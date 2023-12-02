@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/IOHelper.Imaging.cs
+// Copyright (c) 2023 Pixeval/IOHelper.Imaging.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -27,6 +27,7 @@ using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.CoreApi.Net.Response;
 using Windows.Graphics.Imaging;
 using Windows.Storage.Streams;
+using Pixeval.Controls;
 using Pixeval.Options;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats;
@@ -37,7 +38,7 @@ using SixLabors.ImageSharp.Formats.Webp;
 
 namespace Pixeval.Util.IO;
 
-public static partial class IOHelper
+public static partial class IoHelper
 {
     /// <summary>
     ///     Re-encode and decode the image that wrapped in <paramref name="imageStream" />. Note that this function
@@ -73,13 +74,10 @@ public static partial class IOHelper
     public static async Task<SoftwareBitmapSource> GetSoftwareBitmapSourceAsync(this IRandomAccessStream imageStream, bool disposeOfImageStream)
     {
         var bitmap = await GetSoftwareBitmapFromStreamAsync(imageStream);
+        if (disposeOfImageStream)
+            imageStream.Dispose();
         var source = new SoftwareBitmapSource();
         await source.SetBitmapAsync(bitmap);
-        if (disposeOfImageStream)
-        {
-            imageStream.Dispose();
-        }
-
         return source;
     }
 
@@ -102,7 +100,7 @@ public static partial class IOHelper
         foreach (var (frame, delay) in framesArray.Skip(1))
         {
             using var f = await Image.LoadAsync(frame.AsStream());
-            // TODO: delay
+            // TODO: delay, wait for ImageSharp 3.10
             _ = image.Frames.AddFrame(f.Frames[0]);
         }
 
@@ -142,11 +140,8 @@ public static partial class IOHelper
     /// <summary>
     ///     Decodes the <paramref name="imageStream" /> to a <see cref="SoftwareBitmap" />
     /// </summary>
-    /// <returns></returns>
-    public static async Task<SoftwareBitmap?> GetSoftwareBitmapFromStreamAsync(IRandomAccessStream? imageStream)
+    public static async Task<SoftwareBitmap> GetSoftwareBitmapFromStreamAsync(IRandomAccessStream imageStream)
     {
-        if (imageStream is null)
-            return null;
         var decoder = await BitmapDecoder.CreateAsync(imageStream);
         return await decoder.GetSoftwareBitmapAsync(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Premultiplied);
     }
@@ -168,14 +163,19 @@ public static partial class IOHelper
         return entryStreams.Select(s => s.content.AsRandomAccessStream());
     }
 
+    /// <summary>
+    /// 根据显示模式获取缩略图所需的Url
+    /// </summary>
+    /// <param name="illustrationViewOption"></param>
+    /// <returns></returns>
     public static ThumbnailUrlOption ToThumbnailUrlOption(
-        this IllustrationViewOption illustrationViewOption)
+        this ItemsViewLayoutType illustrationViewOption)
     {
         return illustrationViewOption switch
         {
-            IllustrationViewOption.RiverFlow => ThumbnailUrlOption.Medium,
-            IllustrationViewOption.Grid => ThumbnailUrlOption.SquareMedium,
-            _ => WinUI3Utilities.ThrowHelper.ArgumentOutOfRange<IllustrationViewOption, ThumbnailUrlOption>(illustrationViewOption)
+            ItemsViewLayoutType.LinedFlow or ItemsViewLayoutType.VerticalStack or ItemsViewLayoutType.HorizontalStack => ThumbnailUrlOption.Medium,
+            ItemsViewLayoutType.Grid or ItemsViewLayoutType.VerticalUniformStack or ItemsViewLayoutType.HorizontalUniformStack => ThumbnailUrlOption.SquareMedium,
+            _ => WinUI3Utilities.ThrowHelper.ArgumentOutOfRange<ItemsViewLayoutType, ThumbnailUrlOption>(illustrationViewOption)
         };
     }
 }

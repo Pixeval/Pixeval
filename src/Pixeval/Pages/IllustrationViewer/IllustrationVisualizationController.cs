@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/IllustrationVisualizationController.cs
+// Copyright (c) 2023 Pixeval/IllustrationVisualizationController.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -21,11 +21,11 @@
 using System;
 using System.Collections.Specialized;
 using System.Threading.Tasks;
-using CommunityToolkit.WinUI;
+using CommunityToolkit.WinUI.Collections;
 using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Model;
 using Pixeval.Misc;
-using Pixeval.UserControls.IllustrationView;
+using Pixeval.Controls.IllustrationView;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
@@ -39,7 +39,7 @@ public class IllustrationVisualizationController(IIllustrationVisualizer visuali
     {
         var collection = new IncrementalLoadingCollection<FetchEngineIncrementalSource<Illustration, IllustrationViewModel>, IllustrationViewModel>(new IllustrationFetchEngineIncrementalSource(FetchEngine!, itemsLimit));
         visualizer.Illustrations = collection;
-        await collection.LoadMoreItemsAsync(20);
+        _ = await collection.LoadMoreItemsAsync(20);
         visualizer.Illustrations.CollectionChanged += CollectionChanged;
         return visualizer.Illustrations.Count > 0;
     }
@@ -47,7 +47,7 @@ public class IllustrationVisualizationController(IIllustrationVisualizer visuali
     public async Task FillAsync(IFetchEngine<Illustration?>? newEngine, int itemsLimit = -1)
     {
         FetchEngine = newEngine;
-        await FillAsync(itemsLimit);
+        _ = await FillAsync(itemsLimit);
     }
 
     public Task<bool> ResetAndFillAsync(IFetchEngine<Illustration?>? newEngine, int itemsLimit = -1)

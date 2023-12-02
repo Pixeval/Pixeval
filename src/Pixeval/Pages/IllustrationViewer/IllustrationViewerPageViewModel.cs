@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/IllustrationViewerPageViewModel.cs
+// Copyright (c) 2023 Pixeval/IllustrationViewerPageViewModel.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -19,6 +19,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
@@ -33,14 +34,15 @@ using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.AppManagement;
 using Pixeval.CoreApi.Model;
 using Pixeval.Download;
-using Pixeval.UserControls;
-using Pixeval.UserControls.IllustrationView;
+using Pixeval.Controls.IllustrationView;
 using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using Windows.System;
 using Windows.System.UserProfile;
+using Pixeval.Controls;
+using Pixeval.Controls.MarkupExtensions;
 using Pixeval.Misc;
 using Pixeval.Options;
 using Pixeval.Util.Threading;
@@ -106,14 +108,26 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
         }
     }
 
-    #region Current
+    #region Current相关
 
-    public ImmutableArray<IllustrationViewModel> Illustrations => ViewModel.DataProvider.View.Cast<IllustrationViewModel>().ToImmutableArray();
+    /// <summary>
+    /// 插画列表
+    /// </summary>
+    public ImmutableArray<IllustrationViewModel> Illustrations => ViewModelSource?.DataProvider.View.Cast<IllustrationViewModel>().ToImmutableArray() ?? IllustrationsSource!.Value;
 
+    /// <summary>
+    /// 当前插画
+    /// </summary>
     public IllustrationViewModel CurrentIllustration => Illustrations[CurrentIllustrationIndex];
 
+    /// <summary>
+    /// 当前插画的页面
+    /// </summary>
     public IllustrationViewModel CurrentPage => _pages[CurrentPageIndex];
 
+    /// <summary>
+    /// 当前插画的索引
+    /// </summary>
     public int CurrentIllustrationIndex
     {
         get => _currentIllustrationIndex;
@@ -150,18 +164,22 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
             PlayGifCommand.Description = PlayGifCommand.Label = IllustrationViewerPageResources.PauseGif;
             PlayGifCommand.IconSource = new SymbolIconSource { Symbol = Symbol.Stop };
             OnDetailedPropertyChanged(oldValue, value, oldTag, CurrentPage.Id);
+            return;
 
             async Task LoadUserProfile()
             {
                 if (Illustrator is { ProfileImageUrls.Medium: { } profileImage })
                 {
                     UserProfileImageSource = await App.AppViewModel.MakoClient.DownloadSoftwareBitmapSourceResultAsync(profileImage)
-                        .GetOrElseAsync(await AppContext.GetPixivNoProfileImageAsync());
+                        .UnwrapOrElseAsync(await AppContext.GetPixivNoProfileImageAsync());
                 }
             }
         }
     }
 
+    /// <summary>
+    /// 当前插画的页面索引
+    /// </summary>
     public int CurrentPageIndex
     {
         get => _currentPageIndex;
@@ -170,32 +188,65 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
             _currentPageIndex = value;
             OnPropertyChanged(nameof(NextButtonEnable));
             OnPropertyChanged(nameof(PrevButtonEnable));
-            CurrentImage = new(this, CurrentPage);
+            CurrentImage = new ImageViewerPageViewModel(this, CurrentPage);
         }
     }
 
+    /// <inheritdoc cref="CurrentIllustrationIndex"/>
     private int _currentIllustrationIndex;
+
+    /// <inheritdoc cref="CurrentPageIndex"/>
     private int _currentPageIndex;
 
+    /// <summary>
+    /// 一个插画所有的页面
+    /// </summary>
     private IllustrationViewModel[] _pages = null!;
 
+    /// <summary>
+    /// 当前图片的ViewModel
+    /// </summary>
     [ObservableProperty]
     private ImageViewerPageViewModel _currentImage = null!;
 
     #endregion
 
-    public IllustrationViewViewModel ViewModel { get; }
+    private IllustrationViewViewModel? ViewModelSource { get; }
 
-    // illustrations should contains only one item if the illustration is a single
-    // otherwise it contains the entire manga data
-    public IllustrationViewerPageViewModel(IllustrationViewViewModel viewModel, int currentIllustrationIndex)
+    public ImmutableArray<IllustrationViewModel>? IllustrationsSource { get; }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="illustrationViewModels"></param>
+    /// <param name="currentIllustrationIndex"></param>
+    public IllustrationViewerPageViewModel(IEnumerable<IllustrationViewModel> illustrationViewModels, int currentIllustrationIndex)
     {
-        ViewModel = new(viewModel);
+        IllustrationsSource = illustrationViewModels.ToImmutableArray();
         IllustrationInfoTag.Parameter = this;
-        ViewModel.DataProvider.FilterChanged += (_, _) => CurrentIllustrationIndex = Illustrations.IndexOf(CurrentIllustration);
         // ViewModel.DataProvider.View.CurrentItem为null，而且只设置这个属性会导致空引用
         CurrentIllustrationIndex = currentIllustrationIndex;
-        
+
+        InitializeCommands();
+    }
+
+    /// <summary>
+    /// 当拥有DataProvider的时候调用这个构造函数，dispose的时候会自动dispose掉DataProvider
+    /// </summary>
+    /// <param name="viewModel"></param>
+    /// <param name="currentIllustrationIndex"></param>
+    /// <remarks>
+    /// illustrations should contains only one item if the illustration is a single
+    /// otherwise it contains the entire manga data
+    /// </remarks>
+    public IllustrationViewerPageViewModel(IllustrationViewViewModel viewModel, int currentIllustrationIndex)
+    {
+        ViewModelSource = new IllustrationViewViewModel(viewModel);
+        IllustrationInfoTag.Parameter = this;
+        ViewModelSource.DataProvider.View.FilterChanged += (_, _) => CurrentIllustrationIndex = Illustrations.IndexOf(CurrentIllustration);
+        // ViewModel.DataProvider.View.CurrentItem为null，而且只设置这个属性会导致空引用
+        CurrentIllustrationIndex = currentIllustrationIndex;
+
         InitializeCommands();
     }
 
@@ -294,6 +345,9 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
         RestoreResolutionCommand.NotifyCanExecuteChanged();
         ZoomInCommand.NotifyCanExecuteChanged();
         ZoomOutCommand.NotifyCanExecuteChanged();
+        RotateClockwiseCommand.NotifyCanExecuteChanged();
+        RotateCounterclockwiseCommand.NotifyCanExecuteChanged();
+        MirrorCommand.NotifyCanExecuteChanged();
         FullScreenCommand.NotifyCanExecuteChanged();
     }
 
@@ -309,16 +363,26 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
         RestoreResolutionCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
 
         CopyCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
-        CopyCommand.ExecuteRequested += async (_, _) => UIHelper.ClipboardSetBitmap(await CurrentImage.OriginalImageStream!.EncodeBitmapStreamAsync(false));
+        CopyCommand.ExecuteRequested += async (_, _) => UiHelper.ClipboardSetBitmap(await CurrentImage.OriginalImageStream!.EncodeBitmapStreamAsync(false));
 
         PlayGifCommand.CanExecuteRequested += (_, e) => e.CanExecute = IsUgoira && CurrentImage.LoadingCompletedSuccessfully;
         PlayGifCommand.ExecuteRequested += PlayGifCommandOnExecuteRequested;
 
+        // 相当于鼠标滚轮滚动10次，方便快速缩放
         ZoomOutCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
-        ZoomOutCommand.ExecuteRequested += (_, _) => CurrentImage.Zoom(-120);
+        ZoomOutCommand.ExecuteRequested += (_, _) => CurrentImage.Zoom(-1200);
 
         ZoomInCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
-        ZoomInCommand.ExecuteRequested += (_, _) => CurrentImage.Zoom(120);
+        ZoomInCommand.ExecuteRequested += (_, _) => CurrentImage.Zoom(1200);
+
+        RotateClockwiseCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
+        RotateClockwiseCommand.ExecuteRequested += (_, _) => CurrentImage.RotationDegree += 90;
+
+        RotateCounterclockwiseCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
+        RotateCounterclockwiseCommand.ExecuteRequested += (_, _) => CurrentImage.RotationDegree -= 90;
+
+        MirrorCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
+        MirrorCommand.ExecuteRequested += (_, _) => CurrentImage.IsMirrored = !CurrentImage.IsMirrored;
 
         SaveCommand.ExecuteRequested += async (_, _) => await CurrentIllustration.SaveAsync();
         SaveAsCommand.ExecuteRequested += async (_, _) => await CurrentIllustration.SaveAsAsync();
@@ -411,13 +475,13 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
             GenerateLinkTeachingTip.IsOpen = true;
         }
 
-        UIHelper.ClipboardSetText(MakoHelper.GenerateIllustrationAppUri(CurrentIllustration.Id).ToString());
+        UiHelper.ClipboardSetText(MakoHelper.GenerateIllustrationAppUri(CurrentIllustration.Id).ToString());
     }
 
     private void GenerateWebLinkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
         var link = MakoHelper.GenerateIllustrationWebUri(CurrentIllustration.Id).ToString();
-        UIHelper.ClipboardSetText(link);
+        UiHelper.ClipboardSetText(link);
         SnackBarTeachingTip.ShowAndHide(IllustrationViewerPageResources.WebLinkCopiedToClipboardToastTitle);
     }
 
@@ -434,19 +498,20 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
 
     private async void ShowQrCodeCommandExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
-        var qrCodeSource = await UIHelper.GenerateQrCodeForUrlAsync(MakoHelper.GenerateIllustrationWebUri(CurrentIllustration.Id).ToString());
+        var qrCodeSource = await UiHelper.GenerateQrCodeForUrlAsync(MakoHelper.GenerateIllustrationWebUri(CurrentIllustration.Id).ToString());
 
         ShowQrCodeTeachingTip.HeroContent.To<Image>().Source = qrCodeSource;
         OnPropertyChanged(nameof(ShowQrCode));
         ShowQrCodeTeachingTip.IsOpen = true;
+
+        ShowQrCodeTeachingTip.Closed += Closed;
+        return;
 
         void Closed(TeachingTip s, TeachingTipClosedEventArgs ea)
         {
             qrCodeSource.Dispose();
             s.Closed -= Closed;
         }
-
-        ShowQrCodeTeachingTip.Closed += Closed;
     }
 
     private void BookmarkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
@@ -474,9 +539,18 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
 
     public void FlipRestoreResolutionCommand(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
-        RestoreResolutionCommand.Label = CurrentImage.IsFit ? IllustrationViewerPageResources.UniformToFillResolution : IllustrationViewerPageResources.RestoreOriginalResolution;
-        RestoreResolutionCommand.IconSource = CurrentImage.IsFit ? FontIconSymbols.FitPageE9A6.GetFontIconSource() : FontIconSymbols.WebcamE8B8.GetFontIconSource();
-        CurrentImage.ShowMode = CurrentImage.ShowMode is ZoomableImageMode.Fit ? ZoomableImageMode.Original : ZoomableImageMode.Fit;
+        if (CurrentImage.IsFit)
+        {
+            RestoreResolutionCommand.Label = IllustrationViewerPageResources.UniformToFillResolution;
+            RestoreResolutionCommand.IconSource = FontIconSymbols.FitPageE9A6.GetFontIconSource();
+            CurrentImage.ShowMode = ZoomableImageMode.Original;
+        }
+        else
+        {
+            RestoreResolutionCommand.Label = IllustrationViewerPageResources.RestoreOriginalResolution;
+            RestoreResolutionCommand.IconSource = FontIconSymbols.WebcamE8B8.GetFontIconSource();
+            CurrentImage.ShowMode = ZoomableImageMode.Fit;
+        }
     }
 
     public XamlUICommand IllustrationInfoAndCommentsCommand { get; } =
@@ -493,6 +567,17 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
 
     public XamlUICommand ZoomInCommand { get; } = IllustrationViewerPageResources.ZoomIn.GetCommand(
         FontIconSymbols.ZoomInE8A3, VirtualKey.Add);
+
+    public XamlUICommand RotateClockwiseCommand { get; } = IllustrationViewerPageResources.RotateClockwise.GetCommand(
+        FontIconSymbols.RotateE7AD, VirtualKeyModifiers.Control, VirtualKey.R);
+
+    public XamlUICommand RotateCounterclockwiseCommand { get; } =
+        IllustrationViewerPageResources.RotateCounterclockwise.GetCommand(
+            null!, VirtualKeyModifiers.Control, VirtualKey.L);
+
+    public XamlUICommand MirrorCommand { get; } =
+        IllustrationViewerPageResources.Mirror.GetCommand(
+            FontIconSymbols.CollatePortraitF57C, VirtualKeyModifiers.Control, VirtualKey.M);
 
     public XamlUICommand BookmarkCommand { get; private set; } = null!; // the null-state is transient
 
@@ -512,13 +597,13 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
 
     public XamlUICommand OpenInWebBrowserCommand { get; } = IllustrationViewerPageResources.OpenInWebBrowser.GetCommand(FontIconSymbols.WebSearchF6FA);
 
-    public StandardUICommand ShareCommand { get; } = new(StandardUICommandKind.Share);
+    public StandardUICommand ShareCommand { get; } = new StandardUICommand(StandardUICommandKind.Share);
 
     public XamlUICommand ShowQrCodeCommand { get; } = IllustrationViewerPageResources.ShowQRCode.GetCommand(FontIconSymbols.QRCodeED14);
 
-    public XamlUICommand SetAsLockScreenCommand { get; } = new() { Label = IllustrationViewerPageResources.LockScreen };
+    public XamlUICommand SetAsLockScreenCommand { get; } = new XamlUICommand { Label = IllustrationViewerPageResources.LockScreen };
 
-    public XamlUICommand SetAsBackgroundCommand { get; } = new() { Label = IllustrationViewerPageResources.Background };
+    public XamlUICommand SetAsBackgroundCommand { get; } = new XamlUICommand { Label = IllustrationViewerPageResources.Background };
 
     public XamlUICommand FullScreenCommand { get; } = IllustrationViewerPageResources.FullScreen.GetCommand(FontIconSymbols.FullScreenE740);
 
@@ -528,10 +613,10 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
 
     public void Dispose()
     {
-        foreach (var illustrationViewModel in ViewModel.DataProvider.Source)
+        foreach (var illustrationViewModel in Illustrations)
             illustrationViewModel.UnloadThumbnail(this, ThumbnailUrlOption.SquareMedium);
         _pages?.ForEach(i => i.Dispose());
         (UserProfileImageSource as SoftwareBitmapSource)?.Dispose();
-        ViewModel.Dispose();
+        ViewModelSource?.Dispose();
     }
 }

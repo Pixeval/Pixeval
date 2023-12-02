@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval.Utilities
-// Copyright (c) 2021 Pixeval.Utilities/Description.cs
+// Copyright (c) 2023 Pixeval.Utilities/Description.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -20,18 +20,15 @@
 
 using System;
 using System.Reflection;
-using JetBrains.Annotations;
 
 namespace Pixeval.Utilities;
 
 [AttributeUsage(AttributeTargets.Field)]
-[PublicAPI]
 public class Description(string name) : Attribute
 {
     public string Name { get; } = name;
 }
 
-[PublicAPI]
 public static class DescriptionHelper
 {
     public static string GetDescription<TEnum>(this TEnum @enum) where TEnum : Enum

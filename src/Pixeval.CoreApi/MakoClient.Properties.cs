@@ -1,8 +1,8 @@
-﻿#region Copyright (c) Pixeval/Pixeval.CoreApi
+#region Copyright (c) Pixeval/Pixeval.CoreApi
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
-// Copyright (c) 2021 Pixeval.CoreApi/MakoClient.Properties.cs
+// Copyright (c) 2023 Pixeval.CoreApi/MakoClient.Properties.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -28,7 +28,7 @@ namespace Pixeval.CoreApi;
 
 public partial class MakoClient
 {
-    private readonly List<IEngineHandleSource> _runningInstances = new();
+    private readonly List<IEngineHandleSource> _runningInstances = [];
 
     /// <summary>
     ///     The globally unique ID of current <see cref="MakoClient" />

@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/AppSetting.cs
+// Copyright (c) 2023 Pixeval/AppSetting.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -22,17 +22,20 @@ using System;
 using System.Globalization;
 using Microsoft.UI.Xaml.Controls;
 using Pixeval.Attributes;
+using Pixeval.Controls;
+using Pixeval.Controls.Windowing;
 using Pixeval.CoreApi;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Preference;
 using Pixeval.Misc;
 using Pixeval.Options;
+using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
 
 namespace Pixeval.AppManagement;
 
-[GenerateConstructor, SettingPOCO]
-public partial record AppSetting
+[GenerateConstructor, SettingPoco]
+public partial record AppSetting : IWindowSettings
 {
 #pragma warning disable CS8618
     public AppSetting()
@@ -235,9 +238,9 @@ public partial record AppSetting
     [SettingMetadata(SettingEntryCategory.Search, typeof(SettingsPageResources), nameof(SettingsPageResources.MaximumSuggestionBoxSearchHistoryEntryHeader))]
     public int MaximumSuggestionBoxSearchHistory { get; set; }
 
-    [DefaultValue(IllustrationViewOption.RiverFlow)]
-    [SettingMetadata(SettingEntryCategory.BrowsingExperience, typeof(SettingsPageResources), nameof(SettingsPageResources.IllustrationViewOptionEntryHeader))]
-    public IllustrationViewOption IllustrationViewOption { get; set; }
+    [DefaultValue(ItemsViewLayoutType.LinedFlow)]
+    [SettingMetadata(SettingEntryCategory.BrowsingExperience, typeof(SettingsPageResources), nameof(SettingsPageResources.ItemsViewLayoutTypeEntryHeader))]
+    public ItemsViewLayoutType ItemsViewLayoutType { get; set; }
 
     [DefaultValue(true)]
     [SyntheticSetting]
@@ -247,9 +250,12 @@ public partial record AppSetting
     [SyntheticSetting]
     public bool ShowExternalCommandBarInIllustratorContentViewer { get; set; }
 
-    [DefaultValue(AppBackdropType.Mica)]
+    [DefaultValue(BackdropType.MicaAlt)]
     [SettingMetadata(SettingEntryCategory.Application, typeof(SettingsPageResources), nameof(SettingsPageResources.BackdropEntryHeader))]
-    public AppBackdropType AppBackdrop { get; set; }
+    public BackdropType Backdrop { get; set; }
+
+    [AttributeIgnore(typeof(SettingsViewModelAttribute<>))]
+    public string IconAbsolutePath { get; set; }
 
     public static AppSetting CreateDefault()
     {

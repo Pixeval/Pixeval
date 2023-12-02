@@ -1,8 +1,8 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/CommentBlockViewModel.cs
+// Copyright (c) 2023 Pixeval/CommentBlockViewModel.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -74,7 +74,7 @@ public class CommentBlockViewModel(Comment comment, string illustrationId)
     public async Task<ImageSource> GetAvatarSource()
     {
         return (await App.AppViewModel.MakoClient.DownloadBitmapImageResultAsync(Comment.CommentPoster!.ProfileImageUrls!.Medium!, 35)
-            .GetOrElseAsync(await AppContext.GetPixivNoProfileImageAsync()))!;
+            .UnwrapOrElseAsync(await AppContext.GetPixivNoProfileImageAsync()))!;
     }
 
     public async Task<Paragraph> GetReplyContentParagraphAsync()

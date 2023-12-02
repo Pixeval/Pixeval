@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/IDataTransferManagerInterop.cs
+// Copyright (c) 2023 Pixeval/IDataTransferManagerInterop.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -23,6 +23,9 @@ using System.Runtime.InteropServices;
 
 namespace Pixeval.Interop;
 
+/// <summary>
+/// wait for <see href="https://github.com/microsoft/CsWinRT/issues/1337"/>
+/// </summary>
 [ComImport]
 [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
 [Guid("3A3DCD6C-3EAB-43DC-BCDE-45671CE800C8")]

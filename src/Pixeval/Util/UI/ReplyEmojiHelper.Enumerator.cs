@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/ReplyEmojiHelper.Enumerator.cs
+// Copyright (c) 2023 Pixeval/ReplyEmojiHelper.Enumerator.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -23,7 +23,6 @@ using System.Linq;
 using System.Text;
 using Pixeval.Misc;
 
-
 namespace Pixeval.Util.UI;
 
 public static partial class ReplyEmojiHelper
@@ -42,7 +41,7 @@ public static partial class ReplyEmojiHelper
         {
             while (!table.Keys.Contains(i) && i < content.Length)
             {
-                stringBuilder.Append(content[i++]);
+                _ = stringBuilder.Append(content[i++]);
             }
 
             if (stringBuilder.Length != 0)
@@ -55,7 +54,7 @@ public static partial class ReplyEmojiHelper
                 yield break;
             }
 
-            stringBuilder.Clear();
+            _ = stringBuilder.Clear();
             var (emoji, length) = table[i];
             yield return new ReplyContentToken.EmojiToken(emoji);
             i += length;

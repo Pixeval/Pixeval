@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/IllustrationMetaPathMacroProvider.cs
+// Copyright (c) 2023 Pixeval/IllustrationMetaPathMacroProvider.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@
 using System.Collections.Generic;
 using Pixeval.Download.MacroParser;
 using Pixeval.Download.Macros;
-using Pixeval.UserControls.IllustrationView;
+using Pixeval.Controls.IllustrationView;
 
 namespace Pixeval.Download;
 

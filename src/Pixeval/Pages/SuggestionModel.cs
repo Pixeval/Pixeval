@@ -1,8 +1,8 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/SuggestionModel.cs
+// Copyright (c) 2023 Pixeval/SuggestionModel.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -20,6 +20,7 @@
 
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Pixeval.Controls.MarkupExtensions;
 using Pixeval.CoreApi.Model;
 using Pixeval.Database;
 using Pixeval.Util.UI;
@@ -28,13 +29,17 @@ namespace Pixeval.Pages;
 
 public record SuggestionModel(string? Name, string? TranslatedName, SuggestionType SuggestionType)
 {
-    public static readonly SuggestionModel IllustrationTrendingTagHeader = new(null, null, SuggestionType.IllustrationTrendingTagHeader);
+    public static readonly SuggestionModel IllustrationTrendingTagHeader =
+        new(null, null, SuggestionType.IllustrationTrendingTagHeader);
 
-    public static readonly SuggestionModel IllustrationAutoCompleteTagHeader = new(null, null, SuggestionType.IllustrationAutoCompleteTagHeader);
+    public static readonly SuggestionModel IllustrationAutoCompleteTagHeader =
+        new(null, null, SuggestionType.IllustrationAutoCompleteTagHeader);
 
-    public static readonly SuggestionModel SettingEntryHeader = new(null, null, SuggestionType.SettingEntryHeader);
+    public static readonly SuggestionModel SettingEntryHeader =
+        new(null, null, SuggestionType.SettingEntryHeader);
 
-    public static readonly SuggestionModel NovelTrendingTagHeader = new(null, null, SuggestionType.NovelTrendingTagHeader);
+    public static readonly SuggestionModel NovelTrendingTagHeader =
+        new(null, null, SuggestionType.NovelTrendingTagHeader);
 
     public FontIcon? Icon => SuggestionType switch
     {

@@ -1,17 +1,17 @@
-<!--  ReSharper disable Xaml.ConstructorWarning  -->
-<!--  ReSharper disable MarkupAttributeTypo  -->
 <ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:iconButton="using:Pixeval.Controls.IconButton"
+    xmlns:controls="using:Pixeval.Controls"
     xmlns:local="using:Pixeval.Controls.TokenInputTextBox"
-    xmlns:markup="using:Pixeval.Util.MarkupExtensions">
+    xmlns:markup="using:Pixeval.Controls.MarkupExtensions">
     <Style TargetType="local:TokenInputTextBox">
         <Setter Property="HorizontalAlignment" Value="Stretch" />
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="local:TokenInputTextBox">
+                    <!--  ReSharper disable Xaml.ConstructorWarning  -->
+                    <!--  ReSharper disable MarkupAttributeTypo  -->
                     <Grid
                         Height="{TemplateBinding Height}"
                         HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
@@ -38,8 +38,8 @@
                             Padding="0"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
-                            Content="{markup:FontIcon Glyph=UpShiftKeyE84B,
-                                                  FontSize={StaticResource PixevalButtonIconSize}}"
+                            Content="{markup:FontSymbolIcon Glyph=UpShiftKeyE84B,
+                                                            FontSize={StaticResource PixevalButtonIconSize}}"
                             IsChecked="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Token.CaseSensitive, Mode=TwoWay}" />
                         <ToggleButton
                             x:Uid="/TokenInputTextBox/IsRegularExpressionCheckBox"
@@ -49,18 +49,18 @@
                             Padding="0"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
-                            Content="{markup:FontIcon Glyph=ProcessingE9F5,
-                                                  FontSize={StaticResource PixevalButtonIconSize}}"
+                            Content="{markup:FontSymbolIcon Glyph=ProcessingE9F5,
+                                                            FontSize={StaticResource PixevalButtonIconSize}}"
                             IsChecked="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Token.IsRegularExpression, Mode=TwoWay}" />
-                        <iconButton:IconButton
+                        <controls:IconButton
                             x:Name="SubmitButton"
                             x:Uid="/TokenInputTextBox/SubmitButton"
                             Grid.Column="3"
                             Height="32"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
-                            Icon="{markup:FontIcon Glyph=SendE724,
-                                               FontSize={StaticResource PixevalButtonIconSize}}"
+                            Icon="{markup:FontSymbolIcon Glyph=SendE724,
+                                                         FontSize={StaticResource PixevalButtonIconSize}}"
                             Visibility="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=SubmitEnable, Mode=OneWay}" />
                     </Grid>
                 </ControlTemplate>

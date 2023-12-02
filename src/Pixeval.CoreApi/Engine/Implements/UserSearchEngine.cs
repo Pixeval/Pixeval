@@ -1,8 +1,8 @@
-﻿#region Copyright (c) Pixeval/Pixeval.CoreApi
+#region Copyright (c) Pixeval/Pixeval.CoreApi
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
-// Copyright (c) 2021 Pixeval.CoreApi/UserSearchEngine.cs
+// Copyright (c) 2023 Pixeval.CoreApi/UserSearchEngine.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -35,7 +35,7 @@ public class UserSearchEngine(MakoClient makoClient, TargetFilter targetFilter, 
     private readonly TargetFilter _targetFilter = targetFilter;
     private readonly UserSortOption _userSortOption = userSortOption ?? UserSortOption.DateDescending;
 
-    public override IAsyncEnumerator<User> GetAsyncEnumerator(CancellationToken cancellationToken = new())
+    public override IAsyncEnumerator<User> GetAsyncEnumerator(CancellationToken cancellationToken = new CancellationToken())
     {
         var sortSegment = _userSortOption != UserSortOption.DoNotSort ? $"&sort={_userSortOption.GetDescription()}" : string.Empty;
         return RecursivePixivAsyncEnumerators.User<UserSearchEngine>.WithInitialUrl(this, MakoApiKind.AppApi,

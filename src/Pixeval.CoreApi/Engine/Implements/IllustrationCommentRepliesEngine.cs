@@ -1,8 +1,8 @@
-﻿#region Copyright (c) Pixeval/Pixeval.CoreApi
+#region Copyright (c) Pixeval/Pixeval.CoreApi
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
-// Copyright (c) 2021 Pixeval.CoreApi/IllustrationCommentRepliesEngine.cs
+// Copyright (c) 2023 Pixeval.CoreApi/IllustrationCommentRepliesEngine.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -30,7 +30,7 @@ public class IllustrationCommentRepliesEngine(string commentId, MakoClient makoC
 {
     private readonly string _commentId = commentId;
 
-    public override IAsyncEnumerator<Comment> GetAsyncEnumerator(CancellationToken cancellationToken = new())
+    public override IAsyncEnumerator<Comment> GetAsyncEnumerator(CancellationToken cancellationToken = new CancellationToken())
     {
         return RecursivePixivAsyncEnumerators.Comment<IllustrationCommentRepliesEngine>.WithInitialUrl(this, MakoApiKind.AppApi,
             engine => $"/v2/illust/comment/replies?comment_id={engine._commentId}")!;

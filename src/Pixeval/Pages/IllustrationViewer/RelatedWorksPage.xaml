@@ -4,13 +4,13 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Pixeval.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:illustrationView="using:Pixeval.UserControls.IllustrationView"
+    xmlns:illustrationView="using:Pixeval.Controls.IllustrationView"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     NavigationCacheMode="Required"
     mc:Ignorable="d">
     <illustrationView:IllustrationView
         x:Name="RelatedWorksIllustrationGrid"
-        Margin="10,0,5,0"
-        IllustrationViewOption="Grid"
+        Margin="5,0,0,0"
+        LayoutType="VerticalUniformStack"
         ThumbnailDirection="{x:Bind ThumbnailDirection}" />
 </controls:EnhancedPage>

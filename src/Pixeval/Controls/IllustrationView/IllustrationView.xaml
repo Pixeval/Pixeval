@@ -1,0 +1,60 @@
+<Grid
+    x:Class="Pixeval.Controls.IllustrationView.IllustrationView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:Pixeval.Controls"
+    xmlns:converters="using:Pixeval.Util.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:Pixeval.Controls.IllustrationView"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Unloaded="IllustrationViewOnUnloaded"
+    mc:Ignorable="d">
+    <Grid.Resources>
+        <converters:BoolToItemsViewSelectionModeConverter x:Key="BoolToItemsViewSelectionModeConverter" />
+    </Grid.Resources>
+    <controls:AdvancedItemsView
+        x:Name="IllustrationItemsView"
+        IsItemInvokedEnabled="True"
+        ItemInvoked="IllustrationItemsView_OnItemInvoked"
+        ItemsSource="{x:Bind ViewModel.DataProvider.View}"
+        LayoutType="{x:Bind LayoutType, Mode=OneWay}"
+        LoadMoreRequested="IllustrationItemsView_OnLoadMoreRequested"
+        MinItemHeight="{x:Bind DesiredHeight}"
+        MinItemWidth="{x:Bind DesiredWidth}"
+        SelectionMode="{x:Bind ViewModel.IsSelecting, Converter={StaticResource BoolToItemsViewSelectionModeConverter}, Mode=OneWay}">
+        <ItemsView.ItemTemplate>
+            <DataTemplate x:DataType="local:IllustrationViewModel">
+                <ItemContainer IsSelected="{x:Bind IsSelected, Mode=TwoWay}">
+                    <local:IllustrationThumbnail
+                        EffectiveViewportChanged="IllustrationThumbnailContainerItemOnEffectiveViewportChanged"
+                        IsTapEnabled="False"
+                        ShowQrCodeRequested="IllustrationThumbnailOnShowQrCodeRequested"
+                        ThisRequired="IllustrationThumbnail_OnThisRequired"
+                        ViewModel="{x:Bind}" />
+                </ItemContainer>
+            </DataTemplate>
+        </ItemsView.ItemTemplate>
+    </controls:AdvancedItemsView>
+    <StackPanel
+        HorizontalAlignment="Center"
+        VerticalAlignment="Center"
+        Spacing="20"
+        Visibility="{x:Bind ViewModel.HasNoItems, Mode=OneWay}">
+        <Image
+            Width="200"
+            Height="200"
+            Source="/Assets/Images/empty-box.png" />
+        <TextBlock
+            x:Uid="/IllustrationView/ResultIsEmptyTextBlock"
+            HorizontalAlignment="Center"
+            FontSize="{StaticResource PixevalTitleFontSize}" />
+    </StackPanel>
+    <TeachingTip
+        x:Name="QrCodeTeachingTip"
+        x:Uid="/IllustrationView/QrCodeTeachingTip"
+        IsLightDismissEnabled="True">
+        <TeachingTip.HeroContent>
+            <Image />
+        </TeachingTip.HeroContent>
+    </TeachingTip>
+</Grid>

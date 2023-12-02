@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
-// Copyright (c) 2021 Pixeval.CoreApi/IMakoClientSupport.cs
+// Copyright (c) 2023 Pixeval.CoreApi/IMakoClientSupport.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,8 +18,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using JetBrains.Annotations;
-
 namespace Pixeval.CoreApi.Global;
 
 /// <summary>
@@ -28,7 +26,6 @@ namespace Pixeval.CoreApi.Global;
 ///     the properties that are required when performing some context-aware tasks, such as the
 ///     access token while sending a request to app-api.pixiv.net
 /// </summary>
-[PublicAPI]
 public interface IMakoClientSupport
 {
     /// <summary>

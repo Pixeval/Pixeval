@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/MakoHelper.cs
+// Copyright (c) 2023 Pixeval/MakoHelper.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -21,10 +21,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using CommunityToolkit.WinUI.UI;
+using CommunityToolkit.WinUI.Collections;
 using Microsoft.UI;
-using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
+using Pixeval.Controls;
+using Pixeval.Controls.MarkupExtensions;
 using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Model;
@@ -153,53 +154,53 @@ public static class MakoHelper
         return $"https://s.pximg.net/common/images/stamp/generated-stamps/{id}_s.jpg";
     }
 
-    public static IconSource GetBookmarkButtonIconSource(bool isBookmarked)
+    public static FontSymbolIconSource GetBookmarkButtonIconSource(bool isBookmarked)
     {
         var systemThemeFontFamily = new FontFamily(AppContext.AppIconFontFamilyName);
         return isBookmarked
-            ? new FontIconSource
+            ? new FontSymbolIconSource
             {
-                Glyph = "\xEB52", // HeartFill
+                Symbol = FontIconSymbols.HeartFillEB52,
                 Foreground = new SolidColorBrush(Colors.Crimson),
                 FontFamily = systemThemeFontFamily
             }
-            : new FontIconSource
+            : new FontSymbolIconSource
             {
-                Glyph = "\xEB51", // Heart
+                Symbol = FontIconSymbols.HeartEB51,
                 FontFamily = systemThemeFontFamily
             };
     }
 
-    public static IconElement GetBookmarkButtonIcon(bool isBookmarked)
+    public static FontSymbolIcon GetBookmarkButtonIcon(bool isBookmarked)
     {
         var systemThemeFontFamily = new FontFamily(AppContext.AppIconFontFamilyName);
         return isBookmarked
-            ? new FontIcon
+            ? new FontSymbolIcon
             {
-                Glyph = "\xEB52", // HeartFill
+                Symbol = FontIconSymbols.HeartFillEB52,
                 Foreground = new SolidColorBrush(Colors.Crimson),
                 FontFamily = systemThemeFontFamily
             }
-            : new FontIcon
+            : new FontSymbolIcon
             {
-                Glyph = "\xEB51", // Heart
+                Symbol = FontIconSymbols.HeartEB51,
                 FontFamily = systemThemeFontFamily
             };
     }
 
-    public static IconSource GetFollowButtonIcon(bool isFollowed)
+    public static FontSymbolIconSource GetFollowButtonIcon(bool isFollowed)
     {
         var systemThemeFontFamily = new FontFamily(AppContext.AppIconFontFamilyName);
         return isFollowed
-            ? new FontIconSource
+            ? new FontSymbolIconSource
             {
-                Glyph = "\xEA8C", // ContactSolid
+                Symbol = FontIconSymbols.ContactSolidEA8C,
                 Foreground = new SolidColorBrush(Colors.Crimson),
                 FontFamily = systemThemeFontFamily
             }
-            : new FontIconSource
+            : new FontSymbolIconSource
             {
-                Glyph = "\xE77B", // Contact
+                Symbol = FontIconSymbols.ContactE77B,
                 FontFamily = systemThemeFontFamily
             };
     }

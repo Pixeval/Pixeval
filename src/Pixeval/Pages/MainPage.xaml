@@ -5,10 +5,10 @@
     xmlns:animatedVisuals="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
     xmlns:controls="using:Pixeval.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:markup="using:Pixeval.Controls.MarkupExtensions"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pages="using:Pixeval.Pages"
     xmlns:utilities="using:WinUI3Utilities"
-    xmlns:markup="using:Pixeval.Util.MarkupExtensions"
     mc:Ignorable="d">
     <controls:EnhancedWindowPage.Resources>
         <DataTemplate x:Key="IllustrationHeaderSuggestionTemplate">
@@ -129,8 +129,8 @@
                         Padding="0"
                         HorizontalAlignment="Right"
                         VerticalAlignment="Center"
-                        Content="{markup:FontIcon Glyph=SettingsE713,
-                                              FontSize=13}"
+                        Content="{markup:FontSymbolIcon Glyph=SettingsE713,
+                                                        FontSize=13}"
                         Tapped="OpenSearchSettingButton_OnTapped" />
                     <Button
                         x:Uid="/MainPage/ReverseSearchButton"
@@ -140,52 +140,52 @@
                         Padding="0"
                         HorizontalAlignment="Right"
                         VerticalAlignment="Center"
-                        Content="{markup:FontIcon Glyph=CameraE722,
-                                              FontSize=13}"
+                        Content="{markup:FontSymbolIcon Glyph=CameraE722,
+                                                        FontSize=13}"
                         Tapped="ReverseSearchButton_OnTapped" />
                 </Grid>
             </NavigationView.PaneCustomContent>
             <NavigationView.MenuItems>
                 <NavigationViewItem
                     x:Uid="/MainPage/RecommendationsTab"
-                    Icon="{markup:FontIcon Glyph=CalendarE787}"
+                    Icon="{markup:FontSymbolIcon Glyph=CalendarE787}"
                     Tag="{x:Bind _viewModel.RecommendsTag}" />
                 <NavigationViewItem
                     x:Uid="/MainPage/RankingsTab"
-                    Icon="{markup:FontIcon Glyph=MarketEAFC}"
+                    Icon="{markup:FontSymbolIcon Glyph=MarketEAFC}"
                     Tag="{x:Bind _viewModel.RankingsTag}" />
                 <NavigationViewItem
                     x:Uid="/MainPage/BookmarksTab"
-                    Icon="{markup:FontIcon Glyph=HeartEB51}"
+                    Icon="{markup:FontSymbolIcon Glyph=HeartEB51}"
                     Tag="{x:Bind _viewModel.BookmarksTag}" />
                 <NavigationViewItem
                     x:Uid="/MainPage/FollowingsTab"
-                    Icon="{markup:FontIcon Glyph=PeopleE716}"
+                    Icon="{markup:FontSymbolIcon Glyph=PeopleE716}"
                     Tag="{x:Bind _viewModel.FollowingsTag}" />
                 <NavigationViewItem
                     x:Uid="/MainPage/SpotlightsTab"
-                    Icon="{markup:FontIcon Glyph=LibraryE8F1}"
+                    Icon="{markup:FontSymbolIcon Glyph=LibraryE8F1}"
                     Tag="{x:Bind _viewModel.SpotlightsTag}" />
-                <NavigationViewItem x:Uid="/MainPage/FeedsTab" Icon="{markup:FontIcon Glyph=LocationE81D}" />
+                <NavigationViewItem x:Uid="/MainPage/FeedsTab" Icon="{markup:FontSymbolIcon Glyph=LocationE81D}" />
                 <NavigationViewItem
                     x:Uid="/MainPage/RecentPostsTab"
-                    Icon="{markup:FontIcon Glyph=CaloriesECAD}"
+                    Icon="{markup:FontSymbolIcon Glyph=CaloriesECAD}"
                     Tag="{x:Bind _viewModel.RecentPostsTag}" />
                 <NavigationViewItemHeader x:Uid="/MainPage/DownloadAndHistoriesTab" />
                 <NavigationViewItem
                     x:Uid="/MainPage/HistoriesTab"
-                    Icon="{markup:FontIcon Glyph=HistoryE81C}"
+                    Icon="{markup:FontSymbolIcon Glyph=HistoryE81C}"
                     Tag="{x:Bind _viewModel.HistoriesTag}" />
                 <NavigationViewItem
                     x:Name="DownloadListTab"
                     x:Uid="/MainPage/DownloadListTab"
-                    Icon="{markup:FontIcon Glyph=DownloadE896}" />
+                    Icon="{markup:FontSymbolIcon Glyph=DownloadE896}" />
             </NavigationView.MenuItems>
             <NavigationView.FooterMenuItems>
-                <NavigationViewItem x:Uid="/MainPage/HelpTab" Icon="{markup:FontIcon Glyph=HelpE897}" />
+                <NavigationViewItem x:Uid="/MainPage/HelpTab" Icon="{markup:FontSymbolIcon Glyph=HelpE897}" />
                 <NavigationViewItem
                     x:Uid="/MainPage/AboutTab"
-                    Icon="{markup:FontIcon Glyph=RingerEA8F}"
+                    Icon="{markup:FontSymbolIcon Glyph=RingerEA8F}"
                     Tag="{x:Bind _viewModel.AboutTag}" />
                 <NavigationViewItem
                     x:Name="SettingsTab"
@@ -267,14 +267,14 @@
                     <AppBarButton
                         x:Uid="/MainPage/OpenSearchSettingButton"
                         Width="{StaticResource CollapsedAppBarButtonWidth}"
-                        Content="{markup:FontIcon Glyph=CameraE722,
-                                              FontSize=13}"
+                        Content="{markup:FontSymbolIcon Glyph=CameraE722,
+                                                        FontSize=13}"
                         Tapped="ReverseSearchButton_OnTapped" />
                     <AppBarButton
                         x:Uid="/MainPage/ReverseSearchButton"
                         Width="{StaticResource CollapsedAppBarButtonWidth}"
-                        Content="{markup:FontIcon Glyph=SettingsE713,
-                                              FontSize=13}"
+                        Content="{markup:FontSymbolIcon Glyph=SettingsE713,
+                                                        FontSize=13}"
                         Tapped="OpenSearchSettingButton_OnTapped" />
                 </CommandBar>
             </Grid>

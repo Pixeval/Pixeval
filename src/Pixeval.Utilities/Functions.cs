@@ -1,8 +1,8 @@
-﻿#region Copyright (c) Pixeval/Pixeval.Utilities
+#region Copyright (c) Pixeval/Pixeval.Utilities
 // GPL v3 License
 // 
 // Pixeval/Pixeval.Utilities
-// Copyright (c) 2021 Pixeval.Utilities/Functions.cs
+// Copyright (c) 2023 Pixeval.Utilities/Functions.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -22,11 +22,9 @@ using System;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
-using JetBrains.Annotations;
 
 namespace Pixeval.Utilities;
 
-[PublicAPI]
 public static class Functions
 {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -63,10 +61,10 @@ public static class Functions
         if (await Task.WhenAny(task, Task.Delay(timeoutMills, cancellationToken.Token)).ConfigureAwait(false) == task)
         {
             cancellationToken.Cancel();
-            return Result<TResult>.OfSuccess(task.Result);
+            return Result<TResult>.AsSuccess(task.Result);
         }
 
-        return Result<TResult>.OfFailure();
+        return Result<TResult>.AsFailure();
     }
 
     public static async Task<Result<TResult>> RetryAsync<TResult>(Func<Task<TResult>> body, int attempts = 3, int timeoutMills = 0)
@@ -89,7 +87,7 @@ public static class Functions
             }
         }
 
-        return Result<TResult>.OfFailure(cause);
+        return Result<TResult>.AsFailure(cause);
     }
 
     public static Task<TResult> TryCatchAsync<TResult>(Func<Task<TResult>> function, Func<Exception, Task<TResult>> onException)

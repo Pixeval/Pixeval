@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/RelatedWorksPage.xaml.cs
+// Copyright (c) 2023 Pixeval/RelatedWorksPage.xaml.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -38,15 +38,15 @@ public sealed partial class RelatedWorksPage
         InitializeComponent();
     }
 
-    public override async void OnPageActivated(NavigationEventArgs e)
+    public override void OnPageActivated(NavigationEventArgs e)
     {
         // Dispose current page contents if the parent page (IllustrationViewerPage) is navigating
-        WeakReferenceMessenger.Default.TryRegister<RelatedWorksPage, NavigatingFromIllustrationViewerMessage>(this, (recipient, _) =>
+        _ = WeakReferenceMessenger.Default.TryRegister<RelatedWorksPage, NavigatingFromIllustrationViewerMessage>(this, (recipient, _) =>
         {
             recipient.RelatedWorksIllustrationGrid.ViewModel.Dispose();
             WeakReferenceMessenger.Default.UnregisterAll(this);
         });
         _illustrationId = e.Parameter.To<string>();
-        await RelatedWorksIllustrationGrid.ViewModel.ResetEngineAndFillAsync(App.AppViewModel.MakoClient.RelatedWorks(_illustrationId));
+        RelatedWorksIllustrationGrid.ViewModel.ResetEngine(App.AppViewModel.MakoClient.RelatedWorks(_illustrationId));
     }
 }

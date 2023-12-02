@@ -1,8 +1,8 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/Lexer.cs
+// Copyright (c) 2023 Pixeval/Lexer.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -24,11 +24,11 @@ public class Lexer(string rawString)
 {
     private readonly CharStream _rawString = new(rawString);
 
-    private char _currentChar => _rawString.Peek();
+    private char CurrentChar => _rawString.Peek();
 
     public TokenInfo? NextToken()
     {
-        switch (_currentChar)
+        switch (CurrentChar)
         {
             case char.MaxValue:
                 return null;

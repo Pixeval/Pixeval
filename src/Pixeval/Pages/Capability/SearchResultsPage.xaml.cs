@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/SearchResultsPage.xaml.cs
+// Copyright (c) 2023 Pixeval/SearchResultsPage.xaml.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -25,7 +25,7 @@ using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Model;
 using Pixeval.Messages;
 using Pixeval.Misc;
-using Pixeval.UserControls;
+using Pixeval.Controls;
 using Pixeval.Util;
 
 namespace Pixeval.Pages.Capability;
@@ -50,12 +50,12 @@ public sealed partial class SearchResultsPage : ISortedIllustrationContainerPage
     {
         SortOptionComboBox.SelectedItem = MakoHelper.GetAppSettingDefaultSortOptionWrapper();
         ChangeSource((IFetchEngine<Illustration>)navigationEventArgs.Parameter);
-        WeakReferenceMessenger.Default.TryRegister<SearchResultsPage, MainPageFrameNavigatingEvent>(this, static (recipient, _) => recipient.IllustrationContainer.ViewModel.DataProvider.FetchEngine?.Cancel());
+        _ = WeakReferenceMessenger.Default.TryRegister<SearchResultsPage, MainPageFrameNavigatingEvent>(this, static (recipient, _) => recipient.IllustrationContainer.ViewModel.DataProvider.FetchEngine?.Cancel());
     }
 
     private void ChangeSource(IFetchEngine<Illustration> engine)
     {
-        _ = IllustrationContainer.ViewModel.ResetEngineAndFillAsync(engine);
+        IllustrationContainer.ViewModel.ResetEngine(engine);
     }
 
     private void SortOptionComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)

@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
-// Copyright (c) 2021 Pixeval.CoreApi/SpotlightDetail.cs
+// Copyright (c) 2023 Pixeval.CoreApi/SpotlightDetail.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -19,9 +19,7 @@
 #endregion
 
 using System.Collections.Generic;
-using JetBrains.Annotations;
 
 namespace Pixeval.CoreApi.Model;
 
-[PublicAPI]
 public record SpotlightDetail(SpotlightArticle SpotlightArticle, string Introduction, IEnumerable<Illustration> Illustrations);

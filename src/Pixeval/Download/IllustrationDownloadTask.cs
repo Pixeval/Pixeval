@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/IllustrationDownloadTask.cs
+// Copyright (c) 2023 Pixeval/IllustrationDownloadTask.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -25,7 +25,7 @@ using Pixeval.Database;
 using Pixeval.Util;
 using Pixeval.Util.IO;
 using Windows.Storage.Streams;
-using Pixeval.UserControls.IllustrationView;
+using Pixeval.Controls.IllustrationView;
 
 namespace Pixeval.Download;
 
@@ -64,7 +64,7 @@ public class IllustrationDownloadTask : ObservableDownloadTask, IIllustrationVie
             {
                 using (stream)
                 {
-                    IOHelper.CreateParentDirectories(Destination);
+                    IoHelper.CreateParentDirectories(Destination);
                     await using var fs = File.Open(Destination, FileMode.Create, FileAccess.ReadWrite, FileShare.None);
                     await stream.AsStreamForRead().CopyToAsync(fs);
                 }

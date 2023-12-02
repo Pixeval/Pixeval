@@ -1,8 +1,8 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/DownloadStartingDeferral.cs
+// Copyright (c) 2023 Pixeval/DownloadStartingDeferral.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -27,7 +27,7 @@ public class DownloadStartingDeferral
     /// <summary>
     ///     Set its result to <see langword="true" /> if you want the download to proceed, otherwise, <see langword="false" />
     /// </summary>
-    public ReenterableAwaiter<bool> Signal { get; } = new(true, true);
+    public ReenterableAwaiter<bool> Signal { get; } = new ReenterableAwaiter<bool>(true, true);
 
     public void Set()
     {

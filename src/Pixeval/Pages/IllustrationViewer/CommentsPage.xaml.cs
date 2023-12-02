@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/CommentsPage.xaml.cs
+// Copyright (c) 2023 Pixeval/CommentsPage.xaml.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -25,14 +25,14 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Messaging;
-using CommunityToolkit.WinUI;
+using CommunityToolkit.WinUI.Collections;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.CoreApi.Model;
 using Pixeval.CoreApi.Net;
 using Pixeval.CoreApi.Net.Response;
 using Pixeval.Messages;
-using Pixeval.UserControls;
+using Pixeval.Controls;
 using Pixeval.Util;
 using Pixeval.Util.IO;
 using WinUI3Utilities;
@@ -41,7 +41,7 @@ namespace Pixeval.Pages.IllustrationViewer;
 
 public sealed partial class CommentsPage
 {
-    private string? _illustId;
+    private string _illustrationId = null!;
 
     public CommentsPage()
     {
@@ -51,18 +51,18 @@ public sealed partial class CommentsPage
     public override void OnPageActivated(NavigationEventArgs e)
     {
         // Dispose current page contents if the parent page (IllustrationViewerPage) is navigating
-        WeakReferenceMessenger.Default.TryRegister<CommentsPage, NavigatingFromIllustrationViewerMessage>(this, (recipient, _) =>
+        _ = WeakReferenceMessenger.Default.TryRegister<CommentsPage, NavigatingFromIllustrationViewerMessage>(this, (recipient, _) =>
         {
             recipient.CommentList.Dispose();
             WeakReferenceMessenger.Default.UnregisterAll(this);
         });
 
-        var (engine, illustId) = ((IAsyncEnumerable<Comment>, string))e.Parameter;
-        _illustId = illustId;
+        var (engine, illustrationId) = ((IAsyncEnumerable<Comment>, string))e.Parameter;
+        _illustrationId = illustrationId;
         if (CommentList.ItemsSource is not ICollection<CommentBlockViewModel>)
         {
             CommentList.ItemsSource = new IncrementalLoadingCollection<CommentsIncrementalSource, CommentBlockViewModel>(
-                new CommentsIncrementalSource(engine.Select(c => new CommentBlockViewModel(c, illustId))), 30);
+                new CommentsIncrementalSource(engine.Select(c => new CommentBlockViewModel(c, illustrationId))), 30);
         }
     }
 
@@ -75,7 +75,7 @@ public sealed partial class CommentsPage
     private async void ReplyBar_OnSendButtonTapped(object? sender, SendButtonTappedEventArgs e)
     {
         using var result = await App.AppViewModel.MakoClient.GetMakoHttpClient(MakoApiKind.AppApi).PostFormAsync(CommentBlockViewModel.AddCommentUrlSegment,
-            ("illust_id", _illustId!),
+            ("illust_id", _illustrationId),
             ("comment", e.ReplyContentRichEditBoxStringContent));
 
         await AddComment(result);
@@ -84,7 +84,7 @@ public sealed partial class CommentsPage
     private async void ReplyBar_OnStickerTapped(object? sender, StickerTappedEventArgs e)
     {
         using var result = await App.AppViewModel.MakoClient.GetMakoHttpClient(MakoApiKind.AppApi).PostFormAsync(CommentBlockViewModel.AddCommentUrlSegment,
-            ("illust_id", _illustId!),
+            ("illust_id", _illustrationId),
             ("stamp_id", e.StickerViewModel.StickerId.ToString()));
 
         await AddComment(result);
@@ -100,7 +100,7 @@ public sealed partial class CommentsPage
         if (postCommentResponse.IsSuccessStatusCode)
         {
             var response = await postCommentResponse.Content.ReadFromJsonAsync<PostCommentResponse>();
-            (CommentList.ItemsSource as ObservableCollection<CommentBlockViewModel>)?.Insert(0, new CommentBlockViewModel(response?.Comment!, _illustId!));
+            (CommentList.ItemsSource as ObservableCollection<CommentBlockViewModel>)?.Insert(0, new CommentBlockViewModel(response?.Comment!, _illustrationId));
         }
     }
 }

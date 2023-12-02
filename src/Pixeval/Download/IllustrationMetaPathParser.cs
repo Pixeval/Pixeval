@@ -1,8 +1,8 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/IllustrationMetaPathParser.cs
+// Copyright (c) 2023 Pixeval/IllustrationMetaPathParser.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
 
 using Pixeval.Download.MacroParser;
 using Pixeval.Utilities;
-using Pixeval.UserControls.IllustrationView;
+using Pixeval.Controls.IllustrationView;
 
 namespace Pixeval.Download;
 

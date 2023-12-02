@@ -1,8 +1,8 @@
-﻿#region Copyright (c) Pixeval/Pixeval.CoreApi
+#region Copyright (c) Pixeval/Pixeval.CoreApi
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
-// Copyright (c) 2021 Pixeval.CoreApi/AdaptedComputedFetchEngine.cs
+// Copyright (c) 2023 Pixeval.CoreApi/AdaptedComputedFetchEngine.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -21,7 +21,6 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using JetBrains.Annotations;
 using Pixeval.Utilities;
 
 namespace Pixeval.CoreApi.Engine.Implements;
@@ -32,21 +31,15 @@ namespace Pixeval.CoreApi.Engine.Implements;
 ///     only supposed to be used by caching systems
 /// </summary>
 /// <typeparam name="T">The type of the results of the <see cref="IFetchEngine{E}" /></typeparam>
-[PublicAPI]
-public class AdaptedComputedFetchEngine<T> : IFetchEngine<T>
+/// <remarks>
+///     Creates an <see cref="AdaptedComputedFetchEngine{T}" /> that delegates all of its
+///     property and methods to
+///     <param name="outer"></param>
+/// </remarks>
+/// <param name="outer">The <see cref="IEnumerable{T}" /> that is going to be delegated</param>
+public class AdaptedComputedFetchEngine<T>(IEnumerable<T> outer) : IFetchEngine<T>
 {
-    private readonly IEnumerable<T> _outer;
-
-    /// <summary>
-    ///     Creates an <see cref="AdaptedComputedFetchEngine{T}" /> that delegates all of its
-    ///     property and methods to
-    ///     <param name="outer"></param>
-    /// </summary>
-    /// <param name="outer">The <see cref="IEnumerable{T}" /> that is going to be delegated</param>
-    public AdaptedComputedFetchEngine(IEnumerable<T> outer)
-    {
-        _outer = outer;
-    }
+    private readonly IEnumerable<T> _outer = outer;
 
     public MakoClient MakoClient => throw new NotSupportedException();
 
@@ -57,7 +50,7 @@ public class AdaptedComputedFetchEngine<T> : IFetchEngine<T>
 
     public int RequestedPages { get; set; }
 
-    public IAsyncEnumerator<T> GetAsyncEnumerator(CancellationToken cancellationToken = new())
+    public IAsyncEnumerator<T> GetAsyncEnumerator(CancellationToken cancellationToken = new CancellationToken())
     {
         return new AdaptedAsyncEnumerator<T>(_outer.GetEnumerator(), cancellationToken);
     }

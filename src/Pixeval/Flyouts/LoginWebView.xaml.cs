@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/LoginWebView.xaml.cs
+// Copyright (c) 2023 Pixeval/LoginWebView.xaml.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -30,7 +30,8 @@ public sealed partial class LoginWebView
 {
     public LoginWebView() => InitializeComponent();
 
-    public readonly TaskCompletionSource<(string, string)> CookieCompletion = new();
+    public readonly TaskCompletionSource<(string, string)> CookieCompletion =
+        new();
 
     private async void LoginWebView_OnNavigationStarting(WebView2 sender, CoreWebView2NavigationStartingEventArgs args)
     {
@@ -44,6 +45,6 @@ public sealed partial class LoginWebView
 
     private async void LoginWebView_OnCoreWebView2Initialized(WebView2 sender, CoreWebView2InitializedEventArgs args)
     {
-        await LoginWebView2.CoreWebView2.CallDevToolsProtocolMethodAsync("Security.setIgnoreCertificateErrors", "{ \"ignore\": true }");
+        _ = await LoginWebView2.CoreWebView2.CallDevToolsProtocolMethodAsync("Security.setIgnoreCertificateErrors", "{ \"ignore\": true }");
     }
 }

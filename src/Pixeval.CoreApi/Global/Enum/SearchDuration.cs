@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
-// Copyright (c) 2021 Pixeval.CoreApi/SearchDuration.cs
+// Copyright (c) 2023 Pixeval.CoreApi/SearchDuration.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,12 +18,10 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using JetBrains.Annotations;
 using Pixeval.Utilities;
 
 namespace Pixeval.CoreApi.Global.Enum;
 
-[PublicAPI]
 public enum SearchDuration
 {
     Undecided,

@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/IllustrationResultFilterContentViewModel.cs
+// Copyright (c) 2023 Pixeval/IllustrationResultFilterContentViewModel.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@ using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Pixeval.Attributes;
 using Pixeval.Misc;
-using Pixeval.UserControls.TokenInput;
+using Pixeval.Controls.TokenInput;
 
 namespace Pixeval.Flyouts.IllustrationResultFilter;
 

@@ -1,8 +1,8 @@
-﻿#region Copyright (c) Pixeval/Pixeval.CoreApi
+#region Copyright (c) Pixeval/Pixeval.CoreApi
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
-// Copyright (c) 2021 Pixeval.CoreApi/MakoException.cs
+// Copyright (c) 2023 Pixeval.CoreApi/MakoException.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,19 +18,11 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System.Runtime.Serialization;
-using JetBrains.Annotations;
-
 namespace Pixeval.CoreApi.Global.Exception;
 
-[PublicAPI]
 public class MakoException : System.Exception
 {
     public MakoException()
-    {
-    }
-
-    protected MakoException(SerializationInfo info, StreamingContext context) : base(info, context)
     {
     }
 

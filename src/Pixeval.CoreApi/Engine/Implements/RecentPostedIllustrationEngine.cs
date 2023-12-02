@@ -1,8 +1,8 @@
-﻿#region Copyright (c) Pixeval/Pixeval.CoreApi
+#region Copyright (c) Pixeval/Pixeval.CoreApi
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
-// Copyright (c) 2021 Pixeval.CoreApi/RecentPostedIllustrationEngine.cs
+// Copyright (c) 2023 Pixeval.CoreApi/RecentPostedIllustrationEngine.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -33,7 +33,7 @@ public class RecentPostedIllustrationEngine(MakoClient makoClient, PrivacyPolicy
 {
     private readonly PrivacyPolicy _privacyPolicy = privacyPolicy;
 
-    public override IAsyncEnumerator<Illustration> GetAsyncEnumerator(CancellationToken cancellationToken = new())
+    public override IAsyncEnumerator<Illustration> GetAsyncEnumerator(CancellationToken cancellationToken = new CancellationToken())
     {
         return RecursivePixivAsyncEnumerators.Illustration<RecentPostedIllustrationEngine>
             .WithInitialUrl(this, MakoApiKind.AppApi, engine => "/v2/illust/follow"

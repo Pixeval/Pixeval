@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/UIHelper.cs
+// Copyright (c) 2023 Pixeval/UIHelper.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -26,15 +26,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.WinUI;
-using CommunityToolkit.WinUI.UI;
 using Microsoft.UI.Text;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Media.Imaging;
-using Pixeval.Attributes;
 using Pixeval.Misc;
 using Pixeval.Util.IO;
 using Pixeval.Util.Threading;
@@ -48,15 +45,18 @@ using Windows.Foundation;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.Storage.Streams;
+using Pixeval.Controls.MarkupExtensions;
+using Pixeval.Controls.MarkupExtensions.FontSymbolIcon;
 using WinUI3Utilities;
 using Brush = Microsoft.UI.Xaml.Media.Brush;
 using Color = Windows.UI.Color;
 using Image = SixLabors.ImageSharp.Image;
 using Point = Windows.Foundation.Point;
+using Size = SixLabors.ImageSharp.Size;
 
 namespace Pixeval.Util.UI;
 
-public static partial class UIHelper
+public static partial class UiHelper
 {
     /// <summary>
     /// With higher <paramref name="magnitude"/> you will get brighter color and vice-versa.
@@ -107,7 +107,7 @@ public static partial class UIHelper
     {
         using var image = await Image.LoadAsync<Rgb24>(stream);
         image.Mutate(x => x
-            .Resize(new ResizeOptions { Sampler = KnownResamplers.NearestNeighbor, Size = new SixLabors.ImageSharp.Size(100, 0) })
+            .Resize(new ResizeOptions { Sampler = KnownResamplers.NearestNeighbor, Size = new Size(100, 0) })
             .Quantize(new OctreeQuantizer(new QuantizerOptions { Dither = null, MaxColors = 1 })));
         var pixel = image[0, 0];
         if (disposeOfStream)
@@ -116,22 +116,6 @@ public static partial class UIHelper
         }
         return Color.FromArgb(0xFF, pixel.R, pixel.G, pixel.B);
     }
-
-    public static async Task LoadMoreItemsAsync(this AdvancedCollectionView acv, uint count, Action<LoadMoreItemsResult> callback)
-    {
-        var result = await acv.LoadMoreItemsAsync(count);
-        callback(result);
-    }
-
-    //public static T GetDataContext<T>(this FrameworkElement element)
-    //{
-    //    return (T) element.DataContext;
-    //}
-
-    //public static T GetDataContext<T>(this object element)
-    //{
-    //    return ((FrameworkElement) element).GetDataContext<T>(); // direct cast will throw exception if the type check fails, and that's exactly what we want
-    //}
 
     public static ImageSource GetImageSourceFromUriRelativeToAssetsImageFolder(string relativeToAssetsImageFolder)
     {
@@ -142,7 +126,7 @@ public static partial class UIHelper
     {
         var transform = element.TransformToVisual((UIElement)scrollViewer.Content);
         var position = transform.TransformPoint(new Point(0, 0));
-        scrollViewer.ChangeView(null, position.Y, null, false);
+        _ = scrollViewer.ChangeView(null, position.Y, null, false);
     }
 
     public static Storyboard CreateStoryboard(params Timeline[] animations)
@@ -154,37 +138,6 @@ public static partial class UIHelper
         }
 
         return sb;
-    }
-
-    public static DoubleAnimation CreateDoubleAnimation(this DependencyObject depObj,
-        string property,
-        Duration duration = default,
-        EasingFunctionBase? easingFunction = null,
-        double by = default,
-        double from = default,
-        double to = default)
-    {
-        var animation = new DoubleAnimation
-        {
-            Duration = duration,
-            EasingFunction = easingFunction,
-            By = by,
-            From = from,
-            To = to
-        };
-        Storyboard.SetTarget(animation, depObj);
-        Storyboard.SetTargetProperty(animation, property);
-        return animation;
-    }
-
-    public static Storyboard GetStoryboard(this Timeline timeline)
-    {
-        return CreateStoryboard(timeline);
-    }
-
-    public static void BeginStoryboard(this Timeline timeline)
-    {
-        CreateStoryboard(timeline).Begin();
     }
 
     public static void ClipboardSetText(string text)
@@ -208,7 +161,7 @@ public static partial class UIHelper
     {
         if (sender.SelectedItem is NavigationViewItem { Tag: NavigationViewTag tag })
         {
-            frame.Navigate(tag.NavigateTo, tag.Parameter, transitionInfo ?? new SuppressNavigationTransitionInfo());
+            _ = frame.Navigate(tag.NavigateTo, tag.Parameter, transitionInfo ?? new SuppressNavigationTransitionInfo());
         }
     }
 
@@ -226,7 +179,7 @@ public static partial class UIHelper
     {
         var icon = new FontIcon
         {
-            Glyph = symbol.GetMetadataOnEnumMember()
+            Glyph = symbol.GetGlyph().ToString()
         };
         if (fontSize is not null)
         {
@@ -240,7 +193,7 @@ public static partial class UIHelper
     {
         var icon = new FontIconSource
         {
-            Glyph = symbol.GetMetadataOnEnumMember(),
+            Glyph = symbol.GetGlyph().ToString()
         };
         if (fontSize is not null)
         {
@@ -300,7 +253,7 @@ public static partial class UIHelper
         var qrCodeData = qrCodeGen.CreateQrCode(urlPayload, QRCodeGenerator.ECCLevel.Q);
         var qrCode = new BitmapByteQRCode(qrCodeData);
         var bytes = qrCode.GetGraphic(20);
-        return await (await IOHelper.GetRandomAccessStreamFromByteArrayAsync(bytes)).GetSoftwareBitmapSourceAsync(true);
+        return await (await IoHelper.GetRandomAccessStreamFromByteArrayAsync(bytes)).GetSoftwareBitmapSourceAsync(true);
     }
 
     public static async Task<SoftwareBitmapSource> GenerateQrCodeAsync(string content)
@@ -309,7 +262,7 @@ public static partial class UIHelper
         var qrCodeData = qrCodeGen.CreateQrCode(content, QRCodeGenerator.ECCLevel.Q);
         var qrCode = new BitmapByteQRCode(qrCodeData);
         var bytes = qrCode.GetGraphic(20);
-        return await (await IOHelper.GetRandomAccessStreamFromByteArrayAsync(bytes)).GetSoftwareBitmapSourceAsync(true);
+        return await (await IoHelper.GetRandomAccessStreamFromByteArrayAsync(bytes)).GetSoftwareBitmapSourceAsync(true);
     }
 
     public static IAsyncOperation<StorageFolder?> OpenFolderPickerAsync(PickerLocationId suggestedStartLocation)
@@ -357,22 +310,5 @@ public static partial class UIHelper
         var trimmed = !hex.StartsWith('#') ? $"#{hex}" : hex;
         var color = ColorTranslator.FromHtml(trimmed);
         return Color.FromArgb(color.A, color.R, color.G, color.B);
-    }
-
-    /// <summary>
-    /// Get the scale factor of the original image when it is contained inside an <see cref="Microsoft.UI.Xaml.Controls.Image"/> control, and the <see cref="Microsoft.UI.Xaml.Controls.Image.Stretch"/>
-    /// property is set to <see cref="Stretch.UniformToFill"/> or <see cref="Stretch.Uniform"/>
-    /// </summary>
-    public static double GetImageScaledFactor(double originalImageWidth, double originalImageHeight, double imageWidth, double imageHeight, double imageZoomFactor)
-    {
-        var illustResolution = originalImageWidth / originalImageHeight;
-        var imageResolution = imageWidth / imageHeight;
-
-        var displayImageResolution = (imageResolution - illustResolution) switch
-        {
-            > 0 => imageHeight * imageZoomFactor / originalImageHeight, // imageResolution - illustResolution > 0: the height is filled
-            _ => imageWidth * imageZoomFactor / originalImageWidth, // imageResolution - illustResolution < 0: the width is filled; or = 0, then the choose is arbitrary
-        };
-        return displayImageResolution;
     }
 }

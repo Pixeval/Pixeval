@@ -1,8 +1,8 @@
-﻿#region Copyright (c) Pixeval/Pixeval.CoreApi
+#region Copyright (c) Pixeval/Pixeval.CoreApi
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
-// Copyright (c) 2021 Pixeval.CoreApi/RankingDateOutOfRangeException.cs
+// Copyright (c) 2023 Pixeval.CoreApi/RankingDateOutOfRangeException.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,22 +18,14 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System.Runtime.Serialization;
-using JetBrains.Annotations;
-
 namespace Pixeval.CoreApi.Global.Exception;
 
 /// <summary>
 ///     搜索榜单时设定的日期大于等于当前日期-2天
 /// </summary>
-[PublicAPI]
 public class RankingDateOutOfRangeException : MakoException
 {
     public RankingDateOutOfRangeException()
-    {
-    }
-
-    protected RankingDateOutOfRangeException(SerializationInfo info, StreamingContext context) : base(info, context)
     {
     }
 

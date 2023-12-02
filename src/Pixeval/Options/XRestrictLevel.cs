@@ -1,8 +1,8 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/XRestrictLevel.cs
+// Copyright (c) 2023 Pixeval/XRestrictLevel.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,19 +18,11 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using Pixeval.Attributes;
-
-
 namespace Pixeval.Options;
 
 public enum XRestrictLevel
 {
-    [Metadata("")]
     Ordinary = 0,
-
-    [Metadata("R-18")]
     R18 = 1,
-
-    [Metadata("R-18G")]
     R18G = 2
 }

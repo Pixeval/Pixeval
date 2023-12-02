@@ -52,6 +52,17 @@
         <Setter Property="Margin" Value="0" />
         <Setter Property="Padding" Value="0" />
     </Style>
+
+    <Style x:Key="ListViewItemNoStyle" TargetType="ListViewItem">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ListViewItem">
+                    <ContentPresenter Content="{TemplateBinding Content}" />
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <numberFormatting:DecimalFormatter x:Key="IntegerRoundedDecimalFormatter" FractionDigits="0">
         <numberFormatting:DecimalFormatter.NumberRounder>
             <numberFormatting:IncrementNumberRounder Increment="1" RoundingAlgorithm="RoundHalfUp" />

@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/IOHelper.cs
+// Copyright (c) 2023 Pixeval/IOHelper.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -32,7 +32,6 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
-using JetBrains.Annotations;
 using Pixeval.Utilities;
 using Windows.Foundation;
 using Windows.Security.Cryptography;
@@ -41,7 +40,7 @@ using Windows.Storage.Streams;
 
 namespace Pixeval.Util.IO;
 
-public static partial class IOHelper
+public static partial class IoHelper
 {
     public static async Task<string> Sha1Async(this IRandomAccessStream randomAccessStream)
     {
@@ -72,7 +71,7 @@ public static partial class IOHelper
     public static void CreateParentDirectories(string fullPath)
     {
         var directory = Path.GetDirectoryName(fullPath);
-        Directory.CreateDirectory(directory!);
+        _ = Directory.CreateDirectory(directory!);
     }
 
     public static async Task ClearDirectoryAsync(this StorageFolder dir)
@@ -85,8 +84,8 @@ public static partial class IOHelper
         var stream = new InMemoryRandomAccessStream();
         using var dataWriter = new DataWriter(stream.GetOutputStreamAt(0));
         dataWriter.WriteBytes(byteArray);
-        await dataWriter.StoreAsync();
-        dataWriter.DetachStream();
+        _ = await dataWriter.StoreAsync();
+        _ = dataWriter.DetachStream();
         return stream;
     }
 
@@ -119,7 +118,7 @@ public static partial class IOHelper
 
     public static async Task WriteBytesAsync(this StorageStreamTransaction storageStreamTransaction, byte[] bytes)
     {
-        await storageStreamTransaction.Stream.WriteAsync(CryptographicBuffer.CreateFromByteArray(bytes));
+        _ = await storageStreamTransaction.Stream.WriteAsync(CryptographicBuffer.CreateFromByteArray(bytes));
     }
 
     public static IAsyncAction WriteStringAsync(this StorageFile storageFile, string str)
@@ -147,7 +146,6 @@ public static partial class IOHelper
         return (await storageFile.ReadBytesAsync())?.GetString(encoding);
     }
 
-    [ContractAnnotation("notnull => notnull")]
     public static async Task<byte[]?> ReadBytesAsync(this StorageFile? file)
     {
         if (file == null)
@@ -157,7 +155,7 @@ public static partial class IOHelper
 
         using var stream = await file.OpenReadAsync();
         using var reader = new DataReader(stream.GetInputStreamAt(0));
-        await reader.LoadAsync((uint)stream.Size);
+        _ = await reader.LoadAsync((uint)stream.Size);
         var bytes = new byte[stream.Size];
         reader.ReadBytes(bytes);
         return bytes;
@@ -191,7 +189,7 @@ public static partial class IOHelper
             await using var stream = entry.Open();
             var ms = new MemoryStream();
             await stream.CopyToAsync(ms);
-            ms.Seek(0, SeekOrigin.Begin);
+            _ = ms.Seek(0, SeekOrigin.Begin);
             return (entry.Name, (Stream)ms);
         }));
     }
@@ -200,9 +198,9 @@ public static partial class IOHelper
     {
         stream.Seek(0);
         using var dataReader = new DataReader(stream);
-        await dataReader.LoadAsync((uint)stream.Size);
+        _ = await dataReader.LoadAsync((uint)stream.Size);
         await FileIO.WriteBufferAsync(file, dataReader.ReadBuffer((uint)stream.Size));
-        dataReader.DetachStream();
+        _ = dataReader.DetachStream();
     }
 
     public static async Task DeleteAsync(string path)

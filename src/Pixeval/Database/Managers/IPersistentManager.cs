@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/IPersistentManager.cs
+// Copyright (c) 2023 Pixeval/IPersistentManager.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -44,7 +44,6 @@ public interface IPersistentManager<TEntry, out TModel> where TEntry : new()
     ILiteCollection<TEntry> Collection { get; init; }
 
     int MaximumRecords { get; set; }
-
 
     int Count { get; }
 

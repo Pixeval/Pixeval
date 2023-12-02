@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/NavigatingBackToMainPageMessage.cs
+// Copyright (c) 2023 Pixeval/NavigatingBackToMainPageMessage.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
 
 using Pixeval.Pages;
 using Pixeval.Pages.IllustrationViewer;
-using Pixeval.UserControls.IllustrationView;
+using Pixeval.Controls.IllustrationView;
 
 namespace Pixeval.Messages;
 

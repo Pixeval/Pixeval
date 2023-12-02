@@ -1,8 +1,8 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+﻿#region Copyright (c) Pixeval/Pixeval.Utilities
 // GPL v3 License
 // 
-// Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/ReenterableAwaiter.cs
+// Pixeval/Pixeval.Utilities
+// Copyright (c) 2023 Pixeval.Utilities/ReenterableAwaiter.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -93,7 +93,7 @@ public class ReenterableAwaiter(bool initialSignal) : INotifyCompletion
         }
         else
         {
-            Task.Factory.StartNew(_continuation, CancellationToken.None, TaskCreationOptions.None, TaskScheduler.Default);
+            _ = Task.Factory.StartNew(_continuation, CancellationToken.None, TaskCreationOptions.None, TaskScheduler.Default);
         }
     }
 

@@ -1,8 +1,8 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/IOHelper.Mako.cs
+// Copyright (c) 2023 Pixeval/IOHelper.Mako.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -20,23 +20,24 @@
 
 using System.Threading.Tasks;
 using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.CoreApi;
 using Pixeval.CoreApi.Net;
 using Pixeval.Utilities;
 
 namespace Pixeval.Util.IO;
 
-public static partial class IOHelper
+public static partial class IoHelper
 {
-    public static async Task<Result<ImageSource>> DownloadSoftwareBitmapSourceResultAsync(this MakoClient client, string url)
+    public static async Task<Result<SoftwareBitmapSource>> DownloadSoftwareBitmapSourceResultAsync(this MakoClient client, string url)
     {
         return await (await client.GetMakoHttpClient(MakoApiKind.ImageApi).DownloadAsIRandomAccessStreamAsync(url))
-            .BindAsync(async m => (ImageSource)await m.GetSoftwareBitmapSourceAsync(true));
+            .RewrapAsync(async m => await m.GetSoftwareBitmapSourceAsync(true));
     }
 
     public static async Task<Result<ImageSource>> DownloadBitmapImageResultAsync(this MakoClient client, string url, int? desiredWidth)
     {
         return await (await client.GetMakoHttpClient(MakoApiKind.ImageApi).DownloadAsIRandomAccessStreamAsync(url))
-            .BindAsync(async m => (ImageSource)await m.GetBitmapImageAsync(true, desiredWidth));
+            .RewrapAsync(async m => (ImageSource)await m.GetBitmapImageAsync(true, desiredWidth));
     }
 }

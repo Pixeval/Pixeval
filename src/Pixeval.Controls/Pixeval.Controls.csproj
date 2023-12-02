@@ -1,0 +1,81 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net8.0-windows10.0.22621.0</TargetFramework>
+        <TargetPlatformMinVersion>10.0.19041.0</TargetPlatformMinVersion>
+        <RootNamespace>Pixeval.Controls</RootNamespace>
+        <Platforms>x86;x64;arm64</Platforms>
+        <RuntimeIdentifiers>win-x86;win-x64;win-arm64</RuntimeIdentifiers>
+        <UseWinUI>true</UseWinUI>
+        <Nullable>Enable</Nullable>
+        <DefaultLanguage>zh-Hans</DefaultLanguage>
+        <LangVersion>preview</LangVersion>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <DefaultLanguage>zh-Hans</DefaultLanguage>
+    </PropertyGroup>
+    <ItemGroup>
+        <None Remove="AdvancedItemsView\AdvancedItemsView.xaml" />
+        <None Remove="CardControl\CardControl.xaml" />
+        <None Remove="IconButton\IconButton.xaml" />
+        <None Remove="NotifyOnLoadedCalendarDatePicker\NotifyOnLoadedCalendarDatePicker.xaml" />
+        <None Remove="NotifyOnLoadedComboBox\NotifyOnLoadedComboBox.xaml" />
+        <None Remove="PersonView\PersonView.xaml" />
+        <None Remove="PixevalBadge\PixevalBadge.xaml" />
+        <None Remove="SettingRadioButtons\SettingRadioButtons.xaml" />
+        <None Remove="ZoomableImage.xaml" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="CommunityToolkit.WinUI.Triggers" Version="8.0.230907" />
+        <PackageReference Include="CommunityToolkit.WinUI.Collections" Version="8.0.230907" />
+        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
+        <PackageReference Include="CommunityToolkit.WinUI.Controls.Primitives" Version="8.0.230907" />
+        <PackageReference Include="CommunityToolkit.WinUI.Extensions" Version="8.0.230907" />
+        <PackageReference Include="WinUI3Utilities" Version="1.1.4.3" />
+        <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.2428" />
+        <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.4.231115000" />
+        <PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.0.9" />
+    </ItemGroup>
+
+    <Target Name="InjectAdditionalFiles" BeforeTargets="GenerateMSBuildEditorConfigFileShouldRun">
+        <ItemGroup>
+            <AdditionalFiles Include="@(PRIResource)" SourceItemGroup="PRIResource" />
+        </ItemGroup>
+    </Target>
+    <ItemGroup>
+        <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="SourceItemGroup" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Folder Include="Strings\zh-Hans\" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Page Update="CardControl\CardControl.xaml">
+            <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+        </Page>
+        <Page Update="IconButton\IconButton.xaml">
+            <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+        </Page>
+        <Page Update="NotifyOnLoadedCalendarDatePicker\NotifyOnLoadedCalendarDatePicker.xaml">
+            <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+        </Page>
+        <Page Update="NotifyOnLoadedComboBox\NotifyOnLoadedComboBox.xaml">
+            <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+        </Page>
+        <Page Update="PersonView\PersonView.xaml">
+            <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+        </Page>
+        <Page Update="SettingRadioButtons\SettingRadioButtons.xaml">
+            <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+        </Page>
+        <Page Update="PixevalBadge\PixevalBadge.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Page Update="AdvancedItemsView\AdvancedItemsView.xaml">
+        <Generator>MSBuild:Compile</Generator>
+      </Page>
+    </ItemGroup>
+</Project>

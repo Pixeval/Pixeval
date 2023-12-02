@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/PixivReplyStickerListPage.xaml.cs
+// Copyright (c) 2023 Pixeval/PixivReplyStickerListPage.xaml.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -26,7 +26,7 @@ using System.Threading.Tasks;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.CoreApi.Net;
-using Pixeval.UserControls;
+using Pixeval.Controls;
 using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Utilities;
@@ -37,7 +37,7 @@ namespace Pixeval.Pages.IllustrationViewer;
 
 public sealed partial class PixivReplyStickerListPage
 {
-    public static readonly ObservableCollection<PixivReplyStickerViewModel> Stickers = new();
+    public static readonly ObservableCollection<PixivReplyStickerViewModel> Stickers = [];
 
     private EventHandler<StickerTappedEventArgs>? _replyBarStickerTappedEventHandler;
 

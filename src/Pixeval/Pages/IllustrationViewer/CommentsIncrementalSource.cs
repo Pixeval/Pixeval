@@ -1,8 +1,8 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/CommentsIncrementalSource.cs
+// Copyright (c) 2023 Pixeval/CommentsIncrementalSource.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -22,13 +22,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using CommunityToolkit.Common.Collections;
+using CommunityToolkit.WinUI.Collections;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
 public class CommentsIncrementalSource(IAsyncEnumerable<CommentBlockViewModel?> source) : IIncrementalSource<CommentBlockViewModel>
 {
-    public async Task<IEnumerable<CommentBlockViewModel>> GetPagedItemsAsync(int pageIndex, int pageSize, CancellationToken cancellationToken = new())
+    public async Task<IEnumerable<CommentBlockViewModel>> GetPagedItemsAsync(int pageIndex, int pageSize, CancellationToken cancellationToken = new CancellationToken())
     {
         return (await source.Skip(pageIndex * pageSize).Take(pageSize).ToArrayAsync(cancellationToken))!;
     }

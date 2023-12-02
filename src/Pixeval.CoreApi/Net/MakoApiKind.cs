@@ -1,8 +1,8 @@
-﻿#region Copyright (c) Pixeval/Pixeval.CoreApi
+#region Copyright (c) Pixeval/Pixeval.CoreApi
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
-// Copyright (c) 2021 Pixeval.CoreApi/MakoApiKind.cs
+// Copyright (c) 2023 Pixeval.CoreApi/MakoApiKind.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,14 +18,11 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using JetBrains.Annotations;
-
 namespace Pixeval.CoreApi.Net;
 
 /// <summary>
 ///     The several kinds of APIs that Mako will use
 /// </summary>
-[PublicAPI]
 public enum MakoApiKind
 {
     AppApi,

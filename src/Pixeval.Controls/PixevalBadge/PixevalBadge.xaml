@@ -1,0 +1,57 @@
+<UserControl
+    x:Class="Pixeval.Controls.PixevalBadge"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:Pixeval.Controls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:text="using:Windows.UI.Text"
+    xmlns:winUi="using:CommunityToolkit.WinUI"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <x:Boolean x:Key="True">True</x:Boolean>
+        <x:Boolean x:Key="False">False</x:Boolean>
+        <x:Int32 x:Key="NormalFontSize">9</x:Int32>
+        <x:Int32 x:Key="SmallFontSize">7</x:Int32>
+        <Thickness x:Key="NormalFontMargin">3</Thickness>
+        <Thickness x:Key="SmallFontMargin">2</Thickness>
+        <text:FontWeight x:Key="NormalFontWeight">Bold</text:FontWeight>
+        <text:FontWeight x:Key="SmallFontWeight">Normal</text:FontWeight>
+    </UserControl.Resources>
+    <Grid
+        VerticalAlignment="Center"
+        Background="{x:Bind BadgeColor, Mode=OneWay}"
+        CornerRadius="{ThemeResource ControlCornerRadius}">
+        <TextBlock
+            x:Name="BadgeTextBlock"
+            Margin="2"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            FontSize="7"
+            Text="{x:Bind Text, Mode=OneWay}" />
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="CommonStates">
+                <VisualState x:Name="Normal">
+                    <VisualState.StateTriggers>
+                        <winUi:IsEqualStateTrigger Value="{x:Bind UseSmall, Mode=OneWay}" To="{StaticResource False}" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="BadgeTextBlock.FontSize" Value="{StaticResource NormalFontSize}" />
+                        <Setter Target="BadgeTextBlock.Margin" Value="{StaticResource NormalFontMargin}" />
+                        <Setter Target="BadgeTextBlock.FontWeight" Value="{StaticResource NormalFontWeight}" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Small">
+                    <VisualState.StateTriggers>
+                        <winUi:IsEqualStateTrigger Value="{x:Bind UseSmall, Mode=OneWay}" To="{StaticResource True}" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="BadgeTextBlock.FontSize" Value="{StaticResource SmallFontSize}" />
+                        <Setter Target="BadgeTextBlock.Margin" Value="{StaticResource SmallFontMargin}" />
+                        <Setter Target="BadgeTextBlock.FontWeight" Value="{StaticResource SmallFontWeight}" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+    </Grid>
+</UserControl>

@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/IllustrationInfoPage.xaml.cs
+// Copyright (c) 2023 Pixeval/IllustrationInfoPage.xaml.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,12 +18,9 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Messaging;
-using CommunityToolkit.WinUI.UI.Controls;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
@@ -33,8 +30,6 @@ using Pixeval.CoreApi.Model;
 using Pixeval.Messages;
 using Pixeval.Utilities;
 using ReverseMarkdown;
-using Windows.System;
-using Pixeval.Util.Threading;
 using WinUI3Utilities;
 
 namespace Pixeval.Pages.IllustrationViewer;
@@ -54,21 +49,21 @@ public sealed partial class IllustrationInfoPage
         SetIllustrationCaptionText();
     }
 
-    private void IllustrationTagButton_OnClick(object sender, RoutedEventArgs e)
+    private void IllustrationTagButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        WeakReferenceMessenger.Default.Send(new IllustrationTagClickedMessage((string)((Button)sender).Content));
+        _ = WeakReferenceMessenger.Default.Send(new IllustrationTagClickedMessage((string)((Button)sender).Content));
     }
 
-    private async void IllustrationCaptionMarkdownTextBlock_OnLinkClicked(object? sender, LinkClickedEventArgs e)
-    {
-        await Launcher.LaunchUriAsync(new Uri(e.Link));
-    }
+    //private async void IllustrationCaptionMarkdownTextBlock_OnLinkClicked(object? sender, LinkClickedEventArgs e)
+    //{
+    //    await Launcher.LaunchUriAsync(new Uri(e.Link));
+    //}
 
     private void IllustratorPersonPicture_OnTapped(object sender, TappedRoutedEventArgs e)
     {
         if (_viewModel.Illustrator is { } userInfo)
         {
-            ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", (UIElement)sender);
+            _ = ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", (UIElement)sender);
             // todo IllustratorPage use Navigate
             // CurrentContext.Window.Content.To<Frame>().Navigate(typeof(IllustratorPage), Tuple.Create((UIElement)sender, new IllustratorViewModel(userInfo)), new SlideNavigationTransitionInfo
             // {
@@ -118,8 +113,8 @@ public sealed partial class IllustrationInfoPage
     private void SetIllustrationCaptionText()
     {
         var caption = _viewModel.CurrentIllustration.Illustrate.Caption;
-        Task.Run(() => string.IsNullOrEmpty(caption) ? IllustrationInfoPageResources.IllustrationCaptionEmpty : _markdownConverter.Convert(caption))
-            .ContinueWith(task => IllustrationCaptionMarkdownTextBlock.Text = task.Result, TaskScheduler.FromCurrentSynchronizationContext()).Discard();
+        //TODO Task.Run(() => string.IsNullOrEmpty(caption) ? IllustrationInfoPageResources.IllustrationCaptionEmpty : _markdownConverter.Convert(caption))
+        //    .ContinueWith(task => IllustrationCaptionMarkdownTextBlock.Text = task.Result, TaskScheduler.FromCurrentSynchronizationContext()).Discard();
     }
 
     #endregion

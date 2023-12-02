@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/IntrinsicIllustrationDownloadTask.cs
+// Copyright (c) 2023 Pixeval/IntrinsicIllustrationDownloadTask.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -21,26 +21,20 @@
 using Pixeval.Database;
 using Pixeval.Util.IO;
 using Windows.Storage.Streams;
-using Pixeval.UserControls.IllustrationView;
+using Pixeval.Controls.IllustrationView;
 
 namespace Pixeval.Download;
 
-public class IntrinsicIllustrationDownloadTask : IllustrationDownloadTask, IIntrinsicDownloadTask
+/// <summary>
+///     The disposal of <paramref name="imageStream" /> is not handled
+/// </summary>
+public class IntrinsicIllustrationDownloadTask(DownloadHistoryEntry entry, IllustrationViewModel illustrationViewModel, IRandomAccessStream imageStream) : IllustrationDownloadTask(entry, illustrationViewModel), IIntrinsicDownloadTask
 {
-    /// <summary>
-    ///     The disposal of <paramref name="imageStream" /> is not handled
-    /// </summary>
-    public IntrinsicIllustrationDownloadTask(DownloadHistoryEntry entry, IllustrationViewModel illustrationViewModel, IRandomAccessStream imageStream)
-        : base(entry, illustrationViewModel)
-    {
-        Stream = imageStream;
-    }
-
-    public IRandomAccessStream Stream { get; }
+    public IRandomAccessStream Stream { get; } = imageStream;
 
     public override async void DownloadStarting(DownloadStartingEventArgs args)
     {
         args.GetDeferral().Complete(false);
-        await IOHelper.CreateAndWriteToFileAsync(Stream, Destination);
+        await IoHelper.CreateAndWriteToFileAsync(Stream, Destination);
     }
 }

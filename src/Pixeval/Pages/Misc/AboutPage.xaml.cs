@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/AboutPage.xaml.cs
+// Copyright (c) 2023 Pixeval/AboutPage.xaml.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -39,14 +39,16 @@ public sealed partial class AboutPage
         InitializeComponent();
     }
 
+    private string Test => "/AboutPage/QRCoderIntroductoryTextBlock";
+
     private async void AboutPage_OnLoaded(object sender, RoutedEventArgs e)
     {
         var licenseText = Encoding.UTF8.GetString(await AppContext.GetAssetBytesAsync("GPLv3.md"));
-        OpenSourceLicenseMarkdownTextBlock.Text = licenseText;
+        LicenseTextBlock.Text = licenseText;
     }
 
     private async void LaunchUri(object sender, TappedRoutedEventArgs e)
     {
-        await Launcher.LaunchUriAsync(new Uri(sender.GetTag<string>()));
+        _ = await Launcher.LaunchUriAsync(new Uri(sender.GetTag<string>()));
     }
 }

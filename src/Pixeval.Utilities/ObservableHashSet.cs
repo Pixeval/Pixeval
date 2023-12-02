@@ -1,8 +1,8 @@
-﻿#region Copyright (c) Pixeval/Pixeval.Utilities
+#region Copyright (c) Pixeval/Pixeval.Utilities
 // GPL v3 License
 // 
 // Pixeval/Pixeval.Utilities
-// Copyright (c) 2021 Pixeval.Utilities/ObservableHashSet.cs
+// Copyright (c) 2023 Pixeval.Utilities/ObservableHashSet.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -117,7 +117,7 @@ public class ObservableHashSet<T>
 
     void ICollection<T>.Add(T item)
     {
-        Add(item);
+        _ = Add(item);
     }
 
     /// <summary>
@@ -183,7 +183,7 @@ public class ObservableHashSet<T>
 
         OnCountPropertyChanging();
 
-        _set.Remove(item);
+        _ = _set.Remove(item);
 
         OnCollectionChanged(NotifyCollectionChangedAction.Remove, item);
 
@@ -233,7 +233,7 @@ public class ObservableHashSet<T>
 
         OnCountPropertyChanging();
 
-        _set.Add(item);
+        _ = _set.Add(item);
 
         OnCollectionChanged(NotifyCollectionChangedAction.Add, item);
 
@@ -555,5 +555,5 @@ internal static class ObservableHashSetSingletons
     public static readonly PropertyChangedEventArgs CountPropertyChanged = new("Count");
     public static readonly PropertyChangingEventArgs CountPropertyChanging = new("Count");
 
-    public static readonly object[] NoItems = Array.Empty<object>();
+    public static readonly object[] NoItems = [];
 }

@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/SettingsPageViewModel.cs
+// Copyright (c) 2023 Pixeval/SettingsPageViewModel.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -33,11 +33,11 @@ using Pixeval.Database.Managers;
 using Pixeval.Download;
 using Pixeval.Download.MacroParser;
 using Pixeval.Misc;
-using Pixeval.UserControls.Setting.UI;
-using Pixeval.UserControls.TokenInput;
+using Pixeval.Controls.TokenInput;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
-using Pixeval.UserControls.IllustrationView;
+using Pixeval.Controls.IllustrationView;
+using Pixeval.SettingsModels;
 
 namespace Pixeval.Pages.Misc;
 

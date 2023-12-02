@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
-// Copyright (c) 2021 Pixeval.CoreApi/EngineHandle.cs
+// Copyright (c) 2023 Pixeval.CoreApi/EngineHandle.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -19,11 +19,9 @@
 #endregion
 
 using System;
-using JetBrains.Annotations;
 
 namespace Pixeval.CoreApi.Engine;
 
-[PublicAPI]
 #pragma warning disable 660,661 // Object.Equals() and Object.GetHashCode() are not overwritten
 public class EngineHandle : ICancellable, INotifyCompletion, ICompletionCallback<EngineHandle>
 #pragma warning restore 660,661

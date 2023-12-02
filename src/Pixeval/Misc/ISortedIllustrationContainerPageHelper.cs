@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/ISortedIllustrationContainerPageHelper.cs
+// Copyright (c) 2023 Pixeval/ISortedIllustrationContainerPageHelper.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using Pixeval.UserControls;
+using Pixeval.Controls;
 
 namespace Pixeval.Misc;
 
@@ -51,7 +51,6 @@ public interface ISortedIllustrationContainerPageHelper
                 default:
                     // reset the view so that it can resort its item to the initial order
                     vm.ClearSortDescription();
-                    vm.DataProvider.View.Refresh();
                     ViewModelProvider.ScrollToTop();
                     break;
             }

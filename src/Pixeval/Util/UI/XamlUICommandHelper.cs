@@ -21,14 +21,15 @@
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Windows.System;
+using Pixeval.Controls.MarkupExtensions;
 
 namespace Pixeval.Util.UI;
 
-public static class XamlUICommandHelper
+public static class XamlUiCommandHelper
 {
     public static XamlUICommand GetCommand(this string label, FontIconSymbols icon)
     {
-        return new()
+        return new XamlUICommand
         {
             Label = label,
             Description = label,
@@ -38,7 +39,7 @@ public static class XamlUICommandHelper
 
     public static XamlUICommand GetCommand(this string label, FontIconSymbols icon, VirtualKey key)
     {
-        return new()
+        return new XamlUICommand
         {
             Label = label,
             IconSource = icon.GetFontIconSource(),
@@ -48,7 +49,7 @@ public static class XamlUICommandHelper
 
     public static XamlUICommand GetCommand(this string label, FontIconSymbols icon, VirtualKeyModifiers modifiers, VirtualKey key)
     {
-        return new()
+        return new XamlUICommand
         {
             Label = label,
             IconSource = icon.GetFontIconSource(),
@@ -56,9 +57,29 @@ public static class XamlUICommandHelper
         };
     }
 
+    public static XamlUICommand GetCommand(this string label, IconSource icon)
+    {
+        return new XamlUICommand
+        {
+            Label = label,
+            Description = label,
+            IconSource = icon
+        };
+    }
+
+    public static XamlUICommand GetCommand(this string label, IconSource icon, VirtualKey key)
+    {
+        return new XamlUICommand
+        {
+            Label = label,
+            IconSource = icon,
+            KeyboardAccelerators = { new KeyboardAccelerator { Key = key } }
+        };
+    }
+
     public static XamlUICommand GetCommand(this string label, IconSource icon, VirtualKeyModifiers modifiers, VirtualKey key)
     {
-        return new()
+        return new XamlUICommand
         {
             Label = label,
             IconSource = icon,

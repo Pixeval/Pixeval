@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/TokenInputTextBox.cs
+// Copyright (c) 2023 Pixeval/TokenInputTextBox.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@
 using System;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
-using Pixeval.UserControls.TokenInput;
+using Pixeval.Controls.TokenInput;
 using Windows.System;
 using WinUI3Utilities.Attributes;
 
@@ -40,9 +40,7 @@ public partial class TokenInputTextBox : Control
     private const string PartTokenTextBox = "TokenTextBox";
     private const string PartSubmitButton = "SubmitButton";
 
-    private IconButton.IconButton? _submitButton;
-
-    private EventHandler<Token>? _tokenSubmitted;
+    private IconButton? _submitButton;
 
     private TextBox? _tokenTextBox;
 
@@ -51,11 +49,7 @@ public partial class TokenInputTextBox : Control
         DefaultStyleKey = typeof(TokenInputTextBox);
     }
 
-    public event EventHandler<Token> TokenSubmitted
-    {
-        add => _tokenSubmitted += value;
-        remove => _tokenSubmitted -= value;
-    }
+    public event EventHandler<Token>? TokenSubmitted;
 
     protected override void OnApplyTemplate()
     {
@@ -74,7 +68,7 @@ public partial class TokenInputTextBox : Control
             _submitButton.Tapped -= SubmitButtonOnTapped;
         }
 
-        if ((_submitButton = GetTemplateChild(PartSubmitButton) as IconButton.IconButton) is not null)
+        if ((_submitButton = GetTemplateChild(PartSubmitButton) as IconButton) is not null)
         {
             _submitButton.Tapped += SubmitButtonOnTapped;
         }
@@ -100,7 +94,7 @@ public partial class TokenInputTextBox : Control
     {
         if (SubmitEnable && _tokenTextBox is { Text.Length: > 0 })
         {
-            _tokenSubmitted?.Invoke(this, (Token)Token.Clone());
+            TokenSubmitted?.Invoke(this, (Token)Token.Clone());
             _tokenTextBox.Text = string.Empty;
         }
     }

@@ -1,8 +1,8 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/DownloadHistoryEntry.cs
+// Copyright (c) 2023 Pixeval/DownloadHistoryEntry.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -29,21 +29,17 @@ public partial class DownloadHistoryEntry : ObservableObject
     [ObservableProperty]
     private string? _errorCause;
 
-
     [ObservableProperty]
     private DownloadState _state;
 
-    public DownloadHistoryEntry(DownloadState state, string? errorCause, string? destination, DownloadItemType type, string? id, string? title, string? description, string? url, string? thumbnail)
+    public DownloadHistoryEntry(DownloadState state, string? errorCause, string? destination, DownloadItemType type, string? id, string? url)
     {
         _state = state;
         _errorCause = errorCause;
         Destination = destination;
         Type = type;
         Id = id;
-        Title = title;
-        Description = description;
         Url = url;
-        Thumbnail = thumbnail;
     }
 
     // ReSharper disable once UnusedMember.Global
@@ -60,11 +56,5 @@ public partial class DownloadHistoryEntry : ObservableObject
 
     public string? Id { get; set; }
 
-    public string? Title { get; set; }
-
-    public string? Description { get; set; }
-
     public string? Url { get; set; }
-
-    public string? Thumbnail { get; set; }
 }

@@ -1,8 +1,8 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/DownloadListPage.xaml.cs
+// Copyright (c) 2023 Pixeval/DownloadListPage.xaml.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -21,15 +21,22 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
+using Pixeval.Controls;
 using Pixeval.Dialogs;
 using Pixeval.Download;
+using Pixeval.Options;
+using Pixeval.Pages.IllustrationViewer;
+using Pixeval.Controls.IllustrationView;
 using Pixeval.Util.IO;
 using Pixeval.Util.Threading;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
+using WinUI3Utilities;
 
 namespace Pixeval.Pages.Download;
 
@@ -38,23 +45,14 @@ public sealed partial class DownloadListPage
     private bool _queriedBySuggestion;
     private DownloadListPageViewModel _viewModel = null!;
 
-    public DownloadListPage()
+    public DownloadListPage() => InitializeComponent();
+
+    public override void OnPageActivated(NavigationEventArgs e, object? parameter)
     {
-        InitializeComponent();
+        _viewModel = new DownloadListPageViewModel(parameter.To<IEnumerable<ObservableDownloadTask>>());
     }
 
-    public override void OnPageActivated(NavigationEventArgs e)
-    {
-        _viewModel = new DownloadListPageViewModel(((IEnumerable<ObservableDownloadTask>)e.Parameter).Select(o => new DownloadListEntryViewModel(o)).ToList());
-    }
-
-    public override void OnPageDeactivated(NavigatingCancelEventArgs e)
-    {
-        foreach (var downloadListEntryViewModel in _viewModel.DownloadTasks)
-        {
-            downloadListEntryViewModel.Dispose();
-        }
-    }
+    public override void OnPageDeactivated(NavigatingCancelEventArgs e) => _viewModel.Dispose();
 
     private void ModeFilterComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
@@ -79,21 +77,18 @@ public sealed partial class DownloadListPage
     private async void ClearDownloadListButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
         var dialogContent = new DownloadListPageDeleteTasksDialog();
-        var dialog = MessageDialogBuilder.Create().WithTitle(DownloadListPageResources.DeleteDownloadHistoryRecordsFormatted.Format(_viewModel.SelectedTasks.Count()))
+        var dialog = MessageDialogBuilder.Create()
+            .WithTitle(DownloadListPageResources.DeleteDownloadHistoryRecordsFormatted.Format(_viewModel.SelectedTasks.Count()))
             .WithContent(dialogContent)
             .WithPrimaryButtonText(MessageContentDialogResources.OkButtonContent)
             .WithCloseButtonText(MessageContentDialogResources.CancelButtonContent)
             .WithDefaultButton(ContentDialogButton.Primary)
             .Build(this);
-        if (await dialog.ShowAsync() == ContentDialogResult.Primary)
+        if (await dialog.ShowAsync() is ContentDialogResult.Primary)
         {
             if (dialogContent.DeleteLocalFiles)
-            {
                 foreach (var downloadListEntryViewModel in _viewModel.SelectedTasks)
-                {
-                    IOHelper.DeleteAsync(downloadListEntryViewModel.DownloadTask.Destination).Discard();
-                }
-            }
+                    IoHelper.DeleteAsync(downloadListEntryViewModel.DownloadTask.Destination).Discard();
 
             _viewModel.RemoveSelectedItems();
         }
@@ -106,9 +101,9 @@ public sealed partial class DownloadListPage
 
     private void FilterAutoSuggestBox_OnSuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
     {
-        sender.Text = ((IDownloadTask)args.SelectedItem).Title;
+        sender.Text = ((DownloadListEntryViewModel)args.SelectedItem).Illustrate.Title;
         _viewModel.CurrentOption = DownloadListOption.CustomSearch;
-        _viewModel.ResetFilter(Enumerates.EnumerableOf((IDownloadTask)args.SelectedItem));
+        _viewModel.ResetFilter(Enumerates.EnumerableOf((DownloadListEntryViewModel)args.SelectedItem));
         _queriedBySuggestion = true;
     }
 
@@ -134,18 +129,48 @@ public sealed partial class DownloadListPage
 
     private void SelectAllButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        _viewModel.DownloadTasks.ForEach(x => x.DownloadTask.Selected = true);
+        _viewModel.DataProvider.Source.ForEach(x => x.DownloadTask.Selected = true);
         _viewModel.UpdateSelection();
     }
 
     private void CancelSelectButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        _viewModel.DownloadTasks.ForEach(x => x.DownloadTask.Selected = false);
+        _viewModel.DataProvider.Source.ForEach(x => x.DownloadTask.Selected = false);
         _viewModel.UpdateSelection();
     }
 
-    private void DownloadListEntry_OnSelected(object? sender, bool e)
+    private void ItemsView_OnSelectionChanged(ItemsView sender, ItemsViewSelectionChangedEventArgs args)
     {
         _viewModel.UpdateSelection();
+    }
+
+    private void DownloadListEntry_OnOpenIllustrationRequested(DownloadListEntry sender, DownloadListEntryViewModel viewModel)
+    {
+        viewModel.CreateWindowWithPage(_viewModel.DataProvider.Source);
+    }
+
+    private void DownloadListEntryOnEffectiveViewportChanged(FrameworkElement sender, EffectiveViewportChangedEventArgs args)
+    {
+        var context = sender.GetDataContext<IllustrationViewModel>();
+        var preLoadRows = Math.Clamp(App.AppViewModel.AppSetting.PreLoadRows, 1, 15);
+        const ThumbnailUrlOption option = ThumbnailUrlOption.SquareMedium;
+        if (args.BringIntoViewDistanceY <= sender.ActualHeight * preLoadRows)
+        {
+            _ = context.TryLoadThumbnail(_viewModel, option);
+        }
+        else
+        {
+            context.UnloadThumbnail(_viewModel, option);
+        }
+    }
+
+    private void DownloadListPage_OnUnloaded(object sender, RoutedEventArgs e)
+    {
+        _viewModel.Dispose();
+    }
+
+    private async Task AdvancedItemsView_OnLoadMoreRequested(AdvancedItemsView sender, EventArgs e)
+    {
+        await _viewModel.LoadMoreAsync(20);
     }
 }

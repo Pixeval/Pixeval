@@ -1,8 +1,8 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/DownloadManager.cs
+// Copyright (c) 2023 Pixeval/DownloadManager.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -51,7 +51,7 @@ public class DownloadManager<TDownloadTask> : IDisposable where TDownloadTask : 
     public DownloadManager(int concurrencyDegree, HttpClient? httpClient = null)
     {
         _httpClient = httpClient ?? new HttpClient();
-        _queuedTasks = new ObservableCollection<TDownloadTask>();
+        _queuedTasks = [];
         _taskQuerySet = new HashSet<TDownloadTask>();
         _throttle = new ReenterableAwaiter<bool>(true, true);
         _downloadTaskChannel = Channel.CreateUnbounded<TDownloadTask>();
@@ -79,7 +79,7 @@ public class DownloadManager<TDownloadTask> : IDisposable where TDownloadTask : 
             return;
         }
 
-        _taskQuerySet.Add(task);
+        _ = _taskQuerySet.Add(task);
         _queuedTasks.Add(task);
         // Start the task only if it is created and is ready-to-run
         if (task.CurrentState == DownloadState.Created)
@@ -102,8 +102,8 @@ public class DownloadManager<TDownloadTask> : IDisposable where TDownloadTask : 
 
     public void RemoveTask(TDownloadTask task)
     {
-        _taskQuerySet.Remove(task);
-        _queuedTasks.Remove(task);
+        _ = _taskQuerySet.Remove(task);
+        _ = _queuedTasks.Remove(task);
     }
 
     public void ClearTasks()
@@ -134,7 +134,7 @@ public class DownloadManager<TDownloadTask> : IDisposable where TDownloadTask : 
 
     private void QueueDownloadTask(TDownloadTask task)
     {
-        _downloadTaskChannel.Writer.WriteAsync(task);
+        _ = _downloadTaskChannel.Writer.WriteAsync(task);
     }
 
     private async Task Download(TDownloadTask task)
@@ -161,10 +161,10 @@ public class DownloadManager<TDownloadTask> : IDisposable where TDownloadTask : 
 
     private async Task DecrementCounterAsync()
     {
-        Interlocked.Decrement(ref _workingTasks);
+        _ = Interlocked.Decrement(ref _workingTasks);
         await _semaphoreSlim.WaitAsync();
         _throttle.SetResult(true);
-        _semaphoreSlim.Release();
+        _ = _semaphoreSlim.Release();
     }
 
     private async Task DownloadInternal(TDownloadTask task)
@@ -187,7 +187,7 @@ public class DownloadManager<TDownloadTask> : IDisposable where TDownloadTask : 
                     {
                         using (resultStream)
                         {
-                            await IOHelper.CreateAndWriteToFileAsync(resultStream, task.Destination);
+                            await IoHelper.CreateAndWriteToFileAsync(resultStream, task.Destination);
                         }
                     }
                 }
@@ -204,7 +204,7 @@ public class DownloadManager<TDownloadTask> : IDisposable where TDownloadTask : 
                 break;
             case Result<IRandomAccessStream>.Failure(var exception):
                 Functions.IgnoreException(() => File.Delete(task.Destination));
-                if (exception is not OperationCanceledException && exception is not null)
+                if (exception is not OperationCanceledException and not null)
                 {
                     ThreadingHelper.DispatchTask(() => task.ErrorCause = exception);
                     SetState(task, DownloadState.Error);

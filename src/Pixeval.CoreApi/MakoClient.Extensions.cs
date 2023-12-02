@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
-// Copyright (c) 2021 Pixeval.CoreApi/MakoClient.Extensions.cs
+// Copyright (c) 2023 Pixeval.CoreApi/MakoClient.Extensions.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -46,7 +46,7 @@ public partial class MakoClient
                 .GetStringResultAsync($"/ajax/user/{uid}/recommends?userNum={num}&workNum={workNum}&isR18={isR18.ToString().ToLower()}&lang={culture.TwoLetterISOLanguageName}",
                     message => MakoNetworkException.FromHttpResponseMessageAsync(message, Configuration.Bypass))
                 .ConfigureAwait(false))
-            .GetOrThrow().FromJson<PixivRelatedRecommendUsersResponse>()!;
+            .UnwrapOrThrow().FromJson<PixivRelatedRecommendUsersResponse>()!;
     }
 
     /// <summary>
@@ -107,7 +107,7 @@ public partial class MakoClient
                 .GetStringResultAsync($"/ajax/showcase/article?article_id={spotlightId}",
                     message => MakoNetworkException.FromHttpResponseMessageAsync(message, Configuration.Bypass))
                 .ConfigureAwait(false))
-            .GetOrThrow().FromJson<PixivSpotlightDetailResponse>();
+            .UnwrapOrThrow().FromJson<PixivSpotlightDetailResponse>();
         if (result?.ResponseBody is null)
         {
             return null;
@@ -172,7 +172,7 @@ public partial class MakoClient
     {
         EnsureNotCancelled();
         var tags = (await GetMakoHttpClient(MakoApiKind.WebApi).GetStringResultAsync($"/ajax/user/{uid}/illusts/bookmark/tags?lang={Configuration.CultureInfo.TwoLetterISOLanguageName}").ConfigureAwait(false))
-            .GetOrThrow()
+            .UnwrapOrThrow()
             .FromJson<UserSpecifiedBookmarkTagResponse>();
         var dic = new Dictionary<CountedTag, PrivacyPolicy>();
         if (tags?.ResponseBody?.Public is { } publicTags)

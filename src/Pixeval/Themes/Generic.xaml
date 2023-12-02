@@ -1,13 +1,7 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="ms-appx:///Controls/Card/CardControl.xaml" />
         <ResourceDictionary Source="ms-appx:///Controls/IllustratorView/IllustratorView.xaml" />
-        <ResourceDictionary Source="ms-appx:///Controls/NotifyOnLoadedCalendarDatePicker/NotifyOnLoadedCalendarDatePicker.xaml" />
-        <ResourceDictionary Source="ms-appx:///Controls/NotifyOnLoadedComboBox/NotifyOnLoadedComboBox.xaml" />
-        <ResourceDictionary Source="ms-appx:///Controls/IconButton/IconButton.xaml" />
         <ResourceDictionary Source="ms-appx:///Controls/TokenInputTextBox/TokenInputTextBox.xaml" />
-        <ResourceDictionary Source="ms-appx:///Controls/PremiumUserBadge/PremiumUserBadge.xaml" />
-        <ResourceDictionary Source="ms-appx:///Controls/FollowingUserBadge/FollowingUserBadge.xaml" />
         <ResourceDictionary Source="ms-appx:///Flyouts/IllustrationResultFilter/IllustrationResultFilterFunctionEntry.xaml" />
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

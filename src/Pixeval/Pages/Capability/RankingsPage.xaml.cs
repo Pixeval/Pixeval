@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/RankingsPage.xaml.cs
+// Copyright (c) 2023 Pixeval/RankingsPage.xaml.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -26,7 +26,7 @@ using Pixeval.CoreApi.Global.Enum;
 using Pixeval.Messages;
 using Pixeval.Misc;
 using Pixeval.Options;
-using Pixeval.UserControls;
+using Pixeval.Controls;
 using Pixeval.Util;
 using Pixeval.Util.Generic;
 
@@ -55,7 +55,7 @@ public sealed partial class RankingsPage : ISortedIllustrationContainerPageHelpe
         SortOptionComboBox.SelectedItem = MakoHelper.GetAppSettingDefaultSortOptionWrapper();
         RankOptionComboBox.SelectedItem = LocalizedBoxHelper.Of<RankOption, RankOptionWrapper>(RankOption.Day);
         RankDateTimeCalendarDatePicker.Date = DateTime.Now.AddDays(-2);
-        WeakReferenceMessenger.Default.TryRegister<RankingsPage, MainPageFrameNavigatingEvent>(this, static (recipient, _) => recipient.IllustrationContainer.ViewModel.DataProvider.FetchEngine?.Cancel());
+        _ = WeakReferenceMessenger.Default.TryRegister<RankingsPage, MainPageFrameNavigatingEvent>(this, static (recipient, _) => recipient.IllustrationContainer.ViewModel.DataProvider.FetchEngine?.Cancel());
         ChangeSource();
     }
 
@@ -78,6 +78,6 @@ public sealed partial class RankingsPage : ISortedIllustrationContainerPageHelpe
     {
         var rankOption = (RankOptionComboBox.SelectedItem as RankOptionWrapper)?.Value ?? RankOption.Day;
         var dateTime = RankDateTimeCalendarDatePicker.Date?.DateTime ?? DateTime.Now.AddDays(-2);
-        _ = IllustrationContainer.ViewModel.ResetEngineAndFillAsync(App.AppViewModel.MakoClient.Ranking(rankOption, dateTime));
+        IllustrationContainer.ViewModel.ResetEngine(App.AppViewModel.MakoClient.Ranking(rankOption, dateTime));
     }
 }

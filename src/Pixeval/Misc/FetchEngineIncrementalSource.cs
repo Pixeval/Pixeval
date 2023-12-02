@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/FetchEngineIncrementalSource.cs
+// Copyright (c) 2023 Pixeval/FetchEngineIncrementalSource.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -22,16 +22,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using CommunityToolkit.Common.Collections;
+using CommunityToolkit.WinUI.Collections;
 
 namespace Pixeval.Misc;
 
-public abstract class FetchEngineIncrementalSource<T, TModel>
-    (IAsyncEnumerable<T> asyncEnumerator, int limit = -1) : IIncrementalSource<TModel>
+public abstract class FetchEngineIncrementalSource<T, TModel>(IAsyncEnumerable<T> asyncEnumerator, int limit = -1)
+    : IIncrementalSource<TModel>
 {
     private readonly ISet<long> _yieldedItems = new HashSet<long>();
 
-    private readonly IAsyncEnumerator<T> _asyncEnumerator = asyncEnumerator.GetAsyncEnumerator();
+    /// <summary>
+    /// 当为null时暂时不报错
+    /// </summary>
+    private readonly IAsyncEnumerator<T> _asyncEnumerator = asyncEnumerator?.GetAsyncEnumerator()!;
 
     private int _yieldedCounter;
 
@@ -39,7 +42,7 @@ public abstract class FetchEngineIncrementalSource<T, TModel>
 
     protected abstract TModel Select(T entity);
 
-    public async Task<IEnumerable<TModel>> GetPagedItemsAsync(int pageIndex, int pageSize, CancellationToken cancellationToken = new())
+    public virtual async Task<IEnumerable<TModel>> GetPagedItemsAsync(int pageIndex, int pageSize, CancellationToken cancellationToken = new CancellationToken())
     {
         var result = new List<TModel>();
         var i = 0;
@@ -54,7 +57,7 @@ public abstract class FetchEngineIncrementalSource<T, TModel>
                 if (_asyncEnumerator.Current is { } obj && !_yieldedItems.Contains(Identifier(obj)))
                 {
                     result.Add(Select(obj));
-                    _yieldedItems.Add(Identifier(obj));
+                    _ = _yieldedItems.Add(Identifier(obj));
                     i++;
                     _yieldedCounter++;
                 }

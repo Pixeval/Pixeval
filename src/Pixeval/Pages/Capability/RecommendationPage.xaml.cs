@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/RecommendationPage.xaml.cs
+// Copyright (c) 2023 Pixeval/RecommendationPage.xaml.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -24,7 +24,7 @@ using Microsoft.UI.Xaml.Navigation;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.Messages;
 using Pixeval.Misc;
-using Pixeval.UserControls;
+using Pixeval.Controls;
 using Pixeval.Util;
 using Pixeval.Util.UI;
 
@@ -52,7 +52,7 @@ public sealed partial class RecommendationPage : ISortedIllustrationContainerPag
     {
         ModeSelectionComboBox.SelectedItem = ModeSelectionComboBoxIllustComboBoxItem;
         SortOptionComboBox.SelectedItem = MakoHelper.GetAppSettingDefaultSortOptionWrapper();
-        WeakReferenceMessenger.Default.TryRegister<RecommendationPage, MainPageFrameNavigatingEvent>(this, static (recipient, _) => recipient.IllustrationContainer.ViewModel.DataProvider.FetchEngine?.Cancel());
+        _ = WeakReferenceMessenger.Default.TryRegister<RecommendationPage, MainPageFrameNavigatingEvent>(this, static (recipient, _) => recipient.IllustrationContainer.ViewModel.DataProvider.FetchEngine?.Cancel());
         ChangeSource();
     }
 
@@ -70,6 +70,6 @@ public sealed partial class RecommendationPage : ISortedIllustrationContainerPag
 
     private void ChangeSource()
     {
-        _ = IllustrationContainer.ViewModel.ResetEngineAndFillAsync(App.AppViewModel.MakoClient.Recommendations(ModeSelectionComboBox.GetComboBoxSelectedItemTag(RecommendationContentType.Illust)), App.AppViewModel.AppSetting.ItemsNumberLimitForDailyRecommendations);
+        IllustrationContainer.ViewModel.ResetEngine(App.AppViewModel.MakoClient.Recommendations(ModeSelectionComboBox.GetComboBoxSelectedItemTag(RecommendationContentType.Illust)), App.AppViewModel.AppSetting.ItemsNumberLimitForDailyRecommendations);
     }
 }

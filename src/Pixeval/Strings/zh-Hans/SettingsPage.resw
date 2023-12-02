@@ -254,10 +254,10 @@
   <data name="GitHubRepositoryHyperlinkButton.Content" xml:space="preserve">
     <value>GitHub 仓库</value>
   </data>
-  <data name="IllustrationViewOptionEntry.Description" xml:space="preserve">
+  <data name="ItemsViewLayoutTypeEntry.Description" xml:space="preserve">
     <value>选择网格布局则每张图片大小相同；选择流式布局则只有每一行的两端会被对齐</value>
   </data>
-  <data name="IllustrationViewOptionEntry.Header" xml:space="preserve">
+  <data name="ItemsViewLayoutTypeEntry.Header" xml:space="preserve">
     <value>缩略图视图对齐规则</value>
   </data>
   <data name="ImageMirrorServerEntry.Description" xml:space="preserve">

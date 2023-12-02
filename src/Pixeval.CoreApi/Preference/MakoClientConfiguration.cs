@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
-// Copyright (c) 2021 Pixeval.CoreApi/MakoClientConfiguration.cs
+// Copyright (c) 2023 Pixeval.CoreApi/MakoClientConfiguration.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -20,14 +20,12 @@
 
 using System.Globalization;
 using System.Text.Json.Serialization;
-using JetBrains.Annotations;
 
 namespace Pixeval.CoreApi.Preference;
 
 /// <summary>
 ///     Contains all the user-configurable keys
 /// </summary>
-[PublicAPI]
 public record MakoClientConfiguration(int ConnectionTimeout, bool Bypass, string? MirrorHost, CultureInfo CultureInfo)
 {
     public MakoClientConfiguration() : this(5000, false, string.Empty, CultureInfo.CurrentCulture)

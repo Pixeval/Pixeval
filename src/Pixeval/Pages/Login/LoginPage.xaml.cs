@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/LoginPage.xaml.cs
+// Copyright (c) 2023 Pixeval/LoginPage.xaml.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -61,7 +61,7 @@ public sealed partial class LoginPage
             }
 
             AppContext.SaveContext();
-            WeakReferenceMessenger.Default.Send(new LoginCompletedMessage(this, App.AppViewModel.MakoClient.Session));
+            _ = WeakReferenceMessenger.Default.Send(new LoginCompletedMessage(this, App.AppViewModel.MakoClient.Session));
         }
         catch (Exception exception)
         {
@@ -101,7 +101,7 @@ public sealed partial class LoginPage
                 LoginPageResources.WebView2InstallationRequiredContent).ShowAsync();
             if (dialogResult == ContentDialogResult.Primary)
             {
-                await Launcher.LaunchUriAsync(new Uri("https://go.microsoft.com/fwlink/p/?LinkId=2124703"));
+                _ = await Launcher.LaunchUriAsync(new Uri("https://go.microsoft.com/fwlink/p/?LinkId=2124703"));
             }
 
             App.ExitWithPushNotification();

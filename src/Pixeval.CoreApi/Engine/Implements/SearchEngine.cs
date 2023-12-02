@@ -1,8 +1,8 @@
-﻿#region Copyright (c) Pixeval/Pixeval.CoreApi
+#region Copyright (c) Pixeval/Pixeval.CoreApi
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
-// Copyright (c) 2021 Pixeval.CoreApi/SearchEngine.cs
+// Copyright (c) 2023 Pixeval.CoreApi/SearchEngine.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -51,7 +51,7 @@ internal class SearchEngine(MakoClient makoClient,
     private readonly string _tag = tag;
     private readonly TargetFilter _targetFilter = targetFilter ?? TargetFilter.ForAndroid;
 
-    public override IAsyncEnumerator<Illustration> GetAsyncEnumerator(CancellationToken cancellationToken = new())
+    public override IAsyncEnumerator<Illustration> GetAsyncEnumerator(CancellationToken cancellationToken = new CancellationToken())
     {
         return new SearchAsyncEnumerator(this, MakoApiKind.AppApi)!;
     }

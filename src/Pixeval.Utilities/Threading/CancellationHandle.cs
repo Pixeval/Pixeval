@@ -1,8 +1,8 @@
-#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval.Utilities
 // GPL v3 License
 // 
-// Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/CancellationHandle.cs
+// Pixeval/Pixeval.Utilities
+// Copyright (c) 2023 Pixeval.Utilities/CancellationHandle.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -48,7 +48,7 @@ public class CancellationHandle
         if (!IsCancelled)
         {
             _onCancellation?.Invoke();
-            Interlocked.Increment(ref _isCancelled);
+            _ = Interlocked.Increment(ref _isCancelled);
         }
     }
 
@@ -56,12 +56,12 @@ public class CancellationHandle
     {
         if (IsPaused)
         {
-            Interlocked.Decrement(ref _paused);
+            _ = Interlocked.Decrement(ref _paused);
         }
 
         if (IsCancelled)
         {
-            Interlocked.Decrement(ref _isCancelled);
+            _ = Interlocked.Decrement(ref _isCancelled);
         }
     }
 
@@ -70,7 +70,7 @@ public class CancellationHandle
         if (!IsPaused)
         {
             _onPause?.Invoke();
-            Interlocked.Increment(ref _paused);
+            _ = Interlocked.Increment(ref _paused);
         }
     }
 
@@ -79,7 +79,7 @@ public class CancellationHandle
         if (IsPaused)
         {
             _onResume?.Invoke();
-            Interlocked.Decrement(ref _paused);
+            _ = Interlocked.Decrement(ref _paused);
         }
     }
 

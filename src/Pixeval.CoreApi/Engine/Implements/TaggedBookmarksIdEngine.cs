@@ -1,8 +1,8 @@
-﻿#region Copyright (c) Pixeval/Pixeval.CoreApi
+#region Copyright (c) Pixeval/Pixeval.CoreApi
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
-// Copyright (c) 2021 Pixeval.CoreApi/TaggedBookmarksIdEngine.cs
+// Copyright (c) 2023 Pixeval.CoreApi/TaggedBookmarksIdEngine.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -37,7 +37,7 @@ internal class TaggedBookmarksIdEngine(MakoClient makoClient, EngineHandle? engi
     private readonly string _tag = tag;
     private readonly string _uid = uid;
 
-    public override IAsyncEnumerator<string> GetAsyncEnumerator(CancellationToken cancellationToken = new())
+    public override IAsyncEnumerator<string> GetAsyncEnumerator(CancellationToken cancellationToken = new CancellationToken())
     {
         return new TaggedBookmarksIdAsyncEnumerator(this, MakoApiKind.WebApi)!;
     }

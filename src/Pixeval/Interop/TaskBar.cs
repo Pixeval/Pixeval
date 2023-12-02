@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/TaskBar.cs
+// Copyright (c) 2023 Pixeval/TaskBar.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -65,6 +65,4 @@ public interface ITaskBarList3
 [ComImport]
 [Guid("56fdf344-fd6d-11d0-958a-006097c9a090")]
 [ClassInterface(ClassInterfaceType.None)]
-public class TaskBarInstance
-{
-}
+public class TaskBarInstance;

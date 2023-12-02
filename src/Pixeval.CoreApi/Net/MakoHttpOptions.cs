@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
-// Copyright (c) 2021 Pixeval.CoreApi/MakoHttpOptions.cs
+// Copyright (c) 2023 Pixeval.CoreApi/MakoHttpOptions.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -71,7 +71,6 @@ public static class MakoHttpOptions
     {
         return new HttpMessageInvoker(new SocketsHttpHandler());
     }
-
 
     private static Func<SocketsHttpConnectionContext, CancellationToken, ValueTask<Stream>> BypassedConnectCallback(INameResolver nameResolver)
     {

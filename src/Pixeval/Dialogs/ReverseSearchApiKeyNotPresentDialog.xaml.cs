@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/ReverseSearchApiKeyNotPresentDialog.xaml.cs
+// Copyright (c) 2023 Pixeval/ReverseSearchApiKeyNotPresentDialog.xaml.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -43,6 +43,6 @@ public sealed partial class ReverseSearchApiKeyNotPresentDialog
     private void SetApiKeyHyperlinkButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
         Owner?.Hide();
-        WeakReferenceMessenger.Default.Send(new NavigateToSettingEntryMessage(SettingEntry.ReverseSearchApiKey));
+        _ = WeakReferenceMessenger.Default.Send(new NavigateToSettingEntryMessage(SettingEntry.ReverseSearchApiKey));
     }
 }

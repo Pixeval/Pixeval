@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/DownloadListEntryViewModel.cs
+// Copyright (c) 2023 Pixeval/DownloadListEntryViewModel.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -20,51 +20,24 @@
 
 using System;
 using CommunityToolkit.Mvvm.ComponentModel;
-using Microsoft.UI.Xaml.Media.Imaging;
-using Pixeval.CoreApi.Net;
+using Pixeval.CoreApi.Model;
 using Pixeval.Download;
-using Pixeval.Util.IO;
+using Pixeval.Controls.IllustrationView;
 using Pixeval.Utilities;
 
 namespace Pixeval.Pages.Download;
 
-public partial class DownloadListEntryViewModel : ObservableObject, IDisposable
+public sealed partial class DownloadListEntryViewModel(ObservableDownloadTask downloadTask, Illustration illustration)
+    : IllustrationViewModel(illustration)
 {
     [ObservableProperty]
-    private ObservableDownloadTask _downloadTask;
-
-    [ObservableProperty]
-    private BitmapImage? _thumbnail;
-
-    public DownloadListEntryViewModel(ObservableDownloadTask downloadTask)
-    {
-        _downloadTask = downloadTask;
-        LoadThumbnail();
-    }
-
-    public void Dispose()
-    {
-        _thumbnail = null;
-    }
-
-    public async void LoadThumbnail()
-    {
-        if (DownloadTask.Thumbnail is { } url)
-        {
-            var stream = (await App.AppViewModel.MakoClient.GetMakoHttpClient(MakoApiKind.ImageApi).DownloadAsIRandomAccessStreamAsync(url))
-                .GetOrElse(null);
-            if (stream is not null)
-            {
-                Thumbnail = await stream.GetBitmapImageAsync(true, 50);
-            }
-        }
-    }
+    private ObservableDownloadTask _downloadTask = downloadTask;
 
     public static string GetEntryProgressMessage(DownloadState currentState, double progress, Exception? errorCause)
     {
         return currentState switch
         {
-            DownloadState.Created => string.Empty,
+            DownloadState.Created => "",
             DownloadState.Running => DownloadListEntryResources.DownloadRunningFormatted.Format((int)progress),
             DownloadState.Queued => DownloadListEntryResources.DownloadQueued,
             DownloadState.Error => DownloadListEntryResources.DownloadErrorMessageFormatted.Format(errorCause!.Message),
@@ -100,6 +73,6 @@ public partial class DownloadListEntryViewModel : ObservableObject, IDisposable
 
     public static bool GetIsShowErrorDetailDialogItemEnabled(DownloadState currentState)
     {
-        return currentState == DownloadState.Error;
+        return currentState is DownloadState.Error;
     }
 }

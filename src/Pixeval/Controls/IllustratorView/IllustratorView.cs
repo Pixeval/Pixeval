@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/IllustratorView.cs
+// Copyright (c) 2023 Pixeval/IllustratorView.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -22,9 +22,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
-using Pixeval.Controls.Card;
 using WinUI3Utilities.Attributes;
-
 
 namespace Pixeval.Controls.IllustratorView;
 
@@ -35,7 +33,7 @@ namespace Pixeval.Controls.IllustratorView;
 [DependencyProperty<object>("ThumbnailSources")]
 [DependencyProperty<object>("ThumbnailItemTemplate")]
 [DependencyProperty<ImageSource>("IllustratorPicture")]
-[DependencyProperty<IllustratorViewModel>("ViewModel")]
+[DependencyProperty<IllustratorViewViewModel>("ViewModel")]
 public partial class IllustratorView : Control
 {
     private const string PartContentContainer = "ContentContainer";
@@ -45,10 +43,7 @@ public partial class IllustratorView : Control
 
     public PersonPicture? Avatar { get; private set; }
 
-    public IllustratorView()
-    {
-        DefaultStyleKey = typeof(IllustratorView);
-    }
+    public IllustratorView() => DefaultStyleKey = typeof(IllustratorView);
 
     protected override void OnApplyTemplate()
     {

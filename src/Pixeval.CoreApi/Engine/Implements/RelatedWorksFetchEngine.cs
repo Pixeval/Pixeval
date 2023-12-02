@@ -1,8 +1,8 @@
-﻿#region Copyright (c) Pixeval/Pixeval.CoreApi
+#region Copyright (c) Pixeval/Pixeval.CoreApi
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
-// Copyright (c) 2022 Pixeval.CoreApi/RelatedWorksFetchEngine.cs
+// Copyright (c) 2023 Pixeval.CoreApi/RelatedWorksFetchEngine.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -30,7 +30,7 @@ public class RelatedWorksFetchEngine(string illustId, MakoClient makoClient, Eng
 {
     private readonly string _illustId = illustId;
 
-    public override IAsyncEnumerator<Illustration> GetAsyncEnumerator(CancellationToken cancellationToken = new())
+    public override IAsyncEnumerator<Illustration> GetAsyncEnumerator(CancellationToken cancellationToken = new CancellationToken())
     {
         return RecursivePixivAsyncEnumerators.Illustration<RelatedWorksFetchEngine>.WithInitialUrl(this, MakoApiKind.AppApi,
             engine => $"/v2/illust/related?filter=for_android&illust_id={engine._illustId}")!;

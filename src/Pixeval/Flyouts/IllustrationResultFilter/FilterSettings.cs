@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/FilterSettings.cs
+// Copyright (c) 2023 Pixeval/FilterSettings.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Pixeval.UserControls.TokenInput;
+using Pixeval.Controls.TokenInput;
 using Pixeval.Utilities;
 
 namespace Pixeval.Flyouts.IllustrationResultFilter;
@@ -39,18 +39,9 @@ public record FilterSettings(
     DateTimeOffset PublishDateStart,
     DateTimeOffset PublishDateEnd)
 {
-    public static readonly FilterSettings Default = new(
-        Enumerable.Empty<Token>(),
-        Enumerable.Empty<Token>(),
-        0,
-        int.MaxValue,
-        Enumerable.Empty<Token>(),
-        Token.Empty,
-        string.Empty,
-        Token.Empty,
-        string.Empty,
-        DateTimeOffset.MinValue,
-        DateTimeOffset.MaxValue);
+    public static readonly FilterSettings Default = new(Enumerable.Empty<Token>(),
+        Enumerable.Empty<Token>(), 0, int.MaxValue, Enumerable.Empty<Token>(), Token.Empty, string.Empty, Token.Empty,
+        string.Empty, DateTimeOffset.MinValue, DateTimeOffset.MaxValue);
 
     public virtual bool Equals(FilterSettings? other)
     {

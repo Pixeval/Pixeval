@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/BookmarksPage.xaml.cs
+// Copyright (c) 2023 Pixeval/BookmarksPage.xaml.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -24,7 +24,7 @@ using Microsoft.UI.Xaml.Navigation;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.Messages;
 using Pixeval.Misc;
-using Pixeval.UserControls;
+using Pixeval.Controls;
 using Pixeval.Util;
 using Pixeval.Util.UI;
 
@@ -50,7 +50,7 @@ public sealed partial class BookmarksPage : ISortedIllustrationContainerPageHelp
     {
         PrivacyPolicyComboBox.SelectedItem = PrivacyPolicyComboBoxPublicItem;
         SortOptionComboBox.SelectedItem = MakoHelper.GetAppSettingDefaultSortOptionWrapper();
-        WeakReferenceMessenger.Default.TryRegister<BookmarksPage, MainPageFrameNavigatingEvent>(this, static (recipient, _) => recipient.IllustrationContainer.ViewModel.DataProvider.FetchEngine?.Cancel());
+        _ = WeakReferenceMessenger.Default.TryRegister<BookmarksPage, MainPageFrameNavigatingEvent>(this, static (recipient, _) => recipient.IllustrationContainer.ViewModel.DataProvider.FetchEngine?.Cancel());
         ChangeSource();
     }
 
@@ -66,6 +66,6 @@ public sealed partial class BookmarksPage : ISortedIllustrationContainerPageHelp
 
     private void ChangeSource()
     {
-        _ = IllustrationContainer.ViewModel.ResetEngineAndFillAsync(App.AppViewModel.MakoClient.Bookmarks(App.AppViewModel.PixivUid!, PrivacyPolicyComboBox.GetComboBoxSelectedItemTag(PrivacyPolicy.Public), App.AppViewModel.AppSetting.TargetFilter));
+        IllustrationContainer.ViewModel.ResetEngine(App.AppViewModel.MakoClient.Bookmarks(App.AppViewModel.PixivUid!, PrivacyPolicyComboBox.GetComboBoxSelectedItemTag(PrivacyPolicy.Public), App.AppViewModel.AppSetting.TargetFilter));
     }
 }

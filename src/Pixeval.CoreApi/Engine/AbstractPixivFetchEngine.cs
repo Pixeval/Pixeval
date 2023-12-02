@@ -1,8 +1,8 @@
-﻿#region Copyright (c) Pixeval/Pixeval.CoreApi
+#region Copyright (c) Pixeval/Pixeval.CoreApi
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
-// Copyright (c) 2021 Pixeval.CoreApi/AbstractPixivFetchEngine.cs
+// Copyright (c) 2023 Pixeval.CoreApi/AbstractPixivFetchEngine.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -33,7 +33,7 @@ namespace Pixeval.CoreApi.Engine;
 /// </typeparam>
 public abstract class AbstractPixivFetchEngine<E>(MakoClient makoClient, EngineHandle? engineHandle) : IFetchEngine<E>
 {
-    public abstract IAsyncEnumerator<E> GetAsyncEnumerator(CancellationToken cancellationToken = new()); // the 'CancellationToken' is no longer useful, we use 'EngineHandle' to track the lifetime
+    public abstract IAsyncEnumerator<E> GetAsyncEnumerator(CancellationToken cancellationToken = new CancellationToken()); // the 'CancellationToken' is no longer useful, we use 'EngineHandle' to track the lifetime
 
     /// <summary>
     ///     The <see cref="MakoClient" /> that owns this <see cref="IFetchEngine{E}" />, it

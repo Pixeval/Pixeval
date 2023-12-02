@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/CommentRepliesBlock.xaml.cs
+// Copyright (c) 2023 Pixeval/CommentRepliesBlock.xaml.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -24,14 +24,14 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
-using CommunityToolkit.WinUI.UI;
+using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Pixeval.CoreApi.Net;
 using Pixeval.CoreApi.Net.Response;
 using Pixeval.Pages.IllustrationViewer;
-using Pixeval.UserControls;
+using Pixeval.Controls;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using WinUI3Utilities.Attributes;
@@ -60,7 +60,7 @@ public sealed partial class CommentRepliesBlock
 
     private void CommentList_OnRepliesHyperlinkButtonTapped(object? sender, TappedRoutedEventArgs e)
     {
-        ReplyBar.FindDescendant<RichEditBox>()?.Focus(FocusState.Programmatic);
+        _ = (ReplyBar.FindDescendant<RichEditBox>()?.Focus(FocusState.Programmatic));
     }
 
     private async void ReplyBar_OnSendButtonTapped(object? sender, SendButtonTappedEventArgs e)

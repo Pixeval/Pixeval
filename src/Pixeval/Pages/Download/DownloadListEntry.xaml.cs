@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/DownloadListEntry.xaml.cs
+// Copyright (c) 2023 Pixeval/DownloadListEntry.xaml.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -19,23 +19,23 @@
 #endregion
 
 using System;
-using System.Diagnostics;
-using System.Linq;
+using System.IO;
+using Windows.Foundation;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
 using Pixeval.Download;
 using Pixeval.Util.UI;
 using Windows.System;
+using Pixeval.CoreApi.Model;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
 
 namespace Pixeval.Pages.Download;
 
-[DependencyProperty<ObservableDownloadTask>("ViewModel", propertyChanged: nameof(OnViewModelChanged))]
-[DependencyProperty<ImageSource>("Thumbnail")]
+[DependencyProperty<DownloadListEntryViewModel>("ViewModel", propertyChanged: nameof(OnViewModelChanged))]
+[DependencyProperty<Illustration>("Illustration")]
 [DependencyProperty<string>("Title")]
 [DependencyProperty<string>("Description")]
 [DependencyProperty<double>("Progress")]
@@ -46,43 +46,38 @@ namespace Pixeval.Pages.Download;
 [DependencyProperty<bool>("IsShowErrorDetailDialogItemEnabled")]
 public sealed partial class DownloadListEntry
 {
-    public DownloadListEntry()
-    {
-        InitializeComponent();
-    }
+    public event TypedEventHandler<DownloadListEntry, DownloadListEntryViewModel>? OpenIllustrationRequested;
 
-    private bool IsSelected => ViewModel?.Selected ?? false;
+    public DownloadListEntry() => InitializeComponent();
 
     private static void OnViewModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        if (d is DownloadListEntry entry && e.NewValue is ObservableDownloadTask value)
+        if (d is DownloadListEntry entry && e.NewValue is DownloadListEntryViewModel value)
         {
-            ToolTipService.SetToolTip(entry, value.Title);
+            ToolTipService.SetToolTip(entry, value.Illustrate.Title);
             ToolTipService.SetPlacement(entry, PlacementMode.Mouse);
         }
     }
 
-    public event EventHandler<bool>? Selected;
-
     private async void ActionButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
         e.Handled = true;
-        switch (ViewModel.CurrentState)
+        switch (ViewModel.DownloadTask.CurrentState)
         {
             case DownloadState.Created:
             case DownloadState.Queued:
-                ViewModel.CancellationHandle.Cancel();
+                ViewModel.DownloadTask.CancellationHandle.Cancel();
                 break;
             case DownloadState.Running:
-                ViewModel.CancellationHandle.Pause();
+                ViewModel.DownloadTask.CancellationHandle.Pause();
                 break;
             case DownloadState.Error:
             case DownloadState.Cancelled:
             case DownloadState.Completed:
-                await Launcher.LaunchUriAsync(new Uri(ViewModel.Destination));
+                _ = await Launcher.LaunchUriAsync(new Uri(ViewModel.DownloadTask.Destination));
                 break;
             case DownloadState.Paused:
-                ViewModel.CancellationHandle.Resume();
+                ViewModel.DownloadTask.CancellationHandle.Resume();
                 break;
             default:
                 throw new ArgumentOutOfRangeException();
@@ -91,48 +86,25 @@ public sealed partial class DownloadListEntry
 
     private void RedownloadItem_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        ViewModel.Reset();
-        App.AppViewModel.DownloadManager.TryExecuteInline(ViewModel);
+        ViewModel.DownloadTask.Reset();
+        _ = App.AppViewModel.DownloadManager.TryExecuteInline(ViewModel.DownloadTask);
     }
 
     private void CancelDownloadItem_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        ViewModel.CancellationHandle.Cancel();
+        ViewModel.DownloadTask.CancellationHandle.Cancel();
     }
 
-    private void OpenDownloadLocationItem_OnTapped(object sender, TappedRoutedEventArgs e)
+    private async void OpenDownloadLocationItem_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        Process.Start("explorer.exe", $@"/select, ""{ViewModel.Destination}""");
+        _ = await Launcher.LaunchFolderPathAsync(Path.GetDirectoryName(ViewModel.DownloadTask.Destination));
     }
 
-    private async void GoToPageItem_OnTapped(object sender, TappedRoutedEventArgs e)
-    {
-        switch (ViewModel)
-        {
-            case IIllustrationViewModelProvider provider:
-                var viewModels = (await provider.GetViewModelAsync())
-                    .GetMangaIllustrationViewModels()
-                    .ToArray();
-
-                // ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", App.AppViewModel.AppWindowRootFrame);
-                // todo UIHelper.RootFrameNavigate(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(viewModels), new SuppressNavigationTransitionInfo());
-                break;
-        }
-    }
+    private void GoToPageItem_OnTapped(object sender, TappedRoutedEventArgs e) => OpenIllustrationRequested?.Invoke(this, ViewModel);
 
     private async void CheckErrorMessageInDetail_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        await MessageDialogBuilder.CreateAcknowledgement(CurrentContext.Window, DownloadListEntryResources.ErrorMessageDialogTitle, ViewModel.ErrorCause!.ToString())
+        _ = await MessageDialogBuilder.CreateAcknowledgement(CurrentContext.Window, DownloadListEntryResources.ErrorMessageDialogTitle, ViewModel.DownloadTask.ErrorCause!.ToString())
             .ShowAsync();
-    }
-
-    private Brush _lastBorderBrush = (Brush)Application.Current.Resources["SystemControlHighlightAccentBrush"];
-
-    private void RootCardControl_OnTapped(object sender, TappedRoutedEventArgs e)
-    {
-        ViewModel.Selected = !ViewModel.Selected;
-        (_lastBorderBrush, RootCardControl.BorderBrush) = (RootCardControl.BorderBrush, _lastBorderBrush);
-        (RootCardControl.Margin, RootCardControl.BorderThickness) = (RootCardControl.BorderThickness, RootCardControl.Margin);
-        Selected?.Invoke(this, ViewModel.Selected);
     }
 }

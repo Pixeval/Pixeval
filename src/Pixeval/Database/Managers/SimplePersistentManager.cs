@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/SimplePersistentManager.cs
+// Copyright (c) 2023 Pixeval/SimplePersistentManager.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -47,7 +47,7 @@ public abstract class SimplePersistentManager<T>(ILiteDatabase db, int maximumRe
             Purge(MaximumRecords);
         }
 
-        Collection.Insert(t);
+        _ = Collection.Insert(t);
     }
 
     public IEnumerable<T> Query(Expression<Func<T, bool>> predicate)
@@ -86,12 +86,12 @@ public abstract class SimplePersistentManager<T>(ILiteDatabase db, int maximumRe
         if (Collection.Count() > limit)
         {
             var last = Collection.FindAll().Take(^limit..).ToHashSet();
-            Delete(e => !last.Contains(e!));
+            _ = Delete(e => !last.Contains(e!));
         }
     }
 
     public void Clear()
     {
-        Collection.DeleteAll();
+        _ = Collection.DeleteAll();
     }
 }

@@ -5,14 +5,13 @@
     xmlns:controls="using:Pixeval.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:userControls="using:Pixeval.UserControls"
     ClearCacheAfterNavigation="True"
     mc:Ignorable="d">
-    <userControls:IllustrationContainer x:Name="IllustrationContainer">
-        <userControls:IllustrationContainer.CommandBarElements>
-            <Grid Margin="10,0,0,0" Background="Transparent">
-                <userControls:SortOptionComboBox x:Name="SortOptionComboBox" SelectionChangedWhenLoaded="SortOptionComboBox_OnSelectionChanged" />
+    <controls:IllustrationContainer x:Name="IllustrationContainer">
+        <controls:IllustrationContainer.CommandBarElements>
+            <Grid Margin="10,0,0,0">
+                <controls:SortOptionComboBox x:Name="SortOptionComboBox" SelectionChangedWhenLoaded="SortOptionComboBox_OnSelectionChanged" />
             </Grid>
-        </userControls:IllustrationContainer.CommandBarElements>
-    </userControls:IllustrationContainer>
+        </controls:IllustrationContainer.CommandBarElements>
+    </controls:IllustrationContainer>
 </controls:EnhancedPage>

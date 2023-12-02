@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval.Utilities
-// Copyright (c) 2021 Pixeval.Utilities/Jsons.cs
+// Copyright (c) 2023 Pixeval.Utilities/Jsons.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -22,11 +22,9 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
-using JetBrains.Annotations;
 
 namespace Pixeval.Utilities;
 
-[PublicAPI]
 public static class Jsons
 {
     public static IEnumerable<JsonProperty> EnumerateObjectOrEmpty(this JsonElement? element)

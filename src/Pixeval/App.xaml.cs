@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/App.xaml.cs
+// Copyright (c) 2023 Pixeval/App.xaml.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -20,6 +20,7 @@
 
 using System;
 using System.Linq;
+using Windows.Graphics;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -28,9 +29,9 @@ using Microsoft.Windows.AppLifecycle;
 using Pixeval.Activation;
 using Pixeval.AppManagement;
 using Pixeval.Controls;
+using Pixeval.Controls.Windowing;
 using Pixeval.Messages;
 using Pixeval.Pages.Login;
-using Pixeval.Util.UI.Windowing;
 using WinUI3Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
 
@@ -43,7 +44,8 @@ public partial class App
     public App()
     {
         // The theme can only be changed in ctor
-        AppViewModel = new(this) { AppSetting = AppContext.LoadConfiguration() ?? AppSetting.CreateDefault() };
+        AppViewModel = new AppViewModel(this) { AppSetting = AppContext.LoadConfiguration() ?? AppSetting.CreateDefault() };
+        WindowFactory.WindowSettings = AppViewModel.AppSetting;
         AppInstance.GetCurrent().Activated += (_, arguments) => ActivationRegistrar.Dispatch(arguments);
         InitializeComponent();
     }
@@ -75,7 +77,7 @@ public partial class App
             .WithLoaded((s, _) => s.To<Frame>().NavigateTo<LoginPage>(w))
             .WithClosed((_, _) => AppContext.SaveContext())
             .WithSizeLimit(800, 360)
-            .Init(nameof(Pixeval), new(AppViewModel.AppSetting.WindowWidth, AppViewModel.AppSetting.WindowHeight))
+            .Init(nameof(Pixeval), new SizeInt32(AppViewModel.AppSetting.WindowWidth, AppViewModel.AppSetting.WindowHeight))
             .Activate();
 
         await AppViewModel.InitializeAsync(isProtocolActivated);
@@ -83,7 +85,7 @@ public partial class App
 
     public static void ExitWithPushNotification()
     {
-        WeakReferenceMessenger.Default.Send(new ApplicationExitingMessage());
+        _ = WeakReferenceMessenger.Default.Send(new ApplicationExitingMessage());
         CurrentContext.App.Exit();
     }
 }

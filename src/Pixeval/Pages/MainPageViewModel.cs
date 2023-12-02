@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/MainPageViewModel.cs
+// Copyright (c) 2023 Pixeval/MainPageViewModel.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -31,7 +31,7 @@ using Pixeval.Messages;
 using Pixeval.Misc;
 using Pixeval.Pages.Capability;
 using Pixeval.Pages.Misc;
-using Pixeval.UserControls.IllustrationView;
+using Pixeval.Controls.IllustrationView;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using WinUI3Utilities;
@@ -42,19 +42,25 @@ public partial class MainPageViewModel : AutoActivateObservableRecipient, IRecip
 {
     public readonly NavigationViewTag AboutTag = new(typeof(AboutPage), null);
 
-    public readonly NavigationViewTag BookmarksTag = new(typeof(BookmarksPage), App.AppViewModel.MakoClient.Bookmarks(App.AppViewModel.PixivUid!, PrivacyPolicy.Public, App.AppViewModel.AppSetting.TargetFilter));
+    public readonly NavigationViewTag BookmarksTag = new(typeof(BookmarksPage),
+        App.AppViewModel.MakoClient.Bookmarks(App.AppViewModel.PixivUid!, PrivacyPolicy.Public,
+            App.AppViewModel.AppSetting.TargetFilter));
 
     public readonly NavigationViewTag FollowingsTag = new(typeof(FollowingsPage), null);
 
     public readonly NavigationViewTag HistoriesTag = new(typeof(BrowsingHistoryPage), null);
 
-    public readonly NavigationViewTag RankingsTag = new(typeof(RankingsPage), App.AppViewModel.MakoClient.Ranking(RankOption.Day, DateTime.Today - TimeSpan.FromDays(2)));
+    public readonly NavigationViewTag RankingsTag = new(typeof(RankingsPage),
+        App.AppViewModel.MakoClient.Ranking(RankOption.Day, DateTime.Today - TimeSpan.FromDays(2)));
 
-    public readonly NavigationViewTag RecentPostsTag = new(typeof(RecentPostsPage), App.AppViewModel.MakoClient.RecentPosts(PrivacyPolicy.Public));
+    public readonly NavigationViewTag RecentPostsTag = new(typeof(RecentPostsPage),
+        App.AppViewModel.MakoClient.RecentPosts(PrivacyPolicy.Public));
 
-    public readonly NavigationViewTag RecommendsTag = new(typeof(RecommendationPage), App.AppViewModel.MakoClient.Recommendations(targetFilter: App.AppViewModel.AppSetting.TargetFilter));
+    public readonly NavigationViewTag RecommendsTag = new(typeof(RecommendationPage),
+        App.AppViewModel.MakoClient.Recommendations(targetFilter: App.AppViewModel.AppSetting.TargetFilter));
 
-    public readonly NavigationViewTag SettingsTag = new(typeof(SettingsPage), App.AppViewModel.MakoClient.Configuration);
+    public readonly NavigationViewTag SettingsTag =
+        new(typeof(SettingsPage), App.AppViewModel.MakoClient.Configuration);
 
     public readonly NavigationViewTag SpotlightsTag = new(typeof(SpotlightsPage), null);
 
@@ -63,7 +69,7 @@ public partial class MainPageViewModel : AutoActivateObservableRecipient, IRecip
 
     public double MainPageRootNavigationViewOpenPanelLength => 280;
 
-    public SuggestionStateMachine SuggestionProvider { get; } = new();
+    public SuggestionStateMachine SuggestionProvider { get; } = new SuggestionStateMachine();
 
     public void Receive(LoginCompletedMessage message)
     {
@@ -79,7 +85,7 @@ public partial class MainPageViewModel : AutoActivateObservableRecipient, IRecip
         // get byte array of avatar
         // and set to the bitmap image
         Avatar = await (await makoClient.GetMakoHttpClient(MakoApiKind.ImageApi).DownloadAsIRandomAccessStreamAsync(makoClient.Session.AvatarUrl!))
-            .GetOrThrow()
+            .UnwrapOrThrow()
             .GetBitmapImageAsync(true);
     }
 
@@ -108,7 +114,7 @@ public partial class MainPageViewModel : AutoActivateObservableRecipient, IRecip
 
                         break;
                     case var s:
-                        await MessageDialogBuilder.CreateAcknowledgement(
+                        _ = await MessageDialogBuilder.CreateAcknowledgement(
                                 window,
                                 MainPageResources.ReverseSearchErrorTitle,
                                 s > 0 ? MainPageResources.ReverseSearchServerSideErrorContent : MainPageResources.ReverseSearchClientSideErrorContent)
@@ -117,7 +123,7 @@ public partial class MainPageViewModel : AutoActivateObservableRecipient, IRecip
                 }
 
                 // window.HideProgressRing();
-                MessageDialogBuilder.CreateAcknowledgement(window, MainPageResources.ReverseSearchNotFoundTitle, MainPageResources.ReverseSearchNotFoundContent);
+                _ = MessageDialogBuilder.CreateAcknowledgement(window, MainPageResources.ReverseSearchNotFoundTitle, MainPageResources.ReverseSearchNotFoundContent);
             }
         }
         catch (Exception e)

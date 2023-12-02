@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/IllustratorNameMacro.cs
+// Copyright (c) 2023 Pixeval/IllustratorNameMacro.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@
 using Pixeval.Download.MacroParser;
 using Pixeval.Util.IO;
 using Pixeval.Utilities;
-using Pixeval.UserControls.IllustrationView;
+using Pixeval.Controls.IllustrationView;
 
 namespace Pixeval.Download.Macros;
 
@@ -32,6 +32,6 @@ public class IllustratorNameMacro : IMacro<IllustrationViewModel>.ITransducer
 
     public string Substitute(IllustrationViewModel context)
     {
-        return context.Illustrate.User?.Name?.Let(IOHelper.NormalizePathSegment) ?? MacroParserResources.UnknownArtist;
+        return context.Illustrate.User?.Name?.Let(IoHelper.NormalizePathSegment) ?? MacroParserResources.UnknownArtist;
     }
 }

@@ -1,8 +1,8 @@
-﻿#region Copyright (c) Pixeval/Pixeval.CoreApi
+#region Copyright (c) Pixeval/Pixeval.CoreApi
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
-// Copyright (c) 2021 Pixeval.CoreApi/IllegalPrivatePolicyException.cs
+// Copyright (c) 2023 Pixeval.CoreApi/IllegalPrivatePolicyException.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,8 +18,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System.Runtime.Serialization;
-using JetBrains.Annotations;
 using Pixeval.CoreApi.Global.Enum;
 
 namespace Pixeval.CoreApi.Global.Exception;
@@ -28,15 +26,9 @@ namespace Pixeval.CoreApi.Global.Exception;
 ///     When a <see cref="PrivacyPolicy" /> is set to <see cref="PrivacyPolicy.Private" /> while the uid is not equivalent
 ///     to the <see cref="MakoClient.Session" />
 /// </summary>
-[PublicAPI]
 public class IllegalPrivatePolicyException : MakoException
 {
     public IllegalPrivatePolicyException(string uid)
-    {
-        Uid = uid;
-    }
-
-    protected IllegalPrivatePolicyException(SerializationInfo info, StreamingContext context, string uid) : base(info, context)
     {
         Uid = uid;
     }

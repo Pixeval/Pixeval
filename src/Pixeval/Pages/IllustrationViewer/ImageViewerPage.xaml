@@ -5,32 +5,31 @@
     xmlns:controls="using:Pixeval.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:userControls="using:Pixeval.UserControls"
     mc:Ignorable="d">
     <Grid>
-        <userControls:ZoomableImage
+        <controls:ZoomableImage
             HorizontalAlignment="Stretch"
             VerticalAlignment="Stretch"
+            ImageIsMirrored="{x:Bind _viewModel.IsMirrored, Mode=OneWay}"
+            ImageRotationDegree="{x:Bind _viewModel.RotationDegree, Mode=TwoWay}"
             ImageScale="{x:Bind _viewModel.Scale, Mode=TwoWay}"
             IsPlaying="{x:Bind _viewModel.IsPlaying, Mode=OneWay}"
             Mode="{x:Bind _viewModel.ShowMode, Mode=TwoWay}"
             MsIntervals="{x:Bind _viewModel.MsIntervals, Mode=OneWay}"
-            OriginalImageHeight="{x:Bind _viewModel.IllustrationViewModel.Illustrate.Height}"
-            OriginalImageWidth="{x:Bind _viewModel.IllustrationViewModel.Illustrate.Width}"
             Sources="{x:Bind _viewModel.OriginalImageSources, Mode=OneWay}">
-            <userControls:ZoomableImage.ContextFlyout>
-                <!--  Todo: PrimaryCommands 点击后不会自动隐藏Flyout，等待wasdk修复或者加上Close的Handler  -->
+            <controls:ZoomableImage.ContextFlyout>
+                <!--  PrimaryCommands 点击后不会自动隐藏Flyout  -->
                 <CommandBarFlyout>
                     <AppBarToggleButton Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.IllustrationInfoAndCommentsCommand}" IsChecked="{x:Bind _viewModel.IllustrationViewerPageViewModel.IsInfoPaneOpen, Mode=TwoWay}" />
                     <AppBarButton Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.PlayGifCommand}" Visibility="{x:Bind _viewModel.IllustrationViewerPageViewModel.IsUgoira}" />
                     <AppBarButton Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.BookmarkCommand}" />
                     <AppBarSeparator />
-                    <AppBarButton Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.CopyCommand}" />
-                    <AppBarButton Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.SaveCommand}" />
+                    <AppBarButton Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.ZoomInCommand}" />
+                    <AppBarButton Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.ZoomOutCommand}" />
                     <!--<AppBarButton Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.ShareCommand}" />-->
                     <CommandBarFlyout.SecondaryCommands>
-                        <AppBarButton Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.ZoomInCommand}" />
-                        <AppBarButton Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.ZoomOutCommand}" />
+                        <AppBarButton Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.CopyCommand}" />
+                        <AppBarButton Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.SaveCommand}" />
                         <AppBarButton Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.SetAsCommand}">
                             <AppBarButton.Flyout>
                                 <MenuFlyout>
@@ -50,8 +49,8 @@
                                 Tapped="ShowQrCodeCommandOnExecuteRequested" />-->
                     </CommandBarFlyout.SecondaryCommands>
                 </CommandBarFlyout>
-            </userControls:ZoomableImage.ContextFlyout>
-        </userControls:ZoomableImage>
+            </controls:ZoomableImage.ContextFlyout>
+        </controls:ZoomableImage>
         <Grid Visibility="{x:Bind _viewModel.GetLoadingMaskVisibility(_viewModel.LoadingOriginalSourceTask), Mode=OneWay}">
             <Rectangle Fill="{ThemeResource PixevalAppAcrylicBrush}" />
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">

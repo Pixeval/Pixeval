@@ -2,13 +2,12 @@
     x:Class="Pixeval.Pages.Misc.AboutPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    xmlns:controls1="using:Pixeval.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:labs="using:CommunityToolkit.Labs.WinUI"
+    xmlns:markup="using:Pixeval.Controls.MarkupExtensions"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:misc="using:Pixeval.Pages.Misc"
-    xmlns:personView="using:Pixeval.UserControls.PersonView"
-    xmlns:markup="using:Pixeval.Util.MarkupExtensions"
     Loaded="AboutPage_OnLoaded"
     mc:Ignorable="d">
 
@@ -41,7 +40,7 @@
                         </ItemsRepeater.Layout>
                         <ItemsRepeater.ItemTemplate>
                             <DataTemplate x:DataType="misc:Supporter">
-                                <personView:PersonView
+                                <controls1:PersonView
                                     PersonName="{x:Bind Name}"
                                     PersonNickname="{x:Bind Nickname}"
                                     PersonPicture="{x:Bind ProfilePicture}"
@@ -57,34 +56,34 @@
                         Margin="0,10"
                         FontSize="{StaticResource PixevalContentFontSize}"
                         TextWrapping="Wrap" />
-                    <labs:SettingsCard
+                    <controls:SettingsCard
                         x:Uid="/AboutPage/WCTKIntroductoryTextBlock"
-                        ActionIcon="{markup:FontIcon Glyph=OpenInNewWindowE8A7}"
+                        ActionIcon="{markup:FontSymbolIcon Glyph=OpenInNewWindowE8A7}"
                         IsClickEnabled="True"
                         Tapped="LaunchUri" />
-                    <labs:SettingsCard
+                    <controls:SettingsCard
                         x:Uid="/AboutPage/MSHostingIntroductoryTextBlock"
-                        ActionIcon="{markup:FontIcon Glyph=OpenInNewWindowE8A7}"
+                        ActionIcon="{markup:FontSymbolIcon Glyph=OpenInNewWindowE8A7}"
                         IsClickEnabled="True"
                         Tapped="LaunchUri" />
-                    <labs:SettingsCard
+                    <controls:SettingsCard
                         x:Uid="/AboutPage/RCMemoryStreamIntroductoryTextBlock"
-                        ActionIcon="{markup:FontIcon Glyph=OpenInNewWindowE8A7}"
+                        ActionIcon="{markup:FontSymbolIcon Glyph=OpenInNewWindowE8A7}"
                         IsClickEnabled="True"
                         Tapped="LaunchUri" />
-                    <labs:SettingsCard
+                    <controls:SettingsCard
                         x:Uid="/AboutPage/ReverseMDIntroductoryTextBlock"
-                        ActionIcon="{markup:FontIcon Glyph=OpenInNewWindowE8A7}"
+                        ActionIcon="{markup:FontSymbolIcon Glyph=OpenInNewWindowE8A7}"
                         IsClickEnabled="True"
                         Tapped="LaunchUri" />
-                    <labs:SettingsCard
+                    <controls:SettingsCard
                         x:Uid="/AboutPage/SQLiteIntroductoryTextBlock"
-                        ActionIcon="{markup:FontIcon Glyph=OpenInNewWindowE8A7}"
+                        ActionIcon="{markup:FontSymbolIcon Glyph=OpenInNewWindowE8A7}"
                         IsClickEnabled="True"
                         Tapped="LaunchUri" />
-                    <labs:SettingsCard
+                    <controls:SettingsCard
                         x:Uid="/AboutPage/QRCoderIntroductoryTextBlock"
-                        ActionIcon="{markup:FontIcon Glyph=OpenInNewWindowE8A7}"
+                        ActionIcon="{markup:FontSymbolIcon Glyph=OpenInNewWindowE8A7}"
                         IsClickEnabled="True"
                         Tapped="LaunchUri" />
                 </StackPanel>
@@ -111,7 +110,8 @@
                         </Hyperlink>
                         <Run x:Uid="/AboutPage/OpenSourceLicenseContentPartII" />
                     </TextBlock>
-                    <controls:MarkdownTextBlock x:Name="OpenSourceLicenseMarkdownTextBlock" Background="Transparent" />
+                    <!--  TODO: Use Markdown  -->
+                    <TextBlock x:Name="LicenseTextBlock" />
                 </StackPanel>
             </StackPanel>
         </ScrollViewer>

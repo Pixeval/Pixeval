@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
-// Copyright (c) 2021 Pixeval.CoreApi/PixivApiHttpMessageHandler.cs
+// Copyright (c) 2023 Pixeval.CoreApi/PixivApiHttpMessageHandler.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -41,14 +41,14 @@ internal class PixivApiHttpMessageHandler(MakoClient makoClient) : MakoClientSup
             MakoHttpOptions.UseHttpScheme(request);
         }
 
-        headers.TryAddWithoutValidation("Accept-Language", MakoClient.Configuration.CultureInfo.Name);
+        _ = headers.TryAddWithoutValidation("Accept-Language", MakoClient.Configuration.CultureInfo.Name);
 
         var session = MakoClient.Session;
 
         switch (host)
         {
             case MakoHttpOptions.WebApiHost:
-                headers.TryAddWithoutValidation("Cookie", session.Cookie);
+                _ = headers.TryAddWithoutValidation("Cookie", session.Cookie);
                 break;
             case MakoHttpOptions.AppApiHost:
                 headers.Authorization = new AuthenticationHeaderValue("Bearer", session.AccessToken);

@@ -1,8 +1,8 @@
-﻿#region Copyright (c) Pixeval/Pixeval.CoreApi
+#region Copyright (c) Pixeval/Pixeval.CoreApi
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
-// Copyright (c) 2021 Pixeval.CoreApi/RecommendIllustratorEnumerable.cs
+// Copyright (c) 2023 Pixeval.CoreApi/RecommendIllustratorEnumerable.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -32,7 +32,7 @@ internal class RecommendIllustratorEngine(MakoClient makoClient, TargetFilter ta
 {
     private readonly TargetFilter _targetFilter = targetFilter;
 
-    public override IAsyncEnumerator<User> GetAsyncEnumerator(CancellationToken cancellationToken = new())
+    public override IAsyncEnumerator<User> GetAsyncEnumerator(CancellationToken cancellationToken = new CancellationToken())
     {
         return RecursivePixivAsyncEnumerators.User<RecommendIllustratorEngine>
             .WithInitialUrl(this, MakoApiKind.AppApi, engine => "/v1/user/recommended"

@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
-// Copyright (c) 2021 Pixeval.CoreApi/MakoNetworkException.cs
+// Copyright (c) 2023 Pixeval.CoreApi/MakoNetworkException.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -20,11 +20,9 @@
 
 using System.Net.Http;
 using System.Threading.Tasks;
-using JetBrains.Annotations;
 
 namespace Pixeval.CoreApi.Global.Exception;
 
-[PublicAPI]
 public class MakoNetworkException(string url, bool bypass, string? extraMsg, int statusCode)
     : MakoException($"Network error while requesting URL: {url}:\n {extraMsg}\n Bypassing: {bypass}\n Status code: {statusCode}")
 {

@@ -1,8 +1,8 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/ToastNotificationHelper.cs
+// Copyright (c) 2023 Pixeval/ToastNotificationHelper.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -71,11 +71,11 @@ public static class ToastNotificationHelper
                     ["progressValue"] = $"{progress.Normalize(100, 0):#.#}"
                 }
             };
-            ToastNotificationManager.CreateToastNotifier().Update(data, _tag);
+            _ = ToastNotificationManager.CreateToastNotifier().Update(data, _tag);
         }
     }
 
-    private static readonly PropertyInfo AppLogoOverrideUriProperty = typeof(ToastContentBuilder).GetProperty("AppLogoOverrideUri", BindingFlags.NonPublic | BindingFlags.Instance)!;
+    private static readonly PropertyInfo _appLogoOverrideUriProperty = typeof(ToastContentBuilder).GetProperty("AppLogoOverrideUri", BindingFlags.NonPublic | BindingFlags.Instance)!;
 
     public static ToastContentBuilder AddInlineImage(
         this ToastContentBuilder builder,
@@ -134,7 +134,7 @@ public static class ToastNotificationHelper
             appLogoOverrideUri.AddImageQuery = query;
         }
 
-        AppLogoOverrideUriProperty.SetValue(builder, appLogoOverrideUri);
+        _appLogoOverrideUriProperty.SetValue(builder, appLogoOverrideUri);
 
         return builder;
     }
@@ -148,7 +148,7 @@ public static class ToastNotificationHelper
         contentBuilder?.Invoke(builder);
         if (logoUri is not null)
         {
-            builder.AddAppLogoOverride(logoUri, ToastGenericAppLogoCrop.Default);
+            _ = builder.AddAppLogoOverride(logoUri, ToastGenericAppLogoCrop.Default);
         }
 
         builder.Show();

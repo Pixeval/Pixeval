@@ -1,8 +1,8 @@
-﻿#region Copyright (c) Pixeval/Pixeval.CoreApi
+#region Copyright (c) Pixeval/Pixeval.CoreApi
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
-// Copyright (c) 2021 Pixeval.CoreApi/IFetchEngine.cs
+// Copyright (c) 2023 Pixeval.CoreApi/IFetchEngine.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -19,7 +19,6 @@
 #endregion
 
 using System.Collections.Generic;
-using JetBrains.Annotations;
 using Pixeval.CoreApi.Global;
 
 namespace Pixeval.CoreApi.Engine;
@@ -33,7 +32,6 @@ namespace Pixeval.CoreApi.Engine;
 ///     </para>
 /// </summary>
 /// <typeparam name="E">The type of the results of the <see cref="IFetchEngine{E}" /></typeparam>
-[PublicAPI]
 public interface IFetchEngine<out E> : IAsyncEnumerable<E>, IMakoClientSupport, IEngineHandleSource
 {
     /// <summary>

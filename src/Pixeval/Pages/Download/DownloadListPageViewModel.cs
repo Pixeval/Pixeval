@@ -1,8 +1,8 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/DownloadListPageViewModel.cs
+// Copyright (c) 2023 Pixeval/DownloadListPageViewModel.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -23,15 +23,19 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.WinUI.UI;
 using Microsoft.Extensions.DependencyInjection;
+using Pixeval.Controls;
+using Pixeval.Controls.Illustrate;
+using Pixeval.CoreApi.Model;
 using Pixeval.Database.Managers;
 using Pixeval.Download;
+using Pixeval.Options;
 using Pixeval.Utilities;
+using WinUI3Utilities;
 
 namespace Pixeval.Pages.Download;
 
-public partial class DownloadListPageViewModel : ObservableObject
+public partial class DownloadListPageViewModel : IllustrateViewViewModel<Illustration, DownloadListEntryViewModel>
 {
     public static readonly IEnumerable<DownloadListOption> AvailableDownloadListOptions = Enum.GetValues<DownloadListOption>();
 
@@ -39,13 +43,7 @@ public partial class DownloadListPageViewModel : ObservableObject
     private DownloadListOption _currentOption;
 
     [ObservableProperty]
-    private IList<DownloadListEntryViewModel> _downloadTasks;
-
-    [ObservableProperty]
-    private AdvancedCollectionView _downloadTasksView;
-
-    [ObservableProperty]
-    private ObservableCollection<IDownloadTask> _filteredTasks;
+    private ObservableCollection<DownloadListEntryViewModel> _filteredTasks = [];
 
     [ObservableProperty]
     private bool _isAnyEntrySelected;
@@ -53,21 +51,20 @@ public partial class DownloadListPageViewModel : ObservableObject
     [ObservableProperty]
     private string _selectionLabel;
 
-    public DownloadListPageViewModel(List<DownloadListEntryViewModel> downloadTasks)
+    public sealed override IDataProvider<Illustration, DownloadListEntryViewModel> DataProvider { get; } = new DownloadListEntryDataProvider();
+
+    public DownloadListPageViewModel(IEnumerable<ObservableDownloadTask> source)
     {
-        downloadTasks.Reverse();
-        _downloadTasks = downloadTasks;
-        _filteredTasks = new ObservableCollection<IDownloadTask>();
-        _downloadTasksView = new AdvancedCollectionView(downloadTasks);
+        DataProvider.To<DownloadListEntryDataProvider>().ResetEngine(source);
         _selectionLabel = DownloadListPageResources.CancelSelectionButtonDefaultLabel;
     }
 
-    public IEnumerable<DownloadListEntryViewModel> SelectedTasks => DownloadTasks.Where(x => x.DownloadTask.Selected);
+    public IEnumerable<DownloadListEntryViewModel> SelectedTasks => DataProvider.View.Where(x => x.DownloadTask.Selected);
 
     public void UpdateSelection()
     {
         var count = SelectedTasks.Count();
-        SelectionLabel = count == 0
+        SelectionLabel = count is 0
             ? DownloadListPageResources.CancelSelectionButtonDefaultLabel
             : DownloadListPageResources.CancelSelectionButtonFormatted.Format(count);
         IsAnyEntrySelected = count != 0;
@@ -76,25 +73,19 @@ public partial class DownloadListPageViewModel : ObservableObject
     public void PauseSelectedItems()
     {
         foreach (var downloadListEntryViewModel in SelectedTasks.Where(t => t.DownloadTask.CurrentState == DownloadState.Running))
-        {
             downloadListEntryViewModel.DownloadTask.CancellationHandle.Pause();
-        }
     }
 
     public void ResumeSelectedItems()
     {
         foreach (var downloadListEntryViewModel in SelectedTasks.Where(t => t.DownloadTask.CurrentState == DownloadState.Paused))
-        {
             downloadListEntryViewModel.DownloadTask.CancellationHandle.Resume();
-        }
     }
 
     public void CancelSelectedItems()
     {
         foreach (var downloadListEntryViewModel in SelectedTasks.Where(t => t.DownloadTask.CurrentState is DownloadState.Queued or DownloadState.Created or DownloadState.Running or DownloadState.Paused))
-        {
             downloadListEntryViewModel.DownloadTask.CancellationHandle.Cancel();
-        }
     }
 
     public void RemoveSelectedItems()
@@ -104,11 +95,10 @@ public partial class DownloadListPageViewModel : ObservableObject
         SelectedTasks.ToList().ForEach(task =>
         {
             App.AppViewModel.DownloadManager.RemoveTask(task.DownloadTask);
-            DownloadTasks.Remove(task);
-            manager.Delete(m => m.Destination == task.DownloadTask.Destination);
+            _ = DataProvider.View.Remove(task);
+            _ = manager.Delete(m => m.Destination == task.DownloadTask.Destination);
         });
 
-        DownloadTasksView.Refresh();
         UpdateSelection();
     }
 
@@ -120,41 +110,44 @@ public partial class DownloadListPageViewModel : ObservableObject
             return;
         }
 
-        var newTasks = DownloadTasks.Where(Query).Select(t => t.DownloadTask);
+        var newTasks = DataProvider.Source.Where(Query);
         FilteredTasks.ReplaceByUpdate(newTasks);
+        return;
 
-        bool Query(DownloadListEntryViewModel viewModel)
-        {
-            return (viewModel.DownloadTask.Title?.Contains(key) ?? false) ||
+        bool Query(DownloadListEntryViewModel viewModel) =>
+            (viewModel.Illustrate.Title?.Contains(key) ?? false) ||
                    ((viewModel.DownloadTask is IllustrationDownloadTask task ? task.IllustrationViewModel.Id : viewModel.DownloadTask.Id)?.Contains(key) ?? false);
-        }
     }
 
-    public void ResetFilter(IEnumerable<IDownloadTask>? customSearchResultTask = null)
+    public void ResetFilter(IEnumerable<DownloadListEntryViewModel>? customSearchResultTask = null)
     {
-        DownloadTasksView.Filter = o => o switch
+        DataProvider.View.Filter = o => o switch
         {
-            DownloadListEntryViewModel { DownloadTask: var task } => CurrentOption switch
+            { DownloadTask: var task } => CurrentOption switch
             {
                 DownloadListOption.AllQueued => true,
                 DownloadListOption.Running => task.CurrentState is DownloadState.Running,
                 DownloadListOption.Completed => task.CurrentState is DownloadState.Completed,
                 DownloadListOption.Cancelled => task.CurrentState is DownloadState.Cancelled,
                 DownloadListOption.Error => task.CurrentState is DownloadState.Error,
-                DownloadListOption.CustomSearch => customSearchResultTask?.Contains(task) ?? true,
+                DownloadListOption.CustomSearch => customSearchResultTask?.Contains(o) ?? true,
                 _ => throw new ArgumentOutOfRangeException()
             },
             _ => false
         };
-        DownloadTasksView.Refresh();
-        foreach (var downloadListEntryViewModel in DownloadTasks)
-        {
-            if (!DownloadTasksView.Any(entry => downloadListEntryViewModel.DownloadTask.Equals(entry)))
-            {
+        foreach (var downloadListEntryViewModel in DataProvider.Source)
+            if (!DataProvider.View.Any(downloadListEntryViewModel.DownloadTask.Equals))
                 downloadListEntryViewModel.DownloadTask.Selected = false;
-            }
-        }
 
         UpdateSelection();
+    }
+
+    public override void Dispose()
+    {
+        foreach (var illustrationViewModel in DataProvider.Source)
+        {
+            illustrationViewModel.UnloadThumbnail(this, ThumbnailUrlOption.SquareMedium);
+            illustrationViewModel.Dispose();
+        }
     }
 }

@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFramework>net7.0</TargetFramework>
+        <TargetFramework>net8.0</TargetFramework>
         <Configurations>Debug;Release</Configurations>
         <Platforms>x86;x64;arm64</Platforms>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -9,8 +9,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Autofac" Version="7.0.1" PrivateAssets="True" />
-        <PackageReference Include="JetBrains.Annotations" Version="2023.2.0" PrivateAssets="True" />
+        <PackageReference Include="Autofac" Version="7.1.0" PrivateAssets="True" />
         <PackageReference Include="Refit" Version="7.0.0" PrivateAssets="True" />
     </ItemGroup>
 

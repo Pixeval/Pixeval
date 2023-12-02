@@ -1,8 +1,8 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/IDownloadTask.cs
+// Copyright (c) 2023 Pixeval/IDownloadTask.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -26,15 +26,9 @@ namespace Pixeval.Download;
 
 public interface IDownloadTask
 {
-    string? Title { get; }
-
-    string? Description { get; }
-
     string Url { get; }
 
     string Destination { get; }
-
-    string? Thumbnail { get; }
 
     CancellationHandle CancellationHandle { get; set; }
 

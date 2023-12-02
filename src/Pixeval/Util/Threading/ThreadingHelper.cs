@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/AsyncHelper.cs
+// Copyright (c) 2023 Pixeval/ThreadingHelper.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -45,14 +45,16 @@ public static class ThreadingHelper
         // nop
     }
 
-    public static Task<R> ContinueWithFlatten<T, R>(this Task<T> task, Func<T, Task<R>> func)
+    public static Task<TR> ContinueWithFlatten<T, TR>(this Task<T> task, Func<T, Task<TR>> func)
     {
         return task.ContinueWith(t => func(t.Result)).Unwrap();
     }
 
     public static void CompareExchange(ref int location1, int value, int comparand)
     {
-        while (Interlocked.CompareExchange(ref location1, value, comparand) != comparand) ;
+        while (Interlocked.CompareExchange(ref location1, value, comparand) != comparand)
+        {
+        }
     }
 
     // fork a task from current context.
@@ -68,7 +70,7 @@ public static class ThreadingHelper
 
     public static void DispatchTask(DispatcherQueueHandler action)
     {
-        CurrentContext.Window.DispatcherQueue.TryEnqueue(action);
+        _ = CurrentContext.Window.DispatcherQueue.TryEnqueue(action);
     }
 
     public static Task<T> DispatchSyncTaskAsync<T>(Func<T> func)
@@ -89,15 +91,15 @@ public static class ThreadingHelper
     public static Task<T> EnqueueSyncTaskAsync<T>(this DispatcherQueue dispatcher, Func<T> function, DispatcherQueuePriority priority = DispatcherQueuePriority.Normal)
     {
         var taskCompletionSource = new TaskCompletionSource<T>();
-        dispatcher.TryEnqueue(priority, () =>
+        _ = dispatcher.TryEnqueue(priority, () =>
         {
             try
             {
-                taskCompletionSource.TrySetResult(function());
+                _ = taskCompletionSource.TrySetResult(function());
             }
             catch (Exception e)
             {
-                taskCompletionSource.TrySetException(e);
+                _ = taskCompletionSource.TrySetException(e);
             }
         });
         return taskCompletionSource.Task;

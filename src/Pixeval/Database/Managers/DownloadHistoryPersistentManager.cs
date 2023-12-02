@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/DownloadHistoryPersistentManager.cs
+// Copyright (c) 2023 Pixeval/DownloadHistoryPersistentManager.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -42,12 +42,12 @@ public class DownloadHistoryPersistentManager(ILiteDatabase collection, int maxi
             Purge(MaximumRecords);
         }
 
-        Collection.Insert(t);
+        _ = Collection.Insert(t);
         t.PropertyChanged += (_, _) =>
         {
             if (Collection.Find(entry => entry.Destination == t.Destination).Any())
             {
-                Collection.Update(t);
+                _ = Collection.Update(t);
             }
         };
     }
@@ -88,13 +88,13 @@ public class DownloadHistoryPersistentManager(ILiteDatabase collection, int maxi
         if (Collection.Count() > limit)
         {
             var last = Collection.FindAll().Take(^limit..).Select(e => e.Destination).ToHashSet();
-            Delete(e => !last.Contains(e.Destination!));
+            _ = Delete(e => !last.Contains(e.Destination!));
         }
     }
 
     public void Clear()
     {
-        Collection.DeleteAll();
+        _ = Collection.DeleteAll();
         App.AppViewModel.DownloadManager.ClearTasks();
     }
 

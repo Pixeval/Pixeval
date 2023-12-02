@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/MainPage.xaml.cs
+// Copyright (c) 2023 Pixeval/MainPage.xaml.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -24,8 +24,6 @@ using System.Linq;
 using System.Runtime;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Messaging;
-using CommunityToolkit.WinUI.UI;
-using CommunityToolkit.WinUI.UI.Controls;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Input;
 using Microsoft.UI.Windowing;
@@ -44,7 +42,7 @@ using Pixeval.Messages;
 using Pixeval.Pages.Capability;
 using Pixeval.Pages.Download;
 using Pixeval.Pages.Misc;
-using Pixeval.UserControls.IllustrationView;
+using Pixeval.Controls.IllustrationView;
 using Pixeval.Util;
 using Pixeval.Util.Threading;
 using Pixeval.Util.UI;
@@ -55,6 +53,8 @@ using Windows.Graphics;
 using Windows.Storage;
 using Windows.System;
 using Windows.UI.Core;
+using CommunityToolkit.WinUI;
+using Pixeval.Controls.Windowing;
 using WinUI3Utilities;
 using Image = SixLabors.ImageSharp.Image;
 
@@ -96,30 +96,30 @@ public sealed partial class MainPage : ISupportCustomTitleBarDragRegion
             ActivationRegistrar.Dispatch(AppInstance.GetCurrent().GetActivatedEventArgs());
         }
 
-        WeakReferenceMessenger.Default.TryRegister<MainPage, MainPageFrameSetConnectedAnimationTargetMessage>(this, (_, message) => _connectedAnimationTarget = message.Sender);
-        WeakReferenceMessenger.Default.TryRegister<MainPage, NavigatingBackToMainPageMessage>(this, (_, message) => _illustrationViewerContent = message.IllustrationViewModel);
-        WeakReferenceMessenger.Default.TryRegister<MainPage, IllustrationTagClickedMessage>(this, (_, message) => PerformSearch(message.Tag));
-        WeakReferenceMessenger.Default.TryRegister<MainPage, GlobalSearchQuerySubmittedMessage>(this, (_, message) =>
+        _ = WeakReferenceMessenger.Default.TryRegister<MainPage, MainPageFrameSetConnectedAnimationTargetMessage>(this, (_, message) => _connectedAnimationTarget = message.Sender);
+        _ = WeakReferenceMessenger.Default.TryRegister<MainPage, NavigatingBackToMainPageMessage>(this, (_, message) => _illustrationViewerContent = message.IllustrationViewModel);
+        _ = WeakReferenceMessenger.Default.TryRegister<MainPage, IllustrationTagClickedMessage>(this, (_, message) => PerformSearch(message.Tag));
+        _ = WeakReferenceMessenger.Default.TryRegister<MainPage, GlobalSearchQuerySubmittedMessage>(this, (_1, message) =>
         {
             MainPageRootNavigationView.SelectedItem = null;
-            MainPageRootFrame.Navigate(typeof(SearchResultsPage), message.Parameter);
+            _ = MainPageRootFrame.Navigate(typeof(SearchResultsPage), message.Parameter);
         });
-        WeakReferenceMessenger.Default.TryRegister<MainPage, NavigateToSettingEntryMessage>(this, (_, message) => NavigateToSettingEntryAsync(message.Entry).Discard());
+        _ = WeakReferenceMessenger.Default.TryRegister<MainPage, NavigateToSettingEntryMessage>(this, (_, message) => NavigateToSettingEntryAsync(message.Entry).Discard());
 
         // Connected animation to the element located in MainPage
         if (ConnectedAnimationService.GetForCurrentView().GetAnimation("ForwardConnectedAnimation") is { } animation)
         {
             animation.Configuration = new DirectConnectedAnimationConfiguration();
-            animation.TryStart(_connectedAnimationTarget ?? this);
+            _ = animation.TryStart(_connectedAnimationTarget ?? this);
             _connectedAnimationTarget = null;
         }
 
-        // Scroll the content to the item that were being browsed just now
-        if (_illustrationViewerContent is not null && MainPageRootFrame.FindDescendant<AdaptiveGridView>() is { } gridView)
-        {
-            gridView.ScrollIntoView(_illustrationViewerContent);
-            _illustrationViewerContent = null;
-        }
+        // TODO: Scroll the content to the item that were being browsed just now
+        //if (_illustrationViewerContent is not null && MainPageRootFrame.FindDescendant<ItemsRepeater>() is { } gridView)
+        //{
+        //    gridView.ScrollIntoView(_illustrationViewerContent);
+        //    _illustrationViewerContent = null;
+        //}
     }
 
     private void MainPageRootNavigationView_OnSelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
@@ -132,7 +132,7 @@ public sealed partial class MainPage : ISupportCustomTitleBarDragRegion
         // args.SelectedItem may be null here
         if (Equals(args.SelectedItem, DownloadListTab))
         {
-            MainPageRootFrame.Navigate(typeof(DownloadListPage), App.AppViewModel.DownloadManager.QueuedTasks.Where(task => task is not IIntrinsicDownloadTask));
+            Navigate<DownloadListPage>(MainPageRootFrame, App.AppViewModel.DownloadManager.QueuedTasks.Where(task => task is not IIntrinsicDownloadTask));
             return;
         }
 
@@ -141,7 +141,7 @@ public sealed partial class MainPage : ISupportCustomTitleBarDragRegion
 
     private void MainPageRootFrame_OnNavigated(object sender, NavigationEventArgs e)
     {
-        WeakReferenceMessenger.Default.Send(new MainPageFrameNavigatingEvent(this));
+        _ = WeakReferenceMessenger.Default.Send(new MainPageFrameNavigatingEvent(this));
         GCSettings.LargeObjectHeapCompactionMode = GCLargeObjectHeapCompactionMode.CompactOnce;
         GC.Collect();
     }
@@ -158,7 +158,7 @@ public sealed partial class MainPage : ISupportCustomTitleBarDragRegion
     {
         if (args.QueryText.IsNullOrBlank())
         {
-            MessageDialogBuilder.CreateAcknowledgement(this,
+            _ = MessageDialogBuilder.CreateAcknowledgement(this,
                 MainPageResources.SearchKeywordCannotBeBlankTitle,
                 MainPageResources.SearchKeywordCannotBeBlankContent);
             return;
@@ -184,8 +184,8 @@ public sealed partial class MainPage : ISupportCustomTitleBarDragRegion
             switch (type)
             {
                 case SuggestionType.Settings:
-                    SettingEntry.LazyValues.Value.FirstOrDefault(se => se.GetLocalizedResourceContent() == name)
-                        ?.Let(se => WeakReferenceMessenger.Default.Send(new NavigateToSettingEntryMessage(se)));
+                    _ = (SettingEntry.LazyValues.Value.FirstOrDefault(se => se.GetLocalizedResourceContent() == name)
+                        ?.Let(se => WeakReferenceMessenger.Default.Send(new NavigateToSettingEntryMessage(se))));
                     break;
                 default:
                     sender.Text = name;
@@ -217,7 +217,7 @@ public sealed partial class MainPage : ISupportCustomTitleBarDragRegion
 
         var setting = App.AppViewModel.AppSetting;
         MainPageRootNavigationView.SelectedItem = null;
-        MainPageRootFrame.Navigate(typeof(SearchResultsPage), App.AppViewModel.MakoClient.Search(
+        _ = MainPageRootFrame.Navigate(typeof(SearchResultsPage), App.AppViewModel.MakoClient.Search(
             text,
             setting.SearchStartingFromPageNumber,
             setting.PageLimitForKeywordSearch,
@@ -242,7 +242,7 @@ public sealed partial class MainPage : ISupportCustomTitleBarDragRegion
         var position = settingsPage.FindChild<FrameworkElement>(element => element.Tag is SettingEntry e && e == entry)
             ?.TransformToVisual((UIElement)settingsPage.SettingsPageScrollViewer.Content)
             .TransformPoint(new Point(0, 0));
-        settingsPage.SettingsPageScrollViewer.ChangeView(null, position?.Y, null, false);
+        _ = settingsPage.SettingsPageScrollViewer.ChangeView(null, position?.Y, null, false);
     }
 
     // The AutoSuggestBox does not have a 'Paste' event, so we check the keyboard event accordingly
@@ -275,7 +275,7 @@ public sealed partial class MainPage : ISupportCustomTitleBarDragRegion
     {
         if (App.AppViewModel.AppSetting.ReverseSearchApiKey is { Length: > 0 })
         {
-            if (await UIHelper.OpenFileOpenPickerAsync() is { } file)
+            if (await UiHelper.OpenFileOpenPickerAsync() is { } file)
             {
                 await using var stream = await file.OpenStreamForReadAsync();
                 await _viewModel.ReverseSearchAsync(stream);
@@ -296,7 +296,7 @@ public sealed partial class MainPage : ISupportCustomTitleBarDragRegion
             .WithDefaultButton(ContentDialogButton.Primary)
             .Build(CurrentContext.Window);
         content.Owner = dialog;
-        await dialog.ShowAsync();
+        _ = await dialog.ShowAsync();
     }
 
     private void KeywordAutoSuggestBox_OnDragOver(object sender, DragEventArgs e)
@@ -329,7 +329,7 @@ public sealed partial class MainPage : ISupportCustomTitleBarDragRegion
         var titleBar = TitleBar.TransformToVisual(Content).TransformPoint(new Point(0, 0));
         var titleBarRect = new RectInt32((int)titleBar.X, (int)titleBar.Y, (int)TitleBar.ActualWidth, (int)TitleBar.ActualHeight);
 
-        DragZoneHelper.SetDragZones(new(titleBarRect)
+        DragZoneHelper.SetDragZones(new DragZoneInfo(titleBarRect)
         {
             DragZoneLeftIndent = 48
         });

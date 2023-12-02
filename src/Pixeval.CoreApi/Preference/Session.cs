@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
-// Copyright (c) 2021 Pixeval.CoreApi/Session.cs
+// Copyright (c) 2023 Pixeval.CoreApi/Session.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -20,12 +20,10 @@
 
 using System;
 using System.Text.Json.Serialization;
-using JetBrains.Annotations;
 using Pixeval.Utilities;
 
 namespace Pixeval.CoreApi.Preference;
 
-[PublicAPI]
 public record Session
 {
     /// <summary>

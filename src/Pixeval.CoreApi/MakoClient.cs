@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
-// Copyright (c) 2021 Pixeval.CoreApi/MakoClient.cs
+// Copyright (c) 2023 Pixeval.CoreApi/MakoClient.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -23,7 +23,6 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Autofac;
-using JetBrains.Annotations;
 using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Global.Exception;
@@ -34,7 +33,6 @@ using Refit;
 
 namespace Pixeval.CoreApi;
 
-[PublicAPI]
 public partial class MakoClient : ICancellable
 {
     /// <summary>
@@ -89,64 +87,64 @@ public partial class MakoClient : ICancellable
     private IContainer BuildContainer()
     {
         var builder = new ContainerBuilder();
-        builder.RegisterInstance(this).SingleInstance();
+        _ = builder.RegisterInstance(this).SingleInstance();
 
-        builder.RegisterType<PixivApiNameResolver>().SingleInstance();
-        builder.RegisterType<PixivImageNameResolver>().SingleInstance();
-        builder.RegisterType<LocalMachineNameResolver>().SingleInstance();
+        _ = builder.RegisterType<PixivApiNameResolver>().SingleInstance();
+        _ = builder.RegisterType<PixivImageNameResolver>().SingleInstance();
+        _ = builder.RegisterType<LocalMachineNameResolver>().SingleInstance();
 
-        builder.RegisterType<PixivApiHttpMessageHandler>().SingleInstance();
-        builder.RegisterType<PixivImageHttpMessageHandler>().SingleInstance();
+        _ = builder.RegisterType<PixivApiHttpMessageHandler>().SingleInstance();
+        _ = builder.RegisterType<PixivImageHttpMessageHandler>().SingleInstance();
 
-        builder.Register(static c => new MakoRetryHttpClientHandler(c.Resolve<PixivApiHttpMessageHandler>()))
+        _ = builder.Register(static c => new MakoRetryHttpClientHandler(c.Resolve<PixivApiHttpMessageHandler>()))
             .Keyed<HttpMessageHandler>(typeof(PixivApiHttpMessageHandler))
             .As<HttpMessageHandler>()
             .PropertiesAutowired(static (info, _) => info.PropertyType == typeof(MakoClient))
             .SingleInstance();
-        builder.Register(static c => new MakoRetryHttpClientHandler(c.Resolve<PixivImageHttpMessageHandler>()))
+        _ = builder.Register(static c => new MakoRetryHttpClientHandler(c.Resolve<PixivImageHttpMessageHandler>()))
             .Keyed<HttpMessageHandler>(typeof(PixivImageHttpMessageHandler))
             .As<HttpMessageHandler>()
             .PropertiesAutowired(static (info, _) => info.PropertyType == typeof(MakoClient))
             .SingleInstance();
-        builder.Register(static c => MakoHttpClient.Create(c.ResolveKeyed<HttpMessageHandler>(typeof(PixivApiHttpMessageHandler)),
+        _ = builder.Register(static c => MakoHttpClient.Create(c.ResolveKeyed<HttpMessageHandler>(typeof(PixivApiHttpMessageHandler)),
                 static client => client.BaseAddress = new Uri(MakoHttpOptions.AppApiBaseUrl)))
             .Keyed<HttpClient>(MakoApiKind.AppApi)
             .As<HttpClient>()
             .SingleInstance();
-        builder.Register(static c => MakoHttpClient.Create(c.ResolveKeyed<HttpMessageHandler>(typeof(PixivApiHttpMessageHandler)),
+        _ = builder.Register(static c => MakoHttpClient.Create(c.ResolveKeyed<HttpMessageHandler>(typeof(PixivApiHttpMessageHandler)),
                 static client => client.BaseAddress = new Uri(MakoHttpOptions.WebApiBaseUrl)))
             .Keyed<HttpClient>(MakoApiKind.WebApi)
             .As<HttpClient>()
             .SingleInstance();
-        builder.Register(static c => MakoHttpClient.Create(c.ResolveKeyed<HttpMessageHandler>(typeof(PixivApiHttpMessageHandler)),
+        _ = builder.Register(static c => MakoHttpClient.Create(c.ResolveKeyed<HttpMessageHandler>(typeof(PixivApiHttpMessageHandler)),
                 static client => client.BaseAddress = new Uri(MakoHttpOptions.OAuthBaseUrl)))
             .Keyed<HttpClient>(MakoApiKind.AuthApi)
             .As<HttpClient>()
             .SingleInstance();
-        builder.Register(static c => MakoHttpClient.Create(c.ResolveKeyed<HttpMessageHandler>(typeof(PixivImageHttpMessageHandler)),
+        _ = builder.Register(static c => MakoHttpClient.Create(c.ResolveKeyed<HttpMessageHandler>(typeof(PixivImageHttpMessageHandler)),
                 static client =>
                 {
-                    client.DefaultRequestHeaders.TryAddWithoutValidation("Referer", "https://www.pixiv.net");
-                    client.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", "PixivIOSApp/5.8.7");
+                    _ = client.DefaultRequestHeaders.TryAddWithoutValidation("Referer", "https://www.pixiv.net");
+                    _ = client.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", "PixivIOSApp/5.8.7");
                 }))
             .Keyed<HttpClient>(MakoApiKind.ImageApi)
             .As<HttpClient>()
             .SingleInstance();
 
-        builder.Register(static c => MakoHttpOptions.CreateHttpMessageInvoker(c.Resolve<PixivApiNameResolver>()))
+        _ = builder.Register(static c => MakoHttpOptions.CreateHttpMessageInvoker(c.Resolve<PixivApiNameResolver>()))
             .Keyed<HttpMessageInvoker>(typeof(PixivApiNameResolver))
             .As<HttpMessageInvoker>()
             .SingleInstance();
-        builder.Register(static c => MakoHttpOptions.CreateHttpMessageInvoker(c.Resolve<PixivImageNameResolver>()))
+        _ = builder.Register(static c => MakoHttpOptions.CreateHttpMessageInvoker(c.Resolve<PixivImageNameResolver>()))
             .Keyed<HttpMessageInvoker>(typeof(PixivImageNameResolver))
             .As<HttpMessageInvoker>()
             .SingleInstance();
-        builder.Register(static _ => MakoHttpOptions.CreateDirectHttpMessageInvoker())
+        _ = builder.Register(static _ => MakoHttpOptions.CreateDirectHttpMessageInvoker())
             .Keyed<HttpMessageInvoker>(typeof(LocalMachineNameResolver))
             .As<HttpMessageInvoker>()
             .SingleInstance();
 
-        builder.Register(static c =>
+        _ = builder.Register(static c =>
         {
             var context = c.Resolve<IComponentContext>(); // or a System.ObjectDisposedException will thrown because the 'c' cannot be hold
             return RestService.For<IAppApiEndPoint>(c.ResolveKeyed<HttpClient>(MakoApiKind.AppApi), new RefitSettings
@@ -155,7 +153,7 @@ public partial class MakoClient : ICancellable
             });
         });
 
-        builder.Register(static c =>
+        _ = builder.Register(static c =>
         {
             var context = c.Resolve<IComponentContext>(); // or a System.ObjectDisposedException will thrown because the 'c' cannot be hold
             return RestService.For<IAuthEndPoint>(c.ResolveKeyed<HttpClient>(MakoApiKind.AuthApi), new RefitSettings
@@ -164,7 +162,7 @@ public partial class MakoClient : ICancellable
             });
         });
 
-        builder.Register(static c =>
+        _ = builder.Register(static c =>
         {
             var context = c.Resolve<IComponentContext>(); // or a System.ObjectDisposedException will thrown because the 'c' cannot be hold
             return RestService.For<IReverseSearchApiEndPoint>("https://saucenao.com/", new RefitSettings
@@ -227,7 +225,7 @@ public partial class MakoClient : ICancellable
     // removes an instance from the running instances list
     private void CancelInstance(EngineHandle handle)
     {
-        _runningInstances.RemoveAll(instance => instance.EngineHandle == handle);
+        _ = _runningInstances.RemoveAll(instance => instance.EngineHandle == handle);
     }
 
     // PrivacyPolicy.Private is only allowed when the uid is pointing to yourself

@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/RecentPostsPage.xaml.cs
+// Copyright (c) 2023 Pixeval/RecentPostsPage.xaml.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -24,7 +24,7 @@ using Microsoft.UI.Xaml.Navigation;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.Messages;
 using Pixeval.Misc;
-using Pixeval.UserControls;
+using Pixeval.Controls;
 using Pixeval.Util;
 using Pixeval.Util.UI;
 
@@ -50,7 +50,7 @@ public sealed partial class RecentPostsPage : ISortedIllustrationContainerPageHe
     {
         PrivacyPolicyComboBox.SelectedItem = PrivacyPolicyComboBoxPublicItem;
         SortOptionComboBox.SelectedItem = MakoHelper.GetAppSettingDefaultSortOptionWrapper();
-        WeakReferenceMessenger.Default.TryRegister<RecentPostsPage, MainPageFrameNavigatingEvent>(this, static (recipient, _) => recipient.IllustrationContainer.ViewModel.DataProvider.FetchEngine?.Cancel());
+        _ = WeakReferenceMessenger.Default.TryRegister<RecentPostsPage, MainPageFrameNavigatingEvent>(this, static (recipient, _) => recipient.IllustrationContainer.ViewModel.DataProvider.FetchEngine?.Cancel());
         ChangeSource();
     }
 
@@ -61,7 +61,7 @@ public sealed partial class RecentPostsPage : ISortedIllustrationContainerPageHe
 
     private void ChangeSource()
     {
-        _ = IllustrationContainer.ViewModel.ResetEngineAndFillAsync(App.AppViewModel.MakoClient.RecentPosts(PrivacyPolicyComboBox.GetComboBoxSelectedItemTag(PrivacyPolicy.Public)));
+        IllustrationContainer.ViewModel.ResetEngine(App.AppViewModel.MakoClient.RecentPosts(PrivacyPolicyComboBox.GetComboBoxSelectedItemTag(PrivacyPolicy.Public)));
     }
 
     private void SortOptionComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)

@@ -1,8 +1,8 @@
-﻿#region Copyright (c) Pixeval/Pixeval.Utilities
+#region Copyright (c) Pixeval/Pixeval.Utilities
 // GPL v3 License
 // 
 // Pixeval/Pixeval.Utilities
-// Copyright (c) 2021 Pixeval.Utilities/Objects.cs
+// Copyright (c) 2023 Pixeval.Utilities/Objects.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -32,11 +32,9 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using CommunityToolkit.HighPerformance;
 using CommunityToolkit.HighPerformance.Buffers;
-using JetBrains.Annotations;
 
 namespace Pixeval.Utilities;
 
-[PublicAPI]
 public static class Objects
 {
     public static readonly IEqualityComparer<string> CaseIgnoredComparer = new CaseIgnoredStringComparer();
@@ -70,7 +68,6 @@ public static class Objects
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    [ContractAnnotation("str:notnull => true")]
     public static bool IsNullOrEmpty(this string? str)
     {
         return string.IsNullOrEmpty(str);
@@ -126,7 +123,6 @@ public static class Objects
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    [ContractAnnotation("obj:notnull => notnull; obj:null => null")]
     public static string? ToJson(this object? obj, Action<JsonSerializerOptions>? serializerOptionConfigure = null)
     {
         return obj?.Let(o => JsonSerializer.Serialize(o, new JsonSerializerOptions().Apply(option => serializerOptionConfigure?.Invoke(option))));
@@ -163,7 +159,7 @@ public static class Objects
     public static async Task<Result<string>> GetStringResultAsync(this HttpClient httpClient, string url, Func<HttpResponseMessage, Task<Exception>>? exceptionSelector = null)
     {
         var responseMessage = await httpClient.GetAsync(url).ConfigureAwait(false);
-        return !responseMessage.IsSuccessStatusCode ? Result<string>.OfFailure(exceptionSelector is { } selector ? await selector.Invoke(responseMessage).ConfigureAwait(false) : null) : Result<string>.OfSuccess(await responseMessage.Content.ReadAsStringAsync());
+        return !responseMessage.IsSuccessStatusCode ? Result<string>.AsFailure(exceptionSelector is { } selector ? await selector.Invoke(responseMessage).ConfigureAwait(false) : null) : Result<string>.AsSuccess(await responseMessage.Content.ReadAsStringAsync());
     }
 
     public static Task<TResult[]> WhenAll<TResult>(this IEnumerable<Task<TResult>> tasks)
@@ -241,10 +237,9 @@ public static class Objects
         return b = !b;
     }
 
-    [ContractAnnotation("orElse:null => null;orElse:notnull => notnull")]
-    public static async Task<R?> GetOrElseAsync<R>(this Task<Result<R>> task, R? orElse)
+    public static async Task<R?> UnwrapOrElseAsync<R>(this Task<Result<R>> task, R? orElse)
     {
-        return (await task).GetOrElse(orElse);
+        return (await task).UnwrapOrElse(orElse);
     }
 
     public static bool IsValidRegexPattern(this string pattern)

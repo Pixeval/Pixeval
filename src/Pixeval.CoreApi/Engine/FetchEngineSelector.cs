@@ -1,8 +1,8 @@
-﻿#region Copyright (c) Pixeval/Pixeval.CoreApi
+#region Copyright (c) Pixeval/Pixeval.CoreApi
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
-// Copyright (c) 2021 Pixeval.CoreApi/FetchEngineSelector.cs
+// Copyright (c) 2023 Pixeval.CoreApi/FetchEngineSelector.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -33,7 +33,7 @@ internal class FetchEngineSelector<T, R>(IFetchEngine<T> delegateEngine, Func<T,
 
     public int RequestedPages { get; set; } = 0;
 
-    public IAsyncEnumerator<R> GetAsyncEnumerator(CancellationToken cancellationToken = new())
+    public IAsyncEnumerator<R> GetAsyncEnumerator(CancellationToken cancellationToken = new CancellationToken())
     {
         return new FetchEngineSelectorAsyncEnumerator(delegateEngine.GetAsyncEnumerator(cancellationToken), selector)!;
     }

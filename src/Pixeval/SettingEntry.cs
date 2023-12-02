@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/SettingsMarker.cs
+// Copyright (c) 2023 Pixeval/SettingEntry.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -52,14 +52,19 @@ public enum SettingEntryCategory
 
 public partial record SettingEntry(SettingEntryCategory Category, Type ResourceLoader, string ResourceKey)
 {
-    public static readonly SettingEntry AutoUpdate = new(SettingEntryCategory.Version, typeof(SettingsPageResources), nameof(SettingsPageResources.DownloadUpdateAutomaticallyEntryHeader));
+    public static readonly SettingEntry AutoUpdate = new(SettingEntryCategory.Version,
+        typeof(SettingsPageResources), nameof(SettingsPageResources.DownloadUpdateAutomaticallyEntryHeader));
 
-    public static readonly SettingEntry SignOut = new(SettingEntryCategory.Session, typeof(SettingsPageResources), nameof(SettingsPageResources.SignOutEntryHeader));
+    public static readonly SettingEntry SignOut = new(SettingEntryCategory.Session,
+        typeof(SettingsPageResources), nameof(SettingsPageResources.SignOutEntryHeader));
 
-    public static readonly SettingEntry ResetSettings = new(SettingEntryCategory.Session, typeof(SettingsPageResources), nameof(SettingsPageResources.ResetDefaultSettingsEntryHeader));
+    public static readonly SettingEntry ResetSettings = new(SettingEntryCategory.Session,
+        typeof(SettingsPageResources), nameof(SettingsPageResources.ResetDefaultSettingsEntryHeader));
 
     public static readonly Lazy<IEnumerable<SettingEntry>> LazyValues = new(() =>
-        typeof(SettingEntry).GetFields(BindingFlags.Static | BindingFlags.Public | BindingFlags.DeclaredOnly).Select(f => f.GetValue(null)).OfType<SettingEntry>());
+        typeof(SettingEntry).GetFields(BindingFlags.Static | BindingFlags.Public | BindingFlags.DeclaredOnly)
+            .Select(f => f.GetValue(null))
+            .OfType<SettingEntry>());
 
     public string? GetLocalizedResourceContent()
     {

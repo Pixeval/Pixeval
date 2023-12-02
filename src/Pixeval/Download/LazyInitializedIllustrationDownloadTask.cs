@@ -1,8 +1,8 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/LazyInitializedIllustrationDownloadTask.cs
+// Copyright (c) 2023 Pixeval/LazyInitializedIllustrationDownloadTask.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -21,14 +21,16 @@
 using System;
 using System.Threading.Tasks;
 using Pixeval.Database;
-using Pixeval.UserControls.IllustrationView;
+using Pixeval.Controls.IllustrationView;
 
 namespace Pixeval.Download;
 
 public class LazyInitializedIllustrationDownloadTask
     (DownloadHistoryEntry databaseEntry) : ObservableDownloadTask(databaseEntry), IIllustrationViewModelProvider
 {
-    private readonly Lazy<Task<IllustrationViewModel>> _resultGenerator = new(async () => new IllustrationViewModel(await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(databaseEntry.Id!)));
+    private readonly Lazy<Task<IllustrationViewModel>> _resultGenerator =
+        new(async () =>
+            new IllustrationViewModel(await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(databaseEntry.Id!)));
 
     public Task<IllustrationViewModel> GetViewModelAsync()
     {

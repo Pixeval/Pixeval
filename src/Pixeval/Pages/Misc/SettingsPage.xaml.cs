@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/SettingsPage.xaml.cs
+// Copyright (c) 2023 Pixeval/SettingsPage.xaml.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -25,15 +25,15 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
+using Pixeval.Controls.Windowing;
 using Pixeval.Database.Managers;
 using Pixeval.Download.MacroParser;
-using Pixeval.UserControls.Setting.UI;
-using Pixeval.UserControls.TokenInput;
+using Pixeval.Controls.TokenInput;
 using Pixeval.Util.Threading;
 using Pixeval.Util.UI;
-using Pixeval.Util.UI.Windowing;
 using Pixeval.Utilities;
 using Windows.System;
+using Pixeval.SettingsModels;
 using WinUI3Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
 
@@ -43,7 +43,7 @@ namespace Pixeval.Pages.Misc;
 public sealed partial class SettingsPage
 {
     // This TestParser is used to test whether the user input meta path is legal
-    private static readonly MacroParser<string> TestParser = new();
+    private static readonly MacroParser<string> _testParser = new();
     private SettingsPageViewModel _viewModel;
 
     // The previous meta path after user changes the path field, if the path is illegal
@@ -53,8 +53,10 @@ public sealed partial class SettingsPage
     public SettingsPage()
     {
         InitializeComponent();
-        _viewModel = new SettingsPageViewModel(App.AppViewModel.AppSetting);
-        _viewModel.SettingsTeachingTip = SettingsTeachingTip;
+        _viewModel = new SettingsPageViewModel(App.AppViewModel.AppSetting)
+        {
+            SettingsTeachingTip = SettingsTeachingTip
+        };
         _previousPath = _viewModel.DefaultDownloadPathMacro;
     }
 
@@ -77,12 +79,12 @@ public sealed partial class SettingsPage
 
     private void Backdrop_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        WindowFactory.SetBackdrop(_viewModel.AppBackdrop);
+        WindowFactory.SetBackdrop(_viewModel.Backdrop);
     }
 
     private async void ThemeEntryDescriptionHyperlinkButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        await Launcher.LaunchUriAsync(new Uri("ms-settings:themes"));
+        _ = await Launcher.LaunchUriAsync(new Uri("ms-settings:themes"));
     }
 
     private void ImageMirrorServerTextBox_OnGotFocus(object sender, RoutedEventArgs e)
@@ -156,8 +158,8 @@ public sealed partial class SettingsPage
 
         try
         {
-            TestParser.SetupParsingEnvironment(new Lexer(_viewModel.DefaultDownloadPathMacro));
-            TestParser.Parse();
+            _testParser.SetupParsingEnvironment(new Lexer(_viewModel.DefaultDownloadPathMacro));
+            _ = _testParser.Parse();
         }
         catch (Exception exception)
         {

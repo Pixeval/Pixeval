@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/IllustrationDownloadTaskFactory.cs
+// Copyright (c) 2023 Pixeval/IllustrationDownloadTaskFactory.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,19 +18,17 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Pixeval.Database;
 using Pixeval.Database.Managers;
 using Pixeval.Download.MacroParser;
-using Pixeval.Options;
 using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Utilities;
 using Windows.Storage.Streams;
-using Pixeval.UserControls.IllustrationView;
+using Pixeval.Controls.IllustrationView;
 
 namespace Pixeval.Download;
 
@@ -42,11 +40,11 @@ public class IllustrationDownloadTaskFactory : IDownloadTaskFactory<Illustration
     {
         using var scope = App.AppViewModel.AppServicesScope;
         var manager = scope.ServiceProvider.GetRequiredService<DownloadHistoryPersistentManager>();
-        var path = IOHelper.NormalizePath(PathParser.Reduce(rawPath, context));
+        var path = IoHelper.NormalizePath(PathParser.Reduce(rawPath, context));
         if (manager.Collection.Find(entry => entry.Destination == path).Any())
         {
             // delete the original entry
-            manager.Delete(entry => entry.Destination == path);
+            _ = manager.Delete(entry => entry.Destination == path);
         }
 
         var task = Functions.Block<ObservableDownloadTask>(() =>
@@ -60,17 +58,16 @@ public class IllustrationDownloadTaskFactory : IDownloadTaskFactory<Illustration
 
                 var downloadHistoryEntry = new DownloadHistoryEntry(DownloadState.Created, null, path,
                     DownloadItemType.Ugoira,
-                    context.Id, context.Illustrate.Title, context.Illustrate.User?.Name,
-                    url, context.Illustrate.GetThumbnailUrl(ThumbnailUrlOption.SquareMedium));
+                    context.Id, 
+                    url);
                 return new AnimatedIllustrationDownloadTask(downloadHistoryEntry, context, ugoiraMetadata);
             }
             else
             {
                 var downloadHistoryEntry = new DownloadHistoryEntry(DownloadState.Created, null, path,
                     context.IsManga ? DownloadItemType.Manga : DownloadItemType.Illustration, 
-                    context.Id, context.Illustrate.Title, context.Illustrate.User?.Name,
-                    context.Illustrate.GetOriginalUrl()!,
-                    context.Illustrate.GetThumbnailUrl(ThumbnailUrlOption.SquareMedium));
+                    context.Id, 
+                    context.Illustrate.GetOriginalUrl()!);
                 return new IllustrationDownloadTask(downloadHistoryEntry, context);
             }
         });
@@ -87,8 +84,7 @@ public class IllustrationDownloadTaskFactory : IDownloadTaskFactory<Illustration
             { IsManga: true } => DownloadItemType.Manga,
             _ => DownloadItemType.Illustration
         };
-        var entry = new DownloadHistoryEntry(DownloadState.Completed, null, rawPath, type, context.Id,
-            context.Illustrate.Title, context.Illustrate.User?.Name, null, null);
+        var entry = new DownloadHistoryEntry(DownloadState.Completed, null, rawPath, type, context.Id, null);
         return Task.FromResult<ObservableDownloadTask>(new IntrinsicIllustrationDownloadTask(entry, context, stream));
     }
 }

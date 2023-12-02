@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/LazyInitializedAnimatedIllustrationDownloadTask.cs
+// Copyright (c) 2023 Pixeval/LazyInitializedAnimatedIllustrationDownloadTask.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -24,7 +24,7 @@ using System.Threading.Tasks;
 using Pixeval.Database;
 using Pixeval.Util.IO;
 using Windows.Storage.Streams;
-using Pixeval.UserControls.IllustrationView;
+using Pixeval.Controls.IllustrationView;
 
 namespace Pixeval.Download;
 
@@ -37,7 +37,7 @@ public class LazyInitializedAnimatedIllustrationDownloadTask : AnimatedIllustrat
     public LazyInitializedAnimatedIllustrationDownloadTask(DownloadHistoryEntry databaseEntry) : base(databaseEntry)
     {
         _illustId = databaseEntry.Id!;
-        _resultGenerator = new(async () => new(await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(_illustId)));
+        _resultGenerator = new Lazy<Task<IllustrationViewModel>>(async () => new IllustrationViewModel(await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(_illustId)));
     }
 
     public override async void Consume(IRandomAccessStream stream)
@@ -45,8 +45,8 @@ public class LazyInitializedAnimatedIllustrationDownloadTask : AnimatedIllustrat
         using (stream)
         {
             var metadata = await App.AppViewModel.MakoClient.GetUgoiraMetadataAsync(_illustId);
-            using var ugoiraStream = await IOHelper.GetStreamFromZipStreamAsync(stream.AsStreamForRead(), metadata);
-            await IOHelper.CreateAndWriteToFileAsync(ugoiraStream, Destination);
+            using var ugoiraStream = await IoHelper.GetStreamFromZipStreamAsync(stream.AsStreamForRead(), metadata);
+            await IoHelper.CreateAndWriteToFileAsync(ugoiraStream, Destination);
         }
     }
 

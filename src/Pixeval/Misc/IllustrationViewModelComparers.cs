@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/IllustrationViewModelComparers.cs
+// Copyright (c) 2023 Pixeval/IllustrationViewModelComparers.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -20,13 +20,14 @@
 
 using System.Collections;
 using System.Collections.Generic;
-using Pixeval.UserControls.IllustrationView;
+using Pixeval.Controls.IllustrationView;
 
 namespace Pixeval.Misc;
 
 public class IllustrationViewModelPublishDateComparer : IComparer<IllustrationViewModel>, IComparer
 {
-    public static readonly IllustrationViewModelPublishDateComparer Instance = new();
+    public static readonly IllustrationViewModelPublishDateComparer Instance =
+        new();
 
     public int Compare(object? x, object? y)
     {

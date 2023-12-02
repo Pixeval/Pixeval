@@ -2,7 +2,7 @@
     x:Class="Pixeval.Pages.IllustrationViewer.IllustrationInfoPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:model="using:Pixeval.CoreApi.Model"
@@ -60,14 +60,14 @@
             <!--#endregion-->
             <!--#region Illustration Caption-->
             <TextBlock x:Uid="/IllustrationInfoPage/IllustrationCaptionTextBlock" Style="{StaticResource InfoPageSectionHeaderTextBlockStyle}" />
-            <controls:MarkdownTextBlock
+            <!--<controls:MarkdownTextBlock
                 x:Name="IllustrationCaptionMarkdownTextBlock"
                 MaxHeight="200"
                 Margin="{StaticResource StackLayoutEntryPadding}"
                 Background="{ThemeResource PixevalPanelBackgroundThemeBrush}"
                 FontSize="{StaticResource PixevalContentFontSize}"
                 LinkClicked="IllustrationCaptionMarkdownTextBlock_OnLinkClicked"
-                TextWrapping="Wrap" />
+                TextWrapping="Wrap" />-->
             <!--#endregion-->
             <TextBlock x:Uid="/IllustrationInfoPage/IllustrationTotalBookmarksTextBlock" Style="{StaticResource InfoPageSectionHeaderTextBlockStyle}" />
             <TextBlock Style="{StaticResource InfoPageSectionContentTextBlockStyle}" Text="{x:Bind _viewModel.CurrentIllustration.Illustrate.TotalBookmarks}" />
@@ -82,9 +82,9 @@
                 <ItemsControl.ItemTemplate>
                     <DataTemplate x:DataType="model:Tag">
                         <Button
-                            Click="IllustrationTagButton_OnClick"
                             Content="{x:Bind Name}"
                             FontSize="{StaticResource PixevalSubscriptFontSize}"
+                            Tapped="IllustrationTagButton_OnTapped"
                             ToolTipService.ToolTip="{x:Bind viewer:IllustrationInfoPage.GetMakoTagTranslatedNameText(TranslatedName, Name)}" />
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>

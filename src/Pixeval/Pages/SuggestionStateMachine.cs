@@ -1,8 +1,8 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/SuggestionStateMachine.cs
+// Copyright (c) 2023 Pixeval/SuggestionStateMachine.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -36,27 +36,30 @@ namespace Pixeval.Pages;
 
 public class SuggestionStateMachine
 {
-    private readonly Lazy<Task<IEnumerable<SuggestionModel>>> _illustrationTrendingTagCache = new(
-        () => App.AppViewModel.MakoClient.GetTrendingTagsAsync(App.AppViewModel.AppSetting.TargetFilter)
-            .WhereAsync(t => t.Tag is not null && t.Translation is not null)
-            .SelectAsync(t => new Tag(t.Tag!, t.Translation))
-            .SelectAsync(SuggestionModel.FromTag), LazyThreadSafetyMode.ExecutionAndPublication);
+    private readonly Lazy<Task<IEnumerable<SuggestionModel>>> _illustrationTrendingTagCache =
+        new(
+            () => App.AppViewModel.MakoClient.GetTrendingTagsAsync(App.AppViewModel.AppSetting.TargetFilter)
+                .WhereAsync(t => t.Tag is not null && t.Translation is not null)
+                .SelectAsync(t => new Tag(t.Tag!, t.Translation))
+                .SelectAsync(SuggestionModel.FromTag), LazyThreadSafetyMode.ExecutionAndPublication);
 
-    private readonly Lazy<Task<IEnumerable<SuggestionModel>>> _novelTrendingTagCache = new(
-        () => App.AppViewModel.MakoClient.GetTrendingTagsForNovelAsync(App.AppViewModel.AppSetting.TargetFilter)
-            .WhereAsync(t => t.Tag is not null && t.Translation is not null)
-            .SelectAsync(t => new Tag(t.Tag!, t.Translation))
-            .SelectAsync(SuggestionModel.FromTag), LazyThreadSafetyMode.ExecutionAndPublication);
+    private readonly Lazy<Task<IEnumerable<SuggestionModel>>> _novelTrendingTagCache =
+        new(
+            () => App.AppViewModel.MakoClient.GetTrendingTagsForNovelAsync(App.AppViewModel.AppSetting.TargetFilter)
+                .WhereAsync(t => t.Tag is not null && t.Translation is not null)
+                .SelectAsync(t => new Tag(t.Tag!, t.Translation))
+                .SelectAsync(SuggestionModel.FromTag), LazyThreadSafetyMode.ExecutionAndPublication);
 
-    private static readonly TreeSearcher<SettingEntry> SettingEntriesTreeSearcher = new(SearcherLogic.Contain, PinIn.CreateDefault());
+    private static readonly TreeSearcher<SettingEntry> _settingEntriesTreeSearcher =
+        new(SearcherLogic.Contain, PinIn.CreateDefault());
 
-    public ObservableCollection<SuggestionModel> Suggestions { get; } = new();
+    public ObservableCollection<SuggestionModel> Suggestions { get; } = [];
 
     static SuggestionStateMachine()
     {
         foreach (var settingsEntry in SettingEntry.LazyValues.Value)
         {
-            SettingEntriesTreeSearcher.Put(settingsEntry.GetLocalizedResourceContent()!, settingsEntry);
+            _settingEntriesTreeSearcher.Put(settingsEntry.GetLocalizedResourceContent()!, settingsEntry);
         }
     }
 
@@ -105,7 +108,7 @@ public class SuggestionStateMachine
 
     private static IReadOnlySet<SettingEntry> MatchSettings(string keyword)
     {
-        var pinInResult = SettingEntriesTreeSearcher.Search(keyword).ToHashSet();
+        var pinInResult = _settingEntriesTreeSearcher.Search(keyword).ToHashSet();
         var nonPinInResult = SettingEntry.LazyValues.Value.Where(it => it.GetLocalizedResourceContent()!.Contains(keyword));
         pinInResult.AddRange(nonPinInResult);
         return pinInResult;

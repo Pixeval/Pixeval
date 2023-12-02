@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
-// Copyright (c) 2021 Pixeval.CoreApi/MakoClient.Engines.cs
+// Copyright (c) 2023 Pixeval.CoreApi/MakoClient.Engines.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -312,7 +312,7 @@ public partial class MakoClient
     public IFetchEngine<Novel> NovelBookmarks(string uid, PrivacyPolicy privacyPolicy, TargetFilter targetFilter)
     {
         EnsureNotCancelled();
-        CheckPrivacyPolicy(uid, privacyPolicy);
+        _ = CheckPrivacyPolicy(uid, privacyPolicy);
         return new NovelBookmarkEngine(this, uid, privacyPolicy, targetFilter, new EngineHandle(CancelInstance));
     }
 

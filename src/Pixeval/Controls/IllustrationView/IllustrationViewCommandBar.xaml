@@ -1,0 +1,99 @@
+<UserControl
+    x:Class="Pixeval.Controls.IllustrationView.IllustrationViewCommandBar"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    xmlns:converters="using:CommunityToolkit.WinUI.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:illustrationResultFilter1="using:Pixeval.Flyouts.IllustrationResultFilter"
+    xmlns:markup="using:Pixeval.Controls.MarkupExtensions"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+    </UserControl.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <StackPanel
+            x:Name="ExtraCommandsBar"
+            Grid.Column="0"
+            Margin="5,0,0,0"
+            VerticalAlignment="Center"
+            FlowDirection="LeftToRight"
+            Orientation="Horizontal">
+            <Grid Margin="10,0,0,0" Visibility="{x:Bind ShowDefaultSuggestBox, Mode=OneWay}">
+                <AutoSuggestBox
+                    x:Uid="/IllustrationViewCommandBar/FastFilterAutoSuggestBox"
+                    Width="250"
+                    VerticalAlignment="Center"
+                    TextChanged="FastFilterAutoSuggestBox_OnTextChanged" />
+            </Grid>
+        </StackPanel>
+        <CommandBar
+            x:Name="CommandBar"
+            Grid.Column="1"
+            HorizontalAlignment="Stretch"
+            HorizontalContentAlignment="Center"
+            DefaultLabelPosition="Right"
+            Visibility="{x:Bind ViewModel.IsSelecting, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
+            <AppBarButton
+                Icon="{markup:FontSymbolIcon Glyph=CancelE711}"
+                Label="{x:Bind ViewModel.SelectionLabel, Mode=OneWay}"
+                Tapped="CancelSelectionButton_OnTapped" />
+            <AppBarButton
+                x:Name="OpenConditionDialogButton"
+                x:Uid="/IllustrationViewCommandBar/OpenConditionDialogButton"
+                Icon="{markup:FontSymbolIcon Glyph=FilterE71C}"
+                Tapped="OpenConditionDialogButton_OnTapped" />
+            <AppBarButton
+                x:Name="SelectAllButton"
+                x:Uid="/IllustrationViewCommandBar/SelectAllButton"
+                Icon="{markup:FontSymbolIcon Glyph=SelectAllE8B3}"
+                Tapped="SelectAllToggleButton_OnTapped" />
+            <AppBarSeparator />
+            <AppBarButton
+                x:Uid="/IllustrationViewCommandBar/AddAllToBookmarkButton"
+                Icon="{markup:FontSymbolIcon Glyph=BookmarksE8A4}"
+                Tapped="AddAllToBookmarkButton_OnTapped" />
+            <AppBarButton
+                x:Uid="/IllustrationViewCommandBar/SaveAllButton"
+                Icon="{markup:FontSymbolIcon Glyph=SaveE74E}"
+                Tapped="SaveAllButton_OnTapped" />
+            <AppBarButton
+                x:Uid="/IllustrationViewCommandBar/OpenAllInBrowserButton"
+                Icon="{markup:FontSymbolIcon Glyph=WebSearchF6FA}"
+                Tapped="OpenAllInBrowserButton_OnTapped" />
+            <AppBarButton
+                x:Uid="/IllustrationViewCommandBar/ShareButton"
+                Icon="{markup:FontSymbolIcon Glyph=ShareE72D}"
+                Tapped="ShareButton_OnTapped" />
+        </CommandBar>
+        <CommandBar
+            Grid.Column="2"
+            DefaultLabelPosition="Right"
+            OverflowButtonVisibility="Collapsed">
+            <AppBarToggleButton
+                x:Uid="/IllustrationViewCommandBar/SelectionButton"
+                Icon="{markup:FontSymbolIcon Glyph=MultiSelectE762}"
+                IsChecked="{x:Bind ViewModel.IsSelecting, Mode=TwoWay}" />
+        </CommandBar>
+        <TeachingTip
+            x:Name="FilterTeachingTip"
+            x:Uid="/IllustrationViewCommandBar/FilterTeachingTip"
+            Grid.Column="0"
+            ActionButtonClick="FilterTeachingTip_OnActionButtonClick"
+            CloseButtonClick="FilterTeachingTip_OnCloseButtonClick"
+            IsLightDismissEnabled="True"
+            Target="{x:Bind OpenConditionDialogButton}">
+            <illustrationResultFilter1:IllustrationResultFilterContent x:Name="FilterContent" />
+        </TeachingTip>
+        <TeachingTip
+            x:Name="CommandBarTeachingTip"
+            Grid.Column="0"
+            IsLightDismissEnabled="True" />
+    </Grid>
+</UserControl>

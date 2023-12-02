@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/PixivReplyEmojiViewModel.cs
+// Copyright (c) 2023 Pixeval/PixivReplyEmojiViewModel.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -21,7 +21,6 @@
 using Microsoft.UI.Xaml.Media;
 using Pixeval.Misc;
 using Windows.Storage.Streams;
-
 
 namespace Pixeval.Pages.IllustrationViewer;
 

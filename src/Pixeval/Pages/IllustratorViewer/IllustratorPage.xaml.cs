@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/IllustratorPage.xaml.cs
+// Copyright (c) 2023 Pixeval/IllustratorPage.xaml.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -21,7 +21,6 @@
 using System;
 using System.Numerics;
 using CommunityToolkit.Mvvm.Messaging;
-using CommunityToolkit.WinUI.UI.Animations.Expressions;
 using Microsoft.Graphics.Canvas.Effects;
 using Microsoft.UI;
 using Microsoft.UI.Composition;
@@ -34,17 +33,19 @@ using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Controls.IllustratorView;
 using Pixeval.Messages;
-using Pixeval.UserControls;
+using Pixeval.Controls;
 using Pixeval.Util;
 using Pixeval.Util.UI;
 using Windows.System;
+using CommunityToolkit.WinUI.Animations.Expressions;
+using Pixeval.Controls.MarkupExtensions;
 using WinUI3Utilities;
 
 namespace Pixeval.Pages.IllustratorViewer;
 
 public sealed partial class IllustratorPage
 {
-    private IllustratorViewModel? _viewModel;
+    private IllustratorPageViewModel _viewModel = null!;
 
     private CompositionPropertySet? _props;
     private CompositionPropertySet? _scrollerPropertySet;
@@ -58,25 +59,25 @@ public sealed partial class IllustratorPage
         InitializeComponent();
     }
 
-    public XamlUICommand OpenLinkCommand { get; } = new()
+    public XamlUICommand OpenLinkCommand { get; } = new XamlUICommand
     {
         Label = IllustratorPageResources.OpenLink,
         IconSource = FontIconSymbols.LinkE71B.GetFontIconSource()
     };
 
-    public XamlUICommand FollowCommand { get; } = new()
+    public XamlUICommand FollowCommand { get; } = new XamlUICommand
     {
         Label = IllustratorPageResources.Follow,
         IconSource = FontIconSymbols.HeartEB51.GetFontIconSource()
     };
 
-    public XamlUICommand UnfollowCommand { get; } = new()
+    public XamlUICommand UnfollowCommand { get; } = new XamlUICommand
     {
         Label = IllustratorPageResources.Unfollow,
         IconSource = FontIconSymbols.HeartFillEB52.GetFontIconSource(foregroundBrush: new SolidColorBrush(Colors.Crimson))
     };
 
-    public XamlUICommand PrivateFollowCommand { get; } = new()
+    public XamlUICommand PrivateFollowCommand { get; } = new XamlUICommand
     {
         Label = IllustratorPageResources.PrivateFollow,
         IconSource = FontIconSymbols.HeartEB51.GetFontIconSource()
@@ -92,17 +93,17 @@ public sealed partial class IllustratorPage
     {
         switch (navigationEventArgs.Parameter)
         {
-            case (UIElement sender, IllustratorViewModel viewModel):
-                WeakReferenceMessenger.Default.Send(new MainPageFrameSetConnectedAnimationTargetMessage(sender));
-                ConnectedAnimationService.GetForCurrentView().GetAnimation("ForwardConnectedAnimation")?.TryStart(ProfileImage);
+            case (UIElement sender, IllustratorPageViewModel viewModel):
+                _ = WeakReferenceMessenger.Default.Send(new MainPageFrameSetConnectedAnimationTargetMessage(sender));
+                _ = (ConnectedAnimationService.GetForCurrentView().GetAnimation("ForwardConnectedAnimation")?.TryStart(ProfileImage));
                 _viewModel = viewModel;
                 break;
-            case IllustratorViewModel viewModel1:
+            case IllustratorPageViewModel viewModel1:
                 _viewModel = viewModel1;
                 break;
         }
 
-        WeakReferenceMessenger.Default.TryRegister<IllustratorPage, MainPageFrameNavigatingEvent>(this, static (recipient, _) => recipient.ViewModelProvider.ViewModel.DataProvider.FetchEngine?.Cancel());
+        _ = WeakReferenceMessenger.Default.TryRegister<IllustratorPage, MainPageFrameNavigatingEvent>(this, static (recipient, _) => recipient.ViewModelProvider.ViewModel.DataProvider.FetchEngine?.Cancel());
 
         ChangeSource();
     }
@@ -113,8 +114,8 @@ public sealed partial class IllustratorPage
         var headerPresenter = (UIElement)VisualTreeHelper.GetParent(Header);
         var headerContainer = (UIElement)VisualTreeHelper.GetParent(headerPresenter);
         Canvas.SetZIndex(headerContainer, 1);
-
-        _scrollerPropertySet = ElementCompositionPreview.GetScrollViewerManipulationPropertySet(IllustrationContainer.IllustrationView.ScrollViewer);
+        return;
+        //        _scrollerPropertySet = ElementCompositionPreview.GetScrollViewerManipulationPropertySet(IllustrationContainer.IllustrationView.ScrollView);
         _compositor = _scrollerPropertySet.Compositor;
 
         _props = _compositor.CreatePropertySet();
@@ -217,7 +218,7 @@ public sealed partial class IllustratorPage
 
     public void GoBack()
     {
-        ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", ProfileImage);
+        _ = ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", ProfileImage);
         Parent.To<Frame>().GoBack(new SuppressNavigationTransitionInfo());
     }
 
@@ -228,7 +229,7 @@ public sealed partial class IllustratorPage
 
     private async void OpenLinkButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        await Launcher.LaunchUriAsync(new Uri($"https://www.pixiv.net/users/{_viewModel!.Id}"));
+        _ = await Launcher.LaunchUriAsync(new Uri($"https://www.pixiv.net/users/{_viewModel!.Id}"));
     }
 
     private async void FollowButton_OnTapped(object sender, TappedRoutedEventArgs e)

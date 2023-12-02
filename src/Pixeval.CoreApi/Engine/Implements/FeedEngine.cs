@@ -1,8 +1,8 @@
-﻿#region Copyright (c) Pixeval/Pixeval.CoreApi
+#region Copyright (c) Pixeval/Pixeval.CoreApi
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
-// Copyright (c) 2021 Pixeval.CoreApi/FeedEngine.cs
+// Copyright (c) 2023 Pixeval.CoreApi/FeedEngine.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -33,19 +33,18 @@ using Pixeval.Utilities;
 
 namespace Pixeval.CoreApi.Engine.Implements;
 
-internal class FeedEngine(MakoClient makoClient, EngineHandle? engineHandle) : AbstractPixivFetchEngine<Feed>(makoClient, engineHandle)
+internal partial class FeedEngine(MakoClient makoClient, EngineHandle? engineHandle) : AbstractPixivFetchEngine<Feed>(makoClient, engineHandle)
 {
-    public override IAsyncEnumerator<Feed> GetAsyncEnumerator(CancellationToken cancellationToken = new())
+    public override IAsyncEnumerator<Feed> GetAsyncEnumerator(CancellationToken cancellationToken = new CancellationToken())
     {
         return new UserFeedsAsyncEnumerator(this, MakoApiKind.WebApi)!;
     }
 
-    private class UserFeedsAsyncEnumerator
+    private partial class UserFeedsAsyncEnumerator
         (FeedEngine pixivFetchEngine, MakoApiKind apiKind) : AbstractPixivAsyncEnumerator<Feed, string, FeedEngine>(pixivFetchEngine, apiKind)
     {
         private FeedRequestContext? _feedRequestContext;
         private string? _tt;
-
 
         public override async ValueTask<bool> MoveNextAsync()
         {
@@ -57,7 +56,7 @@ internal class FeedEngine(MakoClient makoClient, EngineHandle? engineHandle) : A
                         if (TryParsePreloadJsonFromHtml(response, out var result))
                         {
                             await UpdateAsync(result).ConfigureAwait(false);
-                            _tt = Regex.Match(response, "tt: \"(?<tt>.*)\"").Groups["tt"].Value;
+                            _tt = TtRegex().Match(response).Groups["tt"].Value;
                             _feedRequestContext = ExtractRequestContextFromHtml(response);
                         }
                         else
@@ -147,7 +146,7 @@ internal class FeedEngine(MakoClient makoClient, EngineHandle? engineHandle) : A
 
         private static bool TryExtractPreloadJson(string html, out string json)
         {
-            var match = Regex.Match(html, "pixiv\\.stacc\\.env\\.preload\\.stacc \\= (?<json>.*);");
+            var match = PreloadRegex().Match(html);
             if (match.Success)
             {
                 json = match.Groups["json"].Value;
@@ -293,9 +292,14 @@ internal class FeedEngine(MakoClient makoClient, EngineHandle? engineHandle) : A
             }
             catch (HttpRequestException e)
             {
-                return Result<string>.OfFailure(new MakoNetworkException(url, MakoClient.Configuration.Bypass, e.Message, (int?)e.StatusCode ?? -1));
+                return Result<string>.AsFailure(new MakoNetworkException(url, MakoClient.Configuration.Bypass, e.Message, (int?)e.StatusCode ?? -1));
             }
         }
+
+        [GeneratedRegex("tt: \"(?<tt>.*)\"")]
+        private static partial Regex TtRegex();
+        [GeneratedRegex("pixiv\\.stacc\\.env\\.preload\\.stacc \\= (?<json>.*);")]
+        private static partial Regex PreloadRegex();
     }
 
     /// <summary>

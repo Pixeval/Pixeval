@@ -1,8 +1,8 @@
-﻿#region Copyright (c) Pixeval/Pixeval.Utilities
+#region Copyright (c) Pixeval/Pixeval.Utilities
 // GPL v3 License
 // 
 // Pixeval/Pixeval.Utilities
-// Copyright (c) 2021 Pixeval.Utilities/AsyncEnumerableAdapters.cs
+// Copyright (c) 2023 Pixeval.Utilities/AsyncEnumerableAdapters.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -22,12 +22,10 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using JetBrains.Annotations;
 
 namespace Pixeval.Utilities;
 
-[PublicAPI]
-public class AdaptedAsyncEnumerator<T>(IEnumerator<T> outerEnumerator, CancellationToken cancellationToken = new())
+public class AdaptedAsyncEnumerator<T>(IEnumerator<T> outerEnumerator, CancellationToken cancellationToken = new CancellationToken())
     : IAsyncEnumerator<T>
 {
     public ValueTask DisposeAsync()
@@ -45,10 +43,9 @@ public class AdaptedAsyncEnumerator<T>(IEnumerator<T> outerEnumerator, Cancellat
     public T Current => outerEnumerator.Current;
 }
 
-[PublicAPI]
 public class AdaptedAsyncEnumerable<T>(IEnumerable<T> sync) : IAsyncEnumerable<T>
 {
-    public IAsyncEnumerator<T> GetAsyncEnumerator(CancellationToken cancellationToken = new())
+    public IAsyncEnumerator<T> GetAsyncEnumerator(CancellationToken cancellationToken = new CancellationToken())
     {
         return new AdaptedAsyncEnumerator<T>(sync.GetEnumerator());
     }

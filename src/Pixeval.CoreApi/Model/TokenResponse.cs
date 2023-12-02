@@ -1,8 +1,8 @@
-﻿#region Copyright (c) Pixeval/Pixeval.CoreApi
+#region Copyright (c) Pixeval/Pixeval.CoreApi
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
-// Copyright (c) 2021 Pixeval.CoreApi/TokenResponse.cs
+// Copyright (c) 2023 Pixeval.CoreApi/TokenResponse.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -20,13 +20,11 @@
 
 using System;
 using System.Text.Json.Serialization;
-using JetBrains.Annotations;
 using Pixeval.CoreApi.Preference;
 
 namespace Pixeval.CoreApi.Model;
 
 // 这个类型比较特殊，并非网络请求的响应类型，因此放到Model而非Response目录中
-[PublicAPI]
 public record TokenResponse
 {
     [JsonPropertyName("access_token")]
@@ -65,7 +63,6 @@ public record TokenResponse
         };
     }
 
-    [PublicAPI]
     public class TokenUser
     {
         [JsonPropertyName("profile_image_urls")]
@@ -96,7 +93,6 @@ public record TokenResponse
         public bool RequirePolicyAgreement { get; set; }
     }
 
-    [PublicAPI]
     public class ProfileImageUrls
     {
         [JsonPropertyName("px_16x16")]

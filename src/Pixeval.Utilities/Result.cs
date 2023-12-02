@@ -1,8 +1,8 @@
-﻿#region Copyright (c) Pixeval/Pixeval.Utilities
+#region Copyright (c) Pixeval/Pixeval.Utilities
 // GPL v3 License
 // 
 // Pixeval/Pixeval.Utilities
-// Copyright (c) 2021 Pixeval.Utilities/Result.cs
+// Copyright (c) 2023 Pixeval.Utilities/Result.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -21,14 +21,12 @@
 using System;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using JetBrains.Annotations;
 
 namespace Pixeval.Utilities;
 
-[PublicAPI]
 public record Result<T>
 {
-    public T GetOrThrow()
+    public T UnwrapOrThrow()
     {
         return this switch
         {
@@ -38,8 +36,7 @@ public record Result<T>
         };
     }
 
-    [ContractAnnotation("else:null => null; else:notnull => notnull")]
-    public T? GetOrElse(T? @else)
+    public T? UnwrapOrElse(T? @else)
     {
         return this switch
         {
@@ -50,45 +47,43 @@ public record Result<T>
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Result<T> OfSuccess(T value)
+    public static Result<T> AsSuccess(T value)
     {
         return new Success(value);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Result<T> OfFailure(Exception? cause = null)
+    public static Result<T> AsFailure(Exception? cause = null)
     {
         return new Failure(cause);
     }
 
-    public Result<R> Bind<R>(Func<T, R> selector)
+    public Result<TNew> Rewrap<TNew>(Func<T, TNew> selector)
     {
         return this switch
         {
-            Success(var content) => Result<R>.OfSuccess(selector(content)),
-            Failure(var cause) => Result<R>.OfFailure(cause),
+            Success(var content) => Result<TNew>.AsSuccess(selector(content)),
+            Failure(var cause) => Result<TNew>.AsFailure(cause),
             _ => throw new Exception("Invalid derived type of Result<T>")
         };
     }
 
-    public async Task<Result<R>> BindAsync<R>(Func<T, Task<R>> selector)
+    public async Task<Result<TNew>> RewrapAsync<TNew>(Func<T, Task<TNew>> selector)
     {
         return this switch
         {
-            Success(var content) => Result<R>.OfSuccess(await selector(content)),
-            Failure(var cause) => Result<R>.OfFailure(cause),
+            Success(var content) => Result<TNew>.AsSuccess(await selector(content)),
+            Failure(var cause) => Result<TNew>.AsFailure(cause),
             _ => throw new Exception("Invalid derived type of Result<T>")
         };
     }
 
-    public static Result<R?> Wrap<R>(Result<T> result) where R : class
+    public Result<TNew> Cast<TNew>() where TNew : class
     {
-        return result.Bind(t => t as R);
+        return Rewrap(t => t as TNew ?? throw new InvalidCastException());
     }
 
-    [PublicAPI]
     public record Success(T Value) : Result<T>;
 
-    [PublicAPI]
     public record Failure(Exception? Cause) : Result<T>;
 }

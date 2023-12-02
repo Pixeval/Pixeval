@@ -1,8 +1,8 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/IllustrationSortOptionWrapper.cs
+// Copyright (c) 2023 Pixeval/IllustrationSortOptionWrapper.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -30,10 +30,14 @@ public record IllustrationSortOptionWrapper(IllustrationSortOption Value, string
     {
         return new IllustrationSortOptionWrapper[]
         {
-            new(IllustrationSortOption.PublishDateDescending, MiscResources.IllustrationSortOptionPublishDateDescending),
-            new(IllustrationSortOption.PublishDateAscending, MiscResources.IllustrationSortOptionPublishDateAscending),
-            new(IllustrationSortOption.PopularityDescending, MiscResources.IllustrationSortOptionPopularityDescending),
-            new(IllustrationSortOption.DoNotSort, MiscResources.IllustrationSortOptionDoNotSort)
+            new(IllustrationSortOption.PublishDateDescending,
+                MiscResources.IllustrationSortOptionPublishDateDescending),
+            new(IllustrationSortOption.PublishDateAscending,
+                MiscResources.IllustrationSortOptionPublishDateAscending),
+            new(IllustrationSortOption.PopularityDescending,
+                MiscResources.IllustrationSortOptionPopularityDescending),
+            new(IllustrationSortOption.DoNotSort,
+                MiscResources.IllustrationSortOptionDoNotSort)
         };
     }
 }

@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/IllustrationViewerPage.xaml.cs
+// Copyright (c) 2023 Pixeval/IllustrationViewerPage.xaml.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -19,6 +19,7 @@
 #endregion
 
 using System;
+using System.Numerics;
 using System.Threading.Tasks;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
@@ -29,14 +30,16 @@ using Microsoft.UI.Xaml.Navigation;
 using Pixeval.AppManagement;
 using Pixeval.Misc;
 using Pixeval.Options;
-using Pixeval.UserControls.IllustrationView;
+using Pixeval.Controls.IllustrationView;
 using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using Windows.ApplicationModel.DataTransfer;
+using Windows.Foundation;
 using Windows.Graphics;
 using Windows.Storage.Streams;
+using Pixeval.Controls.Windowing;
 using WinUI3Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
 
@@ -45,10 +48,7 @@ namespace Pixeval.Pages.IllustrationViewer;
 public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragRegion
 {
     private IllustrationViewerPageViewModel _viewModel = null!;
-
-    private const double TitleBarHeight = 48;
-    private const double NegativeTitleBarHeight = -TitleBarHeight;
-
+    
     public IllustrationViewerPage() => InitializeComponent();
 
     /// <summary>
@@ -114,7 +114,7 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
                 }
                 case IllustrationViewerPageViewModel.ShowShare:
                 {
-                    Window.ShowShareUI();
+                    Window.ShowShareUi();
                     break;
                 }
                 case nameof(IllustrationViewerPageViewModel.IsInfoPaneOpen):
@@ -171,7 +171,7 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
             var file = await AppKnownFolders.CreateTemporaryFileWithRandomNameAsync(_viewModel.IsUgoira ? "gif" : "png");
             await stream.SaveToFileAsync(file);
             request.Data.SetStorageItems(Enumerates.ArrayOf(file), true);
-            // SetBitmap 无效
+            // TODO: SetBitmap 无效
             // SetWebLink 后会导致 SetApplicationLink 无效
             // request.Data.SetApplicationLink(MakoHelper.GenerateIllustrationAppUri(vm.Id));
         }
@@ -244,12 +244,12 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
 
     public void SetTitleBarDragRegion()
     {
-        var pointCommandBar = IllustrationViewerCommandBar.TransformToVisual(this).TransformPoint(new(0, 0));
-        var pointSubCommandBar = IllustrationViewerSubCommandBar.TransformToVisual(this).TransformPoint(new(0, 0));
+        var pointCommandBar = IllustrationViewerCommandBar.TransformToVisual(this).TransformPoint(new Point(0, 0));
+        var pointSubCommandBar = IllustrationViewerSubCommandBar.TransformToVisual(this).TransformPoint(new Point(0, 0));
         var commandBarRect = new RectInt32((int)pointCommandBar.X, (int)pointCommandBar.Y, (int)IllustrationViewerCommandBar.ActualWidth, (int)IllustrationViewerCommandBar.ActualHeight);
         var subCommandBarRect = new RectInt32((int)pointSubCommandBar.X, (int)pointSubCommandBar.Y, (int)IllustrationViewerSubCommandBar.ActualWidth, (int)IllustrationViewerSubCommandBar.ActualHeight);
 
-        Window.SetDragRegion(new(commandBarRect, subCommandBarRect)
+        Window.SetDragRegion(new DragZoneInfo(commandBarRect, subCommandBarRect)
         {
             DragZoneLeftIndent = _viewModel.IsInfoPaneOpen
                 ? (int)IllustrationInfoAndCommentsSplitView.OpenPaneLength
@@ -260,9 +260,9 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
     private void ThumbnailOnEffectiveViewportChanged(FrameworkElement sender, EffectiveViewportChangedEventArgs args)
     {
         var context = sender.GetDataContext<IllustrationViewModel?>();
-        const ThumbnailUrlOption option = ThumbnailUrlOption.SquareMedium;
         if (context is null)
             return;
+        const ThumbnailUrlOption option = ThumbnailUrlOption.SquareMedium;
         if (args.BringIntoViewDistanceX <= sender.ActualWidth)
         {
             _ = context.TryLoadThumbnail(_viewModel, option);
@@ -275,7 +275,7 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
 
     private async void IllustrationImageShowcaseFrame_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        BottomCommandSection.Translation = new();
+        BottomCommandSection.Translation = new Vector3();
         TimeUp = false;
         await Task.Delay(3000);
         TimeUp = true;
@@ -287,10 +287,6 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
         ((FrameworkElement)sender).Width = button.IsInOverflow ? double.NaN : (double)Application.Current.Resources["CollapsedAppBarButtonWidth"];
     }
 
-    private void ThumbnailListGrid_OnPointerEntered(object sender, PointerRoutedEventArgs e) => PointerNotInArea = false;
-
-    private void ThumbnailListGrid_OnPointerExited(object sender, PointerRoutedEventArgs e) => PointerNotInArea = true;
-
     public bool PointerNotInArea
     {
         get => _pointerNotInArea;
@@ -298,7 +294,7 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
         {
             _pointerNotInArea = value;
             if (Initialized && _pointerNotInArea && TimeUp)
-                BottomCommandSection.Translation = new(0, 120, 0);
+                BottomCommandSection.Translation = new Vector3(0, 120, 0);
         }
     }
 
@@ -309,7 +305,7 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
         {
             _timeUp = value;
             if (Initialized && _timeUp && PointerNotInArea)
-                BottomCommandSection.Translation = new(0, 120, 0);
+                BottomCommandSection.Translation = new Vector3(0, 120, 0);
         }
     }
 

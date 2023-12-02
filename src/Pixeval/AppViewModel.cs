@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/AppViewModel.cs
+// Copyright (c) 2023 Pixeval/AppViewModel.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -30,7 +30,7 @@ using Pixeval.CoreApi.Net;
 using Pixeval.Database.Managers;
 using Pixeval.Download;
 using Pixeval.Messages;
-using Pixeval.UserControls.IllustrationView;
+using Pixeval.Controls.IllustrationView;
 using Pixeval.Util.IO;
 using Pixeval.Util.Threading;
 using Pixeval.Util.UI;
@@ -88,7 +88,7 @@ public class AppViewModel(App app) : AutoActivateObservableRecipient, IRecipient
 
     public async Task ShowExceptionDialogAsync(Exception e)
     {
-        await MessageDialogBuilder.CreateAcknowledgement(CurrentContext.Window, MiscResources.ExceptionEncountered, e.ToString()).ShowAsync();
+        _ = await MessageDialogBuilder.CreateAcknowledgement(CurrentContext.Window, MiscResources.ExceptionEncountered, e.ToString()).ShowAsync();
     }
 
     public async Task InitializeAsync(bool activatedByProtocol)

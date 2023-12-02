@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/BrowsingHistoryPage.xaml.cs
+// Copyright (c) 2023 Pixeval/BrowsingHistoryPage.xaml.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -19,7 +19,6 @@
 #endregion
 
 using System.Linq;
-using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
@@ -27,7 +26,7 @@ using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Database.Managers;
 using Pixeval.Messages;
 using Pixeval.Misc;
-using Pixeval.UserControls;
+using Pixeval.Controls;
 using Pixeval.Util;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -54,18 +53,18 @@ public sealed partial class BrowsingHistoryPage : ISortedIllustrationContainerPa
         WeakReferenceMessenger.Default.UnregisterAll(this);
     }
 
-    public override async void OnPageActivated(NavigationEventArgs navigationEventArgs)
+    public override void OnPageActivated(NavigationEventArgs navigationEventArgs)
     {
         SortOptionComboBox.SelectedItem = MakoHelper.GetAppSettingDefaultSortOptionWrapper();
-        await FetchAndFill();
-        WeakReferenceMessenger.Default.TryRegister<BrowsingHistoryPage, MainPageFrameNavigatingEvent>(this, static (recipient, _) => recipient.IllustrationContainer.ViewModel.DataProvider.FetchEngine?.Cancel());
+        FetchEngine();
+        _ = WeakReferenceMessenger.Default.TryRegister<BrowsingHistoryPage, MainPageFrameNavigatingEvent>(this, static (recipient, _) => recipient.IllustrationContainer.ViewModel.DataProvider.FetchEngine?.Cancel());
     }
 
-    private async Task FetchAndFill()
+    private void FetchEngine()
     {
         using var scope = App.AppViewModel.AppServicesScope;
         var manager = scope.ServiceProvider.GetRequiredService<BrowseHistoryPersistentManager>();
-        await IllustrationContainer.ViewModel.ResetEngineAndFillAsync(
+        IllustrationContainer.ViewModel.ResetEngine(
             App.AppViewModel.MakoClient.Computed(manager.Enumerate().ToAsyncEnumerable().SelectAwait(async t =>
                 await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(t.Id!))));
     }

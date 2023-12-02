@@ -1,8 +1,8 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/PixivAuthSignature.cs
+// Copyright (c) 2023 Pixeval/PixivAuthSignature.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -33,7 +33,7 @@ public static class PixivAuthSignature
 
     private static string ToUrlSafeBase64String(this byte[] bytes)
     {
-        return Convert.ToBase64String(bytes).TrimEnd(new[] { '=' }).Replace("+", "-").Replace("/", "_");
+        return Convert.ToBase64String(bytes).TrimEnd(['=']).Replace("+", "-").Replace("/", "_");
     }
 
     public static string GenerateWebPageUrl(string codeVerify, bool signUp = false)
