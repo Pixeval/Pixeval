@@ -97,7 +97,7 @@ public class AdvancedObservableCollection<T> : IList<T>, IList, INotifyCollectio
 
             _sourceWeakEventListener?.Detach();
 
-            _sourceWeakEventListener = new WeakEventListener<AdvancedObservableCollection<T>, object, NotifyCollectionChangedEventArgs>(this)
+            _sourceWeakEventListener = new WeakEventListener<AdvancedObservableCollection<T>, object?, NotifyCollectionChangedEventArgs>(this)
             {
                 OnEventAction = (source, changed, arg) => SourceNcc_CollectionChanged(source, arg),
                 OnDetachAction = listener => _source.CollectionChanged -= _sourceWeakEventListener!.OnEvent

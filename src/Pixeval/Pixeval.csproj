@@ -32,6 +32,7 @@
     </ItemGroup>
 
     <ItemGroup>
+        <PackageReference Include="CommunityToolkit.Labs.WinUI.Shimmer" Version="0.1.230830" />
         <PackageReference Include="Microsoft.Graphics.Win2D" Version="1.1.1" />
         <PackageReference Include="CommunityToolkit.WinUI.Behaviors" Version="8.0.230907" />
         <PackageReference Include="CommunityToolkit.WinUI.Collections" Version="8.0.230907" />
@@ -56,8 +57,8 @@
         <PackageReference Include="PininSharp" Version="1.2.0" />
         <PackageReference Include="Pixeval.QRCoder" Version="1.4.5" />
         <PackageReference Include="ReverseMarkdown" Version="3.25.0" />
-        <PackageReference Include="SixLabors.ImageSharp" Version="3.0.2" />
-        <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="2.0.1" />
+        <PackageReference Include="SixLabors.ImageSharp" Version="3.1.0" />
+        <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="2.1.0" />
         <PackageReference Include="System.Linq.Async" Version="6.0.1" />
         <PackageReference Include="WinUI3Utilities" Version="1.1.4.3" />
         <PackageReference Include="WinUIEx" Version="2.3.3" />

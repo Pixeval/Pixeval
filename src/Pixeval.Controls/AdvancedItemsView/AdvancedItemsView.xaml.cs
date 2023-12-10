@@ -14,6 +14,7 @@ namespace Pixeval.Controls;
 public sealed partial class AdvancedItemsView : ItemsView
 {
     public event Func<AdvancedItemsView, EventArgs, Task>? LoadMoreRequested;
+    public event Action<AdvancedItemsView, ScrollView>? ViewChanged;
 
     private static void OnItemHeightChanged(DependencyObject o, DependencyPropertyChangedEventArgs e)
     {
@@ -103,6 +104,8 @@ public sealed partial class AdvancedItemsView : ItemsView
                 await handler(this, EventArgs.Empty);
                 IsLoadingMore = false;
             }
+
+        ViewChanged?.Invoke(this, ScrollView);
     }
 
     private bool IsLoadingMore { get; set; }

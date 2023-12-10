@@ -16,6 +16,7 @@
         x:Name="IllustrationItemsView"
         IsItemInvokedEnabled="True"
         ItemInvoked="IllustrationItemsView_OnItemInvoked"
+       
         ItemsSource="{x:Bind ViewModel.DataProvider.View}"
         LayoutType="{x:Bind LayoutType, Mode=OneWay}"
         LoadMoreRequested="IllustrationItemsView_OnLoadMoreRequested"
@@ -26,8 +27,8 @@
             <DataTemplate x:DataType="local:IllustrationViewModel">
                 <ItemContainer IsSelected="{x:Bind IsSelected, Mode=TwoWay}">
                     <local:IllustrationThumbnail
-                        EffectiveViewportChanged="IllustrationThumbnailContainerItemOnEffectiveViewportChanged"
                         IsTapEnabled="False"
+                        EffectiveViewportChanged="IllustrationThumbnailContainerItemOnEffectiveViewportChanged"
                         ShowQrCodeRequested="IllustrationThumbnailOnShowQrCodeRequested"
                         ThisRequired="IllustrationThumbnail_OnThisRequired"
                         ViewModel="{x:Bind}" />

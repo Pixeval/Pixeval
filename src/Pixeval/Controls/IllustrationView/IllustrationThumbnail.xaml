@@ -6,6 +6,7 @@
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:labs="using:CommunityToolkit.Labs.WinUI"
     xmlns:local="using:Pixeval.Controls.IllustrationView"
     xmlns:markup="using:Pixeval.Controls.MarkupExtensions"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -126,7 +127,7 @@
         <Grid Width="{x:Bind GetDesiredWidth(ViewModel), Mode=OneWay}" Height="{x:Bind GetDesiredHeight(ViewModel), Mode=OneWay}" />
         <Grid HorizontalAlignment="Stretch" CornerRadius="{ThemeResource ControlCornerRadius}">
             <controls:IllustrationImage ThumbnailOption="{x:Bind ThumbnailUrlOption}" ViewModel="{x:Bind ViewModel}" />
-            <!--TODO:<labs:Shimmer Visibility="{x:Bind IsImageLoaded(ViewModel.ThumbnailSources), Mode=OneWay}" />-->
+            <labs:Shimmer Visibility="{x:Bind IsImageLoaded(ViewModel.ThumbnailSources), Mode=OneWay}" />
             <Grid
                 x:Name="ImageBookmarkButtonGrid"
                 Width="20"

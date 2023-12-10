@@ -31,14 +31,16 @@ public class SharedRef<T>
 
     public SharedRef(T value, object key)
     {
+        IdentifyKey(key);
         Value = value;
         _ = _keys.Add(key);
     }
 
     public bool IsDisposed { get; private set; }
 
-    public bool TryDispose(object key)
+    public bool TryDispose<TKey>(TKey key) where TKey : class
     {
+        IdentifyKey(key);
         _ = _keys.Remove(key);
         if (_keys.Count > 0)
             return false;
@@ -55,10 +57,20 @@ public class SharedRef<T>
         IsDisposed = true;
     }
 
-    public SharedRef<T> MakeShared(object key)
+    public void IdentifyKey(object key)
     {
-        if (IsDisposed)
-            throw new ObjectDisposedException(nameof(SharedRef<T>));
+#if DEBUG
+        // 判断key是不是引用类型
+        var type = key.GetType();
+        if (type.IsValueType || type == typeof(string))
+            throw new ArgumentException("Key must be a reference type and not a string.");
+#endif
+    }
+
+    public SharedRef<T> MakeShared<TKey>(TKey key) where TKey : class
+    {
+        IdentifyKey(key);
+        ObjectDisposedException.ThrowIf(IsDisposed, typeof(SharedRef<T>));
         _ = _keys.Add(key);
         return this;
     }

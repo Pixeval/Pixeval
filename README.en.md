@@ -10,7 +10,7 @@
         <a href="https://jq.qq.com/?_wv=1027&k=5hGmJbQ" target="_blank">
             <img src="https://img.shields.io/static/v1?label=chatting&message=qq&color=blue&style=for-the-badge&logo=tencentqq&logoColor=white"/>
         </a>
-        <a href="https://github.com/Pixeval/Pixeval/blob/master/LICENSE" target="_blank">
+        <a href="https://github.com/Pixeval/Pixeval/blob/main/LICENSE" target="_blank">
             <img src="https://img.shields.io/github/license/Pixeval/Pixeval?style=for-the-badge&logo=gnu&logoColor=white"/>
         </a>
         <a href="https://github.com/Pixeval/Pixeval/issues/new/choose" target="_blank">
@@ -24,8 +24,8 @@
     </br>
 </div>
 
-🌏: [简体中文](https://github.com/Pixeval/Pixeval/blob/master/README.md)，
-[**English**](https://github.com/Pixeval/Pixeval/blob/master/README.en.md)
+🌏: [简体中文](https://github.com/Pixeval/Pixeval/blob/main/README.md)，
+[**English**](https://github.com/Pixeval/Pixeval/blob/main/README.en.md)
 
 ---
 

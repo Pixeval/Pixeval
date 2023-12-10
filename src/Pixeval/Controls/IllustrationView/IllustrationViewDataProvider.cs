@@ -54,10 +54,7 @@ public class IllustrationViewDataProvider : ObservableObject, IDataProvider<Illu
         }
     }
 
-    public IFetchEngine<Illustration?>? FetchEngine
-    {
-        get => _fetchEngineRef?.Value;
-    }
+    public IFetchEngine<Illustration?>? FetchEngine => _fetchEngineRef?.Value;
 
     public AdvancedObservableCollection<IllustrationViewModel> View { get; } = [];
 
@@ -84,10 +81,7 @@ public class IllustrationViewDataProvider : ObservableObject, IDataProvider<Illu
         }
     }
 
-    public IncrementalLoadingCollection<FetchEngineIncrementalSource<Illustration, IllustrationViewModel>, IllustrationViewModel> Source
-    {
-        get => _illustrationSourceRef.Value;
-    }
+    public IncrementalLoadingCollection<FetchEngineIncrementalSource<Illustration, IllustrationViewModel>, IllustrationViewModel> Source => _illustrationSourceRef.Value;
 
     public IllustrationViewDataProvider CloneRef()
     {
@@ -118,7 +112,7 @@ public class IllustrationViewDataProvider : ObservableObject, IDataProvider<Illu
 
     public void ResetEngine(IFetchEngine<Illustration?>? fetchEngine, int limit = -1)
     {
-        FetchEngineRef = new SharedRef<IFetchEngine<Illustration>>(fetchEngine, this);
+        FetchEngineRef = new SharedRef<IFetchEngine<Illustration?>?>(fetchEngine, this);
         DisposeCurrent();
 
         IllustrationSourceRef = new SharedRef<IncrementalLoadingCollection<FetchEngineIncrementalSource<Illustration, IllustrationViewModel>, IllustrationViewModel>>(new IncrementalLoadingCollection<FetchEngineIncrementalSource<Illustration, IllustrationViewModel>, IllustrationViewModel>(new IllustrationFetchEngineIncrementalSource(FetchEngine!, limit)), this);

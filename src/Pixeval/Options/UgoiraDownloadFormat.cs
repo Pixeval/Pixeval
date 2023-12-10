@@ -33,6 +33,9 @@ public enum UgoiraDownloadFormat
     [LocalizedResource(typeof(MiscResources), nameof(MiscResources.Gif))]
     Gif,
 
-    [LocalizedResource(typeof(MiscResources), nameof(MiscResources.WebP))]
-    WebP
+    [LocalizedResource(typeof(MiscResources), nameof(MiscResources.WebPLossy))]
+    WebPLossy,
+
+    [LocalizedResource(typeof(MiscResources), nameof(MiscResources.WebPLossless))]
+    WebPLossless
 }

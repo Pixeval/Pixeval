@@ -131,4 +131,25 @@ public sealed partial class IllustrationView
     {
         await ViewModel.LoadMoreAsync(20);
     }
+
+    /// <summary>
+    /// TODO: 加载缩略图有问题，但EffectiveViewportChanged有bug
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="view"></param>
+    private async void IllustrationItemsView_OnViewChanged(AdvancedItemsView sender, ScrollView view)
+    {
+        var option = LayoutType.ToThumbnailUrlOption();
+        if (sender.TryGetItemIndex(0, 0, out var first) && sender.TryGetItemIndex(1, 1, out var last))
+        {
+            for (var index = 0; index < ViewModel.DataProvider.View.Count; index++)
+            {
+                var item = ViewModel.DataProvider.View[index];
+                if (index < first || index > last)
+                    item.UnloadThumbnail(ViewModel, option);
+                else
+                    _ = await item.TryLoadThumbnail(ViewModel, option);
+            }
+        }
+    }
 }

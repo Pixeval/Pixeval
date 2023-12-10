@@ -21,6 +21,7 @@
 using Pixeval.Download.MacroParser;
 using Pixeval.Controls.IllustrationView;
 using Pixeval.Util;
+using Pixeval.Util.IO;
 
 namespace Pixeval.Download.Macros;
 
@@ -32,6 +33,6 @@ public class FileExtensionMacro : IMacro<IllustrationViewModel>.ITransducer
     public string Substitute(IllustrationViewModel context)
     {
         // TODO: 直接在此处调用了AppSetting
-        return context.IsUgoira ? "." + App.AppViewModel.AppSetting.UgoiraDownloadFormat.ToString().ToLower() : context.Illustrate.GetImageFormat();
+        return context.IsUgoira ? App.AppViewModel.AppSetting.UgoiraDownloadFormat.GetExtension() : context.Illustrate.GetImageFormat();
     }
 }

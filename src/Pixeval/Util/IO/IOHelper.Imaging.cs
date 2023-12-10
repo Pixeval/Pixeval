@@ -86,36 +86,56 @@ public static partial class IoHelper
     ///     and encodes to <paramref name="ugoiraDownloadFormat"/> format
     /// </summary>
     /// <returns></returns>
-    public static async Task WriteBitmapAsync(IRandomAccessStream target, IEnumerable<(IRandomAccessStream Frame, int Delay)> frames, UgoiraDownloadFormat ugoiraDownloadFormat)
+    public static async Task WriteBitmapAsync(IRandomAccessStream target, IEnumerable<(IRandomAccessStream Frame, uint Delay)> frames, UgoiraDownloadFormat ugoiraDownloadFormat)
     {
-        var framesArray = (frames as (IRandomAccessStream Frame, int Delay)[] ?? frames.ToArray());
-        foreach (var (frame, _) in framesArray)
-            frame.Seek(0);
+        var framesArray = frames as (IRandomAccessStream Frame, uint Delay)[] ?? frames.ToArray();
 
         if (framesArray.Length is 0)
             return;
 
-        using var image = await Image.LoadAsync(framesArray[0].Frame.AsStream());
+        Image? image = null;
 
-        foreach (var (frame, delay) in framesArray.Skip(1))
+        foreach (var (frame, delay) in framesArray)
         {
-            using var f = await Image.LoadAsync(frame.AsStream());
-            // TODO: delay, wait for ImageSharp 3.10
-            _ = image.Frames.AddFrame(f.Frames[0]);
+            frame.Seek(0);
+            var tempImage = await Image.LoadAsync(frame.AsStream());
+            ImageFrame newFrame;
+            if (image is null)
+            {
+                image = tempImage;
+                newFrame = image.Frames[0];
+            }
+            else
+            {
+                newFrame = image.Frames.AddFrame(tempImage.Frames[0]);
+                tempImage.Dispose();
+            }
+            newFrame.Metadata.GetFormatMetadata(WebpFormat.Instance).FrameDelay = delay;
         }
 
-        await image.SaveAsync(target.AsStreamForWrite(),
+        await image!.SaveAsync(target.AsStreamForWrite(),
             ugoiraDownloadFormat switch
             {
-                // Png and Webp are not supported by SixLabors.ImageSharp yet
                 UgoiraDownloadFormat.Tiff => new TiffEncoder(),
                 UgoiraDownloadFormat.APng => new PngEncoder(),
                 UgoiraDownloadFormat.Gif => new GifEncoder(),
-                UgoiraDownloadFormat.WebP => new WebpEncoder(),
+                UgoiraDownloadFormat.WebPLossless => new WebpEncoder { FileFormat = WebpFileFormatType.Lossless },
+                UgoiraDownloadFormat.WebPLossy => new WebpEncoder { FileFormat = WebpFileFormatType.Lossy },
                 _ => WinUI3Utilities.ThrowHelper.ArgumentOutOfRange<UgoiraDownloadFormat, IImageEncoder>(
                     ugoiraDownloadFormat)
             });
+        image.Dispose();
         target.Seek(0);
+    }
+
+    public static string GetExtension(this UgoiraDownloadFormat ugoiraDownloadFormat)
+    {
+        return ugoiraDownloadFormat switch
+        {
+            UgoiraDownloadFormat.Tiff => "." + ugoiraDownloadFormat.ToString().ToLower(),
+            UgoiraDownloadFormat.WebPLossless or UgoiraDownloadFormat.WebPLossy => ".webp",
+            _ => WinUI3Utilities.ThrowHelper.ArgumentOutOfRange<UgoiraDownloadFormat, string>(ugoiraDownloadFormat)
+        };
     }
 
     public static async Task<BitmapImage> GetBitmapImageAsync(this IRandomAccessStream imageStream, bool disposeOfImageStream, int? desiredWidth = 0)
@@ -152,7 +172,7 @@ public static partial class IoHelper
         var frames = ugoiraMetadataResponse.UgoiraMetadataInfo?.Frames?.ToArray();
         var inMemoryRandomAccessStream = new InMemoryRandomAccessStream();
         await WriteBitmapAsync(inMemoryRandomAccessStream, entryStreams.Select((s, i) =>
-                (s.content.AsRandomAccessStream(), (int)(frames?[i]?.Delay ?? 20))),
+                (s.content.AsRandomAccessStream(), (uint)(frames?[i]?.Delay ?? 10))),
             App.AppViewModel.AppSetting.UgoiraDownloadFormat);
         return inMemoryRandomAccessStream;
     }
@@ -168,8 +188,7 @@ public static partial class IoHelper
     /// </summary>
     /// <param name="illustrationViewOption"></param>
     /// <returns></returns>
-    public static ThumbnailUrlOption ToThumbnailUrlOption(
-        this ItemsViewLayoutType illustrationViewOption)
+    public static ThumbnailUrlOption ToThumbnailUrlOption(this ItemsViewLayoutType illustrationViewOption)
     {
         return illustrationViewOption switch
         {

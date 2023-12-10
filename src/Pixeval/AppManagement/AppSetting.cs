@@ -206,7 +206,7 @@ public partial record AppSetting : IWindowSettings
     [SettingMetadata(SettingEntryCategory.Download, typeof(SettingsPageResources), nameof(SettingsPageResources.DefaultDownloadPathMacroEntryHeader))]
     public string DefaultDownloadPathMacro { get; set; }
 
-    [DefaultValue(UgoiraDownloadFormat.Tiff)]
+    [DefaultValue(UgoiraDownloadFormat.WebPLossless)]
     [SettingMetadata(SettingEntryCategory.Download, typeof(SettingsPageResources), nameof(SettingsPageResources.UgoiraDownloadFormatEntryHeader))]
     public UgoiraDownloadFormat UgoiraDownloadFormat { get; set; }
 

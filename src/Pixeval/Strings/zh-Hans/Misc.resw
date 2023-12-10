@@ -249,7 +249,10 @@
   <data name="UnexpectedBehavior" xml:space="preserve">
     <value>发生了未定义的行为，如果你看到了该信息，请联系开发者寻求帮助</value>
   </data>
-  <data name="WebP" xml:space="preserve">
-    <value>WebP（无损，文件小，支持广泛）</value>
+  <data name="WebPLossless" xml:space="preserve">
+    <value>无损WebP（无损，文件小，支持广泛）</value>
+  </data>
+  <data name="WebPLossy" xml:space="preserve">
+    <value>有损WebP（有损，文件小，支持广泛）</value>
   </data>
 </root>
