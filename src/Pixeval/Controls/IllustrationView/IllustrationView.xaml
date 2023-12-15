@@ -14,9 +14,10 @@
     </Grid.Resources>
     <controls:AdvancedItemsView
         x:Name="IllustrationItemsView"
+        ElementClearing="IllustrationItemsView_OnElementClearing"
+        ElementPrepared="IllustrationItemsView_OnElementPrepared"
         IsItemInvokedEnabled="True"
         ItemInvoked="IllustrationItemsView_OnItemInvoked"
-       
         ItemsSource="{x:Bind ViewModel.DataProvider.View}"
         LayoutType="{x:Bind LayoutType, Mode=OneWay}"
         LoadMoreRequested="IllustrationItemsView_OnLoadMoreRequested"
@@ -28,7 +29,6 @@
                 <ItemContainer IsSelected="{x:Bind IsSelected, Mode=TwoWay}">
                     <local:IllustrationThumbnail
                         IsTapEnabled="False"
-                        EffectiveViewportChanged="IllustrationThumbnailContainerItemOnEffectiveViewportChanged"
                         ShowQrCodeRequested="IllustrationThumbnailOnShowQrCodeRequested"
                         ThisRequired="IllustrationThumbnail_OnThisRequired"
                         ViewModel="{x:Bind}" />

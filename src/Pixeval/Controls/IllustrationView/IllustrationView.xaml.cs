@@ -88,28 +88,6 @@ public sealed partial class IllustrationView
         ViewModel.Dispose();
     }
 
-    private async void IllustrationThumbnailContainerItemOnEffectiveViewportChanged(FrameworkElement sender, EffectiveViewportChangedEventArgs args)
-    {
-        var context = sender.To<IllustrationThumbnail>().ViewModel;
-        var preLoadRows = Math.Clamp(App.AppViewModel.AppSetting.PreLoadRows, 1, 15);
-        var option = LayoutType.ToThumbnailUrlOption();
-
-        if (args.BringIntoViewDistanceY <= sender.ActualHeight * preLoadRows)
-        {
-            if (await context.TryLoadThumbnail(ViewModel, option))
-            {
-                if (sender.IsFullyOrPartiallyVisible(this))
-                    sender.Resources["IllustrationThumbnailStoryboard"].To<Storyboard>().Begin();
-                else
-                    sender.Opacity = 1;
-            }
-        }
-        else
-        {
-            context.UnloadThumbnail(ViewModel, option);
-        }
-    }
-
     public void LoadMoreIfNeeded()
     {
         IllustrationItemsView.TryRaiseLoadMoreRequested();
@@ -127,29 +105,31 @@ public sealed partial class IllustrationView
         vm.CreateWindowWithPage(ViewModel);
     }
 
-    private async Task IllustrationItemsView_OnLoadMoreRequested(object? sender, EventArgs e)
+    private Task IllustrationItemsView_OnLoadMoreRequested(object? sender, EventArgs e)
     {
-        await ViewModel.LoadMoreAsync(20);
+        return ViewModel.LoadMoreAsync(20);
     }
 
-    /// <summary>
-    /// TODO: 加载缩略图有问题，但EffectiveViewportChanged有bug
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="view"></param>
-    private async void IllustrationItemsView_OnViewChanged(AdvancedItemsView sender, ScrollView view)
+    private async void IllustrationItemsView_OnElementPrepared(AdvancedItemsView sender, ItemContainer itemContainer)
     {
+        var thumbnail = itemContainer.Child.To<IllustrationThumbnail>();
+        var viewModel = thumbnail.ViewModel;
         var option = LayoutType.ToThumbnailUrlOption();
-        if (sender.TryGetItemIndex(0, 0, out var first) && sender.TryGetItemIndex(1, 1, out var last))
+
+        if (await viewModel.TryLoadThumbnail(ViewModel, option))
         {
-            for (var index = 0; index < ViewModel.DataProvider.View.Count; index++)
-            {
-                var item = ViewModel.DataProvider.View[index];
-                if (index < first || index > last)
-                    item.UnloadThumbnail(ViewModel, option);
-                else
-                    _ = await item.TryLoadThumbnail(ViewModel, option);
-            }
+            if (thumbnail.IsFullyOrPartiallyVisible(this))
+                thumbnail.Resources["IllustrationThumbnailStoryboard"].To<Storyboard>().Begin();
+            else
+                thumbnail.Opacity = 1;
         }
+    }
+
+    private void IllustrationItemsView_OnElementClearing(AdvancedItemsView sender, ItemContainer itemContainer)
+    {
+        var viewModel = itemContainer.Child.To<IllustrationThumbnail>().ViewModel;
+        var option = LayoutType.ToThumbnailUrlOption();
+
+        viewModel.UnloadThumbnail(ViewModel, option);
     }
 }

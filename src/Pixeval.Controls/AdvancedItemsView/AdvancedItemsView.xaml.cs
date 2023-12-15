@@ -13,8 +13,12 @@ namespace Pixeval.Controls;
 [DependencyProperty<double>("LoadingHeight", "100d")]
 public sealed partial class AdvancedItemsView : ItemsView
 {
+    private ItemsRepeater _itemsRepeater = null!;
+
     public event Func<AdvancedItemsView, EventArgs, Task>? LoadMoreRequested;
     public event Action<AdvancedItemsView, ScrollView>? ViewChanged;
+    public event Action<AdvancedItemsView, ItemContainer>? ElementPrepared;
+    public event Action<AdvancedItemsView, ItemContainer>? ElementClearing;
 
     private static void OnItemHeightChanged(DependencyObject o, DependencyPropertyChangedEventArgs e)
     {
@@ -83,7 +87,7 @@ public sealed partial class AdvancedItemsView : ItemsView
             },
             ItemsViewLayoutType.VerticalStack => new StackLayout
             {
-                Spacing = 5, 
+                Spacing = 5,
                 Orientation = Orientation.Vertical
             },
             ItemsViewLayoutType.HorizontalStack => new StackLayout
@@ -120,6 +124,9 @@ public sealed partial class AdvancedItemsView : ItemsView
     private void AdvancedItemsView_OnLoaded(object sender, RoutedEventArgs e)
     {
         ScrollView.ViewChanged += ScrollViewViewChanged;
+        _itemsRepeater = ScrollView.Content.To<ItemsRepeater>();
+        _itemsRepeater.ElementPrepared += (_, arg) => ElementPrepared?.Invoke(this, arg.Element.To<ItemContainer>());
+        _itemsRepeater.ElementClearing += (_, arg) => ElementClearing?.Invoke(this, arg.Element.To<ItemContainer>());
         TryRaiseLoadMoreRequested();
     }
 }
