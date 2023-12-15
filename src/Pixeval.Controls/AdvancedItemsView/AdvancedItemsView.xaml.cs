@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -11,12 +13,14 @@ namespace Pixeval.Controls;
 [DependencyProperty<double>("MinItemHeight", "0d", nameof(OnItemHeightChanged))]
 [DependencyProperty<double>("MinItemWidth", "0d", nameof(OnItemWidthChanged))]
 [DependencyProperty<double>("LoadingHeight", "100d")]
+[DependencyProperty<int>("SelectedIndex", "-1", nameof(OnSelectedIndexChanged))]
 public sealed partial class AdvancedItemsView : ItemsView
 {
     private ItemsRepeater _itemsRepeater = null!;
 
     public event Func<AdvancedItemsView, EventArgs, Task>? LoadMoreRequested;
     public event Action<AdvancedItemsView, ScrollView>? ViewChanged;
+    // TODO: 调用此事件时可能需要防抖
     public event Action<AdvancedItemsView, ItemContainer>? ElementPrepared;
     public event Action<AdvancedItemsView, ItemContainer>? ElementClearing;
 
@@ -74,6 +78,7 @@ public sealed partial class AdvancedItemsView : ItemsView
                 MinItemHeight = minItemHeight,
                 MinItemWidth = minItemWidth,
                 MinRowSpacing = 5,
+                MinColumnSpacing = 5,
                 Orientation = Orientation.Horizontal
             },
             ItemsViewLayoutType.HorizontalUniformStack => new UniformGridLayout
@@ -83,6 +88,7 @@ public sealed partial class AdvancedItemsView : ItemsView
                 MinItemHeight = minItemHeight,
                 MinItemWidth = minItemWidth,
                 MinRowSpacing = 5,
+                MinColumnSpacing = 5,
                 Orientation = Orientation.Vertical
             },
             ItemsViewLayoutType.VerticalStack => new StackLayout
@@ -97,6 +103,14 @@ public sealed partial class AdvancedItemsView : ItemsView
             },
             _ => throw new ArgumentOutOfRangeException()
         };
+    }
+
+    private static void OnSelectedIndexChanged(DependencyObject o, DependencyPropertyChangedEventArgs e)
+    {
+        var advancedItemsView = o.To<AdvancedItemsView>();
+        var selectedIndex = advancedItemsView.GetSelectedIndex();
+        if (advancedItemsView.SelectedIndex != selectedIndex)
+            advancedItemsView.Select(advancedItemsView.SelectedIndex);
     }
 
     public async void TryRaiseLoadMoreRequested()
@@ -128,5 +142,28 @@ public sealed partial class AdvancedItemsView : ItemsView
         _itemsRepeater.ElementPrepared += (_, arg) => ElementPrepared?.Invoke(this, arg.Element.To<ItemContainer>());
         _itemsRepeater.ElementClearing += (_, arg) => ElementClearing?.Invoke(this, arg.Element.To<ItemContainer>());
         TryRaiseLoadMoreRequested();
+    }
+
+    private int GetSelectedIndex()
+    {
+        return SelectedItem switch
+        {
+            null => -1,
+            _ => ItemsSource switch
+            {
+                Array array => Array.IndexOf(array, SelectedItem),
+                IList list => list.IndexOf(SelectedItem),
+                IEnumerable enumerable => enumerable.Cast<object>().ToList().IndexOf(SelectedItem),
+                _ => ThrowHelper.ArgumentOutOfRange<object, int>(ItemsSource)
+            }
+        };
+    }
+
+    private void AdvancedItemsView_OnSelectionChanged(ItemsView sender, ItemsViewSelectionChangedEventArgs e)
+    {
+        if (sender.SelectionMode is not ItemsViewSelectionMode.Single)
+            return;
+
+        SelectedIndex = sender.To<AdvancedItemsView>().GetSelectedIndex();
     }
 }

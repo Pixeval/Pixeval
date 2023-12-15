@@ -30,7 +30,6 @@ using Microsoft.UI.Xaml.Navigation;
 using Pixeval.AppManagement;
 using Pixeval.Misc;
 using Pixeval.Options;
-using Pixeval.Controls.IllustrationView;
 using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
@@ -39,6 +38,7 @@ using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 using Windows.Graphics;
 using Windows.Storage.Streams;
+using Pixeval.Controls;
 using Pixeval.Controls.Windowing;
 using WinUI3Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
@@ -48,7 +48,9 @@ namespace Pixeval.Pages.IllustrationViewer;
 public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragRegion
 {
     private IllustrationViewerPageViewModel _viewModel = null!;
-    
+
+    private const ThumbnailUrlOption Option = ThumbnailUrlOption.SquareMedium;
+
     public IllustrationViewerPage() => InitializeComponent();
 
     /// <summary>
@@ -88,7 +90,7 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
                 info = new SlideNavigationTransitionInfo { Effect = SlideNavigationTransitionEffect.FromRight };
             else if (oldIndex > newIndex)
                 info = new SlideNavigationTransitionInfo { Effect = SlideNavigationTransitionEffect.FromLeft };
-            ThumbnailList.ScrollIntoView(vm.CurrentIllustration);
+            ThumbnailItemsView.StartBringItemIntoView(vm.CurrentIllustrationIndex, new BringIntoViewOptions { AnimationDesired = true });
             Navigate<ImageViewerPage>(IllustrationImageShowcaseFrame, vm.CurrentImage, info);
         };
 
@@ -142,6 +144,26 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
         IllustrationImageShowcaseFrame_OnTapped(null!, null!);
     }
 
+    private Task IllustrationItemsView_OnLoadMoreRequested(object? sender, EventArgs e)
+    {
+        return _viewModel.LoadMoreAsync(20);
+    }
+
+    private async void IllustrationItemsView_OnElementPrepared(AdvancedItemsView sender, ItemContainer itemContainer)
+    {
+        var thumbnail = itemContainer.Child.To<IllustrationImage>();
+        var viewModel = thumbnail.ViewModel;
+
+        _ = await viewModel.TryLoadThumbnail(_viewModel, Option);
+    }
+
+    private void IllustrationItemsView_OnElementClearing(AdvancedItemsView sender, ItemContainer itemContainer)
+    {
+        var viewModel = itemContainer.Child.To<IllustrationImage>().ViewModel;
+
+        viewModel.UnloadThumbnail(_viewModel, Option);
+    }
+
     private void ExitFullScreenKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => _viewModel.IsFullScreen = false;
 
     private async void OnDataTransferManagerOnDataRequested(DataTransferManager _, DataRequestedEventArgs args)
@@ -162,12 +184,13 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
         props.Description = vm.Illustrate.Title;
         props.Square30x30Logo = RandomAccessStreamReference.CreateFromStream(await AppContext.GetAssetStreamAsync("Images/logo44x44.ico"));
 
-        var thumbnailStream = await _viewModel.CurrentIllustration.GetThumbnail(ThumbnailUrlOption.SquareMedium);
+        var thumbnailStream = await _viewModel.CurrentIllustration.GetThumbnail(Option);
         props.Thumbnail = RandomAccessStreamReference.CreateFromStream(thumbnailStream);
         request.Data.SetWebLink(webLink);
 
         if (_viewModel.CurrentImage.OriginalImageStream is { } stream)
         {
+            // TODO: 是否只能用GIF
             var file = await AppKnownFolders.CreateTemporaryFileWithRandomNameAsync(_viewModel.IsUgoira ? "gif" : "png");
             await stream.SaveToFileAsync(file);
             request.Data.SetStorageItems(Enumerates.ArrayOf(file), true);
@@ -189,7 +212,7 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
                 break;
             case false:
                 // 由于先后次序问题，必须操作SelectedIndex，而不是_viewModel.CurrentIllustrationIndex
-                ++ThumbnailList.SelectedIndex;
+                ++ThumbnailItemsView.SelectedIndex;
                 break;
             case null: break;
         }
@@ -198,7 +221,7 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
     private void NextButton_OnRightTapped(object sender, RightTappedRoutedEventArgs e)
     {
         // 由于先后次序问题，必须操作SelectedIndex，而不是_viewModel.CurrentIllustrationIndex
-        ++ThumbnailList.SelectedIndex;
+        ++ThumbnailItemsView.SelectedIndex;
     }
 
     private void PrevButton_OnTapped(object sender, TappedRoutedEventArgs e)
@@ -211,7 +234,7 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
                 break;
             case false:
                 // 由于先后次序问题，必须操作SelectedIndex，而不是_viewModel.CurrentIllustrationIndex
-                --ThumbnailList.SelectedIndex;
+                --ThumbnailItemsView.SelectedIndex;
                 break;
             case null: break;
         }
@@ -220,7 +243,7 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
     private void PrevButton_OnRightTapped(object sender, RightTappedRoutedEventArgs e)
     {
         // 由于先后次序问题，必须操作SelectedIndex，而不是_viewModel.CurrentIllustrationIndex
-        --ThumbnailList.SelectedIndex;
+        --ThumbnailItemsView.SelectedIndex;
     }
 
     private void GenerateLinkToThisPageButtonTeachingTip_OnActionButtonClick(TeachingTip sender, object args)
@@ -255,22 +278,6 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
                 ? (int)IllustrationInfoAndCommentsSplitView.OpenPaneLength
                 : 0
         });
-    }
-
-    private void ThumbnailOnEffectiveViewportChanged(FrameworkElement sender, EffectiveViewportChangedEventArgs args)
-    {
-        var context = sender.GetDataContext<IllustrationViewModel?>();
-        if (context is null)
-            return;
-        const ThumbnailUrlOption option = ThumbnailUrlOption.SquareMedium;
-        if (args.BringIntoViewDistanceX <= sender.ActualWidth)
-        {
-            _ = context.TryLoadThumbnail(_viewModel, option);
-        }
-        else
-        {
-            context.UnloadThumbnail(_viewModel, option);
-        }
     }
 
     private async void IllustrationImageShowcaseFrame_OnTapped(object sender, TappedRoutedEventArgs e)

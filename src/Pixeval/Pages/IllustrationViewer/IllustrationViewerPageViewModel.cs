@@ -262,6 +262,8 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
         return CurrentImage;
     }
 
+    public Task LoadMoreAsync(uint count) => ViewModelSource?.LoadMoreAsync(count) ?? Task.CompletedTask;
+
     #region Helper Functions
 
     public Visibility NextButtonEnable => NextButtonAction is null ? Visibility.Collapsed : Visibility.Visible;

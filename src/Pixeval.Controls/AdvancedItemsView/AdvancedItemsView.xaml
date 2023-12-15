@@ -7,6 +7,7 @@
     xmlns:local="using:Pixeval.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:winUi="using:CommunityToolkit.WinUI"
+    SelectionChanged="AdvancedItemsView_OnSelectionChanged"
     Loaded="AdvancedItemsView_OnLoaded"
     mc:Ignorable="d">
     <!--<VisualStateManager.VisualStateGroups>

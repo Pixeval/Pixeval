@@ -230,35 +230,34 @@
                                     Value="true" />
                             </core:EventTriggerBehavior>
                         </interactivity:Interaction.Behaviors>
-                        <GridView
-                            x:Name="ThumbnailList"
+                        <controls:AdvancedItemsView
+                            x:Name="ThumbnailItemsView"
                             Margin="5"
                             Padding="0"
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Stretch"
-                            IsItemClickEnabled="True"
+                            ElementClearing="IllustrationItemsView_OnElementClearing"
+                            ElementPrepared="IllustrationItemsView_OnElementPrepared"
+                            IsItemInvokedEnabled="True"
                             ItemsSource="{x:Bind _viewModel.Illustrations}"
-                            ScrollViewer.HorizontalScrollBarVisibility="Auto"
-                            ScrollViewer.HorizontalScrollMode="Auto"
-                            ScrollViewer.VerticalScrollMode="Disabled"
+                            LayoutType="HorizontalStack"
+                            LoadMoreRequested="IllustrationItemsView_OnLoadMoreRequested"
+                            MinItemHeight="80"
+                            MinItemWidth="80"
                             SelectedIndex="{x:Bind _viewModel.CurrentIllustrationIndex, Mode=TwoWay}"
                             SelectionMode="Single">
-                            <GridView.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <ItemsStackPanel Orientation="Horizontal" />
-                                </ItemsPanelTemplate>
-                            </GridView.ItemsPanel>
-                            <GridView.ItemTemplate>
+                            <controls:AdvancedItemsView.ItemTemplate>
                                 <DataTemplate x:DataType="illustrationView:IllustrationViewModel">
-                                    <controls:IllustrationImage
-                                        Width="80"
-                                        Height="80"
-                                        EffectiveViewportChanged="ThumbnailOnEffectiveViewportChanged"
-                                        ThumbnailOption="SquareMedium"
-                                        ViewModel="{x:Bind}" />
+                                    <ItemContainer>
+                                        <controls:IllustrationImage
+                                            Width="80"
+                                            Height="80"
+                                            ThumbnailOption="SquareMedium"
+                                            ViewModel="{x:Bind}" />
+                                    </ItemContainer>
                                 </DataTemplate>
-                            </GridView.ItemTemplate>
-                        </GridView>
+                            </controls:AdvancedItemsView.ItemTemplate>
+                        </controls:AdvancedItemsView>
                     </Grid>
                 </StackPanel>
             </Grid>
