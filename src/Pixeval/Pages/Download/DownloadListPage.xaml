@@ -83,6 +83,8 @@
         </Grid>
         <controls:AdvancedItemsView
             Grid.Row="1"
+            ElementClearing="AdvancedItemsView_OnElementClearing"
+            ElementPrepared="AdvancedItemsView_OnElementPrepared"
             ItemsSource="{x:Bind _viewModel.DataProvider.View}"
             LayoutType="VerticalStack"
             LoadMoreRequested="AdvancedItemsView_OnLoadMoreRequested"
@@ -97,7 +99,6 @@
                             ActionButtonContent="{x:Bind download:DownloadListEntryViewModel.GetEntryActionButtonContent(DownloadTask.CurrentState), Mode=OneWay}"
                             DataContext="{x:Bind}"
                             Description="{x:Bind Illustrate.User.Name}"
-                            EffectiveViewportChanged="DownloadListEntryOnEffectiveViewportChanged"
                             IsCancelItemEnabled="{x:Bind download:DownloadListEntryViewModel.GetIsEntryCancelDownloadItemEnabled(DownloadTask.CurrentState), Mode=OneWay}"
                             IsRedownloadItemEnabled="{x:Bind download:DownloadListEntryViewModel.GetIsRedownloadItemEnabled(DownloadTask.CurrentState), Mode=OneWay}"
                             IsShowErrorDetailDialogItemEnabled="{x:Bind download:DownloadListEntryViewModel.GetIsShowErrorDetailDialogItemEnabled(DownloadTask.CurrentState), Mode=OneWay}"

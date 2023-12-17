@@ -29,6 +29,7 @@ using Pixeval.Download;
 using Pixeval.Util.UI;
 using Windows.System;
 using Pixeval.CoreApi.Model;
+using Pixeval.Options;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
 
@@ -46,6 +47,8 @@ namespace Pixeval.Pages.Download;
 [DependencyProperty<bool>("IsShowErrorDetailDialogItemEnabled")]
 public sealed partial class DownloadListEntry
 {
+    private const ThumbnailUrlOption Option = ThumbnailUrlOption.SquareMedium;
+
     public event TypedEventHandler<DownloadListEntry, DownloadListEntryViewModel>? OpenIllustrationRequested;
 
     public DownloadListEntry() => InitializeComponent();

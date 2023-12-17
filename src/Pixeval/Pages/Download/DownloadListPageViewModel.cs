@@ -37,6 +37,8 @@ namespace Pixeval.Pages.Download;
 
 public partial class DownloadListPageViewModel : IllustrateViewViewModel<Illustration, DownloadListEntryViewModel>
 {
+    public const ThumbnailUrlOption Option = ThumbnailUrlOption.SquareMedium;
+
     public static readonly IEnumerable<DownloadListOption> AvailableDownloadListOptions = Enum.GetValues<DownloadListOption>();
 
     [ObservableProperty]
@@ -146,7 +148,7 @@ public partial class DownloadListPageViewModel : IllustrateViewViewModel<Illustr
     {
         foreach (var illustrationViewModel in DataProvider.Source)
         {
-            illustrationViewModel.UnloadThumbnail(this, ThumbnailUrlOption.SquareMedium);
+            illustrationViewModel.UnloadThumbnail(this, Option);
             illustrationViewModel.Dispose();
         }
     }

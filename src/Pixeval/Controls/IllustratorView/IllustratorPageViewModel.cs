@@ -37,6 +37,8 @@ namespace Pixeval.Controls.IllustratorView;
 
 public partial class IllustratorPageViewModel : ObservableObject, IIllustrationVisualizer
 {
+    private const ThumbnailUrlOption Option = ThumbnailUrlOption.SquareMedium;
+
     public string Name { get; set; }
 
     public string AvatarUrl { get; set; }
@@ -112,7 +114,7 @@ public partial class IllustratorPageViewModel : ObservableObject, IIllustrationV
     public void DisposeCurrent()
     {
         foreach (var illustration in Illustrations)
-            illustration.UnloadThumbnail(this, ThumbnailUrlOption.SquareMedium);
+            illustration.UnloadThumbnail(this, Option);
         Illustrations.Clear();
     }
 

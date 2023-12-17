@@ -29,9 +29,7 @@ using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Controls;
 using Pixeval.Dialogs;
 using Pixeval.Download;
-using Pixeval.Options;
 using Pixeval.Pages.IllustrationViewer;
-using Pixeval.Controls.IllustrationView;
 using Pixeval.Util.IO;
 using Pixeval.Util.Threading;
 using Pixeval.Util.UI;
@@ -149,28 +147,25 @@ public sealed partial class DownloadListPage
         viewModel.CreateWindowWithPage(_viewModel.DataProvider.Source);
     }
 
-    private void DownloadListEntryOnEffectiveViewportChanged(FrameworkElement sender, EffectiveViewportChangedEventArgs args)
-    {
-        var context = sender.GetDataContext<IllustrationViewModel>();
-        var preLoadRows = Math.Clamp(App.AppViewModel.AppSetting.PreLoadRows, 1, 15);
-        const ThumbnailUrlOption option = ThumbnailUrlOption.SquareMedium;
-        if (args.BringIntoViewDistanceY <= sender.ActualHeight * preLoadRows)
-        {
-            _ = context.TryLoadThumbnail(_viewModel, option);
-        }
-        else
-        {
-            context.UnloadThumbnail(_viewModel, option);
-        }
-    }
-
     private void DownloadListPage_OnUnloaded(object sender, RoutedEventArgs e)
     {
         _viewModel.Dispose();
     }
 
-    private async Task AdvancedItemsView_OnLoadMoreRequested(AdvancedItemsView sender, EventArgs e)
+    private Task AdvancedItemsView_OnLoadMoreRequested(AdvancedItemsView sender, EventArgs e)
     {
-        await _viewModel.LoadMoreAsync(20);
+        return _viewModel.LoadMoreAsync(20);
+    }
+
+    private void AdvancedItemsView_OnElementPrepared(AdvancedItemsView sender, ItemContainer itemContainer)
+    {
+        var item = itemContainer.Child.To<DownloadListEntry>();
+        _ = item.ViewModel.TryLoadThumbnail(_viewModel, DownloadListPageViewModel.Option);
+    }
+
+    private void AdvancedItemsView_OnElementClearing(AdvancedItemsView sender, ItemContainer itemContainer)
+    {
+        var item = itemContainer.Child.To<DownloadListEntry>();
+        item.ViewModel.UnloadThumbnail(_viewModel, DownloadListPageViewModel.Option);
     }
 }

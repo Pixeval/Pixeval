@@ -238,7 +238,6 @@
                             VerticalAlignment="Stretch"
                             ElementClearing="IllustrationItemsView_OnElementClearing"
                             ElementPrepared="IllustrationItemsView_OnElementPrepared"
-                            IsItemInvokedEnabled="True"
                             ItemsSource="{x:Bind _viewModel.Illustrations}"
                             LayoutType="HorizontalStack"
                             LoadMoreRequested="IllustrationItemsView_OnLoadMoreRequested"
@@ -252,7 +251,7 @@
                                         <controls:IllustrationImage
                                             Width="80"
                                             Height="80"
-                                            ThumbnailOption="SquareMedium"
+                                            ThumbnailOption="{x:Bind local:IllustrationViewerPage.Option}"
                                             ViewModel="{x:Bind}" />
                                     </ItemContainer>
                                 </DataTemplate>

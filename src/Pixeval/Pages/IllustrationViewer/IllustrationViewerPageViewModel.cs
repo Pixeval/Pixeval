@@ -57,6 +57,8 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
     public const string ShowShare = nameof(ShowShare);
     public const string ShowQrCode = nameof(ShowQrCode);
 
+    private const ThumbnailUrlOption Option = ThumbnailUrlOption.SquareMedium;
+
     #region Tags for IllustrationInfoAndCommentsNavigationView
 
     public NavigationViewTag RelatedWorksTag = new(typeof(RelatedWorksPage), null);
@@ -616,7 +618,7 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
     public void Dispose()
     {
         foreach (var illustrationViewModel in Illustrations)
-            illustrationViewModel.UnloadThumbnail(this, ThumbnailUrlOption.SquareMedium);
+            illustrationViewModel.UnloadThumbnail(this, Option);
         _pages?.ForEach(i => i.Dispose());
         (UserProfileImageSource as SoftwareBitmapSource)?.Dispose();
         ViewModelSource?.Dispose();

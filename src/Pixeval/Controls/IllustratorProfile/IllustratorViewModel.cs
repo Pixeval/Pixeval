@@ -90,8 +90,7 @@ public sealed partial class IllustratorViewModel : IllustrateViewModel<User>
 
     private async Task SetAvatarAsync()
     {
-        var url = Illustrate.UserInfo?.ProfileImageUrls?.Medium;
-        if (url is not null)
+        if (Illustrate.UserInfo?.ProfileImageUrls?.Medium is { } url)
         {
             var avatar = await App.AppViewModel.MakoClient.DownloadBitmapImageResultAsync(url, 100);
             AvatarSource = avatar.UnwrapOrElse(await AppContext.GetPixivNoProfileImageAsync());
