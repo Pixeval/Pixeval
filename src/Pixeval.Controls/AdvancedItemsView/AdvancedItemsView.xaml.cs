@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.UI.Xaml;
@@ -12,7 +13,7 @@ namespace Pixeval.Controls;
 [DependencyProperty<ItemsViewLayoutType>("LayoutType", DependencyPropertyDefaultValue.Default, nameof(OnLayoutTypeChanged))]
 [DependencyProperty<double>("MinItemHeight", "0d", nameof(OnItemHeightChanged))]
 [DependencyProperty<double>("MinItemWidth", "0d", nameof(OnItemWidthChanged))]
-[DependencyProperty<double>("LoadingHeight", "100d")]
+[DependencyProperty<double>("LoadingOffset", "100d")]
 [DependencyProperty<int>("SelectedIndex", "-1", nameof(OnSelectedIndexChanged))]
 public sealed partial class AdvancedItemsView : ItemsView
 {
@@ -113,14 +114,39 @@ public sealed partial class AdvancedItemsView : ItemsView
             advancedItemsView.Select(advancedItemsView.SelectedIndex);
     }
 
+    private readonly HashSet<int> _loadedElements = [];
+
+    /// <summary>
+    /// 当加载本控件之前，<see cref="ItemsView.ItemsSource"/>便已有内容，
+    /// 则<see cref="ItemsRepeater.ElementPrepared"/>可能不会触发，故
+    /// 在<see cref="FrameworkElement.Loaded"/>时手动触发
+    /// </summary>
+    /// <param name="element"></param>
+    public void TryLoadedFirst(ItemContainer element)
+    {
+        _ = _loadedElements.Add(element.GetHashCode());
+        ElementPrepared?.Invoke(this, element);
+    }
+
     public async void TryRaiseLoadMoreRequested()
     {
         if (LoadMoreRequested is { } handler && !IsLoadingMore)
-            if (ScrollView.ScrollableHeight - LoadingHeight < ScrollView.VerticalOffset)
+            switch (ScrollView.ComputedVerticalScrollMode, ScrollView.ComputedHorizontalScrollMode)
             {
-                IsLoadingMore = true;
-                await handler(this, EventArgs.Empty);
-                IsLoadingMore = false;
+                case (ScrollingScrollMode.Disabled, ScrollingScrollMode.Disabled):
+                case (ScrollingScrollMode.Enabled, ScrollingScrollMode.Disabled)
+                    when ScrollView.ScrollableHeight - LoadingOffset < ScrollView.VerticalOffset:
+                case (ScrollingScrollMode.Disabled, ScrollingScrollMode.Enabled)
+                    when ScrollView.ScrollableWidth - LoadingOffset < ScrollView.HorizontalOffset:
+                case (ScrollingScrollMode.Enabled, ScrollingScrollMode.Enabled)
+                    when ScrollView.ScrollableHeight - LoadingOffset < ScrollView.VerticalOffset
+                        || ScrollView.ScrollableWidth - LoadingOffset < ScrollView.HorizontalOffset:
+                {
+                    IsLoadingMore = true;
+                    await handler(this, EventArgs.Empty);
+                    IsLoadingMore = false;
+                    break;
+                }
             }
 
         ViewChanged?.Invoke(this, ScrollView);
@@ -139,7 +165,11 @@ public sealed partial class AdvancedItemsView : ItemsView
     {
         ScrollView.ViewChanged += ScrollViewViewChanged;
         _itemsRepeater = ScrollView.Content.To<ItemsRepeater>();
-        _itemsRepeater.ElementPrepared += (_, arg) => ElementPrepared?.Invoke(this, arg.Element.To<ItemContainer>());
+        _itemsRepeater.ElementPrepared += (_, arg) =>
+        {
+            if (_loadedElements.Count is 0 || _loadedElements.Contains(arg.Element.GetHashCode()))
+                ElementPrepared?.Invoke(this, arg.Element.To<ItemContainer>());
+        };
         _itemsRepeater.ElementClearing += (_, arg) => ElementClearing?.Invoke(this, arg.Element.To<ItemContainer>());
         TryRaiseLoadMoreRequested();
     }

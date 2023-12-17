@@ -247,7 +247,7 @@
                             SelectionMode="Single">
                             <controls:AdvancedItemsView.ItemTemplate>
                                 <DataTemplate x:DataType="illustrationView:IllustrationViewModel">
-                                    <ItemContainer>
+                                    <ItemContainer Loaded="FrameworkElement_OnLoaded">
                                         <controls:IllustrationImage
                                             Width="80"
                                             Height="80"

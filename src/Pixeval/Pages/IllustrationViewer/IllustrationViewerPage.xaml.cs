@@ -318,4 +318,9 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
 
     private bool _timeUp;
     private bool _pointerNotInArea = true;
+
+    private void FrameworkElement_OnLoaded(object sender, RoutedEventArgs e)
+    {
+        ThumbnailItemsView.TryLoadedFirst(sender.To<ItemContainer>());
+    }
 }
