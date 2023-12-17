@@ -45,11 +45,6 @@ namespace Pixeval.Controls;
 /// 渲染：<see cref="CanvasControlOnDraw"/>，图片渲染逻辑<br/>
 /// 对外API：<see cref="Zoom"/>、<see cref="SetPosition"/>
 /// </summary>
-/// <remarks>
-/// 这个控件放在Pixeval.Controls项目时出现
-/// Cannot create instance of type 'Microsoft.Graphics.Canvas.UI.Xaml.CanvasControl'
-/// Win2D的玄学问题，放在这里暂时没问题，如果可以还是放回去
-/// </remarks>
 [DependencyProperty<IEnumerable<IRandomAccessStream>>("Sources", DependencyPropertyDefaultValue.Default, nameof(OnSourcesChanged))]
 [DependencyProperty<List<int>>("MsIntervals", DependencyPropertyDefaultValue.Default, nameof(OnMsIntervalsChanged))]
 [DependencyProperty<bool>("IsPlaying", "true", nameof(OnIsPlayingChanged))]

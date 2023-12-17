@@ -21,9 +21,11 @@
         <None Remove="PixevalBadge\PixevalBadge.xaml" />
         <None Remove="SettingRadioButtons\SettingRadioButtons.xaml" />
         <None Remove="ZoomableImage.xaml" />
+        <None Remove="ZoomableImage\ZoomableImage.xaml" />
     </ItemGroup>
 
     <ItemGroup>
+        <PackageReference Include="Microsoft.Graphics.Win2D" Version="1.1.1" />
         <PackageReference Include="CommunityToolkit.WinUI.Triggers" Version="8.0.230907" />
         <PackageReference Include="CommunityToolkit.WinUI.Collections" Version="8.0.230907" />
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
@@ -75,6 +77,9 @@
     <ItemGroup>
       <Page Update="AdvancedItemsView\AdvancedItemsView.xaml">
         <Generator>MSBuild:Compile</Generator>
+      </Page>
+      <Page Update="ZoomableImage\ZoomableImage.xaml">
+        <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       </Page>
     </ItemGroup>
 </Project>
