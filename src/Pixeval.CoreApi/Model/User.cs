@@ -19,10 +19,12 @@
 #endregion
 
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text.Json.Serialization;
 
 namespace Pixeval.CoreApi.Model;
 
+[DebuggerDisplay("{UserInfo}")]
 public record User : IIllustrate
 {
     [JsonPropertyName("user")]
@@ -35,6 +37,7 @@ public record User : IIllustrate
     public bool IsMuted { get; set; }
 }
 
+[DebuggerDisplay("{Id}: {Name}")]
 public class UserInfo
 {
     [JsonPropertyName("id")]

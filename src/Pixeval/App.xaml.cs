@@ -80,6 +80,8 @@ public partial class App
             .Init(nameof(Pixeval), new SizeInt32(AppViewModel.AppSetting.WindowWidth, AppViewModel.AppSetting.WindowHeight))
             .Activate();
 
+        AppHelper.RegisterUnhandledExceptionHandler(w);
+
         await AppViewModel.InitializeAsync(isProtocolActivated);
     }
 

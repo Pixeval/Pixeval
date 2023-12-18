@@ -20,11 +20,13 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text.Json.Serialization;
 
 namespace Pixeval.CoreApi.Model;
 
 // ReSharper disable UnusedAutoPropertyAccessor.Global
+[DebuggerDisplay("{Id}: {Title} [{User}]")]
 public record Illustration : IIllustrate
 {
     [JsonIgnore]

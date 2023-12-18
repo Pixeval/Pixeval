@@ -20,7 +20,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -115,7 +114,7 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
     /// <summary>
     /// 插画列表
     /// </summary>
-    public ImmutableArray<IllustrationViewModel> Illustrations => ViewModelSource?.DataProvider.View.Cast<IllustrationViewModel>().ToImmutableArray() ?? IllustrationsSource!.Value;
+    public IList<IllustrationViewModel> Illustrations => (IList<IllustrationViewModel>?)ViewModelSource?.DataProvider.View ?? IllustrationsSource;
 
     /// <summary>
     /// 当前插画
@@ -215,7 +214,7 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
 
     private IllustrationViewViewModel? ViewModelSource { get; }
 
-    public ImmutableArray<IllustrationViewModel>? IllustrationsSource { get; }
+    public IllustrationViewModel[] IllustrationsSource { get; }
 
     /// <summary>
     /// 
@@ -224,7 +223,7 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
     /// <param name="currentIllustrationIndex"></param>
     public IllustrationViewerPageViewModel(IEnumerable<IllustrationViewModel> illustrationViewModels, int currentIllustrationIndex)
     {
-        IllustrationsSource = illustrationViewModels.ToImmutableArray();
+        IllustrationsSource = illustrationViewModels.ToArray();
         IllustrationInfoTag.Parameter = this;
         // ViewModel.DataProvider.View.CurrentItem为null，而且只设置这个属性会导致空引用
         CurrentIllustrationIndex = currentIllustrationIndex;
@@ -270,7 +269,7 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
 
     public Visibility NextButtonEnable => NextButtonAction is null ? Visibility.Collapsed : Visibility.Visible;
 
-    public bool NextIllustrationEnable => Illustrations.Length > CurrentIllustrationIndex + 1;
+    public bool NextIllustrationEnable => Illustrations.Count > CurrentIllustrationIndex + 1;
 
     /// <summary>
     /// <see langword="true"/>: next page<br/>
