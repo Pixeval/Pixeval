@@ -57,6 +57,13 @@ namespace Pixeval.Controls;
 [ObservableObject]
 public sealed partial class ZoomableImage : UserControl
 {
+    public bool IsDisposed { get; private set; }
+
+    public static ZoomableImage? EnsureNotDisposed(object? o)
+    {
+        return o is ZoomableImage { IsDisposed: false } image ? image : null;
+    }
+
     public ZoomableImage()
     {
         InitializeComponent();
@@ -214,13 +221,15 @@ public sealed partial class ZoomableImage : UserControl
 
     private static void OnMsIntervalsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        var zoomableImage = d.To<ZoomableImage>();
+        if (EnsureNotDisposed(d) is not { } zoomableImage)
+            return;
         zoomableImage.ClonedMsIntervals = new List<int>(zoomableImage.MsIntervals);
     }
 
     private static void OnSourcesChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        var zoomableImage = d.To<ZoomableImage>();
+        if (EnsureNotDisposed(d) is not { } zoomableImage)
+            return;
         zoomableImage.IsPlaying = true;
         zoomableImage._timerRunning = false;
         _ = zoomableImage.ManualResetEvent.Reset();
@@ -232,7 +241,8 @@ public sealed partial class ZoomableImage : UserControl
 
     private static void OnIsPlayingChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        var zoomableImage = d.To<ZoomableImage>();
+        if (EnsureNotDisposed(d) is not { } zoomableImage)
+            return;
         _ = zoomableImage.IsPlaying ? zoomableImage.ManualResetEvent.Set() : zoomableImage.ManualResetEvent.Reset();
     }
 
@@ -355,12 +365,15 @@ public sealed partial class ZoomableImage : UserControl
 
     private static void OnImageScaleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        OnImageScaleChanged(d.To<ZoomableImage>(), e.NewValue.To<float>());
+        if (EnsureNotDisposed(d) is not { } zoomableImage)
+            return;
+        OnImageScaleChanged(zoomableImage, e.NewValue.To<float>());
     }
 
     private static void OnModeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        var zoomableImage = d.To<ZoomableImage>();
+        if (EnsureNotDisposed(d) is not { } zoomableImage)
+            return;
         var imageScale = zoomableImage.ImageScale;
         switch (zoomableImage.Mode)
         {
@@ -465,7 +478,8 @@ public sealed partial class ZoomableImage : UserControl
 
     private static void OnImageRotationDegreeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        var zoomableImage = d.To<ZoomableImage>();
+        if (EnsureNotDisposed(d) is not { } zoomableImage)
+            return;
 
         if (zoomableImage.ImageRotationDegree % 90 is not 0)
         {
@@ -498,6 +512,7 @@ public sealed partial class ZoomableImage : UserControl
 
     private void CanvasControlOnUnloaded(object sender, RoutedEventArgs e)
     {
+        IsDisposed = true;
         foreach (var frame in _frames)
             frame.Dispose();
         _frames.Clear();
