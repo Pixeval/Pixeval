@@ -214,7 +214,7 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
 
     private IllustrationViewViewModel? ViewModelSource { get; }
 
-    public IllustrationViewModel[] IllustrationsSource { get; }
+    public IllustrationViewModel[]? IllustrationsSource { get; }
 
     /// <summary>
     /// 

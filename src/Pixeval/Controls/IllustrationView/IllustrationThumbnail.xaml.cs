@@ -32,9 +32,6 @@ using WinUI3Utilities.Attributes;
 
 namespace Pixeval.Controls.IllustrationView;
 
-/// <summary>
-/// TODO: IsSelected 在CardControl和CheckBox上是否选择的状态不一致
-/// </summary>
 [DependencyProperty<IllustrationViewModel>("ViewModel")]
 public sealed partial class IllustrationThumbnail : CardControl
 {
@@ -134,7 +131,12 @@ public sealed partial class IllustrationThumbnail : CardControl
         ShowQrCodeRequested?.Invoke(this, webQrCodeSource);
     }
 
-    private async void ShowPixEzQrCodeContextItemOnTapped(object sender, TappedRoutedEventArgs e)
+    /// <summary>
+    /// TODO: Tapped触发不了，但Click可以。不知道为什么
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="routedEventArgs"></param>
+    private async void ShowPixEzQrCodeContextItemOnTapped(object sender, RoutedEventArgs routedEventArgs)
     {
         var pixEzQrCodeSource = await UiHelper.GenerateQrCodeAsync(MakoHelper.GenerateIllustrationPixEzUri(ViewModel.Id).ToString());
         ShowQrCodeRequested?.Invoke(this, pixEzQrCodeSource);

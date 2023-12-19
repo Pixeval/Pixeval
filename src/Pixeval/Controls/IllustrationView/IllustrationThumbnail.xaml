@@ -80,8 +80,8 @@
                 Tapped="ShowQrCodeContextItemOnTapped" />
             <MenuFlyoutItem
                 x:Uid="/IllustrationView/ShowPixEzQrCodeContextItem"
-                Icon="{markup:FontSymbolIcon Glyph=Photo2EB9F}"
-                Tapped="ShowPixEzQrCodeContextItemOnTapped" />
+                Click="ShowPixEzQrCodeContextItemOnTapped"
+                Icon="{markup:FontSymbolIcon Glyph=Photo2EB9F}" />
         </MenuFlyout>
     </controls:CardControl.ContextFlyout>
     <Grid CornerRadius="{ThemeResource ControlCornerRadius}">
@@ -126,7 +126,7 @@
         <!--  PlaceHolderGrid  -->
         <Grid Width="{x:Bind GetDesiredWidth(ViewModel), Mode=OneWay}" Height="{x:Bind GetDesiredHeight(ViewModel), Mode=OneWay}" />
         <Grid HorizontalAlignment="Stretch" CornerRadius="{ThemeResource ControlCornerRadius}">
-            <controls:IllustrationImage ThumbnailOption="{x:Bind ThumbnailUrlOption}" ViewModel="{x:Bind ViewModel}" />
+            <controls:IllustrationImage ThumbnailOption="{x:Bind ThumbnailUrlOption}" ViewModel="{x:Bind ViewModel, Mode=OneWay}" />
             <labs:Shimmer Visibility="{x:Bind IsImageLoaded(ViewModel.ThumbnailSources), Mode=OneWay}" />
             <Grid
                 x:Name="ImageBookmarkButtonGrid"

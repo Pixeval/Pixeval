@@ -19,6 +19,7 @@
 #endregion
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
@@ -144,9 +145,9 @@ public class IllustrationViewModel(Illustration illustration) : IllustrateViewMo
     /// </summary>
     public IReadOnlyDictionary<ThumbnailUrlOption, IRandomAccessStream> ThumbnailStreams => ThumbnailStreamsRef;
 
-    private Dictionary<ThumbnailUrlOption, IRandomAccessStream> ThumbnailStreamsRef { get; } = [];
+    private ConcurrentDictionary<ThumbnailUrlOption, IRandomAccessStream> ThumbnailStreamsRef { get; } = [];
 
-    private Dictionary<ThumbnailUrlOption, SharedRef<SoftwareBitmapSource>> ThumbnailSourcesRef { get; } = [];
+    private ConcurrentDictionary<ThumbnailUrlOption, SharedRef<SoftwareBitmapSource>> ThumbnailSourcesRef { get; } = [];
 
     private CancellationHandle LoadingThumbnailCancellationHandle { get; } = new CancellationHandle();
 
@@ -224,16 +225,12 @@ public class IllustrationViewModel(Illustration illustration) : IllustrateViewMo
         if (App.AppViewModel.AppSetting.UseFileCache)
             return;
 
-        if (!ThumbnailSourcesRef.TryGetValue(thumbnailUrlOption, out var value))
+        if (!ThumbnailSourcesRef.TryRemove(thumbnailUrlOption, out var value) || !value.TryDispose(key))
             return;
 
-        if (!value.TryDispose(key))
-            return;
-
-        if (ThumbnailStreamsRef.TryGetValue(thumbnailUrlOption, out var stream))
+        if (ThumbnailStreamsRef.TryRemove(thumbnailUrlOption, out var stream))
             stream?.Dispose();
-        _ = ThumbnailStreamsRef.Remove(thumbnailUrlOption);
-        _ = ThumbnailSourcesRef.Remove(thumbnailUrlOption);
+
         OnPropertyChanged(nameof(ThumbnailSources));
     }
 
