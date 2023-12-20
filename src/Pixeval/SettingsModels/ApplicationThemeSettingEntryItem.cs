@@ -23,6 +23,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Pixeval.Controls;
 using Pixeval.Controls.Windowing;
+using WinUI3Utilities;
 
 namespace Pixeval.SettingsModels;
 
@@ -33,7 +34,7 @@ public record ApplicationThemeSettingEntryItem : StringRepresentableItem, IAvail
         AppTheme.Dark => MiscResources.AppThemeDark,
         AppTheme.Light => MiscResources.AppThemeLight,
         AppTheme.SystemDefault => MiscResources.AppThemeSystemDefault,
-        _ => throw new ArgumentOutOfRangeException(nameof(item), item, null)
+        _ => ThrowHelper.ArgumentOutOfRange<AppTheme, string>(item)
     })
     {
     }

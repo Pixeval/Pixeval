@@ -18,7 +18,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using Microsoft.UI.Xaml;
@@ -26,6 +25,7 @@ using Microsoft.UI.Xaml.Controls;
 using Pixeval.Controls.IllustrationView;
 using Pixeval.Options;
 using Pixeval.Util.UI;
+using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
 
 namespace Pixeval.Controls;
@@ -56,10 +56,10 @@ public sealed partial class IllustrationContainer
                             TopCommandBar.CommandBarElements.Add(argsNewItem);
                         }
                     }
-
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    ThrowHelper.ArgumentOutOfRange(args);
+                    break;
             }
         };
     }

@@ -483,7 +483,7 @@ public sealed partial class ZoomableImage : UserControl
 
         if (zoomableImage.ImageRotationDegree % 90 is not 0)
         {
-            throw new ArgumentException($"{nameof(ImageRotationDegree)} must be a multiple of 90");
+            ThrowHelper.Argument(zoomableImage.ImageRotationDegree, $"{nameof(ImageRotationDegree)} must be a multiple of 90");
         }
 
         switch (zoomableImage.ImageRotationDegree)

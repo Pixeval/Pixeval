@@ -23,6 +23,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Pixeval.Controls;
 using Pixeval.CoreApi.Global.Enum;
+using WinUI3Utilities;
 
 namespace Pixeval.SettingsModels;
 
@@ -33,7 +34,7 @@ public record SearchTagMatchOptionSettingEntryItem : StringRepresentableItem, IA
         SearchTagMatchOption.PartialMatchForTags => MiscResources.SearchTagMatchOptionPartialMatchForTags,
         SearchTagMatchOption.ExactMatchForTags => MiscResources.SearchTagMatchOptionExactMatchForTags,
         SearchTagMatchOption.TitleAndCaption => MiscResources.SearchTagMatchOptionTitleAndCaption,
-        _ => throw new ArgumentOutOfRangeException(nameof(item), item, null)
+        _ => ThrowHelper.ArgumentOutOfRange<SearchTagMatchOption, string>(item)
     })
     {
     }

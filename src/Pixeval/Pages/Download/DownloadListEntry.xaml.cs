@@ -83,7 +83,8 @@ public sealed partial class DownloadListEntry
                 ViewModel.DownloadTask.CancellationHandle.Resume();
                 break;
             default:
-                throw new ArgumentOutOfRangeException();
+                ThrowHelper.ArgumentOutOfRange(ViewModel.DownloadTask.CurrentState);
+                break;
         }
     }
 

@@ -40,6 +40,7 @@ using Pixeval.Utilities;
 using Windows.System;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
+using ThrowHelper = WinUI3Utilities.ThrowHelper;
 
 namespace Pixeval.Controls.IllustrationView;
 
@@ -76,7 +77,8 @@ public sealed partial class IllustrationViewCommandBar
 
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    ThrowHelper.ArgumentOutOfRange(args);
+                    break;
             }
         };
     }
@@ -116,7 +118,8 @@ public sealed partial class IllustrationViewCommandBar
 
                         break;
                     default:
-                        throw new ArgumentOutOfRangeException(nameof(e), @"This collection does not support operations except the Add");
+                        ThrowHelper.Argument(args, "This collection does not support operations except the Add");
+                        break;
                 }
             };
         }

@@ -102,10 +102,14 @@ public static class WindowFactory
         foreach (var window in _forkedWindowsInternal)
             window.SystemBackdrop = backdropType switch
             {
-                BackdropType.None => null,
-                BackdropType.Acrylic => new DesktopAcrylicBackdrop(),
-                BackdropType.Mica => new MicaBackdrop(),
-                BackdropType.MicaAlt => new MicaBackdrop { Kind = MicaKind.BaseAlt },
+                BackdropType.Acrylic when DesktopAcrylicController.IsSupported() => new DesktopAcrylicBackdrop(),
+                BackdropType.Mica when MicaController.IsSupported() => new MicaBackdrop(),
+                BackdropType.MicaAlt when MicaController.IsSupported() => new MicaBackdrop { Kind = MicaKind.BaseAlt },
+                BackdropType.Maintain => window.SystemBackdrop,
+                BackdropType.None
+                    or BackdropType.Acrylic
+                    or BackdropType.Mica
+                    or BackdropType.MicaAlt => null,
                 _ => ThrowHelper.ArgumentOutOfRange<BackdropType, SystemBackdrop>(backdropType)
             };
     }

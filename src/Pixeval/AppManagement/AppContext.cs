@@ -39,14 +39,13 @@ namespace Pixeval.AppManagement;
 /// <summary>
 ///     Provide miscellaneous information about the app
 /// </summary>
-[AppContext<AppSetting>(ConfigKey = "Config")]
+[AppContext<AppSetting>(ConfigKey = "Config", Type = ApplicationDataContainerType.Roaming, MethodName = "Config")]
+[AppContext<Session>(ConfigKey = "Session", MethodName = "Session")]
 public static partial class AppContext
 {
     public const string AppIdentifier = "Pixeval";
 
     public const string AppProtocol = "pixeval";
-
-    private const string SessionContainerKey = "Session";
 
     public const string AppLogoNoCaptionUri = "ms-appx:///Assets/Images/logo-no-caption.png";
 
@@ -55,8 +54,6 @@ public static partial class AppContext
     public static readonly string DatabaseFilePath = AppKnownFolders.Local.Resolve("PixevalData.litedb");
 
     public static readonly string AppVersion = GitVersionInformation.AssemblySemVer;
-
-    private static readonly ApplicationDataContainer _sessionContainer;
 
     private static SoftwareBitmapSource? _imageNotAvailable;
 
@@ -68,16 +65,10 @@ public static partial class AppContext
 
     static AppContext()
     {
-        if (!ApplicationData.Current.LocalSettings.Containers.ContainsKey(SessionContainerKey))
-        {
-            _ = ApplicationData.Current.LocalSettings.CreateContainer(SessionContainerKey, ApplicationDataCreateDisposition.Always);
-        }
-
         // Keys in the RoamingSettings will be synced through the devices of the same user
         // For more detailed information see https://docs.microsoft.com/en-us/windows/apps/design/app-settings/store-and-retrieve-app-data
-        InitializeConfigurationContainer();
-
-        _sessionContainer = ApplicationData.Current.LocalSettings.Containers[SessionContainerKey];
+        InitializeConfig();
+        InitializeSession();
     }
 
     public static async Task<SoftwareBitmapSource> GetNotAvailableImageAsync()
@@ -162,10 +153,11 @@ public static partial class AppContext
         using var scope = App.AppViewModel.AppServicesScope;
         var downloadHistoryManager = scope.ServiceProvider.GetRequiredService<DownloadHistoryPersistentManager>();
         // the HasFlag is not allow in expression tree
-        _ = downloadHistoryManager.Delete(entry => entry.State == DownloadState.Running ||
-                                               entry.State == DownloadState.Queued ||
-                                               entry.State == DownloadState.Created ||
-                                               entry.State == DownloadState.Paused);
+        _ = downloadHistoryManager.Delete(
+            entry => entry.State == DownloadState.Running ||
+                     entry.State == DownloadState.Queued ||
+                     entry.State == DownloadState.Created ||
+                     entry.State == DownloadState.Paused);
         foreach (var observableDownloadTask in downloadHistoryManager.Enumerate())
         {
             App.AppViewModel.DownloadManager.QueueTask(observableDownloadTask);
@@ -179,7 +171,7 @@ public static partial class AppContext
     {
         return Functions.IgnoreExceptionAsync(async () =>
         {
-            ApplicationData.Current.RoamingSettings.DeleteContainer(ConfigurationContainerKey);
+            ApplicationData.Current.RoamingSettings.DeleteContainer(ConfigContainerKey);
             ApplicationData.Current.LocalSettings.DeleteContainer(SessionContainerKey);
             await ApplicationData.Current.LocalFolder.ClearDirectoryAsync();
             await AppKnownFolders.Temporary.ClearAsync();
@@ -194,51 +186,8 @@ public static partial class AppContext
         App.AppViewModel.AppSetting.WindowHeight = CurrentContext.AppWindow.Size.Height;
         if (!App.AppViewModel.SignOutExit)
         {
-            SaveSession();
-            SaveConfiguration(App.AppViewModel.AppSetting);
-        }
-    }
-
-    public static void SaveSession()
-    {
-        if (App.AppViewModel.MakoClient.Session is { } session)
-        {
-            var values = _sessionContainer.Values;
-            values[nameof(Session.AccessToken)] = session.AccessToken;
-            values[nameof(Session.Account)] = session.Account;
-            values[nameof(Session.AvatarUrl)] = session.AvatarUrl;
-            values[nameof(Session.Cookie)] = session.Cookie;
-            values[nameof(Session.CookieCreation)] = session.CookieCreation;
-            values[nameof(Session.ExpireIn)] = session.ExpireIn;
-            values[nameof(Session.Id)] = session.Id;
-            values[nameof(Session.IsPremium)] = session.IsPremium;
-            values[nameof(Session.Name)] = session.Name;
-            values[nameof(Session.RefreshToken)] = session.RefreshToken;
-        }
-    }
-
-    public static Session? LoadSession()
-    {
-        try
-        {
-            var values = _sessionContainer.Values;
-            return new Session
-            {
-                AccessToken = values[nameof(Session.AccessToken)].CastOrThrow<string>(),
-                Account = values[nameof(Session.Account)].CastOrThrow<string>(),
-                AvatarUrl = values[nameof(Session.AvatarUrl)].CastOrThrow<string>(),
-                Cookie = values[nameof(Session.Cookie)].CastOrThrow<string>(),
-                CookieCreation = values[nameof(Session.CookieCreation)].CastOrThrow<DateTimeOffset>(),
-                ExpireIn = values[nameof(Session.ExpireIn)].CastOrThrow<DateTimeOffset>(),
-                Id = values[nameof(Session.Id)].CastOrThrow<string>(),
-                IsPremium = values[nameof(Session.IsPremium)].CastOrThrow<bool>(),
-                Name = values[nameof(Session.Name)].CastOrThrow<string>(),
-                RefreshToken = values[nameof(Session.RefreshToken)].CastOrThrow<string>()
-            };
-        }
-        catch
-        {
-            return null;
+            SaveSession(App.AppViewModel.MakoClient.Session);
+            SaveConfig(App.AppViewModel.AppSetting);
         }
     }
 }

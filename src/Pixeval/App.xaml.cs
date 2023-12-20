@@ -17,6 +17,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
+#define DISABLE_XAML_GENERATED_BREAK_ON_UNHANDLED_EXCEPTION
 
 using System;
 using System.Linq;
@@ -43,8 +44,7 @@ public partial class App
 
     public App()
     {
-        // The theme can only be changed in ctor
-        AppViewModel = new AppViewModel(this) { AppSetting = AppContext.LoadConfiguration() ?? AppSetting.CreateDefault() };
+        AppViewModel = new AppViewModel(this) { AppSetting = AppContext.LoadConfig() ?? AppSetting.CreateDefault() };
         WindowFactory.WindowSettings = AppViewModel.AppSetting;
         AppInstance.GetCurrent().Activated += (_, arguments) => ActivationRegistrar.Dispatch(arguments);
         InitializeComponent();

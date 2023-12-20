@@ -29,7 +29,7 @@ using Pixeval.CoreApi.Global.Enum;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
-using ArgumentOutOfRangeException = System.ArgumentOutOfRangeException;
+using WinUI3Utilities;
 
 namespace Pixeval.Controls.RecommendIllustratorProfile;
 
@@ -73,11 +73,13 @@ public partial class RecommendIllustratorProfileViewModel : ObservableObject
             return await AppContext.GetPixivNoProfileImageAsync();
         }
 
-        return await App.AppViewModel.MakoClient.DownloadBitmapImageResultAsync(avatarUrl!, 45) switch
+        var result = await App.AppViewModel.MakoClient.DownloadBitmapImageResultAsync(avatarUrl!, 45);
+
+        return result switch
         {
             Result<ImageSource>.Success(var s) => s,
             Result<ImageSource>.Failure => await AppContext.GetPixivNoProfileImageAsync(),
-            _ => throw new ArgumentOutOfRangeException()
+            _ => ThrowHelper.ArgumentOutOfRange<Result<ImageSource>?, ImageSource>(result)
         };
     }
 

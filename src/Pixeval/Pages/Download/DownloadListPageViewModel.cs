@@ -133,7 +133,7 @@ public partial class DownloadListPageViewModel : IllustrateViewViewModel<Illustr
                 DownloadListOption.Cancelled => task.CurrentState is DownloadState.Cancelled,
                 DownloadListOption.Error => task.CurrentState is DownloadState.Error,
                 DownloadListOption.CustomSearch => customSearchResultTask?.Contains(o) ?? true,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => ThrowHelper.ArgumentOutOfRange<DownloadListOption, bool>(CurrentOption)
             },
             _ => false
         };

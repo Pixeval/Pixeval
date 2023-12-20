@@ -26,14 +26,15 @@ using Pixeval.CoreApi.Model;
 using Pixeval.Download;
 using Pixeval.Misc;
 using Pixeval.Utilities;
+using WinUI3Utilities;
 
 namespace Pixeval.Pages.Download;
 
 public class DownloadListEntryIncrementalSource(IEnumerable<ObservableDownloadTask> source) : FetchEngineIncrementalSource<Illustration, DownloadListEntryViewModel>(null!)
 {
-    protected override long Identifier(Illustration entity) => throw new System.NotImplementedException();
+    protected override long Identifier(Illustration entity) => ThrowHelper.NotSupported<long>();
 
-    protected override DownloadListEntryViewModel Select(Illustration entity) => throw new System.NotImplementedException();
+    protected override DownloadListEntryViewModel Select(Illustration entity) => ThrowHelper.NotSupported<DownloadListEntryViewModel>();
 
     public override async Task<IEnumerable<DownloadListEntryViewModel>> GetPagedItemsAsync(int pageIndex, int pageSize, CancellationToken cancellationToken = new CancellationToken())
     {

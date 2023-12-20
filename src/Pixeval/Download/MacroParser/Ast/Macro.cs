@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -18,7 +18,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System;
 using Pixeval.Util;
 using Pixeval.Utilities;
 
@@ -29,7 +28,8 @@ public record Macro<TContext>(PlainText<TContext> MacroName, OptionalMacroParame
 {
     public override string Evaluate(IMetaPathMacroProvider<TContext> env, TContext context)
     {
-        switch (env.TryResolve(MacroName.Text))
+        var result = env.TryResolve(MacroName.Text);
+        switch (result)
         {
             case IMacro<TContext>.ITransducer transducer:
                 ThrowHelper.ThrowIf<IllegalMacroException>(OptionalParameters is not null, MacroParserResources.NonParameterizedMacroBearingParameterFormatted.Format(MacroName));
@@ -40,11 +40,11 @@ public record Macro<TContext>(PlainText<TContext> MacroName, OptionalMacroParame
                     return OptionalParameters?.Evaluate(env, context) ?? ThrowHelper.ThrowException<IllegalMacroException, string>(MacroParserResources.ParameterizedMacroMissingParameterFormatted.Format(MacroName));
                 }
 
-                return string.Empty;
+                return "";
             case IMacro<TContext>.Unknown:
                 return ThrowHelper.ThrowException<IllegalMacroException, string>(MacroParserResources.UnknownMacroNameFormatted.Format(MacroName));
             default:
-                throw new ArgumentOutOfRangeException();
+                return WinUI3Utilities.ThrowHelper.ArgumentOutOfRange<IMacro<TContext>, string>(result);
         }
     }
 }

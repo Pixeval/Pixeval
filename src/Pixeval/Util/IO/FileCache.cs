@@ -139,7 +139,7 @@ public class FileCache
             Guid g => g,
             string s => Guid.Parse(s),
             _ when _supportedKeyTypes.Contains(key.GetType()) => HashToGuid(key),
-            _ => throw new ArgumentOutOfRangeException(nameof(key), key, null)
+            _ => WinUI3Utilities.ThrowHelper.ArgumentOutOfRange<object, object>(key)
         }, data, expireIn, eTag);
     }
 
@@ -184,7 +184,7 @@ public class FileCache
             var k when arrElementType == typeof(Guid) => EmptyAsync(k.Cast<Guid>()),
             string[] arr => EmptyAsync(arr),
             var k when _supportedKeyTypes.Contains(arrElementType) => EmptyAsync(k.Select(HashToGuid)),
-            _ => throw new ArgumentException(@$"The element type of keys '{keys.GetType().GetElementType()} is not supported.'")
+            _ => WinUI3Utilities.ThrowHelper.Argument<object, Task>(@$"The element type of keys '{keys.GetType().GetElementType()} is not supported.'")
         };
     }
 
@@ -286,7 +286,7 @@ public class FileCache
             Guid g => ExistsAsync(g),
             string s => ExistsAsync(s),
             var k when _supportedKeyTypes.Contains(k.GetType()) => ExistsAsync(HashToGuid(k)),
-            _ => throw new ArgumentException($"The type of key '{key.GetType()} is not supported.'")
+            _ => WinUI3Utilities.ThrowHelper.Argument<object, Task<bool>>($"The type of key '{key.GetType()} is not supported.'")
         };
     }
 
@@ -361,8 +361,8 @@ public class FileCache
         {
             Guid g => GetAsync<T>(g),
             string s => GetAsync<T>(s),
-            var k when _supportedKeyTypes.Contains(k.GetType()) => GetAsync<T>(HashToGuid(key)),
-            _ => throw new ArgumentException($"The type of key '{key.GetType()} is not supported.'")
+            _ when _supportedKeyTypes.Contains(key.GetType()) => GetAsync<T>(HashToGuid(key)),
+            _ => WinUI3Utilities.ThrowHelper.Argument<object, Task<T>>($"The type of key '{key.GetType()} is not supported.'")
         };
     }
 
@@ -420,8 +420,8 @@ public class FileCache
         {
             Guid g => GetExpirationAsync(g),
             string s => GetExpirationAsync(s),
-            var k when _supportedKeyTypes.Contains(k.GetType()) => GetExpirationAsync(HashToGuid(key)),
-            _ => throw new ArgumentException($"The type of key '{key.GetType()} is not supported.'")
+            _ when _supportedKeyTypes.Contains(key.GetType()) => GetExpirationAsync(HashToGuid(key)),
+            _ => WinUI3Utilities.ThrowHelper.Argument<object, Task<DateTimeOffset?>>($"The type of key '{key.GetType()} is not supported.'")
         };
     }
 
@@ -469,7 +469,7 @@ public class FileCache
             Guid g => GetETagAsync(g),
             string s => GetETagAsync(s),
             var k when _supportedKeyTypes.Contains(k.GetType()) => GetETagAsync(HashToGuid(k)),
-            _ => throw new ArgumentException($"The type of key '{key.GetType()} is not supported.'")
+            _ => WinUI3Utilities.ThrowHelper.Argument<object, Task<string?>>($"The type of key '{key.GetType()} is not supported.'")
         };
     }
 
@@ -495,7 +495,7 @@ public class FileCache
 
         try
         {
-            return _index.TryGetValue(key, out var tag) ? tag : null;
+            return _index.GetValueOrDefault(key);
         }
         finally
         {
@@ -517,7 +517,7 @@ public class FileCache
             Guid g => IsExpiredAsync(g),
             string s => IsExpiredAsync(s),
             var k when _supportedKeyTypes.Contains(k.GetType()) => IsExpiredAsync(HashToGuid(key)),
-            _ => throw new ArgumentException($"The type of key '{key.GetType()} is not supported.'")
+            _ => WinUI3Utilities.ThrowHelper.Argument<object, Task<bool>>($"The type of key '{key.GetType()} is not supported.'")
         };
     }
 
@@ -597,7 +597,7 @@ public class FileCache
                 Unsafe.WriteUnaligned(ref MemoryMarshal.GetReference(span), number);
                 return new Guid(HashAndTruncateTo128Bit(span));
             }),
-            _ => throw new ArgumentException($"The input type '{input.GetType()}' is not supported.")
+            _ => WinUI3Utilities.ThrowHelper.Argument<object, Guid>($"The input type '{input.GetType()}' is not supported.")
         };
 
         static byte[] HashAndTruncateTo128Bit(ReadOnlySpan<byte> span) => SHA256.HashData(span)[..16];

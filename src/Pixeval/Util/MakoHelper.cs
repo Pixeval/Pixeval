@@ -58,7 +58,7 @@ public static class MakoHelper
             ThumbnailUrlOption.Large => illustration.ImageUrls?.Large,
             ThumbnailUrlOption.Medium => illustration.ImageUrls?.Medium,
             ThumbnailUrlOption.SquareMedium => illustration.ImageUrls?.SquareMedium,
-            _ => throw new ArgumentOutOfRangeException(nameof(option), option, null)
+            _ => WinUI3Utilities.ThrowHelper.ArgumentOutOfRange<ThumbnailUrlOption, string?>(option)
         };
     }
 
@@ -120,7 +120,7 @@ public static class MakoHelper
             IllustrationSortOption.PublishDateAscending => new SortDescription(SortDirection.Ascending, IllustrationViewModelPublishDateComparer.Instance),
             IllustrationSortOption.PublishDateDescending => new SortDescription(SortDirection.Descending, IllustrationViewModelPublishDateComparer.Instance),
             IllustrationSortOption.DoNotSort => null,
-            _ => throw new ArgumentOutOfRangeException(nameof(sortOption), sortOption, null)
+            _ => WinUI3Utilities.ThrowHelper.ArgumentOutOfRange<IllustrationSortOption, SortDescription?>(sortOption)
         };
     }
 

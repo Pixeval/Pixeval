@@ -22,6 +22,7 @@ using System;
 using System.Text.RegularExpressions;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Pixeval.Utilities;
+using WinUI3Utilities;
 
 namespace Pixeval.Controls.TokenInput;
 
@@ -45,7 +46,7 @@ public sealed partial class Token : ObservableObject, IEquatable<Token>, IClonea
         _isRegularExpression = isRegularExpression;
         if (IsRegularExpression && !tokenContent.IsValidRegexPattern())
         {
-            throw new ArgumentException(nameof(tokenContent));
+            ThrowHelper.Argument(tokenContent);
         }
     }
 

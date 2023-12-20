@@ -119,7 +119,7 @@ public partial class SettingsPageViewModel(AppSetting appSetting) : ObservableOb
             ClearDataKind.BrowseHistory => SettingsPageResources.BrowseHistoriesCleared,
             ClearDataKind.SearchHistory => SettingsPageResources.SearchHistoriesCleared,
             ClearDataKind.DownloadHistory => SettingsPageResources.DownloadHistoriesCleared,
-            _ => throw new ArgumentOutOfRangeException(nameof(kind), kind, null)
+            _ => ThrowHelper.ArgumentOutOfRange<ClearDataKind, string>(kind)
         });
     }
 

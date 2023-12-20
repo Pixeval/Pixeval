@@ -102,7 +102,7 @@ public sealed partial class AdvancedItemsView : ItemsView
                 Spacing = 5,
                 Orientation = Orientation.Horizontal
             },
-            _ => throw new ArgumentOutOfRangeException()
+            _ => ThrowHelper.ArgumentOutOfRange<ItemsViewLayoutType, VirtualizingLayout>(advancedItemsView.LayoutType)
         };
     }
 

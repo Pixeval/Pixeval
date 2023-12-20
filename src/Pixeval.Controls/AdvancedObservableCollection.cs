@@ -32,7 +32,7 @@ using Windows.Foundation;
 using CommunityToolkit.WinUI.Collections;
 using CommunityToolkit.WinUI.Helpers;
 using System.Diagnostics;
-using System.IO;
+using WinUI3Utilities;
 
 namespace Pixeval.Collections;
 
@@ -86,7 +86,7 @@ public class AdvancedObservableCollection<T> : IList<T>, IList, INotifyCollectio
         set
         {
             if (value is null)
-                throw new InvalidDataException("Null is not allowed");
+                ThrowHelper.Argument(value, "Null is not allowed");
 
             if (_source == value)
                 return;
