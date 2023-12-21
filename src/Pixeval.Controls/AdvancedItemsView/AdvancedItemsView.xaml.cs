@@ -13,8 +13,11 @@ namespace Pixeval.Controls;
 [DependencyProperty<ItemsViewLayoutType>("LayoutType", DependencyPropertyDefaultValue.Default, nameof(OnLayoutTypeChanged))]
 [DependencyProperty<double>("MinItemHeight", "0d", nameof(OnItemHeightChanged))]
 [DependencyProperty<double>("MinItemWidth", "0d", nameof(OnItemWidthChanged))]
+[DependencyProperty<double>("MinRowSpacing", "5d", nameof(OnMinRowSpacingChanged))]
+[DependencyProperty<double>("MinColumnSpacing", "5d", nameof(OnMinColumnSpacingChanged))]
 [DependencyProperty<double>("LoadingOffset", "100d")]
 [DependencyProperty<int>("SelectedIndex", "-1", nameof(OnSelectedIndexChanged))]
+[DependencyProperty<bool>("CanLoadMore", "true")]
 public sealed partial class AdvancedItemsView : ItemsView
 {
     private ItemsRepeater _itemsRepeater = null!;
@@ -50,27 +53,65 @@ public sealed partial class AdvancedItemsView : ItemsView
         }
     }
 
+    private static void OnMinRowSpacingChanged(DependencyObject o, DependencyPropertyChangedEventArgs e)
+    {
+        var advancedItemsView = o.To<AdvancedItemsView>();
+        var minRowSpacing = advancedItemsView.MinRowSpacing;
+        switch (advancedItemsView.Layout)
+        {
+            case LinedFlowLayout linedFlowLayout:
+                linedFlowLayout.LineSpacing = minRowSpacing;
+                break;
+            case UniformGridLayout uniformGridLayout:
+                uniformGridLayout.MinRowSpacing = minRowSpacing;
+                break;
+            case StackLayout stackLayout when advancedItemsView.LayoutType is ItemsViewLayoutType.VerticalStack:
+                stackLayout.Spacing = minRowSpacing;
+                break;
+        }
+    }
+
+    private static void OnMinColumnSpacingChanged(DependencyObject o, DependencyPropertyChangedEventArgs e)
+    {
+        var advancedItemsView = o.To<AdvancedItemsView>();
+        var minColumnSpacing = advancedItemsView.MinColumnSpacing;
+        switch (advancedItemsView.Layout)
+        {
+            case LinedFlowLayout linedFlowLayout:
+                linedFlowLayout.MinItemSpacing = minColumnSpacing;
+                break;
+            case UniformGridLayout uniformGridLayout:
+                uniformGridLayout.MinColumnSpacing = minColumnSpacing;
+                break;
+            case StackLayout stackLayout when advancedItemsView.LayoutType is ItemsViewLayoutType.HorizontalStack:
+                stackLayout.Spacing = minColumnSpacing;
+                break;
+        }
+    }
+
     private static void OnLayoutTypeChanged(DependencyObject o, DependencyPropertyChangedEventArgs e)
     {
         var advancedItemsView = o.To<AdvancedItemsView>();
         var minItemHeight = advancedItemsView.MinItemHeight;
         var minItemWidth = advancedItemsView.MinItemWidth;
+        var minRowSpacing = advancedItemsView.MinRowSpacing;
+        var minColumnSpacing = advancedItemsView.MinColumnSpacing;
         advancedItemsView.Layout = advancedItemsView.LayoutType switch
         {
             ItemsViewLayoutType.LinedFlow => new LinedFlowLayout
             {
                 ItemsStretch = LinedFlowLayoutItemsStretch.Fill,
                 LineHeight = minItemHeight,
-                LineSpacing = 5,
-                MinItemSpacing = 5,
+                LineSpacing = minRowSpacing,
+                MinItemSpacing = minColumnSpacing,
             },
             ItemsViewLayoutType.Grid => new UniformGridLayout
             {
                 ItemsStretch = UniformGridLayoutItemsStretch.Fill,
-                MinColumnSpacing = 5,
                 MinItemHeight = minItemHeight,
                 MinItemWidth = minItemWidth,
-                MinRowSpacing = 5
+                MinColumnSpacing = minColumnSpacing,
+                MinRowSpacing = minRowSpacing
             },
             ItemsViewLayoutType.VerticalUniformStack => new UniformGridLayout
             {
@@ -78,8 +119,8 @@ public sealed partial class AdvancedItemsView : ItemsView
                 MaximumRowsOrColumns = 1,
                 MinItemHeight = minItemHeight,
                 MinItemWidth = minItemWidth,
-                MinRowSpacing = 5,
-                MinColumnSpacing = 5,
+                MinColumnSpacing = minColumnSpacing,
+                MinRowSpacing = minRowSpacing,
                 Orientation = Orientation.Horizontal
             },
             ItemsViewLayoutType.HorizontalUniformStack => new UniformGridLayout
@@ -88,18 +129,18 @@ public sealed partial class AdvancedItemsView : ItemsView
                 MaximumRowsOrColumns = 1,
                 MinItemHeight = minItemHeight,
                 MinItemWidth = minItemWidth,
-                MinRowSpacing = 5,
-                MinColumnSpacing = 5,
+                MinColumnSpacing = minColumnSpacing,
+                MinRowSpacing = minRowSpacing,
                 Orientation = Orientation.Vertical
             },
             ItemsViewLayoutType.VerticalStack => new StackLayout
             {
-                Spacing = 5,
+                Spacing = minRowSpacing,
                 Orientation = Orientation.Vertical
             },
             ItemsViewLayoutType.HorizontalStack => new StackLayout
             {
-                Spacing = 5,
+                Spacing = minColumnSpacing,
                 Orientation = Orientation.Horizontal
             },
             _ => ThrowHelper.ArgumentOutOfRange<ItemsViewLayoutType, VirtualizingLayout>(advancedItemsView.LayoutType)
@@ -130,7 +171,7 @@ public sealed partial class AdvancedItemsView : ItemsView
 
     public async void TryRaiseLoadMoreRequested()
     {
-        if (LoadMoreRequested is { } handler && !IsLoadingMore)
+        if (CanLoadMore && LoadMoreRequested is { } handler && !IsLoadingMore)
             switch (ScrollView.ComputedVerticalScrollMode, ScrollView.ComputedHorizontalScrollMode)
             {
                 case (ScrollingScrollMode.Disabled, ScrollingScrollMode.Disabled):
