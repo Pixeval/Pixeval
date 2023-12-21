@@ -19,6 +19,7 @@
 #endregion
 
 using System;
+using System.Linq;
 using System.Numerics;
 using System.Threading.Tasks;
 using Microsoft.UI.Windowing;
@@ -42,6 +43,8 @@ using Pixeval.Controls;
 using Pixeval.Controls.Windowing;
 using WinUI3Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
+using Pixeval.CoreApi.Model;
+using System.IO;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
@@ -85,7 +88,7 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
 
             if (oldTag == newTag)
                 return;
-            var info = (NavigationTransitionInfo?)null;
+            var info = null as NavigationTransitionInfo;
             if (oldIndex < newIndex && oldIndex is not -1)
                 info = new SlideNavigationTransitionInfo { Effect = SlideNavigationTransitionEffect.FromRight };
             else if (oldIndex > newIndex)
@@ -188,16 +191,30 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
         props.Thumbnail = RandomAccessStreamReference.CreateFromStream(thumbnailStream);
         request.Data.SetWebLink(webLink);
 
-        if (_viewModel.CurrentImage.OriginalImageStream is { } stream)
+        if (vm.IsUgoira)
         {
-            // TODO: 是否只能用GIF
-            var file = await AppKnownFolders.CreateTemporaryFileWithRandomNameAsync(_viewModel.IsUgoira ? "gif" : "png");
-            await stream.SaveToFileAsync(file);
-            request.Data.SetStorageItems(Enumerates.ArrayOf(file), true);
-            // TODO: SetBitmap 无效
-            // SetWebLink 后会导致 SetApplicationLink 无效
-            // request.Data.SetApplicationLink(MakoHelper.GenerateIllustrationAppUri(vm.Id));
+            if (_viewModel.CurrentImage.OriginalImageSources is { } streams)
+            {
+                var metadata = await App.AppViewModel.MakoClient.GetUgoiraMetadataAsync(vm.Id);
+                var stream = await streams.SaveToStreamAsync(metadata, App.AppViewModel.AppSetting.UgoiraDownloadFormat);
+                var file = await AppKnownFolders.CreateTemporaryFileWithRandomNameAsync(IoHelper.GetUgoiraExtension());
+                await stream.SaveToFileAsync(file);
+                request.Data.SetStorageItems([file]);
+            }
         }
+        else
+        {
+            if (_viewModel.CurrentImage.OriginalImageSources?.FirstOrDefault() is { } stream)
+            {
+                var s = await stream.SaveToStreamAsync();
+                var file = await AppKnownFolders.CreateTemporaryFileWithRandomNameAsync(".png");
+                await s.SaveToFileAsync(file);
+                request.Data.SetStorageItems([file]);
+            }
+        }
+        // SetBitmap 无效
+        // SetWebLink 后会导致 SetApplicationLink 无效
+        // request.Data.SetApplicationLink(MakoHelper.GenerateIllustrationAppUri(vm.Id));
 
         deferral.Complete();
     }

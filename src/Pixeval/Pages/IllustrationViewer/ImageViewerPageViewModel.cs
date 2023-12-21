@@ -51,11 +51,11 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
         [LocalizedResource(typeof(ImageViewerPageResources), nameof(ImageViewerPageResources.LoadingFromCache))]
         LoadingFromCache,
 
-        [LocalizedResource(typeof(ImageViewerPageResources), nameof(ImageViewerPageResources.DownloadingGifZipFormatted), DownloadingGifZip)]
-        DownloadingGifZip,
+        [LocalizedResource(typeof(ImageViewerPageResources), nameof(ImageViewerPageResources.DownloadingUgoiraZipFormatted), DownloadingUgoiraZip)]
+        DownloadingUgoiraZip,
 
-        [LocalizedResource(typeof(ImageViewerPageResources), nameof(ImageViewerPageResources.MergingGifFrames))]
-        MergingGifFrames,
+        [LocalizedResource(typeof(ImageViewerPageResources), nameof(ImageViewerPageResources.MergingUgoiraFrames))]
+        MergingUgoiraFrames,
 
         [LocalizedResource(typeof(ImageViewerPageResources), nameof(ImageViewerPageResources.DownloadingImageFormatted), DownloadingImage)]
         DownloadingImage,
@@ -195,16 +195,16 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
                 var ugoiraMetadata = await App.AppViewModel.MakoClient.GetUgoiraMetadataAsync(IllustrationViewModel.Id);
                 if (ugoiraMetadata.UgoiraMetadataInfo?.ZipUrls?.Large is { } url)
                 {
-                    AdvancePhase(LoadingPhase.DownloadingGifZip);
+                    AdvancePhase(LoadingPhase.DownloadingUgoiraZip);
                     var downloadRes = await imageClient.DownloadAsStreamAsync(url, new Progress<int>(d =>
                     {
                         LoadingProgress = d;
-                        AdvancePhase(LoadingPhase.DownloadingGifZip);
+                        AdvancePhase(LoadingPhase.DownloadingUgoiraZip);
                     }), ImageLoadingCancellationHandle);
                     switch (downloadRes)
                     {
                         case Result<Stream>.Success(var zipStream):
-                            AdvancePhase(LoadingPhase.MergingGifFrames);
+                            AdvancePhase(LoadingPhase.MergingUgoiraFrames);
                             OriginalImageSources = await IoHelper.GetStreamsFromZipStreamAsync(zipStream);
                             MsIntervals = ugoiraMetadata.UgoiraMetadataInfo.Frames?.Select(x => (int)x.Delay)?.ToList();
                             break;
@@ -227,7 +227,7 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
                 switch (ras)
                 {
                     case Result<IRandomAccessStream>.Success(var s):
-                        OriginalImageSources = new[] { s };
+                        OriginalImageSources = [s];
                         break;
                     default:
                         return;

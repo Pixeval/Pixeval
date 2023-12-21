@@ -84,23 +84,22 @@ public static partial class IoHelper
     }
 
     /// <summary>
-    ///     Writes the frames that are contained in <paramref name="frames" /> into <paramref name="target" />
+    ///     Writes the frames that are contained in <paramref name="streams" /> into <see cref="InMemoryRandomAccessStream"/>
     ///     and encodes to <paramref name="ugoiraDownloadFormat"/> format
     /// </summary>
-    /// <returns></returns>
-    public static async Task WriteBitmapAsync(IRandomAccessStream target, IEnumerable<(IRandomAccessStream Frame, uint Delay)> frames, UgoiraDownloadFormat ugoiraDownloadFormat)
+    public static async Task<InMemoryRandomAccessStream> SaveToStreamAsync(this IEnumerable<IRandomAccessStream> streams, UgoiraMetadataResponse ugoiraMetadataResponse, UgoiraDownloadFormat ugoiraDownloadFormat)
     {
-        var framesArray = frames as (IRandomAccessStream Frame, uint Delay)[] ?? frames.ToArray();
-
-        if (framesArray.Length is 0)
-            return;
-
-        Image? image = null;
-
-        foreach (var (frame, delay) in framesArray)
+        var image = null as Image;
+        var frames = ugoiraMetadataResponse.UgoiraMetadataInfo?.Frames;
+        using var e1 = frames?.GetEnumerator();
+        using var e2 = streams.GetEnumerator();
+        while (e2.MoveNext() && (e1?.MoveNext() ?? true))
         {
-            frame.Seek(0);
-            var tempImage = await Image.LoadAsync(frame.AsStream());
+            var delay = (uint?)e1?.Current.Delay ?? 10u;
+            var stream = e2.Current;
+
+            stream.Seek(0);
+            var tempImage = await Image.LoadAsync(stream.AsStream());
             ImageFrame newFrame;
             if (image is null)
             {
@@ -114,7 +113,7 @@ public static partial class IoHelper
             }
             newFrame.Metadata.GetFormatMetadata(WebpFormat.Instance).FrameDelay = delay;
         }
-
+        var target = new InMemoryRandomAccessStream();
         await image!.SaveAsync(target.AsStreamForWrite(),
             ugoiraDownloadFormat switch
             {
@@ -128,15 +127,32 @@ public static partial class IoHelper
             });
         image.Dispose();
         target.Seek(0);
+        return target;
     }
 
-    public static string GetExtension(this UgoiraDownloadFormat ugoiraDownloadFormat)
+
+    /// <summary>
+    ///     Writes the <paramref name="stream" /> into <see cref="InMemoryRandomAccessStream"/>
+    ///     and encodes to PNG format
+    /// </summary>
+    public static async Task<InMemoryRandomAccessStream> SaveToStreamAsync(this IRandomAccessStream stream)
     {
+        stream.Seek(0);
+        var image = await Image.LoadAsync<Rgba32>(stream.AsStreamForRead());
+        var target = new InMemoryRandomAccessStream();
+        await image.SaveAsPngAsync(target.AsStreamForWrite());
+        target.Seek(0);
+        return target;
+    }
+
+    public static string GetUgoiraExtension(UgoiraDownloadFormat? ugoiraDownloadFormat = null)
+    {
+        ugoiraDownloadFormat ??= App.AppViewModel.AppSetting.UgoiraDownloadFormat;
         return ugoiraDownloadFormat switch
         {
-            UgoiraDownloadFormat.Tiff or UgoiraDownloadFormat.APng or UgoiraDownloadFormat.Gif => "." + ugoiraDownloadFormat.ToString().ToLower(),
+            UgoiraDownloadFormat.Tiff or UgoiraDownloadFormat.APng or UgoiraDownloadFormat.Gif => "." + ugoiraDownloadFormat.ToString()!.ToLower(),
             UgoiraDownloadFormat.WebPLossless or UgoiraDownloadFormat.WebPLossy => ".webp",
-            _ => WinUI3Utilities.ThrowHelper.ArgumentOutOfRange<UgoiraDownloadFormat, string>(ugoiraDownloadFormat)
+            _ => WinUI3Utilities.ThrowHelper.ArgumentOutOfRange<UgoiraDownloadFormat?, string>(ugoiraDownloadFormat)
         };
     }
 
@@ -178,12 +194,10 @@ public static partial class IoHelper
     public static async Task<IRandomAccessStream> GetStreamFromZipStreamAsync(Stream zipStream, UgoiraMetadataResponse ugoiraMetadataResponse)
     {
         var entryStreams = await ReadZipArchiveEntries(zipStream);
-        var frames = ugoiraMetadataResponse.UgoiraMetadataInfo?.Frames?.ToArray();
-        var inMemoryRandomAccessStream = new InMemoryRandomAccessStream();
-        await WriteBitmapAsync(inMemoryRandomAccessStream, entryStreams.Select((s, i) =>
-                (s.content.AsRandomAccessStream(), (uint)(frames?[i]?.Delay ?? 10))),
+        return await SaveToStreamAsync(
+            entryStreams.Select(s => s.content.AsRandomAccessStream()),
+            ugoiraMetadataResponse,
             App.AppViewModel.AppSetting.UgoiraDownloadFormat);
-        return inMemoryRandomAccessStream;
     }
 
     public static async Task<IEnumerable<IRandomAccessStream>> GetStreamsFromZipStreamAsync(Stream zipStream)
