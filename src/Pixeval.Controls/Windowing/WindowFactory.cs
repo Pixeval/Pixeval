@@ -19,9 +19,7 @@
 #endregion
 
 using System.Collections.Generic;
-using Microsoft.UI.Composition.SystemBackdrops;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Media;
 using Windows.Foundation;
 using Windows.Graphics;
 using WinUI3Utilities;
@@ -100,18 +98,7 @@ public static class WindowFactory
     public static void SetBackdrop(BackdropType backdropType)
     {
         foreach (var window in _forkedWindowsInternal)
-            window.SystemBackdrop = backdropType switch
-            {
-                BackdropType.Acrylic when DesktopAcrylicController.IsSupported() => new DesktopAcrylicBackdrop(),
-                BackdropType.Mica when MicaController.IsSupported() => new MicaBackdrop(),
-                BackdropType.MicaAlt when MicaController.IsSupported() => new MicaBackdrop { Kind = MicaKind.BaseAlt },
-                BackdropType.Maintain => window.SystemBackdrop,
-                BackdropType.None
-                    or BackdropType.Acrylic
-                    or BackdropType.Mica
-                    or BackdropType.MicaAlt => null,
-                _ => ThrowHelper.ArgumentOutOfRange<BackdropType, SystemBackdrop>(backdropType)
-            };
+            window.SetBackdrop(backdropType);
     }
 
     public static void SetTheme(AppTheme theme)
