@@ -117,6 +117,12 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="BrowserConnnectionLost" xml:space="preserve">
+    <value>失去与浏览器的连接</value>
+  </data>
+  <data name="BrowserNotFound" xml:space="preserve">
+    <value>未找到该浏览器</value>
+  </data>
   <data name="ErrorWhileLoggingInTitle" xml:space="preserve">
     <value>登录过程出现异常</value>
   </data>
@@ -124,6 +130,9 @@
     <value>应用程序即将退出，以下是异常信息：
 {0}</value>
     <comment>{0}: error message</comment>
+  </data>
+  <data name="IncorrectSocketFormat" xml:space="preserve">
+    <value>错误的套接字格式</value>
   </data>
   <data name="LoginPhaseCheckingCertificateInstallation" xml:space="preserve">
     <value>正在检查证书安装情况...</value>
@@ -134,17 +143,21 @@
   <data name="LoginPhaseCheckingWebView2Installation" xml:space="preserve">
     <value>正在检查WebView2安装情况...</value>
   </data>
-  <data name="LoginPhaseExecutingWebView2" xml:space="preserve">
-    <value>正在打开WebView2，请在弹出的窗口中完成登录</value>
+  <data name="LoginPhaseExecutingBrowser" xml:space="preserve">
+    <value>正在打开浏览器，请在浏览器中完成登录</value>
   </data>
   <data name="LoginPhaseInstallingCertificate" xml:space="preserve">
     <value>正在安装证书，请在打开的对话框中点击确认...</value>
   </data>
-  <data name="LoginPhaseNegotiatingPort" xml:space="preserve">
-    <value>正在协商登录代理端口...</value>
-  </data>
   <data name="LoginPhaseRefreshing" xml:space="preserve">
     <value>正在刷新现有会话...</value>
+  </data>
+  <data name="LoginPhaseSuccessNavigating" xml:space="preserve">
+    <value>登录成功，正在导航到主页</value>
+  </data>
+  <data name="LoginPhaseWaitingForUserInput" xml:space="preserve">
+    <value />
+    <comment>等待用户输入</comment>
   </data>
   <data name="LoginProxyCannotFindCertificate" xml:space="preserve">
     <value>找不到对应的证书文件，请重新启动应用程序
@@ -165,6 +178,9 @@
   </data>
   <data name="RootCertificateInstallationRequiredTitle" xml:space="preserve">
     <value>检测到本用户尚未安装证书</value>
+  </data>
+  <data name="TryAfterShuttingDownTheBrowser" xml:space="preserve">
+    <value>请先关闭已打开的浏览器再尝试</value>
   </data>
   <data name="WebView2InstallationRequiredContent" xml:space="preserve">
     <value>如不安装WebView2则无法正常登录，选择确认将会自动打开浏览器为您下载WebView2 Runtime，请您双击exe文件安装后重启应用。如果选择取消则无法继续使用本应用</value>

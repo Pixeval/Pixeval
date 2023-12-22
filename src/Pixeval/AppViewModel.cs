@@ -39,7 +39,7 @@ using AppContext = Pixeval.AppManagement.AppContext;
 
 namespace Pixeval;
 
-public class AppViewModel(App app) : AutoActivateObservableRecipient, IRecipient<ApplicationExitingMessage>, IRecipient<LoginCompletedMessage>
+public class AppViewModel(App app) : AutoActivateObservableRecipient,  IRecipient<LoginCompletedMessage>
 {
     private bool _activatedByProtocol;
 
@@ -63,11 +63,6 @@ public class AppViewModel(App app) : AutoActivateObservableRecipient, IRecipient
     public FileCache Cache { get; private set; } = null!;
 
     public string? PixivUid => MakoClient.Session.Id;
-
-    public void Receive(ApplicationExitingMessage message)
-    {
-        AppContext.SaveContext();
-    }
 
     public void Receive(LoginCompletedMessage message)
     {

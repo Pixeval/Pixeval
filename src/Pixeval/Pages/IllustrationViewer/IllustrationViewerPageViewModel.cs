@@ -114,7 +114,7 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
     /// <summary>
     /// 插画列表
     /// </summary>
-    public IList<IllustrationViewModel> Illustrations => (IList<IllustrationViewModel>?)ViewModelSource?.DataProvider.View ?? IllustrationsSource;
+    public IList<IllustrationViewModel> Illustrations => ViewModelSource?.DataProvider.View ?? (IList<IllustrationViewModel>)IllustrationsSource!;
 
     /// <summary>
     /// 当前插画

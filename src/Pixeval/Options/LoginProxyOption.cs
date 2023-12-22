@@ -1,8 +1,8 @@
-#region Copyright (c) Pixeval/Pixeval.Controls
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
-// Pixeval/Pixeval.Controls
-// Copyright (c) 2023 Pixeval.Controls/IWindowSettings.cs
+// Pixeval/Pixeval
+// Copyright (c) 2023 Pixeval/LoginProxyOption.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,13 +18,18 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using WinUI3Utilities;
+using Pixeval.Attributes;
 
-namespace Pixeval.Controls.Windowing;
+namespace Pixeval.Options;
 
-public interface IWindowSettings
+public enum LoginProxyOption
 {
-    public BackdropType Backdrop { get; }
+    [LocalizedResource(typeof(MiscResources), nameof(MiscResources.UseDirect))]
+    UseDirect,
 
-    public AppTheme Theme { get; }
+    [LocalizedResource(typeof(MiscResources), nameof(MiscResources.UseBrowserProxy))]
+    UseBrowserProxy,
+
+    [LocalizedResource(typeof(MiscResources), nameof(MiscResources.SpecifyProxy))]
+    SpecifyProxy
 }

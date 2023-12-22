@@ -22,7 +22,6 @@
 using System;
 using System.Linq;
 using Windows.Graphics;
-using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
@@ -31,7 +30,6 @@ using Pixeval.Activation;
 using Pixeval.AppManagement;
 using Pixeval.Controls;
 using Pixeval.Controls.Windowing;
-using Pixeval.Messages;
 using Pixeval.Pages.Login;
 using WinUI3Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
@@ -46,6 +44,7 @@ public partial class App
     {
         AppViewModel = new AppViewModel(this) { AppSetting = AppContext.LoadConfig() ?? AppSetting.CreateDefault() };
         WindowFactory.WindowSettings = AppViewModel.AppSetting;
+        WindowFactory.IconAbsolutePath = AppContext.IconAbsolutePath;
         AppInstance.GetCurrent().Activated += (_, arguments) => ActivationRegistrar.Dispatch(arguments);
         InitializeComponent();
     }
@@ -75,7 +74,7 @@ public partial class App
 
         WindowFactory.Create(out var w)
             .WithLoaded((s, _) => s.To<Frame>().NavigateTo<LoginPage>(w))
-            .WithClosed((_, _) => AppContext.SaveContext())
+            .WithClosed((s, _) => AppContext.SaveContext(s.To<EnhancedWindow>()))
             .WithSizeLimit(800, 360)
             .Init(nameof(Pixeval), new SizeInt32(AppViewModel.AppSetting.WindowWidth, AppViewModel.AppSetting.WindowHeight))
             .Activate();
@@ -83,11 +82,5 @@ public partial class App
         AppHelper.RegisterUnhandledExceptionHandler(w);
 
         await AppViewModel.InitializeAsync(isProtocolActivated);
-    }
-
-    public static void ExitWithPushNotification()
-    {
-        _ = WeakReferenceMessenger.Default.Send(new ApplicationExitingMessage());
-        CurrentContext.App.Exit();
     }
 }

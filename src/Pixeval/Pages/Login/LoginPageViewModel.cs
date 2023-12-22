@@ -19,7 +19,7 @@
 #endregion
 
 using System;
-using System.Globalization;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -28,8 +28,9 @@ using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using System.Web;
 using CommunityToolkit.Mvvm.ComponentModel;
+using Microsoft.Playwright;
 using Microsoft.UI.Xaml;
-using Microsoft.Web.WebView2.Core;
+using Microsoft.UI.Xaml.Controls;
 using Microsoft.Win32;
 using Pixeval.AppManagement;
 using Pixeval.Attributes;
@@ -37,12 +38,13 @@ using Pixeval.CoreApi;
 using Pixeval.CoreApi.Model;
 using Pixeval.CoreApi.Net;
 using Pixeval.CoreApi.Preference;
-using Pixeval.Flyouts;
 using Pixeval.Misc;
 using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
+using Windows.System;
+using Pixeval.Options;
 using WinUI3Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
 
@@ -58,11 +60,11 @@ public partial class LoginPageViewModel : AutoActivateObservableRecipient
         [LocalizedResource(typeof(LoginPageResources), nameof(LoginPageResources.LoginPhaseRefreshing))]
         Refreshing,
 
-        [LocalizedResource(typeof(LoginPageResources), nameof(LoginPageResources.LoginPhaseNegotiatingPort))]
-        NegotiatingPort,
+        [LocalizedResource(typeof(LoginPageResources), nameof(LoginPageResources.LoginPhaseWaitingForUserInput))]
+        WaitingForUserInput,
 
-        [LocalizedResource(typeof(LoginPageResources), nameof(LoginPageResources.LoginPhaseExecutingWebView2))]
-        ExecutingWebView2,
+        [LocalizedResource(typeof(LoginPageResources), nameof(LoginPageResources.LoginPhaseExecutingBrowser))]
+        ExecutingBrowser,
 
         [LocalizedResource(typeof(LoginPageResources), nameof(LoginPageResources.LoginPhaseCheckingCertificateInstallation))]
         CheckingCertificateInstallation,
@@ -71,17 +73,33 @@ public partial class LoginPageViewModel : AutoActivateObservableRecipient
         InstallingCertificate,
 
         [LocalizedResource(typeof(LoginPageResources), nameof(LoginPageResources.LoginPhaseCheckingWebView2Installation))]
-        CheckingWebView2Installation
+        CheckingWebView2Installation,
+
+        [LocalizedResource(typeof(LoginPageResources), nameof(LoginPageResources.LoginPhaseSuccessNavigating))]
+        SuccessNavigating
     }
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(ShowProcessingRing))]
     private LoginPhaseEnum _loginPhase;
 
-    [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(IsWebViewVisible))]
-    private LoginWebView? _webView;
+    [ObservableProperty] private WebView2? _webView;
 
-    public Visibility IsWebViewVisible => WebView is null ? Visibility.Collapsed : Visibility.Visible;
+    [ObservableProperty] private bool _isFinished = true;
+
+    public LoginProxyOption LoginProxyOption
+    {
+        get => App.AppViewModel.AppSetting.LoginProxyOption;
+        set => App.AppViewModel.AppSetting.LoginProxyOption = value;
+    }
+
+    public string ProxyString
+    {
+        get => App.AppViewModel.AppSetting.ProxyString;
+        set => App.AppViewModel.AppSetting.ProxyString = value;
+    }
+
+    public Visibility ShowProcessingRing => LoginPhase is LoginPhaseEnum.WaitingForUserInput ? Visibility.Collapsed : Visibility.Visible;
 
     public void AdvancePhase(LoginPhaseEnum newPhase)
     {
@@ -162,44 +180,20 @@ public partial class LoginPageViewModel : AutoActivateObservableRecipient
         }
     }
 
-    private static int NegotiatePort()
+    private static int NegotiatePort(int preferPort = 49152)
     {
-        var unavailable = IPGlobalProperties.GetIPGlobalProperties().GetActiveTcpConnections().Select(t => t.LocalEndPoint.Port).ToArray();
-        var rd = new Random();
-        var proxyPort = rd.Next(3000, 65536);
-        while (Array.BinarySearch(unavailable, proxyPort) >= 0)
-        {
-            proxyPort = rd.Next(3000, 65536);
-        }
+        var unavailable = IPGlobalProperties.GetIPGlobalProperties().GetActiveTcpConnections().Select(t => t.LocalEndPoint.Port).ToHashSet();
+        if (unavailable.Contains(preferPort))
+            for (var i = 49152; i <= ushort.MaxValue; i++)
+            {
+                if (!unavailable.Contains(i))
+                {
+                    preferPort = i;
+                    break;
+                }
+            }
 
-        return proxyPort;
-    }
-
-    public async Task WebLoginAsync()
-    {
-        AdvancePhase(LoginPhaseEnum.NegotiatingPort);
-        var port = NegotiatePort();
-        using var proxyServer = PixivAuthenticationProxyServer.Create(IPAddress.Loopback, port, await AppContext.GetFakeServerCertificateAsync());
-        Environment.SetEnvironmentVariable("WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS", $"--proxy-server=127.0.0.1:{port} --ignore-certificate-errors");
-
-        WebView = new LoginWebView();
-
-        AdvancePhase(LoginPhaseEnum.ExecutingWebView2);
-
-        await WebView.LoginWebView2.EnsureCoreWebView2Async();
-        WebView.LoginWebView2.CoreWebView2.AddWebResourceRequestedFilter("*", CoreWebView2WebResourceContext.All);
-        WebView.LoginWebView2.CoreWebView2.WebResourceRequested += (_, args) => args.Request.Headers.SetHeader("Accept-Language", args.Request.Uri.Contains("recaptcha") ? "zh-cn" : CultureInfo.CurrentUICulture.Name);
-
-        var verifier = PixivAuthSignature.GetCodeVerify();
-        WebView.LoginWebView2.Source = new Uri(PixivAuthSignature.GenerateWebPageUrl(verifier));
-
-        var (url, cookie) = await WebView.CookieCompletion.Task;
-        WebView = null;
-
-        var code = HttpUtility.ParseQueryString(new Uri(url).Query)["code"]!;
-
-        var session = await AuthCodeToSessionAsync(code, verifier, cookie);
-        App.AppViewModel.MakoClient = new MakoClient(session, App.AppViewModel.AppSetting.ToMakoClientConfiguration(), new RefreshTokenSessionUpdate());
+        return preferPort;
     }
 
     public static async Task<Session> AuthCodeToSessionAsync(string code, string verifier, string cookie)
@@ -225,5 +219,156 @@ public partial class LoginPageViewModel : AutoActivateObservableRecipient
             CookieCreation = DateTimeOffset.Now
         };
         return session;
+    }
+
+    public Task<string?> BrowserLoginAsync(BrowserInfo info, UserControl userControl, Action navigated)
+    {
+        return LoginAsync(info.Type,
+            userControl,
+            arguments =>
+            {
+                if (!info.IsAvailable)
+                    return Task.FromResult<string?>(LoginPageResources.BrowserNotFound);
+                AdvancePhase(LoginPhaseEnum.ExecutingBrowser);
+                _ = Process.Start(info.BrowserPath, arguments);
+                return Task.FromResult<string?>(null);
+            },
+            navigated);
+    }
+
+    public Task<string?> WebView2LoginAsync(UserControl userControl, Action navigated)
+    {
+        return LoginAsync(AvailableBrowserType.WebView2,
+            userControl,
+            async arguments =>
+            {
+                await EnsureWebView2IsInstalled(userControl);
+                Environment.SetEnvironmentVariable("WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS", arguments);
+                WebView = new WebView2();
+                await WebView.EnsureCoreWebView2Async();
+                return null;
+            },
+            navigated);
+    }
+
+    private async Task<string?> LoginAsync(AvailableBrowserType type, UserControl userControl, Func<string, Task<string?>> init, Action final)
+    {
+        var remoteDebuggingPort = NegotiatePort(9222);
+        var arguments = $"--remote-debugging-port={remoteDebuggingPort}";
+        var port = NegotiatePort();
+
+        var proxyServer = null as PixivAuthenticationProxyServer;
+        switch (LoginProxyOption)
+        {
+            case LoginProxyOption.UseDirect:
+                await EnsureCertificateIsInstalled(userControl);
+                proxyServer = PixivAuthenticationProxyServer.Create(IPAddress.Loopback, port, await AppContext.GetFakeServerCertificateAsync());
+                arguments += $" --ignore-certificate-errors --proxy-server=127.0.0.1:{port}";
+                break;
+            case LoginProxyOption.SpecifyProxy:
+                var lastIndexOf = ProxyString.LastIndexOf(':');
+                if (lastIndexOf == -1)
+                    return LoginPageResources.IncorrectSocketFormat;
+                var ip = ProxyString[..lastIndexOf];
+                var portString = ProxyString[(lastIndexOf + 1)..];
+                if (IPAddress.TryParse(ip, out _) && ushort.TryParse(portString, out _))
+                    arguments += $" --proxy-server={ProxyString}";
+                else
+                    return LoginPageResources.IncorrectSocketFormat;
+                break;
+        }
+        if (await init(arguments) is { } error)
+            return error;
+        var playWrightHelper = new PlayWrightHelper(type, remoteDebuggingPort);
+        var verifier = PixivAuthSignature.GetCodeVerify();
+        IsFinished = false;
+        try
+        {
+            await playWrightHelper.Initialize();
+            playWrightHelper.Browser.Disconnected += async (_, _) =>
+            {
+                if (IsFinished)
+                    return;
+                await playWrightHelper.DisposeAsync();
+                proxyServer?.Dispose();
+                _ = userControl.DispatcherQueue.TryEnqueue(() =>
+                {
+                    IsFinished = true;
+                    AdvancePhase(LoginPhaseEnum.WaitingForUserInput);
+                    _ = MessageDialogBuilder.CreateAcknowledgement(userControl,
+                            LoginPageResources.ErrorWhileLoggingInTitle, LoginPageResources.BrowserConnnectionLost)
+                        .ShowAsync();
+                });
+            };
+        }
+        catch (PlaywrightException)
+        {
+            IsFinished = true;
+            return LoginPageResources.TryAfterShuttingDownTheBrowser;
+        }
+
+        var page = playWrightHelper.Page;
+        page.Request += async (o, e) =>
+        {
+            if (!IsFinished && e.Url.Contains("code="))
+            {
+                // 成功时不需要让控件IsEnabled
+                // _ = userControl.DispatcherQueue.TryEnqueue(() => IsFinished = true);
+                var code = HttpUtility.ParseQueryString(new Uri(e.Url).Query)["code"]!;
+                var cookies = await page.Context.CookiesAsync(["https://pixiv.net"]);
+                var cookie = string.Join(';', cookies.Select(c => $"{c.Name}={c.Value}"));
+                var session = await AuthCodeToSessionAsync(code, verifier, cookie);
+                App.AppViewModel.MakoClient = new MakoClient(session, App.AppViewModel.AppSetting.ToMakoClientConfiguration(), new RefreshTokenSessionUpdate());
+                await playWrightHelper.DisposeAsync();
+                proxyServer?.Dispose();
+                final();
+            }
+        };
+        try
+        {
+            _ = await page.GotoAsync(PixivAuthSignature.GenerateWebPageUrl(verifier));
+        }
+        catch (PlaywrightException e)
+        {
+            // 可能还没加载完页面就登录成功跳转了，导致异常
+            //if (!IsFinished)
+            //    throw;
+        }
+
+        return null;
+    }
+
+    private async Task EnsureCertificateIsInstalled(UserControl userControl)
+    {
+        if (!await CheckFakeRootCertificateInstallationAsync())
+        {
+            var dialogResult = await MessageDialogBuilder.CreateOkCancel(userControl,
+                LoginPageResources.RootCertificateInstallationRequiredTitle,
+                LoginPageResources.RootCertificateInstallationRequiredContent).ShowAsync();
+            if (dialogResult is ContentDialogResult.Primary)
+            {
+                await InstallFakeRootCertificateAsync();
+            }
+            else
+            {
+                CurrentContext.App.Exit();
+            }
+        }
+    }
+
+    private async Task EnsureWebView2IsInstalled(UserControl userControl)
+    {
+        if (!CheckWebView2Installation())
+        {
+            var dialogResult = await MessageDialogBuilder.CreateOkCancel(userControl,
+                LoginPageResources.WebView2InstallationRequiredTitle,
+                LoginPageResources.WebView2InstallationRequiredContent).ShowAsync();
+            if (dialogResult is ContentDialogResult.Primary)
+            {
+                _ = await Launcher.LaunchUriAsync(new Uri("https://go.microsoft.com/fwlink/p/?LinkId=2124703"));
+            }
+
+            CurrentContext.App.Exit();
+        }
     }
 }

@@ -28,6 +28,8 @@ namespace Pixeval.Controls.Windowing;
 
 public static class WindowFactory
 {
+    public static string IconAbsolutePath { get; set; } ="";
+
     public static IWindowSettings WindowSettings { get; set; } = null!;
 
     public static EnhancedWindow RootWindow => _forkedWindowsInternal[0];
@@ -86,7 +88,7 @@ public static class WindowFactory
             BackdropType = WindowSettings.Backdrop,
             TitleBarType = TitleBarType.AppWindow,
             Size = size,
-            IconPath = WindowSettings.IconAbsolutePath
+            IconPath = IconAbsolutePath
         });
         window.AppWindow.Title = title;
         var theme = GetElementTheme(WindowSettings.Theme);

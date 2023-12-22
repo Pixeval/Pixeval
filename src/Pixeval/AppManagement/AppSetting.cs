@@ -159,10 +159,12 @@ public partial record AppSetting : IWindowSettings
     public bool UseFileCache { get; set; }
 
     [DefaultValue(typeof(AppWidthDefaultValueProvider))]
+    [AttributeIgnore(typeof(SettingsViewModelAttribute<>))]
     [SyntheticSetting]
     public int WindowWidth { get; set; }
 
     [DefaultValue(typeof(AppHeightDefaultValueProvider))]
+    [AttributeIgnore(typeof(SettingsViewModelAttribute<>))]
     [SyntheticSetting]
     public int WindowHeight { get; set; }
 
@@ -254,8 +256,13 @@ public partial record AppSetting : IWindowSettings
     [SettingMetadata(SettingEntryCategory.Application, typeof(SettingsPageResources), nameof(SettingsPageResources.BackdropEntryHeader))]
     public BackdropType Backdrop { get; set; }
 
+    [DefaultValue(LoginProxyOption.UseDirect)]
     [AttributeIgnore(typeof(SettingsViewModelAttribute<>))]
-    public string IconAbsolutePath { get; set; }
+    public LoginProxyOption LoginProxyOption { get; set; }
+
+    [DefaultValue("")]
+    [AttributeIgnore(typeof(SettingsViewModelAttribute<>))]
+    public string ProxyString { get; set; }
 
     public static AppSetting CreateDefault()
     {

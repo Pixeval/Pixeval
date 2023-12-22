@@ -1,8 +1,8 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/ApplicationExitingMessage.cs
+// Copyright (c) 2023 Pixeval/LoginProxyOptionSettingEntryItem.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,10 +18,20 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-namespace Pixeval.Messages;
+using System.Collections.Generic;
+using System;
+using System.Linq;
+using Pixeval.Attributes;
+using Pixeval.Controls;
+using Pixeval.Options;
 
-/// <summary>
-///     This event will be published if the application is going to shutdown programmatically.
-///     See <see cref="App()" />
-/// </summary>
-public record ApplicationExitingMessage;
+namespace Pixeval.SettingsModels;
+
+public record LoginProxyOptionSettingEntryItem : StringRepresentableItem, IAvailableItems
+{
+    public LoginProxyOptionSettingEntryItem(LoginProxyOption item) : base(item, item.GetLocalizedResourceContent()!)
+    {
+    }
+
+    public static IEnumerable<StringRepresentableItem> AvailableItems { get; } = Enum.GetValues<LoginProxyOption>().Select(m => new LoginProxyOptionSettingEntryItem(m));
+}

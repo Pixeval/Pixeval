@@ -31,6 +31,7 @@ using Pixeval.Util.IO;
 using Pixeval.Utilities;
 using Windows.Storage;
 using Windows.Storage.Streams;
+using Pixeval.Controls.Windowing;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
 
@@ -103,12 +104,6 @@ public static partial class AppContext
         }
     }
 
-    public static async Task<string> GetIconAbsolutePath()
-    {
-        const string iconName = "logo44x44.ico";
-        return (await AppKnownFolders.Local.GetFileAsync(iconName)).Path;
-    }
-
     public static string IconName => "logo44x44.ico";
 
     public static string IconAbsolutePath => Path.Combine(AppKnownFolders.Local.Self.Path, IconName);
@@ -179,14 +174,15 @@ public static partial class AppContext
         });
     }
 
-    public static void SaveContext()
+    public static void SaveContext(EnhancedWindow window)
     {
         // Save the current resolution
-        App.AppViewModel.AppSetting.WindowWidth = CurrentContext.AppWindow.Size.Width;
-        App.AppViewModel.AppSetting.WindowHeight = CurrentContext.AppWindow.Size.Height;
+        App.AppViewModel.AppSetting.WindowWidth = window.AppWindow.Size.Width;
+        App.AppViewModel.AppSetting.WindowHeight = window.AppWindow.Size.Height;
         if (!App.AppViewModel.SignOutExit)
         {
-            SaveSession(App.AppViewModel.MakoClient.Session);
+            if (App.AppViewModel.MakoClient != null!) 
+                SaveSession(App.AppViewModel.MakoClient.Session);
             SaveConfig(App.AppViewModel.AppSetting);
         }
     }

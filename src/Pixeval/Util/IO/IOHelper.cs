@@ -161,11 +161,11 @@ public static partial class IoHelper
         return bytes;
     }
 
-    public static Task<HttpResponseMessage> PostFormAsync(this HttpClient httpClient, string url, params (string key, string value)[] parameters)
+    public static Task<HttpResponseMessage> PostFormAsync(this HttpClient httpClient, string url, params (string Key, string Value)[] parameters)
     {
         var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, url)
         {
-            Content = new FormUrlEncodedContent(parameters.Select(tuple => new KeyValuePair<string?, string?>(tuple.key, tuple.value)))
+            Content = new FormUrlEncodedContent(parameters.Select(tuple => new KeyValuePair<string?, string?>(tuple.Key, tuple.Value)))
             {
                 Headers =
                 {
