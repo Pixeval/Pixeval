@@ -18,6 +18,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Imaging;
@@ -29,8 +30,10 @@ namespace Pixeval.Controls;
 
 [DependencyProperty<IllustrationViewModel>("ViewModel")]
 [DependencyProperty<ThumbnailUrlOption>("ThumbnailOption")]
-public sealed partial class IllustrationImage : UserControl
+public sealed partial class IllustrationImage : UserControl, IViewModelControl
 {
+    object IViewModelControl.ViewModel => ViewModel;
+
     public IllustrationImage() => InitializeComponent();
 
     /// <summary>
@@ -40,5 +43,5 @@ public sealed partial class IllustrationImage : UserControl
     /// <param name="option"></param>
     /// <returns></returns>
     private SoftwareBitmapSource? GetThumbnailSource(ImmutableDictionary<ThumbnailUrlOption, SoftwareBitmapSource> dictionary, ThumbnailUrlOption option)
-        => dictionary.TryGetValue(option, out var source) ? source : null;
+        => CollectionExtensions.GetValueOrDefault(dictionary, option);
 }

@@ -331,8 +331,8 @@ public partial class LoginPageViewModel : AutoActivateObservableRecipient
         catch (PlaywrightException e)
         {
             // 可能还没加载完页面就登录成功跳转了，导致异常
-            //if (!IsFinished)
-            //    throw;
+            // if (!IsFinished)
+            //     throw;
         }
 
         return null;

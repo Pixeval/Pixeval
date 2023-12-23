@@ -33,8 +33,10 @@ using WinUI3Utilities.Attributes;
 namespace Pixeval.Controls.IllustrationView;
 
 [DependencyProperty<IllustrationViewModel>("ViewModel")]
-public sealed partial class IllustrationThumbnail : CardControl
+public sealed partial class IllustrationThumbnail : CardControl, IViewModelControl
 {
+    object IViewModelControl.ViewModel => ViewModel;
+
     /// <summary>
     /// 请求显示二维码
     /// </summary>

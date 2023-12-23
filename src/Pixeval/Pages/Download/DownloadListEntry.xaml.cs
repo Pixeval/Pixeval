@@ -28,6 +28,7 @@ using Microsoft.UI.Xaml.Input;
 using Pixeval.Download;
 using Pixeval.Util.UI;
 using Windows.System;
+using Pixeval.Controls;
 using Pixeval.CoreApi.Model;
 using Pixeval.Options;
 using WinUI3Utilities;
@@ -45,8 +46,10 @@ namespace Pixeval.Pages.Download;
 [DependencyProperty<bool>("IsRedownloadItemEnabled")]
 [DependencyProperty<bool>("IsCancelItemEnabled")]
 [DependencyProperty<bool>("IsShowErrorDetailDialogItemEnabled")]
-public sealed partial class DownloadListEntry
+public sealed partial class DownloadListEntry : IViewModelControl
 {
+    object IViewModelControl.ViewModel => ViewModel;
+
     private const ThumbnailUrlOption Option = ThumbnailUrlOption.SquareMedium;
 
     public event TypedEventHandler<DownloadListEntry, DownloadListEntryViewModel>? OpenIllustrationRequested;

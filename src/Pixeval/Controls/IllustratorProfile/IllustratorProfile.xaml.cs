@@ -35,8 +35,10 @@ using WinUI3Utilities.Attributes;
 namespace Pixeval.Controls;
 
 [DependencyProperty<IllustratorViewModel>("ViewModel")]
-public sealed partial class IllustratorProfile
+public sealed partial class IllustratorProfile : IViewModelControl
 {
+    object IViewModelControl.ViewModel => ViewModel;
+
     public static readonly Vector3 ZoomedScale = new(1.2f, 1.2f, 1.2f);
     public static readonly Vector3 CommonScale = new(1, 1, 1);
     public static readonly Vector3 ElevatedTranslation = new(0, 0, 60);

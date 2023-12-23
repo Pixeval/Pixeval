@@ -1,8 +1,8 @@
-#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval.Controls
 // GPL v3 License
 // 
-// Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/DelegatedHttpMessageHandler.cs
+// Pixeval/Pixeval.Controls
+// Copyright (c) 2023 Pixeval.Controls/GenericCollectionView.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,16 +18,9 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System.Net.Http;
-using System.Threading;
-using System.Threading.Tasks;
+namespace Pixeval.Controls;
 
-namespace Pixeval.Util;
-
-public class DelegatedHttpMessageHandler(HttpMessageInvoker @delegate) : HttpMessageHandler
+public interface IViewModelControl
 {
-    protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
-    {
-        return @delegate.SendAsync(request, cancellationToken);
-    }
+    object ViewModel { get; }
 }
