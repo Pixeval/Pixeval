@@ -36,14 +36,19 @@ namespace Pixeval.Controls.IllustratorContentViewer;
 [DependencyProperty<IllustratorContentViewerViewModel>("ViewModel", propertyChanged: nameof(OnViewModelChanged))]
 public sealed partial class IllustratorContentViewer : IDisposable
 {
-    private NavigationViewTag? _lastNavigationViewTag;
-
     private readonly ISet<Page> _pageCache;
+    private NavigationViewTag? _lastNavigationViewTag;
 
     public IllustratorContentViewer()
     {
         InitializeComponent();
         _pageCache = new HashSet<Page>();
+    }
+
+    public void Dispose()
+    {
+        _pageCache.OfType<IDisposable>().ForEach(p => p.Dispose());
+        _pageCache.Clear();
     }
 
     private static async void OnViewModelChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
@@ -100,11 +105,5 @@ public sealed partial class IllustratorContentViewer : IDisposable
         {
             subPage.PerformSearch(sender.Text);
         }
-    }
-
-    public void Dispose()
-    {
-        _pageCache.OfType<IDisposable>().ForEach(p => p.Dispose());
-        _pageCache.Clear();
     }
 }

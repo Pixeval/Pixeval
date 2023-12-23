@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval.CoreApi
+#region Copyright (c) Pixeval/Pixeval.CoreApi
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
@@ -19,7 +19,9 @@
 #endregion
 
 using System;
+using System.Diagnostics;
 using System.Text.Json.Serialization;
+using Pixeval.CoreApi.Model;
 
 namespace Pixeval.CoreApi.Net.Response;
 
@@ -228,7 +230,8 @@ public class PixivRelatedRecommendUsersResponse
         public long AiType { get; set; }
     }
 
-    public class User
+    [DebuggerDisplay("{Id}: {Name}")]
+    public class User : IIllustrate
     {
         [JsonPropertyName("partial")]
         public long Partial { get; set; }
@@ -240,7 +243,7 @@ public class PixivRelatedRecommendUsersResponse
         public bool FollowedBack { get; set; }
 
         [JsonPropertyName("userId")]
-        public string? UserId { get; set; }
+        public string? Id { get; set; }
 
         [JsonPropertyName("name")]
         public string? Name { get; set; }

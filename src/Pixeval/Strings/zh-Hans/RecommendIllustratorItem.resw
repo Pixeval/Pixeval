@@ -123,4 +123,7 @@
   <data name="FollowButtonUnfollow" xml:space="preserve">
     <value>已关注</value>
   </data>
+  <data name="UserHasNoComment" xml:space="preserve">
+    <value>用户没有自我介绍</value>
+  </data>
 </root>

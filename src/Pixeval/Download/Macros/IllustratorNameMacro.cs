@@ -18,19 +18,19 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using Pixeval.Controls.IllustrationView;
 using Pixeval.Download.MacroParser;
 using Pixeval.Util.IO;
 using Pixeval.Utilities;
-using Pixeval.Controls.IllustrationView;
 
 namespace Pixeval.Download.Macros;
 
-[MetaPathMacro(typeof(IllustrationViewModel))]
-public class IllustratorNameMacro : IMacro<IllustrationViewModel>.ITransducer
+[MetaPathMacro(typeof(IllustrationItemViewModel))]
+public class IllustratorNameMacro : IMacro<IllustrationItemViewModel>.ITransducer
 {
     public string Name => "artist_name";
 
-    public string Substitute(IllustrationViewModel context)
+    public string Substitute(IllustrationItemViewModel context)
     {
         return context.Illustrate.User?.Name?.Let(IoHelper.NormalizePathSegment) ?? MacroParserResources.UnknownArtist;
     }

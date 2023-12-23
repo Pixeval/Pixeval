@@ -18,9 +18,9 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using Pixeval.Controls.IllustrationView;
 using Pixeval.Pages;
 using Pixeval.Pages.IllustrationViewer;
-using Pixeval.Controls.IllustrationView;
 
 namespace Pixeval.Messages;
 
@@ -29,4 +29,4 @@ namespace Pixeval.Messages;
 ///     <see cref="MainPage" />, the parameter contains the item that the <see cref="IllustrationViewerPage" />
 ///     is currently browsing
 /// </summary>
-public record NavigatingBackToMainPageMessage(IllustrationViewModel? IllustrationViewModel);
+public record NavigatingBackToMainPageMessage(IllustrationItemViewModel? IllustrationViewModel);

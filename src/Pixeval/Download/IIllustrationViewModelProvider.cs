@@ -25,5 +25,5 @@ namespace Pixeval.Download;
 
 public interface IIllustrationViewModelProvider
 {
-    Task<IllustrationViewModel> GetViewModelAsync();
+    Task<IllustrationItemViewModel> GetViewModelAsync();
 }

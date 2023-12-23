@@ -32,40 +32,9 @@ namespace Pixeval.Controls.IllustratorContentViewer;
 
 public sealed partial class IllustratorMangaPage : ISortedIllustrationContainerPageHelper, IIllustratorContentViewerCommandBarHostSubPage
 {
-    public IllustrationContainer ViewModelProvider => IllustrationContainer;
-
-    public SortOptionComboBox SortOptionProvider => SortOptionComboBox;
-
     public IllustratorMangaPage()
     {
         InitializeComponent();
-    }
-
-    public override void OnPageActivated(NavigationEventArgs e)
-    {
-        if (ActivationCount > 1)
-            return;
-
-        _ = WeakReferenceMessenger.Default.TryRegister<IllustratorMangaPage, MainPageFrameNavigatingEvent>(this, static (recipient, _) => recipient.IllustrationContainer.ViewModel.DataProvider.FetchEngine?.Cancel());
-        if (e.Parameter is string id)
-        {
-            IllustrationContainer.ViewModel.ResetEngine(App.AppViewModel.MakoClient.MangaPosts(id, App.AppViewModel.AppSetting.TargetFilter));
-        }
-
-        if (!App.AppViewModel.AppSetting.ShowExternalCommandBarInIllustratorContentViewer)
-        {
-            ChangeCommandBarVisibility(false);
-        }
-    }
-
-    public override void OnPageDeactivated(NavigatingCancelEventArgs e)
-    {
-        WeakReferenceMessenger.Default.UnregisterAll(this);
-    }
-
-    private void SortOptionComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
-    {
-        ((ISortedIllustrationContainerPageHelper)this).OnSortOptionChanged();
     }
 
     public void Dispose()
@@ -94,5 +63,36 @@ public sealed partial class IllustratorMangaPage : ISortedIllustrationContainerP
     public void ChangeCommandBarVisibility(bool isVisible)
     {
         IllustrationContainer.ShowCommandBar = isVisible;
+    }
+
+    public IllustrationContainer ViewModelProvider => IllustrationContainer;
+
+    public SortOptionComboBox SortOptionProvider => SortOptionComboBox;
+
+    public override void OnPageActivated(NavigationEventArgs e)
+    {
+        if (ActivationCount > 1)
+            return;
+
+        _ = WeakReferenceMessenger.Default.TryRegister<IllustratorMangaPage, MainPageFrameNavigatingEvent>(this, static (recipient, _) => recipient.IllustrationContainer.ViewModel.DataProvider.FetchEngine?.Cancel());
+        if (e.Parameter is string id)
+        {
+            IllustrationContainer.ViewModel.ResetEngine(App.AppViewModel.MakoClient.MangaPosts(id, App.AppViewModel.AppSetting.TargetFilter));
+        }
+
+        if (!App.AppViewModel.AppSetting.ShowExternalCommandBarInIllustratorContentViewer)
+        {
+            ChangeCommandBarVisibility(false);
+        }
+    }
+
+    public override void OnPageDeactivated(NavigatingCancelEventArgs e)
+    {
+        WeakReferenceMessenger.Default.UnregisterAll(this);
+    }
+
+    private void SortOptionComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        ((ISortedIllustrationContainerPageHelper)this).OnSortOptionChanged();
     }
 }

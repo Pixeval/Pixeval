@@ -21,19 +21,17 @@
 using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.WinUI.Collections;
-using Pixeval.CoreApi.Model;
 using Pixeval.Controls.Illustrate;
+using Pixeval.CoreApi.Model;
 using Pixeval.Util;
 using Pixeval.Utilities;
 
 namespace Pixeval.Controls.IllustrationView;
 
-public sealed partial class IllustrationViewViewModel : SortableIllustrateViewViewModel<Illustration, IllustrationViewModel>
+public sealed partial class IllustrationViewViewModel : SortableIllustrateViewViewModel<Illustration, IllustrationItemViewModel>
 {
     [ObservableProperty]
     private bool _isSelecting;
-
-    public override IllustrationViewDataProvider DataProvider { get; }
 
     public IllustrationViewViewModel(IllustrationViewViewModel viewModel)
     {
@@ -46,6 +44,8 @@ public sealed partial class IllustrationViewViewModel : SortableIllustrateViewVi
         DataProvider = new IllustrationViewDataProvider();
         Init();
     }
+
+    public override IllustrationViewDataProvider DataProvider { get; }
 
     private void Init()
     {

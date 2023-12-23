@@ -97,8 +97,8 @@ public partial class PixivAuthenticationProxyServer : IDisposable
                     // create an HTTP connection to the target IP
                     var host = HostRegex().Match(content).Groups["host"].Value;
                     var serverSsl = await CreateConnection(await GetTargetIp(host));
-                    var request = Functions.IgnoreExceptionAsync(async () => await clientSsl.CopyToAsync(serverSsl));
-                    var response = Functions.IgnoreExceptionAsync(async () => await serverSsl.CopyToAsync(clientSsl));
+                    var request = Functions.IgnoreExceptionAsync(() => clientSsl.CopyToAsync(serverSsl));
+                    var response = Functions.IgnoreExceptionAsync(() => serverSsl.CopyToAsync(clientSsl));
                     _ = await Task.WhenAny(request, response);
                     serverSsl.Close();
                 }

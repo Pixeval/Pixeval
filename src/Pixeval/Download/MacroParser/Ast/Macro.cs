@@ -20,6 +20,7 @@
 
 using Pixeval.Util;
 using Pixeval.Utilities;
+using WinUI3Utilities;
 
 namespace Pixeval.Download.MacroParser.Ast;
 
@@ -32,19 +33,19 @@ public record Macro<TContext>(PlainText<TContext> MacroName, OptionalMacroParame
         switch (result)
         {
             case IMacro<TContext>.ITransducer transducer:
-                ThrowHelper.ThrowIf<IllegalMacroException>(OptionalParameters is not null, MacroParserResources.NonParameterizedMacroBearingParameterFormatted.Format(MacroName));
+                ThrowUtils.ThrowIf<IllegalMacroException>(OptionalParameters is not null, MacroParserResources.NonParameterizedMacroBearingParameterFormatted.Format(MacroName));
                 return transducer.Substitute(context);
             case IMacro<TContext>.IPredicate predicate:
                 if (predicate.Match(context))
                 {
-                    return OptionalParameters?.Evaluate(env, context) ?? ThrowHelper.ThrowException<IllegalMacroException, string>(MacroParserResources.ParameterizedMacroMissingParameterFormatted.Format(MacroName));
+                    return OptionalParameters?.Evaluate(env, context) ?? ThrowUtils.ThrowException<IllegalMacroException, string>(MacroParserResources.ParameterizedMacroMissingParameterFormatted.Format(MacroName));
                 }
 
                 return "";
             case IMacro<TContext>.Unknown:
-                return ThrowHelper.ThrowException<IllegalMacroException, string>(MacroParserResources.UnknownMacroNameFormatted.Format(MacroName));
+                return ThrowUtils.ThrowException<IllegalMacroException, string>(MacroParserResources.UnknownMacroNameFormatted.Format(MacroName));
             default:
-                return WinUI3Utilities.ThrowHelper.ArgumentOutOfRange<IMacro<TContext>, string>(result);
+                return ThrowHelper.ArgumentOutOfRange<IMacro<TContext>, string>(result);
         }
     }
 }

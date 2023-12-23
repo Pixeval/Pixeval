@@ -20,16 +20,16 @@
 
 using System;
 using CommunityToolkit.Mvvm.ComponentModel;
+using Pixeval.Controls.IllustrationView;
 using Pixeval.CoreApi.Model;
 using Pixeval.Download;
-using Pixeval.Controls.IllustrationView;
 using Pixeval.Utilities;
 using WinUI3Utilities;
 
 namespace Pixeval.Pages.Download;
 
 public sealed partial class DownloadListEntryViewModel(ObservableDownloadTask downloadTask, Illustration illustration)
-    : IllustrationViewModel(illustration)
+    : IllustrationItemViewModel(illustration)
 {
     [ObservableProperty]
     private ObservableDownloadTask _downloadTask = downloadTask;

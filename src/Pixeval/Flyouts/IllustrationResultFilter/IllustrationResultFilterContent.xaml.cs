@@ -25,13 +25,13 @@ namespace Pixeval.Flyouts.IllustrationResultFilter;
 
 public sealed partial class IllustrationResultFilterContent
 {
-    public IllustrationResultFilterContentViewModel ViewModel { get; set; } =
-        new IllustrationResultFilterContentViewModel();
-
     public IllustrationResultFilterContent()
     {
         InitializeComponent();
     }
+
+    public IllustrationResultFilterContentViewModel ViewModel { get; set; } =
+        new IllustrationResultFilterContentViewModel();
 
     public FilterSettings GetFilterSettings =>
         new(ViewModel.IncludeTags, ViewModel.ExcludeTags, ViewModel.LeastBookmark,

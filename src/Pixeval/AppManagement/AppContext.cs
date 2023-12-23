@@ -22,16 +22,16 @@ using System;
 using System.IO;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
+using Windows.Storage;
+using Windows.Storage.Streams;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Media.Imaging;
+using Pixeval.Controls.Windowing;
 using Pixeval.CoreApi.Preference;
 using Pixeval.Database.Managers;
 using Pixeval.Download;
 using Pixeval.Util.IO;
 using Pixeval.Utilities;
-using Windows.Storage;
-using Windows.Storage.Streams;
-using Pixeval.Controls.Windowing;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
 
@@ -72,6 +72,10 @@ public static partial class AppContext
         InitializeSession();
     }
 
+    public static string IconName => "logo44x44.ico";
+
+    public static string IconAbsolutePath => Path.Combine(AppKnownFolders.Local.Self.Path, IconName);
+
     public static async Task<SoftwareBitmapSource> GetNotAvailableImageAsync()
     {
         // TODO: 可能会多次同时加载此图，可以考虑用弱引用
@@ -103,10 +107,6 @@ public static partial class AppContext
             await (await AppKnownFolders.Local.CreateFileAsync(iconName)).WriteBytesAsync(bytes);
         }
     }
-
-    public static string IconName => "logo44x44.ico";
-
-    public static string IconAbsolutePath => Path.Combine(AppKnownFolders.Local.Self.Path, IconName);
 
     /// <summary>
     ///     Get the byte array of a file in the Assets folder

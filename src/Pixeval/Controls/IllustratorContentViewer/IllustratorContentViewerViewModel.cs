@@ -33,7 +33,6 @@ using Pixeval.Controls.MarkupExtensions;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Net.Response;
 using Pixeval.Misc;
-using Pixeval.Controls.RecommendIllustratorProfile;
 using Pixeval.Util.IO;
 using Pixeval.Util.Threading;
 using Pixeval.Util.UI;
@@ -55,7 +54,56 @@ public partial class IllustratorContentViewerViewModel : ObservableObject
         MyPixivUser
     }
 
-    public record UserMetrics(long FollowingCount, long MyPixivUsers /* 好P友 */, long IllustrationCount);
+    [ObservableProperty]
+    private ObservableCollection<MenuFlyoutItemBase> _actionMenuFlyoutItems = null!;
+
+    [ObservableProperty]
+    private ImageSource? _avatar;
+
+    [ObservableProperty]
+    private NavigationViewTag? _bookmarkedIllustrationAndMangaTag;
+
+    [ObservableProperty]
+    private NavigationViewTag? _bookmarkedNovelTag;
+
+    [ObservableProperty]
+    private IllustratorContentViewerTab _currentTab;
+
+    [ObservableProperty]
+    private XamlUICommand? _followCommand;
+
+    [ObservableProperty]
+    private bool _following;
+
+    [ObservableProperty]
+    private NavigationViewTag? _followingUserTag;
+
+    [ObservableProperty]
+    private XamlUICommand? _followPrivatelyCommand;
+
+    [ObservableProperty]
+    private NavigationViewTag? _illustrationTag;
+
+    [ObservableProperty]
+    private NavigationViewTag? _mangaTag;
+
+    [ObservableProperty]
+    private UserMetrics? _metrics;
+
+    [ObservableProperty]
+    private NavigationViewTag? _myPixivUserTag;
+
+    [ObservableProperty]
+    private NavigationViewTag? _novelTag;
+
+    [ObservableProperty]
+    private bool _premium;
+
+    [ObservableProperty]
+    private PixivSingleUserResponse _userDetail = null!;
+
+    [ObservableProperty]
+    private string? _username;
 
     public IllustratorContentViewerViewModel(PixivSingleUserResponse userDetail)
     {
@@ -67,57 +115,6 @@ public partial class IllustratorContentViewerViewModel : ObservableObject
         InitializeCommands();
         SetAvatarAsync().Discard();
     }
-
-    [ObservableProperty]
-    private NavigationViewTag? _illustrationTag;
-
-    [ObservableProperty]
-    private NavigationViewTag? _mangaTag;
-
-    [ObservableProperty]
-    private NavigationViewTag? _novelTag;
-
-    [ObservableProperty]
-    private NavigationViewTag? _bookmarkedIllustrationAndMangaTag;
-
-    [ObservableProperty]
-    private NavigationViewTag? _bookmarkedNovelTag;
-
-    [ObservableProperty]
-    private NavigationViewTag? _followingUserTag;
-
-    [ObservableProperty]
-    private NavigationViewTag? _myPixivUserTag;
-
-    [ObservableProperty]
-    private PixivSingleUserResponse _userDetail = null!;
-
-    [ObservableProperty]
-    private UserMetrics? _metrics;
-
-    [ObservableProperty]
-    private string? _username;
-
-    [ObservableProperty]
-    private bool _premium;
-
-    [ObservableProperty]
-    private bool _following;
-
-    [ObservableProperty]
-    private ImageSource? _avatar;
-
-    [ObservableProperty]
-    private XamlUICommand? _followCommand;
-
-    [ObservableProperty]
-    private XamlUICommand? _followPrivatelyCommand;
-
-    [ObservableProperty]
-    private ObservableCollection<MenuFlyoutItemBase> _actionMenuFlyoutItems = null!;
-
-    [ObservableProperty]
-    private IllustratorContentViewerTab _currentTab;
 
     public bool ShowRecommendIllustrators
     {
@@ -139,11 +136,11 @@ public partial class IllustratorContentViewerViewModel : ObservableObject
         });
     }
 
+    public ObservableCollection<RecommendIllustratorItemViewModel> RecommendIllustrators { get; init; }
+
     public event EventHandler<bool>? ShowRecommendIllustratorsChanged;
 
     public event EventHandler<bool>? ShowExternalCommandBarChanged;
-
-    public ObservableCollection<RecommendIllustratorProfileViewModel> RecommendIllustrators { get; init; }
 
     private void InitializeTags()
     {
@@ -211,30 +208,30 @@ public partial class IllustratorContentViewerViewModel : ObservableObject
         return new XamlUICommand
         {
             IconSource = Following ? FontIconSymbols.HeartFillEB52.GetFontIconSource(foregroundBrush: new SolidColorBrush(Colors.Crimson)) : FontIconSymbols.HeartEB51.GetFontIconSource(),
-            Label = Following ? IllustratorContentViewerResources.Unfollow : IllustratorProfileResources.Follow
+            Label = Following ? IllustratorContentViewerResources.Unfollow : IllustratorItemResources.Follow
         };
     }
 
     public async Task LoadRecommendIllustratorsAsync()
     {
         var recommendIllustrators = await App.AppViewModel.MakoClient.GetRelatedRecommendUsersAsync(UserDetail.UserEntity!.Id.ToString(), isR18: !App.AppViewModel.AppSetting.FiltrateRestrictedContent, lang: CultureInfo.CurrentUICulture);
-        var viewModels = (recommendIllustrators.ResponseBody?.RecommendUsers ?? Enumerable.Empty<PixivRelatedRecommendUsersResponse.RecommendUser>())
+        var viewModels = (recommendIllustrators.ResponseBody?.RecommendUsers ?? [])
             .Select(ru => ToRecommendIllustratorProfileViewModel(recommendIllustrators, ru));
 
         RecommendIllustrators.AddRange(viewModels);
         return;
 
-        static RecommendIllustratorProfileViewModel ToRecommendIllustratorProfileViewModel(PixivRelatedRecommendUsersResponse context, PixivRelatedRecommendUsersResponse.RecommendUser recommendUser)
+        static RecommendIllustratorItemViewModel ToRecommendIllustratorProfileViewModel(PixivRelatedRecommendUsersResponse context, PixivRelatedRecommendUsersResponse.RecommendUser recommendUser)
         {
-            var users = context.ResponseBody!.Users ?? Enumerates.ArrayOf<PixivRelatedRecommendUsersResponse.User>();
-            var thumbnails = context.ResponseBody!.Thumbnails?.Illustrations ?? Enumerates.ArrayOf<PixivRelatedRecommendUsersResponse.Illust>();
+            var users = context.ResponseBody!.Users ?? [];
+            var thumbnails = context.ResponseBody!.Thumbnails?.Illustrations ?? [];
 
             var userId = recommendUser.UserId;
-            var user = users.First(u => u.UserId == userId);
-
-            var displayImageUrls = (recommendUser.IllustIds ?? Enumerable.Empty<string>()).Select(id => thumbnails.First(t => t.Id == id)).SelectNotNull(illust => illust.Urls?.The250X250);
-
-            return new RecommendIllustratorProfileViewModel(userId ?? string.Empty, user.Name ?? string.Empty, displayImageUrls, user.Image, user.Premium);
+            var user = users.First(u => u.Id == userId);
+            var displayImageUrls = thumbnails
+                .Where(t => recommendUser.IllustIds?.Contains(t.Id) ?? false)
+                .SelectNotNull(i => i.Urls?.The250X250);
+            return new RecommendIllustratorItemViewModel(user, displayImageUrls);
         }
     }
 
@@ -254,4 +251,6 @@ public partial class IllustratorContentViewerViewModel : ObservableObject
     {
         return (!showExternalCommandBar || CurrentTab is not (IllustratorContentViewerTab.Illustration or IllustratorContentViewerTab.Manga or IllustratorContentViewerTab.BookmarkedIllustrationAndManga)).ToVisibility();
     }
+
+    public record UserMetrics(long FollowingCount, long MyPixivUsers /* 好P友 */, long IllustrationCount);
 }

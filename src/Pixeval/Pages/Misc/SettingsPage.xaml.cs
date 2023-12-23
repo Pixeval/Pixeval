@@ -20,20 +20,20 @@
 
 using System;
 using System.Threading.Tasks;
+using Windows.System;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
+using Pixeval.Controls.TokenInput;
 using Pixeval.Controls.Windowing;
 using Pixeval.Database.Managers;
 using Pixeval.Download.MacroParser;
-using Pixeval.Controls.TokenInput;
+using Pixeval.SettingsModels;
 using Pixeval.Util.Threading;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
-using Windows.System;
-using Pixeval.SettingsModels;
 using WinUI3Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
 
@@ -44,11 +44,11 @@ public sealed partial class SettingsPage
 {
     // This TestParser is used to test whether the user input meta path is legal
     private static readonly MacroParser<string> _testParser = new();
-    private SettingsPageViewModel _viewModel;
 
     // The previous meta path after user changes the path field, if the path is illegal
     // its value will be reverted to this field.
     private string _previousPath;
+    private SettingsPageViewModel _viewModel;
 
     public SettingsPage()
     {

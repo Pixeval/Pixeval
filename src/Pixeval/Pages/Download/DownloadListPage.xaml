@@ -87,7 +87,6 @@
             ElementPrepared="AdvancedItemsView_OnElementPrepared"
             ItemsSource="{x:Bind _viewModel.DataProvider.View}"
             LayoutType="VerticalStack"
-            LoadMoreRequested="AdvancedItemsView_OnLoadMoreRequested"
             SelectionChanged="ItemsView_OnSelectionChanged"
             SelectionMode="Multiple">
             <controls:AdvancedItemsView.ItemTemplate>

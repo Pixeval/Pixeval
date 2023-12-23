@@ -18,19 +18,19 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using Pixeval.Controls.IllustrationView;
 using Pixeval.Download.MacroParser;
 using Pixeval.Utilities;
-using Pixeval.Controls.IllustrationView;
 
 namespace Pixeval.Download;
 
-public class IllustrationMetaPathParser : IMetaPathParser<IllustrationViewModel>
+public class IllustrationMetaPathParser : IMetaPathParser<IllustrationItemViewModel>
 {
-    private readonly MacroParser<IllustrationViewModel> _parser = new();
+    private readonly MacroParser<IllustrationItemViewModel> _parser = new();
 
-    public IMetaPathMacroProvider<IllustrationViewModel> MacroProvider { get; } = new IllustrationMetaPathMacroProvider();
+    public IMetaPathMacroProvider<IllustrationItemViewModel> MacroProvider { get; } = new IllustrationMetaPathMacroProvider();
 
-    public string Reduce(string raw, IllustrationViewModel context)
+    public string Reduce(string raw, IllustrationItemViewModel context)
     {
         _parser.SetupParsingEnvironment(new Lexer(raw));
         if (_parser.Parse() is { } root)

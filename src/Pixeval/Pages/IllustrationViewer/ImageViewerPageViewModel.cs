@@ -19,25 +19,25 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
+using Windows.Storage.Streams;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Pixeval.Attributes;
-using Pixeval.CoreApi.Net;
-using Pixeval.Database.Managers;
+using Pixeval.Controls;
 using Pixeval.Controls.IllustrationView;
+using Pixeval.CoreApi.Net;
+using Pixeval.Database;
+using Pixeval.Database.Managers;
+using Pixeval.Options;
 using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Utilities;
 using Pixeval.Utilities.Threading;
-using Windows.Storage.Streams;
-using Pixeval.Options;
-using System.Collections.Generic;
-using System.Linq;
-using Pixeval.Controls;
-using Pixeval.Database;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
@@ -66,6 +66,12 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
 
     private bool _disposed;
 
+    [ObservableProperty]
+    private bool _isMirrored;
+
+    [ObservableProperty]
+    private bool _isPlaying = true;
+
     private TaskNotifier? _loadingOriginalSourceTask;
 
     [ObservableProperty]
@@ -75,38 +81,32 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
     private string? _loadingText;
 
     [ObservableProperty]
-    private IEnumerable<IRandomAccessStream>? _originalImageSources;
-
-    [ObservableProperty]
     private List<int>? _msIntervals;
 
     [ObservableProperty]
-    private float _scale = 1;
-
-    [ObservableProperty]
-    private bool _isPlaying = true;
-
-    [ObservableProperty]
-    private bool _isMirrored;
+    private IEnumerable<IRandomAccessStream>? _originalImageSources;
 
     [ObservableProperty]
     private int _rotationDegree;
 
     [ObservableProperty]
+    private float _scale = 1;
+
+    [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsFit))]
     private ZoomableImageMode _showMode;
 
-    /// <summary>
-    /// <see cref="ShowMode"/> is <see cref="ZoomableImageMode.Fit"/> or not
-    /// </summary>
-    public bool IsFit => ShowMode is ZoomableImageMode.Fit;
-
-    public ImageViewerPageViewModel(IllustrationViewerPageViewModel illustrationViewerPageViewModel, IllustrationViewModel illustrationViewModel)
+    public ImageViewerPageViewModel(IllustrationViewerPageViewModel illustrationViewerPageViewModel, IllustrationItemViewModel illustrationViewModel)
     {
         IllustrationViewerPageViewModel = illustrationViewerPageViewModel;
         IllustrationViewModel = illustrationViewModel;
         _ = LoadImage();
     }
+
+    /// <summary>
+    /// <see cref="ShowMode"/> is <see cref="ZoomableImageMode.Fit"/> or not
+    /// </summary>
+    public bool IsFit => ShowMode is ZoomableImageMode.Fit;
 
     public IRandomAccessStream? OriginalImageStream => OriginalImageSources?.FirstOrDefault();
 
@@ -120,7 +120,7 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
 
     public CancellationHandle ImageLoadingCancellationHandle { get; } = new CancellationHandle();
 
-    public IllustrationViewModel IllustrationViewModel { get; }
+    public IllustrationItemViewModel IllustrationViewModel { get; }
 
     /// <summary>
     ///     The view model of the <see cref="IllustrationViewerPage" /> that hosts the owner <see cref="ImageViewerPage" />

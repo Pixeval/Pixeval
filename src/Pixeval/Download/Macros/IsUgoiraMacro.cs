@@ -18,18 +18,18 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using Pixeval.Download.MacroParser;
 using Pixeval.Controls.IllustrationView;
+using Pixeval.Download.MacroParser;
 using Pixeval.Util;
 
 namespace Pixeval.Download.Macros;
 
-[MetaPathMacro(typeof(IllustrationViewModel))]
-public class IsUgoiraMacro : IMacro<IllustrationViewModel>.IPredicate
+[MetaPathMacro(typeof(IllustrationItemViewModel))]
+public class IsUgoiraMacro : IMacro<IllustrationItemViewModel>.IPredicate
 {
     public string Name => "if_gif";
 
-    public bool Match(IllustrationViewModel context)
+    public bool Match(IllustrationItemViewModel context)
     {
         return context.Illustrate.IsUgoira();
     }

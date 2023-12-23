@@ -21,16 +21,16 @@
 using System;
 using System.IO;
 using Windows.Foundation;
+using Windows.System;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Input;
-using Pixeval.Download;
-using Pixeval.Util.UI;
-using Windows.System;
 using Pixeval.Controls;
 using Pixeval.CoreApi.Model;
+using Pixeval.Download;
 using Pixeval.Options;
+using Pixeval.Util.UI;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
 
@@ -48,13 +48,12 @@ namespace Pixeval.Pages.Download;
 [DependencyProperty<bool>("IsShowErrorDetailDialogItemEnabled")]
 public sealed partial class DownloadListEntry : IViewModelControl
 {
-    object IViewModelControl.ViewModel => ViewModel;
-
     private const ThumbnailUrlOption Option = ThumbnailUrlOption.SquareMedium;
 
-    public event TypedEventHandler<DownloadListEntry, DownloadListEntryViewModel>? OpenIllustrationRequested;
-
     public DownloadListEntry() => InitializeComponent();
+    object IViewModelControl.ViewModel => ViewModel;
+
+    public event TypedEventHandler<DownloadListEntry, DownloadListEntryViewModel>? OpenIllustrationRequested;
 
     private static void OnViewModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {

@@ -27,4 +27,4 @@ namespace Pixeval.Attributes;
 /// in other places among the app
 /// </summary>
 [AttributeUsage(AttributeTargets.Property)]
-public class SyntheticSetting : Attribute { }
+public class SyntheticSetting : Attribute {}

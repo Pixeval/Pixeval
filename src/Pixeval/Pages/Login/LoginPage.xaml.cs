@@ -97,7 +97,6 @@ public sealed partial class LoginPage
         }
     }
 
-
     private async void LoginPage_OnLoaded(object sender, RoutedEventArgs e)
     {
         try

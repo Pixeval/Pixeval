@@ -28,13 +28,17 @@ using Pixeval.Options;
 using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
+using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
 
 namespace Pixeval.Controls.IllustrationView;
 
-[DependencyProperty<IllustrationViewModel>("ViewModel")]
+[DependencyProperty<IllustrationItemViewModel>("ViewModel")]
 public sealed partial class IllustrationThumbnail : CardControl, IViewModelControl
 {
+    public IllustrationThumbnail() => InitializeComponent();
+
+    private ThumbnailUrlOption ThumbnailUrlOption => ThisRequired.Invoke().LayoutType.ToThumbnailUrlOption();
     object IViewModelControl.ViewModel => ViewModel;
 
     /// <summary>
@@ -46,42 +50,6 @@ public sealed partial class IllustrationThumbnail : CardControl, IViewModelContr
     /// 请求获取承载本控件的<see cref="IllustrationView"/>
     /// </summary>
     public event Func<IllustrationView> ThisRequired = null!;
-
-    public IllustrationThumbnail() => InitializeComponent();
-
-    // 这些方法本来用属性就可以实现，但在ViewModel更新的时候更新，使用了{x:Bind GetXXX(ViewModel)}的写法
-    // 这样可以不需要写OnPropertyChange就实现更新
-    #region XAML用的Get方法
-
-    private double GetDesiredWidth(IllustrationViewModel viewModel)
-    {
-        var illustration = viewModel.Illustrate;
-        var thumbnailUrlOption = ThisRequired.Invoke().LayoutType.ToThumbnailUrlOption();
-        var thumbnailDirection = ThisRequired.Invoke().ThumbnailDirection;
-        return thumbnailUrlOption is ThumbnailUrlOption.SquareMedium
-            ? thumbnailDirection switch
-            {
-                ThumbnailDirection.Landscape => IllustrationView.PortraitHeight,
-                ThumbnailDirection.Portrait => IllustrationView.LandscapeHeight,
-                _ => WinUI3Utilities.ThrowHelper.ArgumentOutOfRange<ThumbnailDirection, double>(thumbnailDirection)
-            }
-            : thumbnailDirection switch
-            {
-                ThumbnailDirection.Landscape => IllustrationView.LandscapeHeight * illustration.Width / illustration.Height,
-                ThumbnailDirection.Portrait => IllustrationView.PortraitHeight * illustration.Width / illustration.Height,
-                _ => WinUI3Utilities.ThrowHelper.ArgumentOutOfRange<ThumbnailDirection, double>(thumbnailDirection)
-            };
-    }
-
-#pragma warning disable IDE0060 // 删除未使用的参数
-    private double GetDesiredHeight(IllustrationViewModel viewModel) => ThisRequired.Invoke().DesiredHeight;
-#pragma warning restore IDE0060
-
-    private Visibility IsImageLoaded(IDictionary<ThumbnailUrlOption, SoftwareBitmapSource> dictionary) => dictionary.ContainsKey(ThumbnailUrlOption) ? Visibility.Collapsed : Visibility.Visible;
-
-    #endregion
-
-    private ThumbnailUrlOption ThumbnailUrlOption => ThisRequired.Invoke().LayoutType.ToThumbnailUrlOption();
 
     private async void ToggleBookmarkButtonOnTapped(object sender, TappedRoutedEventArgs e)
     {
@@ -143,4 +111,37 @@ public sealed partial class IllustrationThumbnail : CardControl, IViewModelContr
         var pixEzQrCodeSource = await UiHelper.GenerateQrCodeAsync(MakoHelper.GenerateIllustrationPixEzUri(ViewModel.Id).ToString());
         ShowQrCodeRequested?.Invoke(this, pixEzQrCodeSource);
     }
+
+    // 这些方法本来用属性就可以实现，但在ViewModel更新的时候更新，使用了{x:Bind GetXXX(ViewModel)}的写法
+    // 这样可以不需要写OnPropertyChange就实现更新
+
+    #region XAML用的Get方法
+
+    private double GetDesiredWidth(IllustrationItemViewModel viewModel)
+    {
+        var illustration = viewModel.Illustrate;
+        var thumbnailUrlOption = ThisRequired.Invoke().LayoutType.ToThumbnailUrlOption();
+        var thumbnailDirection = ThisRequired.Invoke().ThumbnailDirection;
+        return thumbnailUrlOption is ThumbnailUrlOption.SquareMedium
+            ? thumbnailDirection switch
+            {
+                ThumbnailDirection.Landscape => IllustrationView.PortraitHeight,
+                ThumbnailDirection.Portrait => IllustrationView.LandscapeHeight,
+                _ => ThrowHelper.ArgumentOutOfRange<ThumbnailDirection, double>(thumbnailDirection)
+            }
+            : thumbnailDirection switch
+            {
+                ThumbnailDirection.Landscape => IllustrationView.LandscapeHeight * illustration.Width / illustration.Height,
+                ThumbnailDirection.Portrait => IllustrationView.PortraitHeight * illustration.Width / illustration.Height,
+                _ => ThrowHelper.ArgumentOutOfRange<ThumbnailDirection, double>(thumbnailDirection)
+            };
+    }
+
+#pragma warning disable IDE0060 // 删除未使用的参数
+    private double GetDesiredHeight(IllustrationItemViewModel viewModel) => ThisRequired.Invoke().DesiredHeight;
+#pragma warning restore IDE0060
+
+    private Visibility IsImageLoaded(IDictionary<ThumbnailUrlOption, SoftwareBitmapSource> dictionary) => dictionary.ContainsKey(ThumbnailUrlOption) ? Visibility.Collapsed : Visibility.Visible;
+
+    #endregion
 }

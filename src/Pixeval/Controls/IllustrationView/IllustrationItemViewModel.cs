@@ -25,21 +25,21 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Storage.Streams;
+using Windows.UI;
 using Microsoft.UI;
+using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
+using Pixeval.Controls.Illustrate;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Model;
 using Pixeval.CoreApi.Net;
 using Pixeval.Options;
-using Pixeval.Controls.Illustrate;
 using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Utilities;
 using Pixeval.Utilities.Threading;
-using Windows.Storage.Streams;
-using Windows.UI;
-using Microsoft.UI.Xaml.Controls;
 using AppContext = Pixeval.AppManagement.AppContext;
 
 namespace Pixeval.Controls.IllustrationView;
@@ -50,7 +50,7 @@ namespace Pixeval.Controls.IllustrationView;
 ///     It is responsible for being the elements of the <see cref="ItemsRepeater" /> to present the thumbnail of an
 ///     illustration
 /// </summary>
-public class IllustrationViewModel(Illustration illustration) : IllustrateViewModel<Illustration>(illustration)
+public class IllustrationItemViewModel(Illustration illustration) : IllustrateViewModel<Illustration>(illustration)
 {
     private bool _isSelected;
 
@@ -99,21 +99,42 @@ public class IllustrationViewModel(Illustration illustration) : IllustrateViewMo
         });
     }
 
-    public event EventHandler<IllustrationViewModel>? IsSelectedChanged;
-
     public bool IsUgoira => Illustrate.IsUgoira();
+
+    public string Tooltip
+    {
+        get
+        {
+            var sb = new StringBuilder(Illustrate.Title);
+            if (Illustrate.IsUgoira())
+            {
+                _ = sb.AppendLine()
+                    .Append(MiscResources.TheIllustrationIsAnUgoira);
+            }
+
+            if (Illustrate.IsManga())
+            {
+                _ = sb.AppendLine()
+                    .Append(MiscResources.TheIllustrationIsAMangaFormatted.Format(Illustrate.PageCount));
+            }
+
+            return sb.ToString();
+        }
+    }
+
+    public event EventHandler<IllustrationItemViewModel>? IsSelectedChanged;
 
     /// <summary>
     ///     An illustration may contains multiple works and such illustrations are named "manga".
-    ///     This method attempts to get the works and wrap into <see cref="IllustrationViewModel" />
+    ///     This method attempts to get the works and wrap into <see cref="IllustrationItemViewModel" />
     /// </summary>
     /// <returns>
-    ///     A collection of a single <see cref="IllustrationViewModel" />, if the illustration is not
+    ///     A collection of a single <see cref="IllustrationItemViewModel" />, if the illustration is not
     ///     a manga, that is to say, contains only a single work.
-    ///     A collection of multiple <see cref="IllustrationViewModel" />, if the illustration is a manga
+    ///     A collection of multiple <see cref="IllustrationItemViewModel" />, if the illustration is a manga
     ///     that consist of multiple works
     /// </returns>
-    public IEnumerable<IllustrationViewModel> GetMangaIllustrationViewModels()
+    public IEnumerable<IllustrationItemViewModel> GetMangaIllustrationViewModels()
     {
         if (Illustrate.PageCount <= 1)
         {
@@ -127,11 +148,42 @@ public class IllustrationViewModel(Illustration illustration) : IllustrateViewMo
         return Illustrate.MetaPages!.Select(m => Illustrate with
         {
             ImageUrls = m.ImageUrls
-        }).Select((p, i) => new IllustrationViewModel(p)
+        }).Select((p, i) => new IllustrationItemViewModel(p)
         {
             MangaIndex = i
         });
     }
+
+    public Task SwitchBookmarkStateAsync()
+    {
+        return IsBookmarked ? RemoveBookmarkAsync() : PostPublicBookmarkAsync();
+    }
+
+    public Task RemoveBookmarkAsync()
+    {
+        IsBookmarked = false;
+        return App.AppViewModel.MakoClient.RemoveBookmarkAsync(Id);
+    }
+
+    public Task PostPublicBookmarkAsync()
+    {
+        IsBookmarked = true;
+        return App.AppViewModel.MakoClient.PostBookmarkAsync(Id, PrivacyPolicy.Public);
+    }
+
+    public string GetBookmarkContextItemText(bool isBookmarked)
+    {
+        return isBookmarked ? MiscResources.RemoveBookmark : MiscResources.AddBookmark;
+    }
+
+    public bool Equals(IllustrationItemViewModel x, IllustrationItemViewModel y)
+    {
+        return x.Illustrate.Equals(y.Illustrate);
+    }
+
+    public override bool Equals(object? obj) => obj is IllustrationItemViewModel viewModel && Illustrate.Equals(viewModel.Illustrate);
+
+    public override int GetHashCode() => Illustrate.GetHashCode();
 
     #region Thumbnail
 
@@ -275,56 +327,4 @@ public class IllustrationViewModel(Illustration illustration) : IllustrateViewMo
     }
 
     #endregion
-
-    public Task SwitchBookmarkStateAsync()
-    {
-        return IsBookmarked ? RemoveBookmarkAsync() : PostPublicBookmarkAsync();
-    }
-
-    public Task RemoveBookmarkAsync()
-    {
-        IsBookmarked = false;
-        return App.AppViewModel.MakoClient.RemoveBookmarkAsync(Id);
-    }
-
-    public Task PostPublicBookmarkAsync()
-    {
-        IsBookmarked = true;
-        return App.AppViewModel.MakoClient.PostBookmarkAsync(Id, PrivacyPolicy.Public);
-    }
-
-    public string Tooltip
-    {
-        get
-        {
-            var sb = new StringBuilder(Illustrate.Title);
-            if (Illustrate.IsUgoira())
-            {
-                _ = sb.AppendLine()
-                    .Append(MiscResources.TheIllustrationIsAnUgoira);
-            }
-
-            if (Illustrate.IsManga())
-            {
-                _ = sb.AppendLine()
-                    .Append(MiscResources.TheIllustrationIsAMangaFormatted.Format(Illustrate.PageCount));
-            }
-
-            return sb.ToString();
-        }
-    }
-
-    public string GetBookmarkContextItemText(bool isBookmarked)
-    {
-        return isBookmarked ? MiscResources.RemoveBookmark : MiscResources.AddBookmark;
-    }
-
-    public bool Equals(IllustrationViewModel x, IllustrationViewModel y)
-    {
-        return x.Illustrate.Equals(y.Illustrate);
-    }
-
-    public override bool Equals(object? obj) => obj is IllustrationViewModel viewModel && Illustrate.Equals(viewModel.Illustrate);
-
-    public override int GetHashCode() => Illustrate.GetHashCode();
 }

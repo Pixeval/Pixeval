@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <OutputType>WinExe</OutputType>
         <TargetFramework>net8.0-windows10.0.22621.0</TargetFramework>
@@ -27,12 +27,7 @@
         <NoWarn>$(NoWarn)</NoWarn>
     </PropertyGroup>
     <ItemGroup>
-      <Content Remove="Assets\Svg.resw" />
-    </ItemGroup>
-    <ItemGroup>
       <None Remove="Assets\Svg.resw" />
-      <None Remove="Controls\IllustrationImage.xaml" />
-      <None Remove="Controls\IllustrationView\IllustrationThumbnail.xaml" />
     </ItemGroup>
 
     <ItemGroup>
@@ -179,7 +174,7 @@
         <PRIResource Include="Strings\zh-Hans\FollowingUserBadge.resw" />
         <PRIResource Include="Strings\zh-Hans\IllustratorContentViewer.resw" />
         <PRIResource Include="Strings\zh-Hans\IllustratorIllustrationAndMangaBookmarkPage.resw" />
-        <PRIResource Include="Strings\zh-Hans\IllustratorProfile.resw" />
+        <PRIResource Include="Strings\zh-Hans\IllustratorItem.resw" />
         <PRIResource Include="Strings\zh-Hans\AboutPage.resw" />
         <PRIResource Include="Strings\zh-Hans\Activations.resw" />
         <PRIResource Include="Strings\zh-Hans\BookmarksPage.resw" />
@@ -205,7 +200,7 @@
         <PRIResource Include="Strings\zh-Hans\RecentPostsPage.resw" />
         <PRIResource Include="Strings\zh-Hans\RecommendationsPage.resw" />
         <PRIResource Include="Strings\zh-Hans\PixivReplyBar.resw" />
-        <PRIResource Include="Strings\zh-Hans\RecommendIllustratorProfile.resw" />
+        <PRIResource Include="Strings\zh-Hans\RecommendIllustratorItem.resw" />
         <PRIResource Include="Strings\zh-Hans\ReverseSearchApiKeyNotPresentDialog.resw" />
         <PRIResource Include="Strings\zh-Hans\SettingsPage.resw" />
         <PRIResource Include="Strings\zh-Hans\SortOptionComboBox.resw" />
@@ -355,11 +350,10 @@
         <Page Update="Pages\Capabilities\BookmarksPage.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
-        <Page Update="Controls\IllustratorView\IllustratorProfile.xaml">
-            <Generator>MSBuild:Compile</Generator>
+        <Page Update="Controls\IllustratorItem\IllustratorIllustrationsOverview.xaml">
+          <Generator>MSBuild:Compile</Generator>
         </Page>
-        <Folder Include="Controls\RecommendIllustratorProfile\" />
-        <Page Update="Controls\IllustrationImage.xaml">
+        <Page Update="Controls\IllustrationItem.xaml">
           <Generator>MSBuild:Compile</Generator>
         </Page>
         <Page Update="Controls\IllustrationView\IllustrationThumbnail.xaml">

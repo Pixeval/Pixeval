@@ -32,14 +32,39 @@ namespace Pixeval.Controls.IllustratorContentViewer;
 
 public sealed partial class IllustratorIllustrationPage : ISortedIllustrationContainerPageHelper, IIllustratorContentViewerCommandBarHostSubPage
 {
-    public IllustrationContainer ViewModelProvider => IllustrationContainer;
-
-    public SortOptionComboBox SortOptionProvider => SortOptionComboBox;
-
     public IllustratorIllustrationPage()
     {
         InitializeComponent();
     }
+
+    public void Dispose()
+    {
+        IllustrationContainer.ViewModel.Dispose();
+    }
+
+    public void PerformSearch(string keyword)
+    {
+        if (IllustrationContainer.ShowCommandBar)
+        {
+            return;
+        }
+
+        IllustrationContainer.ViewModel.DataProvider.View.Filter = keyword.IsNullOrBlank()
+            ? null
+            : o => o.Id.Contains(keyword)
+                   || (o.Illustrate.Tags ?? Enumerable.Empty<Tag>()).Any(x =>
+                       x.Name.Contains(keyword) || (x.TranslatedName?.Contains(keyword) ?? false))
+                   || (o.Illustrate.Title?.Contains(keyword) ?? false);
+    }
+
+    public void ChangeCommandBarVisibility(bool isVisible)
+    {
+        IllustrationContainer.ShowCommandBar = isVisible;
+    }
+
+    public IllustrationContainer ViewModelProvider => IllustrationContainer;
+
+    public SortOptionComboBox SortOptionProvider => SortOptionComboBox;
 
     public override void OnPageActivated(NavigationEventArgs e)
     {
@@ -66,30 +91,5 @@ public sealed partial class IllustratorIllustrationPage : ISortedIllustrationCon
     private void SortOptionComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         ((ISortedIllustrationContainerPageHelper)this).OnSortOptionChanged();
-    }
-
-    public void Dispose()
-    {
-        IllustrationContainer.ViewModel.Dispose();
-    }
-
-    public void PerformSearch(string keyword)
-    {
-        if (IllustrationContainer.ShowCommandBar)
-        {
-            return;
-        }
-
-        IllustrationContainer.ViewModel.DataProvider.View.Filter = keyword.IsNullOrBlank()
-            ? null
-            : o => o.Id.Contains(keyword)
-                   || (o.Illustrate.Tags ?? Enumerable.Empty<Tag>()).Any(x =>
-                       x.Name.Contains(keyword) || (x.TranslatedName?.Contains(keyword) ?? false))
-                   || (o.Illustrate.Title?.Contains(keyword) ?? false);
-    }
-
-    public void ChangeCommandBarVisibility(bool isVisible)
-    {
-        IllustrationContainer.ShowCommandBar = isVisible;
     }
 }

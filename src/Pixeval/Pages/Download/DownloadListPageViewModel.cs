@@ -53,13 +53,13 @@ public partial class DownloadListPageViewModel : IllustrateViewViewModel<Illustr
     [ObservableProperty]
     private string _selectionLabel;
 
-    public sealed override IDataProvider<Illustration, DownloadListEntryViewModel> DataProvider { get; } = new DownloadListEntryDataProvider();
-
     public DownloadListPageViewModel(IEnumerable<ObservableDownloadTask> source)
     {
         DataProvider.To<DownloadListEntryDataProvider>().ResetEngine(source);
         _selectionLabel = DownloadListPageResources.CancelSelectionButtonDefaultLabel;
     }
+
+    public sealed override IDataProvider<Illustration, DownloadListEntryViewModel> DataProvider { get; } = new DownloadListEntryDataProvider();
 
     public IEnumerable<DownloadListEntryViewModel> SelectedTasks => DataProvider.View.Where(x => x.DownloadTask.Selected);
 

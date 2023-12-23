@@ -24,16 +24,16 @@ using System.IO;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using Windows.Storage;
+using Windows.Storage.Pickers;
+using Windows.Storage.Streams;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IO;
+using Pixeval.Controls.IllustrationView;
 using Pixeval.Download;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using Pixeval.Utilities.Threading;
-using Windows.Storage;
-using Windows.Storage.Pickers;
-using Windows.Storage.Streams;
-using Pixeval.Controls.IllustrationView;
 
 namespace Pixeval.Util.IO;
 
@@ -156,10 +156,10 @@ public static partial class IoHelper
         }
     }
 
-    public static async Task SaveAsync(this IllustrationViewModel viewModel)
+    public static async Task SaveAsync(this IllustrationItemViewModel viewModel)
     {
         using var scope = App.AppViewModel.AppServicesScope;
-        var factory = scope.ServiceProvider.GetRequiredService<IDownloadTaskFactory<IllustrationViewModel, ObservableDownloadTask>>();
+        var factory = scope.ServiceProvider.GetRequiredService<IDownloadTaskFactory<IllustrationItemViewModel, ObservableDownloadTask>>();
         foreach (var mangaIllustrationViewModel in viewModel.GetMangaIllustrationViewModels())
         {
             var downloadTask = await factory.CreateAsync(mangaIllustrationViewModel, App.AppViewModel.AppSetting.DefaultDownloadPathMacro);
@@ -167,14 +167,14 @@ public static partial class IoHelper
         }
     }
 
-    public static async Task SaveAsAsync(this IllustrationViewModel viewModel)
+    public static async Task SaveAsAsync(this IllustrationItemViewModel viewModel)
     {
         IStorageItem? item = viewModel.IsManga
             ? await UiHelper.OpenFolderPickerAsync(PickerLocationId.PicturesLibrary)
             : await UiHelper.OpenFileSavePickerAsync(viewModel.Id, $"{viewModel.Illustrate.GetImageFormat().RemoveSurrounding(".", string.Empty)} file", viewModel.Illustrate.GetImageFormat());
 
         using var scope = App.AppViewModel.AppServicesScope;
-        var factory = scope.ServiceProvider.GetRequiredService<IDownloadTaskFactory<IllustrationViewModel, ObservableDownloadTask>>();
+        var factory = scope.ServiceProvider.GetRequiredService<IDownloadTaskFactory<IllustrationItemViewModel, ObservableDownloadTask>>();
         switch (item)
         {
             case StorageFile file:

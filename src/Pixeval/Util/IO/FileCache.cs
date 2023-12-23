@@ -29,10 +29,11 @@ using System.Text;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using CommunityToolkit.Diagnostics;
-using Pixeval.Utilities;
 using Windows.Storage;
 using Windows.Storage.Streams;
+using CommunityToolkit.Diagnostics;
+using Pixeval.Utilities;
+using ThrowHelper = WinUI3Utilities.ThrowHelper;
 
 namespace Pixeval.Util.IO;
 
@@ -128,18 +129,18 @@ public class FileCache
     /// <param name="data">Data object to store</param>
     /// <param name="expireIn">Time from UtcNow to expire entry in</param>
     /// <param name="eTag">Optional eTag information</param>
-    public async Task AddAsync(object key, object data, TimeSpan expireIn, string? eTag = null)
+    public Task AddAsync(object key, object data, TimeSpan expireIn, string? eTag = null)
     {
         Guard.IsNotNull(key, nameof(key));
         Guard.IsNotNullOrEmpty(key as string, nameof(key));
         Guard.IsNotNull(data, nameof(data));
 
-        await AddAsync(key switch
+        return AddAsync(key switch
         {
             Guid g => g,
             string s => Guid.Parse(s),
             _ when _supportedKeyTypes.Contains(key.GetType()) => HashToGuid(key),
-            _ => WinUI3Utilities.ThrowHelper.ArgumentOutOfRange<object, object>(key)
+            _ => ThrowHelper.ArgumentOutOfRange<object, object>(key)
         }, data, expireIn, eTag);
     }
 
@@ -184,7 +185,7 @@ public class FileCache
             var k when arrElementType == typeof(Guid) => EmptyAsync(k.Cast<Guid>()),
             string[] arr => EmptyAsync(arr),
             var k when _supportedKeyTypes.Contains(arrElementType) => EmptyAsync(k.Select(HashToGuid)),
-            _ => WinUI3Utilities.ThrowHelper.Argument<object, Task>(@$"The element type of keys '{keys.GetType().GetElementType()} is not supported.'")
+            _ => ThrowHelper.Argument<object, Task>(@$"The element type of keys '{keys.GetType().GetElementType()} is not supported.'")
         };
     }
 
@@ -193,9 +194,9 @@ public class FileCache
     ///     Throws an exception if any deletions fail and rolls back changes.
     /// </summary>
     /// <param name="keys">keys to empty</param>
-    public async Task EmptyAsync(params string[] keys)
+    public Task EmptyAsync(params string[] keys)
     {
-        await EmptyAsync(keys.Select(HashToGuid));
+        return EmptyAsync(keys.Select(HashToGuid));
     }
 
     /// <summary>
@@ -286,7 +287,7 @@ public class FileCache
             Guid g => ExistsAsync(g),
             string s => ExistsAsync(s),
             var k when _supportedKeyTypes.Contains(k.GetType()) => ExistsAsync(HashToGuid(k)),
-            _ => WinUI3Utilities.ThrowHelper.Argument<object, Task<bool>>($"The type of key '{key.GetType()} is not supported.'")
+            _ => ThrowHelper.Argument<object, Task<bool>>($"The type of key '{key.GetType()} is not supported.'")
         };
     }
 
@@ -362,7 +363,7 @@ public class FileCache
             Guid g => GetAsync<T>(g),
             string s => GetAsync<T>(s),
             _ when _supportedKeyTypes.Contains(key.GetType()) => GetAsync<T>(HashToGuid(key)),
-            _ => WinUI3Utilities.ThrowHelper.Argument<object, Task<T>>($"The type of key '{key.GetType()} is not supported.'")
+            _ => ThrowHelper.Argument<object, Task<T>>($"The type of key '{key.GetType()} is not supported.'")
         };
     }
 
@@ -421,7 +422,7 @@ public class FileCache
             Guid g => GetExpirationAsync(g),
             string s => GetExpirationAsync(s),
             _ when _supportedKeyTypes.Contains(key.GetType()) => GetExpirationAsync(HashToGuid(key)),
-            _ => WinUI3Utilities.ThrowHelper.Argument<object, Task<DateTimeOffset?>>($"The type of key '{key.GetType()} is not supported.'")
+            _ => ThrowHelper.Argument<object, Task<DateTimeOffset?>>($"The type of key '{key.GetType()} is not supported.'")
         };
     }
 
@@ -469,7 +470,7 @@ public class FileCache
             Guid g => GetETagAsync(g),
             string s => GetETagAsync(s),
             var k when _supportedKeyTypes.Contains(k.GetType()) => GetETagAsync(HashToGuid(k)),
-            _ => WinUI3Utilities.ThrowHelper.Argument<object, Task<string?>>($"The type of key '{key.GetType()} is not supported.'")
+            _ => ThrowHelper.Argument<object, Task<string?>>($"The type of key '{key.GetType()} is not supported.'")
         };
     }
 
@@ -517,7 +518,7 @@ public class FileCache
             Guid g => IsExpiredAsync(g),
             string s => IsExpiredAsync(s),
             var k when _supportedKeyTypes.Contains(k.GetType()) => IsExpiredAsync(HashToGuid(key)),
-            _ => WinUI3Utilities.ThrowHelper.Argument<object, Task<bool>>($"The type of key '{key.GetType()} is not supported.'")
+            _ => ThrowHelper.Argument<object, Task<bool>>($"The type of key '{key.GetType()} is not supported.'")
         };
     }
 
@@ -597,7 +598,7 @@ public class FileCache
                 Unsafe.WriteUnaligned(ref MemoryMarshal.GetReference(span), number);
                 return new Guid(HashAndTruncateTo128Bit(span));
             }),
-            _ => WinUI3Utilities.ThrowHelper.Argument<object, Guid>($"The input type '{input.GetType()}' is not supported.")
+            _ => ThrowHelper.Argument<object, Guid>($"The input type '{input.GetType()}' is not supported.")
         };
 
         static byte[] HashAndTruncateTo128Bit(ReadOnlySpan<byte> span) => SHA256.HashData(span)[..16];

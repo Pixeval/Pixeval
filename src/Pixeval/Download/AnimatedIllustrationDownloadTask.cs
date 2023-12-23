@@ -20,22 +20,22 @@
 
 using System.IO;
 using System.Threading.Tasks;
+using Windows.Storage.Streams;
+using Pixeval.Controls.IllustrationView;
 using Pixeval.CoreApi.Net.Response;
 using Pixeval.Database;
 using Pixeval.Util.IO;
-using Windows.Storage.Streams;
-using Pixeval.Controls.IllustrationView;
 
 namespace Pixeval.Download;
 
 public class AnimatedIllustrationDownloadTask : ObservableDownloadTask, ICustomBehaviorDownloadTask, IIllustrationViewModelProvider
 {
-    private readonly IllustrationViewModel _illustration;
+    private readonly IllustrationItemViewModel _illustration;
     private readonly UgoiraMetadataResponse _metadata;
 
     public AnimatedIllustrationDownloadTask(
         DownloadHistoryEntry databaseEntry,
-        IllustrationViewModel illustration,
+        IllustrationItemViewModel illustration,
         UgoiraMetadataResponse metadata) : base(databaseEntry)
     {
         _illustration = illustration;
@@ -64,7 +64,7 @@ public class AnimatedIllustrationDownloadTask : ObservableDownloadTask, ICustomB
         }
     }
 
-    public virtual Task<IllustrationViewModel> GetViewModelAsync()
+    public virtual Task<IllustrationItemViewModel> GetViewModelAsync()
     {
         return Task.FromResult(_illustration);
     }

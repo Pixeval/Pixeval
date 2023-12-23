@@ -22,6 +22,7 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.Playwright;
 using Pixeval.Pages.Login;
+using WinUI3Utilities;
 
 namespace Pixeval.Util;
 
@@ -37,20 +38,6 @@ public class PlayWrightHelper(AvailableBrowserType type, int remoteDebuggingPort
 
     private int RemoteDebuggingPort { get; } = remoteDebuggingPort;
 
-    public async Task Initialize()
-    {
-        Pw = await Playwright.CreateAsync();
-        Browser = await (Type switch
-        {
-            AvailableBrowserType.Chrome or AvailableBrowserType.Edge or AvailableBrowserType.WebView2 => Pw.Chromium,
-            AvailableBrowserType.Firefox => Pw.Firefox,
-            _ => WinUI3Utilities.ThrowHelper.ArgumentOutOfRange<AvailableBrowserType, IBrowserType>(Type)
-        }).ConnectOverCDPAsync($"http://localhost:{RemoteDebuggingPort}");
-        Page = Type is AvailableBrowserType.WebView2
-            ? Browser.Contexts[0].Pages[0]
-            : await Browser.Contexts[0].NewPageAsync();
-    }
-
     public async ValueTask DisposeAsync()
     {
         if (Browser == null!)
@@ -60,5 +47,19 @@ public class PlayWrightHelper(AvailableBrowserType type, int remoteDebuggingPort
         Browser = null!;
         Pw.Dispose();
         GC.Collect();
+    }
+
+    public async Task Initialize()
+    {
+        Pw = await Playwright.CreateAsync();
+        Browser = await (Type switch
+        {
+            AvailableBrowserType.Chrome or AvailableBrowserType.Edge or AvailableBrowserType.WebView2 => Pw.Chromium,
+            AvailableBrowserType.Firefox => Pw.Firefox,
+            _ => ThrowHelper.ArgumentOutOfRange<AvailableBrowserType, IBrowserType>(Type)
+        }).ConnectOverCDPAsync($"http://localhost:{RemoteDebuggingPort}");
+        Page = Type is AvailableBrowserType.WebView2
+            ? Browser.Contexts[0].Pages[0]
+            : await Browser.Contexts[0].NewPageAsync();
     }
 }

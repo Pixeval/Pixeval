@@ -19,27 +19,31 @@
 #endregion
 
 using System;
-using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Controls;
+using Pixeval.Controls.IllustratorView;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.Messages;
 using Pixeval.Pages.Misc;
-using Pixeval.Controls.IllustratorView;
 using Pixeval.Util;
+using Pixeval.Util.UI;
+using WinUI3Utilities;
 
 namespace Pixeval.Pages.Capability;
 
 public sealed partial class FollowingsPage
 {
+    private readonly SolidColorBrush _backgroundBrush;
     private readonly IllustratorViewViewModel _viewModel = new();
 
     public FollowingsPage()
     {
         InitializeComponent();
+        _backgroundBrush = Resources["SystemControlBackgroundChromeMediumLowBrush"].To<SolidColorBrush>().WithAlpha(64);
     }
 
     public FrameworkElement SelfIllustratorView => this;
@@ -60,17 +64,12 @@ public sealed partial class FollowingsPage
         _viewModel.ResetEngine(App.AppViewModel.MakoClient.Following(App.AppViewModel.PixivUid!, PrivacyPolicy.Public));
     }
 
-    private TeachingTip IllustratorProfileOnRequestTeachingTip() => FollowingsPageTeachingTip;
+    private TeachingTip IllustratorItemOnRequestTeachingTip() => FollowingsPageTeachingTip;
 
     private void IllustratorItemsView_OnSelectionChanged(ItemsView sender, ItemsViewSelectionChangedEventArgs e)
     {
-        if (IllustratorItemsView.SelectedItem is IllustratorViewModel viewModel)
+        if (IllustratorItemsView.SelectedItem is IllustratorItemViewModel viewModel)
             _ = IllustratorContentViewerFrame.Navigate(typeof(IllustratorContentViewerPage), viewModel);
-    }
-
-    private async Task IllustratorItemsView_OnLoadMoreRequested(AdvancedItemsView sender, EventArgs e)
-    {
-        await _viewModel.LoadMoreAsync(20);
     }
 
     private void FollowingsPage_OnSizeChanged(object sender, SizeChangedEventArgs e)

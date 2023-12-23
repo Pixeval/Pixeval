@@ -29,15 +29,15 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
 using Pixeval.AppManagement;
 using Pixeval.Attributes;
+using Pixeval.Controls.IllustrationView;
+using Pixeval.Controls.TokenInput;
 using Pixeval.Database.Managers;
 using Pixeval.Download;
 using Pixeval.Download.MacroParser;
 using Pixeval.Misc;
-using Pixeval.Controls.TokenInput;
+using Pixeval.SettingsModels;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
-using Pixeval.Controls.IllustrationView;
-using Pixeval.SettingsModels;
 
 namespace Pixeval.Pages.Misc;
 
@@ -50,12 +50,17 @@ public partial class SettingsPageViewModel(AppSetting appSetting) : ObservableOb
 
     private readonly AppSetting _appSetting = appSetting;
 
+    /// <summary>
+    /// 写成字段防止被反射
+    /// </summary>
+    public TeachingTip SettingsTeachingTip = null!;
+
     static SettingsPageViewModel()
     {
         using var scope = App.AppViewModel.AppServicesScope;
-        var factory = scope.ServiceProvider.GetRequiredService<IDownloadTaskFactory<IllustrationViewModel, ObservableDownloadTask>>();
+        var factory = scope.ServiceProvider.GetRequiredService<IDownloadTaskFactory<IllustrationItemViewModel, ObservableDownloadTask>>();
         AvailableIllustMacros = factory.PathParser.MacroProvider.AvailableMacros
-            .Select(m => $"@{{{(m is IMacro<IllustrationViewModel>.IPredicate ? $"{m.Name}:" : m.Name)}}}")
+            .Select(m => $"@{{{(m is IMacro<IllustrationItemViewModel>.IPredicate ? $"{m.Name}:" : m.Name)}}}")
             .Select(s => new Token(s, false, false))
             .ToList();
     }
@@ -122,9 +127,4 @@ public partial class SettingsPageViewModel(AppSetting appSetting) : ObservableOb
             _ => ThrowHelper.ArgumentOutOfRange<ClearDataKind, string>(kind)
         });
     }
-
-    /// <summary>
-    /// 写成字段防止被反射
-    /// </summary>
-    public TeachingTip SettingsTeachingTip = null!;
 }

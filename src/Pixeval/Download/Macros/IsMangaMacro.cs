@@ -18,18 +18,18 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using Pixeval.Controls.IllustrationView;
 using Pixeval.Download.MacroParser;
 using Pixeval.Util;
-using Pixeval.Controls.IllustrationView;
 
 namespace Pixeval.Download.Macros;
 
-[MetaPathMacro(typeof(IllustrationViewModel))]
-public class IsMangaMacro : IMacro<IllustrationViewModel>.IPredicate
+[MetaPathMacro(typeof(IllustrationItemViewModel))]
+public class IsMangaMacro : IMacro<IllustrationItemViewModel>.IPredicate
 {
     public string Name => "if_manga";
 
-    public bool Match(IllustrationViewModel context)
+    public bool Match(IllustrationItemViewModel context)
     {
         return context.Illustrate.IsManga();
     }

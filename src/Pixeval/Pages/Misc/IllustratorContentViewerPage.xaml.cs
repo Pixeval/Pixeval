@@ -34,17 +34,17 @@ public sealed partial class IllustratorContentViewerPage : IDisposable
         InitializeComponent();
     }
 
+    public void Dispose()
+    {
+        IllustratorContentViewer.Dispose();
+    }
+
     public override async void OnPageActivated(NavigationEventArgs e)
     {
-        if (e.Parameter is IllustratorViewModel viewModel)
+        if (e.Parameter is IllustratorItemViewModel viewModel)
         {
             _illustratorContentViewerViewModel = new IllustratorContentViewerViewModel(viewModel.UserDetail ?? await App.AppViewModel.MakoClient.GetUserFromIdAsync(viewModel.UserId!, App.AppViewModel.AppSetting.TargetFilter));
             IllustratorContentViewer.ViewModel = _illustratorContentViewerViewModel;
         }
-    }
-
-    public void Dispose()
-    {
-        IllustratorContentViewer.Dispose();
     }
 }

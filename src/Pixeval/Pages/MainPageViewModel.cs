@@ -25,13 +25,13 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml.Media;
+using Pixeval.Controls.IllustrationView;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Net;
 using Pixeval.Messages;
 using Pixeval.Misc;
 using Pixeval.Pages.Capability;
 using Pixeval.Pages.Misc;
-using Pixeval.Controls.IllustrationView;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using WinUI3Utilities;
@@ -103,7 +103,7 @@ public partial class MainPageViewModel : AutoActivateObservableRecipient, IRecip
                     case 0:
                         if (result.Results?.FirstOrDefault() is { Header.IndexId: 5 or 6 } first)
                         {
-                            var viewModels = new IllustrationViewModel(await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(first.Data!.PixivId.ToString()))
+                            var viewModels = new IllustrationItemViewModel(await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(first.Data!.PixivId.ToString()))
                                 .GetMangaIllustrationViewModels()
                                 .ToArray();
                             // window.HideProgressRing();

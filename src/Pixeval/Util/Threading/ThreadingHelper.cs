@@ -21,9 +21,9 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Windows.Foundation;
 using CommunityToolkit.WinUI;
 using Microsoft.UI.Dispatching;
-using Windows.Foundation;
 using WinUI3Utilities;
 
 namespace Pixeval.Util.Threading;

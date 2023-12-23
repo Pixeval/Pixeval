@@ -22,8 +22,8 @@ using System;
 using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Pixeval.Attributes;
-using Pixeval.Misc;
 using Pixeval.Controls.TokenInput;
+using Pixeval.Misc;
 
 namespace Pixeval.Flyouts.IllustrationResultFilter;
 

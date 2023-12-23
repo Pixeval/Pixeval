@@ -27,6 +27,7 @@ using System.Net.NetworkInformation;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using System.Web;
+using Windows.System;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Playwright;
 using Microsoft.UI.Xaml;
@@ -39,12 +40,11 @@ using Pixeval.CoreApi.Model;
 using Pixeval.CoreApi.Net;
 using Pixeval.CoreApi.Preference;
 using Pixeval.Misc;
+using Pixeval.Options;
 using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
-using Windows.System;
-using Pixeval.Options;
 using WinUI3Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
 
@@ -79,13 +79,13 @@ public partial class LoginPageViewModel : AutoActivateObservableRecipient
         SuccessNavigating
     }
 
+    [ObservableProperty] private bool _isFinished = true;
+
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(ShowProcessingRing))]
     private LoginPhaseEnum _loginPhase;
 
     [ObservableProperty] private WebView2? _webView;
-
-    [ObservableProperty] private bool _isFinished = true;
 
     public LoginProxyOption LoginProxyOption
     {
@@ -328,7 +328,7 @@ public partial class LoginPageViewModel : AutoActivateObservableRecipient
         {
             _ = await page.GotoAsync(PixivAuthSignature.GenerateWebPageUrl(verifier));
         }
-        catch (PlaywrightException e)
+        catch (PlaywrightException)
         {
             // 可能还没加载完页面就登录成功跳转了，导致异常
             // if (!IsFinished)

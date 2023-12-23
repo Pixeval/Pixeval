@@ -36,6 +36,9 @@ namespace Pixeval.Pages;
 
 public class SuggestionStateMachine
 {
+    private static readonly TreeSearcher<SettingEntry> _settingEntriesTreeSearcher =
+        new(SearcherLogic.Contain, PinIn.CreateDefault());
+
     private readonly Lazy<Task<IEnumerable<SuggestionModel>>> _illustrationTrendingTagCache =
         new(
             () => App.AppViewModel.MakoClient.GetTrendingTagsAsync(App.AppViewModel.AppSetting.TargetFilter)
@@ -50,11 +53,6 @@ public class SuggestionStateMachine
                 .SelectAsync(t => new Tag(t.Tag!, t.Translation))
                 .SelectAsync(SuggestionModel.FromTag), LazyThreadSafetyMode.ExecutionAndPublication);
 
-    private static readonly TreeSearcher<SettingEntry> _settingEntriesTreeSearcher =
-        new(SearcherLogic.Contain, PinIn.CreateDefault());
-
-    public ObservableCollection<SuggestionModel> Suggestions { get; } = [];
-
     static SuggestionStateMachine()
     {
         foreach (var settingsEntry in SettingEntry.LazyValues.Value)
@@ -62,6 +60,8 @@ public class SuggestionStateMachine
             _settingEntriesTreeSearcher.Put(settingsEntry.GetLocalizedResourceContent()!, settingsEntry);
         }
     }
+
+    public ObservableCollection<SuggestionModel> Suggestions { get; } = [];
 
     public Task UpdateAsync(string keyword)
     {

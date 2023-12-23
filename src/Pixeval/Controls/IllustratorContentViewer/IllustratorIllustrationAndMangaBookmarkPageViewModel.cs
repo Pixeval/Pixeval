@@ -34,16 +34,21 @@ namespace Pixeval.Controls.IllustratorContentViewer;
 
 public class IllustratorIllustrationAndMangaBookmarkPageViewModel : ObservableObject, IDisposable
 {
-    private readonly ConcurrentDictionary<string, HashSet<string>> _bookmarkTagIllustrationIdDictionary =
-        new();
-
     public static readonly CountedTag EmptyCountedTag =
         new(new Tag(IllustratorIllustrationAndMangaBookmarkPageResources.EmptyCountedTagName, string.Empty),
             0);
 
     private readonly CancellationTokenSource _bookmarksIdLoadingCancellationTokenSource = new();
 
+    private readonly ConcurrentDictionary<string, HashSet<string>> _bookmarkTagIllustrationIdDictionary =
+        new();
+
     public ObservableCollection<CountedTag> UserBookmarkTags { get; } = [];
+
+    public void Dispose()
+    {
+        _bookmarksIdLoadingCancellationTokenSource.Cancel();
+    }
 
     public event EventHandler<string>? TagBookmarksIncrementallyLoaded;
 
@@ -103,10 +108,5 @@ public class IllustratorIllustrationAndMangaBookmarkPageViewModel : ObservableOb
     public static string GetCountedTagDisplayText(CountedTag tag)
     {
         return ReferenceEquals(tag, EmptyCountedTag) ? tag.Tag.Name : $"#{(tag.Tag.TranslatedName is { Length: > 0 } str ? str : tag.Tag.Name)} ({tag.Count})";
-    }
-
-    public void Dispose()
-    {
-        _bookmarksIdLoadingCancellationTokenSource.Cancel();
     }
 }

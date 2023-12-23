@@ -27,11 +27,11 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
+using Windows.Storage.Streams;
 using Pixeval.Util.IO;
 using Pixeval.Util.Threading;
 using Pixeval.Utilities;
 using Pixeval.Utilities.Threading;
-using Windows.Storage.Streams;
 
 namespace Pixeval.Download;
 

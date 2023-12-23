@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -22,7 +22,7 @@ using System;
 
 namespace Pixeval.Util;
 
-public static class ThrowHelper
+public static class ThrowUtils
 {
     public static void ThrowException<TException>(params object[] parameters) where TException : Exception
     {

@@ -18,8 +18,8 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System.Collections.Generic;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Pixeval.Attributes;
 using Pixeval.Controls;

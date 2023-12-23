@@ -21,11 +21,11 @@
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
+using Pixeval.Controls;
 using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Model;
 using Pixeval.Messages;
 using Pixeval.Misc;
-using Pixeval.Controls;
 using Pixeval.Util;
 
 namespace Pixeval.Pages.Capability;

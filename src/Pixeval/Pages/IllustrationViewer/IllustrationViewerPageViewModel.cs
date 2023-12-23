@@ -23,6 +23,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Windows.System;
+using Windows.System.UserProfile;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
@@ -31,20 +33,18 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.AppManagement;
+using Pixeval.Controls;
+using Pixeval.Controls.IllustrationView;
+using Pixeval.Controls.MarkupExtensions;
 using Pixeval.CoreApi.Model;
 using Pixeval.Download;
-using Pixeval.Controls.IllustrationView;
-using Pixeval.Util;
-using Pixeval.Util.IO;
-using Pixeval.Util.UI;
-using Pixeval.Utilities;
-using Windows.System;
-using Windows.System.UserProfile;
-using Pixeval.Controls;
-using Pixeval.Controls.MarkupExtensions;
 using Pixeval.Misc;
 using Pixeval.Options;
+using Pixeval.Util;
+using Pixeval.Util.IO;
 using Pixeval.Util.Threading;
+using Pixeval.Util.UI;
+using Pixeval.Utilities;
 using WinUI3Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
 
@@ -58,13 +58,7 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
 
     private const ThumbnailUrlOption Option = ThumbnailUrlOption.SquareMedium;
 
-    #region Tags for IllustrationInfoAndCommentsNavigationView
-
-    public NavigationViewTag RelatedWorksTag = new(typeof(RelatedWorksPage), null);
-    public NavigationViewTag IllustrationInfoTag = new(typeof(IllustrationInfoPage), null);
-    public NavigationViewTag CommentsTag = new(typeof(CommentsPage), null);
-
-    #endregion
+    private bool _isFullScreen;
 
     [ObservableProperty]
     private bool _isInfoPaneOpen;
@@ -79,13 +73,46 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
     [ObservableProperty]
     private ImageSource? _userProfileImageSource;
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="illustrationViewModels"></param>
+    /// <param name="currentIllustrationIndex"></param>
+    public IllustrationViewerPageViewModel(IEnumerable<IllustrationItemViewModel> illustrationViewModels, int currentIllustrationIndex)
+    {
+        IllustrationsSource = illustrationViewModels.ToArray();
+        IllustrationInfoTag.Parameter = this;
+        // ViewModel.DataProvider.View.CurrentItem为null，而且只设置这个属性会导致空引用
+        CurrentIllustrationIndex = currentIllustrationIndex;
+
+        InitializeCommands();
+    }
+
+    /// <summary>
+    /// 当拥有DataProvider的时候调用这个构造函数，dispose的时候会自动dispose掉DataProvider
+    /// </summary>
+    /// <param name="viewModel"></param>
+    /// <param name="currentIllustrationIndex"></param>
+    /// <remarks>
+    /// illustrations should contains only one item if the illustration is a single
+    /// otherwise it contains the entire manga data
+    /// </remarks>
+    public IllustrationViewerPageViewModel(IllustrationViewViewModel viewModel, int currentIllustrationIndex)
+    {
+        ViewModelSource = new IllustrationViewViewModel(viewModel);
+        IllustrationInfoTag.Parameter = this;
+        ViewModelSource.DataProvider.View.FilterChanged += (_, _) => CurrentIllustrationIndex = Illustrations.IndexOf(CurrentIllustration);
+        // ViewModel.DataProvider.View.CurrentItem为null，而且只设置这个属性会导致空引用
+        CurrentIllustrationIndex = currentIllustrationIndex;
+
+        InitializeCommands();
+    }
+
     public TeachingTip SnackBarTeachingTip { get; set; } = null!;
 
     public TeachingTip GenerateLinkTeachingTip { get; set; } = null!;
 
     public TeachingTip ShowQrCodeTeachingTip { get; set; } = null!;
-
-    private bool _isFullScreen;
 
     public bool IsFullScreen
     {
@@ -109,22 +136,73 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
         }
     }
 
+    private IllustrationViewViewModel? ViewModelSource { get; }
+
+    public IllustrationItemViewModel[]? IllustrationsSource { get; }
+
+    public string IllustrationId => CurrentIllustration.Illustrate.Id.ToString();
+
+    public UserInfo? Illustrator => CurrentIllustration.Illustrate.User;
+
+    public string? IllustratorName => Illustrator?.Name;
+
+    public string? IllustratorUid => Illustrator?.Id.ToString();
+
+    public bool IsManga => _pages.Length > 1;
+
+    public bool IsUgoira => CurrentIllustration.IsUgoira;
+
+    public void Dispose()
+    {
+        foreach (var illustrationViewModel in Illustrations)
+            illustrationViewModel.UnloadThumbnail(this, Option);
+        _pages?.ForEach(i => i.Dispose());
+        (UserProfileImageSource as SoftwareBitmapSource)?.Dispose();
+        ViewModelSource?.Dispose();
+    }
+
+    public ImageViewerPageViewModel NextPage()
+    {
+        ++CurrentPageIndex;
+        return CurrentImage;
+    }
+
+    public ImageViewerPageViewModel PrevPage()
+    {
+        --CurrentPageIndex;
+        return CurrentImage;
+    }
+
+    public Task LoadMoreAsync(uint count) => ViewModelSource?.LoadMoreAsync(count) ?? Task.CompletedTask;
+
+    public Task PostPublicBookmarkAsync() => CurrentIllustration.PostPublicBookmarkAsync();
+
+    public Task RemoveBookmarkAsync() => CurrentIllustration.RemoveBookmarkAsync();
+
+    #region Tags for IllustrationInfoAndCommentsNavigationView
+
+    public NavigationViewTag RelatedWorksTag = new(typeof(RelatedWorksPage), null);
+    public NavigationViewTag IllustrationInfoTag = new(typeof(IllustrationInfoPage), null);
+    public NavigationViewTag CommentsTag = new(typeof(CommentsPage), null);
+
+    #endregion
+
     #region Current相关
 
     /// <summary>
     /// 插画列表
     /// </summary>
-    public IList<IllustrationViewModel> Illustrations => ViewModelSource?.DataProvider.View ?? (IList<IllustrationViewModel>)IllustrationsSource!;
+    public IList<IllustrationItemViewModel> Illustrations => ViewModelSource?.DataProvider.View ?? (IList<IllustrationItemViewModel>)IllustrationsSource!;
 
     /// <summary>
     /// 当前插画
     /// </summary>
-    public IllustrationViewModel CurrentIllustration => Illustrations[CurrentIllustrationIndex];
+    public IllustrationItemViewModel CurrentIllustration => Illustrations[CurrentIllustrationIndex];
 
     /// <summary>
     /// 当前插画的页面
     /// </summary>
-    public IllustrationViewModel CurrentPage => _pages[CurrentPageIndex];
+    public IllustrationItemViewModel CurrentPage => _pages[CurrentPageIndex];
 
     /// <summary>
     /// 当前插画的索引
@@ -145,10 +223,10 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
             _pages?.ForEach(i => i.Dispose());
             _pages = CurrentIllustration.Illustrate.PageCount <= 1
             // 保证_pages里所有的IllustrationViewModel都是生成的，从而删除的时候一律DisposeForce
-                ? new[] { new IllustrationViewModel(CurrentIllustration.Illustrate) }
+                ? new[] { new IllustrationItemViewModel(CurrentIllustration.Illustrate) }
                 : CurrentIllustration.Illustrate.MetaPages!
                     .Select((m, i) =>
-                        new IllustrationViewModel(CurrentIllustration.Illustrate with { ImageUrls = m.ImageUrls })
+                        new IllustrationItemViewModel(CurrentIllustration.Illustrate with { ImageUrls = m.ImageUrls })
                         {
                             MangaIndex = i
                         }).ToArray();
@@ -202,7 +280,7 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
     /// <summary>
     /// 一个插画所有的页面
     /// </summary>
-    private IllustrationViewModel[] _pages = null!;
+    private IllustrationItemViewModel[] _pages = null!;
 
     /// <summary>
     /// 当前图片的ViewModel
@@ -211,59 +289,6 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
     private ImageViewerPageViewModel _currentImage = null!;
 
     #endregion
-
-    private IllustrationViewViewModel? ViewModelSource { get; }
-
-    public IllustrationViewModel[]? IllustrationsSource { get; }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="illustrationViewModels"></param>
-    /// <param name="currentIllustrationIndex"></param>
-    public IllustrationViewerPageViewModel(IEnumerable<IllustrationViewModel> illustrationViewModels, int currentIllustrationIndex)
-    {
-        IllustrationsSource = illustrationViewModels.ToArray();
-        IllustrationInfoTag.Parameter = this;
-        // ViewModel.DataProvider.View.CurrentItem为null，而且只设置这个属性会导致空引用
-        CurrentIllustrationIndex = currentIllustrationIndex;
-
-        InitializeCommands();
-    }
-
-    /// <summary>
-    /// 当拥有DataProvider的时候调用这个构造函数，dispose的时候会自动dispose掉DataProvider
-    /// </summary>
-    /// <param name="viewModel"></param>
-    /// <param name="currentIllustrationIndex"></param>
-    /// <remarks>
-    /// illustrations should contains only one item if the illustration is a single
-    /// otherwise it contains the entire manga data
-    /// </remarks>
-    public IllustrationViewerPageViewModel(IllustrationViewViewModel viewModel, int currentIllustrationIndex)
-    {
-        ViewModelSource = new IllustrationViewViewModel(viewModel);
-        IllustrationInfoTag.Parameter = this;
-        ViewModelSource.DataProvider.View.FilterChanged += (_, _) => CurrentIllustrationIndex = Illustrations.IndexOf(CurrentIllustration);
-        // ViewModel.DataProvider.View.CurrentItem为null，而且只设置这个属性会导致空引用
-        CurrentIllustrationIndex = currentIllustrationIndex;
-
-        InitializeCommands();
-    }
-
-    public ImageViewerPageViewModel NextPage()
-    {
-        ++CurrentPageIndex;
-        return CurrentImage;
-    }
-
-    public ImageViewerPageViewModel PrevPage()
-    {
-        --CurrentPageIndex;
-        return CurrentImage;
-    }
-
-    public Task LoadMoreAsync(uint count) => ViewModelSource?.LoadMoreAsync(count) ?? Task.CompletedTask;
 
     #region Helper Functions
 
@@ -322,22 +347,6 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
     }
 
     #endregion
-
-    public Task PostPublicBookmarkAsync() => CurrentIllustration.PostPublicBookmarkAsync();
-
-    public Task RemoveBookmarkAsync() => CurrentIllustration.RemoveBookmarkAsync();
-
-    public string IllustrationId => CurrentIllustration.Illustrate.Id.ToString();
-
-    public UserInfo? Illustrator => CurrentIllustration.Illustrate.User;
-
-    public string? IllustratorName => Illustrator?.Name;
-
-    public string? IllustratorUid => Illustrator?.Id.ToString();
-
-    public bool IsManga => _pages.Length > 1;
-
-    public bool IsUgoira => CurrentIllustration.IsUgoira;
 
     #region Commands
 
@@ -431,7 +440,7 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
         {
             var path = Path.Combine(AppKnownFolders.SavedWallPaper.Self.Path, guid);
             using var scope = App.AppViewModel.AppServicesScope;
-            var factory = scope.ServiceProvider.GetRequiredService<IDownloadTaskFactory<IllustrationViewModel, ObservableDownloadTask>>();
+            var factory = scope.ServiceProvider.GetRequiredService<IDownloadTaskFactory<IllustrationItemViewModel, ObservableDownloadTask>>();
             var intrinsicTask = await factory.TryCreateIntrinsicAsync(CurrentIllustration, CurrentImage.OriginalImageStream!, path);
             App.AppViewModel.DownloadManager.QueueTask(intrinsicTask);
             await intrinsicTask.Completion.Task;
@@ -457,7 +466,7 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
         {
             var path = Path.Combine(AppKnownFolders.SavedWallPaper.Self.Path, guid);
             using var scope = App.AppViewModel.AppServicesScope;
-            var factory = scope.ServiceProvider.GetRequiredService<IDownloadTaskFactory<IllustrationViewModel, ObservableDownloadTask>>();
+            var factory = scope.ServiceProvider.GetRequiredService<IDownloadTaskFactory<IllustrationItemViewModel, ObservableDownloadTask>>();
             var intrinsicTask = await factory.TryCreateIntrinsicAsync(CurrentIllustration, CurrentImage.OriginalImageStream!, path);
             App.AppViewModel.DownloadManager.QueueTask(intrinsicTask);
             await intrinsicTask.Completion.Task;
@@ -613,13 +622,4 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
     public XamlUICommand RestoreResolutionCommand { get; } = IllustrationViewerPageResources.RestoreOriginalResolution.GetCommand(FontIconSymbols.WebcamE8B8);
 
     #endregion
-
-    public void Dispose()
-    {
-        foreach (var illustrationViewModel in Illustrations)
-            illustrationViewModel.UnloadThumbnail(this, Option);
-        _pages?.ForEach(i => i.Dispose());
-        (UserProfileImageSource as SoftwareBitmapSource)?.Dispose();
-        ViewModelSource?.Dispose();
-    }
 }

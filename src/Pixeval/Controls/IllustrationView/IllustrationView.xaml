@@ -20,12 +20,11 @@
         ItemInvoked="IllustrationItemsView_OnItemInvoked"
         ItemsSource="{x:Bind ViewModel.DataProvider.View}"
         LayoutType="{x:Bind LayoutType, Mode=OneWay}"
-        LoadMoreRequested="IllustrationItemsView_OnLoadMoreRequested"
         MinItemHeight="{x:Bind DesiredHeight}"
         MinItemWidth="{x:Bind DesiredWidth}"
         SelectionMode="{x:Bind ViewModel.IsSelecting, Converter={StaticResource BoolToItemsViewSelectionModeConverter}, Mode=OneWay}">
         <ItemsView.ItemTemplate>
-            <DataTemplate x:DataType="local:IllustrationViewModel">
+            <DataTemplate x:DataType="local:IllustrationItemViewModel">
                 <ItemContainer IsSelected="{x:Bind IsSelected, Mode=TwoWay}">
                     <local:IllustrationThumbnail
                         ShowQrCodeRequested="IllustrationThumbnailOnShowQrCodeRequested"

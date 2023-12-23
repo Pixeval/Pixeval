@@ -29,18 +29,14 @@ namespace Pixeval.Misc;
 public abstract class FetchEngineIncrementalSource<T, TModel>(IAsyncEnumerable<T> asyncEnumerator, int limit = -1)
     : IIncrementalSource<TModel>
 {
-    private readonly ISet<long> _yieldedItems = new HashSet<long>();
-
     /// <summary>
     /// 当为null时暂时不报错
     /// </summary>
     private readonly IAsyncEnumerator<T> _asyncEnumerator = asyncEnumerator?.GetAsyncEnumerator()!;
 
+    private readonly ISet<long> _yieldedItems = new HashSet<long>();
+
     private int _yieldedCounter;
-
-    protected abstract long Identifier(T entity);
-
-    protected abstract TModel Select(T entity);
 
     public virtual async Task<IEnumerable<TModel>> GetPagedItemsAsync(int pageIndex, int pageSize, CancellationToken cancellationToken = new CancellationToken())
     {
@@ -70,4 +66,8 @@ public abstract class FetchEngineIncrementalSource<T, TModel>(IAsyncEnumerable<T
 
         return result;
     }
+
+    protected abstract long Identifier(T entity);
+
+    protected abstract TModel Select(T entity);
 }

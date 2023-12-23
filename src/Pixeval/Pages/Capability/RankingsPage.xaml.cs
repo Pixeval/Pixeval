@@ -22,11 +22,11 @@ using System;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
+using Pixeval.Controls;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.Messages;
 using Pixeval.Misc;
 using Pixeval.Options;
-using Pixeval.Controls;
 using Pixeval.Util;
 using Pixeval.Util.Generic;
 
@@ -39,11 +39,11 @@ public sealed partial class RankingsPage : ISortedIllustrationContainerPageHelpe
         InitializeComponent();
     }
 
+    public DateTime MaxDate => DateTime.Now.AddDays(-2);
+
     public IllustrationContainer ViewModelProvider => IllustrationContainer;
 
     public SortOptionComboBox SortOptionProvider => SortOptionComboBox;
-
-    public DateTime MaxDate => DateTime.Now.AddDays(-2);
 
     public override void OnPageDeactivated(NavigatingCancelEventArgs navigatingCancelEventArgs)
     {

@@ -1,9 +1,7 @@
 <controls:ConstrainedBox
-    x:Class="Pixeval.Controls.IllustratorProfile"
+    x:Class="Pixeval.Controls.IllustratorItem"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:animations="using:CommunityToolkit.WinUI.Animations"
-    xmlns:behaviors="using:CommunityToolkit.WinUI.Behaviors"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -11,7 +9,6 @@
     xmlns:local="using:Pixeval.Controls"
     xmlns:markup="using:Pixeval.Controls.MarkupExtensions"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:media="using:CommunityToolkit.WinUI.Media"
     Padding="0"
     AspectRatio="15:8"
     Background="{StaticResource CardBackgroundFillColorDefaultBrush}"
@@ -24,7 +21,7 @@
                     <TextBlock
                         Margin="10,5"
                         Style="{StaticResource SubtitleTextBlockStyle}"
-                        Text="{x:Bind ViewModel.Username}"
+                        Text="{x:Bind ViewModel.Username, Mode=OneWay}"
                         TextTrimming="CharacterEllipsis"
                         TextWrapping="NoWrap" />
                     <TextBlock
@@ -41,78 +38,36 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <controls:ConstrainedBox
-            x:Name="Banner"
-            Grid.Row="0"
-            AspectRatio="3:1">
-            <Grid
-                x:Name="BannerContainer"
-                Margin="{x:Bind GetIllustrationAt(ViewModel.BannerSources), Mode=OneWay}"
-                CornerRadius="{StaticResource ControlTopCornerRadius}">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-            </Grid>
-            <!--TODO:BlurEffect 会出现空引用异常，原因未知
-                    <media:UIElementExtensions.VisualFactory>
-                        <media:PipelineVisualFactory>
-                            <media:BlurEffect
-                                x:Name="BannerBlurEffect"
-                                Amount="0"
-                                IsAnimatable="True" />
-                        </media:PipelineVisualFactory>
-                    </media:UIElementExtensions.VisualFactory>
-                    <animations:Explicit.Animations>
-                        <animations:AnimationSet x:Name="BlurInAnimation">
-                            <animations:BlurEffectAnimation
-                                EasingMode="EaseOut"
-                                EasingType="Cubic"
-                                Target="{x:Bind BannerBlurEffect}"
-                                From="0"
-                                To="30"
-                                Duration="0:0:0.500" />
-                        </animations:AnimationSet>
-                        <animations:AnimationSet x:Name="BlurOutAnimation">
-                            <animations:BlurEffectAnimation
-                                EasingMode="EaseOut"
-                                EasingType="Cubic"
-                                Target="{x:Bind BannerBlurEffect}"
-                                From="30"
-                                To="0"
-                                Duration="0:0:0.500" />
-                        </animations:AnimationSet>
-                    </animations:Explicit.Animations>-->
-        </controls:ConstrainedBox>
-        <Grid Grid.Row="1">
-            <StackPanel Margin="105,0,15,0" Spacing="5">
-                <TextBlock
-                    Margin="0,5,0,0"
-                    Style="{StaticResource SubtitleTextBlockStyle}"
-                    Text="{x:Bind ViewModel.Username, Mode=OneWay}"
-                    TextTrimming="CharacterEllipsis"
-                    TextWrapping="NoWrap" />
+        <local:IllustratorIllustrationsOverview Grid.Row="0" ViewModel="{x:Bind ViewModel.OverviewViewModel, Mode=OneWay}" />
+        <StackPanel
+            Grid.Row="1"
+            Margin="105,0,15,0"
+            Spacing="5">
+            <TextBlock
+                Margin="0,5,0,0"
+                Style="{StaticResource SubtitleTextBlockStyle}"
+                Text="{x:Bind ViewModel.Username, Mode=OneWay}"
+                TextTrimming="CharacterEllipsis"
+                TextWrapping="NoWrap" />
+            <StackPanel Orientation="Horizontal" Spacing="5">
+                <ContentControl
+                    VerticalAlignment="Center"
+                    Content="{markup:FontSymbolIcon Glyph=IDBadgeF427,
+                                                    FontSize=11}"
+                    Foreground="{StaticResource TextSecondaryAccentColor}" />
                 <StackPanel Orientation="Horizontal" Spacing="5">
-                    <ContentControl
+                    <TextBlock
                         VerticalAlignment="Center"
-                        Content="{markup:FontSymbolIcon Glyph=IDBadgeF427,
-                                                        FontSize=11}"
-                        Foreground="{StaticResource TextSecondaryAccentColor}" />
-                    <StackPanel Orientation="Horizontal" Spacing="5">
-                        <TextBlock
-                            VerticalAlignment="Center"
-                            Foreground="{StaticResource TextSecondaryAccentColor}"
-                            Style="{StaticResource SubscriptTextBlockStyle}"
-                            Text="{x:Bind ViewModel.UserId, Mode=OneWay}" />
-                        <local:PixevalBadge
-                            Mode="Following"
-                            UseSmall="True"
-                            Visibility="{x:Bind ViewModel.IsFollowed, Mode=OneWay}" />
-                    </StackPanel>
+                        Foreground="{StaticResource TextSecondaryAccentColor}"
+                        Style="{StaticResource SubscriptTextBlockStyle}"
+                        Text="{x:Bind ViewModel.UserId, Mode=OneWay}" />
+                    <local:PixevalBadge
+                        Mode="Following"
+                        UseSmall="True"
+                        Visibility="{x:Bind ViewModel.IsFollowed, Mode=OneWay}" />
                 </StackPanel>
             </StackPanel>
-        </Grid>
+        </StackPanel>
         <Button
             x:Name="AvatarButton"
             Grid.Row="0"
@@ -143,7 +98,7 @@
             <Border
                 Width="82"
                 Height="82"
-                BorderBrush="{x:Bind ViewModel.AvatarBorderBrush, Mode=OneWay}"
+                BorderBrush="{x:Bind ViewModel.OverviewViewModel.AvatarBorderBrush, Mode=OneWay}"
                 BorderThickness="2"
                 CornerRadius="40"
                 Tapped="AvatarButton_OnTapped">
@@ -160,29 +115,29 @@
                     <core:ChangePropertyAction
                         PropertyName="Scale"
                         TargetObject="{x:Bind AvatarButton}"
-                        Value="{x:Bind local:IllustratorProfile.ZoomedScale}" />
+                        Value="{x:Bind local:IllustratorItem.ZoomedScale}" />
                     <core:ChangePropertyAction
                         PropertyName="Translation"
                         TargetObject="{x:Bind AvatarButton}"
-                        Value="{x:Bind local:IllustratorProfile.ElevatedTranslation}" />
+                        Value="{x:Bind local:IllustratorItem.ElevatedTranslation}" />
                     <core:ChangePropertyAction
                         PropertyName="Rotation"
                         TargetObject="{x:Bind AvatarButton}"
-                        Value="{x:Bind local:IllustratorProfile.RotatedRotation}" />
+                        Value="{x:Bind local:IllustratorItem.RotatedRotation}" />
                 </core:EventTriggerBehavior>
             </interactivity:Interaction.Behaviors>
             <Button.Flyout>
                 <MenuFlyout Closed="RestoreAvatarButton">
-                    <MenuFlyoutItem Command="{x:Bind ViewModel.FollowCommand}" />
+                    <MenuFlyoutItem Command="{x:Bind ViewModel.FollowCommand, Mode=OneWay}" />
                     <MenuFlyoutSeparator />
-                    <MenuFlyoutItem Command="{x:Bind ViewModel.ShareCommand}" />
+                    <MenuFlyoutItem Command="{x:Bind ViewModel.ShareCommand, Mode=OneWay}" />
                     <!--  不知道为什么Tapped事件不会触发，只能用Click  -->
                     <MenuFlyoutItem
-                        x:Uid="/IllustratorProfile/GenerateLink"
+                        x:Uid="/IllustratorItem/GenerateLink"
                         Click="GenerateLinkCommandOnExecuteRequested"
                         Icon="{markup:FontSymbolIcon Glyph=LinkE71B}" />
                     <MenuFlyoutItem
-                        x:Uid="/IllustratorProfile/GenerateWebLink"
+                        x:Uid="/IllustratorItem/GenerateWebLink"
                         Click="GenerateWebLinkCommandOnExecuteRequested"
                         Icon="{markup:FontSymbolIcon Glyph=PreviewLinkE8A1}" />
                 </MenuFlyout>

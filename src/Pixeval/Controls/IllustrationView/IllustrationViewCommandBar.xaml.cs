@@ -24,23 +24,22 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Threading.Tasks;
+using Windows.System;
 using CommunityToolkit.WinUI;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
+using Pixeval.Controls.TokenInput;
 using Pixeval.CoreApi.Model;
 using Pixeval.Download;
 using Pixeval.Flyouts.IllustrationResultFilter;
-using Pixeval.Controls.TokenInput;
 using Pixeval.Util;
 using Pixeval.Util.Threading;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
-using Windows.System;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
-using ThrowHelper = WinUI3Utilities.ThrowHelper;
 
 namespace Pixeval.Controls.IllustrationView;
 
@@ -134,7 +133,7 @@ public sealed partial class IllustrationViewCommandBar
     {
         // TODO custom bookmark tag
         var notBookmarked = ViewModel.DataProvider.SelectedIllustrations.Where(i => !i.IsBookmarked);
-        var viewModelSelectedIllustrations = notBookmarked as IllustrationViewModel[] ?? notBookmarked.ToArray();
+        var viewModelSelectedIllustrations = notBookmarked as IllustrationItemViewModel[] ?? notBookmarked.ToArray();
         if (viewModelSelectedIllustrations.Length > 5 && await MessageDialogBuilder.CreateOkCancel(
                     this,
                     IllustrationViewCommandBarResources.SelectedTooManyItemsForBookmarkTitle,
@@ -169,13 +168,12 @@ public sealed partial class IllustrationViewCommandBar
         }
 
         using var scope = App.AppViewModel.AppServicesScope;
-        var factory = scope.ServiceProvider.GetRequiredService<IDownloadTaskFactory<IllustrationViewModel, ObservableDownloadTask>>();
+        var factory = scope.ServiceProvider.GetRequiredService<IDownloadTaskFactory<IllustrationItemViewModel, ObservableDownloadTask>>();
 
         // This will run for quite a while
         _ = Task.Run(async () =>
         {
-            var tasks = await CurrentContext.Window.DispatcherQueue.EnqueueAsync(
-                async () => await Task.WhenAll(
+            var tasks = await CurrentContext.Window.DispatcherQueue.EnqueueAsync(() => Task.WhenAll(
                     ViewModel.DataProvider.SelectedIllustrations
                         .SelectMany(i => i.GetMangaIllustrationViewModels())
                         .Select(i => factory.CreateAsync(i, App.AppViewModel.AppSetting.DefaultDownloadPathMacro))));

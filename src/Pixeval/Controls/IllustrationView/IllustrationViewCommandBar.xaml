@@ -2,7 +2,6 @@
     x:Class="Pixeval.Controls.IllustrationView.IllustrationViewCommandBar"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:converters="using:CommunityToolkit.WinUI.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:illustrationResultFilter1="using:Pixeval.Flyouts.IllustrationResultFilter"

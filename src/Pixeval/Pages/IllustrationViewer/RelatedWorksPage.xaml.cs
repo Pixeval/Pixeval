@@ -29,14 +29,14 @@ namespace Pixeval.Pages.IllustrationViewer;
 
 public sealed partial class RelatedWorksPage
 {
-    public ThumbnailDirection ThumbnailDirection => App.AppViewModel.AppSetting.ThumbnailDirection;
-
     private string? _illustrationId;
 
     public RelatedWorksPage()
     {
         InitializeComponent();
     }
+
+    public ThumbnailDirection ThumbnailDirection => App.AppViewModel.AppSetting.ThumbnailDirection;
 
     public override void OnPageActivated(NavigationEventArgs e)
     {

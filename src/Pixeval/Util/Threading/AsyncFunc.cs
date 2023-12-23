@@ -25,7 +25,7 @@ namespace Pixeval.Util.Threading;
 
 public sealed class AsyncFunc(Func<Task> action)
 {
-    private bool _running = false;
+    private bool _running;
 
     public async Task RunAsync()
     {
@@ -39,7 +39,7 @@ public sealed class AsyncFunc(Func<Task> action)
 
 public sealed class AsyncFunc<T>(Func<T, Task> action)
 {
-    private bool _running = false;
+    private bool _running;
 
     public async Task RunAsync(T param)
     {

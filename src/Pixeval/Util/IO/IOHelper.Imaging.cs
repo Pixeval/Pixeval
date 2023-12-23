@@ -24,11 +24,11 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
-using Microsoft.UI.Xaml.Media.Imaging;
-using Pixeval.CoreApi.Net.Response;
 using Windows.Graphics.Imaging;
 using Windows.Storage.Streams;
+using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.Controls;
+using Pixeval.CoreApi.Net.Response;
 using Pixeval.Options;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats;
@@ -37,6 +37,7 @@ using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp.Formats.Tiff;
 using SixLabors.ImageSharp.Formats.Webp;
 using SixLabors.ImageSharp.PixelFormats;
+using WinUI3Utilities;
 
 namespace Pixeval.Util.IO;
 
@@ -122,14 +123,13 @@ public static partial class IoHelper
                 UgoiraDownloadFormat.Gif => new GifEncoder(),
                 UgoiraDownloadFormat.WebPLossless => new WebpEncoder { FileFormat = WebpFileFormatType.Lossless },
                 UgoiraDownloadFormat.WebPLossy => new WebpEncoder { FileFormat = WebpFileFormatType.Lossy },
-                _ => WinUI3Utilities.ThrowHelper.ArgumentOutOfRange<UgoiraDownloadFormat, IImageEncoder>(
+                _ => ThrowHelper.ArgumentOutOfRange<UgoiraDownloadFormat, IImageEncoder>(
                     ugoiraDownloadFormat)
             });
         image.Dispose();
         target.Seek(0);
         return target;
     }
-
 
     /// <summary>
     ///     Writes the <paramref name="stream" /> into <see cref="InMemoryRandomAccessStream"/>
@@ -152,7 +152,7 @@ public static partial class IoHelper
         {
             UgoiraDownloadFormat.Tiff or UgoiraDownloadFormat.APng or UgoiraDownloadFormat.Gif => "." + ugoiraDownloadFormat.ToString()!.ToLower(),
             UgoiraDownloadFormat.WebPLossless or UgoiraDownloadFormat.WebPLossy => ".webp",
-            _ => WinUI3Utilities.ThrowHelper.ArgumentOutOfRange<UgoiraDownloadFormat?, string>(ugoiraDownloadFormat)
+            _ => ThrowHelper.ArgumentOutOfRange<UgoiraDownloadFormat?, string>(ugoiraDownloadFormat)
         };
     }
 
@@ -180,6 +180,7 @@ public static partial class IoHelper
     /// </summary>
     public static async Task<SoftwareBitmap> GetSoftwareBitmapFromStreamAsync(IRandomAccessStream imageStream)
     {
+        imageStream.Seek(0);
         using var image = await Image.LoadAsync<Bgra32>(imageStream.AsStreamForRead());
         var softwareBitmap = new SoftwareBitmap(BitmapPixelFormat.Bgra8, image.Width, image.Height, BitmapAlphaMode.Premultiplied);
         var buffer = new byte[4 * image.Width * image.Height];
@@ -217,7 +218,7 @@ public static partial class IoHelper
         {
             ItemsViewLayoutType.LinedFlow or ItemsViewLayoutType.VerticalStack or ItemsViewLayoutType.HorizontalStack => ThumbnailUrlOption.Medium,
             ItemsViewLayoutType.Grid or ItemsViewLayoutType.VerticalUniformStack or ItemsViewLayoutType.HorizontalUniformStack => ThumbnailUrlOption.SquareMedium,
-            _ => WinUI3Utilities.ThrowHelper.ArgumentOutOfRange<ItemsViewLayoutType, ThumbnailUrlOption>(illustrationViewOption)
+            _ => ThrowHelper.ArgumentOutOfRange<ItemsViewLayoutType, ThumbnailUrlOption>(illustrationViewOption)
         };
     }
 }

@@ -21,7 +21,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
@@ -150,11 +149,6 @@ public sealed partial class DownloadListPage
     private void DownloadListPage_OnUnloaded(object sender, RoutedEventArgs e)
     {
         _viewModel.Dispose();
-    }
-
-    private Task AdvancedItemsView_OnLoadMoreRequested(AdvancedItemsView sender, EventArgs e)
-    {
-        return _viewModel.LoadMoreAsync(20);
     }
 
     private void AdvancedItemsView_OnElementPrepared(AdvancedItemsView sender, ItemContainer itemContainer)

@@ -36,6 +36,11 @@ public sealed partial class CommentList : IDisposable
         InitializeComponent();
     }
 
+    public void Dispose()
+    {
+        (ItemsSource as IList<CommentBlockViewModel>)?.Clear();
+    }
+
     private static void OnItemsSourceChanged(DependencyObject o, DependencyPropertyChangedEventArgs args)
     {
         ((CommentList)o).CommentsList.ItemsSource = args.NewValue;
@@ -56,10 +61,5 @@ public sealed partial class CommentList : IDisposable
         {
             _ = list.Remove(viewModel);
         }
-    }
-
-    public void Dispose()
-    {
-        (ItemsSource as IList<CommentBlockViewModel>)?.Clear();
     }
 }

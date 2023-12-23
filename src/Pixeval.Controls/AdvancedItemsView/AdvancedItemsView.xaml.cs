@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Data;
 using Pixeval.Collections;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
@@ -25,9 +26,10 @@ namespace Pixeval.Controls;
 [DependencyProperty<double>("LoadingOffset", "100d")]
 [DependencyProperty<int>("SelectedIndex", "-1", nameof(OnSelectedIndexChanged))]
 [DependencyProperty<bool>("CanLoadMore", "true")]
+[DependencyProperty<int>("LoadCount", "20")]
 public sealed partial class AdvancedItemsView : ItemsView
 {
-    public event Func<AdvancedItemsView, EventArgs, Task>? LoadMoreRequested;
+    public event Func<AdvancedItemsView, EventArgs, Task> LoadMoreRequested;
     // TODO: 调用此事件时可能需要防抖
     public event Action<AdvancedItemsView, ItemContainer>? ElementPrepared;
     public event Action<AdvancedItemsView, ItemContainer>? ElementClearing;
@@ -89,7 +91,7 @@ public sealed partial class AdvancedItemsView : ItemsView
     /// <returns></returns>
     public async Task TryRaiseLoadMoreRequested()
     {
-        if (!CanLoadMore || LoadMoreRequested is not { } handler || IsLoadingMore)
+        if (!CanLoadMore || IsLoadingMore)
             return;
 
         switch (ScrollView.ComputedVerticalScrollMode, ScrollView.ComputedHorizontalScrollMode)
@@ -104,17 +106,24 @@ public sealed partial class AdvancedItemsView : ItemsView
                      || ScrollView.ScrollableWidth - LoadingOffset < ScrollView.HorizontalOffset:
             {
                 IsLoadingMore = true;
-                await handler(this, EventArgs.Empty);
+                await LoadMoreRequested(this, EventArgs.Empty);
                 IsLoadingMore = false;
                 break;
             }
         }
     }
 
-    public AdvancedItemsView() => InitializeComponent();
+    public AdvancedItemsView()
+    {
+        InitializeComponent();
+        LoadMoreRequested += async (sender, args) =>
+        {
+            if (sender.To<AdvancedItemsView>() is { ItemsSource: ISupportIncrementalLoading sil } aiv)
+                _ = await sil.LoadMoreItemsAsync((uint)aiv.LoadCount);
+        };
+    }
 
     #region PropertyChanged
-
 
     private static void OnItemHeightChanged(DependencyObject o, DependencyPropertyChangedEventArgs e)
     {

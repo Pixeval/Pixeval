@@ -20,23 +20,23 @@
 
 using System.Linq;
 using System.Threading.Tasks;
+using Windows.Storage.Streams;
 using Microsoft.Extensions.DependencyInjection;
+using Pixeval.Controls.IllustrationView;
 using Pixeval.Database;
 using Pixeval.Database.Managers;
 using Pixeval.Download.MacroParser;
 using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Utilities;
-using Windows.Storage.Streams;
-using Pixeval.Controls.IllustrationView;
 
 namespace Pixeval.Download;
 
-public class IllustrationDownloadTaskFactory : IDownloadTaskFactory<IllustrationViewModel, ObservableDownloadTask>
+public class IllustrationDownloadTaskFactory : IDownloadTaskFactory<IllustrationItemViewModel, ObservableDownloadTask>
 {
-    public IMetaPathParser<IllustrationViewModel> PathParser { get; } = new IllustrationMetaPathParser();
+    public IMetaPathParser<IllustrationItemViewModel> PathParser { get; } = new IllustrationMetaPathParser();
 
-    public Task<ObservableDownloadTask> CreateAsync(IllustrationViewModel context, string rawPath)
+    public Task<ObservableDownloadTask> CreateAsync(IllustrationItemViewModel context, string rawPath)
     {
         using var scope = App.AppViewModel.AppServicesScope;
         var manager = scope.ServiceProvider.GetRequiredService<DownloadHistoryPersistentManager>();
@@ -76,7 +76,7 @@ public class IllustrationDownloadTaskFactory : IDownloadTaskFactory<Illustration
         return Task.FromResult(task);
     }
 
-    public Task<ObservableDownloadTask> TryCreateIntrinsicAsync(IllustrationViewModel context, IRandomAccessStream stream, string rawPath)
+    public Task<ObservableDownloadTask> TryCreateIntrinsicAsync(IllustrationItemViewModel context, IRandomAccessStream stream, string rawPath)
     {
         var type = context switch
         {

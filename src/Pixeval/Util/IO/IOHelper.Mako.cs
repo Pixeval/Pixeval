@@ -32,7 +32,7 @@ public static partial class IoHelper
     public static async Task<Result<SoftwareBitmapSource>> DownloadSoftwareBitmapSourceResultAsync(this MakoClient client, string url)
     {
         return await (await client.GetMakoHttpClient(MakoApiKind.ImageApi).DownloadAsIRandomAccessStreamAsync(url))
-            .RewrapAsync(async m => await m.GetSoftwareBitmapSourceAsync(true));
+            .RewrapAsync(m => m.GetSoftwareBitmapSourceAsync(true));
     }
 
     public static async Task<Result<ImageSource>> DownloadBitmapImageResultAsync(this MakoClient client, string url, int? desiredWidth)

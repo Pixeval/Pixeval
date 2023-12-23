@@ -18,9 +18,9 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using Windows.Storage.Streams;
 using Microsoft.UI.Xaml.Media;
 using Pixeval.Misc;
-using Windows.Storage.Streams;
 
 namespace Pixeval.Pages.IllustrationViewer;
 

@@ -18,7 +18,7 @@
         DisplayMode="CompactOverlay"
         IsPaneOpen="True"
         OpenPaneLength="1000"
-        PaneBackground="{ThemeResource SystemControlBackgroundChromeMediumLowBrush}"
+        PaneBackground="{x:Bind _backgroundBrush}"
         PaneClosing="MainSplitView_OnPaneAction"
         PaneOpening="MainSplitView_OnPaneAction">
         <SplitView.Pane>
@@ -47,14 +47,13 @@
                     Grid.Row="1"
                     ItemsSource="{x:Bind _viewModel.DataProvider.View}"
                     LayoutType="Grid"
-                    LoadMoreRequested="IllustratorItemsView_OnLoadMoreRequested"
                     MinItemWidth="300"
                     SelectionChanged="IllustratorItemsView_OnSelectionChanged"
                     SelectionMode="Single">
                     <controls:AdvancedItemsView.ItemTemplate>
-                        <DataTemplate x:DataType="controls:IllustratorViewModel">
+                        <DataTemplate x:DataType="controls:IllustratorItemViewModel">
                             <ItemContainer>
-                                <controls:IllustratorProfile RequestTeachingTip="IllustratorProfileOnRequestTeachingTip" ViewModel="{x:Bind}" />
+                                <controls:IllustratorItem RequestTeachingTip="IllustratorItemOnRequestTeachingTip" ViewModel="{x:Bind}" />
                             </ItemContainer>
                         </DataTemplate>
                     </controls:AdvancedItemsView.ItemTemplate>

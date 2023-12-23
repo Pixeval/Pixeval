@@ -36,10 +36,6 @@ namespace Pixeval.Controls;
 [DependencyProperty<object>("Header")]
 public sealed partial class IllustrationContainer
 {
-    public ItemsViewLayoutType ItemsViewLayoutType => App.AppViewModel.AppSetting.ItemsViewLayoutType;
-
-    public ThumbnailDirection ThumbnailDirection => App.AppViewModel.AppSetting.ThumbnailDirection;
-
     public IllustrationContainer()
     {
         InitializeComponent();
@@ -64,6 +60,17 @@ public sealed partial class IllustrationContainer
         };
     }
 
+    public ItemsViewLayoutType ItemsViewLayoutType => App.AppViewModel.AppSetting.ItemsViewLayoutType;
+
+    public ThumbnailDirection ThumbnailDirection => App.AppViewModel.AppSetting.ThumbnailDirection;
+
+    public IllustrationViewViewModel ViewModel => IllustrationView.ViewModel;
+
+    /// <summary>
+    ///     The command elements that will appear at the left of the <see cref="TopCommandBar" />
+    /// </summary>
+    public ObservableCollection<UIElement> CommandBarElements { get; }
+
     private static void OnShowCommandBarChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
     {
         if (obj is IllustrationContainer { TopCommandBar: { } commandBar } && args.NewValue is bool v)
@@ -80,13 +87,6 @@ public sealed partial class IllustrationContainer
             }
         }
     }
-
-    public IllustrationViewViewModel ViewModel => IllustrationView.ViewModel;
-
-    /// <summary>
-    ///     The command elements that will appear at the left of the <see cref="TopCommandBar" />
-    /// </summary>
-    public ObservableCollection<UIElement> CommandBarElements { get; }
 
     private void IllustrationContainer_OnLoaded(object sender, RoutedEventArgs e)
     {

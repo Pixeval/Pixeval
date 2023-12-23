@@ -18,8 +18,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System;
-using System.Threading.Tasks;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
@@ -39,10 +37,16 @@ namespace Pixeval.Controls.IllustrationView;
 [DependencyProperty<ThumbnailDirection>("ThumbnailDirection", DependencyPropertyDefaultValue.Default)]
 public sealed partial class IllustrationView
 {
-    public ScrollView ScrollView => IllustrationItemsView.ScrollView;
-
     public const double LandscapeHeight = 180;
     public const double PortraitHeight = 250;
+
+    public IllustrationView()
+    {
+        InitializeComponent();
+        ViewModel.DataProvider.View.FilterChanged += async (_, _) => await IllustrationItemsView.TryRaiseLoadMoreRequested();
+    }
+
+    public ScrollView ScrollView => IllustrationItemsView.ScrollView;
 
     public double DesiredHeight => ThumbnailDirection switch
     {
@@ -57,12 +61,6 @@ public sealed partial class IllustrationView
         ThumbnailDirection.Portrait => LandscapeHeight,
         _ => ThrowHelper.ArgumentOutOfRange<ThumbnailDirection, double>(ThumbnailDirection)
     };
-
-    public IllustrationView()
-    {
-        InitializeComponent();
-        ViewModel.DataProvider.View.FilterChanged += async (_, _) => await IllustrationItemsView.TryRaiseLoadMoreRequested();
-    }
 
     public IllustrationViewViewModel ViewModel { get; } = new IllustrationViewViewModel();
 
@@ -100,14 +98,9 @@ public sealed partial class IllustrationView
 
     private void IllustrationItemsView_OnItemInvoked(ItemsView sender, ItemsViewItemInvokedEventArgs e)
     {
-        var vm = e.InvokedItem.To<IllustrationViewModel>();
+        var vm = e.InvokedItem.To<IllustrationItemViewModel>();
 
         vm.CreateWindowWithPage(ViewModel);
-    }
-
-    private Task IllustrationItemsView_OnLoadMoreRequested(object? sender, EventArgs e)
-    {
-        return ViewModel.LoadMoreAsync(20);
     }
 
     private async void IllustrationItemsView_OnElementPrepared(AdvancedItemsView sender, ItemContainer itemContainer)

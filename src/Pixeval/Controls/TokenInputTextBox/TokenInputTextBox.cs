@@ -19,10 +19,10 @@
 #endregion
 
 using System;
+using Windows.System;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Pixeval.Controls.TokenInput;
-using Windows.System;
 using WinUI3Utilities.Attributes;
 
 namespace Pixeval.Controls.TokenInputTextBox;

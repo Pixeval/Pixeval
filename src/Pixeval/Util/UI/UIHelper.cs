@@ -24,6 +24,11 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.DataTransfer;
+using Windows.Foundation;
+using Windows.Storage;
+using Windows.Storage.Pickers;
+using Windows.Storage.Streams;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.WinUI;
 using Microsoft.UI.Text;
@@ -32,6 +37,8 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Media.Imaging;
+using Pixeval.Controls.MarkupExtensions;
+using Pixeval.Controls.MarkupExtensions.FontSymbolIcon;
 using Pixeval.Misc;
 using Pixeval.Util.IO;
 using Pixeval.Util.Threading;
@@ -40,13 +47,6 @@ using QRCoder;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 using SixLabors.ImageSharp.Processing.Processors.Quantization;
-using Windows.ApplicationModel.DataTransfer;
-using Windows.Foundation;
-using Windows.Storage;
-using Windows.Storage.Pickers;
-using Windows.Storage.Streams;
-using Pixeval.Controls.MarkupExtensions;
-using Pixeval.Controls.MarkupExtensions.FontSymbolIcon;
 using WinUI3Utilities;
 using Brush = Microsoft.UI.Xaml.Media.Brush;
 using Color = Windows.UI.Color;
@@ -90,6 +90,14 @@ public static partial class UiHelper
 
         return Color.FromArgb(color.A, (byte)red, (byte)green, (byte)blue);
     }
+
+    public static SolidColorBrush WithAlpha(this SolidColorBrush brush, byte alpha)
+    {
+        brush.Color = brush.Color.WithAlpha(alpha);
+        return brush;
+    }
+
+    public static Color WithAlpha(this Color color, byte alpha) => Color.FromArgb(alpha, color.R, color.G, color.B);
 
     public static async Task<double> GetImageAspectRatioAsync(Stream stream, bool disposeOfStream = true)
     {

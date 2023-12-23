@@ -19,20 +19,20 @@
 #endregion
 
 using System.Collections.Generic;
-using Pixeval.Controls;
 using Pixeval.CoreApi.Model;
+using Pixeval.Misc;
 
-namespace Pixeval.Misc;
+namespace Pixeval.Controls;
 
-public class IllustratorFetchEngineIncrementalSource(IAsyncEnumerable<User> asyncEnumerator, int limit = -1) : FetchEngineIncrementalSource<User, IllustratorViewModel>(asyncEnumerator, limit)
+public class IllustratorFetchEngineIncrementalSource(IAsyncEnumerable<User> asyncEnumerator, int limit = -1) : FetchEngineIncrementalSource<User, IllustratorItemViewModel>(asyncEnumerator, limit)
 {
     protected override long Identifier(User entity)
     {
         return entity.UserInfo?.Id ?? 0;
     }
 
-    protected override IllustratorViewModel Select(User entity)
+    protected override IllustratorItemViewModel Select(User entity)
     {
-        return new IllustratorViewModel(entity);
+        return new IllustratorItemViewModel(entity);
     }
 }

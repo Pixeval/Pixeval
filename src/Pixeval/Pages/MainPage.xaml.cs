@@ -23,7 +23,14 @@ using System.IO;
 using System.Linq;
 using System.Runtime;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.DataTransfer;
+using Windows.Foundation;
+using Windows.Graphics;
+using Windows.Storage;
+using Windows.System;
+using Windows.UI.Core;
 using CommunityToolkit.Mvvm.Messaging;
+using CommunityToolkit.WinUI;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Input;
 using Microsoft.UI.Windowing;
@@ -34,6 +41,8 @@ using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
 using Microsoft.Windows.AppLifecycle;
 using Pixeval.Activation;
+using Pixeval.Controls.IllustrationView;
+using Pixeval.Controls.Windowing;
 using Pixeval.Database;
 using Pixeval.Database.Managers;
 using Pixeval.Dialogs;
@@ -42,19 +51,10 @@ using Pixeval.Messages;
 using Pixeval.Pages.Capability;
 using Pixeval.Pages.Download;
 using Pixeval.Pages.Misc;
-using Pixeval.Controls.IllustrationView;
 using Pixeval.Util;
 using Pixeval.Util.Threading;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
-using Windows.ApplicationModel.DataTransfer;
-using Windows.Foundation;
-using Windows.Graphics;
-using Windows.Storage;
-using Windows.System;
-using Windows.UI.Core;
-using CommunityToolkit.WinUI;
-using Pixeval.Controls.Windowing;
 using WinUI3Utilities;
 using Image = SixLabors.ImageSharp.Image;
 
@@ -66,7 +66,7 @@ public sealed partial class MainPage : ISupportCustomTitleBarDragRegion
 
     // This field contains the view model that the illustration viewer is
     // currently holding if we're navigating back to the MainPage
-    private static IllustrationViewModel? _illustrationViewerContent;
+    private static IllustrationItemViewModel? _illustrationViewerContent;
 
     private readonly MainPageViewModel _viewModel = new();
 
@@ -82,6 +82,17 @@ public sealed partial class MainPage : ISupportCustomTitleBarDragRegion
         {
             MainPageRootNavigationView.PaneCustomContent = null;
         }
+    }
+
+    public void SetTitleBarDragRegion()
+    {
+        var titleBar = TitleBar.TransformToVisual(Content).TransformPoint(new Point(0, 0));
+        var titleBarRect = new RectInt32((int)titleBar.X, (int)titleBar.Y, (int)TitleBar.ActualWidth, (int)TitleBar.ActualHeight);
+
+        DragZoneHelper.SetDragZones(new DragZoneInfo(titleBarRect)
+        {
+            DragZoneLeftIndent = 48
+        });
     }
 
     public override void OnPageActivated(NavigationEventArgs e, object? parameter)
@@ -322,16 +333,5 @@ public sealed partial class MainPage : ISupportCustomTitleBarDragRegion
     private void AppTitleBarOnSizeChanged(object sender, object e)
     {
         SetTitleBarDragRegion();
-    }
-
-    public void SetTitleBarDragRegion()
-    {
-        var titleBar = TitleBar.TransformToVisual(Content).TransformPoint(new Point(0, 0));
-        var titleBarRect = new RectInt32((int)titleBar.X, (int)titleBar.Y, (int)TitleBar.ActualWidth, (int)TitleBar.ActualHeight);
-
-        DragZoneHelper.SetDragZones(new DragZoneInfo(titleBarRect)
-        {
-            DragZoneLeftIndent = 48
-        });
     }
 }

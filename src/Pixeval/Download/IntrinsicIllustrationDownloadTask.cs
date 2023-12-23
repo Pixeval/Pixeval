@@ -18,17 +18,17 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using Pixeval.Database;
-using Pixeval.Util.IO;
 using Windows.Storage.Streams;
 using Pixeval.Controls.IllustrationView;
+using Pixeval.Database;
+using Pixeval.Util.IO;
 
 namespace Pixeval.Download;
 
 /// <summary>
 ///     The disposal of <paramref name="imageStream" /> is not handled
 /// </summary>
-public class IntrinsicIllustrationDownloadTask(DownloadHistoryEntry entry, IllustrationViewModel illustrationViewModel, IRandomAccessStream imageStream) : IllustrationDownloadTask(entry, illustrationViewModel), IIntrinsicDownloadTask
+public class IntrinsicIllustrationDownloadTask(DownloadHistoryEntry entry, IllustrationItemViewModel illustrationViewModel, IRandomAccessStream imageStream) : IllustrationDownloadTask(entry, illustrationViewModel), IIntrinsicDownloadTask
 {
     public IRandomAccessStream Stream { get; } = imageStream;
 

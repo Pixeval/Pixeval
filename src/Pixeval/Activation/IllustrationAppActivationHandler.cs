@@ -42,7 +42,7 @@ public class IllustrationAppActivationHandler : IAppActivationHandler
 
             try
             {
-                var viewModels = new IllustrationViewModel(await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(id))
+                var viewModels = new IllustrationItemViewModel(await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(id))
                     .GetMangaIllustrationViewModels()
                     .ToArray();
 

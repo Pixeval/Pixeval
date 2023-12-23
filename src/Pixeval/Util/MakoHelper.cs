@@ -33,6 +33,7 @@ using Pixeval.Misc;
 using Pixeval.Options;
 using Pixeval.Util.Generic;
 using Pixeval.Utilities;
+using WinUI3Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
 
 namespace Pixeval.Util;
@@ -58,7 +59,7 @@ public static class MakoHelper
             ThumbnailUrlOption.Large => illustration.ImageUrls?.Large,
             ThumbnailUrlOption.Medium => illustration.ImageUrls?.Medium,
             ThumbnailUrlOption.SquareMedium => illustration.ImageUrls?.SquareMedium,
-            _ => WinUI3Utilities.ThrowHelper.ArgumentOutOfRange<ThumbnailUrlOption, string?>(option)
+            _ => ThrowHelper.ArgumentOutOfRange<ThumbnailUrlOption, string?>(option)
         };
     }
 
@@ -120,7 +121,7 @@ public static class MakoHelper
             IllustrationSortOption.PublishDateAscending => new SortDescription(SortDirection.Ascending, IllustrationViewModelPublishDateComparer.Instance),
             IllustrationSortOption.PublishDateDescending => new SortDescription(SortDirection.Descending, IllustrationViewModelPublishDateComparer.Instance),
             IllustrationSortOption.DoNotSort => null,
-            _ => WinUI3Utilities.ThrowHelper.ArgumentOutOfRange<IllustrationSortOption, SortDescription?>(sortOption)
+            _ => ThrowHelper.ArgumentOutOfRange<IllustrationSortOption, SortDescription?>(sortOption)
         };
     }
 

@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Class Name="Pixeval.Controls.IllustrationView.IllustrationViewDataProvider" Collapsed="true">
-    <Position X="14" Y="4.25" Width="2.5" />
+    <Position X="14" Y="4.25" Width="2.25" />
     <TypeIdentifier>
       <HashCode>BAAEIAEAAiAAAACAAAAAAEIACAABAgAAAQAAAAAAAAA=</HashCode>
       <FileName>Controls\IllustrationView\IllustrationViewDataProvider.cs</FileName>
@@ -16,15 +16,8 @@
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="Pixeval.Misc.IllustratorFetchEngineIncrementalSource" Collapsed="true">
-    <Position X="16.25" Y="7" Width="3.75" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAA=</HashCode>
-      <FileName>Controls\IllustratorProfile\IllustratorFetchEngineIncrementalSource.cs</FileName>
-    </TypeIdentifier>
-  </Class>
   <Class Name="Pixeval.Misc.FetchEngineIncrementalSource&lt;T, TModel&gt;" Collapsed="true">
-    <Position X="9" Y="5.75" Width="3" />
+    <Position X="9.25" Y="5.75" Width="3" />
     <TypeIdentifier>
       <HashCode>AAAAAAIAAAAAQAAAAAgQAAAAAAAAAAAAAAAAQAAAAAA=</HashCode>
       <FileName>Misc\FetchEngineIncrementalSource.cs</FileName>
@@ -47,7 +40,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="Pixeval.Controls.IllustrationView.IllustrationFetchEngineIncrementalSource" Collapsed="true">
-    <Position X="11.5" Y="7" Width="4" />
+    <Position X="11.5" Y="7" Width="4.25" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAA=</HashCode>
       <FileName>Controls\IllustrationView\IllustrationFetchEngineIncrementalSource.cs</FileName>
@@ -67,6 +60,13 @@
       <FileName>Pages\Download\DownloadListEntryDataProvider.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Pixeval.Controls.IllustratorFetchEngineIncrementalSource" Collapsed="true">
+    <Position X="16.5" Y="7" Width="4" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAA=</HashCode>
+      <FileName>Controls\IllustratorItem\IllustratorItem\IllustratorFetchEngineIncrementalSource.cs</FileName>
+    </TypeIdentifier>
   </Class>
   <Interface Name="Pixeval.CoreApi.Engine.IFetchEngine&lt;E&gt;" Collapsed="true">
     <Position X="8" Y="0.75" Width="1.5" />

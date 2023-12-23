@@ -25,12 +25,12 @@ using LiteDB;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Pixeval.AppManagement;
+using Pixeval.Controls.IllustrationView;
 using Pixeval.CoreApi;
 using Pixeval.CoreApi.Net;
 using Pixeval.Database.Managers;
 using Pixeval.Download;
 using Pixeval.Messages;
-using Pixeval.Controls.IllustrationView;
 using Pixeval.Util.IO;
 using Pixeval.Util.Threading;
 using Pixeval.Util.UI;
@@ -74,7 +74,7 @@ public class AppViewModel(App app) : AutoActivateObservableRecipient,  IRecipien
     {
         return Host.CreateDefaultBuilder()
             .ConfigureServices(services =>
-                services.AddSingleton<IDownloadTaskFactory<IllustrationViewModel, ObservableDownloadTask>, IllustrationDownloadTaskFactory>()
+                services.AddSingleton<IDownloadTaskFactory<IllustrationItemViewModel, ObservableDownloadTask>, IllustrationDownloadTaskFactory>()
                     .AddSingleton(new LiteDatabase(AppContext.DatabaseFilePath))
                     .AddSingleton(provider => new DownloadHistoryPersistentManager(provider.GetRequiredService<LiteDatabase>(), App.AppViewModel.AppSetting.MaximumDownloadHistoryRecords))
                     .AddSingleton(provider => new SearchHistoryPersistentManager(provider.GetRequiredService<LiteDatabase>(), App.AppViewModel.AppSetting.MaximumSearchHistoryRecords))

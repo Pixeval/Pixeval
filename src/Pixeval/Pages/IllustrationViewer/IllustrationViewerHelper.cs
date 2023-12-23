@@ -18,16 +18,16 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using Pixeval.Controls.Windowing;
-using Pixeval.Controls.IllustrationView;
 using System;
 using System.Collections.Generic;
 using Windows.Graphics;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
+using Pixeval.Controls;
+using Pixeval.Controls.IllustrationView;
+using Pixeval.Controls.Windowing;
 using Pixeval.CoreApi.Model;
 using WinUI3Utilities;
-using Pixeval.Controls;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
@@ -39,7 +39,7 @@ public static class IllustrationViewerHelper
     /// <typeparam name="T">为了方便协变采用泛型</typeparam>
     /// <param name="illustrationViewModel">指定的插画ViewModel</param>
     /// <param name="illustrationViewModels">指定的插画ViewModel所在的列表</param>
-    public static void CreateWindowWithPage<T>(this T illustrationViewModel, IList<T> illustrationViewModels) where T : IllustrationViewModel
+    public static void CreateWindowWithPage<T>(this T illustrationViewModel, IList<T> illustrationViewModels) where T : IllustrationItemViewModel
     {
         var index = illustrationViewModels.IndexOf(illustrationViewModel);
         CreateWindowWithPage(illustrationViewModel.Illustrate, new IllustrationViewerPageViewModel(illustrationViewModels, index));
@@ -50,7 +50,7 @@ public static class IllustrationViewerHelper
     /// </summary>
     /// <param name="illustrationViewModel">指定的插画ViewModel</param>
     /// <param name="illustrationViewViewModel">指定的插画ViewModel所在的<see cref="IllustrationView"/>的ViewModel</param>
-    public static void CreateWindowWithPage(this IllustrationViewModel illustrationViewModel, IllustrationViewViewModel illustrationViewViewModel)
+    public static void CreateWindowWithPage(this IllustrationItemViewModel illustrationViewModel, IllustrationViewViewModel illustrationViewViewModel)
     {
         var index = illustrationViewViewModel.DataProvider.View.IndexOf(illustrationViewModel);
         CreateWindowWithPage(illustrationViewModel.Illustrate, new IllustrationViewerPageViewModel(illustrationViewViewModel, index));

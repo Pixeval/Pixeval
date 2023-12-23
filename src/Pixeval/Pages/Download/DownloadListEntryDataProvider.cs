@@ -32,13 +32,13 @@ public class DownloadListEntryDataProvider : ObservableObject, IDataProvider<Ill
         View.Clear();
     }
 
-    public void ResetEngine(IEnumerable<ObservableDownloadTask> source)
-    {
-        Source = new IncrementalLoadingCollection<FetchEngineIncrementalSource<Illustration, DownloadListEntryViewModel>, DownloadListEntryViewModel>(new DownloadListEntryIncrementalSource(source));
-    }
-
     void IDataProvider<Illustration, DownloadListEntryViewModel>.ResetEngine(IFetchEngine<Illustration?>? fetchEngine, int limit)
     {
         ThrowHelper.NotSupported($"{nameof(DownloadListEntryDataProvider)} 不使用 {nameof(FetchEngine)}");
+    }
+
+    public void ResetEngine(IEnumerable<ObservableDownloadTask> source)
+    {
+        Source = new IncrementalLoadingCollection<FetchEngineIncrementalSource<Illustration, DownloadListEntryViewModel>, DownloadListEntryViewModel>(new DownloadListEntryIncrementalSource(source));
     }
 }

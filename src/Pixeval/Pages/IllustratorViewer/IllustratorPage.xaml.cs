@@ -20,7 +20,9 @@
 
 using System;
 using System.Numerics;
+using Windows.System;
 using CommunityToolkit.Mvvm.Messaging;
+using CommunityToolkit.WinUI.Animations.Expressions;
 using Microsoft.Graphics.Canvas.Effects;
 using Microsoft.UI;
 using Microsoft.UI.Composition;
@@ -31,33 +33,31 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
-using Pixeval.Controls.IllustratorView;
-using Pixeval.Messages;
 using Pixeval.Controls;
+using Pixeval.Controls.IllustratorView;
+using Pixeval.Controls.MarkupExtensions;
+using Pixeval.Messages;
 using Pixeval.Util;
 using Pixeval.Util.UI;
-using Windows.System;
-using CommunityToolkit.WinUI.Animations.Expressions;
-using Pixeval.Controls.MarkupExtensions;
 using WinUI3Utilities;
 
 namespace Pixeval.Pages.IllustratorViewer;
 
 public sealed partial class IllustratorPage
 {
-    private IllustratorPageViewModel _viewModel = null!;
+    private SpriteVisual? _blurredBackgroundImageVisual;
+    private Compositor? _compositor;
 
     private CompositionPropertySet? _props;
     private CompositionPropertySet? _scrollerPropertySet;
-    private Compositor? _compositor;
-    private SpriteVisual? _blurredBackgroundImageVisual;
-
-    public IllustrationContainer ViewModelProvider => IllustrationContainer;
+    private IllustratorPageViewModel _viewModel = null!;
 
     public IllustratorPage()
     {
         InitializeComponent();
     }
+
+    public IllustrationContainer ViewModelProvider => IllustrationContainer;
 
     public XamlUICommand OpenLinkCommand { get; } = new XamlUICommand
     {
@@ -115,7 +115,7 @@ public sealed partial class IllustratorPage
         var headerContainer = (UIElement)VisualTreeHelper.GetParent(headerPresenter);
         Canvas.SetZIndex(headerContainer, 1);
         return;
-        //        _scrollerPropertySet = ElementCompositionPreview.GetScrollViewerManipulationPropertySet(IllustrationContainer.IllustrationView.ScrollView);
+        // _scrollerPropertySet = ElementCompositionPreview.GetScrollViewerManipulationPropertySet(IllustrationContainer.IllustrationView.ScrollView);
         _compositor = _scrollerPropertySet.Compositor;
 
         _props = _compositor.CreatePropertySet();

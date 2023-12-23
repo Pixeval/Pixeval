@@ -22,6 +22,10 @@ using System;
 using System.Linq;
 using System.Numerics;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.DataTransfer;
+using Windows.Foundation;
+using Windows.Graphics;
+using Windows.Storage.Streams;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -29,32 +33,65 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.AppManagement;
+using Pixeval.Controls;
+using Pixeval.Controls.Windowing;
 using Pixeval.Misc;
 using Pixeval.Options;
 using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
-using Windows.ApplicationModel.DataTransfer;
-using Windows.Foundation;
-using Windows.Graphics;
-using Windows.Storage.Streams;
-using Pixeval.Controls;
-using Pixeval.Controls.Windowing;
 using WinUI3Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
-using Pixeval.CoreApi.Model;
-using System.IO;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
 public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragRegion
 {
+    private const ThumbnailUrlOption Option = ThumbnailUrlOption.SquareMedium;
+    private bool _pointerNotInArea = true;
+
+    private bool _timeUp;
     private IllustrationViewerPageViewModel _viewModel = null!;
 
-    private const ThumbnailUrlOption Option = ThumbnailUrlOption.SquareMedium;
-
     public IllustrationViewerPage() => InitializeComponent();
+
+    public bool PointerNotInArea
+    {
+        get => _pointerNotInArea;
+        set
+        {
+            _pointerNotInArea = value;
+            if (Initialized && _pointerNotInArea && TimeUp)
+                BottomCommandSection.Translation = new Vector3(0, 120, 0);
+        }
+    }
+
+    public bool TimeUp
+    {
+        get => _timeUp;
+        set
+        {
+            _timeUp = value;
+            if (Initialized && _timeUp && PointerNotInArea)
+                BottomCommandSection.Translation = new Vector3(0, 120, 0);
+        }
+    }
+
+    public void SetTitleBarDragRegion()
+    {
+        var pointCommandBar = IllustrationViewerCommandBar.TransformToVisual(this).TransformPoint(new Point(0, 0));
+        var pointSubCommandBar = IllustrationViewerSubCommandBar.TransformToVisual(this).TransformPoint(new Point(0, 0));
+        var commandBarRect = new RectInt32((int)pointCommandBar.X, (int)pointCommandBar.Y, (int)IllustrationViewerCommandBar.ActualWidth, (int)IllustrationViewerCommandBar.ActualHeight);
+        var subCommandBarRect = new RectInt32((int)pointSubCommandBar.X, (int)pointSubCommandBar.Y, (int)IllustrationViewerSubCommandBar.ActualWidth, (int)IllustrationViewerSubCommandBar.ActualHeight);
+
+        Window.SetDragRegion(new DragZoneInfo(commandBarRect, subCommandBarRect)
+        {
+            DragZoneLeftIndent = _viewModel.IsInfoPaneOpen
+                ? (int)IllustrationInfoAndCommentsSplitView.OpenPaneLength
+                : 0
+        });
+    }
 
     /// <summary>
     /// <see cref="IllustrationViewerPage.OnPageDeactivated"/> might not be called when the window is closed
@@ -154,7 +191,7 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
 
     private async void IllustrationItemsView_OnElementPrepared(AdvancedItemsView sender, ItemContainer itemContainer)
     {
-        var thumbnail = itemContainer.Child.To<IllustrationImage>();
+        var thumbnail = itemContainer.Child.To<IllustrationItem>();
         var viewModel = thumbnail.ViewModel;
 
         _ = await viewModel.TryLoadThumbnail(_viewModel, Option);
@@ -162,7 +199,7 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
 
     private void IllustrationItemsView_OnElementClearing(AdvancedItemsView sender, ItemContainer itemContainer)
     {
-        var viewModel = itemContainer.Child.To<IllustrationImage>().ViewModel;
+        var viewModel = itemContainer.Child.To<IllustrationItem>().ViewModel;
 
         viewModel.UnloadThumbnail(_viewModel, Option);
     }
@@ -282,21 +319,6 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
 
     private void IllustrationInfoAndCommentsSplitView_OnPaneOpenedOrClosed(SplitView sender, object args) => SetTitleBarDragRegion();
 
-    public void SetTitleBarDragRegion()
-    {
-        var pointCommandBar = IllustrationViewerCommandBar.TransformToVisual(this).TransformPoint(new Point(0, 0));
-        var pointSubCommandBar = IllustrationViewerSubCommandBar.TransformToVisual(this).TransformPoint(new Point(0, 0));
-        var commandBarRect = new RectInt32((int)pointCommandBar.X, (int)pointCommandBar.Y, (int)IllustrationViewerCommandBar.ActualWidth, (int)IllustrationViewerCommandBar.ActualHeight);
-        var subCommandBarRect = new RectInt32((int)pointSubCommandBar.X, (int)pointSubCommandBar.Y, (int)IllustrationViewerSubCommandBar.ActualWidth, (int)IllustrationViewerSubCommandBar.ActualHeight);
-
-        Window.SetDragRegion(new DragZoneInfo(commandBarRect, subCommandBarRect)
-        {
-            DragZoneLeftIndent = _viewModel.IsInfoPaneOpen
-                ? (int)IllustrationInfoAndCommentsSplitView.OpenPaneLength
-                : 0
-        });
-    }
-
     private async void IllustrationImageShowcaseFrame_OnTapped(object sender, TappedRoutedEventArgs e)
     {
         BottomCommandSection.Translation = new Vector3();
@@ -310,31 +332,6 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
         var button = (ICommandBarElement)sender;
         ((FrameworkElement)sender).Width = button.IsInOverflow ? double.NaN : (double)Application.Current.Resources["CollapsedAppBarButtonWidth"];
     }
-
-    public bool PointerNotInArea
-    {
-        get => _pointerNotInArea;
-        set
-        {
-            _pointerNotInArea = value;
-            if (Initialized && _pointerNotInArea && TimeUp)
-                BottomCommandSection.Translation = new Vector3(0, 120, 0);
-        }
-    }
-
-    public bool TimeUp
-    {
-        get => _timeUp;
-        set
-        {
-            _timeUp = value;
-            if (Initialized && _timeUp && PointerNotInArea)
-                BottomCommandSection.Translation = new Vector3(0, 120, 0);
-        }
-    }
-
-    private bool _timeUp;
-    private bool _pointerNotInArea = true;
 
     private void FrameworkElement_OnLoaded(object sender, RoutedEventArgs e)
     {

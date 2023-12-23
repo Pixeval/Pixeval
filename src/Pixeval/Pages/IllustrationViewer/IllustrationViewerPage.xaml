@@ -246,9 +246,9 @@
                             SelectedIndex="{x:Bind _viewModel.CurrentIllustrationIndex, Mode=TwoWay}"
                             SelectionMode="Single">
                             <controls:AdvancedItemsView.ItemTemplate>
-                                <DataTemplate x:DataType="illustrationView:IllustrationViewModel">
+                                <DataTemplate x:DataType="illustrationView:IllustrationItemViewModel">
                                     <ItemContainer Loaded="FrameworkElement_OnLoaded">
-                                        <controls:IllustrationImage
+                                        <controls:IllustrationItem
                                             Width="80"
                                             Height="80"
                                             ThumbnailOption="{x:Bind local:IllustrationViewerPage.Option}"

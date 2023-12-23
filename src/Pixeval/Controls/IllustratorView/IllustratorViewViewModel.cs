@@ -18,19 +18,15 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using Pixeval.CoreApi.Model;
 using Pixeval.Controls.Illustrate;
+using Pixeval.CoreApi.Model;
 using Pixeval.Util;
-using Pixeval.Pages.Capability;
 
 namespace Pixeval.Controls.IllustratorView;
 
-/// <summary>
-/// For <see cref="FollowingsPage"/>
-/// </summary>
-public sealed class IllustratorViewViewModel : IllustrateViewViewModel<User, IllustratorViewModel>
+public sealed class IllustratorViewViewModel : IllustrateViewViewModel<User, IllustratorItemViewModel>
 {
-    public override IDataProvider<User, IllustratorViewModel> DataProvider { get; } = new IllustratorViewDataProvider();
+    public override IDataProvider<User, IllustratorItemViewModel> DataProvider { get; } = new IllustratorViewDataProvider();
 
     public override void Dispose()
     {

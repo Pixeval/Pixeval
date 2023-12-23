@@ -21,25 +21,25 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using Windows.Storage.Streams;
+using Pixeval.Controls.IllustrationView;
 using Pixeval.Database;
 using Pixeval.Util;
 using Pixeval.Util.IO;
-using Windows.Storage.Streams;
-using Pixeval.Controls.IllustrationView;
 
 namespace Pixeval.Download;
 
 public class IllustrationDownloadTask : ObservableDownloadTask, IIllustrationViewModelProvider
 {
-    public IllustrationDownloadTask(DownloadHistoryEntry dataBaseEntry, IllustrationViewModel illustrationViewModel) : base(dataBaseEntry)
+    public IllustrationDownloadTask(DownloadHistoryEntry dataBaseEntry, IllustrationItemViewModel illustrationViewModel) : base(dataBaseEntry)
     {
         IllustrationViewModel = illustrationViewModel;
         CurrentState = DownloadState.Created;
     }
 
-    public IllustrationViewModel IllustrationViewModel { get; }
+    public IllustrationItemViewModel IllustrationViewModel { get; }
 
-    public Task<IllustrationViewModel> GetViewModelAsync()
+    public Task<IllustrationItemViewModel> GetViewModelAsync()
     {
         return Task.FromResult(IllustrationViewModel);
     }

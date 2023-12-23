@@ -45,13 +45,6 @@ public partial record AppSetting : IWindowSettings
     }
 
     /// <summary>
-    ///     The Application Theme
-    /// </summary>
-    [DefaultValue(AppTheme.SystemDefault)]
-    [SettingMetadata(SettingEntryCategory.Application, typeof(SettingsPageResources), nameof(SettingsPageResources.ThemeEntryHeader))]
-    public AppTheme Theme { get; set; }
-
-    /// <summary>
     ///     Indicates whether the restricted content are permitted to be included
     ///     in the searching results, including R-18 and R-18G
     /// </summary>
@@ -252,10 +245,6 @@ public partial record AppSetting : IWindowSettings
     [SyntheticSetting]
     public bool ShowExternalCommandBarInIllustratorContentViewer { get; set; }
 
-    [DefaultValue(BackdropType.MicaAlt)]
-    [SettingMetadata(SettingEntryCategory.Application, typeof(SettingsPageResources), nameof(SettingsPageResources.BackdropEntryHeader))]
-    public BackdropType Backdrop { get; set; }
-
     [DefaultValue(LoginProxyOption.UseDirect)]
     [AttributeIgnore(typeof(SettingsViewModelAttribute<>))]
     public LoginProxyOption LoginProxyOption { get; set; }
@@ -263,6 +252,17 @@ public partial record AppSetting : IWindowSettings
     [DefaultValue("")]
     [AttributeIgnore(typeof(SettingsViewModelAttribute<>))]
     public string ProxyString { get; set; }
+
+    /// <summary>
+    ///     The Application Theme
+    /// </summary>
+    [DefaultValue(AppTheme.SystemDefault)]
+    [SettingMetadata(SettingEntryCategory.Application, typeof(SettingsPageResources), nameof(SettingsPageResources.ThemeEntryHeader))]
+    public AppTheme Theme { get; set; }
+
+    [DefaultValue(BackdropType.MicaAlt)]
+    [SettingMetadata(SettingEntryCategory.Application, typeof(SettingsPageResources), nameof(SettingsPageResources.BackdropEntryHeader))]
+    public BackdropType Backdrop { get; set; }
 
     public static AppSetting CreateDefault()
     {
