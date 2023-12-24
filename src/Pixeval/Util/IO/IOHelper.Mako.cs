@@ -19,6 +19,7 @@
 #endregion
 
 using System;
+using System.IO;
 using System.Threading.Tasks;
 using Windows.Storage.Streams;
 using Microsoft.UI.Xaml.Media;
@@ -32,6 +33,15 @@ namespace Pixeval.Util.IO;
 
 public static partial class IoHelper
 {
+    public static async Task<Result<Stream>> DownloadStreamResultAsync(
+        this MakoClient client,
+        string url,
+        IProgress<int>? progress = null,
+        CancellationHandle? cancellationHandle = null)
+    {
+        return await client.GetMakoHttpClient(MakoApiKind.ImageApi).DownloadAsStreamAsync(url, progress, cancellationHandle);
+    }
+
     public static async Task<Result<IRandomAccessStream>> DownloadRandomAccessStreamResultAsync(
         this MakoClient client,
         string url,

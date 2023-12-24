@@ -191,7 +191,7 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
 
     private async void IllustrationItemsView_OnElementPrepared(AdvancedItemsView sender, ItemContainer itemContainer)
     {
-        var thumbnail = itemContainer.Child.To<IllustrationItem>();
+        var thumbnail = itemContainer.Child.To<IllustrationImage>();
         var viewModel = thumbnail.ViewModel;
 
         _ = await viewModel.TryLoadThumbnail(_viewModel, Option);
@@ -199,7 +199,7 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
 
     private void IllustrationItemsView_OnElementClearing(AdvancedItemsView sender, ItemContainer itemContainer)
     {
-        var viewModel = itemContainer.Child.To<IllustrationItem>().ViewModel;
+        var viewModel = itemContainer.Child.To<IllustrationImage>().ViewModel;
 
         viewModel.UnloadThumbnail(_viewModel, Option);
     }
@@ -210,7 +210,7 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
     {
         // all the illustrations in _viewModels only differ in different image sources
         var vm = _viewModel.CurrentIllustration;
-        if (_viewModel.CurrentImage.LoadingOriginalSourceTask is not { IsCompletedSuccessfully: true })
+        if (_viewModel.CurrentImage.LoadSuccessfully)
         {
             return;
         }
@@ -233,7 +233,7 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
             if (_viewModel.CurrentImage.OriginalImageSources is { } streams)
             {
                 var metadata = await App.AppViewModel.MakoClient.GetUgoiraMetadataAsync(vm.Id);
-                var stream = await streams.SaveToStreamAsync(metadata, App.AppViewModel.AppSetting.UgoiraDownloadFormat);
+                var stream = await streams.UgoiraSaveToStreamAsync(metadata);
                 var file = await AppKnownFolders.CreateTemporaryFileWithRandomNameAsync(IoHelper.GetUgoiraExtension());
                 await stream.SaveToFileAsync(file);
                 request.Data.SetStorageItems([file]);

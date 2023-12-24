@@ -1,8 +1,8 @@
-#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) ${File.SolutionName}/${File.ProjectName}
 // GPL v3 License
 // 
-// Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/XRestrictLevel.cs
+// Pixeval/Pixeval.Controls
+// Copyright (c) 2023 Pixeval.Controls/BoolNegationToVisibilityConverter.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,11 +18,16 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-namespace Pixeval.Options;
+using System;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Data;
+using WinUI3Utilities;
 
-public enum XRestrictLevel
+namespace Pixeval.Controls.Converters;
+
+public class BoolNegationToVisibilityConverter : IValueConverter
 {
-    Ordinary = 0,
-    R18 = 1,
-    R18G = 2
+    public object Convert(object value, Type targetType, object parameter, string language) => value.To<bool>() ? Visibility.Collapsed : Visibility.Visible;
+
+    public object ConvertBack(object value, Type targetType, object parameter, string language) => value.To<Visibility>() is Visibility.Collapsed;
 }

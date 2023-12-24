@@ -24,14 +24,8 @@ using System.IO;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using Windows.Storage;
-using Windows.Storage.Pickers;
 using Windows.Storage.Streams;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IO;
-using Pixeval.Controls.IllustrationView;
-using Pixeval.Download;
-using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using Pixeval.Utilities.Threading;
 
@@ -153,45 +147,6 @@ public static partial class IoHelper
         catch (Exception e)
         {
             return Result<Stream>.AsFailure(e);
-        }
-    }
-
-    public static async Task SaveAsync(this IllustrationItemViewModel viewModel)
-    {
-        using var scope = App.AppViewModel.AppServicesScope;
-        var factory = scope.ServiceProvider.GetRequiredService<IDownloadTaskFactory<IllustrationItemViewModel, ObservableDownloadTask>>();
-        foreach (var mangaIllustrationViewModel in viewModel.GetMangaIllustrationViewModels())
-        {
-            var downloadTask = await factory.CreateAsync(mangaIllustrationViewModel, App.AppViewModel.AppSetting.DefaultDownloadPathMacro);
-            App.AppViewModel.DownloadManager.QueueTask(downloadTask);
-        }
-    }
-
-    public static async Task SaveAsAsync(this IllustrationItemViewModel viewModel)
-    {
-        IStorageItem? item = viewModel.IsManga
-            ? await UiHelper.OpenFolderPickerAsync(PickerLocationId.PicturesLibrary)
-            : await UiHelper.OpenFileSavePickerAsync(viewModel.Id, $"{viewModel.Illustrate.GetImageFormat().RemoveSurrounding(".", string.Empty)} file", viewModel.Illustrate.GetImageFormat());
-
-        using var scope = App.AppViewModel.AppServicesScope;
-        var factory = scope.ServiceProvider.GetRequiredService<IDownloadTaskFactory<IllustrationItemViewModel, ObservableDownloadTask>>();
-        switch (item)
-        {
-            case StorageFile file:
-                // the file save picker will create a file automatically, and we choose to create one
-                // manually instead of using that file
-                await file.DeleteAsync(StorageDeleteOption.PermanentDelete);
-                var task = await factory.CreateAsync(viewModel, file.Path);
-                App.AppViewModel.DownloadManager.QueueTask(task);
-                break;
-            case StorageFolder folder:
-                foreach (var mangaIllustrationViewModel in viewModel.GetMangaIllustrationViewModels())
-                {
-                    var mTask = await factory.CreateAsync(mangaIllustrationViewModel, Path.Combine(folder.Path, $"{viewModel.Id}_{mangaIllustrationViewModel.MangaIndex}"));
-                    App.AppViewModel.DownloadManager.QueueTask(mTask);
-                }
-
-                break;
         }
     }
 }

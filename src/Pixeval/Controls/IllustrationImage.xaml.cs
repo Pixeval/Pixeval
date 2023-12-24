@@ -30,11 +30,11 @@ namespace Pixeval.Controls;
 
 [DependencyProperty<IllustrationItemViewModel>("ViewModel")]
 [DependencyProperty<ThumbnailUrlOption>("ThumbnailOption")]
-public sealed partial class IllustrationItem : UserControl, IViewModelControl
+public sealed partial class IllustrationImage : UserControl, IViewModelControl
 {
     object IViewModelControl.ViewModel => ViewModel;
 
-    public IllustrationItem() => InitializeComponent();
+    public IllustrationImage() => InitializeComponent();
 
     /// <summary>
     /// 这个方法用来刷新获取缩略图属性

@@ -133,12 +133,12 @@ public static partial class IoHelper
 
     public static async Task<StorageFile> GetOrCreateFileAsync(this StorageFolder folder, string itemName)
     {
-        return await folder.TryGetItemAsync(itemName) is StorageFile file ? file : await folder.CreateFileAsync(itemName, CreationCollisionOption.ReplaceExisting);
+        return await folder.TryGetItemAsync(itemName) as StorageFile ?? await folder.CreateFileAsync(itemName, CreationCollisionOption.ReplaceExisting);
     }
 
     public static async Task<StorageFolder> GetOrCreateFolderAsync(this StorageFolder folder, string folderName)
     {
-        return await folder.TryGetItemAsync(folderName) is StorageFolder f ? f : await folder.CreateFolderAsync(folderName, CreationCollisionOption.ReplaceExisting);
+        return await folder.TryGetItemAsync(folderName) as StorageFolder ?? await folder.CreateFolderAsync(folderName, CreationCollisionOption.ReplaceExisting);
     }
 
     public static async Task<string?> ReadStringAsync(this StorageFile storageFile, Encoding? encoding = null)
@@ -148,7 +148,7 @@ public static partial class IoHelper
 
     public static async Task<byte[]?> ReadBytesAsync(this StorageFile? file)
     {
-        if (file == null)
+        if (file is null)
         {
             return null;
         }
@@ -176,7 +176,7 @@ public static partial class IoHelper
         return httpClient.SendAsync(httpRequestMessage);
     }
 
-    public static async Task<(string filename, Stream content)[]> ReadZipArchiveEntries(Stream zipStream)
+    public static async Task<(string Filename, InMemoryRandomAccessStream Content)[]> ReadZipArchiveEntries(Stream zipStream)
     {
         using var archive = new ZipArchive(zipStream, ZipArchiveMode.Read);
         // return the result of Select directly will cause the enumeration to be delayed
@@ -187,10 +187,10 @@ public static partial class IoHelper
         return await Task.WhenAll(archive.Entries.Select(async entry =>
         {
             await using var stream = entry.Open();
-            var ms = new MemoryStream();
-            await stream.CopyToAsync(ms);
-            _ = ms.Seek(0, SeekOrigin.Begin);
-            return (entry.Name, (Stream)ms);
+            var ms = new InMemoryRandomAccessStream();
+            await stream.CopyToAsync(ms.AsStreamForWrite());
+            ms.Seek(0);
+            return (entry.Name, ms);
         }));
     }
 

@@ -81,7 +81,7 @@ public record Illustration : IIllustrate
     public long SanityLevel { get; set; }
 
     [JsonPropertyName("x_restrict")]
-    public long XRestrict { get; set; }
+    public XRestrict XRestrict { get; set; }
 
     [JsonPropertyName("meta_single_page")]
     public IllustrationMetaSinglePage? MetaSinglePage { get; set; }
@@ -141,4 +141,11 @@ public record Illustration : IIllustrate
         [JsonPropertyName("image_urls")]
         public IllustrationImageUrls? ImageUrls { get; set; }
     }
+}
+
+public enum XRestrict
+{
+    Ordinary = 0,
+    R18 = 1,
+    R18G = 2
 }

@@ -26,7 +26,7 @@
         <ItemsView.ItemTemplate>
             <DataTemplate x:DataType="local:IllustrationItemViewModel">
                 <ItemContainer IsSelected="{x:Bind IsSelected, Mode=TwoWay}">
-                    <local:IllustrationThumbnail
+                    <local:IllustrationItem
                         ShowQrCodeRequested="IllustrationThumbnailOnShowQrCodeRequested"
                         ThisRequired="IllustrationThumbnail_OnThisRequired"
                         ViewModel="{x:Bind}" />

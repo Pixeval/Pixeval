@@ -156,6 +156,10 @@ public static partial class UiHelper
         Clipboard.Flush();
     }
 
+    /// <summary>
+    /// 调用此方法不要过快
+    /// </summary>
+    /// <param name="stream">静态图需要PNG，动图任意格式的图片</param>
     public static void ClipboardSetBitmap(IRandomAccessStream stream)
     {
         var reference = RandomAccessStreamReference.CreateFromStream(stream);

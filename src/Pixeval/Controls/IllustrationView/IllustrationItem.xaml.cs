@@ -34,12 +34,15 @@ using WinUI3Utilities.Attributes;
 namespace Pixeval.Controls.IllustrationView;
 
 [DependencyProperty<IllustrationItemViewModel>("ViewModel")]
-public sealed partial class IllustrationThumbnail : CardControl, IViewModelControl
+public sealed partial class IllustrationItem : IViewModelControl
 {
-    public IllustrationThumbnail() => InitializeComponent();
+    object IViewModelControl.ViewModel => ViewModel;
+
+    public IllustrationItem() => InitializeComponent();
 
     private ThumbnailUrlOption ThumbnailUrlOption => ThisRequired.Invoke().LayoutType.ToThumbnailUrlOption();
-    object IViewModelControl.ViewModel => ViewModel;
+
+    private double DesiredHeight => ThisRequired.Invoke().DesiredHeight;
 
     /// <summary>
     /// 请求显示二维码
@@ -54,15 +57,12 @@ public sealed partial class IllustrationThumbnail : CardControl, IViewModelContr
     private async void ToggleBookmarkButtonOnTapped(object sender, TappedRoutedEventArgs e)
     {
         e.Handled = true;
-        if (ViewModel.IsBookmarked)
-            await ViewModel.RemoveBookmarkAsync();
-        else
-            await ViewModel.PostPublicBookmarkAsync();
+        await ViewModel.ToggleBookmarkStateAsync();
     }
 
     private async void BookmarkContextItemOnTapped(object sender, TappedRoutedEventArgs e)
     {
-        await ViewModel.SwitchBookmarkStateAsync();
+        await ViewModel.ToggleBookmarkStateAsync();
     }
 
     private async void SaveContextItemOnTapped(object sender, TappedRoutedEventArgs e)
@@ -120,9 +120,8 @@ public sealed partial class IllustrationThumbnail : CardControl, IViewModelContr
     private double GetDesiredWidth(IllustrationItemViewModel viewModel)
     {
         var illustration = viewModel.Illustrate;
-        var thumbnailUrlOption = ThisRequired.Invoke().LayoutType.ToThumbnailUrlOption();
         var thumbnailDirection = ThisRequired.Invoke().ThumbnailDirection;
-        return thumbnailUrlOption is ThumbnailUrlOption.SquareMedium
+        return ThumbnailUrlOption is ThumbnailUrlOption.SquareMedium
             ? thumbnailDirection switch
             {
                 ThumbnailDirection.Landscape => IllustrationView.PortraitHeight,
@@ -136,10 +135,6 @@ public sealed partial class IllustrationThumbnail : CardControl, IViewModelContr
                 _ => ThrowHelper.ArgumentOutOfRange<ThumbnailDirection, double>(thumbnailDirection)
             };
     }
-
-#pragma warning disable IDE0060 // 删除未使用的参数
-    private double GetDesiredHeight(IllustrationItemViewModel viewModel) => ThisRequired.Invoke().DesiredHeight;
-#pragma warning restore IDE0060
 
     private Visibility IsImageLoaded(IDictionary<ThumbnailUrlOption, SoftwareBitmapSource> dictionary) => dictionary.ContainsKey(ThumbnailUrlOption) ? Visibility.Collapsed : Visibility.Visible;
 

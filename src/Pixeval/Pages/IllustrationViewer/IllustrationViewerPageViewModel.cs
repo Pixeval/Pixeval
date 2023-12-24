@@ -175,10 +175,6 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
 
     public Task LoadMoreAsync(uint count) => ViewModelSource?.LoadMoreAsync(count) ?? Task.CompletedTask;
 
-    public Task PostPublicBookmarkAsync() => CurrentIllustration.PostPublicBookmarkAsync();
-
-    public Task RemoveBookmarkAsync() => CurrentIllustration.RemoveBookmarkAsync();
-
     #region Tags for IllustrationInfoAndCommentsNavigationView
 
     public NavigationViewTag RelatedWorksTag = new(typeof(RelatedWorksPage), null);
@@ -223,7 +219,7 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
             _pages?.ForEach(i => i.Dispose());
             _pages = CurrentIllustration.Illustrate.PageCount <= 1
             // 保证_pages里所有的IllustrationViewModel都是生成的，从而删除的时候一律DisposeForce
-                ? new[] { new IllustrationItemViewModel(CurrentIllustration.Illustrate) }
+                ? [new IllustrationItemViewModel(CurrentIllustration.Illustrate)]
                 : CurrentIllustration.Illustrate.MetaPages!
                     .Select((m, i) =>
                         new IllustrationItemViewModel(CurrentIllustration.Illustrate with { ImageUrls = m.ImageUrls })
@@ -375,9 +371,22 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
         RestoreResolutionCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
 
         CopyCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
-        CopyCommand.ExecuteRequested += async (_, _) => UiHelper.ClipboardSetBitmap(await CurrentImage.OriginalImageStream!.EncodeBitmapStreamAsync(false));
+        CopyCommand.ExecuteRequested += async (_, _) =>
+        {
+            var progress = null as Progress<int>;
+            if (CurrentImage.IllustrationViewModel.IsUgoira)
+                progress = new(d => SnackBarTeachingTip.Show(IllustrationViewerPageResources.UgoiraProcessing.Format(d),
+                    TeachingTipSeverity.Information, isLightDismissEnabled: true));
+            else
+                SnackBarTeachingTip.Show(IllustrationViewerPageResources.ImageProcessing, isLightDismissEnabled: true);
+            if (await CurrentImage.GetOriginalImageSourceForClipBoard(progress) is { } source)
+            {
+                UiHelper.ClipboardSetBitmap(source);
+                SnackBarTeachingTip.ShowAndHide(IllustrationViewerPageResources.ImageSetToClipBoard);
+            }
+        };
 
-        PlayGifCommand.CanExecuteRequested += (_, e) => e.CanExecute = IsUgoira && CurrentImage.LoadingCompletedSuccessfully;
+        PlayGifCommand.CanExecuteRequested += (_, e) => e.CanExecute = IsUgoira && CurrentImage.LoadSuccessfully;
         PlayGifCommand.ExecuteRequested += PlayGifCommandOnExecuteRequested;
 
         // 相当于鼠标滚轮滚动10次，方便快速缩放
@@ -419,12 +428,12 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
 
     private void LoadingCompletedCanExecuteRequested(XamlUICommand sender, CanExecuteRequestedEventArgs args)
     {
-        args.CanExecute = CurrentImage.LoadingCompletedSuccessfully;
+        args.CanExecute = CurrentImage.LoadSuccessfully;
     }
 
     private void IsNotUgoiraAndLoadingCompletedCanExecuteRequested(XamlUICommand sender, CanExecuteRequestedEventArgs args)
     {
-        args.CanExecute = !IsUgoira && CurrentImage.LoadingCompletedSuccessfully;
+        args.CanExecute = !IsUgoira && CurrentImage.LoadSuccessfully;
     }
 
     private async void SetAsBackgroundCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
@@ -499,7 +508,7 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
 
     private void ShareCommandExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
-        if (CurrentImage.LoadingOriginalSourceTask is not { IsCompletedSuccessfully: true })
+        if (CurrentImage.LoadSuccessfully)
         {
             SnackBarTeachingTip.ShowAndHide(IllustrationViewerPageResources.CannotShareImageForNowTitle, TeachingTipSeverity.Warning,
                 IllustrationViewerPageResources.CannotShareImageForNowContent);
@@ -528,7 +537,7 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
 
     private void BookmarkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
-        (CurrentIllustration.IsBookmarked ? RemoveBookmarkAsync() : PostPublicBookmarkAsync()).Discard();
+        CurrentIllustration.ToggleBookmarkStateAsync().Discard();
         // update manually
         BookmarkCommand.Label = CurrentIllustration.IsBookmarked ? MiscResources.RemoveBookmark : MiscResources.AddBookmark;
         BookmarkCommand.IconSource = MakoHelper.GetBookmarkButtonIconSource(CurrentIllustration.IsBookmarked);
@@ -609,13 +618,13 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
 
     public XamlUICommand OpenInWebBrowserCommand { get; } = IllustrationViewerPageResources.OpenInWebBrowser.GetCommand(FontIconSymbols.WebSearchF6FA);
 
-    public StandardUICommand ShareCommand { get; } = new StandardUICommand(StandardUICommandKind.Share);
+    public StandardUICommand ShareCommand { get; } = new(StandardUICommandKind.Share);
 
     public XamlUICommand ShowQrCodeCommand { get; } = IllustrationViewerPageResources.ShowQRCode.GetCommand(FontIconSymbols.QRCodeED14);
 
-    public XamlUICommand SetAsLockScreenCommand { get; } = new XamlUICommand { Label = IllustrationViewerPageResources.LockScreen };
+    public XamlUICommand SetAsLockScreenCommand { get; } = new() { Label = IllustrationViewerPageResources.LockScreen };
 
-    public XamlUICommand SetAsBackgroundCommand { get; } = new XamlUICommand { Label = IllustrationViewerPageResources.Background };
+    public XamlUICommand SetAsBackgroundCommand { get; } = new() { Label = IllustrationViewerPageResources.Background };
 
     public XamlUICommand FullScreenCommand { get; } = IllustrationViewerPageResources.FullScreen.GetCommand(FontIconSymbols.FullScreenE740);
 

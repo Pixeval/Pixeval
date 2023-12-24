@@ -140,16 +140,6 @@ public static class MakoHelper
         engine.EngineHandle.Cancel();
     }
 
-    public static bool IsRestricted(this Illustration illustration)
-    {
-        return illustration.XRestrict != 0;
-    }
-
-    public static XRestrictLevel RestrictLevel(this Illustration illustration)
-    {
-        return (XRestrictLevel)illustration.XRestrict;
-    }
-
     public static string GenerateStickerDownloadUrl(int id)
     {
         return $"https://s.pximg.net/common/images/stamp/generated-stamps/{id}_s.jpg";
@@ -159,13 +149,13 @@ public static class MakoHelper
     {
         var systemThemeFontFamily = new FontFamily(AppContext.AppIconFontFamilyName);
         return isBookmarked
-            ? new FontSymbolIconSource
+            ? new()
             {
                 Symbol = FontIconSymbols.HeartFillEB52,
                 Foreground = new SolidColorBrush(Colors.Crimson),
                 FontFamily = systemThemeFontFamily
             }
-            : new FontSymbolIconSource
+            : new()
             {
                 Symbol = FontIconSymbols.HeartEB51,
                 FontFamily = systemThemeFontFamily
@@ -176,13 +166,13 @@ public static class MakoHelper
     {
         var systemThemeFontFamily = new FontFamily(AppContext.AppIconFontFamilyName);
         return isBookmarked
-            ? new FontSymbolIcon
+            ? new()
             {
                 Symbol = FontIconSymbols.HeartFillEB52,
                 Foreground = new SolidColorBrush(Colors.Crimson),
                 FontFamily = systemThemeFontFamily
             }
-            : new FontSymbolIcon
+            : new()
             {
                 Symbol = FontIconSymbols.HeartEB51,
                 FontFamily = systemThemeFontFamily
@@ -193,16 +183,21 @@ public static class MakoHelper
     {
         var systemThemeFontFamily = new FontFamily(AppContext.AppIconFontFamilyName);
         return isFollowed
-            ? new FontSymbolIconSource
+            ? new()
             {
                 Symbol = FontIconSymbols.ContactSolidEA8C,
                 Foreground = new SolidColorBrush(Colors.Crimson),
                 FontFamily = systemThemeFontFamily
             }
-            : new FontSymbolIconSource
+            : new()
             {
                 Symbol = FontIconSymbols.ContactE77B,
                 FontFamily = systemThemeFontFamily
             };
+    }
+
+    public static string GetBookmarkContextItemText(bool isBookmarked)
+    {
+        return isBookmarked ? MiscResources.RemoveBookmark : MiscResources.AddBookmark;
     }
 }

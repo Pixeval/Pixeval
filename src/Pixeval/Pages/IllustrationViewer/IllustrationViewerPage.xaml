@@ -248,7 +248,7 @@
                             <controls:AdvancedItemsView.ItemTemplate>
                                 <DataTemplate x:DataType="illustrationView:IllustrationItemViewModel">
                                     <ItemContainer Loaded="FrameworkElement_OnLoaded">
-                                        <controls:IllustrationItem
+                                        <controls:IllustrationImage
                                             Width="80"
                                             Height="80"
                                             ThumbnailOption="{x:Bind local:IllustrationViewerPage.Option}"

@@ -352,10 +352,10 @@
         <Page Update="Controls\IllustratorItem\IllustratorIllustrationsOverview.xaml">
           <Generator>MSBuild:Compile</Generator>
         </Page>
-        <Page Update="Controls\IllustrationItem.xaml">
+        <Page Update="Controls\IllustrationImage.xaml">
           <Generator>MSBuild:Compile</Generator>
         </Page>
-        <Page Update="Controls\IllustrationView\IllustrationThumbnail.xaml">
+        <Page Update="Controls\IllustrationView\IllustrationItem.xaml">
           <Generator>MSBuild:Compile</Generator>
         </Page>
         <Page Update="Controls\IllustratorContentViewer\IllustratorIllustrationAndMangaBookmarkPage.xaml">

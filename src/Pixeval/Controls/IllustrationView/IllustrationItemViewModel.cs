@@ -22,11 +22,15 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Storage;
+using Windows.Storage.Pickers;
 using Windows.Storage.Streams;
 using Windows.UI;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
@@ -34,9 +38,11 @@ using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.Controls.Illustrate;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Model;
+using Pixeval.Download;
 using Pixeval.Options;
 using Pixeval.Util;
 using Pixeval.Util.IO;
+using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using Pixeval.Utilities.Threading;
 using AppContext = Pixeval.AppManagement.AppContext;
@@ -55,15 +61,15 @@ public class IllustrationItemViewModel(Illustration illustration) : IllustrateVi
 
     public int MangaIndex { get; set; }
 
-    public bool IsRestricted => Illustrate.IsRestricted();
+    public bool IsRestricted => Illustrate.XRestrict is not XRestrict.Ordinary;
 
     public bool IsManga => Illustrate.IsManga();
 
     public BadgeMode RestrictionCaption =>
-        Illustrate.RestrictLevel() switch
+        Illustrate.XRestrict switch
         {
-            XRestrictLevel.R18 => BadgeMode.R18,
-            XRestrictLevel.R18G => BadgeMode.R18G,
+            XRestrict.R18 => BadgeMode.R18,
+            XRestrict.R18G => BadgeMode.R18G,
             _ => BadgeMode.R18
         };
 
@@ -137,7 +143,7 @@ public class IllustrationItemViewModel(Illustration illustration) : IllustrateVi
     {
         if (Illustrate.PageCount <= 1)
         {
-            return new[] { this };
+            return [this];
         }
 
         // The API result of manga (a work with multiple illustrations) is a single Illustration object
@@ -153,26 +159,21 @@ public class IllustrationItemViewModel(Illustration illustration) : IllustrateVi
         });
     }
 
-    public Task SwitchBookmarkStateAsync()
+    public Task ToggleBookmarkStateAsync()
     {
         return IsBookmarked ? RemoveBookmarkAsync() : PostPublicBookmarkAsync();
-    }
 
-    public Task RemoveBookmarkAsync()
-    {
-        IsBookmarked = false;
-        return App.AppViewModel.MakoClient.RemoveBookmarkAsync(Id);
-    }
+        Task RemoveBookmarkAsync()
+        {
+            IsBookmarked = false;
+            return App.AppViewModel.MakoClient.RemoveBookmarkAsync(Id);
+        }
 
-    public Task PostPublicBookmarkAsync()
-    {
-        IsBookmarked = true;
-        return App.AppViewModel.MakoClient.PostBookmarkAsync(Id, PrivacyPolicy.Public);
-    }
-
-    public string GetBookmarkContextItemText(bool isBookmarked)
-    {
-        return isBookmarked ? MiscResources.RemoveBookmark : MiscResources.AddBookmark;
+        Task PostPublicBookmarkAsync()
+        {
+            IsBookmarked = true;
+            return App.AppViewModel.MakoClient.PostBookmarkAsync(Id, PrivacyPolicy.Public);
+        }
     }
 
     public bool Equals(IllustrationItemViewModel x, IllustrationItemViewModel y)
@@ -323,6 +324,49 @@ public class IllustrationItemViewModel(Illustration illustration) : IllustrateVi
     {
         DisposeInternal();
         GC.SuppressFinalize(this);
+    }
+
+    #endregion
+
+    #region Helpers
+
+    public async Task SaveAsync()
+    {
+        using var scope = App.AppViewModel.AppServicesScope;
+        var factory = scope.ServiceProvider.GetRequiredService<IDownloadTaskFactory<IllustrationItemViewModel, ObservableDownloadTask>>();
+        foreach (var mangaIllustrationViewModel in GetMangaIllustrationViewModels())
+        {
+            var downloadTask = await factory.CreateAsync(mangaIllustrationViewModel, App.AppViewModel.AppSetting.DefaultDownloadPathMacro);
+            App.AppViewModel.DownloadManager.QueueTask(downloadTask);
+        }
+    }
+
+    public async Task SaveAsAsync()
+    {
+        IStorageItem? item = IsManga
+            ? await UiHelper.OpenFolderPickerAsync(PickerLocationId.PicturesLibrary)
+            : await UiHelper.OpenFileSavePickerAsync(Id, $"{Illustrate.GetImageFormat().RemoveSurrounding(".", string.Empty)} file", Illustrate.GetImageFormat());
+
+        using var scope = App.AppViewModel.AppServicesScope;
+        var factory = scope.ServiceProvider.GetRequiredService<IDownloadTaskFactory<IllustrationItemViewModel, ObservableDownloadTask>>();
+        switch (item)
+        {
+            case StorageFile file:
+                // the file save picker will create a file automatically, and we choose to create one
+                // manually instead of using that file
+                await file.DeleteAsync(StorageDeleteOption.PermanentDelete);
+                var task = await factory.CreateAsync(this, file.Path);
+                App.AppViewModel.DownloadManager.QueueTask(task);
+                break;
+            case StorageFolder folder:
+                foreach (var mangaIllustrationViewModel in GetMangaIllustrationViewModels())
+                {
+                    var mTask = await factory.CreateAsync(mangaIllustrationViewModel, Path.Combine(folder.Path, $"{Id}_{mangaIllustrationViewModel.MangaIndex}"));
+                    App.AppViewModel.DownloadManager.QueueTask(mTask);
+                }
+
+                break;
+        }
     }
 
     #endregion

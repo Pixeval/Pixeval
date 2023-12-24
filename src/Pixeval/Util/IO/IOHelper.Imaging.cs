@@ -44,35 +44,13 @@ namespace Pixeval.Util.IO;
 
 public static partial class IoHelper
 {
-    /// <summary>
-    ///     Re-encode and decode the image that wrapped in <paramref name="imageStream" />. Note that this function
-    ///     is intended to be used when the image is about to be displayed on the screen instead of saving to file
-    /// </summary>
-    /// <returns></returns>
-    public static async Task<SoftwareBitmapSource> EncodeSoftwareBitmapSourceAsync(this IRandomAccessStream imageStream, bool disposeOfImageStream)
+    public static async Task<IRandomAccessStream> SaveAsPngStreamAsync(this IRandomAccessStream imageStream, bool disposeOfImageStream)
     {
-        using var ras = await EncodeBitmapStreamAsync(imageStream, disposeOfImageStream);
-        var source = new SoftwareBitmapSource();
-        await source.SetBitmapAsync(await GetSoftwareBitmapFromStreamAsync(ras));
-
-        return source;
-    }
-
-    public static async Task<IRandomAccessStream> EncodeBitmapStreamAsync(this IRandomAccessStream imageStream, bool disposeOfImageStream)
-    {
-        var bitmap = await GetSoftwareBitmapFromStreamAsync(imageStream);
-        var inMemoryRandomAccessStream = new InMemoryRandomAccessStream();
-        var encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.PngEncoderId, inMemoryRandomAccessStream);
-        encoder.SetSoftwareBitmap(bitmap);
-        encoder.BitmapTransform.InterpolationMode = BitmapInterpolationMode.Fant;
-        await encoder.FlushAsync();
-        inMemoryRandomAccessStream.Seek(0);
-        if (disposeOfImageStream)
-        {
-            imageStream.Dispose();
-        }
-
-        return inMemoryRandomAccessStream;
+        var image = await Image.LoadAsync<Rgba32>(imageStream.AsStreamForRead());
+        var target = new InMemoryRandomAccessStream();
+        await image.SaveAsBmpAsync(target.AsStreamForWrite());
+        target.Seek(0);
+        return target;
     }
 
     public static async Task<SoftwareBitmapSource> GetSoftwareBitmapSourceAsync(this IRandomAccessStream imageStream, bool disposeOfImageStream)
@@ -85,51 +63,64 @@ public static partial class IoHelper
         return source;
     }
 
+    public static async Task<InMemoryRandomAccessStream> UgoiraSaveToStreamAsync(this IEnumerable<IRandomAccessStream> streams, UgoiraMetadataResponse ugoiraMetadataResponse, UgoiraDownloadFormat? ugoiraDownloadFormat = null)
+    {
+        return await streams.UgoiraSaveToStreamAsync(ugoiraMetadataResponse.UgoiraMetadataInfo?.Frames?.Select(t => (int)t.Delay) ?? []);
+    }
+
     /// <summary>
     ///     Writes the frames that are contained in <paramref name="streams" /> into <see cref="InMemoryRandomAccessStream"/>
     ///     and encodes to <paramref name="ugoiraDownloadFormat"/> format
     /// </summary>
-    public static async Task<InMemoryRandomAccessStream> SaveToStreamAsync(this IEnumerable<IRandomAccessStream> streams, UgoiraMetadataResponse ugoiraMetadataResponse, UgoiraDownloadFormat ugoiraDownloadFormat)
+    public static async Task<InMemoryRandomAccessStream> UgoiraSaveToStreamAsync(this IEnumerable<IRandomAccessStream> streams, IEnumerable<int> delays, IProgress<int>? progress = null, UgoiraDownloadFormat? ugoiraDownloadFormat = null)
     {
-        var image = null as Image;
-        var frames = ugoiraMetadataResponse.UgoiraMetadataInfo?.Frames;
-        using var e1 = frames?.GetEnumerator();
-        using var e2 = streams.GetEnumerator();
-        while (e2.MoveNext() && (e1?.MoveNext() ?? true))
+        return await Task.Run(async () =>
         {
-            var delay = (uint?)e1?.Current.Delay ?? 10u;
-            var stream = e2.Current;
+            var s = streams.ToArray();
+            var average = 50d / s.Length;
+            ugoiraDownloadFormat ??= App.AppViewModel.AppSetting.UgoiraDownloadFormat;
+            var image = null as Image;
+            var d = delays as IList<int> ?? delays.ToArray();
+            var i = 0;
+            foreach (var stream in s)
+            {
+                var delay = d.Count > i ? (uint)d[i] : 10u;
+                ++i;
 
-            stream.Seek(0);
-            var tempImage = await Image.LoadAsync(stream.AsStream());
-            ImageFrame newFrame;
-            if (image is null)
-            {
-                image = tempImage;
-                newFrame = image.Frames[0];
+                stream.Seek(0);
+                var tempImage = await Image.LoadAsync(stream.AsStream());
+                ImageFrame newFrame;
+                if (image is null)
+                {
+                    image = tempImage;
+                    newFrame = image.Frames[0];
+                }
+                else
+                {
+                    newFrame = image.Frames.AddFrame(tempImage.Frames[0]);
+                    tempImage.Dispose();
+                }
+
+                newFrame.Metadata.GetFormatMetadata(WebpFormat.Instance).FrameDelay = delay;
+                progress?.Report((int)(i * average));
             }
-            else
-            {
-                newFrame = image.Frames.AddFrame(tempImage.Frames[0]);
-                tempImage.Dispose();
-            }
-            newFrame.Metadata.GetFormatMetadata(WebpFormat.Instance).FrameDelay = delay;
-        }
-        var target = new InMemoryRandomAccessStream();
-        await image!.SaveAsync(target.AsStreamForWrite(),
-            ugoiraDownloadFormat switch
-            {
-                UgoiraDownloadFormat.Tiff => new TiffEncoder(),
-                UgoiraDownloadFormat.APng => new PngEncoder(),
-                UgoiraDownloadFormat.Gif => new GifEncoder(),
-                UgoiraDownloadFormat.WebPLossless => new WebpEncoder { FileFormat = WebpFileFormatType.Lossless },
-                UgoiraDownloadFormat.WebPLossy => new WebpEncoder { FileFormat = WebpFileFormatType.Lossy },
-                _ => ThrowHelper.ArgumentOutOfRange<UgoiraDownloadFormat, IImageEncoder>(
-                    ugoiraDownloadFormat)
-            });
-        image.Dispose();
-        target.Seek(0);
-        return target;
+
+            var target = new InMemoryRandomAccessStream();
+            await image!.SaveAsync(target.AsStreamForWrite(),
+                ugoiraDownloadFormat switch
+                {
+                    UgoiraDownloadFormat.Tiff => new TiffEncoder(),
+                    UgoiraDownloadFormat.APng => new PngEncoder(),
+                    UgoiraDownloadFormat.Gif => new GifEncoder(),
+                    UgoiraDownloadFormat.WebPLossless => new WebpEncoder { FileFormat = WebpFileFormatType.Lossless },
+                    UgoiraDownloadFormat.WebPLossy => new WebpEncoder { FileFormat = WebpFileFormatType.Lossy },
+                    _ => ThrowHelper.ArgumentOutOfRange<UgoiraDownloadFormat?, IImageEncoder>(ugoiraDownloadFormat)
+                });
+            progress?.Report(100);
+            image.Dispose();
+            target.Seek(0);
+            return target;
+        });
     }
 
     /// <summary>
@@ -182,9 +173,21 @@ public static partial class IoHelper
     public static async Task<SoftwareBitmap> GetSoftwareBitmapFromStreamAsync(IRandomAccessStream imageStream)
     {
         // TODO
+        ulong a;
+        ulong b;
+        bool h;
+        bool i;
+        ulong c;
+        ulong d;
         try
         {
+            a = imageStream.Position;
+            b = imageStream.Size;
+            h = imageStream.CanRead;
+            i = imageStream.CanWrite;
             imageStream.Seek(0);
+            c = imageStream.Position;
+            d = imageStream.Size;
             var image = await Image.LoadAsync<Bgra32>(imageStream.AsStreamForRead());
             var softwareBitmap = new SoftwareBitmap(BitmapPixelFormat.Bgra8, image.Width, image.Height,
                 BitmapAlphaMode.Premultiplied);
@@ -205,19 +208,18 @@ public static partial class IoHelper
         // return await decoder.GetSoftwareBitmapAsync(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Premultiplied);
     }
 
-    public static async Task<IRandomAccessStream> GetStreamFromZipStreamAsync(Stream zipStream, UgoiraMetadataResponse ugoiraMetadataResponse)
+    public static async Task<InMemoryRandomAccessStream> GetStreamFromZipStreamAsync(Stream zipStream, UgoiraMetadataResponse ugoiraMetadataResponse)
     {
         var entryStreams = await ReadZipArchiveEntries(zipStream);
-        return await SaveToStreamAsync(
-            entryStreams.Select(s => s.content.AsRandomAccessStream()),
-            ugoiraMetadataResponse,
-            App.AppViewModel.AppSetting.UgoiraDownloadFormat);
+        return await UgoiraSaveToStreamAsync(
+            entryStreams.Select(s => s.Content),
+            ugoiraMetadataResponse.UgoiraMetadataInfo?.Frames?.Select(t => (int)t.Delay) ?? []);
     }
 
-    public static async Task<IEnumerable<IRandomAccessStream>> GetStreamsFromZipStreamAsync(Stream zipStream)
+    public static async Task<IEnumerable<InMemoryRandomAccessStream>> GetStreamsFromZipStreamAsync(Stream zipStream)
     {
         var entryStreams = await ReadZipArchiveEntries(zipStream);
-        return entryStreams.Select(s => s.content.AsRandomAccessStream());
+        return entryStreams.Select(s => s.Content);
     }
 
     /// <summary>

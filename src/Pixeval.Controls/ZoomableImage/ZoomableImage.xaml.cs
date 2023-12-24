@@ -289,7 +289,7 @@ public sealed partial class ZoomableImage : UserControl
         else
         {
             _frames.Clear();
-            if (Sources is null)
+            if (Sources == null!)
                 return;
             foreach (var source in Sources)
                 _frames.Add(await CanvasBitmap.LoadAsync(sender, source));
@@ -308,7 +308,7 @@ public sealed partial class ZoomableImage : UserControl
 
     private List<int>? ClonedMsIntervals { get; set; }
 
-    private ManualResetEvent ManualResetEvent { get; } = new ManualResetEvent(true);
+    private ManualResetEvent ManualResetEvent { get; } = new(true);
 
     #endregion
 

@@ -35,7 +35,6 @@ using Pixeval.CoreApi.Model;
 using Pixeval.Download;
 using Pixeval.Flyouts.IllustrationResultFilter;
 using Pixeval.Util;
-using Pixeval.Util.Threading;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using WinUI3Utilities;
@@ -96,9 +95,13 @@ public sealed partial class IllustrationViewCommandBar
 
     private static void OnIsDefaultCommandsEnabledChanged(DependencyObject o, DependencyPropertyChangedEventArgs args)
     {
-        ((IllustrationViewCommandBar)o)._defaultCommands
-            .Where(c => c != ((IllustrationViewCommandBar)o).SelectAllButton)
-            .ForEach(c => c.IsEnabled = (bool)args.NewValue);
+        var s = (IllustrationViewCommandBar)o;
+        s._defaultCommands
+            .ForEach(c =>
+            {
+                if (c != s.SelectAllButton)
+                    c.IsEnabled = (bool)args.NewValue;
+            });
     }
 
     private static void AddCommandCallback(DependencyPropertyChangedEventArgs e, ICollection<ICommandBarElement> commands)
@@ -114,7 +117,6 @@ public sealed partial class IllustrationViewCommandBar
                         {
                             commands.Add((ICommandBarElement)argsNewItem);
                         }
-
                         break;
                     default:
                         ThrowHelper.Argument(args, "This collection does not support operations except the Add");
@@ -138,14 +140,15 @@ public sealed partial class IllustrationViewCommandBar
                     this,
                     IllustrationViewCommandBarResources.SelectedTooManyItemsForBookmarkTitle,
                     IllustrationViewCommandBarResources.SelectedTooManyItemsForBookmarkContent)
-                .ShowAsync() != ContentDialogResult.Primary)
+                .ShowAsync() is not ContentDialogResult.Primary)
         {
             return;
         }
 
         foreach (var viewModelSelectedIllustration in viewModelSelectedIllustrations)
         {
-            viewModelSelectedIllustration.PostPublicBookmarkAsync().Discard(); // discard the result
+            if (!viewModelSelectedIllustration.IsBookmarked)
+                _ = viewModelSelectedIllustration.ToggleBookmarkStateAsync();
         }
 
         if (viewModelSelectedIllustrations.Length is var c and > 0)
@@ -276,7 +279,7 @@ public sealed partial class IllustrationViewCommandBar
         static bool ExamineIncludeTags(IEnumerable<string> tags, IEnumerable<Token> predicates)
         {
             var tArr = tags.ToArray();
-            return !tArr.Any() || predicates.Aggregate(true, (acc, token) => acc && tArr.Any(token.Match));
+            return tArr.Length is 0 || predicates.Aggregate(true, (acc, token) => acc && tArr.Any(token.Match));
         }
     }
 

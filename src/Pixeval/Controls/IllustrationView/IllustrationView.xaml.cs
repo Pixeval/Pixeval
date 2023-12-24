@@ -39,6 +39,7 @@ public sealed partial class IllustrationView
 {
     public const double LandscapeHeight = 180;
     public const double PortraitHeight = 250;
+    public ThumbnailUrlOption Option => LayoutType.ToThumbnailUrlOption();
 
     public IllustrationView()
     {
@@ -80,9 +81,8 @@ public sealed partial class IllustrationView
 
     private void IllustrationViewOnUnloaded(object sender, RoutedEventArgs e)
     {
-        var option = LayoutType.ToThumbnailUrlOption();
         foreach (var illustrationViewModel in ViewModel.DataProvider.Source)
-            illustrationViewModel.UnloadThumbnail(ViewModel, option);
+            illustrationViewModel.UnloadThumbnail(ViewModel, Option);
         ViewModel.Dispose();
     }
 
@@ -91,10 +91,7 @@ public sealed partial class IllustrationView
         await IllustrationItemsView.TryRaiseLoadMoreRequested();
     }
 
-    private IllustrationView IllustrationThumbnail_OnThisRequired()
-    {
-        return this;
-    }
+    private IllustrationView IllustrationThumbnail_OnThisRequired() => this;
 
     private void IllustrationItemsView_OnItemInvoked(ItemsView sender, ItemsViewItemInvokedEventArgs e)
     {
@@ -105,11 +102,10 @@ public sealed partial class IllustrationView
 
     private async void IllustrationItemsView_OnElementPrepared(AdvancedItemsView sender, ItemContainer itemContainer)
     {
-        var thumbnail = itemContainer.Child.To<IllustrationThumbnail>();
+        var thumbnail = itemContainer.Child.To<IllustrationItem>();
         var viewModel = thumbnail.ViewModel;
-        var option = LayoutType.ToThumbnailUrlOption();
 
-        if (await viewModel.TryLoadThumbnail(ViewModel, option))
+        if (await viewModel.TryLoadThumbnail(ViewModel, Option))
         {
             if (thumbnail.IsFullyOrPartiallyVisible(this))
                 thumbnail.Resources["IllustrationThumbnailStoryboard"].To<Storyboard>().Begin();
@@ -120,9 +116,8 @@ public sealed partial class IllustrationView
 
     private void IllustrationItemsView_OnElementClearing(AdvancedItemsView sender, ItemContainer itemContainer)
     {
-        var viewModel = itemContainer.Child.To<IllustrationThumbnail>().ViewModel;
-        var option = LayoutType.ToThumbnailUrlOption();
+        var viewModel = itemContainer.Child.To<IllustrationItem>().ViewModel;
 
-        viewModel.UnloadThumbnail(ViewModel, option);
+        viewModel.UnloadThumbnail(ViewModel, Option);
     }
 }

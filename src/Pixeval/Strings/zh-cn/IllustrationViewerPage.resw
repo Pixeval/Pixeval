@@ -165,6 +165,12 @@
   <data name="IllustrationInfoTab.Content" xml:space="preserve">
     <value>详情</value>
   </data>
+  <data name="ImageProcessing" xml:space="preserve">
+    <value>正在处理图片</value>
+  </data>
+  <data name="ImageSetToClipBoard" xml:space="preserve">
+    <value>图片已复制到剪切板</value>
+  </data>
   <data name="LockScreen" xml:space="preserve">
     <value>锁屏</value>
   </data>
@@ -227,6 +233,9 @@
   </data>
   <data name="ShowQRCode" xml:space="preserve">
     <value>生成二维码</value>
+  </data>
+  <data name="UgoiraProcessing" xml:space="preserve">
+    <value>正在处理动图：{0}%</value>
   </data>
   <data name="UniformToFillResolution" xml:space="preserve">
     <value>缩放到适应窗口大小</value>
