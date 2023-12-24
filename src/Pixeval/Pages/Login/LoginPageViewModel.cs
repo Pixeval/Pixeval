@@ -79,7 +79,7 @@ public partial class LoginPageViewModel : AutoActivateObservableRecipient
         SuccessNavigating
     }
 
-    [ObservableProperty] private bool _isFinished = true;
+    [ObservableProperty] private bool _isFinished;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(ShowProcessingRing))]
@@ -152,11 +152,9 @@ public partial class LoginPageViewModel : AutoActivateObservableRecipient
         return session is not null && session.RefreshToken.IsNotNullOrEmpty() &&
                session.Cookie.IsNotNullOrEmpty() && CookieNotExpired(session);
 
-        static bool CookieNotExpired(Session session)
-        {
-            return DateTimeOffset.Now - session.CookieCreation <=
-                   TimeSpan.FromDays(15); // check if the cookie is created within the last one week
-        }
+        static bool CookieNotExpired(Session session) =>
+            DateTimeOffset.Now - session.CookieCreation <=
+            TimeSpan.FromDays(15); // check if the cookie is created within the last one week
     }
 
     public async Task RefreshAsync()

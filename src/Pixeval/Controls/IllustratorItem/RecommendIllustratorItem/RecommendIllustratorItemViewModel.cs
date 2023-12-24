@@ -45,9 +45,9 @@ public partial class RecommendIllustratorItemViewModel : IllustrateViewModel<Rec
     [ObservableProperty]
     private bool _isFollowed;
 
-    public RecommendIllustratorItemViewModel(RecommendUser user, IEnumerable<string> urls250X250) : base(user)
+    public RecommendIllustratorItemViewModel(RecommendUser user, IEnumerable<string>? ids) : base(user)
     {
-        OverviewViewModel = new IllustratorIllustrationsOverviewViewModel(urls250X250, false);
+        OverviewViewModel = new IllustratorIllustrationsOverviewViewModel(ids);
 
         _ = SetAvatarAsync();
 

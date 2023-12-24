@@ -28,10 +28,12 @@ using Windows.Storage.Streams;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
-using Pixeval.CoreApi.Net;
+using Pixeval.Options;
+using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
+using Pixeval.CoreApi.Model;
 
 namespace Pixeval.Controls;
 
@@ -44,18 +46,23 @@ public partial class IllustratorIllustrationsOverviewViewModel : ObservableObjec
     [ObservableProperty]
     private Brush? _avatarBorderBrush;
 
-    public IllustratorIllustrationsOverviewViewModel(IEnumerable<string> urls, bool getAvatarBorderBrush)
+    private const ThumbnailUrlOption Option = ThumbnailUrlOption.SquareMedium;
+
+    public IllustratorIllustrationsOverviewViewModel(IEnumerable<string>? ids)
     {
-        DisplayImageUrls = urls;
-        GetAvatarBorderBrush = getAvatarBorderBrush;
-        _ = SetBannerSourceAsync();
+        GetAvatarBorderBrush = false;
+        _ = SetBannerSourceFromIdsAsync(ids);
+    }
+
+    public IllustratorIllustrationsOverviewViewModel(IEnumerable<Illustration>? illustrations)
+    {
+        GetAvatarBorderBrush = true;
+        _ = SetBannerSourceFromIllustrationsAsync(illustrations);
     }
 
     private bool GetAvatarBorderBrush { get; }
 
     public List<SoftwareBitmapSource> BannerSources { get; } = new(3);
-
-    private IEnumerable<string> DisplayImageUrls { get; }
 
     public void Dispose()
     {
@@ -64,29 +71,45 @@ public partial class IllustratorIllustrationsOverviewViewModel : ObservableObjec
         BannerSources.Clear();
     }
 
-    private async Task SetBannerSourceAsync()
+    private async Task SetBannerSourceFromIdsAsync(IEnumerable<string>? ids)
     {
-        var client = App.AppViewModel.MakoClient.GetMakoHttpClient(MakoApiKind.ImageApi);
+        var illustrations = new List<Illustration>();
+        if (ids is not null)
+            foreach (var id in ids)
+            {
+                var illustration = await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(id);
+                illustrations.Add(illustration);
+            }
+
+        await SetBannerSourceFromIllustrationsAsync(illustrations);
+    }
+
+    private async Task SetBannerSourceFromIllustrationsAsync(IEnumerable<Illustration>? illustrations)
+    {
         AvatarBorderBrush = null;
         Dispose();
-
-        foreach (var url in DisplayImageUrls)
-        {
-            if (await client.DownloadAsIRandomAccessStreamAsync(url) is not
-                Result<IRandomAccessStream>.Success(var stream))
-                continue;
-            if (AvatarBorderBrush is null && GetAvatarBorderBrush)
+        if (illustrations is not null)
+            foreach (var illustration in illustrations)
             {
-                var dominantColor = await UiHelper.GetDominantColorAsync(stream.AsStreamForRead(), false);
-                AvatarBorderBrush = new SolidColorBrush(dominantColor);
-            }
-            var bitmapSource = await stream.GetSoftwareBitmapSourceAsync(true);
-            BannerSources.Add(bitmapSource);
+                if (illustration.GetThumbnailUrl(Option) is { } url)
+                {
+                    if (await App.AppViewModel.MakoClient.DownloadRandomAccessStreamResultAsync(url) is not
+                        Result<IRandomAccessStream>.Success(var stream))
+                        continue;
+                    if (AvatarBorderBrush is null && GetAvatarBorderBrush)
+                    {
+                        var dominantColor = await UiHelper.GetDominantColorAsync(stream.AsStreamForRead(), false);
+                        AvatarBorderBrush = new SolidColorBrush(dominantColor);
+                    }
 
-            // 一般只会取 ==
-            if (BannerSources.Count >= 3)
-                break;
-        }
+                    var bitmapSource = await stream.GetSoftwareBitmapSourceAsync(true);
+                    BannerSources.Add(bitmapSource);
+
+                    // 涓�鑸彧浼氬彇 ==
+                    if (BannerSources.Count >= 3)
+                        break;
+                }
+            }
 
         OnPropertyChanged(nameof(BannerSources));
 

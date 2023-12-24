@@ -37,9 +37,7 @@ namespace Pixeval.AppManagement;
 [GenerateConstructor, SettingPoco]
 public partial record AppSetting : IWindowSettings
 {
-#pragma warning disable CS8618
     public AppSetting()
-#pragma warning restore CS8618
     {
         DefaultValueAttributeHelper.Initialize(this);
     }
@@ -175,7 +173,7 @@ public partial record AppSetting : IWindowSettings
 
     [DefaultValue("Microsoft YaHei")]
     [SettingMetadata(SettingEntryCategory.Application, typeof(SettingsPageResources), nameof(SettingsPageResources.AppFontFamilyEntryHeader))]
-    public string AppFontFamilyName { get; set; }
+    public string AppFontFamilyName { get; set; } = "";
 
     [DefaultValue(MainPageTabItem.DailyRecommendation)]
     [SettingMetadata(SettingEntryCategory.Application, typeof(SettingsPageResources), nameof(SettingsPageResources.DefaultSelectedTabEntryHeader))]
@@ -199,7 +197,7 @@ public partial record AppSetting : IWindowSettings
 
     [DefaultValue(typeof(DownloadPathMacroDefaultValueProvider))]
     [SettingMetadata(SettingEntryCategory.Download, typeof(SettingsPageResources), nameof(SettingsPageResources.DefaultDownloadPathMacroEntryHeader))]
-    public string DefaultDownloadPathMacro { get; set; }
+    public string DefaultDownloadPathMacro { get; set; } = "";
 
     [DefaultValue(UgoiraDownloadFormat.WebPLossless)]
     [SettingMetadata(SettingEntryCategory.Download, typeof(SettingsPageResources), nameof(SettingsPageResources.UgoiraDownloadFormatEntryHeader))]
@@ -251,7 +249,7 @@ public partial record AppSetting : IWindowSettings
 
     [DefaultValue("")]
     [AttributeIgnore(typeof(SettingsViewModelAttribute<>))]
-    public string ProxyString { get; set; }
+    public string ProxyString { get; set; } = "";
 
     /// <summary>
     ///     The Application Theme

@@ -179,6 +179,9 @@
   <data name="RootCertificateInstallationRequiredTitle" xml:space="preserve">
     <value>检测到本用户尚未安装证书</value>
   </data>
+  <data name="SelectTextBlock.Text" xml:space="preserve">
+    <value>双击选择登录方式（浏览器方式需要提前关闭外部浏览器）</value>
+  </data>
   <data name="TryAfterShuttingDownTheBrowser" xml:space="preserve">
     <value>请先关闭已打开的浏览器再尝试</value>
   </data>

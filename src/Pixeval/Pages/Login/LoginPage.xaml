@@ -58,7 +58,7 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
-                    <TextBlock Grid.Row="0" Text="双击选择登录方式（浏览器方式需要提前关闭外部浏览器）" />
+                    <TextBlock Grid.Row="0" x:Uid="/LoginPage/SelectTextBlock" />
                     <controls:AdvancedItemsView
                         Grid.Row="1"
                         HorizontalAlignment="Center"

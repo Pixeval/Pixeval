@@ -96,7 +96,7 @@ public static partial class IoHelper
         this HttpClient httpClient,
         string url,
         IProgress<int>? progress = null,
-        CancellationHandle? cancellationHandle = default)
+        CancellationHandle? cancellationHandle = null)
     {
         var awaiter = new ReenterableAwaiter<bool>(!cancellationHandle?.IsPaused ?? true, true);
         cancellationHandle?.RegisterPaused(awaiter.Reset);

@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval.CoreApi
+#region Copyright (c) Pixeval/Pixeval.CoreApi
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
@@ -41,6 +41,7 @@ internal class PixivApiHttpMessageHandler(MakoClient makoClient) : MakoClientSup
             MakoHttpOptions.UseHttpScheme(request);
         }
 
+        _ = request.Headers.TryAddWithoutValidation("User-Agent", MakoClient.Configuration.UserAgent);
         _ = headers.TryAddWithoutValidation("Accept-Language", MakoClient.Configuration.CultureInfo.Name);
 
         var session = MakoClient.Session;

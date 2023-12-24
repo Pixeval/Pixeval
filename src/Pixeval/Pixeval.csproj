@@ -10,7 +10,6 @@
         <ApplicationManifest>app.manifest</ApplicationManifest>
         <UseWinUI>true</UseWinUI>
         <Nullable>enable</Nullable>
-        <DefaultLanguage>zh-Hans</DefaultLanguage>
         <EnableNETAnalyzers>false</EnableNETAnalyzers>
         <EnablePreviewFeatures>true</EnablePreviewFeatures>
         <ApplicationIcon></ApplicationIcon>
@@ -18,7 +17,7 @@
         <EnablePreviewMsixTooling>true</EnablePreviewMsixTooling>
         <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
         <EnableDefaultPriItems>false</EnableDefaultPriItems>
-        <DefaultLanguage>zh-Hans</DefaultLanguage>
+        <DefaultLanguage>zh-cn</DefaultLanguage>
         <AppxPackageSigningEnabled Condition="'$(Configuration)' == 'Release'">true</AppxPackageSigningEnabled>
         <AppxPackageSigningEnabled Condition="'$(Configuration)' == 'Debug'">false</AppxPackageSigningEnabled>
         <RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
@@ -169,42 +168,42 @@
     <!--PRIResource-->
     <ItemGroup>
         <PRIResource Include="Assets\Svg.resw" />
-        <PRIResource Include="Strings\zh-Hans\CommentsPage.resw" />
-        <PRIResource Include="Strings\zh-Hans\FollowingsPage.resw" />
-        <PRIResource Include="Strings\zh-Hans\FollowingUserBadge.resw" />
-        <PRIResource Include="Strings\zh-Hans\IllustratorContentViewer.resw" />
-        <PRIResource Include="Strings\zh-Hans\IllustratorIllustrationAndMangaBookmarkPage.resw" />
-        <PRIResource Include="Strings\zh-Hans\IllustratorItem.resw" />
-        <PRIResource Include="Strings\zh-Hans\AboutPage.resw" />
-        <PRIResource Include="Strings\zh-Hans\Activations.resw" />
-        <PRIResource Include="Strings\zh-Hans\BookmarksPage.resw" />
-        <PRIResource Include="Strings\zh-Hans\CommentBlock.resw" />
-        <PRIResource Include="Strings\zh-Hans\CommentRepliesBlock.resw" />
-        <PRIResource Include="Strings\zh-Hans\DownloadListEntry.resw" />
-        <PRIResource Include="Strings\zh-Hans\DownloadListPage.resw" />
-        <PRIResource Include="Strings\zh-Hans\DownloadListPageDeleteTasksDialog.resw" />
-        <PRIResource Include="Strings\zh-Hans\DownloadTask.resw" />
-        <PRIResource Include="Strings\zh-Hans\IllustrationView.resw" />
-        <PRIResource Include="Strings\zh-Hans\IllustrationViewCommandBar.resw" />
-        <PRIResource Include="Strings\zh-Hans\IllustrationInfoPage.resw" />
-        <PRIResource Include="Strings\zh-Hans\IllustrationResultFilterContent.resw" />
-        <PRIResource Include="Strings\zh-Hans\IllustrationViewerPage.resw" />
-        <PRIResource Include="Strings\zh-Hans\IllustratorPage.resw" />
-        <PRIResource Include="Strings\zh-Hans\ImageViewerPage.resw" />
-        <PRIResource Include="Strings\zh-Hans\LoginPage.resw" />
-        <PRIResource Include="Strings\zh-Hans\MacroParser.resw" />
-        <PRIResource Include="Strings\zh-Hans\MainPage.resw" />
-        <PRIResource Include="Strings\zh-Hans\MessageContentDialog.resw" />
-        <PRIResource Include="Strings\zh-Hans\Misc.resw" />
-        <PRIResource Include="Strings\zh-Hans\RankingsPage.resw" />
-        <PRIResource Include="Strings\zh-Hans\RecentPostsPage.resw" />
-        <PRIResource Include="Strings\zh-Hans\RecommendationsPage.resw" />
-        <PRIResource Include="Strings\zh-Hans\PixivReplyBar.resw" />
-        <PRIResource Include="Strings\zh-Hans\RecommendIllustratorItem.resw" />
-        <PRIResource Include="Strings\zh-Hans\ReverseSearchApiKeyNotPresentDialog.resw" />
-        <PRIResource Include="Strings\zh-Hans\SettingsPage.resw" />
-        <PRIResource Include="Strings\zh-Hans\SortOptionComboBox.resw" />
-        <PRIResource Include="Strings\zh-Hans\TokenInputTextBox.resw" />
+        <PRIResource Include="Strings\zh-cn\CommentsPage.resw" />
+        <PRIResource Include="Strings\zh-cn\FollowingsPage.resw" />
+        <PRIResource Include="Strings\zh-cn\FollowingUserBadge.resw" />
+        <PRIResource Include="Strings\zh-cn\IllustratorContentViewer.resw" />
+        <PRIResource Include="Strings\zh-cn\IllustratorIllustrationAndMangaBookmarkPage.resw" />
+        <PRIResource Include="Strings\zh-cn\IllustratorItem.resw" />
+        <PRIResource Include="Strings\zh-cn\AboutPage.resw" />
+        <PRIResource Include="Strings\zh-cn\Activations.resw" />
+        <PRIResource Include="Strings\zh-cn\BookmarksPage.resw" />
+        <PRIResource Include="Strings\zh-cn\CommentBlock.resw" />
+        <PRIResource Include="Strings\zh-cn\CommentRepliesBlock.resw" />
+        <PRIResource Include="Strings\zh-cn\DownloadListEntry.resw" />
+        <PRIResource Include="Strings\zh-cn\DownloadListPage.resw" />
+        <PRIResource Include="Strings\zh-cn\DownloadListPageDeleteTasksDialog.resw" />
+        <PRIResource Include="Strings\zh-cn\DownloadTask.resw" />
+        <PRIResource Include="Strings\zh-cn\IllustrationView.resw" />
+        <PRIResource Include="Strings\zh-cn\IllustrationViewCommandBar.resw" />
+        <PRIResource Include="Strings\zh-cn\IllustrationInfoPage.resw" />
+        <PRIResource Include="Strings\zh-cn\IllustrationResultFilterContent.resw" />
+        <PRIResource Include="Strings\zh-cn\IllustrationViewerPage.resw" />
+        <PRIResource Include="Strings\zh-cn\IllustratorPage.resw" />
+        <PRIResource Include="Strings\zh-cn\ImageViewerPage.resw" />
+        <PRIResource Include="Strings\zh-cn\LoginPage.resw" />
+        <PRIResource Include="Strings\zh-cn\MacroParser.resw" />
+        <PRIResource Include="Strings\zh-cn\MainPage.resw" />
+        <PRIResource Include="Strings\zh-cn\MessageContentDialog.resw" />
+        <PRIResource Include="Strings\zh-cn\Misc.resw" />
+        <PRIResource Include="Strings\zh-cn\RankingsPage.resw" />
+        <PRIResource Include="Strings\zh-cn\RecentPostsPage.resw" />
+        <PRIResource Include="Strings\zh-cn\RecommendationsPage.resw" />
+        <PRIResource Include="Strings\zh-cn\PixivReplyBar.resw" />
+        <PRIResource Include="Strings\zh-cn\RecommendIllustratorItem.resw" />
+        <PRIResource Include="Strings\zh-cn\ReverseSearchApiKeyNotPresentDialog.resw" />
+        <PRIResource Include="Strings\zh-cn\SettingsPage.resw" />
+        <PRIResource Include="Strings\zh-cn\SortOptionComboBox.resw" />
+        <PRIResource Include="Strings\zh-cn\TokenInputTextBox.resw" />
     </ItemGroup>
 
     <!--XAML-->

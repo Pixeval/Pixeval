@@ -20,6 +20,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -180,13 +181,25 @@ public static partial class IoHelper
     /// </summary>
     public static async Task<SoftwareBitmap> GetSoftwareBitmapFromStreamAsync(IRandomAccessStream imageStream)
     {
-        imageStream.Seek(0);
-        using var image = await Image.LoadAsync<Bgra32>(imageStream.AsStreamForRead());
-        var softwareBitmap = new SoftwareBitmap(BitmapPixelFormat.Bgra8, image.Width, image.Height, BitmapAlphaMode.Premultiplied);
-        var buffer = new byte[4 * image.Width * image.Height];
-        image.CopyPixelDataTo(buffer);
-        softwareBitmap.CopyFromBuffer(buffer.AsBuffer());
-        return softwareBitmap;
+        // TODO
+        try
+        {
+            imageStream.Seek(0);
+            var image = await Image.LoadAsync<Bgra32>(imageStream.AsStreamForRead());
+            var softwareBitmap = new SoftwareBitmap(BitmapPixelFormat.Bgra8, image.Width, image.Height,
+                BitmapAlphaMode.Premultiplied);
+            var buffer = new byte[4 * image.Width * image.Height];
+            image.CopyPixelDataTo(buffer);
+            softwareBitmap.CopyFromBuffer(buffer.AsBuffer());
+            image.Dispose();
+            return softwareBitmap;
+        }
+        catch (Exception e)
+        {
+            Debugger.Break();
+            Console.WriteLine(e);
+            throw;
+        }
         // BitmapDecoder Bug多
         // var decoder = await BitmapDecoder.CreateAsync(imageStream);
         // return await decoder.GetSoftwareBitmapAsync(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Premultiplied);

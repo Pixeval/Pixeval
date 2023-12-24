@@ -39,6 +39,7 @@ public sealed partial class FollowingsPage
 {
     private readonly SolidColorBrush _backgroundBrush;
     private readonly IllustratorViewViewModel _viewModel = new();
+    private const int CompactPaneLength = 300;
 
     public FollowingsPage()
     {
@@ -62,12 +63,15 @@ public sealed partial class FollowingsPage
     {
         _ = WeakReferenceMessenger.Default.TryRegister<FollowingsPage, MainPageFrameNavigatingEvent>(this, static (recipient, _) => recipient._viewModel.DataProvider.FetchEngine?.Cancel());
         _viewModel.ResetEngine(App.AppViewModel.MakoClient.Following(App.AppViewModel.PixivUid!, PrivacyPolicy.Public));
+        // 此时没有Navigate，右边没有内容
+        // ClipGeometry.Rect = new(MainSplitView.OpenPaneLength - CompactPaneLength, 0, int.MaxValue, int.MaxValue);
     }
 
     private TeachingTip IllustratorItemOnRequestTeachingTip() => FollowingsPageTeachingTip;
 
     private void IllustratorItemsView_OnSelectionChanged(ItemsView sender, ItemsViewSelectionChangedEventArgs e)
     {
+        MainSplitView.IsPaneOpen = false;
         if (IllustratorItemsView.SelectedItem is IllustratorItemViewModel viewModel)
             _ = IllustratorContentViewerFrame.Navigate(typeof(IllustratorContentViewerPage), viewModel);
     }
@@ -94,16 +98,19 @@ public sealed partial class FollowingsPage
         if (IllustratorItemsView is null)
             return;
 
+        var openPaneLength = MainSplitView.OpenPaneLength;
         // 10： Margin
         if (args is null)
         {
             IllustratorItemsView.LayoutType = ItemsViewLayoutType.Grid;
-            ContentGrid.Width = MainSplitView.OpenPaneLength;
+            ContentGrid.Width = openPaneLength;
+            ClipGeometry.Rect = new(openPaneLength - CompactPaneLength, 0, int.MaxValue, int.MaxValue);
         }
         else // args is SplitViewPaneClosingEventArgs
         {
             IllustratorItemsView.LayoutType = ItemsViewLayoutType.VerticalStack;
-            ContentGrid.Width = MainSplitView.CompactPaneLength;
+            ContentGrid.Width = CompactPaneLength;
+            ClipGeometry.Rect = new(0, 0, int.MaxValue, int.MaxValue);
         }
     }
 }

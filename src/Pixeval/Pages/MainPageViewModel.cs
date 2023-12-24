@@ -25,6 +25,7 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.Controls.IllustrationView;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Net;
@@ -65,7 +66,7 @@ public partial class MainPageViewModel : AutoActivateObservableRecipient, IRecip
     public readonly NavigationViewTag SpotlightsTag = new(typeof(SpotlightsPage), null);
 
     [ObservableProperty]
-    private ImageSource? _avatar;
+    private SoftwareBitmapSource? _avatar;
 
     public double MainPageRootNavigationViewOpenPanelLength => 280;
 
@@ -84,9 +85,7 @@ public partial class MainPageViewModel : AutoActivateObservableRecipient, IRecip
         var makoClient = App.AppViewModel.MakoClient;
         // get byte array of avatar
         // and set to the bitmap image
-        Avatar = await (await makoClient.GetMakoHttpClient(MakoApiKind.ImageApi).DownloadAsIRandomAccessStreamAsync(makoClient.Session.AvatarUrl!))
-            .UnwrapOrThrow()
-            .GetBitmapImageAsync(true);
+        Avatar = (await makoClient.DownloadSoftwareBitmapSourceResultAsync(makoClient.Session.AvatarUrl!)).UnwrapOrThrow();
     }
 
     public async Task ReverseSearchAsync(Stream stream)

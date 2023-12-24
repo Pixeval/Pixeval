@@ -9,7 +9,7 @@
         <Nullable>Enable</Nullable>
         <LangVersion>preview</LangVersion>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-        <DefaultLanguage>zh-Hans</DefaultLanguage>
+        <DefaultLanguage>zh-cn</DefaultLanguage>
     </PropertyGroup>
     <ItemGroup>
         <None Remove="AdvancedItemsView\AdvancedItemsView.xaml" />

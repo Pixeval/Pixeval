@@ -9,12 +9,15 @@
     xmlns:local="using:Pixeval.Controls"
     xmlns:markup="using:Pixeval.Controls.MarkupExtensions"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Padding="0"
     AspectRatio="15:8"
     Background="{StaticResource CardBackgroundFillColorDefaultBrush}"
     mc:Ignorable="d">
     <!--  图片长宽均为5，故为(3*5):(3+5)  -->
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
         <ToolTipService.ToolTip>
             <ToolTip Padding="0">
                 <StackPanel Width="300">
@@ -34,10 +37,6 @@
                 </StackPanel>
             </ToolTip>
         </ToolTipService.ToolTip>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
         <local:IllustratorIllustrationsOverview Grid.Row="0" ViewModel="{x:Bind ViewModel.OverviewViewModel, Mode=OneWay}" />
         <StackPanel
             Grid.Row="1"
@@ -98,8 +97,6 @@
             <Border
                 Width="82"
                 Height="82"
-                BorderBrush="{x:Bind ViewModel.OverviewViewModel.AvatarBorderBrush, Mode=OneWay}"
-                BorderThickness="2"
                 CornerRadius="40"
                 Tapped="AvatarButton_OnTapped">
                 <PersonPicture
@@ -107,6 +104,8 @@
                     Height="80"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
+                    BorderBrush="{x:Bind ViewModel.OverviewViewModel.AvatarBorderBrush, Mode=OneWay}"
+                    BorderThickness="2"
                     ProfilePicture="{x:Bind ViewModel.AvatarSource, Mode=OneWay}" />
             </Border>
             <interactivity:Interaction.Behaviors>

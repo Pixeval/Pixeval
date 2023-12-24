@@ -29,6 +29,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
+using Pixeval.Controls.IllustrationView;
 using Pixeval.Controls.MarkupExtensions;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Net.Response;
@@ -214,12 +215,20 @@ public partial class IllustratorContentViewerViewModel : ObservableObject
 
     public async Task LoadRecommendIllustratorsAsync()
     {
-        var recommendIllustrators = await App.AppViewModel.MakoClient.GetRelatedRecommendUsersAsync(UserDetail.UserEntity!.Id.ToString(), isR18: !App.AppViewModel.AppSetting.FiltrateRestrictedContent, lang: CultureInfo.CurrentUICulture);
-        var viewModels = (recommendIllustrators.ResponseBody?.RecommendUsers ?? [])
-            .Select(ru => ToRecommendIllustratorProfileViewModel(recommendIllustrators, ru));
+        // TODO
+        try
+        {
+            var recommendIllustrators = await App.AppViewModel.MakoClient.GetRelatedRecommendUsersAsync(UserDetail.UserEntity!.Id.ToString(), isR18: !App.AppViewModel.AppSetting.FiltrateRestrictedContent, lang: CultureInfo.CurrentUICulture);
+            var viewModels = (recommendIllustrators.ResponseBody?.RecommendUsers ?? [])
+                .Select(ru => ToRecommendIllustratorProfileViewModel(recommendIllustrators, ru));
 
-        RecommendIllustrators.AddRange(viewModels);
-        return;
+            RecommendIllustrators.AddRange(viewModels);
+            return;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
 
         static RecommendIllustratorItemViewModel ToRecommendIllustratorProfileViewModel(PixivRelatedRecommendUsersResponse context, PixivRelatedRecommendUsersResponse.RecommendUser recommendUser)
         {
@@ -228,10 +237,8 @@ public partial class IllustratorContentViewerViewModel : ObservableObject
 
             var userId = recommendUser.UserId;
             var user = users.First(u => u.Id == userId);
-            var displayImageUrls = thumbnails
-                .Where(t => recommendUser.IllustIds?.Contains(t.Id) ?? false)
-                .SelectNotNull(i => i.Urls?.The250X250);
-            return new RecommendIllustratorItemViewModel(user, displayImageUrls);
+            
+            return new RecommendIllustratorItemViewModel(user, recommendUser.IllustIds);
         }
     }
 

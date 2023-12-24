@@ -6,10 +6,16 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:Pixeval.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Width="300"
     AspectRatio="15:8"
+    Background="{StaticResource CardBackgroundFillColorDefaultBrush}"
     mc:Ignorable="d">
     <!--  图片长宽均为5，故为(3*5):(3+5)  -->
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
         <ToolTipService.ToolTip>
             <ToolTip Padding="0">
                 <StackPanel Width="300">
@@ -29,20 +35,25 @@
                 </StackPanel>
             </ToolTip>
         </ToolTipService.ToolTip>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
         <local:IllustratorIllustrationsOverview Grid.Row="0" ViewModel="{x:Bind ViewModel.OverviewViewModel, Mode=OneWay}" />
-        <StackPanel
+        <Grid
             Grid.Row="1"
-            Margin="105,0,15,0"
-            Spacing="5">
+            Margin="15,0"
+            ColumnSpacing="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
             <PersonPicture
+                Grid.Column="0"
                 Width="45"
                 HorizontalAlignment="Left"
-                VerticalAlignment="Center" />
+                VerticalAlignment="Center"
+                ProfilePicture="{x:Bind ViewModel.AvatarSource, Mode=OneWay}" />
             <TextBlock
+                Grid.Column="1"
                 MaxWidth="120"
                 VerticalAlignment="Center"
                 Style="{StaticResource ContentStrongTextBlockStyle}"
@@ -50,12 +61,16 @@
                 TextTrimming="CharacterEllipsis"
                 TextWrapping="NoWrap" />
             <local:PixevalBadge
+                Grid.Column="2"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
                 Mode="Premium"
                 UseSmall="True"
                 Visibility="{x:Bind ViewModel.Premium, Mode=OneWay}" />
-            <Button Command="{x:Bind ViewModel.FollowCommand, Mode=OneWay}" Style="{x:Bind ViewModel.ButtonStyle, Mode=OneWay}" />
-        </StackPanel>
+            <Button
+                Grid.Column="3"
+                Command="{x:Bind ViewModel.FollowCommand, Mode=OneWay}"
+                Style="{x:Bind ViewModel.ButtonStyle, Mode=OneWay}" />
+        </Grid>
     </Grid>
 </controls:ConstrainedBox>

@@ -52,8 +52,7 @@ public sealed partial class IllustratorItemViewModel : IllustrateViewModel<User>
 
     public IllustratorItemViewModel(User user) : base(user)
     {
-        OverviewViewModel = new IllustratorIllustrationsOverviewViewModel(
-            Illustrate.Illusts?.SelectNotNull(i => i.GetThumbnailUrl(ThumbnailUrlOption.SquareMedium)) ?? [], true);
+        OverviewViewModel = new IllustratorIllustrationsOverviewViewModel(Illustrate.Illusts);
         IsFollowed = Illustrate.UserInfo?.IsFollowed ?? false;
 
         _ = SetAvatarAsync();

@@ -22,10 +22,10 @@
             Visibility="{x:Bind ViewModel.ShowRecommendIllustrators, Mode=OneWay}" />
         <controls:AdvancedItemsView
             Grid.Row="1"
+            IsItemInvokedEnabled="False"
             ItemsSource="{x:Bind ViewModel.RecommendIllustrators, Mode=OneWay}"
             LayoutType="HorizontalStack"
             MinItemHeight="160"
-            MinItemWidth="300"
             SelectionMode="None"
             Visibility="{x:Bind ViewModel.ShowRecommendIllustrators, Mode=OneWay}">
             <controls:AdvancedItemsView.ItemTemplate>

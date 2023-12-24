@@ -34,7 +34,6 @@ using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.Controls.Illustrate;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Model;
-using Pixeval.CoreApi.Net;
 using Pixeval.Options;
 using Pixeval.Util;
 using Pixeval.Util.IO;
@@ -293,7 +292,7 @@ public class IllustrationItemViewModel(Illustration illustration) : IllustrateVi
     {
         if (Illustrate.GetThumbnailUrl(thumbnailUrlOptions) is { } url)
         {
-            switch (await App.AppViewModel.MakoClient.GetMakoHttpClient(MakoApiKind.ImageApi).DownloadAsIRandomAccessStreamAsync(url, cancellationHandle: LoadingThumbnailCancellationHandle))
+            switch (await App.AppViewModel.MakoClient.DownloadRandomAccessStreamResultAsync(url, cancellationHandle: LoadingThumbnailCancellationHandle))
             {
                 case Result<IRandomAccessStream>.Success(var stream):
                     return stream;

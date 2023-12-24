@@ -29,17 +29,17 @@ namespace Pixeval.Flyouts.IllustrationResultFilter;
 
 public class IllustrationResultFilterContentViewModel : ObservableObject
 {
-    private ObservableCollection<Token> _excludeTags;
+    private ObservableCollection<Token> _excludeTags = null!;
 
-    private string _illustrationId;
+    private string _illustrationId = null!;
 
-    private Token _illustrationName;
+    private Token _illustrationName = null!;
 
-    private string _illustratorId;
+    private string _illustratorId = null!;
 
-    private Token _illustratorName;
+    private Token _illustratorName = null!;
 
-    private ObservableCollection<Token> _includeTags;
+    private ObservableCollection<Token> _includeTags = null!;
 
     private int _leastBookmark;
 
@@ -49,10 +49,9 @@ public class IllustrationResultFilterContentViewModel : ObservableObject
 
     private DateTimeOffset _publishDateStart;
 
-    private ObservableCollection<Token> _userGroupName;
-#pragma warning disable CS8618
+    private ObservableCollection<Token> _userGroupName = null!;
+
     public IllustrationResultFilterContentViewModel()
-#pragma warning restore CS8618
     {
         DefaultValueAttributeHelper.Initialize(this);
     }

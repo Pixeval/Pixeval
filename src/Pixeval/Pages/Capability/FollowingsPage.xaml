@@ -7,6 +7,7 @@
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:local="using:Pixeval.Pages.Capability"
     xmlns:markup="using:Pixeval.Controls.MarkupExtensions"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     ClearCacheAfterNavigation="True"
@@ -14,7 +15,7 @@
     mc:Ignorable="d">
     <SplitView
         x:Name="MainSplitView"
-        CompactPaneLength="300"
+        CompactPaneLength="{x:Bind local:FollowingsPage.CompactPaneLength}"
         DisplayMode="CompactOverlay"
         IsPaneOpen="True"
         OpenPaneLength="1000"
@@ -77,6 +78,10 @@
                 <TeachingTip x:Name="FollowingsPageTeachingTip" Grid.Row="0" />
             </Grid>
         </SplitView.Pane>
-        <Frame x:Name="IllustratorContentViewerFrame" />
+        <Frame x:Name="IllustratorContentViewerFrame" HorizontalAlignment="Right">
+            <Frame.Clip>
+                <RectangleGeometry x:Name="ClipGeometry" />
+            </Frame.Clip>
+        </Frame>
     </SplitView>
 </controls:EnhancedPage>
