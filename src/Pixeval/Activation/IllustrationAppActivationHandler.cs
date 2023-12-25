@@ -22,6 +22,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Pixeval.Controls.IllustrationView;
+using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Util.Threading;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
@@ -39,30 +40,19 @@ public class IllustrationAppActivationHandler : IAppActivationHandler
             return Task.CompletedTask;
         }
 
-        // WeakReferenceMessenger.Default.Send(new MainPageFrameSetConnectedAnimationTargetMessage(App.AppViewModel.AppWindowRootFrame));
-
         return ThreadingHelper.DispatchTaskAsync(async () =>
         {
-            App.AppViewModel.PrepareForActivation();
-
             try
             {
-                var viewModels = new IllustrationItemViewModel(await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(id))
-                    .GetMangaIllustrationViewModels()
-                    .ToArray();
+                var viewModel = new IllustrationItemViewModel(await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(id));
 
-                // 见41行 ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", App.AppViewModel.AppWindowRootFrame);
-                // todo UIHelper.RootFrameNavigate(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(viewModels), new SuppressNavigationTransitionInfo());
+                viewModel.CreateWindowWithPage([viewModel]);
             }
             catch (Exception e)
             {
                 ToastNotificationHelper.ShowTextToastNotification(
                     ActivationsResources.IllustrationActivationFailedTitle,
                     ActivationsResources.IllustrationActivationFailedContentFormatted.Format(e.Message));
-            }
-            finally
-            {
-                App.AppViewModel.ActivationProcessed();
             }
         });
     }

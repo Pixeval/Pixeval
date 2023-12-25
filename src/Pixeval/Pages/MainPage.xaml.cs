@@ -68,15 +68,13 @@ public sealed partial class MainPage : ISupportCustomTitleBarDragRegion
     // currently holding if we're navigating back to the MainPage
     private static IllustrationItemViewModel? _illustrationViewerContent;
 
-    private readonly MainPageViewModel _viewModel = new();
+    private MainPageViewModel _viewModel;
 
     public MainPage()
     {
         InitializeComponent();
         CurrentContext.TitleBar = TitleBarGrid;
         CurrentContext.TitleTextBlock = AppTitleTextBlock;
-        CurrentContext.NavigationView = MainPageRootNavigationView;
-        CurrentContext.Frame = MainPageRootFrame;
         DataContext = _viewModel;
         if (AppWindowTitleBar.IsCustomizationSupported())
         {
@@ -89,14 +87,12 @@ public sealed partial class MainPage : ISupportCustomTitleBarDragRegion
         var titleBar = TitleBar.TransformToVisual(Content).TransformPoint(new Point(0, 0));
         var titleBarRect = new RectInt32((int)titleBar.X, (int)titleBar.Y, (int)TitleBar.ActualWidth, (int)TitleBar.ActualHeight);
 
-        DragZoneHelper.SetDragZones(new DragZoneInfo(titleBarRect)
-        {
-            DragZoneLeftIndent = 48
-        });
+        DragZoneHelper.SetDragZones(new DragZoneInfo(titleBarRect) { DragZoneLeftIndent = 48 });
     }
 
     public override void OnPageActivated(NavigationEventArgs e, object? parameter)
     {
+        _viewModel = new MainPageViewModel(Window);
         // dirty trick, the order of the menu items is the same as the order of the fields in MainPageTabItem
         // since enums are basically integers, we just need a cast to transform it to the correct offset.
         ((NavigationViewItem)MainPageRootNavigationView.MenuItems[(int)App.AppViewModel.AppSetting.DefaultSelectedTabItem]).IsSelected = true;

@@ -148,21 +148,17 @@ public static partial class IoHelper
         };
     }
 
-    public static async Task<BitmapImage> GetBitmapImageAsync(this IRandomAccessStream imageStream, bool disposeOfImageStream, int? desiredWidth = 0)
+    public static async Task<BitmapImage> GetBitmapImageAsync(this IRandomAccessStream imageStream, bool disposeOfImageStream, int? desiredWidth = null)
     {
         var bitmapImage = new BitmapImage
         {
             DecodePixelType = DecodePixelType.Logical
         };
         if (desiredWidth is { } width)
-        {
             bitmapImage.DecodePixelWidth = width;
-        }
         await bitmapImage.SetSourceAsync(imageStream);
         if (disposeOfImageStream)
-        {
             imageStream.Dispose();
-        }
 
         return bitmapImage;
     }
@@ -189,8 +185,7 @@ public static partial class IoHelper
             c = imageStream.Position;
             d = imageStream.Size;
             var image = await Image.LoadAsync<Bgra32>(imageStream.AsStreamForRead());
-            var softwareBitmap = new SoftwareBitmap(BitmapPixelFormat.Bgra8, image.Width, image.Height,
-                BitmapAlphaMode.Premultiplied);
+            var softwareBitmap = new SoftwareBitmap(BitmapPixelFormat.Bgra8, image.Width, image.Height, BitmapAlphaMode.Premultiplied);
             var buffer = new byte[4 * image.Width * image.Height];
             image.CopyPixelDataTo(buffer);
             softwareBitmap.CopyFromBuffer(buffer.AsBuffer());

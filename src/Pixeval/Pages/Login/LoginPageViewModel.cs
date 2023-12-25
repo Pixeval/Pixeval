@@ -35,6 +35,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.Win32;
 using Pixeval.AppManagement;
 using Pixeval.Attributes;
+using Pixeval.Controls.Windowing;
 using Pixeval.CoreApi;
 using Pixeval.CoreApi.Model;
 using Pixeval.CoreApi.Net;
@@ -109,11 +110,8 @@ public partial class LoginPageViewModel : AutoActivateObservableRecipient
     public bool CheckWebView2Installation()
     {
         AdvancePhase(LoginPhaseEnum.CheckingWebView2Installation);
-        var regKey = Registry.LocalMachine.OpenSubKey(
-            Environment.Is64BitOperatingSystem
-                ? @"SOFTWARE\WOW6432Node\Microsoft\EdgeUpdate\Clients\{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}"
-                : @"SOFTWARE\Microsoft\EdgeUpdate\Clients\{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}");
-        return regKey != null && !(regKey.GetValue("pv") as string).IsNullOrEmpty();
+        var regKey = Registry.LocalMachine.OpenSubKey($@"SOFTWARE\{(Environment.Is64BitOperatingSystem ? @"WOW6432Node\" : "")}Microsoft\EdgeUpdate\Clients\{{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}}");
+        return !string.IsNullOrEmpty(regKey?.GetValue("pv") as string);
     }
 
     public async Task<bool> CheckFakeRootCertificateInstallationAsync()
@@ -169,7 +167,7 @@ public partial class LoginPageViewModel : AutoActivateObservableRecipient
         else
         {
             _ = await MessageDialogBuilder.CreateAcknowledgement(
-                    CurrentContext.Window,
+                    WindowFactory.RootWindow,
                     LoginPageResources.RefreshingSessionIsNotPresentTitle,
                     LoginPageResources.RefreshingSessionIsNotPresentContent)
                 .ShowAsync();
@@ -349,7 +347,7 @@ public partial class LoginPageViewModel : AutoActivateObservableRecipient
             }
             else
             {
-                CurrentContext.App.Exit();
+                Application.Current.Exit();
             }
         }
     }
@@ -366,7 +364,7 @@ public partial class LoginPageViewModel : AutoActivateObservableRecipient
                 _ = await Launcher.LaunchUriAsync(new Uri("https://go.microsoft.com/fwlink/p/?LinkId=2124703"));
             }
 
-            CurrentContext.App.Exit();
+            Application.Current.Exit();
         }
     }
 }

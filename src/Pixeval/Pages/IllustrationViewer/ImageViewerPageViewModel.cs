@@ -213,7 +213,7 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
                 if (ugoiraMetadata.UgoiraMetadataInfo?.ZipUrls?.Large is { } url)
                 {
                     AdvancePhase(LoadingPhase.DownloadingUgoiraZip);
-                    var downloadRes = await App.AppViewModel.MakoClient.DownloadStreamResultAsync(url, new Progress<int>(d =>
+                    var downloadRes = await App.AppViewModel.MakoClient.DownloadStreamAsync(url, new Progress<int>(d =>
                     {
                         LoadingProgress = d;
                         AdvancePhase(LoadingPhase.DownloadingUgoiraZip);
@@ -235,7 +235,7 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
             else if (IllustrationViewModel.OriginalSourceUrl is { } src)
             {
                 AdvancePhase(LoadingPhase.DownloadingImage);
-                var ras = await App.AppViewModel.MakoClient.DownloadRandomAccessStreamResultAsync(src, new Progress<int>(d =>
+                var ras = await App.AppViewModel.MakoClient.DownloadRandomAccessStreamAsync(src, new Progress<int>(d =>
                 {
                     LoadingProgress = d;
                     AdvancePhase(LoadingPhase.DownloadingImage);

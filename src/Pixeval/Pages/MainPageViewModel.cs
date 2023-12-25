@@ -24,22 +24,21 @@ using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
-using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.Controls.IllustrationView;
+using Pixeval.Controls.Windowing;
 using Pixeval.CoreApi.Global.Enum;
-using Pixeval.CoreApi.Net;
 using Pixeval.Messages;
 using Pixeval.Misc;
 using Pixeval.Pages.Capability;
+using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Pages.Misc;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
-using WinUI3Utilities;
 
 namespace Pixeval.Pages;
 
-public partial class MainPageViewModel : AutoActivateObservableRecipient, IRecipient<LoginCompletedMessage>
+public partial class MainPageViewModel(EnhancedWindow window) : AutoActivateObservableRecipient, IRecipient<LoginCompletedMessage>
 {
     public readonly NavigationViewTag AboutTag = new(typeof(AboutPage), null);
 
@@ -74,7 +73,7 @@ public partial class MainPageViewModel : AutoActivateObservableRecipient, IRecip
 
     public void Receive(LoginCompletedMessage message)
     {
-        // TODO DownloadAndSetAvatar();
+        DownloadAndSetAvatar();
     }
 
     /// <summary>
@@ -85,50 +84,50 @@ public partial class MainPageViewModel : AutoActivateObservableRecipient, IRecip
         var makoClient = App.AppViewModel.MakoClient;
         // get byte array of avatar
         // and set to the bitmap image
-        Avatar = (await makoClient.DownloadSoftwareBitmapSourceResultAsync(makoClient.Session.AvatarUrl!)).UnwrapOrThrow();
+        Avatar = (await makoClient.DownloadSoftwareBitmapSourceAsync(makoClient.Session.AvatarUrl!)).UnwrapOrThrow();
     }
 
     public async Task ReverseSearchAsync(Stream stream)
     {
-        var window = CurrentContext.Window;
         try
         {
-            //todo window.ShowProgressRing();
             var result = await App.AppViewModel.MakoClient.ReverseSearchAsync(stream, App.AppViewModel.AppSetting.ReverseSearchApiKey!);
-            if (result.Header is not null)
+            if (result.Header.Status is 0)
             {
-                switch (result.Header.Status)
-                {
-                    case 0:
-                        if (result.Results?.FirstOrDefault() is { Header.IndexId: 5 or 6 } first)
-                        {
-                            var viewModels = new IllustrationItemViewModel(await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(first.Data.PixivId))
-                                .GetMangaIllustrationViewModels()
-                                .ToArray();
-                            // window.HideProgressRing();
-                            // ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", App.AppViewModel.AppWindowRootFrame);
-                            // todo UIHelper.RootFrameNavigate(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(viewModels), new SuppressNavigationTransitionInfo());
-                            return;
-                        }
+                var viewModels = await Task.WhenAll(result.Results
+                    .Where(r => r.Header.IndexId is 5 or 6 && r.Header.Similarity >
+                        App.AppViewModel.AppSetting.ReverseSearchResultSimilarityThreshold)
+                    .Select(async r =>
+                        new IllustrationItemViewModel(
+                            await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(r.Data.PixivId))));
 
-                        break;
-                    case var s:
-                        _ = await MessageDialogBuilder.CreateAcknowledgement(
-                                window,
-                                MainPageResources.ReverseSearchErrorTitle,
-                                s > 0 ? MainPageResources.ReverseSearchServerSideErrorContent : MainPageResources.ReverseSearchClientSideErrorContent)
-                            .ShowAsync();
-                        break;
-                }
+                if (viewModels.Length is 0)
+                    _ = MessageDialogBuilder.CreateAcknowledgement(
+                            window,
+                            MainPageResources.ReverseSearchNotFoundTitle,
+                            MainPageResources.ReverseSearchNotFoundContent)
+                        .ShowAsync();
 
-                // window.HideProgressRing();
-                _ = MessageDialogBuilder.CreateAcknowledgement(window, MainPageResources.ReverseSearchNotFoundTitle, MainPageResources.ReverseSearchNotFoundContent);
+                viewModels[0].CreateWindowWithPage(viewModels);
+            }
+            else
+            {
+                _ = await MessageDialogBuilder.CreateAcknowledgement(
+                        window,
+                        MainPageResources.ReverseSearchErrorTitle,
+                        result.Header.Status > 0
+                            ? MainPageResources.ReverseSearchServerSideErrorContent
+                            : MainPageResources.ReverseSearchClientSideErrorContent)
+                    .ShowAsync();
             }
         }
         catch (Exception e)
         {
-            // window.HideProgressRing();
-            await App.AppViewModel.ShowExceptionDialogAsync(e);
+            _ = await MessageDialogBuilder.CreateAcknowledgement(
+                    window,
+                    MiscResources.ExceptionEncountered,
+                    e.ToString())
+                .ShowAsync();
         }
     }
 }

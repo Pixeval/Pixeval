@@ -173,7 +173,7 @@ public class DownloadManager<TDownloadTask> : IDisposable where TDownloadTask : 
         task.CancellationHandle.Register(() => SetState(task, DownloadState.Cancelled));
         task.CancellationHandle.RegisterPaused(() => SetState(task, DownloadState.Paused));
         task.CancellationHandle.RegisterResumed(() => SetState(task, DownloadState.Running));
-        var ras = await _httpClient.DownloadAsIRandomAccessStreamAsync(task.Url, new Progress<int>(percentage => task.ProgressPercentage = percentage), task.CancellationHandle);
+        var ras = await _httpClient.DownloadRandomAccessStreamAsync(task.Url, new Progress<int>(percentage => task.ProgressPercentage = percentage), task.CancellationHandle);
         switch (ras)
         {
             case Result<IRandomAccessStream>.Success(var resultStream):

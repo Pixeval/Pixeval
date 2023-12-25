@@ -34,6 +34,7 @@ using Pixeval.Util.IO;
 using Pixeval.Utilities;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
+using static CommunityToolkit.WinUI.Animations.Expressions.ExpressionValues;
 
 namespace Pixeval.AppManagement;
 
@@ -44,7 +45,7 @@ namespace Pixeval.AppManagement;
 [AppContext<Session>(ConfigKey = "Session", MethodName = "Session")]
 public static partial class AppContext
 {
-    public const string AppIdentifier = "Pixeval";
+    public const string AppIdentifier = nameof(Pixeval);
 
     public const string AppProtocol = "pixeval";
 
@@ -56,13 +57,13 @@ public static partial class AppContext
 
     public static readonly string AppVersion = GitVersionInformation.AssemblySemVer;
 
-    private static SoftwareBitmapSource? _imageNotAvailable;
+    private static readonly WeakReference<SoftwareBitmapSource?> _imageNotAvailable = new(null);
 
-    private static IRandomAccessStream? _imageNotAvailableStream;
+    private static readonly WeakReference<IRandomAccessStream?> _imageNotAvailableStream = new(null);
 
-    private static SoftwareBitmapSource? _pixivNoProfile;
+    private static readonly WeakReference<SoftwareBitmapSource?> _pixivNoProfile = new(null);
 
-    private static IRandomAccessStream? _pixivNoProfileStream;
+    private static readonly WeakReference<IRandomAccessStream?> _pixivNoProfileStream = new(null);
 
     static AppContext()
     {
@@ -78,24 +79,30 @@ public static partial class AppContext
 
     public static async Task<SoftwareBitmapSource> GetNotAvailableImageAsync()
     {
-        // TODO: 可能会多次同时加载此图，可以考虑用弱引用
-        return _imageNotAvailable ??= await (await GetNotAvailableImageStreamAsync()).GetSoftwareBitmapSourceAsync(false);
+        if (!_imageNotAvailable.TryGetTarget(out var target))
+            _imageNotAvailable.SetTarget(target = await (await GetNotAvailableImageStreamAsync()).GetSoftwareBitmapSourceAsync(false));
+        return target;
     }
 
     public static async Task<IRandomAccessStream> GetNotAvailableImageStreamAsync()
     {
-        return _imageNotAvailableStream ??= await GetAssetStreamAsync("Images/image-not-available.png");
+        if (!_imageNotAvailableStream.TryGetTarget(out var target))
+            _imageNotAvailableStream.SetTarget(target = await GetAssetStreamAsync("Images/image-not-available.png"));
+        return target;
     }
 
     public static async Task<SoftwareBitmapSource> GetPixivNoProfileImageAsync()
     {
-        // TODO: 可能会多次同时加载此图，可以考虑用弱引用
-        return _pixivNoProfile ??= await (await GetPixivNoProfileImageStreamAsync()).GetSoftwareBitmapSourceAsync(false);
+        if (!_pixivNoProfile.TryGetTarget(out var target))
+            _pixivNoProfile.SetTarget(target = await (await GetPixivNoProfileImageStreamAsync()).GetSoftwareBitmapSourceAsync(false));
+        return target;
     }
 
     public static async Task<IRandomAccessStream> GetPixivNoProfileImageStreamAsync()
     {
-        return _pixivNoProfileStream ??= await GetAssetStreamAsync("Images/pixiv_no_profile.png");
+        if (!_pixivNoProfileStream.TryGetTarget(out var target))
+            _pixivNoProfileStream.SetTarget(target = await GetAssetStreamAsync("Images/pixiv_no_profile.png"));
+        return target;
     }
 
     public static async Task WriteLogoIcoIfNotExist()
@@ -181,7 +188,7 @@ public static partial class AppContext
         App.AppViewModel.AppSetting.WindowHeight = window.AppWindow.Size.Height;
         if (!App.AppViewModel.SignOutExit)
         {
-            if (App.AppViewModel.MakoClient != null!) 
+            if (App.AppViewModel.MakoClient != null!)
                 SaveSession(App.AppViewModel.MakoClient.Session);
             SaveConfig(App.AppViewModel.AppSetting);
         }

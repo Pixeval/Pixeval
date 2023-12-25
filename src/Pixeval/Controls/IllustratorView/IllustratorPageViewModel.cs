@@ -94,7 +94,7 @@ public partial class IllustratorPageViewModel : ObservableObject, IIllustrationV
     {
         if (AvatarSource != null)
             return;
-        AvatarSource = (await App.AppViewModel.MakoClient.DownloadBitmapImageResultAsync(AvatarUrl, 60)
+        AvatarSource = (await App.AppViewModel.MakoClient.DownloadBitmapImageAsync(AvatarUrl, 60)
             .UnwrapOrElseAsync(await AppContext.GetPixivNoProfileImageAsync()))!;
     }
 

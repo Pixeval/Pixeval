@@ -100,17 +100,6 @@ public class AppViewModel(App app) : AutoActivateObservableRecipient,  IRecipien
         AppHost.RunAsync().Discard();
     }
 
-    //todo ShowProgressRing
-    public void PrepareForActivation()
-    {
-        // ((MainWindow)CurrentContext.Window).ShowProgressRing();
-    }
-
-    public void ActivationProcessed()
-    {
-        // ((MainWindow)CurrentContext.Window).HideProgressRing();
-    }
-
     /// <summary>
     /// Gets and resets the <see cref="_activatedByProtocol" /> field, used for one-time activation process
     /// during the app start

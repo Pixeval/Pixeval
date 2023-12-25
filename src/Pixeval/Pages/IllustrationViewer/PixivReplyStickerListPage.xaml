@@ -19,6 +19,7 @@
                     Height="83"
                     Source="{x:Bind ImageSource}"
                     Stretch="UniformToFill"
+                    Tag="{x:Bind}"
                     Tapped="StickerImage_OnTapped"
                     ToolTipService.ToolTip="{x:Bind StickerId}" />
             </DataTemplate>

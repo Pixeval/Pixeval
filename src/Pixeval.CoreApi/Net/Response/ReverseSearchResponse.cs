@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval.CoreApi
+#region Copyright (c) Pixeval/Pixeval.CoreApi
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
@@ -63,7 +63,8 @@ public class ReverseSearchResponse
     public class ResultHeader
     {
         [JsonPropertyName("similarity")]
-        public required string Similarity { get; set; }
+        [JsonNumberHandling(JsonNumberHandling.AllowReadingFromString | JsonNumberHandling.WriteAsString)]
+        public required double Similarity { get; set; }
 
         [JsonPropertyName("index_id")]
         public required long IndexId { get; set; }

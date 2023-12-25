@@ -217,15 +217,8 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
 
             _currentIllustrationIndex = value;
             _pages?.ForEach(i => i.Dispose());
-            _pages = CurrentIllustration.Illustrate.PageCount <= 1
+            _pages = CurrentIllustration.GetMangaIllustrationViewModels().ToArray();
             // 保证_pages里所有的IllustrationViewModel都是生成的，从而删除的时候一律DisposeForce
-                ? [new IllustrationItemViewModel(CurrentIllustration.Illustrate)]
-                : CurrentIllustration.Illustrate.MetaPages
-                    .Select((m, i) =>
-                        new IllustrationItemViewModel(CurrentIllustration.Illustrate with { ImageUrls = m.ImageUrls })
-                        {
-                            MangaIndex = i
-                        }).ToArray();
 
             RelatedWorksTag.Parameter = IllustrationId;
             // IllustrationInfoTag.Parameter = this;
@@ -245,7 +238,7 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
             {
                 if (Illustrator is { ProfileImageUrls.Medium: { } profileImage })
                 {
-                    UserProfileImageSource = await App.AppViewModel.MakoClient.DownloadSoftwareBitmapSourceResultAsync(profileImage)
+                    UserProfileImageSource = await App.AppViewModel.MakoClient.DownloadSoftwareBitmapSourceAsync(profileImage)
                         .UnwrapOrElseAsync(await AppContext.GetPixivNoProfileImageAsync());
                 }
             }

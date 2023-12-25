@@ -63,6 +63,7 @@ public sealed partial class SettingsPage
     public override void OnPageDeactivated(NavigatingCancelEventArgs e)
     {
         Bindings.StopTracking();
+        AppContext.SaveConfig(App.AppViewModel.AppSetting);
         _viewModel = null!;
         base.OnPageDeactivated(e);
     }

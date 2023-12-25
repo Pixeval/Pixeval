@@ -42,6 +42,8 @@ public partial class App
 
     public App()
     {
+        CurrentContext.Title = AppContext.AppIdentifier;
+
         AppViewModel = new AppViewModel(this) { AppSetting = AppContext.LoadConfig() ?? AppSetting.CreateDefault() };
         WindowFactory.WindowSettings = AppViewModel.AppSetting;
         WindowFactory.IconAbsolutePath = AppContext.IconAbsolutePath;
@@ -69,12 +71,9 @@ public partial class App
         Current.Resources[ApplicationWideFontKey] = new FontFamily(AppViewModel.AppSetting.AppFontFamilyName);
         await AppKnownFolders.InitializeAsync();
 
-        CurrentContext.Title = AppContext.AppIdentifier;
-        WindowFactory.SetTheme(AppViewModel.AppSetting.Theme);
-
         WindowFactory.Create(out var w)
             .WithLoaded((s, _) => s.To<Frame>().NavigateTo<LoginPage>(w))
-            .WithClosed((s, _) => AppContext.SaveContext(s.To<EnhancedWindow>()))
+            .WithClosed((s, _) => AppContext.SaveContext(s.To<EnhancedWindow>())) // TODO: 从运行打开应用的时候不会ExitApp，就算是调用App.Current.Exit();
             .WithSizeLimit(800, 360)
             .Init(nameof(Pixeval), new SizeInt32(AppViewModel.AppSetting.WindowWidth, AppViewModel.AppSetting.WindowHeight))
             .Activate();

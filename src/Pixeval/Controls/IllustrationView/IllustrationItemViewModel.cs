@@ -143,20 +143,16 @@ public class IllustrationItemViewModel(Illustration illustration) : IllustrateVi
     {
         if (Illustrate.PageCount <= 1)
         {
-            return [this];
+            // 保证里所有的IllustrationViewModel都是生成的，从而删除的时候一律DisposeForce
+            return [new(Illustrate)];
         }
 
         // The API result of manga (a work with multiple illustrations) is a single Illustration object
         // that only differs from the illustrations of a single work on the MetaPages property, this property
         // contains the download urls of the manga
 
-        return Illustrate.MetaPages.Select(m => Illustrate with
-        {
-            ImageUrls = m.ImageUrls
-        }).Select((p, i) => new IllustrationItemViewModel(p)
-        {
-            MangaIndex = i
-        });
+        return Illustrate.MetaPages.Select(m => Illustrate with { ImageUrls = m.ImageUrls })
+            .Select((p, i) => new IllustrationItemViewModel(p) { MangaIndex = i });
     }
 
     public Task ToggleBookmarkStateAsync()
@@ -293,7 +289,7 @@ public class IllustrationItemViewModel(Illustration illustration) : IllustrateVi
     {
         if (Illustrate.GetThumbnailUrl(thumbnailUrlOptions) is { } url)
         {
-            switch (await App.AppViewModel.MakoClient.DownloadRandomAccessStreamResultAsync(url, cancellationHandle: LoadingThumbnailCancellationHandle))
+            switch (await App.AppViewModel.MakoClient.DownloadRandomAccessStreamAsync(url, cancellationHandle: LoadingThumbnailCancellationHandle))
             {
                 case Result<IRandomAccessStream>.Success(var stream):
                     return stream;

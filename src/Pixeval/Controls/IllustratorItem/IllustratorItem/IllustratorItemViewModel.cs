@@ -85,7 +85,7 @@ public sealed partial class IllustratorItemViewModel : IllustrateViewModel<User>
     {
         if (Illustrate.UserInfo?.ProfileImageUrls?.Medium is { } url)
         {
-            var avatar = await App.AppViewModel.MakoClient.DownloadBitmapImageResultAsync(url, 100);
+            var avatar = await App.AppViewModel.MakoClient.DownloadBitmapImageAsync(url, 100);
             AvatarSource = avatar.UnwrapOrElse(await AppContext.GetPixivNoProfileImageAsync());
         }
         else
@@ -98,7 +98,7 @@ public sealed partial class IllustratorItemViewModel : IllustrateViewModel<User>
 
         UserDetail = await App.AppViewModel.MakoClient.GetUserFromIdAsync(UserId, App.AppViewModel.AppSetting.TargetFilter);
         if (UserDetail.UserProfile?.BackgroundImageUrl is { } backgroundImageUrl)
-            if (await App.AppViewModel.MakoClient.DownloadRandomAccessStreamResultAsync(backgroundImageUrl) is Result<IRandomAccessStream>.Success(var stream))
+            if (await App.AppViewModel.MakoClient.DownloadRandomAccessStreamAsync(backgroundImageUrl) is Result<IRandomAccessStream>.Success(var stream))
             {
                 //if (OverviewViewModel.AvatarBorderBrush is null)
                 //{

@@ -76,7 +76,7 @@ public partial class RecommendIllustratorItemViewModel : IllustrateViewModel<Rec
     {
         if (Illustrate.Image is { } url)
         {
-            var avatar = await App.AppViewModel.MakoClient.DownloadBitmapImageResultAsync(url, 100);
+            var avatar = await App.AppViewModel.MakoClient.DownloadBitmapImageAsync(url, 100);
             AvatarSource = avatar.UnwrapOrElse(await AppContext.GetPixivNoProfileImageAsync());
         }
         else

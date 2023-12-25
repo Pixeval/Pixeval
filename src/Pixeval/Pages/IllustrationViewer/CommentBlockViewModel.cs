@@ -76,7 +76,7 @@ public class CommentBlockViewModel(Comment comment, long illustrationId)
 
     public async Task<ImageSource> GetAvatarSource()
     {
-        return (await App.AppViewModel.MakoClient.DownloadBitmapImageResultAsync(Comment.CommentPoster.ProfileImageUrls.Medium, 35)
+        return (await App.AppViewModel.MakoClient.DownloadBitmapImageAsync(Comment.CommentPoster.ProfileImageUrls.Medium, 35)
             .UnwrapOrElseAsync(await AppContext.GetPixivNoProfileImageAsync()))!;
     }
 
@@ -93,7 +93,7 @@ public class CommentBlockViewModel(Comment comment, long illustrationId)
                         Text = content
                     });
                     break;
-                case ReplyContentToken.EmojiToken(var emoji) when await App.AppViewModel.MakoClient.DownloadRandomAccessStreamResultAsync(emoji.GetReplyEmojiDownloadUrl()) is Result<IRandomAccessStream>.Success(var emojiSource):
+                case ReplyContentToken.EmojiToken(var emoji) when await App.AppViewModel.MakoClient.DownloadRandomAccessStreamAsync(emoji.GetReplyEmojiDownloadUrl()) is Result<IRandomAccessStream>.Success(var emojiSource):
                     paragraph.Inlines.Add(new InlineUIContainer
                     {
                         Child = new Image

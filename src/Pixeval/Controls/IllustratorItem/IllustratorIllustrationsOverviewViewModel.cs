@@ -93,7 +93,7 @@ public partial class IllustratorIllustrationsOverviewViewModel : ObservableObjec
             {
                 if (illustration.GetThumbnailUrl(Option) is { } url)
                 {
-                    if (await App.AppViewModel.MakoClient.DownloadRandomAccessStreamResultAsync(url) is not
+                    if (await App.AppViewModel.MakoClient.DownloadRandomAccessStreamAsync(url) is not
                         Result<IRandomAccessStream>.Success(var stream))
                         continue;
                     if (AvatarBorderBrush is null && GetAvatarBorderBrush)

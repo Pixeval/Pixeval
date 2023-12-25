@@ -23,7 +23,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace Pixeval.Utilities;
@@ -46,12 +45,6 @@ public static class Enumerates
         var v = valueFactory();
         dictionary.Add(key, v);
         return v;
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static IEnumerable<T> Flatten<T>(this IEnumerable<IEnumerable<T>> source)
-    {
-        return source.SelectMany(i => i);
     }
 
     public static IEnumerable<(int, T)> Indexed<T>(this IEnumerable<T> source)
@@ -77,7 +70,7 @@ public static class Enumerates
         return comparison switch
         {
             SequenceComparison.Sequential => @this.SequenceEqual(another, equalityComparer),
-            SequenceComparison.Unordered => @this.OrderBy(Functions.Identity<T>()).SequenceEqual(another.OrderBy(Functions.Identity<T>()), equalityComparer), // not the fastest way, but still enough
+            SequenceComparison.Unordered => @this.Order().SequenceEqual(another.Order(), equalityComparer), // not the fastest way, but still enough
             _ => throw new ArgumentOutOfRangeException(nameof(comparison), comparison, null)
         };
     }
@@ -153,11 +146,6 @@ public static class Enumerates
         return new AdaptedAsyncEnumerable<T>(source);
     }
 
-    public static ObservableCollection<T> ToObservableCollection<T>(this IEnumerable<T> source)
-    {
-        return new ObservableCollection<T>(source);
-    }
-
     public static async Task<ObservableCollection<T>> ToObservableCollectionAsync<T>(this IAsyncEnumerable<T> that)
     {
         var results = new ObservableCollection<T>();
@@ -167,16 +155,6 @@ public static class Enumerates
         }
 
         return results;
-    }
-
-    public static T[] ArrayOf<T>(params T[] t)
-    {
-        return t;
-    }
-
-    public static IEnumerable<T> EnumerableOf<T>(params T[] t)
-    {
-        return ArrayOf(t);
     }
 
     public static IEnumerable<T> Traverse<T>(this IEnumerable<T> src, Action<T> action)

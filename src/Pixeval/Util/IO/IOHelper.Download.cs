@@ -77,16 +77,16 @@ public static partial class IoHelper
     /// on performance
     /// </remarks>
     /// </summary>
-    public static async Task<Result<IRandomAccessStream>> DownloadAsIRandomAccessStreamAsync(
+    public static async Task<Result<IRandomAccessStream>> DownloadRandomAccessStreamAsync(
         this HttpClient httpClient,
         string url,
         IProgress<int>? progress = null,
         CancellationHandle? cancellationHandle = default)
     {
-        return (await httpClient.DownloadAsStreamAsync(url, progress, cancellationHandle)).Rewrap(stream => stream.AsRandomAccessStream());
+        return (await httpClient.DownloadStreamAsync(url, progress, cancellationHandle)).Rewrap(stream => stream.AsRandomAccessStream());
     }
 
-    public static async Task<Result<Stream>> DownloadAsStreamAsync(
+    private static async Task<Result<Stream>> DownloadStreamAsync(
         this HttpClient httpClient,
         string url,
         IProgress<int>? progress = null,

@@ -32,7 +32,6 @@ using Pixeval.CoreApi.Model;
 using Pixeval.Misc;
 using Pixeval.Options;
 using Pixeval.Util.Generic;
-using Pixeval.Utilities;
 using WinUI3Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
 
@@ -40,12 +39,13 @@ namespace Pixeval.Util;
 
 public static class MakoHelper
 {
-    public static IReadOnlyList<int> StickerIds = Enumerates.EnumerableOf(
-            Enumerable.Range(301, 10),
-            Enumerable.Range(401, 10),
-            Enumerable.Range(201, 10),
-            Enumerable.Range(101, 10))
-        .SelectMany(Functions.Identity<IEnumerable<int>>()).ToList();
+    public static IReadOnlyList<int> StickerIds =
+    [
+        .. Enumerable.Range(301, 10),
+        .. Enumerable.Range(401, 10),
+        .. Enumerable.Range(201, 10),
+        .. Enumerable.Range(101, 10)
+    ];
 
     public static IllustrationSortOptionWrapper GetAppSettingDefaultSortOptionWrapper()
     {
@@ -95,7 +95,7 @@ public static class MakoHelper
 
     public static string? GetOriginalUrl(this Illustration illustration)
     {
-        return illustration.ImageUrls?.Original ?? illustration.MetaSinglePage?.OriginalImageUrl;
+        return illustration.ImageUrls.Original ?? illustration.MetaSinglePage.OriginalImageUrl;
     }
 
     public static string GetImageFormat(this Illustration illustration)
@@ -117,9 +117,9 @@ public static class MakoHelper
     {
         return sortOption switch
         {
-            IllustrationSortOption.PopularityDescending => new SortDescription(SortDirection.Descending, IllustrationBookmarkComparer.Instance),
-            IllustrationSortOption.PublishDateAscending => new SortDescription(SortDirection.Ascending, IllustrationViewModelPublishDateComparer.Instance),
-            IllustrationSortOption.PublishDateDescending => new SortDescription(SortDirection.Descending, IllustrationViewModelPublishDateComparer.Instance),
+            IllustrationSortOption.PopularityDescending => new(SortDirection.Descending, IllustrationBookmarkComparer.Instance),
+            IllustrationSortOption.PublishDateAscending => new(SortDirection.Ascending, IllustrationViewModelPublishDateComparer.Instance),
+            IllustrationSortOption.PublishDateDescending => new(SortDirection.Descending, IllustrationViewModelPublishDateComparer.Instance),
             IllustrationSortOption.DoNotSort => null,
             _ => ThrowHelper.ArgumentOutOfRange<IllustrationSortOption, SortDescription?>(sortOption)
         };
