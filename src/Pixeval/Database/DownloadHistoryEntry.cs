@@ -32,7 +32,7 @@ public partial class DownloadHistoryEntry : ObservableObject
     [ObservableProperty]
     private DownloadState _state;
 
-    public DownloadHistoryEntry(DownloadState state, string? errorCause, string? destination, DownloadItemType type, string? id, string? url)
+    public DownloadHistoryEntry(DownloadState state, string? errorCause, string? destination, DownloadItemType type, long id, string? url)
     {
         _state = state;
         _errorCause = errorCause;
@@ -54,7 +54,7 @@ public partial class DownloadHistoryEntry : ObservableObject
 
     public DownloadItemType Type { get; set; }
 
-    public string? Id { get; set; }
+    public long Id { get; set; }
 
     public string? Url { get; set; }
 }

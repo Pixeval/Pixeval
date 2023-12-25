@@ -53,7 +53,7 @@ public partial class IllustratorPageViewModel : ObservableObject, IIllustrationV
 
     public IllustratorPageViewModel(UserInfo info)
     {
-        Name = info.Name!;
+        Name = info.Name;
         AvatarUrl = info.ProfileImageUrls?.Medium!;
         Id = info.Id;
         Account = info.Account;
@@ -101,7 +101,7 @@ public partial class IllustratorPageViewModel : ObservableObject, IIllustrationV
     public async Task Follow()
     {
         IsFollowButtonEnabled = false;
-        await App.AppViewModel.MakoClient.PostFollowUserAsync(Id.ToString(), PrivacyPolicy.Public);
+        await App.AppViewModel.MakoClient.PostFollowUserAsync(Id, PrivacyPolicy.Public);
         IsFollowed = true;
         IsFollowButtonEnabled = true;
     }
@@ -109,7 +109,7 @@ public partial class IllustratorPageViewModel : ObservableObject, IIllustrationV
     public async Task PrivateFollow()
     {
         IsFollowButtonEnabled = false;
-        await App.AppViewModel.MakoClient.PostFollowUserAsync(Id.ToString(), PrivacyPolicy.Private);
+        await App.AppViewModel.MakoClient.PostFollowUserAsync(Id, PrivacyPolicy.Private);
         IsFollowed = true;
         IsFollowButtonEnabled = true;
     }
@@ -117,7 +117,7 @@ public partial class IllustratorPageViewModel : ObservableObject, IIllustrationV
     public async Task Unfollow()
     {
         IsFollowButtonEnabled = false;
-        await App.AppViewModel.MakoClient.RemoveFollowUserAsync(Id.ToString());
+        await App.AppViewModel.MakoClient.RemoveFollowUserAsync(Id);
         IsFollowed = false;
         IsFollowButtonEnabled = true;
     }

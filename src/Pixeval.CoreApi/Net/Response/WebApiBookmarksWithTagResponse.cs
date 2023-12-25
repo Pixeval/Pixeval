@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval.CoreApi
+#region Copyright (c) Pixeval/Pixeval.CoreApi
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
@@ -27,18 +27,18 @@ namespace Pixeval.CoreApi.Net.Response;
 internal class WebApiBookmarksWithTagResponse
 {
     [JsonPropertyName("body")]
-    public Body? ResponseBody { get; set; }
+    public required Body ResponseBody { get; set; }
 
     public class Body
     {
         [JsonPropertyName("works")]
-        public IEnumerable<Work>? Works { get; set; }
+        public required IEnumerable<Work> Works { get; set; }
     }
 
     public class Work
     {
         [JsonPropertyName("id")]
-        [JsonConverter(typeof(NumberOrStringToStringConverter))]
-        public string? Id { get; set; }
+        [JsonNumberHandling(JsonNumberHandling.AllowReadingFromString | JsonNumberHandling.WriteAsString)]
+        public required long Id { get; set; }
     }
 }

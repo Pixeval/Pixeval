@@ -117,8 +117,8 @@ public partial class DownloadListPageViewModel : IllustrateViewViewModel<Illustr
         return;
 
         bool Query(DownloadListEntryViewModel viewModel) =>
-            (viewModel.Illustrate.Title?.Contains(key) ?? false) ||
-                   ((viewModel.DownloadTask is IllustrationDownloadTask task ? task.IllustrationViewModel.Id : viewModel.DownloadTask.Id)?.Contains(key) ?? false);
+            viewModel.Illustrate.Title.Contains(key) ||
+                   (viewModel.DownloadTask is IllustrationDownloadTask task ? task.IllustrationViewModel.Id : viewModel.DownloadTask.Id).ToString().Contains(key);
     }
 
     public void ResetFilter(IEnumerable<DownloadListEntryViewModel>? customSearchResultTask = null)

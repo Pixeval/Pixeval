@@ -37,7 +37,7 @@ public sealed partial class IllustratorIllustrationAndMangaBookmarkPage : ISorte
 {
     private readonly IllustratorIllustrationAndMangaBookmarkPageViewModel _viewModel;
 
-    private string? _uid;
+    private long _uid;
 
     public IllustratorIllustrationAndMangaBookmarkPage()
     {
@@ -59,8 +59,8 @@ public sealed partial class IllustratorIllustrationAndMangaBookmarkPage : ISorte
 
         IllustrationContainer.ViewModel.DataProvider.View.Filter = keyword.IsNullOrBlank()
             ? null
-            : o => o.Id.Contains(keyword)
-                   || (o.Illustrate.Tags ?? Enumerable.Empty<Tag>()).Any(x =>
+            : o => o.Id.ToString().Contains(keyword)
+                   || o.Illustrate.Tags.Any(x =>
                        x.Name.Contains(keyword) || (x.TranslatedName?.Contains(keyword) ?? false))
                    || (o.Illustrate.Title?.Contains(keyword) ?? false);
     }
@@ -80,7 +80,7 @@ public sealed partial class IllustratorIllustrationAndMangaBookmarkPage : ISorte
             return;
 
         _ = WeakReferenceMessenger.Default.TryRegister<IllustratorIllustrationAndMangaBookmarkPage, MainPageFrameNavigatingEvent>(this, static (recipient, _) => recipient.IllustrationContainer.ViewModel.DataProvider.FetchEngine?.Cancel());
-        if (e.Parameter is string id)
+        if (e.Parameter is long id)
         {
             _uid = id;
             IllustrationContainer.ViewModel.ResetEngine(App.AppViewModel.MakoClient.Bookmarks(id, PrivacyPolicy.Public, App.AppViewModel.AppSetting.TargetFilter));
@@ -104,10 +104,10 @@ public sealed partial class IllustratorIllustrationAndMangaBookmarkPage : ISorte
 
     private void TagComboBox_OnSelectionChangedWhenLoaded(object? sender, SelectionChangedEventArgs e)
     {
-        if (TagComboBox.SelectedItem is CountedTag(var (name, _), _) tag && _uid is { Length: > 0 } id && !ReferenceEquals(tag, IllustratorIllustrationAndMangaBookmarkPageViewModel.EmptyCountedTag))
+        if (TagComboBox.SelectedItem is CountedTag(var (name, _), _) tag && !ReferenceEquals(tag, IllustratorIllustrationAndMangaBookmarkPageViewModel.EmptyCountedTag))
         {
             // fetch the bookmark IDs for tag, but do not wait for it.
-            _viewModel.LoadBookmarksForTagAsync(id, tag.Tag.Name).Discard();
+            _viewModel.LoadBookmarksForTagAsync(_uid, tag.Tag.Name).Discard();
 
             // refresh the filter when there are newly fetched IDs.
             IllustrationContainer.ViewModel.DataProvider.View.Filter = o => BookmarkTagFilter(name, o);

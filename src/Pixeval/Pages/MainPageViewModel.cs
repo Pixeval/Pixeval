@@ -44,7 +44,7 @@ public partial class MainPageViewModel : AutoActivateObservableRecipient, IRecip
     public readonly NavigationViewTag AboutTag = new(typeof(AboutPage), null);
 
     public readonly NavigationViewTag BookmarksTag = new(typeof(BookmarksPage),
-        App.AppViewModel.MakoClient.Bookmarks(App.AppViewModel.PixivUid!, PrivacyPolicy.Public,
+        App.AppViewModel.MakoClient.Bookmarks(App.AppViewModel.PixivUid, PrivacyPolicy.Public,
             App.AppViewModel.AppSetting.TargetFilter));
 
     public readonly NavigationViewTag FollowingsTag = new(typeof(FollowingsPage), null);
@@ -97,12 +97,12 @@ public partial class MainPageViewModel : AutoActivateObservableRecipient, IRecip
             var result = await App.AppViewModel.MakoClient.ReverseSearchAsync(stream, App.AppViewModel.AppSetting.ReverseSearchApiKey!);
             if (result.Header is not null)
             {
-                switch (result.Header!.Status)
+                switch (result.Header.Status)
                 {
                     case 0:
                         if (result.Results?.FirstOrDefault() is { Header.IndexId: 5 or 6 } first)
                         {
-                            var viewModels = new IllustrationItemViewModel(await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(first.Data!.PixivId.ToString()))
+                            var viewModels = new IllustrationItemViewModel(await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(first.Data.PixivId))
                                 .GetMangaIllustrationViewModels()
                                 .ToArray();
                             // window.HideProgressRing();

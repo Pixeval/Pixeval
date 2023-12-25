@@ -96,7 +96,6 @@
                         <download:DownloadListEntry
                             Title="{x:Bind Illustrate.Title}"
                             ActionButtonContent="{x:Bind download:DownloadListEntryViewModel.GetEntryActionButtonContent(DownloadTask.CurrentState), Mode=OneWay}"
-                            DataContext="{x:Bind}"
                             Description="{x:Bind Illustrate.User.Name}"
                             IsCancelItemEnabled="{x:Bind download:DownloadListEntryViewModel.GetIsEntryCancelDownloadItemEnabled(DownloadTask.CurrentState), Mode=OneWay}"
                             IsRedownloadItemEnabled="{x:Bind download:DownloadListEntryViewModel.GetIsRedownloadItemEnabled(DownloadTask.CurrentState), Mode=OneWay}"

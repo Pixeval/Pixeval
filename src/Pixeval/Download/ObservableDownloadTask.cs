@@ -45,7 +45,7 @@ public partial class ObservableDownloadTask : ObservableObject, IDownloadTask
 
     public DownloadHistoryEntry DatabaseEntry { get; }
 
-    public string? Id => DatabaseEntry.Id;
+    public long Id => DatabaseEntry.Id;
 
     public string Url => DatabaseEntry.Url!;
 

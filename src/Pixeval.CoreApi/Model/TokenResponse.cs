@@ -28,22 +28,22 @@ namespace Pixeval.CoreApi.Model;
 public record TokenResponse
 {
     [JsonPropertyName("access_token")]
-    public string? AccessToken { get; set; }
+    public required string AccessToken { get; set; }
 
     [JsonPropertyName("expires_in")]
-    public long ExpiresIn { get; set; }
+    public required long ExpiresIn { get; set; }
 
     [JsonPropertyName("token_type")]
-    public string? TokenType { get; set; }
+    public required string TokenType { get; set; }
 
     [JsonPropertyName("scope")]
-    public string? Scope { get; set; }
+    public required string Scope { get; set; }
 
     [JsonPropertyName("refresh_token")]
-    public string? RefreshToken { get; set; }
+    public required string RefreshToken { get; set; }
 
     [JsonPropertyName("user")]
-    public TokenUser? User { get; set; }
+    public required TokenUser User { get; set; }
 
     [JsonPropertyName("response")]
     public TokenResponse? Response { get; set; }
@@ -53,55 +53,56 @@ public record TokenResponse
         return new Session
         {
             AccessToken = AccessToken,
-            Account = User?.Account,
-            AvatarUrl = User?.ProfileImageUrls?.Px170X170,
+            Account = User.Account,
+            AvatarUrl = User.ProfileImageUrls.Px170X170,
             ExpireIn = DateTime.Now + TimeSpan.FromSeconds(ExpiresIn) - TimeSpan.FromMinutes(5), // 减去5分钟是考虑到网络延迟会导致精确时间不可能恰好是一小时(TokenResponse的ExpireIn是60分钟)
-            Id = User?.Id,
-            IsPremium = User?.IsPremium ?? false,
+            Id = User.Id,
+            IsPremium = User.IsPremium,
             RefreshToken = RefreshToken,
-            Name = User?.Name
+            Name = User.Name
         };
     }
 
     public class TokenUser
     {
         [JsonPropertyName("profile_image_urls")]
-        public ProfileImageUrls? ProfileImageUrls { get; set; }
+        public required ProfileImageUrls ProfileImageUrls { get; set; }
 
         [JsonPropertyName("id")]
-        public string? Id { get; set; }
+        [JsonNumberHandling(JsonNumberHandling.AllowReadingFromString | JsonNumberHandling.WriteAsString)]
+        public required long Id { get; set; }
 
         [JsonPropertyName("name")]
-        public string? Name { get; set; }
+        public required string Name { get; set; }
 
         [JsonPropertyName("account")]
-        public string? Account { get; set; }
+        public required string Account { get; set; }
 
         [JsonPropertyName("mail_address")]
-        public string? MailAddress { get; set; }
+        public required string MailAddress { get; set; }
 
         [JsonPropertyName("is_premium")]
-        public bool IsPremium { get; set; }
+        public required bool IsPremium { get; set; }
 
         [JsonPropertyName("x_restrict")]
-        public long XRestrict { get; set; }
+        public required long XRestrict { get; set; }
 
         [JsonPropertyName("is_mail_authorized")]
-        public bool IsMailAuthorized { get; set; }
+        public required bool IsMailAuthorized { get; set; }
 
         [JsonPropertyName("require_policy_agreement")]
-        public bool RequirePolicyAgreement { get; set; }
+        public required bool RequirePolicyAgreement { get; set; }
     }
 
     public class ProfileImageUrls
     {
         [JsonPropertyName("px_16x16")]
-        public string? Px16X16 { get; set; }
+        public required string Px16X16 { get; set; }
 
         [JsonPropertyName("px_50x50")]
-        public string? Px50X50 { get; set; }
+        public required string Px50X50 { get; set; }
 
         [JsonPropertyName("px_170x170")]
-        public string? Px170X170 { get; set; }
+        public required string Px170X170 { get; set; }
     }
 }

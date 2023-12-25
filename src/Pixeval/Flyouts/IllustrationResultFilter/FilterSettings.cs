@@ -33,15 +33,15 @@ public record FilterSettings(
     int MaximumBookmark,
     IEnumerable<Token> UserGroupName,
     Token IllustratorName,
-    string IllustratorId,
+    long IllustratorId,
     Token IllustrationName,
-    string IllustrationId,
+    long IllustrationId,
     DateTimeOffset PublishDateStart,
     DateTimeOffset PublishDateEnd)
 {
-    public static readonly FilterSettings Default = new(Enumerable.Empty<Token>(),
-        Enumerable.Empty<Token>(), 0, int.MaxValue, Enumerable.Empty<Token>(), Token.Empty, string.Empty, Token.Empty,
-        string.Empty, DateTimeOffset.MinValue, DateTimeOffset.MaxValue);
+    public static readonly FilterSettings Default = new([],
+        [], -1, int.MaxValue, [], Token.Empty, 0, Token.Empty,
+        -1, DateTimeOffset.MinValue, DateTimeOffset.MaxValue);
 
     public virtual bool Equals(FilterSettings? other)
     {

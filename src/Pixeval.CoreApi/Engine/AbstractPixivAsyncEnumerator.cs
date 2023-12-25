@@ -34,15 +34,14 @@ namespace Pixeval.CoreApi.Engine;
 ///     as json),
 ///     and normally, a page can contain multiple result entries. When <see cref="MoveNextAsync" /> method is called, the
 ///     fetch
-///     engine will tries to get the next result entry in the current page, if there are no more entries, it will tries to
-///     fetch the next page, and if that also fails, then all of the pages have been fetched, iteration is over.
+///     engine will try to get the next result entry in the current page, if there are no more entries, it will try to
+///     fetch the next page, and if that also fails, then all the pages have been fetched, iteration is over.
 /// </summary>
 /// <typeparam name="TEntity">The entity that will be yield by the enumerator</typeparam>
 /// <typeparam name="TRawEntity">The entity class corresponding to the result entry</typeparam>
 /// <typeparam name="TFetchEngine">The fetch engine</typeparam>
 public abstract class AbstractPixivAsyncEnumerator<TEntity, TRawEntity, TFetchEngine>(TFetchEngine pixivFetchEngine,
     MakoApiKind apiKind) : IAsyncEnumerator<TEntity?>
-    where TEntity : class?
     where TFetchEngine : class, IFetchEngine<TEntity>
 {
     protected readonly MakoClient MakoClient = pixivFetchEngine.MakoClient;
@@ -66,10 +65,10 @@ public abstract class AbstractPixivAsyncEnumerator<TEntity, TRawEntity, TFetchEn
     /// <summary>
     ///     The current result entry of <see cref="CurrentEntityEnumerator" />
     /// </summary>
-    public TEntity? Current => CurrentEntityEnumerator?.Current;
+    public TEntity? Current => CurrentEntityEnumerator is null ? default : CurrentEntityEnumerator.Current;
 
     /// <summary>
-    ///     Moves the <see cref="MoveNextAsync" /> one step ahead, if fails, it will tries to
+    ///     Moves the <see cref="MoveNextAsync" /> one step ahead, if fails, it will try to
     ///     fetch a new page
     /// </summary>
     /// <returns></returns>

@@ -27,14 +27,14 @@ using Pixeval.Utilities;
 
 namespace Pixeval.CoreApi.Engine.Implements;
 
-internal class FollowingEngine(MakoClient makoClient, PrivacyPolicy privacyPolicy, string uid,
+internal class FollowingEngine(MakoClient makoClient, PrivacyPolicy privacyPolicy, long uid,
         EngineHandle? engineHandle)
     : AbstractPixivFetchEngine<User>(makoClient, engineHandle)
 {
     private readonly PrivacyPolicy _privacyPolicy = privacyPolicy;
-    private readonly string _uid = uid;
+    private readonly long _uid = uid;
 
-    public override IAsyncEnumerator<User> GetAsyncEnumerator(CancellationToken cancellationToken = new CancellationToken())
+    public override IAsyncEnumerator<User> GetAsyncEnumerator(CancellationToken cancellationToken = new())
     {
         return RecursivePixivAsyncEnumerators.User<FollowingEngine>
             .WithInitialUrl(this, MakoApiKind.AppApi,

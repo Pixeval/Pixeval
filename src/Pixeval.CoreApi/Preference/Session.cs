@@ -30,7 +30,7 @@ public record Session
     {
     }
 
-    public Session(string? name, DateTimeOffset expireIn, string? accessToken, string? refreshToken, string? avatarUrl, string? id, string? account, bool isPremium, string? cookie, DateTimeOffset cookieCreation)
+    public Session(string? name, DateTimeOffset expireIn, string? accessToken, string? refreshToken, string? avatarUrl, long id, string? account, bool isPremium, string? cookie, DateTimeOffset cookieCreation)
     {
         Name = name;
         ExpireIn = expireIn;
@@ -78,7 +78,8 @@ public record Session
     ///     User id
     /// </summary>
     [JsonPropertyName("id")]
-    public string? Id { get; set; }
+    [JsonNumberHandling(JsonNumberHandling.AllowReadingFromString | JsonNumberHandling.WriteAsString)]
+    public long Id { get; set; }
 
     /// <summary>
     ///     Account for login

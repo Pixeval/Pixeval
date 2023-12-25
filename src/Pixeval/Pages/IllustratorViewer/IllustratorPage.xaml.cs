@@ -229,21 +229,21 @@ public sealed partial class IllustratorPage
 
     private async void OpenLinkButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        _ = await Launcher.LaunchUriAsync(new Uri($"https://www.pixiv.net/users/{_viewModel!.Id}"));
+        _ = await Launcher.LaunchUriAsync(new Uri($"https://www.pixiv.net/users/{_viewModel.Id}"));
     }
 
     private async void FollowButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        await _viewModel!.Follow();
+        await _viewModel.Follow();
     }
 
     private async void PrivateFollowButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        await _viewModel!.PrivateFollow();
+        await _viewModel.PrivateFollow();
     }
 
     private async void UnfollowButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        await _viewModel!.Unfollow();
+        await _viewModel.Unfollow();
     }
 }

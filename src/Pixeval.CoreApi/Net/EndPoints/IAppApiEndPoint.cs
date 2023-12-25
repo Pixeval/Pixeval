@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval.CoreApi
+#region Copyright (c) Pixeval/Pixeval.CoreApi
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
@@ -35,7 +35,7 @@ internal interface IAppApiEndPoint
     Task<HttpResponseMessage> RemoveBookmarkAsync([Body(BodySerializationMethod.UrlEncoded)] RemoveBookmarkRequest request);
 
     [Get("/v1/illust/detail")]
-    Task<PixivSingleIllustResponse> GetSingleAsync([AliasAs("illust_id")] string id);
+    Task<PixivSingleIllustResponse> GetSingleAsync([AliasAs("illust_id")] long id);
 
     [Get("/v1/user/detail")]
     Task<PixivSingleUserResponse> GetSingleUserAsync(SingleUserRequest request);
@@ -53,7 +53,7 @@ internal interface IAppApiEndPoint
     Task<TrendingTagResponse> GetTrendingTagsForNovelAsync([AliasAs("filter")] string filter);
 
     [Get("/v1/ugoira/metadata")]
-    Task<UgoiraMetadataResponse> GetUgoiraMetadataAsync([AliasAs("illust_id")] string id);
+    Task<UgoiraMetadataResponse> GetUgoiraMetadataAsync([AliasAs("illust_id")] long id);
 
     [Post("/v1/illust/comment/delete")]
     Task DeleteCommentAsync([Body(BodySerializationMethod.UrlEncoded)] DeleteCommentRequest request);

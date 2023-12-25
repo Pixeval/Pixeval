@@ -32,8 +32,13 @@ public class IllustrationAppActivationHandler : IAppActivationHandler
 {
     public string ActivationFragment => "illust";
 
-    public Task Execute(string id)
+    public Task Execute(string param)
     {
+        if (!long.TryParse(param, out var id))
+        {
+            return Task.CompletedTask;
+        }
+
         // WeakReferenceMessenger.Default.Send(new MainPageFrameSetConnectedAnimationTargetMessage(App.AppViewModel.AppWindowRootFrame));
 
         return ThreadingHelper.DispatchTaskAsync(async () =>

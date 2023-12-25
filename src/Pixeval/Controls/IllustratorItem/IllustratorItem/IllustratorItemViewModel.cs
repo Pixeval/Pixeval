@@ -68,7 +68,7 @@ public sealed partial class IllustratorItemViewModel : IllustrateViewModel<User>
 
     public string Username => Illustrate.UserInfo?.Name ?? "";
 
-    public string UserId => Illustrate.UserInfo?.Id.ToString() ?? "";
+    public long UserId => Illustrate.UserInfo?.Id ?? 0;
 
     public XamlUICommand FollowCommand { get; set; }
 
@@ -98,7 +98,7 @@ public sealed partial class IllustratorItemViewModel : IllustrateViewModel<User>
 
         UserDetail = await App.AppViewModel.MakoClient.GetUserFromIdAsync(UserId, App.AppViewModel.AppSetting.TargetFilter);
         if (UserDetail.UserProfile?.BackgroundImageUrl is { } backgroundImageUrl)
-            if (await client.DownloadAsIRandomAccessStreamAsync(backgroundImageUrl) is Result<IRandomAccessStream>.Success(var stream))
+            if (await App.AppViewModel.MakoClient.DownloadRandomAccessStreamResultAsync(backgroundImageUrl) is Result<IRandomAccessStream>.Success(var stream))
             {
                 //if (OverviewViewModel.AvatarBorderBrush is null)
                 //{

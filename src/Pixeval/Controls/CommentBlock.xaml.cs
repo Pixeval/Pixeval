@@ -53,7 +53,7 @@ public sealed partial class CommentBlock
 
         if (viewModel.HasReplies)
         {
-            _ = viewModel.LoadRepliesAsync().ContinueWith(_ => block.OpenRepliesHyperlinkButton.Content = CommentBlockResources.RepliesNavigationStringFormatted.Format(viewModel.Replies!.Count), TaskScheduler.FromCurrentSynchronizationContext());
+            _ = viewModel.LoadRepliesAsync().ContinueWith(_ => block.OpenRepliesHyperlinkButton.Content = CommentBlockResources.RepliesNavigationStringFormatted.Format(viewModel.Replies.Count), TaskScheduler.FromCurrentSynchronizationContext());
         }
         else
         {

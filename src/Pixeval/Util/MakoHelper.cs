@@ -63,32 +63,32 @@ public static class MakoHelper
         };
     }
 
-    public static Uri GenerateIllustrationWebUri(string id)
+    public static Uri GenerateIllustrationWebUri(long id)
     {
         return new Uri($"https://www.pixiv.net/artworks/{id}");
     }
 
-    public static Uri GenerateIllustrationPixEzUri(string id)
+    public static Uri GenerateIllustrationPixEzUri(long id)
     {
         return new Uri($"pixez://www.pixiv.net/artworks/{id}");
     }
 
-    public static Uri GenerateIllustrationAppUri(string id)
+    public static Uri GenerateIllustrationAppUri(long id)
     {
         return new Uri($"{AppContext.AppProtocol}://illust/{id}");
     }
 
-    public static Uri GenerateIllustratorWebUri(string id)
+    public static Uri GenerateIllustratorWebUri(long id)
     {
         return new Uri($"https://www.pixiv.net/users/{id}");
     }
 
-    public static Uri GenerateIllustratorPixEzUri(string id)
+    public static Uri GenerateIllustratorPixEzUri(long id)
     {
         return new Uri($"pixez://www.pixiv.net/users/{id}");
     }
 
-    public static Uri GenerateIllustratorAppUri(string id)
+    public static Uri GenerateIllustratorAppUri(long id)
     {
         return new Uri($"{AppContext.AppProtocol}://user/{id}");
     }
@@ -127,7 +127,7 @@ public static class MakoHelper
 
     public static bool IsUgoira(this Illustration illustration)
     {
-        return illustration.Type!.Equals("ugoira", StringComparison.OrdinalIgnoreCase);
+        return illustration.Type.Equals("ugoira", StringComparison.OrdinalIgnoreCase);
     }
 
     public static bool IsManga(this Illustration illustration)

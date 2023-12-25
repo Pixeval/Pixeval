@@ -43,7 +43,7 @@ public sealed partial class IllustratorContentViewerPage : IDisposable
     {
         if (e.Parameter is IllustratorItemViewModel viewModel)
         {
-            _illustratorContentViewerViewModel = new IllustratorContentViewerViewModel(viewModel.UserDetail ?? await App.AppViewModel.MakoClient.GetUserFromIdAsync(viewModel.UserId!, App.AppViewModel.AppSetting.TargetFilter));
+            _illustratorContentViewerViewModel = new IllustratorContentViewerViewModel(viewModel.UserDetail ?? await App.AppViewModel.MakoClient.GetUserFromIdAsync(viewModel.UserId, App.AppViewModel.AppSetting.TargetFilter));
             IllustratorContentViewer.ViewModel = _illustratorContentViewerViewModel;
         }
     }

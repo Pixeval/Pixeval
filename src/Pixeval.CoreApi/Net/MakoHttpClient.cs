@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval.CoreApi
+#region Copyright (c) Pixeval/Pixeval.CoreApi
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
@@ -34,7 +34,7 @@ internal class MakoHttpClient : HttpClient
         Action<MakoHttpClient>? action = null)
     {
         var mako = new MakoHttpClient(handler);
-        action?.Let(ac => ac!(mako));
+        action?.Let(ac => ac(mako));
         return mako;
     }
 }

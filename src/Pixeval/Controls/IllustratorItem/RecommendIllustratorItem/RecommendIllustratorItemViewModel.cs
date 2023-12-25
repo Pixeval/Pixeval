@@ -45,7 +45,7 @@ public partial class RecommendIllustratorItemViewModel : IllustrateViewModel<Rec
     [ObservableProperty]
     private bool _isFollowed;
 
-    public RecommendIllustratorItemViewModel(RecommendUser user, IEnumerable<string>? ids) : base(user)
+    public RecommendIllustratorItemViewModel(RecommendUser user, IEnumerable<long>? ids) : base(user)
     {
         OverviewViewModel = new IllustratorIllustrationsOverviewViewModel(ids);
 
@@ -59,7 +59,7 @@ public partial class RecommendIllustratorItemViewModel : IllustrateViewModel<Rec
 
     public string Username => Illustrate.Name ?? "";
 
-    public string UserId => Illustrate.Id ?? "";
+    public long UserId => Illustrate.Id;
 
     public XamlUICommand FollowCommand { get; set; }
 

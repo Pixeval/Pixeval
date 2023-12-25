@@ -41,7 +41,7 @@ namespace Pixeval.Pages.IllustrationViewer;
 
 public sealed partial class CommentsPage
 {
-    private string _illustrationId = null!;
+    private long _illustrationId;
 
     public CommentsPage()
     {
@@ -57,7 +57,7 @@ public sealed partial class CommentsPage
             WeakReferenceMessenger.Default.UnregisterAll(this);
         });
 
-        var (engine, illustrationId) = ((IAsyncEnumerable<Comment>, string))e.Parameter;
+        var (engine, illustrationId) = ((IAsyncEnumerable<Comment>, long))e.Parameter;
         _illustrationId = illustrationId;
         if (CommentList.ItemsSource is not ICollection<CommentBlockViewModel>)
         {
@@ -75,7 +75,7 @@ public sealed partial class CommentsPage
     private async void ReplyBar_OnSendButtonTapped(object? sender, SendButtonTappedEventArgs e)
     {
         using var result = await App.AppViewModel.MakoClient.GetMakoHttpClient(MakoApiKind.AppApi).PostFormAsync(CommentBlockViewModel.AddCommentUrlSegment,
-            ("illust_id", _illustrationId),
+            ("illust_id", _illustrationId.ToString()),
             ("comment", e.ReplyContentRichEditBoxStringContent));
 
         await AddComment(result);
@@ -84,7 +84,7 @@ public sealed partial class CommentsPage
     private async void ReplyBar_OnStickerTapped(object? sender, StickerTappedEventArgs e)
     {
         using var result = await App.AppViewModel.MakoClient.GetMakoHttpClient(MakoApiKind.AppApi).PostFormAsync(CommentBlockViewModel.AddCommentUrlSegment,
-            ("illust_id", _illustrationId),
+            ("illust_id", _illustrationId.ToString()),
             ("stamp_id", e.StickerViewModel.StickerId.ToString()));
 
         await AddComment(result);

@@ -66,8 +66,8 @@ public sealed partial class CommentRepliesBlock
     private async void ReplyBar_OnSendButtonTapped(object? sender, SendButtonTappedEventArgs e)
     {
         using var result = await App.AppViewModel.MakoClient.GetMakoHttpClient(MakoApiKind.AppApi).PostFormAsync(CommentBlockViewModel.AddCommentUrlSegment,
-            ("illust_id", ViewModel.Comment.IllustrationId),
-            ("parent_comment_id", ViewModel.Comment.CommentId),
+            ("illust_id", ViewModel.Comment.IllustrationId.ToString()),
+            ("parent_comment_id", ViewModel.Comment.CommentId.ToString()),
             ("comment", e.ReplyContentRichEditBoxStringContent));
 
         await AddComment(result);
@@ -76,8 +76,8 @@ public sealed partial class CommentRepliesBlock
     private async void ReplyBar_OnStickerTapped(object? sender, StickerTappedEventArgs e)
     {
         using var result = await App.AppViewModel.MakoClient.GetMakoHttpClient(MakoApiKind.AppApi).PostFormAsync(CommentBlockViewModel.AddCommentUrlSegment,
-            ("illust_id", ViewModel.Comment.IllustrationId),
-            ("parent_comment_id", ViewModel.Comment.CommentId),
+            ("illust_id", ViewModel.Comment.IllustrationId.ToString()),
+            ("parent_comment_id", ViewModel.Comment.CommentId.ToString()),
             ("stamp_id", e.StickerViewModel.StickerId.ToString()));
 
         await AddComment(result);
@@ -95,8 +95,8 @@ public sealed partial class CommentRepliesBlock
 
         if (postCommentResponse.IsSuccessStatusCode)
         {
-            var response = await postCommentResponse.Content.ReadFromJsonAsync<PostCommentResponse>();
-            (CommentList.ItemsSource as ObservableCollection<CommentBlockViewModel>)?.Insert(0, new CommentBlockViewModel(response?.Comment!, ViewModel.Comment.IllustrationId));
+            var response = (await postCommentResponse.Content.ReadFromJsonAsync<PostCommentResponse>())!;
+            (CommentList.ItemsSource as ObservableCollection<CommentBlockViewModel>)?.Insert(0, new CommentBlockViewModel(response.Comment, ViewModel.Comment.IllustrationId));
         }
     }
 }

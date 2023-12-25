@@ -62,7 +62,7 @@ public class AppViewModel(App app) : AutoActivateObservableRecipient,  IRecipien
 
     public FileCache Cache { get; private set; } = null!;
 
-    public string? PixivUid => MakoClient.Session.Id;
+    public long PixivUid => MakoClient.Session.Id;
 
     public void Receive(LoginCompletedMessage message)
     {

@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval.CoreApi
+#region Copyright (c) Pixeval/Pixeval.CoreApi
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
@@ -26,44 +26,44 @@ namespace Pixeval.CoreApi.Model;
 public class Comment
 {
     [JsonPropertyName("id")]
-    public long Id { get; set; }
+    public required long Id { get; set; }
 
     [JsonPropertyName("comment")]
-    public string? CommentContent { get; set; }
+    public required string CommentContent { get; set; }
 
     [JsonPropertyName("date")]
-    public DateTimeOffset Date { get; set; }
+    public required DateTimeOffset Date { get; set; }
 
     [JsonPropertyName("user")]
-    public User? CommentPoster { get; set; }
+    public required User CommentPoster { get; set; }
 
     [JsonPropertyName("has_replies")]
-    public bool HasReplies { get; set; }
+    public required bool HasReplies { get; set; }
 
     [JsonPropertyName("stamp")]
-    public Stamp? CommentStamp { get; set; }
+    public required Stamp? CommentStamp { get; set; }
 
     public class Stamp
     {
         [JsonPropertyName("stamp_id")]
-        public long StampId { get; set; }
+        public required long StampId { get; set; }
 
         [JsonPropertyName("stamp_url")]
-        public string? StampUrl { get; set; }
+        public required string StampUrl { get; set; }
     }
 
     public class User
     {
         [JsonPropertyName("id")]
-        public long Id { get; set; }
+        public required long Id { get; set; }
 
         [JsonPropertyName("name")]
-        public string? Name { get; set; }
+        public required string Name { get; set; }
 
         [JsonPropertyName("account")]
-        public string? Account { get; set; }
+        public required string Account { get; set; }
 
         [JsonPropertyName("profile_image_urls")]
-        public ProfileImageUrls? ProfileImageUrls { get; set; }
+        public required ProfileImageUrls ProfileImageUrls { get; set; }
     }
 }

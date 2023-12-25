@@ -1,8 +1,8 @@
-﻿#region Copyright (c) Pixeval/Pixeval.CoreApi
+#region Copyright
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
-// Copyright (c) 2023 Pixeval.CoreApi/IllustrationCommentsResponse.cs
+// Copyright (c) 2023 Pixeval.CoreApi/UnusedAttribute.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,17 +18,9 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System.Collections.Generic;
-using System.Text.Json.Serialization;
-using Pixeval.CoreApi.Model;
+using System;
 
-namespace Pixeval.CoreApi.Net.Response;
+namespace Pixeval.CoreApi;
 
-public class IllustrationCommentsResponse
-{
-    [JsonPropertyName("comments")]
-    public required IEnumerable<Comment> Comments { get; set; }
-
-    [JsonPropertyName("next_url")]
-    public required string NextUrl { get; set; }
-}
+[AttributeUsage( AttributeTargets.All, Inherited = false)]
+public class UnusedAttribute : Attribute;

@@ -40,14 +40,14 @@ namespace Pixeval.CoreApi.Engine.Implements;
 /// <param name="engineHandle"></param>
 internal class BookmarkEngine(
     MakoClient makoClient,
-    string uid,
+    long uid,
     PrivacyPolicy privacyPolicy,
     TargetFilter targetFilter,
     EngineHandle? engineHandle = null) : AbstractPixivFetchEngine<Illustration>(makoClient, engineHandle)
 {
     private readonly PrivacyPolicy _privacyPolicy = privacyPolicy;
     private readonly TargetFilter _targetFilter = targetFilter;
-    private readonly string _uid = uid;
+    private readonly long _uid = uid;
 
     public override IAsyncEnumerator<Illustration> GetAsyncEnumerator(CancellationToken cancellationToken = new CancellationToken())
     {

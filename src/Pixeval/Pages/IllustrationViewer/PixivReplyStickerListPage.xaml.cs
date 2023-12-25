@@ -66,7 +66,7 @@ public sealed partial class PixivReplyStickerListPage
         if (!Stickers.Any())
         {
             var results = await Task.WhenAll(MakoHelper.StickerIds
-                .Select(async id => (id, await App.AppViewModel.MakoClient.GetMakoHttpClient(MakoApiKind.ImageApi).DownloadAsIRandomAccessStreamAsync(MakoHelper.GenerateStickerDownloadUrl(id)))));
+                .Select(async id => (id, await App.AppViewModel.MakoClient.DownloadRandomAccessStreamResultAsync(MakoHelper.GenerateStickerDownloadUrl(id)))));
             var tasks = results.Where(r => r.Item2 is Result<IRandomAccessStream>.Success)
                 .Select(r => (r.id, (Result<IRandomAccessStream>.Success)r.Item2))
                 .Select(async r => new PixivReplyStickerViewModel(r.id, await r.Item2.Value.GetBitmapImageAsync(true, 83)));

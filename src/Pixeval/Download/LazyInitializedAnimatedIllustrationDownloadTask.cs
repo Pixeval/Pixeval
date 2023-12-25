@@ -30,13 +30,13 @@ namespace Pixeval.Download;
 
 public class LazyInitializedAnimatedIllustrationDownloadTask : AnimatedIllustrationDownloadTask
 {
-    private readonly string _illustId;
+    private readonly long _illustId;
 
     private readonly Lazy<Task<IllustrationItemViewModel>> _resultGenerator;
 
     public LazyInitializedAnimatedIllustrationDownloadTask(DownloadHistoryEntry databaseEntry) : base(databaseEntry)
     {
-        _illustId = databaseEntry.Id!;
+        _illustId = databaseEntry.Id;
         _resultGenerator = new Lazy<Task<IllustrationItemViewModel>>(async () => new IllustrationItemViewModel(await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(_illustId)));
     }
 

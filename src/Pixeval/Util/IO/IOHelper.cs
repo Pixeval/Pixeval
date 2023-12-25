@@ -161,7 +161,7 @@ public static partial class IoHelper
         return bytes;
     }
 
-    public static Task<HttpResponseMessage> PostFormAsync(this HttpClient httpClient, string url, params (string Key, string Value)[] parameters)
+    public static Task<HttpResponseMessage> PostFormAsync(this HttpClient httpClient, string url, params (string? Key, string? Value)[] parameters)
     {
         var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, url)
         {

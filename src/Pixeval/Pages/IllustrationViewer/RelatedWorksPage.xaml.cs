@@ -29,7 +29,7 @@ namespace Pixeval.Pages.IllustrationViewer;
 
 public sealed partial class RelatedWorksPage
 {
-    private string? _illustrationId;
+    private long _illustrationId;
 
     public RelatedWorksPage()
     {
@@ -46,7 +46,7 @@ public sealed partial class RelatedWorksPage
             recipient.RelatedWorksIllustrationGrid.ViewModel.Dispose();
             WeakReferenceMessenger.Default.UnregisterAll(this);
         });
-        _illustrationId = e.Parameter.To<string>();
+        _illustrationId = e.Parameter.To<long>();
         RelatedWorksIllustrationGrid.ViewModel.ResetEngine(App.AppViewModel.MakoClient.RelatedWorks(_illustrationId));
     }
 }

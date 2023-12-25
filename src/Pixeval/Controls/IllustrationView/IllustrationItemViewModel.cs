@@ -73,7 +73,7 @@ public class IllustrationItemViewModel(Illustration illustration) : IllustrateVi
             _ => BadgeMode.R18
         };
 
-    public string Id => Illustrate.Id.ToString();
+    public long Id => Illustrate.Id;
 
     public int Bookmark => Illustrate.TotalBookmarks;
 
@@ -150,7 +150,7 @@ public class IllustrationItemViewModel(Illustration illustration) : IllustrateVi
         // that only differs from the illustrations of a single work on the MetaPages property, this property
         // contains the download urls of the manga
 
-        return Illustrate.MetaPages!.Select(m => Illustrate with
+        return Illustrate.MetaPages.Select(m => Illustrate with
         {
             ImageUrls = m.ImageUrls
         }).Select((p, i) => new IllustrationItemViewModel(p)
@@ -345,7 +345,7 @@ public class IllustrationItemViewModel(Illustration illustration) : IllustrateVi
     {
         IStorageItem? item = IsManga
             ? await UiHelper.OpenFolderPickerAsync(PickerLocationId.PicturesLibrary)
-            : await UiHelper.OpenFileSavePickerAsync(Id, $"{Illustrate.GetImageFormat().RemoveSurrounding(".", string.Empty)} file", Illustrate.GetImageFormat());
+            : await UiHelper.OpenFileSavePickerAsync(Id.ToString(), $"{Illustrate.GetImageFormat().RemoveSurrounding(".", "")} file", Illustrate.GetImageFormat());
 
         using var scope = App.AppViewModel.AppServicesScope;
         var factory = scope.ServiceProvider.GetRequiredService<IDownloadTaskFactory<IllustrationItemViewModel, ObservableDownloadTask>>();

@@ -48,7 +48,7 @@ public partial class IllustratorIllustrationsOverviewViewModel : ObservableObjec
 
     private const ThumbnailUrlOption Option = ThumbnailUrlOption.SquareMedium;
 
-    public IllustratorIllustrationsOverviewViewModel(IEnumerable<string>? ids)
+    public IllustratorIllustrationsOverviewViewModel(IEnumerable<long>? ids)
     {
         GetAvatarBorderBrush = false;
         _ = SetBannerSourceFromIdsAsync(ids);
@@ -71,7 +71,7 @@ public partial class IllustratorIllustrationsOverviewViewModel : ObservableObjec
         BannerSources.Clear();
     }
 
-    private async Task SetBannerSourceFromIdsAsync(IEnumerable<string>? ids)
+    private async Task SetBannerSourceFromIdsAsync(IEnumerable<long>? ids)
     {
         var illustrations = new List<Illustration>();
         if (ids is not null)

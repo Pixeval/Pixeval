@@ -261,10 +261,9 @@ public sealed partial class IllustrationViewCommandBar
                          && o.Bookmark >= leastBookmark
                          && o.Bookmark <= maximumBookmark
                          && illustrationName.Match(o.Illustrate.Title)
-                         && illustratorName.Match(o.Illustrate.User?.Name)
-                         && (illustratorId.IsNullOrEmpty() ||
-                             illustratorId == o.Illustrate.User?.Id.ToString())
-                         && (illustrationId.IsNullOrEmpty() || illustrationId == o.Id)
+                         && illustratorName.Match(o.Illustrate.User.Name)
+                         && (illustratorId is -1 || illustratorId == o.Illustrate.User.Id)
+                         && illustrationId is -1 || illustrationId == o.Id
                          && o.PublishDate >= publishDateStart
                          && o.PublishDate <= publishDateEnd;
             return result;
@@ -292,8 +291,8 @@ public sealed partial class IllustrationViewCommandBar
     {
         ViewModel.DataProvider.View.Filter = text.IsNullOrBlank()
             ? null
-            : o => o.Id.Contains(text)
-                   || (o.Illustrate.Tags ?? Enumerable.Empty<Tag>()).Any(x =>
+            : o => o.Id.ToString().Contains(text)
+                   || o.Illustrate.Tags.Any(x =>
                        x.Name.Contains(text) || (x.TranslatedName?.Contains(text) ?? false))
                    || (o.Illustrate.Title?.Contains(text) ?? false);
     }

@@ -62,7 +62,7 @@ public sealed partial class FollowingsPage
     public override void OnPageActivated(NavigationEventArgs e)
     {
         _ = WeakReferenceMessenger.Default.TryRegister<FollowingsPage, MainPageFrameNavigatingEvent>(this, static (recipient, _) => recipient._viewModel.DataProvider.FetchEngine?.Cancel());
-        _viewModel.ResetEngine(App.AppViewModel.MakoClient.Following(App.AppViewModel.PixivUid!, PrivacyPolicy.Public));
+        _viewModel.ResetEngine(App.AppViewModel.MakoClient.Following(App.AppViewModel.PixivUid, PrivacyPolicy.Public));
         // 此时没有Navigate，右边没有内容
         // ClipGeometry.Rect = new(MainSplitView.OpenPaneLength - CompactPaneLength, 0, int.MaxValue, int.MaxValue);
     }

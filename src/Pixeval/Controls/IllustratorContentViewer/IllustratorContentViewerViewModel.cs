@@ -145,9 +145,9 @@ public partial class IllustratorContentViewerViewModel : ObservableObject
 
     private void InitializeTags()
     {
-        IllustrationTag = new NavigationViewTag(typeof(IllustratorIllustrationPage), UserDetail.UserEntity!.Id.ToString());
-        MangaTag = new NavigationViewTag(typeof(IllustratorMangaPage), UserDetail.UserEntity!.Id.ToString());
-        BookmarkedIllustrationAndMangaTag = new NavigationViewTag(typeof(IllustratorIllustrationAndMangaBookmarkPage), UserDetail.UserEntity!.Id.ToString());
+        IllustrationTag = new NavigationViewTag(typeof(IllustratorIllustrationPage), UserDetail.UserEntity.Id.ToString());
+        MangaTag = new NavigationViewTag(typeof(IllustratorMangaPage), UserDetail.UserEntity.Id.ToString());
+        BookmarkedIllustrationAndMangaTag = new NavigationViewTag(typeof(IllustratorIllustrationAndMangaBookmarkPage), UserDetail.UserEntity.Id.ToString());
     }
 
     private void InitializeCommands()
@@ -218,8 +218,8 @@ public partial class IllustratorContentViewerViewModel : ObservableObject
         // TODO
         try
         {
-            var recommendIllustrators = await App.AppViewModel.MakoClient.GetRelatedRecommendUsersAsync(UserDetail.UserEntity!.Id.ToString(), isR18: !App.AppViewModel.AppSetting.FiltrateRestrictedContent, lang: CultureInfo.CurrentUICulture);
-            var viewModels = (recommendIllustrators.ResponseBody?.RecommendUsers ?? [])
+            var recommendIllustrators = await App.AppViewModel.MakoClient.GetRelatedRecommendUsersAsync(UserDetail.UserEntity.Id, isR18: !App.AppViewModel.AppSetting.FiltrateRestrictedContent, lang: CultureInfo.CurrentUICulture);
+            var viewModels = (recommendIllustrators.ResponseBody?.RecommendMaps ?? [])
                 .Select(ru => ToRecommendIllustratorProfileViewModel(recommendIllustrators, ru));
 
             RecommendIllustrators.AddRange(viewModels);
@@ -230,10 +230,10 @@ public partial class IllustratorContentViewerViewModel : ObservableObject
             Console.WriteLine(e);
         }
 
-        static RecommendIllustratorItemViewModel ToRecommendIllustratorProfileViewModel(PixivRelatedRecommendUsersResponse context, PixivRelatedRecommendUsersResponse.RecommendUser recommendUser)
+        static RecommendIllustratorItemViewModel ToRecommendIllustratorProfileViewModel(PixivRelatedRecommendUsersResponse context, PixivRelatedRecommendUsersResponse.RecommendMap recommendUser)
         {
-            var users = context.ResponseBody!.Users ?? [];
-            var thumbnails = context.ResponseBody!.Thumbnails?.Illustrations ?? [];
+            var users = context.ResponseBody.Users ?? [];
+            var thumbnails = context.ResponseBody.Thumbnails?.Illustrations ?? [];
 
             var userId = recommendUser.UserId;
             var user = users.First(u => u.Id == userId);
@@ -245,13 +245,13 @@ public partial class IllustratorContentViewerViewModel : ObservableObject
     private void Follow(bool privately)
     {
         Following = true;
-        _ = App.AppViewModel.MakoClient.PostFollowUserAsync(UserDetail.UserEntity!.Id.ToString(), privately ? PrivacyPolicy.Private : PrivacyPolicy.Public);
+        _ = App.AppViewModel.MakoClient.PostFollowUserAsync(UserDetail.UserEntity.Id, privately ? PrivacyPolicy.Private : PrivacyPolicy.Public);
     }
 
     private void Unfollow()
     {
         Following = false;
-        _ = App.AppViewModel.MakoClient.RemoveFollowUserAsync(UserDetail.UserEntity!.Id.ToString());
+        _ = App.AppViewModel.MakoClient.RemoveFollowUserAsync(UserDetail.UserEntity.Id);
     }
 
     public Visibility GetNavigationViewAutoSuggestBoxVisibility(bool showExternalCommandBar)

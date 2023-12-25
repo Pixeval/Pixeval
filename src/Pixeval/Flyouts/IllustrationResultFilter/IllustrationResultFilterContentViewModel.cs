@@ -34,7 +34,7 @@ public class IllustrationResultFilterContentViewModel : ObservableObject
     private string _illustrationId = null!;
 
     private Token _illustrationName = null!;
-
+    
     private string _illustratorId = null!;
 
     private Token _illustratorName = null!;

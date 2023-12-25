@@ -27,7 +27,6 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Input;
 using Pixeval.Controls;
-using Pixeval.CoreApi.Model;
 using Pixeval.Download;
 using Pixeval.Options;
 using Pixeval.Util.UI;
@@ -37,7 +36,6 @@ using WinUI3Utilities.Attributes;
 namespace Pixeval.Pages.Download;
 
 [DependencyProperty<DownloadListEntryViewModel>("ViewModel", propertyChanged: nameof(OnViewModelChanged))]
-[DependencyProperty<Illustration>("Illustration")]
 [DependencyProperty<string>("Title")]
 [DependencyProperty<string>("Description")]
 [DependencyProperty<double>("Progress")]

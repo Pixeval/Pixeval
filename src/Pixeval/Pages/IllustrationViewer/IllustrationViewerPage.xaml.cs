@@ -120,8 +120,8 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
 
             var oldIndex = args.OldValue.To<int>();
             var newIndex = args.NewValue.To<int>(); // vm.CurrentIllustrationIndex
-            var oldTag = args.OldTag.To<string>();
-            var newTag = args.NewTag.To<string>(); // vm.CurrentPage.Id
+            var oldTag = args.OldTag.To<long>();
+            var newTag = args.NewTag.To<long>(); // vm.CurrentPage.Id
 
             if (oldTag == newTag)
                 return;

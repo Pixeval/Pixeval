@@ -35,8 +35,9 @@ public sealed partial class IllustrationResultFilterContent
 
     public FilterSettings GetFilterSettings =>
         new(ViewModel.IncludeTags, ViewModel.ExcludeTags, ViewModel.LeastBookmark,
-            ViewModel.MaximumBookmark, ViewModel.UserGroupName, ViewModel.IllustratorName, ViewModel.IllustratorId,
-            ViewModel.IllustrationName, ViewModel.IllustrationId, ViewModel.PublishDateStart, ViewModel.PublishDateEnd);
+            ViewModel.MaximumBookmark, ViewModel.UserGroupName, ViewModel.IllustratorName, long.Parse(ViewModel.IllustratorId),
+            ViewModel.IllustrationName, long.Parse(ViewModel.IllustrationId), ViewModel.PublishDateStart,
+            ViewModel.PublishDateEnd);
 
     public void Reset()
     {

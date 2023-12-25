@@ -30,7 +30,7 @@ public class LazyInitializedIllustrationDownloadTask
 {
     private readonly Lazy<Task<IllustrationItemViewModel>> _resultGenerator =
         new(async () =>
-            new IllustrationItemViewModel(await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(databaseEntry.Id!)));
+            new IllustrationItemViewModel(await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(databaseEntry.Id)));
 
     public Task<IllustrationItemViewModel> GetViewModelAsync()
     {

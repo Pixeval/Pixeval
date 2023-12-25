@@ -51,7 +51,7 @@ public sealed partial class IllustratorIllustrationPage : ISortedIllustrationCon
 
         IllustrationContainer.ViewModel.DataProvider.View.Filter = keyword.IsNullOrBlank()
             ? null
-            : o => o.Id.Contains(keyword)
+            : o => o.Id.ToString().Contains(keyword)
                    || (o.Illustrate.Tags ?? Enumerable.Empty<Tag>()).Any(x =>
                        x.Name.Contains(keyword) || (x.TranslatedName?.Contains(keyword) ?? false))
                    || (o.Illustrate.Title?.Contains(keyword) ?? false);

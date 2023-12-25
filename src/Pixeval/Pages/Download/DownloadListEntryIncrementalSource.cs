@@ -41,7 +41,7 @@ public class DownloadListEntryIncrementalSource(IEnumerable<ObservableDownloadTa
         return await source
             .Skip(pageIndex * pageSize)
             .Take(pageSize)
-            .Select(async o => new DownloadListEntryViewModel(o, await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(o.Id!)))
+            .Select(async o => new DownloadListEntryViewModel(o, await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(o.Id)))
             .WhenAll();
     }
 }

@@ -66,7 +66,7 @@ public sealed partial class BrowsingHistoryPage : ISortedIllustrationContainerPa
         var manager = scope.ServiceProvider.GetRequiredService<BrowseHistoryPersistentManager>();
         IllustrationContainer.ViewModel.ResetEngine(
             App.AppViewModel.MakoClient.Computed(manager.Enumerate().ToAsyncEnumerable().SelectAwait(async t =>
-                await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(t.Id!))));
+                await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(t.Id))));
     }
 
     private void SortOptionComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)

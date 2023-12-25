@@ -23,6 +23,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Pixeval.Utilities;
@@ -155,6 +156,17 @@ public static class Enumerates
     public static ObservableCollection<T> ToObservableCollection<T>(this IEnumerable<T> source)
     {
         return new ObservableCollection<T>(source);
+    }
+
+    public static async Task<ObservableCollection<T>> ToObservableCollectionAsync<T>(this IAsyncEnumerable<T> that)
+    {
+        var results = new ObservableCollection<T>();
+        await foreach (var value in that)
+        {
+            results.Add(value);
+        }
+
+        return results;
     }
 
     public static T[] ArrayOf<T>(params T[] t)

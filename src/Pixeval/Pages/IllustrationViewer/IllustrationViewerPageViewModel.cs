@@ -140,13 +140,13 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
 
     public IllustrationItemViewModel[]? IllustrationsSource { get; }
 
-    public string IllustrationId => CurrentIllustration.Illustrate.Id.ToString();
+    public long IllustrationId => CurrentIllustration.Illustrate.Id;
 
     public UserInfo? Illustrator => CurrentIllustration.Illustrate.User;
 
     public string? IllustratorName => Illustrator?.Name;
 
-    public string? IllustratorUid => Illustrator?.Id.ToString();
+    public long? IllustratorUid => Illustrator?.Id;
 
     public bool IsManga => _pages.Length > 1;
 
@@ -213,14 +213,14 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
 
             var oldValue = _currentIllustrationIndex;
             // ReSharper disable once ConditionalAccessQualifierIsNonNullableAccordingToAPIContract
-            var oldTag = _pages?[CurrentPageIndex].Id ?? "";
+            var oldTag = _pages?[CurrentPageIndex].Id ?? 0;
 
             _currentIllustrationIndex = value;
             _pages?.ForEach(i => i.Dispose());
             _pages = CurrentIllustration.Illustrate.PageCount <= 1
             // 保证_pages里所有的IllustrationViewModel都是生成的，从而删除的时候一律DisposeForce
                 ? [new IllustrationItemViewModel(CurrentIllustration.Illustrate)]
-                : CurrentIllustration.Illustrate.MetaPages!
+                : CurrentIllustration.Illustrate.MetaPages
                     .Select((m, i) =>
                         new IllustrationItemViewModel(CurrentIllustration.Illustrate with { ImageUrls = m.ImageUrls })
                         {

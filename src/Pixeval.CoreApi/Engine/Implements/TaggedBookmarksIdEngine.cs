@@ -31,19 +31,19 @@ namespace Pixeval.CoreApi.Engine.Implements;
 ///     Get the bookmarks that have user-defined tags associate with them, only returns their ID in string representation
 ///     This API is not supposed to have other usages
 /// </summary>
-internal class TaggedBookmarksIdEngine(MakoClient makoClient, EngineHandle? engineHandle, string uid, string tag)
-    : AbstractPixivFetchEngine<string>(makoClient, engineHandle)
+internal class TaggedBookmarksIdEngine(MakoClient makoClient, EngineHandle? engineHandle, long uid, string tag)
+    : AbstractPixivFetchEngine<long>(makoClient, engineHandle)
 {
     private readonly string _tag = tag;
-    private readonly string _uid = uid;
+    private readonly long _uid = uid;
 
-    public override IAsyncEnumerator<string> GetAsyncEnumerator(CancellationToken cancellationToken = new CancellationToken())
+    public override IAsyncEnumerator<long> GetAsyncEnumerator(CancellationToken cancellationToken = new CancellationToken())
     {
-        return new TaggedBookmarksIdAsyncEnumerator(this, MakoApiKind.WebApi)!;
+        return new TaggedBookmarksIdAsyncEnumerator(this, MakoApiKind.WebApi);
     }
 
     private class TaggedBookmarksIdAsyncEnumerator(TaggedBookmarksIdEngine pixivFetchEngine, MakoApiKind apiKind)
-        : RecursivePixivAsyncEnumerator<string, WebApiBookmarksWithTagResponse, TaggedBookmarksIdEngine>(pixivFetchEngine, apiKind)
+        : RecursivePixivAsyncEnumerator<long, WebApiBookmarksWithTagResponse, TaggedBookmarksIdEngine>(pixivFetchEngine, apiKind)
     {
         private int _currentIndex;
 
@@ -62,10 +62,10 @@ internal class TaggedBookmarksIdEngine(MakoClient makoClient, EngineHandle? engi
             return GetUrl();
         }
 
-        protected override IEnumerator<string>? GetNewEnumerator(WebApiBookmarksWithTagResponse? rawEntity)
+        protected override IEnumerator<long>? GetNewEnumerator(WebApiBookmarksWithTagResponse? rawEntity)
         {
             _currentIndex++; // Cannot put it in the GetUrl() because the NextUrl() gonna be called twice at each iteration which will increases the _currentIndex by 2
-            return rawEntity?.ResponseBody?.Works?.SelectNotNull(w => w.Id, w => w.Id!).GetEnumerator();
+            return rawEntity?.ResponseBody?.Works?.SelectNotNull(w => w.Id, w => w.Id).GetEnumerator();
         }
 
         private string GetUrl()
