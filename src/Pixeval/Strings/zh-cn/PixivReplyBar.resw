@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -124,7 +124,7 @@
     <value>评论长度不符合规范</value>
   </data>
   <data name="ReplyContentRichEditBox.PlaceholderText" xml:space="preserve">
-    <value>输入你要发送的评论</value>
+    <value>输入评论</value>
   </data>
   <data name="SendButton.Text" xml:space="preserve">
     <value>发送</value>

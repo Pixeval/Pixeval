@@ -85,8 +85,7 @@ public class AdvancedObservableCollection<T> : IList<T>, IList, INotifyCollectio
         get => _source;
         set
         {
-            if (value == null!)
-                ThrowHelper.Argument(value, "Null is not allowed");
+            ArgumentNullException.ThrowIfNull(value, "Null is not allowed");
 
             if (_source == value)
                 return;

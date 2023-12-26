@@ -1,8 +1,9 @@
-#region Copyright (c) Pixeval/Pixeval
+#region Copyright
+
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/CommentsIncrementalSource.cs
+// Copyright (c) 2023 Pixeval/CommentsPageViewModel.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -16,21 +17,28 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 #endregion
 
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using CommunityToolkit.WinUI.Collections;
+using Pixeval.Collections;
 using Pixeval.Controls;
+using Pixeval.CoreApi.Model;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
-public class CommentsIncrementalSource(IAsyncEnumerable<CommentBlockViewModel?> source) : IIncrementalSource<CommentBlockViewModel>
+public class CommentsPageViewModel(IAsyncEnumerable<Comment> engine, long illustrationId)
 {
-    public async Task<IEnumerable<CommentBlockViewModel>> GetPagedItemsAsync(int pageIndex, int pageSize, CancellationToken cancellationToken = new())
+    public long IllustrationId { get; set; } = illustrationId;
+
+    public AdvancedObservableCollection<CommentBlockViewModel> Source { get; } = new(
+        new IncrementalLoadingCollection<CommentsIncrementalSource, CommentBlockViewModel>(
+            new CommentsIncrementalSource(engine.Select(c => new CommentBlockViewModel(c, illustrationId))), 30));
+
+    public void AddComment(Comment comment)
     {
-        return (await source.Skip(pageIndex * pageSize).Take(pageSize).ToArrayAsync(cancellationToken))!;
+        Source.Insert(0, new CommentBlockViewModel(comment, IllustrationId));
     }
 }

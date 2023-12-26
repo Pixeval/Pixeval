@@ -58,17 +58,17 @@ public sealed partial class AdvancedItemsView : ItemsView
     /// <see cref="ItemContainer.Child"/>是<see cref="IViewModelControl"/>的控件
     /// </remarks>
     /// <returns></returns>
-    public async Task LoadAndFill()
+    public async Task LoadAndFillAsync()
     {
         if (ItemsSource is not INotifyCollectionChanged ncc)
         {
-            await TryRaiseLoadMoreRequested();
+            await TryRaiseLoadMoreRequestedAsync();
             return;
         }
 
         _viewModels.Clear();
         ncc.CollectionChanged += NccOnCollectionChanged;
-        await TryRaiseLoadMoreRequested();
+        await TryRaiseLoadMoreRequestedAsync();
         ncc.CollectionChanged -= NccOnCollectionChanged;
 
         return;
@@ -89,7 +89,7 @@ public sealed partial class AdvancedItemsView : ItemsView
     /// 需要<see cref="ItemsView.ItemsSource"/>为<see cref="INotifyCollectionChanged"/>
     /// </remarks>
     /// <returns></returns>
-    public async Task TryRaiseLoadMoreRequested()
+    public async Task TryRaiseLoadMoreRequestedAsync()
     {
         if (!CanLoadMore || IsLoadingMore)
             return;
@@ -264,7 +264,7 @@ public sealed partial class AdvancedItemsView : ItemsView
         SelectedIndex = sender.To<AdvancedItemsView>().GetSelectedIndex();
     }
 
-    private async void ScrollView_ViewChanged(ScrollView sender, object args) => await TryRaiseLoadMoreRequested();
+    private async void ScrollView_ViewChanged(ScrollView sender, object args) => await TryRaiseLoadMoreRequestedAsync();
 
     private void AdvancedItemsView_OnLoaded(object sender, RoutedEventArgs e)
     {
@@ -282,14 +282,14 @@ public sealed partial class AdvancedItemsView : ItemsView
             {
                 _ = _viewModels.Remove(viewModelControl.ViewModel.GetHashCode());
                 if (_viewModels.Count is 0)
-                    await LoadAndFill();
+                    await LoadAndFillAsync();
             }
         };
         _itemsRepeater.ElementClearing += (_, arg) => ElementClearing?.Invoke(this, arg.Element.To<ItemContainer>());
         // Loaded之后会触发SizeChanged
     }
 
-    private async void AdvancedItemsView_OnSizeChanged(object sender, SizeChangedEventArgs e) => await LoadAndFill();
+    private async void AdvancedItemsView_OnSizeChanged(object sender, SizeChangedEventArgs e) => await LoadAndFillAsync();
 
     #endregion
 

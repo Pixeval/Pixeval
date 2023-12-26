@@ -34,7 +34,6 @@ using Pixeval.Util.IO;
 using Pixeval.Utilities;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
-using static CommunityToolkit.WinUI.Animations.Expressions.ExpressionValues;
 
 namespace Pixeval.AppManagement;
 

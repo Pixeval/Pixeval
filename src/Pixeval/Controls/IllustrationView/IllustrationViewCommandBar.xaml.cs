@@ -31,7 +31,6 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Pixeval.Controls.TokenInput;
-using Pixeval.CoreApi.Model;
 using Pixeval.Download;
 using Pixeval.Flyouts.IllustrationResultFilter;
 using Pixeval.Util;
@@ -211,7 +210,7 @@ public sealed partial class IllustrationViewCommandBar
 
     private void ShareButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        // TODO
+        // TODO share
         throw new NotImplementedException();
     }
 

@@ -110,10 +110,13 @@ public sealed partial class IllustrationInfoPage
         GithubFlavored = true
     });
 
+    /// <summary>
+    /// <see href="https://github.com/CommunityToolkit/Labs-Windows/pull/480"/>
+    /// </summary>
     private void SetIllustrationCaptionText()
     {
         var caption = _viewModel.CurrentIllustration.Illustrate.Caption;
-        //TODO Task.Run(() => string.IsNullOrEmpty(caption) ? IllustrationInfoPageResources.IllustrationCaptionEmpty : _markdownConverter.Convert(caption))
+        // TODO Markdown Task.Run(() => string.IsNullOrEmpty(caption) ? IllustrationInfoPageResources.IllustrationCaptionEmpty : _markdownConverter.Convert(caption))
         //    .ContinueWith(task => IllustrationCaptionMarkdownTextBlock.Text = task.Result, TaskScheduler.FromCurrentSynchronizationContext()).Discard();
     }
 

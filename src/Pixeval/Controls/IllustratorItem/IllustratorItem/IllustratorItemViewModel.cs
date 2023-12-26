@@ -30,7 +30,6 @@ using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Model;
 using Pixeval.CoreApi.Net;
 using Pixeval.CoreApi.Net.Response;
-using Pixeval.Options;
 using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;

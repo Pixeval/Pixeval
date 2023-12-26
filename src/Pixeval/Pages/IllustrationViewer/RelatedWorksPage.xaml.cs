@@ -18,11 +18,8 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml.Navigation;
-using Pixeval.Messages;
 using Pixeval.Options;
-using Pixeval.Util;
 using WinUI3Utilities;
 
 namespace Pixeval.Pages.IllustrationViewer;
@@ -38,14 +35,13 @@ public sealed partial class RelatedWorksPage
 
     public ThumbnailDirection ThumbnailDirection => App.AppViewModel.AppSetting.ThumbnailDirection;
 
+    public override void OnPageDeactivated(NavigatingCancelEventArgs e)
+    {
+        RelatedWorksIllustrationGrid.ViewModel.Dispose();
+    }
+
     public override void OnPageActivated(NavigationEventArgs e)
     {
-        // Dispose current page contents if the parent page (IllustrationViewerPage) is navigating
-        _ = WeakReferenceMessenger.Default.TryRegister<RelatedWorksPage, NavigatingFromIllustrationViewerMessage>(this, (recipient, _) =>
-        {
-            recipient.RelatedWorksIllustrationGrid.ViewModel.Dispose();
-            WeakReferenceMessenger.Default.UnregisterAll(this);
-        });
         _illustrationId = e.Parameter.To<long>();
         RelatedWorksIllustrationGrid.ViewModel.ResetEngine(App.AppViewModel.MakoClient.RelatedWorks(_illustrationId));
     }

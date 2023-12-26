@@ -24,29 +24,28 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage.Streams;
+using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Documents;
-using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.CoreApi.Model;
-using Pixeval.CoreApi.Net;
 using Pixeval.Misc;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
 
-namespace Pixeval.Pages.IllustrationViewer;
+namespace Pixeval.Controls;
 
-public class CommentBlockViewModel(Comment comment, long illustrationId)
+public partial class CommentBlockViewModel(CoreApi.Model.Comment comment, long illustrationId) : ObservableObject, IDisposable
 {
     public const string AddCommentUrlSegment = "/v1/illust/comment/add";
 
     public long IllustrationId { get; } = illustrationId;
 
-    public Comment Comment { get; } = comment;
+    public CoreApi.Model.Comment Comment { get; } = comment;
 
-    [MemberNotNullWhen(true, nameof(Replies))]
     public bool HasReplies => Comment.HasReplies;
 
     [MemberNotNullWhen(true, nameof(StampSource))]
@@ -54,7 +53,7 @@ public class CommentBlockViewModel(Comment comment, long illustrationId)
 
     public string? StampSource => Comment.CommentStamp?.StampUrl;
 
-    public DateTimeOffset PostDate => Comment.Date;
+    public string PostDate => Comment.Date.ToString("yyyy-MM-dd dddd");
 
     public string Poster => Comment.CommentPoster.Name;
 
@@ -62,9 +61,22 @@ public class CommentBlockViewModel(Comment comment, long illustrationId)
 
     public string CommentContent => Comment.CommentContent;
 
+    public bool IsMe => PosterId == App.AppViewModel.PixivUid;
+
     public long CommentId => Comment.Id;
 
-    public ObservableCollection<CommentBlockViewModel>? Replies { get; private set; }
+    [ObservableProperty]
+    private string _openRepliesText = CommentBlockResources.EmptyRepliesNavigationString;
+
+    [ObservableProperty]
+    private SoftwareBitmapSource _avatarSource = null!;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(RepliesIsNotNull))]
+    private ObservableCollection<CommentBlockViewModel>? _replies;
+
+    [MemberNotNullWhen(true, nameof(Replies))]
+    public bool RepliesIsNotNull => Replies is not null;
 
     [MemberNotNull(nameof(Replies))]
     public async Task LoadRepliesAsync()
@@ -72,12 +84,20 @@ public class CommentBlockViewModel(Comment comment, long illustrationId)
         Replies = await App.AppViewModel.MakoClient.IllustrationCommentReplies(CommentId)
             .Select(c => new CommentBlockViewModel(c, IllustrationId))
             .ToObservableCollectionAsync();
+        OpenRepliesText = CommentBlockResources.RepliesNavigationStringFormatted.Format(Replies.Count);
     }
 
-    public async Task<ImageSource> GetAvatarSource()
+    public async Task LoadAvatarSource()
     {
-        return (await App.AppViewModel.MakoClient.DownloadBitmapImageAsync(Comment.CommentPoster.ProfileImageUrls.Medium, 35)
+        AvatarSource = (await App.AppViewModel.MakoClient.DownloadSoftwareBitmapSourceAsync(Comment.CommentPoster.ProfileImageUrls.Medium)
             .UnwrapOrElseAsync(await AppContext.GetPixivNoProfileImageAsync()))!;
+    }
+
+    public void AddComment(Comment comment)
+    {
+        Replies ??= [];
+
+        Replies.Insert(0, new CommentBlockViewModel(comment, IllustrationId));
     }
 
     public async Task<Paragraph> GetReplyContentParagraphAsync()
@@ -110,5 +130,11 @@ public class CommentBlockViewModel(Comment comment, long illustrationId)
         }
 
         return paragraph;
+    }
+
+    public void Dispose()
+    {
+        AvatarSource?.Dispose();
+        Replies?.ForEach(r => r.Dispose());
     }
 }

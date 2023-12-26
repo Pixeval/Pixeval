@@ -1,0 +1,82 @@
+<UserControl
+    x:Class="Pixeval.Controls.CommentBlock"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:Pixeval.Controls"
+    xmlns:converters="using:CommunityToolkit.WinUI.Converters"
+    xmlns:converters1="using:Pixeval.Controls.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+        <converters1:BoolNegationToVisibilityConverter x:Key="BoolNegationToVisibilityConverter" />
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition Height="10" />
+            <RowDefinition />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="35" />
+            <ColumnDefinition Width="10" />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <PersonPicture
+            Grid.Row="0"
+            Grid.Column="0"
+            Width="35"
+            Height="35"
+            ProfilePicture="{x:Bind ViewModel.AvatarSource, Mode=OneWay}"
+            Tapped="PosterPersonPicture_OnTapped" />
+        <StackPanel
+            Grid.Row="0"
+            Grid.Column="2"
+            Height="35">
+            <TextBlock FontSize="{StaticResource PixevalBaseFontSize}" Text="{x:Bind ViewModel.Poster, Mode=OneWay}" />
+            <!--  TipTextColor  -->
+            <TextBlock
+                Margin="0,5,0,0"
+                FontSize="{StaticResource PixevalCaptionFontSize}"
+                Foreground="{ThemeResource PixevalTipTextForeground}"
+                Text="{x:Bind ViewModel.PostDate, Mode=OneWay}" />
+        </StackPanel>
+        <RichTextBlock
+            x:Name="CommentContent"
+            Grid.Row="2"
+            Grid.Column="2"
+            FontSize="{StaticResource PixevalBaseFontSize}"
+            LineHeight="14.4"
+            TextWrapping="Wrap"
+            Visibility="{x:Bind ViewModel.IsStamp, Converter={StaticResource BoolNegationToVisibilityConverter}}" />
+        <Image
+            x:Name="StickerImageContent"
+            Grid.Row="2"
+            Grid.Column="2"
+            Width="100"
+            Height="100"
+            HorizontalAlignment="Left"
+            Stretch="UniformToFill"
+            Visibility="{x:Bind ViewModel.IsStamp, Converter={StaticResource BoolToVisibilityConverter}}" />
+        <StackPanel
+            Grid.Row="3"
+            Grid.Column="2"
+            Margin="0,5,0,0"
+            Orientation="Horizontal">
+            <HyperlinkButton
+                Padding="0"
+                Content="{x:Bind ViewModel.OpenRepliesText, Mode=OneWay}"
+                FontSize="{StaticResource PixevalCaptionFontSize}"
+                Tapped="OpenRepliesHyperlinkButton_OnTapped" />
+            <HyperlinkButton
+                x:Uid="/CommentBlock/DeleteReplyHyperlinkButton"
+                Margin="10,0,0,0"
+                Padding="0"
+                FontSize="{StaticResource PixevalCaptionFontSize}"
+                Tapped="DeleteReplyHyperlinkButton_OnTapped"
+                Visibility="{x:Bind ViewModel.IsMe, Mode=OneWay}" />
+        </StackPanel>
+    </Grid>
+</UserControl>

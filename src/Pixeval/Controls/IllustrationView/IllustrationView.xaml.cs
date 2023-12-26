@@ -44,7 +44,7 @@ public sealed partial class IllustrationView
     public IllustrationView()
     {
         InitializeComponent();
-        ViewModel.DataProvider.View.FilterChanged += async (_, _) => await IllustrationItemsView.TryRaiseLoadMoreRequested();
+        ViewModel.DataProvider.View.FilterChanged += async (_, _) => await IllustrationItemsView.TryRaiseLoadMoreRequestedAsync();
     }
 
     public ScrollView ScrollView => IllustrationItemsView.ScrollView;
@@ -88,7 +88,7 @@ public sealed partial class IllustrationView
 
     public async void LoadMoreIfNeeded()
     {
-        await IllustrationItemsView.TryRaiseLoadMoreRequested();
+        await IllustrationItemsView.TryRaiseLoadMoreRequestedAsync();
     }
 
     private IllustrationView IllustrationThumbnail_OnThisRequired() => this;

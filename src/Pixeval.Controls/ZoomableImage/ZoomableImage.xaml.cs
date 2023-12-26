@@ -45,7 +45,7 @@ namespace Pixeval.Controls;
 /// 渲染：<see cref="CanvasControlOnDraw"/>，图片渲染逻辑<br/>
 /// 对外API：<see cref="Zoom"/>、<see cref="SetPosition"/>
 /// </summary>
-[DependencyProperty<IEnumerable<IRandomAccessStream>>("Sources", DependencyPropertyDefaultValue.Default, nameof(OnSourcesChanged))]
+[DependencyProperty<IEnumerable<IRandomAccessStream>>("Sources", DependencyPropertyDefaultValue.Default, nameof(OnSourcesChanged), IsNullable = true)]
 [DependencyProperty<List<int>>("MsIntervals", DependencyPropertyDefaultValue.Default, nameof(OnMsIntervalsChanged))]
 [DependencyProperty<bool>("IsPlaying", "true", nameof(OnIsPlayingChanged))]
 [DependencyProperty<int>("ImageRotationDegree", "0", nameof(OnImageRotationDegreeChanged))]
@@ -223,7 +223,7 @@ public sealed partial class ZoomableImage : UserControl
     {
         if (EnsureNotDisposed(d) is not { } zoomableImage)
             return;
-        zoomableImage.ClonedMsIntervals = new List<int>(zoomableImage.MsIntervals);
+        zoomableImage.ClonedMsIntervals = [.. zoomableImage.MsIntervals];
     }
 
     private static void OnSourcesChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -289,7 +289,7 @@ public sealed partial class ZoomableImage : UserControl
         else
         {
             _frames.Clear();
-            if (Sources == null!)
+            if (Sources is null)
                 return;
             foreach (var source in Sources)
                 _frames.Add(await CanvasBitmap.LoadAsync(sender, source));

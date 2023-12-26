@@ -177,9 +177,9 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
 
     #region Tags for IllustrationInfoAndCommentsNavigationView
 
-    public NavigationViewTag RelatedWorksTag = new(typeof(RelatedWorksPage), null);
     public NavigationViewTag IllustrationInfoTag = new(typeof(IllustrationInfoPage), null);
     public NavigationViewTag CommentsTag = new(typeof(CommentsPage), null);
+    public NavigationViewTag RelatedWorksTag = new(typeof(RelatedWorksPage), null);
 
     #endregion
 
