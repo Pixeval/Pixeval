@@ -18,7 +18,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
@@ -41,24 +40,17 @@ public class EnhancedWindowPage : EnhancedPage
 {
     protected EnhancedWindow Window { get; private set; } = null!;
 
-    public EnhancedWindowPage()
-    {
-        if (this is ISupportCustomTitleBarDragRegion)
-        {
-            Loaded += SetTitleBarDragRegion;
-            SizeChanged += SetTitleBarDragRegion;
-        }
-
-        return;
-
-        // 不要捕获外部变量
-        static void SetTitleBarDragRegion(object sender, RoutedEventArgs _) => ((ISupportCustomTitleBarDragRegion)sender).SetTitleBarDragRegion();
-    }
-
     public sealed override void OnPageActivated(NavigationEventArgs e)
     {
         var parameter = e.Parameter.To<NavigateParameter>();
         Window = parameter.Window;
+        if (this is SupportCustomTitleBarDragRegionPage page)
+            Loaded += (_, _) =>
+            {
+                page.RaiseSetTitleBarDragRegion();
+                Window.AppWindow.Changed += (_, _) => page.RaiseSetTitleBarDragRegion();
+            };
+
         OnPageActivated(e, parameter.Parameter);
     }
 

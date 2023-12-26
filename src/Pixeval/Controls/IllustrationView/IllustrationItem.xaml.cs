@@ -65,14 +65,14 @@ public sealed partial class IllustrationItem : IViewModelControl
         await ViewModel.ToggleBookmarkStateAsync();
     }
 
-    private async void SaveContextItemOnTapped(object sender, TappedRoutedEventArgs e)
+    private async void SaveContextItemOnTapped(object sender, RoutedEventArgs routedEventArgs)
     {
         await ViewModel.SaveAsync();
     }
 
-    private async void SaveAsContextItemOnTapped(object sender, TappedRoutedEventArgs e)
+    private void SaveAsContextItemOnTapped(object sender, TappedRoutedEventArgs e)
     {
-        await ViewModel.SaveAsAsync();
+        // await ViewModel.SaveAsAsync();
     }
 
     private async void OpenInBrowserContextItemOnTapped(object sender, TappedRoutedEventArgs e)

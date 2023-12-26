@@ -293,20 +293,20 @@ public class StringArrayToNumberArrayConverter<T> : JsonConverter<T[]> where T :
 {
     public override T[]? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
-        if (reader.TokenType == JsonTokenType.Null)
+        if (reader.TokenType is JsonTokenType.Null)
             return null;
 
-        if (reader.TokenType != JsonTokenType.StartArray)
+        if (reader.TokenType is not JsonTokenType.StartArray)
             throw new JsonException();
 
         var list = new List<T>();
 
         while (reader.Read())
         {
-            if (reader.TokenType == JsonTokenType.EndArray)
+            if (reader.TokenType is JsonTokenType.EndArray)
                 return [.. list];
 
-            if (reader.TokenType != JsonTokenType.String)
+            if (reader.TokenType is not JsonTokenType.String)
                 throw new JsonException();
 
             var value = reader.GetString();

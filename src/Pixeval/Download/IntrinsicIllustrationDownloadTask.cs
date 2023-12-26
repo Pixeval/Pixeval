@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -21,20 +21,54 @@
 using Windows.Storage.Streams;
 using Pixeval.Controls.IllustrationView;
 using Pixeval.Database;
-using Pixeval.Util.IO;
+using Pixeval.Utilities.Threading;
+using Pixeval.Utilities;
+using System.Threading.Tasks;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using WinUI3Utilities;
 
 namespace Pixeval.Download;
 
 /// <summary>
-///     The disposal of <paramref name="imageStream" /> is not handled
+/// The disposal of <paramref name="stream" /> is not handled
 /// </summary>
-public class IntrinsicIllustrationDownloadTask(DownloadHistoryEntry entry, IllustrationItemViewModel illustrationViewModel, IRandomAccessStream imageStream) : IllustrationDownloadTask(entry, illustrationViewModel), IIntrinsicDownloadTask
+public class IntrinsicIllustrationDownloadTask(DownloadHistoryEntry entry, IllustrationItemViewModel illustrationViewModel, IRandomAccessStream stream)
+    : IllustrationDownloadTask(entry, illustrationViewModel)
 {
-    public IRandomAccessStream Stream { get; } = imageStream;
+    public IRandomAccessStream Stream { get; } = stream;
 
-    public override async void DownloadStarting(DownloadStartingEventArgs args)
+    protected override async Task DownloadAsyncCore(Func<string, IProgress<double>?, CancellationHandle?, Task<Result<IRandomAccessStream>>> _, string url, string destination)
     {
-        args.GetDeferral().Complete(false);
-        await IoHelper.CreateAndWriteToFileAsync(Stream, Destination);
+        if (!App.AppViewModel.AppSetting.OverwriteDownloadedFile && File.Exists(destination))
+            return;
+
+        Stream.Seek(0);
+
+        await ManageStream(Stream, destination);
+    }
+}
+
+public class IntrinsicMangaDownloadTask : MangaDownloadTask
+{
+    public IList<IRandomAccessStream> Streams { get; }
+
+    public IntrinsicMangaDownloadTask(DownloadHistoryEntry entry, IllustrationItemViewModel illustrationViewModel, IList<IRandomAccessStream> streams) : base(entry, illustrationViewModel)
+    {
+        if (streams.Count == Urls.Count)
+            Streams = streams;
+        else
+            ThrowHelper.Argument(streams);
+    }
+
+    protected override async Task DownloadAsyncCore(Func<string, IProgress<double>?, CancellationHandle?, Task<Result<IRandomAccessStream>>> _, string url, string destination)
+    {
+        if (!App.AppViewModel.AppSetting.OverwriteDownloadedFile && File.Exists(destination))
+            return;
+
+        Streams[CurrentIndex].Seek(0);
+
+        await ManageStream(Streams[CurrentIndex], destination);
     }
 }

@@ -27,7 +27,6 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
-using Windows.Storage.Streams;
 using Pixeval.Util.IO;
 using Pixeval.Util.Threading;
 using Pixeval.Utilities;
@@ -74,7 +73,7 @@ public class DownloadManager<TDownloadTask> : IDisposable where TDownloadTask : 
     public void QueueTask(TDownloadTask task)
     {
         // intrinsic download task are not counted
-        if (task is not IIntrinsicDownloadTask && _taskQuerySet.Contains(task))
+        if (_taskQuerySet.Contains(task))
         {
             return;
         }
@@ -142,7 +141,7 @@ public class DownloadManager<TDownloadTask> : IDisposable where TDownloadTask : 
         IncrementCounter();
 
         var args = new DownloadStartingEventArgs();
-        task.DownloadStarting(args);
+
         if (await args.DeferralAwaiter)
         {
             await DownloadInternal(task);
@@ -173,46 +172,21 @@ public class DownloadManager<TDownloadTask> : IDisposable where TDownloadTask : 
         task.CancellationHandle.Register(() => SetState(task, DownloadState.Cancelled));
         task.CancellationHandle.RegisterPaused(() => SetState(task, DownloadState.Paused));
         task.CancellationHandle.RegisterResumed(() => SetState(task, DownloadState.Running));
-        var ras = await _httpClient.DownloadRandomAccessStreamAsync(task.Url, new Progress<int>(percentage => task.ProgressPercentage = percentage), task.CancellationHandle);
-        switch (ras)
+        try
         {
-            case Result<IRandomAccessStream>.Success(var resultStream):
-                try
-                {
-                    if (task is ICustomBehaviorDownloadTask customBehaviorDownloadTask)
-                    {
-                        customBehaviorDownloadTask.Consume(resultStream);
-                    }
-                    else
-                    {
-                        using (resultStream)
-                        {
-                            await IoHelper.CreateAndWriteToFileAsync(resultStream, task.Destination);
-                        }
-                    }
-                }
-                catch (Exception e)
-                {
-                    Functions.IgnoreException(() => File.Delete(task.Destination));
-                    ThreadingHelper.DispatchTask(() => task.ErrorCause = e);
-                    SetState(task, DownloadState.Error);
-                    task.Completion.SetException(e);
-                }
-
-                SetState(task, DownloadState.Completed);
-                task.Completion.SetResult();
-                break;
-            case Result<IRandomAccessStream>.Failure(var exception):
-                Functions.IgnoreException(() => File.Delete(task.Destination));
-                if (exception is not OperationCanceledException and not null)
-                {
-                    ThreadingHelper.DispatchTask(() => task.ErrorCause = exception);
-                    SetState(task, DownloadState.Error);
-                    task.Completion.SetException(exception);
-                }
-
-                break;
+            await task.DownloadAsync(_httpClient.DownloadRandomAccessStreamAsync);
         }
+        catch (Exception e)
+        {
+            // todo delete manga
+            Functions.IgnoreException(() => File.Delete(task.Destination));
+            ThreadingHelper.DispatchTask(() => task.ErrorCause = e);
+            SetState(task, DownloadState.Error);
+            task.Completion.SetException(e);
+        }
+
+        SetState(task, DownloadState.Completed);
+        task.Completion.SetResult();
     }
 
     private static void SetState(TDownloadTask task, DownloadState state)

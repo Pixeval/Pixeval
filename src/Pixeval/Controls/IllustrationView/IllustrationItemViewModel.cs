@@ -22,22 +22,23 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Windows.Storage;
-using Windows.Storage.Pickers;
 using Windows.Storage.Streams;
 using Windows.UI;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.Controls.Illustrate;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Model;
+using Pixeval.CoreApi.Net.Response;
 using Pixeval.Download;
 using Pixeval.Options;
 using Pixeval.Util;
@@ -46,6 +47,7 @@ using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using Pixeval.Utilities.Threading;
 using AppContext = Pixeval.AppManagement.AppContext;
+using static Pixeval.CoreApi.Model.Novel;
 
 namespace Pixeval.Controls.IllustrationView;
 
@@ -59,11 +61,14 @@ public class IllustrationItemViewModel(Illustration illustration) : IllustrateVi
 {
     private bool _isSelected;
 
-    public int MangaIndex { get; set; }
+    /// <summary>
+    /// 当调用<see cref="GetMangaIllustrationViewModels"/>后，此属性会被赋值为当前<see cref="IllustrationItemViewModel"/>在Manga中的索引
+    /// </summary>
+    public int MangaIndex { get; set; } = -1;
 
     public bool IsRestricted => Illustrate.XRestrict is not XRestrict.Ordinary;
 
-    public bool IsManga => Illustrate.IsManga();
+    public bool IsManga => Illustrate.PageCount > 1;
 
     public BadgeMode RestrictionCaption =>
         Illustrate.XRestrict switch
@@ -79,7 +84,29 @@ public class IllustrationItemViewModel(Illustration illustration) : IllustrateVi
 
     public DateTimeOffset PublishDate => Illustrate.CreateDate;
 
-    public string? OriginalSourceUrl => Illustrate.GetOriginalUrl();
+    /// <summary>
+    /// <see cref="IsUgoira"/>为<see langword="true"/>时，此属性不会抛异常<br/>
+    /// 同一个漫画图片的格式会不会不同？
+    /// </summary>
+    public async Task<(UgoiraMetadataResponse Metadata, string Url)> GetUgoiraOriginalUrlAsync()
+    {
+        var metadata = await App.AppViewModel.MakoClient.GetUgoiraMetadataAsync(Id);
+        return (metadata, metadata.UgoiraMetadataInfo.ZipUrls.Large);
+    }
+
+    /// <summary>
+    /// <see cref="IsUgoira"/>为<see langword="false"/>时，此属性不为<see langword="null"/>
+    /// </summary>
+    public string? OriginalStaticUrl => IsManga
+        ? Illustrate.MetaPages[MangaIndex is -1 ? 0 : MangaIndex].ImageUrls.Original
+        : Illustrate.MetaSinglePage.OriginalImageUrl;
+
+    /// <summary>
+    /// 除非在必须同步的上下文，否则都应该调用<see cref="OriginalStaticUrl"/>或<see cref="GetUgoiraOriginalUrlAsync"/>
+    /// </summary>
+    public string OriginalSourceUrlSync => IsUgoira
+        ? GetUgoiraOriginalUrlAsync().GetAwaiter().GetResult().Url
+        : OriginalStaticUrl;
 
     public bool IsBookmarked
     {
@@ -104,20 +131,21 @@ public class IllustrationItemViewModel(Illustration illustration) : IllustrateVi
         });
     }
 
-    public bool IsUgoira => Illustrate.IsUgoira();
+    [MemberNotNullWhen(false, nameof(OriginalStaticUrl))]
+    public bool IsUgoira => Illustrate.Type is "ugoira";
 
     public string Tooltip
     {
         get
         {
             var sb = new StringBuilder(Illustrate.Title);
-            if (Illustrate.IsUgoira())
+            if (IsUgoira)
             {
                 _ = sb.AppendLine()
                     .Append(MiscResources.TheIllustrationIsAnUgoira);
             }
 
-            if (Illustrate.IsManga())
+            if (IsManga)
             {
                 _ = sb.AppendLine()
                     .Append(MiscResources.TheIllustrationIsAMangaFormatted.Format(Illustrate.PageCount));
@@ -153,6 +181,11 @@ public class IllustrationItemViewModel(Illustration illustration) : IllustrateVi
 
         return Illustrate.MetaPages.Select(m => Illustrate with { ImageUrls = m.ImageUrls })
             .Select((p, i) => new IllustrationItemViewModel(p) { MangaIndex = i });
+    }
+
+    public IEnumerable<string> GetMangaImageUrls()
+    {
+        return Illustrate.MetaPages.Select(m => m.ImageUrls.Original!);
     }
 
     public Task ToggleBookmarkStateAsync()
@@ -227,7 +260,7 @@ public class IllustrationItemViewModel(Illustration illustration) : IllustrateVi
         }
 
         LoadingThumbnail = true;
-        if (App.AppViewModel.AppSetting.UseFileCache && await App.AppViewModel.Cache.TryGetAsync<IRandomAccessStream>(Illustrate.GetIllustrationThumbnailCacheKey(thumbnailUrlOption)) is { } stream)
+        if (App.AppViewModel.AppSetting.UseFileCache && await App.AppViewModel.Cache.TryGetAsync<IRandomAccessStream>(this.GetIllustrationThumbnailCacheKey(thumbnailUrlOption)) is { } stream)
         {
             ThumbnailStreamsRef[thumbnailUrlOption] = stream;
             ThumbnailSourcesRef[thumbnailUrlOption] = new SharedRef<SoftwareBitmapSource>(await stream.GetSoftwareBitmapSourceAsync(false), key);
@@ -242,7 +275,7 @@ public class IllustrationItemViewModel(Illustration illustration) : IllustrateVi
         {
             if (App.AppViewModel.AppSetting.UseFileCache)
             {
-                _ = await App.AppViewModel.Cache.TryAddAsync(Illustrate.GetIllustrationThumbnailCacheKey(thumbnailUrlOption), ras, TimeSpan.FromDays(1));
+                _ = await App.AppViewModel.Cache.TryAddAsync(this.GetIllustrationThumbnailCacheKey(thumbnailUrlOption), ras, TimeSpan.FromDays(1));
             }
             ThumbnailStreamsRef[thumbnailUrlOption] = ras;
             ThumbnailSourcesRef[thumbnailUrlOption] = new SharedRef<SoftwareBitmapSource>(await ras.GetSoftwareBitmapSourceAsync(false), key);
@@ -326,42 +359,52 @@ public class IllustrationItemViewModel(Illustration illustration) : IllustrateVi
 
     #region Helpers
 
-    public async Task SaveAsync()
+    public async Task SaveAsync(IRandomAccessStream? intrinsic = null)
     {
-        using var scope = App.AppViewModel.AppServicesScope;
-        var factory = scope.ServiceProvider.GetRequiredService<IDownloadTaskFactory<IllustrationItemViewModel, ObservableDownloadTask>>();
-        foreach (var mangaIllustrationViewModel in GetMangaIllustrationViewModels())
+        var path = App.AppViewModel.AppSetting.DefaultDownloadPathMacro;
+        await SaveUtilityAsync(path, intrinsic);
+    }
+
+    public async Task<bool> SaveAsAsync(Window window, IRandomAccessStream? intrinsic = null)
+    {
+        var folder = await window.OpenFolderPickerAsync();
+        if (folder is null)
+            return false;
+        await SaveUtilityAsync(Path.Combine(folder.Path, GetName()), intrinsic);
+        return true;
+
+        string GetName()
         {
-            var downloadTask = await factory.CreateAsync(mangaIllustrationViewModel, App.AppViewModel.AppSetting.DefaultDownloadPathMacro);
-            App.AppViewModel.DownloadManager.QueueTask(downloadTask);
+            string? name;
+            if (IsUgoira)
+                name = Id + IoHelper.GetUgoiraExtension();
+            else if (MangaIndex is -1)
+                name = Id + this.GetImageFormat();
+            else
+                name = $"{Id}_{MangaIndex}";
+            return name;
         }
     }
 
-    public async Task SaveAsAsync()
+    /// <summary>
+    /// <see cref="IllustrationDownloadTaskFactory"/>
+    /// </summary>
+    /// <param name="path"></param>
+    /// <param name="intrinsic"></param>
+    /// <returns></returns>
+    private async Task SaveUtilityAsync(string path, IRandomAccessStream? intrinsic = null)
     {
-        IStorageItem? item = IsManga
-            ? await UiHelper.OpenFolderPickerAsync(PickerLocationId.PicturesLibrary)
-            : await UiHelper.OpenFileSavePickerAsync(Id.ToString(), $"{Illustrate.GetImageFormat().RemoveSurrounding(".", "")} file", Illustrate.GetImageFormat());
-
         using var scope = App.AppViewModel.AppServicesScope;
-        var factory = scope.ServiceProvider.GetRequiredService<IDownloadTaskFactory<IllustrationItemViewModel, ObservableDownloadTask>>();
-        switch (item)
+        var factory = scope.ServiceProvider.GetRequiredService<IDownloadTaskFactory<IllustrationItemViewModel, IllustrationDownloadTask>>();
+        if (intrinsic is null)
         {
-            case StorageFile file:
-                // the file save picker will create a file automatically, and we choose to create one
-                // manually instead of using that file
-                await file.DeleteAsync(StorageDeleteOption.PermanentDelete);
-                var task = await factory.CreateAsync(this, file.Path);
-                App.AppViewModel.DownloadManager.QueueTask(task);
-                break;
-            case StorageFolder folder:
-                foreach (var mangaIllustrationViewModel in GetMangaIllustrationViewModels())
-                {
-                    var mTask = await factory.CreateAsync(mangaIllustrationViewModel, Path.Combine(folder.Path, $"{Id}_{mangaIllustrationViewModel.MangaIndex}"));
-                    App.AppViewModel.DownloadManager.QueueTask(mTask);
-                }
-
-                break;
+            var task = await factory.CreateAsync(this, path);
+            App.AppViewModel.DownloadManager.QueueTask(task);
+        }
+        else
+        {
+            var task = await factory.TryCreateIntrinsicAsync(this, intrinsic, path);
+            App.AppViewModel.DownloadManager.QueueTask(task);
         }
     }
 

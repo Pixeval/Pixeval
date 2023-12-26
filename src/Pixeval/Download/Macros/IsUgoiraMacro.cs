@@ -20,7 +20,6 @@
 
 using Pixeval.Controls.IllustrationView;
 using Pixeval.Download.MacroParser;
-using Pixeval.Util;
 
 namespace Pixeval.Download.Macros;
 
@@ -31,6 +30,6 @@ public class IsUgoiraMacro : IMacro<IllustrationItemViewModel>.IPredicate
 
     public bool Match(IllustrationItemViewModel context)
     {
-        return context.Illustrate.IsUgoira();
+        return context.IsUgoira;
     }
 }

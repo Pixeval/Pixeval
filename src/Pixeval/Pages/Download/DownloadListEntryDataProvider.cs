@@ -37,7 +37,7 @@ public class DownloadListEntryDataProvider : ObservableObject, IDataProvider<Ill
         ThrowHelper.NotSupported($"{nameof(DownloadListEntryDataProvider)} 不使用 {nameof(FetchEngine)}");
     }
 
-    public void ResetEngine(IEnumerable<ObservableDownloadTask> source)
+    public void ResetEngine(IEnumerable<IllustrationDownloadTask> source)
     {
         Source = new IncrementalLoadingCollection<FetchEngineIncrementalSource<Illustration, DownloadListEntryViewModel>, DownloadListEntryViewModel>(new DownloadListEntryIncrementalSource(source));
     }

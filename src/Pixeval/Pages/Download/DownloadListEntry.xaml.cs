@@ -46,10 +46,11 @@ namespace Pixeval.Pages.Download;
 [DependencyProperty<bool>("IsShowErrorDetailDialogItemEnabled")]
 public sealed partial class DownloadListEntry : IViewModelControl
 {
+    object IViewModelControl.ViewModel => ViewModel;
+
     private const ThumbnailUrlOption Option = ThumbnailUrlOption.SquareMedium;
 
     public DownloadListEntry() => InitializeComponent();
-    object IViewModelControl.ViewModel => ViewModel;
 
     public event TypedEventHandler<DownloadListEntry, DownloadListEntryViewModel>? OpenIllustrationRequested;
 
@@ -90,8 +91,8 @@ public sealed partial class DownloadListEntry : IViewModelControl
 
     private void RedownloadItem_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        ViewModel.DownloadTask.Reset();
-        _ = App.AppViewModel.DownloadManager.TryExecuteInline(ViewModel.DownloadTask);
+        // ViewModel.DownloadTask.Reset();
+        // _ = App.AppViewModel.DownloadManager.TryExecuteInline(ViewModel.DownloadTask);
     }
 
     private void CancelDownloadItem_OnTapped(object sender, TappedRoutedEventArgs e)
@@ -108,7 +109,7 @@ public sealed partial class DownloadListEntry : IViewModelControl
 
     private async void CheckErrorMessageInDetail_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        _ = await MessageDialogBuilder.CreateAcknowledgement(CurrentContext.Window, DownloadListEntryResources.ErrorMessageDialogTitle, ViewModel.DownloadTask.ErrorCause!.ToString())
+        _ = await this.CreateAcknowledgement(DownloadListEntryResources.ErrorMessageDialogTitle, ViewModel.DownloadTask.ErrorCause?.ToString())
             .ShowAsync();
     }
 }

@@ -53,7 +53,7 @@ public partial class DownloadListPageViewModel : IllustrateViewViewModel<Illustr
     [ObservableProperty]
     private string _selectionLabel;
 
-    public DownloadListPageViewModel(IEnumerable<ObservableDownloadTask> source)
+    public DownloadListPageViewModel(IEnumerable<IllustrationDownloadTask> source)
     {
         DataProvider.To<DownloadListEntryDataProvider>().ResetEngine(source);
         _selectionLabel = DownloadListPageResources.CancelSelectionButtonDefaultLabel;
@@ -66,10 +66,10 @@ public partial class DownloadListPageViewModel : IllustrateViewViewModel<Illustr
     public void UpdateSelection()
     {
         var count = SelectedTasks.Count();
-        SelectionLabel = count is 0
-            ? DownloadListPageResources.CancelSelectionButtonDefaultLabel
-            : DownloadListPageResources.CancelSelectionButtonFormatted.Format(count);
-        IsAnyEntrySelected = count != 0;
+        IsAnyEntrySelected = count is not 0;
+        SelectionLabel = IsAnyEntrySelected
+            ? DownloadListPageResources.CancelSelectionButtonFormatted.Format(count)
+            : DownloadListPageResources.CancelSelectionButtonDefaultLabel;
     }
 
     public void PauseSelectedItems()

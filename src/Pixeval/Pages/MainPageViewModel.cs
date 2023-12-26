@@ -23,12 +23,10 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Messaging;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.Controls.IllustrationView;
-using Pixeval.Controls.Windowing;
 using Pixeval.CoreApi.Global.Enum;
-using Pixeval.Messages;
 using Pixeval.Misc;
 using Pixeval.Pages.Capability;
 using Pixeval.Pages.IllustrationViewer;
@@ -38,7 +36,7 @@ using Pixeval.Util.UI;
 
 namespace Pixeval.Pages;
 
-public partial class MainPageViewModel(EnhancedWindow window) : AutoActivateObservableRecipient, IRecipient<LoginCompletedMessage>
+public partial class MainPageViewModel : ObservableObject
 {
     public readonly NavigationViewTag AboutTag = new(typeof(AboutPage), null);
 
@@ -67,14 +65,17 @@ public partial class MainPageViewModel(EnhancedWindow window) : AutoActivateObse
     [ObservableProperty]
     private SoftwareBitmapSource? _avatar;
 
-    public double MainPageRootNavigationViewOpenPanelLength => 280;
+    private readonly UIElement _owner;
 
-    public SuggestionStateMachine SuggestionProvider { get; } = new SuggestionStateMachine();
-
-    public void Receive(LoginCompletedMessage message)
+    public MainPageViewModel(UIElement owner)
     {
+        _owner = owner;
         DownloadAndSetAvatar();
     }
+
+    public double MainPageRootNavigationViewOpenPanelLength => 280;
+
+    public SuggestionStateMachine SuggestionProvider { get; } = new();
 
     /// <summary>
     ///     Download user's avatar and set to the Avatar property.
@@ -102,19 +103,15 @@ public partial class MainPageViewModel(EnhancedWindow window) : AutoActivateObse
                             await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(r.Data.PixivId))));
 
                 if (viewModels.Length is 0)
-                    _ = MessageDialogBuilder.CreateAcknowledgement(
-                            window,
-                            MainPageResources.ReverseSearchNotFoundTitle,
+                    _ = _owner.CreateAcknowledgement(MainPageResources.ReverseSearchNotFoundTitle,
                             MainPageResources.ReverseSearchNotFoundContent)
                         .ShowAsync();
-
-                viewModels[0].CreateWindowWithPage(viewModels);
+                else
+                    viewModels[0].CreateWindowWithPage(viewModels);
             }
             else
             {
-                _ = await MessageDialogBuilder.CreateAcknowledgement(
-                        window,
-                        MainPageResources.ReverseSearchErrorTitle,
+                _ = await _owner.CreateAcknowledgement(MainPageResources.ReverseSearchErrorTitle,
                         result.Header.Status > 0
                             ? MainPageResources.ReverseSearchServerSideErrorContent
                             : MainPageResources.ReverseSearchClientSideErrorContent)
@@ -123,9 +120,7 @@ public partial class MainPageViewModel(EnhancedWindow window) : AutoActivateObse
         }
         catch (Exception e)
         {
-            _ = await MessageDialogBuilder.CreateAcknowledgement(
-                    window,
-                    MiscResources.ExceptionEncountered,
+            _ = await _owner.CreateAcknowledgement(MiscResources.ExceptionEncountered,
                     e.ToString())
                 .ShowAsync();
         }

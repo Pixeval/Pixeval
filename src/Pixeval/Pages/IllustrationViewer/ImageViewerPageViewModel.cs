@@ -199,7 +199,7 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
 
         async Task LoadOriginalImage()
         {
-            var cacheKey = IllustrationViewModel.Illustrate.GetIllustrationOriginalImageCacheKey();
+            var cacheKey = IllustrationViewModel.GetIllustrationOriginalImageCacheKey();
             AdvancePhase(LoadingPhase.CheckingCache);
             if (App.AppViewModel.AppSetting.UseFileCache && await App.AppViewModel.Cache.ExistsAsync(cacheKey))
             {
@@ -209,33 +209,31 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
             }
             else if (IllustrationViewModel.IsUgoira)
             {
-                var ugoiraMetadata = await App.AppViewModel.MakoClient.GetUgoiraMetadataAsync(IllustrationViewModel.Id);
-                if (ugoiraMetadata.UgoiraMetadataInfo?.ZipUrls?.Large is { } url)
+                AdvancePhase(LoadingPhase.DownloadingUgoiraZip);
+                var (metadata, url) = await IllustrationViewModel.GetUgoiraOriginalUrlAsync();
+                var downloadRes = await App.AppViewModel.MakoClient.DownloadStreamAsync(url, new Progress<double>(d =>
                 {
+                    LoadingProgress = d;
                     AdvancePhase(LoadingPhase.DownloadingUgoiraZip);
-                    var downloadRes = await App.AppViewModel.MakoClient.DownloadStreamAsync(url, new Progress<int>(d =>
-                    {
-                        LoadingProgress = d;
-                        AdvancePhase(LoadingPhase.DownloadingUgoiraZip);
-                    }), ImageLoadingCancellationHandle);
-                    switch (downloadRes)
-                    {
-                        case Result<Stream>.Success(var zipStream):
-                            AdvancePhase(LoadingPhase.MergingUgoiraFrames);
-                            OriginalImageSources = await IoHelper.GetStreamsFromZipStreamAsync(zipStream);
-                            MsIntervals = ugoiraMetadata.UgoiraMetadataInfo.Frames?.Select(x => (int)x.Delay)?.ToList();
-                            break;
-                        case Result<Stream>.Failure(OperationCanceledException):
-                            return;
-                    }
-
-                    LoadSuccessfully = true;
+                }), ImageLoadingCancellationHandle);
+                switch (downloadRes)
+                {
+                    case Result<Stream>.Success(var zipStream):
+                        AdvancePhase(LoadingPhase.MergingUgoiraFrames);
+                        OriginalImageSources = await IoHelper.GetStreamsFromZipStreamAsync(zipStream);
+                        MsIntervals = metadata.UgoiraMetadataInfo.Frames.Select(x => (int)x.Delay)?.ToList();
+                        break;
+                    case Result<Stream>.Failure(OperationCanceledException):
+                        return;
                 }
+
+                LoadSuccessfully = true;
             }
-            else if (IllustrationViewModel.OriginalSourceUrl is { } src)
+            else
             {
+                var url = IllustrationViewModel.OriginalStaticUrl;
                 AdvancePhase(LoadingPhase.DownloadingImage);
-                var ras = await App.AppViewModel.MakoClient.DownloadRandomAccessStreamAsync(src, new Progress<int>(d =>
+                var ras = await App.AppViewModel.MakoClient.DownloadRandomAccessStreamAsync(url, new Progress<double>(d =>
                 {
                     LoadingProgress = d;
                     AdvancePhase(LoadingPhase.DownloadingImage);

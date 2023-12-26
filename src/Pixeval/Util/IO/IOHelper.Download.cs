@@ -80,7 +80,7 @@ public static partial class IoHelper
     public static async Task<Result<IRandomAccessStream>> DownloadRandomAccessStreamAsync(
         this HttpClient httpClient,
         string url,
-        IProgress<int>? progress = null,
+        IProgress<double>? progress = null,
         CancellationHandle? cancellationHandle = default)
     {
         return (await httpClient.DownloadStreamAsync(url, progress, cancellationHandle)).Rewrap(stream => stream.AsRandomAccessStream());
@@ -89,7 +89,7 @@ public static partial class IoHelper
     private static async Task<Result<Stream>> DownloadStreamAsync(
         this HttpClient httpClient,
         string url,
-        IProgress<int>? progress = null,
+        IProgress<double>? progress = null,
         CancellationHandle? cancellationHandle = null)
     {
         var awaiter = new ReenterableAwaiter<bool>(!cancellationHandle?.IsPaused ?? true, true);
@@ -118,7 +118,6 @@ public static partial class IoHelper
                 var resultStream = new MemoryStream();
                 int bytesRead, totalRead = 0;
                 var buffer = ArrayPool<byte>.Shared.Rent(4096);
-                var lastReportedProgressPercentage = 0;
                 while ((bytesRead = await contentStream.ReadAsync(buffer)) != 0 && await awaiter)
                 {
                     if (cancellationHandle?.IsCancelled is true)
@@ -130,9 +129,8 @@ public static partial class IoHelper
                     await resultStream.WriteAsync(buffer, 0, bytesRead);
                     totalRead += bytesRead;
                     // reduce the frequency of the invocation of the callback, otherwise it will draws a severe performance impact
-                    if ((int)(totalRead / (double)responseLength * 100) is var percentage && percentage - lastReportedProgressPercentage >= 1)
+                    if (totalRead / (double)responseLength * 100 is var percentage)
                     {
-                        lastReportedProgressPercentage = percentage;
                         progress?.Report(percentage); // percentage, 100 as base
                     }
                 }

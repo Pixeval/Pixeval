@@ -26,60 +26,50 @@ using Pixeval.Controls.IllustrationView;
 using Pixeval.Database;
 using Pixeval.Util;
 using Pixeval.Util.IO;
+using Pixeval.Utilities;
+using Pixeval.Utilities.Threading;
 
 namespace Pixeval.Download;
 
-public class IllustrationDownloadTask : ObservableDownloadTask, IIllustrationViewModelProvider
+public class IllustrationDownloadTask(DownloadHistoryEntry entry, IllustrationItemViewModel illustration)
+    : IllustrationDownloadTaskBase(entry)
 {
-    public IllustrationDownloadTask(DownloadHistoryEntry dataBaseEntry, IllustrationItemViewModel illustrationViewModel) : base(dataBaseEntry)
+    public string Url => Urls[0];
+
+    public IllustrationItemViewModel IllustrationViewModel { get; protected set; } = illustration;
+
+    public override async Task DownloadAsync(Func<string, IProgress<double>?, CancellationHandle?, Task<Result<IRandomAccessStream>>> downloadRandomAccessStreamAsync)
     {
-        IllustrationViewModel = illustrationViewModel;
-        CurrentState = DownloadState.Created;
+        await DownloadAsyncCore(downloadRandomAccessStreamAsync, Url, Destination);
     }
 
-    public IllustrationItemViewModel IllustrationViewModel { get; }
-
-    public Task<IllustrationItemViewModel> GetViewModelAsync()
+    protected virtual async Task DownloadAsyncCore(Func<string, IProgress<double>?, CancellationHandle?, Task<Result<IRandomAccessStream>>> downloadRandomAccessStreamAsync, string url, string destination)
     {
-        return Task.FromResult(IllustrationViewModel);
-    }
+        if (!App.AppViewModel.AppSetting.OverwriteDownloadedFile && File.Exists(destination))
+            return;
 
-    public override async void DownloadStarting(DownloadStartingEventArgs args)
-    {
-        var deferral = args.GetDeferral();
-        if (!App.AppViewModel.AppSetting.OverwriteDownloadedFile && File.Exists(Destination))
+        if (App.AppViewModel.AppSetting.UseFileCache && await App.AppViewModel.Cache.TryGetAsync<IRandomAccessStream>(IllustrationViewModel.GetIllustrationOriginalImageCacheKey()) is { } stream)
         {
-            ProgressPercentage = 100;
-            CurrentState = DownloadState.Completed;
-            deferral.Complete(false);
+            using (stream)
+                await ManageStream(stream, destination);
             return;
         }
 
-        if (App.AppViewModel.AppSetting.UseFileCache && await App.AppViewModel.Cache.TryGetAsync<IRandomAccessStream>(IllustrationViewModel.Illustrate.GetIllustrationOriginalImageCacheKey()) is { } stream)
+        if (await downloadRandomAccessStreamAsync(url, this, CancellationHandle) is Result<IRandomAccessStream>.Success result)
         {
-            // fast path
-            deferral.Complete(false);
-            ProgressPercentage = 100;
-            try
-            {
-                using (stream)
-                {
-                    IoHelper.CreateParentDirectories(Destination);
-                    await using var fs = File.Open(Destination, FileMode.Create, FileAccess.ReadWrite, FileShare.None);
-                    await stream.AsStreamForRead().CopyToAsync(fs);
-                }
-            }
-            catch (Exception e)
-            {
-                CurrentState = DownloadState.Error;
-                ErrorCause = e;
-                return;
-            }
-
-            CurrentState = DownloadState.Completed;
+            using var ras = result.Value;
+            await ManageStream(ras, destination);
         }
+    }
 
-        // slow path
-        deferral.Complete(true);
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="stream">会自动Dispose</param>
+    /// <param name="destination"></param>
+    /// <returns></returns>
+    protected virtual async Task ManageStream(IRandomAccessStream stream, string destination)
+    {
+        await IoHelper.CreateAndWriteToFileAsync(stream, destination);
     }
 }

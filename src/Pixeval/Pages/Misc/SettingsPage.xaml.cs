@@ -123,9 +123,7 @@ public sealed partial class SettingsPage
 
     private async void PerformSignOutButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        var dialog = MessageDialogBuilder.CreateOkCancel(
-            CurrentContext.Window,
-            SettingsPageResources.SignOutConfirmationDialogTitle,
+        var dialog = this.CreateOkCancel(SettingsPageResources.SignOutConfirmationDialogTitle,
             SettingsPageResources.SignOutConfirmationDialogContent);
         if (await dialog.ShowAsync() == ContentDialogResult.Primary)
         {
@@ -137,9 +135,7 @@ public sealed partial class SettingsPage
 
     private async void ResetDefaultSettingsButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        var dialog = MessageDialogBuilder.CreateOkCancel(
-            CurrentContext.Window,
-            SettingsPageResources.ResetSettingConfirmationDialogTitle,
+        var dialog = this.CreateOkCancel(SettingsPageResources.ResetSettingConfirmationDialogTitle,
             SettingsPageResources.ResetSettingConfirmationDialogContent);
         if (await dialog.ShowAsync() == ContentDialogResult.Primary)
         {

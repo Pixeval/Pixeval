@@ -26,65 +26,94 @@ using Pixeval.Controls.IllustrationView;
 using Pixeval.Database;
 using Pixeval.Database.Managers;
 using Pixeval.Download.MacroParser;
-using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Utilities;
 
 namespace Pixeval.Download;
 
-public class IllustrationDownloadTaskFactory : IDownloadTaskFactory<IllustrationItemViewModel, ObservableDownloadTask>
+public class IllustrationDownloadTaskFactory : IDownloadTaskFactory<IllustrationItemViewModel, IllustrationDownloadTask>
 {
     public IMetaPathParser<IllustrationItemViewModel> PathParser { get; } = new IllustrationMetaPathParser();
 
-    public Task<ObservableDownloadTask> CreateAsync(IllustrationItemViewModel context, string rawPath)
+    public async Task<IllustrationDownloadTask> CreateAsync(IllustrationItemViewModel context, string rawPath)
     {
         using var scope = App.AppViewModel.AppServicesScope;
         var manager = scope.ServiceProvider.GetRequiredService<DownloadHistoryPersistentManager>();
         var path = IoHelper.NormalizePath(PathParser.Reduce(rawPath, context));
-        if (manager.Collection.Find(entry => entry.Destination == path).Any())
+        if (manager.Collection.Exists(entry => entry.Destination == path))
         {
             // delete the original entry
             _ = manager.Delete(entry => entry.Destination == path);
         }
 
-        var task = Functions.Block<ObservableDownloadTask>(() =>
+        var task = await Functions.Block<Task<IllustrationDownloadTask>>(async () =>
         {
             if (context.IsUgoira)
             {
-                var ugoiraMetadata = App.AppViewModel.MakoClient.GetUgoiraMetadataAsync(context.Id).GetAwaiter().GetResult();
-                if (ugoiraMetadata.UgoiraMetadataInfo?.ZipUrls?.Large is not { } url)
-                    throw new DownloadTaskInitializationException(
-                        DownloadTaskResources.GifSourceUrlNotFoundFormatted.Format(context.Id));
-
-                var downloadHistoryEntry = new DownloadHistoryEntry(DownloadState.Created, null, path,
+                var (metadata, url) = await context.GetUgoiraOriginalUrlAsync();
+                var downloadHistoryEntry = new DownloadHistoryEntry(
+                    DownloadState.Created,
+                    path,
                     DownloadItemType.Ugoira,
-                    context.Id, 
+                    context.Id,
                     url);
-                return new AnimatedIllustrationDownloadTask(downloadHistoryEntry, context, ugoiraMetadata);
+                return new AnimatedIllustrationDownloadTask(downloadHistoryEntry, context, metadata);
+            }
+            else if (context.MangaIndex is -1 && context.IsManga)
+            {
+                var downloadHistoryEntry = new DownloadHistoryEntry(
+                    DownloadState.Created,
+                    path,
+                    DownloadItemType.Manga,
+                    context.Id,
+                    context.GetMangaImageUrls());
+                return new MangaDownloadTask(downloadHistoryEntry, context);
             }
             else
             {
-                var downloadHistoryEntry = new DownloadHistoryEntry(DownloadState.Created, null, path,
-                    context.IsManga ? DownloadItemType.Manga : DownloadItemType.Illustration, 
-                    context.Id, 
-                    context.Illustrate.GetOriginalUrl()!);
+                var downloadHistoryEntry = new DownloadHistoryEntry(
+                    DownloadState.Created,
+                    path,
+                    DownloadItemType.Illustration,
+                    context.Id,
+                    context.OriginalStaticUrl);
                 return new IllustrationDownloadTask(downloadHistoryEntry, context);
             }
         });
 
         manager.Insert(task.DatabaseEntry);
-        return Task.FromResult(task);
+        return task;
     }
 
-    public Task<ObservableDownloadTask> TryCreateIntrinsicAsync(IllustrationItemViewModel context, IRandomAccessStream stream, string rawPath)
+    public async Task<IllustrationDownloadTask> TryCreateIntrinsicAsync(IllustrationItemViewModel context, IRandomAccessStream stream, string rawPath)
     {
+        using var scope = App.AppViewModel.AppServicesScope;
+        var manager = scope.ServiceProvider.GetRequiredService<DownloadHistoryPersistentManager>();
+        var path = IoHelper.NormalizePath(PathParser.Reduce(rawPath, context));
+        if (manager.Collection.Exists(entry => entry.Destination == path))
+        {
+            // delete the original entry
+            _ = manager.Delete(entry => entry.Destination == path);
+        }
+
         var type = context switch
         {
             { IsUgoira: true } => DownloadItemType.Ugoira,
-            { IsManga: true } => DownloadItemType.Manga,
+            { IsManga: true, MangaIndex: -1 } => DownloadItemType.Manga, // 未使用的分支
             _ => DownloadItemType.Illustration
         };
-        var entry = new DownloadHistoryEntry(DownloadState.Completed, null, rawPath, type, context.Id, null);
-        return Task.FromResult<ObservableDownloadTask>(new IntrinsicIllustrationDownloadTask(entry, context, stream));
+        string url;
+        if (context.IsUgoira)
+        {
+            (var metadata, url) = await context.GetUgoiraOriginalUrlAsync();
+        }
+        else
+        {
+            url = context.OriginalStaticUrl;
+        }
+        var entry = new DownloadHistoryEntry(DownloadState.Completed, rawPath, type, context.Id, url);
+        return type is DownloadItemType.Manga
+            ? new IntrinsicMangaDownloadTask(entry, context, [stream]) // 未使用的分支
+            : new IntrinsicIllustrationDownloadTask(entry, context, stream);
     }
 }

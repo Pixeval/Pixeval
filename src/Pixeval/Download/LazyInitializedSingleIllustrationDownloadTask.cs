@@ -20,20 +20,27 @@
 
 using System;
 using System.Threading.Tasks;
-using Pixeval.Controls.IllustrationView;
 using Pixeval.Database;
+using Pixeval.Utilities.Threading;
+using Pixeval.Utilities;
+using Windows.Storage.Streams;
 
 namespace Pixeval.Download;
 
-public class LazyInitializedIllustrationDownloadTask
-    (DownloadHistoryEntry databaseEntry) : ObservableDownloadTask(databaseEntry), IIllustrationViewModelProvider
+public class LazyInitializedSingleIllustrationDownloadTask(DownloadHistoryEntry entry)
+    : IllustrationDownloadTask(entry, null!), ILazyLoadDownloadTask
 {
-    private readonly Lazy<Task<IllustrationItemViewModel>> _resultGenerator =
-        new(async () =>
-            new IllustrationItemViewModel(await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(databaseEntry.Id)));
+    private readonly long _illustId = entry.Id;
 
-    public Task<IllustrationItemViewModel> GetViewModelAsync()
+    public override async Task DownloadAsync(Func<string, IProgress<double>?, CancellationHandle?, Task<Result<IRandomAccessStream>>> downloadRandomAccessStreamAsync)
     {
-        return _resultGenerator.Value;
+        await LazyLoadAsync(_illustId);
+
+        await base.DownloadAsync(downloadRandomAccessStreamAsync);
+    }
+
+    public async Task LazyLoadAsync(long id)
+    {
+        IllustrationViewModel ??= new(await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(id));
     }
 }

@@ -25,6 +25,7 @@ using CommunityToolkit.WinUI.Collections;
 using Microsoft.UI;
 using Microsoft.UI.Xaml.Media;
 using Pixeval.Controls;
+using Pixeval.Controls.IllustrationView;
 using Pixeval.Controls.MarkupExtensions;
 using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Global.Enum;
@@ -56,9 +57,9 @@ public static class MakoHelper
     {
         return option switch
         {
-            ThumbnailUrlOption.Large => illustration.ImageUrls?.Large,
-            ThumbnailUrlOption.Medium => illustration.ImageUrls?.Medium,
-            ThumbnailUrlOption.SquareMedium => illustration.ImageUrls?.SquareMedium,
+            ThumbnailUrlOption.Large => illustration.ImageUrls.Large,
+            ThumbnailUrlOption.Medium => illustration.ImageUrls.Medium,
+            ThumbnailUrlOption.SquareMedium => illustration.ImageUrls.SquareMedium,
             _ => ThrowHelper.ArgumentOutOfRange<ThumbnailUrlOption, string?>(option)
         };
     }
@@ -93,24 +94,20 @@ public static class MakoHelper
         return new Uri($"{AppContext.AppProtocol}://user/{id}");
     }
 
-    public static string? GetOriginalUrl(this Illustration illustration)
+    public static string GetImageFormat(this IllustrationItemViewModel illustration)
     {
-        return illustration.ImageUrls.Original ?? illustration.MetaSinglePage.OriginalImageUrl;
+        var url = illustration.OriginalSourceUrlSync;
+        return url[url.LastIndexOf('.')..];
     }
 
-    public static string GetImageFormat(this Illustration illustration)
+    public static string GetIllustrationThumbnailCacheKey(this IllustrationItemViewModel illustration, ThumbnailUrlOption thumbnailUrlOption)
     {
-        return illustration.GetOriginalUrl() is { } url ? url[url.LastIndexOf(".", StringComparison.Ordinal)..] : string.Empty;
+        return $"thumbnail-{thumbnailUrlOption}-{illustration.OriginalSourceUrlSync}";
     }
 
-    public static string GetIllustrationThumbnailCacheKey(this Illustration illustration, ThumbnailUrlOption thumbnailUrlOption)
+    public static string GetIllustrationOriginalImageCacheKey(this IllustrationItemViewModel illustration)
     {
-        return $"thumbnail-{thumbnailUrlOption}-{illustration.GetOriginalUrl() ?? illustration.Id.ToString()}";
-    }
-
-    public static string GetIllustrationOriginalImageCacheKey(this Illustration illustration)
-    {
-        return $"original-{illustration.GetOriginalUrl() ?? illustration.Id.ToString()}";
+        return $"original-{illustration.OriginalSourceUrlSync}";
     }
 
     public static SortDescription? GetSortDescriptionForIllustration(IllustrationSortOption sortOption)
@@ -123,16 +120,6 @@ public static class MakoHelper
             IllustrationSortOption.DoNotSort => null,
             _ => ThrowHelper.ArgumentOutOfRange<IllustrationSortOption, SortDescription?>(sortOption)
         };
-    }
-
-    public static bool IsUgoira(this Illustration illustration)
-    {
-        return illustration.Type.Equals("ugoira", StringComparison.OrdinalIgnoreCase);
-    }
-
-    public static bool IsManga(this Illustration illustration)
-    {
-        return illustration.PageCount > 1;
     }
 
     public static void Cancel<T>(this IFetchEngine<T> engine)

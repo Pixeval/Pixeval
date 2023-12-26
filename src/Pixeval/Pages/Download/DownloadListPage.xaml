@@ -95,6 +95,7 @@
                         <!--  ReSharper disable once Xaml.PossibleNullReferenceException (Illustrate.User!.Name)  -->
                         <download:DownloadListEntry
                             Title="{x:Bind Illustrate.Title}"
+                            Margin="16"
                             ActionButtonContent="{x:Bind download:DownloadListEntryViewModel.GetEntryActionButtonContent(DownloadTask.CurrentState), Mode=OneWay}"
                             Description="{x:Bind Illustrate.User.Name}"
                             IsCancelItemEnabled="{x:Bind download:DownloadListEntryViewModel.GetIsEntryCancelDownloadItemEnabled(DownloadTask.CurrentState), Mode=OneWay}"

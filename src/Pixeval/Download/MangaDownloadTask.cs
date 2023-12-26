@@ -1,8 +1,9 @@
-#region Copyright (c) Pixeval/Pixeval
+#region Copyright
+
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/IDownloadTask.cs
+// Copyright (c) 2023 Pixeval/MangaDownloadTask.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -16,29 +17,30 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 #endregion
 
 using System;
 using System.Threading.Tasks;
 using Windows.Storage.Streams;
+using Pixeval.Controls.IllustrationView;
+using Pixeval.Database;
 using Pixeval.Utilities;
 using Pixeval.Utilities.Threading;
 
 namespace Pixeval.Download;
 
-public interface IDownloadTask
+public class MangaDownloadTask(DownloadHistoryEntry entry, IllustrationItemViewModel illustration)
+    : IllustrationDownloadTask(entry, illustration)
 {
-    string Destination { get; }
+    protected int CurrentIndex { get; private set; }
 
-    CancellationHandle CancellationHandle { get; set; }
-
-    TaskCompletionSource Completion { get; }
-
-    DownloadState CurrentState { get; set; }
-
-    Exception? ErrorCause { get; set; }
-
-    double ProgressPercentage { get; }
-
-    Task DownloadAsync(Func<string, IProgress<double>?, CancellationHandle?, Task<Result<IRandomAccessStream>>> downloadRandomAccessStreamAsync);
+    public override async Task DownloadAsync(Func<string, IProgress<double>?, CancellationHandle?, Task<Result<IRandomAccessStream>>> downloadRandomAccessStreamAsync)
+    {
+        for (CurrentIndex = 0; CurrentIndex < Urls.Count; ++CurrentIndex)
+        {
+            var dest = Destination.Format(CurrentIndex);
+            await base.DownloadAsyncCore(downloadRandomAccessStreamAsync, Urls[CurrentIndex], dest);
+        }
+    }
 }

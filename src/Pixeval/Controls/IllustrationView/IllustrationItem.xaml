@@ -81,8 +81,8 @@
             <MenuFlyoutSeparator />
             <MenuFlyoutItem
                 x:Uid="/IllustrationView/SaveContextItem"
-                Icon="{markup:FontSymbolIcon Glyph=SaveE74E}"
-                Tapped="SaveContextItemOnTapped" />
+                Click="SaveContextItemOnTapped"
+                Icon="{markup:FontSymbolIcon Glyph=SaveE74E}" />
             <MenuFlyoutItem
                 x:Uid="/IllustrationView/SaveAsContextItem"
                 Icon="{markup:FontSymbolIcon Glyph=SaveAsE792}"

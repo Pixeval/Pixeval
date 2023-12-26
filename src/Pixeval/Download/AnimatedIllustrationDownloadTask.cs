@@ -28,44 +28,17 @@ using Pixeval.Util.IO;
 
 namespace Pixeval.Download;
 
-public class AnimatedIllustrationDownloadTask : ObservableDownloadTask, ICustomBehaviorDownloadTask, IIllustrationViewModelProvider
+public class AnimatedIllustrationDownloadTask(
+    DownloadHistoryEntry entry,
+    IllustrationItemViewModel illustration,
+    UgoiraMetadataResponse metadata)
+    : IllustrationDownloadTask(entry, illustration)
 {
-    private readonly IllustrationItemViewModel _illustration;
-    private readonly UgoiraMetadataResponse _metadata;
+    protected UgoiraMetadataResponse Metadata { get; set; } = metadata;
 
-    public AnimatedIllustrationDownloadTask(
-        DownloadHistoryEntry databaseEntry,
-        IllustrationItemViewModel illustration,
-        UgoiraMetadataResponse metadata) : base(databaseEntry)
+    protected override async Task ManageStream(IRandomAccessStream stream, string destination)
     {
-        _illustration = illustration;
-        _metadata = metadata;
-    }
-
-    protected AnimatedIllustrationDownloadTask(DownloadHistoryEntry databaseEntry)
-        : base(databaseEntry)
-    {
-        // derived classes won't need them
-        _metadata = null!;
-        _illustration = null!;
-    }
-
-    public override void DownloadStarting(DownloadStartingEventArgs args)
-    {
-        args.GetDeferral().Complete(App.AppViewModel.AppSetting.OverwriteDownloadedFile || !File.Exists(Destination));
-    }
-
-    public virtual async void Consume(IRandomAccessStream stream)
-    {
-        using (stream)
-        {
-            using var ugoiraStream = await IoHelper.GetStreamFromZipStreamAsync(stream.AsStreamForRead(), _metadata);
-            await IoHelper.CreateAndWriteToFileAsync(ugoiraStream, Destination);
-        }
-    }
-
-    public virtual Task<IllustrationItemViewModel> GetViewModelAsync()
-    {
-        return Task.FromResult(_illustration);
+        using var ugoiraStream = await IoHelper.GetStreamFromZipStreamAsync(stream.AsStreamForRead(), Metadata);
+        await IoHelper.CreateAndWriteToFileAsync(ugoiraStream, destination);
     }
 }

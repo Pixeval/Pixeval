@@ -19,39 +19,28 @@
 #endregion
 
 using System;
-using System.IO;
 using System.Threading.Tasks;
 using Windows.Storage.Streams;
-using Pixeval.Controls.IllustrationView;
 using Pixeval.Database;
-using Pixeval.Util.IO;
+using Pixeval.Utilities;
+using Pixeval.Utilities.Threading;
 
 namespace Pixeval.Download;
 
-public class LazyInitializedAnimatedIllustrationDownloadTask : AnimatedIllustrationDownloadTask
+public class LazyInitializedAnimatedIllustrationDownloadTask(DownloadHistoryEntry databaseEntry) : AnimatedIllustrationDownloadTask(databaseEntry, null!, null!), ILazyLoadDownloadTask
 {
-    private readonly long _illustId;
+    private readonly long _illustId = databaseEntry.Id;
 
-    private readonly Lazy<Task<IllustrationItemViewModel>> _resultGenerator;
-
-    public LazyInitializedAnimatedIllustrationDownloadTask(DownloadHistoryEntry databaseEntry) : base(databaseEntry)
+    public override async Task DownloadAsync(Func<string, IProgress<double>?, CancellationHandle?, Task<Result<IRandomAccessStream>>> downloadRandomAccessStreamAsync)
     {
-        _illustId = databaseEntry.Id;
-        _resultGenerator = new Lazy<Task<IllustrationItemViewModel>>(async () => new IllustrationItemViewModel(await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(_illustId)));
+        await LazyLoadAsync(_illustId);
+
+        await base.DownloadAsync(downloadRandomAccessStreamAsync);
     }
 
-    public override async void Consume(IRandomAccessStream stream)
+    public async Task LazyLoadAsync(long id)
     {
-        using (stream)
-        {
-            var metadata = await App.AppViewModel.MakoClient.GetUgoiraMetadataAsync(_illustId);
-            using var ugoiraStream = await IoHelper.GetStreamFromZipStreamAsync(stream.AsStreamForRead(), metadata);
-            await IoHelper.CreateAndWriteToFileAsync(ugoiraStream, Destination);
-        }
-    }
-
-    public override Task<IllustrationItemViewModel> GetViewModelAsync()
-    {
-        return _resultGenerator.Value;
+        Metadata ??= await App.AppViewModel.MakoClient.GetUgoiraMetadataAsync(id);
+        IllustrationViewModel ??= new(await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(id));
     }
 }

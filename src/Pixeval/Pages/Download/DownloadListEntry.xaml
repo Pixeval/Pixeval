@@ -7,7 +7,6 @@
     xmlns:local="using:Pixeval.Pages.Download"
     xmlns:markup="using:Pixeval.Controls.MarkupExtensions"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Padding="24"
     ColumnSpacing="20"
     mc:Ignorable="d">
     <Grid.ColumnDefinitions>

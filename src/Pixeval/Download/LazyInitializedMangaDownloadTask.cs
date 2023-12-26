@@ -1,8 +1,9 @@
-#region Copyright (c) Pixeval/Pixeval
+#region Copyright
+
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/IDownloadTask.cs
+// Copyright (c) 2023 Pixeval/LazyInitializedMangaDownloadTask.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -16,29 +17,32 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 #endregion
 
 using System;
 using System.Threading.Tasks;
 using Windows.Storage.Streams;
+using Pixeval.Database;
 using Pixeval.Utilities;
 using Pixeval.Utilities.Threading;
 
 namespace Pixeval.Download;
 
-public interface IDownloadTask
+public class LazyInitializedMangaDownloadTask(DownloadHistoryEntry entry)
+    : MangaDownloadTask(entry, null!), ILazyLoadDownloadTask
 {
-    string Destination { get; }
+    private readonly long _illustId = entry.Id;
 
-    CancellationHandle CancellationHandle { get; set; }
+    public override async Task DownloadAsync(Func<string, IProgress<double>?, CancellationHandle?, Task<Result<IRandomAccessStream>>> downloadRandomAccessStreamAsync)
+    {
+        await LazyLoadAsync(_illustId);
 
-    TaskCompletionSource Completion { get; }
+        await base.DownloadAsync(downloadRandomAccessStreamAsync);
+    }
 
-    DownloadState CurrentState { get; set; }
-
-    Exception? ErrorCause { get; set; }
-
-    double ProgressPercentage { get; }
-
-    Task DownloadAsync(Func<string, IProgress<double>?, CancellationHandle?, Task<Result<IRandomAccessStream>>> downloadRandomAccessStreamAsync);
+    public async Task LazyLoadAsync(long id)
+    {
+        IllustrationViewModel ??= new(await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(id));
+    }
 }

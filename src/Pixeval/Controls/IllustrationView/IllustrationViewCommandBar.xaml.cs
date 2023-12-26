@@ -135,9 +135,7 @@ public sealed partial class IllustrationViewCommandBar
         // TODO custom bookmark tag
         var notBookmarked = ViewModel.DataProvider.SelectedIllustrations.Where(i => !i.IsBookmarked);
         var viewModelSelectedIllustrations = notBookmarked as IllustrationItemViewModel[] ?? notBookmarked.ToArray();
-        if (viewModelSelectedIllustrations.Length > 5 && await MessageDialogBuilder.CreateOkCancel(
-                    this,
-                    IllustrationViewCommandBarResources.SelectedTooManyItemsForBookmarkTitle,
+        if (viewModelSelectedIllustrations.Length > 5 && await this.CreateOkCancel(IllustrationViewCommandBarResources.SelectedTooManyItemsForBookmarkTitle,
                     IllustrationViewCommandBarResources.SelectedTooManyItemsForBookmarkContent)
                 .ShowAsync() is not ContentDialogResult.Primary)
         {
@@ -152,17 +150,14 @@ public sealed partial class IllustrationViewCommandBar
 
         if (viewModelSelectedIllustrations.Length is var c and > 0)
         {
-            _ = MessageDialogBuilder.CreateAcknowledgement(this,
-                IllustrationViewCommandBarResources.AddAllToBookmarkTitle,
+            _ = this.CreateAcknowledgement(IllustrationViewCommandBarResources.AddAllToBookmarkTitle,
                 IllustrationViewCommandBarResources.AddAllToBookmarkContentFormatted.Format(c));
         }
     }
 
     private async void SaveAllButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        if (ViewModel.DataProvider.SelectedIllustrations.Count >= 20 && await MessageDialogBuilder.CreateOkCancel(
-                this,
-                IllustrationViewCommandBarResources.SelectedTooManyItemsTitle,
+        if (ViewModel.DataProvider.SelectedIllustrations.Count >= 20 && await this.CreateOkCancel(IllustrationViewCommandBarResources.SelectedTooManyItemsTitle,
                 IllustrationViewCommandBarResources.SelectedTooManyItemsForSaveContent).ShowAsync()
             != ContentDialogResult.Primary)
         {
@@ -170,7 +165,7 @@ public sealed partial class IllustrationViewCommandBar
         }
 
         using var scope = App.AppViewModel.AppServicesScope;
-        var factory = scope.ServiceProvider.GetRequiredService<IDownloadTaskFactory<IllustrationItemViewModel, ObservableDownloadTask>>();
+        var factory = scope.ServiceProvider.GetRequiredService<IDownloadTaskFactory<IllustrationItemViewModel, IllustrationDownloadTask>>();
 
         // This will run for quite a while
         _ = Task.Run(async () =>
@@ -192,9 +187,7 @@ public sealed partial class IllustrationViewCommandBar
     {
         if (ViewModel.DataProvider.SelectedIllustrations is { Count: var count } selected)
         {
-            if (count > 15 && await MessageDialogBuilder.CreateOkCancel(
-                        this,
-                        IllustrationViewCommandBarResources.SelectedTooManyItemsTitle,
+            if (count > 15 && await this.CreateOkCancel(IllustrationViewCommandBarResources.SelectedTooManyItemsTitle,
                         IllustrationViewCommandBarResources.SelectedTooManyItemsForOpenInBrowserContent)
                     .ShowAsync() != ContentDialogResult.Primary)
             {

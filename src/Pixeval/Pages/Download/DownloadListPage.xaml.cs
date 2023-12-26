@@ -19,7 +19,6 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -27,7 +26,6 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Controls;
 using Pixeval.Dialogs;
-using Pixeval.Download;
 using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Util.IO;
 using Pixeval.Util.Threading;
@@ -46,7 +44,7 @@ public sealed partial class DownloadListPage
 
     public override void OnPageActivated(NavigationEventArgs e, object? parameter)
     {
-        _viewModel = new DownloadListPageViewModel(parameter.To<IEnumerable<ObservableDownloadTask>>());
+        _viewModel = new DownloadListPageViewModel(App.AppViewModel.DownloadManager.QueuedTasks);
     }
 
     public override void OnPageDeactivated(NavigatingCancelEventArgs e) => _viewModel.Dispose();
@@ -74,13 +72,9 @@ public sealed partial class DownloadListPage
     private async void ClearDownloadListButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
         var dialogContent = new DownloadListPageDeleteTasksDialog();
-        var dialog = MessageDialogBuilder.Create()
-            .WithTitle(DownloadListPageResources.DeleteDownloadHistoryRecordsFormatted.Format(_viewModel.SelectedTasks.Count()))
-            .WithContent(dialogContent)
-            .WithPrimaryButtonText(MessageContentDialogResources.OkButtonContent)
-            .WithCloseButtonText(MessageContentDialogResources.CancelButtonContent)
-            .WithDefaultButton(ContentDialogButton.Primary)
-            .Build(this);
+        var dialog = this.CreateOkCancel(
+            DownloadListPageResources.DeleteDownloadHistoryRecordsFormatted.Format(_viewModel.SelectedTasks.Count()),
+            dialogContent);
         if (await dialog.ShowAsync() is ContentDialogResult.Primary)
         {
             if (dialogContent.DeleteLocalFiles)

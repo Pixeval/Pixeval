@@ -23,9 +23,9 @@ using System.Linq;
 using System.Numerics;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
-using Windows.Foundation;
 using Windows.Graphics;
 using Windows.Storage.Streams;
+using Microsoft.UI.Input;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -34,7 +34,6 @@ using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.AppManagement;
 using Pixeval.Controls;
-using Pixeval.Controls.Windowing;
 using Pixeval.Misc;
 using Pixeval.Options;
 using Pixeval.Util;
@@ -46,7 +45,7 @@ using AppContext = Pixeval.AppManagement.AppContext;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
-public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragRegion
+public sealed partial class IllustrationViewerPage : SupportCustomTitleBarDragRegionPage
 {
     private const ThumbnailUrlOption Option = ThumbnailUrlOption.SquareMedium;
     private bool _pointerNotInArea = true;
@@ -78,19 +77,18 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
         }
     }
 
-    public void SetTitleBarDragRegion()
+    protected override void SetTitleBarDragRegion(InputNonClientPointerSource sender, SizeInt32 windowSize, double scaleFactor, out int titleBarHeight)
     {
-        var pointCommandBar = IllustrationViewerCommandBar.TransformToVisual(this).TransformPoint(new Point(0, 0));
-        var pointSubCommandBar = IllustrationViewerSubCommandBar.TransformToVisual(this).TransformPoint(new Point(0, 0));
-        var commandBarRect = new RectInt32((int)pointCommandBar.X, (int)pointCommandBar.Y, (int)IllustrationViewerCommandBar.ActualWidth, (int)IllustrationViewerCommandBar.ActualHeight);
-        var subCommandBarRect = new RectInt32((int)pointSubCommandBar.X, (int)pointSubCommandBar.Y, (int)IllustrationViewerSubCommandBar.ActualWidth, (int)IllustrationViewerSubCommandBar.ActualHeight);
+        var leftIndent = new RectInt32(
+            0,
+            0,
+            _viewModel.IsInfoPaneOpen ? (int)IllustrationInfoAndCommentsSplitView.OpenPaneLength
+                : 0,
+            (int)TitleBarArea.ActualHeight);
 
-        Window.SetDragRegion(new DragZoneInfo(commandBarRect, subCommandBarRect)
-        {
-            DragZoneLeftIndent = _viewModel.IsInfoPaneOpen
-                ? (int)IllustrationInfoAndCommentsSplitView.OpenPaneLength
-                : 0
-        });
+        sender.SetRegionRects(NonClientRegionKind.Icon, [FromControl(Icon)]);
+        sender.SetRegionRects(NonClientRegionKind.Passthrough, [GetScaledRect(leftIndent), FromControl(IllustrationViewerCommandBar), FromControl(IllustrationViewerSubCommandBar)]);
+        titleBarHeight = 48;
     }
 
     /// <summary>
@@ -108,6 +106,7 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
         if (parameter is not IllustrationViewerPageViewModel viewModel)
             return;
         _viewModel = viewModel;
+        _viewModel.Window = Window;
         _viewModel.GenerateLinkTeachingTip = GenerateLinkTeachingTip;
         _viewModel.ShowQrCodeTeachingTip = ShowQrCodeTeachingTip;
         _viewModel.SnackBarTeachingTip = SnackBarTeachingTip;
@@ -142,6 +141,8 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
                 case nameof(IllustrationViewerPageViewModel.IsFullScreen):
                 {
                     Window.AppWindow.SetPresenter(vm.IsFullScreen ? AppWindowPresenterKind.FullScreen : AppWindowPresenterKind.Default);
+                    // 加载完之后设置标题栏
+                    _ = Task.Delay(500).ContinueWith(_ => RaiseSetTitleBarDragRegion(), TaskScheduler.FromCurrentSynchronizationContext());
                     break;
                 }
                 case IllustrationViewerPageViewModel.GenerateLink:
@@ -317,7 +318,7 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
             _ = IllustrationInfoAndCommentsFrame.Navigate(tag.NavigateTo, tag.Parameter, info);
     }
 
-    private void IllustrationInfoAndCommentsSplitView_OnPaneOpenedOrClosed(SplitView sender, object args) => SetTitleBarDragRegion();
+    private void IllustrationInfoAndCommentsSplitView_OnPaneOpenedOrClosed(SplitView sender, object args) => RaiseSetTitleBarDragRegion();
 
     private async void IllustrationImageShowcaseFrame_OnTapped(object sender, TappedRoutedEventArgs e)
     {

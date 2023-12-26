@@ -1,8 +1,9 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright
+
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/LoginCompletedMessage.cs
+// Copyright (c) 2023 Pixeval/ILazyLoadDownloadTask.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -16,15 +17,14 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 #endregion
 
-using Pixeval.CoreApi.Preference;
-using Pixeval.Pages.Login;
+using System.Threading.Tasks;
 
-namespace Pixeval.Messages;
+namespace Pixeval.Download;
 
-/// <summary>
-///     This event will be published once the login procedure is finished successfully.
-///     See <see cref="LoginPage.LoginPage_OnLoaded" />
-/// </summary>
-public record LoginCompletedMessage(LoginPage Sender, Session Session);
+public interface ILazyLoadDownloadTask
+{
+    Task LazyLoadAsync(long id);
+}

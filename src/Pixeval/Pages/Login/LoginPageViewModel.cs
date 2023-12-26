@@ -35,7 +35,6 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.Win32;
 using Pixeval.AppManagement;
 using Pixeval.Attributes;
-using Pixeval.Controls.Windowing;
 using Pixeval.CoreApi;
 using Pixeval.CoreApi.Model;
 using Pixeval.CoreApi.Net;
@@ -50,7 +49,7 @@ using AppContext = Pixeval.AppManagement.AppContext;
 
 namespace Pixeval.Pages.Login;
 
-public partial class LoginPageViewModel : AutoActivateObservableRecipient
+public partial class LoginPageViewModel(UIElement owner) : ObservableObject
 {
     public enum LoginPhaseEnum
     {
@@ -130,11 +129,11 @@ public partial class LoginPageViewModel : AutoActivateObservableRecipient
     }
 
     /// <summary>
-    ///     Check if the session file exists and satisfies the following four conditions: <br></br>
-    ///     1. The <see cref="Session" /> object deserialized from the file is not null <br></br>
-    ///     2. The <see cref="Session.RefreshToken" /> is not null <br></br>
-    ///     3. The <see cref="Session.Cookie" /> is not null <br></br>
-    ///     4. The <see cref="Session.CookieCreation" /> is within last fifteen days <br></br>
+    ///     Check if the session file exists and satisfies the following four conditions: <br/>
+    ///     1. The <see cref="Session" /> object deserialized from the file is not null <br/>
+    ///     2. The <see cref="Session.RefreshToken" /> is not null <br/>
+    ///     3. The <see cref="Session.Cookie" /> is not null <br/>
+    ///     4. The <see cref="Session.CookieCreation" /> is within last fifteen days
     /// </summary>
     /// <returns></returns>
     public bool CheckRefreshAvailable()
@@ -165,9 +164,7 @@ public partial class LoginPageViewModel : AutoActivateObservableRecipient
         }
         else
         {
-            _ = await MessageDialogBuilder.CreateAcknowledgement(
-                    WindowFactory.RootWindow,
-                    LoginPageResources.RefreshingSessionIsNotPresentTitle,
+            _ = await owner.CreateAcknowledgement(LoginPageResources.RefreshingSessionIsNotPresentTitle,
                     LoginPageResources.RefreshingSessionIsNotPresentContent)
                 .ShowAsync();
             await AppKnownFolders.Local.ClearAsync();
@@ -290,8 +287,7 @@ public partial class LoginPageViewModel : AutoActivateObservableRecipient
                 {
                     IsFinished = true;
                     AdvancePhase(LoginPhaseEnum.WaitingForUserInput);
-                    _ = MessageDialogBuilder.CreateAcknowledgement(userControl,
-                            LoginPageResources.ErrorWhileLoggingInTitle, LoginPageResources.BrowserConnnectionLost)
+                    _ = userControl.CreateAcknowledgement(LoginPageResources.ErrorWhileLoggingInTitle, LoginPageResources.BrowserConnnectionLost)
                         .ShowAsync();
                 });
             };
@@ -337,8 +333,7 @@ public partial class LoginPageViewModel : AutoActivateObservableRecipient
     {
         if (!await CheckFakeRootCertificateInstallationAsync())
         {
-            var dialogResult = await MessageDialogBuilder.CreateOkCancel(userControl,
-                LoginPageResources.RootCertificateInstallationRequiredTitle,
+            var dialogResult = await userControl.CreateOkCancel(LoginPageResources.RootCertificateInstallationRequiredTitle,
                 LoginPageResources.RootCertificateInstallationRequiredContent).ShowAsync();
             if (dialogResult is ContentDialogResult.Primary)
             {
@@ -355,8 +350,7 @@ public partial class LoginPageViewModel : AutoActivateObservableRecipient
     {
         if (!CheckWebView2Installation())
         {
-            var dialogResult = await MessageDialogBuilder.CreateOkCancel(userControl,
-                LoginPageResources.WebView2InstallationRequiredTitle,
+            var dialogResult = await userControl.CreateOkCancel(LoginPageResources.WebView2InstallationRequiredTitle,
                 LoginPageResources.WebView2InstallationRequiredContent).ShowAsync();
             if (dialogResult is ContentDialogResult.Primary)
             {

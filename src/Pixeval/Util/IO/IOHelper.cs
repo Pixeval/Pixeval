@@ -47,13 +47,13 @@ public static partial class IoHelper
         using var sha1 = SHA1.Create();
         var result = await sha1.ComputeHashAsync(randomAccessStream.AsStreamForRead());
         randomAccessStream.Seek(0); // reset the stream
-        return result.Select(b => b.ToString("x2")).Aggregate((acc, str) => acc + str);
+        return result.Select(b => b.ToString("X2")).Aggregate((acc, str) => acc + str);
     }
 
     public static async Task CreateAndWriteToFileAsync(IRandomAccessStream contentStream, string path)
     {
         CreateParentDirectories(path);
-        await using var stream = File.Open(path, FileMode.Create, FileAccess.ReadWrite, FileShare.None);
+        await using var stream = File.OpenWrite(path);
         contentStream.Seek(0);
         await contentStream.AsStreamForRead().CopyToAsync(stream);
     }

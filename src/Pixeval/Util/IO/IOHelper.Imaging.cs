@@ -97,8 +97,8 @@ public static partial class IoHelper
                 }
                 else
                 {
-                    newFrame = image.Frames.AddFrame(tempImage.Frames[0]);
-                    tempImage.Dispose();
+                    using (tempImage)
+                        newFrame = image.Frames.AddFrame(tempImage.Frames[0]);
                 }
 
                 newFrame.Metadata.GetFormatMetadata(WebpFormat.Instance).FrameDelay = delay;
@@ -184,12 +184,11 @@ public static partial class IoHelper
             imageStream.Seek(0);
             c = imageStream.Position;
             d = imageStream.Size;
-            var image = await Image.LoadAsync<Bgra32>(imageStream.AsStreamForRead());
+            using var image = await Image.LoadAsync<Bgra32>(imageStream.AsStreamForRead());
             var softwareBitmap = new SoftwareBitmap(BitmapPixelFormat.Bgra8, image.Width, image.Height, BitmapAlphaMode.Premultiplied);
             var buffer = new byte[4 * image.Width * image.Height];
             image.CopyPixelDataTo(buffer);
             softwareBitmap.CopyFromBuffer(buffer.AsBuffer());
-            image.Dispose();
             return softwareBitmap;
         }
         catch (Exception e)

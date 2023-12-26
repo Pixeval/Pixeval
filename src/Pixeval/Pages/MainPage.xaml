@@ -1,4 +1,4 @@
-<controls:EnhancedWindowPage
+<controls:SupportCustomTitleBarDragRegionPage
     x:Class="Pixeval.Pages.MainPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -9,6 +9,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pages="using:Pixeval.Pages"
     xmlns:utilities="using:WinUI3Utilities"
+    xmlns:windowing="using:Pixeval.Controls.Windowing"
     mc:Ignorable="d">
     <controls:EnhancedWindowPage.Resources>
         <DataTemplate x:Key="IllustrationHeaderSuggestionTemplate">
@@ -205,11 +206,7 @@
             </NavigationView.FooterMenuItems>
             <Frame x:Name="MainPageRootFrame" Navigated="MainPageRootFrame_OnNavigated" />
         </NavigationView>
-        <Grid
-            x:Name="TitleBarGrid"
-            VerticalAlignment="Top"
-            Loaded="AppTitleBarOnSizeChanged"
-            SizeChanged="AppTitleBarOnSizeChanged">
+        <Grid x:Name="TitleBarGrid" VerticalAlignment="Top">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
@@ -217,6 +214,7 @@
             </Grid.ColumnDefinitions>
             <Grid Grid.Column="0">
                 <Image
+                    x:Name="Icon"
                     Width="25"
                     Height="25"
                     Margin="12,0,0,0"
@@ -232,7 +230,7 @@
                     Text="Pixeval"
                     TextWrapping="NoWrap" />
             </Grid>
-            <Grid x:Name="TitleBar" Column="1">
+            <Grid x:Name="TitleBarControlGrid" Column="1">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
@@ -280,4 +278,4 @@
             </Grid>
         </Grid>
     </Grid>
-</controls:EnhancedWindowPage>
+</controls:SupportCustomTitleBarDragRegionPage>

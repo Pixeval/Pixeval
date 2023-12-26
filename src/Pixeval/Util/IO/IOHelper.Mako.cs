@@ -36,7 +36,7 @@ public static partial class IoHelper
     public static async Task<Result<Stream>> DownloadStreamAsync(
         this MakoClient client,
         string url,
-        IProgress<int>? progress = null,
+        IProgress<double>? progress = null,
         CancellationHandle? cancellationHandle = null)
     {
         return await client.GetMakoHttpClient(MakoApiKind.ImageApi).DownloadStreamAsync(url, progress, cancellationHandle);
@@ -45,7 +45,7 @@ public static partial class IoHelper
     public static async Task<Result<IRandomAccessStream>> DownloadRandomAccessStreamAsync(
         this MakoClient client,
         string url,
-        IProgress<int>? progress = null,
+        IProgress<double>? progress = null,
         CancellationHandle? cancellationHandle = null)
     {
         return (await client.DownloadStreamAsync(url, progress, cancellationHandle)).Rewrap(stream => stream.AsRandomAccessStream());
@@ -54,7 +54,7 @@ public static partial class IoHelper
     public static async Task<Result<SoftwareBitmapSource>> DownloadSoftwareBitmapSourceAsync(
         this MakoClient client,
         string url,
-        IProgress<int>? progress = null,
+        IProgress<double>? progress = null,
         CancellationHandle? cancellationHandle = null)
     {
         return await (await client.DownloadRandomAccessStreamAsync(url, progress, cancellationHandle)).RewrapAsync(m => m.GetSoftwareBitmapSourceAsync(true));
@@ -64,7 +64,7 @@ public static partial class IoHelper
         this MakoClient client,
         string url,
         int? desiredWidth,
-        IProgress<int>? progress = null,
+        IProgress<double>? progress = null,
         CancellationHandle? cancellationHandle = null)
     {
         return await (await client.DownloadRandomAccessStreamAsync(url, progress, cancellationHandle))

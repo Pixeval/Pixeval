@@ -55,6 +55,7 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
     public const string GenerateLink = nameof(GenerateLink);
     public const string ShowShare = nameof(ShowShare);
     public const string ShowQrCode = nameof(ShowQrCode);
+    public Window Window { get; set; } = null!;
 
     private const ThumbnailUrlOption Option = ThumbnailUrlOption.SquareMedium;
 
@@ -142,11 +143,11 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
 
     public long IllustrationId => CurrentIllustration.Illustrate.Id;
 
-    public UserInfo? Illustrator => CurrentIllustration.Illustrate.User;
+    public UserInfo Illustrator => CurrentIllustration.Illustrate.User;
 
-    public string? IllustratorName => Illustrator?.Name;
+    public string IllustratorName => Illustrator.Name;
 
-    public long? IllustratorUid => Illustrator?.Id;
+    public long IllustratorUid => Illustrator.Id;
 
     public bool IsManga => _pages.Length > 1;
 
@@ -349,6 +350,8 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
         RotateClockwiseCommand.NotifyCanExecuteChanged();
         RotateCounterclockwiseCommand.NotifyCanExecuteChanged();
         MirrorCommand.NotifyCanExecuteChanged();
+        SaveCommand.NotifyCanExecuteChanged();
+        SaveAsCommand.NotifyCanExecuteChanged();
         FullScreenCommand.NotifyCanExecuteChanged();
     }
 
@@ -398,8 +401,11 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
         MirrorCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
         MirrorCommand.ExecuteRequested += (_, _) => CurrentImage.IsMirrored = !CurrentImage.IsMirrored;
 
-        SaveCommand.ExecuteRequested += async (_, _) => await CurrentIllustration.SaveAsync();
-        SaveAsCommand.ExecuteRequested += async (_, _) => await CurrentIllustration.SaveAsAsync();
+        SaveCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
+        SaveCommand.ExecuteRequested += SaveAsync;
+
+        SaveAsCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
+        SaveAsCommand.ExecuteRequested += SaveAsAsync;
 
         GenerateLinkCommand.ExecuteRequested += GenerateLinkCommandOnExecuteRequested;
         GenerateWebLinkCommand.ExecuteRequested += GenerateWebLinkCommandOnExecuteRequested;
@@ -442,7 +448,7 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
         {
             var path = Path.Combine(AppKnownFolders.SavedWallPaper.Self.Path, guid);
             using var scope = App.AppViewModel.AppServicesScope;
-            var factory = scope.ServiceProvider.GetRequiredService<IDownloadTaskFactory<IllustrationItemViewModel, ObservableDownloadTask>>();
+            var factory = scope.ServiceProvider.GetRequiredService<IDownloadTaskFactory<IllustrationItemViewModel, IllustrationDownloadTask>>();
             var intrinsicTask = await factory.TryCreateIntrinsicAsync(CurrentIllustration, CurrentImage.OriginalImageStream!, path);
             App.AppViewModel.DownloadManager.QueueTask(intrinsicTask);
             await intrinsicTask.Completion.Task;
@@ -468,7 +474,7 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
         {
             var path = Path.Combine(AppKnownFolders.SavedWallPaper.Self.Path, guid);
             using var scope = App.AppViewModel.AppServicesScope;
-            var factory = scope.ServiceProvider.GetRequiredService<IDownloadTaskFactory<IllustrationItemViewModel, ObservableDownloadTask>>();
+            var factory = scope.ServiceProvider.GetRequiredService<IDownloadTaskFactory<IllustrationItemViewModel, IllustrationDownloadTask>>();
             var intrinsicTask = await factory.TryCreateIntrinsicAsync(CurrentIllustration, CurrentImage.OriginalImageStream!, path);
             App.AppViewModel.DownloadManager.QueueTask(intrinsicTask);
             await intrinsicTask.Completion.Task;
@@ -479,6 +485,20 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
             IllustrationViewerPageResources.SetAsSucceededTitle,
             IllustrationViewerPageResources.SetAsBackgroundSucceededTitle,
             AppContext.AppLogoNoCaptionUri);
+    }
+
+    private async void SaveAsync(XamlUICommand sender, ExecuteRequestedEventArgs args)
+    {
+        await CurrentPage.SaveAsync();
+        SnackBarTeachingTip.ShowAndHide("已保存");
+    }
+
+    private async void SaveAsAsync(XamlUICommand sender, ExecuteRequestedEventArgs args)
+    {
+        if (await CurrentIllustration.SaveAsAsync(Window))
+            SnackBarTeachingTip.ShowAndHide("已保存");
+        else
+            SnackBarTeachingTip.ShowAndHide("已取消另存为操作", TeachingTipSeverity.Information);
     }
 
     private void GenerateLinkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)

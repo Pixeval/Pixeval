@@ -41,8 +41,8 @@ using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
 using Microsoft.Windows.AppLifecycle;
 using Pixeval.Activation;
+using Pixeval.Controls;
 using Pixeval.Controls.IllustrationView;
-using Pixeval.Controls.Windowing;
 using Pixeval.Database;
 using Pixeval.Database.Managers;
 using Pixeval.Dialogs;
@@ -60,7 +60,7 @@ using Image = SixLabors.ImageSharp.Image;
 
 namespace Pixeval.Pages;
 
-public sealed partial class MainPage : ISupportCustomTitleBarDragRegion
+public sealed partial class MainPage : SupportCustomTitleBarDragRegionPage
 {
     private static UIElement? _connectedAnimationTarget;
 
@@ -68,10 +68,11 @@ public sealed partial class MainPage : ISupportCustomTitleBarDragRegion
     // currently holding if we're navigating back to the MainPage
     private static IllustrationItemViewModel? _illustrationViewerContent;
 
-    private MainPageViewModel _viewModel;
+    private readonly MainPageViewModel _viewModel;
 
     public MainPage()
     {
+        _viewModel = new MainPageViewModel(this);
         InitializeComponent();
         CurrentContext.TitleBar = TitleBarGrid;
         CurrentContext.TitleTextBlock = AppTitleTextBlock;
@@ -82,17 +83,19 @@ public sealed partial class MainPage : ISupportCustomTitleBarDragRegion
         }
     }
 
-    public void SetTitleBarDragRegion()
+    protected override void SetTitleBarDragRegion(InputNonClientPointerSource sender, SizeInt32 windowSize, double scaleFactor, out int titleBarHeight)
     {
-        var titleBar = TitleBar.TransformToVisual(Content).TransformPoint(new Point(0, 0));
-        var titleBarRect = new RectInt32((int)titleBar.X, (int)titleBar.Y, (int)TitleBar.ActualWidth, (int)TitleBar.ActualHeight);
-
-        DragZoneHelper.SetDragZones(new DragZoneInfo(titleBarRect) { DragZoneLeftIndent = 48 });
+        titleBarHeight = 48;
+        // NavigationView的Pane按钮
+        var leftIndent = new RectInt32(0, 0, titleBarHeight, titleBarHeight);
+        sender.SetRegionRects(NonClientRegionKind.Icon, [FromControl(Icon)]);
+        sender.SetRegionRects(NonClientRegionKind.Passthrough, [FromControl(TitleBarControlGrid), GetScaledRect(leftIndent)]);
     }
 
     public override void OnPageActivated(NavigationEventArgs e, object? parameter)
     {
-        _viewModel = new MainPageViewModel(Window);
+        App.AppViewModel.AppLoggedIn();
+
         // dirty trick, the order of the menu items is the same as the order of the fields in MainPageTabItem
         // since enums are basically integers, we just need a cast to transform it to the correct offset.
         ((NavigationViewItem)MainPageRootNavigationView.MenuItems[(int)App.AppViewModel.AppSetting.DefaultSelectedTabItem]).IsSelected = true;
@@ -139,7 +142,7 @@ public sealed partial class MainPage : ISupportCustomTitleBarDragRegion
         // args.SelectedItem may be null here
         if (Equals(args.SelectedItem, DownloadListTab))
         {
-            Navigate<DownloadListPage>(MainPageRootFrame, App.AppViewModel.DownloadManager.QueuedTasks.Where(task => task is not IIntrinsicDownloadTask));
+            Navigate<DownloadListPage>(MainPageRootFrame, null);
             return;
         }
 
@@ -165,8 +168,7 @@ public sealed partial class MainPage : ISupportCustomTitleBarDragRegion
     {
         if (args.QueryText.IsNullOrBlank())
         {
-            _ = MessageDialogBuilder.CreateAcknowledgement(this,
-                MainPageResources.SearchKeywordCannotBeBlankTitle,
+            _ = this.CreateAcknowledgement(MainPageResources.SearchKeywordCannotBeBlankTitle,
                 MainPageResources.SearchKeywordCannotBeBlankContent);
             return;
         }
@@ -282,7 +284,7 @@ public sealed partial class MainPage : ISupportCustomTitleBarDragRegion
     {
         if (App.AppViewModel.AppSetting.ReverseSearchApiKey is { Length: > 0 })
         {
-            if (await UiHelper.OpenFileOpenPickerAsync() is { } file)
+            if (await Window.OpenFileOpenPickerAsync() is { } file)
             {
                 await using var stream = await file.OpenStreamForReadAsync();
                 await _viewModel.ReverseSearchAsync(stream);
@@ -294,14 +296,10 @@ public sealed partial class MainPage : ISupportCustomTitleBarDragRegion
         }
     }
 
-    private static async Task ShowReverseSearchApiKeyNotPresentDialog()
+    private async Task ShowReverseSearchApiKeyNotPresentDialog()
     {
         var content = new ReverseSearchApiKeyNotPresentDialog();
-        var dialog = MessageDialogBuilder.Create().WithTitle(MainPageResources.ReverseSearchApiKeyNotPresentTitle)
-            .WithContent(content)
-            .WithPrimaryButtonText(MessageContentDialogResources.OkButtonContent)
-            .WithDefaultButton(ContentDialogButton.Primary)
-            .Build(CurrentContext.Window);
+        var dialog = this.CreateAcknowledgement(MainPageResources.ReverseSearchApiKeyNotPresentTitle, content);
         content.Owner = dialog;
         _ = await dialog.ShowAsync();
     }
@@ -324,10 +322,5 @@ public sealed partial class MainPage : ISupportCustomTitleBarDragRegion
         {
             await ShowReverseSearchApiKeyNotPresentDialog();
         }
-    }
-
-    private void AppTitleBarOnSizeChanged(object sender, object e)
-    {
-        SetTitleBarDragRegion();
     }
 }

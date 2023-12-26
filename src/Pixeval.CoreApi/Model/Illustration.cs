@@ -21,6 +21,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace Pixeval.CoreApi.Model;
@@ -45,8 +46,12 @@ public record Illustration : IIllustrate
     public required string Title { get; set; }
 
     [JsonPropertyName("type")]
+    // [JsonConverter(typeof(StringToTypeBoolConverter))]
     public required string Type { get; set; }
 
+    /// <summary>
+    /// Original几乎总是null
+    /// </summary>
     [JsonPropertyName("image_urls")]
     public required IllustrationImageUrls ImageUrls { get; set; }
 
@@ -87,7 +92,7 @@ public record Illustration : IIllustrate
     public required IllustrationMetaSinglePage MetaSinglePage { get; set; }
 
     [JsonPropertyName("meta_pages")]
-    public required IEnumerable<MetaPage> MetaPages { get; set; }
+    public required MetaPage[] MetaPages { get; set; }
 
     [JsonPropertyName("total_view")]
     public required int TotalView { get; set; }
@@ -117,6 +122,9 @@ public record Illustration : IIllustrate
 
     public class IllustrationMetaSinglePage
     {
+        /// <summary>
+        /// 单图时的原图链接
+        /// </summary>
         [JsonPropertyName("original_image_url")]
         public string? OriginalImageUrl { get; set; }
     }
@@ -138,6 +146,9 @@ public record Illustration : IIllustrate
 
     public class MetaPage
     {
+        /// <summary>
+        /// 多图时的原图链接
+        /// </summary>
         [JsonPropertyName("image_urls")]
         public required IllustrationImageUrls ImageUrls { get; set; }
     }
@@ -148,4 +159,24 @@ public enum XRestrict
     Ordinary = 0,
     R18 = 1,
     R18G = 2
+}
+
+public class StringToTypeBoolConverter : JsonConverter<bool>
+{
+    public override bool Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    {
+        return reader.TokenType is not JsonTokenType.String
+            ? throw new JsonException()
+            : reader.GetString() switch
+            {
+                "illust" or "manga" => false,
+                "ugoira" => true,
+                _ => throw new JsonException()
+            };
+    }
+
+    public override void Write(Utf8JsonWriter writer, bool value, JsonSerializerOptions options)
+    {
+        writer.WriteStringValue(value ? "ugoira" : "illust");
+    }
 }

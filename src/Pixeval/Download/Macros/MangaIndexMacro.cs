@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -30,6 +30,6 @@ public class MangaIndexMacro : IMacro<IllustrationItemViewModel>.ITransducer
 
     public string Substitute(IllustrationItemViewModel context)
     {
-        return context.MangaIndex.ToString();
+        return context.MangaIndex is -1 ? "{0}" : context.MangaIndex.ToString();
     }
 }

@@ -1,4 +1,4 @@
-<controls:EnhancedWindowPage
+<controls:SupportCustomTitleBarDragRegionPage
     x:Class="Pixeval.Pages.IllustrationViewer.IllustrationViewerPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -319,6 +319,7 @@
                         <ColumnDefinition x:Name="TitleControlButtonsColumn" Width="150" />
                     </Grid.ColumnDefinitions>
                     <Image
+                        x:Name="Icon"
                         Grid.Column="0"
                         Width="25"
                         Height="25"
@@ -448,4 +449,4 @@
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
     </SplitView>
-</controls:EnhancedWindowPage>
+</controls:SupportCustomTitleBarDragRegionPage>

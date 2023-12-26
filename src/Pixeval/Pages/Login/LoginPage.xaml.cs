@@ -43,12 +43,12 @@ public sealed partial class LoginPage
         BrowserInfo.WebView2
     ];
 
-    private readonly LoginPageViewModel _viewModel = new();
+    private readonly LoginPageViewModel _viewModel;
 
     public LoginPage()
     {
+        _viewModel = new(this);
         InitializeComponent();
-        DataContext = _viewModel;
     }
 
     private async void ItemsView_OnItemInvoked(ItemsView sender, ItemsViewItemInvokedEventArgs args)
@@ -66,15 +66,12 @@ public sealed partial class LoginPage
             }) is { } error)
             {
                 _viewModel.AdvancePhase(LoginPageViewModel.LoginPhaseEnum.WaitingForUserInput);
-                _ = await MessageDialogBuilder.CreateAcknowledgement(this,
-                    LoginPageResources.ErrorWhileLoggingInTitle, error).ShowAsync();
+                _ = await this.CreateAcknowledgement(LoginPageResources.ErrorWhileLoggingInTitle, error).ShowAsync();
             }
         }
         catch (Exception exception)
         {
-            _ = await MessageDialogBuilder.CreateAcknowledgement(
-                    this,
-                    LoginPageResources.ErrorWhileLoggingInTitle,
+            _ = await this.CreateAcknowledgement(LoginPageResources.ErrorWhileLoggingInTitle,
                     LoginPageResources.ErrorWhileLogginInContentFormatted.Format(exception + "\n" + exception.StackTrace))
                 .ShowAsync();
             Application.Current.Exit();
@@ -91,8 +88,6 @@ public sealed partial class LoginPage
                 _viewModel.AdvancePhase(LoginPageViewModel.LoginPhaseEnum.SuccessNavigating);
                 NavigateParent<MainPage>(null, new DrillInNavigationTransitionInfo());
                 AppContext.SaveContext(Window);
-                _ = WeakReferenceMessenger.Default.Send(
-                    new LoginCompletedMessage(this, App.AppViewModel.MakoClient.Session));
             });
         }
     }
@@ -114,17 +109,10 @@ public sealed partial class LoginPage
         }
         catch (Exception exception)
         {
-            _ = await MessageDialogBuilder.CreateAcknowledgement(
-                    this,
-                    LoginPageResources.ErrorWhileLoggingInTitle,
+            _ = await this.CreateAcknowledgement(LoginPageResources.ErrorWhileLoggingInTitle,
                     LoginPageResources.ErrorWhileLogginInContentFormatted.Format(exception.StackTrace))
                 .ShowAsync();
             Application.Current.Exit();
         }
-    }
-
-    public override void OnPageDeactivated(NavigatingCancelEventArgs e)
-    {
-        _viewModel.Deactivate();
     }
 }

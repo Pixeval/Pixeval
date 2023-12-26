@@ -78,7 +78,6 @@ public partial class CommentBlockViewModel(CoreApi.Model.Comment comment, long i
     [MemberNotNullWhen(true, nameof(Replies))]
     public bool RepliesIsNotNull => Replies is not null;
 
-    [MemberNotNull(nameof(Replies))]
     public async Task LoadRepliesAsync()
     {
         Replies = await App.AppViewModel.MakoClient.IllustrationCommentReplies(CommentId)
