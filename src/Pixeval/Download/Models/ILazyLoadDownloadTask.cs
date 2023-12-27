@@ -22,7 +22,7 @@
 
 using System.Threading.Tasks;
 
-namespace Pixeval.Download;
+namespace Pixeval.Download.Models;
 
 public interface ILazyLoadDownloadTask
 {

@@ -24,6 +24,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using LiteDB;
 using Pixeval.Download;
+using Pixeval.Download.Models;
 
 namespace Pixeval.Database.Managers;
 

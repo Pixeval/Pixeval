@@ -22,6 +22,7 @@ using System;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Pixeval.Controls.IllustrationView;
 using Pixeval.Download;
+using Pixeval.Download.Models;
 using Pixeval.Utilities;
 using WinUI3Utilities;
 

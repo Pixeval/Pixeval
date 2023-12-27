@@ -18,18 +18,18 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using Windows.Storage.Streams;
-using Pixeval.Controls.IllustrationView;
-using Pixeval.Database;
-using Pixeval.Utilities.Threading;
-using Pixeval.Utilities;
-using System.Threading.Tasks;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
+using Windows.Storage.Streams;
+using Pixeval.Controls.IllustrationView;
+using Pixeval.Database;
+using Pixeval.Utilities;
+using Pixeval.Utilities.Threading;
 using WinUI3Utilities;
 
-namespace Pixeval.Download;
+namespace Pixeval.Download.Models;
 
 /// <summary>
 /// The disposal of <paramref name="stream" /> is not handled

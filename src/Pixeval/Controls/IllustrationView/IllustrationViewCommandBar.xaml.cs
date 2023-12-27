@@ -32,6 +32,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Pixeval.Controls.TokenInput;
 using Pixeval.Download;
+using Pixeval.Download.Models;
 using Pixeval.Flyouts.IllustrationResultFilter;
 using Pixeval.Util;
 using Pixeval.Util.UI;

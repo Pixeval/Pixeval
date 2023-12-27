@@ -29,7 +29,7 @@ using Pixeval.Util.IO;
 using Pixeval.Utilities;
 using Pixeval.Utilities.Threading;
 
-namespace Pixeval.Download;
+namespace Pixeval.Download.Models;
 
 public class IllustrationDownloadTask(DownloadHistoryEntry entry, IllustrationItemViewModel illustration)
     : IllustrationDownloadTaskBase(entry)

@@ -27,7 +27,7 @@ using Pixeval.Database;
 using Pixeval.Utilities;
 using Pixeval.Utilities.Threading;
 
-namespace Pixeval.Download;
+namespace Pixeval.Download.Models;
 
 public class LazyInitializedMangaDownloadTask(DownloadHistoryEntry entry)
     : MangaDownloadTask(entry, null!), ILazyLoadDownloadTask

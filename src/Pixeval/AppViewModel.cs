@@ -30,6 +30,7 @@ using Pixeval.CoreApi;
 using Pixeval.CoreApi.Net;
 using Pixeval.Database.Managers;
 using Pixeval.Download;
+using Pixeval.Download.Models;
 using Pixeval.Util.IO;
 using Pixeval.Util.Threading;
 using Pixeval.Util.UI;

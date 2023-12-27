@@ -27,6 +27,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
+using Pixeval.Download.Models;
 using Pixeval.Util.IO;
 using Pixeval.Util.Threading;
 using Pixeval.Utilities;
@@ -79,9 +80,9 @@ public class DownloadManager<TDownloadTask> : IDisposable where TDownloadTask : 
         }
 
         _ = _taskQuerySet.Add(task);
-        _queuedTasks.Add(task);
+        _queuedTasks.Insert(0, task);
         // Start the task only if it is created and is ready-to-run
-        if (task.CurrentState == DownloadState.Created)
+        if (task.CurrentState is DownloadState.Created)
         {
             SetState(task, DownloadState.Queued);
             QueueDownloadTask(task);

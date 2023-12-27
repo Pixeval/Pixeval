@@ -29,6 +29,7 @@ using Pixeval.Controls.Illustrate;
 using Pixeval.CoreApi.Model;
 using Pixeval.Database.Managers;
 using Pixeval.Download;
+using Pixeval.Download.Models;
 using Pixeval.Options;
 using Pixeval.Utilities;
 using WinUI3Utilities;

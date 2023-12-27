@@ -25,6 +25,7 @@ using System.Threading.Tasks;
 using Windows.Storage.Streams;
 using Pixeval.Controls.IllustrationView;
 using Pixeval.Database;
+using Pixeval.Download.Models;
 using Pixeval.Utilities;
 using Pixeval.Utilities.Threading;
 

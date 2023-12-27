@@ -21,6 +21,7 @@
 using System.Threading.Tasks;
 using Windows.Storage.Streams;
 using Pixeval.Download.MacroParser;
+using Pixeval.Download.Models;
 
 namespace Pixeval.Download;
 

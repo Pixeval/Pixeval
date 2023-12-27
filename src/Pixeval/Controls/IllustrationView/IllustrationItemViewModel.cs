@@ -40,6 +40,7 @@ using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Model;
 using Pixeval.CoreApi.Net.Response;
 using Pixeval.Download;
+using Pixeval.Download.Models;
 using Pixeval.Options;
 using Pixeval.Util;
 using Pixeval.Util.IO;
@@ -47,7 +48,6 @@ using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using Pixeval.Utilities.Threading;
 using AppContext = Pixeval.AppManagement.AppContext;
-using static Pixeval.CoreApi.Model.Novel;
 
 namespace Pixeval.Controls.IllustrationView;
 

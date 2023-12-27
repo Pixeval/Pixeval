@@ -20,12 +20,12 @@
 
 using System;
 using System.Threading.Tasks;
-using Pixeval.Database;
-using Pixeval.Utilities.Threading;
-using Pixeval.Utilities;
 using Windows.Storage.Streams;
+using Pixeval.Database;
+using Pixeval.Utilities;
+using Pixeval.Utilities.Threading;
 
-namespace Pixeval.Download;
+namespace Pixeval.Download.Models;
 
 public class LazyInitializedSingleIllustrationDownloadTask(DownloadHistoryEntry entry)
     : IllustrationDownloadTask(entry, null!), ILazyLoadDownloadTask

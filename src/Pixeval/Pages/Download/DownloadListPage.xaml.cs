@@ -38,13 +38,12 @@ namespace Pixeval.Pages.Download;
 public sealed partial class DownloadListPage
 {
     private bool _queriedBySuggestion;
-    private DownloadListPageViewModel _viewModel = null!;
+    private readonly DownloadListPageViewModel _viewModel = new(App.AppViewModel.DownloadManager.QueuedTasks);
 
     public DownloadListPage() => InitializeComponent();
 
     public override void OnPageActivated(NavigationEventArgs e, object? parameter)
     {
-        _viewModel = new DownloadListPageViewModel(App.AppViewModel.DownloadManager.QueuedTasks);
     }
 
     public override void OnPageDeactivated(NavigatingCancelEventArgs e) => _viewModel.Dispose();

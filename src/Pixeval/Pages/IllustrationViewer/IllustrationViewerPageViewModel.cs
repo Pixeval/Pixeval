@@ -38,6 +38,7 @@ using Pixeval.Controls.IllustrationView;
 using Pixeval.Controls.MarkupExtensions;
 using Pixeval.CoreApi.Model;
 using Pixeval.Download;
+using Pixeval.Download.Models;
 using Pixeval.Misc;
 using Pixeval.Options;
 using Pixeval.Util;

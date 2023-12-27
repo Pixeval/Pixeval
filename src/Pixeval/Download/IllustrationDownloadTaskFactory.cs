@@ -18,7 +18,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage.Streams;
 using Microsoft.Extensions.DependencyInjection;
@@ -26,6 +25,7 @@ using Pixeval.Controls.IllustrationView;
 using Pixeval.Database;
 using Pixeval.Database.Managers;
 using Pixeval.Download.MacroParser;
+using Pixeval.Download.Models;
 using Pixeval.Util.IO;
 using Pixeval.Utilities;
 

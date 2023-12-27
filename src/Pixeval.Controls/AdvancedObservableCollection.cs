@@ -32,7 +32,6 @@ using Windows.Foundation;
 using CommunityToolkit.WinUI.Collections;
 using CommunityToolkit.WinUI.Helpers;
 using System.Diagnostics;
-using WinUI3Utilities;
 
 namespace Pixeval.Collections;
 
@@ -440,7 +439,7 @@ public class AdvancedObservableCollection<T> : IList<T>, IList, INotifyCollectio
             if (newStartingIndex is 0 || _view.Count is 0)
                 newViewIndex = 0;
             else if (newStartingIndex == _source.Count - 1)
-                newViewIndex = _view.Count - 1;
+                newViewIndex = _view.Count;
             else if (viewIndex.HasValue)
                 newViewIndex = viewIndex.Value;
             else

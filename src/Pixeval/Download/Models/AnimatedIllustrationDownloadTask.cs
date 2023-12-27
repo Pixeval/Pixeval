@@ -26,7 +26,7 @@ using Pixeval.CoreApi.Net.Response;
 using Pixeval.Database;
 using Pixeval.Util.IO;
 
-namespace Pixeval.Download;
+namespace Pixeval.Download.Models;
 
 public class AnimatedIllustrationDownloadTask(
     DownloadHistoryEntry entry,

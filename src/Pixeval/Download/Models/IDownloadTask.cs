@@ -24,7 +24,7 @@ using Windows.Storage.Streams;
 using Pixeval.Utilities;
 using Pixeval.Utilities.Threading;
 
-namespace Pixeval.Download;
+namespace Pixeval.Download.Models;
 
 public interface IDownloadTask
 {

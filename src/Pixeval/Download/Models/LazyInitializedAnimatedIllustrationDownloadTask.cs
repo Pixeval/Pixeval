@@ -25,7 +25,7 @@ using Pixeval.Database;
 using Pixeval.Utilities;
 using Pixeval.Utilities.Threading;
 
-namespace Pixeval.Download;
+namespace Pixeval.Download.Models;
 
 public class LazyInitializedAnimatedIllustrationDownloadTask(DownloadHistoryEntry databaseEntry) : AnimatedIllustrationDownloadTask(databaseEntry, null!, null!), ILazyLoadDownloadTask
 {

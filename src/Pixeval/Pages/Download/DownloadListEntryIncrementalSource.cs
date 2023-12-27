@@ -23,14 +23,15 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Pixeval.CoreApi.Model;
-using Pixeval.Download;
+using Pixeval.Download.Models;
 using Pixeval.Misc;
 using Pixeval.Utilities;
 using WinUI3Utilities;
 
 namespace Pixeval.Pages.Download;
 
-public class DownloadListEntryIncrementalSource(IEnumerable<IllustrationDownloadTask> source) : FetchEngineIncrementalSource<Illustration, DownloadListEntryViewModel>(null!)
+public class DownloadListEntryIncrementalSource(IEnumerable<IllustrationDownloadTask> source)
+    : FetchEngineIncrementalSource<Illustration, DownloadListEntryViewModel>(null!)
 {
     protected override long Identifier(Illustration entity) => ThrowHelper.NotSupported<long>();
 
