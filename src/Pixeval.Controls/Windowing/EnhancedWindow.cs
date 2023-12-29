@@ -19,10 +19,10 @@
 #endregion
 
 using CommunityToolkit.Mvvm.Messaging;
+using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
-using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
 
 namespace Pixeval.Controls.Windowing;
@@ -54,7 +54,7 @@ public sealed partial class EnhancedWindow : Window
     internal EnhancedWindow(EnhancedWindow owner) : this()
     {
         _owner = owner;
-        _owner.Closed += OnOwnerOnClosed;
+        _owner.AppWindow.Closing += OnOwnerOnClosing;
     }
 
     public event RoutedEventHandler FrameLoaded
@@ -68,14 +68,9 @@ public sealed partial class EnhancedWindow : Window
         WeakReferenceMessenger.Default.UnregisterAll(this);
     }
 
-    private void OnOwnerOnClosed(object sender, WindowEventArgs e)
+    private void OnOwnerOnClosing(AppWindow sender, AppWindowClosingEventArgs e)
     {
         Close();
-    }
-
-    public void SetDragRegion(DragZoneInfo info)
-    {
-        DragZoneHelper.SetDragZones(info, this);
     }
 
     public void Navigate<T>(object parameter, NavigationTransitionInfo infoOverride) where T : Page

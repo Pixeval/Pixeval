@@ -43,7 +43,6 @@ public class PlayWrightHelper(AvailableBrowserType type, int remoteDebuggingPort
         if (Browser == null!)
             return;
         await Browser.CloseAsync();
-        await Browser.DisposeAsync();
         Browser = null!;
         Pw.Dispose();
         GC.Collect();

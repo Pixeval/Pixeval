@@ -370,16 +370,18 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
         CopyCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
         CopyCommand.ExecuteRequested += async (_, _) =>
         {
+            var a = new TeachingTip { XamlRoot = SnackBarTeachingTip.XamlRoot };
+
             var progress = null as Progress<int>;
             if (CurrentImage.IllustrationViewModel.IsUgoira)
-                progress = new(d => SnackBarTeachingTip.Show(IllustrationViewerPageResources.UgoiraProcessing.Format(d),
-                    TeachingTipSeverity.Information, isLightDismissEnabled: true));
+                progress = new(d => a.Show(IllustrationViewerPageResources.UgoiraProcessing.Format(d),
+                    TeachingTipSeverity.Processing, isLightDismissEnabled: true));
             else
-                SnackBarTeachingTip.Show(IllustrationViewerPageResources.ImageProcessing, isLightDismissEnabled: true);
+                a.Show(IllustrationViewerPageResources.ImageProcessing, isLightDismissEnabled: true);
             if (await CurrentImage.GetOriginalImageSourceForClipBoard(progress) is { } source)
             {
                 UiHelper.ClipboardSetBitmap(source);
-                SnackBarTeachingTip.ShowAndHide(IllustrationViewerPageResources.ImageSetToClipBoard);
+                a.ShowAndHide(IllustrationViewerPageResources.ImageSetToClipBoard);
             }
         };
 

@@ -42,8 +42,6 @@ public partial class App
 
     public App()
     {
-        CurrentContext.Title = AppContext.AppIdentifier;
-
         AppViewModel = new AppViewModel(this) { AppSetting = AppContext.LoadConfig() ?? AppSetting.CreateDefault() };
         WindowFactory.WindowSettings = AppViewModel.AppSetting;
         WindowFactory.IconAbsolutePath = AppContext.IconAbsolutePath;
@@ -73,12 +71,12 @@ public partial class App
 
         WindowFactory.Create(out var w)
             .WithLoaded((s, _) => s.To<Frame>().NavigateTo<LoginPage>(w))
-            .WithClosed((s, _) => AppContext.SaveContext(s.To<EnhancedWindow>())) // TODO: 从运行打开应用的时候不会ExitApp，就算是调用App.Current.Exit();
+            .WithClosing((_, _) => AppContext.SaveContext()) // TODO: 从运行打开应用的时候不会ExitApp，就算是调用App.Current.Exit();
             .WithSizeLimit(800, 360)
-            .Init(nameof(Pixeval), new SizeInt32(AppViewModel.AppSetting.WindowWidth, AppViewModel.AppSetting.WindowHeight))
+            .Init(AppContext.AppIdentifier, new SizeInt32(AppViewModel.AppSetting.WindowWidth, AppViewModel.AppSetting.WindowHeight))
             .Activate();
 
-        AppHelper.RegisterUnhandledExceptionHandler(w);
+        w.RegisterUnhandledExceptionHandler();
 
         await AppViewModel.InitializeAsync(isProtocolActivated);
     }

@@ -34,7 +34,6 @@ using Pixeval.SettingsModels;
 using Pixeval.Util.Threading;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
-using WinUI3Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
 
 namespace Pixeval.Pages.Misc;
@@ -47,16 +46,17 @@ public sealed partial class SettingsPage
 
     // The previous meta path after user changes the path field, if the path is illegal
     // its value will be reverted to this field.
-    private string _previousPath;
-    private SettingsPageViewModel _viewModel;
+    private string _previousPath = "";
+    private SettingsPageViewModel _viewModel = null!;
 
     public SettingsPage()
     {
         InitializeComponent();
-        _viewModel = new SettingsPageViewModel(App.AppViewModel.AppSetting)
-        {
-            SettingsTeachingTip = SettingsTeachingTip
-        };
+    }
+
+    public override void OnPageActivated(NavigationEventArgs e, object? parameter)
+    {
+        _viewModel = new SettingsPageViewModel(App.AppViewModel.AppSetting, Window);
         _previousPath = _viewModel.DefaultDownloadPathMacro;
     }
 
@@ -65,7 +65,6 @@ public sealed partial class SettingsPage
         Bindings.StopTracking();
         AppContext.SaveConfig(App.AppViewModel.AppSetting);
         _viewModel = null!;
-        base.OnPageDeactivated(e);
     }
 
     private void SettingsPage_OnLoaded(object sender, RoutedEventArgs e)
@@ -97,7 +96,7 @@ public sealed partial class SettingsPage
     {
         if (_viewModel.MirrorHost.IsNotNullOrEmpty() && Uri.CheckHostName(_viewModel.MirrorHost) == UriHostNameType.Unknown)
         {
-            ImageMirrorServerTextBox.Text = string.Empty;
+            ImageMirrorServerTextBox.Text = "";
             ImageMirrorServerTextBoxTeachingTip.IsOpen = true;
         }
     }
@@ -129,7 +128,7 @@ public sealed partial class SettingsPage
         {
             await AppContext.ClearDataAsync();
             App.AppViewModel.SignOutExit = true;
-            CurrentContext.Window.Close();
+            Window.Close();
         }
     }
 
@@ -137,7 +136,7 @@ public sealed partial class SettingsPage
     {
         var dialog = this.CreateOkCancel(SettingsPageResources.ResetSettingConfirmationDialogTitle,
             SettingsPageResources.ResetSettingConfirmationDialogContent);
-        if (await dialog.ShowAsync() == ContentDialogResult.Primary)
+        if (await dialog.ShowAsync() is ContentDialogResult.Primary)
         {
             _viewModel.ResetDefault();
         }

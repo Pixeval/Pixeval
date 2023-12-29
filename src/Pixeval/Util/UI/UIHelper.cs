@@ -37,6 +37,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Media.Imaging;
+using Pixeval.Controls;
 using Pixeval.Controls.MarkupExtensions;
 using Pixeval.Controls.MarkupExtensions.FontSymbolIcon;
 using Pixeval.Misc;
@@ -298,7 +299,7 @@ public static partial class UiHelper
             },
             SuggestedFileName = suggestedFileName
         };
-        return savePicker.InitializeWithWindow().PickSaveFileAsync();
+        return savePicker.InitializeWithWindow(window).PickSaveFileAsync();
     }
 
     public static IAsyncOperation<StorageFile?> OpenFileOpenPickerAsync(this Window window)
@@ -312,9 +313,10 @@ public static partial class UiHelper
         return openPicker.InitializeWithWindow(window).PickSingleFileAsync();
     }
 
-    public static Task AwaitPageTransitionAsync<T>(this FrameworkElement root) where T : Page
+    public static async Task<T> AwaitPageTransitionAsync<T>(this Frame root) where T : Page
     {
-        return ThreadingHelper.SpinWaitAsync(() => root.FindDescendant<T>() is null);
+        await ThreadingHelper.SpinWaitAsync(() => root.Content is not T { IsLoaded: true });
+        return (T)root.Content;
     }
 
     public static Color ParseHexColor(string hex)

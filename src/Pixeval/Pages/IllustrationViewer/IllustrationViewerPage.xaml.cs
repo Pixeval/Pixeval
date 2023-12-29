@@ -61,7 +61,7 @@ public sealed partial class IllustrationViewerPage : SupportCustomTitleBarDragRe
         set
         {
             _pointerNotInArea = value;
-            if (Initialized && _pointerNotInArea && TimeUp)
+            if (IsLoaded && _pointerNotInArea && TimeUp)
                 BottomCommandSection.Translation = new Vector3(0, 120, 0);
         }
     }
@@ -72,7 +72,7 @@ public sealed partial class IllustrationViewerPage : SupportCustomTitleBarDragRe
         set
         {
             _timeUp = value;
-            if (Initialized && _timeUp && PointerNotInArea)
+            if (IsLoaded && _timeUp && PointerNotInArea)
                 BottomCommandSection.Translation = new Vector3(0, 120, 0);
         }
     }
@@ -86,8 +86,8 @@ public sealed partial class IllustrationViewerPage : SupportCustomTitleBarDragRe
                 : 0,
             (int)TitleBarArea.ActualHeight);
 
-        sender.SetRegionRects(NonClientRegionKind.Icon, [FromControl(Icon)]);
-        sender.SetRegionRects(NonClientRegionKind.Passthrough, [GetScaledRect(leftIndent), FromControl(IllustrationViewerCommandBar), FromControl(IllustrationViewerSubCommandBar)]);
+        sender.SetRegionRects(NonClientRegionKind.Icon, [GetScaledRect(Icon)]);
+        sender.SetRegionRects(NonClientRegionKind.Passthrough, [GetScaledRect(leftIndent), GetScaledRect(IllustrationViewerCommandBar), GetScaledRect(IllustrationViewerSubCommandBar)]);
         titleBarHeight = 48;
     }
 

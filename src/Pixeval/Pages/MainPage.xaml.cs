@@ -46,7 +46,6 @@ using Pixeval.Controls.IllustrationView;
 using Pixeval.Database;
 using Pixeval.Database.Managers;
 using Pixeval.Dialogs;
-using Pixeval.Download;
 using Pixeval.Messages;
 using Pixeval.Pages.Capability;
 using Pixeval.Pages.Download;
@@ -57,6 +56,7 @@ using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using WinUI3Utilities;
 using Image = SixLabors.ImageSharp.Image;
+using CommunityToolkit.WinUI.Controls;
 
 namespace Pixeval.Pages;
 
@@ -74,12 +74,9 @@ public sealed partial class MainPage : SupportCustomTitleBarDragRegionPage
     {
         _viewModel = new MainPageViewModel(this);
         InitializeComponent();
-        CurrentContext.TitleBar = TitleBarGrid;
-        CurrentContext.TitleTextBlock = AppTitleTextBlock;
-        DataContext = _viewModel;
         if (AppWindowTitleBar.IsCustomizationSupported())
         {
-            MainPageRootNavigationView.PaneCustomContent = null;
+            NavigationView.PaneCustomContent = null;
         }
     }
 
@@ -88,8 +85,8 @@ public sealed partial class MainPage : SupportCustomTitleBarDragRegionPage
         titleBarHeight = 48;
         // NavigationView的Pane按钮
         var leftIndent = new RectInt32(0, 0, titleBarHeight, titleBarHeight);
-        sender.SetRegionRects(NonClientRegionKind.Icon, [FromControl(Icon)]);
-        sender.SetRegionRects(NonClientRegionKind.Passthrough, [FromControl(TitleBarControlGrid), GetScaledRect(leftIndent)]);
+        sender.SetRegionRects(NonClientRegionKind.Icon, [GetScaledRect(Icon)]);
+        sender.SetRegionRects(NonClientRegionKind.Passthrough, [GetScaledRect(TitleBarControlGrid), GetScaledRect(leftIndent)]);
     }
 
     public override void OnPageActivated(NavigationEventArgs e, object? parameter)
@@ -98,7 +95,7 @@ public sealed partial class MainPage : SupportCustomTitleBarDragRegionPage
 
         // dirty trick, the order of the menu items is the same as the order of the fields in MainPageTabItem
         // since enums are basically integers, we just need a cast to transform it to the correct offset.
-        ((NavigationViewItem)MainPageRootNavigationView.MenuItems[(int)App.AppViewModel.AppSetting.DefaultSelectedTabItem]).IsSelected = true;
+        ((NavigationViewItem)NavigationView.MenuItems[(int)App.AppViewModel.AppSetting.DefaultSelectedTabItem]).IsSelected = true;
 
         // The application is invoked by a protocol, call the corresponding protocol handler.
         if (App.AppViewModel.ConsumeProtocolActivation())
@@ -111,7 +108,7 @@ public sealed partial class MainPage : SupportCustomTitleBarDragRegionPage
         _ = WeakReferenceMessenger.Default.TryRegister<MainPage, IllustrationTagClickedMessage>(this, (_, message) => PerformSearch(message.Tag));
         _ = WeakReferenceMessenger.Default.TryRegister<MainPage, GlobalSearchQuerySubmittedMessage>(this, (_1, message) =>
         {
-            MainPageRootNavigationView.SelectedItem = null;
+            NavigationView.SelectedItem = null;
             _ = MainPageRootFrame.Navigate(typeof(SearchResultsPage), message.Parameter);
         });
         _ = WeakReferenceMessenger.Default.TryRegister<MainPage, NavigateToSettingEntryMessage>(this, (_, message) => NavigateToSettingEntryAsync(message.Entry).Discard());
@@ -132,7 +129,7 @@ public sealed partial class MainPage : SupportCustomTitleBarDragRegionPage
         //}
     }
 
-    private void MainPageRootNavigationView_OnSelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
+    private void NavigationView_OnSelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
     {
         // The App.AppViewModel.IllustrationDownloadManager will be initialized after that of MainPage object
         // so we cannot put a navigation tag inside MainPage and treat it as a field, since it will be initialized immediately after
@@ -141,12 +138,16 @@ public sealed partial class MainPage : SupportCustomTitleBarDragRegionPage
 
         // args.SelectedItem may be null here
         if (Equals(args.SelectedItem, DownloadListTab))
-        {
             Navigate<DownloadListPage>(MainPageRootFrame, null);
-            return;
-        }
+        else if (Equals(args.SelectedItem, SettingsTab))
+            Navigate<SettingsPage>(MainPageRootFrame, null);
+        else
+            MainPageRootFrame.NavigateByNavigationViewTag(sender, new SuppressNavigationTransitionInfo());
+    }
 
-        MainPageRootFrame.NavigateByNavigationViewTag(sender, new SuppressNavigationTransitionInfo());
+    private void NavigationView_OnPaneChanging(NavigationView sender, object e)
+    {
+        sender.UpdateAppTitleMargin(AppTitleTextBlock);
     }
 
     private void MainPageRootFrame_OnNavigated(object sender, NavigationEventArgs e)
@@ -225,7 +226,7 @@ public sealed partial class MainPage : SupportCustomTitleBarDragRegionPage
         }
 
         var setting = App.AppViewModel.AppSetting;
-        MainPageRootNavigationView.SelectedItem = null;
+        NavigationView.SelectedItem = null;
         _ = MainPageRootFrame.Navigate(typeof(SearchResultsPage), App.AppViewModel.MakoClient.Search(
             text,
             setting.SearchStartingFromPageNumber,
@@ -245,13 +246,19 @@ public sealed partial class MainPage : SupportCustomTitleBarDragRegionPage
 
     private async Task NavigateToSettingEntryAsync(SettingEntry entry)
     {
-        MainPageRootNavigationView.SelectedItem = SettingsTab;
-        await MainPageRootFrame.AwaitPageTransitionAsync<SettingsPage>();
-        var settingsPage = MainPageRootFrame.FindDescendant<SettingsPage>()!;
-        var position = settingsPage.FindChild<FrameworkElement>(element => element.Tag is SettingEntry e && e == entry)
-            ?.TransformToVisual((UIElement)settingsPage.SettingsPageScrollViewer.Content)
-            .TransformPoint(new Point(0, 0));
-        _ = settingsPage.SettingsPageScrollViewer.ChangeView(null, position?.Y, null, false);
+        NavigationView.SelectedItem = SettingsTab;
+        var settingsPage = await MainPageRootFrame.AwaitPageTransitionAsync<SettingsPage>();
+        var panel = settingsPage.SettingsPageScrollView.Content.To<FrameworkElement>();
+        var frameworkElement = panel.FindChild<SettingsCard>(element => element.Tag is SettingEntry e && e == entry);
+
+        if (frameworkElement is not null)
+        {
+            var position = frameworkElement
+                .TransformToVisual(panel)
+                .TransformPoint(new Point(0, 0));
+
+            _ = settingsPage.SettingsPageScrollView.ScrollTo(position.X, position.Y);
+        }
     }
 
     // The AutoSuggestBox does not have a 'Paste' event, so we check the keyboard event accordingly

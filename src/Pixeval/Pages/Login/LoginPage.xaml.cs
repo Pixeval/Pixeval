@@ -20,12 +20,9 @@
 
 using System;
 using System.Threading.Tasks;
-using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
-using Microsoft.UI.Xaml.Navigation;
-using Pixeval.Messages;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using WinUI3Utilities;
@@ -87,7 +84,7 @@ public sealed partial class LoginPage
             {
                 _viewModel.AdvancePhase(LoginPageViewModel.LoginPhaseEnum.SuccessNavigating);
                 NavigateParent<MainPage>(null, new DrillInNavigationTransitionInfo());
-                AppContext.SaveContext(Window);
+                AppContext.SaveContext();
             });
         }
     }

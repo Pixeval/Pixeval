@@ -22,13 +22,14 @@ using System.Collections.Generic;
 using Microsoft.UI.Xaml;
 using Windows.Foundation;
 using Windows.Graphics;
+using Microsoft.UI.Windowing;
 using WinUI3Utilities;
 
 namespace Pixeval.Controls.Windowing;
 
 public static class WindowFactory
 {
-    public static string IconAbsolutePath { get; set; } ="";
+    public static string IconAbsolutePath { get; set; } = "";
 
     public static IWindowSettings WindowSettings { get; set; } = null!;
 
@@ -41,8 +42,6 @@ public static class WindowFactory
     public static EnhancedWindow Create(out EnhancedWindow window)
     {
         var w = window = new EnhancedWindow();
-        if (_forkedWindowsInternal.Count is 0)
-            CurrentContext.Window = window;
         window.Closed += (_, _) => _forkedWindowsInternal.Remove(w);
         _forkedWindowsInternal.Add(window);
         return window;
@@ -75,9 +74,9 @@ public static class WindowFactory
         return window;
     }
 
-    public static EnhancedWindow WithClosed(this EnhancedWindow window, TypedEventHandler<object, WindowEventArgs> onClosed)
+    public static EnhancedWindow WithClosing(this EnhancedWindow window, TypedEventHandler<AppWindow, AppWindowClosingEventArgs> onClosed)
     {
-        window.Closed += onClosed;
+        window.AppWindow.Closing += onClosed;
         return window;
     }
 
@@ -86,13 +85,12 @@ public static class WindowFactory
         window.Initialize(new InitializeInfo
         {
             BackdropType = WindowSettings.Backdrop,
-            TitleBarType = TitleBarType.AppWindow,
+            ExtendTitleBar = true,
             Size = size,
-            IconPath = IconAbsolutePath
+            IconPath = IconAbsolutePath,
+            Title = title
         });
-        window.AppWindow.Title = title;
         var theme = GetElementTheme(WindowSettings.Theme);
-        window.SetAppWindowTitleBarButtonColor(theme is ElementTheme.Dark);
         window.FrameLoaded += (s, _) => s.To<FrameworkElement>().RequestedTheme = theme;
         return window;
     }
@@ -110,7 +108,6 @@ public static class WindowFactory
         foreach (var window in _forkedWindowsInternal)
         {
             window.Content.To<FrameworkElement>().RequestedTheme = t;
-            window.SetAppWindowTitleBarButtonColor(t is ElementTheme.Dark);
         }
     }
 

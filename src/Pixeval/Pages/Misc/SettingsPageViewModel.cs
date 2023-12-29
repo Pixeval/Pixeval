@@ -26,11 +26,11 @@ using System.Linq;
 using System.Reflection;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.UI.Xaml.Controls;
 using Pixeval.AppManagement;
 using Pixeval.Attributes;
 using Pixeval.Controls.IllustrationView;
 using Pixeval.Controls.TokenInput;
+using Pixeval.Controls.Windowing;
 using Pixeval.Database.Managers;
 using Pixeval.Download;
 using Pixeval.Download.MacroParser;
@@ -43,18 +43,13 @@ using WinUI3Utilities.Attributes;
 namespace Pixeval.Pages.Misc;
 
 [SettingsViewModel<AppSetting>(nameof(_appSetting))]
-public partial class SettingsPageViewModel(AppSetting appSetting) : ObservableObject
+public partial class SettingsPageViewModel(AppSetting appSetting, EnhancedWindow window) : ObservableObject
 {
     public static readonly IEnumerable<string> AvailableFonts = new InstalledFontCollection().Families.Select(f => f.Name);
 
     public static readonly ICollection<Token> AvailableIllustMacros;
 
     private readonly AppSetting _appSetting = appSetting;
-
-    /// <summary>
-    /// 写成字段防止被反射
-    /// </summary>
-    public TeachingTip SettingsTeachingTip = null!;
 
     static SettingsPageViewModel()
     {
@@ -120,7 +115,7 @@ public partial class SettingsPageViewModel(AppSetting appSetting) : ObservableOb
     public void ClearData<T, TModel>(ClearDataKind kind, IPersistentManager<T, TModel> manager) where T : new()
     {
         manager.Clear();
-        SettingsTeachingTip.ShowAndHide(kind switch
+        _ = window.Content.ShowTeachingTipAndHide(kind switch
         {
             ClearDataKind.BrowseHistory => SettingsPageResources.BrowseHistoriesCleared,
             ClearDataKind.SearchHistory => SettingsPageResources.SearchHistoriesCleared,

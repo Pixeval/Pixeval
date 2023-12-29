@@ -146,7 +146,7 @@ public static partial class AppContext
 
     public static async Task<X509Certificate2> GetFakeServerCertificateAsync()
     {
-        return new X509Certificate2(await GetAssetBytesAsync("Certs/pixeval_server_cert.pfx"), "pixeval", X509KeyStorageFlags.UserKeySet);
+        return new X509Certificate2(await GetAssetBytesAsync("Certs/pixeval_server_cert.pfx"), AppProtocol, X509KeyStorageFlags.UserKeySet);
     }
 
     public static void RestoreHistories()
@@ -159,6 +159,7 @@ public static partial class AppContext
                      entry.State == DownloadState.Queued ||
                      entry.State == DownloadState.Created ||
                      entry.State == DownloadState.Paused);
+
         foreach (var observableDownloadTask in downloadHistoryManager.Enumerate())
         {
             App.AppViewModel.DownloadManager.QueueTask(observableDownloadTask);
@@ -180,11 +181,11 @@ public static partial class AppContext
         });
     }
 
-    public static void SaveContext(EnhancedWindow window)
+    public static void SaveContext()
     {
         // Save the current resolution
-        App.AppViewModel.AppSetting.WindowWidth = window.AppWindow.Size.Width;
-        App.AppViewModel.AppSetting.WindowHeight = window.AppWindow.Size.Height;
+        App.AppViewModel.AppSetting.WindowWidth = WindowFactory.RootWindow.AppWindow.Size.Width;
+        App.AppViewModel.AppSetting.WindowHeight = WindowFactory.RootWindow.AppWindow.Size.Height;
         if (!App.AppViewModel.SignOutExit)
         {
             if (App.AppViewModel.MakoClient != null!)

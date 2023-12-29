@@ -8,8 +8,6 @@
     xmlns:markup="using:Pixeval.Controls.MarkupExtensions"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pages="using:Pixeval.Pages"
-    xmlns:utilities="using:WinUI3Utilities"
-    xmlns:windowing="using:Pixeval.Controls.Windowing"
     mc:Ignorable="d">
     <controls:EnhancedWindowPage.Resources>
         <DataTemplate x:Key="IllustrationHeaderSuggestionTemplate">
@@ -84,18 +82,26 @@
             SettingEntryHeader="{StaticResource SettingsEntryHeaderSuggestionTemplate}" />
     </controls:EnhancedWindowPage.Resources>
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Rectangle
+            Grid.Column="0"
+            Width="{x:Bind NavigationView.CompactPaneLength}"
+            Height="1" />
         <NavigationView
-            x:Name="MainPageRootNavigationView"
-            d:DataContext="{d:DesignInstance pages:MainPageViewModel}"
-            DisplayModeChanged="{x:Bind utilities:TitleBarHelper.DisplayModeChanged}"
+            x:Name="NavigationView"
+            Grid.Column="0"
+            Grid.ColumnSpan="2"
             IsBackButtonVisible="Collapsed"
             IsSettingsVisible="False"
             OpenPaneLength="{x:Bind _viewModel.MainPageRootNavigationViewOpenPanelLength}"
-            PaneClosing="{x:Bind utilities:TitleBarHelper.PaneClosing}"
-            PaneOpening="{x:Bind utilities:TitleBarHelper.PaneOpening}"
-            SelectionChanged="MainPageRootNavigationView_OnSelectionChanged">
+            PaneClosing="NavigationView_OnPaneChanging"
+            PaneOpening="NavigationView_OnPaneChanging"
+            SelectionChanged="NavigationView_OnSelectionChanged">
             <NavigationView.PaneCustomContent>
-                <Grid Margin="15,5,15,10" Visibility="{x:Bind MainPageRootNavigationView.IsPaneOpen, Mode=OneWay}">
+                <Grid Margin="15,5,15,10" Visibility="{x:Bind NavigationView.IsPaneOpen, Mode=OneWay}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />
                         <ColumnDefinition Width="38" />
@@ -206,7 +212,7 @@
             </NavigationView.FooterMenuItems>
             <Frame x:Name="MainPageRootFrame" Navigated="MainPageRootFrame_OnNavigated" />
         </NavigationView>
-        <Grid x:Name="TitleBarGrid" VerticalAlignment="Top">
+        <Grid Grid.Column="1" VerticalAlignment="Top">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />

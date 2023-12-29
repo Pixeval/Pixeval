@@ -31,6 +31,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Pixeval.Controls.TokenInput;
+using Pixeval.Controls.Windowing;
 using Pixeval.Download;
 using Pixeval.Download.Models;
 using Pixeval.Flyouts.IllustrationResultFilter;
@@ -171,7 +172,7 @@ public sealed partial class IllustrationViewCommandBar
         // This will run for quite a while
         _ = Task.Run(async () =>
         {
-            var tasks = await CurrentContext.Window.DispatcherQueue.EnqueueAsync(() => Task.WhenAll(
+            var tasks = await WindowFactory.RootWindow.DispatcherQueue.EnqueueAsync(() => Task.WhenAll(
                     ViewModel.DataProvider.SelectedIllustrations
                         .SelectMany(i => i.GetMangaIllustrationViewModels())
                         .Select(i => factory.CreateAsync(i, App.AppViewModel.AppSetting.DefaultDownloadPathMacro))));

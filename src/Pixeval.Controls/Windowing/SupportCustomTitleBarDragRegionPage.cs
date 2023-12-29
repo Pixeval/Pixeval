@@ -18,10 +18,10 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using Windows.Foundation;
 using Windows.Graphics;
 using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
+using WinUI3Utilities;
 
 namespace Pixeval.Controls;
 
@@ -48,26 +48,16 @@ public class SupportCustomTitleBarDragRegionPage : EnhancedWindowPage
         // 区域数量为0或1时，下次AppWindow会自动恢复为默认的区域；>=2的时候不会，需要手动清除
         source.ClearRegionRects(NonClientRegionKind.Passthrough);
         SetTitleBarDragRegion(source, size, scaleFactor, out var titleBarHeight);
-        if (titleBarHeight >= 0)
-        {
-            // 三大金刚下面的区域
-            const int borderThickness = 5;
-            source.SetRegionRects(NonClientRegionKind.LeftBorder, [GetScaledRect(new RectInt32(0, 0, borderThickness, titleBarHeight))]);
-            source.SetRegionRects(NonClientRegionKind.RightBorder, [GetScaledRect(new RectInt32(size.Width, 0, borderThickness, titleBarHeight))]);
-            source.SetRegionRects(NonClientRegionKind.Caption, [GetScaledRect(new RectInt32(0, 0, size.Width, titleBarHeight))]);
-        }
+        Window.SetCaptionAndBorder(titleBarHeight, this);
     }
 
     protected RectInt32 GetScaledRect(RectInt32 rect)
     {
-        var scaleFactor = XamlRoot.RasterizationScale;
-        return new RectInt32((int)(rect.X * scaleFactor), (int)(rect.Y * scaleFactor), (int)(rect.Width * scaleFactor), (int)(rect.Height * scaleFactor));
+        return rect.GetScaledRectFrom(this);
     }
 
-    protected RectInt32 FromControl(UIElement uiElement)
+    protected RectInt32 GetScaledRect(UIElement uiElement)
     {
-        var pos = uiElement.TransformToVisual(null).TransformPoint(new Point(0, 0));
-        var rect = new RectInt32((int)pos.X, (int)pos.Y, (int)uiElement.ActualSize.X, (int)uiElement.ActualSize.Y);
-        return GetScaledRect(rect);
+        return uiElement.GetScaledRectFrom(this);
     }
 }
