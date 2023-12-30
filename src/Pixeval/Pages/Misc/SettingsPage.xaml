@@ -24,7 +24,7 @@
             </Style.Setters>
         </Style>
     </Page.Resources>
-    <Grid RowSpacing="20">
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
@@ -32,7 +32,7 @@
         <TextBlock
             x:Uid="/SettingsPage/TitleTextBlock"
             Grid.Row="0"
-            Margin="20,40,20,0"
+            Margin="20,40,20,20"
             Style="{StaticResource TitleTextBlockStyle}" />
         <ScrollView
             x:Name="SettingsPageScrollView"

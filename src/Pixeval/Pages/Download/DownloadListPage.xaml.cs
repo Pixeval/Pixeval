@@ -71,10 +71,9 @@ public sealed partial class DownloadListPage
     private async void ClearDownloadListButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
         var dialogContent = new DownloadListPageDeleteTasksDialog();
-        var dialog = this.CreateOkCancel(
-            DownloadListPageResources.DeleteDownloadHistoryRecordsFormatted.Format(_viewModel.SelectedTasks.Count()),
-            dialogContent);
-        if (await dialog.ShowAsync() is ContentDialogResult.Primary)
+        if (await this.CreateOkCancelAsync(
+                DownloadListPageResources.DeleteDownloadHistoryRecordsFormatted.Format(_viewModel.SelectedTasks.Count()),
+                dialogContent) is ContentDialogResult.Primary)
         {
             if (dialogContent.DeleteLocalFiles)
                 foreach (var downloadListEntryViewModel in _viewModel.SelectedTasks)

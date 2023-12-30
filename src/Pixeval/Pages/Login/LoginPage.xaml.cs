@@ -63,14 +63,13 @@ public sealed partial class LoginPage
             }) is { } error)
             {
                 _viewModel.AdvancePhase(LoginPageViewModel.LoginPhaseEnum.WaitingForUserInput);
-                _ = await this.CreateAcknowledgement(LoginPageResources.ErrorWhileLoggingInTitle, error).ShowAsync();
+                _ = await this.CreateAcknowledgementAsync(LoginPageResources.ErrorWhileLoggingInTitle, error);
             }
         }
         catch (Exception exception)
         {
-            _ = await this.CreateAcknowledgement(LoginPageResources.ErrorWhileLoggingInTitle,
-                    LoginPageResources.ErrorWhileLogginInContentFormatted.Format(exception + "\n" + exception.StackTrace))
-                .ShowAsync();
+            _ = await this.CreateAcknowledgementAsync(LoginPageResources.ErrorWhileLoggingInTitle,
+                    LoginPageResources.ErrorWhileLogginInContentFormatted.Format(exception + "\n" + exception.StackTrace));
             Application.Current.Exit();
         }
 
@@ -106,9 +105,8 @@ public sealed partial class LoginPage
         }
         catch (Exception exception)
         {
-            _ = await this.CreateAcknowledgement(LoginPageResources.ErrorWhileLoggingInTitle,
-                    LoginPageResources.ErrorWhileLogginInContentFormatted.Format(exception.StackTrace))
-                .ShowAsync();
+            _ = await this.CreateAcknowledgementAsync(LoginPageResources.ErrorWhileLoggingInTitle,
+                    LoginPageResources.ErrorWhileLogginInContentFormatted.Format(exception.StackTrace));
             Application.Current.Exit();
         }
     }

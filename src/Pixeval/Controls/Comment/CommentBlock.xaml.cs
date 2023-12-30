@@ -21,6 +21,7 @@
 using System;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.Util.IO;
 using Pixeval.Utilities;
 using WinUI3Utilities.Attributes;
@@ -49,9 +50,10 @@ public sealed partial class CommentBlock
         _ = viewModel.LoadAvatarSource();
         if (viewModel.IsStamp)
         {
-            block.StickerImageContent.Source =
-                await App.AppViewModel.MakoClient.DownloadSoftwareBitmapSourceAsync(viewModel.StampSource)
-                    .UnwrapOrElseAsync(await AppContext.GetNotAvailableImageAsync());
+            var result = await App.AppViewModel.MakoClient.DownloadSoftwareBitmapSourceAsync(viewModel.StampSource);
+            block.StickerImageContent.Source = result is Result<SoftwareBitmapSource>.Success { Value: var avatar }
+                ? avatar
+                : await AppContext.GetNotAvailableImageAsync();
         }
         else
         {

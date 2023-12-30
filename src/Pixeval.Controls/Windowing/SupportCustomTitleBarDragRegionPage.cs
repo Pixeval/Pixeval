@@ -41,6 +41,8 @@ public class SupportCustomTitleBarDragRegionPage : EnhancedWindowPage
 
     public void RaiseSetTitleBarDragRegion()
     {
+        if (!Window.AppWindow.IsVisible)
+            return;
         // UIElement.RasterizationScale 恒为1
         var source = InputNonClientPointerSource.GetForWindowId(Window.AppWindow.Id);
         var scaleFactor = XamlRoot.RasterizationScale;

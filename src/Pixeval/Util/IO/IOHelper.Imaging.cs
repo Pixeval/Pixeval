@@ -65,7 +65,7 @@ public static partial class IoHelper
 
     public static async Task<InMemoryRandomAccessStream> UgoiraSaveToStreamAsync(this IEnumerable<IRandomAccessStream> streams, UgoiraMetadataResponse ugoiraMetadataResponse, UgoiraDownloadFormat? ugoiraDownloadFormat = null)
     {
-        return await streams.UgoiraSaveToStreamAsync(ugoiraMetadataResponse.UgoiraMetadataInfo?.Frames?.Select(t => (int)t.Delay) ?? []);
+        return await streams.UgoiraSaveToStreamAsync(ugoiraMetadataResponse.UgoiraMetadataInfo.Frames.Select(t => (int)t.Delay));
     }
 
     /// <summary>
@@ -168,35 +168,16 @@ public static partial class IoHelper
     /// </summary>
     public static async Task<SoftwareBitmap> GetSoftwareBitmapFromStreamAsync(IRandomAccessStream imageStream)
     {
-        // TODO
-        ulong a;
-        ulong b;
-        bool h;
-        bool i;
-        ulong c;
-        ulong d;
-        try
-        {
-            a = imageStream.Position;
-            b = imageStream.Size;
-            h = imageStream.CanRead;
-            i = imageStream.CanWrite;
-            imageStream.Seek(0);
-            c = imageStream.Position;
-            d = imageStream.Size;
-            using var image = await Image.LoadAsync<Bgra32>(imageStream.AsStreamForRead());
-            var softwareBitmap = new SoftwareBitmap(BitmapPixelFormat.Bgra8, image.Width, image.Height, BitmapAlphaMode.Premultiplied);
-            var buffer = new byte[4 * image.Width * image.Height];
-            image.CopyPixelDataTo(buffer);
-            softwareBitmap.CopyFromBuffer(buffer.AsBuffer());
-            return softwareBitmap;
-        }
-        catch (Exception e)
-        {
-            Debugger.Break();
-            Console.WriteLine(e);
-            throw;
-        }
+        var stream = imageStream.AsStreamForRead();
+        // 此处Position可能为负数
+        stream.Position = 0;
+        using var image = await Image.LoadAsync<Bgra32>(stream);
+        Debug.WriteLine(image.Size);
+        var softwareBitmap = new SoftwareBitmap(BitmapPixelFormat.Bgra8, image.Width, image.Height, BitmapAlphaMode.Premultiplied);
+        var buffer = new byte[4 * image.Width * image.Height];
+        image.CopyPixelDataTo(buffer);
+        softwareBitmap.CopyFromBuffer(buffer.AsBuffer());
+        return softwareBitmap;
         // BitmapDecoder Bug多
         // var decoder = await BitmapDecoder.CreateAsync(imageStream);
         // return await decoder.GetSoftwareBitmapAsync(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Premultiplied);

@@ -82,7 +82,7 @@ public class AppViewModel(App app)
 
     public async Task ShowExceptionDialogAsync(Exception e)
     {
-        _ = await WindowFactory.RootWindow.Content.CreateAcknowledgement(MiscResources.ExceptionEncountered, e.ToString()).ShowAsync();
+        _ = await WindowFactory.RootWindow.Content.CreateAcknowledgementAsync(MiscResources.ExceptionEncountered, e.ToString());
     }
 
     public async Task InitializeAsync(bool activatedByProtocol)

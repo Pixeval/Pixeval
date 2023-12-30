@@ -88,8 +88,10 @@ public partial class CommentBlockViewModel(CoreApi.Model.Comment comment, long i
 
     public async Task LoadAvatarSource()
     {
-        AvatarSource = (await App.AppViewModel.MakoClient.DownloadSoftwareBitmapSourceAsync(Comment.CommentPoster.ProfileImageUrls.Medium)
-            .UnwrapOrElseAsync(await AppContext.GetPixivNoProfileImageAsync()))!;
+        var result = await App.AppViewModel.MakoClient.DownloadSoftwareBitmapSourceAsync(Comment.CommentPoster.ProfileImageUrls.Medium);
+        AvatarSource = result is Result<SoftwareBitmapSource>.Success { Value: var avatar }
+            ? avatar
+            : await AppContext.GetPixivNoProfileImageAsync();
     }
 
     public void AddComment(Comment comment)

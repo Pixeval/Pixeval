@@ -109,7 +109,6 @@ public sealed partial class DownloadListEntry : IViewModelControl
 
     private async void CheckErrorMessageInDetail_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        _ = await this.CreateAcknowledgement(DownloadListEntryResources.ErrorMessageDialogTitle, ViewModel.DownloadTask.ErrorCause?.ToString())
-            .ShowAsync();
+        _ = await this.CreateAcknowledgementAsync(DownloadListEntryResources.ErrorMessageDialogTitle, ViewModel.DownloadTask.ErrorCause?.ToString());
     }
 }

@@ -63,7 +63,7 @@ public sealed partial class IllustrationView
         _ => ThrowHelper.ArgumentOutOfRange<ThumbnailDirection, double>(ThumbnailDirection)
     };
 
-    public IllustrationViewViewModel ViewModel { get; } = new IllustrationViewViewModel();
+    public IllustrationViewViewModel ViewModel { get; } = new();
 
     private void IllustrationThumbnailOnShowQrCodeRequested(object sender, SoftwareBitmapSource e)
     {

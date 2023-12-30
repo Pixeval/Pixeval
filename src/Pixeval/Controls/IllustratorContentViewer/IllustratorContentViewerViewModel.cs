@@ -177,7 +177,10 @@ public partial class IllustratorContentViewerViewModel : ObservableObject
 
     private async Task SetAvatarAsync()
     {
-        Avatar = (await App.AppViewModel.MakoClient.DownloadBitmapImageAsync(UserDetail.UserEntity?.ProfileImageUrls?.Medium ?? string.Empty, 40)).UnwrapOrElse(await AppContext.GetPixivNoProfileImageAsync());
+        var result = await App.AppViewModel.MakoClient.DownloadBitmapImageAsync(UserDetail.UserEntity.ProfileImageUrls.Medium, 40);
+        Avatar = result is Result<ImageSource>.Success { Value: var avatar }
+            ? avatar
+            : await AppContext.GetPixivNoProfileImageAsync();
     }
 
     private void FollowPrivatelyCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)

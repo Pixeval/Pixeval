@@ -54,11 +54,11 @@
         <PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.0.9" />
         <PackageReference Include="PininSharp" Version="1.2.0" />
         <PackageReference Include="Pixeval.QRCoder" Version="1.4.5" />
-        <PackageReference Include="ReverseMarkdown" Version="3.25.0" />
+        <PackageReference Include="ReverseMarkdown" Version="4.0.0" />
         <PackageReference Include="SixLabors.ImageSharp" Version="3.1.1" />
         <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="2.1.0" />
         <PackageReference Include="System.Linq.Async" Version="6.0.1" />
-        <PackageReference Include="WinUI3Utilities" Version="1.1.5" />
+        <PackageReference Include="WinUI3Utilities" Version="1.1.5.3" />
         <PackageReference Include="WinUIEx" Version="2.3.3" />
 
         <ProjectReference Include="..\Pixeval.Controls\Pixeval.Controls.csproj" />
@@ -254,9 +254,6 @@
             <Generator>MSBuild:Compile</Generator>
         </Page>
         <Page Update="Pages\Misc\LoginPage.xaml">
-            <Generator>MSBuild:Compile</Generator>
-        </Page>
-        <Page Update="Dialogs\ReverseSearchApiKeyNotPresentDialog.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
         <Page Update="Pages\Capability\FollowingsPage.xaml">

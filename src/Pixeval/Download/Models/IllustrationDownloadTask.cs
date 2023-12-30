@@ -48,7 +48,7 @@ public class IllustrationDownloadTask(DownloadHistoryEntry entry, IllustrationIt
         if (!App.AppViewModel.AppSetting.OverwriteDownloadedFile && File.Exists(destination))
             return;
 
-        if (App.AppViewModel.AppSetting.UseFileCache && await App.AppViewModel.Cache.TryGetAsync<IRandomAccessStream>(IllustrationViewModel.GetIllustrationOriginalImageCacheKey()) is { } stream)
+        if (App.AppViewModel.AppSetting.UseFileCache && await App.AppViewModel.Cache.TryGetAsync<IRandomAccessStream>(await IllustrationViewModel.GetIllustrationOriginalImageCacheKeyAsync()) is { } stream)
         {
             using (stream)
                 await ManageStream(stream, destination);

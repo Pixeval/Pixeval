@@ -37,7 +37,6 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Media.Imaging;
-using Pixeval.Controls;
 using Pixeval.Controls.MarkupExtensions;
 using Pixeval.Controls.MarkupExtensions.FontSymbolIcon;
 using Pixeval.Misc;

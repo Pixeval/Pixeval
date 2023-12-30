@@ -35,6 +35,7 @@ using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
+using static Pixeval.CoreApi.Net.Response.ReverseSearchResponse;
 
 namespace Pixeval.Controls;
 
@@ -82,32 +83,26 @@ public sealed partial class IllustratorItemViewModel : IllustrateViewModel<User>
 
     private async Task SetAvatarAsync()
     {
-        if (Illustrate.UserInfo?.ProfileImageUrls?.Medium is { } url)
-        {
-            var avatar = await App.AppViewModel.MakoClient.DownloadBitmapImageAsync(url, 100);
-            AvatarSource = avatar.UnwrapOrElse(await AppContext.GetPixivNoProfileImageAsync());
-        }
-        else
-            AvatarSource = await AppContext.GetPixivNoProfileImageAsync();
+        var result = await App.AppViewModel.MakoClient.DownloadBitmapImageAsync(Illustrate.UserInfo.ProfileImageUrls.Medium, 100);
+        AvatarSource = result is Result<ImageSource>.Success { Value: var avatar }
+            ? avatar
+            : await AppContext.GetPixivNoProfileImageAsync();
     }
 
     private async Task SetBackgroundAsync()
     {
-        var client = App.AppViewModel.MakoClient.GetMakoHttpClient(MakoApiKind.ImageApi);
-
         UserDetail = await App.AppViewModel.MakoClient.GetUserFromIdAsync(UserId, App.AppViewModel.AppSetting.TargetFilter);
-        if (UserDetail.UserProfile?.BackgroundImageUrl is { } backgroundImageUrl)
-            if (await App.AppViewModel.MakoClient.DownloadRandomAccessStreamAsync(backgroundImageUrl) is Result<IRandomAccessStream>.Success(var stream))
-            {
-                //if (OverviewViewModel.AvatarBorderBrush is null)
-                //{
-                //    var dominantColor = await UiHelper.GetDominantColorAsync(stream.AsStreamForRead(), false);
-                //    OverviewViewModel.AvatarBorderBrush = new SolidColorBrush(dominantColor);
-                //}
-                BackgroundSource = await stream.GetSoftwareBitmapSourceAsync(true);
-            }
-
-        BackgroundSource = await AppContext.GetPixivNoProfileImageAsync();
+        if (await App.AppViewModel.MakoClient.DownloadRandomAccessStreamAsync(UserDetail.UserProfile.BackgroundImageUrl) is Result<IRandomAccessStream>.Success(var stream))
+        {
+            //if (OverviewViewModel.AvatarBorderBrush is null)
+            //{
+            //    var dominantColor = await UiHelper.GetDominantColorAsync(stream.AsStreamForRead(), false);
+            //    OverviewViewModel.AvatarBorderBrush = new SolidColorBrush(dominantColor);
+            //}
+            BackgroundSource = await stream.GetSoftwareBitmapSourceAsync(true);
+        }
+        else
+            BackgroundSource = await AppContext.GetPixivNoProfileImageAsync();
     }
 
     // private void SetMetrics()

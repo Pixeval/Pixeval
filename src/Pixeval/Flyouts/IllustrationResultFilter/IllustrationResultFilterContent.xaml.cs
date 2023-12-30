@@ -30,8 +30,7 @@ public sealed partial class IllustrationResultFilterContent
         InitializeComponent();
     }
 
-    public IllustrationResultFilterContentViewModel ViewModel { get; set; } =
-        new IllustrationResultFilterContentViewModel();
+    public IllustrationResultFilterContentViewModel ViewModel { get; set; } = new();
 
     public FilterSettings GetFilterSettings =>
         new(ViewModel.IncludeTags, ViewModel.ExcludeTags, ViewModel.LeastBookmark,

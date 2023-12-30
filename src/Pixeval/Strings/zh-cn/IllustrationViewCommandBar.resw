@@ -177,7 +177,4 @@
   <data name="FilterTeachingTip.CloseButtonContent" xml:space="preserve">
     <value>应用</value>
   </data>
-  <data name="FilterTeachingTip.Title" xml:space="preserve">
-    <value>过滤器设置</value>
-  </data>
 </root>

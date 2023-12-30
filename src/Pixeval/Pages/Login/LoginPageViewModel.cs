@@ -164,9 +164,8 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject
         }
         else
         {
-            _ = await owner.CreateAcknowledgement(LoginPageResources.RefreshingSessionIsNotPresentTitle,
-                    LoginPageResources.RefreshingSessionIsNotPresentContent)
-                .ShowAsync();
+            _ = await owner.CreateAcknowledgementAsync(LoginPageResources.RefreshingSessionIsNotPresentTitle,
+                    LoginPageResources.RefreshingSessionIsNotPresentContent);
             await AppKnownFolders.Local.ClearAsync();
             Application.Current.Exit();
         }
@@ -287,8 +286,7 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject
                 {
                     IsFinished = true;
                     AdvancePhase(LoginPhaseEnum.WaitingForUserInput);
-                    _ = userControl.CreateAcknowledgement(LoginPageResources.ErrorWhileLoggingInTitle, LoginPageResources.BrowserConnnectionLost)
-                        .ShowAsync();
+                    _ = userControl.CreateAcknowledgementAsync(LoginPageResources.ErrorWhileLoggingInTitle, LoginPageResources.BrowserConnnectionLost);
                 });
             };
         }
@@ -333,8 +331,8 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject
     {
         if (!await CheckFakeRootCertificateInstallationAsync())
         {
-            var dialogResult = await userControl.CreateOkCancel(LoginPageResources.RootCertificateInstallationRequiredTitle,
-                LoginPageResources.RootCertificateInstallationRequiredContent).ShowAsync();
+            var dialogResult = await userControl.CreateOkCancelAsync(LoginPageResources.RootCertificateInstallationRequiredTitle,
+                LoginPageResources.RootCertificateInstallationRequiredContent);
             if (dialogResult is ContentDialogResult.Primary)
             {
                 await InstallFakeRootCertificateAsync();
@@ -350,8 +348,8 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject
     {
         if (!CheckWebView2Installation())
         {
-            var dialogResult = await userControl.CreateOkCancel(LoginPageResources.WebView2InstallationRequiredTitle,
-                LoginPageResources.WebView2InstallationRequiredContent).ShowAsync();
+            var dialogResult = await userControl.CreateOkCancelAsync(LoginPageResources.WebView2InstallationRequiredTitle,
+                LoginPageResources.WebView2InstallationRequiredContent);
             if (dialogResult is ContentDialogResult.Primary)
             {
                 _ = await Launcher.LaunchUriAsync(new Uri("https://go.microsoft.com/fwlink/p/?LinkId=2124703"));

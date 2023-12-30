@@ -54,9 +54,10 @@ namespace Pixeval.Pages.IllustrationViewer;
 public partial class IllustrationViewerPageViewModel : DetailedObservableObject, IDisposable
 {
     public const string GenerateLink = nameof(GenerateLink);
-    public const string ShowShare = nameof(ShowShare);
     public const string ShowQrCode = nameof(ShowQrCode);
     public Window Window { get; set; } = null!;
+
+    public FrameworkElement WindowContent => Window.Content.To<FrameworkElement>();
 
     private const ThumbnailUrlOption Option = ThumbnailUrlOption.SquareMedium;
 
@@ -109,8 +110,6 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
 
         InitializeCommands();
     }
-
-    public TeachingTip SnackBarTeachingTip { get; set; } = null!;
 
     public TeachingTip GenerateLinkTeachingTip { get; set; } = null!;
 
@@ -240,8 +239,10 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
             {
                 if (Illustrator is { ProfileImageUrls.Medium: { } profileImage })
                 {
-                    UserProfileImageSource = await App.AppViewModel.MakoClient.DownloadSoftwareBitmapSourceAsync(profileImage)
-                        .UnwrapOrElseAsync(await AppContext.GetPixivNoProfileImageAsync());
+                    var result = await App.AppViewModel.MakoClient.DownloadSoftwareBitmapSourceAsync(profileImage);
+                    UserProfileImageSource = result is Result<SoftwareBitmapSource>.Success { Value: var avatar }
+                            ? avatar
+                            : await AppContext.GetPixivNoProfileImageAsync();
                 }
             }
         }
@@ -353,7 +354,7 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
         MirrorCommand.NotifyCanExecuteChanged();
         SaveCommand.NotifyCanExecuteChanged();
         SaveAsCommand.NotifyCanExecuteChanged();
-        FullScreenCommand.NotifyCanExecuteChanged();
+        ShareCommand.NotifyCanExecuteChanged();
     }
 
     private void InitializeCommands()
@@ -370,18 +371,17 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
         CopyCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
         CopyCommand.ExecuteRequested += async (_, _) =>
         {
-            var a = new TeachingTip { XamlRoot = SnackBarTeachingTip.XamlRoot };
+            var teachingTip = WindowContent.CreateTeachingTip();
 
             var progress = null as Progress<int>;
             if (CurrentImage.IllustrationViewModel.IsUgoira)
-                progress = new(d => a.Show(IllustrationViewerPageResources.UgoiraProcessing.Format(d),
-                    TeachingTipSeverity.Processing, isLightDismissEnabled: true));
+                progress = new(d => teachingTip.Show(IllustrationViewerPageResources.UgoiraProcessing.Format(d), TeachingTipSeverity.Processing, isLightDismissEnabled: true));
             else
-                a.Show(IllustrationViewerPageResources.ImageProcessing, isLightDismissEnabled: true);
+                teachingTip.Show(IllustrationViewerPageResources.ImageProcessing, TeachingTipSeverity.Processing, isLightDismissEnabled: true);
             if (await CurrentImage.GetOriginalImageSourceForClipBoard(progress) is { } source)
             {
                 UiHelper.ClipboardSetBitmap(source);
-                a.ShowAndHide(IllustrationViewerPageResources.ImageSetToClipBoard);
+                teachingTip.ShowAndHide(IllustrationViewerPageResources.ImageSetToClipBoard);
             }
         };
 
@@ -411,10 +411,14 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
         SaveAsCommand.ExecuteRequested += SaveAsAsync;
 
         GenerateLinkCommand.ExecuteRequested += GenerateLinkCommandOnExecuteRequested;
+
         GenerateWebLinkCommand.ExecuteRequested += GenerateWebLinkCommandOnExecuteRequested;
+
         OpenInWebBrowserCommand.ExecuteRequested += async (_, _) => await Launcher.LaunchUriAsync(MakoHelper.GenerateIllustrationWebUri(CurrentIllustration.Id));
 
+        ShareCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
         ShareCommand.ExecuteRequested += ShareCommandExecuteRequested;
+
         ShowQrCodeCommand.ExecuteRequested += ShowQrCodeCommandExecuteRequested;
 
         SetAsLockScreenCommand.CanExecuteRequested += IsNotUgoiraAndLoadingCompletedCanExecuteRequested;
@@ -442,7 +446,7 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
     {
         if (CurrentImage.OriginalImageStream is null)
         {
-            SnackBarTeachingTip.ShowAndHide(IllustrationViewerPageResources.OriginalmageStreamIsEmptyContent, TeachingTipSeverity.Error);
+            WindowContent.ShowTeachingTipAndHide(IllustrationViewerPageResources.OriginalmageStreamIsEmptyContent, TeachingTipSeverity.Error);
             return;
         }
 
@@ -468,7 +472,7 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
     {
         if (CurrentImage.OriginalImageStream is null)
         {
-            SnackBarTeachingTip.ShowAndHide(IllustrationViewerPageResources.OriginalmageStreamIsEmptyContent, TeachingTipSeverity.Error);
+            WindowContent.ShowTeachingTipAndHide(IllustrationViewerPageResources.OriginalmageStreamIsEmptyContent, TeachingTipSeverity.Error);
             return;
         }
 
@@ -493,15 +497,15 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
     private async void SaveAsync(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
         await CurrentPage.SaveAsync();
-        SnackBarTeachingTip.ShowAndHide("已保存");
+        WindowContent.ShowTeachingTipAndHide("已保存");
     }
 
     private async void SaveAsAsync(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
         if (await CurrentIllustration.SaveAsAsync(Window))
-            SnackBarTeachingTip.ShowAndHide("已保存");
+            WindowContent.ShowTeachingTipAndHide("已保存");
         else
-            SnackBarTeachingTip.ShowAndHide("已取消另存为操作", TeachingTipSeverity.Information);
+            WindowContent.ShowTeachingTipAndHide("已取消另存为操作", TeachingTipSeverity.Information);
     }
 
     private void GenerateLinkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
@@ -519,18 +523,15 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
     {
         var link = MakoHelper.GenerateIllustrationWebUri(CurrentIllustration.Id).ToString();
         UiHelper.ClipboardSetText(link);
-        SnackBarTeachingTip.ShowAndHide(IllustrationViewerPageResources.WebLinkCopiedToClipboardToastTitle);
+        WindowContent.ShowTeachingTipAndHide(IllustrationViewerPageResources.WebLinkCopiedToClipboardToastTitle);
     }
 
     private void ShareCommandExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
         if (CurrentImage.LoadSuccessfully)
-        {
-            SnackBarTeachingTip.ShowAndHide(IllustrationViewerPageResources.CannotShareImageForNowTitle, TeachingTipSeverity.Warning,
-                IllustrationViewerPageResources.CannotShareImageForNowContent);
-            return;
-        }
-        OnPropertyChanged(nameof(ShowShare));
+            Window.ShowShareUi();
+        else
+            WindowContent.ShowTeachingTipAndHide(IllustrationViewerPageResources.CannotShareImageForNowTitle, TeachingTipSeverity.Warning, IllustrationViewerPageResources.CannotShareImageForNowContent);
     }
 
     private async void ShowQrCodeCommandExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)

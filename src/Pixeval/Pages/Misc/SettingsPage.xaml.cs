@@ -110,21 +110,20 @@ public sealed partial class SettingsPage
         CheckingForUpdatePanel.Collapse();
     }
 
-    private void FeedbackByEmailHyperlinkButton_OnTapped(object sender, TappedRoutedEventArgs e)
+    private async void FeedbackByEmailHyperlinkButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        Launcher.LaunchUriAsync(new Uri("mailto:decem0730@hotmail.com")).Discard();
+        await Launcher.LaunchUriAsync(new Uri("mailto:decem0730@hotmail.com"));
     }
 
-    private void OpenFontSettingsHyperlinkButton_OnTapped(object sender, TappedRoutedEventArgs e)
+    private async void OpenFontSettingsHyperlinkButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        Launcher.LaunchUriAsync(new Uri("ms-settings:fonts")).Discard();
+        await Launcher.LaunchUriAsync(new Uri("ms-settings:fonts"));
     }
 
     private async void PerformSignOutButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        var dialog = this.CreateOkCancel(SettingsPageResources.SignOutConfirmationDialogTitle,
-            SettingsPageResources.SignOutConfirmationDialogContent);
-        if (await dialog.ShowAsync() == ContentDialogResult.Primary)
+        if (await this.CreateOkCancelAsync(SettingsPageResources.SignOutConfirmationDialogTitle,
+                SettingsPageResources.SignOutConfirmationDialogContent) is ContentDialogResult.Primary)
         {
             await AppContext.ClearDataAsync();
             App.AppViewModel.SignOutExit = true;
@@ -134,9 +133,8 @@ public sealed partial class SettingsPage
 
     private async void ResetDefaultSettingsButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        var dialog = this.CreateOkCancel(SettingsPageResources.ResetSettingConfirmationDialogTitle,
-            SettingsPageResources.ResetSettingConfirmationDialogContent);
-        if (await dialog.ShowAsync() is ContentDialogResult.Primary)
+        if (await this.CreateOkCancelAsync(SettingsPageResources.ResetSettingConfirmationDialogTitle,
+                SettingsPageResources.ResetSettingConfirmationDialogContent) is ContentDialogResult.Primary)
         {
             _viewModel.ResetDefault();
         }

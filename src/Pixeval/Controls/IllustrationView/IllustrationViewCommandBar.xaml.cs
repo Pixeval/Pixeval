@@ -137,9 +137,8 @@ public sealed partial class IllustrationViewCommandBar
         // TODO custom bookmark tag
         var notBookmarked = ViewModel.DataProvider.SelectedIllustrations.Where(i => !i.IsBookmarked);
         var viewModelSelectedIllustrations = notBookmarked as IllustrationItemViewModel[] ?? notBookmarked.ToArray();
-        if (viewModelSelectedIllustrations.Length > 5 && await this.CreateOkCancel(IllustrationViewCommandBarResources.SelectedTooManyItemsForBookmarkTitle,
-                    IllustrationViewCommandBarResources.SelectedTooManyItemsForBookmarkContent)
-                .ShowAsync() is not ContentDialogResult.Primary)
+        if (viewModelSelectedIllustrations.Length > 5 && await this.CreateOkCancelAsync(IllustrationViewCommandBarResources.SelectedTooManyItemsForBookmarkTitle,
+                    IllustrationViewCommandBarResources.SelectedTooManyItemsForBookmarkContent) is not ContentDialogResult.Primary)
         {
             return;
         }
@@ -152,16 +151,15 @@ public sealed partial class IllustrationViewCommandBar
 
         if (viewModelSelectedIllustrations.Length is var c and > 0)
         {
-            _ = this.CreateAcknowledgement(IllustrationViewCommandBarResources.AddAllToBookmarkTitle,
+            _ = this.CreateAcknowledgementAsync(IllustrationViewCommandBarResources.AddAllToBookmarkTitle,
                 IllustrationViewCommandBarResources.AddAllToBookmarkContentFormatted.Format(c));
         }
     }
 
     private async void SaveAllButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        if (ViewModel.DataProvider.SelectedIllustrations.Count >= 20 && await this.CreateOkCancel(IllustrationViewCommandBarResources.SelectedTooManyItemsTitle,
-                IllustrationViewCommandBarResources.SelectedTooManyItemsForSaveContent).ShowAsync()
-            != ContentDialogResult.Primary)
+        if (ViewModel.DataProvider.SelectedIllustrations.Count >= 20 && await this.CreateOkCancelAsync(IllustrationViewCommandBarResources.SelectedTooManyItemsTitle,
+                IllustrationViewCommandBarResources.SelectedTooManyItemsForSaveContent) is not ContentDialogResult.Primary)
         {
             return;
         }
@@ -182,16 +180,15 @@ public sealed partial class IllustrationViewCommandBar
             }
         });
 
-        CommandBarTeachingTip.ShowAndHide(IllustrationViewCommandBarResources.DownloadItemsQueuedFormatted.Format(ViewModel.DataProvider.SelectedIllustrations.Count), mSec: 1500);
+        this.ShowTeachingTipAndHide(IllustrationViewCommandBarResources.DownloadItemsQueuedFormatted.Format(ViewModel.DataProvider.SelectedIllustrations.Count), milliseconds: 1500);
     }
 
     private async void OpenAllInBrowserButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
         if (ViewModel.DataProvider.SelectedIllustrations is { Count: var count } selected)
         {
-            if (count > 15 && await this.CreateOkCancel(IllustrationViewCommandBarResources.SelectedTooManyItemsTitle,
-                        IllustrationViewCommandBarResources.SelectedTooManyItemsForOpenInBrowserContent)
-                    .ShowAsync() != ContentDialogResult.Primary)
+            if (count > 15 && await this.CreateOkCancelAsync(IllustrationViewCommandBarResources.SelectedTooManyItemsTitle,
+                        IllustrationViewCommandBarResources.SelectedTooManyItemsForOpenInBrowserContent) is not ContentDialogResult.Primary)
             {
                 return;
             }

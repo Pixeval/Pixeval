@@ -17,7 +17,7 @@
         <TextBlock
             x:Uid="/IllustratorContentViewer/RecommendIllustratorsTitle"
             Grid.Row="0"
-            Margin="0,20,0,0"
+            Margin="0,20"
             Style="{StaticResource TitleTextBlockStyle}"
             Visibility="{x:Bind ViewModel.ShowRecommendIllustrators, Mode=OneWay}" />
         <controls:AdvancedItemsView

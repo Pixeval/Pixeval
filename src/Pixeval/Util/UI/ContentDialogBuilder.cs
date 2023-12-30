@@ -18,73 +18,29 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using Windows.Foundation;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using WinUI3Utilities;
 
 namespace Pixeval.Util.UI;
 
 public static class ContentDialogBuilder
 {
-    public static ContentDialog CreateOkCancel(this UIElement owner, object? title, object? content)
+    public static IAsyncOperation<ContentDialogResult> CreateOkCancelAsync(this UIElement owner, object? title, object? content, string? okButtonContent = null, string? cancelButtonContent = null)
     {
-        return new ContentDialog()
-            .WithTitle(title)
-            .WithContent(content)
-            .WithPrimaryButtonText(MessageContentDialogResources.OkButtonContent)
-            .WithCloseButtonText(MessageContentDialogResources.CancelButtonContent)
-            .WithDefaultButton(ContentDialogButton.Primary)
-            .Build(owner);
+        return owner.ShowContentDialogAsync(
+            title,
+            content,
+            okButtonContent ?? MessageContentDialogResources.OkButtonContent,
+            cancelButtonContent ?? MessageContentDialogResources.CancelButtonContent);
     }
 
-    public static ContentDialog CreateAcknowledgement(this UIElement owner, object? title, object? content)
+    public static IAsyncOperation<ContentDialogResult> CreateAcknowledgementAsync(this UIElement owner, object? title, object? content, string? okButtonContent = null)
     {
-        return new ContentDialog()
-            .WithTitle(title)
-            .WithContent(content)
-            .WithPrimaryButtonText(MessageContentDialogResources.OkButtonContent)
-            .WithDefaultButton(ContentDialogButton.Primary)
-            .Build(owner);
-    }
-
-    public static ContentDialog WithTitle(this ContentDialog contentDialog, object? title)
-    {
-        contentDialog.Title = title;
-        return contentDialog;
-    }
-
-    public static ContentDialog WithPrimaryButtonText(this ContentDialog contentDialog, string? text)
-    {
-        contentDialog.PrimaryButtonText = text;
-        return contentDialog;
-    }
-
-    public static ContentDialog WithSecondaryButtonText(this ContentDialog contentDialog, string? text)
-    {
-        contentDialog.SecondaryButtonText = text;
-        return contentDialog;
-    }
-
-    public static ContentDialog WithCloseButtonText(this ContentDialog contentDialog, string? text)
-    {
-        contentDialog.CloseButtonText = text;
-        return contentDialog;
-    }
-
-    public static ContentDialog WithDefaultButton(this ContentDialog contentDialog, ContentDialogButton button)
-    {
-        contentDialog.DefaultButton = button;
-        return contentDialog;
-    }
-
-    public static ContentDialog WithContent(this ContentDialog contentDialog, object? content)
-    {
-        contentDialog.Content = content;
-        return contentDialog;
-    }
-
-    public static ContentDialog Build(this ContentDialog contentDialog, UIElement owner) // the owner argument is a workaround for issue #4870
-    {
-        contentDialog.XamlRoot = owner.XamlRoot;
-        return contentDialog;
+        return owner.ShowContentDialogAsync(
+            title,
+            content,
+            okButtonContent ?? MessageContentDialogResources.OkButtonContent);
     }
 }

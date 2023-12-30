@@ -21,6 +21,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using CommunityToolkit.WinUI.Collections;
 using Microsoft.UI;
 using Microsoft.UI.Xaml.Media;
@@ -94,20 +95,22 @@ public static class MakoHelper
         return new Uri($"{AppContext.AppProtocol}://user/{id}");
     }
 
-    public static string GetImageFormat(this IllustrationItemViewModel illustration)
+    public static string GetStaticImageFormat(this IllustrationItemViewModel illustration)
     {
-        var url = illustration.OriginalSourceUrlSync;
+        if (illustration.IsUgoira)
+            return ThrowHelper.Argument<bool, string>(illustration.IsUgoira, "Needs static illustration.");
+        var url = illustration.OriginalStaticUrl;
         return url[url.LastIndexOf('.')..];
     }
 
-    public static string GetIllustrationThumbnailCacheKey(this IllustrationItemViewModel illustration, ThumbnailUrlOption thumbnailUrlOption)
+    public static async Task<string> GetIllustrationThumbnailCacheKeyAsync(this IllustrationItemViewModel illustration, ThumbnailUrlOption thumbnailUrlOption)
     {
-        return $"thumbnail-{thumbnailUrlOption}-{illustration.OriginalSourceUrlSync}";
+        return $"thumbnail-{thumbnailUrlOption}-{await illustration.GetOriginalSourceUrlAsync()}";
     }
 
-    public static string GetIllustrationOriginalImageCacheKey(this IllustrationItemViewModel illustration)
+    public static async Task<string> GetIllustrationOriginalImageCacheKeyAsync(this IllustrationItemViewModel illustration)
     {
-        return $"original-{illustration.OriginalSourceUrlSync}";
+        return $"original-{await illustration.GetOriginalSourceUrlAsync()}";
     }
 
     public static SortDescription? GetSortDescriptionForIllustration(IllustrationSortOption sortOption)

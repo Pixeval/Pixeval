@@ -79,12 +79,7 @@ public sealed partial class IllustrationViewerPage : SupportCustomTitleBarDragRe
 
     protected override void SetTitleBarDragRegion(InputNonClientPointerSource sender, SizeInt32 windowSize, double scaleFactor, out int titleBarHeight)
     {
-        var leftIndent = new RectInt32(
-            0,
-            0,
-            _viewModel.IsInfoPaneOpen ? (int)IllustrationInfoAndCommentsSplitView.OpenPaneLength
-                : 0,
-            (int)TitleBarArea.ActualHeight);
+        var leftIndent = new RectInt32(0, 0, _viewModel.IsInfoPaneOpen ? (int)IllustrationInfoAndCommentsSplitView.OpenPaneLength : 0, (int)TitleBarArea.ActualHeight);
 
         sender.SetRegionRects(NonClientRegionKind.Icon, [GetScaledRect(Icon)]);
         sender.SetRegionRects(NonClientRegionKind.Passthrough, [GetScaledRect(leftIndent), GetScaledRect(IllustrationViewerCommandBar), GetScaledRect(IllustrationViewerSubCommandBar)]);
@@ -109,7 +104,6 @@ public sealed partial class IllustrationViewerPage : SupportCustomTitleBarDragRe
         _viewModel.Window = Window;
         _viewModel.GenerateLinkTeachingTip = GenerateLinkTeachingTip;
         _viewModel.ShowQrCodeTeachingTip = ShowQrCodeTeachingTip;
-        _viewModel.SnackBarTeachingTip = SnackBarTeachingTip;
 
         _viewModel.DetailedPropertyChanged += (sender, args) =>
         {
@@ -153,11 +147,6 @@ public sealed partial class IllustrationViewerPage : SupportCustomTitleBarDragRe
                 case IllustrationViewerPageViewModel.ShowQrCode:
                 {
                     vm.ShowQrCodeTeachingTip.Target = ShowQrCodeButton.IsInOverflow ? null : ShowQrCodeButton;
-                    break;
-                }
-                case IllustrationViewerPageViewModel.ShowShare:
-                {
-                    Window.ShowShareUi();
                     break;
                 }
                 case nameof(IllustrationViewerPageViewModel.IsInfoPaneOpen):
@@ -211,13 +200,12 @@ public sealed partial class IllustrationViewerPage : SupportCustomTitleBarDragRe
     {
         // all the illustrations in _viewModels only differ in different image sources
         var vm = _viewModel.CurrentIllustration;
-        if (_viewModel.CurrentImage.LoadSuccessfully)
-        {
+        if (!_viewModel.CurrentImage.LoadSuccessfully)
             return;
-        }
 
         var request = args.Request;
         var deferral = request.GetDeferral();
+
         var props = request.Data.Properties;
         var webLink = MakoHelper.GenerateIllustrationWebUri(vm.Id);
 

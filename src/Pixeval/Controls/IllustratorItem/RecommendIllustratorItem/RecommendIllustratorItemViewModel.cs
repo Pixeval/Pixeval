@@ -28,6 +28,7 @@ using Pixeval.AppManagement;
 using Pixeval.Controls.Illustrate;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.Util.IO;
+using Pixeval.Utilities;
 using WinUI3Utilities;
 using RecommendUser = Pixeval.CoreApi.Net.Response.PixivRelatedRecommendUsersResponse.User;
 
@@ -74,13 +75,10 @@ public partial class RecommendIllustratorItemViewModel : IllustrateViewModel<Rec
 
     private async Task SetAvatarAsync()
     {
-        if (Illustrate.Image is { } url)
-        {
-            var avatar = await App.AppViewModel.MakoClient.DownloadBitmapImageAsync(url, 100);
-            AvatarSource = avatar.UnwrapOrElse(await AppContext.GetPixivNoProfileImageAsync());
-        }
-        else
-            AvatarSource = await AppContext.GetPixivNoProfileImageAsync();
+        var result = await App.AppViewModel.MakoClient.DownloadBitmapImageAsync(Illustrate.Image, 100);
+        AvatarSource = result is Result<ImageSource>.Success { Value: var avatar }
+            ? avatar
+            : await AppContext.GetPixivNoProfileImageAsync();
     }
 
     public string GetIllustrationToolTipSubtitleText(RecommendUser? user)

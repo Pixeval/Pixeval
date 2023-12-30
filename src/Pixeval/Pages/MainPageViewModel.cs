@@ -103,26 +103,22 @@ public partial class MainPageViewModel : ObservableObject
                             await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(r.Data.PixivId))));
 
                 if (viewModels.Length is 0)
-                    _ = _owner.CreateAcknowledgement(MainPageResources.ReverseSearchNotFoundTitle,
-                            MainPageResources.ReverseSearchNotFoundContent)
-                        .ShowAsync();
+                    _ = _owner.CreateAcknowledgementAsync(MainPageResources.ReverseSearchNotFoundTitle,
+                            MainPageResources.ReverseSearchNotFoundContent);
                 else
                     viewModels[0].CreateWindowWithPage(viewModels);
             }
             else
             {
-                _ = await _owner.CreateAcknowledgement(MainPageResources.ReverseSearchErrorTitle,
+                _ = await _owner.CreateAcknowledgementAsync(MainPageResources.ReverseSearchErrorTitle,
                         result.Header.Status > 0
                             ? MainPageResources.ReverseSearchServerSideErrorContent
-                            : MainPageResources.ReverseSearchClientSideErrorContent)
-                    .ShowAsync();
+                            : MainPageResources.ReverseSearchClientSideErrorContent);
             }
         }
         catch (Exception e)
         {
-            _ = await _owner.CreateAcknowledgement(MiscResources.ExceptionEncountered,
-                    e.ToString())
-                .ShowAsync();
+            _ = await _owner.CreateAcknowledgementAsync(MiscResources.ExceptionEncountered, e.ToString());
         }
     }
 }

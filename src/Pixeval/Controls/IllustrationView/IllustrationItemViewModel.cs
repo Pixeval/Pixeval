@@ -101,11 +101,8 @@ public class IllustrationItemViewModel(Illustration illustration) : IllustrateVi
         ? Illustrate.MetaPages[MangaIndex is -1 ? 0 : MangaIndex].ImageUrls.Original
         : Illustrate.MetaSinglePage.OriginalImageUrl;
 
-    /// <summary>
-    /// 除非在必须同步的上下文，否则都应该调用<see cref="OriginalStaticUrl"/>或<see cref="GetUgoiraOriginalUrlAsync"/>
-    /// </summary>
-    public string OriginalSourceUrlSync => IsUgoira
-        ? GetUgoiraOriginalUrlAsync().GetAwaiter().GetResult().Url
+    public async Task<string> GetOriginalSourceUrlAsync() => IsUgoira
+        ? (await GetUgoiraOriginalUrlAsync()).Url
         : OriginalStaticUrl;
 
     public bool IsBookmarked
@@ -260,7 +257,7 @@ public class IllustrationItemViewModel(Illustration illustration) : IllustrateVi
         }
 
         LoadingThumbnail = true;
-        if (App.AppViewModel.AppSetting.UseFileCache && await App.AppViewModel.Cache.TryGetAsync<IRandomAccessStream>(this.GetIllustrationThumbnailCacheKey(thumbnailUrlOption)) is { } stream)
+        if (App.AppViewModel.AppSetting.UseFileCache && await App.AppViewModel.Cache.TryGetAsync<IRandomAccessStream>(await this.GetIllustrationThumbnailCacheKeyAsync(thumbnailUrlOption)) is { } stream)
         {
             ThumbnailStreamsRef[thumbnailUrlOption] = stream;
             ThumbnailSourcesRef[thumbnailUrlOption] = new SharedRef<SoftwareBitmapSource>(await stream.GetSoftwareBitmapSourceAsync(false), key);
@@ -275,7 +272,7 @@ public class IllustrationItemViewModel(Illustration illustration) : IllustrateVi
         {
             if (App.AppViewModel.AppSetting.UseFileCache)
             {
-                _ = await App.AppViewModel.Cache.TryAddAsync(this.GetIllustrationThumbnailCacheKey(thumbnailUrlOption), ras, TimeSpan.FromDays(1));
+                _ = await App.AppViewModel.Cache.TryAddAsync(await this.GetIllustrationThumbnailCacheKeyAsync(thumbnailUrlOption), ras, TimeSpan.FromDays(1));
             }
             ThumbnailStreamsRef[thumbnailUrlOption] = ras;
             ThumbnailSourcesRef[thumbnailUrlOption] = new SharedRef<SoftwareBitmapSource>(await ras.GetSoftwareBitmapSourceAsync(false), key);
@@ -379,7 +376,7 @@ public class IllustrationItemViewModel(Illustration illustration) : IllustrateVi
             if (IsUgoira)
                 name = Id + IoHelper.GetUgoiraExtension();
             else if (MangaIndex is -1)
-                name = Id + this.GetImageFormat();
+                name = Id + this.GetStaticImageFormat();
             else
                 name = $"{Id}_{MangaIndex}";
             return name;

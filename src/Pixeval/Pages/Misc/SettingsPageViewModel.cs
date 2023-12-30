@@ -26,6 +26,7 @@ using System.Linq;
 using System.Reflection;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.UI.Xaml;
 using Pixeval.AppManagement;
 using Pixeval.Attributes;
 using Pixeval.Controls.IllustrationView;
@@ -115,7 +116,7 @@ public partial class SettingsPageViewModel(AppSetting appSetting, EnhancedWindow
     public void ClearData<T, TModel>(ClearDataKind kind, IPersistentManager<T, TModel> manager) where T : new()
     {
         manager.Clear();
-        _ = window.Content.ShowTeachingTipAndHide(kind switch
+        window.Content.To<FrameworkElement>().ShowTeachingTipAndHide(kind switch
         {
             ClearDataKind.BrowseHistory => SettingsPageResources.BrowseHistoriesCleared,
             ClearDataKind.SearchHistory => SettingsPageResources.SearchHistoriesCleared,

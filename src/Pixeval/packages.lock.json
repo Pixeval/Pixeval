@@ -217,11 +217,11 @@
       },
       "ReverseMarkdown": {
         "type": "Direct",
-        "requested": "[3.25.0, )",
-        "resolved": "3.25.0",
-        "contentHash": "VU9Oirvzq4aEqfWp4rmQrtnD7Di+G4G/ICF93SBcwv4upDbqz3yLv7Q5TgmC4X373U5C387Ak6dVjfGLiNj32w==",
+        "requested": "[4.0.0, )",
+        "resolved": "4.0.0",
+        "contentHash": "tZJMVM0CxS2AOOJ5d0a+G2omyADKbc/EbfRYHYte/bTyRyKfGUaW2hCRL9mT2I4c9DjTOXnejswdKQV7jO6S/w==",
         "dependencies": {
-          "HtmlAgilityPack": "1.11.46"
+          "HtmlAgilityPack": "1.11.57"
         }
       },
       "SixLabors.ImageSharp": {
@@ -251,9 +251,9 @@
       },
       "WinUI3Utilities": {
         "type": "Direct",
-        "requested": "[1.1.5, )",
-        "resolved": "1.1.5",
-        "contentHash": "po+5bhV6mKSs1WrGWYj6fhlrZ635T3I2gZDpEDdUa00HyrLOr5qzi1x8C4raOtvlzRVDLy5c5iA8qK9STeAwSg==",
+        "requested": "[1.1.5.3, )",
+        "resolved": "1.1.5.3",
+        "contentHash": "sZxwF/G+FioyT6N1SxfPPmbLmv2yRSXVwEpC92FCsVz2k2LXBq+MMgM2RmSlw8IAbGDZt8O1GQ1ueUAQe6liRg==",
         "dependencies": {
           "Microsoft.Windows.SDK.BuildTools": "10.0.22621.2428",
           "Microsoft.WindowsAppSDK": "1.4.231115000"
@@ -318,8 +318,8 @@
       },
       "HtmlAgilityPack": {
         "type": "Transitive",
-        "resolved": "1.11.46",
-        "contentHash": "dLMn4EVfJBHWmWK4Uh0XGD76FPLHI0qr2Tm0s1m/xmgiHb1JUb9zB8AzO8HtrkBBlMN6JfCUBYddhqC0hZNR+g=="
+        "resolved": "1.11.57",
+        "contentHash": "zDxnHcAvi+qhZG602eKaPJKmzm0T8npKVML0RMwjrRBabpmTRtu2OVpfNkMUfYMgQ+5EllOkSeGxu0uFVV2zFw=="
       },
       "Microsoft.Bcl.AsyncInterfaces": {
         "type": "Transitive",
@@ -704,7 +704,7 @@
           "Microsoft.Windows.SDK.BuildTools": "[10.0.22621.2428, )",
           "Microsoft.WindowsAppSDK": "[1.4.231115000, )",
           "Microsoft.Xaml.Behaviors.WinUI.Managed": "[2.0.9, )",
-          "WinUI3Utilities": "[1.1.5, )"
+          "WinUI3Utilities": "[1.1.5.3, )"
         }
       },
       "pixeval.coreapi": {

@@ -199,7 +199,7 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
 
         async Task LoadOriginalImage()
         {
-            var cacheKey = IllustrationViewModel.GetIllustrationOriginalImageCacheKey();
+            var cacheKey = await IllustrationViewModel.GetIllustrationOriginalImageCacheKeyAsync();
             AdvancePhase(LoadingPhase.CheckingCache);
             if (App.AppViewModel.AppSetting.UseFileCache && await App.AppViewModel.Cache.ExistsAsync(cacheKey))
             {

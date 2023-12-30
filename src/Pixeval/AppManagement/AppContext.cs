@@ -72,7 +72,7 @@ public static partial class AppContext
         InitializeSession();
     }
 
-    public static string IconName => "logo44x44.ico";
+    public const string IconName = "logo44x44.ico";
 
     public static string IconAbsolutePath => Path.Combine(AppKnownFolders.Local.Self.Path, IconName);
 

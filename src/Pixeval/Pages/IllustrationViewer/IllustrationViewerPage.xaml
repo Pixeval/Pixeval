@@ -416,9 +416,6 @@
                     </TeachingTip>
                 </Grid>
             </Grid>
-
-            <TeachingTip x:Name="SnackBarTeachingTip" IsLightDismissEnabled="True" />
-
         </Grid>
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>

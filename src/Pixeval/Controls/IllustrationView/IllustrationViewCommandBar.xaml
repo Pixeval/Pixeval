@@ -88,11 +88,7 @@
             CloseButtonClick="FilterTeachingTip_OnCloseButtonClick"
             IsLightDismissEnabled="True"
             Target="{x:Bind OpenConditionDialogButton}">
-            <illustrationResultFilter1:IllustrationResultFilterContent x:Name="FilterContent" />
+            <illustrationResultFilter1:IllustrationResultFilterContent x:Name="FilterContent" MaxHeight="{StaticResource TeachingTipContentMaxHeightWithTarget}" />
         </TeachingTip>
-        <TeachingTip
-            x:Name="CommandBarTeachingTip"
-            Grid.Column="0"
-            IsLightDismissEnabled="True" />
     </Grid>
 </UserControl>

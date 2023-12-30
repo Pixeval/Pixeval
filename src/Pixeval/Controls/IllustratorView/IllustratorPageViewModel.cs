@@ -92,10 +92,12 @@ public partial class IllustratorPageViewModel : ObservableObject, IIllustrationV
 
     public async Task LoadAvatar()
     {
-        if (AvatarSource != null)
+        if (AvatarSource is not null)
             return;
-        AvatarSource = (await App.AppViewModel.MakoClient.DownloadBitmapImageAsync(AvatarUrl, 60)
-            .UnwrapOrElseAsync(await AppContext.GetPixivNoProfileImageAsync()))!;
+        var result = await App.AppViewModel.MakoClient.DownloadBitmapImageAsync(AvatarUrl, 60);
+        AvatarSource = result is Result<ImageSource>.Success { Value: var avatar }
+            ? avatar
+            : await AppContext.GetPixivNoProfileImageAsync();
     }
 
     public async Task Follow()
