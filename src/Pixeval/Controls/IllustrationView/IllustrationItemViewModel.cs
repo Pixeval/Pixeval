@@ -59,8 +59,6 @@ namespace Pixeval.Controls.IllustrationView;
 /// </summary>
 public class IllustrationItemViewModel(Illustration illustration) : IllustrateViewModel<Illustration>(illustration)
 {
-    private bool _isSelected;
-
     /// <summary>
     /// 当调用<see cref="GetMangaIllustrationViewModels"/>后，此属性会被赋值为当前<see cref="IllustrationItemViewModel"/>在Manga中的索引
     /// </summary>
@@ -118,16 +116,6 @@ public class IllustrationItemViewModel(Illustration illustration) : IllustrateVi
     public SolidColorBrush BookmarkedColor =>
         new(IsBookmarked ? Colors.Crimson : Color.FromArgb(0x80, 0, 0, 0));
 
-    public bool IsSelected
-    {
-        get => _isSelected;
-        set => SetProperty(_isSelected, value, this, (_, b) =>
-        {
-            _isSelected = b;
-            IsSelectedChanged?.Invoke(this, this);
-        });
-    }
-
     [MemberNotNullWhen(false, nameof(OriginalStaticUrl))]
     public bool IsUgoira => Illustrate.Type is "ugoira";
 
@@ -151,8 +139,6 @@ public class IllustrationItemViewModel(Illustration illustration) : IllustrateVi
             return sb.ToString();
         }
     }
-
-    public event EventHandler<IllustrationItemViewModel>? IsSelectedChanged;
 
     /// <summary>
     ///     An illustration may contains multiple works and such illustrations are named "manga".

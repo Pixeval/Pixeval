@@ -33,31 +33,37 @@ public sealed partial class IllustrationViewViewModel : SortableIllustrateViewVi
     [ObservableProperty]
     private bool _isSelecting;
 
+    private IllustrationItemViewModel[] _selectedIllustrations = [];
+
     public IllustrationViewViewModel(IllustrationViewViewModel viewModel)
     {
         DataProvider = viewModel.DataProvider.CloneRef();
-        Init();
+        SelectionLabel = IllustrationViewCommandBarResources.CancelSelectionButtonDefaultLabel;
     }
 
     public IllustrationViewViewModel()
     {
-        DataProvider = new IllustrationViewDataProvider();
-        Init();
+        DataProvider = new();
+        SelectionLabel = IllustrationViewCommandBarResources.CancelSelectionButtonDefaultLabel;
     }
 
     public override IllustrationViewDataProvider DataProvider { get; }
 
-    private void Init()
+    public IllustrationItemViewModel[] SelectedIllustrations
     {
-        SelectionLabel = IllustrationViewCommandBarResources.CancelSelectionButtonDefaultLabel;
-        DataProvider.SelectedIllustrations.CollectionChanged += (_, _) =>
+        get => _selectedIllustrations;
+        set
         {
-            IsAnyIllustrationSelected = DataProvider.SelectedIllustrations.Count > 0;
-            var count = DataProvider.SelectedIllustrations.Count;
+            if (Equals(value, _selectedIllustrations))
+                return;
+            _selectedIllustrations = value;
+            var count = value.Length;
+            IsAnyIllustrationSelected = value.Length > 0;
             SelectionLabel = count is 0
                 ? IllustrationViewCommandBarResources.CancelSelectionButtonDefaultLabel
                 : IllustrationViewCommandBarResources.CancelSelectionButtonFormatted.Format(count);
-        };
+            OnPropertyChanged();
+        }
     }
 
     public override void Dispose()

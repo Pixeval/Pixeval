@@ -19,9 +19,6 @@
 #endregion
 
 using System;
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.WinUI.Collections;
 using Pixeval.Collections;
@@ -67,17 +64,13 @@ public class IllustrationViewDataProvider : ObservableObject, IDataProvider<Illu
             OnPropertyChanging();
             if (_illustrationSourceRef is { } old)
             {
-                old.Value.CollectionChanged -= OnIllustrationsSourceOnCollectionChanged;
                 _ = old.TryDispose(this);
             }
             _illustrationSourceRef = value;
-            value.Value.CollectionChanged += OnIllustrationsSourceOnCollectionChanged;
             View.Source = value.Value;
             OnPropertyChanged();
         }
     }
-
-    public ObservableCollection<IllustrationItemViewModel> SelectedIllustrations { get; set; } = [];
 
     public IFetchEngine<Illustration?>? FetchEngine => _fetchEngineRef?.Value;
 
@@ -90,13 +83,10 @@ public class IllustrationViewDataProvider : ObservableObject, IDataProvider<Illu
         // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
         if (IllustrationSourceRef is not null)
         {
-            Source.CollectionChanged -= OnIllustrationsSourceOnCollectionChanged;
             if (IllustrationSourceRef.TryDispose(this))
                 foreach (var illustrationViewModel in Source)
                     illustrationViewModel.Dispose();
         }
-
-        SelectedIllustrations.Clear();
     }
 
     public void ResetEngine(IFetchEngine<Illustration?>? fetchEngine, int limit = -1)
@@ -122,32 +112,6 @@ public class IllustrationViewDataProvider : ObservableObject, IDataProvider<Illu
         foreach (var viewSortDescription in View.SortDescriptions)
             dataProvider.View.SortDescriptions.Add(viewSortDescription);
         return dataProvider;
-    }
-
-    protected virtual void OnIllustrationsSourceOnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
-    {
-        switch (e)
-        {
-            case { Action: NotifyCollectionChangedAction.Add }:
-                e.NewItems?.OfType<IllustrationItemViewModel>().ForEach(i => i.IsSelectedChanged += OnIsSelectedChanged);
-                break;
-            case { Action: NotifyCollectionChangedAction.Remove }:
-                e.NewItems?.OfType<IllustrationItemViewModel>().ForEach(i => i.IsSelectedChanged -= OnIsSelectedChanged);
-                break;
-        }
-
-        return;
-
-        void OnIsSelectedChanged(object? s, IllustrationItemViewModel model)
-        {
-            // Do not add to collection is the model does not conform to the filter
-            if (!View.Filter?.Invoke(model) ?? false)
-                return;
-            if (model.IsSelected)
-                SelectedIllustrations.Add(model);
-            else
-                _ = SelectedIllustrations.Remove(model);
-        }
     }
 
     ~IllustrationViewDataProvider() => Dispose();

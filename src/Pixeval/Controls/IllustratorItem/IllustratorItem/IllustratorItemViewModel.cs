@@ -28,14 +28,12 @@ using Pixeval.Controls.Illustrate;
 using Pixeval.Controls.MarkupExtensions;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Model;
-using Pixeval.CoreApi.Net;
 using Pixeval.CoreApi.Net.Response;
 using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
-using static Pixeval.CoreApi.Net.Response.ReverseSearchResponse;
 
 namespace Pixeval.Controls;
 

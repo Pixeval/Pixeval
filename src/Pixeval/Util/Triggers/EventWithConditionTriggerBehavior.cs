@@ -184,10 +184,6 @@ public partial class EventWithConditionTriggerBehavior : Trigger
         {
             rootVisual = element.XamlRoot.Content;
         }
-        else if (Window.Current is not null)
-        {
-            rootVisual = Window.Current.Content;
-        }
 
         var parent = element.Parent;
 

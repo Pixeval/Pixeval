@@ -18,6 +18,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using System.Linq;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
@@ -119,5 +120,10 @@ public sealed partial class IllustrationView
         var viewModel = itemContainer.Child.To<IllustrationItem>().ViewModel;
 
         viewModel.UnloadThumbnail(ViewModel, Option);
+    }
+
+    private void IllustrationItemsView_OnSelectionChanged(ItemsView sender, ItemsViewSelectionChangedEventArgs args)
+    {
+        ViewModel.SelectedIllustrations = sender.SelectedItems.Cast<IllustrationItemViewModel>().ToArray();
     }
 }

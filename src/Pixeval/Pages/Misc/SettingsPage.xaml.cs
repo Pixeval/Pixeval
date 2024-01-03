@@ -31,7 +31,6 @@ using Pixeval.Controls.Windowing;
 using Pixeval.Database.Managers;
 using Pixeval.Download.MacroParser;
 using Pixeval.SettingsModels;
-using Pixeval.Util.Threading;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;

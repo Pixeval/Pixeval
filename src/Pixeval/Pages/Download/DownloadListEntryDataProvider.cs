@@ -5,7 +5,6 @@ using Pixeval.Collections;
 using Pixeval.Controls.Illustrate;
 using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Model;
-using Pixeval.Download;
 using Pixeval.Download.Models;
 using Pixeval.Misc;
 using WinUI3Utilities;

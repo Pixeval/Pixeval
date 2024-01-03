@@ -188,7 +188,7 @@ public static partial class IoHelper
         var entryStreams = await ReadZipArchiveEntries(zipStream);
         return await UgoiraSaveToStreamAsync(
             entryStreams.Select(s => s.Content),
-            ugoiraMetadataResponse.UgoiraMetadataInfo?.Frames?.Select(t => (int)t.Delay) ?? []);
+            ugoiraMetadataResponse.UgoiraMetadataInfo.Frames.Select(t => (int)t.Delay));
     }
 
     public static async Task<IEnumerable<InMemoryRandomAccessStream>> GetStreamsFromZipStreamAsync(Stream zipStream)

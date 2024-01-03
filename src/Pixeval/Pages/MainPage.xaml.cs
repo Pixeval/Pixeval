@@ -42,7 +42,6 @@ using Microsoft.UI.Xaml.Navigation;
 using Microsoft.Windows.AppLifecycle;
 using Pixeval.Activation;
 using Pixeval.Controls;
-using Pixeval.Controls.IllustrationView;
 using Pixeval.Database;
 using Pixeval.Database.Managers;
 using Pixeval.Messages;

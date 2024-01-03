@@ -25,7 +25,6 @@ using Windows.Foundation;
 using CommunityToolkit.WinUI;
 using Microsoft.UI.Dispatching;
 using Pixeval.Controls.Windowing;
-using WinUI3Utilities;
 
 namespace Pixeval.Util.Threading;
 

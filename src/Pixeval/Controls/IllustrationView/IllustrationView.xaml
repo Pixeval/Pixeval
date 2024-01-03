@@ -14,6 +14,7 @@
     </Grid.Resources>
     <controls:AdvancedItemsView
         x:Name="IllustrationItemsView"
+        x:FieldModifier="public"
         ElementClearing="IllustrationItemsView_OnElementClearing"
         ElementPrepared="IllustrationItemsView_OnElementPrepared"
         IsItemInvokedEnabled="True"
@@ -22,10 +23,11 @@
         LayoutType="{x:Bind LayoutType, Mode=OneWay}"
         MinItemHeight="{x:Bind DesiredHeight}"
         MinItemWidth="{x:Bind DesiredWidth}"
+        SelectionChanged="IllustrationItemsView_OnSelectionChanged"
         SelectionMode="{x:Bind ViewModel.IsSelecting, Converter={StaticResource BoolToItemsViewSelectionModeConverter}, Mode=OneWay}">
         <ItemsView.ItemTemplate>
             <DataTemplate x:DataType="local:IllustrationItemViewModel">
-                <ItemContainer IsSelected="{x:Bind IsSelected, Mode=TwoWay}">
+                <ItemContainer>
                     <local:IllustrationItem
                         ShowQrCodeRequested="IllustrationThumbnailOnShowQrCodeRequested"
                         ThisRequired="IllustrationThumbnail_OnThisRequired"

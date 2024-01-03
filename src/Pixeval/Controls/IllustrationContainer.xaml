@@ -2,18 +2,106 @@
     x:Class="Pixeval.Controls.IllustrationContainer"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converters="using:CommunityToolkit.WinUI.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:illustrationResultFilter="using:Pixeval.Flyouts.IllustrationResultFilter"
     xmlns:illustrationView="using:Pixeval.Controls.IllustrationView"
+    xmlns:markupExtensions="using:Pixeval.Controls.MarkupExtensions"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Loaded="IllustrationContainer_OnLoaded"
     mc:Ignorable="d">
-
+    <UserControl.Resources>
+        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+    </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <illustrationView:IllustrationViewCommandBar
+        <Grid
+            Grid.Row="0"
+            HorizontalAlignment="Stretch"
+            Visibility="{x:Bind ShowCommandBar, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <StackPanel
+                x:Name="ExtraCommandsBar"
+                Grid.Column="0"
+                Margin="5,0,0,0"
+                VerticalAlignment="Center"
+                FlowDirection="LeftToRight"
+                Orientation="Horizontal">
+                <Grid Margin="10,0,0,0">
+                    <AutoSuggestBox
+                        x:Uid="/IllustrationViewCommandBar/FastFilterAutoSuggestBox"
+                        Width="250"
+                        VerticalAlignment="Center"
+                        TextChanged="FastFilterAutoSuggestBox_OnTextChanged" />
+                </Grid>
+            </StackPanel>
+            <CommandBar
+                x:Name="CommandBar"
+                Grid.Column="1"
+                HorizontalAlignment="Stretch"
+                HorizontalContentAlignment="Center"
+                DefaultLabelPosition="Right"
+                Visibility="{x:Bind ViewModel.IsSelecting, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
+                <AppBarButton
+                    Icon="{markupExtensions:FontSymbolIcon Glyph=CancelE711}"
+                    Label="{x:Bind ViewModel.SelectionLabel, Mode=OneWay}"
+                    Tapped="CancelSelectionButton_OnTapped" />
+                <AppBarButton
+                    x:Name="OpenConditionDialogButton"
+                    x:Uid="/IllustrationViewCommandBar/OpenConditionDialogButton"
+                    Icon="{markupExtensions:FontSymbolIcon Glyph=FilterE71C}"
+                    Tapped="OpenConditionDialogButton_OnTapped" />
+                <AppBarButton
+                    x:Name="SelectAllButton"
+                    x:Uid="/IllustrationViewCommandBar/SelectAllButton"
+                    Icon="{markupExtensions:FontSymbolIcon Glyph=SelectAllE8B3}"
+                    Tapped="SelectAllToggleButton_OnTapped" />
+                <AppBarSeparator />
+                <AppBarButton
+                    x:Uid="/IllustrationViewCommandBar/AddAllToBookmarkButton"
+                    Icon="{markupExtensions:FontSymbolIcon Glyph=BookmarksE8A4}"
+                    Tapped="AddAllToBookmarkButton_OnTapped" />
+                <AppBarButton
+                    x:Uid="/IllustrationViewCommandBar/SaveAllButton"
+                    Icon="{markupExtensions:FontSymbolIcon Glyph=SaveE74E}"
+                    Tapped="SaveAllButton_OnTapped" />
+                <AppBarButton
+                    x:Uid="/IllustrationViewCommandBar/OpenAllInBrowserButton"
+                    Icon="{markupExtensions:FontSymbolIcon Glyph=WebSearchF6FA}"
+                    Tapped="OpenAllInBrowserButton_OnTapped" />
+                <AppBarButton
+                    x:Uid="/IllustrationViewCommandBar/ShareButton"
+                    Icon="{markupExtensions:FontSymbolIcon Glyph=ShareE72D}"
+                    Tapped="ShareButton_OnTapped" />
+            </CommandBar>
+            <CommandBar
+                Grid.Column="2"
+                DefaultLabelPosition="Right"
+                OverflowButtonVisibility="Collapsed">
+                <AppBarToggleButton
+                    x:Uid="/IllustrationViewCommandBar/SelectionButton"
+                    Icon="{markupExtensions:FontSymbolIcon Glyph=MultiSelectE762}"
+                    IsChecked="{x:Bind ViewModel.IsSelecting, Mode=TwoWay}" />
+            </CommandBar>
+            <TeachingTip
+                x:Name="FilterTeachingTip"
+                x:Uid="/IllustrationViewCommandBar/FilterTeachingTip"
+                Grid.Column="0"
+                ActionButtonClick="FilterTeachingTip_OnActionButtonClick"
+                CloseButtonClick="FilterTeachingTip_OnCloseButtonClick"
+                IsLightDismissEnabled="True"
+                Target="{x:Bind OpenConditionDialogButton}">
+                <illustrationResultFilter:IllustrationResultFilterContent x:Name="FilterContent" MaxHeight="{StaticResource TeachingTipContentMaxHeightWithTarget}" />
+            </TeachingTip>
+        </Grid>
+        <!--<illustrationView:IllustrationViewCommandBar
             x:Name="TopCommandBar"
             Grid.Row="0"
             HorizontalAlignment="Stretch"
@@ -21,7 +109,7 @@
             PrimaryCommandsSupplements="{x:Bind PrimaryCommandsSupplements, Mode=OneWay}"
             SecondaryCommandsSupplements="{x:Bind SecondaryCommandsSupplements, Mode=TwoWay}"
             ViewModel="{x:Bind IllustrationView.ViewModel}"
-            Visibility="{x:Bind ShowCommandBar, Mode=OneWay}" />
+            Visibility="{x:Bind ShowCommandBar, Mode=OneWay}" />-->
         <illustrationView:IllustrationView
             x:Name="IllustrationView"
             Grid.Row="1"
