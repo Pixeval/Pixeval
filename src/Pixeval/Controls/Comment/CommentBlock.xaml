@@ -50,7 +50,7 @@
             FontSize="{StaticResource PixevalBaseFontSize}"
             LineHeight="14.4"
             TextWrapping="Wrap"
-            Visibility="{x:Bind ViewModel.IsStamp, Converter={StaticResource BoolNegationToVisibilityConverter}}" />
+            Visibility="{x:Bind ViewModel.IsStamp, Converter={StaticResource BoolNegationToVisibilityConverter}, Mode=OneWay}" />
         <Image
             x:Name="StickerImageContent"
             Grid.Row="2"
@@ -59,7 +59,7 @@
             Height="100"
             HorizontalAlignment="Left"
             Stretch="UniformToFill"
-            Visibility="{x:Bind ViewModel.IsStamp, Converter={StaticResource BoolToVisibilityConverter}}" />
+            Visibility="{x:Bind ViewModel.IsStamp, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
         <StackPanel
             Grid.Row="3"
             Grid.Column="2"

@@ -237,14 +237,10 @@ public sealed partial class IllustrationContainer
         return;
 
         static bool ExamineExcludeTags(IEnumerable<string> tags, IEnumerable<Token> predicates)
-        {
-            return predicates.Aggregate(true, (acc, token) => acc && tags.None(token.Match));
-        }
+            => predicates.Aggregate(true, (acc, token) => acc && tags.None(token.Match));
 
         static bool ExamineIncludeTags(ICollection<string> tags, IEnumerable<Token> predicates)
-        {
-            return tags.Count is 0 || predicates.Aggregate(true, (acc, token) => acc && tags.Any(token.Match));
-        }
+            => tags.Count is 0 || predicates.Aggregate(true, (acc, token) => acc && tags.Any(token.Match));
     }
 
     private void FastFilterAutoSuggestBox_OnTextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)

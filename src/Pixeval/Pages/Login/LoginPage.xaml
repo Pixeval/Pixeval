@@ -58,7 +58,7 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
-                    <TextBlock Grid.Row="0" x:Uid="/LoginPage/SelectTextBlock" />
+                    <TextBlock x:Uid="/LoginPage/SelectTextBlock" Grid.Row="0" />
                     <controls:AdvancedItemsView
                         Grid.Row="1"
                         HorizontalAlignment="Center"
@@ -107,9 +107,9 @@
                         ItemsSource="{x:Bind models:LoginProxyOptionSettingEntryItem.AvailableItems}"
                         SelectedItem="{x:Bind _viewModel.LoginProxyOption, Mode=TwoWay}" />
                     <TextBox
+                        x:Uid="/LoginPage/ProxyTextBox"
                         Grid.Row="1"
                         IsEnabled="{x:Bind _viewModel.IsFinished, Mode=OneWay}"
-                        PlaceholderText="代理IP及端口"
                         Text="{x:Bind _viewModel.ProxyString, Mode=TwoWay}" />
                 </Grid>
             </Grid>

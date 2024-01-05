@@ -29,7 +29,7 @@ using Pixeval.Utilities.Threading;
 
 namespace Pixeval.Download.Models;
 
-public abstract partial class IllustrationDownloadTaskBase(DownloadHistoryEntry entry) : ObservableObject, IDownloadTask, IProgress<double>
+public abstract class IllustrationDownloadTaskBase(DownloadHistoryEntry entry) : ObservableObject, IDownloadTask, IProgress<double>
 {
     private Exception? _errorCause;
     private double _progressPercentage;
@@ -48,9 +48,6 @@ public abstract partial class IllustrationDownloadTaskBase(DownloadHistoryEntry 
             OnPropertyChanged();
         }
     }
-
-    [ObservableProperty]
-    private bool _selected;
 
     public DownloadHistoryEntry DatabaseEntry { get; } = entry;
 

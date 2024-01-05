@@ -66,22 +66,27 @@
                 <AppBarButton
                     x:Uid="/DownloadListPage/ResumeButton"
                     Icon="{markup:FontSymbolIcon Glyph=PlayE768}"
+                    IsEnabled="{x:Bind _viewModel.IsAnyEntrySelected, Mode=OneWay}"
                     Tapped="ResumeAllButton_OnTapped" />
                 <AppBarButton
                     x:Uid="/DownloadListPage/PauseButton"
                     Icon="{markup:FontSymbolIcon Glyph=PauseE769}"
+                    IsEnabled="{x:Bind _viewModel.IsAnyEntrySelected, Mode=OneWay}"
                     Tapped="PauseAllButton_OnTapped" />
                 <AppBarButton
                     x:Uid="/DownloadListPage/StopButton"
                     Icon="{markup:FontSymbolIcon Glyph=CancelE711}"
+                    IsEnabled="{x:Bind _viewModel.IsAnyEntrySelected, Mode=OneWay}"
                     Tapped="CancelAllButton_OnTapped" />
                 <AppBarButton
                     x:Uid="/DownloadListPage/DeleteButton"
                     Icon="{markup:FontSymbolIcon Glyph=DeleteE74D}"
+                    IsEnabled="{x:Bind _viewModel.IsAnyEntrySelected, Mode=OneWay}"
                     Tapped="ClearDownloadListButton_OnTapped" />
             </CommandBar>
         </Grid>
         <controls:AdvancedItemsView
+            x:Name="AdvancedItemsView"
             Grid.Row="1"
             ElementClearing="AdvancedItemsView_OnElementClearing"
             ElementPrepared="AdvancedItemsView_OnElementPrepared"
@@ -91,7 +96,7 @@
             SelectionMode="Multiple">
             <controls:AdvancedItemsView.ItemTemplate>
                 <DataTemplate x:DataType="download:DownloadListEntryViewModel">
-                    <ItemContainer IsSelected="{x:Bind DownloadTask.Selected, Mode=TwoWay}">
+                    <ItemContainer>
                         <!--  ReSharper disable once Xaml.PossibleNullReferenceException (Illustrate.User!.Name)  -->
                         <download:DownloadListEntry
                             Title="{x:Bind Illustrate.Title}"

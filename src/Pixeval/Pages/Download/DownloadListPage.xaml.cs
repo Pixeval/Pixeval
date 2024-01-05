@@ -72,11 +72,11 @@ public sealed partial class DownloadListPage
     {
         var dialogContent = new DownloadListPageDeleteTasksDialog();
         if (await this.CreateOkCancelAsync(
-                DownloadListPageResources.DeleteDownloadHistoryRecordsFormatted.Format(_viewModel.SelectedTasks.Count()),
+                DownloadListPageResources.DeleteDownloadHistoryRecordsFormatted.Format(_viewModel.SelectedEntries.Count()),
                 dialogContent) is ContentDialogResult.Primary)
         {
             if (dialogContent.DeleteLocalFiles)
-                foreach (var downloadListEntryViewModel in _viewModel.SelectedTasks)
+                foreach (var downloadListEntryViewModel in _viewModel.SelectedEntries)
                     IoHelper.DeleteAsync(downloadListEntryViewModel.DownloadTask.Destination).Discard();
 
             _viewModel.RemoveSelectedItems();
@@ -119,19 +119,17 @@ public sealed partial class DownloadListPage
 
     private void SelectAllButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        _viewModel.DataProvider.Source.ForEach(x => x.DownloadTask.Selected = true);
-        _viewModel.UpdateSelection();
+        AdvancedItemsView.SelectAll();
     }
 
     private void CancelSelectButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        _viewModel.DataProvider.Source.ForEach(x => x.DownloadTask.Selected = false);
-        _viewModel.UpdateSelection();
+        AdvancedItemsView.DeselectAll();
     }
 
     private void ItemsView_OnSelectionChanged(ItemsView sender, ItemsViewSelectionChangedEventArgs args)
     {
-        _viewModel.UpdateSelection();
+        _viewModel.SelectedEntries = sender.SelectedItems.Cast<DownloadListEntryViewModel>().ToArray();
     }
 
     private void DownloadListEntry_OnOpenIllustrationRequested(DownloadListEntry sender, DownloadListEntryViewModel viewModel)

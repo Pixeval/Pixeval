@@ -25,11 +25,10 @@ using System.Threading.Tasks;
 using Windows.Storage.Streams;
 using Pixeval.Controls.IllustrationView;
 using Pixeval.Database;
-using Pixeval.Download.Models;
 using Pixeval.Utilities;
 using Pixeval.Utilities.Threading;
 
-namespace Pixeval.Download;
+namespace Pixeval.Download.Models;
 
 public class MangaDownloadTask(DownloadHistoryEntry entry, IllustrationItemViewModel illustration)
     : IllustrationDownloadTask(entry, illustration)

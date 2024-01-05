@@ -1,8 +1,9 @@
-#region Copyright (c) Pixeval/Pixeval
+#region Copyright
+
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/IntrinsicIllustrationDownloadTask.cs
+// Copyright (c) 2024 Pixeval/IntrinsicMangaDownloadTask.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -16,9 +17,11 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Windows.Storage.Streams;
@@ -26,24 +29,29 @@ using Pixeval.Controls.IllustrationView;
 using Pixeval.Database;
 using Pixeval.Utilities;
 using Pixeval.Utilities.Threading;
+using WinUI3Utilities;
 
 namespace Pixeval.Download.Models;
 
-/// <summary>
-/// The disposal of <paramref name="stream" /> is not handled
-/// </summary>
-public class IntrinsicIllustrationDownloadTask(DownloadHistoryEntry entry, IllustrationItemViewModel illustrationViewModel, IRandomAccessStream stream)
-    : IllustrationDownloadTask(entry, illustrationViewModel)
+public class IntrinsicMangaDownloadTask : MangaDownloadTask
 {
-    public IRandomAccessStream Stream { get; } = stream;
+    public IList<IRandomAccessStream> Streams { get; }
+
+    public IntrinsicMangaDownloadTask(DownloadHistoryEntry entry, IllustrationItemViewModel illustrationViewModel, IList<IRandomAccessStream> streams) : base(entry, illustrationViewModel)
+    {
+        if (streams.Count == Urls.Count)
+            Streams = streams;
+        else
+            ThrowHelper.Argument(streams);
+    }
 
     protected override async Task DownloadAsyncCore(Func<string, IProgress<double>?, CancellationHandle?, Task<Result<IRandomAccessStream>>> _, string url, string destination)
     {
         if (!App.AppViewModel.AppSetting.OverwriteDownloadedFile && File.Exists(destination))
             return;
 
-        Stream.Seek(0);
+        Streams[CurrentIndex].Seek(0);
 
-        await ManageStream(Stream, destination);
+        await ManageStream(Streams[CurrentIndex], destination);
     }
 }

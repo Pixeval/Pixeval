@@ -166,6 +166,9 @@
   <data name="LoginProxyConnectToHostFailed" xml:space="preserve">
     <value>连接到主机失败</value>
   </data>
+  <data name="ProxyTextBox.PlaceholderText" xml:space="preserve">
+    <value>代理IP及端口</value>
+  </data>
   <data name="RefreshingSessionIsNotPresentContent" xml:space="preserve">
     <value>已经删除损坏的文件，请重新启动应用程序
 如果该问题反复出现，请联系开发者寻求解决</value>

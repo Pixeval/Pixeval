@@ -58,10 +58,10 @@ public sealed partial class IllustrationViewViewModel : SortableIllustrateViewVi
                 return;
             _selectedIllustrations = value;
             var count = value.Length;
-            IsAnyIllustrationSelected = value.Length > 0;
-            SelectionLabel = count is 0
-                ? IllustrationViewCommandBarResources.CancelSelectionButtonDefaultLabel
-                : IllustrationViewCommandBarResources.CancelSelectionButtonFormatted.Format(count);
+            IsAnyIllustrationSelected = count > 0;
+            SelectionLabel = IsAnyIllustrationSelected
+                ? IllustrationViewCommandBarResources.CancelSelectionButtonFormatted.Format(count)
+                : IllustrationViewCommandBarResources.CancelSelectionButtonDefaultLabel;
             OnPropertyChanged();
         }
     }
