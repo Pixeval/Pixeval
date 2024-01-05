@@ -21,6 +21,7 @@
 using System;
 using System.Buffers;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -68,7 +69,7 @@ public static class Objects
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool IsNullOrEmpty(this string? str)
+    public static bool IsNullOrEmpty([NotNullWhen(false)] this string? str)
     {
         return string.IsNullOrEmpty(str);
     }

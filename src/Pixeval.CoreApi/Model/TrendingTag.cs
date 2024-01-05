@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval.CoreApi
+#region Copyright (c) Pixeval/Pixeval.CoreApi
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
@@ -20,4 +20,4 @@
 
 namespace Pixeval.CoreApi.Model;
 
-public record TrendingTag(string? Tag, string? Translation, Illustration? Illustration);
+public record TrendingTag(string Tag, string Translation, Illustration Illustration);

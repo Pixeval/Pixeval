@@ -76,12 +76,12 @@ public sealed partial class IllustrationInfoPage
 
     private IEnumerable<Tag> GetIllustrationTagItemSource()
     {
-        return _viewModel.CurrentIllustration.Illustrate.Tags ?? Enumerable.Empty<Tag>();
+        return _viewModel.CurrentIllustration.Illustrate.Tags;
     }
 
-    public static string GetMakoTagTranslatedNameText(string? name, string? fallback)
+    public static string GetMakoTagTranslatedNameText(string? name, string fallback)
     {
-        return (name.IsNullOrEmpty() ? fallback : name) ?? string.Empty;
+        return name.IsNullOrEmpty() ? fallback : name;
     }
 
     private string GetIllustratorNameText()

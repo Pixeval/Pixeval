@@ -1,8 +1,9 @@
-#region Copyright (c) Pixeval/Pixeval
+#region Copyright
+
 // GPL v3 License
 // 
-// Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/IllustrationResultFilterFunctionEntry.xaml.cs
+// Pixeval/Pixeval.Controls
+// Copyright (c) 2024 Pixeval.Controls/LongToDoubleConverter.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -16,18 +17,24 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 #endregion
 
-using Microsoft.UI.Xaml.Controls;
-using WinUI3Utilities.Attributes;
+using System;
+using Microsoft.UI.Xaml.Data;
+using WinUI3Utilities;
 
-namespace Pixeval.Flyouts;
+namespace Pixeval.Controls.Converters;
 
-[DependencyProperty<string>("Header")]
-public partial class IllustrationResultFilterFunctionEntry : ContentControl
+public class LongToDoubleConverter : IValueConverter
 {
-    public IllustrationResultFilterFunctionEntry()
+    public object Convert(object value, Type targetType, object parameter, string language)
     {
-        DefaultStyleKey = typeof(IllustrationResultFilterFunctionEntry);
+        return (double)value.To<long>();
+    }
+
+    public object ConvertBack(object value, Type targetType, object parameter, string language)
+    {
+        return (long)value.To<double>();
     }
 }

@@ -113,22 +113,22 @@ public partial class MakoClient
             return null;
         }
 
-        var illustrations = await (result.ResponseBody.First().Illusts?.SelectNotNull(illust => GetIllustrationFromIdAsync(illust.IllustId)).WhenAll() ?? Task.FromResult(Array.Empty<Illustration>())).ConfigureAwait(false);
+        var illustrations = await result.ResponseBody[0].Illusts.SelectNotNull(illust => GetIllustrationFromIdAsync(illust.IllustId)).WhenAll().ConfigureAwait(false);
         foreach (var illustration in illustrations)
         {
             illustration.FromSpotlight = true;
-            illustration.SpotlightId = result.ResponseBody.First().Id;
-            illustration.SpotlightTitle = result.ResponseBody.First().Title;
+            illustration.SpotlightId = result.ResponseBody[0].Id;
+            illustration.SpotlightTitle = result.ResponseBody[0].Title;
         }
 
-        var entry = result.ResponseBody.First().Entry;
+        var entry = result.ResponseBody[0].Entry;
         return new SpotlightDetail(new SpotlightArticle
         {
             Id = entry.Id,
             Title = entry.Title,
             ArticleUrl = entry.ArticleUrl,
             PublishDate = DateTimeOffset.FromUnixTimeSeconds(entry.PublishDate),
-            Thumbnail = result.ResponseBody.First().ThumbnailUrl
+            Thumbnail = result.ResponseBody[0].ThumbnailUrl
         }, entry.Intro, illustrations);
     }
 
@@ -147,13 +147,13 @@ public partial class MakoClient
     public async Task<IEnumerable<TrendingTag>> GetTrendingTagsAsync(TargetFilter targetFilter)
     {
         EnsureNotCancelled();
-        return ((await Resolve<IAppApiEndPoint>().GetTrendingTagsAsync(targetFilter.GetDescription()).ConfigureAwait(false)).TrendTags ?? Enumerable.Empty<TrendingTagResponse.TrendTag>()).Select(t => new TrendingTag(t.TagStr, t.TranslatedName, t.Illust));
+        return (await Resolve<IAppApiEndPoint>().GetTrendingTagsAsync(targetFilter.GetDescription()).ConfigureAwait(false)).TrendTags.Select(t => new TrendingTag(t.TagStr, t.TranslatedName, t.Illust));
     }
 
     public async Task<IEnumerable<TrendingTag>> GetTrendingTagsForNovelAsync(TargetFilter targetFilter)
     {
         EnsureNotCancelled();
-        return ((await Resolve<IAppApiEndPoint>().GetTrendingTagsForNovelAsync(targetFilter.GetDescription()).ConfigureAwait(false)).TrendTags ?? Enumerable.Empty<TrendingTagResponse.TrendTag>()).Select(t => new TrendingTag(t.TagStr, t.TranslatedName, t.Illust));
+        return (await Resolve<IAppApiEndPoint>().GetTrendingTagsForNovelAsync(targetFilter.GetDescription()).ConfigureAwait(false)).TrendTags.Select(t => new TrendingTag(t.TagStr, t.TranslatedName, t.Illust));
     }
 
     /// <summary>
@@ -171,11 +171,12 @@ public partial class MakoClient
     public async Task<IReadOnlyDictionary<CountedTag, PrivacyPolicy>> GetUserSpecifiedBookmarkTagsAsync(long uid)
     {
         EnsureNotCancelled();
-        var tags = (await GetMakoHttpClient(MakoApiKind.WebApi).GetStringResultAsync($"/ajax/user/{uid}/illusts/bookmark/tags?lang={Configuration.CultureInfo.TwoLetterISOLanguageName}").ConfigureAwait(false))
+        var tags = (await GetMakoHttpClient(MakoApiKind.WebApi)
+                .GetStringResultAsync($"/ajax/user/{uid}/illusts/bookmark/tags?lang={Configuration.CultureInfo.TwoLetterISOLanguageName}").ConfigureAwait(false))
             .UnwrapOrThrow()
             .FromJson<UserSpecifiedBookmarkTagResponse>();
         var dic = new Dictionary<CountedTag, PrivacyPolicy>();
-        if (tags?.ResponseBody?.Public is { } publicTags)
+        if (tags?.ResponseBody.Public is { } publicTags)
         {
             foreach (var tag in publicTags)
             {
@@ -183,7 +184,7 @@ public partial class MakoClient
             }
         }
 
-        if (tags?.ResponseBody?.Private is { } privateTags)
+        if (tags?.ResponseBody.Private is { } privateTags)
         {
             foreach (var tag in privateTags)
             {

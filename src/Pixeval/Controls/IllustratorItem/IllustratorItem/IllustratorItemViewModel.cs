@@ -74,9 +74,9 @@ public sealed partial class IllustratorItemViewModel : IllustrateViewModel<User>
 
     private string FollowText => IsFollowed ? IllustratorItemResources.Unfollow : IllustratorItemResources.Follow;
 
-    public string GetIllustrationToolTipSubtitleText(User? user)
+    public string GetIllustrationToolTipSubtitleText(User user)
     {
-        return user?.UserInfo?.Comment ?? IllustratorItemResources.UserHasNoComment;
+        return user.UserInfo.Comment ?? IllustratorItemResources.UserHasNoComment;
     }
 
     private async Task SetAvatarAsync()

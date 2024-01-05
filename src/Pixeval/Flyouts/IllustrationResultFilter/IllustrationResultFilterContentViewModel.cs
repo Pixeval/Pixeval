@@ -31,11 +31,11 @@ public class IllustrationResultFilterContentViewModel : ObservableObject
 {
     private ObservableCollection<Token> _excludeTags = null!;
 
-    private string _illustrationId = null!;
+    private long _illustrationId = -1;
 
     private Token _illustrationName = null!;
     
-    private string _illustratorId = null!;
+    private long _illustratorId = -1;
 
     private Token _illustratorName = null!;
 
@@ -98,8 +98,8 @@ public class IllustrationResultFilterContentViewModel : ObservableObject
         set => SetProperty(ref _illustratorName, value);
     }
 
-    [DefaultValue("")]
-    public string IllustratorId
+    [DefaultValue(-1)]
+    public long IllustratorId
     {
         get => _illustratorId;
         set => SetProperty(ref _illustratorId, value);
@@ -112,8 +112,8 @@ public class IllustrationResultFilterContentViewModel : ObservableObject
         set => SetProperty(ref _illustrationName, value);
     }
 
-    [DefaultValue("")]
-    public string IllustrationId
+    [DefaultValue(-1)]
+    public long IllustrationId
     {
         get => _illustrationId;
         set => SetProperty(ref _illustrationId, value);

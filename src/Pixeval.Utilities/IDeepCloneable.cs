@@ -1,8 +1,8 @@
-#region Copyright (c) Pixeval/Pixeval
+#region Copyright
 // GPL v3 License
 // 
-// Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/IllustrationResultFilterFunctionEntry.xaml.cs
+// Pixeval/Pixeval.Utilities
+// Copyright (c) 2024 Pixeval.Utilities/IDeepClonable.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,16 +18,9 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using Microsoft.UI.Xaml.Controls;
-using WinUI3Utilities.Attributes;
+namespace Pixeval.Utilities;
 
-namespace Pixeval.Flyouts;
-
-[DependencyProperty<string>("Header")]
-public partial class IllustrationResultFilterFunctionEntry : ContentControl
+public interface IDeepCloneable<out TSelf> where TSelf : IDeepCloneable<TSelf>
 {
-    public IllustrationResultFilterFunctionEntry()
-    {
-        DefaultStyleKey = typeof(IllustrationResultFilterFunctionEntry);
-    }
+    public TSelf DeepClone();
 }

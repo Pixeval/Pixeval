@@ -94,7 +94,7 @@ public partial class TokenInputTextBox : Control
     {
         if (SubmitEnable && _tokenTextBox is { Text.Length: > 0 })
         {
-            TokenSubmitted?.Invoke(this, (Token)Token.Clone());
+            TokenSubmitted?.Invoke(this, Token.DeepClone());
             _tokenTextBox.Text = string.Empty;
         }
     }

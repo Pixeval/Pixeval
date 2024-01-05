@@ -18,6 +18,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using System.Linq;
 using System.Reflection;
 using Pixeval.Attributes;
 
@@ -33,9 +34,16 @@ public sealed partial class IllustrationResultFilterContent
     public IllustrationResultFilterContentViewModel ViewModel { get; set; } = new();
 
     public FilterSettings GetFilterSettings =>
-        new(ViewModel.IncludeTags, ViewModel.ExcludeTags, ViewModel.LeastBookmark,
-            ViewModel.MaximumBookmark, ViewModel.UserGroupName, ViewModel.IllustratorName, long.Parse(ViewModel.IllustratorId),
-            ViewModel.IllustrationName, long.Parse(ViewModel.IllustrationId), ViewModel.PublishDateStart,
+        new(ViewModel.IncludeTags.ToArray(),
+            ViewModel.ExcludeTags.ToArray(),
+            ViewModel.LeastBookmark,
+            ViewModel.MaximumBookmark,
+            ViewModel.UserGroupName.ToArray(),
+            ViewModel.IllustratorName.DeepClone(),
+            ViewModel.IllustratorId,
+            ViewModel.IllustrationName.DeepClone(),
+            ViewModel.IllustrationId,
+            ViewModel.PublishDateStart,
             ViewModel.PublishDateEnd);
 
     public void Reset()

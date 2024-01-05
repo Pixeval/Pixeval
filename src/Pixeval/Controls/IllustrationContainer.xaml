@@ -51,15 +51,10 @@
                 Visibility="{x:Bind ViewModel.IsSelecting, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
                 <AppBarButton
                     Icon="{markupExtensions:FontSymbolIcon Glyph=CancelE711}"
+                    IsEnabled="{x:Bind ViewModel.IsAnyIllustrationSelected, Mode=OneWay}"
                     Label="{x:Bind ViewModel.SelectionLabel, Mode=OneWay}"
                     Tapped="CancelSelectionButton_OnTapped" />
                 <AppBarButton
-                    x:Name="OpenConditionDialogButton"
-                    x:Uid="/IllustrationViewCommandBar/OpenConditionDialogButton"
-                    Icon="{markupExtensions:FontSymbolIcon Glyph=FilterE71C}"
-                    Tapped="OpenConditionDialogButton_OnTapped" />
-                <AppBarButton
-                    x:Name="SelectAllButton"
                     x:Uid="/IllustrationViewCommandBar/SelectAllButton"
                     Icon="{markupExtensions:FontSymbolIcon Glyph=SelectAllE8B3}"
                     Tapped="SelectAllToggleButton_OnTapped" />
@@ -67,18 +62,22 @@
                 <AppBarButton
                     x:Uid="/IllustrationViewCommandBar/AddAllToBookmarkButton"
                     Icon="{markupExtensions:FontSymbolIcon Glyph=BookmarksE8A4}"
+                    IsEnabled="{x:Bind ViewModel.IsAnyIllustrationSelected, Mode=OneWay}"
                     Tapped="AddAllToBookmarkButton_OnTapped" />
                 <AppBarButton
                     x:Uid="/IllustrationViewCommandBar/SaveAllButton"
                     Icon="{markupExtensions:FontSymbolIcon Glyph=SaveE74E}"
+                    IsEnabled="{x:Bind ViewModel.IsAnyIllustrationSelected, Mode=OneWay}"
                     Tapped="SaveAllButton_OnTapped" />
                 <AppBarButton
                     x:Uid="/IllustrationViewCommandBar/OpenAllInBrowserButton"
                     Icon="{markupExtensions:FontSymbolIcon Glyph=WebSearchF6FA}"
+                    IsEnabled="{x:Bind ViewModel.IsAnyIllustrationSelected, Mode=OneWay}"
                     Tapped="OpenAllInBrowserButton_OnTapped" />
                 <AppBarButton
                     x:Uid="/IllustrationViewCommandBar/ShareButton"
                     Icon="{markupExtensions:FontSymbolIcon Glyph=ShareE72D}"
+                    IsEnabled="{x:Bind ViewModel.IsAnyIllustrationSelected, Mode=OneWay}"
                     Tapped="ShareButton_OnTapped" />
             </CommandBar>
             <CommandBar
@@ -89,6 +88,11 @@
                     x:Uid="/IllustrationViewCommandBar/SelectionButton"
                     Icon="{markupExtensions:FontSymbolIcon Glyph=MultiSelectE762}"
                     IsChecked="{x:Bind ViewModel.IsSelecting, Mode=TwoWay}" />
+                <AppBarButton
+                    x:Name="OpenConditionDialogButton"
+                    x:Uid="/IllustrationViewCommandBar/OpenConditionDialogButton"
+                    Icon="{markupExtensions:FontSymbolIcon Glyph=FilterE71C}"
+                    Tapped="OpenConditionDialogButton_OnTapped" />
             </CommandBar>
             <TeachingTip
                 x:Name="FilterTeachingTip"

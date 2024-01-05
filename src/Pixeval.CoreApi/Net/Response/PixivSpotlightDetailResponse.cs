@@ -34,7 +34,7 @@ internal class PixivSpotlightDetailResponse
     public required string Message { get; set; }
 
     [JsonPropertyName("body")]
-    public required IEnumerable<Body> ResponseBody { get; set; }
+    public required Body[] ResponseBody { get; set; }
 
     public class Body
     {

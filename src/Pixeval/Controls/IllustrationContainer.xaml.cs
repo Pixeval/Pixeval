@@ -62,14 +62,6 @@ public sealed partial class IllustrationContainer
     public IllustrationContainer()
     {
         InitializeComponent();
-        var defaultCommands = new List<ICommandBarElement>(CommandBar.PrimaryCommands);
-        defaultCommands.AddRange(CommandBar.SecondaryCommands);
-        _defaultCommands = defaultCommands.Where(e => e is AppBarButton).Cast<Control>();
-        ViewModel.PropertyChanged += (_, e) =>
-        {
-            if (e.PropertyName is nameof(IllustrationViewViewModel.IsAnyIllustrationSelected))
-                OnIsDefaultCommandsEnabledChanged();
-        };
         CommandBarElements.CollectionChanged += (_, args) =>
         {
             if (args is { Action: NotifyCollectionChangedAction.Add, NewItems: { } newItems })
@@ -98,20 +90,7 @@ public sealed partial class IllustrationContainer
         _ = IllustrationView.ScrollView.ScrollTo(0, 0);
     }
 
-
-    private readonly IEnumerable<Control> _defaultCommands;
-
     private FilterSettings _lastFilterSettings = FilterSettings.Default;
-
-    private void OnIsDefaultCommandsEnabledChanged()
-    {
-        _defaultCommands
-            .ForEach(c =>
-            {
-                if (c != SelectAllButton)
-                    c.IsEnabled = ViewModel.IsAnyIllustrationSelected;
-            });
-    }
 
     private void AddCommandCallback(NotifyCollectionChangedEventArgs e, ICollection<ICommandBarElement> commands)
     {
@@ -231,6 +210,7 @@ public sealed partial class IllustrationContainer
             var publishDateStart,
             var publishDateEnd) filterSettings)
             return;
+
         if (filterSettings == _lastFilterSettings)
         {
             return;
@@ -238,20 +218,20 @@ public sealed partial class IllustrationContainer
 
         _lastFilterSettings = filterSettings;
 
-        ViewModel.DataProvider.View.Filter = null;
         ViewModel.DataProvider.View.Filter = o =>
         {
-            var stringTags = o.Illustrate.Tags?.Select(t => t.Name).WhereNotNull().ToArray() ?? [];
-            var result = ExamineExcludeTags(stringTags, excludeTags)
-                         && ExamineIncludeTags(stringTags, includeTags)
-                         && o.Bookmark >= leastBookmark
-                         && o.Bookmark <= maximumBookmark
-                         && illustrationName.Match(o.Illustrate.Title)
-                         && illustratorName.Match(o.Illustrate.User.Name)
-                         && (illustratorId is -1 || illustratorId == o.Illustrate.User.Id)
-                         && illustrationId is -1 || illustrationId == o.Id
-                         && o.PublishDate >= publishDateStart
-                         && o.PublishDate <= publishDateEnd;
+            var stringTags = o.Illustrate.Tags.Select(t => t.Name).ToArray();
+            var result =
+                ExamineExcludeTags(stringTags, excludeTags)
+                && ExamineIncludeTags(stringTags, includeTags)
+                && o.Bookmark >= leastBookmark
+                && o.Bookmark <= maximumBookmark
+                && illustrationName.Match(o.Illustrate.Title)
+                && illustratorName.Match(o.Illustrate.User.Name)
+                && (illustratorId is -1 || illustratorId == o.Illustrate.User.Id)
+                && illustrationId is -1 || illustrationId == o.Id
+                && o.PublishDate >= publishDateStart
+                && o.PublishDate <= publishDateEnd;
             return result;
         };
         return;
@@ -261,10 +241,9 @@ public sealed partial class IllustrationContainer
             return predicates.Aggregate(true, (acc, token) => acc && tags.None(token.Match));
         }
 
-        static bool ExamineIncludeTags(IEnumerable<string> tags, IEnumerable<Token> predicates)
+        static bool ExamineIncludeTags(ICollection<string> tags, IEnumerable<Token> predicates)
         {
-            var tArr = tags.ToArray();
-            return tArr.Length is 0 || predicates.Aggregate(true, (acc, token) => acc && tArr.Any(token.Match));
+            return tags.Count is 0 || predicates.Aggregate(true, (acc, token) => acc && tags.Any(token.Match));
         }
     }
 
@@ -279,6 +258,6 @@ public sealed partial class IllustrationContainer
             ? null
             : o => o.Id.ToString().Contains(text)
                    || o.Illustrate.Tags.Any(x => x.Name.Contains(text) || (x.TranslatedName?.Contains(text) ?? false))
-                   || (o.Illustrate.Title?.Contains(text) ?? false);
+                   || o.Illustrate.Title.Contains(text);
     }
 }
