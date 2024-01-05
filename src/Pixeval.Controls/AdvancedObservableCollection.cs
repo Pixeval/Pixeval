@@ -32,7 +32,6 @@ using Windows.Foundation;
 using CommunityToolkit.WinUI.Collections;
 using CommunityToolkit.WinUI.Helpers;
 using System.Diagnostics;
-using System.IO;
 
 namespace Pixeval.Collections;
 
@@ -66,7 +65,7 @@ public class AdvancedObservableCollection<T> : IList<T>, IList, INotifyCollectio
     /// Initializes a new instance of the <see cref="AdvancedObservableCollection{T}"/> class.
     /// </summary>
     /// <param name="source">source IEnumerable</param>
-    /// <param name="isLiveShaping">Denotes whether or not this ACV should re-filter/re-sort if a PropertyChanged is raised for an observed property.</param>
+    /// <param name="isLiveShaping">Denotes whether this ACV should re-filter/re-sort if a PropertyChanged is raised for an observed property.</param>
     public AdvancedObservableCollection(ObservableCollection<T> source, bool isLiveShaping = false)
     {
         _liveShapingEnabled = isLiveShaping;
@@ -85,8 +84,7 @@ public class AdvancedObservableCollection<T> : IList<T>, IList, INotifyCollectio
         get => _source;
         set
         {
-            if (value is null)
-                throw new InvalidDataException("Null is not allowed");
+            ArgumentNullException.ThrowIfNull(value, "Null is not allowed");
 
             if (_source == value)
                 return;
@@ -97,7 +95,7 @@ public class AdvancedObservableCollection<T> : IList<T>, IList, INotifyCollectio
 
             _sourceWeakEventListener?.Detach();
 
-            _sourceWeakEventListener = new WeakEventListener<AdvancedObservableCollection<T>, object, NotifyCollectionChangedEventArgs>(this)
+            _sourceWeakEventListener = new WeakEventListener<AdvancedObservableCollection<T>, object?, NotifyCollectionChangedEventArgs>(this)
             {
                 OnEventAction = (source, changed, arg) => SourceNcc_CollectionChanged(source, arg),
                 OnDetachAction = listener => _source.CollectionChanged -= _sourceWeakEventListener!.OnEvent
@@ -441,7 +439,7 @@ public class AdvancedObservableCollection<T> : IList<T>, IList, INotifyCollectio
             if (newStartingIndex is 0 || _view.Count is 0)
                 newViewIndex = 0;
             else if (newStartingIndex == _source.Count - 1)
-                newViewIndex = _view.Count - 1;
+                newViewIndex = _view.Count;
             else if (viewIndex.HasValue)
                 newViewIndex = viewIndex.Value;
             else
@@ -469,7 +467,7 @@ public class AdvancedObservableCollection<T> : IList<T>, IList, INotifyCollectio
 
     private void HandleItemRemoved(int oldStartingIndex, T oldItem)
     {
-        if (_filter != null && !_filter(oldItem))
+        if (_filter is not null && !_filter(oldItem))
             return;
 
         if (oldStartingIndex < 0 || oldStartingIndex >= _view.Count || !Equals(_view[oldStartingIndex], oldItem))

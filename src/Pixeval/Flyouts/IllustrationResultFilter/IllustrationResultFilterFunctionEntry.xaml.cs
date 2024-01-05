@@ -21,7 +21,7 @@
 using Microsoft.UI.Xaml.Controls;
 using WinUI3Utilities.Attributes;
 
-namespace Pixeval.Flyouts.IllustrationResultFilter;
+namespace Pixeval.Flyouts;
 
 [DependencyProperty<string>("Header")]
 public partial class IllustrationResultFilterFunctionEntry : ContentControl

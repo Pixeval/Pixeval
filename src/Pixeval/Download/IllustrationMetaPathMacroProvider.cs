@@ -19,13 +19,13 @@
 #endregion
 
 using System.Collections.Generic;
+using Pixeval.Controls.IllustrationView;
 using Pixeval.Download.MacroParser;
 using Pixeval.Download.Macros;
-using Pixeval.Controls.IllustrationView;
 
 namespace Pixeval.Download;
 
-public class IllustrationMetaPathMacroProvider : IMetaPathMacroProvider<IllustrationViewModel>
+public class IllustrationMetaPathMacroProvider : IMetaPathMacroProvider<IllustrationItemViewModel>
 {
-    public IEnumerable<IMacro<IllustrationViewModel>> AvailableMacros { get; } = MetaPathMacroAttributeHelper.GetAttachedTypeInstances<IMacro<IllustrationViewModel>>(typeof(IllustrationViewModel));
+    public IEnumerable<IMacro<IllustrationItemViewModel>> AvailableMacros { get; } = MetaPathMacroAttributeHelper.GetAttachedTypeInstances<IMacro<IllustrationItemViewModel>>(typeof(IllustrationItemViewModel));
 }

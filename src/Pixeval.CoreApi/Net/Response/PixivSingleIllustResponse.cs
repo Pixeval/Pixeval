@@ -27,5 +27,5 @@ namespace Pixeval.CoreApi.Net.Response;
 internal class PixivSingleIllustResponse
 {
     [JsonPropertyName("illust")]
-    public Illustration? Illust { get; set; }
+    public required Illustration Illust { get; set; }
 }

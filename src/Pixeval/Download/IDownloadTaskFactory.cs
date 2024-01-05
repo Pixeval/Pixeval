@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -19,8 +19,9 @@
 #endregion
 
 using System.Threading.Tasks;
-using Pixeval.Download.MacroParser;
 using Windows.Storage.Streams;
+using Pixeval.Download.MacroParser;
+using Pixeval.Download.Models;
 
 namespace Pixeval.Download;
 

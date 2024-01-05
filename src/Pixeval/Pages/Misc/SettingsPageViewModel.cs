@@ -26,23 +26,25 @@ using System.Linq;
 using System.Reflection;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml;
 using Pixeval.AppManagement;
 using Pixeval.Attributes;
+using Pixeval.Controls.IllustrationView;
+using Pixeval.Controls.TokenInput;
+using Pixeval.Controls.Windowing;
 using Pixeval.Database.Managers;
 using Pixeval.Download;
 using Pixeval.Download.MacroParser;
+using Pixeval.Download.Models;
 using Pixeval.Misc;
-using Pixeval.Controls.TokenInput;
+using Pixeval.SettingsModels;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
-using Pixeval.Controls.IllustrationView;
-using Pixeval.SettingsModels;
 
 namespace Pixeval.Pages.Misc;
 
 [SettingsViewModel<AppSetting>(nameof(_appSetting))]
-public partial class SettingsPageViewModel(AppSetting appSetting) : ObservableObject
+public partial class SettingsPageViewModel(AppSetting appSetting, EnhancedWindow window) : ObservableObject
 {
     public static readonly IEnumerable<string> AvailableFonts = new InstalledFontCollection().Families.Select(f => f.Name);
 
@@ -53,9 +55,9 @@ public partial class SettingsPageViewModel(AppSetting appSetting) : ObservableOb
     static SettingsPageViewModel()
     {
         using var scope = App.AppViewModel.AppServicesScope;
-        var factory = scope.ServiceProvider.GetRequiredService<IDownloadTaskFactory<IllustrationViewModel, ObservableDownloadTask>>();
+        var factory = scope.ServiceProvider.GetRequiredService<IDownloadTaskFactory<IllustrationItemViewModel, IllustrationDownloadTask>>();
         AvailableIllustMacros = factory.PathParser.MacroProvider.AvailableMacros
-            .Select(m => $"@{{{(m is IMacro<IllustrationViewModel>.IPredicate ? $"{m.Name}:" : m.Name)}}}")
+            .Select(m => $"@{{{(m is IMacro<IllustrationItemViewModel>.IPredicate ? $"{m.Name}:" : m.Name)}}}")
             .Select(s => new Token(s, false, false))
             .ToList();
     }
@@ -114,17 +116,12 @@ public partial class SettingsPageViewModel(AppSetting appSetting) : ObservableOb
     public void ClearData<T, TModel>(ClearDataKind kind, IPersistentManager<T, TModel> manager) where T : new()
     {
         manager.Clear();
-        SettingsTeachingTip.ShowAndHide(kind switch
+        window.Content.To<FrameworkElement>().ShowTeachingTipAndHide(kind switch
         {
             ClearDataKind.BrowseHistory => SettingsPageResources.BrowseHistoriesCleared,
             ClearDataKind.SearchHistory => SettingsPageResources.SearchHistoriesCleared,
             ClearDataKind.DownloadHistory => SettingsPageResources.DownloadHistoriesCleared,
-            _ => throw new ArgumentOutOfRangeException(nameof(kind), kind, null)
+            _ => ThrowHelper.ArgumentOutOfRange<ClearDataKind, string>(kind)
         });
     }
-
-    /// <summary>
-    /// 写成字段防止被反射
-    /// </summary>
-    public TeachingTip SettingsTeachingTip = null!;
 }

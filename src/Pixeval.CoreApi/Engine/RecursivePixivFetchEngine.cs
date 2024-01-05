@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval.CoreApi
+#region Copyright (c) Pixeval/Pixeval.CoreApi
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
@@ -31,7 +31,6 @@ namespace Pixeval.CoreApi.Engine;
 internal abstract class RecursivePixivAsyncEnumerator<TEntity, TRawEntity, TFetchEngine>(TFetchEngine pixivFetchEngine,
     MakoApiKind makoApiKind) : AbstractPixivAsyncEnumerator<TEntity, TRawEntity, TFetchEngine>(pixivFetchEngine,
     makoApiKind)
-    where TEntity : class
     where TFetchEngine : class, IFetchEngine<TEntity>
 {
     private TRawEntity? RawEntity { get; set; }

@@ -34,20 +34,22 @@ namespace Pixeval.Controls.IllustratorContentViewer;
 
 public class IllustratorIllustrationAndMangaBookmarkPageViewModel : ObservableObject, IDisposable
 {
-    private readonly ConcurrentDictionary<string, HashSet<string>> _bookmarkTagIllustrationIdDictionary =
-        new();
-
-    public static readonly CountedTag EmptyCountedTag =
-        new(new Tag(IllustratorIllustrationAndMangaBookmarkPageResources.EmptyCountedTagName, string.Empty),
-            0);
+    public static readonly CountedTag EmptyCountedTag = new(new Tag(IllustratorIllustrationAndMangaBookmarkPageResources.EmptyCountedTagName, ""), 0);
 
     private readonly CancellationTokenSource _bookmarksIdLoadingCancellationTokenSource = new();
 
+    private readonly ConcurrentDictionary<string, HashSet<long>> _bookmarkTagIllustrationIdDictionary = new();
+
     public ObservableCollection<CountedTag> UserBookmarkTags { get; } = [];
+
+    public void Dispose()
+    {
+        _bookmarksIdLoadingCancellationTokenSource.Cancel();
+    }
 
     public event EventHandler<string>? TagBookmarksIncrementallyLoaded;
 
-    public async Task LoadUserBookmarkTagsAsync(string uid)
+    public async Task LoadUserBookmarkTagsAsync(long uid)
     {
         var result = await App.AppViewModel.MakoClient.GetUserSpecifiedBookmarkTagsAsync(uid);
         UserBookmarkTags.Add(EmptyCountedTag);
@@ -59,7 +61,7 @@ public class IllustratorIllustrationAndMangaBookmarkPageViewModel : ObservableOb
     // but the API is paged, which means we can get at most 100 IDs per request, so this is a gradual process, to prevent
     // from waiting for too long before all IDs are fetched, we choose an incremental way, i.e., instead of setting the filter
     // after all IDs are fetched, we update the filter whenever new IDs are available.
-    public async Task LoadBookmarksForTagAsync(string uid, string tag)
+    public async Task LoadBookmarksForTagAsync(long uid, string tag)
     {
         if (_bookmarkTagIllustrationIdDictionary.TryGetValue(tag, out var set) && set.Count > 0)
         {
@@ -95,7 +97,7 @@ public class IllustratorIllustrationAndMangaBookmarkPageViewModel : ObservableOb
         }
     }
 
-    public IReadOnlySet<string> GetBookmarkIdsForTag(string tag)
+    public IReadOnlySet<long> GetBookmarkIdsForTag(string tag)
     {
         return _bookmarkTagIllustrationIdDictionary[tag];
     }
@@ -103,10 +105,5 @@ public class IllustratorIllustrationAndMangaBookmarkPageViewModel : ObservableOb
     public static string GetCountedTagDisplayText(CountedTag tag)
     {
         return ReferenceEquals(tag, EmptyCountedTag) ? tag.Tag.Name : $"#{(tag.Tag.TranslatedName is { Length: > 0 } str ? str : tag.Tag.Name)} ({tag.Count})";
-    }
-
-    public void Dispose()
-    {
-        _bookmarksIdLoadingCancellationTokenSource.Cancel();
     }
 }

@@ -23,10 +23,10 @@ using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
+using Pixeval.Controls;
 using Pixeval.Database.Managers;
 using Pixeval.Messages;
 using Pixeval.Misc;
-using Pixeval.Controls;
 using Pixeval.Util;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -66,7 +66,7 @@ public sealed partial class BrowsingHistoryPage : ISortedIllustrationContainerPa
         var manager = scope.ServiceProvider.GetRequiredService<BrowseHistoryPersistentManager>();
         IllustrationContainer.ViewModel.ResetEngine(
             App.AppViewModel.MakoClient.Computed(manager.Enumerate().ToAsyncEnumerable().SelectAwait(async t =>
-                await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(t.Id!))));
+                await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(t.Id))));
     }
 
     private void SortOptionComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)

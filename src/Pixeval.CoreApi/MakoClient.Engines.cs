@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval.CoreApi
+#region Copyright (c) Pixeval/Pixeval.CoreApi
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
@@ -48,7 +48,7 @@ public partial class MakoClient
     ///     The <see cref="BookmarkEngine" />> iterator containing bookmarked illustrations for the user.
     /// </returns>
     /// <exception cref="IllegalPrivatePolicyException">Requesting other user's private bookmarks will throw this exception.</exception>
-    public IFetchEngine<Illustration> Bookmarks(string uid, PrivacyPolicy privacyPolicy, TargetFilter targetFilter)
+    public IFetchEngine<Illustration> Bookmarks(long uid, PrivacyPolicy privacyPolicy, TargetFilter targetFilter)
     {
         EnsureNotCancelled();
         if (!CheckPrivacyPolicy(uid, privacyPolicy))
@@ -199,7 +199,7 @@ public partial class MakoClient
     ///     The <see cref="FollowingEngine" /> containing following users.
     /// </returns>
     /// <exception cref="IllegalPrivatePolicyException"></exception>
-    public IFetchEngine<User?> Following(string uid, PrivacyPolicy privacyPolicy)
+    public IFetchEngine<User?> Following(long uid, PrivacyPolicy privacyPolicy)
     {
         EnsureNotCancelled();
         if (!CheckPrivacyPolicy(uid, privacyPolicy))
@@ -252,7 +252,7 @@ public partial class MakoClient
     /// <returns>
     ///     The <see cref="TaggedBookmarksIdEngine" /> containing the illustrations ID for the bookmark tag.
     /// </returns>
-    public IFetchEngine<string> UserTaggedBookmarksId(string uid, string tagWithOriginalName)
+    public IFetchEngine<long> UserTaggedBookmarksId(long uid, string tagWithOriginalName)
     {
         EnsureNotCancelled();
         return new TaggedBookmarksIdEngine(this, new EngineHandle(CancelInstance), uid, tagWithOriginalName);
@@ -266,10 +266,10 @@ public partial class MakoClient
     /// <returns>
     ///     The <see cref="TaggedBookmarksIdEngine" /> containing the illustrations for the bookmark tag.
     /// </returns>
-    public IFetchEngine<Illustration> UserTaggedBookmarks(string uid, string tagWithOriginalName)
+    public IFetchEngine<Illustration> UserTaggedBookmarks(long uid, string tagWithOriginalName)
     {
         EnsureNotCancelled();
-        return new FetchEngineSelector<string, Illustration>(new TaggedBookmarksIdEngine(this, new EngineHandle(CancelInstance), uid, tagWithOriginalName), GetIllustrationFromIdAsync);
+        return new FetchEngineSelector<long, Illustration>(new TaggedBookmarksIdEngine(this, new EngineHandle(CancelInstance), uid, tagWithOriginalName), GetIllustrationFromIdAsync);
     }
 
     /// <summary>
@@ -309,7 +309,7 @@ public partial class MakoClient
     /// <returns>
     ///     The <see cref="NovelBookmarkEngine" /> containing the bookmarked novels.
     /// </returns>
-    public IFetchEngine<Novel> NovelBookmarks(string uid, PrivacyPolicy privacyPolicy, TargetFilter targetFilter)
+    public IFetchEngine<Novel> NovelBookmarks(long uid, PrivacyPolicy privacyPolicy, TargetFilter targetFilter)
     {
         EnsureNotCancelled();
         _ = CheckPrivacyPolicy(uid, privacyPolicy);
@@ -323,7 +323,7 @@ public partial class MakoClient
     /// <returns>
     ///     The <see cref="IllustrationCommentsEngine" /> containing comments of the illustration.
     /// </returns>
-    public IFetchEngine<Comment?> IllustrationComments(string illustId)
+    public IFetchEngine<Comment?> IllustrationComments(long illustId)
     {
         EnsureNotCancelled();
         return new IllustrationCommentsEngine(illustId, this, new EngineHandle(CancelInstance));
@@ -336,13 +336,13 @@ public partial class MakoClient
     /// <returns>
     ///     The <see cref="IllustrationCommentRepliesEngine" /> containing replies of the comment.
     /// </returns>
-    public IFetchEngine<Comment> IllustrationCommentReplies(string commentId)
+    public IFetchEngine<Comment> IllustrationCommentReplies(long commentId)
     {
         EnsureNotCancelled();
-        return new IllustrationCommentRepliesEngine(commentId, this, new EngineHandle(CancelInstance));
+        return new IllustrationCommentRepliesEngine(commentId.ToString(), this, new EngineHandle(CancelInstance));
     }
 
-    public IFetchEngine<Illustration> RelatedWorks(string illustId)
+    public IFetchEngine<Illustration> RelatedWorks(long illustId)
     {
         EnsureNotCancelled();
         return new RelatedWorksFetchEngine(illustId, this, new EngineHandle(CancelInstance));

@@ -22,12 +22,13 @@ using System;
 using System.Text.RegularExpressions;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Pixeval.Utilities;
+using WinUI3Utilities;
 
 namespace Pixeval.Controls.TokenInput;
 
-public sealed partial class Token : ObservableObject, IEquatable<Token>, ICloneable
+public sealed partial class Token : ObservableObject, IEquatable<Token>, IDeepCloneable<Token>
 {
-    public static readonly Token Empty = new(string.Empty, false, false);
+    public static readonly Token Empty = new("", false, false);
 
     [ObservableProperty]
     private bool _caseSensitive;
@@ -45,18 +46,22 @@ public sealed partial class Token : ObservableObject, IEquatable<Token>, IClonea
         _isRegularExpression = isRegularExpression;
         if (IsRegularExpression && !tokenContent.IsValidRegexPattern())
         {
-            throw new ArgumentException(nameof(tokenContent));
+            ThrowHelper.Argument(tokenContent);
         }
     }
 
     public Token()
     {
-        _tokenContent = string.Empty;
+        _tokenContent = "";
     }
 
-    public object Clone()
+    /// <summary>
+    /// 成员全部是类似于值类型，所以深拷贝和浅拷贝效果一样
+    /// </summary>
+    /// <returns></returns>
+    public Token DeepClone()
     {
-        return MemberwiseClone();
+        return (Token)MemberwiseClone();
     }
 
     public bool Equals(Token? other)
@@ -97,10 +102,10 @@ public sealed partial class Token : ObservableObject, IEquatable<Token>, IClonea
 
         if (IsRegularExpression)
         {
-            return Regex.IsMatch(input!, _tokenContent);
+            return Regex.IsMatch(input!, TokenContent);
         }
 
-        return CaseSensitive ? input == _tokenContent : input!.Equals(_tokenContent, StringComparison.OrdinalIgnoreCase);
+        return CaseSensitive ? input == TokenContent : input!.Equals(TokenContent, StringComparison.OrdinalIgnoreCase);
     }
 
     public override int GetHashCode()

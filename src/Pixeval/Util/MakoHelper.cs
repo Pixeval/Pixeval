@@ -21,10 +21,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using CommunityToolkit.WinUI.Collections;
 using Microsoft.UI;
 using Microsoft.UI.Xaml.Media;
 using Pixeval.Controls;
+using Pixeval.Controls.IllustrationView;
 using Pixeval.Controls.MarkupExtensions;
 using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Global.Enum;
@@ -32,19 +34,20 @@ using Pixeval.CoreApi.Model;
 using Pixeval.Misc;
 using Pixeval.Options;
 using Pixeval.Util.Generic;
-using Pixeval.Utilities;
+using WinUI3Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
 
 namespace Pixeval.Util;
 
 public static class MakoHelper
 {
-    public static IReadOnlyList<int> StickerIds = Enumerates.EnumerableOf(
-            Enumerable.Range(301, 10),
-            Enumerable.Range(401, 10),
-            Enumerable.Range(201, 10),
-            Enumerable.Range(101, 10))
-        .SelectMany(Functions.Identity<IEnumerable<int>>()).ToList();
+    public static IReadOnlyList<int> StickerIds =
+    [
+        .. Enumerable.Range(301, 10),
+        .. Enumerable.Range(401, 10),
+        .. Enumerable.Range(201, 10),
+        .. Enumerable.Range(101, 10)
+    ];
 
     public static IllustrationSortOptionWrapper GetAppSettingDefaultSortOptionWrapper()
     {
@@ -55,98 +58,76 @@ public static class MakoHelper
     {
         return option switch
         {
-            ThumbnailUrlOption.Large => illustration.ImageUrls?.Large,
-            ThumbnailUrlOption.Medium => illustration.ImageUrls?.Medium,
-            ThumbnailUrlOption.SquareMedium => illustration.ImageUrls?.SquareMedium,
-            _ => throw new ArgumentOutOfRangeException(nameof(option), option, null)
+            ThumbnailUrlOption.Large => illustration.ImageUrls.Large,
+            ThumbnailUrlOption.Medium => illustration.ImageUrls.Medium,
+            ThumbnailUrlOption.SquareMedium => illustration.ImageUrls.SquareMedium,
+            _ => ThrowHelper.ArgumentOutOfRange<ThumbnailUrlOption, string?>(option)
         };
     }
 
-    public static Uri GenerateIllustrationWebUri(string id)
+    public static Uri GenerateIllustrationWebUri(long id)
     {
         return new Uri($"https://www.pixiv.net/artworks/{id}");
     }
 
-    public static Uri GenerateIllustrationPixEzUri(string id)
+    public static Uri GenerateIllustrationPixEzUri(long id)
     {
         return new Uri($"pixez://www.pixiv.net/artworks/{id}");
     }
 
-    public static Uri GenerateIllustrationAppUri(string id)
+    public static Uri GenerateIllustrationAppUri(long id)
     {
         return new Uri($"{AppContext.AppProtocol}://illust/{id}");
     }
 
-    public static Uri GenerateIllustratorWebUri(string id)
+    public static Uri GenerateIllustratorWebUri(long id)
     {
         return new Uri($"https://www.pixiv.net/users/{id}");
     }
 
-    public static Uri GenerateIllustratorPixEzUri(string id)
+    public static Uri GenerateIllustratorPixEzUri(long id)
     {
         return new Uri($"pixez://www.pixiv.net/users/{id}");
     }
 
-    public static Uri GenerateIllustratorAppUri(string id)
+    public static Uri GenerateIllustratorAppUri(long id)
     {
         return new Uri($"{AppContext.AppProtocol}://user/{id}");
     }
 
-    public static string? GetOriginalUrl(this Illustration illustration)
+    public static string GetStaticImageFormat(this IllustrationItemViewModel illustration)
     {
-        return illustration.ImageUrls?.Original ?? illustration.MetaSinglePage?.OriginalImageUrl;
+        if (illustration.IsUgoira)
+            return ThrowHelper.Argument<bool, string>(illustration.IsUgoira, "Needs static illustration.");
+        var url = illustration.OriginalStaticUrl;
+        return url[url.LastIndexOf('.')..];
     }
 
-    public static string GetImageFormat(this Illustration illustration)
+    public static async Task<string> GetIllustrationThumbnailCacheKeyAsync(this IllustrationItemViewModel illustration, ThumbnailUrlOption thumbnailUrlOption)
     {
-        return illustration.GetOriginalUrl() is { } url ? url[url.LastIndexOf(".", StringComparison.Ordinal)..] : string.Empty;
+        return $"thumbnail-{thumbnailUrlOption}-{await illustration.GetOriginalSourceUrlAsync()}";
     }
 
-    public static string GetIllustrationThumbnailCacheKey(this Illustration illustration, ThumbnailUrlOption thumbnailUrlOption)
+    public static async Task<string> GetIllustrationOriginalImageCacheKeyAsync(this IllustrationItemViewModel illustration)
     {
-        return $"thumbnail-{thumbnailUrlOption}-{illustration.GetOriginalUrl() ?? illustration.Id.ToString()}";
-    }
-
-    public static string GetIllustrationOriginalImageCacheKey(this Illustration illustration)
-    {
-        return $"original-{illustration.GetOriginalUrl() ?? illustration.Id.ToString()}";
+        return $"original-{await illustration.GetOriginalSourceUrlAsync()}";
     }
 
     public static SortDescription? GetSortDescriptionForIllustration(IllustrationSortOption sortOption)
     {
         return sortOption switch
         {
-            IllustrationSortOption.PopularityDescending => new SortDescription(SortDirection.Descending, IllustrationBookmarkComparer.Instance),
-            IllustrationSortOption.PublishDateAscending => new SortDescription(SortDirection.Ascending, IllustrationViewModelPublishDateComparer.Instance),
-            IllustrationSortOption.PublishDateDescending => new SortDescription(SortDirection.Descending, IllustrationViewModelPublishDateComparer.Instance),
+            IllustrationSortOption.PopularityDescending => new(SortDirection.Descending, IllustrationBookmarkComparer.Instance),
+            IllustrationSortOption.PublishDateAscending => new(SortDirection.Ascending, IllustrationViewModelPublishDateComparer.Instance),
+            IllustrationSortOption.PublishDateDescending => new(SortDirection.Descending, IllustrationViewModelPublishDateComparer.Instance),
             IllustrationSortOption.DoNotSort => null,
-            _ => throw new ArgumentOutOfRangeException(nameof(sortOption), sortOption, null)
+            _ => ThrowHelper.ArgumentOutOfRange<IllustrationSortOption, SortDescription?>(sortOption)
         };
-    }
-
-    public static bool IsUgoira(this Illustration illustration)
-    {
-        return illustration.Type!.Equals("ugoira", StringComparison.OrdinalIgnoreCase);
-    }
-
-    public static bool IsManga(this Illustration illustration)
-    {
-        return illustration.PageCount > 1;
     }
 
     public static void Cancel<T>(this IFetchEngine<T> engine)
     {
         engine.EngineHandle.Cancel();
-    }
-
-    public static bool IsRestricted(this Illustration illustration)
-    {
-        return illustration.XRestrict != 0;
-    }
-
-    public static XRestrictLevel RestrictLevel(this Illustration illustration)
-    {
-        return (XRestrictLevel)illustration.XRestrict;
     }
 
     public static string GenerateStickerDownloadUrl(int id)
@@ -158,13 +139,13 @@ public static class MakoHelper
     {
         var systemThemeFontFamily = new FontFamily(AppContext.AppIconFontFamilyName);
         return isBookmarked
-            ? new FontSymbolIconSource
+            ? new()
             {
                 Symbol = FontIconSymbols.HeartFillEB52,
                 Foreground = new SolidColorBrush(Colors.Crimson),
                 FontFamily = systemThemeFontFamily
             }
-            : new FontSymbolIconSource
+            : new()
             {
                 Symbol = FontIconSymbols.HeartEB51,
                 FontFamily = systemThemeFontFamily
@@ -175,13 +156,13 @@ public static class MakoHelper
     {
         var systemThemeFontFamily = new FontFamily(AppContext.AppIconFontFamilyName);
         return isBookmarked
-            ? new FontSymbolIcon
+            ? new()
             {
                 Symbol = FontIconSymbols.HeartFillEB52,
                 Foreground = new SolidColorBrush(Colors.Crimson),
                 FontFamily = systemThemeFontFamily
             }
-            : new FontSymbolIcon
+            : new()
             {
                 Symbol = FontIconSymbols.HeartEB51,
                 FontFamily = systemThemeFontFamily
@@ -192,16 +173,21 @@ public static class MakoHelper
     {
         var systemThemeFontFamily = new FontFamily(AppContext.AppIconFontFamilyName);
         return isFollowed
-            ? new FontSymbolIconSource
+            ? new()
             {
                 Symbol = FontIconSymbols.ContactSolidEA8C,
                 Foreground = new SolidColorBrush(Colors.Crimson),
                 FontFamily = systemThemeFontFamily
             }
-            : new FontSymbolIconSource
+            : new()
             {
                 Symbol = FontIconSymbols.ContactE77B,
                 FontFamily = systemThemeFontFamily
             };
+    }
+
+    public static string GetBookmarkContextItemText(bool isBookmarked)
+    {
+        return isBookmarked ? MiscResources.RemoveBookmark : MiscResources.AddBookmark;
     }
 }

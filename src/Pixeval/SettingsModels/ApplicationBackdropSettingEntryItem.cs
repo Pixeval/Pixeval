@@ -34,7 +34,7 @@ public record ApplicationBackdropSettingEntryItem : StringRepresentableItem, IAv
         BackdropType.Mica => MiscResources.MicaBackdrop,
         BackdropType.MicaAlt => MiscResources.MicaAltBackdrop,
         BackdropType.None => MiscResources.NoneBackdrop,
-        _ => throw new ArgumentOutOfRangeException(nameof(item), item, null)
+        BackdropType.Maintain or _ => ThrowHelper.ArgumentOutOfRange<BackdropType, string>(item)
     })
     {
     }

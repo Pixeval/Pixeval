@@ -27,152 +27,152 @@ namespace Pixeval.CoreApi.Net.Response;
 public class PixivSingleUserResponse
 {
     [JsonPropertyName("user")]
-    public UserInfo? UserEntity { get; set; }
+    public required UserInfo UserEntity { get; set; }
 
     [JsonPropertyName("profile")]
-    public Profile? UserProfile { get; set; }
+    public required Profile UserProfile { get; set; }
 
     [JsonPropertyName("profile_publicity")]
-    public ProfilePublicity? UserProfilePublicity { get; set; }
+    public required ProfilePublicity UserProfilePublicity { get; set; }
 
     [JsonPropertyName("workspace")]
-    public Workspace? UserWorkspace { get; set; }
+    public required Workspace UserWorkspace { get; set; }
 
     public class Profile
     {
         [JsonPropertyName("webpage")]
-        public string? Webpage { get; set; }
+        public required string Webpage { get; set; }
 
         [JsonPropertyName("gender")]
-        public string? Gender { get; set; }
+        public required string Gender { get; set; }
 
         [JsonPropertyName("birth")]
-        public string? Birth { get; set; }
+        public required string Birth { get; set; }
 
         [JsonPropertyName("birth_day")]
-        public string? BirthDay { get; set; }
+        public required string BirthDay { get; set; }
 
         [JsonPropertyName("birth_year")]
-        public long BirthYear { get; set; }
+        public required long BirthYear { get; set; }
 
         [JsonPropertyName("region")]
-        public string? Region { get; set; }
+        public required string Region { get; set; }
 
         [JsonPropertyName("address_id")]
-        public long AddressId { get; set; }
+        public required long AddressId { get; set; }
 
         [JsonPropertyName("country_code")]
-        public string? CountryCode { get; set; }
+        public required string CountryCode { get; set; }
 
         [JsonPropertyName("job")]
-        public string? Job { get; set; }
+        public required string Job { get; set; }
 
         [JsonPropertyName("job_id")]
-        public long JobId { get; set; }
+        public required long JobId { get; set; }
 
         [JsonPropertyName("total_follow_users")]
-        public long TotalFollowUsers { get; set; }
+        public required long TotalFollowUsers { get; set; }
 
         [JsonPropertyName("total_mypixiv_users")]
-        public long TotalMyPixivUsers { get; set; }
+        public required long TotalMyPixivUsers { get; set; }
 
         [JsonPropertyName("total_illusts")]
-        public long TotalIllusts { get; set; }
+        public required long TotalIllusts { get; set; }
 
         [JsonPropertyName("total_manga")]
-        public long TotalManga { get; set; }
+        public required long TotalManga { get; set; }
 
         [JsonPropertyName("total_novels")]
-        public long TotalNovels { get; set; }
+        public required long TotalNovels { get; set; }
 
         [JsonPropertyName("total_illust_bookmarks_public")]
-        public long TotalIllustBookmarksPublic { get; set; }
+        public required long TotalIllustBookmarksPublic { get; set; }
 
         [JsonPropertyName("total_illust_series")]
-        public long TotalIllustSeries { get; set; }
+        public required long TotalIllustSeries { get; set; }
 
         [JsonPropertyName("total_novel_series")]
-        public long TotalNovelSeries { get; set; }
+        public required long TotalNovelSeries { get; set; }
 
         [JsonPropertyName("background_image_url")]
-        public string? BackgroundImageUrl { get; set; }
+        public required string BackgroundImageUrl { get; set; }
 
         [JsonPropertyName("twitter_account")]
-        public string? TwitterAccount { get; set; }
+        public required string TwitterAccount { get; set; }
 
         [JsonPropertyName("twitter_url")]
-        public string? TwitterUrl { get; set; }
+        public required string TwitterUrl { get; set; }
 
         [JsonPropertyName("is_premium")]
-        public bool IsPremium { get; set; }
+        public required bool IsPremium { get; set; }
 
         [JsonPropertyName("is_using_custom_profile_image")]
-        public bool IsUsingCustomProfileImage { get; set; }
+        public required bool IsUsingCustomProfileImage { get; set; }
     }
 
     public class ProfilePublicity
     {
         [JsonPropertyName("gender")]
-        public string? Gender { get; set; }
+        public required string Gender { get; set; }
 
         [JsonPropertyName("region")]
-        public string? Region { get; set; }
+        public required string Region { get; set; }
 
         [JsonPropertyName("birth_day")]
-        public string? BirthDay { get; set; }
+        public required string BirthDay { get; set; }
 
         [JsonPropertyName("birth_year")]
-        public string? BirthYear { get; set; }
+        public required string BirthYear { get; set; }
 
         [JsonPropertyName("job")]
-        public string? Job { get; set; }
+        public required string Job { get; set; }
 
         [JsonPropertyName("pawoo")]
-        public bool? Pawoo { get; set; }
+        public required bool Pawoo { get; set; }
     }
 
     public class ProfileImageUrls
     {
         [JsonPropertyName("medium")]
-        public string? Medium { get; set; }
+        public required string Medium { get; set; }
     }
 
     public class Workspace
     {
         [JsonPropertyName("pc")]
-        public string? Pc { get; set; }
+        public required string Pc { get; set; }
 
         [JsonPropertyName("monitor")]
-        public string? Monitor { get; set; }
+        public required string Monitor { get; set; }
 
         [JsonPropertyName("tool")]
-        public string? Tool { get; set; }
+        public required string Tool { get; set; }
 
         [JsonPropertyName("scanner")]
-        public string? Scanner { get; set; }
+        public required string Scanner { get; set; }
 
         [JsonPropertyName("tablet")]
-        public string? Tablet { get; set; }
+        public required string Tablet { get; set; }
 
         [JsonPropertyName("mouse")]
-        public string? Mouse { get; set; }
+        public required string Mouse { get; set; }
 
         [JsonPropertyName("printer")]
-        public string? Printer { get; set; }
+        public required string Printer { get; set; }
 
         [JsonPropertyName("desktop")]
-        public string? Desktop { get; set; }
+        public required string Desktop { get; set; }
 
         [JsonPropertyName("music")]
-        public string? Music { get; set; }
+        public required string Music { get; set; }
 
         [JsonPropertyName("desk")]
-        public string? Desk { get; set; }
+        public required string Desk { get; set; }
 
         [JsonPropertyName("chair")]
-        public string? Chair { get; set; }
+        public required string Chair { get; set; }
 
         [JsonPropertyName("comment")]
-        public string? Comment { get; set; }
+        public required string Comment { get; set; }
     }
 }

@@ -3,9 +3,13 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Pixeval.Controls"
+    xmlns:converters="using:Pixeval.Controls.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
+    <controls:EnhancedWindowPage.Resources>
+        <converters:BoolNegationToVisibilityConverter x:Key="BoolNegationToVisibilityConverter" />
+    </controls:EnhancedWindowPage.Resources>
     <Grid>
         <controls:ZoomableImage
             HorizontalAlignment="Stretch"
@@ -51,7 +55,7 @@
                 </CommandBarFlyout>
             </controls:ZoomableImage.ContextFlyout>
         </controls:ZoomableImage>
-        <Grid Visibility="{x:Bind _viewModel.GetLoadingMaskVisibility(_viewModel.LoadingOriginalSourceTask), Mode=OneWay}">
+        <Grid Visibility="{x:Bind _viewModel.LoadSuccessfully, Converter={StaticResource BoolNegationToVisibilityConverter}, Mode=OneWay}">
             <Rectangle Fill="{ThemeResource PixevalAppAcrylicBrush}" />
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                 <ProgressRing

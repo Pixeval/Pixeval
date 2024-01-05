@@ -27,5 +27,5 @@ public class BrowseHistoryEntry
     [BsonId(true)]
     public ObjectId? BrowseHistoryEntryId { get; set; }
 
-    public string? Id { get; set; }
+    public long Id { get; set; }
 }

@@ -19,35 +19,38 @@
 #endregion
 
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text.Json.Serialization;
 
 namespace Pixeval.CoreApi.Model;
 
+[DebuggerDisplay("{UserInfo}")]
 public record User : IIllustrate
 {
     [JsonPropertyName("user")]
-    public UserInfo? UserInfo { get; set; }
+    public required UserInfo UserInfo { get; set; }
 
     [JsonPropertyName("illusts")]
-    public IEnumerable<Illustration>? Illusts { get; set; }
+    public required IEnumerable<Illustration> Illusts { get; set; }
 
     [JsonPropertyName("is_muted")]
-    public bool IsMuted { get; set; }
+    public required bool IsMuted { get; set; }
 }
 
+[DebuggerDisplay("{Id}: {Name}")]
 public class UserInfo
 {
     [JsonPropertyName("id")]
-    public long Id { get; set; }
+    public required long Id { get; set; }
 
     [JsonPropertyName("name")]
-    public string? Name { get; set; }
+    public required string Name { get; set; }
 
     [JsonPropertyName("account")]
-    public string? Account { get; set; }
+    public required string Account { get; set; }
 
     [JsonPropertyName("profile_image_urls")]
-    public ProfileImageUrls? ProfileImageUrls { get; set; }
+    public required ProfileImageUrls ProfileImageUrls { get; set; }
 
     [JsonPropertyName("comment")]
     public string? Comment { get; set; }

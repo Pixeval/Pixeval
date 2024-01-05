@@ -18,13 +18,15 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using WinUI3Utilities;
+
 namespace Pixeval.Misc;
 
 public class AppWidthDefaultValueProvider : IDefaultValueProvider
 {
     public object ProvideValue()
     {
-        return WinUI3Utilities.WindowHelper.EstimatedWindowSize().Width;
+        return WindowHelper.EstimatedWindowSize().Width;
     }
 }
 
@@ -32,6 +34,6 @@ public class AppHeightDefaultValueProvider : IDefaultValueProvider
 {
     public object ProvideValue()
     {
-        return WinUI3Utilities.WindowHelper.EstimatedWindowSize().Height;
+        return WindowHelper.EstimatedWindowSize().Height;
     }
 }

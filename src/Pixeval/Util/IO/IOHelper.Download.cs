@@ -24,16 +24,10 @@ using System.IO;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
+using Windows.Storage.Streams;
 using Microsoft.IO;
-using Pixeval.Download;
-using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using Pixeval.Utilities.Threading;
-using Windows.Storage;
-using Windows.Storage.Pickers;
-using Windows.Storage.Streams;
-using Pixeval.Controls.IllustrationView;
 
 namespace Pixeval.Util.IO;
 
@@ -50,8 +44,12 @@ public static partial class IoHelper
     private const int MaximumSmallBufferPoolSizeInBytes = 24 * 1024 * BlockSizeInBytes; // 24MB
 
     private static readonly RecyclableMemoryStreamManager _recyclableMemoryStreamManager =
-        new(BlockSizeInBytes, LargeBufferMultipleInBytes, MaxBufferSizeInBytes,
-            MaximumSmallBufferPoolSizeInBytes, MaximumLargeBufferPoolSizeInBytes);
+        new(new RecyclableMemoryStreamManager.Options(
+            BlockSizeInBytes,
+            LargeBufferMultipleInBytes,
+            MaxBufferSizeInBytes,
+            MaximumSmallBufferPoolSizeInBytes,
+            MaximumLargeBufferPoolSizeInBytes));
 
     // To avoid collecting stack trace, which is quite a time-consuming task
     // and this exception is intended to be used at a massive magnitude
@@ -79,20 +77,20 @@ public static partial class IoHelper
     /// on performance
     /// </remarks>
     /// </summary>
-    public static async Task<Result<IRandomAccessStream>> DownloadAsIRandomAccessStreamAsync(
+    public static async Task<Result<IRandomAccessStream>> DownloadRandomAccessStreamAsync(
         this HttpClient httpClient,
         string url,
-        IProgress<int>? progress = null,
+        IProgress<double>? progress = null,
         CancellationHandle? cancellationHandle = default)
     {
-        return (await httpClient.DownloadAsStreamAsync(url, progress, cancellationHandle)).Rewrap(stream => stream.AsRandomAccessStream());
+        return (await httpClient.DownloadStreamAsync(url, progress, cancellationHandle)).Rewrap(stream => stream.AsRandomAccessStream());
     }
 
-    public static async Task<Result<Stream>> DownloadAsStreamAsync(
+    private static async Task<Result<Stream>> DownloadStreamAsync(
         this HttpClient httpClient,
         string url,
-        IProgress<int>? progress = null,
-        CancellationHandle? cancellationHandle = default)
+        IProgress<double>? progress = null,
+        CancellationHandle? cancellationHandle = null)
     {
         var awaiter = new ReenterableAwaiter<bool>(!cancellationHandle?.IsPaused ?? true, true);
         cancellationHandle?.RegisterPaused(awaiter.Reset);
@@ -120,7 +118,6 @@ public static partial class IoHelper
                 var resultStream = new MemoryStream();
                 int bytesRead, totalRead = 0;
                 var buffer = ArrayPool<byte>.Shared.Rent(4096);
-                var lastReportedProgressPercentage = 0;
                 while ((bytesRead = await contentStream.ReadAsync(buffer)) != 0 && await awaiter)
                 {
                     if (cancellationHandle?.IsCancelled is true)
@@ -132,9 +129,8 @@ public static partial class IoHelper
                     await resultStream.WriteAsync(buffer, 0, bytesRead);
                     totalRead += bytesRead;
                     // reduce the frequency of the invocation of the callback, otherwise it will draws a severe performance impact
-                    if ((int)(totalRead / (double)responseLength * 100) is var percentage && percentage - lastReportedProgressPercentage >= 1)
+                    if (totalRead / (double)responseLength * 100 is var percentage)
                     {
-                        lastReportedProgressPercentage = percentage;
                         progress?.Report(percentage); // percentage, 100 as base
                     }
                 }
@@ -149,45 +145,6 @@ public static partial class IoHelper
         catch (Exception e)
         {
             return Result<Stream>.AsFailure(e);
-        }
-    }
-
-    public static async Task SaveAsync(this IllustrationViewModel viewModel)
-    {
-        using var scope = App.AppViewModel.AppServicesScope;
-        var factory = scope.ServiceProvider.GetRequiredService<IDownloadTaskFactory<IllustrationViewModel, ObservableDownloadTask>>();
-        foreach (var mangaIllustrationViewModel in viewModel.GetMangaIllustrationViewModels())
-        {
-            var downloadTask = await factory.CreateAsync(mangaIllustrationViewModel, App.AppViewModel.AppSetting.DefaultDownloadPathMacro);
-            App.AppViewModel.DownloadManager.QueueTask(downloadTask);
-        }
-    }
-
-    public static async Task SaveAsAsync(this IllustrationViewModel viewModel)
-    {
-        IStorageItem? item = viewModel.IsManga
-            ? await UiHelper.OpenFolderPickerAsync(PickerLocationId.PicturesLibrary)
-            : await UiHelper.OpenFileSavePickerAsync(viewModel.Id, $"{viewModel.Illustrate.GetImageFormat().RemoveSurrounding(".", string.Empty)} file", viewModel.Illustrate.GetImageFormat());
-
-        using var scope = App.AppViewModel.AppServicesScope;
-        var factory = scope.ServiceProvider.GetRequiredService<IDownloadTaskFactory<IllustrationViewModel, ObservableDownloadTask>>();
-        switch (item)
-        {
-            case StorageFile file:
-                // the file save picker will create a file automatically, and we choose to create one
-                // manually instead of using that file
-                await file.DeleteAsync(StorageDeleteOption.PermanentDelete);
-                var task = await factory.CreateAsync(viewModel, file.Path);
-                App.AppViewModel.DownloadManager.QueueTask(task);
-                break;
-            case StorageFolder folder:
-                foreach (var mangaIllustrationViewModel in viewModel.GetMangaIllustrationViewModels())
-                {
-                    var mTask = await factory.CreateAsync(mangaIllustrationViewModel, Path.Combine(folder.Path, $"{viewModel.Id}_{mangaIllustrationViewModel.MangaIndex}"));
-                    App.AppViewModel.DownloadManager.QueueTask(mTask);
-                }
-
-                break;
         }
     }
 }

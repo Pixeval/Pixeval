@@ -17,11 +17,11 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
+#define DISABLE_XAML_GENERATED_BREAK_ON_UNHANDLED_EXCEPTION
 
 using System;
 using System.Linq;
 using Windows.Graphics;
-using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
@@ -30,7 +30,6 @@ using Pixeval.Activation;
 using Pixeval.AppManagement;
 using Pixeval.Controls;
 using Pixeval.Controls.Windowing;
-using Pixeval.Messages;
 using Pixeval.Pages.Login;
 using WinUI3Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
@@ -43,9 +42,9 @@ public partial class App
 
     public App()
     {
-        // The theme can only be changed in ctor
-        AppViewModel = new AppViewModel(this) { AppSetting = AppContext.LoadConfiguration() ?? AppSetting.CreateDefault() };
+        AppViewModel = new AppViewModel(this) { AppSetting = AppContext.LoadConfig() ?? AppSetting.CreateDefault() };
         WindowFactory.WindowSettings = AppViewModel.AppSetting;
+        WindowFactory.IconAbsolutePath = AppContext.IconAbsolutePath;
         AppInstance.GetCurrent().Activated += (_, arguments) => ActivationRegistrar.Dispatch(arguments);
         InitializeComponent();
     }
@@ -70,22 +69,15 @@ public partial class App
         Current.Resources[ApplicationWideFontKey] = new FontFamily(AppViewModel.AppSetting.AppFontFamilyName);
         await AppKnownFolders.InitializeAsync();
 
-        CurrentContext.Title = AppContext.AppIdentifier;
-        WindowFactory.SetTheme(AppViewModel.AppSetting.Theme);
-
         WindowFactory.Create(out var w)
             .WithLoaded((s, _) => s.To<Frame>().NavigateTo<LoginPage>(w))
-            .WithClosed((_, _) => AppContext.SaveContext())
+            .WithClosing((_, _) => AppContext.SaveContext()) // TODO: 从运行打开应用的时候不会ExitApp，就算是调用App.Current.Exit();
             .WithSizeLimit(800, 360)
-            .Init(nameof(Pixeval), new SizeInt32(AppViewModel.AppSetting.WindowWidth, AppViewModel.AppSetting.WindowHeight))
+            .Init(AppContext.AppIdentifier, new SizeInt32(AppViewModel.AppSetting.WindowWidth, AppViewModel.AppSetting.WindowHeight))
             .Activate();
 
-        await AppViewModel.InitializeAsync(isProtocolActivated);
-    }
+        w.RegisterUnhandledExceptionHandler();
 
-    public static void ExitWithPushNotification()
-    {
-        _ = WeakReferenceMessenger.Default.Send(new ApplicationExitingMessage());
-        CurrentContext.App.Exit();
+        await AppViewModel.InitializeAsync(isProtocolActivated);
     }
 }

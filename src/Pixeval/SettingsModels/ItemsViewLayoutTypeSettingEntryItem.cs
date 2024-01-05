@@ -18,10 +18,10 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Pixeval.Controls;
+using WinUI3Utilities;
 
 namespace Pixeval.SettingsModels;
 
@@ -31,7 +31,7 @@ public record ItemsViewLayoutTypeSettingEntryItem : StringRepresentableItem, IAv
     {
         ItemsViewLayoutType.LinedFlow => MiscResources.IllustrationViewLinedFlowLayout,
         ItemsViewLayoutType.Grid => MiscResources.IllustrationViewGridLayout,
-        _ => throw new ArgumentOutOfRangeException(nameof(item), item, null)
+        _ => ThrowHelper.ArgumentOutOfRange<ItemsViewLayoutType, string>(item)
     })
     {
     }

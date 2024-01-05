@@ -27,5 +27,5 @@ namespace Pixeval.CoreApi.Net.Response;
 public class AutoCompletionResponse
 {
     [JsonPropertyName("tags")]
-    public List<Tag>? Tags { get; set; }
+    public required List<Tag> Tags { get; set; }
 }

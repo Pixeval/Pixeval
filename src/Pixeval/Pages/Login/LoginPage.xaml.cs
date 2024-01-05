@@ -20,27 +20,72 @@
 
 using System;
 using System.Threading.Tasks;
-using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
-using Microsoft.UI.Xaml.Navigation;
-using Pixeval.Messages;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
-using Windows.System;
+using WinUI3Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
 
 namespace Pixeval.Pages.Login;
 
 public sealed partial class LoginPage
 {
-    private readonly LoginPageViewModel _viewModel = new();
+    private readonly BrowserInfo[] _browserInfos =
+    [
+        BrowserInfo.Chrome,
+        BrowserInfo.Edge,
+        BrowserInfo.Firefox,
+        BrowserInfo.WebView2
+    ];
+
+    private readonly LoginPageViewModel _viewModel;
 
     public LoginPage()
     {
+        _viewModel = new(this);
         InitializeComponent();
-        DataContext = _viewModel;
+    }
+
+    private async void ItemsView_OnItemInvoked(ItemsView sender, ItemsViewItemInvokedEventArgs args)
+    {
+        try
+        {
+            var browserInfo = sender.SelectedItem.To<BrowserInfo>();
+            if (await (browserInfo.Type switch
+            {
+                AvailableBrowserType.Chrome => _viewModel.BrowserLoginAsync(BrowserInfo.Chrome, this, Navigated),
+                AvailableBrowserType.Edge => _viewModel.BrowserLoginAsync(BrowserInfo.Edge, this, Navigated),
+                AvailableBrowserType.Firefox => _viewModel.BrowserLoginAsync(BrowserInfo.Firefox, this, Navigated),
+                AvailableBrowserType.WebView2 => _viewModel.WebView2LoginAsync(this, Navigated),
+                _ => ThrowHelper.ArgumentOutOfRange<AvailableBrowserType, Task<string?>>(browserInfo.Type)
+            }) is { } error)
+            {
+                _viewModel.AdvancePhase(LoginPageViewModel.LoginPhaseEnum.WaitingForUserInput);
+                _ = await this.CreateAcknowledgementAsync(LoginPageResources.ErrorWhileLoggingInTitle, error);
+            }
+        }
+        catch (Exception exception)
+        {
+            _ = await this.CreateAcknowledgementAsync(LoginPageResources.ErrorWhileLoggingInTitle,
+                    LoginPageResources.ErrorWhileLogginInContentFormatted.Format(exception + "\n" + exception.StackTrace));
+            Application.Current.Exit();
+        }
+
+        return;
+        void Navigated()
+        {
+            if (App.AppViewModel.MakoClient == null!)
+                ThrowHelper.Exception();
+
+            _ = DispatcherQueue.TryEnqueue(() =>
+            {
+                _viewModel.AdvancePhase(LoginPageViewModel.LoginPhaseEnum.SuccessNavigating);
+                NavigateParent<MainPage>(null, new DrillInNavigationTransitionInfo());
+                AppContext.SaveContext();
+            });
+        }
     }
 
     private async void LoginPage_OnLoaded(object sender, RoutedEventArgs e)
@@ -54,62 +99,15 @@ public sealed partial class LoginPage
             }
             else
             {
-                await EnsureCertificateIsInstalled();
-                await EnsureWebView2IsInstalled();
-                await _viewModel.WebLoginAsync();
-                NavigateParent<MainPage>(null, new DrillInNavigationTransitionInfo());
+                _viewModel.AdvancePhase(LoginPageViewModel.LoginPhaseEnum.WaitingForUserInput);
+                _viewModel.IsFinished = true;
             }
-
-            AppContext.SaveContext();
-            _ = WeakReferenceMessenger.Default.Send(new LoginCompletedMessage(this, App.AppViewModel.MakoClient.Session));
         }
         catch (Exception exception)
         {
-            _ = await MessageDialogBuilder.CreateAcknowledgement(
-                    this,
-                    LoginPageResources.ErrorWhileLoggingInTitle,
-                    LoginPageResources.ErrorWhileLogginInContentFormatted.Format(exception.StackTrace))
-                .ShowAsync();
+            _ = await this.CreateAcknowledgementAsync(LoginPageResources.ErrorWhileLoggingInTitle,
+                    LoginPageResources.ErrorWhileLogginInContentFormatted.Format(exception.StackTrace));
             Application.Current.Exit();
         }
-    }
-
-    private async Task EnsureCertificateIsInstalled()
-    {
-        if (!await _viewModel.CheckFakeRootCertificateInstallationAsync())
-        {
-            var dialogResult = await MessageDialogBuilder.CreateOkCancel(this,
-                LoginPageResources.RootCertificateInstallationRequiredTitle,
-                LoginPageResources.RootCertificateInstallationRequiredContent).ShowAsync();
-            if (dialogResult == ContentDialogResult.Primary)
-            {
-                await _viewModel.InstallFakeRootCertificateAsync();
-            }
-            else
-            {
-                App.ExitWithPushNotification();
-            }
-        }
-    }
-
-    private async Task EnsureWebView2IsInstalled()
-    {
-        if (!_viewModel.CheckWebView2Installation())
-        {
-            var dialogResult = await MessageDialogBuilder.CreateOkCancel(this,
-                LoginPageResources.WebView2InstallationRequiredTitle,
-                LoginPageResources.WebView2InstallationRequiredContent).ShowAsync();
-            if (dialogResult == ContentDialogResult.Primary)
-            {
-                _ = await Launcher.LaunchUriAsync(new Uri("https://go.microsoft.com/fwlink/p/?LinkId=2124703"));
-            }
-
-            App.ExitWithPushNotification();
-        }
-    }
-
-    public override void OnPageDeactivated(NavigatingCancelEventArgs e)
-    {
-        _viewModel.Deactivate();
     }
 }

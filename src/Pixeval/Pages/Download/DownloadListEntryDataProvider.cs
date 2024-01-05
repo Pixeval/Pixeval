@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.WinUI.Collections;
@@ -6,8 +5,9 @@ using Pixeval.Collections;
 using Pixeval.Controls.Illustrate;
 using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Model;
-using Pixeval.Download;
+using Pixeval.Download.Models;
 using Pixeval.Misc;
+using WinUI3Utilities;
 
 namespace Pixeval.Pages.Download;
 
@@ -32,13 +32,13 @@ public class DownloadListEntryDataProvider : ObservableObject, IDataProvider<Ill
         View.Clear();
     }
 
-    public void ResetEngine(IEnumerable<ObservableDownloadTask> source)
-    {
-        Source = new IncrementalLoadingCollection<FetchEngineIncrementalSource<Illustration, DownloadListEntryViewModel>, DownloadListEntryViewModel>(new DownloadListEntryIncrementalSource(source));
-    }
-
     void IDataProvider<Illustration, DownloadListEntryViewModel>.ResetEngine(IFetchEngine<Illustration?>? fetchEngine, int limit)
     {
-        throw new NotImplementedException("DownloadListEntryDataProvider 不使用 FetchEngine");
+        ThrowHelper.NotSupported($"{nameof(DownloadListEntryDataProvider)} 不使用 {nameof(FetchEngine)}");
+    }
+
+    public void ResetEngine(IEnumerable<IllustrationDownloadTask> source)
+    {
+        Source = new IncrementalLoadingCollection<FetchEngineIncrementalSource<Illustration, DownloadListEntryViewModel>, DownloadListEntryViewModel>(new DownloadListEntryIncrementalSource(source));
     }
 }

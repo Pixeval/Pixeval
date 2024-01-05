@@ -18,16 +18,17 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using System;
 using Pixeval.Utilities.Threading;
 
 namespace Pixeval.Download;
 
-public class DownloadStartingDeferral
+public class DownloadStartingDeferral : IDisposable
 {
     /// <summary>
     ///     Set its result to <see langword="true" /> if you want the download to proceed, otherwise, <see langword="false" />
     /// </summary>
-    public ReenterableAwaiter<bool> Signal { get; } = new ReenterableAwaiter<bool>(true, true);
+    public ReenterableAwaiter<bool> Signal { get; } = new(true, true);
 
     public void Set()
     {
@@ -42,5 +43,10 @@ public class DownloadStartingDeferral
     public void Complete(bool value)
     {
         Signal.SetResult(value);
+    }
+
+    public void Dispose()
+    {
+        Signal.SetResult(true);
     }
 }

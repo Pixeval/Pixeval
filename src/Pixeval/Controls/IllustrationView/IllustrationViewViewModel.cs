@@ -21,43 +21,49 @@
 using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.WinUI.Collections;
-using Pixeval.CoreApi.Model;
 using Pixeval.Controls.Illustrate;
+using Pixeval.CoreApi.Model;
 using Pixeval.Util;
 using Pixeval.Utilities;
 
 namespace Pixeval.Controls.IllustrationView;
 
-public sealed partial class IllustrationViewViewModel : SortableIllustrateViewViewModel<Illustration, IllustrationViewModel>
+public sealed partial class IllustrationViewViewModel : SortableIllustrateViewViewModel<Illustration, IllustrationItemViewModel>
 {
     [ObservableProperty]
     private bool _isSelecting;
 
-    public override IllustrationViewDataProvider DataProvider { get; }
+    private IllustrationItemViewModel[] _selectedIllustrations = [];
 
     public IllustrationViewViewModel(IllustrationViewViewModel viewModel)
     {
         DataProvider = viewModel.DataProvider.CloneRef();
-        Init();
+        SelectionLabel = IllustrationViewCommandBarResources.CancelSelectionButtonDefaultLabel;
     }
 
     public IllustrationViewViewModel()
     {
-        DataProvider = new IllustrationViewDataProvider();
-        Init();
+        DataProvider = new();
+        SelectionLabel = IllustrationViewCommandBarResources.CancelSelectionButtonDefaultLabel;
     }
 
-    private void Init()
+    public override IllustrationViewDataProvider DataProvider { get; }
+
+    public IllustrationItemViewModel[] SelectedIllustrations
     {
-        SelectionLabel = IllustrationViewCommandBarResources.CancelSelectionButtonDefaultLabel;
-        DataProvider.SelectedIllustrations.CollectionChanged += (_, _) =>
+        get => _selectedIllustrations;
+        set
         {
-            IsAnyIllustrationSelected = DataProvider.SelectedIllustrations.Count > 0;
-            var count = DataProvider.SelectedIllustrations.Count;
-            SelectionLabel = count is 0
-                ? IllustrationViewCommandBarResources.CancelSelectionButtonDefaultLabel
-                : IllustrationViewCommandBarResources.CancelSelectionButtonFormatted.Format(count);
-        };
+            if (Equals(value, _selectedIllustrations))
+                return;
+            _selectedIllustrations = value;
+            var count = value.Length;
+            IsAnyIllustrationSelected = count > 0;
+            SelectionLabel = IsAnyIllustrationSelected
+                ? IllustrationViewCommandBarResources.CancelSelectionButtonFormatted.Format(count)
+                : IllustrationViewCommandBarResources.CancelSelectionButtonDefaultLabel;
+            OnPropertyChanged();
+        }
     }
 
     public override void Dispose()

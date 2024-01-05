@@ -18,20 +18,20 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using Pixeval.Download.MacroParser;
 using Pixeval.Controls.IllustrationView;
+using Pixeval.Download.MacroParser;
 using Pixeval.Util;
+using Pixeval.Util.IO;
 
 namespace Pixeval.Download.Macros;
 
-[MetaPathMacro(typeof(IllustrationViewModel))]
-public class FileExtensionMacro : IMacro<IllustrationViewModel>.ITransducer
+[MetaPathMacro(typeof(IllustrationItemViewModel))]
+public class FileExtensionMacro : IMacro<IllustrationItemViewModel>.ITransducer
 {
     public string Name => "illust_ext";
 
-    public string Substitute(IllustrationViewModel context)
+    public string Substitute(IllustrationItemViewModel context)
     {
-        // TODO: 直接在此处调用了AppSetting
-        return context.IsUgoira ? "." + App.AppViewModel.AppSetting.UgoiraDownloadFormat.ToString().ToLower() : context.Illustrate.GetImageFormat();
+        return context.IsUgoira ? IoHelper.GetUgoiraExtension() : context.GetStaticImageFormat();
     }
 }

@@ -27,6 +27,4 @@ public interface IWindowSettings
     public BackdropType Backdrop { get; }
 
     public AppTheme Theme { get; }
-
-    public string IconAbsolutePath { get; }
 }

@@ -22,15 +22,16 @@ using System;
 using System.IO;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
+using Windows.Storage;
+using Windows.Storage.Streams;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Media.Imaging;
+using Pixeval.Controls.Windowing;
 using Pixeval.CoreApi.Preference;
 using Pixeval.Database.Managers;
 using Pixeval.Download;
 using Pixeval.Util.IO;
 using Pixeval.Utilities;
-using Windows.Storage;
-using Windows.Storage.Streams;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
 
@@ -39,14 +40,13 @@ namespace Pixeval.AppManagement;
 /// <summary>
 ///     Provide miscellaneous information about the app
 /// </summary>
-[AppContext<AppSetting>(ConfigKey = "Config")]
+[AppContext<AppSetting>(ConfigKey = "Config", Type = ApplicationDataContainerType.Roaming, MethodName = "Config")]
+[AppContext<Session>(ConfigKey = "Session", MethodName = "Session")]
 public static partial class AppContext
 {
-    public const string AppIdentifier = "Pixeval";
+    public const string AppIdentifier = nameof(Pixeval);
 
     public const string AppProtocol = "pixeval";
-
-    private const string SessionContainerKey = "Session";
 
     public const string AppLogoNoCaptionUri = "ms-appx:///Assets/Images/logo-no-caption.png";
 
@@ -56,50 +56,52 @@ public static partial class AppContext
 
     public static readonly string AppVersion = GitVersionInformation.AssemblySemVer;
 
-    private static readonly ApplicationDataContainer _sessionContainer;
+    private static readonly WeakReference<SoftwareBitmapSource?> _imageNotAvailable = new(null);
 
-    private static SoftwareBitmapSource? _imageNotAvailable;
+    private static readonly WeakReference<IRandomAccessStream?> _imageNotAvailableStream = new(null);
 
-    private static IRandomAccessStream? _imageNotAvailableStream;
+    private static readonly WeakReference<SoftwareBitmapSource?> _pixivNoProfile = new(null);
 
-    private static SoftwareBitmapSource? _pixivNoProfile;
-
-    private static IRandomAccessStream? _pixivNoProfileStream;
+    private static readonly WeakReference<IRandomAccessStream?> _pixivNoProfileStream = new(null);
 
     static AppContext()
     {
-        if (!ApplicationData.Current.LocalSettings.Containers.ContainsKey(SessionContainerKey))
-        {
-            _ = ApplicationData.Current.LocalSettings.CreateContainer(SessionContainerKey, ApplicationDataCreateDisposition.Always);
-        }
-
         // Keys in the RoamingSettings will be synced through the devices of the same user
         // For more detailed information see https://docs.microsoft.com/en-us/windows/apps/design/app-settings/store-and-retrieve-app-data
-        InitializeConfigurationContainer();
-
-        _sessionContainer = ApplicationData.Current.LocalSettings.Containers[SessionContainerKey];
+        InitializeConfig();
+        InitializeSession();
     }
+
+    public const string IconName = "logo44x44.ico";
+
+    public static string IconAbsolutePath => Path.Combine(AppKnownFolders.Local.Self.Path, IconName);
 
     public static async Task<SoftwareBitmapSource> GetNotAvailableImageAsync()
     {
-        // TODO: 可能会多次同时加载此图，可以考虑用弱引用
-        return _imageNotAvailable ??= await (await GetNotAvailableImageStreamAsync()).GetSoftwareBitmapSourceAsync(false);
+        if (!_imageNotAvailable.TryGetTarget(out var target))
+            _imageNotAvailable.SetTarget(target = await (await GetNotAvailableImageStreamAsync()).GetSoftwareBitmapSourceAsync(false));
+        return target;
     }
 
     public static async Task<IRandomAccessStream> GetNotAvailableImageStreamAsync()
     {
-        return _imageNotAvailableStream ??= await GetAssetStreamAsync("Images/image-not-available.png");
+        if (!_imageNotAvailableStream.TryGetTarget(out var target))
+            _imageNotAvailableStream.SetTarget(target = await GetAssetStreamAsync("Images/image-not-available.png"));
+        return target;
     }
 
     public static async Task<SoftwareBitmapSource> GetPixivNoProfileImageAsync()
     {
-        // TODO: 可能会多次同时加载此图，可以考虑用弱引用
-        return _pixivNoProfile ??= await (await GetPixivNoProfileImageStreamAsync()).GetSoftwareBitmapSourceAsync(false);
+        if (!_pixivNoProfile.TryGetTarget(out var target))
+            _pixivNoProfile.SetTarget(target = await (await GetPixivNoProfileImageStreamAsync()).GetSoftwareBitmapSourceAsync(false));
+        return target;
     }
 
     public static async Task<IRandomAccessStream> GetPixivNoProfileImageStreamAsync()
     {
-        return _pixivNoProfileStream ??= await GetAssetStreamAsync("Images/pixiv_no_profile.png");
+        if (!_pixivNoProfileStream.TryGetTarget(out var target))
+            _pixivNoProfileStream.SetTarget(target = await GetAssetStreamAsync("Images/pixiv_no_profile.png"));
+        return target;
     }
 
     public static async Task WriteLogoIcoIfNotExist()
@@ -111,16 +113,6 @@ public static partial class AppContext
             await (await AppKnownFolders.Local.CreateFileAsync(iconName)).WriteBytesAsync(bytes);
         }
     }
-
-    public static async Task<string> GetIconAbsolutePath()
-    {
-        const string iconName = "logo44x44.ico";
-        return (await AppKnownFolders.Local.GetFileAsync(iconName)).Path;
-    }
-
-    public static string IconName => "logo44x44.ico";
-
-    public static string IconAbsolutePath => Path.Combine(AppKnownFolders.Local.Self.Path, IconName);
 
     /// <summary>
     ///     Get the byte array of a file in the Assets folder
@@ -154,7 +146,7 @@ public static partial class AppContext
 
     public static async Task<X509Certificate2> GetFakeServerCertificateAsync()
     {
-        return new X509Certificate2(await GetAssetBytesAsync("Certs/pixeval_server_cert.pfx"), "pixeval", X509KeyStorageFlags.UserKeySet);
+        return new X509Certificate2(await GetAssetBytesAsync("Certs/pixeval_server_cert.pfx"), AppProtocol, X509KeyStorageFlags.UserKeySet);
     }
 
     public static void RestoreHistories()
@@ -162,10 +154,12 @@ public static partial class AppContext
         using var scope = App.AppViewModel.AppServicesScope;
         var downloadHistoryManager = scope.ServiceProvider.GetRequiredService<DownloadHistoryPersistentManager>();
         // the HasFlag is not allow in expression tree
-        _ = downloadHistoryManager.Delete(entry => entry.State == DownloadState.Running ||
-                                               entry.State == DownloadState.Queued ||
-                                               entry.State == DownloadState.Created ||
-                                               entry.State == DownloadState.Paused);
+        _ = downloadHistoryManager.Delete(
+            entry => entry.State == DownloadState.Running ||
+                     entry.State == DownloadState.Queued ||
+                     entry.State == DownloadState.Created ||
+                     entry.State == DownloadState.Paused);
+
         foreach (var observableDownloadTask in downloadHistoryManager.Enumerate())
         {
             App.AppViewModel.DownloadManager.QueueTask(observableDownloadTask);
@@ -179,7 +173,7 @@ public static partial class AppContext
     {
         return Functions.IgnoreExceptionAsync(async () =>
         {
-            ApplicationData.Current.RoamingSettings.DeleteContainer(ConfigurationContainerKey);
+            ApplicationData.Current.RoamingSettings.DeleteContainer(ConfigContainerKey);
             ApplicationData.Current.LocalSettings.DeleteContainer(SessionContainerKey);
             await ApplicationData.Current.LocalFolder.ClearDirectoryAsync();
             await AppKnownFolders.Temporary.ClearAsync();
@@ -190,55 +184,13 @@ public static partial class AppContext
     public static void SaveContext()
     {
         // Save the current resolution
-        App.AppViewModel.AppSetting.WindowWidth = CurrentContext.AppWindow.Size.Width;
-        App.AppViewModel.AppSetting.WindowHeight = CurrentContext.AppWindow.Size.Height;
+        App.AppViewModel.AppSetting.WindowWidth = WindowFactory.RootWindow.AppWindow.Size.Width;
+        App.AppViewModel.AppSetting.WindowHeight = WindowFactory.RootWindow.AppWindow.Size.Height;
         if (!App.AppViewModel.SignOutExit)
         {
-            SaveSession();
-            SaveConfiguration(App.AppViewModel.AppSetting);
-        }
-    }
-
-    public static void SaveSession()
-    {
-        if (App.AppViewModel.MakoClient.Session is { } session)
-        {
-            var values = _sessionContainer.Values;
-            values[nameof(Session.AccessToken)] = session.AccessToken;
-            values[nameof(Session.Account)] = session.Account;
-            values[nameof(Session.AvatarUrl)] = session.AvatarUrl;
-            values[nameof(Session.Cookie)] = session.Cookie;
-            values[nameof(Session.CookieCreation)] = session.CookieCreation;
-            values[nameof(Session.ExpireIn)] = session.ExpireIn;
-            values[nameof(Session.Id)] = session.Id;
-            values[nameof(Session.IsPremium)] = session.IsPremium;
-            values[nameof(Session.Name)] = session.Name;
-            values[nameof(Session.RefreshToken)] = session.RefreshToken;
-        }
-    }
-
-    public static Session? LoadSession()
-    {
-        try
-        {
-            var values = _sessionContainer.Values;
-            return new Session
-            {
-                AccessToken = values[nameof(Session.AccessToken)].CastOrThrow<string>(),
-                Account = values[nameof(Session.Account)].CastOrThrow<string>(),
-                AvatarUrl = values[nameof(Session.AvatarUrl)].CastOrThrow<string>(),
-                Cookie = values[nameof(Session.Cookie)].CastOrThrow<string>(),
-                CookieCreation = values[nameof(Session.CookieCreation)].CastOrThrow<DateTimeOffset>(),
-                ExpireIn = values[nameof(Session.ExpireIn)].CastOrThrow<DateTimeOffset>(),
-                Id = values[nameof(Session.Id)].CastOrThrow<string>(),
-                IsPremium = values[nameof(Session.IsPremium)].CastOrThrow<bool>(),
-                Name = values[nameof(Session.Name)].CastOrThrow<string>(),
-                RefreshToken = values[nameof(Session.RefreshToken)].CastOrThrow<string>()
-            };
-        }
-        catch
-        {
-            return null;
+            if (App.AppViewModel.MakoClient != null!)
+                SaveSession(App.AppViewModel.MakoClient.Session);
+            SaveConfig(App.AppViewModel.AppSetting);
         }
     }
 }

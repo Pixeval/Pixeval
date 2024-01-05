@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval.CoreApi
+#region Copyright (c) Pixeval/Pixeval.CoreApi
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
@@ -25,47 +25,48 @@ namespace Pixeval.CoreApi.Net.Response;
 public class ReverseSearchResponse
 {
     [JsonPropertyName("header")]
-    public ReverseSearchResponseHeader? Header { get; set; }
+    public required ReverseSearchResponseHeader Header { get; set; }
 
     [JsonPropertyName("results")]
-    public Result[]? Results { get; set; }
+    public required Result[] Results { get; set; }
 
     public class ReverseSearchResponseHeader
     {
         [JsonPropertyName("status")]
-        public long Status { get; set; }
+        public required long Status { get; set; }
     }
 
     public class Result
     {
         [JsonPropertyName("header")]
-        public ResultHeader? Header { get; set; }
+        public required ResultHeader Header { get; set; }
 
         [JsonPropertyName("data")]
-        public Data? Data { get; set; }
+        public required Data Data { get; set; }
     }
 
     public class Data
     {
         [JsonPropertyName("title")]
-        public string? Title { get; set; }
+        public required string Title { get; set; }
 
         [JsonPropertyName("pixiv_id")]
-        public long PixivId { get; set; }
+        public required long PixivId { get; set; }
 
         [JsonPropertyName("member_name")]
-        public string? MemberName { get; set; }
+        public required string MemberName { get; set; }
 
         [JsonPropertyName("member_id")]
-        public long MemberId { get; set; }
+        public required long MemberId { get; set; }
     }
 
     public class ResultHeader
     {
         [JsonPropertyName("similarity")]
-        public string? Similarity { get; set; }
+        [JsonNumberHandling(JsonNumberHandling.AllowReadingFromString | JsonNumberHandling.WriteAsString)]
+        public required double Similarity { get; set; }
 
         [JsonPropertyName("index_id")]
-        public long IndexId { get; set; }
+        public required long IndexId { get; set; }
     }
 }

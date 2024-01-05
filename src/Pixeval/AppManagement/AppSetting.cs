@@ -37,19 +37,10 @@ namespace Pixeval.AppManagement;
 [GenerateConstructor, SettingPoco]
 public partial record AppSetting : IWindowSettings
 {
-#pragma warning disable CS8618
     public AppSetting()
-#pragma warning restore CS8618
     {
         DefaultValueAttributeHelper.Initialize(this);
     }
-
-    /// <summary>
-    ///     The Application Theme
-    /// </summary>
-    [DefaultValue(AppTheme.SystemDefault)]
-    [SettingMetadata(SettingEntryCategory.Application, typeof(SettingsPageResources), nameof(SettingsPageResources.ThemeEntryHeader))]
-    public AppTheme Theme { get; set; }
 
     /// <summary>
     ///     Indicates whether the restricted content are permitted to be included
@@ -159,10 +150,12 @@ public partial record AppSetting : IWindowSettings
     public bool UseFileCache { get; set; }
 
     [DefaultValue(typeof(AppWidthDefaultValueProvider))]
+    [AttributeIgnore(typeof(SettingsViewModelAttribute<>))]
     [SyntheticSetting]
     public int WindowWidth { get; set; }
 
     [DefaultValue(typeof(AppHeightDefaultValueProvider))]
+    [AttributeIgnore(typeof(SettingsViewModelAttribute<>))]
     [SyntheticSetting]
     public int WindowHeight { get; set; }
 
@@ -180,7 +173,7 @@ public partial record AppSetting : IWindowSettings
 
     [DefaultValue("Microsoft YaHei")]
     [SettingMetadata(SettingEntryCategory.Application, typeof(SettingsPageResources), nameof(SettingsPageResources.AppFontFamilyEntryHeader))]
-    public string AppFontFamilyName { get; set; }
+    public string AppFontFamilyName { get; set; } = "";
 
     [DefaultValue(MainPageTabItem.DailyRecommendation)]
     [SettingMetadata(SettingEntryCategory.Application, typeof(SettingsPageResources), nameof(SettingsPageResources.DefaultSelectedTabEntryHeader))]
@@ -204,9 +197,9 @@ public partial record AppSetting : IWindowSettings
 
     [DefaultValue(typeof(DownloadPathMacroDefaultValueProvider))]
     [SettingMetadata(SettingEntryCategory.Download, typeof(SettingsPageResources), nameof(SettingsPageResources.DefaultDownloadPathMacroEntryHeader))]
-    public string DefaultDownloadPathMacro { get; set; }
+    public string DefaultDownloadPathMacro { get; set; } = "";
 
-    [DefaultValue(UgoiraDownloadFormat.Tiff)]
+    [DefaultValue(UgoiraDownloadFormat.WebPLossless)]
     [SettingMetadata(SettingEntryCategory.Download, typeof(SettingsPageResources), nameof(SettingsPageResources.UgoiraDownloadFormatEntryHeader))]
     public UgoiraDownloadFormat UgoiraDownloadFormat { get; set; }
 
@@ -250,12 +243,24 @@ public partial record AppSetting : IWindowSettings
     [SyntheticSetting]
     public bool ShowExternalCommandBarInIllustratorContentViewer { get; set; }
 
+    [DefaultValue(LoginProxyOption.UseDirect)]
+    [AttributeIgnore(typeof(SettingsViewModelAttribute<>))]
+    public LoginProxyOption LoginProxyOption { get; set; }
+
+    [DefaultValue("")]
+    [AttributeIgnore(typeof(SettingsViewModelAttribute<>))]
+    public string ProxyString { get; set; } = "";
+
+    /// <summary>
+    ///     The Application Theme
+    /// </summary>
+    [DefaultValue(AppTheme.SystemDefault)]
+    [SettingMetadata(SettingEntryCategory.Application, typeof(SettingsPageResources), nameof(SettingsPageResources.ThemeEntryHeader))]
+    public AppTheme Theme { get; set; }
+
     [DefaultValue(BackdropType.MicaAlt)]
     [SettingMetadata(SettingEntryCategory.Application, typeof(SettingsPageResources), nameof(SettingsPageResources.BackdropEntryHeader))]
     public BackdropType Backdrop { get; set; }
-
-    [AttributeIgnore(typeof(SettingsViewModelAttribute<>))]
-    public string IconAbsolutePath { get; set; }
 
     public static AppSetting CreateDefault()
     {

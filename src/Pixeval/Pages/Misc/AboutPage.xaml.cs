@@ -20,9 +20,9 @@
 
 using System;
 using System.Text;
+using Windows.System;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
-using Windows.System;
 using WinUI3Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
 
@@ -38,8 +38,6 @@ public sealed partial class AboutPage
     {
         InitializeComponent();
     }
-
-    private string Test => "/AboutPage/QRCoderIntroductoryTextBlock";
 
     private async void AboutPage_OnLoaded(object sender, RoutedEventArgs e)
     {

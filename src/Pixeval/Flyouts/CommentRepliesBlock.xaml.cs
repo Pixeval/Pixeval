@@ -18,27 +18,21 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Input;
+using Pixeval.Controls;
 using Pixeval.CoreApi.Net;
 using Pixeval.CoreApi.Net.Response;
-using Pixeval.Pages.IllustrationViewer;
-using Pixeval.Controls;
 using Pixeval.Util.IO;
-using Pixeval.Util.UI;
 using WinUI3Utilities.Attributes;
 
 namespace Pixeval.Flyouts;
 
-[DependencyProperty<CommentRepliesBlockViewModel>("ViewModel", propertyChanged: nameof(OnViewModelChanged))]
+[DependencyProperty<CommentBlockViewModel>("ViewModel")]
 public sealed partial class CommentRepliesBlock
 {
     public CommentRepliesBlock()
@@ -46,28 +40,16 @@ public sealed partial class CommentRepliesBlock
         InitializeComponent();
     }
 
-    private static void OnViewModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    private void CommentList_OnRepliesHyperlinkButtonTapped(CommentBlockViewModel viewModel)
     {
-        var block = (CommentRepliesBlock)d;
-        var viewModel = (CommentRepliesBlockViewModel)e.NewValue;
-        block.RepliesAreEmptyPanel.Visibility = (!viewModel.HasReplies).ToVisibility();
-        block.CommentList.Visibility = viewModel.HasReplies.ToVisibility();
-        if (viewModel is { HasReplies: true, Comment.Replies: { } rs })
-        {
-            block.CommentList.ItemsSource = rs;
-        }
-    }
-
-    private void CommentList_OnRepliesHyperlinkButtonTapped(object? sender, TappedRoutedEventArgs e)
-    {
-        _ = (ReplyBar.FindDescendant<RichEditBox>()?.Focus(FocusState.Programmatic));
+        _ = ReplyBar.FindDescendant<RichEditBox>()?.Focus(FocusState.Programmatic);
     }
 
     private async void ReplyBar_OnSendButtonTapped(object? sender, SendButtonTappedEventArgs e)
     {
         using var result = await App.AppViewModel.MakoClient.GetMakoHttpClient(MakoApiKind.AppApi).PostFormAsync(CommentBlockViewModel.AddCommentUrlSegment,
-            ("illust_id", ViewModel.Comment.IllustrationId),
-            ("parent_comment_id", ViewModel.Comment.CommentId),
+            ("illust_id", ViewModel.IllustrationId.ToString()),
+            ("parent_comment_id", ViewModel.CommentId.ToString()),
             ("comment", e.ReplyContentRichEditBoxStringContent));
 
         await AddComment(result);
@@ -76,8 +58,8 @@ public sealed partial class CommentRepliesBlock
     private async void ReplyBar_OnStickerTapped(object? sender, StickerTappedEventArgs e)
     {
         using var result = await App.AppViewModel.MakoClient.GetMakoHttpClient(MakoApiKind.AppApi).PostFormAsync(CommentBlockViewModel.AddCommentUrlSegment,
-            ("illust_id", ViewModel.Comment.IllustrationId),
-            ("parent_comment_id", ViewModel.Comment.CommentId),
+            ("illust_id", ViewModel.IllustrationId.ToString()),
+            ("parent_comment_id", ViewModel.CommentId.ToString()),
             ("stamp_id", e.StickerViewModel.StickerId.ToString()));
 
         await AddComment(result);
@@ -85,18 +67,7 @@ public sealed partial class CommentRepliesBlock
 
     private async Task AddComment(HttpResponseMessage postCommentResponse)
     {
-        RepliesAreEmptyPanel.Visibility = Visibility.Collapsed;
-        CommentList.Visibility = Visibility.Visible;
-
-        if (CommentList.ItemsSource is IEnumerable<object> enumerable && !enumerable.Any())
-        {
-            CommentList.ItemsSource = new ObservableCollection<CommentBlockViewModel>();
-        }
-
-        if (postCommentResponse.IsSuccessStatusCode)
-        {
-            var response = await postCommentResponse.Content.ReadFromJsonAsync<PostCommentResponse>();
-            (CommentList.ItemsSource as ObservableCollection<CommentBlockViewModel>)?.Insert(0, new CommentBlockViewModel(response?.Comment!, ViewModel.Comment.IllustrationId));
-        }
+        if (postCommentResponse.IsSuccessStatusCode && await postCommentResponse.Content.ReadFromJsonAsync<PostCommentResponse>() is { Comment: { } comment })
+            ViewModel.AddComment(comment);
     }
 }

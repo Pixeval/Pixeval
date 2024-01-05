@@ -20,18 +20,19 @@
 
 using System;
 using CommunityToolkit.Mvvm.ComponentModel;
-using Pixeval.CoreApi.Model;
-using Pixeval.Download;
 using Pixeval.Controls.IllustrationView;
+using Pixeval.Download;
+using Pixeval.Download.Models;
 using Pixeval.Utilities;
+using WinUI3Utilities;
 
 namespace Pixeval.Pages.Download;
 
-public sealed partial class DownloadListEntryViewModel(ObservableDownloadTask downloadTask, Illustration illustration)
-    : IllustrationViewModel(illustration)
+public sealed partial class DownloadListEntryViewModel(IllustrationDownloadTask downloadTask)
+    : IllustrationItemViewModel(downloadTask.IllustrationViewModel.Illustrate)
 {
     [ObservableProperty]
-    private ObservableDownloadTask _downloadTask = downloadTask;
+    private IllustrationDownloadTask _downloadTask = downloadTask;
 
     public static string GetEntryProgressMessage(DownloadState currentState, double progress, Exception? errorCause)
     {
@@ -44,7 +45,7 @@ public sealed partial class DownloadListEntryViewModel(ObservableDownloadTask do
             DownloadState.Completed => DownloadListEntryResources.DownloadCompleted,
             DownloadState.Cancelled => DownloadListEntryResources.DownloadCancelled,
             DownloadState.Paused => DownloadListEntryResources.DownloadPaused,
-            _ => throw new ArgumentOutOfRangeException(nameof(currentState), currentState, null)
+            _ => ThrowHelper.ArgumentOutOfRange<DownloadState, string>(currentState)
         };
     }
 
@@ -57,7 +58,7 @@ public sealed partial class DownloadListEntryViewModel(ObservableDownloadTask do
             DownloadState.Cancelled or DownloadState.Error => DownloadListEntryResources.ActionButtonContentRetry,
             DownloadState.Completed => DownloadListEntryResources.ActionButtonContentOpen,
             DownloadState.Paused => DownloadListEntryResources.ActionButtonContentResume,
-            _ => throw new ArgumentOutOfRangeException()
+            _ => ThrowHelper.ArgumentOutOfRange<DownloadState, string>(currentState)
         };
     }
 

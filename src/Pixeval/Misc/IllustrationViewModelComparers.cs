@@ -24,17 +24,17 @@ using Pixeval.Controls.IllustrationView;
 
 namespace Pixeval.Misc;
 
-public class IllustrationViewModelPublishDateComparer : IComparer<IllustrationViewModel>, IComparer
+public class IllustrationViewModelPublishDateComparer : IComparer<IllustrationItemViewModel>, IComparer
 {
     public static readonly IllustrationViewModelPublishDateComparer Instance =
         new();
 
     public int Compare(object? x, object? y)
     {
-        return Compare(x as IllustrationViewModel, y as IllustrationViewModel);
+        return Compare(x as IllustrationItemViewModel, y as IllustrationItemViewModel);
     }
 
-    public int Compare(IllustrationViewModel? x, IllustrationViewModel? y)
+    public int Compare(IllustrationItemViewModel? x, IllustrationItemViewModel? y)
     {
         if (x is null || y is null)
         {
@@ -45,16 +45,16 @@ public class IllustrationViewModelPublishDateComparer : IComparer<IllustrationVi
     }
 }
 
-public class IllustrationBookmarkComparer : IComparer<IllustrationViewModel>, IComparer
+public class IllustrationBookmarkComparer : IComparer<IllustrationItemViewModel>, IComparer
 {
     public static readonly IllustrationBookmarkComparer Instance = new();
 
     public int Compare(object? x, object? y)
     {
-        return Compare(x as IllustrationViewModel, y as IllustrationViewModel);
+        return Compare(x as IllustrationItemViewModel, y as IllustrationItemViewModel);
     }
 
-    public int Compare(IllustrationViewModel? x, IllustrationViewModel? y)
+    public int Compare(IllustrationItemViewModel? x, IllustrationItemViewModel? y)
     {
         if (x?.Illustrate is { } xi && y?.Illustrate is { } yi)
         {

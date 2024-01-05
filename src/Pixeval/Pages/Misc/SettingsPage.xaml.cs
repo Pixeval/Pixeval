@@ -20,21 +20,19 @@
 
 using System;
 using System.Threading.Tasks;
+using Windows.System;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
+using Pixeval.Controls.TokenInput;
 using Pixeval.Controls.Windowing;
 using Pixeval.Database.Managers;
 using Pixeval.Download.MacroParser;
-using Pixeval.Controls.TokenInput;
-using Pixeval.Util.Threading;
+using Pixeval.SettingsModels;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
-using Windows.System;
-using Pixeval.SettingsModels;
-using WinUI3Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
 
 namespace Pixeval.Pages.Misc;
@@ -44,27 +42,28 @@ public sealed partial class SettingsPage
 {
     // This TestParser is used to test whether the user input meta path is legal
     private static readonly MacroParser<string> _testParser = new();
-    private SettingsPageViewModel _viewModel;
 
     // The previous meta path after user changes the path field, if the path is illegal
     // its value will be reverted to this field.
-    private string _previousPath;
+    private string _previousPath = "";
+    private SettingsPageViewModel _viewModel = null!;
 
     public SettingsPage()
     {
         InitializeComponent();
-        _viewModel = new SettingsPageViewModel(App.AppViewModel.AppSetting)
-        {
-            SettingsTeachingTip = SettingsTeachingTip
-        };
+    }
+
+    public override void OnPageActivated(NavigationEventArgs e, object? parameter)
+    {
+        _viewModel = new SettingsPageViewModel(App.AppViewModel.AppSetting, Window);
         _previousPath = _viewModel.DefaultDownloadPathMacro;
     }
 
     public override void OnPageDeactivated(NavigatingCancelEventArgs e)
     {
         Bindings.StopTracking();
+        AppContext.SaveConfig(App.AppViewModel.AppSetting);
         _viewModel = null!;
-        base.OnPageDeactivated(e);
     }
 
     private void SettingsPage_OnLoaded(object sender, RoutedEventArgs e)
@@ -96,7 +95,7 @@ public sealed partial class SettingsPage
     {
         if (_viewModel.MirrorHost.IsNotNullOrEmpty() && Uri.CheckHostName(_viewModel.MirrorHost) == UriHostNameType.Unknown)
         {
-            ImageMirrorServerTextBox.Text = string.Empty;
+            ImageMirrorServerTextBox.Text = "";
             ImageMirrorServerTextBoxTeachingTip.IsOpen = true;
         }
     }
@@ -110,37 +109,31 @@ public sealed partial class SettingsPage
         CheckingForUpdatePanel.Collapse();
     }
 
-    private void FeedbackByEmailHyperlinkButton_OnTapped(object sender, TappedRoutedEventArgs e)
+    private async void FeedbackByEmailHyperlinkButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        Launcher.LaunchUriAsync(new Uri("mailto:decem0730@hotmail.com")).Discard();
+        await Launcher.LaunchUriAsync(new Uri("mailto:decem0730@hotmail.com"));
     }
 
-    private void OpenFontSettingsHyperlinkButton_OnTapped(object sender, TappedRoutedEventArgs e)
+    private async void OpenFontSettingsHyperlinkButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        Launcher.LaunchUriAsync(new Uri("ms-settings:fonts")).Discard();
+        await Launcher.LaunchUriAsync(new Uri("ms-settings:fonts"));
     }
 
     private async void PerformSignOutButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        var dialog = MessageDialogBuilder.CreateOkCancel(
-            CurrentContext.Window,
-            SettingsPageResources.SignOutConfirmationDialogTitle,
-            SettingsPageResources.SignOutConfirmationDialogContent);
-        if (await dialog.ShowAsync() == ContentDialogResult.Primary)
+        if (await this.CreateOkCancelAsync(SettingsPageResources.SignOutConfirmationDialogTitle,
+                SettingsPageResources.SignOutConfirmationDialogContent) is ContentDialogResult.Primary)
         {
             await AppContext.ClearDataAsync();
             App.AppViewModel.SignOutExit = true;
-            CurrentContext.Window.Close();
+            Window.Close();
         }
     }
 
     private async void ResetDefaultSettingsButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        var dialog = MessageDialogBuilder.CreateOkCancel(
-            CurrentContext.Window,
-            SettingsPageResources.ResetSettingConfirmationDialogTitle,
-            SettingsPageResources.ResetSettingConfirmationDialogContent);
-        if (await dialog.ShowAsync() == ContentDialogResult.Primary)
+        if (await this.CreateOkCancelAsync(SettingsPageResources.ResetSettingConfirmationDialogTitle,
+                SettingsPageResources.ResetSettingConfirmationDialogContent) is ContentDialogResult.Primary)
         {
             _viewModel.ResetDefault();
         }

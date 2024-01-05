@@ -19,29 +19,21 @@
 #endregion
 
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
-using CommunityToolkit.Mvvm.Messaging;
-using CommunityToolkit.WinUI.Collections;
-using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
+using Pixeval.Controls;
 using Pixeval.CoreApi.Model;
 using Pixeval.CoreApi.Net;
 using Pixeval.CoreApi.Net.Response;
-using Pixeval.Messages;
-using Pixeval.Controls;
-using Pixeval.Util;
 using Pixeval.Util.IO;
-using WinUI3Utilities;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
 public sealed partial class CommentsPage
 {
-    private string _illustrationId = null!;
+    private CommentsPageViewModel _viewModel = null!;
 
     public CommentsPage()
     {
@@ -50,33 +42,22 @@ public sealed partial class CommentsPage
 
     public override void OnPageActivated(NavigationEventArgs e)
     {
-        // Dispose current page contents if the parent page (IllustrationViewerPage) is navigating
-        _ = WeakReferenceMessenger.Default.TryRegister<CommentsPage, NavigatingFromIllustrationViewerMessage>(this, (recipient, _) =>
-        {
-            recipient.CommentList.Dispose();
-            WeakReferenceMessenger.Default.UnregisterAll(this);
-        });
-
-        var (engine, illustrationId) = ((IAsyncEnumerable<Comment>, string))e.Parameter;
-        _illustrationId = illustrationId;
-        if (CommentList.ItemsSource is not ICollection<CommentBlockViewModel>)
-        {
-            CommentList.ItemsSource = new IncrementalLoadingCollection<CommentsIncrementalSource, CommentBlockViewModel>(
-                new CommentsIncrementalSource(engine.Select(c => new CommentBlockViewModel(c, illustrationId))), 30);
-        }
+        var (engine, illustrationId) = ((IAsyncEnumerable<Comment>, long))e.Parameter;
+        _viewModel = new CommentsPageViewModel(engine, illustrationId);
     }
 
-    private void CommentList_OnRepliesHyperlinkButtonTapped(object? sender, TappedRoutedEventArgs e)
+    private void CommentList_OnRepliesHyperlinkButtonTapped(CommentBlockViewModel viewModel)
     {
-        CommentRepliesBlock.ViewModel = new CommentRepliesBlockViewModel(sender!.GetDataContext<CommentBlockViewModel>());
+        CommentRepliesBlock.ViewModel = viewModel;
         CommentRepliesTeachingTip.IsOpen = true;
     }
 
     private async void ReplyBar_OnSendButtonTapped(object? sender, SendButtonTappedEventArgs e)
     {
-        using var result = await App.AppViewModel.MakoClient.GetMakoHttpClient(MakoApiKind.AppApi).PostFormAsync(CommentBlockViewModel.AddCommentUrlSegment,
-            ("illust_id", _illustrationId),
-            ("comment", e.ReplyContentRichEditBoxStringContent));
+        using var result = await App.AppViewModel.MakoClient.GetMakoHttpClient(MakoApiKind.AppApi)
+            .PostFormAsync(CommentBlockViewModel.AddCommentUrlSegment,
+                ("illust_id", _viewModel.IllustrationId.ToString()),
+                ("comment", e.ReplyContentRichEditBoxStringContent));
 
         await AddComment(result);
     }
@@ -84,7 +65,7 @@ public sealed partial class CommentsPage
     private async void ReplyBar_OnStickerTapped(object? sender, StickerTappedEventArgs e)
     {
         using var result = await App.AppViewModel.MakoClient.GetMakoHttpClient(MakoApiKind.AppApi).PostFormAsync(CommentBlockViewModel.AddCommentUrlSegment,
-            ("illust_id", _illustrationId),
+            ("illust_id", _viewModel.IllustrationId.ToString()),
             ("stamp_id", e.StickerViewModel.StickerId.ToString()));
 
         await AddComment(result);
@@ -92,15 +73,7 @@ public sealed partial class CommentsPage
 
     private async Task AddComment(HttpResponseMessage postCommentResponse)
     {
-        if (CommentList.ItemsSource is IEnumerable<object> enumerable && !enumerable.Any())
-        {
-            CommentList.ItemsSource = new ObservableCollection<CommentBlockViewModel>();
-        }
-
-        if (postCommentResponse.IsSuccessStatusCode)
-        {
-            var response = await postCommentResponse.Content.ReadFromJsonAsync<PostCommentResponse>();
-            (CommentList.ItemsSource as ObservableCollection<CommentBlockViewModel>)?.Insert(0, new CommentBlockViewModel(response?.Comment!, _illustrationId));
-        }
+        if (postCommentResponse.IsSuccessStatusCode && await postCommentResponse.Content.ReadFromJsonAsync<PostCommentResponse>() is { Comment: { } comment })
+            _viewModel.AddComment(comment);
     }
 }

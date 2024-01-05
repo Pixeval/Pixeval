@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -18,18 +18,18 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using Pixeval.Download.MacroParser;
 using Pixeval.Controls.IllustrationView;
+using Pixeval.Download.MacroParser;
 
 namespace Pixeval.Download.Macros;
 
-[MetaPathMacro(typeof(IllustrationViewModel))]
-public class IllustrationIdMacro : IMacro<IllustrationViewModel>.ITransducer
+[MetaPathMacro(typeof(IllustrationItemViewModel))]
+public class IllustrationIdMacro : IMacro<IllustrationItemViewModel>.ITransducer
 {
     public string Name => "illust_id";
 
-    public string Substitute(IllustrationViewModel context)
+    public string Substitute(IllustrationItemViewModel context)
     {
-        return context.Id;
+        return context.Id.ToString();
     }
 }

@@ -27,8 +27,8 @@ namespace Pixeval.CoreApi.Net.Response;
 internal class PixivNovelResponse
 {
     [JsonPropertyName("novels")]
-    public IEnumerable<Novel>? Novels { get; set; }
+    public required IEnumerable<Novel> Novels { get; set; }
 
     [JsonPropertyName("next_url")]
-    public string? NextUrl { get; set; }
+    public required string NextUrl { get; set; }
 }

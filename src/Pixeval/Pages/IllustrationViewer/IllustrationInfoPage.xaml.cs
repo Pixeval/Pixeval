@@ -76,12 +76,12 @@ public sealed partial class IllustrationInfoPage
 
     private IEnumerable<Tag> GetIllustrationTagItemSource()
     {
-        return _viewModel.CurrentIllustration.Illustrate.Tags ?? Enumerable.Empty<Tag>();
+        return _viewModel.CurrentIllustration.Illustrate.Tags;
     }
 
-    public static string GetMakoTagTranslatedNameText(string? name, string? fallback)
+    public static string GetMakoTagTranslatedNameText(string? name, string fallback)
     {
-        return (name.IsNullOrEmpty() ? fallback : name) ?? string.Empty;
+        return name.IsNullOrEmpty() ? fallback : name;
     }
 
     private string GetIllustratorNameText()
@@ -110,10 +110,13 @@ public sealed partial class IllustrationInfoPage
         GithubFlavored = true
     });
 
+    /// <summary>
+    /// <see href="https://github.com/CommunityToolkit/Labs-Windows/pull/480"/>
+    /// </summary>
     private void SetIllustrationCaptionText()
     {
         var caption = _viewModel.CurrentIllustration.Illustrate.Caption;
-        //TODO Task.Run(() => string.IsNullOrEmpty(caption) ? IllustrationInfoPageResources.IllustrationCaptionEmpty : _markdownConverter.Convert(caption))
+        // TODO Markdown Task.Run(() => string.IsNullOrEmpty(caption) ? IllustrationInfoPageResources.IllustrationCaptionEmpty : _markdownConverter.Convert(caption))
         //    .ContinueWith(task => IllustrationCaptionMarkdownTextBlock.Text = task.Result, TaskScheduler.FromCurrentSynchronizationContext()).Discard();
     }
 

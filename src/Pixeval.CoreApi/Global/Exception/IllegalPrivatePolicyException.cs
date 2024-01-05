@@ -28,20 +28,20 @@ namespace Pixeval.CoreApi.Global.Exception;
 /// </summary>
 public class IllegalPrivatePolicyException : MakoException
 {
-    public IllegalPrivatePolicyException(string uid)
+    public IllegalPrivatePolicyException(long uid)
     {
         Uid = uid;
     }
 
-    public IllegalPrivatePolicyException(string? message, string uid) : base(message)
+    public IllegalPrivatePolicyException(string? message, long uid) : base(message)
     {
         Uid = uid;
     }
 
-    public IllegalPrivatePolicyException(string? message, System.Exception? innerException, string uid) : base(message, innerException)
+    public IllegalPrivatePolicyException(string? message, System.Exception? innerException, long uid) : base(message, innerException)
     {
         Uid = uid;
     }
 
-    public string Uid { get; }
+    public long Uid { get; }
 }

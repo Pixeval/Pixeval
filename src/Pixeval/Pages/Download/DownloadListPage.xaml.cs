@@ -19,19 +19,14 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Controls;
 using Pixeval.Dialogs;
-using Pixeval.Download;
-using Pixeval.Options;
 using Pixeval.Pages.IllustrationViewer;
-using Pixeval.Controls.IllustrationView;
 using Pixeval.Util.IO;
 using Pixeval.Util.Threading;
 using Pixeval.Util.UI;
@@ -43,13 +38,12 @@ namespace Pixeval.Pages.Download;
 public sealed partial class DownloadListPage
 {
     private bool _queriedBySuggestion;
-    private DownloadListPageViewModel _viewModel = null!;
+    private readonly DownloadListPageViewModel _viewModel = new(App.AppViewModel.DownloadManager.QueuedTasks);
 
     public DownloadListPage() => InitializeComponent();
 
     public override void OnPageActivated(NavigationEventArgs e, object? parameter)
     {
-        _viewModel = new DownloadListPageViewModel(parameter.To<IEnumerable<ObservableDownloadTask>>());
     }
 
     public override void OnPageDeactivated(NavigatingCancelEventArgs e) => _viewModel.Dispose();
@@ -77,17 +71,12 @@ public sealed partial class DownloadListPage
     private async void ClearDownloadListButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
         var dialogContent = new DownloadListPageDeleteTasksDialog();
-        var dialog = MessageDialogBuilder.Create()
-            .WithTitle(DownloadListPageResources.DeleteDownloadHistoryRecordsFormatted.Format(_viewModel.SelectedTasks.Count()))
-            .WithContent(dialogContent)
-            .WithPrimaryButtonText(MessageContentDialogResources.OkButtonContent)
-            .WithCloseButtonText(MessageContentDialogResources.CancelButtonContent)
-            .WithDefaultButton(ContentDialogButton.Primary)
-            .Build(this);
-        if (await dialog.ShowAsync() is ContentDialogResult.Primary)
+        if (await this.CreateOkCancelAsync(
+                DownloadListPageResources.DeleteDownloadHistoryRecordsFormatted.Format(_viewModel.SelectedEntries.Count()),
+                dialogContent) is ContentDialogResult.Primary)
         {
             if (dialogContent.DeleteLocalFiles)
-                foreach (var downloadListEntryViewModel in _viewModel.SelectedTasks)
+                foreach (var downloadListEntryViewModel in _viewModel.SelectedEntries)
                     IoHelper.DeleteAsync(downloadListEntryViewModel.DownloadTask.Destination).Discard();
 
             _viewModel.RemoveSelectedItems();
@@ -101,9 +90,10 @@ public sealed partial class DownloadListPage
 
     private void FilterAutoSuggestBox_OnSuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
     {
-        sender.Text = ((DownloadListEntryViewModel)args.SelectedItem).Illustrate.Title;
+        var selectedItem = (DownloadListEntryViewModel)args.SelectedItem;
+        sender.Text = selectedItem.Illustrate.Title;
         _viewModel.CurrentOption = DownloadListOption.CustomSearch;
-        _viewModel.ResetFilter(Enumerates.EnumerableOf((DownloadListEntryViewModel)args.SelectedItem));
+        _viewModel.ResetFilter([selectedItem]);
         _queriedBySuggestion = true;
     }
 
@@ -129,19 +119,17 @@ public sealed partial class DownloadListPage
 
     private void SelectAllButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        _viewModel.DataProvider.Source.ForEach(x => x.DownloadTask.Selected = true);
-        _viewModel.UpdateSelection();
+        AdvancedItemsView.SelectAll();
     }
 
     private void CancelSelectButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        _viewModel.DataProvider.Source.ForEach(x => x.DownloadTask.Selected = false);
-        _viewModel.UpdateSelection();
+        AdvancedItemsView.DeselectAll();
     }
 
     private void ItemsView_OnSelectionChanged(ItemsView sender, ItemsViewSelectionChangedEventArgs args)
     {
-        _viewModel.UpdateSelection();
+        _viewModel.SelectedEntries = sender.SelectedItems.Cast<DownloadListEntryViewModel>().ToArray();
     }
 
     private void DownloadListEntry_OnOpenIllustrationRequested(DownloadListEntry sender, DownloadListEntryViewModel viewModel)
@@ -149,28 +137,20 @@ public sealed partial class DownloadListPage
         viewModel.CreateWindowWithPage(_viewModel.DataProvider.Source);
     }
 
-    private void DownloadListEntryOnEffectiveViewportChanged(FrameworkElement sender, EffectiveViewportChangedEventArgs args)
-    {
-        var context = sender.GetDataContext<IllustrationViewModel>();
-        var preLoadRows = Math.Clamp(App.AppViewModel.AppSetting.PreLoadRows, 1, 15);
-        const ThumbnailUrlOption option = ThumbnailUrlOption.SquareMedium;
-        if (args.BringIntoViewDistanceY <= sender.ActualHeight * preLoadRows)
-        {
-            _ = context.TryLoadThumbnail(_viewModel, option);
-        }
-        else
-        {
-            context.UnloadThumbnail(_viewModel, option);
-        }
-    }
-
     private void DownloadListPage_OnUnloaded(object sender, RoutedEventArgs e)
     {
         _viewModel.Dispose();
     }
 
-    private async Task AdvancedItemsView_OnLoadMoreRequested(AdvancedItemsView sender, EventArgs e)
+    private void AdvancedItemsView_OnElementPrepared(AdvancedItemsView sender, ItemContainer itemContainer)
     {
-        await _viewModel.LoadMoreAsync(20);
+        var item = itemContainer.Child.To<DownloadListEntry>();
+        _ = item.ViewModel.TryLoadThumbnail(_viewModel, DownloadListPageViewModel.Option);
+    }
+
+    private void AdvancedItemsView_OnElementClearing(AdvancedItemsView sender, ItemContainer itemContainer)
+    {
+        var item = itemContainer.Child.To<DownloadListEntry>();
+        item.ViewModel.UnloadThumbnail(_viewModel, DownloadListPageViewModel.Option);
     }
 }

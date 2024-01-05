@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -18,18 +18,18 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using Pixeval.Download.MacroParser;
 using Pixeval.Controls.IllustrationView;
+using Pixeval.Download.MacroParser;
 
 namespace Pixeval.Download.Macros;
 
-[MetaPathMacro(typeof(IllustrationViewModel))]
-public class MangaIndexMacro : IMacro<IllustrationViewModel>.ITransducer
+[MetaPathMacro(typeof(IllustrationItemViewModel))]
+public class MangaIndexMacro : IMacro<IllustrationItemViewModel>.ITransducer
 {
     public string Name => "manga_index";
 
-    public string Substitute(IllustrationViewModel context)
+    public string Substitute(IllustrationItemViewModel context)
     {
-        return context.MangaIndex.ToString();
+        return context.MangaIndex is -1 ? "{0}" : context.MangaIndex.ToString();
     }
 }

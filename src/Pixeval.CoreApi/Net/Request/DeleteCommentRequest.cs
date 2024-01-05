@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval.CoreApi
+#region Copyright (c) Pixeval/Pixeval.CoreApi
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
@@ -22,4 +22,4 @@ using Refit;
 
 namespace Pixeval.CoreApi.Net.Request;
 
-public record DeleteCommentRequest([property: AliasAs("comment_id")] string CommentId);
+public record DeleteCommentRequest([property: AliasAs("comment_id")] long CommentId);

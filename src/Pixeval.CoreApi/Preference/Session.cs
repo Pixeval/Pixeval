@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval.CoreApi
+#region Copyright (c) Pixeval/Pixeval.CoreApi
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
@@ -26,6 +26,24 @@ namespace Pixeval.CoreApi.Preference;
 
 public record Session
 {
+    public Session()
+    {
+    }
+
+    public Session(string? name, DateTimeOffset expireIn, string? accessToken, string? refreshToken, string? avatarUrl, long id, string? account, bool isPremium, string? cookie, DateTimeOffset cookieCreation)
+    {
+        Name = name;
+        ExpireIn = expireIn;
+        AccessToken = accessToken;
+        RefreshToken = refreshToken;
+        AvatarUrl = avatarUrl;
+        Id = id;
+        Account = account;
+        IsPremium = isPremium;
+        Cookie = cookie;
+        CookieCreation = cookieCreation;
+    }
+
     /// <summary>
     ///     User name
     /// </summary>
@@ -60,7 +78,8 @@ public record Session
     ///     User id
     /// </summary>
     [JsonPropertyName("id")]
-    public string? Id { get; set; }
+    [JsonNumberHandling(JsonNumberHandling.AllowReadingFromString | JsonNumberHandling.WriteAsString)]
+    public long Id { get; set; }
 
     /// <summary>
     ///     Account for login

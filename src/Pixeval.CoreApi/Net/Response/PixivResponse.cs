@@ -28,8 +28,8 @@ namespace Pixeval.CoreApi.Net.Response;
 internal class PixivResponse
 {
     [JsonPropertyName("illusts")]
-    public IEnumerable<Illustration>? Illusts { get; set; }
+    public required IEnumerable<Illustration> Illusts { get; set; }
 
     [JsonPropertyName("next_url")]
-    public string? NextUrl { get; set; }
+    public required string NextUrl { get; set; }
 }

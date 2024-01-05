@@ -10,7 +10,7 @@
         <a href="https://jq.qq.com/?_wv=1027&k=5hGmJbQ" target="_blank">
             <img src="https://img.shields.io/static/v1?label=chatting&message=qq&color=blue&style=for-the-badge&logo=tencentqq&logoColor=white"/>
         </a>
-        <a href="https://github.com/Pixeval/Pixeval/blob/master/LICENSE" target="_blank">
+        <a href="https://github.com/Pixeval/Pixeval/blob/main/LICENSE" target="_blank">
             <img src="https://img.shields.io/github/license/Pixeval/Pixeval?style=for-the-badge&logo=gnu&logoColor=white"/>
         </a>
         <a href="https://github.com/Pixeval/Pixeval/issues/new/choose" target="_blank">
@@ -24,8 +24,8 @@
     </br>
 </div>
 
-🌏: [**简体中文**](https://github.com/Pixeval/Pixeval/blob/master/README.md),
-[English](https://github.com/Pixeval/Pixeval/blob/master/README.en.md)
+🌏: [**简体中文**](https://github.com/Pixeval/Pixeval/blob/main/README.md),
+[English](https://github.com/Pixeval/Pixeval/blob/main/README.en.md)
 
 ---
 
@@ -40,10 +40,10 @@
 
 ## 环境要求
 
-1. 安装[Visual Studio 2022](https://visualstudio.microsoft.com/vs)（Roslyn 4.x要求必须是VS17.x，即VS2022）
-2. 在**工具-获取工具与功能**的**工作负载**中选择 **.NET 桌面开发**（建议在安装对话框的“安装详细信息”窗格中，选择位于列表底部的“Windows 应用 SDK C# 模板”，但不是必需的。可以参考[安装适用于 Windows 应用 SDK 的工具](https://learn.microsoft.com/windows/apps/windows-app-sdk/set-up-your-development-environment)）
-3. 在**工具-获取工具与功能**的**单个组件**中选择 **.NET 8**；也可以在VS外部下载[.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)最新版本，但不推荐这么做
-4. 在**扩展-管理扩展**中搜索[Single-project MSIX Packaging Tools for VS 2022](https://marketplace.visualstudio.com/items?itemName=ProjectReunion.MicrosoftSingleProjectMSIXPackagingToolsDev17)并安装
+1. 拥有[git](https://git-scm.com)环境
+2. 安装[Visual Studio 2022](https://visualstudio.microsoft.com/vs)（Roslyn 4.x要求必须是VS17.x，即VS2022）。
+如果已安装请确认是VS2022的最新版本，因为负载里.NET SDK的版本和VS的版本有关，低版本可能不包含.NET8 SDK。
+3. 在**工具-获取工具与功能**的**工作负载**中选择 **.NET 桌面开发**，并在安装对话框的“安装详细信息”窗格中，选择位于列表底部的“Windows 应用 SDK C# 模板”。（可以参考[安装适用于 Windows 应用 SDK 的工具](https://learn.microsoft.com/windows/apps/windows-app-sdk/set-up-your-development-environment)）
 
 ## 运行项目
 

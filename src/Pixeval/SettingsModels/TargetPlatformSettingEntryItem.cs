@@ -23,6 +23,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Pixeval.Controls;
 using Pixeval.CoreApi.Global.Enum;
+using WinUI3Utilities;
 
 namespace Pixeval.SettingsModels;
 
@@ -32,7 +33,7 @@ public record TargetPlatformSettingEntryItem : StringRepresentableItem, IAvailab
     {
         TargetFilter.ForAndroid => MiscResources.TargetFilterForAndroid,
         TargetFilter.ForIos => MiscResources.TargetFilterForIOS,
-        _ => throw new ArgumentOutOfRangeException(nameof(item), item, null)
+        _ => ThrowHelper.ArgumentOutOfRange<TargetFilter, string>(item)
     })
     {
     }

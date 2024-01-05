@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -19,6 +19,7 @@
 #endregion
 
 using System;
+using WinUI3Utilities;
 
 namespace Pixeval.AppManagement;
 
@@ -33,29 +34,29 @@ internal record AppVersion(int Major, int Minor, int Patch, IterationStage Stage
 {
     public int CompareTo(AppVersion? other)
     {
-        if (other is { } version)
+        if (other != null)
         {
-            if (version.Stage.CompareTo(Stage) is var i and not 0)
+            if (other.Stage.CompareTo(Stage) is var i and not 0)
             {
                 return i;
             }
 
-            if (version.Major.CompareTo(Major) is var j and not 0)
+            if (other.Major.CompareTo(Major) is var j and not 0)
             {
                 return j;
             }
 
-            if (version.Minor.CompareTo(Minor) is var k and not 0)
+            if (other.Minor.CompareTo(Minor) is var k and not 0)
             {
                 return k;
             }
 
-            if (version.Patch.CompareTo(Patch) is var n and not 0)
+            if (other.Patch.CompareTo(Patch) is var n and not 0)
             {
                 return n;
             }
 
-            if (version.PreReleaseSpecifier is { } thatSpecifier && PreReleaseSpecifier is { } specifier && thatSpecifier.CompareTo(specifier) is var m and not 0)
+            if (other.PreReleaseSpecifier is { } thatSpecifier && PreReleaseSpecifier is { } specifier && thatSpecifier.CompareTo(specifier) is var m and not 0)
             {
                 return m;
             }
@@ -73,7 +74,7 @@ internal record AppVersion(int Major, int Minor, int Patch, IterationStage Stage
         {
             IterationStage.Preview => $"{versionNumber}-preview",
             IterationStage.Stable => $"{versionNumber}",
-            _ => throw new ArgumentOutOfRangeException()
+            _ => ThrowHelper.ArgumentOutOfRange<IterationStage, string>(Stage)
         };
         return Stage is not IterationStage.Stable && PreReleaseSpecifier is { } specifier ? $"{str}.{specifier}" : str;
     }

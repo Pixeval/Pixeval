@@ -26,17 +26,17 @@ namespace Pixeval.CoreApi.Model;
 public record SpotlightArticle : IIllustrate
 {
     [JsonPropertyName("id")]
-    public long Id { get; set; }
+    public required long Id { get; set; }
 
     [JsonPropertyName("title")]
-    public string? Title { get; set; }
+    public required string Title { get; set; }
 
     [JsonPropertyName("thumbnail")]
-    public string? Thumbnail { get; set; }
+    public required string Thumbnail { get; set; }
 
     [JsonPropertyName("article_url")]
-    public string? ArticleUrl { get; set; }
+    public required string ArticleUrl { get; set; }
 
     [JsonPropertyName("publish_date")]
-    public DateTimeOffset PublishDate { get; set; }
+    public required DateTimeOffset PublishDate { get; set; }
 }

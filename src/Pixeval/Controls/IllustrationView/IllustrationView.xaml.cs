@@ -18,8 +18,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System;
-using System.Threading.Tasks;
+using System.Linq;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
@@ -39,10 +38,17 @@ namespace Pixeval.Controls.IllustrationView;
 [DependencyProperty<ThumbnailDirection>("ThumbnailDirection", DependencyPropertyDefaultValue.Default)]
 public sealed partial class IllustrationView
 {
-    public ScrollView ScrollView => IllustrationItemsView.ScrollView;
-
     public const double LandscapeHeight = 180;
     public const double PortraitHeight = 250;
+    public ThumbnailUrlOption Option => LayoutType.ToThumbnailUrlOption();
+
+    public IllustrationView()
+    {
+        InitializeComponent();
+        ViewModel.DataProvider.View.FilterChanged += async (_, _) => await IllustrationItemsView.TryRaiseLoadMoreRequestedAsync();
+    }
+
+    public ScrollView ScrollView => IllustrationItemsView.ScrollView;
 
     public double DesiredHeight => ThumbnailDirection switch
     {
@@ -58,13 +64,7 @@ public sealed partial class IllustrationView
         _ => ThrowHelper.ArgumentOutOfRange<ThumbnailDirection, double>(ThumbnailDirection)
     };
 
-    public IllustrationView()
-    {
-        InitializeComponent();
-        ViewModel.DataProvider.View.FilterChanged += (_, _) => IllustrationItemsView.TryRaiseLoadMoreRequested();
-    }
-
-    public IllustrationViewViewModel ViewModel { get; } = new IllustrationViewViewModel();
+    public IllustrationViewViewModel ViewModel { get; } = new();
 
     private void IllustrationThumbnailOnShowQrCodeRequested(object sender, SoftwareBitmapSource e)
     {
@@ -82,53 +82,48 @@ public sealed partial class IllustrationView
 
     private void IllustrationViewOnUnloaded(object sender, RoutedEventArgs e)
     {
-        var option = LayoutType.ToThumbnailUrlOption();
         foreach (var illustrationViewModel in ViewModel.DataProvider.Source)
-            illustrationViewModel.UnloadThumbnail(ViewModel, option);
+            illustrationViewModel.UnloadThumbnail(ViewModel, Option);
         ViewModel.Dispose();
     }
 
-    private async void IllustrationThumbnailContainerItemOnEffectiveViewportChanged(FrameworkElement sender, EffectiveViewportChangedEventArgs args)
+    public async void LoadMoreIfNeeded()
     {
-        var context = sender.To<IllustrationThumbnail>().ViewModel;
-        var preLoadRows = Math.Clamp(App.AppViewModel.AppSetting.PreLoadRows, 1, 15);
-        var option = LayoutType.ToThumbnailUrlOption();
-
-        if (args.BringIntoViewDistanceY <= sender.ActualHeight * preLoadRows)
-        {
-            if (await context.TryLoadThumbnail(ViewModel, option))
-            {
-                if (sender.IsFullyOrPartiallyVisible(this))
-                    sender.Resources["IllustrationThumbnailStoryboard"].To<Storyboard>().Begin();
-                else
-                    sender.Opacity = 1;
-            }
-        }
-        else
-        {
-            context.UnloadThumbnail(ViewModel, option);
-        }
+        await IllustrationItemsView.TryRaiseLoadMoreRequestedAsync();
     }
 
-    public void LoadMoreIfNeeded()
-    {
-        IllustrationItemsView.TryRaiseLoadMoreRequested();
-    }
-
-    private IllustrationView IllustrationThumbnail_OnThisRequired()
-    {
-        return this;
-    }
+    private IllustrationView IllustrationThumbnail_OnThisRequired() => this;
 
     private void IllustrationItemsView_OnItemInvoked(ItemsView sender, ItemsViewItemInvokedEventArgs e)
     {
-        var vm = e.InvokedItem.To<IllustrationViewModel>();
+        var vm = e.InvokedItem.To<IllustrationItemViewModel>();
 
         vm.CreateWindowWithPage(ViewModel);
     }
 
-    private async Task IllustrationItemsView_OnLoadMoreRequested(object? sender, EventArgs e)
+    private async void IllustrationItemsView_OnElementPrepared(AdvancedItemsView sender, ItemContainer itemContainer)
     {
-        await ViewModel.LoadMoreAsync(20);
+        var thumbnail = itemContainer.Child.To<IllustrationItem>();
+        var viewModel = thumbnail.ViewModel;
+
+        if (await viewModel.TryLoadThumbnail(ViewModel, Option))
+        {
+            if (thumbnail.IsFullyOrPartiallyVisible(this))
+                thumbnail.Resources["IllustrationThumbnailStoryboard"].To<Storyboard>().Begin();
+            else
+                thumbnail.Opacity = 1;
+        }
+    }
+
+    private void IllustrationItemsView_OnElementClearing(AdvancedItemsView sender, ItemContainer itemContainer)
+    {
+        var viewModel = itemContainer.Child.To<IllustrationItem>().ViewModel;
+
+        viewModel.UnloadThumbnail(ViewModel, Option);
+    }
+
+    private void IllustrationItemsView_OnSelectionChanged(ItemsView sender, ItemsViewSelectionChangedEventArgs args)
+    {
+        ViewModel.SelectedIllustrations = sender.SelectedItems.Cast<IllustrationItemViewModel>().ToArray();
     }
 }

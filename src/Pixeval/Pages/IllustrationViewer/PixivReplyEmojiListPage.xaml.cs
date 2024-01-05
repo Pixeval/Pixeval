@@ -23,16 +23,15 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Windows.Storage.Streams;
 using Microsoft.UI.Text;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
-using Pixeval.CoreApi.Net;
-using Pixeval.Misc;
 using Pixeval.Controls;
+using Pixeval.Misc;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
-using Windows.Storage.Streams;
 using WinUI3Utilities;
 
 namespace Pixeval.Pages.IllustrationViewer;
@@ -65,7 +64,7 @@ public sealed partial class PixivReplyEmojiListPage
         if (!EmojiList.Any())
         {
             var results = await Task.WhenAll(Enum.GetValues<PixivReplyEmoji>()
-                .Select(async emoji => (emoji, await App.AppViewModel.MakoClient.GetMakoHttpClient(MakoApiKind.ImageApi).DownloadAsIRandomAccessStreamAsync(emoji.GetReplyEmojiDownloadUrl()))));
+                .Select(async emoji => (emoji, await App.AppViewModel.MakoClient.DownloadRandomAccessStreamAsync(emoji.GetReplyEmojiDownloadUrl()))));
             var tasks = results.Where(r => r.Item2 is Result<IRandomAccessStream>.Success).Select(async r => new PixivReplyEmojiViewModel(r.emoji, ((Result<IRandomAccessStream>.Success)r.Item2).Value)
             {
                 // We don't dispose of the image here because it will be used when inserting emoji to the rich edit box.

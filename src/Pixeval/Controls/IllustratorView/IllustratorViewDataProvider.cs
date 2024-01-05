@@ -28,13 +28,13 @@ using Pixeval.Misc;
 
 namespace Pixeval.Controls.IllustratorView;
 
-public class IllustratorViewDataProvider : ObservableObject, IDataProvider<User, IllustratorViewModel>
+public class IllustratorViewDataProvider : ObservableObject, IDataProvider<User, IllustratorItemViewModel>
 {
-    public AdvancedObservableCollection<IllustratorViewModel> View { get; } = [];
+    public AdvancedObservableCollection<IllustratorItemViewModel> View { get; } = [];
 
-    public IncrementalLoadingCollection<FetchEngineIncrementalSource<User, IllustratorViewModel>, IllustratorViewModel> Source
+    public IncrementalLoadingCollection<FetchEngineIncrementalSource<User, IllustratorItemViewModel>, IllustratorItemViewModel> Source
     {
-        get => (View.Source as IncrementalLoadingCollection<FetchEngineIncrementalSource<User, IllustratorViewModel>, IllustratorViewModel>)!;
+        get => (View.Source as IncrementalLoadingCollection<FetchEngineIncrementalSource<User, IllustratorItemViewModel>, IllustratorItemViewModel>)!;
         protected set => View.Source = value;
     }
 
@@ -55,6 +55,6 @@ public class IllustratorViewDataProvider : ObservableObject, IDataProvider<User,
         FetchEngine = fetchEngine;
         DisposeCurrent();
 
-        Source = new IncrementalLoadingCollection<FetchEngineIncrementalSource<User, IllustratorViewModel>, IllustratorViewModel>(new IllustratorFetchEngineIncrementalSource(FetchEngine!, limit));
+        Source = new IncrementalLoadingCollection<FetchEngineIncrementalSource<User, IllustratorItemViewModel>, IllustratorItemViewModel>(new IllustratorFetchEngineIncrementalSource(FetchEngine!, limit));
     }
 }

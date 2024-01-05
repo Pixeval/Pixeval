@@ -20,8 +20,8 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.Windows.AppLifecycle;
 using Windows.ApplicationModel.Activation;
+using Microsoft.Windows.AppLifecycle;
 
 namespace Pixeval.Activation;
 

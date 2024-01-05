@@ -20,26 +20,25 @@
 
 using System;
 using System.Threading.Tasks;
-using CommunityToolkit.Mvvm.Messaging;
 using LiteDB;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Pixeval.AppManagement;
+using Pixeval.Controls.IllustrationView;
+using Pixeval.Controls.Windowing;
 using Pixeval.CoreApi;
 using Pixeval.CoreApi.Net;
 using Pixeval.Database.Managers;
 using Pixeval.Download;
-using Pixeval.Messages;
-using Pixeval.Controls.IllustrationView;
+using Pixeval.Download.Models;
 using Pixeval.Util.IO;
 using Pixeval.Util.Threading;
 using Pixeval.Util.UI;
-using WinUI3Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
 
 namespace Pixeval;
 
-public class AppViewModel(App app) : AutoActivateObservableRecipient, IRecipient<ApplicationExitingMessage>, IRecipient<LoginCompletedMessage>
+public class AppViewModel(App app)
 {
     private bool _activatedByProtocol;
 
@@ -54,7 +53,7 @@ public class AppViewModel(App app) : AutoActivateObservableRecipient, IRecipient
 
     public App App { get; } = app;
 
-    public DownloadManager<ObservableDownloadTask> DownloadManager { get; private set; } = null!;
+    public DownloadManager<IllustrationDownloadTask> DownloadManager { get; private set; } = null!;
 
     public MakoClient MakoClient { get; set; } = null!; // The null-state of MakoClient is transient
 
@@ -62,16 +61,11 @@ public class AppViewModel(App app) : AutoActivateObservableRecipient, IRecipient
 
     public FileCache Cache { get; private set; } = null!;
 
-    public string? PixivUid => MakoClient.Session.Id;
+    public long PixivUid => MakoClient.Session.Id;
 
-    public void Receive(ApplicationExitingMessage message)
+    public void AppLoggedIn()
     {
-        AppContext.SaveContext();
-    }
-
-    public void Receive(LoginCompletedMessage message)
-    {
-        DownloadManager = new DownloadManager<ObservableDownloadTask>(AppSetting.MaxDownloadTaskConcurrencyLevel, MakoClient.GetMakoHttpClient(MakoApiKind.ImageApi));
+        DownloadManager = new DownloadManager<IllustrationDownloadTask>(AppSetting.MaxDownloadTaskConcurrencyLevel, MakoClient.GetMakoHttpClient(MakoApiKind.ImageApi));
         AppContext.RestoreHistories();
     }
 
@@ -79,7 +73,7 @@ public class AppViewModel(App app) : AutoActivateObservableRecipient, IRecipient
     {
         return Host.CreateDefaultBuilder()
             .ConfigureServices(services =>
-                services.AddSingleton<IDownloadTaskFactory<IllustrationViewModel, ObservableDownloadTask>, IllustrationDownloadTaskFactory>()
+                services.AddSingleton<IDownloadTaskFactory<IllustrationItemViewModel, IllustrationDownloadTask>, IllustrationDownloadTaskFactory>()
                     .AddSingleton(new LiteDatabase(AppContext.DatabaseFilePath))
                     .AddSingleton(provider => new DownloadHistoryPersistentManager(provider.GetRequiredService<LiteDatabase>(), App.AppViewModel.AppSetting.MaximumDownloadHistoryRecords))
                     .AddSingleton(provider => new SearchHistoryPersistentManager(provider.GetRequiredService<LiteDatabase>(), App.AppViewModel.AppSetting.MaximumSearchHistoryRecords))
@@ -88,7 +82,7 @@ public class AppViewModel(App app) : AutoActivateObservableRecipient, IRecipient
 
     public async Task ShowExceptionDialogAsync(Exception e)
     {
-        _ = await MessageDialogBuilder.CreateAcknowledgement(CurrentContext.Window, MiscResources.ExceptionEncountered, e.ToString()).ShowAsync();
+        _ = await WindowFactory.RootWindow.Content.CreateAcknowledgementAsync(MiscResources.ExceptionEncountered, e.ToString());
     }
 
     public async Task InitializeAsync(bool activatedByProtocol)
@@ -103,17 +97,6 @@ public class AppViewModel(App app) : AutoActivateObservableRecipient, IRecipient
         Cache = await FileCache.CreateDefaultAsync();
 
         AppHost.RunAsync().Discard();
-    }
-
-    //todo ShowProgressRing
-    public void PrepareForActivation()
-    {
-        // ((MainWindow)CurrentContext.Window).ShowProgressRing();
-    }
-
-    public void ActivationProcessed()
-    {
-        // ((MainWindow)CurrentContext.Window).HideProgressRing();
     }
 
     /// <summary>

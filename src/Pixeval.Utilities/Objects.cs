@@ -21,6 +21,7 @@
 using System;
 using System.Buffers;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -68,7 +69,7 @@ public static class Objects
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool IsNullOrEmpty(this string? str)
+    public static bool IsNullOrEmpty([NotNullWhen(false)] this string? str)
     {
         return string.IsNullOrEmpty(str);
     }
@@ -81,19 +82,19 @@ public static class Objects
 
     public static byte[] GetBytes(this string str, Encoding? encoding = null)
     {
-        return encoding?.Let(e => e!.GetBytes(str)) ?? Encoding.UTF8.GetBytes(str);
+        return encoding?.Let(e => e.GetBytes(str)) ?? Encoding.UTF8.GetBytes(str);
     }
 
     public static string GetString(this byte[] bytes, Encoding? encoding = null)
     {
-        return encoding?.Let(e => e!.GetString(bytes)) ?? Encoding.UTF8.GetString(bytes);
+        return encoding?.Let(e => e.GetString(bytes)) ?? Encoding.UTF8.GetString(bytes);
     }
 
     public static string GetString(this MemoryOwner<byte> bytes, Encoding? encoding = null)
     {
         using (bytes)
         {
-            return encoding?.Let(e => e!.GetString(bytes.Span)) ?? Encoding.UTF8.GetString(bytes.Span);
+            return encoding?.Let(e => e.GetString(bytes.Span)) ?? Encoding.UTF8.GetString(bytes.Span);
         }
     }
 

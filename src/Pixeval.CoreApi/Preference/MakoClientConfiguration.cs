@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval.CoreApi
+#region Copyright (c) Pixeval/Pixeval.CoreApi
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
@@ -28,12 +28,15 @@ namespace Pixeval.CoreApi.Preference;
 /// </summary>
 public record MakoClientConfiguration(int ConnectionTimeout, bool Bypass, string? MirrorHost, CultureInfo CultureInfo)
 {
-    public MakoClientConfiguration() : this(5000, false, string.Empty, CultureInfo.CurrentCulture)
+    public MakoClientConfiguration() : this(5000, false, "", CultureInfo.CurrentCulture)
     {
     }
 
     [JsonIgnore]
     public CultureInfo CultureInfo { get; set; } = CultureInfo;
+
+    [JsonPropertyName("userAgent")]
+    public string UserAgent { get; set; } = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 Edg/120.0.0.0";
 
     [JsonPropertyName("connectionTimeout")]
     public int ConnectionTimeout { get; set; } = ConnectionTimeout;

@@ -22,10 +22,10 @@ using System;
 using System.Collections.Specialized;
 using System.Threading.Tasks;
 using CommunityToolkit.WinUI.Collections;
+using Pixeval.Controls.IllustrationView;
 using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Model;
 using Pixeval.Misc;
-using Pixeval.Controls.IllustrationView;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
@@ -35,9 +35,15 @@ public class IllustrationVisualizationController(IIllustrationVisualizer visuali
 
     public NotifyCollectionChangedEventHandler? CollectionChanged { get; set; }
 
+    public void Dispose()
+    {
+        visualizer.DisposeCurrent();
+        FetchEngine = null;
+    }
+
     public async Task<bool> FillAsync(int itemsLimit = -1)
     {
-        var collection = new IncrementalLoadingCollection<FetchEngineIncrementalSource<Illustration, IllustrationViewModel>, IllustrationViewModel>(new IllustrationFetchEngineIncrementalSource(FetchEngine!, itemsLimit));
+        var collection = new IncrementalLoadingCollection<FetchEngineIncrementalSource<Illustration, IllustrationItemViewModel>, IllustrationItemViewModel>(new IllustrationFetchEngineIncrementalSource(FetchEngine!, itemsLimit));
         visualizer.Illustrations = collection;
         _ = await collection.LoadMoreItemsAsync(20);
         visualizer.Illustrations.CollectionChanged += CollectionChanged;
@@ -56,11 +62,5 @@ public class IllustrationVisualizationController(IIllustrationVisualizer visuali
         FetchEngine = newEngine;
         visualizer.DisposeCurrent();
         return FillAsync(itemsLimit);
-    }
-
-    public void Dispose()
-    {
-        visualizer.DisposeCurrent();
-        FetchEngine = null;
     }
 }

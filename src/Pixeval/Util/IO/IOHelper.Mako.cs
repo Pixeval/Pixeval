@@ -18,26 +18,56 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using System;
+using System.IO;
 using System.Threading.Tasks;
+using Windows.Storage.Streams;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.CoreApi;
 using Pixeval.CoreApi.Net;
 using Pixeval.Utilities;
+using Pixeval.Utilities.Threading;
 
 namespace Pixeval.Util.IO;
 
 public static partial class IoHelper
 {
-    public static async Task<Result<SoftwareBitmapSource>> DownloadSoftwareBitmapSourceResultAsync(this MakoClient client, string url)
+    public static async Task<Result<Stream>> DownloadStreamAsync(
+        this MakoClient client,
+        string url,
+        IProgress<double>? progress = null,
+        CancellationHandle? cancellationHandle = null)
     {
-        return await (await client.GetMakoHttpClient(MakoApiKind.ImageApi).DownloadAsIRandomAccessStreamAsync(url))
-            .RewrapAsync(async m => await m.GetSoftwareBitmapSourceAsync(true));
+        return await client.GetMakoHttpClient(MakoApiKind.ImageApi).DownloadStreamAsync(url, progress, cancellationHandle);
     }
 
-    public static async Task<Result<ImageSource>> DownloadBitmapImageResultAsync(this MakoClient client, string url, int? desiredWidth)
+    public static async Task<Result<IRandomAccessStream>> DownloadRandomAccessStreamAsync(
+        this MakoClient client,
+        string url,
+        IProgress<double>? progress = null,
+        CancellationHandle? cancellationHandle = null)
     {
-        return await (await client.GetMakoHttpClient(MakoApiKind.ImageApi).DownloadAsIRandomAccessStreamAsync(url))
+        return (await client.DownloadStreamAsync(url, progress, cancellationHandle)).Rewrap(stream => stream.AsRandomAccessStream());
+    }
+
+    public static async Task<Result<SoftwareBitmapSource>> DownloadSoftwareBitmapSourceAsync(
+        this MakoClient client,
+        string url,
+        IProgress<double>? progress = null,
+        CancellationHandle? cancellationHandle = null)
+    {
+        return await (await client.DownloadRandomAccessStreamAsync(url, progress, cancellationHandle)).RewrapAsync(m => m.GetSoftwareBitmapSourceAsync(true));
+    }
+
+    public static async Task<Result<ImageSource>> DownloadBitmapImageAsync(
+        this MakoClient client,
+        string url,
+        int? desiredWidth,
+        IProgress<double>? progress = null,
+        CancellationHandle? cancellationHandle = null)
+    {
+        return await (await client.DownloadRandomAccessStreamAsync(url, progress, cancellationHandle))
             .RewrapAsync(async m => (ImageSource)await m.GetBitmapImageAsync(true, desiredWidth));
     }
 }

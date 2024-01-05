@@ -10,25 +10,25 @@
     mc:Ignorable="d">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="50" />
-            <RowDefinition />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <controls:PixivReplyBar
             Grid.Row="0"
-            Margin="10,0"
+            Margin="10"
             VerticalAlignment="Center"
             SendButtonTapped="ReplyBar_OnSendButtonTapped"
             StickerTapped="ReplyBar_OnStickerTapped" />
         <controls:CommentList
-            x:Name="CommentList"
             Grid.Row="1"
+            ItemsSource="{x:Bind _viewModel.Source}"
             RepliesHyperlinkButtonTapped="CommentList_OnRepliesHyperlinkButtonTapped" />
         <TeachingTip
             x:Name="CommentRepliesTeachingTip"
             x:Uid="/CommentsPage/CommentRepliesTeachingTip"
             Grid.Row="0"
             IsLightDismissEnabled="False">
-            <flyouts:CommentRepliesBlock x:Name="CommentRepliesBlock" />
+            <flyouts:CommentRepliesBlock x:Name="CommentRepliesBlock" MaxHeight="{StaticResource TeachingTipContentMaxHeight}" />
         </TeachingTip>
     </Grid>
 </controls:EnhancedPage>

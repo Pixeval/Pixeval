@@ -20,12 +20,25 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Pixeval.Controls.TokenInput;
 using Pixeval.Utilities;
 
 namespace Pixeval.Flyouts.IllustrationResultFilter;
 
+/// <summary>
+/// 
+/// </summary>
+/// <param name="IncludeTags"></param>
+/// <param name="ExcludeTags"></param>
+/// <param name="LeastBookmark"></param>
+/// <param name="MaximumBookmark"></param>
+/// <param name="UserGroupName"></param>
+/// <param name="IllustratorName"></param>
+/// <param name="IllustratorId">-1表未设置</param>
+/// <param name="IllustrationName"></param>
+/// <param name="IllustrationId">-1表未设置</param>
+/// <param name="PublishDateStart"></param>
+/// <param name="PublishDateEnd"></param>
 public record FilterSettings(
     IEnumerable<Token> IncludeTags,
     IEnumerable<Token> ExcludeTags,
@@ -33,15 +46,24 @@ public record FilterSettings(
     int MaximumBookmark,
     IEnumerable<Token> UserGroupName,
     Token IllustratorName,
-    string IllustratorId,
+    long IllustratorId,
     Token IllustrationName,
-    string IllustrationId,
+    long IllustrationId,
     DateTimeOffset PublishDateStart,
     DateTimeOffset PublishDateEnd)
 {
-    public static readonly FilterSettings Default = new(Enumerable.Empty<Token>(),
-        Enumerable.Empty<Token>(), 0, int.MaxValue, Enumerable.Empty<Token>(), Token.Empty, string.Empty, Token.Empty,
-        string.Empty, DateTimeOffset.MinValue, DateTimeOffset.MaxValue);
+    public static readonly FilterSettings Default = new(
+        [],
+        [],
+        0,
+        int.MaxValue,
+        [],
+        Token.Empty,
+        -1,
+        Token.Empty,
+        -1,
+        DateTimeOffset.MinValue,
+        DateTimeOffset.MaxValue);
 
     public virtual bool Equals(FilterSettings? other)
     {

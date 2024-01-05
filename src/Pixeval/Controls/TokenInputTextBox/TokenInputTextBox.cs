@@ -19,10 +19,10 @@
 #endregion
 
 using System;
+using Windows.System;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Pixeval.Controls.TokenInput;
-using Windows.System;
 using WinUI3Utilities.Attributes;
 
 namespace Pixeval.Controls.TokenInputTextBox;
@@ -94,7 +94,7 @@ public partial class TokenInputTextBox : Control
     {
         if (SubmitEnable && _tokenTextBox is { Text.Length: > 0 })
         {
-            TokenSubmitted?.Invoke(this, (Token)Token.Clone());
+            TokenSubmitted?.Invoke(this, Token.DeepClone());
             _tokenTextBox.Text = string.Empty;
         }
     }

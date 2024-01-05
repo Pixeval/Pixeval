@@ -4,10 +4,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Pixeval.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:followingUserBadge="using:Pixeval.Controls.FollowingUserBadge"
     xmlns:markup="using:Pixeval.Controls.MarkupExtensions"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:recommendIllustratorProfile="using:Pixeval.Controls.RecommendIllustratorProfile"
     mc:Ignorable="d">
 
     <Grid>
@@ -19,34 +17,25 @@
         <TextBlock
             x:Uid="/IllustratorContentViewer/RecommendIllustratorsTitle"
             Grid.Row="0"
-            Margin="0,20,0,0"
+            Margin="0,20"
             Style="{StaticResource TitleTextBlockStyle}"
             Visibility="{x:Bind ViewModel.ShowRecommendIllustrators, Mode=OneWay}" />
-        <ListView
+        <controls:AdvancedItemsView
             Grid.Row="1"
-            Height="200"
-            Padding="0"
-            HorizontalAlignment="Stretch"
-            VerticalAlignment="Top"
-            ItemContainerStyle="{StaticResource ListViewItemStretchStyle}"
+            IsItemInvokedEnabled="False"
             ItemsSource="{x:Bind ViewModel.RecommendIllustrators, Mode=OneWay}"
-            ScrollViewer.HorizontalScrollBarVisibility="Hidden"
-            ScrollViewer.HorizontalScrollMode="Enabled"
-            ScrollViewer.IsHorizontalRailEnabled="True"
+            LayoutType="HorizontalStack"
+            MinItemHeight="160"
             SelectionMode="None"
             Visibility="{x:Bind ViewModel.ShowRecommendIllustrators, Mode=OneWay}">
-            <ListView.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <VirtualizingStackPanel Orientation="Horizontal" />
-                </ItemsPanelTemplate>
-            </ListView.ItemsPanel>
-            <ListView.ItemTemplate>
-                <DataTemplate x:DataType="recommendIllustratorProfile:RecommendIllustratorProfileViewModel">
-                    <recommendIllustratorProfile:RecommendIllustratorProfile Margin="5,0" ViewModel="{x:Bind Mode=OneWay}" />
-                    <!--  TODO ui:FrameworkElementExtensions.Cursor="Hand"  -->
+            <controls:AdvancedItemsView.ItemTemplate>
+                <DataTemplate x:DataType="controls:RecommendIllustratorItemViewModel">
+                    <ItemContainer>
+                        <controls:RecommendIllustratorItem ViewModel="{x:Bind}" />
+                    </ItemContainer>
                 </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
+            </controls:AdvancedItemsView.ItemTemplate>
+        </controls:AdvancedItemsView>
         <NavigationView
             x:Name="IllustratorContentViewerNavigationView"
             Grid.Row="2"

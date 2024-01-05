@@ -21,9 +21,9 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
-using Pixeval.Util.IO;
 using Windows.Foundation;
 using Windows.Storage;
+using Pixeval.Util.IO;
 
 namespace Pixeval.AppManagement;
 
@@ -56,14 +56,24 @@ public class AppKnownFolders(StorageFolder self)
         SavedWallPaper = await GetOrCreate(Local, "Wallpapers");
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="extension">Including the leading dot.</param>
+    /// <returns></returns>
     public static IAsyncOperation<StorageFile> CreateTemporaryFileWithRandomNameAsync(string? extension = null)
     {
-        return Temporary.CreateFileAsync($"{Guid.NewGuid()}.{extension ?? "temp"}");
+        return Temporary.CreateFileAsync(Guid.NewGuid() + (extension ?? ".temp"));
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="extension">Including the leading dot.</param>
+    /// <returns></returns>
     public static IAsyncOperation<StorageFile> CreateTemporaryFileWithNameAsync(string name, string? extension = null)
     {
-        return Temporary.CreateFileAsync($"{name}.{extension ?? "temp"}");
+        return Temporary.CreateFileAsync(name + (extension ?? ".temp"));
     }
 
     public IAsyncOperation<StorageFile> GetFileAsync(string name)

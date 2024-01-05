@@ -30,5 +30,5 @@ public class BoolToItemsViewSelectionModeConverter : IValueConverter
     public object Convert(object value, Type targetType, object parameter, string language) =>
         value.To<bool>() ? ItemsViewSelectionMode.Multiple : ItemsViewSelectionMode.None;
 
-    public object ConvertBack(object value, Type targetType, object parameter, string language) => throw new NotImplementedException();
+    public object ConvertBack(object value, Type targetType, object parameter, string language) => ThrowHelper.NotSupported<object>();
 }

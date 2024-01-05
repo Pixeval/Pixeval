@@ -33,7 +33,7 @@ public static class PixivAuthSignature
 
     private static string ToUrlSafeBase64String(this byte[] bytes)
     {
-        return Convert.ToBase64String(bytes).TrimEnd(['=']).Replace("+", "-").Replace("/", "_");
+        return Convert.ToBase64String(bytes).TrimEnd('=').Replace("+", "-").Replace("/", "_");
     }
 
     public static string GenerateWebPageUrl(string codeVerify, bool signUp = false)

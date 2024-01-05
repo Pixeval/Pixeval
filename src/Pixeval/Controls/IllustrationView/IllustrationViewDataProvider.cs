@@ -19,9 +19,6 @@
 #endregion
 
 using System;
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.WinUI.Collections;
 using Pixeval.Collections;
@@ -37,9 +34,11 @@ namespace Pixeval.Controls.IllustrationView;
 /// 复用时调用<see cref="CloneRef"/>，<see cref="FetchEngineRef"/>和<see cref="IllustrationSourceRef"/>会在所有复用对象都Dispose时Dispose。
 /// 初始化时调用<see cref="ResetEngine"/>
 /// </summary>
-public class IllustrationViewDataProvider : ObservableObject, IDataProvider<Illustration, IllustrationViewModel>, IDisposable
+public class IllustrationViewDataProvider : ObservableObject, IDataProvider<Illustration, IllustrationItemViewModel>, IDisposable
 {
     private SharedRef<IFetchEngine<Illustration?>?>? _fetchEngineRef;
+
+    private SharedRef<IncrementalLoadingCollection<FetchEngineIncrementalSource<Illustration, IllustrationItemViewModel>, IllustrationItemViewModel>> _illustrationSourceRef = null!;
 
     public SharedRef<IFetchEngine<Illustration?>?>? FetchEngineRef
     {
@@ -54,16 +53,7 @@ public class IllustrationViewDataProvider : ObservableObject, IDataProvider<Illu
         }
     }
 
-    public IFetchEngine<Illustration?>? FetchEngine
-    {
-        get => _fetchEngineRef?.Value;
-    }
-
-    public AdvancedObservableCollection<IllustrationViewModel> View { get; } = [];
-
-    private SharedRef<IncrementalLoadingCollection<FetchEngineIncrementalSource<Illustration, IllustrationViewModel>, IllustrationViewModel>> _illustrationSourceRef = null!;
-
-    protected SharedRef<IncrementalLoadingCollection<FetchEngineIncrementalSource<Illustration, IllustrationViewModel>, IllustrationViewModel>> IllustrationSourceRef
+    protected SharedRef<IncrementalLoadingCollection<FetchEngineIncrementalSource<Illustration, IllustrationItemViewModel>, IllustrationItemViewModel>> IllustrationSourceRef
     {
         get => _illustrationSourceRef;
         set
@@ -74,19 +64,43 @@ public class IllustrationViewDataProvider : ObservableObject, IDataProvider<Illu
             OnPropertyChanging();
             if (_illustrationSourceRef is { } old)
             {
-                old.Value.CollectionChanged -= OnIllustrationsSourceOnCollectionChanged;
                 _ = old.TryDispose(this);
             }
             _illustrationSourceRef = value;
-            value.Value.CollectionChanged += OnIllustrationsSourceOnCollectionChanged;
             View.Source = value.Value;
             OnPropertyChanged();
         }
     }
 
-    public IncrementalLoadingCollection<FetchEngineIncrementalSource<Illustration, IllustrationViewModel>, IllustrationViewModel> Source
+    public IFetchEngine<Illustration?>? FetchEngine => _fetchEngineRef?.Value;
+
+    public AdvancedObservableCollection<IllustrationItemViewModel> View { get; } = [];
+
+    public IncrementalLoadingCollection<FetchEngineIncrementalSource<Illustration, IllustrationItemViewModel>, IllustrationItemViewModel> Source => _illustrationSourceRef.Value;
+
+    public void DisposeCurrent()
     {
-        get => _illustrationSourceRef.Value;
+        // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
+        if (IllustrationSourceRef is not null)
+        {
+            if (IllustrationSourceRef.TryDispose(this))
+                foreach (var illustrationViewModel in Source)
+                    illustrationViewModel.Dispose();
+        }
+    }
+
+    public void ResetEngine(IFetchEngine<Illustration?>? fetchEngine, int limit = -1)
+    {
+        FetchEngineRef = new SharedRef<IFetchEngine<Illustration?>?>(fetchEngine, this);
+        DisposeCurrent();
+
+        IllustrationSourceRef = new SharedRef<IncrementalLoadingCollection<FetchEngineIncrementalSource<Illustration, IllustrationItemViewModel>, IllustrationItemViewModel>>(new IncrementalLoadingCollection<FetchEngineIncrementalSource<Illustration, IllustrationItemViewModel>, IllustrationItemViewModel>(new IllustrationFetchEngineIncrementalSource(FetchEngine!, limit)), this);
+    }
+
+    public void Dispose()
+    {
+        DisposeCurrent();
+        FetchEngineRef = null;
     }
 
     public IllustrationViewDataProvider CloneRef()
@@ -98,62 +112,6 @@ public class IllustrationViewDataProvider : ObservableObject, IDataProvider<Illu
         foreach (var viewSortDescription in View.SortDescriptions)
             dataProvider.View.SortDescriptions.Add(viewSortDescription);
         return dataProvider;
-    }
-
-    public ObservableCollection<IllustrationViewModel> SelectedIllustrations { get; set; } = [];
-
-    public void DisposeCurrent()
-    {
-        // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
-        if (IllustrationSourceRef is not null)
-        {
-            Source.CollectionChanged -= OnIllustrationsSourceOnCollectionChanged;
-            if (IllustrationSourceRef.TryDispose(this))
-                foreach (var illustrationViewModel in Source)
-                    illustrationViewModel.Dispose();
-        }
-
-        SelectedIllustrations.Clear();
-    }
-
-    public void ResetEngine(IFetchEngine<Illustration?>? fetchEngine, int limit = -1)
-    {
-        FetchEngineRef = new SharedRef<IFetchEngine<Illustration>>(fetchEngine, this);
-        DisposeCurrent();
-
-        IllustrationSourceRef = new SharedRef<IncrementalLoadingCollection<FetchEngineIncrementalSource<Illustration, IllustrationViewModel>, IllustrationViewModel>>(new IncrementalLoadingCollection<FetchEngineIncrementalSource<Illustration, IllustrationViewModel>, IllustrationViewModel>(new IllustrationFetchEngineIncrementalSource(FetchEngine!, limit)), this);
-    }
-
-    protected virtual void OnIllustrationsSourceOnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
-    {
-        switch (e)
-        {
-            case { Action: NotifyCollectionChangedAction.Add }:
-                e.NewItems?.OfType<IllustrationViewModel>().ForEach(i => i.IsSelectedChanged += OnIsSelectedChanged);
-                break;
-            case { Action: NotifyCollectionChangedAction.Remove }:
-                e.NewItems?.OfType<IllustrationViewModel>().ForEach(i => i.IsSelectedChanged -= OnIsSelectedChanged);
-                break;
-        }
-
-        return;
-
-        void OnIsSelectedChanged(object? s, IllustrationViewModel model)
-        {
-            // Do not add to collection is the model does not conform to the filter
-            if (!View.Filter?.Invoke(model) ?? false)
-                return;
-            if (model.IsSelected)
-                SelectedIllustrations.Add(model);
-            else
-                _ = SelectedIllustrations.Remove(model);
-        }
-    }
-
-    public void Dispose()
-    {
-        DisposeCurrent();
-        FetchEngineRef = null;
     }
 
     ~IllustrationViewDataProvider() => Dispose();

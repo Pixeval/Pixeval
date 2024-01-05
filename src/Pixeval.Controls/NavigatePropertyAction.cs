@@ -2,6 +2,7 @@ using Microsoft.UI.Xaml;
 using System.Reflection;
 using System;
 using Microsoft.Xaml.Interactivity;
+using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
 
 namespace Pixeval.Actions;
@@ -43,7 +44,7 @@ public sealed partial class NavigatePropertyAction : DependencyObject, IAction
         {
             if (propertyInfo.PropertyType != typeof(bool))
             {
-                throw new ArgumentException($"{PropertyName} 应该是 bool 类型的属性，实际类型是 {propertyInfo.PropertyType.Name}。");
+                ThrowHelper.Argument(propertyInfo.PropertyType, $"{PropertyName} 应该是 bool 类型的属性，实际类型是 {propertyInfo.PropertyType.Name}。");
             }
 
             var boolValue = (bool)propertyInfo.GetValue(targetObject)!;
@@ -69,12 +70,12 @@ public sealed partial class NavigatePropertyAction : DependencyObject, IAction
     {
         if (propertyInfo is null)
         {
-            throw new ArgumentException($"在类型 {targetTypeName} 上找不到名为 {PropertyName} 的属性。");
+            ThrowHelper.Argument(propertyInfo, $"在类型 {targetTypeName} 上找不到名为 {PropertyName} 的属性。");
         }
 
         if (!propertyInfo.CanWrite)
         {
-            throw new ArgumentException($"类型 {targetTypeName} 定义的属性 {PropertyName} 没有 set 方法。");
+            ThrowHelper.Argument(propertyInfo.CanWrite, $"类型 {targetTypeName} 定义的属性 {PropertyName} 没有 set 方法。");
         }
     }
 }

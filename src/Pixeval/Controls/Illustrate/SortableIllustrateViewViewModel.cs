@@ -27,10 +27,10 @@ namespace Pixeval.Controls.Illustrate;
 public abstract partial class SortableIllustrateViewViewModel<T, TViewModel> : IllustrateViewViewModel<T, TViewModel> where T : IIllustrate where TViewModel : IllustrateViewModel<T>
 {
     [ObservableProperty]
-    private string? _selectionLabel;
+    private bool _isAnyIllustrationSelected;
 
     [ObservableProperty]
-    private bool _isAnyIllustrationSelected;
+    private string? _selectionLabel;
 
     public abstract void SetSortDescription(SortDescription description);
 

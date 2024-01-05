@@ -35,9 +35,9 @@ namespace Pixeval.Util.Triggers;
 [DependencyProperty<bool>("IsActive", "true")]
 public partial class EventWithConditionTriggerBehavior : Trigger
 {
-    private object? _resolvedSource;
     private Delegate? _eventHandler;
     private bool _isLoadedEventRegistered;
+    private object? _resolvedSource;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="EventWithConditionTriggerBehavior"/> class.
@@ -183,10 +183,6 @@ public partial class EventWithConditionTriggerBehavior : Trigger
         if (element.XamlRoot is not null)
         {
             rootVisual = element.XamlRoot.Content;
-        }
-        else if (Window.Current is not null)
-        {
-            rootVisual = Window.Current.Content;
         }
 
         var parent = element.Parent;

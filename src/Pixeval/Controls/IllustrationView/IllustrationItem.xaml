@@ -1,0 +1,161 @@
+<Grid
+    x:Class="Pixeval.Controls.IllustrationView.IllustrationItem"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:Pixeval.Controls"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:labs="using:CommunityToolkit.Labs.WinUI"
+    xmlns:markup="using:Pixeval.Controls.MarkupExtensions"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:media="using:Microsoft.Xaml.Interactions.Media"
+    xmlns:triggers="using:Pixeval.Util.Triggers"
+    xmlns:util="using:Pixeval.Util"
+    x:Name="IllustrationThumbnailCard"
+    Padding="0"
+    CornerRadius="{ThemeResource ControlCornerRadius}"
+    RenderTransformOrigin="0.5,0.5"
+    mc:Ignorable="d">
+    <ToolTipService.ToolTip>
+        <ToolTip Content="{x:Bind ViewModel.Tooltip, Mode=OneWay}" Placement="Right" />
+    </ToolTipService.ToolTip>
+    <Grid.Resources>
+        <ExponentialEase
+            x:Key="EasingFunction"
+            EasingMode="EaseOut"
+            Exponent="12" />
+        <!--  ReSharper disable once Xaml.RedundantResource  -->
+        <Storyboard x:Key="IllustrationThumbnailStoryboard">
+            <DoubleAnimation
+                EasingFunction="{StaticResource EasingFunction}"
+                Storyboard.TargetName="IllustrationThumbnailCard"
+                Storyboard.TargetProperty="Opacity"
+                From="0"
+                To="1"
+                Duration="0:0:2" />
+        </Storyboard>
+        <Storyboard x:Key="ThumbnailScaleOutStoryboard">
+            <DoubleAnimation
+                EasingFunction="{StaticResource EasingFunction}"
+                Storyboard.TargetName="ImageBookmarkButtonGrid"
+                Storyboard.TargetProperty="(Grid.RenderTransform).(ScaleTransform.ScaleX)"
+                To="1"
+                Duration="0:0:2" />
+            <DoubleAnimation
+                EasingFunction="{StaticResource EasingFunction}"
+                Storyboard.TargetName="ImageBookmarkButtonGrid"
+                Storyboard.TargetProperty="(Grid.RenderTransform).(ScaleTransform.ScaleY)"
+                To="1"
+                Duration="0:0:2" />
+        </Storyboard>
+        <Storyboard x:Key="ThumbnailScaleInStoryboard">
+            <DoubleAnimation
+                EasingFunction="{StaticResource EasingFunction}"
+                Storyboard.TargetName="ImageBookmarkButtonGrid"
+                Storyboard.TargetProperty="(Grid.RenderTransform).(ScaleTransform.ScaleX)"
+                To="0"
+                Duration="0:0:2" />
+            <DoubleAnimation
+                EasingFunction="{StaticResource EasingFunction}"
+                Storyboard.TargetName="ImageBookmarkButtonGrid"
+                Storyboard.TargetProperty="(Grid.RenderTransform).(ScaleTransform.ScaleY)"
+                To="0"
+                Duration="0:0:2" />
+        </Storyboard>
+    </Grid.Resources>
+    <Grid.RenderTransform>
+        <ScaleTransform />
+    </Grid.RenderTransform>
+    <Grid.ContextFlyout>
+        <MenuFlyout>
+            <MenuFlyoutItem
+                x:Uid="/IllustrationView/BookmarkContextItem"
+                Icon="{x:Bind util:MakoHelper.GetBookmarkButtonIcon(ViewModel.IsBookmarked), Mode=OneWay}"
+                Tapped="BookmarkContextItemOnTapped"
+                Text="{x:Bind util:MakoHelper.GetBookmarkContextItemText(ViewModel.IsBookmarked), Mode=OneWay}" />
+            <MenuFlyoutItem
+                x:Uid="/IllustrationView/AddToBookmarkContextItem"
+                Icon="{markup:FontSymbolIcon Glyph=BookmarksE8A4}"
+                Tapped="AddToBookmarkContextItemOnTapped" />
+            <MenuFlyoutSeparator />
+            <MenuFlyoutItem
+                x:Uid="/IllustrationView/SaveContextItem"
+                Click="SaveContextItemOnTapped"
+                Icon="{markup:FontSymbolIcon Glyph=SaveE74E}" />
+            <MenuFlyoutSeparator />
+            <MenuFlyoutItem
+                x:Uid="/IllustrationView/OpenInBrowserContextItem"
+                Icon="{markup:FontSymbolIcon Glyph=WebSearchF6FA}"
+                Tapped="OpenInBrowserContextItemOnTapped" />
+            <MenuFlyoutItem
+                x:Uid="/IllustrationView/CopyWebLinkContextItem"
+                Icon="{markup:FontSymbolIcon Glyph=PreviewLinkE8A1}"
+                Tapped="CopyWebLinkContextItemOnTapped" />
+            <MenuFlyoutItem
+                x:Uid="/IllustrationView/CopyAppLinkContextItem"
+                Icon="{markup:FontSymbolIcon Glyph=LinkE71B}"
+                Tapped="CopyAppLinkContextItemOnTapped" />
+            <MenuFlyoutSeparator />
+            <MenuFlyoutItem
+                x:Uid="/IllustrationView/ShowQrCodeContextItem"
+                Icon="{markup:FontSymbolIcon Glyph=QRCodeED14}"
+                Tapped="ShowQrCodeContextItemOnTapped" />
+            <MenuFlyoutItem
+                x:Uid="/IllustrationView/ShowPixEzQrCodeContextItem"
+                Click="ShowPixEzQrCodeContextItemOnTapped"
+                Icon="{markup:FontSymbolIcon Glyph=Photo2EB9F}" />
+        </MenuFlyout>
+    </Grid.ContextFlyout>
+    <interactivity:Interaction.Behaviors>
+        <core:EventTriggerBehavior EventName="PointerEntered">
+            <media:ControlStoryboardAction Storyboard="{StaticResource ThumbnailScaleOutStoryboard}" />
+        </core:EventTriggerBehavior>
+        <triggers:EventWithConditionTriggerBehavior EventName="PointerExited">
+            <media:ControlStoryboardAction Storyboard="{StaticResource ThumbnailScaleInStoryboard}" />
+        </triggers:EventWithConditionTriggerBehavior>
+    </interactivity:Interaction.Behaviors>
+    <!--  PlaceHolderGrid  -->
+    <Grid Width="{x:Bind GetDesiredWidth(ViewModel), Mode=OneWay}" Height="{x:Bind DesiredHeight}" />
+    <Grid HorizontalAlignment="Stretch" CornerRadius="{ThemeResource ControlCornerRadius}">
+        <controls:IllustrationImage ThumbnailOption="{x:Bind ThumbnailUrlOption}" ViewModel="{x:Bind ViewModel, Mode=OneWay}" />
+        <labs:Shimmer Visibility="{x:Bind IsImageLoaded(ViewModel.ThumbnailSources), Mode=OneWay}" />
+        <Grid
+            x:Name="ImageBookmarkButtonGrid"
+            Width="20"
+            Height="20"
+            Margin="1"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            Tapped="ToggleBookmarkButtonOnTapped">
+            <Grid.RenderTransform>
+                <ScaleTransform CenterX="10" CenterY="10" ScaleX="0" ScaleY="0" />
+            </Grid.RenderTransform>
+            <controls:FontSymbolIcon Foreground="{x:Bind ViewModel.BookmarkedColor, Mode=OneWay}" Symbol="HeartFillEB52" />
+            <controls:FontSymbolIcon Foreground="White" Symbol="HeartEB51" />
+        </Grid>
+        <Grid
+            Margin="10"
+            VerticalAlignment="Bottom"
+            ColumnSpacing="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <controls:PixevalBadge
+                Grid.Column="0"
+                Mode="{x:Bind ViewModel.RestrictionCaption, Mode=OneWay}"
+                Visibility="{x:Bind ViewModel.IsRestricted, Mode=OneWay}" />
+            <controls:PixevalBadge
+                Grid.Column="1"
+                Mode="Gif"
+                Visibility="{x:Bind ViewModel.IsUgoira, Mode=OneWay}" />
+            <controls:FontSymbolIcon
+                Grid.Column="3"
+                Symbol="SetF5ED"
+                Visibility="{x:Bind ViewModel.IsManga, Mode=OneWay}" />
+        </Grid>
+    </Grid>
+</Grid>

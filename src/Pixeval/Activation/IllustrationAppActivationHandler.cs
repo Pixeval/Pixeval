@@ -19,9 +19,9 @@
 #endregion
 
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 using Pixeval.Controls.IllustrationView;
+using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Util.Threading;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
@@ -32,32 +32,26 @@ public class IllustrationAppActivationHandler : IAppActivationHandler
 {
     public string ActivationFragment => "illust";
 
-    public Task Execute(string id)
+    public Task Execute(string param)
     {
-        // WeakReferenceMessenger.Default.Send(new MainPageFrameSetConnectedAnimationTargetMessage(App.AppViewModel.AppWindowRootFrame));
+        if (!long.TryParse(param, out var id))
+        {
+            return Task.CompletedTask;
+        }
 
         return ThreadingHelper.DispatchTaskAsync(async () =>
         {
-            App.AppViewModel.PrepareForActivation();
-
             try
             {
-                var viewModels = new IllustrationViewModel(await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(id))
-                    .GetMangaIllustrationViewModels()
-                    .ToArray();
+                var viewModel = new IllustrationItemViewModel(await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(id));
 
-                // 见41行 ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", App.AppViewModel.AppWindowRootFrame);
-                // todo UIHelper.RootFrameNavigate(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(viewModels), new SuppressNavigationTransitionInfo());
+                viewModel.CreateWindowWithPage([viewModel]);
             }
             catch (Exception e)
             {
                 ToastNotificationHelper.ShowTextToastNotification(
                     ActivationsResources.IllustrationActivationFailedTitle,
                     ActivationsResources.IllustrationActivationFailedContentFormatted.Format(e.Message));
-            }
-            finally
-            {
-                App.AppViewModel.ActivationProcessed();
             }
         });
     }

@@ -1,0 +1,197 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="BrowserConnnectionLost" xml:space="preserve">
+    <value>失去与浏览器的连接</value>
+  </data>
+  <data name="BrowserNotFound" xml:space="preserve">
+    <value>未找到该浏览器</value>
+  </data>
+  <data name="ErrorWhileLoggingInTitle" xml:space="preserve">
+    <value>登录过程出现异常</value>
+  </data>
+  <data name="ErrorWhileLogginInContentFormatted" xml:space="preserve">
+    <value>应用程序即将退出，以下是异常信息：
+{0}</value>
+    <comment>{0}: error message</comment>
+  </data>
+  <data name="IncorrectSocketFormat" xml:space="preserve">
+    <value>错误的套接字格式</value>
+  </data>
+  <data name="LoginPhaseCheckingCertificateInstallation" xml:space="preserve">
+    <value>正在检查证书安装情况...</value>
+  </data>
+  <data name="LoginPhaseCheckingRefreshAvailable" xml:space="preserve">
+    <value>正在检查是否可以刷新现有会话...</value>
+  </data>
+  <data name="LoginPhaseCheckingWebView2Installation" xml:space="preserve">
+    <value>正在检查WebView2安装情况...</value>
+  </data>
+  <data name="LoginPhaseExecutingBrowser" xml:space="preserve">
+    <value>正在打开浏览器，请在浏览器中完成登录</value>
+  </data>
+  <data name="LoginPhaseInstallingCertificate" xml:space="preserve">
+    <value>正在安装证书，请在打开的对话框中点击确认...</value>
+  </data>
+  <data name="LoginPhaseRefreshing" xml:space="preserve">
+    <value>正在刷新现有会话...</value>
+  </data>
+  <data name="LoginPhaseSuccessNavigating" xml:space="preserve">
+    <value>登录成功，正在导航到主页</value>
+  </data>
+  <data name="LoginPhaseWaitingForUserInput" xml:space="preserve">
+    <value />
+    <comment>等待用户输入</comment>
+  </data>
+  <data name="LoginProxyCannotFindCertificate" xml:space="preserve">
+    <value>找不到对应的证书文件，请重新启动应用程序
+如果该问题反复出现，请联系开发者寻求解决</value>
+  </data>
+  <data name="LoginProxyConnectToHostFailed" xml:space="preserve">
+    <value>连接到主机失败</value>
+  </data>
+  <data name="ProxyTextBox.PlaceholderText" xml:space="preserve">
+    <value>代理IP及端口</value>
+  </data>
+  <data name="RefreshingSessionIsNotPresentContent" xml:space="preserve">
+    <value>已经删除损坏的文件，请重新启动应用程序
+如果该问题反复出现，请联系开发者寻求解决</value>
+  </data>
+  <data name="RefreshingSessionIsNotPresentTitle" xml:space="preserve">
+    <value>必要的配置文件不存在</value>
+  </data>
+  <data name="RootCertificateInstallationRequiredContent" xml:space="preserve">
+    <value>如不安装证书则无法正常登录，本证书的私钥不会被分发，选择确认即代表您将会安装该证书，请在接下来弹出的对话框中选择确认/OK，如果您拒绝安装则无法继续使用本应用</value>
+  </data>
+  <data name="RootCertificateInstallationRequiredTitle" xml:space="preserve">
+    <value>检测到本用户尚未安装证书</value>
+  </data>
+  <data name="SelectTextBlock.Text" xml:space="preserve">
+    <value>双击选择登录方式（浏览器方式需要提前关闭外部浏览器）</value>
+  </data>
+  <data name="TryAfterShuttingDownTheBrowser" xml:space="preserve">
+    <value>请先关闭已打开的浏览器再尝试</value>
+  </data>
+  <data name="WebView2InstallationRequiredContent" xml:space="preserve">
+    <value>如不安装WebView2则无法正常登录，选择确认将会自动打开浏览器为您下载WebView2 Runtime，请您双击exe文件安装后重启应用。如果选择取消则无法继续使用本应用</value>
+  </data>
+  <data name="WebView2InstallationRequiredTitle" xml:space="preserve">
+    <value>检测到本机尚未安装WebView2 Runtime</value>
+  </data>
+</root>

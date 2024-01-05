@@ -1,11 +1,12 @@
-<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:illustrationResultFilter1="using:Pixeval.Flyouts.IllustrationResultFilter">
-    <Style TargetType="illustrationResultFilter1:IllustrationResultFilterFunctionEntry">
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:illustrationResultFilter1="using:Pixeval.Flyouts.IllustrationResultFilter"
+                    xmlns:flyouts="using:Pixeval.Flyouts">
+    <Style TargetType="flyouts:IllustrationResultFilterFunctionEntry">
         <Setter Property="MinHeight" Value="60" />
         <Setter Property="HorizontalAlignment" Value="Stretch" />
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="illustrationResultFilter1:IllustrationResultFilterFunctionEntry">
+                <ControlTemplate TargetType="flyouts:IllustrationResultFilterFunctionEntry">
                     <Grid
                         Height="{TemplateBinding Height}"
                         HorizontalAlignment="Stretch"

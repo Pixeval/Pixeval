@@ -19,27 +19,32 @@
 #endregion
 
 using System;
-using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Controls;
+using Pixeval.Controls.IllustratorView;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.Messages;
 using Pixeval.Pages.Misc;
-using Pixeval.Controls.IllustratorView;
 using Pixeval.Util;
+using Pixeval.Util.UI;
+using WinUI3Utilities;
 
 namespace Pixeval.Pages.Capability;
 
 public sealed partial class FollowingsPage
 {
+    private readonly SolidColorBrush _backgroundBrush;
     private readonly IllustratorViewViewModel _viewModel = new();
+    private const int CompactPaneLength = 300;
 
     public FollowingsPage()
     {
         InitializeComponent();
+        _backgroundBrush = Resources["SystemControlBackgroundChromeMediumLowBrush"].To<SolidColorBrush>().WithAlpha(64);
     }
 
     public FrameworkElement SelfIllustratorView => this;
@@ -57,20 +62,18 @@ public sealed partial class FollowingsPage
     public override void OnPageActivated(NavigationEventArgs e)
     {
         _ = WeakReferenceMessenger.Default.TryRegister<FollowingsPage, MainPageFrameNavigatingEvent>(this, static (recipient, _) => recipient._viewModel.DataProvider.FetchEngine?.Cancel());
-        _viewModel.ResetEngine(App.AppViewModel.MakoClient.Following(App.AppViewModel.PixivUid!, PrivacyPolicy.Public));
+        _viewModel.ResetEngine(App.AppViewModel.MakoClient.Following(App.AppViewModel.PixivUid, PrivacyPolicy.Public));
+        // 此时没有Navigate，右边没有内容
+        // ClipGeometry.Rect = new(MainSplitView.OpenPaneLength - CompactPaneLength, 0, int.MaxValue, int.MaxValue);
     }
 
-    private TeachingTip IllustratorProfileOnRequestTeachingTip() => FollowingsPageTeachingTip;
+    private TeachingTip IllustratorItemOnRequestTeachingTip() => FollowingsPageTeachingTip;
 
     private void IllustratorItemsView_OnSelectionChanged(ItemsView sender, ItemsViewSelectionChangedEventArgs e)
     {
-        if (IllustratorItemsView.SelectedItem is IllustratorViewModel viewModel)
+        MainSplitView.IsPaneOpen = false;
+        if (IllustratorItemsView.SelectedItem is IllustratorItemViewModel viewModel)
             _ = IllustratorContentViewerFrame.Navigate(typeof(IllustratorContentViewerPage), viewModel);
-    }
-
-    private async Task IllustratorItemsView_OnLoadMoreRequested(AdvancedItemsView sender, EventArgs e)
-    {
-        await _viewModel.LoadMoreAsync(20);
     }
 
     private void FollowingsPage_OnSizeChanged(object sender, SizeChangedEventArgs e)
@@ -95,16 +98,19 @@ public sealed partial class FollowingsPage
         if (IllustratorItemsView is null)
             return;
 
+        var openPaneLength = MainSplitView.OpenPaneLength;
         // 10： Margin
         if (args is null)
         {
             IllustratorItemsView.LayoutType = ItemsViewLayoutType.Grid;
-            ContentGrid.Width = MainSplitView.OpenPaneLength;
+            ContentGrid.Width = openPaneLength;
+            ClipGeometry.Rect = new(openPaneLength - CompactPaneLength, 0, int.MaxValue, int.MaxValue);
         }
         else // args is SplitViewPaneClosingEventArgs
         {
             IllustratorItemsView.LayoutType = ItemsViewLayoutType.VerticalStack;
-            ContentGrid.Width = MainSplitView.CompactPaneLength;
+            ContentGrid.Width = CompactPaneLength;
+            ClipGeometry.Rect = new(0, 0, int.MaxValue, int.MaxValue);
         }
     }
 }

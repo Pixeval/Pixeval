@@ -25,15 +25,15 @@ using Pixeval.Misc;
 namespace Pixeval.Controls.IllustrationView;
 
 public class IllustrationFetchEngineIncrementalSource(IAsyncEnumerable<Illustration> asyncEnumerator, int limit = -1)
-    : FetchEngineIncrementalSource<Illustration, IllustrationViewModel>(asyncEnumerator, limit)
+    : FetchEngineIncrementalSource<Illustration, IllustrationItemViewModel>(asyncEnumerator, limit)
 {
     protected override long Identifier(Illustration entity)
     {
         return entity.Id;
     }
 
-    protected override IllustrationViewModel Select(Illustration entity)
+    protected override IllustrationItemViewModel Select(Illustration entity)
     {
-        return new IllustrationViewModel(entity);
+        return new IllustrationItemViewModel(entity);
     }
 }

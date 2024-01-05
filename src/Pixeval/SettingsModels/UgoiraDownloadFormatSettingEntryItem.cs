@@ -18,12 +18,12 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using Pixeval.Options;
-using System.Collections.Generic;
 using System;
+using System.Collections.Generic;
 using System.Linq;
-using Pixeval.Controls;
 using Pixeval.Attributes;
+using Pixeval.Controls;
+using Pixeval.Options;
 
 namespace Pixeval.SettingsModels;
 

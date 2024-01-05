@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -24,10 +24,11 @@ using System.Linq;
 using System.Linq.Expressions;
 using LiteDB;
 using Pixeval.Download;
+using Pixeval.Download.Models;
 
 namespace Pixeval.Database.Managers;
 
-public class DownloadHistoryPersistentManager(ILiteDatabase collection, int maximumRecords) : IPersistentManager<DownloadHistoryEntry, ObservableDownloadTask>
+public class DownloadHistoryPersistentManager(ILiteDatabase collection, int maximumRecords) : IPersistentManager<DownloadHistoryEntry, IllustrationDownloadTask>
 {
     public ILiteCollection<DownloadHistoryEntry> Collection { get; init; } = collection.GetCollection<DownloadHistoryEntry>(nameof(DownloadHistoryEntry));
 
@@ -52,12 +53,12 @@ public class DownloadHistoryPersistentManager(ILiteDatabase collection, int maxi
         };
     }
 
-    public IEnumerable<ObservableDownloadTask> Query(Expression<Func<DownloadHistoryEntry, bool>> predicate)
+    public IEnumerable<IllustrationDownloadTask> Query(Expression<Func<DownloadHistoryEntry, bool>> predicate)
     {
         return Collection.Find(predicate).Select(ToObservableDownloadTask);
     }
 
-    public IEnumerable<ObservableDownloadTask> Select(Expression<Func<DownloadHistoryEntry, bool>>? predicate = null, int? count = null)
+    public IEnumerable<IllustrationDownloadTask> Select(Expression<Func<DownloadHistoryEntry, bool>>? predicate = null, int? count = null)
     {
         var query = Collection.FindAll();
         if (count.HasValue)
@@ -78,7 +79,7 @@ public class DownloadHistoryPersistentManager(ILiteDatabase collection, int maxi
         return Collection.DeleteMany(predicate);
     }
 
-    public IEnumerable<ObservableDownloadTask> Enumerate()
+    public IEnumerable<IllustrationDownloadTask> Enumerate()
     {
         return Collection.FindAll().Select(ToObservableDownloadTask);
     }
@@ -88,7 +89,7 @@ public class DownloadHistoryPersistentManager(ILiteDatabase collection, int maxi
         if (Collection.Count() > limit)
         {
             var last = Collection.FindAll().Take(^limit..).Select(e => e.Destination).ToHashSet();
-            _ = Delete(e => !last.Contains(e.Destination!));
+            _ = Delete(e => !last.Contains(e.Destination));
         }
     }
 
@@ -98,12 +99,13 @@ public class DownloadHistoryPersistentManager(ILiteDatabase collection, int maxi
         App.AppViewModel.DownloadManager.ClearTasks();
     }
 
-    private static ObservableDownloadTask ToObservableDownloadTask(DownloadHistoryEntry entry)
+    private static IllustrationDownloadTask ToObservableDownloadTask(DownloadHistoryEntry entry)
     {
         return entry.Type switch
         {
-            DownloadItemType.Ugoira => new LazyInitializedAnimatedIllustrationDownloadTask(entry) { ProgressPercentage = 100 },
-            _ => new LazyInitializedIllustrationDownloadTask(entry) { ProgressPercentage = 100 }
+            DownloadItemType.Ugoira => new LazyInitializedAnimatedIllustrationDownloadTask(entry) { CurrentState = DownloadState.Completed },
+            DownloadItemType.Manga => new LazyInitializedMangaDownloadTask(entry) { CurrentState = DownloadState.Completed },
+            _ => new LazyInitializedSingleIllustrationDownloadTask(entry) { CurrentState = DownloadState.Completed }
         };
     }
 }

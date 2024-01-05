@@ -25,16 +25,16 @@ namespace Pixeval.Pages.IllustrationViewer;
 
 public interface IIllustrationVisualizer
 {
+    ObservableCollection<IllustrationItemViewModel> Illustrations { get; set; }
+
     /// <summary>
     /// Dispose current visualizing illustrations, behaves like Clear
     /// </summary>
     void DisposeCurrent();
 
-    ObservableCollection<IllustrationViewModel> Illustrations { get; set; }
-
     /// <summary>
     /// Add a illustration view model to visualizer
     /// </summary>
     /// <param name="viewModel">The view model, usually fetched from FetchEngine</param>
-    void AddIllustrationViewModel(IllustrationViewModel viewModel);
+    void AddIllustrationViewModel(IllustrationItemViewModel viewModel);
 }

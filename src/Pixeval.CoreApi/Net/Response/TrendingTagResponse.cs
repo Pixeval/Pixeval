@@ -28,17 +28,17 @@ namespace Pixeval.CoreApi.Net.Response;
 internal class TrendingTagResponse
 {
     [JsonPropertyName("trend_tags")]
-    public IEnumerable<TrendTag>? TrendTags { get; set; }
+    public required IEnumerable<TrendTag> TrendTags { get; set; }
 
     public class TrendTag
     {
         [JsonPropertyName("tag")]
-        public string? TagStr { get; set; }
+        public required string TagStr { get; set; }
 
         [JsonPropertyName("translated_name")]
-        public string? TranslatedName { get; set; }
+        public required string TranslatedName { get; set; }
 
         [JsonPropertyName("illust")]
-        public Illustration? Illust { get; set; }
+        public required Illustration Illust { get; set; }
     }
 }

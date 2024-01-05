@@ -18,17 +18,17 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using Pixeval.Download.MacroParser;
 using Pixeval.Controls.IllustrationView;
+using Pixeval.Download.MacroParser;
 
 namespace Pixeval.Download.Macros;
 
-[MetaPathMacro(typeof(IllustrationViewModel))]
-public class IsFromSpotlightMacro : IMacro<IllustrationViewModel>.IPredicate
+[MetaPathMacro(typeof(IllustrationItemViewModel))]
+public class IsFromSpotlightMacro : IMacro<IllustrationItemViewModel>.IPredicate
 {
     public string Name => "if_spot";
 
-    public bool Match(IllustrationViewModel context)
+    public bool Match(IllustrationItemViewModel context)
     {
         return context.Illustrate.FromSpotlight;
     }

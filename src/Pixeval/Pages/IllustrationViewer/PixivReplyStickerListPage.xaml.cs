@@ -24,13 +24,12 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
-using Pixeval.CoreApi.Net;
 using Pixeval.Controls;
 using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Utilities;
-using Windows.Storage.Streams;
 using WinUI3Utilities;
 
 namespace Pixeval.Pages.IllustrationViewer;
@@ -63,19 +62,17 @@ public sealed partial class PixivReplyStickerListPage
     {
         using var semaphoreSlim = new SemaphoreSlim(1, 1);
         await semaphoreSlim.WaitAsync();
-        if (!Stickers.Any())
+        if (Stickers.Count is 0)
         {
             var results = await Task.WhenAll(MakoHelper.StickerIds
-                .Select(async id => (id, await App.AppViewModel.MakoClient.GetMakoHttpClient(MakoApiKind.ImageApi).DownloadAsIRandomAccessStreamAsync(MakoHelper.GenerateStickerDownloadUrl(id)))));
-            var tasks = results.Where(r => r.Item2 is Result<IRandomAccessStream>.Success)
-                .Select(r => (r.id, (Result<IRandomAccessStream>.Success)r.Item2))
-                .Select(async r => new PixivReplyStickerViewModel(r.id, await r.Item2.Value.GetBitmapImageAsync(true, 83)));
-            Stickers.AddRange(await Task.WhenAll(tasks));
+                .Select(async id => await App.AppViewModel.MakoClient.DownloadBitmapImageAsync(
+                    MakoHelper.GenerateStickerDownloadUrl(id), 83) is Result<ImageSource>.Success { Value: { } result } ? new PixivReplyStickerViewModel(id, result) : null));
+            Stickers.AddRange(results.WhereNotNull());
         }
     }
 
     private void StickerImage_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        _replyBarStickerTappedEventHandler?.Invoke(sender, new StickerTappedEventArgs(e, sender.GetDataContext<PixivReplyStickerViewModel>()));
+        _replyBarStickerTappedEventHandler?.Invoke(sender, new StickerTappedEventArgs(e, sender.GetTag<PixivReplyStickerViewModel>()));
     }
 }

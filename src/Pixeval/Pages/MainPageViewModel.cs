@@ -23,27 +23,25 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Messaging;
-using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Media.Imaging;
+using Pixeval.Controls.IllustrationView;
 using Pixeval.CoreApi.Global.Enum;
-using Pixeval.CoreApi.Net;
-using Pixeval.Messages;
 using Pixeval.Misc;
 using Pixeval.Pages.Capability;
+using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Pages.Misc;
-using Pixeval.Controls.IllustrationView;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
-using WinUI3Utilities;
 
 namespace Pixeval.Pages;
 
-public partial class MainPageViewModel : AutoActivateObservableRecipient, IRecipient<LoginCompletedMessage>
+public partial class MainPageViewModel : ObservableObject
 {
     public readonly NavigationViewTag AboutTag = new(typeof(AboutPage), null);
 
     public readonly NavigationViewTag BookmarksTag = new(typeof(BookmarksPage),
-        App.AppViewModel.MakoClient.Bookmarks(App.AppViewModel.PixivUid!, PrivacyPolicy.Public,
+        App.AppViewModel.MakoClient.Bookmarks(App.AppViewModel.PixivUid, PrivacyPolicy.Public,
             App.AppViewModel.AppSetting.TargetFilter));
 
     public readonly NavigationViewTag FollowingsTag = new(typeof(FollowingsPage), null);
@@ -65,16 +63,19 @@ public partial class MainPageViewModel : AutoActivateObservableRecipient, IRecip
     public readonly NavigationViewTag SpotlightsTag = new(typeof(SpotlightsPage), null);
 
     [ObservableProperty]
-    private ImageSource? _avatar;
+    private SoftwareBitmapSource? _avatar;
+
+    private readonly UIElement _owner;
+
+    public MainPageViewModel(UIElement owner)
+    {
+        _owner = owner;
+        DownloadAndSetAvatar();
+    }
 
     public double MainPageRootNavigationViewOpenPanelLength => 280;
 
-    public SuggestionStateMachine SuggestionProvider { get; } = new SuggestionStateMachine();
-
-    public void Receive(LoginCompletedMessage message)
-    {
-        // TODO DownloadAndSetAvatar();
-    }
+    public SuggestionStateMachine SuggestionProvider { get; } = new();
 
     /// <summary>
     ///     Download user's avatar and set to the Avatar property.
@@ -84,52 +85,40 @@ public partial class MainPageViewModel : AutoActivateObservableRecipient, IRecip
         var makoClient = App.AppViewModel.MakoClient;
         // get byte array of avatar
         // and set to the bitmap image
-        Avatar = await (await makoClient.GetMakoHttpClient(MakoApiKind.ImageApi).DownloadAsIRandomAccessStreamAsync(makoClient.Session.AvatarUrl!))
-            .UnwrapOrThrow()
-            .GetBitmapImageAsync(true);
+        Avatar = (await makoClient.DownloadSoftwareBitmapSourceAsync(makoClient.Session.AvatarUrl!)).UnwrapOrThrow();
     }
 
     public async Task ReverseSearchAsync(Stream stream)
     {
-        var window = CurrentContext.Window;
         try
         {
-            //todo window.ShowProgressRing();
             var result = await App.AppViewModel.MakoClient.ReverseSearchAsync(stream, App.AppViewModel.AppSetting.ReverseSearchApiKey!);
-            if (result.Header is not null)
+            if (result.Header.Status is 0)
             {
-                switch (result.Header!.Status)
-                {
-                    case 0:
-                        if (result.Results?.FirstOrDefault() is { Header.IndexId: 5 or 6 } first)
-                        {
-                            var viewModels = new IllustrationViewModel(await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(first.Data!.PixivId.ToString()))
-                                .GetMangaIllustrationViewModels()
-                                .ToArray();
-                            // window.HideProgressRing();
-                            // ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", App.AppViewModel.AppWindowRootFrame);
-                            // todo UIHelper.RootFrameNavigate(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(viewModels), new SuppressNavigationTransitionInfo());
-                            return;
-                        }
+                var viewModels = await Task.WhenAll(result.Results
+                    .Where(r => r.Header.IndexId is 5 or 6 && r.Header.Similarity >
+                        App.AppViewModel.AppSetting.ReverseSearchResultSimilarityThreshold)
+                    .Select(async r =>
+                        new IllustrationItemViewModel(
+                            await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(r.Data.PixivId))));
 
-                        break;
-                    case var s:
-                        _ = await MessageDialogBuilder.CreateAcknowledgement(
-                                window,
-                                MainPageResources.ReverseSearchErrorTitle,
-                                s > 0 ? MainPageResources.ReverseSearchServerSideErrorContent : MainPageResources.ReverseSearchClientSideErrorContent)
-                            .ShowAsync();
-                        break;
-                }
-
-                // window.HideProgressRing();
-                _ = MessageDialogBuilder.CreateAcknowledgement(window, MainPageResources.ReverseSearchNotFoundTitle, MainPageResources.ReverseSearchNotFoundContent);
+                if (viewModels.Length is 0)
+                    _ = _owner.CreateAcknowledgementAsync(MainPageResources.ReverseSearchNotFoundTitle,
+                            MainPageResources.ReverseSearchNotFoundContent);
+                else
+                    viewModels[0].CreateWindowWithPage(viewModels);
+            }
+            else
+            {
+                _ = await _owner.CreateAcknowledgementAsync(MainPageResources.ReverseSearchErrorTitle,
+                        result.Header.Status > 0
+                            ? MainPageResources.ReverseSearchServerSideErrorContent
+                            : MainPageResources.ReverseSearchClientSideErrorContent);
             }
         }
         catch (Exception e)
         {
-            // window.HideProgressRing();
-            await App.AppViewModel.ShowExceptionDialogAsync(e);
+            _ = await _owner.CreateAcknowledgementAsync(MiscResources.ExceptionEncountered, e.ToString());
         }
     }
 }

@@ -27,8 +27,8 @@ namespace Pixeval.CoreApi.Net.Response;
 public class IllustrationCommentsResponse
 {
     [JsonPropertyName("comments")]
-    public IEnumerable<Comment>? Comments { get; set; }
+    public required IEnumerable<Comment> Comments { get; set; }
 
     [JsonPropertyName("next_url")]
-    public string? NextUrl { get; set; }
+    public required string NextUrl { get; set; }
 }

@@ -25,5 +25,5 @@ namespace Pixeval.CoreApi.Model;
 public record ProfileImageUrls
 {
     [JsonPropertyName("medium")]
-    public string? Medium { get; set; }
+    public required string Medium { get; set; }
 }

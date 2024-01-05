@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -18,9 +18,9 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System;
 using Pixeval.Util;
 using Pixeval.Utilities;
+using WinUI3Utilities;
 
 namespace Pixeval.Download.MacroParser.Ast;
 
@@ -29,22 +29,23 @@ public record Macro<TContext>(PlainText<TContext> MacroName, OptionalMacroParame
 {
     public override string Evaluate(IMetaPathMacroProvider<TContext> env, TContext context)
     {
-        switch (env.TryResolve(MacroName.Text))
+        var result = env.TryResolve(MacroName.Text);
+        switch (result)
         {
             case IMacro<TContext>.ITransducer transducer:
-                ThrowHelper.ThrowIf<IllegalMacroException>(OptionalParameters is not null, MacroParserResources.NonParameterizedMacroBearingParameterFormatted.Format(MacroName));
+                ThrowUtils.ThrowIf<IllegalMacroException>(OptionalParameters is not null, MacroParserResources.NonParameterizedMacroBearingParameterFormatted.Format(MacroName));
                 return transducer.Substitute(context);
             case IMacro<TContext>.IPredicate predicate:
                 if (predicate.Match(context))
                 {
-                    return OptionalParameters?.Evaluate(env, context) ?? ThrowHelper.ThrowException<IllegalMacroException, string>(MacroParserResources.ParameterizedMacroMissingParameterFormatted.Format(MacroName));
+                    return OptionalParameters?.Evaluate(env, context) ?? ThrowUtils.ThrowException<IllegalMacroException, string>(MacroParserResources.ParameterizedMacroMissingParameterFormatted.Format(MacroName));
                 }
 
-                return string.Empty;
+                return "";
             case IMacro<TContext>.Unknown:
-                return ThrowHelper.ThrowException<IllegalMacroException, string>(MacroParserResources.UnknownMacroNameFormatted.Format(MacroName));
+                return ThrowUtils.ThrowException<IllegalMacroException, string>(MacroParserResources.UnknownMacroNameFormatted.Format(MacroName));
             default:
-                throw new ArgumentOutOfRangeException();
+                return ThrowHelper.ArgumentOutOfRange<IMacro<TContext>, string>(result);
         }
     }
 }

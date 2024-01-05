@@ -21,10 +21,10 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Windows.Foundation;
 using CommunityToolkit.WinUI;
 using Microsoft.UI.Dispatching;
-using Windows.Foundation;
-using WinUI3Utilities;
+using Pixeval.Controls.Windowing;
 
 namespace Pixeval.Util.Threading;
 
@@ -70,22 +70,22 @@ public static class ThreadingHelper
 
     public static void DispatchTask(DispatcherQueueHandler action)
     {
-        _ = CurrentContext.Window.DispatcherQueue.TryEnqueue(action);
+        _ = WindowFactory.RootWindow.DispatcherQueue.TryEnqueue(action);
     }
 
     public static Task<T> DispatchSyncTaskAsync<T>(Func<T> func)
     {
-        return CurrentContext.Window.DispatcherQueue.EnqueueSyncTaskAsync(func);
+        return WindowFactory.RootWindow.DispatcherQueue.EnqueueSyncTaskAsync(func);
     }
 
     public static Task DispatchTaskAsync(Func<Task> action)
     {
-        return CurrentContext.Window.DispatcherQueue.EnqueueAsync(action);
+        return WindowFactory.RootWindow.DispatcherQueue.EnqueueAsync(action);
     }
 
     public static Task<T> DispatchTaskAsync<T>(Func<Task<T>> action)
     {
-        return CurrentContext.Window.DispatcherQueue.EnqueueAsync(action);
+        return WindowFactory.RootWindow.DispatcherQueue.EnqueueAsync(action);
     }
 
     public static Task<T> EnqueueSyncTaskAsync<T>(this DispatcherQueue dispatcher, Func<T> function, DispatcherQueuePriority priority = DispatcherQueuePriority.Normal)

@@ -28,7 +28,7 @@ using Pixeval.Utilities;
 namespace Pixeval.CoreApi.Engine.Implements;
 
 public class NovelBookmarkEngine(MakoClient makoClient,
-        string uid,
+    long uid,
         PrivacyPolicy privacyPolicy,
         TargetFilter targetFilter,
         EngineHandle? engineHandle)
@@ -36,7 +36,7 @@ public class NovelBookmarkEngine(MakoClient makoClient,
 {
     private readonly PrivacyPolicy _privacyPolicy = privacyPolicy;
     private readonly TargetFilter _targetFilter = targetFilter;
-    private readonly string _uid = uid;
+    private readonly long _uid = uid;
 
     public override IAsyncEnumerator<Novel> GetAsyncEnumerator(CancellationToken cancellationToken = new CancellationToken())
     {

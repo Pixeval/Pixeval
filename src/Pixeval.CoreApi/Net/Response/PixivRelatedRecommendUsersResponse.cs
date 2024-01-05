@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval.CoreApi
+#region Copyright (c) Pixeval/Pixeval.CoreApi
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
@@ -19,199 +19,209 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Numerics;
+using System.Text.Json;
 using System.Text.Json.Serialization;
+using Pixeval.CoreApi.Model;
 
 namespace Pixeval.CoreApi.Net.Response;
 
 public class PixivRelatedRecommendUsersResponse
 {
     [JsonPropertyName("error")]
-    public bool Error { get; set; }
+    public required bool Error { get; set; }
 
     [JsonPropertyName("message")]
-    public string? Message { get; set; }
+    public required string Message { get; set; }
 
     [JsonPropertyName("body")]
-    public Body? ResponseBody { get; set; }
+    public required Body ResponseBody { get; set; }
 
     public class Body
     {
         [JsonPropertyName("recommendUsers")]
-        public RecommendUser[]? RecommendUsers { get; set; }
+        public required RecommendMap[] RecommendMaps { get; set; }
 
         [JsonPropertyName("thumbnails")]
-        public Thumbnails? Thumbnails { get; set; }
+        public required Thumbnails Thumbnails { get; set; }
 
         [JsonPropertyName("users")]
-        public User[]? Users { get; set; }
+        public required User[] Users { get; set; }
     }
 
-    public class RecommendUser
+    public class RecommendMap
     {
         [JsonPropertyName("userId")]
-        public string? UserId { get; set; }
+        [JsonNumberHandling(JsonNumberHandling.AllowReadingFromString | JsonNumberHandling.WriteAsString)]
+        public required long UserId { get; set; }
 
         [JsonPropertyName("illustIds")]
-        public string[]? IllustIds { get; set; }
+        [JsonConverter(typeof(StringArrayToNumberArrayConverter<long>))]
+        public required long[] IllustIds { get; set; }
 
         [JsonPropertyName("novelIds")]
-        public string[]? NovelIds { get; set; }
+        [JsonConverter(typeof(StringArrayToNumberArrayConverter<long>))]
+        public required long[] NovelIds { get; set; }
     }
 
     public class Thumbnails
     {
         [JsonPropertyName("illust")]
-        public Illust[]? Illustrations { get; set; }
+        public required IllustProfile[] Illustrations { get; set; }
 
         [JsonPropertyName("novel")]
-        public Novel[]? Novels { get; set; }
+        public required Novel[] Novels { get; set; }
     }
 
-    public class Illust
+    public class IllustProfile
     {
         [JsonPropertyName("id")]
-        public string? Id { get; set; }
+        [JsonNumberHandling(JsonNumberHandling.AllowReadingFromString | JsonNumberHandling.WriteAsString)]
+        public required long Id { get; set; }
 
         [JsonPropertyName("title")]
-        public string? Title { get; set; }
+        public required string Title { get; set; }
 
         [JsonPropertyName("illustType")]
-        public long? IllustType { get; set; }
+        public required IllustType IllustType { get; set; }
 
         [JsonPropertyName("xRestrict")]
-        public long? XRestrict { get; set; }
+        public required int XRestrict { get; set; }
 
         [JsonPropertyName("restrict")]
-        public long? Restrict { get; set; }
+        public required int Restrict { get; set; }
 
         [JsonPropertyName("sl")]
-        public long Sl { get; set; }
+        public required long Sl { get; set; }
 
         [JsonPropertyName("url")]
-        public Uri? Url { get; set; }
+        public required string Url { get; set; }
 
         [JsonPropertyName("description")]
-        public string? Description { get; set; }
+        public required string Description { get; set; }
 
         [JsonPropertyName("tags")]
-        public string[]? Tags { get; set; }
+        public required string[] Tags { get; set; }
 
         [JsonPropertyName("userId")]
-        public string? UserId { get; set; }
+        [JsonNumberHandling(JsonNumberHandling.AllowReadingFromString | JsonNumberHandling.WriteAsString)]
+        public required long UserId { get; set; }
 
         [JsonPropertyName("userName")]
-        public string? UserName { get; set; }
+        public required string UserName { get; set; }
 
         [JsonPropertyName("width")]
-        public long Width { get; set; }
+        public required int Width { get; set; }
 
         [JsonPropertyName("height")]
-        public long Height { get; set; }
+        public required int Height { get; set; }
 
         [JsonPropertyName("pageCount")]
-        public long PageCount { get; set; }
+        public required int PageCount { get; set; }
 
         [JsonPropertyName("isBookmarkable")]
-        public bool IsBookmarkable { get; set; }
+        public required bool IsBookmarkable { get; set; }
 
         [JsonPropertyName("alt")]
-        public string? Alt { get; set; }
+        public required string Alt { get; set; }
 
         [JsonPropertyName("createDate")]
-        public string? CreateDate { get; set; }
+        public required string CreateDate { get; set; }
 
         [JsonPropertyName("updateDate")]
-        public string? UpdateDate { get; set; }
+        public required string UpdateDate { get; set; }
 
         [JsonPropertyName("isUnlisted")]
-        public bool IsUnlisted { get; set; }
+        public required bool IsUnlisted { get; set; }
 
         [JsonPropertyName("isMasked")]
-        public bool IsMasked { get; set; }
+        public required bool IsMasked { get; set; }
 
         [JsonPropertyName("urls")]
         public Urls? Urls { get; set; }
 
         [JsonPropertyName("profileImageUrl")]
-        public Uri? ProfileImageUrl { get; set; }
+        public required Uri ProfileImageUrl { get; set; }
 
         [JsonPropertyName("aiType")]
-        public long AiType { get; set; }
+        public required long AiType { get; set; }
     }
 
     public class Urls
     {
         [JsonPropertyName("250x250")]
-        public string? The250X250 { get; set; }
+        public required string The250X250 { get; set; }
 
         [JsonPropertyName("360x360")]
-        public string? The360X360 { get; set; }
+        public required string The360X360 { get; set; }
 
         [JsonPropertyName("540x540")]
-        public string? The540X540 { get; set; }
+        public required string The540X540 { get; set; }
     }
 
     public class Novel
     {
         [JsonPropertyName("id")]
-        public string? Id { get; set; }
+        public required string Id { get; set; }
 
         [JsonPropertyName("title")]
-        public string? Title { get; set; }
+        public required string Title { get; set; }
 
         [JsonPropertyName("xRestrict")]
-        public long? XRestrict { get; set; }
+        public required long XRestrict { get; set; }
 
         [JsonPropertyName("restrict")]
-        public long Restrict { get; set; }
+        public required long Restrict { get; set; }
 
         [JsonPropertyName("url")]
-        public Uri? Url { get; set; }
+        public required Uri Url { get; set; }
 
         [JsonPropertyName("tags")]
-        public string[]? Tags { get; set; }
+        public required string[] Tags { get; set; }
 
         [JsonPropertyName("userId")]
-        public string? UserId { get; set; }
+        public required string UserId { get; set; }
 
         [JsonPropertyName("userName")]
-        public string? UserName { get; set; }
+        public required string UserName { get; set; }
 
         [JsonPropertyName("profileImageUrl")]
-        public Uri? ProfileImageUrl { get; set; }
+        public required Uri ProfileImageUrl { get; set; }
 
         [JsonPropertyName("textCount")]
-        public long TextCount { get; set; }
+        public required long TextCount { get; set; }
 
         [JsonPropertyName("wordCount")]
-        public long WordCount { get; set; }
+        public required long WordCount { get; set; }
 
         [JsonPropertyName("readingTime")]
-        public long ReadingTime { get; set; }
+        public required long ReadingTime { get; set; }
 
         [JsonPropertyName("useWordCount")]
-        public bool UseWordCount { get; set; }
+        public required bool UseWordCount { get; set; }
 
         [JsonPropertyName("description")]
-        public string? Description { get; set; }
+        public required string Description { get; set; }
 
         [JsonPropertyName("isBookmarkable")]
-        public bool IsBookmarkable { get; set; }
+        public required bool IsBookmarkable { get; set; }
 
         [JsonPropertyName("bookmarkCount")]
-        public long BookmarkCount { get; set; }
+        public required long BookmarkCount { get; set; }
 
         [JsonPropertyName("isOriginal")]
-        public bool IsOriginal { get; set; }
+        public required bool IsOriginal { get; set; }
 
         [JsonPropertyName("createDate")]
-        public string? CreateDate { get; set; }
+        public required string CreateDate { get; set; }
 
         [JsonPropertyName("updateDate")]
-        public string? UpdateDate { get; set; }
+        public required string UpdateDate { get; set; }
 
         [JsonPropertyName("isMasked")]
-        public bool IsMasked { get; set; }
+        public required bool IsMasked { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("seriesId")]
@@ -222,48 +232,109 @@ public class PixivRelatedRecommendUsersResponse
         public string? SeriesTitle { get; set; }
 
         [JsonPropertyName("isUnlisted")]
-        public bool IsUnlisted { get; set; }
+        public required bool IsUnlisted { get; set; }
 
         [JsonPropertyName("aiType")]
-        public long AiType { get; set; }
+        public required long AiType { get; set; }
     }
 
-    public class User
+    [DebuggerDisplay("{Id}: {Name}")]
+    public class User : IIllustrate
     {
         [JsonPropertyName("partial")]
-        public long Partial { get; set; }
+        public required long Partial { get; set; }
 
         [JsonPropertyName("comment")]
-        public string? Comment { get; set; }
+        public required string Comment { get; set; }
 
         [JsonPropertyName("followedBack")]
-        public bool FollowedBack { get; set; }
+        public required bool FollowedBack { get; set; }
 
         [JsonPropertyName("userId")]
-        public string? UserId { get; set; }
+        [JsonNumberHandling(JsonNumberHandling.AllowReadingFromString | JsonNumberHandling.WriteAsString)]
+        public required long Id { get; set; }
 
         [JsonPropertyName("name")]
-        public string? Name { get; set; }
+        public required string Name { get; set; }
 
         [JsonPropertyName("image")]
-        public string? Image { get; set; }
+        public required string Image { get; set; }
 
         [JsonPropertyName("imageBig")]
-        public string? ImageBig { get; set; }
+        public required string ImageBig { get; set; }
 
         [JsonPropertyName("premium")]
-        public bool Premium { get; set; }
+        public required bool Premium { get; set; }
 
         [JsonPropertyName("isFollowed")]
-        public bool IsFollowed { get; set; }
+        public required bool IsFollowed { get; set; }
 
         [JsonPropertyName("isMypixiv")]
-        public bool IsMypixiv { get; set; }
+        public required bool IsMypixiv { get; set; }
 
         [JsonPropertyName("isBlocking")]
-        public bool IsBlocking { get; set; }
+        public required bool IsBlocking { get; set; }
 
         [JsonPropertyName("acceptRequest")]
-        public bool AcceptRequest { get; set; }
+        public required bool AcceptRequest { get; set; }
+    }
+}
+
+public enum IllustType
+{
+    Illustration,
+
+    Manga,
+
+    Animation,
+}
+
+public class StringArrayToNumberArrayConverter<T> : JsonConverter<T[]> where T : INumber<T>
+{
+    public override T[]? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    {
+        if (reader.TokenType is JsonTokenType.Null)
+            return null;
+
+        if (reader.TokenType is not JsonTokenType.StartArray)
+            throw new JsonException();
+
+        var list = new List<T>();
+
+        while (reader.Read())
+        {
+            if (reader.TokenType is JsonTokenType.EndArray)
+                return [.. list];
+
+            if (reader.TokenType is not JsonTokenType.String)
+                throw new JsonException();
+
+            var value = reader.GetString();
+
+            if (value is null || !T.TryParse(value, null, out var v))
+                throw new JsonException();
+
+            list.Add(v);
+        }
+
+        throw new JsonException();
+    }
+
+    public override void Write(Utf8JsonWriter writer, T[]? value, JsonSerializerOptions options)
+    {
+        if (value is null)
+        {
+            writer.WriteNullValue();
+            return;
+        }
+
+        writer.WriteStartArray();
+
+        foreach (var item in value)
+        {
+            writer.WriteStringValue(item.ToString());
+        }
+
+        writer.WriteEndArray();
     }
 }

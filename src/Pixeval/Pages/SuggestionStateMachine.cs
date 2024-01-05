@@ -36,24 +36,20 @@ namespace Pixeval.Pages;
 
 public class SuggestionStateMachine
 {
+    private static readonly TreeSearcher<SettingEntry> _settingEntriesTreeSearcher =
+        new(SearcherLogic.Contain, PinIn.CreateDefault());
+
     private readonly Lazy<Task<IEnumerable<SuggestionModel>>> _illustrationTrendingTagCache =
         new(
             () => App.AppViewModel.MakoClient.GetTrendingTagsAsync(App.AppViewModel.AppSetting.TargetFilter)
-                .WhereAsync(t => t.Tag is not null && t.Translation is not null)
-                .SelectAsync(t => new Tag(t.Tag!, t.Translation))
+                .SelectAsync(t => new Tag(t.Tag, t.Translation))
                 .SelectAsync(SuggestionModel.FromTag), LazyThreadSafetyMode.ExecutionAndPublication);
 
     private readonly Lazy<Task<IEnumerable<SuggestionModel>>> _novelTrendingTagCache =
         new(
             () => App.AppViewModel.MakoClient.GetTrendingTagsForNovelAsync(App.AppViewModel.AppSetting.TargetFilter)
-                .WhereAsync(t => t.Tag is not null && t.Translation is not null)
-                .SelectAsync(t => new Tag(t.Tag!, t.Translation))
+                .SelectAsync(t => new Tag(t.Tag, t.Translation))
                 .SelectAsync(SuggestionModel.FromTag), LazyThreadSafetyMode.ExecutionAndPublication);
-
-    private static readonly TreeSearcher<SettingEntry> _settingEntriesTreeSearcher =
-        new(SearcherLogic.Contain, PinIn.CreateDefault());
-
-    public ObservableCollection<SuggestionModel> Suggestions { get; } = [];
 
     static SuggestionStateMachine()
     {
@@ -62,6 +58,8 @@ public class SuggestionStateMachine
             _settingEntriesTreeSearcher.Put(settingsEntry.GetLocalizedResourceContent()!, settingsEntry);
         }
     }
+
+    public ObservableCollection<SuggestionModel> Suggestions { get; } = [];
 
     public Task UpdateAsync(string keyword)
     {

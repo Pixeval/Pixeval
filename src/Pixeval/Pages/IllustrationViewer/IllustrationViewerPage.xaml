@@ -1,4 +1,4 @@
-<controls:EnhancedWindowPage
+<controls:SupportCustomTitleBarDragRegionPage
     x:Class="Pixeval.Pages.IllustrationViewer.IllustrationViewerPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -230,35 +230,33 @@
                                     Value="true" />
                             </core:EventTriggerBehavior>
                         </interactivity:Interaction.Behaviors>
-                        <GridView
-                            x:Name="ThumbnailList"
+                        <controls:AdvancedItemsView
+                            x:Name="ThumbnailItemsView"
                             Margin="5"
                             Padding="0"
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Stretch"
-                            IsItemClickEnabled="True"
+                            ElementClearing="IllustrationItemsView_OnElementClearing"
+                            ElementPrepared="IllustrationItemsView_OnElementPrepared"
                             ItemsSource="{x:Bind _viewModel.Illustrations}"
-                            ScrollViewer.HorizontalScrollBarVisibility="Auto"
-                            ScrollViewer.HorizontalScrollMode="Auto"
-                            ScrollViewer.VerticalScrollMode="Disabled"
+                            LayoutType="HorizontalStack"
+                            LoadMoreRequested="IllustrationItemsView_OnLoadMoreRequested"
+                            MinItemHeight="80"
+                            MinItemWidth="80"
                             SelectedIndex="{x:Bind _viewModel.CurrentIllustrationIndex, Mode=TwoWay}"
                             SelectionMode="Single">
-                            <GridView.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <ItemsStackPanel Orientation="Horizontal" />
-                                </ItemsPanelTemplate>
-                            </GridView.ItemsPanel>
-                            <GridView.ItemTemplate>
-                                <DataTemplate x:DataType="illustrationView:IllustrationViewModel">
-                                    <controls:IllustrationImage
-                                        Width="80"
-                                        Height="80"
-                                        EffectiveViewportChanged="ThumbnailOnEffectiveViewportChanged"
-                                        ThumbnailOption="SquareMedium"
-                                        ViewModel="{x:Bind}" />
+                            <controls:AdvancedItemsView.ItemTemplate>
+                                <DataTemplate x:DataType="illustrationView:IllustrationItemViewModel">
+                                    <ItemContainer Loaded="FrameworkElement_OnLoaded">
+                                        <controls:IllustrationImage
+                                            Width="80"
+                                            Height="80"
+                                            ThumbnailOption="{x:Bind local:IllustrationViewerPage.Option}"
+                                            ViewModel="{x:Bind}" />
+                                    </ItemContainer>
                                 </DataTemplate>
-                            </GridView.ItemTemplate>
-                        </GridView>
+                            </controls:AdvancedItemsView.ItemTemplate>
+                        </controls:AdvancedItemsView>
                     </Grid>
                 </StackPanel>
             </Grid>
@@ -321,6 +319,7 @@
                         <ColumnDefinition x:Name="TitleControlButtonsColumn" Width="150" />
                     </Grid.ColumnDefinitions>
                     <Image
+                        x:Name="Icon"
                         Grid.Column="0"
                         Width="25"
                         Height="25"
@@ -417,9 +416,6 @@
                     </TeachingTip>
                 </Grid>
             </Grid>
-
-            <TeachingTip x:Name="SnackBarTeachingTip" IsLightDismissEnabled="True" />
-
         </Grid>
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
@@ -450,4 +446,4 @@
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
     </SplitView>
-</controls:EnhancedWindowPage>
+</controls:SupportCustomTitleBarDragRegionPage>

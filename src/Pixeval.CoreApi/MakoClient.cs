@@ -229,9 +229,9 @@ public partial class MakoClient : ICancellable
     }
 
     // PrivacyPolicy.Private is only allowed when the uid is pointing to yourself
-    private bool CheckPrivacyPolicy(string uid, PrivacyPolicy privacyPolicy)
+    private bool CheckPrivacyPolicy(long uid, PrivacyPolicy privacyPolicy)
     {
-        return !(privacyPolicy == PrivacyPolicy.Private && Session.Id! != uid);
+        return !(privacyPolicy == PrivacyPolicy.Private && Session.Id != uid);
     }
 
     /// <summary>

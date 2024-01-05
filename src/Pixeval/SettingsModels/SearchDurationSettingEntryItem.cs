@@ -23,6 +23,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Pixeval.Controls;
 using Pixeval.CoreApi.Global.Enum;
+using WinUI3Utilities;
 
 namespace Pixeval.SettingsModels;
 
@@ -34,7 +35,7 @@ public record SearchDurationSettingEntryItem : StringRepresentableItem, IAvailab
         SearchDuration.WithinLastDay => MiscResources.SearchDurationWithinLastDay,
         SearchDuration.WithinLastWeek => MiscResources.SearchDurationWithinLastWeek,
         SearchDuration.WithinLastMonth => MiscResources.SearchDurationWithinLastMonth,
-        _ => throw new ArgumentOutOfRangeException(nameof(item), item, null)
+        _ => ThrowHelper.ArgumentOutOfRange<SearchDuration, string>(item)
     })
     {
     }

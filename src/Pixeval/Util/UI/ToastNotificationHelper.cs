@@ -20,61 +20,14 @@
 
 using System;
 using System.Reflection;
+using Windows.UI.Notifications;
 using Microsoft.Toolkit.Uwp.Notifications;
 using Pixeval.Utilities;
-using Windows.UI.Notifications;
 
 namespace Pixeval.Util.UI;
 
 public static class ToastNotificationHelper
 {
-    public record ProgressToastNotification(string Title, string Subtitle, string ProgressBarText, Uri LogoUri)
-    {
-        private uint _updateCounter;
-        private readonly string _tag = Guid.NewGuid().ToString();
-
-        public void Send()
-        {
-            var content = new ToastContentBuilder()
-                .AddText(Title)
-                .AddAppLogoOverride(LogoUri)
-                .AddVisualChild(new AdaptiveProgressBar
-                {
-                    Title = Subtitle,
-                    Status = ProgressBarText,
-                    Value = new BindableProgressBarValue("progressValue")
-                })
-                .GetToastContent();
-            var toast = new ToastNotification(content.GetXml())
-            {
-                Tag = _tag,
-                ExpiresOnReboot = true,
-                Data = new NotificationData
-                {
-                    SequenceNumber = _updateCounter,
-                    Values =
-                    {
-                        ["progressValue"] = "0.0"
-                    }
-                }
-            };
-            ToastNotificationManager.CreateToastNotifier().Show(toast);
-        }
-
-        public void Update(double progress)
-        {
-            var data = new NotificationData
-            {
-                SequenceNumber = _updateCounter++,
-                Values =
-                {
-                    ["progressValue"] = $"{progress.Normalize(100, 0):#.#}"
-                }
-            };
-            _ = ToastNotificationManager.CreateToastNotifier().Update(data, _tag);
-        }
-    }
-
     private static readonly PropertyInfo _appLogoOverrideUriProperty = typeof(ToastContentBuilder).GetProperty("AppLogoOverrideUri", BindingFlags.NonPublic | BindingFlags.Instance)!;
 
     public static ToastContentBuilder AddInlineImage(
@@ -159,5 +112,52 @@ public static class ToastNotificationHelper
         var notification = new ProgressToastNotification(title, subtitle, progressBarText, logoUri);
         notification.Send();
         return notification;
+    }
+
+    public record ProgressToastNotification(string Title, string Subtitle, string ProgressBarText, Uri LogoUri)
+    {
+        private readonly string _tag = Guid.NewGuid().ToString();
+        private uint _updateCounter;
+
+        public void Send()
+        {
+            var content = new ToastContentBuilder()
+                .AddText(Title)
+                .AddAppLogoOverride(LogoUri)
+                .AddVisualChild(new AdaptiveProgressBar
+                {
+                    Title = Subtitle,
+                    Status = ProgressBarText,
+                    Value = new BindableProgressBarValue("progressValue")
+                })
+                .GetToastContent();
+            var toast = new ToastNotification(content.GetXml())
+            {
+                Tag = _tag,
+                ExpiresOnReboot = true,
+                Data = new NotificationData
+                {
+                    SequenceNumber = _updateCounter,
+                    Values =
+                    {
+                        ["progressValue"] = "0.0"
+                    }
+                }
+            };
+            ToastNotificationManager.CreateToastNotifier().Show(toast);
+        }
+
+        public void Update(double progress)
+        {
+            var data = new NotificationData
+            {
+                SequenceNumber = _updateCounter++,
+                Values =
+                {
+                    ["progressValue"] = $"{progress.Normalize(100, 0):#.#}"
+                }
+            };
+            _ = ToastNotificationManager.CreateToastNotifier().Update(data, _tag);
+        }
     }
 }

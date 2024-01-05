@@ -21,21 +21,21 @@
 using System;
 using System.IO;
 using Windows.Foundation;
+using Windows.System;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Input;
+using Pixeval.Controls;
 using Pixeval.Download;
+using Pixeval.Options;
 using Pixeval.Util.UI;
-using Windows.System;
-using Pixeval.CoreApi.Model;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
 
 namespace Pixeval.Pages.Download;
 
 [DependencyProperty<DownloadListEntryViewModel>("ViewModel", propertyChanged: nameof(OnViewModelChanged))]
-[DependencyProperty<Illustration>("Illustration")]
 [DependencyProperty<string>("Title")]
 [DependencyProperty<string>("Description")]
 [DependencyProperty<double>("Progress")]
@@ -44,11 +44,15 @@ namespace Pixeval.Pages.Download;
 [DependencyProperty<bool>("IsRedownloadItemEnabled")]
 [DependencyProperty<bool>("IsCancelItemEnabled")]
 [DependencyProperty<bool>("IsShowErrorDetailDialogItemEnabled")]
-public sealed partial class DownloadListEntry
+public sealed partial class DownloadListEntry : IViewModelControl
 {
-    public event TypedEventHandler<DownloadListEntry, DownloadListEntryViewModel>? OpenIllustrationRequested;
+    object IViewModelControl.ViewModel => ViewModel;
+
+    private const ThumbnailUrlOption Option = ThumbnailUrlOption.SquareMedium;
 
     public DownloadListEntry() => InitializeComponent();
+
+    public event TypedEventHandler<DownloadListEntry, DownloadListEntryViewModel>? OpenIllustrationRequested;
 
     private static void OnViewModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
@@ -80,14 +84,15 @@ public sealed partial class DownloadListEntry
                 ViewModel.DownloadTask.CancellationHandle.Resume();
                 break;
             default:
-                throw new ArgumentOutOfRangeException();
+                ThrowHelper.ArgumentOutOfRange(ViewModel.DownloadTask.CurrentState);
+                break;
         }
     }
 
     private void RedownloadItem_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        ViewModel.DownloadTask.Reset();
-        _ = App.AppViewModel.DownloadManager.TryExecuteInline(ViewModel.DownloadTask);
+        // ViewModel.DownloadTask.Reset();
+        // _ = App.AppViewModel.DownloadManager.TryExecuteInline(ViewModel.DownloadTask);
     }
 
     private void CancelDownloadItem_OnTapped(object sender, TappedRoutedEventArgs e)
@@ -104,7 +109,6 @@ public sealed partial class DownloadListEntry
 
     private async void CheckErrorMessageInDetail_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        _ = await MessageDialogBuilder.CreateAcknowledgement(CurrentContext.Window, DownloadListEntryResources.ErrorMessageDialogTitle, ViewModel.DownloadTask.ErrorCause!.ToString())
-            .ShowAsync();
+        _ = await this.CreateAcknowledgementAsync(DownloadListEntryResources.ErrorMessageDialogTitle, ViewModel.DownloadTask.ErrorCause?.ToString());
     }
 }

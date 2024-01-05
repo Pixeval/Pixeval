@@ -22,24 +22,24 @@ using System;
 using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Pixeval.Attributes;
-using Pixeval.Misc;
 using Pixeval.Controls.TokenInput;
+using Pixeval.Misc;
 
 namespace Pixeval.Flyouts.IllustrationResultFilter;
 
 public class IllustrationResultFilterContentViewModel : ObservableObject
 {
-    private ObservableCollection<Token> _excludeTags;
+    private ObservableCollection<Token> _excludeTags = null!;
 
-    private string _illustrationId;
+    private long _illustrationId = -1;
 
-    private Token _illustrationName;
+    private Token _illustrationName = null!;
+    
+    private long _illustratorId = -1;
 
-    private string _illustratorId;
+    private Token _illustratorName = null!;
 
-    private Token _illustratorName;
-
-    private ObservableCollection<Token> _includeTags;
+    private ObservableCollection<Token> _includeTags = null!;
 
     private int _leastBookmark;
 
@@ -49,10 +49,9 @@ public class IllustrationResultFilterContentViewModel : ObservableObject
 
     private DateTimeOffset _publishDateStart;
 
-    private ObservableCollection<Token> _userGroupName;
-#pragma warning disable CS8618
+    private ObservableCollection<Token> _userGroupName = null!;
+
     public IllustrationResultFilterContentViewModel()
-#pragma warning restore CS8618
     {
         DefaultValueAttributeHelper.Initialize(this);
     }
@@ -99,8 +98,8 @@ public class IllustrationResultFilterContentViewModel : ObservableObject
         set => SetProperty(ref _illustratorName, value);
     }
 
-    [DefaultValue("")]
-    public string IllustratorId
+    [DefaultValue(-1)]
+    public long IllustratorId
     {
         get => _illustratorId;
         set => SetProperty(ref _illustratorId, value);
@@ -113,8 +112,8 @@ public class IllustrationResultFilterContentViewModel : ObservableObject
         set => SetProperty(ref _illustrationName, value);
     }
 
-    [DefaultValue("")]
-    public string IllustrationId
+    [DefaultValue(-1)]
+    public long IllustrationId
     {
         get => _illustrationId;
         set => SetProperty(ref _illustrationId, value);

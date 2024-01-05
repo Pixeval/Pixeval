@@ -4,27 +4,118 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:attributes="using:Pixeval.Attributes"
     xmlns:controls="using:Pixeval.Controls"
+    xmlns:controls1="using:CommunityToolkit.WinUI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:login="using:Pixeval.Pages.Login"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="using:Pixeval.SettingsModels"
     d:DataContext="{d:DesignInstance login:LoginPageViewModel}"
     Loaded="LoginPage_OnLoaded"
     mc:Ignorable="d">
     <Grid>
-        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-            <Image
-                Width="150"
-                Height="150"
-                Source="../../Assets/Images/logo.png" />
-            <ProgressRing Width="30" Height="30" />
-            <TextBlock
-                Margin="0,15,0,0"
+        <Grid.RowDefinitions>
+            <RowDefinition Height="32" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Grid
+            Grid.Row="1"
+            Padding="50"
+            RowSpacing="20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <StackPanel
+                Grid.Row="0"
                 HorizontalAlignment="Center"
-                FontSize="10"
-                Text="{x:Bind attributes:LocalizedResourceAttributeHelper.GetLocalizedResourceContent(_viewModel.LoginPhase), Mode=OneWay}" />
-        </StackPanel>
+                VerticalAlignment="Center">
+                <Image
+                    Width="150"
+                    Height="150"
+                    Source="../../Assets/Images/logo.png" />
+                <ProgressRing
+                    Width="30"
+                    Height="30"
+                    Visibility="{x:Bind _viewModel.ShowProcessingRing, Mode=OneWay}" />
+                <TextBlock
+                    Margin="0,15,0,0"
+                    HorizontalAlignment="Center"
+                    FontSize="10"
+                    Text="{x:Bind attributes:LocalizedResourceAttributeHelper.GetLocalizedResourceContent(_viewModel.LoginPhase), Mode=OneWay}" />
+            </StackPanel>
+            <Grid
+                Grid.Row="2"
+                ColumnSpacing="20"
+                RowSpacing="20">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid Column="0" RowSpacing="20">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <TextBlock x:Uid="/LoginPage/SelectTextBlock" Grid.Row="0" />
+                    <controls:AdvancedItemsView
+                        Grid.Row="1"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        controls1:DockPanel.Dock="Left"
+                        CanLoadMore="False"
+                        IsEnabled="{x:Bind _viewModel.IsFinished, Mode=OneWay}"
+                        IsItemInvokedEnabled="True"
+                        ItemInvoked="ItemsView_OnItemInvoked"
+                        ItemsSource="{x:Bind _browserInfos}"
+                        LayoutType="HorizontalStack"
+                        MinItemHeight="150"
+                        MinItemWidth="150">
+                        <controls:AdvancedItemsView.ItemTemplate>
+                            <DataTemplate x:DataType="login:BrowserInfo">
+                                <ItemContainer>
+                                    <Grid Padding="20" RowSpacing="20">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                        </Grid.RowDefinitions>
+                                        <Image
+                                            Grid.Row="0"
+                                            Width="80"
+                                            Height="80"
+                                            HorizontalAlignment="Center"
+                                            Source="{x:Bind IconSource}" />
+                                        <TextBlock
+                                            Grid.Row="1"
+                                            HorizontalAlignment="Center"
+                                            Text="{x:Bind Type}" />
+                                    </Grid>
+                                </ItemContainer>
+                            </DataTemplate>
+                        </controls:AdvancedItemsView.ItemTemplate>
+                    </controls:AdvancedItemsView>
+                </Grid>
+                <Grid Column="1" RowSpacing="20">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <controls:SettingRadioButtons
+                        Grid.Row="0"
+                        IsEnabled="{x:Bind _viewModel.IsFinished, Mode=OneWay}"
+                        ItemsSource="{x:Bind models:LoginProxyOptionSettingEntryItem.AvailableItems}"
+                        SelectedItem="{x:Bind _viewModel.LoginProxyOption, Mode=TwoWay}" />
+                    <TextBox
+                        x:Uid="/LoginPage/ProxyTextBox"
+                        Grid.Row="1"
+                        IsEnabled="{x:Bind _viewModel.IsFinished, Mode=OneWay}"
+                        Text="{x:Bind _viewModel.ProxyString, Mode=TwoWay}" />
+                </Grid>
+            </Grid>
+        </Grid>
         <Border
-            Margin="100"
+            Grid.Row="1"
             Child="{x:Bind _viewModel.WebView, Mode=OneWay}"
             CornerRadius="{ThemeResource ControlCornerRadius}" />
     </Grid>

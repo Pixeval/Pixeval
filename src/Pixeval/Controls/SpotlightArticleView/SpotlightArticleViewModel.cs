@@ -18,6 +18,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using System;
 using Pixeval.Controls.Illustrate;
 using Pixeval.CoreApi.Model;
 
@@ -25,5 +26,5 @@ namespace Pixeval.Controls.SpotlightArticleView;
 
 public class SpotlightArticleViewModel(SpotlightArticle illustrate) : IllustrateViewModel<SpotlightArticle>(illustrate)
 {
-    public override void Dispose() => throw new System.NotImplementedException();
+    public override void Dispose() => throw new NotImplementedException();
 }

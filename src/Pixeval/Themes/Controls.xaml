@@ -13,6 +13,8 @@
     <CornerRadius x:Key="ControlTopCornerRadius">4,4,0,0</CornerRadius>
     <CornerRadius x:Key="ControlBottomCornerRadius">0,0,4,4</CornerRadius>
     <x:Double x:Key="PixevalButtonIconSmallSize">10</x:Double>
+    <x:Double x:Key="TeachingTipContentMaxHeight">450</x:Double>
+    <x:Double x:Key="TeachingTipContentMaxHeightWithTarget">430</x:Double>
     <Style x:Key="TitleTextBlockStyle" TargetType="TextBlock">
         <Setter Property="FontWeight" Value="SemiBold" />
         <Setter Property="FontSize" Value="{StaticResource PixevalTitleFontSize}" />
@@ -39,28 +41,12 @@
         <Setter Property="FontSize" Value="{StaticResource PixevalSubscriptFontSize}" />
     </Style>
     <Style x:Key="SettingsNumberBoxStyle" TargetType="NumberBox">
-        <Setter Property="Width" Value="200" />
         <Setter Property="IsWrapEnabled" Value="True" />
         <Setter Property="LargeChange" Value="10" />
         <Setter Property="NumberFormatter" Value="{StaticResource IntegerRoundedDecimalFormatter}" />
         <Setter Property="SmallChange" Value="1" />
         <Setter Property="SpinButtonPlacementMode" Value="Compact" />
         <Setter Property="ValidationMode" Value="InvalidInputOverwritten" />
-    </Style>
-    <Style x:Key="ListViewItemStretchStyle" TargetType="ListViewItem">
-        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-        <Setter Property="Margin" Value="0" />
-        <Setter Property="Padding" Value="0" />
-    </Style>
-
-    <Style x:Key="ListViewItemNoStyle" TargetType="ListViewItem">
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="ListViewItem">
-                    <ContentPresenter Content="{TemplateBinding Content}" />
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
     </Style>
 
     <numberFormatting:DecimalFormatter x:Key="IntegerRoundedDecimalFormatter" FractionDigits="0">

@@ -27,15 +27,7 @@ public class EnhancedPage : Page
 {
     public int ActivationCount { get; private set; }
 
-    public EnhancedPage()
-    {
-        Loaded += (_, _) => Initialized = true;
-        Unloaded += (_, _) => Initialized = false;
-    }
-
     public bool ClearCacheAfterNavigation { get; set; }
-
-    public bool Initialized { get; private set; }
 
     protected sealed override void OnNavigatedTo(NavigationEventArgs e)
     {
