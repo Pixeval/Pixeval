@@ -70,11 +70,6 @@ public sealed partial class IllustrationItem : IViewModelControl
         await ViewModel.SaveAsync();
     }
 
-    private void SaveAsContextItemOnTapped(object sender, TappedRoutedEventArgs e)
-    {
-        // await ViewModel.SaveAsAsync();
-    }
-
     private async void OpenInBrowserContextItemOnTapped(object sender, TappedRoutedEventArgs e)
     {
         _ = await Launcher.LaunchUriAsync(MakoHelper.GenerateIllustrationWebUri(ViewModel.Id));

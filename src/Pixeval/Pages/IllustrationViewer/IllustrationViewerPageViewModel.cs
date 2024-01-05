@@ -496,7 +496,7 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
 
     private async void SaveAsync(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
-        await CurrentPage.SaveAsync();
+        await CurrentPage.SaveAsync(CurrentImage.OriginalImageStream);
         WindowContent.ShowTeachingTipAndHide("已保存");
     }
 

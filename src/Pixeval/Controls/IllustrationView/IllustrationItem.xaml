@@ -83,10 +83,6 @@
                 x:Uid="/IllustrationView/SaveContextItem"
                 Click="SaveContextItemOnTapped"
                 Icon="{markup:FontSymbolIcon Glyph=SaveE74E}" />
-            <MenuFlyoutItem
-                x:Uid="/IllustrationView/SaveAsContextItem"
-                Icon="{markup:FontSymbolIcon Glyph=SaveAsE792}"
-                Tapped="SaveAsContextItemOnTapped" />
             <MenuFlyoutSeparator />
             <MenuFlyoutItem
                 x:Uid="/IllustrationView/OpenInBrowserContextItem"

@@ -32,7 +32,7 @@ namespace Pixeval.Download.Models;
 public abstract class IllustrationDownloadTaskBase(DownloadHistoryEntry entry) : ObservableObject, IDownloadTask, IProgress<double>
 {
     private Exception? _errorCause;
-    private double _progressPercentage;
+    private double _progressPercentage = entry.State is DownloadState.Completed ? 100 : 0;
 
     /// <summary>
     /// 只有<see cref="CurrentState"/>是<see cref="DownloadState.Running"/>或<see cref="DownloadState.Paused"/>值有效
