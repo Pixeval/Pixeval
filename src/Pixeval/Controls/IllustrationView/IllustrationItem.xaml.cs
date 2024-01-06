@@ -20,15 +20,12 @@
 
 using System;
 using System.Collections.Generic;
-using Windows.System;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.Options;
-using Pixeval.Util;
 using Pixeval.Util.IO;
-using Pixeval.Util.UI;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
 
@@ -45,43 +42,18 @@ public sealed partial class IllustrationItem : IViewModelControl
 
     private double DesiredHeight => ThisRequired.Invoke().DesiredHeight;
 
-    /// <summary>
-    /// 请求显示二维码
-    /// </summary>
-    public event Func<TeachingTip>? TeachingTipRequested;
+    private TeachingTip QrCodeTeachingTip => ThisRequired.Invoke().QrCodeTeachingTip;
 
     /// <summary>
     /// 请求获取承载本控件的<see cref="IllustrationView"/>
     /// </summary>
     public event Func<IllustrationView> ThisRequired = null!;
 
-    private async void ToggleBookmarkButtonOnTapped(object sender, TappedRoutedEventArgs e)
+    private void ToggleBookmarkButtonOnTapped(object sender, TappedRoutedEventArgs e)
     {
         e.Handled = true;
-        await ViewModel.ToggleBookmarkStateAsync();
+        ViewModel.BookmarkCommand.Execute(null);
     }
-
-    private async void BookmarkContextItemOnTapped(object sender, TappedRoutedEventArgs e)
-    {
-        await ViewModel.ToggleBookmarkStateAsync();
-    }
-
-    private async void SaveContextItemOnTapped(object sender, RoutedEventArgs routedEventArgs)
-    {
-        await ViewModel.SaveAsync();
-    }
-
-    private async void OpenInBrowserContextItemOnTapped(object sender, TappedRoutedEventArgs e)
-    {
-        _ = await Launcher.LaunchUriAsync(MakoHelper.GenerateIllustrationWebUri(ViewModel.Id));
-    }
-
-    private void AddToBookmarkContextItemOnTapped(object sender, TappedRoutedEventArgs e)
-    {
-        throw new NotImplementedException();
-    }
-
-    private TeachingTip? GetQrCodeTeachingTip() => TeachingTipRequested?.Invoke();
 
     // 这些方法本来用属性就可以实现，但在ViewModel更新的时候更新，使用了{x:Bind GetXXX(ViewModel)}的写法
     // 这样可以不需要写OnPropertyChange就实现更新

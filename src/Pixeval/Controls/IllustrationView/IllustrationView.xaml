@@ -28,10 +28,7 @@
         <ItemsView.ItemTemplate>
             <DataTemplate x:DataType="local:IllustrationItemViewModel">
                 <ItemContainer>
-                    <local:IllustrationItem
-                        TeachingTipRequested="IllustrationThumbnailOnShowQrCodeRequested"
-                        ThisRequired="IllustrationThumbnail_OnThisRequired"
-                        ViewModel="{x:Bind}" />
+                    <local:IllustrationItem ThisRequired="IllustrationThumbnail_OnThisRequired" ViewModel="{x:Bind}" />
                 </ItemContainer>
             </DataTemplate>
         </ItemsView.ItemTemplate>
@@ -53,6 +50,7 @@
     <TeachingTip
         x:Name="QrCodeTeachingTip"
         x:Uid="/IllustrationView/QrCodeTeachingTip"
+        x:FieldModifier="public"
         IsLightDismissEnabled="True">
         <TeachingTip.HeroContent>
             <Image />

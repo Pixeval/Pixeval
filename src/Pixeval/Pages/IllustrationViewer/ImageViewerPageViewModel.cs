@@ -27,7 +27,6 @@ using Windows.Storage.Streams;
 using Windows.System;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
 using Pixeval.Attributes;
 using Pixeval.Controls;
@@ -82,10 +81,10 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
     private string? _loadingText;
 
     [ObservableProperty]
-    private List<int>? _msIntervals;
+    private IList<int>? _msIntervals;
 
     [ObservableProperty]
-    private IEnumerable<IRandomAccessStream>? _originalImageSources;
+    private IList<IRandomAccessStream>? _originalImageSources;
 
     [ObservableProperty]
     private int _rotationDegree;
@@ -117,8 +116,7 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
         IllustrationViewModel = illustrationViewModel;
         _ = LoadImage();
 
-        SaveCommand.CanExecuteRequested += (_, args) => args.CanExecute = LoadSuccessfully;
-        SaveCommand.ExecuteRequested += (_, _) => IllustrationViewModel.SaveCommand.Execute((IllustrationViewerPageViewModel.WindowContent, (Func<IProgress<int>?, Task<IRandomAccessStream?>>)GetOriginalImageSourceForClipBoardAsync));
+        InitializeCommands();
     }
 
     /// <summary>
@@ -128,7 +126,7 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
 
     public IRandomAccessStream? OriginalImageStream => OriginalImageSources?.FirstOrDefault();
 
-    public async Task<IRandomAccessStream?> GetOriginalImageSourceForClipBoardAsync(IProgress<int>? progress = null)
+    public async Task<IRandomAccessStream?> GetOriginalImageSourceAsync(IProgress<int>? progress = null)
     {
         if (OriginalImageSources is null)
             return null;
@@ -212,7 +210,7 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
             if (App.AppViewModel.AppSetting.UseFileCache && await App.AppViewModel.Cache.ExistsAsync(cacheKey))
             {
                 AdvancePhase(LoadingPhase.LoadingFromCache);
-                OriginalImageSources = await App.AppViewModel.Cache.GetAsync<IEnumerable<IRandomAccessStream>>(cacheKey);
+                OriginalImageSources = await App.AppViewModel.Cache.GetAsync<IList<IRandomAccessStream>>(cacheKey);
                 LoadSuccessfully = true;
             }
             else if (IllustrationViewModel.IsUgoira)
@@ -228,8 +226,8 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
                 {
                     case Result<Stream>.Success(var zipStream):
                         AdvancePhase(LoadingPhase.MergingUgoiraFrames);
-                        OriginalImageSources = await IoHelper.GetStreamsFromZipStreamAsync(zipStream);
-                        MsIntervals = metadata.UgoiraMetadataInfo.Frames.Select(x => (int)x.Delay)?.ToList();
+                        OriginalImageSources = (await IoHelper.GetStreamsFromZipStreamAsync(zipStream)).ToArray();
+                        MsIntervals = metadata.UgoiraMetadataInfo.Frames.Select(x => (int)x.Delay)?.ToArray();
                         break;
                     case Result<Stream>.Failure(OperationCanceledException):
                         return;
@@ -260,8 +258,7 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
 
             if (OriginalImageSources is not null && !_disposed)
             {
-                SaveCommand.NotifyCanExecuteChanged();
-                IllustrationViewerPageViewModel.UpdateCommandCanExecute();
+                UpdateCommandCanExecute();
                 if (App.AppViewModel.AppSetting.UseFileCache)
                 {
                     _ = await App.AppViewModel.Cache.TryAddAsync(cacheKey, OriginalImageSources, TimeSpan.FromDays(1));
@@ -273,9 +270,36 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
             throw new IllustrationSourceNotFoundException(ImageViewerPageResources.CannotFindImageSourceContent);
         }
     }
+    private void InitializeCommands()
+    {
+        SaveCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
+        SaveCommand.ExecuteRequested += (_, _) => IllustrationViewModel.SaveCommand.Execute((IllustrationViewerPageViewModel.WindowContent, (Func<IProgress<int>?, Task<IRandomAccessStream?>>)GetOriginalImageSourceAsync));
+
+        SaveAsCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
+        SaveAsCommand.ExecuteRequested += (_, _) => IllustrationViewModel.SaveAsCommand.Execute((IllustrationViewerPageViewModel.Window, (Func<IProgress<int>?, Task<IRandomAccessStream?>>)GetOriginalImageSourceAsync));
+
+        CopyCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
+        CopyCommand.ExecuteRequested += (_, _) => IllustrationViewModel.CopyCommand.Execute((IllustrationViewerPageViewModel.WindowContent, (Func<IProgress<int>?, Task<IRandomAccessStream?>>)GetOriginalImageSourceAsync));
+    }
+
+    private void UpdateCommandCanExecute()
+    {
+        SaveCommand.NotifyCanExecuteChanged();
+        SaveAsCommand.NotifyCanExecuteChanged();
+        CopyCommand.NotifyCanExecuteChanged();
+        IllustrationViewerPageViewModel.UpdateCommandCanExecute();
+    }
+
+    private void LoadingCompletedCanExecuteRequested(XamlUICommand _, CanExecuteRequestedEventArgs args) => args.CanExecute = LoadSuccessfully;
 
     public XamlUICommand SaveCommand { get; } = IllustrationViewerPageResources.Save.GetCommand(
         FontIconSymbols.SaveE74E, VirtualKeyModifiers.Control, VirtualKey.S);
+
+    public XamlUICommand SaveAsCommand { get; } = IllustrationViewerPageResources.SaveAs.GetCommand(
+        FontIconSymbols.SaveAsE792, VirtualKeyModifiers.Control | VirtualKeyModifiers.Shift, VirtualKey.S);
+
+    public XamlUICommand CopyCommand { get; } = IllustrationViewerPageResources.Copy.GetCommand(
+        FontIconSymbols.CopyE8C8, VirtualKeyModifiers.Control, VirtualKey.C);
 
     private void DisposeInternal()
     {

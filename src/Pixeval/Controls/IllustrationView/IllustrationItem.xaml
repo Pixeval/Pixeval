@@ -7,7 +7,6 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:labs="using:CommunityToolkit.Labs.WinUI"
-    xmlns:markup="using:Pixeval.Controls.MarkupExtensions"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:media="using:Microsoft.Xaml.Interactions.Media"
     xmlns:triggers="using:Pixeval.Util.Triggers"
@@ -71,18 +70,15 @@
             <MenuFlyoutItem Command="{x:Bind ViewModel.BookmarkCommand, Mode=OneWay}" />
             <MenuFlyoutItem Command="{x:Bind ViewModel.AddToBookmarkCommand, Mode=OneWay}" />
             <MenuFlyoutSeparator />
-            <MenuFlyoutItem
-                x:Uid="/IllustrationView/SaveContextItem"
-                Click="SaveContextItemOnTapped"
-                Icon="{markup:FontSymbolIcon Glyph=SaveE74E}" />
+            <MenuFlyoutItem Command="{x:Bind ViewModel.SaveCommand, Mode=OneWay}" CommandParameter="{x:Bind}" />
             <MenuFlyoutSeparator />
             <MenuFlyoutItem Command="{x:Bind ViewModel.OpenInWebBrowserCommand, Mode=OneWay}" />
             <MenuFlyoutItem Command="{x:Bind ViewModel.GenerateWebLinkCommand, Mode=OneWay}" CommandParameter="{x:Bind}" />
             <!--  TODO:此处不打开教学TeachingTip，不然画面太乱，但是可以提示已经复制链接  -->
             <MenuFlyoutItem Command="{x:Bind ViewModel.GenerateLinkCommand, Mode=OneWay}" />
             <MenuFlyoutSeparator />
-            <MenuFlyoutItem Command="{x:Bind ViewModel.ShowQrCodeCommand, Mode=OneWay}" CommandParameter="{x:Bind GetQrCodeTeachingTip()}" />
-            <MenuFlyoutItem Command="{x:Bind ViewModel.ShowPixEzQrCodeCommand, Mode=OneWay}" CommandParameter="{x:Bind GetQrCodeTeachingTip()}" />
+            <MenuFlyoutItem Command="{x:Bind ViewModel.ShowQrCodeCommand, Mode=OneWay}" CommandParameter="{x:Bind QrCodeTeachingTip}" />
+            <MenuFlyoutItem Command="{x:Bind ViewModel.ShowPixEzQrCodeCommand, Mode=OneWay}" CommandParameter="{x:Bind QrCodeTeachingTip}" />
         </MenuFlyout>
     </Grid.ContextFlyout>
     <interactivity:Interaction.Behaviors>
@@ -109,7 +105,8 @@
             <Grid.RenderTransform>
                 <ScaleTransform CenterX="10" CenterY="10" ScaleX="0" ScaleY="0" />
             </Grid.RenderTransform>
-            <controls:FontSymbolIcon Foreground="{x:Bind ViewModel.BookmarkedColor, Mode=OneWay}" Symbol="HeartFillEB52" />
+            <controls:FontSymbolIcon Foreground="#80000000" Symbol="HeartFillEB52" />
+            <IconSourceElement IconSource="{x:Bind ViewModel.BookmarkCommand.IconSource, Mode=OneWay}" />
             <controls:FontSymbolIcon Foreground="White" Symbol="HeartEB51" />
         </Grid>
         <Grid

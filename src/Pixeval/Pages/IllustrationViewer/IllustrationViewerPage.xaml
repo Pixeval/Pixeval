@@ -202,7 +202,7 @@
                                     Command="{x:Bind _viewModel.MirrorCommand}"
                                     IsChecked="{x:Bind _viewModel.CurrentImage.IsMirrored, Mode=OneWay}" />
                                 <AppBarButton Width="50" Command="{x:Bind _viewModel.RotateClockwiseCommand}" />
-                                <AppBarButton Width="50" Command="{x:Bind _viewModel.SaveCommand}" />
+                                <AppBarButton Width="50" Command="{x:Bind _viewModel.CurrentImage.SaveCommand, Mode=OneWay}" />
                             </CommandBar>
                         </Border>
                     </Grid>
@@ -349,9 +349,9 @@
                             SizeChanged="CommandBarElementOnSizeChanged"
                             Visibility="{x:Bind _viewModel.IsUgoira, Mode=OneWay}" />
                         <AppBarSeparator />
-                        <AppBarButton Command="{x:Bind _viewModel.CopyCommand}" SizeChanged="CommandBarElementOnSizeChanged" />
+                        <AppBarButton Command="{x:Bind _viewModel.CurrentImage.CopyCommand, Mode=OneWay}" SizeChanged="CommandBarElementOnSizeChanged" />
                         <AppBarButton Command="{x:Bind _viewModel.CurrentImage.SaveCommand, Mode=OneWay}" SizeChanged="CommandBarElementOnSizeChanged" />
-                        <AppBarButton Command="{x:Bind _viewModel.SaveAsCommand}" SizeChanged="CommandBarElementOnSizeChanged" />
+                        <AppBarButton Command="{x:Bind _viewModel.CurrentImage.SaveAsCommand, Mode=OneWay}" SizeChanged="CommandBarElementOnSizeChanged" />
                         <AppBarSeparator />
                         <AppBarButton Command="{x:Bind _viewModel.SetAsCommand}" SizeChanged="CommandBarElementOnSizeChanged">
                             <AppBarButton.Flyout>

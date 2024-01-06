@@ -26,14 +26,14 @@
                 <CommandBarFlyout>
                     <AppBarToggleButton Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.IllustrationInfoAndCommentsCommand}" IsChecked="{x:Bind _viewModel.IllustrationViewerPageViewModel.IsInfoPaneOpen, Mode=TwoWay}" />
                     <AppBarButton Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.PlayGifCommand}" Visibility="{x:Bind _viewModel.IllustrationViewerPageViewModel.IsUgoira}" />
-                    <AppBarButton Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.CurrentIllustration.BookmarkCommand}" />
+                    <AppBarButton Command="{x:Bind _viewModel.IllustrationViewModel.BookmarkCommand}" />
                     <AppBarSeparator />
                     <AppBarButton Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.ZoomInCommand}" />
                     <AppBarButton Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.ZoomOutCommand}" />
                     <!--<AppBarButton Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.ShareCommand}" />-->
                     <CommandBarFlyout.SecondaryCommands>
-                        <AppBarButton Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.CopyCommand}" />
-                        <AppBarButton Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.SaveCommand}" />
+                        <AppBarButton Command="{x:Bind _viewModel.CopyCommand}" />
+                        <AppBarButton Command="{x:Bind _viewModel.SaveCommand}" />
                         <AppBarButton Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.SetAsCommand}">
                             <AppBarButton.Flyout>
                                 <MenuFlyout>
@@ -44,8 +44,8 @@
                         </AppBarButton>
                         <AppBarSeparator />
                         <!--<AppBarButton Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.GenerateLinkCommand}" />-->
-                        <AppBarButton Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.CurrentIllustration.GenerateWebLinkCommand}" CommandParameter="{x:Bind}" />
-                        <AppBarButton Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.CurrentIllustration.OpenInWebBrowserCommand}" />
+                        <AppBarButton Command="{x:Bind _viewModel.IllustrationViewModel.GenerateWebLinkCommand}" CommandParameter="{x:Bind}" />
+                        <AppBarButton Command="{x:Bind _viewModel.IllustrationViewModel.OpenInWebBrowserCommand}" />
                         <!--<AppBarButton
                                 Command="{x:Bind _viewModel.ShowQrCodeCommand}"
                                 x:Uid="/ImageViewerPage/ShowQRCode"

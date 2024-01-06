@@ -157,7 +157,6 @@ public static partial class AppContext
         _ = downloadHistoryManager.Delete(
             entry => entry.State == DownloadState.Running ||
                      entry.State == DownloadState.Queued ||
-                     entry.State == DownloadState.Created ||
                      entry.State == DownloadState.Paused);
 
         foreach (var observableDownloadTask in downloadHistoryManager.Enumerate())

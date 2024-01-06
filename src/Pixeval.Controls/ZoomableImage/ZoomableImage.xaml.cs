@@ -45,8 +45,8 @@ namespace Pixeval.Controls;
 /// 渲染：<see cref="CanvasControlOnDraw"/>，图片渲染逻辑<br/>
 /// 对外API：<see cref="Zoom"/>、<see cref="SetPosition"/>
 /// </summary>
-[DependencyProperty<IEnumerable<IRandomAccessStream>>("Sources", DependencyPropertyDefaultValue.Default, nameof(OnSourcesChanged), IsNullable = true)]
-[DependencyProperty<List<int>>("MsIntervals", DependencyPropertyDefaultValue.Default, nameof(OnMsIntervalsChanged))]
+[DependencyProperty<IList<IRandomAccessStream>>("Sources", DependencyPropertyDefaultValue.Default, nameof(OnSourcesChanged), IsNullable = true)]
+[DependencyProperty<IList<int>>("MsIntervals", DependencyPropertyDefaultValue.Default, nameof(OnMsIntervalsChanged))]
 [DependencyProperty<bool>("IsPlaying", "true", nameof(OnIsPlayingChanged))]
 [DependencyProperty<int>("ImageRotationDegree", "0", nameof(OnImageRotationDegreeChanged))]
 [DependencyProperty<bool>("ImageIsMirrored", "false")]

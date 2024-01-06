@@ -29,13 +29,18 @@ using Pixeval.Utilities.Threading;
 
 namespace Pixeval.Download.Models;
 
-/// <summary>
-/// The disposal of <paramref name="stream" /> is not handled
-/// </summary>
-public class IntrinsicIllustrationDownloadTask(DownloadHistoryEntry entry, IllustrationItemViewModel illustrationViewModel, IRandomAccessStream stream)
-    : IllustrationDownloadTask(entry, illustrationViewModel)
+public class IntrinsicIllustrationDownloadTask : IllustrationDownloadTask
 {
-    public IRandomAccessStream Stream { get; } = stream;
+    /// <summary>
+    /// The disposal of <paramref name="stream" /> is not handled
+    /// </summary>
+    public IntrinsicIllustrationDownloadTask(DownloadHistoryEntry entry, IllustrationItemViewModel illustrationViewModel, IRandomAccessStream stream) : base(entry, illustrationViewModel)
+    {
+        Report(100);
+        Stream = stream;
+    }
+
+    public IRandomAccessStream Stream { get; }
 
     protected override async Task DownloadAsyncCore(Func<string, IProgress<double>?, CancellationHandle?, Task<Result<IRandomAccessStream>>> _, string url, string destination)
     {

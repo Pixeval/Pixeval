@@ -38,9 +38,8 @@ public sealed partial class DownloadListEntryViewModel(IllustrationDownloadTask 
     {
         return currentState switch
         {
-            DownloadState.Created => "",
-            DownloadState.Running => DownloadListEntryResources.DownloadRunningFormatted.Format((int)progress),
             DownloadState.Queued => DownloadListEntryResources.DownloadQueued,
+            DownloadState.Running => DownloadListEntryResources.DownloadRunningFormatted.Format((int)progress),
             DownloadState.Error => DownloadListEntryResources.DownloadErrorMessageFormatted.Format(errorCause!.Message),
             DownloadState.Completed => DownloadListEntryResources.DownloadCompleted,
             DownloadState.Cancelled => DownloadListEntryResources.DownloadCancelled,
@@ -53,7 +52,7 @@ public sealed partial class DownloadListEntryViewModel(IllustrationDownloadTask 
     {
         return currentState switch
         {
-            DownloadState.Created or DownloadState.Queued => DownloadListEntryResources.DownloadCancelledAction,
+            DownloadState.Queued => DownloadListEntryResources.DownloadCancelledAction,
             DownloadState.Running => DownloadListEntryResources.ActionButtonContentPause,
             DownloadState.Cancelled or DownloadState.Error => DownloadListEntryResources.ActionButtonContentRetry,
             DownloadState.Completed => DownloadListEntryResources.ActionButtonContentOpen,
@@ -69,7 +68,7 @@ public sealed partial class DownloadListEntryViewModel(IllustrationDownloadTask 
 
     public static bool GetIsEntryCancelDownloadItemEnabled(DownloadState currentState)
     {
-        return currentState is DownloadState.Running or DownloadState.Created or DownloadState.Queued;
+        return currentState is DownloadState.Running or DownloadState.Queued;
     }
 
     public static bool GetIsShowErrorDetailDialogItemEnabled(DownloadState currentState)

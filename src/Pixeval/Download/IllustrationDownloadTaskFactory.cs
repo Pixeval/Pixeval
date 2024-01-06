@@ -52,7 +52,7 @@ public class IllustrationDownloadTaskFactory : IDownloadTaskFactory<Illustration
             {
                 var (metadata, url) = await context.GetUgoiraOriginalUrlAsync();
                 var downloadHistoryEntry = new DownloadHistoryEntry(
-                    DownloadState.Created,
+                    DownloadState.Queued,
                     path,
                     DownloadItemType.Ugoira,
                     context.Id,
@@ -62,7 +62,7 @@ public class IllustrationDownloadTaskFactory : IDownloadTaskFactory<Illustration
             else if (context.MangaIndex is -1 && context.IsManga)
             {
                 var downloadHistoryEntry = new DownloadHistoryEntry(
-                    DownloadState.Created,
+                    DownloadState.Queued,
                     path,
                     DownloadItemType.Manga,
                     context.Id,
@@ -72,7 +72,7 @@ public class IllustrationDownloadTaskFactory : IDownloadTaskFactory<Illustration
             else
             {
                 var downloadHistoryEntry = new DownloadHistoryEntry(
-                    DownloadState.Created,
+                    DownloadState.Queued,
                     path,
                     DownloadItemType.Illustration,
                     context.Id,
@@ -111,7 +111,7 @@ public class IllustrationDownloadTaskFactory : IDownloadTaskFactory<Illustration
         {
             url = context.OriginalStaticUrl;
         }
-        var entry = new DownloadHistoryEntry(DownloadState.Completed, rawPath, type, context.Id, url);
+        var entry = new DownloadHistoryEntry(DownloadState.Queued, path, type, context.Id, url);
         return type is DownloadItemType.Manga
             ? new IntrinsicMangaDownloadTask(entry, context, [stream]) // 未使用的分支
             : new IntrinsicIllustrationDownloadTask(entry, context, stream);

@@ -23,6 +23,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Windows.Foundation;
+using Windows.Storage;
 using Windows.System;
 using Windows.System.UserProfile;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -339,38 +341,19 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
     public void UpdateCommandCanExecute()
     {
         PlayGifCommand.NotifyCanExecuteChanged();
-        CopyCommand.NotifyCanExecuteChanged();
         RestoreResolutionCommand.NotifyCanExecuteChanged();
         ZoomInCommand.NotifyCanExecuteChanged();
         ZoomOutCommand.NotifyCanExecuteChanged();
         RotateClockwiseCommand.NotifyCanExecuteChanged();
         RotateCounterclockwiseCommand.NotifyCanExecuteChanged();
         MirrorCommand.NotifyCanExecuteChanged();
-        SaveCommand.NotifyCanExecuteChanged();
-        SaveAsCommand.NotifyCanExecuteChanged();
+
         ShareCommand.NotifyCanExecuteChanged();
     }
 
     private void InitializeCommands()
     {
         RestoreResolutionCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
-
-        CopyCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
-        CopyCommand.ExecuteRequested += async (_, _) =>
-        {
-            var teachingTip = WindowContent.CreateTeachingTip();
-
-            var progress = null as Progress<int>;
-            if (CurrentImage.IllustrationViewModel.IsUgoira)
-                progress = new(d => teachingTip.Show(IllustrationViewerPageResources.UgoiraProcessing.Format(d), TeachingTipSeverity.Processing, isLightDismissEnabled: true));
-            else
-                teachingTip.Show(IllustrationViewerPageResources.ImageProcessing, TeachingTipSeverity.Processing, isLightDismissEnabled: true);
-            if (await CurrentImage.GetOriginalImageSourceForClipBoardAsync(progress) is { } source)
-            {
-                UiHelper.ClipboardSetBitmap(source);
-                teachingTip.ShowAndHide(IllustrationViewerPageResources.ImageSetToClipBoard);
-            }
-        };
 
         PlayGifCommand.CanExecuteRequested += (_, e) => e.CanExecute = IsUgoira && CurrentImage.LoadSuccessfully;
         PlayGifCommand.ExecuteRequested += PlayGifCommandOnExecuteRequested;
@@ -390,12 +373,6 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
 
         MirrorCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
         MirrorCommand.ExecuteRequested += (_, _) => CurrentImage.IsMirrored = !CurrentImage.IsMirrored;
-
-        SaveCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
-        SaveCommand.ExecuteRequested += SaveAsync;
-
-        SaveAsCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
-        SaveAsCommand.ExecuteRequested += SaveAsAsync;
 
         ShareCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
         ShareCommand.ExecuteRequested += ShareCommandExecuteRequested;
@@ -423,68 +400,36 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
 
     private async void SetAsBackgroundCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
-        if (CurrentImage.OriginalImageStream is null)
-        {
-            WindowContent.ShowTeachingTipAndHide(IllustrationViewerPageResources.OriginalmageStreamIsEmptyContent, TeachingTipSeverity.Error);
-            return;
-        }
+        SetPersonalization(UserProfilePersonalizationSettings.Current.TrySetWallpaperImageAsync);
+    }
 
-        var guid = await CurrentImage.OriginalImageStream.Sha1Async();
+    private void SetAsLockScreenCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
+    {
+        SetPersonalization(UserProfilePersonalizationSettings.Current.TrySetLockScreenImageAsync);
+    }
+
+    private async void SetPersonalization(Func<StorageFile, IAsyncOperation<bool>> operation)
+    {
+        if (CurrentImage.OriginalImageSources is not [{ } first, ..])
+            return;
+
+        var guid = await first.Sha1Async();
         if (await AppKnownFolders.SavedWallPaper.TryGetFileRelativeToSelfAsync(guid) is null)
         {
             var path = Path.Combine(AppKnownFolders.SavedWallPaper.Self.Path, guid);
             using var scope = App.AppViewModel.AppServicesScope;
             var factory = scope.ServiceProvider.GetRequiredService<IDownloadTaskFactory<IllustrationItemViewModel, IllustrationDownloadTask>>();
-            var intrinsicTask = await factory.TryCreateIntrinsicAsync(CurrentIllustration, CurrentImage.OriginalImageStream!, path);
+            var intrinsicTask = await factory.TryCreateIntrinsicAsync(CurrentIllustration, first, path);
             App.AppViewModel.DownloadManager.QueueTask(intrinsicTask);
             await intrinsicTask.Completion.Task;
         }
+        var file = await AppKnownFolders.SavedWallPaper.GetFileAsync(guid);
+        _ = await operation(file);
 
-        _ = await UserProfilePersonalizationSettings.Current.TrySetWallpaperImageAsync(await AppKnownFolders.SavedWallPaper.GetFileAsync(guid));
         ToastNotificationHelper.ShowTextToastNotification(
             IllustrationViewerPageResources.SetAsSucceededTitle,
             IllustrationViewerPageResources.SetAsBackgroundSucceededTitle,
             AppContext.AppLogoNoCaptionUri);
-    }
-
-    private async void SetAsLockScreenCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
-    {
-        if (CurrentImage.OriginalImageStream is null)
-        {
-            WindowContent.ShowTeachingTipAndHide(IllustrationViewerPageResources.OriginalmageStreamIsEmptyContent, TeachingTipSeverity.Error);
-            return;
-        }
-
-        var guid = await CurrentImage.OriginalImageStream.Sha1Async();
-        if (await AppKnownFolders.SavedWallPaper.TryGetFileRelativeToSelfAsync(guid) is null)
-        {
-            var path = Path.Combine(AppKnownFolders.SavedWallPaper.Self.Path, guid);
-            using var scope = App.AppViewModel.AppServicesScope;
-            var factory = scope.ServiceProvider.GetRequiredService<IDownloadTaskFactory<IllustrationItemViewModel, IllustrationDownloadTask>>();
-            var intrinsicTask = await factory.TryCreateIntrinsicAsync(CurrentIllustration, CurrentImage.OriginalImageStream!, path);
-            App.AppViewModel.DownloadManager.QueueTask(intrinsicTask);
-            await intrinsicTask.Completion.Task;
-        }
-
-        _ = await UserProfilePersonalizationSettings.Current.TrySetLockScreenImageAsync(await AppKnownFolders.SavedWallPaper.GetFileAsync(guid));
-        ToastNotificationHelper.ShowTextToastNotification(
-            IllustrationViewerPageResources.SetAsSucceededTitle,
-            IllustrationViewerPageResources.SetAsBackgroundSucceededTitle,
-            AppContext.AppLogoNoCaptionUri);
-    }
-
-    private async void SaveAsync(XamlUICommand sender, ExecuteRequestedEventArgs args)
-    {
-        await CurrentPage.SaveAsync(CurrentImage.OriginalImageStream);
-        WindowContent.ShowTeachingTipAndHide("已保存");
-    }
-
-    private async void SaveAsAsync(XamlUICommand sender, ExecuteRequestedEventArgs args)
-    {
-        if (await CurrentIllustration.SaveAsAsync(Window))
-            WindowContent.ShowTeachingTipAndHide("已保存");
-        else
-            WindowContent.ShowTeachingTipAndHide("已取消另存为操作", TeachingTipSeverity.Information);
     }
 
     private void ShareCommandExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
@@ -529,9 +474,6 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
     public XamlUICommand IllustrationInfoAndCommentsCommand { get; } =
         IllustrationViewerPageResources.IllustrationInfoAndComments.GetCommand(FontIconSymbols.InfoE946, VirtualKey.F12);
 
-    public XamlUICommand CopyCommand { get; } = IllustrationViewerPageResources.Copy.GetCommand(
-            FontIconSymbols.CopyE8C8, VirtualKeyModifiers.Control, VirtualKey.C);
-
     // The gif will be played as soon as its loaded, so the default state is playing and thus we need the button to be pause
     public XamlUICommand PlayGifCommand { get; } = IllustrationViewerPageResources.PauseGif.GetCommand(FontIconSymbols.StopE71A);
 
@@ -551,12 +493,6 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
     public XamlUICommand MirrorCommand { get; } =
         IllustrationViewerPageResources.Mirror.GetCommand(
             FontIconSymbols.CollatePortraitF57C, VirtualKeyModifiers.Control, VirtualKey.M);
-
-    public XamlUICommand SaveCommand { get; } = IllustrationViewerPageResources.Save.GetCommand(
-        FontIconSymbols.SaveE74E, VirtualKeyModifiers.Control, VirtualKey.S);
-
-    public XamlUICommand SaveAsCommand { get; } = IllustrationViewerPageResources.SaveAs.GetCommand(
-        FontIconSymbols.SaveAsE792, VirtualKeyModifiers.Control | VirtualKeyModifiers.Shift, VirtualKey.S);
 
     public XamlUICommand SetAsCommand { get; } = IllustrationViewerPageResources.SetAs.GetCommand(FontIconSymbols.PersonalizeE771);
 

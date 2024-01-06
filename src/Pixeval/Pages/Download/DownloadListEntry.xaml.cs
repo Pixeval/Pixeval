@@ -68,7 +68,6 @@ public sealed partial class DownloadListEntry : IViewModelControl
         e.Handled = true;
         switch (ViewModel.DownloadTask.CurrentState)
         {
-            case DownloadState.Created:
             case DownloadState.Queued:
                 ViewModel.DownloadTask.CancellationHandle.Cancel();
                 break;

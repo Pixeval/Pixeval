@@ -39,6 +39,7 @@ public class IntrinsicMangaDownloadTask : MangaDownloadTask
 
     public IntrinsicMangaDownloadTask(DownloadHistoryEntry entry, IllustrationItemViewModel illustrationViewModel, IList<IRandomAccessStream> streams) : base(entry, illustrationViewModel)
     {
+        Report(100);
         if (streams.Count == Urls.Count)
             Streams = streams;
         else

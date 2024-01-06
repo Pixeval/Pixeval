@@ -121,7 +121,7 @@ public sealed partial class IllustrationContainer
         foreach (var viewModelSelectedIllustration in viewModelSelectedIllustrations)
         {
             if (!viewModelSelectedIllustration.IsBookmarked)
-                _ = viewModelSelectedIllustration.ToggleBookmarkStateAsync();
+                viewModelSelectedIllustration.BookmarkCommand.Execute(null);
         }
 
         if (viewModelSelectedIllustrations.Length is var c and > 0)

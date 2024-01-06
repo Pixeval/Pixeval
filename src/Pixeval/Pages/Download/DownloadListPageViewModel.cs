@@ -83,19 +83,19 @@ public partial class DownloadListPageViewModel : IllustrateViewViewModel<Illustr
 
     public void PauseSelectedItems()
     {
-        foreach (var downloadListEntryViewModel in SelectedEntries.Where(t => t.DownloadTask.CurrentState == DownloadState.Running))
+        foreach (var downloadListEntryViewModel in SelectedEntries.Where(t => t.DownloadTask.CurrentState is DownloadState.Running))
             downloadListEntryViewModel.DownloadTask.CancellationHandle.Pause();
     }
 
     public void ResumeSelectedItems()
     {
-        foreach (var downloadListEntryViewModel in SelectedEntries.Where(t => t.DownloadTask.CurrentState == DownloadState.Paused))
+        foreach (var downloadListEntryViewModel in SelectedEntries.Where(t => t.DownloadTask.CurrentState is DownloadState.Paused))
             downloadListEntryViewModel.DownloadTask.CancellationHandle.Resume();
     }
 
     public void CancelSelectedItems()
     {
-        foreach (var downloadListEntryViewModel in SelectedEntries.Where(t => t.DownloadTask.CurrentState is DownloadState.Queued or DownloadState.Created or DownloadState.Running or DownloadState.Paused))
+        foreach (var downloadListEntryViewModel in SelectedEntries.Where(t => t.DownloadTask.CurrentState is DownloadState.Queued or DownloadState.Running or DownloadState.Paused))
             downloadListEntryViewModel.DownloadTask.CancellationHandle.Cancel();
     }
 

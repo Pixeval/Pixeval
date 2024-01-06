@@ -66,7 +66,7 @@ public class DownloadHistoryPersistentManager(ILiteDatabase collection, int maxi
             query = query.TakeLast(count.Value);
         }
 
-        if (predicate != null)
+        if (predicate is not null)
         {
             query = query.Where(predicate.Compile());
         }
