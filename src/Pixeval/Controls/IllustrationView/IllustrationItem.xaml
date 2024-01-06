@@ -11,7 +11,6 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:media="using:Microsoft.Xaml.Interactions.Media"
     xmlns:triggers="using:Pixeval.Util.Triggers"
-    xmlns:util="using:Pixeval.Util"
     x:Name="IllustrationThumbnailCard"
     Padding="0"
     CornerRadius="{ThemeResource ControlCornerRadius}"
@@ -69,42 +68,21 @@
     </Grid.RenderTransform>
     <Grid.ContextFlyout>
         <MenuFlyout>
-            <MenuFlyoutItem
-                x:Uid="/IllustrationView/BookmarkContextItem"
-                Icon="{x:Bind util:MakoHelper.GetBookmarkButtonIcon(ViewModel.IsBookmarked), Mode=OneWay}"
-                Tapped="BookmarkContextItemOnTapped"
-                Text="{x:Bind util:MakoHelper.GetBookmarkContextItemText(ViewModel.IsBookmarked), Mode=OneWay}" />
-            <MenuFlyoutItem
-                x:Uid="/IllustrationView/AddToBookmarkContextItem"
-                Icon="{markup:FontSymbolIcon Glyph=BookmarksE8A4}"
-                Tapped="AddToBookmarkContextItemOnTapped" />
+            <MenuFlyoutItem Command="{x:Bind ViewModel.BookmarkCommand, Mode=OneWay}" />
+            <MenuFlyoutItem Command="{x:Bind ViewModel.AddToBookmarkCommand, Mode=OneWay}" />
             <MenuFlyoutSeparator />
             <MenuFlyoutItem
                 x:Uid="/IllustrationView/SaveContextItem"
                 Click="SaveContextItemOnTapped"
                 Icon="{markup:FontSymbolIcon Glyph=SaveE74E}" />
             <MenuFlyoutSeparator />
-            <MenuFlyoutItem
-                x:Uid="/IllustrationView/OpenInBrowserContextItem"
-                Icon="{markup:FontSymbolIcon Glyph=WebSearchF6FA}"
-                Tapped="OpenInBrowserContextItemOnTapped" />
-            <MenuFlyoutItem
-                x:Uid="/IllustrationView/CopyWebLinkContextItem"
-                Icon="{markup:FontSymbolIcon Glyph=PreviewLinkE8A1}"
-                Tapped="CopyWebLinkContextItemOnTapped" />
-            <MenuFlyoutItem
-                x:Uid="/IllustrationView/CopyAppLinkContextItem"
-                Icon="{markup:FontSymbolIcon Glyph=LinkE71B}"
-                Tapped="CopyAppLinkContextItemOnTapped" />
+            <MenuFlyoutItem Command="{x:Bind ViewModel.OpenInWebBrowserCommand, Mode=OneWay}" />
+            <MenuFlyoutItem Command="{x:Bind ViewModel.GenerateWebLinkCommand, Mode=OneWay}" CommandParameter="{x:Bind}" />
+            <!--  TODO:此处不打开教学TeachingTip，不然画面太乱，但是可以提示已经复制链接  -->
+            <MenuFlyoutItem Command="{x:Bind ViewModel.GenerateLinkCommand, Mode=OneWay}" />
             <MenuFlyoutSeparator />
-            <MenuFlyoutItem
-                x:Uid="/IllustrationView/ShowQrCodeContextItem"
-                Icon="{markup:FontSymbolIcon Glyph=QRCodeED14}"
-                Tapped="ShowQrCodeContextItemOnTapped" />
-            <MenuFlyoutItem
-                x:Uid="/IllustrationView/ShowPixEzQrCodeContextItem"
-                Click="ShowPixEzQrCodeContextItemOnTapped"
-                Icon="{markup:FontSymbolIcon Glyph=Photo2EB9F}" />
+            <MenuFlyoutItem Command="{x:Bind ViewModel.ShowQrCodeCommand, Mode=OneWay}" CommandParameter="{x:Bind GetQrCodeTeachingTip()}" />
+            <MenuFlyoutItem Command="{x:Bind ViewModel.ShowPixEzQrCodeCommand, Mode=OneWay}" CommandParameter="{x:Bind GetQrCodeTeachingTip()}" />
         </MenuFlyout>
     </Grid.ContextFlyout>
     <interactivity:Interaction.Behaviors>

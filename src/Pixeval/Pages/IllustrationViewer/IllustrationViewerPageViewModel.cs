@@ -53,8 +53,6 @@ namespace Pixeval.Pages.IllustrationViewer;
 
 public partial class IllustrationViewerPageViewModel : DetailedObservableObject, IDisposable
 {
-    public const string GenerateLink = nameof(GenerateLink);
-    public const string ShowQrCode = nameof(ShowQrCode);
     public Window Window { get; set; } = null!;
 
     public FrameworkElement WindowContent => Window.Content.To<FrameworkElement>();
@@ -110,10 +108,6 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
 
         InitializeCommands();
     }
-
-    public TeachingTip GenerateLinkTeachingTip { get; set; } = null!;
-
-    public TeachingTip ShowQrCodeTeachingTip { get; set; } = null!;
 
     public bool IsFullScreen
     {
@@ -359,13 +353,6 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
 
     private void InitializeCommands()
     {
-        BookmarkCommand =
-            (CurrentIllustration.IsBookmarked ? MiscResources.RemoveBookmark : MiscResources.AddBookmark)
-            .GetCommand(
-                MakoHelper.GetBookmarkButtonIconSource(CurrentIllustration.IsBookmarked),
-                VirtualKeyModifiers.Control, VirtualKey.D);
-        BookmarkCommand.ExecuteRequested += BookmarkCommandOnExecuteRequested;
-
         RestoreResolutionCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
 
         CopyCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
@@ -378,7 +365,7 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
                 progress = new(d => teachingTip.Show(IllustrationViewerPageResources.UgoiraProcessing.Format(d), TeachingTipSeverity.Processing, isLightDismissEnabled: true));
             else
                 teachingTip.Show(IllustrationViewerPageResources.ImageProcessing, TeachingTipSeverity.Processing, isLightDismissEnabled: true);
-            if (await CurrentImage.GetOriginalImageSourceForClipBoard(progress) is { } source)
+            if (await CurrentImage.GetOriginalImageSourceForClipBoardAsync(progress) is { } source)
             {
                 UiHelper.ClipboardSetBitmap(source);
                 teachingTip.ShowAndHide(IllustrationViewerPageResources.ImageSetToClipBoard);
@@ -410,16 +397,8 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
         SaveAsCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
         SaveAsCommand.ExecuteRequested += SaveAsAsync;
 
-        GenerateLinkCommand.ExecuteRequested += GenerateLinkCommandOnExecuteRequested;
-
-        GenerateWebLinkCommand.ExecuteRequested += GenerateWebLinkCommandOnExecuteRequested;
-
-        OpenInWebBrowserCommand.ExecuteRequested += async (_, _) => await Launcher.LaunchUriAsync(MakoHelper.GenerateIllustrationWebUri(CurrentIllustration.Id));
-
         ShareCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
         ShareCommand.ExecuteRequested += ShareCommandExecuteRequested;
-
-        ShowQrCodeCommand.ExecuteRequested += ShowQrCodeCommandExecuteRequested;
 
         SetAsLockScreenCommand.CanExecuteRequested += IsNotUgoiraAndLoadingCompletedCanExecuteRequested;
         SetAsLockScreenCommand.ExecuteRequested += SetAsLockScreenCommandOnExecuteRequested;
@@ -508,56 +487,12 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
             WindowContent.ShowTeachingTipAndHide("已取消另存为操作", TeachingTipSeverity.Information);
     }
 
-    private void GenerateLinkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
-    {
-        if (App.AppViewModel.AppSetting.DisplayTeachingTipWhenGeneratingAppLink)
-        {
-            OnPropertyChanged(nameof(GenerateLink));
-            GenerateLinkTeachingTip.IsOpen = true;
-        }
-
-        UiHelper.ClipboardSetText(MakoHelper.GenerateIllustrationAppUri(CurrentIllustration.Id).ToString());
-    }
-
-    private void GenerateWebLinkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
-    {
-        var link = MakoHelper.GenerateIllustrationWebUri(CurrentIllustration.Id).ToString();
-        UiHelper.ClipboardSetText(link);
-        WindowContent.ShowTeachingTipAndHide(IllustrationViewerPageResources.WebLinkCopiedToClipboardToastTitle);
-    }
-
     private void ShareCommandExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
         if (CurrentImage.LoadSuccessfully)
             Window.ShowShareUi();
         else
             WindowContent.ShowTeachingTipAndHide(IllustrationViewerPageResources.CannotShareImageForNowTitle, TeachingTipSeverity.Warning, IllustrationViewerPageResources.CannotShareImageForNowContent);
-    }
-
-    private async void ShowQrCodeCommandExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
-    {
-        var qrCodeSource = await UiHelper.GenerateQrCodeForUrlAsync(MakoHelper.GenerateIllustrationWebUri(CurrentIllustration.Id).ToString());
-
-        ShowQrCodeTeachingTip.HeroContent.To<Image>().Source = qrCodeSource;
-        OnPropertyChanged(nameof(ShowQrCode));
-        ShowQrCodeTeachingTip.IsOpen = true;
-
-        ShowQrCodeTeachingTip.Closed += Closed;
-        return;
-
-        void Closed(TeachingTip s, TeachingTipClosedEventArgs ea)
-        {
-            qrCodeSource.Dispose();
-            s.Closed -= Closed;
-        }
-    }
-
-    private void BookmarkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
-    {
-        CurrentIllustration.ToggleBookmarkStateAsync().Discard();
-        // update manually
-        BookmarkCommand.Label = CurrentIllustration.IsBookmarked ? MiscResources.RemoveBookmark : MiscResources.AddBookmark;
-        BookmarkCommand.IconSource = MakoHelper.GetBookmarkButtonIconSource(CurrentIllustration.IsBookmarked);
     }
 
     private void PlayGifCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
@@ -617,8 +552,6 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
         IllustrationViewerPageResources.Mirror.GetCommand(
             FontIconSymbols.CollatePortraitF57C, VirtualKeyModifiers.Control, VirtualKey.M);
 
-    public XamlUICommand BookmarkCommand { get; private set; } = null!; // the null-state is transient
-
     public XamlUICommand SaveCommand { get; } = IllustrationViewerPageResources.Save.GetCommand(
         FontIconSymbols.SaveE74E, VirtualKeyModifiers.Control, VirtualKey.S);
 
@@ -627,17 +560,7 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
 
     public XamlUICommand SetAsCommand { get; } = IllustrationViewerPageResources.SetAs.GetCommand(FontIconSymbols.PersonalizeE771);
 
-    public XamlUICommand AddToBookmarkCommand { get; } = IllustrationViewerPageResources.AddToBookmark.GetCommand(FontIconSymbols.BookmarksE8A4);
-
-    public XamlUICommand GenerateLinkCommand { get; } = IllustrationViewerPageResources.GenerateLink.GetCommand(FontIconSymbols.LinkE71B);
-
-    public XamlUICommand GenerateWebLinkCommand { get; } = IllustrationViewerPageResources.GenerateWebLink.GetCommand(FontIconSymbols.PreviewLinkE8A1);
-
-    public XamlUICommand OpenInWebBrowserCommand { get; } = IllustrationViewerPageResources.OpenInWebBrowser.GetCommand(FontIconSymbols.WebSearchF6FA);
-
     public StandardUICommand ShareCommand { get; } = new(StandardUICommandKind.Share);
-
-    public XamlUICommand ShowQrCodeCommand { get; } = IllustrationViewerPageResources.ShowQRCode.GetCommand(FontIconSymbols.QRCodeED14);
 
     public XamlUICommand SetAsLockScreenCommand { get; } = new() { Label = IllustrationViewerPageResources.LockScreen };
 

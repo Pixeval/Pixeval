@@ -22,6 +22,7 @@ using System;
 using System.Collections.Generic;
 using Windows.System;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.Options;
@@ -47,7 +48,7 @@ public sealed partial class IllustrationItem : IViewModelControl
     /// <summary>
     /// 请求显示二维码
     /// </summary>
-    public event EventHandler<SoftwareBitmapSource>? ShowQrCodeRequested;
+    public event Func<TeachingTip>? TeachingTipRequested;
 
     /// <summary>
     /// 请求获取承载本控件的<see cref="IllustrationView"/>
@@ -80,32 +81,7 @@ public sealed partial class IllustrationItem : IViewModelControl
         throw new NotImplementedException();
     }
 
-    private void CopyWebLinkContextItemOnTapped(object sender, TappedRoutedEventArgs e)
-    {
-        UiHelper.ClipboardSetText(MakoHelper.GenerateIllustrationWebUri(ViewModel.Id).ToString());
-    }
-
-    private void CopyAppLinkContextItemOnTapped(object sender, TappedRoutedEventArgs e)
-    {
-        UiHelper.ClipboardSetText(MakoHelper.GenerateIllustrationAppUri(ViewModel.Id).ToString());
-    }
-
-    private async void ShowQrCodeContextItemOnTapped(object sender, TappedRoutedEventArgs e)
-    {
-        var webQrCodeSource = await UiHelper.GenerateQrCodeAsync(MakoHelper.GenerateIllustrationWebUri(ViewModel.Id).ToString());
-        ShowQrCodeRequested?.Invoke(this, webQrCodeSource);
-    }
-
-    /// <summary>
-    /// TODO: Tapped触发不了，但Click可以。不知道为什么
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="routedEventArgs"></param>
-    private async void ShowPixEzQrCodeContextItemOnTapped(object sender, RoutedEventArgs routedEventArgs)
-    {
-        var pixEzQrCodeSource = await UiHelper.GenerateQrCodeAsync(MakoHelper.GenerateIllustrationPixEzUri(ViewModel.Id).ToString());
-        ShowQrCodeRequested?.Invoke(this, pixEzQrCodeSource);
-    }
+    private TeachingTip? GetQrCodeTeachingTip() => TeachingTipRequested?.Invoke();
 
     // 这些方法本来用属性就可以实现，但在ViewModel更新的时候更新，使用了{x:Bind GetXXX(ViewModel)}的写法
     // 这样可以不需要写OnPropertyChange就实现更新

@@ -57,8 +57,10 @@ namespace Pixeval.Controls.IllustrationView;
 ///     It is responsible for being the elements of the <see cref="ItemsRepeater" /> to present the thumbnail of an
 ///     illustration
 /// </summary>
-public class IllustrationItemViewModel(Illustration illustration) : IllustrateViewModel<Illustration>(illustration)
+public partial class IllustrationItemViewModel : IllustrateViewModel<Illustration>
 {
+    public IllustrationItemViewModel(Illustration illustration) : base(illustration) => InitializeCommands();
+
     /// <summary>
     /// 当调用<see cref="GetMangaIllustrationViewModels"/>后，此属性会被赋值为当前<see cref="IllustrationItemViewModel"/>在Manga中的索引
     /// </summary>

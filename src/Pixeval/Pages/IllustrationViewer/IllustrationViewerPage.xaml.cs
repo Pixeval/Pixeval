@@ -102,8 +102,6 @@ public sealed partial class IllustrationViewerPage : SupportCustomTitleBarDragRe
             return;
         _viewModel = viewModel;
         _viewModel.Window = Window;
-        _viewModel.GenerateLinkTeachingTip = GenerateLinkTeachingTip;
-        _viewModel.ShowQrCodeTeachingTip = ShowQrCodeTeachingTip;
 
         _viewModel.DetailedPropertyChanged += (sender, args) =>
         {
@@ -137,16 +135,6 @@ public sealed partial class IllustrationViewerPage : SupportCustomTitleBarDragRe
                     Window.AppWindow.SetPresenter(vm.IsFullScreen ? AppWindowPresenterKind.FullScreen : AppWindowPresenterKind.Default);
                     // 加载完之后设置标题栏
                     _ = Task.Delay(500).ContinueWith(_ => RaiseSetTitleBarDragRegion(), TaskScheduler.FromCurrentSynchronizationContext());
-                    break;
-                }
-                case IllustrationViewerPageViewModel.GenerateLink:
-                {
-                    vm.GenerateLinkTeachingTip.Target = GenerateLinkButton.IsInOverflow ? null : GenerateLinkButton;
-                    break;
-                }
-                case IllustrationViewerPageViewModel.ShowQrCode:
-                {
-                    vm.ShowQrCodeTeachingTip.Target = ShowQrCodeButton.IsInOverflow ? null : ShowQrCodeButton;
                     break;
                 }
                 case nameof(IllustrationViewerPageViewModel.IsInfoPaneOpen):
@@ -198,7 +186,6 @@ public sealed partial class IllustrationViewerPage : SupportCustomTitleBarDragRe
 
     private async void OnDataTransferManagerOnDataRequested(DataTransferManager _, DataRequestedEventArgs args)
     {
-        // all the illustrations in _viewModels only differ in different image sources
         var vm = _viewModel.CurrentIllustration;
         if (!_viewModel.CurrentImage.LoadSuccessfully)
             return;
@@ -319,7 +306,23 @@ public sealed partial class IllustrationViewerPage : SupportCustomTitleBarDragRe
     private void CommandBarElementOnSizeChanged(object sender, SizeChangedEventArgs e)
     {
         var button = (ICommandBarElement)sender;
-        ((FrameworkElement)sender).Width = button.IsInOverflow ? double.NaN : (double)Application.Current.Resources["CollapsedAppBarButtonWidth"];
+        var frameworkElement = (FrameworkElement)sender;
+        if (button.IsInOverflow)
+        {
+            frameworkElement.Width = double.NaN;
+            if (frameworkElement == ShowQrCodeButton)
+                ShowQrCodeTeachingTip.Target = null;
+            else if (frameworkElement == GenerateLinkButton)
+                GenerateLinkTeachingTip.Target = null;
+        }
+        else
+        {
+            frameworkElement.Width = (double)Application.Current.Resources["CollapsedAppBarButtonWidth"];
+            if (frameworkElement == ShowQrCodeButton)
+                ShowQrCodeTeachingTip.Target = frameworkElement;
+            else if (frameworkElement == GenerateLinkButton)
+                GenerateLinkTeachingTip.Target = frameworkElement;
+        }
     }
 
     private void FrameworkElement_OnLoaded(object sender, RoutedEventArgs e)

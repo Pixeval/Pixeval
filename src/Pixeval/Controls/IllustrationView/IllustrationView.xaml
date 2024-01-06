@@ -29,7 +29,7 @@
             <DataTemplate x:DataType="local:IllustrationItemViewModel">
                 <ItemContainer>
                     <local:IllustrationItem
-                        ShowQrCodeRequested="IllustrationThumbnailOnShowQrCodeRequested"
+                        TeachingTipRequested="IllustrationThumbnailOnShowQrCodeRequested"
                         ThisRequired="IllustrationThumbnail_OnThisRequired"
                         ViewModel="{x:Bind}" />
                 </ItemContainer>

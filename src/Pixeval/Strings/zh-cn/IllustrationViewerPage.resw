@@ -231,6 +231,9 @@
   <data name="ShareTitleFormatted" xml:space="preserve">
     <value>分享{0}</value>
   </data>
+  <data name="ShowPixEzQrCode" xml:space="preserve">
+    <value>生成PixEz二维码</value>
+  </data>
   <data name="ShowQRCode" xml:space="preserve">
     <value>生成二维码</value>
   </data>

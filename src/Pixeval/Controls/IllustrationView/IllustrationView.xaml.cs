@@ -66,19 +66,7 @@ public sealed partial class IllustrationView
 
     public IllustrationViewViewModel ViewModel { get; } = new();
 
-    private void IllustrationThumbnailOnShowQrCodeRequested(object sender, SoftwareBitmapSource e)
-    {
-        QrCodeTeachingTip.HeroContent.To<Image>().Source = e;
-        QrCodeTeachingTip.IsOpen = true;
-        QrCodeTeachingTip.Closed += Closed;
-        return;
-
-        void Closed(TeachingTip s, TeachingTipClosedEventArgs ea)
-        {
-            e.Dispose();
-            s.Closed -= Closed;
-        }
-    }
+    private TeachingTip IllustrationThumbnailOnShowQrCodeRequested() => QrCodeTeachingTip;
 
     private void IllustrationViewOnUnloaded(object sender, RoutedEventArgs e)
     {

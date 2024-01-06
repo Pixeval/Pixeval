@@ -24,16 +24,21 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage.Streams;
+using Windows.System;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Input;
 using Pixeval.Attributes;
 using Pixeval.Controls;
 using Pixeval.Controls.IllustrationView;
+using Pixeval.Controls.MarkupExtensions;
 using Pixeval.Database;
 using Pixeval.Database.Managers;
 using Pixeval.Options;
 using Pixeval.Util;
 using Pixeval.Util.IO;
+using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using Pixeval.Utilities.Threading;
 
@@ -111,6 +116,9 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
         IllustrationViewerPageViewModel = illustrationViewerPageViewModel;
         IllustrationViewModel = illustrationViewModel;
         _ = LoadImage();
+
+        SaveCommand.CanExecuteRequested += (_, args) => args.CanExecute = LoadSuccessfully;
+        SaveCommand.ExecuteRequested += (_, _) => IllustrationViewModel.SaveCommand.Execute((IllustrationViewerPageViewModel.WindowContent, (Func<IProgress<int>?, Task<IRandomAccessStream?>>)GetOriginalImageSourceForClipBoardAsync));
     }
 
     /// <summary>
@@ -120,7 +128,7 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
 
     public IRandomAccessStream? OriginalImageStream => OriginalImageSources?.FirstOrDefault();
 
-    public async Task<IRandomAccessStream?> GetOriginalImageSourceForClipBoard(IProgress<int>? progress = null)
+    public async Task<IRandomAccessStream?> GetOriginalImageSourceForClipBoardAsync(IProgress<int>? progress = null)
     {
         if (OriginalImageSources is null)
             return null;
@@ -252,6 +260,7 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
 
             if (OriginalImageSources is not null && !_disposed)
             {
+                SaveCommand.NotifyCanExecuteChanged();
                 IllustrationViewerPageViewModel.UpdateCommandCanExecute();
                 if (App.AppViewModel.AppSetting.UseFileCache)
                 {
@@ -264,6 +273,9 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
             throw new IllustrationSourceNotFoundException(ImageViewerPageResources.CannotFindImageSourceContent);
         }
     }
+
+    public XamlUICommand SaveCommand { get; } = IllustrationViewerPageResources.Save.GetCommand(
+        FontIconSymbols.SaveE74E, VirtualKeyModifiers.Control, VirtualKey.S);
 
     private void DisposeInternal()
     {

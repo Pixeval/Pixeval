@@ -13,6 +13,7 @@
     xmlns:markup="using:Pixeval.Controls.MarkupExtensions"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:media="using:Microsoft.Xaml.Interactions.Media"
+    xmlns:system="using:System"
     xmlns:triggers="using:Pixeval.Util.Triggers"
     KeyboardAcceleratorPlacementMode="Hidden"
     Loaded="IllustrationViewerPage_OnLoaded"
@@ -189,7 +190,7 @@
                                 Background="{StaticResource BottomCommandSectionBackground}"
                                 DefaultLabelPosition="Collapsed"
                                 OverflowButtonVisibility="Collapsed">
-                                <AppBarButton Width="50" Command="{x:Bind _viewModel.BookmarkCommand}" />
+                                <AppBarButton Width="50" Command="{x:Bind _viewModel.CurrentIllustration.BookmarkCommand}" />
                                 <AppBarButton
                                     Width="50"
                                     Command="{x:Bind _viewModel.RotateCounterclockwiseCommand}"
@@ -349,7 +350,7 @@
                             Visibility="{x:Bind _viewModel.IsUgoira, Mode=OneWay}" />
                         <AppBarSeparator />
                         <AppBarButton Command="{x:Bind _viewModel.CopyCommand}" SizeChanged="CommandBarElementOnSizeChanged" />
-                        <AppBarButton Command="{x:Bind _viewModel.SaveCommand}" SizeChanged="CommandBarElementOnSizeChanged" />
+                        <AppBarButton Command="{x:Bind _viewModel.CurrentImage.SaveCommand, Mode=OneWay}" SizeChanged="CommandBarElementOnSizeChanged" />
                         <AppBarButton Command="{x:Bind _viewModel.SaveAsCommand}" SizeChanged="CommandBarElementOnSizeChanged" />
                         <AppBarSeparator />
                         <AppBarButton Command="{x:Bind _viewModel.SetAsCommand}" SizeChanged="CommandBarElementOnSizeChanged">
@@ -361,16 +362,21 @@
                             </AppBarButton.Flyout>
                         </AppBarButton>
                         <AppBarSeparator />
-                        <AppBarButton Command="{x:Bind _viewModel.AddToBookmarkCommand}" SizeChanged="CommandBarElementOnSizeChanged" />
+                        <AppBarButton Command="{x:Bind _viewModel.CurrentIllustration.AddToBookmarkCommand}" SizeChanged="CommandBarElementOnSizeChanged" />
                         <AppBarButton
                             x:Name="GenerateLinkButton"
-                            Command="{x:Bind _viewModel.GenerateLinkCommand}"
+                            Command="{x:Bind _viewModel.CurrentIllustration.GenerateLinkCommand}"
+                            CommandParameter="{x:Bind GenerateLinkTeachingTip}"
                             SizeChanged="CommandBarElementOnSizeChanged" />
-                        <AppBarButton Command="{x:Bind _viewModel.GenerateWebLinkCommand}" SizeChanged="CommandBarElementOnSizeChanged" />
-                        <AppBarButton Command="{x:Bind _viewModel.OpenInWebBrowserCommand}" SizeChanged="CommandBarElementOnSizeChanged" />
+                        <AppBarButton
+                            Command="{x:Bind _viewModel.CurrentIllustration.GenerateWebLinkCommand}"
+                            CommandParameter="{x:Bind}"
+                            SizeChanged="CommandBarElementOnSizeChanged" />
+                        <AppBarButton Command="{x:Bind _viewModel.CurrentIllustration.OpenInWebBrowserCommand}" SizeChanged="CommandBarElementOnSizeChanged" />
                         <AppBarButton
                             x:Name="ShowQrCodeButton"
-                            Command="{x:Bind _viewModel.ShowQrCodeCommand}"
+                            Command="{x:Bind _viewModel.CurrentIllustration.ShowQrCodeCommand}"
+                            CommandParameter="{x:Bind ShowQrCodeTeachingTip}"
                             SizeChanged="CommandBarElementOnSizeChanged" />
                         <AppBarButton Command="{x:Bind _viewModel.ShareCommand}" SizeChanged="CommandBarElementOnSizeChanged" />
                     </CommandBar>
