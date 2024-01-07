@@ -38,8 +38,6 @@ public sealed partial class IllustrationItem : IViewModelControl
 
     public IllustrationItem() => InitializeComponent();
 
-    private ThumbnailUrlOption ThumbnailUrlOption => ThisRequired.Invoke().LayoutType.ToThumbnailUrlOption();
-
     private double DesiredHeight => ThisRequired.Invoke().DesiredHeight;
 
     private TeachingTip QrCodeTeachingTip => ThisRequired.Invoke().QrCodeTeachingTip;
@@ -64,14 +62,7 @@ public sealed partial class IllustrationItem : IViewModelControl
     {
         var illustration = viewModel.Illustrate;
         var thumbnailDirection = ThisRequired.Invoke().ThumbnailDirection;
-        return ThumbnailUrlOption is ThumbnailUrlOption.SquareMedium
-            ? thumbnailDirection switch
-            {
-                ThumbnailDirection.Landscape => IllustrationView.PortraitHeight,
-                ThumbnailDirection.Portrait => IllustrationView.LandscapeHeight,
-                _ => ThrowHelper.ArgumentOutOfRange<ThumbnailDirection, double>(thumbnailDirection)
-            }
-            : thumbnailDirection switch
+        return thumbnailDirection switch
             {
                 ThumbnailDirection.Landscape => IllustrationView.LandscapeHeight * illustration.Width / illustration.Height,
                 ThumbnailDirection.Portrait => IllustrationView.PortraitHeight * illustration.Width / illustration.Height,
@@ -79,7 +70,7 @@ public sealed partial class IllustrationItem : IViewModelControl
             };
     }
 
-    private Visibility IsImageLoaded(IDictionary<ThumbnailUrlOption, SoftwareBitmapSource> dictionary) => dictionary.ContainsKey(ThumbnailUrlOption) ? Visibility.Collapsed : Visibility.Visible;
+    private Visibility IsImageLoaded(SoftwareBitmapSource? source) => source is null ? Visibility.Collapsed : Visibility.Visible;
 
     #endregion
 }

@@ -23,6 +23,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Storage;
+using Windows.Storage.Streams;
 using Pixeval.Util.IO;
 
 namespace Pixeval.AppManagement;
@@ -64,6 +65,7 @@ public class AppKnownFolders(StorageFolder self)
     public static IAsyncOperation<StorageFile> CreateTemporaryFileWithRandomNameAsync(string? extension = null)
     {
         return Temporary.CreateFileAsync(Guid.NewGuid() + (extension ?? ".temp"));
+        // return File.Create(Path.Combine(Temporary.Self.Path, Guid.NewGuid() + (extension ?? ".temp")));
     }
 
     /// <summary>

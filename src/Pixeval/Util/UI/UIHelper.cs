@@ -265,7 +265,7 @@ public static partial class UiHelper
         var qrCodeData = qrCodeGen.CreateQrCode(urlPayload, QRCodeGenerator.ECCLevel.Q);
         var qrCode = new BitmapByteQRCode(qrCodeData);
         var bytes = qrCode.GetGraphic(20);
-        return await (await IoHelper.GetRandomAccessStreamFromByteArrayAsync(bytes)).GetSoftwareBitmapSourceAsync(true);
+        return await new MemoryStream(bytes).GetSoftwareBitmapSourceAsync(true);
     }
 
     public static async Task<SoftwareBitmapSource> GenerateQrCodeAsync(string content)
@@ -274,7 +274,7 @@ public static partial class UiHelper
         var qrCodeData = qrCodeGen.CreateQrCode(content, QRCodeGenerator.ECCLevel.Q);
         var qrCode = new BitmapByteQRCode(qrCodeData);
         var bytes = qrCode.GetGraphic(20);
-        return await (await IoHelper.GetRandomAccessStreamFromByteArrayAsync(bytes)).GetSoftwareBitmapSourceAsync(true);
+        return await new MemoryStream(bytes).GetSoftwareBitmapSourceAsync(true);
     }
 
     public static IAsyncOperation<StorageFolder?> OpenFolderPickerAsync(this Window window)

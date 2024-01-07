@@ -58,11 +58,11 @@ public static partial class AppContext
 
     private static readonly WeakReference<SoftwareBitmapSource?> _imageNotAvailable = new(null);
 
-    private static readonly WeakReference<IRandomAccessStream?> _imageNotAvailableStream = new(null);
+    private static readonly WeakReference<Stream?> _imageNotAvailableStream = new(null);
 
     private static readonly WeakReference<SoftwareBitmapSource?> _pixivNoProfile = new(null);
 
-    private static readonly WeakReference<IRandomAccessStream?> _pixivNoProfileStream = new(null);
+    private static readonly WeakReference<Stream?> _pixivNoProfileStream = new(null);
 
     static AppContext()
     {
@@ -79,38 +79,37 @@ public static partial class AppContext
     public static async Task<SoftwareBitmapSource> GetNotAvailableImageAsync()
     {
         if (!_imageNotAvailable.TryGetTarget(out var target))
-            _imageNotAvailable.SetTarget(target = await (await GetNotAvailableImageStreamAsync()).GetSoftwareBitmapSourceAsync(false));
+            _imageNotAvailable.SetTarget(target = await GetNotAvailableImageStream().GetSoftwareBitmapSourceAsync(false));
         return target;
     }
 
-    public static async Task<IRandomAccessStream> GetNotAvailableImageStreamAsync()
+    public static Stream GetNotAvailableImageStream()
     {
         if (!_imageNotAvailableStream.TryGetTarget(out var target))
-            _imageNotAvailableStream.SetTarget(target = await GetAssetStreamAsync("Images/image-not-available.png"));
+            _imageNotAvailableStream.SetTarget(target = GetAssetStream("Images/image-not-available.png"));
         return target;
     }
 
     public static async Task<SoftwareBitmapSource> GetPixivNoProfileImageAsync()
     {
         if (!_pixivNoProfile.TryGetTarget(out var target))
-            _pixivNoProfile.SetTarget(target = await (await GetPixivNoProfileImageStreamAsync()).GetSoftwareBitmapSourceAsync(false));
+            _pixivNoProfile.SetTarget(target = await GetPixivNoProfileImageStream().GetSoftwareBitmapSourceAsync(false));
         return target;
     }
 
-    public static async Task<IRandomAccessStream> GetPixivNoProfileImageStreamAsync()
+    public static Stream GetPixivNoProfileImageStream()
     {
         if (!_pixivNoProfileStream.TryGetTarget(out var target))
-            _pixivNoProfileStream.SetTarget(target = await GetAssetStreamAsync("Images/pixiv_no_profile.png"));
+            _pixivNoProfileStream.SetTarget(target = GetAssetStream("Images/pixiv_no_profile.png"));
         return target;
     }
 
     public static async Task WriteLogoIcoIfNotExist()
     {
-        const string iconName = "logo44x44.ico";
-        if (await AppKnownFolders.Local.TryGetFileRelativeToSelfAsync(iconName) is null)
+        if (await AppKnownFolders.Local.TryGetFileRelativeToSelfAsync(IconName) is null)
         {
-            var bytes = await GetAssetBytesAsync($"Images/{iconName}");
-            await (await AppKnownFolders.Local.CreateFileAsync(iconName)).WriteBytesAsync(bytes);
+            var bytes = await GetAssetBytesAsync($"Images/{IconName}");
+            await (await AppKnownFolders.Local.CreateFileAsync(IconName)).WriteBytesAsync(bytes);
         }
     }
 
@@ -124,19 +123,14 @@ public static partial class AppContext
         return GetResourceBytesAsync($"ms-appx:///Assets/{relativeToAssetsFolder}");
     }
 
-    public static Task<IRandomAccessStreamWithContentType> GetAssetStreamAsync(string relativeToAssetsFolder)
+    public static Stream GetAssetStream(string relativeToAssetsFolder)
     {
-        return GetResourceStreamAsync($"ms-appx:///Assets/{relativeToAssetsFolder}");
+        return File.OpenRead($"ms-appx:///Assets/{relativeToAssetsFolder}");
     }
 
     public static async Task<byte[]> GetResourceBytesAsync(string path)
     {
-        return (await (await StorageFile.GetFileFromApplicationUriAsync(new Uri(path))).ReadBytesAsync())!;
-    }
-
-    public static async Task<IRandomAccessStreamWithContentType> GetResourceStreamAsync(string path)
-    {
-        return await (await StorageFile.GetFileFromApplicationUriAsync(new Uri(path))).OpenReadAsync();
+        return await File.ReadAllBytesAsync(path);
     }
 
     public static async Task<X509Certificate2> GetFakeCaRootCertificateAsync()

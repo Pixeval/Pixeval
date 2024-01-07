@@ -35,8 +35,8 @@ using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.AppManagement;
 using Pixeval.Controls;
+using Pixeval.Controls.IllustrationView;
 using Pixeval.Misc;
-using Pixeval.Options;
 using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
@@ -48,7 +48,6 @@ namespace Pixeval.Pages.IllustrationViewer;
 
 public sealed partial class IllustrationViewerPage : SupportCustomTitleBarDragRegionPage
 {
-    private const ThumbnailUrlOption Option = ThumbnailUrlOption.SquareMedium;
     private bool _pointerNotInArea = true;
 
     private bool _timeUp;
@@ -168,19 +167,10 @@ public sealed partial class IllustrationViewerPage : SupportCustomTitleBarDragRe
         return _viewModel.LoadMoreAsync(20);
     }
 
-    private async void IllustrationItemsView_OnElementPrepared(AdvancedItemsView sender, ItemContainer itemContainer)
+    private async void FrameworkElement_OnLoaded(object sender, RoutedEventArgs e)
     {
-        var thumbnail = itemContainer.Child.To<IllustrationImage>();
-        var viewModel = thumbnail.ViewModel;
-
-        _ = await viewModel.TryLoadThumbnail(_viewModel, Option);
-    }
-
-    private void IllustrationItemsView_OnElementClearing(AdvancedItemsView sender, ItemContainer itemContainer)
-    {
-        var viewModel = itemContainer.Child.To<IllustrationImage>().ViewModel;
-
-        viewModel.UnloadThumbnail(_viewModel, Option);
+        var viewModel = sender.GetTag<IllustrationItemViewModel>();
+        _ = await viewModel.TryLoadThumbnail(_viewModel);
     }
 
     private void ExitFullScreenKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => _viewModel.IsFullScreen = false;
@@ -199,10 +189,11 @@ public sealed partial class IllustrationViewerPage : SupportCustomTitleBarDragRe
 
         props.Title = IllustrationViewerPageResources.ShareTitleFormatted.Format(vm.Id);
         props.Description = vm.Illustrate.Title;
-        props.Square30x30Logo = RandomAccessStreamReference.CreateFromStream(await AppContext.GetAssetStreamAsync("Images/logo44x44.ico"));
+        var randomAccessStream = AppContext.GetAssetStream("Images/logo44x44.ico").AsRandomAccessStream();
+        props.Square30x30Logo = RandomAccessStreamReference.CreateFromStream(randomAccessStream);
 
-        var thumbnailStream = await _viewModel.CurrentIllustration.GetThumbnail(Option);
-        props.Thumbnail = RandomAccessStreamReference.CreateFromStream(thumbnailStream);
+        var thumbnailStream = await _viewModel.CurrentIllustration.GetThumbnailAsync();
+        props.Thumbnail = RandomAccessStreamReference.CreateFromStream(thumbnailStream.AsRandomAccessStream());
         request.Data.SetWebLink(webLink);
 
         if (vm.IsUgoira)
@@ -212,7 +203,8 @@ public sealed partial class IllustrationViewerPage : SupportCustomTitleBarDragRe
                 var metadata = await App.AppViewModel.MakoClient.GetUgoiraMetadataAsync(vm.Id);
                 var stream = await streams.UgoiraSaveToStreamAsync(metadata);
                 var file = await AppKnownFolders.CreateTemporaryFileWithRandomNameAsync(IoHelper.GetUgoiraExtension());
-                await stream.AsRandomAccessStream().SaveToFileAsync(file);
+                var target = await file.OpenStreamForWriteAsync();
+                await stream.CopyToAsync(target);
                 request.Data.SetStorageItems([file]);
             }
         }
@@ -223,7 +215,8 @@ public sealed partial class IllustrationViewerPage : SupportCustomTitleBarDragRe
                 stream.Position = 0;
                 var s = await stream.SaveToStreamAsync();
                 var file = await AppKnownFolders.CreateTemporaryFileWithRandomNameAsync(".png");
-                await s.SaveToFileAsync(file);
+                var target = await file.OpenStreamForWriteAsync();
+                await s.CopyToAsync(target);
                 request.Data.SetStorageItems([file]);
             }
         }
@@ -325,10 +318,5 @@ public sealed partial class IllustrationViewerPage : SupportCustomTitleBarDragRe
             else if (frameworkElement == GenerateLinkButton)
                 GenerateLinkTeachingTip.Target = frameworkElement;
         }
-    }
-
-    private void FrameworkElement_OnLoaded(object sender, RoutedEventArgs e)
-    {
-        ThumbnailItemsView.TryLoadedFirst(sender.To<ItemContainer>());
     }
 }

@@ -237,8 +237,6 @@
                             Padding="0"
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Stretch"
-                            ElementClearing="IllustrationItemsView_OnElementClearing"
-                            ElementPrepared="IllustrationItemsView_OnElementPrepared"
                             ItemsSource="{x:Bind _viewModel.Illustrations}"
                             LayoutType="HorizontalStack"
                             LoadMoreRequested="IllustrationItemsView_OnLoadMoreRequested"
@@ -248,12 +246,14 @@
                             SelectionMode="Single">
                             <controls:AdvancedItemsView.ItemTemplate>
                                 <DataTemplate x:DataType="illustrationView:IllustrationItemViewModel">
-                                    <ItemContainer Loaded="FrameworkElement_OnLoaded">
-                                        <controls:IllustrationImage
+                                    <ItemContainer>
+                                        <Image
                                             Width="80"
                                             Height="80"
-                                            ThumbnailOption="{x:Bind local:IllustrationViewerPage.Option}"
-                                            ViewModel="{x:Bind}" />
+                                            Tag="{x:Bind}"
+                                            Loaded="FrameworkElement_OnLoaded"
+                                            Source="{x:Bind ThumbnailSource, Mode=OneWay}"
+                                            Stretch="UniformToFill" />
                                     </ItemContainer>
                                 </DataTemplate>
                             </controls:AdvancedItemsView.ItemTemplate>

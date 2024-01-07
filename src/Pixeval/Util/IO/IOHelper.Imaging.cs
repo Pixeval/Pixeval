@@ -52,15 +52,14 @@ public static partial class IoHelper
         return target;
     }
 
-    public static async Task<SoftwareBitmapSource> GetSoftwareBitmapSourceAsync(this IRandomAccessStream imageStream, bool disposeOfImageStream)
+    public static async Task<SoftwareBitmapSource> GetSoftwareBitmapSourceAsync(this Stream stream, bool disposeOfImageStream)
     {
-        var stream = imageStream.AsStreamForRead();
         // 此处Position可能为负数
         stream.Position = 0;
 
         var bitmap = await GetSoftwareBitmapFromStreamAsync(stream);
         if (disposeOfImageStream)
-            imageStream.Dispose();
+            await stream.DisposeAsync();
         var source = new SoftwareBitmapSource();
         await source.SetBitmapAsync(bitmap);
         return source;
@@ -127,12 +126,12 @@ public static partial class IoHelper
     ///     Writes the <paramref name="stream" /> into <see cref="InMemoryRandomAccessStream"/>
     ///     and encodes to PNG format
     /// </summary>
-    public static async Task<InMemoryRandomAccessStream> SaveToStreamAsync(this Stream stream)
+    public static async Task<MemoryStream> SaveToStreamAsync(this Stream stream)
     {
         var image = await Image.LoadAsync<Rgba32>(stream);
-        var target = new InMemoryRandomAccessStream();
-        await image.SaveAsPngAsync(target.AsStreamForWrite());
-        target.Seek(0);
+        var target = new MemoryStream();
+        await image.SaveAsPngAsync(target);
+        target.Position = 0;
         return target;
     }
 

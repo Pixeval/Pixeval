@@ -93,12 +93,12 @@ public partial class IllustratorIllustrationsOverviewViewModel : ObservableObjec
             {
                 if (illustration.GetThumbnailUrl(Option) is { } url)
                 {
-                    if (await App.AppViewModel.MakoClient.DownloadRandomAccessStreamAsync(url) is not
-                        Result<IRandomAccessStream>.Success(var stream))
+                    if (await App.AppViewModel.MakoClient.DownloadStreamAsync(url) is not
+                        Result<Stream>.Success(var stream))
                         continue;
                     if (AvatarBorderBrush is null && GetAvatarBorderBrush)
                     {
-                        var dominantColor = await UiHelper.GetDominantColorAsync(stream.AsStreamForRead(), false);
+                        var dominantColor = await UiHelper.GetDominantColorAsync(stream, false);
                         AvatarBorderBrush = new SolidColorBrush(dominantColor);
                     }
 

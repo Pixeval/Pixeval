@@ -28,7 +28,7 @@
                 Height="35"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center" />
-            <controls:IllustrationImage ThumbnailOption="{x:Bind local:DownloadListEntry.Option}" ViewModel="{x:Bind ViewModel, Mode=OneWay}" />
+            <Image Source="{x:Bind ViewModel.ThumbnailSource, Mode=OneWay}" Stretch="UniformToFill" />
         </Grid>
     </Border>
     <StackPanel

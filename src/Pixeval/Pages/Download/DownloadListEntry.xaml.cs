@@ -48,8 +48,6 @@ public sealed partial class DownloadListEntry : IViewModelControl
 {
     object IViewModelControl.ViewModel => ViewModel;
 
-    private const ThumbnailUrlOption Option = ThumbnailUrlOption.SquareMedium;
-
     public DownloadListEntry() => InitializeComponent();
 
     public event TypedEventHandler<DownloadListEntry, DownloadListEntryViewModel>? OpenIllustrationRequested;

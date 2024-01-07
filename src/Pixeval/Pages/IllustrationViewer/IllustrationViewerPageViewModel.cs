@@ -152,7 +152,7 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
     public void Dispose()
     {
         foreach (var illustrationViewModel in Illustrations)
-            illustrationViewModel.UnloadThumbnail(this, Option);
+            illustrationViewModel.UnloadThumbnail(this);
         _pages?.ForEach(i => i.Dispose());
         (UserProfileImageSource as SoftwareBitmapSource)?.Dispose();
         ViewModelSource?.Dispose();

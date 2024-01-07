@@ -103,7 +103,7 @@ public static class MakoHelper
         return url[url.LastIndexOf('.')..];
     }
 
-    public static async Task<string> GetIllustrationThumbnailCacheKeyAsync(this IllustrationItemViewModel illustration, ThumbnailUrlOption thumbnailUrlOption)
+    public static async Task<string> GetIllustrationThumbnailCacheKeyAsync(this IllustrationItemViewModel illustration, ThumbnailUrlOption thumbnailUrlOption = ThumbnailUrlOption.Medium)
     {
         return $"thumbnail-{thumbnailUrlOption}-{await illustration.GetOriginalSourceUrlAsync()}";
     }

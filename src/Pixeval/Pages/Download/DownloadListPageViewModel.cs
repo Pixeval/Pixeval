@@ -30,7 +30,6 @@ using Pixeval.CoreApi.Model;
 using Pixeval.Database.Managers;
 using Pixeval.Download;
 using Pixeval.Download.Models;
-using Pixeval.Options;
 using Pixeval.Utilities;
 using WinUI3Utilities;
 
@@ -38,8 +37,6 @@ namespace Pixeval.Pages.Download;
 
 public partial class DownloadListPageViewModel : IllustrateViewViewModel<Illustration, DownloadListEntryViewModel>
 {
-    public const ThumbnailUrlOption Option = ThumbnailUrlOption.SquareMedium;
-
     public static readonly IEnumerable<DownloadListOption> AvailableDownloadListOptions = Enum.GetValues<DownloadListOption>();
 
     [ObservableProperty]
@@ -150,7 +147,7 @@ public partial class DownloadListPageViewModel : IllustrateViewViewModel<Illustr
     {
         foreach (var illustrationViewModel in DataProvider.Source)
         {
-            illustrationViewModel.UnloadThumbnail(this, Option);
+            illustrationViewModel.UnloadThumbnail(this);
             illustrationViewModel.Dispose();
         }
     }

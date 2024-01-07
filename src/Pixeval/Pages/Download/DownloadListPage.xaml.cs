@@ -24,7 +24,6 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
-using Pixeval.Controls;
 using Pixeval.Dialogs;
 using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Util.IO;
@@ -142,15 +141,9 @@ public sealed partial class DownloadListPage
         _viewModel.Dispose();
     }
 
-    private void AdvancedItemsView_OnElementPrepared(AdvancedItemsView sender, ItemContainer itemContainer)
+    private async void FrameworkElement_OnLoaded(object sender, RoutedEventArgs e)
     {
-        var item = itemContainer.Child.To<DownloadListEntry>();
-        _ = item.ViewModel.TryLoadThumbnail(_viewModel, DownloadListPageViewModel.Option);
-    }
-
-    private void AdvancedItemsView_OnElementClearing(AdvancedItemsView sender, ItemContainer itemContainer)
-    {
-        var item = itemContainer.Child.To<DownloadListEntry>();
-        item.ViewModel.UnloadThumbnail(_viewModel, DownloadListPageViewModel.Option);
+        var item = sender.To<DownloadListEntry>();
+        _ = await item.ViewModel.TryLoadThumbnail(_viewModel);
     }
 }

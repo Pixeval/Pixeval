@@ -22,10 +22,8 @@ using System.Linq;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
-using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.Options;
 using Pixeval.Pages.IllustrationViewer;
-using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
@@ -40,7 +38,6 @@ public sealed partial class IllustrationView
 {
     public const double LandscapeHeight = 180;
     public const double PortraitHeight = 250;
-    public ThumbnailUrlOption Option => LayoutType.ToThumbnailUrlOption();
 
     public IllustrationView()
     {
@@ -66,12 +63,10 @@ public sealed partial class IllustrationView
 
     public IllustrationViewViewModel ViewModel { get; } = new();
 
-    private TeachingTip IllustrationThumbnailOnShowQrCodeRequested() => QrCodeTeachingTip;
-
     private void IllustrationViewOnUnloaded(object sender, RoutedEventArgs e)
     {
         foreach (var illustrationViewModel in ViewModel.DataProvider.Source)
-            illustrationViewModel.UnloadThumbnail(ViewModel, Option);
+            illustrationViewModel.UnloadThumbnail(ViewModel);
         ViewModel.Dispose();
     }
 
@@ -89,25 +84,18 @@ public sealed partial class IllustrationView
         vm.CreateWindowWithPage(ViewModel);
     }
 
-    private async void IllustrationItemsView_OnElementPrepared(AdvancedItemsView sender, ItemContainer itemContainer)
+    private async void FrameworkElement_OnLoaded(object sender, RoutedEventArgs e)
     {
-        var thumbnail = itemContainer.Child.To<IllustrationItem>();
+        var thumbnail = sender.To<IllustrationItem>();
         var viewModel = thumbnail.ViewModel;
 
-        if (await viewModel.TryLoadThumbnail(ViewModel, Option))
+        if (await viewModel.TryLoadThumbnail(ViewModel))
         {
             if (thumbnail.IsFullyOrPartiallyVisible(this))
                 thumbnail.Resources["IllustrationThumbnailStoryboard"].To<Storyboard>().Begin();
             else
                 thumbnail.Opacity = 1;
         }
-    }
-
-    private void IllustrationItemsView_OnElementClearing(AdvancedItemsView sender, ItemContainer itemContainer)
-    {
-        var viewModel = itemContainer.Child.To<IllustrationItem>().ViewModel;
-
-        viewModel.UnloadThumbnail(ViewModel, Option);
     }
 
     private void IllustrationItemsView_OnSelectionChanged(ItemsView sender, ItemsViewSelectionChangedEventArgs args)

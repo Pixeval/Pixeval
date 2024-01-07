@@ -343,9 +343,6 @@
         <Page Update="Controls\IllustratorItem\IllustratorIllustrationsOverview.xaml">
           <Generator>MSBuild:Compile</Generator>
         </Page>
-        <Page Update="Controls\IllustrationImage.xaml">
-          <Generator>MSBuild:Compile</Generator>
-        </Page>
         <Page Update="Controls\IllustrationView\IllustrationItem.xaml">
           <Generator>MSBuild:Compile</Generator>
         </Page>

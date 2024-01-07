@@ -18,6 +18,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using System.IO;
 using System.Threading.Tasks;
 using Windows.Storage.Streams;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -90,7 +91,7 @@ public sealed partial class IllustratorItemViewModel : IllustrateViewModel<User>
     private async Task SetBackgroundAsync()
     {
         UserDetail = await App.AppViewModel.MakoClient.GetUserFromIdAsync(UserId, App.AppViewModel.AppSetting.TargetFilter);
-        if (await App.AppViewModel.MakoClient.DownloadRandomAccessStreamAsync(UserDetail.UserProfile.BackgroundImageUrl) is Result<IRandomAccessStream>.Success(var stream))
+        if (await App.AppViewModel.MakoClient.DownloadStreamAsync(UserDetail.UserProfile.BackgroundImageUrl) is Result<Stream>.Success(var stream))
         {
             //if (OverviewViewModel.AvatarBorderBrush is null)
             //{

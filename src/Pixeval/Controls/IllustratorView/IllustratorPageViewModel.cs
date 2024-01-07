@@ -81,7 +81,7 @@ public partial class IllustratorPageViewModel : ObservableObject, IIllustrationV
     public void DisposeCurrent()
     {
         foreach (var illustration in Illustrations)
-            illustration.UnloadThumbnail(this, Option);
+            illustration.UnloadThumbnail(this);
         Illustrations.Clear();
     }
 

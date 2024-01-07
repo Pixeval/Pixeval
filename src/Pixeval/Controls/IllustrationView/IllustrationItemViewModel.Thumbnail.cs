@@ -21,11 +21,9 @@
 #endregion
 
 using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Threading.Tasks;
-using Windows.Storage.Streams;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.Options;
 using Pixeval.Util;
@@ -41,16 +39,27 @@ public partial class IllustrationItemViewModel
     /// <summary>
     /// 缩略图图片
     /// </summary>
-    public ImmutableDictionary<ThumbnailUrlOption, SoftwareBitmapSource> ThumbnailSources => ThumbnailSourcesRef.ToImmutableDictionary(pair => pair.Key, pair => pair.Value.Value);
+    public SoftwareBitmapSource? ThumbnailSource => ThumbnailSourceRef?.Value;
 
     /// <summary>
     /// 缩略图文件流
     /// </summary>
-    public IReadOnlyDictionary<ThumbnailUrlOption, IRandomAccessStream> ThumbnailStreams => ThumbnailStreamsRef;
+    public Stream? ThumbnailStream { get; set; }
 
-    private ConcurrentDictionary<ThumbnailUrlOption, IRandomAccessStream> ThumbnailStreamsRef { get; } = [];
+     private SharedRef<SoftwareBitmapSource>? _thumbnailSourceRef;
 
-    private ConcurrentDictionary<ThumbnailUrlOption, SharedRef<SoftwareBitmapSource>> ThumbnailSourcesRef { get; } = [];
+     public SharedRef<SoftwareBitmapSource>? ThumbnailSourceRef
+     {
+         get => _thumbnailSourceRef;
+         set
+         {
+             if (Equals(_thumbnailSourceRef, value))
+                 return;
+             OnPropertyChanging(nameof(ThumbnailSource));
+             _thumbnailSourceRef = value;
+             OnPropertyChanged(nameof(ThumbnailSource));
+         }
+     }
 
     private CancellationHandle LoadingThumbnailCancellationHandle { get; } = new();
 
@@ -63,13 +72,13 @@ public partial class IllustrationItemViewModel
     /// 当控件需要显示图片时，调用此方法加载缩略图
     /// </summary>
     /// <param name="key">使用<see cref="IDisposable"/>对象，防止复用本对象的时候，本对象持有对<paramref name="key"/>的引用，导致<paramref name="key"/>无法释放</param>
-    /// <param name="thumbnailUrlOption"></param>
     /// <returns>缩略图首次加载完成则返回<see langword="true"/>，之前已加载、正在加载或加载失败则返回<see langword="false"/></returns>
-    public async Task<bool> TryLoadThumbnail(IDisposable key, ThumbnailUrlOption thumbnailUrlOption)
+    [MemberNotNullWhen(true, nameof(ThumbnailSource), nameof(ThumbnailStream), nameof(ThumbnailSourceRef))]
+    public async Task<bool> TryLoadThumbnail(IDisposable key)
     {
-        if (ThumbnailSourcesRef.TryGetValue(thumbnailUrlOption, out var value))
+        if (ThumbnailSourceRef is not null)
         {
-            _ = value.MakeShared(key);
+            _ = ThumbnailSourceRef.MakeShared(key);
 
             // 之前已加载
             return false;
@@ -82,29 +91,28 @@ public partial class IllustrationItemViewModel
         }
 
         LoadingThumbnail = true;
-        if (App.AppViewModel.AppSetting.UseFileCache && await App.AppViewModel.Cache.TryGetAsync<IRandomAccessStream>(await this.GetIllustrationThumbnailCacheKeyAsync(thumbnailUrlOption)) is { } stream)
+        if (App.AppViewModel.AppSetting.UseFileCache && await App.AppViewModel.Cache.TryGetAsync<Stream>(await this.GetIllustrationThumbnailCacheKeyAsync()) is { } stream)
         {
-            ThumbnailStreamsRef[thumbnailUrlOption] = stream;
-            ThumbnailSourcesRef[thumbnailUrlOption] = new SharedRef<SoftwareBitmapSource>(await stream.GetSoftwareBitmapSourceAsync(false), key);
+            ThumbnailStream = stream;
+            ThumbnailSourceRef = new SharedRef<SoftwareBitmapSource>(await stream.GetSoftwareBitmapSourceAsync(false), key);
 
             // 读取缓存并加载完成
             LoadingThumbnail = false;
-            OnPropertyChanged(nameof(ThumbnailSources));
+            OnPropertyChanged(nameof(ThumbnailSource));
             return true;
         }
 
-        if (await GetThumbnail(thumbnailUrlOption) is { } ras)
+        if (await GetThumbnailAsync() is { } ras)
         {
             if (App.AppViewModel.AppSetting.UseFileCache)
             {
-                _ = await App.AppViewModel.Cache.TryAddAsync(await this.GetIllustrationThumbnailCacheKeyAsync(thumbnailUrlOption), ras, TimeSpan.FromDays(1));
+                _ = await App.AppViewModel.Cache.TryAddAsync(await this.GetIllustrationThumbnailCacheKeyAsync(), ras, TimeSpan.FromDays(1));
             }
-            ThumbnailStreamsRef[thumbnailUrlOption] = ras;
-            ThumbnailSourcesRef[thumbnailUrlOption] = new SharedRef<SoftwareBitmapSource>(await ras.GetSoftwareBitmapSourceAsync(false), key);
+            ThumbnailStream = ras;
+            ThumbnailSourceRef = new SharedRef<SoftwareBitmapSource>(await ras.GetSoftwareBitmapSourceAsync(false), key);
 
             // 获取并加载完成
             LoadingThumbnail = false;
-            OnPropertyChanged(nameof(ThumbnailSources));
             return true;
         }
 
@@ -116,7 +124,7 @@ public partial class IllustrationItemViewModel
     /// <summary>
     /// 当控件不显示，或者Unload时，调用此方法以尝试释放内存
     /// </summary>
-    public void UnloadThumbnail(object key, ThumbnailUrlOption thumbnailUrlOption)
+    public void UnloadThumbnail(object key)
     {
         if (LoadingThumbnail)
         {
@@ -128,33 +136,31 @@ public partial class IllustrationItemViewModel
         if (App.AppViewModel.AppSetting.UseFileCache)
             return;
 
-        if (!ThumbnailSourcesRef.TryRemove(thumbnailUrlOption, out var value) || !value.TryDispose(key))
+        if (!ThumbnailSourceRef?.TryDispose(key) ?? true)
             return;
 
-        if (ThumbnailStreamsRef.TryRemove(thumbnailUrlOption, out var stream))
-            stream?.Dispose();
-
-        OnPropertyChanged(nameof(ThumbnailSources));
+        ThumbnailSourceRef = null;
+        ThumbnailStream?.Dispose();
     }
 
     /// <summary>
     /// 直接获取对应缩略图
     /// </summary>
-    public async Task<IRandomAccessStream?> GetThumbnail(ThumbnailUrlOption thumbnailUrlOptions)
+    public async Task<Stream?> GetThumbnailAsync(ThumbnailUrlOption thumbnailUrlOptions = ThumbnailUrlOption.Medium)
     {
         if (Illustrate.GetThumbnailUrl(thumbnailUrlOptions) is { } url)
         {
-            switch (await App.AppViewModel.MakoClient.DownloadRandomAccessStreamAsync(url, cancellationHandle: LoadingThumbnailCancellationHandle))
+            switch (await App.AppViewModel.MakoClient.DownloadStreamAsync(url, cancellationHandle: LoadingThumbnailCancellationHandle))
             {
-                case Result<IRandomAccessStream>.Success(var stream):
+                case Result<Stream>.Success(var stream):
                     return stream;
-                case Result<IRandomAccessStream>.Failure(OperationCanceledException):
+                case Result<Stream>.Failure(OperationCanceledException):
                     LoadingThumbnailCancellationHandle.Reset();
                     return null;
             }
         }
 
-        return await AppContext.GetNotAvailableImageStreamAsync();
+        return AppContext.GetNotAvailableImageStream();
     }
 
     /// <summary>
@@ -162,13 +168,8 @@ public partial class IllustrationItemViewModel
     /// </summary>
     private void DisposeInternal()
     {
-        foreach (var (option, softwareBitmapSource) in ThumbnailSourcesRef)
-        {
-            softwareBitmapSource?.DisposeForce();
-            ThumbnailStreamsRef[option]?.Dispose();
-        }
-        ThumbnailSourcesRef.Clear();
-        ThumbnailStreamsRef.Clear();
+        ThumbnailSourceRef?.DisposeForce();
+        ThumbnailStream?.Dispose();
     }
 
     public override void Dispose()

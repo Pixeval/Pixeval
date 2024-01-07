@@ -57,7 +57,7 @@ public static partial class IoHelper
         IProgress<double>? progress = null,
         CancellationHandle? cancellationHandle = null)
     {
-        return await (await client.DownloadRandomAccessStreamAsync(url, progress, cancellationHandle)).RewrapAsync(m => m.GetSoftwareBitmapSourceAsync(true));
+        return await (await client.DownloadStreamAsync(url, progress, cancellationHandle)).RewrapAsync(m => m.GetSoftwareBitmapSourceAsync(true));
     }
 
     public static async Task<Result<ImageSource>> DownloadBitmapImageAsync(

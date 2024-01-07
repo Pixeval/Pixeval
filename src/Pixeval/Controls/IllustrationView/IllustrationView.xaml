@@ -15,8 +15,6 @@
     <controls:AdvancedItemsView
         x:Name="IllustrationItemsView"
         x:FieldModifier="public"
-        ElementClearing="IllustrationItemsView_OnElementClearing"
-        ElementPrepared="IllustrationItemsView_OnElementPrepared"
         IsItemInvokedEnabled="True"
         ItemInvoked="IllustrationItemsView_OnItemInvoked"
         ItemsSource="{x:Bind ViewModel.DataProvider.View}"
@@ -28,7 +26,10 @@
         <ItemsView.ItemTemplate>
             <DataTemplate x:DataType="local:IllustrationItemViewModel">
                 <ItemContainer>
-                    <local:IllustrationItem ThisRequired="IllustrationThumbnail_OnThisRequired" ViewModel="{x:Bind}" />
+                    <local:IllustrationItem
+                        Loaded="FrameworkElement_OnLoaded"
+                        ThisRequired="IllustrationThumbnail_OnThisRequired"
+                        ViewModel="{x:Bind}" />
                 </ItemContainer>
             </DataTemplate>
         </ItemsView.ItemTemplate>
