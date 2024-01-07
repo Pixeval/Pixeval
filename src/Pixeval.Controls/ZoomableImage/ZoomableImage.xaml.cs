@@ -20,11 +20,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Numerics;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Foundation;
-using Windows.Storage.Streams;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Graphics.Canvas;
 using Microsoft.Graphics.Canvas.UI.Xaml;
@@ -45,8 +45,8 @@ namespace Pixeval.Controls;
 /// 渲染：<see cref="CanvasControlOnDraw"/>，图片渲染逻辑<br/>
 /// 对外API：<see cref="Zoom"/>、<see cref="SetPosition"/>
 /// </summary>
-[DependencyProperty<IList<IRandomAccessStream>>("Sources", DependencyPropertyDefaultValue.Default, nameof(OnSourcesChanged), IsNullable = true)]
-[DependencyProperty<IList<int>>("MsIntervals", DependencyPropertyDefaultValue.Default, nameof(OnMsIntervalsChanged))]
+[DependencyProperty<IReadOnlyList<Stream>>("Sources", DependencyPropertyDefaultValue.Default, nameof(OnSourcesChanged), IsNullable = true)]
+[DependencyProperty<IReadOnlyList<int>>("MsIntervals", DependencyPropertyDefaultValue.Default, nameof(OnMsIntervalsChanged))]
 [DependencyProperty<bool>("IsPlaying", "true", nameof(OnIsPlayingChanged))]
 [DependencyProperty<int>("ImageRotationDegree", "0", nameof(OnImageRotationDegreeChanged))]
 [DependencyProperty<bool>("ImageIsMirrored", "false")]
@@ -94,7 +94,7 @@ public sealed partial class ZoomableImage : UserControl
                     CanvasControl.Invalidate();
                     _ = ManualResetEvent.WaitOne();
                     var delay = 20;
-                    if (ClonedMsIntervals is { } t && t.Count > i)
+                    if (ClonedMsIntervals is { } t && t.Length > i)
                         delay = ClonedMsIntervals[i];
                     totalDelay += delay;
                     do
@@ -292,7 +292,11 @@ public sealed partial class ZoomableImage : UserControl
             if (Sources is null)
                 return;
             foreach (var source in Sources)
-                _frames.Add(await CanvasBitmap.LoadAsync(sender, source));
+            {
+                var randomAccessStream = source.AsRandomAccessStream();
+                randomAccessStream.Seek(0);
+                _frames.Add(await CanvasBitmap.LoadAsync(sender, randomAccessStream));
+            }
             OriginalImageWidth = _frames[0].Size.Width;
             OriginalImageHeight = _frames[0].Size.Height;
             Mode = InitMode; // 触发OnModeChanged
@@ -306,7 +310,7 @@ public sealed partial class ZoomableImage : UserControl
     private readonly List<CanvasBitmap> _frames = [];
     private readonly CancellationTokenSource _token = new();
 
-    private List<int>? ClonedMsIntervals { get; set; }
+    private int[]? ClonedMsIntervals { get; set; }
 
     private ManualResetEvent ManualResetEvent { get; } = new(true);
 

@@ -21,7 +21,6 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
-using Windows.Storage.Streams;
 using Pixeval.Controls.IllustrationView;
 using Pixeval.Database;
 using Pixeval.Utilities;
@@ -34,20 +33,20 @@ public class IntrinsicIllustrationDownloadTask : IllustrationDownloadTask
     /// <summary>
     /// The disposal of <paramref name="stream" /> is not handled
     /// </summary>
-    public IntrinsicIllustrationDownloadTask(DownloadHistoryEntry entry, IllustrationItemViewModel illustrationViewModel, IRandomAccessStream stream) : base(entry, illustrationViewModel)
+    public IntrinsicIllustrationDownloadTask(DownloadHistoryEntry entry, IllustrationItemViewModel illustrationViewModel, Stream stream) : base(entry, illustrationViewModel)
     {
         Report(100);
         Stream = stream;
     }
 
-    public IRandomAccessStream Stream { get; }
+    public Stream Stream { get; }
 
-    protected override async Task DownloadAsyncCore(Func<string, IProgress<double>?, CancellationHandle?, Task<Result<IRandomAccessStream>>> _, string url, string destination)
+    protected override async Task DownloadAsyncCore(Func<string, IProgress<double>?, CancellationHandle?, Task<Result<Stream>>> _, string url, string destination)
     {
         if (!App.AppViewModel.AppSetting.OverwriteDownloadedFile && File.Exists(destination))
             return;
 
-        Stream.Seek(0);
+        Stream.Position = 0;
 
         await ManageStream(Stream, destination);
     }

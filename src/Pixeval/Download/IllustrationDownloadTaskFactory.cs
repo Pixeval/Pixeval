@@ -18,6 +18,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using System.IO;
 using System.Threading.Tasks;
 using Windows.Storage.Streams;
 using Microsoft.Extensions.DependencyInjection;
@@ -85,7 +86,7 @@ public class IllustrationDownloadTaskFactory : IDownloadTaskFactory<Illustration
         return task;
     }
 
-    public async Task<IllustrationDownloadTask> TryCreateIntrinsicAsync(IllustrationItemViewModel context, IRandomAccessStream stream, string rawPath)
+    public async Task<IllustrationDownloadTask> TryCreateIntrinsicAsync(IllustrationItemViewModel context, Stream stream, string rawPath)
     {
         using var scope = App.AppViewModel.AppServicesScope;
         var manager = scope.ServiceProvider.GetRequiredService<DownloadHistoryPersistentManager>();

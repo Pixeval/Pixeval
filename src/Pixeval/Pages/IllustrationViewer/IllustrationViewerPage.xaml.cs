@@ -19,6 +19,7 @@
 #endregion
 
 using System;
+using System.IO;
 using System.Linq;
 using System.Numerics;
 using System.Threading.Tasks;
@@ -211,7 +212,7 @@ public sealed partial class IllustrationViewerPage : SupportCustomTitleBarDragRe
                 var metadata = await App.AppViewModel.MakoClient.GetUgoiraMetadataAsync(vm.Id);
                 var stream = await streams.UgoiraSaveToStreamAsync(metadata);
                 var file = await AppKnownFolders.CreateTemporaryFileWithRandomNameAsync(IoHelper.GetUgoiraExtension());
-                await stream.SaveToFileAsync(file);
+                await stream.AsRandomAccessStream().SaveToFileAsync(file);
                 request.Data.SetStorageItems([file]);
             }
         }
@@ -219,6 +220,7 @@ public sealed partial class IllustrationViewerPage : SupportCustomTitleBarDragRe
         {
             if (_viewModel.CurrentImage.OriginalImageSources?.FirstOrDefault() is { } stream)
             {
+                stream.Position = 0;
                 var s = await stream.SaveToStreamAsync();
                 var file = await AppKnownFolders.CreateTemporaryFileWithRandomNameAsync(".png");
                 await s.SaveToFileAsync(file);

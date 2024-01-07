@@ -19,9 +19,9 @@
 #endregion
 
 using System.Threading.Tasks;
-using Windows.Storage.Streams;
 using Pixeval.Download.MacroParser;
 using Pixeval.Download.Models;
+using System.IO;
 
 namespace Pixeval.Download;
 
@@ -31,5 +31,5 @@ public interface IDownloadTaskFactory<T, TDownloadTask> where TDownloadTask : ID
 
     Task<TDownloadTask> CreateAsync(T context, string rawPath);
 
-    Task<TDownloadTask> TryCreateIntrinsicAsync(T context, IRandomAccessStream stream, string rawPath);
+    Task<TDownloadTask> TryCreateIntrinsicAsync(T context, Stream stream, string rawPath);
 }

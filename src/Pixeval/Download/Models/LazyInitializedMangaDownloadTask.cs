@@ -21,6 +21,7 @@
 #endregion
 
 using System;
+using System.IO;
 using System.Threading.Tasks;
 using Windows.Storage.Streams;
 using Pixeval.Database;
@@ -34,11 +35,12 @@ public class LazyInitializedMangaDownloadTask(DownloadHistoryEntry entry)
 {
     private readonly long _illustId = entry.Id;
 
-    public override async Task DownloadAsync(Func<string, IProgress<double>?, CancellationHandle?, Task<Result<IRandomAccessStream>>> downloadRandomAccessStreamAsync)
+    public override async Task DownloadAsync(
+        Func<string, IProgress<double>?, CancellationHandle?, Task<Result<Stream>>> downloadStreamAsync)
     {
         await LazyLoadAsync(_illustId);
 
-        await base.DownloadAsync(downloadRandomAccessStreamAsync);
+        await base.DownloadAsync(downloadStreamAsync);
     }
 
     public async Task LazyLoadAsync(long id)

@@ -21,6 +21,7 @@
 #endregion
 
 using System;
+using System.IO;
 using System.Threading.Tasks;
 using Windows.Storage.Streams;
 using Pixeval.Controls.IllustrationView;
@@ -35,12 +36,13 @@ public class MangaDownloadTask(DownloadHistoryEntry entry, IllustrationItemViewM
 {
     protected int CurrentIndex { get; private set; }
 
-    public override async Task DownloadAsync(Func<string, IProgress<double>?, CancellationHandle?, Task<Result<IRandomAccessStream>>> downloadRandomAccessStreamAsync)
+    public override async Task DownloadAsync(
+        Func<string, IProgress<double>?, CancellationHandle?, Task<Result<Stream>>> downloadStreamAsync)
     {
         for (CurrentIndex = 0; CurrentIndex < Urls.Count; ++CurrentIndex)
         {
             var dest = Destination.Format(CurrentIndex);
-            await base.DownloadAsyncCore(downloadRandomAccessStreamAsync, Urls[CurrentIndex], dest);
+            await base.DownloadAsyncCore(downloadStreamAsync, Urls[CurrentIndex], dest);
         }
     }
 }

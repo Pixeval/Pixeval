@@ -289,6 +289,7 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
     /// <see langword="false"/>: next illustration<br/>
     /// <see langword="null"/>: none
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0046:转换为条件表达式", Justification = "<挂起>")]
     public bool? NextButtonAction
     {
         get
@@ -316,6 +317,7 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
     /// <see langword="false"/>: prev illustration<br/>
     /// <see langword="null"/>: none
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0046:转换为条件表达式", Justification = "<挂起>")]
     public bool? PrevButtonAction
     {
         get
@@ -398,7 +400,7 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
         args.CanExecute = !IsUgoira && CurrentImage.LoadSuccessfully;
     }
 
-    private async void SetAsBackgroundCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
+    private void SetAsBackgroundCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
         SetPersonalization(UserProfilePersonalizationSettings.Current.TrySetWallpaperImageAsync);
     }

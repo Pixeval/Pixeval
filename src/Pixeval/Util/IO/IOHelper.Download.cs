@@ -86,7 +86,7 @@ public static partial class IoHelper
         return (await httpClient.DownloadStreamAsync(url, progress, cancellationHandle)).Rewrap(stream => stream.AsRandomAccessStream());
     }
 
-    private static async Task<Result<Stream>> DownloadStreamAsync(
+    public static async Task<Result<Stream>> DownloadStreamAsync(
         this HttpClient httpClient,
         string url,
         IProgress<double>? progress = null,

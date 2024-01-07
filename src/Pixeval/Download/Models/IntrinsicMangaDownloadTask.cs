@@ -24,7 +24,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using Windows.Storage.Streams;
 using Pixeval.Controls.IllustrationView;
 using Pixeval.Database;
 using Pixeval.Utilities;
@@ -35,9 +34,9 @@ namespace Pixeval.Download.Models;
 
 public class IntrinsicMangaDownloadTask : MangaDownloadTask
 {
-    public IList<IRandomAccessStream> Streams { get; }
+    public IList<Stream> Streams { get; }
 
-    public IntrinsicMangaDownloadTask(DownloadHistoryEntry entry, IllustrationItemViewModel illustrationViewModel, IList<IRandomAccessStream> streams) : base(entry, illustrationViewModel)
+    public IntrinsicMangaDownloadTask(DownloadHistoryEntry entry, IllustrationItemViewModel illustrationViewModel, IList<Stream> streams) : base(entry, illustrationViewModel)
     {
         Report(100);
         if (streams.Count == Urls.Count)
@@ -46,12 +45,12 @@ public class IntrinsicMangaDownloadTask : MangaDownloadTask
             ThrowHelper.Argument(streams);
     }
 
-    protected override async Task DownloadAsyncCore(Func<string, IProgress<double>?, CancellationHandle?, Task<Result<IRandomAccessStream>>> _, string url, string destination)
+    protected override async Task DownloadAsyncCore(Func<string, IProgress<double>?, CancellationHandle?, Task<Result<Stream>>> _, string url, string destination)
     {
         if (!App.AppViewModel.AppSetting.OverwriteDownloadedFile && File.Exists(destination))
             return;
 
-        Streams[CurrentIndex].Seek(0);
+        Streams[CurrentIndex].Position = 0;
 
         await ManageStream(Streams[CurrentIndex], destination);
     }

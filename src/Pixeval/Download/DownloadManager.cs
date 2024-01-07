@@ -168,7 +168,7 @@ public class DownloadManager<TDownloadTask> : IDisposable where TDownloadTask : 
         task.CancellationHandle.RegisterResumed(() => SetState(task, DownloadState.Running));
         try
         {
-            await task.DownloadAsync(_httpClient.DownloadRandomAccessStreamAsync);
+            await task.DownloadAsync(_httpClient.DownloadStreamAsync);
         }
         catch (Exception e)
         {

@@ -42,20 +42,20 @@ namespace Pixeval.Util.IO;
 
 public static partial class IoHelper
 {
-    public static async Task<string> Sha1Async(this IRandomAccessStream randomAccessStream)
+    public static async Task<string> Sha1Async(this Stream stream)
     {
         using var sha1 = SHA1.Create();
-        var result = await sha1.ComputeHashAsync(randomAccessStream.AsStreamForRead());
-        randomAccessStream.Seek(0); // reset the stream
+        var result = await sha1.ComputeHashAsync(stream);
+        stream.Position = 0; // reset the stream
         return result.Select(b => b.ToString("X2")).Aggregate((acc, str) => acc + str);
     }
 
-    public static async Task CreateAndWriteToFileAsync(IRandomAccessStream contentStream, string path)
+    public static async Task CreateAndWriteToFileAsync(Stream contentStream, string path)
     {
         CreateParentDirectories(path);
         await using var stream = File.OpenWrite(path);
-        contentStream.Seek(0);
-        await contentStream.AsStreamForRead().CopyToAsync(stream);
+        contentStream.Position = 0;
+        await contentStream.CopyToAsync(stream);
     }
 
     public static string NormalizePath(string path)
@@ -176,7 +176,7 @@ public static partial class IoHelper
         return httpClient.SendAsync(httpRequestMessage);
     }
 
-    public static async Task<(string Filename, InMemoryRandomAccessStream Content)[]> ReadZipArchiveEntries(Stream zipStream)
+    public static async Task<MemoryStream[]> ReadZipArchiveEntries(Stream zipStream)
     {
         using var archive = new ZipArchive(zipStream, ZipArchiveMode.Read);
         // return the result of Select directly will cause the enumeration to be delayed
@@ -187,10 +187,10 @@ public static partial class IoHelper
         return await Task.WhenAll(archive.Entries.Select(async entry =>
         {
             await using var stream = entry.Open();
-            var ms = new InMemoryRandomAccessStream();
-            await stream.CopyToAsync(ms.AsStreamForWrite());
-            ms.Seek(0);
-            return (entry.Name, ms);
+            var ms = new MemoryStream();
+            await stream.CopyToAsync(ms);
+            ms.Position = 0;
+            return ms;
         }));
     }
 

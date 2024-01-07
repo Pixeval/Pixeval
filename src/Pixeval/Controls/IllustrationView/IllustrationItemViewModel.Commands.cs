@@ -58,20 +58,20 @@ public partial class IllustrationItemViewModel
     public XamlUICommand ShowPixEzQrCodeCommand { get; } = IllustrationViewerPageResources.ShowPixEzQrCode.GetCommand(FontIconSymbols.Photo2EB9F);
 
     /// <summary>
-    /// Parameter1: <see cref="ValueTuple{T1,T2}"/> where T1 is <see cref="FrameworkElement"/>? and T2 is <see cref="Func{T, TResult}"/>? where T is <see cref="IProgress{T}"/>? and TResult is <see cref="IRandomAccessStream"/>?<br/>
+    /// Parameter1: <see cref="ValueTuple{T1,T2}"/> where T1 is <see cref="FrameworkElement"/>? and T2 is <see cref="Func{T, TResult}"/>? where T is <see cref="IProgress{T}"/>? and TResult is <see cref="Stream"/>?<br/>
     /// Parameter2: <see cref="FrameworkElement"/>?
     /// </summary>
     public XamlUICommand SaveCommand { get; } = IllustrationViewerPageResources.Save.GetCommand(FontIconSymbols.SaveE74E, VirtualKeyModifiers.Control, VirtualKey.S);
 
     /// <summary>
-    /// Parameter1: <see cref="ValueTuple{T1,T2}"/> where T1 is <see cref="Window"/> and T2 is <see cref="Func{T, TResult}"/>? where T is <see cref="IProgress{T}"/>? and TResult is <see cref="IRandomAccessStream"/>?<br/>
+    /// Parameter1: <see cref="ValueTuple{T1,T2}"/> where T1 is <see cref="Window"/> and T2 is <see cref="Func{T, TResult}"/>? where T is <see cref="IProgress{T}"/>? and TResult is <see cref="Stream"/>?<br/>
     /// Parameter2: <see cref="Window"/>
     /// </summary>
     public XamlUICommand SaveAsCommand { get; } = IllustrationViewerPageResources.SaveAs.GetCommand(FontIconSymbols.SaveAsE792, VirtualKeyModifiers.Control | VirtualKeyModifiers.Shift, VirtualKey.S);
 
     /// <summary>
-    /// Parameter1: <see cref="ValueTuple{T1,T2}"/> where T1 is <see cref="FrameworkElement"/>? and T2 is <see cref="Func{T, TResult}"/> where T is <see cref="IProgress{T}"/>? and TResult is <see cref="IRandomAccessStream"/>?<br/>
-    /// Parameter2: <see cref="Func{T, TResult}"/> where T is <see cref="IProgress{T}"/>? and TResult is <see cref="IRandomAccessStream"/>?
+    /// Parameter1: <see cref="ValueTuple{T1,T2}"/> where T1 is <see cref="FrameworkElement"/>? and T2 is <see cref="Func{T, TResult}"/> where T is <see cref="IProgress{T}"/>? and TResult is <see cref="Stream"/>?<br/>
+    /// Parameter2: <see cref="Func{T, TResult}"/> where T is <see cref="IProgress{T}"/>? and TResult is <see cref="Stream"/>?
     /// </summary>
     public XamlUICommand CopyCommand { get; } = IllustrationViewerPageResources.Copy.GetCommand(FontIconSymbols.CopyE8C8, VirtualKeyModifiers.Control, VirtualKey.C);
 
@@ -175,10 +175,10 @@ public partial class IllustrationItemViewModel
     private async void SaveCommandExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
         var frameworkElement = null as FrameworkElement;
-        var getOriginalImageSourceAsync = null as Func<IProgress<int>?, Task<IRandomAccessStream?>>;
+        var getOriginalImageSourceAsync = null as Func<IProgress<int>?, Task<Stream?>>;
         switch (args.Parameter)
         {
-            case ValueTuple<FrameworkElement?, Func<IProgress<int>?, Task<IRandomAccessStream?>>?> tuple:
+            case ValueTuple<FrameworkElement?, Func<IProgress<int>?, Task<Stream?>>?> tuple:
                 frameworkElement = tuple.Item1;
                 getOriginalImageSourceAsync = tuple.Item2;
                 break;
@@ -194,10 +194,10 @@ public partial class IllustrationItemViewModel
     private async void SaveAsCommandExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
         Window window;
-        var getOriginalImageSourceAsync = null as Func<IProgress<int>?, Task<IRandomAccessStream?>>;
+        var getOriginalImageSourceAsync = null as Func<IProgress<int>?, Task<Stream?>>;
         switch (args.Parameter)
         {
-            case ValueTuple<Window, Func<IProgress<int>?, Task<IRandomAccessStream?>>?> tuple:
+            case ValueTuple<Window, Func<IProgress<int>?, Task<Stream?>>?> tuple:
                 window = tuple.Item1;
                 getOriginalImageSourceAsync = tuple.Item2;
                 break;
@@ -242,7 +242,7 @@ public partial class IllustrationItemViewModel
     /// <param name="getOriginalImageSourceAsync">获取原图的<see cref="IRandomAccessStream"/>，支持进度显示，为<see langword="null"/>则创建新的下载任务</param>
     /// <param name="path">文件路径</param>
     /// <returns></returns>
-    private async Task SaveUtilityAsync(FrameworkElement? frameworkElement, Func<IProgress<int>?, Task<IRandomAccessStream?>>? getOriginalImageSourceAsync, string path)
+    private async Task SaveUtilityAsync(FrameworkElement? frameworkElement, Func<IProgress<int>?, Task<Stream?>>? getOriginalImageSourceAsync, string path)
     {
         var teachingTip = frameworkElement?.CreateTeachingTip();
 
@@ -272,14 +272,14 @@ public partial class IllustrationItemViewModel
     private async void CopyCommandExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
         var frameworkElement = null as FrameworkElement;
-        Func<IProgress<int>?, Task<IRandomAccessStream?>> getOriginalImageSourceAsync;
+        Func<IProgress<int>?, Task<Stream?>> getOriginalImageSourceAsync;
         switch (args.Parameter)
         {
-            case ValueTuple<FrameworkElement?, Func<IProgress<int>?, Task<IRandomAccessStream?>>> tuple:
+            case ValueTuple<FrameworkElement?, Func<IProgress<int>?, Task<Stream?>>> tuple:
                 frameworkElement = tuple.Item1;
                 getOriginalImageSourceAsync = tuple.Item2;
                 break;
-            case Func<IProgress<int>?, Task<IRandomAccessStream?>> f:
+            case Func<IProgress<int>?, Task<Stream?>> f:
                 getOriginalImageSourceAsync = f;
                 break;
             default:
@@ -295,7 +295,7 @@ public partial class IllustrationItemViewModel
             teachingTip?.Show(IllustrationViewerPageResources.ImageProcessing, TeachingTipSeverity.Processing, isLightDismissEnabled: true);
         if (await getOriginalImageSourceAsync(progress) is { } source)
         {
-            UiHelper.ClipboardSetBitmap(source);
+            UiHelper.ClipboardSetBitmap(source.AsRandomAccessStream());
             teachingTip?.ShowAndHide(IllustrationViewerPageResources.ImageSetToClipBoard);
         }
     }

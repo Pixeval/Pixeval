@@ -81,10 +81,10 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
     private string? _loadingText;
 
     [ObservableProperty]
-    private IList<int>? _msIntervals;
+    private IReadOnlyList<int>? _msIntervals;
 
     [ObservableProperty]
-    private IList<IRandomAccessStream>? _originalImageSources;
+    private IReadOnlyList<Stream>? _originalImageSources;
 
     [ObservableProperty]
     private int _rotationDegree;
@@ -124,9 +124,7 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
     /// </summary>
     public bool IsFit => ShowMode is ZoomableImageMode.Fit;
 
-    public IRandomAccessStream? OriginalImageStream => OriginalImageSources?.FirstOrDefault();
-
-    public async Task<IRandomAccessStream?> GetOriginalImageSourceAsync(IProgress<int>? progress = null)
+    public async Task<Stream?> GetOriginalImageSourceAsync(IProgress<int>? progress = null)
     {
         if (OriginalImageSources is null)
             return null;
@@ -136,14 +134,14 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
 
         if (OriginalImageSources.FirstOrDefault() is { } stream)
         {
-            stream.Seek(0);
+            stream.Position = 0;
             return await stream.SaveAsPngStreamAsync(false);
         }
 
         return null;
     }
 
-    public CancellationHandle ImageLoadingCancellationHandle { get; } = new CancellationHandle();
+    public CancellationHandle ImageLoadingCancellationHandle { get; } = new();
 
     /// <summary>
     ///     The view model of the <see cref="IllustrationViewerPage" /> that hosts the owner <see cref="ImageViewerPage" />
@@ -194,7 +192,7 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
         {
             _disposed = false;
             _ = IllustrationViewModel.TryLoadThumbnail(this, Option).ContinueWith(
-                _ => OriginalImageSources ??= [IllustrationViewModel.ThumbnailStreams[Option]],
+                _ => OriginalImageSources ??= [IllustrationViewModel.ThumbnailStreams[Option].AsStreamForRead()],
                 TaskScheduler.FromCurrentSynchronizationContext());
             AddHistory();
             await LoadOriginalImage();
@@ -210,7 +208,7 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
             if (App.AppViewModel.AppSetting.UseFileCache && await App.AppViewModel.Cache.ExistsAsync(cacheKey))
             {
                 AdvancePhase(LoadingPhase.LoadingFromCache);
-                OriginalImageSources = await App.AppViewModel.Cache.GetAsync<IList<IRandomAccessStream>>(cacheKey);
+                OriginalImageSources = await App.AppViewModel.Cache.GetAsync<IReadOnlyList<Stream>>(cacheKey);
                 LoadSuccessfully = true;
             }
             else if (IllustrationViewModel.IsUgoira)
@@ -226,8 +224,8 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
                 {
                     case Result<Stream>.Success(var zipStream):
                         AdvancePhase(LoadingPhase.MergingUgoiraFrames);
-                        OriginalImageSources = (await IoHelper.GetStreamsFromZipStreamAsync(zipStream)).ToArray();
-                        MsIntervals = metadata.UgoiraMetadataInfo.Frames.Select(x => (int)x.Delay)?.ToArray();
+                        OriginalImageSources = [.. await IoHelper.GetStreamsFromZipStreamAsync(zipStream)];
+                        MsIntervals = metadata.UgoiraMetadataInfo.Frames.Select(x => (int)x.Delay).ToArray();
                         break;
                     case Result<Stream>.Failure(OperationCanceledException):
                         return;
@@ -239,14 +237,14 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
             {
                 var url = IllustrationViewModel.OriginalStaticUrl;
                 AdvancePhase(LoadingPhase.DownloadingImage);
-                var ras = await App.AppViewModel.MakoClient.DownloadRandomAccessStreamAsync(url, new Progress<double>(d =>
+                var ras = await App.AppViewModel.MakoClient.DownloadStreamAsync(url, new Progress<double>(d =>
                 {
                     LoadingProgress = d;
                     AdvancePhase(LoadingPhase.DownloadingImage);
                 }), ImageLoadingCancellationHandle);
                 switch (ras)
                 {
-                    case Result<IRandomAccessStream>.Success(var s):
+                    case Result<Stream>.Success(var s):
                         OriginalImageSources = [s];
                         break;
                     default:
@@ -273,13 +271,13 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
     private void InitializeCommands()
     {
         SaveCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
-        SaveCommand.ExecuteRequested += (_, _) => IllustrationViewModel.SaveCommand.Execute((IllustrationViewerPageViewModel.WindowContent, (Func<IProgress<int>?, Task<IRandomAccessStream?>>)GetOriginalImageSourceAsync));
+        SaveCommand.ExecuteRequested += (_, _) => IllustrationViewModel.SaveCommand.Execute((IllustrationViewerPageViewModel.WindowContent, (Func<IProgress<int>?, Task<Stream?>>)GetOriginalImageSourceAsync));
 
         SaveAsCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
-        SaveAsCommand.ExecuteRequested += (_, _) => IllustrationViewModel.SaveAsCommand.Execute((IllustrationViewerPageViewModel.Window, (Func<IProgress<int>?, Task<IRandomAccessStream?>>)GetOriginalImageSourceAsync));
+        SaveAsCommand.ExecuteRequested += (_, _) => IllustrationViewModel.SaveAsCommand.Execute((IllustrationViewerPageViewModel.Window, (Func<IProgress<int>?, Task<Stream?>>)GetOriginalImageSourceAsync));
 
         CopyCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
-        CopyCommand.ExecuteRequested += (_, _) => IllustrationViewModel.CopyCommand.Execute((IllustrationViewerPageViewModel.WindowContent, (Func<IProgress<int>?, Task<IRandomAccessStream?>>)GetOriginalImageSourceAsync));
+        CopyCommand.ExecuteRequested += (_, _) => IllustrationViewModel.CopyCommand.Execute((IllustrationViewerPageViewModel.WindowContent, (Func<IProgress<int>?, Task<Stream?>>)GetOriginalImageSourceAsync));
     }
 
     private void UpdateCommandCanExecute()

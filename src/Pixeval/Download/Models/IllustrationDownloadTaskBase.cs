@@ -20,8 +20,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
-using Windows.Storage.Streams;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Pixeval.Database;
 using Pixeval.Utilities;
@@ -82,7 +82,7 @@ public abstract class IllustrationDownloadTaskBase(DownloadHistoryEntry entry) :
         });
     }
 
-    public abstract Task DownloadAsync(Func<string, IProgress<double>?, CancellationHandle?, Task<Result<IRandomAccessStream>>> downloadRandomAccessStreamAsync);
+    public abstract Task DownloadAsync(Func<string, IProgress<double>?, CancellationHandle?, Task<Result<Stream>>> downloadStreamAsync);
 
     public void Report(double value) => ProgressPercentage = value;
 }

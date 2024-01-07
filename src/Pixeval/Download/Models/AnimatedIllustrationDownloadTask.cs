@@ -36,9 +36,9 @@ public class AnimatedIllustrationDownloadTask(
 {
     protected UgoiraMetadataResponse Metadata { get; set; } = metadata;
 
-    protected override async Task ManageStream(IRandomAccessStream stream, string destination)
+    protected override async Task ManageStream(Stream stream, string destination)
     {
-        using var ugoiraStream = await IoHelper.GetStreamFromZipStreamAsync(stream.AsStreamForRead(), Metadata);
+        using var ugoiraStream = await IoHelper.GetStreamFromZipStreamAsync(stream, Metadata);
         await IoHelper.CreateAndWriteToFileAsync(ugoiraStream, destination);
     }
 }
