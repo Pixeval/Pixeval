@@ -22,28 +22,17 @@ using System;
 using System.IO;
 using Windows.Foundation;
 using Windows.System;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Input;
 using Pixeval.Controls;
 using Pixeval.Download;
-using Pixeval.Options;
+using Pixeval.Download.Models;
 using Pixeval.Util.UI;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
 
 namespace Pixeval.Pages.Download;
 
-[DependencyProperty<DownloadListEntryViewModel>("ViewModel", propertyChanged: nameof(OnViewModelChanged))]
-[DependencyProperty<string>("Title")]
-[DependencyProperty<string>("Description")]
-[DependencyProperty<double>("Progress")]
-[DependencyProperty<string>("ProgressMessage")]
-[DependencyProperty<string>("ActionButtonContent")]
-[DependencyProperty<bool>("IsRedownloadItemEnabled")]
-[DependencyProperty<bool>("IsCancelItemEnabled")]
-[DependencyProperty<bool>("IsShowErrorDetailDialogItemEnabled")]
+[DependencyProperty<DownloadListEntryViewModel>("ViewModel")]
 public sealed partial class DownloadListEntry : IViewModelControl
 {
     object IViewModelControl.ViewModel => ViewModel;
@@ -51,15 +40,6 @@ public sealed partial class DownloadListEntry : IViewModelControl
     public DownloadListEntry() => InitializeComponent();
 
     public event TypedEventHandler<DownloadListEntry, DownloadListEntryViewModel>? OpenIllustrationRequested;
-
-    private static void OnViewModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-    {
-        if (d is DownloadListEntry entry && e.NewValue is DownloadListEntryViewModel value)
-        {
-            ToolTipService.SetToolTip(entry, value.Illustrate.Title);
-            ToolTipService.SetPlacement(entry, PlacementMode.Mouse);
-        }
-    }
 
     private async void ActionButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
@@ -75,7 +55,9 @@ public sealed partial class DownloadListEntry : IViewModelControl
             case DownloadState.Error:
             case DownloadState.Cancelled:
             case DownloadState.Completed:
-                _ = await Launcher.LaunchUriAsync(new Uri(ViewModel.DownloadTask.Destination));
+                _ = await (ViewModel.DownloadTask is MangaDownloadTask
+                    ? Launcher.LaunchFolderPathAsync(Path.GetDirectoryName(ViewModel.DownloadTask.Destination))
+                    : Launcher.LaunchUriAsync(new Uri(ViewModel.DownloadTask.Destination)));
                 break;
             case DownloadState.Paused:
                 ViewModel.DownloadTask.CancellationHandle.Resume();

@@ -22,7 +22,6 @@ using System.Linq;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
-using Pixeval.CoreApi.Model;
 using Pixeval.Messages;
 using Pixeval.Misc;
 using Pixeval.Util;

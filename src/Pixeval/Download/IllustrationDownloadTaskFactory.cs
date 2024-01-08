@@ -20,7 +20,6 @@
 
 using System.IO;
 using System.Threading.Tasks;
-using Windows.Storage.Streams;
 using Microsoft.Extensions.DependencyInjection;
 using Pixeval.Controls.IllustrationView;
 using Pixeval.Database;
@@ -58,7 +57,7 @@ public class IllustrationDownloadTaskFactory : IDownloadTaskFactory<Illustration
                     DownloadItemType.Ugoira,
                     context.Id,
                     url);
-                return new AnimatedIllustrationDownloadTask(downloadHistoryEntry, context, metadata);
+                return new UgoiraDownloadTask(downloadHistoryEntry, context, metadata);
             }
             else if (context.MangaIndex is -1 && context.IsManga)
             {
@@ -97,24 +96,29 @@ public class IllustrationDownloadTaskFactory : IDownloadTaskFactory<Illustration
             _ = manager.Delete(entry => entry.Destination == path);
         }
 
-        var type = context switch
+        DownloadItemType type;
+        switch (context)
         {
-            { IsUgoira: true } => DownloadItemType.Ugoira,
-            { IsManga: true, MangaIndex: -1 } => DownloadItemType.Manga, // 未使用的分支
-            _ => DownloadItemType.Illustration
-        };
-        string url;
-        if (context.IsUgoira)
-        {
-            (var metadata, url) = await context.GetUgoiraOriginalUrlAsync();
+            case { IsUgoira: true }:
+            {
+                var (metadata, url) = await context.GetUgoiraOriginalUrlAsync();
+                var entry = new DownloadHistoryEntry(DownloadState.Queued, path, DownloadItemType.Ugoira, context.Id, url);
+                return new IntrinsicUgoiraDownloadTask(entry, context, metadata, stream);
+            }
+            case { IsManga: true, MangaIndex: -1 }: // 未使用的分支
+            {
+                var url = context.OriginalStaticUrl;
+                var entry = new DownloadHistoryEntry(DownloadState.Queued, path, DownloadItemType.Manga, context.Id, url);
+                return new IntrinsicMangaDownloadTask(entry, context, [stream]);
+                break;
+            }
+            default:
+            {
+                var url = context.OriginalStaticUrl;
+                var entry = new DownloadHistoryEntry(DownloadState.Queued, path, DownloadItemType.Illustration, context.Id, url);
+                return new IntrinsicIllustrationDownloadTask(entry, context, stream);
+                break;
+            }
         }
-        else
-        {
-            url = context.OriginalStaticUrl;
-        }
-        var entry = new DownloadHistoryEntry(DownloadState.Queued, path, type, context.Id, url);
-        return type is DownloadItemType.Manga
-            ? new IntrinsicMangaDownloadTask(entry, context, [stream]) // 未使用的分支
-            : new IntrinsicIllustrationDownloadTask(entry, context, stream);
     }
 }

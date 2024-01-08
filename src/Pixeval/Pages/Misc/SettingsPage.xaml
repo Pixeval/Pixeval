@@ -467,6 +467,16 @@
                 </controls:SettingsExpander>
 
                 <controls:SettingsExpander
+                    x:Uid="/SettingsPage/IllustrationDownloadFormatEntry"
+                    HeaderIcon="{markup:FontSymbolIcon Glyph=PictureE8B9}"
+                    Tag="{x:Bind pixeval:SettingEntry.IllustrationDownloadFormat}">
+                    <controls:SettingsExpander.Items>
+                        <controls:SettingsCard ContentAlignment="Left">
+                            <controls1:SettingRadioButtons ItemsSource="{x:Bind models:IllustrationDownloadFormatSettingEntryItem.AvailableItems}" SelectedItem="{x:Bind _viewModel.IllustrationDownloadFormat, Mode=TwoWay}" />
+                        </controls:SettingsCard>
+                    </controls:SettingsExpander.Items>
+                </controls:SettingsExpander>
+                <controls:SettingsExpander
                     x:Uid="/SettingsPage/UgoiraDownloadFormatEntry"
                     HeaderIcon="{markup:FontSymbolIcon Glyph=GIFF4A9}"
                     Tag="{x:Bind pixeval:SettingEntry.UgoiraDownloadFormat}">

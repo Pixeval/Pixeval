@@ -480,7 +480,7 @@
     <value>指定下载动图的格式</value>
   </data>
   <data name="UgoiraDownloadFormatEntry.Header" xml:space="preserve">
-    <value>下载动图格式</value>
+    <value>下载动图的格式</value>
   </data>
   <data name="UseFileCacheEntry.Description" xml:space="preserve">
     <value>开启此选项后会减少网络流量消耗并提升浏览体验，但是会增加 CPU 占用以及硬盘读写</value>
@@ -499,5 +499,11 @@
   </data>
   <data name="ViewPixevalWebsiteHyperlinkButton.Content" xml:space="preserve">
     <value>介绍网页</value>
+  </data>
+  <data name="IllustrationDownloadFormatEntry.Description" xml:space="preserve">
+    <value>指定下载静态图的格式</value>
+  </data>
+  <data name="IllustrationDownloadFormatEntry.Header" xml:space="preserve">
+    <value>下载静态图的格式</value>
   </data>
 </root>

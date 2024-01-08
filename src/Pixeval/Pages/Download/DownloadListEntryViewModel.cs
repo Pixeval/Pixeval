@@ -18,8 +18,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System;
-using CommunityToolkit.Mvvm.ComponentModel;
 using Pixeval.Controls.IllustrationView;
 using Pixeval.Download;
 using Pixeval.Download.Models;
@@ -28,51 +26,59 @@ using WinUI3Utilities;
 
 namespace Pixeval.Pages.Download;
 
-public sealed partial class DownloadListEntryViewModel(IllustrationDownloadTask downloadTask)
-    : IllustrationItemViewModel(downloadTask.IllustrationViewModel.Illustrate)
+/// <inheritdoc/>
+public sealed class DownloadListEntryViewModel : IllustrationItemViewModel
 {
-    [ObservableProperty]
-    private IllustrationDownloadTask _downloadTask = downloadTask;
+    public IllustrationDownloadTask DownloadTask { get; }
 
-    public static string GetEntryProgressMessage(DownloadState currentState, double progress, Exception? errorCause)
+    public DownloadListEntryViewModel(IllustrationDownloadTask downloadTask) : base(downloadTask.IllustrationViewModel.Illustrate)
     {
-        return currentState switch
+        DownloadTask = downloadTask;
+        DownloadTask.PropertyChanged += (_, e) =>
         {
-            DownloadState.Queued => DownloadListEntryResources.DownloadQueued,
-            DownloadState.Running => DownloadListEntryResources.DownloadRunningFormatted.Format((int)progress),
-            DownloadState.Error => DownloadListEntryResources.DownloadErrorMessageFormatted.Format(errorCause!.Message),
-            DownloadState.Completed => DownloadListEntryResources.DownloadCompleted,
-            DownloadState.Cancelled => DownloadListEntryResources.DownloadCancelled,
-            DownloadState.Paused => DownloadListEntryResources.DownloadPaused,
-            _ => ThrowHelper.ArgumentOutOfRange<DownloadState, string>(currentState)
+            switch (e.PropertyName)
+            {
+                case nameof(IllustrationDownloadTask.CurrentState):
+                    OnPropertyChanged(nameof(ProgressMessage));
+                    OnPropertyChanged(nameof(ActionButtonContent));
+                    OnPropertyChanged(nameof(IsRedownloadItemEnabled));
+                    OnPropertyChanged(nameof(IsCancelItemEnabled));
+                    OnPropertyChanged(nameof(IsError));
+                    OnPropertyChanged(nameof(IsPaused));
+                    break;
+                case nameof(IllustrationDownloadTask.ProgressPercentage):
+                    OnPropertyChanged(nameof(ProgressMessage));
+                    break;
+            }
         };
     }
 
-    public static string GetEntryActionButtonContent(DownloadState currentState)
+    public string ProgressMessage => DownloadTask.CurrentState switch
     {
-        return currentState switch
-        {
-            DownloadState.Queued => DownloadListEntryResources.DownloadCancelledAction,
-            DownloadState.Running => DownloadListEntryResources.ActionButtonContentPause,
-            DownloadState.Cancelled or DownloadState.Error => DownloadListEntryResources.ActionButtonContentRetry,
-            DownloadState.Completed => DownloadListEntryResources.ActionButtonContentOpen,
-            DownloadState.Paused => DownloadListEntryResources.ActionButtonContentResume,
-            _ => ThrowHelper.ArgumentOutOfRange<DownloadState, string>(currentState)
-        };
-    }
+        DownloadState.Queued => DownloadListEntryResources.DownloadQueued,
+        DownloadState.Running => DownloadListEntryResources.DownloadRunningFormatted.Format((int)DownloadTask.ProgressPercentage),
+        DownloadState.Error => DownloadListEntryResources.DownloadErrorMessageFormatted.Format(DownloadTask.ErrorCause?.Message),
+        DownloadState.Completed => DownloadListEntryResources.DownloadCompleted,
+        DownloadState.Cancelled => DownloadListEntryResources.DownloadCancelled,
+        DownloadState.Paused => DownloadListEntryResources.DownloadPaused,
+        _ => ThrowHelper.ArgumentOutOfRange<DownloadState, string>(DownloadTask.CurrentState)
+    };
 
-    public static bool GetIsRedownloadItemEnabled(DownloadState currentState)
+    public string ActionButtonContent => DownloadTask.CurrentState switch
     {
-        return currentState is DownloadState.Completed or DownloadState.Error;
-    }
+        DownloadState.Queued => DownloadListEntryResources.DownloadCancelledAction,
+        DownloadState.Running => DownloadListEntryResources.ActionButtonContentPause,
+        DownloadState.Cancelled or DownloadState.Error => DownloadListEntryResources.ActionButtonContentRetry,
+        DownloadState.Completed => DownloadListEntryResources.ActionButtonContentOpen,
+        DownloadState.Paused => DownloadListEntryResources.ActionButtonContentResume,
+        _ => ThrowHelper.ArgumentOutOfRange<DownloadState, string>(DownloadTask.CurrentState)
+    };
 
-    public static bool GetIsEntryCancelDownloadItemEnabled(DownloadState currentState)
-    {
-        return currentState is DownloadState.Running or DownloadState.Queued;
-    }
+    public bool IsRedownloadItemEnabled => DownloadTask.CurrentState is DownloadState.Completed or DownloadState.Error;
 
-    public static bool GetIsShowErrorDetailDialogItemEnabled(DownloadState currentState)
-    {
-        return currentState is DownloadState.Error;
-    }
+    public bool IsCancelItemEnabled => DownloadTask.CurrentState is DownloadState.Running or DownloadState.Queued;
+
+    public bool IsError => DownloadTask.CurrentState is DownloadState.Error;
+
+    public bool IsPaused => DownloadTask.CurrentState is DownloadState.Paused;
 }

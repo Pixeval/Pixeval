@@ -3,7 +3,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/MangaDownloadTask.cs
+// Copyright (c) 2024 Pixeval/IntrinsicAnimatedIllustrationDownloadTask.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -24,24 +24,33 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 using Pixeval.Controls.IllustrationView;
+using Pixeval.CoreApi.Net.Response;
 using Pixeval.Database;
 using Pixeval.Utilities;
 using Pixeval.Utilities.Threading;
 
 namespace Pixeval.Download.Models;
 
-public class MangaDownloadTask(DownloadHistoryEntry entry, IllustrationItemViewModel illustration)
-    : IllustrationDownloadTask(entry, illustration)
+public class IntrinsicUgoiraDownloadTask : UgoiraDownloadTask
 {
-    protected int CurrentIndex { get; private set; }
-
-    public override async Task DownloadAsync(
-        Func<string, IProgress<double>?, CancellationHandle?, Task<Result<Stream>>> downloadStreamAsync)
+    /// <summary>
+    /// The disposal of <paramref name="stream" /> is not handled
+    /// </summary>
+    public IntrinsicUgoiraDownloadTask(DownloadHistoryEntry entry, IllustrationItemViewModel illustrationViewModel, UgoiraMetadataResponse metadata, Stream stream) : base(entry, illustrationViewModel, metadata)
     {
-        for (CurrentIndex = 0; CurrentIndex < Urls.Count; ++CurrentIndex)
-        {
-            var dest = Destination.Format(CurrentIndex);
-            await base.DownloadAsyncCore(downloadStreamAsync, Urls[CurrentIndex], dest);
-        }
+        Report(100);
+        Stream = stream;
+    }
+
+    public Stream Stream { get; }
+
+    protected override async Task DownloadAsyncCore(Func<string, IProgress<double>?, CancellationHandle?, Task<Result<Stream>>> _, string url, string destination)
+    {
+        if (!App.AppViewModel.AppSetting.OverwriteDownloadedFile && File.Exists(destination))
+            return;
+
+        Stream.Position = 0;
+
+        await ManageStream(Stream, destination);
     }
 }

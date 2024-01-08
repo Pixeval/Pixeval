@@ -103,9 +103,9 @@ public class DownloadHistoryPersistentManager(ILiteDatabase collection, int maxi
     {
         return entry.Type switch
         {
-            DownloadItemType.Ugoira => new LazyInitializedAnimatedIllustrationDownloadTask(entry) { CurrentState = DownloadState.Completed },
+            DownloadItemType.Ugoira => new LazyInitializedUgoiraDownloadTask(entry) { CurrentState = DownloadState.Completed },
             DownloadItemType.Manga => new LazyInitializedMangaDownloadTask(entry) { CurrentState = DownloadState.Completed },
-            _ => new LazyInitializedSingleIllustrationDownloadTask(entry) { CurrentState = DownloadState.Completed }
+            _ => new LazyInitializedIllustrationDownloadTask(entry) { CurrentState = DownloadState.Completed }
         };
     }
 }

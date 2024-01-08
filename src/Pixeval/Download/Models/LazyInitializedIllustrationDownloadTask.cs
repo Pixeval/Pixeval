@@ -21,14 +21,13 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
-using Windows.Storage.Streams;
 using Pixeval.Database;
 using Pixeval.Utilities;
 using Pixeval.Utilities.Threading;
 
 namespace Pixeval.Download.Models;
 
-public class LazyInitializedSingleIllustrationDownloadTask(DownloadHistoryEntry entry)
+public class LazyInitializedIllustrationDownloadTask(DownloadHistoryEntry entry)
     : IllustrationDownloadTask(entry, null!), ILazyLoadDownloadTask
 {
     private readonly long _illustId = entry.Id;

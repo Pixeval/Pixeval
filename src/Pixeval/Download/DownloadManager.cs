@@ -177,6 +177,7 @@ public class DownloadManager<TDownloadTask> : IDisposable where TDownloadTask : 
             ThreadingHelper.DispatchTask(() => task.ErrorCause = e);
             SetState(task, DownloadState.Error);
             task.Completion.SetException(e);
+            return;
         }
 
         SetState(task, DownloadState.Completed);

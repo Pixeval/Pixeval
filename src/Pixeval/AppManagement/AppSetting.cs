@@ -203,6 +203,10 @@ public partial record AppSetting : IWindowSettings
     [SettingMetadata(SettingEntryCategory.Download, typeof(SettingsPageResources), nameof(SettingsPageResources.UgoiraDownloadFormatEntryHeader))]
     public UgoiraDownloadFormat UgoiraDownloadFormat { get; set; }
 
+    [DefaultValue(IllustrationDownloadFormat.Png)]
+    [SettingMetadata(SettingEntryCategory.Download, typeof(SettingsPageResources), nameof(SettingsPageResources.IllustrationDownloadFormatEntryHeader))]
+    public IllustrationDownloadFormat IllustrationDownloadFormat { get; set; }
+
     [DefaultValue(false)]
     [SettingMetadata(SettingEntryCategory.Download, typeof(SettingsPageResources), nameof(SettingsPageResources.OverwriteDownloadedFileEntryHeader))]
     public bool OverwriteDownloadedFile { get; set; }

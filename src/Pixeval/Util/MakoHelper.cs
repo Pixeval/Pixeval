@@ -95,14 +95,6 @@ public static class MakoHelper
         return new Uri($"{AppContext.AppProtocol}://user/{id}");
     }
 
-    public static string GetStaticImageFormat(this IllustrationItemViewModel illustration)
-    {
-        if (illustration.IsUgoira)
-            return ThrowHelper.Argument<bool, string>(illustration.IsUgoira, "Needs static illustration.");
-        var url = illustration.OriginalStaticUrl;
-        return url[url.LastIndexOf('.')..];
-    }
-
     public static async Task<string> GetIllustrationThumbnailCacheKeyAsync(this IllustrationItemViewModel illustration, ThumbnailUrlOption thumbnailUrlOption = ThumbnailUrlOption.Medium)
     {
         return $"thumbnail-{thumbnailUrlOption}-{await illustration.GetOriginalSourceUrlAsync()}";

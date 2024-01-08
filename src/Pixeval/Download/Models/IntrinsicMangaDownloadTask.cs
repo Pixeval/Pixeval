@@ -28,6 +28,7 @@ using Pixeval.Controls.IllustrationView;
 using Pixeval.Database;
 using Pixeval.Utilities;
 using Pixeval.Utilities.Threading;
+using SixLabors.ImageSharp;
 using WinUI3Utilities;
 
 namespace Pixeval.Download.Models;

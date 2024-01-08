@@ -23,7 +23,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Windows.Storage.Streams;
 using Windows.System;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Extensions.DependencyInjection;
@@ -40,6 +39,7 @@ using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using Pixeval.Utilities.Threading;
+using SixLabors.ImageSharp;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
@@ -124,7 +124,7 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
     /// </summary>
     public bool IsFit => ShowMode is ZoomableImageMode.Fit;
 
-    public async Task<Stream?> GetOriginalImageSourceAsync(IProgress<int>? progress = null)
+    public async Task<Stream?> GetOriginalImageSourceAsync(bool useBmp, IProgress<int>? progress = null)
     {
         if (OriginalImageSources is null)
             return null;
@@ -135,7 +135,7 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
         if (OriginalImageSources.FirstOrDefault() is { } stream)
         {
             stream.Position = 0;
-            return await stream.SaveAsPngStreamAsync(false);
+            return await stream.IllustrationSaveToStreamAsync(useBmp ? IllustrationDownloadFormat.Bmp : null);
         }
 
         return null;
@@ -222,7 +222,7 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
                 {
                     case Result<Stream>.Success(var zipStream):
                         AdvancePhase(LoadingPhase.MergingUgoiraFrames);
-                        OriginalImageSources = [.. await IoHelper.GetStreamsFromZipStreamAsync(zipStream)];
+                        OriginalImageSources = [.. await IoHelper.ReadZipArchiveEntries(zipStream)];
                         MsIntervals = metadata.UgoiraMetadataInfo.Frames.Select(x => (int)x.Delay).ToArray();
                         break;
                     case Result<Stream>.Failure(OperationCanceledException):
@@ -269,13 +269,13 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
     private void InitializeCommands()
     {
         SaveCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
-        SaveCommand.ExecuteRequested += (_, _) => IllustrationViewModel.SaveCommand.Execute((IllustrationViewerPageViewModel.WindowContent, (Func<IProgress<int>?, Task<Stream?>>)GetOriginalImageSourceAsync));
+        SaveCommand.ExecuteRequested += (_, _) => IllustrationViewModel.SaveCommand.Execute((IllustrationViewerPageViewModel.WindowContent, (Func<IProgress<int>?, Task<Stream?>>)(p => GetOriginalImageSourceAsync(false, p))));
 
         SaveAsCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
-        SaveAsCommand.ExecuteRequested += (_, _) => IllustrationViewModel.SaveAsCommand.Execute((IllustrationViewerPageViewModel.Window, (Func<IProgress<int>?, Task<Stream?>>)GetOriginalImageSourceAsync));
+        SaveAsCommand.ExecuteRequested += (_, _) => IllustrationViewModel.SaveAsCommand.Execute((IllustrationViewerPageViewModel.Window, (Func<IProgress<int>?, Task<Stream?>>)(p => GetOriginalImageSourceAsync(false, p))));
 
         CopyCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
-        CopyCommand.ExecuteRequested += (_, _) => IllustrationViewModel.CopyCommand.Execute((IllustrationViewerPageViewModel.WindowContent, (Func<IProgress<int>?, Task<Stream?>>)GetOriginalImageSourceAsync));
+        CopyCommand.ExecuteRequested += (_, _) => IllustrationViewModel.CopyCommand.Execute((IllustrationViewerPageViewModel.WindowContent, (Func<IProgress<int>?, Task<Stream?>>)(p => GetOriginalImageSourceAsync(true, p))));
     }
 
     private void UpdateCommandCanExecute()

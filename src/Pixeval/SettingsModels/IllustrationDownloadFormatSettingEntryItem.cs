@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/IDownloadTask.cs
+// Copyright (c) 2023 Pixeval/UgoiraDownloadFormatSettingEntryItem.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -19,26 +19,19 @@
 #endregion
 
 using System;
-using System.IO;
-using System.Threading.Tasks;
-using Pixeval.Utilities;
-using Pixeval.Utilities.Threading;
+using System.Collections.Generic;
+using System.Linq;
+using Pixeval.Attributes;
+using Pixeval.Controls;
+using Pixeval.Options;
 
-namespace Pixeval.Download.Models;
+namespace Pixeval.SettingsModels;
 
-public interface IDownloadTask
+public record IllustrationDownloadFormatSettingEntryItem : StringRepresentableItem, IAvailableItems
 {
-    string Destination { get; }
+    public IllustrationDownloadFormatSettingEntryItem(IllustrationDownloadFormat item) : base(item, item.GetLocalizedResourceContent()!)
+    {
+    }
 
-    CancellationHandle CancellationHandle { get; set; }
-
-    TaskCompletionSource Completion { get; }
-
-    DownloadState CurrentState { get; set; }
-
-    Exception? ErrorCause { get; set; }
-
-    double ProgressPercentage { get; }
-
-    Task DownloadAsync(Func<string, IProgress<double>?, CancellationHandle?, Task<Result<Stream>>> downloadStreamAsync);
+    public static IEnumerable<StringRepresentableItem> AvailableItems { get; } = Enum.GetValues<IllustrationDownloadFormat>().Select(a => new IllustrationDownloadFormatSettingEntryItem(a));
 }

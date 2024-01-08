@@ -21,8 +21,6 @@
 using System;
 using System.Buffers;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -37,6 +35,9 @@ using Windows.Security.Cryptography;
 using Windows.Storage;
 using Windows.Storage.Streams;
 using Pixeval.Utilities;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats;
+using SixLabors.ImageSharp.Formats.Png;
 
 namespace Pixeval.Util.IO;
 
@@ -48,14 +49,6 @@ public static partial class IoHelper
         var result = await sha1.ComputeHashAsync(stream);
         stream.Position = 0; // reset the stream
         return result.Select(b => b.ToString("X2")).Aggregate((acc, str) => acc + str);
-    }
-
-    public static async Task CreateAndWriteToFileAsync(Stream contentStream, string path)
-    {
-        CreateParentDirectories(path);
-        await using var stream = File.OpenWrite(path);
-        contentStream.Position = 0;
-        await contentStream.CopyToAsync(stream);
     }
 
     public static string NormalizePath(string path)
@@ -89,11 +82,10 @@ public static partial class IoHelper
         return stream;
     }
 
-    public static async Task<ImageFormat> DetectImageFormat(this IRandomAccessStream randomAccessStream)
+    public static async Task<IImageFormat> DetectImageFormat(this IRandomAccessStream randomAccessStream)
     {
         await using var stream = randomAccessStream.AsStream();
-        using var image = Image.FromStream(stream);
-        return image.RawFormat;
+        return await Image.DetectFormatAsync(stream);
     }
 
     public static async Task<string> ToBase64StringAsync(this IRandomAccessStream randomAccessStream)
@@ -108,7 +100,7 @@ public static partial class IoHelper
     {
         var base64Str = await randomAccessStream.ToBase64StringAsync();
         var format = await randomAccessStream.DetectImageFormat();
-        return $"data:image/{format.ToString().ToLower()},{base64Str}";
+        return $"data:image/{format?.Name.ToLower()},{base64Str}";
     }
 
     public static async Task WriteBytesAsync(this Stream stream, byte[] bytes)
@@ -187,7 +179,7 @@ public static partial class IoHelper
         return await Task.WhenAll(archive.Entries.Select(async entry =>
         {
             await using var stream = entry.Open();
-            var ms = new MemoryStream();
+            var ms = _recyclableMemoryStreamManager.GetStream();
             await stream.CopyToAsync(ms);
             ms.Position = 0;
             return ms;
@@ -197,17 +189,14 @@ public static partial class IoHelper
     public static async Task SaveToFileAsync(this IRandomAccessStream stream, StorageFile file)
     {
         stream.Seek(0);
-        using var dataReader = new DataReader(stream);
-        _ = await dataReader.LoadAsync((uint)stream.Size);
-        await FileIO.WriteBufferAsync(file, dataReader.ReadBuffer((uint)stream.Size));
-        _ = dataReader.DetachStream();
+        await stream.AsStreamForRead().CopyToAsync(await file.OpenStreamForWriteAsync());
     }
 
-    public static async Task DeleteAsync(string path)
+    public static void Delete(string path)
     {
         try
         {
-            await using var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.None, 4096, FileOptions.DeleteOnClose);
+            File.Delete(path);
         }
         catch
         {

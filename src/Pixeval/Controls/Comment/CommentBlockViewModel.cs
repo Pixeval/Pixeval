@@ -38,7 +38,7 @@ using AppContext = Pixeval.AppManagement.AppContext;
 
 namespace Pixeval.Controls;
 
-public partial class CommentBlockViewModel(CoreApi.Model.Comment comment, long illustrationId) : ObservableObject, IDisposable
+public partial class CommentBlockViewModel(Comment comment, long illustrationId) : ObservableObject, IDisposable
 {
     public const string AddCommentUrlSegment = "/v1/illust/comment/add";
 

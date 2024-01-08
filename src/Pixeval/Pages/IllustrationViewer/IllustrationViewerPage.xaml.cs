@@ -213,8 +213,8 @@ public sealed partial class IllustrationViewerPage : SupportCustomTitleBarDragRe
             if (_viewModel.CurrentImage.OriginalImageSources?.FirstOrDefault() is { } stream)
             {
                 stream.Position = 0;
-                var s = await stream.SaveToStreamAsync();
-                var file = await AppKnownFolders.CreateTemporaryFileWithRandomNameAsync(".png");
+                var s = await stream.IllustrationSaveToStreamAsync();
+                var file = await AppKnownFolders.CreateTemporaryFileWithRandomNameAsync(IoHelper.GetIllustrationExtension());
                 var target = await file.OpenStreamForWriteAsync();
                 await s.CopyToAsync(target);
                 request.Data.SetStorageItems([file]);

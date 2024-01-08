@@ -20,7 +20,6 @@
 
 using System.IO;
 using System.Threading.Tasks;
-using Windows.Storage.Streams;
 using Pixeval.Controls.IllustrationView;
 using Pixeval.CoreApi.Net.Response;
 using Pixeval.Database;
@@ -28,7 +27,7 @@ using Pixeval.Util.IO;
 
 namespace Pixeval.Download.Models;
 
-public class AnimatedIllustrationDownloadTask(
+public class UgoiraDownloadTask(
     DownloadHistoryEntry entry,
     IllustrationItemViewModel illustration,
     UgoiraMetadataResponse metadata)
@@ -38,7 +37,8 @@ public class AnimatedIllustrationDownloadTask(
 
     protected override async Task ManageStream(Stream stream, string destination)
     {
-        using var ugoiraStream = await IoHelper.GetStreamFromZipStreamAsync(stream, Metadata);
-        await IoHelper.CreateAndWriteToFileAsync(ugoiraStream, destination);
+        using var image = await IoHelper.GetImageFromZipStreamAsync(stream, Metadata);
+        IoHelper.SetImageTags(image, IllustrationViewModel.Illustrate);
+        await image.UgoiraSaveToFileAsync(destination);
     }
 }

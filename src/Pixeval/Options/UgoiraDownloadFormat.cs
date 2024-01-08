@@ -27,11 +27,29 @@ public enum UgoiraDownloadFormat
     [LocalizedResource(typeof(MiscResources), nameof(MiscResources.Tiff))]
     Tiff,
 
-    [LocalizedResource(typeof(MiscResources), nameof(MiscResources.APng))]
+    [LocalizedResource(typeof(MiscResources), nameof(MiscResources.Png))]
     APng,
 
     [LocalizedResource(typeof(MiscResources), nameof(MiscResources.Gif))]
     Gif,
+
+    [LocalizedResource(typeof(MiscResources), nameof(MiscResources.WebPLossy))]
+    WebPLossy,
+
+    [LocalizedResource(typeof(MiscResources), nameof(MiscResources.WebPLossless))]
+    WebPLossless
+}
+
+public enum IllustrationDownloadFormat
+{
+    [LocalizedResource(typeof(MiscResources), nameof(MiscResources.Jpg))]
+    Jpg,
+
+    [LocalizedResource(typeof(MiscResources), nameof(MiscResources.Png))]
+    Png,
+
+    [LocalizedResource(typeof(MiscResources), nameof(MiscResources.Bmp))]
+    Bmp,
 
     [LocalizedResource(typeof(MiscResources), nameof(MiscResources.WebPLossy))]
     WebPLossy,

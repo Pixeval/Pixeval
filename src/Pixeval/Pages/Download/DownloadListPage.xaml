@@ -95,19 +95,10 @@
             <controls:AdvancedItemsView.ItemTemplate>
                 <DataTemplate x:DataType="download:DownloadListEntryViewModel">
                     <ItemContainer>
-                        <!--  ReSharper disable once Xaml.PossibleNullReferenceException (Illustrate.User!.Name)  -->
                         <download:DownloadListEntry
-                            Title="{x:Bind Illustrate.Title}"
                             Margin="16"
-                            ActionButtonContent="{x:Bind download:DownloadListEntryViewModel.GetEntryActionButtonContent(DownloadTask.CurrentState), Mode=OneWay}"
-                            Description="{x:Bind Illustrate.User.Name}"
-                            IsCancelItemEnabled="{x:Bind download:DownloadListEntryViewModel.GetIsEntryCancelDownloadItemEnabled(DownloadTask.CurrentState), Mode=OneWay}"
-                            IsRedownloadItemEnabled="{x:Bind download:DownloadListEntryViewModel.GetIsRedownloadItemEnabled(DownloadTask.CurrentState), Mode=OneWay}"
-                            IsShowErrorDetailDialogItemEnabled="{x:Bind download:DownloadListEntryViewModel.GetIsShowErrorDetailDialogItemEnabled(DownloadTask.CurrentState), Mode=OneWay}"
                             Loaded="FrameworkElement_OnLoaded"
                             OpenIllustrationRequested="DownloadListEntry_OnOpenIllustrationRequested"
-                            Progress="{x:Bind DownloadTask.ProgressPercentage, Mode=OneWay}"
-                            ProgressMessage="{x:Bind download:DownloadListEntryViewModel.GetEntryProgressMessage(DownloadTask.CurrentState, DownloadTask.ProgressPercentage, DownloadTask.ErrorCause), Mode=OneWay}"
                             ViewModel="{x:Bind}" />
                     </ItemContainer>
                 </DataTemplate>

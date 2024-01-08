@@ -27,6 +27,7 @@ using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Utilities;
 using Pixeval.Utilities.Threading;
+using SixLabors.ImageSharp;
 
 namespace Pixeval.Download.Models;
 
@@ -69,6 +70,8 @@ public class IllustrationDownloadTask(DownloadHistoryEntry entry, IllustrationIt
     /// <returns></returns>
     protected virtual async Task ManageStream(Stream stream, string destination)
     {
-        await IoHelper.CreateAndWriteToFileAsync(stream, destination);
+        using var image = await Image.LoadAsync(stream);
+        IoHelper.SetImageTags(image, IllustrationViewModel.Illustrate);
+        await image.IllustrationSaveToFileAsync(destination);
     }
 }

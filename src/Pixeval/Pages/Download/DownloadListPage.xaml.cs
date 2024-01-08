@@ -27,7 +27,6 @@ using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Dialogs;
 using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Util.IO;
-using Pixeval.Util.Threading;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using WinUI3Utilities;
@@ -76,7 +75,7 @@ public sealed partial class DownloadListPage
         {
             if (dialogContent.DeleteLocalFiles)
                 foreach (var downloadListEntryViewModel in _viewModel.SelectedEntries)
-                    IoHelper.DeleteAsync(downloadListEntryViewModel.DownloadTask.Destination).Discard();
+                    IoHelper.Delete(downloadListEntryViewModel.DownloadTask.Destination);
 
             _viewModel.RemoveSelectedItems();
         }
@@ -136,14 +135,14 @@ public sealed partial class DownloadListPage
         viewModel.CreateWindowWithPage(_viewModel.DataProvider.Source);
     }
 
-    private void DownloadListPage_OnUnloaded(object sender, RoutedEventArgs e)
-    {
-        _viewModel.Dispose();
-    }
-
     private async void FrameworkElement_OnLoaded(object sender, RoutedEventArgs e)
     {
         var item = sender.To<DownloadListEntry>();
         _ = await item.ViewModel.TryLoadThumbnail(_viewModel);
+    }
+
+    private void DownloadListPage_OnUnloaded(object sender, RoutedEventArgs e)
+    {
+        _viewModel.Dispose();
     }
 }

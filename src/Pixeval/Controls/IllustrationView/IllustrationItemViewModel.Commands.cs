@@ -228,7 +228,7 @@ public partial class IllustrationItemViewModel
             if (IsUgoira)
                 name = Id + IoHelper.GetUgoiraExtension();
             else if (MangaIndex is -1)
-                name = Id + this.GetStaticImageFormat();
+                name = Id + IoHelper.GetIllustrationExtension();
             else
                 name = $"{Id}_{MangaIndex}";
             return name;

@@ -115,7 +115,7 @@ public static partial class IoHelper
                     return Result<Stream>.AsFailure(_cancellationMark);
                 }
 
-                var resultStream = new MemoryStream();
+                var resultStream = _recyclableMemoryStreamManager.GetStream();
                 int bytesRead, totalRead = 0;
                 var buffer = ArrayPool<byte>.Shared.Rent(4096);
                 while ((bytesRead = await contentStream.ReadAsync(buffer)) != 0 && await awaiter)
