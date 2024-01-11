@@ -24,7 +24,10 @@ using System.Linq;
 using System.Numerics;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
+using Windows.Foundation;
 using Windows.Graphics;
+using Windows.Storage;
+using Windows.Storage.FileProperties;
 using Windows.Storage.Streams;
 using Microsoft.UI.Input;
 using Microsoft.UI.Windowing;
@@ -37,12 +40,14 @@ using Pixeval.AppManagement;
 using Pixeval.Controls;
 using Pixeval.Controls.IllustrationView;
 using Pixeval.Misc;
+using Pixeval.Options;
 using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using WinUI3Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
+using Pixeval.CoreApi.Net.Response;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
@@ -175,7 +180,7 @@ public sealed partial class IllustrationViewerPage : SupportCustomTitleBarDragRe
 
     private void ExitFullScreenKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => _viewModel.IsFullScreen = false;
 
-    private async void OnDataTransferManagerOnDataRequested(DataTransferManager _, DataRequestedEventArgs args)
+    private async void OnDataTransferManagerOnDataRequested(DataTransferManager sender, DataRequestedEventArgs args)
     {
         var vm = _viewModel.CurrentIllustration;
         if (!_viewModel.CurrentImage.LoadSuccessfully)
@@ -185,46 +190,41 @@ public sealed partial class IllustrationViewerPage : SupportCustomTitleBarDragRe
         var deferral = request.GetDeferral();
 
         var props = request.Data.Properties;
-        var webLink = MakoHelper.GenerateIllustrationWebUri(vm.Id);
 
         props.Title = IllustrationViewerPageResources.ShareTitleFormatted.Format(vm.Id);
         props.Description = vm.Illustrate.Title;
-        var randomAccessStream = AppContext.GetAssetStream("Images/logo44x44.ico").AsRandomAccessStream();
-        props.Square30x30Logo = RandomAccessStreamReference.CreateFromStream(randomAccessStream);
 
-        var thumbnailStream = await _viewModel.CurrentIllustration.GetThumbnailAsync();
-        props.Thumbnail = RandomAccessStreamReference.CreateFromStream(thumbnailStream.AsRandomAccessStream());
-        request.Data.SetWebLink(webLink);
-
+        var file = null as StorageFile;
         if (vm.IsUgoira)
         {
             if (_viewModel.CurrentImage.OriginalImageSources is { } streams)
             {
                 var metadata = await App.AppViewModel.MakoClient.GetUgoiraMetadataAsync(vm.Id);
-                var stream = await streams.UgoiraSaveToStreamAsync(metadata);
-                var file = await AppKnownFolders.CreateTemporaryFileWithRandomNameAsync(IoHelper.GetUgoiraExtension());
-                var target = await file.OpenStreamForWriteAsync();
-                await stream.CopyToAsync(target);
-                request.Data.SetStorageItems([file]);
+                file = await AppKnownFolders.CreateTemporaryFileWithRandomNameAsync(IoHelper.GetUgoiraExtension());
+                await using var target = await file.OpenStreamForWriteAsync();
+                _ = await streams.UgoiraSaveToStreamAsync(metadata.UgoiraMetadataInfo.Frames.Select(t => (int)t.Delay), target);
             }
         }
         else
         {
-            if (_viewModel.CurrentImage.OriginalImageSources?.FirstOrDefault() is { } stream)
+            if (_viewModel.CurrentImage.OriginalImageSources is [var s, ..])
             {
-                stream.Position = 0;
-                var s = await stream.IllustrationSaveToStreamAsync();
-                var file = await AppKnownFolders.CreateTemporaryFileWithRandomNameAsync(IoHelper.GetIllustrationExtension());
-                var target = await file.OpenStreamForWriteAsync();
-                await s.CopyToAsync(target);
-                request.Data.SetStorageItems([file]);
+                s.Position = 0;
+                file = await AppKnownFolders.CreateTemporaryFileWithRandomNameAsync(IoHelper.GetIllustrationExtension());
+                await using var target = await file.OpenStreamForWriteAsync();
+                _ = await s.IllustrationSaveToStreamAsync(target);
             }
         }
-        // SetBitmap 无效
-        // SetWebLink 后会导致 SetApplicationLink 无效
-        // request.Data.SetApplicationLink(MakoHelper.GenerateIllustrationAppUri(vm.Id));
-
+        if (file is not null)
+        {
+            request.Data.SetStorageItems([file]);
+            request.Data.ShareCanceled += FileDispose;
+            request.Data.ShareCompleted += FileDispose;
+        }
         deferral.Complete();
+        return;
+
+        async void FileDispose(DataPackage dataPackage, object o) => await file?.DeleteAsync(StorageDeleteOption.PermanentDelete);
     }
 
     private void NextButton_OnTapped(object sender, TappedRoutedEventArgs e)

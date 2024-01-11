@@ -121,18 +121,20 @@ public partial class IllustrationItemViewModel
 
     private void GenerateLinkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
-        if (App.AppViewModel.AppSetting.DisplayTeachingTipWhenGeneratingAppLink)
-            if (args.Parameter is TeachingTip teachingTip)
-                teachingTip.IsOpen = true;
-
         UiHelper.ClipboardSetText(MakoHelper.GenerateIllustrationAppUri(Id).ToString());
+
+        if (args.Parameter is TeachingTip teachingTip)
+            if (App.AppViewModel.AppSetting.DisplayTeachingTipWhenGeneratingAppLink)
+                teachingTip.IsOpen = true;
+            else
+                teachingTip?.ShowTeachingTipAndHide(IllustrationViewerPageResources.LinkCopiedToClipboard);
     }
 
     private void GenerateWebLinkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
         var link = MakoHelper.GenerateIllustrationWebUri(Id).ToString();
         UiHelper.ClipboardSetText(link);
-        (args.Parameter as FrameworkElement)?.ShowTeachingTipAndHide(IllustrationViewerPageResources.WebLinkCopiedToClipboardToastTitle);
+        (args.Parameter as FrameworkElement)?.ShowTeachingTipAndHide(IllustrationViewerPageResources.LinkCopiedToClipboard);
     }
 
     private async void OpenInWebBrowserCommandOnExecuteRequested(XamlUICommand xamlUiCommand, ExecuteRequestedEventArgs executeRequestedEventArgs)

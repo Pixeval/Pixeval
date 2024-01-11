@@ -33,6 +33,7 @@ using Pixeval.Util.IO;
 using Pixeval.Utilities;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
+using Windows.ApplicationModel;
 
 namespace Pixeval.AppManagement;
 
@@ -49,6 +50,8 @@ public static partial class AppContext
 
     public const string AppLogoNoCaptionUri = "ms-appx:///Assets/Images/logo-no-caption.png";
 
+    public const string IconApplicationUri = "ms-appx:///Images/logo44x44.ico";
+
     public static readonly string AppIconFontFamilyName = AppHelper.IsWindows11 ? "Segoe Fluent Icons" : "Segoe MDL2 Assets";
 
     public static readonly string DatabaseFilePath = AppKnownFolders.Local.Resolve("PixevalData.litedb");
@@ -63,6 +66,10 @@ public static partial class AppContext
 
     private static readonly WeakReference<Stream?> _pixivNoProfileStream = new(null);
 
+    private static readonly WeakReference<SoftwareBitmapSource?> _icon = new(null);
+
+    private static readonly WeakReference<Stream?> _iconStream = new(null);
+
     static AppContext()
     {
         // Keys in the RoamingSettings will be synced through the devices of the same user
@@ -71,9 +78,20 @@ public static partial class AppContext
         InitializeSession();
     }
 
-    public const string IconName = "logo44x44.ico";
+    public static string IconAbsolutePath => ApplicationUriToPath(new Uri(IconApplicationUri));
 
-    public static string IconAbsolutePath => Path.Combine(AppKnownFolders.Local.Self.Path, IconName);
+    public static string ApplicationUriToPath(Uri uri)
+    {
+        if (uri.Scheme is not "ms-appx")
+        {
+            // ms-appdata is handled by the caller.
+            throw new InvalidOperationException("Uri is not using the ms-appx or ms-appdata scheme");
+        }
+
+        var path = Uri.UnescapeDataString(uri.PathAndQuery).TrimStart('/');
+
+        return Path.Combine(Package.Current.InstalledPath, uri.Host, path);
+    }
 
     public static async Task<SoftwareBitmapSource> GetNotAvailableImageAsync()
     {
@@ -103,13 +121,18 @@ public static partial class AppContext
         return target;
     }
 
-    public static async Task WriteLogoIcoIfNotExist()
+    public static async Task<SoftwareBitmapSource> GetIconImageAsync()
     {
-        if (await AppKnownFolders.Local.TryGetFileRelativeToSelfAsync(IconName) is null)
-        {
-            var bytes = await GetAssetBytesAsync($"Images/{IconName}");
-            await (await AppKnownFolders.Local.CreateFileAsync(IconName)).WriteBytesAsync(bytes);
-        }
+        if (!_icon.TryGetTarget(out var target))
+            _icon.SetTarget(target = await GetIconImageStream().GetSoftwareBitmapSourceAsync(false));
+        return target;
+    }
+
+    public static Stream GetIconImageStream()
+    {
+        if (!_iconStream.TryGetTarget(out var target))
+            _iconStream.SetTarget(target = GetAssetStream("Images/logo44x44.ico"));
+        return target;
     }
 
     /// <summary>
@@ -124,12 +147,12 @@ public static partial class AppContext
 
     public static Stream GetAssetStream(string relativeToAssetsFolder)
     {
-        return File.OpenRead($"ms-appx:///Assets/{relativeToAssetsFolder}");
+        return File.OpenRead(ApplicationUriToPath(new Uri($"ms-appx:///Assets/{relativeToAssetsFolder}")));
     }
 
     public static async Task<byte[]> GetResourceBytesAsync(string path)
     {
-        return await File.ReadAllBytesAsync(path);
+        return await File.ReadAllBytesAsync(ApplicationUriToPath(new Uri(path)));
     }
 
     public static async Task<X509Certificate2> GetFakeCaRootCertificateAsync()

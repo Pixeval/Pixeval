@@ -91,8 +91,6 @@ public class AppViewModel(App app)
 
         AppHost = CreateHostBuilder().Build();
 
-        await AppContext.WriteLogoIcoIfNotExist();
-
         await AppKnownFolders.Temporary.ClearAsync();
         Cache = await FileCache.CreateDefaultAsync();
 

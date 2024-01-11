@@ -13,7 +13,6 @@
     xmlns:markup="using:Pixeval.Controls.MarkupExtensions"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:media="using:Microsoft.Xaml.Interactions.Media"
-    xmlns:system="using:System"
     xmlns:triggers="using:Pixeval.Util.Triggers"
     KeyboardAcceleratorPlacementMode="Hidden"
     Loaded="IllustrationViewerPage_OnLoaded"
@@ -250,10 +249,10 @@
                                         <Image
                                             Width="80"
                                             Height="80"
-                                            Tag="{x:Bind}"
                                             Loaded="FrameworkElement_OnLoaded"
                                             Source="{x:Bind ThumbnailSource, Mode=OneWay}"
-                                            Stretch="UniformToFill" />
+                                            Stretch="UniformToFill"
+                                            Tag="{x:Bind}" />
                                     </ItemContainer>
                                 </DataTemplate>
                             </controls:AdvancedItemsView.ItemTemplate>

@@ -55,9 +55,10 @@ public sealed partial class DownloadListEntry : IViewModelControl
             case DownloadState.Error:
             case DownloadState.Cancelled:
             case DownloadState.Completed:
-                _ = await (ViewModel.DownloadTask is MangaDownloadTask
-                    ? Launcher.LaunchFolderPathAsync(Path.GetDirectoryName(ViewModel.DownloadTask.Destination))
-                    : Launcher.LaunchUriAsync(new Uri(ViewModel.DownloadTask.Destination)));
+                if (!await (ViewModel.DownloadTask is MangaDownloadTask
+                        ? Launcher.LaunchFolderPathAsync(Path.GetDirectoryName(ViewModel.DownloadTask.Destination))
+                        : Launcher.LaunchUriAsync(new Uri(ViewModel.DownloadTask.Destination))))
+                    _ = await this.CreateAcknowledgementAsync("打开文件（夹）失败", "可能你已经删除了该图片");
                 break;
             case DownloadState.Paused:
                 ViewModel.DownloadTask.CancellationHandle.Resume();

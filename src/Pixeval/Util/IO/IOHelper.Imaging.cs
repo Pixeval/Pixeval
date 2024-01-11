@@ -90,26 +90,21 @@ public static partial class IoHelper
         // return await decoder.GetSoftwareBitmapAsync(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Premultiplied);
     }
 
-    public static async Task<MemoryStream> UgoiraSaveToStreamAsync(this IEnumerable<Stream> streams, UgoiraMetadataResponse ugoiraMetadataResponse, UgoiraDownloadFormat? ugoiraDownloadFormat = null)
-    {
-        return await streams.UgoiraSaveToStreamAsync(ugoiraMetadataResponse.UgoiraMetadataInfo.Frames.Select(t => (int)t.Delay));
-    }
-
     public static async Task UgoiraSaveToFileAsync(this Image image, string path, UgoiraDownloadFormat? ugoiraDownloadFormat = null)
     {
         CreateParentDirectories(path);
         await using var fileStream = File.OpenWrite(path);
-        await UgoiraSaveToStreamAsync(image, fileStream, ugoiraDownloadFormat);
+        _ = await UgoiraSaveToStreamAsync(image, fileStream, ugoiraDownloadFormat);
     }
 
     /// <summary>
-    ///     Writes the frames that are contained in <paramref name="streams" /> into <see cref="MemoryStream"/>
+    ///     Writes the frames that are contained in <paramref name="streams" /> into <see cref="Stream"/>
     ///     and encodes to <paramref name="ugoiraDownloadFormat"/> format
     /// </summary>
-    public static async Task<MemoryStream> UgoiraSaveToStreamAsync(this IEnumerable<Stream> streams, IEnumerable<int> delays, IProgress<int>? progress = null, UgoiraDownloadFormat? ugoiraDownloadFormat = null)
+    public static async Task<Stream> UgoiraSaveToStreamAsync(this IEnumerable<Stream> streams, IEnumerable<int> delays, Stream? target = null, IProgress<int>? progress = null, UgoiraDownloadFormat? ugoiraDownloadFormat = null)
     {
         using var image = await streams.UgoiraSaveToImageAsync(delays, progress);
-        var s = await image.UgoiraSaveToStreamAsync(_recyclableMemoryStreamManager.GetStream());
+        var s = await image.UgoiraSaveToStreamAsync(target ?? _recyclableMemoryStreamManager.GetStream());
         progress?.Report(100);
         return s;
     }
@@ -172,13 +167,13 @@ public static partial class IoHelper
     {
         CreateParentDirectories(path);
         await using var fileStream = File.OpenWrite(path);
-        await IllustrationSaveToStreamAsync(image, fileStream, illustrationDownloadFormat);
+        _ = await IllustrationSaveToStreamAsync(image, fileStream, illustrationDownloadFormat);
     }
 
-    public static async Task<MemoryStream> IllustrationSaveToStreamAsync(this Stream stream, IllustrationDownloadFormat? illustrationDownloadFormat = null)
+    public static async Task<Stream> IllustrationSaveToStreamAsync(this Stream stream, Stream? target = null, IllustrationDownloadFormat? illustrationDownloadFormat = null)
     {
         using var image = await Image.LoadAsync(stream);
-        return await IllustrationSaveToStreamAsync(image, _recyclableMemoryStreamManager.GetStream(), illustrationDownloadFormat);
+        return await IllustrationSaveToStreamAsync(image, target ?? _recyclableMemoryStreamManager.GetStream(), illustrationDownloadFormat);
     }
 
     public static async Task<T> IllustrationSaveToStreamAsync<T>(this Image image, T destination, IllustrationDownloadFormat? illustrationDownloadFormat = null) where T : Stream

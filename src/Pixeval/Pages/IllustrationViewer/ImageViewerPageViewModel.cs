@@ -130,12 +130,12 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
             return null;
 
         if (IllustrationViewModel.IsUgoira)
-            return await OriginalImageSources.UgoiraSaveToStreamAsync(MsIntervals ?? [], progress);
+            return await OriginalImageSources.UgoiraSaveToStreamAsync(MsIntervals ?? [], null, progress);
 
-        if (OriginalImageSources.FirstOrDefault() is { } stream)
+        if (OriginalImageSources is [var stream, ..])
         {
             stream.Position = 0;
-            return await stream.IllustrationSaveToStreamAsync(useBmp ? IllustrationDownloadFormat.Bmp : null);
+            return await stream.IllustrationSaveToStreamAsync(null, useBmp ? IllustrationDownloadFormat.Bmp : null);
         }
 
         return null;

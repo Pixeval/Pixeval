@@ -1,8 +1,9 @@
-#region Copyright (c) Pixeval/Pixeval
+#region Copyright
+
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/UgoiraDownloadFormat.cs
+// Copyright (c) 2024 Pixeval/IllustrationDownloadFormat.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -16,22 +17,23 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 #endregion
 
 using Pixeval.Attributes;
 
 namespace Pixeval.Options;
 
-public enum UgoiraDownloadFormat
+public enum IllustrationDownloadFormat
 {
-    [LocalizedResource(typeof(MiscResources), nameof(MiscResources.Tiff))]
-    Tiff,
+    [LocalizedResource(typeof(MiscResources), nameof(MiscResources.Jpg))]
+    Jpg,
 
     [LocalizedResource(typeof(MiscResources), nameof(MiscResources.Png))]
-    APng,
+    Png,
 
-    [LocalizedResource(typeof(MiscResources), nameof(MiscResources.Gif))]
-    Gif,
+    [LocalizedResource(typeof(MiscResources), nameof(MiscResources.Bmp))]
+    Bmp,
 
     [LocalizedResource(typeof(MiscResources), nameof(MiscResources.WebPLossy))]
     WebPLossy,
