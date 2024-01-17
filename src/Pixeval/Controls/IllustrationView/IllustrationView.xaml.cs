@@ -84,11 +84,8 @@ public sealed partial class IllustrationView
         vm.CreateWindowWithPage(ViewModel);
     }
 
-    private async void FrameworkElement_OnLoaded(object sender, RoutedEventArgs e)
+    private async void IllustrationItem_OnViewModelChanged(IllustrationItem thumbnail, IllustrationItemViewModel viewModel)
     {
-        var thumbnail = sender.To<IllustrationItem>();
-        var viewModel = thumbnail.ViewModel;
-
         if (await viewModel.TryLoadThumbnail(ViewModel))
         {
             if (thumbnail.IsFullyOrPartiallyVisible(this))

@@ -27,7 +27,7 @@
             <DataTemplate x:DataType="local:IllustrationItemViewModel">
                 <ItemContainer>
                     <local:IllustrationItem
-                        Loaded="FrameworkElement_OnLoaded"
+                        ViewModelChanged="IllustrationItem_OnViewModelChanged"
                         ThisRequired="IllustrationThumbnail_OnThisRequired"
                         ViewModel="{x:Bind}" />
                 </ItemContainer>

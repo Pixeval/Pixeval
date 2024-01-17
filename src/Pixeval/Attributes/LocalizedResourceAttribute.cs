@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -29,6 +29,7 @@ public class LocalizedResource(Type resourceLoader, string key, object? formatKe
     public Type ResourceLoader { get; } = resourceLoader;
 
     public string Key { get; } = key;
+
     public object? FormatKey { get; } = formatKey;
 }
 

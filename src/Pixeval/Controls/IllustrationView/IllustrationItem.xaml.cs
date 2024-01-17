@@ -29,10 +29,20 @@ using WinUI3Utilities.Attributes;
 
 namespace Pixeval.Controls.IllustrationView;
 
-[DependencyProperty<IllustrationItemViewModel>("ViewModel")]
+[DependencyProperty<IllustrationItemViewModel>("ViewModel", propertyChanged: nameof(OnViewModelChanged))]
 public sealed partial class IllustrationItem : IViewModelControl
 {
     object IViewModelControl.ViewModel => ViewModel;
+
+    public event Action<IllustrationItem, IllustrationItemViewModel>? ViewModelChanged;
+
+    private static void OnViewModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (d as IllustrationItem is { } illustrationItem)
+        {
+            illustrationItem.ViewModelChanged?.Invoke(illustrationItem, illustrationItem.ViewModel);
+        }
+    }
 
     public IllustrationItem() => InitializeComponent();
 
@@ -61,11 +71,11 @@ public sealed partial class IllustrationItem : IViewModelControl
         var illustration = viewModel.Illustrate;
         var thumbnailDirection = ThisRequired.Invoke().ThumbnailDirection;
         return thumbnailDirection switch
-            {
-                ThumbnailDirection.Landscape => IllustrationView.LandscapeHeight * illustration.Width / illustration.Height,
-                ThumbnailDirection.Portrait => IllustrationView.PortraitHeight * illustration.Width / illustration.Height,
-                _ => ThrowHelper.ArgumentOutOfRange<ThumbnailDirection, double>(thumbnailDirection)
-            };
+        {
+            ThumbnailDirection.Landscape => IllustrationView.LandscapeHeight * illustration.Width / illustration.Height,
+            ThumbnailDirection.Portrait => IllustrationView.PortraitHeight * illustration.Width / illustration.Height,
+            _ => ThrowHelper.ArgumentOutOfRange<ThumbnailDirection, double>(thumbnailDirection)
+        };
     }
 
     private Visibility IsImageLoaded(SoftwareBitmapSource? source) => source is null ? Visibility.Collapsed : Visibility.Visible;
