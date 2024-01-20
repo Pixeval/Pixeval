@@ -49,30 +49,28 @@
         PaneClosed="IllustrationInfoAndCommentsSplitView_OnPaneOpenedOrClosed"
         PaneOpened="IllustrationInfoAndCommentsSplitView_OnPaneOpenedOrClosed">
         <SplitView.Pane>
-            <Grid Width="330" HorizontalAlignment="Left">
-                <Grid
-                    Width="320"
-                    HorizontalAlignment="Left"
-                    Background="{StaticResource SystemControlBackgroundChromeMediumLowBrush}"
-                    Shadow="{x:Bind SidePanelShadow}"
-                    Translation="0,0,40">
-                    <NavigationView
-                        x:Name="InfoPaneNavigationView"
-                        IsBackButtonVisible="Collapsed"
-                        IsSettingsVisible="False"
-                        PaneDisplayMode="Top"
-                        SelectionChanged="IllustrationInfoAndCommentsNavigationViewOnSelectionChanged">
-                        <NavigationView.MenuItems>
-                            <NavigationViewItem
-                                x:Uid="/IllustrationViewerPage/IllustrationInfoTab"
-                                IsSelected="True"
-                                Tag="{x:Bind _viewModel.IllustrationInfoTag}" />
-                            <NavigationViewItem x:Uid="/IllustrationViewerPage/CommentsTab" Tag="{x:Bind _viewModel.CommentsTag}" />
-                            <NavigationViewItem x:Uid="/IllustrationViewerPage/RelatedWorksTab" Tag="{x:Bind _viewModel.RelatedWorksTag}" />
-                        </NavigationView.MenuItems>
-                        <Frame x:Name="IllustrationInfoAndCommentsFrame" Width="320" />
-                    </NavigationView>
-                </Grid>
+            <Grid
+                Width="320"
+                HorizontalAlignment="Left"
+                Background="{StaticResource SystemControlBackgroundChromeMediumLowBrush}"
+                Shadow="{x:Bind SidePanelShadow}"
+                Translation="0,0,40">
+                <NavigationView
+                    x:Name="InfoPaneNavigationView"
+                    IsBackButtonVisible="Collapsed"
+                    IsSettingsVisible="False"
+                    PaneDisplayMode="Top"
+                    SelectionChanged="IllustrationInfoAndCommentsNavigationViewOnSelectionChanged">
+                    <NavigationView.MenuItems>
+                        <NavigationViewItem
+                            x:Uid="/IllustrationViewerPage/IllustrationInfoTab"
+                            IsSelected="True"
+                            Tag="{x:Bind _viewModel.IllustrationInfoTag}" />
+                        <NavigationViewItem x:Uid="/IllustrationViewerPage/CommentsTab" Tag="{x:Bind _viewModel.CommentsTag}" />
+                        <NavigationViewItem x:Uid="/IllustrationViewerPage/RelatedWorksTab" Tag="{x:Bind _viewModel.RelatedWorksTag}" />
+                    </NavigationView.MenuItems>
+                    <Frame x:Name="IllustrationInfoAndCommentsFrame" Width="320" />
+                </NavigationView>
             </Grid>
         </SplitView.Pane>
         <Grid x:Name="IllustrationPresenterDockPanel" HorizontalAlignment="Stretch">
@@ -189,18 +187,18 @@
                                 Background="{StaticResource BottomCommandSectionBackground}"
                                 DefaultLabelPosition="Collapsed"
                                 OverflowButtonVisibility="Collapsed">
-                                <AppBarButton Width="50" Command="{x:Bind _viewModel.CurrentIllustration.BookmarkCommand}" />
+                                <AppBarButton Width="50" Command="{x:Bind _viewModel.CurrentIllustration.BookmarkCommand, Mode=OneWay}" />
                                 <AppBarButton
                                     Width="50"
-                                    Command="{x:Bind _viewModel.RotateCounterclockwiseCommand}"
+                                    Command="{x:Bind _viewModel.CurrentImage.RotateCounterclockwiseCommand, Mode=OneWay}"
                                     Icon="{markup:FontSymbolIcon Glyph=RotateE7AD,
                                                                  FlowDirection=RightToLeft,
                                                                  MirroredWhenRightToLeft=True}" />
                                 <AppBarToggleButton
                                     Width="50"
-                                    Command="{x:Bind _viewModel.MirrorCommand}"
+                                    Command="{x:Bind _viewModel.CurrentImage.MirrorCommand, Mode=OneWay}"
                                     IsChecked="{x:Bind _viewModel.CurrentImage.IsMirrored, Mode=OneWay}" />
-                                <AppBarButton Width="50" Command="{x:Bind _viewModel.RotateClockwiseCommand}" />
+                                <AppBarButton Width="50" Command="{x:Bind _viewModel.CurrentImage.RotateClockwiseCommand, Mode=OneWay}" />
                                 <AppBarButton Width="50" Command="{x:Bind _viewModel.CurrentImage.SaveCommand, Mode=OneWay}" />
                             </CommandBar>
                         </Border>
@@ -249,10 +247,10 @@
                                         <Image
                                             Width="80"
                                             Height="80"
-                                            Loaded="FrameworkElement_OnLoaded"
+                                            DataContext="{x:Bind}"
+                                            DataContextChanged="FrameworkElement_OnDataContextChanged"
                                             Source="{x:Bind ThumbnailSource, Mode=OneWay}"
-                                            Stretch="UniformToFill"
-                                            Tag="{x:Bind}" />
+                                            Stretch="UniformToFill" />
                                     </ItemContainer>
                                 </DataTemplate>
                             </controls:AdvancedItemsView.ItemTemplate>
@@ -344,7 +342,7 @@
                             IsChecked="{x:Bind _viewModel.IsInfoPaneOpen, Mode=TwoWay}"
                             SizeChanged="CommandBarElementOnSizeChanged" />
                         <AppBarButton
-                            Command="{x:Bind _viewModel.PlayGifCommand}"
+                            Command="{x:Bind _viewModel.CurrentImage.PlayGifCommand, Mode=OneWay}"
                             SizeChanged="CommandBarElementOnSizeChanged"
                             Visibility="{x:Bind _viewModel.IsUgoira, Mode=OneWay}" />
                         <AppBarSeparator />
@@ -361,20 +359,20 @@
                             </AppBarButton.Flyout>
                         </AppBarButton>
                         <AppBarSeparator />
-                        <AppBarButton Command="{x:Bind _viewModel.CurrentIllustration.AddToBookmarkCommand}" SizeChanged="CommandBarElementOnSizeChanged" />
+                        <AppBarButton Command="{x:Bind _viewModel.CurrentIllustration.AddToBookmarkCommand, Mode=OneWay}" SizeChanged="CommandBarElementOnSizeChanged" />
                         <AppBarButton
                             x:Name="GenerateLinkButton"
-                            Command="{x:Bind _viewModel.CurrentIllustration.GenerateLinkCommand}"
+                            Command="{x:Bind _viewModel.CurrentIllustration.GenerateLinkCommand, Mode=OneWay}"
                             CommandParameter="{x:Bind GenerateLinkTeachingTip}"
                             SizeChanged="CommandBarElementOnSizeChanged" />
                         <AppBarButton
-                            Command="{x:Bind _viewModel.CurrentIllustration.GenerateWebLinkCommand}"
+                            Command="{x:Bind _viewModel.CurrentIllustration.GenerateWebLinkCommand, Mode=OneWay}"
                             CommandParameter="{x:Bind}"
                             SizeChanged="CommandBarElementOnSizeChanged" />
-                        <AppBarButton Command="{x:Bind _viewModel.CurrentIllustration.OpenInWebBrowserCommand}" SizeChanged="CommandBarElementOnSizeChanged" />
+                        <AppBarButton Command="{x:Bind _viewModel.CurrentIllustration.OpenInWebBrowserCommand, Mode=OneWay}" SizeChanged="CommandBarElementOnSizeChanged" />
                         <AppBarButton
                             x:Name="ShowQrCodeButton"
-                            Command="{x:Bind _viewModel.CurrentIllustration.ShowQrCodeCommand}"
+                            Command="{x:Bind _viewModel.CurrentIllustration.ShowQrCodeCommand, Mode=OneWay}"
                             CommandParameter="{x:Bind ShowQrCodeTeachingTip}"
                             SizeChanged="CommandBarElementOnSizeChanged" />
                         <AppBarButton Command="{x:Bind _viewModel.ShareCommand}" SizeChanged="CommandBarElementOnSizeChanged" />
@@ -386,9 +384,9 @@
                         VerticalAlignment="Center"
                         DefaultLabelPosition="Collapsed">
                         <AppBarButton Width="{StaticResource CollapsedAppBarButtonWidth}" Command="{x:Bind _viewModel.FullScreenCommand}" />
-                        <AppBarButton Width="{StaticResource CollapsedAppBarButtonWidth}" Command="{x:Bind _viewModel.RestoreResolutionCommand}" />
-                        <AppBarButton Width="{StaticResource CollapsedAppBarButtonWidth}" Command="{x:Bind _viewModel.ZoomOutCommand}" />
-                        <AppBarButton Width="{StaticResource CollapsedAppBarButtonWidth}" Command="{x:Bind _viewModel.ZoomInCommand}" />
+                        <AppBarButton Width="{StaticResource CollapsedAppBarButtonWidth}" Command="{x:Bind _viewModel.CurrentImage.RestoreResolutionCommand, Mode=OneWay}" />
+                        <AppBarButton Width="{StaticResource CollapsedAppBarButtonWidth}" Command="{x:Bind _viewModel.CurrentImage.ZoomOutCommand, Mode=OneWay}" />
+                        <AppBarButton Width="{StaticResource CollapsedAppBarButtonWidth}" Command="{x:Bind _viewModel.CurrentImage.ZoomInCommand, Mode=OneWay}" />
                     </CommandBar>
                     <TextBlock
                         Grid.Column="4"

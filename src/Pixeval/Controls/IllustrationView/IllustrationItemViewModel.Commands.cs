@@ -42,8 +42,7 @@ namespace Pixeval.Controls.IllustrationView;
 
 public partial class IllustrationItemViewModel
 {
-    public XamlUICommand BookmarkCommand { get; } = "".GetCommand(
-        FontIconSymbols.HeartEB51, VirtualKeyModifiers.Control, VirtualKey.D);
+    public XamlUICommand BookmarkCommand { get; } = "".GetCommand(FontIconSymbols.HeartEB51, VirtualKeyModifiers.Control, VirtualKey.D);
 
     public XamlUICommand AddToBookmarkCommand { get; } = IllustrationViewerPageResources.AddToBookmark.GetCommand(FontIconSymbols.BookmarksE8A4);
 

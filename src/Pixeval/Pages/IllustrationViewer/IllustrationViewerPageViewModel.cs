@@ -35,17 +35,14 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.AppManagement;
-using Pixeval.Controls;
 using Pixeval.Controls.IllustrationView;
 using Pixeval.Controls.MarkupExtensions;
 using Pixeval.CoreApi.Model;
 using Pixeval.Download;
 using Pixeval.Download.Models;
 using Pixeval.Misc;
-using Pixeval.Options;
 using Pixeval.Util;
 using Pixeval.Util.IO;
-using Pixeval.Util.Threading;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using WinUI3Utilities;
@@ -58,8 +55,6 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
     public Window Window { get; set; } = null!;
 
     public FrameworkElement WindowContent => Window.Content.To<FrameworkElement>();
-
-    private const ThumbnailUrlOption Option = ThumbnailUrlOption.SquareMedium;
 
     private bool _isFullScreen;
 
@@ -174,9 +169,11 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
 
     #region Tags for IllustrationInfoAndCommentsNavigationView
 
-    public NavigationViewTag IllustrationInfoTag = new(typeof(IllustrationInfoPage), null);
-    public NavigationViewTag CommentsTag = new(typeof(CommentsPage), null);
-    public NavigationViewTag RelatedWorksTag = new(typeof(RelatedWorksPage), null);
+    public NavigationViewTag<IllustrationInfoPage, IllustrationViewerPageViewModel> IllustrationInfoTag { get; } = new(null!);
+
+    public NavigationViewTag<CommentsPage, (IAsyncEnumerable<Comment?>, long IllustrationId)> CommentsTag { get; } = new(default);
+
+    public NavigationViewTag<RelatedWorksPage, long> RelatedWorksTag { get; } = new(default);
 
     #endregion
 
@@ -221,14 +218,12 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
             // IllustrationInfoTag.Parameter = this;
             CommentsTag.Parameter = (App.AppViewModel.MakoClient.IllustrationComments(IllustrationId).Where(c => c is not null), IllustrationId);
 
-            LoadUserProfile().Discard();
+            _ = LoadUserProfile();
 
             CurrentPageIndex = 0;
-            // 更新PlayGif按钮的状态
             OnPropertyChanged(nameof(IsUgoira));
-            PlayGifCommand.Description = PlayGifCommand.Label = IllustrationViewerPageResources.PauseGif;
-            PlayGifCommand.IconSource = new SymbolIconSource { Symbol = Symbol.Stop };
             OnDetailedPropertyChanged(oldValue, value, oldTag, CurrentPage.Id);
+            OnPropertyChanged(nameof(CurrentIllustration));
             return;
 
             async Task LoadUserProfile()
@@ -237,8 +232,8 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
                 {
                     var result = await App.AppViewModel.MakoClient.DownloadSoftwareBitmapSourceAsync(profileImage);
                     UserProfileImageSource = result is Result<SoftwareBitmapSource>.Success { Value: var avatar }
-                            ? avatar
-                            : await AppContext.GetPixivNoProfileImageAsync();
+                        ? avatar
+                        : await AppContext.GetPixivNoProfileImageAsync();
                 }
             }
         }
@@ -342,40 +337,11 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
 
     public void UpdateCommandCanExecute()
     {
-        PlayGifCommand.NotifyCanExecuteChanged();
-        RestoreResolutionCommand.NotifyCanExecuteChanged();
-        ZoomInCommand.NotifyCanExecuteChanged();
-        ZoomOutCommand.NotifyCanExecuteChanged();
-        RotateClockwiseCommand.NotifyCanExecuteChanged();
-        RotateCounterclockwiseCommand.NotifyCanExecuteChanged();
-        MirrorCommand.NotifyCanExecuteChanged();
-
         ShareCommand.NotifyCanExecuteChanged();
     }
 
     private void InitializeCommands()
     {
-        RestoreResolutionCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
-
-        PlayGifCommand.CanExecuteRequested += (_, e) => e.CanExecute = IsUgoira && CurrentImage.LoadSuccessfully;
-        PlayGifCommand.ExecuteRequested += PlayGifCommandOnExecuteRequested;
-
-        // 相当于鼠标滚轮滚动10次，方便快速缩放
-        ZoomOutCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
-        ZoomOutCommand.ExecuteRequested += (_, _) => CurrentImage.Zoom(-1200);
-
-        ZoomInCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
-        ZoomInCommand.ExecuteRequested += (_, _) => CurrentImage.Zoom(1200);
-
-        RotateClockwiseCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
-        RotateClockwiseCommand.ExecuteRequested += (_, _) => CurrentImage.RotationDegree += 90;
-
-        RotateCounterclockwiseCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
-        RotateCounterclockwiseCommand.ExecuteRequested += (_, _) => CurrentImage.RotationDegree -= 90;
-
-        MirrorCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
-        MirrorCommand.ExecuteRequested += (_, _) => CurrentImage.IsMirrored = !CurrentImage.IsMirrored;
-
         ShareCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
         ShareCommand.ExecuteRequested += ShareCommandExecuteRequested;
 
@@ -386,8 +352,6 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
         SetAsBackgroundCommand.ExecuteRequested += SetAsBackgroundCommandOnExecuteRequested;
 
         FullScreenCommand.ExecuteRequested += (_, _) => IsFullScreen = !IsFullScreen;
-
-        RestoreResolutionCommand.ExecuteRequested += FlipRestoreResolutionCommand;
     }
 
     private void LoadingCompletedCanExecuteRequested(XamlUICommand sender, CanExecuteRequestedEventArgs args)
@@ -442,59 +406,8 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
             WindowContent.ShowTeachingTipAndHide(IllustrationViewerPageResources.CannotShareImageForNowTitle, TeachingTipSeverity.Warning, IllustrationViewerPageResources.CannotShareImageForNowContent);
     }
 
-    private void PlayGifCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
-    {
-        CurrentImage.IsPlaying = !CurrentImage.IsPlaying;
-        if (CurrentImage.IsPlaying)
-        {
-            PlayGifCommand.Description = PlayGifCommand.Label = IllustrationViewerPageResources.PauseGif;
-            PlayGifCommand.IconSource = new SymbolIconSource { Symbol = Symbol.Stop };
-        }
-        else
-        {
-            PlayGifCommand.Description = PlayGifCommand.Label = IllustrationViewerPageResources.PlayGif;
-            PlayGifCommand.IconSource = new SymbolIconSource { Symbol = Symbol.Play };
-        }
-    }
-
-    public void FlipRestoreResolutionCommand(XamlUICommand sender, ExecuteRequestedEventArgs args)
-    {
-        if (CurrentImage.IsFit)
-        {
-            RestoreResolutionCommand.Label = IllustrationViewerPageResources.UniformToFillResolution;
-            RestoreResolutionCommand.IconSource = FontIconSymbols.FitPageE9A6.GetFontIconSource();
-            CurrentImage.ShowMode = ZoomableImageMode.Original;
-        }
-        else
-        {
-            RestoreResolutionCommand.Label = IllustrationViewerPageResources.RestoreOriginalResolution;
-            RestoreResolutionCommand.IconSource = FontIconSymbols.WebcamE8B8.GetFontIconSource();
-            CurrentImage.ShowMode = ZoomableImageMode.Fit;
-        }
-    }
-
     public XamlUICommand IllustrationInfoAndCommentsCommand { get; } =
         IllustrationViewerPageResources.IllustrationInfoAndComments.GetCommand(FontIconSymbols.InfoE946, VirtualKey.F12);
-
-    // The gif will be played as soon as its loaded, so the default state is playing and thus we need the button to be pause
-    public XamlUICommand PlayGifCommand { get; } = IllustrationViewerPageResources.PauseGif.GetCommand(FontIconSymbols.StopE71A);
-
-    public XamlUICommand ZoomOutCommand { get; } = IllustrationViewerPageResources.ZoomOut.GetCommand(
-        FontIconSymbols.ZoomOutE71F, VirtualKey.Subtract);
-
-    public XamlUICommand ZoomInCommand { get; } = IllustrationViewerPageResources.ZoomIn.GetCommand(
-        FontIconSymbols.ZoomInE8A3, VirtualKey.Add);
-
-    public XamlUICommand RotateClockwiseCommand { get; } = IllustrationViewerPageResources.RotateClockwise.GetCommand(
-        FontIconSymbols.RotateE7AD, VirtualKeyModifiers.Control, VirtualKey.R);
-
-    public XamlUICommand RotateCounterclockwiseCommand { get; } =
-        IllustrationViewerPageResources.RotateCounterclockwise.GetCommand(
-            null!, VirtualKeyModifiers.Control, VirtualKey.L);
-
-    public XamlUICommand MirrorCommand { get; } =
-        IllustrationViewerPageResources.Mirror.GetCommand(
-            FontIconSymbols.CollatePortraitF57C, VirtualKeyModifiers.Control, VirtualKey.M);
 
     public XamlUICommand SetAsCommand { get; } = IllustrationViewerPageResources.SetAs.GetCommand(FontIconSymbols.PersonalizeE771);
 
@@ -505,8 +418,6 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
     public XamlUICommand SetAsBackgroundCommand { get; } = new() { Label = IllustrationViewerPageResources.Background };
 
     public XamlUICommand FullScreenCommand { get; } = IllustrationViewerPageResources.FullScreen.GetCommand(FontIconSymbols.FullScreenE740);
-
-    public XamlUICommand RestoreResolutionCommand { get; } = IllustrationViewerPageResources.RestoreOriginalResolution.GetCommand(FontIconSymbols.WebcamE8B8);
 
     #endregion
 }

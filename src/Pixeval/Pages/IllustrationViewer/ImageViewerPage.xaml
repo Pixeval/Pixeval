@@ -25,11 +25,11 @@
                 <!--  PrimaryCommands 点击后不会自动隐藏Flyout  -->
                 <CommandBarFlyout>
                     <AppBarToggleButton Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.IllustrationInfoAndCommentsCommand}" IsChecked="{x:Bind _viewModel.IllustrationViewerPageViewModel.IsInfoPaneOpen, Mode=TwoWay}" />
-                    <AppBarButton Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.PlayGifCommand}" Visibility="{x:Bind _viewModel.IllustrationViewerPageViewModel.IsUgoira}" />
+                    <AppBarButton Command="{x:Bind _viewModel.PlayGifCommand}" Visibility="{x:Bind _viewModel.IllustrationViewerPageViewModel.IsUgoira}" />
                     <AppBarButton Command="{x:Bind _viewModel.IllustrationViewModel.BookmarkCommand}" />
                     <AppBarSeparator />
-                    <AppBarButton Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.ZoomInCommand}" />
-                    <AppBarButton Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.ZoomOutCommand}" />
+                    <AppBarButton Command="{x:Bind _viewModel.ZoomInCommand}" />
+                    <AppBarButton Command="{x:Bind _viewModel.ZoomOutCommand}" />
                     <!--<AppBarButton Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.ShareCommand}" />-->
                     <CommandBarFlyout.SecondaryCommands>
                         <AppBarButton Command="{x:Bind _viewModel.CopyCommand}" />

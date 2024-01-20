@@ -24,11 +24,8 @@ using System.Linq;
 using System.Numerics;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
-using Windows.Foundation;
 using Windows.Graphics;
 using Windows.Storage;
-using Windows.Storage.FileProperties;
-using Windows.Storage.Streams;
 using Microsoft.UI.Input;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
@@ -40,14 +37,10 @@ using Pixeval.AppManagement;
 using Pixeval.Controls;
 using Pixeval.Controls.IllustrationView;
 using Pixeval.Misc;
-using Pixeval.Options;
-using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using WinUI3Utilities;
-using AppContext = Pixeval.AppManagement.AppContext;
-using Pixeval.CoreApi.Net.Response;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
@@ -128,6 +121,7 @@ public sealed partial class IllustrationViewerPage : SupportCustomTitleBarDragRe
                 info = new SlideNavigationTransitionInfo { Effect = SlideNavigationTransitionEffect.FromLeft };
             ThumbnailItemsView.StartBringItemIntoView(vm.CurrentIllustrationIndex, new BringIntoViewOptions { AnimationDesired = true });
             Navigate<ImageViewerPage>(IllustrationImageShowcaseFrame, vm.CurrentImage, info);
+            // TODO: 换页后ViewModel需要更新绑定
         };
 
         _viewModel.PropertyChanged += (sender, args) =>
@@ -172,9 +166,9 @@ public sealed partial class IllustrationViewerPage : SupportCustomTitleBarDragRe
         return _viewModel.LoadMoreAsync(20);
     }
 
-    private async void FrameworkElement_OnLoaded(object sender, RoutedEventArgs e)
+    private async void FrameworkElement_OnDataContextChanged(FrameworkElement sender, DataContextChangedEventArgs e)
     {
-        var viewModel = sender.GetTag<IllustrationItemViewModel>();
+        var viewModel = sender.GetDataContext<IllustrationItemViewModel>();
         _ = await viewModel.TryLoadThumbnail(_viewModel);
     }
 

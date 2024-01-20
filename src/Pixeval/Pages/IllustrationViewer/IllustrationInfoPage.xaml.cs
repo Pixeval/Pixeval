@@ -20,10 +20,8 @@
 
 using System.Collections.Generic;
 using CommunityToolkit.Mvvm.Messaging;
-using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.CoreApi.Model;
 using Pixeval.Messages;
@@ -62,7 +60,7 @@ public sealed partial class IllustrationInfoPage
     {
         if (_viewModel.Illustrator is { } userInfo)
         {
-            _ = ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", (UIElement)sender);
+            // _ = ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", (UIElement)sender);
             // todo IllustratorPage use Navigate
             // CurrentContext.Window.Content.To<Frame>().Navigate(typeof(IllustratorPage), Tuple.Create((UIElement)sender, new IllustratorViewModel(userInfo)), new SlideNavigationTransitionInfo
             // {

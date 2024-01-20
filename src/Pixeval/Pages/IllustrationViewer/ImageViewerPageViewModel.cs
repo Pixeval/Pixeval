@@ -39,7 +39,7 @@ using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using Pixeval.Utilities.Threading;
-using SixLabors.ImageSharp;
+using Microsoft.UI.Xaml.Controls;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
@@ -266,6 +266,38 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
             throw new IllustrationSourceNotFoundException(ImageViewerPageResources.CannotFindImageSourceContent);
         }
     }
+
+    private void PlayGifCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
+    {
+        IsPlaying = !IsPlaying;
+        if (IsPlaying)
+        {
+            PlayGifCommand.Description = PlayGifCommand.Label = IllustrationViewerPageResources.PauseGif;
+            PlayGifCommand.IconSource = new SymbolIconSource { Symbol = Symbol.Stop };
+        }
+        else
+        {
+            PlayGifCommand.Description = PlayGifCommand.Label = IllustrationViewerPageResources.PlayGif;
+            PlayGifCommand.IconSource = new SymbolIconSource { Symbol = Symbol.Play };
+        }
+    }
+
+    public void FlipRestoreResolutionCommand(XamlUICommand sender, ExecuteRequestedEventArgs args)
+    {
+        if (IsFit)
+        {
+            RestoreResolutionCommand.Label = IllustrationViewerPageResources.UniformToFillResolution;
+            RestoreResolutionCommand.IconSource = FontIconSymbols.FitPageE9A6.GetFontIconSource();
+            ShowMode = ZoomableImageMode.Original;
+        }
+        else
+        {
+            RestoreResolutionCommand.Label = IllustrationViewerPageResources.RestoreOriginalResolution;
+            RestoreResolutionCommand.IconSource = FontIconSymbols.WebcamE8B8.GetFontIconSource();
+            ShowMode = ZoomableImageMode.Fit;
+        }
+    }
+
     private void InitializeCommands()
     {
         SaveCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
@@ -276,6 +308,28 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
 
         CopyCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
         CopyCommand.ExecuteRequested += (_, _) => IllustrationViewModel.CopyCommand.Execute((IllustrationViewerPageViewModel.WindowContent, (Func<IProgress<int>?, Task<Stream?>>)(p => GetOriginalImageSourceAsync(true, p))));
+
+        PlayGifCommand.CanExecuteRequested += (_, e) => e.CanExecute = IllustrationViewModel.IsUgoira && LoadSuccessfully;
+        PlayGifCommand.ExecuteRequested += PlayGifCommandOnExecuteRequested;
+
+        // 相当于鼠标滚轮滚动10次，方便快速缩放
+        ZoomOutCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
+        ZoomOutCommand.ExecuteRequested += (_, _) => Zoom(-1200);
+
+        ZoomInCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
+        ZoomInCommand.ExecuteRequested += (_, _) => Zoom(1200);
+
+        RotateClockwiseCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
+        RotateClockwiseCommand.ExecuteRequested += (_, _) => RotationDegree += 90;
+
+        RotateCounterclockwiseCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
+        RotateCounterclockwiseCommand.ExecuteRequested += (_, _) => RotationDegree -= 90;
+
+        MirrorCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
+        MirrorCommand.ExecuteRequested += (_, _) => IsMirrored = !IsMirrored;
+
+        RestoreResolutionCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
+        RestoreResolutionCommand.ExecuteRequested += FlipRestoreResolutionCommand;
     }
 
     private void UpdateCommandCanExecute()
@@ -283,6 +337,13 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
         SaveCommand.NotifyCanExecuteChanged();
         SaveAsCommand.NotifyCanExecuteChanged();
         CopyCommand.NotifyCanExecuteChanged();
+        PlayGifCommand.NotifyCanExecuteChanged();
+        RestoreResolutionCommand.NotifyCanExecuteChanged();
+        ZoomInCommand.NotifyCanExecuteChanged();
+        ZoomOutCommand.NotifyCanExecuteChanged();
+        RotateClockwiseCommand.NotifyCanExecuteChanged();
+        RotateCounterclockwiseCommand.NotifyCanExecuteChanged();
+        MirrorCommand.NotifyCanExecuteChanged();
         IllustrationViewerPageViewModel.UpdateCommandCanExecute();
     }
 
@@ -296,6 +357,28 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
 
     public XamlUICommand CopyCommand { get; } = IllustrationViewerPageResources.Copy.GetCommand(
         FontIconSymbols.CopyE8C8, VirtualKeyModifiers.Control, VirtualKey.C);
+
+    /// <summary>
+    /// The gif will be played as soon as its loaded, so the default state is playing, and thus we need the button to be paused
+    /// </summary>
+    public XamlUICommand PlayGifCommand { get; } = IllustrationViewerPageResources.PauseGif.GetCommand(FontIconSymbols.StopE71A);
+
+    public XamlUICommand ZoomOutCommand { get; } = IllustrationViewerPageResources.ZoomOut.GetCommand(
+        FontIconSymbols.ZoomOutE71F, VirtualKey.Subtract);
+
+    public XamlUICommand ZoomInCommand { get; } = IllustrationViewerPageResources.ZoomIn.GetCommand(
+        FontIconSymbols.ZoomInE8A3, VirtualKey.Add);
+
+    public XamlUICommand RotateClockwiseCommand { get; } = IllustrationViewerPageResources.RotateClockwise.GetCommand(
+        FontIconSymbols.RotateE7AD, VirtualKeyModifiers.Control, VirtualKey.R);
+
+    public XamlUICommand RotateCounterclockwiseCommand { get; } = IllustrationViewerPageResources.RotateCounterclockwise.GetCommand(
+            null!, VirtualKeyModifiers.Control, VirtualKey.L);
+
+    public XamlUICommand MirrorCommand { get; } = IllustrationViewerPageResources.Mirror.GetCommand(
+            FontIconSymbols.CollatePortraitF57C, VirtualKeyModifiers.Control, VirtualKey.M);
+
+    public XamlUICommand RestoreResolutionCommand { get; } = IllustrationViewerPageResources.RestoreOriginalResolution.GetCommand(FontIconSymbols.WebcamE8B8);
 
     private void DisposeInternal()
     {

@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -22,7 +22,16 @@ using System;
 
 namespace Pixeval.Misc;
 
-public sealed record NavigationViewTag(Type NavigateTo, object? Parameter, int? Index = null)
+public record NavigationViewTag(Type NavigateTo, object? Parameter, int? Index = null)
 {
     public object? Parameter { get; set; } = Parameter;
+}
+
+public sealed record NavigationViewTag<TPage, TParam>(TParam Parameter, int? Index = null) : NavigationViewTag(typeof(TPage), Parameter, Index)
+{
+    public new TParam Parameter
+    {
+        get => (TParam)base.Parameter!;
+        set => base.Parameter = value;
+    }
 }
