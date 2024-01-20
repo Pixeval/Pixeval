@@ -50,7 +50,7 @@
                     Width="13"
                     HorizontalAlignment="Left"
                     VerticalAlignment="Center"
-                    Content="{x:Bind Icon}" />
+                    Content="{x:Bind FontIcon}" />
                 <StackPanel
                     Grid.Column="1"
                     VerticalAlignment="Center"

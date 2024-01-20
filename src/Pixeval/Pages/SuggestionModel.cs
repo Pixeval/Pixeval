@@ -41,7 +41,7 @@ public record SuggestionModel(string? Name, string? TranslatedName, SuggestionTy
     public static readonly SuggestionModel NovelTrendingTagHeader =
         new(null, null, SuggestionType.NovelTrendingTagHeader);
 
-    public FontIcon? Icon => SuggestionType switch
+    public FontIcon? FontIcon => SuggestionType switch
     {
         SuggestionType.Tag => FontIconSymbols.TagE8EC.GetFontIcon(12),
         SuggestionType.Settings => FontIconSymbols.SettingsE713.GetFontIcon(12),

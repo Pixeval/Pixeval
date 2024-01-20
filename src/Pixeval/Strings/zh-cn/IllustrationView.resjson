@@ -1,0 +1,11 @@
+{
+  "AddToBookmarkContextItem/Text": "添加到收藏夹",
+  "CopyAppLinkContextItem/Text": "复制应用链接",
+  "CopyWebLinkContextItem/Text": "复制网页链接",
+  "OpenInBrowserContextItem/Text": "在浏览器中打开",
+  "QrCodeTeachingTip/Title": "作品链接二维码",
+  "ResultIsEmptyTextBlock/Text": "这里空空如也",
+  "SaveContextItem/Text": "保存",
+  "ShowPixEzQrCodeContextItem/Text": "PixEz二维码",
+  "ShowQrCodeContextItem/Text": "作品链接二维码"
+}

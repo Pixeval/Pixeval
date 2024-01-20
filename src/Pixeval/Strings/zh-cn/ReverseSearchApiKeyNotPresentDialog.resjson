@@ -1,0 +1,4 @@
+{
+  "MessageTextBlock/Text": "逆向搜索需要正确的填写SauceNAO API Key，您未填写或者填写的API Key错误，请仔细检查后再使用该功能",
+  "SetApiKeyHyperlinkButton/Content": "修改API Key"
+}

@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <OutputType>WinExe</OutputType>
         <TargetFramework>net8.0-windows10.0.22621.0</TargetFramework>
@@ -26,7 +26,7 @@
         <NoWarn>$(NoWarn)</NoWarn>
     </PropertyGroup>
     <ItemGroup>
-      <None Remove="Assets\Svg.resw" />
+      <None Remove="Assets\Svg.resjson" />
     </ItemGroup>
 
     <ItemGroup>
@@ -167,43 +167,43 @@
 
     <!--PRIResource-->
     <ItemGroup>
-        <PRIResource Include="Assets\Svg.resw" />
-        <PRIResource Include="Strings\zh-cn\CommentsPage.resw" />
-        <PRIResource Include="Strings\zh-cn\FollowingsPage.resw" />
-        <PRIResource Include="Strings\zh-cn\FollowingUserBadge.resw" />
-        <PRIResource Include="Strings\zh-cn\IllustratorContentViewer.resw" />
-        <PRIResource Include="Strings\zh-cn\IllustratorIllustrationAndMangaBookmarkPage.resw" />
-        <PRIResource Include="Strings\zh-cn\IllustratorItem.resw" />
-        <PRIResource Include="Strings\zh-cn\AboutPage.resw" />
-        <PRIResource Include="Strings\zh-cn\Activations.resw" />
-        <PRIResource Include="Strings\zh-cn\BookmarksPage.resw" />
-        <PRIResource Include="Strings\zh-cn\CommentBlock.resw" />
-        <PRIResource Include="Strings\zh-cn\CommentRepliesBlock.resw" />
-        <PRIResource Include="Strings\zh-cn\DownloadListEntry.resw" />
-        <PRIResource Include="Strings\zh-cn\DownloadListPage.resw" />
-        <PRIResource Include="Strings\zh-cn\DownloadListPageDeleteTasksDialog.resw" />
-        <PRIResource Include="Strings\zh-cn\DownloadTask.resw" />
-        <PRIResource Include="Strings\zh-cn\IllustrationView.resw" />
-        <PRIResource Include="Strings\zh-cn\IllustrationViewCommandBar.resw" />
-        <PRIResource Include="Strings\zh-cn\IllustrationInfoPage.resw" />
-        <PRIResource Include="Strings\zh-cn\IllustrationResultFilterContent.resw" />
-        <PRIResource Include="Strings\zh-cn\IllustrationViewerPage.resw" />
-        <PRIResource Include="Strings\zh-cn\IllustratorPage.resw" />
-        <PRIResource Include="Strings\zh-cn\ImageViewerPage.resw" />
-        <PRIResource Include="Strings\zh-cn\LoginPage.resw" />
-        <PRIResource Include="Strings\zh-cn\MacroParser.resw" />
-        <PRIResource Include="Strings\zh-cn\MainPage.resw" />
-        <PRIResource Include="Strings\zh-cn\MessageContentDialog.resw" />
-        <PRIResource Include="Strings\zh-cn\Misc.resw" />
-        <PRIResource Include="Strings\zh-cn\RankingsPage.resw" />
-        <PRIResource Include="Strings\zh-cn\RecentPostsPage.resw" />
-        <PRIResource Include="Strings\zh-cn\RecommendationsPage.resw" />
-        <PRIResource Include="Strings\zh-cn\PixivReplyBar.resw" />
-        <PRIResource Include="Strings\zh-cn\RecommendIllustratorItem.resw" />
-        <PRIResource Include="Strings\zh-cn\ReverseSearchApiKeyNotPresentDialog.resw" />
-        <PRIResource Include="Strings\zh-cn\SettingsPage.resw" />
-        <PRIResource Include="Strings\zh-cn\SortOptionComboBox.resw" />
-        <PRIResource Include="Strings\zh-cn\TokenInputTextBox.resw" />
+        <PRIResource Include="Assets\Svg.resjson" />
+        <PRIResource Include="Strings\zh-cn\CommentsPage.resjson" />
+        <PRIResource Include="Strings\zh-cn\FollowingsPage.resjson" />
+        <PRIResource Include="Strings\zh-cn\FollowingUserBadge.resjson" />
+        <PRIResource Include="Strings\zh-cn\IllustratorContentViewer.resjson" />
+        <PRIResource Include="Strings\zh-cn\IllustratorIllustrationAndMangaBookmarkPage.resjson" />
+        <PRIResource Include="Strings\zh-cn\IllustratorItem.resjson" />
+        <PRIResource Include="Strings\zh-cn\AboutPage.resjson" />
+        <PRIResource Include="Strings\zh-cn\Activations.resjson" />
+        <PRIResource Include="Strings\zh-cn\BookmarksPage.resjson" />
+        <PRIResource Include="Strings\zh-cn\CommentBlock.resjson" />
+        <PRIResource Include="Strings\zh-cn\CommentRepliesBlock.resjson" />
+        <PRIResource Include="Strings\zh-cn\DownloadListEntry.resjson" />
+        <PRIResource Include="Strings\zh-cn\DownloadListPage.resjson" />
+        <PRIResource Include="Strings\zh-cn\DownloadListPageDeleteTasksDialog.resjson" />
+        <PRIResource Include="Strings\zh-cn\DownloadTask.resjson" />
+        <PRIResource Include="Strings\zh-cn\IllustrationView.resjson" />
+        <PRIResource Include="Strings\zh-cn\IllustrationViewCommandBar.resjson" />
+        <PRIResource Include="Strings\zh-cn\IllustrationInfoPage.resjson" />
+        <PRIResource Include="Strings\zh-cn\IllustrationResultFilterContent.resjson" />
+        <PRIResource Include="Strings\zh-cn\IllustrationViewerPage.resjson" />
+        <PRIResource Include="Strings\zh-cn\IllustratorPage.resjson" />
+        <PRIResource Include="Strings\zh-cn\ImageViewerPage.resjson" />
+        <PRIResource Include="Strings\zh-cn\LoginPage.resjson" />
+        <PRIResource Include="Strings\zh-cn\MacroParser.resjson" />
+        <PRIResource Include="Strings\zh-cn\MainPage.resjson" />
+        <PRIResource Include="Strings\zh-cn\MessageContentDialog.resjson" />
+        <PRIResource Include="Strings\zh-cn\Misc.resjson" />
+        <PRIResource Include="Strings\zh-cn\RankingsPage.resjson" />
+        <PRIResource Include="Strings\zh-cn\RecentPostsPage.resjson" />
+        <PRIResource Include="Strings\zh-cn\RecommendationsPage.resjson" />
+        <PRIResource Include="Strings\zh-cn\PixivReplyBar.resjson" />
+        <PRIResource Include="Strings\zh-cn\RecommendIllustratorItem.resjson" />
+        <PRIResource Include="Strings\zh-cn\ReverseSearchApiKeyNotPresentDialog.resjson" />
+        <PRIResource Include="Strings\zh-cn\SettingsPage.resjson" />
+        <PRIResource Include="Strings\zh-cn\SortOptionComboBox.resjson" />
+        <PRIResource Include="Strings\zh-cn\TokenInputTextBox.resjson" />
     </ItemGroup>
 
     <!--XAML-->

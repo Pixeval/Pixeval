@@ -96,7 +96,6 @@ public class IllustrationDownloadTaskFactory : IDownloadTaskFactory<Illustration
             _ = manager.Delete(entry => entry.Destination == path);
         }
 
-        DownloadItemType type;
         switch (context)
         {
             case { IsUgoira: true }:
@@ -110,14 +109,12 @@ public class IllustrationDownloadTaskFactory : IDownloadTaskFactory<Illustration
                 var url = context.OriginalStaticUrl;
                 var entry = new DownloadHistoryEntry(DownloadState.Queued, path, DownloadItemType.Manga, context.Id, url);
                 return new IntrinsicMangaDownloadTask(entry, context, [stream]);
-                break;
             }
             default:
             {
                 var url = context.OriginalStaticUrl;
                 var entry = new DownloadHistoryEntry(DownloadState.Queued, path, DownloadItemType.Illustration, context.Id, url);
                 return new IntrinsicIllustrationDownloadTask(entry, context, stream);
-                break;
             }
         }
     }

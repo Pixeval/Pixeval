@@ -21,7 +21,6 @@
 #endregion
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.UI.Xaml.Media.Imaging;
@@ -73,7 +72,6 @@ public partial class IllustrationItemViewModel
     /// </summary>
     /// <param name="key">使用<see cref="IDisposable"/>对象，防止复用本对象的时候，本对象持有对<paramref name="key"/>的引用，导致<paramref name="key"/>无法释放</param>
     /// <returns>缩略图首次加载完成则返回<see langword="true"/>，之前已加载、正在加载或加载失败则返回<see langword="false"/></returns>
-    [MemberNotNullWhen(true, nameof(ThumbnailSource), nameof(ThumbnailStream), nameof(ThumbnailSourceRef))]
     public async Task<bool> TryLoadThumbnail(IDisposable key)
     {
         if (ThumbnailSourceRef is not null)
