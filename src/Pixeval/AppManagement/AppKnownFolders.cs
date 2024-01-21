@@ -70,11 +70,11 @@ public class AppKnownFolders(StorageFolder self)
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="extension">Including the leading dot.</param>
+    /// <param name="name"></param>
     /// <returns></returns>
-    public static IAsyncOperation<StorageFile> CreateTemporaryFileWithNameAsync(string name, string? extension = null)
+    public static IAsyncOperation<StorageFile> CreateTemporaryFileWithNameAsync(string name)
     {
-        return Temporary.CreateFileAsync(name + (extension ?? ".temp"));
+        return Temporary.CreateFileAsync(name);
     }
 
     public IAsyncOperation<StorageFile> GetFileAsync(string name)

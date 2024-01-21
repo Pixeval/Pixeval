@@ -1,8 +1,8 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/SyntheticSetting.cs
+// Copyright (c) 2023 Pixeval/SettingPOCO.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -22,9 +22,4 @@ using System;
 
 namespace Pixeval.Attributes;
 
-/// <summary>
-/// This attribute is used to mark a setting entry as synthetic. that the entry won't appear in the SettingsPage, but rather provided
-/// in other places among the app
-/// </summary>
-[AttributeUsage(AttributeTargets.Property)]
-public class SyntheticSetting : Attribute {}
+public class SettingPocoAttribute : Attribute;

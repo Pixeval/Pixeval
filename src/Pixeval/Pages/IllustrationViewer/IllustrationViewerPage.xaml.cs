@@ -41,6 +41,7 @@ using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using WinUI3Utilities;
+using Pixeval.Download;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
@@ -194,8 +195,7 @@ public sealed partial class IllustrationViewerPage : SupportCustomTitleBarDragRe
             if (_viewModel.CurrentImage.OriginalImageSources is { } streams)
             {
                 var metadata = await App.AppViewModel.MakoClient.GetUgoiraMetadataAsync(vm.Id);
-                file = await AppKnownFolders.CreateTemporaryFileWithRandomNameAsync(IoHelper.GetUgoiraExtension());
-                await using var target = await file.OpenStreamForWriteAsync();
+                await using var target = await OpenStreamAsync(vm);
                 _ = await streams.UgoiraSaveToStreamAsync(metadata.UgoiraMetadataInfo.Frames.Select(t => (int)t.Delay), target);
             }
         }
@@ -204,8 +204,7 @@ public sealed partial class IllustrationViewerPage : SupportCustomTitleBarDragRe
             if (_viewModel.CurrentImage.OriginalImageSources is [var s, ..])
             {
                 s.Position = 0;
-                file = await AppKnownFolders.CreateTemporaryFileWithRandomNameAsync(IoHelper.GetIllustrationExtension());
-                await using var target = await file.OpenStreamForWriteAsync();
+                await using var target = await OpenStreamAsync(vm);
                 _ = await s.IllustrationSaveToStreamAsync(target);
             }
         }
@@ -219,6 +218,14 @@ public sealed partial class IllustrationViewerPage : SupportCustomTitleBarDragRe
         return;
 
         async void FileDispose(DataPackage dataPackage, object o) => await file?.DeleteAsync(StorageDeleteOption.PermanentDelete);
+
+        async Task<Stream> OpenStreamAsync(IllustrationItemViewModel viewModel)
+        {
+            var path = IoHelper.NormalizePath(
+                new IllustrationMetaPathParser().Reduce(App.AppViewModel.AppSetting.DefaultDownloadNameMacro, viewModel));
+            file = await AppKnownFolders.CreateTemporaryFileWithNameAsync(path);
+            return await file.OpenStreamForWriteAsync();
+        }
     }
 
     private void NextButton_OnTapped(object sender, TappedRoutedEventArgs e)

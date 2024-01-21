@@ -22,6 +22,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.System;
@@ -147,7 +148,7 @@ public sealed partial class IllustrationContainer
         {
             var tasks = await WindowFactory.RootWindow.DispatcherQueue.EnqueueAsync(() => Task.WhenAll(
                     ViewModel.SelectedIllustrations
-                        .Select(i => factory.CreateAsync(i, App.AppViewModel.AppSetting.DefaultDownloadPathMacro))));
+                        .Select(i => factory.CreateAsync(i, Path.Combine(App.AppViewModel.AppSetting.DefaultDownloadPathMacro, App.AppViewModel.AppSetting.DefaultDownloadNameMacro)))));
             foreach (var viewModelSelectedIllustration in tasks)
             {
                 App.AppViewModel.DownloadManager.QueueTask(viewModelSelectedIllustration);

@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -27,7 +27,15 @@ public class DownloadPathMacroDefaultValueProvider : IDefaultValueProvider
     public object ProvideValue()
     {
         var segment1 = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures, Environment.SpecialFolderOption.Create);
-        const string segment2 = @"\@{if_spot:@{spot_title}}\@{if_manga:[@{artist_name}]@{illust_title}}\[@{artist_name}]@{illust_id}@{if_manga:p@{manga_index}}@{illust_ext}";
+        const string segment2 = @"\@{if_spot:@{spot_title}}\@{if_manga:[@{artist_name}]@{illust_title}}";
         return segment1 + segment2;
+    }
+}
+
+public class DownloadNameMacroDefaultValueProvider : IDefaultValueProvider
+{
+    public object ProvideValue()
+    {
+        return "[@{artist_name}]@{illust_id}@{if_manga:p@{manga_index}}@{illust_ext}";
     }
 }

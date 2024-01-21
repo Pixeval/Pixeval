@@ -1,8 +1,8 @@
-﻿#region Copyright (c) Pixeval/Pixeval.SourceGen
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
-// Pixeval/Pixeval.SourceGen
-// Copyright (c) 2023 Pixeval.SourceGen/ObjectHelper.cs
+// Pixeval/Pixeval
+// Copyright (c) 2023 Pixeval/SyntheticSetting.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -20,12 +20,11 @@
 
 using System;
 
-namespace Pixeval.SourceGen;
+namespace Pixeval.Attributes;
 
-public static class ObjectHelper
-{
-    public static T? TakeIf<T>(this T obj, Func<T, bool> predicate) where T : class
-    {
-        return predicate(obj) ? obj : null;
-    }
-}
+/// <summary>
+/// This attribute is used to mark a setting entry as synthetic. that the entry won't appear in the SettingsPage, but rather provided
+/// in other places among the app
+/// </summary>
+[AttributeUsage(AttributeTargets.Property)]
+public class SyntheticSettingAttribute : Attribute;

@@ -444,16 +444,17 @@
 
                 <controls:SettingsExpander
                     x:Uid="/SettingsPage/DefaultDownloadPathMacroEntry"
-                    HeaderIcon="{markup:FontSymbolIcon Glyph=CaptionE8BA}"
+                    HeaderIcon="{markup:FontSymbolIcon Glyph=FolderOpenE838}"
                     Tag="{x:Bind pixeval:SettingEntry.DefaultDownloadPathMacro}">
                     <controls:SettingsExpander.Items>
                         <controls:SettingsCard ContentAlignment="Left">
                             <StackPanel Spacing="3">
                                 <tokenInput:TokenInput
                                     IsTokenTappedDefaultBehaviorEnabled="False"
+                                    Tag="{x:Bind DefaultDownloadPathMacroTextBox}"
                                     TokenInputTextBoxVisibility="Collapsed"
                                     TokenSource="{x:Bind misc:SettingsPageViewModel.AvailableIllustMacros}"
-                                    TokenTapped="MacroTokenInputBox_OnTokenTapped" />
+                                    TokenTapped="PathMacroTokenInputBox_OnTokenTapped" />
                                 <TextBox
                                     x:Name="DefaultDownloadPathMacroTextBox"
                                     x:Uid="/SettingsPage/DefaultDownloadPathMacroTextBox"
@@ -461,6 +462,31 @@
                                     IsSpellCheckEnabled="False"
                                     LostFocus="DefaultDownloadPathMacroTextBox_OnLostFocus"
                                     Text="{x:Bind _viewModel.DefaultDownloadPathMacro, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                            </StackPanel>
+                        </controls:SettingsCard>
+                    </controls:SettingsExpander.Items>
+                </controls:SettingsExpander>
+
+                <controls:SettingsExpander
+                    x:Uid="/SettingsPage/DefaultDownloadNameMacroEntry"
+                    HeaderIcon="{markup:FontSymbolIcon Glyph=CaptionE8BA}"
+                    Tag="{x:Bind pixeval:SettingEntry.DefaultDownloadNameMacro}">
+                    <controls:SettingsExpander.Items>
+                        <controls:SettingsCard ContentAlignment="Left">
+                            <StackPanel Spacing="3">
+                                <tokenInput:TokenInput
+                                    IsTokenTappedDefaultBehaviorEnabled="False"
+                                    Tag="{x:Bind DefaultDownloadNameMacroTextBox}"
+                                    TokenInputTextBoxVisibility="Collapsed"
+                                    TokenSource="{x:Bind misc:SettingsPageViewModel.AvailableIllustMacros}"
+                                    TokenTapped="NameMacroTokenInputBox_OnTokenTapped" />
+                                <TextBox
+                                    x:Name="DefaultDownloadNameMacroTextBox"
+                                    x:Uid="/SettingsPage/DefaultDownloadNameMacroTextBox"
+                                    GotFocus="DefaultDownloadNameMacroTextBox_OnGotFocus"
+                                    IsSpellCheckEnabled="False"
+                                    LostFocus="DefaultDownloadNameMacroTextBox_OnLostFocus"
+                                    Text="{x:Bind _viewModel.DefaultDownloadNameMacro, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                             </StackPanel>
                         </controls:SettingsCard>
                     </controls:SettingsExpander.Items>
@@ -555,10 +581,9 @@
                     Target="{x:Bind ImageMirrorServerTextBox}" />
 
                 <TeachingTip
-                    x:Name="DownloadPathMacroInvalidTeachingTip"
-                    x:Uid="/SettingsPage/DownloadPathMacroInvalidTeachingTip"
-                    IconSource="{markup:FontSymbolIconSource Glyph=ErrorE783}"
-                    Target="{x:Bind DefaultDownloadPathMacroTextBox}" />
+                    x:Name="DownloadMacroInvalidTeachingTip"
+                    x:Uid="/SettingsPage/DownloadMacroInvalidTeachingTip"
+                    IconSource="{markup:FontSymbolIconSource Glyph=ErrorE783}" />
             </StackPanel>
         </ScrollView>
     </Grid>

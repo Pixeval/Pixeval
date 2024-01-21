@@ -1,8 +1,8 @@
-﻿#region Copyright (c) Pixeval/Pixeval.SourceGen
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
-// Pixeval/Pixeval.SourceGen
-// Copyright (c) 2023 Pixeval.SourceGen/EnumerateHelper.cs
+// Pixeval/Pixeval
+// Copyright (c) 2023 Pixeval/SettingMetadata.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,18 +18,16 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System.Collections.Generic;
+using System;
 
-namespace Pixeval.SourceGen;
+namespace Pixeval.Attributes;
 
-public static class EnumerateHelper
+public class SettingMetadataAttribute(SettingEntryCategory category, Type resourceLoaderType, string localizedResourceKey)
+    : Attribute
 {
-    public static IEnumerable<(T, int)> Indexed<T>(this IEnumerable<T> enumerable)
-    {
-        var counter = 0;
-        foreach (var t in enumerable)
-        {
-            yield return (t, counter++);
-        }
-    }
+    public SettingEntryCategory Category { get; } = category;
+
+    public Type ResourceLoaderType { get; } = resourceLoaderType;
+
+    public string LocalizedResourceKey { get; } = localizedResourceKey;
 }

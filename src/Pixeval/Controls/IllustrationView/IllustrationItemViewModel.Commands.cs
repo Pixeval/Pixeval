@@ -188,7 +188,7 @@ public partial class IllustrationItemViewModel
                 break;
         }
 
-        var path = App.AppViewModel.AppSetting.DefaultDownloadPathMacro;
+        var path = Path.Combine(App.AppViewModel.AppSetting.DefaultDownloadPathMacro, App.AppViewModel.AppSetting.DefaultDownloadNameMacro);
         await SaveUtilityAsync(frameworkElement, getOriginalImageSourceAsync, path);
     }
 
@@ -218,22 +218,8 @@ public partial class IllustrationItemViewModel
             return;
         }
 
-        var path = Path.Combine(folder.Path, GetName());
+        var path = Path.Combine(folder.Path, App.AppViewModel.AppSetting.DefaultDownloadNameMacro);
         await SaveUtilityAsync(frameworkElement, getOriginalImageSourceAsync, path);
-        return;
-
-        // TODO: 名字能使用宏吗
-        string GetName()
-        {
-            string? name;
-            if (IsUgoira)
-                name = Id + IoHelper.GetUgoiraExtension();
-            else if (MangaIndex is -1)
-                name = Id + IoHelper.GetIllustrationExtension();
-            else
-                name = $"{Id}_{MangaIndex}";
-            return name;
-        }
     }
 
     /// <summary>
