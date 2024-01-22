@@ -33,7 +33,6 @@ using Pixeval.Utilities;
 using System.Threading.Tasks;
 using System.IO;
 using Pixeval.Download;
-using Pixeval.Util.IO;
 using Microsoft.Extensions.DependencyInjection;
 using Pixeval.Download.Models;
 using Pixeval.CoreApi.Global.Enum;

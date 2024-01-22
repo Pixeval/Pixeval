@@ -131,7 +131,7 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
     {
         foreach (var illustrationViewModel in Illustrations)
             illustrationViewModel.UnloadThumbnail(this);
-        _pages?.ForEach(i => i.Dispose());
+        Pages = null!;
         (UserProfileImageSource as SoftwareBitmapSource)?.Dispose();
         ViewModelSource?.Dispose();
     }
@@ -175,7 +175,7 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
     /// <summary>
     /// 当前插画的页面
     /// </summary>
-    public IllustrationItemViewModel CurrentPage => _pages[CurrentPageIndex];
+    public IllustrationItemViewModel CurrentPage => Pages[CurrentPageIndex];
 
     /// <summary>
     /// 当前插画的索引
@@ -190,11 +190,10 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
 
             var oldValue = _currentIllustrationIndex;
             // ReSharper disable once ConditionalAccessQualifierIsNonNullableAccordingToAPIContract
-            var oldTag = _pages?[CurrentPageIndex].Id ?? 0;
+            var oldTag = Pages?[CurrentPageIndex].Id ?? 0;
 
             _currentIllustrationIndex = value;
-            _pages?.ForEach(i => i.Dispose());
-            _pages = CurrentIllustration.GetMangaIllustrationViewModels().ToArray();
+            Pages = CurrentIllustration.GetMangaIllustrationViewModels().ToArray();
             // 保证_pages里所有的IllustrationViewModel都是生成的，从而删除的时候一律DisposeForce
 
             RelatedWorksTag.Parameter = IllustrationId;
@@ -230,11 +229,14 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
         set
         {
             _currentPageIndex = value;
+            OnPropertyChanged();
             OnPropertyChanged(nameof(NextButtonEnable));
             OnPropertyChanged(nameof(PrevButtonEnable));
             CurrentImage = new ImageViewerPageViewModel(this, CurrentPage);
         }
     }
+
+    public int PageCount => Pages.Length;
 
     /// <inheritdoc cref="CurrentIllustrationIndex"/>
     private int _currentIllustrationIndex;
@@ -245,13 +247,26 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
     /// <summary>
     /// 一个插画所有的页面
     /// </summary>
+    public IllustrationItemViewModel[] Pages
+    {
+        get => _pages;
+        set
+        {
+            if (_pages == value)
+                return;
+            _pages?.ForEach(i => i.Dispose());
+            _pages = value;
+            if (_pages != null!)
+                OnPropertyChanged(nameof(PageCount));
+        }
+    }
+
     private IllustrationItemViewModel[] _pages = null!;
 
     /// <summary>
     /// 当前图片的ViewModel
     /// </summary>
-    [ObservableProperty]
-    private ImageViewerPageViewModel _currentImage = null!;
+    [ObservableProperty] private ImageViewerPageViewModel _currentImage = null!;
 
     #endregion
 
@@ -271,7 +286,7 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
     {
         get
         {
-            if (CurrentPageIndex < _pages.Length - 1)
+            if (CurrentPageIndex < PageCount - 1)
             {
                 return true;
             }

@@ -18,6 +18,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using System.Threading.Tasks;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
@@ -48,7 +49,15 @@ public class EnhancedWindowPage : EnhancedPage
             Loaded += (_, _) =>
             {
                 page.RaiseSetTitleBarDragRegion();
-                Window.AppWindow.Changed += (_, _) => page.RaiseSetTitleBarDragRegion();
+                Window.AppWindow.Changed += (s, args) =>
+                {
+                    // 等待XAML元素变化后计算
+                    if (args.DidSizeChange)
+                        _ = Task.Delay(500).ContinueWith(_ =>
+                             page.RaiseSetTitleBarDragRegion(), TaskScheduler.FromCurrentSynchronizationContext());
+                    else
+                        page.RaiseSetTitleBarDragRegion();
+                };
             };
 
         OnPageActivated(e, parameter.Parameter);

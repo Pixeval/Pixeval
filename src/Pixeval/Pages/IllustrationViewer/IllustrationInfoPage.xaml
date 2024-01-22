@@ -78,8 +78,11 @@
             <TextBlock x:Uid="/IllustrationInfoPage/IllustrationUploadDateTextBlock" Style="{StaticResource InfoPageSectionHeaderTextBlockStyle}" />
             <TextBlock Style="{StaticResource InfoPageSectionContentTextBlockStyle}" Text="{x:Bind GetIllustrationUploadDateText()}" />
             <TextBlock x:Uid="/IllustrationInfoPage/IllustrationTagListTextBlock" Style="{StaticResource InfoPageSectionHeaderTextBlockStyle}" />
-            <ItemsControl Margin="{StaticResource StackLayoutEntryPadding}" ItemsSource="{x:Bind GetIllustrationTagItemSource()}">
-                <ItemsControl.ItemTemplate>
+            <ItemsRepeater Margin="{StaticResource StackLayoutEntryPadding}" ItemsSource="{x:Bind GetIllustrationTagItemSource()}">
+                <ItemsRepeater.Layout>
+                    <controls:WrapLayout HorizontalSpacing="5" VerticalSpacing="5" />
+                </ItemsRepeater.Layout>
+                <ItemsRepeater.ItemTemplate>
                     <DataTemplate x:DataType="model:Tag">
                         <Button
                             Content="{x:Bind Name}"
@@ -87,13 +90,8 @@
                             Tapped="IllustrationTagButton_OnTapped"
                             ToolTipService.ToolTip="{x:Bind viewer:IllustrationInfoPage.GetMakoTagTranslatedNameText(TranslatedName, Name)}" />
                     </DataTemplate>
-                </ItemsControl.ItemTemplate>
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <controls:WrapPanel HorizontalSpacing="5" VerticalSpacing="5" />
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-            </ItemsControl>
+                </ItemsRepeater.ItemTemplate>
+            </ItemsRepeater>
         </StackPanel>
     </ScrollViewer>
 </pixevalControls:EnhancedPage>

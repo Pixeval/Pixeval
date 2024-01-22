@@ -4,9 +4,10 @@
     xmlns:numberFormatting="using:Windows.Globalization.NumberFormatting">
     <Style x:Key="PixevalRoundedButtonStyle" TargetType="Button">
         <Style.Setters>
-            <Setter Property="CornerRadius" Value="90" />
+            <Setter Property="CornerRadius" Value="19" />
             <Setter Property="Width" Value="38" />
             <Setter Property="Height" Value="38" />
+            <Setter Property="Padding" Value="0" />
         </Style.Setters>
     </Style>
     <x:Double x:Key="PixevalButtonIconSize">12</x:Double>

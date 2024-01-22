@@ -135,7 +135,7 @@ public partial class CommentBlockViewModel(Comment comment, long illustrationId)
 
     public void Dispose()
     {
-        AvatarSource.Dispose();
+        AvatarSource?.Dispose();
         Replies?.ForEach(r => r.Dispose());
     }
 }

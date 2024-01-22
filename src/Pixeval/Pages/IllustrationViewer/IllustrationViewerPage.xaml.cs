@@ -19,8 +19,6 @@
 #endregion
 
 using System;
-using System.IO;
-using System.Linq;
 using System.Numerics;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
@@ -37,11 +35,9 @@ using Pixeval.AppManagement;
 using Pixeval.Controls;
 using Pixeval.Controls.IllustrationView;
 using Pixeval.Misc;
-using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using WinUI3Utilities;
-using Pixeval.Download;
 
 namespace Pixeval.Pages.IllustrationViewer;
 

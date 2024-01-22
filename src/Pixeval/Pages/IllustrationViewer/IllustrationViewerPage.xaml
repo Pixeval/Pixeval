@@ -4,7 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Pixeval.Controls"
     xmlns:converters="using:CommunityToolkit.WinUI.Converters"
-    xmlns:converters1="using:Pixeval.Util.Converters"
+    xmlns:converters1="using:Pixeval.Controls.Converters"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:illustrationView="using:Pixeval.Controls.IllustrationView"
@@ -21,6 +21,9 @@
     <controls:EnhancedWindowPage.Resources>
         <ThemeShadow x:Name="SidePanelShadow" />
         <converters:BoolNegationConverter x:Key="BoolNegationConverter" />
+        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+        <converters1:NumberToPercentageConverter x:Key="NumberToPercentageConverter" />
+        <converters1:DisplayIndexConverter x:Key="DisplayIndexConverter" />
         <AcrylicBrush
             x:Key="BottomCommandSectionBackground"
             FallbackColor="{StaticResource SecondaryAccentColor}"
@@ -32,7 +35,17 @@
         <Thickness x:Key="FullScreenMargin">0</Thickness>
         <x:Double x:Key="TitleBarHeight">48</x:Double>
         <x:Double x:Key="NegativeTitleBarHeight">-48</x:Double>
-        <converters1:NumberToPercentageConverter x:Key="NumberToPercentageConverter" />
+        <Style
+            x:Key="TextBlockStyle"
+            BasedOn="{StaticResource BaseTextBlockStyle}"
+            TargetType="TextBlock">
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="FontSize" Value="{StaticResource PixevalContentFontSize}" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="HorizontalTextAlignment" Value="Center" />
+            <Setter Property="TextAlignment" Value="Center" />
+            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+        </Style>
     </controls:EnhancedWindowPage.Resources>
     <Page.KeyboardAccelerators>
         <KeyboardAccelerator
@@ -313,6 +326,7 @@
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
                         <!--  ReSharper disable once UnusedMember.Local  -->
                         <ColumnDefinition x:Name="TitleControlButtonsColumn" Width="150" />
                     </Grid.ColumnDefinitions>
@@ -377,9 +391,18 @@
                             SizeChanged="CommandBarElementOnSizeChanged" />
                         <AppBarButton Command="{x:Bind _viewModel.CurrentImage.ShareCommand, Mode=OneWay}" SizeChanged="CommandBarElementOnSizeChanged" />
                     </CommandBar>
+                    <StackPanel
+                        Grid.Column="3"
+                        Orientation="Horizontal"
+                        Spacing="5"
+                        Visibility="{x:Bind _viewModel.CurrentIllustration.IsManga, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
+                        <TextBlock Style="{StaticResource TextBlockStyle}" Text="{x:Bind _viewModel.CurrentPageIndex, Converter={StaticResource DisplayIndexConverter}, Mode=OneWay}" />
+                        <TextBlock Style="{StaticResource TextBlockStyle}" Text="/" />
+                        <TextBlock Style="{StaticResource TextBlockStyle}" Text="{x:Bind _viewModel.PageCount, Mode=OneWay}" />
+                    </StackPanel>
                     <CommandBar
                         x:Name="IllustrationViewerSubCommandBar"
-                        Grid.Column="3"
+                        Grid.Column="4"
                         HorizontalAlignment="Right"
                         VerticalAlignment="Center"
                         DefaultLabelPosition="Collapsed">
@@ -389,16 +412,12 @@
                         <AppBarButton Width="{StaticResource CollapsedAppBarButtonWidth}" Command="{x:Bind _viewModel.CurrentImage.ZoomInCommand, Mode=OneWay}" />
                     </CommandBar>
                     <TextBlock
-                        Grid.Column="4"
+                        Grid.Column="5"
                         Width="60"
                         Margin="-5,-3,0,0"
-                        VerticalAlignment="Center"
-                        FontSize="{StaticResource PixevalContentFontSize}"
-                        FontWeight="SemiBold"
-                        HorizontalTextAlignment="Center"
+                        Style="{StaticResource TextBlockStyle}"
                         Text="{x:Bind _viewModel.CurrentImage.Scale, Converter={StaticResource NumberToPercentageConverter}, ConverterParameter=2, Mode=OneWay}"
-                        TextAlignment="Center"
-                        TextTrimming="CharacterEllipsis" />
+                        ToolTipService.ToolTip="{x:Bind _viewModel.CurrentImage.Scale, Converter={StaticResource NumberToPercentageConverter}, ConverterParameter=2, Mode=OneWay}" />
                     <TeachingTip
                         x:Name="ShowQrCodeTeachingTip"
                         x:Uid="/IllustrationViewerPage/QrCodeTeachingTip"

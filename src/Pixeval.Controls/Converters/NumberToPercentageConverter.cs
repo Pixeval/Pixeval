@@ -22,7 +22,7 @@ using System;
 using Microsoft.UI.Xaml.Data;
 using WinUI3Utilities;
 
-namespace Pixeval.Util.Converters;
+namespace Pixeval.Controls.Converters;
 
 public class NumberToPercentageConverter : IValueConverter
 {

@@ -97,7 +97,11 @@ public sealed partial class MainPage : SupportCustomTitleBarDragRegionPage
         }
 
         _ = WeakReferenceMessenger.Default.TryRegister<MainPage, MainPageFrameSetConnectedAnimationTargetMessage>(this, (_, message) => _connectedAnimationTarget = message.Sender);
-        _ = WeakReferenceMessenger.Default.TryRegister<MainPage, IllustrationTagClickedMessage>(this, (_, message) => PerformSearch(message.Tag));
+        _ = WeakReferenceMessenger.Default.TryRegister<MainPage, IllustrationTagClickedMessage>(this, (_, message) =>
+        {
+            Window.AppWindow.MoveInZOrderAtTop();
+            PerformSearch(message.Tag);
+        });
         _ = WeakReferenceMessenger.Default.TryRegister<MainPage, GlobalSearchQuerySubmittedMessage>(this, (_1, message) =>
         {
             NavigationView.SelectedItem = null;

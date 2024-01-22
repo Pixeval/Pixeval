@@ -43,7 +43,7 @@ namespace Pixeval.Controls;
 /// <summary>
 /// 主体：<see cref="ZoomableImageMain"/>，由此控制渲染速度<br/>
 /// 渲染：<see cref="CanvasControlOnDraw"/>，图片渲染逻辑<br/>
-/// 对外API：<see cref="Zoom"/>、<see cref="SetPosition"/>
+/// 对外API：<see cref="Zoom(float)"/>、<see cref="SetPosition"/>
 /// </summary>
 [DependencyProperty<IReadOnlyList<Stream>>("Sources", DependencyPropertyDefaultValue.Default, nameof(OnSourcesChanged), IsNullable = true)]
 [DependencyProperty<IReadOnlyList<int>>("MsIntervals", DependencyPropertyDefaultValue.Default, nameof(OnMsIntervalsChanged))]
