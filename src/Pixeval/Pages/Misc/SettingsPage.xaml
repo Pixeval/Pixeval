@@ -451,7 +451,6 @@
                             <StackPanel Spacing="3">
                                 <tokenInput:TokenInput
                                     IsTokenTappedDefaultBehaviorEnabled="False"
-                                    Tag="{x:Bind DefaultDownloadPathMacroTextBox}"
                                     TokenInputTextBoxVisibility="Collapsed"
                                     TokenSource="{x:Bind misc:SettingsPageViewModel.AvailableIllustMacros}"
                                     TokenTapped="PathMacroTokenInputBox_OnTokenTapped" />
@@ -476,7 +475,6 @@
                             <StackPanel Spacing="3">
                                 <tokenInput:TokenInput
                                     IsTokenTappedDefaultBehaviorEnabled="False"
-                                    Tag="{x:Bind DefaultDownloadNameMacroTextBox}"
                                     TokenInputTextBoxVisibility="Collapsed"
                                     TokenSource="{x:Bind misc:SettingsPageViewModel.AvailableIllustMacros}"
                                     TokenTapped="NameMacroTokenInputBox_OnTokenTapped" />

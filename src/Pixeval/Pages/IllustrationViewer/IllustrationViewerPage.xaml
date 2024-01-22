@@ -344,17 +344,17 @@
                         <AppBarButton
                             Command="{x:Bind _viewModel.CurrentImage.PlayGifCommand, Mode=OneWay}"
                             SizeChanged="CommandBarElementOnSizeChanged"
-                            Visibility="{x:Bind _viewModel.IsUgoira, Mode=OneWay}" />
+                            Visibility="{x:Bind _viewModel.CurrentIllustration.IsUgoira, Mode=OneWay}" />
                         <AppBarSeparator />
                         <AppBarButton Command="{x:Bind _viewModel.CurrentImage.CopyCommand, Mode=OneWay}" SizeChanged="CommandBarElementOnSizeChanged" />
                         <AppBarButton Command="{x:Bind _viewModel.CurrentImage.SaveCommand, Mode=OneWay}" SizeChanged="CommandBarElementOnSizeChanged" />
                         <AppBarButton Command="{x:Bind _viewModel.CurrentImage.SaveAsCommand, Mode=OneWay}" SizeChanged="CommandBarElementOnSizeChanged" />
                         <AppBarSeparator />
-                        <AppBarButton Command="{x:Bind _viewModel.SetAsCommand}" SizeChanged="CommandBarElementOnSizeChanged">
+                        <AppBarButton Command="{x:Bind _viewModel.CurrentImage.SetAsCommand, Mode=OneWay}" SizeChanged="CommandBarElementOnSizeChanged">
                             <AppBarButton.Flyout>
                                 <MenuFlyout>
-                                    <MenuFlyoutItem Command="{x:Bind _viewModel.SetAsBackgroundCommand}" />
-                                    <MenuFlyoutItem Command="{x:Bind _viewModel.SetAsLockScreenCommand}" />
+                                    <MenuFlyoutItem Command="{x:Bind _viewModel.CurrentImage.SetAsBackgroundCommand, Mode=OneWay}" />
+                                    <MenuFlyoutItem Command="{x:Bind _viewModel.CurrentImage.SetAsLockScreenCommand, Mode=OneWay}" />
                                 </MenuFlyout>
                             </AppBarButton.Flyout>
                         </AppBarButton>
@@ -375,7 +375,7 @@
                             Command="{x:Bind _viewModel.CurrentIllustration.ShowQrCodeCommand, Mode=OneWay}"
                             CommandParameter="{x:Bind ShowQrCodeTeachingTip}"
                             SizeChanged="CommandBarElementOnSizeChanged" />
-                        <AppBarButton Command="{x:Bind _viewModel.ShareCommand}" SizeChanged="CommandBarElementOnSizeChanged" />
+                        <AppBarButton Command="{x:Bind _viewModel.CurrentImage.ShareCommand, Mode=OneWay}" SizeChanged="CommandBarElementOnSizeChanged" />
                     </CommandBar>
                     <CommandBar
                         x:Name="IllustrationViewerSubCommandBar"

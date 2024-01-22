@@ -19,10 +19,10 @@
 #endregion
 
 using System.Collections.Generic;
+using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Windows.Foundation;
 using Windows.Graphics;
-using Microsoft.UI.Windowing;
 using WinUI3Utilities;
 
 namespace Pixeval.Controls.Windowing;
@@ -38,6 +38,15 @@ public static class WindowFactory
     private static readonly List<EnhancedWindow> _forkedWindowsInternal = [];
 
     public static IReadOnlyList<EnhancedWindow> ForkedWindows => _forkedWindowsInternal;
+
+    public static EnhancedWindow GetWindowForElement(UIElement element)
+    {
+        if (element.XamlRoot is null)
+            ThrowHelper.ArgumentNull(element.XamlRoot, $"{nameof(element.XamlRoot)} should not be null.");
+
+        return _forkedWindowsInternal.Find(window => element.XamlRoot == window.Content.XamlRoot) 
+               ?? ThrowHelper.ArgumentOutOfRange<UIElement, EnhancedWindow>(element, $"Specified {nameof(element)} is not existed in any of {nameof(ForkedWindows)}.");
+    }
 
     public static EnhancedWindow Create(out EnhancedWindow window)
     {

@@ -97,10 +97,8 @@ public sealed partial class IllustrationViewerPage : SupportCustomTitleBarDragRe
 
     public override void OnPageActivated(NavigationEventArgs e, object? parameter)
     {
-        if (parameter is not IllustrationViewerPageViewModel viewModel)
-            return;
-        _viewModel = viewModel;
-        _viewModel.Window = Window;
+        // 此处this.XamlRoot为null
+        _viewModel = Window.Content.To<FrameworkElement>().GetViewModel(parameter);
 
         _viewModel.DetailedPropertyChanged += (sender, args) =>
         {
@@ -122,7 +120,6 @@ public sealed partial class IllustrationViewerPage : SupportCustomTitleBarDragRe
                 info = new SlideNavigationTransitionInfo { Effect = SlideNavigationTransitionEffect.FromLeft };
             ThumbnailItemsView.StartBringItemIntoView(vm.CurrentIllustrationIndex, new BringIntoViewOptions { AnimationDesired = true });
             Navigate<ImageViewerPage>(IllustrationImageShowcaseFrame, vm.CurrentImage, info);
-            // TODO: 换页后ViewModel需要更新绑定
         };
 
         _viewModel.PropertyChanged += (sender, args) =>
@@ -189,43 +186,14 @@ public sealed partial class IllustrationViewerPage : SupportCustomTitleBarDragRe
         props.Title = IllustrationViewerPageResources.ShareTitleFormatted.Format(vm.Id);
         props.Description = vm.Illustrate.Title;
 
-        var file = null as StorageFile;
-        if (vm.IsUgoira)
-        {
-            if (_viewModel.CurrentImage.OriginalImageSources is { } streams)
-            {
-                var metadata = await App.AppViewModel.MakoClient.GetUgoiraMetadataAsync(vm.Id);
-                await using var target = await OpenStreamAsync(vm);
-                _ = await streams.UgoiraSaveToStreamAsync(metadata.UgoiraMetadataInfo.Frames.Select(t => (int)t.Delay), target);
-            }
-        }
-        else
-        {
-            if (_viewModel.CurrentImage.OriginalImageSources is [var s, ..])
-            {
-                s.Position = 0;
-                await using var target = await OpenStreamAsync(vm);
-                _ = await s.IllustrationSaveToStreamAsync(target);
-            }
-        }
-        if (file is not null)
-        {
-            request.Data.SetStorageItems([file]);
-            request.Data.ShareCanceled += FileDispose;
-            request.Data.ShareCompleted += FileDispose;
-        }
+        var file = await _viewModel.CurrentImage.SaveToFileAsync(AppKnownFolders.Temporary);
+        request.Data.SetStorageItems([file]);
+        request.Data.ShareCanceled += FileDispose;
+        request.Data.ShareCompleted += FileDispose;
         deferral.Complete();
         return;
 
         async void FileDispose(DataPackage dataPackage, object o) => await file?.DeleteAsync(StorageDeleteOption.PermanentDelete);
-
-        async Task<Stream> OpenStreamAsync(IllustrationItemViewModel viewModel)
-        {
-            var path = IoHelper.NormalizePath(
-                new IllustrationMetaPathParser().Reduce(App.AppViewModel.AppSetting.DefaultDownloadNameMacro, viewModel));
-            file = await AppKnownFolders.CreateTemporaryFileWithNameAsync(path);
-            return await file.OpenStreamForWriteAsync();
-        }
     }
 
     private void NextButton_OnTapped(object sender, TappedRoutedEventArgs e)

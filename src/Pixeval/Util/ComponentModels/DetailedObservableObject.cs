@@ -18,14 +18,12 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System;
-using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using CommunityToolkit.Mvvm.ComponentModel;
 
-namespace Pixeval.Util;
+namespace Pixeval.Util.ComponentModels;
 
-public class DetailedObservableObject : ObservableObject
+public class DetailedObservableObject : ObservableObject, INotifyDetailedPropertyChanging, INotifyDetailedPropertyChanged
 {
     public event DetailedPropertyChangedEventHandler? DetailedPropertyChanged;
 
@@ -74,34 +72,4 @@ public class DetailedObservableObject : ObservableObject
         DetailedPropertyChanging?.Invoke(this, args);
         OnPropertyChanging(args);
     }
-}
-
-public delegate void DetailedPropertyChangedEventHandler(object? sender, DetailedPropertyChangedEventArgs e);
-
-public delegate void DetailedPropertyChangingEventHandler(object? sender, DetailedPropertyChangingEventArgs e);
-
-public class DetailedPropertyChangedEventArgs(string? propertyName) : PropertyChangedEventArgs(propertyName)
-{
-    public Type? Type { get; init; }
-
-    public object? OldValue { get; init; }
-
-    public object? NewValue { get; init; }
-
-    public object? OldTag { get; init; }
-
-    public object? NewTag { get; init; }
-}
-
-public class DetailedPropertyChangingEventArgs(string? propertyName) : PropertyChangingEventArgs(propertyName)
-{
-    public Type? Type { get; init; }
-
-    public object? OldValue { get; init; }
-
-    public object? NewValue { get; init; }
-
-    public object? OldTag { get; init; }
-
-    public object? NewTag { get; init; }
 }

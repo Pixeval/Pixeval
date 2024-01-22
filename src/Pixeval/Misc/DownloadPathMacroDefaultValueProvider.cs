@@ -36,6 +36,6 @@ public class DownloadNameMacroDefaultValueProvider : IDefaultValueProvider
 {
     public object ProvideValue()
     {
-        return "[@{artist_name}]@{illust_id}@{if_manga:p@{manga_index}}@{illust_ext}";
+        return "[@{artist_name}] @{illust_id}@{if_manga:p@{manga_index}}@{illust_ext}";
     }
 }

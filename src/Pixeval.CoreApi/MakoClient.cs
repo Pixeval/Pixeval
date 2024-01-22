@@ -146,7 +146,7 @@ public partial class MakoClient : ICancellable
 
         _ = builder.Register(static c =>
         {
-            var context = c.Resolve<IComponentContext>(); // or a System.ObjectDisposedException will thrown because the 'c' cannot be hold
+            var context = c.Resolve<IComponentContext>(); // or a System.ObjectDisposedException will be thrown because the 'c' cannot be hold
             return RestService.For<IAppApiEndPoint>(c.ResolveKeyed<HttpClient>(MakoApiKind.AppApi), new RefitSettings
             {
                 ExceptionFactory = async message => !message.IsSuccessStatusCode ? await MakoNetworkException.FromHttpResponseMessageAsync(message, context.Resolve<MakoClient>().Configuration.Bypass).ConfigureAwait(false) : null

@@ -23,7 +23,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Windows.Foundation;
+using Windows.Storage;
 using Windows.System;
+using Windows.System.UserProfile;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Input;
@@ -40,10 +43,14 @@ using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using Pixeval.Utilities.Threading;
 using Microsoft.UI.Xaml.Controls;
+using Pixeval.AppManagement;
+using Pixeval.Download;
+using Pixeval.Util.ComponentModels;
+using WinUI3Utilities;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
-public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
+public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
 {
     public enum LoadingPhase
     {
@@ -96,6 +103,11 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
     [NotifyPropertyChangedFor(nameof(IsFit))]
     private ZoomableImageMode _showMode;
 
+    /// <summary>
+    /// <see cref="ShowMode"/> is <see cref="ZoomableImageMode.Fit"/> or not
+    /// </summary>
+    public bool IsFit => ShowMode is ZoomableImageMode.Fit;
+
     private bool _loadSuccessfully;
 
     public bool LoadSuccessfully
@@ -110,7 +122,7 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
         }
     }
 
-    public ImageViewerPageViewModel(IllustrationViewerPageViewModel illustrationViewerPageViewModel, IllustrationItemViewModel illustrationViewModel)
+    public ImageViewerPageViewModel(IllustrationViewerPageViewModel illustrationViewerPageViewModel, IllustrationItemViewModel illustrationViewModel) : base(illustrationViewerPageViewModel.FrameworkElement)
     {
         IllustrationViewerPageViewModel = illustrationViewerPageViewModel;
         IllustrationViewModel = illustrationViewModel;
@@ -119,26 +131,31 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
         InitializeCommands();
     }
 
-    /// <summary>
-    /// <see cref="ShowMode"/> is <see cref="ZoomableImageMode.Fit"/> or not
-    /// </summary>
-    public bool IsFit => ShowMode is ZoomableImageMode.Fit;
-
-    public async Task<Stream?> GetOriginalImageSourceAsync(bool useBmp, IProgress<int>? progress = null)
+    public async Task<Stream?> GetOriginalImageSourceAsync(bool useBmp, IProgress<int>? progress = null, Stream? destination = null)
     {
         if (OriginalImageSources is null)
             return null;
 
         if (IllustrationViewModel.IsUgoira)
-            return await OriginalImageSources.UgoiraSaveToStreamAsync(MsIntervals ?? [], null, progress);
+            return await OriginalImageSources.UgoiraSaveToStreamAsync(MsIntervals ?? [], destination, progress);
 
         if (OriginalImageSources is [var stream, ..])
         {
             stream.Position = 0;
-            return await stream.IllustrationSaveToStreamAsync(null, useBmp ? IllustrationDownloadFormat.Bmp : null);
+            return await stream.IllustrationSaveToStreamAsync(destination, useBmp ? IllustrationDownloadFormat.Bmp : null);
         }
 
-        return null;
+        return destination;
+    }
+
+    public async Task<StorageFile> SaveToFileAsync(AppKnownFolders appKnownFolder)
+    {
+        var path = IoHelper.NormalizePathSegment(
+            new IllustrationMetaPathParser().Reduce(App.AppViewModel.AppSetting.DefaultDownloadNameMacro, IllustrationViewModel));
+        var file = await appKnownFolder.CreateFileAsync(path);
+        await using var target = await file.OpenStreamForWriteAsync();
+        _ = await GetOriginalImageSourceAsync(false, null, target);
+        return file;
     }
 
     public CancellationHandle ImageLoadingCancellationHandle { get; } = new();
@@ -156,15 +173,6 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
         _disposed = true;
         DisposeInternal();
         GC.SuppressFinalize(this);
-    }
-
-    /// <summary>
-    /// see <see cref="ZoomableImage.Zoom"/>
-    /// </summary>
-    /// <param name="delta"></param>
-    public void Zoom(float delta)
-    {
-        Scale = MathF.Exp(MathF.Log(Scale) + delta / 5000f);
     }
 
     private void AdvancePhase(LoadingPhase phase)
@@ -298,26 +306,57 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
         }
     }
 
+    private void SetAsBackgroundCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
+    {
+        SetPersonalization(UserProfilePersonalizationSettings.Current.TrySetWallpaperImageAsync);
+    }
+
+    private void SetAsLockScreenCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
+    {
+        SetPersonalization(UserProfilePersonalizationSettings.Current.TrySetLockScreenImageAsync);
+    }
+
+    private async void SetPersonalization(Func<StorageFile, IAsyncOperation<bool>> operation)
+    {
+        if (OriginalImageSources is not [{ } first, ..])
+            return;
+        
+        var file = await SaveToFileAsync(AppKnownFolders.SavedWallPaper);
+        _ = await operation(file);
+
+        ToastNotificationHelper.ShowTextToastNotification(
+            IllustrationViewerPageResources.SetAsSucceededTitle,
+            IllustrationViewerPageResources.SetAsBackgroundSucceededTitle);
+    }
+
+    private void ShareCommandExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
+    {
+        if (LoadSuccessfully)
+            Window.ShowShareUi();
+        else
+            FrameworkElement.ShowTeachingTipAndHide(IllustrationViewerPageResources.CannotShareImageForNowTitle, TeachingTipSeverity.Warning, IllustrationViewerPageResources.CannotShareImageForNowContent);
+    }
+
     private void InitializeCommands()
     {
         SaveCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
-        SaveCommand.ExecuteRequested += (_, _) => IllustrationViewModel.SaveCommand.Execute((IllustrationViewerPageViewModel.WindowContent, (Func<IProgress<int>?, Task<Stream?>>)(p => GetOriginalImageSourceAsync(false, p))));
+        SaveCommand.ExecuteRequested += (_, _) => IllustrationViewModel.SaveCommand.Execute((FrameworkElement, (Func<IProgress<int>?, Task<Stream?>>)(p => GetOriginalImageSourceAsync(false, p))));
 
         SaveAsCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
-        SaveAsCommand.ExecuteRequested += (_, _) => IllustrationViewModel.SaveAsCommand.Execute((IllustrationViewerPageViewModel.Window, (Func<IProgress<int>?, Task<Stream?>>)(p => GetOriginalImageSourceAsync(false, p))));
+        SaveAsCommand.ExecuteRequested += (_, _) => IllustrationViewModel.SaveAsCommand.Execute((Window, (Func<IProgress<int>?, Task<Stream?>>)(p => GetOriginalImageSourceAsync(false, p))));
 
         CopyCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
-        CopyCommand.ExecuteRequested += (_, _) => IllustrationViewModel.CopyCommand.Execute((IllustrationViewerPageViewModel.WindowContent, (Func<IProgress<int>?, Task<Stream?>>)(p => GetOriginalImageSourceAsync(true, p))));
+        CopyCommand.ExecuteRequested += (_, _) => IllustrationViewModel.CopyCommand.Execute((FrameworkElement, (Func<IProgress<int>?, Task<Stream?>>)(p => GetOriginalImageSourceAsync(true, p))));
 
         PlayGifCommand.CanExecuteRequested += (_, e) => e.CanExecute = IllustrationViewModel.IsUgoira && LoadSuccessfully;
         PlayGifCommand.ExecuteRequested += PlayGifCommandOnExecuteRequested;
 
         // 相当于鼠标滚轮滚动10次，方便快速缩放
         ZoomOutCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
-        ZoomOutCommand.ExecuteRequested += (_, _) => Zoom(-1200);
+        ZoomOutCommand.ExecuteRequested += (_, _) => Scale = ZoomableImage.Zoom(-1200, Scale);
 
         ZoomInCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
-        ZoomInCommand.ExecuteRequested += (_, _) => Zoom(1200);
+        ZoomInCommand.ExecuteRequested += (_, _) => Scale = ZoomableImage.Zoom(1200, Scale);
 
         RotateClockwiseCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
         RotateClockwiseCommand.ExecuteRequested += (_, _) => RotationDegree += 90;
@@ -330,6 +369,15 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
 
         RestoreResolutionCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
         RestoreResolutionCommand.ExecuteRequested += FlipRestoreResolutionCommand;
+
+        ShareCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
+        ShareCommand.ExecuteRequested += ShareCommandExecuteRequested;
+
+        SetAsLockScreenCommand.CanExecuteRequested += IsNotUgoiraAndLoadingCompletedCanExecuteRequested;
+        SetAsLockScreenCommand.ExecuteRequested += SetAsLockScreenCommandOnExecuteRequested;
+
+        SetAsBackgroundCommand.CanExecuteRequested += IsNotUgoiraAndLoadingCompletedCanExecuteRequested;
+        SetAsBackgroundCommand.ExecuteRequested += SetAsBackgroundCommandOnExecuteRequested;
     }
 
     private void UpdateCommandCanExecute()
@@ -344,10 +392,12 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
         RotateClockwiseCommand.NotifyCanExecuteChanged();
         RotateCounterclockwiseCommand.NotifyCanExecuteChanged();
         MirrorCommand.NotifyCanExecuteChanged();
-        IllustrationViewerPageViewModel.UpdateCommandCanExecute();
+        ShareCommand.NotifyCanExecuteChanged();
     }
 
     private void LoadingCompletedCanExecuteRequested(XamlUICommand _, CanExecuteRequestedEventArgs args) => args.CanExecute = LoadSuccessfully;
+
+    private void IsNotUgoiraAndLoadingCompletedCanExecuteRequested(XamlUICommand sender, CanExecuteRequestedEventArgs args) => args.CanExecute = !IllustrationViewModel.IsUgoira && LoadSuccessfully;
 
     public XamlUICommand SaveCommand { get; } = IllustrationViewerPageResources.Save.GetCommand(
         FontIconSymbols.SaveE74E, VirtualKeyModifiers.Control, VirtualKey.S);
@@ -379,6 +429,14 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
             FontIconSymbols.CollatePortraitF57C, VirtualKeyModifiers.Control, VirtualKey.M);
 
     public XamlUICommand RestoreResolutionCommand { get; } = IllustrationViewerPageResources.RestoreOriginalResolution.GetCommand(FontIconSymbols.WebcamE8B8);
+
+    public StandardUICommand ShareCommand { get; } = new(StandardUICommandKind.Share);
+
+    public XamlUICommand SetAsCommand { get; } = IllustrationViewerPageResources.SetAs.GetCommand(FontIconSymbols.PersonalizeE771);
+
+    public XamlUICommand SetAsLockScreenCommand { get; } = new() { Label = IllustrationViewerPageResources.LockScreen };
+
+    public XamlUICommand SetAsBackgroundCommand { get; } = new() { Label = IllustrationViewerPageResources.Background };
 
     private void DisposeInternal()
     {

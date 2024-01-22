@@ -25,25 +25,25 @@
                 <!--  PrimaryCommands 点击后不会自动隐藏Flyout  -->
                 <CommandBarFlyout>
                     <AppBarToggleButton Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.IllustrationInfoAndCommentsCommand}" IsChecked="{x:Bind _viewModel.IllustrationViewerPageViewModel.IsInfoPaneOpen, Mode=TwoWay}" />
-                    <AppBarButton Command="{x:Bind _viewModel.PlayGifCommand}" Visibility="{x:Bind _viewModel.IllustrationViewerPageViewModel.IsUgoira}" />
+                    <AppBarButton Command="{x:Bind _viewModel.PlayGifCommand}" Visibility="{x:Bind _viewModel.IllustrationViewModel.IsUgoira}" />
                     <AppBarButton Command="{x:Bind _viewModel.IllustrationViewModel.BookmarkCommand}" />
                     <AppBarSeparator />
                     <AppBarButton Command="{x:Bind _viewModel.ZoomInCommand}" />
                     <AppBarButton Command="{x:Bind _viewModel.ZoomOutCommand}" />
-                    <!--<AppBarButton Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.ShareCommand}" />-->
+                    <AppBarButton Command="{x:Bind _viewModel.ShareCommand}" />
                     <CommandBarFlyout.SecondaryCommands>
                         <AppBarButton Command="{x:Bind _viewModel.CopyCommand}" />
                         <AppBarButton Command="{x:Bind _viewModel.SaveCommand}" />
-                        <AppBarButton Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.SetAsCommand}">
+                        <AppBarButton Command="{x:Bind _viewModel.SetAsCommand}">
                             <AppBarButton.Flyout>
                                 <MenuFlyout>
-                                    <MenuFlyoutItem Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.SetAsBackgroundCommand}" />
-                                    <MenuFlyoutItem Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.SetAsLockScreenCommand}" />
+                                    <MenuFlyoutItem Command="{x:Bind _viewModel.SetAsBackgroundCommand}" />
+                                    <MenuFlyoutItem Command="{x:Bind _viewModel.SetAsLockScreenCommand}" />
                                 </MenuFlyout>
                             </AppBarButton.Flyout>
                         </AppBarButton>
                         <AppBarSeparator />
-                        <!--<AppBarButton Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.GenerateLinkCommand}" />-->
+                        <!--<AppBarButton Command="{x:Bind _viewModel.IllustrationViewModel.GenerateLinkCommand}" />-->
                         <AppBarButton Command="{x:Bind _viewModel.IllustrationViewModel.GenerateWebLinkCommand}" CommandParameter="{x:Bind}" />
                         <AppBarButton Command="{x:Bind _viewModel.IllustrationViewModel.OpenInWebBrowserCommand}" />
                         <!--<AppBarButton

@@ -21,6 +21,7 @@
 using System;
 using System.Collections.Generic;
 using Windows.Graphics;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
 using Pixeval.Controls;
@@ -42,7 +43,7 @@ public static class IllustrationViewerHelper
     public static void CreateWindowWithPage<T>(this T illustrationViewModel, IList<T> illustrationViewModels) where T : IllustrationItemViewModel
     {
         var index = illustrationViewModels.IndexOf(illustrationViewModel);
-        CreateWindowWithPage(illustrationViewModel.Illustrate, new IllustrationViewerPageViewModel(illustrationViewModels, index));
+        CreateWindowWithPage(illustrationViewModel.Illustrate, (illustrationViewModels, index));
     }
 
     /// <summary>
@@ -53,16 +54,28 @@ public static class IllustrationViewerHelper
     public static void CreateWindowWithPage(this IllustrationItemViewModel illustrationViewModel, IllustrationViewViewModel illustrationViewViewModel)
     {
         var index = illustrationViewViewModel.DataProvider.View.IndexOf(illustrationViewModel);
-        CreateWindowWithPage(illustrationViewModel.Illustrate, new IllustrationViewerPageViewModel(illustrationViewViewModel, index));
+        CreateWindowWithPage(illustrationViewModel.Illustrate, (illustrationViewViewModel, index));
     }
 
-    private static void CreateWindowWithPage(Illustration illustration, IllustrationViewerPageViewModel viewModel)
+    public static IllustrationViewerPageViewModel GetViewModel(this FrameworkElement element, object? param)
+    {
+        return param switch
+        {
+            (IllustrationViewViewModel illustrationViewViewModel, int index) => new IllustrationViewerPageViewModel(
+                illustrationViewViewModel, index, element),
+            (IList<IllustrationItemViewModel> illustrationViewModels, int index) => new IllustrationViewerPageViewModel(
+                illustrationViewModels, index, element),
+            _ => ThrowHelper.Argument<object, IllustrationViewerPageViewModel>(param, "Invalid parameter type.")
+        };
+    }
+
+    private static void CreateWindowWithPage(Illustration illustration, object param)
     {
         var (width, height) = DetermineWindowSize(illustration.Width, illustration.Width / (double)illustration.Height);
 
         WindowFactory.RootWindow.Fork(out var w)
             .WithLoaded((o, _) => o.To<Frame>().NavigateTo<IllustrationViewerPage>(w,
-                viewModel,
+                param,
                 new SuppressNavigationTransitionInfo()))
             .WithSizeLimit(640, 360)
             .Init(illustration.Title, new SizeInt32(width, height))
@@ -95,7 +108,7 @@ public static class IllustrationViewerHelper
             var windowWidth = determinedWidth > monitorWidth ? monitorWidth - 100 : determinedWidth;
             // 51: determined through calculation, it is the height of the title bar
             // 80: estimated working area height
-            var windowHeight = windowWidth / illustRatio + 51 is var height && height > monitorHeight - 80 
+            var windowHeight = windowWidth / illustRatio + 51 is var height && height > monitorHeight - 80
                 ? monitorHeight - 100
                 : height;
             return (windowWidth, (int)windowHeight);

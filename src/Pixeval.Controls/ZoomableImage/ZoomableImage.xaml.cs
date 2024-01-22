@@ -325,7 +325,18 @@ public sealed partial class ZoomableImage : UserControl
     /// <param name="delta"></param>
     public void Zoom(float delta)
     {
-        ImageScale = MathF.Exp(MathF.Log(ImageScale) + delta / 5000f);
+        ImageScale = Zoom(delta, ImageScale);
+    }
+
+    /// <summary>
+    /// 缩放
+    /// </summary>
+    /// <remarks>MouseWheelDelta = 120 when mouse wheel scrolls up</remarks>
+    /// <param name="delta"></param>
+    /// <param name="scale"></param>
+    public static float Zoom(float delta, float scale)
+    {
+        return MathF.Exp(MathF.Log(scale) + delta / 5000f);
     }
 
     /// <summary>

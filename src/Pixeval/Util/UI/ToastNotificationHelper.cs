@@ -77,9 +77,9 @@ public static class ToastNotificationHelper
             appLogoOverrideUri.HintCrop = crop;
         }
 
-        if (alternateText is { } alt)
+        if (alternateText != null)
         {
-            appLogoOverrideUri.AlternateText = alt;
+            appLogoOverrideUri.AlternateText = alternateText;
         }
 
         if (addImageQuery is { } query)

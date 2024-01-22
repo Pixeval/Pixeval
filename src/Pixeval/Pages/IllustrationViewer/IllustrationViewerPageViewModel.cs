@@ -20,42 +20,29 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Windows.Foundation;
-using Windows.Storage;
 using Windows.System;
-using Windows.System.UserProfile;
 using CommunityToolkit.Mvvm.ComponentModel;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
-using Pixeval.AppManagement;
 using Pixeval.Controls.IllustrationView;
 using Pixeval.Controls.MarkupExtensions;
 using Pixeval.CoreApi.Model;
-using Pixeval.Download;
-using Pixeval.Download.Models;
 using Pixeval.Misc;
-using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
-using WinUI3Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
+using Pixeval.Util.ComponentModels;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
-public partial class IllustrationViewerPageViewModel : DetailedObservableObject, IDisposable
+public partial class IllustrationViewerPageViewModel : DetailedUiObservableObject, IDisposable
 {
-    public Window Window { get; set; } = null!;
-
-    public FrameworkElement WindowContent => Window.Content.To<FrameworkElement>();
-
     private bool _isFullScreen;
 
     [ObservableProperty]
@@ -65,7 +52,7 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
     // is because the whole array of Illustrations is just representing the same 
     // illustration's different manga pages, so all of them have the same illustrator
     // If the UserProfileImageSource is in IllustrationViewModel and the illustration
-    // itself is a manga then all of the IllustrationViewModel in Illustrations will
+    // itself is a manga then all of IllustrationViewModel in Illustrations will
     // request the same user profile image which is pointless and will (inevitably) causing
     // the waste of system resource
     [ObservableProperty]
@@ -76,11 +63,11 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
     /// </summary>
     /// <param name="illustrationViewModels"></param>
     /// <param name="currentIllustrationIndex"></param>
-    public IllustrationViewerPageViewModel(IEnumerable<IllustrationItemViewModel> illustrationViewModels, int currentIllustrationIndex)
+    /// <param name="content"></param>
+    public IllustrationViewerPageViewModel(IEnumerable<IllustrationItemViewModel> illustrationViewModels, int currentIllustrationIndex, FrameworkElement content) : base(content)
     {
         IllustrationsSource = illustrationViewModels.ToArray();
         IllustrationInfoTag.Parameter = this;
-        // ViewModel.DataProvider.View.CurrentItem为null，而且只设置这个属性会导致空引用
         CurrentIllustrationIndex = currentIllustrationIndex;
 
         InitializeCommands();
@@ -91,16 +78,16 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
     /// </summary>
     /// <param name="viewModel"></param>
     /// <param name="currentIllustrationIndex"></param>
+    /// <param name="content"></param>
     /// <remarks>
-    /// illustrations should contains only one item if the illustration is a single
+    /// illustrations should contain only one item if the illustration is a single
     /// otherwise it contains the entire manga data
     /// </remarks>
-    public IllustrationViewerPageViewModel(IllustrationViewViewModel viewModel, int currentIllustrationIndex)
+    public IllustrationViewerPageViewModel(IllustrationViewViewModel viewModel, int currentIllustrationIndex, FrameworkElement content) : base(content)
     {
         ViewModelSource = new IllustrationViewViewModel(viewModel);
         IllustrationInfoTag.Parameter = this;
         ViewModelSource.DataProvider.View.FilterChanged += (_, _) => CurrentIllustrationIndex = Illustrations.IndexOf(CurrentIllustration);
-        // ViewModel.DataProvider.View.CurrentItem为null，而且只设置这个属性会导致空引用
         CurrentIllustrationIndex = currentIllustrationIndex;
 
         InitializeCommands();
@@ -139,10 +126,6 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
     public string IllustratorName => Illustrator.Name;
 
     public long IllustratorUid => Illustrator.Id;
-
-    public bool IsManga => _pages.Length > 1;
-
-    public bool IsUgoira => CurrentIllustration.IsUgoira;
 
     public void Dispose()
     {
@@ -221,7 +204,6 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
             _ = LoadUserProfile();
 
             CurrentPageIndex = 0;
-            OnPropertyChanged(nameof(IsUgoira));
             OnDetailedPropertyChanged(oldValue, value, oldTag, CurrentPage.Id);
             OnPropertyChanged(nameof(CurrentIllustration));
             return;
@@ -335,87 +317,13 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
 
     #region Commands
 
-    public void UpdateCommandCanExecute()
-    {
-        ShareCommand.NotifyCanExecuteChanged();
-    }
-
     private void InitializeCommands()
     {
-        ShareCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
-        ShareCommand.ExecuteRequested += ShareCommandExecuteRequested;
-
-        SetAsLockScreenCommand.CanExecuteRequested += IsNotUgoiraAndLoadingCompletedCanExecuteRequested;
-        SetAsLockScreenCommand.ExecuteRequested += SetAsLockScreenCommandOnExecuteRequested;
-
-        SetAsBackgroundCommand.CanExecuteRequested += IsNotUgoiraAndLoadingCompletedCanExecuteRequested;
-        SetAsBackgroundCommand.ExecuteRequested += SetAsBackgroundCommandOnExecuteRequested;
-
         FullScreenCommand.ExecuteRequested += (_, _) => IsFullScreen = !IsFullScreen;
-    }
-
-    private void LoadingCompletedCanExecuteRequested(XamlUICommand sender, CanExecuteRequestedEventArgs args)
-    {
-        args.CanExecute = CurrentImage.LoadSuccessfully;
-    }
-
-    private void IsNotUgoiraAndLoadingCompletedCanExecuteRequested(XamlUICommand sender, CanExecuteRequestedEventArgs args)
-    {
-        args.CanExecute = !IsUgoira && CurrentImage.LoadSuccessfully;
-    }
-
-    private void SetAsBackgroundCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
-    {
-        SetPersonalization(UserProfilePersonalizationSettings.Current.TrySetWallpaperImageAsync);
-    }
-
-    private void SetAsLockScreenCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
-    {
-        SetPersonalization(UserProfilePersonalizationSettings.Current.TrySetLockScreenImageAsync);
-    }
-
-    private async void SetPersonalization(Func<StorageFile, IAsyncOperation<bool>> operation)
-    {
-        if (CurrentImage.OriginalImageSources is not [{ } first, ..])
-            return;
-
-        var guid = await first.Sha1Async();
-        if (await AppKnownFolders.SavedWallPaper.TryGetFileRelativeToSelfAsync(guid) is null)
-        {
-            var path = Path.Combine(AppKnownFolders.SavedWallPaper.Self.Path, guid);
-            using var scope = App.AppViewModel.AppServicesScope;
-            var factory = scope.ServiceProvider.GetRequiredService<IDownloadTaskFactory<IllustrationItemViewModel, IllustrationDownloadTask>>();
-            var intrinsicTask = await factory.TryCreateIntrinsicAsync(CurrentIllustration, first, path);
-            App.AppViewModel.DownloadManager.QueueTask(intrinsicTask);
-            await intrinsicTask.Completion.Task;
-        }
-        var file = await AppKnownFolders.SavedWallPaper.GetFileAsync(guid);
-        _ = await operation(file);
-
-        ToastNotificationHelper.ShowTextToastNotification(
-            IllustrationViewerPageResources.SetAsSucceededTitle,
-            IllustrationViewerPageResources.SetAsBackgroundSucceededTitle,
-            AppContext.AppLogoNoCaptionUri);
-    }
-
-    private void ShareCommandExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
-    {
-        if (CurrentImage.LoadSuccessfully)
-            Window.ShowShareUi();
-        else
-            WindowContent.ShowTeachingTipAndHide(IllustrationViewerPageResources.CannotShareImageForNowTitle, TeachingTipSeverity.Warning, IllustrationViewerPageResources.CannotShareImageForNowContent);
     }
 
     public XamlUICommand IllustrationInfoAndCommentsCommand { get; } =
         IllustrationViewerPageResources.IllustrationInfoAndComments.GetCommand(FontIconSymbols.InfoE946, VirtualKey.F12);
-
-    public XamlUICommand SetAsCommand { get; } = IllustrationViewerPageResources.SetAs.GetCommand(FontIconSymbols.PersonalizeE771);
-
-    public StandardUICommand ShareCommand { get; } = new(StandardUICommandKind.Share);
-
-    public XamlUICommand SetAsLockScreenCommand { get; } = new() { Label = IllustrationViewerPageResources.LockScreen };
-
-    public XamlUICommand SetAsBackgroundCommand { get; } = new() { Label = IllustrationViewerPageResources.Background };
 
     public XamlUICommand FullScreenCommand { get; } = IllustrationViewerPageResources.FullScreen.GetCommand(FontIconSymbols.FullScreenE740);
 
