@@ -1,0 +1,1 @@
+// [assembly: LocalizedStringResources(nameof(Pixeval))]

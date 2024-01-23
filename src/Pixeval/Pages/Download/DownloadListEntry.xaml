@@ -74,7 +74,7 @@
         Width="125"
         DefaultLabelPosition="Right"
         OverflowButtonVisibility="Visible">
-        <!--  Width="125"是试出来刚好只显示一个按钮的宽度  -->
+        <!--  Width="125" 是试出来刚好只显示一个按钮的宽度  -->
         <AppBarButton
             Icon="{markup:FontSymbolIcon Glyph=OpenInNewWindowE8A7}"
             Label="{x:Bind ViewModel.ActionButtonContent, Mode=OneWay}"

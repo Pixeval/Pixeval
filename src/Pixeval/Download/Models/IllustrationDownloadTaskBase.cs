@@ -24,6 +24,7 @@ using System.IO;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Pixeval.Database;
+using Pixeval.Util.IO;
 using Pixeval.Utilities;
 using Pixeval.Utilities.Threading;
 
@@ -59,30 +60,51 @@ public abstract class IllustrationDownloadTaskBase(DownloadHistoryEntry entry) :
 
     public CancellationHandle CancellationHandle { get; set; } = new();
 
-    public TaskCompletionSource Completion { get; } = new();
+    public TaskCompletionSource Completion { get; private set; } = new();
 
     public DownloadState CurrentState
     {
         get => DatabaseEntry.State;
-        set
+        set => SetProperty(DatabaseEntry.State, value, DatabaseEntry, (entry, state) =>
         {
+            entry.State = state;
             if (value is DownloadState.Completed)
+            {
                 ProgressPercentage = 100;
-            _ = SetProperty(DatabaseEntry.State, value, DatabaseEntry, (entry, state) => entry.State = state);
-        }
+                Completion.SetResult();
+            }
+        });
     }
 
     public Exception? ErrorCause
     {
         get => _errorCause;
-        set => SetProperty(_errorCause, value, DatabaseEntry, (entry, exception) =>
+        set
         {
+            if (Equals(value, _errorCause))
+                return;
             _errorCause = value;
-            entry.ErrorCause = exception?.ToString();
-        });
+            OnPropertyChanged();
+
+            DatabaseEntry.ErrorCause = value?.ToString();
+            if (value is not null)
+            {
+                CurrentState = DownloadState.Error;
+                Completion.SetException(value);
+            }
+        }
     }
 
     public abstract Task DownloadAsync(Func<string, IProgress<double>?, CancellationHandle?, Task<Result<Stream>>> downloadStreamAsync);
+
+    public async Task ResetAsync()
+    {
+        await IoHelper.DeleteIllustrationTaskAsync(this);
+        ProgressPercentage = 0;
+        CurrentState = DownloadState.Queued;
+        ErrorCause = null;
+        Completion = new();
+    }
 
     public void Report(double value) => ProgressPercentage = value;
 }

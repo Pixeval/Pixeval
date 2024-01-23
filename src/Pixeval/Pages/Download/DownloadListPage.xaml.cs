@@ -20,6 +20,7 @@
 
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
@@ -29,7 +30,6 @@ using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
-using WinUI3Utilities;
 
 namespace Pixeval.Pages.Download;
 
@@ -70,12 +70,13 @@ public sealed partial class DownloadListPage
     {
         var dialogContent = new DownloadListPageDeleteTasksDialog();
         if (await this.CreateOkCancelAsync(
-                DownloadListPageResources.DeleteDownloadHistoryRecordsFormatted.Format(_viewModel.SelectedEntries.Count()),
+                DownloadListPageResources.DeleteDownloadHistoryRecordsFormatted.Format(_viewModel.SelectedEntries.Length),
                 dialogContent) is ContentDialogResult.Primary)
         {
             if (dialogContent.DeleteLocalFiles)
-                foreach (var downloadListEntryViewModel in _viewModel.SelectedEntries)
-                    IoHelper.Delete(downloadListEntryViewModel.DownloadTask.Destination);
+                Task.WaitAll(_viewModel.SelectedEntries
+                    .Select(async t => await IoHelper.DeleteIllustrationTaskAsync(t.DownloadTask))
+                    .ToArray());
 
             _viewModel.RemoveSelectedItems();
         }
@@ -135,10 +136,9 @@ public sealed partial class DownloadListPage
         viewModel.CreateWindowWithPage(_viewModel.DataProvider.Source);
     }
 
-    private async void FrameworkElement_OnLoaded(object sender, RoutedEventArgs e)
+    private async void DownloadListEntry_OnViewModelChanged(DownloadListEntry sender, DownloadListEntryViewModel viewModel)
     {
-        var item = sender.To<DownloadListEntry>();
-        _ = await item.ViewModel.TryLoadThumbnail(_viewModel);
+        _ = await viewModel.TryLoadThumbnail(_viewModel);
     }
 
     private void DownloadListPage_OnUnloaded(object sender, RoutedEventArgs e)

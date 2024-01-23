@@ -27,7 +27,7 @@ public class DownloadPathMacroDefaultValueProvider : IDefaultValueProvider
     public object ProvideValue()
     {
         var segment1 = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures, Environment.SpecialFolderOption.Create);
-        const string segment2 = @"\@{if_spot:@{spot_title}}\@{if_manga:[@{artist_name}]@{illust_title}}";
+        const string segment2 = @"\@{if_spot:@{spot_title}}\@{if_manga:[@{artist_name}] @{illust_title}}";
         return segment1 + segment2;
     }
 }

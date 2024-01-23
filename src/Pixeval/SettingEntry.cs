@@ -68,6 +68,6 @@ public partial record SettingEntry(SettingEntryCategory Category, Type ResourceL
 
     public string? GetLocalizedResourceContent()
     {
-        return ResourceLoader.GetField(ResourceKey)?.GetValue(null) as string;
+        return LocalizedResourceAttributeHelper.GetLocalizedResourceContent(ResourceLoader, ResourceKey);
     }
 }

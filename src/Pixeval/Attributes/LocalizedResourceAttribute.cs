@@ -19,6 +19,7 @@
 #endregion
 
 using System;
+using System.Reflection;
 using Pixeval.Util;
 
 namespace Pixeval.Attributes;
@@ -48,6 +49,16 @@ public static class LocalizedResourceAttributeHelper
 
     public static string? GetLocalizedResourceContent(this LocalizedResource attribute)
     {
-        return attribute.ResourceLoader.GetField(attribute.Key)?.GetValue(null) as string;
+        return GetLocalizedResourceContent(attribute.ResourceLoader, attribute.Key);
+    }
+    
+    public static string? GetLocalizedResourceContent(Type resourceLoader, string key)
+    {
+        return resourceLoader.GetMember(key, BindingFlags.Static | BindingFlags.Public) switch
+        {
+            [FieldInfo fi] => fi?.GetValue(null),
+            [PropertyInfo pi] => pi?.GetValue(null),
+            _ => null
+        } as string;
     }
 }

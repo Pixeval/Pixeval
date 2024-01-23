@@ -21,7 +21,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading;
@@ -30,7 +29,6 @@ using System.Threading.Tasks;
 using Pixeval.Download.Models;
 using Pixeval.Util.IO;
 using Pixeval.Util.Threading;
-using Pixeval.Utilities;
 using Pixeval.Utilities.Threading;
 
 namespace Pixeval.Download;
@@ -120,8 +118,8 @@ public class DownloadManager<TDownloadTask> : IDisposable where TDownloadTask : 
     /// </summary>
     public bool TryExecuteInline(TDownloadTask task)
     {
-        // Execute the task only if it's already queued and is not running
-        if (_queuedTasks.Contains(task) && task.CurrentState is not DownloadState.Running and not DownloadState.Queued)
+        // Execute the task only if it's already queued
+        if (_queuedTasks.Contains(task) && task.CurrentState is DownloadState.Queued)
         {
             QueueDownloadTask(task);
             return true;
@@ -172,16 +170,13 @@ public class DownloadManager<TDownloadTask> : IDisposable where TDownloadTask : 
         }
         catch (Exception e)
         {
-            // todo delete manga
-            Functions.IgnoreException(() => File.Delete(task.Destination));
+            if (task is IllustrationDownloadTask t)
+                await IoHelper.DeleteIllustrationTaskAsync(t);
             ThreadingHelper.DispatchTask(() => task.ErrorCause = e);
-            SetState(task, DownloadState.Error);
-            task.Completion.SetException(e);
             return;
         }
 
         SetState(task, DownloadState.Completed);
-        task.Completion.SetResult();
     }
 
     private static void SetState(TDownloadTask task, DownloadState state)

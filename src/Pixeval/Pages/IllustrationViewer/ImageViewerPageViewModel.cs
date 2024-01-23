@@ -148,7 +148,7 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
         return destination;
     }
 
-    public async Task<StorageFile> SaveToFileAsync(AppKnownFolders appKnownFolder)
+    public async Task<StorageFile> SaveToFolderAsync(AppKnownFolders appKnownFolder)
     {
         var path = IoHelper.NormalizePathSegment(
             new IllustrationMetaPathParser().Reduce(App.AppViewModel.AppSetting.DefaultDownloadNameMacro, IllustrationViewModel));
@@ -321,7 +321,7 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
         if (OriginalImageSources is not [{ } first, ..])
             return;
         
-        var file = await SaveToFileAsync(AppKnownFolders.SavedWallPaper);
+        var file = await SaveToFolderAsync(AppKnownFolders.SavedWallPaper);
         _ = await operation(file);
 
         ToastNotificationHelper.ShowTextToastNotification(

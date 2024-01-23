@@ -19,7 +19,9 @@
 #endregion
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Windows.Graphics;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -63,8 +65,8 @@ public static class IllustrationViewerHelper
         {
             (IllustrationViewViewModel illustrationViewViewModel, int index) => new IllustrationViewerPageViewModel(
                 illustrationViewViewModel, index, element),
-            (IList<IllustrationItemViewModel> illustrationViewModels, int index) => new IllustrationViewerPageViewModel(
-                illustrationViewModels, index, element),
+            (IEnumerable illustrationViewModels, int index) => new IllustrationViewerPageViewModel(
+                illustrationViewModels.Cast<IllustrationItemViewModel>(), index, element),
             _ => ThrowHelper.Argument<object, IllustrationViewerPageViewModel>(param, "Invalid parameter type.")
         };
     }

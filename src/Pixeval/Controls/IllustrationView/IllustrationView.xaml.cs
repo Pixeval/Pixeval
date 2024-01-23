@@ -84,14 +84,14 @@ public sealed partial class IllustrationView
         vm.CreateWindowWithPage(ViewModel);
     }
 
-    private async void IllustrationItem_OnViewModelChanged(IllustrationItem thumbnail, IllustrationItemViewModel viewModel)
+    private async void IllustrationItem_OnViewModelChanged(IllustrationItem sender, IllustrationItemViewModel viewModel)
     {
         if (await viewModel.TryLoadThumbnail(ViewModel))
         {
-            if (thumbnail.IsFullyOrPartiallyVisible(this))
-                thumbnail.Resources["IllustrationThumbnailStoryboard"].To<Storyboard>().Begin();
+            if (sender.IsFullyOrPartiallyVisible(this))
+                sender.Resources["IllustrationThumbnailStoryboard"].To<Storyboard>().Begin();
             else
-                thumbnail.Opacity = 1;
+                sender.Opacity = 1;
         }
     }
 

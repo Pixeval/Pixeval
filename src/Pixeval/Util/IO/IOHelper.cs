@@ -34,6 +34,7 @@ using Windows.Foundation;
 using Windows.Security.Cryptography;
 using Windows.Storage;
 using Windows.Storage.Streams;
+using Pixeval.Download.Models;
 using Pixeval.Utilities;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats;
@@ -191,11 +192,14 @@ public static partial class IoHelper
         await stream.AsStreamForRead().CopyToAsync(await file.OpenStreamForWriteAsync());
     }
 
-    public static void Delete(string path)
+    public static async Task DeleteIllustrationTaskAsync(IllustrationDownloadTaskBase task)
     {
         try
         {
-            File.Delete(path);
+            if (task is MangaDownloadTask)
+                await (await StorageFolder.GetFolderFromPathAsync(Path.GetDirectoryName(task.Destination))).DeleteAsync(StorageDeleteOption.Default);
+            else
+                await (await StorageFile.GetFileFromPathAsync(task.Destination)).DeleteAsync(StorageDeleteOption.Default);
         }
         catch
         {

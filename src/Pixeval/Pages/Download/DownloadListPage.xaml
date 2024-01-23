@@ -97,9 +97,9 @@
                     <ItemContainer>
                         <download:DownloadListEntry
                             Margin="16"
-                            Loaded="FrameworkElement_OnLoaded"
                             OpenIllustrationRequested="DownloadListEntry_OnOpenIllustrationRequested"
-                            ViewModel="{x:Bind}" />
+                            ViewModel="{x:Bind}"
+                            ViewModelChanged="DownloadListEntry_OnViewModelChanged" />
                     </ItemContainer>
                 </DataTemplate>
             </controls:AdvancedItemsView.ItemTemplate>

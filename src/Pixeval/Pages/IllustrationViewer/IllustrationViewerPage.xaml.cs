@@ -182,7 +182,7 @@ public sealed partial class IllustrationViewerPage : SupportCustomTitleBarDragRe
         props.Title = IllustrationViewerPageResources.ShareTitleFormatted.Format(vm.Id);
         props.Description = vm.Illustrate.Title;
 
-        var file = await _viewModel.CurrentImage.SaveToFileAsync(AppKnownFolders.Temporary);
+        var file = await _viewModel.CurrentImage.SaveToFolderAsync(AppKnownFolders.Temporary);
         request.Data.SetStorageItems([file]);
         request.Data.ShareCanceled += FileDispose;
         request.Data.ShareCompleted += FileDispose;

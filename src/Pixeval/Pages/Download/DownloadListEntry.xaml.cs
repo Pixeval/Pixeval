@@ -22,6 +22,7 @@ using System;
 using System.IO;
 using Windows.Foundation;
 using Windows.System;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
 using Pixeval.Controls;
 using Pixeval.Download;
@@ -32,10 +33,20 @@ using WinUI3Utilities.Attributes;
 
 namespace Pixeval.Pages.Download;
 
-[DependencyProperty<DownloadListEntryViewModel>("ViewModel")]
+[DependencyProperty<DownloadListEntryViewModel>("ViewModel", propertyChanged: nameof(OnViewModelChanged))]
 public sealed partial class DownloadListEntry : IViewModelControl
 {
     object IViewModelControl.ViewModel => ViewModel;
+
+    public event Action<DownloadListEntry, DownloadListEntryViewModel>? ViewModelChanged;
+
+    private static void OnViewModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (d as DownloadListEntry is { } entry)
+        {
+            entry.ViewModelChanged?.Invoke(entry, entry.ViewModel);
+        }
+    }
 
     public DownloadListEntry() => InitializeComponent();
 
@@ -58,7 +69,7 @@ public sealed partial class DownloadListEntry : IViewModelControl
                 if (!await (ViewModel.DownloadTask is MangaDownloadTask
                         ? Launcher.LaunchFolderPathAsync(Path.GetDirectoryName(ViewModel.DownloadTask.Destination))
                         : Launcher.LaunchUriAsync(new Uri(ViewModel.DownloadTask.Destination))))
-                    _ = await this.CreateAcknowledgementAsync("打开文件（夹）失败", "可能你已经删除了该图片");
+                    _ = await this.CreateAcknowledgementAsync(MiscResources.DownloadListEntryOpenFailed, MiscResources.DownloadListEntryMaybeDeleted);
                 break;
             case DownloadState.Paused:
                 ViewModel.DownloadTask.CancellationHandle.Resume();
@@ -69,10 +80,10 @@ public sealed partial class DownloadListEntry : IViewModelControl
         }
     }
 
-    private void RedownloadItem_OnTapped(object sender, TappedRoutedEventArgs e)
+    private async void RedownloadItem_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        // ViewModel.DownloadTask.Reset();
-        // _ = App.AppViewModel.DownloadManager.TryExecuteInline(ViewModel.DownloadTask);
+        await ViewModel.DownloadTask.ResetAsync();
+        _ = App.AppViewModel.DownloadManager.TryExecuteInline(ViewModel.DownloadTask);
     }
 
     private void CancelDownloadItem_OnTapped(object sender, TappedRoutedEventArgs e)
