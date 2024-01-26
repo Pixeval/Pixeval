@@ -150,8 +150,8 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
 
     public async Task<StorageFile> SaveToFolderAsync(AppKnownFolders appKnownFolder)
     {
-        var path = IoHelper.NormalizePathSegment(
-            new IllustrationMetaPathParser().Reduce(App.AppViewModel.AppSetting.DefaultDownloadNameMacro, IllustrationViewModel));
+        var name = Path.GetFileName(App.AppViewModel.AppSetting.DefaultDownloadPathMacro);
+        var path = IoHelper.NormalizePathSegment(new IllustrationMetaPathParser().Reduce(name, IllustrationViewModel));
         var file = await appKnownFolder.CreateFileAsync(path);
         await using var target = await file.OpenStreamForWriteAsync();
         _ = await GetOriginalImageSourceAsync(false, null, target);
@@ -161,8 +161,8 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
     public CancellationHandle ImageLoadingCancellationHandle { get; } = new();
 
     /// <summary>
-    ///     The view model of the <see cref="IllustrationViewerPage" /> that hosts the owner <see cref="ImageViewerPage" />
-    ///     of this <see cref="ImageViewerPageViewModel" />
+    /// The view model of the <see cref="IllustrationViewerPage" /> that hosts the owner <see cref="ImageViewerPage" />
+    /// of this <see cref="ImageViewerPageViewModel" />
     /// </summary>
     public IllustrationViewerPageViewModel IllustrationViewerPageViewModel { get; }
 
@@ -320,7 +320,7 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
     {
         if (OriginalImageSources is not [{ } first, ..])
             return;
-        
+
         var file = await SaveToFolderAsync(AppKnownFolders.SavedWallPaper);
         _ = await operation(file);
 

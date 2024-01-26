@@ -73,7 +73,7 @@
                         <HyperlinkButton x:Uid="/SettingsPage/GitHubRepositoryHyperlinkButton" NavigateUri="https://github.com/pixeval/Pixeval" />
                         <HyperlinkButton x:Uid="/SettingsPage/ReportBugHyperlinkButton" NavigateUri="https://github.com/Pixeval/Pixeval/issues/new/choose" />
                         <HyperlinkButton x:Uid="/SettingsPage/FeedbackByEmailHyperlinkButton" Tapped="FeedbackByEmailHyperlinkButton_OnTapped" />
-                        <HyperlinkButton x:Uid="/SettingsPage/DonateDeveloperHyperlinkButton" NavigateUri="https://afdian.net/@dylech30th" />
+                        <HyperlinkButton x:Uid="/SettingsPage/DonateDeveloperHyperlinkButton" NavigateUri="https://afdian.net/a/dylech30th" />
                         <HyperlinkButton x:Uid="/SettingsPage/JoinFeedbackGroupHyperlinkButton" NavigateUri="https://jq.qq.com/?_wv=1027&amp;k=trDeCrog" />
                     </controls:WrapPanel>
                 </Grid>
@@ -443,7 +443,7 @@
 
                 <controls:SettingsExpander
                     x:Uid="/SettingsPage/DefaultDownloadPathMacroEntry"
-                    HeaderIcon="{markup:FontSymbolIcon Glyph=FolderOpenE838}"
+                    HeaderIcon="{markup:FontSymbolIcon Glyph=CaptionE8BA}"
                     Tag="{x:Bind pixeval:SettingEntry.DefaultDownloadPathMacro}">
                     <controls:SettingsExpander.Items>
                         <controls:SettingsCard ContentAlignment="Left">
@@ -460,30 +460,6 @@
                                     IsSpellCheckEnabled="False"
                                     LostFocus="DefaultDownloadPathMacroTextBox_OnLostFocus"
                                     Text="{x:Bind _viewModel.DefaultDownloadPathMacro, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                            </StackPanel>
-                        </controls:SettingsCard>
-                    </controls:SettingsExpander.Items>
-                </controls:SettingsExpander>
-
-                <controls:SettingsExpander
-                    x:Uid="/SettingsPage/DefaultDownloadNameMacroEntry"
-                    HeaderIcon="{markup:FontSymbolIcon Glyph=CaptionE8BA}"
-                    Tag="{x:Bind pixeval:SettingEntry.DefaultDownloadNameMacro}">
-                    <controls:SettingsExpander.Items>
-                        <controls:SettingsCard ContentAlignment="Left">
-                            <StackPanel Spacing="3">
-                                <tokenInput:TokenInput
-                                    IsTokenTappedDefaultBehaviorEnabled="False"
-                                    TokenInputTextBoxVisibility="Collapsed"
-                                    TokenSource="{x:Bind misc:SettingsPageViewModel.AvailableIllustMacros}"
-                                    TokenTapped="NameMacroTokenInputBox_OnTokenTapped" />
-                                <TextBox
-                                    x:Name="DefaultDownloadNameMacroTextBox"
-                                    x:Uid="/SettingsPage/DefaultDownloadNameMacroTextBox"
-                                    GotFocus="DefaultDownloadNameMacroTextBox_OnGotFocus"
-                                    IsSpellCheckEnabled="False"
-                                    LostFocus="DefaultDownloadNameMacroTextBox_OnLostFocus"
-                                    Text="{x:Bind _viewModel.DefaultDownloadNameMacro, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                             </StackPanel>
                         </controls:SettingsCard>
                     </controls:SettingsExpander.Items>
@@ -580,7 +556,8 @@
                 <TeachingTip
                     x:Name="DownloadMacroInvalidTeachingTip"
                     x:Uid="/SettingsPage/DownloadMacroInvalidTeachingTip"
-                    IconSource="{markup:FontSymbolIconSource Glyph=ErrorE783}" />
+                    IconSource="{markup:FontSymbolIconSource Glyph=ErrorE783}"
+                    Target="{x:Bind DefaultDownloadPathMacroTextBox}" />
             </StackPanel>
         </ScrollView>
     </Grid>

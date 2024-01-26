@@ -23,8 +23,8 @@ using Pixeval.Utilities;
 namespace Pixeval.CoreApi.Global.Enum;
 
 /// <summary>
-///     The privacy policy of Pixiv, be aware that the <see cref="Private" /> option
-///     is only permitted when the ID is pointing to yourself
+/// The privacy policy of Pixiv, be aware that the <see cref="Private" /> option
+/// is only permitted when the ID is pointing to yourself
 /// </summary>
 public enum PrivacyPolicy
 {

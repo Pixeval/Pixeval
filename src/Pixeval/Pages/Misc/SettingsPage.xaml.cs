@@ -50,7 +50,6 @@ public sealed partial class SettingsPage
     // The previous meta path after user changes the path field, if the path is illegal
     // its value will be reverted to this field.
     private string _previousPath = "";
-    private string _previousName = "";
     private SettingsPageViewModel _viewModel = null!;
 
     public SettingsPage()
@@ -62,7 +61,6 @@ public sealed partial class SettingsPage
     {
         _viewModel = new SettingsPageViewModel(App.AppViewModel.AppSetting, Window);
         _previousPath = _viewModel.DefaultDownloadPathMacro;
-        _previousName = _viewModel.DefaultDownloadNameMacro;
     }
 
     public override void OnPageDeactivated(NavigatingCancelEventArgs e)
@@ -150,7 +148,6 @@ public sealed partial class SettingsPage
         if (_viewModel.DefaultDownloadPathMacro.IsNullOrBlank())
         {
             DownloadMacroInvalidTeachingTip.Subtitle = SettingsPageResources.DownloadMacroInvalidTeachingTipInputCannotBeBlank;
-            DownloadMacroInvalidTeachingTip.Target = sender as FrameworkElement;
             DownloadMacroInvalidTeachingTip.IsOpen = true;
             _viewModel.DefaultDownloadPathMacro = _previousPath;
             return;
@@ -164,34 +161,8 @@ public sealed partial class SettingsPage
         catch (Exception exception)
         {
             DownloadMacroInvalidTeachingTip.Subtitle = SettingsPageResources.DownloadMacroInvalidTeachingTipMacroInvalidFormatted.Format(exception.Message);
-            DownloadMacroInvalidTeachingTip.Target = sender as FrameworkElement;
             DownloadMacroInvalidTeachingTip.IsOpen = true;
             _viewModel.DefaultDownloadPathMacro = _previousPath;
-        }
-    }
-
-    private void DefaultDownloadNameMacroTextBox_OnLostFocus(object sender, RoutedEventArgs e)
-    {
-        if (_viewModel.DefaultDownloadNameMacro.IsNullOrBlank())
-        {
-            DownloadMacroInvalidTeachingTip.Subtitle = SettingsPageResources.DownloadMacroInvalidTeachingTipInputCannotBeBlank;
-            DownloadMacroInvalidTeachingTip.Target = sender as FrameworkElement;
-            DownloadMacroInvalidTeachingTip.IsOpen = true;
-            _viewModel.DefaultDownloadNameMacro = _previousName;
-            return;
-        }
-
-        try
-        {
-            _testParser.SetupParsingEnvironment(new Lexer(_viewModel.DefaultDownloadNameMacro));
-            _ = _testParser.Parse();
-        }
-        catch (Exception exception)
-        {
-            DownloadMacroInvalidTeachingTip.Subtitle = SettingsPageResources.DownloadMacroInvalidTeachingTipMacroInvalidFormatted.Format(exception.Message);
-            DownloadMacroInvalidTeachingTip.Target = sender as FrameworkElement;
-            DownloadMacroInvalidTeachingTip.IsOpen = true;
-            _viewModel.DefaultDownloadNameMacro = _previousName;
         }
     }
 
@@ -201,20 +172,9 @@ public sealed partial class SettingsPage
         _previousPath = _viewModel.DefaultDownloadPathMacro;
     }
 
-    private void DefaultDownloadNameMacroTextBox_OnGotFocus(object sender, RoutedEventArgs e)
-    {
-        DownloadMacroInvalidTeachingTip.IsOpen = false;
-        _previousName = _viewModel.DefaultDownloadNameMacro;
-    }
-
     private void PathMacroTokenInputBox_OnTokenTapped(object? sender, Token e)
     {
         _viewModel.DefaultDownloadPathMacro = _viewModel.DefaultDownloadPathMacro.Insert(DefaultDownloadPathMacroTextBox.SelectionStart, e.TokenContent);
-    }
-
-    private void NameMacroTokenInputBox_OnTokenTapped(object? sender, Token e)
-    {
-        _viewModel.DefaultDownloadNameMacro = _viewModel.DefaultDownloadNameMacro.Insert(DefaultDownloadNameMacroTextBox.SelectionStart, e.TokenContent);
     }
 
     private void DeleteSearchHistoriesButton_OnTapped(object sender, TappedRoutedEventArgs e)

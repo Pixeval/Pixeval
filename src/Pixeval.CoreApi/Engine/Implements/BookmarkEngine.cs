@@ -28,10 +28,10 @@ using Pixeval.Utilities;
 namespace Pixeval.CoreApi.Engine.Implements;
 
 /// <summary>
-///     An <see cref="IFetchEngine{E}" /> that fetches the bookmark of a specific user
+/// An <see cref="IFetchEngine{E}" /> that fetches the bookmark of a specific user
 /// </summary>
 /// <remarks>
-///     Creates a <see cref="BookmarkEngine" />
+/// Creates a <see cref="BookmarkEngine" />
 /// </remarks>
 /// <param name="makoClient">The <see cref="MakoClient" /> that owns this object</param>
 /// <param name="uid">Id of the user</param>

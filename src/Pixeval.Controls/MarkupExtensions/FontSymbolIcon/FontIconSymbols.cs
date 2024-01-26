@@ -27,7 +27,7 @@ using Pixeval.Controls.MarkupExtensions.FontSymbolIcon;
 namespace Pixeval.Controls.MarkupExtensions;
 
 /// <summary>
-///     This file is auto-generated
+/// This file is auto-generated
 /// </summary>
 public enum FontIconSymbols
 {

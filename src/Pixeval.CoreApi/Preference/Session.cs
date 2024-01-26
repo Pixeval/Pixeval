@@ -45,56 +45,56 @@ public record Session
     }
 
     /// <summary>
-    ///     User name
+    /// User name
     /// </summary>
     [JsonPropertyName("name")]
     public string? Name { get; set; }
 
     /// <summary>
-    ///     Token expiration
+    /// Token expiration
     /// </summary>
     [JsonPropertyName("expireIn")]
     public DateTimeOffset ExpireIn { get; set; }
 
     /// <summary>
-    ///     Current access token
+    /// Current access token
     /// </summary>
     [JsonPropertyName("accessToken")]
     public string? AccessToken { get; set; }
 
     /// <summary>
-    ///     Current refresh token
+    /// Current refresh token
     /// </summary>
     [JsonPropertyName("refreshToken")]
     public string? RefreshToken { get; set; }
 
     /// <summary>
-    ///     Avatar
+    /// Avatar
     /// </summary>
     [JsonPropertyName("avatarUrl")]
     public string? AvatarUrl { get; set; }
 
     /// <summary>
-    ///     User id
+    /// User id
     /// </summary>
     [JsonPropertyName("id")]
     [JsonNumberHandling(JsonNumberHandling.AllowReadingFromString | JsonNumberHandling.WriteAsString)]
     public long Id { get; set; }
 
     /// <summary>
-    ///     Account for login
+    /// Account for login
     /// </summary>
     [JsonPropertyName("account")]
     public string? Account { get; set; }
 
     /// <summary>
-    ///     Indicates whether current user is Pixiv Premium or not
+    /// Indicates whether current user is Pixiv Premium or not
     /// </summary>
     [JsonPropertyName("isPremium")]
     public bool IsPremium { get; set; }
 
     /// <summary>
-    ///     WebAPI cookie
+    /// WebAPI cookie
     /// </summary>
     [JsonPropertyName("cookie")]
     public string? Cookie { get; set; }

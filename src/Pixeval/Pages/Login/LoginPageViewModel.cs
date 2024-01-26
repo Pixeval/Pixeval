@@ -129,11 +129,11 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject
     }
 
     /// <summary>
-    ///     Check if the session file exists and satisfies the following four conditions: <br/>
-    ///     1. The <see cref="Session" /> object deserialized from the file is not null <br/>
-    ///     2. The <see cref="Session.RefreshToken" /> is not null <br/>
-    ///     3. The <see cref="Session.Cookie" /> is not null <br/>
-    ///     4. The <see cref="Session.CookieCreation" /> is within last fifteen days
+    /// Check if the session file exists and satisfies the following four conditions: <br/>
+    /// 1. The <see cref="Session" /> object deserialized from the file is not null <br/>
+    /// 2. The <see cref="Session.RefreshToken" /> is not null <br/>
+    /// 3. The <see cref="Session.Cookie" /> is not null <br/>
+    /// 4. The <see cref="Session.CookieCreation" /> is within last fifteen days
     /// </summary>
     /// <returns></returns>
     public bool CheckRefreshAvailable()

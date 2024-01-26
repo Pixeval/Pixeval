@@ -24,18 +24,18 @@ using Pixeval.CoreApi.Global;
 namespace Pixeval.CoreApi.Engine;
 
 /// <summary>
-///     An highly abstracted fetch engine that fetches pages and yields results asynchronously
-///     <para>
-///         Just like a fetch engine, it continuously fetches pages, and each page may contains either multiple
-///         result entries or an error response, at each iteration, it fetches a single page and tries to
-///         deserialize its content into a list of result entries or stops and reports the iteration is over
-///     </para>
+/// An highly abstracted fetch engine that fetches pages and yields results asynchronously
+/// <para>
+///     Just like a fetch engine, it continuously fetches pages, and each page may contains either multiple
+///     result entries or an error response, at each iteration, it fetches a single page and tries to
+///     deserialize its content into a list of result entries or stops and reports the iteration is over
+/// </para>
 /// </summary>
 /// <typeparam name="TE">The type of the results of the <see cref="IFetchEngine{TE}" /></typeparam>
 public interface IFetchEngine<out TE> : IAsyncEnumerable<TE>, IMakoClientSupport, IEngineHandleSource
 {
     /// <summary>
-    ///     How many pages have been fetches
+    /// How many pages have been fetches
     /// </summary>
     int RequestedPages { get; set; }
 }

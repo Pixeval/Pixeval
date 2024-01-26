@@ -31,7 +31,7 @@ public partial class MakoClient
     private readonly List<IEngineHandleSource> _runningInstances = [];
 
     /// <summary>
-    ///     The globally unique ID of current <see cref="MakoClient" />
+    /// The globally unique ID of current <see cref="MakoClient" />
     /// </summary>
     public Guid Id { get; } = Guid.NewGuid();
 
@@ -42,7 +42,7 @@ public partial class MakoClient
     internal ISessionUpdate SessionUpdater { get; }
 
     /// <summary>
-    ///     The IoC container
+    /// The IoC container
     /// </summary>
     internal IContainer MakoServices { get; init; }
 

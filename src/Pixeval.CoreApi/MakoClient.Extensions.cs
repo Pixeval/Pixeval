@@ -50,7 +50,7 @@ public partial class MakoClient
     }
 
     /// <summary>
-    ///     Gets the detail of an illustration from the illust id
+    /// Gets the detail of an illustration from the illust id
     /// </summary>
     /// <param name="id">The illust id</param>
     /// <returns></returns>
@@ -73,7 +73,7 @@ public partial class MakoClient
     }
 
     /// <summary>
-    ///     Sends a request to the Pixiv to add it to the bookmark
+    /// Sends a request to the Pixiv to add it to the bookmark
     /// </summary>
     /// <param name="id">The ID of the illustration which needs to be bookmarked</param>
     /// <param name="privacyPolicy">Indicates the privacy of the the illustration in the bookmark</param>
@@ -85,7 +85,7 @@ public partial class MakoClient
     }
 
     /// <summary>
-    ///     Sends a request to the Pixiv to remove it from the bookmark
+    /// Sends a request to the Pixiv to remove it from the bookmark
     /// </summary>
     /// <param name="id">The ID of the illustration which needs to be removed from the bookmark</param>
     /// <returns>A <see cref="Task" /> represents the operation</returns>
@@ -96,7 +96,7 @@ public partial class MakoClient
     }
 
     /// <summary>
-    ///     Gets the details of a spotlight from its ID which contains the article information, introduction, and illustrations
+    /// Gets the details of a spotlight from its ID which contains the article information, introduction, and illustrations
     /// </summary>
     /// <param name="spotlightId">The ID of the spotlight</param>
     /// <returns>A <see cref="Task{TResult}" /> contains the result of the operation</returns>
@@ -157,15 +157,15 @@ public partial class MakoClient
     }
 
     /// <summary>
-    ///     Gets the tags that are created by users to classify their bookmarks
+    /// Gets the tags that are created by users to classify their bookmarks
     /// </summary>
     /// <example>
-    ///     <a href="https://www.pixiv.net/en/users/333556/bookmarks/artworks">A user's bookmarks page</a>.
-    ///     There is a list of tags atop of the illustrations
+    /// <a href="https://www.pixiv.net/en/users/333556/bookmarks/artworks">A user's bookmarks page</a>.
+    /// There is a list of tags atop of the illustrations
     /// </example>
     /// <returns>
-    ///     An <see cref="IReadOnlyDictionary{TKey,TValue}" /> representing the results, where the keys are
-    ///     tags and values are the privacy of the tags
+    /// An <see cref="IReadOnlyDictionary{TKey,TValue}" /> representing the results, where the keys are
+    /// tags and values are the privacy of the tags
     /// </returns>
     /// <param name="uid">The ID of the user</param>
     public async Task<IReadOnlyDictionary<CountedTag, PrivacyPolicy>> GetUserSpecifiedBookmarkTagsAsync(long uid)

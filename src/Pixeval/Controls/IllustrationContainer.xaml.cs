@@ -52,7 +52,7 @@ public sealed partial class IllustrationContainer
 {
 
     /// <summary>
-    ///     The command elements that will appear at the left of the TopCommandBar
+    /// The command elements that will appear at the left of the TopCommandBar
     /// </summary>
     public ObservableCollection<UIElement> CommandBarElements { get; } = [];
 
@@ -148,7 +148,7 @@ public sealed partial class IllustrationContainer
         {
             var tasks = await WindowFactory.RootWindow.DispatcherQueue.EnqueueAsync(() => Task.WhenAll(
                     ViewModel.SelectedIllustrations
-                        .Select(i => factory.CreateAsync(i, Path.Combine(App.AppViewModel.AppSetting.DefaultDownloadPathMacro, App.AppViewModel.AppSetting.DefaultDownloadNameMacro)))));
+                        .Select(i => factory.CreateAsync(i, App.AppViewModel.AppSetting.DefaultDownloadPathMacro))));
             foreach (var viewModelSelectedIllustration in tasks)
             {
                 App.AppViewModel.DownloadManager.QueueTask(viewModelSelectedIllustration);

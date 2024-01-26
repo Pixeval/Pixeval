@@ -48,7 +48,7 @@ public sealed partial class TokenInput
     public event EventHandler<Token>? TokenAdded;
 
     /// <summary>
-    ///     Only works when <see cref="IsTokenTappedDefaultBehaviorEnabled" /> is set to <see langword="true" />
+    /// Only works when <see cref="IsTokenTappedDefaultBehaviorEnabled" /> is set to <see langword="true" />
     /// </summary>
     public event EventHandler<TokenDeletingEventArgs>? TokenDeleting;
 

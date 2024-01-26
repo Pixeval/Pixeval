@@ -84,7 +84,7 @@ public class FileCache
     }
 
     /// <summary>
-    ///     Adds an entry to the cache
+    /// Adds an entry to the cache
     /// </summary>
     /// <param name="key">Unique identifier for the entry</param>
     /// <param name="data">Data object to store</param>
@@ -123,7 +123,7 @@ public class FileCache
     }
 
     /// <summary>
-    ///     Adds an entry to the cache
+    /// Adds an entry to the cache
     /// </summary>
     /// <param name="key">Unique identifier for the entry</param>
     /// <param name="data">Data object to store</param>
@@ -156,7 +156,7 @@ public class FileCache
     }
 
     /// <summary>
-    ///     Adds an entry to the cache
+    /// Adds an entry to the cache
     /// </summary>
     /// <param name="key">Unique identifier for the entry</param>
     /// <param name="data">Data object to store</param>
@@ -171,8 +171,8 @@ public class FileCache
     }
 
     /// <summary>
-    ///     Empties all specified entries regardless of whether they're expired or not.
-    ///     Throws an exception if any deletion fails and rollback changes.
+    /// Empties all specified entries regardless of whether they're expired or not.
+    /// Throws an exception if any deletion fails and rollback changes.
     /// </summary>
     /// <param name="keys">keys to empty</param>
     public Task EmptyAsync(params object[] keys)
@@ -190,8 +190,8 @@ public class FileCache
     }
 
     /// <summary>
-    ///     Empties all specified entries regardless if they are expired.
-    ///     Throws an exception if any deletions fail and rolls back changes.
+    /// Empties all specified entries regardless if they are expired.
+    /// Throws an exception if any deletions fail and rolls back changes.
     /// </summary>
     /// <param name="keys">keys to empty</param>
     public Task EmptyAsync(params string[] keys)
@@ -200,8 +200,8 @@ public class FileCache
     }
 
     /// <summary>
-    ///     Empties all specified entries regardless if they are expired.
-    ///     Throws an exception if any deletions fail and rolls back changes.
+    /// Empties all specified entries regardless if they are expired.
+    /// Throws an exception if any deletions fail and rolls back changes.
     /// </summary>
     /// <param name="keys">keys to empty</param>
     public async Task EmptyAsync(IEnumerable<Guid> keys)
@@ -225,8 +225,8 @@ public class FileCache
     }
 
     /// <summary>
-    ///     Empties all expired entries that are in the cache.
-    ///     Throws an exception if any deletions fail and rolls back changes.
+    /// Empties all expired entries that are in the cache.
+    /// Throws an exception if any deletions fail and rolls back changes.
     /// </summary>
     public async Task EmptyAllAsync()
     {
@@ -247,8 +247,8 @@ public class FileCache
     }
 
     /// <summary>
-    ///     Empties all expired entries that are in the cache.
-    ///     Throws an exception if any deletions fail and rolls back changes.
+    /// Empties all expired entries that are in the cache.
+    /// Throws an exception if any deletions fail and rolls back changes.
     /// </summary>
     public async Task EmptyExpiredAsync()
     {
@@ -274,7 +274,7 @@ public class FileCache
     }
 
     /// <summary>
-    ///     Checks to see if the key exists in the cache.
+    /// Checks to see if the key exists in the cache.
     /// </summary>
     /// <param name="key">Unique identifier for the entry to check</param>
     /// <returns>If the key exists</returns>
@@ -292,7 +292,7 @@ public class FileCache
     }
 
     /// <summary>
-    ///     Checks to see if the key exists in the cache.
+    /// Checks to see if the key exists in the cache.
     /// </summary>
     /// <param name="key">Unique identifier for the entry to check</param>
     /// <returns>If the key exists</returns>
@@ -303,7 +303,7 @@ public class FileCache
     }
 
     /// <summary>
-    ///     Checks to see if the key exists in the cache.
+    /// Checks to see if the key exists in the cache.
     /// </summary>
     /// <param name="key">Unique identifier for the entry to check</param>
     /// <returns>If the key exists</returns>
@@ -322,7 +322,7 @@ public class FileCache
     }
 
     /// <summary>
-    ///     Gets all the keys that are saved in the cache
+    /// Gets all the keys that are saved in the cache
     /// </summary>
     /// <returns>The IEnumerable of keys</returns>
     public async Task<IEnumerable<Guid>> GetKeysAsync(CacheState state = CacheState.Active)
@@ -378,7 +378,7 @@ public class FileCache
     }
 
     /// <summary>
-    ///     Gets the data entry for the specified key.
+    /// Gets the data entry for the specified key.
     /// </summary>
     /// <param name="key">Unique identifier for the entry to get</param>
     /// <returns>The data object that was stored if found, else default(T)</returns>
@@ -427,7 +427,7 @@ public class FileCache
     }
 
     /// <summary>
-    ///     Gets the DateTime that the item will expire for the specified key.
+    /// Gets the DateTime that the item will expire for the specified key.
     /// </summary>
     /// <param name="key">Unique identifier for entry to get</param>
     /// <returns>The expiration date if the key is found, else null</returns>
@@ -438,7 +438,7 @@ public class FileCache
     }
 
     /// <summary>
-    ///     Gets the DateTime that the item will expire for the specified key.
+    /// Gets the DateTime that the item will expire for the specified key.
     /// </summary>
     /// <param name="key">Unique identifier for entry to get</param>
     /// <returns>The expiration date if the key is found, else null</returns>
@@ -457,7 +457,7 @@ public class FileCache
     }
 
     /// <summary>
-    ///     Gets the ETag for the specified key.
+    /// Gets the ETag for the specified key.
     /// </summary>
     /// <param name="key">Unique identifier for entry to get</param>
     /// <returns>The ETag if the key is found, else null</returns>
@@ -475,7 +475,7 @@ public class FileCache
     }
 
     /// <summary>
-    ///     Gets the ETag for the specified key.
+    /// Gets the ETag for the specified key.
     /// </summary>
     /// <param name="key">Unique identifier for entry to get</param>
     /// <returns>The ETag if the key is found, else null</returns>
@@ -486,7 +486,7 @@ public class FileCache
     }
 
     /// <summary>
-    ///     Gets the ETag for the specified key.
+    /// Gets the ETag for the specified key.
     /// </summary>
     /// <param name="key">Unique identifier for entry to get</param>
     /// <returns>The ETag if the key is found, else null</returns>
@@ -505,7 +505,7 @@ public class FileCache
     }
 
     /// <summary>
-    ///     Checks to see if the entry for the key is expired.
+    /// Checks to see if the entry for the key is expired.
     /// </summary>
     /// <param name="key">Key to check</param>
     /// <returns>If the expiration data has been met</returns>
@@ -523,7 +523,7 @@ public class FileCache
     }
 
     /// <summary>
-    ///     Checks to see if the entry for the key is expired.
+    /// Checks to see if the entry for the key is expired.
     /// </summary>
     /// <param name="key">Key to check</param>
     /// <returns>If the expiration data has been met</returns>
@@ -533,7 +533,7 @@ public class FileCache
     }
 
     /// <summary>
-    ///     Checks to see if the entry for the key is expired.
+    /// Checks to see if the entry for the key is expired.
     /// </summary>
     /// <param name="key">Key to check</param>
     /// <returns>If the expiration data has been met</returns>
@@ -605,7 +605,7 @@ public class FileCache
     }
 
     /// <summary>
-    ///     Gets the expiration from a timespan
+    /// Gets the expiration from a timespan
     /// </summary>
     /// <param name="timeSpan"></param>
     /// <returns></returns>
@@ -623,23 +623,23 @@ public class FileCache
 }
 
 /// <summary>
-///     Current state of the item in the cache.
+/// Current state of the item in the cache.
 /// </summary>
 [Flags]
 public enum CacheState
 {
     /// <summary>
-    ///     An unknown state for the cache item
+    /// An unknown state for the cache item
     /// </summary>
     None = 0,
 
     /// <summary>
-    ///     Expired cache item
+    /// Expired cache item
     /// </summary>
     Expired = 1,
 
     /// <summary>
-    ///     Active non-expired cache item
+    /// Active non-expired cache item
     /// </summary>
     Active = 2
 }

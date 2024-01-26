@@ -44,17 +44,17 @@ public partial record AppSetting : IWindowSettings
     }
 
     /// <summary>
-    ///     Indicates whether the restricted content are permitted to be included
-    ///     in the searching results, including R-18 and R-18G
+    /// Indicates whether the restricted content are permitted to be included
+    /// in the searching results, including R-18 and R-18G
     /// </summary>
     [DefaultValue(false)]
     [SettingMetadata(SettingEntryCategory.BrowsingExperience, typeof(SettingsPageResources), nameof(SettingsPageResources.FiltrateRestrictedContentEntryHeader))]
     public bool FiltrateRestrictedContent { get; set; }
 
     /// <summary>
-    ///     Disable the domain fronting technology, once disabled, the users
-    ///     from China mainland are required to have other countermeasures to bypass
-    ///     GFW
+    /// Disable the domain fronting technology, once disabled, the users
+    /// from China mainland are required to have other countermeasures to bypass
+    /// GFW
     /// </summary>
     [DefaultValue(false)]
     [AttributeIgnore(typeof(SettingsViewModelAttribute<>))]
@@ -62,60 +62,60 @@ public partial record AppSetting : IWindowSettings
     public bool DisableDomainFronting { get; set; }
 
     /// <summary>
-    ///     The application-wide default sort option, any illustration page that supports
-    ///     different orders will use this as its default value
+    /// The application-wide default sort option, any illustration page that supports
+    /// different orders will use this as its default value
     /// </summary>
     [DefaultValue(IllustrationSortOption.DoNotSort)]
     [SettingMetadata(SettingEntryCategory.Search, typeof(SettingsPageResources), nameof(SettingsPageResources.DefaultSearchSortOptionEntryHeader))]
     public IllustrationSortOption DefaultSortOption { get; set; }
 
     /// <summary>
-    ///     The tag match option for keyword search
+    /// The tag match option for keyword search
     /// </summary>
     [DefaultValue(SearchTagMatchOption.PartialMatchForTags)]
     [SettingMetadata(SettingEntryCategory.Search, typeof(SettingsPageResources), nameof(SettingsPageResources.DefaultSearchTagMatchOptionEntryHeader))]
     public SearchTagMatchOption TagMatchOption { get; set; }
 
     /// <summary>
-    ///     The target filter that indicates the type of the client
+    /// The target filter that indicates the type of the client
     /// </summary>
     [DefaultValue(TargetFilter.ForAndroid)]
     [SettingMetadata(SettingEntryCategory.BrowsingExperience, typeof(SettingsPageResources), nameof(SettingsPageResources.TargetAPIPlatformEntryHeader))]
     public TargetFilter TargetFilter { get; set; }
 
     /// <summary>
-    ///     How many rows to be preloaded in illustration grid
+    /// How many rows to be preloaded in illustration grid
     /// </summary>
     [DefaultValue(2)]
     [SettingMetadata(SettingEntryCategory.Misc, typeof(SettingsPageResources), nameof(SettingsPageResources.PreloadRowsEntryHeader))]
     public int PreLoadRows { get; set; }
 
     /// <summary>
-    ///     Indicates the maximum page count that are allowed to be retrieved during
-    ///     keyword search(30 entries per page)
+    /// Indicates the maximum page count that are allowed to be retrieved during
+    /// keyword search(30 entries per page)
     /// </summary>
     [DefaultValue(100)]
     [SettingMetadata(SettingEntryCategory.Search, typeof(SettingsPageResources), nameof(SettingsPageResources.MaximumSearchPageLimitHeader))]
     public int PageLimitForKeywordSearch { get; set; }
 
     /// <summary>
-    ///     Indicates the starting page's number of keyword search
+    /// Indicates the starting page's number of keyword search
     /// </summary>
     [DefaultValue(1)]
     [SettingMetadata(SettingEntryCategory.Search, typeof(SettingsPageResources), nameof(SettingsPageResources.SearchStartsFromEntryHeader))]
     public int SearchStartingFromPageNumber { get; set; }
 
     /// <summary>
-    ///     Indicates the maximum page count that are allowed to be retrieved during
-    ///     spotlight retrieval(10 entries per page)
+    /// Indicates the maximum page count that are allowed to be retrieved during
+    /// spotlight retrieval(10 entries per page)
     /// </summary>
     [DefaultValue(50)]
     [SettingMetadata(SettingEntryCategory.Misc, typeof(SettingsPageResources), nameof(SettingsPageResources.SpotlightSearchPageLimitEntryHeader))]
     public int PageLimitForSpotlight { get; set; }
 
     /// <summary>
-    ///     The mirror host for image server, Pixeval will do a simple substitution that
-    ///     changes the host of the original url(i.pximg.net) to this one.
+    /// The mirror host for image server, Pixeval will do a simple substitution that
+    /// changes the host of the original url(i.pximg.net) to this one.
     /// </summary>
     [DefaultValue(null)]
     [AttributeIgnore(typeof(SettingsViewModelAttribute<>))]
@@ -123,7 +123,7 @@ public partial record AppSetting : IWindowSettings
     public string? MirrorHost { get; set; }
 
     /// <summary>
-    ///     The max download tasks that are allowed to run concurrently
+    /// The max download tasks that are allowed to run concurrently
     /// </summary>
     [DefaultValue(typeof(DownloadConcurrencyDefaultValueProvider))]
     [AttributeIgnore(typeof(SettingsViewModelAttribute<>))]
@@ -131,16 +131,16 @@ public partial record AppSetting : IWindowSettings
     public int MaxDownloadTaskConcurrencyLevel { get; set; }
 
     /// <summary>
-    ///     Indicates whether a <see cref="TeachingTip" /> should be displayed
-    ///     when user clicks "Generate Link"
+    /// Indicates whether a <see cref="TeachingTip" /> should be displayed
+    /// when user clicks "Generate Link"
     /// </summary>
     [DefaultValue(true)]
     [SettingMetadata(SettingEntryCategory.Application, typeof(SettingsPageResources), nameof(SettingsPageResources.GenerateHelpLinkEntryHeader))]
     public bool DisplayTeachingTipWhenGeneratingAppLink { get; set; }
 
     /// <summary>
-    ///     Indicates how many illustrations will be collected during
-    ///     the enumeration of the <see cref="MakoClient.Recommendations" />
+    /// Indicates how many illustrations will be collected during
+    /// the enumeration of the <see cref="MakoClient.Recommendations" />
     /// </summary>
     [DefaultValue(500)]
     [SettingMetadata(SettingEntryCategory.Misc, typeof(SettingsPageResources), nameof(SettingsPageResources.RecommendationItemLimitEntryHeader))]
@@ -200,10 +200,6 @@ public partial record AppSetting : IWindowSettings
     [SettingMetadata(SettingEntryCategory.Download, typeof(SettingsPageResources), nameof(SettingsPageResources.DefaultDownloadPathMacroEntryHeader))]
     public string DefaultDownloadPathMacro { get; set; } = "";
 
-    [DefaultValue(typeof(DownloadNameMacroDefaultValueProvider))]
-    [SettingMetadata(SettingEntryCategory.Download, typeof(SettingsPageResources), nameof(SettingsPageResources.DefaultDownloadPathMacroEntryHeader))]
-    public string DefaultDownloadNameMacro { get; set; } = "";
-
     [DefaultValue(UgoiraDownloadFormat.WebPLossless)]
     [SettingMetadata(SettingEntryCategory.Download, typeof(SettingsPageResources), nameof(SettingsPageResources.UgoiraDownloadFormatEntryHeader))]
     public UgoiraDownloadFormat UgoiraDownloadFormat { get; set; }
@@ -261,7 +257,7 @@ public partial record AppSetting : IWindowSettings
     public string ProxyString { get; set; } = "";
 
     /// <summary>
-    ///     The Application Theme
+    /// The Application Theme
     /// </summary>
     [DefaultValue(ElementTheme.Default)]
     [SettingMetadata(SettingEntryCategory.Application, typeof(SettingsPageResources), nameof(SettingsPageResources.ThemeEntryHeader))]

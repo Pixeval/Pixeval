@@ -26,7 +26,7 @@ namespace Pixeval.Download;
 public class DownloadStartingDeferral : IDisposable
 {
     /// <summary>
-    ///     Set its result to <see langword="true" /> if you want the download to proceed, otherwise, <see langword="false" />
+    /// Set its result to <see langword="true" /> if you want the download to proceed, otherwise, <see langword="false" />
     /// </summary>
     public ReenterableAwaiter<bool> Signal { get; } = new(true, true);
 
@@ -36,8 +36,8 @@ public class DownloadStartingDeferral : IDisposable
     }
 
     /// <summary>
-    ///     Sets the value of <see cref="Signal" /> <br></br>
-    ///     Pass <see langword="true" /> if you want the download to proceed, otherwise, <see langword="false" />
+    /// Sets the value of <see cref="Signal" /> <br></br>
+    /// Pass <see langword="true" /> if you want the download to proceed, otherwise, <see langword="false" />
     /// </summary>
     /// <param name="value"></param>
     public void Complete(bool value)

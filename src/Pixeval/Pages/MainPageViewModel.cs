@@ -78,7 +78,7 @@ public partial class MainPageViewModel : ObservableObject
     public SuggestionStateMachine SuggestionProvider { get; } = new();
 
     /// <summary>
-    ///     Download user's avatar and set to the Avatar property.
+    /// Download user's avatar and set to the Avatar property.
     /// </summary>
     public async void DownloadAndSetAvatar()
     {

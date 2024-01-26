@@ -75,7 +75,7 @@ public static partial class IoHelper
     }
 
     /// <summary>
-    ///     Decodes the <paramref name="stream" /> to a <see cref="SoftwareBitmap" />
+    /// Decodes the <paramref name="stream" /> to a <see cref="SoftwareBitmap" />
     /// </summary>
     public static async Task<SoftwareBitmap> GetSoftwareBitmapFromStreamAsync(Stream stream)
     {
@@ -98,8 +98,8 @@ public static partial class IoHelper
     }
 
     /// <summary>
-    ///     Writes the frames that are contained in <paramref name="streams" /> into <see cref="Stream"/>
-    ///     and encodes to <paramref name="ugoiraDownloadFormat"/> format
+    /// Writes the frames that are contained in <paramref name="streams" /> into <see cref="Stream"/>
+    /// and encodes to <paramref name="ugoiraDownloadFormat"/> format
     /// </summary>
     public static async Task<Stream> UgoiraSaveToStreamAsync(this IEnumerable<Stream> streams, IEnumerable<int> delays, Stream? target = null, IProgress<int>? progress = null, UgoiraDownloadFormat? ugoiraDownloadFormat = null)
     {

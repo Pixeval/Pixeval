@@ -33,7 +33,7 @@ public class DefaultValue : Attribute
     }
 
     /// <summary>
-    ///     Create a <see cref="DefaultValue" /> using a factory type, the type will be instantiated to provide the value
+    /// Create a <see cref="DefaultValue" /> using a factory type, the type will be instantiated to provide the value
     /// </summary>
     /// <param name="valueFactoryType"></param>
     public DefaultValue(Type? valueFactoryType)

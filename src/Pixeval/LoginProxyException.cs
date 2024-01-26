@@ -23,7 +23,7 @@ using System;
 namespace Pixeval;
 
 /// <summary>
-///     Indicates that the login proxy failed to respond
+/// Indicates that the login proxy failed to respond
 /// </summary>
 public class LoginProxyException : Exception
 {

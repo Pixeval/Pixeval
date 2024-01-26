@@ -36,15 +36,15 @@ namespace Pixeval.CoreApi;
 public partial class MakoClient : ICancellable
 {
     /// <summary>
-    ///     Create an new <see cref="MakoClient" /> based on given <see cref="Configuration" />, <see cref="Session" />, and
-    ///     <see cref="ISessionUpdate" />
+    /// Create an new <see cref="MakoClient" /> based on given <see cref="Configuration" />, <see cref="Session" />, and
+    /// <see cref="ISessionUpdate" />
     /// </summary>
     /// <remarks>
-    ///     The <see cref="MakoClient" /> is not responsible for the <see cref="Session" />'s refreshment, you need to check
-    ///     the
-    ///     <see cref="P:Session.Expire" /> and call <see cref="RefreshSession(Preference.Session)" /> or
-    ///     <see cref="RefreshSessionAsync" />
-    ///     periodically
+    /// The <see cref="MakoClient" /> is not responsible for the <see cref="Session" />'s refreshment, you need to check
+    /// the
+    /// <see cref="P:Session.Expire" /> and call <see cref="RefreshSession(Preference.Session)" /> or
+    /// <see cref="RefreshSessionAsync" />
+    /// periodically
     /// </remarks>
     /// <param name="session">The <see cref="Preference.Session" /></param>
     /// <param name="configuration">The <see cref="Configuration" /></param>
@@ -59,16 +59,16 @@ public partial class MakoClient : ICancellable
     }
 
     /// <summary>
-    ///     Creates a <see cref="MakoClient" /> based on given <see cref="Session" /> and <see cref="ISessionUpdate" />, the
-    ///     configurations will stay
-    ///     as default
+    /// Creates a <see cref="MakoClient" /> based on given <see cref="Session" /> and <see cref="ISessionUpdate" />, the
+    /// configurations will stay
+    /// as default
     /// </summary>
     /// <remarks>
-    ///     The <see cref="MakoClient" /> is not responsible for the <see cref="Session" />'s refreshment, you need to check
-    ///     the
-    ///     <see cref="P:Session.Expire" /> and call <see cref="RefreshSession(Pixeval.CoreApi.Preference.Session)" /> or
-    ///     <see cref="RefreshSessionAsync" />
-    ///     periodically
+    /// The <see cref="MakoClient" /> is not responsible for the <see cref="Session" />'s refreshment, you need to check
+    /// the
+    /// <see cref="P:Session.Expire" /> and call <see cref="RefreshSession(Pixeval.CoreApi.Preference.Session)" /> or
+    /// <see cref="RefreshSessionAsync" />
+    /// periodically
     /// </remarks>
     /// <param name="session">The <see cref="Pixeval.CoreApi.Preference.Session" /></param>
     /// <param name="sessionUpdater">The updater of <see cref="Pixeval.CoreApi.Preference.Session" /></param>
@@ -81,7 +81,7 @@ public partial class MakoClient : ICancellable
     }
 
     /// <summary>
-    ///     Injects necessary dependencies
+    /// Injects necessary dependencies
     /// </summary>
     /// <returns>The <see cref="IContainer" /> contains all the required dependencies</returns>
     private IContainer BuildContainer()
@@ -174,9 +174,9 @@ public partial class MakoClient : ICancellable
     }
 
     /// <summary>
-    ///     Cancels this <see cref="MakoClient" />, including all of the running instances, the
-    ///     <see cref="Session" /> will be reset to its default value, the <see cref="MakoClient" />
-    ///     will unable to be used again after calling this method
+    /// Cancels this <see cref="MakoClient" />, including all of the running instances, the
+    /// <see cref="Session" /> will be reset to its default value, the <see cref="MakoClient" />
+    /// will unable to be used again after calling this method
     /// </summary>
     public void Cancel()
     {
@@ -235,7 +235,7 @@ public partial class MakoClient : ICancellable
     }
 
     /// <summary>
-    ///     Gets a registered <see cref="IFetchEngine{E}" /> by its <see cref="EngineHandle" />
+    /// Gets a registered <see cref="IFetchEngine{E}" /> by its <see cref="EngineHandle" />
     /// </summary>
     /// <param name="handle">The <see cref="EngineHandle" /> of the <see cref="IFetchEngine{E}" /></param>
     /// <typeparam name="T">The type of the results of the <see cref="IFetchEngine{E}" /></typeparam>
@@ -246,7 +246,7 @@ public partial class MakoClient : ICancellable
     }
 
     /// <summary>
-    ///     Acquires a configured <see cref="HttpClient" /> for the network traffics
+    /// Acquires a configured <see cref="HttpClient" /> for the network traffics
     /// </summary>
     /// <param name="makoApiKind">The kind of API that is going to be used by the request</param>
     /// <returns>The <see cref="HttpClient" /> corresponding to <paramref name="makoApiKind" /></returns>
@@ -256,7 +256,7 @@ public partial class MakoClient : ICancellable
     }
 
     /// <summary>
-    ///     Sets the <see cref="Session" /> to a new value
+    /// Sets the <see cref="Session" /> to a new value
     /// </summary>
     /// <param name="newSession">The new <see cref="Preference.Session" /></param>
     public void RefreshSession(Session newSession)
@@ -265,7 +265,7 @@ public partial class MakoClient : ICancellable
     }
 
     /// <summary>
-    ///     Refresh session using the provided <see cref="ISessionUpdate" />
+    /// Refresh session using the provided <see cref="ISessionUpdate" />
     /// </summary>
     public async Task RefreshSessionAsync()
     {

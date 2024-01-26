@@ -57,7 +57,7 @@ public partial class SettingsPageViewModel(AppSetting appSetting, EnhancedWindow
         using var scope = App.AppViewModel.AppServicesScope;
         var factory = scope.ServiceProvider.GetRequiredService<IDownloadTaskFactory<IllustrationItemViewModel, IllustrationDownloadTask>>();
         AvailableIllustMacros = factory.PathParser.MacroProvider.AvailableMacros
-            .Select(m => $"@{{{(m is IMacro<IllustrationItemViewModel>.IPredicate ? $"{m.Name}:" : m.Name)}}}")
+            .Select(m => $"@{{{(m is IMacro<IllustrationItemViewModel>.IPredicate ? $"{m.Name}=" : m.Name)}}}")
             .Select(s => new Token(s, false, false))
             .ToList();
     }

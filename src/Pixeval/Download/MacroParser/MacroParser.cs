@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -26,14 +26,14 @@ namespace Pixeval.Download.MacroParser;
 public class MacroParser<TContext>
 {
     private TokenInfo? _currentToken;
-    private bool _expectContextualColon;
+    private bool _expectContextualEqual;
     private Lexer? _lexer;
 
     public void SetupParsingEnvironment(Lexer lexer)
     {
         _lexer = lexer;
         _currentToken = _lexer.NextToken();
-        _expectContextualColon = false;
+        _expectContextualEqual = false;
     }
 
     private TokenInfo EatToken(TokenKind kind)
@@ -96,7 +96,7 @@ public class MacroParser<TContext>
         return _currentToken switch
         {
             { TokenKind: TokenKind.At } => Macro(),
-            { TokenKind: TokenKind.PlainText or TokenKind.Colon } => PlainText(),
+            { TokenKind: TokenKind.PlainText or TokenKind.Equal } => PlainText(),
             { TokenKind: TokenKind.RBrace } => null,
             _ => throw new MacroParseException(MacroParserResources.UnexpectedTokenFormatted.Format(_currentToken?.Position.Start is { Value: var start } ? start + 1 : "EOF"))
         };
@@ -107,7 +107,7 @@ public class MacroParser<TContext>
         _ = EatToken(TokenKind.At);
         _ = EatToken(TokenKind.LBrace);
         var macroName = PlainText();
-        _expectContextualColon = true;
+        _expectContextualEqual = true;
         var node = new Macro<TContext>(macroName, OptionalMacroParameter());
         _ = EatToken(TokenKind.RBrace);
         return node;
@@ -115,20 +115,20 @@ public class MacroParser<TContext>
 
     private OptionalMacroParameter<TContext>? OptionalMacroParameter()
     {
-        _expectContextualColon = false;
-        return TryEatToken(TokenKind.Colon, out _) ? new OptionalMacroParameter<TContext>(Sequence()) : null;
+        _expectContextualEqual = false;
+        return TryEatToken(TokenKind.Equal, out _) ? new OptionalMacroParameter<TContext>(Sequence()) : null;
     }
 
     private PlainText<TContext> PlainText()
     {
-        if (_currentToken?.TokenKind is TokenKind.Colon)
+        if (_currentToken?.TokenKind is TokenKind.Equal)
         {
-            if (_expectContextualColon)
+            if (_expectContextualEqual)
             {
                 throw new MacroParseException(MacroParserResources.UnexpectedTokenFormatted.Format(_currentToken.Position.Start));
             }
 
-            _ = EatToken(TokenKind.Colon);
+            _ = EatToken(TokenKind.Equal);
             return new PlainText<TContext>($":{EatToken(TokenKind.PlainText).Text}");
         }
 

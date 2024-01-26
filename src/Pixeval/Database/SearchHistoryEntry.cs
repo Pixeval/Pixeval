@@ -29,7 +29,7 @@ public class SearchHistoryEntry
     public ObjectId? Id { get; set; }
 
     /// <summary>
-    ///     Search value
+    /// Search value
     /// </summary>
     public string? Value { get; set; }
 

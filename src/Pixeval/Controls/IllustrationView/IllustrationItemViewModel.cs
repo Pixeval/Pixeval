@@ -115,14 +115,14 @@ public partial class IllustrationItemViewModel : IllustrateViewModel<Illustratio
     }
 
     /// <summary>
-    ///     An illustration may contain multiple works and such illustrations are named "manga".
-    ///     This method attempts to get the works and wrap into <see cref="IllustrationItemViewModel" />
+    /// An illustration may contain multiple works and such illustrations are named "manga".
+    /// This method attempts to get the works and wrap into <see cref="IllustrationItemViewModel" />
     /// </summary>
     /// <returns>
-    ///     A collection of a single <see cref="IllustrationItemViewModel" />, if the illustration is not
-    ///     a manga, that is to say, contains only a single work.
-    ///     A collection of multiple <see cref="IllustrationItemViewModel" />, if the illustration is a manga
-    ///     that consist of multiple works
+    /// A collection of a single <see cref="IllustrationItemViewModel" />, if the illustration is not
+    /// a manga, that is to say, contains only a single work.
+    /// A collection of multiple <see cref="IllustrationItemViewModel" />, if the illustration is a manga
+    /// that consist of multiple works
     /// </returns>
     public IEnumerable<IllustrationItemViewModel> GetMangaIllustrationViewModels()
     {

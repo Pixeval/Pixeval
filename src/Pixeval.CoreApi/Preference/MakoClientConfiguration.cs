@@ -24,7 +24,7 @@ using System.Text.Json.Serialization;
 namespace Pixeval.CoreApi.Preference;
 
 /// <summary>
-///     Contains all the user-configurable keys
+/// Contains all the user-configurable keys
 /// </summary>
 public record MakoClientConfiguration(int ConnectionTimeout, bool Bypass, string? MirrorHost, CultureInfo CultureInfo)
 {
@@ -42,16 +42,16 @@ public record MakoClientConfiguration(int ConnectionTimeout, bool Bypass, string
     public int ConnectionTimeout { get; set; } = ConnectionTimeout;
 
     /// <summary>
-    ///     Automatically bypass GFW or not, default is set to true.
-    ///     If you are currently living in China Mainland, turn it on to make sure
-    ///     you can use Mako without using any kind of proxy, otherwise you will
-    ///     need a proper proxy server to bypass the GFW
+    /// Automatically bypass GFW or not, default is set to true.
+    /// If you are currently living in China Mainland, turn it on to make sure
+    /// you can use Mako without using any kind of proxy, otherwise you will
+    /// need a proper proxy server to bypass the GFW
     /// </summary>
     [JsonPropertyName("bypass")]
     public bool Bypass { get; set; } = Bypass;
 
     /// <summary>
-    ///     Mirror server's host of image downloading
+    /// Mirror server's host of image downloading
     /// </summary>
     [JsonPropertyName("mirrorHost")]
     public string? MirrorHost { get; set; } = MirrorHost;

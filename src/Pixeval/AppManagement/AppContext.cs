@@ -38,7 +38,7 @@ using Windows.ApplicationModel;
 namespace Pixeval.AppManagement;
 
 /// <summary>
-///     Provide miscellaneous information about the app
+/// Provide miscellaneous information about the app
 /// </summary>
 [AppContext<AppSetting>(ConfigKey = "Config", Type = ApplicationDataContainerType.Roaming, MethodName = "Config")]
 [AppContext<Session>(ConfigKey = "Session", MethodName = "Session")]
@@ -136,7 +136,7 @@ public static partial class AppContext
     }
 
     /// <summary>
-    ///     Get the byte array of a file in the Assets folder
+    /// Get the byte array of a file in the Assets folder
     /// </summary>
     /// <param name="relativeToAssetsFolder">A path with leading slash(or backslash) removed</param>
     /// <returns></returns>
@@ -182,7 +182,7 @@ public static partial class AppContext
     }
 
     /// <summary>
-    ///     Erase all personal data, including session, configuration and image cache
+    /// Erase all personal data, including session, configuration and image cache
     /// </summary>
     public static Task ClearDataAsync()
     {

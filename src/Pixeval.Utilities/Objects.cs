@@ -151,7 +151,7 @@ public static class Objects
     }
 
     /// <summary>
-    ///     Returns <see cref="Result{T}.Failure" /> if the status code does not indicating success
+    /// Returns <see cref="Result{T}.Failure" /> if the status code does not indicating success
     /// </summary>
     /// <param name="httpClient"></param>
     /// <param name="url"></param>
@@ -208,7 +208,7 @@ public static class Objects
     }
 
     /// <summary>
-    ///     Start inclusive, end inclusive
+    /// Start inclusive, end inclusive
     /// </summary>
     public static bool InRange(this double i, (double, double) range)
     {

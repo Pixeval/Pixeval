@@ -303,7 +303,7 @@ internal partial class FeedEngine(MakoClient makoClient, EngineHandle? engineHan
     }
 
     /// <summary>
-    ///     Required parameters established from multiple tests, I don't know what do they mean
+    /// Required parameters established from multiple tests, I don't know what do they mean
     /// </summary>
     private record FeedRequestContext(string UnifyToken, string Sid, string Mode, bool IsLastPage);
 }
