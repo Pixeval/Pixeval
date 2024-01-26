@@ -37,7 +37,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Pixeval.Download.Models;
 using Pixeval.CoreApi.Global.Enum;
 
-namespace Pixeval.Controls.IllustrationView;
+namespace Pixeval.Controls;
 
 public partial class IllustrationItemViewModel
 {

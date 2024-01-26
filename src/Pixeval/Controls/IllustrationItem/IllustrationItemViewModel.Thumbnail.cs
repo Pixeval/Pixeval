@@ -31,7 +31,7 @@ using Pixeval.Utilities;
 using Pixeval.Utilities.Threading;
 using AppContext = Pixeval.AppManagement.AppContext;
 
-namespace Pixeval.Controls.IllustrationView;
+namespace Pixeval.Controls;
 
 public partial class IllustrationItemViewModel
 {

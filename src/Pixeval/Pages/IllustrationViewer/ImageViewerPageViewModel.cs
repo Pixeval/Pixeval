@@ -32,7 +32,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Input;
 using Pixeval.Attributes;
 using Pixeval.Controls;
-using Pixeval.Controls.IllustrationView;
 using Pixeval.Controls.MarkupExtensions;
 using Pixeval.Database;
 using Pixeval.Database.Managers;

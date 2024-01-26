@@ -26,7 +26,6 @@ using CommunityToolkit.WinUI.Collections;
 using Microsoft.UI;
 using Microsoft.UI.Xaml.Media;
 using Pixeval.Controls;
-using Pixeval.Controls.IllustrationView;
 using Pixeval.Controls.MarkupExtensions;
 using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Global.Enum;

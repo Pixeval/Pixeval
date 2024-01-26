@@ -27,7 +27,7 @@ using Pixeval.Options;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
 
-namespace Pixeval.Controls.IllustrationView;
+namespace Pixeval.Controls;
 
 [DependencyProperty<IllustrationItemViewModel>("ViewModel", propertyChanged: nameof(OnViewModelChanged))]
 public sealed partial class IllustrationItem : IViewModelControl

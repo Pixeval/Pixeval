@@ -5,9 +5,9 @@
     xmlns:converters="using:CommunityToolkit.WinUI.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:illustrationResultFilter="using:Pixeval.Flyouts.IllustrationResultFilter"
-    xmlns:illustrationView="using:Pixeval.Controls.IllustrationView"
     xmlns:markupExtensions="using:Pixeval.Controls.MarkupExtensions"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:Pixeval.Controls"
     Loaded="IllustrationContainer_OnLoaded"
     mc:Ignorable="d">
     <UserControl.Resources>
@@ -114,7 +114,7 @@
             SecondaryCommandsSupplements="{x:Bind SecondaryCommandsSupplements, Mode=TwoWay}"
             ViewModel="{x:Bind IllustrationView.ViewModel}"
             Visibility="{x:Bind ShowCommandBar, Mode=OneWay}" />-->
-        <illustrationView:IllustrationView
+        <controls:IllustrationView
             x:Name="IllustrationView"
             Grid.Row="1"
             x:FieldModifier="public"

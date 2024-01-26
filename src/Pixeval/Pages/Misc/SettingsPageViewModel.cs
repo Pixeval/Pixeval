@@ -29,7 +29,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Pixeval.AppManagement;
 using Pixeval.Attributes;
-using Pixeval.Controls.IllustrationView;
+using Pixeval.Controls;
 using Pixeval.Controls.TokenInput;
 using Pixeval.Controls.Windowing;
 using Pixeval.Database.Managers;

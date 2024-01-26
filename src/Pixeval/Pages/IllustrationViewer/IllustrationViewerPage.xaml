@@ -7,7 +7,6 @@
     xmlns:converters1="using:Pixeval.Controls.Converters"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:illustrationView="using:Pixeval.Controls.IllustrationView"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:local="using:Pixeval.Pages.IllustrationViewer"
     xmlns:markup="using:Pixeval.Controls.MarkupExtensions"
@@ -255,7 +254,7 @@
                             SelectedIndex="{x:Bind _viewModel.CurrentIllustrationIndex, Mode=TwoWay}"
                             SelectionMode="Single">
                             <controls:AdvancedItemsView.ItemTemplate>
-                                <DataTemplate x:DataType="illustrationView:IllustrationItemViewModel">
+                                <DataTemplate x:DataType="controls:IllustrationItemViewModel">
                                     <ItemContainer>
                                         <Image
                                             Width="80"

@@ -26,7 +26,7 @@ using Pixeval.CoreApi.Model;
 using Pixeval.Util;
 using Pixeval.Utilities;
 
-namespace Pixeval.Controls.IllustrationView;
+namespace Pixeval.Controls;
 
 public sealed partial class IllustrationViewViewModel : SortableIllustrateViewViewModel<Illustration, IllustrationItemViewModel>
 {

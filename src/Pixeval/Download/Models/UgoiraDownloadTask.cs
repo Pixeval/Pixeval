@@ -20,7 +20,7 @@
 
 using System.IO;
 using System.Threading.Tasks;
-using Pixeval.Controls.IllustrationView;
+using Pixeval.Controls;
 using Pixeval.CoreApi.Net.Response;
 using Pixeval.Database;
 using Pixeval.Util.IO;

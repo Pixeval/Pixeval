@@ -28,7 +28,7 @@ using Pixeval.CoreApi.Model;
 using Pixeval.Misc;
 using Pixeval.Utilities;
 
-namespace Pixeval.Controls.IllustrationView;
+namespace Pixeval.Controls;
 
 /// <summary>
 /// 复用时调用<see cref="CloneRef"/>，<see cref="FetchEngineRef"/>和<see cref="IllustrationSourceRef"/>会在所有复用对象都Dispose时Dispose。

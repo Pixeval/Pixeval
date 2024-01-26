@@ -22,7 +22,7 @@ using Pixeval.Controls.Illustrate;
 using Pixeval.CoreApi.Model;
 using Pixeval.Util;
 
-namespace Pixeval.Controls.IllustratorView;
+namespace Pixeval.Controls;
 
 public sealed class IllustratorViewViewModel : IllustrateViewViewModel<User, IllustratorItemViewModel>
 {

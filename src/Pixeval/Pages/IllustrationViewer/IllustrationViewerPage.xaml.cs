@@ -33,7 +33,6 @@ using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.AppManagement;
 using Pixeval.Controls;
-using Pixeval.Controls.IllustrationView;
 using Pixeval.Misc;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;

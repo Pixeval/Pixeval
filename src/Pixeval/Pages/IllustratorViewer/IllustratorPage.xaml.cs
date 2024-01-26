@@ -34,7 +34,6 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Controls;
-using Pixeval.Controls.IllustratorView;
 using Pixeval.Controls.MarkupExtensions;
 using Pixeval.Messages;
 using Pixeval.Util;

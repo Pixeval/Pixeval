@@ -18,7 +18,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using Pixeval.Controls.IllustrationView;
+using Pixeval.Controls;
 using Pixeval.Download.MacroParser;
 
 namespace Pixeval.Download.Macros;

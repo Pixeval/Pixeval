@@ -22,7 +22,7 @@ using System;
 using System.Collections.Specialized;
 using System.Threading.Tasks;
 using CommunityToolkit.WinUI.Collections;
-using Pixeval.Controls.IllustrationView;
+using Pixeval.Controls;
 using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Model;
 using Pixeval.Misc;

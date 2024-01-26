@@ -30,7 +30,7 @@ using Pixeval.CoreApi.Model;
 using Pixeval.CoreApi.Net.Response;
 using Pixeval.Utilities;
 
-namespace Pixeval.Controls.IllustrationView;
+namespace Pixeval.Controls;
 
 /// <summary>
 /// A view model that communicates between the model <see cref="Illustration" /> and the view <see cref="IllustrationView" />.

@@ -1,11 +1,10 @@
 <Grid
-    x:Class="Pixeval.Controls.IllustrationView.IllustrationView"
+    x:Class="Pixeval.Controls.IllustrationView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Pixeval.Controls"
     xmlns:converters="using:Pixeval.Util.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="using:Pixeval.Controls.IllustrationView"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Unloaded="IllustrationViewOnUnloaded"
     mc:Ignorable="d">
@@ -24,9 +23,9 @@
         SelectionChanged="IllustrationItemsView_OnSelectionChanged"
         SelectionMode="{x:Bind ViewModel.IsSelecting, Converter={StaticResource BoolToItemsViewSelectionModeConverter}, Mode=OneWay}">
         <ItemsView.ItemTemplate>
-            <DataTemplate x:DataType="local:IllustrationItemViewModel">
+            <DataTemplate x:DataType="controls:IllustrationItemViewModel">
                 <ItemContainer>
-                    <local:IllustrationItem
+                    <controls:IllustrationItem
                         ThisRequired="IllustrationThumbnail_OnThisRequired"
                         ViewModel="{x:Bind}"
                         ViewModelChanged="IllustrationItem_OnViewModelChanged" />

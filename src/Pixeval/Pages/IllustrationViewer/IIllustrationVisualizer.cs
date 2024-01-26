@@ -19,7 +19,7 @@
 #endregion
 
 using System.Collections.ObjectModel;
-using Pixeval.Controls.IllustrationView;
+using Pixeval.Controls;
 
 namespace Pixeval.Pages.IllustrationViewer;
 

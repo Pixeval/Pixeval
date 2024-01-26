@@ -28,7 +28,7 @@ using Pixeval.Util.UI;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
 
-namespace Pixeval.Controls.IllustrationView;
+namespace Pixeval.Controls;
 
 // use "load failed" image for those thumbnails who failed to load its source due to various reasons
 // note: please ALWAYS add e.Handled = true before every "tapped" event for the buttons
@@ -88,8 +88,8 @@ public sealed partial class IllustrationView
     {
         if (await viewModel.TryLoadThumbnail(ViewModel))
         {
-            if (sender.IsFullyOrPartiallyVisible(this))
-                sender.Resources["IllustrationThumbnailStoryboard"].To<Storyboard>().Begin();
+            if (UiHelper.IsFullyOrPartiallyVisible(sender, this))
+                WinUI3Utilities.Misc.To<Storyboard>(sender.Resources["IllustrationThumbnailStoryboard"]).Begin();
             else
                 sender.Opacity = 1;
         }

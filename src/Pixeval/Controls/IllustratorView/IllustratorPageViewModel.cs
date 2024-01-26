@@ -23,7 +23,6 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
-using Pixeval.Controls.IllustrationView;
 using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Model;
@@ -33,7 +32,7 @@ using Pixeval.Util.IO;
 using Pixeval.Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
 
-namespace Pixeval.Controls.IllustratorView;
+namespace Pixeval.Controls;
 
 public partial class IllustratorPageViewModel : ObservableObject, IIllustrationVisualizer
 {

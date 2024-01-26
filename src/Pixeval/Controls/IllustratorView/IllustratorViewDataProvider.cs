@@ -26,7 +26,7 @@ using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Model;
 using Pixeval.Misc;
 
-namespace Pixeval.Controls.IllustratorView;
+namespace Pixeval.Controls;
 
 public class IllustratorViewDataProvider : ObservableObject, IDataProvider<User, IllustratorItemViewModel>
 {
