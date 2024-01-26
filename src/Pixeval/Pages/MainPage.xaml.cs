@@ -59,8 +59,6 @@ namespace Pixeval.Pages;
 
 public sealed partial class MainPage : SupportCustomTitleBarDragRegionPage
 {
-    private static UIElement? _connectedAnimationTarget;
-
     private readonly MainPageViewModel _viewModel;
 
     public MainPage()
@@ -96,7 +94,6 @@ public sealed partial class MainPage : SupportCustomTitleBarDragRegionPage
             ActivationRegistrar.Dispatch(AppInstance.GetCurrent().GetActivatedEventArgs());
         }
 
-        _ = WeakReferenceMessenger.Default.TryRegister<MainPage, MainPageFrameSetConnectedAnimationTargetMessage>(this, (_, message) => _connectedAnimationTarget = message.Sender);
         _ = WeakReferenceMessenger.Default.TryRegister<MainPage, IllustrationTagClickedMessage>(this, (_, message) =>
         {
             Window.AppWindow.MoveInZOrderAtTop();

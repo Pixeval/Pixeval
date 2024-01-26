@@ -28,6 +28,8 @@
     <ItemGroup>
       <None Remove="Assets\Svg.resjson" />
       <None Remove="Controls\SettingRadioButtons\SettingRadioButtons.xaml" />
+      <None Remove="Pages\Capability\TagsPage.xaml" />
+      <None Remove="Pages\Tags\TagsEntry.xaml" />
     </ItemGroup>
 
     <ItemGroup>
@@ -371,5 +373,15 @@
     </ItemGroup>
     <ItemGroup>
       <Folder Include="Controls\IllustrationItem\" />
+    </ItemGroup>
+    <ItemGroup>
+      <Page Update="Pages\Tags\TagsEntry.xaml">
+        <Generator>MSBuild:Compile</Generator>
+      </Page>
+    </ItemGroup>
+    <ItemGroup>
+      <Page Update="Pages\Capability\TagsPage.xaml">
+        <Generator>MSBuild:Compile</Generator>
+      </Page>
     </ItemGroup>
 </Project>

@@ -25,6 +25,8 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Windows.Graphics.Imaging;
+using Windows.Storage;
+using Windows.Storage.FileProperties;
 using Windows.Storage.Streams;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.CoreApi.Model;
@@ -88,6 +90,19 @@ public static partial class IoHelper
         // BitmapDecoder Bug多
         // var decoder = await BitmapDecoder.CreateAsync(imageStream);
         // return await decoder.GetSoftwareBitmapAsync(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Premultiplied);
+    }
+
+    public static async Task<SoftwareBitmapSource> GetSoftwareBitmapSourceFromFileAsync(string path)
+    {
+        const int size = 64;
+        var file = await StorageFile.GetFileFromPathAsync(path);
+        var thumbnail = await file.GetThumbnailAsync(ThumbnailMode.SingleItem, size);
+        var bitmap = new SoftwareBitmap(BitmapPixelFormat.Bgra8, size, size, BitmapAlphaMode.Premultiplied);
+        var buffer = await thumbnail.ReadAsync(new Windows.Storage.Streams.Buffer(size * size * 4), size * size * 4, InputStreamOptions.None);
+        bitmap.CopyFromBuffer(buffer);
+        var source = new SoftwareBitmapSource();
+        await source.SetBitmapAsync(bitmap);
+        return source;
     }
 
     public static async Task UgoiraSaveToFileAsync(this Image image, string path, UgoiraDownloadFormat? ugoiraDownloadFormat = null)
@@ -228,6 +243,6 @@ public static partial class IoHelper
     public static void SetImageTags(Image image, Illustration illustration)
     {
         var profile = image.Metadata.ExifProfile ??= new();
-        profile.SetValue(ExifTag.UserComment, new(illustration.Tags.Aggregate("", (current, tag) => current + tag.Name + ";")));
+        profile.SetValue(ExifTag.UserComment, string.Join(';', illustration.Tags.Select(t => t.Name)));
     }
 }

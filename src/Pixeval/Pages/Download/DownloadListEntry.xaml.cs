@@ -39,6 +39,8 @@ public sealed partial class DownloadListEntry : IViewModelControl
     object IViewModelControl.ViewModel => ViewModel;
 
     public event Action<DownloadListEntry, DownloadListEntryViewModel>? ViewModelChanged;
+    
+    public event TypedEventHandler<DownloadListEntry, DownloadListEntryViewModel>? OpenIllustrationRequested;
 
     private static void OnViewModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
@@ -49,8 +51,6 @@ public sealed partial class DownloadListEntry : IViewModelControl
     }
 
     public DownloadListEntry() => InitializeComponent();
-
-    public event TypedEventHandler<DownloadListEntry, DownloadListEntryViewModel>? OpenIllustrationRequested;
 
     private async void ActionButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {

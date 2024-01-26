@@ -31,6 +31,6 @@ public sealed class IllustratorViewViewModel : IllustrateViewViewModel<User, Ill
     public override void Dispose()
     {
         DataProvider.FetchEngine?.Cancel();
-        DataProvider.DisposeCurrent();
+        DataProvider.Dispose();
     }
 }

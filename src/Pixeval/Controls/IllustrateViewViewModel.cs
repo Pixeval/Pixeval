@@ -27,7 +27,7 @@ using Pixeval.CoreApi.Model;
 
 namespace Pixeval.Controls;
 
-public abstract partial class IllustrateViewViewModel<T, TViewModel> : ObservableObject, IDisposable where T : IIllustrate where TViewModel : IllustrateViewModel<T>
+public abstract partial class IllustrateViewViewModel<T, TViewModel> : ObservableObject, IDisposable where T : class, IIllustrate where TViewModel : IllustrateViewModel<T>
 {
     [ObservableProperty]
     private bool _hasNoItems;

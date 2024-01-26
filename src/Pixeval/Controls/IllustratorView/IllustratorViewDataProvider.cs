@@ -40,7 +40,7 @@ public class IllustratorViewDataProvider : ObservableObject, IDataProvider<User,
 
     public IFetchEngine<User?>? FetchEngine { get; protected set; }
 
-    public void DisposeCurrent()
+    public void Dispose()
     {
         if (Source is { } source)
             foreach (var illustratorViewModel in source)
@@ -53,7 +53,7 @@ public class IllustratorViewDataProvider : ObservableObject, IDataProvider<User,
     {
         FetchEngine?.EngineHandle.Cancel();
         FetchEngine = fetchEngine;
-        DisposeCurrent();
+        Dispose();
 
         Source = new IncrementalLoadingCollection<FetchEngineIncrementalSource<User, IllustratorItemViewModel>, IllustratorItemViewModel>(new IllustratorFetchEngineIncrementalSource(FetchEngine!, limit));
     }

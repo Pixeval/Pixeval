@@ -18,24 +18,22 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using System;
 using System.ComponentModel;
 using CommunityToolkit.WinUI.Collections;
 using Pixeval.Collections;
 using Pixeval.CoreApi.Engine;
-using Pixeval.CoreApi.Model;
 using Pixeval.Misc;
 
 namespace Pixeval.Controls.Illustrate;
 
-public interface IDataProvider<T, TViewModel> : INotifyPropertyChanged, INotifyPropertyChanging where T : IIllustrate where TViewModel : IllustrateViewModel<T>
+public interface IDataProvider<T, TViewModel> : INotifyPropertyChanged, INotifyPropertyChanging, IDisposable where T : class where TViewModel : class
 {
     AdvancedObservableCollection<TViewModel> View { get; }
 
     IncrementalLoadingCollection<FetchEngineIncrementalSource<T, TViewModel>, TViewModel> Source { get; }
 
     IFetchEngine<T?>? FetchEngine { get; }
-
-    void DisposeCurrent();
 
     void ResetEngine(IFetchEngine<T?>? fetchEngine, int limit = -1);
 }

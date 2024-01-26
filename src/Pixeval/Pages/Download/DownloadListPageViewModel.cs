@@ -145,10 +145,6 @@ public partial class DownloadListPageViewModel : IllustrateViewViewModel<Illustr
 
     public override void Dispose()
     {
-        foreach (var illustrationViewModel in DataProvider.Source)
-        {
-            illustrationViewModel.UnloadThumbnail(this);
-            illustrationViewModel.Dispose();
-        }
+        DataProvider.Dispose();
     }
 }

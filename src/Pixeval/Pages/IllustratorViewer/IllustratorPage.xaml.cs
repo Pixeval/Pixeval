@@ -93,8 +93,6 @@ public sealed partial class IllustratorPage
         switch (navigationEventArgs.Parameter)
         {
             case (UIElement sender, IllustratorPageViewModel viewModel):
-                _ = WeakReferenceMessenger.Default.Send(new MainPageFrameSetConnectedAnimationTargetMessage(sender));
-                _ = (ConnectedAnimationService.GetForCurrentView().GetAnimation("ForwardConnectedAnimation")?.TryStart(ProfileImage));
                 _viewModel = viewModel;
                 break;
             case IllustratorPageViewModel viewModel1:

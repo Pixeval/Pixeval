@@ -180,6 +180,10 @@
                     Tag="{x:Bind _viewModel.RecentPostsTag}" />
                 <NavigationViewItemHeader x:Uid="/MainPage/DownloadAndHistoriesTab" />
                 <NavigationViewItem
+                    x:Uid="/MainPage/TagsTab"
+                    Icon="{markup:FontSymbolIcon Glyph=TagE8EC}"
+                    Tag="{x:Bind _viewModel.TagsTag}" />
+                <NavigationViewItem
                     x:Uid="/MainPage/HistoriesTab"
                     Icon="{markup:FontSymbolIcon Glyph=HistoryE81C}"
                     Tag="{x:Bind _viewModel.HistoriesTag}" />

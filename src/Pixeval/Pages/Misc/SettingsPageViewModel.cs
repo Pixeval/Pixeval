@@ -38,6 +38,7 @@ using Pixeval.Download.MacroParser;
 using Pixeval.Download.Models;
 using Pixeval.Misc;
 using Pixeval.Options;
+using Pixeval.Util;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
 
@@ -116,12 +117,6 @@ public partial class SettingsPageViewModel(AppSetting appSetting, EnhancedWindow
     public void ClearData<T, TModel>(ClearDataKind kind, IPersistentManager<T, TModel> manager) where T : new()
     {
         manager.Clear();
-        window.Content.To<FrameworkElement>().ShowTeachingTipAndHide(kind switch
-        {
-            ClearDataKind.BrowseHistory => SettingsPageResources.BrowseHistoriesCleared,
-            ClearDataKind.SearchHistory => SettingsPageResources.SearchHistoriesCleared,
-            ClearDataKind.DownloadHistory => SettingsPageResources.DownloadHistoriesCleared,
-            _ => ThrowHelper.ArgumentOutOfRange<ClearDataKind, string>(kind)
-        });
+        window.Content.To<FrameworkElement>().ShowTeachingTipAndHide(kind.GetLocalizedResourceContent()!);
     }
 }

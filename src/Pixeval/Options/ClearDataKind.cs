@@ -18,11 +18,18 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using Pixeval.Attributes;
+
 namespace Pixeval.Options;
 
 public enum ClearDataKind
 {
+    [LocalizedResource(typeof(SettingsPageResources), nameof(SettingsPageResources.BrowseHistoriesCleared))]
     BrowseHistory,
+
+    [LocalizedResource(typeof(SettingsPageResources), nameof(SettingsPageResources.SearchHistoriesCleared))]
     SearchHistory,
+
+    [LocalizedResource(typeof(SettingsPageResources), nameof(SettingsPageResources.DownloadHistoriesCleared))]
     DownloadHistory
 }

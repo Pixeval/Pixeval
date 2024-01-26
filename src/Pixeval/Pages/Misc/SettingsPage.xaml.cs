@@ -115,12 +115,12 @@ public sealed partial class SettingsPage
 
     private async void FeedbackByEmailHyperlinkButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        await Launcher.LaunchUriAsync(new Uri("mailto:decem0730@hotmail.com"));
+        _ = await Launcher.LaunchUriAsync(new Uri("mailto:decem0730@hotmail.com"));
     }
 
     private async void OpenFontSettingsHyperlinkButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        await Launcher.LaunchUriAsync(new Uri("ms-settings:fonts"));
+        _ = await Launcher.LaunchUriAsync(new Uri("ms-settings:fonts"));
     }
 
     private async void PerformSignOutButton_OnTapped(object sender, TappedRoutedEventArgs e)

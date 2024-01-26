@@ -23,11 +23,14 @@ public class DownloadListEntryDataProvider : ObservableObject, IDataProvider<Ill
 
     public IFetchEngine<Illustration?>? FetchEngine { get; protected set; }
 
-    public void DisposeCurrent()
+    public void Dispose()
     {
         if (Source is { } source)
-            foreach (var downloadListEntryViewModel in source)
-                downloadListEntryViewModel.Dispose();
+            foreach (var illustrationViewModel in source)
+            {
+                illustrationViewModel.UnloadThumbnail(this);
+                illustrationViewModel.Dispose();
+            }
 
         View.Clear();
     }

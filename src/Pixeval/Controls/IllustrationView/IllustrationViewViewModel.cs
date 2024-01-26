@@ -69,7 +69,7 @@ public sealed partial class IllustrationViewViewModel : SortableIllustrateViewVi
     public override void Dispose()
     {
         DataProvider.FetchEngine?.Cancel();
-        DataProvider.DisposeCurrent();
+        DataProvider.Dispose();
     }
 
     public override void SetSortDescription(SortDescription description)

@@ -31,6 +31,7 @@ using Pixeval.Misc;
 using Pixeval.Pages.Capability;
 using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Pages.Misc;
+using Pixeval.Pages.Tags;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 
@@ -47,6 +48,8 @@ public partial class MainPageViewModel : ObservableObject
     public readonly NavigationViewTag FollowingsTag = new(typeof(FollowingsPage), null);
 
     public readonly NavigationViewTag HistoriesTag = new(typeof(BrowsingHistoryPage), null);
+
+    public readonly NavigationViewTag TagsTag = new(typeof(TagsPage), null);
 
     public readonly NavigationViewTag RankingsTag = new(typeof(RankingsPage),
         App.AppViewModel.MakoClient.Ranking(RankOption.Day, DateTime.Today - TimeSpan.FromDays(2)));

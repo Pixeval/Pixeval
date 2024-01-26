@@ -24,7 +24,7 @@ using Pixeval.CoreApi.Model;
 
 namespace Pixeval.Controls.Illustrate;
 
-public abstract partial class SortableIllustrateViewViewModel<T, TViewModel> : IllustrateViewViewModel<T, TViewModel> where T : IIllustrate where TViewModel : IllustrateViewModel<T>
+public abstract partial class SortableIllustrateViewViewModel<T, TViewModel> : IllustrateViewViewModel<T, TViewModel> where T : class, IIllustrate where TViewModel : IllustrateViewModel<T>
 {
     [ObservableProperty]
     private bool _isAnyIllustrationSelected;

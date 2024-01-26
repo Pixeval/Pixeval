@@ -1,0 +1,51 @@
+<Grid
+    x:Class="Pixeval.Pages.Tags.TagsEntry"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:Pixeval.Pages.Tags"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    ColumnSpacing="20"
+    mc:Ignorable="d">
+    <!--<ToolTipService.ToolTip>
+        <ToolTip Content="{x:Bind ViewModel.Name, Mode=OneWay}" Placement="Mouse" />
+    </ToolTipService.ToolTip>-->
+    <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="Auto" />
+        <ColumnDefinition Width="*" />
+    </Grid.ColumnDefinitions>
+    <Border
+        Grid.Column="0"
+        Width="50"
+        Height="50"
+        HorizontalAlignment="Left"
+        VerticalAlignment="Center"
+        CornerRadius="{ThemeResource ControlCornerRadius}">
+        <Image Source="{x:Bind ViewModel.Thumbnail, Mode=OneWay}" Stretch="UniformToFill" />
+    </Border>
+    <StackPanel
+        Grid.Column="1"
+        HorizontalAlignment="Left"
+        VerticalAlignment="Center"
+        Spacing="5">
+        <TextBlock
+            FontSize="{StaticResource PixevalBaseFontSize}"
+            Text="{x:Bind ViewModel.Name, Mode=OneWay}"
+            TextTrimming="CharacterEllipsis"
+            TextWrapping="NoWrap" />
+        <ItemsRepeater ItemsSource="{x:Bind ViewModel.Tags, Mode=OneWay}">
+            <ItemsRepeater.Layout>
+                <controls:WrapLayout HorizontalSpacing="5" VerticalSpacing="5" />
+            </ItemsRepeater.Layout>
+            <ItemsRepeater.ItemTemplate>
+                <DataTemplate x:DataType="x:String">
+                    <Button
+                        Content="{x:Bind}"
+                        FontSize="{StaticResource PixevalSubscriptFontSize}"
+                        Tapped="TagButton_OnTapped" />
+                </DataTemplate>
+            </ItemsRepeater.ItemTemplate>
+        </ItemsRepeater>
+    </StackPanel>
+</Grid>

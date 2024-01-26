@@ -39,7 +39,7 @@ public class SpotlightArticleViewDataProvider : ObservableObject, IDataProvider<
 
     public IFetchEngine<SpotlightArticle?>? FetchEngine { get; protected set; }
 
-    public void DisposeCurrent()
+    public void Dispose()
     {
         if (Source is { } source)
             foreach (var illustratorViewModel in source)
@@ -54,7 +54,7 @@ public class SpotlightArticleViewDataProvider : ObservableObject, IDataProvider<
     {
         FetchEngine?.EngineHandle.Cancel();
         FetchEngine = fetchEngine;
-        DisposeCurrent();
+        Dispose();
 
         Source = new IncrementalLoadingCollection<FetchEngineIncrementalSource<SpotlightArticle, SpotlightArticleViewModel>, SpotlightArticleViewModel>(new SpotlightArticleFetchEngineIncrementalSource(FetchEngine!, limit));
     }

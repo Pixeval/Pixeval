@@ -8,9 +8,9 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     ColumnSpacing="20"
     mc:Ignorable="d">
-    <ToolTipService.ToolTip>
+    <!--<ToolTipService.ToolTip>
         <ToolTip Content="{x:Bind ViewModel.Illustrate.Title, Mode=OneWay}" Placement="Mouse" />
-    </ToolTipService.ToolTip>
+    </ToolTipService.ToolTip>-->
     <Grid.ColumnDefinitions>
         <ColumnDefinition Width="Auto" />
         <ColumnDefinition Width="*" />

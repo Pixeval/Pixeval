@@ -78,7 +78,7 @@ public class IllustrationViewDataProvider : ObservableObject, IDataProvider<Illu
 
     public IncrementalLoadingCollection<FetchEngineIncrementalSource<Illustration, IllustrationItemViewModel>, IllustrationItemViewModel> Source => _illustrationSourceRef.Value;
 
-    public void DisposeCurrent()
+    public void Dispose()
     {
         // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
         if (IllustrationSourceRef is not null)
@@ -87,20 +87,15 @@ public class IllustrationViewDataProvider : ObservableObject, IDataProvider<Illu
                 foreach (var illustrationViewModel in Source)
                     illustrationViewModel.Dispose();
         }
+        FetchEngineRef = null;
     }
 
     public void ResetEngine(IFetchEngine<Illustration?>? fetchEngine, int limit = -1)
     {
+        Dispose();
         FetchEngineRef = new SharedRef<IFetchEngine<Illustration?>?>(fetchEngine, this);
-        DisposeCurrent();
 
         IllustrationSourceRef = new SharedRef<IncrementalLoadingCollection<FetchEngineIncrementalSource<Illustration, IllustrationItemViewModel>, IllustrationItemViewModel>>(new IncrementalLoadingCollection<FetchEngineIncrementalSource<Illustration, IllustrationItemViewModel>, IllustrationItemViewModel>(new IllustrationFetchEngineIncrementalSource(FetchEngine!, limit)), this);
-    }
-
-    public void Dispose()
-    {
-        DisposeCurrent();
-        FetchEngineRef = null;
     }
 
     public IllustrationViewDataProvider CloneRef()
