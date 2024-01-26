@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -19,7 +19,12 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Reflection;
+using Microsoft.UI.Xaml;
+using Pixeval.Attributes;
+using Pixeval.CoreApi.Global.Enum;
+using WinUI3Utilities;
 
 namespace Pixeval.Util;
 
@@ -29,4 +34,64 @@ public static class AttributeHelper
     {
         return e.GetType().GetField(e.ToString())?.GetCustomAttribute(typeof(TAttribute), false) as TAttribute;
     }
+}
+
+public static class LocalizedResourceAttributeHelper
+{
+    public static string? GetLocalizedResourceContent(this Enum e)
+    {
+        if (_predefinedResources.TryGetValue(e, out var v))
+            return v;
+        var attribute = e.GetCustomAttribute<LocalizedResource>();
+        return attribute?.GetLocalizedResourceContent();
+    }
+
+    public static LocalizedResource? GetLocalizedResource(this Enum e)
+    {
+        return e.GetCustomAttribute<LocalizedResource>();
+    }
+
+    public static string? GetLocalizedResourceContent(this LocalizedResource attribute)
+    {
+        return GetLocalizedResourceContent(attribute.ResourceLoader, attribute.Key);
+    }
+
+    public static string? GetLocalizedResourceContent(Type resourceLoader, string key)
+    {
+        return resourceLoader.GetMember(key, BindingFlags.Static | BindingFlags.Public) switch
+        {
+            [FieldInfo fi] => fi?.GetValue(null),
+            [PropertyInfo pi] => pi?.GetValue(null),
+            _ => null
+        } as string;
+    }
+
+    private static readonly Dictionary<Enum, string> _predefinedResources = new()
+    {
+        [TargetFilter.ForAndroid] = MiscResources.TargetFilterForAndroid,
+        [TargetFilter.ForIos] = MiscResources.TargetFilterForIOS,
+
+        [BackdropType.Acrylic] = MiscResources.AcrylicBackdrop,
+        [BackdropType.Mica] = MiscResources.MicaBackdrop,
+        [BackdropType.MicaAlt] = MiscResources.MicaAltBackdrop,
+        [BackdropType.None] = MiscResources.NoneBackdrop,
+
+        [SearchTagMatchOption.PartialMatchForTags] = MiscResources.SearchTagMatchOptionPartialMatchForTags,
+        [SearchTagMatchOption.ExactMatchForTags] = MiscResources.SearchTagMatchOptionExactMatchForTags,
+        [SearchTagMatchOption.TitleAndCaption] = MiscResources.SearchTagMatchOptionTitleAndCaption,
+
+        [ElementTheme.Dark] = MiscResources.AppThemeDark,
+        [ElementTheme.Light] = MiscResources.AppThemeLight,
+        [ElementTheme.Default] = MiscResources.AppThemeSystemDefault,
+
+        [IllustrationSortOption.PopularityDescending] = MiscResources.IllustrationSortOptionPopularityDescending,
+        [IllustrationSortOption.PublishDateAscending] = MiscResources.IllustrationSortOptionPublishDateAscending,
+        [IllustrationSortOption.PublishDateDescending] = MiscResources.IllustrationSortOptionPublishDateDescending,
+        [IllustrationSortOption.DoNotSort] = MiscResources.IllustrationSortOptionDoNotSort,
+
+        [SearchDuration.Undecided] = MiscResources.SearchDurationUndecided,
+        [SearchDuration.WithinLastDay] = MiscResources.SearchDurationWithinLastDay,
+        [SearchDuration.WithinLastWeek] = MiscResources.SearchDurationWithinLastWeek,
+        [SearchDuration.WithinLastMonth] = MiscResources.SearchDurationWithinLastMonth
+    };
 }

@@ -37,7 +37,7 @@ using Pixeval.Download;
 using Pixeval.Download.MacroParser;
 using Pixeval.Download.Models;
 using Pixeval.Misc;
-using Pixeval.SettingsModels;
+using Pixeval.Options;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
 

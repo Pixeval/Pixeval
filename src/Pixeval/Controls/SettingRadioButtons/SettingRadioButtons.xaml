@@ -7,12 +7,12 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Loaded="SettingRadioButtons_OnLoaded"
     mc:Ignorable="d">
-    <RadioButtons ItemsSource="{x:Bind ItemsSource, Mode=OneWay}">
+    <RadioButtons>
         <RadioButtons.ItemTemplate>
             <DataTemplate x:DataType="local:StringRepresentableItem">
                 <RadioButton
                     Content="{x:Bind StringRepresentation}"
-                    DataContext="{x:Bind}"
+                    Tag="{x:Bind}"
                     Tapped="RadioButton_OnTapped" />
             </DataTemplate>
         </RadioButtons.ItemTemplate>

@@ -23,6 +23,8 @@ using System.Threading.Tasks;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
+using Pixeval.Controls;
+using Pixeval.Options;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using WinUI3Utilities;
@@ -110,4 +112,7 @@ public sealed partial class LoginPage
             Application.Current.Exit();
         }
     }
+
+    // ReSharper disable once MemberCanBeMadeStatic.Local
+    private Type LoginProxyOption => typeof(LoginProxyOption);
 }

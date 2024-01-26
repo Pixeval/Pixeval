@@ -182,5 +182,5 @@ public class DownloadManager<TDownloadTask> : IDisposable where TDownloadTask : 
     private static void SetState(TDownloadTask task, DownloadState state)
     {
         ThreadingHelper.DispatchTask(() => task.CurrentState = state);
-    }
+    } 
 }

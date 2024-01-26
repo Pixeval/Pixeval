@@ -72,9 +72,7 @@ public sealed partial class PixevalBadge : UserControl
 
 static file class PixevalBadgeResources
 {
-    private const string AssemblyName = $"{nameof(Pixeval)}.{nameof(Controls)}";
-
-    private static readonly ResourceLoader _resourceLoader = new(Path.GetDirectoryName(ResourceLoader.GetDefaultResourceFilePath()) + @$"\{AssemblyName}.pri", $"ms-resource://{AssemblyName}/{AssemblyName}/PixevalBadge");
+    private static readonly ResourceLoader _resourceLoader = ResourceHelper.GetResourceLoader("PixevalBadge");
 
     public static string Following { get; } = _resourceLoader.GetString("Following");
 }

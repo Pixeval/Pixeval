@@ -18,6 +18,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -26,12 +27,13 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Windows.Foundation;
 using CommunityToolkit.WinUI;
+using Pixeval.Util;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
 
 namespace Pixeval.Controls;
 
-[DependencyProperty<IEnumerable<StringRepresentableItem>>("ItemsSource")]
+[DependencyProperty<Type>("EnumSource", DependencyPropertyDefaultValue.Default, nameof(OnEnumSourceChanged))]
 [DependencyProperty<object>("SelectedItem", propertyChanged: nameof(OnSelectedItemChanged))]
 public sealed partial class SettingRadioButtons : UserControl
 {
@@ -41,7 +43,7 @@ public sealed partial class SettingRadioButtons : UserControl
 
     private void RadioButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        var select = sender.To<RadioButton>().GetDataContext<StringRepresentableItem>();
+        var select = sender.To<RadioButton>().GetTag<StringRepresentableItem>();
         if (!Equals(SelectedItem, select.Item))
         {
             SelectedItem = select.Item;
@@ -54,6 +56,19 @@ public sealed partial class SettingRadioButtons : UserControl
         SelectedItemChanged(this, SelectedItem);
     }
 
+    private static void OnEnumSourceChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
+    {
+        var buttons = sender.To<SettingRadioButtons>();
+        if (buttons.EnumSource is { IsEnum: true } enumType)
+        {
+            var items = new List<StringRepresentableItem>();
+            foreach (var value in Enum.GetValues(enumType).Cast<Enum>())
+                if (value.GetLocalizedResourceContent() is { } content)
+                    items.Add(new StringRepresentableItem(value, content));
+            buttons.Buttons.ItemsSource = items;
+        }
+    }
+
     private static void OnSelectedItemChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
     {
         SelectedItemChanged(sender, e.NewValue);
@@ -64,11 +79,11 @@ public sealed partial class SettingRadioButtons : UserControl
     [MethodImpl(MethodImplOptions.Synchronized)]
     private static void SelectedItemChanged(DependencyObject d, object newValue)
     {
-        if (d is not SettingRadioButtons { Buttons: { } buttons, ItemsSource: { } itemsSource })
+        if (d is not SettingRadioButtons { Buttons: { } buttons, EnumSource: not null })
             return;
 
-        var correspondingItem = itemsSource.First(r => Equals(r.Item, newValue));
+        var correspondingItem = buttons.ItemsSource.To<IEnumerable<StringRepresentableItem>>().First(r => Equals(r.Item, newValue));
         // set RadioButtons.SelectedItem won't work
-        buttons.FindDescendants().OfType<RadioButton>().First(b => b.GetDataContext<StringRepresentableItem>() == correspondingItem).IsChecked = true;
+        buttons.FindDescendants().OfType<RadioButton>().First(b => b.GetTag<StringRepresentableItem>() == correspondingItem).IsChecked = true;
     }
 }

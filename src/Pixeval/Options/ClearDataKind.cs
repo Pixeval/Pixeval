@@ -1,8 +1,8 @@
-#region Copyright (c) Pixeval/Pixeval.Controls
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
-// Pixeval/Pixeval.Controls
-// Copyright (c) 2023 Pixeval.Controls/AppTheme.cs
+// Pixeval/Pixeval
+// Copyright (c) 2023 Pixeval/ClearDataKind.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,13 +18,11 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-namespace Pixeval.Controls.Windowing;
+namespace Pixeval.Options;
 
-public enum AppTheme
+public enum ClearDataKind
 {
-    Dark,
-
-    Light,
-
-    SystemDefault
+    BrowseHistory,
+    SearchHistory,
+    DownloadHistory
 }

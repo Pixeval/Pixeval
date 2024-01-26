@@ -18,6 +18,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using Microsoft.UI.Xaml;
 using WinUI3Utilities;
 
 namespace Pixeval.Controls.Windowing;
@@ -26,5 +27,5 @@ public interface IWindowSettings
 {
     public BackdropType Backdrop { get; }
 
-    public AppTheme Theme { get; }
+    public ElementTheme Theme { get; }
 }

@@ -27,6 +27,7 @@
     </PropertyGroup>
     <ItemGroup>
       <None Remove="Assets\Svg.resjson" />
+      <None Remove="Controls\SettingRadioButtons\SettingRadioButtons.xaml" />
     </ItemGroup>
 
     <ItemGroup>
@@ -208,6 +209,9 @@
 
     <!--XAML-->
     <ItemGroup>
+        <Page Update="Controls\SettingRadioButtons\SettingRadioButtons.xaml">
+          <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+        </Page>
         <Page Update="Pages\Capability\SpotlightsPage.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>

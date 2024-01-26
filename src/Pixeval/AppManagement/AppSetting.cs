@@ -20,6 +20,7 @@
 
 using System;
 using System.Globalization;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Pixeval.Attributes;
 using Pixeval.Controls;
@@ -262,9 +263,9 @@ public partial record AppSetting : IWindowSettings
     /// <summary>
     ///     The Application Theme
     /// </summary>
-    [DefaultValue(AppTheme.SystemDefault)]
+    [DefaultValue(ElementTheme.Default)]
     [SettingMetadata(SettingEntryCategory.Application, typeof(SettingsPageResources), nameof(SettingsPageResources.ThemeEntryHeader))]
-    public AppTheme Theme { get; set; }
+    public ElementTheme Theme { get; set; }
 
     [DefaultValue(BackdropType.MicaAlt)]
     [SettingMetadata(SettingEntryCategory.Application, typeof(SettingsPageResources), nameof(SettingsPageResources.BackdropEntryHeader))]

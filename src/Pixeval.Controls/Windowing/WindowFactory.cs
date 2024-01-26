@@ -99,8 +99,7 @@ public static class WindowFactory
             IconPath = IconAbsolutePath,
             Title = title
         });
-        var theme = GetElementTheme(WindowSettings.Theme);
-        window.FrameLoaded += (s, _) => s.To<FrameworkElement>().RequestedTheme = theme;
+        window.FrameLoaded += (s, _) => s.To<FrameworkElement>().RequestedTheme = WindowSettings.Theme;
         return window;
     }
 
@@ -110,24 +109,11 @@ public static class WindowFactory
             window.SetBackdrop(backdropType);
     }
 
-    public static void SetTheme(AppTheme theme)
+    public static void SetTheme(ElementTheme theme)
     {
-        var t = GetElementTheme(theme);
-
         foreach (var window in _forkedWindowsInternal)
         {
-            window.Content.To<FrameworkElement>().RequestedTheme = t;
+            window.Content.To<FrameworkElement>().RequestedTheme = theme;
         }
-    }
-
-    private static ElementTheme GetElementTheme(AppTheme theme)
-    {
-        return theme switch
-        {
-            AppTheme.Dark => ElementTheme.Dark,
-            AppTheme.Light => ElementTheme.Light,
-            AppTheme.SystemDefault => TitleBarHelper.GetDefaultTheme(),
-            _ => ThrowHelper.ArgumentOutOfRange<AppTheme, ElementTheme>(theme)
-        };
     }
 }

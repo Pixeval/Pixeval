@@ -8,6 +8,8 @@
     xmlns:download="using:Pixeval.Pages.Download"
     xmlns:markup="using:Pixeval.Controls.MarkupExtensions"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:system="using:System"
+    xmlns:util="using:Pixeval.Util"
     Unloaded="DownloadListPage_OnUnloaded"
     mc:Ignorable="d">
     <Grid>
@@ -32,8 +34,8 @@
                 SelectedItem="{x:Bind _viewModel.CurrentOption, Mode=TwoWay}"
                 SelectionChanged="ModeFilterComboBox_OnSelectionChanged">
                 <ComboBox.ItemTemplate>
-                    <DataTemplate x:DataType="download:DownloadListOption">
-                        <TextBlock Text="{x:Bind attributes:LocalizedResourceAttributeHelper.GetLocalizedResourceContent((download:DownloadListOption))}" />
+                    <DataTemplate x:DataType="system:Enum">
+                        <TextBlock Text="{x:Bind util:LocalizedResourceAttributeHelper.GetLocalizedResourceContent((download:DownloadListOption))}" />
                     </DataTemplate>
                 </ComboBox.ItemTemplate>
             </ComboBox>

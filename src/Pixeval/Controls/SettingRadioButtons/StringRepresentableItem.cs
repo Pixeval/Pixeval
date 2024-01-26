@@ -1,8 +1,8 @@
-#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval.Controls
 // GPL v3 License
 // 
-// Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/LoginProxyOptionSettingEntryItem.cs
+// Pixeval/Pixeval.Controls
+// Copyright (c) 2023 Pixeval.Controls/StringRepresentableItem.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -19,19 +19,10 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using Pixeval.Attributes;
-using Pixeval.Controls;
-using Pixeval.Options;
 
-namespace Pixeval.SettingsModels;
+namespace Pixeval.Controls;
 
-public record LoginProxyOptionSettingEntryItem : StringRepresentableItem, IAvailableItems
+public record StringRepresentableItem(Enum Item, string? StringRepresentation)
 {
-    public LoginProxyOptionSettingEntryItem(LoginProxyOption item) : base(item, item.GetLocalizedResourceContent()!)
-    {
-    }
-
-    public static IEnumerable<StringRepresentableItem> AvailableItems { get; } = Enum.GetValues<LoginProxyOption>().Select(m => new LoginProxyOptionSettingEntryItem(m));
+    public override string? ToString() => StringRepresentation;
 }

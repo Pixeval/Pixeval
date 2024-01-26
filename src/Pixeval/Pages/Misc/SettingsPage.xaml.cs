@@ -26,15 +26,18 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
+using Pixeval.Controls;
 using Pixeval.Controls.TokenInput;
 using Pixeval.Controls.Windowing;
 using Pixeval.Database.Managers;
 using Pixeval.Download.MacroParser;
-using Pixeval.SettingsModels;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
 using UIElement = Microsoft.UI.Xaml.UIElement;
+using Pixeval.Options;
+using Pixeval.CoreApi.Global.Enum;
+using WinUI3Utilities;
 
 namespace Pixeval.Pages.Misc;
 
@@ -234,4 +237,18 @@ public sealed partial class SettingsPage
         var manager = scope.ServiceProvider.GetRequiredService<DownloadHistoryPersistentManager>();
         _viewModel.ClearData(ClearDataKind.DownloadHistory, manager);
     }
+
+    // ReSharper disable MemberCanBeMadeStatic.Local
+    private Type MainPageTabItem => typeof(MainPageTabItem);
+    private Type ItemsViewLayoutType => typeof(ItemsViewLayoutType);
+    private Type ThumbnailDirection => typeof(ThumbnailDirection);
+    private Type IllustrationDownloadFormat => typeof(IllustrationDownloadFormat);
+    private Type UgoiraDownloadFormat => typeof(UgoiraDownloadFormat);
+    private Type TargetFilter => typeof(TargetFilter);
+    private Type BackdropType => typeof(BackdropType);
+    private Type SearchTagMatchOption => typeof(SearchTagMatchOption);
+    private Type ElementTheme => typeof(ElementTheme);
+    private Type IllustrationSortOption => typeof(IllustrationSortOption);
+    private Type SearchDuration => typeof(SearchDuration);
+    // ReSharper restore MemberCanBeMadeStatic.Local
 }

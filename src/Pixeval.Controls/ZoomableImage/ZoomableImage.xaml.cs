@@ -292,11 +292,12 @@ public sealed partial class ZoomableImage : UserControl
             if (Sources is null)
                 return;
             foreach (var source in Sources)
-            {
-                var randomAccessStream = source.AsRandomAccessStream();
-                randomAccessStream.Seek(0);
-                _frames.Add(await CanvasBitmap.LoadAsync(sender, randomAccessStream));
-            }
+                if (source.CanRead)
+                {
+                    var randomAccessStream = source.AsRandomAccessStream();
+                    randomAccessStream.Seek(0);
+                    _frames.Add(await CanvasBitmap.LoadAsync(sender, randomAccessStream));
+                }
             OriginalImageWidth = _frames[0].Size.Width;
             OriginalImageHeight = _frames[0].Size.Height;
             Mode = InitMode; // 触发OnModeChanged

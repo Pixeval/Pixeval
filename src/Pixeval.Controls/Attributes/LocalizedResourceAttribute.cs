@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/ThumbnailDirectionSettingEntryItem.cs
+// Copyright (c) 2023 Pixeval/LocalizedResourceAttribute.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -19,19 +19,16 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using Pixeval.Attributes;
-using Pixeval.Controls;
-using Pixeval.Options;
 
-namespace Pixeval.SettingsModels;
+// ReSharper disable once CheckNamespace
+namespace Pixeval.Attributes;
 
-public record ThumbnailDirectionSettingEntryItem : StringRepresentableItem, IAvailableItems
+[AttributeUsage(AttributeTargets.Field)]
+public class LocalizedResource(Type resourceLoader, string key, object? formatKey = null) : Attribute
 {
-    public ThumbnailDirectionSettingEntryItem(ThumbnailDirection item) : base(item, item.GetLocalizedResourceContent()!)
-    {
-    }
+    public Type ResourceLoader { get; } = resourceLoader;
 
-    public static IEnumerable<StringRepresentableItem> AvailableItems { get; } = Enum.GetValues<ThumbnailDirection>().Select(t => new ThumbnailDirectionSettingEntryItem(t));
+    public string Key { get; } = key;
+
+    public object? FormatKey { get; } = formatKey;
 }

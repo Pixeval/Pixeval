@@ -19,7 +19,6 @@
         <None Remove="NotifyOnLoadedComboBox\NotifyOnLoadedComboBox.xaml" />
         <None Remove="PersonView\PersonView.xaml" />
         <None Remove="PixevalBadge\PixevalBadge.xaml" />
-        <None Remove="SettingRadioButtons\SettingRadioButtons.xaml" />
         <None Remove="ZoomableImage.xaml" />
         <None Remove="ZoomableImage\ZoomableImage.xaml" />
     </ItemGroup>
@@ -50,6 +49,7 @@
     <!--PRIResource-->
     <ItemGroup>
         <PRIResource Include="Strings\zh-cn\PixevalBadge.resjson" />
+        <PRIResource Include="Strings\zh-cn\AdvancedItemsView.resjson" />
     </ItemGroup>
 
     <ItemGroup>
@@ -68,9 +68,6 @@
         <Page Update="PersonView\PersonView.xaml">
             <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
         </Page>
-        <Page Update="SettingRadioButtons\SettingRadioButtons.xaml">
-            <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-        </Page>
         <Page Update="PixevalBadge\PixevalBadge.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
@@ -80,5 +77,10 @@
       <Page Update="ZoomableImage\ZoomableImage.xaml">
         <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       </Page>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Microsoft\UI\" />
+      <Folder Include="UI\" />
     </ItemGroup>
 </Project>
