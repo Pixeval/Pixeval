@@ -18,11 +18,18 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using System;
+using System.IO;
+using System.Threading.Tasks;
+using Windows.Storage;
 using Pixeval.Controls;
+using Pixeval.Database;
 using Pixeval.Download;
 using Pixeval.Download.Models;
+using Pixeval.Util.IO;
 using Pixeval.Utilities;
 using WinUI3Utilities;
+using Microsoft.UI.Xaml.Media.Imaging;
 
 namespace Pixeval.Pages.Download;
 
@@ -73,6 +80,33 @@ public sealed class DownloadListEntryViewModel : IllustrationItemViewModel
         DownloadState.Paused => DownloadListEntryResources.ActionButtonContentResume,
         _ => ThrowHelper.ArgumentOutOfRange<DownloadState, string>(DownloadTask.CurrentState)
     };
+
+    public override async Task<bool> TryLoadThumbnailAsync(IDisposable key)
+    {
+        if (ThumbnailSourceRef is not null)
+        {
+            _ = ThumbnailSourceRef.MakeShared(key);
+
+            // 之前已加载
+            return false;
+        }
+
+        if (DownloadTask.CurrentState is DownloadState.Completed || DownloadTask.Type is DownloadItemType.Manga)
+        {
+            var path = DownloadTask.Destination.Format(0);
+            if (File.Exists(path) && !LoadingThumbnail)
+            {
+                LoadingThumbnail = true;
+                var s = await IoHelper.GetFileThumbnailAsync(path);
+                ThumbnailStream = s;
+                ThumbnailSourceRef = new SharedRef<SoftwareBitmapSource>(await s.GetSoftwareBitmapSourceAsync(false), key);
+                LoadingThumbnail = false;
+                return true;
+            }
+        }
+
+        return await base.TryLoadThumbnailAsync(key);
+    }
 
     public bool IsRedownloadItemEnabled => DownloadTask.CurrentState is DownloadState.Completed or DownloadState.Error;
 

@@ -138,7 +138,7 @@ public sealed partial class DownloadListPage
 
     private async void DownloadListEntry_OnViewModelChanged(DownloadListEntry sender, DownloadListEntryViewModel viewModel)
     {
-        _ = await viewModel.TryLoadThumbnail(_viewModel);
+        _ = await viewModel.TryLoadThumbnailAsync(_viewModel);
     }
 
     private void DownloadListPage_OnUnloaded(object sender, RoutedEventArgs e)

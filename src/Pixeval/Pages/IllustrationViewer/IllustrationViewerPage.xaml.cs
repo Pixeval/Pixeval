@@ -162,7 +162,7 @@ public sealed partial class IllustrationViewerPage : SupportCustomTitleBarDragRe
     private async void FrameworkElement_OnDataContextChanged(FrameworkElement sender, DataContextChangedEventArgs e)
     {
         var viewModel = sender.GetDataContext<IllustrationItemViewModel>();
-        _ = await viewModel.TryLoadThumbnail(_viewModel);
+        _ = await viewModel.TryLoadThumbnailAsync(_viewModel);
     }
 
     private void ExitFullScreenKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => _viewModel.IsFullScreen = false;

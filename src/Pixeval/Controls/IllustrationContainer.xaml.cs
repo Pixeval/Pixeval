@@ -138,22 +138,10 @@ public sealed partial class IllustrationContainer
             return;
         }
 
-        using var scope = App.AppViewModel.AppServicesScope;
-        var factory = scope.ServiceProvider.GetRequiredService<IDownloadTaskFactory<IllustrationItemViewModel, IllustrationDownloadTask>>();
+        foreach (var i in ViewModel.SelectedIllustrations) 
+            i.SaveCommand.Execute(null);
 
-        // This will run for quite a while
-        _ = Task.Run(async () =>
-        {
-            var tasks = await WindowFactory.RootWindow.DispatcherQueue.EnqueueAsync(() => Task.WhenAll(
-                    ViewModel.SelectedIllustrations
-                        .Select(i => factory.CreateAsync(i, App.AppViewModel.AppSetting.DefaultDownloadPathMacro))));
-            foreach (var viewModelSelectedIllustration in tasks)
-            {
-                App.AppViewModel.DownloadManager.QueueTask(viewModelSelectedIllustration);
-            }
-        });
-
-        this.ShowTeachingTipAndHide(IllustrationViewCommandBarResources.DownloadItemsQueuedFormatted.Format(ViewModel.SelectedIllustrations.Length), milliseconds: 1500);
+        this.ShowTeachingTipAndHide(IllustrationViewCommandBarResources.DownloadItemsQueuedFormatted.Format(ViewModel.SelectedIllustrations.Length));
     }
 
     private async void OpenAllInBrowserButton_OnTapped(object sender, TappedRoutedEventArgs e)

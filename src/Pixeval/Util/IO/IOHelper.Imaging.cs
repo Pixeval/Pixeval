@@ -42,7 +42,7 @@ using SixLabors.ImageSharp.Formats.Tiff;
 using SixLabors.ImageSharp.Formats.Webp;
 using SixLabors.ImageSharp.PixelFormats;
 using WinUI3Utilities;
-using SixLabors.ImageSharp.Metadata.Profiles.Exif;
+using Pixeval.Pages.Tags;
 
 namespace Pixeval.Util.IO;
 
@@ -92,17 +92,11 @@ public static partial class IoHelper
         // return await decoder.GetSoftwareBitmapAsync(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Premultiplied);
     }
 
-    public static async Task<SoftwareBitmapSource> GetSoftwareBitmapSourceFromFileAsync(string path)
+    public static async Task<Stream> GetFileThumbnailAsync(string path, uint size = 64)
     {
-        const int size = 64;
         var file = await StorageFile.GetFileFromPathAsync(path);
         var thumbnail = await file.GetThumbnailAsync(ThumbnailMode.SingleItem, size);
-        var bitmap = new SoftwareBitmap(BitmapPixelFormat.Bgra8, size, size, BitmapAlphaMode.Premultiplied);
-        var buffer = await thumbnail.ReadAsync(new Windows.Storage.Streams.Buffer(size * size * 4), size * size * 4, InputStreamOptions.None);
-        bitmap.CopyFromBuffer(buffer);
-        var source = new SoftwareBitmapSource();
-        await source.SetBitmapAsync(bitmap);
-        return source;
+        return thumbnail.AsStreamForRead();
     }
 
     public static async Task UgoiraSaveToFileAsync(this Image image, string path, UgoiraDownloadFormat? ugoiraDownloadFormat = null)
@@ -238,11 +232,5 @@ public static partial class IoHelper
     {
         var entryStreams = await ReadZipArchiveEntries(zipStream);
         return await entryStreams.UgoiraSaveToImageAsync(ugoiraMetadataResponse.UgoiraMetadataInfo.Frames.Select(t => (int)t.Delay));
-    }
-
-    public static void SetImageTags(Image image, Illustration illustration)
-    {
-        var profile = image.Metadata.ExifProfile ??= new();
-        profile.SetValue(ExifTag.UserComment, string.Join(';', illustration.Tags.Select(t => t.Name)));
     }
 }

@@ -54,6 +54,8 @@ public abstract class IllustrationDownloadTaskBase(DownloadHistoryEntry entry) :
 
     public long Id => DatabaseEntry.Id;
 
+    public DownloadItemType Type => DatabaseEntry.Type;
+
     public List<string> Urls => DatabaseEntry.Urls;
 
     public string Destination => DatabaseEntry.Destination;

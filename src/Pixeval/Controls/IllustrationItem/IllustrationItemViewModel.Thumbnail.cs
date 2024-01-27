@@ -65,14 +65,14 @@ public partial class IllustrationItemViewModel
     /// <summary>
     /// 是否正在加载缩略图
     /// </summary>
-    private bool LoadingThumbnail { get; set; }
+    protected bool LoadingThumbnail { get; set; }
 
     /// <summary>
     /// 当控件需要显示图片时，调用此方法加载缩略图
     /// </summary>
     /// <param name="key">使用<see cref="IDisposable"/>对象，防止复用本对象的时候，本对象持有对<paramref name="key"/>的引用，导致<paramref name="key"/>无法释放</param>
     /// <returns>缩略图首次加载完成则返回<see langword="true"/>，之前已加载、正在加载或加载失败则返回<see langword="false"/></returns>
-    public async Task<bool> TryLoadThumbnail(IDisposable key)
+    public virtual async Task<bool> TryLoadThumbnailAsync(IDisposable key)
     {
         if (ThumbnailSourceRef is not null)
         {
@@ -100,14 +100,14 @@ public partial class IllustrationItemViewModel
             return true;
         }
 
-        if (await GetThumbnailAsync() is { } ras)
+        if (await GetThumbnailAsync() is { } s)
         {
             if (App.AppViewModel.AppSetting.UseFileCache)
             {
-                _ = await App.AppViewModel.Cache.TryAddAsync(await this.GetIllustrationThumbnailCacheKeyAsync(), ras, TimeSpan.FromDays(1));
+                _ = await App.AppViewModel.Cache.TryAddAsync(await this.GetIllustrationThumbnailCacheKeyAsync(), s, TimeSpan.FromDays(1));
             }
-            ThumbnailStream = ras;
-            ThumbnailSourceRef = new SharedRef<SoftwareBitmapSource>(await ras.GetSoftwareBitmapSourceAsync(false), key);
+            ThumbnailStream = s;
+            ThumbnailSourceRef = new SharedRef<SoftwareBitmapSource>(await s.GetSoftwareBitmapSourceAsync(false), key);
 
             // 获取并加载完成
             LoadingThumbnail = false;

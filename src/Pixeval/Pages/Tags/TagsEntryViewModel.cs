@@ -1,23 +1,23 @@
 using System;
 using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.FileProperties;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.CoreApi.Model;
+using Pixeval.Util;
 using Pixeval.Util.IO;
 using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Metadata.Profiles.Exif;
 
 namespace Pixeval.Pages.Tags;
 
 public class TagsEntryViewModel : IIllustrate, IDisposable
 {
-    private TagsEntryViewModel(string path, SoftwareBitmapSource thumbnail)
+    private TagsEntryViewModel(string path)
     {
         FullPath = path;
-        Thumbnail = thumbnail;
 
         Name = Path.GetFileNameWithoutExtension(path);
     }
@@ -26,21 +26,23 @@ public class TagsEntryViewModel : IIllustrate, IDisposable
 
     public string FullPath { get; }
 
-    public SoftwareBitmapSource Thumbnail { get; }
+    public SoftwareBitmapSource Thumbnail { get; private init; } = null!;
 
-    public ObservableCollection<string> Tags { get; } = [];
+    public string[] Tags { get; private init; } = null!;
+
+    public Illustration? Illustration { get; private init; } 
 
     public static async Task<TagsEntryViewModel?> IdentifyAsync(string path)
     {
         try
         {
             var imageInfo = await Image.IdentifyAsync(path);
-            var file = await StorageFile.GetFileFromPathAsync(path);
-            var thumbnail = await file.GetThumbnailAsync(ThumbnailMode.SingleItem, 64);
-            var entry = new TagsEntryViewModel(path, await thumbnail.AsStreamForRead().GetSoftwareBitmapSourceAsync(true));
-            if (imageInfo.Metadata.ExifProfile is { } profile && profile.TryGetValue(ExifTag.UserComment, out var value))
-                foreach (var s in value.Value.Text.Split(';'))
-                    entry.Tags.Add(s);
+            var entry = new TagsEntryViewModel(path)
+            {
+                Thumbnail = await (await IoHelper.GetFileThumbnailAsync(path)).GetSoftwareBitmapSourceAsync(true),
+                Tags = imageInfo.GetTags(),
+                Illustration = await imageInfo.GetIllustrationAsync()
+            };
             return entry;
         }
         catch

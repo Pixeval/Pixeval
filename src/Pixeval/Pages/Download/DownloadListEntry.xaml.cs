@@ -25,8 +25,8 @@ using Windows.System;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
 using Pixeval.Controls;
+using Pixeval.Database;
 using Pixeval.Download;
-using Pixeval.Download.Models;
 using Pixeval.Util.UI;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
@@ -66,7 +66,7 @@ public sealed partial class DownloadListEntry : IViewModelControl
             case DownloadState.Error:
             case DownloadState.Cancelled:
             case DownloadState.Completed:
-                if (!await (ViewModel.DownloadTask is MangaDownloadTask
+                if (!await (ViewModel.DownloadTask.Type is DownloadItemType.Manga
                         ? Launcher.LaunchFolderPathAsync(Path.GetDirectoryName(ViewModel.DownloadTask.Destination))
                         : Launcher.LaunchUriAsync(new Uri(ViewModel.DownloadTask.Destination))))
                     _ = await this.CreateAcknowledgementAsync(MiscResources.DownloadListEntryOpenFailed, MiscResources.DownloadListEntryMaybeDeleted);

@@ -196,7 +196,7 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
         if (!LoadSuccessfully || _disposed)
         {
             _disposed = false;
-            _ = IllustrationViewModel.TryLoadThumbnail(this).ContinueWith(
+            _ = IllustrationViewModel.TryLoadThumbnailAsync(this).ContinueWith(
                 _ => OriginalImageSources ??= [IllustrationViewModel.ThumbnailStream!],
                 TaskScheduler.FromCurrentSynchronizationContext());
             AddHistory();

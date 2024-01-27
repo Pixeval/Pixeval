@@ -86,10 +86,10 @@ public sealed partial class IllustrationView
 
     private async void IllustrationItem_OnViewModelChanged(IllustrationItem sender, IllustrationItemViewModel viewModel)
     {
-        if (await viewModel.TryLoadThumbnail(ViewModel))
+        if (await viewModel.TryLoadThumbnailAsync(ViewModel))
         {
-            if (UiHelper.IsFullyOrPartiallyVisible(sender, this))
-                WinUI3Utilities.Misc.To<Storyboard>(sender.Resources["IllustrationThumbnailStoryboard"]).Begin();
+            if (sender.IsFullyOrPartiallyVisible(this))
+                sender.Resources["IllustrationThumbnailStoryboard"].To<Storyboard>().Begin();
             else
                 sender.Opacity = 1;
         }

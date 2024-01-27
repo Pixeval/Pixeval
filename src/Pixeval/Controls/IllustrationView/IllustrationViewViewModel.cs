@@ -21,6 +21,7 @@
 using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.WinUI.Collections;
+using Microsoft.UI.Xaml.Controls;
 using Pixeval.Controls.Illustrate;
 using Pixeval.CoreApi.Model;
 using Pixeval.Util;
@@ -31,7 +32,10 @@ namespace Pixeval.Controls;
 public sealed partial class IllustrationViewViewModel : SortableIllustrateViewViewModel<Illustration, IllustrationItemViewModel>
 {
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(SelectionMode))]
     private bool _isSelecting;
+
+    public ItemsViewSelectionMode SelectionMode => IsSelecting ? ItemsViewSelectionMode.Multiple : ItemsViewSelectionMode.None;
 
     private IllustrationItemViewModel[] _selectedIllustrations = [];
 

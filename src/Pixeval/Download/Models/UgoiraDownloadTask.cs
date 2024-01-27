@@ -23,6 +23,7 @@ using System.Threading.Tasks;
 using Pixeval.Controls;
 using Pixeval.CoreApi.Net.Response;
 using Pixeval.Database;
+using Pixeval.Util;
 using Pixeval.Util.IO;
 
 namespace Pixeval.Download.Models;
@@ -38,7 +39,7 @@ public class UgoiraDownloadTask(
     protected override async Task ManageStream(Stream stream, string destination)
     {
         using var image = await IoHelper.GetImageFromZipStreamAsync(stream, Metadata);
-        IoHelper.SetImageTags(image, IllustrationViewModel.Illustrate);
+        image.ApplyTags(IllustrationViewModel.Illustrate);
         await image.UgoiraSaveToFileAsync(destination);
     }
 }
