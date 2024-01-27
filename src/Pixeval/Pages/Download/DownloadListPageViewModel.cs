@@ -24,9 +24,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Extensions.DependencyInjection;
-using Pixeval.Controls;
 using Pixeval.Controls.Illustrate;
-using Pixeval.CoreApi.Model;
 using Pixeval.Database.Managers;
 using Pixeval.Download;
 using Pixeval.Download.Models;
@@ -35,7 +33,7 @@ using WinUI3Utilities;
 
 namespace Pixeval.Pages.Download;
 
-public partial class DownloadListPageViewModel : IllustrateViewViewModel<Illustration, DownloadListEntryViewModel>
+public partial class DownloadListPageViewModel : ObservableObject, IDisposable
 {
     public static readonly IEnumerable<DownloadListOption> AvailableDownloadListOptions = Enum.GetValues<DownloadListOption>();
 
@@ -59,7 +57,7 @@ public partial class DownloadListPageViewModel : IllustrateViewViewModel<Illustr
         _selectionLabel = DownloadListPageResources.CancelSelectionButtonDefaultLabel;
     }
 
-    public sealed override IDataProvider<Illustration, DownloadListEntryViewModel> DataProvider { get; } = new DownloadListEntryDataProvider();
+    public IDataProvider<IllustrationDownloadTask, DownloadListEntryViewModel> DataProvider { get; } = new DownloadListEntryDataProvider();
 
     public DownloadListEntryViewModel[] SelectedEntries
     {
@@ -143,7 +141,7 @@ public partial class DownloadListPageViewModel : IllustrateViewViewModel<Illustr
         };
     }
 
-    public override void Dispose()
+    public void Dispose()
     {
         DataProvider.Dispose();
     }

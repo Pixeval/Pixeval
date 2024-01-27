@@ -26,6 +26,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System;
 using System.Collections;
+using System.Collections.Frozen;
 using System.Collections.Specialized;
 using System.Linq;
 using Windows.Foundation;
@@ -253,6 +254,14 @@ public class AdvancedObservableCollection<T> : IList<T>, IList, INotifyCollectio
     }
 
     /// <summary>
+    /// Remove a property to re-filter an item on when it is changed
+    /// </summary>
+    public void UnobserveFilterProperty(string propertyName)
+    {
+        _ = _observedFilterProperties.Remove(propertyName);
+    }
+
+    /// <summary>
     /// Clears all properties items are re-filtered on
     /// </summary>
     public void ClearObservedFilterProperties()
@@ -332,7 +341,7 @@ public class AdvancedObservableCollection<T> : IList<T>, IList, INotifyCollectio
     {
         if (_filter is not null)
         {
-            for (var index = 0; index < _view.Count; index++)
+            for (var index = 0; index < _view.Count; ++index)
             {
                 var item = _view[index];
                 if (_filter(item))
@@ -343,19 +352,19 @@ public class AdvancedObservableCollection<T> : IList<T>, IList, INotifyCollectio
             }
         }
 
-        var viewHash = new HashSet<T>(this);
+        var viewHash = this.ToFrozenSet();
         var viewIndex = 0;
-        for (var index = 0; index < _source.Count; index++)
+        for (var index = 0; index < _source.Count; ++index)
         {
             var item = _source[index];
             if (viewHash.Contains(item))
             {
-                viewIndex++;
+                ++viewIndex;
                 continue;
             }
 
             if (HandleItemAdded(index, item, viewIndex))
-                viewIndex++;
+                ++viewIndex;
         }
     }
 

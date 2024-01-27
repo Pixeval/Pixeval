@@ -4,24 +4,23 @@ using CommunityToolkit.WinUI.Collections;
 using Pixeval.Collections;
 using Pixeval.Controls.Illustrate;
 using Pixeval.CoreApi.Engine;
-using Pixeval.CoreApi.Model;
 using Pixeval.Download.Models;
 using Pixeval.Misc;
 using WinUI3Utilities;
 
 namespace Pixeval.Pages.Download;
 
-public class DownloadListEntryDataProvider : ObservableObject, IDataProvider<Illustration, DownloadListEntryViewModel>
+public class DownloadListEntryDataProvider : ObservableObject, IDataProvider<IllustrationDownloadTask, DownloadListEntryViewModel>
 {
     public AdvancedObservableCollection<DownloadListEntryViewModel> View { get; } = [];
 
-    public IncrementalLoadingCollection<FetchEngineIncrementalSource<Illustration, DownloadListEntryViewModel>, DownloadListEntryViewModel> Source
+    public IncrementalLoadingCollection<FetchEngineIncrementalSource<IllustrationDownloadTask, DownloadListEntryViewModel>, DownloadListEntryViewModel> Source
     {
-        get => (View.Source as IncrementalLoadingCollection<FetchEngineIncrementalSource<Illustration, DownloadListEntryViewModel>, DownloadListEntryViewModel>)!;
+        get => (View.Source as IncrementalLoadingCollection<FetchEngineIncrementalSource<IllustrationDownloadTask, DownloadListEntryViewModel>, DownloadListEntryViewModel>)!;
         protected set => View.Source = value;
     }
 
-    public IFetchEngine<Illustration?>? FetchEngine { get; protected set; }
+    public IFetchEngine<IllustrationDownloadTask?>? FetchEngine { get; protected set; }
 
     public void Dispose()
     {
@@ -35,13 +34,13 @@ public class DownloadListEntryDataProvider : ObservableObject, IDataProvider<Ill
         View.Clear();
     }
 
-    void IDataProvider<Illustration, DownloadListEntryViewModel>.ResetEngine(IFetchEngine<Illustration?>? fetchEngine, int limit)
+    void IDataProvider<IllustrationDownloadTask, DownloadListEntryViewModel>.ResetEngine(IFetchEngine<IllustrationDownloadTask?>? fetchEngine, int limit)
     {
         ThrowHelper.NotSupported($"{nameof(DownloadListEntryDataProvider)} 不使用 {nameof(FetchEngine)}");
     }
 
     public void ResetEngine(IEnumerable<IllustrationDownloadTask> source)
     {
-        Source = new IncrementalLoadingCollection<FetchEngineIncrementalSource<Illustration, DownloadListEntryViewModel>, DownloadListEntryViewModel>(new DownloadListEntryIncrementalSource(source));
+        Source = new IncrementalLoadingCollection<FetchEngineIncrementalSource<IllustrationDownloadTask, DownloadListEntryViewModel>, DownloadListEntryViewModel>(new DownloadListEntryIncrementalSource(source));
     }
 }

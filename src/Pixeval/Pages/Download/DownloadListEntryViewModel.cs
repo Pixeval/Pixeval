@@ -21,7 +21,6 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
-using Windows.Storage;
 using Pixeval.Controls;
 using Pixeval.Database;
 using Pixeval.Download;

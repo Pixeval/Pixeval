@@ -65,7 +65,7 @@ public sealed partial class IllustrationContainer
         {
             if (args is { Action: NotifyCollectionChangedAction.Add, NewItems: { } newItems })
                 foreach (UIElement argsNewItem in newItems)
-                    ExtraCommandsBar.Children.Insert(ExtraCommandsBar.Children.Count - 1, argsNewItem);
+                    ExtraCommandsBar.Children.Insert(0, argsNewItem);
             else
                 ThrowHelper.Argument(args);
         };

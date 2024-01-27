@@ -6,14 +6,15 @@ using Pixeval.Collections;
 using Pixeval.Controls.Illustrate;
 using Pixeval.CoreApi.Engine;
 using Pixeval.Misc;
-using Pixeval.Pages.Download;
 using WinUI3Utilities;
 
 namespace Pixeval.Pages.Tags;
 
 public class TagsEntryDataProvider : ObservableObject, IDataProvider<FileInfo, TagsEntryViewModel>
 {
-    public AdvancedObservableCollection<TagsEntryViewModel> View { get; } = [];
+    public TagsEntryDataProvider() => View.ObserveFilterProperty(nameof(TagsEntryViewModel.Tags));
+
+    public AdvancedObservableCollection<TagsEntryViewModel> View { get; } = new([], true);
 
     public IncrementalLoadingCollection<FetchEngineIncrementalSource<FileInfo, TagsEntryViewModel>, TagsEntryViewModel> Source
     {
@@ -34,7 +35,7 @@ public class TagsEntryDataProvider : ObservableObject, IDataProvider<FileInfo, T
 
     void IDataProvider<FileInfo, TagsEntryViewModel>.ResetEngine(IFetchEngine<FileInfo?>? fetchEngine, int limit)
     {
-        ThrowHelper.NotSupported($"{nameof(DownloadListEntryDataProvider)} 不使用 {nameof(FetchEngine)}");
+        ThrowHelper.NotSupported($"{nameof(TagsEntryDataProvider)} 不使用 {nameof(FetchEngine)}");
     }
 
     public void ResetEngine(IEnumerable<FileInfo> source)

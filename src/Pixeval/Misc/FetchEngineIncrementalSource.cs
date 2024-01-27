@@ -18,6 +18,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -54,13 +55,13 @@ public abstract class FetchEngineIncrementalSource<T, TModel>(IAsyncEnumerable<T
                 {
                     result.Add(Select(obj));
                     _ = _yieldedItems.Add(Identifier(obj));
-                    i++;
+                    ++i;
                     _yieldedCounter++;
                 }
             }
             else
             {
-                return Enumerable.Empty<TModel>();
+                return result;
             }
         }
 

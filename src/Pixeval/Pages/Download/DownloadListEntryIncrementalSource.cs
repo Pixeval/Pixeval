@@ -22,20 +22,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Pixeval.CoreApi.Model;
 using Pixeval.Download.Models;
 using Pixeval.Misc;
 using Pixeval.Utilities;
-using WinUI3Utilities;
 
 namespace Pixeval.Pages.Download;
 
 public class DownloadListEntryIncrementalSource(IEnumerable<IllustrationDownloadTask> source)
-    : FetchEngineIncrementalSource<Illustration, DownloadListEntryViewModel>(null!)
+    : FetchEngineIncrementalSource<IllustrationDownloadTask, DownloadListEntryViewModel>(null!)
 {
-    protected override long Identifier(Illustration entity) => ThrowHelper.NotSupported<long>();
+    protected override long Identifier(IllustrationDownloadTask entity) => entity.Id;
 
-    protected override DownloadListEntryViewModel Select(Illustration entity) => ThrowHelper.NotSupported<DownloadListEntryViewModel>();
+    protected override DownloadListEntryViewModel Select(IllustrationDownloadTask entity) => new(entity);
 
     public override async Task<IEnumerable<DownloadListEntryViewModel>> GetPagedItemsAsync(int pageIndex, int pageSize, CancellationToken cancellationToken = new CancellationToken())
     {

@@ -11,7 +11,7 @@ namespace Pixeval.Pages.Tags;
 public class TagsEntryIncrementalSource(IEnumerable<FileInfo> source)
     : FetchEngineIncrementalSource<FileInfo, TagsEntryViewModel>(null!)
 {
-    protected override long Identifier(FileInfo entity) => ThrowHelper.NotSupported<long>();
+    protected override long Identifier(FileInfo entity) => entity.GetHashCode();
 
     protected override TagsEntryViewModel Select(FileInfo entity) => ThrowHelper.NotSupported<TagsEntryViewModel>();
 

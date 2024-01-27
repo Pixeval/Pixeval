@@ -94,7 +94,6 @@ public class IllustrationViewDataProvider : ObservableObject, IDataProvider<Illu
     {
         Dispose();
         FetchEngineRef = new SharedRef<IFetchEngine<Illustration?>?>(fetchEngine, this);
-
         IllustrationSourceRef = new SharedRef<IncrementalLoadingCollection<FetchEngineIncrementalSource<Illustration, IllustrationItemViewModel>, IllustrationItemViewModel>>(new IncrementalLoadingCollection<FetchEngineIncrementalSource<Illustration, IllustrationItemViewModel>, IllustrationItemViewModel>(new IllustrationFetchEngineIncrementalSource(FetchEngine!, limit)), this);
     }
 

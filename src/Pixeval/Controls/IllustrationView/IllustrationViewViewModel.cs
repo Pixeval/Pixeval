@@ -18,7 +18,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.WinUI.Collections;
 using Microsoft.UI.Xaml.Controls;
@@ -78,13 +77,10 @@ public sealed partial class IllustrationViewViewModel : SortableIllustrateViewVi
 
     public override void SetSortDescription(SortDescription description)
     {
-        if (!DataProvider.View.SortDescriptions.Any())
-        {
+        if (DataProvider.View.SortDescriptions.Count is 0)
             DataProvider.View.SortDescriptions.Add(description);
-            return;
-        }
-
-        DataProvider.View.SortDescriptions[0] = description;
+        else
+            DataProvider.View.SortDescriptions[0] = description;
     }
 
     public override void ClearSortDescription()

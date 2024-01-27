@@ -12,4 +12,10 @@ public sealed partial class TagsPage
     }
 
     public override void OnPageDeactivated(NavigatingCancelEventArgs e) => _viewModel.Dispose();
+
+    private void TagsEntry_OnTagTapped(TagsEntry sender, string tag)
+    {
+        if (!_viewModel.SelectedTags.Contains(tag))
+            _viewModel.SelectedTags.Add(tag);
+    }
 }

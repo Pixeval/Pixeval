@@ -26,13 +26,7 @@ namespace Pixeval.Controls;
 
 public class IllustratorFetchEngineIncrementalSource(IAsyncEnumerable<User> asyncEnumerator, int limit = -1) : FetchEngineIncrementalSource<User, IllustratorItemViewModel>(asyncEnumerator, limit)
 {
-    protected override long Identifier(User entity)
-    {
-        return entity.UserInfo?.Id ?? 0;
-    }
+    protected override long Identifier(User entity) => entity.UserInfo.Id;
 
-    protected override IllustratorItemViewModel Select(User entity)
-    {
-        return new IllustratorItemViewModel(entity);
-    }
+    protected override IllustratorItemViewModel Select(User entity) => new(entity);
 }
