@@ -108,15 +108,16 @@ public static class ThreadingHelper
     public static Task SpinWaitAsync(Func<bool> condition)
     {
         var tcs = new TaskCompletionSource();
-        Task.Run(async () =>
+        _ = Task.Run(async () =>
         {
             var spinWait = new SpinWait();
             while (await DispatchSyncTaskAsync(condition))
             {
                 spinWait.SpinOnce(20);
             }
+
             tcs.SetResult();
-        }).Discard();
+        });
         return tcs.Task;
     }
 }

@@ -94,7 +94,7 @@ public class AppViewModel(App app)
         await AppKnownFolders.Temporary.ClearAsync();
         Cache = await FileCache.CreateDefaultAsync();
 
-        AppHost.RunAsync().Discard();
+        _ = AppHost.RunAsync();
     }
 
     /// <summary>

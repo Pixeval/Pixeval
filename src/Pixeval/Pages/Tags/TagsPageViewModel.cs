@@ -20,7 +20,7 @@ public class TagsPageViewModel : ObservableObject, IDisposable
         DataProvider.To<TagsEntryDataProvider>().ResetEngine(workingDirectory.EnumerateFiles("*", SearchOption.AllDirectories));
         SelectedTags.CollectionChanged += (_, _) => DataProvider.View.Filter = SelectedTags.Count is 0
             ? null
-            : vm => vm.Tags is not null && SelectedTags.Any(selectedTag => vm.Tags.Contains(selectedTag));
+            : vm => vm.TagsSet is not null && SelectedTags.Any(selectedTag => vm.TagsSet.Contains(selectedTag));
     }
 
     public IDataProvider<FileInfo, TagsEntryViewModel> DataProvider { get; } = new TagsEntryDataProvider();

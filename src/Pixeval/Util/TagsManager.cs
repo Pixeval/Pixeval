@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Pixeval.CoreApi.Model;
@@ -8,18 +10,31 @@ namespace Pixeval.Util;
 
 public static class TagsManager
 {
-    public static void ApplyTags(this Image image, Illustration illustration)
+    public static void SetTags(this Image image, Illustration illustration)
     {
         var profile = image.Metadata.ExifProfile ??= new();
         profile.SetValue(ExifTag.ImageNumber, (uint)illustration.Id);
         profile.SetValue(ExifTag.UserComment, string.Join(';', illustration.Tags.Select(t => t.Name)));
     }
 
+    public static void SetTags(this Image image, IEnumerable<string> tags)
+    {
+        var profile = image.Metadata.ExifProfile ??= new();
+        profile.SetValue(ExifTag.UserComment, string.Join(';', tags));
+    }
+
     public static async Task<Illustration?> GetIllustrationAsync(this ImageInfo image)
     {
-        return image.Metadata.ExifProfile?.TryGetValue(ExifTag.ImageNumber, out var id) is true
-            ? await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(id.Value)
-            : null;
+        if (image.Metadata.ExifProfile?.TryGetValue(ExifTag.ImageNumber, out var id) is true)
+            try
+            {
+                return await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(id.Value);
+            }
+            catch
+            {
+                // ignored
+            }
+        return null;
     }
 
     public static string[] GetTags(this ImageInfo image)

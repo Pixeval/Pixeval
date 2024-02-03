@@ -25,7 +25,7 @@ using Pixeval.Attributes;
 using Pixeval.Controls.TokenInput;
 using Pixeval.Misc;
 
-namespace Pixeval.Flyouts.IllustrationResultFilter;
+namespace Pixeval.Controls.FlyoutContent;
 
 public class IllustrationResultFilterContentViewModel : ObservableObject
 {

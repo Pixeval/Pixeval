@@ -24,13 +24,12 @@ using System.Threading.Tasks;
 using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Pixeval.Controls;
 using Pixeval.CoreApi.Net;
 using Pixeval.CoreApi.Net.Response;
 using Pixeval.Util.IO;
 using WinUI3Utilities.Attributes;
 
-namespace Pixeval.Flyouts;
+namespace Pixeval.Controls.FlyoutContent;
 
 [DependencyProperty<CommentBlockViewModel>("ViewModel")]
 public sealed partial class CommentRepliesBlock

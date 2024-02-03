@@ -83,7 +83,7 @@ public sealed partial class IllustratorIllustrationAndMangaBookmarkPage : ISorte
         {
             _uid = id;
             IllustrationContainer.ViewModel.ResetEngine(App.AppViewModel.MakoClient.Bookmarks(id, PrivacyPolicy.Public, App.AppViewModel.AppSetting.TargetFilter));
-            _viewModel.LoadUserBookmarkTagsAsync(id).Discard();
+            _ = _viewModel.LoadUserBookmarkTagsAsync(id);
             _viewModel.TagBookmarksIncrementallyLoaded += ViewModelOnTagBookmarksIncrementallyLoaded;
         }
 
@@ -106,7 +106,7 @@ public sealed partial class IllustratorIllustrationAndMangaBookmarkPage : ISorte
         if (TagComboBox.SelectedItem is CountedTag(var (name, _), _) tag && !ReferenceEquals(tag, IllustratorIllustrationAndMangaBookmarkPageViewModel.EmptyCountedTag))
         {
             // fetch the bookmark IDs for tag, but do not wait for it.
-            _viewModel.LoadBookmarksForTagAsync(_uid, tag.Tag.Name).Discard();
+            _ = _viewModel.LoadBookmarksForTagAsync(_uid, tag.Tag.Name);
 
             // refresh the filter when there are newly fetched IDs.
             IllustrationContainer.ViewModel.DataProvider.View.Filter = o => BookmarkTagFilter(name, o);

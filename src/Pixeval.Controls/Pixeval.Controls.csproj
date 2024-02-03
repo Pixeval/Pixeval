@@ -15,6 +15,7 @@
         <None Remove="AdvancedItemsView\AdvancedItemsView.xaml" />
         <None Remove="CardControl\CardControl.xaml" />
         <None Remove="IconButton\IconButton.xaml" />
+        <None Remove="LazyImage\LazyImage.xaml" />
         <None Remove="NotifyOnLoadedCalendarDatePicker\NotifyOnLoadedCalendarDatePicker.xaml" />
         <None Remove="NotifyOnLoadedComboBox\NotifyOnLoadedComboBox.xaml" />
         <None Remove="PersonView\PersonView.xaml" />
@@ -71,16 +72,14 @@
         <Page Update="PixevalBadge\PixevalBadge.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
-      <Page Update="AdvancedItemsView\AdvancedItemsView.xaml">
-        <Generator>MSBuild:Compile</Generator>
-      </Page>
-      <Page Update="ZoomableImage\ZoomableImage.xaml">
-        <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-      </Page>
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Microsoft\UI\" />
-      <Folder Include="UI\" />
+        <Page Update="AdvancedItemsView\AdvancedItemsView.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="ZoomableImage\ZoomableImage.xaml">
+            <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+        </Page>
+        <Page Update="LazyImage\LazyImage.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
     </ItemGroup>
 </Project>

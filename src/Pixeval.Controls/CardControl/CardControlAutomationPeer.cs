@@ -18,6 +18,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.UI.Xaml.Automation.Peers;
 
 namespace Pixeval.Controls;
@@ -29,7 +30,7 @@ namespace Pixeval.Controls;
 /// Initializes a new instance of the <see cref="CardControl"/> class.
 /// </remarks>
 /// <param name="owner">CardControl</param>
-public class CardControlAutomationPeer(CardControl owner) : FrameworkElementAutomationPeer(owner)
+public class CardControlAutomationPeer([SuppressMessage("ReSharper", "SuggestBaseTypeForParameterInConstructor")] CardControl owner) : FrameworkElementAutomationPeer(owner)
 {
     /// <summary>
     /// Gets the control type for the element that is associated with the UI Automation peer.
@@ -41,7 +42,7 @@ public class CardControlAutomationPeer(CardControl owner) : FrameworkElementAuto
     }
 
     /// <summary>
-    /// Called by GetClassName that gets a human readable name that, in addition to AutomationControlType,
+    /// Called by GetClassName that gets a human-readable name that, in addition to AutomationControlType,
     /// differentiates the control represented by this AutomationPeer.
     /// </summary>
     /// <returns>The string that contains the name.</returns>

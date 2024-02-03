@@ -64,7 +64,7 @@ public sealed partial class IllustratorContentViewer : IDisposable
     {
         if (App.AppViewModel.AppSetting.ShowRecommendIllustratorsInIllustratorContentViewer)
         {
-            ViewModel.LoadRecommendIllustratorsAsync().Discard();
+            _ = ViewModel.LoadRecommendIllustratorsAsync();
         }
 
         ViewModel.ShowExternalCommandBarChanged += (_, b) =>
@@ -73,10 +73,10 @@ public sealed partial class IllustratorContentViewer : IDisposable
                 subPage.ChangeCommandBarVisibility(b);
         };
 
-        ViewModel.ShowRecommendIllustratorsChanged += (_, b) =>
+        ViewModel.ShowRecommendIllustratorsChanged += (o, b) =>
         {
-            if (b && !ViewModel.RecommendIllustrators.Any())
-                ViewModel.LoadRecommendIllustratorsAsync().Discard();
+            if (b && ViewModel.RecommendIllustrators.Count is 0)
+                _ = ViewModel.LoadRecommendIllustratorsAsync();
         };
 
         ViewModel.CurrentTab = args.SelectedItemContainer.Tag switch

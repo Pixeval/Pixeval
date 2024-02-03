@@ -113,7 +113,7 @@ public partial class IllustratorContentViewerViewModel : ObservableObject
         InitializeTags();
         InitializeTrivia();
         InitializeCommands();
-        SetAvatarAsync().Discard();
+        _ = SetAvatarAsync();
     }
 
     public bool ShowRecommendIllustrators

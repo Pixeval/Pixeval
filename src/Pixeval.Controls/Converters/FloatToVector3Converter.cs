@@ -27,13 +27,7 @@ namespace Pixeval.Controls.Converters;
 
 public class FloatToVector3Converter : IValueConverter
 {
-    public object Convert(object value, Type targetType, object parameter, string language)
-    {
-        return new Vector3(value.To<float>());
-    }
+    public object Convert(object value, Type targetType, object parameter, string language) => new Vector3(value.To<float>());
 
-    public object ConvertBack(object value, Type targetType, object parameter, string language)
-    {
-        return value.To<Vector3>().X;
-    }
+    public object ConvertBack(object value, Type targetType, object parameter, string language) => value.To<Vector3>().X;
 }

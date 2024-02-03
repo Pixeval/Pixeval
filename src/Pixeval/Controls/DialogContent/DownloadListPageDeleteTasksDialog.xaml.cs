@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/IllustrationResultFilterFunctionEntry.xaml.cs
+// Copyright (c) 2023 Pixeval/DownloadListPageDeleteTasksDialog.xaml.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,16 +18,15 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using Microsoft.UI.Xaml.Controls;
 using WinUI3Utilities.Attributes;
 
-namespace Pixeval.Flyouts;
+namespace Pixeval.Controls.DialogContent;
 
-[DependencyProperty<string>("Header")]
-public partial class IllustrationResultFilterFunctionEntry : ContentControl
+[DependencyProperty<bool>("DeleteLocalFiles", "false")]
+public sealed partial class DownloadListPageDeleteTasksDialog
 {
-    public IllustrationResultFilterFunctionEntry()
+    public DownloadListPageDeleteTasksDialog()
     {
-        DefaultStyleKey = typeof(IllustrationResultFilterFunctionEntry);
+        InitializeComponent();
     }
 }

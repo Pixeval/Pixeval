@@ -23,7 +23,7 @@ using System.Collections.Generic;
 using Pixeval.Controls.TokenInput;
 using Pixeval.Utilities;
 
-namespace Pixeval.Flyouts.IllustrationResultFilter;
+namespace Pixeval.Controls.FlyoutContent;
 
 /// <summary>
 /// 

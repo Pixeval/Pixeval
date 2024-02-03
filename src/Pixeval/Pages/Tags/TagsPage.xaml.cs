@@ -18,4 +18,9 @@ public sealed partial class TagsPage
         if (!_viewModel.SelectedTags.Contains(tag))
             _viewModel.SelectedTags.Add(tag);
     }
+
+    private void TagsEntry_OnFileDeleted(TagsEntry sender, TagsEntryViewModel viewModel)
+    {
+        _ = _viewModel.DataProvider.View.Remove(viewModel);
+    }
 }

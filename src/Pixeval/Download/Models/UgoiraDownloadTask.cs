@@ -39,7 +39,7 @@ public class UgoiraDownloadTask(
     protected override async Task ManageStream(Stream stream, string destination)
     {
         using var image = await IoHelper.GetImageFromZipStreamAsync(stream, Metadata);
-        image.ApplyTags(IllustrationViewModel.Illustrate);
+        image.SetTags(IllustrationViewModel.Illustrate);
         await image.UgoiraSaveToFileAsync(destination);
     }
 }

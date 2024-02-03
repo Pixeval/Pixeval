@@ -14,7 +14,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <TextBlock Margin="20" Text="{x:Bind _viewModel.WorkingDirectory, Mode=OneWay}" />
+        <TextBlock Margin="10" Text="{x:Bind _viewModel.WorkingDirectory, Mode=OneWay}" />
         <controls1:TokenizingTextBox
             Grid.Row="1"
             ItemsSource="{x:Bind _viewModel.SelectedTags}"
@@ -29,6 +29,7 @@
                     <ItemContainer>
                         <local:TagsEntry
                             Margin="16"
+                            FileDeleted="TagsEntry_OnFileDeleted"
                             TagTapped="TagsEntry_OnTagTapped"
                             ViewModel="{x:Bind}" />
                     </ItemContainer>

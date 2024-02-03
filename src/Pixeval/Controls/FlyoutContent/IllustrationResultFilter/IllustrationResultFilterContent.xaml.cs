@@ -22,7 +22,7 @@ using System.Linq;
 using System.Reflection;
 using Pixeval.Attributes;
 
-namespace Pixeval.Flyouts.IllustrationResultFilter;
+namespace Pixeval.Controls.FlyoutContent;
 
 public sealed partial class IllustrationResultFilterContent
 {

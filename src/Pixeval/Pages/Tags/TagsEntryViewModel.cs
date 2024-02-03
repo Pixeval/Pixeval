@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Frozen;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -33,12 +34,52 @@ public partial class TagsEntryViewModel : ObservableObject, IIllustrate, IDispos
     /// </remarks>
     [ObservableProperty] private SoftwareBitmapSource _thumbnail = null!;
 
-    /// <remarks>
-    /// Should be private set
-    /// </remarks>
-    [ObservableProperty] private FrozenSet<string>? _tags;
+    private FrozenSet<string>? _tagsSet;
+
+    public FrozenSet<string>? TagsSet
+    {
+        get => _tagsSet;
+        set
+        {
+            if (value == _tagsSet)
+                return;
+            _tagsSet = value;
+            Tags.Clear();
+            if (value is not null)
+            {
+                foreach (var tag in value)
+                    Tags.Add(tag);
+            }
+            // 用来提醒AdvancedObservableCollection的Filter更新
+            OnPropertyChanged(nameof(Tags));
+        }
+    }
+
+    public ObservableCollection<string> Tags { get; } = [];
 
     public Illustration? Illustration { get; private set; }
+
+    public async Task<string?> SaveTagsAsync()
+    {
+        return TagsSet is null
+            ? TagsEntryResources.TagsIsUnloaded
+            : await Task.Run(async () =>
+            {
+                try
+                {
+                    var image = await Image.LoadAsync(FullPath);
+                    image.SetTags(TagsSet);
+                    await using var stream = File.OpenWrite(FullPath);
+                    await image.SaveAsync(stream, image.Metadata.DecodedImageFormat!);
+                    return null;
+                }
+                catch (Exception e)
+                {
+                    return e.Message;
+                    // ignored
+                }
+            });
+    }
 
     public static async Task<TagsEntryViewModel?> IdentifyAsync(string path)
     {
@@ -64,6 +105,7 @@ public partial class TagsEntryViewModel : ObservableObject, IIllustrate, IDispos
         {
             try
             {
+                // 理论上只有此句可能throw
                 var info = await Image.IdentifyAsync(path);
                 illustration = await info.GetIllustrationAsync();
                 tags = info.GetTags().ToFrozenSet();
@@ -74,7 +116,7 @@ public partial class TagsEntryViewModel : ObservableObject, IIllustrate, IDispos
             }
         });
         entry.Illustration = illustration;
-        entry.Tags = tags;
+        entry.TagsSet = tags;
     }
 
     private static async void LoadThumbnail(TagsEntryViewModel entry, string path)

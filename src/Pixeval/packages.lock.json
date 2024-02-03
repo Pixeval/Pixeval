@@ -168,9 +168,9 @@
       },
       "Microsoft.Playwright": {
         "type": "Direct",
-        "requested": "[1.41.1, )",
-        "resolved": "1.41.1",
-        "contentHash": "iBGvfzGhPntaVc8VZu8agzaRWSDUiLCGJYyrr2MTm8c1tfNbNZhj/aOgFsOPVt61RYCIhGTvwRv9mhl3hJ6GnQ==",
+        "requested": "[1.41.2, )",
+        "resolved": "1.41.2",
+        "contentHash": "UtfjOhh52rDi5D7FTk0+9fWFgEO6mbOX3//YvO1yiuEFfCfe1/C9mkhnZkyzDmTSdox/FmDGZ5EmuG4murT5MQ==",
         "dependencies": {
           "Microsoft.Bcl.AsyncInterfaces": "6.0.0",
           "System.ComponentModel.Annotations": "5.0.0",
@@ -230,9 +230,9 @@
       },
       "ReverseMarkdown": {
         "type": "Direct",
-        "requested": "[4.1.0, )",
-        "resolved": "4.1.0",
-        "contentHash": "PDf8CgorwlXQVbbgsKQ/OqWRSORsgs9XcOI/dbXPykkHZnZ3bTDFmmYCg0XrJweOQ1tTfixKKIhzUTZGoag5cA==",
+        "requested": "[4.3.0, )",
+        "resolved": "4.3.0",
+        "contentHash": "KykyBe7Q26pkYbmMP7zwRgAy74xglCCU4lPilii0Vj++LMdvTcm2EZ6EvzaNKvaBNhWQtcI69V/4tW52sceEOw==",
         "dependencies": {
           "HtmlAgilityPack": "1.11.57"
         }
@@ -245,12 +245,12 @@
       },
       "SixLabors.ImageSharp.Drawing": {
         "type": "Direct",
-        "requested": "[2.1.0, )",
-        "resolved": "2.1.0",
-        "contentHash": "rXisPlS9wEjsW/fYqqmsmtvExcqUIujMEJZQe4WlnH/V+xN5JAv/TqFUWFJ9++1bZNOX7NEFdYadUlo51859BA==",
+        "requested": "[2.1.1, )",
+        "resolved": "2.1.1",
+        "contentHash": "BOo/ff26qU2pnA2mSRd7otAx+rnmn9eo9tLbn1ObWTIuMMNMaQK1DxTVWMo6fGb4hBONVl7O7O0aJjdLszUydA==",
         "dependencies": {
           "SixLabors.Fonts": "2.0.1",
-          "SixLabors.ImageSharp": "3.1.0"
+          "SixLabors.ImageSharp": "3.1.1"
         }
       },
       "System.Linq.Async": {
