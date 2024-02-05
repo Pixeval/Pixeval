@@ -19,8 +19,10 @@
 #endregion
 
 using System;
+using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
 
-namespace Pixeval.Util;
+namespace Pixeval.Utilities;
 
 public static class ThrowUtils
 {
@@ -41,4 +43,16 @@ public static class ThrowUtils
             ThrowException<TException>(parameters);
         }
     }
+
+    [DoesNotReturn]
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static void InvalidOperation(string? message = null)
+    {
+        throw new InvalidOperationException(message);
+    }
+
+    [DoesNotReturn]
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static TReturn ArgumentOutOfRange<T, TReturn>(T? actualValue, string? message = null, [CallerArgumentExpression(nameof(actualValue))] string? paraName = null)
+        => throw new ArgumentOutOfRangeException(paraName, actualValue, message);
 }

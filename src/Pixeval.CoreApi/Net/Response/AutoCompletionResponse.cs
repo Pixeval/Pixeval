@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval.CoreApi
+#region Copyright (c) Pixeval/Pixeval.CoreApi
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
@@ -18,14 +18,14 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using Pixeval.CoreApi.Model;
 
 namespace Pixeval.CoreApi.Net.Response;
 
-public class AutoCompletionResponse
+[Factory]
+public partial record AutoCompletionResponse
 {
     [JsonPropertyName("tags")]
-    public required List<Tag> Tags { get; set; }
+    public required Tag[] Tags { get; set; } = [];
 }

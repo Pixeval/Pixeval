@@ -20,4 +20,4 @@
 
 namespace Pixeval.CoreApi.Model;
 
-public interface IIllustrate;
+public interface IEntry;

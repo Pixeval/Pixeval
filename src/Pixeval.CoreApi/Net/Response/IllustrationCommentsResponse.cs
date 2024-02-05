@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval.CoreApi
+#region Copyright (c) Pixeval/Pixeval.CoreApi
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
@@ -18,17 +18,17 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using Pixeval.CoreApi.Model;
 
 namespace Pixeval.CoreApi.Net.Response;
 
-public class IllustrationCommentsResponse
+[Factory]
+public partial record IllustrationCommentsResponse
 {
     [JsonPropertyName("comments")]
-    public required IEnumerable<Comment> Comments { get; set; }
+    public required Comment[] Comments { get; set; } = [];
 
     [JsonPropertyName("next_url")]
-    public required string NextUrl { get; set; }
+    public required string NextUrl { get; set; } = "";
 }

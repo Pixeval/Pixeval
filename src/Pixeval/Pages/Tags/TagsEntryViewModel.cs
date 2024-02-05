@@ -16,7 +16,7 @@ namespace Pixeval.Pages.Tags;
 /// <summary>
 /// 由于<see cref="Illustration"/>不一定存在，所以这个类不直接继承 <see cref="IllustrationItemViewModel"/>
 /// </summary>
-public partial class TagsEntryViewModel : ObservableObject, IIllustrate, IDisposable
+public partial class TagsEntryViewModel : ObservableObject, IEntry, IDisposable
 {
     private TagsEntryViewModel(string path)
     {
@@ -57,7 +57,10 @@ public partial class TagsEntryViewModel : ObservableObject, IIllustrate, IDispos
 
     public ObservableCollection<string> Tags { get; } = [];
 
-    public Illustration? Illustration { get; private set; }
+    /// <remarks>
+    /// Should be private set
+    /// </remarks>
+    [ObservableProperty] private Illustration? _illustration;
 
     public async Task<string?> SaveTagsAsync()
     {

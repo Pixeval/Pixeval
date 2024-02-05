@@ -1,28 +1,21 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Class Name="Pixeval.Controls.Illustrate.SortableIllustrateViewViewModel&lt;T, TViewModel&gt;" Collapsed="true">
-    <Position X="3" Y="3.75" Width="3.5" />
+    <Position X="3.5" Y="3.75" Width="3.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAgAAAAAAAAAAAAAAAAIBAAAAAAAAAAEAAAAAA=</HashCode>
       <FileName>Controls\Illustrate\SortableIllustrateViewViewModel.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Pixeval.Controls.IllustratorView.IllustratorViewViewModel" Collapsed="true">
-    <Position X="12.75" Y="3.75" Width="3.5" />
+  <Class Name="Pixeval.Controls.IllustratorViewViewModel" Collapsed="true">
+    <Position X="8.25" Y="3.75" Width="3.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAACAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Controls\IllustratorView\IllustratorViewViewModel.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Pixeval.Controls.IllustrationView.IllustrationViewViewModel" Collapsed="true">
-    <Position X="2.5" Y="5" Width="4.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAACAAAAAAAAAAAABAIAIAAAAAAAACEAAAAAA=</HashCode>
-      <FileName>Controls\IllustrationView\IllustrationViewViewModel.cs</FileName>
-    </TypeIdentifier>
-  </Class>
   <Class Name="Pixeval.Controls.IllustrateViewViewModel&lt;T, TViewModel&gt;" Collapsed="true">
-    <Position X="8" Y="2.25" Width="3" />
+    <Position X="6" Y="2.25" Width="3" />
     <TypeIdentifier>
       <HashCode>AgAAAAEEACAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Controls\IllustrateViewViewModel.cs</FileName>
@@ -30,11 +23,27 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="Pixeval.Pages.Download.DownloadListPageViewModel" Collapsed="true">
-    <Position X="7.75" Y="3.75" Width="4.25" />
+    <Position X="8.5" Y="5" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAgASACAAABAAABCABBBAAAgAAAAABBAAAAAAg=</HashCode>
+      <HashCode>AAAAAAAgASgCAAAAAAABCABBBAAAgAAAAAABAAIAAAg=</HashCode>
       <FileName>Pages\Download\DownloadListPageViewModel.cs</FileName>
     </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Pixeval.Controls.IllustrationViewViewModel" Collapsed="true">
+    <Position X="3" Y="5" Width="4.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAAAAAAAAAJAIAIAAAAAAQAAEAAAAAI=</HashCode>
+      <FileName>Controls\IllustrationView\IllustrationViewViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Pixeval.Pages.Tags.TagsPageViewModel" Collapsed="true">
+    <Position X="11.5" Y="5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAAAAAAAAABAAAAAAAAAAAAAAAQCAAA=</HashCode>
+      <FileName>Pages\Tags\TagsPageViewModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
   </Class>
   <Font Name="Microsoft YaHei UI" Size="9" />
 </ClassDiagram>

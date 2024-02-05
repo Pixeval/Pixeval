@@ -27,10 +27,10 @@ using Microsoft.UI.Xaml.Media;
 using Pixeval.AppManagement;
 using Pixeval.Controls.Illustrate;
 using Pixeval.CoreApi.Global.Enum;
+using Pixeval.CoreApi.Net.Response;
 using Pixeval.Util.IO;
 using Pixeval.Utilities;
 using WinUI3Utilities;
-using RecommendUser = Pixeval.CoreApi.Net.Response.PixivRelatedRecommendUsersResponse.User;
 
 namespace Pixeval.Controls;
 

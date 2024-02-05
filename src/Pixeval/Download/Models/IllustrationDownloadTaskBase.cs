@@ -31,7 +31,7 @@ using Pixeval.Utilities.Threading;
 
 namespace Pixeval.Download.Models;
 
-public abstract class IllustrationDownloadTaskBase(DownloadHistoryEntry entry) : ObservableObject, IDownloadTask, IProgress<double>, IIllustrate
+public abstract class IllustrationDownloadTaskBase(DownloadHistoryEntry entry) : ObservableObject, IDownloadTask, IProgress<double>, IEntry
 {
     private Exception? _errorCause;
     private double _progressPercentage = entry.State is DownloadState.Completed ? 100 : 0;

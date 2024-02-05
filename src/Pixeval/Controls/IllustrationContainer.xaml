@@ -30,17 +30,15 @@
             <StackPanel
                 x:Name="ExtraCommandsBar"
                 Grid.Column="0"
-                Margin="5,0,0,0"
                 VerticalAlignment="Center"
                 FlowDirection="LeftToRight"
-                Orientation="Horizontal">
-                <Grid Margin="10,0,0,0">
-                    <AutoSuggestBox
-                        x:Uid="/IllustrationViewCommandBar/FastFilterAutoSuggestBox"
-                        Width="250"
-                        VerticalAlignment="Center"
-                        TextChanged="FastFilterAutoSuggestBox_OnTextChanged" />
-                </Grid>
+                Orientation="Horizontal"
+                Spacing="10">
+                <AutoSuggestBox
+                    x:Uid="/IllustrationViewCommandBar/FastFilterAutoSuggestBox"
+                    Width="250"
+                    VerticalAlignment="Center"
+                    TextChanged="FastFilterAutoSuggestBox_OnTextChanged" />
             </StackPanel>
             <CommandBar
                 x:Name="CommandBar"

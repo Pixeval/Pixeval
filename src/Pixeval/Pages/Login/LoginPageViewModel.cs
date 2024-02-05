@@ -29,6 +29,8 @@ using System.Threading.Tasks;
 using System.Web;
 using Windows.System;
 using CommunityToolkit.Mvvm.ComponentModel;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.Playwright;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -158,7 +160,8 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject
         AdvancePhase(LoginPhaseEnum.Refreshing);
         if (AppContext.LoadSession() is { } session && CheckRefreshAvailableInternal(session))
         {
-            App.AppViewModel.MakoClient = new MakoClient(session, App.AppViewModel.AppSetting.ToMakoClientConfiguration(),
+            var logger = App.AppViewModel.AppServicesScope.ServiceProvider.GetRequiredService<ILogger<MakoClient>>();
+            App.AppViewModel.MakoClient = new MakoClient(session, App.AppViewModel.AppSetting.ToMakoClientConfiguration(), logger,
                 new RefreshTokenSessionUpdate());
             await App.AppViewModel.MakoClient.RefreshSessionAsync();
         }
@@ -307,7 +310,8 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject
                 var cookies = await page.Context.CookiesAsync(["https://pixiv.net"]);
                 var cookie = string.Join(';', cookies.Select(c => $"{c.Name}={c.Value}"));
                 var session = await AuthCodeToSessionAsync(code, verifier, cookie);
-                App.AppViewModel.MakoClient = new MakoClient(session, App.AppViewModel.AppSetting.ToMakoClientConfiguration(), new RefreshTokenSessionUpdate());
+                var logger = App.AppViewModel.AppServicesScope.ServiceProvider.GetRequiredService<ILogger<MakoClient>>();
+                App.AppViewModel.MakoClient = new MakoClient(session, App.AppViewModel.AppSetting.ToMakoClientConfiguration(), logger, new RefreshTokenSessionUpdate());
                 await playWrightHelper.DisposeAsync();
                 proxyServer?.Dispose();
                 final();
@@ -327,7 +331,7 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject
         return null;
     }
 
-    private async Task EnsureCertificateIsInstalled(UserControl userControl)
+    private async Task EnsureCertificateIsInstalled(UIElement userControl)
     {
         if (!await CheckFakeRootCertificateInstallationAsync())
         {
@@ -344,7 +348,7 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject
         }
     }
 
-    private async Task EnsureWebView2IsInstalled(UserControl userControl)
+    private async Task EnsureWebView2IsInstalled(UIElement userControl)
     {
         if (!CheckWebView2Installation())
         {

@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval.CoreApi
+#region Copyright (c) Pixeval/Pixeval.CoreApi
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
@@ -18,27 +18,28 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using Pixeval.CoreApi.Model;
 
 namespace Pixeval.CoreApi.Net.Response;
 
-// ReSharper disable UnusedAutoPropertyAccessor.Global
-internal class TrendingTagResponse
+[Factory]
+internal partial record TrendingTagResponse
 {
     [JsonPropertyName("trend_tags")]
-    public required IEnumerable<TrendTag> TrendTags { get; set; }
+    public required TrendTag[] TrendTags { get; set; } = [];
 
-    public class TrendTag
-    {
-        [JsonPropertyName("tag")]
-        public required string TagStr { get; set; }
+}
 
-        [JsonPropertyName("translated_name")]
-        public required string TranslatedName { get; set; }
+[Factory]
+internal partial record TrendTag
+{
+    [JsonPropertyName("tag")]
+    public required string TagStr { get; set; } = "";
 
-        [JsonPropertyName("illust")]
-        public required Illustration Illust { get; set; }
-    }
+    [JsonPropertyName("translated_name")]
+    public required string TranslatedName { get; set; } = "";
+
+    [JsonPropertyName("illust")]
+    public required Illustration Illust { get; set; }
 }

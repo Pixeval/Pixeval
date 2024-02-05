@@ -44,12 +44,19 @@ public static class Objects
     /// Normalize a double to a value between 0 and 1
     /// </summary>
     /// <param name="value">The value to be normalized</param>
+    /// <param name="max"></param>
+    /// <param name="min"></param>
     /// <returns>[0, 1]</returns>
     public static double Normalize(this double value, int max, int min)
     {
         return (value - min) / (max - min);
     }
 
+    /// <summary>
+    /// 当<paramref name="str"/>为<see langword="const"/>时使用<see cref="GeneratedRegexAttribute"/>代替
+    /// </summary>
+    /// <param name="str"></param>
+    /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Regex ToRegex(this string str)
     {
@@ -106,11 +113,6 @@ public static class Objects
         return bytes.Select(b => b.ToString("x2")).Aggregate(string.Concat);
     }
 
-    public static Task<HttpResponseMessage> GetResponseHeader(this HttpClient client, string url)
-    {
-        return client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead);
-    }
-
     public static async Task<string?> ToJsonAsync<TEntity>(this TEntity? obj, Action<JsonSerializerOptions>? serializerOptionConfigure = null)
     {
         if (obj is null)
@@ -160,7 +162,7 @@ public static class Objects
     public static async Task<Result<string>> GetStringResultAsync(this HttpClient httpClient, string url, Func<HttpResponseMessage, Task<Exception>>? exceptionSelector = null)
     {
         var responseMessage = await httpClient.GetAsync(url).ConfigureAwait(false);
-        return !responseMessage.IsSuccessStatusCode ? Result<string>.AsFailure(exceptionSelector is { } selector ? await selector.Invoke(responseMessage).ConfigureAwait(false) : null) : Result<string>.AsSuccess(await responseMessage.Content.ReadAsStringAsync());
+        return responseMessage.IsSuccessStatusCode ? Result<string>.AsSuccess(await responseMessage.Content.ReadAsStringAsync()) : Result<string>.AsFailure(exceptionSelector is { } selector ? await selector.Invoke(responseMessage).ConfigureAwait(false) : null);
     }
 
     public static Task<TResult[]> WhenAll<TResult>(this IEnumerable<Task<TResult>> tasks)

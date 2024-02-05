@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval.CoreApi
+#region Copyright (c) Pixeval/Pixeval.CoreApi
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
@@ -28,8 +28,7 @@ public class RefreshTokenSessionUpdate : ISessionUpdate
 {
     public async Task<Session> RefreshAsync(MakoClient makoClient)
     {
-        return (await makoClient.Resolve<IAuthEndPoint>().RefreshAsync(new RefreshSessionRequest(makoClient.Session.RefreshToken)).ConfigureAwait(false))
-            .ToSession() with
+        return (await makoClient.Resolve<IAuthEndPoint>().RefreshAsync(new RefreshSessionRequest(makoClient.Session.RefreshToken)).ConfigureAwait(false)).ToSession() with
         {
             Cookie = makoClient.Session.Cookie,
             CookieCreation = makoClient.Session.CookieCreation

@@ -95,7 +95,7 @@ public sealed partial class IllustratorIllustrationAndMangaBookmarkPage : ISorte
 
     private void ViewModelOnTagBookmarksIncrementallyLoaded(object? sender, string e)
     {
-        if (TagComboBox.SelectedItem is CountedTag(var (name, _), _) && name == e)
+        if (TagComboBox.SelectedItem is CountedTag({ Name: var name }, _) && name == e)
         {
             IllustrationContainer.ViewModel.DataProvider.View.Filter = o => BookmarkTagFilter(name, o);
         }
@@ -103,7 +103,7 @@ public sealed partial class IllustratorIllustrationAndMangaBookmarkPage : ISorte
 
     private void TagComboBox_OnSelectionChangedWhenLoaded(object? sender, SelectionChangedEventArgs e)
     {
-        if (TagComboBox.SelectedItem is CountedTag(var (name, _), _) tag && !ReferenceEquals(tag, IllustratorIllustrationAndMangaBookmarkPageViewModel.EmptyCountedTag))
+        if (TagComboBox.SelectedItem is CountedTag({ Name: var name }, _) tag && !ReferenceEquals(tag, IllustratorIllustrationAndMangaBookmarkPageViewModel.EmptyCountedTag))
         {
             // fetch the bookmark IDs for tag, but do not wait for it.
             _ = _viewModel.LoadBookmarksForTagAsync(_uid, tag.Tag.Name);

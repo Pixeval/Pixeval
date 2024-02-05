@@ -28,256 +28,264 @@ using Pixeval.CoreApi.Model;
 
 namespace Pixeval.CoreApi.Net.Response;
 
-public class PixivRelatedRecommendUsersResponse
+[Factory]
+public partial record PixivRelatedRecommendUsersResponse
 {
     [JsonPropertyName("error")]
     public required bool Error { get; set; }
 
     [JsonPropertyName("message")]
-    public required string Message { get; set; }
+    public required string Message { get; set; } = "";
 
     [JsonPropertyName("body")]
-    public required Body ResponseBody { get; set; }
+    public required PixivRelatedRecommendUsersBody ResponseBody { get; set; }
+}
 
-    public class Body
-    {
-        [JsonPropertyName("recommendUsers")]
-        public required RecommendMap[] RecommendMaps { get; set; }
+[Factory]
+public partial record PixivRelatedRecommendUsersBody
+{
+    [JsonPropertyName("recommendUsers")]
+    public required RecommendMap[] RecommendMaps { get; set; } = [];
 
-        [JsonPropertyName("thumbnails")]
-        public required Thumbnails Thumbnails { get; set; }
+    [JsonPropertyName("thumbnails")]
+    public required Thumbnails Thumbnails { get; set; }
 
-        [JsonPropertyName("users")]
-        public required User[] Users { get; set; }
-    }
+    [JsonPropertyName("users")]
+    public required RecommendUser[] Users { get; set; } = [];
+}
 
-    public class RecommendMap
-    {
-        [JsonPropertyName("userId")]
-        [JsonNumberHandling(JsonNumberHandling.AllowReadingFromString | JsonNumberHandling.WriteAsString)]
-        public required long UserId { get; set; }
+[Factory]
+public partial record RecommendMap
+{
+    [JsonPropertyName("userId")]
+    [JsonNumberHandling(JsonNumberHandling.AllowReadingFromString | JsonNumberHandling.WriteAsString)]
+    public required long UserId { get; set; }
 
-        [JsonPropertyName("illustIds")]
-        [JsonConverter(typeof(StringArrayToNumberArrayConverter<long>))]
-        public required long[] IllustIds { get; set; }
+    [JsonPropertyName("illustIds")]
+    [JsonConverter(typeof(StringArrayToNumberArrayConverter<long>))]
+    public required long[] IllustIds { get; set; } = [];
 
-        [JsonPropertyName("novelIds")]
-        [JsonConverter(typeof(StringArrayToNumberArrayConverter<long>))]
-        public required long[] NovelIds { get; set; }
-    }
+    [JsonPropertyName("novelIds")]
+    [JsonConverter(typeof(StringArrayToNumberArrayConverter<long>))]
+    public required long[] NovelIds { get; set; } = [];
+}
 
-    public class Thumbnails
-    {
-        [JsonPropertyName("illust")]
-        public required IllustProfile[] Illustrations { get; set; }
+[Factory]
+public partial record Thumbnails
+{
+    [JsonPropertyName("illust")]
+    public required IllustProfile[] Illustrations { get; set; } = [];
 
-        [JsonPropertyName("novel")]
-        public required Novel[] Novels { get; set; }
-    }
+    [JsonPropertyName("novel")]
+    public required RecommendUserNovel[] Novels { get; set; } = [];
+}
 
-    public class IllustProfile
-    {
-        [JsonPropertyName("id")]
-        [JsonNumberHandling(JsonNumberHandling.AllowReadingFromString | JsonNumberHandling.WriteAsString)]
-        public required long Id { get; set; }
+[Factory]
+public partial record IllustProfile
+{
+    [JsonPropertyName("id")]
+    [JsonNumberHandling(JsonNumberHandling.AllowReadingFromString | JsonNumberHandling.WriteAsString)]
+    public required long Id { get; set; }
 
-        [JsonPropertyName("title")]
-        public required string Title { get; set; }
+    [JsonPropertyName("title")]
+    public required string Title { get; set; } = "";
 
-        [JsonPropertyName("illustType")]
-        public required IllustType IllustType { get; set; }
+    [JsonPropertyName("illustType")]
+    public required IllustType IllustType { get; set; }
 
-        [JsonPropertyName("xRestrict")]
-        public required int XRestrict { get; set; }
+    [JsonPropertyName("xRestrict")]
+    public required int XRestrict { get; set; }
 
-        [JsonPropertyName("restrict")]
-        public required int Restrict { get; set; }
+    [JsonPropertyName("restrict")]
+    public required int Restrict { get; set; }
 
-        [JsonPropertyName("sl")]
-        public required long Sl { get; set; }
+    [JsonPropertyName("sl")]
+    public required long Sl { get; set; }
 
-        [JsonPropertyName("url")]
-        public required string Url { get; set; }
+    [JsonPropertyName("url")]
+    public required string Url { get; set; } = "";
 
-        [JsonPropertyName("description")]
-        public required string Description { get; set; }
+    [JsonPropertyName("description")]
+    public required string Description { get; set; } = "";
 
-        [JsonPropertyName("tags")]
-        public required string[] Tags { get; set; }
+    [JsonPropertyName("tags")]
+    public required string[] Tags { get; set; } = [];
 
-        [JsonPropertyName("userId")]
-        [JsonNumberHandling(JsonNumberHandling.AllowReadingFromString | JsonNumberHandling.WriteAsString)]
-        public required long UserId { get; set; }
+    [JsonPropertyName("userId")]
+    [JsonNumberHandling(JsonNumberHandling.AllowReadingFromString | JsonNumberHandling.WriteAsString)]
+    public required long UserId { get; set; }
 
-        [JsonPropertyName("userName")]
-        public required string UserName { get; set; }
+    [JsonPropertyName("userName")]
+    public required string UserName { get; set; } = "";
 
-        [JsonPropertyName("width")]
-        public required int Width { get; set; }
+    [JsonPropertyName("width")]
+    public required int Width { get; set; }
 
-        [JsonPropertyName("height")]
-        public required int Height { get; set; }
+    [JsonPropertyName("height")]
+    public required int Height { get; set; }
 
-        [JsonPropertyName("pageCount")]
-        public required int PageCount { get; set; }
+    [JsonPropertyName("pageCount")]
+    public required int PageCount { get; set; }
 
-        [JsonPropertyName("isBookmarkable")]
-        public required bool IsBookmarkable { get; set; }
+    [JsonPropertyName("isBookmarkable")]
+    public required bool IsBookmarkable { get; set; }
 
-        [JsonPropertyName("alt")]
-        public required string Alt { get; set; }
+    [JsonPropertyName("alt")]
+    public required string Alt { get; set; } = "";
 
-        [JsonPropertyName("createDate")]
-        public required string CreateDate { get; set; }
+    [JsonPropertyName("createDate")]
+    public required string CreateDate { get; set; } = "";
 
-        [JsonPropertyName("updateDate")]
-        public required string UpdateDate { get; set; }
+    [JsonPropertyName("updateDate")]
+    public required string UpdateDate { get; set; } = "";
 
-        [JsonPropertyName("isUnlisted")]
-        public required bool IsUnlisted { get; set; }
+    [JsonPropertyName("isUnlisted")]
+    public required bool IsUnlisted { get; set; }
 
-        [JsonPropertyName("isMasked")]
-        public required bool IsMasked { get; set; }
+    [JsonPropertyName("isMasked")]
+    public required bool IsMasked { get; set; }
 
-        [JsonPropertyName("urls")]
-        public Urls? Urls { get; set; }
+    [JsonPropertyName("urls")]
+    public IllustProfileUrls? Urls { get; set; }
 
-        [JsonPropertyName("profileImageUrl")]
-        public required Uri ProfileImageUrl { get; set; }
+    [JsonPropertyName("profileImageUrl")]
+    public required string ProfileImageUrl { get; set; } = "";
 
-        [JsonPropertyName("aiType")]
-        public required long AiType { get; set; }
-    }
+    [JsonPropertyName("aiType")]
+    public required long AiType { get; set; }
+}
 
-    public class Urls
-    {
-        [JsonPropertyName("250x250")]
-        public required string The250X250 { get; set; }
+[Factory]
+public partial record IllustProfileUrls
+{
+    [JsonPropertyName("250x250")]
+    public required string The250X250 { get; set; } = "";
 
-        [JsonPropertyName("360x360")]
-        public required string The360X360 { get; set; }
+    [JsonPropertyName("360x360")]
+    public required string The360X360 { get; set; } = "";
 
-        [JsonPropertyName("540x540")]
-        public required string The540X540 { get; set; }
-    }
+    [JsonPropertyName("540x540")]
+    public required string The540X540 { get; set; } = "";
+}
 
-    public class Novel
-    {
-        [JsonPropertyName("id")]
-        public required string Id { get; set; }
+[Factory]
+public partial record RecommendUserNovel
+{
+    [JsonPropertyName("id")]
+    public required string Id { get; set; } = "";
 
-        [JsonPropertyName("title")]
-        public required string Title { get; set; }
+    [JsonPropertyName("title")]
+    public required string Title { get; set; } = "";
 
-        [JsonPropertyName("xRestrict")]
-        public required long XRestrict { get; set; }
+    [JsonPropertyName("xRestrict")]
+    public required long XRestrict { get; set; }
 
-        [JsonPropertyName("restrict")]
-        public required long Restrict { get; set; }
+    [JsonPropertyName("restrict")]
+    public required long Restrict { get; set; }
 
-        [JsonPropertyName("url")]
-        public required Uri Url { get; set; }
+    [JsonPropertyName("url")]
+    public required string Url { get; set; } = "";
 
-        [JsonPropertyName("tags")]
-        public required string[] Tags { get; set; }
+    [JsonPropertyName("tags")]
+    public required string[] Tags { get; set; } = [];
 
-        [JsonPropertyName("userId")]
-        public required string UserId { get; set; }
+    [JsonPropertyName("userId")]
+    public required string UserId { get; set; } = "";
 
-        [JsonPropertyName("userName")]
-        public required string UserName { get; set; }
+    [JsonPropertyName("userName")]
+    public required string UserName { get; set; } = "";
 
-        [JsonPropertyName("profileImageUrl")]
-        public required Uri ProfileImageUrl { get; set; }
+    [JsonPropertyName("profileImageUrl")]
+    public required string ProfileImageUrl { get; set; } = "";
 
-        [JsonPropertyName("textCount")]
-        public required long TextCount { get; set; }
+    [JsonPropertyName("textCount")]
+    public required long TextCount { get; set; }
 
-        [JsonPropertyName("wordCount")]
-        public required long WordCount { get; set; }
+    [JsonPropertyName("wordCount")]
+    public required long WordCount { get; set; }
 
-        [JsonPropertyName("readingTime")]
-        public required long ReadingTime { get; set; }
+    [JsonPropertyName("readingTime")]
+    public required long ReadingTime { get; set; }
 
-        [JsonPropertyName("useWordCount")]
-        public required bool UseWordCount { get; set; }
+    [JsonPropertyName("useWordCount")]
+    public required bool UseWordCount { get; set; }
 
-        [JsonPropertyName("description")]
-        public required string Description { get; set; }
+    [JsonPropertyName("description")]
+    public required string Description { get; set; } = "";
 
-        [JsonPropertyName("isBookmarkable")]
-        public required bool IsBookmarkable { get; set; }
+    [JsonPropertyName("isBookmarkable")]
+    public required bool IsBookmarkable { get; set; }
 
-        [JsonPropertyName("bookmarkCount")]
-        public required long BookmarkCount { get; set; }
+    [JsonPropertyName("bookmarkCount")]
+    public required long BookmarkCount { get; set; }
 
-        [JsonPropertyName("isOriginal")]
-        public required bool IsOriginal { get; set; }
+    [JsonPropertyName("isOriginal")]
+    public required bool IsOriginal { get; set; }
 
-        [JsonPropertyName("createDate")]
-        public required string CreateDate { get; set; }
+    [JsonPropertyName("createDate")]
+    public required string CreateDate { get; set; } = "";
 
-        [JsonPropertyName("updateDate")]
-        public required string UpdateDate { get; set; }
+    [JsonPropertyName("updateDate")]
+    public required string UpdateDate { get; set; } = "";
 
-        [JsonPropertyName("isMasked")]
-        public required bool IsMasked { get; set; }
+    [JsonPropertyName("isMasked")]
+    public required bool IsMasked { get; set; }
 
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        [JsonPropertyName("seriesId")]
-        public string? SeriesId { get; set; }
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    [JsonPropertyName("seriesId")]
+    public string? SeriesId { get; set; }
 
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        [JsonPropertyName("seriesTitle")]
-        public string? SeriesTitle { get; set; }
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    [JsonPropertyName("seriesTitle")]
+    public string? SeriesTitle { get; set; }
 
-        [JsonPropertyName("isUnlisted")]
-        public required bool IsUnlisted { get; set; }
+    [JsonPropertyName("isUnlisted")]
+    public required bool IsUnlisted { get; set; }
 
-        [JsonPropertyName("aiType")]
-        public required long AiType { get; set; }
-    }
+    [JsonPropertyName("aiType")]
+    public required long AiType { get; set; }
+}
 
-    [DebuggerDisplay("{Id}: {Name}")]
-    public class User : IIllustrate
-    {
-        [JsonPropertyName("partial")]
-        public required long Partial { get; set; }
+[DebuggerDisplay("{Id}: {Name}")]
+[Factory]
+public partial record RecommendUser : IEntry
+{
+    [JsonPropertyName("partial")]
+    public required long Partial { get; set; }
 
-        [JsonPropertyName("comment")]
-        public required string Comment { get; set; }
+    [JsonPropertyName("comment")]
+    public required string Comment { get; set; } = "";
 
-        [JsonPropertyName("followedBack")]
-        public required bool FollowedBack { get; set; }
+    [JsonPropertyName("followedBack")]
+    public required bool FollowedBack { get; set; }
 
-        [JsonPropertyName("userId")]
-        [JsonNumberHandling(JsonNumberHandling.AllowReadingFromString | JsonNumberHandling.WriteAsString)]
-        public required long Id { get; set; }
+    [JsonPropertyName("userId")]
+    [JsonNumberHandling(JsonNumberHandling.AllowReadingFromString | JsonNumberHandling.WriteAsString)]
+    public required long Id { get; set; }
 
-        [JsonPropertyName("name")]
-        public required string Name { get; set; }
+    [JsonPropertyName("name")]
+    public required string Name { get; set; } = "";
 
-        [JsonPropertyName("image")]
-        public required string Image { get; set; }
+    [JsonPropertyName("image")]
+    public required string Image { get; set; } = DefaultImageUrls.NoProfile;
 
-        [JsonPropertyName("imageBig")]
-        public required string ImageBig { get; set; }
+    [JsonPropertyName("imageBig")]
+    public required string ImageBig { get; set; } = "";
 
-        [JsonPropertyName("premium")]
-        public required bool Premium { get; set; }
+    [JsonPropertyName("premium")]
+    public required bool Premium { get; set; }
 
-        [JsonPropertyName("isFollowed")]
-        public required bool IsFollowed { get; set; }
+    [JsonPropertyName("isFollowed")]
+    public required bool IsFollowed { get; set; }
 
-        [JsonPropertyName("isMypixiv")]
-        public required bool IsMypixiv { get; set; }
+    [JsonPropertyName("isMypixiv")]
+    public required bool IsMypixiv { get; set; }
 
-        [JsonPropertyName("isBlocking")]
-        public required bool IsBlocking { get; set; }
+    [JsonPropertyName("isBlocking")]
+    public required bool IsBlocking { get; set; }
 
-        [JsonPropertyName("acceptRequest")]
-        public required bool AcceptRequest { get; set; }
-    }
+    [JsonPropertyName("acceptRequest")]
+    public required bool AcceptRequest { get; set; }
 }
 
 public enum IllustType
@@ -289,7 +297,7 @@ public enum IllustType
     Animation,
 }
 
-public class StringArrayToNumberArrayConverter<T> : JsonConverter<T[]> where T : INumber<T>
+internal class StringArrayToNumberArrayConverter<T> : JsonConverter<T[]> where T : INumber<T>
 {
     public override T[]? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {

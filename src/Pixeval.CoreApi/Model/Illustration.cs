@@ -19,7 +19,6 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -28,7 +27,8 @@ namespace Pixeval.CoreApi.Model;
 
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 [DebuggerDisplay("{Id}: {Title} [{User}]")]
-public record Illustration : IIllustrate
+[Factory]
+public partial record Illustration : IEntry
 {
     [JsonIgnore]
     public bool FromSpotlight { get; set; }
@@ -43,11 +43,11 @@ public record Illustration : IIllustrate
     public required long Id { get; set; }
 
     [JsonPropertyName("title")]
-    public required string Title { get; set; }
+    public required string Title { get; set; } = "";
 
     [JsonPropertyName("type")]
     // [JsonConverter(typeof(StringToTypeBoolConverter))]
-    public required string Type { get; set; }
+    public required string Type { get; set; } = "";
 
     /// <summary>
     /// Original几乎总是null
@@ -56,7 +56,7 @@ public record Illustration : IIllustrate
     public required IllustrationImageUrls ImageUrls { get; set; }
 
     [JsonPropertyName("caption")]
-    public required string Caption { get; set; }
+    public required string Caption { get; set; } = "";
 
     [JsonPropertyName("restrict")]
     public required long Restrict { get; set; }
@@ -65,10 +65,10 @@ public record Illustration : IIllustrate
     public required UserInfo User { get; set; }
 
     [JsonPropertyName("tags")]
-    public required IEnumerable<Tag> Tags { get; set; }
+    public required Tag[] Tags { get; set; } = [];
 
     [JsonPropertyName("tools")]
-    public required IEnumerable<string> Tools { get; set; }
+    public required string[] Tools { get; set; } = [];
 
     [JsonPropertyName("create_date")]
     public required DateTimeOffset CreateDate { get; set; }
@@ -92,7 +92,7 @@ public record Illustration : IIllustrate
     public required IllustrationMetaSinglePage MetaSinglePage { get; set; }
 
     [JsonPropertyName("meta_pages")]
-    public required MetaPage[] MetaPages { get; set; }
+    public required MetaPage[] MetaPages { get; set; } = [];
 
     [JsonPropertyName("total_view")]
     public required int TotalView { get; set; }
@@ -119,39 +119,42 @@ public record Illustration : IIllustrate
     {
         return other?.Id == Id;
     }
+}
 
-    public class IllustrationMetaSinglePage
-    {
-        /// <summary>
-        /// 单图时的原图链接
-        /// </summary>
-        [JsonPropertyName("original_image_url")]
-        public string? OriginalImageUrl { get; set; }
-    }
+[Factory]
+public partial record IllustrationMetaSinglePage
+{
+    /// <summary>
+    /// 单图时的原图链接
+    /// </summary>
+    [JsonPropertyName("original_image_url")]
+    public string? OriginalImageUrl { get; set; } = DefaultImageUrls.ImageNotAvailable;
+}
 
-    public class IllustrationImageUrls
-    {
-        [JsonPropertyName("square_medium")]
-        public required string SquareMedium { get; set; }
+[Factory]
+public partial record IllustrationImageUrls
+{
+    [JsonPropertyName("square_medium")]
+    public required string SquareMedium { get; set; } = DefaultImageUrls.ImageNotAvailable;
 
-        [JsonPropertyName("medium")]
-        public required string Medium { get; set; }
+    [JsonPropertyName("medium")]
+    public required string Medium { get; set; } = DefaultImageUrls.ImageNotAvailable;
 
-        [JsonPropertyName("large")]
-        public required string Large { get; set; }
+    [JsonPropertyName("large")]
+    public required string Large { get; set; } = DefaultImageUrls.ImageNotAvailable;
 
-        [JsonPropertyName("original")]
-        public string? Original { get; set; }
-    }
+    [JsonPropertyName("original")]
+    public string? Original { get; set; } = DefaultImageUrls.ImageNotAvailable;
+}
 
-    public class MetaPage
-    {
-        /// <summary>
-        /// 多图时的原图链接
-        /// </summary>
-        [JsonPropertyName("image_urls")]
-        public required IllustrationImageUrls ImageUrls { get; set; }
-    }
+[Factory]
+public partial record MetaPage
+{
+    /// <summary>
+    /// 多图时的原图链接
+    /// </summary>
+    [JsonPropertyName("image_urls")]
+    public required IllustrationImageUrls ImageUrls { get; set; }
 }
 
 public enum XRestrict

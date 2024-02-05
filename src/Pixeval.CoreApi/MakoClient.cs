@@ -19,16 +19,20 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Autofac;
+using Microsoft.Extensions.Logging;
 using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Global.Exception;
 using Pixeval.CoreApi.Net;
 using Pixeval.CoreApi.Net.EndPoints;
 using Pixeval.CoreApi.Preference;
+using Pixeval.Utilities;
 using Refit;
 
 namespace Pixeval.CoreApi;
@@ -36,7 +40,7 @@ namespace Pixeval.CoreApi;
 public partial class MakoClient : ICancellable
 {
     /// <summary>
-    /// Create an new <see cref="MakoClient" /> based on given <see cref="Configuration" />, <see cref="Session" />, and
+    /// Create a new <see cref="MakoClient" /> based on given <see cref="Configuration" />, <see cref="Session" />, and
     /// <see cref="ISessionUpdate" />
     /// </summary>
     /// <remarks>
@@ -48,9 +52,11 @@ public partial class MakoClient : ICancellable
     /// </remarks>
     /// <param name="session">The <see cref="Preference.Session" /></param>
     /// <param name="configuration">The <see cref="Configuration" /></param>
+    /// <param name="logger"></param>
     /// <param name="sessionUpdater">The updater of <see cref="Preference.Session" /></param>
-    public MakoClient(Session session, MakoClientConfiguration configuration, ISessionUpdate? sessionUpdater = null)
+    public MakoClient(Session session, MakoClientConfiguration configuration, ILogger<MakoClient> logger, ISessionUpdate? sessionUpdater = null)
     {
+        Logger = logger;
         SessionUpdater = sessionUpdater ?? new RefreshTokenSessionUpdate();
         Session = session;
         MakoServices = BuildContainer();
@@ -66,14 +72,16 @@ public partial class MakoClient : ICancellable
     /// <remarks>
     /// The <see cref="MakoClient" /> is not responsible for the <see cref="Session" />'s refreshment, you need to check
     /// the
-    /// <see cref="P:Session.Expire" /> and call <see cref="RefreshSession(Pixeval.CoreApi.Preference.Session)" /> or
+    /// <see cref="P:Session.Expire" /> and call <see cref="RefreshSession(Preference.Session)" /> or
     /// <see cref="RefreshSessionAsync" />
     /// periodically
     /// </remarks>
-    /// <param name="session">The <see cref="Pixeval.CoreApi.Preference.Session" /></param>
-    /// <param name="sessionUpdater">The updater of <see cref="Pixeval.CoreApi.Preference.Session" /></param>
-    public MakoClient(Session session, ISessionUpdate? sessionUpdater = null)
+    /// <param name="session">The <see cref="Preference.Session" /></param>
+    /// <param name="logger"></param>
+    /// <param name="sessionUpdater">The updater of <see cref="Preference.Session" /></param>
+    public MakoClient(Session session, ILogger<MakoClient> logger, ISessionUpdate? sessionUpdater = null)
     {
+        Logger = logger;
         SessionUpdater = sessionUpdater ?? new RefreshTokenSessionUpdate();
         Session = session;
         MakoServices = BuildContainer();
@@ -155,7 +163,7 @@ public partial class MakoClient : ICancellable
 
         _ = builder.Register(static c =>
         {
-            var context = c.Resolve<IComponentContext>(); // or a System.ObjectDisposedException will thrown because the 'c' cannot be hold
+            var context = c.Resolve<IComponentContext>(); // or a System.ObjectDisposedException will be thrown because the 'c' cannot be hold
             return RestService.For<IAuthEndPoint>(c.ResolveKeyed<HttpClient>(MakoApiKind.AuthApi), new RefitSettings
             {
                 ExceptionFactory = async message => !message.IsSuccessStatusCode ? await MakoNetworkException.FromHttpResponseMessageAsync(message, context.Resolve<MakoClient>().Configuration.Bypass).ConfigureAwait(false) : null
@@ -164,7 +172,7 @@ public partial class MakoClient : ICancellable
 
         _ = builder.Register(static c =>
         {
-            var context = c.Resolve<IComponentContext>(); // or a System.ObjectDisposedException will thrown because the 'c' cannot be hold
+            var context = c.Resolve<IComponentContext>(); // or a System.ObjectDisposedException will be thrown because the 'c' cannot be hold
             return RestService.For<IReverseSearchApiEndPoint>("https://saucenao.com/", new RefitSettings
             {
                 ExceptionFactory = async message => !message.IsSuccessStatusCode ? await MakoNetworkException.FromHttpResponseMessageAsync(message, context.Resolve<MakoClient>().Configuration.Bypass).ConfigureAwait(false) : null
@@ -174,7 +182,7 @@ public partial class MakoClient : ICancellable
     }
 
     /// <summary>
-    /// Cancels this <see cref="MakoClient" />, including all of the running instances, the
+    /// Cancels this <see cref="MakoClient" />, including all the running instances, the
     /// <see cref="Session" /> will be reset to its default value, the <see cref="MakoClient" />
     /// will unable to be used again after calling this method
     /// </summary>
@@ -184,28 +192,46 @@ public partial class MakoClient : ICancellable
         _runningInstances.ForEach(instance => instance.EngineHandle.Cancel());
     }
 
-    // Ensures the current instances hasn't been cancelled
+    /// <summary>
+    /// Ensures the current instances hasn't been cancelled
+    /// </summary>
+    /// <exception cref="OperationCanceledException"></exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void EnsureNotCancelled()
     {
         if (IsCancelled)
         {
-            throw new OperationCanceledException($"MakoClient({Id}) has been cancelled");
+            ThrowUtils.InvalidOperation($"MakoClient({Id}) has been cancelled");
         }
     }
 
-    // Resolves a dependency of type 'TResult'
+    /// <summary>
+    /// Resolves a dependency of type <typeparamref name="TResult"/>
+    /// </summary>
+    /// <typeparam name="TResult"></typeparam>
+    /// <returns></returns>
     internal TResult Resolve<TResult>() where TResult : notnull
     {
         return MakoServices.Resolve<TResult>();
     }
 
-    // Resolves a key-bounded dependency of type 'TResult'
+    /// <summary>
+    /// Resolves a key-bounded dependency of type <typeparamref name="TResult"/>
+    /// </summary>
+    /// <typeparam name="TResult"></typeparam>
+    /// <param name="key"></param>
+    /// <returns></returns>
     internal TResult ResolveKeyed<TResult>(object key) where TResult : notnull
     {
         return MakoServices.ResolveKeyed<TResult>(key);
     }
 
-    // Resolves a dependency of type 'type'
+    /// <summary>
+    /// Resolves a dependency of type 'type'
+    /// </summary>
+    /// <typeparam name="TResult"></typeparam>
+    /// <param name="type"></param>
+    /// <returns></returns>
     internal TResult Resolve<TResult>(Type type) where TResult : notnull
     {
         return (TResult)MakoServices.Resolve(type);
@@ -216,19 +242,30 @@ public partial class MakoClient : ICancellable
         return ResolveKeyed<HttpMessageInvoker>(key);
     }
 
-    // registers an instance to the running instances list
+    /// <summary>
+    /// registers an instance to the running instances list
+    /// </summary>
+    /// <param name="engineHandleSource"></param>
     private void RegisterInstance(IEngineHandleSource engineHandleSource)
     {
         _runningInstances.Add(engineHandleSource);
     }
 
-    // removes an instance from the running instances list
+    /// <summary>
+    /// removes an instance from the running instances list
+    /// </summary>
+    /// <param name="handle"></param>
     private void CancelInstance(EngineHandle handle)
     {
         _ = _runningInstances.RemoveAll(instance => instance.EngineHandle == handle);
     }
 
-    // PrivacyPolicy.Private is only allowed when the uid is pointing to yourself
+    /// <summary>
+    /// <see cref="PrivacyPolicy.Private"/> is only allowed when the uid is pointing to yourself
+    /// </summary>
+    /// <param name="uid"></param>
+    /// <param name="privacyPolicy"></param>
+    /// <returns></returns>
     private bool CheckPrivacyPolicy(long uid, PrivacyPolicy privacyPolicy)
     {
         return !(privacyPolicy == PrivacyPolicy.Private && Session.Id != uid);

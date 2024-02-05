@@ -232,7 +232,7 @@ public partial class IllustratorContentViewerViewModel : ObservableObject
         }
         return;
 
-        static RecommendIllustratorItemViewModel ToRecommendIllustratorProfileViewModel(PixivRelatedRecommendUsersResponse context, PixivRelatedRecommendUsersResponse.RecommendMap recommendUser)
+        static RecommendIllustratorItemViewModel ToRecommendIllustratorProfileViewModel(PixivRelatedRecommendUsersResponse context, RecommendMap recommendUser)
         {
             var users = context.ResponseBody.Users;
             var thumbnails = context.ResponseBody.Thumbnails.Illustrations;

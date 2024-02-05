@@ -26,6 +26,7 @@ using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Pixeval.CoreApi.Global.Exception;
 using Pixeval.CoreApi.Model;
 using Pixeval.CoreApi.Net;
@@ -67,10 +68,9 @@ internal partial class FeedEngine(MakoClient makoClient, EngineHandle? engineHan
 
                         break;
                     case Result<string>.Failure(var exception):
-                        if (exception is { } e)
+                        if (exception is not null)
                         {
-                            PixivFetchEngine.EngineHandle.Complete();
-                            throw e;
+                            MakoClient.Logger.LogError(exception, "");
                         }
 
                         PixivFetchEngine.EngineHandle.Complete();
@@ -298,7 +298,8 @@ internal partial class FeedEngine(MakoClient makoClient, EngineHandle? engineHan
 
         [GeneratedRegex("tt: \"(?<tt>.*)\"")]
         private static partial Regex TtRegex();
-        [GeneratedRegex("pixiv\\.stacc\\.env\\.preload\\.stacc \\= (?<json>.*);")]
+
+        [GeneratedRegex(@"pixiv\.stacc\.env\.preload\.stacc \= (?<json>.*);")]
         private static partial Regex PreloadRegex();
     }
 

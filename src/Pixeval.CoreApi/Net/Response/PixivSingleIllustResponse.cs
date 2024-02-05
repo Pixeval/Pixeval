@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval.CoreApi
+#region Copyright (c) Pixeval/Pixeval.CoreApi
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
@@ -23,8 +23,8 @@ using Pixeval.CoreApi.Model;
 
 namespace Pixeval.CoreApi.Net.Response;
 
-// ReSharper disable once UnusedAutoPropertyAccessor.Global
-internal class PixivSingleIllustResponse
+[Factory]
+internal partial record PixivSingleIllustResponse
 {
     [JsonPropertyName("illust")]
     public required Illustration Illust { get; set; }

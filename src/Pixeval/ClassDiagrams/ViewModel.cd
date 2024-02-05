@@ -3,15 +3,8 @@
   <Class Name="Pixeval.Pages.Download.DownloadListEntryViewModel" Collapsed="true">
     <Position X="8.75" Y="4" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAQEAAAAAAAAAAIAQIAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAQAAAAAgAAAAAgAAAgAAAARAAAABAAgAAAAAAA=</HashCode>
       <FileName>Pages\Download\DownloadListEntryViewModel.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="Pixeval.Controls.IllustrationView.IllustrationItemViewModel" Collapsed="true">
-    <Position X="9" Y="2.75" Width="2.25" />
-    <TypeIdentifier>
-      <HashCode>ACSGAAAAACBAEQAQiAASAACAFIAQA4CAAIAAZBAEEIA=</HashCode>
-      <FileName>Controls\IllustrationView\IllustrationItemViewModel.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Pixeval.Controls.Illustrate.IllustrateViewModel&lt;T&gt;" Collapsed="true">
@@ -35,6 +28,21 @@
       <HashCode>AAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Controls\SpotlightArticleView\SpotlightArticleViewModel.cs</FileName>
     </TypeIdentifier>
+  </Class>
+  <Class Name="Pixeval.Controls.IllustrationItemViewModel" Collapsed="true">
+    <Position X="9" Y="2.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AgEDIFAEAKBAAAgYiMATEIGCGgAUAYAABAQAZBL0EAg=</HashCode>
+      <FileName>Controls\IllustrationItem\IllustrationItemViewModel.Commands.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Pixeval.Pages.Tags.TagsEntryViewModel" Collapsed="true">
+    <Position X="11.75" Y="4" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>CACAAAAAACAAAABAQAAAAAQAAAAAAEAEAAAAQIAAEAA=</HashCode>
+      <FileName>Pages\Tags\TagsEntryViewModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
   </Class>
   <Font Name="Microsoft YaHei UI" Size="9" />
 </ClassDiagram>

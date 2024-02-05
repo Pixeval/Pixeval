@@ -22,51 +22,56 @@ using System.Text.Json.Serialization;
 
 namespace Pixeval.CoreApi.Net.Response;
 
-public class ReverseSearchResponse
+[Factory]
+public partial record ReverseSearchResponse
 {
     [JsonPropertyName("header")]
     public required ReverseSearchResponseHeader Header { get; set; }
 
     [JsonPropertyName("results")]
-    public required Result[] Results { get; set; }
+    public required Result[] Results { get; set; } = [];
+}
 
-    public class ReverseSearchResponseHeader
-    {
-        [JsonPropertyName("status")]
-        public required long Status { get; set; }
-    }
+[Factory]
+public partial record ReverseSearchResponseHeader
+{
+    [JsonPropertyName("status")]
+    public required long Status { get; set; }
+}
 
-    public class Result
-    {
-        [JsonPropertyName("header")]
-        public required ResultHeader Header { get; set; }
+[Factory]
+public partial record Result
+{
+    [JsonPropertyName("header")]
+    public required ResultHeader Header { get; set; }
 
-        [JsonPropertyName("data")]
-        public required Data Data { get; set; }
-    }
+    [JsonPropertyName("data")]
+    public required Data Data { get; set; }
+}
 
-    public class Data
-    {
-        [JsonPropertyName("title")]
-        public required string Title { get; set; }
+[Factory]
+public partial record Data
+{
+    [JsonPropertyName("title")]
+    public required string Title { get; set; } = "";
 
-        [JsonPropertyName("pixiv_id")]
-        public required long PixivId { get; set; }
+    [JsonPropertyName("pixiv_id")]
+    public required long PixivId { get; set; }
 
-        [JsonPropertyName("member_name")]
-        public required string MemberName { get; set; }
+    [JsonPropertyName("member_name")]
+    public required string MemberName { get; set; } = "";
 
-        [JsonPropertyName("member_id")]
-        public required long MemberId { get; set; }
-    }
+    [JsonPropertyName("member_id")]
+    public required long MemberId { get; set; }
+}
 
-    public class ResultHeader
-    {
-        [JsonPropertyName("similarity")]
-        [JsonNumberHandling(JsonNumberHandling.AllowReadingFromString | JsonNumberHandling.WriteAsString)]
-        public required double Similarity { get; set; }
+[Factory]
+public partial record ResultHeader
+{
+    [JsonPropertyName("similarity")]
+    [JsonNumberHandling(JsonNumberHandling.AllowReadingFromString | JsonNumberHandling.WriteAsString)]
+    public required double Similarity { get; set; }
 
-        [JsonPropertyName("index_id")]
-        public required long IndexId { get; set; }
-    }
+    [JsonPropertyName("index_id")]
+    public required long IndexId { get; set; }
 }

@@ -10,11 +10,13 @@
 
     <ItemGroup>
         <PackageReference Include="Autofac" Version="8.0.0" PrivateAssets="True" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.0" />
         <PackageReference Include="Refit" Version="7.0.0" PrivateAssets="True" />
     </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\Pixeval.Utilities\Pixeval.Utilities.csproj" />
+        <ProjectReference Include="..\Pixeval.SourceGen\Pixeval.SourceGen.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="False" />
     </ItemGroup>
 
     <ItemGroup>

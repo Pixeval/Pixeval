@@ -54,7 +54,7 @@ internal class SpotlightArticleEngine(MakoClient makoClient, EngineHandle? engin
 
         protected override IEnumerator<SpotlightArticle>? GetNewEnumerator(PixivSpotlightResponse? rawEntity)
         {
-            return rawEntity?.SpotlightArticles?.GetEnumerator();
+            return (rawEntity?.SpotlightArticles as IEnumerable<SpotlightArticle>)?.GetEnumerator();
         }
     }
 }

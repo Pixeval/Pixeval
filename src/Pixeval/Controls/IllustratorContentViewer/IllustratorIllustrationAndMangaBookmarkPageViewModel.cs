@@ -34,7 +34,7 @@ namespace Pixeval.Controls.IllustratorContentViewer;
 
 public class IllustratorIllustrationAndMangaBookmarkPageViewModel : ObservableObject, IDisposable
 {
-    public static readonly CountedTag EmptyCountedTag = new(new Tag(IllustratorIllustrationAndMangaBookmarkPageResources.EmptyCountedTagName, ""), 0);
+    public static readonly CountedTag EmptyCountedTag = new(new Tag { Name = IllustratorIllustrationAndMangaBookmarkPageResources.EmptyCountedTagName, TranslatedName = "" }, 0);
 
     private readonly CancellationTokenSource _bookmarksIdLoadingCancellationTokenSource = new();
 

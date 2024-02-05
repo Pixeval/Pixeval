@@ -21,6 +21,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Pixeval.CoreApi.Model;
 using Pixeval.CoreApi.Net;
 using Pixeval.CoreApi.Net.Response;
@@ -63,9 +64,9 @@ internal abstract class RecursivePixivAsyncEnumerator<TEntity, TRawEntity, TFetc
                     Update(raw);
                     break;
                 case Result<TRawEntity>.Failure(var exception):
-                    if (exception is { } e)
+                    if (exception is not null)
                     {
-                        throw e;
+                        MakoClient.Logger.LogError(exception, "");
                     }
 
                     PixivFetchEngine.EngineHandle.Complete();
@@ -104,6 +105,7 @@ internal abstract class RecursivePixivAsyncEnumerator<TEntity, TRawEntity, TFetc
     {
         RawEntity = rawEntity;
         CurrentEntityEnumerator = GetNewEnumerator(rawEntity) ?? EmptyEnumerators<TEntity>.Sync;
+        _ = CurrentEntityEnumerator.MoveNext();
         PixivFetchEngine.RequestedPages++;
     }
 }
@@ -128,8 +130,7 @@ internal static class RecursivePixivAsyncEnumerators
 
         protected override IEnumerator<User>? GetNewEnumerator(PixivUserResponse? rawEntity)
         {
-            var tasks = rawEntity?.Users;
-            return tasks?.GetEnumerator();
+            return (rawEntity?.Users as IEnumerable<User>)?.GetEnumerator();
         }
 
         public static User<TFetchEngine> WithInitialUrl(TFetchEngine engine, MakoApiKind kind, Func<TFetchEngine, string> initialUrlFactory)
@@ -167,7 +168,7 @@ internal static class RecursivePixivAsyncEnumerators
 
         protected override IEnumerator<Illustration>? GetNewEnumerator(PixivResponse? rawEntity)
         {
-            return rawEntity?.Illusts?.GetEnumerator();
+            return (rawEntity?.Illusts as IEnumerable<Illustration>)?.GetEnumerator();
         }
 
         public static Illustration<TFetchEngine> WithInitialUrl(TFetchEngine engine, MakoApiKind kind, Func<TFetchEngine, string> initialUrlFactory)
@@ -205,7 +206,7 @@ internal static class RecursivePixivAsyncEnumerators
 
         protected override IEnumerator<Novel>? GetNewEnumerator(PixivNovelResponse? rawEntity)
         {
-            return rawEntity?.Novels?.GetEnumerator();
+            return (rawEntity?.Novels as IEnumerable<Novel>)?.GetEnumerator();
         }
 
         public static Novel<TFetchEngine> WithInitialUrl(TFetchEngine engine, MakoApiKind kind, Func<TFetchEngine, string> initialUrlFactory)
@@ -244,7 +245,7 @@ internal static class RecursivePixivAsyncEnumerators
 
         protected override IEnumerator<Comment>? GetNewEnumerator(IllustrationCommentsResponse? rawEntity)
         {
-            return rawEntity?.Comments?.GetEnumerator();
+            return (rawEntity?.Comments as IEnumerable<Comment>)?.GetEnumerator();
         }
 
         public static Comment<TFetchEngine> WithInitialUrl(TFetchEngine engine, MakoApiKind kind, Func<TFetchEngine, string> initialUrlFactory)

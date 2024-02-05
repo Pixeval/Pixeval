@@ -19,6 +19,7 @@
 #endregion
 
 using System;
+using Pixeval.Utilities;
 
 namespace Pixeval.Util.UI.Animating;
 

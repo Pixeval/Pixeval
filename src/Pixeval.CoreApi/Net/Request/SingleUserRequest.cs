@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval.CoreApi
+#region Copyright (c) Pixeval/Pixeval.CoreApi
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
@@ -22,13 +22,4 @@ using Refit;
 
 namespace Pixeval.CoreApi.Net.Request;
 
-// ReSharper disable MemberCanBePrivate.Global
-// ReSharper disable UnusedAutoPropertyAccessor.Global
-internal class SingleUserRequest(string id, string filter)
-{
-    [AliasAs("user_id")]
-    public string Id { get; } = id;
-
-    [AliasAs("filter")]
-    public string Filter { get; } = filter;
-}
+internal record SingleUserRequest([property: AliasAs("user_id")] string Id, [property: AliasAs("filter")] string Filter);

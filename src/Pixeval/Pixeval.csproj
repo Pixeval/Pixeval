@@ -51,6 +51,7 @@
         </PackageReference>
         <PackageReference Include="LiteDB" Version="5.0.17" />
         <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
         <PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="3.0.0" />
         <PackageReference Include="Microsoft.Playwright" Version="1.41.2" />
         <PackageReference Include="Microsoft.Toolkit.Uwp.Notifications" Version="7.1.3" />

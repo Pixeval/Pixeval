@@ -23,6 +23,7 @@ using System.Threading.Tasks;
 using LiteDB;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Pixeval.AppManagement;
 using Pixeval.Controls;
 using Pixeval.Controls.Windowing;
@@ -31,8 +32,8 @@ using Pixeval.CoreApi.Net;
 using Pixeval.Database.Managers;
 using Pixeval.Download;
 using Pixeval.Download.Models;
+using Pixeval.Logging;
 using Pixeval.Util.IO;
-using Pixeval.Util.Threading;
 using Pixeval.Util.UI;
 using AppContext = Pixeval.AppManagement.AppContext;
 
@@ -77,7 +78,9 @@ public class AppViewModel(App app)
                     .AddSingleton(new LiteDatabase(AppContext.DatabaseFilePath))
                     .AddSingleton(provider => new DownloadHistoryPersistentManager(provider.GetRequiredService<LiteDatabase>(), App.AppViewModel.AppSetting.MaximumDownloadHistoryRecords))
                     .AddSingleton(provider => new SearchHistoryPersistentManager(provider.GetRequiredService<LiteDatabase>(), App.AppViewModel.AppSetting.MaximumSearchHistoryRecords))
-                    .AddSingleton(provider => new BrowseHistoryPersistentManager(provider.GetRequiredService<LiteDatabase>(), App.AppViewModel.AppSetting.MaximumBrowseHistoryRecords)));
+                    .AddSingleton(provider => new BrowseHistoryPersistentManager(provider.GetRequiredService<LiteDatabase>(), App.AppViewModel.AppSetting.MaximumBrowseHistoryRecords))
+                    .AddLogging(t => t.AddDebug().AddFileLogger())
+                );
     }
 
     public async Task ShowExceptionDialogAsync(Exception e)
