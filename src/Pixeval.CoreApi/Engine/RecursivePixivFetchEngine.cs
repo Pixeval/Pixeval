@@ -21,7 +21,6 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
 using Pixeval.CoreApi.Model;
 using Pixeval.CoreApi.Net;
 using Pixeval.CoreApi.Net.Response;
@@ -66,7 +65,7 @@ internal abstract class RecursivePixivAsyncEnumerator<TEntity, TRawEntity, TFetc
                 case Result<TRawEntity>.Failure(var exception):
                     if (exception is not null)
                     {
-                        MakoClient.Logger.LogError(exception, "");
+                        MakoClient.Logger.LogError("", exception);
                     }
 
                     PixivFetchEngine.EngineHandle.Complete();

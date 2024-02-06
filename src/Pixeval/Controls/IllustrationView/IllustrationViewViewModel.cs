@@ -18,9 +18,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.WinUI.Collections;
-using Microsoft.UI.Xaml.Controls;
 using Pixeval.Controls.Illustrate;
 using Pixeval.CoreApi.Model;
 using Pixeval.Util;
@@ -28,14 +25,8 @@ using Pixeval.Utilities;
 
 namespace Pixeval.Controls;
 
-public sealed partial class IllustrationViewViewModel : SortableIllustrateViewViewModel<Illustration, IllustrationItemViewModel>
+public sealed class IllustrationViewViewModel : SortableIllustrateViewViewModel<Illustration, IllustrationItemViewModel>
 {
-    [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(SelectionMode))]
-    private bool _isSelecting;
-
-    public ItemsViewSelectionMode SelectionMode => IsSelecting ? ItemsViewSelectionMode.Multiple : ItemsViewSelectionMode.None;
-
     private IllustrationItemViewModel[] _selectedIllustrations = [];
 
     public IllustrationViewViewModel(IllustrationViewViewModel viewModel)
@@ -52,7 +43,7 @@ public sealed partial class IllustrationViewViewModel : SortableIllustrateViewVi
 
     public override IllustrationViewDataProvider DataProvider { get; }
 
-    public IllustrationItemViewModel[] SelectedIllustrations
+    public override IllustrationItemViewModel[] SelectedIllustrations
     {
         get => _selectedIllustrations;
         set
@@ -73,18 +64,5 @@ public sealed partial class IllustrationViewViewModel : SortableIllustrateViewVi
     {
         DataProvider.FetchEngine?.Cancel();
         DataProvider.Dispose();
-    }
-
-    public override void SetSortDescription(SortDescription description)
-    {
-        if (DataProvider.View.SortDescriptions.Count is 0)
-            DataProvider.View.SortDescriptions.Add(description);
-        else
-            DataProvider.View.SortDescriptions[0] = description;
-    }
-
-    public override void ClearSortDescription()
-    {
-        DataProvider.View.SortDescriptions.Clear();
     }
 }

@@ -23,7 +23,6 @@ using System.Threading.Tasks;
 using LiteDB;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Pixeval.AppManagement;
 using Pixeval.Controls;
 using Pixeval.Controls.Windowing;
@@ -35,6 +34,7 @@ using Pixeval.Download.Models;
 using Pixeval.Logging;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
+using Windows.Storage;
 using AppContext = Pixeval.AppManagement.AppContext;
 
 namespace Pixeval;
@@ -79,7 +79,7 @@ public class AppViewModel(App app)
                     .AddSingleton(provider => new DownloadHistoryPersistentManager(provider.GetRequiredService<LiteDatabase>(), App.AppViewModel.AppSetting.MaximumDownloadHistoryRecords))
                     .AddSingleton(provider => new SearchHistoryPersistentManager(provider.GetRequiredService<LiteDatabase>(), App.AppViewModel.AppSetting.MaximumSearchHistoryRecords))
                     .AddSingleton(provider => new BrowseHistoryPersistentManager(provider.GetRequiredService<LiteDatabase>(), App.AppViewModel.AppSetting.MaximumBrowseHistoryRecords))
-                    .AddLogging(t => t.AddDebug().AddFileLogger())
+                    .AddSingleton(_ => new FileLogger(ApplicationData.Current.LocalFolder.Path + @"\Logs\"))
                 );
     }
 

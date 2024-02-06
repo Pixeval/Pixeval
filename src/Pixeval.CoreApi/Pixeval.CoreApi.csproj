@@ -10,7 +10,6 @@
 
     <ItemGroup>
         <PackageReference Include="Autofac" Version="8.0.0" PrivateAssets="True" />
-        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.0" />
         <PackageReference Include="Refit" Version="7.0.0" PrivateAssets="True" />
     </ItemGroup>
 

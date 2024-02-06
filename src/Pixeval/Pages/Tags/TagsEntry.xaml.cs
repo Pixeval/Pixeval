@@ -4,11 +4,11 @@ using System.IO;
 using Windows.Storage;
 using Windows.System;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Pixeval.Controls;
 using Pixeval.Controls.DialogContent;
+using Pixeval.Logging;
 using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Util.UI;
 using WinUI3Utilities;
@@ -31,10 +31,6 @@ public sealed partial class TagsEntry : IViewModelControl
 
     private void GoToPageItem_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        using var scope = App.AppViewModel.AppServicesScope;
-        var requiredService = scope.ServiceProvider.GetRequiredService<ILogger<object>>();
-        requiredService.LogInformation("fuck!");
-        return;
         var vm = new IllustrationItemViewModel(ViewModel.Illustration!);
         vm.CreateWindowWithPage([vm]);
     }

@@ -19,19 +19,18 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Autofac;
-using Microsoft.Extensions.Logging;
 using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Global.Exception;
 using Pixeval.CoreApi.Net;
 using Pixeval.CoreApi.Net.EndPoints;
 using Pixeval.CoreApi.Preference;
+using Pixeval.Logging;
 using Pixeval.Utilities;
 using Refit;
 
@@ -54,7 +53,7 @@ public partial class MakoClient : ICancellable
     /// <param name="configuration">The <see cref="Configuration" /></param>
     /// <param name="logger"></param>
     /// <param name="sessionUpdater">The updater of <see cref="Preference.Session" /></param>
-    public MakoClient(Session session, MakoClientConfiguration configuration, ILogger<MakoClient> logger, ISessionUpdate? sessionUpdater = null)
+    public MakoClient(Session session, MakoClientConfiguration configuration, FileLogger logger, ISessionUpdate? sessionUpdater = null)
     {
         Logger = logger;
         SessionUpdater = sessionUpdater ?? new RefreshTokenSessionUpdate();
@@ -79,7 +78,7 @@ public partial class MakoClient : ICancellable
     /// <param name="session">The <see cref="Preference.Session" /></param>
     /// <param name="logger"></param>
     /// <param name="sessionUpdater">The updater of <see cref="Preference.Session" /></param>
-    public MakoClient(Session session, ILogger<MakoClient> logger, ISessionUpdate? sessionUpdater = null)
+    public MakoClient(Session session, FileLogger logger, ISessionUpdate? sessionUpdater = null)
     {
         Logger = logger;
         SessionUpdater = sessionUpdater ?? new RefreshTokenSessionUpdate();
@@ -268,7 +267,7 @@ public partial class MakoClient : ICancellable
     /// <returns></returns>
     private bool CheckPrivacyPolicy(long uid, PrivacyPolicy privacyPolicy)
     {
-        return !(privacyPolicy == PrivacyPolicy.Private && Session.Id != uid);
+        return !(privacyPolicy is PrivacyPolicy.Private && Session.Id != uid);
     }
 
     /// <summary>

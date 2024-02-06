@@ -26,7 +26,6 @@ using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
 using Pixeval.CoreApi.Global.Exception;
 using Pixeval.CoreApi.Model;
 using Pixeval.CoreApi.Net;
@@ -70,7 +69,7 @@ internal partial class FeedEngine(MakoClient makoClient, EngineHandle? engineHan
                     case Result<string>.Failure(var exception):
                         if (exception is not null)
                         {
-                            MakoClient.Logger.LogError(exception, "");
+                            MakoClient.Logger.LogError("", exception);
                         }
 
                         PixivFetchEngine.EngineHandle.Complete();

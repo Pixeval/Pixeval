@@ -24,14 +24,20 @@ using System.Threading.Tasks;
 namespace Pixeval.CoreApi.Global.Exception;
 
 public class MakoNetworkException(string url, bool bypass, string? extraMsg, int statusCode)
-    : MakoException($"Network error while requesting URL: {url}:\n {extraMsg}\n Bypassing: {bypass}\n Status code: {statusCode}")
+    : MakoException($"Network error while requesting URL: {url}(Bypassing: {bypass}, Status code: {statusCode}) {extraMsg}")
 {
     public string Url { get; set; } = url;
 
     public bool Bypass { get; set; } = bypass;
+
     public int StatusCode { get; } = statusCode;
 
-    // We use Task<Exception> instead of Task<MakoNetworkException> to compromise with the generic variance
+    /// <summary>
+    /// We use Task&lt;Exception&gt; instead of Task&lt;MakoNetworkException&gt; to compromise with the generic variance
+    /// </summary>
+    /// <param name="message"></param>
+    /// <param name="bypass"></param>
+    /// <returns></returns>
     public static async Task<System.Exception> FromHttpResponseMessageAsync(HttpResponseMessage message, bool bypass)
     {
         return new MakoNetworkException(message.RequestMessage?.RequestUri?.ToString() ?? "", bypass, await message.Content.ReadAsStringAsync().ConfigureAwait(false), (int)message.StatusCode);

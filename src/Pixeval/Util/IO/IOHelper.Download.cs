@@ -98,12 +98,7 @@ public static partial class IoHelper
             if (uri.Scheme is "ms-appx")
             {
                 progress?.Report(100);
-                return uri.AbsolutePath switch
-                {
-                    "/Assets/Images/image-not-available.png" => Result<Stream>.AsSuccess(AppContext.GetNotAvailableImageStream()),
-                    "/Assets/Images/pixiv_no_profile.png" => Result<Stream>.AsSuccess(AppContext.GetPixivNoProfileImageStream()),
-                    _ => Result<Stream>.AsSuccess(File.OpenRead(AppContext.ApplicationUriToPath(uri)))
-                };
+                return Result<Stream>.AsSuccess(File.OpenRead(AppContext.ApplicationUriToPath(uri)));
             }
 
             cancellationHandle?.RegisterPaused(awaiter.Reset);

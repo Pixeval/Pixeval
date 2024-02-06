@@ -23,7 +23,6 @@ using System.Threading.Tasks;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
-using Pixeval.Controls;
 using Pixeval.Options;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;

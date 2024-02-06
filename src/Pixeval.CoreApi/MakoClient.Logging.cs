@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
 using Pixeval.CoreApi.Net.EndPoints;
 using Pixeval.Utilities;
 
@@ -19,7 +18,7 @@ public partial class MakoClient
         }
         catch (Exception e)
         {
-            Logger.LogError(e, "");
+            Logger.LogError("", e);
             return [];
         }
     }
@@ -34,7 +33,7 @@ public partial class MakoClient
         }
         catch (Exception e)
         {
-            Logger.LogError(e, "");
+            Logger.LogError("", e);
             return [];
         }
     }
@@ -49,7 +48,7 @@ public partial class MakoClient
         }
         catch (Exception e)
         {
-            Logger.LogError(e, "");
+            Logger.LogError("", e);
         }
     }
 
@@ -63,7 +62,7 @@ public partial class MakoClient
         }
         catch (Exception e)
         {
-            Logger.LogError(e, "");
+            Logger.LogError("", e);
             return T.CreateDefault();
         }
     }
@@ -78,7 +77,7 @@ public partial class MakoClient
         }
         catch (Exception e)
         {
-            Logger.LogError(e, "");
+            Logger.LogError("", e);
             return T.CreateDefault();
         }
     }
@@ -95,7 +94,7 @@ public partial class MakoClient
                 case Result<T>.Success { Value: var value }:
                     return value;
                 case Result<T>.Failure { Cause: var e }:
-                    Logger.LogError(e, "");
+                    Logger.LogError("", e);
                     return createDefault();
                 default:
                     return ThrowUtils.ArgumentOutOfRange<Result<T>, T>(result);
@@ -103,7 +102,7 @@ public partial class MakoClient
         }
         catch (Exception e)
         {
-            Logger.LogError(e, "");
+            Logger.LogError("", e);
             return createDefault();
         }
     }
@@ -125,7 +124,7 @@ public partial class MakoClient
     //            case Result<T>.Success { Value: var value }:
     //                return value;
     //            case Result<T>.Failure { Cause: var e }:
-    //                Logger.LogError(e, "");
+    //                Logger.LogError("", e);
     //                return defaultValue;
     //            default:
     //                return ThrowUtils.ArgumentOutOfRange<Result<T>, T>(result);
@@ -133,7 +132,7 @@ public partial class MakoClient
     //    }
     //    catch (Exception e)
     //    {
-    //        Logger.LogError(e, "");
+    //        Logger.LogError("", e);
     //        return defaultValue;
     //    }
     //}

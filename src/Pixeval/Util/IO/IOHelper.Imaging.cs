@@ -29,7 +29,6 @@ using Windows.Storage;
 using Windows.Storage.FileProperties;
 using Windows.Storage.Streams;
 using Microsoft.UI.Xaml.Media.Imaging;
-using Pixeval.CoreApi.Model;
 using Pixeval.CoreApi.Net.Response;
 using Pixeval.Options;
 using SixLabors.ImageSharp;
@@ -42,7 +41,6 @@ using SixLabors.ImageSharp.Formats.Tiff;
 using SixLabors.ImageSharp.Formats.Webp;
 using SixLabors.ImageSharp.PixelFormats;
 using WinUI3Utilities;
-using Pixeval.Pages.Tags;
 
 namespace Pixeval.Util.IO;
 

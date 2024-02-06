@@ -101,6 +101,8 @@ public partial class ZoomableImage
                     randomAccessStream.Seek(0);
                     _frames.Add(await CanvasBitmap.LoadAsync(sender, randomAccessStream));
                 }
+            if (_frames.Count is 0)
+                return;
             OriginalImageWidth = _frames[0].Size.Width;
             OriginalImageHeight = _frames[0].Size.Height;
             Mode = InitMode; // 触发OnModeChanged

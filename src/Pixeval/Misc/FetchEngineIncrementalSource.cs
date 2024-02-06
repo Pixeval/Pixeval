@@ -18,9 +18,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.WinUI.Collections;
@@ -49,6 +47,7 @@ public abstract class FetchEngineIncrementalSource<T, TModel>(IAsyncEnumerable<T
             {
                 return result;
             }
+
             if (await _asyncEnumerator.MoveNextAsync())
             {
                 if (_asyncEnumerator.Current is { } obj && !_yieldedItems.Contains(Identifier(obj)))

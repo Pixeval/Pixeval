@@ -30,7 +30,6 @@ using System.Web;
 using Windows.System;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Microsoft.Playwright;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -41,6 +40,7 @@ using Pixeval.CoreApi;
 using Pixeval.CoreApi.Model;
 using Pixeval.CoreApi.Net;
 using Pixeval.CoreApi.Preference;
+using Pixeval.Logging;
 using Pixeval.Misc;
 using Pixeval.Options;
 using Pixeval.Util;
@@ -160,7 +160,7 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject
         AdvancePhase(LoginPhaseEnum.Refreshing);
         if (AppContext.LoadSession() is { } session && CheckRefreshAvailableInternal(session))
         {
-            var logger = App.AppViewModel.AppServicesScope.ServiceProvider.GetRequiredService<ILogger<MakoClient>>();
+            var logger = App.AppViewModel.AppServicesScope.ServiceProvider.GetRequiredService<FileLogger>();
             App.AppViewModel.MakoClient = new MakoClient(session, App.AppViewModel.AppSetting.ToMakoClientConfiguration(), logger,
                 new RefreshTokenSessionUpdate());
             await App.AppViewModel.MakoClient.RefreshSessionAsync();
@@ -310,7 +310,7 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject
                 var cookies = await page.Context.CookiesAsync(["https://pixiv.net"]);
                 var cookie = string.Join(';', cookies.Select(c => $"{c.Name}={c.Value}"));
                 var session = await AuthCodeToSessionAsync(code, verifier, cookie);
-                var logger = App.AppViewModel.AppServicesScope.ServiceProvider.GetRequiredService<ILogger<MakoClient>>();
+                var logger = App.AppViewModel.AppServicesScope.ServiceProvider.GetRequiredService<FileLogger>();
                 App.AppViewModel.MakoClient = new MakoClient(session, App.AppViewModel.AppSetting.ToMakoClientConfiguration(), logger, new RefreshTokenSessionUpdate());
                 await playWrightHelper.DisposeAsync();
                 proxyServer?.Dispose();

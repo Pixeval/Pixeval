@@ -27,7 +27,6 @@ using Pixeval.CoreApi.Model;
 using Pixeval.Messages;
 using Pixeval.Misc;
 using Pixeval.Util;
-using Pixeval.Util.Threading;
 using Pixeval.Utilities;
 
 namespace Pixeval.Controls.IllustratorContentViewer;

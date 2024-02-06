@@ -21,9 +21,9 @@
 using System;
 using System.Collections.Generic;
 using Autofac;
-using Microsoft.Extensions.Logging;
 using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Preference;
+using Pixeval.Logging;
 
 namespace Pixeval.CoreApi;
 
@@ -42,7 +42,7 @@ public partial class MakoClient
 
     internal ISessionUpdate SessionUpdater { get; }
 
-    public ILogger<MakoClient> Logger { get; }
+    public FileLogger Logger { get; }
 
     /// <summary>
     /// The IoC container
