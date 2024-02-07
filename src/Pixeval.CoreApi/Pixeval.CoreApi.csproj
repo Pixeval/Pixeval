@@ -28,5 +28,8 @@
         <Compile Update="MakoClient.Properties.cs">
             <DependentUpon>MakoClient.cs</DependentUpon>
         </Compile>
+        <Compile Update="MakoClient.Logging.cs">
+            <DependentUpon>MakoClient.cs</DependentUpon>
+        </Compile>
     </ItemGroup>
 </Project>

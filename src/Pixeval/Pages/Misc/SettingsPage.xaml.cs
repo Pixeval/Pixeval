@@ -52,14 +52,11 @@ public sealed partial class SettingsPage
     private string _previousPath = "";
     private SettingsPageViewModel _viewModel = null!;
 
-    public SettingsPage()
-    {
-        InitializeComponent();
-    }
+    public SettingsPage() => InitializeComponent();
 
     public override void OnPageActivated(NavigationEventArgs e, object? parameter)
     {
-        _viewModel = new SettingsPageViewModel(App.AppViewModel.AppSetting, Window);
+        _viewModel = new SettingsPageViewModel(App.AppViewModel.AppSetting, Window.Content.To<FrameworkElement>());
         _previousPath = _viewModel.DefaultDownloadPathMacro;
     }
 
@@ -68,11 +65,6 @@ public sealed partial class SettingsPage
         Bindings.StopTracking();
         AppContext.SaveConfig(App.AppViewModel.AppSetting);
         _viewModel = null!;
-    }
-
-    private void SettingsPage_OnLoaded(object sender, RoutedEventArgs e)
-    {
-        CheckForUpdatesEntry.Header = GitVersionInformation.SemVer;
     }
 
     private void Theme_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -104,13 +96,9 @@ public sealed partial class SettingsPage
         }
     }
 
-    private async void CheckForUpdateButton_OnTapped(object sender, TappedRoutedEventArgs e)
+    private void CheckForUpdateButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        _viewModel.LastCheckedUpdate = DateTimeOffset.Now;
-        CheckingForUpdatePanel.Show();
-        // TODO add update check
-        await Task.Delay(2000);
-        CheckingForUpdatePanel.Collapse();
+        _viewModel.CheckForUpdate();
     }
 
     private async void FeedbackByEmailHyperlinkButton_OnTapped(object sender, TappedRoutedEventArgs e)

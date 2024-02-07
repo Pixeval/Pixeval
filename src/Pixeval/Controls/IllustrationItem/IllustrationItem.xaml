@@ -9,7 +9,6 @@
     xmlns:labs="using:CommunityToolkit.Labs.WinUI"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:media="using:Microsoft.Xaml.Interactions.Media"
-    xmlns:triggers="using:Pixeval.Util.Triggers"
     x:Name="IllustrationThumbnailCard"
     Padding="0"
     CornerRadius="{ThemeResource ControlCornerRadius}"
@@ -85,9 +84,9 @@
         <core:EventTriggerBehavior EventName="PointerEntered">
             <media:ControlStoryboardAction Storyboard="{StaticResource ThumbnailScaleOutStoryboard}" />
         </core:EventTriggerBehavior>
-        <triggers:EventWithConditionTriggerBehavior EventName="PointerExited">
+        <core:EventTriggerBehavior EventName="PointerExited">
             <media:ControlStoryboardAction Storyboard="{StaticResource ThumbnailScaleInStoryboard}" />
-        </triggers:EventWithConditionTriggerBehavior>
+        </core:EventTriggerBehavior>
     </interactivity:Interaction.Behaviors>
     <!--  PlaceHolderGrid  -->
     <Grid Width="{x:Bind GetDesiredWidth(ViewModel), Mode=OneWay}" Height="{x:Bind DesiredHeight}" />

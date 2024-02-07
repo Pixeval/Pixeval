@@ -131,17 +131,17 @@ public class FileCache
     /// <param name="eTag">Optional eTag information</param>
     public Task AddAsync(object key, object data, TimeSpan expireIn, string? eTag = null)
     {
-        Guard.IsNotNull(key, nameof(key));
-        Guard.IsNotNullOrEmpty(key as string, nameof(key));
-        Guard.IsNotNull(data, nameof(data));
+        Guard.IsNotNull(key);
+        Guard.IsNotNullOrEmpty(key as string);
+        Guard.IsNotNull(data);
 
-        return AddAsync(key switch
+        return key switch
         {
-            Guid g => g,
-            string s => Guid.Parse(s),
-            _ when _supportedKeyTypes.Contains(key.GetType()) => HashToGuid(key),
-            _ => ThrowHelper.ArgumentOutOfRange<object, object>(key)
-        }, data, expireIn, eTag);
+            Guid g => AddAsync(g, data, expireIn, eTag),
+            string s => AddAsync(Guid.Parse(s), data, expireIn, eTag),
+            _ when _supportedKeyTypes.Contains(key.GetType()) => AddAsync(HashToGuid(key), data, expireIn, eTag),
+            _ => ThrowHelper.ArgumentOutOfRange<object, Task>(key)
+        };
     }
 
     public async Task<bool> TryAddAsync(string key, object data, TimeSpan expireIn, string? eTag = null)
@@ -164,8 +164,8 @@ public class FileCache
     /// <param name="eTag">Optional eTag information</param>
     public Task AddAsync(string key, object data, TimeSpan expireIn, string? eTag = null)
     {
-        Guard.IsNotNull(key, nameof(key));
-        Guard.IsNotNull(data, nameof(data));
+        Guard.IsNotNull(key);
+        Guard.IsNotNull(data);
 
         return AddAsync(HashToGuid(key), data, expireIn, eTag);
     }
@@ -177,7 +177,7 @@ public class FileCache
     /// <param name="keys">keys to empty</param>
     public Task EmptyAsync(params object[] keys)
     {
-        Guard.IsNotNull(keys, nameof(keys));
+        Guard.IsNotNull(keys);
 
         var arrElementType = keys.GetType().GetElementType();
         return keys switch
@@ -298,7 +298,7 @@ public class FileCache
     /// <returns>If the key exists</returns>
     public Task<bool> ExistsAsync(string key)
     {
-        Guard.IsNotNull(key, nameof(key));
+        Guard.IsNotNull(key);
         return ExistsAsync(HashToGuid(key));
     }
 
@@ -356,7 +356,7 @@ public class FileCache
 
     public Task<T> GetAsync<T>(object key)
     {
-        Guard.IsNotNull(key, nameof(key));
+        Guard.IsNotNull(key);
 
         return key switch
         {
@@ -415,7 +415,7 @@ public class FileCache
 
     public Task<DateTimeOffset?> GetExpirationAsync(object key)
     {
-        Guard.IsNotNull(key, nameof(key));
+        Guard.IsNotNull(key);
 
         return key switch
         {
@@ -433,7 +433,7 @@ public class FileCache
     /// <returns>The expiration date if the key is found, else null</returns>
     public Task<DateTimeOffset?> GetExpirationAsync(string key)
     {
-        Guard.IsNotNullOrWhiteSpace(key, nameof(key));
+        Guard.IsNotNullOrWhiteSpace(key);
         return GetExpirationAsync(Guid.Parse(key));
     }
 
@@ -463,7 +463,7 @@ public class FileCache
     /// <returns>The ETag if the key is found, else null</returns>
     public Task<string?> GetETag(object key)
     {
-        Guard.IsNotNull(key, nameof(key));
+        Guard.IsNotNull(key);
 
         return key switch
         {
@@ -481,7 +481,7 @@ public class FileCache
     /// <returns>The ETag if the key is found, else null</returns>
     public Task<string?> GetETagAsync(string key)
     {
-        Guard.IsNotNullOrWhiteSpace(key, nameof(key));
+        Guard.IsNotNullOrWhiteSpace(key);
         return GetETagAsync(HashToGuid(key));
     }
 
@@ -585,8 +585,8 @@ public class FileCache
 
     private static Guid HashToGuid(object input)
     {
-        Guard.IsNotNull(input, nameof(input));
-        Guard.IsNotOfType<Guid>(input, nameof(input));
+        Guard.IsNotNull(input);
+        Guard.IsNotOfType<Guid>(input);
 
         return input switch
         {

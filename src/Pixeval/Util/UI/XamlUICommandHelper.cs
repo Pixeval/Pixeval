@@ -27,63 +27,31 @@ namespace Pixeval.Util.UI;
 
 public static class XamlUiCommandHelper
 {
-    public static XamlUICommand GetCommand(this string label, FontIconSymbols icon)
-    {
-        return new XamlUICommand
-        {
-            Label = label,
-            Description = label,
-            IconSource = icon.GetFontIconSource()
-        };
-    }
+    public static XamlUICommand GetCommand(this string label, FontIconSymbols icon) =>
+        GetCommand(label, icon.GetFontIconSource());
 
-    public static XamlUICommand GetCommand(this string label, FontIconSymbols icon, VirtualKey key)
-    {
-        return new XamlUICommand
-        {
-            Label = label,
-            IconSource = icon.GetFontIconSource(),
-            KeyboardAccelerators = { new KeyboardAccelerator { Key = key } }
-        };
-    }
+    public static XamlUICommand GetCommand(this string label, FontIconSymbols icon, VirtualKey key) =>
+        GetCommand(label, icon.GetFontIconSource(), key);
 
-    public static XamlUICommand GetCommand(this string label, FontIconSymbols icon, VirtualKeyModifiers modifiers, VirtualKey key)
-    {
-        return new XamlUICommand
-        {
-            Label = label,
-            IconSource = icon.GetFontIconSource(),
-            KeyboardAccelerators = { new KeyboardAccelerator { Modifiers = modifiers, Key = key } }
-        };
-    }
+    public static XamlUICommand GetCommand(this string label, FontIconSymbols icon, VirtualKeyModifiers modifiers, VirtualKey key) =>
+        GetCommand(label, icon.GetFontIconSource(), modifiers, key);
 
-    public static XamlUICommand GetCommand(this string label, IconSource icon)
-    {
-        return new XamlUICommand
+    public static XamlUICommand GetCommand(this string label, IconSource icon) =>
+        new()
         {
             Label = label,
             Description = label,
             IconSource = icon
         };
-    }
 
-    public static XamlUICommand GetCommand(this string label, IconSource icon, VirtualKey key)
-    {
-        return new XamlUICommand
-        {
-            Label = label,
-            IconSource = icon,
-            KeyboardAccelerators = { new KeyboardAccelerator { Key = key } }
-        };
-    }
+    public static XamlUICommand GetCommand(this string label, IconSource icon, VirtualKey key) =>
+        GetCommand(label, icon, VirtualKeyModifiers.None, key);
 
-    public static XamlUICommand GetCommand(this string label, IconSource icon, VirtualKeyModifiers modifiers, VirtualKey key)
-    {
-        return new XamlUICommand
+    public static XamlUICommand GetCommand(this string label, IconSource icon, VirtualKeyModifiers modifiers, VirtualKey key) =>
+        new()
         {
             Label = label,
             IconSource = icon,
             KeyboardAccelerators = { new KeyboardAccelerator { Modifiers = modifiers, Key = key } }
         };
-    }
 }

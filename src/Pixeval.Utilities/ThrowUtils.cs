@@ -51,8 +51,15 @@ public static class ThrowUtils
         throw new InvalidOperationException(message);
     }
 
+    /// <exception cref="ArgumentOutOfRangeException"></exception>
     [DoesNotReturn]
     [MethodImpl(MethodImplOptions.NoInlining)]
     public static TReturn ArgumentOutOfRange<T, TReturn>(T? actualValue, string? message = null, [CallerArgumentExpression(nameof(actualValue))] string? paraName = null)
         => throw new ArgumentOutOfRangeException(paraName, actualValue, message);
+
+    /// <exception cref="FormatException"></exception>
+    [DoesNotReturn]
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static TReturn Format<TReturn>(string? message = null)
+        => throw new FormatException(message);
 }

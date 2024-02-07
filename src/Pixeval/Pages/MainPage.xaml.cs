@@ -21,6 +21,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Runtime;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
@@ -54,6 +55,7 @@ using Pixeval.Utilities;
 using WinUI3Utilities;
 using Image = SixLabors.ImageSharp.Image;
 using CommunityToolkit.WinUI.Controls;
+using AppContext = Pixeval.AppManagement.AppContext;
 
 namespace Pixeval.Pages;
 
@@ -80,7 +82,7 @@ public sealed partial class MainPage : SupportCustomTitleBarDragRegionPage
         sender.SetRegionRects(NonClientRegionKind.Passthrough, [GetScaledRect(TitleBarControlGrid), GetScaledRect(leftIndent)]);
     }
 
-    public override void OnPageActivated(NavigationEventArgs e, object? parameter)
+    public override async void OnPageActivated(NavigationEventArgs e, object? parameter)
     {
         App.AppViewModel.AppLoggedIn();
 
@@ -104,19 +106,16 @@ public sealed partial class MainPage : SupportCustomTitleBarDragRegionPage
             NavigationView.SelectedItem = null;
             _ = MainPageRootFrame.Navigate(typeof(SearchResultsPage), message.Parameter);
         });
-
-        // TODO: Scroll the content to the item that were being browsed just now
-        //if (_illustrationViewerContent is not null && MainPageRootFrame.FindDescendant<ItemsRepeater>() is { } gridView)
-        //{
-        //    gridView.ScrollIntoView(_illustrationViewerContent);
-        //    _illustrationViewerContent = null;
-        //}
+        using var client = new HttpClient();
+        _ = await AppContext.AppVersion.CheckForUpdateAsync(client);
+        if (AppContext.AppVersion.UpdateAvailable) 
+            InfoBadge.Visibility = Visibility.Visible;
     }
 
     private void NavigationView_OnSelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
     {
         // The App.AppViewModel.IllustrationDownloadManager will be initialized after that of MainPage object
-        // so we cannot put a navigation tag inside MainPage and treat it as a field, since it will be initialized immediately after
+        // so, we cannot put a navigation tag inside MainPage and treat it as a field, since it will be initialized immediately after
         // the creation of the object while the App.AppViewModel.IllustrationDownloadManager is still null which
         // will lead the program into NullReferenceException on the access of QueuedTasks.
 

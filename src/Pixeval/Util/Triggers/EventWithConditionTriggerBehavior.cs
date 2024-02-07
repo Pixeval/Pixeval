@@ -188,7 +188,7 @@ public partial class EventWithConditionTriggerBehavior : Trigger
         var parent = element.Parent;
 
         // If the element is the child of a ControlTemplate it will have a null parent even when it is loaded.
-        // To catch that scenario, also check it's parent in the visual tree.
+        // To catch that scenario, also check its parent in the visual tree.
         parent ??= VisualTreeHelper.GetParent(element);
 
         return (parent is not null || (rootVisual is not null && element == rootVisual));

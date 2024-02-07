@@ -19,6 +19,8 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Windows.System;
 using Microsoft.UI.Xaml;
@@ -49,4 +51,32 @@ public sealed partial class AboutPage
     {
         _ = await Launcher.LaunchUriAsync(new Uri(sender.GetTag<string>()));
     }
+
+    private readonly string[] _dependencies =
+    [
+        "CommunityToolkit",
+        "praeclarum/sqlite-net",
+        // "mysticmind/reversemarkdown-net",
+        // "GitTools/GitVersion",
+        // "dotMorten/WinUIEx",
+        "dotnet/runtime/tree/main/src/libraries/Microsoft.Extensions.Hosting",
+        "codebude/QRCoder",
+        "microsoft/Microsoft.IO.RecyclableMemoryStream",
+        "microsoft/playwright-dotnet",
+        "autofac/Autofac",
+        "microsoft/Win2D",
+        "Sergio0694/PolySharp",
+        "SixLabors/ImageSharp",
+        "reactiveui/refit"
+    ];
+
+    private IEnumerable<DependenciesViewModel> DependencyViewModels =>
+        _dependencies.Select(t =>
+        {
+            var segments = t.Split('/');
+            return new DependenciesViewModel(segments[^1], "by " + segments[0], "https://github.com/" + t);
+        });
+
 }
+
+public record DependenciesViewModel(string Name, string Author, string Url);

@@ -30,7 +30,9 @@ namespace Pixeval.Controls;
 public sealed partial class AdvancedItemsView : ItemsView
 {
     public event Func<AdvancedItemsView, EventArgs, Task> LoadMoreRequested;
-    // TODO: 调用此事件时可能需要防抖
+    /// <summary>
+    /// 调用此事件时可能需要防抖
+    /// </summary>
     public event Action<AdvancedItemsView, ItemContainer>? ElementPrepared;
     public event Action<AdvancedItemsView, ItemContainer>? ElementClearing;
 

@@ -61,7 +61,7 @@ public sealed partial class IllustrationInfoPage
         if (_viewModel.Illustrator is { } userInfo)
         {
             // _ = ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", (UIElement)sender);
-            // todo IllustratorPage use Navigate
+            // TODO 弹出用户页窗口
             // CurrentContext.Window.Content.To<Frame>().Navigate(typeof(IllustratorPage), Tuple.Create((UIElement)sender, new IllustratorViewModel(userInfo)), new SlideNavigationTransitionInfo
             // {
             //     Effect = SlideNavigationTransitionEffect.FromRight

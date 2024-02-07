@@ -38,10 +38,7 @@ namespace Pixeval.AppManagement;
 [GenerateConstructor, SettingPoco]
 public partial record AppSetting : IWindowSettings
 {
-    public AppSetting()
-    {
-        DefaultValueAttributeHelper.Initialize(this);
-    }
+    public AppSetting() => DefaultValueAttributeHelper.Initialize(this);
 
     /// <summary>
     /// Indicates whether the restricted content are permitted to be included
@@ -172,7 +169,7 @@ public partial record AppSetting : IWindowSettings
     [SettingMetadata(SettingEntryCategory.Version, typeof(SettingsPageResources), nameof(SettingsPageResources.DownloadUpdateAutomaticallyEntryHeader))]
     public bool DownloadUpdateAutomatically { get; set; }
 
-    [DefaultValue("Microsoft YaHei")]
+    [DefaultValue("微软雅黑")]
     [SettingMetadata(SettingEntryCategory.Application, typeof(SettingsPageResources), nameof(SettingsPageResources.AppFontFamilyEntryHeader))]
     public string AppFontFamilyName { get; set; } = "";
 

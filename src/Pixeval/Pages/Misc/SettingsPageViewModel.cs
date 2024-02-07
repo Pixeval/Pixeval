@@ -20,18 +20,23 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing.Text;
 using System.Globalization;
+using System.IO.Compression;
+using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Reflection;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
 using Pixeval.AppManagement;
 using Pixeval.Attributes;
 using Pixeval.Controls;
 using Pixeval.Controls.TokenInput;
-using Pixeval.Controls.Windowing;
 using Pixeval.Database.Managers;
 using Pixeval.Download;
 using Pixeval.Download.MacroParser;
@@ -39,22 +44,123 @@ using Pixeval.Download.Models;
 using Pixeval.Misc;
 using Pixeval.Options;
 using Pixeval.Util;
+using Pixeval.Util.ComponentModels;
+using Pixeval.Util.IO;
+using Pixeval.Util.UI;
+using Pixeval.Utilities;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
+using AppContext = Pixeval.AppManagement.AppContext;
 
 namespace Pixeval.Pages.Misc;
 
 [SettingsViewModel<AppSetting>(nameof(_appSetting))]
-public partial class SettingsPageViewModel(AppSetting appSetting, EnhancedWindow window) : ObservableObject
+public partial class SettingsPageViewModel(AppSetting appSetting, FrameworkElement frameworkElement) : UiObservableObject(frameworkElement)
 {
-    public static readonly IEnumerable<string> AvailableFonts = new InstalledFontCollection().Families.Select(f => f.Name);
+    public static IEnumerable<FontFamily> AvailableFonts { get; }
 
-    public static readonly ICollection<Token> AvailableIllustMacros;
+    public static ICollection<Token> AvailableIllustMacros { get; }
+
+    public static IEnumerable<CultureInfo> AvailableCultures { get; }
 
     private readonly AppSetting _appSetting = appSetting;
 
+    [ObservableProperty] private bool _checkingUpdate;
+
+    [ObservableProperty] private bool _downloadingUpdate;
+
+    [ObservableProperty] private double _downloadingUpdateProgress;
+
+    [ObservableProperty] private string _updateMessage = "";
+
+    public string UpdateInfo => AppContext.AppVersion.UpdateState switch
+    {
+        UpdateState.MajorUpdate => SettingsPageResources.MajorUpdateAvailable.Format(AppContext.AppVersion.NewestVersion),
+        UpdateState.MinorUpdate => SettingsPageResources.MinorUpdateAvailable.Format(AppContext.AppVersion.NewestVersion),
+        UpdateState.PatchUpdate or UpdateState.SpecifierUpdate => SettingsPageResources.PatchUpdateAvailable.Format(AppContext.AppVersion.NewestVersion),
+        UpdateState.Insider => SettingsPageResources.IsInsider,
+        UpdateState.UpToDate => SettingsPageResources.IsUpToDate,
+        _ => SettingsPageResources.UnknownUpdateState
+    };
+
+    public InfoBarSeverity UpdateInfoSeverity => AppContext.AppVersion.UpdateState switch
+    {
+        UpdateState.MajorUpdate or UpdateState.MinorUpdate => InfoBarSeverity.Warning,
+        UpdateState.UpToDate => InfoBarSeverity.Success,
+        _ => InfoBarSeverity.Informational
+    };
+
+    public async void CheckForUpdate()
+    {
+        if (CheckingUpdate)
+            return;
+        try
+        {
+            CheckingUpdate = true;
+            UpdateMessage = SettingsPageResources.CheckingForUpdate;
+            using var client = new HttpClient();
+            var appReleaseModel = await AppContext.AppVersion.CheckForUpdateAsync(client);
+            OnPropertyChanged(nameof(UpdateInfo));
+            OnPropertyChanged(nameof(UpdateInfoSeverity));
+            OnPropertyChanged(nameof(LastCheckedUpdate));
+            if (AppContext.AppVersion.UpdateAvailable)
+            {
+                DownloadingUpdate = true;
+                UpdateMessage = SettingsPageResources.DownloadingUpdate;
+                var result = await client.DownloadStreamAsync(appReleaseModel!.ReleaseUri, new Progress<double>(progress => DownloadingUpdateProgress = progress));
+                // ReSharper disable once DisposeOnUsingVariable
+                client.Dispose();
+
+                DownloadingUpdate = false;
+
+                if (result is Result<Stream>.Success { Value: var value })
+                {
+                    UpdateMessage = SettingsPageResources.Unzipping;
+                    using var archive = new ZipArchive(value, ZipArchiveMode.Read);
+                    var destUrl = null as string;
+                    foreach (var entry in archive.Entries)
+                    {
+                        var path = AppKnownFolders.Local.Self.Path + entry.FullName.Replace('/', '\\');
+                        if (entry.FullName.EndsWith('/'))
+                            continue;
+
+                        if (entry.FullName.EndsWith("Install.ps1"))
+                            destUrl = path;
+                        IoHelper.CreateParentDirectories(path);
+                        await using var stream = entry.Open();
+                        await using var fileStream = File.OpenWrite(path);
+                        await stream.CopyToAsync(fileStream);
+                    }
+
+                    if (destUrl is not null
+                        && await FrameworkElement.CreateOkCancelAsync(SettingsPageResources.UpdateApp,
+                            SettingsPageResources.DownloadedAndWaitingToInstall) is ContentDialogResult.Primary)
+                    {
+                        var process = new Process
+                        {
+                            StartInfo = new ProcessStartInfo("powershell", $"-noexit \"&'{destUrl}'\"")
+                            {
+                                UseShellExecute = false,
+                                Verb = "runas"
+                            }
+                        };
+                        _ = process.Start();
+                        await process.WaitForExitAsync();
+                    }
+                }
+            }
+        }
+        finally
+        {
+            CheckingUpdate = false;
+        }
+    }
+
     static SettingsPageViewModel()
     {
+        AvailableCultures = [CultureInfo.GetCultureInfo("zh-cn")];
+        using var collection = new InstalledFontCollection();
+        AvailableFonts = collection.Families.Select(t => new FontFamily(t.Name));
         using var scope = App.AppViewModel.AppServicesScope;
         var factory = scope.ServiceProvider.GetRequiredService<IDownloadTaskFactory<IllustrationItemViewModel, IllustrationDownloadTask>>();
         AvailableIllustMacros = factory.PathParser.MacroProvider.AvailableMacros
@@ -103,7 +209,7 @@ public partial class SettingsPageViewModel(AppSetting appSetting, EnhancedWindow
 
     public string GetLastUpdateCheckDisplayString(DateTimeOffset lastChecked)
     {
-        return $"{SettingsPageResources.LastCheckedPrefix}{lastChecked.ToString(CultureInfo.CurrentUICulture)}";
+        return SettingsPageResources.LastCheckedPrefix + lastChecked.ToString(CultureInfo.CurrentUICulture);
     }
 
     public void ResetDefault()
@@ -117,6 +223,6 @@ public partial class SettingsPageViewModel(AppSetting appSetting, EnhancedWindow
     public void ClearData<T, TModel>(ClearDataKind kind, IPersistentManager<T, TModel> manager) where T : new()
     {
         manager.Clear();
-        window.Content.To<FrameworkElement>().ShowTeachingTipAndHide(kind.GetLocalizedResourceContent()!);
+        FrameworkElement.ShowTeachingTipAndHide(kind.GetLocalizedResourceContent()!);
     }
 }
