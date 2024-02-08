@@ -20,7 +20,9 @@
         </Grid.RowDefinitions>
         <Grid
             Grid.Row="0"
+            Margin="10,0,0,0"
             HorizontalAlignment="Stretch"
+            ColumnSpacing="10"
             Visibility="{x:Bind ShowCommandBar, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />

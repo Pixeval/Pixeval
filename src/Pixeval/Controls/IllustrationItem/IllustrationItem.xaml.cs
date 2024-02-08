@@ -78,7 +78,7 @@ public sealed partial class IllustrationItem : IViewModelControl
         };
     }
 
-    private Visibility IsImageLoaded(SoftwareBitmapSource? source) => source is null ? Visibility.Collapsed : Visibility.Visible;
+    private Visibility IsImageNotLoaded(SoftwareBitmapSource? source) => source is null ? Visibility.Visible : Visibility.Collapsed;
 
     #endregion
 }

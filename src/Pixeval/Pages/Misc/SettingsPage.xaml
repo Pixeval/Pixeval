@@ -28,6 +28,12 @@
                 <Setter Property="Margin" Value="1,28,0,4" />
             </Style.Setters>
         </Style>
+        <Style
+            x:Key="SettingsNumberBoxStyle"
+            BasedOn="{StaticResource SettingsNumberBoxStyle}"
+            TargetType="NumberBox">
+            <Setter Property="Width" Value="200" />
+        </Style>
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
         <converters:BoolNegationConverter x:Key="BoolNegationConverter" />
         <converters1:StringToFontFamilyConverter x:Key="StringToFontFamilyConverter" />

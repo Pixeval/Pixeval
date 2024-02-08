@@ -7,7 +7,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:markup="using:Pixeval.Controls.MarkupExtensions"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:misc="using:Pixeval.Pages.Misc"
+    xmlns:misc="using:Pixeval.Misc"
     Loaded="AboutPage_OnLoaded"
     mc:Ignorable="d">
 

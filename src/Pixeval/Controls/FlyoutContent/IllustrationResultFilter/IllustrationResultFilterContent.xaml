@@ -19,7 +19,7 @@
                     x:Uid="/IllustrationResultFilterContent/LeastBookmarkCountNumberBox"
                     Maximum="{x:Bind x:Int32.MaxValue}"
                     Minimum="0"
-                    Style="{StaticResource SettingsNumberBoxStyle}"
+                    Style="{StaticResource PixevalNumberBoxStyle}"
                     Value="{x:Bind ViewModel.LeastBookmark, Mode=TwoWay}" />
             </flyouts:IllustrationResultFilterFunctionEntry>
 
@@ -28,7 +28,7 @@
                     x:Uid="/IllustrationResultFilterContent/MaximumBookmarkCountNumberBox"
                     Maximum="{x:Bind x:Int32.MaxValue}"
                     Minimum="0"
-                    Style="{StaticResource SettingsNumberBoxStyle}"
+                    Style="{StaticResource PixevalNumberBoxStyle}"
                     Value="{x:Bind ViewModel.MaximumBookmark, Mode=TwoWay}" />
             </flyouts:IllustrationResultFilterFunctionEntry>
 
@@ -58,7 +58,7 @@
                     x:Uid="/IllustrationResultFilterContent/IllustratorIdInput"
                     Minimum="0"
                     SpinButtonPlacementMode="Hidden"
-                    Style="{StaticResource SettingsNumberBoxStyle}"
+                    Style="{StaticResource PixevalNumberBoxStyle}"
                     Value="{x:Bind ViewModel.IllustratorId, Converter={StaticResource LongToDoubleConverter}, Mode=TwoWay}" />
             </flyouts:IllustrationResultFilterFunctionEntry>
 
@@ -68,7 +68,7 @@
                     x:Uid="/IllustrationResultFilterContent/IllustrationIdInput"
                     Minimum="0"
                     SpinButtonPlacementMode="Hidden"
-                    Style="{StaticResource SettingsNumberBoxStyle}"
+                    Style="{StaticResource PixevalNumberBoxStyle}"
                     Value="{x:Bind ViewModel.IllustrationId, Converter={StaticResource LongToDoubleConverter}, Mode=TwoWay}" />
             </flyouts:IllustrationResultFilterFunctionEntry>
 

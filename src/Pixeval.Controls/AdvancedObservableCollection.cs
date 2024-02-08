@@ -33,6 +33,7 @@ using Windows.Foundation;
 using CommunityToolkit.WinUI.Collections;
 using CommunityToolkit.WinUI.Helpers;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace Pixeval.Collections;
 
@@ -156,7 +157,7 @@ public class AdvancedObservableCollection<T> : IList<T>, IList, INotifyCollectio
     #endregion
 
     /// <inheritdoc cref="ISupportIncrementalLoading.LoadMoreItemsAsync"/>
-    public IAsyncOperation<LoadMoreItemsResult>? LoadMoreItemsAsync(uint count) => (_source as ISupportIncrementalLoading)?.LoadMoreItemsAsync(count);
+    public IAsyncOperation<LoadMoreItemsResult> LoadMoreItemsAsync(uint count) => (_source as ISupportIncrementalLoading)?.LoadMoreItemsAsync(count) ?? Task.FromResult(new LoadMoreItemsResult()).AsAsyncOperation();
 
     /// <inheritdoc cref="ISupportIncrementalLoading.HasMoreItems"/>
     public bool HasMoreItems => (_source as ISupportIncrementalLoading)?.HasMoreItems ?? false;

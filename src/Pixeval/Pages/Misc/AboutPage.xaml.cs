@@ -27,6 +27,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
 using WinUI3Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
+using Pixeval.Misc;
 
 namespace Pixeval.Pages.Misc;
 
@@ -78,5 +79,3 @@ public sealed partial class AboutPage
         });
 
 }
-
-public record DependenciesViewModel(string Name, string Author, string Url);

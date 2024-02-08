@@ -41,7 +41,7 @@
         <Setter Property="FontWeight" Value="SemiBold" />
         <Setter Property="FontSize" Value="{StaticResource PixevalSubscriptFontSize}" />
     </Style>
-    <Style x:Key="SettingsNumberBoxStyle" TargetType="NumberBox">
+    <Style x:Key="PixevalNumberBoxStyle" TargetType="NumberBox">
         <Setter Property="IsWrapEnabled" Value="True" />
         <Setter Property="LargeChange" Value="10" />
         <Setter Property="NumberFormatter" Value="{StaticResource IntegerRoundedDecimalFormatter}" />

@@ -22,9 +22,7 @@
                     <ComboBoxItem x:Uid="/RecentPostsPage/PrivacyPolicyComboBoxPrivateComboBoxItem" Tag="{x:Bind enum:PrivacyPolicy.Private}" />
                 </controls:NotifyOnLoadedComboBox.Items>
             </controls:NotifyOnLoadedComboBox>
-            <Grid Margin="10,0,0,0">
-                <controls:SortOptionComboBox x:Name="SortOptionComboBox" SelectionChangedWhenLoaded="SortOptionComboBox_OnSelectionChanged" />
-            </Grid>
+            <controls:SortOptionComboBox x:Name="SortOptionComboBox" SelectionChangedWhenLoaded="SortOptionComboBox_OnSelectionChanged" />
         </controls:IllustrationContainer.CommandBarElements>
     </controls:IllustrationContainer>
 </controls:EnhancedPage>

@@ -57,6 +57,7 @@
                 <NavigationViewItem
                     x:Uid="/IllustratorContentViewer/NovelNavigationViewItem"
                     Icon="{markup:FontSymbolIcon Glyph=ReadingModeE736}"
+                    IsEnabled="False"
                     Tag="{x:Bind ViewModel.NovelTag, Mode=OneWay}" />
                 <NavigationViewItemSeparator />
                 <NavigationViewItem
@@ -66,15 +67,18 @@
                 <NavigationViewItem
                     x:Uid="/IllustratorContentViewer/BookmarkedNovelNavigationViewItem"
                     Icon="{markup:FontSymbolIcon Glyph=ReadingListE7BC}"
+                    IsEnabled="False"
                     Tag="{x:Bind ViewModel.BookmarkedNovelTag, Mode=OneWay}" />
                 <NavigationViewItemSeparator />
                 <NavigationViewItem
                     x:Uid="/IllustratorContentViewer/FollowingUserNavigationViewItem"
                     Icon="{markup:FontSymbolIcon Glyph=PeopleE716}"
+                    IsEnabled="False"
                     Tag="{x:Bind ViewModel.FollowingUserTag, Mode=OneWay}" />
                 <NavigationViewItem
                     x:Uid="/IllustratorContentViewer/MyPixivUserNavigationViewItem"
                     Icon="{markup:FontSymbolIcon Glyph=PeopleE716}"
+                    IsEnabled="False"
                     Tag="{x:Bind ViewModel.MyPixivUserTag, Mode=OneWay}" />
             </NavigationView.MenuItems>
             <NavigationView.PaneFooter>
