@@ -18,6 +18,8 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 #define DISABLE_XAML_GENERATED_BREAK_ON_UNHANDLED_EXCEPTION
+#define DISABLE_XAML_GENERATED_RESOURCE_REFERENCE_DEBUG_OUTPUT
+#define DISABLE_XAML_GENERATED_BINDING_DEBUG_OUTPUT
 
 using System;
 using System.Linq;
@@ -33,6 +35,10 @@ using Pixeval.Controls.Windowing;
 using Pixeval.Pages.Login;
 using WinUI3Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
+using System.Diagnostics;
+using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
+using Pixeval.Logging;
 
 namespace Pixeval;
 
@@ -53,7 +59,7 @@ public partial class App
 
     protected override async void OnLaunched(LaunchActivatedEventArgs args)
     {
-        if (AppInstance.GetCurrent().GetActivatedEventArgs().Kind == ExtendedActivationKind.ToastNotification)
+        if (AppInstance.GetCurrent().GetActivatedEventArgs().Kind is ExtendedActivationKind.ToastNotification)
         {
             return;
         }
@@ -76,8 +82,58 @@ public partial class App
             .Init(AppContext.AppIdentifier, new SizeInt32(AppViewModel.AppSetting.WindowWidth, AppViewModel.AppSetting.WindowHeight))
             .Activate();
 
-        w.RegisterUnhandledExceptionHandler();
-
         await AppViewModel.InitializeAsync(isProtocolActivated);
+
+        RegisterUnhandledExceptionHandler();
+    }
+
+    private void RegisterUnhandledExceptionHandler()
+    {
+        DebugSettings.BindingFailed += (o, e) =>
+        {
+            using var scope = AppViewModel.AppServicesScope;
+            var logger = scope.ServiceProvider.GetRequiredService<FileLogger>();
+            logger.LogWarning(e.Message, null);
+        };
+        DebugSettings.XamlResourceReferenceFailed += (o, e) =>
+        {
+            using var scope = AppViewModel.AppServicesScope;
+            var logger = scope.ServiceProvider.GetRequiredService<FileLogger>();
+            logger.LogWarning(e.Message, null);
+        };
+        UnhandledException += (o, e) =>
+        {
+            using var scope = AppViewModel.AppServicesScope;
+            var logger = scope.ServiceProvider.GetRequiredService<FileLogger>();
+            logger.LogError(e.Message, e.Exception);
+#if DEBUG
+            if (Debugger.IsAttached)
+                Debugger.Break();
+#endif
+        };
+        TaskScheduler.UnobservedTaskException += (o, e) =>
+        {
+            e.SetObserved();
+            using var scope = AppViewModel.AppServicesScope;
+            var logger = scope.ServiceProvider.GetRequiredService<FileLogger>();
+            logger.LogError(nameof(TaskScheduler.UnobservedTaskException), e.Exception);
+#if DEBUG
+            if (Debugger.IsAttached)
+                Debugger.Break();
+#endif
+        };
+        AppDomain.CurrentDomain.UnhandledException += (o, e) =>
+        {
+            using var scope = AppViewModel.AppServicesScope;
+            var logger = scope.ServiceProvider.GetRequiredService<FileLogger>();
+            if (e.IsTerminating)
+                logger.LogCritical(nameof(AppDomain.UnhandledException), e.ExceptionObject as Exception);
+            else
+                logger.LogError(nameof(AppDomain.UnhandledException), e.ExceptionObject as Exception);
+#if DEBUG
+            if (Debugger.IsAttached)
+                Debugger.Break();
+#endif
+        };
     }
 }

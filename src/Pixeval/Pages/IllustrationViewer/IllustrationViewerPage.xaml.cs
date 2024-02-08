@@ -98,22 +98,28 @@ public sealed partial class IllustrationViewerPage : SupportCustomTitleBarDragRe
         _viewModel.DetailedPropertyChanged += (sender, args) =>
         {
             var vm = sender.To<IllustrationViewerPageViewModel>();
-            if (args.PropertyName is not nameof(vm.CurrentIllustrationIndex))
+
+            if (args.PropertyName is not nameof(vm.CurrentIllustrationIndex) and not nameof(vm.CurrentPageIndex))
                 return;
 
             var oldIndex = args.OldValue.To<int>();
             var newIndex = args.NewValue.To<int>(); // vm.CurrentIllustrationIndex
-            var oldTag = args.OldTag.To<long>();
-            var newTag = args.NewTag.To<long>(); // vm.CurrentPage.Id
 
-            if (oldTag == newTag)
-                return;
             var info = null as NavigationTransitionInfo;
             if (oldIndex < newIndex && oldIndex is not -1)
                 info = new SlideNavigationTransitionInfo { Effect = SlideNavigationTransitionEffect.FromRight };
             else if (oldIndex > newIndex)
                 info = new SlideNavigationTransitionInfo { Effect = SlideNavigationTransitionEffect.FromLeft };
-            ThumbnailItemsView.StartBringItemIntoView(vm.CurrentIllustrationIndex, new BringIntoViewOptions { AnimationDesired = true });
+
+            if (args.PropertyName is nameof(vm.CurrentIllustrationIndex))
+            {
+                var oldTag = args.OldTag.To<long>();
+                var newTag = args.NewTag.To<long>(); // vm.CurrentPage.Id
+                if (oldTag == newTag)
+                    return;
+                ThumbnailItemsView.StartBringItemIntoView(vm.CurrentIllustrationIndex, new BringIntoViewOptions { AnimationDesired = true });
+            }
+
             Navigate<ImageViewerPage>(IllustrationImageShowcaseFrame, vm.CurrentImage, info);
         };
 
@@ -195,14 +201,9 @@ public sealed partial class IllustrationViewerPage : SupportCustomTitleBarDragRe
     {
         switch (_viewModel.NextButtonAction)
         {
-            case true:
-                Navigate<ImageViewerPage>(IllustrationImageShowcaseFrame, _viewModel.NextPage(),
-                    new SlideNavigationTransitionInfo { Effect = SlideNavigationTransitionEffect.FromRight });
-                break;
-            case false:
-                // 由于先后次序问题，必须操作SelectedIndex，而不是_viewModel.CurrentIllustrationIndex
-                ++ThumbnailItemsView.SelectedIndex;
-                break;
+            case true: ++PipsPager.SelectedPageIndex; break;
+            // 由于先后次序问题，必须操作SelectedIndex，而不是_viewModel.CurrentIllustrationIndex
+            case false: ++ThumbnailItemsView.SelectedIndex; break;
             case null: break;
         }
     }
@@ -217,14 +218,9 @@ public sealed partial class IllustrationViewerPage : SupportCustomTitleBarDragRe
     {
         switch (_viewModel.PrevButtonAction)
         {
-            case true:
-                Navigate<ImageViewerPage>(IllustrationImageShowcaseFrame, _viewModel.PrevPage(),
-                    new SlideNavigationTransitionInfo { Effect = SlideNavigationTransitionEffect.FromLeft });
-                break;
-            case false:
-                // 由于先后次序问题，必须操作SelectedIndex，而不是_viewModel.CurrentIllustrationIndex
-                --ThumbnailItemsView.SelectedIndex;
-                break;
+            case true: --PipsPager.SelectedPageIndex; break;
+            // 由于先后次序问题，必须操作SelectedIndex，而不是_viewModel.CurrentIllustrationIndex
+            case false: --ThumbnailItemsView.SelectedIndex; break;
             case null: break;
         }
     }

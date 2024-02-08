@@ -160,7 +160,8 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject
         AdvancePhase(LoginPhaseEnum.Refreshing);
         if (AppContext.LoadSession() is { } session && CheckRefreshAvailableInternal(session))
         {
-            var logger = App.AppViewModel.AppServicesScope.ServiceProvider.GetRequiredService<FileLogger>();
+            using var scope = App.AppViewModel.AppServicesScope;
+            var logger = scope.ServiceProvider.GetRequiredService<FileLogger>();
             App.AppViewModel.MakoClient = new MakoClient(session, App.AppViewModel.AppSetting.ToMakoClientConfiguration(), logger,
                 new RefreshTokenSessionUpdate());
             await App.AppViewModel.MakoClient.RefreshSessionAsync();
@@ -310,7 +311,8 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject
                 var cookies = await page.Context.CookiesAsync(["https://pixiv.net"]);
                 var cookie = string.Join(';', cookies.Select(c => $"{c.Name}={c.Value}"));
                 var session = await AuthCodeToSessionAsync(code, verifier, cookie);
-                var logger = App.AppViewModel.AppServicesScope.ServiceProvider.GetRequiredService<FileLogger>();
+                using var scope = App.AppViewModel.AppServicesScope;
+                var logger = scope.ServiceProvider.GetRequiredService<FileLogger>();
                 App.AppViewModel.MakoClient = new MakoClient(session, App.AppViewModel.AppSetting.ToMakoClientConfiguration(), logger, new RefreshTokenSessionUpdate());
                 await playWrightHelper.DisposeAsync();
                 proxyServer?.Dispose();

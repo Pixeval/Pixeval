@@ -187,6 +187,8 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
         {
             if (value is -1)
                 return;
+            if (value == _currentIllustrationIndex)
+                return;
 
             var oldValue = _currentIllustrationIndex;
             // ReSharper disable once ConditionalAccessQualifierIsNonNullableAccordingToAPIContract
@@ -202,7 +204,13 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
 
             _ = LoadUserProfile();
 
-            CurrentPageIndex = 0;
+            // 此处不要触发CurrentPageIndex的OnPropertyChanged，否则会导航两次
+            _currentPageIndex = 0;
+            OnPropertyChanged(nameof(NextButtonEnable));
+            OnPropertyChanged(nameof(PrevButtonEnable));
+            CurrentImage = new ImageViewerPageViewModel(this, CurrentPage);
+            // ---
+
             OnDetailedPropertyChanged(oldValue, value, oldTag, CurrentPage.Id);
             OnPropertyChanged(nameof(CurrentIllustration));
             return;
@@ -228,11 +236,14 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
         get => _currentPageIndex;
         set
         {
+            if (value == _currentPageIndex)
+                return;
+            var oldValue = _currentPageIndex;
             _currentPageIndex = value;
-            OnPropertyChanged();
             OnPropertyChanged(nameof(NextButtonEnable));
             OnPropertyChanged(nameof(PrevButtonEnable));
             CurrentImage = new ImageViewerPageViewModel(this, CurrentPage);
+            OnDetailedPropertyChanged(oldValue, value);
         }
     }
 

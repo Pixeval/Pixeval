@@ -119,6 +119,7 @@
                             VerticalAlignment="Center"
                             Content="{markup:FontSymbolIcon Glyph=ChevronLeft20F743}"
                             RightTapped="PrevButton_OnRightTapped"
+                            Style="{StaticResource AccentButtonStyle}"
                             Tapped="PrevButton_OnTapped"
                             Visibility="{x:Bind _viewModel.PrevButtonEnable, Mode=OneWay}" />
                     </Grid>
@@ -141,6 +142,7 @@
                             VerticalAlignment="Center"
                             Content="{markup:FontSymbolIcon Glyph=ChevronRight20F745}"
                             RightTapped="NextButton_OnRightTapped"
+                            Style="{StaticResource AccentButtonStyle}"
                             Tapped="NextButton_OnTapped"
                             Visibility="{x:Bind _viewModel.NextButtonEnable, Mode=OneWay}" />
                     </Grid>
@@ -159,6 +161,7 @@
                     <Grid
                         Width="400"
                         Height="100"
+                        Background="Transparent"
                         Opacity="0">
                         <Grid.OpacityTransition>
                             <ScalarTransition />
@@ -176,6 +179,7 @@
                             x:Name="CommandBorder"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
+                            Background="{StaticResource BottomCommandSectionBackground}"
                             BorderBrush="{StaticResource SecondaryAccentBorderBrush}"
                             BorderThickness="0.5"
                             CornerRadius="{ThemeResource ControlCornerRadius}"
@@ -195,24 +199,43 @@
                                     <core:ChangePropertyAction PropertyName="Opacity" Value="0.7" />
                                 </core:EventTriggerBehavior>
                             </interactivity:Interaction.Behaviors>
-                            <CommandBar
-                                Background="{StaticResource BottomCommandSectionBackground}"
-                                DefaultLabelPosition="Collapsed"
-                                OverflowButtonVisibility="Collapsed">
-                                <AppBarButton Width="50" Command="{x:Bind _viewModel.CurrentIllustration.BookmarkCommand, Mode=OneWay}" />
-                                <AppBarButton
-                                    Width="50"
-                                    Command="{x:Bind _viewModel.CurrentImage.RotateCounterclockwiseCommand, Mode=OneWay}"
-                                    Icon="{markup:FontSymbolIcon Glyph=RotateE7AD,
-                                                                 FlowDirection=RightToLeft,
-                                                                 MirroredWhenRightToLeft=True}" />
-                                <AppBarToggleButton
-                                    Width="50"
-                                    Command="{x:Bind _viewModel.CurrentImage.MirrorCommand, Mode=OneWay}"
-                                    IsChecked="{x:Bind _viewModel.CurrentImage.IsMirrored, Mode=OneWay}" />
-                                <AppBarButton Width="50" Command="{x:Bind _viewModel.CurrentImage.RotateClockwiseCommand, Mode=OneWay}" />
-                                <AppBarButton Width="50" Command="{x:Bind _viewModel.CurrentImage.SaveCommand, Mode=OneWay}" />
-                            </CommandBar>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <PipsPager
+                                    x:Name="PipsPager"
+                                    Grid.Row="0"
+                                    MaxWidth="200"
+                                    Margin="5"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    MaxVisiblePips="10"
+                                    NextButtonVisibility="Visible"
+                                    NumberOfPages="{x:Bind _viewModel.PageCount, Mode=OneWay}"
+                                    PreviousButtonVisibility="Visible"
+                                    SelectedPageIndex="{x:Bind _viewModel.CurrentPageIndex, Mode=TwoWay}"
+                                    Visibility="{x:Bind _viewModel.CurrentIllustration.IsManga, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
+                                <CommandBar
+                                    Grid.Row="1"
+                                    DefaultLabelPosition="Collapsed"
+                                    OverflowButtonVisibility="Collapsed">
+                                    <AppBarButton Width="50" Command="{x:Bind _viewModel.CurrentIllustration.BookmarkCommand, Mode=OneWay}" />
+                                    <AppBarButton
+                                        Width="50"
+                                        Command="{x:Bind _viewModel.CurrentImage.RotateCounterclockwiseCommand, Mode=OneWay}"
+                                        Icon="{markup:FontSymbolIcon Glyph=RotateE7AD,
+                                                                     FlowDirection=RightToLeft,
+                                                                     MirroredWhenRightToLeft=True}" />
+                                    <AppBarToggleButton
+                                        Width="50"
+                                        Command="{x:Bind _viewModel.CurrentImage.MirrorCommand, Mode=OneWay}"
+                                        IsChecked="{x:Bind _viewModel.CurrentImage.IsMirrored, Mode=OneWay}" />
+                                    <AppBarButton Width="50" Command="{x:Bind _viewModel.CurrentImage.RotateClockwiseCommand, Mode=OneWay}" />
+                                    <AppBarButton Width="50" Command="{x:Bind _viewModel.CurrentImage.SaveCommand, Mode=OneWay}" />
+                                </CommandBar>
+                            </Grid>
                         </Border>
                     </Grid>
                     <Grid

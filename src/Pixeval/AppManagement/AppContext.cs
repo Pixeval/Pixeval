@@ -50,7 +50,7 @@ public static partial class AppContext
 
     public const string AppLogoNoCaptionUri = "ms-appx:///Assets/Images/logo-no-caption.png";
 
-    public const string IconApplicationUri = "ms-appx:///Images/logo44x44.ico";
+    public const string IconApplicationUri = "ms-appx:///Assets/Images/logo44x44.ico";
 
     public static readonly string AppIconFontFamilyName = AppHelper.IsWindows11 ? "Segoe Fluent Icons" : "Segoe MDL2 Assets";
 
@@ -86,7 +86,7 @@ public static partial class AppContext
         if (uri.Scheme is not "ms-appx")
         {
             // ms-appdata is handled by the caller.
-            throw new InvalidOperationException("Uri is not using the ms-appx or ms-appdata scheme");
+            ThrowHelper.InvalidOperation("Uri is not using the ms-appx or ms-appdata scheme");
         }
 
         var path = Uri.UnescapeDataString(uri.PathAndQuery).TrimStart('/');

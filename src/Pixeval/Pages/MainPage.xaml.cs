@@ -101,11 +101,6 @@ public sealed partial class MainPage : SupportCustomTitleBarDragRegionPage
             Window.AppWindow.MoveInZOrderAtTop();
             PerformSearch(message.Tag);
         });
-        _ = WeakReferenceMessenger.Default.TryRegister<MainPage, GlobalSearchQuerySubmittedMessage>(this, (_1, message) =>
-        {
-            NavigationView.SelectedItem = null;
-            _ = MainPageRootFrame.Navigate(typeof(SearchResultsPage), message.Parameter);
-        });
         using var client = new HttpClient();
         _ = await AppContext.AppVersion.CheckForUpdateAsync(client);
         if (AppContext.AppVersion.UpdateAvailable) 
