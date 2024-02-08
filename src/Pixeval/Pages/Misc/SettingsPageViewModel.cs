@@ -32,7 +32,6 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Media;
 using Pixeval.AppManagement;
 using Pixeval.Attributes;
 using Pixeval.Controls;
@@ -57,7 +56,7 @@ namespace Pixeval.Pages.Misc;
 [SettingsViewModel<AppSetting>(nameof(_appSetting))]
 public partial class SettingsPageViewModel(AppSetting appSetting, FrameworkElement frameworkElement) : UiObservableObject(frameworkElement)
 {
-    public static IEnumerable<FontFamily> AvailableFonts { get; }
+    public static IEnumerable<string> AvailableFonts { get; }
 
     public static ICollection<Token> AvailableIllustMacros { get; }
 
@@ -160,7 +159,7 @@ public partial class SettingsPageViewModel(AppSetting appSetting, FrameworkEleme
     {
         AvailableCultures = [CultureInfo.GetCultureInfo("zh-cn")];
         using var collection = new InstalledFontCollection();
-        AvailableFonts = collection.Families.Select(t => new FontFamily(t.Name));
+        AvailableFonts = collection.Families.Select(t => t.Name);
         using var scope = App.AppViewModel.AppServicesScope;
         var factory = scope.ServiceProvider.GetRequiredService<IDownloadTaskFactory<IllustrationItemViewModel, IllustrationDownloadTask>>();
         AvailableIllustMacros = factory.PathParser.MacroProvider.AvailableMacros
@@ -216,7 +215,7 @@ public partial class SettingsPageViewModel(AppSetting appSetting, FrameworkEleme
     {
         foreach (var propertyInfo in typeof(SettingsPageViewModel).GetProperties(BindingFlags.Public | BindingFlags.Instance))
         {
-            propertyInfo.SetValue(this, propertyInfo.GetDefaultValue());
+            propertyInfo.SetIfHasDefaultValue(this);
         }
     }
 

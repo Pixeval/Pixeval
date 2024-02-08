@@ -19,7 +19,6 @@
 #endregion
 
 using System;
-using System.Threading.Tasks;
 using Windows.System;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
@@ -185,18 +184,4 @@ public sealed partial class SettingsPage
         var manager = scope.ServiceProvider.GetRequiredService<DownloadHistoryPersistentManager>();
         _viewModel.ClearData(ClearDataKind.DownloadHistory, manager);
     }
-
-    // ReSharper disable MemberCanBeMadeStatic.Local
-    private Type MainPageTabItem => typeof(MainPageTabItem);
-    private Type ItemsViewLayoutType => typeof(ItemsViewLayoutType);
-    private Type ThumbnailDirection => typeof(ThumbnailDirection);
-    private Type IllustrationDownloadFormat => typeof(IllustrationDownloadFormat);
-    private Type UgoiraDownloadFormat => typeof(UgoiraDownloadFormat);
-    private Type TargetFilter => typeof(TargetFilter);
-    private Type BackdropType => typeof(BackdropType);
-    private Type SearchTagMatchOption => typeof(SearchTagMatchOption);
-    private Type ElementTheme => typeof(ElementTheme);
-    private Type IllustrationSortOption => typeof(IllustrationSortOption);
-    private Type SearchDuration => typeof(SearchDuration);
-    // ReSharper restore MemberCanBeMadeStatic.Local
 }

@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -48,28 +48,28 @@ public class DefaultValue : Attribute
 
 public static class DefaultValueAttributeHelper
 {
-    public static object? GetDefaultValue(this PropertyInfo propInfo)
+    public static void SetIfHasDefaultValue(this PropertyInfo propInfo, object targetObject)
     {
-        if (propInfo.GetCustomAttribute<DefaultValue>() is { } attribute)
+        if (propInfo.GetCustomAttribute<DefaultValue>() is not { } attribute)
+            return;
+
+        if (attribute.ValueFactoryType is { } type)
         {
-            if (attribute.ValueFactoryType is { } type)
-            {
-                return type.IsAssignableTo(typeof(IDefaultValueProvider))
-                    ? ((IDefaultValueProvider)Activator.CreateInstance(type)!).ProvideValue()
-                    : Activator.CreateInstance(type);
-            }
-
-            return attribute.Value;
+            propInfo.SetValue(targetObject, type.IsAssignableTo(typeof(IDefaultValueProvider))
+                ? ((IDefaultValueProvider)Activator.CreateInstance(type)!).ProvideValue()
+                : Activator.CreateInstance(type));
         }
-
-        return null;
+        else
+        {
+            propInfo.SetValue(targetObject, attribute.Value);
+        }
     }
 
     public static void Initialize(object obj)
     {
         foreach (var propertyInfo in obj.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance))
         {
-            propertyInfo.SetValue(obj, propertyInfo.GetDefaultValue());
+            propertyInfo.SetIfHasDefaultValue(obj);
         }
     }
 }

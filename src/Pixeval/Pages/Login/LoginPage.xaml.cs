@@ -111,7 +111,4 @@ public sealed partial class LoginPage
             Application.Current.Exit();
         }
     }
-
-    // ReSharper disable once MemberCanBeMadeStatic.Local
-    private Type LoginProxyOption => typeof(LoginProxyOption);
 }

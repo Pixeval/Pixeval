@@ -7,7 +7,9 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:login="using:Pixeval.Pages.Login"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:options="using:Pixeval.Options"
     xmlns:util="using:Pixeval.Util"
+    xmlns:winUi="using:CommunityToolkit.WinUI"
     d:DataContext="{d:DesignInstance login:LoginPageViewModel}"
     Loaded="LoginPage_OnLoaded"
     mc:Ignorable="d">
@@ -102,8 +104,8 @@
                     </Grid.RowDefinitions>
                     <controls:SettingRadioButtons
                         Grid.Row="0"
-                        EnumSource="{x:Bind LoginProxyOption}"
                         IsEnabled="{x:Bind _viewModel.IsFinished, Mode=OneWay}"
+                        ItemsSource="{winUi:EnumValues Type=options:LoginProxyOption}"
                         SelectedItem="{x:Bind _viewModel.LoginProxyOption, Mode=TwoWay}" />
                     <TextBox
                         x:Uid="/LoginPage/ProxyTextBox"

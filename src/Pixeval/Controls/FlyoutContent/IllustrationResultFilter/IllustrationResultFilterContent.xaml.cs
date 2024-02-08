@@ -50,7 +50,7 @@ public sealed partial class IllustrationResultFilterContent
     {
         foreach (var propertyInfo in typeof(IllustrationResultFilterContentViewModel).GetProperties(BindingFlags.Public | BindingFlags.Instance))
         {
-            propertyInfo.SetValue(ViewModel, propertyInfo.GetDefaultValue());
+            propertyInfo.SetIfHasDefaultValue(ViewModel);
         }
     }
 }

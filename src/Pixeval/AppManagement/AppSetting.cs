@@ -169,7 +169,7 @@ public partial record AppSetting : IWindowSettings
     [SettingMetadata(SettingEntryCategory.Version, typeof(SettingsPageResources), nameof(SettingsPageResources.DownloadUpdateAutomaticallyEntryHeader))]
     public bool DownloadUpdateAutomatically { get; set; }
 
-    [DefaultValue("微软雅黑")]
+    [DefaultValue("Microsoft YaHei Ul")]
     [SettingMetadata(SettingEntryCategory.Application, typeof(SettingsPageResources), nameof(SettingsPageResources.AppFontFamilyEntryHeader))]
     public string AppFontFamilyName { get; set; } = "";
 

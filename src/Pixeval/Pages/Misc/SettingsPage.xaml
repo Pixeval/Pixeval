@@ -6,13 +6,18 @@
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:controls1="using:Pixeval.Controls"
     xmlns:converters="using:CommunityToolkit.WinUI.Converters"
+    xmlns:converters1="using:Pixeval.Controls.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:enum="using:Pixeval.CoreApi.Global.Enum"
     xmlns:markup="using:Pixeval.Controls.MarkupExtensions"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:misc="using:Pixeval.Pages.Misc"
+    xmlns:options="using:Pixeval.Options"
     xmlns:pixeval="using:Pixeval"
     xmlns:system="using:System"
     xmlns:tokenInput="using:Pixeval.Controls.TokenInput"
+    xmlns:utilities="using:WinUI3Utilities"
+    xmlns:winUi="using:CommunityToolkit.WinUI"
     mc:Ignorable="d">
     <Page.Resources>
         <Style
@@ -25,6 +30,7 @@
         </Style>
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
         <converters:BoolNegationConverter x:Key="BoolNegationConverter" />
+        <converters1:StringToFontFamilyConverter x:Key="StringToFontFamilyConverter" />
     </Page.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -175,7 +181,7 @@
                     <controls:SettingsExpander.Items>
                         <controls:SettingsCard ContentAlignment="Left">
                             <controls1:SettingRadioButtons
-                                EnumSource="{x:Bind ElementTheme}"
+                                ItemsSource="{winUi:EnumValues Type=ElementTheme}"
                                 SelectedItem="{x:Bind _viewModel.Theme, Mode=TwoWay}"
                                 SelectionChanged="Theme_OnSelectionChanged" />
                         </controls:SettingsCard>
@@ -189,7 +195,7 @@
                     <controls:SettingsExpander.Items>
                         <controls:SettingsCard ContentAlignment="Left">
                             <controls1:SettingRadioButtons
-                                EnumSource="{x:Bind BackdropType}"
+                                ItemsSource="{winUi:EnumValues Type=utilities:BackdropType}"
                                 SelectedItem="{x:Bind _viewModel.Backdrop, Mode=TwoWay}"
                                 SelectionChanged="Backdrop_OnSelectionChanged" />
                         </controls:SettingsCard>
@@ -211,8 +217,8 @@
                                 ItemsSource="{x:Bind misc:SettingsPageViewModel.AvailableFonts}"
                                 SelectedItem="{x:Bind _viewModel.AppFontFamilyName, Mode=TwoWay}">
                                 <ComboBox.ItemTemplate>
-                                    <DataTemplate x:DataType="FontFamily">
-                                        <TextBlock FontFamily="{x:Bind}" Text="{x:Bind Source}" />
+                                    <DataTemplate x:DataType="x:String">
+                                        <TextBlock FontFamily="{x:Bind Converter={StaticResource StringToFontFamilyConverter}}" Text="{x:Bind}" />
                                     </DataTemplate>
                                 </ComboBox.ItemTemplate>
                             </ComboBox>
@@ -247,7 +253,7 @@
                     Tag="{x:Bind pixeval:SettingEntry.DefaultSelectedTabItem}">
                     <controls:SettingsExpander.Items>
                         <controls:SettingsCard ContentAlignment="Left">
-                            <controls1:SettingRadioButtons EnumSource="{x:Bind MainPageTabItem}" SelectedItem="{x:Bind _viewModel.DefaultSelectedTabItem, Mode=TwoWay}" />
+                            <controls1:SettingRadioButtons ItemsSource="{winUi:EnumValues Type=options:MainPageTabItem}" SelectedItem="{x:Bind _viewModel.DefaultSelectedTabItem, Mode=TwoWay}" />
                         </controls:SettingsCard>
                     </controls:SettingsExpander.Items>
                 </controls:SettingsExpander>
@@ -260,7 +266,7 @@
                     Tag="{x:Bind pixeval:SettingEntry.ThumbnailDirection}">
                     <controls:SettingsExpander.Items>
                         <controls:SettingsCard ContentAlignment="Left">
-                            <controls1:SettingRadioButtons EnumSource="{x:Bind ThumbnailDirection}" SelectedItem="{x:Bind _viewModel.ThumbnailDirection, Mode=TwoWay}" />
+                            <controls1:SettingRadioButtons ItemsSource="{winUi:EnumValues Type=options:ThumbnailDirection}" SelectedItem="{x:Bind _viewModel.ThumbnailDirection, Mode=TwoWay}" />
                         </controls:SettingsCard>
                     </controls:SettingsExpander.Items>
                 </controls:SettingsExpander>
@@ -271,7 +277,7 @@
                     Tag="{x:Bind pixeval:SettingEntry.ItemsViewLayoutType}">
                     <controls:SettingsExpander.Items>
                         <controls:SettingsCard ContentAlignment="Left">
-                            <controls1:SettingRadioButtons EnumSource="{x:Bind ItemsViewLayoutType}" SelectedItem="{x:Bind _viewModel.ItemsViewLayoutType, Mode=TwoWay}" />
+                            <controls1:SettingRadioButtons ItemsSource="{winUi:EnumValues Type=controls1:ItemsViewLayoutType}" SelectedItem="{x:Bind _viewModel.ItemsViewLayoutType, Mode=TwoWay}" />
                         </controls:SettingsCard>
                     </controls:SettingsExpander.Items>
                 </controls:SettingsExpander>
@@ -289,7 +295,7 @@
                     Tag="{x:Bind pixeval:SettingEntry.TargetFilter}">
                     <controls:SettingsExpander.Items>
                         <controls:SettingsCard ContentAlignment="Left">
-                            <controls1:SettingRadioButtons EnumSource="{x:Bind TargetFilter}" SelectedItem="{x:Bind _viewModel.TargetFilter, Mode=TwoWay}" />
+                            <controls1:SettingRadioButtons ItemsSource="{winUi:EnumValues Type=enum:TargetFilter}" SelectedItem="{x:Bind _viewModel.TargetFilter, Mode=TwoWay}" />
                         </controls:SettingsCard>
                     </controls:SettingsExpander.Items>
                 </controls:SettingsExpander>
@@ -350,7 +356,7 @@
 
                     <controls:SettingsExpander.Items>
                         <controls:SettingsCard ContentAlignment="Left">
-                            <controls1:SettingRadioButtons EnumSource="{x:Bind IllustrationSortOption}" SelectedItem="{x:Bind _viewModel.DefaultSortOption, Mode=TwoWay}" />
+                            <controls1:SettingRadioButtons ItemsSource="{winUi:EnumValues Type=enum:IllustrationSortOption}" SelectedItem="{x:Bind _viewModel.DefaultSortOption, Mode=TwoWay}" />
                         </controls:SettingsCard>
                     </controls:SettingsExpander.Items>
                 </controls:SettingsExpander>
@@ -361,7 +367,7 @@
                     Tag="{x:Bind pixeval:SettingEntry.TagMatchOption}">
                     <controls:SettingsExpander.Items>
                         <controls:SettingsCard ContentAlignment="Left">
-                            <controls1:SettingRadioButtons EnumSource="{x:Bind SearchTagMatchOption}" SelectedItem="{x:Bind _viewModel.TagMatchOption, Mode=TwoWay}" />
+                            <controls1:SettingRadioButtons ItemsSource="{winUi:EnumValues Type=enum:SearchTagMatchOption}" SelectedItem="{x:Bind _viewModel.TagMatchOption, Mode=TwoWay}" />
                         </controls:SettingsCard>
                     </controls:SettingsExpander.Items>
                 </controls:SettingsExpander>
@@ -396,7 +402,7 @@
                     Tag="{x:Bind pixeval:SettingEntry.SearchDuration}">
                     <controls:SettingsExpander.Items>
                         <controls:SettingsCard ContentAlignment="Left">
-                            <controls1:SettingRadioButtons EnumSource="{x:Bind SearchDuration}" SelectedItem="{x:Bind _viewModel.SearchDuration, Mode=TwoWay}" />
+                            <controls1:SettingRadioButtons ItemsSource="{winUi:EnumValues Type=enum:SearchDuration}" SelectedItem="{x:Bind _viewModel.SearchDuration, Mode=TwoWay}" />
                         </controls:SettingsCard>
                     </controls:SettingsExpander.Items>
                 </controls:SettingsExpander>
@@ -486,7 +492,7 @@
                     Tag="{x:Bind pixeval:SettingEntry.IllustrationDownloadFormat}">
                     <controls:SettingsExpander.Items>
                         <controls:SettingsCard ContentAlignment="Left">
-                            <controls1:SettingRadioButtons EnumSource="{x:Bind IllustrationDownloadFormat}" SelectedItem="{x:Bind _viewModel.IllustrationDownloadFormat, Mode=TwoWay}" />
+                            <controls1:SettingRadioButtons ItemsSource="{winUi:EnumValues Type=options:IllustrationDownloadFormat}" SelectedItem="{x:Bind _viewModel.IllustrationDownloadFormat, Mode=TwoWay}" />
                         </controls:SettingsCard>
                     </controls:SettingsExpander.Items>
                 </controls:SettingsExpander>
@@ -496,7 +502,7 @@
                     Tag="{x:Bind pixeval:SettingEntry.UgoiraDownloadFormat}">
                     <controls:SettingsExpander.Items>
                         <controls:SettingsCard ContentAlignment="Left">
-                            <controls1:SettingRadioButtons EnumSource="{x:Bind UgoiraDownloadFormat}" SelectedItem="{x:Bind _viewModel.UgoiraDownloadFormat, Mode=TwoWay}" />
+                            <controls1:SettingRadioButtons ItemsSource="{winUi:EnumValues Type=options:UgoiraDownloadFormat}" SelectedItem="{x:Bind _viewModel.UgoiraDownloadFormat, Mode=TwoWay}" />
                         </controls:SettingsCard>
                     </controls:SettingsExpander.Items>
                 </controls:SettingsExpander>
