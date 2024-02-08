@@ -24,5 +24,7 @@ public sealed partial class LazyImage : UserControl
     [SuppressMessage("Style", "CS0414", Justification = "For {x:Bind}")]
     [SuppressMessage("ReSharper", "ConvertToConstant.Local", Justification = "For {x:Bind}")]
     [SuppressMessage("CodeQuality", "IDE0079:Remove unnecessary suppression", Justification = "For ReSharper")]
+#pragma warning disable CS0414
     private readonly double _progressRingSize = 35;
+#pragma warning restore CS0414
 }

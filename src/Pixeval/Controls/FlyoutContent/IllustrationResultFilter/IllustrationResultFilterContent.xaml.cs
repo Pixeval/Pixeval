@@ -19,19 +19,16 @@
 #endregion
 
 using System.Linq;
-using System.Reflection;
-using Pixeval.Attributes;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Pixeval.Controls.FlyoutContent;
 
+[INotifyPropertyChanged]
 public sealed partial class IllustrationResultFilterContent
 {
-    public IllustrationResultFilterContent()
-    {
-        InitializeComponent();
-    }
+    public IllustrationResultFilterContent() => InitializeComponent();
 
-    public IllustrationResultFilterContentViewModel ViewModel { get; set; } = new();
+    [ObservableProperty] private IllustrationResultFilterContentModel _viewModel = new();
 
     public FilterSettings GetFilterSettings =>
         new(ViewModel.IncludeTags.ToArray(),
@@ -48,9 +45,6 @@ public sealed partial class IllustrationResultFilterContent
 
     public void Reset()
     {
-        foreach (var propertyInfo in typeof(IllustrationResultFilterContentViewModel).GetProperties(BindingFlags.Public | BindingFlags.Instance))
-        {
-            propertyInfo.SetIfHasDefaultValue(ViewModel);
-        }
+        ViewModel = new();
     }
 }

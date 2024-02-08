@@ -27,14 +27,12 @@ using System.IO.Compression;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
-using System.Reflection;
 using Windows.Globalization;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Pixeval.AppManagement;
-using Pixeval.Attributes;
 using Pixeval.Controls;
 using Pixeval.Controls.TokenInput;
 using Pixeval.Database.Managers;
@@ -51,11 +49,12 @@ using Pixeval.Utilities;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
 using AppContext = Pixeval.AppManagement.AppContext;
+using System.ComponentModel;
 
 namespace Pixeval.Pages.Misc;
 
-[SettingsViewModel<AppSetting>(nameof(_appSetting))]
-public partial class SettingsPageViewModel(AppSetting appSetting, FrameworkElement frameworkElement) : UiObservableObject(frameworkElement)
+[SettingsViewModel<AppSetting>(nameof(AppSetting))]
+public partial class SettingsPageViewModel(FrameworkElement frameworkElement) : UiObservableObject(frameworkElement)
 {
     public static IEnumerable<string> AvailableFonts { get; }
 
@@ -63,9 +62,9 @@ public partial class SettingsPageViewModel(AppSetting appSetting, FrameworkEleme
 
     public static IEnumerable<CultureInfo> AvailableCultures { get; }
 
-    public static IEnumerable<Language> AvailableLanguages { get; } = [new("系统默认", ""), new("简体中文", "zh-cn")];
+    public static IEnumerable<LanguageModel> AvailableLanguages { get; } = [LanguageModel.DefaultLanguage, new("简体中文", "zh-cn")];
 
-    private readonly AppSetting _appSetting = appSetting;
+    public AppSetting AppSetting { get; set; } = App.AppViewModel.AppSetting with { };
 
     [ObservableProperty] private bool _checkingUpdate;
 
@@ -171,43 +170,27 @@ public partial class SettingsPageViewModel(AppSetting appSetting, FrameworkEleme
             .ToList();
     }
 
-    [DefaultValue(false)]
-    public bool DisableDomainFronting
+    protected override void OnPropertyChanged(PropertyChangedEventArgs e)
     {
-        get => _appSetting.DisableDomainFronting;
-        set => SetProperty(_appSetting.DisableDomainFronting, value, _appSetting, (setting, value) =>
+        base.OnPropertyChanged(e);
+
+        switch (e.PropertyName)
         {
-            setting.DisableDomainFronting = value;
-            App.AppViewModel.MakoClient.Configuration.Bypass = !value;
-        });
+            case nameof(DisableDomainFronting):
+                App.AppViewModel.MakoClient.Configuration.Bypass = !DisableDomainFronting;
+                break;
+            case nameof(MirrorHost):
+                App.AppViewModel.MakoClient.Configuration.MirrorHost = MirrorHost;
+                break;
+            case nameof(MaxDownloadTaskConcurrencyLevel):
+                App.AppViewModel.DownloadManager.ConcurrencyDegree = MaxDownloadTaskConcurrencyLevel;
+                break;
+        }
     }
 
-    [DefaultValue(null)]
-    public string? MirrorHost
+    public LanguageModel AppLanguage
     {
-        get => _appSetting.MirrorHost;
-        set => SetProperty(_appSetting.MirrorHost, value, _appSetting, (setting, value) =>
-        {
-            setting.MirrorHost = value;
-            App.AppViewModel.MakoClient.Configuration.MirrorHost = value;
-        });
-    }
-
-    [DefaultValue(typeof(DownloadConcurrencyDefaultValueProvider))]
-    public int MaxDownloadTaskConcurrencyLevel
-    {
-        get => _appSetting.MaxDownloadTaskConcurrencyLevel;
-        set => SetProperty(_appSetting.MaxDownloadTaskConcurrencyLevel, value, _appSetting, (setting, value) =>
-        {
-            App.AppViewModel.DownloadManager.ConcurrencyDegree = value;
-            setting.MaxDownloadTaskConcurrencyLevel = value;
-        });
-    }
-
-    [DefaultValue(typeof(DefaultLanguageProvider))]
-    public Language AppLanguage
-    {
-        get => AvailableLanguages.FirstOrDefault(t => t.Name == ApplicationLanguages.PrimaryLanguageOverride) ?? Language.DefaultLanguage;
+        get => AvailableLanguages.FirstOrDefault(t => t.Name == ApplicationLanguages.PrimaryLanguageOverride) ?? LanguageModel.DefaultLanguage;
         set
         {
             if (ApplicationLanguages.PrimaryLanguageOverride != value.Name)
@@ -215,6 +198,15 @@ public partial class SettingsPageViewModel(AppSetting appSetting, FrameworkEleme
             ApplicationLanguages.PrimaryLanguageOverride = value.Name;
             OnPropertyChanged();
         }
+    }
+
+    public void ResetDefault()
+    {
+        AppSetting = new AppSetting();
+        OnPropertyChanged(nameof(DisableDomainFronting));
+        OnPropertyChanged(nameof(MirrorHost));
+        OnPropertyChanged(nameof(MaxDownloadTaskConcurrencyLevel));
+        AppLanguage = LanguageModel.DefaultLanguage;
     }
 
     public DateTimeOffset GetMinSearchEndDate(DateTimeOffset startDate)
@@ -227,29 +219,9 @@ public partial class SettingsPageViewModel(AppSetting appSetting, FrameworkEleme
         return SettingsPageResources.LastCheckedPrefix + lastChecked.ToString(CultureInfo.CurrentUICulture);
     }
 
-    public void ResetDefault()
-    {
-        foreach (var propertyInfo in typeof(SettingsPageViewModel).GetProperties(BindingFlags.Public | BindingFlags.Instance))
-        {
-            propertyInfo.SetIfHasDefaultValue(this);
-        }
-    }
-
     public void ClearData<T, TModel>(ClearDataKind kind, IPersistentManager<T, TModel> manager) where T : new()
     {
         manager.Clear();
         FrameworkElement.ShowTeachingTipAndHide(kind.GetLocalizedResourceContent()!);
     }
-}
-
-public record Language(string DisplayName, string Name)
-{
-    public override string ToString() => DisplayName;
-
-    public static Language DefaultLanguage { get; } = new("默认", "");
-}
-
-public class DefaultLanguageProvider : IDefaultValueProvider
-{
-    public object ProvideValue() => Language.DefaultLanguage;
 }

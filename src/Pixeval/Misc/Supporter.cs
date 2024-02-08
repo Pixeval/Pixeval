@@ -23,7 +23,7 @@ using System.Collections.Generic;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
 
-namespace Pixeval.Pages.Misc;
+namespace Pixeval.Misc;
 
 public record Supporter(string Nickname, string Name, ImageSource ProfilePicture, Uri ProfileUri)
 {

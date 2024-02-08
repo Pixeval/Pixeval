@@ -20,6 +20,7 @@
 
 using System;
 using Windows.System;
+using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -38,6 +39,7 @@ using WinUI3Utilities;
 
 namespace Pixeval.Pages.Misc;
 
+[INotifyPropertyChanged]
 public sealed partial class SettingsPage
 {
     // This TestParser is used to test whether the user input meta path is legal
@@ -46,31 +48,33 @@ public sealed partial class SettingsPage
     // The previous meta path after user changes the path field, if the path is illegal
     // its value will be reverted to this field.
     private string _previousPath = "";
-    private SettingsPageViewModel _viewModel = null!;
+
+    private SettingsPageViewModel ViewModel { get; set; } = null!;
 
     public SettingsPage() => InitializeComponent();
 
     public override void OnPageActivated(NavigationEventArgs e, object? parameter)
     {
-        _viewModel = new SettingsPageViewModel(App.AppViewModel.AppSetting, Window.Content.To<FrameworkElement>());
-        _previousPath = _viewModel.DefaultDownloadPathMacro;
+        ViewModel = new SettingsPageViewModel(Window.Content.To<FrameworkElement>());
+        _previousPath = ViewModel.DefaultDownloadPathMacro;
     }
 
     public override void OnPageDeactivated(NavigatingCancelEventArgs e)
     {
         Bindings.StopTracking();
-        AppContext.SaveConfig(App.AppViewModel.AppSetting);
-        _viewModel = null!;
+        App.AppViewModel.AppSetting = ViewModel.AppSetting;
+        AppContext.SaveConfig(ViewModel.AppSetting);
+        ViewModel = null!;
     }
 
     private void Theme_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        WindowFactory.SetTheme(_viewModel.Theme);
+        WindowFactory.SetTheme(ViewModel.Theme);
     }
 
     private void Backdrop_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        WindowFactory.SetBackdrop(_viewModel.Backdrop);
+        WindowFactory.SetBackdrop(ViewModel.Backdrop);
     }
 
     private void ImageMirrorServerTextBox_OnGotFocus(object sender, RoutedEventArgs e)
@@ -80,7 +84,7 @@ public sealed partial class SettingsPage
 
     private void ImageMirrorServerTextBox_OnLosingFocus(UIElement sender, LosingFocusEventArgs args)
     {
-        if (_viewModel.MirrorHost.IsNotNullOrEmpty() && Uri.CheckHostName(_viewModel.MirrorHost) is UriHostNameType.Unknown)
+        if (ViewModel.MirrorHost.IsNotNullOrEmpty() && Uri.CheckHostName(ViewModel.MirrorHost) is UriHostNameType.Unknown)
         {
             ImageMirrorServerTextBox.Text = "";
             ImageMirrorServerTextBoxTeachingTip.IsOpen = true;
@@ -89,7 +93,7 @@ public sealed partial class SettingsPage
 
     private void CheckForUpdateButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        _viewModel.CheckForUpdate();
+        ViewModel.CheckForUpdate();
     }
 
     private async void OpenHyperlinkButton_OnTapped(object sender, TappedRoutedEventArgs e)
@@ -113,62 +117,64 @@ public sealed partial class SettingsPage
         if (await this.CreateOkCancelAsync(SettingsPageResources.ResetSettingConfirmationDialogTitle,
                 SettingsPageResources.ResetSettingConfirmationDialogContent) is ContentDialogResult.Primary)
         {
-            _viewModel.ResetDefault();
+            ViewModel.ResetDefault();
+            // 不知道为什么字体无法重置
+            OnPropertyChanged(nameof(ViewModel));
         }
     }
 
     private void DefaultDownloadPathMacroTextBox_OnLostFocus(object sender, RoutedEventArgs e)
     {
-        if (_viewModel.DefaultDownloadPathMacro.IsNullOrBlank())
+        if (ViewModel.DefaultDownloadPathMacro.IsNullOrBlank())
         {
             DownloadMacroInvalidTeachingTip.Subtitle = SettingsPageResources.DownloadMacroInvalidTeachingTipInputCannotBeBlank;
             DownloadMacroInvalidTeachingTip.IsOpen = true;
-            _viewModel.DefaultDownloadPathMacro = _previousPath;
+            ViewModel.DefaultDownloadPathMacro = _previousPath;
             return;
         }
 
         try
         {
-            _testParser.SetupParsingEnvironment(new Lexer(_viewModel.DefaultDownloadPathMacro));
+            _testParser.SetupParsingEnvironment(new Lexer(ViewModel.DefaultDownloadPathMacro));
             _ = _testParser.Parse();
         }
         catch (Exception exception)
         {
             DownloadMacroInvalidTeachingTip.Subtitle = SettingsPageResources.DownloadMacroInvalidTeachingTipMacroInvalidFormatted.Format(exception.Message);
             DownloadMacroInvalidTeachingTip.IsOpen = true;
-            _viewModel.DefaultDownloadPathMacro = _previousPath;
+            ViewModel.DefaultDownloadPathMacro = _previousPath;
         }
     }
 
     private void DefaultDownloadPathMacroTextBox_OnGotFocus(object sender, RoutedEventArgs e)
     {
         DownloadMacroInvalidTeachingTip.IsOpen = false;
-        _previousPath = _viewModel.DefaultDownloadPathMacro;
+        _previousPath = ViewModel.DefaultDownloadPathMacro;
     }
 
     private void PathMacroTokenInputBox_OnTokenTapped(object? sender, Token e)
     {
-        _viewModel.DefaultDownloadPathMacro = _viewModel.DefaultDownloadPathMacro.Insert(DefaultDownloadPathMacroTextBox.SelectionStart, e.TokenContent);
+        ViewModel.DefaultDownloadPathMacro = ViewModel.DefaultDownloadPathMacro.Insert(DefaultDownloadPathMacroTextBox.SelectionStart, e.TokenContent);
     }
 
     private void DeleteSearchHistoriesButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
         using var scope = App.AppViewModel.AppServicesScope;
         var manager = scope.ServiceProvider.GetRequiredService<SearchHistoryPersistentManager>();
-        _viewModel.ClearData(ClearDataKind.SearchHistory, manager);
+        ViewModel.ClearData(ClearDataKind.SearchHistory, manager);
     }
 
     private void DeleteBrowseHistoriesButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
         using var scope = App.AppViewModel.AppServicesScope;
         var manager = scope.ServiceProvider.GetRequiredService<BrowseHistoryPersistentManager>();
-        _viewModel.ClearData(ClearDataKind.BrowseHistory, manager);
+        ViewModel.ClearData(ClearDataKind.BrowseHistory, manager);
     }
 
     private void DeleteDownloadHistoriesButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
         using var scope = App.AppViewModel.AppServicesScope;
         var manager = scope.ServiceProvider.GetRequiredService<DownloadHistoryPersistentManager>();
-        _viewModel.ClearData(ClearDataKind.DownloadHistory, manager);
+        ViewModel.ClearData(ClearDataKind.DownloadHistory, manager);
     }
 }

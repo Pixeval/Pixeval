@@ -42,7 +42,7 @@ public partial class App
 
     public App()
     {
-        AppViewModel = new AppViewModel(this) { AppSetting = AppContext.LoadConfig() ?? AppSetting.CreateDefault() };
+        AppViewModel = new AppViewModel(this) { AppSetting = AppContext.LoadConfig() ?? new AppSetting() };
         WindowFactory.WindowSettings = AppViewModel.AppSetting;
         WindowFactory.IconAbsolutePath = AppContext.IconAbsolutePath;
         AppInstance.GetCurrent().Activated += (_, arguments) => ActivationRegistrar.Dispatch(arguments);
