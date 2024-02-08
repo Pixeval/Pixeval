@@ -25,7 +25,6 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
-using Pixeval.Controls;
 using Pixeval.Controls.TokenInput;
 using Pixeval.Controls.Windowing;
 using Pixeval.Database.Managers;
@@ -35,12 +34,10 @@ using Pixeval.Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
 using UIElement = Microsoft.UI.Xaml.UIElement;
 using Pixeval.Options;
-using Pixeval.CoreApi.Global.Enum;
 using WinUI3Utilities;
 
 namespace Pixeval.Pages.Misc;
 
-// TODO set language
 public sealed partial class SettingsPage
 {
     // This TestParser is used to test whether the user input meta path is legal
@@ -76,11 +73,6 @@ public sealed partial class SettingsPage
         WindowFactory.SetBackdrop(_viewModel.Backdrop);
     }
 
-    private async void ThemeEntryDescriptionHyperlinkButton_OnTapped(object sender, TappedRoutedEventArgs e)
-    {
-        _ = await Launcher.LaunchUriAsync(new Uri("ms-settings:themes"));
-    }
-
     private void ImageMirrorServerTextBox_OnGotFocus(object sender, RoutedEventArgs e)
     {
         ImageMirrorServerTextBoxTeachingTip.IsOpen = false;
@@ -88,7 +80,7 @@ public sealed partial class SettingsPage
 
     private void ImageMirrorServerTextBox_OnLosingFocus(UIElement sender, LosingFocusEventArgs args)
     {
-        if (_viewModel.MirrorHost.IsNotNullOrEmpty() && Uri.CheckHostName(_viewModel.MirrorHost) == UriHostNameType.Unknown)
+        if (_viewModel.MirrorHost.IsNotNullOrEmpty() && Uri.CheckHostName(_viewModel.MirrorHost) is UriHostNameType.Unknown)
         {
             ImageMirrorServerTextBox.Text = "";
             ImageMirrorServerTextBoxTeachingTip.IsOpen = true;
@@ -100,14 +92,9 @@ public sealed partial class SettingsPage
         _viewModel.CheckForUpdate();
     }
 
-    private async void FeedbackByEmailHyperlinkButton_OnTapped(object sender, TappedRoutedEventArgs e)
+    private async void OpenHyperlinkButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        _ = await Launcher.LaunchUriAsync(new Uri("mailto:decem0730@hotmail.com"));
-    }
-
-    private async void OpenFontSettingsHyperlinkButton_OnTapped(object sender, TappedRoutedEventArgs e)
-    {
-        _ = await Launcher.LaunchUriAsync(new Uri("ms-settings:fonts"));
+        _ = await Launcher.LaunchUriAsync(new Uri(sender.GetTag<string>()));
     }
 
     private async void PerformSignOutButton_OnTapped(object sender, TappedRoutedEventArgs e)

@@ -28,6 +28,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Reflection;
+using Windows.Globalization;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
@@ -61,6 +62,8 @@ public partial class SettingsPageViewModel(AppSetting appSetting, FrameworkEleme
     public static ICollection<Token> AvailableIllustMacros { get; }
 
     public static IEnumerable<CultureInfo> AvailableCultures { get; }
+
+    public static IEnumerable<Language> AvailableLanguages { get; } = [new("系统默认", ""), new("简体中文", "zh-cn")];
 
     private readonly AppSetting _appSetting = appSetting;
 
@@ -201,6 +204,19 @@ public partial class SettingsPageViewModel(AppSetting appSetting, FrameworkEleme
         });
     }
 
+    [DefaultValue(typeof(DefaultLanguageProvider))]
+    public Language AppLanguage
+    {
+        get => AvailableLanguages.FirstOrDefault(t => t.Name == ApplicationLanguages.PrimaryLanguageOverride) ?? Language.DefaultLanguage;
+        set
+        {
+            if (ApplicationLanguages.PrimaryLanguageOverride != value.Name)
+                return;
+            ApplicationLanguages.PrimaryLanguageOverride = value.Name;
+            OnPropertyChanged();
+        }
+    }
+
     public DateTimeOffset GetMinSearchEndDate(DateTimeOffset startDate)
     {
         return startDate.AddDays(1);
@@ -224,4 +240,16 @@ public partial class SettingsPageViewModel(AppSetting appSetting, FrameworkEleme
         manager.Clear();
         FrameworkElement.ShowTeachingTipAndHide(kind.GetLocalizedResourceContent()!);
     }
+}
+
+public record Language(string DisplayName, string Name)
+{
+    public override string ToString() => DisplayName;
+
+    public static Language DefaultLanguage { get; } = new("默认", "");
+}
+
+public class DefaultLanguageProvider : IDefaultValueProvider
+{
+    public object ProvideValue() => Language.DefaultLanguage;
 }

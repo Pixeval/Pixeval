@@ -172,6 +172,7 @@
                 <NavigationViewItem
                     x:Uid="/MainPage/SpotlightsTab"
                     Icon="{markup:FontSymbolIcon Glyph=LibraryE8F1}"
+                    IsEnabled="False"
                     Tag="{x:Bind _viewModel.SpotlightsTag}" />
                 <NavigationViewItem x:Uid="/MainPage/FeedsTab" Icon="{markup:FontSymbolIcon Glyph=LocationE81D}" />
                 <NavigationViewItem
@@ -193,7 +194,10 @@
                     Icon="{markup:FontSymbolIcon Glyph=DownloadE896}" />
             </NavigationView.MenuItems>
             <NavigationView.FooterMenuItems>
-                <NavigationViewItem x:Uid="/MainPage/HelpTab" Icon="{markup:FontSymbolIcon Glyph=HelpE897}" />
+                <NavigationViewItem
+                    x:Uid="/MainPage/HelpTab"
+                    Icon="{markup:FontSymbolIcon Glyph=HelpE897}"
+                    IsEnabled="False" />
                 <NavigationViewItem
                     x:Uid="/MainPage/AboutTab"
                     Icon="{markup:FontSymbolIcon Glyph=RingerEA8F}"
