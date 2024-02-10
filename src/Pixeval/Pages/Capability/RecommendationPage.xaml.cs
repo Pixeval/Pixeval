@@ -30,10 +30,7 @@ namespace Pixeval.Pages.Capability;
 
 public sealed partial class RecommendationPage : ISortedIllustrationContainerPageHelper
 {
-    public RecommendationPage()
-    {
-        InitializeComponent();
-    }
+    public RecommendationPage() => InitializeComponent();
 
     public IllustrationContainer ViewModelProvider => IllustrationContainer;
 

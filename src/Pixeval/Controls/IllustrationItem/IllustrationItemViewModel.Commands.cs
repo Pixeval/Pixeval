@@ -36,6 +36,7 @@ using Pixeval.Download;
 using Microsoft.Extensions.DependencyInjection;
 using Pixeval.Download.Models;
 using Pixeval.CoreApi.Global.Enum;
+using Pixeval.Util.IO;
 
 namespace Pixeval.Controls;
 
@@ -75,8 +76,7 @@ public partial class IllustrationItemViewModel
 
     private void InitializeCommands()
     {
-        BookmarkCommand.Label = IsBookmarked ? MiscResources.RemoveBookmark : MiscResources.AddBookmark;
-        BookmarkCommand.IconSource = MakoHelper.GetBookmarkButtonIconSource(IsBookmarked);
+        BookmarkCommand.GetBookmarkCommand(IsBookmarked);
         BookmarkCommand.ExecuteRequested += BookmarkCommandOnExecuteRequested;
 
         GenerateLinkCommand.ExecuteRequested += GenerateLinkCommandOnExecuteRequested;
@@ -100,8 +100,7 @@ public partial class IllustrationItemViewModel
     {
         _ = IsBookmarked ? RemoveBookmarkAsync() : PostPublicBookmarkAsync();
         // update manually
-        BookmarkCommand.Label = IsBookmarked ? MiscResources.RemoveBookmark : MiscResources.AddBookmark;
-        BookmarkCommand.IconSource = MakoHelper.GetBookmarkButtonIconSource(IsBookmarked);
+        BookmarkCommand.GetBookmarkCommand(IsBookmarked);
 
         return;
         Task RemoveBookmarkAsync()
@@ -145,7 +144,7 @@ public partial class IllustrationItemViewModel
         if (args.Parameter is not TeachingTip showQrCodeTeachingTip)
             return;
 
-        var qrCodeSource = await UiHelper.GenerateQrCodeForUrlAsync(MakoHelper.GenerateIllustrationWebUri(Id).ToString());
+        var qrCodeSource = await IoHelper.GenerateQrCodeForUrlAsync(MakoHelper.GenerateIllustrationWebUri(Id).ToString());
         ShowQrCodeCommandExecuteRequested(showQrCodeTeachingTip, qrCodeSource);
     }
 
@@ -154,7 +153,7 @@ public partial class IllustrationItemViewModel
         if (args.Parameter is not TeachingTip showQrCodeTeachingTip)
             return;
 
-        var qrCodeSource = await UiHelper.GenerateQrCodeAsync(MakoHelper.GenerateIllustrationPixEzUri(Id).ToString());
+        var qrCodeSource = await IoHelper.GenerateQrCodeAsync(MakoHelper.GenerateIllustrationPixEzUri(Id).ToString());
         ShowQrCodeCommandExecuteRequested(showQrCodeTeachingTip, qrCodeSource);
     }
 
@@ -212,7 +211,7 @@ public partial class IllustrationItemViewModel
         var folder = await window.OpenFolderPickerAsync();
         if (folder is null)
         {
-            frameworkElement.ShowTeachingTipAndHide("已取消另存为操作", TeachingTipSeverity.Information);
+            frameworkElement.ShowTeachingTipAndHide(MiscResources.SaveAsCancelled, TeachingTipSeverity.Information);
             return;
         }
 
@@ -245,13 +244,13 @@ public partial class IllustrationItemViewModel
         {
             var task = await factory.CreateAsync(this, path);
             App.AppViewModel.DownloadManager.QueueTask(task);
-            teachingTip?.ShowAndHide("已创建下载任务");
+            teachingTip?.ShowAndHide(MiscResources.DownloadTaskCreated);
         }
         else
         {
             var task = await factory.TryCreateIntrinsicAsync(this, source, path);
             App.AppViewModel.DownloadManager.QueueTask(task);
-            teachingTip?.ShowAndHide("已保存");
+            teachingTip?.ShowAndHide(MiscResources.Saved);
         }
     }
 

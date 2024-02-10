@@ -25,13 +25,6 @@
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <NoWarn>$(NoWarn)</NoWarn>
     </PropertyGroup>
-    <ItemGroup>
-        <None Remove="Assets\Svg.resjson" />
-        <None Remove="Controls\DialogContent\TagsEntryEditTagDialog.xaml" />
-        <None Remove="Controls\SettingRadioButtons\SettingRadioButtons.xaml" />
-        <None Remove="Pages\Capability\TagsPage.xaml" />
-        <None Remove="Pages\Tags\TagsEntry.xaml" />
-    </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="CommunityToolkit.Labs.WinUI.Shimmer" Version="0.1.230830" />

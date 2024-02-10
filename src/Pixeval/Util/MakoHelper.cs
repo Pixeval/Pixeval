@@ -24,10 +24,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.WinUI.Collections;
 using Microsoft.UI;
+using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Pixeval.Controls;
 using Pixeval.Controls.MarkupExtensions;
-using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Model;
 using Pixeval.Misc;
@@ -116,69 +116,16 @@ public static class MakoHelper
         };
     }
 
-    public static void Cancel<T>(this IFetchEngine<T> engine)
-    {
-        engine.EngineHandle.Cancel();
-    }
-
     public static string GenerateStickerDownloadUrl(int id)
     {
         return $"https://s.pximg.net/common/images/stamp/generated-stamps/{id}_s.jpg";
     }
 
-    public static FontSymbolIconSource GetBookmarkButtonIconSource(bool isBookmarked)
+    public static bool SetFollow(long id, bool isFollowed, bool privately = false)
     {
-        var systemThemeFontFamily = new FontFamily(AppContext.AppIconFontFamilyName);
-        return isBookmarked
-            ? new()
-            {
-                Symbol = FontIconSymbols.HeartFillEB52,
-                Foreground = new SolidColorBrush(Colors.Crimson),
-                FontFamily = systemThemeFontFamily
-            }
-            : new()
-            {
-                Symbol = FontIconSymbols.HeartEB51,
-                FontFamily = systemThemeFontFamily
-            };
-    }
-
-    public static FontSymbolIcon GetBookmarkButtonIcon(bool isBookmarked)
-    {
-        var systemThemeFontFamily = new FontFamily(AppContext.AppIconFontFamilyName);
-        return isBookmarked
-            ? new()
-            {
-                Symbol = FontIconSymbols.HeartFillEB52,
-                Foreground = new SolidColorBrush(Colors.Crimson),
-                FontFamily = systemThemeFontFamily
-            }
-            : new()
-            {
-                Symbol = FontIconSymbols.HeartEB51,
-                FontFamily = systemThemeFontFamily
-            };
-    }
-
-    public static FontSymbolIconSource GetFollowButtonIcon(bool isFollowed)
-    {
-        var systemThemeFontFamily = new FontFamily(AppContext.AppIconFontFamilyName);
-        return isFollowed
-            ? new()
-            {
-                Symbol = FontIconSymbols.ContactSolidEA8C,
-                Foreground = new SolidColorBrush(Colors.Crimson),
-                FontFamily = systemThemeFontFamily
-            }
-            : new()
-            {
-                Symbol = FontIconSymbols.ContactE77B,
-                FontFamily = systemThemeFontFamily
-            };
-    }
-
-    public static string GetBookmarkContextItemText(bool isBookmarked)
-    {
-        return isBookmarked ? MiscResources.RemoveBookmark : MiscResources.AddBookmark;
+        _ = isFollowed
+            ? App.AppViewModel.MakoClient.PostFollowUserAsync(id, privately ? PrivacyPolicy.Private : PrivacyPolicy.Public)
+            : App.AppViewModel.MakoClient.RemoveFollowUserAsync(id);
+        return isFollowed;
     }
 }

@@ -41,6 +41,7 @@ using SixLabors.ImageSharp.Formats.Tiff;
 using SixLabors.ImageSharp.Formats.Webp;
 using SixLabors.ImageSharp.PixelFormats;
 using WinUI3Utilities;
+using QRCoder;
 
 namespace Pixeval.Util.IO;
 
@@ -230,5 +231,24 @@ public static partial class IoHelper
     {
         var entryStreams = await ReadZipArchiveEntries(zipStream);
         return await entryStreams.UgoiraSaveToImageAsync(ugoiraMetadataResponse.UgoiraMetadataInfo.Frames.Select(t => (int)t.Delay));
+    }
+
+    public static async Task<SoftwareBitmapSource> GenerateQrCodeForUrlAsync(string url)
+    {
+        var qrCodeGen = new QRCodeGenerator();
+        var urlPayload = new PayloadGenerator.Url(url);
+        var qrCodeData = qrCodeGen.CreateQrCode(urlPayload, QRCodeGenerator.ECCLevel.Q);
+        var qrCode = new BitmapByteQRCode(qrCodeData);
+        var bytes = qrCode.GetGraphic(20);
+        return await _recyclableMemoryStreamManager.GetStream(bytes).GetSoftwareBitmapSourceAsync(true);
+    }
+
+    public static async Task<SoftwareBitmapSource> GenerateQrCodeAsync(string content)
+    {
+        var qrCodeGen = new QRCodeGenerator();
+        var qrCodeData = qrCodeGen.CreateQrCode(content, QRCodeGenerator.ECCLevel.Q);
+        var qrCode = new BitmapByteQRCode(qrCodeData);
+        var bytes = qrCode.GetGraphic(20);
+        return await _recyclableMemoryStreamManager.GetStream(bytes).GetSoftwareBitmapSourceAsync(true);
     }
 }

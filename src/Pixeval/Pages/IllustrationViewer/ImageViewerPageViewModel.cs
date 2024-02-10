@@ -41,11 +41,9 @@ using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using Pixeval.Utilities.Threading;
-using Microsoft.UI.Xaml.Controls;
 using Pixeval.AppManagement;
 using Pixeval.Download;
 using Pixeval.Util.ComponentModels;
-using WinUI3Utilities;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
@@ -128,6 +126,9 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
         _ = LoadImage();
 
         InitializeCommands();
+        // 此时IsPlaying为true，IsFit为true
+        PlayGifCommand.GetPlayCommand(true);
+        RestoreResolutionCommand.GetResolutionCommand(true);
     }
 
     public async Task<Stream?> GetOriginalImageSourceAsync(bool useBmp, IProgress<int>? progress = null, Stream? destination = null)
@@ -232,7 +233,7 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
                         OriginalImageSources = [.. await IoHelper.ReadZipArchiveEntries(zipStream)];
                         MsIntervals = metadata.UgoiraMetadataInfo.Frames.Select(x => (int)x.Delay).ToArray();
                         break;
-                    case Result<Stream>.Failure(OperationCanceledException):
+                    default:
                         return;
                 }
 
@@ -266,43 +267,20 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
                 {
                     _ = await App.AppViewModel.Cache.TryAddAsync(cacheKey, OriginalImageSources, TimeSpan.FromDays(1));
                 }
-
-                return;
             }
-
-            throw new IllustrationSourceNotFoundException(ImageViewerPageResources.CannotFindImageSourceContent);
         }
     }
 
     private void PlayGifCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
         IsPlaying = !IsPlaying;
-        if (IsPlaying)
-        {
-            PlayGifCommand.Description = PlayGifCommand.Label = IllustrationViewerPageResources.PauseGif;
-            PlayGifCommand.IconSource = new SymbolIconSource { Symbol = Symbol.Stop };
-        }
-        else
-        {
-            PlayGifCommand.Description = PlayGifCommand.Label = IllustrationViewerPageResources.PlayGif;
-            PlayGifCommand.IconSource = new SymbolIconSource { Symbol = Symbol.Play };
-        }
+        PlayGifCommand.GetPlayCommand(IsPlaying);
     }
 
     public void FlipRestoreResolutionCommand(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
-        if (IsFit)
-        {
-            RestoreResolutionCommand.Label = IllustrationViewerPageResources.UniformToFillResolution;
-            RestoreResolutionCommand.IconSource = FontIconSymbols.FitPageE9A6.GetFontIconSource();
-            ShowMode = ZoomableImageMode.Original;
-        }
-        else
-        {
-            RestoreResolutionCommand.Label = IllustrationViewerPageResources.RestoreOriginalResolution;
-            RestoreResolutionCommand.IconSource = FontIconSymbols.WebcamE8B8.GetFontIconSource();
-            ShowMode = ZoomableImageMode.Fit;
-        }
+        RestoreResolutionCommand.GetResolutionCommand(IsFit);
+        ShowMode = IsFit ? ZoomableImageMode.Original : ZoomableImageMode.Fit;
     }
 
     private void SetAsBackgroundCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
@@ -317,7 +295,7 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
 
     private async void SetPersonalization(Func<StorageFile, IAsyncOperation<bool>> operation)
     {
-        if (OriginalImageSources is not [{ } first, ..])
+        if (OriginalImageSources is not [not null, ..])
             return;
 
         var file = await SaveToFolderAsync(AppKnownFolders.SavedWallPaper);
@@ -330,10 +308,7 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
 
     private void ShareCommandExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
-        if (LoadSuccessfully)
-            Window.ShowShareUi();
-        else
-            FrameworkElement.ShowTeachingTipAndHide(IllustrationViewerPageResources.CannotShareImageForNowTitle, TeachingTipSeverity.Warning, IllustrationViewerPageResources.CannotShareImageForNowContent);
+        Window.ShowShareUi();
     }
 
     private void InitializeCommands()
@@ -407,10 +382,7 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
     public XamlUICommand CopyCommand { get; } = IllustrationViewerPageResources.Copy.GetCommand(
         FontIconSymbols.CopyE8C8, VirtualKeyModifiers.Control, VirtualKey.C);
 
-    /// <summary>
-    /// The gif will be played as soon as its loaded, so the default state is playing, and thus we need the button to be paused
-    /// </summary>
-    public XamlUICommand PlayGifCommand { get; } = IllustrationViewerPageResources.PauseGif.GetCommand(FontIconSymbols.StopE71A);
+    public XamlUICommand PlayGifCommand { get; } = "".GetCommand(FontIconSymbols.StopE71A);
 
     public XamlUICommand ZoomOutCommand { get; } = IllustrationViewerPageResources.ZoomOut.GetCommand(
         FontIconSymbols.ZoomOutE71F, VirtualKey.Subtract);
@@ -427,7 +399,7 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
     public XamlUICommand MirrorCommand { get; } = IllustrationViewerPageResources.Mirror.GetCommand(
             FontIconSymbols.CollatePortraitF57C, VirtualKeyModifiers.Control, VirtualKey.M);
 
-    public XamlUICommand RestoreResolutionCommand { get; } = IllustrationViewerPageResources.RestoreOriginalResolution.GetCommand(FontIconSymbols.WebcamE8B8);
+    public XamlUICommand RestoreResolutionCommand { get; } = "".GetCommand(FontIconSymbols.WebcamE8B8);
 
     public StandardUICommand ShareCommand { get; } = new(StandardUICommandKind.Share);
 

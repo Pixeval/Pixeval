@@ -25,7 +25,7 @@ using System.Reflection;
 using Pixeval.Attributes;
 using Pixeval.Util;
 
-namespace Pixeval;
+namespace Pixeval.Misc;
 
 public enum SettingEntryCategory
 {

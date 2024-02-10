@@ -19,6 +19,7 @@
 #endregion
 
 using System;
+using Pixeval.Misc;
 
 namespace Pixeval.Attributes;
 

@@ -20,7 +20,6 @@
 
 using Pixeval.Controls.Illustrate;
 using Pixeval.CoreApi.Model;
-using Pixeval.Util;
 using Pixeval.Utilities;
 
 namespace Pixeval.Controls;
@@ -62,7 +61,7 @@ public sealed class IllustrationViewViewModel : SortableIllustrateViewViewModel<
 
     public override void Dispose()
     {
-        DataProvider.FetchEngine?.Cancel();
+        DataProvider.FetchEngine?.EngineHandle.Cancel();
         DataProvider.Dispose();
     }
 }

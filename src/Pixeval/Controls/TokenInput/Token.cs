@@ -24,20 +24,17 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using Pixeval.Utilities;
 using WinUI3Utilities;
 
-namespace Pixeval.Controls.TokenInput;
+namespace Pixeval.Controls;
 
 public sealed partial class Token : ObservableObject, IEquatable<Token>, IDeepCloneable<Token>
 {
     public static readonly Token Empty = new("", false, false);
 
-    [ObservableProperty]
-    private bool _caseSensitive;
+    [ObservableProperty] private bool _caseSensitive;
 
-    [ObservableProperty]
-    private bool _isRegularExpression;
+    [ObservableProperty] private bool _isRegularExpression;
 
-    [ObservableProperty]
-    private string _tokenContent;
+    [ObservableProperty] private string _tokenContent;
 
     public Token(string tokenContent, bool caseSensitive, bool isRegularExpression)
     {
@@ -45,9 +42,7 @@ public sealed partial class Token : ObservableObject, IEquatable<Token>, IDeepCl
         _caseSensitive = caseSensitive;
         _isRegularExpression = isRegularExpression;
         if (IsRegularExpression && !tokenContent.IsValidRegexPattern())
-        {
             ThrowHelper.Argument(tokenContent);
-        }
     }
 
     public Token()

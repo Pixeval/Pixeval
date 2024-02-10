@@ -24,15 +24,13 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
-using Microsoft.UI;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Pixeval.Controls.MarkupExtensions;
-using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Net.Response;
 using Pixeval.Misc;
+using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
@@ -54,64 +52,72 @@ public partial class IllustratorContentViewerViewModel : ObservableObject
     }
 
     [ObservableProperty]
-    private ObservableCollection<MenuFlyoutItemBase> _actionMenuFlyoutItems = null!;
+    private ImageSource? _avatarSource;
 
     [ObservableProperty]
-    private ImageSource? _avatar;
+    private IllustratorContentViewerTab _currentTab = IllustratorContentViewerTab.Illustration;
 
-    [ObservableProperty]
-    private NavigationViewTag? _bookmarkedIllustrationAndMangaTag;
+    private bool _isFollowed;
 
-    [ObservableProperty]
-    private NavigationViewTag? _bookmarkedNovelTag;
+    public bool IsFollowed
+    {
+        get => _isFollowed;
+        set
+        {
+            if (_isFollowed == value)
+                return;
+            _isFollowed = value;
+            OnPropertyChanged();
+            FollowPrivatelyCommand.NotifyCanExecuteChanged();
+            FollowCommand.GetFollowCommand(IsFollowed);
+        }
+    }
 
-    [ObservableProperty]
-    private IllustratorContentViewerTab _currentTab;
+    public NavigationViewTag IllustrationTag { get; }
 
-    [ObservableProperty]
-    private XamlUICommand? _followCommand;
+    public NavigationViewTag MangaTag { get; }
 
-    [ObservableProperty]
-    private bool _following;
+    public NavigationViewTag BookmarkedIllustrationAndMangaTag { get; }
 
-    [ObservableProperty]
-    private NavigationViewTag? _followingUserTag;
+    public NavigationViewTag FollowingUserTag { get; }
 
-    [ObservableProperty]
-    private XamlUICommand? _followPrivatelyCommand;
+    public NavigationViewTag MyPixivUserTag { get; }
 
-    [ObservableProperty]
-    private NavigationViewTag? _illustrationTag;
+    public NavigationViewTag NovelTag { get; }
 
-    [ObservableProperty]
-    private NavigationViewTag? _mangaTag;
+    public NavigationViewTag BookmarkedNovelTag { get; }
 
-    [ObservableProperty]
-    private UserMetrics? _metrics;
+    public bool Premium => UserDetail.UserProfile.IsPremium;
 
-    [ObservableProperty]
-    private NavigationViewTag? _myPixivUserTag;
+    public string UserName => UserDetail.UserEntity.Name;
 
-    [ObservableProperty]
-    private NavigationViewTag? _novelTag;
+    public long UserId => UserDetail.UserEntity.Id;
 
-    [ObservableProperty]
-    private bool _premium;
+    public PixivSingleUserResponse UserDetail { get; }
 
-    [ObservableProperty]
-    private PixivSingleUserResponse _userDetail = null!;
+    public UserMetrics Metrics { get; }
 
-    [ObservableProperty]
-    private string? _username;
+    public XamlUICommand FollowCommand { get; } = "".GetCommand(FontIconSymbols.ContactE77B);
+
+    public XamlUICommand FollowPrivatelyCommand { get; } = IllustratorContentViewerResources.FollowPrivately.GetCommand(FontIconSymbols.FavoriteStarE734);
 
     public IllustratorContentViewerViewModel(PixivSingleUserResponse userDetail)
     {
         RecommendIllustrators = [];
         UserDetail = userDetail;
+        Metrics = new UserMetrics(userDetail.UserProfile.TotalFollowUsers, userDetail.UserProfile.TotalMyPixivUsers, userDetail.UserProfile.TotalIllusts);
 
-        InitializeTags();
-        InitializeTrivia();
+        IllustrationTag = new NavigationViewTag(typeof(IllustratorIllustrationPage), UserDetail.UserEntity.Id);
+        MangaTag = new NavigationViewTag(typeof(IllustratorMangaPage), UserDetail.UserEntity.Id);
+        BookmarkedIllustrationAndMangaTag = new NavigationViewTag(typeof(IllustratorIllustrationAndMangaBookmarkPage), UserDetail.UserEntity.Id);
+        FollowingUserTag = null!;
+        MyPixivUserTag = null!;
+        NovelTag = null!;
+        BookmarkedNovelTag = null!;
+
         InitializeCommands();
+        // 在InitializeCommands之后，方便setter里的触发
+        IsFollowed = UserDetail.UserEntity.IsFollowed;
         _ = SetAvatarAsync();
     }
 
@@ -135,100 +141,42 @@ public partial class IllustratorContentViewerViewModel : ObservableObject
         });
     }
 
-    public ObservableCollection<RecommendIllustratorItemViewModel> RecommendIllustrators { get; init; }
+    public ObservableCollection<RecommendIllustratorItemViewModel> RecommendIllustrators { get; }
 
     public event EventHandler<bool>? ShowRecommendIllustratorsChanged;
 
     public event EventHandler<bool>? ShowExternalCommandBarChanged;
 
-    private void InitializeTags()
-    {
-        IllustrationTag = new NavigationViewTag(typeof(IllustratorIllustrationPage), UserDetail.UserEntity.Id);
-        MangaTag = new NavigationViewTag(typeof(IllustratorMangaPage), UserDetail.UserEntity.Id);
-        BookmarkedIllustrationAndMangaTag = new NavigationViewTag(typeof(IllustratorIllustrationAndMangaBookmarkPage), UserDetail.UserEntity.Id);
-    }
-
-    private void InitializeCommands()
-    {
-        FollowCommand = GetFollowCommand();
-        FollowCommand.ExecuteRequested += OnFollowCommandOnExecuteRequested;
-
-        FollowPrivatelyCommand = new XamlUICommand
-        {
-            IconSource = FontIconSymbols.FavoriteStarE734.GetFontIconSource(),
-            Label = IllustratorContentViewerResources.FollowPrivately
-        };
-        FollowPrivatelyCommand.CanExecuteRequested += (_, args) => args.CanExecute = !Following;
-        FollowPrivatelyCommand.ExecuteRequested += FollowPrivatelyCommandOnExecuteRequested;
-    }
-
-    private void InitializeTrivia()
-    {
-        var profile = UserDetail.UserProfile;
-
-        CurrentTab = IllustratorContentViewerTab.Illustration;
-        Username = UserDetail.UserEntity?.Name;
-        Metrics = new UserMetrics(profile?.TotalFollowUsers ?? 0, profile?.TotalMyPixivUsers ?? 0, profile?.TotalIllusts ?? 0);
-        Premium = profile?.IsPremium ?? false;
-        Following = UserDetail.UserEntity?.IsFollowed ?? false;
-        ActionMenuFlyoutItems = [];
-    }
-
     private async Task SetAvatarAsync()
     {
         var result = await App.AppViewModel.MakoClient.DownloadBitmapImageAsync(UserDetail.UserEntity.ProfileImageUrls.Medium, 40);
-        Avatar = result is Result<ImageSource>.Success { Value: var avatar }
+        AvatarSource = result is Result<ImageSource>.Success { Value: var avatar }
             ? avatar
             : await AppContext.GetPixivNoProfileImageAsync();
     }
 
+    private void InitializeCommands()
+    {
+        FollowCommand.ExecuteRequested += (_, _) => IsFollowed = MakoHelper.SetFollow(UserId, !IsFollowed);
+
+        FollowPrivatelyCommand.CanExecuteRequested += (_, args) => args.CanExecute = !IsFollowed;
+        FollowPrivatelyCommand.ExecuteRequested += FollowPrivatelyCommandOnExecuteRequested;
+    }
+
     private void FollowPrivatelyCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
-        if (!Following)
-        {
-            Follow(true);
-        }
-    }
-
-    private void OnFollowCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
-    {
-        if (Following)
-        {
-            Unfollow();
-        }
-        else
-        {
-            Follow(false);
-        }
-
-        FollowCommand = GetFollowCommand();
-        FollowPrivatelyCommand?.NotifyCanExecuteChanged();
-    }
-
-    private XamlUICommand GetFollowCommand()
-    {
-        return new XamlUICommand
-        {
-            IconSource = Following ? FontIconSymbols.HeartFillEB52.GetFontIconSource(foregroundBrush: new SolidColorBrush(Colors.Crimson)) : FontIconSymbols.HeartEB51.GetFontIconSource(),
-            Label = Following ? IllustratorContentViewerResources.Unfollow : IllustratorItemResources.Follow
-        };
+        if (!IsFollowed)
+            IsFollowed = MakoHelper.SetFollow(UserId, true, true);
     }
 
     public async Task LoadRecommendIllustratorsAsync()
     {
         // TODO 可能会有请求过多问题
-        try
-        {
-            var recommendIllustrators = await App.AppViewModel.MakoClient.GetRelatedRecommendUsersAsync(UserDetail.UserEntity.Id, isR18: !App.AppViewModel.AppSetting.FiltrateRestrictedContent, lang: CultureInfo.CurrentUICulture);
-            var viewModels = recommendIllustrators.ResponseBody.RecommendMaps
-                .Select(ru => ToRecommendIllustratorProfileViewModel(recommendIllustrators, ru));
+        var recommendIllustrators = await App.AppViewModel.MakoClient.GetRelatedRecommendUsersAsync(UserDetail.UserEntity.Id, isR18: !App.AppViewModel.AppSetting.FiltrateRestrictedContent, lang: CultureInfo.CurrentUICulture);
+        var viewModels = recommendIllustrators.ResponseBody.RecommendMaps
+            .Select(ru => ToRecommendIllustratorProfileViewModel(recommendIllustrators, ru));
 
-            RecommendIllustrators.AddRange(viewModels);
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-        }
+        RecommendIllustrators.AddRange(viewModels);
         return;
 
         static RecommendIllustratorItemViewModel ToRecommendIllustratorProfileViewModel(PixivRelatedRecommendUsersResponse context, RecommendMap recommendUser)
@@ -241,18 +189,6 @@ public partial class IllustratorContentViewerViewModel : ObservableObject
 
             return new RecommendIllustratorItemViewModel(user, recommendUser.IllustIds);
         }
-    }
-
-    private void Follow(bool privately)
-    {
-        Following = true;
-        _ = App.AppViewModel.MakoClient.PostFollowUserAsync(UserDetail.UserEntity.Id, privately ? PrivacyPolicy.Private : PrivacyPolicy.Public);
-    }
-
-    private void Unfollow()
-    {
-        Following = false;
-        _ = App.AppViewModel.MakoClient.RemoveFollowUserAsync(UserDetail.UserEntity.Id);
     }
 
     public Visibility GetNavigationViewAutoSuggestBoxVisibility(bool showExternalCommandBar)

@@ -18,6 +18,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -26,7 +27,6 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.Controls.Illustrate;
 using Pixeval.Controls.MarkupExtensions;
-using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Model;
 using Pixeval.CoreApi.Net.Response;
 using Pixeval.Util;
@@ -45,34 +45,44 @@ public sealed partial class IllustratorItemViewModel : IllustrateViewModel<User>
     [ObservableProperty]
     private SoftwareBitmapSource? _backgroundSource;
 
-    [ObservableProperty]
     private bool _isFollowed;
+
+    public bool IsFollowed
+    {
+        get => _isFollowed;
+        set
+        {
+            if (_isFollowed == value)
+                return;
+            _isFollowed = value;
+            OnPropertyChanged();
+            FollowCommand.GetFollowCommand(IsFollowed);
+        }
+    }
 
     public IllustratorItemViewModel(User user) : base(user)
     {
         OverviewViewModel = new IllustratorIllustrationsOverviewViewModel(Illustrate.Illusts);
-        IsFollowed = Illustrate.UserInfo?.IsFollowed ?? false;
 
         _ = SetAvatarAsync();
         _ = SetBackgroundAsync();
 
-        FollowCommand = FollowText.GetCommand(MakoHelper.GetFollowButtonIcon(IsFollowed));
         InitializeCommands();
+        // 在InitializeCommands之后，方便setter里的触发
+        IsFollowed = Illustrate.UserInfo.IsFollowed;
     }
 
     public IllustratorIllustrationsOverviewViewModel OverviewViewModel { get; }
 
-    public PixivSingleUserResponse? UserDetail { get; private set; }
+    public PixivSingleUserResponse UserDetail { get; private set; } = null!;
 
-    public string Username => Illustrate.UserInfo?.Name ?? "";
+    public string Username => Illustrate.UserInfo.Name;
 
-    public long UserId => Illustrate.UserInfo?.Id ?? 0;
+    public long UserId => Illustrate.UserInfo.Id;
 
-    public XamlUICommand FollowCommand { get; set; }
+    public XamlUICommand FollowCommand { get; } = "".GetCommand(FontIconSymbols.ContactE77B);
 
-    public XamlUICommand ShareCommand { get; set; } = IllustratorItemResources.Share.GetCommand(FontIconSymbols.ShareE72D);
-
-    private string FollowText => IsFollowed ? IllustratorItemResources.Unfollow : IllustratorItemResources.Follow;
+    public XamlUICommand ShareCommand { get; } = IllustratorItemResources.Share.GetCommand(FontIconSymbols.ShareE72D);
 
     public string GetIllustrationToolTipSubtitleText(User user)
     {
@@ -105,38 +115,16 @@ public sealed partial class IllustratorItemViewModel : IllustrateViewModel<User>
 
     // private void SetMetrics()
     // {
-    //     var followings = UserDetail!.UserProfile?.TotalFollowUsers ?? 0;
-    //     var myPixivUsers = UserDetail.UserProfile?.TotalMyPixivUsers ?? 0;
-    //     var illustrations = UserDetail.UserProfile?.TotalIllusts ?? 0;
+    //     var followings = UserDetail.UserProfile.TotalFollowUsers;
+    //     var myPixivUsers = UserDetail.UserProfile.TotalMyPixivUsers;
+    //     var illustrations = UserDetail.UserProfile.TotalIllusts;
     //     Metrics = new UserMetrics(followings, myPixivUsers, illustrations);
     // }
 
     private void InitializeCommands()
     {
-        FollowCommand.ExecuteRequested += FollowCommandOnExecuteRequested;
+        FollowCommand.ExecuteRequested += (_, _) => IsFollowed = MakoHelper.SetFollow(UserId, !IsFollowed);
         // TODO: ShareCommand
-    }
-
-    private void FollowCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
-    {
-        if (IsFollowed)
-            Unfollow();
-        else
-            Follow();
-        FollowCommand.Label = FollowText;
-        FollowCommand.IconSource = MakoHelper.GetFollowButtonIcon(IsFollowed);
-    }
-
-    private void Follow()
-    {
-        IsFollowed = true;
-        _ = App.AppViewModel.MakoClient.PostFollowUserAsync(UserId, PrivacyPolicy.Public);
-    }
-
-    private void Unfollow()
-    {
-        IsFollowed = false;
-        _ = App.AppViewModel.MakoClient.RemoveFollowUserAsync(UserId);
     }
 
     public override void Dispose()

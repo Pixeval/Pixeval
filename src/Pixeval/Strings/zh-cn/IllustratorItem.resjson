@@ -1,12 +1,10 @@
 {
-  "Follow": "关注用户",
-  "GenerateLink/Text": "复制应用链接",
-  "GenerateWebLink/Text": "复制网页链接",
-  "LinkCopiedToClipboard": "链接已复制到剪切板",
-  "Share": "分享",
-  "Unfollow": "取消关注",
-  "UserHasNoComment": "用户没有自我介绍",
-  "UserMetricsFollowingsTextBlock/Text": "正在关注",
-  "UserMetricsIllustrationCountTextBlock/Text": "作品数",
-  "UserMetricsMyPixivUsersTextBlock/Text": "好P友"
+    "GenerateLink/Text": "复制应用链接",
+    "GenerateWebLink/Text": "复制网页链接",
+    "LinkCopiedToClipboard": "链接已复制到剪切板",
+    "Share": "分享",
+    "UserHasNoComment": "用户没有自我介绍",
+    "UserMetricsFollowingsTextBlock/Text": "正在关注",
+    "UserMetricsIllustrationCountTextBlock/Text": "作品数",
+    "UserMetricsMyPixivUsersTextBlock/Text": "好P友"
 }

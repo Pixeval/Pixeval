@@ -141,7 +141,7 @@ public class ExceptionModel
          {Indent(indent)}Source: {Source}
          {Indent(indent)}Message: {Message}
          {Indent(indent)}StackTrace: 
-         {Indent(indent)} {StackTrace?.ReplaceLineEndings(Environment.NewLine + Indent(indent) + " ") ?? "null"}
+         {Indent(indent + 1)}{StackTrace?.ReplaceLineEndings(Environment.NewLine + Indent(indent + 1)) ?? "null"}
          {InnerException?.ToString(indent + 1)}
          
          """;

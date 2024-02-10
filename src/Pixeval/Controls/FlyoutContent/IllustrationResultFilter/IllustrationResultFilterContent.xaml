@@ -2,12 +2,11 @@
     x:Class="Pixeval.Controls.FlyoutContent.IllustrationResultFilterContent"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:Pixeval.Controls"
     xmlns:converters="using:Pixeval.Controls.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:flyouts="using:Pixeval.Controls.FlyoutContent"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:tokenInput="using:Pixeval.Controls.TokenInput"
-    xmlns:tokenInputTextBox="using:Pixeval.Controls.TokenInputTextBox"
     mc:Ignorable="d">
     <UserControl.Resources>
         <converters:LongToDoubleConverter x:Key="LongToDoubleConverter" />
@@ -33,23 +32,23 @@
             </flyouts:IllustrationResultFilterFunctionEntry>
 
             <flyouts:IllustrationResultFilterFunctionEntry x:Uid="/IllustrationResultFilterContent/IncludeTagsEntry">
-                <tokenInput:TokenInput x:Uid="/IllustrationResultFilterContent/IncludeTagTokenInput" TokenSource="{x:Bind ViewModel.IncludeTags, Mode=OneWay}" />
+                <controls:TokenInput x:Uid="/IllustrationResultFilterContent/IncludeTagTokenInput" TokenSource="{x:Bind ViewModel.IncludeTags, Mode=OneWay}" />
             </flyouts:IllustrationResultFilterFunctionEntry>
 
             <flyouts:IllustrationResultFilterFunctionEntry x:Uid="/IllustrationResultFilterContent/ExcludeTagsEntry">
-                <tokenInput:TokenInput x:Uid="/IllustrationResultFilterContent/ExcludeTagTokenInput" TokenSource="{x:Bind ViewModel.ExcludeTags, Mode=OneWay}" />
+                <controls:TokenInput x:Uid="/IllustrationResultFilterContent/ExcludeTagTokenInput" TokenSource="{x:Bind ViewModel.ExcludeTags, Mode=OneWay}" />
             </flyouts:IllustrationResultFilterFunctionEntry>
 
             <flyouts:IllustrationResultFilterFunctionEntry x:Uid="/IllustrationResultFilterContent/UserGroupNameEntry">
-                <tokenInput:TokenInput x:Uid="/IllustrationResultFilterContent/UserGroupNameInput" TokenSource="{x:Bind ViewModel.UserGroupName, Mode=OneWay}" />
+                <controls:TokenInput x:Uid="/IllustrationResultFilterContent/UserGroupNameInput" TokenSource="{x:Bind ViewModel.UserGroupName, Mode=OneWay}" />
             </flyouts:IllustrationResultFilterFunctionEntry>
 
             <flyouts:IllustrationResultFilterFunctionEntry x:Uid="/IllustrationResultFilterContent/IllustratorNameEntry">
-                <tokenInputTextBox:TokenInputTextBox x:Uid="/IllustrationResultFilterContent/IllustratorNameInput" Token="{x:Bind ViewModel.IllustratorName, Mode=OneWay}" />
+                <controls:TokenInputTextBox x:Uid="/IllustrationResultFilterContent/IllustratorNameInput" Token="{x:Bind ViewModel.IllustratorName, Mode=OneWay}" />
             </flyouts:IllustrationResultFilterFunctionEntry>
 
             <flyouts:IllustrationResultFilterFunctionEntry x:Uid="/IllustrationResultFilterContent/IllustrationNameEntry">
-                <tokenInputTextBox:TokenInputTextBox x:Uid="/IllustrationResultFilterContent/IllustrationNameInput" Token="{x:Bind ViewModel.IllustrationName, Mode=OneWay}" />
+                <controls:TokenInputTextBox x:Uid="/IllustrationResultFilterContent/IllustrationNameInput" Token="{x:Bind ViewModel.IllustrationName, Mode=OneWay}" />
             </flyouts:IllustrationResultFilterFunctionEntry>
 
             <flyouts:IllustrationResultFilterFunctionEntry x:Uid="/IllustrationResultFilterContent/IllustratorIdEntry">

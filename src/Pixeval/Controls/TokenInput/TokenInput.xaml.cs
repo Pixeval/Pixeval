@@ -27,7 +27,7 @@ using Pixeval.Util.UI;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
 
-namespace Pixeval.Controls.TokenInput;
+namespace Pixeval.Controls;
 
 [DependencyProperty<string>("PlaceholderText")]
 [DependencyProperty<ICollection<Token>>("TokenSource")]
@@ -76,7 +76,7 @@ public sealed partial class TokenInput
     {
         if (IsTokenTappedDefaultBehaviorEnabled)
         {
-            var token = sender.GetDataContext<Token>();
+            var token = sender.GetTag<Token>();
             var arg = new TokenDeletingEventArgs(token, false);
             TokenDeleting?.Invoke(this, arg);
             if (!arg.Cancel)
@@ -86,25 +86,11 @@ public sealed partial class TokenInput
             }
         }
 
-        TokenTapped?.Invoke(sender, sender.GetDataContext<Token>());
+        TokenTapped?.Invoke(sender, sender.GetTag<Token>());
     }
 
     public static Visibility CalculateTokenIconRightmostSeparatorVisibility(bool caseSensitive, bool isRegex)
     {
         return (caseSensitive || isRegex).ToVisibility();
     }
-}
-
-public class TokenAddingEventArgs(Token token, bool cancel) : EventArgs
-{
-    public Token Token { get; } = token;
-
-    public bool Cancel { get; set; } = cancel;
-}
-
-public class TokenDeletingEventArgs(Token token, bool cancel) : EventArgs
-{
-    public Token Token { get; } = token;
-
-    public bool Cancel { get; set; } = cancel;
 }

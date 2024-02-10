@@ -236,10 +236,10 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
     public int PageCount => Pages.Length;
 
     /// <inheritdoc cref="CurrentIllustrationIndex"/>
-    private int _currentIllustrationIndex;
+    private int _currentIllustrationIndex = -1;
 
     /// <inheritdoc cref="CurrentPageIndex"/>
-    private int _currentPageIndex;
+    private int _currentPageIndex = -1;
 
     /// <summary>
     /// 一个插画所有的页面

@@ -22,10 +22,9 @@ using System;
 using Windows.System;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
-using Pixeval.Controls.TokenInput;
 using WinUI3Utilities.Attributes;
 
-namespace Pixeval.Controls.TokenInputTextBox;
+namespace Pixeval.Controls;
 
 /// <summary>
 /// The <see cref="TokenInputTextBox"/> is intended to be used together with <see cref="TokenInput"/>, it contains a <see cref="TextBox"/>

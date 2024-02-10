@@ -20,7 +20,6 @@
 
 using Pixeval.Controls.Illustrate;
 using Pixeval.CoreApi.Model;
-using Pixeval.Util;
 
 namespace Pixeval.Controls;
 
@@ -30,7 +29,7 @@ public sealed class IllustratorViewViewModel : IllustrateViewViewModel<User, Ill
 
     public override void Dispose()
     {
-        DataProvider.FetchEngine?.Cancel();
+        DataProvider.FetchEngine?.EngineHandle.Cancel();
         DataProvider.Dispose();
     }
 }

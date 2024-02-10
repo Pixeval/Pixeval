@@ -19,21 +19,17 @@
 #endregion
 
 using System;
-using System.Numerics;
 using Windows.System;
-using CommunityToolkit.WinUI.Animations.Expressions;
-using Microsoft.Graphics.Canvas.Effects;
 using Microsoft.UI;
-using Microsoft.UI.Composition;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Hosting;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Controls;
 using Pixeval.Controls.MarkupExtensions;
+using Pixeval.Util;
 using Pixeval.Util.UI;
 using WinUI3Utilities;
 
@@ -41,11 +37,6 @@ namespace Pixeval.Pages.IllustratorViewer;
 
 public sealed partial class IllustratorPage
 {
-    private SpriteVisual? _blurredBackgroundImageVisual;
-    private Compositor? _compositor;
-
-    private CompositionPropertySet? _props;
-    private CompositionPropertySet? _scrollerPropertySet;
     private IllustratorPageViewModel _viewModel = null!;
 
     public IllustratorPage()
@@ -86,18 +77,21 @@ public sealed partial class IllustratorPage
 
     public override void OnPageActivated(NavigationEventArgs navigationEventArgs)
     {
-        switch (navigationEventArgs.Parameter)
+        _viewModel = navigationEventArgs.Parameter switch
         {
-            case (UIElement sender, IllustratorPageViewModel viewModel):
-                _viewModel = viewModel;
-                break;
-            case IllustratorPageViewModel viewModel1:
-                _viewModel = viewModel1;
-                break;
-        }
+            (UIElement sender, IllustratorPageViewModel viewModel) => viewModel,
+            IllustratorPageViewModel viewModel1 => viewModel1,
+            _ => _viewModel
+        };
 
         ChangeSource();
     }
+
+#if false // TODO 这是什么
+    private CompositionPropertySet? _props;
+    private CompositionPropertySet? _scrollerPropertySet;
+    private SpriteVisual? _blurredBackgroundImageVisual;
+    private Compositor? _compositor;
 
     private void IllustratorPage_OnLoaded(object sender, RoutedEventArgs e)
     {
@@ -105,7 +99,6 @@ public sealed partial class IllustratorPage
         var headerPresenter = (UIElement)VisualTreeHelper.GetParent(Header);
         var headerContainer = (UIElement)VisualTreeHelper.GetParent(headerPresenter);
         Canvas.SetZIndex(headerContainer, 1);
-        return;
         // _scrollerPropertySet = ElementCompositionPreview.GetScrollViewerManipulationPropertySet(IllustrationContainer.IllustrationView.ScrollView);
         _compositor = _scrollerPropertySet.Compositor;
 
@@ -194,17 +187,18 @@ public sealed partial class IllustratorPage
         buttonVisual.StartAnimation("Offset.Y", buttonOffsetAnimation);
     }
 
-    private void ChangeSource()
-    {
-        // _ = ViewModelProvider.ViewModel.ResetEngineAndFillAsync(_viewModel!.FetchEngine, 100);
-    }
-
     private void IllustratorPage_OnSizeChanged(object sender, SizeChangedEventArgs e)
     {
         if (_blurredBackgroundImageVisual != null)
         {
             _blurredBackgroundImageVisual.Size = new Vector2((float)OverlayRectangle.ActualWidth, (float)OverlayRectangle.ActualHeight);
         }
+    }
+#endif
+
+    private void ChangeSource()
+    {
+        ViewModelProvider.ViewModel.ResetEngine(_viewModel.FetchEngine, 100);
     }
 
     public void GoBack()
@@ -220,7 +214,7 @@ public sealed partial class IllustratorPage
 
     private async void OpenLinkButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        _ = await Launcher.LaunchUriAsync(new Uri($"https://www.pixiv.net/users/{_viewModel.Id}"));
+        _ = await Launcher.LaunchUriAsync(MakoHelper.GenerateIllustratorWebUri(_viewModel.Id));
     }
 
     private async void FollowButton_OnTapped(object sender, TappedRoutedEventArgs e)

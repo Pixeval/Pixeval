@@ -3,6 +3,7 @@
   "BookmarkedNovelNavigationViewItem/Content": "小说收藏",
   "DoNotSort": "不进行排序",
   "Follow": "关注",
+  "Unfollow": "取消关注",
   "FollowingUserNavigationViewItem/Content": "关注的人",
   "FollowPrivately": "悄悄关注",
   "IllustrationNavigationViewItem/Content": "插画",
@@ -18,7 +19,6 @@
   "SortMethod": "排序方式",
   "ToggleShowExternalCommandBarItem/Text": "展示辅助命令栏",
   "ToggleShowRecommendIllustratorItem/Text": "展示推荐作者",
-  "Unfollow": "取消关注",
   "UserMetricsFollowingUserTextBlock/Text": "关注中",
   "UserMetricsIllustrationCountTextBlock/Text": "作品数",
   "UserMetricsMyPixivUserTextBlock/Text": "好P友"

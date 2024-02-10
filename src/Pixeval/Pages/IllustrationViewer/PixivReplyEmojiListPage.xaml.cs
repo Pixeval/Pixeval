@@ -76,7 +76,7 @@ public sealed partial class PixivReplyEmojiListPage
 
     private void EmojiImage_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        var viewModel = sender.GetDataContext<PixivReplyEmojiViewModel>();
+        var viewModel = sender.GetTag<PixivReplyEmojiViewModel>();
         _replyBar?.ReplyContentRichEditBox.Document.Selection.InsertImage(20, 20, 17, VerticalCharacterAlignment.Baseline, viewModel.EmojiEnumValue.GetReplyEmojiPlaceholderKey(), viewModel.ImageStream);
     }
 }

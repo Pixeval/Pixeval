@@ -56,11 +56,16 @@ public class IllustratorIllustrationAndMangaBookmarkPageViewModel : ObservableOb
         UserBookmarkTags.AddRange(result.Where(t => t.Value is PrivacyPolicy.Public).Select(t => t.Key));
     }
 
-    // Fuck Pixiv: The results from web API and the results from app API have different formats and json schemas,
-    // so the only useful thing we can get from web API are the IDs of those illustrations belonging to the specific tag,
-    // but the API is paged, which means we can get at most 100 IDs per request, so this is a gradual process, to prevent
-    // from waiting for too long before all IDs are fetched, we choose an incremental way, i.e., instead of setting the filter
-    // after all IDs are fetched, we update the filter whenever new IDs are available.
+    /// <summary>
+    /// Fuck Pixiv: The results from web API and the results from app API have different formats and json schemas,
+    /// so the only useful thing we can get from web API are the IDs of those illustrations belonging to the specific tag,
+    /// but the API is paged, which means we can get at most 100 IDs per request, so this is a gradual process, to prevent
+    /// from waiting for too long before all IDs are fetched, we choose an incremental way, i.e., instead of setting the filter
+    /// after all IDs are fetched, we update the filter whenever new IDs are available.
+    /// </summary>
+    /// <param name="uid"></param>
+    /// <param name="tag"></param>
+    /// <returns></returns>
     public async Task LoadBookmarksForTagAsync(long uid, string tag)
     {
         if (_bookmarkTagIllustrationIdDictionary.TryGetValue(tag, out var set) && set.Count > 0)

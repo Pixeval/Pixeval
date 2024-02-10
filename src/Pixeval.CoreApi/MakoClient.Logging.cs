@@ -18,7 +18,7 @@ public partial class MakoClient
         }
         catch (Exception e)
         {
-            Logger.LogError("", e);
+            LogException(e);
             return [];
         }
     }
@@ -33,7 +33,7 @@ public partial class MakoClient
         }
         catch (Exception e)
         {
-            Logger.LogError("", e);
+            LogException(e);
             return [];
         }
     }
@@ -48,7 +48,7 @@ public partial class MakoClient
         }
         catch (Exception e)
         {
-            Logger.LogError("", e);
+            LogException(e);
         }
     }
 
@@ -77,7 +77,7 @@ public partial class MakoClient
         }
         catch (Exception e)
         {
-            Logger.LogError("", e);
+            LogException(e);
             return T.CreateDefault();
         }
     }
@@ -102,7 +102,7 @@ public partial class MakoClient
         }
         catch (Exception e)
         {
-            Logger.LogError("", e);
+            LogException(e);
             return createDefault();
         }
     }
@@ -110,6 +110,11 @@ public partial class MakoClient
     private Task<T> RunWithLoggerAsync<T>(Func<Task<Result<T>>> task) where T : IFactory<T>
     {
         return RunWithLoggerAsync(task, T.CreateDefault);
+    }
+
+    private void LogException(Exception e)
+    {
+        Logger.LogError("MakoClient Exception", e);
     }
 
     //private async Task<T> RunWithLoggerAsync<T>(Func<Task<Result<T>>> task, T defaultValue)

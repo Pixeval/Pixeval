@@ -46,6 +46,7 @@ using Pixeval.Controls;
 using Pixeval.Database;
 using Pixeval.Database.Managers;
 using Pixeval.Messages;
+using Pixeval.Misc;
 using Pixeval.Pages.Capability;
 using Pixeval.Pages.Download;
 using Pixeval.Pages.Misc;

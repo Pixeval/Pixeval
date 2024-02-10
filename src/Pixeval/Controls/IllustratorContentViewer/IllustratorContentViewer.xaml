@@ -86,7 +86,7 @@
                     <PersonPicture
                         Width="35"
                         Height="35"
-                        ProfilePicture="{x:Bind ViewModel.Avatar, Mode=OneWay}" />
+                        ProfilePicture="{x:Bind ViewModel.AvatarSource, Mode=OneWay}" />
                     <StackPanel
                         Margin="20,0,0,5"
                         VerticalAlignment="Center"
@@ -94,7 +94,7 @@
                         <TextBlock
                             MaxWidth="80"
                             Style="{StaticResource ContentStrongTextBlockStyle}"
-                            Text="{x:Bind ViewModel.Username, Mode=OneWay}"
+                            Text="{x:Bind ViewModel.UserName, Mode=OneWay}"
                             TextTrimming="CharacterEllipsis"
                             TextWrapping="NoWrap" />
                         <StackPanel
@@ -108,7 +108,7 @@
                             <controls:PixevalBadge
                                 Mode="Following"
                                 UseSmall="True"
-                                Visibility="{x:Bind ViewModel.Following, Mode=OneWay}" />
+                                Visibility="{x:Bind ViewModel.IsFollowed, Mode=OneWay}" />
                         </StackPanel>
                     </StackPanel>
                     <Grid Margin="20,0,0,0" VerticalAlignment="Center">

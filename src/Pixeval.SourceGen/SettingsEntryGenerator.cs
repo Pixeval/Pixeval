@@ -33,7 +33,7 @@ public class SettingsEntryGenerator : IIncrementalGenerator
     private const string SettingPocoAttributeFqName = "Pixeval.Attributes.SettingPocoAttribute";
     private const string SyntheticSettingAttributeFqName = "Pixeval.Attributes.SyntheticSettingAttribute";
     private const string SettingMetadataAttributeFqName = "Pixeval.Attributes.SettingMetadataAttribute";
-    private const string SettingEntryFqName = "global::Pixeval.SettingEntry";
+    private const string SettingEntryFqName = "global::Pixeval.Misc.SettingEntry";
 
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
@@ -82,7 +82,7 @@ public class SettingsEntryGenerator : IIncrementalGenerator
                 $$"""
                 #nullable enable
                 
-                namespace Pixeval;
+                namespace Pixeval.Misc;
 
                 public partial record SettingEntry
                 {

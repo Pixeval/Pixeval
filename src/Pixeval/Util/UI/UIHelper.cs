@@ -18,7 +18,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -29,27 +28,25 @@ using Windows.Foundation;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.Storage.Streams;
-using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.WinUI;
 using Microsoft.UI.Text;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
-using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.Controls.MarkupExtensions;
 using Pixeval.Controls.MarkupExtensions.FontSymbolIcon;
 using Pixeval.Misc;
-using Pixeval.Util.IO;
 using Pixeval.Util.Threading;
 using Pixeval.Utilities;
-using QRCoder;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 using SixLabors.ImageSharp.Processing.Processors.Quantization;
 using WinUI3Utilities;
+using AppContext = Pixeval.AppManagement.AppContext;
 using Brush = Microsoft.UI.Xaml.Media.Brush;
 using Color = Windows.UI.Color;
+using FontFamily = Microsoft.UI.Xaml.Media.FontFamily;
 using Image = SixLabors.ImageSharp.Image;
 using Point = Windows.Foundation.Point;
 using Size = SixLabors.ImageSharp.Size;
@@ -125,18 +122,6 @@ public static partial class UiHelper
         return Color.FromArgb(0xFF, pixel.R, pixel.G, pixel.B);
     }
 
-    public static ImageSource GetImageSourceFromUriRelativeToAssetsImageFolder(string relativeToAssetsImageFolder)
-    {
-        return new BitmapImage(new Uri($"ms-appx:///Assets/Images/{relativeToAssetsImageFolder}"));
-    }
-
-    public static void ScrollToElement(this ScrollViewer scrollViewer, UIElement element)
-    {
-        var transform = element.TransformToVisual((UIElement)scrollViewer.Content);
-        var position = transform.TransformPoint(new Point(0, 0));
-        _ = scrollViewer.ChangeView(null, position.Y, null, false);
-    }
-
     public static Storyboard CreateStoryboard(params Timeline[] animations)
     {
         var sb = new Storyboard();
@@ -189,9 +174,11 @@ public static partial class UiHelper
 
     public static FontIcon GetFontIcon(this FontIconSymbols symbol, double? fontSize = null)
     {
+        var systemThemeFontFamily = new FontFamily(AppContext.AppIconFontFamilyName);
         var icon = new FontIcon
         {
-            Glyph = symbol.GetGlyph().ToString()
+            Glyph = symbol.GetGlyph().ToString(),
+            FontFamily = systemThemeFontFamily
         };
         if (fontSize is not null)
         {
@@ -203,9 +190,11 @@ public static partial class UiHelper
 
     public static FontIconSource GetFontIconSource(this FontIconSymbols symbol, double? fontSize = null, Brush? foregroundBrush = null)
     {
+        var systemThemeFontFamily = new FontFamily(AppContext.AppIconFontFamilyName);
         var icon = new FontIconSource
         {
-            Glyph = symbol.GetGlyph().ToString()
+            Glyph = symbol.GetGlyph().ToString(),
+            FontFamily = systemThemeFontFamily
         };
         if (fontSize is not null)
         {
@@ -240,41 +229,7 @@ public static partial class UiHelper
 
     public static void ClearContent(this RichEditBox box)
     {
-        box.Document.SetText(TextSetOptions.None, string.Empty);
-    }
-
-    public static void Deactivate(this ObservableRecipient recipient)
-    {
-        recipient.IsActive = false;
-    }
-
-    public static void Collapse(this UIElement element)
-    {
-        element.Visibility = Visibility.Collapsed;
-    }
-
-    public static void Show(this UIElement element)
-    {
-        element.Visibility = Visibility.Visible;
-    }
-
-    public static async Task<SoftwareBitmapSource> GenerateQrCodeForUrlAsync(string url)
-    {
-        var qrCodeGen = new QRCodeGenerator();
-        var urlPayload = new PayloadGenerator.Url(url);
-        var qrCodeData = qrCodeGen.CreateQrCode(urlPayload, QRCodeGenerator.ECCLevel.Q);
-        var qrCode = new BitmapByteQRCode(qrCodeData);
-        var bytes = qrCode.GetGraphic(20);
-        return await new MemoryStream(bytes).GetSoftwareBitmapSourceAsync(true);
-    }
-
-    public static async Task<SoftwareBitmapSource> GenerateQrCodeAsync(string content)
-    {
-        var qrCodeGen = new QRCodeGenerator();
-        var qrCodeData = qrCodeGen.CreateQrCode(content, QRCodeGenerator.ECCLevel.Q);
-        var qrCode = new BitmapByteQRCode(qrCodeData);
-        var bytes = qrCode.GetGraphic(20);
-        return await new MemoryStream(bytes).GetSoftwareBitmapSourceAsync(true);
+        box.Document.SetText(TextSetOptions.None, "");
     }
 
     public static IAsyncOperation<StorageFolder?> OpenFolderPickerAsync(this Window window)
