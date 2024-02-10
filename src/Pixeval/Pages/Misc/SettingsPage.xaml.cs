@@ -33,7 +33,6 @@ using Pixeval.Download.MacroParser;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
-using UIElement = Microsoft.UI.Xaml.UIElement;
 using Pixeval.Options;
 using WinUI3Utilities;
 

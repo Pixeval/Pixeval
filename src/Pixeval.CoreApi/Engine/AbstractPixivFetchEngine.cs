@@ -37,7 +37,7 @@ public abstract class AbstractPixivFetchEngine<TE>(MakoClient makoClient, Engine
 
     /// <summary>
     /// The <see cref="MakoClient" /> that owns this <see cref="IFetchEngine{TE}" />, it
-    /// shares its context such as <see cref="CoreApi.MakoClient.Configuration" /> with current
+    /// shares its context such as <see cref="MakoClient.Configuration" /> with current
     /// <see cref="IFetchEngine{TE}" /> to provides the required fields when the <see cref="IFetchEngine{E}" />
     /// performing its task
     /// </summary>

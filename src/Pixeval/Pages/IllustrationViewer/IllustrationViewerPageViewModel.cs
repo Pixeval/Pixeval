@@ -136,20 +136,6 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
         ViewModelSource?.Dispose();
     }
 
-    public ImageViewerPageViewModel NextPage()
-    {
-        ++CurrentPageIndex;
-        return CurrentImage;
-    }
-
-    public ImageViewerPageViewModel PrevPage()
-    {
-        --CurrentPageIndex;
-        return CurrentImage;
-    }
-
-    public Task LoadMoreAsync(uint count) => ViewModelSource?.LoadMoreAsync(count) ?? Task.CompletedTask;
-
     #region Tags for IllustrationInfoAndCommentsNavigationView
 
     public NavigationViewTag<IllustrationInfoPage, IllustrationViewerPageViewModel> IllustrationInfoTag { get; } = new(null!);

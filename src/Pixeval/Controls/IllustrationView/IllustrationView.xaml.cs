@@ -30,8 +30,9 @@ using WinUI3Utilities.Attributes;
 
 namespace Pixeval.Controls;
 
-// use "load failed" image for those thumbnails who failed to load its source due to various reasons
-// note: please ALWAYS add e.Handled = true before every "tapped" event for the buttons
+/// <summary>
+/// <see cref="FrameworkElement.Unloaded"/>时会尝试卸载缩略图并释放FetchEngine
+/// </summary>
 [DependencyProperty<ItemsViewLayoutType>("LayoutType", DependencyPropertyDefaultValue.Default)]
 [DependencyProperty<ThumbnailDirection>("ThumbnailDirection", DependencyPropertyDefaultValue.Default)]
 public sealed partial class IllustrationView
@@ -39,11 +40,7 @@ public sealed partial class IllustrationView
     public const double LandscapeHeight = 180;
     public const double PortraitHeight = 250;
 
-    public IllustrationView()
-    {
-        InitializeComponent();
-        ViewModel.DataProvider.View.FilterChanged += async (_, _) => await IllustrationItemsView.TryRaiseLoadMoreRequestedAsync();
-    }
+    public IllustrationViewViewModel ViewModel { get; } = new();
 
     public ScrollView ScrollView => IllustrationItemsView.ScrollView;
 
@@ -61,18 +58,17 @@ public sealed partial class IllustrationView
         _ => ThrowHelper.ArgumentOutOfRange<ThumbnailDirection, double>(ThumbnailDirection)
     };
 
-    public IllustrationViewViewModel ViewModel { get; } = new();
+    public IllustrationView()
+    {
+        InitializeComponent();
+        ViewModel.DataProvider.View.FilterChanged += async (_, _) => await IllustrationItemsView.TryRaiseLoadMoreRequestedAsync();
+    }
 
     private void IllustrationViewOnUnloaded(object sender, RoutedEventArgs e)
     {
         foreach (var illustrationViewModel in ViewModel.DataProvider.Source)
             illustrationViewModel.UnloadThumbnail(ViewModel);
         ViewModel.Dispose();
-    }
-
-    public async void LoadMoreIfNeeded()
-    {
-        await IllustrationItemsView.TryRaiseLoadMoreRequestedAsync();
     }
 
     private IllustrationView IllustrationThumbnail_OnThisRequired() => this;

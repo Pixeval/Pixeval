@@ -19,16 +19,13 @@
 #endregion
 
 using System;
-using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Controls;
 using Pixeval.CoreApi.Global.Enum;
-using Pixeval.Messages;
 using Pixeval.Pages.Misc;
-using Pixeval.Util;
 using Pixeval.Util.UI;
 using WinUI3Utilities;
 
@@ -55,12 +52,10 @@ public sealed partial class FollowingsPage
         {
             disposable.Dispose();
         }
-        WeakReferenceMessenger.Default.UnregisterAll(this);
     }
 
     public override void OnPageActivated(NavigationEventArgs e)
     {
-        _ = WeakReferenceMessenger.Default.TryRegister<FollowingsPage, MainPageFrameNavigatingEvent>(this, static (recipient, _) => recipient._viewModel.DataProvider.FetchEngine?.Cancel());
         _viewModel.ResetEngine(App.AppViewModel.MakoClient.Following(App.AppViewModel.PixivUid, PrivacyPolicy.Public));
         // 此时没有Navigate，右边没有内容
         // ClipGeometry.Rect = new(MainSplitView.OpenPaneLength - CompactPaneLength, 0, int.MaxValue, int.MaxValue);

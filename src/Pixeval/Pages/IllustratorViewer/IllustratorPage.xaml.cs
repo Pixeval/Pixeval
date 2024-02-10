@@ -21,7 +21,6 @@
 using System;
 using System.Numerics;
 using Windows.System;
-using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.WinUI.Animations.Expressions;
 using Microsoft.Graphics.Canvas.Effects;
 using Microsoft.UI;
@@ -35,8 +34,6 @@ using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Controls;
 using Pixeval.Controls.MarkupExtensions;
-using Pixeval.Messages;
-using Pixeval.Util;
 using Pixeval.Util.UI;
 using WinUI3Utilities;
 
@@ -85,7 +82,6 @@ public sealed partial class IllustratorPage
     public override void OnPageDeactivated(NavigatingCancelEventArgs navigatingCancelEventArgs)
     {
         ViewModelProvider.ViewModel.Dispose();
-        WeakReferenceMessenger.Default.UnregisterAll(this);
     }
 
     public override void OnPageActivated(NavigationEventArgs navigationEventArgs)
@@ -99,8 +95,6 @@ public sealed partial class IllustratorPage
                 _viewModel = viewModel1;
                 break;
         }
-
-        _ = WeakReferenceMessenger.Default.TryRegister<IllustratorPage, MainPageFrameNavigatingEvent>(this, static (recipient, _) => recipient.ViewModelProvider.ViewModel.DataProvider.FetchEngine?.Cancel());
 
         ChangeSource();
     }

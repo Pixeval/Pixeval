@@ -18,13 +18,11 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Controls;
 using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Model;
-using Pixeval.Messages;
 using Pixeval.Misc;
 using Pixeval.Util;
 
@@ -41,16 +39,10 @@ public sealed partial class SearchResultsPage : ISortedIllustrationContainerPage
 
     public SortOptionComboBox SortOptionProvider => SortOptionComboBox;
 
-    public override void OnPageDeactivated(NavigatingCancelEventArgs navigatingCancelEventArgs)
-    {
-        WeakReferenceMessenger.Default.UnregisterAll(this);
-    }
-
     public override void OnPageActivated(NavigationEventArgs navigationEventArgs)
     {
         SortOptionComboBox.SelectedItem = MakoHelper.GetAppSettingDefaultSortOptionWrapper();
         ChangeSource((IFetchEngine<Illustration>)navigationEventArgs.Parameter);
-        _ = WeakReferenceMessenger.Default.TryRegister<SearchResultsPage, MainPageFrameNavigatingEvent>(this, static (recipient, _) => recipient.IllustrationContainer.ViewModel.DataProvider.FetchEngine?.Cancel());
     }
 
     private void ChangeSource(IFetchEngine<Illustration> engine)

@@ -69,8 +69,8 @@ public sealed partial class IllustratorContentViewer : IDisposable
 
         ViewModel.ShowExternalCommandBarChanged += (_, b) =>
         {
-            if (IllustratorContentViewerFrame.Content is IIllustratorContentViewerCommandBarHostSubPage subPage)
-                subPage.ChangeCommandBarVisibility(b);
+            if (IllustratorContentViewerFrame.Content is IllustratorContentViewerSubPage subPage)
+                subPage.ViewModelProvider.ShowCommandBar = b;
         };
 
         ViewModel.ShowRecommendIllustratorsChanged += (o, b) =>
@@ -101,7 +101,7 @@ public sealed partial class IllustratorContentViewer : IDisposable
 
     private void NavigationViewAutoSuggestBox_OnTextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
     {
-        if (IllustratorContentViewerFrame.Content is IIllustratorContentViewerSubPage subPage)
+        if (IllustratorContentViewerFrame.Content is IllustratorContentViewerSubPage subPage)
         {
             subPage.PerformSearch(sender.Text);
         }

@@ -81,7 +81,7 @@ public sealed partial class IllustrationViewerPage : SupportCustomTitleBarDragRe
     }
 
     /// <summary>
-    /// <see cref="IllustrationViewerPage.OnPageDeactivated"/> might not be called when the window is closed
+    /// <see cref="EnhancedPage.OnPageDeactivated"/> might not be called when the window is closed
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
@@ -158,11 +158,6 @@ public sealed partial class IllustrationViewerPage : SupportCustomTitleBarDragRe
         ThumbnailListDropShadow.Receivers.Add(IllustrationImageShowcaseFrame);
 
         IllustrationImageShowcaseFrame_OnTapped(null!, null!);
-    }
-
-    private Task IllustrationItemsView_OnLoadMoreRequested(object? sender, EventArgs e)
-    {
-        return _viewModel.LoadMoreAsync(20);
     }
 
     private async void FrameworkElement_OnDataContextChanged(FrameworkElement sender, DataContextChangedEventArgs e)

@@ -1,4 +1,4 @@
-<controls:EnhancedPage
+<controls:IllustratorContentViewerSubPage
     x:Class="Pixeval.Controls.IllustratorContentViewer.IllustratorIllustrationPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -11,4 +11,4 @@
             <controls:SortOptionComboBox x:Name="SortOptionComboBox" SelectionChangedWhenLoaded="SortOptionComboBox_OnSelectionChanged" />
         </controls:IllustrationContainer.CommandBarElements>
     </controls:IllustrationContainer>
-</controls:EnhancedPage>
+</controls:IllustratorContentViewerSubPage>

@@ -93,6 +93,7 @@ internal abstract class RecursivePixivAsyncEnumerator<TEntity, TRawEntity, TFetc
             }
 
             Update(value);
+            _ = CurrentEntityEnumerator.MoveNext();
             return true;
         }
 
@@ -104,7 +105,6 @@ internal abstract class RecursivePixivAsyncEnumerator<TEntity, TRawEntity, TFetc
     {
         RawEntity = rawEntity;
         CurrentEntityEnumerator = GetNewEnumerator(rawEntity) ?? EmptyEnumerators<TEntity>.Sync;
-        _ = CurrentEntityEnumerator.MoveNext();
         PixivFetchEngine.RequestedPages++;
     }
 }

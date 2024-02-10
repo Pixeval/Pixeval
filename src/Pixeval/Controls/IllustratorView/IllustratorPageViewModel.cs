@@ -67,7 +67,7 @@ public partial class IllustratorPageViewModel : ObservableObject, IIllustrationV
 
     public string AvatarUrl { get; set; }
 
-    public IFetchEngine<Illustration?> FetchEngine => App.AppViewModel.MakoClient.Posts(Id.ToString());
+    public IFetchEngine<Illustration?> FetchEngine => App.AppViewModel.MakoClient.Posts(Id);
 
     public long Id { get; set; }
 

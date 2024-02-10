@@ -184,7 +184,7 @@ public partial class MakoClient
     /// <returns>
     /// The <see cref="PostedIllustrationEngine" /> containing posts of that user.
     /// </returns>
-    public IFetchEngine<Illustration> Posts(string uid)
+    public IFetchEngine<Illustration> Posts(long uid)
     {
         EnsureNotCancelled();
         return new PostedIllustrationEngine(this, uid, new EngineHandle(CancelInstance));
@@ -280,7 +280,7 @@ public partial class MakoClient
     /// <returns>
     /// The <see cref="PostedMangaEngine" /> containing the manga posts of the user.
     /// </returns>
-    public IFetchEngine<Illustration> MangaPosts(string uid, TargetFilter targetFilter)
+    public IFetchEngine<Illustration> MangaPosts(long uid, TargetFilter targetFilter)
     {
         EnsureNotCancelled();
         return new PostedMangaEngine(this, uid, targetFilter, new EngineHandle(CancelInstance));
@@ -294,7 +294,7 @@ public partial class MakoClient
     /// <returns>
     /// The <see cref="PostedNovelEngine" /> containing the novel posts of that user.
     /// </returns>
-    public IFetchEngine<Novel> NovelPosts(string uid, TargetFilter targetFilter)
+    public IFetchEngine<Novel> NovelPosts(long uid, TargetFilter targetFilter)
     {
         EnsureNotCancelled();
         return new PostedNovelEngine(this, uid, targetFilter, new EngineHandle(CancelInstance));

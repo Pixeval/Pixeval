@@ -81,15 +81,9 @@ public class EngineHandle : ICancellable, INotifyCompletion, ICompletionCallback
         OnCompletion(this);
     }
 
-    public static bool operator ==(EngineHandle lhs, EngineHandle rhs)
-    {
-        return lhs.Id == rhs.Id && lhs.IsCancelled == rhs.IsCancelled && lhs.IsCompleted == rhs.IsCompleted;
-    }
+    public static bool operator ==(EngineHandle lhs, EngineHandle rhs) => Equals(lhs, rhs);
 
-    public static bool operator !=(EngineHandle lhs, EngineHandle rhs)
-    {
-        return !(lhs == rhs);
-    }
+    public static bool operator !=(EngineHandle lhs, EngineHandle rhs) => !Equals(lhs, rhs);
 
     public void OnCompletion(EngineHandle engineHandle)
     {

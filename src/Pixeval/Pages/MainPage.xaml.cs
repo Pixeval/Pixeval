@@ -130,7 +130,6 @@ public sealed partial class MainPage : SupportCustomTitleBarDragRegionPage
 
     private void MainPageRootFrame_OnNavigated(object sender, NavigationEventArgs e)
     {
-        _ = WeakReferenceMessenger.Default.Send(new MainPageFrameNavigatingEvent(this));
         GCSettings.LargeObjectHeapCompactionMode = GCLargeObjectHeapCompactionMode.CompactOnce;
         GC.Collect();
     }

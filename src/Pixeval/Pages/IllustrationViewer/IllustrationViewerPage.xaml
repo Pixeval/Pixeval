@@ -271,7 +271,6 @@
                             VerticalAlignment="Stretch"
                             ItemsSource="{x:Bind _viewModel.Illustrations}"
                             LayoutType="HorizontalStack"
-                            LoadMoreRequested="IllustrationItemsView_OnLoadMoreRequested"
                             MinItemHeight="80"
                             MinItemWidth="80"
                             SelectedIndex="{x:Bind _viewModel.CurrentIllustrationIndex, Mode=TwoWay}"

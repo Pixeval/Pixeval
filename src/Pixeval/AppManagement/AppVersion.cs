@@ -21,7 +21,6 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using Pixeval.Utilities;
-using WinUI3Utilities;
 
 namespace Pixeval.AppManagement;
 

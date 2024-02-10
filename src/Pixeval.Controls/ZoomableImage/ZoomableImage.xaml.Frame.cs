@@ -92,15 +92,23 @@ public partial class ZoomableImage
         else
         {
             _frames.Clear();
-            if (Sources is null)
-                return;
-            foreach (var source in Sources)
-                if (source.CanRead)
-                {
-                    var randomAccessStream = source.AsRandomAccessStream();
-                    randomAccessStream.Seek(0);
-                    _frames.Add(await CanvasBitmap.LoadAsync(sender, randomAccessStream));
-                }
+            try
+            {
+                if (Sources is null)
+                    return;
+                foreach (var source in Sources)
+                    if (source.CanRead)
+                    {
+                        var randomAccessStream = source.AsRandomAccessStream();
+                        randomAccessStream.Seek(0);
+                        _frames.Add(await CanvasBitmap.LoadAsync(sender, randomAccessStream));
+                    }
+            }
+            catch (Exception)
+            {
+                _frames.Clear();
+            }
+
             if (_frames.Count is 0)
                 return;
             OriginalImageWidth = _frames[0].Size.Width;

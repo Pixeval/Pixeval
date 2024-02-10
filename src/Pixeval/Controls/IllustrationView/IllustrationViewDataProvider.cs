@@ -47,8 +47,8 @@ public class IllustrationViewDataProvider : ObservableObject, IDataProvider<Illu
         {
             if (Equals(value, _fetchEngineRef))
                 return;
-            FetchEngine?.EngineHandle.Cancel();
-
+            if (_fetchEngineRef?.TryDispose(this) is true)
+                FetchEngine?.EngineHandle.Cancel();
             _fetchEngineRef = value;
         }
     }
@@ -62,10 +62,7 @@ public class IllustrationViewDataProvider : ObservableObject, IDataProvider<Illu
                 return;
 
             OnPropertyChanging();
-            if (_illustrationSourceRef is { } old)
-            {
-                _ = old.TryDispose(this);
-            }
+            DisposeIllustrationSourceRef();
             _illustrationSourceRef = value;
             View.Source = value.Value;
             OnPropertyChanged();
@@ -80,13 +77,8 @@ public class IllustrationViewDataProvider : ObservableObject, IDataProvider<Illu
 
     public void Dispose()
     {
-        // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
-        if (IllustrationSourceRef is not null)
-        {
-            if (IllustrationSourceRef.TryDispose(this))
-                foreach (var illustrationViewModel in Source)
-                    illustrationViewModel.Dispose();
-        }
+        DisposeIllustrationSourceRef();
+        // 赋值为null会自动调用setter中的Dispose逻辑
         FetchEngineRef = null;
     }
 
@@ -106,6 +98,13 @@ public class IllustrationViewDataProvider : ObservableObject, IDataProvider<Illu
         foreach (var viewSortDescription in View.SortDescriptions)
             dataProvider.View.SortDescriptions.Add(viewSortDescription);
         return dataProvider;
+    }
+
+    private void DisposeIllustrationSourceRef()
+    {
+        if (_illustrationSourceRef?.TryDispose(this) is true)
+            foreach (var illustrationViewModel in Source)
+                illustrationViewModel.Dispose();
     }
 
     ~IllustrationViewDataProvider() => Dispose();
