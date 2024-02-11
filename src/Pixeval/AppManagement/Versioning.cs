@@ -10,7 +10,7 @@ public class Versioning
 {
     private AppVersion? _newestVersion;
 
-    public AppVersion CurrentVersion { get; } = new(3, 0, 0, IterationStage.Preview);
+    public AppVersion CurrentVersion { get; } = new(3, 0, 0, 1);
 
     public AppVersion? NewestVersion
     {
@@ -61,17 +61,17 @@ public record AppReleaseModel(
 file class GitHubRelease
 {
     [JsonPropertyName("tag_name")]
-    public required string TagName { get; set; }
+    public required string TagName { get; init; }
 
     [JsonPropertyName("assets")]
-    public required Assets[] Assets { get; set; }
+    public required Assets[] Assets { get; init; }
 
     [JsonPropertyName("body")]
-    public required string Notes { get; set; }
+    public required string Notes { get; init; }
 }
 
 file class Assets
 {
     [JsonPropertyName("browser_download_url")]
-    public required string BrowserDownloadUrl { get; set; }
+    public required string BrowserDownloadUrl { get; init; }
 }

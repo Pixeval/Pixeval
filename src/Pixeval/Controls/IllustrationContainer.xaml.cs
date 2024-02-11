@@ -41,7 +41,6 @@ namespace Pixeval.Controls;
 [DependencyProperty<object>("Header")]
 public sealed partial class IllustrationContainer
 {
-
     /// <summary>
     /// The command elements that will appear at the left of the TopCommandBar
     /// </summary>
@@ -54,16 +53,26 @@ public sealed partial class IllustrationContainer
     public IllustrationContainer()
     {
         InitializeComponent();
-        CommandBarElements.CollectionChanged += (_, args) =>
+        CommandBarElements.CollectionChanged += (_, e) =>
         {
-            if (args is { Action: NotifyCollectionChangedAction.Add, NewItems: { } newItems })
+            if (e is { Action: NotifyCollectionChangedAction.Add, NewItems: { } newItems })
                 foreach (UIElement argsNewItem in newItems)
                     ExtraCommandsBar.Children.Insert(0, argsNewItem);
             else
-                ThrowHelper.Argument(args);
+                ThrowHelper.Argument(e, "This collection does not support operations except the Add");
         };
         PrimaryCommandsSupplements.CollectionChanged += (_, args) => AddCommandCallback(args, CommandBar.PrimaryCommands);
         SecondaryCommandsSupplements.CollectionChanged += (_, args) => AddCommandCallback(args, CommandBar.SecondaryCommands);
+
+        return;
+        void AddCommandCallback(NotifyCollectionChangedEventArgs e, ICollection<ICommandBarElement> commands)
+        {
+            if (e is { Action: NotifyCollectionChangedAction.Add, NewItems: { } newItems })
+                foreach (UIElement argsNewItem in newItems)
+                    commands.Add(argsNewItem.To<ICommandBarElement>());
+            else
+                ThrowHelper.Argument(e, "This collection does not support operations except the Add");
+        }
     }
 
     public ItemsViewLayoutType ItemsViewLayoutType => App.AppViewModel.AppSetting.ItemsViewLayoutType;
@@ -83,15 +92,6 @@ public sealed partial class IllustrationContainer
     }
 
     private FilterSettings _lastFilterSettings = FilterSettings.Default;
-
-    private void AddCommandCallback(NotifyCollectionChangedEventArgs e, ICollection<ICommandBarElement> commands)
-    {
-        if (e is { Action: NotifyCollectionChangedAction.Add, NewItems: { } newItems })
-            foreach (UIElement argsNewItem in newItems)
-                commands.Add(argsNewItem.To<ICommandBarElement>());
-        else
-            ThrowHelper.Argument(e, "This collection does not support operations except the Add");
-    }
 
     private void SelectAllToggleButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
@@ -152,12 +152,6 @@ public sealed partial class IllustrationContainer
                 _ = await Launcher.LaunchUriAsync(MakoHelper.GenerateIllustrationWebUri(illustrationViewModel.Id));
             }
         }
-    }
-
-    private void ShareButton_OnTapped(object sender, TappedRoutedEventArgs e)
-    {
-        // TODO share
-        throw new NotImplementedException();
     }
 
     private void CancelSelectionButton_OnTapped(object sender, TappedRoutedEventArgs e)

@@ -36,17 +36,14 @@ public enum IterationStage
 /// <param name="major"></param>
 /// <param name="minor"></param>
 /// <param name="patch"></param>
-/// <param name="stage"></param>
 /// <param name="preReleaseSpecifier"></param>
-public class AppVersion(int major, int minor, int patch, IterationStage stage, int? preReleaseSpecifier = null) : IComparable<AppVersion>, IEquatable<AppVersion>, IParsable<AppVersion>
+public class AppVersion(int major, int minor, int patch, int? preReleaseSpecifier = null) : IComparable<AppVersion>, IEquatable<AppVersion>, IParsable<AppVersion>
 {
     public int Major { get; } = major;
 
     public int Minor { get; } = minor;
 
     public int Patch { get; } = patch;
-
-    public IterationStage Stage => PreReleaseSpecifier is null ? IterationStage.Stable : IterationStage.Preview;
 
     public int? PreReleaseSpecifier { get; } = preReleaseSpecifier;
 
@@ -121,7 +118,7 @@ public class AppVersion(int major, int minor, int patch, IterationStage stage, i
                 {
                     case []:
                     {
-                        result = new AppVersion(major, minor, patch, iterationStage);
+                        result = new AppVersion(major, minor, patch);
                         return true;
                     }
                     case [var preReleaseSpecifierStr]:
@@ -129,7 +126,7 @@ public class AppVersion(int major, int minor, int patch, IterationStage stage, i
                         if (!int.TryParse(preReleaseSpecifierStr, out var preReleaseSpecifier))
                             return false;
 
-                        result = new AppVersion(major, minor, patch, iterationStage, preReleaseSpecifier);
+                        result = new AppVersion(major, minor, patch, preReleaseSpecifier);
                         return true;
                     }
                     default:
@@ -137,7 +134,7 @@ public class AppVersion(int major, int minor, int patch, IterationStage stage, i
                 }
             }
             case []:
-                result = new AppVersion(major, minor, patch, IterationStage.Stable);
+                result = new AppVersion(major, minor, patch);
                 return true;
             default:
                 return false;

@@ -280,7 +280,7 @@ public partial class IllustrationItemViewModel
             teachingTip?.Show(IllustrationViewerPageResources.ImageProcessing, TeachingTipSeverity.Processing, isLightDismissEnabled: true);
         if (await getOriginalImageSourceAsync(progress) is { } source)
         {
-            UiHelper.ClipboardSetBitmap(source.AsRandomAccessStream());
+            await UiHelper.ClipboardSetBitmapAsync(source);
             teachingTip?.ShowAndHide(IllustrationViewerPageResources.ImageSetToClipBoard);
         }
     }

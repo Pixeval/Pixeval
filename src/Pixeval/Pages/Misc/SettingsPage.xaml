@@ -12,8 +12,9 @@
     xmlns:markup="using:Pixeval.Controls.MarkupExtensions"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:misc="using:Pixeval.Pages.Misc"
-    xmlns:options="using:Pixeval.Options"
     xmlns:misc2="using:Pixeval.Misc"
+    xmlns:options="using:Pixeval.Options"
+    xmlns:pixeval="using:Pixeval"
     xmlns:system="using:System"
     xmlns:utilities="using:WinUI3Utilities"
     xmlns:winUi="using:CommunityToolkit.WinUI"
@@ -69,7 +70,7 @@
                         MaxHeight="160"
                         AspectRatio="1360:906"
                         CornerRadius="{ThemeResource ControlCornerRadius}">
-                        <Image Source="../../Assets/Images/misc2-mock.png" Stretch="UniformToFill" />
+                        <Image Source="../../Assets/Images/pixeval-mock.png" Stretch="UniformToFill" />
                     </controls:ConstrainedBox>
                     <TextBlock
                         x:Uid="/SettingsPage/AppDescriptionTextBlock"
@@ -86,10 +87,7 @@
                         <HyperlinkButton x:Uid="/SettingsPage/ViewPixevalWebsiteHyperlinkButton" NavigateUri="https://piexval.github.io/" />
                         <HyperlinkButton x:Uid="/SettingsPage/GitHubRepositoryHyperlinkButton" NavigateUri="https://github.com/misc2/Pixeval" />
                         <HyperlinkButton x:Uid="/SettingsPage/ReportBugHyperlinkButton" NavigateUri="https://github.com/Pixeval/Pixeval/issues/new/choose" />
-                        <HyperlinkButton
-                            x:Uid="/SettingsPage/FeedbackByEmailHyperlinkButton"
-                            Tag="mailto:decem0730@hotmail.com"
-                            Tapped="OpenHyperlinkButton_OnTapped" />
+                        <HyperlinkButton x:Uid="/SettingsPage/FeedbackByEmailHyperlinkButton" NavigateUri="mailto:decem0730@hotmail.com" />
                         <HyperlinkButton x:Uid="/SettingsPage/DonateDeveloperHyperlinkButton" NavigateUri="https://afdian.net/a/dylech30th" />
                         <HyperlinkButton x:Uid="/SettingsPage/JoinFeedbackGroupHyperlinkButton" NavigateUri="https://jq.qq.com/?_wv=1027&amp;k=trDeCrog" />
                     </controls:WrapPanel>
@@ -98,13 +96,8 @@
                 <!--  region Setting Entries  -->
                 <TextBlock x:Uid="/SettingsPage/VersionSettingsGroup" Style="{StaticResource SettingHeaderStyle}" />
 
-                <controls:SettingsCard
-                    ActionIcon="{markup:FontSymbolIcon Glyph=RefreshE72C}"
-                    Header="{x:Bind appManagement:AppContext.AppVersion.CurrentVersion}"
-                    HeaderIcon="{markup:FontSymbolIcon Glyph=SyncE895}"
-                    IsClickEnabled="True"
-                    Tapped="CheckForUpdateButton_OnTapped">
-                    <controls:SettingsCard.Description>
+                <controls:SettingsExpander Header="{x:Bind appManagement:AppContext.AppVersion.CurrentVersion}" HeaderIcon="{markup:FontSymbolIcon Glyph=SyncE895}">
+                    <controls:SettingsExpander.Description>
                         <StackPanel Spacing="3">
                             <TextBlock>
                                 <Run Text="{x:Bind ViewModel.GetLastUpdateCheckDisplayString(ViewModel.LastCheckedUpdate), Mode=OneWay}" />
@@ -115,20 +108,35 @@
                                 </Hyperlink>
                             </TextBlock>
                         </StackPanel>
-                    </controls:SettingsCard.Description>
-                    <StackPanel
-                        Orientation="Horizontal"
-                        Spacing="10"
-                        Visibility="{x:Bind ViewModel.CheckingUpdate, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
+                    </controls:SettingsExpander.Description>
+                    <StackPanel Orientation="Horizontal" Spacing="10">
                         <ProgressRing
                             Width="35"
                             Height="35"
                             IsActive="True"
                             IsIndeterminate="{x:Bind ViewModel.DownloadingUpdate, Converter={StaticResource BoolNegationConverter}, Mode=OneWay}"
+                            Visibility="{x:Bind ViewModel.CheckingUpdate, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"
                             Value="{x:Bind ViewModel.DownloadingUpdateProgress, Mode=OneWay}" />
-                        <TextBlock VerticalAlignment="Center" Text="{x:Bind ViewModel.UpdateMessage, Mode=OneWay}" />
+                        <TextBlock
+                            VerticalAlignment="Center"
+                            Text="{x:Bind ViewModel.UpdateMessage, Mode=OneWay}"
+                            Visibility="{x:Bind ViewModel.CheckingUpdate, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
+                        <Button
+                            x:Uid="/SettingsPage/CheckForUpdatesButton"
+                            IsEnabled="{x:Bind ViewModel.CheckingUpdate, Converter={StaticResource BoolNegationConverter}, Mode=OneWay}"
+                            Tapped="CheckForUpdateButton_OnTapped" />
                     </StackPanel>
-                </controls:SettingsCard>
+                    <controls:SettingsExpander.Items>
+                        <controls:SettingsCard
+                            x:Uid="/SettingsPage/GitHubCheckForUpdatesEntry"
+                            IsClickEnabled="True"
+                            Tapped="CheckForUpdateButton_OnTapped">
+                            <controls:SettingsCard.HeaderIcon>
+                                <PathIcon Data="{x:Bind pixeval:SvgResources.GitHub}" />
+                            </controls:SettingsCard.HeaderIcon>
+                        </controls:SettingsCard>
+                    </controls:SettingsExpander.Items>
+                </controls:SettingsExpander>
 
                 <InfoBar
                     Title="{x:Bind ViewModel.UpdateInfo, Mode=OneWay}"
@@ -142,6 +150,66 @@
                     Tag="{x:Bind misc2:SettingEntry.AutoUpdate}">
                     <ToggleSwitch IsOn="{x:Bind ViewModel.DownloadUpdateAutomatically, Mode=TwoWay}" />
                 </controls:SettingsCard>
+
+                <controls:SettingsExpander x:Uid="/SettingsPage/BugReportEntry" HeaderIcon="{markup:FontSymbolIcon Glyph=BugEBE8}">
+                    <controls:SettingsExpander.Items>
+                        <controls:SettingsCard
+                            x:Uid="/SettingsPage/GitHubBugReportEntry"
+                            ActionIcon="{markup:FontSymbolIcon Glyph=OpenInNewWindowE8A7}"
+                            IsClickEnabled="True"
+                            Tag="https://github.com/Pixeval/Pixeval/issues/new/choose"
+                            Tapped="OpenHyperlinkButton_OnTapped">
+                            <controls:SettingsCard.HeaderIcon>
+                                <PathIcon Data="{x:Bind pixeval:SvgResources.GitHub}" />
+                            </controls:SettingsCard.HeaderIcon>
+                        </controls:SettingsCard>
+                        <controls:SettingsCard
+                            x:Uid="/SettingsPage/EMailBugReportEntry"
+                            ActionIcon="{markup:FontSymbolIcon Glyph=OpenInNewWindowE8A7}"
+                            HeaderIcon="{markup:FontSymbolIcon Glyph=MailE715}"
+                            IsClickEnabled="True"
+                            Tag="mailto:decem0730@hotmail.com"
+                            Tapped="OpenHyperlinkButton_OnTapped" />
+                        <controls:SettingsCard
+                            x:Uid="/SettingsPage/QQBugReportEntry"
+                            ActionIcon="{markup:FontSymbolIcon Glyph=OpenInNewWindowE8A7}"
+                            IsClickEnabled="True"
+                            Tag="https://jq.qq.com/?_wv=1027&amp;k=trDeCrog"
+                            Tapped="OpenHyperlinkButton_OnTapped">
+                            <controls:SettingsCard.HeaderIcon>
+                                <PathIcon Data="{x:Bind pixeval:SvgResources.QQ}" />
+                            </controls:SettingsCard.HeaderIcon>
+                        </controls:SettingsCard>
+                        <controls:SettingsCard
+                            x:Uid="/SettingsPage/OpenLogEntry"
+                            ActionIcon="{markup:FontSymbolIcon Glyph=OpenInNewWindowE8A7}"
+                            HeaderIcon="{markup:FontSymbolIcon Glyph=FolderE8B7}"
+                            IsClickEnabled="True"
+                            Tag="Log"
+                            Tapped="OpenFolder_OnTapped" />
+                        <controls:SettingsCard
+                            x:Uid="/SettingsPage/OpenTempEntry"
+                            ActionIcon="{markup:FontSymbolIcon Glyph=OpenInNewWindowE8A7}"
+                            HeaderIcon="{markup:FontSymbolIcon Glyph=FolderE8B7}"
+                            IsClickEnabled="True"
+                            Tag="Temp"
+                            Tapped="OpenFolder_OnTapped" />
+                        <controls:SettingsCard
+                            x:Uid="/SettingsPage/OpenLocalEntry"
+                            ActionIcon="{markup:FontSymbolIcon Glyph=OpenInNewWindowE8A7}"
+                            HeaderIcon="{markup:FontSymbolIcon Glyph=FolderE8B7}"
+                            IsClickEnabled="True"
+                            Tag="Local"
+                            Tapped="OpenFolder_OnTapped" />
+                        <controls:SettingsCard
+                            x:Uid="/SettingsPage/OpenRoamingEntry"
+                            ActionIcon="{markup:FontSymbolIcon Glyph=OpenInNewWindowE8A7}"
+                            HeaderIcon="{markup:FontSymbolIcon Glyph=FolderE8B7}"
+                            IsClickEnabled="True"
+                            Tag="Roaming"
+                            Tapped="OpenFolder_OnTapped" />
+                    </controls:SettingsExpander.Items>
+                </controls:SettingsExpander>
 
                 <TextBlock x:Uid="/SettingsPage/SessionSettingsGroup" Style="{StaticResource SettingHeaderStyle}" />
 

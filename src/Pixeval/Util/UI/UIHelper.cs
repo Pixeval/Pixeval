@@ -18,6 +18,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -50,6 +51,8 @@ using FontFamily = Microsoft.UI.Xaml.Media.FontFamily;
 using Image = SixLabors.ImageSharp.Image;
 using Point = Windows.Foundation.Point;
 using Size = SixLabors.ImageSharp.Size;
+using System.Runtime.Intrinsics.Arm;
+using Microsoft.UI.Xaml.Media.Imaging;
 
 namespace Pixeval.Util.UI;
 
@@ -144,10 +147,13 @@ public static partial class UiHelper
     /// <summary>
     /// 调用此方法不要过快
     /// </summary>
-    /// <param name="stream">静态图需要PNG，动图任意格式的图片</param>
-    public static void ClipboardSetBitmap(IRandomAccessStream stream)
+    public static async Task ClipboardSetBitmapAsync(Stream stream)
     {
-        var reference = RandomAccessStreamReference.CreateFromStream(stream);
+        using var randomAccessStream = new InMemoryRandomAccessStream();
+        await stream.CopyToAsync(randomAccessStream.AsStreamForWrite());
+        randomAccessStream.Seek(0);
+        // 此处必须是原生的IRandomAccessStream，而非Stream.AsRandomAccessStream()，否则会导致不显示剪切板缩略图
+        var reference = RandomAccessStreamReference.CreateFromStream(randomAccessStream);
         var content = new DataPackage { RequestedOperation = DataPackageOperation.Copy };
         content.SetBitmap(reference);
         Clipboard.SetContent(content);
@@ -242,7 +248,7 @@ public static partial class UiHelper
         return folderPicker.InitializeWithWindow(window).PickSingleFolderAsync();
     }
 
-    public static IAsyncOperation<StorageFile?> OpenFileSavePickerAsync(this Window window, string suggestedFileName, string fileTypeName, string fileTypeId)
+    public static IAsyncOperation<StorageFile?> OpenFileSavePickerAsync(this Window window, string suggestedFileName, string fileTypeId)
     {
         var savePicker = new FileSavePicker
         {

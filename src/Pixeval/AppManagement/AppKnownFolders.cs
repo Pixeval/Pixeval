@@ -29,8 +29,11 @@ namespace Pixeval.AppManagement;
 
 public class AppKnownFolders(StorageFolder self)
 {
-    public static AppKnownFolders Local = new(ApplicationData.Current.LocalFolder,
-        _ => ApplicationData.Current.ClearAsync(ApplicationDataLocality.Local).AsTask());
+    public static AppKnownFolders Local = new(ApplicationData.Current.LocalFolder, _ => Task.CompletedTask);
+    
+    public static AppKnownFolders Log = null!;
+
+    public static AppKnownFolders Roaming = new(ApplicationData.Current.RoamingFolder, _ => Task.CompletedTask);
 
     public static AppKnownFolders SavedWallPaper = null!;
 
@@ -54,6 +57,7 @@ public class AppKnownFolders(StorageFolder self)
     public static async Task InitializeAsync()
     {
         SavedWallPaper = await GetOrCreate(Local, "Wallpapers");
+        Log = await GetOrCreate(Local, "Logs");
     }
 
     /// <summary>

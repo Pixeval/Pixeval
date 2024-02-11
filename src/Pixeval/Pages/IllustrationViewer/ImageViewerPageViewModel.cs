@@ -131,10 +131,10 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
         RestoreResolutionCommand.GetResolutionCommand(true);
     }
 
-    public async Task<Stream?> GetOriginalImageSourceAsync(bool useBmp, IProgress<int>? progress = null, Stream? destination = null)
+    public async Task<Stream?> GetOriginalImageSourceAsync(bool usePng, IProgress<int>? progress = null, Stream? destination = null)
     {
         if (OriginalImageSources is null)
-            return null;
+            return destination;
 
         if (IllustrationViewModel.IsUgoira)
             return await OriginalImageSources.UgoiraSaveToStreamAsync(MsIntervals ?? [], destination, progress);
@@ -142,7 +142,7 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
         if (OriginalImageSources is [var stream, ..])
         {
             stream.Position = 0;
-            return await stream.IllustrationSaveToStreamAsync(destination, useBmp ? IllustrationDownloadFormat.Bmp : null);
+            return await stream.IllustrationSaveToStreamAsync(destination, usePng ? IllustrationDownloadFormat.Png : null);
         }
 
         return destination;

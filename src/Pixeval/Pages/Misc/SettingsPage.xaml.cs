@@ -26,6 +26,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
+using Pixeval.AppManagement;
 using Pixeval.Controls;
 using Pixeval.Controls.Windowing;
 using Pixeval.Database.Managers;
@@ -175,5 +176,19 @@ public sealed partial class SettingsPage
         using var scope = App.AppViewModel.AppServicesScope;
         var manager = scope.ServiceProvider.GetRequiredService<DownloadHistoryPersistentManager>();
         ViewModel.ClearData(ClearDataKind.DownloadHistory, manager);
+    }
+
+    private void OpenFolder_OnTapped(object sender, TappedRoutedEventArgs e)
+    {
+        var folder = sender.GetTag<string>() switch
+        {
+            "Log" => AppKnownFolders.Log.Self,
+            "Temp" => AppKnownFolders.Temporary.Self,
+            "Local" => AppKnownFolders.Local.Self,
+            "Roaming" => AppKnownFolders.Roaming.Self,
+            _ => null
+        };
+        if (folder is not null)
+            _ = Launcher.LaunchFolderAsync(folder);
     }
 }

@@ -74,11 +74,6 @@
                     Icon="{markupExtensions:FontSymbolIcon Glyph=WebSearchF6FA}"
                     IsEnabled="{x:Bind ViewModel.IsAnyIllustrationSelected, Mode=OneWay}"
                     Tapped="OpenAllInBrowserButton_OnTapped" />
-                <AppBarButton
-                    x:Uid="/IllustrationViewCommandBar/ShareButton"
-                    Icon="{markupExtensions:FontSymbolIcon Glyph=ShareE72D}"
-                    IsEnabled="{x:Bind ViewModel.IsAnyIllustrationSelected, Mode=OneWay}"
-                    Tapped="ShareButton_OnTapped" />
             </CommandBar>
             <CommandBar
                 Grid.Column="2"
