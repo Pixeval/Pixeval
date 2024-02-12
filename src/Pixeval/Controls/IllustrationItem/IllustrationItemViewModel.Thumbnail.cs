@@ -45,20 +45,19 @@ public partial class IllustrationItemViewModel
     /// </summary>
     public Stream? ThumbnailStream { get; set; }
 
-     private SharedRef<SoftwareBitmapSource>? _thumbnailSourceRef;
+    private SharedRef<SoftwareBitmapSource>? _thumbnailSourceRef;
 
-     public SharedRef<SoftwareBitmapSource>? ThumbnailSourceRef
-     {
-         get => _thumbnailSourceRef;
-         set
-         {
-             if (Equals(_thumbnailSourceRef, value))
-                 return;
-             OnPropertyChanging(nameof(ThumbnailSource));
-             _thumbnailSourceRef = value;
-             OnPropertyChanged(nameof(ThumbnailSource));
-         }
-     }
+    public SharedRef<SoftwareBitmapSource>? ThumbnailSourceRef
+    {
+        get => _thumbnailSourceRef;
+        set
+        {
+            if (Equals(_thumbnailSourceRef, value))
+                return;
+            _thumbnailSourceRef = value;
+            OnPropertyChanged(nameof(ThumbnailSource));
+        }
+    }
 
     private CancellationHandle LoadingThumbnailCancellationHandle { get; } = new();
 

@@ -23,7 +23,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
-using Pixeval.Misc;
+using Pixeval.Controls.Windowing;
 using Pixeval.Pages.Misc;
 using Pixeval.Util.Threading;
 using Pixeval.Util.UI;

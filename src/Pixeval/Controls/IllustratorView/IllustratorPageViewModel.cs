@@ -21,7 +21,6 @@
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
-using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
 using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Global.Enum;

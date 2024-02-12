@@ -33,7 +33,7 @@ using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.AppManagement;
 using Pixeval.Controls;
-using Pixeval.Misc;
+using Pixeval.Controls.Windowing;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using WinUI3Utilities;
@@ -73,6 +73,11 @@ public sealed partial class IllustrationViewerPage : SupportCustomTitleBarDragRe
 
     protected override void SetTitleBarDragRegion(InputNonClientPointerSource sender, SizeInt32 windowSize, double scaleFactor, out int titleBarHeight)
     {
+        if (_viewModel.IsFullScreen)
+        {
+            titleBarHeight = 0;
+            return;
+        }
         var leftIndent = new RectInt32(0, 0, _viewModel.IsInfoPaneOpen ? (int)IllustrationInfoAndCommentsSplitView.OpenPaneLength : 0, (int)TitleBarArea.ActualHeight);
 
         sender.SetRegionRects(NonClientRegionKind.Icon, [GetScaledRect(Icon)]);

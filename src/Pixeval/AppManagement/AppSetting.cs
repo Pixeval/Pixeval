@@ -43,6 +43,15 @@ public partial record AppSetting : IWindowSettings
     }
 
     /// <summary>
+    /// The Application Theme
+    /// </summary>
+    [SettingMetadata(SettingEntryCategory.Application, typeof(SettingsPageResources), nameof(SettingsPageResources.ThemeEntryHeader))]
+    public ElementTheme Theme { get; set; } = ElementTheme.Default;
+
+    [SettingMetadata(SettingEntryCategory.Application, typeof(SettingsPageResources), nameof(SettingsPageResources.BackdropEntryHeader))]
+    public BackdropType Backdrop { get; set; } = BackdropType.MicaAlt;
+
+    /// <summary>
     /// Indicates whether the restricted content are permitted to be included
     /// in the searching results, including R-18 and R-18G
     /// </summary>
@@ -202,26 +211,25 @@ public partial record AppSetting : IWindowSettings
     [SettingMetadata(SettingEntryCategory.BrowsingExperience, typeof(SettingsPageResources), nameof(SettingsPageResources.ItemsViewLayoutTypeEntryHeader))]
     public ItemsViewLayoutType ItemsViewLayoutType { get; set; } = ItemsViewLayoutType.LinedFlow;
 
+    [AttributeIgnore(typeof(SettingsViewModelAttribute<>))]
     [SyntheticSetting]
     public bool ShowRecommendIllustratorsInIllustratorContentViewer { get; set; } = true;
 
+    [AttributeIgnore(typeof(SettingsViewModelAttribute<>))]
     [SyntheticSetting]
     public bool ShowExternalCommandBarInIllustratorContentViewer { get; set; } = true;
 
     [AttributeIgnore(typeof(SettingsViewModelAttribute<>))]
+    [SyntheticSetting]
     public LoginProxyOption LoginProxyOption { get; set; } = LoginProxyOption.UseDirect;
 
     [AttributeIgnore(typeof(SettingsViewModelAttribute<>))]
+    [SyntheticSetting]
     public string ProxyString { get; set; } = "";
 
-    /// <summary>
-    /// The Application Theme
-    /// </summary>
-    [SettingMetadata(SettingEntryCategory.Application, typeof(SettingsPageResources), nameof(SettingsPageResources.ThemeEntryHeader))]
-    public ElementTheme Theme { get; set; } = ElementTheme.Default;
-
-    [SettingMetadata(SettingEntryCategory.Application, typeof(SettingsPageResources), nameof(SettingsPageResources.BackdropEntryHeader))]
-    public BackdropType Backdrop { get; set; } = BackdropType.MicaAlt;
+    [AttributeIgnore(typeof(SettingsViewModelAttribute<>))]
+    [SyntheticSetting]
+    public string TagsManagerWorkingPath { get; set; } = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures, Environment.SpecialFolderOption.Create);
 
     public static AppSetting CreateDefault()
     {

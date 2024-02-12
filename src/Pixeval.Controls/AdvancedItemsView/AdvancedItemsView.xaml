@@ -8,7 +8,6 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:winUi="using:CommunityToolkit.WinUI"
     SelectionChanged="AdvancedItemsView_OnSelectionChanged"
-    SizeChanged="AdvancedItemsView_OnSizeChanged"
     mc:Ignorable="d">
     <!--<VisualStateManager.VisualStateGroups>
         <VisualStateGroup x:Name="Group">

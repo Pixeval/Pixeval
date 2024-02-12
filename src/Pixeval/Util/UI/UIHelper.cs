@@ -18,7 +18,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -37,7 +36,6 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using Pixeval.Controls.MarkupExtensions;
 using Pixeval.Controls.MarkupExtensions.FontSymbolIcon;
-using Pixeval.Misc;
 using Pixeval.Util.Threading;
 using Pixeval.Utilities;
 using SixLabors.ImageSharp.PixelFormats;
@@ -51,8 +49,7 @@ using FontFamily = Microsoft.UI.Xaml.Media.FontFamily;
 using Image = SixLabors.ImageSharp.Image;
 using Point = Windows.Foundation.Point;
 using Size = SixLabors.ImageSharp.Size;
-using System.Runtime.Intrinsics.Arm;
-using Microsoft.UI.Xaml.Media.Imaging;
+using Pixeval.Controls.Windowing;
 
 namespace Pixeval.Util.UI;
 
@@ -164,8 +161,13 @@ public static partial class UiHelper
     {
         if (sender.SelectedItem is NavigationViewItem { Tag: NavigationViewTag tag })
         {
-            _ = frame.Navigate(tag.NavigateTo, tag.Parameter, transitionInfo ?? new SuppressNavigationTransitionInfo());
+            _ = frame.Navigate(tag.NavigateTo, tag.Parameter, transitionInfo);
         }
+    }
+
+    public static void NavigateTag(this Frame frame, NavigationViewTag tag, NavigationTransitionInfo? transitionInfo = null)
+    {
+        _ = frame.Navigate(tag.NavigateTo, tag.Parameter, transitionInfo);
     }
 
     public static Visibility Inverse(this Visibility visibility)

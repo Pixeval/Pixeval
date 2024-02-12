@@ -48,7 +48,6 @@ using Pixeval.Database.Managers;
 using Pixeval.Messages;
 using Pixeval.Misc;
 using Pixeval.Pages.Capability;
-using Pixeval.Pages.Download;
 using Pixeval.Pages.Misc;
 using Pixeval.Util;
 using Pixeval.Util.UI;
@@ -56,6 +55,7 @@ using Pixeval.Utilities;
 using WinUI3Utilities;
 using Image = SixLabors.ImageSharp.Image;
 using CommunityToolkit.WinUI.Controls;
+using Pixeval.Controls.Windowing;
 using AppContext = Pixeval.AppManagement.AppContext;
 
 namespace Pixeval.Pages;
@@ -104,7 +104,7 @@ public sealed partial class MainPage : SupportCustomTitleBarDragRegionPage
         });
         using var client = new HttpClient();
         _ = await AppContext.AppVersion.CheckForUpdateAsync(client);
-        if (AppContext.AppVersion.UpdateAvailable) 
+        if (AppContext.AppVersion.UpdateAvailable)
             InfoBadge.Visibility = Visibility.Visible;
     }
 
@@ -116,12 +116,11 @@ public sealed partial class MainPage : SupportCustomTitleBarDragRegionPage
         // will lead the program into NullReferenceException on the access of QueuedTasks.
 
         // args.SelectedItem may be null here
-        if (Equals(args.SelectedItem, DownloadListTab))
-            Navigate<DownloadListPage>(MainPageRootFrame, null);
-        else if (Equals(args.SelectedItem, SettingsTab))
-            Navigate<SettingsPage>(MainPageRootFrame, null);
-        else
-            MainPageRootFrame.NavigateByNavigationViewTag(sender, new SuppressNavigationTransitionInfo());
+        if (sender.SelectedItem is NavigationViewItem { Tag: NavigationViewTag tag } selectedItem)
+            if (Equals(selectedItem, DownloadListTab) || Equals(selectedItem, SettingsTab) || Equals(selectedItem, TagsTab))
+                Navigate(MainPageRootFrame, tag);
+            else
+                MainPageRootFrame.NavigateTag(tag, new SuppressNavigationTransitionInfo());
     }
 
     private void NavigationView_OnPaneChanging(NavigationView sender, object e)
@@ -142,7 +141,11 @@ public sealed partial class MainPage : SupportCustomTitleBarDragRegionPage
         await _viewModel.SuggestionProvider.UpdateAsync(suggestBox.Text);
     }
 
-    // 搜索并跳转至搜索结果
+    /// <summary>
+    /// 搜索并跳转至搜索结果
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="args"></param>
     private void KeywordAutoSuggestBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
     {
         if (args.QueryText.IsNullOrBlank())

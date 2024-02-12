@@ -10,7 +10,6 @@
     "AppThemeLight": "亮色",
     "AppThemeDark": "暗色",
     "AppThemeSystemDefault": "跟随系统主题",
-    "CannotFindLoginProxyServerExecutable": "找不到用于登录的可执行文件，请重新打开应用或者联系开发者",
     "ExceptionEncountered": "应用程序遇到了异常",
     "IllustrationSortOptionDoNotSort": "不进行任何排序",
     "IllustrationSortOptionPopularityDescending": "收藏数降序",
@@ -37,11 +36,8 @@
     "SearchTagMatchOptionTitleAndCaption": "匹配标题与说明文",
     "TargetFilterForAndroid": "Android",
     "TargetFilterForIOS": "IOS",
-    "TheIllustrationIsAMangaFormatted": "这是一副图集，内含{0}张图片",
-    "TheIllustrationIsAnUgoira": "这是一张动图",
     "ThumbnailDirectionLandscape": "横向",
     "ThumbnailDirectionPortrait": "纵向",
-    "UnexpectedBehavior": "发生了未定义的行为，如果你看到了该信息，请联系开发者寻求帮助",
     "UseDirect": "使用直连",
     "UseBrowserProxy": "使用浏览器代理",
     "SpecifyProxy": "指定代理",
@@ -55,5 +51,7 @@
     "DownloadListEntryOpenFailed": "打开文件（夹）失败",
     "DownloadListEntryMaybeDeleted": "可能你已经删除了该图片",
 
+    "CannotFindLoginProxyServerExecutable": "找不到用于登录的可执行文件，请重新打开应用或者联系开发者",
+    "UnexpectedBehavior": "发生了未定义的行为，如果你看到了该信息，请联系开发者寻求帮助",
     "ReplyContentTooLong": "回复内容超过140字，请重新编辑"
 }

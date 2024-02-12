@@ -187,6 +187,7 @@
                     Tag="{x:Bind _viewModel.RecentPostsTag}" />
                 <NavigationViewItemHeader x:Uid="/MainPage/DownloadAndHistoriesTab" />
                 <NavigationViewItem
+                    x:Name="TagsTab"
                     x:Uid="/MainPage/TagsTab"
                     Icon="{markup:FontSymbolIcon Glyph=TagE8EC}"
                     Tag="{x:Bind _viewModel.TagsTag}" />
@@ -197,7 +198,8 @@
                 <NavigationViewItem
                     x:Name="DownloadListTab"
                     x:Uid="/MainPage/DownloadListTab"
-                    Icon="{markup:FontSymbolIcon Glyph=DownloadE896}" />
+                    Icon="{markup:FontSymbolIcon Glyph=DownloadE896}"
+                    Tag="{x:Bind _viewModel.DownloadListTag}" />
             </NavigationView.MenuItems>
             <NavigationView.FooterMenuItems>
                 <NavigationViewItem
@@ -208,6 +210,25 @@
                     x:Uid="/MainPage/AboutTab"
                     Icon="{markup:FontSymbolIcon Glyph=RingerEA8F}"
                     Tag="{x:Bind _viewModel.AboutTag}" />
+                <NavigationViewItemSeparator />
+                <NavigationViewItem SelectsOnInvoked="False">
+                    <NavigationViewItem.Content>
+                        <Grid Margin="-5,10" ColumnSpacing="10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <PersonPicture
+                                Grid.Column="0"
+                                MaxHeight="35"
+                                ProfilePicture="{x:Bind _viewModel.AvatarSource, Mode=OneWay}" />
+                            <TextBlock
+                                Grid.Column="1"
+                                VerticalAlignment="Center"
+                                Text="{x:Bind _viewModel.UserName}" />
+                        </Grid>
+                    </NavigationViewItem.Content>
+                </NavigationViewItem>
                 <NavigationViewItem
                     x:Name="SettingsTab"
                     x:Uid="/MainPage/SettingsTab"

@@ -27,7 +27,7 @@ namespace Pixeval.Controls;
 [DependencyProperty<int>("SelectedIndex", "-1", nameof(OnSelectedIndexChanged))]
 [DependencyProperty<bool>("CanLoadMore", "true")]
 [DependencyProperty<int>("LoadCount", "20")]
-public sealed partial class AdvancedItemsView : ItemsView
+public sealed partial class AdvancedItemsView
 {
     public event Func<AdvancedItemsView, EventArgs, Task> LoadMoreRequested;
     /// <summary>
@@ -68,6 +68,7 @@ public sealed partial class AdvancedItemsView : ItemsView
             return;
         }
 
+        // 记录新的
         _viewModels.Clear();
         ncc.CollectionChanged += NccOnCollectionChanged;
         await TryRaiseLoadMoreRequestedAsync();
@@ -76,11 +77,36 @@ public sealed partial class AdvancedItemsView : ItemsView
         return;
         void NccOnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
-            if (e.Action is not NotifyCollectionChangedAction.Add || e.NewItems is null)
-                return;
-
-            foreach (var newItem in e.NewItems)
-                _ = _viewModels.Add(newItem.GetHashCode());
+            switch (e.Action)
+            {
+                case NotifyCollectionChangedAction.Add when e.NewItems is not null:
+                {
+                    foreach (var newItem in e.NewItems)
+                        _ = _viewModels.Add(newItem.GetHashCode());
+                    break;
+                }
+                case NotifyCollectionChangedAction.Remove when e.OldItems is not null:
+                {
+                    foreach (var oldItem in e.OldItems)
+                        _ = _viewModels.Remove(oldItem.GetHashCode());
+                    break;
+                }
+                case NotifyCollectionChangedAction.Reset:
+                {
+                    _viewModels.Clear();
+                    break;
+                }
+                case NotifyCollectionChangedAction.Replace:
+                {
+                    if (e.NewItems is not null)
+                        foreach (var newItem in e.NewItems)
+                            _ = _viewModels.Add(newItem.GetHashCode());
+                    if (e.OldItems is not null)
+                        foreach (var oldItem in e.OldItems)
+                            _ = _viewModels.Remove(oldItem.GetHashCode());
+                    break;
+                }
+            }
         }
     }
 
@@ -96,6 +122,7 @@ public sealed partial class AdvancedItemsView : ItemsView
         if (!CanLoadMore || IsLoadingMore)
             return;
 
+        // 只有页面没充满时会触发LoadMoreRequested
         switch (ScrollView.ComputedVerticalScrollMode, ScrollView.ComputedHorizontalScrollMode)
         {
             case (ScrollingScrollMode.Disabled, ScrollingScrollMode.Disabled):
@@ -269,29 +296,44 @@ public sealed partial class AdvancedItemsView : ItemsView
 
     private async void ScrollView_ViewChanged(ScrollView sender, object args) => await TryRaiseLoadMoreRequestedAsync();
 
+    /// <summary>
+    /// 本方法之后会触发<see cref="AdvancedItemsView_OnSizeChanged"/>
+    /// </summary>
     private void ScrollView_OnLoaded(DependencyObject sender, DependencyProperty dp)
     {
         ScrollView.ViewChanged += ScrollView_ViewChanged;
         _itemsRepeater = ScrollView.Content.To<ItemsRepeater>();
-        _itemsRepeater.ElementPrepared += async (s, arg) =>
+        _itemsRepeater.SizeChanged += AdvancedItemsView_OnSizeChanged;
+        _itemsRepeater.ElementPrepared += (_, arg) =>
         {
             // _loadedElements.Count is 0 说明不存在TryLoadedFirst注释里的情况
             // 否则需要检测该控件是否加载，加载后才能触发ElementPrepared，以此防止ElementPrepared调用两次
             var itemContainer = arg.Element.To<ItemContainer>();
             if (_loadedElements.Count is 0 || _loadedElements.Contains(arg.Element.GetHashCode()))
                 ElementPrepared?.Invoke(this, itemContainer);
-            // LoadAndFill用的逻辑
-            if (_viewModels.Count is not 0 && itemContainer.Child is IViewModelControl viewModelControl)
+            // LoadAndFillAsync用的逻辑，当控件加载后，从_viewModels移除，当_viewModels为空时（全部Load后），触发LoadAndFillAsync
+            if (_viewModels.Count is not 0)
+                itemContainer.Loaded += OnItemContainerOnLoaded;
+        };
+        _itemsRepeater.ElementClearing += (_, arg) => ElementClearing?.Invoke(this, arg.Element.To<ItemContainer>());
+        return;
+        async void OnItemContainerOnLoaded(object o, RoutedEventArgs routedEventArgs)
+        {
+            if (o is ItemContainer { Child: IViewModelControl viewModelControl })
             {
                 _ = _viewModels.Remove(viewModelControl.ViewModel.GetHashCode());
                 if (_viewModels.Count is 0)
                     await LoadAndFillAsync();
             }
-        };
-        _itemsRepeater.ElementClearing += (_, arg) => ElementClearing?.Invoke(this, arg.Element.To<ItemContainer>());
-        // Loaded之后会触发SizeChanged
+            o.To<FrameworkElement>().Loaded -= OnItemContainerOnLoaded;
+        }
     }
 
+    /// <summary>
+    /// 数据换源后（或第一次设置数据源时），<see cref="ItemsRepeater.ActualHeight"/>变为0，这个方法可以重新加载数据
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
     private async void AdvancedItemsView_OnSizeChanged(object sender, SizeChangedEventArgs e) => await LoadAndFillAsync();
 
     #endregion

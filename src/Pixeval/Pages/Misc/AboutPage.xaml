@@ -104,7 +104,7 @@
                         <Run x:Uid="/AboutPage/OpenSourceLicenseContentPartII" />
                     </TextBlock>
                     <!--  TODO: Use Markdown  -->
-                    <TextBlock x:Name="LicenseTextBlock" />
+                    <TextBlock x:Name="LicenseTextBlock" IsTextSelectionEnabled="True" />
                 </StackPanel>
             </StackPanel>
         </ScrollViewer>

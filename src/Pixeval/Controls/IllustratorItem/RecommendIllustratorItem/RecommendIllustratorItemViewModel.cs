@@ -61,7 +61,7 @@ public partial class RecommendIllustratorItemViewModel : IllustrateViewModel<Rec
 
     public long UserId => Illustrate.Id;
 
-    public XamlUICommand FollowCommand { get; } = new XamlUICommand();
+    public XamlUICommand FollowCommand { get; } = new();
 
     public IllustratorIllustrationsOverviewViewModel OverviewViewModel { get; }
 

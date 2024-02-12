@@ -38,7 +38,9 @@ namespace Pixeval.Controls;
 
 public partial class IllustratorIllustrationsOverviewViewModel : ObservableObject, IDisposable
 {
-    // Dominant color of the "No Image" image
+    /// <summary>
+    /// Dominant color of the "No Image" image
+    /// </summary>
     private static readonly SolidColorBrush _defaultAvatarBorderColorBrush =
         new(UiHelper.ParseHexColor("#D6DEE5"));
 

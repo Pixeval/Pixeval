@@ -18,6 +18,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using System;
 using System.Threading.Tasks;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
@@ -63,20 +64,29 @@ public class EnhancedWindowPage : EnhancedPage
         OnPageActivated(e, parameter.Parameter);
     }
 
+    protected void Navigate(Type type, Frame frame, object? parameter, NavigationTransitionInfo? info = null)
+    {
+        _ = frame.Navigate(type, new NavigateParameter(parameter, Window), info);
+    }
+
     protected void Navigate<TPage>(Frame frame, object? parameter, NavigationTransitionInfo? info = null) where TPage : EnhancedWindowPage
     {
-        _ = frame.Navigate(typeof(TPage), new NavigateParameter(parameter, Window), info);
+        Navigate(typeof(TPage), frame, parameter, info);
     }
 
     protected void NavigateParent<TPage>(object? parameter, NavigationTransitionInfo? info = null) where TPage : EnhancedWindowPage
     {
-        _ = Frame.Navigate(typeof(TPage), new NavigateParameter(parameter, Window), info);
+        Navigate(typeof(TPage), Frame, parameter, info);
     }
 
     protected void NavigateSelf(object? parameter, NavigationTransitionInfo? info = null)
     {
-        info ??= new SuppressNavigationTransitionInfo();
-        _ = Frame.Navigate(GetType(), new NavigateParameter(parameter, Window), info);
+        Navigate(GetType(), Frame, parameter, info);
+    }
+
+    protected void Navigate(Frame frame, NavigationViewTag tag, NavigationTransitionInfo? info = null)
+    {
+        Navigate(tag.NavigateTo, frame, tag.Parameter, info);
     }
 
     public virtual void OnPageActivated(NavigationEventArgs e, object? parameter)

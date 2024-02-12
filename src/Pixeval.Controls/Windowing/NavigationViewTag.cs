@@ -20,7 +20,7 @@
 
 using System;
 
-namespace Pixeval.Misc;
+namespace Pixeval.Controls.Windowing;
 
 public record NavigationViewTag(Type NavigateTo, object? Parameter, int? Index = null)
 {

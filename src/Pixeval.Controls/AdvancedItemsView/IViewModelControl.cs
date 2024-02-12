@@ -18,10 +18,13 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System;
+using Microsoft.UI.Xaml.Controls;
 
 namespace Pixeval.Controls;
 
+/// <summary>
+/// 由于<see cref="ItemsRepeater"/>会回收控件，所以用<see cref="ViewModel"/>来作唯一标识符
+/// </summary>
 public interface IViewModelControl
 {
     object ViewModel { get; }

@@ -101,13 +101,13 @@ public partial class IllustrationItemViewModel : IllustrateViewModel<Illustratio
             if (IsUgoira)
             {
                 _ = sb.AppendLine()
-                    .Append(MiscResources.TheIllustrationIsAnUgoira);
+                    .Append(IllustrateItemResources.TheIllustrationIsAnUgoira);
             }
 
             if (IsManga)
             {
                 _ = sb.AppendLine()
-                    .Append(MiscResources.TheIllustrationIsAMangaFormatted.Format(Illustrate.PageCount));
+                    .Append(IllustrateItemResources.TheIllustrationIsAMangaFormatted.Format(Illustrate.PageCount));
             }
 
             return sb.ToString();
