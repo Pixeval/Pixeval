@@ -36,9 +36,9 @@ internal class SearchEngine(MakoClient makoClient,
         int pages,
         IllustrationSortOption? sortOption,
         SearchDuration searchDuration,
+        TargetFilter targetFilter,
         DateTimeOffset? startDate,
-        DateTimeOffset? endDate,
-        TargetFilter? targetFilter)
+        DateTimeOffset? endDate)
     : AbstractPixivFetchEngine<Illustration>(makoClient, engineHandle)
 {
     private readonly int _current = start;
@@ -49,7 +49,7 @@ internal class SearchEngine(MakoClient makoClient,
     private readonly IllustrationSortOption _sortOption = sortOption ?? IllustrationSortOption.PublishDateDescending;
     private readonly DateTimeOffset? _startDate = startDate;
     private readonly string _tag = tag;
-    private readonly TargetFilter _targetFilter = targetFilter ?? TargetFilter.ForAndroid;
+    private readonly TargetFilter _targetFilter = targetFilter;
 
     public override IAsyncEnumerator<Illustration> GetAsyncEnumerator(CancellationToken cancellationToken = new CancellationToken())
     {

@@ -26,8 +26,5 @@ namespace Pixeval.Controls.FlyoutContent;
 [DependencyProperty<string>("Header")]
 public partial class IllustrationResultFilterFunctionEntry : ContentControl
 {
-    public IllustrationResultFilterFunctionEntry()
-    {
-        DefaultStyleKey = typeof(IllustrationResultFilterFunctionEntry);
-    }
+    public IllustrationResultFilterFunctionEntry() => DefaultStyleKey = typeof(IllustrationResultFilterFunctionEntry);
 }

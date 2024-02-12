@@ -11,10 +11,7 @@ namespace Pixeval.Controls;
 [DependencyProperty<IllustratorIllustrationsOverviewViewModel>("ViewModel")]
 public sealed partial class IllustratorIllustrationsOverview
 {
-    public IllustratorIllustrationsOverview()
-    {
-        InitializeComponent();
-    }
+    public IllustratorIllustrationsOverview() => InitializeComponent();
 
     private Thickness GetIllustrationAt(List<SoftwareBitmapSource> sources)
     {

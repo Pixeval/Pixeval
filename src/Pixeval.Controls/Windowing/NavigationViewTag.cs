@@ -27,6 +27,8 @@ public record NavigationViewTag(Type NavigateTo, object? Parameter, int? Index =
     public object? Parameter { get; set; } = Parameter;
 }
 
+public sealed record NavigationViewTag<TPage>(int? Index = null) : NavigationViewTag(typeof(TPage), null, Index);
+
 public sealed record NavigationViewTag<TPage, TParam>(TParam Parameter, int? Index = null) : NavigationViewTag(typeof(TPage), Parameter, Index)
 {
     public new TParam Parameter

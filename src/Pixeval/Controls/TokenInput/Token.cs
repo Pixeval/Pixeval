@@ -45,10 +45,7 @@ public sealed partial class Token : ObservableObject, IEquatable<Token>, IDeepCl
             ThrowHelper.Argument(tokenContent);
     }
 
-    public Token()
-    {
-        _tokenContent = "";
-    }
+    public Token() => _tokenContent = "";
 
     /// <summary>
     /// 成员全部是类似于值类型，所以深拷贝和浅拷贝效果一样

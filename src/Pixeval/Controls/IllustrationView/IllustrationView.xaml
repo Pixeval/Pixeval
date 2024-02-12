@@ -22,7 +22,7 @@
         MinItemWidth="{x:Bind DesiredWidth}"
         SelectionChanged="IllustrationItemsView_OnSelectionChanged"
         SelectionMode="{x:Bind ViewModel.SelectionMode, Mode=OneWay}">
-        <ItemsView.ItemTemplate>
+        <local:AdvancedItemsView.ItemTemplate>
             <DataTemplate x:DataType="local:IllustrationItemViewModel">
                 <ItemContainer>
                     <local:IllustrationItem
@@ -31,7 +31,7 @@
                         ViewModelChanged="IllustrationItem_OnViewModelChanged" />
                 </ItemContainer>
             </DataTemplate>
-        </ItemsView.ItemTemplate>
+        </local:AdvancedItemsView.ItemTemplate>
     </local:AdvancedItemsView>
     <StackPanel
         HorizontalAlignment="Center"

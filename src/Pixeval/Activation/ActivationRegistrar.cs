@@ -29,10 +29,7 @@ public static class ActivationRegistrar
 {
     public static readonly List<IAppActivationHandler> FeatureHandlers = [];
 
-    static ActivationRegistrar()
-    {
-        FeatureHandlers.Add(new IllustrationAppActivationHandler());
-    }
+    static ActivationRegistrar() => FeatureHandlers.Add(new IllustrationAppActivationHandler());
 
     public static void Dispatch(AppActivationArguments args)
     {

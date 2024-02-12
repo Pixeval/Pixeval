@@ -37,10 +37,7 @@ namespace Pixeval.Pages.Misc;
 /// </summary>
 public sealed partial class BrowsingHistoryPage : ISortedIllustrationContainerPageHelper
 {
-    public BrowsingHistoryPage()
-    {
-        InitializeComponent();
-    }
+    public BrowsingHistoryPage() => InitializeComponent();
 
     public IllustrationContainer ViewModelProvider => IllustrationContainer;
 

@@ -30,10 +30,7 @@ namespace Pixeval.Pages.Capability;
 
 public sealed partial class SearchResultsPage : ISortedIllustrationContainerPageHelper
 {
-    public SearchResultsPage()
-    {
-        InitializeComponent();
-    }
+    public SearchResultsPage() => InitializeComponent();
 
     public IllustrationContainer ViewModelProvider => IllustrationContainer;
 

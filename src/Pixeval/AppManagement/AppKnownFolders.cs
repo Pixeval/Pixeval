@@ -42,10 +42,7 @@ public class AppKnownFolders(StorageFolder self)
 
     private readonly Func<StorageFolder, Task>? _deleter;
 
-    private AppKnownFolders(StorageFolder self, Func<StorageFolder, Task> deleter) : this(self)
-    {
-        _deleter = deleter;
-    }
+    private AppKnownFolders(StorageFolder self, Func<StorageFolder, Task> deleter) : this(self) => _deleter = deleter;
 
     public StorageFolder Self { get; } = self;
 

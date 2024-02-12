@@ -9,10 +9,7 @@ public sealed partial class TagsPage
 {
     private readonly TagsPageViewModel _viewModel = new();
 
-    public TagsPage()
-    {
-        InitializeComponent();
-    }
+    public TagsPage() => InitializeComponent();
 
     public override void OnPageDeactivated(NavigatingCancelEventArgs e) => _viewModel.Dispose();
 

@@ -32,10 +32,7 @@ namespace Pixeval.Pages.Capability;
 
 public sealed partial class RankingsPage : ISortedIllustrationContainerPageHelper
 {
-    public RankingsPage()
-    {
-        InitializeComponent();
-    }
+    public RankingsPage() => InitializeComponent();
 
     public DateTime MaxDate => DateTime.Now.AddDays(-2);
 
@@ -70,6 +67,6 @@ public sealed partial class RankingsPage : ISortedIllustrationContainerPageHelpe
     {
         var rankOption = (RankOptionComboBox.SelectedItem as RankOptionWrapper)?.Value ?? RankOption.Day;
         var dateTime = RankDateTimeCalendarDatePicker.Date?.DateTime ?? DateTime.Now.AddDays(-2);
-        IllustrationContainer.ViewModel.ResetEngine(App.AppViewModel.MakoClient.Ranking(rankOption, dateTime));
+        IllustrationContainer.ViewModel.ResetEngine(App.AppViewModel.MakoClient.Ranking(rankOption, dateTime, App.AppViewModel.AppSetting.TargetFilter));
     }
 }

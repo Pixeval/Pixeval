@@ -76,6 +76,7 @@ public partial class RecommendIllustratorItemViewModel : IllustrateViewModel<Rec
         AvatarSource = result is Result<ImageSource>.Success { Value: var avatar }
             ? avatar
             : await AppContext.GetPixivNoProfileImageAsync();
+        await OverviewViewModel.LoadBannerSource();
     }
 
     public string GetIllustrationToolTipSubtitleText(RecommendUser user)

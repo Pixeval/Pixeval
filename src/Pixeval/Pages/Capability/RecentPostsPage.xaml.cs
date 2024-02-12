@@ -30,10 +30,7 @@ namespace Pixeval.Pages.Capability;
 
 public sealed partial class RecentPostsPage : ISortedIllustrationContainerPageHelper
 {
-    public RecentPostsPage()
-    {
-        InitializeComponent();
-    }
+    public RecentPostsPage() => InitializeComponent();
 
     public IllustrationContainer ViewModelProvider => IllustrationContainer;
 

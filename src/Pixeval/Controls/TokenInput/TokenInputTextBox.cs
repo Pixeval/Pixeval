@@ -43,10 +43,7 @@ public partial class TokenInputTextBox : Control
 
     private TextBox? _tokenTextBox;
 
-    public TokenInputTextBox()
-    {
-        DefaultStyleKey = typeof(TokenInputTextBox);
-    }
+    public TokenInputTextBox() => DefaultStyleKey = typeof(TokenInputTextBox);
 
     public event EventHandler<Token>? TokenSubmitted;
 

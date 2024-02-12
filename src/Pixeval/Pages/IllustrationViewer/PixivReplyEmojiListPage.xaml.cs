@@ -42,15 +42,9 @@ public sealed partial class PixivReplyEmojiListPage
 
     private PixivReplyBar? _replyBar;
 
-    static PixivReplyEmojiListPage()
-    {
-        LoadEmojis();
-    }
+    static PixivReplyEmojiListPage() => LoadEmojis();
 
-    public PixivReplyEmojiListPage()
-    {
-        InitializeComponent();
-    }
+    public PixivReplyEmojiListPage() => InitializeComponent();
 
     public override void OnPageActivated(NavigationEventArgs e)
     {

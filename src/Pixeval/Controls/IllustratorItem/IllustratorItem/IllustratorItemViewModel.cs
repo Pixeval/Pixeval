@@ -80,6 +80,7 @@ public sealed partial class IllustratorItemViewModel : IllustrateViewModel<User>
         AvatarSource = result is Result<ImageSource>.Success { Value: var avatar }
             ? avatar
             : await AppContext.GetPixivNoProfileImageAsync();
+        await OverviewViewModel.LoadBannerSource();
     }
 
     // private void SetMetrics()

@@ -41,8 +41,7 @@ public partial class IllustratorIllustrationsOverviewViewModel : ObservableObjec
     /// <summary>
     /// Dominant color of the "No Image" image
     /// </summary>
-    private static readonly SolidColorBrush _defaultAvatarBorderColorBrush =
-        new(UiHelper.ParseHexColor("#D6DEE5"));
+    private static readonly SolidColorBrush _defaultAvatarBorderColorBrush = new(UiHelper.ParseHexColor("#D6DEE5"));
 
     [ObservableProperty]
     private Brush? _avatarBorderBrush;
@@ -52,14 +51,16 @@ public partial class IllustratorIllustrationsOverviewViewModel : ObservableObjec
     public IllustratorIllustrationsOverviewViewModel(IEnumerable<long>? ids)
     {
         GetAvatarBorderBrush = false;
-        _ = SetBannerSourceFromIdsAsync(ids);
+        LoadBannerSource = () => LoadBannerSourceFromIdsAsync(ids);
     }
 
     public IllustratorIllustrationsOverviewViewModel(IEnumerable<Illustration>? illustrations)
     {
         GetAvatarBorderBrush = true;
-        _ = SetBannerSourceFromIllustrationsAsync(illustrations);
+        LoadBannerSource = () => LoadBannerSourceFromIllustrationsAsync(illustrations);
     }
+
+    public Func<Task> LoadBannerSource { get; }
 
     private bool GetAvatarBorderBrush { get; }
 
@@ -72,7 +73,7 @@ public partial class IllustratorIllustrationsOverviewViewModel : ObservableObjec
         BannerSources.Clear();
     }
 
-    private async Task SetBannerSourceFromIdsAsync(IEnumerable<long>? ids)
+    private async Task LoadBannerSourceFromIdsAsync(IEnumerable<long>? ids)
     {
         var illustrations = new List<Illustration>();
         if (ids is not null)
@@ -82,10 +83,10 @@ public partial class IllustratorIllustrationsOverviewViewModel : ObservableObjec
                 illustrations.Add(illustration);
             }
 
-        await SetBannerSourceFromIllustrationsAsync(illustrations);
+        await LoadBannerSourceFromIllustrationsAsync(illustrations);
     }
 
-    private async Task SetBannerSourceFromIllustrationsAsync(IEnumerable<Illustration>? illustrations)
+    private async Task LoadBannerSourceFromIllustrationsAsync(IEnumerable<Illustration>? illustrations)
     {
         AvatarBorderBrush = null;
         Dispose();

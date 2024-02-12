@@ -48,7 +48,7 @@ public partial class MakoClient
     /// The <see cref="BookmarkEngine" />> iterator containing bookmarked illustrations for the user.
     /// </returns>
     /// <exception cref="IllegalPrivatePolicyException">Requesting other user's private bookmarks will throw this exception.</exception>
-    public IFetchEngine<Illustration> Bookmarks(long uid, PrivacyPolicy privacyPolicy, TargetFilter targetFilter)
+    public IFetchEngine<Illustration> Bookmarks(long uid, PrivacyPolicy privacyPolicy, TargetFilter targetFilter = TargetFilter.ForAndroid)
     {
         EnsureNotCancelled();
         if (!CheckPrivacyPolicy(uid, privacyPolicy))
@@ -84,7 +84,7 @@ public partial class MakoClient
         SearchTagMatchOption matchOption = SearchTagMatchOption.TitleAndCaption,
         IllustrationSortOption? sortOption = null,
         SearchDuration searchDuration = SearchDuration.Undecided,
-        TargetFilter? targetFilter = null,
+        TargetFilter targetFilter = TargetFilter.ForAndroid,
         DateTimeOffset? startDate = null,
         DateTimeOffset? endDate = null)
     {
@@ -94,7 +94,7 @@ public partial class MakoClient
             sortOption = IllustrationSortOption.DoNotSort;
         }
 
-        return new SearchEngine(this, new EngineHandle(CancelInstance), matchOption, tag, start, pages, sortOption, searchDuration, startDate, endDate, targetFilter);
+        return new SearchEngine(this, new EngineHandle(CancelInstance), matchOption, tag, start, pages, sortOption, searchDuration, targetFilter, startDate, endDate);
     }
 
     /// <summary>
@@ -280,7 +280,7 @@ public partial class MakoClient
     /// <returns>
     /// The <see cref="PostedMangaEngine" /> containing the manga posts of the user.
     /// </returns>
-    public IFetchEngine<Illustration> MangaPosts(long uid, TargetFilter targetFilter)
+    public IFetchEngine<Illustration> MangaPosts(long uid, TargetFilter targetFilter = TargetFilter.ForAndroid)
     {
         EnsureNotCancelled();
         return new PostedMangaEngine(this, uid, targetFilter, new EngineHandle(CancelInstance));
@@ -294,7 +294,7 @@ public partial class MakoClient
     /// <returns>
     /// The <see cref="PostedNovelEngine" /> containing the novel posts of that user.
     /// </returns>
-    public IFetchEngine<Novel> NovelPosts(long uid, TargetFilter targetFilter)
+    public IFetchEngine<Novel> NovelPosts(long uid, TargetFilter targetFilter = TargetFilter.ForAndroid)
     {
         EnsureNotCancelled();
         return new PostedNovelEngine(this, uid, targetFilter, new EngineHandle(CancelInstance));
@@ -309,7 +309,7 @@ public partial class MakoClient
     /// <returns>
     /// The <see cref="NovelBookmarkEngine" /> containing the bookmarked novels.
     /// </returns>
-    public IFetchEngine<Novel> NovelBookmarks(long uid, PrivacyPolicy privacyPolicy, TargetFilter targetFilter)
+    public IFetchEngine<Novel> NovelBookmarks(long uid, PrivacyPolicy privacyPolicy, TargetFilter targetFilter = TargetFilter.ForAndroid)
     {
         EnsureNotCancelled();
         _ = CheckPrivacyPolicy(uid, privacyPolicy);

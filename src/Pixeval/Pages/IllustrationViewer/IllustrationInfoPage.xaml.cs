@@ -35,10 +35,7 @@ public sealed partial class IllustrationInfoPage
 {
     private IllustrationViewerPageViewModel _viewModel = null!;
 
-    public IllustrationInfoPage()
-    {
-        InitializeComponent();
-    }
+    public IllustrationInfoPage() => InitializeComponent();
 
     public override void OnPageActivated(NavigationEventArgs e)
     {

@@ -27,9 +27,6 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.Controls;
 using Pixeval.Controls.Windowing;
-using Pixeval.CoreApi.Engine;
-using Pixeval.CoreApi.Global.Enum;
-using Pixeval.CoreApi.Model;
 using Pixeval.Pages.Capability;
 using Pixeval.Pages.Download;
 using Pixeval.Pages.IllustrationViewer;
@@ -44,31 +41,27 @@ namespace Pixeval.Pages;
 
 public partial class MainPageViewModel : ObservableObject
 {
-    public readonly NavigationViewTag<AboutPage, object?> AboutTag = new(null);
+    public readonly NavigationViewTag<AboutPage> AboutTag = new();
 
-    public readonly NavigationViewTag<BookmarksPage, IFetchEngine<Illustration>> BookmarksTag =
-        new(App.AppViewModel.MakoClient.Bookmarks(App.AppViewModel.PixivUid, PrivacyPolicy.Public, App.AppViewModel.AppSetting.TargetFilter));
+    public readonly NavigationViewTag<BookmarksPage> BookmarksTag = new();
 
-    public readonly NavigationViewTag<FollowingsPage, object?> FollowingsTag = new(null);
+    public readonly NavigationViewTag<FollowingsPage> FollowingsTag = new();
 
-    public readonly NavigationViewTag<BrowsingHistoryPage, object?> HistoriesTag = new(null);
+    public readonly NavigationViewTag<BrowsingHistoryPage> HistoriesTag = new();
 
-    public readonly NavigationViewTag<RankingsPage, IFetchEngine<Illustration>> RankingsTag =
-        new(App.AppViewModel.MakoClient.Ranking(RankOption.Day, DateTime.Today - TimeSpan.FromDays(2)));
+    public readonly NavigationViewTag<RankingsPage> RankingsTag = new();
 
-    public readonly NavigationViewTag<RecentPostsPage, IFetchEngine<Illustration>> RecentPostsTag =
-        new(App.AppViewModel.MakoClient.RecentPosts(PrivacyPolicy.Public));
+    public readonly NavigationViewTag<RecentPostsPage> RecentPostsTag = new();
 
-    public readonly NavigationViewTag<RecommendationPage, IFetchEngine<Illustration>> RecommendsTag =
-        new(App.AppViewModel.MakoClient.Recommendations(targetFilter: App.AppViewModel.AppSetting.TargetFilter));
+    public readonly NavigationViewTag<RecommendationPage> RecommendsTag = new();
 
-    public readonly NavigationViewTag<TagsPage, object?> TagsTag = new(null);
+    public readonly NavigationViewTag<TagsPage> TagsTag = new();
 
-    public readonly NavigationViewTag<DownloadListPage, object?> DownloadListTag = new(null);
+    public readonly NavigationViewTag<DownloadListPage> DownloadListTag = new();
 
-    public readonly NavigationViewTag<SettingsPage, object?> SettingsTag = new(null);
+    public readonly NavigationViewTag<SettingsPage> SettingsTag = new();
 
-    public readonly NavigationViewTag<SpotlightsPage, object?> SpotlightsTag = new(null);
+    public readonly NavigationViewTag<SpotlightsPage> SpotlightsTag = new();
 
     [ObservableProperty]
     private SoftwareBitmapSource? _avatarSource;

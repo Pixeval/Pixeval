@@ -32,10 +32,7 @@ namespace Pixeval.Controls;
 [DependencyProperty<CommentBlockViewModel>("ViewModel", propertyChanged: nameof(OnViewModelChanged))]
 public sealed partial class CommentBlock
 {
-    public CommentBlock()
-    {
-        InitializeComponent();
-    }
+    public CommentBlock() => InitializeComponent();
 
     public event Action<CommentBlockViewModel>? RepliesHyperlinkButtonTapped;
 

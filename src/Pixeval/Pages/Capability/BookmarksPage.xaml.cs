@@ -30,10 +30,7 @@ namespace Pixeval.Pages.Capability;
 
 public sealed partial class BookmarksPage : ISortedIllustrationContainerPageHelper
 {
-    public BookmarksPage()
-    {
-        InitializeComponent();
-    }
+    public BookmarksPage() => InitializeComponent();
 
     public IllustrationContainer ViewModelProvider => IllustrationContainer;
 

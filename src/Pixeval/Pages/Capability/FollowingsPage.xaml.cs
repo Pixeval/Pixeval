@@ -19,6 +19,7 @@
 #endregion
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
@@ -35,6 +36,8 @@ namespace Pixeval.Pages.Capability;
 
 public sealed partial class FollowingsPage
 {
+    [SuppressMessage("CodeQuality", "IDE0079:请删除不必要的忽略")]
+    [SuppressMessage("ReSharper", "PrivateFieldCanBeConvertedToLocalVariable")]
     private readonly SolidColorBrush _backgroundBrush;
     private readonly IllustratorViewViewModel _viewModel = new();
     private const int CompactPaneLength = 300;

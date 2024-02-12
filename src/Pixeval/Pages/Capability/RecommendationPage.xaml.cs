@@ -36,13 +36,13 @@ public sealed partial class RecommendationPage : ISortedIllustrationContainerPag
 
     public SortOptionComboBox SortOptionProvider => SortOptionComboBox;
 
-    public override void OnPageDeactivated(NavigatingCancelEventArgs navigatingCancelEventArgs)
+    public override void OnPageDeactivated(NavigatingCancelEventArgs e)
     {
         ModeSelectionComboBox.SelectionChangedWhenLoaded -= ModeSelectionComboBox_OnSelectionChangedWhenLoaded;
         SortOptionComboBox.SelectionChangedWhenLoaded -= SortOptionComboBox_OnSelectionChanged;
     }
 
-    public override void OnPageActivated(NavigationEventArgs navigationEventArgs)
+    public override void OnPageActivated(NavigationEventArgs e)
     {
         ModeSelectionComboBox.SelectedItem = ModeSelectionComboBoxIllustComboBoxItem;
         SortOptionComboBox.SelectedItem = MakoHelper.GetAppSettingDefaultSortOptionWrapper();
@@ -63,6 +63,6 @@ public sealed partial class RecommendationPage : ISortedIllustrationContainerPag
 
     private void ChangeSource()
     {
-        IllustrationContainer.ViewModel.ResetEngine(App.AppViewModel.MakoClient.Recommendations(ModeSelectionComboBox.GetComboBoxSelectedItemTag(RecommendationContentType.Illust)), App.AppViewModel.AppSetting.ItemsNumberLimitForDailyRecommendations);
+        IllustrationContainer.ViewModel.ResetEngine(App.AppViewModel.MakoClient.Recommendations(ModeSelectionComboBox.GetComboBoxSelectedItemTag(RecommendationContentType.Illust), App.AppViewModel.AppSetting.TargetFilter), App.AppViewModel.AppSetting.ItemsNumberLimitForDailyRecommendations);
     }
 }

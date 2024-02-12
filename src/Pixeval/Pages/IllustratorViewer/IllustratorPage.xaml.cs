@@ -39,10 +39,7 @@ public sealed partial class IllustratorPage
 {
     private IllustratorPageViewModel _viewModel = null!;
 
-    public IllustratorPage()
-    {
-        InitializeComponent();
-    }
+    public IllustratorPage() => InitializeComponent();
 
     public IllustrationContainer ViewModelProvider => IllustrationContainer;
 

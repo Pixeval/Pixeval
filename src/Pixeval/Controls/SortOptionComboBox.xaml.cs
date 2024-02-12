@@ -30,10 +30,7 @@ namespace Pixeval.Controls;
 [DependencyProperty<object>("SelectedItem")]
 public sealed partial class SortOptionComboBox
 {
-    public SortOptionComboBox()
-    {
-        InitializeComponent();
-    }
+    public SortOptionComboBox() => InitializeComponent();
 
     public IllustrationSortOption SelectedOption => ((IllustrationSortOptionWrapper)SelectedItem).Value;
 

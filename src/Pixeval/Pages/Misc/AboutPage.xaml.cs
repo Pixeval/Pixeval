@@ -37,10 +37,7 @@ namespace Pixeval.Pages.Misc;
 public sealed partial class AboutPage
 {
     // TODO add sponsors
-    public AboutPage()
-    {
-        InitializeComponent();
-    }
+    public AboutPage() => InitializeComponent();
 
     private async void AboutPage_OnLoaded(object sender, RoutedEventArgs e)
     {

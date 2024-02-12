@@ -25,8 +25,5 @@ namespace Pixeval.Controls.DialogContent;
 [DependencyProperty<bool>("DeleteLocalFiles", "false")]
 public sealed partial class DownloadListPageDeleteTasksDialog
 {
-    public DownloadListPageDeleteTasksDialog()
-    {
-        InitializeComponent();
-    }
+    public DownloadListPageDeleteTasksDialog() => InitializeComponent();
 }

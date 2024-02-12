@@ -26,10 +26,7 @@ public sealed partial class ImageViewerPage
 {
     private ImageViewerPageViewModel _viewModel = null!;
 
-    public ImageViewerPage()
-    {
-        InitializeComponent();
-    }
+    public ImageViewerPage() => InitializeComponent();
 
     public override void OnPageActivated(NavigationEventArgs e, object? parameter)
     {

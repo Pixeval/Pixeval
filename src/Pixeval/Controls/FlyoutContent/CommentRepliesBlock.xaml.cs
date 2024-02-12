@@ -34,10 +34,7 @@ namespace Pixeval.Controls.FlyoutContent;
 [DependencyProperty<CommentBlockViewModel>("ViewModel")]
 public sealed partial class CommentRepliesBlock
 {
-    public CommentRepliesBlock()
-    {
-        InitializeComponent();
-    }
+    public CommentRepliesBlock() => InitializeComponent();
 
     private void CommentList_OnRepliesHyperlinkButtonTapped(CommentBlockViewModel viewModel)
     {

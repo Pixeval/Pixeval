@@ -162,8 +162,7 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject
         {
             using var scope = App.AppViewModel.AppServicesScope;
             var logger = scope.ServiceProvider.GetRequiredService<FileLogger>();
-            App.AppViewModel.MakoClient = new MakoClient(session, App.AppViewModel.AppSetting.ToMakoClientConfiguration(), logger,
-                new RefreshTokenSessionUpdate());
+            App.AppViewModel.MakoClient = new MakoClient(session, App.AppViewModel.AppSetting.ToMakoClientConfiguration(), logger, new RefreshTokenSessionUpdate());
             await App.AppViewModel.MakoClient.RefreshSessionAsync();
         }
         else
