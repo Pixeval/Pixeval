@@ -83,7 +83,7 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject
     [ObservableProperty] private bool _isFinished;
 
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(ShowProcessingRing))]
+    [NotifyPropertyChangedFor(nameof(ProcessingRingVisible))]
     private LoginPhaseEnum _loginPhase;
 
     [ObservableProperty] private WebView2? _webView;
@@ -100,7 +100,7 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject
         set => App.AppViewModel.AppSetting.ProxyString = value;
     }
 
-    public Visibility ShowProcessingRing => LoginPhase is LoginPhaseEnum.WaitingForUserInput ? Visibility.Collapsed : Visibility.Visible;
+    public Visibility ProcessingRingVisible => LoginPhase is LoginPhaseEnum.WaitingForUserInput ? Visibility.Collapsed : Visibility.Visible;
 
     public void AdvancePhase(LoginPhaseEnum newPhase)
     {

@@ -1,0 +1,25 @@
+{
+    "GenerateLink": "复制应用链接",
+    "GenerateWebLink": "复制网页链接",
+    "OpenInWebBrowser": "打开网页",
+    "LinkCopiedToClipboard": "链接已复制到剪切板",
+    "ShowPixEzQrCode": "生成PixEz二维码",
+    "ShowQRCode": "生成二维码",
+
+    "AddToBookmark": "添加到收藏夹",
+    "Share": "分享",
+    "Save": "保存",
+    "SaveAs": "另存为",
+    "Copy": "复制图片到剪切板",
+    "SaveAsCancelled": "已取消另存为操作",
+    "Saved": "已保存",
+    "DownloadTaskCreated": "已创建下载任务",
+    "UgoiraProcessing": "正在处理动图：{0}%",
+    "ImageProcessing": "正在处理图片",
+    "ImageSetToClipBoard": "图片已复制到剪切板",
+
+    "UserHasNoComment": "用户没有自我介绍",
+    "UserMetricsFollowingsTextBlock/Text": "正在关注",
+    "UserMetricsIllustrationCountTextBlock/Text": "作品数",
+    "UserMetricsMyPixivUsersTextBlock/Text": "好P友"
+}

@@ -54,9 +54,6 @@
     "WebPLossy": "有损WebP（有损，文件小，支持广泛）",
     "DownloadListEntryOpenFailed": "打开文件（夹）失败",
     "DownloadListEntryMaybeDeleted": "可能你已经删除了该图片",
-    "SaveAsCancelled": "已取消另存为操作",
-    "Saved": "已保存",
-    "DownloadTaskCreated": "已创建下载任务",
 
     "ReplyContentTooLong": "回复内容超过140字，请重新编辑"
 }

@@ -19,6 +19,7 @@
         <ToolTip Content="{x:Bind ViewModel.Tooltip, Mode=OneWay}" Placement="Right" />
     </ToolTipService.ToolTip>
     <Grid.Resources>
+        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
         <ExponentialEase
             x:Key="EasingFunction"
             EasingMode="EaseOut"
@@ -74,8 +75,7 @@
             <MenuFlyoutSeparator />
             <MenuFlyoutItem Command="{x:Bind ViewModel.OpenInWebBrowserCommand, Mode=OneWay}" />
             <MenuFlyoutItem Command="{x:Bind ViewModel.GenerateWebLinkCommand, Mode=OneWay}" CommandParameter="{x:Bind}" />
-            <!--  TODO:此处不打开教学TeachingTip，不然画面太乱，但是可以提示已经复制链接  -->
-            <MenuFlyoutItem Command="{x:Bind ViewModel.GenerateLinkCommand, Mode=OneWay}" />
+            <MenuFlyoutItem Command="{x:Bind ViewModel.GenerateLinkCommand, Mode=OneWay}" CommandParameter="{x:Bind}" />
             <MenuFlyoutSeparator />
             <MenuFlyoutItem Command="{x:Bind ViewModel.ShowQrCodeCommand, Mode=OneWay}" CommandParameter="{x:Bind QrCodeTeachingTip}" />
             <MenuFlyoutItem Command="{x:Bind ViewModel.ShowPixEzQrCodeCommand, Mode=OneWay}" CommandParameter="{x:Bind QrCodeTeachingTip}" />
@@ -93,7 +93,7 @@
     <Grid Width="{x:Bind GetDesiredWidth(ViewModel), Mode=OneWay}" Height="{x:Bind DesiredHeight}" />
     <Grid HorizontalAlignment="Stretch" CornerRadius="{ThemeResource ControlCornerRadius}">
         <Image Source="{x:Bind ViewModel.ThumbnailSource, Mode=OneWay}" Stretch="UniformToFill" />
-        <labs:Shimmer Visibility="{x:Bind IsImageNotLoaded(ViewModel.ThumbnailSource), Mode=OneWay}" />
+        <labs:Shimmer Visibility="{x:Bind IsImageNotVisible(ViewModel.ThumbnailSource), Mode=OneWay}" />
         <Grid
             x:Name="ImageBookmarkButtonGrid"
             Width="20"
@@ -122,15 +122,15 @@
             <controls:PixevalBadge
                 Grid.Column="0"
                 Mode="{x:Bind ViewModel.RestrictionCaption, Mode=OneWay}"
-                Visibility="{x:Bind ViewModel.IsRestricted, Mode=OneWay}" />
+                Visibility="{x:Bind ViewModel.IsRestricted, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
             <controls:PixevalBadge
                 Grid.Column="1"
                 Mode="Gif"
-                Visibility="{x:Bind ViewModel.IsUgoira, Mode=OneWay}" />
+                Visibility="{x:Bind ViewModel.IsUgoira, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
             <controls:FontSymbolIcon
                 Grid.Column="3"
                 Symbol="SetF5ED"
-                Visibility="{x:Bind ViewModel.IsManga, Mode=OneWay}" />
+                Visibility="{x:Bind ViewModel.IsManga, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
         </Grid>
     </Grid>
 </Grid>

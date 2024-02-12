@@ -18,17 +18,26 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using Microsoft.UI.Xaml;
+using System;
 using WinUI3Utilities.Attributes;
 
 namespace Pixeval.Controls;
 
-[DependencyProperty<RecommendIllustratorItemViewModel>("ViewModel")]
+[DependencyProperty<RecommendIllustratorItemViewModel>("ViewModel", propertyChanged: nameof(OnViewModelChanged))]
 public sealed partial class RecommendIllustratorItem : IViewModelControl
 {
-    public RecommendIllustratorItem()
+    object IViewModelControl.ViewModel => ViewModel;
+
+    public event Action<RecommendIllustratorItem, RecommendIllustratorItemViewModel>? ViewModelChanged;
+
+    private static void OnViewModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        InitializeComponent();
+        if (d as RecommendIllustratorItem is { } item)
+        {
+            item.ViewModelChanged?.Invoke(item, item.ViewModel);
+        }
     }
 
-    object IViewModelControl.ViewModel => ViewModel;
+    public RecommendIllustratorItem() => InitializeComponent();
 }

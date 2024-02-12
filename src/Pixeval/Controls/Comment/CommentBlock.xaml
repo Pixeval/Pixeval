@@ -72,7 +72,7 @@
                     Padding="0"
                     FontSize="{StaticResource PixevalCaptionFontSize}"
                     Tapped="DeleteReplyHyperlinkButton_OnTapped"
-                    Visibility="{x:Bind ViewModel.IsMe, Mode=OneWay}" />
+                    Visibility="{x:Bind ViewModel.IsMe, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
             </StackPanel>
         </Grid>
     </Grid>

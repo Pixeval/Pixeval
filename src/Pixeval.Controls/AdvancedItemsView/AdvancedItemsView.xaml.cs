@@ -123,6 +123,7 @@ public sealed partial class AdvancedItemsView : ItemsView
             if (sender.To<AdvancedItemsView>() is { ItemsSource: ISupportIncrementalLoading sil } aiv)
                 _ = await sil.LoadMoreItemsAsync((uint)aiv.LoadCount);
         };
+        _ = RegisterPropertyChangedCallback(ScrollViewProperty, ScrollView_OnLoaded);
     }
 
     #region PropertyChanged
@@ -268,7 +269,7 @@ public sealed partial class AdvancedItemsView : ItemsView
 
     private async void ScrollView_ViewChanged(ScrollView sender, object args) => await TryRaiseLoadMoreRequestedAsync();
 
-    private void AdvancedItemsView_OnLoaded(object sender, RoutedEventArgs e)
+    private void ScrollView_OnLoaded(DependencyObject sender, DependencyProperty dp)
     {
         ScrollView.ViewChanged += ScrollView_ViewChanged;
         _itemsRepeater = ScrollView.Content.To<ItemsRepeater>();

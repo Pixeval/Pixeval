@@ -122,6 +122,4 @@ public partial class IllustratorPageViewModel : ObservableObject, IIllustrationV
         IsFollowed = false;
         IsFollowButtonEnabled = true;
     }
-
-    public Visibility IsNotFollowed(bool followed) => followed ? Visibility.Collapsed : Visibility.Visible;
 }

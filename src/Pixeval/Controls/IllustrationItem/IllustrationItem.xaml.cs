@@ -46,9 +46,9 @@ public sealed partial class IllustrationItem : IViewModelControl
 
     public IllustrationItem() => InitializeComponent();
 
-    private double DesiredHeight => ThisRequired.Invoke().DesiredHeight;
+    private double DesiredHeight => ThisRequired().DesiredHeight;
 
-    private TeachingTip QrCodeTeachingTip => ThisRequired.Invoke().QrCodeTeachingTip;
+    private TeachingTip QrCodeTeachingTip => ThisRequired().QrCodeTeachingTip;
 
     /// <summary>
     /// 请求获取承载本控件的<see cref="IllustrationView"/>
@@ -78,7 +78,7 @@ public sealed partial class IllustrationItem : IViewModelControl
         };
     }
 
-    private Visibility IsImageNotLoaded(SoftwareBitmapSource? source) => source is null ? Visibility.Visible : Visibility.Collapsed;
+    private Visibility IsImageNotVisible(SoftwareBitmapSource? source) => source is null ? Visibility.Visible : Visibility.Collapsed;
 
     #endregion
 }

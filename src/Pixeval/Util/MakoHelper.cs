@@ -128,4 +128,12 @@ public static class MakoHelper
             : App.AppViewModel.MakoClient.RemoveFollowUserAsync(id);
         return isFollowed;
     }
+
+    public static bool SetBookmark(long id, bool isBookmarked, bool privately = false)
+    {
+        _ = isBookmarked
+            ? App.AppViewModel.MakoClient.PostBookmarkAsync(id, privately ? PrivacyPolicy.Private : PrivacyPolicy.Public)
+            : App.AppViewModel.MakoClient.RemoveBookmarkAsync(id);
+        return isBookmarked;
+    }
 }

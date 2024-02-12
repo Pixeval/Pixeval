@@ -108,7 +108,7 @@
             PrimaryCommandsSupplements="{x:Bind PrimaryCommandsSupplements, Mode=OneWay}"
             SecondaryCommandsSupplements="{x:Bind SecondaryCommandsSupplements, Mode=TwoWay}"
             ViewModel="{x:Bind IllustrationView.ViewModel}"
-            Visibility="{x:Bind ShowCommandBar, Mode=OneWay}" />-->
+            Visibility="{x:Bind ShowCommandBar, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />-->
         <controls:IllustrationView
             x:Name="IllustrationView"
             Grid.Row="1"

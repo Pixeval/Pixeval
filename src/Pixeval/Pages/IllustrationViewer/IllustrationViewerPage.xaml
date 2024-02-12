@@ -121,7 +121,7 @@
                             RightTapped="PrevButton_OnRightTapped"
                             Style="{StaticResource AccentButtonStyle}"
                             Tapped="PrevButton_OnTapped"
-                            Visibility="{x:Bind _viewModel.PrevButtonEnable, Mode=OneWay}" />
+                            Visibility="{x:Bind _viewModel.PrevButtonVisible, Mode=OneWay}" />
                     </Grid>
                     <Grid
                         Grid.Column="2"
@@ -144,7 +144,7 @@
                             RightTapped="NextButton_OnRightTapped"
                             Style="{StaticResource AccentButtonStyle}"
                             Tapped="NextButton_OnTapped"
-                            Visibility="{x:Bind _viewModel.NextButtonEnable, Mode=OneWay}" />
+                            Visibility="{x:Bind _viewModel.NextButtonVisible, Mode=OneWay}" />
                     </Grid>
                 </Grid>
 
@@ -378,7 +378,7 @@
                         <AppBarButton
                             Command="{x:Bind _viewModel.CurrentImage.PlayGifCommand, Mode=OneWay}"
                             SizeChanged="CommandBarElementOnSizeChanged"
-                            Visibility="{x:Bind _viewModel.CurrentIllustration.IsUgoira, Mode=OneWay}" />
+                            Visibility="{x:Bind _viewModel.CurrentIllustration.IsUgoira, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
                         <AppBarSeparator />
                         <AppBarButton Command="{x:Bind _viewModel.CurrentImage.CopyCommand, Mode=OneWay}" SizeChanged="CommandBarElementOnSizeChanged" />
                         <AppBarButton Command="{x:Bind _viewModel.CurrentImage.SaveCommand, Mode=OneWay}" SizeChanged="CommandBarElementOnSizeChanged" />

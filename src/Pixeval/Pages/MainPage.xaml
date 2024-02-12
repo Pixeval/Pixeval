@@ -4,12 +4,15 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:animatedVisuals="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
     xmlns:controls="using:Pixeval.Controls"
+    xmlns:converters="using:CommunityToolkit.WinUI.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:markup="using:Pixeval.Controls.MarkupExtensions"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pages="using:Pixeval.Pages"
     mc:Ignorable="d">
     <controls:EnhancedWindowPage.Resources>
+        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+
         <DataTemplate x:Key="IllustrationHeaderSuggestionTemplate">
             <TextBlock
                 x:Uid="/MainPage/IllustrationHeaderSuggestionTextBlock"
@@ -101,7 +104,7 @@
             PaneOpening="NavigationView_OnPaneChanging"
             SelectionChanged="NavigationView_OnSelectionChanged">
             <NavigationView.PaneCustomContent>
-                <Grid Margin="15,5,15,10" Visibility="{x:Bind NavigationView.IsPaneOpen, Mode=OneWay}">
+                <Grid Margin="15,5,15,10" Visibility="{x:Bind NavigationView.IsPaneOpen, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />
                         <ColumnDefinition Width="38" />

@@ -20,30 +20,23 @@
 
 using System;
 using Microsoft.UI.Xaml.Navigation;
-using Pixeval.Controls;
 using Pixeval.Controls.IllustratorContentViewer;
+using Pixeval.CoreApi.Net.Response;
 
 namespace Pixeval.Pages.Misc;
 
 public sealed partial class IllustratorContentViewerPage : IDisposable
 {
-    private IllustratorContentViewerViewModel? _illustratorContentViewerViewModel;
+    public IllustratorContentViewerPage() => InitializeComponent();
 
-    public IllustratorContentViewerPage()
-    {
-        InitializeComponent();
-    }
+    private IllustratorContentViewer? _illustratorContentViewer;
 
-    public void Dispose()
-    {
-        IllustratorContentViewer.Dispose();
-    }
+    public void Dispose() => _illustratorContentViewer?.Dispose();
 
     public override void OnPageActivated(NavigationEventArgs e)
     {
-        if (e.Parameter is IllustratorItemViewModel viewModel)
-        {
-            IllustratorContentViewer.ViewModel = _illustratorContentViewerViewModel = new IllustratorContentViewerViewModel(viewModel.UserDetail);
-        }
+        if (e.Parameter is not PixivSingleUserResponse userDetail)
+            return;
+        Content = _illustratorContentViewer = new IllustratorContentViewer { ViewModel = new IllustratorContentViewerViewModel(userDetail) };
     }
 }

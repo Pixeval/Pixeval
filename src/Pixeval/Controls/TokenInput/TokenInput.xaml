@@ -4,10 +4,14 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:controls1="using:Pixeval.Controls"
+    xmlns:converters="using:CommunityToolkit.WinUI.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:markup="using:Pixeval.Controls.MarkupExtensions"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
+    <UserControl.Resources>
+        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+    </UserControl.Resources>
     <StackPanel
         HorizontalAlignment="Stretch"
         VerticalAlignment="Stretch"
@@ -25,23 +29,23 @@
                                 Height="15"
                                 Margin="10,0,5,0"
                                 Padding="0"
-                                Visibility="{x:Bind CaseSensitive}" />
+                                Visibility="{x:Bind CaseSensitive, Converter={StaticResource BoolToVisibilityConverter}}" />
                             <ContentPresenter
                                 VerticalAlignment="Center"
                                 Content="{markup:FontSymbolIcon Glyph=UpShiftKeyE84B,
                                                                 FontSize=15}"
-                                Visibility="{x:Bind CaseSensitive}" />
+                                Visibility="{x:Bind CaseSensitive, Converter={StaticResource BoolToVisibilityConverter}}" />
                             <AppBarSeparator
                                 Height="15"
                                 Margin="5,0,5,0"
                                 Padding="0"
-                                Visibility="{x:Bind IsRegularExpression}" />
+                                Visibility="{x:Bind IsRegularExpression, Converter={StaticResource BoolToVisibilityConverter}}" />
                             <ContentPresenter
                                 Margin="5,0,0,0"
                                 VerticalAlignment="Center"
                                 Content="{markup:FontSymbolIcon Glyph=ProcessingE9F5,
                                                                 FontSize=15}"
-                                Visibility="{x:Bind IsRegularExpression}" />
+                                Visibility="{x:Bind IsRegularExpression, Converter={StaticResource BoolToVisibilityConverter}}" />
                             <AppBarSeparator
                                 Height="15"
                                 Margin="5,0,0,0"

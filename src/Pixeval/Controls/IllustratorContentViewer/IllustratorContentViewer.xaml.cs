@@ -21,23 +21,23 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using CommunityToolkit.Diagnostics;
-using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
 using Pixeval.Misc;
+using Pixeval.Pages.Misc;
 using Pixeval.Util.Threading;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
-using WinUI3Utilities.Attributes;
+using WinUI3Utilities;
 
 namespace Pixeval.Controls.IllustratorContentViewer;
 
-[DependencyProperty<IllustratorContentViewerViewModel>("ViewModel", propertyChanged: nameof(OnViewModelChanged))]
 public sealed partial class IllustratorContentViewer : IDisposable
 {
     private readonly ISet<Page> _pageCache;
     private NavigationViewTag? _lastNavigationViewTag;
+
+    public IllustratorContentViewerViewModel ViewModel { get; set; } = null!;
 
     public IllustratorContentViewer()
     {
@@ -49,15 +49,6 @@ public sealed partial class IllustratorContentViewer : IDisposable
     {
         _pageCache.OfType<IDisposable>().ForEach(p => p.Dispose());
         _pageCache.Clear();
-    }
-
-    private static async void OnViewModelChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
-    {
-        if (obj is IllustratorContentViewer viewer && args.NewValue is IllustratorContentViewerViewModel viewModel)
-        {
-            await ThreadingHelper.SpinWaitAsync(() => viewModel.IllustrationTag is null);
-            viewer.IllustratorContentViewerNavigationView.SelectedItem = viewer.IllustrationTab;
-        }
     }
 
     private async void IllustrationContentViewerNavigationView_OnSelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
@@ -78,24 +69,24 @@ public sealed partial class IllustratorContentViewer : IDisposable
             if (b && ViewModel.RecommendIllustrators.Count is 0)
                 _ = ViewModel.LoadRecommendIllustratorsAsync();
         };
-
-        ViewModel.CurrentTab = args.SelectedItemContainer.Tag switch
+        var currentTag = args.SelectedItemContainer.GetTag<NavigationViewTag>();
+        ViewModel.CurrentTab = currentTag switch
         {
-            var tag when ReferenceEquals(tag, ViewModel.IllustrationTag) => IllustratorContentViewerViewModel.IllustratorContentViewerTab.Illustration,
-            var tag when ReferenceEquals(tag, ViewModel.MangaTag) => IllustratorContentViewerViewModel.IllustratorContentViewerTab.Manga,
-            var tag when ReferenceEquals(tag, ViewModel.NovelTag) => IllustratorContentViewerViewModel.IllustratorContentViewerTab.Novel,
-            var tag when ReferenceEquals(tag, ViewModel.BookmarkedIllustrationAndMangaTag) => IllustratorContentViewerViewModel.IllustratorContentViewerTab.BookmarkedIllustrationAndManga,
-            var tag when ReferenceEquals(tag, ViewModel.BookmarkedNovelTag) => IllustratorContentViewerViewModel.IllustratorContentViewerTab.BookmarkedNovel,
-            var tag when ReferenceEquals(tag, ViewModel.FollowingUserTag) => IllustratorContentViewerViewModel.IllustratorContentViewerTab.FollowingUser,
-            var tag when ReferenceEquals(tag, ViewModel.MyPixivUserTag) => IllustratorContentViewerViewModel.IllustratorContentViewerTab.MyPixivUser,
-            _ => ThrowHelper.ThrowArgumentOutOfRangeException<IllustratorContentViewerViewModel.IllustratorContentViewerTab>(nameof(sender.Tag))
+            _ when ReferenceEquals(currentTag, ViewModel.IllustrationTag) => IllustratorContentViewerViewModel.IllustratorContentViewerTab.Illustration,
+            _ when ReferenceEquals(currentTag, ViewModel.MangaTag) => IllustratorContentViewerViewModel.IllustratorContentViewerTab.Manga,
+            _ when ReferenceEquals(currentTag, ViewModel.NovelTag) => IllustratorContentViewerViewModel.IllustratorContentViewerTab.Novel,
+            _ when ReferenceEquals(currentTag, ViewModel.BookmarkedIllustrationAndMangaTag) => IllustratorContentViewerViewModel.IllustratorContentViewerTab.BookmarkedIllustrationAndManga,
+            _ when ReferenceEquals(currentTag, ViewModel.BookmarkedNovelTag) => IllustratorContentViewerViewModel.IllustratorContentViewerTab.BookmarkedNovel,
+            _ when ReferenceEquals(currentTag, ViewModel.FollowingUserTag) => IllustratorContentViewerViewModel.IllustratorContentViewerTab.FollowingUser,
+            _ when ReferenceEquals(currentTag, ViewModel.MyPixivUserTag) => IllustratorContentViewerViewModel.IllustratorContentViewerTab.MyPixivUser,
+            _ => ThrowHelper.ArgumentOutOfRange<object, IllustratorContentViewerViewModel.IllustratorContentViewerTab>(args.SelectedItemContainer.Tag)
         };
         IllustratorContentViewerFrame.NavigateByNavigationViewTag(sender, _lastNavigationViewTag is var (_, _, index) && args.SelectedItemContainer.Tag is NavigationViewTag(_, _, var currentIndex)
             ? index > currentIndex ? new SlideNavigationTransitionInfo { Effect = SlideNavigationTransitionEffect.FromLeft } : new SlideNavigationTransitionInfo { Effect = SlideNavigationTransitionEffect.FromRight }
             : new EntranceNavigationTransitionInfo());
-        _lastNavigationViewTag = args.SelectedItemContainer.Tag as NavigationViewTag;
+        _lastNavigationViewTag = currentTag;
 
-        await ThreadingHelper.SpinWaitAsync(() => IllustratorContentViewerFrame.Content.GetType() != _lastNavigationViewTag!.NavigateTo);
+        await ThreadingHelper.SpinWaitAsync(() => IllustratorContentViewerFrame.Content?.GetType() != _lastNavigationViewTag.NavigateTo);
         _ = _pageCache.Add((Page)IllustratorContentViewerFrame.Content);
     }
 
@@ -105,5 +96,20 @@ public sealed partial class IllustratorContentViewer : IDisposable
         {
             subPage.PerformSearch(sender.Text);
         }
+    }
+
+    private async void IllustratorItem_OnViewModelChanged(RecommendIllustratorItem item, RecommendIllustratorItemViewModel viewModel)
+    {
+        await viewModel.LoadAvatarAsync();
+    }
+
+    private async void ItemsView_OnSelectionChanged(ItemsView sender, ItemsViewSelectionChangedEventArgs e)
+    {
+        if (Parent is Page { Frame: { } frame })
+            if (sender.SelectedItem is RecommendIllustratorItemViewModel viewModel)
+            {
+                var userDetail = await App.AppViewModel.MakoClient.GetUserFromIdAsync(viewModel.UserId, App.AppViewModel.AppSetting.TargetFilter);
+                _ = frame.Navigate(typeof(IllustratorContentViewerPage), userDetail);
+            }
     }
 }

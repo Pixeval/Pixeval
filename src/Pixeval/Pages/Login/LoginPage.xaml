@@ -39,7 +39,7 @@
                 <ProgressRing
                     Width="30"
                     Height="30"
-                    Visibility="{x:Bind _viewModel.ShowProcessingRing, Mode=OneWay}" />
+                    Visibility="{x:Bind _viewModel.ProcessingRingVisible, Mode=OneWay}" />
                 <TextBlock
                     Margin="0,15,0,0"
                     HorizontalAlignment="Center"

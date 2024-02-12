@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    xmlns:converters="using:CommunityToolkit.WinUI.Converters"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
@@ -12,6 +13,9 @@
     AspectRatio="15:8"
     Background="{StaticResource CardBackgroundFillColorDefaultBrush}"
     mc:Ignorable="d">
+    <controls:ConstrainedBox.Resources>
+        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+    </controls:ConstrainedBox.Resources>
     <!--  图片长宽均为5，故为(3*5):(3+5)  -->
     <Grid>
         <Grid.RowDefinitions>
@@ -63,7 +67,7 @@
                     <local:PixevalBadge
                         Mode="Following"
                         UseSmall="True"
-                        Visibility="{x:Bind ViewModel.IsFollowed, Mode=OneWay}" />
+                        Visibility="{x:Bind ViewModel.IsFollowed, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
                 </StackPanel>
             </StackPanel>
         </StackPanel>
@@ -129,16 +133,12 @@
                 <MenuFlyout Closed="RestoreAvatarButton">
                     <MenuFlyoutItem Command="{x:Bind ViewModel.FollowCommand, Mode=OneWay}" />
                     <MenuFlyoutSeparator />
-                    <MenuFlyoutItem Command="{x:Bind ViewModel.ShareCommand, Mode=OneWay}" />
-                    <!--  不知道为什么Tapped事件不会触发，只能用Click  -->
-                    <MenuFlyoutItem
-                        x:Uid="/IllustratorItem/GenerateLink"
-                        Click="GenerateLinkCommandOnExecuteRequested"
-                        Icon="{markup:FontSymbolIcon Glyph=LinkE71B}" />
-                    <MenuFlyoutItem
-                        x:Uid="/IllustratorItem/GenerateWebLink"
-                        Click="GenerateWebLinkCommandOnExecuteRequested"
-                        Icon="{markup:FontSymbolIcon Glyph=PreviewLinkE8A1}" />
+                    <MenuFlyoutItem Command="{x:Bind ViewModel.OpenInWebBrowserCommand, Mode=OneWay}" />
+                    <MenuFlyoutItem Command="{x:Bind ViewModel.GenerateWebLinkCommand, Mode=OneWay}" CommandParameter="{x:Bind}" />
+                    <MenuFlyoutItem Command="{x:Bind ViewModel.GenerateLinkCommand, Mode=OneWay}" CommandParameter="{x:Bind}" />
+                    <MenuFlyoutSeparator />
+                    <MenuFlyoutItem Command="{x:Bind ViewModel.ShowQrCodeCommand, Mode=OneWay}" CommandParameter="{x:Bind QrCodeTeachingTip}" />
+                    <MenuFlyoutItem Command="{x:Bind ViewModel.ShowPixEzQrCodeCommand, Mode=OneWay}" CommandParameter="{x:Bind QrCodeTeachingTip}" />
                 </MenuFlyout>
             </Button.Flyout>
         </Button>

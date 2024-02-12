@@ -192,8 +192,8 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
 
             // 此处不要触发CurrentPageIndex的OnPropertyChanged，否则会导航两次
             _currentPageIndex = 0;
-            OnPropertyChanged(nameof(NextButtonEnable));
-            OnPropertyChanged(nameof(PrevButtonEnable));
+            OnPropertyChanged(nameof(NextButtonVisible));
+            OnPropertyChanged(nameof(PrevButtonVisible));
             CurrentImage = new ImageViewerPageViewModel(this, CurrentPage);
             // ---
 
@@ -226,8 +226,8 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
                 return;
             var oldValue = _currentPageIndex;
             _currentPageIndex = value;
-            OnPropertyChanged(nameof(NextButtonEnable));
-            OnPropertyChanged(nameof(PrevButtonEnable));
+            OnPropertyChanged(nameof(NextButtonVisible));
+            OnPropertyChanged(nameof(PrevButtonVisible));
             CurrentImage = new ImageViewerPageViewModel(this, CurrentPage);
             OnDetailedPropertyChanged(oldValue, value);
         }
@@ -269,7 +269,7 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
 
     #region Helper Functions
 
-    public Visibility NextButtonEnable => NextButtonAction is null ? Visibility.Collapsed : Visibility.Visible;
+    public Visibility NextButtonVisible => NextButtonAction is null ? Visibility.Collapsed : Visibility.Visible;
 
     public bool NextIllustrationEnable => Illustrations.Count > CurrentIllustrationIndex + 1;
 
@@ -297,7 +297,7 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
         }
     }
 
-    public Visibility PrevButtonEnable => PrevButtonAction is null ? Visibility.Collapsed : Visibility.Visible;
+    public Visibility PrevButtonVisible => PrevButtonAction is null ? Visibility.Collapsed : Visibility.Visible;
 
     public bool PrevIllustrationEnable => CurrentIllustrationIndex > 0;
 

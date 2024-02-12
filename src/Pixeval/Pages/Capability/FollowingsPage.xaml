@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:actions="using:Pixeval.Actions"
     xmlns:controls="using:Pixeval.Controls"
+    xmlns:converters="using:CommunityToolkit.WinUI.Converters"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
@@ -13,6 +14,9 @@
     ClearCacheAfterNavigation="True"
     SizeChanged="FollowingsPage_OnSizeChanged"
     mc:Ignorable="d">
+    <UserControl.Resources>
+        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+    </UserControl.Resources>
     <SplitView
         x:Name="MainSplitView"
         CompactPaneLength="{x:Bind local:FollowingsPage.CompactPaneLength}"
@@ -33,16 +37,23 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
-                <controls:IconButton
-                    Width="40"
-                    Height="40"
-                    Icon="{markup:FontSymbolIcon Glyph=GlobalNavButtonE700}">
-                    <interactivity:Interaction.Behaviors>
-                        <core:EventTriggerBehavior EventName="Tapped">
-                            <actions:NavigatePropertyAction PropertyName="IsPaneOpen" TargetObject="{x:Bind MainSplitView}" />
-                        </core:EventTriggerBehavior>
-                    </interactivity:Interaction.Behaviors>
-                </controls:IconButton>
+                <CommandBar
+                    HorizontalAlignment="Left"
+                    DefaultLabelPosition="Collapsed"
+                    OverflowButtonVisibility="Collapsed">
+                    <AppBarButton Width="40" Icon="{markup:FontSymbolIcon Glyph=GlobalNavButtonE700}">
+                        <interactivity:Interaction.Behaviors>
+                            <core:EventTriggerBehavior EventName="Tapped">
+                                <actions:NavigatePropertyAction PropertyName="IsPaneOpen" TargetObject="{x:Bind MainSplitView}" />
+                            </core:EventTriggerBehavior>
+                        </interactivity:Interaction.Behaviors>
+                    </AppBarButton>
+                    <AppBarButton
+                        x:Uid="/FollowingsPage/ShowOrHideRecommendIllustratorButton"
+                        Width="40"
+                        Icon="{markup:FontSymbolIcon Glyph=MoreE712}"
+                        Tapped="ShowOrHideRecommendIllustrator_OnTapped" />
+                </CommandBar>
                 <controls:AdvancedItemsView
                     x:Name="IllustratorItemsView"
                     Grid.Row="1"
@@ -54,7 +65,10 @@
                     <controls:AdvancedItemsView.ItemTemplate>
                         <DataTemplate x:DataType="controls:IllustratorItemViewModel">
                             <ItemContainer>
-                                <controls:IllustratorItem RequestTeachingTip="IllustratorItemOnRequestTeachingTip" ViewModel="{x:Bind}" />
+                                <controls:IllustratorItem
+                                    RequestTeachingTip="IllustratorItemOnRequestTeachingTip"
+                                    ViewModel="{x:Bind}"
+                                    ViewModelChanged="IllustratorItem_OnViewModelChanged" />
                             </ItemContainer>
                         </DataTemplate>
                     </controls:AdvancedItemsView.ItemTemplate>
@@ -65,7 +79,7 @@
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
                     Spacing="20"
-                    Visibility="{x:Bind _viewModel.HasNoItems, Mode=OneWay}">
+                    Visibility="{x:Bind _viewModel.HasNoItems, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
                     <Image
                         Width="200"
                         Height="200"
@@ -75,7 +89,15 @@
                         HorizontalAlignment="Center"
                         FontSize="{StaticResource PixevalTitleFontSize}" />
                 </StackPanel>
-                <TeachingTip x:Name="FollowingsPageTeachingTip" Grid.Row="0" />
+                <TeachingTip
+                    x:Name="FollowingsPageTeachingTip"
+                    x:Uid="/FollowingsPage/QrCodeTeachingTip"
+                    Grid.Row="0"
+                    IsLightDismissEnabled="True">
+                    <TeachingTip.HeroContent>
+                        <Image />
+                    </TeachingTip.HeroContent>
+                </TeachingTip>
             </Grid>
         </SplitView.Pane>
         <Frame x:Name="IllustratorContentViewerFrame" HorizontalAlignment="Right">

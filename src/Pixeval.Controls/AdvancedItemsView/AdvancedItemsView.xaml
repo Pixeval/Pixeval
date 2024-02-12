@@ -7,7 +7,6 @@
     xmlns:local="using:Pixeval.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:winUi="using:CommunityToolkit.WinUI"
-    Loaded="AdvancedItemsView_OnLoaded"
     SelectionChanged="AdvancedItemsView_OnSelectionChanged"
     SizeChanged="AdvancedItemsView_OnSizeChanged"
     mc:Ignorable="d">

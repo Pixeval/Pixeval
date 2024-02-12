@@ -127,6 +127,7 @@ public partial class IllustratorContentViewerViewModel : ObservableObject
         set => SetProperty(App.AppViewModel.AppSetting.ShowRecommendIllustratorsInIllustratorContentViewer, value, App.AppViewModel.AppSetting, (setting, value) =>
         {
             setting.ShowRecommendIllustratorsInIllustratorContentViewer = value;
+            AppContext.SaveConfig(App.AppViewModel.AppSetting);
             ShowRecommendIllustratorsChanged?.Invoke(this, value);
         });
     }
@@ -136,7 +137,8 @@ public partial class IllustratorContentViewerViewModel : ObservableObject
         get => App.AppViewModel.AppSetting.ShowExternalCommandBarInIllustratorContentViewer;
         set => SetProperty(App.AppViewModel.AppSetting.ShowExternalCommandBarInIllustratorContentViewer, value, App.AppViewModel.AppSetting, (setting, value) =>
         {
-            setting.ShowExternalCommandBarInIllustratorContentViewer = value;
+            setting.ShowExternalCommandBarInIllustratorContentViewer = value; 
+            AppContext.SaveConfig(App.AppViewModel.AppSetting);
             ShowExternalCommandBarChanged?.Invoke(this, value);
         });
     }
@@ -171,7 +173,6 @@ public partial class IllustratorContentViewerViewModel : ObservableObject
 
     public async Task LoadRecommendIllustratorsAsync()
     {
-        // TODO 可能会有请求过多问题
         var recommendIllustrators = await App.AppViewModel.MakoClient.GetRelatedRecommendUsersAsync(UserDetail.UserEntity.Id, isR18: !App.AppViewModel.AppSetting.FiltrateRestrictedContent, lang: CultureInfo.CurrentUICulture);
         var viewModels = recommendIllustrators.ResponseBody.RecommendMaps
             .Select(ru => ToRecommendIllustratorProfileViewModel(recommendIllustrators, ru));

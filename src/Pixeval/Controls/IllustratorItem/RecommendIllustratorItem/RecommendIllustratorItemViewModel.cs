@@ -26,9 +26,10 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Pixeval.AppManagement;
 using Pixeval.Controls.Illustrate;
-using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Net.Response;
+using Pixeval.Util;
 using Pixeval.Util.IO;
+using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using WinUI3Utilities;
 
@@ -50,30 +51,26 @@ public partial class RecommendIllustratorItemViewModel : IllustrateViewModel<Rec
     {
         OverviewViewModel = new IllustratorIllustrationsOverviewViewModel(ids);
 
-        _ = SetAvatarAsync();
-
-        FollowCommand = new XamlUICommand { Label = FollowText };
         InitializeCommands();
+        FollowCommand.GetFollowCommand(IsFollowed);
     }
 
-    public Visibility Premium => Illustrate.Premium ? Visibility.Visible : Visibility.Collapsed;
+    public bool Premium => Illustrate.Premium;
 
-    public string Username => Illustrate.Name ?? "";
+    public string Username => Illustrate.Name;
 
     public long UserId => Illustrate.Id;
 
-    public XamlUICommand FollowCommand { get; set; }
+    public XamlUICommand FollowCommand { get; } = new XamlUICommand();
 
     public IllustratorIllustrationsOverviewViewModel OverviewViewModel { get; }
-
-    private string FollowText => IsFollowed ? RecommendIllustratorItemResources.FollowButtonUnfollow : RecommendIllustratorItemResources.FollowButtonFollow;
 
     private void InitializeCommands()
     {
         FollowCommand.ExecuteRequested += FollowCommandOnExecuteRequested;
     }
 
-    private async Task SetAvatarAsync()
+    public async Task LoadAvatarAsync()
     {
         var result = await App.AppViewModel.MakoClient.DownloadBitmapImageAsync(Illustrate.Image, 100);
         AvatarSource = result is Result<ImageSource>.Success { Value: var avatar }
@@ -81,32 +78,16 @@ public partial class RecommendIllustratorItemViewModel : IllustrateViewModel<Rec
             : await AppContext.GetPixivNoProfileImageAsync();
     }
 
-    public string GetIllustrationToolTipSubtitleText(RecommendUser? user)
+    public string GetIllustrationToolTipSubtitleText(RecommendUser user)
     {
-        return user?.Comment ?? RecommendIllustratorItemResources.UserHasNoComment;
+        return user.Comment is "" ? IllustrateItemResources.UserHasNoComment : user.Comment;
     }
 
     private void FollowCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
-        if (IsFollowed)
-            Unfollow();
-        else
-            Follow();
-        FollowCommand.Label = FollowText;
-    }
-
-    private void Follow()
-    {
-        IsFollowed = true;
-        _ = App.AppViewModel.MakoClient.PostFollowUserAsync(UserId, PrivacyPolicy.Public);
-        ButtonStyle = Application.Current.Resources["DefaultButtonStyle"].To<Style>();
-    }
-
-    private void Unfollow()
-    {
-        IsFollowed = false;
-        _ = App.AppViewModel.MakoClient.RemoveFollowUserAsync(UserId);
-        ButtonStyle = Application.Current.Resources["AccentButtonStyle"].To<Style>();
+        IsFollowed = MakoHelper.SetFollow(UserId, !IsFollowed);
+        ButtonStyle = Application.Current.Resources[IsFollowed ? "DefaultButtonStyle" : "AccentButtonStyle"].To<Style>();
+        FollowCommand.GetFollowCommand(IsFollowed);
     }
 
     public override void Dispose()

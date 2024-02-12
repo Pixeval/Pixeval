@@ -21,9 +21,11 @@
 using System;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Controls;
+using Pixeval.Controls.IllustratorContentViewer;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.Pages.Misc;
 using Pixeval.Util.UI;
@@ -63,11 +65,14 @@ public sealed partial class FollowingsPage
 
     private TeachingTip IllustratorItemOnRequestTeachingTip() => FollowingsPageTeachingTip;
 
-    private void IllustratorItemsView_OnSelectionChanged(ItemsView sender, ItemsViewSelectionChangedEventArgs e)
+    private async void IllustratorItemsView_OnSelectionChanged(ItemsView sender, ItemsViewSelectionChangedEventArgs e)
     {
         MainSplitView.IsPaneOpen = false;
-        if (IllustratorItemsView.SelectedItem is IllustratorItemViewModel viewModel)
-            _ = IllustratorContentViewerFrame.Navigate(typeof(IllustratorContentViewerPage), viewModel);
+        if (sender.SelectedItem is IllustratorItemViewModel viewModel)
+        {
+            var userDetail = await App.AppViewModel.MakoClient.GetUserFromIdAsync(viewModel.UserId, App.AppViewModel.AppSetting.TargetFilter);
+            _ = IllustratorContentViewerFrame.Navigate(typeof(IllustratorContentViewerPage), userDetail);
+        }
     }
 
     private void FollowingsPage_OnSizeChanged(object sender, SizeChangedEventArgs e)
@@ -105,6 +110,23 @@ public sealed partial class FollowingsPage
             IllustratorItemsView.LayoutType = ItemsViewLayoutType.VerticalStack;
             ContentGrid.Width = CompactPaneLength;
             ClipGeometry.Rect = new(0, 0, int.MaxValue, int.MaxValue);
+        }
+    }
+
+    private async void IllustratorItem_OnViewModelChanged(IllustratorItem item, IllustratorItemViewModel viewModel)
+    {
+        await viewModel.LoadAvatarAsync();
+    }
+
+    private void ShowOrHideRecommendIllustrator_OnTapped(object sender, TappedRoutedEventArgs e)
+    {
+        if (IllustratorContentViewerFrame.Content is IllustratorContentViewerPage { Content: IllustratorContentViewer { ViewModel: var viewModel } })
+            viewModel.ShowRecommendIllustrators = !viewModel.ShowRecommendIllustrators;
+        else
+        {
+            App.AppViewModel.AppSetting.ShowRecommendIllustratorsInIllustratorContentViewer =
+                !App.AppViewModel.AppSetting.ShowRecommendIllustratorsInIllustratorContentViewer;
+            AppManagement.AppContext.SaveConfig(App.AppViewModel.AppSetting);
         }
     }
 }
