@@ -42,11 +42,15 @@ namespace Pixeval.Pages.Misc;
 [INotifyPropertyChanged]
 public sealed partial class SettingsPage
 {
-    // This TestParser is used to test whether the user input meta path is legal
+    /// <summary>
+    /// This TestParser is used to test whether the user input meta path is legal
+    /// </summary>
     private static readonly MacroParser<string> _testParser = new();
 
-    // The previous meta path after user changes the path field, if the path is illegal
-    // its value will be reverted to this field.
+    /// <summary>
+    /// The previous meta path after user changes the path field, if the path is illegal
+    /// its value will be reverted to this field.
+    /// </summary>
     private string _previousPath = "";
 
     private SettingsPageViewModel ViewModel { get; set; } = null!;
@@ -62,6 +66,7 @@ public sealed partial class SettingsPage
     public override void OnPageDeactivated(NavigatingCancelEventArgs e)
     {
         Bindings.StopTracking();
+        ViewModel.SaveCollections();
         App.AppViewModel.AppSetting = ViewModel.AppSetting;
         AppContext.SaveConfig(ViewModel.AppSetting);
         ViewModel = null!;
@@ -118,7 +123,6 @@ public sealed partial class SettingsPage
                 SettingsPageResources.ResetSettingConfirmationDialogContent) is ContentDialogResult.Primary)
         {
             ViewModel.ResetDefault();
-            // 不知道为什么字体无法重置
             OnPropertyChanged(nameof(ViewModel));
         }
     }

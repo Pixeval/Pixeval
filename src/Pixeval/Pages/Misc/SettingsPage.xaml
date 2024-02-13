@@ -322,12 +322,35 @@
                         SelectedItem="{x:Bind ViewModel.AppLanguage, Mode=TwoWay}" />
                 </controls:SettingsCard>
 
-                <controls:SettingsCard
+                <controls:SettingsExpander
                     x:Uid="/SettingsPage/DisableDomainFrontingEntry"
                     HeaderIcon="{markup:FontSymbolIcon Glyph=DisableUpdatesE8D8}"
                     Tag="{x:Bind misc2:SettingEntry.DisableDomainFronting}">
                     <ToggleSwitch IsOn="{x:Bind ViewModel.DisableDomainFronting, Mode=TwoWay}" />
-                </controls:SettingsCard>
+                    <controls:SettingsExpander.Items>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <controls:SettingsCard
+                                x:Uid="/SettingsPage/PixivApiNameResolverEntry"
+                                Grid.Column="0"
+                                VerticalAlignment="Stretch"
+                                HorizontalContentAlignment="Stretch"
+                                ContentAlignment="Vertical">
+                                <controls1:IPListInput ItemsSource="{x:Bind ViewModel.PixivApiNameResolver, Mode=OneWay}" />
+                            </controls:SettingsCard>
+                            <controls:SettingsCard
+                                x:Uid="/SettingsPage/PixivImageNameResolverEntry"
+                                Grid.Column="1"
+                                VerticalAlignment="Stretch"
+                                HorizontalContentAlignment="Stretch">
+                                <controls1:IPListInput ItemsSource="{x:Bind ViewModel.PixivImageNameResolver, Mode=OneWay}" />
+                            </controls:SettingsCard>
+                        </Grid>
+                    </controls:SettingsExpander.Items>
+                </controls:SettingsExpander>
 
                 <controls:SettingsCard
                     x:Uid="/SettingsPage/UseFileCacheEntry"

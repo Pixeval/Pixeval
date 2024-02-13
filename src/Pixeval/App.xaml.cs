@@ -39,6 +39,7 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Pixeval.Logging;
+using Pixeval.Util.UI;
 
 namespace Pixeval;
 
@@ -49,8 +50,8 @@ public partial class App
     public App()
     {
         AppViewModel = new AppViewModel(this) { AppSetting = AppContext.LoadConfig() ?? new AppSetting() };
-        WindowFactory.WindowSettings = AppViewModel.AppSetting;
-        WindowFactory.IconAbsolutePath = AppContext.IconAbsolutePath;
+        AppContext.SetNameResolver(AppViewModel.AppSetting);
+        WindowFactory.Initialize(AppViewModel.AppSetting, AppContext.IconAbsolutePath);
         AppInstance.GetCurrent().Activated += (_, arguments) => ActivationRegistrar.Dispatch(arguments);
         InitializeComponent();
     }
@@ -79,7 +80,7 @@ public partial class App
             .WithLoaded((s, _) => s.To<Frame>().NavigateTo<LoginPage>(w))
             .WithClosing((_, _) => AppContext.SaveContext()) // TODO: 从运行打开应用的时候不会ExitApp，就算是调用App.Current.Exit();
             .WithSizeLimit(800, 360)
-            .Init(AppContext.AppIdentifier, new SizeInt32(AppViewModel.AppSetting.WindowWidth, AppViewModel.AppSetting.WindowHeight))
+            .Init(AppContext.AppIdentifier, AppViewModel.AppSetting.WindowSize.ToSizeInt32())
             .Activate();
 
         await AppViewModel.InitializeAsync(isProtocolActivated);

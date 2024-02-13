@@ -34,6 +34,8 @@ using Pixeval.Utilities;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
 using Windows.ApplicationModel;
+using Pixeval.CoreApi.Net;
+using Pixeval.Util.UI;
 
 namespace Pixeval.AppManagement;
 
@@ -56,7 +58,7 @@ public static partial class AppContext
 
     public static readonly string DatabaseFilePath = AppKnownFolders.Local.Resolve("PixevalData.litedb");
 
-    public static Versioning AppVersion { get; }
+    public static Versioning AppVersion { get; } = new();
 
     private static readonly WeakReference<SoftwareBitmapSource?> _imageNotAvailable = new(null);
 
@@ -76,7 +78,12 @@ public static partial class AppContext
         // For more detailed information see https://docs.microsoft.com/en-us/windows/apps/design/app-settings/store-and-retrieve-app-data
         InitializeConfig();
         InitializeSession();
-        AppVersion = new Versioning();
+    }
+
+    public static void SetNameResolver(AppSetting appSetting)
+    {
+        PixivApiNameResolver.IPAddresses = appSetting.PixivApiNameResolver;
+        PixivImageNameResolver.IPAddresses = appSetting.PixivImageNameResolver;
     }
 
     public static string IconAbsolutePath => ApplicationUriToPath(new Uri(IconApplicationUri));
@@ -200,8 +207,7 @@ public static partial class AppContext
     public static void SaveContext()
     {
         // Save the current resolution
-        App.AppViewModel.AppSetting.WindowWidth = WindowFactory.RootWindow.AppWindow.Size.Width;
-        App.AppViewModel.AppSetting.WindowHeight = WindowFactory.RootWindow.AppWindow.Size.Height;
+        App.AppViewModel.AppSetting.WindowSize = WindowFactory.RootWindow.AppWindow.Size.ToSize();
         if (!App.AppViewModel.SignOutExit)
         {
             if (App.AppViewModel.MakoClient != null!)

@@ -20,7 +20,6 @@ public class ResetGenerator : IIncrementalGenerator
     internal string TypeWithAttribute(INamedTypeSymbol typeSymbol, ImmutableArray<AttributeData> attributeList)
     {
         var name = typeSymbol.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
-        var typeSyntax = typeSymbol.GetTypeSyntax(false);
         const string createDefault = "ResetDefault";
         var list = typeSymbol.GetProperties(attributeList[0].AttributeClass!)
             .Where(symbol => !symbol.IsReadOnly)

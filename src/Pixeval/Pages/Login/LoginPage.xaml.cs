@@ -100,7 +100,7 @@ public sealed partial class LoginPage
             else
             {
                 _viewModel.AdvancePhase(LoginPageViewModel.LoginPhaseEnum.WaitingForUserInput);
-                _viewModel.IsFinished = true;
+                _viewModel.IsFinished = _viewModel.IsEnabled = true;
             }
         }
         catch (Exception exception)

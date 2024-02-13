@@ -25,6 +25,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
+using Windows.Graphics;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.Storage.Streams;
@@ -48,8 +49,8 @@ using Color = Windows.UI.Color;
 using FontFamily = Microsoft.UI.Xaml.Media.FontFamily;
 using Image = SixLabors.ImageSharp.Image;
 using Point = Windows.Foundation.Point;
-using Size = SixLabors.ImageSharp.Size;
 using Pixeval.Controls.Windowing;
+using Size = Windows.Foundation.Size;
 
 namespace Pixeval.Util.UI;
 
@@ -88,6 +89,10 @@ public static partial class UiHelper
         return Color.FromArgb(color.A, (byte)red, (byte)green, (byte)blue);
     }
 
+    public static SizeInt32 ToSizeInt32(this Size size) => new((int)size.Width, (int)size.Height);
+
+    public static Size ToSize(this SizeInt32 size) => new(size.Width, size.Height);
+
     public static SolidColorBrush WithAlpha(this SolidColorBrush brush, byte alpha)
     {
         brush.Color = brush.Color.WithAlpha(alpha);
@@ -112,7 +117,7 @@ public static partial class UiHelper
     {
         using var image = await Image.LoadAsync<Rgb24>(stream);
         image.Mutate(x => x
-            .Resize(new ResizeOptions { Sampler = KnownResamplers.NearestNeighbor, Size = new Size(100, 0) })
+            .Resize(new ResizeOptions { Sampler = KnownResamplers.NearestNeighbor, Size = new(100, 0) })
             .Quantize(new OctreeQuantizer(new QuantizerOptions { Dither = null, MaxColors = 1 })));
         var pixel = image[0, 0];
         if (disposeOfStream)

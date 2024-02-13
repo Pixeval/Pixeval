@@ -62,4 +62,10 @@ public static class ThrowUtils
     [MethodImpl(MethodImplOptions.NoInlining)]
     public static TReturn Format<TReturn>(string? message = null)
         => throw new FormatException(message);
+
+    /// <exception cref="UriFormatException"></exception>
+    [DoesNotReturn]
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static TReturn UriFormat<TReturn>(string? message = null)
+        => throw new UriFormatException(message);
 }

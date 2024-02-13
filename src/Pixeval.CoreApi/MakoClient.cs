@@ -236,9 +236,9 @@ public partial class MakoClient : ICancellable
         return (TResult)MakoServices.Resolve(type);
     }
 
-    internal HttpMessageInvoker GetHttpMessageInvoker(Type key)
+    internal HttpMessageInvoker GetHttpMessageInvoker<T>() where T : INameResolver
     {
-        return ResolveKeyed<HttpMessageInvoker>(key);
+        return ResolveKeyed<HttpMessageInvoker>(typeof(T));
     }
 
     /// <summary>

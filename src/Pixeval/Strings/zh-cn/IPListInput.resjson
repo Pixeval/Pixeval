@@ -1,0 +1,5 @@
+{
+    "InvalidIPFormat": "无效的IP格式",
+    "DuplicatesWithExistingIP": "与现有IP重复",
+    "AddItemAutoSuggestBox/PlaceholderText": "输入一条IP，并点击“+”添加"
+}

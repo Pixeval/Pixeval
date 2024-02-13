@@ -66,7 +66,7 @@
                         VerticalAlignment="Center"
                         controls1:DockPanel.Dock="Left"
                         CanLoadMore="False"
-                        IsEnabled="{x:Bind _viewModel.IsFinished, Mode=OneWay}"
+                        IsEnabled="{x:Bind _viewModel.IsEnabled, Mode=OneWay}"
                         IsItemInvokedEnabled="True"
                         ItemInvoked="ItemsView_OnItemInvoked"
                         ItemsSource="{x:Bind _browserInfos}"
@@ -104,13 +104,13 @@
                     </Grid.RowDefinitions>
                     <controls:SettingRadioButtons
                         Grid.Row="0"
-                        IsEnabled="{x:Bind _viewModel.IsFinished, Mode=OneWay}"
+                        IsEnabled="{x:Bind _viewModel.IsEnabled, Mode=OneWay}"
                         ItemsSource="{winUi:EnumValues Type=options:LoginProxyOption}"
                         SelectedItem="{x:Bind _viewModel.LoginProxyOption, Mode=TwoWay}" />
                     <TextBox
                         x:Uid="/LoginPage/ProxyTextBox"
                         Grid.Row="1"
-                        IsEnabled="{x:Bind _viewModel.IsFinished, Mode=OneWay}"
+                        IsEnabled="{x:Bind _viewModel.IsEnabled, Mode=OneWay}"
                         Text="{x:Bind _viewModel.ProxyString, Mode=TwoWay}" />
                 </Grid>
             </Grid>

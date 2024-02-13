@@ -35,6 +35,7 @@ using Pixeval.Logging;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using Windows.Storage;
+using Pixeval.Misc;
 using AppContext = Pixeval.AppManagement.AppContext;
 
 namespace Pixeval;

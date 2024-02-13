@@ -56,7 +56,7 @@
         <PackageReference Include="SixLabors.ImageSharp" Version="3.1.2" />
         <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="2.1.1" />
         <PackageReference Include="System.Linq.Async" Version="6.0.1" />
-        <PackageReference Include="WinUI3Utilities" Version="1.1.5.9" />
+        <PackageReference Include="WinUI3Utilities" Version="1.1.6.1" />
         <PackageReference Include="WinUIEx" Version="2.3.3" />
 
         <ProjectReference Include="..\Pixeval.Controls\Pixeval.Controls.csproj" />
@@ -202,6 +202,12 @@
         <PRIResource Include="Strings\zh-cn\SortOptionComboBox.resjson" />
         <PRIResource Include="Strings\zh-cn\TokenInputTextBox.resjson" />
         <PRIResource Include="Strings\zh-cn\TagsEntry.resjson" />
+        <PRIResource Include="Strings\zh-cn\IPListInput.resjson" />
+    </ItemGroup>
+    <ItemGroup>
+      <Page Update="Controls\IPListInput.xaml">
+        <Generator>MSBuild:Compile</Generator>
+      </Page>
     </ItemGroup>
 
     <!--XAML-->

@@ -49,6 +49,7 @@ using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
 using AppContext = Pixeval.AppManagement.AppContext;
 using System.ComponentModel;
+using System.Collections.ObjectModel;
 
 namespace Pixeval.Pages.Misc;
 
@@ -62,6 +63,10 @@ public partial class SettingsPageViewModel(FrameworkElement frameworkElement) : 
     public static IEnumerable<CultureInfo> AvailableCultures { get; }
 
     public static IEnumerable<LanguageModel> AvailableLanguages { get; } = [LanguageModel.DefaultLanguage, new("简体中文", "zh-cn")];
+
+    public ObservableCollection<string> PixivApiNameResolver { get; set; } = [.. App.AppViewModel.AppSetting.PixivApiNameResolver];
+
+    public ObservableCollection<string> PixivImageNameResolver { get; set; } = [.. App.AppViewModel.AppSetting.PixivImageNameResolver];
 
     public AppSetting AppSetting { get; set; } = App.AppViewModel.AppSetting with { };
 
@@ -138,7 +143,7 @@ public partial class SettingsPageViewModel(FrameworkElement frameworkElement) : 
                     {
                         var process = new Process
                         {
-                            StartInfo = new ProcessStartInfo("powershell", $"-noexit \"&'{destUrl}'\"")
+                            StartInfo = new ProcessStartInfo("powershell", $"-ExecutionPolicy Unrestricted -noexit \"&'{destUrl}'\"")
                             {
                                 UseShellExecute = false,
                                 Verb = "runas"
@@ -192,7 +197,7 @@ public partial class SettingsPageViewModel(FrameworkElement frameworkElement) : 
         get => AvailableLanguages.FirstOrDefault(t => t.Name == ApplicationLanguages.PrimaryLanguageOverride) ?? LanguageModel.DefaultLanguage;
         set
         {
-            if (ApplicationLanguages.PrimaryLanguageOverride != value.Name)
+            if (ApplicationLanguages.PrimaryLanguageOverride == value.Name)
                 return;
             ApplicationLanguages.PrimaryLanguageOverride = value.Name;
             OnPropertyChanged();
@@ -201,7 +206,10 @@ public partial class SettingsPageViewModel(FrameworkElement frameworkElement) : 
 
     public void ResetDefault()
     {
-        AppSetting = new AppSetting();
+        AppSetting = new() { LastCheckedUpdate = AppSetting.LastCheckedUpdate };
+        PixivApiNameResolver = [.. App.AppViewModel.AppSetting.PixivApiNameResolver];
+        PixivImageNameResolver = [.. App.AppViewModel.AppSetting.PixivImageNameResolver];
+        // see OnPropertyChanged
         OnPropertyChanged(nameof(DisableDomainFronting));
         OnPropertyChanged(nameof(MirrorHost));
         OnPropertyChanged(nameof(MaxDownloadTaskConcurrencyLevel));
@@ -222,5 +230,11 @@ public partial class SettingsPageViewModel(FrameworkElement frameworkElement) : 
     {
         manager.Clear();
         FrameworkElement.ShowTeachingTipAndHide(kind.GetLocalizedResourceContent()!);
+    }
+
+    public void SaveCollections()
+    {
+        AppSetting.PixivApiNameResolver = [.. PixivApiNameResolver];
+        AppSetting.PixivImageNameResolver = [.. PixivImageNameResolver];
     }
 }

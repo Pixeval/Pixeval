@@ -39,6 +39,12 @@ public static class WindowFactory
 
     public static IReadOnlyList<EnhancedWindow> ForkedWindows => _forkedWindowsInternal;
 
+    public static void Initialize(IWindowSettings windowSettings, string iconAbsolutePath)
+    {
+        WindowSettings = windowSettings;
+        IconAbsolutePath = iconAbsolutePath;
+    }
+
     public static EnhancedWindow GetWindowForElement(UIElement element)
     {
         if (element.XamlRoot is null)

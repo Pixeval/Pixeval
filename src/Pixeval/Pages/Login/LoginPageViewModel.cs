@@ -80,7 +80,9 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject
         SuccessNavigating
     }
 
-    [ObservableProperty] private bool _isFinished;
+    public bool IsFinished { get; set; }
+
+    [ObservableProperty] private bool _isEnabled;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(ProcessingRingVisible))]
@@ -275,7 +277,7 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject
             return error;
         var playWrightHelper = new PlayWrightHelper(type, remoteDebuggingPort);
         var verifier = PixivAuthSignature.GetCodeVerify();
-        IsFinished = false;
+        IsEnabled = IsFinished = false;
         try
         {
             await playWrightHelper.Initialize();
@@ -287,7 +289,7 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject
                 proxyServer?.Dispose();
                 _ = userControl.DispatcherQueue.TryEnqueue(() =>
                 {
-                    IsFinished = true;
+                    IsEnabled = IsFinished = true;
                     AdvancePhase(LoginPhaseEnum.WaitingForUserInput);
                     _ = userControl.CreateAcknowledgementAsync(LoginPageResources.ErrorWhileLoggingInTitle, LoginPageResources.BrowserConnnectionLost);
                 });
@@ -295,7 +297,7 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject
         }
         catch (PlaywrightException)
         {
-            IsFinished = true;
+            IsEnabled = IsFinished = true;
             return LoginPageResources.TryAfterShuttingDownTheBrowser;
         }
 
@@ -305,7 +307,7 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject
             if (!IsFinished && e.Url.Contains("code="))
             {
                 // 成功时不需要让控件IsEnabled
-                // _ = userControl.DispatcherQueue.TryEnqueue(() => IsFinished = true);
+                _ = userControl.DispatcherQueue.TryEnqueue(() => IsFinished = true);
                 var code = HttpUtility.ParseQueryString(new Uri(e.Url).Query)["code"]!;
                 var cookies = await page.Context.CookiesAsync(["https://pixiv.net"]);
                 var cookie = string.Join(';', cookies.Select(c => $"{c.Name}={c.Value}"));
@@ -325,8 +327,8 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject
         catch (PlaywrightException)
         {
             // 可能还没加载完页面就登录成功跳转了，导致异常
-            // if (!IsFinished)
-            //     throw;
+            if (!IsFinished)
+                ;
         }
 
         return null;

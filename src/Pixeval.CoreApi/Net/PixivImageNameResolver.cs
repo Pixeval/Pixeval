@@ -18,6 +18,8 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -25,16 +27,15 @@ namespace Pixeval.CoreApi.Net;
 
 public class PixivImageNameResolver : INameResolver
 {
+    [SuppressMessage("ReSharper", "InconsistentNaming")]
+    [SuppressMessage("CodeQuality", "IDE0079:请删除不必要的忽略")]
+    public static string[]? IPAddresses { get; set; }
+
     public Task<IPAddress[]> Lookup(string hostname)
     {
         if (hostname == "i.pximg.net")
         {
-            return Task.FromResult(new[]
-            {
-                IPAddress.Parse("210.140.92.141"),
-                IPAddress.Parse("210.140.92.142"),
-                IPAddress.Parse("210.140.92.143")
-            });
+            return Task.FromResult((IPAddresses ?? []).Select(IPAddress.Parse).ToArray());
         }
 
         return Dns.GetHostAddressesAsync(hostname);

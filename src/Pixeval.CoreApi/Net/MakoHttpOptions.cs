@@ -52,7 +52,7 @@ public static partial class MakoHttpOptions
 
     public static void UseHttpScheme(HttpRequestMessage request)
     {
-        if (request.RequestUri != null)
+        if (request.RequestUri is not null)
         {
             request.RequestUri = new UriBuilder(request.RequestUri)
             {
