@@ -1,3 +1,4 @@
+using System;
 using Windows.Foundation;
 using Microsoft.UI.Xaml.Input;
 using WinUI3Utilities;
@@ -7,6 +8,7 @@ namespace Pixeval.Controls;
 public partial class ZoomableImage
 {
     private Point _lastPoint;
+    private DateTime _lastTime;
     private double _centerX;
     private double _centerY;
     private double _originalImageWidth;
@@ -150,8 +152,13 @@ public partial class ZoomableImage
         var currentPoint = e.GetCurrentPoint(Canvas);
         if (currentPoint.Properties.IsLeftButtonPressed)
         {
-            ImageCenterX += currentPoint.Position.X - _lastPoint.X;
-            ImageCenterY += currentPoint.Position.Y - _lastPoint.Y;
+            var now = DateTime.Now;
+            if ((now - _lastTime).TotalMilliseconds < 50)
+            {
+                ImageCenterX += currentPoint.Position.X - _lastPoint.X;
+                ImageCenterY += currentPoint.Position.Y - _lastPoint.Y;
+            }
+            _lastTime = now;
         }
 
         _lastPoint = currentPoint.Position;
