@@ -37,7 +37,7 @@ public abstract partial class IllustrateViewViewModel<T, TViewModel> : Observabl
     /// </summary>
     public abstract IDataProvider<T, TViewModel> DataProvider { get; }
 
-    public abstract void Dispose();
+    public void Dispose() => DataProvider.Dispose();
 
     public void ResetEngine(IFetchEngine<T?>? newEngine, int itemLimit = -1) => DataProvider.ResetEngine(newEngine, itemLimit);
 

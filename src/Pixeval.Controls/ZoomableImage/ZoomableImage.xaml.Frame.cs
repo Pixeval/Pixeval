@@ -13,6 +13,9 @@ namespace Pixeval.Controls;
 
 public partial class ZoomableImage
 {
+    /// <summary>
+    /// <see cref="IsPlaying"/>是对外的属性，当无图片、<see cref="IsPlaying"/>又为<see langword="true"/>时，此字段为<see langword="false"/>可以阻止<see cref="CanvasControlOnDraw"/>的渲染
+    /// </summary>
     private bool _timerRunning;
     private CanvasBitmap? _currentFrame;
     private readonly List<CanvasBitmap> _frames = [];
@@ -20,6 +23,9 @@ public partial class ZoomableImage
 
     private int[]? ClonedMsIntervals { get; set; }
 
+    /// <summary>
+    /// 用于控制是否渲染（播放）
+    /// </summary>
     private ManualResetEvent ManualResetEvent { get; } = new(true);
 
     private static void OnMsIntervalsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -91,6 +97,7 @@ public partial class ZoomableImage
         }
         else
         {
+            // 进入此分支时ManualResetEvent一定为false
             _frames.Clear();
             try
             {

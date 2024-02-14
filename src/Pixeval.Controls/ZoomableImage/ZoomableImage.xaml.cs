@@ -21,6 +21,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Input;
@@ -67,8 +68,9 @@ public sealed partial class ZoomableImage : UserControl
     /// </summary>
     private async Task ZoomableImageMain()
     {
-        while (true)
+        while (!IsDisposed)
         {
+            // 刚开始时图片可能为空，等待图片加载
             if (_frames.Count is 0)
             {
                 await Task.Delay(200, _token.Token);
@@ -82,8 +84,8 @@ public sealed partial class ZoomableImage : UserControl
                     _currentFrame = _frames[i];
                     _ = ManualResetEvent.WaitOne();
                     CanvasControl.Invalidate();
-                    _ = ManualResetEvent.WaitOne();
                     var delay = 20;
+                    _ = ManualResetEvent.WaitOne();
                     if (ClonedMsIntervals is { } t && t.Length > i)
                         delay = ClonedMsIntervals[i];
                     totalDelay += delay;
@@ -99,14 +101,13 @@ public sealed partial class ZoomableImage : UserControl
         }
     }
 
-
     private void CanvasControlOnUnloaded(object sender, RoutedEventArgs e)
     {
         IsDisposed = true;
+        _token.Cancel();
         foreach (var frame in _frames)
             frame.Dispose();
         _frames.Clear();
-        _token.Cancel();
         _token.Dispose();
         ManualResetEvent.Dispose();
     }

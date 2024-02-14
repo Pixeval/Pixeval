@@ -58,10 +58,4 @@ public sealed class IllustrationViewViewModel : SortableIllustrateViewViewModel<
             OnPropertyChanged();
         }
     }
-
-    public override void Dispose()
-    {
-        DataProvider.FetchEngine?.EngineHandle.Cancel();
-        DataProvider.Dispose();
-    }
 }

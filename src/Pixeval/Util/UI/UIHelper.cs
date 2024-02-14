@@ -22,6 +22,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
@@ -143,7 +144,13 @@ public static partial class UiHelper
         var content = new DataPackage { RequestedOperation = DataPackageOperation.Copy };
         content.SetText(text);
         Clipboard.SetContent(content);
-        Clipboard.Flush();
+        try
+        {
+            Clipboard.Flush();
+        }
+        catch (COMException)
+        {
+        }
     }
 
     /// <summary>
@@ -159,7 +166,13 @@ public static partial class UiHelper
         var content = new DataPackage { RequestedOperation = DataPackageOperation.Copy };
         content.SetBitmap(reference);
         Clipboard.SetContent(content);
-        Clipboard.Flush();
+        try
+        {
+            Clipboard.Flush();
+        }
+        catch (COMException)
+        {
+        }
     }
 
     public static void NavigateByNavigationViewTag(this Frame frame, NavigationView sender, NavigationTransitionInfo? transitionInfo = null)

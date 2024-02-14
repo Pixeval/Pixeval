@@ -245,16 +245,7 @@ public partial record AppSetting : IWindowSettings
 
     [AttributeIgnore(typeof(SettingsViewModelAttribute<>))]
     [SyntheticSetting]
-    public Size WindowSize { get; set; } = new Size();
-
-    [AttributeIgnore(typeof(SettingsViewModelAttribute<>))]
-    [SyntheticSetting]
-    public Size WindowHeight { get; set; } = WindowHelper.EstimatedWindowSize().ToSize();
-
-    public static AppSetting CreateDefault()
-    {
-        return new AppSetting();
-    }
+    public Size WindowSize { get; set; } = WindowHelper.EstimatedWindowSize().ToSize();
 
     public MakoClientConfiguration ToMakoClientConfiguration()
     {
