@@ -93,7 +93,7 @@ public static partial class AppContext
         if (uri.Scheme is not "ms-appx")
         {
             // ms-appdata is handled by the caller.
-            ThrowHelper.InvalidOperation("Uri is not using the ms-appx or ms-appdata scheme");
+            ThrowHelper.InvalidOperation("Uri is not using the ms-appx scheme");
         }
 
         var path = Uri.UnescapeDataString(uri.PathAndQuery).TrimStart('/');
@@ -192,16 +192,9 @@ public static partial class AppContext
     /// <summary>
     /// Erase all personal data, including session, configuration and image cache
     /// </summary>
-    public static Task ClearDataAsync()
+    public static void ClearSession()
     {
-        return Functions.IgnoreExceptionAsync(async () =>
-        {
-            ApplicationData.Current.RoamingSettings.DeleteContainer(ConfigContainerKey);
-            ApplicationData.Current.LocalSettings.DeleteContainer(SessionContainerKey);
-            await ApplicationData.Current.LocalFolder.ClearDirectoryAsync();
-            await AppKnownFolders.Temporary.ClearAsync();
-            await AppKnownFolders.SavedWallPaper.ClearAsync();
-        });
+        Functions.IgnoreException(() => ApplicationData.Current.LocalSettings.DeleteContainer(SessionContainerKey));
     }
 
     public static void SaveContext()

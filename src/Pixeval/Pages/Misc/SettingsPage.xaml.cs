@@ -111,7 +111,7 @@ public sealed partial class SettingsPage
         if (await this.CreateOkCancelAsync(SettingsPageResources.SignOutConfirmationDialogTitle,
                 SettingsPageResources.SignOutConfirmationDialogContent) is ContentDialogResult.Primary)
         {
-            await AppContext.ClearDataAsync();
+            AppContext.ClearSession();
             App.AppViewModel.SignOutExit = true;
             Window.Close();
         }

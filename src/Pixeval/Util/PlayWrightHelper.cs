@@ -21,20 +21,16 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.Playwright;
-using Pixeval.Pages.Login;
-using WinUI3Utilities;
 
 namespace Pixeval.Util;
 
-public class PlayWrightHelper(AvailableBrowserType type, int remoteDebuggingPort) : IAsyncDisposable
+public class PlayWrightHelper(int remoteDebuggingPort) : IAsyncDisposable
 {
     private IPlaywright Pw { get; set; } = null!;
 
     internal IBrowser Browser { get; set; } = null!;
 
     internal IPage Page { get; set; } = null!;
-
-    private AvailableBrowserType Type { get; } = type;
 
     private int RemoteDebuggingPort { get; } = remoteDebuggingPort;
 
@@ -51,14 +47,7 @@ public class PlayWrightHelper(AvailableBrowserType type, int remoteDebuggingPort
     public async Task Initialize()
     {
         Pw = await Playwright.CreateAsync();
-        Browser = await (Type switch
-        {
-            AvailableBrowserType.Chrome or AvailableBrowserType.Edge or AvailableBrowserType.WebView2 => Pw.Chromium,
-            AvailableBrowserType.Firefox => Pw.Firefox,
-            _ => ThrowHelper.ArgumentOutOfRange<AvailableBrowserType, IBrowserType>(Type)
-        }).ConnectOverCDPAsync($"http://localhost:{RemoteDebuggingPort}");
-        Page = Type is AvailableBrowserType.WebView2
-            ? Browser.Contexts[0].Pages[0]
-            : await Browser.Contexts[0].NewPageAsync();
+        Browser = await Pw.Chromium.ConnectOverCDPAsync($"http://localhost:{RemoteDebuggingPort}");
+        Page = Browser.Contexts[0].Pages[0];
     }
 }

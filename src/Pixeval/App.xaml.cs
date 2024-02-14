@@ -39,6 +39,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Pixeval.Logging;
 using Pixeval.Util.UI;
+using Pixeval.Utilities;
 
 namespace Pixeval;
 
@@ -72,7 +73,8 @@ public partial class App
             return;
         }
 
-        Current.Resources[ApplicationWideFontKey] = new FontFamily(AppViewModel.AppSetting.AppFontFamilyName);
+        if (AppViewModel.AppSetting.AppFontFamilyName.IsNotNullOrEmpty())
+            Current.Resources[ApplicationWideFontKey] = new FontFamily(AppViewModel.AppSetting.AppFontFamilyName);
         await AppKnownFolders.InitializeAsync();
 
         WindowFactory.Create(out var w)
@@ -132,6 +134,8 @@ public partial class App
                 logger.LogError(nameof(AppDomain.UnhandledException), e.ExceptionObject as Exception);
 #if DEBUG
             if (Debugger.IsAttached)
+                Debugger.Break();
+            if (e.IsTerminating)
                 Debugger.Break();
 #endif
         };

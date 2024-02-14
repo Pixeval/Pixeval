@@ -233,15 +233,15 @@ public partial record AppSetting : IWindowSettings
 
     [AttributeIgnore(typeof(SettingsViewModelAttribute<>))]
     [SyntheticSetting]
-    public LoginProxyOption LoginProxyOption { get; set; } = LoginProxyOption.UseDirect;
-
-    [AttributeIgnore(typeof(SettingsViewModelAttribute<>))]
-    [SyntheticSetting]
-    public string ProxyString { get; set; } = "";
-
-    [AttributeIgnore(typeof(SettingsViewModelAttribute<>))]
-    [SyntheticSetting]
     public string TagsManagerWorkingPath { get; set; } = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures, Environment.SpecialFolderOption.Create);
+
+    [AttributeIgnore(typeof(SettingsViewModelAttribute<>))]
+    [SyntheticSetting]
+    public string UserName { get; set; } = "";
+
+    [AttributeIgnore(typeof(SettingsViewModelAttribute<>))]
+    [SyntheticSetting]
+    public string Password { get; set; } = "";
 
     [AttributeIgnore(typeof(SettingsViewModelAttribute<>))]
     [SyntheticSetting]

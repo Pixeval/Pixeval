@@ -345,7 +345,8 @@
                                 x:Uid="/SettingsPage/PixivImageNameResolverEntry"
                                 Grid.Column="1"
                                 VerticalAlignment="Stretch"
-                                HorizontalContentAlignment="Stretch">
+                                HorizontalContentAlignment="Stretch"
+                                ContentAlignment="Vertical">
                                 <controls1:IPListInput ItemsSource="{x:Bind ViewModel.PixivImageNameResolver, Mode=OneWay}" />
                             </controls:SettingsCard>
                         </Grid>
