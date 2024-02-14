@@ -19,7 +19,6 @@
 #endregion
 
 using System;
-using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -46,7 +45,6 @@ using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
-using AppContext = Pixeval.AppManagement.AppContext;
 
 namespace Pixeval.Pages.Login;
 
@@ -88,20 +86,20 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject
 
     public bool DisableDomainFronting
     {
-        get => App.AppViewModel.AppSetting.DisableDomainFronting;
-        set => App.AppViewModel.AppSetting.DisableDomainFronting = value;
+        get => App.AppViewModel.AppSettings.DisableDomainFronting;
+        set => App.AppViewModel.AppSettings.DisableDomainFronting = value;
     }
 
     public string UserName
     {
-        get => App.AppViewModel.AppSetting.UserName;
-        set => App.AppViewModel.AppSetting.UserName = value;
+        get => App.AppViewModel.AppSettings.UserName;
+        set => App.AppViewModel.AppSettings.UserName = value;
     }
 
     public string Password
     {
-        get => App.AppViewModel.AppSetting.Password;
-        set => App.AppViewModel.AppSetting.Password = value;
+        get => App.AppViewModel.AppSettings.Password;
+        set => App.AppViewModel.AppSettings.Password = value;
     }
 
     public Visibility ProcessingRingVisible => LoginPhase is LoginPhaseEnum.WaitingForUserInput ? Visibility.Collapsed : Visibility.Visible;
@@ -121,7 +119,7 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject
     public async Task<bool> CheckFakeRootCertificateInstallationAsync()
     {
         AdvancePhase(LoginPhaseEnum.CheckingCertificateInstallation);
-        using var cert = await AppContext.GetFakeCaRootCertificateAsync();
+        using var cert = await AppInfo.GetFakeCaRootCertificateAsync();
         var fakeCertMgr = new CertificateManager(cert);
         return fakeCertMgr.Query(StoreName.Root, StoreLocation.CurrentUser);
     }
@@ -129,7 +127,7 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject
     public async Task InstallFakeRootCertificateAsync()
     {
         AdvancePhase(LoginPhaseEnum.InstallingCertificate);
-        using var cert = await AppContext.GetFakeCaRootCertificateAsync();
+        using var cert = await AppInfo.GetFakeCaRootCertificateAsync();
         var fakeCertMgr = new CertificateManager(cert);
         fakeCertMgr.Install(StoreName.Root, StoreLocation.CurrentUser);
     }
@@ -146,7 +144,7 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject
     {
         AdvancePhase(LoginPhaseEnum.CheckingRefreshAvailable);
 
-        return AppContext.LoadSession() is { } session && CheckRefreshAvailableInternal(session);
+        return AppInfo.LoadSession() is { } session && CheckRefreshAvailableInternal(session);
     }
 
     private static bool CheckRefreshAvailableInternal(Session? session)
@@ -162,11 +160,11 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject
     public async Task RefreshAsync()
     {
         AdvancePhase(LoginPhaseEnum.Refreshing);
-        if (AppContext.LoadSession() is { } session && CheckRefreshAvailableInternal(session))
+        if (AppInfo.LoadSession() is { } session && CheckRefreshAvailableInternal(session))
         {
             using var scope = App.AppViewModel.AppServicesScope;
             var logger = scope.ServiceProvider.GetRequiredService<FileLogger>();
-            App.AppViewModel.MakoClient = new MakoClient(session, App.AppViewModel.AppSetting.ToMakoClientConfiguration(), logger, new RefreshTokenSessionUpdate());
+            App.AppViewModel.MakoClient = new MakoClient(session, App.AppViewModel.AppSettings.ToMakoClientConfiguration(), logger, new RefreshTokenSessionUpdate());
             await App.AppViewModel.MakoClient.RefreshSessionAsync();
         }
         else
@@ -236,7 +234,7 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject
         {
             await EnsureCertificateIsInstalled(userControl);
             proxyServer = PixivAuthenticationProxyServer.Create(IPAddress.Loopback, port,
-                await AppContext.GetFakeServerCertificateAsync());
+                await AppInfo.GetFakeServerCertificateAsync());
             arguments += $" --ignore-certificate-errors --proxy-server=127.0.0.1:{port}";
         }
 
@@ -262,7 +260,7 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject
                 var session = await AuthCodeToSessionAsync(code, verifier, cookie);
                 using var scope = App.AppViewModel.AppServicesScope;
                 var logger = scope.ServiceProvider.GetRequiredService<FileLogger>();
-                App.AppViewModel.MakoClient = new MakoClient(session, App.AppViewModel.AppSetting.ToMakoClientConfiguration(), logger, new RefreshTokenSessionUpdate());
+                App.AppViewModel.MakoClient = new MakoClient(session, App.AppViewModel.AppSettings.ToMakoClientConfiguration(), logger, new RefreshTokenSessionUpdate());
                 await playWrightHelper.DisposeAsync();
                 proxyServer?.Dispose();
                 navigated();

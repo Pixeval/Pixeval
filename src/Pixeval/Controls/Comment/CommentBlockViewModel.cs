@@ -29,12 +29,12 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Documents;
 using Microsoft.UI.Xaml.Media.Imaging;
+using Pixeval.AppManagement;
 using Pixeval.CoreApi.Model;
 using Pixeval.Misc;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
-using AppContext = Pixeval.AppManagement.AppContext;
 
 namespace Pixeval.Controls;
 
@@ -91,7 +91,7 @@ public partial class CommentBlockViewModel(Comment comment, long illustrationId)
         var result = await App.AppViewModel.MakoClient.DownloadSoftwareBitmapSourceAsync(Comment.CommentPoster.ProfileImageUrls.Medium);
         AvatarSource = result is Result<SoftwareBitmapSource>.Success { Value: var avatar }
             ? avatar
-            : await AppContext.GetPixivNoProfileImageAsync();
+            : await AppInfo.GetPixivNoProfileImageAsync();
     }
 
     public void AddComment(Comment comment)

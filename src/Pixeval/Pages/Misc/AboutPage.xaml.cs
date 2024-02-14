@@ -25,8 +25,8 @@ using System.Text;
 using Windows.System;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
+using Pixeval.AppManagement;
 using WinUI3Utilities;
-using AppContext = Pixeval.AppManagement.AppContext;
 using Pixeval.Misc;
 
 namespace Pixeval.Pages.Misc;
@@ -41,7 +41,7 @@ public sealed partial class AboutPage
 
     private async void AboutPage_OnLoaded(object sender, RoutedEventArgs e)
     {
-        var licenseText = Encoding.UTF8.GetString(await AppContext.GetAssetBytesAsync("GPLv3.md"));
+        var licenseText = Encoding.UTF8.GetString(await AppInfo.GetAssetBytesAsync("GPLv3.md"));
         LicenseTextBlock.Text = licenseText;
     }
 

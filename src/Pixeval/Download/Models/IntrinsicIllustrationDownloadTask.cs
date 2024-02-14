@@ -43,7 +43,7 @@ public class IntrinsicIllustrationDownloadTask : IllustrationDownloadTask
 
     protected override async Task DownloadAsyncCore(Func<string, IProgress<double>?, CancellationHandle?, Task<Result<Stream>>> _, string url, string destination)
     {
-        if (!App.AppViewModel.AppSetting.OverwriteDownloadedFile && File.Exists(destination))
+        if (!App.AppViewModel.AppSettings.OverwriteDownloadedFile && File.Exists(destination))
             return;
 
         Stream.Position = 0;

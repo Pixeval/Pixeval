@@ -29,6 +29,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
+using Pixeval.AppManagement;
 using Pixeval.Controls;
 using Pixeval.Controls.MarkupExtensions;
 using Pixeval.Controls.Windowing;
@@ -36,7 +37,6 @@ using Pixeval.CoreApi.Model;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
-using AppContext = Pixeval.AppManagement.AppContext;
 using Pixeval.Util.ComponentModels;
 
 namespace Pixeval.Pages.IllustrationViewer;
@@ -208,7 +208,7 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
                     var result = await App.AppViewModel.MakoClient.DownloadSoftwareBitmapSourceAsync(profileImage);
                     UserProfileImageSource = result is Result<SoftwareBitmapSource>.Success { Value: var avatar }
                         ? avatar
-                        : await AppContext.GetPixivNoProfileImageAsync();
+                        : await AppInfo.GetPixivNoProfileImageAsync();
                 }
             }
         }

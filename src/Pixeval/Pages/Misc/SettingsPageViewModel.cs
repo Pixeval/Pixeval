@@ -47,13 +47,12 @@ using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
-using AppContext = Pixeval.AppManagement.AppContext;
 using System.ComponentModel;
 using System.Collections.ObjectModel;
 
 namespace Pixeval.Pages.Misc;
 
-[SettingsViewModel<AppSetting>(nameof(AppSetting))]
+[SettingsViewModel<AppSettings>(nameof(AppSetting))]
 public partial class SettingsPageViewModel(FrameworkElement frameworkElement) : UiObservableObject(frameworkElement)
 {
     public static IEnumerable<string> AvailableFonts { get; }
@@ -64,11 +63,11 @@ public partial class SettingsPageViewModel(FrameworkElement frameworkElement) : 
 
     public static IEnumerable<LanguageModel> AvailableLanguages { get; } = [LanguageModel.DefaultLanguage, new("简体中文", "zh-cn")];
 
-    public ObservableCollection<string> PixivApiNameResolver { get; set; } = [.. App.AppViewModel.AppSetting.PixivApiNameResolver];
+    public ObservableCollection<string> PixivApiNameResolver { get; set; } = [.. App.AppViewModel.AppSettings.PixivApiNameResolver];
 
-    public ObservableCollection<string> PixivImageNameResolver { get; set; } = [.. App.AppViewModel.AppSetting.PixivImageNameResolver];
+    public ObservableCollection<string> PixivImageNameResolver { get; set; } = [.. App.AppViewModel.AppSettings.PixivImageNameResolver];
 
-    public AppSetting AppSetting { get; set; } = App.AppViewModel.AppSetting with { };
+    public AppSettings AppSetting { get; set; } = App.AppViewModel.AppSettings with { };
 
     [ObservableProperty] private bool _checkingUpdate;
 
@@ -78,17 +77,17 @@ public partial class SettingsPageViewModel(FrameworkElement frameworkElement) : 
 
     [ObservableProperty] private string _updateMessage = "";
 
-    public string UpdateInfo => AppContext.AppVersion.UpdateState switch
+    public string UpdateInfo => AppInfo.AppVersion.UpdateState switch
     {
-        UpdateState.MajorUpdate => SettingsPageResources.MajorUpdateAvailable.Format(AppContext.AppVersion.NewestVersion),
-        UpdateState.MinorUpdate => SettingsPageResources.MinorUpdateAvailable.Format(AppContext.AppVersion.NewestVersion),
-        UpdateState.PatchUpdate or UpdateState.SpecifierUpdate => SettingsPageResources.PatchUpdateAvailable.Format(AppContext.AppVersion.NewestVersion),
+        UpdateState.MajorUpdate => SettingsPageResources.MajorUpdateAvailable.Format(AppInfo.AppVersion.NewestVersion),
+        UpdateState.MinorUpdate => SettingsPageResources.MinorUpdateAvailable.Format(AppInfo.AppVersion.NewestVersion),
+        UpdateState.PatchUpdate or UpdateState.SpecifierUpdate => SettingsPageResources.PatchUpdateAvailable.Format(AppInfo.AppVersion.NewestVersion),
         UpdateState.Insider => SettingsPageResources.IsInsider,
         UpdateState.UpToDate => SettingsPageResources.IsUpToDate,
         _ => SettingsPageResources.UnknownUpdateState
     };
 
-    public InfoBarSeverity UpdateInfoSeverity => AppContext.AppVersion.UpdateState switch
+    public InfoBarSeverity UpdateInfoSeverity => AppInfo.AppVersion.UpdateState switch
     {
         UpdateState.MajorUpdate or UpdateState.MinorUpdate => InfoBarSeverity.Warning,
         UpdateState.UpToDate => InfoBarSeverity.Success,
@@ -104,11 +103,11 @@ public partial class SettingsPageViewModel(FrameworkElement frameworkElement) : 
             CheckingUpdate = true;
             UpdateMessage = SettingsPageResources.CheckingForUpdate;
             using var client = new HttpClient();
-            var appReleaseModel = await AppContext.AppVersion.CheckForUpdateAsync(client);
+            var appReleaseModel = await AppInfo.AppVersion.CheckForUpdateAsync(client);
             OnPropertyChanged(nameof(UpdateInfo));
             OnPropertyChanged(nameof(UpdateInfoSeverity));
             OnPropertyChanged(nameof(LastCheckedUpdate));
-            if (AppContext.AppVersion.UpdateAvailable)
+            if (AppInfo.AppVersion.UpdateAvailable)
             {
                 DownloadingUpdate = true;
                 UpdateMessage = SettingsPageResources.DownloadingUpdate;
@@ -207,8 +206,8 @@ public partial class SettingsPageViewModel(FrameworkElement frameworkElement) : 
     public void ResetDefault()
     {
         AppSetting = new() { LastCheckedUpdate = AppSetting.LastCheckedUpdate };
-        PixivApiNameResolver = [.. App.AppViewModel.AppSetting.PixivApiNameResolver];
-        PixivImageNameResolver = [.. App.AppViewModel.AppSetting.PixivImageNameResolver];
+        PixivApiNameResolver = [.. App.AppViewModel.AppSettings.PixivApiNameResolver];
+        PixivImageNameResolver = [.. App.AppViewModel.AppSettings.PixivImageNameResolver];
         // see OnPropertyChanged
         OnPropertyChanged(nameof(DisableDomainFronting));
         OnPropertyChanged(nameof(MirrorHost));

@@ -3,9 +3,9 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
+using Pixeval.AppManagement;
 using Pixeval.Controls.Illustrate;
 using WinUI3Utilities;
-using AppContext = Pixeval.AppManagement.AppContext;
 
 namespace Pixeval.Pages.Tags;
 
@@ -13,11 +13,11 @@ public class TagsPageViewModel : ObservableObject, IDisposable
 {
     public string WorkingDirectory
     {
-        get => App.AppViewModel.AppSetting.TagsManagerWorkingPath;
-        set => SetProperty(App.AppViewModel.AppSetting.TagsManagerWorkingPath, value, App.AppViewModel.AppSetting, (setting, value) =>
+        get => App.AppViewModel.AppSettings.TagsManagerWorkingPath;
+        set => SetProperty(App.AppViewModel.AppSettings.TagsManagerWorkingPath, value, App.AppViewModel.AppSettings, (setting, value) =>
         {
             setting.TagsManagerWorkingPath = value;
-            AppContext.SaveConfig(App.AppViewModel.AppSetting);
+            AppInfo.SaveConfig(App.AppViewModel.AppSettings);
             ResetEngine(value);
         });
     }

@@ -45,10 +45,10 @@ public class IllustrationDownloadTask(DownloadHistoryEntry entry, IllustrationIt
 
     protected virtual async Task DownloadAsyncCore(Func<string, IProgress<double>?, CancellationHandle?, Task<Result<Stream>>> downloadStreamAsync, string url, string destination)
     {
-        if (!App.AppViewModel.AppSetting.OverwriteDownloadedFile && File.Exists(destination))
+        if (!App.AppViewModel.AppSettings.OverwriteDownloadedFile && File.Exists(destination))
             return;
 
-        if (App.AppViewModel.AppSetting.UseFileCache && await App.AppViewModel.Cache.TryGetAsync<Stream>(await IllustrationViewModel.GetIllustrationOriginalImageCacheKeyAsync()) is { } stream)
+        if (App.AppViewModel.AppSettings.UseFileCache && await App.AppViewModel.Cache.TryGetAsync<Stream>(await IllustrationViewModel.GetIllustrationOriginalImageCacheKeyAsync()) is { } stream)
         {
             await using (stream)
                 await ManageStream(stream, destination);

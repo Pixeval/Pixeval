@@ -121,7 +121,7 @@ public static partial class IoHelper
     {
         return await Task.Run(async () =>
         {
-            ugoiraDownloadFormat ??= App.AppViewModel.AppSetting.UgoiraDownloadFormat;
+            ugoiraDownloadFormat ??= App.AppViewModel.AppSettings.UgoiraDownloadFormat;
             await image.SaveAsync(destination,
                 ugoiraDownloadFormat switch
                 {
@@ -188,7 +188,7 @@ public static partial class IoHelper
     {
         return await Task.Run(async () =>
         {
-            illustrationDownloadFormat ??= App.AppViewModel.AppSetting.IllustrationDownloadFormat;
+            illustrationDownloadFormat ??= App.AppViewModel.AppSettings.IllustrationDownloadFormat;
             await image.SaveAsync(destination,
                 illustrationDownloadFormat switch
                 {
@@ -207,7 +207,7 @@ public static partial class IoHelper
 
     public static string GetUgoiraExtension(UgoiraDownloadFormat? ugoiraDownloadFormat = null)
     {
-        ugoiraDownloadFormat ??= App.AppViewModel.AppSetting.UgoiraDownloadFormat;
+        ugoiraDownloadFormat ??= App.AppViewModel.AppSettings.UgoiraDownloadFormat;
         return ugoiraDownloadFormat switch
         {
             UgoiraDownloadFormat.Tiff or UgoiraDownloadFormat.APng or UgoiraDownloadFormat.Gif => "." + ugoiraDownloadFormat.ToString()!.ToLower(),
@@ -218,7 +218,7 @@ public static partial class IoHelper
 
     public static string GetIllustrationExtension(IllustrationDownloadFormat? illustrationDownloadFormat = null)
     {
-        illustrationDownloadFormat ??= App.AppViewModel.AppSetting.IllustrationDownloadFormat;
+        illustrationDownloadFormat ??= App.AppViewModel.AppSettings.IllustrationDownloadFormat;
         return illustrationDownloadFormat switch
         {
             IllustrationDownloadFormat.Jpg or IllustrationDownloadFormat.Png or IllustrationDownloadFormat.Bmp => "." + illustrationDownloadFormat.ToString()!.ToLower(),

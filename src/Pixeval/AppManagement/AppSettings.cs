@@ -38,9 +38,9 @@ using WinUI3Utilities.Attributes;
 namespace Pixeval.AppManagement;
 
 [GenerateConstructor, SettingPoco]
-public partial record AppSetting : IWindowSettings
+public partial record AppSettings : IWindowSettings
 {
-    public AppSetting()
+    public AppSettings()
     {
     }
 

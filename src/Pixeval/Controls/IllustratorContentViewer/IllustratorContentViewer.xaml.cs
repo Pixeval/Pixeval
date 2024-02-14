@@ -53,7 +53,7 @@ public sealed partial class IllustratorContentViewer : IDisposable
 
     private async void IllustrationContentViewerNavigationView_OnSelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
     {
-        if (App.AppViewModel.AppSetting.ShowRecommendIllustratorsInIllustratorContentViewer)
+        if (App.AppViewModel.AppSettings.ShowRecommendIllustratorsInIllustratorContentViewer)
         {
             _ = ViewModel.LoadRecommendIllustratorsAsync();
         }
@@ -108,7 +108,7 @@ public sealed partial class IllustratorContentViewer : IDisposable
         if (Parent is Page { Frame: { } frame })
             if (sender.SelectedItem is RecommendIllustratorItemViewModel viewModel)
             {
-                var userDetail = await App.AppViewModel.MakoClient.GetUserFromIdAsync(viewModel.UserId, App.AppViewModel.AppSetting.TargetFilter);
+                var userDetail = await App.AppViewModel.MakoClient.GetUserFromIdAsync(viewModel.UserId, App.AppViewModel.AppSettings.TargetFilter);
                 _ = frame.Navigate(typeof(IllustratorContentViewerPage), userDetail);
             }
     }

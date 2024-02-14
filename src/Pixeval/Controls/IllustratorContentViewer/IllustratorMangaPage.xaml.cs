@@ -30,6 +30,6 @@ public sealed partial class IllustratorMangaPage
 
     public override void OnPageActivated(long id)
     {
-        IllustrationContainer.ViewModel.ResetEngine(App.AppViewModel.MakoClient.MangaPosts(id, App.AppViewModel.AppSetting.TargetFilter));
+        IllustrationContainer.ViewModel.ResetEngine(App.AppViewModel.MakoClient.MangaPosts(id, App.AppViewModel.AppSettings.TargetFilter));
     }
 }

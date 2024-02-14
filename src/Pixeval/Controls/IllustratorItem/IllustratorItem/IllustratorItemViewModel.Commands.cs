@@ -54,7 +54,7 @@ public partial class IllustratorItemViewModel
 
         if (args.Parameter is not TeachingTip teachingTip)
             return;
-        if (App.AppViewModel.AppSetting.DisplayTeachingTipWhenGeneratingAppLink)
+        if (App.AppViewModel.AppSettings.DisplayTeachingTipWhenGeneratingAppLink)
             teachingTip.IsOpen = true;
         else
             teachingTip?.ShowTeachingTipAndHide(IllustrateItemResources.LinkCopiedToClipboard);

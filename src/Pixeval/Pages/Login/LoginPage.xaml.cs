@@ -22,10 +22,10 @@ using System;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media.Animation;
+using Pixeval.AppManagement;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using WinUI3Utilities;
-using AppContext = Pixeval.AppManagement.AppContext;
 
 namespace Pixeval.Pages.Login;
 
@@ -62,7 +62,7 @@ public sealed partial class LoginPage
             {
                 _viewModel.AdvancePhase(LoginPageViewModel.LoginPhaseEnum.SuccessNavigating);
                 NavigateParent<MainPage>(null, new DrillInNavigationTransitionInfo());
-                AppContext.SaveContext();
+                AppInfo.SaveContext();
             });
         }
     }

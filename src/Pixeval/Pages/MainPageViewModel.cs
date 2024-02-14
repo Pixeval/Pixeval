@@ -25,6 +25,7 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media.Imaging;
+using Pixeval.AppManagement;
 using Pixeval.Controls;
 using Pixeval.Controls.Windowing;
 using Pixeval.Pages.Capability;
@@ -35,7 +36,6 @@ using Pixeval.Pages.Tags;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
-using AppContext = Pixeval.AppManagement.AppContext;
 
 namespace Pixeval.Pages;
 
@@ -91,19 +91,19 @@ public partial class MainPageViewModel : ObservableObject
         var result = await makoClient.DownloadSoftwareBitmapSourceAsync(makoClient.Session.AvatarUrl!);
         AvatarSource = result is Result<SoftwareBitmapSource>.Success { Value: var avatar }
             ? avatar
-            : await AppContext.GetNotAvailableImageAsync();
+            : await AppInfo.GetNotAvailableImageAsync();
     }
 
     public async Task ReverseSearchAsync(Stream stream)
     {
         try
         {
-            var result = await App.AppViewModel.MakoClient.ReverseSearchAsync(stream, App.AppViewModel.AppSetting.ReverseSearchApiKey!);
+            var result = await App.AppViewModel.MakoClient.ReverseSearchAsync(stream, App.AppViewModel.AppSettings.ReverseSearchApiKey!);
             if (result.Header.Status is 0)
             {
                 var viewModels = await Task.WhenAll(result.Results
                     .Where(r => r.Header.IndexId is 5 or 6 && r.Header.Similarity >
-                        App.AppViewModel.AppSetting.ReverseSearchResultSimilarityThreshold)
+                        App.AppViewModel.AppSettings.ReverseSearchResultSimilarityThreshold)
                     .Select(async r =>
                         new IllustrationItemViewModel(
                             await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(r.Data.PixivId))));

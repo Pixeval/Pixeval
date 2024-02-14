@@ -55,8 +55,8 @@ using Pixeval.Utilities;
 using WinUI3Utilities;
 using Image = SixLabors.ImageSharp.Image;
 using CommunityToolkit.WinUI.Controls;
+using Pixeval.AppManagement;
 using Pixeval.Controls.Windowing;
-using AppContext = Pixeval.AppManagement.AppContext;
 
 namespace Pixeval.Pages;
 
@@ -89,7 +89,7 @@ public sealed partial class MainPage : SupportCustomTitleBarDragRegionPage
 
         // dirty trick, the order of the menu items is the same as the order of the fields in MainPageTabItem
         // since enums are basically integers, we just need a cast to transform it to the correct offset.
-        ((NavigationViewItem)NavigationView.MenuItems[(int)App.AppViewModel.AppSetting.DefaultSelectedTabItem]).IsSelected = true;
+        ((NavigationViewItem)NavigationView.MenuItems[(int)App.AppViewModel.AppSettings.DefaultSelectedTabItem]).IsSelected = true;
 
         // The application is invoked by a protocol, call the corresponding protocol handler.
         if (App.AppViewModel.ConsumeProtocolActivation())
@@ -103,8 +103,8 @@ public sealed partial class MainPage : SupportCustomTitleBarDragRegionPage
             PerformSearch(message.Tag);
         });
         using var client = new HttpClient();
-        _ = await AppContext.AppVersion.CheckForUpdateAsync(client);
-        if (AppContext.AppVersion.UpdateAvailable)
+        _ = await AppInfo.AppVersion.CheckForUpdateAsync(client);
+        if (AppInfo.AppVersion.UpdateAvailable)
             InfoBadge.Visibility = Visibility.Visible;
     }
 
@@ -207,7 +207,7 @@ public sealed partial class MainPage : SupportCustomTitleBarDragRegionPage
             }
         }
 
-        var setting = App.AppViewModel.AppSetting;
+        var setting = App.AppViewModel.AppSettings;
         NavigationView.SelectedItem = null;
         _ = MainPageRootFrame.Navigate(typeof(SearchResultsPage), App.AppViewModel.MakoClient.Search(
             text,
@@ -257,7 +257,7 @@ public sealed partial class MainPage : SupportCustomTitleBarDragRegionPage
                 // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
                 if (await Image.DetectFormatAsync(stream) is not null)
                 {
-                    if (App.AppViewModel.AppSetting.ReverseSearchApiKey is not { Length: > 0 })
+                    if (App.AppViewModel.AppSettings.ReverseSearchApiKey is not { Length: > 0 })
                     {
                         await ShowReverseSearchApiKeyNotPresentDialog();
                         return;
@@ -271,7 +271,7 @@ public sealed partial class MainPage : SupportCustomTitleBarDragRegionPage
 
     private async void ReverseSearchButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        if (App.AppViewModel.AppSetting.ReverseSearchApiKey is { Length: > 0 })
+        if (App.AppViewModel.AppSettings.ReverseSearchApiKey is { Length: > 0 })
         {
             if (await Window.OpenFileOpenPickerAsync() is { } file)
             {
@@ -301,7 +301,7 @@ public sealed partial class MainPage : SupportCustomTitleBarDragRegionPage
 
     private async void KeywordAutoSuggestBox_OnDrop(object sender, DragEventArgs e)
     {
-        if (App.AppViewModel.AppSetting.ReverseSearchApiKey is { Length: > 0 })
+        if (App.AppViewModel.AppSettings.ReverseSearchApiKey is { Length: > 0 })
         {
             if (e.DataView.Contains(StandardDataFormats.StorageItems) && (await e.DataView.GetStorageItemsAsync()).ToArray() is [StorageFile item, ..])
             {

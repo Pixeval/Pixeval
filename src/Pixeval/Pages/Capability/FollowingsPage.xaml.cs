@@ -73,7 +73,7 @@ public sealed partial class FollowingsPage
         MainSplitView.IsPaneOpen = false;
         if (sender.SelectedItem is IllustratorItemViewModel viewModel)
         {
-            var userDetail = await App.AppViewModel.MakoClient.GetUserFromIdAsync(viewModel.UserId, App.AppViewModel.AppSetting.TargetFilter);
+            var userDetail = await App.AppViewModel.MakoClient.GetUserFromIdAsync(viewModel.UserId, App.AppViewModel.AppSettings.TargetFilter);
             _ = IllustratorContentViewerFrame.Navigate(typeof(IllustratorContentViewerPage), userDetail);
         }
     }
@@ -127,9 +127,9 @@ public sealed partial class FollowingsPage
             viewModel.ShowRecommendIllustrators = !viewModel.ShowRecommendIllustrators;
         else
         {
-            App.AppViewModel.AppSetting.ShowRecommendIllustratorsInIllustratorContentViewer =
-                !App.AppViewModel.AppSetting.ShowRecommendIllustratorsInIllustratorContentViewer;
-            AppManagement.AppContext.SaveConfig(App.AppViewModel.AppSetting);
+            App.AppViewModel.AppSettings.ShowRecommendIllustratorsInIllustratorContentViewer =
+                !App.AppViewModel.AppSettings.ShowRecommendIllustratorsInIllustratorContentViewer;
+            AppManagement.AppInfo.SaveConfig(App.AppViewModel.AppSettings);
         }
     }
 }

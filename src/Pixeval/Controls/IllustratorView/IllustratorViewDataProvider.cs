@@ -64,8 +64,8 @@ public class IllustratorViewDataProvider : ObservableObject, IDataProvider<User,
 
     public void ResetEngine(IFetchEngine<User?>? fetchEngine, int limit = -1)
     {
-        FetchEngine = fetchEngine;
         Dispose();
+        FetchEngine = fetchEngine;
 
         Source = new IncrementalLoadingCollection<FetchEngineIncrementalSource<User, IllustratorItemViewModel>, IllustratorItemViewModel>(new IllustratorFetchEngineIncrementalSource(FetchEngine!, limit));
     }

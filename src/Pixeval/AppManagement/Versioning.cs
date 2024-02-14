@@ -40,7 +40,7 @@ public class Versioning
             if (AppVersion.TryParse(gitHubRelease.TagName, out var appVersion))
             {
                 NewestVersion = appVersion;
-                App.AppViewModel.AppSetting.LastCheckedUpdate = DateTimeOffset.Now;
+                App.AppViewModel.AppSettings.LastCheckedUpdate = DateTimeOffset.Now;
                 return new AppReleaseModel(appVersion, gitHubRelease.Notes, gitHubRelease.Assets[0].BrowserDownloadUrl);
             }
         }

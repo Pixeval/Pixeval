@@ -47,7 +47,7 @@ public class IntrinsicMangaDownloadTask : MangaDownloadTask
 
     protected override async Task DownloadAsyncCore(Func<string, IProgress<double>?, CancellationHandle?, Task<Result<Stream>>> _, string url, string destination)
     {
-        if (!App.AppViewModel.AppSetting.OverwriteDownloadedFile && File.Exists(destination))
+        if (!App.AppViewModel.AppSettings.OverwriteDownloadedFile && File.Exists(destination))
             return;
 
         Streams[CurrentIndex].Position = 0;

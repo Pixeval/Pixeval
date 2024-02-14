@@ -234,7 +234,7 @@ public sealed partial class IllustrationViewerPage : SupportCustomTitleBarDragRe
     private void GenerateLinkToThisPageButtonTeachingTip_OnActionButtonClick(TeachingTip sender, object args)
     {
         GenerateLinkTeachingTip.IsOpen = false;
-        App.AppViewModel.AppSetting.DisplayTeachingTipWhenGeneratingAppLink = false;
+        App.AppViewModel.AppSettings.DisplayTeachingTipWhenGeneratingAppLink = false;
     }
 
     private void IllustrationInfoAndCommentsNavigationViewOnSelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs e)

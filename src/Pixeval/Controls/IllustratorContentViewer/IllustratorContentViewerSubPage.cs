@@ -62,7 +62,7 @@ public abstract class IllustratorContentViewerSubPage : EnhancedPage, ISortedIll
             OnPageActivated(id);
         }
 
-        if (!App.AppViewModel.AppSetting.ShowExternalCommandBarInIllustratorContentViewer)
+        if (!App.AppViewModel.AppSettings.ShowExternalCommandBarInIllustratorContentViewer)
         {
             ViewModelProvider.ShowCommandBar = false;
         }

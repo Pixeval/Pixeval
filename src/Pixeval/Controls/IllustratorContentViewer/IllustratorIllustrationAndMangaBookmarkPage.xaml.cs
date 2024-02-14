@@ -39,7 +39,7 @@ public sealed partial class IllustratorIllustrationAndMangaBookmarkPage
     public override void OnPageActivated(long id)
     {
         _uid = id;
-        IllustrationContainer.ViewModel.ResetEngine(App.AppViewModel.MakoClient.Bookmarks(id, PrivacyPolicy.Public, App.AppViewModel.AppSetting.TargetFilter));
+        IllustrationContainer.ViewModel.ResetEngine(App.AppViewModel.MakoClient.Bookmarks(id, PrivacyPolicy.Public, App.AppViewModel.AppSettings.TargetFilter));
         _ = _viewModel.LoadUserBookmarkTagsAsync(id);
         _viewModel.TagBookmarksIncrementallyLoaded += ViewModelOnTagBookmarksIncrementallyLoaded;
     }

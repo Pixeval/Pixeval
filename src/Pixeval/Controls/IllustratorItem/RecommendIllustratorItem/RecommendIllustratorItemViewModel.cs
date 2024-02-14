@@ -75,7 +75,7 @@ public partial class RecommendIllustratorItemViewModel : IllustrateViewModel<Rec
         var result = await App.AppViewModel.MakoClient.DownloadBitmapImageAsync(Illustrate.Image, 100);
         AvatarSource = result is Result<ImageSource>.Success { Value: var avatar }
             ? avatar
-            : await AppContext.GetPixivNoProfileImageAsync();
+            : await AppInfo.GetPixivNoProfileImageAsync();
         await OverviewViewModel.LoadBannerSource();
     }
 

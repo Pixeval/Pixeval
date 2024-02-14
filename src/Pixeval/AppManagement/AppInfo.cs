@@ -42,9 +42,9 @@ namespace Pixeval.AppManagement;
 /// <summary>
 /// Provide miscellaneous information about the app
 /// </summary>
-[AppContext<AppSetting>(ConfigKey = "Config", Type = ApplicationDataContainerType.Roaming, MethodName = "Config")]
+[AppContext<AppSettings>(ConfigKey = "Config", Type = ApplicationDataContainerType.Roaming, MethodName = "Config")]
 [AppContext<Session>(ConfigKey = "Session", MethodName = "Session")]
-public static partial class AppContext
+public static partial class AppInfo
 {
     public const string AppIdentifier = nameof(Pixeval);
 
@@ -72,7 +72,7 @@ public static partial class AppContext
 
     private static readonly WeakReference<Stream?> _iconStream = new(null);
 
-    static AppContext()
+    static AppInfo()
     {
         // Keys in the RoamingSettings will be synced through the devices of the same user
         // For more detailed information see https://docs.microsoft.com/en-us/windows/apps/design/app-settings/store-and-retrieve-app-data
@@ -80,7 +80,7 @@ public static partial class AppContext
         InitializeSession();
     }
 
-    public static void SetNameResolver(AppSetting appSetting)
+    public static void SetNameResolver(AppSettings appSetting)
     {
         PixivApiNameResolver.IPAddresses = appSetting.PixivApiNameResolver;
         PixivImageNameResolver.IPAddresses = appSetting.PixivImageNameResolver;
@@ -200,12 +200,12 @@ public static partial class AppContext
     public static void SaveContext()
     {
         // Save the current resolution
-        App.AppViewModel.AppSetting.WindowSize = WindowFactory.RootWindow.AppWindow.Size.ToSize();
+        App.AppViewModel.AppSettings.WindowSize = WindowFactory.RootWindow.AppWindow.Size.ToSize();
         if (!App.AppViewModel.SignOutExit)
         {
             if (App.AppViewModel.MakoClient != null!)
                 SaveSession(App.AppViewModel.MakoClient.Session);
-            SaveConfig(App.AppViewModel.AppSetting);
+            SaveConfig(App.AppViewModel.AppSettings);
         }
     }
 }

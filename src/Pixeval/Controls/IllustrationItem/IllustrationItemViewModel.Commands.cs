@@ -110,7 +110,7 @@ public partial class IllustrationItemViewModel
 
         if (args.Parameter is TeachingTip teachingTip)
         {
-            if (App.AppViewModel.AppSetting.DisplayTeachingTipWhenGeneratingAppLink)
+            if (App.AppViewModel.AppSettings.DisplayTeachingTipWhenGeneratingAppLink)
                 teachingTip.IsOpen = true;
             else
                 teachingTip?.ShowTeachingTipAndHide(IllustrateItemResources.LinkCopiedToClipboard);
@@ -178,7 +178,7 @@ public partial class IllustrationItemViewModel
                 break;
         }
 
-        await SaveUtilityAsync(frameworkElement, getOriginalImageSourceAsync, App.AppViewModel.AppSetting.DefaultDownloadPathMacro);
+        await SaveUtilityAsync(frameworkElement, getOriginalImageSourceAsync, App.AppViewModel.AppSettings.DefaultDownloadPathMacro);
     }
 
     private async void SaveAsCommandExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
@@ -207,7 +207,7 @@ public partial class IllustrationItemViewModel
             return;
         }
 
-        var name = Path.GetFileName(App.AppViewModel.AppSetting.DefaultDownloadPathMacro);
+        var name = Path.GetFileName(App.AppViewModel.AppSettings.DefaultDownloadPathMacro);
         var path = Path.Combine(folder.Path, name);
         await SaveUtilityAsync(frameworkElement, getOriginalImageSourceAsync, path);
     }

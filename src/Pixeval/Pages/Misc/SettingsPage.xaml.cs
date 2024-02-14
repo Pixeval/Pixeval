@@ -33,7 +33,6 @@ using Pixeval.Database.Managers;
 using Pixeval.Download.MacroParser;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
-using AppContext = Pixeval.AppManagement.AppContext;
 using Pixeval.Options;
 using WinUI3Utilities;
 
@@ -67,8 +66,8 @@ public sealed partial class SettingsPage
     {
         Bindings.StopTracking();
         ViewModel.SaveCollections();
-        App.AppViewModel.AppSetting = ViewModel.AppSetting;
-        AppContext.SaveConfig(ViewModel.AppSetting);
+        App.AppViewModel.AppSettings = ViewModel.AppSetting;
+        AppInfo.SaveConfig(ViewModel.AppSetting);
         ViewModel = null!;
     }
 
@@ -111,7 +110,7 @@ public sealed partial class SettingsPage
         if (await this.CreateOkCancelAsync(SettingsPageResources.SignOutConfirmationDialogTitle,
                 SettingsPageResources.SignOutConfirmationDialogContent) is ContentDialogResult.Primary)
         {
-            AppContext.ClearSession();
+            AppInfo.ClearSession();
             App.AppViewModel.SignOutExit = true;
             Window.Close();
         }

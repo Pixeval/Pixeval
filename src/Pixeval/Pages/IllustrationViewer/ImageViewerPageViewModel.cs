@@ -150,7 +150,7 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
 
     public async Task<StorageFile> SaveToFolderAsync(AppKnownFolders appKnownFolder)
     {
-        var name = Path.GetFileName(App.AppViewModel.AppSetting.DefaultDownloadPathMacro);
+        var name = Path.GetFileName(App.AppViewModel.AppSettings.DefaultDownloadPathMacro);
         var path = IoHelper.NormalizePathSegment(new IllustrationMetaPathParser().Reduce(name, IllustrationViewModel));
         var file = await appKnownFolder.CreateFileAsync(path);
         await using var target = await file.OpenStreamForWriteAsync();
@@ -211,7 +211,7 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
         {
             var cacheKey = await IllustrationViewModel.GetIllustrationOriginalImageCacheKeyAsync();
             AdvancePhase(LoadingPhase.CheckingCache);
-            if (App.AppViewModel.AppSetting.UseFileCache && await App.AppViewModel.Cache.ExistsAsync(cacheKey))
+            if (App.AppViewModel.AppSettings.UseFileCache && await App.AppViewModel.Cache.ExistsAsync(cacheKey))
             {
                 AdvancePhase(LoadingPhase.LoadingFromCache);
                 OriginalImageSources = await App.AppViewModel.Cache.GetAsync<IReadOnlyList<Stream>>(cacheKey);
@@ -263,7 +263,7 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
             if (OriginalImageSources is not null && !_disposed)
             {
                 UpdateCommandCanExecute();
-                if (App.AppViewModel.AppSetting.UseFileCache)
+                if (App.AppViewModel.AppSettings.UseFileCache)
                 {
                     _ = await App.AppViewModel.Cache.TryAddAsync(cacheKey, OriginalImageSources, TimeSpan.FromDays(1));
                 }

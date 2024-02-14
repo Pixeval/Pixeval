@@ -22,12 +22,12 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
+using Pixeval.AppManagement;
 using Pixeval.Controls.Illustrate;
 using Pixeval.CoreApi.Model;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
-using AppContext = Pixeval.AppManagement.AppContext;
 
 namespace Pixeval.Controls;
 
@@ -79,7 +79,7 @@ public sealed partial class IllustratorItemViewModel : IllustrateViewModel<User>
         var result = await App.AppViewModel.MakoClient.DownloadBitmapImageAsync(Illustrate.UserInfo.ProfileImageUrls.Medium, 100);
         AvatarSource = result is Result<ImageSource>.Success { Value: var avatar }
             ? avatar
-            : await AppContext.GetPixivNoProfileImageAsync();
+            : await AppInfo.GetPixivNoProfileImageAsync();
         await OverviewViewModel.LoadBannerSource();
     }
 

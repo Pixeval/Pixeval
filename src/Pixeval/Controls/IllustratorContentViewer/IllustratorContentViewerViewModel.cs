@@ -27,6 +27,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
+using Pixeval.AppManagement;
 using Pixeval.Controls.MarkupExtensions;
 using Pixeval.Controls.Windowing;
 using Pixeval.CoreApi.Net.Response;
@@ -34,7 +35,6 @@ using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
-using AppContext = Pixeval.AppManagement.AppContext;
 
 namespace Pixeval.Controls.IllustratorContentViewer;
 
@@ -123,22 +123,22 @@ public partial class IllustratorContentViewerViewModel : ObservableObject
 
     public bool ShowRecommendIllustrators
     {
-        get => App.AppViewModel.AppSetting.ShowRecommendIllustratorsInIllustratorContentViewer;
-        set => SetProperty(App.AppViewModel.AppSetting.ShowRecommendIllustratorsInIllustratorContentViewer, value, App.AppViewModel.AppSetting, (setting, value) =>
+        get => App.AppViewModel.AppSettings.ShowRecommendIllustratorsInIllustratorContentViewer;
+        set => SetProperty(App.AppViewModel.AppSettings.ShowRecommendIllustratorsInIllustratorContentViewer, value, App.AppViewModel.AppSettings, (setting, value) =>
         {
             setting.ShowRecommendIllustratorsInIllustratorContentViewer = value;
-            AppContext.SaveConfig(App.AppViewModel.AppSetting);
+            AppInfo.SaveConfig(App.AppViewModel.AppSettings);
             ShowRecommendIllustratorsChanged?.Invoke(this, value);
         });
     }
 
     public bool ShowExternalCommandBar
     {
-        get => App.AppViewModel.AppSetting.ShowExternalCommandBarInIllustratorContentViewer;
-        set => SetProperty(App.AppViewModel.AppSetting.ShowExternalCommandBarInIllustratorContentViewer, value, App.AppViewModel.AppSetting, (setting, value) =>
+        get => App.AppViewModel.AppSettings.ShowExternalCommandBarInIllustratorContentViewer;
+        set => SetProperty(App.AppViewModel.AppSettings.ShowExternalCommandBarInIllustratorContentViewer, value, App.AppViewModel.AppSettings, (setting, value) =>
         {
             setting.ShowExternalCommandBarInIllustratorContentViewer = value; 
-            AppContext.SaveConfig(App.AppViewModel.AppSetting);
+            AppInfo.SaveConfig(App.AppViewModel.AppSettings);
             ShowExternalCommandBarChanged?.Invoke(this, value);
         });
     }
@@ -154,7 +154,7 @@ public partial class IllustratorContentViewerViewModel : ObservableObject
         var result = await App.AppViewModel.MakoClient.DownloadBitmapImageAsync(UserDetail.UserEntity.ProfileImageUrls.Medium, 40);
         AvatarSource = result is Result<ImageSource>.Success { Value: var avatar }
             ? avatar
-            : await AppContext.GetPixivNoProfileImageAsync();
+            : await AppInfo.GetPixivNoProfileImageAsync();
     }
 
     private void InitializeCommands()
@@ -173,7 +173,7 @@ public partial class IllustratorContentViewerViewModel : ObservableObject
 
     public async Task LoadRecommendIllustratorsAsync()
     {
-        var recommendIllustrators = await App.AppViewModel.MakoClient.GetRelatedRecommendUsersAsync(UserDetail.UserEntity.Id, isR18: !App.AppViewModel.AppSetting.FiltrateRestrictedContent, lang: CultureInfo.CurrentUICulture);
+        var recommendIllustrators = await App.AppViewModel.MakoClient.GetRelatedRecommendUsersAsync(UserDetail.UserEntity.Id, isR18: !App.AppViewModel.AppSettings.FiltrateRestrictedContent, lang: CultureInfo.CurrentUICulture);
         var viewModels = recommendIllustrators.ResponseBody.RecommendMaps
             .Select(ru => ToRecommendIllustratorProfileViewModel(recommendIllustrators, ru));
 

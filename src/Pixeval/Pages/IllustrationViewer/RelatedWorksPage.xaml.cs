@@ -30,7 +30,7 @@ public sealed partial class RelatedWorksPage
 
     public RelatedWorksPage() => InitializeComponent();
 
-    public ThumbnailDirection ThumbnailDirection => App.AppViewModel.AppSetting.ThumbnailDirection;
+    public ThumbnailDirection ThumbnailDirection => App.AppViewModel.AppSettings.ThumbnailDirection;
 
     public override void OnPageDeactivated(NavigatingCancelEventArgs e)
     {

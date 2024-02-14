@@ -96,7 +96,7 @@
                 <!--  region Setting Entries  -->
                 <TextBlock x:Uid="/SettingsPage/VersionSettingsGroup" Style="{StaticResource SettingHeaderStyle}" />
 
-                <controls:SettingsExpander Header="{x:Bind appManagement:AppContext.AppVersion.CurrentVersion}" HeaderIcon="{markup:FontSymbolIcon Glyph=SyncE895}">
+                <controls:SettingsExpander Header="{x:Bind appManagement:AppInfo.AppVersion.CurrentVersion}" HeaderIcon="{markup:FontSymbolIcon Glyph=SyncE895}">
                     <controls:SettingsExpander.Description>
                         <StackPanel Spacing="3">
                             <TextBlock>

@@ -16,7 +16,7 @@
         ColumnSpacing="20">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" MinWidth="300" />
         </Grid.ColumnDefinitions>
         <StackPanel
             Grid.Column="0"

@@ -25,9 +25,9 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.IO;
+using Pixeval.AppManagement;
 using Pixeval.Utilities;
 using Pixeval.Utilities.Threading;
-using AppContext = Pixeval.AppManagement.AppContext;
 
 namespace Pixeval.Util.IO;
 
@@ -98,7 +98,7 @@ public static partial class IoHelper
             if (uri.Scheme is "ms-appx")
             {
                 progress?.Report(100);
-                return Result<Stream>.AsSuccess(File.OpenRead(AppContext.ApplicationUriToPath(uri)));
+                return Result<Stream>.AsSuccess(File.OpenRead(AppInfo.ApplicationUriToPath(uri)));
             }
 
             cancellationHandle?.RegisterPaused(awaiter.Reset);

@@ -36,6 +36,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
+using Pixeval.AppManagement;
 using Pixeval.Controls.MarkupExtensions;
 using Pixeval.Controls.MarkupExtensions.FontSymbolIcon;
 using Pixeval.Util.Threading;
@@ -44,7 +45,6 @@ using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 using SixLabors.ImageSharp.Processing.Processors.Quantization;
 using WinUI3Utilities;
-using AppContext = Pixeval.AppManagement.AppContext;
 using Brush = Microsoft.UI.Xaml.Media.Brush;
 using Color = Windows.UI.Color;
 using FontFamily = Microsoft.UI.Xaml.Media.FontFamily;
@@ -200,7 +200,7 @@ public static partial class UiHelper
 
     public static FontIcon GetFontIcon(this FontIconSymbols symbol, double? fontSize = null)
     {
-        var systemThemeFontFamily = new FontFamily(AppContext.AppIconFontFamilyName);
+        var systemThemeFontFamily = new FontFamily(AppInfo.AppIconFontFamilyName);
         var icon = new FontIcon
         {
             Glyph = symbol.GetGlyph().ToString(),
@@ -216,7 +216,7 @@ public static partial class UiHelper
 
     public static FontIconSource GetFontIconSource(this FontIconSymbols symbol, double? fontSize = null, Brush? foregroundBrush = null)
     {
-        var systemThemeFontFamily = new FontFamily(AppContext.AppIconFontFamilyName);
+        var systemThemeFontFamily = new FontFamily(AppInfo.AppIconFontFamilyName);
         var icon = new FontIconSource
         {
             Glyph = symbol.GetGlyph().ToString(),

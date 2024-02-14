@@ -55,6 +55,6 @@ public sealed partial class BookmarksPage : ISortedIllustrationContainerPageHelp
 
     private void ChangeSource()
     {
-        IllustrationContainer.ViewModel.ResetEngine(App.AppViewModel.MakoClient.Bookmarks(App.AppViewModel.PixivUid, PrivacyPolicyComboBox.GetComboBoxSelectedItemTag(PrivacyPolicy.Public), App.AppViewModel.AppSetting.TargetFilter));
+        IllustrationContainer.ViewModel.ResetEngine(App.AppViewModel.MakoClient.Bookmarks(App.AppViewModel.PixivUid, PrivacyPolicyComboBox.GetComboBoxSelectedItemTag(PrivacyPolicy.Public), App.AppViewModel.AppSettings.TargetFilter));
     }
 }

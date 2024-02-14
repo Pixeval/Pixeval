@@ -24,12 +24,12 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.UI.Xaml.Media.Imaging;
+using Pixeval.AppManagement;
 using Pixeval.Options;
 using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Utilities;
 using Pixeval.Utilities.Threading;
-using AppContext = Pixeval.AppManagement.AppContext;
 
 namespace Pixeval.Controls;
 
@@ -88,7 +88,7 @@ public partial class IllustrationItemViewModel
         }
 
         LoadingThumbnail = true;
-        if (App.AppViewModel.AppSetting.UseFileCache && await App.AppViewModel.Cache.TryGetAsync<Stream>(await this.GetIllustrationThumbnailCacheKeyAsync()) is { } stream)
+        if (App.AppViewModel.AppSettings.UseFileCache && await App.AppViewModel.Cache.TryGetAsync<Stream>(await this.GetIllustrationThumbnailCacheKeyAsync()) is { } stream)
         {
             ThumbnailStream = stream;
             ThumbnailSourceRef = new SharedRef<SoftwareBitmapSource>(await stream.GetSoftwareBitmapSourceAsync(false), key);
@@ -101,7 +101,7 @@ public partial class IllustrationItemViewModel
 
         if (await GetThumbnailAsync() is { } s)
         {
-            if (App.AppViewModel.AppSetting.UseFileCache)
+            if (App.AppViewModel.AppSettings.UseFileCache)
             {
                 _ = await App.AppViewModel.Cache.TryAddAsync(await this.GetIllustrationThumbnailCacheKeyAsync(), s, TimeSpan.FromDays(1));
             }
@@ -130,7 +130,7 @@ public partial class IllustrationItemViewModel
             return;
         }
 
-        if (App.AppViewModel.AppSetting.UseFileCache)
+        if (App.AppViewModel.AppSettings.UseFileCache)
             return;
 
         if (!ThumbnailSourceRef?.TryDispose(key) ?? true)
@@ -157,7 +157,7 @@ public partial class IllustrationItemViewModel
             }
         }
 
-        return AppContext.GetNotAvailableImageStream();
+        return AppInfo.GetNotAvailableImageStream();
     }
 
     /// <summary>

@@ -22,6 +22,7 @@ using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml.Media;
+using Pixeval.AppManagement;
 using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Model;
@@ -29,7 +30,6 @@ using Pixeval.Options;
 using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Util.IO;
 using Pixeval.Utilities;
-using AppContext = Pixeval.AppManagement.AppContext;
 
 namespace Pixeval.Controls;
 
@@ -95,7 +95,7 @@ public partial class IllustratorPageViewModel : ObservableObject, IIllustrationV
         var result = await App.AppViewModel.MakoClient.DownloadBitmapImageAsync(AvatarUrl, 60);
         AvatarSource = result is Result<ImageSource>.Success { Value: var avatar }
             ? avatar
-            : await AppContext.GetPixivNoProfileImageAsync();
+            : await AppInfo.GetPixivNoProfileImageAsync();
     }
 
     public async Task Follow()

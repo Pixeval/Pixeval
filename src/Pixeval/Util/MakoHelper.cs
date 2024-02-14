@@ -23,6 +23,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.WinUI.Collections;
+using Pixeval.AppManagement;
 using Pixeval.Controls;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Model;
@@ -30,7 +31,6 @@ using Pixeval.Misc;
 using Pixeval.Options;
 using Pixeval.Util.Generic;
 using WinUI3Utilities;
-using AppContext = Pixeval.AppManagement.AppContext;
 
 namespace Pixeval.Util;
 
@@ -46,7 +46,7 @@ public static class MakoHelper
 
     public static IllustrationSortOptionWrapper GetAppSettingDefaultSortOptionWrapper()
     {
-        return LocalizedBoxHelper.Of<IllustrationSortOption, IllustrationSortOptionWrapper>(App.AppViewModel.AppSetting.DefaultSortOption);
+        return LocalizedBoxHelper.Of<IllustrationSortOption, IllustrationSortOptionWrapper>(App.AppViewModel.AppSettings.DefaultSortOption);
     }
 
     public static string GetThumbnailUrl(this Illustration illustration, ThumbnailUrlOption option)
@@ -72,7 +72,7 @@ public static class MakoHelper
 
     public static Uri GenerateIllustrationAppUri(long id)
     {
-        return new Uri($"{AppContext.AppProtocol}://illust/{id}");
+        return new Uri($"{AppInfo.AppProtocol}://illust/{id}");
     }
 
     public static Uri GenerateIllustratorWebUri(long id)
@@ -87,7 +87,7 @@ public static class MakoHelper
 
     public static Uri GenerateIllustratorAppUri(long id)
     {
-        return new Uri($"{AppContext.AppProtocol}://user/{id}");
+        return new Uri($"{AppInfo.AppProtocol}://user/{id}");
     }
 
     public static async Task<string> GetIllustrationThumbnailCacheKeyAsync(this IllustrationItemViewModel illustration, ThumbnailUrlOption thumbnailUrlOption = ThumbnailUrlOption.Medium)

@@ -33,7 +33,6 @@ using Pixeval.Controls;
 using Pixeval.Controls.Windowing;
 using Pixeval.Pages.Login;
 using WinUI3Utilities;
-using AppContext = Pixeval.AppManagement.AppContext;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
@@ -49,9 +48,9 @@ public partial class App
 
     public App()
     {
-        AppViewModel = new AppViewModel(this) { AppSetting = AppContext.LoadConfig() ?? new AppSetting() };
-        AppContext.SetNameResolver(AppViewModel.AppSetting);
-        WindowFactory.Initialize(AppViewModel.AppSetting, AppContext.IconAbsolutePath);
+        AppViewModel = new AppViewModel(this) { AppSettings = AppInfo.LoadConfig() ?? new AppSettings() };
+        AppInfo.SetNameResolver(AppViewModel.AppSettings);
+        WindowFactory.Initialize(AppViewModel.AppSettings, AppInfo.IconAbsolutePath);
         AppInstance.GetCurrent().Activated += (_, arguments) => ActivationRegistrar.Dispatch(arguments);
         InitializeComponent();
     }
@@ -73,15 +72,15 @@ public partial class App
             return;
         }
 
-        if (AppViewModel.AppSetting.AppFontFamilyName.IsNotNullOrEmpty())
-            Current.Resources[ApplicationWideFontKey] = new FontFamily(AppViewModel.AppSetting.AppFontFamilyName);
+        if (AppViewModel.AppSettings.AppFontFamilyName.IsNotNullOrEmpty())
+            Current.Resources[ApplicationWideFontKey] = new FontFamily(AppViewModel.AppSettings.AppFontFamilyName);
         await AppKnownFolders.InitializeAsync();
 
         WindowFactory.Create(out var w)
             .WithLoaded((s, _) => s.To<Frame>().NavigateTo<LoginPage>(w))
-            .WithClosing((_, _) => AppContext.SaveContext()) // TODO: 从运行打开应用的时候不会ExitApp，就算是调用App.Current.Exit();
+            .WithClosing((_, _) => AppInfo.SaveContext()) // TODO: 从运行打开应用的时候不会ExitApp，就算是调用App.Current.Exit();
             .WithSizeLimit(800, 360)
-            .Init(AppContext.AppIdentifier, AppViewModel.AppSetting.WindowSize.ToSizeInt32())
+            .Init(AppInfo.AppIdentifier, AppViewModel.AppSettings.WindowSize.ToSizeInt32())
             .Activate();
 
         await AppViewModel.InitializeAsync(isProtocolActivated);
@@ -115,10 +114,10 @@ public partial class App
         };
         TaskScheduler.UnobservedTaskException += (o, e) =>
         {
-            e.SetObserved();
             using var scope = AppViewModel.AppServicesScope;
             var logger = scope.ServiceProvider.GetRequiredService<FileLogger>();
             logger.LogError(nameof(TaskScheduler.UnobservedTaskException), e.Exception);
+            e.SetObserved();
 #if DEBUG
             if (Debugger.IsAttached)
                 Debugger.Break();

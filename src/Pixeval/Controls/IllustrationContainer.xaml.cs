@@ -75,9 +75,9 @@ public sealed partial class IllustrationContainer
         }
     }
 
-    public ItemsViewLayoutType ItemsViewLayoutType => App.AppViewModel.AppSetting.ItemsViewLayoutType;
+    public ItemsViewLayoutType ItemsViewLayoutType => App.AppViewModel.AppSettings.ItemsViewLayoutType;
 
-    public ThumbnailDirection ThumbnailDirection => App.AppViewModel.AppSetting.ThumbnailDirection;
+    public ThumbnailDirection ThumbnailDirection => App.AppViewModel.AppSettings.ThumbnailDirection;
 
     public IllustrationViewViewModel ViewModel => IllustrationView.ViewModel;
 

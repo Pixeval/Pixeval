@@ -7,7 +7,7 @@ Both implementation depends on `IIllustrationViewViewModel` to provide behaviora
 At last, the `IllustrationView` will be depended by `IllustrationContainer` which itself is depended by functional pages, and since `IllustrationContainer` depends solely on `IllustrationView`, so it's convenient to hot-swap two possible implementations just by switching to the corresponding `IIllustrationView`, as the following code snippet inside `IllustrationContainer`'s constructor shows:
 
 ```cs
-IllustrationView = App.AppViewModel.AppSetting.ItemsViewLayoutType switch
+IllustrationView = App.AppViewModel.AppSettings.ItemsViewLayoutType switch
 {
     ItemsViewLayoutType.Regular => new GridIllustrationView(),
     ItemsViewLayoutType.Justified => new JustifiedLayoutIllustrationView(),
