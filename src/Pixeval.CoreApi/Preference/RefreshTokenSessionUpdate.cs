@@ -19,6 +19,7 @@
 #endregion
 
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using Pixeval.CoreApi.Net.EndPoints;
 using Pixeval.CoreApi.Net.Request;
 
@@ -28,7 +29,7 @@ public class RefreshTokenSessionUpdate : ISessionUpdate
 {
     public async Task<Session> RefreshAsync(MakoClient makoClient)
     {
-        return (await makoClient.Resolve<IAuthEndPoint>().RefreshAsync(new RefreshSessionRequest(makoClient.Session.RefreshToken)).ConfigureAwait(false)).ToSession() with
+        return (await makoClient.MakoServices.GetRequiredService<IAuthEndPoint>().RefreshAsync(new RefreshSessionRequest(makoClient.Session.RefreshToken)).ConfigureAwait(false)).ToSession() with
         {
             Cookie = makoClient.Session.Cookie,
             CookieCreation = makoClient.Session.CookieCreation

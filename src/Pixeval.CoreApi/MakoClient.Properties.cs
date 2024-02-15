@@ -20,7 +20,7 @@
 
 using System;
 using System.Collections.Generic;
-using Autofac;
+using Microsoft.Extensions.DependencyInjection;
 using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Preference;
 using Pixeval.Logging;
@@ -47,7 +47,7 @@ public partial class MakoClient
     /// <summary>
     /// The IoC container
     /// </summary>
-    internal IContainer MakoServices { get; init; }
+    internal ServiceProvider MakoServices { get; init; }
 
     public bool IsCancelled { get; set; }
 }

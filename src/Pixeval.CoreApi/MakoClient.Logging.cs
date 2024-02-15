@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using Pixeval.CoreApi.Net.EndPoints;
 using Pixeval.Utilities;
 
@@ -14,7 +15,7 @@ public partial class MakoClient
         {
             EnsureNotCancelled();
 
-            return await task(Resolve<IAppApiEndPoint>());
+            return await task(MakoServices.GetRequiredService<IAppApiEndPoint>());
         }
         catch (Exception e)
         {
@@ -29,7 +30,7 @@ public partial class MakoClient
         {
             EnsureNotCancelled();
 
-            return await task(Resolve<IAppApiEndPoint>());
+            return await task(MakoServices.GetRequiredService<IAppApiEndPoint>());
         }
         catch (Exception e)
         {
@@ -44,7 +45,7 @@ public partial class MakoClient
         {
             EnsureNotCancelled();
 
-            await task(Resolve<IAppApiEndPoint>());
+            await task(MakoServices.GetRequiredService<IAppApiEndPoint>());
         }
         catch (Exception e)
         {
@@ -58,7 +59,7 @@ public partial class MakoClient
         {
             EnsureNotCancelled();
 
-            return await task(Resolve<IAppApiEndPoint>());
+            return await task(MakoServices.GetRequiredService<IAppApiEndPoint>());
         }
         catch (Exception e)
         {
@@ -116,29 +117,4 @@ public partial class MakoClient
     {
         Logger.LogError("MakoClient Exception", e);
     }
-
-    //private async Task<T> RunWithLoggerAsync<T>(Func<Task<Result<T>>> task, T defaultValue)
-    //{
-    //    try
-    //    {
-    //        EnsureNotCancelled();
-
-    //        var result = await task();
-    //        switch (result)
-    //        {
-    //            case Result<T>.Success { Value: var value }:
-    //                return value;
-    //            case Result<T>.Failure { Cause: var e }:
-    //                Logger.LogError("", e);
-    //                return defaultValue;
-    //            default:
-    //                return ThrowUtils.ArgumentOutOfRange<Result<T>, T>(result);
-    //        }
-    //    }
-    //    catch (Exception e)
-    //    {
-    //        Logger.LogError("", e);
-    //        return defaultValue;
-    //    }
-    //}
 }

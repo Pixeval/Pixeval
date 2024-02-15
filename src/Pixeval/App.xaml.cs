@@ -134,7 +134,7 @@ public partial class App
 #if DEBUG
             if (Debugger.IsAttached)
                 Debugger.Break();
-            if (e.IsTerminating)
+            if (e.IsTerminating && Debugger.IsAttached) 
                 Debugger.Break();
 #endif
         };

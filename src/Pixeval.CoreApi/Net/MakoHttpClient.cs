@@ -18,23 +18,8 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System;
 using System.Net.Http;
-using Pixeval.Utilities;
 
 namespace Pixeval.CoreApi.Net;
 
-internal class MakoHttpClient : HttpClient
-{
-    private MakoHttpClient(HttpMessageHandler handler) : base(handler)
-    {
-    }
-
-    public static MakoHttpClient Create(HttpMessageHandler handler,
-        Action<MakoHttpClient>? action = null)
-    {
-        var mako = new MakoHttpClient(handler);
-        action?.Let(ac => ac(mako));
-        return mako;
-    }
-}
+internal class MakoHttpClient(HttpMessageHandler handler) : HttpClient(handler);

@@ -42,12 +42,11 @@ internal class RetryHttpClientHandler(HttpMessageHandler delegatedHandler, int t
     }
 }
 
-internal class MakoRetryHttpClientHandler(HttpMessageHandler delegatedHandler) : HttpMessageHandler, IMakoClientSupport
+internal class MakoRetryHttpClientHandler(MakoClient makoClient, HttpMessageHandler delegatedHandler) : HttpMessageHandler, IMakoClientSupport
 {
     private readonly HttpMessageInvoker _delegatedHandler = new(delegatedHandler);
 
-    // ReSharper disable once AutoPropertyCanBeMadeGetOnly.Global ! Dependency Injected
-    public MakoClient MakoClient { get; set; } = null!;
+    public MakoClient MakoClient { get; set; } = makoClient;
 
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {

@@ -26,6 +26,7 @@ using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using Pixeval.CoreApi.Global.Exception;
 using Pixeval.CoreApi.Model;
 using Pixeval.CoreApi.Net;
@@ -285,7 +286,7 @@ internal partial class FeedEngine(MakoClient makoClient, EngineHandle? engineHan
         {
             try
             {
-                return await MakoClient.ResolveKeyed<HttpClient>(MakoApiKind.WebApi)
+                return await MakoClient.MakoServices.GetRequiredKeyedService<HttpClient>(MakoApiKind.WebApi)
                     .GetStringResultAsync(url, async responseMessage => new MakoNetworkException(url, MakoClient.Configuration.Bypass, await responseMessage.Content.ReadAsStringAsync(), (int)responseMessage.StatusCode))
                     .ConfigureAwait(false);
             }

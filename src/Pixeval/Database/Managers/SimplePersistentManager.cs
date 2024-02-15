@@ -33,9 +33,8 @@ namespace Pixeval.Database.Managers;
 public abstract class SimplePersistentManager<T>(ILiteDatabase db, int maximumRecords) : IPersistentManager<T, T>
     where T : new()
 {
-#nullable disable
     public ILiteCollection<T> Collection { get; init; } = db.GetCollection<T>(typeof(T).Name);
-#nullable restore
+
     public int MaximumRecords { get; set; } = maximumRecords;
 
     public int Count => Collection.Count();

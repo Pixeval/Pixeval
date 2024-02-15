@@ -24,6 +24,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Global.Exception;
 using Pixeval.CoreApi.Model;
@@ -204,8 +205,7 @@ public partial class MakoClient
         => RunWithLoggerAsync(async t => await t
             .DeleteCommentAsync(new DeleteCommentRequest(commentId)));
 
-
     public Task<ReverseSearchResponse> ReverseSearchAsync(Stream imgStream, string apiKey)
-        => RunWithLoggerAsync(async () => await Resolve<IReverseSearchApiEndPoint>()
+        => RunWithLoggerAsync(async () => await MakoServices.GetRequiredService<IReverseSearchApiEndPoint>()
             .GetSauceAsync(new ReverseSearchRequest(apiKey), new StreamPart(imgStream, "img")));
 }

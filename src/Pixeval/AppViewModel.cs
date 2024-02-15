@@ -22,7 +22,6 @@ using System;
 using System.Threading.Tasks;
 using LiteDB;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Pixeval.AppManagement;
 using Pixeval.Controls;
 using Pixeval.Controls.Windowing;
@@ -42,9 +41,9 @@ public class AppViewModel(App app)
 {
     private bool _activatedByProtocol;
 
-    public IHost AppHost { get; private set; } = null!;
+    public ServiceProvider AppServiceProvider { get; private set; } = null!;
 
-    public IServiceScope AppServicesScope => AppHost.Services.CreateScope();
+    public IServiceScope AppServicesScope => AppServiceProvider.CreateScope();
 
     /// <summary>
     /// Indicates whether the exit is caused by a logout action
@@ -69,17 +68,17 @@ public class AppViewModel(App app)
         AppInfo.RestoreHistories();
     }
 
-    private static IHostBuilder CreateHostBuilder()
+    private static ServiceProvider CreateServiceProvider()
     {
-        return Host.CreateDefaultBuilder()
-            .ConfigureServices(services =>
-                services.AddSingleton<IDownloadTaskFactory<IllustrationItemViewModel, IllustrationDownloadTask>, IllustrationDownloadTaskFactory>()
-                    .AddSingleton(new LiteDatabase(AppInfo.DatabaseFilePath))
-                    .AddSingleton(provider => new DownloadHistoryPersistentManager(provider.GetRequiredService<LiteDatabase>(), App.AppViewModel.AppSettings.MaximumDownloadHistoryRecords))
-                    .AddSingleton(provider => new SearchHistoryPersistentManager(provider.GetRequiredService<LiteDatabase>(), App.AppViewModel.AppSettings.MaximumSearchHistoryRecords))
-                    .AddSingleton(provider => new BrowseHistoryPersistentManager(provider.GetRequiredService<LiteDatabase>(), App.AppViewModel.AppSettings.MaximumBrowseHistoryRecords))
-                    .AddSingleton(_ => new FileLogger(ApplicationData.Current.LocalFolder.Path + @"\Logs\"))
-                );
+        var fileLogger = new FileLogger(ApplicationData.Current.LocalFolder.Path + @"\Logs\");
+        return new ServiceCollection()
+            .AddSingleton<IDownloadTaskFactory<IllustrationItemViewModel, IllustrationDownloadTask>, IllustrationDownloadTaskFactory>()
+            .AddSingleton(new LiteDatabase(AppInfo.DatabaseFilePath))
+            .AddSingleton(provider => new DownloadHistoryPersistentManager(provider.GetRequiredService<LiteDatabase>(), App.AppViewModel.AppSettings.MaximumDownloadHistoryRecords))
+            .AddSingleton(provider => new SearchHistoryPersistentManager(provider.GetRequiredService<LiteDatabase>(), App.AppViewModel.AppSettings.MaximumSearchHistoryRecords))
+            .AddSingleton(provider => new BrowseHistoryPersistentManager(provider.GetRequiredService<LiteDatabase>(), App.AppViewModel.AppSettings.MaximumBrowseHistoryRecords))
+            .AddSingleton(fileLogger)
+            .BuildServiceProvider();
     }
 
     public async Task ShowExceptionDialogAsync(Exception e)
@@ -91,12 +90,10 @@ public class AppViewModel(App app)
     {
         _activatedByProtocol = activatedByProtocol;
 
-        AppHost = CreateHostBuilder().Build();
-
         await AppKnownFolders.Temporary.ClearAsync();
         Cache = await FileCache.CreateDefaultAsync();
 
-        _ = AppHost.RunAsync();
+        AppServiceProvider = CreateServiceProvider();
     }
 
     /// <summary>

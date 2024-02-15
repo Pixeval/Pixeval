@@ -23,7 +23,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using Autofac;
+using Microsoft.Extensions.DependencyInjection;
 using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Global.Exception;
@@ -58,7 +58,7 @@ public partial class MakoClient : ICancellable
         Logger = logger;
         SessionUpdater = sessionUpdater ?? new RefreshTokenSessionUpdate();
         Session = session;
-        MakoServices = BuildContainer();
+        MakoServices = BuildServiceProvider();
         Configuration = configuration;
         IsCancelled = false;
     }
@@ -83,101 +83,69 @@ public partial class MakoClient : ICancellable
         Logger = logger;
         SessionUpdater = sessionUpdater ?? new RefreshTokenSessionUpdate();
         Session = session;
-        MakoServices = BuildContainer();
+        MakoServices = BuildServiceProvider();
         Configuration = new MakoClientConfiguration();
     }
 
     /// <summary>
     /// Injects necessary dependencies
     /// </summary>
-    /// <returns>The <see cref="IContainer" /> contains all the required dependencies</returns>
-    private IContainer BuildContainer()
+    /// <returns>The <see cref="ServiceProvider" /> contains all the required dependencies</returns>
+    private ServiceProvider BuildServiceProvider()
     {
-        var builder = new ContainerBuilder();
-        _ = builder.RegisterInstance(this).SingleInstance();
-
-        _ = builder.RegisterType<PixivApiNameResolver>().SingleInstance();
-        _ = builder.RegisterType<PixivImageNameResolver>().SingleInstance();
-        _ = builder.RegisterType<LocalMachineNameResolver>().SingleInstance();
-
-        _ = builder.RegisterType<PixivApiHttpMessageHandler>().SingleInstance();
-        _ = builder.RegisterType<PixivImageHttpMessageHandler>().SingleInstance();
-
-        _ = builder.Register(static c => new MakoRetryHttpClientHandler(c.Resolve<PixivApiHttpMessageHandler>()))
-            .Keyed<HttpMessageHandler>(typeof(PixivApiHttpMessageHandler))
-            .As<HttpMessageHandler>()
-            .PropertiesAutowired(static (info, _) => info.PropertyType == typeof(MakoClient))
-            .SingleInstance();
-        _ = builder.Register(static c => new MakoRetryHttpClientHandler(c.Resolve<PixivImageHttpMessageHandler>()))
-            .Keyed<HttpMessageHandler>(typeof(PixivImageHttpMessageHandler))
-            .As<HttpMessageHandler>()
-            .PropertiesAutowired(static (info, _) => info.PropertyType == typeof(MakoClient))
-            .SingleInstance();
-        _ = builder.Register(static c => MakoHttpClient.Create(c.ResolveKeyed<HttpMessageHandler>(typeof(PixivApiHttpMessageHandler)),
-                static client => client.BaseAddress = new Uri(MakoHttpOptions.AppApiBaseUrl)))
-            .Keyed<HttpClient>(MakoApiKind.AppApi)
-            .As<HttpClient>()
-            .SingleInstance();
-        _ = builder.Register(static c => MakoHttpClient.Create(c.ResolveKeyed<HttpMessageHandler>(typeof(PixivApiHttpMessageHandler)),
-                static client => client.BaseAddress = new Uri(MakoHttpOptions.WebApiBaseUrl)))
-            .Keyed<HttpClient>(MakoApiKind.WebApi)
-            .As<HttpClient>()
-            .SingleInstance();
-        _ = builder.Register(static c => MakoHttpClient.Create(c.ResolveKeyed<HttpMessageHandler>(typeof(PixivApiHttpMessageHandler)),
-                static client => client.BaseAddress = new Uri(MakoHttpOptions.OAuthBaseUrl)))
-            .Keyed<HttpClient>(MakoApiKind.AuthApi)
-            .As<HttpClient>()
-            .SingleInstance();
-        _ = builder.Register(static c => MakoHttpClient.Create(c.ResolveKeyed<HttpMessageHandler>(typeof(PixivImageHttpMessageHandler)),
-                static client =>
+        return new ServiceCollection()
+            .AddSingleton(this)
+            .AddSingleton<PixivApiNameResolver>()
+            .AddSingleton<PixivImageNameResolver>()
+            .AddSingleton<LocalMachineNameResolver>()
+            .AddSingleton<PixivApiHttpMessageHandler>()
+            .AddSingleton<PixivImageHttpMessageHandler>()
+            .AddKeyedSingleton<HttpMessageHandler, MakoRetryHttpClientHandler>(typeof(PixivApiHttpMessageHandler),
+                (s, _) => new(s.GetRequiredService<MakoClient>(), s.GetRequiredService<PixivApiHttpMessageHandler>()))
+            .AddKeyedSingleton<HttpMessageHandler, MakoRetryHttpClientHandler>(typeof(PixivImageHttpMessageHandler),
+                (s, _) => new(s.GetRequiredService<MakoClient>(), s.GetRequiredService<PixivImageHttpMessageHandler>()))
+            .AddKeyedSingleton<HttpClient, MakoHttpClient>(MakoApiKind.AppApi,
+                (s, _) => new(s.GetRequiredKeyedService<HttpMessageHandler>(typeof(PixivApiHttpMessageHandler)))
                 {
-                    _ = client.DefaultRequestHeaders.TryAddWithoutValidation("Referer", "https://www.pixiv.net");
-                    _ = client.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", "PixivIOSApp/5.8.7");
-                }))
-            .Keyed<HttpClient>(MakoApiKind.ImageApi)
-            .As<HttpClient>()
-            .SingleInstance();
-
-        _ = builder.Register(static c => MakoHttpOptions.CreateHttpMessageInvoker(c.Resolve<PixivApiNameResolver>()))
-            .Keyed<HttpMessageInvoker>(typeof(PixivApiNameResolver))
-            .As<HttpMessageInvoker>()
-            .SingleInstance();
-        _ = builder.Register(static c => MakoHttpOptions.CreateHttpMessageInvoker(c.Resolve<PixivImageNameResolver>()))
-            .Keyed<HttpMessageInvoker>(typeof(PixivImageNameResolver))
-            .As<HttpMessageInvoker>()
-            .SingleInstance();
-        _ = builder.Register(static _ => MakoHttpOptions.CreateDirectHttpMessageInvoker())
-            .Keyed<HttpMessageInvoker>(typeof(LocalMachineNameResolver))
-            .As<HttpMessageInvoker>()
-            .SingleInstance();
-
-        _ = builder.Register(static c =>
-        {
-            var context = c.Resolve<IComponentContext>(); // or a System.ObjectDisposedException will be thrown because the 'c' cannot be hold
-            return RestService.For<IAppApiEndPoint>(c.ResolveKeyed<HttpClient>(MakoApiKind.AppApi), new RefitSettings
+                    BaseAddress = new Uri(MakoHttpOptions.AppApiBaseUrl)
+                })
+            .AddKeyedSingleton<HttpClient, MakoHttpClient>(MakoApiKind.WebApi,
+                (s, _) => new(s.GetRequiredKeyedService<HttpMessageHandler>(typeof(PixivApiHttpMessageHandler)))
+                {
+                    BaseAddress = new Uri(MakoHttpOptions.WebApiBaseUrl)
+                })
+            .AddKeyedSingleton<HttpClient, MakoHttpClient>(MakoApiKind.AuthApi,
+                (s, _) => new(s.GetRequiredKeyedService<HttpMessageHandler>(typeof(PixivApiHttpMessageHandler)))
+                {
+                    BaseAddress = new Uri(MakoHttpOptions.OAuthBaseUrl)
+                })
+            .AddKeyedSingleton<HttpClient, MakoHttpClient>(MakoApiKind.ImageApi,
+                (s, _) => new(s.GetRequiredKeyedService<HttpMessageHandler>(typeof(PixivImageHttpMessageHandler)))
+                {
+                    DefaultRequestHeaders =
+                    {
+                        Referrer = new Uri("https://www.pixiv.net"),
+                        UserAgent = { new("PixivIOSApp", "5.8.7") }
+                    }
+                })
+            .AddKeyedSingleton(typeof(PixivApiNameResolver),
+                (s, _) => MakoHttpOptions.CreateHttpMessageInvoker(s.GetRequiredService<PixivApiNameResolver>()))
+            .AddKeyedSingleton(typeof(PixivImageNameResolver),
+                (s, _) => MakoHttpOptions.CreateHttpMessageInvoker(s.GetRequiredService<PixivImageNameResolver>()))
+            .AddKeyedSingleton(typeof(LocalMachineNameResolver),
+                (_, _) => MakoHttpOptions.CreateDirectHttpMessageInvoker())
+            .AddSingleton(s => RestService.For<IAppApiEndPoint>(s.GetRequiredKeyedService<HttpClient>(MakoApiKind.AppApi), new RefitSettings
             {
-                ExceptionFactory = async message => !message.IsSuccessStatusCode ? await MakoNetworkException.FromHttpResponseMessageAsync(message, context.Resolve<MakoClient>().Configuration.Bypass).ConfigureAwait(false) : null
-            });
-        });
-
-        _ = builder.Register(static c =>
-        {
-            var context = c.Resolve<IComponentContext>(); // or a System.ObjectDisposedException will be thrown because the 'c' cannot be hold
-            return RestService.For<IAuthEndPoint>(c.ResolveKeyed<HttpClient>(MakoApiKind.AuthApi), new RefitSettings
+                ExceptionFactory = async message => !message.IsSuccessStatusCode ? await MakoNetworkException.FromHttpResponseMessageAsync(message, s.GetRequiredService<MakoClient>().Configuration.Bypass).ConfigureAwait(false) : null
+            }))
+            .AddSingleton(s => RestService.For<IAuthEndPoint>(s.GetRequiredKeyedService<HttpClient>(MakoApiKind.AuthApi), new RefitSettings
             {
-                ExceptionFactory = async message => !message.IsSuccessStatusCode ? await MakoNetworkException.FromHttpResponseMessageAsync(message, context.Resolve<MakoClient>().Configuration.Bypass).ConfigureAwait(false) : null
-            });
-        });
-
-        _ = builder.Register(static c =>
-        {
-            var context = c.Resolve<IComponentContext>(); // or a System.ObjectDisposedException will be thrown because the 'c' cannot be hold
-            return RestService.For<IReverseSearchApiEndPoint>("https://saucenao.com/", new RefitSettings
+                ExceptionFactory = async message => !message.IsSuccessStatusCode ? await MakoNetworkException.FromHttpResponseMessageAsync(message, s.GetRequiredService<MakoClient>().Configuration.Bypass).ConfigureAwait(false) : null
+            }))
+            .AddSingleton(s => RestService.For<IReverseSearchApiEndPoint>("https://saucenao.com/", new RefitSettings
             {
-                ExceptionFactory = async message => !message.IsSuccessStatusCode ? await MakoNetworkException.FromHttpResponseMessageAsync(message, context.Resolve<MakoClient>().Configuration.Bypass).ConfigureAwait(false) : null
-            });
-        });
-        return builder.Build();
+                ExceptionFactory = async message => !message.IsSuccessStatusCode ? await MakoNetworkException.FromHttpResponseMessageAsync(message, s.GetRequiredService<MakoClient>().Configuration.Bypass).ConfigureAwait(false) : null
+            })).BuildServiceProvider();
     }
 
     /// <summary>
@@ -204,41 +172,9 @@ public partial class MakoClient : ICancellable
         }
     }
 
-    /// <summary>
-    /// Resolves a dependency of type <typeparamref name="TResult"/>
-    /// </summary>
-    /// <typeparam name="TResult"></typeparam>
-    /// <returns></returns>
-    internal TResult Resolve<TResult>() where TResult : notnull
-    {
-        return MakoServices.Resolve<TResult>();
-    }
-
-    /// <summary>
-    /// Resolves a key-bounded dependency of type <typeparamref name="TResult"/>
-    /// </summary>
-    /// <typeparam name="TResult"></typeparam>
-    /// <param name="key"></param>
-    /// <returns></returns>
-    internal TResult ResolveKeyed<TResult>(object key) where TResult : notnull
-    {
-        return MakoServices.ResolveKeyed<TResult>(key);
-    }
-
-    /// <summary>
-    /// Resolves a dependency of type 'type'
-    /// </summary>
-    /// <typeparam name="TResult"></typeparam>
-    /// <param name="type"></param>
-    /// <returns></returns>
-    internal TResult Resolve<TResult>(Type type) where TResult : notnull
-    {
-        return (TResult)MakoServices.Resolve(type);
-    }
-
     internal HttpMessageInvoker GetHttpMessageInvoker<T>() where T : INameResolver
     {
-        return ResolveKeyed<HttpMessageInvoker>(typeof(T));
+        return MakoServices.GetRequiredKeyedService<HttpMessageInvoker>(typeof(T));
     }
 
     /// <summary>
@@ -288,7 +224,7 @@ public partial class MakoClient : ICancellable
     /// <returns>The <see cref="HttpClient" /> corresponding to <paramref name="makoApiKind" /></returns>
     public HttpClient GetMakoHttpClient(MakoApiKind makoApiKind)
     {
-        return ResolveKeyed<HttpClient>(makoApiKind);
+        return MakoServices.GetRequiredKeyedService<HttpClient>(makoApiKind);
     }
 
     /// <summary>
