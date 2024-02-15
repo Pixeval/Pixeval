@@ -7,7 +7,6 @@ using Microsoft.UI.Xaml.Media;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
 
-
 namespace Pixeval.Controls;
 
 [DependencyProperty<ICollection<string>>("ItemsSource")]

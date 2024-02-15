@@ -29,7 +29,8 @@ public record DoubleExponentialEaseOut(int Exponent = 2) : IEasingFunction<doubl
 
     public double GetValue(double percentage)
     {
-        ThrowUtils.ThrowIf<ArgumentOutOfRangeException>(percentage is > 1 or < 0, "The percentage must between 0 and 1.");
+        if (percentage is > 1 or < 0)
+            return ThrowUtils.ArgumentOutOfRange<double, double>(percentage, "The percentage must between 0 and 1.");
         return Math.Abs(percentage - 1) < double.Epsilon ? 1 : 1 - Math.Pow(Exponent, -10 * percentage);
     }
 }

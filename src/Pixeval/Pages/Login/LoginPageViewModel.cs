@@ -19,9 +19,11 @@
 #endregion
 
 using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Net.NetworkInformation;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
@@ -199,13 +201,21 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject
         // is intended to be called only once (at the start time) during the entire application's
         // lifetime, so the overhead is acceptable
 
-        // LoginProxyOption.SpecifyProxy => new HttpClientHandler { Proxy = new WebProxy { Address = new Uri(ProxyString) }, UseProxy = true },
         var handler = new DelegatedHttpMessageHandler(MakoHttpOptions.CreateHttpMessageInvoker(DisableDomainFronting
             ? new LocalMachineNameResolver()
             : new PixivApiNameResolver()));
 
-        using var httpClient = new HttpClient(handler);
-        httpClient.DefaultRequestHeaders.Add("User-Agent", "PixivAndroidApp/5.0.64 (Android 6.0)");
+        var httpClient = new HttpClient(handler)
+        {
+            DefaultRequestHeaders =
+            {
+                UserAgent =
+                {
+                    new ProductInfoHeaderValue("PixivAndroidApp", "5.0.64"),
+                    new ProductInfoHeaderValue("(Android 6.0)")
+                }
+            }
+        };
         var result = await httpClient.PostFormAsync("http://oauth.secure.pixiv.net/auth/token",
             ("code", code),
             ("code_verifier", verifier),
@@ -214,6 +224,8 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject
             ("grant_type", "authorization_code"),
             ("include_policy", "true"),
             ("redirect_uri", "https://app-api.pixiv.net/web/v1/users/auth/pixiv/callback"));
+        // using会有resharper警告，所以这里用Dispose
+        httpClient.Dispose();
         _ = result.EnsureSuccessStatusCode();
         var session = (await result.Content.ReadAsStringAsync()).FromJson<TokenResponse>()!.ToSession() with
         {
@@ -299,10 +311,14 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject
         }
         catch (PlaywrightException)
         {
-            // 可能还没加载完页面就登录成功跳转了，导致异常
-            if (!IsFinished)
-                ;
             // visible
+            // 可能还没加载完页面就登录成功跳转了，导致异常
+            // ----- 如果碰到了此处断点，说明此处的忽略是有必要的，将这段删掉，即catch块内留空
+#if DEBUG
+            if (!IsFinished)
+                Debugger.Break();
+#endif
+            // -----
         }
     }
 

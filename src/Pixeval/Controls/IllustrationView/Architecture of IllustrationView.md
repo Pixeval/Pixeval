@@ -1,4 +1,4 @@
-﻿# Architecture and Logic Segregation of IllustrationView
+# Architecture and Logic Segregation of IllustrationView
 The `IllustrationView` segregates two implementations: `GridIllustrationView` and `JustifiedLayoutIllustrationView`, while allow them to be hot-swapped, the former one is a traditional layout that use `AdaptiveGridView` to hold items, each item will have the same height and width; the latter one, is a `JustifiedLayout` which, only aligned at ends, the images inside a row can have different width.
 The architecture is presented simply as the following diagram shows:![uml](uml.png)
 
@@ -11,7 +11,7 @@ IllustrationView = App.AppViewModel.AppSettings.ItemsViewLayoutType switch
 {
     ItemsViewLayoutType.Regular => new GridIllustrationView(),
     ItemsViewLayoutType.Justified => new JustifiedLayoutIllustrationView(),
-    _ => throw new ArgumentOutOfRangeException()
+    _ => Throw new ArgumentOutOfRangeException()
 }; 
 IllustrationContainerDockPanel.Children.Add(IllustrationView.SelfIllustrationView);
 ```

@@ -2,6 +2,7 @@ using Microsoft.UI.Xaml;
 using System.Reflection;
 using System;
 using Microsoft.Xaml.Interactivity;
+using Pixeval.Utilities;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
 
@@ -58,8 +59,7 @@ public sealed partial class NavigatePropertyAction : DependencyObject, IAction
 
         if (innerException is not null)
         {
-            throw new ArgumentException($"无法将 bool 类型的值赋予 {propertyInfo.PropertyType.Name} 类型的属性 {PropertyName}。",
-                innerException);
+            ThrowUtils.Argument($"无法将 bool 类型的值赋予 {propertyInfo.PropertyType.Name} 类型的属性 {PropertyName}。", innerException);
         }
     }
 

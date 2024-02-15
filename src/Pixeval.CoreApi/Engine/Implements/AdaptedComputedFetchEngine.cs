@@ -41,12 +41,12 @@ public class AdaptedComputedFetchEngine<T>(IEnumerable<T> outer) : IFetchEngine<
 {
     private readonly IEnumerable<T> _outer = outer;
 
-    public MakoClient MakoClient => throw new NotSupportedException();
+    public MakoClient MakoClient => ThrowUtils.NotSupported<MakoClient>();
 
     // The 'AdaptedFetchEngine' is specialized for an "already computed" 'IFetchEngine'
     // which means its lifetime had been ended but computation result is cached into this
     // class, so the 'EngineHandle' that is used to track its lifetime is useless here
-    public EngineHandle EngineHandle => throw new NotSupportedException();
+    public EngineHandle EngineHandle => ThrowUtils.NotSupported<EngineHandle>();
 
     public int RequestedPages { get; set; }
 

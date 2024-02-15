@@ -44,7 +44,7 @@ public class MacroParser<TContext>
             return token;
         }
 
-        throw new MacroParseException(MacroParserResources.UnexpectedTokenFormatted.Format((object?)_currentToken?.Position.Start ?? "EOF"));
+        return ThrowUtils.MacroParse<TokenInfo>(MacroParserResources.UnexpectedTokenFormatted.Format((object?)_currentToken?.Position.Start ?? "EOF"));
     }
 
     // ReSharper disable once OutParameterValueIsAlwaysDiscarded.Local
@@ -66,7 +66,7 @@ public class MacroParser<TContext>
         var root = Path();
         if (_lexer!.NextToken() is { } token)
         {
-            throw new MacroParseException(MacroParserResources.UnexpectedTokenFormatted.Format(token.Position.Start.Value - 1));
+            return ThrowUtils.MacroParse<IMetaPathNode<TContext>?>(MacroParserResources.UnexpectedTokenFormatted.Format(token.Position.Start.Value - 1));
         }
 
         return root;
@@ -79,16 +79,10 @@ public class MacroParser<TContext>
 
     private Sequence<TContext>? Sequence()
     {
-        if (_currentToken is { TokenKind: TokenKind.RBrace })
-        {
-            return null;
-        }
+        if (_currentToken is not { TokenKind: TokenKind.RBrace } and not null && SingleNode() is { } node) 
+            return new Sequence<TContext>(node, Sequence());
 
-        return _currentToken is not null
-            ? SingleNode() is { } node
-                ? new Sequence<TContext>(node, Sequence())
-                : null
-            : null;
+        return null;
     }
 
     private SingleNode<TContext>? SingleNode()
@@ -98,7 +92,7 @@ public class MacroParser<TContext>
             { TokenKind: TokenKind.At } => Macro(),
             { TokenKind: TokenKind.PlainText or TokenKind.Equal } => PlainText(),
             { TokenKind: TokenKind.RBrace } => null,
-            _ => throw new MacroParseException(MacroParserResources.UnexpectedTokenFormatted.Format(_currentToken?.Position.Start is { Value: var start } ? start + 1 : "EOF"))
+            _ => ThrowUtils.MacroParse<SingleNode<TContext>?>(MacroParserResources.UnexpectedTokenFormatted.Format(_currentToken?.Position.Start is { Value: var start } ? start + 1 : "EOF"))
         };
     }
 
@@ -125,7 +119,7 @@ public class MacroParser<TContext>
         {
             if (_expectContextualEqual)
             {
-                throw new MacroParseException(MacroParserResources.UnexpectedTokenFormatted.Format(_currentToken.Position.Start));
+                return ThrowUtils.MacroParse<PlainText<TContext>>(MacroParserResources.UnexpectedTokenFormatted.Format(_currentToken.Position.Start));
             }
 
             _ = EatToken(TokenKind.Equal);

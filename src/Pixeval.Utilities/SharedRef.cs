@@ -63,7 +63,7 @@ public class SharedRef<T>
         // 判断key是不是引用类型
         var type = key.GetType();
         if (type.IsValueType || type == typeof(string))
-            throw new ArgumentException("Key must be a reference type and not a string.");
+            ThrowUtils.Argument("Key must be a reference type and not a string.");
 #endif
     }
 

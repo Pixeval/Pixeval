@@ -192,8 +192,7 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
 
             // 此处不要触发CurrentPageIndex的OnPropertyChanged，否则会导航两次
             _currentPageIndex = 0;
-            OnPropertyChanged(nameof(NextButtonVisible));
-            OnPropertyChanged(nameof(PrevButtonVisible));
+            OnButtonPropertiesChanged();
             CurrentImage = new ImageViewerPageViewModel(this, CurrentPage);
             // ---
 
@@ -226,11 +225,18 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
                 return;
             var oldValue = _currentPageIndex;
             _currentPageIndex = value;
-            OnPropertyChanged(nameof(NextButtonVisible));
-            OnPropertyChanged(nameof(PrevButtonVisible));
+            OnButtonPropertiesChanged();
             CurrentImage = new ImageViewerPageViewModel(this, CurrentPage);
             OnDetailedPropertyChanged(oldValue, value);
         }
+    }
+
+    private void OnButtonPropertiesChanged()
+    {
+        OnPropertyChanged(nameof(NextButtonVisible));
+        OnPropertyChanged(nameof(PrevButtonVisible));
+        OnPropertyChanged(nameof(NextButtonText));
+        OnPropertyChanged(nameof(PrevButtonText));
     }
 
     public int PageCount => Pages.Length;
@@ -269,16 +275,21 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
 
     #region Helper Functions
 
-    public Visibility NextButtonVisible => NextButtonAction is null ? Visibility.Collapsed : Visibility.Visible;
+    public string? NextButtonText => NextButtonAction switch
+    {
+        true => IllustrationViewerPageResources.NextPageOrIllustration,
+        false => IllustrationViewerPageResources.NextIllustration,
+        _ => null
+    };
 
-    public bool NextIllustrationEnable => Illustrations.Count > CurrentIllustrationIndex + 1;
+    public Visibility NextButtonVisible => NextButtonAction is null ? Visibility.Collapsed : Visibility.Visible;
 
     /// <summary>
     /// <see langword="true"/>: next page<br/>
     /// <see langword="false"/>: next illustration<br/>
     /// <see langword="null"/>: none
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0046:转换为条件表达式", Justification = "<挂起>")]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0046:转换为条件表达式")]
     public bool? NextButtonAction
     {
         get
@@ -288,7 +299,7 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
                 return true;
             }
 
-            if (NextIllustrationEnable)
+            if (CurrentIllustrationIndex < Illustrations.Count - 1)
             {
                 return false;
             }
@@ -297,16 +308,21 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
         }
     }
 
-    public Visibility PrevButtonVisible => PrevButtonAction is null ? Visibility.Collapsed : Visibility.Visible;
+    public string? PrevButtonText => PrevButtonAction switch
+    {
+        true => IllustrationViewerPageResources.PrevPageOrIllustration,
+        false => IllustrationViewerPageResources.PrevIllustration,
+        _ => null
+    };
 
-    public bool PrevIllustrationEnable => CurrentIllustrationIndex > 0;
+    public Visibility PrevButtonVisible => PrevButtonAction is null ? Visibility.Collapsed : Visibility.Visible;
 
     /// <summary>
     /// <see langword="true"/>: prev page<br/>
     /// <see langword="false"/>: prev illustration<br/>
     /// <see langword="null"/>: none
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0046:转换为条件表达式", Justification = "<挂起>")]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0046:转换为条件表达式")]
     public bool? PrevButtonAction
     {
         get
@@ -316,7 +332,7 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
                 return true;
             }
 
-            if (PrevIllustrationEnable)
+            if (CurrentIllustrationIndex > 0)
             {
                 return false;
             }

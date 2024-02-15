@@ -410,7 +410,7 @@ public class FileCache
             _ = _indexLocker.Release();
         }
 
-        throw new KeyNotFoundException(key.ToString());
+        return ThrowUtils.KeyNotFound<T>(key.ToString());
     }
 
     public Task<DateTimeOffset?> GetExpirationAsync(object key)

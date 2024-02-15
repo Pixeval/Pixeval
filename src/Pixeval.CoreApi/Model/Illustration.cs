@@ -163,23 +163,3 @@ public enum XRestrict
     R18 = 1,
     R18G = 2
 }
-
-public class StringToTypeBoolConverter : JsonConverter<bool>
-{
-    public override bool Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-    {
-        return reader.TokenType is not JsonTokenType.String
-            ? throw new JsonException()
-            : reader.GetString() switch
-            {
-                "illust" or "manga" => false,
-                "ugoira" => true,
-                _ => throw new JsonException()
-            };
-    }
-
-    public override void Write(Utf8JsonWriter writer, bool value, JsonSerializerOptions options)
-    {
-        writer.WriteStringValue(value ? "ugoira" : "illust");
-    }
-}

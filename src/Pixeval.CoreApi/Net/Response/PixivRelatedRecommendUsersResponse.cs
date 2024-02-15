@@ -25,6 +25,7 @@ using System.Numerics;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Pixeval.CoreApi.Model;
+using Pixeval.Utilities;
 
 namespace Pixeval.CoreApi.Net.Response;
 
@@ -305,7 +306,7 @@ internal class StringArrayToNumberArrayConverter<T> : JsonConverter<T[]> where T
             return null;
 
         if (reader.TokenType is not JsonTokenType.StartArray)
-            throw new JsonException();
+            return ThrowUtils.Json<T[]>();
 
         var list = new List<T>();
 
@@ -315,17 +316,17 @@ internal class StringArrayToNumberArrayConverter<T> : JsonConverter<T[]> where T
                 return [.. list];
 
             if (reader.TokenType is not JsonTokenType.String)
-                throw new JsonException();
+                return ThrowUtils.Json<T[]>();
 
             var value = reader.GetString();
 
             if (value is null || !T.TryParse(value, null, out var v))
-                throw new JsonException();
+                return ThrowUtils.Json<T[]>();
 
             list.Add(v);
         }
 
-        throw new JsonException();
+        return ThrowUtils.Json<T[]>();
     }
 
     public override void Write(Utf8JsonWriter writer, T[]? value, JsonSerializerOptions options)

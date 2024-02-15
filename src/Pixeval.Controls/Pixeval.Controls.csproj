@@ -36,6 +36,8 @@
         <PackageReference Include="CommunityToolkit.WinUI.Controls.Primitives" Version="8.0.240109" />
         <PackageReference Include="CommunityToolkit.WinUI.Extensions" Version="8.0.240109" />
         <PackageReference Include="WinUI3Utilities" Version="1.1.6.1" />
+
+        <ProjectReference Include="..\Pixeval.Utilities\Pixeval.Utilities.csproj" />
     </ItemGroup>
 
     <!--Exposes PRI resources-->

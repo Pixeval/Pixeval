@@ -18,7 +18,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -33,11 +32,12 @@ internal class RetryHttpClientHandler(HttpMessageHandler delegatedHandler, int t
 
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
-        return await Functions.RetryAsync(() => _delegatedHandler.SendAsync(request, cancellationToken), 2, timeout).ConfigureAwait(false) switch
+        var result = await Functions.RetryAsync(() => _delegatedHandler.SendAsync(request, cancellationToken), 2, timeout).ConfigureAwait(false);
+        return result switch
         {
             Result<HttpResponseMessage>.Success(var response) => response,
-            Result<HttpResponseMessage>.Failure failure => throw failure.Cause ?? new HttpRequestException(),
-            _ => throw new InvalidOperationException("Unexpected case")
+            Result<HttpResponseMessage>.Failure failure => ThrowUtils.Throw<HttpResponseMessage>(failure.Cause ?? new HttpRequestException()),
+            _ => ThrowUtils.ArgumentOutOfRange<Result<HttpResponseMessage>, HttpResponseMessage>(result, "Unexpected case")
         };
     }
 }
@@ -50,11 +50,12 @@ internal class MakoRetryHttpClientHandler(MakoClient makoClient, HttpMessageHand
 
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
-        return await Functions.RetryAsync(() => _delegatedHandler.SendAsync(request, cancellationToken), 2, MakoClient.Configuration.ConnectionTimeout).ConfigureAwait(false) switch
+        var result = await Functions.RetryAsync(() => _delegatedHandler.SendAsync(request, cancellationToken), 2, MakoClient.Configuration.ConnectionTimeout).ConfigureAwait(false);
+        return result switch
         {
             Result<HttpResponseMessage>.Success(var response) => response,
-            Result<HttpResponseMessage>.Failure failure => throw failure.Cause ?? new HttpRequestException(),
-            _ => throw new InvalidOperationException("Unexpected case")
+            Result<HttpResponseMessage>.Failure failure => ThrowUtils.Throw<HttpResponseMessage>(failure.Cause ?? new HttpRequestException()),
+            _ => ThrowUtils.ArgumentOutOfRange<Result<HttpResponseMessage>, HttpResponseMessage>(result, "Unexpected case")
         };
     }
 }

@@ -61,7 +61,6 @@ public sealed partial class CommentBlock
     private void PosterPersonPicture_OnTapped(object sender, TappedRoutedEventArgs e)
     {
         // TODO 弹出用户页窗口
-        // throw new NotImplementedException();
     }
 
     private void OpenRepliesHyperlinkButton_OnTapped(object sender, TappedRoutedEventArgs e) => RepliesHyperlinkButtonTapped?.Invoke(ViewModel);

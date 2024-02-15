@@ -28,6 +28,6 @@ public static class DescriptionHelper
 {
     public static string GetDescription<TEnum>(this TEnum @enum) where TEnum : Enum
     {
-        return (typeof(TEnum).GetField(@enum.ToString())?.GetCustomAttribute(typeof(DescriptionAttribute)) as DescriptionAttribute)?.Description ?? throw new InvalidOperationException("Attribute not found");
+        return (typeof(TEnum).GetField(@enum.ToString())?.GetCustomAttribute(typeof(DescriptionAttribute)) as DescriptionAttribute)?.Description ?? ThrowUtils.InvalidOperation<string>("Attribute not found");
     }
 }

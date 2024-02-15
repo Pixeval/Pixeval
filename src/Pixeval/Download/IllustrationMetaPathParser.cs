@@ -36,9 +36,10 @@ public class IllustrationMetaPathParser : IMetaPathParser<IllustrationItemViewMo
         if (_parser.Parse() is { } root)
         {
             var result = root.Evaluate(MacroProvider, context);
-            return result.IsNotNullOrBlank() ? result : throw new MacroParseException(MacroParserResources.ResultIsEmpty);
+            if (result.IsNotNullOrBlank())
+                return result;
         }
 
-        throw new MacroParseException(MacroParserResources.ResultIsEmpty);
+        return ThrowUtils.MacroParse<string>(MacroParserResources.ResultIsEmpty);
     }
 }

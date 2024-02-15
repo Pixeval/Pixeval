@@ -121,6 +121,7 @@
                             RightTapped="PrevButton_OnRightTapped"
                             Style="{StaticResource AccentButtonStyle}"
                             Tapped="PrevButton_OnTapped"
+                            ToolTipService.ToolTip="{x:Bind _viewModel.PrevButtonText, Mode=OneWay}"
                             Visibility="{x:Bind _viewModel.PrevButtonVisible, Mode=OneWay}" />
                     </Grid>
                     <Grid
@@ -144,6 +145,7 @@
                             RightTapped="NextButton_OnRightTapped"
                             Style="{StaticResource AccentButtonStyle}"
                             Tapped="NextButton_OnTapped"
+                            ToolTipService.ToolTip="{x:Bind _viewModel.NextButtonText, Mode=OneWay}"
                             Visibility="{x:Bind _viewModel.NextButtonVisible, Mode=OneWay}" />
                     </Grid>
                 </Grid>
@@ -358,7 +360,6 @@
                         Margin="12"
                         HorizontalAlignment="Left"
                         Source="/Assets/Images/logo44x44.ico" />
-                    <!--  ReSharper disable once Xaml.PossibleNullReferenceException  -->
                     <TextBlock
                         Grid.Column="1"
                         MaxWidth="200"

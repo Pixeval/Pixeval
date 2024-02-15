@@ -66,7 +66,6 @@ public partial class MakoClient
             .ConfigureAwait(false))
             .Tags);
 
-
     public Task<PixivSingleUserResponse> GetUserFromIdAsync(long id, TargetFilter targetFilter)
         => RunWithLoggerAsync(async t => await t
             .GetSingleUserAsync(new SingleUserRequest(id.ToString(), targetFilter.GetDescription()))
@@ -135,7 +134,6 @@ public partial class MakoClient
             .FollowUserAsync(new FollowUserRequest(id.ToString(), privacyPolicy.GetDescription()))
             .ConfigureAwait(false));
 
-
     public Task RemoveFollowUserAsync(long id)
         => RunWithLoggerAsync(async t => await t
             .RemoveFollowUserAsync(new RemoveFollowUserRequest(id.ToString()))
@@ -148,14 +146,12 @@ public partial class MakoClient
             .TrendTags
             .Select(tag => new TrendingTag(tag.TagStr, tag.TranslatedName, tag.Illust)));
 
-
     public Task<IEnumerable<TrendingTag>> GetTrendingTagsForNovelAsync(TargetFilter targetFilter)
         => RunWithLoggerAsync(async t => (await t
             .GetTrendingTagsForNovelAsync(targetFilter.GetDescription())
             .ConfigureAwait(false))
             .TrendTags
             .Select(tag => new TrendingTag(tag.TagStr, tag.TranslatedName, tag.Illust)));
-
 
     /// <summary>
     /// Gets the tags that are created by users to classify their bookmarks

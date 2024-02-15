@@ -279,8 +279,8 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
 
     public void FlipRestoreResolutionCommand(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
-        RestoreResolutionCommand.GetResolutionCommand(IsFit);
         ShowMode = IsFit ? ZoomableImageMode.Original : ZoomableImageMode.Fit;
+        RestoreResolutionCommand.GetResolutionCommand(IsFit);
     }
 
     private void SetAsBackgroundCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)

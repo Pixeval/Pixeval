@@ -57,7 +57,6 @@ public static class XamlUiCommandHelper
             KeyboardAccelerators = { new KeyboardAccelerator { Modifiers = modifiers, Key = key } }
         };
 
-
     public static void GetBookmarkCommand(this XamlUICommand command, bool isBookmarked)
     {
         command.Label = command.Description = isBookmarked ? MiscResources.RemoveBookmark : MiscResources.AddBookmark;

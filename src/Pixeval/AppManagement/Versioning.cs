@@ -10,7 +10,7 @@ public class Versioning
 {
     private AppVersion? _newestVersion;
 
-    public AppVersion CurrentVersion { get; } = new(3, 0, 0, 1);
+    public AppVersion CurrentVersion { get; } = new(4, 0, 0, 1);
 
     public AppVersion? NewestVersion
     {
@@ -31,8 +31,8 @@ public class Versioning
     {
         try
         {
-            if (!client.DefaultRequestHeaders.Contains("User-Agent"))
-                client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36 Edg/121.0.0.0");
+            if (client.DefaultRequestHeaders.UserAgent.Count is 0)
+                client.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36 Edg/121.0.0.0");
             var stringAsync = await client.GetStringAsync("https://api.github.com/repos/Pixeval/Pixeval/releases");
             var gitHubReleases = JsonSerializer.Deserialize<GitHubRelease[]>(stringAsync);
             if (gitHubReleases is not [var gitHubRelease, ..])

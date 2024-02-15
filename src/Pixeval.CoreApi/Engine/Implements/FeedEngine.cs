@@ -269,7 +269,7 @@ internal partial class FeedEngine(MakoClient makoClient, EngineHandle? engineHan
 
         protected override bool ValidateResponse(string rawEntity)
         {
-            throw new NotSupportedException();
+            return ThrowUtils.NotSupported<bool>();
         }
 
         private string BuildRequestUrl()

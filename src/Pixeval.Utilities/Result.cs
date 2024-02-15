@@ -31,7 +31,7 @@ public record Result<T>
         return this switch
         {
             Success(var content) => content,
-            Failure(var cause) => throw cause ?? new Exception("This is an exception thrown by Result.Failure"),
+            Failure(var cause) => ThrowUtils.Throw<T>(cause ?? new Exception("This is an exception thrown by Result.Failure")),
             _ => ThrowUtils.ArgumentOutOfRange<Result<T>, T>(this, "Invalid derived type of Result<T>")
         };
     }
@@ -80,7 +80,7 @@ public record Result<T>
 
     public Result<TNew> Cast<TNew>() where TNew : class
     {
-        return Rewrap(t => t as TNew ?? throw new InvalidCastException());
+        return Rewrap(t => t as TNew ?? ThrowUtils.InvalidCast<TNew>());
     }
 
     public record Success(T Value) : Result<T>;

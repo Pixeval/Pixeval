@@ -53,7 +53,7 @@ public partial class MakoClient
         EnsureNotCancelled();
         if (!CheckPrivacyPolicy(uid, privacyPolicy))
         {
-            throw new IllegalPrivatePolicyException(uid);
+            ThrowUtils.Throw(new IllegalPrivatePolicyException(uid));
         }
 
         return new BookmarkEngine(this, uid, privacyPolicy, targetFilter, new EngineHandle(CancelInstance)).Apply(RegisterInstance);
@@ -114,7 +114,7 @@ public partial class MakoClient
         EnsureNotCancelled();
         if (DateTime.Today - dateTime.Date < TimeSpan.FromDays(2))
         {
-            throw new RankingDateOutOfRangeException();
+            ThrowUtils.Throw(new RankingDateOutOfRangeException());
         }
 
         return new RankingEngine(this, rankOption, dateTime, targetFilter, new EngineHandle(CancelInstance));
@@ -204,7 +204,7 @@ public partial class MakoClient
         EnsureNotCancelled();
         if (!CheckPrivacyPolicy(uid, privacyPolicy))
         {
-            throw new IllegalPrivatePolicyException(uid);
+            ThrowUtils.Throw(new IllegalPrivatePolicyException(uid));
         }
 
         return new FollowingEngine(this, privacyPolicy, uid, new EngineHandle(CancelInstance));

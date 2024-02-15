@@ -24,12 +24,6 @@ using Pixeval.Utilities;
 
 namespace Pixeval.AppManagement;
 
-public enum IterationStage
-{
-    Preview,
-    Stable
-}
-
 /// <summary>
 /// A slightly modified semantic version
 /// </summary>
@@ -98,7 +92,6 @@ public class AppVersion(int major, int minor, int patch, int? preReleaseSpecifie
         if (s?.Split('-') is not [var version, .. var specifierStr])
             return false;
 
-
         if (version.Split('.') is not [var majorStr, var minorStr, var patchStr] ||
             !int.TryParse(majorStr, out var major) ||
             !int.TryParse(minorStr, out var minor) ||
@@ -111,27 +104,13 @@ public class AppVersion(int major, int minor, int patch, int? preReleaseSpecifie
         {
             case [var specifier]:
             {
-                if (specifier.Split('.') is not [var stage, .. var rest] ||
-                    !Enum.TryParse<IterationStage>(stage, true, out var iterationStage))
-                    return false;
-                switch (rest)
+                if (specifier.StartsWith("preview") && int.TryParse(specifier["preview".Length..], out var preReleaseSpecifier))
                 {
-                    case []:
-                    {
-                        result = new AppVersion(major, minor, patch);
-                        return true;
-                    }
-                    case [var preReleaseSpecifierStr]:
-                    {
-                        if (!int.TryParse(preReleaseSpecifierStr, out var preReleaseSpecifier))
-                            return false;
-
-                        result = new AppVersion(major, minor, patch, preReleaseSpecifier);
-                        return true;
-                    }
-                    default:
-                        return false;
+                    result = new AppVersion(major, minor, patch, preReleaseSpecifier);
+                    return true;
                 }
+
+                return false;
             }
             case []:
                 result = new AppVersion(major, minor, patch);

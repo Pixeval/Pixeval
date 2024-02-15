@@ -198,12 +198,6 @@ public static class Objects
         return bytes.Select(b => b.ToString("X2")).Aggregate((s1, s2) => s1 + s2);
     }
 
-    public static T CastOrThrow<T>(this object? obj)
-    {
-        // Debugger compliant: NullReferenceException will cause debugger to break, meanwhile the NRE is not supposed to be thrown by developer
-        return (T)(obj ?? throw new InvalidCastException());
-    }
-
     public static string Format(this string str, params object?[] args)
     {
         return string.Format(str, args);

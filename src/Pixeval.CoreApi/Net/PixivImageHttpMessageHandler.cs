@@ -35,7 +35,7 @@ internal class PixivImageHttpMessageHandler(MakoClient makoClient) : MakoClientS
             MakoHttpOptions.UseHttpScheme(request);
         }
 
-        _ = request.Headers.TryAddWithoutValidation("User-Agent", MakoClient.Configuration.UserAgent);
+        request.Headers.UserAgent.AddRange(MakoClient.Configuration.UserAgent);
 
         var requestUri = request.RequestUri!;
         if (requestUri.Host == MakoHttpOptions.ImageHost && MakoClient.Configuration.MirrorHost is { } mirror && mirror.IsNotNullOrBlank())
