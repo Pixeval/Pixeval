@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Threading.Tasks;
+using CommunityToolkit.WinUI.Helpers;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Data;
@@ -150,7 +151,8 @@ public sealed partial class AdvancedItemsView
             if (sender.To<AdvancedItemsView>() is { ItemsSource: ISupportIncrementalLoading sil } aiv)
                 _ = await sil.LoadMoreItemsAsync((uint)aiv.LoadCount);
         };
-        _ = RegisterPropertyChangedCallback(ScrollViewProperty, ScrollView_OnLoaded);
+        _ = RegisterPropertyChangedCallback(ScrollViewProperty, ScrollView_OnPropertyChanged);
+        _ = RegisterPropertyChangedCallback(ItemsSourceProperty, ItemsSource_OnPropertyChanged);
     }
 
     #region PropertyChanged
@@ -299,7 +301,7 @@ public sealed partial class AdvancedItemsView
     /// <summary>
     /// 本方法之后会触发<see cref="AdvancedItemsView_OnSizeChanged"/>
     /// </summary>
-    private void ScrollView_OnLoaded(DependencyObject sender, DependencyProperty dp)
+    private void ScrollView_OnPropertyChanged(DependencyObject sender, DependencyProperty dp)
     {
         ScrollView.ViewChanged += ScrollView_ViewChanged;
         _itemsRepeater = ScrollView.Content.To<ItemsRepeater>();
@@ -327,6 +329,36 @@ public sealed partial class AdvancedItemsView
             }
             o.To<FrameworkElement>().Loaded -= OnItemContainerOnLoaded;
         }
+    }
+    private WeakEventListener<AdvancedItemsView, object?, NotifyCollectionChangedEventArgs> _sourceWeakEventListener = null!;
+
+    private async void ItemsSource_OnPropertyChanged(DependencyObject sender, DependencyProperty dp)
+    {
+        if (sender.To<AdvancedItemsView>() is { ItemsSource: ISupportIncrementalLoading sil })
+        {
+            if (sil is INotifyCollectionChanged ncc)
+            {
+                _sourceWeakEventListener?.Detach();
+
+                _sourceWeakEventListener =
+                    new WeakEventListener<AdvancedItemsView, object?, NotifyCollectionChangedEventArgs>(this)
+                    {
+                        OnEventAction = (source, changed, arg) => SourceNcc_CollectionChanged(source, arg),
+                        OnDetachAction = listener => ncc.CollectionChanged -= listener.OnEvent
+                    };
+                ncc.CollectionChanged += _sourceWeakEventListener.OnEvent;
+            }
+
+            // 在第一次加载时，ScrollView还未初始化，可以交给AdvancedItemsView_OnSizeChanged来触发
+            if (ScrollView != null!)
+                await TryRaiseLoadMoreRequestedAsync();
+        }
+    }
+
+    private async void SourceNcc_CollectionChanged(object? s, NotifyCollectionChangedEventArgs e)
+    {
+        if (e.Action is NotifyCollectionChangedAction.Reset or NotifyCollectionChangedAction.Remove)
+            await TryRaiseLoadMoreRequestedAsync();
     }
 
     /// <summary>

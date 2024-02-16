@@ -266,7 +266,7 @@
         <Page Update="Pages\Capability\FollowingsPage.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
-        <Page Update="Pages\IllustratorViewer\IllustratorPage.xaml">
+        <Page Update="Pages\IllustratorViewer\IllustratorViewerPage.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
         <Page Update="Pages\Capability\RecentPostsPage.xaml">

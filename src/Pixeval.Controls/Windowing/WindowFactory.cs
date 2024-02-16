@@ -56,16 +56,16 @@ public static class WindowFactory
 
     public static EnhancedWindow Create(out EnhancedWindow window)
     {
-        var w = window = new EnhancedWindow();
-        window.Closed += (_, _) => _forkedWindowsInternal.Remove(w);
+        window = new EnhancedWindow();
+        window.Closed += (sender, _) => _forkedWindowsInternal.Remove(sender.To<EnhancedWindow>());
         _forkedWindowsInternal.Add(window);
         return window;
     }
 
     public static EnhancedWindow Fork(this EnhancedWindow owner, out EnhancedWindow window)
     {
-        var w = window = new EnhancedWindow(owner);
-        window.Closed += (_, _) => _forkedWindowsInternal.Remove(w);
+        window = new EnhancedWindow(owner);
+        window.Closed += (sender, _) => _forkedWindowsInternal.Remove(sender.To<EnhancedWindow>());
         _forkedWindowsInternal.Add(window);
         return window;
     }

@@ -65,6 +65,8 @@ public sealed partial class EnhancedWindow : Window
 
     private void OnClosed(object sender, WindowEventArgs e)
     {
+        if (_owner is not null)
+            _owner.AppWindow.Closing -= OnOwnerOnClosing;
         WeakReferenceMessenger.Default.UnregisterAll(this);
     }
 

@@ -103,6 +103,8 @@ public sealed partial class ZoomableImage : UserControl
     private void CanvasControlOnUnloaded(object sender, RoutedEventArgs e)
     {
         IsDisposed = true;
+        CanvasControl.Draw -= CanvasControlOnDraw;
+        CanvasControl.Unloaded -= CanvasControlOnUnloaded;
         _token.Cancel();
         foreach (var frame in _frames)
             frame.Dispose();

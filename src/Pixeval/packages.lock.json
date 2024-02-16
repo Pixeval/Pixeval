@@ -431,6 +431,7 @@
           "Microsoft.Windows.SDK.BuildTools": "[10.0.22621.2428, )",
           "Microsoft.WindowsAppSDK": "[1.4.240211001, )",
           "Microsoft.Xaml.Behaviors.WinUI.Managed": "[2.0.9, )",
+          "Pixeval.Utilities": "[1.0.0, )",
           "WinUI3Utilities": "[1.1.6.1, )"
         }
       },

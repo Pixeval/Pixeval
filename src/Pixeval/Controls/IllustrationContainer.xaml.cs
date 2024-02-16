@@ -38,7 +38,6 @@ using WinUI3Utilities.Attributes;
 namespace Pixeval.Controls;
 
 [DependencyProperty<bool>("ShowCommandBar", "true")]
-[DependencyProperty<object>("Header")]
 public sealed partial class IllustrationContainer
 {
     /// <summary>

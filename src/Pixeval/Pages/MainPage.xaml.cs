@@ -196,7 +196,7 @@ public sealed partial class MainPage : SupportCustomTitleBarDragRegionPage
         using (var scope = App.AppViewModel.AppServicesScope)
         {
             var manager = scope.ServiceProvider.GetRequiredService<SearchHistoryPersistentManager>();
-            if (manager.Count == 0 || manager.Select(count: 1).AsList() is [{ Value: var last }, ..] && last != text)
+            if (manager.Count is 0 || manager.Select(count: 1).AsList() is [{ Value: var last }, ..] && last != text)
             {
                 manager.Insert(new SearchHistoryEntry
                 {
