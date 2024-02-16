@@ -39,28 +39,16 @@ public sealed partial class IllustratorItemViewModel : IllustrateViewModel<User>
     [ObservableProperty]
     private SoftwareBitmapSource? _backgroundSource;
 
+    [ObservableProperty]
     private bool _isFollowed;
-
-    public bool IsFollowed
-    {
-        get => _isFollowed;
-        set
-        {
-            if (_isFollowed == value)
-                return;
-            _isFollowed = value;
-            OnPropertyChanged();
-            FollowCommand.GetFollowCommand(IsFollowed);
-        }
-    }
 
     public IllustratorItemViewModel(User user) : base(user)
     {
         OverviewViewModel = new IllustratorIllustrationsOverviewViewModel(Illustrate.Illusts);
+        IsFollowed = Illustrate.UserInfo.IsFollowed;
 
         InitializeCommands();
-        // 在InitializeCommands之后，方便setter里的触发
-        IsFollowed = Illustrate.UserInfo.IsFollowed;
+        FollowCommand.GetFollowCommand(IsFollowed);
     }
 
     public IllustratorIllustrationsOverviewViewModel OverviewViewModel { get; }
@@ -68,11 +56,6 @@ public sealed partial class IllustratorItemViewModel : IllustrateViewModel<User>
     public string Username => Illustrate.UserInfo.Name;
 
     public long UserId => Illustrate.UserInfo.Id;
-
-    public string GetIllustrationToolTipSubtitleText(User user)
-    {
-        return user.UserInfo.Comment ?? IllustrateItemResources.UserHasNoComment;
-    }
 
     public async Task LoadAvatarAsync()
     {
@@ -82,14 +65,6 @@ public sealed partial class IllustratorItemViewModel : IllustrateViewModel<User>
             : await AppInfo.GetPixivNoProfileImageAsync();
         await OverviewViewModel.LoadBannerSource();
     }
-
-    // private void SetMetrics()
-    // {
-    //     var followings = UserDetail.UserProfile.TotalFollowUsers;
-    //     var myPixivUsers = UserDetail.UserProfile.TotalMyPixivUsers;
-    //     var illustrations = UserDetail.UserProfile.TotalIllusts;
-    //     Metrics = new UserMetrics(followings, myPixivUsers, illustrations);
-    // }
 
     public override void Dispose()
     {

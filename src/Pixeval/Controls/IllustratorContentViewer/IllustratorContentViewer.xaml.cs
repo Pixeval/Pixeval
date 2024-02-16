@@ -69,22 +69,11 @@ public sealed partial class IllustratorContentViewer : IDisposable
             if (b && ViewModel.RecommendIllustrators.Count is 0)
                 _ = ViewModel.LoadRecommendIllustratorsAsync();
         };
-        var currentTag = args.SelectedItemContainer.GetTag<NavigationViewTag>();
-        ViewModel.CurrentTab = currentTag switch
-        {
-            _ when ReferenceEquals(currentTag, ViewModel.IllustrationTag) => IllustratorContentViewerViewModel.IllustratorContentViewerTab.Illustration,
-            _ when ReferenceEquals(currentTag, ViewModel.MangaTag) => IllustratorContentViewerViewModel.IllustratorContentViewerTab.Manga,
-            _ when ReferenceEquals(currentTag, ViewModel.NovelTag) => IllustratorContentViewerViewModel.IllustratorContentViewerTab.Novel,
-            _ when ReferenceEquals(currentTag, ViewModel.BookmarkedIllustrationAndMangaTag) => IllustratorContentViewerViewModel.IllustratorContentViewerTab.BookmarkedIllustrationAndManga,
-            _ when ReferenceEquals(currentTag, ViewModel.BookmarkedNovelTag) => IllustratorContentViewerViewModel.IllustratorContentViewerTab.BookmarkedNovel,
-            _ when ReferenceEquals(currentTag, ViewModel.FollowingUserTag) => IllustratorContentViewerViewModel.IllustratorContentViewerTab.FollowingUser,
-            _ when ReferenceEquals(currentTag, ViewModel.MyPixivUserTag) => IllustratorContentViewerViewModel.IllustratorContentViewerTab.MyPixivUser,
-            _ => ThrowHelper.ArgumentOutOfRange<object, IllustratorContentViewerViewModel.IllustratorContentViewerTab>(args.SelectedItemContainer.Tag)
-        };
-        IllustratorContentViewerFrame.NavigateByNavigationViewTag(sender, _lastNavigationViewTag is var (_, _, index) && args.SelectedItemContainer.Tag is NavigationViewTag(_, _, var currentIndex)
-            ? index > currentIndex ? new SlideNavigationTransitionInfo { Effect = SlideNavigationTransitionEffect.FromLeft } : new SlideNavigationTransitionInfo { Effect = SlideNavigationTransitionEffect.FromRight }
+        ViewModel.CurrentTag = args.SelectedItemContainer.GetTag<NavigationViewTag?>() ?? ViewModel.IllustrationTag;
+        IllustratorContentViewerFrame.NavigateByNavigationViewTag(sender, _lastNavigationViewTag is var (_, _, index) 
+            ? index > ViewModel.CurrentTag.Index ? new SlideNavigationTransitionInfo { Effect = SlideNavigationTransitionEffect.FromLeft } : new SlideNavigationTransitionInfo { Effect = SlideNavigationTransitionEffect.FromRight }
             : new EntranceNavigationTransitionInfo());
-        _lastNavigationViewTag = currentTag;
+        _lastNavigationViewTag = ViewModel.CurrentTag;
 
         await ThreadingHelper.SpinWaitAsync(() => IllustratorContentViewerFrame.Content?.GetType() != _lastNavigationViewTag.NavigateTo);
         _ = _pageCache.Add((Page)IllustratorContentViewerFrame.Content);

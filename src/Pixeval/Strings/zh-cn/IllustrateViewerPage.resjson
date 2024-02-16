@@ -1,17 +1,16 @@
 {
-    "Background": "壁纸",
-    "BackToWindow": "恢复窗口化",
-    "CommentsTab/Content": "评论",
-    "FullScreen": "全屏",
     "GenerateLinkToThisPageButtonTeachingTip/ActionButtonContent": "不再显示",
     "GenerateLinkToThisPageButtonTeachingTip/CloseButtonContent": "知道了",
     "GenerateLinkToThisPageButtonTeachingTip/Subtitle": "分享给你的朋友或者在浏览器或者Windows运行中输入该链接以直接打开当前页面",
     "GenerateLinkToThisPageButtonTeachingTip/Title": "链接已经复制到剪切板",
+    "QrCodeTeachingTip/Title": "作品链接二维码",
+
+    "Background": "壁纸",
+    "CommentsTab/Content": "评论",
     "IllustrationInfoAndComments": "详情",
     "IllustrationInfoTab/Content": "详情",
     "LockScreen": "锁屏",
     "Mirror": "镜像翻转",
-    "QrCodeTeachingTip/Title": "作品链接二维码",
     "RelatedWorksTab/Content": "推荐作品",
     "RotateClockwise": "顺时针旋转",
     "RotateCounterclockwise": "逆时针旋转",
@@ -25,5 +24,13 @@
     "SetAsSucceededTitle": "设置成功",
     "ShareTitleFormatted": "分享{0}",
     "ZoomIn": "放大",
-    "ZoomOut": "缩小"
+    "ZoomOut": "缩小",
+
+    "BookmarkedIllustrationAndMangaNavigationViewItem/Content": "插画·漫画收藏",
+    "BookmarkedNovelNavigationViewItem/Content": "小说收藏",
+    "FollowingUserNavigationViewItem/Content": "关注的人",
+    "IllustrationNavigationViewItem/Content": "插画",
+    "MangaNavigationViewItem/Content": "漫画",
+    "MyPixivUserNavigationViewItem/Content": "好P友",
+    "NovelNavigationViewItem/Content": "小说"
 }

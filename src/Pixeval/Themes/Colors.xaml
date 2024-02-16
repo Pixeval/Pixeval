@@ -10,6 +10,7 @@
                 TintColor="#E6E6E6"
                 TintLuminosityOpacity="0.4"
                 TintOpacity="0.3" />
+            <SolidColorBrush x:Key="PixevalTranslucentBackgroundBrush" Color="#8FFFFFFF" />
             <SolidColorBrush x:Key="PixevalPanelBackgroundThemeBrush" Color="#F2F2F2" />
             <SolidColorBrush x:Key="PixevalBorderBrush" Color="#7C7B7B" />
             <SolidColorBrush x:Key="PixevalTipTextForeground" Color="#999AA1" />
@@ -33,6 +34,7 @@
                 TintColor="#E6E6E6"
                 TintLuminosityOpacity="0.4"
                 TintOpacity="0.3" />
+            <SolidColorBrush x:Key="PixevalTranslucentBackgroundBrush" Color="#8FFFFFFF" />
             <SolidColorBrush x:Key="PixevalPanelBackgroundThemeBrush" Color="#F2F2F2" />
             <SolidColorBrush x:Key="PixevalBorderBrush" Color="#7C7B7B" />
             <SolidColorBrush x:Key="PixevalTipTextForeground" Color="#999AA1" />
@@ -56,6 +58,7 @@
                 TintColor="#515151"
                 TintLuminosityOpacity="0.4"
                 TintOpacity="0.3" />
+            <SolidColorBrush x:Key="PixevalTranslucentBackgroundBrush" Color="#8F000000" />
             <SolidColorBrush x:Key="PixevalPanelBackgroundThemeBrush" Color="#232323" />
             <SolidColorBrush x:Key="PixevalBorderBrush" Color="#ACADAD" />
             <SolidColorBrush x:Key="PixevalTipTextForeground" Color="#828492" />

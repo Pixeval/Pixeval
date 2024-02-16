@@ -79,11 +79,6 @@ public partial class RecommendIllustratorItemViewModel : IllustrateViewModel<Rec
         await OverviewViewModel.LoadBannerSource();
     }
 
-    public string GetIllustrationToolTipSubtitleText(RecommendUser user)
-    {
-        return user.Comment is "" ? IllustrateItemResources.UserHasNoComment : user.Comment;
-    }
-
     private void FollowCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
         IsFollowed = MakoHelper.SetFollow(UserId, !IsFollowed);

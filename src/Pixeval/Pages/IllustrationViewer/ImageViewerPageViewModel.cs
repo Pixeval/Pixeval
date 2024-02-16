@@ -277,7 +277,7 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
         PlayGifCommand.GetPlayCommand(IsPlaying);
     }
 
-    public void FlipRestoreResolutionCommand(XamlUICommand sender, ExecuteRequestedEventArgs args)
+    public void RestoreResolutionCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
         ShowMode = IsFit ? ZoomableImageMode.Original : ZoomableImageMode.Fit;
         RestoreResolutionCommand.GetResolutionCommand(IsFit);
@@ -302,8 +302,8 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
         _ = await operation(file);
 
         ToastNotificationHelper.ShowTextToastNotification(
-            IllustrationViewerPageResources.SetAsSucceededTitle,
-            IllustrationViewerPageResources.SetAsBackgroundSucceededTitle);
+            IllustrateViewerPageResources.SetAsSucceededTitle,
+            IllustrateViewerPageResources.SetAsBackgroundSucceededTitle);
     }
 
     private void ShareCommandExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
@@ -342,7 +342,7 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
         MirrorCommand.ExecuteRequested += (_, _) => IsMirrored = !IsMirrored;
 
         RestoreResolutionCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
-        RestoreResolutionCommand.ExecuteRequested += FlipRestoreResolutionCommand;
+        RestoreResolutionCommand.ExecuteRequested += RestoreResolutionCommandOnExecuteRequested;
 
         ShareCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
         ShareCommand.ExecuteRequested += ShareCommandExecuteRequested;
@@ -384,30 +384,30 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
 
     public XamlUICommand PlayGifCommand { get; } = "".GetCommand(FontIconSymbols.StopE71A);
 
-    public XamlUICommand ZoomOutCommand { get; } = IllustrationViewerPageResources.ZoomOut.GetCommand(
+    public XamlUICommand ZoomOutCommand { get; } = IllustrateViewerPageResources.ZoomOut.GetCommand(
         FontIconSymbols.ZoomOutE71F, VirtualKey.Subtract);
 
-    public XamlUICommand ZoomInCommand { get; } = IllustrationViewerPageResources.ZoomIn.GetCommand(
+    public XamlUICommand ZoomInCommand { get; } = IllustrateViewerPageResources.ZoomIn.GetCommand(
         FontIconSymbols.ZoomInE8A3, VirtualKey.Add);
 
-    public XamlUICommand RotateClockwiseCommand { get; } = IllustrationViewerPageResources.RotateClockwise.GetCommand(
+    public XamlUICommand RotateClockwiseCommand { get; } = IllustrateViewerPageResources.RotateClockwise.GetCommand(
         FontIconSymbols.RotateE7AD, VirtualKeyModifiers.Control, VirtualKey.R);
 
-    public XamlUICommand RotateCounterclockwiseCommand { get; } = IllustrationViewerPageResources.RotateCounterclockwise.GetCommand(
+    public XamlUICommand RotateCounterclockwiseCommand { get; } = IllustrateViewerPageResources.RotateCounterclockwise.GetCommand(
             null!, VirtualKeyModifiers.Control, VirtualKey.L);
 
-    public XamlUICommand MirrorCommand { get; } = IllustrationViewerPageResources.Mirror.GetCommand(
+    public XamlUICommand MirrorCommand { get; } = IllustrateViewerPageResources.Mirror.GetCommand(
             FontIconSymbols.CollatePortraitF57C, VirtualKeyModifiers.Control, VirtualKey.M);
 
     public XamlUICommand RestoreResolutionCommand { get; } = "".GetCommand(FontIconSymbols.WebcamE8B8);
 
     public StandardUICommand ShareCommand { get; } = new(StandardUICommandKind.Share);
 
-    public XamlUICommand SetAsCommand { get; } = IllustrationViewerPageResources.SetAs.GetCommand(FontIconSymbols.PersonalizeE771);
+    public XamlUICommand SetAsCommand { get; } = IllustrateViewerPageResources.SetAs.GetCommand(FontIconSymbols.PersonalizeE771);
 
-    public XamlUICommand SetAsLockScreenCommand { get; } = new() { Label = IllustrationViewerPageResources.LockScreen };
+    public XamlUICommand SetAsLockScreenCommand { get; } = new() { Label = IllustrateViewerPageResources.LockScreen };
 
-    public XamlUICommand SetAsBackgroundCommand { get; } = new() { Label = IllustrationViewerPageResources.Background };
+    public XamlUICommand SetAsBackgroundCommand { get; } = new() { Label = IllustrateViewerPageResources.Background };
 
     private void DisposeInternal()
     {

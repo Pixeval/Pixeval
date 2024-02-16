@@ -63,7 +63,7 @@ public static partial class IoHelper
     public static async Task<Result<ImageSource>> DownloadBitmapImageAsync(
         this MakoClient client,
         string url,
-        int? desiredWidth,
+        int? desiredWidth = null,
         IProgress<double>? progress = null,
         CancellationHandle? cancellationHandle = null)
     {

@@ -61,7 +61,6 @@ public class IllustrationViewDataProvider : ObservableObject, IDataProvider<Illu
             if (Equals(_illustrationSourceRef, value))
                 return;
 
-            OnPropertyChanging();
             DisposeIllustrationSourceRef();
             _illustrationSourceRef = value;
             View.Source = value.Value;
@@ -84,7 +83,6 @@ public class IllustrationViewDataProvider : ObservableObject, IDataProvider<Illu
 
     public void ResetEngine(IFetchEngine<Illustration?>? fetchEngine, int limit = -1)
     {
-        Dispose();
         FetchEngineRef = new SharedRef<IFetchEngine<Illustration?>?>(fetchEngine, this);
         IllustrationSourceRef = new SharedRef<IncrementalLoadingCollection<FetchEngineIncrementalSource<Illustration, IllustrationItemViewModel>, IllustrationItemViewModel>>(new IncrementalLoadingCollection<FetchEngineIncrementalSource<Illustration, IllustrationItemViewModel>, IllustrationItemViewModel>(new IllustrationFetchEngineIncrementalSource(FetchEngine!, limit)), this);
     }

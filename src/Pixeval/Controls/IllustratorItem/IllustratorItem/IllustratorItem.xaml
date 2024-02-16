@@ -17,30 +17,11 @@
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
     </controls:ConstrainedBox.Resources>
     <!--  图片长宽均为5，故为(3*5):(3+5)  -->
-    <Grid>
+    <Grid ToolTipService.ToolTip="{x:Bind ViewModel.Username, Mode=OneWay}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <ToolTipService.ToolTip>
-            <ToolTip Padding="0">
-                <StackPanel Width="300">
-                    <TextBlock
-                        Margin="10,5"
-                        Style="{StaticResource SubtitleTextBlockStyle}"
-                        Text="{x:Bind ViewModel.Username, Mode=OneWay}"
-                        TextTrimming="CharacterEllipsis"
-                        TextWrapping="NoWrap" />
-                    <TextBlock
-                        Margin="10,0,10,10"
-                        HorizontalAlignment="Stretch"
-                        Style="{StaticResource ContentTextBlockStyle}"
-                        Text="{x:Bind ViewModel.GetIllustrationToolTipSubtitleText(ViewModel.Illustrate), Mode=OneWay}"
-                        TextTrimming="CharacterEllipsis"
-                        TextWrapping="Wrap" />
-                </StackPanel>
-            </ToolTip>
-        </ToolTipService.ToolTip>
         <local:IllustratorIllustrationsOverview Grid.Row="0" ViewModel="{x:Bind ViewModel.OverviewViewModel, Mode=OneWay}" />
         <StackPanel
             Grid.Row="1"

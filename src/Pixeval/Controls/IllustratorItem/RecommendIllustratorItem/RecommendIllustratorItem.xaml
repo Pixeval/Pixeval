@@ -33,7 +33,7 @@
                         Margin="10,0,10,10"
                         HorizontalAlignment="Stretch"
                         Style="{StaticResource ContentTextBlockStyle}"
-                        Text="{x:Bind ViewModel.GetIllustrationToolTipSubtitleText(ViewModel.Illustrate), Mode=OneWay}"
+                        Text="{x:Bind ViewModel.Illustrate.Comment, Mode=OneWay}"
                         TextTrimming="CharacterEllipsis"
                         TextWrapping="Wrap" />
                 </StackPanel>

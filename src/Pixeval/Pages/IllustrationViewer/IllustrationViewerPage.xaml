@@ -75,11 +75,11 @@
                     SelectionChanged="IllustrationInfoAndCommentsNavigationViewOnSelectionChanged">
                     <NavigationView.MenuItems>
                         <NavigationViewItem
-                            x:Uid="/IllustrationViewerPage/IllustrationInfoTab"
+                            x:Uid="/IllustrateViewerPage/IllustrationInfoTab"
                             IsSelected="True"
                             Tag="{x:Bind _viewModel.IllustrationInfoTag}" />
-                        <NavigationViewItem x:Uid="/IllustrationViewerPage/CommentsTab" Tag="{x:Bind _viewModel.CommentsTag}" />
-                        <NavigationViewItem x:Uid="/IllustrationViewerPage/RelatedWorksTab" Tag="{x:Bind _viewModel.RelatedWorksTag}" />
+                        <NavigationViewItem x:Uid="/IllustrateViewerPage/CommentsTab" Tag="{x:Bind _viewModel.CommentsTag}" />
+                        <NavigationViewItem x:Uid="/IllustrateViewerPage/RelatedWorksTab" Tag="{x:Bind _viewModel.RelatedWorksTag}" />
                     </NavigationView.MenuItems>
                     <Frame x:Name="IllustrationInfoAndCommentsFrame" Width="320" />
                 </NavigationView>
@@ -358,7 +358,6 @@
                         Width="25"
                         Height="25"
                         Margin="12"
-                        HorizontalAlignment="Left"
                         Source="/Assets/Images/logo44x44.ico" />
                     <TextBlock
                         Grid.Column="1"
@@ -440,21 +439,21 @@
                         Text="{x:Bind _viewModel.CurrentImage.Scale, Converter={StaticResource NumberToPercentageConverter}, ConverterParameter=2, Mode=OneWay}"
                         ToolTipService.ToolTip="{x:Bind _viewModel.CurrentImage.Scale, Converter={StaticResource NumberToPercentageConverter}, ConverterParameter=2, Mode=OneWay}" />
                     <TeachingTip
+                        x:Name="GenerateLinkTeachingTip"
+                        x:Uid="/IllustrateViewerPage/GenerateLinkToThisPageButtonTeachingTip"
+                        Grid.Column="0"
+                        ActionButtonClick="GenerateLinkToThisPageButtonTeachingTip_OnActionButtonClick">
+                        <TeachingTip.HeroContent>
+                            <Image Source="ms-appx:///Assets/Images/illust-app-link-sample.png" />
+                        </TeachingTip.HeroContent>
+                    </TeachingTip>
+                    <TeachingTip
                         x:Name="ShowQrCodeTeachingTip"
-                        x:Uid="/IllustrationViewerPage/QrCodeTeachingTip"
+                        x:Uid="/IllustrateViewerPage/QrCodeTeachingTip"
                         Grid.Column="0"
                         IsLightDismissEnabled="True">
                         <TeachingTip.HeroContent>
                             <Image />
-                        </TeachingTip.HeroContent>
-                    </TeachingTip>
-                    <TeachingTip
-                        x:Name="GenerateLinkTeachingTip"
-                        x:Uid="/IllustrationViewerPage/GenerateLinkToThisPageButtonTeachingTip"
-                        Grid.Column="0"
-                        ActionButtonClick="GenerateLinkToThisPageButtonTeachingTip_OnActionButtonClick">
-                        <TeachingTip.HeroContent>
-                            <Image Source="../../Assets/Images/illust-app-link-sample.png" />
                         </TeachingTip.HeroContent>
                     </TeachingTip>
                 </Grid>

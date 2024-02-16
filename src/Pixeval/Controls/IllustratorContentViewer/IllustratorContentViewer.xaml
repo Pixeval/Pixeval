@@ -4,12 +4,14 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Pixeval.Controls"
     xmlns:converters="using:CommunityToolkit.WinUI.Converters"
+    xmlns:converters1="using:Pixeval.Controls.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:markup="using:Pixeval.Controls.MarkupExtensions"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
     <UserControl.Resources>
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+        <converters1:BoolNegationToVisibilityConverter x:Key="BoolNegationToVisibilityConverter" />
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -213,8 +215,9 @@
                             LabelPosition="Collapsed">
                             <AppBarButton.Flyout>
                                 <MenuFlyout>
-                                    <MenuFlyoutItem Command="{x:Bind ViewModel.FollowCommand, Mode=OneWay}" />
-                                    <MenuFlyoutItem Command="{x:Bind ViewModel.FollowPrivatelyCommand, Mode=OneWay}" />
+                                    <MenuFlyoutItem Command="{x:Bind ViewModel.FollowCommand, Mode=OneWay}" Visibility="{x:Bind ViewModel.IsFollowed, Converter={StaticResource BoolNegationToVisibilityConverter}, Mode=OneWay}" />
+                                    <MenuFlyoutItem Command="{x:Bind ViewModel.FollowPrivatelyCommand, Mode=OneWay}" Visibility="{x:Bind ViewModel.IsFollowed, Converter={StaticResource BoolNegationToVisibilityConverter}, Mode=OneWay}" />
+                                    <MenuFlyoutItem Command="{x:Bind ViewModel.UnfollowCommand, Mode=OneWay}" Visibility="{x:Bind ViewModel.IsFollowed, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
                                     <MenuFlyoutSeparator />
                                     <ToggleMenuFlyoutItem
                                         x:Uid="/IllustratorContentViewer/ToggleShowRecommendIllustratorItem"

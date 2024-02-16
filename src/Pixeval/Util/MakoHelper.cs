@@ -49,7 +49,7 @@ public static class MakoHelper
         return LocalizedBoxHelper.Of<IllustrationSortOption, IllustrationSortOptionWrapper>(App.AppViewModel.AppSettings.DefaultSortOption);
     }
 
-    public static string GetThumbnailUrl(this Illustration illustration, ThumbnailUrlOption option)
+    public static string GetThumbnailUrl(this Illustration illustration, ThumbnailUrlOption option = ThumbnailUrlOption.Medium)
     {
         return option switch
         {

@@ -18,44 +18,32 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using CommunityToolkit.Mvvm.ComponentModel;
 using Pixeval.Controls.Illustrate;
 using Pixeval.CoreApi.Model;
 using Pixeval.Utilities;
 
 namespace Pixeval.Controls;
 
-public sealed class IllustrationViewViewModel : SortableIllustrateViewViewModel<Illustration, IllustrationItemViewModel>
+public sealed partial class IllustrationViewViewModel : SortableIllustrateViewViewModel<Illustration, IllustrationItemViewModel>
 {
+    [ObservableProperty]
+    private bool _isSelecting;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsAnyIllustrationSelected))]
+    [NotifyPropertyChangedFor(nameof(SelectionLabel))]
     private IllustrationItemViewModel[] _selectedIllustrations = [];
 
-    public IllustrationViewViewModel(IllustrationViewViewModel viewModel)
-    {
-        DataProvider = viewModel.DataProvider.CloneRef();
-        SelectionLabel = IllustrationViewCommandBarResources.CancelSelectionButtonDefaultLabel;
-    }
+    public bool IsAnyIllustrationSelected => SelectedIllustrations.Length > 0;
 
-    public IllustrationViewViewModel()
-    {
-        DataProvider = new();
-        SelectionLabel = IllustrationViewCommandBarResources.CancelSelectionButtonDefaultLabel;
-    }
+    public string SelectionLabel => IsAnyIllustrationSelected
+        ? IllustrationViewCommandBarResources.CancelSelectionButtonFormatted.Format(SelectedIllustrations.Length)
+        : IllustrationViewCommandBarResources.CancelSelectionButtonDefaultLabel;
+
+    public IllustrationViewViewModel(IllustrationViewViewModel viewModel) => DataProvider = viewModel.DataProvider.CloneRef();
+
+    public IllustrationViewViewModel() => DataProvider = new();
 
     public override IllustrationViewDataProvider DataProvider { get; }
-
-    public override IllustrationItemViewModel[] SelectedIllustrations
-    {
-        get => _selectedIllustrations;
-        set
-        {
-            if (Equals(value, _selectedIllustrations))
-                return;
-            _selectedIllustrations = value;
-            var count = value.Length;
-            IsAnyIllustrationSelected = count > 0;
-            SelectionLabel = IsAnyIllustrationSelected
-                ? IllustrationViewCommandBarResources.CancelSelectionButtonFormatted.Format(count)
-                : IllustrationViewCommandBarResources.CancelSelectionButtonDefaultLabel;
-            OnPropertyChanged();
-        }
-    }
 }

@@ -28,6 +28,7 @@ using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Controls;
 using Pixeval.Controls.IllustratorContentViewer;
 using Pixeval.CoreApi.Global.Enum;
+using Pixeval.Pages.IllustratorViewer;
 using Pixeval.Pages.Misc;
 using Pixeval.Util.UI;
 using WinUI3Utilities;
@@ -75,6 +76,7 @@ public sealed partial class FollowingsPage
         {
             var userDetail = await App.AppViewModel.MakoClient.GetUserFromIdAsync(viewModel.UserId, App.AppViewModel.AppSettings.TargetFilter);
             _ = IllustratorContentViewerFrame.Navigate(typeof(IllustratorContentViewerPage), userDetail);
+            IllustratorViewerHelper.CreateWindowWithPage(userDetail);
         }
     }
 

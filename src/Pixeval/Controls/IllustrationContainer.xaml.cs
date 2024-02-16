@@ -64,7 +64,8 @@ public sealed partial class IllustrationContainer
         SecondaryCommandsSupplements.CollectionChanged += (_, args) => AddCommandCallback(args, CommandBar.SecondaryCommands);
 
         return;
-        void AddCommandCallback(NotifyCollectionChangedEventArgs e, ICollection<ICommandBarElement> commands)
+
+        static void AddCommandCallback(NotifyCollectionChangedEventArgs e, ICollection<ICommandBarElement> commands)
         {
             if (e is { Action: NotifyCollectionChangedAction.Add, NewItems: { } newItems })
                 foreach (UIElement argsNewItem in newItems)

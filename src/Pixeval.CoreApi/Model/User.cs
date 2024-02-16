@@ -53,9 +53,6 @@ public partial record UserInfo
     [JsonPropertyName("profile_image_urls")]
     public required ProfileImageUrls ProfileImageUrls { get; set; }
 
-    [JsonPropertyName("comment")]
-    public string? Comment { get; set; }
-
     [JsonPropertyName("is_followed")]
     public bool IsFollowed { get; set; }
 }

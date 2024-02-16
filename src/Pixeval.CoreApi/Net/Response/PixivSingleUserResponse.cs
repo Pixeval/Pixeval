@@ -18,16 +18,18 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using System.Diagnostics;
 using System.Text.Json.Serialization;
 using Pixeval.CoreApi.Model;
 
 namespace Pixeval.CoreApi.Net.Response;
 
+[DebuggerDisplay("{UserEntity}")]
 [Factory]
 public partial record PixivSingleUserResponse
 {
     [JsonPropertyName("user")]
-    public required UserInfo UserEntity { get; set; }
+    public required UserEntity UserEntity { get; set; }
 
     [JsonPropertyName("profile")]
     public required Profile UserProfile { get; set; }
@@ -37,6 +39,16 @@ public partial record PixivSingleUserResponse
 
     [JsonPropertyName("workspace")]
     public required Workspace UserWorkspace { get; set; }
+}
+
+[Factory]
+public partial record UserEntity : UserInfo
+{
+    /// <summary>
+    /// 比<see cref="UserInfo"/>多了个<see cref="Comment"/>
+    /// </summary>
+    [JsonPropertyName("comment")]
+    public required string Comment { get; set; } = "";
 }
 
 [Factory]
@@ -97,7 +109,7 @@ public partial record Profile
     public required long TotalNovelSeries { get; set; }
 
     [JsonPropertyName("background_image_url")]
-    public required string BackgroundImageUrl { get; set; } = "";
+    public required string? BackgroundImageUrl { get; set; }
 
     [JsonPropertyName("twitter_account")]
     public required string TwitterAccount { get; set; } = "";

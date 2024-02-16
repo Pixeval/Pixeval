@@ -25,7 +25,6 @@ using System.Threading.Tasks;
 using Windows.System;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
@@ -43,6 +42,7 @@ namespace Pixeval.Pages.IllustrationViewer;
 
 public partial class IllustrationViewerPageViewModel : DetailedUiObservableObject, IDisposable
 {
+    [ObservableProperty]
     private bool _isFullScreen;
 
     [ObservableProperty]
@@ -71,6 +71,7 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
         CurrentIllustrationIndex = currentIllustrationIndex;
 
         InitializeCommands();
+        FullScreenCommand.GetFullScreenCommand(false);
     }
 
     /// <summary>
@@ -91,28 +92,6 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
         CurrentIllustrationIndex = currentIllustrationIndex;
 
         InitializeCommands();
-    }
-
-    public bool IsFullScreen
-    {
-        get => _isFullScreen;
-        set
-        {
-            if (value == _isFullScreen)
-                return;
-            _isFullScreen = value;
-            if (value)
-            {
-                FullScreenCommand.Description = IllustrationViewerPageResources.BackToWindow;
-                FullScreenCommand.IconSource = new SymbolIconSource { Symbol = Symbol.BackToWindow };
-            }
-            else
-            {
-                FullScreenCommand.Description = IllustrationViewerPageResources.FullScreen;
-                FullScreenCommand.IconSource = new SymbolIconSource { Symbol = Symbol.FullScreen };
-            }
-            OnPropertyChanged();
-        }
     }
 
     private IllustrationViewViewModel? ViewModelSource { get; }
@@ -277,8 +256,8 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
 
     public string? NextButtonText => NextButtonAction switch
     {
-        true => IllustrationViewerPageResources.NextPageOrIllustration,
-        false => IllustrationViewerPageResources.NextIllustration,
+        true => IllustrateViewerPageResources.NextPageOrIllustration,
+        false => IllustrateViewerPageResources.NextIllustration,
         _ => null
     };
 
@@ -310,8 +289,8 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
 
     public string? PrevButtonText => PrevButtonAction switch
     {
-        true => IllustrationViewerPageResources.PrevPageOrIllustration,
-        false => IllustrationViewerPageResources.PrevIllustration,
+        true => IllustrateViewerPageResources.PrevPageOrIllustration,
+        false => IllustrateViewerPageResources.PrevIllustration,
         _ => null
     };
 
@@ -347,13 +326,19 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
 
     private void InitializeCommands()
     {
-        FullScreenCommand.ExecuteRequested += (_, _) => IsFullScreen = !IsFullScreen;
+        FullScreenCommand.ExecuteRequested += FullScreenCommandOnExecuteRequested;
+    }
+
+    private void FullScreenCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
+    {
+        IsFullScreen = !IsFullScreen;
+        FullScreenCommand.GetFullScreenCommand(IsFullScreen);
     }
 
     public XamlUICommand IllustrationInfoAndCommentsCommand { get; } =
-        IllustrationViewerPageResources.IllustrationInfoAndComments.GetCommand(FontIconSymbols.InfoE946, VirtualKey.F12);
+        IllustrateViewerPageResources.IllustrationInfoAndComments.GetCommand(FontIconSymbols.InfoE946, VirtualKey.F12);
 
-    public XamlUICommand FullScreenCommand { get; } = IllustrationViewerPageResources.FullScreen.GetCommand(FontIconSymbols.FullScreenE740);
+    public XamlUICommand FullScreenCommand { get; } = "".GetCommand(FontIconSymbols.FullScreenE740);
 
     #endregion
 }

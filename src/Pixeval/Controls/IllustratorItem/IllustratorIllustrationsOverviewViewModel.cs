@@ -25,9 +25,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
+using Microsoft.UI;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
-using Pixeval.Options;
 using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
@@ -45,8 +45,6 @@ public partial class IllustratorIllustrationsOverviewViewModel : ObservableObjec
 
     [ObservableProperty]
     private Brush? _avatarBorderBrush;
-
-    private const ThumbnailUrlOption Option = ThumbnailUrlOption.SquareMedium;
 
     public IllustratorIllustrationsOverviewViewModel(IEnumerable<long>? ids)
     {
@@ -93,7 +91,7 @@ public partial class IllustratorIllustrationsOverviewViewModel : ObservableObjec
         if (illustrations is not null)
             foreach (var illustration in illustrations)
             {
-                if (illustration.GetThumbnailUrl(Option) is { } url)
+                if (illustration.GetThumbnailUrl() is { } url)
                 {
                     if (await App.AppViewModel.MakoClient.DownloadStreamAsync(url) is not
                         Result<Stream>.Success(var stream))

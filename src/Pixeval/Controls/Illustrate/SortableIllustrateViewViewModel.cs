@@ -18,29 +18,13 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.WinUI.Collections;
-using Microsoft.UI.Xaml.Controls;
 using Pixeval.CoreApi.Model;
 
 namespace Pixeval.Controls.Illustrate;
 
-public abstract partial class SortableIllustrateViewViewModel<T, TViewModel> : IllustrateViewViewModel<T, TViewModel> where T : class, IEntry where TViewModel : IllustrateViewModel<T>
+public abstract class SortableIllustrateViewViewModel<T, TViewModel> : IllustrateViewViewModel<T, TViewModel> where T : class, IEntry where TViewModel : IllustrateViewModel<T>
 {
-    [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(SelectionMode))]
-    private bool _isSelecting;
-
-    public ItemsViewSelectionMode SelectionMode => IsSelecting ? ItemsViewSelectionMode.Multiple : ItemsViewSelectionMode.None;
-
-    [ObservableProperty]
-    private bool _isAnyIllustrationSelected;
-
-    [ObservableProperty]
-    private string? _selectionLabel;
-
-    public abstract TViewModel[] SelectedIllustrations { get; set; }
-
     public void SetSortDescription(SortDescription description)
     {
         if (DataProvider.View.SortDescriptions.Count is 0)

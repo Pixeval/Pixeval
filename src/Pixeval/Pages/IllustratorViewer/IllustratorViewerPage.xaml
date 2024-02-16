@@ -1,0 +1,170 @@
+<controls:SupportCustomTitleBarDragRegionPage
+    x:Class="Pixeval.Pages.IllustratorViewer.IllustratorViewerPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:Pixeval.Controls"
+    xmlns:controls1="using:CommunityToolkit.WinUI.Controls"
+    xmlns:converters="using:CommunityToolkit.WinUI.Converters"
+    xmlns:converters1="using:Pixeval.Controls.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:markup="using:Pixeval.Controls.MarkupExtensions"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+    <controls:EnhancedPage.Resources>
+        <converters1:BoolNegationToVisibilityConverter x:Key="BoolNegationToVisibilityConverter" />
+        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+    </controls:EnhancedPage.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="32" />
+            <RowDefinition Height="250" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Border
+            x:Name="TitleBar"
+            Grid.Row="0"
+            Height="32"
+            Margin="10,0"
+            IsHitTestVisible="True">
+            <StackPanel Orientation="Horizontal">
+                <Image
+                    x:Name="Icon"
+                    Width="25"
+                    Height="25"
+                    HorizontalAlignment="Left"
+                    Source="/Assets/Images/logo44x44.ico" />
+                <TextBlock
+                    x:Name="TitleTextBlock"
+                    Margin="20,0"
+                    VerticalAlignment="Center"
+                    FontSize="{StaticResource PixevalContentFontSize}"
+                    Text="{x:Bind _viewModel.Name}"
+                    TextTrimming="CharacterEllipsis" />
+            </StackPanel>
+        </Border>
+        <Image
+            Grid.Row="1"
+            Source="{x:Bind _viewModel.BackgroundSource, Mode=OneWay}"
+            Stretch="UniformToFill" />
+        <Rectangle Grid.Row="1" Fill="{StaticResource PixevalTranslucentBackgroundBrush}" />
+        <Grid
+            x:Name="TextContainer"
+            Grid.Row="1"
+            Margin="100,0"
+            VerticalAlignment="Center"
+            ColumnSpacing="50">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <PersonPicture
+                x:Name="ProfileImage"
+                Grid.Column="0"
+                Width="100"
+                Height="100"
+                VerticalAlignment="Top"
+                ProfilePicture="{x:Bind _viewModel.AvatarSource, Mode=OneWay}" />
+            <StackPanel
+                Grid.Column="1"
+                HorizontalAlignment="Left"
+                Orientation="Vertical"
+                Spacing="10">
+                <StackPanel Orientation="Horizontal" Spacing="10">
+                    <TextBlock FontSize="20" Text="{x:Bind _viewModel.Name}" />
+                    <controls:PixevalBadge Mode="Premium" Visibility="{x:Bind _viewModel.IsPremium, Converter={StaticResource BoolToVisibilityConverter}}" />
+                </StackPanel>
+                <TextBlock
+                    x:Name="SubtitleBlock"
+                    FontSize="14"
+                    Text="{x:Bind _viewModel.Id}" />
+                <TextBlock
+                    x:Name="Blurb"
+                    Width="400"
+                    FontSize="16"
+                    Text="{x:Bind _viewModel.Comment}"
+                    TextWrapping="Wrap" />
+            </StackPanel>
+        </Grid>
+        <CommandBar
+            x:Name="CommandBar"
+            Grid.Row="1"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Bottom"
+            DefaultLabelPosition="Right">
+            <AppBarButton Command="{x:Bind _viewModel.FollowCommand}" Visibility="{x:Bind _viewModel.IsFollowed, Converter={StaticResource BoolNegationToVisibilityConverter}, Mode=OneWay}" />
+            <AppBarButton Command="{x:Bind _viewModel.FollowPrivatelyCommand}" Visibility="{x:Bind _viewModel.IsFollowed, Converter={StaticResource BoolNegationToVisibilityConverter}, Mode=OneWay}" />
+            <AppBarButton Command="{x:Bind _viewModel.UnfollowCommand}" Visibility="{x:Bind _viewModel.IsFollowed, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
+            <AppBarSeparator />
+            <AppBarButton
+                x:Name="GenerateLinkButton"
+                Command="{x:Bind _viewModel.GenerateLinkCommand}"
+                CommandParameter="{x:Bind GenerateLinkTeachingTip}" />
+            <AppBarButton Command="{x:Bind _viewModel.GenerateWebLinkCommand}" CommandParameter="{x:Bind}" />
+            <AppBarButton Command="{x:Bind _viewModel.OpenInWebBrowserCommand}" />
+            <AppBarButton
+                x:Name="ShowQrCodeButton"
+                Command="{x:Bind _viewModel.ShowQrCodeCommand}"
+                CommandParameter="{x:Bind ShowQrCodeTeachingTip}" />
+        </CommandBar>
+        <controls1:Segmented
+            Grid.Row="2"
+            SelectedItem="{x:Bind IllustrationTab}"
+            SelectionChanged="IllustratorViewerSegmented_OnSelectionChanged">
+            <controls1:SegmentedItem
+                x:Name="IllustrationTab"
+                x:Uid="/IllustrateViewerPage/IllustrationNavigationViewItem"
+                Icon="{markup:FontSymbolIcon Glyph=PictureE8B9}"
+                Tag="{x:Bind _viewModel.IllustrationTag}" />
+            <controls1:SegmentedItem
+                x:Uid="/IllustrateViewerPage/MangaNavigationViewItem"
+                Icon="{markup:FontSymbolIcon Glyph=FavoriteListE728}"
+                Tag="{x:Bind _viewModel.MangaTag}" />
+            <controls1:SegmentedItem
+                x:Uid="/IllustrateViewerPage/NovelNavigationViewItem"
+                Icon="{markup:FontSymbolIcon Glyph=ReadingModeE736}"
+                IsEnabled="False"
+                Tag="{x:Bind _viewModel.NovelTag}" />
+            <controls1:SegmentedItem
+                x:Uid="/IllustrateViewerPage/BookmarkedIllustrationAndMangaNavigationViewItem"
+                Icon="{markup:FontSymbolIcon Glyph=LibraryE8F1}"
+                Tag="{x:Bind _viewModel.BookmarkedIllustrationAndMangaTag}" />
+            <controls1:SegmentedItem
+                x:Uid="/IllustrateViewerPage/BookmarkedNovelNavigationViewItem"
+                Icon="{markup:FontSymbolIcon Glyph=ReadingListE7BC}"
+                IsEnabled="False"
+                Tag="{x:Bind _viewModel.BookmarkedNovelTag}" />
+            <controls1:SegmentedItem
+                x:Uid="/IllustrateViewerPage/FollowingUserNavigationViewItem"
+                Icon="{markup:FontSymbolIcon Glyph=PeopleE716}"
+                IsEnabled="False"
+                Tag="{x:Bind _viewModel.FollowingUserTag}" />
+            <controls1:SegmentedItem
+                x:Uid="/IllustrateViewerPage/MyPixivUserNavigationViewItem"
+                Icon="{markup:FontSymbolIcon Glyph=PeopleE716}"
+                IsEnabled="False"
+                Tag="{x:Bind _viewModel.MyPixivUserTag}" />
+        </controls1:Segmented>
+        <Frame x:Name="Frame" Grid.Row="3" />
+        <TeachingTip
+            x:Name="GenerateLinkTeachingTip"
+            x:Uid="/IllustrateViewerPage/GenerateLinkToThisPageButtonTeachingTip"
+            Grid.Row="2"
+            ActionButtonClick="GenerateLinkToThisPageButtonTeachingTip_OnActionButtonClick"
+            Target="{x:Bind GenerateLinkButton}">
+            <TeachingTip.HeroContent>
+                <Image Source="ms-appx:///Assets/Images/illust-app-link-sample.png" />
+            </TeachingTip.HeroContent>
+        </TeachingTip>
+        <TeachingTip
+            x:Name="ShowQrCodeTeachingTip"
+            x:Uid="/IllustrateViewerPage/QrCodeTeachingTip"
+            Grid.Row="2"
+            IsLightDismissEnabled="True"
+            Target="{x:Bind ShowQrCodeButton}">
+            <TeachingTip.HeroContent>
+                <Image />
+            </TeachingTip.HeroContent>
+        </TeachingTip>
+    </Grid>
+</controls:SupportCustomTitleBarDragRegionPage>

@@ -73,6 +73,19 @@ public static class XamlUiCommandHelper
             : FontIconSymbols.ContactE77B.GetFontIconSource();
     }
 
+    public static XamlUICommand GetNewFollowCommand(bool isFollowed)
+    {
+        return (isFollowed ? MiscResources.Unfollow : MiscResources.Follow)
+            .GetCommand(isFollowed
+                ? FontIconSymbols.ContactSolidEA8C.GetFontIconSource(foregroundBrush: new SolidColorBrush(Colors.Crimson))
+                : FontIconSymbols.ContactE77B.GetFontIconSource());
+    }
+
+    public static XamlUICommand GetNewFollowPrivatelyCommand()
+    {
+        return MiscResources.FollowPrivately.GetCommand(FontIconSymbols.FavoriteStarE734);
+    }
+
     public static void GetPlayCommand(this XamlUICommand command, bool isPlaying)
     {
         command.Label = command.Description = isPlaying ? MiscResources.Pause : MiscResources.Play;
@@ -87,5 +100,13 @@ public static class XamlUiCommandHelper
         command.IconSource = (isFit
             ? FontIconSymbols.WebcamE8B8
             : FontIconSymbols.FitPageE9A6).GetFontIconSource();
+    }
+
+    public static void GetFullScreenCommand(this XamlUICommand command, bool isFullScreen)
+    {
+        command.Label = command.Description = isFullScreen ? MiscResources.BackToWindow : MiscResources.FullScreen;
+        command.IconSource = (isFullScreen
+            ? FontIconSymbols.BackToWindowE73F
+            : FontIconSymbols.FullScreenE740).GetFontIconSource();
     }
 }

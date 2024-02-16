@@ -43,6 +43,19 @@ public class FactoryGenerator : IIncrementalGenerator
                 ObjectCreationExpression(typeSyntax, null, InitializerExpression(SyntaxKind.ObjectInitializerExpression, SeparatedList(list)))))
             .WithSemicolonToken(Token(SyntaxKind.SemicolonToken));
 
+        // 如果typeSymbol的任意一个基类有CreateDefault方法，则加上new关键字
+        var baseType = typeSymbol.BaseType;
+        while (baseType is not null)
+        {
+            if (baseType.HasAttribute(AttributeFullName))
+            {
+                method = method.AddModifiers(Token(SyntaxKind.NewKeyword));
+                break;
+            }
+            baseType = baseType.BaseType;
+        }
+
+
         var generatedType = GetDeclaration(name, typeSymbol, method)
             .WithBaseList(BaseList(SeparatedList([(BaseTypeSyntax)SimpleBaseType(ParseTypeName($"{AttributeNamespace}.IFactory<{name}>"))])));
         var generatedNamespace = GetFileScopedNamespaceDeclaration(typeSymbol, generatedType, true);

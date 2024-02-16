@@ -171,7 +171,7 @@ public sealed partial class IllustrationViewerPage : SupportCustomTitleBarDragRe
         _ = await viewModel.TryLoadThumbnailAsync(_viewModel);
     }
 
-    private void ExitFullScreenKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => _viewModel.IsFullScreen = false;
+    private void ExitFullScreenKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => _viewModel.FullScreenCommand.Execute(null);
 
     private async void OnDataTransferManagerOnDataRequested(DataTransferManager sender, DataRequestedEventArgs args)
     {
@@ -184,7 +184,7 @@ public sealed partial class IllustrationViewerPage : SupportCustomTitleBarDragRe
 
         var props = request.Data.Properties;
 
-        props.Title = IllustrationViewerPageResources.ShareTitleFormatted.Format(vm.Id);
+        props.Title = IllustrateViewerPageResources.ShareTitleFormatted.Format(vm.Id);
         props.Description = vm.Illustrate.Title;
 
         var file = await _viewModel.CurrentImage.SaveToFolderAsync(AppKnownFolders.Temporary);

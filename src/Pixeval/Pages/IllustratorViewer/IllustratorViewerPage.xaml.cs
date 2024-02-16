@@ -18,70 +18,72 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System;
-using Windows.System;
-using Microsoft.UI;
+using Windows.Graphics;
+using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
-using Pixeval.Controls;
-using Pixeval.Controls.MarkupExtensions;
-using Pixeval.Util;
-using Pixeval.Util.UI;
 using WinUI3Utilities;
+using System.Collections.Generic;
+using System;
+using System.Linq;
+using CommunityToolkit.WinUI.Controls;
+using Pixeval.Controls.Windowing;
+using Pixeval.Utilities;
+using Microsoft.UI.Xaml.Media.Animation;
+using Pixeval.Util.Threading;
+using Pixeval.Util.UI;
 
 namespace Pixeval.Pages.IllustratorViewer;
 
-public sealed partial class IllustratorPage
+public sealed partial class IllustratorViewerPage
 {
-    private IllustratorPageViewModel _viewModel = null!;
+    private readonly ISet<Page> _pageCache;
+    private IllustratorViewerPageViewModel _viewModel = null!;
+    private int _lastNavigationViewTag = -1;
 
-    public IllustratorPage() => InitializeComponent();
-
-    public IllustrationContainer ViewModelProvider => IllustrationContainer;
-
-    public XamlUICommand OpenLinkCommand { get; } = new XamlUICommand
+    public IllustratorViewerPage()
     {
-        Label = IllustratorPageResources.OpenLink,
-        IconSource = FontIconSymbols.LinkE71B.GetFontIconSource()
-    };
-
-    public XamlUICommand FollowCommand { get; } = new XamlUICommand
-    {
-        Label = IllustratorPageResources.Follow,
-        IconSource = FontIconSymbols.HeartEB51.GetFontIconSource()
-    };
-
-    public XamlUICommand UnfollowCommand { get; } = new XamlUICommand
-    {
-        Label = IllustratorPageResources.Unfollow,
-        IconSource = FontIconSymbols.HeartFillEB52.GetFontIconSource(foregroundBrush: new SolidColorBrush(Colors.Crimson))
-    };
-
-    public XamlUICommand PrivateFollowCommand { get; } = new XamlUICommand
-    {
-        Label = IllustratorPageResources.PrivateFollow,
-        IconSource = FontIconSymbols.HeartEB51.GetFontIconSource()
-    };
-
-    public override void OnPageDeactivated(NavigatingCancelEventArgs navigatingCancelEventArgs)
-    {
-        ViewModelProvider.ViewModel.Dispose();
+        InitializeComponent();
+        _pageCache = new HashSet<Page>();
     }
 
-    public override void OnPageActivated(NavigationEventArgs navigationEventArgs)
+    public void Dispose()
     {
-        _viewModel = navigationEventArgs.Parameter switch
-        {
-            (UIElement sender, IllustratorPageViewModel viewModel) => viewModel,
-            IllustratorPageViewModel viewModel1 => viewModel1,
-            _ => _viewModel
-        };
+        _pageCache.OfType<IDisposable>().ForEach(p => p.Dispose());
+        _pageCache.Clear();
+    }
 
-        ChangeSource();
+    public override void OnPageActivated(NavigationEventArgs e, object? parameter)
+    {
+        _viewModel = Window.Content.To<FrameworkElement>().GetViewModel(parameter);
+    }
+
+    protected override void SetTitleBarDragRegion(InputNonClientPointerSource sender, SizeInt32 windowSize, double scaleFactor, out int titleBarHeight)
+    {
+        sender.SetRegionRects(NonClientRegionKind.Icon, [GetScaledRect(Icon)]);
+        titleBarHeight = 32;
+    }
+
+    private void GenerateLinkToThisPageButtonTeachingTip_OnActionButtonClick(TeachingTip sender, object e)
+    {
+        GenerateLinkTeachingTip.IsOpen = false;
+        App.AppViewModel.AppSettings.DisplayTeachingTipWhenGeneratingAppLink = false;
+    }
+
+    private async void IllustratorViewerSegmented_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        var segmented = sender.To<Segmented>();
+        var currentTag = segmented.SelectedItem.GetTag<NavigationViewTag?>() ?? _viewModel.IllustrationTag;
+
+        Frame.NavigateTag(currentTag, new EntranceNavigationTransitionInfo());
+        Frame.NavigateTag(currentTag, _lastNavigationViewTag is not -1
+            ? new SlideNavigationTransitionInfo { Effect = _lastNavigationViewTag > segmented.SelectedIndex ? SlideNavigationTransitionEffect.FromLeft : SlideNavigationTransitionEffect.FromRight }
+            : new EntranceNavigationTransitionInfo());
+        _lastNavigationViewTag = segmented.SelectedIndex;
+
+        await ThreadingHelper.SpinWaitAsync(() => Frame.Content?.GetType() != currentTag.NavigateTo);
+        _ = _pageCache.Add((Page)Frame.Content);
     }
 
 #if false // TODO 这是什么
@@ -192,40 +194,4 @@ public sealed partial class IllustratorPage
         }
     }
 #endif
-
-    private void ChangeSource()
-    {
-        ViewModelProvider.ViewModel.ResetEngine(_viewModel.FetchEngine, 100);
-    }
-
-    public void GoBack()
-    {
-        _ = ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", ProfileImage);
-        Parent.To<Frame>().GoBack(new SuppressNavigationTransitionInfo());
-    }
-
-    private void BackButton_OnTapped(object sender, TappedRoutedEventArgs e)
-    {
-        GoBack();
-    }
-
-    private async void OpenLinkButton_OnTapped(object sender, TappedRoutedEventArgs e)
-    {
-        _ = await Launcher.LaunchUriAsync(MakoHelper.GenerateIllustratorWebUri(_viewModel.Id));
-    }
-
-    private async void FollowButton_OnTapped(object sender, TappedRoutedEventArgs e)
-    {
-        await _viewModel.Follow();
-    }
-
-    private async void PrivateFollowButton_OnTapped(object sender, TappedRoutedEventArgs e)
-    {
-        await _viewModel.PrivateFollow();
-    }
-
-    private async void UnfollowButton_OnTapped(object sender, TappedRoutedEventArgs e)
-    {
-        await _viewModel.Unfollow();
-    }
 }

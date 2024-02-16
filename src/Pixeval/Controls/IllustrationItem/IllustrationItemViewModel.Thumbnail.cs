@@ -25,7 +25,6 @@ using System.IO;
 using System.Threading.Tasks;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.AppManagement;
-using Pixeval.Options;
 using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Utilities;
@@ -143,9 +142,9 @@ public partial class IllustrationItemViewModel
     /// <summary>
     /// 直接获取对应缩略图
     /// </summary>
-    public async Task<Stream?> GetThumbnailAsync(ThumbnailUrlOption thumbnailUrlOptions = ThumbnailUrlOption.Medium)
+    public async Task<Stream?> GetThumbnailAsync()
     {
-        if (Illustrate.GetThumbnailUrl(thumbnailUrlOptions) is { } url)
+        if (Illustrate.GetThumbnailUrl() is { } url)
         {
             switch (await App.AppViewModel.MakoClient.DownloadStreamAsync(url, cancellationHandle: LoadingThumbnailCancellationHandle))
             {
