@@ -18,7 +18,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -27,8 +26,9 @@ namespace Pixeval.CoreApi.Net;
 
 public class PixivImageNameResolver : INameResolver
 {
-    [SuppressMessage("ReSharper", "InconsistentNaming")]
-    [SuppressMessage("CodeQuality", "IDE0079:请删除不必要的忽略")]
+    /// <summary>
+    /// ReSharper disable once InconsistentNaming
+    /// </summary>
     public static string[]? IPAddresses { get; set; }
 
     public Task<IPAddress[]> Lookup(string hostname)

@@ -28,10 +28,8 @@ using WinUI3Utilities.Attributes;
 namespace Pixeval.Controls;
 
 [DependencyProperty<IllustratorItemViewModel>("ViewModel", propertyChanged: nameof(OnViewModelChanged))]
-public sealed partial class IllustratorItem : IViewModelControl
+public sealed partial class IllustratorItem
 {
-    object IViewModelControl.ViewModel => ViewModel;
-
     public event Action<IllustratorItem, IllustratorItemViewModel>? ViewModelChanged;
 
     private static void OnViewModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)

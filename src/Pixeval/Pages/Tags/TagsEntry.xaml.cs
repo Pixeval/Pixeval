@@ -15,10 +15,8 @@ using WinUI3Utilities.Attributes;
 namespace Pixeval.Pages.Tags;
 
 [DependencyProperty<TagsEntryViewModel>("ViewModel")]
-public sealed partial class TagsEntry : IViewModelControl
+public sealed partial class TagsEntry
 {
-    object IViewModelControl.ViewModel => ViewModel;
-
     public event Action<TagsEntry, string>? TagTapped;
 
     public event Action<TagsEntry, TagsEntryViewModel>? FileDeleted;

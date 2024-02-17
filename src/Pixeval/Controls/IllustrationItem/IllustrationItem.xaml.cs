@@ -30,10 +30,8 @@ using WinUI3Utilities.Attributes;
 namespace Pixeval.Controls;
 
 [DependencyProperty<IllustrationItemViewModel>("ViewModel", propertyChanged: nameof(OnViewModelChanged))]
-public sealed partial class IllustrationItem : IViewModelControl
+public sealed partial class IllustrationItem
 {
-    object IViewModelControl.ViewModel => ViewModel;
-
     public event Action<IllustrationItem, IllustrationItemViewModel>? ViewModelChanged;
 
     private static void OnViewModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)

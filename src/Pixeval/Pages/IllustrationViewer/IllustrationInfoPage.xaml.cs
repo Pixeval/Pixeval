@@ -25,6 +25,7 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.CoreApi.Model;
 using Pixeval.Messages;
+using Pixeval.Pages.IllustratorViewer;
 using Pixeval.Utilities;
 using ReverseMarkdown;
 using WinUI3Utilities;
@@ -53,17 +54,9 @@ public sealed partial class IllustrationInfoPage
     //    await Launcher.LaunchUriAsync(new Uri(e.Link));
     //}
 
-    private void IllustratorPersonPicture_OnTapped(object sender, TappedRoutedEventArgs e)
+    private async void IllustratorPersonPicture_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        if (_viewModel.Illustrator is { } userInfo)
-        {
-            // _ = ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", (UIElement)sender);
-            // TODO 弹出用户页窗口
-            // CurrentContext.Window.Content.To<Frame>().Navigate(typeof(IllustratorPage), Tuple.Create((UIElement)sender, new IllustratorViewModel(userInfo)), new SlideNavigationTransitionInfo
-            // {
-            //     Effect = SlideNavigationTransitionEffect.FromRight
-            // });
-        }
+        await IllustratorViewerHelper.CreateWindowWithPageAsync(_viewModel.IllustratorId);
     }
 
     #region Helper Functions
@@ -85,7 +78,7 @@ public sealed partial class IllustrationInfoPage
 
     private string GetIllustratorIdText()
     {
-        return IllustrationInfoPageResources.IllustratorIdFormatted.Format(_viewModel.IllustratorUid);
+        return IllustrationInfoPageResources.IllustratorIdFormatted.Format(_viewModel.IllustratorId);
     }
 
     private string GetIllustrationDimensionText()

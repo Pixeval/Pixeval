@@ -87,15 +87,12 @@
                     Tag="{x:Bind ViewModel.MyPixivUserTag, Mode=OneWay}" />
             </NavigationView.MenuItems>
             <NavigationView.PaneFooter>
-                <StackPanel Margin="20,0,0,0" Orientation="Horizontal">
+                <StackPanel Orientation="Horizontal" Spacing="20">
                     <PersonPicture
                         Width="35"
                         Height="35"
                         ProfilePicture="{x:Bind ViewModel.AvatarSource, Mode=OneWay}" />
-                    <StackPanel
-                        Margin="20,0,0,5"
-                        VerticalAlignment="Center"
-                        Spacing="2">
+                    <StackPanel VerticalAlignment="Center" Spacing="2">
                         <TextBlock
                             MaxWidth="80"
                             Style="{StaticResource ContentStrongTextBlockStyle}"
@@ -116,7 +113,7 @@
                                 Visibility="{x:Bind ViewModel.IsFollowed, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
                         </StackPanel>
                     </StackPanel>
-                    <Grid Margin="20,0,0,0" VerticalAlignment="Center">
+                    <Grid VerticalAlignment="Center">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition />
                             <ColumnDefinition Width="20" />
@@ -208,7 +205,7 @@
                             </StackPanel>
                         </StackPanel>
                     </Grid>
-                    <CommandBar Margin="10,0,0,0" OverflowButtonVisibility="Collapsed">
+                    <CommandBar OverflowButtonVisibility="Collapsed">
                         <AppBarButton
                             Width="40"
                             Icon="{markup:FontSymbolIcon Glyph=MoreE712}"

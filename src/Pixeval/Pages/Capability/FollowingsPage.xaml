@@ -8,7 +8,6 @@
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
-    xmlns:local="using:Pixeval.Pages.Capability"
     xmlns:markup="using:Pixeval.Controls.MarkupExtensions"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     ClearCacheAfterNavigation="True"
@@ -19,11 +18,11 @@
     </UserControl.Resources>
     <SplitView
         x:Name="MainSplitView"
-        CompactPaneLength="{x:Bind local:FollowingsPage.CompactPaneLength}"
+        CompactPaneLength="{x:Bind CompactPaneLength}"
         DisplayMode="CompactOverlay"
         IsPaneOpen="True"
         OpenPaneLength="1000"
-        PaneBackground="{x:Bind _backgroundBrush}"
+        PaneBackground="{x:Bind BackgroundBrush}"
         PaneClosing="MainSplitView_OnPaneAction"
         PaneOpening="MainSplitView_OnPaneAction">
         <SplitView.Pane>

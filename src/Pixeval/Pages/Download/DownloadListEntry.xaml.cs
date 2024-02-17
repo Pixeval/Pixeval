@@ -24,7 +24,6 @@ using Windows.Foundation;
 using Windows.System;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
-using Pixeval.Controls;
 using Pixeval.Database;
 using Pixeval.Download;
 using Pixeval.Util.UI;
@@ -34,10 +33,8 @@ using WinUI3Utilities.Attributes;
 namespace Pixeval.Pages.Download;
 
 [DependencyProperty<DownloadListEntryViewModel>("ViewModel", propertyChanged: nameof(OnViewModelChanged))]
-public sealed partial class DownloadListEntry : IViewModelControl
+public sealed partial class DownloadListEntry
 {
-    object IViewModelControl.ViewModel => ViewModel;
-
     public event Action<DownloadListEntry, DownloadListEntryViewModel>? ViewModelChanged;
     
     public event TypedEventHandler<DownloadListEntry, DownloadListEntryViewModel>? OpenIllustrationRequested;

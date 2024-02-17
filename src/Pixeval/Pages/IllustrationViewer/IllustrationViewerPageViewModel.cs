@@ -104,7 +104,7 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
 
     public string IllustratorName => Illustrator.Name;
 
-    public long IllustratorUid => Illustrator.Id;
+    public long IllustratorId => Illustrator.Id;
 
     public void Dispose()
     {

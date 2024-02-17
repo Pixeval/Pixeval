@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Windows.Graphics;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media.Animation;
@@ -17,6 +18,12 @@ public static class IllustratorViewerHelper
             PixivSingleUserResponse userDetail => new IllustratorViewerPageViewModel(userDetail, element),
             _ => ThrowHelper.Argument<object, IllustratorViewerPageViewModel>(param, "Invalid parameter type.")
         };
+    }
+
+    public static async Task CreateWindowWithPageAsync(long userId)
+    {
+        var userDetail = await App.AppViewModel.MakoClient.GetUserFromIdAsync(userId, App.AppViewModel.AppSettings.TargetFilter);
+        CreateWindowWithPage(userDetail);
     }
 
     public static void CreateWindowWithPage(PixivSingleUserResponse userDetail)

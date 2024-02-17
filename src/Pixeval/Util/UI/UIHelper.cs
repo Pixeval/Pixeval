@@ -19,6 +19,7 @@
 #endregion
 
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -91,16 +92,16 @@ public static partial class UiHelper
         return Color.FromArgb(color.A, (byte)red, (byte)green, (byte)blue);
     }
 
+    [Pure]
     public static SizeInt32 ToSizeInt32(this Size size) => new((int)size.Width, (int)size.Height);
 
+    [Pure]
     public static Size ToSize(this SizeInt32 size) => new(size.Width, size.Height);
 
-    public static SolidColorBrush WithAlpha(this SolidColorBrush brush, byte alpha)
-    {
-        brush.Color = brush.Color.WithAlpha(alpha);
-        return brush;
-    }
+    [Pure]
+    public static SolidColorBrush WithAlpha(this SolidColorBrush brush, byte alpha) => new(brush.Color.WithAlpha(alpha));
 
+    [Pure]
     public static Color WithAlpha(this Color color, byte alpha) => Color.FromArgb(alpha, color.R, color.G, color.B);
 
     public static async Task<double> GetImageAspectRatioAsync(Stream stream, bool disposeOfStream = true)

@@ -12,7 +12,6 @@
         <DefaultLanguage>zh-cn</DefaultLanguage>
     </PropertyGroup>
     <ItemGroup>
-        <None Remove="AdvancedItemsView\AdvancedItemsView.xaml" />
         <None Remove="CardControl\CardControl.xaml" />
         <None Remove="IconButton\IconButton.xaml" />
         <None Remove="LazyImage\LazyImage.xaml" />
@@ -73,9 +72,6 @@
             <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
         </Page>
         <Page Update="PixevalBadge\PixevalBadge.xaml">
-            <Generator>MSBuild:Compile</Generator>
-        </Page>
-        <Page Update="AdvancedItemsView\AdvancedItemsView.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
         <Page Update="ZoomableImage\ZoomableImage.xaml">

@@ -37,17 +37,14 @@ namespace Pixeval.Pages.Capability;
 
 public sealed partial class FollowingsPage
 {
-    [SuppressMessage("CodeQuality", "IDE0079:请删除不必要的忽略")]
-    [SuppressMessage("ReSharper", "PrivateFieldCanBeConvertedToLocalVariable")]
-    private readonly SolidColorBrush _backgroundBrush;
-    private readonly IllustratorViewViewModel _viewModel = new();
-    private const int CompactPaneLength = 300;
+    private SolidColorBrush BackgroundBrush => Resources["SystemControlBackgroundChromeMediumLowBrush"].To<SolidColorBrush>().WithAlpha(64);
 
-    public FollowingsPage()
-    {
-        InitializeComponent();
-        _backgroundBrush = Resources["SystemControlBackgroundChromeMediumLowBrush"].To<SolidColorBrush>().WithAlpha(64);
-    }
+    private readonly IllustratorViewViewModel _viewModel = new();
+    
+    // ReSharper disable once MemberCanBeMadeStatic.Local
+    private int CompactPaneLength => 300;
+
+    public FollowingsPage() => InitializeComponent();
 
     public FrameworkElement SelfIllustratorView => this;
 

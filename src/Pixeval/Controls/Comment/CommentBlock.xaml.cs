@@ -23,6 +23,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.AppManagement;
+using Pixeval.Pages.IllustratorViewer;
 using Pixeval.Util.IO;
 using Pixeval.Utilities;
 using WinUI3Utilities.Attributes;
@@ -58,9 +59,9 @@ public sealed partial class CommentBlock
         }
     }
 
-    private void PosterPersonPicture_OnTapped(object sender, TappedRoutedEventArgs e)
+    private async void PosterPersonPicture_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        // TODO 弹出用户页窗口
+        await IllustratorViewerHelper.CreateWindowWithPageAsync(ViewModel.PosterId);
     }
 
     private void OpenRepliesHyperlinkButton_OnTapped(object sender, TappedRoutedEventArgs e) => RepliesHyperlinkButtonTapped?.Invoke(ViewModel);

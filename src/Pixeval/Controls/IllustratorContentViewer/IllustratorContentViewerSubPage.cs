@@ -32,6 +32,8 @@ public abstract class IllustratorContentViewerSubPage : EnhancedPage, ISortedIll
 
     public abstract SortOptionComboBox SortOptionProvider { get; }
 
+    public ScrollView ScrollView => ViewModelProvider.IllustrationView.ScrollView;
+
     public void PerformSearch(string keyword)
     {
         if (ViewModelProvider.ShowCommandBar)

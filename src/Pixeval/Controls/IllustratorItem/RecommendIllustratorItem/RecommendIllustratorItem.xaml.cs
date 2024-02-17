@@ -25,10 +25,8 @@ using WinUI3Utilities.Attributes;
 namespace Pixeval.Controls;
 
 [DependencyProperty<RecommendIllustratorItemViewModel>("ViewModel", propertyChanged: nameof(OnViewModelChanged))]
-public sealed partial class RecommendIllustratorItem : IViewModelControl
+public sealed partial class RecommendIllustratorItem
 {
-    object IViewModelControl.ViewModel => ViewModel;
-
     public event Action<RecommendIllustratorItem, RecommendIllustratorItemViewModel>? ViewModelChanged;
 
     private static void OnViewModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)

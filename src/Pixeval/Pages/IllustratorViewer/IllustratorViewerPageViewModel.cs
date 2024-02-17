@@ -55,6 +55,12 @@ public partial class IllustratorViewerPageViewModel : UiObservableObject, IIllus
     [ObservableProperty]
     private bool _isFollowed;
 
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(ComplementaryRatio))]
+    private double _scrollRatio;
+
+    public double ComplementaryRatio => 1 - ScrollRatio;
+
     public NavigationViewTag IllustrationTag { get; }
 
     public NavigationViewTag MangaTag { get; }
@@ -73,6 +79,8 @@ public partial class IllustratorViewerPageViewModel : UiObservableObject, IIllus
     {
         UserDetail = userDetail;
         IsFollowed = userDetail.UserEntity.IsFollowed;
+        Metrics = new UserMetrics(userDetail.UserProfile.TotalFollowUsers, userDetail.UserProfile.TotalMyPixivUsers, userDetail.UserProfile.TotalIllusts);
+
 
         IllustrationTag = new NavigationViewTag(typeof(IllustratorIllustrationPage), Id);
         MangaTag = new NavigationViewTag(typeof(IllustratorMangaPage), Id);
@@ -89,6 +97,8 @@ public partial class IllustratorViewerPageViewModel : UiObservableObject, IIllus
     public PixivSingleUserResponse UserDetail { get; }
 
     public string Name => UserDetail.UserEntity.Name;
+
+    public UserMetrics Metrics { get; }
 
     private string AvatarUrl => UserDetail.UserEntity.ProfileImageUrls.Medium;
 
@@ -134,6 +144,8 @@ public partial class IllustratorViewerPageViewModel : UiObservableObject, IIllus
             BackgroundSource = AvatarSource;
         }
     }
+
+    public record UserMetrics(long FollowingCount, long MyPixivUsers /* 好P友 */, long IllustrationCount);
 
     #region Commands
 

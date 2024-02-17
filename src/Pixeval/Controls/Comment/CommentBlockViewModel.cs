@@ -44,7 +44,7 @@ public partial class CommentBlockViewModel(Comment comment, long illustrationId)
 
     public long IllustrationId { get; } = illustrationId;
 
-    public CoreApi.Model.Comment Comment { get; } = comment;
+    public Comment Comment { get; } = comment;
 
     public bool HasReplies => Comment.HasReplies;
 

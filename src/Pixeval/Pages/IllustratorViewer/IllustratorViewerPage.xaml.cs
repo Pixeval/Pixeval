@@ -33,11 +33,27 @@ using Pixeval.Utilities;
 using Microsoft.UI.Xaml.Media.Animation;
 using Pixeval.Util.Threading;
 using Pixeval.Util.UI;
+using Pixeval.Controls;
 
 namespace Pixeval.Pages.IllustratorViewer;
 
 public sealed partial class IllustratorViewerPage
 {
+    /// <summary>
+    /// ReSharper disable once MemberCanBeMadeStatic.Local
+    /// </summary>
+    private GridLength TitleBarHeight => new(32);
+
+    /// <summary>
+    /// ReSharper disable once MemberCanBeMadeStatic.Local
+    /// </summary>
+    private GridLength BackgroundActualHeight => new(220 + 32);
+
+    /// <summary>
+    /// ReSharper disable once MemberCanBeMadeStatic.Local
+    /// </summary>
+    private GridLength BackgroundHeight => new(220);
+
     private readonly ISet<Page> _pageCache;
     private IllustratorViewerPageViewModel _viewModel = null!;
     private int _lastNavigationViewTag = -1;
@@ -57,6 +73,11 @@ public sealed partial class IllustratorViewerPage
     public override void OnPageActivated(NavigationEventArgs e, object? parameter)
     {
         _viewModel = Window.Content.To<FrameworkElement>().GetViewModel(parameter);
+        _viewModel.PropertyChanged += (sender, args) =>
+        {
+            if (args.PropertyName is nameof(IllustratorViewerPageViewModel.ScrollRatio))
+                SetPageScrollView();
+        };
     }
 
     protected override void SetTitleBarDragRegion(InputNonClientPointerSource sender, SizeInt32 windowSize, double scaleFactor, out int titleBarHeight)
@@ -76,14 +97,41 @@ public sealed partial class IllustratorViewerPage
         var segmented = sender.To<Segmented>();
         var currentTag = segmented.SelectedItem.GetTag<NavigationViewTag?>() ?? _viewModel.IllustrationTag;
 
-        Frame.NavigateTag(currentTag, new EntranceNavigationTransitionInfo());
-        Frame.NavigateTag(currentTag, _lastNavigationViewTag is not -1
+        IllustratorViewerFrame.NavigateTag(currentTag, new EntranceNavigationTransitionInfo());
+        IllustratorViewerFrame.NavigateTag(currentTag, _lastNavigationViewTag is not -1
             ? new SlideNavigationTransitionInfo { Effect = _lastNavigationViewTag > segmented.SelectedIndex ? SlideNavigationTransitionEffect.FromLeft : SlideNavigationTransitionEffect.FromRight }
             : new EntranceNavigationTransitionInfo());
         _lastNavigationViewTag = segmented.SelectedIndex;
 
-        await ThreadingHelper.SpinWaitAsync(() => Frame.Content?.GetType() != currentTag.NavigateTo);
-        _ = _pageCache.Add((Page)Frame.Content);
+        await ThreadingHelper.SpinWaitAsync(() => IllustratorViewerFrame.Content?.GetType() != currentTag.NavigateTo);
+        _ = _pageCache.Add((Page)IllustratorViewerFrame.Content);
+        SetPageScrollView();
+    }
+
+    private void FrameworkElement_OnSizeChanged(object sender, SizeChangedEventArgs e)
+    {
+        ScrollGrid.Height = ScrollView.ActualHeight + ScrollableLength.ActualHeight;
+    }
+
+    private void ScrollView_OnViewChanged(ScrollView sender, object args)
+    {
+        _viewModel.ScrollRatio = sender.VerticalOffset / sender.ScrollableHeight;
+    }
+
+    private void SetPageScrollView()
+    {
+        if (IllustratorViewerFrame.Content is not IllustratorContentViewerSubPage { ScrollView: { } scrollView }) 
+            return;
+        if (_viewModel.ScrollRatio is 1)
+        {
+            scrollView.VerticalScrollBarVisibility = ScrollingScrollBarVisibility.Auto;
+            scrollView.VerticalScrollMode = ScrollingScrollMode.Auto;
+        }
+        else
+        {
+            scrollView.VerticalScrollBarVisibility = ScrollingScrollBarVisibility.Hidden;
+            scrollView.VerticalScrollMode = ScrollingScrollMode.Disabled;
+        }
     }
 
 #if false // TODO 这是什么

@@ -122,7 +122,9 @@ public partial class ZoomableImage
             OriginalImageHeight = _frames[0].Size.Height;
             Mode = InitMode; // 触发OnModeChanged
             _timerRunning = true;
-            _ = ManualResetEvent.Set();
+            // 防止此处ManualResetEvent已经Dispose了，绝大多数情况下不会发生
+            if (!IsDisposed)
+                _ = ManualResetEvent.Set();
         }
     }
 }

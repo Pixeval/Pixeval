@@ -15,8 +15,7 @@ using WinUI3Utilities.Attributes;
 namespace Pixeval.Controls;
 
 /// <summary>
-/// <see cref="ItemsView.ItemsSource"/>属性推荐使用<see cref="AdvancedObservableCollection{T}"/>类型，
-/// 同时在<see cref="ItemContainer.Child"/>的控件使用<see cref="IViewModelControl"/>接口
+/// <see cref="ItemsView.ItemsSource"/>属性推荐使用<see cref="AdvancedObservableCollection{T}"/>类型
 /// </summary>
 /// <remarks><see cref="ItemsView.ItemTemplate"/>中必须使用<see cref="ItemContainer"/>作为根元素</remarks>
 [DependencyProperty<ItemsViewLayoutType>("LayoutType", DependencyPropertyDefaultValue.Default, nameof(OnLayoutTypeChanged))]
@@ -28,7 +27,7 @@ namespace Pixeval.Controls;
 [DependencyProperty<int>("SelectedIndex", "-1", nameof(OnSelectedIndexChanged))]
 [DependencyProperty<bool>("CanLoadMore", "true")]
 [DependencyProperty<int>("LoadCount", "20")]
-public sealed partial class AdvancedItemsView
+public sealed partial class AdvancedItemsView : ItemsView
 {
     public event Func<AdvancedItemsView, EventArgs, Task> LoadMoreRequested;
     /// <summary>
@@ -51,68 +50,9 @@ public sealed partial class AdvancedItemsView
         ElementPrepared?.Invoke(this, element);
     }
 
-    private readonly HashSet<int> _viewModels = [];
-
     /// <summary>
-    /// 加载并在加载完毕后检查是否填满视区
-    /// </summary>
-    /// <remarks>
-    /// 需要<see cref="ItemsView.ItemsSource"/>为<see cref="INotifyCollectionChanged"/>并且
-    /// <see cref="ItemContainer.Child"/>是<see cref="IViewModelControl"/>的控件
-    /// </remarks>
-    /// <returns></returns>
-    public async Task LoadAndFillAsync()
-    {
-        if (ItemsSource is not INotifyCollectionChanged ncc)
-        {
-            await TryRaiseLoadMoreRequestedAsync();
-            return;
-        }
-
-        // 记录新的
-        _viewModels.Clear();
-        ncc.CollectionChanged += NccOnCollectionChanged;
-        await TryRaiseLoadMoreRequestedAsync();
-        ncc.CollectionChanged -= NccOnCollectionChanged;
-
-        return;
-        void NccOnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
-        {
-            switch (e.Action)
-            {
-                case NotifyCollectionChangedAction.Add when e.NewItems is not null:
-                {
-                    foreach (var newItem in e.NewItems)
-                        _ = _viewModels.Add(newItem.GetHashCode());
-                    break;
-                }
-                case NotifyCollectionChangedAction.Remove when e.OldItems is not null:
-                {
-                    foreach (var oldItem in e.OldItems)
-                        _ = _viewModels.Remove(oldItem.GetHashCode());
-                    break;
-                }
-                case NotifyCollectionChangedAction.Reset:
-                {
-                    _viewModels.Clear();
-                    break;
-                }
-                case NotifyCollectionChangedAction.Replace:
-                {
-                    if (e.NewItems is not null)
-                        foreach (var newItem in e.NewItems)
-                            _ = _viewModels.Add(newItem.GetHashCode());
-                    if (e.OldItems is not null)
-                        foreach (var oldItem in e.OldItems)
-                            _ = _viewModels.Remove(oldItem.GetHashCode());
-                    break;
-                }
-            }
-        }
-    }
-
-    /// <summary>
-    /// 判断滚动视图是否滚到底部，如果是则触发<see cref="LoadMoreRequested"/>事件
+    /// 判断滚动视图是否滚到底部，如果是则触发<see cref="LoadMoreRequested"/>事件，
+    /// 这个事件只会使源加载最多一次
     /// </summary>
     /// <remarks>
     /// 需要<see cref="ItemsView.ItemsSource"/>为<see cref="INotifyCollectionChanged"/>
@@ -145,14 +85,14 @@ public sealed partial class AdvancedItemsView
 
     public AdvancedItemsView()
     {
-        InitializeComponent();
+        SelectionChanged += AdvancedItemsViewOnSelectionChanged;
         LoadMoreRequested += async (sender, args) =>
         {
             if (sender.To<AdvancedItemsView>() is { ItemsSource: ISupportIncrementalLoading sil } aiv)
                 _ = await sil.LoadMoreItemsAsync((uint)aiv.LoadCount);
         };
-        _ = RegisterPropertyChangedCallback(ScrollViewProperty, ScrollView_OnPropertyChanged);
-        _ = RegisterPropertyChangedCallback(ItemsSourceProperty, ItemsSource_OnPropertyChanged);
+        _ = RegisterPropertyChangedCallback(ScrollViewProperty, ScrollViewOnPropertyChanged);
+        _ = RegisterPropertyChangedCallback(ItemsSourceProperty, ItemsSourceOnPropertyChanged);
     }
 
     #region PropertyChanged
@@ -288,7 +228,26 @@ public sealed partial class AdvancedItemsView
 
     #region EventHandlers
 
-    private void AdvancedItemsView_OnSelectionChanged(ItemsView sender, ItemsViewSelectionChangedEventArgs e)
+    /// <summary>
+    /// 本方法之后会触发<see cref="AdvancedItemsViewOnSizeChanged"/>
+    /// </summary>
+    private void ScrollViewOnPropertyChanged(DependencyObject sender, DependencyProperty dp)
+    {
+        ScrollView.ViewChanged += ScrollView_ViewChanged;
+        _itemsRepeater = ScrollView.Content.To<ItemsRepeater>();
+        _itemsRepeater.SizeChanged += AdvancedItemsViewOnSizeChanged;
+        _itemsRepeater.ElementPrepared += (_, arg) =>
+        {
+            // _loadedElements.Count is 0 说明不存在TryLoadedFirst注释里的情况
+            // 否则需要检测该控件是否加载，加载后才能触发ElementPrepared，以此防止ElementPrepared调用两次
+            var itemContainer = arg.Element.To<ItemContainer>();
+            if (_loadedElements.Count is 0 || _loadedElements.Contains(arg.Element.GetHashCode()))
+                ElementPrepared?.Invoke(this, itemContainer);
+        };
+        _itemsRepeater.ElementClearing += (_, arg) => ElementClearing?.Invoke(this, arg.Element.To<ItemContainer>());
+    }
+
+    private void AdvancedItemsViewOnSelectionChanged(ItemsView sender, ItemsViewSelectionChangedEventArgs e)
     {
         if (sender.SelectionMode is not ItemsViewSelectionMode.Single)
             return;
@@ -299,40 +258,11 @@ public sealed partial class AdvancedItemsView
     private async void ScrollView_ViewChanged(ScrollView sender, object args) => await TryRaiseLoadMoreRequestedAsync();
 
     /// <summary>
-    /// 本方法之后会触发<see cref="AdvancedItemsView_OnSizeChanged"/>
+    /// 当数据源变化或者<see cref="NotifyCollectionChangedAction.Reset"/>、<see cref="NotifyCollectionChangedAction.Remove"/>时，
+    /// 这个方法可以重新加载数据。
+    /// 这个方法旨在解决数据源变化，而<see cref="ItemsRepeater"/>的<see cref="FrameworkElement.ActualHeight"/>没有变化时，重新加载数据的问题
     /// </summary>
-    private void ScrollView_OnPropertyChanged(DependencyObject sender, DependencyProperty dp)
-    {
-        ScrollView.ViewChanged += ScrollView_ViewChanged;
-        _itemsRepeater = ScrollView.Content.To<ItemsRepeater>();
-        _itemsRepeater.SizeChanged += AdvancedItemsView_OnSizeChanged;
-        _itemsRepeater.ElementPrepared += (_, arg) =>
-        {
-            // _loadedElements.Count is 0 说明不存在TryLoadedFirst注释里的情况
-            // 否则需要检测该控件是否加载，加载后才能触发ElementPrepared，以此防止ElementPrepared调用两次
-            var itemContainer = arg.Element.To<ItemContainer>();
-            if (_loadedElements.Count is 0 || _loadedElements.Contains(arg.Element.GetHashCode()))
-                ElementPrepared?.Invoke(this, itemContainer);
-            // LoadAndFillAsync用的逻辑，当控件加载后，从_viewModels移除，当_viewModels为空时（全部Load后），触发LoadAndFillAsync
-            if (_viewModels.Count is not 0)
-                itemContainer.Loaded += OnItemContainerOnLoaded;
-        };
-        _itemsRepeater.ElementClearing += (_, arg) => ElementClearing?.Invoke(this, arg.Element.To<ItemContainer>());
-        return;
-        async void OnItemContainerOnLoaded(object o, RoutedEventArgs routedEventArgs)
-        {
-            if (o is ItemContainer { Child: IViewModelControl viewModelControl })
-            {
-                _ = _viewModels.Remove(viewModelControl.ViewModel.GetHashCode());
-                if (_viewModels.Count is 0)
-                    await LoadAndFillAsync();
-            }
-            o.To<FrameworkElement>().Loaded -= OnItemContainerOnLoaded;
-        }
-    }
-    private WeakEventListener<AdvancedItemsView, object?, NotifyCollectionChangedEventArgs> _sourceWeakEventListener = null!;
-
-    private async void ItemsSource_OnPropertyChanged(DependencyObject sender, DependencyProperty dp)
+    private async void ItemsSourceOnPropertyChanged(DependencyObject sender, DependencyProperty dp)
     {
         if (sender.To<AdvancedItemsView>() is { ItemsSource: ISupportIncrementalLoading sil })
         {
@@ -343,7 +273,8 @@ public sealed partial class AdvancedItemsView
                 _sourceWeakEventListener =
                     new WeakEventListener<AdvancedItemsView, object?, NotifyCollectionChangedEventArgs>(this)
                     {
-                        OnEventAction = (source, changed, arg) => SourceNcc_CollectionChanged(source, arg),
+                        // ReSharper disable once AsyncVoidLambda
+                        OnEventAction = async (source, changed, arg) => await TryRaiseLoadMoreRequestedAsync(),
                         OnDetachAction = listener => ncc.CollectionChanged -= listener.OnEvent
                     };
                 ncc.CollectionChanged += _sourceWeakEventListener.OnEvent;
@@ -355,18 +286,14 @@ public sealed partial class AdvancedItemsView
         }
     }
 
-    private async void SourceNcc_CollectionChanged(object? s, NotifyCollectionChangedEventArgs e)
-    {
-        if (e.Action is NotifyCollectionChangedAction.Reset or NotifyCollectionChangedAction.Remove)
-            await TryRaiseLoadMoreRequestedAsync();
-    }
-
     /// <summary>
-    /// 数据换源后（或第一次设置数据源时），<see cref="ItemsRepeater.ActualHeight"/>变为0，这个方法可以重新加载数据
+    /// 这个方法是连续加载的关键所在。
+    /// 当新数据加载完毕后，会使<see cref="ItemsRepeater"/>的<see cref="FrameworkElement.ActualHeight"/>变大，
+    /// 或数据换源后（或第一次设置数据源时），<see cref="FrameworkElement.ActualHeight"/>变为0，这个方法都可以重新加载数据
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    private async void AdvancedItemsView_OnSizeChanged(object sender, SizeChangedEventArgs e) => await LoadAndFillAsync();
+    private async void AdvancedItemsViewOnSizeChanged(object sender, SizeChangedEventArgs e) => await TryRaiseLoadMoreRequestedAsync();
 
     #endregion
 
@@ -375,6 +302,8 @@ public sealed partial class AdvancedItemsView
     private ItemsRepeater _itemsRepeater = null!;
 
     private readonly HashSet<int> _loadedElements = [];
+
+    private WeakEventListener<AdvancedItemsView, object?, NotifyCollectionChangedEventArgs> _sourceWeakEventListener = null!;
 
     private int GetSelectedIndex()
     {
