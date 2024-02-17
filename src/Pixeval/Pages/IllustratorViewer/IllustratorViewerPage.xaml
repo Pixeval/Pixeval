@@ -54,7 +54,7 @@
                         Opacity="{x:Bind _viewModel.ComplementaryRatio, Mode=OneWay}">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" MaxWidth="400" />
                         </Grid.ColumnDefinitions>
                         <PersonPicture
                             x:Name="ProfileImage"
@@ -62,26 +62,40 @@
                             Width="100"
                             Height="100"
                             ProfilePicture="{x:Bind _viewModel.AvatarSource, Mode=OneWay}" />
-                        <StackPanel
+                        <Grid
                             Grid.Column="1"
-                            HorizontalAlignment="Left"
-                            Orientation="Vertical"
-                            Spacing="10">
-                            <StackPanel Orientation="Horizontal" Spacing="10">
-                                <TextBlock FontSize="20" Text="{x:Bind _viewModel.Name}" />
+                            HorizontalAlignment="Stretch"
+                            RowSpacing="10">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <StackPanel
+                                Grid.Row="0"
+                                Orientation="Horizontal"
+                                Spacing="10">
+                                <TextBlock
+                                    FontSize="20"
+                                    IsTextSelectionEnabled="True"
+                                    Text="{x:Bind _viewModel.Name}" />
                                 <controls:PixevalBadge Mode="Premium" Visibility="{x:Bind _viewModel.IsPremium, Converter={StaticResource BoolToVisibilityConverter}}" />
                             </StackPanel>
                             <TextBlock
                                 x:Name="SubtitleBlock"
+                                Grid.Row="1"
                                 FontSize="14"
+                                IsTextSelectionEnabled="True"
                                 Text="{x:Bind _viewModel.Id}" />
                             <TextBlock
                                 x:Name="Blurb"
-                                Width="400"
+                                Grid.Row="2"
                                 FontSize="16"
+                                IsTextSelectionEnabled="True"
+                                MaxLines="3"
                                 Text="{x:Bind _viewModel.Comment}"
                                 TextWrapping="Wrap" />
-                        </StackPanel>
+                        </Grid>
                     </Grid>
                     <StackPanel
                         Grid.Row="2"

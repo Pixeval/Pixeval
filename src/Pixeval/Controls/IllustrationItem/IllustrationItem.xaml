@@ -116,25 +116,30 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <controls:PixevalBadge
-                Grid.Column="0"
+                Grid.Column="2"
+                Mode="Ai"
+                Visibility="{x:Bind ViewModel.IsAiGenerated, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
+            <controls:PixevalBadge
+                Grid.Column="1"
                 Mode="{x:Bind ViewModel.RestrictionCaption, Mode=OneWay}"
                 Visibility="{x:Bind ViewModel.IsRestricted, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
             <controls:PixevalBadge
-                Grid.Column="1"
+                Grid.Column="2"
                 Mode="Gif"
                 Visibility="{x:Bind ViewModel.IsUgoira, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
             <controls:FontSymbolIcon
-                Grid.Column="3"
+                Grid.Column="4"
                 FontSize="18"
                 Foreground="#80000000"
                 Symbol="SetSolidF5EE"
                 Visibility="{x:Bind ViewModel.IsManga, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
             <controls:FontSymbolIcon
-                Grid.Column="3"
+                Grid.Column="4"
                 Symbol="SetF5ED"
                 Visibility="{x:Bind ViewModel.IsManga, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
         </Grid>

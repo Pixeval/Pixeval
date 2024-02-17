@@ -49,6 +49,8 @@ public partial class IllustrationItemViewModel : IllustrateViewModel<Illustratio
 
     public bool IsManga => Illustrate.PageCount > 1;
 
+    public bool IsAiGenerated => Illustrate.AiType is 2;
+
     public BadgeMode RestrictionCaption =>
         Illustrate.XRestrict switch
         {

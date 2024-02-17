@@ -26,5 +26,6 @@ public enum BadgeMode
     Following,
     Gif,
     R18,
-    R18G
+    R18G,
+    Ai
 }

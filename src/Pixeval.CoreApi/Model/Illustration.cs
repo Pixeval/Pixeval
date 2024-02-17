@@ -20,7 +20,6 @@
 
 using System;
 using System.Diagnostics;
-using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace Pixeval.CoreApi.Model;
@@ -46,7 +45,6 @@ public partial record Illustration : IEntry
     public required string Title { get; set; } = "";
 
     [JsonPropertyName("type")]
-    // [JsonConverter(typeof(StringToTypeBoolConverter))]
     public required string Type { get; set; } = "";
 
     /// <summary>
@@ -108,6 +106,12 @@ public partial record Illustration : IEntry
 
     [JsonPropertyName("is_muted")]
     public required bool IsMuted { get; set; }
+
+    /// <summary>
+    /// 值为2是AI生成
+    /// </summary>
+    [JsonPropertyName("illust_ai_type")]
+    public required int AiType { get; set; }
 
     public override int GetHashCode()
     {
