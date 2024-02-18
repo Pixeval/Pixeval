@@ -405,6 +405,7 @@
                 <controls:SettingsCard
                     x:Uid="/SettingsPage/FiltrateRestrictedContentEntry"
                     HeaderIcon="{markup:FontSymbolIcon Glyph=BlockContactE8F8}"
+                    IsEnabled="False"
                     Tag="{x:Bind misc2:SettingEntry.FiltrateRestrictedContent}">
                     <ToggleSwitch IsOn="{x:Bind ViewModel.FiltrateRestrictedContent, Mode=TwoWay}" />
                 </controls:SettingsCard>
@@ -420,7 +421,10 @@
                     </controls:SettingsExpander.Items>
                 </controls:SettingsExpander>
 
-                <TextBlock x:Uid="/SettingsPage/SearchSettingsGroup" Style="{StaticResource SettingHeaderStyle}" />
+                <TextBlock
+                    x:Uid="/SettingsPage/SearchSettingsGroup"
+                    Style="{StaticResource SettingHeaderStyle}"
+                    Tag="{x:Bind misc2:SettingEntry.SearchCategory}" />
 
                 <controls:SettingsCard
                     x:Uid="/SettingsPage/ReverseSearchResultSimilarityThresholdEntry"

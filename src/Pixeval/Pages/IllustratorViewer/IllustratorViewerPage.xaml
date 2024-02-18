@@ -13,33 +13,26 @@
     <controls:EnhancedPage.Resources>
         <converters1:BoolNegationToVisibilityConverter x:Key="BoolNegationToVisibilityConverter" />
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+        <converters1:ComplementaryDoubleConverter x:Key="ComplementaryDoubleConverter" />
     </controls:EnhancedPage.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="{x:Bind TitleBarHeight}" />
-            <RowDefinition Height="{x:Bind BackgroundHeight}" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <ScrollView
-            x:Name="ScrollView"
+        <controls:StickyHeaderScrollView
+            x:Name="StickyHeaderScrollView"
             Grid.Row="0"
-            Grid.RowSpan="3"
-            SizeChanged="FrameworkElement_OnSizeChanged"
-            VerticalScrollBarVisibility="Hidden"
-            ViewChanged="ScrollView_OnViewChanged">
-            <Grid x:Name="ScrollGrid">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="{x:Bind BackgroundActualHeight}" />
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
-                <Image
-                    Grid.Row="0"
-                    Source="{x:Bind _viewModel.BackgroundSource, Mode=OneWay}"
-                    Stretch="UniformToFill" />
-                <Rectangle Grid.Row="0" Fill="{StaticResource PixevalTranslucentBackgroundBrush}" />
-                <Grid Grid.Row="0" SizeChanged="FrameworkElement_OnSizeChanged">
+            Grid.RowSpan="2"
+            GetScrollableLength="StickyHeaderScrollView_OnGetScrollableLength"
+            SetInnerScrollView="StickyHeaderScrollView_OnSetInnerScrollView">
+            <controls:StickyHeaderScrollView.HeaderBackGround>
+                <ImageBrush ImageSource="{x:Bind _viewModel.BackgroundSource, Mode=OneWay}" Stretch="UniformToFill" />
+            </controls:StickyHeaderScrollView.HeaderBackGround>
+            <controls:StickyHeaderScrollView.Header>
+                <!--  220 + 32  -->
+                <Grid Height="252" Background="{StaticResource PixevalTranslucentBackgroundBrush}">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="{x:Bind TitleBarHeight}" />
                         <RowDefinition x:Name="ScrollableLength" Height="*" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
@@ -47,11 +40,11 @@
                     <Grid
                         x:Name="TextContainer"
                         Grid.Row="0"
-                        Grid.RowSpan="3"
+                        Grid.RowSpan="2"
                         Margin="100,0"
                         VerticalAlignment="Center"
                         ColumnSpacing="50"
-                        Opacity="{x:Bind _viewModel.ComplementaryRatio, Mode=OneWay}">
+                        Opacity="{x:Bind StickyHeaderScrollView.ScrollRatio, Converter={StaticResource ComplementaryDoubleConverter}, Mode=OneWay}">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="*" MaxWidth="400" />
@@ -98,10 +91,10 @@
                         </Grid>
                     </Grid>
                     <StackPanel
-                        Grid.Row="2"
+                        Grid.Row="1"
                         Margin="20,0"
                         HorizontalAlignment="Left"
-                        Opacity="{x:Bind _viewModel.ScrollRatio, Mode=OneWay}"
+                        Opacity="{x:Bind StickyHeaderScrollView.ScrollRatio, Mode=OneWay}"
                         Orientation="Horizontal"
                         Spacing="20">
                         <PersonPicture
@@ -216,7 +209,7 @@
                     </StackPanel>
                     <CommandBar
                         x:Name="CommandBar"
-                        Grid.Row="2"
+                        Grid.Row="1"
                         HorizontalAlignment="Right"
                         DefaultLabelPosition="Right">
                         <AppBarButton Command="{x:Bind _viewModel.FollowCommand}" Visibility="{x:Bind _viewModel.IsFollowed, Converter={StaticResource BoolNegationToVisibilityConverter}, Mode=OneWay}" />
@@ -235,7 +228,7 @@
                             CommandParameter="{x:Bind ShowQrCodeTeachingTip}" />
                     </CommandBar>
                     <controls1:Segmented
-                        Grid.Row="3"
+                        Grid.Row="2"
                         HorizontalAlignment="Stretch"
                         SelectedItem="{x:Bind IllustrationTab}"
                         SelectionChanged="IllustratorViewerSegmented_OnSelectionChanged">
@@ -274,29 +267,31 @@
                             Tag="{x:Bind _viewModel.MyPixivUserTag}" />
                     </controls1:Segmented>
                 </Grid>
-                <Frame x:Name="IllustratorViewerFrame" Grid.Row="1" />
-                <TeachingTip
-                    x:Name="GenerateLinkTeachingTip"
-                    x:Uid="/IllustrateViewerPage/GenerateLinkToThisPageButtonTeachingTip"
-                    Grid.Row="1"
-                    ActionButtonClick="GenerateLinkToThisPageButtonTeachingTip_OnActionButtonClick"
-                    Target="{x:Bind GenerateLinkButton}">
-                    <TeachingTip.HeroContent>
-                        <Image Source="ms-appx:///Assets/Images/illust-app-link-sample.png" />
-                    </TeachingTip.HeroContent>
-                </TeachingTip>
-                <TeachingTip
-                    x:Name="ShowQrCodeTeachingTip"
-                    x:Uid="/IllustrateViewerPage/QrCodeTeachingTip"
-                    Grid.Row="1"
-                    IsLightDismissEnabled="True"
-                    Target="{x:Bind ShowQrCodeButton}">
-                    <TeachingTip.HeroContent>
-                        <Image />
-                    </TeachingTip.HeroContent>
-                </TeachingTip>
-            </Grid>
-        </ScrollView>
+            </controls:StickyHeaderScrollView.Header>
+            <controls:StickyHeaderScrollView.StickyContent>
+                <Grid>
+                    <Frame x:Name="IllustratorViewerFrame" />
+                    <TeachingTip
+                        x:Name="GenerateLinkTeachingTip"
+                        x:Uid="/IllustrateViewerPage/GenerateLinkToThisPageButtonTeachingTip"
+                        ActionButtonClick="GenerateLinkToThisPageButtonTeachingTip_OnActionButtonClick"
+                        Target="{x:Bind GenerateLinkButton}">
+                        <TeachingTip.HeroContent>
+                            <Image Source="ms-appx:///Assets/Images/illust-app-link-sample.png" />
+                        </TeachingTip.HeroContent>
+                    </TeachingTip>
+                    <TeachingTip
+                        x:Name="ShowQrCodeTeachingTip"
+                        x:Uid="/IllustrateViewerPage/QrCodeTeachingTip"
+                        IsLightDismissEnabled="True"
+                        Target="{x:Bind ShowQrCodeButton}">
+                        <TeachingTip.HeroContent>
+                            <Image />
+                        </TeachingTip.HeroContent>
+                    </TeachingTip>
+                </Grid>
+            </controls:StickyHeaderScrollView.StickyContent>
+        </controls:StickyHeaderScrollView>
         <Border
             Grid.Row="0"
             Height="32"

@@ -415,13 +415,15 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
         // if the loading task is null or hasn't been completed yet, the 
         // OriginalImageSources would be the thumbnail source, its disposal may 
         // cause the IllustrationGrid shows weird result such as an empty content
-        if (LoadSuccessfully && OriginalImageSources is not null)
-            foreach (var originalImageSource in OriginalImageSources)
+        var temp = OriginalImageSources;
+        OriginalImageSources = null;
+
+        if (LoadSuccessfully && temp is not null)
+            foreach (var originalImageSource in temp)
             {
                 originalImageSource?.Dispose();
             }
 
-        OriginalImageSources = null;
         LoadSuccessfully = false;
     }
 }

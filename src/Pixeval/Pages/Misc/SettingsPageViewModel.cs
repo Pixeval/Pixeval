@@ -188,6 +188,9 @@ public partial class SettingsPageViewModel(FrameworkElement frameworkElement) : 
             case nameof(MaxDownloadTaskConcurrencyLevel):
                 App.AppViewModel.DownloadManager.ConcurrencyDegree = MaxDownloadTaskConcurrencyLevel;
                 break;
+            case nameof(FiltrateRestrictedContent):
+                // TODO: R18 Settings
+                break;
         }
     }
 

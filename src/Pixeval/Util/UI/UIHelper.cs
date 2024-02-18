@@ -18,6 +18,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Drawing;
@@ -299,6 +300,12 @@ public static partial class UiHelper
     {
         await ThreadingHelper.SpinWaitAsync(() => root.Content is not T { IsLoaded: true });
         return (T)root.Content;
+    }
+
+    public static async Task<Page> AwaitPageTransitionAsync(this Frame root, Type pageType)
+    {
+        await ThreadingHelper.SpinWaitAsync(() => root.Content is not Page { IsLoaded: true } || root.Content?.GetType() != pageType);
+        return (Page)root.Content;
     }
 
     public static Color ParseHexColor(string hex)

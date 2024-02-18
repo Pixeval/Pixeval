@@ -62,6 +62,9 @@ public partial record SettingEntry(SettingEntryCategory Category, Type ResourceL
     public static readonly SettingEntry ResetSettings = new(SettingEntryCategory.Session,
         typeof(SettingsPageResources), nameof(SettingsPageResources.ResetDefaultSettingsEntryHeader));
 
+    public static readonly SettingEntry SearchCategory = new(SettingEntryCategory.Search,
+        typeof(SettingsPageResources), nameof(SettingsPageResources.SearchSettingsGroupText));
+
     public static readonly Lazy<IEnumerable<SettingEntry>> LazyValues = new(() =>
         typeof(SettingEntry).GetFields(BindingFlags.Static | BindingFlags.Public | BindingFlags.DeclaredOnly)
             .Select(f => f.GetValue(null))

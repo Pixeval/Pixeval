@@ -1,0 +1,27 @@
+<UserControl
+    x:Class="Pixeval.Controls.StickyHeaderScrollView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:Pixeval.Controls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+    <ScrollView
+        x:Name="View"
+        SizeChanged="FrameworkElement_OnSizeChanged"
+        VerticalScrollBarVisibility="Hidden"
+        ViewChanged="ScrollView_OnViewChanged">
+        <Grid x:Name="ScrollGrid">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <ContentPresenter
+                Grid.Row="0"
+                Background="{x:Bind HeaderBackGround, Mode=OneWay}"
+                Content="{x:Bind Header, Mode=OneWay}"
+                SizeChanged="FrameworkElement_OnSizeChanged" />
+            <ContentPresenter Grid.Row="1" Content="{x:Bind StickyContent, Mode=OneWay}" />
+        </Grid>
+    </ScrollView>
+</UserControl>

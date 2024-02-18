@@ -87,13 +87,18 @@ public partial class ZoomableImage
                 _ => Matrix3x2.Identity
             };
 
+            // 最后调整scale，防止影响前面
+            transform *= Matrix3x2.CreateScale(ImageScale);
+
             var image = new Transform2DEffect
             {
                 Source = _currentFrame,
-                TransformMatrix = transform
+                TransformMatrix = transform,
+                InterpolationMode = CanvasImageInterpolation.MultiSampleLinear,
             };
 
-            e.DrawingSession.DrawImage(image);
+
+            e.DrawingSession.DrawImage(image, new Vector2((float)ImagePositionX, (float)ImagePositionY));
         }
         else
         {
@@ -104,7 +109,7 @@ public partial class ZoomableImage
                 if (Sources is null)
                     return;
                 foreach (var source in Sources)
-                    if (source.CanRead)
+                    if (source is { CanRead: true })
                     {
                         var randomAccessStream = source.AsRandomAccessStream();
                         randomAccessStream.Seek(0);

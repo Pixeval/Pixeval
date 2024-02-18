@@ -45,6 +45,7 @@ public sealed partial class PixevalBadge : UserControl
         [BadgeMode.Following] = (PixevalBadgeResources.Following, Colors.Crimson),
         [BadgeMode.Gif] = ("GIF", Colors.Green),
         [BadgeMode.R18] = ("R18", Colors.Crimson),
+        [BadgeMode.R18G] = ("R18G", Colors.Crimson),
         [BadgeMode.Ai] = ("AI", Colors.Gray)
     };
 

@@ -129,15 +129,15 @@ public partial class ZoomableImage
                 break;
             case ZoomableImagePosition.LeftCenter:
                 ImagePositionX = 0;
-                ImageCenterY = Canvas.ActualHeight / 2;
+                ImageCenterY = CanvasControl.ActualHeight / 2;
                 break;
             case ZoomableImagePosition.TopCenter:
-                ImageCenterX = Canvas.ActualWidth / 2;
+                ImageCenterX = CanvasControl.ActualWidth / 2;
                 ImagePositionY = 0;
                 break;
             case ZoomableImagePosition.AbsoluteCenter:
-                ImageCenterX = Canvas.ActualWidth / 2;
-                ImageCenterY = Canvas.ActualHeight / 2;
+                ImageCenterX = CanvasControl.ActualWidth / 2;
+                ImageCenterY = CanvasControl.ActualHeight / 2;
                 break;
             case ZoomableImagePosition.Default:
                 break;
@@ -149,7 +149,7 @@ public partial class ZoomableImage
 
     private void CanvasOnPointerMoved(object sender, PointerRoutedEventArgs e)
     {
-        var currentPoint = e.GetCurrentPoint(Canvas);
+        var currentPoint = e.GetCurrentPoint(CanvasControl);
         if (currentPoint.Properties.IsLeftButtonPressed)
         {
             var now = DateTime.Now;

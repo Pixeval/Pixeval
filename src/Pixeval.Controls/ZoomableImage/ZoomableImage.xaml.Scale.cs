@@ -41,8 +41,8 @@ public partial class ZoomableImage
     {
         get
         {
-            var canvasWidth = Canvas.ActualWidth;
-            var canvasHeight = Canvas.ActualHeight;
+            var canvasWidth = CanvasControl.ActualWidth;
+            var canvasHeight = CanvasControl.ActualHeight;
             var imageResolution = ImageWidth / ImageHeight;
             var canvasResolution = canvasWidth / canvasHeight;
             return (canvasResolution - imageResolution) switch
@@ -55,7 +55,7 @@ public partial class ZoomableImage
 
     private void CanvasOnPointerWheelChanged(object sender, PointerRoutedEventArgs e)
     {
-        var point = e.GetCurrentPoint(Canvas);
+        var point = e.GetCurrentPoint(CanvasControl);
         var originalScale = ImageScale;
         Zoom(point.Properties.MouseWheelDelta);
         var ratio = ImageScale / originalScale;
@@ -67,7 +67,6 @@ public partial class ZoomableImage
 
     private void CanvasOnSizeChanged(object sender, SizeChangedEventArgs e)
     {
-        CanvasRectangleGeometry.Rect = new Rect(new Point(), Canvas.ActualSize.ToSize());
         OnImageScaleChanged(this, ImageScale);
     }
 

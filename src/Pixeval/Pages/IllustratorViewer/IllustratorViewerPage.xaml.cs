@@ -39,21 +39,6 @@ namespace Pixeval.Pages.IllustratorViewer;
 
 public sealed partial class IllustratorViewerPage
 {
-    /// <summary>
-    /// ReSharper disable once MemberCanBeMadeStatic.Local
-    /// </summary>
-    private GridLength TitleBarHeight => new(32);
-
-    /// <summary>
-    /// ReSharper disable once MemberCanBeMadeStatic.Local
-    /// </summary>
-    private GridLength BackgroundActualHeight => new(220 + 32);
-
-    /// <summary>
-    /// ReSharper disable once MemberCanBeMadeStatic.Local
-    /// </summary>
-    private GridLength BackgroundHeight => new(220);
-
     private readonly ISet<Page> _pageCache;
     private IllustratorViewerPageViewModel _viewModel = null!;
     private int _lastNavigationViewTag = -1;
@@ -73,11 +58,6 @@ public sealed partial class IllustratorViewerPage
     public override void OnPageActivated(NavigationEventArgs e, object? parameter)
     {
         _viewModel = Window.Content.To<FrameworkElement>().GetViewModel(parameter);
-        _viewModel.PropertyChanged += (sender, args) =>
-        {
-            if (args.PropertyName is nameof(IllustratorViewerPageViewModel.ScrollRatio))
-                SetPageScrollView();
-        };
     }
 
     protected override void SetTitleBarDragRegion(InputNonClientPointerSource sender, SizeInt32 windowSize, double scaleFactor, out int titleBarHeight)
@@ -103,35 +83,20 @@ public sealed partial class IllustratorViewerPage
             : new EntranceNavigationTransitionInfo());
         _lastNavigationViewTag = segmented.SelectedIndex;
 
-        await ThreadingHelper.SpinWaitAsync(() => IllustratorViewerFrame.Content?.GetType() != currentTag.NavigateTo);
-        _ = _pageCache.Add((Page)IllustratorViewerFrame.Content);
-        SetPageScrollView();
+        var page = await IllustratorViewerFrame.AwaitPageTransitionAsync(currentTag.NavigateTo);
+        _ = _pageCache.Add(page);
+        StickyHeaderScrollView.RaiseSetInnerScrollView();
     }
 
-    private void FrameworkElement_OnSizeChanged(object sender, SizeChangedEventArgs e)
+    private double StickyHeaderScrollView_OnGetScrollableLength()
     {
-        ScrollGrid.Height = ScrollView.ActualHeight + ScrollableLength.ActualHeight;
+        // 标题栏高度32
+        return ScrollableLength.ActualHeight - 32;
     }
 
-    private void ScrollView_OnViewChanged(ScrollView sender, object args)
+    private ScrollView? StickyHeaderScrollView_OnSetInnerScrollView()
     {
-        _viewModel.ScrollRatio = sender.VerticalOffset / sender.ScrollableHeight;
-    }
-
-    private void SetPageScrollView()
-    {
-        if (IllustratorViewerFrame.Content is not IllustratorContentViewerSubPage { ScrollView: { } scrollView }) 
-            return;
-        if (_viewModel.ScrollRatio is 1)
-        {
-            scrollView.VerticalScrollBarVisibility = ScrollingScrollBarVisibility.Auto;
-            scrollView.VerticalScrollMode = ScrollingScrollMode.Auto;
-        }
-        else
-        {
-            scrollView.VerticalScrollBarVisibility = ScrollingScrollBarVisibility.Hidden;
-            scrollView.VerticalScrollMode = ScrollingScrollMode.Disabled;
-        }
+        return IllustratorViewerFrame.Content is IllustratorContentViewerSubPage { ScrollView: { } scrollView } ? scrollView : null;
     }
 
 #if false // TODO 这是什么

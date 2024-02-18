@@ -223,15 +223,17 @@ public sealed partial class MainPage : SupportCustomTitleBarDragRegionPage
 
     private async void OpenSearchSettingButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        await NavigateToSettingEntryAsync(SettingEntry.ReverseSearchResultSimilarityThreshold);
+        await NavigateToSettingEntryAsync(SettingEntry.SearchCategory);
     }
 
     private async Task NavigateToSettingEntryAsync(SettingEntry entry)
     {
+        // ScrollView第一次导航的时候会有一个偏移，所以我们需要手动调整一下
+        var offset = (NavigationViewItem)NavigationView.SelectedItem == SettingsTab ? 0 : 60;
         NavigationView.SelectedItem = SettingsTab;
         var settingsPage = await MainPageRootFrame.AwaitPageTransitionAsync<SettingsPage>();
         var panel = settingsPage.SettingsPageScrollView.Content.To<FrameworkElement>();
-        var frameworkElement = panel.FindChild<SettingsCard>(element => element.Tag is SettingEntry e && e == entry);
+        var frameworkElement = panel.FindChild<FrameworkElement>(element => element.Tag is SettingEntry e && e == entry);
 
         if (frameworkElement is not null)
         {
@@ -239,7 +241,7 @@ public sealed partial class MainPage : SupportCustomTitleBarDragRegionPage
                 .TransformToVisual(panel)
                 .TransformPoint(new Point(0, 0));
 
-            _ = settingsPage.SettingsPageScrollView.ScrollTo(position.X, position.Y);
+            _ = settingsPage.SettingsPageScrollView.ScrollTo(position.X, position.Y - offset);
         }
     }
 

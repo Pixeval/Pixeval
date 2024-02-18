@@ -160,6 +160,7 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
             var oldTag = Pages?[CurrentPageIndex].Id ?? 0;
 
             _currentIllustrationIndex = value;
+            // 这里可以触发总页数的更新
             Pages = CurrentIllustration.GetMangaIllustrationViewModels().ToArray();
             // 保证_pages里所有的IllustrationViewModel都是生成的，从而删除的时候一律DisposeForce
 
@@ -169,11 +170,12 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
 
             _ = LoadUserProfile();
 
-            // 此处不要触发CurrentPageIndex的OnPropertyChanged，否则会导航两次
+            // 此处不要触发CurrentPageIndex的OnDetailedPropertyChanged，否则会导航两次
             _currentPageIndex = 0;
             OnButtonPropertiesChanged();
+            // 用OnPropertyChanged不会触发导航，但可以让UI页码更新
+            OnPropertyChanged(nameof(CurrentPageIndex));
             CurrentImage = new ImageViewerPageViewModel(this, CurrentPage);
-            // ---
 
             OnDetailedPropertyChanged(oldValue, value, oldTag, CurrentPage.Id);
             OnPropertyChanged(nameof(CurrentIllustration));

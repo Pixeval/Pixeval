@@ -411,15 +411,14 @@
                             SizeChanged="CommandBarElementOnSizeChanged" />
                         <AppBarButton Command="{x:Bind _viewModel.CurrentImage.ShareCommand, Mode=OneWay}" SizeChanged="CommandBarElementOnSizeChanged" />
                     </CommandBar>
-                    <StackPanel
+                    <TextBlock
                         Grid.Column="3"
-                        Orientation="Horizontal"
-                        Spacing="5"
+                        Style="{StaticResource TextBlockStyle}"
                         Visibility="{x:Bind _viewModel.CurrentIllustration.IsManga, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
-                        <TextBlock Style="{StaticResource TextBlockStyle}" Text="{x:Bind _viewModel.CurrentPageIndex, Converter={StaticResource DisplayIndexConverter}, Mode=OneWay}" />
-                        <TextBlock Style="{StaticResource TextBlockStyle}" Text="/" />
-                        <TextBlock Style="{StaticResource TextBlockStyle}" Text="{x:Bind _viewModel.PageCount, Mode=OneWay}" />
-                    </StackPanel>
+                        <Run Text="{x:Bind _viewModel.CurrentPageIndex, Converter={StaticResource DisplayIndexConverter}, Mode=OneWay}" />
+                        <Run Text="/" />
+                        <Run Text="{x:Bind _viewModel.PageCount, Mode=OneWay}" />
+                    </TextBlock>
                     <CommandBar
                         x:Name="IllustrationViewerSubCommandBar"
                         Grid.Column="4"

@@ -55,12 +55,6 @@ public partial class IllustratorViewerPageViewModel : UiObservableObject, IIllus
     [ObservableProperty]
     private bool _isFollowed;
 
-    [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(ComplementaryRatio))]
-    private double _scrollRatio;
-
-    public double ComplementaryRatio => 1 - ScrollRatio;
-
     public NavigationViewTag IllustrationTag { get; }
 
     public NavigationViewTag MangaTag { get; }

@@ -92,7 +92,11 @@
     <!--  PlaceHolderGrid  -->
     <Grid Width="{x:Bind GetDesiredWidth(ViewModel), Mode=OneWay}" Height="{x:Bind DesiredHeight}" />
     <Grid HorizontalAlignment="Stretch" CornerRadius="{ThemeResource ControlCornerRadius}">
-        <Image Source="{x:Bind ViewModel.ThumbnailSource, Mode=OneWay}" Stretch="UniformToFill" />
+        <Image
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Source="{x:Bind ViewModel.ThumbnailSource, Mode=OneWay}"
+            Stretch="UniformToFill" />
         <labs:Shimmer Visibility="{x:Bind IsImageNotVisible(ViewModel.ThumbnailSource), Mode=OneWay}" />
         <Grid
             x:Name="ImageBookmarkButtonGrid"
