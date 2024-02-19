@@ -9,8 +9,6 @@
     "LoginPhaseSuccessNavigating": "登录成功，正在导航到主页",
     "LoginPhaseWaitingForUserInput": "等待用户输入",
     "SubmitButton/Content": "登录",
-    "UserNameBox/PlaceholderText": "用户名",
-    "PasswordBox/PlaceholderText": "密码",
     "DisableDomainFrontingToggleSwitch/Header": "禁用前域直连",
     "RefreshingSessionIsNotPresentContent": "已经删除损坏的文件，请重新启动应用程序\n如果该问题反复出现，请联系开发者寻求解决",
     "RefreshingSessionIsNotPresentTitle": "必要的配置文件不存在",

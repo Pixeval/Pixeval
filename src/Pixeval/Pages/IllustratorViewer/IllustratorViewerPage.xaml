@@ -17,7 +17,7 @@
     </controls:EnhancedPage.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
+            <RowDefinition Height="32" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <controls:StickyHeaderScrollView
@@ -87,6 +87,7 @@
                                 IsTextSelectionEnabled="True"
                                 MaxLines="3"
                                 Text="{x:Bind _viewModel.Comment}"
+                                TextTrimming="CharacterEllipsis"
                                 TextWrapping="Wrap" />
                         </Grid>
                     </Grid>
@@ -292,26 +293,9 @@
                 </Grid>
             </controls:StickyHeaderScrollView.StickyContent>
         </controls:StickyHeaderScrollView>
-        <Border
-            Grid.Row="0"
-            Height="32"
-            Margin="10,0"
-            IsHitTestVisible="True">
-            <StackPanel Orientation="Horizontal">
-                <Image
-                    x:Name="Icon"
-                    Width="25"
-                    Height="25"
-                    HorizontalAlignment="Left"
-                    Source="/Assets/Images/logo44x44.ico" />
-                <TextBlock
-                    x:Name="TitleTextBlock"
-                    Margin="20,0"
-                    VerticalAlignment="Center"
-                    FontSize="{StaticResource PixevalContentFontSize}"
-                    Text="{x:Bind _viewModel.Name}"
-                    TextTrimming="CharacterEllipsis" />
-            </StackPanel>
-        </Border>
+        <controls:TitleBarIconText
+            x:Name="TitleBar"
+            Title="{x:Bind _viewModel.Name}"
+            Grid.Row="0" />
     </Grid>
 </controls:SupportCustomTitleBarDragRegionPage>

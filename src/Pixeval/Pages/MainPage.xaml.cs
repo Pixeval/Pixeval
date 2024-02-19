@@ -53,8 +53,6 @@ using Pixeval.Util;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using WinUI3Utilities;
-using Image = SixLabors.ImageSharp.Image;
-using CommunityToolkit.WinUI.Controls;
 using Pixeval.AppManagement;
 using Pixeval.Controls.Windowing;
 
@@ -68,9 +66,11 @@ public sealed partial class MainPage : SupportCustomTitleBarDragRegionPage
     {
         _viewModel = new MainPageViewModel(this);
         InitializeComponent();
-        if (AppWindowTitleBar.IsCustomizationSupported())
+        if (!AppInfo.CustomizeTitleBarSupported)
         {
-            NavigationView.PaneCustomContent = null;
+            AutoSuggestBoxWidth.Width = new GridLength(1, GridUnitType.Star);
+            PaneCustomContentPresenter.Content = TitleBarPresenter.Content;
+            TitleBarPresenter.Content = null;
         }
     }
 
@@ -79,8 +79,8 @@ public sealed partial class MainPage : SupportCustomTitleBarDragRegionPage
         titleBarHeight = 48;
         // NavigationView的Pane按钮
         var leftIndent = new RectInt32(0, 0, titleBarHeight, titleBarHeight);
-        sender.SetRegionRects(NonClientRegionKind.Icon, [GetScaledRect(Icon)]);
-        sender.SetRegionRects(NonClientRegionKind.Passthrough, [GetScaledRect(TitleBarControlGrid), GetScaledRect(leftIndent)]);
+        sender.SetRegionRects(NonClientRegionKind.Icon, [GetScaledRect(TitleBar.Icon)]);
+        sender.SetRegionRects(NonClientRegionKind.Passthrough, [GetScaledRect(TitleBarPresenter), GetScaledRect(leftIndent)]);
     }
 
     public override async void OnPageActivated(NavigationEventArgs e, object? parameter)
@@ -125,7 +125,7 @@ public sealed partial class MainPage : SupportCustomTitleBarDragRegionPage
 
     private void NavigationView_OnPaneChanging(NavigationView sender, object e)
     {
-        sender.UpdateAppTitleMargin(AppTitleTextBlock);
+        sender.UpdateAppTitleMargin(TitleBar.TitleBlock);
     }
 
     private void MainPageRootFrame_OnNavigated(object sender, NavigationEventArgs e)
@@ -245,7 +245,9 @@ public sealed partial class MainPage : SupportCustomTitleBarDragRegionPage
         }
     }
 
-    // The AutoSuggestBox does not have a 'Paste' event, so we check the keyboard event accordingly
+    /// <summary>
+    /// The AutoSuggestBox does not have a 'Paste' event, so we check the keyboard event accordingly
+    /// </summary>
     private async void KeywordAutoSuggestionBox_OnKeyDown(object sender, KeyRoutedEventArgs e)
     {
         if (InputKeyboardSource.GetKeyStateForCurrentThread(VirtualKey.LeftControl).HasFlag(CoreVirtualKeyStates.Down) && e.Key == VirtualKey.V)
@@ -256,17 +258,13 @@ public sealed partial class MainPage : SupportCustomTitleBarDragRegionPage
             {
                 e.Handled = true; // prevent the event from bubbling if it contains an image, since it means that we want to do reverse search.
                 await using var stream = await file.OpenStreamForReadAsync();
-                // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
-                if (await Image.DetectFormatAsync(stream) is not null)
+                if (App.AppViewModel.AppSettings.ReverseSearchApiKey is not { Length: > 0 })
                 {
-                    if (App.AppViewModel.AppSettings.ReverseSearchApiKey is not { Length: > 0 })
-                    {
-                        await ShowReverseSearchApiKeyNotPresentDialog();
-                        return;
-                    }
-
-                    await _viewModel.ReverseSearchAsync(stream);
+                    await ShowReverseSearchApiKeyNotPresentDialog();
+                    return;
                 }
+
+                await _viewModel.ReverseSearchAsync(stream);
             }
         }
     }

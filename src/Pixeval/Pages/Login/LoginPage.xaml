@@ -16,7 +16,7 @@
         ColumnSpacing="20">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="Auto" MinWidth="300" />
+            <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
         <StackPanel
             Grid.Column="0"
@@ -37,14 +37,6 @@
                 Text="{x:Bind util:LocalizedResourceAttributeHelper.GetLocalizedResourceContent(_viewModel.LoginPhase), Mode=OneWay}" />
         </StackPanel>
         <StackPanel Grid.Column="1" Spacing="20">
-            <TextBox
-                x:Uid="/LoginPage/UserNameBox"
-                IsEnabled="{x:Bind _viewModel.IsEnabled, Mode=OneWay}"
-                Text="{x:Bind _viewModel.UserName, Mode=TwoWay}" />
-            <PasswordBox
-                x:Uid="/LoginPage/PasswordBox"
-                IsEnabled="{x:Bind _viewModel.IsEnabled, Mode=OneWay}"
-                Password="{x:Bind _viewModel.Password, Mode=TwoWay}" />
             <Button
                 x:Uid="/LoginPage/SubmitButton"
                 IsEnabled="{x:Bind _viewModel.IsEnabled, Mode=OneWay}"

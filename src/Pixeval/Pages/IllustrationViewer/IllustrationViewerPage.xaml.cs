@@ -80,7 +80,7 @@ public sealed partial class IllustrationViewerPage : SupportCustomTitleBarDragRe
         }
         var leftIndent = new RectInt32(0, 0, _viewModel.IsInfoPaneOpen ? (int)IllustrationInfoAndCommentsSplitView.OpenPaneLength : 0, (int)TitleBarArea.ActualHeight);
 
-        sender.SetRegionRects(NonClientRegionKind.Icon, [GetScaledRect(Icon)]);
+        sender.SetRegionRects(NonClientRegionKind.Icon, [GetScaledRect(TitleBar.Icon)]);
         sender.SetRegionRects(NonClientRegionKind.Passthrough, [GetScaledRect(leftIndent), GetScaledRect(IllustrationViewerCommandBar), GetScaledRect(IllustrationViewerSubCommandBar)]);
         titleBarHeight = 48;
     }

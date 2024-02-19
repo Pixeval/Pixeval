@@ -9,6 +9,7 @@
     xmlns:markup="using:Pixeval.Controls.MarkupExtensions"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pages="using:Pixeval.Pages"
+    xmlns:pixeval="using:Pixeval.AppManagement"
     mc:Ignorable="d">
     <controls:EnhancedWindowPage.Resources>
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
@@ -76,6 +77,13 @@
             </Grid>
         </DataTemplate>
 
+        <Style
+            x:Key="NavigationViewPaneContentGridStyle"
+            BasedOn="{StaticResource DefaultGridStyle}"
+            TargetType="Grid">
+            <Setter Property="Margin" Value="10,0,0,0" />
+        </Style>
+
         <pages:SuggestionModelDataTemplateSelector
             x:Key="SuggestionModelDataTemplateSelector"
             AutoCompletionHeader="{StaticResource TagAutoCompletionSuggestionTemplate}"
@@ -86,13 +94,9 @@
     </controls:EnhancedWindowPage.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" MinWidth="{x:Bind NavigationView.CompactPaneLength}" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <Rectangle
-            Grid.Column="0"
-            Width="{x:Bind NavigationView.CompactPaneLength}"
-            Height="1" />
         <NavigationView
             x:Name="NavigationView"
             Grid.Column="0"
@@ -104,56 +108,10 @@
             PaneOpening="NavigationView_OnPaneChanging"
             SelectionChanged="NavigationView_OnSelectionChanged">
             <NavigationView.PaneCustomContent>
-                <Grid Margin="15,5,15,10" Visibility="{x:Bind NavigationView.IsPaneOpen, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition />
-                        <ColumnDefinition Width="38" />
-                        <ColumnDefinition Width="38" />
-                    </Grid.ColumnDefinitions>
-                    <AutoSuggestBox
-                        x:Uid="/MainPage/MainPageAutoSuggestionBox"
-                        Grid.Column="0"
-                        VerticalAlignment="Center"
-                        AllowDrop="True"
-                        DragOver="KeywordAutoSuggestBox_OnDragOver"
-                        Drop="KeywordAutoSuggestBox_OnDrop"
-                        GotFocus="KeywordAutoSuggestBox_GotFocus"
-                        ItemTemplateSelector="{StaticResource SuggestionModelDataTemplateSelector}"
-                        ItemsSource="{x:Bind _viewModel.SuggestionProvider.Suggestions, Mode=OneWay}"
-                        KeyDown="KeywordAutoSuggestionBox_OnKeyDown"
-                        QueryIcon="Find"
-                        QuerySubmitted="KeywordAutoSuggestBox_QuerySubmitted"
-                        SuggestionChosen="KeywordAutoSuggestBox_OnSuggestionChosen"
-                        TextChanged="KeywordAutoSuggestBox_OnTextChanged">
-                        <AutoSuggestBox.ItemContainerTransitions>
-                            <TransitionCollection>
-                                <AddDeleteThemeTransition />
-                            </TransitionCollection>
-                        </AutoSuggestBox.ItemContainerTransitions>
-                    </AutoSuggestBox>
-                    <Button
-                        x:Uid="/MainPage/OpenSearchSettingButton"
-                        Grid.Column="1"
-                        Width="33"
-                        Height="33"
-                        Padding="0"
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Center"
-                        Content="{markup:FontSymbolIcon Glyph=SettingsE713,
-                                                        FontSize=13}"
-                        Tapped="OpenSearchSettingButton_OnTapped" />
-                    <Button
-                        x:Uid="/MainPage/ReverseSearchButton"
-                        Grid.Column="2"
-                        Width="33"
-                        Height="33"
-                        Padding="0"
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Center"
-                        Content="{markup:FontSymbolIcon Glyph=CameraE722,
-                                                        FontSize=13}"
-                        Tapped="ReverseSearchButton_OnTapped" />
-                </Grid>
+                <ContentPresenter
+                    x:Name="PaneCustomContentPresenter"
+                    Margin="10,0,0,0"
+                    Visibility="{x:Bind NavigationView.IsPaneOpen, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
             </NavigationView.PaneCustomContent>
             <NavigationView.MenuItems>
                 <NavigationViewItem
@@ -253,76 +211,67 @@
             </NavigationView.FooterMenuItems>
             <Frame x:Name="MainPageRootFrame" Navigated="MainPageRootFrame_OnNavigated" />
         </NavigationView>
-        <Grid Grid.Column="1" VerticalAlignment="Top">
+        <Grid
+            Grid.Column="1"
+            Height="48"
+            VerticalAlignment="Top"
+            Visibility="{x:Bind pixeval:AppInfo.CustomizeTitleBarSupported, Converter={StaticResource BoolToVisibilityConverter}}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <Grid Grid.Column="0">
-                <Image
-                    x:Name="Icon"
-                    Width="25"
-                    Height="25"
-                    Margin="12,0,0,0"
-                    HorizontalAlignment="Left"
-                    Source="/Assets/Images/logo44x44.ico" />
-                <TextBlock
-                    x:Name="AppTitleTextBlock"
-                    Margin="48,14,0,0"
-                    VerticalAlignment="Top"
-                    x:FieldModifier="public"
-                    FontWeight="Semibold"
-                    Style="{StaticResource ContentTextBlockStyle}"
-                    Text="Pixeval"
-                    TextWrapping="NoWrap" />
-            </Grid>
-            <Grid x:Name="TitleBarControlGrid" Column="1">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-                <AutoSuggestBox
-                    x:Uid="/MainPage/MainPageAutoSuggestionBox"
-                    Grid.Column="0"
-                    Width="350"
-                    VerticalAlignment="Center"
-                    AllowDrop="True"
-                    DragOver="KeywordAutoSuggestBox_OnDragOver"
-                    Drop="KeywordAutoSuggestBox_OnDrop"
-                    GotFocus="KeywordAutoSuggestBox_GotFocus"
-                    IsFocusEngaged="False"
-                    ItemTemplateSelector="{StaticResource SuggestionModelDataTemplateSelector}"
-                    ItemsSource="{x:Bind _viewModel.SuggestionProvider.Suggestions, Mode=OneWay}"
-                    KeyDown="KeywordAutoSuggestionBox_OnKeyDown"
-                    QueryIcon="Find"
-                    QuerySubmitted="KeywordAutoSuggestBox_QuerySubmitted"
-                    SuggestionChosen="KeywordAutoSuggestBox_OnSuggestionChosen"
-                    TextChanged="KeywordAutoSuggestBox_OnTextChanged">
-                    <AutoSuggestBox.ItemContainerTransitions>
-                        <TransitionCollection>
-                            <AddDeleteThemeTransition />
-                        </TransitionCollection>
-                    </AutoSuggestBox.ItemContainerTransitions>
-                </AutoSuggestBox>
-                <CommandBar
-                    Grid.Column="1"
-                    DefaultLabelPosition="Collapsed"
-                    OverflowButtonVisibility="Collapsed">
-                    <AppBarButton
-                        x:Uid="/MainPage/OpenSearchSettingButton"
-                        Width="{StaticResource CollapsedAppBarButtonWidth}"
-                        Content="{markup:FontSymbolIcon Glyph=CameraE722,
-                                                        FontSize=13}"
-                        Tapped="ReverseSearchButton_OnTapped" />
-                    <AppBarButton
-                        x:Uid="/MainPage/ReverseSearchButton"
-                        Width="{StaticResource CollapsedAppBarButtonWidth}"
-                        Content="{markup:FontSymbolIcon Glyph=SettingsE713,
-                                                        FontSize=13}"
-                        Tapped="OpenSearchSettingButton_OnTapped" />
-                </CommandBar>
-            </Grid>
+            <controls:TitleBarIconText
+                x:Name="TitleBar"
+                Title="{x:Bind pixeval:AppInfo.AppIdentifier}"
+                Grid.Column="0" />
+            <ContentPresenter x:Name="TitleBarPresenter" Grid.Column="1">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition x:Name="AutoSuggestBoxWidth" Width="350" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <AutoSuggestBox
+                        x:Uid="/MainPage/MainPageAutoSuggestionBox"
+                        Grid.Column="0"
+                        VerticalAlignment="Center"
+                        AllowDrop="True"
+                        DragOver="KeywordAutoSuggestBox_OnDragOver"
+                        Drop="KeywordAutoSuggestBox_OnDrop"
+                        GotFocus="KeywordAutoSuggestBox_GotFocus"
+                        IsFocusEngaged="False"
+                        ItemTemplateSelector="{StaticResource SuggestionModelDataTemplateSelector}"
+                        ItemsSource="{x:Bind _viewModel.SuggestionProvider.Suggestions, Mode=OneWay}"
+                        KeyDown="KeywordAutoSuggestionBox_OnKeyDown"
+                        QueryIcon="Find"
+                        QuerySubmitted="KeywordAutoSuggestBox_QuerySubmitted"
+                        SuggestionChosen="KeywordAutoSuggestBox_OnSuggestionChosen"
+                        TextChanged="KeywordAutoSuggestBox_OnTextChanged">
+                        <AutoSuggestBox.ItemContainerTransitions>
+                            <TransitionCollection>
+                                <AddDeleteThemeTransition />
+                            </TransitionCollection>
+                        </AutoSuggestBox.ItemContainerTransitions>
+                    </AutoSuggestBox>
+                    <CommandBar
+                        Grid.Column="1"
+                        DefaultLabelPosition="Collapsed"
+                        OverflowButtonVisibility="Collapsed">
+                        <AppBarButton
+                            x:Uid="/MainPage/ReverseSearchButton"
+                            Width="{StaticResource CollapsedAppBarButtonWidth}"
+                            Content="{markup:FontSymbolIcon Glyph=CameraE722,
+                                                            FontSize=13}"
+                            Tapped="ReverseSearchButton_OnTapped" />
+                        <AppBarButton
+                            x:Uid="/MainPage/OpenSearchSettingButton"
+                            Width="{StaticResource CollapsedAppBarButtonWidth}"
+                            Content="{markup:FontSymbolIcon Glyph=SettingsE713,
+                                                            FontSize=13}"
+                            Tapped="OpenSearchSettingButton_OnTapped" />
+                    </CommandBar>
+                </Grid>
+            </ContentPresenter>
         </Grid>
     </Grid>
 </controls:SupportCustomTitleBarDragRegionPage>

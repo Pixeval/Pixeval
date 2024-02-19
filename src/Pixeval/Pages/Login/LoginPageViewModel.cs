@@ -28,7 +28,9 @@ using System.Net.NetworkInformation;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using System.Web;
+using Windows.Devices.Input;
 using Windows.System;
+using Windows.UI.Input.Preview.Injection;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Playwright;
@@ -47,6 +49,8 @@ using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
+using System.Collections.Generic;
+using Windows.Foundation;
 
 namespace Pixeval.Pages.Login;
 
@@ -90,18 +94,6 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject
     {
         get => App.AppViewModel.AppSettings.DisableDomainFronting;
         set => App.AppViewModel.AppSettings.DisableDomainFronting = value;
-    }
-
-    public string UserName
-    {
-        get => App.AppViewModel.AppSettings.UserName;
-        set => App.AppViewModel.AppSettings.UserName = value;
-    }
-
-    public string Password
-    {
-        get => App.AppViewModel.AppSettings.Password;
-        set => App.AppViewModel.AppSettings.Password = value;
     }
 
     public Visibility ProcessingRingVisible => LoginPhase is LoginPhaseEnum.WaitingForUserInput ? Visibility.Collapsed : Visibility.Visible;
@@ -237,8 +229,7 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject
 
     public async Task WebView2LoginAsync(UserControl userControl, Action navigated)
     {
-        var remoteDebuggingPort = NegotiatePort(9222);
-        var arguments = $"--remote-debugging-port={remoteDebuggingPort}";
+        var arguments = "";
         var port = NegotiatePort();
 
         var proxyServer = null as PixivAuthenticationProxyServer;
@@ -252,74 +243,27 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject
 
         await EnsureWebView2IsInstalled(userControl);
         Environment.SetEnvironmentVariable("WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS", arguments);
-        WebView = new() { Visibility = Visibility.Visible };
+        WebView = new();
         await WebView.EnsureCoreWebView2Async();
-        var playWrightHelper = new PlayWrightHelper(remoteDebuggingPort);
         var verifier = PixivAuthSignature.GetCodeVerify();
         IsEnabled = IsFinished = false;
-        await playWrightHelper.Initialize();
-
-        var page = playWrightHelper.Page;
-        page.Request += async (o, e) =>
+        WebView.NavigationStarting += async (sender, e) =>
         {
-            if (!IsFinished && e.Url.Contains("code="))
+            if (e.Uri.StartsWith("pixiv://"))
             {
-                // 成功时不需要让控件IsEnabled
-                _ = userControl.DispatcherQueue.TryEnqueue(() => IsFinished = true);
-                var code = HttpUtility.ParseQueryString(new Uri(e.Url).Query)["code"]!;
-                var cookies = await page.Context.CookiesAsync(["https://pixiv.net"]);
+                var cookies = await sender.CoreWebView2.CookieManager.GetCookiesAsync("https://pixiv.net");
                 var cookie = string.Join(';', cookies.Select(c => $"{c.Name}={c.Value}"));
+                var code = HttpUtility.ParseQueryString(new Uri(e.Uri).Query)["code"]!;
                 var session = await AuthCodeToSessionAsync(code, verifier, cookie);
+                IsFinished = true;
                 using var scope = App.AppViewModel.AppServicesScope;
                 var logger = scope.ServiceProvider.GetRequiredService<FileLogger>();
                 App.AppViewModel.MakoClient = new MakoClient(session, App.AppViewModel.AppSettings.ToMakoClientConfiguration(), logger, new RefreshTokenSessionUpdate());
-                await playWrightHelper.DisposeAsync();
                 proxyServer?.Dispose();
                 navigated();
             }
         };
-        try
-        {
-            _ = await page.GotoAsync(PixivAuthSignature.GenerateWebPageUrl(verifier));
-            await page.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
-            const string prefix = "//html/body/div[1]/div/div/div[4]/div[1]/div";
-            const string prefix2 = prefix + "[2]/div/div/div/form/";
-            var buttonLocator = page.Locator(prefix + "[1]/div[5]/button[2]");
-            var userNameLocator = page.Locator(prefix2 + "fieldset[1]/label/input");
-            var passwordLocator = page.Locator(prefix2 + "fieldset[2]/label/input");
-            var submitLocator = page.Locator(prefix2 + "button");
-            if (await buttonLocator.CountAsync() is not 0)
-            {
-                await buttonLocator.ClickAsync();
-                await page.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
-            }
-
-            if (await userNameLocator.CountAsync() is not 0
-                && await passwordLocator.CountAsync() is not 0
-                && await submitLocator.CountAsync() is not 0)
-            {
-                await userNameLocator.FillAsync(UserName);
-                await passwordLocator.FillAsync(Password);
-                await submitLocator.ClickAsync();
-            }
-
-            await page.WaitForLoadStateAsync(LoadState.NetworkIdle);
-            if (IsFinished || !await submitLocator.IsEnabledAsync())
-            {
-                // 需要输入reCAPTCHA
-            }
-        }
-        catch (PlaywrightException)
-        {
-            // visible
-            // 可能还没加载完页面就登录成功跳转了，导致异常
-            // ----- 如果碰到了此处断点，说明此处的忽略是有必要的，将这段删掉，即catch块内留空
-#if DEBUG
-            if (!IsFinished)
-                Debugger.Break();
-#endif
-            // -----
-        }
+        WebView.Source = new Uri(PixivAuthSignature.GenerateWebPageUrl(verifier));
     }
 
     private async Task EnsureCertificateIsInstalled(UIElement userControl)

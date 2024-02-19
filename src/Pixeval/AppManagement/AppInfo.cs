@@ -34,6 +34,7 @@ using Pixeval.Utilities;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
 using Windows.ApplicationModel;
+using Microsoft.UI.Windowing;
 using Pixeval.CoreApi.Net;
 using Pixeval.Util.UI;
 
@@ -59,6 +60,8 @@ public static partial class AppInfo
     public static readonly string DatabaseFilePath = AppKnownFolders.Local.Resolve("PixevalData.litedb");
 
     public static Versioning AppVersion { get; } = new();
+
+    public static bool CustomizeTitleBarSupported => AppWindowTitleBar.IsCustomizationSupported();
 
     private static readonly WeakReference<SoftwareBitmapSource?> _imageNotAvailable = new(null);
 

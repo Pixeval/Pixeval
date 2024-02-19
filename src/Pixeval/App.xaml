@@ -23,9 +23,6 @@
             <Thickness x:Key="StackLayoutEntriesMargin">0,20,0,0</Thickness>
             <!--  Gap between the same entry's different component  -->
             <Thickness x:Key="StackLayoutEntryPadding">0,5,0,0</Thickness>
-            <Thickness x:Key="NavigationViewContentMargin">0,48,0,0</Thickness>
-            <SolidColorBrush x:Key="WindowCaptionBackground">Transparent</SolidColorBrush>
-            <SolidColorBrush x:Key="WindowCaptionBackgroundDisabled">Transparent</SolidColorBrush>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

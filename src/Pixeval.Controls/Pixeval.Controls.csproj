@@ -20,6 +20,7 @@
         <None Remove="PersonView\PersonView.xaml" />
         <None Remove="PixevalBadge\PixevalBadge.xaml" />
         <None Remove="StickyHeaderScrollView.xaml" />
+        <None Remove="TitleBarIconText.xaml" />
         <None Remove="ZoomableImage.xaml" />
         <None Remove="ZoomableImage\ZoomableImage.xaml" />
     </ItemGroup>
@@ -54,6 +55,11 @@
     <ItemGroup>
         <PRIResource Include="Strings\zh-cn\PixevalBadge.resjson" />
         <PRIResource Include="Strings\zh-cn\AdvancedItemsView.resjson" />
+    </ItemGroup>
+    <ItemGroup>
+      <Page Update="TitleBarIconText.xaml">
+        <Generator>MSBuild:Compile</Generator>
+      </Page>
     </ItemGroup>
     <ItemGroup>
       <Page Update="StickyHeaderScrollView.xaml">

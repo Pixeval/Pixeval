@@ -31,7 +31,6 @@ using CommunityToolkit.WinUI.Controls;
 using Pixeval.Controls.Windowing;
 using Pixeval.Utilities;
 using Microsoft.UI.Xaml.Media.Animation;
-using Pixeval.Util.Threading;
 using Pixeval.Util.UI;
 using Pixeval.Controls;
 
@@ -62,7 +61,7 @@ public sealed partial class IllustratorViewerPage
 
     protected override void SetTitleBarDragRegion(InputNonClientPointerSource sender, SizeInt32 windowSize, double scaleFactor, out int titleBarHeight)
     {
-        sender.SetRegionRects(NonClientRegionKind.Icon, [GetScaledRect(Icon)]);
+        sender.SetRegionRects(NonClientRegionKind.Icon, [GetScaledRect(TitleBar.Icon)]);
         titleBarHeight = 32;
     }
 

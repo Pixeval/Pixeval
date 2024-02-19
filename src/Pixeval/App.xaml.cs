@@ -46,6 +46,8 @@ public partial class App
 {
     private const string ApplicationWideFontKey = "ContentControlThemeFontFamily";
 
+    private const string NavigationViewContentMargin = "NavigationViewContentMargin";
+
     public App()
     {
         AppViewModel = new AppViewModel(this) { AppSettings = AppInfo.LoadConfig() ?? new AppSettings() };
@@ -59,6 +61,9 @@ public partial class App
 
     protected override async void OnLaunched(LaunchActivatedEventArgs args)
     {
+        if (AppInfo.CustomizeTitleBarSupported)
+            Resources[NavigationViewContentMargin] = new Thickness(0, 48, 0, 0);
+
         if (AppInstance.GetCurrent().GetActivatedEventArgs().Kind is ExtendedActivationKind.ToastNotification)
         {
             return;
@@ -134,7 +139,7 @@ public partial class App
 #if DEBUG
             if (Debugger.IsAttached)
                 Debugger.Break();
-            if (e.IsTerminating && Debugger.IsAttached) 
+            if (e.IsTerminating && Debugger.IsAttached)
                 Debugger.Break();
 #endif
         };

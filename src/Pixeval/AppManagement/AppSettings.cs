@@ -237,14 +237,6 @@ public partial record AppSettings : IWindowSettings
 
     [AttributeIgnore(typeof(SettingsViewModelAttribute<>))]
     [SyntheticSetting]
-    public string UserName { get; set; } = "";
-
-    [AttributeIgnore(typeof(SettingsViewModelAttribute<>))]
-    [SyntheticSetting]
-    public string Password { get; set; } = "";
-
-    [AttributeIgnore(typeof(SettingsViewModelAttribute<>))]
-    [SyntheticSetting]
     public Size WindowSize { get; set; } = WindowHelper.EstimatedWindowSize().ToSize();
 
     public MakoClientConfiguration ToMakoClientConfiguration()
