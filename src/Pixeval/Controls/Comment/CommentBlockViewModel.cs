@@ -35,7 +35,6 @@ using Pixeval.Misc;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
-using WinUI3Utilities;
 
 namespace Pixeval.Controls;
 
@@ -65,9 +64,6 @@ public partial class CommentBlockViewModel(Comment comment, long illustrationId)
     public bool IsMe => PosterId == App.AppViewModel.PixivUid;
 
     public long CommentId => Comment.Id;
-
-    [ObservableProperty]
-    private string _openRepliesText = CommentBlockResources.EmptyRepliesNavigationString;
 
     [ObservableProperty]
     private SoftwareBitmapSource _avatarSource = null!;
@@ -100,7 +96,6 @@ public partial class CommentBlockViewModel(Comment comment, long illustrationId)
         Replies = await App.AppViewModel.MakoClient.IllustrationCommentReplies(CommentId)
             .Select(c => new CommentBlockViewModel(c, IllustrationId))
             .ToObservableCollectionAsync();
-        OpenRepliesText = CommentBlockResources.RepliesNavigationStringFormatted.Format(Replies.Count);
     }
 
     public async Task LoadAvatarSource()

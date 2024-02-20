@@ -175,7 +175,6 @@
         <PRIResource Include="Strings\zh-cn\AboutPage.resjson" />
         <PRIResource Include="Strings\zh-cn\Activations.resjson" />
         <PRIResource Include="Strings\zh-cn\BookmarksPage.resjson" />
-        <PRIResource Include="Strings\zh-cn\CommentBlock.resjson" />
         <PRIResource Include="Strings\zh-cn\CommentRepliesBlock.resjson" />
         <PRIResource Include="Strings\zh-cn\DownloadListEntry.resjson" />
         <PRIResource Include="Strings\zh-cn\DownloadListPage.resjson" />
