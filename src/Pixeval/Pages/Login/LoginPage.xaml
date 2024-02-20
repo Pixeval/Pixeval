@@ -4,10 +4,10 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Pixeval.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:login="using:Pixeval.Pages.Login"
+    xmlns:local="using:Pixeval.Pages.Login"
+    xmlns:markup="using:Pixeval.Controls.MarkupExtensions"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:util="using:Pixeval.Util"
-    d:DataContext="{d:DesignInstance login:LoginPageViewModel}"
     Loaded="LoginPage_OnLoaded"
     mc:Ignorable="d">
     <Grid
@@ -16,7 +16,7 @@
         ColumnSpacing="20">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" MinWidth="300" />
         </Grid.ColumnDefinitions>
         <StackPanel
             Grid.Column="0"
@@ -37,15 +37,26 @@
                 Text="{x:Bind util:LocalizedResourceAttributeHelper.GetLocalizedResourceContent(_viewModel.LoginPhase), Mode=OneWay}" />
         </StackPanel>
         <StackPanel Grid.Column="1" Spacing="20">
-            <Button
-                x:Uid="/LoginPage/SubmitButton"
+            <TextBox
+                x:Uid="/LoginPage/UserNameBox"
                 IsEnabled="{x:Bind _viewModel.IsEnabled, Mode=OneWay}"
-                Style="{StaticResource AccentButtonStyle}"
-                Tapped="Login_OnTapped" />
-            <ToggleSwitch
-                x:Uid="/LoginPage/DisableDomainFrontingToggleSwitch"
+                Text="{x:Bind _viewModel.UserName, Mode=TwoWay}" />
+            <PasswordBox
+                x:Uid="/LoginPage/PasswordBox"
                 IsEnabled="{x:Bind _viewModel.IsEnabled, Mode=OneWay}"
-                IsOn="{x:Bind _viewModel.DisableDomainFronting, Mode=OneWay}" />
+                Password="{x:Bind _viewModel.Password, Mode=TwoWay}" />
+            <StackPanel Orientation="Horizontal" Spacing="10">
+                <ToggleSwitch
+                    x:Uid="/LoginPage/DisableDomainFrontingToggleSwitch"
+                    IsEnabled="{x:Bind _viewModel.IsEnabled, Mode=OneWay}"
+                    IsOn="{x:Bind _viewModel.DisableDomainFronting, Mode=OneWay}" />
+                <Button
+                    x:Uid="/LoginPage/SubmitButton"
+                    IsEnabled="{x:Bind _viewModel.IsEnabled, Mode=OneWay}"
+                    Style="{StaticResource AccentButtonStyle}"
+                    Tapped="Login_OnTapped" />
+                <Button x:Uid="/LoginPage/Help" Content="{markup:FontSymbolIcon Glyph=HelpE897}" />
+            </StackPanel>
         </StackPanel>
         <Border
             Grid.Column="0"

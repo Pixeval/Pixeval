@@ -42,7 +42,8 @@ public record Supporter(string Nickname, string Name, ImageSource ProfilePicture
         new("扑克", "@Poker-sang", SupportImageOf(62325494), new Uri("https://github.com/Poker-sang")),
         new("南门二", "@Rigil-Kentaurus", SupportImageOf(49679244), new Uri("https://github.com/Rigil-Kentaurus")),
         new("当妈", "@TheRealKamisama", SupportImageOf(35005476), new Uri("https://github.com/TheRealKamisama")),
-        new("茶栗", "@CharlieJiang", SupportImageOf(5109850), new Uri("https://github.com/cqjjjzr"))
+        new("茶栗", "@CharlieJiang", SupportImageOf(5109850), new Uri("https://github.com/cqjjjzr")),
+        new("cnbluefire", "@cnbluefire", SupportImageOf(27049838), new Uri("https://github.com/cnbluefire"))
     };
     // ReSharper restore StringLiteralTypo
 

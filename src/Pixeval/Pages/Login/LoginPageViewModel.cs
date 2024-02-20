@@ -96,6 +96,18 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject
         set => App.AppViewModel.AppSettings.DisableDomainFronting = value;
     }
 
+    public string UserName
+    {
+        get => App.AppViewModel.AppSettings.UserName;
+        set => App.AppViewModel.AppSettings.UserName = value;
+    }
+
+    public string Password
+    {
+        get => App.AppViewModel.AppSettings.Password;
+        set => App.AppViewModel.AppSettings.Password = value;
+    }
+
     public Visibility ProcessingRingVisible => LoginPhase is LoginPhaseEnum.WaitingForUserInput ? Visibility.Collapsed : Visibility.Visible;
 
     public void AdvancePhase(LoginPhaseEnum newPhase)
@@ -245,8 +257,8 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject
         Environment.SetEnvironmentVariable("WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS", arguments);
         WebView = new();
         await WebView.EnsureCoreWebView2Async();
-        var verifier = PixivAuthSignature.GetCodeVerify();
         IsEnabled = IsFinished = false;
+        var verifier = PixivAuthSignature.GetCodeVerify();
         WebView.NavigationStarting += async (sender, e) =>
         {
             if (e.Uri.StartsWith("pixiv://"))
@@ -261,6 +273,41 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject
                 App.AppViewModel.MakoClient = new MakoClient(session, App.AppViewModel.AppSettings.ToMakoClientConfiguration(), logger, new RefreshTokenSessionUpdate());
                 proxyServer?.Dispose();
                 navigated();
+            }
+            else if (UserName != "" && Password != "" && e.Uri.Contains("accounts.pixiv.net"))
+            {
+                _ = await sender.ExecuteScriptAsync(
+                    $$"""
+                      document.addEventListener("DOMContentLoaded", async (event) => {
+                          async function checkElement(selector) {
+                              const targetElement = document.querySelector(selector);
+                              if (targetElement) {
+                                  return targetElement;
+                              } else {
+                                  await new Promise((resolve) => setTimeout(resolve, 100));
+                                  return await checkElement(selector);
+                              }
+                          }
+                      
+                          async function fill(selector, value)
+                          {
+                              const input = (await checkElement(selector));
+                              input.value = value;
+                              input._valueTracker.setValue("");
+                              const ev = new Event("input", { bubbles: true });
+                              input.dispatchEvent(ev);
+                          }
+                      
+                          if ((await checkElement("button")) && document.querySelectorAll("button").length === 3) {
+                              (await checkElement("button:nth-child(2)")).click();
+                          }
+                          else {
+                              await fill("input[autocomplete='username']", "{{UserName}}");
+                              await fill("input[autocomplete='current-password']", "{{Password}}");
+                              document.querySelectorAll("button[type='submit']")[4].click();
+                          }
+                      });
+                      """);
             }
         };
         WebView.Source = new Uri(PixivAuthSignature.GenerateWebPageUrl(verifier));

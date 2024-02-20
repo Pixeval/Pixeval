@@ -234,6 +234,14 @@ public partial record AppSettings : IWindowSettings
     [AttributeIgnore(typeof(SettingsViewModelAttribute<>))]
     [SyntheticSetting]
     public string TagsManagerWorkingPath { get; set; } = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures, Environment.SpecialFolderOption.Create);
+    
+    [AttributeIgnore(typeof(SettingsViewModelAttribute<>))]
+    [SyntheticSetting]
+    public string UserName { get; set; } = "";
+
+    [AttributeIgnore(typeof(SettingsViewModelAttribute<>))]
+    [SyntheticSetting]
+    public string Password { get; set; } = "";
 
     [AttributeIgnore(typeof(SettingsViewModelAttribute<>))]
     [SyntheticSetting]

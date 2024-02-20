@@ -60,7 +60,6 @@ public sealed partial class AboutPage
         "dotnet/runtime/tree/main/src/libraries/Microsoft.Extensions.DependencyInjection",
         "codebude/QRCoder",
         "microsoft/Microsoft.IO.RecyclableMemoryStream",
-        "microsoft/playwright-dotnet",
         "microsoft/Win2D",
         "Sergio0694/PolySharp",
         "SixLabors/ImageSharp",

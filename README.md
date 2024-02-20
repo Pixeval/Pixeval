@@ -98,6 +98,7 @@
 * [TheRealKamisama](https://github.com/TheRealKamisama)
 * [Summpot](https://github.com/Summpot)
 * [Poker](https://github.com/Poker-sang)
+* [cnbluefire](https://github.com/cnbluefire)
 
 ## 支持作者
 
