@@ -32,5 +32,10 @@
     "IllustrationNavigationViewItem/Content": "插画",
     "MangaNavigationViewItem/Content": "漫画",
     "MyPixivUserNavigationViewItem/Content": "好P友",
-    "NovelNavigationViewItem/Content": "小说"
+    "NovelNavigationViewItem/Content": "小说",
+    "FollowingUserItem/Title": "关注中",
+    "MyPixivUserItem/Title": "好P友",
+    "IllustrationCountItem/Title": "插画数",
+    "MangaCountItem/Title": "漫画数",
+    "NovelCountItem/Title": "小说数"
 }

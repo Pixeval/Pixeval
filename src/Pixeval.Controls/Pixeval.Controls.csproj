@@ -12,6 +12,7 @@
         <DefaultLanguage>zh-cn</DefaultLanguage>
     </PropertyGroup>
     <ItemGroup>
+        <None Remove="AppButtonItem.xaml" />
         <None Remove="CardControl\CardControl.xaml" />
         <None Remove="IconButton\IconButton.xaml" />
         <None Remove="LazyImage\LazyImage.xaml" />
@@ -55,6 +56,11 @@
     <ItemGroup>
         <PRIResource Include="Strings\zh-cn\PixevalBadge.resjson" />
         <PRIResource Include="Strings\zh-cn\AdvancedItemsView.resjson" />
+    </ItemGroup>
+    <ItemGroup>
+      <Page Update="AppButtonItem.xaml">
+        <Generator>MSBuild:Compile</Generator>
+      </Page>
     </ItemGroup>
     <ItemGroup>
       <Page Update="TitleBarIconText.xaml">

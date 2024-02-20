@@ -102,7 +102,7 @@
             x:Name="ImageBookmarkButtonGrid"
             Width="20"
             Height="20"
-            Margin="1"
+            Margin="3"
             HorizontalAlignment="Left"
             VerticalAlignment="Top"
             Tapped="ToggleBookmarkButtonOnTapped">

@@ -19,7 +19,6 @@
 #endregion
 
 using System;
-using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -28,12 +27,9 @@ using System.Net.NetworkInformation;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using System.Web;
-using Windows.Devices.Input;
 using Windows.System;
-using Windows.UI.Input.Preview.Injection;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Playwright;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Win32;
@@ -49,8 +45,6 @@ using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
-using System.Collections.Generic;
-using Windows.Foundation;
 
 namespace Pixeval.Pages.Login;
 

@@ -19,7 +19,6 @@
 #endregion
 
 using System;
-using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Windows.System;
@@ -34,7 +33,7 @@ namespace Pixeval.Controls;
 [DependencyProperty<string>("PersonName")]
 [DependencyProperty<Uri>("PersonProfileNavigateUri")]
 [DependencyProperty<ImageSource>("PersonPicture")]
-public partial class PersonView : UserControl
+public partial class PersonView
 {
     public PersonView()
     {

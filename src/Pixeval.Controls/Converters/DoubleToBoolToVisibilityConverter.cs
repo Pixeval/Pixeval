@@ -19,15 +19,15 @@
 #endregion
 
 using System;
-using System.Numerics;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Data;
 using WinUI3Utilities;
 
 namespace Pixeval.Controls.Converters;
 
-public class FloatToVector3Converter : IValueConverter
+public class DoubleToBoolToVisibilityConverter : IValueConverter
 {
-    public object Convert(object value, Type targetType, object parameter, string language) => new Vector3(value.To<float>());
+    public object Convert(object value, Type targetType, object parameter, string language) => value.To<double>() is not 0 ? Visibility.Visible : Visibility.Collapsed;
 
-    public object ConvertBack(object value, Type targetType, object parameter, string language) => value.To<Vector3>().X;
+    public object ConvertBack(object value, Type targetType, object parameter, string language) => value.To<Visibility>() is Visibility.Visible ? 1d : 0d;
 }

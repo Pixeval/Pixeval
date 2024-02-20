@@ -21,7 +21,7 @@
             x:Uid="/AboutPage/TitleTextBlock"
             Grid.Row="0"
             Style="{StaticResource TitleTextBlockStyle}" />
-        <ScrollViewer Grid.Row="2">
+        <ScrollView Grid.Row="2">
             <StackPanel Spacing="20">
                 <StackPanel Spacing="10">
                     <TextBlock x:Uid="/AboutPage/SpecialThanksSubtitleTextBlock" Style="{StaticResource SubtitleTextBlockStyle}" />
@@ -33,10 +33,10 @@
                         <ItemsRepeater.Layout>
                             <UniformGridLayout
                                 ItemsStretch="Fill"
-                                MinColumnSpacing="5"
+                                MinColumnSpacing="10"
                                 MinItemHeight="160"
                                 MinItemWidth="140"
-                                MinRowSpacing="5" />
+                                MinRowSpacing="10" />
                         </ItemsRepeater.Layout>
                         <ItemsRepeater.ItemTemplate>
                             <DataTemplate x:DataType="misc:Supporter">
@@ -107,6 +107,6 @@
                     <TextBlock x:Name="LicenseTextBlock" IsTextSelectionEnabled="True" />
                 </StackPanel>
             </StackPanel>
-        </ScrollViewer>
+        </ScrollView>
     </Grid>
 </Page>

@@ -25,7 +25,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
-using Microsoft.UI;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.Util;
@@ -48,19 +47,19 @@ public partial class IllustratorIllustrationsOverviewViewModel : ObservableObjec
 
     public IllustratorIllustrationsOverviewViewModel(IEnumerable<long>? ids)
     {
-        GetAvatarBorderBrush = false;
+        _getAvatarBorderBrush = false;
         LoadBannerSource = () => LoadBannerSourceFromIdsAsync(ids);
     }
 
     public IllustratorIllustrationsOverviewViewModel(IEnumerable<Illustration>? illustrations)
     {
-        GetAvatarBorderBrush = true;
+        _getAvatarBorderBrush = true;
         LoadBannerSource = () => LoadBannerSourceFromIllustrationsAsync(illustrations);
     }
 
     public Func<Task> LoadBannerSource { get; }
 
-    private bool GetAvatarBorderBrush { get; }
+    private readonly bool _getAvatarBorderBrush;
 
     public List<SoftwareBitmapSource> BannerSources { get; } = new(3);
 
@@ -96,7 +95,7 @@ public partial class IllustratorIllustrationsOverviewViewModel : ObservableObjec
                     if (await App.AppViewModel.MakoClient.DownloadStreamAsync(url) is not
                         Result<Stream>.Success(var stream))
                         continue;
-                    if (AvatarBorderBrush is null && GetAvatarBorderBrush)
+                    if (AvatarBorderBrush is null && _getAvatarBorderBrush)
                     {
                         var dominantColor = await UiHelper.GetDominantColorAsync(stream, false);
                         AvatarBorderBrush = new SolidColorBrush(dominantColor);
@@ -113,7 +112,7 @@ public partial class IllustratorIllustrationsOverviewViewModel : ObservableObjec
 
         OnPropertyChanged(nameof(BannerSources));
 
-        if (AvatarBorderBrush is null && GetAvatarBorderBrush)
+        if (AvatarBorderBrush is null && _getAvatarBorderBrush)
             AvatarBorderBrush = _defaultAvatarBorderColorBrush;
     }
 }

@@ -14,6 +14,7 @@
         <converters1:BoolNegationToVisibilityConverter x:Key="BoolNegationToVisibilityConverter" />
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
         <converters1:ComplementaryDoubleConverter x:Key="ComplementaryDoubleConverter" />
+        <converters1:DoubleToBoolToVisibilityConverter x:Key="DoubleToBoolToVisibilityConverter" />
     </controls:EnhancedPage.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -91,143 +92,85 @@
                                 TextWrapping="Wrap" />
                         </Grid>
                     </Grid>
-                    <StackPanel
-                        Grid.Row="1"
-                        Margin="20,0"
-                        HorizontalAlignment="Left"
-                        Opacity="{x:Bind StickyHeaderScrollView.ScrollRatio, Mode=OneWay}"
-                        Orientation="Horizontal"
-                        Spacing="20">
-                        <PersonPicture
-                            Width="35"
-                            Height="35"
-                            ProfilePicture="{x:Bind _viewModel.AvatarSource, Mode=OneWay}" />
-                        <StackPanel VerticalAlignment="Center" Spacing="2">
-                            <TextBlock
-                                MaxWidth="80"
-                                Style="{StaticResource ContentStrongTextBlockStyle}"
-                                Text="{x:Bind _viewModel.Name}"
-                                TextTrimming="CharacterEllipsis"
-                                TextWrapping="NoWrap" />
-                            <controls:PixevalBadge
-                                HorizontalAlignment="Left"
-                                Mode="Premium"
-                                UseSmall="True"
-                                Visibility="{x:Bind _viewModel.IsPremium, Converter={StaticResource BoolToVisibilityConverter}}" />
-                        </StackPanel>
-                        <Grid VerticalAlignment="Center">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition />
-                                <ColumnDefinition Width="20" />
-                                <ColumnDefinition />
-                                <ColumnDefinition Width="20" />
-                                <ColumnDefinition />
-                            </Grid.ColumnDefinitions>
-                            <StackPanel
-                                Grid.Column="0"
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center">
-                                <TextBlock
-                                    x:Uid="/IllustratorContentViewer/UserMetricsFollowingUserTextBlock"
-                                    HorizontalAlignment="Left"
-                                    FontWeight="SemiBold"
-                                    Foreground="{StaticResource TextSecondaryAccentColor}"
-                                    Style="{StaticResource BaseTextBlockStyle}" />
-                                <StackPanel Orientation="Horizontal" Spacing="5">
-                                    <ContentControl
-                                        VerticalAlignment="Center"
-                                        Content="{markup:FontSymbolIcon Glyph=AddFriendE8FA,
-                                                                        FontSize=15}"
-                                        FlowDirection="RightToLeft"
-                                        Foreground="{StaticResource TextSecondaryAccentColor}" />
+                    <Grid Grid.Row="1" VerticalAlignment="Bottom">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <CommandBar
+                            Grid.Column="0"
+                            VerticalAlignment="Center"
+                            Opacity="{x:Bind StickyHeaderScrollView.ScrollRatio, Mode=OneWay}"
+                            OverflowButtonVisibility="Collapsed"
+                            Visibility="{x:Bind StickyHeaderScrollView.ScrollRatio, Converter={StaticResource DoubleToBoolToVisibilityConverter}, Mode=OneWay}">
+                            <AppBarElementContainer Padding="20,0" VerticalContentAlignment="Center">
+                                <PersonPicture
+                                    Width="35"
+                                    Height="35"
+                                    ProfilePicture="{x:Bind _viewModel.AvatarSource, Mode=OneWay}" />
+                            </AppBarElementContainer>
+                            <AppBarElementContainer VerticalContentAlignment="Center">
+                                <StackPanel Padding="5,0" Spacing="2">
                                     <TextBlock
-                                        VerticalAlignment="Top"
-                                        Style="{StaticResource SubtitleTextBlockStyle}"
-                                        Text="{x:Bind _viewModel.Metrics.FollowingCount, Mode=OneWay, FallbackValue=0}" />
+                                        MaxWidth="80"
+                                        Style="{StaticResource ContentStrongTextBlockStyle}"
+                                        Text="{x:Bind _viewModel.Name}"
+                                        TextTrimming="CharacterEllipsis"
+                                        TextWrapping="NoWrap" />
+                                    <controls:PixevalBadge
+                                        HorizontalAlignment="Left"
+                                        Mode="Premium"
+                                        UseSmall="True"
+                                        Visibility="{x:Bind _viewModel.IsPremium, Converter={StaticResource BoolToVisibilityConverter}}" />
                                 </StackPanel>
-                            </StackPanel>
-                            <Rectangle
-                                Grid.Column="1"
-                                Width="1"
-                                Height="35"
-                                HorizontalAlignment="Center"
-                                Fill="#80808080" />
-                            <StackPanel
-                                Grid.Column="2"
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center">
-                                <TextBlock
-                                    x:Uid="/IllustratorContentViewer/UserMetricsMyPixivUserTextBlock"
-                                    HorizontalAlignment="Left"
-                                    FontWeight="SemiBold"
-                                    Foreground="{StaticResource TextSecondaryAccentColor}"
-                                    Style="{StaticResource BaseTextBlockStyle}" />
-                                <StackPanel Orientation="Horizontal" Spacing="5">
-                                    <ContentControl
-                                        VerticalAlignment="Center"
-                                        Content="{markup:FontSymbolIcon Glyph=PeopleE716,
-                                                                        MirroredWhenRightToLeft=True,
-                                                                        FontSize=15}"
-                                        FlowDirection="RightToLeft"
-                                        Foreground="{StaticResource TextSecondaryAccentColor}" />
-                                    <TextBlock
-                                        VerticalAlignment="Top"
-                                        Style="{StaticResource SubtitleTextBlockStyle}"
-                                        Text="{x:Bind _viewModel.Metrics.MyPixivUsers, Mode=OneWay, FallbackValue=0}" />
-                                </StackPanel>
-                            </StackPanel>
-                            <Rectangle
-                                Grid.Column="3"
-                                Width="1"
-                                Height="35"
-                                HorizontalAlignment="Center"
-                                Fill="#80808080" />
-                            <StackPanel
-                                Grid.Column="4"
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center">
-                                <TextBlock
-                                    x:Uid="/IllustratorContentViewer/UserMetricsIllustrationCountTextBlock"
-                                    HorizontalAlignment="Left"
-                                    FontWeight="SemiBold"
-                                    Foreground="{StaticResource TextSecondaryAccentColor}"
-                                    Style="{StaticResource BaseTextBlockStyle}" />
-                                <StackPanel Orientation="Horizontal" Spacing="5">
-                                    <ContentControl
-                                        VerticalAlignment="Center"
-                                        Content="{markup:FontSymbolIcon Glyph=PictureE8B9,
-                                                                        MirroredWhenRightToLeft=True,
-                                                                        FontSize=15}"
-                                        FlowDirection="RightToLeft"
-                                        Foreground="{StaticResource TextSecondaryAccentColor}" />
-                                    <TextBlock
-                                        VerticalAlignment="Top"
-                                        Style="{StaticResource SubtitleTextBlockStyle}"
-                                        Text="{x:Bind _viewModel.Metrics.IllustrationCount, Mode=OneWay, FallbackValue=0}" />
-                                </StackPanel>
-                            </StackPanel>
-                        </Grid>
-                    </StackPanel>
-                    <CommandBar
-                        x:Name="CommandBar"
-                        Grid.Row="1"
-                        HorizontalAlignment="Right"
-                        DefaultLabelPosition="Right">
-                        <AppBarButton Command="{x:Bind _viewModel.FollowCommand}" Visibility="{x:Bind _viewModel.IsFollowed, Converter={StaticResource BoolNegationToVisibilityConverter}, Mode=OneWay}" />
-                        <AppBarButton Command="{x:Bind _viewModel.FollowPrivatelyCommand}" Visibility="{x:Bind _viewModel.IsFollowed, Converter={StaticResource BoolNegationToVisibilityConverter}, Mode=OneWay}" />
-                        <AppBarButton Command="{x:Bind _viewModel.UnfollowCommand}" Visibility="{x:Bind _viewModel.IsFollowed, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
-                        <AppBarSeparator />
-                        <AppBarButton
-                            x:Name="GenerateLinkButton"
-                            Command="{x:Bind _viewModel.GenerateLinkCommand}"
-                            CommandParameter="{x:Bind GenerateLinkTeachingTip}" />
-                        <AppBarButton Command="{x:Bind _viewModel.GenerateWebLinkCommand}" CommandParameter="{x:Bind}" />
-                        <AppBarButton Command="{x:Bind _viewModel.OpenInWebBrowserCommand}" />
-                        <AppBarButton
-                            x:Name="ShowQrCodeButton"
-                            Command="{x:Bind _viewModel.ShowQrCodeCommand}"
-                            CommandParameter="{x:Bind ShowQrCodeTeachingTip}" />
-                    </CommandBar>
+                            </AppBarElementContainer>
+                            <controls:AppButtonItem
+                                x:Uid="/IllustrateViewerPage/FollowingUserItem"
+                                Icon="{markup:FontSymbolIcon Glyph=AddFriendE8FA,
+                                                             FontSize=15}"
+                                Number="{x:Bind _viewModel.Metrics.TotalFollowUsers, Mode=OneWay}" />
+                            <AppBarSeparator />
+                            <controls:AppButtonItem
+                                x:Uid="/IllustrateViewerPage/MyPixivUserItem"
+                                Icon="{markup:FontSymbolIcon Glyph=PeopleE716,
+                                                             FontSize=15}"
+                                Number="{x:Bind _viewModel.Metrics.TotalMyPixivUsers, Mode=OneWay}" />
+                            <AppBarSeparator />
+                            <controls:AppButtonItem
+                                x:Uid="/IllustrateViewerPage/IllustrationCountItem"
+                                Icon="{markup:FontSymbolIcon Glyph=PhotoE91B,
+                                                             FontSize=15}"
+                                Number="{x:Bind _viewModel.Metrics.TotalIllusts, Mode=OneWay}" />
+                            <AppBarSeparator />
+                            <controls:AppButtonItem
+                                x:Uid="/IllustrateViewerPage/MangaCountItem"
+                                Icon="{markup:FontSymbolIcon Glyph=PictureE8B9,
+                                                             FontSize=15}"
+                                Number="{x:Bind _viewModel.Metrics.TotalManga, Mode=OneWay}" />
+                            <AppBarSeparator />
+                            <controls:AppButtonItem
+                                x:Uid="/IllustrateViewerPage/NovelCountItem"
+                                Icon="{markup:FontSymbolIcon Glyph=PhoneBookE780,
+                                                             FontSize=15}"
+                                Number="{x:Bind _viewModel.Metrics.TotalNovelSeries, Mode=OneWay}" />
+                        </CommandBar>
+                        <CommandBar Grid.Column="1" DefaultLabelPosition="Right">
+                            <AppBarButton Command="{x:Bind _viewModel.FollowCommand}" Visibility="{x:Bind _viewModel.IsFollowed, Converter={StaticResource BoolNegationToVisibilityConverter}, Mode=OneWay}" />
+                            <AppBarButton Command="{x:Bind _viewModel.FollowPrivatelyCommand}" Visibility="{x:Bind _viewModel.IsFollowed, Converter={StaticResource BoolNegationToVisibilityConverter}, Mode=OneWay}" />
+                            <AppBarButton Command="{x:Bind _viewModel.UnfollowCommand}" Visibility="{x:Bind _viewModel.IsFollowed, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
+                            <AppBarSeparator />
+                            <AppBarButton
+                                x:Name="GenerateLinkButton"
+                                Command="{x:Bind _viewModel.GenerateLinkCommand}"
+                                CommandParameter="{x:Bind GenerateLinkTeachingTip}" />
+                            <AppBarButton Command="{x:Bind _viewModel.GenerateWebLinkCommand}" CommandParameter="{x:Bind}" />
+                            <AppBarButton Command="{x:Bind _viewModel.OpenInWebBrowserCommand}" />
+                            <AppBarButton
+                                x:Name="ShowQrCodeButton"
+                                Command="{x:Bind _viewModel.ShowQrCodeCommand}"
+                                CommandParameter="{x:Bind ShowQrCodeTeachingTip}" />
+                        </CommandBar>
+                    </Grid>
                     <controls1:Segmented
                         Grid.Row="2"
                         HorizontalAlignment="Stretch"

@@ -73,7 +73,7 @@ public partial class IllustratorViewerPageViewModel : UiObservableObject, IIllus
     {
         UserDetail = userDetail;
         IsFollowed = userDetail.UserEntity.IsFollowed;
-        Metrics = new UserMetrics(userDetail.UserProfile.TotalFollowUsers, userDetail.UserProfile.TotalMyPixivUsers, userDetail.UserProfile.TotalIllusts);
+        Metrics = userDetail.UserProfile;
 
 
         IllustrationTag = new NavigationViewTag(typeof(IllustratorIllustrationPage), Id);
@@ -92,7 +92,7 @@ public partial class IllustratorViewerPageViewModel : UiObservableObject, IIllus
 
     public string Name => UserDetail.UserEntity.Name;
 
-    public UserMetrics Metrics { get; }
+    public Profile Metrics { get; }
 
     private string AvatarUrl => UserDetail.UserEntity.ProfileImageUrls.Medium;
 
@@ -138,8 +138,6 @@ public partial class IllustratorViewerPageViewModel : UiObservableObject, IIllus
             BackgroundSource = AvatarSource;
         }
     }
-
-    public record UserMetrics(long FollowingCount, long MyPixivUsers /* 好P友 */, long IllustrationCount);
 
     #region Commands
 

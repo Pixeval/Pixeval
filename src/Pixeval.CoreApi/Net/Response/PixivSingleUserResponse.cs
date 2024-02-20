@@ -85,28 +85,31 @@ public partial record Profile
     public required long JobId { get; set; }
 
     [JsonPropertyName("total_follow_users")]
-    public required long TotalFollowUsers { get; set; }
+    public required int TotalFollowUsers { get; set; }
 
+    /// <summary>
+    /// 好P友
+    /// </summary>
     [JsonPropertyName("total_mypixiv_users")]
-    public required long TotalMyPixivUsers { get; set; }
+    public required int TotalMyPixivUsers { get; set; }
 
     [JsonPropertyName("total_illusts")]
-    public required long TotalIllusts { get; set; }
+    public required int TotalIllusts { get; set; }
 
     [JsonPropertyName("total_manga")]
-    public required long TotalManga { get; set; }
+    public required int TotalManga { get; set; }
 
     [JsonPropertyName("total_novels")]
-    public required long TotalNovels { get; set; }
+    public required int TotalNovels { get; set; }
 
     [JsonPropertyName("total_illust_bookmarks_public")]
-    public required long TotalIllustBookmarksPublic { get; set; }
+    public required int TotalIllustBookmarksPublic { get; set; }
 
     [JsonPropertyName("total_illust_series")]
-    public required long TotalIllustSeries { get; set; }
+    public required int TotalIllustSeries { get; set; }
 
     [JsonPropertyName("total_novel_series")]
-    public required long TotalNovelSeries { get; set; }
+    public required int TotalNovelSeries { get; set; }
 
     [JsonPropertyName("background_image_url")]
     public required string? BackgroundImageUrl { get; set; }
