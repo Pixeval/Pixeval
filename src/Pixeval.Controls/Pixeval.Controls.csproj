@@ -14,6 +14,7 @@
     <ItemGroup>
         <None Remove="AppButtonItem.xaml" />
         <None Remove="CardControl\CardControl.xaml" />
+        <None Remove="Themes\Controls.xaml" />
         <None Remove="IconButton\IconButton.xaml" />
         <None Remove="LazyImage\LazyImage.xaml" />
         <None Remove="NotifyOnLoadedCalendarDatePicker\NotifyOnLoadedCalendarDatePicker.xaml" />
@@ -56,24 +57,18 @@
     <ItemGroup>
         <PRIResource Include="Strings\zh-cn\PixevalBadge.resjson" />
         <PRIResource Include="Strings\zh-cn\AdvancedItemsView.resjson" />
-    </ItemGroup>
-    <ItemGroup>
-      <Page Update="AppButtonItem.xaml">
-        <Generator>MSBuild:Compile</Generator>
-      </Page>
-    </ItemGroup>
-    <ItemGroup>
-      <Page Update="TitleBarIconText.xaml">
-        <Generator>MSBuild:Compile</Generator>
-      </Page>
-    </ItemGroup>
-    <ItemGroup>
-      <Page Update="StickyHeaderScrollView.xaml">
-        <Generator>MSBuild:Compile</Generator>
-      </Page>
-    </ItemGroup>
-
-    <ItemGroup>
+        <Page Update="Themes\Controls.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="AppButtonItem.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="TitleBarIconText.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="StickyHeaderScrollView.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
         <Page Update="CardControl\CardControl.xaml">
             <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
         </Page>

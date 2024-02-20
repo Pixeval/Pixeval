@@ -28,11 +28,9 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.AppManagement;
-using Pixeval.Controls;
 using Pixeval.Controls.IllustratorContentViewer;
 using Pixeval.Controls.MarkupExtensions;
 using Pixeval.Controls.Windowing;
-using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Util;
 using Pixeval.Util.ComponentModels;
 using Pixeval.Util.IO;
@@ -44,7 +42,7 @@ using WinUI3Utilities;
 
 namespace Pixeval.Pages.IllustratorViewer;
 
-public partial class IllustratorViewerPageViewModel : UiObservableObject, IIllustrationVisualizer
+public partial class IllustratorViewerPageViewModel : UiObservableObject
 {
     [ObservableProperty]
     private ImageSource? _avatarSource;
@@ -75,7 +73,6 @@ public partial class IllustratorViewerPageViewModel : UiObservableObject, IIllus
         IsFollowed = userDetail.UserEntity.IsFollowed;
         Metrics = userDetail.UserProfile;
 
-
         IllustrationTag = new NavigationViewTag(typeof(IllustratorIllustrationPage), Id);
         MangaTag = new NavigationViewTag(typeof(IllustratorMangaPage), Id);
         NovelTag = null!;
@@ -105,20 +102,6 @@ public partial class IllustratorViewerPageViewModel : UiObservableObject, IIllus
     public bool IsPremium => UserDetail.UserProfile.IsPremium;
 
     public string Comment => UserDetail.UserEntity.Comment;
-
-    public ObservableCollection<IllustrationItemViewModel> Illustrations { get; set; } = [];
-
-    public void DisposeCurrent()
-    {
-        foreach (var illustration in Illustrations)
-            illustration.UnloadThumbnail(this);
-        Illustrations.Clear();
-    }
-
-    public void AddIllustrationViewModel(IllustrationItemViewModel viewModel)
-    {
-        Illustrations.Add(viewModel);
-    }
 
     public async Task SetAvatarAndBackgroundAsync()
     {

@@ -35,6 +35,7 @@ using Pixeval.Misc;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
+using WinUI3Utilities;
 
 namespace Pixeval.Controls;
 
@@ -72,11 +73,27 @@ public partial class CommentBlockViewModel(Comment comment, long illustrationId)
     private SoftwareBitmapSource _avatarSource = null!;
 
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(RepliesIsNotNull))]
+    [NotifyPropertyChangedFor(nameof(RepliesIsNotNull), nameof(RepliesCount), nameof(RepliesAppBarButtonStyleIsNotNull))]
     private ObservableCollection<CommentBlockViewModel>? _replies;
 
-    [MemberNotNullWhen(true, nameof(Replies))]
     public bool RepliesIsNotNull => Replies is not null;
+
+    private static Style DefaultAppBarButtonStyle => (Style)Application.Current.Resources[$"Default{nameof(AppBarButton)}Style"];
+
+    private static readonly Style _noRepliesStyle = new()
+    {
+        BasedOn = DefaultAppBarButtonStyle,
+        TargetType = typeof(AppBarButton),
+        Setters =
+        {
+            new Setter(FrameworkElement.WidthProperty, Application.Current.Resources["CollapsedAppBarButtonWidth"]),
+            new Setter(AppBarButton.LabelPositionProperty, CommandBarLabelPosition.Collapsed)
+        }
+    };
+
+    public Style RepliesAppBarButtonStyleIsNotNull => RepliesIsNotNull ? DefaultAppBarButtonStyle : _noRepliesStyle;
+
+    public string? RepliesCount => Replies?.Count.ToString();
 
     public async Task LoadRepliesAsync()
     {

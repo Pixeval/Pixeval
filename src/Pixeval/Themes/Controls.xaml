@@ -49,6 +49,14 @@
         <Setter Property="SpinButtonPlacementMode" Value="Compact" />
         <Setter Property="ValidationMode" Value="InvalidInputOverwritten" />
     </Style>
+    <Style
+        x:Key="CardControlButton"
+        BasedOn="{StaticResource DefaultButtonStyle}"
+        TargetType="Button">
+        <Setter Property="Padding" Value="{StaticResource CardControlPadding}" />
+        <Setter Property="HorizontalContentAlignment" Value="Left" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+    </Style>
 
     <numberFormatting:DecimalFormatter x:Key="IntegerRoundedDecimalFormatter" FractionDigits="0">
         <numberFormatting:DecimalFormatter.NumberRounder>

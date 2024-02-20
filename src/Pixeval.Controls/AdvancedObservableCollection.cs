@@ -430,41 +430,38 @@ public class AdvancedObservableCollection<T> : IList<T>, IList, INotifyCollectio
         }
     }
 
-    private bool HandleItemAdded(int newStartingIndex, T newItem, int? viewIndex = null)
+    private bool HandleItemAdded(int sourceIndex, T newItem, int? viewIndex = null)
     {
         if (_filter is not null && !_filter(newItem))
             return false;
 
         var newViewIndex = _view.Count;
 
-        if (SortDescriptions.Any())
+        if (SortDescriptions.Count is not 0)
         {
             _sortProperties.Clear();
             newViewIndex = _view.BinarySearch(newItem, this);
             if (newViewIndex < 0)
                 newViewIndex = ~newViewIndex;
         }
-        else if (_filter is not null)
+        else if (sourceIndex is 0 || _view.Count is 0)
+            newViewIndex = 0;
+        else if (viewIndex.HasValue)
+            newViewIndex = viewIndex.Value;
+        else if (_view.Count == _source.Count - 1)
+            newViewIndex = _view.Count;
+        else
         {
-            if (newStartingIndex is 0 || _view.Count is 0)
-                newViewIndex = 0;
-            else if (newStartingIndex == _source.Count - 1)
-                newViewIndex = _view.Count;
-            else if (viewIndex.HasValue)
-                newViewIndex = viewIndex.Value;
-            else
+            for (int i = 0, j = 0; i < _source.Count; i++)
             {
-                for (int i = 0, j = 0; i < _source.Count; i++)
+                if (i == sourceIndex)
                 {
-                    if (i == newStartingIndex)
-                    {
-                        newViewIndex = j;
-                        break;
-                    }
-
-                    if (_view[j] == _source[i])
-                        j++;
+                    newViewIndex = j;
+                    break;
                 }
+
+                if (_view[j] == _source[i])
+                    j++;
             }
         }
 

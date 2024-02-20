@@ -17,7 +17,7 @@
             <DataTemplate x:Key="CommentDataTemplate" x:DataType="local:CommentBlockViewModel">
                 <ItemContainer>
                     <local:CommentBlock
-                        Margin="16"
+                        Margin="{StaticResource CardControlPadding}"
                         DeleteHyperlinkButtonTapped="CommentBlock_OnDeleteHyperlinkButtonTapped"
                         RepliesHyperlinkButtonTapped="CommentBlock_OnRepliesHyperlinkButtonTapped"
                         ViewModel="{x:Bind}" />

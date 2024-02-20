@@ -7,7 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
     <Button
-        Padding="16"
+        Padding="{StaticResource CardControlPadding}"
         HorizontalAlignment="Stretch"
         VerticalAlignment="Stretch"
         Tapped="ContentContainerOnTapped">
