@@ -66,11 +66,11 @@ public sealed partial class AboutPage
         "reactiveui/refit"
     ];
 
-    private IEnumerable<DependenciesViewModel> DependencyViewModels =>
+    private IEnumerable<DependencyViewModel> DependencyViewModels =>
         _dependencies.Select(t =>
         {
             var segments = t.Split('/');
-            return new DependenciesViewModel(segments[^1], "by " + segments[0], "https://github.com/" + t);
+            return new DependencyViewModel(segments[^1], "by " + segments[0], "https://github.com/" + t);
         });
 
 }

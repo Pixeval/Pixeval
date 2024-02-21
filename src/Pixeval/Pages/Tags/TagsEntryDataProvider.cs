@@ -1,28 +1,23 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.WinUI.Collections;
 using Pixeval.Collections;
-using Pixeval.Controls.Illustrate;
-using Pixeval.CoreApi.Engine;
-using Pixeval.Misc;
-using WinUI3Utilities;
 
 namespace Pixeval.Pages.Tags;
 
-public class TagsEntryDataProvider : ObservableObject, IDataProvider<FileInfo, TagsEntryViewModel>
+public class TagsEntryDataProvider : ObservableObject, IDisposable
 {
     public TagsEntryDataProvider() => View.ObserveFilterProperty(nameof(TagsEntryViewModel.Tags));
 
     public AdvancedObservableCollection<TagsEntryViewModel> View { get; } = new([], true);
 
-    public IncrementalLoadingCollection<FetchEngineIncrementalSource<FileInfo, TagsEntryViewModel>, TagsEntryViewModel> Source
+    public IncrementalLoadingCollection<TagsEntryIncrementalSource, TagsEntryViewModel> Source
     {
-        get => (View.Source as IncrementalLoadingCollection<FetchEngineIncrementalSource<FileInfo, TagsEntryViewModel>, TagsEntryViewModel>)!;
+        get => (View.Source as IncrementalLoadingCollection<TagsEntryIncrementalSource, TagsEntryViewModel>)!;
         protected set => View.Source = value;
     }
-
-    public IFetchEngine<FileInfo?>? FetchEngine { get; protected set; }
 
     public void Dispose()
     {
@@ -33,13 +28,8 @@ public class TagsEntryDataProvider : ObservableObject, IDataProvider<FileInfo, T
         View.Clear();
     }
 
-    void IDataProvider<FileInfo, TagsEntryViewModel>.ResetEngine(IFetchEngine<FileInfo?>? fetchEngine, int limit)
-    {
-        ThrowHelper.NotSupported($"{nameof(TagsEntryDataProvider)} 不使用 {nameof(FetchEngine)}");
-    }
-
     public void ResetEngine(IEnumerable<FileInfo> source)
     {
-        Source = new IncrementalLoadingCollection<FetchEngineIncrementalSource<FileInfo, TagsEntryViewModel>, TagsEntryViewModel>(new TagsEntryIncrementalSource(source));
+        Source = new IncrementalLoadingCollection<TagsEntryIncrementalSource, TagsEntryViewModel>(new TagsEntryIncrementalSource(source));
     }
 }

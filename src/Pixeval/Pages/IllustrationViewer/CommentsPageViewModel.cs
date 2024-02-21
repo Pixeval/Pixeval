@@ -33,12 +33,12 @@ public class CommentsPageViewModel(IAsyncEnumerable<Comment> engine, long illust
 {
     public long IllustrationId { get; set; } = illustrationId;
 
-    public AdvancedObservableCollection<CommentBlockViewModel> Source { get; } = new(
+    public AdvancedObservableCollection<CommentBlockViewModel> View { get; } = new(
         new IncrementalLoadingCollection<CommentsIncrementalSource, CommentBlockViewModel>(
             new CommentsIncrementalSource(engine.Select(c => new CommentBlockViewModel(c, illustrationId))), 30));
 
     public void AddComment(Comment comment)
     {
-        Source.Insert(0, new CommentBlockViewModel(comment, IllustrationId));
+        View.Insert(0, new CommentBlockViewModel(comment, IllustrationId));
     }
 }

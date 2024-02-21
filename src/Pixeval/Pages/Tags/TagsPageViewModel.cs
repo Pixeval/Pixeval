@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Pixeval.AppManagement;
-using Pixeval.Controls.Illustrate;
 using WinUI3Utilities;
 
 namespace Pixeval.Pages.Tags;
@@ -35,7 +34,7 @@ public class TagsPageViewModel : ObservableObject, IDisposable
             : vm => vm.TagsSet is not null && SelectedTags.Any(selectedTag => vm.TagsSet.Contains(selectedTag));
     }
 
-    public IDataProvider<FileInfo, TagsEntryViewModel> DataProvider { get; } = new TagsEntryDataProvider();
+    public TagsEntryDataProvider DataProvider { get; } = new TagsEntryDataProvider();
 
     public void Dispose()
     {

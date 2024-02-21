@@ -1,21 +1,15 @@
-using Pixeval.Misc;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Threading;
-using WinUI3Utilities;
+using CommunityToolkit.WinUI.Collections;
 
 namespace Pixeval.Pages.Tags;
 
-public class TagsEntryIncrementalSource(IEnumerable<FileInfo> source)
-    : FetchEngineIncrementalSource<FileInfo, TagsEntryViewModel>(null!)
+public class TagsEntryIncrementalSource(IEnumerable<FileInfo> source) : IIncrementalSource<TagsEntryViewModel>
 {
-    protected override long Identifier(FileInfo entity) => entity.GetHashCode();
-
-    protected override TagsEntryViewModel Select(FileInfo entity) => ThrowHelper.NotSupported<TagsEntryViewModel>();
-
-    public override async Task<IEnumerable<TagsEntryViewModel>> GetPagedItemsAsync(int pageIndex, int pageSize, CancellationToken cancellationToken = new CancellationToken())
+    public async Task<IEnumerable<TagsEntryViewModel>> GetPagedItemsAsync(int pageIndex, int pageSize, CancellationToken cancellationToken = new CancellationToken())
     {
         var list = new List<TagsEntryViewModel>();
         foreach (var fileInfo in source.Skip(pageIndex * pageSize))

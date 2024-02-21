@@ -21,7 +21,7 @@
             StickerTapped="ReplyBar_OnStickerTapped" />
         <controls:CommentList
             Grid.Row="1"
-            ItemsSource="{x:Bind _viewModel.Source}"
+            ItemsSource="{x:Bind _viewModel.View}"
             RepliesHyperlinkButtonTapped="CommentList_OnRepliesHyperlinkButtonTapped" />
         <TeachingTip
             x:Name="CommentRepliesTeachingTip"

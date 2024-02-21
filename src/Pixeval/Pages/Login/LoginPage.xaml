@@ -9,6 +9,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:util="using:Pixeval.Util"
     Loaded="LoginPage_OnLoaded"
+    Unloaded="LoginPage_OnUnloaded"
     mc:Ignorable="d">
     <Grid
         Margin="0,32,0,0"
@@ -49,7 +50,7 @@
                 <ToggleSwitch
                     x:Uid="/LoginPage/DisableDomainFrontingToggleSwitch"
                     IsEnabled="{x:Bind _viewModel.IsEnabled, Mode=OneWay}"
-                    IsOn="{x:Bind _viewModel.DisableDomainFronting, Mode=OneWay}" />
+                    IsOn="{x:Bind _viewModel.DisableDomainFronting, Mode=TwoWay}" />
                 <Button
                     x:Uid="/LoginPage/SubmitButton"
                     IsEnabled="{x:Bind _viewModel.IsEnabled, Mode=OneWay}"

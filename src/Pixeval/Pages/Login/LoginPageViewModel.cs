@@ -48,7 +48,7 @@ using Pixeval.Utilities;
 
 namespace Pixeval.Pages.Login;
 
-public partial class LoginPageViewModel(UIElement owner) : ObservableObject
+public partial class LoginPageViewModel(UIElement owner) : ObservableObject, IDisposable
 {
     public enum LoginPhaseEnum
     {
@@ -137,14 +137,14 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject
     /// 1. The <see cref="Session" /> object deserialized from the file is not null <br/>
     /// 2. The <see cref="Session.RefreshToken" /> is not null <br/>
     /// 3. The <see cref="Session.Cookie" /> is not null <br/>
-    /// 4. The <see cref="Session.CookieCreation" /> is within last fifteen days
+    /// 4. The <see cref="Session.CookieCreation" /> is within last 15 days
     /// </summary>
     /// <returns></returns>
-    public bool CheckRefreshAvailable()
+    public Session? CheckRefreshAvailable()
     {
         AdvancePhase(LoginPhaseEnum.CheckingRefreshAvailable);
 
-        return AppInfo.LoadSession() is { } session && CheckRefreshAvailableInternal(session);
+        return AppInfo.LoadSession() is { } session && CheckRefreshAvailableInternal(session) ? session : null;
     }
 
     private static bool CheckRefreshAvailableInternal(Session? session)
@@ -157,22 +157,23 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject
             TimeSpan.FromDays(15); // check if the cookie is created within the last one week
     }
 
-    public async Task RefreshAsync()
+    public async Task RefreshAsync(Session session)
     {
         AdvancePhase(LoginPhaseEnum.Refreshing);
-        if (AppInfo.LoadSession() is { } session && CheckRefreshAvailableInternal(session))
+        using var scope = App.AppViewModel.AppServicesScope;
+        var logger = scope.ServiceProvider.GetRequiredService<FileLogger>();
+        App.AppViewModel.MakoClient = new MakoClient(session, App.AppViewModel.AppSettings.ToMakoClientConfiguration(), logger, new RefreshTokenSessionUpdate());
+        try
         {
-            using var scope = App.AppViewModel.AppServicesScope;
-            var logger = scope.ServiceProvider.GetRequiredService<FileLogger>();
-            App.AppViewModel.MakoClient = new MakoClient(session, App.AppViewModel.AppSettings.ToMakoClientConfiguration(), logger, new RefreshTokenSessionUpdate());
             await App.AppViewModel.MakoClient.RefreshSessionAsync();
         }
-        else
+        catch
         {
-            _ = await owner.CreateAcknowledgementAsync(LoginPageResources.RefreshingSessionIsNotPresentTitle,
-                    LoginPageResources.RefreshingSessionIsNotPresentContent);
+            _ = await owner.CreateAcknowledgementAsync(LoginPageResources.RefreshingSessionFailedTitle,
+                LoginPageResources.RefreshingSessionFailedContent);
+            AppInfo.ClearSession();
             await AppKnownFolders.Local.ClearAsync();
-            Application.Current.Exit();
+            ExitApp();
         }
     }
 
@@ -214,7 +215,7 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject
                 }
             }
         };
-        var result = await httpClient.PostFormAsync("http://oauth.secure.pixiv.net/auth/token",
+        using var result = await httpClient.PostFormAsync("http://oauth.secure.pixiv.net/auth/token",
             ("code", code),
             ("code_verifier", verifier),
             ("client_id", "MOBrBDS8blbauoSck0ZfDbtuzpyT"),
@@ -260,7 +261,18 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject
                 var cookies = await sender.CoreWebView2.CookieManager.GetCookiesAsync("https://pixiv.net");
                 var cookie = string.Join(';', cookies.Select(c => $"{c.Name}={c.Value}"));
                 var code = HttpUtility.ParseQueryString(new Uri(e.Uri).Query)["code"]!;
-                var session = await AuthCodeToSessionAsync(code, verifier, cookie);
+                Session session;
+                try
+                {
+                    session = await AuthCodeToSessionAsync(code, verifier, cookie);
+                }
+                catch
+                {
+                    _ = await owner.CreateAcknowledgementAsync(LoginPageResources.FetchingSessionFailedTitle,
+                        LoginPageResources.FetchingSessionFailedContent);
+                    ExitApp();
+                    return;
+                }
                 IsFinished = true;
                 using var scope = App.AppViewModel.AppServicesScope;
                 var logger = scope.ServiceProvider.GetRequiredService<FileLogger>();
@@ -272,7 +284,7 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject
             {
                 _ = await sender.ExecuteScriptAsync(
                     $$"""
-                      document.addEventListener("DOMContentLoaded", async (event) => {
+                      async function login(event) {
                           async function checkElement(selector) {
                               const targetElement = document.querySelector(selector);
                               if (targetElement) {
@@ -300,7 +312,12 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject
                               await fill("input[autocomplete='current-password']", "{{Password}}");
                               document.querySelectorAll("button[type='submit']")[4].click();
                           }
-                      });
+                      }
+                      if (document.readyState === "loading") {
+                          document.addEventListener("DOMContentLoaded", login);
+                      } else {
+                          login(null);
+                      }
                       """);
             }
         };
@@ -319,7 +336,7 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject
             }
             else
             {
-                Application.Current.Exit();
+                ExitApp();
             }
         }
     }
@@ -337,5 +354,20 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject
 
             Application.Current.Exit();
         }
+    }
+
+    public void ExitApp()
+    {
+        Dispose();
+        Application.Current.Exit();
+    }
+
+    /// <summary>
+    /// 退出App时关闭<see cref="WebView"/>可以保证不抛异常
+    /// </summary>
+    public void Dispose()
+    {
+        WebView?.Close();
+        WebView = null;
     }
 }

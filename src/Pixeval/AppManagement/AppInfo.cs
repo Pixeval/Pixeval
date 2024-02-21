@@ -192,9 +192,6 @@ public static partial class AppInfo
         }
     }
 
-    /// <summary>
-    /// Erase all personal data, including session, configuration and image cache
-    /// </summary>
     public static void ClearSession()
     {
         Functions.IgnoreException(() => ApplicationData.Current.LocalSettings.DeleteContainer(SessionContainerKey));

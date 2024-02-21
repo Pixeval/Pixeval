@@ -61,7 +61,7 @@
                             <StackLayout Orientation="Vertical" />
                         </ItemsRepeater.Layout>
                         <ItemsRepeater.ItemTemplate>
-                            <DataTemplate x:DataType="misc:DependenciesViewModel">
+                            <DataTemplate x:DataType="misc:DependencyViewModel">
                                 <controls:SettingsCard
                                     MinHeight="0"
                                     ActionIcon="{markup:FontSymbolIcon Glyph=OpenInNewWindowE8A7}"
