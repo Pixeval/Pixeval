@@ -58,7 +58,6 @@ public class IllustratorViewDataProvider : ObservableObject, IDataProvider<User,
             foreach (var illustratorViewModel in source)
                 illustratorViewModel.Dispose();
 
-        View.Clear();
         FetchEngine = null;
     }
 

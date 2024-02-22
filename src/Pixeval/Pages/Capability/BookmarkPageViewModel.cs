@@ -30,17 +30,21 @@ using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Model;
 using Pixeval.Utilities;
 
-namespace Pixeval.Controls.IllustratorContentViewer;
+namespace Pixeval.Pages.Capability;
 
-public class IllustratorIllustrationAndMangaBookmarkPageViewModel : ObservableObject, IDisposable
+public class BookmarkPageViewModel(long userId) : ObservableObject, IDisposable
 {
     public static readonly CountedTag EmptyCountedTag = new(new Tag { Name = IllustratorIllustrationAndMangaBookmarkPageResources.EmptyCountedTagName, TranslatedName = "" }, 0);
+
+    public long UserId { get; } = userId;
+
+    public bool IsMe => App.AppViewModel.PixivUid == UserId;
 
     private readonly CancellationTokenSource _bookmarksIdLoadingCancellationTokenSource = new();
 
     private readonly ConcurrentDictionary<string, HashSet<long>> _bookmarkTagIllustrationIdDictionary = new();
 
-    public ObservableCollection<CountedTag> UserBookmarkTags { get; } = [];
+    public ObservableCollection<CountedTag> UserBookmarkTags { get; } = [EmptyCountedTag];
 
     public void Dispose()
     {
@@ -49,10 +53,9 @@ public class IllustratorIllustrationAndMangaBookmarkPageViewModel : ObservableOb
 
     public event EventHandler<string>? TagBookmarksIncrementallyLoaded;
 
-    public async Task LoadUserBookmarkTagsAsync(long uid)
+    public async Task LoadUserBookmarkTagsAsync()
     {
-        var result = await App.AppViewModel.MakoClient.GetUserSpecifiedBookmarkTagsAsync(uid);
-        UserBookmarkTags.Add(EmptyCountedTag);
+        var result = await App.AppViewModel.MakoClient.GetUserSpecifiedBookmarkTagsAsync(UserId);
         UserBookmarkTags.AddRange(result.Where(t => t.Value is PrivacyPolicy.Public).Select(t => t.Key));
     }
 
@@ -63,26 +66,21 @@ public class IllustratorIllustrationAndMangaBookmarkPageViewModel : ObservableOb
     /// from waiting for too long before all IDs are fetched, we choose an incremental way, i.e., instead of setting the filter
     /// after all IDs are fetched, we update the filter whenever new IDs are available.
     /// </summary>
-    /// <param name="uid"></param>
     /// <param name="tag"></param>
     /// <returns></returns>
-    public async Task LoadBookmarksForTagAsync(long uid, string tag)
+    public async Task LoadBookmarksForTagAsync(string tag)
     {
         if (_bookmarkTagIllustrationIdDictionary.TryGetValue(tag, out var set) && set.Count > 0)
-        {
             return;
-        }
         // fork a token from the source
         var token = _bookmarksIdLoadingCancellationTokenSource.Token;
-        var engine = App.AppViewModel.MakoClient.UserTaggedBookmarksId(uid, tag);
+        var engine = App.AppViewModel.MakoClient.UserTaggedBookmarksId(UserId, tag);
         var counter = 0;
         var hashSet = _bookmarkTagIllustrationIdDictionary.GetOrAdd(tag, []);
         await foreach (var id in engine)
         {
             if (token.IsCancellationRequested)
-            {
                 break;
-            }
 
             // 100 IDs per page
             if (counter == 100)
@@ -97,9 +95,7 @@ public class IllustratorIllustrationAndMangaBookmarkPageViewModel : ObservableOb
         }
 
         if (counter != 0)
-        {
             TagBookmarksIncrementallyLoaded?.Invoke(this, tag);
-        }
     }
 
     public IReadOnlySet<long> GetBookmarkIdsForTag(string tag)

@@ -41,9 +41,19 @@ public sealed partial class IllustrationViewViewModel : SortableIllustrateViewVi
         ? IllustrationViewCommandBarResources.CancelSelectionButtonFormatted.Format(SelectedIllustrations.Length)
         : IllustrationViewCommandBarResources.CancelSelectionButtonDefaultLabel;
 
-    public IllustrationViewViewModel(IllustrationViewViewModel viewModel) => DataProvider = viewModel.DataProvider.CloneRef();
+    public IllustrationViewViewModel(IllustrationViewViewModel viewModel) : this(viewModel.DataProvider.CloneRef())
+    {
+    }
 
-    public IllustrationViewViewModel() => DataProvider = new();
+    public IllustrationViewViewModel() : this(new IllustrationViewDataProvider())
+    {
+    }
+
+    public IllustrationViewViewModel(IllustrationViewDataProvider dataProvider)
+    {
+        DataProvider = dataProvider;
+        dataProvider.View.CollectionChanged += (_, _) => OnPropertyChanged(nameof(HasNoItem));
+    }
 
     public override IllustrationViewDataProvider DataProvider { get; }
 }

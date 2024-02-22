@@ -89,7 +89,8 @@
                                 MaxLines="3"
                                 Text="{x:Bind _viewModel.Comment}"
                                 TextTrimming="CharacterEllipsis"
-                                TextWrapping="Wrap" />
+                                TextWrapping="Wrap"
+                                ToolTipService.ToolTip="{x:Bind _viewModel.Comment}" />
                         </Grid>
                     </Grid>
                     <Grid Grid.Row="1" VerticalAlignment="Bottom">
@@ -202,7 +203,6 @@
                         <controls1:SegmentedItem
                             x:Uid="/IllustrateViewerPage/FollowingUserNavigationViewItem"
                             Icon="{markup:FontSymbolIcon Glyph=PeopleE716}"
-                            IsEnabled="False"
                             Tag="{x:Bind _viewModel.FollowingUserTag}" />
                         <controls1:SegmentedItem
                             x:Uid="/IllustrateViewerPage/MyPixivUserNavigationViewItem"

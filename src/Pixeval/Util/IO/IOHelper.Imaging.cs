@@ -27,7 +27,6 @@ using System.Threading.Tasks;
 using Windows.Graphics.Imaging;
 using Windows.Storage;
 using Windows.Storage.FileProperties;
-using Windows.Storage.Streams;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.CoreApi.Net.Response;
 using Pixeval.Options;
@@ -60,7 +59,7 @@ public static partial class IoHelper
         return source;
     }
 
-    public static async Task<BitmapImage> GetBitmapImageAsync(this IRandomAccessStream imageStream, bool disposeOfImageStream, int? desiredWidth = null)
+    public static async Task<BitmapImage> GetBitmapImageAsync(this Stream imageStream, bool disposeOfImageStream, int? desiredWidth = null)
     {
         var bitmapImage = new BitmapImage
         {
@@ -68,9 +67,9 @@ public static partial class IoHelper
         };
         if (desiredWidth is { } width)
             bitmapImage.DecodePixelWidth = width;
-        await bitmapImage.SetSourceAsync(imageStream);
+        await bitmapImage.SetSourceAsync(imageStream.AsRandomAccessStream());
         if (disposeOfImageStream)
-            imageStream.Dispose();
+            await imageStream.DisposeAsync();
 
         return bitmapImage;
     }

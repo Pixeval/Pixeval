@@ -88,6 +88,7 @@ public partial class RecommendIllustratorItemViewModel : IllustrateViewModel<Rec
 
     public override void Dispose()
     {
+        AvatarSource = null;
         OverviewViewModel.Dispose();
     }
 }

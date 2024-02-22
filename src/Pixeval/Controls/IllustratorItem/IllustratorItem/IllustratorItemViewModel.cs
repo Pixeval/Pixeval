@@ -21,7 +21,6 @@
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.AppManagement;
 using Pixeval.Controls.Illustrate;
 using Pixeval.CoreApi.Model;
@@ -35,9 +34,6 @@ public sealed partial class IllustratorItemViewModel : IllustrateViewModel<User>
 {
     [ObservableProperty]
     private ImageSource? _avatarSource;
-
-    [ObservableProperty]
-    private SoftwareBitmapSource? _backgroundSource;
 
     [ObservableProperty]
     private bool _isFollowed;
@@ -68,6 +64,7 @@ public sealed partial class IllustratorItemViewModel : IllustrateViewModel<User>
 
     public override void Dispose()
     {
+        AvatarSource = null;
         OverviewViewModel.Dispose();
     }
 }

@@ -25,6 +25,11 @@
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <NoWarn>$(NoWarn)</NoWarn>
     </PropertyGroup>
+    <ItemGroup>
+        <None Remove="Controls\IllustrateView.xaml" />
+        <None Remove="Controls\IllustrationView\IllustratorView.xaml" />
+        <None Remove="IllustrateView.xaml" />
+    </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="CommunityToolkit.Labs.WinUI.Shimmer" Version="0.1.230830" />
@@ -180,7 +185,7 @@
         <PRIResource Include="Strings\zh-cn\DownloadListPage.resjson" />
         <PRIResource Include="Strings\zh-cn\DownloadListPageDeleteTasksDialog.resjson" />
         <PRIResource Include="Strings\zh-cn\DownloadTask.resjson" />
-        <PRIResource Include="Strings\zh-cn\IllustrationView.resjson" />
+        <PRIResource Include="Strings\zh-cn\IllustrateView.resjson" />
         <PRIResource Include="Strings\zh-cn\IllustrationViewCommandBar.resjson" />
         <PRIResource Include="Strings\zh-cn\IllustrationInfoPage.resjson" />
         <PRIResource Include="Strings\zh-cn\IllustrationResultFilterContent.resjson" />
@@ -204,15 +209,18 @@
         <PRIResource Include="Strings\zh-cn\IPListInput.resjson" />
     </ItemGroup>
     <ItemGroup>
-        <Page Update="Controls\IPListInput.xaml">
-            <Generator>MSBuild:Compile</Generator>
-        </Page>
     </ItemGroup>
 
     <!--XAML-->
     <ItemGroup>
+        <Page Update="Controls\IllustrateView.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="Controls\IPListInput.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
         <Page Update="Controls\SettingRadioButtons\SettingRadioButtons.xaml">
-            <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+            <Generator>MSBuild:Compile</Generator>
         </Page>
         <Page Update="Pages\Capability\SpotlightsPage.xaml">
             <Generator>MSBuild:Compile</Generator>
@@ -341,9 +349,6 @@
             <Generator>MSBuild:Compile</Generator>
         </Page>
         <Page Update="Controls\IllustrationView\IllustrationItem.xaml">
-            <Generator>MSBuild:Compile</Generator>
-        </Page>
-        <Page Update="Controls\IllustratorContentViewer\IllustratorIllustrationAndMangaBookmarkPage.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
         <Page Update="Controls\IllustratorContentViewer\IllustratorMangaPage.xaml">

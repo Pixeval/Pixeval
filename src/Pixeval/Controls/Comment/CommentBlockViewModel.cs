@@ -21,9 +21,9 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Windows.Storage.Streams;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -126,7 +126,7 @@ public partial class CommentBlockViewModel(Comment comment, long illustrationId)
                         Text = content
                     });
                     break;
-                case ReplyContentToken.EmojiToken(var emoji) when await App.AppViewModel.MakoClient.DownloadRandomAccessStreamAsync(emoji.GetReplyEmojiDownloadUrl()) is Result<IRandomAccessStream>.Success(var emojiSource):
+                case ReplyContentToken.EmojiToken(var emoji) when await App.AppViewModel.MakoClient.DownloadStreamAsync(emoji.GetReplyEmojiDownloadUrl()) is Result<Stream>.Success(var emojiSource):
                     paragraph.Inlines.Add(new InlineUIContainer
                     {
                         Child = new Image

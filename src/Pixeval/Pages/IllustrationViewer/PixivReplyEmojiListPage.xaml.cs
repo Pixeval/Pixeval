@@ -20,10 +20,10 @@
 
 using System;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Windows.Storage.Streams;
 using Microsoft.UI.Text;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
@@ -58,11 +58,11 @@ public sealed partial class PixivReplyEmojiListPage
         if (!EmojiList.Any())
         {
             var results = await Task.WhenAll(Enum.GetValues<PixivReplyEmoji>()
-                .Select(async emoji => (emoji, await App.AppViewModel.MakoClient.DownloadRandomAccessStreamAsync(emoji.GetReplyEmojiDownloadUrl()))));
-            var tasks = results.Where(r => r.Item2 is Result<IRandomAccessStream>.Success).Select(async r => new PixivReplyEmojiViewModel(r.emoji, ((Result<IRandomAccessStream>.Success)r.Item2).Value)
+                .Select(async emoji => (emoji, await App.AppViewModel.MakoClient.DownloadStreamAsync(emoji.GetReplyEmojiDownloadUrl()))));
+            var tasks = results.Where(r => r.Item2 is Result<Stream>.Success).Select(async r => new PixivReplyEmojiViewModel(r.emoji, ((Result<Stream>.Success)r.Item2).Value)
             {
                 // We don't dispose of the image here because it will be used when inserting emoji to the rich edit box.
-                ImageSource = await ((Result<IRandomAccessStream>.Success)r.Item2).Value.GetBitmapImageAsync(false, 35)
+                ImageSource = await ((Result<Stream>.Success)r.Item2).Value.GetBitmapImageAsync(false, 35)
             });
             EmojiList.AddRange(await Task.WhenAll(tasks));
         }
@@ -71,6 +71,6 @@ public sealed partial class PixivReplyEmojiListPage
     private void EmojiImage_OnTapped(object sender, TappedRoutedEventArgs e)
     {
         var viewModel = sender.GetTag<PixivReplyEmojiViewModel>();
-        _replyBar?.ReplyContentRichEditBox.Document.Selection.InsertImage(20, 20, 17, VerticalCharacterAlignment.Baseline, viewModel.EmojiEnumValue.GetReplyEmojiPlaceholderKey(), viewModel.ImageStream);
+        _replyBar?.ReplyContentRichEditBox.Document.Selection.InsertImage(20, 20, 17, VerticalCharacterAlignment.Baseline, viewModel.EmojiEnumValue.GetReplyEmojiPlaceholderKey(), viewModel.ImageStream.AsRandomAccessStream());
     }
 }

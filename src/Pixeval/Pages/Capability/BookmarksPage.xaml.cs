@@ -22,6 +22,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Controls;
 using Pixeval.CoreApi.Global.Enum;
+using Pixeval.CoreApi.Model;
 using Pixeval.Misc;
 using Pixeval.Util;
 using Pixeval.Util.UI;
@@ -30,17 +31,24 @@ namespace Pixeval.Pages.Capability;
 
 public sealed partial class BookmarksPage : ISortedIllustrationContainerPageHelper
 {
+    private BookmarkPageViewModel _viewModel = null!;
+
     public BookmarksPage() => InitializeComponent();
 
     public IllustrationContainer ViewModelProvider => IllustrationContainer;
 
     public SortOptionComboBox SortOptionProvider => SortOptionComboBox;
 
-    public override void OnPageActivated(NavigationEventArgs navigationEventArgs)
+    public override async void OnPageActivated(NavigationEventArgs e)
     {
+        if (e.Parameter is not long uid)
+            uid = App.AppViewModel.PixivUid;
+        _viewModel = new BookmarkPageViewModel(uid);
         PrivacyPolicyComboBox.SelectedItem = PrivacyPolicyComboBoxPublicItem;
         SortOptionComboBox.SelectedItem = MakoHelper.GetAppSettingDefaultSortOptionWrapper();
         ChangeSource();
+        _viewModel.TagBookmarksIncrementallyLoaded += ViewModelOnTagBookmarksIncrementallyLoaded;
+        await _viewModel.LoadUserBookmarkTagsAsync();
     }
 
     private void PrivacyPolicyComboBox_OnSelectionChangedWhenLoaded(object sender, SelectionChangedEventArgs e)
@@ -53,8 +61,36 @@ public sealed partial class BookmarksPage : ISortedIllustrationContainerPageHelp
         ((ISortedIllustrationContainerPageHelper)this).OnSortOptionChanged();
     }
 
+    private void ViewModelOnTagBookmarksIncrementallyLoaded(object? sender, string e)
+    {
+        if (TagComboBox.SelectedItem is CountedTag({ Name: var name }, _) && name == e)
+        {
+            IllustrationContainer.ViewModel.DataProvider.View.Filter = o => BookmarkTagFilter(name, o);
+        }
+    }
+
+    private void TagComboBox_OnSelectionChangedWhenLoaded(object? sender, SelectionChangedEventArgs e)
+    {
+        if (TagComboBox.SelectedItem is CountedTag({ Name: var name }, _) tag && !ReferenceEquals(tag, BookmarkPageViewModel.EmptyCountedTag))
+        {
+            // fetch the bookmark IDs for tag, but do not wait for it.
+            _ = _viewModel.LoadBookmarksForTagAsync(tag.Tag.Name);
+
+            // refresh the filter when there are newly fetched IDs.
+            IllustrationContainer.ViewModel.DataProvider.View.Filter = o => BookmarkTagFilter(name, o);
+            return;
+        }
+
+        IllustrationContainer.ViewModel.DataProvider.View.Filter = null;
+    }
+
+    private bool BookmarkTagFilter(string name, object o) => o is IllustrationItemViewModel model && _viewModel.GetBookmarkIdsForTag(name).Contains(model.Id);
+
     private void ChangeSource()
     {
-        IllustrationContainer.ViewModel.ResetEngine(App.AppViewModel.MakoClient.Bookmarks(App.AppViewModel.PixivUid, PrivacyPolicyComboBox.GetComboBoxSelectedItemTag(PrivacyPolicy.Public), App.AppViewModel.AppSettings.TargetFilter));
+        var tag = PrivacyPolicyComboBox.GetComboBoxSelectedItemTag(PrivacyPolicy.Public);
+        if (tag is PrivacyPolicy.Private && !_viewModel.IsMe)
+            tag = PrivacyPolicy.Public;
+        IllustrationContainer.ViewModel.ResetEngine(App.AppViewModel.MakoClient.Bookmarks(_viewModel.UserId, tag, App.AppViewModel.AppSettings.TargetFilter));
     }
 }

@@ -30,6 +30,7 @@ using Microsoft.UI.Xaml.Media;
 using Pixeval.AppManagement;
 using Pixeval.Controls.Windowing;
 using Pixeval.CoreApi.Net.Response;
+using Pixeval.Pages.Capability;
 using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
@@ -85,7 +86,7 @@ public partial class IllustratorContentViewerViewModel : ObservableObject
 
         CurrentTag = IllustrationTag = new NavigationViewTag(typeof(IllustratorIllustrationPage), UserId);
         MangaTag = new NavigationViewTag(typeof(IllustratorMangaPage), UserId);
-        BookmarkedIllustrationAndMangaTag = new NavigationViewTag(typeof(IllustratorIllustrationAndMangaBookmarkPage), UserId);
+        BookmarkedIllustrationAndMangaTag = new NavigationViewTag(typeof(BookmarksPage), UserId);
         FollowingUserTag = null!;
         MyPixivUserTag = null!;
         NovelTag = null!;

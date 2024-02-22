@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.WinUI.Helpers;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -27,9 +28,10 @@ namespace Pixeval.Controls;
 [DependencyProperty<int>("SelectedIndex", "-1", nameof(OnSelectedIndexChanged))]
 [DependencyProperty<bool>("CanLoadMore", "true")]
 [DependencyProperty<int>("LoadCount", "20")]
+[ObservableObject]
 public sealed partial class AdvancedItemsView : ItemsView
 {
-    public event Func<AdvancedItemsView, EventArgs, Task> LoadMoreRequested;
+    public event Func<AdvancedItemsView, EventArgs, Task<bool>> LoadMoreRequested;
     /// <summary>
     /// 调用此事件时可能需要防抖
     /// </summary>
@@ -60,25 +62,44 @@ public sealed partial class AdvancedItemsView : ItemsView
     /// <returns></returns>
     public async Task TryRaiseLoadMoreRequestedAsync()
     {
-        if (!CanLoadMore || IsLoadingMore)
-            return;
-
-        // 只有页面没充满时会触发LoadMoreRequested
-        switch (ScrollView.ComputedVerticalScrollMode, ScrollView.ComputedHorizontalScrollMode)
+        var loadMore = true;
+        // 加载直到有新元素加载进来
+        while (loadMore)
         {
-            case (ScrollingScrollMode.Disabled, ScrollingScrollMode.Disabled):
-            case (ScrollingScrollMode.Enabled, ScrollingScrollMode.Disabled)
-                when ScrollView.ScrollableHeight - LoadingOffset < ScrollView.VerticalOffset:
-            case (ScrollingScrollMode.Disabled, ScrollingScrollMode.Enabled)
-                when ScrollView.ScrollableWidth - LoadingOffset < ScrollView.HorizontalOffset:
-            case (ScrollingScrollMode.Enabled, ScrollingScrollMode.Enabled)
-                when ScrollView.ScrollableHeight - LoadingOffset < ScrollView.VerticalOffset
-                     || ScrollView.ScrollableWidth - LoadingOffset < ScrollView.HorizontalOffset:
+            if (!CanLoadMore || IsLoadingMore)
+                return;
+
+            // 只有页面没充满时会触发LoadMoreRequested
+            switch (ScrollView.ComputedVerticalScrollMode, ScrollView.ComputedHorizontalScrollMode, ScrollView.VerticalScrollMode, ScrollView.HorizontalScrollMode)
             {
-                IsLoadingMore = true;
-                await LoadMoreRequested(this, EventArgs.Empty);
-                IsLoadingMore = false;
-                break;
+                case (ScrollingScrollMode.Disabled, ScrollingScrollMode.Disabled, not ScrollingScrollMode.Disabled, not ScrollingScrollMode.Disabled):
+                case (ScrollingScrollMode.Enabled, ScrollingScrollMode.Disabled, _, not ScrollingScrollMode.Disabled)
+                    when ScrollView.ScrollableHeight - LoadingOffset < ScrollView.VerticalOffset:
+                case (ScrollingScrollMode.Disabled, ScrollingScrollMode.Enabled, not ScrollingScrollMode.Disabled, _)
+                    when ScrollView.ScrollableWidth - LoadingOffset < ScrollView.HorizontalOffset:
+                case (ScrollingScrollMode.Enabled, ScrollingScrollMode.Enabled, _, _)
+                    when ScrollView.ScrollableHeight - LoadingOffset < ScrollView.VerticalOffset
+                         || ScrollView.ScrollableWidth - LoadingOffset < ScrollView.HorizontalOffset:
+                {
+                    IsLoadingMore = true;
+                    var before = GetItemsCount();
+                    if (await LoadMoreRequested(this, EventArgs.Empty))
+                    {
+                        var after = GetItemsCount();
+                        // 这里可以设为一行的元素数，这样在加载过少数量的时候，也可以持续加载
+                        // 一般一次会加载20个元素，而一行元素数一般少于10，所以这里设为10
+                        if (before + 10 < after)
+                            loadMore = false;
+                    }
+                    else
+                        loadMore = false;
+                    IsLoadingMore = false;
+                    break;
+                }
+                // 如果填满了页面，也无需继续加载
+                default:
+                    loadMore = false;
+                    break;
             }
         }
     }
@@ -89,7 +110,12 @@ public sealed partial class AdvancedItemsView : ItemsView
         LoadMoreRequested += async (sender, args) =>
         {
             if (sender.To<AdvancedItemsView>() is { ItemsSource: ISupportIncrementalLoading sil } aiv)
+            {
                 _ = await sil.LoadMoreItemsAsync((uint)aiv.LoadCount);
+                return sil.HasMoreItems;
+            }
+
+            return false;
         };
         _ = RegisterPropertyChangedCallback(ScrollViewProperty, ScrollViewOnPropertyChanged);
         _ = RegisterPropertyChangedCallback(ItemsSourceProperty, ItemsSourceOnPropertyChanged);
@@ -320,10 +346,21 @@ public sealed partial class AdvancedItemsView : ItemsView
         };
     }
 
+    private int GetItemsCount()
+    {
+        return ItemsSource switch
+        {
+            Array array => array.Length,
+            ICollection list => list.Count,
+            IEnumerable enumerable => enumerable.Cast<object>().Count(),
+            _ => ThrowHelper.ArgumentOutOfRange<object, int>(ItemsSource)
+        };
+    }
+
     /// <summary>
     /// For debounce
     /// </summary>
-    private bool IsLoadingMore { get; set; }
+    [ObservableProperty] private bool _isLoadingMore;
 
     #endregion
 }

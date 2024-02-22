@@ -20,33 +20,35 @@
 
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
-using Pixeval.Controls;
 using Pixeval.CoreApi.Global.Enum;
-using Pixeval.Pages.IllustratorViewer;
-using WinUI3Utilities;
+using Pixeval.Util.UI;
 
 namespace Pixeval.Pages.Capability;
 
 public sealed partial class FollowingsPage
 {
-    private readonly IllustratorViewViewModel _viewModel = new();
-
     public FollowingsPage() => InitializeComponent();
+
+    private long _uid = -1;
+
+    private bool IsMe => _uid == App.AppViewModel.PixivUid;
 
     public override void OnPageActivated(NavigationEventArgs e)
     {
-        _viewModel.ResetEngine(App.AppViewModel.MakoClient.Following(App.AppViewModel.PixivUid, PrivacyPolicy.Public));
+        if (e.Parameter is not long uid)
+            uid = App.AppViewModel.PixivUid;
+        _uid = uid;
+        PrivacyPolicyComboBox.SelectedItem = PrivacyPolicyComboBoxPublicItem;
+        ChangeSource();
     }
 
-    private TeachingTip IllustratorItemOnRequestTeachingTip() => FollowingsPageTeachingTip;
-
-    private async void IllustratorItem_OnViewModelChanged(IllustratorItem item, IllustratorItemViewModel viewModel)
+    private void PrivacyPolicyComboBox_OnSelectionChangedWhenLoaded(object sender, SelectionChangedEventArgs e)
     {
-        await viewModel.LoadAvatarAsync();
+        ChangeSource();
     }
 
-    private async void IllustratorItemsView_OnItemInvoked(ItemsView sender, ItemsViewItemInvokedEventArgs e)
+    private void ChangeSource()
     {
-        await IllustratorViewerHelper.CreateWindowWithPageAsync(e.InvokedItem.To<IllustratorItemViewModel>().UserId);
+        IllustratorView.ViewModel.ResetEngine(App.AppViewModel.MakoClient.Following(_uid, PrivacyPolicyComboBox.GetComboBoxSelectedItemTag(PrivacyPolicy.Public)));
     }
 }

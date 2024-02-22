@@ -44,6 +44,8 @@ public sealed partial class IllustrationView
 
     public ScrollView ScrollView => IllustrationItemsView.ScrollView;
 
+    public TeachingTip QrCodeTeachingTip => IllustrateView.QrCodeTeachingTip;
+
     public double DesiredHeight => ThumbnailDirection switch
     {
         ThumbnailDirection.Landscape => LandscapeHeight,
@@ -58,11 +60,7 @@ public sealed partial class IllustrationView
         _ => ThrowHelper.ArgumentOutOfRange<ThumbnailDirection, double>(ThumbnailDirection)
     };
 
-    public IllustrationView()
-    {
-        InitializeComponent();
-        ViewModel.DataProvider.View.FilterChanged += async (_, _) => await IllustrationItemsView.TryRaiseLoadMoreRequestedAsync();
-    }
+    public IllustrationView() => InitializeComponent();
 
     private void IllustrationViewOnUnloaded(object sender, RoutedEventArgs e)
     {

@@ -33,7 +33,6 @@
                 x:Name="ExtraCommandsBar"
                 Grid.Column="0"
                 VerticalAlignment="Center"
-                FlowDirection="LeftToRight"
                 Orientation="Horizontal"
                 Spacing="10">
                 <AutoSuggestBox

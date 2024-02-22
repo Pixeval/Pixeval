@@ -19,7 +19,6 @@
 #endregion
 
 using System;
-using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml;
@@ -38,6 +37,7 @@ using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using Windows.System;
 using Pixeval.CoreApi.Net.Response;
+using Pixeval.Pages.Capability;
 using WinUI3Utilities;
 
 namespace Pixeval.Pages.IllustratorViewer;
@@ -53,17 +53,17 @@ public partial class IllustratorViewerPageViewModel : UiObservableObject
     [ObservableProperty]
     private bool _isFollowed;
 
-    public NavigationViewTag IllustrationTag { get; }
+    public NavigationViewTag<IllustratorIllustrationPage, long> IllustrationTag { get; }
 
-    public NavigationViewTag MangaTag { get; }
+    public NavigationViewTag<IllustratorMangaPage, long> MangaTag { get; }
 
     public NavigationViewTag NovelTag { get; }
 
-    public NavigationViewTag BookmarkedIllustrationAndMangaTag { get; }
+    public NavigationViewTag<BookmarksPage, long> BookmarkedIllustrationAndMangaTag { get; }
 
     public NavigationViewTag BookmarkedNovelTag { get; }
 
-    public NavigationViewTag FollowingUserTag { get; }
+    public NavigationViewTag<FollowingsPage, long> FollowingUserTag { get; }
 
     public NavigationViewTag MyPixivUserTag { get; }
 
@@ -73,11 +73,11 @@ public partial class IllustratorViewerPageViewModel : UiObservableObject
         IsFollowed = userDetail.UserEntity.IsFollowed;
         Metrics = userDetail.UserProfile;
 
-        IllustrationTag = new NavigationViewTag(typeof(IllustratorIllustrationPage), Id);
-        MangaTag = new NavigationViewTag(typeof(IllustratorMangaPage), Id);
+        IllustrationTag = new(Id);
+        MangaTag = new(Id);
         NovelTag = null!;
-        BookmarkedIllustrationAndMangaTag = new NavigationViewTag(typeof(IllustratorIllustrationAndMangaBookmarkPage), Id);
-        FollowingUserTag = null!;
+        BookmarkedIllustrationAndMangaTag = new(Id);
+        FollowingUserTag = new(Id);
         MyPixivUserTag = null!;
         BookmarkedNovelTag = null!;
 

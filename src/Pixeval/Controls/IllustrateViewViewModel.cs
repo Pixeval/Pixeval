@@ -19,7 +19,6 @@
 #endregion
 
 using System;
-using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Pixeval.Controls.Illustrate;
 using Pixeval.CoreApi.Engine;
@@ -27,11 +26,8 @@ using Pixeval.CoreApi.Model;
 
 namespace Pixeval.Controls;
 
-public abstract partial class IllustrateViewViewModel<T, TViewModel> : ObservableObject, IDisposable where T : class, IEntry where TViewModel : IllustrateViewModel<T>
+public abstract class IllustrateViewViewModel<T, TViewModel> : ObservableObject, IDisposable where T : class, IEntry where TViewModel : IllustrateViewModel<T>
 {
-    [ObservableProperty]
-    private bool _hasNoItems;
-
     /// <summary>
     /// Avoid calls to <see cref="IDataProvider{T,TViewModel}.ResetEngine"/>, calls to <see cref="ResetEngine"/> instead.
     /// </summary>
@@ -41,9 +37,5 @@ public abstract partial class IllustrateViewViewModel<T, TViewModel> : Observabl
 
     public void ResetEngine(IFetchEngine<T?>? newEngine, int itemLimit = -1) => DataProvider.ResetEngine(newEngine, itemLimit);
 
-    public async Task LoadMoreAsync(uint count)
-    {
-        var r = await DataProvider.Source.LoadMoreItemsAsync(count);
-        HasNoItems = DataProvider.Source.Count is 0 && r.Count is 0;
-    }
+    public bool HasNoItem => DataProvider.View.Count is 0;
 }

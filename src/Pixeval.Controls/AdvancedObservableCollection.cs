@@ -452,9 +452,9 @@ public class AdvancedObservableCollection<T> : IList<T>, IList, INotifyCollectio
             newViewIndex = _view.Count;
         else
         {
-            for (int i = 0, j = 0; i < _source.Count; i++)
+            for (int i = 0, j = 0; i < _source.Count; ++i)
             {
-                if (i == sourceIndex)
+                if (i == sourceIndex || j >= _view.Count)
                 {
                     newViewIndex = j;
                     break;

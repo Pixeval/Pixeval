@@ -5,52 +5,37 @@
     xmlns:controls="using:Pixeval.Controls"
     xmlns:converters="using:CommunityToolkit.WinUI.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:enum="using:Pixeval.CoreApi.Global.Enum"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     ClearCacheAfterNavigation="True"
     mc:Ignorable="d">
     <controls:EnhancedPage.Resources>
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
     </controls:EnhancedPage.Resources>
-    <Grid>
-        <controls:AdvancedItemsView
-            IsItemInvokedEnabled="True"
-            ItemInvoked="IllustratorItemsView_OnItemInvoked"
-            ItemsSource="{x:Bind _viewModel.DataProvider.View}"
-            LayoutType="Grid"
-            MinItemWidth="300"
-            SelectionMode="None">
-            <controls:AdvancedItemsView.ItemTemplate>
-                <DataTemplate x:DataType="controls:IllustratorItemViewModel">
-                    <ItemContainer>
-                        <controls:IllustratorItem
-                            RequestTeachingTip="IllustratorItemOnRequestTeachingTip"
-                            ViewModel="{x:Bind}"
-                            ViewModelChanged="IllustratorItem_OnViewModelChanged" />
-                    </ItemContainer>
-                </DataTemplate>
-            </controls:AdvancedItemsView.ItemTemplate>
-        </controls:AdvancedItemsView>
+    <Grid Margin="10,0,0,0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
         <StackPanel
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center"
-            Spacing="20"
-            Visibility="{x:Bind _viewModel.HasNoItems, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
-            <Image
-                Width="200"
-                Height="200"
-                Source="/Assets/Images/empty-box.png" />
-            <TextBlock
-                x:Uid="/FollowingsPage/ResultIsEmptyTextBlock"
-                HorizontalAlignment="Center"
-                FontSize="{StaticResource PixevalTitleFontSize}" />
+            Grid.Row="0"
+            Height="{StaticResource CommandBarHeight}"
+            Orientation="Horizontal">
+            <controls:NotifyOnLoadedComboBox
+                x:Name="PrivacyPolicyComboBox"
+                x:Uid="/FollowingsPage/PrivacyPolicyComboBox"
+                VerticalAlignment="Center"
+                SelectionChangedWhenLoaded="PrivacyPolicyComboBox_OnSelectionChangedWhenLoaded"
+                Visibility="{x:Bind IsMe, Converter={StaticResource BoolToVisibilityConverter}}">
+                <controls:NotifyOnLoadedComboBox.Items>
+                    <ComboBoxItem
+                        x:Name="PrivacyPolicyComboBoxPublicItem"
+                        x:Uid="/FollowingsPage/PrivacyPolicyComboBoxPublicComboBoxItem"
+                        Tag="{x:Bind enum:PrivacyPolicy.Public}" />
+                    <ComboBoxItem x:Uid="/FollowingsPage/PrivacyPolicyComboBoxPrivateComboBoxItem" Tag="{x:Bind enum:PrivacyPolicy.Private}" />
+                </controls:NotifyOnLoadedComboBox.Items>
+            </controls:NotifyOnLoadedComboBox>
         </StackPanel>
-        <TeachingTip
-            x:Name="FollowingsPageTeachingTip"
-            x:Uid="/FollowingsPage/QrCodeTeachingTip"
-            IsLightDismissEnabled="True">
-            <TeachingTip.HeroContent>
-                <Image />
-            </TeachingTip.HeroContent>
-        </TeachingTip>
+        <controls:IllustratorView x:Name="IllustratorView" Grid.Row="1" />
     </Grid>
 </controls:EnhancedPage>

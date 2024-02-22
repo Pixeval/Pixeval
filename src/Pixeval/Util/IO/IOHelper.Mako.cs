@@ -67,7 +67,7 @@ public static partial class IoHelper
         IProgress<double>? progress = null,
         CancellationHandle? cancellationHandle = null)
     {
-        return await (await client.DownloadRandomAccessStreamAsync(url, progress, cancellationHandle))
+        return await (await client.DownloadStreamAsync(url, progress, cancellationHandle))
             .RewrapAsync(async m => (ImageSource)await m.GetBitmapImageAsync(true, desiredWidth));
     }
 }

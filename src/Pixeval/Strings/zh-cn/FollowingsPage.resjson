@@ -1,5 +1,5 @@
 {
-    "ResultIsEmptyTextBlock/Text": "这里空空如也",
-    "QrCodeTeachingTip/Title": "画师链接二维码",
-    "ShowOrHideRecommendIllustratorButton/ToolTipService/ToolTip": "展示推荐作者"
+    "PrivacyPolicyComboBox/PlaceholderText": "关注选项",
+    "PrivacyPolicyComboBoxPrivateComboBoxItem/Content": "私人关注",
+    "PrivacyPolicyComboBoxPublicComboBoxItem/Content": "公开关注"
 }
