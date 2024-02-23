@@ -54,6 +54,7 @@ using Pixeval.Utilities;
 using WinUI3Utilities;
 using Pixeval.AppManagement;
 using Pixeval.Controls.Windowing;
+using Pixeval.Logging;
 
 namespace Pixeval.Pages;
 
@@ -65,12 +66,21 @@ public sealed partial class MainPage : SupportCustomTitleBarDragRegionPage
     {
         _viewModel = new MainPageViewModel(this);
         InitializeComponent();
-        if (!AppInfo.CustomizeTitleBarSupported)
-        {
-            AutoSuggestBoxWidth.Width = new GridLength(1, GridUnitType.Star);
-            PaneCustomContentPresenter.Content = TitleBarPresenter.Content;
-            TitleBarPresenter.Content = null;
-        }
+        CustomizeTitleBar();
+    }
+
+    private async void CustomizeTitleBar()
+    {
+        if (AppInfo.CustomizeTitleBarSupported)
+            return;
+        AutoSuggestBoxWidth.Width = new GridLength(1, GridUnitType.Star);
+        PaneCustomContentPresenter.Content = TitleBarPresenter.Content;
+        TitleBarPresenter.Content = null;
+
+        await Task.Yield();
+        using var scope = App.AppViewModel.AppServicesScope;
+        var logger = scope.ServiceProvider.GetRequiredService<FileLogger>();
+        logger.LogInformation("Customize title bar is not supported", null);
     }
 
     protected override void SetTitleBarDragRegion(InputNonClientPointerSource sender, SizeInt32 windowSize, double scaleFactor, out int titleBarHeight)
@@ -88,7 +98,7 @@ public sealed partial class MainPage : SupportCustomTitleBarDragRegionPage
 
         // dirty trick, the order of the menu items is the same as the order of the fields in MainPageTabItem
         // since enums are basically integers, we just need a cast to transform it to the correct offset.
-        ((NavigationViewItem)NavigationView.MenuItems[(int)App.AppViewModel.AppSettings.DefaultSelectedTabItem]).IsSelected = true;
+        NavigationView.SelectedItem = NavigationView.MenuItems[(int)App.AppViewModel.AppSettings.DefaultSelectedTabItem];
 
         // The application is invoked by a protocol, call the corresponding protocol handler.
         if (App.AppViewModel.ConsumeProtocolActivation())
@@ -228,7 +238,7 @@ public sealed partial class MainPage : SupportCustomTitleBarDragRegionPage
     private async Task NavigateToSettingEntryAsync(SettingEntry entry)
     {
         // ScrollView第一次导航的时候会有一个偏移，所以我们需要手动调整一下
-        var offset = (NavigationViewItem)NavigationView.SelectedItem == SettingsTab ? 0 : 60;
+        var offset = MainPageRootFrame.Content is SettingsPage ? 0 : 60;
         NavigationView.SelectedItem = SettingsTab;
         var settingsPage = await MainPageRootFrame.AwaitPageTransitionAsync<SettingsPage>();
         var panel = settingsPage.SettingsPageScrollView.Content.To<FrameworkElement>();

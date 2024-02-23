@@ -7,7 +7,6 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:Pixeval.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Width="300"
     AspectRatio="15:8"
     Background="{StaticResource CardBackgroundFillColorDefaultBrush}"
     mc:Ignorable="d">
@@ -15,6 +14,18 @@
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
     </controls:ConstrainedBox.Resources>
     <!--  图片长宽均为5，故为(3*5):(3+5)  -->
+    <controls:ConstrainedBox.ContextFlyout>
+        <MenuFlyout>
+            <MenuFlyoutItem Command="{x:Bind ViewModel.FollowCommand, Mode=OneWay}" />
+            <MenuFlyoutSeparator />
+            <MenuFlyoutItem Command="{x:Bind ViewModel.OpenInWebBrowserCommand, Mode=OneWay}" />
+            <MenuFlyoutItem Command="{x:Bind ViewModel.GenerateWebLinkCommand, Mode=OneWay}" CommandParameter="{x:Bind}" />
+            <MenuFlyoutItem Command="{x:Bind ViewModel.GenerateLinkCommand, Mode=OneWay}" CommandParameter="{x:Bind}" />
+            <MenuFlyoutSeparator />
+            <MenuFlyoutItem Command="{x:Bind ViewModel.ShowQrCodeCommand, Mode=OneWay}" CommandParameter="{x:Bind QrCodeTeachingTip}" />
+            <MenuFlyoutItem Command="{x:Bind ViewModel.ShowPixEzQrCodeCommand, Mode=OneWay}" CommandParameter="{x:Bind QrCodeTeachingTip}" />
+        </MenuFlyout>
+    </controls:ConstrainedBox.ContextFlyout>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />

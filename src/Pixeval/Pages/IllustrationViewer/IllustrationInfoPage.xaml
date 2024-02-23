@@ -39,19 +39,33 @@
                 Margin="{StaticResource StackLayoutEntryPadding}"
                 Style="{StaticResource CardControlButton}"
                 Tapped="IllustratorPersonPicture_OnTapped">
-                <StackPanel Orientation="Horizontal">
+                <Grid ColumnSpacing="10" RowSpacing="5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
                     <PersonPicture
+                        Grid.Row="0"
+                        Grid.RowSpan="2"
+                        Grid.Column="0"
                         Width="50"
                         Height="50"
                         ProfilePicture="{x:Bind _viewModel.UserProfileImageSource, Mode=OneWay}" />
-                    <StackPanel Margin="10,0,0,0" VerticalAlignment="Center">
-                        <TextBlock FontSize="{StaticResource PixevalContentFontSize}" Text="{x:Bind GetIllustratorNameText()}" />
-                        <TextBlock
-                            Margin="{StaticResource StackLayoutEntryPadding}"
-                            FontSize="{StaticResource PixevalContentFontSize}"
-                            Text="{x:Bind GetIllustratorIdText()}" />
-                    </StackPanel>
-                </StackPanel>
+                    <TextBlock
+                        Grid.Row="0"
+                        Grid.Column="1"
+                        FontSize="{StaticResource PixevalContentFontSize}"
+                        Text="{x:Bind GetIllustratorNameText()}" />
+                    <TextBlock
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        FontSize="{StaticResource PixevalContentFontSize}"
+                        Text="{x:Bind GetIllustratorIdText()}" />
+                </Grid>
             </Button>
             <!--#endregion-->
             <!--#region Illustration Title-->

@@ -6,8 +6,8 @@ namespace Pixeval.Controls;
 /// <summary>
 /// <see cref="IsLoadingMore"/>将覆盖<see cref="HasNoItem"/>的效果
 /// </summary>
-[DependencyProperty<bool>("HasNoItem", propertyChanged: nameof(OnHasNoItemChanged))]
-[DependencyProperty<bool>("IsLoadingMore", propertyChanged: nameof(OnHasNoItemChanged))]
+[DependencyProperty<bool>("HasNoItem", "true", nameof(OnHasNoItemChanged))]
+[DependencyProperty<bool>("IsLoadingMore", "false", nameof(OnHasNoItemChanged))]
 [DependencyProperty<object>("Content")]
 [DependencyProperty<string>("TeachingTipTitle")]
 public sealed partial class IllustrateView

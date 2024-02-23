@@ -11,7 +11,7 @@
     xmlns:pages="using:Pixeval.Pages"
     xmlns:pixeval="using:Pixeval.AppManagement"
     mc:Ignorable="d">
-    <controls:EnhancedWindowPage.Resources>
+    <controls:SupportCustomTitleBarDragRegionPage.Resources>
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
 
         <DataTemplate x:Key="IllustrationHeaderSuggestionTemplate">
@@ -91,7 +91,7 @@
             IllustrationHeader="{StaticResource IllustrationHeaderSuggestionTemplate}"
             NovelHeader="{StaticResource NovelHeaderSuggestionTemplate}"
             SettingEntryHeader="{StaticResource SettingsEntryHeaderSuggestionTemplate}" />
-    </controls:EnhancedWindowPage.Resources>
+    </controls:SupportCustomTitleBarDragRegionPage.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" MinWidth="{x:Bind NavigationView.CompactPaneLength}" />
@@ -110,7 +110,7 @@
             <NavigationView.PaneCustomContent>
                 <ContentPresenter
                     x:Name="PaneCustomContentPresenter"
-                    Margin="10,0,0,0"
+                    Margin="{StaticResource ComboBoxLeftIndent}"
                     Visibility="{x:Bind NavigationView.IsPaneOpen, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
             </NavigationView.PaneCustomContent>
             <NavigationView.MenuItems>

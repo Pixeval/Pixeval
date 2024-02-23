@@ -137,9 +137,9 @@
       },
       "LiteDB": {
         "type": "Direct",
-        "requested": "[5.0.17, )",
-        "resolved": "5.0.17",
-        "contentHash": "cKPvkdlzIts3ZKu/BzoIc/Y71e4VFKlij4LyioPFATZMot+wB7EAm1FFbZSJez6coJmQUoIg/3yHE1MMU+zOdg=="
+        "requested": "[5.0.19, )",
+        "resolved": "5.0.19",
+        "contentHash": "O8XPBptE4SygW2SN6skqg/VDVTrjpJ0p6+i7Cp8x8razbu2ORLSd6ep3JdhDIdL6h57Bcxv2BuVaN70IKpXI0Q=="
       },
       "Microsoft.Extensions.DependencyInjection": {
         "type": "Direct",

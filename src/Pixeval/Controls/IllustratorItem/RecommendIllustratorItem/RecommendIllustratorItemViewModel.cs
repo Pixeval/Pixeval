@@ -19,26 +19,18 @@
 #endregion
 
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using Pixeval.AppManagement;
-using Pixeval.Controls.Illustrate;
 using Pixeval.CoreApi.Net.Response;
 using Pixeval.Util;
-using Pixeval.Util.IO;
 using Pixeval.Util.UI;
-using Pixeval.Utilities;
 using WinUI3Utilities;
 
 namespace Pixeval.Controls;
 
-public partial class RecommendIllustratorItemViewModel : IllustrateViewModel<RecommendUser>
+public partial class RecommendIllustratorItemViewModel : UserItemViewModel<RecommendUser>
 {
-    [ObservableProperty]
-    private ImageSource? _avatarSource;
 
     [ObservableProperty]
     private Style _buttonStyle = Application.Current.Resources["AccentButtonStyle"].To<Style>();
@@ -47,10 +39,8 @@ public partial class RecommendIllustratorItemViewModel : IllustrateViewModel<Rec
     [ObservableProperty]
     private bool _isFollowed;
 
-    public RecommendIllustratorItemViewModel(RecommendUser user, IEnumerable<long>? ids) : base(user)
+    public RecommendIllustratorItemViewModel(RecommendUser user, IEnumerable<long>? ids) : base(user, new IllustratorIllustrationsOverviewViewModel(ids))
     {
-        OverviewViewModel = new IllustratorIllustrationsOverviewViewModel(ids);
-
         InitializeCommands();
         FollowCommand.GetFollowCommand(IsFollowed);
     }
@@ -59,36 +49,14 @@ public partial class RecommendIllustratorItemViewModel : IllustrateViewModel<Rec
 
     public string Username => Illustrate.Name;
 
-    public long UserId => Illustrate.Id;
+    public override long UserId => Illustrate.Id;
 
-    public XamlUICommand FollowCommand { get; } = new();
+    public override string AvatarUrl => Illustrate.Image;
 
-    public IllustratorIllustrationsOverviewViewModel OverviewViewModel { get; }
-
-    private void InitializeCommands()
-    {
-        FollowCommand.ExecuteRequested += FollowCommandOnExecuteRequested;
-    }
-
-    public async Task LoadAvatarAsync()
-    {
-        var result = await App.AppViewModel.MakoClient.DownloadBitmapImageAsync(Illustrate.Image, 100);
-        AvatarSource = result is Result<ImageSource>.Success { Value: var avatar }
-            ? avatar
-            : await AppInfo.GetPixivNoProfileImageAsync();
-        await OverviewViewModel.LoadBannerSource();
-    }
-
-    private void FollowCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
+    protected override void FollowCommandExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
         IsFollowed = MakoHelper.SetFollow(UserId, !IsFollowed);
         ButtonStyle = Application.Current.Resources[IsFollowed ? "DefaultButtonStyle" : "AccentButtonStyle"].To<Style>();
         FollowCommand.GetFollowCommand(IsFollowed);
-    }
-
-    public override void Dispose()
-    {
-        AvatarSource = null;
-        OverviewViewModel.Dispose();
     }
 }

@@ -19,6 +19,7 @@
 #endregion
 
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using System;
 using WinUI3Utilities.Attributes;
 
@@ -29,6 +30,9 @@ public sealed partial class RecommendIllustratorItem
 {
     public event Action<RecommendIllustratorItem, RecommendIllustratorItemViewModel>? ViewModelChanged;
 
+    public event Func<TeachingTip> RequestTeachingTip = null!;
+
+    private TeachingTip QrCodeTeachingTip => RequestTeachingTip();
     private static void OnViewModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         if (d as RecommendIllustratorItem is { } item)

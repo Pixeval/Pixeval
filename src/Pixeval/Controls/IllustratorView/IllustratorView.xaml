@@ -15,8 +15,6 @@
         <local:IllustrateView.Content>
             <local:AdvancedItemsView
                 x:Name="AdvancedItemsView"
-                HorizontalAlignment="Stretch"
-                VerticalAlignment="Stretch"
                 IsItemInvokedEnabled="True"
                 ItemInvoked="IllustratorItemsView_OnItemInvoked"
                 ItemsSource="{x:Bind ViewModel.DataProvider.View}"

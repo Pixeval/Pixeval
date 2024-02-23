@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
@@ -7,13 +8,46 @@ using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using Windows.System;
+using CommunityToolkit.Mvvm.ComponentModel;
+using Microsoft.UI.Xaml.Media;
 using WinUI3Utilities;
 using Microsoft.UI.Xaml.Media.Imaging;
+using Pixeval.AppManagement;
+using Pixeval.Controls.Illustrate;
+using Pixeval.CoreApi.Model;
+using Pixeval.Utilities;
 
 namespace Pixeval.Controls;
 
-public partial class IllustratorItemViewModel
+public abstract partial class UserItemViewModel<T>(T illustrate, IllustratorIllustrationsOverviewViewModel overviewViewModel) : IllustrateViewModel<T>(illustrate) where T : IEntry
 {
+    [ObservableProperty]
+    private bool _isFollowed;
+
+    [ObservableProperty]
+    private ImageSource? _avatarSource;
+
+    public abstract long UserId { get; }
+
+    public abstract string AvatarUrl { get; }
+
+    public IllustratorIllustrationsOverviewViewModel OverviewViewModel { get; } = overviewViewModel;
+
+    public async Task LoadAvatarAsync()
+    {
+        var result = await App.AppViewModel.MakoClient.DownloadBitmapImageAsync(AvatarUrl, 100);
+        AvatarSource = result is Result<ImageSource>.Success { Value: var avatar }
+            ? avatar
+            : await AppInfo.GetPixivNoProfileImageAsync();
+        await OverviewViewModel.LoadBannerSource();
+    }
+
+    public override void Dispose()
+    {
+        AvatarSource = null;
+        OverviewViewModel.Dispose();
+    }
+
     public XamlUICommand FollowCommand { get; } = "".GetCommand(FontIconSymbols.ContactE77B);
 
     public XamlUICommand GenerateLinkCommand { get; } = IllustrateItemResources.GenerateLink.GetCommand(FontIconSymbols.LinkE71B);
@@ -26,7 +60,7 @@ public partial class IllustratorItemViewModel
 
     public XamlUICommand ShowPixEzQrCodeCommand { get; } = IllustrateItemResources.ShowPixEzQrCode.GetCommand(FontIconSymbols.Photo2EB9F);
 
-    private void InitializeCommands()
+    protected void InitializeCommands()
     {
         FollowCommand.GetFollowCommand(IsFollowed);
         FollowCommand.ExecuteRequested += FollowCommandExecuteRequested;
@@ -42,7 +76,7 @@ public partial class IllustratorItemViewModel
         ShowPixEzQrCodeCommand.ExecuteRequested += ShowPixEzQrCodeCommandExecuteRequested;
     }
 
-    private void FollowCommandExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
+    protected virtual void FollowCommandExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
         IsFollowed = MakoHelper.SetFollow(UserId, !IsFollowed);
         FollowCommand.GetFollowCommand(IsFollowed);

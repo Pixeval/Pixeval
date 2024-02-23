@@ -209,6 +209,10 @@
                             Icon="{markup:FontSymbolIcon Glyph=PeopleE716}"
                             IsEnabled="False"
                             Tag="{x:Bind _viewModel.MyPixivUserTag}" />
+                        <controls1:SegmentedItem
+                            x:Uid="/IllustrateViewerPage/RecommendUserNavigationViewItem"
+                            Icon="{markup:FontSymbolIcon Glyph=AddFriendE8FA}"
+                            Tag="{x:Bind _viewModel.RecommendUserTag}" />
                     </controls1:Segmented>
                 </Grid>
             </controls:StickyHeaderScrollView.Header>

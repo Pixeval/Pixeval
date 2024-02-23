@@ -12,15 +12,18 @@
     <controls:EnhancedPage.Resources>
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
     </controls:EnhancedPage.Resources>
-    <Grid Margin="10,0,0,0">
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
+        <!--  由于现在内容只有一个，所以当内容隐藏的时候，StackPanel也隐藏  -->
         <StackPanel
             Grid.Row="0"
             Height="{StaticResource CommandBarHeight}"
-            Orientation="Horizontal">
+            Margin="{StaticResource ComboBoxLeftIndent}"
+            Orientation="Horizontal"
+            Visibility="{x:Bind IsMe, Converter={StaticResource BoolToVisibilityConverter}}">
             <controls:NotifyOnLoadedComboBox
                 x:Name="PrivacyPolicyComboBox"
                 x:Uid="/FollowingsPage/PrivacyPolicyComboBox"

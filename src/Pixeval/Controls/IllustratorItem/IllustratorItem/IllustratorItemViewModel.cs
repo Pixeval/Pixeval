@@ -18,53 +18,28 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
-using Microsoft.UI.Xaml.Media;
-using Pixeval.AppManagement;
-using Pixeval.Controls.Illustrate;
 using Pixeval.CoreApi.Model;
-using Pixeval.Util.IO;
 using Pixeval.Util.UI;
-using Pixeval.Utilities;
 
 namespace Pixeval.Controls;
 
-public sealed partial class IllustratorItemViewModel : IllustrateViewModel<User>
+public sealed partial class IllustratorItemViewModel : UserItemViewModel<User>
 {
-    [ObservableProperty]
-    private ImageSource? _avatarSource;
-
     [ObservableProperty]
     private bool _isFollowed;
 
-    public IllustratorItemViewModel(User user) : base(user)
+    public IllustratorItemViewModel(User user) : base(user, new IllustratorIllustrationsOverviewViewModel(user.Illusts))
     {
-        OverviewViewModel = new IllustratorIllustrationsOverviewViewModel(Illustrate.Illusts);
         IsFollowed = Illustrate.UserInfo.IsFollowed;
 
         InitializeCommands();
         FollowCommand.GetFollowCommand(IsFollowed);
     }
 
-    public IllustratorIllustrationsOverviewViewModel OverviewViewModel { get; }
-
     public string Username => Illustrate.UserInfo.Name;
 
-    public long UserId => Illustrate.UserInfo.Id;
+    public override long UserId => Illustrate.UserInfo.Id;
 
-    public async Task LoadAvatarAsync()
-    {
-        var result = await App.AppViewModel.MakoClient.DownloadBitmapImageAsync(Illustrate.UserInfo.ProfileImageUrls.Medium, 100);
-        AvatarSource = result is Result<ImageSource>.Success { Value: var avatar }
-            ? avatar
-            : await AppInfo.GetPixivNoProfileImageAsync();
-        await OverviewViewModel.LoadBannerSource();
-    }
-
-    public override void Dispose()
-    {
-        AvatarSource = null;
-        OverviewViewModel.Dispose();
-    }
+    public override string AvatarUrl => Illustrate.UserInfo.ProfileImageUrls.Medium;
 }

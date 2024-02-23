@@ -32,6 +32,8 @@ public sealed partial class IllustratorItem
 {
     public event Action<IllustratorItem, IllustratorItemViewModel>? ViewModelChanged;
 
+    public event Func<TeachingTip> RequestTeachingTip = null!;
+
     private static void OnViewModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         if (d as IllustratorItem is { } item)
@@ -40,14 +42,13 @@ public sealed partial class IllustratorItem
         }
     }
 
-    public const float RotatedRotation = 10f;
-    public const float CommonRotation = 0f;
+    private const float RotatedRotation = 10f;
+    private const float CommonRotation = 0f;
 
-    public static readonly Vector3 ZoomedScale = new(1.2f, 1.2f, 1.2f);
-    public static readonly Vector3 CommonScale = new(1, 1, 1);
-    public static readonly Vector3 ElevatedTranslation = new(0, 0, 60);
-    public static readonly Vector3 CommonTranslation = new(0, 0, 30);
-    public event Func<TeachingTip> RequestTeachingTip = null!;
+    private static readonly Vector3 _zoomedScale = new(1.2f, 1.2f, 1.2f);
+    private static readonly Vector3 _commonScale = new(1, 1, 1);
+    private static readonly Vector3 _elevatedTranslation = new(0, 0, 60);
+    private static readonly Vector3 _commonTranslation = new(0, 0, 30);
 
     private TeachingTip QrCodeTeachingTip => RequestTeachingTip();
 
@@ -62,8 +63,8 @@ public sealed partial class IllustratorItem
     {
         if (!AvatarButton.Flyout.IsOpen)
         {
-            AvatarButton.Scale = CommonScale;
-            AvatarButton.Translation = CommonTranslation;
+            AvatarButton.Scale = _commonScale;
+            AvatarButton.Translation = _commonTranslation;
             AvatarButton.Rotation = CommonRotation;
         }
     }
