@@ -24,7 +24,6 @@ using Pixeval.Controls;
 using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Model;
 using Pixeval.Misc;
-using Pixeval.Util;
 
 namespace Pixeval.Pages.Capability;
 
@@ -38,7 +37,6 @@ public sealed partial class SearchResultsPage : ISortedIllustrationContainerPage
 
     public override void OnPageActivated(NavigationEventArgs navigationEventArgs)
     {
-        SortOptionComboBox.SelectedItem = MakoHelper.GetAppSettingDefaultSortOptionWrapper();
         ChangeSource((IFetchEngine<Illustration>)navigationEventArgs.Parameter);
     }
 

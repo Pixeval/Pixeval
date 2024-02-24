@@ -25,7 +25,6 @@ using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Controls;
 using Pixeval.Database.Managers;
 using Pixeval.Misc;
-using Pixeval.Util;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -45,7 +44,6 @@ public sealed partial class BrowsingHistoryPage : ISortedIllustrationContainerPa
 
     public override void OnPageActivated(NavigationEventArgs navigationEventArgs)
     {
-        SortOptionComboBox.SelectedItem = MakoHelper.GetAppSettingDefaultSortOptionWrapper();
         FetchEngine();
     }
 

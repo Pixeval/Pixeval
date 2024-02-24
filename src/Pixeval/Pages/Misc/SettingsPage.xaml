@@ -16,6 +16,7 @@
     xmlns:options="using:Pixeval.Options"
     xmlns:pixeval="using:Pixeval"
     xmlns:system="using:System"
+    Unloaded="SettingsPage_OnUnloaded"
     xmlns:utilities="using:WinUI3Utilities"
     xmlns:winUi="using:CommunityToolkit.WinUI"
     mc:Ignorable="d">
@@ -441,7 +442,10 @@
                     HeaderIcon="{markup:FontSymbolIcon Glyph=SearchAndAppsE773}"
                     Tag="{x:Bind misc2:SettingEntry.ReverseSearchApiKey}">
                     <controls:SettingsCard.Description>
-                        <HyperlinkButton x:Uid="/SettingsPage/ReverseSearchApiKeyEntryDescriptionHyperlinkButton" />
+                        <TextBlock>
+                            <Run x:Uid="/SettingsPage/ReverseSearchApiKeyEntryDescriptionTextBlock" />
+                            <Hyperlink NavigateUri="https://saucenao.com/user.php?page=search-api" />
+                        </TextBlock>
                     </controls:SettingsCard.Description>
                     <TextBox
                         x:Uid="/SettingsPage/ReverseSearchApiKeyTextBox"

@@ -5,7 +5,6 @@
     xmlns:controls="using:Pixeval.Controls"
     xmlns:converters="using:CommunityToolkit.WinUI.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:enum="using:Pixeval.CoreApi.Global.Enum"
     xmlns:local="using:Pixeval.Pages.Capability"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:model="using:Pixeval.CoreApi.Model"
@@ -16,23 +15,14 @@
     </controls:EnhancedPage.Resources>
     <controls:IllustrationContainer x:Name="IllustrationContainer">
         <controls:IllustrationContainer.CommandBarElements>
-            <controls:NotifyOnLoadedComboBox
+            <controls:PrivacyPolicyComboBox
                 x:Name="PrivacyPolicyComboBox"
-                x:Uid="/BookmarksPage/PrivacyPolicyComboBox"
                 SelectionChangedWhenLoaded="PrivacyPolicyComboBox_OnSelectionChangedWhenLoaded"
-                Visibility="{x:Bind _viewModel.IsMe, Converter={StaticResource BoolToVisibilityConverter}}">
-                <controls:NotifyOnLoadedComboBox.Items>
-                    <ComboBoxItem
-                        x:Name="PrivacyPolicyComboBoxPublicItem"
-                        x:Uid="/BookmarksPage/PrivacyPolicyComboBoxPublicComboBoxItem"
-                        Tag="{x:Bind enum:PrivacyPolicy.Public}" />
-                    <ComboBoxItem x:Uid="/BookmarksPage/PrivacyPolicyComboBoxPrivateComboBoxItem" Tag="{x:Bind enum:PrivacyPolicy.Private}" />
-                </controls:NotifyOnLoadedComboBox.Items>
-            </controls:NotifyOnLoadedComboBox>
+                Visibility="{x:Bind _viewModel.IsMe, Converter={StaticResource BoolToVisibilityConverter}}" />
             <controls:SortOptionComboBox x:Name="SortOptionComboBox" SelectionChangedWhenLoaded="SortOptionComboBox_OnSelectionChanged" />
             <controls:NotifyOnLoadedComboBox
                 x:Name="TagComboBox"
-                x:Uid="/IllustratorIllustrationAndMangaBookmarkPage/TagComboBox"
+                x:Uid="/BookmarksPage/TagComboBox"
                 ItemsSource="{x:Bind _viewModel.UserBookmarkTags, Mode=OneWay}"
                 SelectionChangedWhenLoaded="TagComboBox_OnSelectionChangedWhenLoaded">
                 <controls:NotifyOnLoadedComboBox.ItemTemplate>

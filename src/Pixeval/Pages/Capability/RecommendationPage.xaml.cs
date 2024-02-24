@@ -23,7 +23,6 @@ using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Controls;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.Misc;
-using Pixeval.Util;
 using Pixeval.Util.UI;
 
 namespace Pixeval.Pages.Capability;
@@ -45,7 +44,6 @@ public sealed partial class RecommendationPage : ISortedIllustrationContainerPag
     public override void OnPageActivated(NavigationEventArgs e)
     {
         ModeSelectionComboBox.SelectedItem = ModeSelectionComboBoxIllustComboBoxItem;
-        SortOptionComboBox.SelectedItem = MakoHelper.GetAppSettingDefaultSortOptionWrapper();
         ChangeSource();
     }
 

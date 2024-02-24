@@ -45,13 +45,13 @@ public partial class IllustratorIllustrationsOverviewViewModel : ObservableObjec
     [ObservableProperty]
     private Brush? _avatarBorderBrush;
 
-    public IllustratorIllustrationsOverviewViewModel(IEnumerable<long>? ids)
+    public IllustratorIllustrationsOverviewViewModel(IEnumerable<long> ids)
     {
         _getAvatarBorderBrush = false;
         LoadBannerSource = () => LoadBannerSourceFromIdsAsync(ids);
     }
 
-    public IllustratorIllustrationsOverviewViewModel(IEnumerable<Illustration>? illustrations)
+    public IllustratorIllustrationsOverviewViewModel(IEnumerable<Illustration> illustrations)
     {
         _getAvatarBorderBrush = true;
         LoadBannerSource = () => LoadBannerSourceFromIllustrationsAsync(illustrations);
@@ -70,45 +70,43 @@ public partial class IllustratorIllustrationsOverviewViewModel : ObservableObjec
         BannerSources.Clear();
     }
 
-    private async Task LoadBannerSourceFromIdsAsync(IEnumerable<long>? ids)
+    private async Task LoadBannerSourceFromIdsAsync(IEnumerable<long> ids)
     {
         var illustrations = new List<Illustration>();
-        if (ids is not null)
-            foreach (var id in ids)
-            {
-                var illustration = await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(id);
-                illustrations.Add(illustration);
-            }
+        foreach (var id in ids)
+        {
+            var illustration = await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(id);
+            illustrations.Add(illustration);
+        }
 
         await LoadBannerSourceFromIllustrationsAsync(illustrations);
     }
 
-    private async Task LoadBannerSourceFromIllustrationsAsync(IEnumerable<Illustration>? illustrations)
+    private async Task LoadBannerSourceFromIllustrationsAsync(IEnumerable<Illustration> illustrations)
     {
         AvatarBorderBrush = null;
         Dispose();
-        if (illustrations is not null)
-            foreach (var illustration in illustrations)
+        foreach (var illustration in illustrations)
+        {
+            if (illustration.GetThumbnailUrl() is { } url)
             {
-                if (illustration.GetThumbnailUrl() is { } url)
+                if (await App.AppViewModel.MakoClient.DownloadStreamAsync(url) is not
+                    Result<Stream>.Success(var stream))
+                    continue;
+                if (AvatarBorderBrush is null && _getAvatarBorderBrush)
                 {
-                    if (await App.AppViewModel.MakoClient.DownloadStreamAsync(url) is not
-                        Result<Stream>.Success(var stream))
-                        continue;
-                    if (AvatarBorderBrush is null && _getAvatarBorderBrush)
-                    {
-                        var dominantColor = await UiHelper.GetDominantColorAsync(stream, false);
-                        AvatarBorderBrush = new SolidColorBrush(dominantColor);
-                    }
-
-                    var bitmapSource = await stream.GetSoftwareBitmapSourceAsync(true);
-                    BannerSources.Add(bitmapSource);
-
-                    // 一般只会取 ==
-                    if (BannerSources.Count >= 3)
-                        break;
+                    var dominantColor = await UiHelper.GetDominantColorAsync(stream, false);
+                    AvatarBorderBrush = new SolidColorBrush(dominantColor);
                 }
+
+                var bitmapSource = await stream.GetSoftwareBitmapSourceAsync(true);
+                BannerSources.Add(bitmapSource);
+
+                // 一般只会取 ==
+                if (BannerSources.Count >= 3)
+                    break;
             }
+        }
 
         OnPropertyChanged(nameof(BannerSources));
 

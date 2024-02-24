@@ -5,7 +5,6 @@
     xmlns:controls="using:Pixeval.Controls"
     xmlns:converters="using:CommunityToolkit.WinUI.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:enum="using:Pixeval.CoreApi.Global.Enum"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     ClearCacheAfterNavigation="True"
     mc:Ignorable="d">
@@ -24,20 +23,10 @@
             Margin="{StaticResource ComboBoxLeftIndent}"
             Orientation="Horizontal"
             Visibility="{x:Bind IsMe, Converter={StaticResource BoolToVisibilityConverter}}">
-            <controls:NotifyOnLoadedComboBox
+            <controls:PrivacyPolicyComboBox
                 x:Name="PrivacyPolicyComboBox"
-                x:Uid="/FollowingsPage/PrivacyPolicyComboBox"
-                VerticalAlignment="Center"
                 SelectionChangedWhenLoaded="PrivacyPolicyComboBox_OnSelectionChangedWhenLoaded"
-                Visibility="{x:Bind IsMe, Converter={StaticResource BoolToVisibilityConverter}}">
-                <controls:NotifyOnLoadedComboBox.Items>
-                    <ComboBoxItem
-                        x:Name="PrivacyPolicyComboBoxPublicItem"
-                        x:Uid="/FollowingsPage/PrivacyPolicyComboBoxPublicComboBoxItem"
-                        Tag="{x:Bind enum:PrivacyPolicy.Public}" />
-                    <ComboBoxItem x:Uid="/FollowingsPage/PrivacyPolicyComboBoxPrivateComboBoxItem" Tag="{x:Bind enum:PrivacyPolicy.Private}" />
-                </controls:NotifyOnLoadedComboBox.Items>
-            </controls:NotifyOnLoadedComboBox>
+                Visibility="{x:Bind IsMe, Converter={StaticResource BoolToVisibilityConverter}}" />
         </StackPanel>
         <controls:IllustratorView x:Name="IllustratorView" Grid.Row="1" />
     </Grid>

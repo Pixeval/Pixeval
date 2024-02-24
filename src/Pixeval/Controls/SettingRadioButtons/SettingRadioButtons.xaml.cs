@@ -60,13 +60,7 @@ public sealed partial class SettingRadioButtons : UserControl
     {
         var buttons = sender.To<SettingRadioButtons>();
         if (buttons.ItemsSource is Array enumType)
-        {
-            var items = new List<StringRepresentableItem>();
-            foreach (var value in enumType)
-                if (value is Enum t && t.GetLocalizedResourceContent() is { } content)
-                    items.Add(new StringRepresentableItem(t, content));
-            buttons.Buttons.ItemsSource = items;
-        }
+            buttons.Buttons.ItemsSource = LocalizedResourceAttributeHelper.GetLocalizedResourceContents(enumType);
     }
 
     private static void OnSelectedItemChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
@@ -85,7 +79,7 @@ public sealed partial class SettingRadioButtons : UserControl
         var correspondingItem = buttons.ItemsSource.To<IEnumerable<StringRepresentableItem>>().First(r => Equals(r.Item, newValue));
         // set RadioButtons.SelectedItem won't work
         foreach (var button in buttons.FindDescendants().OfType<RadioButton>())
-            if (button.GetTag<StringRepresentableItem>() == correspondingItem)
+            if (button.GetTag<StringRepresentableItem>().Equals(correspondingItem))
                 button.IsChecked = true;
     }
 }

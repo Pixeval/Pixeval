@@ -24,15 +24,20 @@ using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Controls;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.Misc;
-using Pixeval.Options;
 using Pixeval.Util;
-using Pixeval.Util.Generic;
+using WinUI3Utilities;
 
 namespace Pixeval.Pages.Capability;
 
 public sealed partial class RankingsPage : ISortedIllustrationContainerPageHelper
 {
-    public RankingsPage() => InitializeComponent();
+    public RankingsPage()
+    {
+        InitializeComponent();
+        RankOptionComboBox.ItemsSource = LocalizedResourceAttributeHelper.GetLocalizedResourceContents<RankOption>();
+        RankOptionComboBox.SelectedItem = new StringRepresentableItem(RankOption.Day, null);
+        RankDateTimeCalendarDatePicker.Date = MaxDate;
+    }
 
     public DateTime MaxDate => DateTime.Now.AddDays(-2);
 
@@ -42,9 +47,6 @@ public sealed partial class RankingsPage : ISortedIllustrationContainerPageHelpe
 
     public override void OnPageActivated(NavigationEventArgs navigationEventArgs)
     {
-        SortOptionComboBox.SelectedItem = MakoHelper.GetAppSettingDefaultSortOptionWrapper();
-        RankOptionComboBox.SelectedItem = LocalizedBoxHelper.Of<RankOption, RankOptionWrapper>(RankOption.Day);
-        RankDateTimeCalendarDatePicker.Date = DateTime.Now.AddDays(-2);
         ChangeSource();
     }
 
@@ -65,8 +67,8 @@ public sealed partial class RankingsPage : ISortedIllustrationContainerPageHelpe
 
     private void ChangeSource()
     {
-        var rankOption = (RankOptionComboBox.SelectedItem as RankOptionWrapper)?.Value ?? RankOption.Day;
-        var dateTime = RankDateTimeCalendarDatePicker.Date?.DateTime ?? DateTime.Now.AddDays(-2);
+        var rankOption = RankOptionComboBox.SelectedItem.To<StringRepresentableItem>().Item.To<RankOption>();
+        var dateTime = RankDateTimeCalendarDatePicker.Date!.Value.DateTime;
         IllustrationContainer.ViewModel.ResetEngine(App.AppViewModel.MakoClient.Ranking(rankOption, dateTime, App.AppViewModel.AppSettings.TargetFilter));
     }
 }

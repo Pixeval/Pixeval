@@ -34,7 +34,7 @@ namespace Pixeval.Pages.Capability;
 
 public class BookmarkPageViewModel(long userId) : ObservableObject, IDisposable
 {
-    public static readonly CountedTag EmptyCountedTag = new(new Tag { Name = IllustratorIllustrationAndMangaBookmarkPageResources.EmptyCountedTagName, TranslatedName = "" }, 0);
+    public static readonly CountedTag EmptyCountedTag = new(new Tag { Name = BookmarksPageResources.EmptyCountedTagName, TranslatedName = "" }, 0);
 
     public long UserId { get; } = userId;
 

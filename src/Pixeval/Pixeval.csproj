@@ -26,10 +26,7 @@
         <NoWarn>$(NoWarn)</NoWarn>
     </PropertyGroup>
     <ItemGroup>
-        <None Remove="Controls\IllustrateView.xaml" />
-        <None Remove="Controls\IllustrationView\IllustratorView.xaml" />
-        <None Remove="IllustrateView.xaml" />
-        <None Remove="Pages\Capability\RecommendUsersPage.xaml" />
+      <None Remove="Controls\PrivacyPolicyComboBox.xaml" />
     </ItemGroup>
 
     <ItemGroup>
@@ -173,14 +170,12 @@
     <ItemGroup>
         <PRIResource Include="Assets\Svg.resjson" />
         <PRIResource Include="Strings\zh-cn\CommentsPage.resjson" />
-        <PRIResource Include="Strings\zh-cn\FollowingsPage.resjson" />
         <PRIResource Include="Strings\zh-cn\FollowingUserBadge.resjson" />
         <PRIResource Include="Strings\zh-cn\IllustratorContentViewer.resjson" />
-        <PRIResource Include="Strings\zh-cn\IllustratorIllustrationAndMangaBookmarkPage.resjson" />
+        <PRIResource Include="Strings\zh-cn\BookmarksPage.resjson" />
         <PRIResource Include="Strings\zh-cn\IllustrateItem.resjson" />
         <PRIResource Include="Strings\zh-cn\AboutPage.resjson" />
         <PRIResource Include="Strings\zh-cn\Activations.resjson" />
-        <PRIResource Include="Strings\zh-cn\BookmarksPage.resjson" />
         <PRIResource Include="Strings\zh-cn\CommentRepliesBlock.resjson" />
         <PRIResource Include="Strings\zh-cn\DownloadListEntry.resjson" />
         <PRIResource Include="Strings\zh-cn\DownloadListPage.resjson" />
@@ -199,24 +194,20 @@
         <PRIResource Include="Strings\zh-cn\MessageContentDialog.resjson" />
         <PRIResource Include="Strings\zh-cn\Misc.resjson" />
         <PRIResource Include="Strings\zh-cn\RankingsPage.resjson" />
-        <PRIResource Include="Strings\zh-cn\RecentPostsPage.resjson" />
         <PRIResource Include="Strings\zh-cn\RecommendationsPage.resjson" />
         <PRIResource Include="Strings\zh-cn\PixivReplyBar.resjson" />
         <PRIResource Include="Strings\zh-cn\ReverseSearchApiKeyNotPresentDialog.resjson" />
         <PRIResource Include="Strings\zh-cn\SettingsPage.resjson" />
-        <PRIResource Include="Strings\zh-cn\SortOptionComboBox.resjson" />
         <PRIResource Include="Strings\zh-cn\TokenInputTextBox.resjson" />
         <PRIResource Include="Strings\zh-cn\TagsEntry.resjson" />
         <PRIResource Include="Strings\zh-cn\IPListInput.resjson" />
     </ItemGroup>
-    <ItemGroup>
-      <Page Update="Pages\Capability\RecommendUsersPage.xaml">
-        <Generator>MSBuild:Compile</Generator>
-      </Page>
-    </ItemGroup>
 
     <!--XAML-->
     <ItemGroup>
+        <Page Update="Pages\Capability\RecommendUsersPage.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
         <Page Update="Controls\IllustrateView.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
@@ -373,5 +364,13 @@
         <Page Update="Pages\Capability\TagsPage.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
+    </ItemGroup>
+    <ItemGroup>
+      <Folder Include="Util\Generic\" />
+    </ItemGroup>
+    <ItemGroup>
+      <Page Update="Controls\PrivacyPolicyComboBox.xaml">
+        <Generator>MSBuild:Compile</Generator>
+      </Page>
     </ItemGroup>
 </Project>

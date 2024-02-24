@@ -192,28 +192,46 @@ public class AdvancedObservableCollection<T> : IList<T>, IList, INotifyCollectio
                 if (!string.IsNullOrEmpty(sd.PropertyName))
                     _sortProperties[sd.PropertyName] = typeof(T).GetProperty(sd.PropertyName)!;
 
-        foreach (var sd in SortDescriptions)
+        if (SortDescriptions.Count is 0)
         {
-            T? cx, cy;
-
-            if (string.IsNullOrEmpty(sd.PropertyName))
+            var newIndex = 0;
+            foreach (var item in _source)
             {
-                cx = x;
-                cy = y;
+                if (_view.IndexOf(item) is var index and not -1)
+                    // 元素重复时可能出现index < newIndex
+                    if (index == newIndex)
+                        ++newIndex;
+                    else if (index > newIndex)
+                    {
+                        _view.RemoveAt(index);
+                        _view.Insert(newIndex, item);
+                        ++newIndex;
+                    }
             }
-            else
-            {
-                var pi = _sortProperties[sd.PropertyName];
-
-                cx = (T?)pi.GetValue(x);
-                cy = (T?)pi.GetValue(y);
-            }
-
-            var cmp = sd.Comparer.Compare(cx, cy);
-
-            if (cmp is not 0)
-                return sd.Direction is SortDirection.Ascending ? +cmp : -cmp;
         }
+        else
+            foreach (var sd in SortDescriptions)
+            {
+                T? cx, cy;
+
+                if (string.IsNullOrEmpty(sd.PropertyName))
+                {
+                    cx = x;
+                    cy = y;
+                }
+                else
+                {
+                    var pi = _sortProperties[sd.PropertyName];
+
+                    cx = (T?)pi.GetValue(x);
+                    cy = (T?)pi.GetValue(y);
+                }
+
+                var cmp = sd.Comparer.Compare(cx, cy);
+
+                if (cmp is not 0)
+                    return sd.Direction is SortDirection.Ascending ? +cmp : -cmp;
+            }
 
         return 0;
     }

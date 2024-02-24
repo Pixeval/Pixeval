@@ -24,8 +24,6 @@ using Pixeval.Controls;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Model;
 using Pixeval.Misc;
-using Pixeval.Util;
-using Pixeval.Util.UI;
 
 namespace Pixeval.Pages.Capability;
 
@@ -44,8 +42,6 @@ public sealed partial class BookmarksPage : ISortedIllustrationContainerPageHelp
         if (e.Parameter is not long uid)
             uid = App.AppViewModel.PixivUid;
         _viewModel = new BookmarkPageViewModel(uid);
-        PrivacyPolicyComboBox.SelectedItem = PrivacyPolicyComboBoxPublicItem;
-        SortOptionComboBox.SelectedItem = MakoHelper.GetAppSettingDefaultSortOptionWrapper();
         ChangeSource();
         _viewModel.TagBookmarksIncrementallyLoaded += ViewModelOnTagBookmarksIncrementallyLoaded;
         await _viewModel.LoadUserBookmarkTagsAsync();
@@ -88,7 +84,7 @@ public sealed partial class BookmarksPage : ISortedIllustrationContainerPageHelp
 
     private void ChangeSource()
     {
-        var tag = PrivacyPolicyComboBox.GetComboBoxSelectedItemTag(PrivacyPolicy.Public);
+        var tag = PrivacyPolicyComboBox.SelectedItem;
         if (tag is PrivacyPolicy.Private && !_viewModel.IsMe)
             tag = PrivacyPolicy.Public;
         IllustrationContainer.ViewModel.ResetEngine(App.AppViewModel.MakoClient.Bookmarks(_viewModel.UserId, tag, App.AppViewModel.AppSettings.TargetFilter));

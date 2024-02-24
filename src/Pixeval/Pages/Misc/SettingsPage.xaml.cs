@@ -62,7 +62,7 @@ public sealed partial class SettingsPage
         _previousPath = ViewModel.DefaultDownloadPathMacro;
     }
 
-    public override void OnPageDeactivated(NavigatingCancelEventArgs e)
+    private void SettingsPage_OnUnloaded(object sender, RoutedEventArgs e)
     {
         Bindings.StopTracking();
         ViewModel.SaveCollections();

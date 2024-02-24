@@ -89,6 +89,7 @@ public class EnhancedWindowPage : EnhancedPage
         Navigate(tag.NavigateTo, frame, tag.Parameter, info);
     }
 
+    /// <inheritdoc cref="OnPageActivated(NavigationEventArgs)"/>
     public virtual void OnPageActivated(NavigationEventArgs e, object? parameter)
     {
     }

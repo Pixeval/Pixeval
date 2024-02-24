@@ -21,10 +21,7 @@
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Controls;
-using Pixeval.CoreApi.Global.Enum;
 using Pixeval.Misc;
-using Pixeval.Util;
-using Pixeval.Util.UI;
 
 namespace Pixeval.Pages.Capability;
 
@@ -38,8 +35,6 @@ public sealed partial class RecentPostsPage : ISortedIllustrationContainerPageHe
 
     public override void OnPageActivated(NavigationEventArgs e)
     {
-        PrivacyPolicyComboBox.SelectedItem = PrivacyPolicyComboBoxPublicItem;
-        SortOptionComboBox.SelectedItem = MakoHelper.GetAppSettingDefaultSortOptionWrapper();
         ChangeSource();
     }
 
@@ -50,7 +45,7 @@ public sealed partial class RecentPostsPage : ISortedIllustrationContainerPageHe
 
     private void ChangeSource()
     {
-        IllustrationContainer.ViewModel.ResetEngine(App.AppViewModel.MakoClient.RecentPosts(PrivacyPolicyComboBox.GetComboBoxSelectedItemTag(PrivacyPolicy.Public)));
+        IllustrationContainer.ViewModel.ResetEngine(App.AppViewModel.MakoClient.RecentPosts(PrivacyPolicyComboBox.SelectedItem));
     }
 
     private void SortOptionComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)

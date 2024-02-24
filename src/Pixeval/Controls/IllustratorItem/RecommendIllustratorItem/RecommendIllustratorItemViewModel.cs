@@ -39,7 +39,7 @@ public partial class RecommendIllustratorItemViewModel : UserItemViewModel<Recom
     [ObservableProperty]
     private bool _isFollowed;
 
-    public RecommendIllustratorItemViewModel(RecommendUser user, IEnumerable<long>? ids) : base(user, new IllustratorIllustrationsOverviewViewModel(ids))
+    public RecommendIllustratorItemViewModel(RecommendUser user, IEnumerable<long> ids) : base(user, new IllustratorIllustrationsOverviewViewModel(ids))
     {
         InitializeCommands();
         FollowCommand.GetFollowCommand(IsFollowed);

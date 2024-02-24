@@ -20,14 +20,15 @@
 
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
-using Pixeval.CoreApi.Global.Enum;
-using Pixeval.Util.UI;
 
 namespace Pixeval.Pages.Capability;
 
 public sealed partial class FollowingsPage
 {
-    public FollowingsPage() => InitializeComponent();
+    public FollowingsPage()
+    {
+        InitializeComponent();
+    }
 
     private long _uid = -1;
 
@@ -38,7 +39,6 @@ public sealed partial class FollowingsPage
         if (e.Parameter is not long uid)
             uid = App.AppViewModel.PixivUid;
         _uid = uid;
-        PrivacyPolicyComboBox.SelectedItem = PrivacyPolicyComboBoxPublicItem;
         ChangeSource();
     }
 
@@ -49,6 +49,6 @@ public sealed partial class FollowingsPage
 
     private void ChangeSource()
     {
-        IllustratorView.ViewModel.ResetEngine(App.AppViewModel.MakoClient.Following(_uid, PrivacyPolicyComboBox.GetComboBoxSelectedItemTag(PrivacyPolicy.Public)));
+        IllustratorView.ViewModel.ResetEngine(App.AppViewModel.MakoClient.Following(_uid, PrivacyPolicyComboBox.SelectedItem));
     }
 }

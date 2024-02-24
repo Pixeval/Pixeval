@@ -29,7 +29,6 @@ using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Model;
 using Pixeval.Misc;
 using Pixeval.Options;
-using Pixeval.Util.Generic;
 using WinUI3Utilities;
 
 namespace Pixeval.Util;
@@ -43,11 +42,6 @@ public static class MakoHelper
         .. Enumerable.Range(201, 10),
         .. Enumerable.Range(101, 10)
     ];
-
-    public static IllustrationSortOptionWrapper GetAppSettingDefaultSortOptionWrapper()
-    {
-        return LocalizedBoxHelper.Of<IllustrationSortOption, IllustrationSortOptionWrapper>(App.AppViewModel.AppSettings.DefaultSortOption);
-    }
 
     public static string GetThumbnailUrl(this Illustration illustration, ThumbnailUrlOption option = ThumbnailUrlOption.Medium)
     {

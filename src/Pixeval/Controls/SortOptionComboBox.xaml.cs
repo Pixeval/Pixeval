@@ -18,32 +18,54 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using System;
 using CommunityToolkit.WinUI.Collections;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Pixeval.CoreApi.Global.Enum;
-using Pixeval.Options;
 using Pixeval.Util;
 using WinUI3Utilities.Attributes;
+using System.Runtime.CompilerServices;
 
 namespace Pixeval.Controls;
 
-[DependencyProperty<object>("SelectedItem")]
+[DependencyProperty<IllustrationSortOption>("SelectedItem", propertyChanged: nameof(OnSelectedItemChanged))]
 public sealed partial class SortOptionComboBox
 {
-    public SortOptionComboBox() => InitializeComponent();
-
-    public IllustrationSortOption SelectedOption => ((IllustrationSortOptionWrapper)SelectedItem).Value;
-
     public event SelectionChangedEventHandler? SelectionChangedWhenLoaded;
+
+    public SortOptionComboBox()
+    {
+        InitializeComponent();
+        ComboBox.ItemsSource = LocalizedResourceAttributeHelper.GetLocalizedResourceContents<IllustrationSortOption>();
+        SelectedItem = App.AppViewModel.AppSettings.DefaultSortOption;
+    }
 
     public SortDescription? GetSortDescription()
     {
-        return MakoHelper.GetSortDescriptionForIllustration(SelectedOption);
+        return MakoHelper.GetSortDescriptionForIllustration(SelectedItem);
+    }
+
+    private static void OnSelectedItemChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
+    {
+        if (!Equals(e.NewValue, e.OldValue))
+            SelectedItemChanged(sender, e.NewValue);
     }
 
     private void SortOptionComboBox_OnSelectionChangedWhenPrepared(object sender, SelectionChangedEventArgs e)
     {
-        SelectedItem = ComboBox.SelectedItem;
+        if (ComboBox is not { SelectedItem: StringRepresentableItem { Item: IllustrationSortOption option } } || option == SelectedItem)
+            return;
+        SelectedItem = option;
         SelectionChangedWhenLoaded?.Invoke(sender, e);
+    }
+
+    [MethodImpl(MethodImplOptions.Synchronized)]
+    private static void SelectedItemChanged(DependencyObject d, object newValue)
+    {
+        if (d is not SortOptionComboBox { ComboBox: { } box } || newValue is not Enum e)
+            return;
+
+        box.SelectedItem = new StringRepresentableItem(e, null);
     }
 }

@@ -23,6 +23,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using Microsoft.UI.Xaml;
 using Pixeval.Attributes;
+using Pixeval.Controls;
 using Pixeval.CoreApi.Global.Enum;
 using WinUI3Utilities;
 
@@ -38,6 +39,20 @@ public static class AttributeHelper
 
 public static class LocalizedResourceAttributeHelper
 {
+    public static List<StringRepresentableItem> GetLocalizedResourceContents<T>() where T : struct, Enum
+    {
+        return GetLocalizedResourceContents(Enum.GetValues<T>());
+    }
+
+    public static List<StringRepresentableItem> GetLocalizedResourceContents(Array enumType)
+    {
+        var items = new List<StringRepresentableItem>();
+        foreach (var value in enumType)
+            if (value is Enum t && t.GetLocalizedResourceContent() is { } content)
+                items.Add(new StringRepresentableItem(t, content));
+        return items;
+    }
+
     public static string? GetLocalizedResourceContent(this Enum e)
     {
         if (_predefinedResources.TryGetValue(e, out var v))
@@ -60,8 +75,8 @@ public static class LocalizedResourceAttributeHelper
     {
         return resourceLoader.GetMember(key, BindingFlags.Static | BindingFlags.Public) switch
         {
-            [FieldInfo fi] => fi?.GetValue(null),
-            [PropertyInfo pi] => pi?.GetValue(null),
+        [FieldInfo fi] => fi?.GetValue(null),
+        [PropertyInfo pi] => pi?.GetValue(null),
             _ => null
         } as string;
     }
@@ -92,6 +107,24 @@ public static class LocalizedResourceAttributeHelper
         [SearchDuration.Undecided] = MiscResources.SearchDurationUndecided,
         [SearchDuration.WithinLastDay] = MiscResources.SearchDurationWithinLastDay,
         [SearchDuration.WithinLastWeek] = MiscResources.SearchDurationWithinLastWeek,
-        [SearchDuration.WithinLastMonth] = MiscResources.SearchDurationWithinLastMonth
+        [SearchDuration.WithinLastMonth] = MiscResources.SearchDurationWithinLastMonth,
+
+        [PrivacyPolicy.Public] = MiscResources.PrivacyPolicyPublic,
+        [PrivacyPolicy.Private] = MiscResources.PrivacyPolicyPrivate,
+
+        [RankOption.Day] = RankingsPageResources.RankOptionDay,
+        [RankOption.Week] = RankingsPageResources.RankOptionWeek,
+        [RankOption.Month] = RankingsPageResources.RankOptionMonth,
+        [RankOption.DayMale] = RankingsPageResources.RankOptionDayMale,
+        [RankOption.DayFemale] = RankingsPageResources.RankOptionDayFemale,
+        [RankOption.DayManga] = RankingsPageResources.RankOptionDayManga,
+        [RankOption.WeekManga] = RankingsPageResources.RankOptionWeekManga,
+        [RankOption.WeekOriginal] = RankingsPageResources.RankOptionWeekOriginal,
+        [RankOption.WeekRookie] = RankingsPageResources.RankOptionWeekRookie,
+        [RankOption.DayR18] = RankingsPageResources.RankOptionDayR18,
+        [RankOption.DayMaleR18] = RankingsPageResources.RankOptionDayMaleR18,
+        [RankOption.DayFemaleR18] = RankingsPageResources.RankOptionDayFemaleR18,
+        [RankOption.WeekR18] = RankingsPageResources.RankOptionWeekR18,
+        [RankOption.WeekR18G] = RankingsPageResources.RankOptionWeekR18G
     };
 }

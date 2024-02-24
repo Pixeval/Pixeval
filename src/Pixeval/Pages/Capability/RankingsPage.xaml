@@ -5,7 +5,6 @@
     xmlns:controls="using:Pixeval.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:options="using:Pixeval.Options"
     ClearCacheAfterNavigation="True"
     mc:Ignorable="d">
     <controls:IllustrationContainer x:Name="IllustrationContainer">
@@ -13,11 +12,10 @@
             <controls:NotifyOnLoadedComboBox
                 x:Name="RankOptionComboBox"
                 x:Uid="/RankingsPage/RankOptionComboBox"
-                ItemsSource="{x:Bind options:RankOptionWrapper.AvailableOptions()}"
                 SelectionChangedWhenLoaded="RankOptionComboBox_OnSelectionChangedWhenPrepared">
                 <controls:NotifyOnLoadedComboBox.ItemTemplate>
-                    <DataTemplate x:DataType="options:RankOptionWrapper">
-                        <TextBlock Text="{x:Bind LocalizedString}" />
+                    <DataTemplate x:DataType="controls:StringRepresentableItem">
+                        <TextBlock Tag="{x:Bind}" Text="{x:Bind StringRepresentation}" />
                     </DataTemplate>
                 </controls:NotifyOnLoadedComboBox.ItemTemplate>
             </controls:NotifyOnLoadedComboBox>

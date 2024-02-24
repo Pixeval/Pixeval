@@ -24,6 +24,8 @@ namespace Pixeval.CoreApi.Global.Enum;
 
 public enum IllustrationSortOption
 {
+    DoNotSort,
+
     [Description("popular_desc")]
     PopularityDescending,
 
@@ -31,18 +33,16 @@ public enum IllustrationSortOption
     PublishDateAscending,
 
     [Description("date_desc")]
-    PublishDateDescending,
-
-    DoNotSort
+    PublishDateDescending
 }
 
 public enum UserSortOption
 {
+    DoNotSort,
+
     [Description("date_asc")]
     DateAscending,
 
     [Description("date_desc")]
-    DateDescending,
-
-    DoNotSort
+    DateDescending
 }

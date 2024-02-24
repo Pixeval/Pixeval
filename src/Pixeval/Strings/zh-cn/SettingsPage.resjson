@@ -118,7 +118,7 @@
     "ResetSettingConfirmationDialogContent": "该操作将会无法撤销",
     "ResetSettingConfirmationDialogTitle": "你确定要重置所有设置项吗？",
     "ReverseSearchApiKeyEntry/Header": "SauceNAO的API Key",
-    "ReverseSearchApiKeyEntryDescriptionHyperlinkButton/Content": "点击这里查看如何获取SaoceNao的API Key",
+    "ReverseSearchApiKeyEntryDescriptionTextBlock/Text": "在这里获取SauceNAO的API Key（需要注册/登录）",
     "ReverseSearchApiKeyTextBox/PlaceholderText": "请输入API Key",
     "ReverseSearchResultSimilarityThresholdEntry/Description": "逆向搜索结果的阈值，如果搜索结果低于该阈值则会被忽略，值越高则说明搜索结果和原图越相似",
     "ReverseSearchResultSimilarityThresholdEntry/Header": "逆向搜索阈值",

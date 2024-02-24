@@ -1,5 +1,4 @@
 {
-  "PrivacyPolicyComboBox/PlaceholderText": "收藏选项",
-  "PrivacyPolicyComboBoxPrivateComboBoxItem/Content": "私人收藏",
-  "PrivacyPolicyComboBoxPublicComboBoxItem/Content": "公开收藏"
+  "EmptyCountedTagName": "所有标签",
+  "TagComboBox/PlaceholderText": "收藏标签"
 }

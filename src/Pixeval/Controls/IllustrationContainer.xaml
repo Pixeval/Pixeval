@@ -61,7 +61,7 @@
                 <AppBarButton
                     x:Uid="/IllustrationViewCommandBar/AddAllToBookmarkButton"
                     Icon="{markupExtensions:FontSymbolIcon Glyph=BookmarksE8A4}"
-                    IsEnabled="{x:Bind ViewModel.IsAnyIllustrationSelected, Mode=OneWay}"
+                    IsEnabled="False"
                     Tapped="AddAllToBookmarkButton_OnTapped" />
                 <AppBarButton
                     x:Uid="/IllustrationViewCommandBar/SaveAllButton"
