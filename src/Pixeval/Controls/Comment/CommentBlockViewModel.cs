@@ -21,30 +21,30 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Windows.Storage.Streams;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Documents;
 using Microsoft.UI.Xaml.Media.Imaging;
+using Pixeval.AppManagement;
 using Pixeval.CoreApi.Model;
 using Pixeval.Misc;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
-using AppContext = Pixeval.AppManagement.AppContext;
 
 namespace Pixeval.Controls;
 
-public partial class CommentBlockViewModel(CoreApi.Model.Comment comment, long illustrationId) : ObservableObject, IDisposable
+public partial class CommentBlockViewModel(Comment comment, long illustrationId) : ObservableObject, IDisposable
 {
     public const string AddCommentUrlSegment = "/v1/illust/comment/add";
 
     public long IllustrationId { get; } = illustrationId;
 
-    public CoreApi.Model.Comment Comment { get; } = comment;
+    public Comment Comment { get; } = comment;
 
     public bool HasReplies => Comment.HasReplies;
 
@@ -66,24 +66,36 @@ public partial class CommentBlockViewModel(CoreApi.Model.Comment comment, long i
     public long CommentId => Comment.Id;
 
     [ObservableProperty]
-    private string _openRepliesText = CommentBlockResources.EmptyRepliesNavigationString;
-
-    [ObservableProperty]
     private SoftwareBitmapSource _avatarSource = null!;
 
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(RepliesIsNotNull))]
+    [NotifyPropertyChangedFor(nameof(RepliesIsNotNull), nameof(RepliesCount), nameof(RepliesAppBarButtonStyleIsNotNull))]
     private ObservableCollection<CommentBlockViewModel>? _replies;
 
-    [MemberNotNullWhen(true, nameof(Replies))]
     public bool RepliesIsNotNull => Replies is not null;
+
+    private static Style DefaultAppBarButtonStyle => (Style)Application.Current.Resources[$"Default{nameof(AppBarButton)}Style"];
+
+    private static readonly Style _noRepliesStyle = new()
+    {
+        BasedOn = DefaultAppBarButtonStyle,
+        TargetType = typeof(AppBarButton),
+        Setters =
+        {
+            new Setter(FrameworkElement.WidthProperty, Application.Current.Resources["CollapsedAppBarButtonWidth"]),
+            new Setter(AppBarButton.LabelPositionProperty, CommandBarLabelPosition.Collapsed)
+        }
+    };
+
+    public Style RepliesAppBarButtonStyleIsNotNull => RepliesIsNotNull ? DefaultAppBarButtonStyle : _noRepliesStyle;
+
+    public string? RepliesCount => Replies?.Count.ToString();
 
     public async Task LoadRepliesAsync()
     {
         Replies = await App.AppViewModel.MakoClient.IllustrationCommentReplies(CommentId)
             .Select(c => new CommentBlockViewModel(c, IllustrationId))
             .ToObservableCollectionAsync();
-        OpenRepliesText = CommentBlockResources.RepliesNavigationStringFormatted.Format(Replies.Count);
     }
 
     public async Task LoadAvatarSource()
@@ -91,7 +103,7 @@ public partial class CommentBlockViewModel(CoreApi.Model.Comment comment, long i
         var result = await App.AppViewModel.MakoClient.DownloadSoftwareBitmapSourceAsync(Comment.CommentPoster.ProfileImageUrls.Medium);
         AvatarSource = result is Result<SoftwareBitmapSource>.Success { Value: var avatar }
             ? avatar
-            : await AppContext.GetPixivNoProfileImageAsync();
+            : await AppInfo.GetPixivNoProfileImageAsync();
     }
 
     public void AddComment(Comment comment)
@@ -114,7 +126,7 @@ public partial class CommentBlockViewModel(CoreApi.Model.Comment comment, long i
                         Text = content
                     });
                     break;
-                case ReplyContentToken.EmojiToken(var emoji) when await App.AppViewModel.MakoClient.DownloadRandomAccessStreamAsync(emoji.GetReplyEmojiDownloadUrl()) is Result<IRandomAccessStream>.Success(var emojiSource):
+                case ReplyContentToken.EmojiToken(var emoji) when await App.AppViewModel.MakoClient.DownloadStreamAsync(emoji.GetReplyEmojiDownloadUrl()) is Result<Stream>.Success(var emojiSource):
                     paragraph.Inlines.Add(new InlineUIContainer
                     {
                         Child = new Image
@@ -135,7 +147,7 @@ public partial class CommentBlockViewModel(CoreApi.Model.Comment comment, long i
 
     public void Dispose()
     {
-        AvatarSource.Dispose();
+        AvatarSource?.Dispose();
         Replies?.ForEach(r => r.Dispose());
     }
 }

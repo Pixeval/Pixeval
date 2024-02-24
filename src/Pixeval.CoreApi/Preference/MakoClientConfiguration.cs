@@ -19,39 +19,47 @@
 #endregion
 
 using System.Globalization;
+using System.Net.Http.Headers;
 using System.Text.Json.Serialization;
 
 namespace Pixeval.CoreApi.Preference;
 
 /// <summary>
-///     Contains all the user-configurable keys
+/// Contains all the user-configurable keys
 /// </summary>
 public record MakoClientConfiguration(int ConnectionTimeout, bool Bypass, string? MirrorHost, CultureInfo CultureInfo)
 {
-    public MakoClientConfiguration() : this(5000, false, "", CultureInfo.CurrentCulture)
-    {
-    }
+    public MakoClientConfiguration() : this(5000, false, "", CultureInfo.CurrentCulture) { }
 
     [JsonIgnore]
     public CultureInfo CultureInfo { get; set; } = CultureInfo;
 
     [JsonPropertyName("userAgent")]
-    public string UserAgent { get; set; } = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 Edg/120.0.0.0";
+    public ProductInfoHeaderValue[] UserAgent { get; set; } =
+    [
+        new("Mozilla", "5.0"),
+        new("(Windows NT 10.0; Win64; x64)"),
+        new("AppleWebKit", "537.36"),
+        new("(KHTML, like Gecko)"),
+        new("Chrome", "121.0.0.0"),
+        new("Safari", "537.36"),
+        new("Edg", "121.0.0.0")
+    ];
 
     [JsonPropertyName("connectionTimeout")]
     public int ConnectionTimeout { get; set; } = ConnectionTimeout;
 
     /// <summary>
-    ///     Automatically bypass GFW or not, default is set to true.
-    ///     If you are currently living in China Mainland, turn it on to make sure
-    ///     you can use Mako without using any kind of proxy, otherwise you will
-    ///     need a proper proxy server to bypass the GFW
+    /// Automatically bypass GFW or not, default is set to true.
+    /// If you are currently living in China Mainland, turn it on to make sure
+    /// you can use Mako without using any kind of proxy, otherwise you will
+    /// need a proper proxy server to bypass the GFW
     /// </summary>
     [JsonPropertyName("bypass")]
     public bool Bypass { get; set; } = Bypass;
 
     /// <summary>
-    ///     Mirror server's host of image downloading
+    /// Mirror server's host of image downloading
     /// </summary>
     [JsonPropertyName("mirrorHost")]
     public string? MirrorHost { get; set; } = MirrorHost;

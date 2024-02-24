@@ -3,80 +3,108 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Pixeval.Controls"
+    xmlns:controls1="using:CommunityToolkit.WinUI.Controls"
     xmlns:converters="using:CommunityToolkit.WinUI.Converters"
-    xmlns:converters1="using:Pixeval.Controls.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:markup="using:Pixeval.Controls.MarkupExtensions"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
     <UserControl.Resources>
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
-        <converters1:BoolNegationToVisibilityConverter x:Key="BoolNegationToVisibilityConverter" />
     </UserControl.Resources>
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition />
-            <RowDefinition Height="10" />
-            <RowDefinition />
-            <RowDefinition />
-        </Grid.RowDefinitions>
+    <Grid ColumnSpacing="10" RowSpacing="5">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="35" />
-            <ColumnDefinition Width="10" />
-            <ColumnDefinition />
+            <ColumnDefinition Width="47" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
-        <PersonPicture
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Button
             Grid.Row="0"
             Grid.Column="0"
-            Width="35"
-            Height="35"
-            ProfilePicture="{x:Bind ViewModel.AvatarSource, Mode=OneWay}"
-            Tapped="PosterPersonPicture_OnTapped" />
-        <StackPanel
+            Grid.ColumnSpan="2"
+            HorizontalAlignment="Stretch"
+            HorizontalContentAlignment="Left"
+            Background="Transparent"
+            BorderThickness="0"
+            Tapped="PosterPersonPicture_OnTapped">
+            <Grid ColumnSpacing="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <PersonPicture
+                    Grid.Row="0"
+                    Grid.RowSpan="3"
+                    Grid.Column="0"
+                    Width="35"
+                    Height="35"
+                    ProfilePicture="{x:Bind ViewModel.AvatarSource, Mode=OneWay}" />
+                <TextBlock
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    FontSize="{StaticResource PixevalContentFontSize}"
+                    Text="{x:Bind ViewModel.Poster, Mode=OneWay}" />
+                <!--  TipTextColor  -->
+                <TextBlock
+                    Grid.Row="2"
+                    Grid.Column="1"
+                    FontSize="{StaticResource PixevalCaptionFontSize}"
+                    Foreground="{ThemeResource PixevalTipTextForeground}"
+                    Text="{x:Bind ViewModel.PostDate, Mode=OneWay}" />
+            </Grid>
+        </Button>
+        <CommandBar
             Grid.Row="0"
             Grid.Column="2"
-            Height="35">
-            <TextBlock FontSize="{StaticResource PixevalBaseFontSize}" Text="{x:Bind ViewModel.Poster, Mode=OneWay}" />
-            <!--  TipTextColor  -->
-            <TextBlock
-                Margin="0,5,0,0"
-                FontSize="{StaticResource PixevalCaptionFontSize}"
-                Foreground="{ThemeResource PixevalTipTextForeground}"
-                Text="{x:Bind ViewModel.PostDate, Mode=OneWay}" />
-        </StackPanel>
-        <RichTextBlock
-            x:Name="CommentContent"
-            Grid.Row="2"
-            Grid.Column="2"
-            FontSize="{StaticResource PixevalBaseFontSize}"
-            LineHeight="14.4"
-            TextWrapping="Wrap"
-            Visibility="{x:Bind ViewModel.IsStamp, Converter={StaticResource BoolNegationToVisibilityConverter}, Mode=OneWay}" />
-        <Image
-            x:Name="StickerImageContent"
-            Grid.Row="2"
-            Grid.Column="2"
-            Width="100"
-            Height="100"
-            HorizontalAlignment="Left"
-            Stretch="UniformToFill"
-            Visibility="{x:Bind ViewModel.IsStamp, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
-        <StackPanel
-            Grid.Row="3"
-            Grid.Column="2"
-            Margin="0,5,0,0"
-            Orientation="Horizontal">
-            <HyperlinkButton
-                Padding="0"
-                Content="{x:Bind ViewModel.OpenRepliesText, Mode=OneWay}"
-                FontSize="{StaticResource PixevalCaptionFontSize}"
-                Tapped="OpenRepliesHyperlinkButton_OnTapped" />
-            <HyperlinkButton
-                x:Uid="/CommentBlock/DeleteReplyHyperlinkButton"
-                Margin="10,0,0,0"
-                Padding="0"
-                FontSize="{StaticResource PixevalCaptionFontSize}"
+            DefaultLabelPosition="Right"
+            OverflowButtonVisibility="Collapsed">
+            <AppBarButton
+                Width="{StaticResource CollapsedAppBarButtonWidth}"
+                Icon="{markup:FontSymbolIcon Glyph=DeleteE74D}"
+                LabelPosition="Collapsed"
                 Tapped="DeleteReplyHyperlinkButton_OnTapped"
-                Visibility="{x:Bind ViewModel.IsMe, Mode=OneWay}" />
-        </StackPanel>
+                Visibility="{x:Bind ViewModel.IsMe, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
+            <AppBarButton
+                Icon="{markup:FontSymbolIcon Glyph=MessageE8BD}"
+                Label="{x:Bind ViewModel.RepliesCount, Mode=OneWay}"
+                Style="{x:Bind ViewModel.RepliesAppBarButtonStyleIsNotNull, Mode=OneWay}"
+                Tapped="OpenRepliesHyperlinkButton_OnTapped" />
+        </CommandBar>
+        <controls1:SwitchPresenter
+            Grid.Row="1"
+            Grid.Column="1"
+            Grid.ColumnSpan="2"
+            Value="{x:Bind ViewModel.IsStamp, Mode=OneWay}">
+            <controls1:Case>
+                <controls1:Case.Value>
+                    <x:Boolean>True</x:Boolean>
+                </controls1:Case.Value>
+                <Image
+                    x:Name="StickerImageContent"
+                    Width="100"
+                    Height="100"
+                    HorizontalAlignment="Left"
+                    Stretch="UniformToFill" />
+            </controls1:Case>
+            <controls1:Case>
+                <controls1:Case.Value>
+                    <x:Boolean>False</x:Boolean>
+                </controls1:Case.Value>
+                <RichTextBlock
+                    x:Name="CommentContent"
+                    FontSize="{StaticResource PixevalBaseFontSize}"
+                    LineHeight="14.4"
+                    TextWrapping="Wrap" />
+            </controls1:Case>
+        </controls1:SwitchPresenter>
     </Grid>
 </UserControl>

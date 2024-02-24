@@ -22,19 +22,18 @@ using System;
 using System.Threading.Tasks;
 using LiteDB;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Pixeval.AppManagement;
-using Pixeval.Controls.IllustrationView;
+using Pixeval.Controls;
 using Pixeval.Controls.Windowing;
 using Pixeval.CoreApi;
 using Pixeval.CoreApi.Net;
 using Pixeval.Database.Managers;
 using Pixeval.Download;
 using Pixeval.Download.Models;
+using Pixeval.Logging;
 using Pixeval.Util.IO;
-using Pixeval.Util.Threading;
 using Pixeval.Util.UI;
-using AppContext = Pixeval.AppManagement.AppContext;
+using Windows.Storage;
 
 namespace Pixeval;
 
@@ -42,9 +41,9 @@ public class AppViewModel(App app)
 {
     private bool _activatedByProtocol;
 
-    public IHost AppHost { get; private set; } = null!;
+    public ServiceProvider AppServiceProvider { get; private set; } = null!;
 
-    public IServiceScope AppServicesScope => AppHost.Services.CreateScope();
+    public IServiceScope AppServicesScope => AppServiceProvider.CreateScope();
 
     /// <summary>
     /// Indicates whether the exit is caused by a logout action
@@ -57,7 +56,7 @@ public class AppViewModel(App app)
 
     public MakoClient MakoClient { get; set; } = null!; // The null-state of MakoClient is transient
 
-    public AppSetting AppSetting { get; set; } = null!;
+    public AppSettings AppSettings { get; set; } = null!;
 
     public FileCache Cache { get; private set; } = null!;
 
@@ -65,19 +64,21 @@ public class AppViewModel(App app)
 
     public void AppLoggedIn()
     {
-        DownloadManager = new DownloadManager<IllustrationDownloadTask>(AppSetting.MaxDownloadTaskConcurrencyLevel, MakoClient.GetMakoHttpClient(MakoApiKind.ImageApi));
-        AppContext.RestoreHistories();
+        DownloadManager = new DownloadManager<IllustrationDownloadTask>(AppSettings.MaxDownloadTaskConcurrencyLevel, MakoClient.GetMakoHttpClient(MakoApiKind.ImageApi));
+        AppInfo.RestoreHistories();
     }
 
-    private static IHostBuilder CreateHostBuilder()
+    private static ServiceProvider CreateServiceProvider()
     {
-        return Host.CreateDefaultBuilder()
-            .ConfigureServices(services =>
-                services.AddSingleton<IDownloadTaskFactory<IllustrationItemViewModel, IllustrationDownloadTask>, IllustrationDownloadTaskFactory>()
-                    .AddSingleton(new LiteDatabase(AppContext.DatabaseFilePath))
-                    .AddSingleton(provider => new DownloadHistoryPersistentManager(provider.GetRequiredService<LiteDatabase>(), App.AppViewModel.AppSetting.MaximumDownloadHistoryRecords))
-                    .AddSingleton(provider => new SearchHistoryPersistentManager(provider.GetRequiredService<LiteDatabase>(), App.AppViewModel.AppSetting.MaximumSearchHistoryRecords))
-                    .AddSingleton(provider => new BrowseHistoryPersistentManager(provider.GetRequiredService<LiteDatabase>(), App.AppViewModel.AppSetting.MaximumBrowseHistoryRecords)));
+        var fileLogger = new FileLogger(ApplicationData.Current.LocalFolder.Path + @"\Logs\");
+        return new ServiceCollection()
+            .AddSingleton<IDownloadTaskFactory<IllustrationItemViewModel, IllustrationDownloadTask>, IllustrationDownloadTaskFactory>()
+            .AddSingleton(new LiteDatabase(AppInfo.DatabaseFilePath))
+            .AddSingleton(provider => new DownloadHistoryPersistentManager(provider.GetRequiredService<LiteDatabase>(), App.AppViewModel.AppSettings.MaximumDownloadHistoryRecords))
+            .AddSingleton(provider => new SearchHistoryPersistentManager(provider.GetRequiredService<LiteDatabase>(), App.AppViewModel.AppSettings.MaximumSearchHistoryRecords))
+            .AddSingleton(provider => new BrowseHistoryPersistentManager(provider.GetRequiredService<LiteDatabase>(), App.AppViewModel.AppSettings.MaximumBrowseHistoryRecords))
+            .AddSingleton(fileLogger)
+            .BuildServiceProvider();
     }
 
     public async Task ShowExceptionDialogAsync(Exception e)
@@ -89,14 +90,10 @@ public class AppViewModel(App app)
     {
         _activatedByProtocol = activatedByProtocol;
 
-        AppHost = CreateHostBuilder().Build();
-
-        await AppContext.WriteLogoIcoIfNotExist();
-
         await AppKnownFolders.Temporary.ClearAsync();
         Cache = await FileCache.CreateDefaultAsync();
 
-        AppHost.RunAsync().Discard();
+        AppServiceProvider = CreateServiceProvider();
     }
 
     /// <summary>

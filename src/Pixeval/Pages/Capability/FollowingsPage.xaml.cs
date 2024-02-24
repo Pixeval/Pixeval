@@ -18,99 +18,37 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System;
-using CommunityToolkit.Mvvm.Messaging;
-using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
-using Pixeval.Controls;
-using Pixeval.Controls.IllustratorView;
-using Pixeval.CoreApi.Global.Enum;
-using Pixeval.Messages;
-using Pixeval.Pages.Misc;
-using Pixeval.Util;
-using Pixeval.Util.UI;
-using WinUI3Utilities;
 
 namespace Pixeval.Pages.Capability;
 
 public sealed partial class FollowingsPage
 {
-    private readonly SolidColorBrush _backgroundBrush;
-    private readonly IllustratorViewViewModel _viewModel = new();
-    private const int CompactPaneLength = 300;
-
     public FollowingsPage()
     {
         InitializeComponent();
-        _backgroundBrush = Resources["SystemControlBackgroundChromeMediumLowBrush"].To<SolidColorBrush>().WithAlpha(64);
     }
 
-    public FrameworkElement SelfIllustratorView => this;
+    private long _uid = -1;
 
-    public override void OnPageDeactivated(NavigatingCancelEventArgs e)
-    {
-        _viewModel.Dispose();
-        if (IllustratorContentViewerFrame.Content is IDisposable disposable)
-        {
-            disposable.Dispose();
-        }
-        WeakReferenceMessenger.Default.UnregisterAll(this);
-    }
+    private bool IsMe => _uid == App.AppViewModel.PixivUid;
 
     public override void OnPageActivated(NavigationEventArgs e)
     {
-        _ = WeakReferenceMessenger.Default.TryRegister<FollowingsPage, MainPageFrameNavigatingEvent>(this, static (recipient, _) => recipient._viewModel.DataProvider.FetchEngine?.Cancel());
-        _viewModel.ResetEngine(App.AppViewModel.MakoClient.Following(App.AppViewModel.PixivUid, PrivacyPolicy.Public));
-        // 此时没有Navigate，右边没有内容
-        // ClipGeometry.Rect = new(MainSplitView.OpenPaneLength - CompactPaneLength, 0, int.MaxValue, int.MaxValue);
+        if (e.Parameter is not long uid)
+            uid = App.AppViewModel.PixivUid;
+        _uid = uid;
+        ChangeSource();
     }
 
-    private TeachingTip IllustratorItemOnRequestTeachingTip() => FollowingsPageTeachingTip;
-
-    private void IllustratorItemsView_OnSelectionChanged(ItemsView sender, ItemsViewSelectionChangedEventArgs e)
+    private void PrivacyPolicyComboBox_OnSelectionChangedWhenLoaded(object sender, SelectionChangedEventArgs e)
     {
-        MainSplitView.IsPaneOpen = false;
-        if (IllustratorItemsView.SelectedItem is IllustratorItemViewModel viewModel)
-            _ = IllustratorContentViewerFrame.Navigate(typeof(IllustratorContentViewerPage), viewModel);
+        ChangeSource();
     }
 
-    private void FollowingsPage_OnSizeChanged(object sender, SizeChangedEventArgs e)
+    private void ChangeSource()
     {
-        var newWidth = Math.Floor(Math.Max(ActualWidth * 2 / 3, MainSplitView.CompactPaneLength));
-        MainSplitView.OpenPaneLength = newWidth;
-        if (MainSplitView.IsPaneOpen)
-            ContentGrid.Width = newWidth;
-
-        var count = Math.Round(newWidth / 305);
-        // 10：Padding，5：Spacing
-        var newItemWidth = (newWidth - 10 - 5 * (count - 1)) / count;
-        var newItemHeight = newItemWidth * 8 / 15;
-        // 3：空出余量
-        IllustratorItemsView.MinItemWidth = newItemWidth - 3;
-        IllustratorItemsView.MinItemHeight = newItemHeight;
-    }
-
-    private void MainSplitView_OnPaneAction(SplitView sender, object? args)
-    {
-        // not loaded
-        if (IllustratorItemsView is null)
-            return;
-
-        var openPaneLength = MainSplitView.OpenPaneLength;
-        // 10： Margin
-        if (args is null)
-        {
-            IllustratorItemsView.LayoutType = ItemsViewLayoutType.Grid;
-            ContentGrid.Width = openPaneLength;
-            ClipGeometry.Rect = new(openPaneLength - CompactPaneLength, 0, int.MaxValue, int.MaxValue);
-        }
-        else // args is SplitViewPaneClosingEventArgs
-        {
-            IllustratorItemsView.LayoutType = ItemsViewLayoutType.VerticalStack;
-            ContentGrid.Width = CompactPaneLength;
-            ClipGeometry.Rect = new(0, 0, int.MaxValue, int.MaxValue);
-        }
+        IllustratorView.ViewModel.ResetEngine(App.AppViewModel.MakoClient.Following(_uid, PrivacyPolicyComboBox.SelectedItem));
     }
 }

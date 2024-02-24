@@ -20,6 +20,7 @@
 
 using System;
 using Windows.Foundation;
+using Windows.System;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Automation.Peers;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -157,7 +158,7 @@ public partial class CardControl : ButtonBase
 
     private void Control_PreviewKeyUp(object sender, KeyRoutedEventArgs e)
     {
-        if (e.Key is Windows.System.VirtualKey.Enter or Windows.System.VirtualKey.Space or Windows.System.VirtualKey.GamepadA)
+        if (e.Key is VirtualKey.Enter or VirtualKey.Space or VirtualKey.GamepadA)
         {
             ChangeSelectionState(NormalState);
         }
@@ -165,7 +166,7 @@ public partial class CardControl : ButtonBase
 
     private void Control_PreviewKeyDown(object sender, KeyRoutedEventArgs e)
     {
-        if (e.Key is Windows.System.VirtualKey.Enter or Windows.System.VirtualKey.Space or Windows.System.VirtualKey.GamepadA)
+        if (e.Key is VirtualKey.Enter or VirtualKey.Space or VirtualKey.GamepadA)
         {
             // Check if the active focus is on the card itself - only then we show the pressed state.
             if (GetFocusedElement() is CardControl)
@@ -201,7 +202,7 @@ public partial class CardControl : ButtonBase
 
     protected override void OnPointerPressed(PointerRoutedEventArgs e)
     {
-        //  e.Handled = true;
+        // e.Handled = true;
         if (IsOperationEnabled)
         {
             base.OnPointerPressed(e);
@@ -239,8 +240,8 @@ public partial class CardControl : ButtonBase
 
     private FrameworkElement? GetFocusedElement()
     {
-        return XamlRoot is not null
-            ? FocusManager.GetFocusedElement(XamlRoot) as FrameworkElement
-            : FocusManager.GetFocusedElement() as FrameworkElement;
+        return (XamlRoot is null
+            ? FocusManager.GetFocusedElement()
+            : FocusManager.GetFocusedElement(XamlRoot)) as FrameworkElement;
     }
 }

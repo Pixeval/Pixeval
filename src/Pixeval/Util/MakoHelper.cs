@@ -23,19 +23,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.WinUI.Collections;
-using Microsoft.UI;
-using Microsoft.UI.Xaml.Media;
+using Pixeval.AppManagement;
 using Pixeval.Controls;
-using Pixeval.Controls.IllustrationView;
-using Pixeval.Controls.MarkupExtensions;
-using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Model;
 using Pixeval.Misc;
 using Pixeval.Options;
-using Pixeval.Util.Generic;
 using WinUI3Utilities;
-using AppContext = Pixeval.AppManagement.AppContext;
 
 namespace Pixeval.Util;
 
@@ -49,12 +43,7 @@ public static class MakoHelper
         .. Enumerable.Range(101, 10)
     ];
 
-    public static IllustrationSortOptionWrapper GetAppSettingDefaultSortOptionWrapper()
-    {
-        return LocalizedBoxHelper.Of<IllustrationSortOption, IllustrationSortOptionWrapper>(App.AppViewModel.AppSetting.DefaultSortOption);
-    }
-
-    public static string? GetThumbnailUrl(this Illustration illustration, ThumbnailUrlOption option)
+    public static string GetThumbnailUrl(this Illustration illustration, ThumbnailUrlOption option = ThumbnailUrlOption.Medium)
     {
         return option switch
         {
@@ -77,7 +66,7 @@ public static class MakoHelper
 
     public static Uri GenerateIllustrationAppUri(long id)
     {
-        return new Uri($"{AppContext.AppProtocol}://illust/{id}");
+        return new Uri($"{AppInfo.AppProtocol}://illust/{id}");
     }
 
     public static Uri GenerateIllustratorWebUri(long id)
@@ -92,18 +81,10 @@ public static class MakoHelper
 
     public static Uri GenerateIllustratorAppUri(long id)
     {
-        return new Uri($"{AppContext.AppProtocol}://user/{id}");
+        return new Uri($"{AppInfo.AppProtocol}://user/{id}");
     }
 
-    public static string GetStaticImageFormat(this IllustrationItemViewModel illustration)
-    {
-        if (illustration.IsUgoira)
-            return ThrowHelper.Argument<bool, string>(illustration.IsUgoira, "Needs static illustration.");
-        var url = illustration.OriginalStaticUrl;
-        return url[url.LastIndexOf('.')..];
-    }
-
-    public static async Task<string> GetIllustrationThumbnailCacheKeyAsync(this IllustrationItemViewModel illustration, ThumbnailUrlOption thumbnailUrlOption)
+    public static async Task<string> GetIllustrationThumbnailCacheKeyAsync(this IllustrationItemViewModel illustration, ThumbnailUrlOption thumbnailUrlOption = ThumbnailUrlOption.Medium)
     {
         return $"thumbnail-{thumbnailUrlOption}-{await illustration.GetOriginalSourceUrlAsync()}";
     }
@@ -125,69 +106,24 @@ public static class MakoHelper
         };
     }
 
-    public static void Cancel<T>(this IFetchEngine<T> engine)
-    {
-        engine.EngineHandle.Cancel();
-    }
-
     public static string GenerateStickerDownloadUrl(int id)
     {
         return $"https://s.pximg.net/common/images/stamp/generated-stamps/{id}_s.jpg";
     }
 
-    public static FontSymbolIconSource GetBookmarkButtonIconSource(bool isBookmarked)
+    public static bool SetFollow(long id, bool isFollowed, bool privately = false)
     {
-        var systemThemeFontFamily = new FontFamily(AppContext.AppIconFontFamilyName);
-        return isBookmarked
-            ? new()
-            {
-                Symbol = FontIconSymbols.HeartFillEB52,
-                Foreground = new SolidColorBrush(Colors.Crimson),
-                FontFamily = systemThemeFontFamily
-            }
-            : new()
-            {
-                Symbol = FontIconSymbols.HeartEB51,
-                FontFamily = systemThemeFontFamily
-            };
+        _ = isFollowed
+            ? App.AppViewModel.MakoClient.PostFollowUserAsync(id, privately ? PrivacyPolicy.Private : PrivacyPolicy.Public)
+            : App.AppViewModel.MakoClient.RemoveFollowUserAsync(id);
+        return isFollowed;
     }
 
-    public static FontSymbolIcon GetBookmarkButtonIcon(bool isBookmarked)
+    public static bool SetBookmark(long id, bool isBookmarked, bool privately = false)
     {
-        var systemThemeFontFamily = new FontFamily(AppContext.AppIconFontFamilyName);
-        return isBookmarked
-            ? new()
-            {
-                Symbol = FontIconSymbols.HeartFillEB52,
-                Foreground = new SolidColorBrush(Colors.Crimson),
-                FontFamily = systemThemeFontFamily
-            }
-            : new()
-            {
-                Symbol = FontIconSymbols.HeartEB51,
-                FontFamily = systemThemeFontFamily
-            };
-    }
-
-    public static FontSymbolIconSource GetFollowButtonIcon(bool isFollowed)
-    {
-        var systemThemeFontFamily = new FontFamily(AppContext.AppIconFontFamilyName);
-        return isFollowed
-            ? new()
-            {
-                Symbol = FontIconSymbols.ContactSolidEA8C,
-                Foreground = new SolidColorBrush(Colors.Crimson),
-                FontFamily = systemThemeFontFamily
-            }
-            : new()
-            {
-                Symbol = FontIconSymbols.ContactE77B,
-                FontFamily = systemThemeFontFamily
-            };
-    }
-
-    public static string GetBookmarkContextItemText(bool isBookmarked)
-    {
-        return isBookmarked ? MiscResources.RemoveBookmark : MiscResources.AddBookmark;
+        _ = isBookmarked
+            ? App.AppViewModel.MakoClient.PostBookmarkAsync(id, privately ? PrivacyPolicy.Private : PrivacyPolicy.Public)
+            : App.AppViewModel.MakoClient.RemoveBookmarkAsync(id);
+        return isBookmarked;
     }
 }

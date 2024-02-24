@@ -37,8 +37,8 @@ public static partial class ReplyEmojiHelper
     }
 
     /// <summary>
-    ///     Returns the placeholder of the emoji in the reply content which has a form of
-    ///     "(emoji_name)"
+    /// Returns the placeholder of the emoji in the reply content which has a form of
+    /// "(emoji_name)"
     /// </summary>
     public static string GetReplyEmojiPlaceholderKey(this PixivReplyEmoji emoji)
     {
@@ -46,7 +46,7 @@ public static partial class ReplyEmojiHelper
     }
 
     /// <summary>
-    ///     Returns the url of the png image of the <see cref="PixivReplyEmoji" />
+    /// Returns the url of the png image of the <see cref="PixivReplyEmoji" />
     /// </summary>
     public static string GetReplyEmojiDownloadUrl(this PixivReplyEmoji emoji)
     {

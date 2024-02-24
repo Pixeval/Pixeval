@@ -24,6 +24,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Global.Exception;
 using Pixeval.CoreApi.Model;
@@ -38,65 +39,61 @@ namespace Pixeval.CoreApi;
 
 public partial class MakoClient
 {
-    public async Task<PixivRelatedRecommendUsersResponse> GetRelatedRecommendUsersAsync(long uid, int num = 20, int workNum = 3, bool isR18 = true, CultureInfo? lang = null)
-    {
-        var culture = lang ?? CultureInfo.CurrentCulture;
-        EnsureNotCancelled();
-        return (await GetMakoHttpClient(MakoApiKind.WebApi)
-                .GetStringResultAsync($"/ajax/user/{uid}/recommends?userNum={num}&workNum={workNum}&isR18={isR18.ToString().ToLower()}&lang={culture.TwoLetterISOLanguageName}",
+    public Task<PixivRelatedRecommendUsersResponse> GetRelatedRecommendUsersAsync(long uid, int num = 20, int workNum = 3, bool isR18 = true, CultureInfo? lang = null)
+        => RunWithLoggerAsync(async () =>
+        {
+            var culture = lang ?? CultureInfo.CurrentCulture;
+            return (await GetMakoHttpClient(MakoApiKind.WebApi)
+                .GetStringResultAsync(
+                    $"/ajax/user/{uid}/recommends?userNum={num}&workNum={workNum}&isR18={isR18.ToString().ToLower()}&lang={culture.TwoLetterISOLanguageName}",
                     message => MakoNetworkException.FromHttpResponseMessageAsync(message, Configuration.Bypass))
-                .ConfigureAwait(false))
-            .UnwrapOrThrow().FromJson<PixivRelatedRecommendUsersResponse>()!;
-    }
+                .ConfigureAwait(false)).Rewrap(t => t.FromJson<PixivRelatedRecommendUsersResponse>()!);
+        });
 
     /// <summary>
-    ///     Gets the detail of an illustration from the illust id
+    /// Gets the detail of an illustration from the illust id
     /// </summary>
     /// <param name="id">The illust id</param>
     /// <returns></returns>
-    public async Task<Illustration> GetIllustrationFromIdAsync(long id)
-    {
-        EnsureNotCancelled();
-        return (await Resolve<IAppApiEndPoint>().GetSingleAsync(id).ConfigureAwait(false)).Illust;
-    }
+    public Task<Illustration> GetIllustrationFromIdAsync(long id)
+        => RunWithLoggerAsync(async t => (await t
+            .GetSingleAsync(id)
+            .ConfigureAwait(false)).Illust);
 
-    public async Task<IEnumerable<Tag>> GetAutoCompletionForKeyword(string word)
-    {
-        return (await Resolve<IAppApiEndPoint>().GetAutoCompletionAsync(new AutoCompletionRequest(word))).Tags;
-    }
+    public Task<Tag[]> GetAutoCompletionForKeyword(string word)
+        => RunWithLoggerAsync(async t => (await t
+            .GetAutoCompletionAsync(new AutoCompletionRequest(word))
+            .ConfigureAwait(false))
+            .Tags);
 
-    public async Task<PixivSingleUserResponse> GetUserFromIdAsync(long id, TargetFilter targetFilter)
-    {
-        EnsureNotCancelled();
-        var result = await Resolve<IAppApiEndPoint>().GetSingleUserAsync(new SingleUserRequest(id.ToString(), targetFilter.GetDescription())).ConfigureAwait(false);
-        return result;
-    }
+    public Task<PixivSingleUserResponse> GetUserFromIdAsync(long id, TargetFilter targetFilter)
+        => RunWithLoggerAsync(async t => await t
+            .GetSingleUserAsync(new SingleUserRequest(id.ToString(), targetFilter.GetDescription()))
+            .ConfigureAwait(false));
 
     /// <summary>
-    ///     Sends a request to the Pixiv to add it to the bookmark
+    /// Sends a request to the Pixiv to add it to the bookmark
     /// </summary>
     /// <param name="id">The ID of the illustration which needs to be bookmarked</param>
-    /// <param name="privacyPolicy">Indicates the privacy of the the illustration in the bookmark</param>
+    /// <param name="privacyPolicy">Indicates the privacy of the illustration in the bookmark</param>
     /// <returns>A <see cref="Task" /> represents the operation</returns>
-    public Task PostBookmarkAsync(long id, PrivacyPolicy privacyPolicy)
-    {
-        EnsureNotCancelled();
-        return Resolve<IAppApiEndPoint>().AddBookmarkAsync(new AddBookmarkRequest(privacyPolicy.GetDescription(), id.ToString()));
-    }
+    public Task PostBookmarkAsync(long id, PrivacyPolicy privacyPolicy) =>
+        RunWithLoggerAsync(async t => await t
+            .AddBookmarkAsync(new AddBookmarkRequest(privacyPolicy.GetDescription(), id.ToString()))
+            .ConfigureAwait(false));
 
     /// <summary>
-    ///     Sends a request to the Pixiv to remove it from the bookmark
+    /// Sends a request to the Pixiv to remove it from the bookmark
     /// </summary>
     /// <param name="id">The ID of the illustration which needs to be removed from the bookmark</param>
     /// <returns>A <see cref="Task" /> represents the operation</returns>
     public Task RemoveBookmarkAsync(long id)
-    {
-        EnsureNotCancelled();
-        return Resolve<IAppApiEndPoint>().RemoveBookmarkAsync(new RemoveBookmarkRequest(id.ToString()));
-    }
+        => RunWithLoggerAsync(async t => await t
+            .RemoveBookmarkAsync(new RemoveBookmarkRequest(id.ToString()))
+            .ConfigureAwait(false));
 
     /// <summary>
-    ///     Gets the details of a spotlight from its ID which contains the article information, introduction, and illustrations
+    /// Gets the details of a spotlight from its ID which contains the article information, introduction, and illustrations
     /// </summary>
     /// <param name="spotlightId">The ID of the spotlight</param>
     /// <returns>A <see cref="Task{TResult}" /> contains the result of the operation</returns>
@@ -133,39 +130,39 @@ public partial class MakoClient
     }
 
     public Task PostFollowUserAsync(long id, PrivacyPolicy privacyPolicy)
-    {
-        EnsureNotCancelled();
-        return Resolve<IAppApiEndPoint>().FollowUserAsync(new FollowUserRequest(id.ToString(), privacyPolicy.GetDescription()));
-    }
+        => RunWithLoggerAsync(async t => await t
+            .FollowUserAsync(new FollowUserRequest(id.ToString(), privacyPolicy.GetDescription()))
+            .ConfigureAwait(false));
 
     public Task RemoveFollowUserAsync(long id)
-    {
-        EnsureNotCancelled();
-        return Resolve<IAppApiEndPoint>().RemoveFollowUserAsync(new RemoveFollowUserRequest(id.ToString()));
-    }
+        => RunWithLoggerAsync(async t => await t
+            .RemoveFollowUserAsync(new RemoveFollowUserRequest(id.ToString()))
+            .ConfigureAwait(false));
 
-    public async Task<IEnumerable<TrendingTag>> GetTrendingTagsAsync(TargetFilter targetFilter)
-    {
-        EnsureNotCancelled();
-        return (await Resolve<IAppApiEndPoint>().GetTrendingTagsAsync(targetFilter.GetDescription()).ConfigureAwait(false)).TrendTags.Select(t => new TrendingTag(t.TagStr, t.TranslatedName, t.Illust));
-    }
+    public Task<IEnumerable<TrendingTag>> GetTrendingTagsAsync(TargetFilter targetFilter)
+        => RunWithLoggerAsync(async t => (await t
+            .GetTrendingTagsAsync(targetFilter.GetDescription())
+            .ConfigureAwait(false))
+            .TrendTags
+            .Select(tag => new TrendingTag(tag.TagStr, tag.TranslatedName, tag.Illust)));
 
-    public async Task<IEnumerable<TrendingTag>> GetTrendingTagsForNovelAsync(TargetFilter targetFilter)
-    {
-        EnsureNotCancelled();
-        return (await Resolve<IAppApiEndPoint>().GetTrendingTagsForNovelAsync(targetFilter.GetDescription()).ConfigureAwait(false)).TrendTags.Select(t => new TrendingTag(t.TagStr, t.TranslatedName, t.Illust));
-    }
+    public Task<IEnumerable<TrendingTag>> GetTrendingTagsForNovelAsync(TargetFilter targetFilter)
+        => RunWithLoggerAsync(async t => (await t
+            .GetTrendingTagsForNovelAsync(targetFilter.GetDescription())
+            .ConfigureAwait(false))
+            .TrendTags
+            .Select(tag => new TrendingTag(tag.TagStr, tag.TranslatedName, tag.Illust)));
 
     /// <summary>
-    ///     Gets the tags that are created by users to classify their bookmarks
+    /// Gets the tags that are created by users to classify their bookmarks
     /// </summary>
     /// <example>
-    ///     <a href="https://www.pixiv.net/en/users/333556/bookmarks/artworks">A user's bookmarks page</a>.
-    ///     There is a list of tags atop of the illustrations
+    /// <a href="https://www.pixiv.net/en/users/333556/bookmarks/artworks">A user's bookmarks page</a>.
+    /// There is a list of tags atop of the illustrations
     /// </example>
     /// <returns>
-    ///     An <see cref="IReadOnlyDictionary{TKey,TValue}" /> representing the results, where the keys are
-    ///     tags and values are the privacy of the tags
+    /// A <see cref="IReadOnlyDictionary{TKey,TValue}" /> representing the results, where the keys are
+    /// tags and values are the privacy of the tags
     /// </returns>
     /// <param name="uid">The ID of the user</param>
     public async Task<IReadOnlyDictionary<CountedTag, PrivacyPolicy>> GetUserSpecifiedBookmarkTagsAsync(long uid)
@@ -180,7 +177,7 @@ public partial class MakoClient
         {
             foreach (var tag in publicTags)
             {
-                dic[new CountedTag(new Tag(tag.Name, null), tag.Count)] = PrivacyPolicy.Public;
+                dic[new CountedTag(new Tag { Name = tag.Name, TranslatedName = null }, tag.Count)] = PrivacyPolicy.Public;
             }
         }
 
@@ -188,7 +185,7 @@ public partial class MakoClient
         {
             foreach (var tag in privateTags)
             {
-                dic[new CountedTag(new Tag(tag.Name, null), tag.Count)] = PrivacyPolicy.Private;
+                dic[new CountedTag(new Tag { Name = tag.Name, TranslatedName = null }, tag.Count)] = PrivacyPolicy.Private;
             }
         }
 
@@ -196,17 +193,15 @@ public partial class MakoClient
     }
 
     public Task<UgoiraMetadataResponse> GetUgoiraMetadataAsync(long id)
-    {
-        return Resolve<IAppApiEndPoint>().GetUgoiraMetadataAsync(id);
-    }
+        => RunWithLoggerAsync(async t => await t
+            .GetUgoiraMetadataAsync(id)
+            .ConfigureAwait(false));
 
     public Task DeleteCommentAsync(long commentId)
-    {
-        return Resolve<IAppApiEndPoint>().DeleteCommentAsync(new DeleteCommentRequest(commentId));
-    }
+        => RunWithLoggerAsync(async t => await t
+            .DeleteCommentAsync(new DeleteCommentRequest(commentId)));
 
     public Task<ReverseSearchResponse> ReverseSearchAsync(Stream imgStream, string apiKey)
-    {
-        return Resolve<IReverseSearchApiEndPoint>().GetSauceAsync(new ReverseSearchRequest(apiKey), new StreamPart(imgStream, "img"));
-    }
+        => RunWithLoggerAsync(async () => await MakoServices.GetRequiredService<IReverseSearchApiEndPoint>()
+            .GetSauceAsync(new ReverseSearchRequest(apiKey), new StreamPart(imgStream, "img")));
 }

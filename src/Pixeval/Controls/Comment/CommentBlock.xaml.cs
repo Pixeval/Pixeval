@@ -22,20 +22,18 @@ using System;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media.Imaging;
+using Pixeval.AppManagement;
+using Pixeval.Pages.IllustratorViewer;
 using Pixeval.Util.IO;
 using Pixeval.Utilities;
 using WinUI3Utilities.Attributes;
-using AppContext = Pixeval.AppManagement.AppContext;
 
 namespace Pixeval.Controls;
 
 [DependencyProperty<CommentBlockViewModel>("ViewModel", propertyChanged: nameof(OnViewModelChanged))]
 public sealed partial class CommentBlock
 {
-    public CommentBlock()
-    {
-        InitializeComponent();
-    }
+    public CommentBlock() => InitializeComponent();
 
     public event Action<CommentBlockViewModel>? RepliesHyperlinkButtonTapped;
 
@@ -53,7 +51,7 @@ public sealed partial class CommentBlock
             var result = await App.AppViewModel.MakoClient.DownloadSoftwareBitmapSourceAsync(viewModel.StampSource);
             block.StickerImageContent.Source = result is Result<SoftwareBitmapSource>.Success { Value: var avatar }
                 ? avatar
-                : await AppContext.GetNotAvailableImageAsync();
+                : await AppInfo.GetNotAvailableImageAsync();
         }
         else
         {
@@ -61,10 +59,9 @@ public sealed partial class CommentBlock
         }
     }
 
-    private void PosterPersonPicture_OnTapped(object sender, TappedRoutedEventArgs e)
+    private async void PosterPersonPicture_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        // TODO
-        // throw new NotImplementedException();
+        await IllustratorViewerHelper.CreateWindowWithPageAsync(ViewModel.PosterId);
     }
 
     private void OpenRepliesHyperlinkButton_OnTapped(object sender, TappedRoutedEventArgs e) => RepliesHyperlinkButtonTapped?.Invoke(ViewModel);

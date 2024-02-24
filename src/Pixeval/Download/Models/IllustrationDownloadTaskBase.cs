@@ -20,16 +20,18 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
-using Windows.Storage.Streams;
 using CommunityToolkit.Mvvm.ComponentModel;
+using Pixeval.CoreApi.Model;
 using Pixeval.Database;
+using Pixeval.Util.IO;
 using Pixeval.Utilities;
 using Pixeval.Utilities.Threading;
 
 namespace Pixeval.Download.Models;
 
-public abstract class IllustrationDownloadTaskBase(DownloadHistoryEntry entry) : ObservableObject, IDownloadTask, IProgress<double>
+public abstract class IllustrationDownloadTaskBase(DownloadHistoryEntry entry) : ObservableObject, IDownloadTask, IProgress<double>, IEntry
 {
     private Exception? _errorCause;
     private double _progressPercentage = entry.State is DownloadState.Completed ? 100 : 0;
@@ -53,36 +55,59 @@ public abstract class IllustrationDownloadTaskBase(DownloadHistoryEntry entry) :
 
     public long Id => DatabaseEntry.Id;
 
+    public DownloadItemType Type => DatabaseEntry.Type;
+
     public List<string> Urls => DatabaseEntry.Urls;
 
     public string Destination => DatabaseEntry.Destination;
 
     public CancellationHandle CancellationHandle { get; set; } = new();
 
-    public TaskCompletionSource Completion { get; } = new();
+    public TaskCompletionSource Completion { get; private set; } = new();
 
     public DownloadState CurrentState
     {
         get => DatabaseEntry.State;
-        set
+        set => SetProperty(DatabaseEntry.State, value, DatabaseEntry, (entry, state) =>
         {
+            entry.State = state;
             if (value is DownloadState.Completed)
+            {
                 ProgressPercentage = 100;
-            _ = SetProperty(DatabaseEntry.State, value, DatabaseEntry, (entry, state) => entry.State = state);
-        }
+                Completion.SetResult();
+            }
+        });
     }
 
     public Exception? ErrorCause
     {
         get => _errorCause;
-        set => SetProperty(_errorCause, value, DatabaseEntry, (entry, exception) =>
+        set
         {
+            if (Equals(value, _errorCause))
+                return;
             _errorCause = value;
-            entry.ErrorCause = exception?.ToString();
-        });
+            OnPropertyChanged();
+
+            DatabaseEntry.ErrorCause = value?.ToString();
+            if (value is not null)
+            {
+                CurrentState = DownloadState.Error;
+                Completion.SetException(value);
+            }
+        }
     }
 
-    public abstract Task DownloadAsync(Func<string, IProgress<double>?, CancellationHandle?, Task<Result<IRandomAccessStream>>> downloadRandomAccessStreamAsync);
+    public abstract Task DownloadAsync(Func<string, IProgress<double>?, CancellationHandle?, Task<Result<Stream>>> downloadStreamAsync);
+
+    public async Task ResetAsync()
+    {
+        await IoHelper.DeleteIllustrationTaskAsync(this);
+        ProgressPercentage = 0;
+        CurrentState = DownloadState.Queued;
+        ErrorCause = null;
+        Completion = new();
+    }
 
     public void Report(double value) => ProgressPercentage = value;
 }

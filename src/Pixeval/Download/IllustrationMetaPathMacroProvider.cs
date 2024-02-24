@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -19,7 +19,7 @@
 #endregion
 
 using System.Collections.Generic;
-using Pixeval.Controls.IllustrationView;
+using Pixeval.Controls;
 using Pixeval.Download.MacroParser;
 using Pixeval.Download.Macros;
 

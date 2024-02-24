@@ -21,7 +21,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading;
@@ -30,7 +29,6 @@ using System.Threading.Tasks;
 using Pixeval.Download.Models;
 using Pixeval.Util.IO;
 using Pixeval.Util.Threading;
-using Pixeval.Utilities;
 using Pixeval.Utilities.Threading;
 
 namespace Pixeval.Download;
@@ -81,10 +79,8 @@ public class DownloadManager<TDownloadTask> : IDisposable where TDownloadTask : 
 
         _ = _taskQuerySet.Add(task);
         _queuedTasks.Insert(0, task);
-        // Start the task only if it is created and is ready-to-run
-        if (task.CurrentState is DownloadState.Created)
+        if (task.CurrentState is DownloadState.Queued)
         {
-            SetState(task, DownloadState.Queued);
             QueueDownloadTask(task);
         }
     }
@@ -95,7 +91,7 @@ public class DownloadManager<TDownloadTask> : IDisposable where TDownloadTask : 
         {
             while (await _throttle && _downloadTaskChannel.Reader.TryRead(out var task))
             {
-                Download(task).Discard();
+                _ = Download(task);
             }
         }
     }
@@ -108,7 +104,7 @@ public class DownloadManager<TDownloadTask> : IDisposable where TDownloadTask : 
 
     public void ClearTasks()
     {
-        foreach (var task in _queuedTasks.Where(t => t.CurrentState is DownloadState.Running or DownloadState.Paused or DownloadState.Created or DownloadState.Queued))
+        foreach (var task in _queuedTasks.Where(t => t.CurrentState is DownloadState.Running or DownloadState.Paused or DownloadState.Queued))
         {
             task.CancellationHandle.Cancel();
         }
@@ -122,8 +118,8 @@ public class DownloadManager<TDownloadTask> : IDisposable where TDownloadTask : 
     /// </summary>
     public bool TryExecuteInline(TDownloadTask task)
     {
-        // Execute the task only if it's already queued and is not running
-        if (_queuedTasks.Contains(task) && task.CurrentState is not DownloadState.Running or DownloadState.Created or DownloadState.Queued)
+        // Execute the task only if it's already queued
+        if (_queuedTasks.Contains(task) && task.CurrentState is DownloadState.Queued)
         {
             QueueDownloadTask(task);
             return true;
@@ -141,12 +137,7 @@ public class DownloadManager<TDownloadTask> : IDisposable where TDownloadTask : 
     {
         IncrementCounter();
 
-        var args = new DownloadStartingEventArgs();
-
-        if (await args.DeferralAwaiter)
-        {
-            await DownloadInternal(task);
-        }
+        await DownloadInternalAsync(task);
 
         await DecrementCounterAsync();
     }
@@ -167,7 +158,7 @@ public class DownloadManager<TDownloadTask> : IDisposable where TDownloadTask : 
         _ = _semaphoreSlim.Release();
     }
 
-    private async Task DownloadInternal(TDownloadTask task)
+    private async Task DownloadInternalAsync(TDownloadTask task)
     {
         SetState(task, DownloadState.Running);
         task.CancellationHandle.Register(() => SetState(task, DownloadState.Cancelled));
@@ -175,23 +166,21 @@ public class DownloadManager<TDownloadTask> : IDisposable where TDownloadTask : 
         task.CancellationHandle.RegisterResumed(() => SetState(task, DownloadState.Running));
         try
         {
-            await task.DownloadAsync(_httpClient.DownloadRandomAccessStreamAsync);
+            await task.DownloadAsync(_httpClient.DownloadStreamAsync);
         }
         catch (Exception e)
         {
-            // todo delete manga
-            Functions.IgnoreException(() => File.Delete(task.Destination));
+            if (task is IllustrationDownloadTask t)
+                await IoHelper.DeleteIllustrationTaskAsync(t);
             ThreadingHelper.DispatchTask(() => task.ErrorCause = e);
-            SetState(task, DownloadState.Error);
-            task.Completion.SetException(e);
+            return;
         }
 
         SetState(task, DownloadState.Completed);
-        task.Completion.SetResult();
     }
 
     private static void SetState(TDownloadTask task, DownloadState state)
     {
         ThreadingHelper.DispatchTask(() => task.CurrentState = state);
-    }
+    } 
 }

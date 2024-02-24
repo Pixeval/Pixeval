@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -21,6 +21,6 @@
 namespace Pixeval.Messages;
 
 /// <summary>
-///     Raises when the tag in IllustrationInfoPage is clicked
+/// Raises when the tag in IllustrationInfoPage is clicked
 /// </summary>
 public record IllustrationTagClickedMessage(string Tag);

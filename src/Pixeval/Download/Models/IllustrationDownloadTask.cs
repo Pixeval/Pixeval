@@ -21,13 +21,13 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
-using Windows.Storage.Streams;
-using Pixeval.Controls.IllustrationView;
+using Pixeval.Controls;
 using Pixeval.Database;
 using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Utilities;
 using Pixeval.Utilities.Threading;
+using SixLabors.ImageSharp;
 
 namespace Pixeval.Download.Models;
 
@@ -38,26 +38,26 @@ public class IllustrationDownloadTask(DownloadHistoryEntry entry, IllustrationIt
 
     public IllustrationItemViewModel IllustrationViewModel { get; protected set; } = illustration;
 
-    public override async Task DownloadAsync(Func<string, IProgress<double>?, CancellationHandle?, Task<Result<IRandomAccessStream>>> downloadRandomAccessStreamAsync)
+    public override async Task DownloadAsync(Func<string, IProgress<double>?, CancellationHandle?, Task<Result<Stream>>> downloadStreamAsync)
     {
-        await DownloadAsyncCore(downloadRandomAccessStreamAsync, Url, Destination);
+        await DownloadAsyncCore(downloadStreamAsync, Url, Destination);
     }
 
-    protected virtual async Task DownloadAsyncCore(Func<string, IProgress<double>?, CancellationHandle?, Task<Result<IRandomAccessStream>>> downloadRandomAccessStreamAsync, string url, string destination)
+    protected virtual async Task DownloadAsyncCore(Func<string, IProgress<double>?, CancellationHandle?, Task<Result<Stream>>> downloadStreamAsync, string url, string destination)
     {
-        if (!App.AppViewModel.AppSetting.OverwriteDownloadedFile && File.Exists(destination))
+        if (!App.AppViewModel.AppSettings.OverwriteDownloadedFile && File.Exists(destination))
             return;
 
-        if (App.AppViewModel.AppSetting.UseFileCache && await App.AppViewModel.Cache.TryGetAsync<IRandomAccessStream>(await IllustrationViewModel.GetIllustrationOriginalImageCacheKeyAsync()) is { } stream)
+        if (App.AppViewModel.AppSettings.UseFileCache && await App.AppViewModel.Cache.TryGetAsync<Stream>(await IllustrationViewModel.GetIllustrationOriginalImageCacheKeyAsync()) is { } stream)
         {
-            using (stream)
+            await using (stream)
                 await ManageStream(stream, destination);
             return;
         }
 
-        if (await downloadRandomAccessStreamAsync(url, this, CancellationHandle) is Result<IRandomAccessStream>.Success result)
+        if (await downloadStreamAsync(url, this, CancellationHandle) is Result<Stream>.Success result)
         {
-            using var ras = result.Value;
+            await using var ras = result.Value;
             await ManageStream(ras, destination);
         }
     }
@@ -68,8 +68,10 @@ public class IllustrationDownloadTask(DownloadHistoryEntry entry, IllustrationIt
     /// <param name="stream">会自动Dispose</param>
     /// <param name="destination"></param>
     /// <returns></returns>
-    protected virtual async Task ManageStream(IRandomAccessStream stream, string destination)
+    protected virtual async Task ManageStream(Stream stream, string destination)
     {
-        await IoHelper.CreateAndWriteToFileAsync(stream, destination);
+        using var image = await Image.LoadAsync(stream);
+        image.SetTags(IllustrationViewModel.Illustrate);
+        await image.IllustrationSaveToFileAsync(destination);
     }
 }

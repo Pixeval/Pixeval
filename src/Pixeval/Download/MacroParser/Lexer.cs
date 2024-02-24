@@ -44,10 +44,10 @@ public class Lexer(string rawString)
                 var rBrace = new TokenInfo(TokenKind.RBrace, "}", _rawString.Forward..(_rawString.Forward + 1));
                 _rawString.Advance();
                 return rBrace;
-            case ':':
-                var colon = new TokenInfo(TokenKind.Colon, ":", _rawString.Forward..(_rawString.Forward + 1));
+            case '=':
+                var equal = new TokenInfo(TokenKind.Equal, "=", _rawString.Forward..(_rawString.Forward + 1));
                 _rawString.Advance();
-                return colon;
+                return equal;
             default:
                 return PlainText();
         }
@@ -57,7 +57,7 @@ public class Lexer(string rawString)
     {
         var forward = _rawString.Forward;
         _rawString.AdvanceMarker();
-        var str = _rawString.GetUntilIf(ch => ch is not '{' and not '}' and not '@' and not ':');
+        var str = _rawString.GetUntilIf(ch => ch is not '{' and not '}' and not '@' and not '=');
         return new TokenInfo(TokenKind.PlainText, str, forward..(forward + str.Length));
     }
 }

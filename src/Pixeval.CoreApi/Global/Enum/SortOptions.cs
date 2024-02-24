@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval.CoreApi
+#region Copyright (c) Pixeval/Pixeval.CoreApi
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
@@ -18,12 +18,14 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using Pixeval.Utilities;
+using System.ComponentModel;
 
 namespace Pixeval.CoreApi.Global.Enum;
 
 public enum IllustrationSortOption
 {
+    DoNotSort,
+
     [Description("popular_desc")]
     PopularityDescending,
 
@@ -31,18 +33,16 @@ public enum IllustrationSortOption
     PublishDateAscending,
 
     [Description("date_desc")]
-    PublishDateDescending,
-
-    DoNotSort
+    PublishDateDescending
 }
 
 public enum UserSortOption
 {
+    DoNotSort,
+
     [Description("date_asc")]
     DateAscending,
 
     [Description("date_desc")]
-    DateDescending,
-
-    DoNotSort
+    DateDescending
 }

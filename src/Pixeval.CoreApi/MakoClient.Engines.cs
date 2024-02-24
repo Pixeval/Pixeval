@@ -39,35 +39,35 @@ public partial class MakoClient
     // --------------------------------------------------
 
     /// <summary>
-    ///     Request bookmarked illustrations for a user.
+    /// Request bookmarked illustrations for a user.
     /// </summary>
     /// <param name="uid">User id</param>
     /// <param name="privacyPolicy">The <see cref="PrivacyPolicy" /> options targeting private or public</param>
     /// <param name="targetFilter">The <see cref="TargetFilter" /> options targeting android or ios</param>
     /// <returns>
-    ///     The <see cref="BookmarkEngine" />> iterator containing bookmarked illustrations for the user.
+    /// The <see cref="BookmarkEngine" />> iterator containing bookmarked illustrations for the user.
     /// </returns>
     /// <exception cref="IllegalPrivatePolicyException">Requesting other user's private bookmarks will throw this exception.</exception>
-    public IFetchEngine<Illustration> Bookmarks(long uid, PrivacyPolicy privacyPolicy, TargetFilter targetFilter)
+    public IFetchEngine<Illustration> Bookmarks(long uid, PrivacyPolicy privacyPolicy, TargetFilter targetFilter = TargetFilter.ForAndroid)
     {
         EnsureNotCancelled();
         if (!CheckPrivacyPolicy(uid, privacyPolicy))
         {
-            throw new IllegalPrivatePolicyException(uid);
+            ThrowUtils.Throw(new IllegalPrivatePolicyException(uid));
         }
 
         return new BookmarkEngine(this, uid, privacyPolicy, targetFilter, new EngineHandle(CancelInstance)).Apply(RegisterInstance);
     }
 
     /// <summary>
-    ///     Search in Pixiv.
+    /// Search in Pixiv.
     /// </summary>
     /// <param name="tag">Texts for searching</param>
     /// <param name="start">Start page</param>
     /// <param name="pages">Number of pages</param>
     /// <param name="matchOption">
-    ///     The <see cref="SearchTagMatchOption.TitleAndCaption" /> option for the method of search
-    ///     matching
+    /// The <see cref="SearchTagMatchOption.TitleAndCaption" /> option for the method of search
+    /// matching
     /// </param>
     /// <param name="sortOption">The <see cref="IllustrationSortOption" /> option for sorting method</param>
     /// <param name="searchDuration">The <see cref="SearchDuration" /> option for the duration of this search</param>
@@ -75,7 +75,7 @@ public partial class MakoClient
     /// <param name="startDate">The starting date filtering the search results</param>
     /// <param name="endDate">The ending date filtering the searching results</param>
     /// <returns>
-    ///     The <see cref="SearchEngine" /> iterator containing the searching results.
+    /// The <see cref="SearchEngine" /> iterator containing the searching results.
     /// </returns>
     public IFetchEngine<Illustration> Search(
         string tag,
@@ -84,7 +84,7 @@ public partial class MakoClient
         SearchTagMatchOption matchOption = SearchTagMatchOption.TitleAndCaption,
         IllustrationSortOption? sortOption = null,
         SearchDuration searchDuration = SearchDuration.Undecided,
-        TargetFilter? targetFilter = null,
+        TargetFilter targetFilter = TargetFilter.ForAndroid,
         DateTimeOffset? startDate = null,
         DateTimeOffset? endDate = null)
     {
@@ -94,41 +94,41 @@ public partial class MakoClient
             sortOption = IllustrationSortOption.DoNotSort;
         }
 
-        return new SearchEngine(this, new EngineHandle(CancelInstance), matchOption, tag, start, pages, sortOption, searchDuration, startDate, endDate, targetFilter);
+        return new SearchEngine(this, new EngineHandle(CancelInstance), matchOption, tag, start, pages, sortOption, searchDuration, targetFilter, startDate, endDate);
     }
 
     /// <summary>
-    ///     Request ranking illustrations in Pixiv.
+    /// Request ranking illustrations in Pixiv.
     /// </summary>
     /// <param name="rankOption">The option of which the <see cref="RankOption" /> of rankings</param>
     /// <param name="dateTime">The date of rankings</param>
     /// <param name="targetFilter">The <see cref="TargetFilter" /> option targeting android or ios</param>
     /// <returns>
-    ///     The <see cref="RankingEngine" /> containing rankings.
+    /// The <see cref="RankingEngine" /> containing rankings.
     /// </returns>
     /// <exception cref="RankingDateOutOfRangeException">
-    ///     Throw this exception if the date is not valid.
+    /// Throw this exception if the date is not valid.
     /// </exception>
     public IFetchEngine<Illustration> Ranking(RankOption rankOption, DateTime dateTime, TargetFilter targetFilter = TargetFilter.ForAndroid)
     {
         EnsureNotCancelled();
         if (DateTime.Today - dateTime.Date < TimeSpan.FromDays(2))
         {
-            throw new RankingDateOutOfRangeException();
+            ThrowUtils.Throw(new RankingDateOutOfRangeException());
         }
 
         return new RankingEngine(this, rankOption, dateTime, targetFilter, new EngineHandle(CancelInstance));
     }
 
     /// <summary>
-    ///     Request recommended illustrations in Pixiv.
+    /// Request recommended illustrations in Pixiv.
     /// </summary>
     /// <param name="recommendContentType">The <see cref="RecommendationContentType" /> option for illust or manga</param>
     /// <param name="targetFilter">The <see cref="TargetFilter" /> option targeting android or ios</param>
     /// <param name="maxBookmarkIdForRecommend">Max bookmark id for recommendation</param>
     /// <param name="minBookmarkIdForRecentIllust">Min bookmark id for recent illust</param>
     /// <returns>
-    ///     The <see cref="RecommendationEngine" /> containing recommended illustrations.
+    /// The <see cref="RecommendationEngine" /> containing recommended illustrations.
     /// </returns>
     public IFetchEngine<Illustration> Recommendations(
         RecommendationContentType recommendContentType = RecommendationContentType.Illust,
@@ -141,11 +141,11 @@ public partial class MakoClient
     }
 
     /// <summary>
-    ///     Request recommended illustrators.
+    /// Request recommended illustrators.
     /// </summary>
     /// <param name="targetFilter">The <see cref="TargetFilter" /> option targeting android or ios</param>
     /// <returns>
-    ///     The <see cref="RecommendIllustratorEngine" /> containing recommended illustrators.
+    /// The <see cref="RecommendIllustratorEngine" /> containing recommended illustrators.
     /// </returns>
     public IFetchEngine<User> RecommendIllustrators(TargetFilter targetFilter = TargetFilter.ForAndroid)
     {
@@ -154,10 +154,10 @@ public partial class MakoClient
     }
 
     /// <summary>
-    ///     Request the spotlights in Pixiv.
+    /// Request the spotlights in Pixiv.
     /// </summary>
     /// <returns>
-    ///     The <see cref="SpotlightArticleEngine" /> containing the spotlight articles.
+    /// The <see cref="SpotlightArticleEngine" /> containing the spotlight articles.
     /// </returns>
     public IFetchEngine<SpotlightArticle> Spotlights()
     {
@@ -166,10 +166,10 @@ public partial class MakoClient
     }
 
     /// <summary>
-    ///     Request feeds (the recent activity of following users)
+    /// Request feeds (the recent activity of following users)
     /// </summary>
     /// <returns>
-    ///     The <see cref="FeedEngine" /> containing the feeds.
+    /// The <see cref="FeedEngine" /> containing the feeds.
     /// </returns>
     public IFetchEngine<Feed> Feeds()
     {
@@ -178,25 +178,25 @@ public partial class MakoClient
     }
 
     /// <summary>
-    ///     Request posts of a user.
+    /// Request posts of a user.
     /// </summary>
     /// <param name="uid">User id.</param>
     /// <returns>
-    ///     The <see cref="PostedIllustrationEngine" /> containing posts of that user.
+    /// The <see cref="PostedIllustrationEngine" /> containing posts of that user.
     /// </returns>
-    public IFetchEngine<Illustration> Posts(string uid)
+    public IFetchEngine<Illustration> Posts(long uid)
     {
         EnsureNotCancelled();
         return new PostedIllustrationEngine(this, uid, new EngineHandle(CancelInstance));
     }
 
     /// <summary>
-    ///     Request following users of a user.
+    /// Request following users of a user.
     /// </summary>
     /// <param name="uid">User id</param>
     /// <param name="privacyPolicy">The <see cref="PrivacyPolicy" /> options targeting private or public</param>
     /// <returns>
-    ///     The <see cref="FollowingEngine" /> containing following users.
+    /// The <see cref="FollowingEngine" /> containing following users.
     /// </returns>
     /// <exception cref="IllegalPrivatePolicyException"></exception>
     public IFetchEngine<User?> Following(long uid, PrivacyPolicy privacyPolicy)
@@ -204,20 +204,20 @@ public partial class MakoClient
         EnsureNotCancelled();
         if (!CheckPrivacyPolicy(uid, privacyPolicy))
         {
-            throw new IllegalPrivatePolicyException(uid);
+            ThrowUtils.Throw(new IllegalPrivatePolicyException(uid));
         }
 
         return new FollowingEngine(this, privacyPolicy, uid, new EngineHandle(CancelInstance));
     }
 
     /// <summary>
-    ///     Search user in Pixiv.
+    /// Search user in Pixiv.
     /// </summary>
     /// <param name="keyword">The text in searching</param>
     /// <param name="userSortOption">The <see cref="UserSortOption" /> enum as date ascending or descending.</param>
     /// <param name="targetFilter">The <see cref="TargetFilter" /> option targeting android or ios</param>
     /// <returns>
-    ///     The <see cref="UserSearchEngine" /> containing the search results for users.
+    /// The <see cref="UserSearchEngine" /> containing the search results for users.
     /// </returns>
     public IFetchEngine<User> SearchUser(
         string keyword,
@@ -229,11 +229,11 @@ public partial class MakoClient
     }
 
     /// <summary>
-    ///     Request recent posts of following users.
+    /// Request recent posts of following users.
     /// </summary>
     /// <param name="privacyPolicy">The <see cref="PrivacyPolicy" /> options targeting private or public</param>
     /// <returns>
-    ///     The <see cref="RecentPostedIllustrationEngine" /> containing the recent posts.
+    /// The <see cref="RecentPostedIllustrationEngine" /> containing the recent posts.
     /// </returns>
     public IFetchEngine<Illustration> RecentPosts(PrivacyPolicy privacyPolicy)
     {
@@ -242,15 +242,15 @@ public partial class MakoClient
     }
 
     /// <summary>
-    ///     This function is intended to be cooperated with <see cref="GetUserSpecifiedBookmarkTagsAsync" />, because
-    ///     it requires an untranslated tag, for example, "未分類" is the untranslated name for "uncategorized",
-    ///     and the API only recognizes the former one, while the latter one is usually works as the display
-    ///     name
+    /// This function is intended to be cooperated with <see cref="GetUserSpecifiedBookmarkTagsAsync" />, because
+    /// it requires an untranslated tag, for example, "未分類" is the untranslated name for "uncategorized",
+    /// and the API only recognizes the former one, while the latter one is usually works as the display
+    /// name
     /// </summary>
     /// <param name="uid">User id</param>
     /// <param name="tagWithOriginalName">The untranslated name of the tag</param>
     /// <returns>
-    ///     The <see cref="TaggedBookmarksIdEngine" /> containing the illustrations ID for the bookmark tag.
+    /// The <see cref="TaggedBookmarksIdEngine" /> containing the illustrations ID for the bookmark tag.
     /// </returns>
     public IFetchEngine<long> UserTaggedBookmarksId(long uid, string tagWithOriginalName)
     {
@@ -259,12 +259,12 @@ public partial class MakoClient
     }
 
     /// <summary>
-    ///     Similar to <see cref="UserTaggedBookmarksId" /> but get the illustrations.
+    /// Similar to <see cref="UserTaggedBookmarksId" /> but get the illustrations.
     /// </summary>
     /// <param name="uid">User id</param>
     /// <param name="tagWithOriginalName">The untranslated name of the tag</param>
     /// <returns>
-    ///     The <see cref="TaggedBookmarksIdEngine" /> containing the illustrations for the bookmark tag.
+    /// The <see cref="TaggedBookmarksIdEngine" /> containing the illustrations for the bookmark tag.
     /// </returns>
     public IFetchEngine<Illustration> UserTaggedBookmarks(long uid, string tagWithOriginalName)
     {
@@ -273,43 +273,43 @@ public partial class MakoClient
     }
 
     /// <summary>
-    ///     Request manga posts of that user.
+    /// Request manga posts of that user.
     /// </summary>
     /// <param name="uid">User id</param>
     /// <param name="targetFilter">The <see cref="TargetFilter" /> option targeting android or ios</param>
     /// <returns>
-    ///     The <see cref="PostedMangaEngine" /> containing the manga posts of the user.
+    /// The <see cref="PostedMangaEngine" /> containing the manga posts of the user.
     /// </returns>
-    public IFetchEngine<Illustration> MangaPosts(string uid, TargetFilter targetFilter)
+    public IFetchEngine<Illustration> MangaPosts(long uid, TargetFilter targetFilter = TargetFilter.ForAndroid)
     {
         EnsureNotCancelled();
         return new PostedMangaEngine(this, uid, targetFilter, new EngineHandle(CancelInstance));
     }
 
     /// <summary>
-    ///     Request novel posts of that user.
+    /// Request novel posts of that user.
     /// </summary>
     /// <param name="uid">User id</param>
     /// <param name="targetFilter">The <see cref="TargetFilter" /> option targeting android or ios</param>
     /// <returns>
-    ///     The <see cref="PostedNovelEngine" /> containing the novel posts of that user.
+    /// The <see cref="PostedNovelEngine" /> containing the novel posts of that user.
     /// </returns>
-    public IFetchEngine<Novel> NovelPosts(string uid, TargetFilter targetFilter)
+    public IFetchEngine<Novel> NovelPosts(long uid, TargetFilter targetFilter = TargetFilter.ForAndroid)
     {
         EnsureNotCancelled();
         return new PostedNovelEngine(this, uid, targetFilter, new EngineHandle(CancelInstance));
     }
 
     /// <summary>
-    ///     Request bookmarked novels.
+    /// Request bookmarked novels.
     /// </summary>
     /// <param name="uid">User id</param>
     /// <param name="privacyPolicy">The <see cref="PrivacyPolicy" /> options targeting private or public</param>
     /// <param name="targetFilter">The <see cref="TargetFilter" /> option targeting android or ios</param>
     /// <returns>
-    ///     The <see cref="NovelBookmarkEngine" /> containing the bookmarked novels.
+    /// The <see cref="NovelBookmarkEngine" /> containing the bookmarked novels.
     /// </returns>
-    public IFetchEngine<Novel> NovelBookmarks(long uid, PrivacyPolicy privacyPolicy, TargetFilter targetFilter)
+    public IFetchEngine<Novel> NovelBookmarks(long uid, PrivacyPolicy privacyPolicy, TargetFilter targetFilter = TargetFilter.ForAndroid)
     {
         EnsureNotCancelled();
         _ = CheckPrivacyPolicy(uid, privacyPolicy);
@@ -317,11 +317,11 @@ public partial class MakoClient
     }
 
     /// <summary>
-    ///     Request comments of an illustration.
+    /// Request comments of an illustration.
     /// </summary>
     /// <param name="illustId">Illustration id</param>
     /// <returns>
-    ///     The <see cref="IllustrationCommentsEngine" /> containing comments of the illustration.
+    /// The <see cref="IllustrationCommentsEngine" /> containing comments of the illustration.
     /// </returns>
     public IFetchEngine<Comment?> IllustrationComments(long illustId)
     {
@@ -330,11 +330,11 @@ public partial class MakoClient
     }
 
     /// <summary>
-    ///     Request replies of a comment.
+    /// Request replies of a comment.
     /// </summary>
     /// <param name="commentId">Comment id</param>
     /// <returns>
-    ///     The <see cref="IllustrationCommentRepliesEngine" /> containing replies of the comment.
+    /// The <see cref="IllustrationCommentRepliesEngine" /> containing replies of the comment.
     /// </returns>
     public IFetchEngine<Comment> IllustrationCommentReplies(long commentId)
     {

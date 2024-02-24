@@ -7,7 +7,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:markup="using:Pixeval.Controls.MarkupExtensions"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:misc="using:Pixeval.Pages.Misc"
+    xmlns:misc="using:Pixeval.Misc"
     Loaded="AboutPage_OnLoaded"
     mc:Ignorable="d">
 
@@ -21,7 +21,7 @@
             x:Uid="/AboutPage/TitleTextBlock"
             Grid.Row="0"
             Style="{StaticResource TitleTextBlockStyle}" />
-        <ScrollViewer Grid.Row="2">
+        <ScrollView Grid.Row="2">
             <StackPanel Spacing="20">
                 <StackPanel Spacing="10">
                     <TextBlock x:Uid="/AboutPage/SpecialThanksSubtitleTextBlock" Style="{StaticResource SubtitleTextBlockStyle}" />
@@ -33,10 +33,10 @@
                         <ItemsRepeater.Layout>
                             <UniformGridLayout
                                 ItemsStretch="Fill"
-                                MinColumnSpacing="5"
+                                MinColumnSpacing="10"
                                 MinItemHeight="160"
                                 MinItemWidth="140"
-                                MinRowSpacing="5" />
+                                MinRowSpacing="10" />
                         </ItemsRepeater.Layout>
                         <ItemsRepeater.ItemTemplate>
                             <DataTemplate x:DataType="misc:Supporter">
@@ -56,36 +56,29 @@
                         Margin="0,10"
                         FontSize="{StaticResource PixevalContentFontSize}"
                         TextWrapping="Wrap" />
-                    <controls:SettingsCard
-                        x:Uid="/AboutPage/WCTKIntroductoryTextBlock"
-                        ActionIcon="{markup:FontSymbolIcon Glyph=OpenInNewWindowE8A7}"
-                        IsClickEnabled="True"
-                        Tapped="LaunchUri" />
-                    <controls:SettingsCard
-                        x:Uid="/AboutPage/MSHostingIntroductoryTextBlock"
-                        ActionIcon="{markup:FontSymbolIcon Glyph=OpenInNewWindowE8A7}"
-                        IsClickEnabled="True"
-                        Tapped="LaunchUri" />
-                    <controls:SettingsCard
-                        x:Uid="/AboutPage/RCMemoryStreamIntroductoryTextBlock"
-                        ActionIcon="{markup:FontSymbolIcon Glyph=OpenInNewWindowE8A7}"
-                        IsClickEnabled="True"
-                        Tapped="LaunchUri" />
-                    <controls:SettingsCard
-                        x:Uid="/AboutPage/ReverseMDIntroductoryTextBlock"
-                        ActionIcon="{markup:FontSymbolIcon Glyph=OpenInNewWindowE8A7}"
-                        IsClickEnabled="True"
-                        Tapped="LaunchUri" />
-                    <controls:SettingsCard
-                        x:Uid="/AboutPage/SQLiteIntroductoryTextBlock"
-                        ActionIcon="{markup:FontSymbolIcon Glyph=OpenInNewWindowE8A7}"
-                        IsClickEnabled="True"
-                        Tapped="LaunchUri" />
-                    <controls:SettingsCard
-                        x:Uid="/AboutPage/QRCoderIntroductoryTextBlock"
-                        ActionIcon="{markup:FontSymbolIcon Glyph=OpenInNewWindowE8A7}"
-                        IsClickEnabled="True"
-                        Tapped="LaunchUri" />
+                    <ItemsRepeater ItemsSource="{x:Bind DependencyViewModels}">
+                        <ItemsRepeater.Layout>
+                            <StackLayout Orientation="Vertical" />
+                        </ItemsRepeater.Layout>
+                        <ItemsRepeater.ItemTemplate>
+                            <DataTemplate x:DataType="misc:DependencyViewModel">
+                                <controls:SettingsCard
+                                    MinHeight="0"
+                                    ActionIcon="{markup:FontSymbolIcon Glyph=OpenInNewWindowE8A7}"
+                                    IsClickEnabled="True"
+                                    Tag="{x:Bind Url}"
+                                    Tapped="LaunchUri">
+                                    <controls:SettingsCard.Header>
+                                        <TextBlock>
+                                            <Run FontWeight="Bold" Text="{x:Bind Name}" />
+                                            <Run Text="    " />
+                                            <Run FontStyle="Italic" Text="{x:Bind Author}" />
+                                        </TextBlock>
+                                    </controls:SettingsCard.Header>
+                                </controls:SettingsCard>
+                            </DataTemplate>
+                        </ItemsRepeater.ItemTemplate>
+                    </ItemsRepeater>
                 </StackPanel>
                 <StackPanel Spacing="10">
                     <TextBlock x:Uid="/AboutPage/SupportMeSubtitleTextBlock" Style="{StaticResource SubtitleTextBlockStyle}" />
@@ -111,9 +104,9 @@
                         <Run x:Uid="/AboutPage/OpenSourceLicenseContentPartII" />
                     </TextBlock>
                     <!--  TODO: Use Markdown  -->
-                    <TextBlock x:Name="LicenseTextBlock" />
+                    <TextBlock x:Name="LicenseTextBlock" IsTextSelectionEnabled="True" />
                 </StackPanel>
             </StackPanel>
-        </ScrollViewer>
+        </ScrollView>
     </Grid>
 </Page>

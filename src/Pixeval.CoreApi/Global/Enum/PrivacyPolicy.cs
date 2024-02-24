@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval.CoreApi
+#region Copyright (c) Pixeval/Pixeval.CoreApi
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
@@ -18,13 +18,13 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using Pixeval.Utilities;
+using System.ComponentModel;
 
 namespace Pixeval.CoreApi.Global.Enum;
 
 /// <summary>
-///     The privacy policy of Pixiv, be aware that the <see cref="Private" /> option
-///     is only permitted when the ID is pointing to yourself
+/// The privacy policy of Pixiv, be aware that the <see cref="Private" /> option
+/// is only permitted when the ID is pointing to yourself
 /// </summary>
 public enum PrivacyPolicy
 {

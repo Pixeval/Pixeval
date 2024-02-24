@@ -20,47 +20,29 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.System;
-using Windows.System.UserProfile;
 using CommunityToolkit.Mvvm.ComponentModel;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.AppManagement;
 using Pixeval.Controls;
-using Pixeval.Controls.IllustrationView;
 using Pixeval.Controls.MarkupExtensions;
+using Pixeval.Controls.Windowing;
 using Pixeval.CoreApi.Model;
-using Pixeval.Download;
-using Pixeval.Download.Models;
-using Pixeval.Misc;
-using Pixeval.Options;
-using Pixeval.Util;
 using Pixeval.Util.IO;
-using Pixeval.Util.Threading;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
-using WinUI3Utilities;
-using AppContext = Pixeval.AppManagement.AppContext;
+using Pixeval.Util.ComponentModels;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
-public partial class IllustrationViewerPageViewModel : DetailedObservableObject, IDisposable
+public partial class IllustrationViewerPageViewModel : DetailedUiObservableObject, IDisposable
 {
-    public const string GenerateLink = nameof(GenerateLink);
-    public const string ShowQrCode = nameof(ShowQrCode);
-    public Window Window { get; set; } = null!;
-
-    public FrameworkElement WindowContent => Window.Content.To<FrameworkElement>();
-
-    private const ThumbnailUrlOption Option = ThumbnailUrlOption.SquareMedium;
-
+    [ObservableProperty]
     private bool _isFullScreen;
 
     [ObservableProperty]
@@ -70,7 +52,7 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
     // is because the whole array of Illustrations is just representing the same 
     // illustration's different manga pages, so all of them have the same illustrator
     // If the UserProfileImageSource is in IllustrationViewModel and the illustration
-    // itself is a manga then all of the IllustrationViewModel in Illustrations will
+    // itself is a manga then all of IllustrationViewModel in Illustrations will
     // request the same user profile image which is pointless and will (inevitably) causing
     // the waste of system resource
     [ObservableProperty]
@@ -81,14 +63,15 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
     /// </summary>
     /// <param name="illustrationViewModels"></param>
     /// <param name="currentIllustrationIndex"></param>
-    public IllustrationViewerPageViewModel(IEnumerable<IllustrationItemViewModel> illustrationViewModels, int currentIllustrationIndex)
+    /// <param name="content"></param>
+    public IllustrationViewerPageViewModel(IEnumerable<IllustrationItemViewModel> illustrationViewModels, int currentIllustrationIndex, FrameworkElement content) : base(content)
     {
         IllustrationsSource = illustrationViewModels.ToArray();
         IllustrationInfoTag.Parameter = this;
-        // ViewModel.DataProvider.View.CurrentItem为null，而且只设置这个属性会导致空引用
         CurrentIllustrationIndex = currentIllustrationIndex;
 
         InitializeCommands();
+        FullScreenCommand.GetFullScreenCommand(false);
     }
 
     /// <summary>
@@ -96,45 +79,19 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
     /// </summary>
     /// <param name="viewModel"></param>
     /// <param name="currentIllustrationIndex"></param>
+    /// <param name="content"></param>
     /// <remarks>
-    /// illustrations should contains only one item if the illustration is a single
+    /// illustrations should contain only one item if the illustration is a single
     /// otherwise it contains the entire manga data
     /// </remarks>
-    public IllustrationViewerPageViewModel(IllustrationViewViewModel viewModel, int currentIllustrationIndex)
+    public IllustrationViewerPageViewModel(IllustrationViewViewModel viewModel, int currentIllustrationIndex, FrameworkElement content) : base(content)
     {
         ViewModelSource = new IllustrationViewViewModel(viewModel);
         IllustrationInfoTag.Parameter = this;
         ViewModelSource.DataProvider.View.FilterChanged += (_, _) => CurrentIllustrationIndex = Illustrations.IndexOf(CurrentIllustration);
-        // ViewModel.DataProvider.View.CurrentItem为null，而且只设置这个属性会导致空引用
         CurrentIllustrationIndex = currentIllustrationIndex;
 
         InitializeCommands();
-    }
-
-    public TeachingTip GenerateLinkTeachingTip { get; set; } = null!;
-
-    public TeachingTip ShowQrCodeTeachingTip { get; set; } = null!;
-
-    public bool IsFullScreen
-    {
-        get => _isFullScreen;
-        set
-        {
-            if (value == _isFullScreen)
-                return;
-            _isFullScreen = value;
-            if (value)
-            {
-                FullScreenCommand.Description = IllustrationViewerPageResources.BackToWindow;
-                FullScreenCommand.IconSource = new SymbolIconSource { Symbol = Symbol.BackToWindow };
-            }
-            else
-            {
-                FullScreenCommand.Description = IllustrationViewerPageResources.FullScreen;
-                FullScreenCommand.IconSource = new SymbolIconSource { Symbol = Symbol.FullScreen };
-            }
-            OnPropertyChanged();
-        }
     }
 
     private IllustrationViewViewModel? ViewModelSource { get; }
@@ -147,40 +104,24 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
 
     public string IllustratorName => Illustrator.Name;
 
-    public long IllustratorUid => Illustrator.Id;
-
-    public bool IsManga => _pages.Length > 1;
-
-    public bool IsUgoira => CurrentIllustration.IsUgoira;
+    public long IllustratorId => Illustrator.Id;
 
     public void Dispose()
     {
         foreach (var illustrationViewModel in Illustrations)
-            illustrationViewModel.UnloadThumbnail(this, Option);
-        _pages?.ForEach(i => i.Dispose());
+            illustrationViewModel.UnloadThumbnail(this);
+        Pages = null!;
         (UserProfileImageSource as SoftwareBitmapSource)?.Dispose();
         ViewModelSource?.Dispose();
     }
 
-    public ImageViewerPageViewModel NextPage()
-    {
-        ++CurrentPageIndex;
-        return CurrentImage;
-    }
-
-    public ImageViewerPageViewModel PrevPage()
-    {
-        --CurrentPageIndex;
-        return CurrentImage;
-    }
-
-    public Task LoadMoreAsync(uint count) => ViewModelSource?.LoadMoreAsync(count) ?? Task.CompletedTask;
-
     #region Tags for IllustrationInfoAndCommentsNavigationView
 
-    public NavigationViewTag IllustrationInfoTag = new(typeof(IllustrationInfoPage), null);
-    public NavigationViewTag CommentsTag = new(typeof(CommentsPage), null);
-    public NavigationViewTag RelatedWorksTag = new(typeof(RelatedWorksPage), null);
+    public NavigationViewTag<IllustrationInfoPage, IllustrationViewerPageViewModel> IllustrationInfoTag { get; } = new(null!);
+
+    public NavigationViewTag<CommentsPage, (IAsyncEnumerable<Comment?>, long IllustrationId)> CommentsTag { get; } = new(default);
+
+    public NavigationViewTag<RelatedWorksPage, long> RelatedWorksTag { get; } = new(default);
 
     #endregion
 
@@ -199,7 +140,7 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
     /// <summary>
     /// 当前插画的页面
     /// </summary>
-    public IllustrationItemViewModel CurrentPage => _pages[CurrentPageIndex];
+    public IllustrationItemViewModel CurrentPage => Pages[CurrentPageIndex];
 
     /// <summary>
     /// 当前插画的索引
@@ -211,28 +152,33 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
         {
             if (value is -1)
                 return;
+            if (value == _currentIllustrationIndex)
+                return;
 
             var oldValue = _currentIllustrationIndex;
             // ReSharper disable once ConditionalAccessQualifierIsNonNullableAccordingToAPIContract
-            var oldTag = _pages?[CurrentPageIndex].Id ?? 0;
+            var oldTag = Pages?[CurrentPageIndex].Id ?? 0;
 
             _currentIllustrationIndex = value;
-            _pages?.ForEach(i => i.Dispose());
-            _pages = CurrentIllustration.GetMangaIllustrationViewModels().ToArray();
+            // 这里可以触发总页数的更新
+            Pages = CurrentIllustration.GetMangaIllustrationViewModels().ToArray();
             // 保证_pages里所有的IllustrationViewModel都是生成的，从而删除的时候一律DisposeForce
 
             RelatedWorksTag.Parameter = IllustrationId;
             // IllustrationInfoTag.Parameter = this;
             CommentsTag.Parameter = (App.AppViewModel.MakoClient.IllustrationComments(IllustrationId).Where(c => c is not null), IllustrationId);
 
-            LoadUserProfile().Discard();
+            _ = LoadUserProfile();
 
-            CurrentPageIndex = 0;
-            // 更新PlayGif按钮的状态
-            OnPropertyChanged(nameof(IsUgoira));
-            PlayGifCommand.Description = PlayGifCommand.Label = IllustrationViewerPageResources.PauseGif;
-            PlayGifCommand.IconSource = new SymbolIconSource { Symbol = Symbol.Stop };
+            // 此处不要触发CurrentPageIndex的OnDetailedPropertyChanged，否则会导航两次
+            _currentPageIndex = 0;
+            OnButtonPropertiesChanged();
+            // 用OnPropertyChanged不会触发导航，但可以让UI页码更新
+            OnPropertyChanged(nameof(CurrentPageIndex));
+            CurrentImage = new ImageViewerPageViewModel(this, CurrentPage);
+
             OnDetailedPropertyChanged(oldValue, value, oldTag, CurrentPage.Id);
+            OnPropertyChanged(nameof(CurrentIllustration));
             return;
 
             async Task LoadUserProfile()
@@ -241,8 +187,8 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
                 {
                     var result = await App.AppViewModel.MakoClient.DownloadSoftwareBitmapSourceAsync(profileImage);
                     UserProfileImageSource = result is Result<SoftwareBitmapSource>.Success { Value: var avatar }
-                            ? avatar
-                            : await AppContext.GetPixivNoProfileImageAsync();
+                        ? avatar
+                        : await AppInfo.GetPixivNoProfileImageAsync();
                 }
             }
         }
@@ -256,53 +202,85 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
         get => _currentPageIndex;
         set
         {
+            if (value == _currentPageIndex)
+                return;
+            var oldValue = _currentPageIndex;
             _currentPageIndex = value;
-            OnPropertyChanged(nameof(NextButtonEnable));
-            OnPropertyChanged(nameof(PrevButtonEnable));
+            OnButtonPropertiesChanged();
             CurrentImage = new ImageViewerPageViewModel(this, CurrentPage);
+            OnDetailedPropertyChanged(oldValue, value);
         }
     }
 
+    private void OnButtonPropertiesChanged()
+    {
+        OnPropertyChanged(nameof(NextButtonVisible));
+        OnPropertyChanged(nameof(PrevButtonVisible));
+        OnPropertyChanged(nameof(NextButtonText));
+        OnPropertyChanged(nameof(PrevButtonText));
+    }
+
+    public int PageCount => Pages.Length;
+
     /// <inheritdoc cref="CurrentIllustrationIndex"/>
-    private int _currentIllustrationIndex;
+    private int _currentIllustrationIndex = -1;
 
     /// <inheritdoc cref="CurrentPageIndex"/>
-    private int _currentPageIndex;
+    private int _currentPageIndex = -1;
 
     /// <summary>
     /// 一个插画所有的页面
     /// </summary>
+    public IllustrationItemViewModel[] Pages
+    {
+        get => _pages;
+        set
+        {
+            if (_pages == value)
+                return;
+            _pages?.ForEach(i => i.Dispose());
+            _pages = value;
+            if (_pages != null!)
+                OnPropertyChanged(nameof(PageCount));
+        }
+    }
+
     private IllustrationItemViewModel[] _pages = null!;
 
     /// <summary>
     /// 当前图片的ViewModel
     /// </summary>
-    [ObservableProperty]
-    private ImageViewerPageViewModel _currentImage = null!;
+    [ObservableProperty] private ImageViewerPageViewModel _currentImage = null!;
 
     #endregion
 
     #region Helper Functions
 
-    public Visibility NextButtonEnable => NextButtonAction is null ? Visibility.Collapsed : Visibility.Visible;
+    public string? NextButtonText => NextButtonAction switch
+    {
+        true => IllustrateViewerPageResources.NextPageOrIllustration,
+        false => IllustrateViewerPageResources.NextIllustration,
+        _ => null
+    };
 
-    public bool NextIllustrationEnable => Illustrations.Count > CurrentIllustrationIndex + 1;
+    public Visibility NextButtonVisible => NextButtonAction is null ? Visibility.Collapsed : Visibility.Visible;
 
     /// <summary>
     /// <see langword="true"/>: next page<br/>
     /// <see langword="false"/>: next illustration<br/>
     /// <see langword="null"/>: none
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0046:转换为条件表达式")]
     public bool? NextButtonAction
     {
         get
         {
-            if (CurrentPageIndex < _pages.Length - 1)
+            if (CurrentPageIndex < PageCount - 1)
             {
                 return true;
             }
 
-            if (NextIllustrationEnable)
+            if (CurrentIllustrationIndex < Illustrations.Count - 1)
             {
                 return false;
             }
@@ -311,15 +289,21 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
         }
     }
 
-    public Visibility PrevButtonEnable => PrevButtonAction is null ? Visibility.Collapsed : Visibility.Visible;
+    public string? PrevButtonText => PrevButtonAction switch
+    {
+        true => IllustrateViewerPageResources.PrevPageOrIllustration,
+        false => IllustrateViewerPageResources.PrevIllustration,
+        _ => null
+    };
 
-    public bool PrevIllustrationEnable => CurrentIllustrationIndex > 0;
+    public Visibility PrevButtonVisible => PrevButtonAction is null ? Visibility.Collapsed : Visibility.Visible;
 
     /// <summary>
     /// <see langword="true"/>: prev page<br/>
     /// <see langword="false"/>: prev illustration<br/>
     /// <see langword="null"/>: none
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0046:转换为条件表达式")]
     public bool? PrevButtonAction
     {
         get
@@ -329,7 +313,7 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
                 return true;
             }
 
-            if (PrevIllustrationEnable)
+            if (CurrentIllustrationIndex > 0)
             {
                 return false;
             }
@@ -342,310 +326,21 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
 
     #region Commands
 
-    public void UpdateCommandCanExecute()
-    {
-        PlayGifCommand.NotifyCanExecuteChanged();
-        CopyCommand.NotifyCanExecuteChanged();
-        RestoreResolutionCommand.NotifyCanExecuteChanged();
-        ZoomInCommand.NotifyCanExecuteChanged();
-        ZoomOutCommand.NotifyCanExecuteChanged();
-        RotateClockwiseCommand.NotifyCanExecuteChanged();
-        RotateCounterclockwiseCommand.NotifyCanExecuteChanged();
-        MirrorCommand.NotifyCanExecuteChanged();
-        SaveCommand.NotifyCanExecuteChanged();
-        SaveAsCommand.NotifyCanExecuteChanged();
-        ShareCommand.NotifyCanExecuteChanged();
-    }
-
     private void InitializeCommands()
     {
-        BookmarkCommand =
-            (CurrentIllustration.IsBookmarked ? MiscResources.RemoveBookmark : MiscResources.AddBookmark)
-            .GetCommand(
-                MakoHelper.GetBookmarkButtonIconSource(CurrentIllustration.IsBookmarked),
-                VirtualKeyModifiers.Control, VirtualKey.D);
-        BookmarkCommand.ExecuteRequested += BookmarkCommandOnExecuteRequested;
-
-        RestoreResolutionCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
-
-        CopyCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
-        CopyCommand.ExecuteRequested += async (_, _) =>
-        {
-            var teachingTip = WindowContent.CreateTeachingTip();
-
-            var progress = null as Progress<int>;
-            if (CurrentImage.IllustrationViewModel.IsUgoira)
-                progress = new(d => teachingTip.Show(IllustrationViewerPageResources.UgoiraProcessing.Format(d), TeachingTipSeverity.Processing, isLightDismissEnabled: true));
-            else
-                teachingTip.Show(IllustrationViewerPageResources.ImageProcessing, TeachingTipSeverity.Processing, isLightDismissEnabled: true);
-            if (await CurrentImage.GetOriginalImageSourceForClipBoard(progress) is { } source)
-            {
-                UiHelper.ClipboardSetBitmap(source);
-                teachingTip.ShowAndHide(IllustrationViewerPageResources.ImageSetToClipBoard);
-            }
-        };
-
-        PlayGifCommand.CanExecuteRequested += (_, e) => e.CanExecute = IsUgoira && CurrentImage.LoadSuccessfully;
-        PlayGifCommand.ExecuteRequested += PlayGifCommandOnExecuteRequested;
-
-        // 相当于鼠标滚轮滚动10次，方便快速缩放
-        ZoomOutCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
-        ZoomOutCommand.ExecuteRequested += (_, _) => CurrentImage.Zoom(-1200);
-
-        ZoomInCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
-        ZoomInCommand.ExecuteRequested += (_, _) => CurrentImage.Zoom(1200);
-
-        RotateClockwiseCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
-        RotateClockwiseCommand.ExecuteRequested += (_, _) => CurrentImage.RotationDegree += 90;
-
-        RotateCounterclockwiseCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
-        RotateCounterclockwiseCommand.ExecuteRequested += (_, _) => CurrentImage.RotationDegree -= 90;
-
-        MirrorCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
-        MirrorCommand.ExecuteRequested += (_, _) => CurrentImage.IsMirrored = !CurrentImage.IsMirrored;
-
-        SaveCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
-        SaveCommand.ExecuteRequested += SaveAsync;
-
-        SaveAsCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
-        SaveAsCommand.ExecuteRequested += SaveAsAsync;
-
-        GenerateLinkCommand.ExecuteRequested += GenerateLinkCommandOnExecuteRequested;
-
-        GenerateWebLinkCommand.ExecuteRequested += GenerateWebLinkCommandOnExecuteRequested;
-
-        OpenInWebBrowserCommand.ExecuteRequested += async (_, _) => await Launcher.LaunchUriAsync(MakoHelper.GenerateIllustrationWebUri(CurrentIllustration.Id));
-
-        ShareCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
-        ShareCommand.ExecuteRequested += ShareCommandExecuteRequested;
-
-        ShowQrCodeCommand.ExecuteRequested += ShowQrCodeCommandExecuteRequested;
-
-        SetAsLockScreenCommand.CanExecuteRequested += IsNotUgoiraAndLoadingCompletedCanExecuteRequested;
-        SetAsLockScreenCommand.ExecuteRequested += SetAsLockScreenCommandOnExecuteRequested;
-
-        SetAsBackgroundCommand.CanExecuteRequested += IsNotUgoiraAndLoadingCompletedCanExecuteRequested;
-        SetAsBackgroundCommand.ExecuteRequested += SetAsBackgroundCommandOnExecuteRequested;
-
-        FullScreenCommand.ExecuteRequested += (_, _) => IsFullScreen = !IsFullScreen;
-
-        RestoreResolutionCommand.ExecuteRequested += FlipRestoreResolutionCommand;
+        FullScreenCommand.ExecuteRequested += FullScreenCommandOnExecuteRequested;
     }
 
-    private void LoadingCompletedCanExecuteRequested(XamlUICommand sender, CanExecuteRequestedEventArgs args)
+    private void FullScreenCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
-        args.CanExecute = CurrentImage.LoadSuccessfully;
-    }
-
-    private void IsNotUgoiraAndLoadingCompletedCanExecuteRequested(XamlUICommand sender, CanExecuteRequestedEventArgs args)
-    {
-        args.CanExecute = !IsUgoira && CurrentImage.LoadSuccessfully;
-    }
-
-    private async void SetAsBackgroundCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
-    {
-        if (CurrentImage.OriginalImageStream is null)
-        {
-            WindowContent.ShowTeachingTipAndHide(IllustrationViewerPageResources.OriginalmageStreamIsEmptyContent, TeachingTipSeverity.Error);
-            return;
-        }
-
-        var guid = await CurrentImage.OriginalImageStream.Sha1Async();
-        if (await AppKnownFolders.SavedWallPaper.TryGetFileRelativeToSelfAsync(guid) is null)
-        {
-            var path = Path.Combine(AppKnownFolders.SavedWallPaper.Self.Path, guid);
-            using var scope = App.AppViewModel.AppServicesScope;
-            var factory = scope.ServiceProvider.GetRequiredService<IDownloadTaskFactory<IllustrationItemViewModel, IllustrationDownloadTask>>();
-            var intrinsicTask = await factory.TryCreateIntrinsicAsync(CurrentIllustration, CurrentImage.OriginalImageStream!, path);
-            App.AppViewModel.DownloadManager.QueueTask(intrinsicTask);
-            await intrinsicTask.Completion.Task;
-        }
-
-        _ = await UserProfilePersonalizationSettings.Current.TrySetWallpaperImageAsync(await AppKnownFolders.SavedWallPaper.GetFileAsync(guid));
-        ToastNotificationHelper.ShowTextToastNotification(
-            IllustrationViewerPageResources.SetAsSucceededTitle,
-            IllustrationViewerPageResources.SetAsBackgroundSucceededTitle,
-            AppContext.AppLogoNoCaptionUri);
-    }
-
-    private async void SetAsLockScreenCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
-    {
-        if (CurrentImage.OriginalImageStream is null)
-        {
-            WindowContent.ShowTeachingTipAndHide(IllustrationViewerPageResources.OriginalmageStreamIsEmptyContent, TeachingTipSeverity.Error);
-            return;
-        }
-
-        var guid = await CurrentImage.OriginalImageStream.Sha1Async();
-        if (await AppKnownFolders.SavedWallPaper.TryGetFileRelativeToSelfAsync(guid) is null)
-        {
-            var path = Path.Combine(AppKnownFolders.SavedWallPaper.Self.Path, guid);
-            using var scope = App.AppViewModel.AppServicesScope;
-            var factory = scope.ServiceProvider.GetRequiredService<IDownloadTaskFactory<IllustrationItemViewModel, IllustrationDownloadTask>>();
-            var intrinsicTask = await factory.TryCreateIntrinsicAsync(CurrentIllustration, CurrentImage.OriginalImageStream!, path);
-            App.AppViewModel.DownloadManager.QueueTask(intrinsicTask);
-            await intrinsicTask.Completion.Task;
-        }
-
-        _ = await UserProfilePersonalizationSettings.Current.TrySetLockScreenImageAsync(await AppKnownFolders.SavedWallPaper.GetFileAsync(guid));
-        ToastNotificationHelper.ShowTextToastNotification(
-            IllustrationViewerPageResources.SetAsSucceededTitle,
-            IllustrationViewerPageResources.SetAsBackgroundSucceededTitle,
-            AppContext.AppLogoNoCaptionUri);
-    }
-
-    private async void SaveAsync(XamlUICommand sender, ExecuteRequestedEventArgs args)
-    {
-        await CurrentPage.SaveAsync(CurrentImage.OriginalImageStream);
-        WindowContent.ShowTeachingTipAndHide("已保存");
-    }
-
-    private async void SaveAsAsync(XamlUICommand sender, ExecuteRequestedEventArgs args)
-    {
-        if (await CurrentIllustration.SaveAsAsync(Window))
-            WindowContent.ShowTeachingTipAndHide("已保存");
-        else
-            WindowContent.ShowTeachingTipAndHide("已取消另存为操作", TeachingTipSeverity.Information);
-    }
-
-    private void GenerateLinkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
-    {
-        if (App.AppViewModel.AppSetting.DisplayTeachingTipWhenGeneratingAppLink)
-        {
-            OnPropertyChanged(nameof(GenerateLink));
-            GenerateLinkTeachingTip.IsOpen = true;
-        }
-
-        UiHelper.ClipboardSetText(MakoHelper.GenerateIllustrationAppUri(CurrentIllustration.Id).ToString());
-    }
-
-    private void GenerateWebLinkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
-    {
-        var link = MakoHelper.GenerateIllustrationWebUri(CurrentIllustration.Id).ToString();
-        UiHelper.ClipboardSetText(link);
-        WindowContent.ShowTeachingTipAndHide(IllustrationViewerPageResources.WebLinkCopiedToClipboardToastTitle);
-    }
-
-    private void ShareCommandExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
-    {
-        if (CurrentImage.LoadSuccessfully)
-            Window.ShowShareUi();
-        else
-            WindowContent.ShowTeachingTipAndHide(IllustrationViewerPageResources.CannotShareImageForNowTitle, TeachingTipSeverity.Warning, IllustrationViewerPageResources.CannotShareImageForNowContent);
-    }
-
-    private async void ShowQrCodeCommandExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
-    {
-        var qrCodeSource = await UiHelper.GenerateQrCodeForUrlAsync(MakoHelper.GenerateIllustrationWebUri(CurrentIllustration.Id).ToString());
-
-        ShowQrCodeTeachingTip.HeroContent.To<Image>().Source = qrCodeSource;
-        OnPropertyChanged(nameof(ShowQrCode));
-        ShowQrCodeTeachingTip.IsOpen = true;
-
-        ShowQrCodeTeachingTip.Closed += Closed;
-        return;
-
-        void Closed(TeachingTip s, TeachingTipClosedEventArgs ea)
-        {
-            qrCodeSource.Dispose();
-            s.Closed -= Closed;
-        }
-    }
-
-    private void BookmarkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
-    {
-        CurrentIllustration.ToggleBookmarkStateAsync().Discard();
-        // update manually
-        BookmarkCommand.Label = CurrentIllustration.IsBookmarked ? MiscResources.RemoveBookmark : MiscResources.AddBookmark;
-        BookmarkCommand.IconSource = MakoHelper.GetBookmarkButtonIconSource(CurrentIllustration.IsBookmarked);
-    }
-
-    private void PlayGifCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
-    {
-        CurrentImage.IsPlaying = !CurrentImage.IsPlaying;
-        if (CurrentImage.IsPlaying)
-        {
-            PlayGifCommand.Description = PlayGifCommand.Label = IllustrationViewerPageResources.PauseGif;
-            PlayGifCommand.IconSource = new SymbolIconSource { Symbol = Symbol.Stop };
-        }
-        else
-        {
-            PlayGifCommand.Description = PlayGifCommand.Label = IllustrationViewerPageResources.PlayGif;
-            PlayGifCommand.IconSource = new SymbolIconSource { Symbol = Symbol.Play };
-        }
-    }
-
-    public void FlipRestoreResolutionCommand(XamlUICommand sender, ExecuteRequestedEventArgs args)
-    {
-        if (CurrentImage.IsFit)
-        {
-            RestoreResolutionCommand.Label = IllustrationViewerPageResources.UniformToFillResolution;
-            RestoreResolutionCommand.IconSource = FontIconSymbols.FitPageE9A6.GetFontIconSource();
-            CurrentImage.ShowMode = ZoomableImageMode.Original;
-        }
-        else
-        {
-            RestoreResolutionCommand.Label = IllustrationViewerPageResources.RestoreOriginalResolution;
-            RestoreResolutionCommand.IconSource = FontIconSymbols.WebcamE8B8.GetFontIconSource();
-            CurrentImage.ShowMode = ZoomableImageMode.Fit;
-        }
+        IsFullScreen = !IsFullScreen;
+        FullScreenCommand.GetFullScreenCommand(IsFullScreen);
     }
 
     public XamlUICommand IllustrationInfoAndCommentsCommand { get; } =
-        IllustrationViewerPageResources.IllustrationInfoAndComments.GetCommand(FontIconSymbols.InfoE946, VirtualKey.F12);
+        IllustrateViewerPageResources.IllustrationInfoAndComments.GetCommand(FontIconSymbols.InfoE946, VirtualKey.F12);
 
-    public XamlUICommand CopyCommand { get; } = IllustrationViewerPageResources.Copy.GetCommand(
-            FontIconSymbols.CopyE8C8, VirtualKeyModifiers.Control, VirtualKey.C);
-
-    // The gif will be played as soon as its loaded, so the default state is playing and thus we need the button to be pause
-    public XamlUICommand PlayGifCommand { get; } = IllustrationViewerPageResources.PauseGif.GetCommand(FontIconSymbols.StopE71A);
-
-    public XamlUICommand ZoomOutCommand { get; } = IllustrationViewerPageResources.ZoomOut.GetCommand(
-        FontIconSymbols.ZoomOutE71F, VirtualKey.Subtract);
-
-    public XamlUICommand ZoomInCommand { get; } = IllustrationViewerPageResources.ZoomIn.GetCommand(
-        FontIconSymbols.ZoomInE8A3, VirtualKey.Add);
-
-    public XamlUICommand RotateClockwiseCommand { get; } = IllustrationViewerPageResources.RotateClockwise.GetCommand(
-        FontIconSymbols.RotateE7AD, VirtualKeyModifiers.Control, VirtualKey.R);
-
-    public XamlUICommand RotateCounterclockwiseCommand { get; } =
-        IllustrationViewerPageResources.RotateCounterclockwise.GetCommand(
-            null!, VirtualKeyModifiers.Control, VirtualKey.L);
-
-    public XamlUICommand MirrorCommand { get; } =
-        IllustrationViewerPageResources.Mirror.GetCommand(
-            FontIconSymbols.CollatePortraitF57C, VirtualKeyModifiers.Control, VirtualKey.M);
-
-    public XamlUICommand BookmarkCommand { get; private set; } = null!; // the null-state is transient
-
-    public XamlUICommand SaveCommand { get; } = IllustrationViewerPageResources.Save.GetCommand(
-        FontIconSymbols.SaveE74E, VirtualKeyModifiers.Control, VirtualKey.S);
-
-    public XamlUICommand SaveAsCommand { get; } = IllustrationViewerPageResources.SaveAs.GetCommand(
-        FontIconSymbols.SaveAsE792, VirtualKeyModifiers.Control | VirtualKeyModifiers.Shift, VirtualKey.S);
-
-    public XamlUICommand SetAsCommand { get; } = IllustrationViewerPageResources.SetAs.GetCommand(FontIconSymbols.PersonalizeE771);
-
-    public XamlUICommand AddToBookmarkCommand { get; } = IllustrationViewerPageResources.AddToBookmark.GetCommand(FontIconSymbols.BookmarksE8A4);
-
-    public XamlUICommand GenerateLinkCommand { get; } = IllustrationViewerPageResources.GenerateLink.GetCommand(FontIconSymbols.LinkE71B);
-
-    public XamlUICommand GenerateWebLinkCommand { get; } = IllustrationViewerPageResources.GenerateWebLink.GetCommand(FontIconSymbols.PreviewLinkE8A1);
-
-    public XamlUICommand OpenInWebBrowserCommand { get; } = IllustrationViewerPageResources.OpenInWebBrowser.GetCommand(FontIconSymbols.WebSearchF6FA);
-
-    public StandardUICommand ShareCommand { get; } = new(StandardUICommandKind.Share);
-
-    public XamlUICommand ShowQrCodeCommand { get; } = IllustrationViewerPageResources.ShowQRCode.GetCommand(FontIconSymbols.QRCodeED14);
-
-    public XamlUICommand SetAsLockScreenCommand { get; } = new() { Label = IllustrationViewerPageResources.LockScreen };
-
-    public XamlUICommand SetAsBackgroundCommand { get; } = new() { Label = IllustrationViewerPageResources.Background };
-
-    public XamlUICommand FullScreenCommand { get; } = IllustrationViewerPageResources.FullScreen.GetCommand(FontIconSymbols.FullScreenE740);
-
-    public XamlUICommand RestoreResolutionCommand { get; } = IllustrationViewerPageResources.RestoreOriginalResolution.GetCommand(FontIconSymbols.WebcamE8B8);
+    public XamlUICommand FullScreenCommand { get; } = "".GetCommand(FontIconSymbols.FullScreenE740);
 
     #endregion
 }

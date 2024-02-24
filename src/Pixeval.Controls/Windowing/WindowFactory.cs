@@ -19,10 +19,10 @@
 #endregion
 
 using System.Collections.Generic;
+using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Windows.Foundation;
 using Windows.Graphics;
-using Microsoft.UI.Windowing;
 using WinUI3Utilities;
 
 namespace Pixeval.Controls.Windowing;
@@ -39,18 +39,33 @@ public static class WindowFactory
 
     public static IReadOnlyList<EnhancedWindow> ForkedWindows => _forkedWindowsInternal;
 
+    public static void Initialize(IWindowSettings windowSettings, string iconAbsolutePath)
+    {
+        WindowSettings = windowSettings;
+        IconAbsolutePath = iconAbsolutePath;
+    }
+
+    public static EnhancedWindow GetWindowForElement(UIElement element)
+    {
+        if (element.XamlRoot is null)
+            ThrowHelper.ArgumentNull(element.XamlRoot, $"{nameof(element.XamlRoot)} should not be null.");
+
+        return _forkedWindowsInternal.Find(window => element.XamlRoot == window.Content.XamlRoot) 
+               ?? ThrowHelper.ArgumentOutOfRange<UIElement, EnhancedWindow>(element, $"Specified {nameof(element)} is not existed in any of {nameof(ForkedWindows)}.");
+    }
+
     public static EnhancedWindow Create(out EnhancedWindow window)
     {
-        var w = window = new EnhancedWindow();
-        window.Closed += (_, _) => _forkedWindowsInternal.Remove(w);
+        window = new EnhancedWindow();
+        window.Closed += (sender, _) => _forkedWindowsInternal.Remove(sender.To<EnhancedWindow>());
         _forkedWindowsInternal.Add(window);
         return window;
     }
 
     public static EnhancedWindow Fork(this EnhancedWindow owner, out EnhancedWindow window)
     {
-        var w = window = new EnhancedWindow(owner);
-        window.Closed += (_, _) => _forkedWindowsInternal.Remove(w);
+        window = new EnhancedWindow(owner);
+        window.Closed += (sender, _) => _forkedWindowsInternal.Remove(sender.To<EnhancedWindow>());
         _forkedWindowsInternal.Add(window);
         return window;
     }
@@ -90,8 +105,7 @@ public static class WindowFactory
             IconPath = IconAbsolutePath,
             Title = title
         });
-        var theme = GetElementTheme(WindowSettings.Theme);
-        window.FrameLoaded += (s, _) => s.To<FrameworkElement>().RequestedTheme = theme;
+        window.FrameLoaded += (s, _) => s.To<FrameworkElement>().RequestedTheme = WindowSettings.Theme;
         return window;
     }
 
@@ -101,24 +115,11 @@ public static class WindowFactory
             window.SetBackdrop(backdropType);
     }
 
-    public static void SetTheme(AppTheme theme)
+    public static void SetTheme(ElementTheme theme)
     {
-        var t = GetElementTheme(theme);
-
         foreach (var window in _forkedWindowsInternal)
         {
-            window.Content.To<FrameworkElement>().RequestedTheme = t;
+            window.Content.To<FrameworkElement>().RequestedTheme = theme;
         }
-    }
-
-    private static ElementTheme GetElementTheme(AppTheme theme)
-    {
-        return theme switch
-        {
-            AppTheme.Dark => ElementTheme.Dark,
-            AppTheme.Light => ElementTheme.Light,
-            AppTheme.SystemDefault => TitleBarHelper.GetDefaultTheme(),
-            _ => ThrowHelper.ArgumentOutOfRange<AppTheme, ElementTheme>(theme)
-        };
     }
 }

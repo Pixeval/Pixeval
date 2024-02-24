@@ -28,12 +28,9 @@ public sealed partial class RelatedWorksPage
 {
     private long _illustrationId;
 
-    public RelatedWorksPage()
-    {
-        InitializeComponent();
-    }
+    public RelatedWorksPage() => InitializeComponent();
 
-    public ThumbnailDirection ThumbnailDirection => App.AppViewModel.AppSetting.ThumbnailDirection;
+    public ThumbnailDirection ThumbnailDirection => App.AppViewModel.AppSettings.ThumbnailDirection;
 
     public override void OnPageDeactivated(NavigatingCancelEventArgs e)
     {

@@ -19,15 +19,12 @@
 #endregion
 
 using System.Linq;
-using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Controls;
 using Pixeval.Database.Managers;
-using Pixeval.Messages;
 using Pixeval.Misc;
-using Pixeval.Util;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -35,29 +32,19 @@ using Pixeval.Util;
 namespace Pixeval.Pages.Misc;
 
 /// <summary>
-///     An empty page that can be used on its own or navigated to within a Frame.
+/// An empty page that can be used on its own or navigated to within a Frame.
 /// </summary>
 public sealed partial class BrowsingHistoryPage : ISortedIllustrationContainerPageHelper
 {
-    public BrowsingHistoryPage()
-    {
-        InitializeComponent();
-    }
+    public BrowsingHistoryPage() => InitializeComponent();
 
     public IllustrationContainer ViewModelProvider => IllustrationContainer;
 
     public SortOptionComboBox SortOptionProvider => SortOptionComboBox;
 
-    public override void OnPageDeactivated(NavigatingCancelEventArgs navigatingCancelEventArgs)
-    {
-        WeakReferenceMessenger.Default.UnregisterAll(this);
-    }
-
     public override void OnPageActivated(NavigationEventArgs navigationEventArgs)
     {
-        SortOptionComboBox.SelectedItem = MakoHelper.GetAppSettingDefaultSortOptionWrapper();
         FetchEngine();
-        _ = WeakReferenceMessenger.Default.TryRegister<BrowsingHistoryPage, MainPageFrameNavigatingEvent>(this, static (recipient, _) => recipient.IllustrationContainer.ViewModel.DataProvider.FetchEngine?.Cancel());
     }
 
     private void FetchEngine()
@@ -65,8 +52,9 @@ public sealed partial class BrowsingHistoryPage : ISortedIllustrationContainerPa
         using var scope = App.AppViewModel.AppServicesScope;
         var manager = scope.ServiceProvider.GetRequiredService<BrowseHistoryPersistentManager>();
         IllustrationContainer.ViewModel.ResetEngine(
-            App.AppViewModel.MakoClient.Computed(manager.Enumerate().ToAsyncEnumerable().SelectAwait(async t =>
-                await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(t.Id))));
+            App.AppViewModel.MakoClient.Computed(
+                manager.Enumerate().Reverse().ToAsyncEnumerable()
+                    .SelectAwait(async t => await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(t.Id))));
     }
 
     private void SortOptionComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)

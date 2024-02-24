@@ -1,0 +1,10 @@
+{
+    "EditTagItem/Label": "编辑",
+    "OpenItem/Label": "打开图片",
+    "GoToPageItem/Label": "查看页面",
+    "DeleteItem/Label": "删除图片",
+    "OpenLocationItem/Label": "打开图片位置",
+    "EditTag": "编辑图片标签（用英文逗号分隔）",
+    "TagsIsUnloaded": "标签还未加载",
+    "EditTagFailed": "编辑标签失败"
+}

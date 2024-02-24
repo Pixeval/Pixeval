@@ -21,7 +21,7 @@
 namespace Pixeval.CoreApi.Global.Exception;
 
 /// <summary>
-///     搜索榜单时设定的日期大于等于当前日期-2天
+/// 搜索榜单时设定的日期大于等于当前日期-2天
 /// </summary>
 public class RankingDateOutOfRangeException : MakoException
 {

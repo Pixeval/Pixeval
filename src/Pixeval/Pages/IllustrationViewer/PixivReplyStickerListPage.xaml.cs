@@ -40,15 +40,9 @@ public sealed partial class PixivReplyStickerListPage
 
     private EventHandler<StickerTappedEventArgs>? _replyBarStickerTappedEventHandler;
 
-    static PixivReplyStickerListPage()
-    {
-        LoadStickers();
-    }
+    static PixivReplyStickerListPage() => LoadStickers();
 
-    public PixivReplyStickerListPage()
-    {
-        InitializeComponent();
-    }
+    public PixivReplyStickerListPage() => InitializeComponent();
 
     public override void OnPageActivated(NavigationEventArgs e)
     {

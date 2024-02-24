@@ -23,7 +23,7 @@ using Pixeval.CoreApi.Global;
 
 namespace Pixeval.CoreApi.Net;
 
-public abstract class MakoClientSupportedHttpMessageHandler : HttpMessageHandler, IMakoClientSupport
+public abstract class MakoClientSupportedHttpMessageHandler(MakoClient makoClient) : HttpMessageHandler, IMakoClientSupport
 {
-    public abstract MakoClient MakoClient { get; set; }
+    public MakoClient MakoClient { get; set; } = makoClient;
 }

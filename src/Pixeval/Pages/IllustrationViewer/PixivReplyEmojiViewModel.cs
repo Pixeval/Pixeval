@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -18,17 +18,17 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using Windows.Storage.Streams;
+using System.IO;
 using Microsoft.UI.Xaml.Media;
 using Pixeval.Misc;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
-public class PixivReplyEmojiViewModel(PixivReplyEmoji emojiEnumValue, IRandomAccessStream imageStream)
+public class PixivReplyEmojiViewModel(PixivReplyEmoji emojiEnumValue, Stream imageStream)
 {
     public PixivReplyEmoji EmojiEnumValue { get; } = emojiEnumValue;
 
-    public IRandomAccessStream ImageStream { get; } = imageStream;
+    public Stream ImageStream { get; } = imageStream;
 
     public ImageSource? ImageSource { get; set; }
 }

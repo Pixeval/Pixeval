@@ -18,39 +18,23 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Controls;
-using Pixeval.CoreApi.Global.Enum;
-using Pixeval.Messages;
 using Pixeval.Misc;
-using Pixeval.Util;
-using Pixeval.Util.UI;
 
 namespace Pixeval.Pages.Capability;
 
 public sealed partial class RecentPostsPage : ISortedIllustrationContainerPageHelper
 {
-    public RecentPostsPage()
-    {
-        InitializeComponent();
-    }
+    public RecentPostsPage() => InitializeComponent();
 
     public IllustrationContainer ViewModelProvider => IllustrationContainer;
 
     public SortOptionComboBox SortOptionProvider => SortOptionComboBox;
 
-    public override void OnPageDeactivated(NavigatingCancelEventArgs navigatingCancelEventArgs)
-    {
-        WeakReferenceMessenger.Default.UnregisterAll(this);
-    }
-
     public override void OnPageActivated(NavigationEventArgs e)
     {
-        PrivacyPolicyComboBox.SelectedItem = PrivacyPolicyComboBoxPublicItem;
-        SortOptionComboBox.SelectedItem = MakoHelper.GetAppSettingDefaultSortOptionWrapper();
-        _ = WeakReferenceMessenger.Default.TryRegister<RecentPostsPage, MainPageFrameNavigatingEvent>(this, static (recipient, _) => recipient.IllustrationContainer.ViewModel.DataProvider.FetchEngine?.Cancel());
         ChangeSource();
     }
 
@@ -61,7 +45,7 @@ public sealed partial class RecentPostsPage : ISortedIllustrationContainerPageHe
 
     private void ChangeSource()
     {
-        IllustrationContainer.ViewModel.ResetEngine(App.AppViewModel.MakoClient.RecentPosts(PrivacyPolicyComboBox.GetComboBoxSelectedItemTag(PrivacyPolicy.Public)));
+        IllustrationContainer.ViewModel.ResetEngine(App.AppViewModel.MakoClient.RecentPosts(PrivacyPolicyComboBox.SelectedItem));
     }
 
     private void SortOptionComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)

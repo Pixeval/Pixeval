@@ -12,31 +12,38 @@
         <DefaultLanguage>zh-cn</DefaultLanguage>
     </PropertyGroup>
     <ItemGroup>
-        <None Remove="AdvancedItemsView\AdvancedItemsView.xaml" />
+        <None Remove="AppButtonItem.xaml" />
         <None Remove="CardControl\CardControl.xaml" />
+        <None Remove="Themes\Controls.xaml" />
         <None Remove="IconButton\IconButton.xaml" />
+        <None Remove="LazyImage\LazyImage.xaml" />
         <None Remove="NotifyOnLoadedCalendarDatePicker\NotifyOnLoadedCalendarDatePicker.xaml" />
         <None Remove="NotifyOnLoadedComboBox\NotifyOnLoadedComboBox.xaml" />
         <None Remove="PersonView\PersonView.xaml" />
         <None Remove="PixevalBadge\PixevalBadge.xaml" />
-        <None Remove="SettingRadioButtons\SettingRadioButtons.xaml" />
+        <None Remove="StickyHeaderScrollView.xaml" />
+        <None Remove="TitleBarIconText.xaml" />
         <None Remove="ZoomableImage.xaml" />
         <None Remove="ZoomableImage\ZoomableImage.xaml" />
     </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="Microsoft.Graphics.Win2D" Version="1.1.1" />
-        <PackageReference Include="CommunityToolkit.WinUI.Triggers" Version="8.0.230907" />
-        <PackageReference Include="CommunityToolkit.WinUI.Collections" Version="8.0.230907" />
-        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
-        <PackageReference Include="CommunityToolkit.WinUI.Controls.Primitives" Version="8.0.230907" />
-        <PackageReference Include="CommunityToolkit.WinUI.Extensions" Version="8.0.230907" />
-        <PackageReference Include="WinUI3Utilities" Version="1.1.5.3" />
+        <PackageReference Include="Microsoft.Playwright" Version="1.41.2" />
         <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.2428" />
-        <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.4.231115000" />
+        <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.4.240211001" />
         <PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.0.9" />
+        <PackageReference Include="CommunityToolkit.WinUI.Triggers" Version="8.0.240109" />
+        <PackageReference Include="CommunityToolkit.WinUI.Collections" Version="8.0.240109" />
+        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
+        <PackageReference Include="CommunityToolkit.WinUI.Controls.Primitives" Version="8.0.240109" />
+        <PackageReference Include="CommunityToolkit.WinUI.Extensions" Version="8.0.240109" />
+        <PackageReference Include="WinUI3Utilities" Version="1.1.6.1" />
+
+        <ProjectReference Include="..\Pixeval.Utilities\Pixeval.Utilities.csproj" />
     </ItemGroup>
 
+    <!--Exposes PRI resources-->
     <Target Name="InjectAdditionalFiles" BeforeTargets="GenerateMSBuildEditorConfigFileShouldRun">
         <ItemGroup>
             <AdditionalFiles Include="@(PRIResource)" SourceItemGroup="PRIResource" />
@@ -46,11 +53,22 @@
         <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="SourceItemGroup" />
     </ItemGroup>
 
+    <!--PRIResource-->
     <ItemGroup>
-        <Folder Include="Strings\zh-Hans\" />
-    </ItemGroup>
-
-    <ItemGroup>
+        <PRIResource Include="Strings\zh-cn\PixevalBadge.resjson" />
+        <PRIResource Include="Strings\zh-cn\AdvancedItemsView.resjson" />
+        <Page Update="Themes\Controls.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="AppButtonItem.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="TitleBarIconText.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="StickyHeaderScrollView.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
         <Page Update="CardControl\CardControl.xaml">
             <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
         </Page>
@@ -66,20 +84,14 @@
         <Page Update="PersonView\PersonView.xaml">
             <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
         </Page>
-        <Page Update="SettingRadioButtons\SettingRadioButtons.xaml">
-            <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-        </Page>
         <Page Update="PixevalBadge\PixevalBadge.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
-    </ItemGroup>
-
-    <ItemGroup>
-      <Page Update="AdvancedItemsView\AdvancedItemsView.xaml">
-        <Generator>MSBuild:Compile</Generator>
-      </Page>
-      <Page Update="ZoomableImage\ZoomableImage.xaml">
-        <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-      </Page>
+        <Page Update="ZoomableImage\ZoomableImage.xaml">
+            <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+        </Page>
+        <Page Update="LazyImage\LazyImage.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
     </ItemGroup>
 </Project>

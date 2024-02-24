@@ -28,10 +28,7 @@ namespace Pixeval.Controls;
 [DependencyProperty<object>("ItemsSource")]
 public sealed partial class CommentList
 {
-    public CommentList()
-    {
-        InitializeComponent();
-    }
+    public CommentList() => InitializeComponent();
 
     public event Action<CommentBlockViewModel>? RepliesHyperlinkButtonTapped;
 

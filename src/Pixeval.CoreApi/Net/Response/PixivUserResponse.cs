@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval.CoreApi
+#region Copyright (c) Pixeval/Pixeval.CoreApi
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
@@ -18,18 +18,17 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using Pixeval.CoreApi.Model;
 
 namespace Pixeval.CoreApi.Net.Response;
 
-// ReSharper disable UnusedAutoPropertyAccessor.Global
-internal class PixivUserResponse
+[Factory]
+internal partial record PixivUserResponse
 {
     [JsonPropertyName("user_previews")]
-    public required IEnumerable<User> Users { get; set; }
+    public required User[] Users { get; set; } = [];
 
     [JsonPropertyName("next_url")]
-    public required string NextUrl { get; set; }
+    public required string NextUrl { get; set; } = "";
 }

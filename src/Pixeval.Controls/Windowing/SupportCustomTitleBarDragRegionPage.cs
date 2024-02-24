@@ -20,6 +20,7 @@
 
 using Windows.Graphics;
 using Microsoft.UI.Input;
+using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using WinUI3Utilities;
 
@@ -41,7 +42,7 @@ public class SupportCustomTitleBarDragRegionPage : EnhancedWindowPage
 
     public void RaiseSetTitleBarDragRegion()
     {
-        if (!Window.AppWindow.IsVisible)
+        if (!Window.AppWindow.IsVisible || !AppWindowTitleBar.IsCustomizationSupported())
             return;
         // UIElement.RasterizationScale 恒为1
         var source = InputNonClientPointerSource.GetForWindowId(Window.AppWindow.Id);

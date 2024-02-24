@@ -27,9 +27,10 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using PininSharp;
 using PininSharp.Searchers;
-using Pixeval.Attributes;
 using Pixeval.CoreApi.Model;
 using Pixeval.Database.Managers;
+using Pixeval.Util;
+using Pixeval.Misc;
 using Pixeval.Utilities;
 
 namespace Pixeval.Pages;
@@ -41,14 +42,14 @@ public class SuggestionStateMachine
 
     private readonly Lazy<Task<IEnumerable<SuggestionModel>>> _illustrationTrendingTagCache =
         new(
-            () => App.AppViewModel.MakoClient.GetTrendingTagsAsync(App.AppViewModel.AppSetting.TargetFilter)
-                .SelectAsync(t => new Tag(t.Tag, t.Translation))
+            () => App.AppViewModel.MakoClient.GetTrendingTagsAsync(App.AppViewModel.AppSettings.TargetFilter)
+                .SelectAsync(t => new Tag { Name = t.Tag, TranslatedName = t.Translation })
                 .SelectAsync(SuggestionModel.FromTag), LazyThreadSafetyMode.ExecutionAndPublication);
 
     private readonly Lazy<Task<IEnumerable<SuggestionModel>>> _novelTrendingTagCache =
         new(
-            () => App.AppViewModel.MakoClient.GetTrendingTagsForNovelAsync(App.AppViewModel.AppSetting.TargetFilter)
-                .SelectAsync(t => new Tag(t.Tag, t.Translation))
+            () => App.AppViewModel.MakoClient.GetTrendingTagsForNovelAsync(App.AppViewModel.AppSettings.TargetFilter)
+                .SelectAsync(t => new Tag { Name = t.Tag, TranslatedName = t.Translation })
                 .SelectAsync(SuggestionModel.FromTag), LazyThreadSafetyMode.ExecutionAndPublication);
 
     static SuggestionStateMachine()
@@ -95,7 +96,7 @@ public class SuggestionStateMachine
         var newItems = new List<SuggestionModel>();
         using var scope = App.AppViewModel.AppServicesScope;
         var manager = scope.ServiceProvider.GetRequiredService<SearchHistoryPersistentManager>();
-        var histories = manager.Select(count: App.AppViewModel.AppSetting.MaximumSuggestionBoxSearchHistory).OrderByDescending(e => e.Time).SelectNotNull(SuggestionModel.FromHistory);
+        var histories = manager.Select(count: App.AppViewModel.AppSettings.MaximumSuggestionBoxSearchHistory).OrderByDescending(e => e.Time).SelectNotNull(SuggestionModel.FromHistory);
         newItems.AddRange(histories);
         newItems.Add(SuggestionModel.IllustrationTrendingTagHeader);
         newItems.AddRange(await _illustrationTrendingTagCache.Value);

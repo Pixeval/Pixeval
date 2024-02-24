@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval.CoreApi
+#region Copyright (c) Pixeval/Pixeval.CoreApi
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
@@ -22,13 +22,4 @@ using Refit;
 
 namespace Pixeval.CoreApi.Net.Request;
 
-// ReSharper disable UnusedAutoPropertyAccessor.Global
-// ReSharper disable MemberCanBePrivate.Global
-internal class AddBookmarkRequest(string restrict, string id)
-{
-    [AliasAs("restrict")]
-    public string Restrict { get; } = restrict;
-
-    [AliasAs("illust_id")]
-    public string Id { get; } = id;
-}
+internal record AddBookmarkRequest([property: AliasAs("restrict")] string Restrict, [property: AliasAs("illust_id")] string Id);

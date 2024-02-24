@@ -35,20 +35,38 @@
                 FontWeight="Bold" />
             <!--#region Illustrator Info-->
             <TextBlock x:Uid="/IllustrationInfoPage/IllustratorTextBlock" Style="{StaticResource InfoPageSectionHeaderTextBlockStyle}" />
-            <StackPanel Margin="{StaticResource StackLayoutEntryPadding}" Orientation="Horizontal">
-                <PersonPicture
-                    Width="50"
-                    Height="50"
-                    ProfilePicture="{x:Bind _viewModel.UserProfileImageSource, Mode=OneWay}"
-                    Tapped="IllustratorPersonPicture_OnTapped" />
-                <StackPanel Margin="10,0,0,0" VerticalAlignment="Center">
-                    <TextBlock FontSize="{StaticResource PixevalContentFontSize}" Text="{x:Bind GetIllustratorNameText()}" />
+            <Button
+                Margin="{StaticResource StackLayoutEntryPadding}"
+                Style="{StaticResource CardControlButton}"
+                Tapped="IllustratorPersonPicture_OnTapped">
+                <Grid ColumnSpacing="10" RowSpacing="5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <PersonPicture
+                        Grid.Row="0"
+                        Grid.RowSpan="2"
+                        Grid.Column="0"
+                        Width="50"
+                        Height="50"
+                        ProfilePicture="{x:Bind _viewModel.UserProfileImageSource, Mode=OneWay}" />
                     <TextBlock
-                        Margin="{StaticResource StackLayoutEntryPadding}"
+                        Grid.Row="0"
+                        Grid.Column="1"
+                        FontSize="{StaticResource PixevalContentFontSize}"
+                        Text="{x:Bind GetIllustratorNameText()}" />
+                    <TextBlock
+                        Grid.Row="1"
+                        Grid.Column="1"
                         FontSize="{StaticResource PixevalContentFontSize}"
                         Text="{x:Bind GetIllustratorIdText()}" />
-                </StackPanel>
-            </StackPanel>
+                </Grid>
+            </Button>
             <!--#endregion-->
             <!--#region Illustration Title-->
             <TextBlock x:Uid="/IllustrationInfoPage/IllustrationTitleTextBlock" Style="{StaticResource InfoPageSectionHeaderTextBlockStyle}" />
@@ -78,8 +96,11 @@
             <TextBlock x:Uid="/IllustrationInfoPage/IllustrationUploadDateTextBlock" Style="{StaticResource InfoPageSectionHeaderTextBlockStyle}" />
             <TextBlock Style="{StaticResource InfoPageSectionContentTextBlockStyle}" Text="{x:Bind GetIllustrationUploadDateText()}" />
             <TextBlock x:Uid="/IllustrationInfoPage/IllustrationTagListTextBlock" Style="{StaticResource InfoPageSectionHeaderTextBlockStyle}" />
-            <ItemsControl Margin="{StaticResource StackLayoutEntryPadding}" ItemsSource="{x:Bind GetIllustrationTagItemSource()}">
-                <ItemsControl.ItemTemplate>
+            <ItemsRepeater Margin="{StaticResource StackLayoutEntryPadding}" ItemsSource="{x:Bind GetIllustrationTagItemSource()}">
+                <ItemsRepeater.Layout>
+                    <controls:WrapLayout HorizontalSpacing="5" VerticalSpacing="5" />
+                </ItemsRepeater.Layout>
+                <ItemsRepeater.ItemTemplate>
                     <DataTemplate x:DataType="model:Tag">
                         <Button
                             Content="{x:Bind Name}"
@@ -87,13 +108,8 @@
                             Tapped="IllustrationTagButton_OnTapped"
                             ToolTipService.ToolTip="{x:Bind viewer:IllustrationInfoPage.GetMakoTagTranslatedNameText(TranslatedName, Name)}" />
                     </DataTemplate>
-                </ItemsControl.ItemTemplate>
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <controls:WrapPanel HorizontalSpacing="5" VerticalSpacing="5" />
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-            </ItemsControl>
+                </ItemsRepeater.ItemTemplate>
+            </ItemsRepeater>
         </StackPanel>
     </ScrollViewer>
 </pixevalControls:EnhancedPage>

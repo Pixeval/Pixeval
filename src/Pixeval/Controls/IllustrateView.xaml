@@ -1,0 +1,52 @@
+<Grid
+    x:Class="Pixeval.Controls.IllustrateView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converters="using:CommunityToolkit.WinUI.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:Pixeval.Controls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+    <Grid.Resources>
+        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+    </Grid.Resources>
+    <StackPanel
+        HorizontalAlignment="Center"
+        VerticalAlignment="Center"
+        Spacing="40"
+        Visibility="{x:Bind IsLoadingMore, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
+        <ProgressRing
+            Width="50"
+            Height="50"
+            IsActive="True"
+            IsIndeterminate="True" />
+        <TextBlock
+            x:Uid="/IllustrateView/IsLoadingMoreTextBlock"
+            HorizontalAlignment="Center"
+            FontSize="{StaticResource PixevalTitleFontSize}" />
+    </StackPanel>
+    <StackPanel
+        x:Name="HasNoItemStackPanel"
+        HorizontalAlignment="Center"
+        VerticalAlignment="Center"
+        Spacing="20">
+        <Image
+            Width="200"
+            Height="200"
+            Source="/Assets/Images/empty-box.png" />
+        <TextBlock
+            x:Uid="/IllustrateView/ResultIsEmptyTextBlock"
+            HorizontalAlignment="Center"
+            FontSize="{StaticResource PixevalTitleFontSize}" />
+    </StackPanel>
+    <ContentPresenter Content="{x:Bind Content, Mode=OneWay}" />
+    <TeachingTip
+        x:Name="QrCodeTeachingTip"
+        Title="{x:Bind TeachingTipTitle, Mode=OneWay}"
+        x:FieldModifier="public"
+        IsLightDismissEnabled="True">
+        <TeachingTip.HeroContent>
+            <Image />
+        </TeachingTip.HeroContent>
+    </TeachingTip>
+</Grid>

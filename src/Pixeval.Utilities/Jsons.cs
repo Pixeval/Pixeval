@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval.Utilities
+#region Copyright (c) Pixeval/Pixeval.Utilities
 // GPL v3 License
 // 
 // Pixeval/Pixeval.Utilities
@@ -29,7 +29,7 @@ public static class Jsons
 {
     public static IEnumerable<JsonProperty> EnumerateObjectOrEmpty(this JsonElement? element)
     {
-        return element?.EnumerateObject() as IEnumerable<JsonProperty> ?? Array.Empty<JsonProperty>();
+        return element?.EnumerateObject() as IEnumerable<JsonProperty> ?? [];
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

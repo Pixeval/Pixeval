@@ -20,9 +20,10 @@
 
 using System;
 using System.Collections.Generic;
-using Autofac;
+using Microsoft.Extensions.DependencyInjection;
 using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Preference;
+using Pixeval.Logging;
 
 namespace Pixeval.CoreApi;
 
@@ -31,7 +32,7 @@ public partial class MakoClient
     private readonly List<IEngineHandleSource> _runningInstances = [];
 
     /// <summary>
-    ///     The globally unique ID of current <see cref="MakoClient" />
+    /// The globally unique ID of current <see cref="MakoClient" />
     /// </summary>
     public Guid Id { get; } = Guid.NewGuid();
 
@@ -41,10 +42,12 @@ public partial class MakoClient
 
     internal ISessionUpdate SessionUpdater { get; }
 
+    public FileLogger Logger { get; }
+
     /// <summary>
-    ///     The IoC container
+    /// The IoC container
     /// </summary>
-    internal IContainer MakoServices { get; init; }
+    internal ServiceProvider MakoServices { get; init; }
 
     public bool IsCancelled { get; set; }
 }

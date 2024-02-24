@@ -23,32 +23,36 @@ using System.Numerics;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
-using Pixeval.Util;
-using Pixeval.Util.UI;
-using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
 
 namespace Pixeval.Controls;
 
-[DependencyProperty<IllustratorItemViewModel>("ViewModel")]
-public sealed partial class IllustratorItem : IViewModelControl
+[DependencyProperty<IllustratorItemViewModel>("ViewModel", propertyChanged: nameof(OnViewModelChanged))]
+public sealed partial class IllustratorItem
 {
-    object IViewModelControl.ViewModel => ViewModel;
+    public event Action<IllustratorItem, IllustratorItemViewModel>? ViewModelChanged;
 
-    public const float RotatedRotation = 10f;
-    public const float CommonRotation = 0f;
+    public event Func<TeachingTip> RequestTeachingTip = null!;
 
-    public static readonly Vector3 ZoomedScale = new(1.2f, 1.2f, 1.2f);
-    public static readonly Vector3 CommonScale = new(1, 1, 1);
-    public static readonly Vector3 ElevatedTranslation = new(0, 0, 60);
-    public static readonly Vector3 CommonTranslation = new(0, 0, 30);
-
-    public IllustratorItem()
+    private static void OnViewModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        InitializeComponent();
+        if (d as IllustratorItem is { } item)
+        {
+            item.ViewModelChanged?.Invoke(item, item.ViewModel);
+        }
     }
 
-    public event Func<TeachingTip>? RequestTeachingTip;
+    private const float RotatedRotation = 10f;
+    private const float CommonRotation = 0f;
+
+    private static readonly Vector3 _zoomedScale = new(1.2f, 1.2f, 1.2f);
+    private static readonly Vector3 _commonScale = new(1, 1, 1);
+    private static readonly Vector3 _elevatedTranslation = new(0, 0, 60);
+    private static readonly Vector3 _commonTranslation = new(0, 0, 30);
+
+    private TeachingTip QrCodeTeachingTip => RequestTeachingTip();
+
+    public IllustratorItem() => InitializeComponent();
 
     private void AvatarButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
@@ -59,21 +63,9 @@ public sealed partial class IllustratorItem : IViewModelControl
     {
         if (!AvatarButton.Flyout.IsOpen)
         {
-            AvatarButton.Scale = CommonScale;
-            AvatarButton.Translation = CommonTranslation;
+            AvatarButton.Scale = _commonScale;
+            AvatarButton.Translation = _commonTranslation;
             AvatarButton.Rotation = CommonRotation;
         }
-    }
-
-    private void GenerateLinkCommandOnExecuteRequested(object sender, RoutedEventArgs routedEventArgs)
-    {
-        UiHelper.ClipboardSetText(MakoHelper.GenerateIllustratorAppUri(ViewModel.UserId).ToString());
-        RequestTeachingTip?.Invoke().ShowAndHide(IllustratorItemResources.LinkCopiedToClipboard);
-    }
-
-    private void GenerateWebLinkCommandOnExecuteRequested(object sender, RoutedEventArgs routedEventArgs)
-    {
-        UiHelper.ClipboardSetText(MakoHelper.GenerateIllustratorWebUri(ViewModel.UserId).ToString());
-        RequestTeachingTip?.Invoke().ShowAndHide(IllustratorItemResources.LinkCopiedToClipboard);
     }
 }

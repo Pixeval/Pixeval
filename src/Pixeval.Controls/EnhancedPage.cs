@@ -18,6 +18,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 
@@ -51,10 +52,22 @@ public class EnhancedPage : Page
         frame.CacheSize = cacheSize;
     }
 
+    /// <inheritdoc cref="OnPageActivated"/>
+    /// <remarks>
+    /// 只有被导航时才会调用此方法，直接关闭窗口等情况下不会调用此方法
+    /// </remarks>
     public virtual void OnPageDeactivated(NavigatingCancelEventArgs e)
     {
     }
 
+    /// <summary>
+    /// <see cref="OnNavigatedTo"/>-><br/>
+    /// <see cref="OnPageActivated"/>-><br/>
+    /// <see cref="FrameworkElement.Loaded"/>-><br/>
+    /// <see cref="OnPageDeactivated"/>-><br/>
+    /// <see cref="OnNavigatingFrom"/>-><br/>
+    /// <see cref="FrameworkElement.Unloaded"/>
+    /// </summary>
     public virtual void OnPageActivated(NavigationEventArgs e)
     {
     }

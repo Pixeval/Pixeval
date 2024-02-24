@@ -24,22 +24,16 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Extensions.DependencyInjection;
-using Pixeval.Controls;
-using Pixeval.Controls.Illustrate;
-using Pixeval.CoreApi.Model;
 using Pixeval.Database.Managers;
 using Pixeval.Download;
 using Pixeval.Download.Models;
-using Pixeval.Options;
 using Pixeval.Utilities;
 using WinUI3Utilities;
 
 namespace Pixeval.Pages.Download;
 
-public partial class DownloadListPageViewModel : IllustrateViewViewModel<Illustration, DownloadListEntryViewModel>
+public partial class DownloadListPageViewModel : ObservableObject, IDisposable
 {
-    public const ThumbnailUrlOption Option = ThumbnailUrlOption.SquareMedium;
-
     public static readonly IEnumerable<DownloadListOption> AvailableDownloadListOptions = Enum.GetValues<DownloadListOption>();
 
     [ObservableProperty]
@@ -62,7 +56,7 @@ public partial class DownloadListPageViewModel : IllustrateViewViewModel<Illustr
         _selectionLabel = DownloadListPageResources.CancelSelectionButtonDefaultLabel;
     }
 
-    public sealed override IDataProvider<Illustration, DownloadListEntryViewModel> DataProvider { get; } = new DownloadListEntryDataProvider();
+    public DownloadListEntryDataProvider DataProvider { get; } = new DownloadListEntryDataProvider();
 
     public DownloadListEntryViewModel[] SelectedEntries
     {
@@ -83,19 +77,19 @@ public partial class DownloadListPageViewModel : IllustrateViewViewModel<Illustr
 
     public void PauseSelectedItems()
     {
-        foreach (var downloadListEntryViewModel in SelectedEntries.Where(t => t.DownloadTask.CurrentState == DownloadState.Running))
+        foreach (var downloadListEntryViewModel in SelectedEntries.Where(t => t.DownloadTask.CurrentState is DownloadState.Running))
             downloadListEntryViewModel.DownloadTask.CancellationHandle.Pause();
     }
 
     public void ResumeSelectedItems()
     {
-        foreach (var downloadListEntryViewModel in SelectedEntries.Where(t => t.DownloadTask.CurrentState == DownloadState.Paused))
+        foreach (var downloadListEntryViewModel in SelectedEntries.Where(t => t.DownloadTask.CurrentState is DownloadState.Paused))
             downloadListEntryViewModel.DownloadTask.CancellationHandle.Resume();
     }
 
     public void CancelSelectedItems()
     {
-        foreach (var downloadListEntryViewModel in SelectedEntries.Where(t => t.DownloadTask.CurrentState is DownloadState.Queued or DownloadState.Created or DownloadState.Running or DownloadState.Paused))
+        foreach (var downloadListEntryViewModel in SelectedEntries.Where(t => t.DownloadTask.CurrentState is DownloadState.Queued or DownloadState.Running or DownloadState.Paused))
             downloadListEntryViewModel.DownloadTask.CancellationHandle.Cancel();
     }
 
@@ -146,12 +140,8 @@ public partial class DownloadListPageViewModel : IllustrateViewViewModel<Illustr
         };
     }
 
-    public override void Dispose()
+    public void Dispose()
     {
-        foreach (var illustrationViewModel in DataProvider.Source)
-        {
-            illustrationViewModel.UnloadThumbnail(this, Option);
-            illustrationViewModel.Dispose();
-        }
+        DataProvider.Dispose();
     }
 }

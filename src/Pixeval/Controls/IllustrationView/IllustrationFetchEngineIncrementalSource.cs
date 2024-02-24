@@ -22,18 +22,12 @@ using System.Collections.Generic;
 using Pixeval.CoreApi.Model;
 using Pixeval.Misc;
 
-namespace Pixeval.Controls.IllustrationView;
+namespace Pixeval.Controls;
 
 public class IllustrationFetchEngineIncrementalSource(IAsyncEnumerable<Illustration> asyncEnumerator, int limit = -1)
     : FetchEngineIncrementalSource<Illustration, IllustrationItemViewModel>(asyncEnumerator, limit)
 {
-    protected override long Identifier(Illustration entity)
-    {
-        return entity.Id;
-    }
+    protected override long Identifier(Illustration entity) => entity.Id;
 
-    protected override IllustrationItemViewModel Select(Illustration entity)
-    {
-        return new IllustrationItemViewModel(entity);
-    }
+    protected override IllustrationItemViewModel Select(Illustration entity) => new(entity);
 }

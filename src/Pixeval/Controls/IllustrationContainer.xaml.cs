@@ -23,19 +23,11 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
-using System.Threading.Tasks;
 using Windows.System;
-using CommunityToolkit.WinUI;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
-using Pixeval.Controls.IllustrationView;
-using Pixeval.Controls.TokenInput;
-using Pixeval.Controls.Windowing;
-using Pixeval.Download;
-using Pixeval.Download.Models;
-using Pixeval.Flyouts.IllustrationResultFilter;
+using Pixeval.Controls.FlyoutContent;
 using Pixeval.Options;
 using Pixeval.Util;
 using Pixeval.Util.UI;
@@ -46,12 +38,10 @@ using WinUI3Utilities.Attributes;
 namespace Pixeval.Controls;
 
 [DependencyProperty<bool>("ShowCommandBar", "true")]
-[DependencyProperty<object>("Header")]
 public sealed partial class IllustrationContainer
 {
-
     /// <summary>
-    ///     The command elements that will appear at the left of the TopCommandBar
+    /// The command elements that will appear at the left of the TopCommandBar
     /// </summary>
     public ObservableCollection<UIElement> CommandBarElements { get; } = [];
 
@@ -62,21 +52,32 @@ public sealed partial class IllustrationContainer
     public IllustrationContainer()
     {
         InitializeComponent();
-        CommandBarElements.CollectionChanged += (_, args) =>
+        CommandBarElements.CollectionChanged += (_, e) =>
         {
-            if (args is { Action: NotifyCollectionChangedAction.Add, NewItems: { } newItems })
+            if (e is { Action: NotifyCollectionChangedAction.Add, NewItems: { } newItems })
                 foreach (UIElement argsNewItem in newItems)
-                    ExtraCommandsBar.Children.Insert(ExtraCommandsBar.Children.Count - 1, argsNewItem);
+                    ExtraCommandsBar.Children.Insert(0, argsNewItem);
             else
-                ThrowHelper.Argument(args);
+                ThrowHelper.Argument(e, "This collection does not support operations except the Add");
         };
         PrimaryCommandsSupplements.CollectionChanged += (_, args) => AddCommandCallback(args, CommandBar.PrimaryCommands);
         SecondaryCommandsSupplements.CollectionChanged += (_, args) => AddCommandCallback(args, CommandBar.SecondaryCommands);
+
+        return;
+
+        static void AddCommandCallback(NotifyCollectionChangedEventArgs e, ICollection<ICommandBarElement> commands)
+        {
+            if (e is { Action: NotifyCollectionChangedAction.Add, NewItems: { } newItems })
+                foreach (UIElement argsNewItem in newItems)
+                    commands.Add(argsNewItem.To<ICommandBarElement>());
+            else
+                ThrowHelper.Argument(e, "This collection does not support operations except the Add");
+        }
     }
 
-    public ItemsViewLayoutType ItemsViewLayoutType => App.AppViewModel.AppSetting.ItemsViewLayoutType;
+    public ItemsViewLayoutType ItemsViewLayoutType => App.AppViewModel.AppSettings.ItemsViewLayoutType;
 
-    public ThumbnailDirection ThumbnailDirection => App.AppViewModel.AppSetting.ThumbnailDirection;
+    public ThumbnailDirection ThumbnailDirection => App.AppViewModel.AppSettings.ThumbnailDirection;
 
     public IllustrationViewViewModel ViewModel => IllustrationView.ViewModel;
 
@@ -91,15 +92,6 @@ public sealed partial class IllustrationContainer
     }
 
     private FilterSettings _lastFilterSettings = FilterSettings.Default;
-
-    private void AddCommandCallback(NotifyCollectionChangedEventArgs e, ICollection<ICommandBarElement> commands)
-    {
-        if (e is { Action: NotifyCollectionChangedAction.Add, NewItems: { } newItems })
-            foreach (UIElement argsNewItem in newItems)
-                commands.Add(argsNewItem.To<ICommandBarElement>());
-        else
-            ThrowHelper.Argument(e, "This collection does not support operations except the Add");
-    }
 
     private void SelectAllToggleButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
@@ -121,7 +113,7 @@ public sealed partial class IllustrationContainer
         foreach (var viewModelSelectedIllustration in viewModelSelectedIllustrations)
         {
             if (!viewModelSelectedIllustration.IsBookmarked)
-                _ = viewModelSelectedIllustration.ToggleBookmarkStateAsync();
+                viewModelSelectedIllustration.BookmarkCommand.Execute(null);
         }
 
         if (viewModelSelectedIllustrations.Length is var c and > 0)
@@ -139,22 +131,10 @@ public sealed partial class IllustrationContainer
             return;
         }
 
-        using var scope = App.AppViewModel.AppServicesScope;
-        var factory = scope.ServiceProvider.GetRequiredService<IDownloadTaskFactory<IllustrationItemViewModel, IllustrationDownloadTask>>();
+        foreach (var i in ViewModel.SelectedIllustrations) 
+            i.SaveCommand.Execute(null);
 
-        // This will run for quite a while
-        _ = Task.Run(async () =>
-        {
-            var tasks = await WindowFactory.RootWindow.DispatcherQueue.EnqueueAsync(() => Task.WhenAll(
-                    ViewModel.SelectedIllustrations
-                        .Select(i => factory.CreateAsync(i, App.AppViewModel.AppSetting.DefaultDownloadPathMacro))));
-            foreach (var viewModelSelectedIllustration in tasks)
-            {
-                App.AppViewModel.DownloadManager.QueueTask(viewModelSelectedIllustration);
-            }
-        });
-
-        this.ShowTeachingTipAndHide(IllustrationViewCommandBarResources.DownloadItemsQueuedFormatted.Format(ViewModel.SelectedIllustrations.Length), milliseconds: 1500);
+        this.ShowTeachingTipAndHide(IllustrationViewCommandBarResources.DownloadItemsQueuedFormatted.Format(ViewModel.SelectedIllustrations.Length));
     }
 
     private async void OpenAllInBrowserButton_OnTapped(object sender, TappedRoutedEventArgs e)
@@ -172,12 +152,6 @@ public sealed partial class IllustrationContainer
                 _ = await Launcher.LaunchUriAsync(MakoHelper.GenerateIllustrationWebUri(illustrationViewModel.Id));
             }
         }
-    }
-
-    private void ShareButton_OnTapped(object sender, TappedRoutedEventArgs e)
-    {
-        // TODO share
-        throw new NotImplementedException();
     }
 
     private void CancelSelectionButton_OnTapped(object sender, TappedRoutedEventArgs e)

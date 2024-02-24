@@ -6,7 +6,11 @@
     xmlns:local="using:Pixeval.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
-    <local:CardControl IsClickEnabled="True" Tapped="ContentContainerOnTapped">
+    <Button
+        Padding="{StaticResource CardControlPadding}"
+        HorizontalAlignment="Stretch"
+        VerticalAlignment="Stretch"
+        Tapped="ContentContainerOnTapped">
         <Grid RowSpacing="10">
             <Grid.RowDefinitions>
                 <RowDefinition Height="2.3*" />
@@ -31,5 +35,5 @@
                     Text="{x:Bind PersonName, Mode=TwoWay}" />
             </StackPanel>
         </Grid>
-    </local:CardControl>
+    </Button>
 </UserControl>

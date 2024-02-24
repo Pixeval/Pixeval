@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval.CoreApi
+#region Copyright (c) Pixeval/Pixeval.CoreApi
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
@@ -18,6 +18,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -25,17 +26,17 @@ namespace Pixeval.CoreApi.Net;
 
 public class PixivApiNameResolver : INameResolver
 {
+    /// <summary>
+    /// ReSharper disable once InconsistentNaming
+    /// </summary>
+    public static string[]? IPAddresses { get; set; }
+
     public Task<IPAddress[]> Lookup(string hostname)
     {
         // not a good idea
         if (hostname.Contains("pixiv"))
         {
-            return Task.FromResult(new[]
-            {
-                IPAddress.Parse("210.140.131.219"),
-                IPAddress.Parse("210.140.131.223"),
-                IPAddress.Parse("210.140.131.226")
-            });
+            return Task.FromResult((IPAddresses ?? []).Select(IPAddress.Parse).ToArray()); 
         }
 
         return Dns.GetHostAddressesAsync(hostname);

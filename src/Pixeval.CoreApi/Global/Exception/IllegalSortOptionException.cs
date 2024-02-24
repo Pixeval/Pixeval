@@ -21,7 +21,7 @@
 namespace Pixeval.CoreApi.Global.Exception;
 
 /// <summary>
-///     Raised if you're trying to set the sort option to popular_desc without a premium access
+/// Raised if you're trying to set the sort option to popular_desc without a premium access
 /// </summary>
 public class IllegalSortOptionException : MakoException
 {

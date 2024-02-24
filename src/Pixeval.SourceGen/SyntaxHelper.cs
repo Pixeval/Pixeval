@@ -20,38 +20,27 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.CSharp;
+using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
+using System;
 
 namespace Pixeval.SourceGen;
 
 public static class SyntaxHelper
 {
-    public static string? FullQualifiedName(this SemanticModel semModel, AttributeSyntax syntax)
-    {
-        if (semModel.GetTypeInfo(syntax).Type is { ContainingNamespace: var ns, ContainingType: var ty, Name: var name })
-        {
-            return ty != null ? $"{semModel.FullQualifiedName(ty)}.{name}" : $"{ns}.{name}";
-        }
+    internal const string AttributeNamespace = "WinUI3Utilities.Attributes.";
+    internal const string DisableSourceGeneratorAttribute = AttributeNamespace + "DisableSourceGeneratorAttribute";
 
-        return null;
+    public static bool HasAttribute(this ISymbol s, string attributeFqName)
+    {
+        return s.GetAttributes().Any(als => als.AttributeClass?.ToDisplayString() == attributeFqName);
     }
 
-    public static string FullQualifiedName(this SemanticModel semModel, INamedTypeSymbol sym)
+    public static AttributeData? GetAttribute(this ISymbol mds, string attributeFqName)
     {
-        return sym.ContainingType is null ? $"global::{sym.ContainingNamespace}.{sym.Name}" : $"{semModel.FullQualifiedName(sym.ContainingType)}.{sym.Name}";
-    }
-
-    public static bool HasAttribute(this MemberDeclarationSyntax mds, SemanticModel semanticModel, string attributeFqName)
-    {
-        return mds.AttributeLists.Any(als => als.Attributes.Any(attr => semanticModel.FullQualifiedName(attr) == attributeFqName));
-    }
-
-    public static AttributeSyntax? GetAttribute(this MemberDeclarationSyntax mds, SemanticModel semanticModel, string attributeFqName)
-    {
-        return mds.AttributeLists.SelectMany(t => t.Attributes).FirstOrDefault(attr => semanticModel.FullQualifiedName(attr) == attributeFqName);
+        return mds.GetAttributes().FirstOrDefault(attr => attr?.AttributeClass?.ToDisplayString() == attributeFqName);
     }
 
     /// <summary>
@@ -62,9 +51,65 @@ public static class SyntaxHelper
     internal static string Spacing(int n)
     {
         var temp = "";
-        for (var i = 0; i < n; i++)
+        for (var i = 0; i < n; ++i)
             temp += "    ";
         return temp;
+    }
+
+    /// <summary>
+    /// Generate the following code
+    /// <code>
+    /// <paramref name="typeSymbol" />&lt;<paramref name="isNullable" />&gt;
+    /// </code>
+    /// </summary>
+    /// <returns>CompilationUnit</returns>
+    internal static TypeSyntax GetTypeSyntax(this ITypeSymbol typeSymbol, bool isNullable)
+    {
+        var typeName = ParseTypeName(typeSymbol.ToDisplayString());
+        return isNullable ? NullableType(typeName) : typeName;
+    }
+
+    internal static MemberAccessExpressionSyntax GetStaticMemberAccessExpression(this ITypeSymbol typeSymbol, string name)
+    {
+        return MemberAccessExpression(
+            SyntaxKind.SimpleMemberAccessExpression,
+            IdentifierName(typeSymbol.ToDisplayString()),
+            IdentifierName(name));
+    }
+
+    internal static IEnumerable<IPropertySymbol> GetProperties(this ITypeSymbol typeSymbol, INamedTypeSymbol attribute)
+    {
+        var symbol = typeSymbol;
+        do
+        {
+            foreach (var member in symbol.GetMembers())
+            {
+                if (member is not IPropertySymbol { Name: not "EqualityContract" } property)
+                    continue;
+
+                if (IgnoreAttribute(property, attribute))
+                    continue;
+
+                yield return property;
+            }
+        } while ((symbol = symbol.BaseType) is not null);
+    }
+
+    internal static bool IgnoreAttribute(ISymbol symbol, INamedTypeSymbol attribute)
+    {
+        attribute = attribute is { IsGenericType: true, IsUnboundGenericType: false } ? attribute.ConstructUnboundGenericType() : attribute;
+        if (symbol.GetAttributes()
+                .FirstOrDefault(propertyAttribute => propertyAttribute.AttributeClass!.ToDisplayString() is AttributeNamespace + "AttributeIgnoreAttribute")
+            is { ConstructorArguments: [{ Kind: TypedConstantKind.Array }] args })
+            if (args[0].Values.Any(t =>
+                {
+                    if (t.Value is not INamedTypeSymbol type)
+                        return false;
+                    type = type is { IsGenericType: true, IsUnboundGenericType: false } ? type.ConstructUnboundGenericType() : type;
+                    return SymbolEqualityComparer.Default.Equals(type, attribute);
+                }))
+                return true;
+        return false;
     }
 
     /// <summary>
@@ -81,34 +126,54 @@ public static class SyntaxHelper
 
         _ = usedTypes.Add(symbol);
 
-        var ns = symbol.ContainingNamespace;
-        if (ns.IsGlobalNamespace)
-        {
-            _ = namespaces.Add(contextType.ContainingNamespace.ToDisplayString());
-        }
-        else if (!SymbolEqualityComparer.Default.Equals(ns, contextType.ContainingNamespace))
-        {
+        if (symbol.ContainingNamespace is not { } ns)
+            return;
+
+        if (!SymbolEqualityComparer.Default.Equals(ns, contextType.ContainingNamespace))
             _ = namespaces.Add(ns.ToDisplayString());
-        }
 
         if (symbol is INamedTypeSymbol { IsGenericType: true } genericSymbol)
             foreach (var a in genericSymbol.TypeArguments)
-                UseNamespace(namespaces, usedTypes, contextType, a);
+                namespaces.UseNamespace(usedTypes, contextType, a);
     }
 
     /// <summary>
-    /// 生成nullable预处理语句和引用命名空间
-    /// <br/>#nullable enable
-    /// <br/><see langword="using"/> ...;
-    /// <br/><see langword="using"/> ...;
-    /// <br/>...
+    /// Generate the following code
+    /// <code>
+    /// #nullable enable
+    /// namespace <paramref name="specificClass" />.ContainingNamespace;<br/>
+    /// <paramref name="generatedClass" />
+    /// </code>
     /// </summary>
-    /// <param name="namespaces">namespaces集合</param>
-    internal static StringBuilder GenerateFileHeader(this HashSet<string> namespaces)
+    /// <returns>FileScopedNamespaceDeclaration</returns>
+    internal static FileScopedNamespaceDeclarationSyntax GetFileScopedNamespaceDeclaration(ISymbol specificClass, MemberDeclarationSyntax generatedClass, bool nullableEnable)
+        => FileScopedNamespaceDeclaration(ParseName(specificClass.ContainingNamespace.ToDisplayString()))
+            .AddMembers(generatedClass)
+            .WithNamespaceKeyword(Token(SyntaxKind.NamespaceKeyword))
+            .WithLeadingTrivia(Trivia(NullableDirectiveTrivia(Token(SyntaxKind.EnableKeyword), nullableEnable)));
+
+    /// <summary>
+    /// Generate the following code
+    /// <code>
+    /// partial <paramref name="symbol" /> <paramref name="name" /><br/>
+    /// {<br/>
+    ///     <paramref name="member" /><br/>
+    /// }
+    /// </code>
+    /// </summary>
+    /// <returns>TypeDeclaration</returns>
+    internal static TypeDeclarationSyntax GetDeclaration(string name, INamedTypeSymbol symbol, params MemberDeclarationSyntax[] member)
     {
-        var stringBuilder = new StringBuilder().AppendLine("#nullable enable\n");
-        foreach (var s in namespaces)
-            _ = stringBuilder.AppendLine($"using {s};");
-        return stringBuilder;
+        TypeDeclarationSyntax typeDeclarationTemp = symbol.TypeKind switch
+        {
+            TypeKind.Class when !symbol.IsRecord => ClassDeclaration(name),
+            TypeKind.Struct when !symbol.IsRecord => StructDeclaration(name),
+            TypeKind.Class or TypeKind.Struct when symbol.IsRecord => RecordDeclaration(Token(SyntaxKind.RecordKeyword), name),
+            _ => throw new ArgumentOutOfRangeException(nameof(symbol.TypeKind))
+        };
+        return typeDeclarationTemp.AddModifiers(Token(SyntaxKind.PartialKeyword))
+            .WithOpenBraceToken(Token(SyntaxKind.OpenBraceToken))
+            .AddMembers(member)
+            .WithCloseBraceToken(Token(SyntaxKind.CloseBraceToken));
     }
 }

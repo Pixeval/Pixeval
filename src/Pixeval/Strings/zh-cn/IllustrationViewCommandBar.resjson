@@ -1,0 +1,21 @@
+{
+  "CancelSelectionButtonFormatted": "取消选择 ({0})",
+  "AddAllToBookmarkButton/Label": "添加到收藏夹",
+  "AddAllToBookmarkContentFormatted": "收藏了{0}张图片",
+  "AddAllToBookmarkTitle": "成功添加到收藏",
+  "OpenAllInBrowserButton/Label": "在浏览器中打开",
+  "OpenConditionDialogButton/Label": "过滤",
+  "SaveAllButton/Label": "全部保存",
+  "SelectAllButton/Label": "全选",
+  "SelectedTooManyItemsForBookmarkContent": "一旦完成该操作不可撤销，请确认你是否真的想要这么做",
+  "SelectedTooManyItemsForBookmarkTitle": "检测到批量收藏的操作",
+  "SelectedTooManyItemsForOpenInBrowserContent": "你选择了超过15幅作品并决定在浏览器中打开，这可能会在内存不足的计算机上导致系统资源耗尽，请问您确定要这么做吗？",
+  "SelectedTooManyItemsForSaveContent": "你选择了超过20幅作品并决定下载到本地，这可能会在CPU性能不足的电脑上导致系统资源耗尽，请问您确定要这么做吗？",
+  "SelectedTooManyItemsTitle": "该操作可能会导致性能问题",
+  "SelectionButton/Label": "多选",
+  "CancelSelectionButtonDefaultLabel": "取消选择",
+  "DownloadItemsQueuedFormatted": "已将{0}个作品添加至下载列表",
+  "FastFilterAutoSuggestBox/PlaceholderText": "输入ID/标签/作品名进行快速过滤",
+  "FilterTeachingTip/ActionButtonContent": "清空过滤器",
+  "FilterTeachingTip/CloseButtonContent": "应用"
+}

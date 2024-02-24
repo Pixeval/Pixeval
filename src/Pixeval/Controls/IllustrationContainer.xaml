@@ -2,10 +2,10 @@
     x:Class="Pixeval.Controls.IllustrationContainer"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:Pixeval.Controls"
     xmlns:converters="using:CommunityToolkit.WinUI.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:illustrationResultFilter="using:Pixeval.Flyouts.IllustrationResultFilter"
-    xmlns:illustrationView="using:Pixeval.Controls.IllustrationView"
+    xmlns:flyoutContent="using:Pixeval.Controls.FlyoutContent"
     xmlns:markupExtensions="using:Pixeval.Controls.MarkupExtensions"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Loaded="IllustrationContainer_OnLoaded"
@@ -20,7 +20,9 @@
         </Grid.RowDefinitions>
         <Grid
             Grid.Row="0"
+            Margin="{StaticResource ComboBoxLeftIndent}"
             HorizontalAlignment="Stretch"
+            ColumnSpacing="10"
             Visibility="{x:Bind ShowCommandBar, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
@@ -30,17 +32,14 @@
             <StackPanel
                 x:Name="ExtraCommandsBar"
                 Grid.Column="0"
-                Margin="5,0,0,0"
                 VerticalAlignment="Center"
-                FlowDirection="LeftToRight"
-                Orientation="Horizontal">
-                <Grid Margin="10,0,0,0">
-                    <AutoSuggestBox
-                        x:Uid="/IllustrationViewCommandBar/FastFilterAutoSuggestBox"
-                        Width="250"
-                        VerticalAlignment="Center"
-                        TextChanged="FastFilterAutoSuggestBox_OnTextChanged" />
-                </Grid>
+                Orientation="Horizontal"
+                Spacing="10">
+                <AutoSuggestBox
+                    x:Uid="/IllustrationViewCommandBar/FastFilterAutoSuggestBox"
+                    Width="250"
+                    VerticalAlignment="Center"
+                    TextChanged="FastFilterAutoSuggestBox_OnTextChanged" />
             </StackPanel>
             <CommandBar
                 x:Name="CommandBar"
@@ -62,7 +61,7 @@
                 <AppBarButton
                     x:Uid="/IllustrationViewCommandBar/AddAllToBookmarkButton"
                     Icon="{markupExtensions:FontSymbolIcon Glyph=BookmarksE8A4}"
-                    IsEnabled="{x:Bind ViewModel.IsAnyIllustrationSelected, Mode=OneWay}"
+                    IsEnabled="False"
                     Tapped="AddAllToBookmarkButton_OnTapped" />
                 <AppBarButton
                     x:Uid="/IllustrationViewCommandBar/SaveAllButton"
@@ -74,11 +73,6 @@
                     Icon="{markupExtensions:FontSymbolIcon Glyph=WebSearchF6FA}"
                     IsEnabled="{x:Bind ViewModel.IsAnyIllustrationSelected, Mode=OneWay}"
                     Tapped="OpenAllInBrowserButton_OnTapped" />
-                <AppBarButton
-                    x:Uid="/IllustrationViewCommandBar/ShareButton"
-                    Icon="{markupExtensions:FontSymbolIcon Glyph=ShareE72D}"
-                    IsEnabled="{x:Bind ViewModel.IsAnyIllustrationSelected, Mode=OneWay}"
-                    Tapped="ShareButton_OnTapped" />
             </CommandBar>
             <CommandBar
                 Grid.Column="2"
@@ -102,7 +96,7 @@
                 CloseButtonClick="FilterTeachingTip_OnCloseButtonClick"
                 IsLightDismissEnabled="True"
                 Target="{x:Bind OpenConditionDialogButton}">
-                <illustrationResultFilter:IllustrationResultFilterContent x:Name="FilterContent" MaxHeight="{StaticResource TeachingTipContentMaxHeightWithTarget}" />
+                <flyoutContent:IllustrationResultFilterContent x:Name="FilterContent" MaxHeight="{StaticResource TeachingTipContentMaxHeightWithTarget}" />
             </TeachingTip>
         </Grid>
         <!--<illustrationView:IllustrationViewCommandBar
@@ -113,8 +107,8 @@
             PrimaryCommandsSupplements="{x:Bind PrimaryCommandsSupplements, Mode=OneWay}"
             SecondaryCommandsSupplements="{x:Bind SecondaryCommandsSupplements, Mode=TwoWay}"
             ViewModel="{x:Bind IllustrationView.ViewModel}"
-            Visibility="{x:Bind ShowCommandBar, Mode=OneWay}" />-->
-        <illustrationView:IllustrationView
+            Visibility="{x:Bind ShowCommandBar, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />-->
+        <controls:IllustrationView
             x:Name="IllustrationView"
             Grid.Row="1"
             x:FieldModifier="public"

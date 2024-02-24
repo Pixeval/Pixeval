@@ -20,18 +20,16 @@
 
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
-using Pixeval.Controls;
-using Pixeval.Dialogs;
+using Pixeval.Controls.DialogContent;
 using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Util.IO;
-using Pixeval.Util.Threading;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
-using WinUI3Utilities;
 
 namespace Pixeval.Pages.Download;
 
@@ -72,12 +70,13 @@ public sealed partial class DownloadListPage
     {
         var dialogContent = new DownloadListPageDeleteTasksDialog();
         if (await this.CreateOkCancelAsync(
-                DownloadListPageResources.DeleteDownloadHistoryRecordsFormatted.Format(_viewModel.SelectedEntries.Count()),
+                DownloadListPageResources.DeleteDownloadHistoryRecordsFormatted.Format(_viewModel.SelectedEntries.Length),
                 dialogContent) is ContentDialogResult.Primary)
         {
             if (dialogContent.DeleteLocalFiles)
-                foreach (var downloadListEntryViewModel in _viewModel.SelectedEntries)
-                    IoHelper.DeleteAsync(downloadListEntryViewModel.DownloadTask.Destination).Discard();
+                Task.WaitAll(_viewModel.SelectedEntries
+                    .Select(async t => await IoHelper.DeleteIllustrationTaskAsync(t.DownloadTask))
+                    .ToArray());
 
             _viewModel.RemoveSelectedItems();
         }
@@ -137,20 +136,13 @@ public sealed partial class DownloadListPage
         viewModel.CreateWindowWithPage(_viewModel.DataProvider.Source);
     }
 
+    private async void DownloadListEntry_OnViewModelChanged(DownloadListEntry sender, DownloadListEntryViewModel viewModel)
+    {
+        _ = await viewModel.TryLoadThumbnailAsync(_viewModel);
+    }
+
     private void DownloadListPage_OnUnloaded(object sender, RoutedEventArgs e)
     {
         _viewModel.Dispose();
-    }
-
-    private void AdvancedItemsView_OnElementPrepared(AdvancedItemsView sender, ItemContainer itemContainer)
-    {
-        var item = itemContainer.Child.To<DownloadListEntry>();
-        _ = item.ViewModel.TryLoadThumbnail(_viewModel, DownloadListPageViewModel.Option);
-    }
-
-    private void AdvancedItemsView_OnElementClearing(AdvancedItemsView sender, ItemContainer itemContainer)
-    {
-        var item = itemContainer.Child.To<DownloadListEntry>();
-        item.ViewModel.UnloadThumbnail(_viewModel, DownloadListPageViewModel.Option);
     }
 }

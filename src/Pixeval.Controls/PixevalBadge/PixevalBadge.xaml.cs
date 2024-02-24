@@ -24,6 +24,7 @@ using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
+using Microsoft.Windows.ApplicationModel.Resources;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
 
@@ -40,12 +41,13 @@ public sealed partial class PixevalBadge : UserControl
 
     private static readonly Dictionary<BadgeMode, (string Text, Color Background)> _propertySet = new()
     {
-            [BadgeMode.Premium] = ("Premium", Colors.Orange),
-            [BadgeMode.Following] = ("关注中", Colors.Crimson),
-            [BadgeMode.Gif] = ("GIF", Colors.Green),
-            [BadgeMode.R18] = ("R18", Colors.Crimson),
-            [BadgeMode.R18G] = ("R18G", Colors.Crimson),
-        };
+        [BadgeMode.Premium] = ("Premium", Colors.Orange),
+        [BadgeMode.Following] = (PixevalBadgeResources.Following, Colors.Crimson),
+        [BadgeMode.Gif] = ("GIF", Colors.Green),
+        [BadgeMode.R18] = ("R18", Colors.Crimson),
+        [BadgeMode.R18G] = ("R18G", Colors.Crimson),
+        [BadgeMode.Ai] = ("AI", Colors.Gray)
+    };
 
     public PixevalBadge() => InitializeComponent();
 
@@ -66,4 +68,11 @@ public sealed partial class PixevalBadge : UserControl
     {
         _ = VisualStateManager.GoToState(this, useSmall ? SmallState : NormalState, true);
     }
+}
+
+static file class PixevalBadgeResources
+{
+    private static readonly ResourceLoader _resourceLoader = ResourceHelper.GetResourceLoader("PixevalBadge");
+
+    public static string Following { get; } = _resourceLoader.GetString("Following");
 }

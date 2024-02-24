@@ -71,7 +71,7 @@ public static class Enumerates
         {
             SequenceComparison.Sequential => @this.SequenceEqual(another, equalityComparer),
             SequenceComparison.Unordered => @this.Order().SequenceEqual(another.Order(), equalityComparer), // not the fastest way, but still enough
-            _ => throw new ArgumentOutOfRangeException(nameof(comparison), comparison, null)
+            _ => ThrowUtils.ArgumentOutOfRange<SequenceComparison, bool>(comparison)
         };
     }
 
@@ -165,7 +165,7 @@ public static class Enumerates
     }
 
     /// <summary>
-    ///     Replace a collection by update transactions, best to use with ObservableCollection
+    /// Replace a collection by update transactions, best to use with ObservableCollection
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="dest">Collection to be updated</param>

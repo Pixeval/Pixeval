@@ -1,44 +1,36 @@
+using System;
 using System.Collections.Generic;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.WinUI.Collections;
 using Pixeval.Collections;
-using Pixeval.Controls.Illustrate;
-using Pixeval.CoreApi.Engine;
-using Pixeval.CoreApi.Model;
 using Pixeval.Download.Models;
-using Pixeval.Misc;
-using WinUI3Utilities;
 
 namespace Pixeval.Pages.Download;
 
-public class DownloadListEntryDataProvider : ObservableObject, IDataProvider<Illustration, DownloadListEntryViewModel>
+public class DownloadListEntryDataProvider : ObservableObject, IDisposable
 {
     public AdvancedObservableCollection<DownloadListEntryViewModel> View { get; } = [];
 
-    public IncrementalLoadingCollection<FetchEngineIncrementalSource<Illustration, DownloadListEntryViewModel>, DownloadListEntryViewModel> Source
+    public IncrementalLoadingCollection<DownloadListEntryIncrementalSource, DownloadListEntryViewModel> Source
     {
-        get => (View.Source as IncrementalLoadingCollection<FetchEngineIncrementalSource<Illustration, DownloadListEntryViewModel>, DownloadListEntryViewModel>)!;
+        get => (View.Source as IncrementalLoadingCollection<DownloadListEntryIncrementalSource, DownloadListEntryViewModel>)!;
         protected set => View.Source = value;
     }
 
-    public IFetchEngine<Illustration?>? FetchEngine { get; protected set; }
-
-    public void DisposeCurrent()
+    public void Dispose()
     {
         if (Source is { } source)
-            foreach (var downloadListEntryViewModel in source)
-                downloadListEntryViewModel.Dispose();
+            foreach (var illustrationViewModel in source)
+            {
+                illustrationViewModel.UnloadThumbnail(this);
+                illustrationViewModel.Dispose();
+            }
 
         View.Clear();
     }
 
-    void IDataProvider<Illustration, DownloadListEntryViewModel>.ResetEngine(IFetchEngine<Illustration?>? fetchEngine, int limit)
-    {
-        ThrowHelper.NotSupported($"{nameof(DownloadListEntryDataProvider)} 不使用 {nameof(FetchEngine)}");
-    }
-
     public void ResetEngine(IEnumerable<IllustrationDownloadTask> source)
     {
-        Source = new IncrementalLoadingCollection<FetchEngineIncrementalSource<Illustration, DownloadListEntryViewModel>, DownloadListEntryViewModel>(new DownloadListEntryIncrementalSource(source));
+        Source = new IncrementalLoadingCollection<DownloadListEntryIncrementalSource, DownloadListEntryViewModel>(new DownloadListEntryIncrementalSource(source));
     }
 }

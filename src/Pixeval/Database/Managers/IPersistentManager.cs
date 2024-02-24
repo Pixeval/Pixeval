@@ -26,12 +26,12 @@ using LiteDB;
 namespace Pixeval.Database.Managers;
 
 /// <summary>
-///     Manage persistent data stored in SQLite.
-///     You may call CreateTable in the constructor.
+/// Manage persistent data stored in SQLite.
+/// You may call CreateTable in the constructor.
 /// </summary>
 /// <example>
-///     This example shows how to get a registered manager.
-///     <code>
+/// This example shows how to get a registered manager.
+/// <code>
 /// using var scope = App.AppViewModel.AppServicesScope;
 /// var manager = scope.ServiceProvider.GetRequiredService&lt;IPersistentManager&lt;Entry, Model&gt;&gt;();
 /// </code>

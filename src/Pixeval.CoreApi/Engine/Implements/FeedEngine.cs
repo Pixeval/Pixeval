@@ -26,6 +26,7 @@ using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using Pixeval.CoreApi.Global.Exception;
 using Pixeval.CoreApi.Model;
 using Pixeval.CoreApi.Net;
@@ -67,10 +68,9 @@ internal partial class FeedEngine(MakoClient makoClient, EngineHandle? engineHan
 
                         break;
                     case Result<string>.Failure(var exception):
-                        if (exception is { } e)
+                        if (exception is not null)
                         {
-                            PixivFetchEngine.EngineHandle.Complete();
-                            throw e;
+                            MakoClient.Logger.LogError("", exception);
                         }
 
                         PixivFetchEngine.EngineHandle.Complete();
@@ -269,7 +269,7 @@ internal partial class FeedEngine(MakoClient makoClient, EngineHandle? engineHan
 
         protected override bool ValidateResponse(string rawEntity)
         {
-            throw new NotSupportedException();
+            return ThrowUtils.NotSupported<bool>();
         }
 
         private string BuildRequestUrl()
@@ -286,7 +286,7 @@ internal partial class FeedEngine(MakoClient makoClient, EngineHandle? engineHan
         {
             try
             {
-                return await MakoClient.ResolveKeyed<HttpClient>(MakoApiKind.WebApi)
+                return await MakoClient.MakoServices.GetRequiredKeyedService<HttpClient>(MakoApiKind.WebApi)
                     .GetStringResultAsync(url, async responseMessage => new MakoNetworkException(url, MakoClient.Configuration.Bypass, await responseMessage.Content.ReadAsStringAsync(), (int)responseMessage.StatusCode))
                     .ConfigureAwait(false);
             }
@@ -298,12 +298,13 @@ internal partial class FeedEngine(MakoClient makoClient, EngineHandle? engineHan
 
         [GeneratedRegex("tt: \"(?<tt>.*)\"")]
         private static partial Regex TtRegex();
-        [GeneratedRegex("pixiv\\.stacc\\.env\\.preload\\.stacc \\= (?<json>.*);")]
+
+        [GeneratedRegex(@"pixiv\.stacc\.env\.preload\.stacc \= (?<json>.*);")]
         private static partial Regex PreloadRegex();
     }
 
     /// <summary>
-    ///     Required parameters established from multiple tests, I don't know what do they mean
+    /// Required parameters established from multiple tests, I don't know what do they mean
     /// </summary>
     private record FeedRequestContext(string UnifyToken, string Sid, string Mode, bool IsLastPage);
 }

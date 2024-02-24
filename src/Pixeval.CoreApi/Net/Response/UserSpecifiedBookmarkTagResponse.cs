@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval.CoreApi
+#region Copyright (c) Pixeval/Pixeval.CoreApi
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
@@ -18,44 +18,45 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
 namespace Pixeval.CoreApi.Net.Response;
 
-// ReSharper disable UnusedAutoPropertyAccessor.Global
-internal class UserSpecifiedBookmarkTagResponse
+[Factory]
+internal partial record UserSpecifiedBookmarkTagResponse
 {
     [JsonPropertyName("error")]
     public required bool Error { get; set; }
 
     [JsonPropertyName("message")]
-    public required string Message { get; set; }
+    public required string Message { get; set; } = "";
 
     [JsonPropertyName("body")]
-    public required Body ResponseBody { get; set; }
+    public required UserSpecifiedBookmarkTagBody ResponseBody { get; set; }
+}
 
-    public class Body
-    {
-        [JsonPropertyName("public")]
-        public required IEnumerable<Tag> Public { get; set; }
+[Factory]
+internal partial record UserSpecifiedBookmarkTagBody
+{
+    [JsonPropertyName("public")]
+    public required UserSpecifiedBookmarkTag[] Public { get; set; } = [];
 
-        [JsonPropertyName("private")]
-        public required IEnumerable<Tag> Private { get; set; }
+    [JsonPropertyName("private")]
+    public required UserSpecifiedBookmarkTag[] Private { get; set; } = [];
 
-        [JsonPropertyName("tooManyBookmark")]
-        public required bool TooManyBookmark { get; set; }
+    [JsonPropertyName("tooManyBookmark")]
+    public required bool TooManyBookmark { get; set; }
 
-        [JsonPropertyName("tooManyBookmarkTags")]
-        public required bool TooManyBookmarkTags { get; set; }
-    }
+    [JsonPropertyName("tooManyBookmarkTags")]
+    public required bool TooManyBookmarkTags { get; set; }
+}
 
-    public class Tag
-    {
-        [JsonPropertyName("tag")]
-        public required string Name { get; set; }
+[Factory]
+internal partial record UserSpecifiedBookmarkTag
+{
+    [JsonPropertyName("tag")]
+    public required string Name { get; set; } = "";
 
-        [JsonPropertyName("cnt")]
-        public required long Count { get; set; }
-    }
+    [JsonPropertyName("cnt")]
+    public required long Count { get; set; }
 }

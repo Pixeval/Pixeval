@@ -18,39 +18,42 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
 namespace Pixeval.CoreApi.Net.Response;
 
-public class UgoiraMetadataResponse
+[Factory]
+public partial record UgoiraMetadataResponse
 {
     [JsonPropertyName("ugoira_metadata")]
     public required UgoiraMetadata UgoiraMetadataInfo { get; set; }
 }
 
-public class UgoiraMetadata
+[Factory]
+public partial record UgoiraMetadata
 {
     [JsonPropertyName("zip_urls")]
     public required ZipUrls ZipUrls { get; set; }
 
     [JsonPropertyName("frames")]
-    public required IEnumerable<Frame> Frames { get; set; }
+    public required Frame[] Frames { get; set; } = [];
 }
 
-public class Frame
+[Factory]
+public partial record Frame
 {
     [JsonPropertyName("file")]
-    public required string File { get; set; }
+    public required string File { get; set; } = "";
 
     [JsonPropertyName("delay")]
     public required long Delay { get; set; }
 }
 
-public class ZipUrls
+[Factory]
+public partial record ZipUrls
 {
     [JsonPropertyName("medium")]
-    public required string Medium { get; set; }
+    public required string Medium { get; set; } = DefaultImageUrls.ImageNotAvailable;
 
     public string Large => Medium.Replace("600x600", "1920x1080");
 }

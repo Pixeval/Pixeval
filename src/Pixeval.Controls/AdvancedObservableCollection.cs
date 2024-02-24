@@ -26,12 +26,14 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System;
 using System.Collections;
+using System.Collections.Frozen;
 using System.Collections.Specialized;
 using System.Linq;
 using Windows.Foundation;
 using CommunityToolkit.WinUI.Collections;
 using CommunityToolkit.WinUI.Helpers;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace Pixeval.Collections;
 
@@ -98,7 +100,7 @@ public class AdvancedObservableCollection<T> : IList<T>, IList, INotifyCollectio
             _sourceWeakEventListener = new WeakEventListener<AdvancedObservableCollection<T>, object?, NotifyCollectionChangedEventArgs>(this)
             {
                 OnEventAction = (source, changed, arg) => SourceNcc_CollectionChanged(source, arg),
-                OnDetachAction = listener => _source.CollectionChanged -= _sourceWeakEventListener!.OnEvent
+                OnDetachAction = listener => _source.CollectionChanged -= listener.OnEvent
             };
             _source.CollectionChanged += _sourceWeakEventListener.OnEvent;
 
@@ -155,7 +157,7 @@ public class AdvancedObservableCollection<T> : IList<T>, IList, INotifyCollectio
     #endregion
 
     /// <inheritdoc cref="ISupportIncrementalLoading.LoadMoreItemsAsync"/>
-    public IAsyncOperation<LoadMoreItemsResult>? LoadMoreItemsAsync(uint count) => (_source as ISupportIncrementalLoading)?.LoadMoreItemsAsync(count);
+    public IAsyncOperation<LoadMoreItemsResult> LoadMoreItemsAsync(uint count) => (_source as ISupportIncrementalLoading)?.LoadMoreItemsAsync(count) ?? Task.FromResult(new LoadMoreItemsResult()).AsAsyncOperation();
 
     /// <inheritdoc cref="ISupportIncrementalLoading.HasMoreItems"/>
     public bool HasMoreItems => (_source as ISupportIncrementalLoading)?.HasMoreItems ?? false;
@@ -190,28 +192,46 @@ public class AdvancedObservableCollection<T> : IList<T>, IList, INotifyCollectio
                 if (!string.IsNullOrEmpty(sd.PropertyName))
                     _sortProperties[sd.PropertyName] = typeof(T).GetProperty(sd.PropertyName)!;
 
-        foreach (var sd in SortDescriptions)
+        if (SortDescriptions.Count is 0)
         {
-            T? cx, cy;
-
-            if (string.IsNullOrEmpty(sd.PropertyName))
+            var newIndex = 0;
+            foreach (var item in _source)
             {
-                cx = x;
-                cy = y;
+                if (_view.IndexOf(item) is var index and not -1)
+                    // 元素重复时可能出现index < newIndex
+                    if (index == newIndex)
+                        ++newIndex;
+                    else if (index > newIndex)
+                    {
+                        _view.RemoveAt(index);
+                        _view.Insert(newIndex, item);
+                        ++newIndex;
+                    }
             }
-            else
-            {
-                var pi = _sortProperties[sd.PropertyName];
-
-                cx = (T?)pi.GetValue(x);
-                cy = (T?)pi.GetValue(y);
-            }
-
-            var cmp = sd.Comparer.Compare(cx, cy);
-
-            if (cmp is not 0)
-                return sd.Direction is SortDirection.Ascending ? +cmp : -cmp;
         }
+        else
+            foreach (var sd in SortDescriptions)
+            {
+                T? cx, cy;
+
+                if (string.IsNullOrEmpty(sd.PropertyName))
+                {
+                    cx = x;
+                    cy = y;
+                }
+                else
+                {
+                    var pi = _sortProperties[sd.PropertyName];
+
+                    cx = (T?)pi.GetValue(x);
+                    cy = (T?)pi.GetValue(y);
+                }
+
+                var cmp = sd.Comparer.Compare(cx, cy);
+
+                if (cmp is not 0)
+                    return sd.Direction is SortDirection.Ascending ? +cmp : -cmp;
+            }
 
         return 0;
     }
@@ -250,6 +270,14 @@ public class AdvancedObservableCollection<T> : IList<T>, IList, INotifyCollectio
     public void ObserveFilterProperty(string propertyName)
     {
         _ = _observedFilterProperties.Add(propertyName);
+    }
+
+    /// <summary>
+    /// Remove a property to re-filter an item on when it is changed
+    /// </summary>
+    public void UnobserveFilterProperty(string propertyName)
+    {
+        _ = _observedFilterProperties.Remove(propertyName);
     }
 
     /// <summary>
@@ -332,7 +360,7 @@ public class AdvancedObservableCollection<T> : IList<T>, IList, INotifyCollectio
     {
         if (_filter is not null)
         {
-            for (var index = 0; index < _view.Count; index++)
+            for (var index = 0; index < _view.Count; ++index)
             {
                 var item = _view[index];
                 if (_filter(item))
@@ -343,19 +371,19 @@ public class AdvancedObservableCollection<T> : IList<T>, IList, INotifyCollectio
             }
         }
 
-        var viewHash = new HashSet<T>(this);
+        var viewHash = this.ToFrozenSet();
         var viewIndex = 0;
-        for (var index = 0; index < _source.Count; index++)
+        for (var index = 0; index < _source.Count; ++index)
         {
             var item = _source[index];
             if (viewHash.Contains(item))
             {
-                viewIndex++;
+                ++viewIndex;
                 continue;
             }
 
             if (HandleItemAdded(index, item, viewIndex))
-                viewIndex++;
+                ++viewIndex;
         }
     }
 
@@ -420,41 +448,38 @@ public class AdvancedObservableCollection<T> : IList<T>, IList, INotifyCollectio
         }
     }
 
-    private bool HandleItemAdded(int newStartingIndex, T newItem, int? viewIndex = null)
+    private bool HandleItemAdded(int sourceIndex, T newItem, int? viewIndex = null)
     {
         if (_filter is not null && !_filter(newItem))
             return false;
 
         var newViewIndex = _view.Count;
 
-        if (SortDescriptions.Any())
+        if (SortDescriptions.Count is not 0)
         {
             _sortProperties.Clear();
             newViewIndex = _view.BinarySearch(newItem, this);
             if (newViewIndex < 0)
                 newViewIndex = ~newViewIndex;
         }
-        else if (_filter is not null)
+        else if (sourceIndex is 0 || _view.Count is 0)
+            newViewIndex = 0;
+        else if (viewIndex.HasValue)
+            newViewIndex = viewIndex.Value;
+        else if (_view.Count == _source.Count - 1)
+            newViewIndex = _view.Count;
+        else
         {
-            if (newStartingIndex is 0 || _view.Count is 0)
-                newViewIndex = 0;
-            else if (newStartingIndex == _source.Count - 1)
-                newViewIndex = _view.Count;
-            else if (viewIndex.HasValue)
-                newViewIndex = viewIndex.Value;
-            else
+            for (int i = 0, j = 0; i < _source.Count; ++i)
             {
-                for (int i = 0, j = 0; i < _source.Count; i++)
+                if (i == sourceIndex || j >= _view.Count)
                 {
-                    if (i == newStartingIndex)
-                    {
-                        newViewIndex = j;
-                        break;
-                    }
-
-                    if (_view[j] == _source[i])
-                        j++;
+                    newViewIndex = j;
+                    break;
                 }
+
+                if (_view[j] == _source[i])
+                    j++;
             }
         }
 

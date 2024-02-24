@@ -27,13 +27,7 @@ namespace Pixeval.Controls.SpotlightArticleView;
 public class SpotlightArticleFetchEngineIncrementalSource(IAsyncEnumerable<SpotlightArticle> asyncEnumerator, int limit = -1)
     : FetchEngineIncrementalSource<SpotlightArticle, SpotlightArticleViewModel>(asyncEnumerator, limit)
 {
-    protected override long Identifier(SpotlightArticle entity)
-    {
-        return entity.Id;
-    }
+    protected override long Identifier(SpotlightArticle entity) => entity.Id;
 
-    protected override SpotlightArticleViewModel Select(SpotlightArticle entity)
-    {
-        return new SpotlightArticleViewModel(entity);
-    }
+    protected override SpotlightArticleViewModel Select(SpotlightArticle entity) => new(entity);
 }

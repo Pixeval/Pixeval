@@ -20,14 +20,33 @@
 
 #endregion
 
+using Microsoft.Windows.ApplicationModel.Resources;
+using Pixeval.Attributes;
+
 namespace Pixeval.Controls;
 
 public enum ItemsViewLayoutType
 {
+    [LocalizedResource(typeof(AdvancedItemsViewResources), nameof(AdvancedItemsViewResources.LinedFlow))]
     LinedFlow,
+
+    [LocalizedResource(typeof(AdvancedItemsViewResources), nameof(AdvancedItemsViewResources.Grid))]
     Grid,
+
     VerticalUniformStack,
+
     HorizontalUniformStack,
+
     VerticalStack,
+
     HorizontalStack,
+}
+
+static file class AdvancedItemsViewResources
+{
+    private static readonly ResourceLoader _resourceLoader = ResourceHelper.GetResourceLoader("AdvancedItemsView");
+
+    public static string LinedFlow { get; } = _resourceLoader.GetString("LinedFlow");
+
+    public static string Grid { get; } = _resourceLoader.GetString("Grid");
 }

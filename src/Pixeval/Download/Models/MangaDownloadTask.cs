@@ -21,9 +21,9 @@
 #endregion
 
 using System;
+using System.IO;
 using System.Threading.Tasks;
-using Windows.Storage.Streams;
-using Pixeval.Controls.IllustrationView;
+using Pixeval.Controls;
 using Pixeval.Database;
 using Pixeval.Utilities;
 using Pixeval.Utilities.Threading;
@@ -35,12 +35,18 @@ public class MangaDownloadTask(DownloadHistoryEntry entry, IllustrationItemViewM
 {
     protected int CurrentIndex { get; private set; }
 
-    public override async Task DownloadAsync(Func<string, IProgress<double>?, CancellationHandle?, Task<Result<IRandomAccessStream>>> downloadRandomAccessStreamAsync)
+    public override async Task DownloadAsync(
+        Func<string, IProgress<double>?, CancellationHandle?, Task<Result<Stream>>> downloadStreamAsync)
     {
         for (CurrentIndex = 0; CurrentIndex < Urls.Count; ++CurrentIndex)
         {
             var dest = Destination.Format(CurrentIndex);
-            await base.DownloadAsyncCore(downloadRandomAccessStreamAsync, Urls[CurrentIndex], dest);
+            await base.DownloadAsyncCore((a1, a2, a3) => downloadStreamAsync(a1, new MyProgress(a2, Urls.Count, CurrentIndex), a3), Urls[CurrentIndex], dest);
         }
     }
+}
+
+file class MyProgress(IProgress<double>? dest, int count, int index) : IProgress<double>
+{
+    public void Report(double value) => dest?.Report((100 * index + value) / count);
 }

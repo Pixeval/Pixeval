@@ -28,7 +28,7 @@ using Pixeval.CoreApi.Model;
 using Pixeval.Misc;
 using Pixeval.Utilities;
 
-namespace Pixeval.Controls.IllustrationView;
+namespace Pixeval.Controls;
 
 /// <summary>
 /// 复用时调用<see cref="CloneRef"/>，<see cref="FetchEngineRef"/>和<see cref="IllustrationSourceRef"/>会在所有复用对象都Dispose时Dispose。
@@ -47,8 +47,8 @@ public class IllustrationViewDataProvider : ObservableObject, IDataProvider<Illu
         {
             if (Equals(value, _fetchEngineRef))
                 return;
-            FetchEngine?.EngineHandle.Cancel();
-
+            if (_fetchEngineRef?.TryDispose(this) is true)
+                FetchEngine?.EngineHandle.Cancel();
             _fetchEngineRef = value;
         }
     }
@@ -61,11 +61,7 @@ public class IllustrationViewDataProvider : ObservableObject, IDataProvider<Illu
             if (Equals(_illustrationSourceRef, value))
                 return;
 
-            OnPropertyChanging();
-            if (_illustrationSourceRef is { } old)
-            {
-                _ = old.TryDispose(this);
-            }
+            DisposeIllustrationSourceRef();
             _illustrationSourceRef = value;
             View.Source = value.Value;
             OnPropertyChanged();
@@ -78,29 +74,17 @@ public class IllustrationViewDataProvider : ObservableObject, IDataProvider<Illu
 
     public IncrementalLoadingCollection<FetchEngineIncrementalSource<Illustration, IllustrationItemViewModel>, IllustrationItemViewModel> Source => _illustrationSourceRef.Value;
 
-    public void DisposeCurrent()
+    public void Dispose()
     {
-        // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
-        if (IllustrationSourceRef is not null)
-        {
-            if (IllustrationSourceRef.TryDispose(this))
-                foreach (var illustrationViewModel in Source)
-                    illustrationViewModel.Dispose();
-        }
+        DisposeIllustrationSourceRef();
+        // 赋值为null会自动调用setter中的Dispose逻辑
+        FetchEngineRef = null;
     }
 
     public void ResetEngine(IFetchEngine<Illustration?>? fetchEngine, int limit = -1)
     {
         FetchEngineRef = new SharedRef<IFetchEngine<Illustration?>?>(fetchEngine, this);
-        DisposeCurrent();
-
         IllustrationSourceRef = new SharedRef<IncrementalLoadingCollection<FetchEngineIncrementalSource<Illustration, IllustrationItemViewModel>, IllustrationItemViewModel>>(new IncrementalLoadingCollection<FetchEngineIncrementalSource<Illustration, IllustrationItemViewModel>, IllustrationItemViewModel>(new IllustrationFetchEngineIncrementalSource(FetchEngine!, limit)), this);
-    }
-
-    public void Dispose()
-    {
-        DisposeCurrent();
-        FetchEngineRef = null;
     }
 
     public IllustrationViewDataProvider CloneRef()
@@ -112,6 +96,13 @@ public class IllustrationViewDataProvider : ObservableObject, IDataProvider<Illu
         foreach (var viewSortDescription in View.SortDescriptions)
             dataProvider.View.SortDescriptions.Add(viewSortDescription);
         return dataProvider;
+    }
+
+    private void DisposeIllustrationSourceRef()
+    {
+        if (_illustrationSourceRef?.TryDispose(this) is true)
+            foreach (var illustrationViewModel in Source)
+                illustrationViewModel.Dispose();
     }
 
     ~IllustrationViewDataProvider() => Dispose();

@@ -19,27 +19,18 @@
 #endregion
 
 using System;
-using System.Threading.Tasks;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media.Animation;
+using Pixeval.AppManagement;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using WinUI3Utilities;
-using AppContext = Pixeval.AppManagement.AppContext;
 
 namespace Pixeval.Pages.Login;
 
 public sealed partial class LoginPage
 {
-    private readonly BrowserInfo[] _browserInfos =
-    [
-        BrowserInfo.Chrome,
-        BrowserInfo.Edge,
-        BrowserInfo.Firefox,
-        BrowserInfo.WebView2
-    ];
-
     private readonly LoginPageViewModel _viewModel;
 
     public LoginPage()
@@ -48,29 +39,17 @@ public sealed partial class LoginPage
         InitializeComponent();
     }
 
-    private async void ItemsView_OnItemInvoked(ItemsView sender, ItemsViewItemInvokedEventArgs args)
+    private async void Login_OnTapped(object sender, TappedRoutedEventArgs e)
     {
         try
         {
-            var browserInfo = sender.SelectedItem.To<BrowserInfo>();
-            if (await (browserInfo.Type switch
-            {
-                AvailableBrowserType.Chrome => _viewModel.BrowserLoginAsync(BrowserInfo.Chrome, this, Navigated),
-                AvailableBrowserType.Edge => _viewModel.BrowserLoginAsync(BrowserInfo.Edge, this, Navigated),
-                AvailableBrowserType.Firefox => _viewModel.BrowserLoginAsync(BrowserInfo.Firefox, this, Navigated),
-                AvailableBrowserType.WebView2 => _viewModel.WebView2LoginAsync(this, Navigated),
-                _ => ThrowHelper.ArgumentOutOfRange<AvailableBrowserType, Task<string?>>(browserInfo.Type)
-            }) is { } error)
-            {
-                _viewModel.AdvancePhase(LoginPageViewModel.LoginPhaseEnum.WaitingForUserInput);
-                _ = await this.CreateAcknowledgementAsync(LoginPageResources.ErrorWhileLoggingInTitle, error);
-            }
+            await _viewModel.WebView2LoginAsync(this, Navigated);
         }
         catch (Exception exception)
         {
             _ = await this.CreateAcknowledgementAsync(LoginPageResources.ErrorWhileLoggingInTitle,
                     LoginPageResources.ErrorWhileLogginInContentFormatted.Format(exception + "\n" + exception.StackTrace));
-            Application.Current.Exit();
+            _viewModel.ExitApp();
         }
 
         return;
@@ -83,7 +62,7 @@ public sealed partial class LoginPage
             {
                 _viewModel.AdvancePhase(LoginPageViewModel.LoginPhaseEnum.SuccessNavigating);
                 NavigateParent<MainPage>(null, new DrillInNavigationTransitionInfo());
-                AppContext.SaveContext();
+                AppInfo.SaveContext();
             });
         }
     }
@@ -92,22 +71,27 @@ public sealed partial class LoginPage
     {
         try
         {
-            if (_viewModel.CheckRefreshAvailable())
+            if (_viewModel.CheckRefreshAvailable() is { } session)
             {
-                await _viewModel.RefreshAsync();
+                await _viewModel.RefreshAsync(session);
                 NavigateParent<MainPage>(null, new DrillInNavigationTransitionInfo());
             }
             else
             {
                 _viewModel.AdvancePhase(LoginPageViewModel.LoginPhaseEnum.WaitingForUserInput);
-                _viewModel.IsFinished = true;
+                _viewModel.IsFinished = _viewModel.IsEnabled = true;
             }
         }
         catch (Exception exception)
         {
             _ = await this.CreateAcknowledgementAsync(LoginPageResources.ErrorWhileLoggingInTitle,
                     LoginPageResources.ErrorWhileLogginInContentFormatted.Format(exception.StackTrace));
-            Application.Current.Exit();
+            _viewModel.ExitApp();
         }
+    }
+
+    private void LoginPage_OnUnloaded(object sender, RoutedEventArgs e)
+    {
+        _viewModel.Dispose();
     }
 }

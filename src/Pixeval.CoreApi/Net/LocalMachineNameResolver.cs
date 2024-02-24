@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval.CoreApi
+#region Copyright (c) Pixeval/Pixeval.CoreApi
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
@@ -23,7 +23,7 @@ using System.Threading.Tasks;
 
 namespace Pixeval.CoreApi.Net;
 
-internal class LocalMachineNameResolver : INameResolver
+public class LocalMachineNameResolver : INameResolver
 {
     public Task<IPAddress[]> Lookup(string hostname)
     {

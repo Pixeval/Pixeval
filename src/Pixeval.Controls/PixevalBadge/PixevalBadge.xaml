@@ -22,6 +22,7 @@
         VerticalAlignment="Center"
         Background="{x:Bind BadgeColor, Mode=OneWay}"
         CornerRadius="{ThemeResource ControlCornerRadius}">
+        <!--  ReSharper disable once UnusedMember.Local  -->
         <TextBlock
             x:Name="BadgeTextBlock"
             Margin="2"

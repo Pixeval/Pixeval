@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval.CoreApi
+#region Copyright (c) Pixeval/Pixeval.CoreApi
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
@@ -22,8 +22,9 @@ using System.Text.Json.Serialization;
 
 namespace Pixeval.CoreApi.Model;
 
-public record ProfileImageUrls
+[Factory]
+public partial record ProfileImageUrls
 {
     [JsonPropertyName("medium")]
-    public required string Medium { get; set; }
+    public required string Medium { get; set; } = DefaultImageUrls.ImageNotAvailable;
 }

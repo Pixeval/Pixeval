@@ -1,0 +1,17 @@
+{
+  "RankOptionComboBox/PlaceholderText": "选择模式",
+  "RankOptionDay": "每日榜单",
+  "RankOptionDayFemale": "女性向日榜",
+  "RankOptionDayFemaleR18": "女性向R-18日榜",
+  "RankOptionDayMale": "男性向日榜",
+  "RankOptionDayMaleR18": "男性向R-18日榜",
+  "RankOptionDayManga": "多图/漫画日榜",
+  "RankOptionDayR18": "R-18日榜",
+  "RankOptionMonth": "每月榜单",
+  "RankOptionWeek": "每周榜单",
+  "RankOptionWeekManga": "多图/漫画周榜",
+  "RankOptionWeekOriginal": "原创",
+  "RankOptionWeekR18": "R-18周榜",
+  "RankOptionWeekR18G": "R-18G周榜",
+  "RankOptionWeekRookie": "新人"
+}

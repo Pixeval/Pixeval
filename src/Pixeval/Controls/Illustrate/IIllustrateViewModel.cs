@@ -27,7 +27,7 @@ namespace Pixeval.Controls.Illustrate;
 
 [DebuggerDisplay("{Illustrate}")]
 public abstract class IllustrateViewModel<T>(T illustrate) : ObservableObject, IDisposable
-    where T : IIllustrate
+    where T : IEntry
 {
     public T Illustrate { get; } = illustrate;
 

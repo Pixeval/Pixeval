@@ -29,8 +29,11 @@ namespace Pixeval.AppManagement;
 
 public class AppKnownFolders(StorageFolder self)
 {
-    public static AppKnownFolders Local = new(ApplicationData.Current.LocalFolder,
-        _ => ApplicationData.Current.ClearAsync(ApplicationDataLocality.Local).AsTask());
+    public static AppKnownFolders Local = new(ApplicationData.Current.LocalFolder, _ => Task.CompletedTask);
+    
+    public static AppKnownFolders Log = null!;
+
+    public static AppKnownFolders Roaming = new(ApplicationData.Current.RoamingFolder, _ => Task.CompletedTask);
 
     public static AppKnownFolders SavedWallPaper = null!;
 
@@ -39,10 +42,7 @@ public class AppKnownFolders(StorageFolder self)
 
     private readonly Func<StorageFolder, Task>? _deleter;
 
-    private AppKnownFolders(StorageFolder self, Func<StorageFolder, Task> deleter) : this(self)
-    {
-        _deleter = deleter;
-    }
+    private AppKnownFolders(StorageFolder self, Func<StorageFolder, Task> deleter) : this(self) => _deleter = deleter;
 
     public StorageFolder Self { get; } = self;
 
@@ -54,6 +54,7 @@ public class AppKnownFolders(StorageFolder self)
     public static async Task InitializeAsync()
     {
         SavedWallPaper = await GetOrCreate(Local, "Wallpapers");
+        Log = await GetOrCreate(Local, "Logs");
     }
 
     /// <summary>
@@ -64,16 +65,17 @@ public class AppKnownFolders(StorageFolder self)
     public static IAsyncOperation<StorageFile> CreateTemporaryFileWithRandomNameAsync(string? extension = null)
     {
         return Temporary.CreateFileAsync(Guid.NewGuid() + (extension ?? ".temp"));
+        // return File.Create(Path.Combine(Temporary.Self.Path, Guid.NewGuid() + (extension ?? ".temp")));
     }
 
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="extension">Including the leading dot.</param>
+    /// <param name="name"></param>
     /// <returns></returns>
-    public static IAsyncOperation<StorageFile> CreateTemporaryFileWithNameAsync(string name, string? extension = null)
+    public static IAsyncOperation<StorageFile> CreateTemporaryFileWithNameAsync(string name)
     {
-        return Temporary.CreateFileAsync(name + (extension ?? ".temp"));
+        return Temporary.CreateFileAsync(name);
     }
 
     public IAsyncOperation<StorageFile> GetFileAsync(string name)

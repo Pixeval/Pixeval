@@ -27,10 +27,10 @@ using Pixeval.Utilities;
 
 namespace Pixeval.CoreApi.Engine.Implements;
 
-public class PostedMangaEngine(MakoClient makoClient, string uid, TargetFilter targetFilter, EngineHandle? engineHandle)
+public class PostedMangaEngine(MakoClient makoClient, long uid, TargetFilter targetFilter, EngineHandle? engineHandle)
     : AbstractPixivFetchEngine<Illustration>(makoClient, engineHandle)
 {
-    private readonly string _uid = uid;
+    private readonly long _uid = uid;
 
     public override IAsyncEnumerator<Illustration> GetAsyncEnumerator(CancellationToken cancellationToken = new CancellationToken())
     {

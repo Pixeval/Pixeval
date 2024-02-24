@@ -84,7 +84,7 @@ public class FileCache
     }
 
     /// <summary>
-    ///     Adds an entry to the cache
+    /// Adds an entry to the cache
     /// </summary>
     /// <param name="key">Unique identifier for the entry</param>
     /// <param name="data">Data object to store</param>
@@ -123,7 +123,7 @@ public class FileCache
     }
 
     /// <summary>
-    ///     Adds an entry to the cache
+    /// Adds an entry to the cache
     /// </summary>
     /// <param name="key">Unique identifier for the entry</param>
     /// <param name="data">Data object to store</param>
@@ -131,17 +131,17 @@ public class FileCache
     /// <param name="eTag">Optional eTag information</param>
     public Task AddAsync(object key, object data, TimeSpan expireIn, string? eTag = null)
     {
-        Guard.IsNotNull(key, nameof(key));
-        Guard.IsNotNullOrEmpty(key as string, nameof(key));
-        Guard.IsNotNull(data, nameof(data));
+        Guard.IsNotNull(key);
+        Guard.IsNotNullOrEmpty(key as string);
+        Guard.IsNotNull(data);
 
-        return AddAsync(key switch
+        return key switch
         {
-            Guid g => g,
-            string s => Guid.Parse(s),
-            _ when _supportedKeyTypes.Contains(key.GetType()) => HashToGuid(key),
-            _ => ThrowHelper.ArgumentOutOfRange<object, object>(key)
-        }, data, expireIn, eTag);
+            Guid g => AddAsync(g, data, expireIn, eTag),
+            string s => AddAsync(Guid.Parse(s), data, expireIn, eTag),
+            _ when _supportedKeyTypes.Contains(key.GetType()) => AddAsync(HashToGuid(key), data, expireIn, eTag),
+            _ => ThrowHelper.ArgumentOutOfRange<object, Task>(key)
+        };
     }
 
     public async Task<bool> TryAddAsync(string key, object data, TimeSpan expireIn, string? eTag = null)
@@ -156,7 +156,7 @@ public class FileCache
     }
 
     /// <summary>
-    ///     Adds an entry to the cache
+    /// Adds an entry to the cache
     /// </summary>
     /// <param name="key">Unique identifier for the entry</param>
     /// <param name="data">Data object to store</param>
@@ -164,20 +164,20 @@ public class FileCache
     /// <param name="eTag">Optional eTag information</param>
     public Task AddAsync(string key, object data, TimeSpan expireIn, string? eTag = null)
     {
-        Guard.IsNotNull(key, nameof(key));
-        Guard.IsNotNull(data, nameof(data));
+        Guard.IsNotNull(key);
+        Guard.IsNotNull(data);
 
         return AddAsync(HashToGuid(key), data, expireIn, eTag);
     }
 
     /// <summary>
-    ///     Empties all specified entries regardless of whether they're expired or not.
-    ///     Throws an exception if any deletion fails and rollback changes.
+    /// Empties all specified entries regardless of whether they're expired or not.
+    /// Throws an exception if any deletion fails and rollback changes.
     /// </summary>
     /// <param name="keys">keys to empty</param>
     public Task EmptyAsync(params object[] keys)
     {
-        Guard.IsNotNull(keys, nameof(keys));
+        Guard.IsNotNull(keys);
 
         var arrElementType = keys.GetType().GetElementType();
         return keys switch
@@ -190,8 +190,8 @@ public class FileCache
     }
 
     /// <summary>
-    ///     Empties all specified entries regardless if they are expired.
-    ///     Throws an exception if any deletions fail and rolls back changes.
+    /// Empties all specified entries regardless if they are expired.
+    /// Throws an exception if any deletions fail and rolls back changes.
     /// </summary>
     /// <param name="keys">keys to empty</param>
     public Task EmptyAsync(params string[] keys)
@@ -200,8 +200,8 @@ public class FileCache
     }
 
     /// <summary>
-    ///     Empties all specified entries regardless if they are expired.
-    ///     Throws an exception if any deletions fail and rolls back changes.
+    /// Empties all specified entries regardless if they are expired.
+    /// Throws an exception if any deletions fail and rolls back changes.
     /// </summary>
     /// <param name="keys">keys to empty</param>
     public async Task EmptyAsync(IEnumerable<Guid> keys)
@@ -225,8 +225,8 @@ public class FileCache
     }
 
     /// <summary>
-    ///     Empties all expired entries that are in the cache.
-    ///     Throws an exception if any deletions fail and rolls back changes.
+    /// Empties all expired entries that are in the cache.
+    /// Throws an exception if any deletions fail and rolls back changes.
     /// </summary>
     public async Task EmptyAllAsync()
     {
@@ -247,8 +247,8 @@ public class FileCache
     }
 
     /// <summary>
-    ///     Empties all expired entries that are in the cache.
-    ///     Throws an exception if any deletions fail and rolls back changes.
+    /// Empties all expired entries that are in the cache.
+    /// Throws an exception if any deletions fail and rolls back changes.
     /// </summary>
     public async Task EmptyExpiredAsync()
     {
@@ -274,7 +274,7 @@ public class FileCache
     }
 
     /// <summary>
-    ///     Checks to see if the key exists in the cache.
+    /// Checks to see if the key exists in the cache.
     /// </summary>
     /// <param name="key">Unique identifier for the entry to check</param>
     /// <returns>If the key exists</returns>
@@ -292,18 +292,18 @@ public class FileCache
     }
 
     /// <summary>
-    ///     Checks to see if the key exists in the cache.
+    /// Checks to see if the key exists in the cache.
     /// </summary>
     /// <param name="key">Unique identifier for the entry to check</param>
     /// <returns>If the key exists</returns>
     public Task<bool> ExistsAsync(string key)
     {
-        Guard.IsNotNull(key, nameof(key));
+        Guard.IsNotNull(key);
         return ExistsAsync(HashToGuid(key));
     }
 
     /// <summary>
-    ///     Checks to see if the key exists in the cache.
+    /// Checks to see if the key exists in the cache.
     /// </summary>
     /// <param name="key">Unique identifier for the entry to check</param>
     /// <returns>If the key exists</returns>
@@ -322,7 +322,7 @@ public class FileCache
     }
 
     /// <summary>
-    ///     Gets all the keys that are saved in the cache
+    /// Gets all the keys that are saved in the cache
     /// </summary>
     /// <returns>The IEnumerable of keys</returns>
     public async Task<IEnumerable<Guid>> GetKeysAsync(CacheState state = CacheState.Active)
@@ -356,7 +356,7 @@ public class FileCache
 
     public Task<T> GetAsync<T>(object key)
     {
-        Guard.IsNotNull(key, nameof(key));
+        Guard.IsNotNull(key);
 
         return key switch
         {
@@ -378,7 +378,7 @@ public class FileCache
     }
 
     /// <summary>
-    ///     Gets the data entry for the specified key.
+    /// Gets the data entry for the specified key.
     /// </summary>
     /// <param name="key">Unique identifier for the entry to get</param>
     /// <returns>The data object that was stored if found, else default(T)</returns>
@@ -410,12 +410,12 @@ public class FileCache
             _ = _indexLocker.Release();
         }
 
-        throw new KeyNotFoundException(key.ToString());
+        return ThrowUtils.KeyNotFound<T>(key.ToString());
     }
 
     public Task<DateTimeOffset?> GetExpirationAsync(object key)
     {
-        Guard.IsNotNull(key, nameof(key));
+        Guard.IsNotNull(key);
 
         return key switch
         {
@@ -427,18 +427,18 @@ public class FileCache
     }
 
     /// <summary>
-    ///     Gets the DateTime that the item will expire for the specified key.
+    /// Gets the DateTime that the item will expire for the specified key.
     /// </summary>
     /// <param name="key">Unique identifier for entry to get</param>
     /// <returns>The expiration date if the key is found, else null</returns>
     public Task<DateTimeOffset?> GetExpirationAsync(string key)
     {
-        Guard.IsNotNullOrWhiteSpace(key, nameof(key));
+        Guard.IsNotNullOrWhiteSpace(key);
         return GetExpirationAsync(Guid.Parse(key));
     }
 
     /// <summary>
-    ///     Gets the DateTime that the item will expire for the specified key.
+    /// Gets the DateTime that the item will expire for the specified key.
     /// </summary>
     /// <param name="key">Unique identifier for entry to get</param>
     /// <returns>The expiration date if the key is found, else null</returns>
@@ -457,13 +457,13 @@ public class FileCache
     }
 
     /// <summary>
-    ///     Gets the ETag for the specified key.
+    /// Gets the ETag for the specified key.
     /// </summary>
     /// <param name="key">Unique identifier for entry to get</param>
     /// <returns>The ETag if the key is found, else null</returns>
     public Task<string?> GetETag(object key)
     {
-        Guard.IsNotNull(key, nameof(key));
+        Guard.IsNotNull(key);
 
         return key switch
         {
@@ -475,18 +475,18 @@ public class FileCache
     }
 
     /// <summary>
-    ///     Gets the ETag for the specified key.
+    /// Gets the ETag for the specified key.
     /// </summary>
     /// <param name="key">Unique identifier for entry to get</param>
     /// <returns>The ETag if the key is found, else null</returns>
     public Task<string?> GetETagAsync(string key)
     {
-        Guard.IsNotNullOrWhiteSpace(key, nameof(key));
+        Guard.IsNotNullOrWhiteSpace(key);
         return GetETagAsync(HashToGuid(key));
     }
 
     /// <summary>
-    ///     Gets the ETag for the specified key.
+    /// Gets the ETag for the specified key.
     /// </summary>
     /// <param name="key">Unique identifier for entry to get</param>
     /// <returns>The ETag if the key is found, else null</returns>
@@ -505,7 +505,7 @@ public class FileCache
     }
 
     /// <summary>
-    ///     Checks to see if the entry for the key is expired.
+    /// Checks to see if the entry for the key is expired.
     /// </summary>
     /// <param name="key">Key to check</param>
     /// <returns>If the expiration data has been met</returns>
@@ -523,7 +523,7 @@ public class FileCache
     }
 
     /// <summary>
-    ///     Checks to see if the entry for the key is expired.
+    /// Checks to see if the entry for the key is expired.
     /// </summary>
     /// <param name="key">Key to check</param>
     /// <returns>If the expiration data has been met</returns>
@@ -533,7 +533,7 @@ public class FileCache
     }
 
     /// <summary>
-    ///     Checks to see if the entry for the key is expired.
+    /// Checks to see if the entry for the key is expired.
     /// </summary>
     /// <param name="key">Key to check</param>
     /// <returns>If the expiration data has been met</returns>
@@ -585,8 +585,8 @@ public class FileCache
 
     private static Guid HashToGuid(object input)
     {
-        Guard.IsNotNull(input, nameof(input));
-        Guard.IsNotOfType<Guid>(input, nameof(input));
+        Guard.IsNotNull(input);
+        Guard.IsNotOfType<Guid>(input);
 
         return input switch
         {
@@ -605,7 +605,7 @@ public class FileCache
     }
 
     /// <summary>
-    ///     Gets the expiration from a timespan
+    /// Gets the expiration from a timespan
     /// </summary>
     /// <param name="timeSpan"></param>
     /// <returns></returns>
@@ -623,23 +623,23 @@ public class FileCache
 }
 
 /// <summary>
-///     Current state of the item in the cache.
+/// Current state of the item in the cache.
 /// </summary>
 [Flags]
 public enum CacheState
 {
     /// <summary>
-    ///     An unknown state for the cache item
+    /// An unknown state for the cache item
     /// </summary>
     None = 0,
 
     /// <summary>
-    ///     Expired cache item
+    /// Expired cache item
     /// </summary>
     Expired = 1,
 
     /// <summary>
-    ///     Active non-expired cache item
+    /// Active non-expired cache item
     /// </summary>
     Active = 2
 }

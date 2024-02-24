@@ -19,71 +19,66 @@
 #endregion
 
 using System;
-using System.Threading.Tasks;
 using Windows.System;
+using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
-using Pixeval.Controls.TokenInput;
+using Pixeval.AppManagement;
+using Pixeval.Controls;
 using Pixeval.Controls.Windowing;
 using Pixeval.Database.Managers;
 using Pixeval.Download.MacroParser;
-using Pixeval.SettingsModels;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
-using AppContext = Pixeval.AppManagement.AppContext;
+using Pixeval.Options;
+using WinUI3Utilities;
 
 namespace Pixeval.Pages.Misc;
 
-// TODO set language
+[INotifyPropertyChanged]
 public sealed partial class SettingsPage
 {
-    // This TestParser is used to test whether the user input meta path is legal
+    /// <summary>
+    /// This TestParser is used to test whether the user input meta path is legal
+    /// </summary>
     private static readonly MacroParser<string> _testParser = new();
 
-    // The previous meta path after user changes the path field, if the path is illegal
-    // its value will be reverted to this field.
+    /// <summary>
+    /// The previous meta path after user changes the path field, if the path is illegal
+    /// its value will be reverted to this field.
+    /// </summary>
     private string _previousPath = "";
-    private SettingsPageViewModel _viewModel = null!;
 
-    public SettingsPage()
-    {
-        InitializeComponent();
-    }
+    private SettingsPageViewModel ViewModel { get; set; } = null!;
+
+    public SettingsPage() => InitializeComponent();
 
     public override void OnPageActivated(NavigationEventArgs e, object? parameter)
     {
-        _viewModel = new SettingsPageViewModel(App.AppViewModel.AppSetting, Window);
-        _previousPath = _viewModel.DefaultDownloadPathMacro;
+        ViewModel = new SettingsPageViewModel(Window.Content.To<FrameworkElement>());
+        _previousPath = ViewModel.DefaultDownloadPathMacro;
     }
 
-    public override void OnPageDeactivated(NavigatingCancelEventArgs e)
+    private void SettingsPage_OnUnloaded(object sender, RoutedEventArgs e)
     {
         Bindings.StopTracking();
-        AppContext.SaveConfig(App.AppViewModel.AppSetting);
-        _viewModel = null!;
-    }
-
-    private void SettingsPage_OnLoaded(object sender, RoutedEventArgs e)
-    {
-        CheckForUpdatesEntry.Header = GitVersionInformation.SemVer;
+        ViewModel.SaveCollections();
+        App.AppViewModel.AppSettings = ViewModel.AppSetting;
+        AppInfo.SaveConfig(ViewModel.AppSetting);
+        ViewModel = null!;
     }
 
     private void Theme_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        WindowFactory.SetTheme(_viewModel.Theme);
+        WindowFactory.SetTheme(ViewModel.Theme);
     }
 
     private void Backdrop_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        WindowFactory.SetBackdrop(_viewModel.Backdrop);
-    }
-
-    private async void ThemeEntryDescriptionHyperlinkButton_OnTapped(object sender, TappedRoutedEventArgs e)
-    {
-        _ = await Launcher.LaunchUriAsync(new Uri("ms-settings:themes"));
+        WindowFactory.SetBackdrop(ViewModel.Backdrop);
     }
 
     private void ImageMirrorServerTextBox_OnGotFocus(object sender, RoutedEventArgs e)
@@ -93,30 +88,21 @@ public sealed partial class SettingsPage
 
     private void ImageMirrorServerTextBox_OnLosingFocus(UIElement sender, LosingFocusEventArgs args)
     {
-        if (_viewModel.MirrorHost.IsNotNullOrEmpty() && Uri.CheckHostName(_viewModel.MirrorHost) == UriHostNameType.Unknown)
+        if (ViewModel.MirrorHost.IsNotNullOrEmpty() && Uri.CheckHostName(ViewModel.MirrorHost) is UriHostNameType.Unknown)
         {
             ImageMirrorServerTextBox.Text = "";
             ImageMirrorServerTextBoxTeachingTip.IsOpen = true;
         }
     }
 
-    private async void CheckForUpdateButton_OnTapped(object sender, TappedRoutedEventArgs e)
+    private void CheckForUpdateButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        _viewModel.LastCheckedUpdate = DateTimeOffset.Now;
-        CheckingForUpdatePanel.Show();
-        // TODO add update check
-        await Task.Delay(2000);
-        CheckingForUpdatePanel.Collapse();
+        ViewModel.CheckForUpdate();
     }
 
-    private async void FeedbackByEmailHyperlinkButton_OnTapped(object sender, TappedRoutedEventArgs e)
+    private async void OpenHyperlinkButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        await Launcher.LaunchUriAsync(new Uri("mailto:decem0730@hotmail.com"));
-    }
-
-    private async void OpenFontSettingsHyperlinkButton_OnTapped(object sender, TappedRoutedEventArgs e)
-    {
-        await Launcher.LaunchUriAsync(new Uri("ms-settings:fonts"));
+        _ = await Launcher.LaunchUriAsync(new Uri(sender.GetTag<string>()));
     }
 
     private async void PerformSignOutButton_OnTapped(object sender, TappedRoutedEventArgs e)
@@ -124,7 +110,7 @@ public sealed partial class SettingsPage
         if (await this.CreateOkCancelAsync(SettingsPageResources.SignOutConfirmationDialogTitle,
                 SettingsPageResources.SignOutConfirmationDialogContent) is ContentDialogResult.Primary)
         {
-            await AppContext.ClearDataAsync();
+            AppInfo.ClearSession();
             App.AppViewModel.SignOutExit = true;
             Window.Close();
         }
@@ -135,62 +121,77 @@ public sealed partial class SettingsPage
         if (await this.CreateOkCancelAsync(SettingsPageResources.ResetSettingConfirmationDialogTitle,
                 SettingsPageResources.ResetSettingConfirmationDialogContent) is ContentDialogResult.Primary)
         {
-            _viewModel.ResetDefault();
+            ViewModel.ResetDefault();
+            OnPropertyChanged(nameof(ViewModel));
         }
     }
 
     private void DefaultDownloadPathMacroTextBox_OnLostFocus(object sender, RoutedEventArgs e)
     {
-        if (_viewModel.DefaultDownloadPathMacro.IsNullOrBlank())
+        if (ViewModel.DefaultDownloadPathMacro.IsNullOrBlank())
         {
-            DownloadPathMacroInvalidTeachingTip.IsOpen = true;
-            DownloadPathMacroInvalidTeachingTip.Subtitle = SettingsPageResources.DownloadPathMacroInvalidTeachingTipInputCannotBeBlank;
-            _viewModel.DefaultDownloadPathMacro = _previousPath;
+            DownloadMacroInvalidTeachingTip.Subtitle = SettingsPageResources.DownloadMacroInvalidTeachingTipInputCannotBeBlank;
+            DownloadMacroInvalidTeachingTip.IsOpen = true;
+            ViewModel.DefaultDownloadPathMacro = _previousPath;
             return;
         }
 
         try
         {
-            _testParser.SetupParsingEnvironment(new Lexer(_viewModel.DefaultDownloadPathMacro));
+            _testParser.SetupParsingEnvironment(new Lexer(ViewModel.DefaultDownloadPathMacro));
             _ = _testParser.Parse();
         }
         catch (Exception exception)
         {
-            DownloadPathMacroInvalidTeachingTip.IsOpen = true;
-            DownloadPathMacroInvalidTeachingTip.Subtitle = SettingsPageResources.DownloadPathMacroInvalidTeachingTipMacroInvalidFormatted.Format(exception.Message);
-            _viewModel.DefaultDownloadPathMacro = _previousPath;
+            DownloadMacroInvalidTeachingTip.Subtitle = SettingsPageResources.DownloadMacroInvalidTeachingTipMacroInvalidFormatted.Format(exception.Message);
+            DownloadMacroInvalidTeachingTip.IsOpen = true;
+            ViewModel.DefaultDownloadPathMacro = _previousPath;
         }
     }
 
     private void DefaultDownloadPathMacroTextBox_OnGotFocus(object sender, RoutedEventArgs e)
     {
-        DownloadPathMacroInvalidTeachingTip.IsOpen = false;
-        _previousPath = _viewModel.DefaultDownloadPathMacro;
+        DownloadMacroInvalidTeachingTip.IsOpen = false;
+        _previousPath = ViewModel.DefaultDownloadPathMacro;
     }
 
-    private void MacroTokenInputBox_OnTokenTapped(object? sender, Token e)
+    private void PathMacroTokenInputBox_OnTokenTapped(object? sender, Token e)
     {
-        _viewModel.DefaultDownloadPathMacro = _viewModel.DefaultDownloadPathMacro.Insert(DefaultDownloadPathMacroTextBox.SelectionStart, e.TokenContent);
+        ViewModel.DefaultDownloadPathMacro = ViewModel.DefaultDownloadPathMacro.Insert(DefaultDownloadPathMacroTextBox.SelectionStart, e.TokenContent);
     }
 
     private void DeleteSearchHistoriesButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
         using var scope = App.AppViewModel.AppServicesScope;
         var manager = scope.ServiceProvider.GetRequiredService<SearchHistoryPersistentManager>();
-        _viewModel.ClearData(ClearDataKind.SearchHistory, manager);
+        ViewModel.ClearData(ClearDataKind.SearchHistory, manager);
     }
 
     private void DeleteBrowseHistoriesButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
         using var scope = App.AppViewModel.AppServicesScope;
         var manager = scope.ServiceProvider.GetRequiredService<BrowseHistoryPersistentManager>();
-        _viewModel.ClearData(ClearDataKind.BrowseHistory, manager);
+        ViewModel.ClearData(ClearDataKind.BrowseHistory, manager);
     }
 
     private void DeleteDownloadHistoriesButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
         using var scope = App.AppViewModel.AppServicesScope;
         var manager = scope.ServiceProvider.GetRequiredService<DownloadHistoryPersistentManager>();
-        _viewModel.ClearData(ClearDataKind.DownloadHistory, manager);
+        ViewModel.ClearData(ClearDataKind.DownloadHistory, manager);
+    }
+
+    private void OpenFolder_OnTapped(object sender, TappedRoutedEventArgs e)
+    {
+        var folder = sender.GetTag<string>() switch
+        {
+            "Log" => AppKnownFolders.Log.Self,
+            "Temp" => AppKnownFolders.Temporary.Self,
+            "Local" => AppKnownFolders.Local.Self,
+            "Roaming" => AppKnownFolders.Roaming.Self,
+            _ => null
+        };
+        if (folder is not null)
+            _ = Launcher.LaunchFolderAsync(folder);
     }
 }

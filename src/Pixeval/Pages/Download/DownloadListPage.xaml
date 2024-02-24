@@ -2,12 +2,13 @@
     x:Class="Pixeval.Pages.Download.DownloadListPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:attributes="using:Pixeval.Attributes"
     xmlns:controls="using:Pixeval.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:download="using:Pixeval.Pages.Download"
     xmlns:markup="using:Pixeval.Controls.MarkupExtensions"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:system="using:System"
+    xmlns:util="using:Pixeval.Util"
     Unloaded="DownloadListPage_OnUnloaded"
     mc:Ignorable="d">
     <Grid>
@@ -32,8 +33,8 @@
                 SelectedItem="{x:Bind _viewModel.CurrentOption, Mode=TwoWay}"
                 SelectionChanged="ModeFilterComboBox_OnSelectionChanged">
                 <ComboBox.ItemTemplate>
-                    <DataTemplate x:DataType="download:DownloadListOption">
-                        <TextBlock Text="{x:Bind attributes:LocalizedResourceAttributeHelper.GetLocalizedResourceContent((download:DownloadListOption))}" />
+                    <DataTemplate x:DataType="system:Enum">
+                        <TextBlock Text="{x:Bind util:LocalizedResourceAttributeHelper.GetLocalizedResourceContent((download:DownloadListOption))}" />
                     </DataTemplate>
                 </ComboBox.ItemTemplate>
             </ComboBox>
@@ -88,8 +89,6 @@
         <controls:AdvancedItemsView
             x:Name="AdvancedItemsView"
             Grid.Row="1"
-            ElementClearing="AdvancedItemsView_OnElementClearing"
-            ElementPrepared="AdvancedItemsView_OnElementPrepared"
             ItemsSource="{x:Bind _viewModel.DataProvider.View}"
             LayoutType="VerticalStack"
             SelectionChanged="ItemsView_OnSelectionChanged"
@@ -97,19 +96,11 @@
             <controls:AdvancedItemsView.ItemTemplate>
                 <DataTemplate x:DataType="download:DownloadListEntryViewModel">
                     <ItemContainer>
-                        <!--  ReSharper disable once Xaml.PossibleNullReferenceException (Illustrate.User!.Name)  -->
                         <download:DownloadListEntry
-                            Title="{x:Bind Illustrate.Title}"
                             Margin="16"
-                            ActionButtonContent="{x:Bind download:DownloadListEntryViewModel.GetEntryActionButtonContent(DownloadTask.CurrentState), Mode=OneWay}"
-                            Description="{x:Bind Illustrate.User.Name}"
-                            IsCancelItemEnabled="{x:Bind download:DownloadListEntryViewModel.GetIsEntryCancelDownloadItemEnabled(DownloadTask.CurrentState), Mode=OneWay}"
-                            IsRedownloadItemEnabled="{x:Bind download:DownloadListEntryViewModel.GetIsRedownloadItemEnabled(DownloadTask.CurrentState), Mode=OneWay}"
-                            IsShowErrorDetailDialogItemEnabled="{x:Bind download:DownloadListEntryViewModel.GetIsShowErrorDetailDialogItemEnabled(DownloadTask.CurrentState), Mode=OneWay}"
                             OpenIllustrationRequested="DownloadListEntry_OnOpenIllustrationRequested"
-                            Progress="{x:Bind DownloadTask.ProgressPercentage, Mode=OneWay}"
-                            ProgressMessage="{x:Bind download:DownloadListEntryViewModel.GetEntryProgressMessage(DownloadTask.CurrentState, DownloadTask.ProgressPercentage, DownloadTask.ErrorCause), Mode=OneWay}"
-                            ViewModel="{x:Bind}" />
+                            ViewModel="{x:Bind}"
+                            ViewModelChanged="DownloadListEntry_OnViewModelChanged" />
                     </ItemContainer>
                 </DataTemplate>
             </controls:AdvancedItemsView.ItemTemplate>

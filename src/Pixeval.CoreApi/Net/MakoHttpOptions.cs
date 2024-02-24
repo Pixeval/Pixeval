@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval.CoreApi
+#region Copyright (c) Pixeval/Pixeval.CoreApi
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
@@ -26,11 +26,10 @@ using System.Net.Sockets;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using Pixeval.Utilities;
 
 namespace Pixeval.CoreApi.Net;
 
-public static class MakoHttpOptions
+public static partial class MakoHttpOptions
 {
     public const string AppApiBaseUrl = "https://app-api.pixiv.net";
 
@@ -46,11 +45,14 @@ public static class MakoHttpOptions
 
     public const string OAuthHost = "oauth.secure.pixiv.net";
 
-    public static readonly Regex BypassRequiredHost = "^app-api\\.pixiv\\.net$|^www\\.pixiv\\.net$".ToRegex();
+    public static readonly Regex BypassRequiredHost = MyRegex();
+
+    [GeneratedRegex(@"^app-api\.pixiv\.net$|^www\.pixiv\.net$")]
+    private static partial Regex MyRegex();
 
     public static void UseHttpScheme(HttpRequestMessage request)
     {
-        if (request.RequestUri != null)
+        if (request.RequestUri is not null)
         {
             request.RequestUri = new UriBuilder(request.RequestUri)
             {
@@ -80,7 +82,7 @@ public static class MakoHttpOptions
             await sockets.ConnectAsync(await nameResolver.Lookup(context.InitialRequestMessage.RequestUri!.Host).ConfigureAwait(false), 443, token).ConfigureAwait(false);
             var networkStream = new NetworkStream(sockets, true); // disposed by sslStream
             var sslStream = new SslStream(networkStream, false, (_, _, _, _) => true);
-            await sslStream.AuthenticateAsClientAsync(string.Empty).ConfigureAwait(false);
+            await sslStream.AuthenticateAsClientAsync("").ConfigureAwait(false);
             return sslStream;
         };
     }

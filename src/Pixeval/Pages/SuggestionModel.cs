@@ -41,7 +41,7 @@ public record SuggestionModel(string? Name, string? TranslatedName, SuggestionTy
     public static readonly SuggestionModel NovelTrendingTagHeader =
         new(null, null, SuggestionType.NovelTrendingTagHeader);
 
-    public FontIcon? Icon => SuggestionType switch
+    public FontIcon? FontIcon => SuggestionType switch
     {
         SuggestionType.Tag => FontIconSymbols.TagE8EC.GetFontIcon(12),
         SuggestionType.Settings => FontIconSymbols.SettingsE713.GetFontIcon(12),
@@ -53,8 +53,7 @@ public record SuggestionModel(string? Name, string? TranslatedName, SuggestionTy
 
     public static SuggestionModel FromTag(Tag tag)
     {
-        var (name, translatedName) = tag;
-        return new SuggestionModel(name, translatedName, SuggestionType.Tag);
+        return new SuggestionModel(tag.Name, tag.TranslatedName, SuggestionType.Tag);
     }
 
     public static SuggestionModel FromHistory(SearchHistoryEntry history)

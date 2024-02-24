@@ -19,63 +19,171 @@
 #endregion
 
 using System;
-using WinUI3Utilities;
+using System.Diagnostics.CodeAnalysis;
+using Pixeval.Utilities;
 
 namespace Pixeval.AppManagement;
 
-public enum IterationStage
+/// <summary>
+/// A slightly modified semantic version
+/// </summary>
+/// <param name="major"></param>
+/// <param name="minor"></param>
+/// <param name="patch"></param>
+/// <param name="preReleaseSpecifier"></param>
+public class AppVersion(int major, int minor, int patch, int? preReleaseSpecifier = null) : IComparable<AppVersion>, IEquatable<AppVersion>, IParsable<AppVersion>
 {
-    Preview,
-    Stable
-}
+    public int Major { get; } = major;
 
-// A slightly modified semantic version
-internal record AppVersion(int Major, int Minor, int Patch, IterationStage Stage, int? PreReleaseSpecifier = null) : IComparable<AppVersion>
-{
+    public int Minor { get; } = minor;
+
+    public int Patch { get; } = patch;
+
+    public int? PreReleaseSpecifier { get; } = preReleaseSpecifier;
+
     public int CompareTo(AppVersion? other)
     {
-        if (other != null)
+        if (other is null)
+            return 1;
+
+        if (Major.CompareTo(other.Major) is var j and not 0)
+            return j;
+
+        if (Minor.CompareTo(other.Minor) is var k and not 0)
+            return k;
+
+        if (Patch.CompareTo(other.Patch) is var n and not 0)
+            return n;
+
+        if (other.PreReleaseSpecifier is { } thatSpecifier && PreReleaseSpecifier is { } specifier && specifier.CompareTo(thatSpecifier) is var m and not 0)
+            return m;
+
+        return 0;
+    }
+
+    public UpdateState CompareUpdateState(AppVersion? newVersion)
+    {
+        if (newVersion is null)
+            return UpdateState.Unknown;
+
+        return CompareTo(newVersion) switch
         {
-            if (other.Stage.CompareTo(Stage) is var i and not 0)
-            {
-                return i;
-            }
+            > 0 => UpdateState.Insider,
+            0 => UpdateState.UpToDate,
+            _ => newVersion.Major > Major ? UpdateState.MajorUpdate :
+                newVersion.Minor > Minor ? UpdateState.MinorUpdate :
+                newVersion.Patch > Patch ? UpdateState.PatchUpdate :
+                UpdateState.SpecifierUpdate
+        };
+    }
 
-            if (other.Major.CompareTo(Major) is var j and not 0)
-            {
-                return j;
-            }
+    public static AppVersion Parse(string s) => Parse(s, null);
 
-            if (other.Minor.CompareTo(Minor) is var k and not 0)
-            {
-                return k;
-            }
+    public static bool TryParse([NotNullWhen(true)] string? s, [NotNullWhen(true)] out AppVersion? result) => TryParse(s, null, out result);
 
-            if (other.Patch.CompareTo(Patch) is var n and not 0)
-            {
-                return n;
-            }
+    public static AppVersion Parse(string s, IFormatProvider? provider)
+    {
+        return TryParse(s, provider, out var result) ? result : ThrowUtils.Format<AppVersion>();
+    }
 
-            if (other.PreReleaseSpecifier is { } thatSpecifier && PreReleaseSpecifier is { } specifier && thatSpecifier.CompareTo(specifier) is var m and not 0)
-            {
-                return m;
-            }
+    public static bool TryParse([NotNullWhen(true)] string? s, IFormatProvider? provider, [NotNullWhen(true)] out AppVersion? result)
+    {
+        result = null;
+        if (s?.Split('-') is not [var version, .. var specifierStr])
+            return false;
 
-            return 0;
+        if (version.Split('.') is not [var majorStr, var minorStr, var patchStr] ||
+            !int.TryParse(majorStr, out var major) ||
+            !int.TryParse(minorStr, out var minor) ||
+            !int.TryParse(patchStr, out var patch))
+        {
+            return false;
         }
 
-        return 1;
+        switch (specifierStr)
+        {
+            case [var specifier]:
+            {
+                if (specifier.StartsWith("preview") && int.TryParse(specifier["preview".Length..], out var preReleaseSpecifier))
+                {
+                    result = new AppVersion(major, minor, patch, preReleaseSpecifier);
+                    return true;
+                }
+
+                return false;
+            }
+            case []:
+                result = new AppVersion(major, minor, patch);
+                return true;
+            default:
+                return false;
+        }
     }
+
+    public static bool operator >(AppVersion x, AppVersion y) => x.CompareTo(y) > 0;
+
+    public static bool operator <(AppVersion x, AppVersion y) => x.CompareTo(y) < 0;
+
+    public static bool operator ==(AppVersion x, AppVersion y) => x.Equals(y);
+
+    public static bool operator !=(AppVersion x, AppVersion y) => !x.Equals(y);
 
     public override string ToString()
     {
-        var versionNumber = $"v{Major}.{Minor}.{Patch}";
-        var str = Stage switch
-        {
-            IterationStage.Preview => $"{versionNumber}-preview",
-            IterationStage.Stable => $"{versionNumber}",
-            _ => ThrowHelper.ArgumentOutOfRange<IterationStage, string>(Stage)
-        };
-        return Stage is not IterationStage.Stable && PreReleaseSpecifier is { } specifier ? $"{str}.{specifier}" : str;
+        var versionNumber = $"{Major}.{Minor}.{Patch}";
+        if (PreReleaseSpecifier is { } specifier)
+            versionNumber += "-preview" + specifier;
+        return versionNumber;
     }
+
+    public bool Equals(AppVersion? other) => other is not null && Major == other.Major && Minor == other.Minor && Patch == other.Patch && PreReleaseSpecifier == other.PreReleaseSpecifier;
+
+    public override bool Equals(object? obj)
+    {
+        if (obj is null)
+            return false;
+        if (ReferenceEquals(this, obj))
+            return true;
+        return Equals(obj as AppVersion);
+    }
+
+    public override int GetHashCode() => HashCode.Combine(Major, Minor, Patch, PreReleaseSpecifier);
+}
+
+public enum UpdateState
+{
+    /// <summary>
+    /// 已是最新
+    /// </summary>
+    UpToDate,
+
+    /// <summary>
+    /// 主要更新
+    /// </summary>
+    MajorUpdate,
+
+    /// <summary>
+    /// 次要更新
+    /// </summary>
+    MinorUpdate,
+
+    /// <summary>
+    /// 修订更新
+    /// </summary>
+    PatchUpdate,
+
+    /// <summary>
+    /// 预览更新
+    /// </summary>
+    SpecifierUpdate,
+
+    /// <summary>
+    /// 内部版本
+    /// </summary>
+    Insider,
+
+    /// <summary>
+    /// 未知状态
+    /// </summary>
+    Unknown
 }

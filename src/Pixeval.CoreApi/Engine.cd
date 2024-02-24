@@ -1,0 +1,154 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Pixeval.CoreApi.Engine.Implements.AdaptedComputedFetchEngine&lt;T&gt;" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="58.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAgAAAAAIAAAAACAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Engine\Implements\AdaptedComputedFetchEngine.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Pixeval.CoreApi.Engine.Implements.BookmarkEngine" Collapsed="true">
+    <Position X="10.25" Y="3.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAAAAAAAAAAAABAIAAAAAAAAAAAAEAAA=</HashCode>
+      <FileName>Engine\Implements\BookmarkEngine.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Pixeval.CoreApi.Engine.Implements.FeedEngine" Collapsed="true">
+    <Position X="23.25" Y="3.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Engine\Implements\FeedEngine.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Pixeval.CoreApi.Engine.Implements.FollowingEngine" Collapsed="true">
+    <Position X="35.75" Y="3.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAAAAAAAAAAAABAIAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Engine\Implements\FollowingEngine.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Pixeval.CoreApi.Engine.Implements.IllustrationCommentRepliesEngine" Collapsed="true">
+    <Position X="48.25" Y="3.75" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Engine\Implements\IllustrationCommentRepliesEngine.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Pixeval.CoreApi.Engine.Implements.IllustrationCommentsEngine" Collapsed="true">
+    <Position X="0.5" Y="3.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAA=</HashCode>
+      <FileName>Engine\Implements\IllustrationCommentsEngine.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Pixeval.CoreApi.Engine.Implements.NovelBookmarkEngine" Collapsed="true">
+    <Position X="13.5" Y="3.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAAAAAAAAAAAABAIAAAAAAAAAAAAEAAA=</HashCode>
+      <FileName>Engine\Implements\NovelBookmarkEngine.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Pixeval.CoreApi.Engine.Implements.PostedIllustrationEngine" Collapsed="true">
+    <Position X="26.25" Y="3.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Engine\Implements\PostedIllustrationEngine.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Pixeval.CoreApi.Engine.Implements.PostedMangaEngine" Collapsed="true">
+    <Position X="38.75" Y="3.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Engine\Implements\PostedMangaEngine.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Pixeval.CoreApi.Engine.Implements.PostedNovelEngine" Collapsed="true">
+    <Position X="51.75" Y="3.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAEAAA=</HashCode>
+      <FileName>Engine\Implements\PostedNovelEngine.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Pixeval.CoreApi.Engine.Implements.RankingEngine" Collapsed="true">
+    <Position X="3.75" Y="3.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AASAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAA=</HashCode>
+      <FileName>Engine\Implements\RankingEngine.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Pixeval.CoreApi.Engine.Implements.RecentPostedIllustrationEngine" Collapsed="true">
+    <Position X="16.5" Y="3.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Engine\Implements\RecentPostedIllustrationEngine.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Pixeval.CoreApi.Engine.Implements.RecommendationEngine" Collapsed="true">
+    <Position X="29.5" Y="3.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AASAAAAAAAAAAAAAAIAABAAAAAAAAIAAAAAAAAAAAAA=</HashCode>
+      <FileName>Engine\Implements\RecommendationEngine.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Pixeval.CoreApi.Engine.Implements.RecommendIllustratorEngine" Collapsed="true">
+    <Position X="42" Y="3.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAA=</HashCode>
+      <FileName>Engine\Implements\RecommendIllustratorEnumerable.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Pixeval.CoreApi.Engine.Implements.RelatedWorksFetchEngine" Collapsed="true">
+    <Position X="54.75" Y="3.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAA=</HashCode>
+      <FileName>Engine\Implements\RelatedWorksFetchEngine.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Pixeval.CoreApi.Engine.Implements.SearchEngine" Collapsed="true">
+    <Position X="7" Y="3.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>ABQAAABAAAAAIAIAAAAEAAAAAAAAoAAAAAAABAAEAAA=</HashCode>
+      <FileName>Engine\Implements\SearchEngine.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Pixeval.CoreApi.Engine.Implements.SpotlightArticleEngine" Collapsed="true">
+    <Position X="19.75" Y="3.75" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Engine\Implements\SpotlightArticleEngine.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Pixeval.CoreApi.Engine.Implements.TaggedBookmarksIdEngine" Collapsed="true">
+    <Position X="32.75" Y="3.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAQAAABAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Engine\Implements\TaggedBookmarksIdEngine.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Pixeval.CoreApi.Engine.Implements.UserSearchEngine" Collapsed="true">
+    <Position X="45.25" Y="3.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAEAIA=</HashCode>
+      <FileName>Engine\Implements\UserSearchEngine.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Pixeval.CoreApi.Engine.AbstractPixivFetchEngine&lt;TE&gt;" Collapsed="true">
+    <Position X="27.75" Y="2.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAIAAAAACAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Engine\AbstractPixivFetchEngine.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Pixeval.CoreApi.Engine.ComputedFetchEngine&lt;T&gt;" Collapsed="true">
+    <Position X="60" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAIAAAAACAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Engine\ComputedFetchEngine.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Font Name="Microsoft YaHei UI" Size="9" />
+</ClassDiagram>

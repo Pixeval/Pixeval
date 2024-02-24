@@ -22,4 +22,12 @@ using System.Text.Json.Serialization;
 
 namespace Pixeval.CoreApi.Model;
 
-public record Tag([property: JsonPropertyName("name")] string Name, [property: JsonPropertyName("translated_name")] string? TranslatedName);
+[Factory]
+public partial record Tag
+{
+    [JsonPropertyName("name")]
+    public required string Name { get; set; } = "";
+
+    [JsonPropertyName("translated_name")]
+    public required string? TranslatedName { get; set; }
+}

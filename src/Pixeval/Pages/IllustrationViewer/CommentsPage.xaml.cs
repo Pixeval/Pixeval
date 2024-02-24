@@ -35,10 +35,7 @@ public sealed partial class CommentsPage
 {
     private CommentsPageViewModel _viewModel = null!;
 
-    public CommentsPage()
-    {
-        InitializeComponent();
-    }
+    public CommentsPage() => InitializeComponent();
 
     public override void OnPageActivated(NavigationEventArgs e)
     {

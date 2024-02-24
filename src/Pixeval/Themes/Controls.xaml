@@ -4,9 +4,10 @@
     xmlns:numberFormatting="using:Windows.Globalization.NumberFormatting">
     <Style x:Key="PixevalRoundedButtonStyle" TargetType="Button">
         <Style.Setters>
-            <Setter Property="CornerRadius" Value="90" />
+            <Setter Property="CornerRadius" Value="19" />
             <Setter Property="Width" Value="38" />
             <Setter Property="Height" Value="38" />
+            <Setter Property="Padding" Value="0" />
         </Style.Setters>
     </Style>
     <x:Double x:Key="PixevalButtonIconSize">12</x:Double>
@@ -40,13 +41,21 @@
         <Setter Property="FontWeight" Value="SemiBold" />
         <Setter Property="FontSize" Value="{StaticResource PixevalSubscriptFontSize}" />
     </Style>
-    <Style x:Key="SettingsNumberBoxStyle" TargetType="NumberBox">
+    <Style x:Key="PixevalNumberBoxStyle" TargetType="NumberBox">
         <Setter Property="IsWrapEnabled" Value="True" />
         <Setter Property="LargeChange" Value="10" />
         <Setter Property="NumberFormatter" Value="{StaticResource IntegerRoundedDecimalFormatter}" />
         <Setter Property="SmallChange" Value="1" />
         <Setter Property="SpinButtonPlacementMode" Value="Compact" />
         <Setter Property="ValidationMode" Value="InvalidInputOverwritten" />
+    </Style>
+    <Style
+        x:Key="CardControlButton"
+        BasedOn="{StaticResource DefaultButtonStyle}"
+        TargetType="Button">
+        <Setter Property="Padding" Value="{StaticResource CardControlPadding}" />
+        <Setter Property="HorizontalContentAlignment" Value="Left" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
     </Style>
 
     <numberFormatting:DecimalFormatter x:Key="IntegerRoundedDecimalFormatter" FractionDigits="0">

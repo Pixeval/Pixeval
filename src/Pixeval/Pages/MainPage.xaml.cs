@@ -21,6 +21,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Runtime;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
@@ -33,7 +34,6 @@ using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.WinUI;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Input;
-using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
@@ -45,32 +45,42 @@ using Pixeval.Controls;
 using Pixeval.Database;
 using Pixeval.Database.Managers;
 using Pixeval.Messages;
+using Pixeval.Misc;
 using Pixeval.Pages.Capability;
-using Pixeval.Pages.Download;
 using Pixeval.Pages.Misc;
 using Pixeval.Util;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using WinUI3Utilities;
-using Image = SixLabors.ImageSharp.Image;
-using CommunityToolkit.WinUI.Controls;
+using Pixeval.AppManagement;
+using Pixeval.Controls.Windowing;
+using Pixeval.Logging;
 
 namespace Pixeval.Pages;
 
 public sealed partial class MainPage : SupportCustomTitleBarDragRegionPage
 {
-    private static UIElement? _connectedAnimationTarget;
-
     private readonly MainPageViewModel _viewModel;
 
     public MainPage()
     {
         _viewModel = new MainPageViewModel(this);
         InitializeComponent();
-        if (AppWindowTitleBar.IsCustomizationSupported())
-        {
-            NavigationView.PaneCustomContent = null;
-        }
+        CustomizeTitleBar();
+    }
+
+    private async void CustomizeTitleBar()
+    {
+        if (AppInfo.CustomizeTitleBarSupported)
+            return;
+        AutoSuggestBoxWidth.Width = new GridLength(1, GridUnitType.Star);
+        PaneCustomContentPresenter.Content = TitleBarPresenter.Content;
+        TitleBarPresenter.Content = null;
+
+        await Task.Yield();
+        using var scope = App.AppViewModel.AppServicesScope;
+        var logger = scope.ServiceProvider.GetRequiredService<FileLogger>();
+        logger.LogInformation("Customize title bar is not supported", null);
     }
 
     protected override void SetTitleBarDragRegion(InputNonClientPointerSource sender, SizeInt32 windowSize, double scaleFactor, out int titleBarHeight)
@@ -78,17 +88,17 @@ public sealed partial class MainPage : SupportCustomTitleBarDragRegionPage
         titleBarHeight = 48;
         // NavigationView的Pane按钮
         var leftIndent = new RectInt32(0, 0, titleBarHeight, titleBarHeight);
-        sender.SetRegionRects(NonClientRegionKind.Icon, [GetScaledRect(Icon)]);
-        sender.SetRegionRects(NonClientRegionKind.Passthrough, [GetScaledRect(TitleBarControlGrid), GetScaledRect(leftIndent)]);
+        sender.SetRegionRects(NonClientRegionKind.Icon, [GetScaledRect(TitleBar.Icon)]);
+        sender.SetRegionRects(NonClientRegionKind.Passthrough, [GetScaledRect(TitleBarPresenter), GetScaledRect(leftIndent)]);
     }
 
-    public override void OnPageActivated(NavigationEventArgs e, object? parameter)
+    public override async void OnPageActivated(NavigationEventArgs e, object? parameter)
     {
         App.AppViewModel.AppLoggedIn();
 
         // dirty trick, the order of the menu items is the same as the order of the fields in MainPageTabItem
         // since enums are basically integers, we just need a cast to transform it to the correct offset.
-        ((NavigationViewItem)NavigationView.MenuItems[(int)App.AppViewModel.AppSetting.DefaultSelectedTabItem]).IsSelected = true;
+        NavigationView.SelectedItem = NavigationView.MenuItems[(int)App.AppViewModel.AppSettings.DefaultSelectedTabItem];
 
         // The application is invoked by a protocol, call the corresponding protocol handler.
         if (App.AppViewModel.ConsumeProtocolActivation())
@@ -96,46 +106,39 @@ public sealed partial class MainPage : SupportCustomTitleBarDragRegionPage
             ActivationRegistrar.Dispatch(AppInstance.GetCurrent().GetActivatedEventArgs());
         }
 
-        _ = WeakReferenceMessenger.Default.TryRegister<MainPage, MainPageFrameSetConnectedAnimationTargetMessage>(this, (_, message) => _connectedAnimationTarget = message.Sender);
-        _ = WeakReferenceMessenger.Default.TryRegister<MainPage, IllustrationTagClickedMessage>(this, (_, message) => PerformSearch(message.Tag));
-        _ = WeakReferenceMessenger.Default.TryRegister<MainPage, GlobalSearchQuerySubmittedMessage>(this, (_1, message) =>
+        _ = WeakReferenceMessenger.Default.TryRegister<MainPage, IllustrationTagClickedMessage>(this, (_, message) =>
         {
-            NavigationView.SelectedItem = null;
-            _ = MainPageRootFrame.Navigate(typeof(SearchResultsPage), message.Parameter);
+            Window.AppWindow.MoveInZOrderAtTop();
+            PerformSearch(message.Tag);
         });
-
-        // TODO: Scroll the content to the item that were being browsed just now
-        //if (_illustrationViewerContent is not null && MainPageRootFrame.FindDescendant<ItemsRepeater>() is { } gridView)
-        //{
-        //    gridView.ScrollIntoView(_illustrationViewerContent);
-        //    _illustrationViewerContent = null;
-        //}
+        using var client = new HttpClient();
+        _ = await AppInfo.AppVersion.CheckForUpdateAsync(client);
+        if (AppInfo.AppVersion.UpdateAvailable)
+            InfoBadge.Visibility = Visibility.Visible;
     }
 
     private void NavigationView_OnSelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
     {
         // The App.AppViewModel.IllustrationDownloadManager will be initialized after that of MainPage object
-        // so we cannot put a navigation tag inside MainPage and treat it as a field, since it will be initialized immediately after
+        // so, we cannot put a navigation tag inside MainPage and treat it as a field, since it will be initialized immediately after
         // the creation of the object while the App.AppViewModel.IllustrationDownloadManager is still null which
         // will lead the program into NullReferenceException on the access of QueuedTasks.
 
         // args.SelectedItem may be null here
-        if (Equals(args.SelectedItem, DownloadListTab))
-            Navigate<DownloadListPage>(MainPageRootFrame, null);
-        else if (Equals(args.SelectedItem, SettingsTab))
-            Navigate<SettingsPage>(MainPageRootFrame, null);
-        else
-            MainPageRootFrame.NavigateByNavigationViewTag(sender, new SuppressNavigationTransitionInfo());
+        if (sender.SelectedItem is NavigationViewItem { Tag: NavigationViewTag tag } selectedItem)
+            if (Equals(selectedItem, DownloadListTab) || Equals(selectedItem, SettingsTab) || Equals(selectedItem, TagsTab))
+                Navigate(MainPageRootFrame, tag);
+            else
+                MainPageRootFrame.NavigateTag(tag, new SuppressNavigationTransitionInfo());
     }
 
     private void NavigationView_OnPaneChanging(NavigationView sender, object e)
     {
-        sender.UpdateAppTitleMargin(AppTitleTextBlock);
+        sender.UpdateAppTitleMargin(TitleBar.TitleBlock);
     }
 
     private void MainPageRootFrame_OnNavigated(object sender, NavigationEventArgs e)
     {
-        _ = WeakReferenceMessenger.Default.Send(new MainPageFrameNavigatingEvent(this));
         GCSettings.LargeObjectHeapCompactionMode = GCLargeObjectHeapCompactionMode.CompactOnce;
         GC.Collect();
     }
@@ -147,7 +150,11 @@ public sealed partial class MainPage : SupportCustomTitleBarDragRegionPage
         await _viewModel.SuggestionProvider.UpdateAsync(suggestBox.Text);
     }
 
-    // 搜索并跳转至搜索结果
+    /// <summary>
+    /// 搜索并跳转至搜索结果
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="args"></param>
     private void KeywordAutoSuggestBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
     {
         if (args.QueryText.IsNullOrBlank())
@@ -198,7 +205,7 @@ public sealed partial class MainPage : SupportCustomTitleBarDragRegionPage
         using (var scope = App.AppViewModel.AppServicesScope)
         {
             var manager = scope.ServiceProvider.GetRequiredService<SearchHistoryPersistentManager>();
-            if (manager.Count == 0 || manager.Select(count: 1).AsList() is [{ Value: var last }, ..] && last != text)
+            if (manager.Count is 0 || manager.Select(count: 1).AsList() is [{ Value: var last }, ..] && last != text)
             {
                 manager.Insert(new SearchHistoryEntry
                 {
@@ -209,7 +216,7 @@ public sealed partial class MainPage : SupportCustomTitleBarDragRegionPage
             }
         }
 
-        var setting = App.AppViewModel.AppSetting;
+        var setting = App.AppViewModel.AppSettings;
         NavigationView.SelectedItem = null;
         _ = MainPageRootFrame.Navigate(typeof(SearchResultsPage), App.AppViewModel.MakoClient.Search(
             text,
@@ -225,15 +232,17 @@ public sealed partial class MainPage : SupportCustomTitleBarDragRegionPage
 
     private async void OpenSearchSettingButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        await NavigateToSettingEntryAsync(SettingEntry.ReverseSearchResultSimilarityThreshold);
+        await NavigateToSettingEntryAsync(SettingEntry.SearchCategory);
     }
 
     private async Task NavigateToSettingEntryAsync(SettingEntry entry)
     {
+        // ScrollView第一次导航的时候会有一个偏移，所以我们需要手动调整一下
+        var offset = MainPageRootFrame.Content is SettingsPage ? 0 : 60;
         NavigationView.SelectedItem = SettingsTab;
         var settingsPage = await MainPageRootFrame.AwaitPageTransitionAsync<SettingsPage>();
         var panel = settingsPage.SettingsPageScrollView.Content.To<FrameworkElement>();
-        var frameworkElement = panel.FindChild<SettingsCard>(element => element.Tag is SettingEntry e && e == entry);
+        var frameworkElement = panel.FindChild<FrameworkElement>(element => element.Tag is SettingEntry e && e == entry);
 
         if (frameworkElement is not null)
         {
@@ -241,11 +250,13 @@ public sealed partial class MainPage : SupportCustomTitleBarDragRegionPage
                 .TransformToVisual(panel)
                 .TransformPoint(new Point(0, 0));
 
-            _ = settingsPage.SettingsPageScrollView.ScrollTo(position.X, position.Y);
+            _ = settingsPage.SettingsPageScrollView.ScrollTo(position.X, position.Y - offset);
         }
     }
 
-    // The AutoSuggestBox does not have a 'Paste' event, so we check the keyboard event accordingly
+    /// <summary>
+    /// The AutoSuggestBox does not have a 'Paste' event, so we check the keyboard event accordingly
+    /// </summary>
     private async void KeywordAutoSuggestionBox_OnKeyDown(object sender, KeyRoutedEventArgs e)
     {
         if (InputKeyboardSource.GetKeyStateForCurrentThread(VirtualKey.LeftControl).HasFlag(CoreVirtualKeyStates.Down) && e.Key == VirtualKey.V)
@@ -256,24 +267,20 @@ public sealed partial class MainPage : SupportCustomTitleBarDragRegionPage
             {
                 e.Handled = true; // prevent the event from bubbling if it contains an image, since it means that we want to do reverse search.
                 await using var stream = await file.OpenStreamForReadAsync();
-                // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
-                if (await Image.DetectFormatAsync(stream) is not null)
+                if (App.AppViewModel.AppSettings.ReverseSearchApiKey is not { Length: > 0 })
                 {
-                    if (App.AppViewModel.AppSetting.ReverseSearchApiKey is not { Length: > 0 })
-                    {
-                        await ShowReverseSearchApiKeyNotPresentDialog();
-                        return;
-                    }
-
-                    await _viewModel.ReverseSearchAsync(stream);
+                    await ShowReverseSearchApiKeyNotPresentDialog();
+                    return;
                 }
+
+                await _viewModel.ReverseSearchAsync(stream);
             }
         }
     }
 
     private async void ReverseSearchButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        if (App.AppViewModel.AppSetting.ReverseSearchApiKey is { Length: > 0 })
+        if (App.AppViewModel.AppSettings.ReverseSearchApiKey is { Length: > 0 })
         {
             if (await Window.OpenFileOpenPickerAsync() is { } file)
             {
@@ -303,7 +310,7 @@ public sealed partial class MainPage : SupportCustomTitleBarDragRegionPage
 
     private async void KeywordAutoSuggestBox_OnDrop(object sender, DragEventArgs e)
     {
-        if (App.AppViewModel.AppSetting.ReverseSearchApiKey is { Length: > 0 })
+        if (App.AppViewModel.AppSettings.ReverseSearchApiKey is { Length: > 0 })
         {
             if (e.DataView.Contains(StandardDataFormats.StorageItems) && (await e.DataView.GetStorageItemsAsync()).ToArray() is [StorageFile item, ..])
             {

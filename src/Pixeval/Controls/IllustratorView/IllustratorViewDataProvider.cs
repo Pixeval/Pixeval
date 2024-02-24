@@ -26,10 +26,12 @@ using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Model;
 using Pixeval.Misc;
 
-namespace Pixeval.Controls.IllustratorView;
+namespace Pixeval.Controls;
 
 public class IllustratorViewDataProvider : ObservableObject, IDataProvider<User, IllustratorItemViewModel>
 {
+    private IFetchEngine<User?>? _fetchEngine;
+
     public AdvancedObservableCollection<IllustratorItemViewModel> View { get; } = [];
 
     public IncrementalLoadingCollection<FetchEngineIncrementalSource<User, IllustratorItemViewModel>, IllustratorItemViewModel> Source
@@ -38,22 +40,31 @@ public class IllustratorViewDataProvider : ObservableObject, IDataProvider<User,
         protected set => View.Source = value;
     }
 
-    public IFetchEngine<User?>? FetchEngine { get; protected set; }
+    public IFetchEngine<User?>? FetchEngine
+    {
+        get => _fetchEngine;
+        protected set
+        {
+            if (value == _fetchEngine)
+                return;
+            _fetchEngine?.EngineHandle.Cancel();
+            _fetchEngine = value;
+        }
+    }
 
-    public void DisposeCurrent()
+    public void Dispose()
     {
         if (Source is { } source)
             foreach (var illustratorViewModel in source)
                 illustratorViewModel.Dispose();
 
-        View.Clear();
+        FetchEngine = null;
     }
 
     public void ResetEngine(IFetchEngine<User?>? fetchEngine, int limit = -1)
     {
-        FetchEngine?.EngineHandle.Cancel();
+        Dispose();
         FetchEngine = fetchEngine;
-        DisposeCurrent();
 
         Source = new IncrementalLoadingCollection<FetchEngineIncrementalSource<User, IllustratorItemViewModel>, IllustratorItemViewModel>(new IllustratorFetchEngineIncrementalSource(FetchEngine!, limit));
     }

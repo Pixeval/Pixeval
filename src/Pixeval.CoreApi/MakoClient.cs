@@ -21,14 +21,17 @@
 using System;
 using System.Linq;
 using System.Net.Http;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using Autofac;
+using Microsoft.Extensions.DependencyInjection;
 using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Global.Exception;
 using Pixeval.CoreApi.Net;
 using Pixeval.CoreApi.Net.EndPoints;
 using Pixeval.CoreApi.Preference;
+using Pixeval.Logging;
+using Pixeval.Utilities;
 using Refit;
 
 namespace Pixeval.CoreApi;
@@ -36,147 +39,138 @@ namespace Pixeval.CoreApi;
 public partial class MakoClient : ICancellable
 {
     /// <summary>
-    ///     Create an new <see cref="MakoClient" /> based on given <see cref="Configuration" />, <see cref="Session" />, and
-    ///     <see cref="ISessionUpdate" />
+    /// Create a new <see cref="MakoClient" /> based on given <see cref="Configuration" />, <see cref="Session" />, and
+    /// <see cref="ISessionUpdate" />
     /// </summary>
     /// <remarks>
-    ///     The <see cref="MakoClient" /> is not responsible for the <see cref="Session" />'s refreshment, you need to check
-    ///     the
-    ///     <see cref="P:Session.Expire" /> and call <see cref="RefreshSession(Preference.Session)" /> or
-    ///     <see cref="RefreshSessionAsync" />
-    ///     periodically
+    /// The <see cref="MakoClient" /> is not responsible for the <see cref="Session" />'s refreshment, you need to check
+    /// the
+    /// <see cref="P:Session.Expire" /> and call <see cref="RefreshSession(Preference.Session)" /> or
+    /// <see cref="RefreshSessionAsync" />
+    /// periodically
     /// </remarks>
     /// <param name="session">The <see cref="Preference.Session" /></param>
     /// <param name="configuration">The <see cref="Configuration" /></param>
+    /// <param name="logger"></param>
     /// <param name="sessionUpdater">The updater of <see cref="Preference.Session" /></param>
-    public MakoClient(Session session, MakoClientConfiguration configuration, ISessionUpdate? sessionUpdater = null)
+    public MakoClient(Session session, MakoClientConfiguration configuration, FileLogger logger, ISessionUpdate? sessionUpdater = null)
     {
+        Logger = logger;
         SessionUpdater = sessionUpdater ?? new RefreshTokenSessionUpdate();
         Session = session;
-        MakoServices = BuildContainer();
+        MakoServices = BuildServiceProvider();
         Configuration = configuration;
         IsCancelled = false;
     }
 
     /// <summary>
-    ///     Creates a <see cref="MakoClient" /> based on given <see cref="Session" /> and <see cref="ISessionUpdate" />, the
-    ///     configurations will stay
-    ///     as default
+    /// Creates a <see cref="MakoClient" /> based on given <see cref="Session" /> and <see cref="ISessionUpdate" />, the
+    /// configurations will stay
+    /// as default
     /// </summary>
     /// <remarks>
-    ///     The <see cref="MakoClient" /> is not responsible for the <see cref="Session" />'s refreshment, you need to check
-    ///     the
-    ///     <see cref="P:Session.Expire" /> and call <see cref="RefreshSession(Pixeval.CoreApi.Preference.Session)" /> or
-    ///     <see cref="RefreshSessionAsync" />
-    ///     periodically
+    /// The <see cref="MakoClient" /> is not responsible for the <see cref="Session" />'s refreshment, you need to check
+    /// the
+    /// <see cref="P:Session.Expire" /> and call <see cref="RefreshSession(Preference.Session)" /> or
+    /// <see cref="RefreshSessionAsync" />
+    /// periodically
     /// </remarks>
-    /// <param name="session">The <see cref="Pixeval.CoreApi.Preference.Session" /></param>
-    /// <param name="sessionUpdater">The updater of <see cref="Pixeval.CoreApi.Preference.Session" /></param>
-    public MakoClient(Session session, ISessionUpdate? sessionUpdater = null)
+    /// <param name="session">The <see cref="Preference.Session" /></param>
+    /// <param name="logger"></param>
+    /// <param name="sessionUpdater">The updater of <see cref="Preference.Session" /></param>
+    public MakoClient(Session session, FileLogger logger, ISessionUpdate? sessionUpdater = null)
     {
+        Logger = logger;
         SessionUpdater = sessionUpdater ?? new RefreshTokenSessionUpdate();
         Session = session;
-        MakoServices = BuildContainer();
+        MakoServices = BuildServiceProvider();
         Configuration = new MakoClientConfiguration();
     }
 
     /// <summary>
-    ///     Injects necessary dependencies
+    /// Injects necessary dependencies
     /// </summary>
-    /// <returns>The <see cref="IContainer" /> contains all the required dependencies</returns>
-    private IContainer BuildContainer()
-    {
-        var builder = new ContainerBuilder();
-        _ = builder.RegisterInstance(this).SingleInstance();
-
-        _ = builder.RegisterType<PixivApiNameResolver>().SingleInstance();
-        _ = builder.RegisterType<PixivImageNameResolver>().SingleInstance();
-        _ = builder.RegisterType<LocalMachineNameResolver>().SingleInstance();
-
-        _ = builder.RegisterType<PixivApiHttpMessageHandler>().SingleInstance();
-        _ = builder.RegisterType<PixivImageHttpMessageHandler>().SingleInstance();
-
-        _ = builder.Register(static c => new MakoRetryHttpClientHandler(c.Resolve<PixivApiHttpMessageHandler>()))
-            .Keyed<HttpMessageHandler>(typeof(PixivApiHttpMessageHandler))
-            .As<HttpMessageHandler>()
-            .PropertiesAutowired(static (info, _) => info.PropertyType == typeof(MakoClient))
-            .SingleInstance();
-        _ = builder.Register(static c => new MakoRetryHttpClientHandler(c.Resolve<PixivImageHttpMessageHandler>()))
-            .Keyed<HttpMessageHandler>(typeof(PixivImageHttpMessageHandler))
-            .As<HttpMessageHandler>()
-            .PropertiesAutowired(static (info, _) => info.PropertyType == typeof(MakoClient))
-            .SingleInstance();
-        _ = builder.Register(static c => MakoHttpClient.Create(c.ResolveKeyed<HttpMessageHandler>(typeof(PixivApiHttpMessageHandler)),
-                static client => client.BaseAddress = new Uri(MakoHttpOptions.AppApiBaseUrl)))
-            .Keyed<HttpClient>(MakoApiKind.AppApi)
-            .As<HttpClient>()
-            .SingleInstance();
-        _ = builder.Register(static c => MakoHttpClient.Create(c.ResolveKeyed<HttpMessageHandler>(typeof(PixivApiHttpMessageHandler)),
-                static client => client.BaseAddress = new Uri(MakoHttpOptions.WebApiBaseUrl)))
-            .Keyed<HttpClient>(MakoApiKind.WebApi)
-            .As<HttpClient>()
-            .SingleInstance();
-        _ = builder.Register(static c => MakoHttpClient.Create(c.ResolveKeyed<HttpMessageHandler>(typeof(PixivApiHttpMessageHandler)),
-                static client => client.BaseAddress = new Uri(MakoHttpOptions.OAuthBaseUrl)))
-            .Keyed<HttpClient>(MakoApiKind.AuthApi)
-            .As<HttpClient>()
-            .SingleInstance();
-        _ = builder.Register(static c => MakoHttpClient.Create(c.ResolveKeyed<HttpMessageHandler>(typeof(PixivImageHttpMessageHandler)),
-                static client =>
+    /// <returns>The <see cref="ServiceProvider" /> contains all the required dependencies</returns>
+    private ServiceProvider BuildServiceProvider() =>
+        new ServiceCollection()
+            .AddSingleton(this)
+            .AddSingleton<PixivApiNameResolver>()
+            .AddSingleton<PixivImageNameResolver>()
+            .AddSingleton<LocalMachineNameResolver>()
+            .AddSingleton<PixivApiHttpMessageHandler>()
+            .AddSingleton<PixivImageHttpMessageHandler>()
+            .AddKeyedSingleton<HttpMessageHandler, MakoRetryHttpClientHandler>(typeof(PixivApiHttpMessageHandler),
+                (s, _) => new(s.GetRequiredService<MakoClient>(), s.GetRequiredService<PixivApiHttpMessageHandler>()))
+            .AddKeyedSingleton<HttpMessageHandler, MakoRetryHttpClientHandler>(typeof(PixivImageHttpMessageHandler),
+                (s, _) => new(s.GetRequiredService<MakoClient>(), s.GetRequiredService<PixivImageHttpMessageHandler>()))
+            .AddKeyedSingleton<HttpClient, MakoHttpClient>(MakoApiKind.AppApi,
+                (s, _) => new(s.GetRequiredKeyedService<HttpMessageHandler>(typeof(PixivApiHttpMessageHandler)))
                 {
-                    _ = client.DefaultRequestHeaders.TryAddWithoutValidation("Referer", "https://www.pixiv.net");
-                    _ = client.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", "PixivIOSApp/5.8.7");
+                    BaseAddress = new Uri(MakoHttpOptions.AppApiBaseUrl)
+                })
+            .AddKeyedSingleton<HttpClient, MakoHttpClient>(MakoApiKind.WebApi,
+                (s, _) => new(s.GetRequiredKeyedService<HttpMessageHandler>(typeof(PixivApiHttpMessageHandler)))
+                {
+                    BaseAddress = new Uri(MakoHttpOptions.WebApiBaseUrl)
+                })
+            .AddKeyedSingleton<HttpClient, MakoHttpClient>(MakoApiKind.AuthApi,
+                (s, _) => new(s.GetRequiredKeyedService<HttpMessageHandler>(typeof(PixivApiHttpMessageHandler)))
+                {
+                    BaseAddress = new Uri(MakoHttpOptions.OAuthBaseUrl)
+                })
+            .AddKeyedSingleton<HttpClient, MakoHttpClient>(MakoApiKind.ImageApi,
+                (s, _) => new(s.GetRequiredKeyedService<HttpMessageHandler>(typeof(PixivImageHttpMessageHandler)))
+                {
+                    DefaultRequestHeaders =
+                    {
+                        Referrer = new Uri("https://www.pixiv.net"),
+                        UserAgent = { new("PixivIOSApp", "5.8.7") }
+                    }
+                })
+            .AddKeyedSingleton(typeof(PixivApiNameResolver),
+                (s, _) => MakoHttpOptions.CreateHttpMessageInvoker(s.GetRequiredService<PixivApiNameResolver>()))
+            .AddKeyedSingleton(typeof(PixivImageNameResolver),
+                (s, _) => MakoHttpOptions.CreateHttpMessageInvoker(s.GetRequiredService<PixivImageNameResolver>()))
+            .AddKeyedSingleton(typeof(LocalMachineNameResolver),
+                (_, _) => MakoHttpOptions.CreateDirectHttpMessageInvoker())
+            .AddSingleton(s => RestService.For<IAppApiEndPoint>(
+                s.GetRequiredKeyedService<HttpClient>(MakoApiKind.AppApi),
+                new RefitSettings
+                {
+                    ExceptionFactory = async message =>
+                        !message.IsSuccessStatusCode
+                            ? await MakoNetworkException
+                                .FromHttpResponseMessageAsync(message,
+                                    s.GetRequiredService<MakoClient>().Configuration.Bypass).ConfigureAwait(false)
+                            : null
                 }))
-            .Keyed<HttpClient>(MakoApiKind.ImageApi)
-            .As<HttpClient>()
-            .SingleInstance();
-
-        _ = builder.Register(static c => MakoHttpOptions.CreateHttpMessageInvoker(c.Resolve<PixivApiNameResolver>()))
-            .Keyed<HttpMessageInvoker>(typeof(PixivApiNameResolver))
-            .As<HttpMessageInvoker>()
-            .SingleInstance();
-        _ = builder.Register(static c => MakoHttpOptions.CreateHttpMessageInvoker(c.Resolve<PixivImageNameResolver>()))
-            .Keyed<HttpMessageInvoker>(typeof(PixivImageNameResolver))
-            .As<HttpMessageInvoker>()
-            .SingleInstance();
-        _ = builder.Register(static _ => MakoHttpOptions.CreateDirectHttpMessageInvoker())
-            .Keyed<HttpMessageInvoker>(typeof(LocalMachineNameResolver))
-            .As<HttpMessageInvoker>()
-            .SingleInstance();
-
-        _ = builder.Register(static c =>
-        {
-            var context = c.Resolve<IComponentContext>(); // or a System.ObjectDisposedException will thrown because the 'c' cannot be hold
-            return RestService.For<IAppApiEndPoint>(c.ResolveKeyed<HttpClient>(MakoApiKind.AppApi), new RefitSettings
-            {
-                ExceptionFactory = async message => !message.IsSuccessStatusCode ? await MakoNetworkException.FromHttpResponseMessageAsync(message, context.Resolve<MakoClient>().Configuration.Bypass).ConfigureAwait(false) : null
-            });
-        });
-
-        _ = builder.Register(static c =>
-        {
-            var context = c.Resolve<IComponentContext>(); // or a System.ObjectDisposedException will thrown because the 'c' cannot be hold
-            return RestService.For<IAuthEndPoint>(c.ResolveKeyed<HttpClient>(MakoApiKind.AuthApi), new RefitSettings
-            {
-                ExceptionFactory = async message => !message.IsSuccessStatusCode ? await MakoNetworkException.FromHttpResponseMessageAsync(message, context.Resolve<MakoClient>().Configuration.Bypass).ConfigureAwait(false) : null
-            });
-        });
-
-        _ = builder.Register(static c =>
-        {
-            var context = c.Resolve<IComponentContext>(); // or a System.ObjectDisposedException will thrown because the 'c' cannot be hold
-            return RestService.For<IReverseSearchApiEndPoint>("https://saucenao.com/", new RefitSettings
-            {
-                ExceptionFactory = async message => !message.IsSuccessStatusCode ? await MakoNetworkException.FromHttpResponseMessageAsync(message, context.Resolve<MakoClient>().Configuration.Bypass).ConfigureAwait(false) : null
-            });
-        });
-        return builder.Build();
-    }
+            .AddSingleton(s => RestService.For<IAuthEndPoint>(
+                s.GetRequiredKeyedService<HttpClient>(MakoApiKind.AuthApi),
+                new RefitSettings
+                {
+                    ExceptionFactory = async message =>
+                        !message.IsSuccessStatusCode
+                            ? await MakoNetworkException
+                                .FromHttpResponseMessageAsync(message,
+                                    s.GetRequiredService<MakoClient>().Configuration.Bypass).ConfigureAwait(false)
+                            : null
+                }))
+            .AddSingleton(s => RestService.For<IReverseSearchApiEndPoint>("https://saucenao.com/",
+                new RefitSettings
+                {
+                    ExceptionFactory = async message =>
+                        !message.IsSuccessStatusCode
+                            ? await MakoNetworkException
+                                .FromHttpResponseMessageAsync(message,
+                                    s.GetRequiredService<MakoClient>().Configuration.Bypass).ConfigureAwait(false)
+                            : null
+                }))
+            .BuildServiceProvider();
 
     /// <summary>
-    ///     Cancels this <see cref="MakoClient" />, including all of the running instances, the
-    ///     <see cref="Session" /> will be reset to its default value, the <see cref="MakoClient" />
-    ///     will unable to be used again after calling this method
+    /// Cancels this <see cref="MakoClient" />, including all the running instances, the
+    /// <see cref="Session" /> will be reset to its default value, the <see cref="MakoClient" />
+    /// will unable to be used again after calling this method
     /// </summary>
     public void Cancel()
     {
@@ -184,58 +178,55 @@ public partial class MakoClient : ICancellable
         _runningInstances.ForEach(instance => instance.EngineHandle.Cancel());
     }
 
-    // Ensures the current instances hasn't been cancelled
+    /// <summary>
+    /// Ensures the current instances hasn't been cancelled
+    /// </summary>
+    /// <exception cref="OperationCanceledException"></exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void EnsureNotCancelled()
     {
         if (IsCancelled)
         {
-            throw new OperationCanceledException($"MakoClient({Id}) has been cancelled");
+            ThrowUtils.InvalidOperation($"MakoClient({Id}) has been cancelled");
         }
     }
 
-    // Resolves a dependency of type 'TResult'
-    internal TResult Resolve<TResult>() where TResult : notnull
+    internal HttpMessageInvoker GetHttpMessageInvoker<T>() where T : INameResolver
     {
-        return MakoServices.Resolve<TResult>();
+        return MakoServices.GetRequiredKeyedService<HttpMessageInvoker>(typeof(T));
     }
 
-    // Resolves a key-bounded dependency of type 'TResult'
-    internal TResult ResolveKeyed<TResult>(object key) where TResult : notnull
-    {
-        return MakoServices.ResolveKeyed<TResult>(key);
-    }
-
-    // Resolves a dependency of type 'type'
-    internal TResult Resolve<TResult>(Type type) where TResult : notnull
-    {
-        return (TResult)MakoServices.Resolve(type);
-    }
-
-    internal HttpMessageInvoker GetHttpMessageInvoker(Type key)
-    {
-        return ResolveKeyed<HttpMessageInvoker>(key);
-    }
-
-    // registers an instance to the running instances list
+    /// <summary>
+    /// registers an instance to the running instances list
+    /// </summary>
+    /// <param name="engineHandleSource"></param>
     private void RegisterInstance(IEngineHandleSource engineHandleSource)
     {
         _runningInstances.Add(engineHandleSource);
     }
 
-    // removes an instance from the running instances list
+    /// <summary>
+    /// removes an instance from the running instances list
+    /// </summary>
+    /// <param name="handle"></param>
     private void CancelInstance(EngineHandle handle)
     {
         _ = _runningInstances.RemoveAll(instance => instance.EngineHandle == handle);
     }
 
-    // PrivacyPolicy.Private is only allowed when the uid is pointing to yourself
+    /// <summary>
+    /// <see cref="PrivacyPolicy.Private"/> is only allowed when the uid is pointing to yourself
+    /// </summary>
+    /// <param name="uid"></param>
+    /// <param name="privacyPolicy"></param>
+    /// <returns></returns>
     private bool CheckPrivacyPolicy(long uid, PrivacyPolicy privacyPolicy)
     {
-        return !(privacyPolicy == PrivacyPolicy.Private && Session.Id != uid);
+        return !(privacyPolicy is PrivacyPolicy.Private && Session.Id != uid);
     }
 
     /// <summary>
-    ///     Gets a registered <see cref="IFetchEngine{E}" /> by its <see cref="EngineHandle" />
+    /// Gets a registered <see cref="IFetchEngine{E}" /> by its <see cref="EngineHandle" />
     /// </summary>
     /// <param name="handle">The <see cref="EngineHandle" /> of the <see cref="IFetchEngine{E}" /></param>
     /// <typeparam name="T">The type of the results of the <see cref="IFetchEngine{E}" /></typeparam>
@@ -246,17 +237,17 @@ public partial class MakoClient : ICancellable
     }
 
     /// <summary>
-    ///     Acquires a configured <see cref="HttpClient" /> for the network traffics
+    /// Acquires a configured <see cref="HttpClient" /> for the network traffics
     /// </summary>
     /// <param name="makoApiKind">The kind of API that is going to be used by the request</param>
     /// <returns>The <see cref="HttpClient" /> corresponding to <paramref name="makoApiKind" /></returns>
     public HttpClient GetMakoHttpClient(MakoApiKind makoApiKind)
     {
-        return ResolveKeyed<HttpClient>(makoApiKind);
+        return MakoServices.GetRequiredKeyedService<HttpClient>(makoApiKind);
     }
 
     /// <summary>
-    ///     Sets the <see cref="Session" /> to a new value
+    /// Sets the <see cref="Session" /> to a new value
     /// </summary>
     /// <param name="newSession">The new <see cref="Preference.Session" /></param>
     public void RefreshSession(Session newSession)
@@ -265,7 +256,7 @@ public partial class MakoClient : ICancellable
     }
 
     /// <summary>
-    ///     Refresh session using the provided <see cref="ISessionUpdate" />
+    /// Refresh session using the provided <see cref="ISessionUpdate" />
     /// </summary>
     public async Task RefreshSessionAsync()
     {

@@ -24,7 +24,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media.Animation;
-using Pixeval.Misc;
+using Pixeval.Controls.Windowing;
 using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;

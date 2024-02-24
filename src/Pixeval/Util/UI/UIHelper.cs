@@ -20,39 +20,40 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
+using Windows.Graphics;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.Storage.Streams;
-using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.WinUI;
 using Microsoft.UI.Text;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
-using Microsoft.UI.Xaml.Media.Imaging;
+using Pixeval.AppManagement;
 using Pixeval.Controls.MarkupExtensions;
 using Pixeval.Controls.MarkupExtensions.FontSymbolIcon;
-using Pixeval.Misc;
-using Pixeval.Util.IO;
 using Pixeval.Util.Threading;
 using Pixeval.Utilities;
-using QRCoder;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 using SixLabors.ImageSharp.Processing.Processors.Quantization;
 using WinUI3Utilities;
 using Brush = Microsoft.UI.Xaml.Media.Brush;
 using Color = Windows.UI.Color;
+using FontFamily = Microsoft.UI.Xaml.Media.FontFamily;
 using Image = SixLabors.ImageSharp.Image;
 using Point = Windows.Foundation.Point;
-using Size = SixLabors.ImageSharp.Size;
+using Pixeval.Controls.Windowing;
+using Size = Windows.Foundation.Size;
 
 namespace Pixeval.Util.UI;
 
@@ -91,12 +92,16 @@ public static partial class UiHelper
         return Color.FromArgb(color.A, (byte)red, (byte)green, (byte)blue);
     }
 
-    public static SolidColorBrush WithAlpha(this SolidColorBrush brush, byte alpha)
-    {
-        brush.Color = brush.Color.WithAlpha(alpha);
-        return brush;
-    }
+    [Pure]
+    public static SizeInt32 ToSizeInt32(this Size size) => new((int)size.Width, (int)size.Height);
 
+    [Pure]
+    public static Size ToSize(this SizeInt32 size) => new(size.Width, size.Height);
+
+    [Pure]
+    public static SolidColorBrush WithAlpha(this SolidColorBrush brush, byte alpha) => new(brush.Color.WithAlpha(alpha));
+
+    [Pure]
     public static Color WithAlpha(this Color color, byte alpha) => Color.FromArgb(alpha, color.R, color.G, color.B);
 
     public static async Task<double> GetImageAspectRatioAsync(Stream stream, bool disposeOfStream = true)
@@ -115,7 +120,7 @@ public static partial class UiHelper
     {
         using var image = await Image.LoadAsync<Rgb24>(stream);
         image.Mutate(x => x
-            .Resize(new ResizeOptions { Sampler = KnownResamplers.NearestNeighbor, Size = new Size(100, 0) })
+            .Resize(new ResizeOptions { Sampler = KnownResamplers.NearestNeighbor, Size = new(100, 0) })
             .Quantize(new OctreeQuantizer(new QuantizerOptions { Dither = null, MaxColors = 1 })));
         var pixel = image[0, 0];
         if (disposeOfStream)
@@ -123,18 +128,6 @@ public static partial class UiHelper
             await stream.DisposeAsync();
         }
         return Color.FromArgb(0xFF, pixel.R, pixel.G, pixel.B);
-    }
-
-    public static ImageSource GetImageSourceFromUriRelativeToAssetsImageFolder(string relativeToAssetsImageFolder)
-    {
-        return new BitmapImage(new Uri($"ms-appx:///Assets/Images/{relativeToAssetsImageFolder}"));
-    }
-
-    public static void ScrollToElement(this ScrollViewer scrollViewer, UIElement element)
-    {
-        var transform = element.TransformToVisual((UIElement)scrollViewer.Content);
-        var position = transform.TransformPoint(new Point(0, 0));
-        _ = scrollViewer.ChangeView(null, position.Y, null, false);
     }
 
     public static Storyboard CreateStoryboard(params Timeline[] animations)
@@ -153,28 +146,48 @@ public static partial class UiHelper
         var content = new DataPackage { RequestedOperation = DataPackageOperation.Copy };
         content.SetText(text);
         Clipboard.SetContent(content);
-        Clipboard.Flush();
+        try
+        {
+            Clipboard.Flush();
+        }
+        catch (COMException)
+        {
+        }
     }
 
     /// <summary>
     /// 调用此方法不要过快
     /// </summary>
-    /// <param name="stream">静态图需要PNG，动图任意格式的图片</param>
-    public static void ClipboardSetBitmap(IRandomAccessStream stream)
+    public static async Task ClipboardSetBitmapAsync(Stream stream)
     {
-        var reference = RandomAccessStreamReference.CreateFromStream(stream);
+        using var randomAccessStream = new InMemoryRandomAccessStream();
+        await stream.CopyToAsync(randomAccessStream.AsStreamForWrite());
+        randomAccessStream.Seek(0);
+        // 此处必须是原生的IRandomAccessStream，而非Stream.AsRandomAccessStream()，否则会导致不显示剪切板缩略图
+        var reference = RandomAccessStreamReference.CreateFromStream(randomAccessStream);
         var content = new DataPackage { RequestedOperation = DataPackageOperation.Copy };
         content.SetBitmap(reference);
         Clipboard.SetContent(content);
-        Clipboard.Flush();
+        try
+        {
+            Clipboard.Flush();
+        }
+        catch (COMException)
+        {
+        }
     }
 
     public static void NavigateByNavigationViewTag(this Frame frame, NavigationView sender, NavigationTransitionInfo? transitionInfo = null)
     {
         if (sender.SelectedItem is NavigationViewItem { Tag: NavigationViewTag tag })
         {
-            _ = frame.Navigate(tag.NavigateTo, tag.Parameter, transitionInfo ?? new SuppressNavigationTransitionInfo());
+            _ = frame.Navigate(tag.NavigateTo, tag.Parameter, transitionInfo);
         }
+    }
+
+    public static void NavigateTag(this Frame frame, NavigationViewTag tag, NavigationTransitionInfo? transitionInfo = null)
+    {
+        _ = frame.Navigate(tag.NavigateTo, tag.Parameter, transitionInfo);
     }
 
     public static Visibility Inverse(this Visibility visibility)
@@ -189,9 +202,11 @@ public static partial class UiHelper
 
     public static FontIcon GetFontIcon(this FontIconSymbols symbol, double? fontSize = null)
     {
+        var systemThemeFontFamily = new FontFamily(AppInfo.AppIconFontFamilyName);
         var icon = new FontIcon
         {
-            Glyph = symbol.GetGlyph().ToString()
+            Glyph = symbol.GetGlyph().ToString(),
+            FontFamily = systemThemeFontFamily
         };
         if (fontSize is not null)
         {
@@ -203,9 +218,11 @@ public static partial class UiHelper
 
     public static FontIconSource GetFontIconSource(this FontIconSymbols symbol, double? fontSize = null, Brush? foregroundBrush = null)
     {
+        var systemThemeFontFamily = new FontFamily(AppInfo.AppIconFontFamilyName);
         var icon = new FontIconSource
         {
-            Glyph = symbol.GetGlyph().ToString()
+            Glyph = symbol.GetGlyph().ToString(),
+            FontFamily = systemThemeFontFamily
         };
         if (fontSize is not null)
         {
@@ -240,41 +257,7 @@ public static partial class UiHelper
 
     public static void ClearContent(this RichEditBox box)
     {
-        box.Document.SetText(TextSetOptions.None, string.Empty);
-    }
-
-    public static void Deactivate(this ObservableRecipient recipient)
-    {
-        recipient.IsActive = false;
-    }
-
-    public static void Collapse(this UIElement element)
-    {
-        element.Visibility = Visibility.Collapsed;
-    }
-
-    public static void Show(this UIElement element)
-    {
-        element.Visibility = Visibility.Visible;
-    }
-
-    public static async Task<SoftwareBitmapSource> GenerateQrCodeForUrlAsync(string url)
-    {
-        var qrCodeGen = new QRCodeGenerator();
-        var urlPayload = new PayloadGenerator.Url(url);
-        var qrCodeData = qrCodeGen.CreateQrCode(urlPayload, QRCodeGenerator.ECCLevel.Q);
-        var qrCode = new BitmapByteQRCode(qrCodeData);
-        var bytes = qrCode.GetGraphic(20);
-        return await (await IoHelper.GetRandomAccessStreamFromByteArrayAsync(bytes)).GetSoftwareBitmapSourceAsync(true);
-    }
-
-    public static async Task<SoftwareBitmapSource> GenerateQrCodeAsync(string content)
-    {
-        var qrCodeGen = new QRCodeGenerator();
-        var qrCodeData = qrCodeGen.CreateQrCode(content, QRCodeGenerator.ECCLevel.Q);
-        var qrCode = new BitmapByteQRCode(qrCodeData);
-        var bytes = qrCode.GetGraphic(20);
-        return await (await IoHelper.GetRandomAccessStreamFromByteArrayAsync(bytes)).GetSoftwareBitmapSourceAsync(true);
+        box.Document.SetText(TextSetOptions.None, "");
     }
 
     public static IAsyncOperation<StorageFolder?> OpenFolderPickerAsync(this Window window)
@@ -287,7 +270,7 @@ public static partial class UiHelper
         return folderPicker.InitializeWithWindow(window).PickSingleFolderAsync();
     }
 
-    public static IAsyncOperation<StorageFile?> OpenFileSavePickerAsync(this Window window, string suggestedFileName, string fileTypeName, string fileTypeId)
+    public static IAsyncOperation<StorageFile?> OpenFileSavePickerAsync(this Window window, string suggestedFileName, string fileTypeId)
     {
         var savePicker = new FileSavePicker
         {
@@ -316,6 +299,12 @@ public static partial class UiHelper
     {
         await ThreadingHelper.SpinWaitAsync(() => root.Content is not T { IsLoaded: true });
         return (T)root.Content;
+    }
+
+    public static async Task<Page> AwaitPageTransitionAsync(this Frame root, Type pageType)
+    {
+        await ThreadingHelper.SpinWaitAsync(() => root.Content is not Page { IsLoaded: true } || root.Content?.GetType() != pageType);
+        return (Page)root.Content;
     }
 
     public static Color ParseHexColor(string hex)

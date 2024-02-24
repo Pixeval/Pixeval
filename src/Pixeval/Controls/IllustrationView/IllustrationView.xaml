@@ -1,61 +1,44 @@
-<Grid
-    x:Class="Pixeval.Controls.IllustrationView.IllustrationView"
+<UserControl
+    x:Class="Pixeval.Controls.IllustrationView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:controls="using:Pixeval.Controls"
-    xmlns:converters="using:Pixeval.Util.Converters"
+    xmlns:converters1="using:Pixeval.Controls.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="using:Pixeval.Controls.IllustrationView"
+    xmlns:local="using:Pixeval.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Unloaded="IllustrationViewOnUnloaded"
     mc:Ignorable="d">
-    <Grid.Resources>
-        <converters:BoolToItemsViewSelectionModeConverter x:Key="BoolToItemsViewSelectionModeConverter" />
-    </Grid.Resources>
-    <controls:AdvancedItemsView
-        x:Name="IllustrationItemsView"
-        x:FieldModifier="public"
-        ElementClearing="IllustrationItemsView_OnElementClearing"
-        ElementPrepared="IllustrationItemsView_OnElementPrepared"
-        IsItemInvokedEnabled="True"
-        ItemInvoked="IllustrationItemsView_OnItemInvoked"
-        ItemsSource="{x:Bind ViewModel.DataProvider.View}"
-        LayoutType="{x:Bind LayoutType, Mode=OneWay}"
-        MinItemHeight="{x:Bind DesiredHeight}"
-        MinItemWidth="{x:Bind DesiredWidth}"
-        SelectionChanged="IllustrationItemsView_OnSelectionChanged"
-        SelectionMode="{x:Bind ViewModel.IsSelecting, Converter={StaticResource BoolToItemsViewSelectionModeConverter}, Mode=OneWay}">
-        <ItemsView.ItemTemplate>
-            <DataTemplate x:DataType="local:IllustrationItemViewModel">
-                <ItemContainer>
-                    <local:IllustrationItem
-                        ShowQrCodeRequested="IllustrationThumbnailOnShowQrCodeRequested"
-                        ThisRequired="IllustrationThumbnail_OnThisRequired"
-                        ViewModel="{x:Bind}" />
-                </ItemContainer>
-            </DataTemplate>
-        </ItemsView.ItemTemplate>
-    </controls:AdvancedItemsView>
-    <StackPanel
-        HorizontalAlignment="Center"
-        VerticalAlignment="Center"
-        Spacing="20"
-        Visibility="{x:Bind ViewModel.HasNoItems, Mode=OneWay}">
-        <Image
-            Width="200"
-            Height="200"
-            Source="/Assets/Images/empty-box.png" />
-        <TextBlock
-            x:Uid="/IllustrationView/ResultIsEmptyTextBlock"
-            HorizontalAlignment="Center"
-            FontSize="{StaticResource PixevalTitleFontSize}" />
-    </StackPanel>
-    <TeachingTip
-        x:Name="QrCodeTeachingTip"
-        x:Uid="/IllustrationView/QrCodeTeachingTip"
-        IsLightDismissEnabled="True">
-        <TeachingTip.HeroContent>
-            <Image />
-        </TeachingTip.HeroContent>
-    </TeachingTip>
-</Grid>
+    <UserControl.Resources>
+        <converters1:BoolToSelectionModeConverter x:Key="BoolToSelectionModeConverter" />
+    </UserControl.Resources>
+    <local:IllustrateView
+        x:Name="IllustrateView"
+        x:Uid="/IllustrateView/IllustrationQrCodeTeachingTip"
+        HasNoItem="{x:Bind ViewModel.HasNoItem, Mode=OneWay}"
+        IsLoadingMore="{x:Bind IllustrationItemsView.IsLoadingMore, Mode=OneWay}">
+        <local:IllustrateView.Content>
+            <local:AdvancedItemsView
+                x:Name="IllustrationItemsView"
+                x:FieldModifier="public"
+                IsItemInvokedEnabled="True"
+                ItemInvoked="IllustrationItemsView_OnItemInvoked"
+                ItemsSource="{x:Bind ViewModel.DataProvider.View}"
+                LayoutType="{x:Bind LayoutType, Mode=OneWay}"
+                MinItemHeight="{x:Bind DesiredHeight}"
+                MinItemWidth="{x:Bind DesiredWidth}"
+                SelectionChanged="IllustrationItemsView_OnSelectionChanged"
+                SelectionMode="{x:Bind ViewModel.IsSelecting, Converter={StaticResource BoolToSelectionModeConverter}, Mode=OneWay}">
+                <local:AdvancedItemsView.ItemTemplate>
+                    <DataTemplate x:DataType="local:IllustrationItemViewModel">
+                        <ItemContainer>
+                            <local:IllustrationItem
+                                ThisRequired="IllustrationThumbnail_OnThisRequired"
+                                ViewModel="{x:Bind}"
+                                ViewModelChanged="IllustrationItem_OnViewModelChanged" />
+                        </ItemContainer>
+                    </DataTemplate>
+                </local:AdvancedItemsView.ItemTemplate>
+            </local:AdvancedItemsView>
+        </local:IllustrateView.Content>
+    </local:IllustrateView>
+</UserControl>

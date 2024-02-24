@@ -28,8 +28,8 @@ using Pixeval.Utilities;
 namespace Pixeval.CoreApi.Engine.Implements;
 
 /// <summary>
-///     Get the bookmarks that have user-defined tags associate with them, only returns their ID in string representation
-///     This API is not supposed to have other usages
+/// Get the bookmarks that have user-defined tags associate with them, only returns their ID in string representation
+/// This API is not supposed to have other usages
 /// </summary>
 internal class TaggedBookmarksIdEngine(MakoClient makoClient, EngineHandle? engineHandle, long uid, string tag)
     : AbstractPixivFetchEngine<long>(makoClient, engineHandle)

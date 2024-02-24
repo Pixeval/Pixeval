@@ -21,7 +21,7 @@
 namespace Pixeval.CoreApi.Net;
 
 /// <summary>
-///     The several kinds of APIs that Mako will use
+/// The several kinds of APIs that Mako will use
 /// </summary>
 public enum MakoApiKind
 {

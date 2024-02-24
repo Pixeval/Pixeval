@@ -23,8 +23,8 @@ using Pixeval.CoreApi.Global.Enum;
 namespace Pixeval.CoreApi.Global.Exception;
 
 /// <summary>
-///     When a <see cref="PrivacyPolicy" /> is set to <see cref="PrivacyPolicy.Private" /> while the uid is not equivalent
-///     to the <see cref="MakoClient.Session" />
+/// When a <see cref="PrivacyPolicy" /> is set to <see cref="PrivacyPolicy.Private" /> while the uid is not equivalent
+/// to the <see cref="MakoClient.Session" />
 /// </summary>
 public class IllegalPrivatePolicyException : MakoException
 {

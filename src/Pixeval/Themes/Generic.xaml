@@ -1,6 +1,6 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="ms-appx:///Controls/TokenInputTextBox/TokenInputTextBox.xaml" />
-        <ResourceDictionary Source="ms-appx:///Flyouts/IllustrationResultFilter/IllustrationResultFilterFunctionEntry.xaml" />
+        <ResourceDictionary Source="ms-appx:///Controls/TokenInput/TokenInputTextBox.xaml" />
+        <ResourceDictionary Source="ms-appx:///Controls/FlyoutContent/IllustrationResultFilter/IllustrationResultFilterFunctionEntry.xaml" />
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

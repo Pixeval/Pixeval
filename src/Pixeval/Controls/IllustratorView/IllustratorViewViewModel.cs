@@ -18,19 +18,13 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using Pixeval.Controls.Illustrate;
 using Pixeval.CoreApi.Model;
-using Pixeval.Util;
 
-namespace Pixeval.Controls.IllustratorView;
+namespace Pixeval.Controls;
 
 public sealed class IllustratorViewViewModel : IllustrateViewViewModel<User, IllustratorItemViewModel>
 {
-    public override IDataProvider<User, IllustratorItemViewModel> DataProvider { get; } = new IllustratorViewDataProvider();
+    public override IllustratorViewDataProvider DataProvider { get; } = new();
 
-    public override void Dispose()
-    {
-        DataProvider.FetchEngine?.Cancel();
-        DataProvider.DisposeCurrent();
-    }
+    public IllustratorViewViewModel() => DataProvider.View.CollectionChanged += (_, _) => OnPropertyChanged(nameof(HasNoItem));
 }

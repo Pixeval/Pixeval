@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.WinUI.Helpers;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Data;
@@ -14,8 +16,7 @@ using WinUI3Utilities.Attributes;
 namespace Pixeval.Controls;
 
 /// <summary>
-/// <see cref="ItemsView.ItemsSource"/>属性推荐使用<see cref="AdvancedObservableCollection{T}"/>类型，
-/// 同时在<see cref="ItemContainer.Child"/>的控件使用<see cref="IViewModelControl"/>接口
+/// <see cref="ItemsView.ItemsSource"/>属性推荐使用<see cref="AdvancedObservableCollection{T}"/>类型
 /// </summary>
 /// <remarks><see cref="ItemsView.ItemTemplate"/>中必须使用<see cref="ItemContainer"/>作为根元素</remarks>
 [DependencyProperty<ItemsViewLayoutType>("LayoutType", DependencyPropertyDefaultValue.Default, nameof(OnLayoutTypeChanged))]
@@ -27,10 +28,13 @@ namespace Pixeval.Controls;
 [DependencyProperty<int>("SelectedIndex", "-1", nameof(OnSelectedIndexChanged))]
 [DependencyProperty<bool>("CanLoadMore", "true")]
 [DependencyProperty<int>("LoadCount", "20")]
+[ObservableObject]
 public sealed partial class AdvancedItemsView : ItemsView
 {
-    public event Func<AdvancedItemsView, EventArgs, Task> LoadMoreRequested;
-    // TODO: 调用此事件时可能需要防抖
+    public event Func<AdvancedItemsView, EventArgs, Task<bool>> LoadMoreRequested;
+    /// <summary>
+    /// 调用此事件时可能需要防抖
+    /// </summary>
     public event Action<AdvancedItemsView, ItemContainer>? ElementPrepared;
     public event Action<AdvancedItemsView, ItemContainer>? ElementClearing;
 
@@ -48,42 +52,9 @@ public sealed partial class AdvancedItemsView : ItemsView
         ElementPrepared?.Invoke(this, element);
     }
 
-    private readonly HashSet<int> _viewModels = [];
-
     /// <summary>
-    /// 加载并在加载完毕后检查是否填满视区
-    /// </summary>
-    /// <remarks>
-    /// 需要<see cref="ItemsView.ItemsSource"/>为<see cref="INotifyCollectionChanged"/>并且
-    /// <see cref="ItemContainer.Child"/>是<see cref="IViewModelControl"/>的控件
-    /// </remarks>
-    /// <returns></returns>
-    public async Task LoadAndFillAsync()
-    {
-        if (ItemsSource is not INotifyCollectionChanged ncc)
-        {
-            await TryRaiseLoadMoreRequestedAsync();
-            return;
-        }
-
-        _viewModels.Clear();
-        ncc.CollectionChanged += NccOnCollectionChanged;
-        await TryRaiseLoadMoreRequestedAsync();
-        ncc.CollectionChanged -= NccOnCollectionChanged;
-
-        return;
-        void NccOnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
-        {
-            if (e.Action is not NotifyCollectionChangedAction.Add || e.NewItems is null)
-                return;
-
-            foreach (var newItem in e.NewItems)
-                _ = _viewModels.Add(newItem.GetHashCode());
-        }
-    }
-
-    /// <summary>
-    /// 判断滚动视图是否滚到底部，如果是则触发<see cref="LoadMoreRequested"/>事件
+    /// 判断滚动视图是否滚到底部，如果是则触发<see cref="LoadMoreRequested"/>事件，
+    /// 这个事件只会使源加载最多一次
     /// </summary>
     /// <remarks>
     /// 需要<see cref="ItemsView.ItemsSource"/>为<see cref="INotifyCollectionChanged"/>
@@ -91,36 +62,63 @@ public sealed partial class AdvancedItemsView : ItemsView
     /// <returns></returns>
     public async Task TryRaiseLoadMoreRequestedAsync()
     {
-        if (!CanLoadMore || IsLoadingMore)
-            return;
-
-        switch (ScrollView.ComputedVerticalScrollMode, ScrollView.ComputedHorizontalScrollMode)
+        var loadMore = true;
+        // 加载直到有新元素加载进来
+        while (loadMore)
         {
-            case (ScrollingScrollMode.Disabled, ScrollingScrollMode.Disabled):
-            case (ScrollingScrollMode.Enabled, ScrollingScrollMode.Disabled)
-                when ScrollView.ScrollableHeight - LoadingOffset < ScrollView.VerticalOffset:
-            case (ScrollingScrollMode.Disabled, ScrollingScrollMode.Enabled)
-                when ScrollView.ScrollableWidth - LoadingOffset < ScrollView.HorizontalOffset:
-            case (ScrollingScrollMode.Enabled, ScrollingScrollMode.Enabled)
-                when ScrollView.ScrollableHeight - LoadingOffset < ScrollView.VerticalOffset
-                     || ScrollView.ScrollableWidth - LoadingOffset < ScrollView.HorizontalOffset:
+            if (!CanLoadMore || IsLoadingMore)
+                return;
+
+            // 只有页面没充满时会触发LoadMoreRequested
+            switch (ScrollView.ComputedVerticalScrollMode, ScrollView.ComputedHorizontalScrollMode, ScrollView.VerticalScrollMode, ScrollView.HorizontalScrollMode)
             {
-                IsLoadingMore = true;
-                await LoadMoreRequested(this, EventArgs.Empty);
-                IsLoadingMore = false;
-                break;
+                case (ScrollingScrollMode.Disabled, ScrollingScrollMode.Disabled, not ScrollingScrollMode.Disabled, not ScrollingScrollMode.Disabled):
+                case (ScrollingScrollMode.Enabled, ScrollingScrollMode.Disabled, _, not ScrollingScrollMode.Disabled)
+                    when ScrollView.ScrollableHeight - LoadingOffset < ScrollView.VerticalOffset:
+                case (ScrollingScrollMode.Disabled, ScrollingScrollMode.Enabled, not ScrollingScrollMode.Disabled, _)
+                    when ScrollView.ScrollableWidth - LoadingOffset < ScrollView.HorizontalOffset:
+                case (ScrollingScrollMode.Enabled, ScrollingScrollMode.Enabled, _, _)
+                    when ScrollView.ScrollableHeight - LoadingOffset < ScrollView.VerticalOffset
+                         || ScrollView.ScrollableWidth - LoadingOffset < ScrollView.HorizontalOffset:
+                {
+                    IsLoadingMore = true;
+                    var before = GetItemsCount();
+                    if (await LoadMoreRequested(this, EventArgs.Empty))
+                    {
+                        var after = GetItemsCount();
+                        // 这里可以设为一行的元素数，这样在加载过少数量的时候，也可以持续加载
+                        // 一般一次会加载20个元素，而一行元素数一般少于10，所以这里设为10
+                        if (before + 10 < after)
+                            loadMore = false;
+                    }
+                    else
+                        loadMore = false;
+                    IsLoadingMore = false;
+                    break;
+                }
+                // 如果填满了页面，也无需继续加载
+                default:
+                    loadMore = false;
+                    break;
             }
         }
     }
 
     public AdvancedItemsView()
     {
-        InitializeComponent();
+        SelectionChanged += AdvancedItemsViewOnSelectionChanged;
         LoadMoreRequested += async (sender, args) =>
         {
             if (sender.To<AdvancedItemsView>() is { ItemsSource: ISupportIncrementalLoading sil } aiv)
+            {
                 _ = await sil.LoadMoreItemsAsync((uint)aiv.LoadCount);
+                return sil.HasMoreItems;
+            }
+
+            return false;
         };
+        _ = RegisterPropertyChangedCallback(ScrollViewProperty, ScrollViewOnPropertyChanged);
+        _ = RegisterPropertyChangedCallback(ItemsSourceProperty, ItemsSourceOnPropertyChanged);
     }
 
     #region PropertyChanged
@@ -256,7 +254,26 @@ public sealed partial class AdvancedItemsView : ItemsView
 
     #region EventHandlers
 
-    private void AdvancedItemsView_OnSelectionChanged(ItemsView sender, ItemsViewSelectionChangedEventArgs e)
+    /// <summary>
+    /// 本方法之后会触发<see cref="AdvancedItemsViewOnSizeChanged"/>
+    /// </summary>
+    private void ScrollViewOnPropertyChanged(DependencyObject sender, DependencyProperty dp)
+    {
+        ScrollView.ViewChanged += ScrollView_ViewChanged;
+        _itemsRepeater = ScrollView.Content.To<ItemsRepeater>();
+        _itemsRepeater.SizeChanged += AdvancedItemsViewOnSizeChanged;
+        _itemsRepeater.ElementPrepared += (_, arg) =>
+        {
+            // _loadedElements.Count is 0 说明不存在TryLoadedFirst注释里的情况
+            // 否则需要检测该控件是否加载，加载后才能触发ElementPrepared，以此防止ElementPrepared调用两次
+            var itemContainer = arg.Element.To<ItemContainer>();
+            if (_loadedElements.Count is 0 || _loadedElements.Contains(arg.Element.GetHashCode()))
+                ElementPrepared?.Invoke(this, itemContainer);
+        };
+        _itemsRepeater.ElementClearing += (_, arg) => ElementClearing?.Invoke(this, arg.Element.To<ItemContainer>());
+    }
+
+    private void AdvancedItemsViewOnSelectionChanged(ItemsView sender, ItemsViewSelectionChangedEventArgs e)
     {
         if (sender.SelectionMode is not ItemsViewSelectionMode.Single)
             return;
@@ -266,30 +283,43 @@ public sealed partial class AdvancedItemsView : ItemsView
 
     private async void ScrollView_ViewChanged(ScrollView sender, object args) => await TryRaiseLoadMoreRequestedAsync();
 
-    private void AdvancedItemsView_OnLoaded(object sender, RoutedEventArgs e)
+    /// <summary>
+    /// 当数据源变化或者<see cref="NotifyCollectionChangedAction.Reset"/>、<see cref="NotifyCollectionChangedAction.Remove"/>时，
+    /// 这个方法可以重新加载数据。
+    /// 这个方法旨在解决数据源变化，而<see cref="ItemsRepeater"/>的<see cref="FrameworkElement.ActualHeight"/>没有变化时，重新加载数据的问题
+    /// </summary>
+    private async void ItemsSourceOnPropertyChanged(DependencyObject sender, DependencyProperty dp)
     {
-        ScrollView.ViewChanged += ScrollView_ViewChanged;
-        _itemsRepeater = ScrollView.Content.To<ItemsRepeater>();
-        _itemsRepeater.ElementPrepared += async (s, arg) =>
+        if (sender.To<AdvancedItemsView>() is { ItemsSource: ISupportIncrementalLoading sil })
         {
-            // _loadedElements.Count is 0 说明不存在TryLoadedFirst注释里的情况
-            // 否则需要检测该控件是否加载，加载后才能触发ElementPrepared，以此防止ElementPrepared调用两次
-            var itemContainer = arg.Element.To<ItemContainer>();
-            if (_loadedElements.Count is 0 || _loadedElements.Contains(arg.Element.GetHashCode()))
-                ElementPrepared?.Invoke(this, itemContainer);
-            // LoadAndFill用的逻辑
-            if (_viewModels.Count is not 0 && itemContainer.Child is IViewModelControl viewModelControl)
+            if (sil is INotifyCollectionChanged ncc)
             {
-                _ = _viewModels.Remove(viewModelControl.ViewModel.GetHashCode());
-                if (_viewModels.Count is 0)
-                    await LoadAndFillAsync();
+                _sourceWeakEventListener?.Detach();
+
+                _sourceWeakEventListener =
+                    new WeakEventListener<AdvancedItemsView, object?, NotifyCollectionChangedEventArgs>(this)
+                    {
+                        // ReSharper disable once AsyncVoidLambda
+                        OnEventAction = async (source, changed, arg) => await TryRaiseLoadMoreRequestedAsync(),
+                        OnDetachAction = listener => ncc.CollectionChanged -= listener.OnEvent
+                    };
+                ncc.CollectionChanged += _sourceWeakEventListener.OnEvent;
             }
-        };
-        _itemsRepeater.ElementClearing += (_, arg) => ElementClearing?.Invoke(this, arg.Element.To<ItemContainer>());
-        // Loaded之后会触发SizeChanged
+
+            // 在第一次加载时，ScrollView还未初始化，可以交给AdvancedItemsView_OnSizeChanged来触发
+            if (ScrollView != null!)
+                await TryRaiseLoadMoreRequestedAsync();
+        }
     }
 
-    private async void AdvancedItemsView_OnSizeChanged(object sender, SizeChangedEventArgs e) => await LoadAndFillAsync();
+    /// <summary>
+    /// 这个方法是连续加载的关键所在。
+    /// 当新数据加载完毕后，会使<see cref="ItemsRepeater"/>的<see cref="FrameworkElement.ActualHeight"/>变大，
+    /// 或数据换源后（或第一次设置数据源时），<see cref="FrameworkElement.ActualHeight"/>变为0，这个方法都可以重新加载数据
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private async void AdvancedItemsViewOnSizeChanged(object sender, SizeChangedEventArgs e) => await TryRaiseLoadMoreRequestedAsync();
 
     #endregion
 
@@ -298,6 +328,8 @@ public sealed partial class AdvancedItemsView : ItemsView
     private ItemsRepeater _itemsRepeater = null!;
 
     private readonly HashSet<int> _loadedElements = [];
+
+    private WeakEventListener<AdvancedItemsView, object?, NotifyCollectionChangedEventArgs> _sourceWeakEventListener = null!;
 
     private int GetSelectedIndex()
     {
@@ -314,10 +346,21 @@ public sealed partial class AdvancedItemsView : ItemsView
         };
     }
 
+    private int GetItemsCount()
+    {
+        return ItemsSource switch
+        {
+            Array array => array.Length,
+            ICollection list => list.Count,
+            IEnumerable enumerable => enumerable.Cast<object>().Count(),
+            _ => ThrowHelper.ArgumentOutOfRange<object, int>(ItemsSource)
+        };
+    }
+
     /// <summary>
     /// For debounce
     /// </summary>
-    private bool IsLoadingMore { get; set; }
+    [ObservableProperty] private bool _isLoadingMore;
 
     #endregion
 }

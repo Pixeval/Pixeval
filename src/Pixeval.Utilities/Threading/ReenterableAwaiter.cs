@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval.Utilities
+#region Copyright (c) Pixeval/Pixeval.Utilities
 // GPL v3 License
 // 
 // Pixeval/Pixeval.Utilities
@@ -53,7 +53,7 @@ public class ReenterableAwaiter(bool initialSignal) : INotifyCompletion
     {
         if (_exception is not null)
         {
-            throw _exception;
+            ThrowUtils.Throw(_exception);
         }
     }
 

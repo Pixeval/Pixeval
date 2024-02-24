@@ -34,17 +34,17 @@ public class EngineHandle : ICancellable, INotifyCompletion, ICompletionCallback
     }
 
     /// <summary>
-    ///     搜索引擎的唯一ID
+    /// 搜索引擎的唯一ID
     /// </summary>
     public Guid Id { get; }
 
     /// <summary>
-    ///     指示该句柄对应的搜索引擎是否已经被取消
+    /// 指示该句柄对应的搜索引擎是否已经被取消
     /// </summary>
     public bool IsCancelled { get; set; }
 
     /// <summary>
-    ///     指示该句柄对应的搜索引擎是否已经结束运行
+    /// 指示该句柄对应的搜索引擎是否已经结束运行
     /// </summary>
     public bool IsCompleted { get; set; }
 
@@ -65,7 +65,7 @@ public class EngineHandle : ICancellable, INotifyCompletion, ICompletionCallback
     }
 
     /// <summary>
-    ///     取消该句柄对应的搜索引擎的运行
+    /// 取消该句柄对应的搜索引擎的运行
     /// </summary>
     public void Cancel()
     {
@@ -73,7 +73,7 @@ public class EngineHandle : ICancellable, INotifyCompletion, ICompletionCallback
     }
 
     /// <summary>
-    ///     设置该句柄对应的搜索引擎的状态为已完成，并执行注册的结束回调
+    /// 设置该句柄对应的搜索引擎的状态为已完成，并执行注册的结束回调
     /// </summary>
     public void Complete()
     {
@@ -81,15 +81,9 @@ public class EngineHandle : ICancellable, INotifyCompletion, ICompletionCallback
         OnCompletion(this);
     }
 
-    public static bool operator ==(EngineHandle lhs, EngineHandle rhs)
-    {
-        return lhs.Id == rhs.Id && lhs.IsCancelled == rhs.IsCancelled && lhs.IsCompleted == rhs.IsCompleted;
-    }
+    public static bool operator ==(EngineHandle lhs, EngineHandle rhs) => Equals(lhs, rhs);
 
-    public static bool operator !=(EngineHandle lhs, EngineHandle rhs)
-    {
-        return !(lhs == rhs);
-    }
+    public static bool operator !=(EngineHandle lhs, EngineHandle rhs) => !Equals(lhs, rhs);
 
     public void OnCompletion(EngineHandle engineHandle)
     {

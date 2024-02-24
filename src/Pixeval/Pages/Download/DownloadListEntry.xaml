@@ -9,44 +9,35 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     ColumnSpacing="20"
     mc:Ignorable="d">
+    <!--<ToolTipService.ToolTip>
+        <ToolTip Content="{x:Bind ViewModel.Illustrate.Title, Mode=OneWay}" Placement="Mouse" />
+    </ToolTipService.ToolTip>-->
     <Grid.ColumnDefinitions>
         <ColumnDefinition Width="Auto" />
         <ColumnDefinition Width="*" />
         <ColumnDefinition Width="3*" />
         <ColumnDefinition Width="Auto" />
     </Grid.ColumnDefinitions>
-    <Border
+    <controls:LazyImage
         Grid.Column="0"
         Width="50"
         Height="50"
-        HorizontalAlignment="Left"
-        VerticalAlignment="Center"
-        CornerRadius="{ThemeResource ControlCornerRadius}">
-        <Grid>
-            <ProgressRing
-                Width="35"
-                Height="35"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center" />
-            <controls:IllustrationImage ThumbnailOption="{x:Bind local:DownloadListEntry.Option}" ViewModel="{x:Bind ViewModel, Mode=OneWay}" />
-        </Grid>
-    </Border>
+        Source="{x:Bind ViewModel.ThumbnailSource, Mode=OneWay}" />
     <StackPanel
         Grid.Column="1"
-        HorizontalAlignment="Left"
         VerticalAlignment="Center"
         Spacing="1">
         <TextBlock
             MaxWidth="250"
             FontSize="{StaticResource PixevalBaseFontSize}"
-            Text="{x:Bind Title, Mode=OneWay}"
+            Text="{x:Bind ViewModel.Illustrate.Title, Mode=OneWay}"
             TextTrimming="CharacterEllipsis"
             TextWrapping="NoWrap" />
         <TextBlock
             MaxWidth="250"
             FontSize="{StaticResource PixevalCaptionFontSize}"
             Foreground="{ThemeResource PixevalTipTextForeground}"
-            Text="{x:Bind Description, Mode=OneWay}"
+            Text="{x:Bind ViewModel.Illustrate.User.Name, Mode=OneWay}"
             TextTrimming="CharacterEllipsis"
             TextWrapping="NoWrap" />
     </StackPanel>
@@ -55,33 +46,38 @@
         HorizontalAlignment="Stretch"
         VerticalAlignment="Center"
         Spacing="5">
-        <ProgressBar HorizontalAlignment="Stretch" Value="{x:Bind Progress, Mode=OneWay}" />
+        <ProgressBar
+            HorizontalAlignment="Stretch"
+            ShowError="{x:Bind ViewModel.IsError, Mode=OneWay}"
+            ShowPaused="{x:Bind ViewModel.IsPaused, Mode=OneWay}"
+            Value="{x:Bind ViewModel.DownloadTask.ProgressPercentage, Mode=OneWay}" />
         <TextBlock
             FontSize="{StaticResource PixevalSubscriptFontSize}"
             Foreground="{ThemeResource PixevalTipTextForeground}"
-            Text="{x:Bind ProgressMessage, Mode=OneWay}"
+            Text="{x:Bind ViewModel.ProgressMessage, Mode=OneWay}"
             TextTrimming="CharacterEllipsis"
             TextWrapping="NoWrap" />
     </StackPanel>
     <CommandBar
         Grid.Column="3"
         Width="125"
+        VerticalAlignment="Center"
         DefaultLabelPosition="Right"
         OverflowButtonVisibility="Visible">
-        <!--  Width="125"是试出来刚好只显示一个按钮的宽度  -->
+        <!--  Width="125" 是试出来刚好只显示一个按钮的宽度  -->
         <AppBarButton
             Icon="{markup:FontSymbolIcon Glyph=OpenInNewWindowE8A7}"
-            Label="{x:Bind ActionButtonContent, Mode=OneWay}"
+            Label="{x:Bind ViewModel.ActionButtonContent, Mode=OneWay}"
             Tapped="ActionButton_OnTapped" />
         <AppBarButton
             x:Uid="/DownloadListEntry/RedownloadItem"
             Icon="{markup:FontSymbolIcon Glyph=DownloadE896}"
-            IsEnabled="{x:Bind IsRedownloadItemEnabled, Mode=OneWay}"
+            IsEnabled="{x:Bind ViewModel.IsRedownloadItemEnabled, Mode=OneWay}"
             Tapped="RedownloadItem_OnTapped" />
         <AppBarButton
             x:Uid="/DownloadListEntry/CancelDownloadItem"
             Icon="{markup:FontSymbolIcon Glyph=CancelE711}"
-            IsEnabled="{x:Bind IsCancelItemEnabled, Mode=OneWay}"
+            IsEnabled="{x:Bind ViewModel.IsCancelItemEnabled, Mode=OneWay}"
             Tapped="CancelDownloadItem_OnTapped" />
         <AppBarButton
             x:Uid="/DownloadListEntry/OpenDownloadLocationItem"
@@ -94,7 +90,7 @@
         <AppBarButton
             x:Uid="/DownloadListEntry/CheckErrorMessageInDetailItem"
             Icon="{markup:FontSymbolIcon Glyph=DocumentE8A5}"
-            IsEnabled="{x:Bind IsShowErrorDetailDialogItemEnabled, Mode=OneWay}"
+            IsEnabled="{x:Bind ViewModel.IsError, Mode=OneWay}"
             Tapped="CheckErrorMessageInDetail_OnTapped" />
     </CommandBar>
 </Grid>

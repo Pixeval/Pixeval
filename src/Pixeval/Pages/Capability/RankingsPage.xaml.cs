@@ -19,16 +19,13 @@
 #endregion
 
 using System;
-using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Controls;
 using Pixeval.CoreApi.Global.Enum;
-using Pixeval.Messages;
 using Pixeval.Misc;
-using Pixeval.Options;
 using Pixeval.Util;
-using Pixeval.Util.Generic;
+using WinUI3Utilities;
 
 namespace Pixeval.Pages.Capability;
 
@@ -37,6 +34,9 @@ public sealed partial class RankingsPage : ISortedIllustrationContainerPageHelpe
     public RankingsPage()
     {
         InitializeComponent();
+        RankOptionComboBox.ItemsSource = LocalizedResourceAttributeHelper.GetLocalizedResourceContents<RankOption>();
+        RankOptionComboBox.SelectedItem = new StringRepresentableItem(RankOption.Day, null);
+        RankDateTimeCalendarDatePicker.Date = MaxDate;
     }
 
     public DateTime MaxDate => DateTime.Now.AddDays(-2);
@@ -45,17 +45,8 @@ public sealed partial class RankingsPage : ISortedIllustrationContainerPageHelpe
 
     public SortOptionComboBox SortOptionProvider => SortOptionComboBox;
 
-    public override void OnPageDeactivated(NavigatingCancelEventArgs navigatingCancelEventArgs)
-    {
-        WeakReferenceMessenger.Default.UnregisterAll(this);
-    }
-
     public override void OnPageActivated(NavigationEventArgs navigationEventArgs)
     {
-        SortOptionComboBox.SelectedItem = MakoHelper.GetAppSettingDefaultSortOptionWrapper();
-        RankOptionComboBox.SelectedItem = LocalizedBoxHelper.Of<RankOption, RankOptionWrapper>(RankOption.Day);
-        RankDateTimeCalendarDatePicker.Date = DateTime.Now.AddDays(-2);
-        _ = WeakReferenceMessenger.Default.TryRegister<RankingsPage, MainPageFrameNavigatingEvent>(this, static (recipient, _) => recipient.IllustrationContainer.ViewModel.DataProvider.FetchEngine?.Cancel());
         ChangeSource();
     }
 
@@ -76,8 +67,8 @@ public sealed partial class RankingsPage : ISortedIllustrationContainerPageHelpe
 
     private void ChangeSource()
     {
-        var rankOption = (RankOptionComboBox.SelectedItem as RankOptionWrapper)?.Value ?? RankOption.Day;
-        var dateTime = RankDateTimeCalendarDatePicker.Date?.DateTime ?? DateTime.Now.AddDays(-2);
-        IllustrationContainer.ViewModel.ResetEngine(App.AppViewModel.MakoClient.Ranking(rankOption, dateTime));
+        var rankOption = RankOptionComboBox.SelectedItem.To<StringRepresentableItem>().Item.To<RankOption>();
+        var dateTime = RankDateTimeCalendarDatePicker.Date!.Value.DateTime;
+        IllustrationContainer.ViewModel.ResetEngine(App.AppViewModel.MakoClient.Ranking(rankOption, dateTime, App.AppViewModel.AppSettings.TargetFilter));
     }
 }

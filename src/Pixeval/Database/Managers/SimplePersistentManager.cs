@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -27,15 +27,14 @@ using LiteDB;
 namespace Pixeval.Database.Managers;
 
 /// <summary>
-///     A simple persistent manager without mapping
+/// A simple persistent manager without mapping
 /// </summary>
 /// <typeparam name="T"></typeparam>
 public abstract class SimplePersistentManager<T>(ILiteDatabase db, int maximumRecords) : IPersistentManager<T, T>
     where T : new()
 {
-#nullable disable
     public ILiteCollection<T> Collection { get; init; } = db.GetCollection<T>(typeof(T).Name);
-#nullable restore
+
     public int MaximumRecords { get; set; } = maximumRecords;
 
     public int Count => Collection.Count();

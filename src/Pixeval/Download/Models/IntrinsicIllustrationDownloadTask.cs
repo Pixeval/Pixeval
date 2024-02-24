@@ -21,28 +21,32 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
-using Windows.Storage.Streams;
-using Pixeval.Controls.IllustrationView;
+using Pixeval.Controls;
 using Pixeval.Database;
 using Pixeval.Utilities;
 using Pixeval.Utilities.Threading;
 
 namespace Pixeval.Download.Models;
 
-/// <summary>
-/// The disposal of <paramref name="stream" /> is not handled
-/// </summary>
-public class IntrinsicIllustrationDownloadTask(DownloadHistoryEntry entry, IllustrationItemViewModel illustrationViewModel, IRandomAccessStream stream)
-    : IllustrationDownloadTask(entry, illustrationViewModel)
+public class IntrinsicIllustrationDownloadTask : IllustrationDownloadTask
 {
-    public IRandomAccessStream Stream { get; } = stream;
-
-    protected override async Task DownloadAsyncCore(Func<string, IProgress<double>?, CancellationHandle?, Task<Result<IRandomAccessStream>>> _, string url, string destination)
+    /// <summary>
+    /// The disposal of <paramref name="stream" /> is not handled
+    /// </summary>
+    public IntrinsicIllustrationDownloadTask(DownloadHistoryEntry entry, IllustrationItemViewModel illustrationViewModel, Stream stream) : base(entry, illustrationViewModel)
     {
-        if (!App.AppViewModel.AppSetting.OverwriteDownloadedFile && File.Exists(destination))
+        Report(100);
+        Stream = stream;
+    }
+
+    public Stream Stream { get; }
+
+    protected override async Task DownloadAsyncCore(Func<string, IProgress<double>?, CancellationHandle?, Task<Result<Stream>>> _, string url, string destination)
+    {
+        if (!App.AppViewModel.AppSettings.OverwriteDownloadedFile && File.Exists(destination))
             return;
 
-        Stream.Seek(0);
+        Stream.Position = 0;
 
         await ManageStream(Stream, destination);
     }

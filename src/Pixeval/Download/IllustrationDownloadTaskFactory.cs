@@ -18,10 +18,10 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using System.IO;
 using System.Threading.Tasks;
-using Windows.Storage.Streams;
 using Microsoft.Extensions.DependencyInjection;
-using Pixeval.Controls.IllustrationView;
+using Pixeval.Controls;
 using Pixeval.Database;
 using Pixeval.Database.Managers;
 using Pixeval.Download.MacroParser;
@@ -52,17 +52,17 @@ public class IllustrationDownloadTaskFactory : IDownloadTaskFactory<Illustration
             {
                 var (metadata, url) = await context.GetUgoiraOriginalUrlAsync();
                 var downloadHistoryEntry = new DownloadHistoryEntry(
-                    DownloadState.Created,
+                    DownloadState.Queued,
                     path,
                     DownloadItemType.Ugoira,
                     context.Id,
                     url);
-                return new AnimatedIllustrationDownloadTask(downloadHistoryEntry, context, metadata);
+                return new UgoiraDownloadTask(downloadHistoryEntry, context, metadata);
             }
             else if (context.MangaIndex is -1 && context.IsManga)
             {
                 var downloadHistoryEntry = new DownloadHistoryEntry(
-                    DownloadState.Created,
+                    DownloadState.Queued,
                     path,
                     DownloadItemType.Manga,
                     context.Id,
@@ -72,7 +72,7 @@ public class IllustrationDownloadTaskFactory : IDownloadTaskFactory<Illustration
             else
             {
                 var downloadHistoryEntry = new DownloadHistoryEntry(
-                    DownloadState.Created,
+                    DownloadState.Queued,
                     path,
                     DownloadItemType.Illustration,
                     context.Id,
@@ -85,7 +85,7 @@ public class IllustrationDownloadTaskFactory : IDownloadTaskFactory<Illustration
         return task;
     }
 
-    public async Task<IllustrationDownloadTask> TryCreateIntrinsicAsync(IllustrationItemViewModel context, IRandomAccessStream stream, string rawPath)
+    public async Task<IllustrationDownloadTask> TryCreateIntrinsicAsync(IllustrationItemViewModel context, Stream stream, string rawPath)
     {
         using var scope = App.AppViewModel.AppServicesScope;
         var manager = scope.ServiceProvider.GetRequiredService<DownloadHistoryPersistentManager>();
@@ -96,24 +96,26 @@ public class IllustrationDownloadTaskFactory : IDownloadTaskFactory<Illustration
             _ = manager.Delete(entry => entry.Destination == path);
         }
 
-        var type = context switch
+        switch (context)
         {
-            { IsUgoira: true } => DownloadItemType.Ugoira,
-            { IsManga: true, MangaIndex: -1 } => DownloadItemType.Manga, // 未使用的分支
-            _ => DownloadItemType.Illustration
-        };
-        string url;
-        if (context.IsUgoira)
-        {
-            (var metadata, url) = await context.GetUgoiraOriginalUrlAsync();
+            case { IsUgoira: true }:
+            {
+                var (metadata, url) = await context.GetUgoiraOriginalUrlAsync();
+                var entry = new DownloadHistoryEntry(DownloadState.Queued, path, DownloadItemType.Ugoira, context.Id, url);
+                return new IntrinsicUgoiraDownloadTask(entry, context, metadata, stream);
+            }
+            case { IsManga: true, MangaIndex: -1 }: // 未使用的分支
+            {
+                var url = context.OriginalStaticUrl;
+                var entry = new DownloadHistoryEntry(DownloadState.Queued, path, DownloadItemType.Manga, context.Id, url);
+                return new IntrinsicMangaDownloadTask(entry, context, [stream]);
+            }
+            default:
+            {
+                var url = context.OriginalStaticUrl;
+                var entry = new DownloadHistoryEntry(DownloadState.Queued, path, DownloadItemType.Illustration, context.Id, url);
+                return new IntrinsicIllustrationDownloadTask(entry, context, stream);
+            }
         }
-        else
-        {
-            url = context.OriginalStaticUrl;
-        }
-        var entry = new DownloadHistoryEntry(DownloadState.Completed, rawPath, type, context.Id, url);
-        return type is DownloadItemType.Manga
-            ? new IntrinsicMangaDownloadTask(entry, context, [stream]) // 未使用的分支
-            : new IntrinsicIllustrationDownloadTask(entry, context, stream);
     }
 }

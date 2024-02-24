@@ -18,41 +18,32 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Controls;
 using Pixeval.CoreApi.Global.Enum;
-using Pixeval.Messages;
 using Pixeval.Misc;
-using Pixeval.Util;
 using Pixeval.Util.UI;
 
 namespace Pixeval.Pages.Capability;
 
 public sealed partial class RecommendationPage : ISortedIllustrationContainerPageHelper
 {
-    public RecommendationPage()
-    {
-        InitializeComponent();
-    }
+    public RecommendationPage() => InitializeComponent();
 
     public IllustrationContainer ViewModelProvider => IllustrationContainer;
 
     public SortOptionComboBox SortOptionProvider => SortOptionComboBox;
 
-    public override void OnPageDeactivated(NavigatingCancelEventArgs navigatingCancelEventArgs)
+    public override void OnPageDeactivated(NavigatingCancelEventArgs e)
     {
         ModeSelectionComboBox.SelectionChangedWhenLoaded -= ModeSelectionComboBox_OnSelectionChangedWhenLoaded;
         SortOptionComboBox.SelectionChangedWhenLoaded -= SortOptionComboBox_OnSelectionChanged;
-        WeakReferenceMessenger.Default.UnregisterAll(this);
     }
 
-    public override void OnPageActivated(NavigationEventArgs navigationEventArgs)
+    public override void OnPageActivated(NavigationEventArgs e)
     {
         ModeSelectionComboBox.SelectedItem = ModeSelectionComboBoxIllustComboBoxItem;
-        SortOptionComboBox.SelectedItem = MakoHelper.GetAppSettingDefaultSortOptionWrapper();
-        _ = WeakReferenceMessenger.Default.TryRegister<RecommendationPage, MainPageFrameNavigatingEvent>(this, static (recipient, _) => recipient.IllustrationContainer.ViewModel.DataProvider.FetchEngine?.Cancel());
         ChangeSource();
     }
 
@@ -70,6 +61,6 @@ public sealed partial class RecommendationPage : ISortedIllustrationContainerPag
 
     private void ChangeSource()
     {
-        IllustrationContainer.ViewModel.ResetEngine(App.AppViewModel.MakoClient.Recommendations(ModeSelectionComboBox.GetComboBoxSelectedItemTag(RecommendationContentType.Illust)), App.AppViewModel.AppSetting.ItemsNumberLimitForDailyRecommendations);
+        IllustrationContainer.ViewModel.ResetEngine(App.AppViewModel.MakoClient.Recommendations(ModeSelectionComboBox.GetComboBoxSelectedItemTag(RecommendationContentType.Illust), App.AppViewModel.AppSettings.TargetFilter), App.AppViewModel.AppSettings.ItemsNumberLimitForDailyRecommendations);
     }
 }

@@ -27,7 +27,7 @@ public enum UgoiraDownloadFormat
     [LocalizedResource(typeof(MiscResources), nameof(MiscResources.Tiff))]
     Tiff,
 
-    [LocalizedResource(typeof(MiscResources), nameof(MiscResources.APng))]
+    [LocalizedResource(typeof(MiscResources), nameof(MiscResources.Png))]
     APng,
 
     [LocalizedResource(typeof(MiscResources), nameof(MiscResources.Gif))]

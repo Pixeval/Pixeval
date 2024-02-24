@@ -1,4 +1,4 @@
-﻿To add a new setting entry, follow the instructions:
+To add a new setting entry, follow the instructions:
 
 1. Create a property that corresponds to the setting entry you want to add in Pixeval.AppManagement.AppSetting class.
 2. Add a [DefaultValue] attribute to indicates the default value of your property, if the value is of primitive type, provide the value directly to the constructor of `[DefaultValue]`, otherwise, create a class that implements Pixeval.Misc.IDefaultValueProvider and use it as factory to create the default value, then pass that class to the `[DefaultValue]` attribute using `typeof`, e.g., `[DefaultValue(typeof(AppWidthDefaultValueProvider))]`
@@ -28,7 +28,7 @@
                 {
                     ItemsViewLayoutType.Regular => MiscResources.IllustrationViewRegularLayout,
                     ItemsViewLayoutType.Justified => MiscResources.IllustrationViewJustifiedLayout,
-                    _ => throw new ArgumentOutOfRangeException(nameof(item), item, null)
+                    _ => Throw new ArgumentOutOfRangeException(nameof(item), item, null)
                 };
             }
 

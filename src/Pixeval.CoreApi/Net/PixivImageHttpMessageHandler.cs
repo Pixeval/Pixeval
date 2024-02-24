@@ -26,10 +26,8 @@ using Pixeval.Utilities;
 
 namespace Pixeval.CoreApi.Net;
 
-internal class PixivImageHttpMessageHandler(MakoClient makoClient) : MakoClientSupportedHttpMessageHandler
+internal class PixivImageHttpMessageHandler(MakoClient makoClient) : MakoClientSupportedHttpMessageHandler(makoClient)
 {
-    public sealed override MakoClient MakoClient { get; set; } = makoClient;
-
     protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
         if (MakoClient.Configuration.Bypass)
@@ -37,7 +35,7 @@ internal class PixivImageHttpMessageHandler(MakoClient makoClient) : MakoClientS
             MakoHttpOptions.UseHttpScheme(request);
         }
 
-        _ = request.Headers.TryAddWithoutValidation("User-Agent", MakoClient.Configuration.UserAgent);
+        request.Headers.UserAgent.AddRange(MakoClient.Configuration.UserAgent);
 
         var requestUri = request.RequestUri!;
         if (requestUri.Host == MakoHttpOptions.ImageHost && MakoClient.Configuration.MirrorHost is { } mirror && mirror.IsNotNullOrBlank())
@@ -46,12 +44,13 @@ internal class PixivImageHttpMessageHandler(MakoClient makoClient) : MakoClientS
             {
                 _ when Uri.CheckHostName(mirror) is not UriHostNameType.Unknown => new UriBuilder(requestUri) { Host = mirror }.Uri,
                 _ when Uri.IsWellFormedUriString(mirror, UriKind.Absolute) => new Uri(mirror).Let(mirrorUri => new UriBuilder(requestUri) { Host = mirrorUri.Host, Scheme = mirrorUri.Scheme })!.Uri,
-                _ => throw new UriFormatException("Expecting a valid Host or URI")
+                _ => ThrowUtils.UriFormat<Uri>("Expecting a valid Host or URI")
             };
         }
 
-        return MakoClient.GetHttpMessageInvoker(
-            MakoClient.Configuration.Bypass ? typeof(PixivImageNameResolver) : typeof(LocalMachineNameResolver)
-        ).SendAsync(request, cancellationToken);
+        return (MakoClient.Configuration.Bypass
+                ? MakoClient.GetHttpMessageInvoker<PixivImageNameResolver>()
+                : MakoClient.GetHttpMessageInvoker<LocalMachineNameResolver>())
+            .SendAsync(request, cancellationToken);
     }
 }

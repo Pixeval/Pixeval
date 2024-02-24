@@ -25,45 +25,48 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media.Imaging;
-using Pixeval.Controls.IllustrationView;
-using Pixeval.CoreApi.Global.Enum;
-using Pixeval.Misc;
+using Pixeval.AppManagement;
+using Pixeval.Controls;
+using Pixeval.Controls.Windowing;
 using Pixeval.Pages.Capability;
+using Pixeval.Pages.Download;
 using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Pages.Misc;
+using Pixeval.Pages.Tags;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
+using Pixeval.Utilities;
 
 namespace Pixeval.Pages;
 
 public partial class MainPageViewModel : ObservableObject
 {
-    public readonly NavigationViewTag AboutTag = new(typeof(AboutPage), null);
+    public readonly NavigationViewTag<AboutPage> AboutTag = new();
 
-    public readonly NavigationViewTag BookmarksTag = new(typeof(BookmarksPage),
-        App.AppViewModel.MakoClient.Bookmarks(App.AppViewModel.PixivUid, PrivacyPolicy.Public,
-            App.AppViewModel.AppSetting.TargetFilter));
+    public readonly NavigationViewTag<BookmarksPage> BookmarksTag = new();
 
-    public readonly NavigationViewTag FollowingsTag = new(typeof(FollowingsPage), null);
+    public readonly NavigationViewTag<FollowingsPage> FollowingsTag = new();
 
-    public readonly NavigationViewTag HistoriesTag = new(typeof(BrowsingHistoryPage), null);
+    public readonly NavigationViewTag<BrowsingHistoryPage> HistoriesTag = new();
 
-    public readonly NavigationViewTag RankingsTag = new(typeof(RankingsPage),
-        App.AppViewModel.MakoClient.Ranking(RankOption.Day, DateTime.Today - TimeSpan.FromDays(2)));
+    public readonly NavigationViewTag<RankingsPage> RankingsTag = new();
 
-    public readonly NavigationViewTag RecentPostsTag = new(typeof(RecentPostsPage),
-        App.AppViewModel.MakoClient.RecentPosts(PrivacyPolicy.Public));
+    public readonly NavigationViewTag<RecentPostsPage> RecentPostsTag = new();
 
-    public readonly NavigationViewTag RecommendsTag = new(typeof(RecommendationPage),
-        App.AppViewModel.MakoClient.Recommendations(targetFilter: App.AppViewModel.AppSetting.TargetFilter));
+    public readonly NavigationViewTag<RecommendationPage> RecommendsTag = new();
 
-    public readonly NavigationViewTag SettingsTag =
-        new(typeof(SettingsPage), App.AppViewModel.MakoClient.Configuration);
+    public readonly NavigationViewTag<TagsPage> TagsTag = new();
 
-    public readonly NavigationViewTag SpotlightsTag = new(typeof(SpotlightsPage), null);
+    public readonly NavigationViewTag<DownloadListPage> DownloadListTag = new();
+
+    public readonly NavigationViewTag<SettingsPage> SettingsTag = new();
+
+    public readonly NavigationViewTag<SpotlightsPage> SpotlightsTag = new();
 
     [ObservableProperty]
-    private SoftwareBitmapSource? _avatar;
+    private SoftwareBitmapSource? _avatarSource;
+
+    public string? UserName => App.AppViewModel.MakoClient.Session.Name;
 
     private readonly UIElement _owner;
 
@@ -78,26 +81,29 @@ public partial class MainPageViewModel : ObservableObject
     public SuggestionStateMachine SuggestionProvider { get; } = new();
 
     /// <summary>
-    ///     Download user's avatar and set to the Avatar property.
+    /// Download user's avatar and set to the Avatar property.
     /// </summary>
     public async void DownloadAndSetAvatar()
     {
         var makoClient = App.AppViewModel.MakoClient;
         // get byte array of avatar
         // and set to the bitmap image
-        Avatar = (await makoClient.DownloadSoftwareBitmapSourceAsync(makoClient.Session.AvatarUrl!)).UnwrapOrThrow();
+        var result = await makoClient.DownloadSoftwareBitmapSourceAsync(makoClient.Session.AvatarUrl!);
+        AvatarSource = result is Result<SoftwareBitmapSource>.Success { Value: var avatar }
+            ? avatar
+            : await AppInfo.GetNotAvailableImageAsync();
     }
 
     public async Task ReverseSearchAsync(Stream stream)
     {
         try
         {
-            var result = await App.AppViewModel.MakoClient.ReverseSearchAsync(stream, App.AppViewModel.AppSetting.ReverseSearchApiKey!);
+            var result = await App.AppViewModel.MakoClient.ReverseSearchAsync(stream, App.AppViewModel.AppSettings.ReverseSearchApiKey!);
             if (result.Header.Status is 0)
             {
                 var viewModels = await Task.WhenAll(result.Results
                     .Where(r => r.Header.IndexId is 5 or 6 && r.Header.Similarity >
-                        App.AppViewModel.AppSetting.ReverseSearchResultSimilarityThreshold)
+                        App.AppViewModel.AppSettings.ReverseSearchResultSimilarityThreshold)
                     .Select(async r =>
                         new IllustrationItemViewModel(
                             await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(r.Data.PixivId))));

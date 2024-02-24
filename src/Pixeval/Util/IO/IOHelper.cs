@@ -21,8 +21,6 @@
 using System;
 using System.Buffers;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -36,26 +34,21 @@ using Windows.Foundation;
 using Windows.Security.Cryptography;
 using Windows.Storage;
 using Windows.Storage.Streams;
+using Pixeval.Download.Models;
 using Pixeval.Utilities;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats;
 
 namespace Pixeval.Util.IO;
 
 public static partial class IoHelper
 {
-    public static async Task<string> Sha1Async(this IRandomAccessStream randomAccessStream)
+    public static async Task<string> Sha1Async(this Stream stream)
     {
         using var sha1 = SHA1.Create();
-        var result = await sha1.ComputeHashAsync(randomAccessStream.AsStreamForRead());
-        randomAccessStream.Seek(0); // reset the stream
+        var result = await sha1.ComputeHashAsync(stream);
+        stream.Position = 0; // reset the stream
         return result.Select(b => b.ToString("X2")).Aggregate((acc, str) => acc + str);
-    }
-
-    public static async Task CreateAndWriteToFileAsync(IRandomAccessStream contentStream, string path)
-    {
-        CreateParentDirectories(path);
-        await using var stream = File.OpenWrite(path);
-        contentStream.Seek(0);
-        await contentStream.AsStreamForRead().CopyToAsync(stream);
     }
 
     public static string NormalizePath(string path)
@@ -89,11 +82,10 @@ public static partial class IoHelper
         return stream;
     }
 
-    public static async Task<ImageFormat> DetectImageFormat(this IRandomAccessStream randomAccessStream)
+    public static async Task<IImageFormat> DetectImageFormat(this IRandomAccessStream randomAccessStream)
     {
         await using var stream = randomAccessStream.AsStream();
-        using var image = Image.FromStream(stream);
-        return image.RawFormat;
+        return await Image.DetectFormatAsync(stream);
     }
 
     public static async Task<string> ToBase64StringAsync(this IRandomAccessStream randomAccessStream)
@@ -108,7 +100,7 @@ public static partial class IoHelper
     {
         var base64Str = await randomAccessStream.ToBase64StringAsync();
         var format = await randomAccessStream.DetectImageFormat();
-        return $"data:image/{format.ToString().ToLower()},{base64Str}";
+        return $"data:image/{format?.Name.ToLower()},{base64Str}";
     }
 
     public static async Task WriteBytesAsync(this Stream stream, byte[] bytes)
@@ -176,7 +168,7 @@ public static partial class IoHelper
         return httpClient.SendAsync(httpRequestMessage);
     }
 
-    public static async Task<(string Filename, InMemoryRandomAccessStream Content)[]> ReadZipArchiveEntries(Stream zipStream)
+    public static async Task<MemoryStream[]> ReadZipArchiveEntries(Stream zipStream)
     {
         using var archive = new ZipArchive(zipStream, ZipArchiveMode.Read);
         // return the result of Select directly will cause the enumeration to be delayed
@@ -187,27 +179,27 @@ public static partial class IoHelper
         return await Task.WhenAll(archive.Entries.Select(async entry =>
         {
             await using var stream = entry.Open();
-            var ms = new InMemoryRandomAccessStream();
-            await stream.CopyToAsync(ms.AsStreamForWrite());
-            ms.Seek(0);
-            return (entry.Name, ms);
+            var ms = _recyclableMemoryStreamManager.GetStream();
+            await stream.CopyToAsync(ms);
+            ms.Position = 0;
+            return ms;
         }));
     }
 
     public static async Task SaveToFileAsync(this IRandomAccessStream stream, StorageFile file)
     {
         stream.Seek(0);
-        using var dataReader = new DataReader(stream);
-        _ = await dataReader.LoadAsync((uint)stream.Size);
-        await FileIO.WriteBufferAsync(file, dataReader.ReadBuffer((uint)stream.Size));
-        _ = dataReader.DetachStream();
+        await stream.AsStreamForRead().CopyToAsync(await file.OpenStreamForWriteAsync());
     }
 
-    public static async Task DeleteAsync(string path)
+    public static async Task DeleteIllustrationTaskAsync(IllustrationDownloadTaskBase task)
     {
         try
         {
-            await using var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.None, 4096, FileOptions.DeleteOnClose);
+            if (task is MangaDownloadTask)
+                await (await StorageFolder.GetFolderFromPathAsync(Path.GetDirectoryName(task.Destination))).DeleteAsync(StorageDeleteOption.Default);
+            else
+                await (await StorageFile.GetFileFromPathAsync(task.Destination)).DeleteAsync(StorageDeleteOption.Default);
         }
         catch
         {

@@ -39,7 +39,6 @@
         </ResourceDictionary>-->
 
     </ResourceDictionary.ThemeDictionaries>
-    <Thickness x:Key="CardControlPadding">16</Thickness>
     <Thickness x:Key="CollapsedThickness">1</Thickness>
     <Thickness x:Key="ExpandedThickness">2</Thickness>
     <x:Double x:Key="CardControlMinWidth">0</x:Double>

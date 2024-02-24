@@ -25,7 +25,7 @@ namespace Pixeval.Utilities;
 
 public class SharedRef<T>
 {
-    private readonly HashSet<object> _keys = [];
+    private readonly HashSet<int> _keys = [];
 
     public T Value { get; init; }
 
@@ -33,7 +33,7 @@ public class SharedRef<T>
     {
         IdentifyKey(key);
         Value = value;
-        _ = _keys.Add(key);
+        _ = _keys.Add(key.GetHashCode());
     }
 
     public bool IsDisposed { get; private set; }
@@ -41,7 +41,7 @@ public class SharedRef<T>
     public bool TryDispose<TKey>(TKey key) where TKey : class
     {
         IdentifyKey(key);
-        _ = _keys.Remove(key);
+        _ = _keys.Remove(key.GetHashCode());
         if (_keys.Count > 0)
             return false;
         if (Value is IDisposable disposable)
@@ -63,7 +63,7 @@ public class SharedRef<T>
         // 判断key是不是引用类型
         var type = key.GetType();
         if (type.IsValueType || type == typeof(string))
-            throw new ArgumentException("Key must be a reference type and not a string.");
+            ThrowUtils.Argument("Key must be a reference type and not a string.");
 #endif
     }
 
@@ -71,7 +71,7 @@ public class SharedRef<T>
     {
         IdentifyKey(key);
         ObjectDisposedException.ThrowIf(IsDisposed, typeof(SharedRef<T>));
-        _ = _keys.Add(key);
+        _ = _keys.Add(key.GetHashCode());
         return this;
     }
 }

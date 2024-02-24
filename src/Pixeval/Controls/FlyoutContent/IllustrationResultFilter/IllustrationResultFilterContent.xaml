@@ -1,0 +1,89 @@
+<UserControl
+    x:Class="Pixeval.Controls.FlyoutContent.IllustrationResultFilterContent"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:Pixeval.Controls"
+    xmlns:converters="using:Pixeval.Controls.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:flyouts="using:Pixeval.Controls.FlyoutContent"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <converters:LongToDoubleConverter x:Key="LongToDoubleConverter" />
+    </UserControl.Resources>
+    <ScrollView>
+        <StackPanel Spacing="5">
+            <flyouts:IllustrationResultFilterFunctionEntry x:Uid="/IllustrationResultFilterContent/LeastBookmarkCountEntry">
+                <NumberBox
+                    x:Uid="/IllustrationResultFilterContent/LeastBookmarkCountNumberBox"
+                    Maximum="{x:Bind x:Int32.MaxValue}"
+                    Minimum="0"
+                    Style="{StaticResource PixevalNumberBoxStyle}"
+                    Value="{x:Bind ViewModel.LeastBookmark, Mode=TwoWay}" />
+            </flyouts:IllustrationResultFilterFunctionEntry>
+
+            <flyouts:IllustrationResultFilterFunctionEntry x:Uid="/IllustrationResultFilterContent/MaximumBookmarkCountEntry">
+                <NumberBox
+                    x:Uid="/IllustrationResultFilterContent/MaximumBookmarkCountNumberBox"
+                    Maximum="{x:Bind x:Int32.MaxValue}"
+                    Minimum="0"
+                    Style="{StaticResource PixevalNumberBoxStyle}"
+                    Value="{x:Bind ViewModel.MaximumBookmark, Mode=TwoWay}" />
+            </flyouts:IllustrationResultFilterFunctionEntry>
+
+            <flyouts:IllustrationResultFilterFunctionEntry x:Uid="/IllustrationResultFilterContent/IncludeTagsEntry">
+                <controls:TokenInput x:Uid="/IllustrationResultFilterContent/IncludeTagTokenInput" TokenSource="{x:Bind ViewModel.IncludeTags, Mode=OneWay}" />
+            </flyouts:IllustrationResultFilterFunctionEntry>
+
+            <flyouts:IllustrationResultFilterFunctionEntry x:Uid="/IllustrationResultFilterContent/ExcludeTagsEntry">
+                <controls:TokenInput x:Uid="/IllustrationResultFilterContent/ExcludeTagTokenInput" TokenSource="{x:Bind ViewModel.ExcludeTags, Mode=OneWay}" />
+            </flyouts:IllustrationResultFilterFunctionEntry>
+
+            <flyouts:IllustrationResultFilterFunctionEntry x:Uid="/IllustrationResultFilterContent/UserGroupNameEntry">
+                <controls:TokenInput x:Uid="/IllustrationResultFilterContent/UserGroupNameInput" TokenSource="{x:Bind ViewModel.UserGroupName, Mode=OneWay}" />
+            </flyouts:IllustrationResultFilterFunctionEntry>
+
+            <flyouts:IllustrationResultFilterFunctionEntry x:Uid="/IllustrationResultFilterContent/IllustratorNameEntry">
+                <controls:TokenInputTextBox x:Uid="/IllustrationResultFilterContent/IllustratorNameInput" Token="{x:Bind ViewModel.IllustratorName, Mode=OneWay}" />
+            </flyouts:IllustrationResultFilterFunctionEntry>
+
+            <flyouts:IllustrationResultFilterFunctionEntry x:Uid="/IllustrationResultFilterContent/IllustrationNameEntry">
+                <controls:TokenInputTextBox x:Uid="/IllustrationResultFilterContent/IllustrationNameInput" Token="{x:Bind ViewModel.IllustrationName, Mode=OneWay}" />
+            </flyouts:IllustrationResultFilterFunctionEntry>
+
+            <flyouts:IllustrationResultFilterFunctionEntry x:Uid="/IllustrationResultFilterContent/IllustratorIdEntry">
+                <!--  TODO: 由于double无法满足long的精度，最好改用InputValidation  -->
+                <NumberBox
+                    x:Uid="/IllustrationResultFilterContent/IllustratorIdInput"
+                    Minimum="0"
+                    SpinButtonPlacementMode="Hidden"
+                    Style="{StaticResource PixevalNumberBoxStyle}"
+                    Value="{x:Bind ViewModel.IllustratorId, Converter={StaticResource LongToDoubleConverter}, Mode=TwoWay}" />
+            </flyouts:IllustrationResultFilterFunctionEntry>
+
+            <flyouts:IllustrationResultFilterFunctionEntry x:Uid="/IllustrationResultFilterContent/IllustrationIdEntry">
+                <!--  由于double无法满足long的精度，最好改用InputValidation  -->
+                <NumberBox
+                    x:Uid="/IllustrationResultFilterContent/IllustrationIdInput"
+                    Minimum="0"
+                    SpinButtonPlacementMode="Hidden"
+                    Style="{StaticResource PixevalNumberBoxStyle}"
+                    Value="{x:Bind ViewModel.IllustrationId, Converter={StaticResource LongToDoubleConverter}, Mode=TwoWay}" />
+            </flyouts:IllustrationResultFilterFunctionEntry>
+
+            <flyouts:IllustrationResultFilterFunctionEntry x:Uid="/IllustrationResultFilterContent/PublishDateStartEntry">
+                <CalendarDatePicker
+                    x:Uid="/IllustrationResultFilterContent/PublishDateStartPicker"
+                    HorizontalAlignment="Stretch"
+                    Date="{x:Bind ViewModel.PublishDateStart, Mode=TwoWay}" />
+            </flyouts:IllustrationResultFilterFunctionEntry>
+
+            <flyouts:IllustrationResultFilterFunctionEntry x:Uid="/IllustrationResultFilterContent/PublishDateEndEntry">
+                <CalendarDatePicker
+                    x:Uid="/IllustrationResultFilterContent/PublishDateEndPicker"
+                    HorizontalAlignment="Stretch"
+                    Date="{x:Bind ViewModel.PublishDateEnd, Mode=TwoWay}" />
+            </flyouts:IllustrationResultFilterFunctionEntry>
+        </StackPanel>
+    </ScrollView>
+</UserControl>

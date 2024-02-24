@@ -4,7 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Pixeval.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:flyouts="using:Pixeval.Flyouts"
+    xmlns:flyouts="using:Pixeval.Controls.FlyoutContent"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Background="{ThemeResource PixevalPanelBackgroundThemeBrush}"
     mc:Ignorable="d">
@@ -21,7 +21,7 @@
             StickerTapped="ReplyBar_OnStickerTapped" />
         <controls:CommentList
             Grid.Row="1"
-            ItemsSource="{x:Bind _viewModel.Source}"
+            ItemsSource="{x:Bind _viewModel.View}"
             RepliesHyperlinkButtonTapped="CommentList_OnRepliesHyperlinkButtonTapped" />
         <TeachingTip
             x:Name="CommentRepliesTeachingTip"

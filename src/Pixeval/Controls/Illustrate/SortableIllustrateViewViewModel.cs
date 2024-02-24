@@ -18,21 +18,23 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.WinUI.Collections;
 using Pixeval.CoreApi.Model;
 
 namespace Pixeval.Controls.Illustrate;
 
-public abstract partial class SortableIllustrateViewViewModel<T, TViewModel> : IllustrateViewViewModel<T, TViewModel> where T : IIllustrate where TViewModel : IllustrateViewModel<T>
+public abstract class SortableIllustrateViewViewModel<T, TViewModel> : IllustrateViewViewModel<T, TViewModel> where T : class, IEntry where TViewModel : IllustrateViewModel<T>
 {
-    [ObservableProperty]
-    private bool _isAnyIllustrationSelected;
+    public void SetSortDescription(SortDescription description)
+    {
+        if (DataProvider.View.SortDescriptions.Count is 0)
+            DataProvider.View.SortDescriptions.Add(description);
+        else
+            DataProvider.View.SortDescriptions[0] = description;
+    }
 
-    [ObservableProperty]
-    private string? _selectionLabel;
-
-    public abstract void SetSortDescription(SortDescription description);
-
-    public abstract void ClearSortDescription();
+    public void ClearSortDescription()
+    {
+        DataProvider.View.SortDescriptions.Clear();
+    }
 }

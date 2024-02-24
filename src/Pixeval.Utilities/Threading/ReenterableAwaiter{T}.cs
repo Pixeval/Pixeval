@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval.Utilities
+#region Copyright (c) Pixeval/Pixeval.Utilities
 // GPL v3 License
 // 
 // Pixeval/Pixeval.Utilities
@@ -52,12 +52,7 @@ public class ReenterableAwaiter<TResult>(bool initialSignal, TResult resultIniti
 
     public TResult GetResult()
     {
-        if (_exception is not null)
-        {
-            throw _exception;
-        }
-
-        return _result!;
+        return _exception is null ? _result! : ThrowUtils.Throw<TResult>(_exception);
     }
 
     // Signals the awaiter to complete successfully

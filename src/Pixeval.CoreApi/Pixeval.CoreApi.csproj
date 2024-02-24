@@ -9,12 +9,13 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Autofac" Version="7.1.0" PrivateAssets="True" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
         <PackageReference Include="Refit" Version="7.0.0" PrivateAssets="True" />
     </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\Pixeval.Utilities\Pixeval.Utilities.csproj" />
+        <ProjectReference Include="..\Pixeval.SourceGen\Pixeval.SourceGen.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="False" />
     </ItemGroup>
 
     <ItemGroup>
@@ -25,6 +26,9 @@
             <DependentUpon>MakoClient.cs</DependentUpon>
         </Compile>
         <Compile Update="MakoClient.Properties.cs">
+            <DependentUpon>MakoClient.cs</DependentUpon>
+        </Compile>
+        <Compile Update="MakoClient.Logging.cs">
             <DependentUpon>MakoClient.cs</DependentUpon>
         </Compile>
     </ItemGroup>

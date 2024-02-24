@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval.Utilities
+#region Copyright (c) Pixeval/Pixeval.Utilities
 // GPL v3 License
 // 
 // Pixeval/Pixeval.Utilities
@@ -19,20 +19,15 @@
 #endregion
 
 using System;
+using System.ComponentModel;
 using System.Reflection;
 
 namespace Pixeval.Utilities;
-
-[AttributeUsage(AttributeTargets.Field)]
-public class Description(string name) : Attribute
-{
-    public string Name { get; } = name;
-}
 
 public static class DescriptionHelper
 {
     public static string GetDescription<TEnum>(this TEnum @enum) where TEnum : Enum
     {
-        return (typeof(TEnum).GetField(@enum.ToString())?.GetCustomAttribute(typeof(Description)) as Description)?.Name ?? throw new InvalidOperationException("Attribute not found");
+        return (typeof(TEnum).GetField(@enum.ToString())?.GetCustomAttribute(typeof(DescriptionAttribute)) as DescriptionAttribute)?.Description ?? ThrowUtils.InvalidOperation<string>("Attribute not found");
     }
 }

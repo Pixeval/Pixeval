@@ -22,17 +22,16 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
+using Pixeval.Utilities;
 
 namespace Pixeval.CoreApi.Net;
 
-internal class PixivApiHttpMessageHandler(MakoClient makoClient) : MakoClientSupportedHttpMessageHandler
+internal class PixivApiHttpMessageHandler(MakoClient makoClient) : MakoClientSupportedHttpMessageHandler(makoClient)
 {
-    public sealed override MakoClient MakoClient { get; set; } = makoClient;
-
     protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
         var headers = request.Headers;
-        var host = request.RequestUri!.Host; // the 'RequestUri' is guaranteed to be nonnull here, because the 'HttpClient' will set it to 'BaseAddress' if its null
+        var host = request.RequestUri!.Host; // the 'RequestUri' is guaranteed to be nonnull here, because the 'HttpClient' will set it to 'BaseAddress' if it's null
 
         var bypass = MakoHttpOptions.BypassRequiredHost.IsMatch(host) && MakoClient.Configuration.Bypass || host == MakoHttpOptions.OAuthHost;
 
@@ -41,8 +40,8 @@ internal class PixivApiHttpMessageHandler(MakoClient makoClient) : MakoClientSup
             MakoHttpOptions.UseHttpScheme(request);
         }
 
-        _ = request.Headers.TryAddWithoutValidation("User-Agent", MakoClient.Configuration.UserAgent);
-        _ = headers.TryAddWithoutValidation("Accept-Language", MakoClient.Configuration.CultureInfo.Name);
+        headers.UserAgent.AddRange(MakoClient.Configuration.UserAgent);
+        headers.AcceptLanguage.Add(new StringWithQualityHeaderValue(MakoClient.Configuration.CultureInfo.Name));
 
         var session = MakoClient.Session;
 
@@ -56,8 +55,9 @@ internal class PixivApiHttpMessageHandler(MakoClient makoClient) : MakoClientSup
                 break;
         }
 
-        return MakoClient.GetHttpMessageInvoker(bypass
-            ? typeof(PixivApiNameResolver)
-            : typeof(LocalMachineNameResolver)).SendAsync(request, cancellationToken);
+        return (MakoClient.Configuration.Bypass
+                ? MakoClient.GetHttpMessageInvoker<PixivApiNameResolver>()
+                : MakoClient.GetHttpMessageInvoker<LocalMachineNameResolver>())
+            .SendAsync(request, cancellationToken);
     }
 }

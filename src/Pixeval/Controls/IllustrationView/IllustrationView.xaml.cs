@@ -22,33 +22,29 @@ using System.Linq;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
-using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.Options;
 using Pixeval.Pages.IllustrationViewer;
-using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
 
-namespace Pixeval.Controls.IllustrationView;
+namespace Pixeval.Controls;
 
-// use "load failed" image for those thumbnails who failed to load its source due to various reasons
-// note: please ALWAYS add e.Handled = true before every "tapped" event for the buttons
+/// <summary>
+/// <see cref="FrameworkElement.Unloaded"/>时会尝试卸载缩略图并释放FetchEngine
+/// </summary>
 [DependencyProperty<ItemsViewLayoutType>("LayoutType", DependencyPropertyDefaultValue.Default)]
 [DependencyProperty<ThumbnailDirection>("ThumbnailDirection", DependencyPropertyDefaultValue.Default)]
 public sealed partial class IllustrationView
 {
     public const double LandscapeHeight = 180;
     public const double PortraitHeight = 250;
-    public ThumbnailUrlOption Option => LayoutType.ToThumbnailUrlOption();
 
-    public IllustrationView()
-    {
-        InitializeComponent();
-        ViewModel.DataProvider.View.FilterChanged += async (_, _) => await IllustrationItemsView.TryRaiseLoadMoreRequestedAsync();
-    }
+    public IllustrationViewViewModel ViewModel { get; } = new();
 
     public ScrollView ScrollView => IllustrationItemsView.ScrollView;
+
+    public TeachingTip QrCodeTeachingTip => IllustrateView.QrCodeTeachingTip;
 
     public double DesiredHeight => ThumbnailDirection switch
     {
@@ -64,32 +60,13 @@ public sealed partial class IllustrationView
         _ => ThrowHelper.ArgumentOutOfRange<ThumbnailDirection, double>(ThumbnailDirection)
     };
 
-    public IllustrationViewViewModel ViewModel { get; } = new();
-
-    private void IllustrationThumbnailOnShowQrCodeRequested(object sender, SoftwareBitmapSource e)
-    {
-        QrCodeTeachingTip.HeroContent.To<Image>().Source = e;
-        QrCodeTeachingTip.IsOpen = true;
-        QrCodeTeachingTip.Closed += Closed;
-        return;
-
-        void Closed(TeachingTip s, TeachingTipClosedEventArgs ea)
-        {
-            e.Dispose();
-            s.Closed -= Closed;
-        }
-    }
+    public IllustrationView() => InitializeComponent();
 
     private void IllustrationViewOnUnloaded(object sender, RoutedEventArgs e)
     {
         foreach (var illustrationViewModel in ViewModel.DataProvider.Source)
-            illustrationViewModel.UnloadThumbnail(ViewModel, Option);
+            illustrationViewModel.UnloadThumbnail(ViewModel);
         ViewModel.Dispose();
-    }
-
-    public async void LoadMoreIfNeeded()
-    {
-        await IllustrationItemsView.TryRaiseLoadMoreRequestedAsync();
     }
 
     private IllustrationView IllustrationThumbnail_OnThisRequired() => this;
@@ -101,25 +78,15 @@ public sealed partial class IllustrationView
         vm.CreateWindowWithPage(ViewModel);
     }
 
-    private async void IllustrationItemsView_OnElementPrepared(AdvancedItemsView sender, ItemContainer itemContainer)
+    private async void IllustrationItem_OnViewModelChanged(IllustrationItem sender, IllustrationItemViewModel viewModel)
     {
-        var thumbnail = itemContainer.Child.To<IllustrationItem>();
-        var viewModel = thumbnail.ViewModel;
-
-        if (await viewModel.TryLoadThumbnail(ViewModel, Option))
+        if (await viewModel.TryLoadThumbnailAsync(ViewModel))
         {
-            if (thumbnail.IsFullyOrPartiallyVisible(this))
-                thumbnail.Resources["IllustrationThumbnailStoryboard"].To<Storyboard>().Begin();
+            if (sender.IsFullyOrPartiallyVisible(this))
+                sender.Resources["IllustrationThumbnailStoryboard"].To<Storyboard>().Begin();
             else
-                thumbnail.Opacity = 1;
+                sender.Opacity = 1;
         }
-    }
-
-    private void IllustrationItemsView_OnElementClearing(AdvancedItemsView sender, ItemContainer itemContainer)
-    {
-        var viewModel = itemContainer.Child.To<IllustrationItem>().ViewModel;
-
-        viewModel.UnloadThumbnail(ViewModel, Option);
     }
 
     private void IllustrationItemsView_OnSelectionChanged(ItemsView sender, ItemsViewSelectionChangedEventArgs args)

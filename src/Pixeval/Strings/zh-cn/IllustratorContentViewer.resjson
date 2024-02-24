@@ -1,0 +1,16 @@
+{
+    "BookmarkedIllustrationAndMangaNavigationViewItem/Content": "插画·漫画收藏",
+    "BookmarkedNovelNavigationViewItem/Content": "小说收藏",
+    "FollowingUserNavigationViewItem/Content": "关注的人",
+    "IllustrationNavigationViewItem/Content": "插画",
+    "MangaNavigationViewItem/Content": "漫画",
+    "MyPixivUserNavigationViewItem/Content": "好P友",
+    "NovelNavigationViewItem/Content": "小说",
+    "NavigationViewAutoSuggestBox/PlaceholderText": "输入ID/标签/作品名/用户名进行快速过滤",
+    "RecommendIllustratorsTitle/Text": "推荐作者",
+    "ToggleShowExternalCommandBarItem/Text": "展示辅助命令栏",
+    "ToggleShowRecommendIllustratorItem/Text": "展示推荐作者",
+    "UserMetricsFollowingUserTextBlock/Text": "关注中",
+    "UserMetricsIllustrationCountTextBlock/Text": "作品数",
+    "UserMetricsMyPixivUserTextBlock/Text": "好P友"
+}

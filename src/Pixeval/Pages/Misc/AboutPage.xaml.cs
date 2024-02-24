@@ -19,12 +19,15 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Windows.System;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
+using Pixeval.AppManagement;
 using WinUI3Utilities;
-using AppContext = Pixeval.AppManagement.AppContext;
+using Pixeval.Misc;
 
 namespace Pixeval.Pages.Misc;
 
@@ -34,14 +37,11 @@ namespace Pixeval.Pages.Misc;
 public sealed partial class AboutPage
 {
     // TODO add sponsors
-    public AboutPage()
-    {
-        InitializeComponent();
-    }
+    public AboutPage() => InitializeComponent();
 
     private async void AboutPage_OnLoaded(object sender, RoutedEventArgs e)
     {
-        var licenseText = Encoding.UTF8.GetString(await AppContext.GetAssetBytesAsync("GPLv3.md"));
+        var licenseText = Encoding.UTF8.GetString(await AppInfo.GetAssetBytesAsync("GPLv3.md"));
         LicenseTextBlock.Text = licenseText;
     }
 
@@ -49,4 +49,28 @@ public sealed partial class AboutPage
     {
         _ = await Launcher.LaunchUriAsync(new Uri(sender.GetTag<string>()));
     }
+
+    private readonly string[] _dependencies =
+    [
+        "CommunityToolkit",
+        "praeclarum/sqlite-net",
+        // "mysticmind/reversemarkdown-net",
+        // "GitTools/GitVersion",
+        // "dotMorten/WinUIEx",
+        "dotnet/runtime/tree/main/src/libraries/Microsoft.Extensions.DependencyInjection",
+        "codebude/QRCoder",
+        "microsoft/Microsoft.IO.RecyclableMemoryStream",
+        "microsoft/Win2D",
+        "Sergio0694/PolySharp",
+        "SixLabors/ImageSharp",
+        "reactiveui/refit"
+    ];
+
+    private IEnumerable<DependencyViewModel> DependencyViewModels =>
+        _dependencies.Select(t =>
+        {
+            var segments = t.Split('/');
+            return new DependencyViewModel(segments[^1], "by " + segments[0], "https://github.com/" + t);
+        });
+
 }

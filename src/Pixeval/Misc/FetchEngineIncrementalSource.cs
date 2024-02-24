@@ -19,7 +19,6 @@
 #endregion
 
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.WinUI.Collections;
@@ -48,19 +47,20 @@ public abstract class FetchEngineIncrementalSource<T, TModel>(IAsyncEnumerable<T
             {
                 return result;
             }
+
             if (await _asyncEnumerator.MoveNextAsync())
             {
                 if (_asyncEnumerator.Current is { } obj && !_yieldedItems.Contains(Identifier(obj)))
                 {
                     result.Add(Select(obj));
                     _ = _yieldedItems.Add(Identifier(obj));
-                    i++;
+                    ++i;
                     _yieldedCounter++;
                 }
             }
             else
             {
-                return Enumerable.Empty<TModel>();
+                return result;
             }
         }
 

@@ -18,27 +18,28 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System.Collections.Generic;
 using System.Text.Json.Serialization;
-using Pixeval.Utilities;
 
 namespace Pixeval.CoreApi.Net.Response;
 
-internal class WebApiBookmarksWithTagResponse
+[Factory]
+internal partial record WebApiBookmarksWithTagResponse
 {
     [JsonPropertyName("body")]
-    public required Body ResponseBody { get; set; }
+    public required WebApiBookmarksWithTagBody ResponseBody { get; set; }
+}
 
-    public class Body
-    {
-        [JsonPropertyName("works")]
-        public required IEnumerable<Work> Works { get; set; }
-    }
+[Factory]
+internal partial record WebApiBookmarksWithTagBody
+{
+    [JsonPropertyName("works")] 
+    public required Work[] Works { get; set; } = [];
+}
 
-    public class Work
-    {
-        [JsonPropertyName("id")]
-        [JsonNumberHandling(JsonNumberHandling.AllowReadingFromString | JsonNumberHandling.WriteAsString)]
-        public required long Id { get; set; }
-    }
+[Factory]
+internal partial record Work
+{
+    [JsonPropertyName("id")]
+    [JsonNumberHandling(JsonNumberHandling.AllowReadingFromString | JsonNumberHandling.WriteAsString)]
+    public required long Id { get; set; }
 }

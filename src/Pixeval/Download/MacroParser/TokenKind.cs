@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -27,5 +27,5 @@ public enum TokenKind
     At,
     LBrace,
     RBrace,
-    Colon
+    Equal
 }

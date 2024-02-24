@@ -18,42 +18,40 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text.Json.Serialization;
 
 namespace Pixeval.CoreApi.Model;
 
 [DebuggerDisplay("{UserInfo}")]
-public record User : IIllustrate
+[Factory]
+public partial record User : IEntry
 {
     [JsonPropertyName("user")]
     public required UserInfo UserInfo { get; set; }
 
-    [JsonPropertyName("illusts")]
-    public required IEnumerable<Illustration> Illusts { get; set; }
+    [JsonPropertyName("illusts")] 
+    public required Illustration[] Illusts { get; set; } = [];
 
     [JsonPropertyName("is_muted")]
     public required bool IsMuted { get; set; }
 }
 
 [DebuggerDisplay("{Id}: {Name}")]
-public class UserInfo
+[Factory]
+public partial record UserInfo
 {
     [JsonPropertyName("id")]
     public required long Id { get; set; }
 
     [JsonPropertyName("name")]
-    public required string Name { get; set; }
+    public required string Name { get; set; } = "";
 
     [JsonPropertyName("account")]
-    public required string Account { get; set; }
+    public required string Account { get; set; } = "";
 
     [JsonPropertyName("profile_image_urls")]
     public required ProfileImageUrls ProfileImageUrls { get; set; }
-
-    [JsonPropertyName("comment")]
-    public string? Comment { get; set; }
 
     [JsonPropertyName("is_followed")]
     public bool IsFollowed { get; set; }

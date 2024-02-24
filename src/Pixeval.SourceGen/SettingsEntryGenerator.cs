@@ -18,7 +18,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -30,81 +30,68 @@ namespace Pixeval.SourceGen;
 [Generator]
 public class SettingsEntryGenerator : IIncrementalGenerator
 {
-    private const string SettingPocoAttributeFqName = "Pixeval.Attributes.SettingPoco";
-    private const string SyntheticSettingAttributeFqName = "Pixeval.Attributes.SyntheticSetting";
-    private const string SettingMetadataAttributeFqName = "Pixeval.Attributes.SettingMetadata";
-    private const string SettingEntryFqName = "global::Pixeval.SettingEntry";
+    private const string SettingPocoAttributeFqName = "Pixeval.Attributes.SettingPocoAttribute";
+    private const string SyntheticSettingAttributeFqName = "Pixeval.Attributes.SyntheticSettingAttribute";
+    private const string SettingMetadataAttributeFqName = "Pixeval.Attributes.SettingMetadataAttribute";
+    private const string SettingEntryFqName = $"global::{SettingEntryNamespace}.SettingEntry";
+    private const string SettingEntryNamespace = "Pixeval.Misc";
 
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
-        var classDeclaration = context.SyntaxProvider.CreateSyntaxProvider(
-            predicate: static (node, _) => node is ClassDeclarationSyntax { AttributeLists.Count: > 0 } or RecordDeclarationSyntax { AttributeLists.Count: > 0 },
-            transform: static (ctx, _) =>
-            {
-                var tds = (TypeDeclarationSyntax)ctx.Node;
-                (TypeDeclarationSyntax, IEnumerable<(PropertyDeclarationSyntax, AttributeSyntax?)>)? tuple = tds.HasAttribute(ctx.SemanticModel, SettingPocoAttributeFqName)
-                    ? (tds, tds.Members.OfType<PropertyDeclarationSyntax>().Where(pds => !pds.HasAttribute(ctx.SemanticModel, SyntheticSettingAttributeFqName) && pds.HasAttribute(ctx.SemanticModel, SettingMetadataAttributeFqName))
-                        .Select(property => (property, property.GetAttribute(ctx.SemanticModel, SettingMetadataAttributeFqName)))
-                        .Where(tuple => tuple.Item2 is not null))
-                    : null;
-                return tuple;
-            }).Where(s => s.HasValue).Select((n, _) => n!.Value).Collect();
-        context.RegisterSourceOutput(classDeclaration, (ctx, array) =>
+        var classDeclaration = context.SyntaxProvider.ForAttributeWithMetadataName(
+                SettingPocoAttributeFqName,
+                (_, _) => true,
+            (syntaxContext, _) => syntaxContext
+        ).Combine(context.CompilationProvider);
+
+        context.RegisterSourceOutput(classDeclaration, (spc, tuple) =>
         {
-            switch (array)
+            var (ga, compilation) = tuple;
+
+            if (compilation.Assembly.GetAttributes().Any(attrData => attrData.AttributeClass?.ToDisplayString() == SyntaxHelper.DisableSourceGeneratorAttribute))
+                return;
+
+            if (ga.TargetSymbol is not INamedTypeSymbol symbol)
+                return;
+
+            var properties = symbol.GetProperties(ga.Attributes[0].AttributeClass!)
+                .Where(pds => !pds.HasAttribute(SyntheticSettingAttributeFqName)
+                              && pds.HasAttribute(SettingMetadataAttributeFqName))
+                .Select(property => (property, property.GetAttribute(SettingMetadataAttributeFqName)!))
+                .ToImmutableArray();
+            var whitespaceTrivia = SyntaxTriviaList.Create(SyntaxTrivia(WhitespaceTrivia, " "));
+            var entries = properties.Select(t =>
             {
-                case [var (_, attributeDeclarationSyntaxList)]:
-                    const string classBegin = """
-                            using Pixeval;
-
-                            namespace Pixeval;
-
-                            public partial record SettingEntry  
-                            {   
-
-                            """;
-
-                    const string classEnd = """
-
-                            }
-                            """;
-                    var whitespaceTrivia = SyntaxTriviaList.Create(SyntaxTrivia(WhitespaceTrivia, " "));
-                    var entries = attributeDeclarationSyntaxList.Select(tuple =>
-                    {
-                        var (property, attribute) = tuple;
-                        var ctor = ImplicitObjectCreationExpression(ArgumentList(
-                            SeparatedList(attribute!.ArgumentList!.Arguments.Indexed().Select(t => t is (var arg, 0)
-                                ? Argument(arg.Expression)
-                                : Argument(t.Item1.Expression).WithLeadingTrivia(whitespaceTrivia)))), null);
-                        return FieldDeclaration(
-                            new SyntaxList<AttributeListSyntax>(),
-                            new SyntaxTokenList(
-                                Token(PublicKeyword),
-                                Token(whitespaceTrivia, StaticKeyword, SyntaxTriviaList.Empty),
-                                Token(whitespaceTrivia, ReadOnlyKeyword, whitespaceTrivia)),
-                            VariableDeclaration(
-                                ParseTypeName(SettingEntryFqName),
-                                SeparatedList(new[] { VariableDeclarator(property.Identifier, null, EqualsValueClause(Token(SyntaxTriviaList.Empty, EqualsToken, whitespaceTrivia), ctor))
+                var (property, attribute) = t;
+                if (attribute.ApplicationSyntaxReference?.GetSyntax() is not AttributeSyntax { ArgumentList.Arguments: var arguments })
+                    throw new();
+                var ctor = ImplicitObjectCreationExpression(ArgumentList(
+                    SeparatedList(arguments.Select(syntax => Argument(syntax.Expression).WithLeadingTrivia(whitespaceTrivia)))), null);
+                return FieldDeclaration(
+                    [],
+                    new SyntaxTokenList(
+                        Token(PublicKeyword),
+                        Token(whitespaceTrivia, StaticKeyword, SyntaxTriviaList.Empty),
+                        Token(whitespaceTrivia, ReadOnlyKeyword, whitespaceTrivia)
+                    ),
+                    VariableDeclaration(
+                        ParseTypeName(SettingEntryFqName),
+                        SeparatedList(new[] { VariableDeclarator(Identifier(property.Name), null, EqualsValueClause(Token(SyntaxTriviaList.Empty, EqualsToken, whitespaceTrivia), ctor))
                                     .WithLeadingTrivia(whitespaceTrivia) })));
-                    });
-                    var str = classBegin + string.Join("\n\n", entries.Select(entry => $"    {entry.GetText()}")) + classEnd;
-                    ctx.AddSource("SettingEntry.g.cs", str);
-                    break;
-                case [{ }, ..]:
-                    foreach (var (typeDeclarationSyntax, _) in array)
-                    {
-                        ctx.ReportDiagnostic(
-                            Diagnostic.Create(new DiagnosticDescriptor(
-                                "PSG0001",
-                                "There should be only one [SettingPoco] in an assembly",
-                                "There should be only one [SettingPoco] in an assembly",
-                                "SourceGen",
-                                DiagnosticSeverity.Error,
-                                true), typeDeclarationSyntax.GetLocation()));
-                    }
+            });
+            var str =
+                $$"""
+                #nullable enable
+                
+                namespace {{SettingEntryNamespace}};
 
-                    break;
-            }
+                public partial record SettingEntry
+                {
+                {{string.Join("\n\n", entries.Select(entry => $"    {entry.GetText()}"))}}
+                }
+                """;
+            spc.AddSource("SettingEntry.g.cs", str);
         });
+
     }
 }
