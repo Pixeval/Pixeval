@@ -9,6 +9,7 @@ using CommunityToolkit.WinUI.Helpers;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Data;
+using Microsoft.UI.Xaml.Input;
 using Pixeval.Collections;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
@@ -260,6 +261,7 @@ public sealed partial class AdvancedItemsView : ItemsView
     private void ScrollViewOnPropertyChanged(DependencyObject sender, DependencyProperty dp)
     {
         ScrollView.ViewChanged += ScrollView_ViewChanged;
+        ScrollView.PointerWheelChanged += ScrollView_PointerWheelChanged;
         _itemsRepeater = ScrollView.Content.To<ItemsRepeater>();
         _itemsRepeater.SizeChanged += AdvancedItemsViewOnSizeChanged;
         _itemsRepeater.ElementPrepared += (_, arg) =>
@@ -271,6 +273,12 @@ public sealed partial class AdvancedItemsView : ItemsView
                 ElementPrepared?.Invoke(this, itemContainer);
         };
         _itemsRepeater.ElementClearing += (_, arg) => ElementClearing?.Invoke(this, arg.Element.To<ItemContainer>());
+    }
+
+    private static void ScrollView_PointerWheelChanged(object sender, PointerRoutedEventArgs e)
+    {
+        if (sender is ScrollView { ComputedVerticalScrollMode: ScrollingScrollMode.Disabled, ComputedHorizontalScrollMode: ScrollingScrollMode.Enabled } scrollView)
+            _ = scrollView.AddScrollVelocity(new(-e.GetCurrentPoint(scrollView).Properties.MouseWheelDelta, 0), null);
     }
 
     private void AdvancedItemsViewOnSelectionChanged(ItemsView sender, ItemsViewSelectionChangedEventArgs e)
