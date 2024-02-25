@@ -7,6 +7,7 @@
     xmlns:converters1="using:CommunityToolkit.WinUI.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Unloaded="ImageViewerPage_OnUnloaded"
     mc:Ignorable="d">
     <controls:EnhancedWindowPage.Resources>
         <converters1:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />

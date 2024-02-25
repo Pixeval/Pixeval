@@ -24,7 +24,6 @@ using System.Threading.Tasks;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Controls.DialogContent;
 using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Util.IO;
@@ -39,12 +38,6 @@ public sealed partial class DownloadListPage
     private readonly DownloadListPageViewModel _viewModel = new(App.AppViewModel.DownloadManager.QueuedTasks);
 
     public DownloadListPage() => InitializeComponent();
-
-    public override void OnPageActivated(NavigationEventArgs e, object? parameter)
-    {
-    }
-
-    public override void OnPageDeactivated(NavigatingCancelEventArgs e) => _viewModel.Dispose();
 
     private void ModeFilterComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
@@ -141,8 +134,5 @@ public sealed partial class DownloadListPage
         _ = await viewModel.TryLoadThumbnailAsync(_viewModel);
     }
 
-    private void DownloadListPage_OnUnloaded(object sender, RoutedEventArgs e)
-    {
-        _viewModel.Dispose();
-    }
+    private void DownloadListPage_OnUnloaded(object sender, RoutedEventArgs e) => _viewModel.Dispose();
 }

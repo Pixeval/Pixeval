@@ -18,6 +18,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Controls;
@@ -34,12 +35,6 @@ public sealed partial class RecommendationPage : ISortedIllustrationContainerPag
     public IllustrationContainer ViewModelProvider => IllustrationContainer;
 
     public SortOptionComboBox SortOptionProvider => SortOptionComboBox;
-
-    public override void OnPageDeactivated(NavigatingCancelEventArgs e)
-    {
-        ModeSelectionComboBox.SelectionChangedWhenLoaded -= ModeSelectionComboBox_OnSelectionChangedWhenLoaded;
-        SortOptionComboBox.SelectionChangedWhenLoaded -= SortOptionComboBox_OnSelectionChanged;
-    }
 
     public override void OnPageActivated(NavigationEventArgs e)
     {

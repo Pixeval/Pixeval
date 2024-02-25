@@ -18,6 +18,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Navigation;
 
 namespace Pixeval.Pages.IllustrationViewer;
@@ -30,14 +31,9 @@ public sealed partial class ImageViewerPage
 
     public override void OnPageActivated(NavigationEventArgs e, object? parameter)
     {
-        if (parameter is ImageViewerPageViewModel viewModel)
-        {
+        if (parameter is ImageViewerPageViewModel viewModel) 
             _viewModel = viewModel;
-        }
     }
 
-    public override void OnPageDeactivated(NavigatingCancelEventArgs e)
-    {
-        _viewModel.Dispose();
-    }
+    private void ImageViewerPage_OnUnloaded(object sender, RoutedEventArgs e) => _viewModel.Dispose();
 }

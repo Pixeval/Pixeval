@@ -6,7 +6,6 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:enum="using:Pixeval.CoreApi.Global.Enum"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    ClearCacheAfterNavigation="True"
     mc:Ignorable="d">
     <controls:IllustrationContainer x:Name="IllustrationContainer">
         <controls:IllustrationContainer.CommandBarElements>
