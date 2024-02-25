@@ -2,6 +2,7 @@ using System;
 using Windows.Foundation;
 using Microsoft.UI.Xaml.Input;
 using WinUI3Utilities;
+using Microsoft.Graphics.Canvas.UI.Xaml;
 
 namespace Pixeval.Controls;
 
@@ -15,47 +16,101 @@ public partial class ZoomableImage
     private double _originalImageHeight;
 
     /// <summary>
-    /// <see cref="CanvasControl"/>中心点在<see cref="Canvas"/>的X坐标
+    /// 图片中心点在<see cref="CanvasControl"/>的X坐标
     /// </summary>
     private double ImageCenterX
     {
         get => _centerX;
         set
         {
+            if (_centerX == value)
+                return;
             _centerX = value;
-            OnPropertyChanged(nameof(ImagePositionX));
+            var actualWidth = CanvasControl.ActualWidth;
+            var bigger = actualWidth < ImageActualWidth;
+            if (ImagePositionLeft < 0 && ImagePositionRight < actualWidth)
+                if (bigger)
+                    ImagePositionRight = actualWidth;
+                else
+                    ImagePositionLeft = 0;
+            else if (0 < ImagePositionLeft && actualWidth < ImagePositionRight)
+                if (bigger)
+                    ImagePositionLeft = 0;
+                else
+                    ImagePositionRight = actualWidth;
+            else
+            {
+                OnPropertyChanged(nameof(ImagePositionLeft));
+                OnPropertyChanged(nameof(ImagePositionRight));
+            }
         }
     }
 
     /// <summary>
-    /// <see cref="CanvasControl"/>中心点在<see cref="Canvas"/>的Y坐标
+    /// 图片中心点在<see cref="CanvasControl"/>的Y坐标
     /// </summary>
     private double ImageCenterY
     {
         get => _centerY;
         set
         {
+            if (_centerY == value)
+                return;
             _centerY = value;
-            OnPropertyChanged(nameof(ImagePositionY));
+            var actualHeight = CanvasControl.ActualHeight;
+            var bigger = actualHeight < ImageActualHeight;
+            if (ImagePositionTop < 0 && ImagePositionBottom < actualHeight)
+                if (bigger)
+                    ImagePositionBottom = actualHeight;
+                else
+                    ImagePositionTop = 0;
+            else if (0 < ImagePositionTop && actualHeight < ImagePositionBottom)
+                if (bigger)
+                    ImagePositionTop = 0;
+                else
+                    ImagePositionBottom = actualHeight;
+            else
+            {
+                OnPropertyChanged(nameof(ImagePositionTop));
+                OnPropertyChanged(nameof(ImagePositionBottom));
+            }
         }
     }
 
     /// <summary>
-    /// <see cref="CanvasControl"/>左上角<see cref="Canvas"/>的X坐标
+    /// 图片左上角<see cref="CanvasControl"/>的左边距
     /// </summary>
-    private double ImagePositionX
+    private double ImagePositionLeft
     {
         get => ImageCenterX - ImageActualWidth / 2;
         set => ImageCenterX = value + ImageActualWidth / 2;
     }
 
     /// <summary>
-    /// <see cref="CanvasControl"/>左上角<see cref="Canvas"/>的Y坐标
+    /// 图片左上角<see cref="CanvasControl"/>的上边距
     /// </summary>
-    private double ImagePositionY
+    private double ImagePositionTop
     {
         get => ImageCenterY - ImageActualHeight / 2;
         set => ImageCenterY = value + ImageActualHeight / 2;
+    }
+
+    /// <summary>
+    /// 图片左上角<see cref="CanvasControl"/>的左边距
+    /// </summary>
+    private double ImagePositionRight
+    {
+        get => ImageCenterX + ImageActualWidth / 2;
+        set => ImageCenterX = value - ImageActualWidth / 2;
+    }
+
+    /// <summary>
+    /// 图片左上角<see cref="CanvasControl"/>的上边距
+    /// </summary>
+    private double ImagePositionBottom
+    {
+        get => ImageCenterY + ImageActualHeight / 2;
+        set => ImageCenterY = value - ImageActualHeight / 2;
     }
 
     /// <summary>
@@ -93,8 +148,10 @@ public partial class ZoomableImage
         {
             _originalImageWidth = value;
             OnPropertyChanged(nameof(ImageWidth));
-            OnPropertyChanged(nameof(ImagePositionX));
-            OnPropertyChanged(nameof(ImagePositionY));
+            OnPropertyChanged(nameof(ImagePositionLeft));
+            OnPropertyChanged(nameof(ImagePositionTop));
+            OnPropertyChanged(nameof(ImagePositionRight));
+            OnPropertyChanged(nameof(ImagePositionBottom));
         }
     }
 
@@ -108,8 +165,10 @@ public partial class ZoomableImage
         {
             _originalImageHeight = value;
             OnPropertyChanged(nameof(ImageHeight));
-            OnPropertyChanged(nameof(ImagePositionX));
-            OnPropertyChanged(nameof(ImagePositionY));
+            OnPropertyChanged(nameof(ImagePositionLeft));
+            OnPropertyChanged(nameof(ImagePositionTop));
+            OnPropertyChanged(nameof(ImagePositionRight));
+            OnPropertyChanged(nameof(ImagePositionBottom));
         }
     }
 
@@ -122,18 +181,18 @@ public partial class ZoomableImage
         switch (position)
         {
             case ZoomableImagePosition.Left:
-                ImagePositionX = 0;
+                ImagePositionLeft = 0;
                 break;
             case ZoomableImagePosition.Top:
-                ImagePositionY = 0;
+                ImagePositionTop = 0;
                 break;
             case ZoomableImagePosition.LeftCenter:
-                ImagePositionX = 0;
+                ImagePositionLeft = 0;
                 ImageCenterY = CanvasControl.ActualHeight / 2;
                 break;
             case ZoomableImagePosition.TopCenter:
                 ImageCenterX = CanvasControl.ActualWidth / 2;
-                ImagePositionY = 0;
+                ImagePositionTop = 0;
                 break;
             case ZoomableImagePosition.AbsoluteCenter:
                 ImageCenterX = CanvasControl.ActualWidth / 2;
@@ -149,7 +208,8 @@ public partial class ZoomableImage
 
     private void CanvasOnPointerMoved(object sender, PointerRoutedEventArgs e)
     {
-        var currentPoint = e.GetCurrentPoint(CanvasControl);
+        var canvas = CanvasControl.To<CanvasControl>();
+        var currentPoint = e.GetCurrentPoint(canvas);
         if (currentPoint.Properties.IsLeftButtonPressed)
         {
             var now = DateTime.Now;

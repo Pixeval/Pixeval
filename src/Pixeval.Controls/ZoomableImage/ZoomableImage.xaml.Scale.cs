@@ -2,6 +2,8 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml;
 using System;
+using System.Numerics;
+using Windows.Foundation;
 using WinUI3Utilities;
 using Microsoft.UI.Xaml.Media;
 
@@ -9,6 +11,8 @@ namespace Pixeval.Controls;
 
 public partial class ZoomableImage
 {
+    private bool _isInitMode = false;
+
     /// <summary>
     /// 缩放
     /// </summary>
@@ -35,20 +39,24 @@ public partial class ZoomableImage
     /// property is set to <see cref="Stretch.UniformToFill"/> or <see cref="Stretch.Uniform"/>
     /// </summary>
     /// <remarks>当图片按原比例显示，并占满画布时，图片的缩放比例</remarks>>
-    private double ScaledFactor
+    private double ScaledFactor => GetScaledFactor(new Size(CanvasControl.ActualWidth, CanvasControl.ActualHeight));
+
+    /// <summary>
+    /// Get the scale factor of the original image when it is contained inside a <see cref="Image"/> control, and the <see cref="Image.Stretch"/>
+    /// property is set to <see cref="Stretch.UniformToFill"/> or <see cref="Stretch.Uniform"/>
+    /// </summary>
+    /// <remarks>当图片按原比例显示，并占满画布时，图片的缩放比例</remarks>>
+    private double GetScaledFactor(Size canvasSize)
     {
-        get
+        var canvasWidth = canvasSize.Width;
+        var canvasHeight = canvasSize.Height;
+        var imageResolution = ImageWidth / ImageHeight;
+        var canvasResolution = canvasWidth / canvasHeight;
+        return (canvasResolution - imageResolution) switch
         {
-            var canvasWidth = CanvasControl.ActualWidth;
-            var canvasHeight = CanvasControl.ActualHeight;
-            var imageResolution = ImageWidth / ImageHeight;
-            var canvasResolution = canvasWidth / canvasHeight;
-            return (canvasResolution - imageResolution) switch
-            {
-                > 0 => canvasHeight / ImageHeight,
-                _ => canvasWidth / ImageWidth
-            };
-        }
+            > 0 => canvasHeight / ImageHeight,
+            _ => canvasWidth / ImageWidth
+        };
     }
 
     private void CanvasOnPointerWheelChanged(object sender, PointerRoutedEventArgs e)
@@ -65,14 +73,20 @@ public partial class ZoomableImage
 
     private void CanvasOnSizeChanged(object sender, SizeChangedEventArgs e)
     {
-        OnImageScaleChanged(this, ImageScale);
+        // 是NotFit则自动调整
+        if (ImageScale is 1 or float.NaN || Math.Abs(GetScaledFactor(e.PreviousSize) - ImageScale) > 0.01)
+            OnImageScaleChanged(ImageScale);
+        else
+#pragma warning disable CA2245
+            Mode = Mode;
+#pragma warning restore CA2245
     }
 
     private static void OnImageScaleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         if (EnsureNotDisposed(d) is not { } zoomableImage)
             return;
-        OnImageScaleChanged(zoomableImage, e.NewValue.To<float>());
+        zoomableImage.OnImageScaleChanged(e.OldValue.To<float>());
     }
 
     private static void OnModeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -103,24 +117,29 @@ public partial class ZoomableImage
                 ThrowHelper.ArgumentOutOfRange(e.NewValue.To<ZoomableImageMode>());
                 break;
         }
+
+        if (zoomableImage._isInitMode)
+            zoomableImage._isInitMode = false;
     }
 
-    private static void OnImageScaleChanged(ZoomableImage zoomableImage, float newScale)
+    private void OnImageScaleChanged(float oldScale)
     {
-        var mode = zoomableImage.Mode;
-        switch (newScale)
+        // 初始化时抑制动画
+        if (!_isInitMode)
+            StartZoomAnimation(oldScale);
+        switch (ImageScale)
         {
             case 1:
-                if (mode is not ZoomableImageMode.Original)
-                    zoomableImage.Mode = ZoomableImageMode.Original;
+                if (Mode is not ZoomableImageMode.Original)
+                    Mode = ZoomableImageMode.Original;
                 break;
-            case var _ when Math.Abs(newScale - zoomableImage.ScaledFactor) <= 0.01:
-                if (mode is not ZoomableImageMode.Fit)
-                    zoomableImage.Mode = ZoomableImageMode.Fit;
+            case var _ when Math.Abs(ImageScale - ScaledFactor) <= 0.01:
+                if (Mode is not ZoomableImageMode.Fit)
+                    Mode = ZoomableImageMode.Fit;
                 break;
             default:
-                if (mode is not ZoomableImageMode.NotFit)
-                    zoomableImage.Mode = ZoomableImageMode.NotFit;
+                if (Mode is not ZoomableImageMode.NotFit)
+                    Mode = ZoomableImageMode.NotFit;
                 break;
         }
     }

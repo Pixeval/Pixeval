@@ -33,7 +33,9 @@ public partial class ZoomableImage
         zoomableImage.OnPropertyChanged(nameof(ImageHeight));
 
         // 更新图片位置
-        zoomableImage.OnPropertyChanged(nameof(ImagePositionX));
-        zoomableImage.OnPropertyChanged(nameof(ImagePositionY));
+        zoomableImage.OnPropertyChanged(nameof(ImagePositionLeft));
+        zoomableImage.OnPropertyChanged(nameof(ImagePositionTop));
+        zoomableImage.OnPropertyChanged(nameof(ImagePositionRight));
+        zoomableImage.OnPropertyChanged(nameof(ImagePositionBottom));
     }
 }
