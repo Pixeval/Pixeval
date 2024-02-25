@@ -18,7 +18,9 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
@@ -48,11 +50,6 @@ public sealed partial class IllustrationInfoPage
     {
         _ = WeakReferenceMessenger.Default.Send(new IllustrationTagClickedMessage((string)((Button)sender).Content));
     }
-
-    //private async void IllustrationCaptionMarkdownTextBlock_OnLinkClicked(object? sender, LinkClickedEventArgs e)
-    //{
-    //    await Launcher.LaunchUriAsync(new Uri(e.Link));
-    //}
 
     private async void IllustratorPersonPicture_OnTapped(object sender, TappedRoutedEventArgs e)
     {
@@ -91,20 +88,19 @@ public sealed partial class IllustrationInfoPage
         return _viewModel.CurrentIllustration.Illustrate.CreateDate.ToString("yyyy-M-d HH:mm:ss");
     }
 
-    private readonly Converter _markdownConverter = new(new Config
+    private async void SetIllustrationCaptionText()
     {
-        UnknownTags = Config.UnknownTagsOption.PassThrough,
-        GithubFlavored = true
-    });
-
-    /// <summary>
-    /// <see href="https://github.com/CommunityToolkit/Labs-Windows/pull/480"/>
-    /// </summary>
-    private void SetIllustrationCaptionText()
-    {
+        await Task.Yield();
+        var markdownConverter = new Converter(new Config
+        {
+            UnknownTags = Config.UnknownTagsOption.PassThrough,
+            GithubFlavored = true,
+        });
         var caption = _viewModel.CurrentIllustration.Illustrate.Caption;
-        // TODO Markdown Task.Run(() => string.IsNullOrEmpty(caption) ? IllustrationInfoPageResources.IllustrationCaptionEmpty : _markdownConverter.Convert(caption))
-        //    .ContinueWith(task => IllustrationCaptionMarkdownTextBlock.Text = task.Result, TaskScheduler.FromCurrentSynchronizationContext()).Discard();
+        var md = string.IsNullOrEmpty(caption)
+            ? IllustrationInfoPageResources.IllustrationCaptionEmpty
+            : markdownConverter.Convert(caption);
+        IllustrationCaptionMarkdownTextBlock.Text = md.ReplaceLineEndings(Environment.NewLine + Environment.NewLine);
     }
 
     #endregion

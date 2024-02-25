@@ -1,10 +1,8 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Threading.Tasks;
-using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.WinUI.Helpers;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -28,30 +26,11 @@ namespace Pixeval.Controls;
 [DependencyProperty<double>("LoadingOffset", "100d")]
 [DependencyProperty<int>("SelectedIndex", "-1", nameof(OnSelectedIndexChanged))]
 [DependencyProperty<bool>("CanLoadMore", "true")]
+[DependencyProperty<bool>("IsLoadingMore", "false")]
 [DependencyProperty<int>("LoadCount", "20")]
-[ObservableObject]
 public sealed partial class AdvancedItemsView : ItemsView
 {
     public event Func<AdvancedItemsView, EventArgs, Task<bool>> LoadMoreRequested;
-    /// <summary>
-    /// 调用此事件时可能需要防抖
-    /// </summary>
-    public event Action<AdvancedItemsView, ItemContainer>? ElementPrepared;
-    public event Action<AdvancedItemsView, ItemContainer>? ElementClearing;
-
-    /// <summary>
-    /// 当加载本控件之前，若<see cref="ItemsView.ItemsSource"/>便已有内容，
-    /// 则第一次加载就在视图里的控件可能不会触发<see cref="ItemsRepeater.ElementPrepared"/>，
-    /// 故可以在<see cref="FrameworkElement.Loaded"/>时手动调用本方法来触发<see cref="ElementPrepared"/>
-    /// </summary>
-    /// <remarks><see cref="FrameworkElement.Loaded"/>触发在<see cref="ItemsRepeater.ElementPrepared"/>之后，
-    /// 故不是第一次加载控件调用本方法后，不会多次触发<see cref="ElementPrepared"/>事件</remarks>
-    /// <param name="element"></param>
-    public void TryLoadedFirst(ItemContainer element)
-    {
-        _ = _loadedElements.Add(element.GetHashCode());
-        ElementPrepared?.Invoke(this, element);
-    }
 
     /// <summary>
     /// 判断滚动视图是否滚到底部，如果是则触发<see cref="LoadMoreRequested"/>事件，
@@ -264,15 +243,6 @@ public sealed partial class AdvancedItemsView : ItemsView
         ScrollView.PointerWheelChanged += ScrollView_PointerWheelChanged;
         _itemsRepeater = ScrollView.Content.To<ItemsRepeater>();
         _itemsRepeater.SizeChanged += AdvancedItemsViewOnSizeChanged;
-        _itemsRepeater.ElementPrepared += (_, arg) =>
-        {
-            // _loadedElements.Count is 0 说明不存在TryLoadedFirst注释里的情况
-            // 否则需要检测该控件是否加载，加载后才能触发ElementPrepared，以此防止ElementPrepared调用两次
-            var itemContainer = arg.Element.To<ItemContainer>();
-            if (_loadedElements.Count is 0 || _loadedElements.Contains(arg.Element.GetHashCode()))
-                ElementPrepared?.Invoke(this, itemContainer);
-        };
-        _itemsRepeater.ElementClearing += (_, arg) => ElementClearing?.Invoke(this, arg.Element.To<ItemContainer>());
     }
 
     private static void ScrollView_PointerWheelChanged(object sender, PointerRoutedEventArgs e)
@@ -335,8 +305,6 @@ public sealed partial class AdvancedItemsView : ItemsView
 
     private ItemsRepeater _itemsRepeater = null!;
 
-    private readonly HashSet<int> _loadedElements = [];
-
     private WeakEventListener<AdvancedItemsView, object?, NotifyCollectionChangedEventArgs> _sourceWeakEventListener = null!;
 
     private int GetSelectedIndex()
@@ -364,11 +332,6 @@ public sealed partial class AdvancedItemsView : ItemsView
             _ => ThrowHelper.ArgumentOutOfRange<object, int>(ItemsSource)
         };
     }
-
-    /// <summary>
-    /// For debounce
-    /// </summary>
-    [ObservableProperty] private bool _isLoadingMore;
 
     #endregion
 }

@@ -95,7 +95,6 @@
             </Border>
             <interactivity:Interaction.Behaviors>
                 <core:EventTriggerBehavior EventName="PointerEntered">
-                    <!--TODO:BlurEffect <behaviors:StartAnimationAction Animation="{x:Bind BlurInAnimation}" TargetObject="{x:Bind Banner}" />-->
                     <core:ChangePropertyAction
                         PropertyName="Scale"
                         TargetObject="{x:Bind AvatarButton}"

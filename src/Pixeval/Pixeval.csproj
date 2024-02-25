@@ -25,11 +25,9 @@
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <NoWarn>$(NoWarn)</NoWarn>
     </PropertyGroup>
-    <ItemGroup>
-      <None Remove="Controls\PrivacyPolicyComboBox.xaml" />
-    </ItemGroup>
 
     <ItemGroup>
+        <PackageReference Include="CommunityToolkit.Labs.WinUI.Controls.MarkdownTextBlock" Version="0.1.240213-build.1640" />
         <PackageReference Include="CommunityToolkit.Labs.WinUI.Shimmer" Version="0.1.230830" />
         <PackageReference Include="CommunityToolkit.WinUI.Behaviors" Version="8.0.240109" />
         <PackageReference Include="CommunityToolkit.WinUI.Collections" Version="8.0.240109" />
@@ -364,13 +362,8 @@
         <Page Update="Pages\Capability\TagsPage.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
-    </ItemGroup>
-    <ItemGroup>
-      <Folder Include="Util\Generic\" />
-    </ItemGroup>
-    <ItemGroup>
-      <Page Update="Controls\PrivacyPolicyComboBox.xaml">
-        <Generator>MSBuild:Compile</Generator>
-      </Page>
+        <Page Update="Controls\PrivacyPolicyComboBox.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
     </ItemGroup>
 </Project>

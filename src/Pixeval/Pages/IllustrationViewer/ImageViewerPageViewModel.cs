@@ -29,6 +29,7 @@ using Windows.System;
 using Windows.System.UserProfile;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
 using Pixeval.Attributes;
 using Pixeval.Controls;
@@ -119,9 +120,8 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
         }
     }
 
-    public ImageViewerPageViewModel(IllustrationViewerPageViewModel illustrationViewerPageViewModel, IllustrationItemViewModel illustrationViewModel) : base(illustrationViewerPageViewModel.FrameworkElement)
+    public ImageViewerPageViewModel(IllustrationItemViewModel illustrationViewModel, FrameworkElement frameworkElement) : base(frameworkElement)
     {
-        IllustrationViewerPageViewModel = illustrationViewerPageViewModel;
         IllustrationViewModel = illustrationViewModel;
         _ = LoadImage();
 
@@ -159,12 +159,6 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
     }
 
     public CancellationHandle ImageLoadingCancellationHandle { get; } = new();
-
-    /// <summary>
-    /// The view model of the <see cref="IllustrationViewerPage" /> that hosts the owner <see cref="ImageViewerPage" />
-    /// of this <see cref="ImageViewerPageViewModel" />
-    /// </summary>
-    public IllustrationViewerPageViewModel IllustrationViewerPageViewModel { get; }
 
     public IllustrationItemViewModel IllustrationViewModel { get; }
 

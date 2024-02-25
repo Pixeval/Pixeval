@@ -26,7 +26,6 @@
             <controls:ZoomableImage.ContextFlyout>
                 <!--  PrimaryCommands 点击后不会自动隐藏Flyout  -->
                 <CommandBarFlyout>
-                    <AppBarToggleButton Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.IllustrationInfoAndCommentsCommand}" IsChecked="{x:Bind _viewModel.IllustrationViewerPageViewModel.IsInfoPaneOpen, Mode=TwoWay}" />
                     <AppBarButton Command="{x:Bind _viewModel.PlayGifCommand}" Visibility="{x:Bind _viewModel.IllustrationViewModel.IsUgoira, Converter={StaticResource BoolToVisibilityConverter}}" />
                     <AppBarButton Command="{x:Bind _viewModel.IllustrationViewModel.BookmarkCommand}" />
                     <AppBarSeparator />

@@ -55,7 +55,6 @@
     <SplitView
         x:Name="IllustrationInfoAndCommentsSplitView"
         DisplayMode="Overlay"
-        IsPaneOpen="{x:Bind _viewModel.IsInfoPaneOpen, Mode=TwoWay}"
         OpenPaneLength="330"
         PaneBackground="Transparent"
         PaneClosed="IllustrationInfoAndCommentsSplitView_OnPaneOpenedOrClosed"
@@ -362,7 +361,7 @@
                         DefaultLabelPosition="Collapsed">
                         <AppBarToggleButton
                             Command="{x:Bind _viewModel.IllustrationInfoAndCommentsCommand}"
-                            IsChecked="{x:Bind _viewModel.IsInfoPaneOpen, Mode=TwoWay}"
+                            IsChecked="{x:Bind IllustrationInfoAndCommentsSplitView.IsPaneOpen, Mode=TwoWay}"
                             SizeChanged="CommandBarElementOnSizeChanged" />
                         <AppBarButton
                             Command="{x:Bind _viewModel.CurrentImage.PlayGifCommand, Mode=OneWay}"

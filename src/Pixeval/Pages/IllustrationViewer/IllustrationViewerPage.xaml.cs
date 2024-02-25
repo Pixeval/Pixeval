@@ -78,7 +78,7 @@ public sealed partial class IllustrationViewerPage : SupportCustomTitleBarDragRe
             titleBarHeight = 0;
             return;
         }
-        var leftIndent = new RectInt32(0, 0, _viewModel.IsInfoPaneOpen ? (int)IllustrationInfoAndCommentsSplitView.OpenPaneLength : 0, (int)TitleBarArea.ActualHeight);
+        var leftIndent = new RectInt32(0, 0, IllustrationInfoAndCommentsSplitView.IsPaneOpen ? (int)IllustrationInfoAndCommentsSplitView.OpenPaneLength : 0, (int)TitleBarArea.ActualHeight);
 
         sender.SetRegionRects(NonClientRegionKind.Icon, [GetScaledRect(TitleBar.Icon)]);
         sender.SetRegionRects(NonClientRegionKind.Passthrough, [GetScaledRect(leftIndent), GetScaledRect(IllustrationViewerCommandBar), GetScaledRect(IllustrationViewerSubCommandBar)]);
@@ -138,12 +138,6 @@ public sealed partial class IllustrationViewerPage : SupportCustomTitleBarDragRe
                     Window.AppWindow.SetPresenter(vm.IsFullScreen ? AppWindowPresenterKind.FullScreen : AppWindowPresenterKind.Default);
                     // 加载完之后设置标题栏
                     _ = Task.Delay(500).ContinueWith(_ => RaiseSetTitleBarDragRegion(), TaskScheduler.FromCurrentSynchronizationContext());
-                    break;
-                }
-                case nameof(IllustrationViewerPageViewModel.IsInfoPaneOpen):
-                {
-                    if (vm.IsInfoPaneOpen)
-                        IllustrationInfoAndCommentsNavigationViewNavigate(InfoPaneNavigationView, new SuppressNavigationTransitionInfo());
                     break;
                 }
             }
@@ -239,13 +233,8 @@ public sealed partial class IllustrationViewerPage : SupportCustomTitleBarDragRe
 
     private void IllustrationInfoAndCommentsNavigationViewOnSelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs e)
     {
-        IllustrationInfoAndCommentsNavigationViewNavigate(sender, e.RecommendedNavigationTransitionInfo);
-    }
-
-    private void IllustrationInfoAndCommentsNavigationViewNavigate(NavigationView sender, NavigationTransitionInfo info)
-    {
         if (sender.SelectedItem is NavigationViewItem { Tag: NavigationViewTag tag })
-            _ = IllustrationInfoAndCommentsFrame.Navigate(tag.NavigateTo, tag.Parameter, info);
+            _ = IllustrationInfoAndCommentsFrame.Navigate(tag.NavigateTo, tag.Parameter, e.RecommendedNavigationTransitionInfo);
     }
 
     private void IllustrationInfoAndCommentsSplitView_OnPaneOpenedOrClosed(SplitView sender, object args) => RaiseSetTitleBarDragRegion();

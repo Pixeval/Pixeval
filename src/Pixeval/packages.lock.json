@@ -8,6 +8,19 @@
         "resolved": "8.2.2",
         "contentHash": "iILVyo7VvzTlQT7b2qOs1ZDcneKsmuy2mTuxCCaBWEfg3tjw35B/ImO9Xw6It7xi2ie8/2PWfXhFn+Prztg03w=="
       },
+      "CommunityToolkit.Labs.WinUI.Controls.MarkdownTextBlock": {
+        "type": "Direct",
+        "requested": "[0.1.240213-build.1640, )",
+        "resolved": "0.1.240213-build.1640",
+        "contentHash": "uL0MudGqWbSjw5wRILLtcEGjNlwpriJPv4Zf0MC5u6J6uD0UesoDaS4/9BZrGMJjuPYtMUqcKe6ktVqS9mZYaQ==",
+        "dependencies": {
+          "HtmlAgilityPack": "1.11.48",
+          "Markdig": "0.31.0",
+          "Microsoft.Windows.SDK.BuildTools": "10.0.22621.2428",
+          "Microsoft.WindowsAppSDK": "1.4.231219000",
+          "Roman-Numerals": "2.0.0"
+        }
+      },
       "CommunityToolkit.Labs.WinUI.Shimmer": {
         "type": "Direct",
         "requested": "[0.1.230830, )",
@@ -305,6 +318,11 @@
         "resolved": "1.11.57",
         "contentHash": "zDxnHcAvi+qhZG602eKaPJKmzm0T8npKVML0RMwjrRBabpmTRtu2OVpfNkMUfYMgQ+5EllOkSeGxu0uFVV2zFw=="
       },
+      "Markdig": {
+        "type": "Transitive",
+        "resolved": "0.31.0",
+        "contentHash": "CEdZ3KyFfz5IPMrofhCOSrc4O2KNvSXSMXt3fv0W5AFCsk6a/JhKZuTBxGSadNt8n4zyyd/xXfoUMvr4ZbZ4Fw=="
+      },
       "Microsoft.Bcl.AsyncInterfaces": {
         "type": "Transitive",
         "resolved": "6.0.0",
@@ -363,6 +381,11 @@
           "System.Net.Http.Json": "7.0.1",
           "System.Text.Json": "7.0.3"
         }
+      },
+      "Roman-Numerals": {
+        "type": "Transitive",
+        "resolved": "2.0.0",
+        "contentHash": "OZP9ACtcxaJeyidhulsLFAG1OLq5OOozXeORg5Ol3pUCHb0Abz6EqQI6Sz38oJESP3dtz1lTNg8DHauVhbp7BA=="
       },
       "SixLabors.Fonts": {
         "type": "Transitive",

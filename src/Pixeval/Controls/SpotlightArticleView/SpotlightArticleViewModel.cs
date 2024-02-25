@@ -26,5 +26,5 @@ namespace Pixeval.Controls.SpotlightArticleView;
 
 public class SpotlightArticleViewModel(SpotlightArticle illustrate) : IllustrateViewModel<SpotlightArticle>(illustrate)
 {
-    public override void Dispose() => ThrowUtils.NotImplemented();
+    public override void Dispose() => ThrowUtils.Throw(new());
 }

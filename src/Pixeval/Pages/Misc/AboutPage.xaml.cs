@@ -41,8 +41,7 @@ public sealed partial class AboutPage
 
     private async void AboutPage_OnLoaded(object sender, RoutedEventArgs e)
     {
-        var licenseText = Encoding.UTF8.GetString(await AppInfo.GetAssetBytesAsync("GPLv3.md"));
-        LicenseTextBlock.Text = licenseText;
+        LicenseTextBlock.Text = Encoding.UTF8.GetString(await AppInfo.GetAssetBytesAsync("GPLv3.md"));
     }
 
     private async void LaunchUri(object sender, TappedRoutedEventArgs e)

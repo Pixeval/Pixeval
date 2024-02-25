@@ -28,7 +28,7 @@ public partial class ZoomableImage
             return now;
         }
 
-        var progress = ((now - _startTime).TotalMilliseconds / (_endTime - _startTime).TotalMilliseconds);
+        var progress = (now - _startTime).TotalMilliseconds / (_endTime - _startTime).TotalMilliseconds;
         scale = (currentScale - _startScale) * (float)progress + _startScale;
         centerX = (ImageCenterX - _startCenterX) * progress + _startCenterX;
         centerY = (ImageCenterY - _startCenterY) * progress + _startCenterY;

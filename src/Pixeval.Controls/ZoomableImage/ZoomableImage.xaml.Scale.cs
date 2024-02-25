@@ -2,7 +2,6 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml;
 using System;
-using System.Numerics;
 using Windows.Foundation;
 using WinUI3Utilities;
 using Microsoft.UI.Xaml.Media;
@@ -117,9 +116,6 @@ public partial class ZoomableImage
                 ThrowHelper.ArgumentOutOfRange(e.NewValue.To<ZoomableImageMode>());
                 break;
         }
-
-        if (zoomableImage._isInitMode)
-            zoomableImage._isInitMode = false;
     }
 
     private void OnImageScaleChanged(float oldScale)
@@ -127,6 +123,8 @@ public partial class ZoomableImage
         // 初始化时抑制动画
         if (!_isInitMode)
             StartZoomAnimation(oldScale);
+        else
+            _isInitMode = false;
         switch (ImageScale)
         {
             case 1:

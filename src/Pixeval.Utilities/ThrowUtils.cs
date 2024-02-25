@@ -107,11 +107,5 @@ public static class ThrowUtils
     [MethodImpl(MethodImplOptions.NoInlining)]
     public static TReturn Json<TReturn>(string? message = null)
         => throw new JsonException(message);
-
-    /// <exception cref="NotImplementedException"/>
-    [DoesNotReturn]
-    [MethodImpl(MethodImplOptions.NoInlining)]
-    public static void NotImplemented(string? message = null)
-        => throw new NotImplementedException(message);
 }
 

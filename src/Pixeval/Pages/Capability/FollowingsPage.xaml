@@ -25,6 +25,7 @@
             Visibility="{x:Bind IsMe, Converter={StaticResource BoolToVisibilityConverter}}">
             <controls:PrivacyPolicyComboBox
                 x:Name="PrivacyPolicyComboBox"
+                VerticalAlignment="Center"
                 SelectionChangedWhenLoaded="PrivacyPolicyComboBox_OnSelectionChangedWhenLoaded"
                 Visibility="{x:Bind IsMe, Converter={StaticResource BoolToVisibilityConverter}}" />
         </StackPanel>

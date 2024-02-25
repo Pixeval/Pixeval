@@ -5,6 +5,7 @@
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:controls1="using:Pixeval.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:labs="using:CommunityToolkit.Labs.WinUI.MarkdownTextBlock"
     xmlns:markup="using:Pixeval.Controls.MarkupExtensions"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:misc="using:Pixeval.Misc"
@@ -103,8 +104,11 @@
                         </Hyperlink>
                         <Run x:Uid="/AboutPage/OpenSourceLicenseContentPartII" />
                     </TextBlock>
-                    <!--  TODO: Use Markdown  -->
-                    <TextBlock x:Name="LicenseTextBlock" IsTextSelectionEnabled="True" />
+                    <labs:MarkdownTextBlock x:Name="LicenseTextBlock" Text="">
+                        <labs:MarkdownTextBlock.Config>
+                            <labs:MarkdownConfig />
+                        </labs:MarkdownTextBlock.Config>
+                    </labs:MarkdownTextBlock>
                 </StackPanel>
             </StackPanel>
         </ScrollView>
