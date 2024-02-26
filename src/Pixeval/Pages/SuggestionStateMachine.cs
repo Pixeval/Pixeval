@@ -41,14 +41,12 @@ public class SuggestionStateMachine
         new(SearcherLogic.Contain, PinIn.CreateDefault());
 
     private readonly Lazy<Task<IEnumerable<SuggestionModel>>> _illustrationTrendingTagCache =
-        new(
-            () => App.AppViewModel.MakoClient.GetTrendingTagsAsync(App.AppViewModel.AppSettings.TargetFilter)
+        new(() => App.AppViewModel.MakoClient.GetTrendingTagsAsync(App.AppViewModel.AppSettings.TargetFilter)
                 .SelectAsync(t => new Tag { Name = t.Tag, TranslatedName = t.Translation })
                 .SelectAsync(SuggestionModel.FromTag), LazyThreadSafetyMode.ExecutionAndPublication);
 
     private readonly Lazy<Task<IEnumerable<SuggestionModel>>> _novelTrendingTagCache =
-        new(
-            () => App.AppViewModel.MakoClient.GetTrendingTagsForNovelAsync(App.AppViewModel.AppSettings.TargetFilter)
+        new(() => App.AppViewModel.MakoClient.GetTrendingTagsForNovelAsync(App.AppViewModel.AppSettings.TargetFilter)
                 .SelectAsync(t => new Tag { Name = t.Tag, TranslatedName = t.Translation })
                 .SelectAsync(SuggestionModel.FromTag), LazyThreadSafetyMode.ExecutionAndPublication);
 

@@ -19,15 +19,12 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using Windows.System;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
 using Pixeval.AppManagement;
 using WinUI3Utilities;
-using Pixeval.Misc;
 
 namespace Pixeval.Pages.Misc;
 

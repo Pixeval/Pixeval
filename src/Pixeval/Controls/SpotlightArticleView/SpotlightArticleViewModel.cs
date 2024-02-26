@@ -18,7 +18,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using Pixeval.Controls.Illustrate;
 using Pixeval.CoreApi.Model;
 using Pixeval.Utilities;
 

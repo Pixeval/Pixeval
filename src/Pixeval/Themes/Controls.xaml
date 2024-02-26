@@ -41,6 +41,10 @@
         <Setter Property="FontWeight" Value="SemiBold" />
         <Setter Property="FontSize" Value="{StaticResource PixevalSubscriptFontSize}" />
     </Style>
+    <Style x:Key="ContentBoldTextBlockStyle" TargetType="TextBlock">
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="FontSize" Value="{StaticResource PixevalContentFontSize}" />
+    </Style>
     <Style x:Key="PixevalNumberBoxStyle" TargetType="NumberBox">
         <Setter Property="IsWrapEnabled" Value="True" />
         <Setter Property="LargeChange" Value="10" />

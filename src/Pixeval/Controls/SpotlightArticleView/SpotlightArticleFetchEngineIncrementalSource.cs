@@ -20,7 +20,6 @@
 
 using System.Collections.Generic;
 using Pixeval.CoreApi.Model;
-using Pixeval.Misc;
 
 namespace Pixeval.Controls.SpotlightArticleView;
 

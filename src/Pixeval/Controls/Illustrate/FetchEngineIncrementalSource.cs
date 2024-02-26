@@ -23,7 +23,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.WinUI.Collections;
 
-namespace Pixeval.Misc;
+namespace Pixeval.Controls;
 
 public abstract class FetchEngineIncrementalSource<T, TModel>(IAsyncEnumerable<T> asyncEnumerator, int limit = -1)
     : IIncrementalSource<TModel>

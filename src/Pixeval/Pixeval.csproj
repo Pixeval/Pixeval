@@ -203,127 +203,142 @@
 
     <!--XAML-->
     <ItemGroup>
-        <Page Update="Pages\Capability\RecommendUsersPage.xaml">
-            <Generator>MSBuild:Compile</Generator>
-        </Page>
-        <Page Update="Controls\Illustrate\IllustrateView.xaml">
+        <None Remove="IllustrationContainer.xaml" />
+        <None Remove="IPListInput.xaml" />
+        <None Remove="PrivacyPolicyComboBox.xaml" />
+        <None Remove="SettingRadioButtons.xaml" />
+        <None Remove="SortOptionComboBox.xaml" />
+        <None Remove="MainPage.xaml" />
+        <None Remove="CommentBlock.xaml" />
+        <None Remove="CommentList.xaml" />
+        <None Remove="PixivReplyBar.xaml" />
+        <None Remove="DownloadListPageDeleteTasksDialog.xaml" />
+        <None Remove="TagsEntryEditTagDialog.xaml" />
+        <None Remove="CommentRepliesBlock.xaml" />
+        <None Remove="IllustrateView.xaml" />
+        <None Remove="IllustrationItem.xaml" />
+        <None Remove="IllustrationView.xaml" />
+        <None Remove="IllustratorIllustrationsOverview.xaml" />
+        <None Remove="IllustratorView.xaml" />
+        <None Remove="TokenInput.xaml" />
+        <None Remove="BookmarksPage.xaml" />
+        <None Remove="FollowingsPage.xaml" />
+        <None Remove="IllustratorIllustrationPage.xaml" />
+        <None Remove="IllustratorMangaPage.xaml" />
+        <None Remove="RankingsPage.xaml" />
+        <None Remove="RecentPostsPage.xaml" />
+        <None Remove="RecommendationPage.xaml" />
+        <None Remove="RecommendUsersPage.xaml" />
+        <None Remove="SearchResultsPage.xaml" />
+        <None Remove="SpotlightsPage.xaml" />
+        <None Remove="DownloadListEntry.xaml" />
+        <None Remove="DownloadListPage.xaml" />
+        <None Remove="CommentsPage.xaml" />
+        <None Remove="IllustrationInfoPage.xaml" />
+        <None Remove="IllustrationViewerPage.xaml" />
+        <None Remove="ImageViewerPage.xaml" />
+        <None Remove="PixivReplyEmojiListPage.xaml" />
+        <None Remove="PixivReplyStickerListPage.xaml" />
+        <None Remove="RelatedWorksPage.xaml" />
+        <None Remove="IllustratorViewerPage.xaml" />
+        <None Remove="LoginPage.xaml" />
+        <None Remove="AboutPage.xaml" />
+        <None Remove="BrowsingHistoryPage.xaml" />
+        <None Remove="SettingsPage.xaml" />
+        <None Remove="TagsEntry.xaml" />
+        <None Remove="TagsPage.xaml" />
+        <None Remove="IllustrationResultFilterContent.xaml" />
+        <None Remove="IllustratorItem.xaml" />
+        <None Remove="RecommendIllustratorItem.xaml" />
+
+        <Page Update="Controls\IllustrationContainer.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
         <Page Update="Controls\IPListInput.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
-        <Page Update="Controls\SettingRadioButtons\SettingRadioButtons.xaml">
+        <Page Update="Controls\PrivacyPolicyComboBox.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
-        <Page Update="Pages\Capability\SpotlightsPage.xaml">
-            <Generator>MSBuild:Compile</Generator>
-        </Page>
-        <Page Update="Pages\IllustrationViewer\RelatedWorksPage.xaml">
-            <Generator>MSBuild:Compile</Generator>
-        </Page>
-        <Page Update="Pages\Download\DownloadListPage.xaml">
-            <Generator>MSBuild:Compile</Generator>
-        </Page>
-        <Page Update="Pages\IllustrationViewer\IllustrationViewerPage.xaml">
-            <Generator>MSBuild:Compile</Generator>
-        </Page>
-        <Page Update="Controls\IllustrationViewCommandBar.xaml">
-            <Generator>MSBuild:Compile</Generator>
-        </Page>
-        <Page Update="Pages\Capabilities\RecommendationPage.xaml">
-            <Generator>MSBuild:Compile</Generator>
-        </Page>
-        <Page Update="Pages\MainPage.xaml">
-            <Generator>MSBuild:Compile</Generator>
-        </Page>
-        <Page Update="Pages\Login\LoginPage.xaml">
-            <Generator>MSBuild:Compile</Generator>
-        </Page>
-        <Page Update="Pages\Capability\SearchResultsPage.xaml">
-            <Generator>MSBuild:Compile</Generator>
-        </Page>
-        <Page Update="Pages\Misc\SettingsPage.xaml">
-            <Generator>MSBuild:Compile</Generator>
-        </Page>
-        <Page Update="Pages\Download\DownloadListPage.xaml">
-            <Generator>MSBuild:Compile</Generator>
-        </Page>
-        <Page Update="Pages\IllustrationViewer\IllustrationViewerPage.xaml">
-            <Generator>MSBuild:Compile</Generator>
-        </Page>
-        <Page Update="Controls\IllustrationViewCommandBar.xaml">
-            <Generator>MSBuild:Compile</Generator>
-        </Page>
-        <Page Update="Pages\Capabilities\RecommendationPage.xaml">
-            <Generator>MSBuild:Compile</Generator>
-        </Page>
-        <Page Update="Pages\MainPage.xaml">
-            <Generator>MSBuild:Compile</Generator>
-        </Page>
-        <Page Update="Pages\Misc\LoginPage.xaml">
-            <Generator>MSBuild:Compile</Generator>
-        </Page>
-        <Page Update="Pages\Capability\FollowingsPage.xaml">
-            <Generator>MSBuild:Compile</Generator>
-        </Page>
-        <Page Update="Pages\IllustratorViewer\IllustratorViewerPage.xaml">
-            <Generator>MSBuild:Compile</Generator>
-        </Page>
-        <Page Update="Pages\Capability\RecentPostsPage.xaml">
-            <Generator>MSBuild:Compile</Generator>
-        </Page>
-        <Page Update="Pages\Capability\SearchResultsPage.xaml">
-            <Generator>MSBuild:Compile</Generator>
-        </Page>
-        <Page Update="Pages\Misc\AboutPage.xaml">
-            <Generator>MSBuild:Compile</Generator>
-        </Page>
-        <Page Update="Dialogs\DownloadListPageDeleteTasksDialog.xaml">
-            <Generator>MSBuild:Compile</Generator>
-        </Page>
-        <Page Update="Pages\Download\DownloadListEntry.xaml">
-            <Generator>MSBuild:Compile</Generator>
-        </Page>
-        <Page Update="Pages\Misc\BrowsingHistoryPage.xaml">
-            <Generator>MSBuild:Compile</Generator>
-        </Page>
-        <Page Update="Controls\TokenInput\TokenInput.xaml">
-            <Generator>MSBuild:Compile</Generator>
-        </Page>
-        <Page Update="Themes\Generic.xaml">
-            <Generator>MSBuild:Compile</Generator>
-        </Page>
-        <Page Update="Controls\PixivReplyBar.xaml">
-            <Generator>MSBuild:Compile</Generator>
-        </Page>
-        <Page Update="Pages\IllustrationViewer\PixivReplyStickerListPage.xaml">
-            <Generator>MSBuild:Compile</Generator>
-        </Page>
-        <Page Update="Pages\IllustrationViewer\PixivReplyEmojiListPage.xaml">
-            <Generator>MSBuild:Compile</Generator>
-        </Page>
-        <Page Update="Styles\Controls.xaml">
-            <Generator>MSBuild:Compile</Generator>
-        </Page>
-        <Page Update="Controls\CommentList.xaml">
-            <Generator>MSBuild:Compile</Generator>
-        </Page>
-        <Page Update="Controls\CommentBlock.xaml">
+        <Page Update="Controls\SettingRadioButtons.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
         <Page Update="Controls\SortOptionComboBox.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
-        <Page Update="Pages\Capability\RecentPostsPage.xaml">
+        <Page Update="Pages\MainPage.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
-        <Page Update="Controls\IllustrationContainer.xaml">
+        <Page Update="Controls\Comment\CommentBlock.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="Controls\Comment\CommentList.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="Controls\Comment\PixivReplyBar.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="Controls\DialogContent\DownloadListPageDeleteTasksDialog.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="Controls\DialogContent\TagsEntryEditTagDialog.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="Controls\FlyoutContent\CommentRepliesBlock.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="Controls\Illustrate\IllustrateView.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="Controls\IllustrationItem\IllustrationItem.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="Controls\IllustrationView\IllustrationView.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="Controls\IllustratorItem\IllustratorIllustrationsOverview.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="Controls\IllustratorView\IllustratorView.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="Controls\TokenInput\TokenInput.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="Pages\Capability\BookmarksPage.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="Pages\Capability\FollowingsPage.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="Pages\Capability\IllustratorIllustrationPage.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="Pages\Capability\IllustratorMangaPage.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
         <Page Update="Pages\Capability\RankingsPage.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
-        <Page Update="Styles\Colors.xaml">
+        <Page Update="Pages\Capability\RecentPostsPage.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="Pages\Capability\RecommendationPage.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="Pages\Capability\RecommendUsersPage.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="Pages\Capability\SearchResultsPage.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="Pages\Capability\SpotlightsPage.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="Pages\Download\DownloadListEntry.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="Pages\Download\DownloadListPage.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
         <Page Update="Pages\IllustrationViewer\CommentsPage.xaml">
@@ -332,37 +347,49 @@
         <Page Update="Pages\IllustrationViewer\IllustrationInfoPage.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
+        <Page Update="Pages\IllustrationViewer\IllustrationViewerPage.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
         <Page Update="Pages\IllustrationViewer\ImageViewerPage.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
-        <Page Update="Pages\Capabilities\BookmarksPage.xaml">
+        <Page Update="Pages\IllustrationViewer\PixivReplyEmojiListPage.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
-        <Page Update="Controls\IllustratorItem\IllustratorIllustrationsOverview.xaml">
+        <Page Update="Pages\IllustrationViewer\PixivReplyStickerListPage.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
-        <Page Update="Controls\IllustrationView\IllustrationItem.xaml">
+        <Page Update="Pages\IllustrationViewer\RelatedWorksPage.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
-        <Page Update="Pages\Capability\IllustratorMangaPage.xaml">
+        <Page Update="Pages\IllustratorViewer\IllustratorViewerPage.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
-        <Page Update="Pages\Capability\IllustratorIllustrationPage.xaml">
+        <Page Update="Pages\Login\LoginPage.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
-        <Page Update="Controls\RecommendIllustratorProfile.xaml">
+        <Page Update="Pages\Misc\AboutPage.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
-        <Page Update="Controls\DialogContent\TagsEntryEditTagDialog.xaml">
+        <Page Update="Pages\Misc\BrowsingHistoryPage.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="Pages\Misc\SettingsPage.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
         <Page Update="Pages\Tags\TagsEntry.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
-        <Page Update="Pages\Capability\TagsPage.xaml">
+        <Page Update="Pages\Tags\TagsPage.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
-        <Page Update="Controls\PrivacyPolicyComboBox.xaml">
+        <Page Update="Controls\FlyoutContent\IllustrationResultFilter\IllustrationResultFilterContent.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="Controls\IllustratorItem\IllustratorItem\IllustratorItem.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="Controls\IllustratorItem\RecommendIllustratorItem\RecommendIllustratorItem.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
     </ItemGroup>

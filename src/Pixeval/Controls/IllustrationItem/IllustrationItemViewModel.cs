@@ -25,7 +25,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.UI.Xaml.Controls;
-using Pixeval.Controls.Illustrate;
 using Pixeval.CoreApi.Model;
 using Pixeval.CoreApi.Net.Response;
 using Pixeval.Utilities;

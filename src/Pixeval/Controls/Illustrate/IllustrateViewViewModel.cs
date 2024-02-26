@@ -20,7 +20,6 @@
 
 using System;
 using CommunityToolkit.Mvvm.ComponentModel;
-using Pixeval.Controls.Illustrate;
 using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Model;
 

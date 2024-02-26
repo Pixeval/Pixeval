@@ -13,7 +13,6 @@ using Microsoft.UI.Xaml.Media;
 using WinUI3Utilities;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.AppManagement;
-using Pixeval.Controls.Illustrate;
 using Pixeval.CoreApi.Model;
 using Pixeval.Utilities;
 
