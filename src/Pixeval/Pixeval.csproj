@@ -206,7 +206,7 @@
         <Page Update="Pages\Capability\RecommendUsersPage.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
-        <Page Update="Controls\IllustrateView.xaml">
+        <Page Update="Controls\Illustrate\IllustrateView.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
         <Page Update="Controls\IPListInput.xaml">
@@ -344,10 +344,10 @@
         <Page Update="Controls\IllustrationView\IllustrationItem.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
-        <Page Update="Controls\IllustratorContentViewer\IllustratorMangaPage.xaml">
+        <Page Update="Pages\Capability\IllustratorMangaPage.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
-        <Page Update="Controls\IllustratorContentViewer\IllustratorIllustrationPage.xaml">
+        <Page Update="Pages\Capability\IllustratorIllustrationPage.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
         <Page Update="Controls\RecommendIllustratorProfile.xaml">

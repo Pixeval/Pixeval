@@ -1,11 +1,12 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Pixeval.Misc;
 using Pixeval.Pages.IllustratorViewer;
 using WinUI3Utilities;
 
 namespace Pixeval.Controls;
 
-public sealed partial class IllustratorView
+public sealed partial class IllustratorView : IScrollViewProvider
 {
     public IllustratorViewViewModel ViewModel { get; } = new();
 
@@ -29,4 +30,6 @@ public sealed partial class IllustratorView
             illustrationViewModel.Dispose();
         ViewModel.Dispose();
     }
+
+    public ScrollView ScrollView => AdvancedItemsView.ScrollView;
 }

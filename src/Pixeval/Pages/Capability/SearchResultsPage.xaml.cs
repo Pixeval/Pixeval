@@ -20,20 +20,15 @@
 
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
-using Pixeval.Controls;
 using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Model;
 using Pixeval.Misc;
 
 namespace Pixeval.Pages.Capability;
 
-public sealed partial class SearchResultsPage : ISortedIllustrationContainerPageHelper
+public sealed partial class SearchResultsPage : IScrollViewProvider
 {
     public SearchResultsPage() => InitializeComponent();
-
-    public IllustrationContainer ViewModelProvider => IllustrationContainer;
-
-    public SortOptionComboBox SortOptionProvider => SortOptionComboBox;
 
     public override void OnPageActivated(NavigationEventArgs navigationEventArgs)
     {
@@ -45,8 +40,5 @@ public sealed partial class SearchResultsPage : ISortedIllustrationContainerPage
         IllustrationContainer.ViewModel.ResetEngine(engine);
     }
 
-    private void SortOptionComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
-    {
-        ((ISortedIllustrationContainerPageHelper)this).OnSortOptionChanged();
-    }
+    public ScrollView ScrollView => IllustrationContainer.ScrollView;
 }

@@ -22,25 +22,17 @@ using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
-using Pixeval.Controls;
 using Pixeval.Database.Managers;
 using Pixeval.Misc;
-
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
 
 namespace Pixeval.Pages.Misc;
 
 /// <summary>
 /// An empty page that can be used on its own or navigated to within a Frame.
 /// </summary>
-public sealed partial class BrowsingHistoryPage : ISortedIllustrationContainerPageHelper
+public sealed partial class BrowsingHistoryPage : IScrollViewProvider
 {
     public BrowsingHistoryPage() => InitializeComponent();
-
-    public IllustrationContainer ViewModelProvider => IllustrationContainer;
-
-    public SortOptionComboBox SortOptionProvider => SortOptionComboBox;
 
     public override void OnPageActivated(NavigationEventArgs navigationEventArgs)
     {
@@ -57,8 +49,5 @@ public sealed partial class BrowsingHistoryPage : ISortedIllustrationContainerPa
                     .SelectAwait(async t => await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(t.Id))));
     }
 
-    private void SortOptionComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
-    {
-        ((ISortedIllustrationContainerPageHelper)this).OnSortOptionChanged();
-    }
+    public ScrollView ScrollView => IllustrationContainer.ScrollView;
 }

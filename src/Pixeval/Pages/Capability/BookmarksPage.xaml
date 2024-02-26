@@ -18,7 +18,6 @@
                 x:Name="PrivacyPolicyComboBox"
                 SelectionChangedWhenLoaded="PrivacyPolicyComboBox_OnSelectionChangedWhenLoaded"
                 Visibility="{x:Bind _viewModel.IsMe, Converter={StaticResource BoolToVisibilityConverter}}" />
-            <controls:SortOptionComboBox x:Name="SortOptionComboBox" SelectionChangedWhenLoaded="SortOptionComboBox_OnSelectionChanged" />
             <controls:NotifyOnLoadedComboBox
                 x:Name="TagComboBox"
                 x:Uid="/BookmarksPage/TagComboBox"

@@ -27,7 +27,6 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.AppManagement;
-using Pixeval.Controls.IllustratorContentViewer;
 using Pixeval.Controls.MarkupExtensions;
 using Pixeval.Controls.Windowing;
 using Pixeval.Util;

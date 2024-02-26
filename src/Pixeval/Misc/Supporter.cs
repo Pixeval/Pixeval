@@ -20,6 +20,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
 
@@ -28,24 +29,27 @@ namespace Pixeval.Misc;
 public record Supporter(string Nickname, string Name, ImageSource ProfilePicture, Uri ProfileUri)
 {
     // ReSharper disable StringLiteralTypo
-    public static readonly IEnumerable<Supporter> Supporters = new List<Supporter>
-    {
-        new("Sep", "@Guro2", SupportImageOf(22517862), new Uri("https://github.com/Guro2")),
-        new("无论时间", "@wulunshijian", SupportImageOf(46415928), new Uri("https://github.com/wulunshijian")),
-        new("CN", "@ControlNet", SupportImageOf(12800094), new Uri("https://github.com/ControlNet")),
-        new("CY", "@Cyl18", SupportImageOf(14993992), new Uri("https://github.com/cyl18")),
-        new("对味", "@duiweiya", SupportImageOf(40987061), new Uri("https://github.com/duiweiya")),
-        new("LG", "@LasmGratel", SupportImageOf(6669365), new Uri("https://github.com/LasmGratel")),
-        new("鱼鱼", "@sovetskyfish",SupportImageOf(76583116), new Uri("https://github.com/sovetskyfish")),
-        new("探姬", "@PerolNotsfsssf", SupportImageOf(96558937), new Uri("https://github.com/Notsfsssf")),
-        new("Summpot", "@Summpot", SupportImageOf(29229273), new Uri("https://github.com/Summpot")),
-        new("扑克", "@Poker-sang", SupportImageOf(62325494), new Uri("https://github.com/Poker-sang")),
-        new("南门二", "@Rigil-Kentaurus", SupportImageOf(49679244), new Uri("https://github.com/Rigil-Kentaurus")),
-        new("当妈", "@TheRealKamisama", SupportImageOf(35005476), new Uri("https://github.com/TheRealKamisama")),
-        new("茶栗", "@CharlieJiang", SupportImageOf(5109850), new Uri("https://github.com/cqjjjzr")),
-        new("cnbluefire", "@cnbluefire", SupportImageOf(27049838), new Uri("https://github.com/cnbluefire"))
-    };
+    private static readonly IEnumerable<(int Id, string Nickname, string Name)> _supporters =
+    [
+        (22517862, "Sep", "Guro2"),
+        (46415928, "无论时间", "wulunshijian"),
+        (12800094, "CN", "ControlNet"),
+        (14993992, "CY", "Cyl18"),
+        (40987061, "对味", "duiweiya"),
+        (6669365, "LG", "LasmGratel"),
+        (76583116, "鱼鱼", "sovetskyfish"),
+        (96558937, "探姬", "PerolNotsfsssf"),
+        (29229273, "Summpot", "Summpot"),
+        (62325494, "扑克", "Poker-sang"),
+        (49679244, "南门二", "Rigil-Kentaurus"),
+        (35005476, "当妈", "TheRealKamisama"),
+        (5109850, "茶栗", "cqjjjzr"),
+        (27049838, "cnbluefire", "cnbluefire")
+    ];
     // ReSharper restore StringLiteralTypo
+
+    public static readonly IEnumerable<Supporter> Supporters = _supporters.Select(t =>
+        new Supporter(t.Nickname, '@' + t.Name, SupportImageOf(t.Id), new Uri("https://github.com/" + t.Name)));
 
     private static ImageSource SupportImageOf(int supporterId)
     {

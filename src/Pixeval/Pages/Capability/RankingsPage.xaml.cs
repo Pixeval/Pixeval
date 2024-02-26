@@ -29,7 +29,7 @@ using WinUI3Utilities;
 
 namespace Pixeval.Pages.Capability;
 
-public sealed partial class RankingsPage : ISortedIllustrationContainerPageHelper
+public sealed partial class RankingsPage : IScrollViewProvider
 {
     public RankingsPage()
     {
@@ -40,10 +40,6 @@ public sealed partial class RankingsPage : ISortedIllustrationContainerPageHelpe
     }
 
     public DateTime MaxDate => DateTime.Now.AddDays(-2);
-
-    public IllustrationContainer ViewModelProvider => IllustrationContainer;
-
-    public SortOptionComboBox SortOptionProvider => SortOptionComboBox;
 
     public override void OnPageActivated(NavigationEventArgs navigationEventArgs)
     {
@@ -60,15 +56,12 @@ public sealed partial class RankingsPage : ISortedIllustrationContainerPageHelpe
         ChangeSource();
     }
 
-    private void SortOptionComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
-    {
-        ((ISortedIllustrationContainerPageHelper)this).OnSortOptionChanged();
-    }
-
     private void ChangeSource()
     {
         var rankOption = RankOptionComboBox.SelectedItem.To<StringRepresentableItem>().Item.To<RankOption>();
         var dateTime = RankDateTimeCalendarDatePicker.Date!.Value.DateTime;
         IllustrationContainer.ViewModel.ResetEngine(App.AppViewModel.MakoClient.Ranking(rankOption, dateTime, App.AppViewModel.AppSettings.TargetFilter));
     }
+
+    public ScrollView ScrollView => IllustrationContainer.ScrollView;
 }

@@ -9,7 +9,6 @@
     <controls:IllustrationContainer x:Name="IllustrationContainer">
         <controls:IllustrationContainer.CommandBarElements>
             <controls:PrivacyPolicyComboBox x:Name="PrivacyPolicyComboBox" SelectionChangedWhenLoaded="PrivacyPolicyComboBox_OnSelectionChangedWhenLoaded" />
-            <controls:SortOptionComboBox x:Name="SortOptionComboBox" SelectionChangedWhenLoaded="SortOptionComboBox_OnSelectionChanged" />
         </controls:IllustrationContainer.CommandBarElements>
     </controls:IllustrationContainer>
 </controls:EnhancedPage>

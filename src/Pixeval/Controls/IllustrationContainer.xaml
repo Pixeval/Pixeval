@@ -21,9 +21,7 @@
         <Grid
             Grid.Row="0"
             Margin="{StaticResource ComboBoxLeftIndent}"
-            HorizontalAlignment="Stretch"
-            ColumnSpacing="10"
-            Visibility="{x:Bind ShowCommandBar, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
+            ColumnSpacing="10">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
@@ -35,6 +33,7 @@
                 VerticalAlignment="Center"
                 Orientation="Horizontal"
                 Spacing="10">
+                <controls:SortOptionComboBox SelectionChangedWhenLoaded="SortOptionComboBox_OnSelectionChanged" />
                 <AutoSuggestBox
                     x:Uid="/IllustrationViewCommandBar/FastFilterAutoSuggestBox"
                     Width="250"
@@ -44,8 +43,6 @@
             <CommandBar
                 x:Name="CommandBar"
                 Grid.Column="1"
-                HorizontalAlignment="Stretch"
-                HorizontalContentAlignment="Center"
                 DefaultLabelPosition="Right"
                 Visibility="{x:Bind ViewModel.IsSelecting, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
                 <AppBarButton
@@ -74,10 +71,7 @@
                     IsEnabled="{x:Bind ViewModel.IsAnyIllustrationSelected, Mode=OneWay}"
                     Tapped="OpenAllInBrowserButton_OnTapped" />
             </CommandBar>
-            <CommandBar
-                Grid.Column="2"
-                DefaultLabelPosition="Right"
-                OverflowButtonVisibility="Collapsed">
+            <CommandBar Grid.Column="2" DefaultLabelPosition="Right">
                 <AppBarToggleButton
                     x:Uid="/IllustrationViewCommandBar/SelectionButton"
                     Icon="{markupExtensions:FontSymbolIcon Glyph=MultiSelectE762}"
@@ -99,15 +93,6 @@
                 <flyoutContent:IllustrationResultFilterContent x:Name="FilterContent" MaxHeight="{StaticResource TeachingTipContentMaxHeightWithTarget}" />
             </TeachingTip>
         </Grid>
-        <!--<illustrationView:IllustrationViewCommandBar
-            x:Name="TopCommandBar"
-            Grid.Row="0"
-            HorizontalAlignment="Stretch"
-            IsDefaultCommandsEnabled="{x:Bind TopCommandBar.ViewModel.IsAnyIllustrationSelected, Mode=OneWay}"
-            PrimaryCommandsSupplements="{x:Bind PrimaryCommandsSupplements, Mode=OneWay}"
-            SecondaryCommandsSupplements="{x:Bind SecondaryCommandsSupplements, Mode=TwoWay}"
-            ViewModel="{x:Bind IllustrationView.ViewModel}"
-            Visibility="{x:Bind ShowCommandBar, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />-->
         <controls:IllustrationView
             x:Name="IllustrationView"
             Grid.Row="1"

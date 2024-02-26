@@ -27,15 +27,11 @@ using Pixeval.Misc;
 
 namespace Pixeval.Pages.Capability;
 
-public sealed partial class BookmarksPage : ISortedIllustrationContainerPageHelper
+public sealed partial class BookmarksPage : IScrollViewProvider
 {
     private BookmarkPageViewModel _viewModel = null!;
 
     public BookmarksPage() => InitializeComponent();
-
-    public IllustrationContainer ViewModelProvider => IllustrationContainer;
-
-    public SortOptionComboBox SortOptionProvider => SortOptionComboBox;
 
     public override async void OnPageActivated(NavigationEventArgs e)
     {
@@ -50,11 +46,6 @@ public sealed partial class BookmarksPage : ISortedIllustrationContainerPageHelp
     private void PrivacyPolicyComboBox_OnSelectionChangedWhenLoaded(object sender, SelectionChangedEventArgs e)
     {
         ChangeSource();
-    }
-
-    private void SortOptionComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
-    {
-        ((ISortedIllustrationContainerPageHelper)this).OnSortOptionChanged();
     }
 
     private void ViewModelOnTagBookmarksIncrementallyLoaded(object? sender, string e)
@@ -89,4 +80,6 @@ public sealed partial class BookmarksPage : ISortedIllustrationContainerPageHelp
             tag = PrivacyPolicy.Public;
         IllustrationContainer.ViewModel.ResetEngine(App.AppViewModel.MakoClient.Bookmarks(_viewModel.UserId, tag, App.AppViewModel.AppSettings.TargetFilter));
     }
+
+    public ScrollView ScrollView => IllustrationContainer.ScrollView;
 }
