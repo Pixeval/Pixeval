@@ -64,6 +64,13 @@ public sealed partial class IllustrationContainer : IScrollViewProvider
         };
         PrimaryCommandsSupplements.CollectionChanged += (_, args) => AddCommandCallback(args, CommandBar.PrimaryCommands);
         SecondaryCommandsSupplements.CollectionChanged += (_, args) => AddCommandCallback(args, CommandBar.SecondaryCommands);
+        ViewModel.PropertyChanged+= (_, e) =>
+        {
+            if (e.PropertyName is nameof(IllustrationViewViewModel.IsSelecting))
+            {
+                CommandBar.UpdateLayout();
+            }
+        };
 
         return;
 
