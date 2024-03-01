@@ -192,46 +192,24 @@ public class AdvancedObservableCollection<T> : IList<T>, IList, INotifyCollectio
                 if (!string.IsNullOrEmpty(sd.PropertyName))
                     _sortProperties[sd.PropertyName] = typeof(T).GetProperty(sd.PropertyName)!;
 
-        if (SortDescriptions.Count is 0)
+        foreach (var sd in SortDescriptions)
         {
-            var newIndex = 0;
-            foreach (var item in _source)
+            int cmp;
+
+            if (string.IsNullOrEmpty(sd.PropertyName))
             {
-                if (_view.IndexOf(item) is var index and not -1)
-                    // 元素重复时可能出现index < newIndex
-                    if (index == newIndex)
-                        ++newIndex;
-                    else if (index > newIndex)
-                    {
-                        _view.RemoveAt(index);
-                        _view.Insert(newIndex, item);
-                        ++newIndex;
-                    }
+                cmp = sd.Comparer.Compare(x, y);
             }
+            else
+            {
+                var pi = _sortProperties[sd.PropertyName];
+
+                cmp = sd.Comparer.Compare(pi.GetValue(x), pi.GetValue(y));
+            }
+
+            if (cmp is not 0)
+                return sd.Direction is SortDirection.Ascending ? +cmp : -cmp;
         }
-        else
-            foreach (var sd in SortDescriptions)
-            {
-                T? cx, cy;
-
-                if (string.IsNullOrEmpty(sd.PropertyName))
-                {
-                    cx = x;
-                    cy = y;
-                }
-                else
-                {
-                    var pi = _sortProperties[sd.PropertyName];
-
-                    cx = (T?)pi.GetValue(x);
-                    cy = (T?)pi.GetValue(y);
-                }
-
-                var cmp = sd.Comparer.Compare(cx, cy);
-
-                if (cmp is not 0)
-                    return sd.Direction is SortDirection.Ascending ? +cmp : -cmp;
-            }
 
         return 0;
     }
@@ -351,8 +329,28 @@ public class AdvancedObservableCollection<T> : IList<T>, IList, INotifyCollectio
     private void HandleSortChanged()
     {
         _sortProperties.Clear();
-        _view.Sort(this);
-        _sortProperties.Clear();
+        if (SortDescriptions.Count is not 0)
+        {
+            _view.Sort(this);
+            _sortProperties.Clear();
+        }
+        else
+        {
+            var newIndex = 0;
+            foreach (var item in _source)
+            {
+                if (_view.IndexOf(item) is var index and not -1)
+                    // 元素重复时可能出现index < newIndex
+                    if (index == newIndex)
+                        ++newIndex;
+                    else if (index > newIndex)
+                    {
+                        _view.RemoveAt(index);
+                        _view.Insert(newIndex, item);
+                        ++newIndex;
+                    }
+            }
+        }
         OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
     }
 
