@@ -23,7 +23,6 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Markup;
 using Microsoft.UI.Xaml.Media;
-using Pixeval.Controls.MarkupExtensions.FontSymbolIcon;
 using WinUI3Utilities;
 
 namespace Pixeval.Controls.MarkupExtensions;
@@ -31,7 +30,7 @@ namespace Pixeval.Controls.MarkupExtensions;
 [MarkupExtensionReturnType(ReturnType = typeof(FontIcon))]
 public class FontSymbolIconExtension : TextIconExtension
 {
-    public FontIconSymbols Glyph { get; set; }
+    public FontIconSymbol Glyph { get; set; }
 
     public FontFamily? FontFamily { get; set; }
 
@@ -42,7 +41,7 @@ public class FontSymbolIconExtension : TextIconExtension
     {
         var fontIcon = new FontIcon
         {
-            Glyph = Glyph.GetGlyph().ToString(),
+            Glyph = ((char)Glyph).ToString(),
             FontFamily = FontFamily ?? new FontFamily(AppHelper.IsWindows11 ? "Segoe Fluent Icons" : "Segoe MDL2 Assets"),
             FontWeight = FontWeight,
             FontStyle = FontStyle,

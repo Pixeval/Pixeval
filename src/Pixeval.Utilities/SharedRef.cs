@@ -23,7 +23,7 @@ using System.Collections.Generic;
 
 namespace Pixeval.Utilities;
 
-public class SharedRef<T>
+public class SharedRef<T> where T : class
 {
     private readonly HashSet<int> _keys = [];
 

@@ -43,9 +43,9 @@ public record SuggestionModel(string? Name, string? TranslatedName, SuggestionTy
 
     public FontIcon? FontIcon => SuggestionType switch
     {
-        SuggestionType.Tag => FontIconSymbols.TagE8EC.GetFontIcon(12),
-        SuggestionType.Settings => FontIconSymbols.SettingsE713.GetFontIcon(12),
-        SuggestionType.History => FontIconSymbols.HistoryE81C.GetFontIcon(12),
+        SuggestionType.Tag => FontIconSymbol.TagE8EC.GetFontIcon(12),
+        SuggestionType.Settings => FontIconSymbol.SettingsE713.GetFontIcon(12),
+        SuggestionType.History => FontIconSymbol.HistoryE81C.GetFontIcon(12),
         _ => null
     };
 

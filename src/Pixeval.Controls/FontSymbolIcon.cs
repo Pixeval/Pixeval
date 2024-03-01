@@ -21,26 +21,25 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Pixeval.Controls.MarkupExtensions;
-using Pixeval.Controls.MarkupExtensions.FontSymbolIcon;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
 
 namespace Pixeval.Controls;
 
-[DependencyProperty<FontIconSymbols>("Symbol", DependencyPropertyDefaultValue.UnsetValue, nameof(PropertyChangedCallback))]
+[DependencyProperty<FontIconSymbol>("Symbol", DependencyPropertyDefaultValue.UnsetValue, nameof(PropertyChangedCallback))]
 public partial class FontSymbolIcon : FontIcon
 {
     private static void PropertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        d.To<FontSymbolIcon>().Glyph = e.NewValue.To<FontIconSymbols>().GetGlyph().ToString();
+        d.To<FontSymbolIcon>().Glyph = ((char)e.NewValue.To<FontIconSymbol>()).ToString();
     }
 }
 
-[DependencyProperty<FontIconSymbols>("Symbol", DependencyPropertyDefaultValue.UnsetValue, nameof(PropertyChangedCallback))]
+[DependencyProperty<FontIconSymbol>("Symbol", DependencyPropertyDefaultValue.UnsetValue, nameof(PropertyChangedCallback))]
 public partial class FontSymbolIconSource : FontIconSource
 {
     private static void PropertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        d.To<FontSymbolIconSource>().Glyph = e.NewValue.To<FontIconSymbols>().GetGlyph().ToString();
+        d.To<FontSymbolIconSource>().Glyph = ((char)e.NewValue.To<FontIconSymbol>()).ToString();
     }
 }

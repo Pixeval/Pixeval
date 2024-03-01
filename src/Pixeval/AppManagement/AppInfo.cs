@@ -34,7 +34,9 @@ using Pixeval.Utilities;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
 using Windows.ApplicationModel;
+using Windows.Foundation.Collections;
 using Microsoft.UI.Windowing;
+using Microsoft.UI.Xaml.Data;
 using Pixeval.CoreApi.Net;
 using Pixeval.Util.UI;
 

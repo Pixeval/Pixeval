@@ -29,9 +29,8 @@
 
     <ItemGroup>
         <PackageReference Include="Microsoft.Graphics.Win2D" Version="1.1.1" />
-        <PackageReference Include="Microsoft.Playwright" Version="1.41.2" />
-        <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.2428" />
-        <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.4.240211001" />
+        <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.3233" />
+        <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.5.240227000" />
         <PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.0.9" />
         <PackageReference Include="CommunityToolkit.WinUI.Triggers" Version="8.0.240109" />
         <PackageReference Include="CommunityToolkit.WinUI.Collections" Version="8.0.240109" />

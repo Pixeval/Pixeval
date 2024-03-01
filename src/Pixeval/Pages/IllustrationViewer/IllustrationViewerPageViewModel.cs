@@ -335,9 +335,9 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
     }
 
     public XamlUICommand IllustrationInfoAndCommentsCommand { get; } =
-        IllustrateViewerPageResources.IllustrationInfoAndComments.GetCommand(FontIconSymbols.InfoE946, VirtualKey.F12);
+        IllustrateViewerPageResources.IllustrationInfoAndComments.GetCommand(FontIconSymbol.InfoE946, VirtualKey.F12);
 
-    public XamlUICommand FullScreenCommand { get; } = "".GetCommand(FontIconSymbols.FullScreenE740);
+    public XamlUICommand FullScreenCommand { get; } = "".GetCommand(FontIconSymbol.FullScreenE740);
 
     #endregion
 }
