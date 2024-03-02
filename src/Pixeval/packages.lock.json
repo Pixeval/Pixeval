@@ -256,12 +256,12 @@
       },
       "WinUI3Utilities": {
         "type": "Direct",
-        "requested": "[1.1.6.1, )",
-        "resolved": "1.1.6.1",
-        "contentHash": "LLRWsUyzy/JkbT9i4Yk+FVLcTgMT0rnLbi57V+rB5vexq6Z9cd7HWlC3/JPIZJtgu331lvhHnrFOiyxFrj3a1w==",
+        "requested": "[1.1.6.2, )",
+        "resolved": "1.1.6.2",
+        "contentHash": "x69eHB+6rcxz6+asg7sZaYTH+CYcoI8pAQQjcWPVpTOR4yhPG1d/c4bJv3MXU6fnxnvgZMGiS4qYBdiY9JACBA==",
         "dependencies": {
-          "Microsoft.Windows.SDK.BuildTools": "10.0.22621.2428",
-          "Microsoft.WindowsAppSDK": "1.4.231219000"
+          "Microsoft.Windows.SDK.BuildTools": "10.0.22621.3233",
+          "Microsoft.WindowsAppSDK": "1.5.240227000"
         }
       },
       "WinUIEx": {

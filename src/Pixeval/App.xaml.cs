@@ -39,6 +39,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Pixeval.Logging;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
+using Windows.Storage;
 
 namespace Pixeval;
 
