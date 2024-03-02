@@ -10,26 +10,26 @@
       },
       "CommunityToolkit.Labs.WinUI.Controls.MarkdownTextBlock": {
         "type": "Direct",
-        "requested": "[0.1.240213-build.1640, )",
-        "resolved": "0.1.240213-build.1640",
-        "contentHash": "uL0MudGqWbSjw5wRILLtcEGjNlwpriJPv4Zf0MC5u6J6uD0UesoDaS4/9BZrGMJjuPYtMUqcKe6ktVqS9mZYaQ==",
+        "requested": "[0.1.240229-build.1650, )",
+        "resolved": "0.1.240229-build.1650",
+        "contentHash": "mPjnVpmmYnUhfY6VkW3jVsrlCJTb1XI9auhDlJPgoyuaTKHHXkhWTf7LR0Z95mmqhHTSuqZ5kn3axVV0T7buHQ==",
         "dependencies": {
           "HtmlAgilityPack": "1.11.48",
           "Markdig": "0.31.0",
           "Microsoft.Windows.SDK.BuildTools": "10.0.22621.2428",
-          "Microsoft.WindowsAppSDK": "1.4.231219000",
+          "Microsoft.WindowsAppSDK": "1.5.240205001-preview1",
           "Roman-Numerals": "2.0.0"
         }
       },
       "CommunityToolkit.Labs.WinUI.Shimmer": {
         "type": "Direct",
-        "requested": "[0.1.240213-build.1640, )",
-        "resolved": "0.1.240213-build.1640",
-        "contentHash": "rZ7J21PwihqHz6Dq5Ekk2rqfwqOAzeLm+P7SGbRkzXE7HeBRHaTsDZflPN6hU0i7z32m3Z88q+0akQshKH0GhQ==",
+        "requested": "[0.1.240229-build.1650, )",
+        "resolved": "0.1.240229-build.1650",
+        "contentHash": "dQuUip54FuMr6gIxO1RnUn8IlwRjMVsXOA1OgVuYHtNv6Y8nZrSNb6w4RI42nBLwFhZwHRv1aKIKnyBcOYco3A==",
         "dependencies": {
           "CommunityToolkit.WinUI.Animations": "8.0.230907",
           "Microsoft.Windows.SDK.BuildTools": "10.0.22621.2428",
-          "Microsoft.WindowsAppSDK": "1.4.231219000"
+          "Microsoft.WindowsAppSDK": "1.5.240205001-preview1"
         }
       },
       "CommunityToolkit.Mvvm": {
