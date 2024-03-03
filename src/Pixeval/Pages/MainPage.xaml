@@ -5,6 +5,7 @@
     xmlns:animatedVisuals="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
     xmlns:controls="using:Pixeval.Controls"
     xmlns:converters="using:CommunityToolkit.WinUI.Converters"
+    xmlns:converters1="using:Pixeval.Controls.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:markup="using:Pixeval.Controls.MarkupExtensions"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -14,6 +15,7 @@
     mc:Ignorable="d">
     <controls:SupportCustomTitleBarDragRegionPage.Resources>
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+        <converters1:NullableToVisibilityConverter x:Key="NullableToVisibilityConverter" />
 
         <DataTemplate x:Key="CommonSuggestionModelTemplate" x:DataType="pages:SuggestionModel">
             <Grid Padding="0,10" ColumnSpacing="10">
@@ -44,7 +46,7 @@
                         Text="{x:Bind TranslatedName}"
                         TextTrimming="CharacterEllipsis"
                         TextWrapping="WrapWholeWords"
-                        Visibility="{x:Bind TranslatedNameVisibility}" />
+                        Visibility="{x:Bind TranslatedName, Converter={StaticResource NullableToVisibilityConverter}}" />
                 </StackPanel>
             </Grid>
         </DataTemplate>

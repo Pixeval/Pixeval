@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ClassDiagram MajorVersion="1" MinorVersion="1">
+<ClassDiagram MajorVersion="1" MinorVersion="1" GroupingSetting="Alphabetical">
   <Class Name="Pixeval.CoreApi.Engine.Implements.AdaptedComputedFetchEngine&lt;T&gt;" Collapsed="true" BaseTypeListCollapsed="true">
     <Position X="58.25" Y="2.5" Width="1.5" />
     <TypeIdentifier>

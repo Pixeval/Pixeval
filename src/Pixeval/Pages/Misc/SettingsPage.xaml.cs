@@ -20,6 +20,7 @@
 
 using System;
 using Windows.System;
+using CommunityToolkit.Labs.WinUI.MarkdownTextBlock;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
@@ -68,6 +69,7 @@ public sealed partial class SettingsPage
         ViewModel.SaveCollections();
         App.AppViewModel.AppSettings = ViewModel.AppSetting;
         AppInfo.SaveConfig(ViewModel.AppSetting);
+        ViewModel.Dispose();
         ViewModel = null!;
     }
 
@@ -103,6 +105,16 @@ public sealed partial class SettingsPage
     private async void OpenHyperlinkButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
         _ = await Launcher.LaunchUriAsync(new Uri(sender.GetTag<string>()));
+    }
+
+    private async void ReleaseNotesHyperlink_OnTapped(object sender, TappedRoutedEventArgs e)
+    {
+        _ = await this.CreateAcknowledgementAsync(SettingsPageResources.ReleaseNotesHyperlinkButtonContent,
+            new MarkdownTextBlock
+            {
+                Config = new MarkdownConfig(),
+                Text = (sender.GetTag<string>() is "Newest" ? AppInfo.AppVersion.NewestAppReleaseModel : AppInfo.AppVersion.CurrentAppReleaseModel)?.ReleaseNote ?? ""
+            });
     }
 
     private async void PerformSignOutButton_OnTapped(object sender, TappedRoutedEventArgs e)

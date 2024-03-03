@@ -20,7 +20,7 @@
     xmlns:winUi="using:CommunityToolkit.WinUI"
     Unloaded="SettingsPage_OnUnloaded"
     mc:Ignorable="d">
-    <Page.Resources>
+    <controls1:EnhancedWindowPage.Resources>
         <Style
             x:Key="SettingHeaderStyle"
             BasedOn="{StaticResource BodyStrongTextBlockStyle}"
@@ -38,7 +38,8 @@
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
         <converters:BoolNegationConverter x:Key="BoolNegationConverter" />
         <converters1:StringToFontFamilyConverter x:Key="StringToFontFamilyConverter" />
-    </Page.Resources>
+        <converters1:NullableToVisibilityConverter x:Key="NullableToVisibilityConverter" />
+    </controls1:EnhancedWindowPage.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -97,16 +98,17 @@
                 <!--  region Setting Entries  -->
                 <TextBlock x:Uid="/SettingsPage/VersionSettingsGroup" Style="{StaticResource SettingHeaderStyle}" />
 
-                <controls:SettingsExpander Header="{x:Bind appManagement:AppInfo.AppVersion.CurrentVersion}" HeaderIcon="{markup:FontSymbolIcon Glyph=SyncE895}">
+                <controls:SettingsExpander HeaderIcon="{markup:FontSymbolIcon Glyph=SyncE895}" IsExpanded="{x:Bind ViewModel.ExpandExpander, Mode=OneWay}">
+                    <controls:SettingsExpander.Header>
+                        <HyperlinkButton
+                            Padding="0"
+                            Content="{x:Bind appManagement:AppInfo.AppVersion.CurrentVersion}"
+                            Tapped="ReleaseNotesHyperlink_OnTapped" />
+                    </controls:SettingsExpander.Header>
                     <controls:SettingsExpander.Description>
                         <StackPanel Spacing="3">
                             <TextBlock>
                                 <Run Text="{x:Bind ViewModel.GetLastUpdateCheckDisplayString(ViewModel.LastCheckedUpdate), Mode=OneWay}" />
-                                <LineBreak />
-                                <!--  TODO add release note hyperlink  -->
-                                <Hyperlink>
-                                    <Run x:Uid="/SettingsPage/ReleaseNotesHyperlinkButton" />
-                                </Hyperlink>
                             </TextBlock>
                         </StackPanel>
                     </controls:SettingsExpander.Description>
@@ -121,7 +123,7 @@
                         <TextBlock
                             VerticalAlignment="Center"
                             Text="{x:Bind ViewModel.UpdateMessage, Mode=OneWay}"
-                            Visibility="{x:Bind ViewModel.CheckingUpdate, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
+                            Visibility="{x:Bind ViewModel.UpdateMessage, Converter={StaticResource NullableToVisibilityConverter}, Mode=OneWay}" />
                         <Button
                             x:Uid="/SettingsPage/CheckForUpdatesButton"
                             IsEnabled="{x:Bind ViewModel.CheckingUpdate, Converter={StaticResource BoolNegationConverter}, Mode=OneWay}"
@@ -129,12 +131,22 @@
                     </StackPanel>
                     <controls:SettingsExpander.Items>
                         <controls:SettingsCard
+                            x:Uid="/SettingsPage/OpenTempEntry"
+                            ActionIcon="{markup:FontSymbolIcon Glyph=OpenInNewWindowE8A7}"
+                            HeaderIcon="{markup:FontSymbolIcon Glyph=FolderE8B7}"
+                            IsClickEnabled="True"
+                            Tag="Temp"
+                            Tapped="OpenFolder_OnTapped" />
+                        <controls:SettingsCard
                             x:Uid="/SettingsPage/GitHubCheckForUpdatesEntry"
                             IsClickEnabled="True"
                             Tapped="CheckForUpdateButton_OnTapped">
                             <controls:SettingsCard.HeaderIcon>
                                 <PathIcon Data="{x:Bind pixeval:SvgResources.GitHub}" />
                             </controls:SettingsCard.HeaderIcon>
+                            <controls:SettingsCard.Description>
+                                <HyperlinkButton Content="https://github.com/Pixeval/Pixeval/releases" NavigateUri="https://github.com/Pixeval/Pixeval/releases" />
+                            </controls:SettingsCard.Description>
                         </controls:SettingsCard>
                     </controls:SettingsExpander.Items>
                 </controls:SettingsExpander>
@@ -143,7 +155,15 @@
                     Title="{x:Bind ViewModel.UpdateInfo, Mode=OneWay}"
                     IsClosable="False"
                     IsOpen="True"
-                    Severity="{x:Bind ViewModel.UpdateInfoSeverity, Mode=OneWay}" />
+                    Message="{x:Bind ViewModel.NewestVersion, Mode=OneWay}"
+                    Severity="{x:Bind ViewModel.UpdateInfoSeverity, Mode=OneWay}">
+                    <InfoBar.ActionButton>
+                        <HyperlinkButton
+                            x:Uid="/SettingsPage/ReleaseNotesHyperlinkButton"
+                            Tag="Newest"
+                            Tapped="ReleaseNotesHyperlink_OnTapped" />
+                    </InfoBar.ActionButton>
+                </InfoBar>
 
                 <controls:SettingsCard
                     x:Uid="/SettingsPage/DownloadUpdateAutomaticallyEntry"

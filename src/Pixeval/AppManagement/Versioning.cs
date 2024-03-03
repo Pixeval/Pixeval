@@ -1,60 +1,84 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using CommunityToolkit.HighPerformance;
 
 namespace Pixeval.AppManagement;
 
 public class Versioning
 {
-    private AppVersion? _newestVersion;
+    public Version CurrentVersion { get; } = Version.Parse(GitVersionInformation.AssemblySemVer);
 
-    public AppVersion CurrentVersion { get; } = new(4, 0, 0, 1);
+    public Version? NewestVersion => NewestAppReleaseModel?.Version;
 
-    public AppVersion? NewestVersion
+    public AppReleaseModel? NewestAppReleaseModel => AppReleaseModels?[0];
+
+    public AppReleaseModel? CurrentAppReleaseModel => AppReleaseModels?.First(t => t.Version == CurrentVersion);
+
+    public UpdateState CompareUpdateState(Version currentVersion, Version? newVersion)
     {
-        get => _newestVersion;
-        private set
+        if (newVersion is null)
+            return UpdateState.Unknown;
+
+        return currentVersion.CompareTo(newVersion) switch
         {
-            _newestVersion = value;
-            UpdateState = CurrentVersion.CompareUpdateState(value);
-            UpdateAvailable = UpdateState is not UpdateState.UpToDate and not UpdateState.Insider and not UpdateState.Unknown;
-        }
+            > 0 => UpdateState.Insider,
+            0 => UpdateState.UpToDate,
+            _ => newVersion.Major > currentVersion.Major ? UpdateState.MajorUpdate :
+                newVersion.Minor > currentVersion.Minor ? UpdateState.MinorUpdate :
+                newVersion.Build > currentVersion.Build ? UpdateState.PatchUpdate :
+                UpdateState.SpecifierUpdate
+        };
     }
 
     public UpdateState UpdateState { get; private set; }
 
     public bool UpdateAvailable { get; private set; }
 
-    public async Task<AppReleaseModel?> CheckForUpdateAsync(HttpClient client)
+    public AppReleaseModel[]? AppReleaseModels { get; private set; }
+
+    public async Task GitHubCheckForUpdateAsync(HttpClient client)
     {
         try
         {
+            AppReleaseModels = null;
             if (client.DefaultRequestHeaders.UserAgent.Count is 0)
                 client.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36 Edg/121.0.0.0");
             var stringAsync = await client.GetStringAsync("https://api.github.com/repos/Pixeval/Pixeval/releases");
-            var gitHubReleases = JsonSerializer.Deserialize<GitHubRelease[]>(stringAsync);
-            if (gitHubReleases is not [var gitHubRelease, ..])
-                return null;
-            if (AppVersion.TryParse(gitHubRelease.TagName, out var appVersion))
+            if (JsonSerializer.Deserialize<GitHubRelease[]>(stringAsync) is { Length: > 0 } gitHubReleases)
             {
-                NewestVersion = appVersion;
-                App.AppViewModel.AppSettings.LastCheckedUpdate = DateTimeOffset.Now;
-                return new AppReleaseModel(appVersion, gitHubRelease.Notes, gitHubRelease.Assets[0].BrowserDownloadUrl);
+                var appReleaseModels = new List<AppReleaseModel>(gitHubReleases.Length);
+                foreach (var release in gitHubReleases)
+                {
+                    var tag = release.TagName;
+                    for (var j = tag.Count('.'); j < 3; ++j)
+                        tag += ".0";
+                    if (Version.TryParse(tag, out var appVersion))
+                    {
+                        App.AppViewModel.AppSettings.LastCheckedUpdate = DateTimeOffset.Now;
+                        appReleaseModels.Add(new AppReleaseModel(appVersion, release.Notes,
+                            release.Assets[0].BrowserDownloadUrl));
+                    }
+                }
+
+                AppReleaseModels = [.. appReleaseModels];
             }
         }
-        catch (Exception)
+        catch
         {
             // ignored
         }
-        NewestVersion = null;
-        return null;
+        UpdateState = AppReleaseModels is null ? UpdateState.Unknown : CompareUpdateState(CurrentVersion, NewestVersion);
+        UpdateAvailable = UpdateState is not UpdateState.UpToDate and not UpdateState.Insider and not UpdateState.Unknown;
     }
 }
 
 public record AppReleaseModel(
-    AppVersion Version,
+    Version Version,
     string ReleaseNote,
     string ReleaseUri);
 

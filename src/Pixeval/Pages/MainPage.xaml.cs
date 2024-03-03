@@ -110,7 +110,7 @@ public sealed partial class MainPage : SupportCustomTitleBarDragRegionPage
             PerformSearch(message.Tag);
         });
         using var client = new HttpClient();
-        _ = await AppInfo.AppVersion.CheckForUpdateAsync(client);
+        await AppInfo.AppVersion.GitHubCheckForUpdateAsync(client);
         if (AppInfo.AppVersion.UpdateAvailable)
             InfoBadge.Visibility = Visibility.Visible;
     }

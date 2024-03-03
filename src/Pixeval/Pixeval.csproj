@@ -84,14 +84,14 @@
         <GitVersionTargetsBefore>$(GitVersionTargetsBefore);_ValidateWindowsPackageType</GitVersionTargetsBefore>
         <GenerateAppInstallerFile>True</GenerateAppInstallerFile>
         <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
-        <PackageCertificateKeyFile>C:\WorkSpace\DanmakuPlayer\DanmakuPlayer\DanmakuPlayer_TemporaryKey.pfx</PackageCertificateKeyFile>
         <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
-        <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
+        <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
         <AppxSymbolPackageEnabled>False</AppxSymbolPackageEnabled>
         <GenerateTestArtifacts>True</GenerateTestArtifacts>
         <AppxBundle>Never</AppxBundle>
-        <AppInstallerUri>C:\Users\poker\Desktop</AppInstallerUri>
+        <AppInstallerUri>%UserProfile%\Desktop</AppInstallerUri>
         <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
+        <PackageCertificateThumbprint>7E324F18025670AFD5C06739776C17C8DDE2F8E6</PackageCertificateThumbprint>
     </PropertyGroup>
 
     <Target Name="PrepareForGenerateGitVersionInformation" BeforeTargets="GenerateGitVersionInformation">

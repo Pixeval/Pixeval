@@ -18,7 +18,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Pixeval.Controls.MarkupExtensions;
 using Pixeval.CoreApi.Model;
@@ -49,8 +48,6 @@ public record SuggestionModel(string? Name, string? TranslatedName, SuggestionTy
         SuggestionType.History => FontIconSymbol.HistoryE81C.GetFontIcon(12),
         _ => null
     };
-
-    public Visibility TranslatedNameVisibility => TranslatedName is null ? Visibility.Collapsed : Visibility.Visible;
 
     public static SuggestionModel[] FromId()
     {

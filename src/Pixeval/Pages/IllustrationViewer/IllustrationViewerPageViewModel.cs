@@ -211,8 +211,6 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
 
     private void OnButtonPropertiesChanged()
     {
-        OnPropertyChanged(nameof(NextButtonVisible));
-        OnPropertyChanged(nameof(PrevButtonVisible));
         OnPropertyChanged(nameof(NextButtonText));
         OnPropertyChanged(nameof(PrevButtonText));
     }
@@ -260,8 +258,6 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
         _ => null
     };
 
-    public Visibility NextButtonVisible => NextButtonAction is null ? Visibility.Collapsed : Visibility.Visible;
-
     /// <summary>
     /// <see langword="true"/>: next page<br/>
     /// <see langword="false"/>: next illustration<br/>
@@ -292,8 +288,6 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
         false => IllustrateViewerPageResources.PrevIllustration,
         _ => null
     };
-
-    public Visibility PrevButtonVisible => PrevButtonAction is null ? Visibility.Collapsed : Visibility.Visible;
 
     /// <summary>
     /// <see langword="true"/>: prev page<br/>
