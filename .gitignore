@@ -368,3 +368,6 @@ src/Pixeval/Assets/Binary/Pixeval.LoginProxy.zip
 
 # Poly#
 src/Pixeval.SourceGen/Generated
+
+# Package.appxmanifest
+Package.appxmanifest

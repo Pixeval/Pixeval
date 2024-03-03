@@ -10,20 +10,20 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pages="using:Pixeval.Pages"
     xmlns:pixeval="using:Pixeval.AppManagement"
+    Loaded="MainPage_OnLoaded"
     mc:Ignorable="d">
     <controls:SupportCustomTitleBarDragRegionPage.Resources>
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
 
-        <DataTemplate x:Name="CommonSuggestionModelTemplate" x:DataType="pages:SuggestionModel">
-            <Grid Height="50">
+        <DataTemplate x:Key="CommonSuggestionModelTemplate" x:DataType="pages:SuggestionModel">
+            <Grid Padding="0,10" ColumnSpacing="10">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="22" />
+                    <ColumnDefinition Width="13" />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
                 <ContentPresenter
                     x:Name="IconContentPresenter"
                     Grid.Column="0"
-                    Width="13"
                     HorizontalAlignment="Left"
                     VerticalAlignment="Center"
                     Content="{x:Bind FontIcon}" />

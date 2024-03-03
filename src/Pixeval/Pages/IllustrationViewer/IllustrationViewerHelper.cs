@@ -22,6 +22,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Windows.Graphics;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -35,6 +36,16 @@ namespace Pixeval.Pages.IllustrationViewer;
 
 public static class IllustrationViewerHelper
 {
+    /// <summary>
+    /// 此方法无法加载更多插画，加载单张图使用
+    /// </summary>
+    public static async Task CreateWindowWithPageAsync(long id)
+    {
+        var viewModel = new IllustrationItemViewModel(await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(id));
+
+        viewModel.CreateWindowWithPage([viewModel]);
+    }
+
     /// <summary>
     /// 此方法无法加载更多插画
     /// </summary>

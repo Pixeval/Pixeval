@@ -75,6 +75,12 @@ public class SuggestionStateMachine
         var tagSuggestions = (await App.AppViewModel.MakoClient.GetAutoCompletionForKeyword(keyword)).Select(SuggestionModel.FromTag).ToList();
         var settingSuggestions = MatchSettings(keyword);
         var suggestions = new List<SuggestionModel>();
+
+        if (long.TryParse(keyword, out _))
+        {
+            suggestions.AddRange(SuggestionModel.FromId());
+        }
+
         if (settingSuggestions.IsNotNullOrEmpty())
         {
             suggestions.Add(SuggestionModel.SettingEntryHeader);

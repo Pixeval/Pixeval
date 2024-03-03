@@ -75,10 +75,9 @@ public static class XamlUiCommandHelper
 
     public static XamlUICommand GetNewFollowCommand(bool isFollowed)
     {
-        return (isFollowed ? MiscResources.Unfollow : MiscResources.Follow)
-            .GetCommand(isFollowed
-                ? FontIconSymbol.ContactSolidEA8C.GetFontIconSource(foregroundBrush: new SolidColorBrush(Colors.Crimson))
-                : FontIconSymbol.ContactE77B.GetFontIconSource());
+        var xamlUiCommand = new XamlUICommand();
+        xamlUiCommand.GetFollowCommand(isFollowed);
+        return xamlUiCommand;
     }
 
     public static XamlUICommand GetNewFollowPrivatelyCommand()
@@ -98,7 +97,7 @@ public static class XamlUiCommandHelper
     {
         command.Label = command.Description = isFit ? MiscResources.RestoreOriginalResolution : MiscResources.UniformToFillResolution;
         command.IconSource = (isFit
-            ? FontIconSymbol.WebcamE8B8
+            ? FontIconSymbol.AspectRatioE799
             : FontIconSymbol.FitPageE9A6).GetFontIconSource();
     }
 

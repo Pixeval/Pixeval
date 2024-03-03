@@ -43,13 +43,23 @@ public record SuggestionModel(string? Name, string? TranslatedName, SuggestionTy
 
     public FontIcon? FontIcon => SuggestionType switch
     {
+        SuggestionType.IllustId or SuggestionType.UserId => FontIconSymbol.OpenInNewWindowE8A7.GetFontIcon(12),
         SuggestionType.Tag => FontIconSymbol.TagE8EC.GetFontIcon(12),
         SuggestionType.Settings => FontIconSymbol.SettingsE713.GetFontIcon(12),
         SuggestionType.History => FontIconSymbol.HistoryE81C.GetFontIcon(12),
         _ => null
     };
 
-    public Visibility TranslatedNameVisibility => TranslatedName == null ? Visibility.Collapsed : Visibility.Visible;
+    public Visibility TranslatedNameVisibility => TranslatedName is null ? Visibility.Collapsed : Visibility.Visible;
+
+    public static SuggestionModel[] FromId()
+    {
+        return
+        [
+            new SuggestionModel(MiscResources.OpenIllustId, null, SuggestionType.IllustId),
+            new SuggestionModel(MiscResources.OpenUserId, null, SuggestionType.UserId)
+        ];
+    }
 
     public static SuggestionModel FromTag(Tag tag)
     {
@@ -73,6 +83,8 @@ public enum SuggestionType
     Tag,
     Settings,
     History,
+    UserId,
+    IllustId,
     IllustrationAutoCompleteTagHeader,
     IllustrationTrendingTagHeader,
     NovelTrendingTagHeader,

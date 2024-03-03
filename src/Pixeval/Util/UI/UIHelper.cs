@@ -276,7 +276,7 @@ public static partial class UiHelper
             SuggestedStartLocation = PickerLocationId.PicturesLibrary,
             FileTypeChoices =
             {
-                [fileTypeId] = new List<string> { fileTypeId }
+                [fileTypeId] = [fileTypeId]
             },
             SuggestedFileName = suggestedFileName
         };

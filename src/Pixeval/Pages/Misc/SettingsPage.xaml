@@ -16,9 +16,9 @@
     xmlns:options="using:Pixeval.Options"
     xmlns:pixeval="using:Pixeval"
     xmlns:system="using:System"
-    Unloaded="SettingsPage_OnUnloaded"
     xmlns:utilities="using:WinUI3Utilities"
     xmlns:winUi="using:CommunityToolkit.WinUI"
+    Unloaded="SettingsPage_OnUnloaded"
     mc:Ignorable="d">
     <Page.Resources>
         <Style
@@ -154,32 +154,30 @@
 
                 <controls:SettingsExpander x:Uid="/SettingsPage/BugReportEntry" HeaderIcon="{markup:FontSymbolIcon Glyph=BugEBE8}">
                     <controls:SettingsExpander.Items>
-                        <controls:SettingsCard
-                            x:Uid="/SettingsPage/GitHubBugReportEntry"
-                            ActionIcon="{markup:FontSymbolIcon Glyph=OpenInNewWindowE8A7}"
-                            IsClickEnabled="True"
-                            Tag="https://github.com/Pixeval/Pixeval/issues/new/choose"
-                            Tapped="OpenHyperlinkButton_OnTapped">
-                            <controls:SettingsCard.HeaderIcon>
-                                <PathIcon Data="{x:Bind pixeval:SvgResources.GitHub}" />
-                            </controls:SettingsCard.HeaderIcon>
-                        </controls:SettingsCard>
-                        <controls:SettingsCard
-                            x:Uid="/SettingsPage/EMailBugReportEntry"
-                            ActionIcon="{markup:FontSymbolIcon Glyph=OpenInNewWindowE8A7}"
-                            HeaderIcon="{markup:FontSymbolIcon Glyph=MailE715}"
-                            IsClickEnabled="True"
-                            Tag="mailto:decem0730@hotmail.com"
-                            Tapped="OpenHyperlinkButton_OnTapped" />
-                        <controls:SettingsCard
-                            x:Uid="/SettingsPage/QQBugReportEntry"
-                            ActionIcon="{markup:FontSymbolIcon Glyph=OpenInNewWindowE8A7}"
-                            IsClickEnabled="True"
-                            Tag="https://jq.qq.com/?_wv=1027&amp;k=trDeCrog"
-                            Tapped="OpenHyperlinkButton_OnTapped">
-                            <controls:SettingsCard.HeaderIcon>
-                                <PathIcon Data="{x:Bind pixeval:SvgResources.QQ}" />
-                            </controls:SettingsCard.HeaderIcon>
+                        <controls:SettingsCard x:Uid="/SettingsPage/BugReportEntry" HeaderIcon="{markup:FontSymbolIcon Glyph=SendE724}">
+                            <CommandBar OverflowButtonVisibility="Collapsed">
+                                <AppBarButton
+                                    x:Uid="/SettingsPage/GitHubBugReportEntry"
+                                    Tag="https://github.com/Pixeval/Pixeval/issues/new/choose"
+                                    Tapped="OpenHyperlinkButton_OnTapped">
+                                    <AppBarButton.Icon>
+                                        <PathIcon Data="{x:Bind pixeval:SvgResources.GitHub}" />
+                                    </AppBarButton.Icon>
+                                </AppBarButton>
+                                <AppBarButton
+                                    x:Uid="/SettingsPage/EMailBugReportEntry"
+                                    Icon="{markup:FontSymbolIcon Glyph=MailE715}"
+                                    Tag="mailto:decem0730@hotmail.com"
+                                    Tapped="OpenHyperlinkButton_OnTapped" />
+                                <AppBarButton
+                                    x:Uid="/SettingsPage/QQBugReportEntry"
+                                    Tag="https://jq.qq.com/?_wv=1027&amp;k=trDeCrog"
+                                    Tapped="OpenHyperlinkButton_OnTapped">
+                                    <AppBarButton.Icon>
+                                        <PathIcon Data="{x:Bind pixeval:SvgResources.QQ}" />
+                                    </AppBarButton.Icon>
+                                </AppBarButton>
+                            </CommandBar>
                         </controls:SettingsCard>
                         <controls:SettingsCard
                             x:Uid="/SettingsPage/OpenLogEntry"
@@ -592,7 +590,7 @@
 
                 <controls:SettingsExpander
                     x:Uid="/SettingsPage/DefaultDownloadPathMacroEntry"
-                    HeaderIcon="{markup:FontSymbolIcon Glyph=CaptionE8BA}"
+                    HeaderIcon="{markup:FontSymbolIcon Glyph=RenameE8AC}"
                     Tag="{x:Bind misc2:SettingEntry.DefaultDownloadPathMacro}">
                     <controls:SettingsExpander.Items>
                         <controls:SettingsCard ContentAlignment="Left">
@@ -616,7 +614,7 @@
 
                 <controls:SettingsExpander
                     x:Uid="/SettingsPage/IllustrationDownloadFormatEntry"
-                    HeaderIcon="{markup:FontSymbolIcon Glyph=PictureE8B9}"
+                    HeaderIcon="{markup:FontSymbolIcon Glyph=CaptionE8BA}"
                     Tag="{x:Bind misc2:SettingEntry.IllustrationDownloadFormat}">
                     <controls:SettingsExpander.Items>
                         <controls:SettingsCard ContentAlignment="Left">
