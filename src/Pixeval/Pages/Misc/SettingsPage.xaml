@@ -161,7 +161,8 @@
                         <HyperlinkButton
                             x:Uid="/SettingsPage/ReleaseNotesHyperlinkButton"
                             Tag="Newest"
-                            Tapped="ReleaseNotesHyperlink_OnTapped" />
+                            Tapped="ReleaseNotesHyperlink_OnTapped"
+                            Visibility="{x:Bind ViewModel.NewestVersion, Converter={StaticResource NullableToVisibilityConverter}, Mode=OneWay}" />
                     </InfoBar.ActionButton>
                 </InfoBar>
 

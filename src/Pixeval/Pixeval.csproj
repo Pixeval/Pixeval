@@ -107,68 +107,57 @@
     <Target Name="GeneratePackageAppxManifest" BeforeTargets="_ValidateWindowsPackageType" DependsOnTargets="GetVersion">
         <PropertyGroup>
             <ManifestText>
-                &lt;?xml version="1.0" encoding="utf-8"?&gt;
-                &lt;Package
-                xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
-                xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
-                xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
-                IgnorableNamespaces="uap rescap"&gt;
-                &lt;Identity
-                Name="9a360099-e513-45d0-b3f1-3e599691ea06"
-                Publisher="CN=Pixeval"
-                Version="$(GitVersion_AssemblySemVer)" /&gt;
-                &lt;Properties&gt;
-                &lt;DisplayName&gt;Pixeval&lt;/DisplayName&gt;
-                &lt;PublisherDisplayName&gt;Pixeval&lt;/PublisherDisplayName&gt;
-                &lt;Logo&gt;Assets\Images\Tiles\StoreLogo.png&lt;/Logo&gt;
-                &lt;/Properties&gt;
-                &lt;Dependencies&gt;
-                &lt;TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.19041.0" MaxVersionTested="10.0.22621.0" /&gt;
-                &lt;TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.19041.0" MaxVersionTested="10.0.22621.0" /&gt;
-                &lt;/Dependencies&gt;
-                &lt;Resources&gt;
-                &lt;Resource Language="x-generate"/&gt;
-                &lt;/Resources&gt;
-                &lt;Applications&gt;
-                &lt;Application Id="App"
-                Executable="%24targetnametoken%24.exe"
-                EntryPoint="%24targetentrypoint%24"&gt;
-                &lt;uap:VisualElements
-                DisplayName="Pixeval"
-                Description="A fast, powerful and fully-functional third-party Pixiv client"
-                BackgroundColor="transparent"
-                Square150x150Logo="Assets\Images\Tiles\Square150x150Logo.png"
-                Square44x44Logo="Assets\Images\Tiles\Square44x44Logo.png"&gt;
-                &lt;uap:DefaultTile Wide310x150Logo="Assets\Images\Tiles\Wide310x150Logo.png"  Square71x71Logo="Assets\Images\Tiles\SmallTile.png" Square310x310Logo="Assets\Images\Tiles\LargeTile.png"&gt;
-                &lt;uap:ShowNameOnTiles&gt;
-                &lt;uap:ShowOn Tile="square150x150Logo"/&gt;
-                &lt;uap:ShowOn Tile="wide310x150Logo"/&gt;
-                &lt;uap:ShowOn Tile="square310x310Logo"/&gt;
-                &lt;/uap:ShowNameOnTiles&gt;
-                &lt;/uap:DefaultTile &gt;
-                &lt;uap:SplashScreen Image="Assets\Images\Tiles\SplashScreen.png" /&gt;
-                &lt;uap:LockScreen BadgeLogo="Assets\Images\Tiles\BadgeLogo.png" Notification="badgeAndTileText"/&gt;
-                &lt;uap:InitialRotationPreference&gt;
-                &lt;uap:Rotation Preference="landscape"/&gt;
-                &lt;uap:Rotation Preference="portrait"/&gt;&lt;/uap:InitialRotationPreference&gt;
-                &lt;/uap:VisualElements&gt;
-                &lt;Extensions&gt;
-                &lt;uap:Extension Category="windows.protocol"&gt;
-                &lt;uap:Protocol Name="pixeval"&gt;
-                &lt;uap:DisplayName&gt;Pixeval App Protocol&lt;/uap:DisplayName&gt;
-                &lt;/uap:Protocol&gt;
-                &lt;/uap:Extension&gt;
-                &lt;/Extensions&gt;
-                &lt;/Application&gt;
-                &lt;/Applications&gt;
-                &lt;Capabilities&gt;
-                &lt;rescap:Capability Name="runFullTrust" /&gt;
-                &lt;Capability Name="internetClient"/&gt;
-                &lt;uap:Capability Name="picturesLibrary"/&gt;
-                &lt;Capability Name="codeGeneration"/&gt;
-                &lt;uap:Capability Name="removableStorage"/&gt;
-                &lt;/Capabilities&gt;
-                &lt;/Package&gt;
+                <![CDATA[<?xml version="1.0" encoding="utf-8"?>
+                <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
+                    xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
+                    xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities" IgnorableNamespaces="uap rescap">
+                    <Identity Name="9a360099-e513-45d0-b3f1-3e599691ea06" Publisher="CN=Pixeval" Version="]]>$(GitVersion_AssemblySemVer)<![CDATA[" />
+                    <Properties>
+                        <DisplayName>Pixeval</DisplayName>
+                        <PublisherDisplayName>Pixeval</PublisherDisplayName>
+                        <Logo>Assets\Images\Tiles\StoreLogo.png</Logo>
+                    </Properties>
+                    <Dependencies>
+                        <TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.19041.0" MaxVersionTested="10.0.22621.0" />
+                        <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.19041.0" MaxVersionTested="10.0.22621.0" />
+                    </Dependencies>
+                    <Resources>
+                        <Resource Language="x-generate"/>
+                    </Resources>
+                    <Applications>
+                        <Application Id="App" Executable="%24targetnametoken%24.exe" EntryPoint="%24targetentrypoint%24">
+                            <uap:VisualElements DisplayName="Pixeval" Description="A fast, powerful and fully-functional third-party Pixiv client" BackgroundColor="transparent" Square150x150Logo="Assets\Images\Tiles\Square150x150Logo.png" Square44x44Logo="Assets\Images\Tiles\Square44x44Logo.png">
+                                <uap:DefaultTile Wide310x150Logo="Assets\Images\Tiles\Wide310x150Logo.png" Square71x71Logo="Assets\Images\Tiles\SmallTile.png" Square310x310Logo="Assets\Images\Tiles\LargeTile.png">
+                                    <uap:ShowNameOnTiles>
+                                        <uap:ShowOn Tile="square150x150Logo"/>
+                                        <uap:ShowOn Tile="wide310x150Logo"/>
+                                        <uap:ShowOn Tile="square310x310Logo"/>
+                                    </uap:ShowNameOnTiles>
+                                </uap:DefaultTile >
+                                <uap:SplashScreen Image="Assets\Images\Tiles\SplashScreen.png" />
+                                <uap:LockScreen BadgeLogo="Assets\Images\Tiles\BadgeLogo.png" Notification="badgeAndTileText"/>
+                                <uap:InitialRotationPreference>
+                                    <uap:Rotation Preference="landscape"/>
+                                    <uap:Rotation Preference="portrait"/>
+                                </uap:InitialRotationPreference>
+                            </uap:VisualElements>
+                            <Extensions>
+                                <uap:Extension Category="windows.protocol">
+                                    <uap:Protocol Name="pixeval">
+                                        <uap:DisplayName>Pixeval App Protocol</uap:DisplayName>
+                                    </uap:Protocol>
+                                </uap:Extension>
+                            </Extensions>
+                        </Application>
+                    </Applications>
+                    <Capabilities>
+                        <rescap:Capability Name="runFullTrust" />
+                        <Capability Name="internetClient"/>
+                        <uap:Capability Name="picturesLibrary"/>
+                        <Capability Name="codeGeneration"/>
+                        <uap:Capability Name="removableStorage"/>
+                    </Capabilities>
+                </Package>]]>
             </ManifestText>
         </PropertyGroup>
         <WriteLinesToFile File="$(MSBuildProjectDirectory)\Package.appxmanifest" Overwrite="true" Lines="$(ManifestText)" />

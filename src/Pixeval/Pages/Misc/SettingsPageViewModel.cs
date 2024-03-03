@@ -84,15 +84,15 @@ public partial class SettingsPageViewModel(FrameworkElement frameworkElement) : 
 
     public string UpdateInfo => AppInfo.AppVersion.UpdateState switch
     {
-        UpdateState.MajorUpdate => SettingsPageResources.MajorUpdateAvailable.Format(AppInfo.AppVersion.NewestVersion),
-        UpdateState.MinorUpdate => SettingsPageResources.MinorUpdateAvailable.Format(AppInfo.AppVersion.NewestVersion),
-        UpdateState.PatchUpdate or UpdateState.SpecifierUpdate => SettingsPageResources.PatchUpdateAvailable.Format(AppInfo.AppVersion.NewestVersion),
+        UpdateState.MajorUpdate => SettingsPageResources.MajorUpdateAvailable,
+        UpdateState.MinorUpdate => SettingsPageResources.MinorUpdateAvailable,
+        UpdateState.PatchUpdate or UpdateState.SpecifierUpdate => SettingsPageResources.PatchUpdateAvailable,
         UpdateState.Insider => SettingsPageResources.IsInsider,
         UpdateState.UpToDate => SettingsPageResources.IsUpToDate,
         _ => SettingsPageResources.UnknownUpdateState
     };
 
-    public string? NewestVersion => AppInfo.AppVersion.NewestVersion?.ToString();
+    public string? NewestVersion => AppInfo.AppVersion.UpdateAvailable ? AppInfo.AppVersion.NewestVersion?.ToString() : null;
 
     public InfoBarSeverity UpdateInfoSeverity => AppInfo.AppVersion.UpdateState switch
     {
