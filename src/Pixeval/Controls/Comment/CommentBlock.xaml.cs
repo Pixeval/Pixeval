@@ -55,6 +55,7 @@ public sealed partial class CommentBlock
         }
         else
         {
+            block.CommentContent.Blocks.Clear();
             block.CommentContent.Blocks.Add(await viewModel.GetReplyContentParagraphAsync());
         }
     }

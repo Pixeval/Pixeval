@@ -203,7 +203,7 @@
                         <controls:SettingsCard
                             x:Uid="/SettingsPage/OpenLogEntry"
                             ActionIcon="{markup:FontSymbolIcon Glyph=OpenInNewWindowE8A7}"
-                            HeaderIcon="{markup:FontSymbolIcon Glyph=FolderE8B7}"
+                            HeaderIcon="{markup:FontSymbolIcon Glyph=FolderFillE8D5}"
                             IsClickEnabled="True"
                             Tag="Log"
                             Tapped="OpenFolder_OnTapped" />
@@ -217,14 +217,14 @@
                         <controls:SettingsCard
                             x:Uid="/SettingsPage/OpenLocalEntry"
                             ActionIcon="{markup:FontSymbolIcon Glyph=OpenInNewWindowE8A7}"
-                            HeaderIcon="{markup:FontSymbolIcon Glyph=FolderE8B7}"
+                            HeaderIcon="{markup:FontSymbolIcon Glyph=UnsyncFolderE8F6}"
                             IsClickEnabled="True"
                             Tag="Local"
                             Tapped="OpenFolder_OnTapped" />
                         <controls:SettingsCard
                             x:Uid="/SettingsPage/OpenRoamingEntry"
                             ActionIcon="{markup:FontSymbolIcon Glyph=OpenInNewWindowE8A7}"
-                            HeaderIcon="{markup:FontSymbolIcon Glyph=FolderE8B7}"
+                            HeaderIcon="{markup:FontSymbolIcon Glyph=SyncFolderE8F7}"
                             IsClickEnabled="True"
                             Tag="Roaming"
                             Tapped="OpenFolder_OnTapped" />
@@ -235,7 +235,6 @@
 
                 <controls:SettingsCard
                     x:Uid="/SettingsPage/SignOutEntry"
-                    ActionIcon="{markup:FontSymbolIcon Glyph=SignOutF3B1}"
                     HeaderIcon="{markup:FontSymbolIcon Glyph=SignOutF3B1}"
                     IsClickEnabled="True"
                     Tag="{x:Bind misc2:SettingEntry.SignOut}"

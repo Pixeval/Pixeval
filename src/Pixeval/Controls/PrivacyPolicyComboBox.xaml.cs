@@ -28,10 +28,10 @@ public sealed partial class PrivacyPolicyComboBox
 
     private void PrivacyPolicyComboBox_OnSelectionChangedWhenLoaded(object sender, SelectionChangedEventArgs e)
     {
-        if (ComboBox is not { SelectedItem: StringRepresentableItem { Item: PrivacyPolicy option } } || option == SelectedItem)
+        if (sender is not NotifyOnLoadedComboBox { SelectedItem: StringRepresentableItem { Item: PrivacyPolicy option } } || option == SelectedItem)
             return;
         SelectedItem = option;
-        SelectionChangedWhenLoaded?.Invoke(sender, e);
+        SelectionChangedWhenLoaded?.Invoke(this, e);
     }
 
     [MethodImpl(MethodImplOptions.Synchronized)]

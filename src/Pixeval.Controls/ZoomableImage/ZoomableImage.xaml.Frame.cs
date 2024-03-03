@@ -98,7 +98,6 @@ public partial class ZoomableImage
                 InterpolationMode = CanvasImageInterpolation.MultiSampleLinear,
             };
 
-
             e.DrawingSession.DrawImage(image, new Vector2((float)x, (float)y));
         }
         else

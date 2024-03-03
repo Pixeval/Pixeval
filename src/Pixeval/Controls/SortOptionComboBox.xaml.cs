@@ -57,7 +57,7 @@ public sealed partial class SortOptionComboBox
         if (ComboBox is not { SelectedItem: StringRepresentableItem { Item: IllustrationSortOption option } } || option == SelectedItem)
             return;
         SelectedItem = option;
-        SelectionChangedWhenLoaded?.Invoke(sender, e);
+        SelectionChangedWhenLoaded?.Invoke(this, e);
     }
 
     [MethodImpl(MethodImplOptions.Synchronized)]

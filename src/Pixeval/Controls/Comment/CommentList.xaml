@@ -10,7 +10,7 @@
     <local:AdvancedItemsView
         x:Name="CommentsList"
         IsItemInvokedEnabled="False"
-        ItemsSource="{x:Bind ItemsSource}"
+        ItemsSource="{x:Bind ItemsSource, Mode=OneWay}"
         LayoutType="VerticalStack"
         SelectionMode="None">
         <local:AdvancedItemsView.ItemTemplate>

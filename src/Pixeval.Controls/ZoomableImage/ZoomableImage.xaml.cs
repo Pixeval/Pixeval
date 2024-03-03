@@ -81,18 +81,19 @@ public sealed partial class ZoomableImage : UserControl
                 for (var i = 0; i < _frames.Count; ++i)
                 {
                     _currentFrame = _frames[i];
-                    _ = ManualResetEvent.WaitOne();
                     CanvasControl.Invalidate();
                     var delay = 20;
-                    _ = ManualResetEvent.WaitOne();
                     if (ClonedMsIntervals is { } t && t.Length > i)
                         delay = ClonedMsIntervals[i];
                     totalDelay += delay;
                     do
                     {
-                        _ = ManualResetEvent.WaitOne();
                         await Task.Delay(10, _token.Token);
                     } while ((DateTime.Now - startTime).TotalMilliseconds < totalDelay);
+                    var before = DateTime.Now;
+                    _ = ManualResetEvent.WaitOne();
+                    var after = DateTime.Now;
+                    startTime += after - before;
                 }
             }
             if (_token.IsCancellationRequested)

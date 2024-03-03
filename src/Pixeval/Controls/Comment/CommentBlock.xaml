@@ -88,12 +88,11 @@
                 <controls1:Case.Value>
                     <x:Boolean>True</x:Boolean>
                 </controls1:Case.Value>
-                <Image
+                <controls:LazyImage
                     x:Name="StickerImageContent"
-                    Width="100"
-                    Height="100"
+                    MaxHeight="100"
                     HorizontalAlignment="Left"
-                    Stretch="UniformToFill" />
+                    Stretch="Uniform" />
             </controls1:Case>
             <controls1:Case>
                 <controls1:Case.Value>

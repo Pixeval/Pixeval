@@ -17,7 +17,7 @@ public class Versioning
 
     public AppReleaseModel? NewestAppReleaseModel => AppReleaseModels?[0];
 
-    public AppReleaseModel? CurrentAppReleaseModel => AppReleaseModels?.First(t => t.Version == CurrentVersion);
+    public AppReleaseModel? CurrentAppReleaseModel => AppReleaseModels?.FirstOrDefault(t => t.Version == CurrentVersion);
 
     public UpdateState CompareUpdateState(Version currentVersion, Version? newVersion)
     {
