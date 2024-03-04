@@ -72,7 +72,7 @@ public class AppVersion(int major, int minor, int patch, int? preReleaseSpecifie
             0 => UpdateState.UpToDate,
             _ => newVersion.Major > Major ? UpdateState.MajorUpdate :
                 newVersion.Minor > Minor ? UpdateState.MinorUpdate :
-                newVersion.Patch > Patch ? UpdateState.PatchUpdate :
+                newVersion.Patch > Patch ? UpdateState.BuildUpdate :
                 UpdateState.SpecifierUpdate
         };
     }
@@ -168,9 +168,9 @@ public enum UpdateState
     MinorUpdate,
 
     /// <summary>
-    /// 修订更新
+    /// 生成更新
     /// </summary>
-    PatchUpdate,
+    BuildUpdate,
 
     /// <summary>
     /// 预览更新

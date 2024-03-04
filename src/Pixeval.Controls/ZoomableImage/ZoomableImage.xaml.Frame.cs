@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
 using System.Threading;
+using System.Diagnostics;
 
 namespace Pixeval.Controls;
 
@@ -87,8 +88,9 @@ public partial class ZoomableImage
                 _ => Matrix3x2.Identity
             };
 
+            _ = Compute(out var scale, out _, out _, out var x, out var y);
             // 最后调整scale，防止影响前面
-            transform *= Matrix3x2.CreateScale(ImageScale);
+            transform *= Matrix3x2.CreateScale(scale);
 
             var image = new Transform2DEffect
             {
@@ -97,8 +99,7 @@ public partial class ZoomableImage
                 InterpolationMode = CanvasImageInterpolation.MultiSampleLinear,
             };
 
-
-            e.DrawingSession.DrawImage(image, new Vector2((float)ImagePositionX, (float)ImagePositionY));
+            e.DrawingSession.DrawImage(image, new Vector2((float)x, (float)y));
         }
         else
         {
@@ -125,6 +126,7 @@ public partial class ZoomableImage
                 return;
             OriginalImageWidth = _frames[0].Size.Width;
             OriginalImageHeight = _frames[0].Size.Height;
+            _isInitMode = true;
             Mode = InitMode; // 触发OnModeChanged
             _timerRunning = true;
             // 防止此处ManualResetEvent已经Dispose了，绝大多数情况下不会发生

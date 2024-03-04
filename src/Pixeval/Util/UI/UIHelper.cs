@@ -40,7 +40,6 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using Pixeval.AppManagement;
 using Pixeval.Controls.MarkupExtensions;
-using Pixeval.Controls.MarkupExtensions.FontSymbolIcon;
 using Pixeval.Util.Threading;
 using Pixeval.Utilities;
 using SixLabors.ImageSharp.PixelFormats;
@@ -200,12 +199,12 @@ public static partial class UiHelper
         return value ? Visibility.Visible : Visibility.Collapsed;
     }
 
-    public static FontIcon GetFontIcon(this FontIconSymbols symbol, double? fontSize = null)
+    public static FontIcon GetFontIcon(this FontIconSymbol symbol, double? fontSize = null)
     {
         var systemThemeFontFamily = new FontFamily(AppInfo.AppIconFontFamilyName);
         var icon = new FontIcon
         {
-            Glyph = symbol.GetGlyph().ToString(),
+            Glyph = ((char)symbol).ToString(),
             FontFamily = systemThemeFontFamily
         };
         if (fontSize is not null)
@@ -216,12 +215,12 @@ public static partial class UiHelper
         return icon;
     }
 
-    public static FontIconSource GetFontIconSource(this FontIconSymbols symbol, double? fontSize = null, Brush? foregroundBrush = null)
+    public static FontIconSource GetFontIconSource(this FontIconSymbol symbol, double? fontSize = null, Brush? foregroundBrush = null)
     {
         var systemThemeFontFamily = new FontFamily(AppInfo.AppIconFontFamilyName);
         var icon = new FontIconSource
         {
-            Glyph = symbol.GetGlyph().ToString(),
+            Glyph = ((char)symbol).ToString(),
             FontFamily = systemThemeFontFamily
         };
         if (fontSize is not null)
@@ -277,7 +276,7 @@ public static partial class UiHelper
             SuggestedStartLocation = PickerLocationId.PicturesLibrary,
             FileTypeChoices =
             {
-                [fileTypeId] = new List<string> { fileTypeId }
+                [fileTypeId] = [fileTypeId]
             },
             SuggestedFileName = suggestedFileName
         };

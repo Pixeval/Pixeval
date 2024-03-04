@@ -21,10 +21,8 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.WinUI.Collections;
 using Pixeval.Collections;
-using Pixeval.Controls.Illustrate;
 using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Model;
-using Pixeval.Misc;
 
 namespace Pixeval.Controls.SpotlightArticleView;
 public class SpotlightArticleViewDataProvider : ObservableObject, IDataProvider<SpotlightArticle, SpotlightArticleViewModel>

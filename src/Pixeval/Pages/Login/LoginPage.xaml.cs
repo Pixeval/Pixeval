@@ -20,7 +20,6 @@
 
 using System;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media.Animation;
 using Pixeval.AppManagement;
 using Pixeval.Util.UI;
@@ -39,7 +38,7 @@ public sealed partial class LoginPage
         InitializeComponent();
     }
 
-    private async void Login_OnTapped(object sender, TappedRoutedEventArgs e)
+    private async void Login_OnTapped(object sender, object e)
     {
         try
         {

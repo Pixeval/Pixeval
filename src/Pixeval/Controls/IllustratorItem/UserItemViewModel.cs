@@ -13,7 +13,6 @@ using Microsoft.UI.Xaml.Media;
 using WinUI3Utilities;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.AppManagement;
-using Pixeval.Controls.Illustrate;
 using Pixeval.CoreApi.Model;
 using Pixeval.Utilities;
 
@@ -48,17 +47,17 @@ public abstract partial class UserItemViewModel<T>(T illustrate, IllustratorIllu
         OverviewViewModel.Dispose();
     }
 
-    public XamlUICommand FollowCommand { get; } = "".GetCommand(FontIconSymbols.ContactE77B);
+    public XamlUICommand FollowCommand { get; } = "".GetCommand(FontIconSymbol.ContactE77B);
 
-    public XamlUICommand GenerateLinkCommand { get; } = IllustrateItemResources.GenerateLink.GetCommand(FontIconSymbols.LinkE71B);
+    public XamlUICommand GenerateLinkCommand { get; } = IllustrateItemResources.GenerateLink.GetCommand(FontIconSymbol.LinkE71B);
 
-    public XamlUICommand GenerateWebLinkCommand { get; } = IllustrateItemResources.GenerateWebLink.GetCommand(FontIconSymbols.PreviewLinkE8A1);
+    public XamlUICommand GenerateWebLinkCommand { get; } = IllustrateItemResources.GenerateWebLink.GetCommand(FontIconSymbol.PreviewLinkE8A1);
 
-    public XamlUICommand OpenInWebBrowserCommand { get; } = IllustrateItemResources.OpenInWebBrowser.GetCommand(FontIconSymbols.WebSearchF6FA);
+    public XamlUICommand OpenInWebBrowserCommand { get; } = IllustrateItemResources.OpenInWebBrowser.GetCommand(FontIconSymbol.WebSearchF6FA);
 
-    public XamlUICommand ShowQrCodeCommand { get; } = IllustrateItemResources.ShowQRCode.GetCommand(FontIconSymbols.QRCodeED14);
+    public XamlUICommand ShowQrCodeCommand { get; } = IllustrateItemResources.ShowQRCode.GetCommand(FontIconSymbol.QRCodeED14);
 
-    public XamlUICommand ShowPixEzQrCodeCommand { get; } = IllustrateItemResources.ShowPixEzQrCode.GetCommand(FontIconSymbols.Photo2EB9F);
+    public XamlUICommand ShowPixEzQrCodeCommand { get; } = IllustrateItemResources.ShowPixEzQrCode.GetCommand(FontIconSymbol.Photo2EB9F);
 
     protected void InitializeCommands()
     {

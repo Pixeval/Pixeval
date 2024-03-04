@@ -23,7 +23,7 @@ using System.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Pixeval.CoreApi.Model;
 
-namespace Pixeval.Controls.Illustrate;
+namespace Pixeval.Controls;
 
 [DebuggerDisplay("{Illustrate}")]
 public abstract class IllustrateViewModel<T>(T illustrate) : ObservableObject, IDisposable

@@ -20,18 +20,13 @@
 
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
-using Pixeval.Controls;
 using Pixeval.Misc;
 
 namespace Pixeval.Pages.Capability;
 
-public sealed partial class RecentPostsPage : ISortedIllustrationContainerPageHelper
+public sealed partial class RecentPostsPage : IScrollViewProvider
 {
     public RecentPostsPage() => InitializeComponent();
-
-    public IllustrationContainer ViewModelProvider => IllustrationContainer;
-
-    public SortOptionComboBox SortOptionProvider => SortOptionComboBox;
 
     public override void OnPageActivated(NavigationEventArgs e)
     {
@@ -48,8 +43,5 @@ public sealed partial class RecentPostsPage : ISortedIllustrationContainerPageHe
         IllustrationContainer.ViewModel.ResetEngine(App.AppViewModel.MakoClient.RecentPosts(PrivacyPolicyComboBox.SelectedItem));
     }
 
-    private void SortOptionComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
-    {
-        ((ISortedIllustrationContainerPageHelper)this).OnSortOptionChanged();
-    }
+    public ScrollView ScrollView => IllustrationContainer.ScrollView;
 }

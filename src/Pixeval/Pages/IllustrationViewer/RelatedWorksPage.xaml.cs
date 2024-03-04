@@ -18,6 +18,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Options;
 using WinUI3Utilities;
@@ -32,14 +33,11 @@ public sealed partial class RelatedWorksPage
 
     public ThumbnailDirection ThumbnailDirection => App.AppViewModel.AppSettings.ThumbnailDirection;
 
-    public override void OnPageDeactivated(NavigatingCancelEventArgs e)
-    {
-        RelatedWorksIllustrationGrid.ViewModel.Dispose();
-    }
-
     public override void OnPageActivated(NavigationEventArgs e)
     {
         _illustrationId = e.Parameter.To<long>();
         RelatedWorksIllustrationGrid.ViewModel.ResetEngine(App.AppViewModel.MakoClient.RelatedWorks(_illustrationId));
     }
+
+    private void RelatedWorksPage_OnUnloaded(object sender, RoutedEventArgs e) => RelatedWorksIllustrationGrid.ViewModel.Dispose();
 }

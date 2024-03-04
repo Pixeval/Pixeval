@@ -1,8 +1,9 @@
 #region Copyright
+
 // GPL v3 License
 // 
-// Pixeval/Pixeval.CoreApi
-// Copyright (c) 2023 Pixeval.CoreApi/UnusedAttribute.cs
+// Pixeval/Pixeval.Controls
+// Copyright (c) 2024 Pixeval.Controls/NullableToVisibilityConverter.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -16,11 +17,22 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 #endregion
 
 using System;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Data;
+using WinUI3Utilities;
 
-namespace Pixeval.CoreApi;
+namespace Pixeval.Controls.Converters;
 
-[AttributeUsage( AttributeTargets.All, Inherited = false)]
-public class UnusedAttribute : Attribute;
+public class NullableToVisibilityConverter : IValueConverter
+{
+    public bool Negative { get; set; }
+
+    public object Convert(object? value, Type targetType, object parameter, string language) => Negative ^ value is null ? Visibility.Collapsed : Visibility.Visible;
+
+    public object ConvertBack(object value, Type targetType, object parameter, string language) => ThrowHelper.NotSupported<object>();
+}
+

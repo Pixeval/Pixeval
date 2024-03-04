@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -20,30 +20,42 @@
 
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Markup;
+using WinUI3Utilities;
 
 namespace Pixeval.Pages;
 
 public class SuggestionModelDataTemplateSelector : DataTemplateSelector
 {
-    public DataTemplate? IllustrationHeader { get; set; }
+    public string? IllustrationHeader { get; set; }
 
-    public DataTemplate? NovelHeader { get; set; }
+    public string? NovelHeader { get; set; }
 
-    public DataTemplate? AutoCompletionHeader { get; set; }
+    public string? AutoCompletionHeader { get; set; }
 
-    public DataTemplate? SettingEntryHeader { get; set; }
+    public string? SettingEntryHeader { get; set; }
 
     public DataTemplate? CommonSuggestion { get; set; }
 
-    protected override DataTemplate SelectTemplateCore(object item)
+    protected override DataTemplate? SelectTemplateCore(object item)
     {
-        return item switch
+        if (item is SuggestionModel model && model.SuggestionType switch
+            {
+                SuggestionType.IllustrationTrendingTagHeader => IllustrationHeader,
+                SuggestionType.NovelTrendingTagHeader => NovelHeader,
+                SuggestionType.SettingEntryHeader => SettingEntryHeader,
+                SuggestionType.IllustrationAutoCompleteTagHeader => AutoCompletionHeader,
+                _ => null
+            } is { } header)
         {
-            SuggestionModel { SuggestionType: SuggestionType.IllustrationTrendingTagHeader } => IllustrationHeader!,
-            SuggestionModel { SuggestionType: SuggestionType.NovelTrendingTagHeader } => NovelHeader!,
-            SuggestionModel { SuggestionType: SuggestionType.SettingEntryHeader } => SettingEntryHeader!,
-            SuggestionModel { SuggestionType: SuggestionType.IllustrationAutoCompleteTagHeader } => AutoCompletionHeader!,
-            _ => CommonSuggestion!
-        };
+            var xaml = $$"""
+                         <DataTemplate xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+                             <TextBlock x:Uid="{{header}}" Style="{StaticResource ContentBoldTextBlockStyle}" />
+                         </DataTemplate>
+                         """;
+            return XamlReader.Load(xaml).To<DataTemplate>();
+        }
+
+        return CommonSuggestion;
     }
 }

@@ -33,12 +33,14 @@ using Pixeval.Controls;
 using Pixeval.Controls.Windowing;
 using Pixeval.Pages.Login;
 using WinUI3Utilities;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Pixeval.Logging;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
+#if DEBUG
+using System.Diagnostics;
+#endif
 
 namespace Pixeval;
 

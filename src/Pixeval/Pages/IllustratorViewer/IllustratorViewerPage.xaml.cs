@@ -32,7 +32,7 @@ using Pixeval.Controls.Windowing;
 using Pixeval.Utilities;
 using Microsoft.UI.Xaml.Media.Animation;
 using Pixeval.Util.UI;
-using Pixeval.Controls;
+using Pixeval.Misc;
 
 namespace Pixeval.Pages.IllustratorViewer;
 
@@ -95,7 +95,7 @@ public sealed partial class IllustratorViewerPage
 
     private ScrollView? StickyHeaderScrollView_OnSetInnerScrollView()
     {
-        return IllustratorViewerFrame.Content is IllustratorContentViewerSubPage { ScrollView: { } scrollView } ? scrollView : null;
+        return IllustratorViewerFrame.Content is IScrollViewProvider { ScrollView: { } scrollView } ? scrollView : null;
     }
 
 #if false // TODO 这是什么

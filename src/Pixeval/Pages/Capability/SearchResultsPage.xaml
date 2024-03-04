@@ -5,11 +5,6 @@
     xmlns:controls="using:Pixeval.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    ClearCacheAfterNavigation="True"
     mc:Ignorable="d">
-    <controls:IllustrationContainer x:Name="IllustrationContainer">
-        <controls:IllustrationContainer.CommandBarElements>
-            <controls:SortOptionComboBox x:Name="SortOptionComboBox" SelectionChangedWhenLoaded="SortOptionComboBox_OnSelectionChanged" />
-        </controls:IllustrationContainer.CommandBarElements>
-    </controls:IllustrationContainer>
+    <controls:IllustrationContainer x:Name="IllustrationContainer" />
 </controls:EnhancedPage>

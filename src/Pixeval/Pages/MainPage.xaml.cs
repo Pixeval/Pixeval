@@ -55,6 +55,8 @@ using WinUI3Utilities;
 using Pixeval.AppManagement;
 using Pixeval.Controls.Windowing;
 using Pixeval.Logging;
+using Pixeval.Pages.IllustrationViewer;
+using Pixeval.Pages.IllustratorViewer;
 
 namespace Pixeval.Pages;
 
@@ -96,10 +98,6 @@ public sealed partial class MainPage : SupportCustomTitleBarDragRegionPage
     {
         App.AppViewModel.AppLoggedIn();
 
-        // dirty trick, the order of the menu items is the same as the order of the fields in MainPageTabItem
-        // since enums are basically integers, we just need a cast to transform it to the correct offset.
-        NavigationView.SelectedItem = NavigationView.MenuItems[(int)App.AppViewModel.AppSettings.DefaultSelectedTabItem];
-
         // The application is invoked by a protocol, call the corresponding protocol handler.
         if (App.AppViewModel.ConsumeProtocolActivation())
         {
@@ -112,9 +110,16 @@ public sealed partial class MainPage : SupportCustomTitleBarDragRegionPage
             PerformSearch(message.Tag);
         });
         using var client = new HttpClient();
-        _ = await AppInfo.AppVersion.CheckForUpdateAsync(client);
+        await AppInfo.AppVersion.GitHubCheckForUpdateAsync(client);
         if (AppInfo.AppVersion.UpdateAvailable)
             InfoBadge.Visibility = Visibility.Visible;
+    }
+
+    private void MainPage_OnLoaded(object sender, RoutedEventArgs e)
+    {
+        // dirty trick, the order of the menu items is the same as the order of the fields in MainPageTabItem
+        // since enums are basically integers, we just need a cast to transform it to the correct offset.
+        NavigationView.SelectedItem = NavigationView.MenuItems[(int)App.AppViewModel.AppSettings.DefaultSelectedTabItem];
     }
 
     private void NavigationView_OnSelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
@@ -145,6 +150,8 @@ public sealed partial class MainPage : SupportCustomTitleBarDragRegionPage
 
     private async void KeywordAutoSuggestBox_GotFocus(object sender, RoutedEventArgs e)
     {
+        if (FocusManager.GetFocusedElement(XamlRoot) is not TextBox)
+            return;
         var suggestBox = (AutoSuggestBox)sender;
         suggestBox.IsSuggestionListOpen = true;
         await _viewModel.SuggestionProvider.UpdateAsync(suggestBox.Text);
@@ -157,6 +164,19 @@ public sealed partial class MainPage : SupportCustomTitleBarDragRegionPage
     /// <param name="args"></param>
     private void KeywordAutoSuggestBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
     {
+        if (args.ChosenSuggestion is SuggestionModel
+            {
+                SuggestionType:
+                SuggestionType.Settings or
+                SuggestionType.IllustId or
+                SuggestionType.UserId or
+                SuggestionType.IllustrationAutoCompleteTagHeader or
+                SuggestionType.IllustrationTrendingTagHeader or
+                SuggestionType.NovelTrendingTagHeader or
+                SuggestionType.SettingEntryHeader
+            })
+            return;
+
         if (args.QueryText.IsNullOrBlank())
         {
             _ = this.CreateAcknowledgementAsync(MainPageResources.SearchKeywordCannotBeBlankTitle,
@@ -166,8 +186,6 @@ public sealed partial class MainPage : SupportCustomTitleBarDragRegionPage
 
         switch (args.ChosenSuggestion)
         {
-            case SuggestionModel { SuggestionType: SuggestionType.Settings or SuggestionType.IllustrationAutoCompleteTagHeader or SuggestionType.IllustrationTrendingTagHeader or SuggestionType.NovelTrendingTagHeader or SuggestionType.SettingEntryHeader }:
-                return;
             case SuggestionModel({ } name, var translatedName, _):
                 PerformSearch(name, translatedName);
                 break;
@@ -177,16 +195,23 @@ public sealed partial class MainPage : SupportCustomTitleBarDragRegionPage
         }
     }
 
-    private async void KeywordAutoSuggestBox_OnSuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
+    private async void KeywordAutoSuggestBox_OnSuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs e)
     {
-        if (args.SelectedItem is SuggestionModel { Name: { Length: > 0 } name, SuggestionType: var type })
+        if (e.SelectedItem is SuggestionModel { Name: { Length: > 0 } name, SuggestionType: var type })
         {
             switch (type)
             {
+                case SuggestionType.IllustId:
+                    if (long.TryParse(sender.Text, out var illustId))
+                        await IllustrationViewerHelper.CreateWindowWithPageAsync(illustId);
+                    break;
+                case SuggestionType.UserId:
+                    if (long.TryParse(sender.Text, out var userId))
+                        await IllustratorViewerHelper.CreateWindowWithPageAsync(userId);
+                    break;
                 case SuggestionType.Settings:
-                    if (SettingEntry.LazyValues.Value.FirstOrDefault(se => se.GetLocalizedResourceContent() == name)
-                       ?.Let(NavigateToSettingEntryAsync) is { } task)
-                        await task;
+                    if (SettingEntry.LazyValues.Value.FirstOrDefault(se => se.GetLocalizedResourceContent() == name) is { } entry)
+                        await NavigateToSettingEntryAsync(entry);
                     break;
                 default:
                     sender.Text = name;
@@ -237,20 +262,21 @@ public sealed partial class MainPage : SupportCustomTitleBarDragRegionPage
 
     private async Task NavigateToSettingEntryAsync(SettingEntry entry)
     {
-        // ScrollView第一次导航的时候会有一个偏移，所以我们需要手动调整一下
-        var offset = MainPageRootFrame.Content is SettingsPage ? 0 : 60;
         NavigationView.SelectedItem = SettingsTab;
         var settingsPage = await MainPageRootFrame.AwaitPageTransitionAsync<SettingsPage>();
-        var panel = settingsPage.SettingsPageScrollView.Content.To<FrameworkElement>();
+        var panel = settingsPage.SettingsPageScrollView.ScrollPresenter.Content.To<FrameworkElement>();
         var frameworkElement = panel.FindChild<FrameworkElement>(element => element.Tag is SettingEntry e && e == entry);
 
         if (frameworkElement is not null)
         {
+            // ScrollView第一次导航的时候会有一个偏移，等待大小确定后滚动
+            await Task.Delay(10);
+
             var position = frameworkElement
                 .TransformToVisual(panel)
                 .TransformPoint(new Point(0, 0));
 
-            _ = settingsPage.SettingsPageScrollView.ScrollTo(position.X, position.Y - offset);
+            _ = settingsPage.SettingsPageScrollView.ScrollTo(position.X, position.Y);
         }
     }
 
@@ -268,12 +294,9 @@ public sealed partial class MainPage : SupportCustomTitleBarDragRegionPage
                 e.Handled = true; // prevent the event from bubbling if it contains an image, since it means that we want to do reverse search.
                 await using var stream = await file.OpenStreamForReadAsync();
                 if (App.AppViewModel.AppSettings.ReverseSearchApiKey is not { Length: > 0 })
-                {
                     await ShowReverseSearchApiKeyNotPresentDialog();
-                    return;
-                }
-
-                await _viewModel.ReverseSearchAsync(stream);
+                else
+                    await _viewModel.ReverseSearchAsync(stream);
             }
         }
     }

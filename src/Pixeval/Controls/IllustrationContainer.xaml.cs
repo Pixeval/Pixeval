@@ -33,12 +33,14 @@ using Pixeval.Util;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using WinUI3Utilities;
-using WinUI3Utilities.Attributes;
+using Pixeval.Misc;
 
 namespace Pixeval.Controls;
 
-[DependencyProperty<bool>("ShowCommandBar", "true")]
-public sealed partial class IllustrationContainer
+/// <summary>
+/// 所有插画集合通用的容器
+/// </summary>
+public sealed partial class IllustrationContainer : IScrollViewProvider
 {
     /// <summary>
     /// The command elements that will appear at the left of the TopCommandBar
@@ -62,6 +64,13 @@ public sealed partial class IllustrationContainer
         };
         PrimaryCommandsSupplements.CollectionChanged += (_, args) => AddCommandCallback(args, CommandBar.PrimaryCommands);
         SecondaryCommandsSupplements.CollectionChanged += (_, args) => AddCommandCallback(args, CommandBar.SecondaryCommands);
+        ViewModel.PropertyChanged+= (_, e) =>
+        {
+            if (e.PropertyName is nameof(IllustrationViewViewModel.IsSelecting))
+            {
+                CommandBar.UpdateLayout();
+            }
+        };
 
         return;
 
@@ -86,16 +95,35 @@ public sealed partial class IllustrationContainer
         _ = IllustrationView.Focus(FocusState.Programmatic);
     }
 
-    public void ScrollToTop()
-    {
-        _ = IllustrationView.ScrollView.ScrollTo(0, 0);
-    }
-
     private FilterSettings _lastFilterSettings = FilterSettings.Default;
 
     private void SelectAllToggleButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
         IllustrationView.IllustrationItemsView.SelectAll();
+    }
+
+    private void SortOptionComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (ViewModel is { } vm)
+        {
+            switch (sender.To<SortOptionComboBox>().GetSortDescription())
+            {
+                case { } desc:
+                    vm.SetSortDescription(desc);
+                    ScrollToTop();
+                    break;
+                default:
+                    // reset the view so that it can resort its item to the initial order
+                    vm.ClearSortDescription();
+                    ScrollToTop();
+                    break;
+            }
+        }
+    }
+
+    private void ScrollToTop()
+    {
+        _ = IllustrationView.ScrollView.ScrollTo(0, 0);
     }
 
     private async void AddAllToBookmarkButton_OnTapped(object sender, TappedRoutedEventArgs e)
@@ -131,7 +159,7 @@ public sealed partial class IllustrationContainer
             return;
         }
 
-        foreach (var i in ViewModel.SelectedIllustrations) 
+        foreach (var i in ViewModel.SelectedIllustrations)
             i.SaveCommand.Execute(null);
 
         this.ShowTeachingTipAndHide(IllustrationViewCommandBarResources.DownloadItemsQueuedFormatted.Format(ViewModel.SelectedIllustrations.Length));
@@ -230,4 +258,6 @@ public sealed partial class IllustrationContainer
                    || o.Illustrate.Tags.Any(x => x.Name.Contains(text) || (x.TranslatedName?.Contains(text) ?? false))
                    || o.Illustrate.Title.Contains(text);
     }
+
+    public ScrollView ScrollView => IllustrationView.ScrollView;
 }

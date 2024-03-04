@@ -21,7 +21,7 @@
 using CommunityToolkit.WinUI.Collections;
 using Pixeval.CoreApi.Model;
 
-namespace Pixeval.Controls.Illustrate;
+namespace Pixeval.Controls;
 
 public abstract class SortableIllustrateViewViewModel<T, TViewModel> : IllustrateViewViewModel<T, TViewModel> where T : class, IEntry where TViewModel : IllustrateViewModel<T>
 {

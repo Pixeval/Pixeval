@@ -20,15 +20,13 @@
 
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
+using Pixeval.Misc;
 
 namespace Pixeval.Pages.Capability;
 
-public sealed partial class FollowingsPage
+public sealed partial class FollowingsPage : IScrollViewProvider
 {
-    public FollowingsPage()
-    {
-        InitializeComponent();
-    }
+    public FollowingsPage() => InitializeComponent();
 
     private long _uid = -1;
 
@@ -51,4 +49,6 @@ public sealed partial class FollowingsPage
     {
         IllustratorView.ViewModel.ResetEngine(App.AppViewModel.MakoClient.Following(_uid, PrivacyPolicyComboBox.SelectedItem));
     }
+
+    public ScrollView ScrollView => IllustratorView.ScrollView;
 }

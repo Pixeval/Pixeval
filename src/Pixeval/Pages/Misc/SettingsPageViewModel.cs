@@ -49,11 +49,12 @@ using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
 using System.ComponentModel;
 using System.Collections.ObjectModel;
+using Pixeval.Utilities.Threading;
 
 namespace Pixeval.Pages.Misc;
 
 [SettingsViewModel<AppSettings>(nameof(AppSetting))]
-public partial class SettingsPageViewModel(FrameworkElement frameworkElement) : UiObservableObject(frameworkElement)
+public partial class SettingsPageViewModel(FrameworkElement frameworkElement) : UiObservableObject(frameworkElement), IDisposable
 {
     public static IEnumerable<string> AvailableFonts { get; }
 
@@ -75,17 +76,23 @@ public partial class SettingsPageViewModel(FrameworkElement frameworkElement) : 
 
     [ObservableProperty] private double _downloadingUpdateProgress;
 
-    [ObservableProperty] private string _updateMessage = "";
+    [ObservableProperty] private string? _updateMessage;
+
+    [ObservableProperty] private bool _expandExpander;
+
+    private CancellationHandle? _cancellationHandle;
 
     public string UpdateInfo => AppInfo.AppVersion.UpdateState switch
     {
-        UpdateState.MajorUpdate => SettingsPageResources.MajorUpdateAvailable.Format(AppInfo.AppVersion.NewestVersion),
-        UpdateState.MinorUpdate => SettingsPageResources.MinorUpdateAvailable.Format(AppInfo.AppVersion.NewestVersion),
-        UpdateState.PatchUpdate or UpdateState.SpecifierUpdate => SettingsPageResources.PatchUpdateAvailable.Format(AppInfo.AppVersion.NewestVersion),
+        UpdateState.MajorUpdate => SettingsPageResources.MajorUpdateAvailable,
+        UpdateState.MinorUpdate => SettingsPageResources.MinorUpdateAvailable,
+        UpdateState.BuildUpdate or UpdateState.SpecifierUpdate => SettingsPageResources.BuildUpdateAvailable,
         UpdateState.Insider => SettingsPageResources.IsInsider,
         UpdateState.UpToDate => SettingsPageResources.IsUpToDate,
         _ => SettingsPageResources.UnknownUpdateState
     };
+
+    public string? NewestVersion => AppInfo.AppVersion.UpdateAvailable ? AppInfo.AppVersion.NewestVersion?.ToString() : null;
 
     public InfoBarSeverity UpdateInfoSeverity => AppInfo.AppVersion.UpdateState switch
     {
@@ -98,65 +105,102 @@ public partial class SettingsPageViewModel(FrameworkElement frameworkElement) : 
     {
         if (CheckingUpdate)
             return;
+        var downloaded = false;
         try
         {
+            _cancellationHandle = new CancellationHandle();
             CheckingUpdate = true;
             UpdateMessage = SettingsPageResources.CheckingForUpdate;
             using var client = new HttpClient();
-            var appReleaseModel = await AppInfo.AppVersion.CheckForUpdateAsync(client);
+            await AppInfo.AppVersion.GitHubCheckForUpdateAsync(client);
+            var appReleaseModel = AppInfo.AppVersion.NewestAppReleaseModel;
             OnPropertyChanged(nameof(UpdateInfo));
+            OnPropertyChanged(nameof(NewestVersion));
             OnPropertyChanged(nameof(UpdateInfoSeverity));
             OnPropertyChanged(nameof(LastCheckedUpdate));
-            if (AppInfo.AppVersion.UpdateAvailable)
+            if (!AppInfo.AppVersion.UpdateAvailable)
             {
-                DownloadingUpdate = true;
-                UpdateMessage = SettingsPageResources.DownloadingUpdate;
-                var result = await client.DownloadStreamAsync(appReleaseModel!.ReleaseUri, new Progress<double>(progress => DownloadingUpdateProgress = progress));
-                // ReSharper disable once DisposeOnUsingVariable
-                client.Dispose();
+                UpdateMessage = null;
+                return;
+            }
 
-                DownloadingUpdate = false;
+            DownloadingUpdate = true;
+            UpdateMessage = SettingsPageResources.DownloadingUpdate;
+            var result = await client.DownloadStreamAsync(appReleaseModel!.ReleaseUri,
+                new Progress<double>(progress => DownloadingUpdateProgress = progress), _cancellationHandle);
+            // ReSharper disable once DisposeOnUsingVariable
+            client.Dispose();
 
-                if (result is Result<Stream>.Success { Value: var value })
+            DownloadingUpdate = false;
+            DownloadingUpdateProgress = 0;
+
+            if (result is Result<Stream>.Success { Value: var value })
+            {
+                UpdateMessage = SettingsPageResources.Unzipping;
+                using var archive = new ZipArchive(value, ZipArchiveMode.Read);
+                var destUrl = null as string;
+                var directoryPath = Path.Combine(AppKnownFolders.Temporary.Self.Path, $"Pixeval {appReleaseModel.Version}\\");
+                foreach (var entry in archive.Entries)
                 {
-                    UpdateMessage = SettingsPageResources.Unzipping;
-                    using var archive = new ZipArchive(value, ZipArchiveMode.Read);
-                    var destUrl = null as string;
-                    foreach (var entry in archive.Entries)
-                    {
-                        var path = AppKnownFolders.Local.Self.Path + entry.FullName.Replace('/', '\\');
-                        if (entry.FullName.EndsWith('/'))
-                            continue;
+                    if (_cancellationHandle is { IsCancelled: true })
+                        return;
+                    var path = directoryPath + entry.FullName.Replace('/', '\\');
+                    if (entry.FullName.EndsWith('/'))
+                        continue;
 
-                        if (entry.FullName.EndsWith("Install.ps1"))
-                            destUrl = path;
-                        IoHelper.CreateParentDirectories(path);
-                        await using var stream = entry.Open();
-                        await using var fileStream = File.OpenWrite(path);
-                        await stream.CopyToAsync(fileStream);
-                    }
+                    if (entry.FullName.EndsWith("Install.ps1"))
+                        destUrl = path;
+                    IoHelper.CreateParentDirectories(path);
+                    await using var stream = entry.Open();
+                    await using var fileStream = File.OpenWrite(path);
+                    await stream.CopyToAsync(fileStream);
+                }
 
-                    if (destUrl is not null
-                        && await FrameworkElement.CreateOkCancelAsync(SettingsPageResources.UpdateApp,
+                downloaded = true;
+                if (destUrl is not null)
+                {
+                    if (_cancellationHandle is { IsCancelled: true })
+                        return;
+                    if (await FrameworkElement.CreateOkCancelAsync(SettingsPageResources.UpdateApp,
                             SettingsPageResources.DownloadedAndWaitingToInstall) is ContentDialogResult.Primary)
                     {
                         var process = new Process
                         {
-                            StartInfo = new ProcessStartInfo("powershell", $"-ExecutionPolicy Unrestricted -noexit \"&'{destUrl}'\"")
-                            {
-                                UseShellExecute = false,
-                                Verb = "runas"
-                            }
+                            StartInfo =
+                                new ProcessStartInfo("powershell", $"-ExecutionPolicy Unrestricted -noexit \"&'{destUrl}'\"")
+                                {
+                                    UseShellExecute = false,
+                                    Verb = "runas"
+                                }
                         };
                         _ = process.Start();
                         await process.WaitForExitAsync();
+                        UpdateMessage = null;
                     }
+                    else
+                        UpdateMessage = SettingsPageResources.InstallCanceled;
+                }
+                else
+                {
+                    UpdateMessage = SettingsPageResources.UpdateFailedInTempFolder;
+                    ExpandExpander = true;
                 }
             }
+        }
+        catch
+        {
+            if (downloaded)
+            {
+                UpdateMessage = SettingsPageResources.UpdateFailedInTempFolder;
+                ExpandExpander = true;
+            }
+            else
+                UpdateMessage = SettingsPageResources.UpdateFailed;
         }
         finally
         {
             CheckingUpdate = false;
+            CancelToken();
         }
     }
 
@@ -238,5 +282,16 @@ public partial class SettingsPageViewModel(FrameworkElement frameworkElement) : 
     {
         AppSetting.PixivApiNameResolver = [.. PixivApiNameResolver];
         AppSetting.PixivImageNameResolver = [.. PixivImageNameResolver];
+    }
+
+    public void CancelToken()
+    {
+        _cancellationHandle?.Cancel();
+        _cancellationHandle = null;
+    }
+
+    public void Dispose()
+    {
+        CancelToken();
     }
 }

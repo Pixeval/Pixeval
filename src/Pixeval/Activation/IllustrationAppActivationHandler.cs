@@ -20,7 +20,6 @@
 
 using System;
 using System.Threading.Tasks;
-using Pixeval.Controls;
 using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Util.Threading;
 using Pixeval.Util.UI;
@@ -43,15 +42,13 @@ public class IllustrationAppActivationHandler : IAppActivationHandler
         {
             try
             {
-                var viewModel = new IllustrationItemViewModel(await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(id));
-
-                viewModel.CreateWindowWithPage([viewModel]);
+                await IllustrationViewerHelper.CreateWindowWithPageAsync(id);
             }
             catch (Exception e)
             {
                 ToastNotificationHelper.ShowTextToastNotification(
-                    ActivationsResources.IllustrationActivationFailedTitle,
-                    ActivationsResources.IllustrationActivationFailedContentFormatted.Format(e.Message));
+                    ActivationsResources.IllustrateActivationFailedTitle,
+                    ActivationsResources.IllustrateActivationFailedContentFormatted.Format(e.Message));
             }
         });
     }

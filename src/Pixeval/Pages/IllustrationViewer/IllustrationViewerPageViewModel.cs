@@ -45,9 +45,6 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
     [ObservableProperty]
     private bool _isFullScreen;
 
-    [ObservableProperty]
-    private bool _isInfoPaneOpen;
-
     // The reason why we don't put UserProfileImageSource into IllustrationViewModel
     // is because the whole array of Illustrations is just representing the same 
     // illustration's different manga pages, so all of them have the same illustrator
@@ -175,7 +172,7 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
             OnButtonPropertiesChanged();
             // 用OnPropertyChanged不会触发导航，但可以让UI页码更新
             OnPropertyChanged(nameof(CurrentPageIndex));
-            CurrentImage = new ImageViewerPageViewModel(this, CurrentPage);
+            CurrentImage = new ImageViewerPageViewModel(CurrentPage, FrameworkElement);
 
             OnDetailedPropertyChanged(oldValue, value, oldTag, CurrentPage.Id);
             OnPropertyChanged(nameof(CurrentIllustration));
@@ -207,15 +204,13 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
             var oldValue = _currentPageIndex;
             _currentPageIndex = value;
             OnButtonPropertiesChanged();
-            CurrentImage = new ImageViewerPageViewModel(this, CurrentPage);
+            CurrentImage = new ImageViewerPageViewModel(CurrentPage, FrameworkElement);
             OnDetailedPropertyChanged(oldValue, value);
         }
     }
 
     private void OnButtonPropertiesChanged()
     {
-        OnPropertyChanged(nameof(NextButtonVisible));
-        OnPropertyChanged(nameof(PrevButtonVisible));
         OnPropertyChanged(nameof(NextButtonText));
         OnPropertyChanged(nameof(PrevButtonText));
     }
@@ -263,8 +258,6 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
         _ => null
     };
 
-    public Visibility NextButtonVisible => NextButtonAction is null ? Visibility.Collapsed : Visibility.Visible;
-
     /// <summary>
     /// <see langword="true"/>: next page<br/>
     /// <see langword="false"/>: next illustration<br/>
@@ -295,8 +288,6 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
         false => IllustrateViewerPageResources.PrevIllustration,
         _ => null
     };
-
-    public Visibility PrevButtonVisible => PrevButtonAction is null ? Visibility.Collapsed : Visibility.Visible;
 
     /// <summary>
     /// <see langword="true"/>: prev page<br/>
@@ -338,9 +329,9 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
     }
 
     public XamlUICommand IllustrationInfoAndCommentsCommand { get; } =
-        IllustrateViewerPageResources.IllustrationInfoAndComments.GetCommand(FontIconSymbols.InfoE946, VirtualKey.F12);
+        IllustrateViewerPageResources.IllustrationInfoAndComments.GetCommand(FontIconSymbol.InfoE946, VirtualKey.F12);
 
-    public XamlUICommand FullScreenCommand { get; } = "".GetCommand(FontIconSymbols.FullScreenE740);
+    public XamlUICommand FullScreenCommand { get; } = "".GetCommand(FontIconSymbol.FullScreenE740);
 
     #endregion
 }

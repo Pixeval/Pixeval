@@ -29,6 +29,7 @@ using Windows.System;
 using Windows.System.UserProfile;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
 using Pixeval.Attributes;
 using Pixeval.Controls;
@@ -119,9 +120,8 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
         }
     }
 
-    public ImageViewerPageViewModel(IllustrationViewerPageViewModel illustrationViewerPageViewModel, IllustrationItemViewModel illustrationViewModel) : base(illustrationViewerPageViewModel.FrameworkElement)
+    public ImageViewerPageViewModel(IllustrationItemViewModel illustrationViewModel, FrameworkElement frameworkElement) : base(frameworkElement)
     {
-        IllustrationViewerPageViewModel = illustrationViewerPageViewModel;
         IllustrationViewModel = illustrationViewModel;
         _ = LoadImage();
 
@@ -160,12 +160,6 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
 
     public CancellationHandle ImageLoadingCancellationHandle { get; } = new();
 
-    /// <summary>
-    /// The view model of the <see cref="IllustrationViewerPage" /> that hosts the owner <see cref="ImageViewerPage" />
-    /// of this <see cref="ImageViewerPageViewModel" />
-    /// </summary>
-    public IllustrationViewerPageViewModel IllustrationViewerPageViewModel { get; }
-
     public IllustrationItemViewModel IllustrationViewModel { get; }
 
     public void Dispose()
@@ -184,28 +178,32 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
         };
     }
 
-    private void AddHistory()
-    {
-        using var scope = App.AppViewModel.AppServicesScope;
-        var manager = scope.ServiceProvider.GetRequiredService<BrowseHistoryPersistentManager>();
-        _ = manager.Delete(x => x.Id == IllustrationViewModel.Id);
-        manager.Insert(new BrowseHistoryEntry { Id = IllustrationViewModel.Id });
-    }
-
     private async Task LoadImage()
     {
         if (!LoadSuccessfully || _disposed)
         {
             _disposed = false;
-            _ = IllustrationViewModel.TryLoadThumbnailAsync(this).ContinueWith(
-                _ => OriginalImageSources ??= [IllustrationViewModel.ThumbnailStream!],
-                TaskScheduler.FromCurrentSynchronizationContext());
+            _ = LoadThumbnail();
             AddHistory();
             await LoadOriginalImage();
             IllustrationViewModel.UnloadThumbnail(this);
         }
 
         return;
+
+        async Task LoadThumbnail()
+        {
+            _ = await IllustrationViewModel.TryLoadThumbnailAsync(this);
+            OriginalImageSources ??= [IllustrationViewModel.ThumbnailStream!];
+        }
+
+        void AddHistory()
+        {
+            using var scope = App.AppViewModel.AppServicesScope;
+            var manager = scope.ServiceProvider.GetRequiredService<BrowseHistoryPersistentManager>();
+            _ = manager.Delete(x => x.Id == IllustrationViewModel.Id);
+            manager.Insert(new BrowseHistoryEntry { Id = IllustrationViewModel.Id });
+        }
 
         async Task LoadOriginalImage()
         {
@@ -374,36 +372,36 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
     private void IsNotUgoiraAndLoadingCompletedCanExecuteRequested(XamlUICommand sender, CanExecuteRequestedEventArgs args) => args.CanExecute = !IllustrationViewModel.IsUgoira && LoadSuccessfully;
 
     public XamlUICommand SaveCommand { get; } = IllustrateItemResources.Save.GetCommand(
-        FontIconSymbols.SaveE74E, VirtualKeyModifiers.Control, VirtualKey.S);
+        FontIconSymbol.SaveE74E, VirtualKeyModifiers.Control, VirtualKey.S);
 
     public XamlUICommand SaveAsCommand { get; } = IllustrateItemResources.SaveAs.GetCommand(
-        FontIconSymbols.SaveAsE792, VirtualKeyModifiers.Control | VirtualKeyModifiers.Shift, VirtualKey.S);
+        FontIconSymbol.SaveAsE792, VirtualKeyModifiers.Control | VirtualKeyModifiers.Shift, VirtualKey.S);
 
     public XamlUICommand CopyCommand { get; } = IllustrateItemResources.Copy.GetCommand(
-        FontIconSymbols.CopyE8C8, VirtualKeyModifiers.Control, VirtualKey.C);
+        FontIconSymbol.CopyE8C8, VirtualKeyModifiers.Control, VirtualKey.C);
 
-    public XamlUICommand PlayGifCommand { get; } = "".GetCommand(FontIconSymbols.StopE71A);
+    public XamlUICommand PlayGifCommand { get; } = "".GetCommand(FontIconSymbol.StopE71A);
 
     public XamlUICommand ZoomOutCommand { get; } = IllustrateViewerPageResources.ZoomOut.GetCommand(
-        FontIconSymbols.ZoomOutE71F, VirtualKey.Subtract);
+        FontIconSymbol.ZoomOutE71F, VirtualKey.Subtract);
 
     public XamlUICommand ZoomInCommand { get; } = IllustrateViewerPageResources.ZoomIn.GetCommand(
-        FontIconSymbols.ZoomInE8A3, VirtualKey.Add);
+        FontIconSymbol.ZoomInE8A3, VirtualKey.Add);
 
     public XamlUICommand RotateClockwiseCommand { get; } = IllustrateViewerPageResources.RotateClockwise.GetCommand(
-        FontIconSymbols.RotateE7AD, VirtualKeyModifiers.Control, VirtualKey.R);
+        FontIconSymbol.RotateE7AD, VirtualKeyModifiers.Control, VirtualKey.R);
 
     public XamlUICommand RotateCounterclockwiseCommand { get; } = IllustrateViewerPageResources.RotateCounterclockwise.GetCommand(
             null!, VirtualKeyModifiers.Control, VirtualKey.L);
 
     public XamlUICommand MirrorCommand { get; } = IllustrateViewerPageResources.Mirror.GetCommand(
-            FontIconSymbols.CollatePortraitF57C, VirtualKeyModifiers.Control, VirtualKey.M);
+            FontIconSymbol.CollatePortraitF57C, VirtualKeyModifiers.Control, VirtualKey.M);
 
-    public XamlUICommand RestoreResolutionCommand { get; } = "".GetCommand(FontIconSymbols.WebcamE8B8);
+    public XamlUICommand RestoreResolutionCommand { get; } = "".GetCommand(FontIconSymbol.WebcamE8B8);
 
     public StandardUICommand ShareCommand { get; } = new(StandardUICommandKind.Share);
 
-    public XamlUICommand SetAsCommand { get; } = IllustrateViewerPageResources.SetAs.GetCommand(FontIconSymbols.PersonalizeE771);
+    public XamlUICommand SetAsCommand { get; } = IllustrateViewerPageResources.SetAs.GetCommand(FontIconSymbol.PersonalizeE771);
 
     public XamlUICommand SetAsLockScreenCommand { get; } = new() { Label = IllustrateViewerPageResources.LockScreen };
 

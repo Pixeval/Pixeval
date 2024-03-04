@@ -20,26 +20,14 @@
 
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
-using Pixeval.Controls;
 using Pixeval.CoreApi.Global.Enum;
-using Pixeval.Misc;
 using Pixeval.Util.UI;
 
 namespace Pixeval.Pages.Capability;
 
-public sealed partial class RecommendationPage : ISortedIllustrationContainerPageHelper
+public sealed partial class RecommendationPage
 {
     public RecommendationPage() => InitializeComponent();
-
-    public IllustrationContainer ViewModelProvider => IllustrationContainer;
-
-    public SortOptionComboBox SortOptionProvider => SortOptionComboBox;
-
-    public override void OnPageDeactivated(NavigatingCancelEventArgs e)
-    {
-        ModeSelectionComboBox.SelectionChangedWhenLoaded -= ModeSelectionComboBox_OnSelectionChangedWhenLoaded;
-        SortOptionComboBox.SelectionChangedWhenLoaded -= SortOptionComboBox_OnSelectionChanged;
-    }
 
     public override void OnPageActivated(NavigationEventArgs e)
     {
@@ -50,13 +38,6 @@ public sealed partial class RecommendationPage : ISortedIllustrationContainerPag
     private void ModeSelectionComboBox_OnSelectionChangedWhenLoaded(object? sender, SelectionChangedEventArgs e)
     {
         ChangeSource();
-    }
-
-    private void SortOptionComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
-    {
-        // FUCK C#, the default implementations are not inherited. We have to use this stupid cast here.
-        // even a donkey knows "this" is an "ISortedIllustrationContainerPageHelper"
-        ((ISortedIllustrationContainerPageHelper)this).OnSortOptionChanged();
     }
 
     private void ChangeSource()

@@ -21,6 +21,7 @@
 using System;
 using System.Globalization;
 using Windows.Foundation;
+using Microsoft.UI.Composition.SystemBackdrops;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Pixeval.Attributes;
@@ -54,7 +55,7 @@ public partial record AppSettings : IWindowSettings
     public ElementTheme Theme { get; set; } = ElementTheme.Default;
 
     [SettingMetadata(SettingEntryCategory.Application, typeof(SettingsPageResources), nameof(SettingsPageResources.BackdropEntryHeader))]
-    public BackdropType Backdrop { get; set; } = BackdropType.MicaAlt;
+    public BackdropType Backdrop { get; set; } = MicaController.IsSupported() ? BackdropType.MicaAlt : DesktopAcrylicController.IsSupported() ? BackdropType.Acrylic : BackdropType.None;
 
     /// <summary>
     /// Disable the domain fronting technology, once disabled, the users
@@ -79,7 +80,7 @@ public partial record AppSettings : IWindowSettings
 
     [SettingMetadata(SettingEntryCategory.Application, typeof(SettingsPageResources), nameof(SettingsPageResources.DefaultSelectedTabEntryHeader))]
     public MainPageTabItem DefaultSelectedTabItem { get; set; } = MainPageTabItem.DailyRecommendation;
-    
+
     [SettingMetadata(SettingEntryCategory.Download, typeof(SettingsPageResources), nameof(SettingsPageResources.DefaultDownloadPathMacroEntryHeader))]
     public string DefaultDownloadPathMacro { get; set; } =
         Environment.GetFolderPath(Environment.SpecialFolder.MyPictures, Environment.SpecialFolderOption.Create)
@@ -234,7 +235,7 @@ public partial record AppSettings : IWindowSettings
     [AttributeIgnore(typeof(SettingsViewModelAttribute<>))]
     [SyntheticSetting]
     public string TagsManagerWorkingPath { get; set; } = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures, Environment.SpecialFolderOption.Create);
-    
+
     [AttributeIgnore(typeof(SettingsViewModelAttribute<>))]
     [SyntheticSetting]
     public string UserName { get; set; } = "";

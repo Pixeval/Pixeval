@@ -23,9 +23,8 @@ using System.ComponentModel;
 using CommunityToolkit.WinUI.Collections;
 using Pixeval.Collections;
 using Pixeval.CoreApi.Engine;
-using Pixeval.Misc;
 
-namespace Pixeval.Controls.Illustrate;
+namespace Pixeval.Controls;
 
 public interface IDataProvider<T, TViewModel> : INotifyPropertyChanged, INotifyPropertyChanging, IDisposable where T : class where TViewModel : class
 {

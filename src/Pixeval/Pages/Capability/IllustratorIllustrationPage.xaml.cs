@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/IllustratorMangaPage.xaml.cs
+// Copyright (c) 2023 Pixeval/IllustratorIllustrationPage.xaml.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,18 +18,21 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-namespace Pixeval.Controls.IllustratorContentViewer;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Navigation;
+using Pixeval.Misc;
 
-public sealed partial class IllustratorMangaPage 
+namespace Pixeval.Pages.Capability;
+
+public sealed partial class IllustratorIllustrationPage : IScrollViewProvider
 {
-    public IllustratorMangaPage() => InitializeComponent();
+    public IllustratorIllustrationPage() => InitializeComponent();
 
-    public override IllustrationContainer ViewModelProvider => IllustrationContainer;
+    public ScrollView ScrollView => IllustrationContainer.ScrollView;
 
-    public override SortOptionComboBox SortOptionProvider => SortOptionComboBox;
-
-    public override void OnPageActivated(long id)
+    public override void OnPageActivated(NavigationEventArgs e)
     {
-        IllustrationContainer.ViewModel.ResetEngine(App.AppViewModel.MakoClient.MangaPosts(id, App.AppViewModel.AppSettings.TargetFilter));
+        if (e.Parameter is long id)
+            IllustrationContainer.ViewModel.ResetEngine(App.AppViewModel.MakoClient.Posts(id));
     }
 }

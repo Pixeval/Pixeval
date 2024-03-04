@@ -5,6 +5,7 @@
     xmlns:controls="using:Pixeval.Controls"
     xmlns:converters="using:CommunityToolkit.WinUI.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:Pixeval.Controls.FlyoutContent"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
     <Grid.Resources>
@@ -20,6 +21,7 @@
         Grid.Row="0"
         x:Load="{x:Bind ViewModel.RepliesIsNotNull, Converter={StaticResource BoolNegationConverter}, Mode=OneWay}">
         <Image
+            Width="200"
             Height="200"
             Source="/Assets/Images/empty-box.png"
             Stretch="Uniform" />

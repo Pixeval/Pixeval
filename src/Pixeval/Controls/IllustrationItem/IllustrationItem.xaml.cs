@@ -22,7 +22,6 @@ using System;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.Options;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
@@ -75,8 +74,6 @@ public sealed partial class IllustrationItem
             _ => ThrowHelper.ArgumentOutOfRange<ThumbnailDirection, double>(thumbnailDirection)
         };
     }
-
-    private Visibility IsImageNotVisible(SoftwareBitmapSource? source) => source is null ? Visibility.Visible : Visibility.Collapsed;
 
     #endregion
 }

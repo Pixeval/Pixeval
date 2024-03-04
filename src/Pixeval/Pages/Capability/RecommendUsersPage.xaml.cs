@@ -4,12 +4,13 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Controls;
 using Pixeval.CoreApi.Net.Response;
+using Pixeval.Misc;
 using Pixeval.Pages.IllustratorViewer;
 using WinUI3Utilities;
 
 namespace Pixeval.Pages.Capability;
 
-public sealed partial class RecommendUsersPage
+public sealed partial class RecommendUsersPage : IScrollViewProvider
 {
     public RecommendUsersPage() => InitializeComponent();
 
@@ -45,4 +46,6 @@ public sealed partial class RecommendUsersPage
     {
         await IllustratorViewerHelper.CreateWindowWithPageAsync(e.InvokedItem.To<RecommendIllustratorItemViewModel>().UserId);
     }
+
+    public ScrollView ScrollView => AdvancedItemsView.ScrollView;
 }

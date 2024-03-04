@@ -27,9 +27,11 @@ namespace Pixeval.Activation;
 
 public static class ActivationRegistrar
 {
-    public static readonly List<IAppActivationHandler> FeatureHandlers = [];
-
-    static ActivationRegistrar() => FeatureHandlers.Add(new IllustrationAppActivationHandler());
+    public static readonly List<IAppActivationHandler> FeatureHandlers =
+    [
+        new IllustrationAppActivationHandler(),
+        new IllustratorAppActivationHandler()
+    ];
 
     public static void Dispatch(AppActivationArguments args)
     {

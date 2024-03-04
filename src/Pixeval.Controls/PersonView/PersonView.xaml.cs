@@ -35,13 +35,7 @@ namespace Pixeval.Controls;
 [DependencyProperty<ImageSource>("PersonPicture")]
 public partial class PersonView
 {
-    public PersonView()
-    {
-        InitializeComponent();
-    }
+    public PersonView() => InitializeComponent();
 
-    private async void ContentContainerOnTapped(object sender, TappedRoutedEventArgs e)
-    {
-        _ = await Launcher.LaunchUriAsync(PersonProfileNavigateUri);
-    }
+    private async void ContentContainerOnTapped(object sender, TappedRoutedEventArgs e) => await Launcher.LaunchUriAsync(PersonProfileNavigateUri);
 }

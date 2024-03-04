@@ -19,15 +19,15 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using Windows.System;
+using CommunityToolkit.WinUI.Controls;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
 using Pixeval.AppManagement;
-using WinUI3Utilities;
+using Pixeval.Controls;
 using Pixeval.Misc;
+using WinUI3Utilities;
 
 namespace Pixeval.Pages.Misc;
 
@@ -36,41 +36,33 @@ namespace Pixeval.Pages.Misc;
 /// </summary>
 public sealed partial class AboutPage
 {
-    // TODO add sponsors
-    public AboutPage() => InitializeComponent();
+    /// <summary>
+    /// TODO add sponsors
+    /// </summary>
+    public AboutPage()
+    {
+        InitializeComponent();
+        foreach (var supporter in Supporter.Supporters)
+        {
+            UniformGrid.Children.Add(new PersonView
+            {
+                PersonName = supporter.Name,
+                PersonNickname = supporter.Nickname,
+                PersonPicture = supporter.ProfilePicture,
+                PersonProfileNavigateUri = supporter.ProfileUri,
+                Height = 160
+            });
+        }
+        UniformGrid.SizeChanged += (sender, args) => sender.To<UniformGrid>().Columns = (int)(args.NewSize.Width / 140);
+    }
 
     private async void AboutPage_OnLoaded(object sender, RoutedEventArgs e)
     {
-        var licenseText = Encoding.UTF8.GetString(await AppInfo.GetAssetBytesAsync("GPLv3.md"));
-        LicenseTextBlock.Text = licenseText;
+        LicenseTextBlock.Text = Encoding.UTF8.GetString(await AppInfo.GetAssetBytesAsync("GPLv3.md"));
     }
 
     private async void LaunchUri(object sender, TappedRoutedEventArgs e)
     {
         _ = await Launcher.LaunchUriAsync(new Uri(sender.GetTag<string>()));
     }
-
-    private readonly string[] _dependencies =
-    [
-        "CommunityToolkit",
-        "praeclarum/sqlite-net",
-        // "mysticmind/reversemarkdown-net",
-        // "GitTools/GitVersion",
-        // "dotMorten/WinUIEx",
-        "dotnet/runtime/tree/main/src/libraries/Microsoft.Extensions.DependencyInjection",
-        "codebude/QRCoder",
-        "microsoft/Microsoft.IO.RecyclableMemoryStream",
-        "microsoft/Win2D",
-        "Sergio0694/PolySharp",
-        "SixLabors/ImageSharp",
-        "reactiveui/refit"
-    ];
-
-    private IEnumerable<DependencyViewModel> DependencyViewModels =>
-        _dependencies.Select(t =>
-        {
-            var segments = t.Split('/');
-            return new DependencyViewModel(segments[^1], "by " + segments[0], "https://github.com/" + t);
-        });
-
 }

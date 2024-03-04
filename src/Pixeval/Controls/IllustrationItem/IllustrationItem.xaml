@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Pixeval.Controls"
     xmlns:converters="using:CommunityToolkit.WinUI.Converters"
+    xmlns:converters1="using:Pixeval.Controls.Converters"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
@@ -20,6 +21,7 @@
     </ToolTipService.ToolTip>
     <Grid.Resources>
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+        <converters1:NullableToVisibilityConverter x:Key="NullableToVisibilityConverter" Negative="True" />
         <ExponentialEase
             x:Key="EasingFunction"
             EasingMode="EaseOut"
@@ -97,7 +99,7 @@
             VerticalAlignment="Center"
             Source="{x:Bind ViewModel.ThumbnailSource, Mode=OneWay}"
             Stretch="UniformToFill" />
-        <labs:Shimmer Visibility="{x:Bind IsImageNotVisible(ViewModel.ThumbnailSource), Mode=OneWay}" />
+        <labs:Shimmer Visibility="{x:Bind ViewModel.ThumbnailSource, Converter={StaticResource NullableToVisibilityConverter}, Mode=OneWay}" />
         <Grid
             x:Name="ImageBookmarkButtonGrid"
             Width="20"

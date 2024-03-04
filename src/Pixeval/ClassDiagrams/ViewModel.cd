@@ -1,29 +1,23 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
-  <Class Name="Pixeval.Pages.Download.DownloadListEntryViewModel" Collapsed="true">
-    <Position X="8.75" Y="4" Width="2.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAQAAAAAgAAAAAgAAAgAAAARAAAABAAgAAAAAAA=</HashCode>
-      <FileName>Pages\Download\DownloadListEntryViewModel.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="Pixeval.Controls.Illustrate.IllustrateViewModel&lt;T&gt;" Collapsed="true">
-    <Position X="6" Y="1.25" Width="2" />
+  <Class Name="Pixeval.Controls.IllustrateViewModel&lt;T&gt;" Collapsed="true">
+    <Position X="11" Y="1.25" Width="2" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAACAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Controls\Illustrate\IIllustrateViewModel.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="Pixeval.Controls.IllustratorItemViewModel" Collapsed="true">
-    <Position X="5.75" Y="2.75" Width="2.25" />
+  <Class Name="Pixeval.Pages.Tags.TagsEntryViewModel" Collapsed="true">
+    <Position X="19.25" Y="1.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAACIAIAACAQQAAAAQAAAgyCAAAAgAAAAAAAAIAAABE=</HashCode>
-      <FileName>Controls\IllustratorItem\IllustratorItem\IllustratorItemViewModel.cs</FileName>
+      <HashCode>CACAAAAAACAAAABAQAAAAAQAAAAAAEAEAAAAQIAAEAA=</HashCode>
+      <FileName>Pages\Tags\TagsEntryViewModel.cs</FileName>
     </TypeIdentifier>
+    <Lollipop Position="0.2" />
   </Class>
   <Class Name="Pixeval.Controls.SpotlightArticleView.SpotlightArticleViewModel" Collapsed="true">
-    <Position X="2.5" Y="2.75" Width="2.5" />
+    <Position X="5.75" Y="2.75" Width="2.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Controls\SpotlightArticleView\SpotlightArticleViewModel.cs</FileName>
@@ -32,17 +26,37 @@
   <Class Name="Pixeval.Controls.IllustrationItemViewModel" Collapsed="true">
     <Position X="9" Y="2.75" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>AgEDIFAEAKBAAAgYiMATEIGCGgAUAYAABAQAZBL0EAg=</HashCode>
+      <HashCode>AgEDIFAEBKBAAAgYiMATEIGCGgAUAYAABAQAZBL0EAg=</HashCode>
       <FileName>Controls\IllustrationItem\IllustrationItemViewModel.Commands.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Pixeval.Pages.Tags.TagsEntryViewModel" Collapsed="true">
-    <Position X="11.75" Y="4" Width="2.5" />
+  <Class Name="Pixeval.Controls.UserItemViewModel&lt;T&gt;" Collapsed="true">
+    <Position X="14.25" Y="2.75" Width="2" />
     <TypeIdentifier>
-      <HashCode>CACAAAAAACAAAABAQAAAAAQAAAAAAEAEAAAAQIAAEAA=</HashCode>
-      <FileName>Pages\Tags\TagsEntryViewModel.cs</FileName>
+      <HashCode>AAAAIAAAAKAQQAAIAUIAEAmCCAAEAAAAAAIAAAAgAAg=</HashCode>
+      <FileName>Controls\IllustratorItem\UserItemViewModel.cs</FileName>
     </TypeIdentifier>
-    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Pixeval.Controls.IllustratorItemViewModel" Collapsed="true">
+    <Position X="12.25" Y="4" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAAAAAAAAAAIAQAAAAgAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Controls\IllustratorItem\IllustratorItem\IllustratorItemViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Pixeval.Controls.RecommendIllustratorItemViewModel" Collapsed="true">
+    <Position X="15.25" Y="4" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAAIAAAAAAAIAQIAAAgAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>Controls\IllustratorItem\RecommendIllustratorItem\RecommendIllustratorItemViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Pixeval.Pages.Download.DownloadListEntryViewModel" Collapsed="true">
+    <Position X="9" Y="4" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAQAAAAAgAAAAAgAAAgAAAARAAAABAAgAAAAAAA=</HashCode>
+      <FileName>Pages\Download\DownloadListEntryViewModel.cs</FileName>
+    </TypeIdentifier>
   </Class>
   <Font Name="Microsoft YaHei UI" Size="9" />
 </ClassDiagram>

@@ -29,13 +29,13 @@ namespace Pixeval.Util.UI;
 
 public static class XamlUiCommandHelper
 {
-    public static XamlUICommand GetCommand(this string label, FontIconSymbols icon) =>
+    public static XamlUICommand GetCommand(this string label, FontIconSymbol icon) =>
         GetCommand(label, icon.GetFontIconSource());
 
-    public static XamlUICommand GetCommand(this string label, FontIconSymbols icon, VirtualKey key) =>
+    public static XamlUICommand GetCommand(this string label, FontIconSymbol icon, VirtualKey key) =>
         GetCommand(label, icon.GetFontIconSource(), key);
 
-    public static XamlUICommand GetCommand(this string label, FontIconSymbols icon, VirtualKeyModifiers modifiers, VirtualKey key) =>
+    public static XamlUICommand GetCommand(this string label, FontIconSymbol icon, VirtualKeyModifiers modifiers, VirtualKey key) =>
         GetCommand(label, icon.GetFontIconSource(), modifiers, key);
 
     public static XamlUICommand GetCommand(this string label, IconSource icon) =>
@@ -61,52 +61,51 @@ public static class XamlUiCommandHelper
     {
         command.Label = command.Description = isBookmarked ? MiscResources.RemoveBookmark : MiscResources.AddBookmark;
         command.IconSource = isBookmarked
-            ? FontIconSymbols.HeartFillEB52.GetFontIconSource(foregroundBrush: new SolidColorBrush(Colors.Crimson))
-            : FontIconSymbols.HeartEB51.GetFontIconSource();
+            ? FontIconSymbol.HeartFillEB52.GetFontIconSource(foregroundBrush: new SolidColorBrush(Colors.Crimson))
+            : FontIconSymbol.HeartEB51.GetFontIconSource();
     }
 
     public static void GetFollowCommand(this XamlUICommand command, bool isFollowed)
     {
         command.Label = command.Description = isFollowed ? MiscResources.Unfollow : MiscResources.Follow;
         command.IconSource = isFollowed
-            ? FontIconSymbols.ContactSolidEA8C.GetFontIconSource(foregroundBrush: new SolidColorBrush(Colors.Crimson))
-            : FontIconSymbols.ContactE77B.GetFontIconSource();
+            ? FontIconSymbol.ContactSolidEA8C.GetFontIconSource(foregroundBrush: new SolidColorBrush(Colors.Crimson))
+            : FontIconSymbol.ContactE77B.GetFontIconSource();
     }
 
     public static XamlUICommand GetNewFollowCommand(bool isFollowed)
     {
-        return (isFollowed ? MiscResources.Unfollow : MiscResources.Follow)
-            .GetCommand(isFollowed
-                ? FontIconSymbols.ContactSolidEA8C.GetFontIconSource(foregroundBrush: new SolidColorBrush(Colors.Crimson))
-                : FontIconSymbols.ContactE77B.GetFontIconSource());
+        var xamlUiCommand = new XamlUICommand();
+        xamlUiCommand.GetFollowCommand(isFollowed);
+        return xamlUiCommand;
     }
 
     public static XamlUICommand GetNewFollowPrivatelyCommand()
     {
-        return MiscResources.FollowPrivately.GetCommand(FontIconSymbols.FavoriteStarE734);
+        return MiscResources.FollowPrivately.GetCommand(FontIconSymbol.FavoriteStarE734);
     }
 
     public static void GetPlayCommand(this XamlUICommand command, bool isPlaying)
     {
         command.Label = command.Description = isPlaying ? MiscResources.Pause : MiscResources.Play;
         command.IconSource = (isPlaying
-            ? FontIconSymbols.StopE71A
-            : FontIconSymbols.Play36EE4A).GetFontIconSource();
+            ? FontIconSymbol.StopE71A
+            : FontIconSymbol.Play36EE4A).GetFontIconSource();
     }
 
     public static void GetResolutionCommand(this XamlUICommand command, bool isFit)
     {
         command.Label = command.Description = isFit ? MiscResources.RestoreOriginalResolution : MiscResources.UniformToFillResolution;
         command.IconSource = (isFit
-            ? FontIconSymbols.WebcamE8B8
-            : FontIconSymbols.FitPageE9A6).GetFontIconSource();
+            ? FontIconSymbol.AspectRatioE799
+            : FontIconSymbol.FitPageE9A6).GetFontIconSource();
     }
 
     public static void GetFullScreenCommand(this XamlUICommand command, bool isFullScreen)
     {
         command.Label = command.Description = isFullScreen ? MiscResources.BackToWindow : MiscResources.FullScreen;
         command.IconSource = (isFullScreen
-            ? FontIconSymbols.BackToWindowE73F
-            : FontIconSymbols.FullScreenE740).GetFontIconSource();
+            ? FontIconSymbol.BackToWindowE73F
+            : FontIconSymbol.FullScreenE740).GetFontIconSource();
     }
 }

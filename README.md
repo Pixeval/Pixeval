@@ -99,6 +99,7 @@
 * [Summpot](https://github.com/Summpot)
 * [Poker](https://github.com/Poker-sang)
 * [cnbluefire](https://github.com/cnbluefire)
+* [frg2089](https://github.com/frg2089)
 
 ## 支持作者
 

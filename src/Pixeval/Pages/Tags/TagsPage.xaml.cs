@@ -1,6 +1,6 @@
 using System;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Util.UI;
 
 namespace Pixeval.Pages.Tags;
@@ -10,8 +10,6 @@ public sealed partial class TagsPage
     private readonly TagsPageViewModel _viewModel = new();
 
     public TagsPage() => InitializeComponent();
-
-    public override void OnPageDeactivated(NavigatingCancelEventArgs e) => _viewModel.Dispose();
 
     private void TagsEntry_OnTagTapped(TagsEntry sender, string tag)
     {
@@ -29,4 +27,6 @@ public sealed partial class TagsPage
         if (await Window.OpenFolderPickerAsync() is { } folder) 
             _viewModel.WorkingDirectory = folder.Path;
     }
+
+    private void TagsPage_OnUnloaded(object sender, RoutedEventArgs e) => _viewModel.Dispose();
 }

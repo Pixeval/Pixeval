@@ -1,8 +1,8 @@
-#region Copyright (c) Pixeval/Pixeval.Controls
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
-// Pixeval/Pixeval.Controls
-// Copyright (c) 2023 Pixeval.Controls/GlyphAttribute.cs
+// Pixeval/Pixeval
+// Copyright (c) 2023 Pixeval/IllustratorMangaPage.xaml.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,21 +18,21 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System;
-using System.Reflection;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Navigation;
+using Pixeval.Misc;
 
-namespace Pixeval.Controls.MarkupExtensions.FontSymbolIcon;
+namespace Pixeval.Pages.Capability;
 
-[AttributeUsage(AttributeTargets.Field)]
-internal sealed class GlyphAttribute(char glyph) : Attribute
+public sealed partial class IllustratorMangaPage : IScrollViewProvider
 {
-    public char Glyph { get; } = glyph;
-}
+    public IllustratorMangaPage() => InitializeComponent();
 
-public static class GlyphAttributeHelper
-{
-    public static char GetGlyph(this Enum e)
+    public override void OnPageActivated(NavigationEventArgs e)
     {
-        return e.GetType().GetField(e.ToString())!.GetCustomAttribute<GlyphAttribute>()!.Glyph;
+        if (e.Parameter is long id) 
+            IllustrationContainer.ViewModel.ResetEngine(App.AppViewModel.MakoClient.MangaPosts(id, App.AppViewModel.AppSettings.TargetFilter));
     }
+
+    public ScrollView ScrollView => IllustrationContainer.ScrollView;
 }

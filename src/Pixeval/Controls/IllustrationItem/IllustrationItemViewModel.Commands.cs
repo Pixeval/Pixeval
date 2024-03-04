@@ -41,37 +41,37 @@ namespace Pixeval.Controls;
 
 public partial class IllustrationItemViewModel
 {
-    public XamlUICommand BookmarkCommand { get; } = "".GetCommand(FontIconSymbols.HeartEB51, VirtualKeyModifiers.Control, VirtualKey.D);
+    public XamlUICommand BookmarkCommand { get; } = "".GetCommand(FontIconSymbol.HeartEB51, VirtualKeyModifiers.Control, VirtualKey.D);
 
-    public XamlUICommand AddToBookmarkCommand { get; } = IllustrateItemResources.AddToBookmark.GetCommand(FontIconSymbols.BookmarksE8A4);
+    public XamlUICommand AddToBookmarkCommand { get; } = IllustrateItemResources.AddToBookmark.GetCommand(FontIconSymbol.BookmarksE8A4);
 
-    public XamlUICommand GenerateLinkCommand { get; } = IllustrateItemResources.GenerateLink.GetCommand(FontIconSymbols.LinkE71B);
+    public XamlUICommand GenerateLinkCommand { get; } = IllustrateItemResources.GenerateLink.GetCommand(FontIconSymbol.LinkE71B);
 
-    public XamlUICommand GenerateWebLinkCommand { get; } = IllustrateItemResources.GenerateWebLink.GetCommand(FontIconSymbols.PreviewLinkE8A1);
+    public XamlUICommand GenerateWebLinkCommand { get; } = IllustrateItemResources.GenerateWebLink.GetCommand(FontIconSymbol.PreviewLinkE8A1);
 
-    public XamlUICommand OpenInWebBrowserCommand { get; } = IllustrateItemResources.OpenInWebBrowser.GetCommand(FontIconSymbols.WebSearchF6FA);
+    public XamlUICommand OpenInWebBrowserCommand { get; } = IllustrateItemResources.OpenInWebBrowser.GetCommand(FontIconSymbol.WebSearchF6FA);
 
-    public XamlUICommand ShowQrCodeCommand { get; } = IllustrateItemResources.ShowQRCode.GetCommand(FontIconSymbols.QRCodeED14);
+    public XamlUICommand ShowQrCodeCommand { get; } = IllustrateItemResources.ShowQRCode.GetCommand(FontIconSymbol.QRCodeED14);
 
-    public XamlUICommand ShowPixEzQrCodeCommand { get; } = IllustrateItemResources.ShowPixEzQrCode.GetCommand(FontIconSymbols.Photo2EB9F);
+    public XamlUICommand ShowPixEzQrCodeCommand { get; } = IllustrateItemResources.ShowPixEzQrCode.GetCommand(FontIconSymbol.Photo2EB9F);
 
     /// <summary>
     /// Parameter1: <see cref="ValueTuple{T1,T2}"/> where T1 is <see cref="FrameworkElement"/>? and T2 is <see cref="Func{T, TResult}"/>? where T is <see cref="IProgress{T}"/>? and TResult is <see cref="Stream"/>?<br/>
     /// Parameter2: <see cref="FrameworkElement"/>?
     /// </summary>
-    public XamlUICommand SaveCommand { get; } = IllustrateItemResources.Save.GetCommand(FontIconSymbols.SaveE74E, VirtualKeyModifiers.Control, VirtualKey.S);
+    public XamlUICommand SaveCommand { get; } = IllustrateItemResources.Save.GetCommand(FontIconSymbol.SaveE74E, VirtualKeyModifiers.Control, VirtualKey.S);
 
     /// <summary>
     /// Parameter1: <see cref="ValueTuple{T1,T2}"/> where T1 is <see cref="Window"/> and T2 is <see cref="Func{T, TResult}"/>? where T is <see cref="IProgress{T}"/>? and TResult is <see cref="Stream"/>?<br/>
     /// Parameter2: <see cref="Window"/>
     /// </summary>
-    public XamlUICommand SaveAsCommand { get; } = IllustrateItemResources.SaveAs.GetCommand(FontIconSymbols.SaveAsE792, VirtualKeyModifiers.Control | VirtualKeyModifiers.Shift, VirtualKey.S);
+    public XamlUICommand SaveAsCommand { get; } = IllustrateItemResources.SaveAs.GetCommand(FontIconSymbol.SaveAsE792, VirtualKeyModifiers.Control | VirtualKeyModifiers.Shift, VirtualKey.S);
 
     /// <summary>
     /// Parameter1: <see cref="ValueTuple{T1,T2}"/> where T1 is <see cref="FrameworkElement"/>? and T2 is <see cref="Func{T, TResult}"/> where T is <see cref="IProgress{T}"/>? and TResult is <see cref="Stream"/>?<br/>
     /// Parameter2: <see cref="Func{T, TResult}"/> where T is <see cref="IProgress{T}"/>? and TResult is <see cref="Stream"/>?
     /// </summary>
-    public XamlUICommand CopyCommand { get; } = IllustrateItemResources.Copy.GetCommand(FontIconSymbols.CopyE8C8, VirtualKeyModifiers.Control, VirtualKey.C);
+    public XamlUICommand CopyCommand { get; } = IllustrateItemResources.Copy.GetCommand(FontIconSymbol.CopyE8C8, VirtualKeyModifiers.Control, VirtualKey.C);
 
     private void InitializeCommands()
     {

@@ -83,7 +83,7 @@ public class BookmarkPageViewModel(long userId) : ObservableObject, IDisposable
                 break;
 
             // 100 IDs per page
-            if (counter == 100)
+            if (counter is 100)
             {
                 counter = 0;
                 // tells the UI that new IDs are available
@@ -94,7 +94,7 @@ public class BookmarkPageViewModel(long userId) : ObservableObject, IDisposable
             counter++;
         }
 
-        if (counter != 0)
+        if (counter is not 0)
             TagBookmarksIncrementallyLoaded?.Invoke(this, tag);
     }
 

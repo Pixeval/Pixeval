@@ -33,7 +33,8 @@
         <Image
             Width="200"
             Height="200"
-            Source="/Assets/Images/empty-box.png" />
+            Source="/Assets/Images/empty-box.png"
+            Stretch="Uniform" />
         <TextBlock
             x:Uid="/IllustrateView/ResultIsEmptyTextBlock"
             HorizontalAlignment="Center"

@@ -28,7 +28,7 @@ public class EnhancedPage : Page
 {
     public int ActivationCount { get; private set; }
 
-    public bool ClearCacheAfterNavigation { get; set; }
+    public bool ClearCacheAfterNavigation { get; set; } = true;
 
     protected sealed override void OnNavigatedTo(NavigationEventArgs e)
     {

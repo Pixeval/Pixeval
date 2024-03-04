@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:labs="using:CommunityToolkit.Labs.WinUI.MarkdownTextBlock"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:model="using:Pixeval.CoreApi.Model"
     xmlns:pixevalControls="using:Pixeval.Controls"
@@ -78,14 +79,15 @@
             <!--#endregion-->
             <!--#region Illustration Caption-->
             <TextBlock x:Uid="/IllustrationInfoPage/IllustrationCaptionTextBlock" Style="{StaticResource InfoPageSectionHeaderTextBlockStyle}" />
-            <!--<controls:MarkdownTextBlock
+            <labs:MarkdownTextBlock
                 x:Name="IllustrationCaptionMarkdownTextBlock"
-                MaxHeight="200"
                 Margin="{StaticResource StackLayoutEntryPadding}"
-                Background="{ThemeResource PixevalPanelBackgroundThemeBrush}"
                 FontSize="{StaticResource PixevalContentFontSize}"
-                LinkClicked="IllustrationCaptionMarkdownTextBlock_OnLinkClicked"
-                TextWrapping="Wrap" />-->
+                Text="">
+                <labs:MarkdownTextBlock.Config>
+                    <labs:MarkdownConfig />
+                </labs:MarkdownTextBlock.Config>
+            </labs:MarkdownTextBlock>
             <!--#endregion-->
             <TextBlock x:Uid="/IllustrationInfoPage/IllustrationTotalBookmarksTextBlock" Style="{StaticResource InfoPageSectionHeaderTextBlockStyle}" />
             <TextBlock Style="{StaticResource InfoPageSectionContentTextBlockStyle}" Text="{x:Bind _viewModel.CurrentIllustration.Illustrate.TotalBookmarks}" />

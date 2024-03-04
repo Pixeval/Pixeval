@@ -22,10 +22,8 @@ using System;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.WinUI.Collections;
 using Pixeval.Collections;
-using Pixeval.Controls.Illustrate;
 using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Model;
-using Pixeval.Misc;
 using Pixeval.Utilities;
 
 namespace Pixeval.Controls;

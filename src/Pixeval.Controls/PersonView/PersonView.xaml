@@ -22,17 +22,17 @@
                 Height="75"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
-                ProfilePicture="{x:Bind PersonPicture, Mode=TwoWay}" />
+                ProfilePicture="{x:Bind PersonPicture, Mode=OneWay}" />
             <StackPanel Grid.Row="1" HorizontalAlignment="Center">
                 <TextBlock
                     HorizontalAlignment="Center"
                     FontSize="{StaticResource PixevalContentFontSize}"
-                    Text="{x:Bind PersonNickname, Mode=TwoWay}" />
+                    Text="{x:Bind PersonNickname, Mode=OneWay}" />
                 <TextBlock
                     HorizontalAlignment="Center"
                     Foreground="{ThemeResource PixevalTipTextForeground}"
                     Style="{StaticResource CaptionTextBlockStyle}"
-                    Text="{x:Bind PersonName, Mode=TwoWay}" />
+                    Text="{x:Bind PersonName, Mode=OneWay}" />
             </StackPanel>
         </Grid>
     </Button>

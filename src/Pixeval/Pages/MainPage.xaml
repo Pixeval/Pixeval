@@ -5,53 +5,27 @@
     xmlns:animatedVisuals="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
     xmlns:controls="using:Pixeval.Controls"
     xmlns:converters="using:CommunityToolkit.WinUI.Converters"
+    xmlns:converters1="using:Pixeval.Controls.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:markup="using:Pixeval.Controls.MarkupExtensions"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pages="using:Pixeval.Pages"
     xmlns:pixeval="using:Pixeval.AppManagement"
+    Loaded="MainPage_OnLoaded"
     mc:Ignorable="d">
     <controls:SupportCustomTitleBarDragRegionPage.Resources>
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+        <converters1:NullableToVisibilityConverter x:Key="NullableToVisibilityConverter" />
 
-        <DataTemplate x:Key="IllustrationHeaderSuggestionTemplate">
-            <TextBlock
-                x:Uid="/MainPage/IllustrationHeaderSuggestionTextBlock"
-                FontSize="{StaticResource PixevalContentFontSize}"
-                FontWeight="Bold" />
-        </DataTemplate>
-
-        <DataTemplate x:Key="NovelHeaderSuggestionTemplate">
-            <TextBlock
-                x:Uid="/MainPage/NovelHeaderSuggestionTextBlock"
-                FontSize="{StaticResource PixevalContentFontSize}"
-                FontWeight="Bold" />
-        </DataTemplate>
-
-        <DataTemplate x:Key="SettingsEntryHeaderSuggestionTemplate">
-            <TextBlock
-                x:Uid="/MainPage/SettingsEntryHeaderSuggestionTextBlock"
-                FontSize="{StaticResource PixevalContentFontSize}"
-                FontWeight="Bold" />
-        </DataTemplate>
-
-        <DataTemplate x:Key="TagAutoCompletionSuggestionTemplate">
-            <TextBlock
-                x:Uid="/MainPage/TagAutoCompletionSuggestionTextBlock"
-                FontSize="{StaticResource PixevalContentFontSize}"
-                FontWeight="Bold" />
-        </DataTemplate>
-
-        <DataTemplate x:Name="CommonSuggestionModelTemplate" x:DataType="pages:SuggestionModel">
-            <Grid Height="50">
+        <DataTemplate x:Key="CommonSuggestionModelTemplate" x:DataType="pages:SuggestionModel">
+            <Grid Padding="0,10" ColumnSpacing="10">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="22" />
+                    <ColumnDefinition Width="13" />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
                 <ContentPresenter
                     x:Name="IconContentPresenter"
                     Grid.Column="0"
-                    Width="13"
                     HorizontalAlignment="Left"
                     VerticalAlignment="Center"
                     Content="{x:Bind FontIcon}" />
@@ -72,25 +46,18 @@
                         Text="{x:Bind TranslatedName}"
                         TextTrimming="CharacterEllipsis"
                         TextWrapping="WrapWholeWords"
-                        Visibility="{x:Bind TranslatedNameVisibility}" />
+                        Visibility="{x:Bind TranslatedName, Converter={StaticResource NullableToVisibilityConverter}}" />
                 </StackPanel>
             </Grid>
         </DataTemplate>
 
-        <Style
-            x:Key="NavigationViewPaneContentGridStyle"
-            BasedOn="{StaticResource DefaultGridStyle}"
-            TargetType="Grid">
-            <Setter Property="Margin" Value="10,0,0,0" />
-        </Style>
-
         <pages:SuggestionModelDataTemplateSelector
             x:Key="SuggestionModelDataTemplateSelector"
-            AutoCompletionHeader="{StaticResource TagAutoCompletionSuggestionTemplate}"
+            AutoCompletionHeader="/MainPage/TagAutoCompletionSuggestionTextBlock"
             CommonSuggestion="{StaticResource CommonSuggestionModelTemplate}"
-            IllustrationHeader="{StaticResource IllustrationHeaderSuggestionTemplate}"
-            NovelHeader="{StaticResource NovelHeaderSuggestionTemplate}"
-            SettingEntryHeader="{StaticResource SettingsEntryHeaderSuggestionTemplate}" />
+            IllustrationHeader="/MainPage/IllustrationHeaderSuggestionTextBlock"
+            NovelHeader="/MainPage/NovelHeaderSuggestionTextBlock"
+            SettingEntryHeader="/MainPage/SettingsEntryHeaderSuggestionTextBlock" />
     </controls:SupportCustomTitleBarDragRegionPage.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
@@ -260,14 +227,12 @@
                         <AppBarButton
                             x:Uid="/MainPage/ReverseSearchButton"
                             Width="{StaticResource CollapsedAppBarButtonWidth}"
-                            Content="{markup:FontSymbolIcon Glyph=CameraE722,
-                                                            FontSize=13}"
+                            Content="{markup:FontSymbolIcon Glyph=CameraE722}"
                             Tapped="ReverseSearchButton_OnTapped" />
                         <AppBarButton
                             x:Uid="/MainPage/OpenSearchSettingButton"
                             Width="{StaticResource CollapsedAppBarButtonWidth}"
-                            Content="{markup:FontSymbolIcon Glyph=SettingsE713,
-                                                            FontSize=13}"
+                            Content="{markup:FontSymbolIcon Glyph=SettingsE713}"
                             Tapped="OpenSearchSettingButton_OnTapped" />
                     </CommandBar>
                 </Grid>
