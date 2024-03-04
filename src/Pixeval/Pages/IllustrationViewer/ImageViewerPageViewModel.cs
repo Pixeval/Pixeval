@@ -178,28 +178,32 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
         };
     }
 
-    private void AddHistory()
-    {
-        using var scope = App.AppViewModel.AppServicesScope;
-        var manager = scope.ServiceProvider.GetRequiredService<BrowseHistoryPersistentManager>();
-        _ = manager.Delete(x => x.Id == IllustrationViewModel.Id);
-        manager.Insert(new BrowseHistoryEntry { Id = IllustrationViewModel.Id });
-    }
-
     private async Task LoadImage()
     {
         if (!LoadSuccessfully || _disposed)
         {
             _disposed = false;
-            _ = IllustrationViewModel.TryLoadThumbnailAsync(this).ContinueWith(
-                _ => OriginalImageSources ??= [IllustrationViewModel.ThumbnailStream!],
-                TaskScheduler.FromCurrentSynchronizationContext());
+            _ = LoadThumbnail();
             AddHistory();
             await LoadOriginalImage();
             IllustrationViewModel.UnloadThumbnail(this);
         }
 
         return;
+
+        async Task LoadThumbnail()
+        {
+            _ = await IllustrationViewModel.TryLoadThumbnailAsync(this);
+            OriginalImageSources ??= [IllustrationViewModel.ThumbnailStream!];
+        }
+
+        void AddHistory()
+        {
+            using var scope = App.AppViewModel.AppServicesScope;
+            var manager = scope.ServiceProvider.GetRequiredService<BrowseHistoryPersistentManager>();
+            _ = manager.Delete(x => x.Id == IllustrationViewModel.Id);
+            manager.Insert(new BrowseHistoryEntry { Id = IllustrationViewModel.Id });
+        }
 
         async Task LoadOriginalImage()
         {

@@ -14,11 +14,15 @@
     <Grid
         Margin="0,32,0,0"
         Padding="50"
-        ColumnSpacing="20">
+        ColumnSpacing="20"
+        KeyboardAcceleratorPlacementMode="Hidden">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="Auto" MinWidth="300" />
         </Grid.ColumnDefinitions>
+        <Grid.KeyboardAccelerators>
+            <KeyboardAccelerator Key="Enter" Invoked="Login_OnTapped" />
+        </Grid.KeyboardAccelerators>
         <StackPanel
             Grid.Column="0"
             HorizontalAlignment="Center"
@@ -37,28 +41,55 @@
                 FontSize="10"
                 Text="{x:Bind util:LocalizedResourceAttributeHelper.GetLocalizedResourceContent(_viewModel.LoginPhase), Mode=OneWay}" />
         </StackPanel>
-        <StackPanel Grid.Column="1" Spacing="20">
+        <Grid
+            Grid.Column="1"
+            ColumnSpacing="10"
+            RowSpacing="20">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
             <TextBox
                 x:Uid="/LoginPage/UserNameBox"
+                Grid.Row="0"
+                Grid.Column="0"
+                Grid.ColumnSpan="3"
                 IsEnabled="{x:Bind _viewModel.IsEnabled, Mode=OneWay}"
+                IsSpellCheckEnabled="False"
                 Text="{x:Bind _viewModel.UserName, Mode=TwoWay}" />
             <PasswordBox
                 x:Uid="/LoginPage/PasswordBox"
+                Grid.Row="1"
+                Grid.Column="0"
+                Grid.ColumnSpan="3"
                 IsEnabled="{x:Bind _viewModel.IsEnabled, Mode=OneWay}"
                 Password="{x:Bind _viewModel.Password, Mode=TwoWay}" />
-            <StackPanel Orientation="Horizontal" Spacing="10">
-                <ToggleSwitch
-                    x:Uid="/LoginPage/DisableDomainFrontingToggleSwitch"
-                    IsEnabled="{x:Bind _viewModel.IsEnabled, Mode=OneWay}"
-                    IsOn="{x:Bind _viewModel.DisableDomainFronting, Mode=TwoWay}" />
-                <Button
-                    x:Uid="/LoginPage/SubmitButton"
-                    IsEnabled="{x:Bind _viewModel.IsEnabled, Mode=OneWay}"
-                    Style="{StaticResource AccentButtonStyle}"
-                    Tapped="Login_OnTapped" />
-                <Button x:Uid="/LoginPage/Help" Content="{markup:FontSymbolIcon Glyph=HelpE897}" />
-            </StackPanel>
-        </StackPanel>
+            <ToggleSwitch
+                x:Uid="/LoginPage/DisableDomainFrontingToggleSwitch"
+                Grid.Row="2"
+                Grid.Column="0"
+                IsEnabled="{x:Bind _viewModel.IsEnabled, Mode=OneWay}"
+                IsOn="{x:Bind _viewModel.DisableDomainFronting, Mode=TwoWay}" />
+            <Button
+                x:Uid="/LoginPage/SubmitButton"
+                Grid.Row="2"
+                Grid.Column="1"
+                IsEnabled="{x:Bind _viewModel.IsEnabled, Mode=OneWay}"
+                Style="{StaticResource AccentButtonStyle}"
+                Tapped="Login_OnTapped" />
+            <Button
+                x:Uid="/LoginPage/Help"
+                Grid.Row="2"
+                Grid.Column="2"
+                Content="{markup:FontSymbolIcon Glyph=HelpE897}"
+                IsTabStop="False" />
+        </Grid>
         <Border
             Grid.Column="0"
             Child="{x:Bind _viewModel.WebView, Mode=OneWay}"

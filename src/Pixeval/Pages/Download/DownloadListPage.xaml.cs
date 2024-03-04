@@ -67,7 +67,7 @@ public sealed partial class DownloadListPage
                 dialogContent) is ContentDialogResult.Primary)
         {
             if (dialogContent.DeleteLocalFiles)
-                Task.WaitAll(_viewModel.SelectedEntries
+                await Task.WhenAll(_viewModel.SelectedEntries
                     .Select(async t => await IoHelper.DeleteIllustrationTaskAsync(t.DownloadTask))
                     .ToArray());
 

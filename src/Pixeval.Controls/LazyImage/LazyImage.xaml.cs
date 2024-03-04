@@ -9,8 +9,8 @@ namespace Pixeval.Controls;
 
 [DependencyProperty<ImageSource>("Source", DependencyPropertyDefaultValue.UnsetValue, nameof(OnSourceChanged), IsNullable = true)]
 [DependencyProperty<Stretch>("Stretch", "Microsoft.UI.Xaml.Media.Stretch.UniformToFill")]
-[DependencyProperty<HorizontalAlignment>("HorizontalContentAlignment", "Microsoft.UI.Xaml.HorizontalAlignment.Center")]
-[DependencyProperty<VerticalAlignment>("VerticalContentAlignment", "Microsoft.UI.Xaml.VerticalAlignment.Center")]
+[DependencyProperty<HorizontalAlignment>("HorizontalImageAlignment", "Microsoft.UI.Xaml.HorizontalAlignment.Center")]
+[DependencyProperty<VerticalAlignment>("VerticalImageAlignment", "Microsoft.UI.Xaml.VerticalAlignment.Center")]
 [INotifyPropertyChanged]
 public sealed partial class LazyImage : UserControl
 {

@@ -21,9 +21,12 @@
 using System;
 using System.Text;
 using Windows.System;
+using CommunityToolkit.WinUI.Controls;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
 using Pixeval.AppManagement;
+using Pixeval.Controls;
+using Pixeval.Misc;
 using WinUI3Utilities;
 
 namespace Pixeval.Pages.Misc;
@@ -33,8 +36,25 @@ namespace Pixeval.Pages.Misc;
 /// </summary>
 public sealed partial class AboutPage
 {
-    // TODO add sponsors
-    public AboutPage() => InitializeComponent();
+    /// <summary>
+    /// TODO add sponsors
+    /// </summary>
+    public AboutPage()
+    {
+        InitializeComponent();
+        foreach (var supporter in Supporter.Supporters)
+        {
+            UniformGrid.Children.Add(new PersonView
+            {
+                PersonName = supporter.Name,
+                PersonNickname = supporter.Nickname,
+                PersonPicture = supporter.ProfilePicture,
+                PersonProfileNavigateUri = supporter.ProfileUri,
+                Height = 160
+            });
+        }
+        UniformGrid.SizeChanged += (sender, args) => sender.To<UniformGrid>().Columns = (int)(args.NewSize.Width / 140);
+    }
 
     private async void AboutPage_OnLoaded(object sender, RoutedEventArgs e)
     {
@@ -45,6 +65,4 @@ public sealed partial class AboutPage
     {
         _ = await Launcher.LaunchUriAsync(new Uri(sender.GetTag<string>()));
     }
-
-
 }

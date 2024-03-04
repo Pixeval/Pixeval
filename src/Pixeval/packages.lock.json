@@ -264,15 +264,6 @@
           "Microsoft.WindowsAppSDK": "1.5.240227000"
         }
       },
-      "WinUIEx": {
-        "type": "Direct",
-        "requested": "[2.3.4, )",
-        "resolved": "2.3.4",
-        "contentHash": "wtptPKduMiTjfVhTQAcA7PHvY6NTAEkDj5zvW+4QbHg1YdUv8NFAU9CSH37OXBkBlHrsuyDIoHuF7xAMR8iqJw==",
-        "dependencies": {
-          "Microsoft.WindowsAppSDK": "1.4.230822000"
-        }
-      },
       "CommunityToolkit.Common": {
         "type": "Transitive",
         "resolved": "8.2.1",

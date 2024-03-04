@@ -4,13 +4,13 @@
     xmlns:numberFormatting="using:Windows.Globalization.NumberFormatting">
     <Style x:Key="PixevalRoundedButtonStyle" TargetType="Button">
         <Style.Setters>
-            <Setter Property="CornerRadius" Value="19" />
-            <Setter Property="Width" Value="38" />
-            <Setter Property="Height" Value="38" />
+            <Setter Property="CornerRadius" Value="16" />
+            <Setter Property="Width" Value="32" />
+            <Setter Property="Height" Value="32" />
             <Setter Property="Padding" Value="0" />
         </Style.Setters>
     </Style>
-    <x:Double x:Key="PixevalButtonIconSize">12</x:Double>
+    <x:Double x:Key="PixevalButtonIconSize">16</x:Double>
     <CornerRadius x:Key="ControlTopCornerRadius">4,4,0,0</CornerRadius>
     <CornerRadius x:Key="ControlBottomCornerRadius">0,0,4,4</CornerRadius>
     <x:Double x:Key="PixevalButtonIconSmallSize">10</x:Double>

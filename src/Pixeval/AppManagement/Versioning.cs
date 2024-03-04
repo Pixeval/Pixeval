@@ -30,7 +30,7 @@ public class Versioning
             0 => UpdateState.UpToDate,
             _ => newVersion.Major > currentVersion.Major ? UpdateState.MajorUpdate :
                 newVersion.Minor > currentVersion.Minor ? UpdateState.MinorUpdate :
-                newVersion.Build > currentVersion.Build ? UpdateState.PatchUpdate :
+                newVersion.Build > currentVersion.Build ? UpdateState.BuildUpdate :
                 UpdateState.SpecifierUpdate
         };
     }

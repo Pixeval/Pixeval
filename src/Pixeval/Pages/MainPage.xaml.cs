@@ -150,6 +150,8 @@ public sealed partial class MainPage : SupportCustomTitleBarDragRegionPage
 
     private async void KeywordAutoSuggestBox_GotFocus(object sender, RoutedEventArgs e)
     {
+        if (FocusManager.GetFocusedElement(XamlRoot) is not TextBox)
+            return;
         var suggestBox = (AutoSuggestBox)sender;
         suggestBox.IsSuggestionListOpen = true;
         await _viewModel.SuggestionProvider.UpdateAsync(suggestBox.Text);

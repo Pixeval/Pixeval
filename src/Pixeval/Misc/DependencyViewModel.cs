@@ -5,13 +5,14 @@ namespace Pixeval.Misc;
 
 public record DependencyViewModel(string Name, string Author, string Url)
 {
+    // ReSharper disable StringLiteralTypo
     private static readonly string[] _dependencies =
     [
         "CommunityToolkit",
         "praeclarum/sqlite-net",
-        // "mysticmind/reversemarkdown-net",
-        // "GitTools/GitVersion",
-        // "dotMorten/WinUIEx",
+        "mysticmind/reversemarkdown-net",
+        "GitTools/GitVersion",
+        "Poker-sang/WinUI3Utilities",
         "dotnet/runtime/tree/main/src/libraries/Microsoft.Extensions.DependencyInjection",
         "codebude/QRCoder",
         "microsoft/Microsoft.IO.RecyclableMemoryStream",
@@ -20,6 +21,7 @@ public record DependencyViewModel(string Name, string Author, string Url)
         "SixLabors/ImageSharp",
         "reactiveui/refit"
     ];
+    // ReSharper restore StringLiteralTypo
 
     public static IEnumerable<DependencyViewModel> DependencyViewModels =>
         _dependencies.Select(t =>

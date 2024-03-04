@@ -86,7 +86,7 @@ public partial class SettingsPageViewModel(FrameworkElement frameworkElement) : 
     {
         UpdateState.MajorUpdate => SettingsPageResources.MajorUpdateAvailable,
         UpdateState.MinorUpdate => SettingsPageResources.MinorUpdateAvailable,
-        UpdateState.PatchUpdate or UpdateState.SpecifierUpdate => SettingsPageResources.PatchUpdateAvailable,
+        UpdateState.BuildUpdate or UpdateState.SpecifierUpdate => SettingsPageResources.BuildUpdateAvailable,
         UpdateState.Insider => SettingsPageResources.IsInsider,
         UpdateState.UpToDate => SettingsPageResources.IsUpToDate,
         _ => SettingsPageResources.UnknownUpdateState
@@ -166,12 +166,12 @@ public partial class SettingsPageViewModel(FrameworkElement frameworkElement) : 
                     {
                         var process = new Process
                         {
-                            StartInfo = new ProcessStartInfo("powershell",
-                                $"-ExecutionPolicy Unrestricted -noexit \"&'{destUrl}'\"")
-                            {
-                                UseShellExecute = false,
-                                Verb = "runas"
-                            }
+                            StartInfo =
+                                new ProcessStartInfo("powershell", $"-ExecutionPolicy Unrestricted -noexit \"&'{destUrl}'\"")
+                                {
+                                    UseShellExecute = false,
+                                    Verb = "runas"
+                                }
                         };
                         _ = process.Start();
                         await process.WaitForExitAsync();

@@ -23,6 +23,7 @@
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
+                        <!--  ReSharper disable once UnusedMember.Local  -->
                         <TextBox
                             x:Name="TokenTextBox"
                             Grid.Column="0"
@@ -38,7 +39,7 @@
                             Padding="0"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
-                            Content="{markup:FontSymbolIcon Glyph=UpShiftKeyE84B,
+                            Content="{markup:FontSymbolIcon Glyph=UpArrowShiftKeyE752,
                                                             FontSize={StaticResource PixevalButtonIconSize}}"
                             IsChecked="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Token.CaseSensitive, Mode=TwoWay}" />
                         <ToggleButton
@@ -49,18 +50,21 @@
                             Padding="0"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
-                            Content="{markup:FontSymbolIcon Glyph=ProcessingE9F5,
+                            Content="{markup:FontSymbolIcon Glyph=CodeE943,
                                                             FontSize={StaticResource PixevalButtonIconSize}}"
                             IsChecked="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Token.IsRegularExpression, Mode=TwoWay}" />
-                        <controls:IconButton
+                        <!--  ReSharper disable once UnusedMember.Local  -->
+                        <Button
                             x:Name="SubmitButton"
                             x:Uid="/TokenInputTextBox/SubmitButton"
                             Grid.Column="3"
+                            Width="32"
                             Height="32"
+                            Padding="0"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
-                            Icon="{markup:FontSymbolIcon Glyph=SendE724,
-                                                         FontSize={StaticResource PixevalButtonIconSize}}"
+                            Content="{markup:FontSymbolIcon Glyph=ReturnKeyE751,
+                                                            FontSize={StaticResource PixevalButtonIconSize}}"
                             Visibility="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=SubmitEnable, Mode=OneWay}" />
                     </Grid>
                 </ControlTemplate>

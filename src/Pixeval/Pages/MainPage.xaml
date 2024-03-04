@@ -227,14 +227,12 @@
                         <AppBarButton
                             x:Uid="/MainPage/ReverseSearchButton"
                             Width="{StaticResource CollapsedAppBarButtonWidth}"
-                            Content="{markup:FontSymbolIcon Glyph=CameraE722,
-                                                            FontSize=13}"
+                            Content="{markup:FontSymbolIcon Glyph=CameraE722}"
                             Tapped="ReverseSearchButton_OnTapped" />
                         <AppBarButton
                             x:Uid="/MainPage/OpenSearchSettingButton"
                             Width="{StaticResource CollapsedAppBarButtonWidth}"
-                            Content="{markup:FontSymbolIcon Glyph=SettingsE713,
-                                                            FontSize=13}"
+                            Content="{markup:FontSymbolIcon Glyph=SettingsE713}"
                             Tapped="OpenSearchSettingButton_OnTapped" />
                     </CommandBar>
                 </Grid>

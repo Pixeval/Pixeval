@@ -1,6 +1,6 @@
 {
-  "CommentIsTooShortOrTooLongToastContentFormatted": "请发布长度在0到140之间的评论，当前评论字数：{0}",
-  "CommentIsTooShortOrTooLongToastTitle": "评论长度不符合规范",
-  "ReplyContentRichEditBox/PlaceholderText": "输入评论",
-  "SendButton/Text": "发送"
+    "CommentIsTooShortOrTooLongToastContentFormatted": "请发布长度在0到140之间的评论，当前评论字数：{0}",
+    "CommentIsTooShortOrTooLongToastTitle": "评论长度不符合规范",
+    "ReplyContentRichEditBox/PlaceholderText": "输入评论",
+    "SendButton/ToolTipService/ToolTip": "发送"
 }

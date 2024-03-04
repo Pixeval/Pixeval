@@ -11,7 +11,6 @@
     xmlns:misc="using:Pixeval.Misc"
     Loaded="AboutPage_OnLoaded"
     mc:Ignorable="d">
-
     <Grid Margin="20,40,20,20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -30,6 +29,11 @@
                         x:Uid="/AboutPage/SpecialThanksContentTextBlock"
                         FontSize="{StaticResource PixevalContentFontSize}"
                         TextWrapping="Wrap" />
+                    <controls:UniformGrid
+                        x:Name="UniformGrid"
+                        ColumnSpacing="10"
+                        RowSpacing="10" />
+                    <!-- 由于UniformGridLayout有崩溃Bug，暂时使用 UniformGrid 代替
                     <ItemsRepeater ItemsSource="{x:Bind misc:Supporter.Supporters}">
                         <ItemsRepeater.Layout>
                             <UniformGridLayout
@@ -48,7 +52,7 @@
                                     PersonProfileNavigateUri="{x:Bind ProfileUri}" />
                             </DataTemplate>
                         </ItemsRepeater.ItemTemplate>
-                    </ItemsRepeater>
+                    </ItemsRepeater>-->
                 </StackPanel>
                 <StackPanel>
                     <TextBlock x:Uid="/AboutPage/DependenciesSubtitleTextBlock" Style="{StaticResource SubtitleTextBlockStyle}" />

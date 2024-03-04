@@ -2,6 +2,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml;
 using System;
+using System.Diagnostics;
 using Windows.Foundation;
 using WinUI3Utilities;
 using Microsoft.UI.Xaml.Media;
@@ -10,7 +11,7 @@ namespace Pixeval.Controls;
 
 public partial class ZoomableImage
 {
-    private bool _isInitMode = false;
+    private bool _isInitMode;
 
     /// <summary>
     /// 缩放
@@ -121,10 +122,10 @@ public partial class ZoomableImage
     private void OnImageScaleChanged(float oldScale)
     {
         // 初始化时抑制动画
-        if (!_isInitMode)
-            StartZoomAnimation(oldScale);
-        else
+        if (_isInitMode || Sources is not { Count: > 0 })
             _isInitMode = false;
+        else
+            StartZoomAnimation(oldScale);
         switch (ImageScale)
         {
             case 1:

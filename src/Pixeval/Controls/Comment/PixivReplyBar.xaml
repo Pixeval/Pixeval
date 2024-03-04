@@ -11,16 +11,16 @@
     <Grid ColumnSpacing="5">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="40" />
-            <ColumnDefinition />
-            <ColumnDefinition Width="75" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
         <Button
             x:Name="EmojiButton"
             Grid.Column="0"
-            HorizontalAlignment="Left"
+            HorizontalAlignment="Center"
             VerticalAlignment="Center"
             Content="{markup:FontSymbolIcon Glyph=Emoji2E76E,
-                                            FontSize=20}"
+                                            FontSize={StaticResource PixevalButtonIconSize}}"
             Style="{StaticResource PixevalRoundedButtonStyle}">
             <Button.Flyout>
                 <Flyout>
@@ -52,20 +52,18 @@
             x:Name="ReplyContentRichEditBox"
             x:Uid="/PixivReplyBar/ReplyContentRichEditBox"
             Grid.Column="1"
-            Height="35"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Center"
             x:FieldModifier="public"
             ContextMenuOpening="ReplyContentRichEditBox_OnContextMenuOpening" />
-        <controls:IconButton
+        <Button
             x:Uid="/PixivReplyBar/SendButton"
             Grid.Column="2"
-            Width="70"
-            Height="30"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center"
-            Icon="{markup:FontSymbolIcon Glyph=SendE724,
-                                         FontSize={StaticResource PixevalSubscriptFontSize}}"
+            Width="32"
+            Height="32"
+            Padding="0"
+            Content="{markup:FontSymbolIcon Glyph=SendE724,
+                                            FontSize={StaticResource PixevalButtonIconSize}}"
             Tapped="SendButton_OnTapped" />
     </Grid>
 </UserControl>

@@ -18,7 +18,7 @@
     "IsInsider": "正在使用内部版本",
     "MajorUpdateAvailable": "有可用的主要更新",
     "MinorUpdateAvailable": "有可用的次要更新",
-    "PatchUpdateAvailable": "有可用的修订更新",
+    "BuildUpdateAvailable": "有可用的生成更新",
     "UnknownUpdateState": "未知更新状态",
     "UpdateApp": "软件更新",
     "LanguageSystemDefault": "系统默认",
