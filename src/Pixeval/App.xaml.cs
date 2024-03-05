@@ -63,6 +63,7 @@ public partial class App
 
     protected override async void OnLaunched(LaunchActivatedEventArgs args)
     {
+        Resources["DefaultAppBarButtonStyle"].To<Style>().Setters[7] = new Setter(FrameworkElement.WidthProperty, 45);
         if (AppInfo.CustomizeTitleBarSupported)
             Resources[NavigationViewContentMargin] = new Thickness(0, 48, 0, 0);
 

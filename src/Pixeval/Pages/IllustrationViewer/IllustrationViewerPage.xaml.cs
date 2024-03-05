@@ -247,25 +247,10 @@ public sealed partial class IllustrationViewerPage : SupportCustomTitleBarDragRe
         TimeUp = true;
     }
 
-    private void CommandBarElementOnSizeChanged(object sender, SizeChangedEventArgs e)
+    private void Image_OnLoading(FrameworkElement sender, object args)
     {
-        var button = (ICommandBarElement)sender;
-        var frameworkElement = (FrameworkElement)sender;
-        if (button.IsInOverflow)
-        {
-            frameworkElement.Width = double.NaN;
-            if (frameworkElement == ShowQrCodeButton)
-                ShowQrCodeTeachingTip.Target = null;
-            else if (frameworkElement == GenerateLinkButton)
-                GenerateLinkTeachingTip.Target = null;
-        }
-        else
-        {
-            frameworkElement.Width = (double)Application.Current.Resources["CollapsedAppBarButtonWidth"];
-            if (frameworkElement == ShowQrCodeButton)
-                ShowQrCodeTeachingTip.Target = frameworkElement;
-            else if (frameworkElement == GenerateLinkButton)
-                GenerateLinkTeachingTip.Target = frameworkElement;
-        }
+        var teachingTip = sender.GetTag<TeachingTip>();
+        var appBarButton = teachingTip.GetTag<AppBarButton>();
+        teachingTip.Target = appBarButton.IsInOverflow ? null : appBarButton;
     }
 }
