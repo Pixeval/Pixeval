@@ -33,25 +33,30 @@ public class FontSymbolIconSourceExtension : TextIconExtension
 
     public FontFamily? FontFamily { get; set; }
 
+    public Size Size { get; set; }
+
     /// <inheritdoc />
     protected override object ProvideValue()
     {
-        var fontIcon = new FontIconSource
+        var icon = new FontIconSource
         {
             Glyph = ((char)Glyph).ToString(),
-            FontFamily = FontFamily ?? new FontFamily(AppHelper.IsWindows11 ? "Segoe Fluent Icons" : "Segoe MDL2 Assets"),
+            FontFamily = FontFamily ??
+                         new FontFamily(AppHelper.IsWindows11 ? "Segoe Fluent Icons" : "Segoe MDL2 Assets"),
             FontWeight = FontWeight,
             FontStyle = FontStyle,
             IsTextScaleFactorEnabled = IsTextScaleFactorEnabled,
-            MirroredWhenRightToLeft = MirroredWhenRightToLeft
+            MirroredWhenRightToLeft = MirroredWhenRightToLeft,
         };
 
-        if (FontSize > 0)
-            fontIcon.FontSize = FontSize;
+        if (Size is not Size.None)
+            icon.FontSize = (int)Size;
+        else if (FontSize > 0)
+            icon.FontSize = FontSize;
 
         if (Foreground is not null)
-            fontIcon.Foreground = Foreground;
+            icon.Foreground = Foreground;
 
-        return fontIcon;
+        return icon;
     }
 }

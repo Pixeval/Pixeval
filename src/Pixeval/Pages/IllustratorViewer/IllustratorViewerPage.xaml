@@ -127,33 +127,28 @@
                             </AppBarElementContainer>
                             <controls:AppButtonItem
                                 x:Uid="/IllustrateViewerPage/FollowingUserItem"
-                                Icon="{markup:FontSymbolIcon Glyph=AddFriendE8FA,
-                                                             FontSize=15}"
-                                Number="{x:Bind _viewModel.Metrics.TotalFollowUsers, Mode=OneWay}" />
+                                Number="{x:Bind _viewModel.Metrics.TotalFollowUsers, Mode=OneWay}"
+                                Symbol="AddFriendE8FA" />
                             <AppBarSeparator />
                             <controls:AppButtonItem
                                 x:Uid="/IllustrateViewerPage/MyPixivUserItem"
-                                Icon="{markup:FontSymbolIcon Glyph=PeopleE716,
-                                                             FontSize=15}"
-                                Number="{x:Bind _viewModel.Metrics.TotalMyPixivUsers, Mode=OneWay}" />
+                                Number="{x:Bind _viewModel.Metrics.TotalMyPixivUsers, Mode=OneWay}"
+                                Symbol="PeopleE716" />
                             <AppBarSeparator />
                             <controls:AppButtonItem
                                 x:Uid="/IllustrateViewerPage/IllustrationCountItem"
-                                Icon="{markup:FontSymbolIcon Glyph=PhotoE91B,
-                                                             FontSize=15}"
-                                Number="{x:Bind _viewModel.Metrics.TotalIllusts, Mode=OneWay}" />
+                                Number="{x:Bind _viewModel.Metrics.TotalIllusts, Mode=OneWay}"
+                                Symbol="PhotoE91B" />
                             <AppBarSeparator />
                             <controls:AppButtonItem
                                 x:Uid="/IllustrateViewerPage/MangaCountItem"
-                                Icon="{markup:FontSymbolIcon Glyph=PictureE8B9,
-                                                             FontSize=15}"
-                                Number="{x:Bind _viewModel.Metrics.TotalManga, Mode=OneWay}" />
+                                Number="{x:Bind _viewModel.Metrics.TotalManga, Mode=OneWay}"
+                                Symbol="PictureE8B9" />
                             <AppBarSeparator />
                             <controls:AppButtonItem
                                 x:Uid="/IllustrateViewerPage/NovelCountItem"
-                                Icon="{markup:FontSymbolIcon Glyph=PhoneBookE780,
-                                                             FontSize=15}"
-                                Number="{x:Bind _viewModel.Metrics.TotalNovelSeries, Mode=OneWay}" />
+                                Number="{x:Bind _viewModel.Metrics.TotalNovelSeries, Mode=OneWay}"
+                                Symbol="ReadingModeE736" />
                         </CommandBar>
                         <CommandBar Grid.Column="1" DefaultLabelPosition="Right">
                             <AppBarButton Command="{x:Bind _viewModel.FollowCommand}" Visibility="{x:Bind _viewModel.IsFollowed, Converter={StaticResource BoolNegationToVisibilityConverter}, Mode=OneWay}" />
@@ -180,11 +175,11 @@
                         <controls1:SegmentedItem
                             x:Name="IllustrationTab"
                             x:Uid="/IllustrateViewerPage/IllustrationNavigationViewItem"
-                            Icon="{markup:FontSymbolIcon Glyph=PictureE8B9}"
+                            Icon="{markup:FontSymbolIcon Glyph=PhotoE91B}"
                             Tag="{x:Bind _viewModel.IllustrationTag}" />
                         <controls1:SegmentedItem
                             x:Uid="/IllustrateViewerPage/MangaNavigationViewItem"
-                            Icon="{markup:FontSymbolIcon Glyph=FavoriteListE728}"
+                            Icon="{markup:FontSymbolIcon Glyph=PictureE8B9}"
                             Tag="{x:Bind _viewModel.MangaTag}" />
                         <controls1:SegmentedItem
                             x:Uid="/IllustrateViewerPage/NovelNavigationViewItem"

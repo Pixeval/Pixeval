@@ -36,13 +36,16 @@ public class FontSymbolIconExtension : TextIconExtension
 
     public FlowDirection FlowDirection { get; set; }
 
+    public Size Size { get; set; }
+
     /// <inheritdoc />
     protected override object ProvideValue()
     {
-        var fontIcon = new FontIcon
+        var icon = new FontIcon
         {
             Glyph = ((char)Glyph).ToString(),
-            FontFamily = FontFamily ?? new FontFamily(AppHelper.IsWindows11 ? "Segoe Fluent Icons" : "Segoe MDL2 Assets"),
+            FontFamily = FontFamily ??
+                         new FontFamily(AppHelper.IsWindows11 ? "Segoe Fluent Icons" : "Segoe MDL2 Assets"),
             FontWeight = FontWeight,
             FontStyle = FontStyle,
             IsTextScaleFactorEnabled = IsTextScaleFactorEnabled,
@@ -50,12 +53,14 @@ public class FontSymbolIconExtension : TextIconExtension
             FlowDirection = FlowDirection
         };
 
-        if (FontSize > 0) 
-            fontIcon.FontSize = FontSize;
+        if (Size is not Size.None)
+            icon.FontSize = (int)Size;
+        else if (FontSize > 0)
+            icon.FontSize = FontSize;
 
-        if (Foreground is not null) 
-            fontIcon.Foreground = Foreground;
+        if (Foreground is not null)
+            icon.Foreground = Foreground;
 
-        return fontIcon;
+        return icon;
     }
 }
