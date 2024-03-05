@@ -360,20 +360,14 @@
                         Grid.Column="1"
                         HorizontalAlignment="Center"
                         DefaultLabelPosition="Collapsed">
-                        <AppBarToggleButton
-                            Command="{x:Bind _viewModel.IllustrationInfoAndCommentsCommand}"
-                            IsChecked="{x:Bind IllustrationInfoAndCommentsSplitView.IsPaneOpen, Mode=TwoWay}"
-                            SizeChanged="CommandBarElementOnSizeChanged" />
-                        <AppBarButton
-                            Command="{x:Bind _viewModel.CurrentImage.PlayGifCommand, Mode=OneWay}"
-                            SizeChanged="CommandBarElementOnSizeChanged"
-                            Visibility="{x:Bind _viewModel.CurrentIllustration.IsUgoira, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
+                        <AppBarToggleButton Command="{x:Bind _viewModel.IllustrationInfoAndCommentsCommand}" IsChecked="{x:Bind IllustrationInfoAndCommentsSplitView.IsPaneOpen, Mode=TwoWay}" />
+                        <AppBarButton Command="{x:Bind _viewModel.CurrentImage.PlayGifCommand, Mode=OneWay}" Visibility="{x:Bind _viewModel.CurrentIllustration.IsUgoira, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
                         <AppBarSeparator />
-                        <AppBarButton Command="{x:Bind _viewModel.CurrentImage.CopyCommand, Mode=OneWay}" SizeChanged="CommandBarElementOnSizeChanged" />
-                        <AppBarButton Command="{x:Bind _viewModel.CurrentImage.SaveCommand, Mode=OneWay}" SizeChanged="CommandBarElementOnSizeChanged" />
-                        <AppBarButton Command="{x:Bind _viewModel.CurrentImage.SaveAsCommand, Mode=OneWay}" SizeChanged="CommandBarElementOnSizeChanged" />
+                        <AppBarButton Command="{x:Bind _viewModel.CurrentImage.CopyCommand, Mode=OneWay}" />
+                        <AppBarButton Command="{x:Bind _viewModel.CurrentImage.SaveCommand, Mode=OneWay}" />
+                        <AppBarButton Command="{x:Bind _viewModel.CurrentImage.SaveAsCommand, Mode=OneWay}" />
                         <AppBarSeparator />
-                        <AppBarButton Command="{x:Bind _viewModel.CurrentImage.SetAsCommand, Mode=OneWay}" SizeChanged="CommandBarElementOnSizeChanged">
+                        <AppBarButton Command="{x:Bind _viewModel.CurrentImage.SetAsCommand, Mode=OneWay}">
                             <AppBarButton.Flyout>
                                 <MenuFlyout>
                                     <MenuFlyoutItem Command="{x:Bind _viewModel.CurrentImage.SetAsBackgroundCommand, Mode=OneWay}" />
@@ -382,23 +376,18 @@
                             </AppBarButton.Flyout>
                         </AppBarButton>
                         <AppBarSeparator />
-                        <AppBarButton Command="{x:Bind _viewModel.CurrentIllustration.AddToBookmarkCommand, Mode=OneWay}" SizeChanged="CommandBarElementOnSizeChanged" />
+                        <AppBarButton Command="{x:Bind _viewModel.CurrentIllustration.AddToBookmarkCommand, Mode=OneWay}" />
                         <AppBarButton
                             x:Name="GenerateLinkButton"
                             Command="{x:Bind _viewModel.CurrentIllustration.GenerateLinkCommand, Mode=OneWay}"
-                            CommandParameter="{x:Bind GenerateLinkTeachingTip}"
-                            SizeChanged="CommandBarElementOnSizeChanged" />
-                        <AppBarButton
-                            Command="{x:Bind _viewModel.CurrentIllustration.GenerateWebLinkCommand, Mode=OneWay}"
-                            CommandParameter="{x:Bind}"
-                            SizeChanged="CommandBarElementOnSizeChanged" />
-                        <AppBarButton Command="{x:Bind _viewModel.CurrentIllustration.OpenInWebBrowserCommand, Mode=OneWay}" SizeChanged="CommandBarElementOnSizeChanged" />
+                            CommandParameter="{x:Bind GenerateLinkTeachingTip}" />
+                        <AppBarButton Command="{x:Bind _viewModel.CurrentIllustration.GenerateWebLinkCommand, Mode=OneWay}" CommandParameter="{x:Bind}" />
+                        <AppBarButton Command="{x:Bind _viewModel.CurrentIllustration.OpenInWebBrowserCommand, Mode=OneWay}" />
                         <AppBarButton
                             x:Name="ShowQrCodeButton"
                             Command="{x:Bind _viewModel.CurrentIllustration.ShowQrCodeCommand, Mode=OneWay}"
-                            CommandParameter="{x:Bind ShowQrCodeTeachingTip}"
-                            SizeChanged="CommandBarElementOnSizeChanged" />
-                        <AppBarButton Command="{x:Bind _viewModel.CurrentImage.ShareCommand, Mode=OneWay}" SizeChanged="CommandBarElementOnSizeChanged" />
+                            CommandParameter="{x:Bind ShowQrCodeTeachingTip}" />
+                        <AppBarButton Command="{x:Bind _viewModel.CurrentImage.ShareCommand, Mode=OneWay}" />
                     </CommandBar>
                     <TextBlock
                         Grid.Column="2"
@@ -430,18 +419,23 @@
                         x:Name="GenerateLinkTeachingTip"
                         x:Uid="/IllustrateViewerPage/GenerateLinkToThisPageButtonTeachingTip"
                         Grid.Column="0"
-                        ActionButtonClick="GenerateLinkToThisPageButtonTeachingTip_OnActionButtonClick">
+                        ActionButtonClick="GenerateLinkToThisPageButtonTeachingTip_OnActionButtonClick"
+                        Tag="{x:Bind GenerateLinkButton}">
                         <TeachingTip.HeroContent>
-                            <Image Source="ms-appx:///Assets/Images/illust-app-link-sample.png" />
+                            <Image
+                                Loading="Image_OnLoading"
+                                Source="ms-appx:///Assets/Images/illust-app-link-sample.png"
+                                Tag="{x:Bind GenerateLinkTeachingTip}" />
                         </TeachingTip.HeroContent>
                     </TeachingTip>
                     <TeachingTip
                         x:Name="ShowQrCodeTeachingTip"
                         x:Uid="/IllustrateViewerPage/QrCodeTeachingTip"
                         Grid.Column="0"
-                        IsLightDismissEnabled="True">
+                        IsLightDismissEnabled="True"
+                        Tag="{x:Bind ShowQrCodeButton}">
                         <TeachingTip.HeroContent>
-                            <Image />
+                            <Image Loading="Image_OnLoading" Tag="{x:Bind ShowQrCodeTeachingTip}" />
                         </TeachingTip.HeroContent>
                     </TeachingTip>
                 </Grid>
