@@ -1,11 +1,11 @@
-using Microsoft.UI.Xaml.Controls;
+using Pixeval.Controls.MarkupExtensions;
 using WinUI3Utilities.Attributes;
 
 namespace Pixeval.Controls;
 
 [DependencyProperty<string>("Title")]
 [DependencyProperty<int>("Number")]
-[DependencyProperty<IconElement>("Icon")]
+[DependencyProperty<FontIconSymbol>("Symbol")]
 public sealed partial class AppButtonItem
 {
     public AppButtonItem() => InitializeComponent();

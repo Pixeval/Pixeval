@@ -18,28 +18,58 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using Windows.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
 using Pixeval.Controls.MarkupExtensions;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
 
 namespace Pixeval.Controls;
 
-[DependencyProperty<FontIconSymbol>("Symbol", DependencyPropertyDefaultValue.UnsetValue, nameof(PropertyChangedCallback))]
+[DependencyProperty<FontIconSymbol>("Symbol", DependencyPropertyDefaultValue.UnsetValue, nameof(SymbolPropertyChangedCallback))]
+[DependencyProperty<Size>("Size", DependencyPropertyDefaultValue.UnsetValue, nameof(SizePropertyChangedCallback))]
+[DependencyProperty<bool>("IsBackLayer", DependencyPropertyDefaultValue.UnsetValue, nameof(IsBackLayerPropertyChangedCallback))]
 public partial class FontSymbolIcon : FontIcon
 {
-    private static void PropertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    private static void SymbolPropertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         d.To<FontSymbolIcon>().Glyph = ((char)e.NewValue.To<FontIconSymbol>()).ToString();
     }
+
+    private static void SizePropertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (e.NewValue is { } size and not Size.None)
+            d.To<FontSymbolIcon>().FontSize = (int)size;
+    }
+
+    private static void IsBackLayerPropertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (e.NewValue is true)
+            d.To<FontSymbolIcon>().Foreground = new SolidColorBrush(Color.FromArgb(0x80, 0, 0, 0));
+    }
 }
 
-[DependencyProperty<FontIconSymbol>("Symbol", DependencyPropertyDefaultValue.UnsetValue, nameof(PropertyChangedCallback))]
+[DependencyProperty<FontIconSymbol>("Symbol", DependencyPropertyDefaultValue.UnsetValue, nameof(SymbolPropertyChangedCallback))]
+[DependencyProperty<Size>("Size", DependencyPropertyDefaultValue.UnsetValue, nameof(SizePropertyChangedCallback))]
+[DependencyProperty<bool>("IsBackLayer", DependencyPropertyDefaultValue.UnsetValue, nameof(IsBackLayerPropertyChangedCallback))]
 public partial class FontSymbolIconSource : FontIconSource
 {
-    private static void PropertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    private static void SymbolPropertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        d.To<FontSymbolIconSource>().Glyph = ((char)e.NewValue.To<FontIconSymbol>()).ToString();
+        d.To<FontSymbolIcon>().Glyph = ((char)e.NewValue.To<FontIconSymbol>()).ToString();
+    }
+
+    private static void SizePropertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (e.NewValue is { } size and not Size.None)
+            d.To<FontSymbolIcon>().FontSize = (int)size;
+    }
+
+    private static void IsBackLayerPropertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (e.NewValue is true)
+            d.To<FontSymbolIcon>().Foreground = new SolidColorBrush(Color.FromArgb(0x80, 0, 0, 0));
     }
 }

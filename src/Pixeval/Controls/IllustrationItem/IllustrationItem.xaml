@@ -111,9 +111,9 @@
             <Grid.RenderTransform>
                 <ScaleTransform CenterX="10" CenterY="10" ScaleX="0" ScaleY="0" />
             </Grid.RenderTransform>
-            <controls:FontSymbolIcon Foreground="#80000000" Symbol="HeartFillEB52" />
+            <controls:FontSymbolIcon IsBackLayer="True" Symbol="HeartFillEB52" />
             <IconSourceElement IconSource="{x:Bind ViewModel.BookmarkCommand.IconSource, Mode=OneWay}" />
-            <controls:FontSymbolIcon Foreground="White" Symbol="HeartEB51" />
+            <controls:FontSymbolIcon Symbol="HeartEB51" />
         </Grid>
         <Grid
             Margin="10"
@@ -140,8 +140,8 @@
                 Visibility="{x:Bind ViewModel.IsUgoira, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
             <controls:FontSymbolIcon
                 Grid.Column="4"
-                FontSize="18"
-                Foreground="#80000000"
+                IsBackLayer="True"
+                Size="Small"
                 Symbol="SetSolidF5EE"
                 Visibility="{x:Bind ViewModel.IsManga, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
             <controls:FontSymbolIcon

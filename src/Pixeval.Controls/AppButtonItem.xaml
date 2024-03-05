@@ -27,12 +27,13 @@
             Foreground="{StaticResource TextSecondaryAccentColor}"
             Style="{StaticResource BaseTextBlockStyle}"
             Text="{x:Bind Title, Mode=OneWay}" />
-        <ContentControl
+        <local:FontSymbolIcon
             Grid.Row="1"
             Grid.Column="0"
             VerticalAlignment="Center"
-            Content="{x:Bind Icon, Mode=OneWay}"
-            Foreground="{StaticResource TextSecondaryAccentColor}" />
+            Foreground="{StaticResource TextSecondaryAccentColor}"
+            Size="Small"
+            Symbol="{x:Bind Symbol, Mode=OneWay}" />
         <TextBlock
             Grid.Row="1"
             Grid.Column="1"
