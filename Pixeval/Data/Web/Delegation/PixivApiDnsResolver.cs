@@ -19,6 +19,7 @@
 #endregion
 
 using System.Collections.Generic;
+using System.IO;
 using System.Net;
 
 namespace Pixeval.Data.Web.Delegation
@@ -29,21 +30,41 @@ namespace Pixeval.Data.Web.Delegation
 
         protected override IEnumerable<IPAddress> UseDefaultDns()
         {
-            yield return IPAddress.Parse("210.140.131.219");
-            yield return IPAddress.Parse("210.140.131.223");
-            yield return IPAddress.Parse("210.140.131.226");
+            if (File.Exists("./ApiIP.cfg"))
+            {
+                foreach (var ip in File.ReadAllLines("./ApiIP.cfg"))
+                {
+                    yield return IPAddress.Parse(ip);
+                }
+            }
+            else
+            {
+                yield return IPAddress.Parse("210.140.131.219");
+                yield return IPAddress.Parse("210.140.131.223");
+                yield return IPAddress.Parse("210.140.131.226");
+            }
         }
     }
-    
+
     public class PixivImageDnsResolver : DnsResolver
     {
         public static readonly DnsResolver Instance = new PixivImageDnsResolver();
 
         protected override IEnumerable<IPAddress> UseDefaultDns()
         {
-            yield return IPAddress.Parse("210.140.92.138");
-            yield return IPAddress.Parse("210.140.92.139");
-            yield return IPAddress.Parse("210.140.92.140");
+            if (File.Exists("./ImageIP.cfg"))
+            {
+                foreach (var ip in File.ReadAllLines("./ImageIP.cfg"))
+                {
+                    yield return IPAddress.Parse(ip);
+                }
+            }
+            else
+            {
+                yield return IPAddress.Parse("210.140.92.141");
+                yield return IPAddress.Parse("210.140.92.142");
+                yield return IPAddress.Parse("210.140.92.143");
+            }
         }
     }
 }

@@ -13,6 +13,7 @@
     <Platforms>x86;AnyCPU</Platforms>
     <NoWarn>$(NoWarn);NU1701</NoWarn>
     <Configurations>Debug;Release</Configurations>
+    <ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>
   </PropertyGroup>
 
   <PropertyGroup>
