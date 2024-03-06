@@ -32,6 +32,6 @@ public class IllustratorNameMacro : IMacro<IllustrationItemViewModel>.ITransduce
 
     public string Substitute(IllustrationItemViewModel context)
     {
-        return context.Illustrate.User?.Name?.Let(IoHelper.NormalizePathSegment) ?? MacroParserResources.UnknownArtist;
+        return context.Entry.User?.Name?.Let(IoHelper.NormalizePathSegment) ?? MacroParserResources.UnknownArtist;
     }
 }

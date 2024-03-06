@@ -32,6 +32,6 @@ public class SpotlightTitleMacro : IMacro<IllustrationItemViewModel>.ITransducer
 
     public string Substitute(IllustrationItemViewModel context)
     {
-        return context.Illustrate.SpotlightTitle?.Let(IoHelper.NormalizePathSegment) ?? MacroParserResources.UnknownSpotlightTitle;
+        return context.Entry.SpotlightTitle?.Let(IoHelper.NormalizePathSegment) ?? MacroParserResources.UnknownSpotlightTitle;
     }
 }

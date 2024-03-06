@@ -371,13 +371,13 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
 
     private void IsNotUgoiraAndLoadingCompletedCanExecuteRequested(XamlUICommand sender, CanExecuteRequestedEventArgs args) => args.CanExecute = !IllustrationViewModel.IsUgoira && LoadSuccessfully;
 
-    public XamlUICommand SaveCommand { get; } = IllustrateItemResources.Save.GetCommand(
+    public XamlUICommand SaveCommand { get; } = EntryItemResources.Save.GetCommand(
         FontIconSymbol.SaveE74E, VirtualKeyModifiers.Control, VirtualKey.S);
 
-    public XamlUICommand SaveAsCommand { get; } = IllustrateItemResources.SaveAs.GetCommand(
+    public XamlUICommand SaveAsCommand { get; } = EntryItemResources.SaveAs.GetCommand(
         FontIconSymbol.SaveAsE792, VirtualKeyModifiers.Control | VirtualKeyModifiers.Shift, VirtualKey.S);
 
-    public XamlUICommand CopyCommand { get; } = IllustrateItemResources.Copy.GetCommand(
+    public XamlUICommand CopyCommand { get; } = EntryItemResources.Copy.GetCommand(
         FontIconSymbol.CopyE8C8, VirtualKeyModifiers.Control, VirtualKey.C);
 
     public XamlUICommand PlayGifCommand { get; } = "".GetCommand(FontIconSymbol.StopE71A);

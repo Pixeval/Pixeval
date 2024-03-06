@@ -55,7 +55,7 @@ public static class IllustrationViewerHelper
     public static void CreateWindowWithPage<T>(this T illustrationViewModel, IList<T> illustrationViewModels) where T : IllustrationItemViewModel
     {
         var index = illustrationViewModels.IndexOf(illustrationViewModel);
-        CreateWindowWithPage(illustrationViewModel.Illustrate, (illustrationViewModels, index));
+        CreateWindowWithPage(illustrationViewModel.Entry, (illustrationViewModels, index));
     }
 
     /// <summary>
@@ -66,7 +66,7 @@ public static class IllustrationViewerHelper
     public static void CreateWindowWithPage(this IllustrationItemViewModel illustrationViewModel, IllustrationViewViewModel illustrationViewViewModel)
     {
         var index = illustrationViewViewModel.DataProvider.View.IndexOf(illustrationViewModel);
-        CreateWindowWithPage(illustrationViewModel.Illustrate, (illustrationViewViewModel, index));
+        CreateWindowWithPage(illustrationViewModel.Entry, (illustrationViewViewModel, index));
     }
 
     public static IllustrationViewerPageViewModel GetViewModel(this FrameworkElement element, object? param)

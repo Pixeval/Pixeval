@@ -17,7 +17,7 @@
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
     </controls:ConstrainedBox.Resources>
     <!--  图片长宽均为5，故为(3*5):(3+5)  -->
-    <Grid ToolTipService.ToolTip="{x:Bind ViewModel.Username, Mode=OneWay}">
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
@@ -39,17 +39,15 @@
                     Content="{markup:FontSymbolIcon Glyph=IDBadgeF427,
                                                     FontSize=11}"
                     Foreground="{StaticResource TextSecondaryAccentColor}" />
-                <StackPanel Orientation="Horizontal" Spacing="5">
-                    <TextBlock
-                        VerticalAlignment="Center"
-                        Foreground="{StaticResource TextSecondaryAccentColor}"
-                        Style="{StaticResource SubscriptTextBlockStyle}"
-                        Text="{x:Bind ViewModel.UserId, Mode=OneWay}" />
-                    <local:PixevalBadge
-                        Mode="Following"
-                        UseSmall="True"
-                        Visibility="{x:Bind ViewModel.IsFollowed, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
-                </StackPanel>
+                <TextBlock
+                    VerticalAlignment="Center"
+                    Foreground="{StaticResource TextSecondaryAccentColor}"
+                    Style="{StaticResource SubscriptTextBlockStyle}"
+                    Text="{x:Bind ViewModel.UserId, Mode=OneWay}" />
+                <local:PixevalBadge
+                    Mode="Following"
+                    UseSmall="True"
+                    Visibility="{x:Bind ViewModel.IsFollowed, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
             </StackPanel>
         </StackPanel>
         <Button

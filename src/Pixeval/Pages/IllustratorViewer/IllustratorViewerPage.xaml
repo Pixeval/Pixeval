@@ -70,8 +70,8 @@
                                 Orientation="Horizontal"
                                 Spacing="10">
                                 <TextBlock
-                                    FontSize="20"
                                     IsTextSelectionEnabled="True"
+                                    Style="{StaticResource TitleTextBlockStyle}"
                                     Text="{x:Bind _viewModel.Name}" />
                                 <controls:PixevalBadge Mode="Premium" Visibility="{x:Bind _viewModel.IsPremium, Converter={StaticResource BoolToVisibilityConverter}}" />
                             </StackPanel>
@@ -184,7 +184,6 @@
                         <controls1:SegmentedItem
                             x:Uid="/IllustrateViewerPage/NovelNavigationViewItem"
                             Icon="{markup:FontSymbolIcon Glyph=ReadingModeE736}"
-                            IsEnabled="False"
                             Tag="{x:Bind _viewModel.NovelTag}" />
                         <controls1:SegmentedItem
                             x:Uid="/IllustrateViewerPage/BookmarkedIllustrationAndMangaNavigationViewItem"

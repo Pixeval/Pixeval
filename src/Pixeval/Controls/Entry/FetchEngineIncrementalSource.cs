@@ -25,7 +25,7 @@ using CommunityToolkit.WinUI.Collections;
 
 namespace Pixeval.Controls;
 
-public abstract class FetchEngineIncrementalSource<T, TModel>(IAsyncEnumerable<T> asyncEnumerator, int limit = -1)
+public abstract class FetchEngineIncrementalSource<T, TModel>(IAsyncEnumerable<T?> asyncEnumerator, int limit = -1)
     : IIncrementalSource<TModel>
 {
     /// <summary>

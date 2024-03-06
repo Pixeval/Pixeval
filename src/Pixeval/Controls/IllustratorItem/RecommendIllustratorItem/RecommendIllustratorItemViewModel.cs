@@ -45,13 +45,13 @@ public partial class RecommendIllustratorItemViewModel : UserItemViewModel<Recom
         FollowCommand.GetFollowCommand(IsFollowed);
     }
 
-    public bool Premium => Illustrate.Premium;
+    public bool Premium => Entry.Premium;
 
-    public string Username => Illustrate.Name;
+    public string Username => Entry.Name;
 
-    public override long UserId => Illustrate.Id;
+    public override long UserId => Entry.Id;
 
-    public override string AvatarUrl => Illustrate.Image;
+    public override string AvatarUrl => Entry.Image;
 
     protected override void FollowCommandExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {

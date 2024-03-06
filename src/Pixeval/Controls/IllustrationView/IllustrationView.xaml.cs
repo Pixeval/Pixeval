@@ -22,7 +22,6 @@ using System.Linq;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
-using Pixeval.Misc;
 using Pixeval.Options;
 using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Util.UI;
@@ -36,12 +35,14 @@ namespace Pixeval.Controls;
 /// </summary>
 [DependencyProperty<ItemsViewLayoutType>("LayoutType", DependencyPropertyDefaultValue.Default)]
 [DependencyProperty<ThumbnailDirection>("ThumbnailDirection", DependencyPropertyDefaultValue.Default)]
-public sealed partial class IllustrationView : IScrollViewProvider
+public sealed partial class IllustrationView : IEntryView<IllustrationViewViewModel>
 {
     public const double LandscapeHeight = 180;
     public const double PortraitHeight = 250;
 
     public IllustrationViewViewModel ViewModel { get; } = new();
+
+    public AdvancedItemsView AdvancedItemsView => IllustrationItemsView;
 
     public ScrollView ScrollView => IllustrationItemsView.ScrollView;
 
@@ -92,6 +93,6 @@ public sealed partial class IllustrationView : IScrollViewProvider
 
     private void IllustrationItemsView_OnSelectionChanged(ItemsView sender, ItemsViewSelectionChangedEventArgs args)
     {
-        ViewModel.SelectedIllustrations = sender.SelectedItems.Cast<IllustrationItemViewModel>().ToArray();
+        ViewModel.SelectedEntries = sender.SelectedItems.Cast<IllustrationItemViewModel>().ToArray();
     }
 }

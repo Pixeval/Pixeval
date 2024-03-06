@@ -14,6 +14,8 @@
     <ItemGroup>
         <None Remove="AppButtonItem.xaml" />
         <None Remove="CardControl\CardControl.xaml" />
+        <None Remove="HeartButton.xaml" />
+        <None Remove="IconText.xaml" />
         <None Remove="Themes\Controls.xaml" />
         <None Remove="IconButton\IconButton.xaml" />
         <None Remove="LazyImage\LazyImage.xaml" />
@@ -56,6 +58,12 @@
     <ItemGroup>
         <PRIResource Include="Strings\zh-cn\PixevalBadge.resjson" />
         <PRIResource Include="Strings\zh-cn\AdvancedItemsView.resjson" />
+        <Page Update="IconText.xaml">
+          <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="HeartButton.xaml">
+          <Generator>MSBuild:Compile</Generator>
+        </Page>
         <Page Update="Themes\Controls.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>

@@ -1,8 +1,9 @@
-#region Copyright (c) Pixeval/Pixeval
+#region Copyright
+
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/IIllustrateViewModel.cs
+// Copyright (c) 2024 Pixeval/NovelFetchEngineIncrementalSource.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -16,20 +17,17 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 #endregion
 
-using System;
-using System.Diagnostics;
-using CommunityToolkit.Mvvm.ComponentModel;
+using System.Collections.Generic;
 using Pixeval.CoreApi.Model;
 
 namespace Pixeval.Controls;
 
-[DebuggerDisplay("{Illustrate}")]
-public abstract class IllustrateViewModel<T>(T illustrate) : ObservableObject, IDisposable
-    where T : IEntry
+public class NovelFetchEngineIncrementalSource(IAsyncEnumerable<Novel> asyncEnumerator, int limit = -1) : FetchEngineIncrementalSource<Novel, NovelItemViewModel>(asyncEnumerator, limit)
 {
-    public T Illustrate { get; } = illustrate;
+    protected override long Identifier(Novel entity) => entity.Id;
 
-    public abstract void Dispose();
+    protected override NovelItemViewModel Select(Novel entity) => new(entity);
 }

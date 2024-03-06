@@ -10,13 +10,13 @@ namespace Pixeval.Controls;
 [DependencyProperty<bool>("IsLoadingMore", "false", nameof(OnHasNoItemChanged))]
 [DependencyProperty<object>("Content")]
 [DependencyProperty<string>("TeachingTipTitle")]
-public sealed partial class IllustrateView
+public sealed partial class EntryView
 {
-    public IllustrateView() => InitializeComponent();
+    public EntryView() => InitializeComponent();
 
     private static void OnHasNoItemChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        var control = (IllustrateView)d;
+        var control = (EntryView)d;
         control.HasNoItemStackPanel.Visibility = control is { HasNoItem: true, IsLoadingMore: false } ? Visibility.Visible : Visibility.Collapsed;
     }
 }

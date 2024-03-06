@@ -10,7 +10,6 @@
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:labs="using:CommunityToolkit.Labs.WinUI"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:media="using:Microsoft.Xaml.Interactions.Media"
     x:Name="IllustrationThumbnailCard"
     Padding="0"
     CornerRadius="{ThemeResource ControlCornerRadius}"
@@ -36,34 +35,6 @@
                 To="1"
                 Duration="0:0:2" />
         </Storyboard>
-        <Storyboard x:Key="ThumbnailScaleOutStoryboard">
-            <DoubleAnimation
-                EasingFunction="{StaticResource EasingFunction}"
-                Storyboard.TargetName="ImageBookmarkButtonGrid"
-                Storyboard.TargetProperty="(Grid.RenderTransform).(ScaleTransform.ScaleX)"
-                To="1"
-                Duration="0:0:2" />
-            <DoubleAnimation
-                EasingFunction="{StaticResource EasingFunction}"
-                Storyboard.TargetName="ImageBookmarkButtonGrid"
-                Storyboard.TargetProperty="(Grid.RenderTransform).(ScaleTransform.ScaleY)"
-                To="1"
-                Duration="0:0:2" />
-        </Storyboard>
-        <Storyboard x:Key="ThumbnailScaleInStoryboard">
-            <DoubleAnimation
-                EasingFunction="{StaticResource EasingFunction}"
-                Storyboard.TargetName="ImageBookmarkButtonGrid"
-                Storyboard.TargetProperty="(Grid.RenderTransform).(ScaleTransform.ScaleX)"
-                To="0"
-                Duration="0:0:2" />
-            <DoubleAnimation
-                EasingFunction="{StaticResource EasingFunction}"
-                Storyboard.TargetName="ImageBookmarkButtonGrid"
-                Storyboard.TargetProperty="(Grid.RenderTransform).(ScaleTransform.ScaleY)"
-                To="0"
-                Duration="0:0:2" />
-        </Storyboard>
     </Grid.Resources>
     <Grid.RenderTransform>
         <ScaleTransform />
@@ -85,10 +56,10 @@
     </Grid.ContextFlyout>
     <interactivity:Interaction.Behaviors>
         <core:EventTriggerBehavior EventName="PointerEntered">
-            <media:ControlStoryboardAction Storyboard="{StaticResource ThumbnailScaleOutStoryboard}" />
+            <core:CallMethodAction MethodName="ScaleIn" TargetObject="{x:Bind HeartButton}" />
         </core:EventTriggerBehavior>
         <core:EventTriggerBehavior EventName="PointerExited">
-            <media:ControlStoryboardAction Storyboard="{StaticResource ThumbnailScaleInStoryboard}" />
+            <core:CallMethodAction MethodName="ScaleOut" TargetObject="{x:Bind HeartButton}" />
         </core:EventTriggerBehavior>
     </interactivity:Interaction.Behaviors>
     <!--  PlaceHolderGrid  -->
@@ -100,21 +71,11 @@
             Source="{x:Bind ViewModel.ThumbnailSource, Mode=OneWay}"
             Stretch="UniformToFill" />
         <labs:Shimmer Visibility="{x:Bind ViewModel.ThumbnailSource, Converter={StaticResource NullableToVisibilityConverter}, Mode=OneWay}" />
-        <Grid
-            x:Name="ImageBookmarkButtonGrid"
-            Width="20"
-            Height="20"
-            Margin="3"
+        <controls:HeartButton
+            x:Name="HeartButton"
             HorizontalAlignment="Left"
             VerticalAlignment="Top"
-            Tapped="ToggleBookmarkButtonOnTapped">
-            <Grid.RenderTransform>
-                <ScaleTransform CenterX="10" CenterY="10" ScaleX="0" ScaleY="0" />
-            </Grid.RenderTransform>
-            <controls:FontSymbolIcon IsBackLayer="True" Symbol="HeartFillEB52" />
-            <IconSourceElement IconSource="{x:Bind ViewModel.BookmarkCommand.IconSource, Mode=OneWay}" />
-            <controls:FontSymbolIcon Symbol="HeartEB51" />
-        </Grid>
+            Command="{x:Bind ViewModel.BookmarkCommand, Mode=OneWay}" />
         <Grid
             Margin="10"
             VerticalAlignment="Bottom"

@@ -28,17 +28,23 @@ using Pixeval.Utilities;
 
 namespace Pixeval.Controls;
 
+/// <inheritdoc cref="EntryViewDataProvider{T, TViewModel, TSelf}"/>
+public class IllustrationViewDataProvider : EntryViewDataProvider<Illustration, IllustrationItemViewModel, IllustrationViewDataProvider>
+{
+    protected override FetchEngineIncrementalSource<Illustration, IllustrationItemViewModel> NewFetchEngineIncrementalSource(IFetchEngine<Illustration> fetchEngine, int limit = -1) => new IllustrationFetchEngineIncrementalSource(fetchEngine, limit);
+}
+
 /// <summary>
-/// 复用时调用<see cref="CloneRef"/>，<see cref="FetchEngineRef"/>和<see cref="IllustrationSourceRef"/>会在所有复用对象都Dispose时Dispose。
+/// 复用时调用<see cref="CloneRef"/>，<see cref="FetchEngineRef"/>和<see cref="EntrySourceRef"/>会在所有复用对象都Dispose时Dispose。
 /// 初始化时调用<see cref="ResetEngine"/>
 /// </summary>
-public class IllustrationViewDataProvider : ObservableObject, IDataProvider<Illustration, IllustrationItemViewModel>, IDisposable
+public abstract class EntryViewDataProvider<T, TViewModel, TSelf> : ObservableObject, IDataProvider<T, TViewModel>, IDisposable where T : class, IEntry where TViewModel : EntryViewModel<T>, IDisposable where TSelf : EntryViewDataProvider<T, TViewModel, TSelf>, new()
 {
-    private SharedRef<IFetchEngine<Illustration?>?>? _fetchEngineRef;
+    private SharedRef<IFetchEngine<T>?>? _fetchEngineRef;
 
-    private SharedRef<IncrementalLoadingCollection<FetchEngineIncrementalSource<Illustration, IllustrationItemViewModel>, IllustrationItemViewModel>> _illustrationSourceRef = null!;
+    private SharedRef<IncrementalLoadingCollection<FetchEngineIncrementalSource<T, TViewModel>, TViewModel>> _entrySourceRef = null!;
 
-    public SharedRef<IFetchEngine<Illustration?>?>? FetchEngineRef
+    public SharedRef<IFetchEngine<T>?>? FetchEngineRef
     {
         get => _fetchEngineRef;
         private set
@@ -51,26 +57,26 @@ public class IllustrationViewDataProvider : ObservableObject, IDataProvider<Illu
         }
     }
 
-    protected SharedRef<IncrementalLoadingCollection<FetchEngineIncrementalSource<Illustration, IllustrationItemViewModel>, IllustrationItemViewModel>> IllustrationSourceRef
+    protected SharedRef<IncrementalLoadingCollection<FetchEngineIncrementalSource<T, TViewModel>, TViewModel>> EntrySourceRef
     {
-        get => _illustrationSourceRef;
+        get => _entrySourceRef;
         set
         {
-            if (Equals(_illustrationSourceRef, value))
+            if (Equals(_entrySourceRef, value))
                 return;
 
             DisposeIllustrationSourceRef();
-            _illustrationSourceRef = value;
+            _entrySourceRef = value;
             View.Source = value.Value;
             OnPropertyChanged();
         }
     }
 
-    public IFetchEngine<Illustration?>? FetchEngine => _fetchEngineRef?.Value;
+    public IFetchEngine<T>? FetchEngine => _fetchEngineRef?.Value;
 
-    public AdvancedObservableCollection<IllustrationItemViewModel> View { get; } = [];
+    public AdvancedObservableCollection<TViewModel> View { get; } = [];
 
-    public IncrementalLoadingCollection<FetchEngineIncrementalSource<Illustration, IllustrationItemViewModel>, IllustrationItemViewModel> Source => _illustrationSourceRef.Value;
+    public IncrementalLoadingCollection<FetchEngineIncrementalSource<T, TViewModel>, TViewModel> Source => _entrySourceRef.Value;
 
     public void Dispose()
     {
@@ -79,17 +85,19 @@ public class IllustrationViewDataProvider : ObservableObject, IDataProvider<Illu
         FetchEngineRef = null;
     }
 
-    public void ResetEngine(IFetchEngine<Illustration?>? fetchEngine, int limit = -1)
+    public void ResetEngine(IFetchEngine<T>? fetchEngine, int limit = -1)
     {
-        FetchEngineRef = new SharedRef<IFetchEngine<Illustration?>?>(fetchEngine, this);
-        IllustrationSourceRef = new SharedRef<IncrementalLoadingCollection<FetchEngineIncrementalSource<Illustration, IllustrationItemViewModel>, IllustrationItemViewModel>>(new IncrementalLoadingCollection<FetchEngineIncrementalSource<Illustration, IllustrationItemViewModel>, IllustrationItemViewModel>(new IllustrationFetchEngineIncrementalSource(FetchEngine!, limit)), this);
+        FetchEngineRef = new SharedRef<IFetchEngine<T>?>(fetchEngine, this);
+        EntrySourceRef = new SharedRef<IncrementalLoadingCollection<FetchEngineIncrementalSource<T, TViewModel>, TViewModel>>(new IncrementalLoadingCollection<FetchEngineIncrementalSource<T, TViewModel>, TViewModel>(NewFetchEngineIncrementalSource(FetchEngine!, limit)), this);
     }
 
-    public IllustrationViewDataProvider CloneRef()
+    protected abstract FetchEngineIncrementalSource<T, TViewModel> NewFetchEngineIncrementalSource(IFetchEngine<T> fetchEngine, int limit = -1);
+
+    public TSelf CloneRef()
     {
-        var dataProvider = new IllustrationViewDataProvider();
+        var dataProvider = new TSelf();
         dataProvider.FetchEngineRef = FetchEngineRef?.MakeShared(dataProvider);
-        dataProvider.IllustrationSourceRef = IllustrationSourceRef.MakeShared(dataProvider);
+        dataProvider.EntrySourceRef = EntrySourceRef.MakeShared(dataProvider);
         dataProvider.View.Filter = View.Filter;
         foreach (var viewSortDescription in View.SortDescriptions)
             dataProvider.View.SortDescriptions.Add(viewSortDescription);
@@ -98,10 +106,10 @@ public class IllustrationViewDataProvider : ObservableObject, IDataProvider<Illu
 
     private void DisposeIllustrationSourceRef()
     {
-        if (_illustrationSourceRef?.TryDispose(this) is true)
+        if (_entrySourceRef?.TryDispose(this) is true)
             foreach (var illustrationViewModel in Source)
                 illustrationViewModel.Dispose();
     }
 
-    ~IllustrationViewDataProvider() => Dispose();
+    ~EntryViewDataProvider() => Dispose();
 }

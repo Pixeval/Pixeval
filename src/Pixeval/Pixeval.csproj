@@ -169,7 +169,7 @@
         <PRIResource Include="Strings\zh-cn\FollowingUserBadge.resjson" />
         <PRIResource Include="Strings\zh-cn\IllustratorContentViewer.resjson" />
         <PRIResource Include="Strings\zh-cn\BookmarksPage.resjson" />
-        <PRIResource Include="Strings\zh-cn\IllustrateItem.resjson" />
+        <PRIResource Include="Strings\zh-cn\EntryItem.resjson" />
         <PRIResource Include="Strings\zh-cn\AboutPage.resjson" />
         <PRIResource Include="Strings\zh-cn\Activations.resjson" />
         <PRIResource Include="Strings\zh-cn\CommentRepliesBlock.resjson" />
@@ -177,8 +177,8 @@
         <PRIResource Include="Strings\zh-cn\DownloadListPage.resjson" />
         <PRIResource Include="Strings\zh-cn\DownloadListPageDeleteTasksDialog.resjson" />
         <PRIResource Include="Strings\zh-cn\DownloadTask.resjson" />
-        <PRIResource Include="Strings\zh-cn\IllustrateView.resjson" />
-        <PRIResource Include="Strings\zh-cn\IllustrationViewCommandBar.resjson" />
+        <PRIResource Include="Strings\zh-cn\EntryView.resjson" />
+        <PRIResource Include="Strings\zh-cn\EntryContainer.resjson" />
         <PRIResource Include="Strings\zh-cn\IllustrationInfoPage.resjson" />
         <PRIResource Include="Strings\zh-cn\IllustrationResultFilterContent.resjson" />
         <PRIResource Include="Strings\zh-cn\IllustrateViewerPage.resjson" />
@@ -201,8 +201,11 @@
 
     <!--XAML-->
     <ItemGroup>
+        <None Remove="Controls\NovelItem\NovelItem.xaml" />
+        <None Remove="Controls\NovelView\NovelView.xaml" />
         <None Remove="IllustrationContainer.xaml" />
         <None Remove="IPListInput.xaml" />
+        <None Remove="Pages\Capability\IllustratorNovelPage.xaml" />
         <None Remove="PrivacyPolicyComboBox.xaml" />
         <None Remove="SettingRadioButtons.xaml" />
         <None Remove="SortOptionComboBox.xaml" />
@@ -248,8 +251,11 @@
         <None Remove="IllustrationResultFilterContent.xaml" />
         <None Remove="IllustratorItem.xaml" />
         <None Remove="RecommendIllustratorItem.xaml" />
+        <Page Update="Pages\Capability\IllustratorNovelPage.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
 
-        <Page Update="Controls\IllustrationContainer.xaml">
+        <Page Update="Controls\EntryContainer.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
         <Page Update="Controls\IPListInput.xaml">
@@ -388,6 +394,12 @@
             <Generator>MSBuild:Compile</Generator>
         </Page>
         <Page Update="Controls\IllustratorItem\RecommendIllustratorItem\RecommendIllustratorItem.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="Controls\NovelItem\NovelItem.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="Controls\NovelView\NovelView.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
     </ItemGroup>

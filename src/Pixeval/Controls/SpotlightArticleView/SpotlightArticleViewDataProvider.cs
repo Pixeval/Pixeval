@@ -35,7 +35,7 @@ public class SpotlightArticleViewDataProvider : ObservableObject, IDataProvider<
         protected set => View.Source = value;
     }
 
-    public IFetchEngine<SpotlightArticle?>? FetchEngine { get; protected set; }
+    public IFetchEngine<SpotlightArticle>? FetchEngine { get; protected set; }
 
     public void Dispose()
     {
@@ -48,7 +48,7 @@ public class SpotlightArticleViewDataProvider : ObservableObject, IDataProvider<
         View.Clear();
     }
 
-    public void ResetEngine(IFetchEngine<SpotlightArticle?>? fetchEngine, int limit = -1)
+    public void ResetEngine(IFetchEngine<SpotlightArticle>? fetchEngine, int limit = -1)
     {
         FetchEngine?.EngineHandle.Cancel();
         FetchEngine = fetchEngine;

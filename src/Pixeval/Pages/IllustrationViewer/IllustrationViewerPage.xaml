@@ -353,7 +353,7 @@
                     </Grid.ColumnDefinitions>
                     <controls:TitleBarIconText
                         x:Name="TitleBar"
-                        Title="{x:Bind _viewModel.CurrentIllustration.Illustrate.Title, Mode=OneWay}"
+                        Title="{x:Bind _viewModel.CurrentIllustration.Title, Mode=OneWay}"
                         Grid.Column="0" />
                     <CommandBar
                         x:Name="IllustrationViewerCommandBar"

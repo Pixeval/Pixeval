@@ -95,9 +95,9 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
 
     public IllustrationItemViewModel[]? IllustrationsSource { get; }
 
-    public long IllustrationId => CurrentIllustration.Illustrate.Id;
+    public long IllustrationId => CurrentIllustration.Entry.Id;
 
-    public UserInfo Illustrator => CurrentIllustration.Illustrate.User;
+    public UserInfo Illustrator => CurrentIllustration.Entry.User;
 
     public string IllustratorName => Illustrator.Name;
 

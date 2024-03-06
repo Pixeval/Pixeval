@@ -23,7 +23,7 @@ using Pixeval.Utilities;
 
 namespace Pixeval.Controls.SpotlightArticleView;
 
-public class SpotlightArticleViewModel(SpotlightArticle illustrate) : IllustrateViewModel<SpotlightArticle>(illustrate)
+public class SpotlightArticleViewModel(SpotlightArticle illustrate) : EntryViewModel<SpotlightArticle>(illustrate)
 {
     public override void Dispose() => ThrowUtils.Throw(new());
 }

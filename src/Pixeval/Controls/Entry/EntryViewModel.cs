@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/DataProvider.cs
+// Copyright (c) 2023 Pixeval/IIllustrateViewModel.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -19,20 +19,17 @@
 #endregion
 
 using System;
-using System.ComponentModel;
-using CommunityToolkit.WinUI.Collections;
-using Pixeval.Collections;
-using Pixeval.CoreApi.Engine;
+using System.Diagnostics;
+using CommunityToolkit.Mvvm.ComponentModel;
+using Pixeval.CoreApi.Model;
 
 namespace Pixeval.Controls;
 
-public interface IDataProvider<T, TViewModel> : INotifyPropertyChanged, INotifyPropertyChanging, IDisposable where T : class where TViewModel : class
+[DebuggerDisplay("{Entry}")]
+public abstract class EntryViewModel<T>(T entry) : ObservableObject, IDisposable
+    where T : IEntry
 {
-    AdvancedObservableCollection<TViewModel> View { get; }
+    public T Entry { get; } = entry;
 
-    IncrementalLoadingCollection<FetchEngineIncrementalSource<T, TViewModel>, TViewModel> Source { get; }
-
-    IFetchEngine<T?>? FetchEngine { get; }
-
-    void ResetEngine(IFetchEngine<T?>? fetchEngine, int limit = -1);
+    public abstract void Dispose();
 }

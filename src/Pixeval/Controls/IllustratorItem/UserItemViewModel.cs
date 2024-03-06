@@ -18,7 +18,7 @@ using Pixeval.Utilities;
 
 namespace Pixeval.Controls;
 
-public abstract partial class UserItemViewModel<T>(T illustrate, IllustratorIllustrationsOverviewViewModel overviewViewModel) : IllustrateViewModel<T>(illustrate) where T : IEntry
+public abstract partial class UserItemViewModel<T>(T illustrate, IllustratorIllustrationsOverviewViewModel overviewViewModel) : EntryViewModel<T>(illustrate) where T : IEntry
 {
     [ObservableProperty]
     private bool _isFollowed;
@@ -49,15 +49,15 @@ public abstract partial class UserItemViewModel<T>(T illustrate, IllustratorIllu
 
     public XamlUICommand FollowCommand { get; } = "".GetCommand(FontIconSymbol.ContactE77B);
 
-    public XamlUICommand GenerateLinkCommand { get; } = IllustrateItemResources.GenerateLink.GetCommand(FontIconSymbol.LinkE71B);
+    public XamlUICommand GenerateLinkCommand { get; } = EntryItemResources.GenerateLink.GetCommand(FontIconSymbol.LinkE71B);
 
-    public XamlUICommand GenerateWebLinkCommand { get; } = IllustrateItemResources.GenerateWebLink.GetCommand(FontIconSymbol.PreviewLinkE8A1);
+    public XamlUICommand GenerateWebLinkCommand { get; } = EntryItemResources.GenerateWebLink.GetCommand(FontIconSymbol.PreviewLinkE8A1);
 
-    public XamlUICommand OpenInWebBrowserCommand { get; } = IllustrateItemResources.OpenInWebBrowser.GetCommand(FontIconSymbol.WebSearchF6FA);
+    public XamlUICommand OpenInWebBrowserCommand { get; } = EntryItemResources.OpenInWebBrowser.GetCommand(FontIconSymbol.WebSearchF6FA);
 
-    public XamlUICommand ShowQrCodeCommand { get; } = IllustrateItemResources.ShowQRCode.GetCommand(FontIconSymbol.QRCodeED14);
+    public XamlUICommand ShowQrCodeCommand { get; } = EntryItemResources.ShowQRCode.GetCommand(FontIconSymbol.QRCodeED14);
 
-    public XamlUICommand ShowPixEzQrCodeCommand { get; } = IllustrateItemResources.ShowPixEzQrCode.GetCommand(FontIconSymbol.Photo2EB9F);
+    public XamlUICommand ShowPixEzQrCodeCommand { get; } = EntryItemResources.ShowPixEzQrCode.GetCommand(FontIconSymbol.Photo2EB9F);
 
     protected void InitializeCommands()
     {
@@ -90,13 +90,13 @@ public abstract partial class UserItemViewModel<T>(T illustrate, IllustratorIllu
         if (App.AppViewModel.AppSettings.DisplayTeachingTipWhenGeneratingAppLink)
             teachingTip.IsOpen = true;
         else
-            teachingTip?.ShowTeachingTipAndHide(IllustrateItemResources.LinkCopiedToClipboard);
+            teachingTip?.ShowTeachingTipAndHide(EntryItemResources.LinkCopiedToClipboard);
     }
 
     private void GenerateWebLinkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
         UiHelper.ClipboardSetText(MakoHelper.GenerateIllustratorWebUri(UserId).OriginalString);
-        (args.Parameter as FrameworkElement)?.ShowTeachingTipAndHide(IllustrateItemResources.LinkCopiedToClipboard);
+        (args.Parameter as FrameworkElement)?.ShowTeachingTipAndHide(EntryItemResources.LinkCopiedToClipboard);
     }
 
     private async void OpenInWebBrowserCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)

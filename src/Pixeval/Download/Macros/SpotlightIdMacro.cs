@@ -30,6 +30,6 @@ public class SpotlightIdMacro : IMacro<IllustrationItemViewModel>.ITransducer
 
     public string Substitute(IllustrationItemViewModel context)
     {
-        return context.Illustrate.SpotlightId ?? MacroParserResources.UnknownSpotlightId;
+        return context.Entry.SpotlightId ?? MacroParserResources.UnknownSpotlightId;
     }
 }

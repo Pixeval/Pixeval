@@ -58,16 +58,6 @@ public sealed partial class IllustrationInfoPage
 
     #region Helper Functions
 
-    private IEnumerable<Tag> GetIllustrationTagItemSource()
-    {
-        return _viewModel.CurrentIllustration.Illustrate.Tags;
-    }
-
-    public static string GetMakoTagTranslatedNameText(string? name, string fallback)
-    {
-        return name.IsNullOrEmpty() ? fallback : name;
-    }
-
     private string GetIllustratorNameText()
     {
         return IllustrationInfoPageResources.IllustratorNameFormatted.Format(_viewModel.IllustratorName);
@@ -80,12 +70,7 @@ public sealed partial class IllustrationInfoPage
 
     private string GetIllustrationDimensionText()
     {
-        return _viewModel.CurrentIllustration.Illustrate.Let(i => $"{i.Width} x {i.Height}") ?? IllustrationInfoPageResources.IllustrationDimensionUnknown;
-    }
-
-    private string GetIllustrationUploadDateText()
-    {
-        return _viewModel.CurrentIllustration.Illustrate.CreateDate.ToString("yyyy-M-d HH:mm:ss");
+        return _viewModel.CurrentIllustration.Entry.Let(i => $"{i.Width} x {i.Height}") ?? IllustrationInfoPageResources.IllustrationDimensionUnknown;
     }
 
     private async void SetIllustrationCaptionText()
@@ -96,7 +81,7 @@ public sealed partial class IllustrationInfoPage
             UnknownTags = Config.UnknownTagsOption.PassThrough,
             GithubFlavored = true,
         });
-        var caption = _viewModel.CurrentIllustration.Illustrate.Caption;
+        var caption = _viewModel.CurrentIllustration.Entry.Caption;
         var md = string.IsNullOrEmpty(caption)
             ? IllustrationInfoPageResources.IllustrationCaptionEmpty
             : markdownConverter.Convert(caption);

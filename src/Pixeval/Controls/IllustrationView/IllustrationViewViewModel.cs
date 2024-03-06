@@ -18,27 +18,12 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using CommunityToolkit.Mvvm.ComponentModel;
 using Pixeval.CoreApi.Model;
-using Pixeval.Utilities;
 
 namespace Pixeval.Controls;
 
-public sealed partial class IllustrationViewViewModel : SortableIllustrateViewViewModel<Illustration, IllustrationItemViewModel>
+public sealed class IllustrationViewViewModel : SortableEntryViewViewModel<Illustration, IllustrationItemViewModel>
 {
-    [ObservableProperty]
-    private bool _isSelecting;
-
-    [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(IsAnyIllustrationSelected))]
-    [NotifyPropertyChangedFor(nameof(SelectionLabel))]
-    private IllustrationItemViewModel[] _selectedIllustrations = [];
-
-    public bool IsAnyIllustrationSelected => SelectedIllustrations.Length > 0;
-
-    public string SelectionLabel => IsAnyIllustrationSelected
-        ? IllustrationViewCommandBarResources.CancelSelectionButtonFormatted.Format(SelectedIllustrations.Length)
-        : IllustrationViewCommandBarResources.CancelSelectionButtonDefaultLabel;
 
     public IllustrationViewViewModel(IllustrationViewViewModel viewModel) : this(viewModel.DataProvider.CloneRef())
     {
@@ -48,7 +33,7 @@ public sealed partial class IllustrationViewViewModel : SortableIllustrateViewVi
     {
     }
 
-    public IllustrationViewViewModel(IllustrationViewDataProvider dataProvider)
+    private IllustrationViewViewModel(IllustrationViewDataProvider dataProvider)
     {
         DataProvider = dataProvider;
         dataProvider.View.CollectionChanged += (_, _) => OnPropertyChanged(nameof(HasNoItem));

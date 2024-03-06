@@ -52,12 +52,6 @@ public sealed partial class IllustrationItem
     /// </summary>
     public event Func<IllustrationView> ThisRequired = null!;
 
-    private void ToggleBookmarkButtonOnTapped(object sender, TappedRoutedEventArgs e)
-    {
-        e.Handled = true;
-        ViewModel.BookmarkCommand.Execute(null);
-    }
-
     // 这些方法本来用属性就可以实现，但在ViewModel更新的时候更新，使用了{x:Bind GetXXX(ViewModel)}的写法
     // 这样可以不需要写OnPropertyChange就实现更新
 
@@ -65,7 +59,7 @@ public sealed partial class IllustrationItem
 
     private double GetDesiredWidth(IllustrationItemViewModel viewModel)
     {
-        var illustration = viewModel.Illustrate;
+        var illustration = viewModel.Entry;
         var thumbnailDirection = ThisRequired.Invoke().ThumbnailDirection;
         return thumbnailDirection switch
         {

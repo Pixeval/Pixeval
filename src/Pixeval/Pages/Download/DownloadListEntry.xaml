@@ -30,14 +30,14 @@
         <TextBlock
             MaxWidth="250"
             FontSize="{StaticResource PixevalBaseFontSize}"
-            Text="{x:Bind ViewModel.Illustrate.Title, Mode=OneWay}"
+            Text="{x:Bind ViewModel.Title, Mode=OneWay}"
             TextTrimming="CharacterEllipsis"
             TextWrapping="NoWrap" />
         <TextBlock
             MaxWidth="250"
             FontSize="{StaticResource PixevalCaptionFontSize}"
             Foreground="{ThemeResource PixevalTipTextForeground}"
-            Text="{x:Bind ViewModel.Illustrate.User.Name, Mode=OneWay}"
+            Text="{x:Bind ViewModel.User.Name, Mode=OneWay}"
             TextTrimming="CharacterEllipsis"
             TextWrapping="NoWrap" />
     </StackPanel>

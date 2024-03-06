@@ -27,6 +27,7 @@ using System.Threading.Tasks;
 using Microsoft.UI.Xaml.Controls;
 using Pixeval.CoreApi.Model;
 using Pixeval.CoreApi.Net.Response;
+using Pixeval.Util;
 using Pixeval.Utilities;
 
 namespace Pixeval.Controls;
@@ -35,34 +36,44 @@ namespace Pixeval.Controls;
 /// A view model that communicates between the model <see cref="Illustration" /> and the view <see cref="IllustrationView" />.
 /// It is responsible for being the elements of the <see cref="ItemsRepeater" /> to present the thumbnail of an illustration
 /// </summary>
-public partial class IllustrationItemViewModel : IllustrateViewModel<Illustration>
+public partial class IllustrationItemViewModel(Illustration illustration) : ThumbnailEntryViewModel<Illustration>(illustration), IBookmarkableViewModel
 {
-    public IllustrationItemViewModel(Illustration illustration) : base(illustration) => InitializeCommands();
-
     /// <summary>
     /// 当调用<see cref="GetMangaIllustrationViewModels"/>后，此属性会被赋值为当前<see cref="IllustrationItemViewModel"/>在Manga中的索引
     /// </summary>
     public int MangaIndex { get; set; } = -1;
 
-    public bool IsRestricted => Illustrate.XRestrict is not XRestrict.Ordinary;
+    public bool IsRestricted => Entry.XRestrict is not XRestrict.Ordinary;
 
-    public bool IsManga => Illustrate.PageCount > 1;
+    public bool IsManga => Entry.PageCount > 1;
 
-    public bool IsAiGenerated => Illustrate.AiType is 2;
+    public bool IsAiGenerated => Entry.AiType is 2;
 
     public BadgeMode RestrictionCaption =>
-        Illustrate.XRestrict switch
+        Entry.XRestrict switch
         {
             XRestrict.R18 => BadgeMode.R18,
             XRestrict.R18G => BadgeMode.R18G,
             _ => BadgeMode.R18
         };
 
-    public long Id => Illustrate.Id;
+    public override long Id => Entry.Id;
 
-    public int Bookmark => Illustrate.TotalBookmarks;
+    public override int Bookmark => Entry.TotalBookmarks;
 
-    public DateTimeOffset PublishDate => Illustrate.CreateDate;
+    public override DateTimeOffset PublishDate => Entry.CreateDate;
+
+    public override Tag[] Tags => Entry.Tags;
+
+    public override string Title => Entry.Title;
+
+    public override UserInfo User => Entry.User;
+
+    public override bool IsBookmarked
+    {
+        get => Entry.IsBookmarked;
+        set => SetProperty(Entry.IsBookmarked, value, m => Entry.IsBookmarked = m);
+    }
 
     /// <summary>
     /// <see cref="IsUgoira"/>为<see langword="true"/>时，此属性不会抛异常<br/>
@@ -78,37 +89,31 @@ public partial class IllustrationItemViewModel : IllustrateViewModel<Illustratio
     /// <see cref="IsUgoira"/>为<see langword="false"/>时，此属性不为<see langword="null"/>
     /// </summary>
     public string? OriginalStaticUrl => IsManga
-        ? Illustrate.MetaPages[MangaIndex is -1 ? 0 : MangaIndex].ImageUrls.Original
-        : Illustrate.MetaSinglePage.OriginalImageUrl;
+        ? Entry.MetaPages[MangaIndex is -1 ? 0 : MangaIndex].ImageUrls.Original
+        : Entry.MetaSinglePage.OriginalImageUrl;
 
     public async Task<string> GetOriginalSourceUrlAsync() => IsUgoira
         ? (await GetUgoiraOriginalUrlAsync()).Url
         : OriginalStaticUrl;
 
-    public bool IsBookmarked
-    {
-        get => Illustrate.IsBookmarked;
-        set => SetProperty(Illustrate.IsBookmarked, value, m => Illustrate.IsBookmarked = m);
-    }
-
     [MemberNotNullWhen(false, nameof(OriginalStaticUrl))]
-    public bool IsUgoira => Illustrate.Type is "ugoira";
+    public bool IsUgoira => Entry.Type is "ugoira";
 
     public string Tooltip
     {
         get
         {
-            var sb = new StringBuilder(Illustrate.Title);
+            var sb = new StringBuilder(Title);
             if (IsUgoira)
             {
                 _ = sb.AppendLine()
-                    .Append(IllustrateItemResources.TheIllustrationIsAnUgoira);
+                    .Append(EntryItemResources.TheIllustrationIsAnUgoira);
             }
 
             if (IsManga)
             {
                 _ = sb.AppendLine()
-                    .Append(IllustrateItemResources.TheIllustrationIsAMangaFormatted.Format(Illustrate.PageCount));
+                    .Append(EntryItemResources.TheIllustrationIsAMangaFormatted.Format(Entry.PageCount));
             }
 
             return sb.ToString();
@@ -127,31 +132,32 @@ public partial class IllustrationItemViewModel : IllustrateViewModel<Illustratio
     /// </returns>
     public IEnumerable<IllustrationItemViewModel> GetMangaIllustrationViewModels()
     {
-        if (Illustrate.PageCount <= 1)
+        if (Entry.PageCount <= 1)
         {
             // 保证里所有的IllustrationViewModel都是生成的，从而删除的时候一律DisposeForce
-            return [new(Illustrate)];
+            return [new(Entry)];
         }
 
         // The API result of manga (a work with multiple illustrations) is a single Illustration object
         // that only differs from the illustrations of a single work on the MetaPages property, this property
         // contains the download urls of the manga
 
-        return Illustrate.MetaPages.Select(m => Illustrate with { ImageUrls = m.ImageUrls })
+        return Entry.MetaPages.Select(m => Entry with { ImageUrls = m.ImageUrls })
             .Select((p, i) => new IllustrationItemViewModel(p) { MangaIndex = i });
     }
 
     public IEnumerable<string> GetMangaImageUrls()
     {
-        return Illustrate.MetaPages.Select(m => m.ImageUrls.Original!);
+        return Entry.MetaPages.Select(m => m.ImageUrls.Original!);
     }
+    protected override string ThumbnailUrl => Entry.GetThumbnailUrl();
 
     public bool Equals(IllustrationItemViewModel x, IllustrationItemViewModel y)
     {
-        return x.Illustrate.Equals(y.Illustrate);
+        return x.Entry.Equals(y.Entry);
     }
 
-    public override bool Equals(object? obj) => obj is IllustrationItemViewModel viewModel && Illustrate.Equals(viewModel.Illustrate);
+    public override bool Equals(object? obj) => obj is IllustrationItemViewModel viewModel && Entry.Equals(viewModel.Entry);
 
-    public override int GetHashCode() => Illustrate.GetHashCode();
+    public override int GetHashCode() => Entry.GetHashCode();
 }

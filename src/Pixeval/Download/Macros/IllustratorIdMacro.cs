@@ -30,6 +30,6 @@ public class IllustratorIdMacro : IMacro<IllustrationItemViewModel>.ITransducer
 
     public string Substitute(IllustrationItemViewModel context)
     {
-        return context.Illustrate.User?.Id.ToString() ?? string.Empty;
+        return context.Entry.User?.Id.ToString() ?? string.Empty;
     }
 }

@@ -25,6 +25,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.AppManagement;
+using Pixeval.CoreApi.Model;
 using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Utilities;
@@ -32,8 +33,26 @@ using Pixeval.Utilities.Threading;
 
 namespace Pixeval.Controls;
 
-public partial class IllustrationItemViewModel
+public abstract partial class ThumbnailEntryViewModel<T> : EntryViewModel<T>, IBookmarkableViewModel where T : IEntry
 {
+    protected ThumbnailEntryViewModel(T illustrate) : base(illustrate) => InitializeCommands();
+
+    public abstract long Id { get; }
+
+    public abstract int Bookmark { get; }
+
+    public abstract bool IsBookmarked { get; set; }
+
+    public abstract Tag[] Tags { get; }
+
+    public abstract string Title { get; }
+
+    public abstract UserInfo User { get; }
+
+    public abstract DateTimeOffset PublishDate { get; }
+
+    protected abstract string ThumbnailUrl { get; }
+
     /// <summary>
     /// 缩略图图片
     /// </summary>
@@ -86,8 +105,10 @@ public partial class IllustrationItemViewModel
             return false;
         }
 
+        var cacheKey = MakoHelper.GetCacheKeyForThumbnailAsync(ThumbnailUrl);
+
         LoadingThumbnail = true;
-        if (App.AppViewModel.AppSettings.UseFileCache && await App.AppViewModel.Cache.TryGetAsync<Stream>(await this.GetIllustrationThumbnailCacheKeyAsync()) is { } stream)
+        if (App.AppViewModel.AppSettings.UseFileCache && await App.AppViewModel.Cache.TryGetAsync<Stream>(cacheKey) is { } stream)
         {
             ThumbnailStream = stream;
             ThumbnailSourceRef = new SharedRef<SoftwareBitmapSource>(await stream.GetSoftwareBitmapSourceAsync(false), key);
@@ -102,7 +123,7 @@ public partial class IllustrationItemViewModel
         {
             if (App.AppViewModel.AppSettings.UseFileCache)
             {
-                _ = await App.AppViewModel.Cache.TryAddAsync(await this.GetIllustrationThumbnailCacheKeyAsync(), s, TimeSpan.FromDays(1));
+                _ = await App.AppViewModel.Cache.TryAddAsync(cacheKey, s, TimeSpan.FromDays(1));
             }
             ThumbnailStream = s;
             ThumbnailSourceRef = new SharedRef<SoftwareBitmapSource>(await s.GetSoftwareBitmapSourceAsync(false), key);
@@ -115,6 +136,24 @@ public partial class IllustrationItemViewModel
         // 加载失败
         LoadingThumbnail = false;
         return false;
+    }
+
+
+    /// <summary>
+    /// 直接获取对应缩略图
+    /// </summary>
+    public async Task<Stream?> GetThumbnailAsync()
+    {
+        switch (await App.AppViewModel.MakoClient.DownloadStreamAsync(ThumbnailUrl, cancellationHandle: LoadingThumbnailCancellationHandle))
+        {
+            case Result<Stream>.Success(var stream):
+                return stream;
+            case Result<Stream>.Failure(OperationCanceledException):
+                LoadingThumbnailCancellationHandle.Reset();
+                return null;
+        }
+
+        return AppInfo.GetNotAvailableImageStream();
     }
 
     /// <summary>
@@ -140,37 +179,18 @@ public partial class IllustrationItemViewModel
     }
 
     /// <summary>
-    /// 直接获取对应缩略图
-    /// </summary>
-    public async Task<Stream?> GetThumbnailAsync()
-    {
-        if (Illustrate.GetThumbnailUrl() is { } url)
-        {
-            switch (await App.AppViewModel.MakoClient.DownloadStreamAsync(url, cancellationHandle: LoadingThumbnailCancellationHandle))
-            {
-                case Result<Stream>.Success(var stream):
-                    return stream;
-                case Result<Stream>.Failure(OperationCanceledException):
-                    LoadingThumbnailCancellationHandle.Reset();
-                    return null;
-            }
-        }
-
-        return AppInfo.GetNotAvailableImageStream();
-    }
-
-    /// <summary>
     /// 强制释放所有缩略图
     /// </summary>
-    private void DisposeInternal()
+    public sealed override void Dispose()
     {
         ThumbnailSourceRef?.DisposeForce();
         ThumbnailStream?.Dispose();
-    }
-
-    public override void Dispose()
-    {
-        DisposeInternal();
+        DisposeOverride();
         GC.SuppressFinalize(this);
     }
+
+    protected virtual void DisposeOverride()
+    {
+    }
 }
+

@@ -32,6 +32,6 @@ public class IllustrationTitleMacro : IMacro<IllustrationItemViewModel>.ITransdu
 
     public string Substitute(IllustrationItemViewModel context)
     {
-        return context.Illustrate.Title?.Let(IoHelper.NormalizePathSegment) ?? MacroParserResources.UnknownIllustrationTitle;
+        return context.Title.Let(IoHelper.NormalizePathSegment) ?? MacroParserResources.UnknownIllustrationTitle;
     }
 }

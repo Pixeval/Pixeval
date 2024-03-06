@@ -1,5 +1,5 @@
 <Grid
-    x:Class="Pixeval.Controls.IllustrateView"
+    x:Class="Pixeval.Controls.EntryView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:converters="using:CommunityToolkit.WinUI.Converters"
@@ -21,7 +21,7 @@
             IsActive="True"
             IsIndeterminate="True" />
         <TextBlock
-            x:Uid="/IllustrateView/IsLoadingMoreTextBlock"
+            x:Uid="/EntryView/IsLoadingMoreTextBlock"
             HorizontalAlignment="Center"
             FontSize="{StaticResource PixevalTitleFontSize}" />
     </StackPanel>
@@ -36,7 +36,7 @@
             Source="/Assets/Images/empty-box.png"
             Stretch="Uniform" />
         <TextBlock
-            x:Uid="/IllustrateView/ResultIsEmptyTextBlock"
+            x:Uid="/EntryView/ResultIsEmptyTextBlock"
             HorizontalAlignment="Center"
             FontSize="{StaticResource PixevalTitleFontSize}" />
     </StackPanel>
