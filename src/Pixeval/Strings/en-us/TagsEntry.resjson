@@ -1,0 +1,10 @@
+{
+    "EditTagItem/Label": "Edit",
+    "OpenItem/Label": "Open",
+    "GoToPageItem/Label": "View",
+    "DeleteItem/Label": "Delete",
+    "OpenLocationItem/Label": "Open file location",
+    "EditTag": "Edit tag (split different tags with comma)",
+    "TagsIsUnloaded": "Tags not loaded yet",
+    "EditTagFailed": "Failed to edit the tag"
+}

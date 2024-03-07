@@ -106,7 +106,7 @@
     "BugReportEntry/Header": "软件问题反馈",
     "BugReportEntry/Description": "关于软件BUG或者新功能提案（反馈软件BUG请附上相关日志文件）",
     "BugReportChannelsEntry/Header": "汇报问题渠道",
-    "BugReportChannelsEntry/Description": "可以通过以下渠道汇编问题",
+    "BugReportChannelsEntry/Description": "可以通过以下渠道汇报问题",
     "GitHubBugReportEntry/ToolTipService/ToolTip": "在 GitHub 上汇报问题",
     "EMailBugReportEntry/ToolTipService/ToolTip": "使用电子邮件汇报问题",
     "QQBugReportEntry/ToolTipService/ToolTip": "在QQ群内汇报问题",
