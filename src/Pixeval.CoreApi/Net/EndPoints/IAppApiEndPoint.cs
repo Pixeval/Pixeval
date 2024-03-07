@@ -20,6 +20,7 @@
 
 using System.Net.Http;
 using System.Threading.Tasks;
+using Pixeval.CoreApi.Model;
 using Pixeval.CoreApi.Net.Request;
 using Pixeval.CoreApi.Net.Response;
 using Refit;
@@ -39,6 +40,23 @@ internal interface IAppApiEndPoint
 
     [Get("/v1/user/detail")]
     Task<PixivSingleUserResponse> GetSingleUserAsync(SingleUserRequest request);
+
+    [Get("/v2/novel/detail")]
+    Task<Novel> GetSingleNovelAsync([AliasAs("novel_id")] long id);
+
+    [Get("/webview/v2/novel")]
+    Task<string> GetNovelContentAsync([AliasAs("id")] long id
+        //[AliasAs("viewer_version")] string viewerVersion = "20221031_ai",
+        //[AliasAs("font")] string x1 = "mincho",
+        //[AliasAs("font_size")] string x2 = "1.0em",
+        //[AliasAs("line_height")] string x3 = "1.8",
+        //[AliasAs("color")] string x4 = "#1F1F1F",
+        //[AliasAs("background_color")] string x5 = "#FFFFFF",
+        //[AliasAs("mode")] string x6 = "horizontal",
+        //[AliasAs("theme")] string x7 = "light",
+        //[AliasAs("margin_top")] string x8 = "60px",
+        //[AliasAs("margin_bottom")] string x9 = "50px"
+    );
 
     [Post("/v1/user/follow/add")]
     Task<HttpResponseMessage> FollowUserAsync([Body(BodySerializationMethod.UrlEncoded)] FollowUserRequest request);

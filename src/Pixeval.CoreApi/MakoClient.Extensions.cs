@@ -23,6 +23,9 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Pixeval.CoreApi.Global.Enum;
@@ -68,8 +71,49 @@ public partial class MakoClient
 
     public Task<PixivSingleUserResponse> GetUserFromIdAsync(long id, TargetFilter targetFilter)
         => RunWithLoggerAsync(async t => await t
-            .GetSingleUserAsync(new SingleUserRequest(id.ToString(), targetFilter.GetDescription()))
+            .GetSingleUserAsync(new SingleUserRequest(id, targetFilter.GetDescription()))
             .ConfigureAwait(false));
+
+    public Task<Novel> GetNovelFromIdAsync(long id)
+        => RunWithLoggerAsync(async t => await t
+            .GetSingleNovelAsync(id)
+            .ConfigureAwait(false));
+
+    public Task<NovelContent> GetNovelContentAsync(long id)
+        => RunWithLoggerAsync(async t =>
+        {
+            var contentHtml = await t
+                .GetNovelContentAsync(id)
+                .ConfigureAwait(false);
+
+            var leftStack = -2;
+            var rightStack = 0;
+            var startIndex = -1;
+            var endIndex = -1;
+
+            for (var i = 0; i < contentHtml.Length; ++i)
+            {
+                if (contentHtml[i] is '{')
+                {
+                    ++leftStack;
+                    if (leftStack < 2)
+                        startIndex = i;
+                }
+                else if (contentHtml[i] is '}')
+                {
+                    ++rightStack;
+                    if (rightStack == leftStack)
+                    {
+                        endIndex = i + 1;
+                        break;
+                    }
+                }
+            }
+
+            var span = contentHtml[startIndex..endIndex];
+
+            return JsonSerializer.Deserialize<NovelContent>(span)!;
+        });
 
     /// <summary>
     /// Sends a request to the Pixiv to add it to the bookmark

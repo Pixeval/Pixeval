@@ -33,7 +33,7 @@ public partial record Novel : IEntry
     public required string Title { get; set; } = "";
 
     [JsonPropertyName("caption")]
-    public required string Caption { get; set; }
+    public required string Caption { get; set; } = "";
 
     [JsonPropertyName("restrict")]
     public required long Restrict { get; set; }
@@ -50,8 +50,8 @@ public partial record Novel : IEntry
     [JsonPropertyName("create_date")]
     public required DateTimeOffset CreateDate { get; set; }
 
-    [JsonPropertyName("tags")]
-    public required Tag[] Tags { get; set; }
+    [JsonPropertyName("tags")] 
+    public required Tag[] Tags { get; set; } = [];
 
     [JsonPropertyName("page_count")]
     public required int PageCount { get; set; }
@@ -88,6 +88,12 @@ public partial record Novel : IEntry
 
     [JsonPropertyName("is_x_restricted")]
     public required bool IsXRestricted { get; set; }
+
+    [JsonPropertyName("novel_ai_type")]
+    public required int NovelAiType { get; set; }
+
+    [JsonPropertyName("comment_access_control")]
+    public int? CommentAccessControl { get; set; }
 }
 
 [Factory]

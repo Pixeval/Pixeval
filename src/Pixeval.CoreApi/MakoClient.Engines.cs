@@ -342,10 +342,10 @@ public partial class MakoClient
         return new IllustrationCommentRepliesEngine(commentId.ToString(), this, new EngineHandle(CancelInstance));
     }
 
-    public IFetchEngine<Illustration> RelatedWorks(long illustId)
+    public IFetchEngine<Illustration> RelatedWorks(long illustId, TargetFilter targetFilter = TargetFilter.ForAndroid)
     {
         EnsureNotCancelled();
-        return new RelatedWorksFetchEngine(illustId, this, new EngineHandle(CancelInstance));
+        return new RelatedWorksFetchEngine(illustId, this, targetFilter, new EngineHandle(CancelInstance));
     }
 
     public IFetchEngine<T> Computed<T>(IAsyncEnumerable<T> result)

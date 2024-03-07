@@ -1,4 +1,5 @@
 using Microsoft.UI.Xaml.Controls;
+using WinUI3Utilities;
 
 namespace Pixeval.Controls;
 
@@ -19,5 +20,8 @@ public sealed partial class NovelView : IEntryView<NovelViewViewModel>
 
     private void NovelItemsView_OnItemInvoked(ItemsView sender, ItemsViewItemInvokedEventArgs e)
     {
+        var viewModel = e.InvokedItem.To<NovelItemViewModel>();
+
+        //viewModel.Entry;
     }
 }
