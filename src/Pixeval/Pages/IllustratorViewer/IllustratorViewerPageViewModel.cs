@@ -166,7 +166,7 @@ public partial class IllustratorViewerPageViewModel : UiObservableObject
 
     private void GenerateLinkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
-        UiHelper.ClipboardSetText(MakoHelper.GenerateIllustratorAppUri(Id).OriginalString);
+        UiHelper.ClipboardSetText(MakoHelper.GenerateUserAppUri(Id).OriginalString);
 
         if (args.Parameter is TeachingTip teachingTip)
         {
@@ -182,13 +182,13 @@ public partial class IllustratorViewerPageViewModel : UiObservableObject
 
     private void GenerateWebLinkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
-        UiHelper.ClipboardSetText(MakoHelper.GenerateIllustratorWebUri(Id).OriginalString);
+        UiHelper.ClipboardSetText(MakoHelper.GenerateUserWebUri(Id).OriginalString);
         (args.Parameter as FrameworkElement)?.ShowTeachingTipAndHide(EntryItemResources.LinkCopiedToClipboard);
     }
 
     private async void OpenInWebBrowserCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
-        _ = await Launcher.LaunchUriAsync(MakoHelper.GenerateIllustratorWebUri(Id));
+        _ = await Launcher.LaunchUriAsync(MakoHelper.GenerateUserWebUri(Id));
     }
 
     private async void ShowQrCodeCommandExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
@@ -196,7 +196,7 @@ public partial class IllustratorViewerPageViewModel : UiObservableObject
         if (args.Parameter is not TeachingTip showQrCodeTeachingTip)
             return;
 
-        var qrCodeSource = await IoHelper.GenerateQrCodeForUrlAsync(MakoHelper.GenerateIllustratorWebUri(Id).OriginalString);
+        var qrCodeSource = await IoHelper.GenerateQrCodeForUrlAsync(MakoHelper.GenerateUserWebUri(Id).OriginalString);
         ShowQrCodeCommandExecuteRequested(showQrCodeTeachingTip, qrCodeSource);
     }
 
@@ -205,7 +205,7 @@ public partial class IllustratorViewerPageViewModel : UiObservableObject
         if (args.Parameter is not TeachingTip showQrCodeTeachingTip)
             return;
 
-        var qrCodeSource = await IoHelper.GenerateQrCodeAsync(MakoHelper.GenerateIllustratorPixEzUri(Id).OriginalString);
+        var qrCodeSource = await IoHelper.GenerateQrCodeAsync(MakoHelper.GenerateUserPixEzUri(Id).OriginalString);
         ShowQrCodeCommandExecuteRequested(showQrCodeTeachingTip, qrCodeSource);
     }
 

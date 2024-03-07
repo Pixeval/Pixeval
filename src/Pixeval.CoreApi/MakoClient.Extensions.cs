@@ -57,7 +57,7 @@ public partial class MakoClient
     /// <returns></returns>
     public Task<Illustration> GetIllustrationFromIdAsync(long id)
         => RunWithLoggerAsync(async t => (await t
-            .GetSingleAsync(id)
+            .GetSingleIllustAsync(id)
             .ConfigureAwait(false)).Illust);
 
     public Task<Tag[]> GetAutoCompletionForKeyword(string word)
@@ -77,9 +77,9 @@ public partial class MakoClient
     /// <param name="id">The ID of the illustration which needs to be bookmarked</param>
     /// <param name="privacyPolicy">Indicates the privacy of the illustration in the bookmark</param>
     /// <returns>A <see cref="Task" /> represents the operation</returns>
-    public Task PostBookmarkAsync(long id, PrivacyPolicy privacyPolicy) =>
+    public Task PostIllustrationBookmarkAsync(long id, PrivacyPolicy privacyPolicy) =>
         RunWithLoggerAsync(async t => await t
-            .AddBookmarkAsync(new AddBookmarkRequest(privacyPolicy.GetDescription(), id.ToString()))
+            .AddIllustBookmarkAsync(new AddBookmarkRequest(privacyPolicy.GetDescription(), id.ToString()))
             .ConfigureAwait(false));
 
     /// <summary>
@@ -87,9 +87,9 @@ public partial class MakoClient
     /// </summary>
     /// <param name="id">The ID of the illustration which needs to be removed from the bookmark</param>
     /// <returns>A <see cref="Task" /> represents the operation</returns>
-    public Task RemoveBookmarkAsync(long id)
+    public Task RemoveIllustrationBookmarkAsync(long id)
         => RunWithLoggerAsync(async t => await t
-            .RemoveBookmarkAsync(new RemoveBookmarkRequest(id.ToString()))
+            .RemoveIllustBookmarkAsync(new RemoveBookmarkRequest(id.ToString()))
             .ConfigureAwait(false));
 
     /// <summary>
@@ -199,7 +199,7 @@ public partial class MakoClient
 
     public Task DeleteCommentAsync(long commentId)
         => RunWithLoggerAsync(async t => await t
-            .DeleteCommentAsync(new DeleteCommentRequest(commentId)));
+            .DeleteIllustCommentAsync(new DeleteCommentRequest(commentId)));
 
     public Task<ReverseSearchResponse> ReverseSearchAsync(Stream imgStream, string apiKey)
         => RunWithLoggerAsync(async () => await MakoServices.GetRequiredService<IReverseSearchApiEndPoint>()

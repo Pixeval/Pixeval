@@ -29,13 +29,13 @@ namespace Pixeval.CoreApi.Net.EndPoints;
 internal interface IAppApiEndPoint
 {
     [Post("/v2/illust/bookmark/add")]
-    Task<HttpResponseMessage> AddBookmarkAsync([Body(BodySerializationMethod.UrlEncoded)] AddBookmarkRequest request);
+    Task<HttpResponseMessage> AddIllustBookmarkAsync([Body(BodySerializationMethod.UrlEncoded)] AddBookmarkRequest request);
 
     [Post("/v1/illust/bookmark/delete")]
-    Task<HttpResponseMessage> RemoveBookmarkAsync([Body(BodySerializationMethod.UrlEncoded)] RemoveBookmarkRequest request);
+    Task<HttpResponseMessage> RemoveIllustBookmarkAsync([Body(BodySerializationMethod.UrlEncoded)] RemoveBookmarkRequest request);
 
     [Get("/v1/illust/detail")]
-    Task<PixivSingleIllustResponse> GetSingleAsync([AliasAs("illust_id")] long id);
+    Task<PixivSingleIllustResponse> GetSingleIllustAsync([AliasAs("illust_id")] long id);
 
     [Get("/v1/user/detail")]
     Task<PixivSingleUserResponse> GetSingleUserAsync(SingleUserRequest request);
@@ -56,7 +56,7 @@ internal interface IAppApiEndPoint
     Task<UgoiraMetadataResponse> GetUgoiraMetadataAsync([AliasAs("illust_id")] long id);
 
     [Post("/v1/illust/comment/delete")]
-    Task DeleteCommentAsync([Body(BodySerializationMethod.UrlEncoded)] DeleteCommentRequest request);
+    Task DeleteIllustCommentAsync([Body(BodySerializationMethod.UrlEncoded)] DeleteCommentRequest request);
 
     [Get("/v2/search/autocomplete")]
     Task<AutoCompletionResponse> GetAutoCompletionAsync(AutoCompletionRequest autoCompletionRequest);

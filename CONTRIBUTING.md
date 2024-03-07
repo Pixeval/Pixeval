@@ -29,9 +29,9 @@ pixiv的页面是使用react写的，设置自动化费了好大劲，最终参�
 由于单独使用一个窗口，所以要继承自`SupportCustomTitleBarDragRegionPage`来支持拖拽区域定义，
 同时搭配一个`XXXViewerPageHelper`的静态类，用来方便地从任何代码上下文呼出包含`XXXViewerPage`的窗口。
 
-### IllustrateXXX
+### EntryXXX
 
-一般表示被Illustration、Illustrator共用的模型，如`IllustrationView`、`IllustratorView`都包含`IllustrateView`。
+一般表示被Illustration、Illustrator共用的模型，如`IllustrationView`、`IllustratorView`都包含`EntryView`。
 
 ### AdvancedItemsView
 
@@ -110,7 +110,7 @@ WinRT自带的Bitmap解码器功能较差，经常出现正常图片无法解码
 
 ### 通过继承、组合减少代码量
 
-如`IllustrationView`、`IllustratorView`都包含`IllustrateView`，这是为了不要将相似的逻辑写两遍，否则在重构某部分时也许会漏掉另一部分。
+如`IllustrationView`、`IllustratorView`都包含`EntryView`，这是为了不要将相似的逻辑写两遍，否则在重构某部分时也许会漏掉另一部分。
 提取不同类的共同部分并不总是为了抽象。
 
 ### XAML中少用复杂的Margin、Padding

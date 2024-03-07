@@ -21,7 +21,6 @@
 #endregion
 
 using System;
-using Microsoft.UI.Xaml.Input;
 using Pixeval.CoreApi.Model;
 
 namespace Pixeval.Controls;
@@ -53,52 +52,4 @@ public partial class NovelItemViewModel(Novel novel) : ThumbnailEntryViewModel<N
     public override DateTimeOffset PublishDate => Entry.CreateDate;
 
     protected override string ThumbnailUrl => Entry.Cover.Medium;
-}
-
-public partial class NovelItemViewModel
-{
-    protected override void BookmarkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs e)
-    {
-
-    }
-
-    protected override void GenerateLinkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs e)
-    {
-
-    }
-
-    protected override void GenerateWebLinkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs e)
-    {
-
-    }
-
-    protected override void OpenInWebBrowserCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs e)
-    {
-
-    }
-
-    protected override void ShowQrCodeCommandExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs e)
-    {
-
-    }
-
-    protected override void ShowPixEzQrCodeCommandExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs e)
-    {
-
-    }
-
-    protected override void SaveCommandExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs e)
-    {
-
-    }
-
-    protected override void SaveAsCommandExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs e)
-    {
-
-    }
-
-    protected override void CopyCommandExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs e)
-    {
-
-    }
 }

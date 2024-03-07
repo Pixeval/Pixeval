@@ -54,35 +54,23 @@ public static class MakoHelper
         };
     }
 
-    public static Uri GenerateIllustrationWebUri(long id)
-    {
-        return new Uri($"https://www.pixiv.net/artworks/{id}");
-    }
+    public static Uri GenerateIllustrationWebUri(long id) => new($"https://www.pixiv.net/artworks/{id}");
 
-    public static Uri GenerateIllustrationPixEzUri(long id)
-    {
-        return new Uri($"pixez://www.pixiv.net/artworks/{id}");
-    }
+    public static Uri GenerateIllustrationPixEzUri(long id) => new($"pixez://www.pixiv.net/artworks/{id}");
 
-    public static Uri GenerateIllustrationAppUri(long id)
-    {
-        return new Uri($"{AppInfo.AppProtocol}://illust/{id}");
-    }
+    public static Uri GenerateIllustrationAppUri(long id) => new($"{AppInfo.AppProtocol}://illust/{id}");
 
-    public static Uri GenerateIllustratorWebUri(long id)
-    {
-        return new Uri($"https://www.pixiv.net/users/{id}");
-    }
+    public static Uri GenerateUserWebUri(long id) => new($"https://www.pixiv.net/users/{id}");
 
-    public static Uri GenerateIllustratorPixEzUri(long id)
-    {
-        return new Uri($"pixez://www.pixiv.net/users/{id}");
-    }
+    public static Uri GenerateUserPixEzUri(long id) => new($"pixez://www.pixiv.net/users/{id}");
 
-    public static Uri GenerateIllustratorAppUri(long id)
-    {
-        return new Uri($"{AppInfo.AppProtocol}://user/{id}");
-    }
+    public static Uri GenerateUserAppUri(long id) => new($"{AppInfo.AppProtocol}://user/{id}");
+
+    public static Uri GenerateNovelWebUri(long id) => new($"https://www.pixiv.net/novel/show.php?id={id}");
+
+    public static Uri GenerateNovelPixEzUri(long id) => new($"pixez://www.pixiv.net/novel/show.php?id={id}");
+
+    public static Uri GenerateNovelAppUri(long id) => new($"{AppInfo.AppProtocol}://novel/{id}");
 
     public static string GetCacheKeyForThumbnailAsync(string url, ThumbnailUrlOption thumbnailUrlOption = ThumbnailUrlOption.Medium)
     {
@@ -124,11 +112,11 @@ public static class MakoHelper
         return isFollowed;
     }
 
-    public static bool SetBookmark(long id, bool isBookmarked, bool privately = false)
+    public static bool SetIllustrationBookmark(long id, bool isBookmarked, bool privately = false)
     {
         _ = isBookmarked
-            ? App.AppViewModel.MakoClient.PostBookmarkAsync(id, privately ? PrivacyPolicy.Private : PrivacyPolicy.Public)
-            : App.AppViewModel.MakoClient.RemoveBookmarkAsync(id);
+            ? App.AppViewModel.MakoClient.PostIllustrationBookmarkAsync(id, privately ? PrivacyPolicy.Private : PrivacyPolicy.Public)
+            : App.AppViewModel.MakoClient.RemoveIllustrationBookmarkAsync(id);
         return isBookmarked;
     }
 }
