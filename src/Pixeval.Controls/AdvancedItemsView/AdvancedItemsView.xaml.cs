@@ -50,36 +50,31 @@ public sealed partial class AdvancedItemsView : ItemsView
                 return;
 
             // 只有页面没充满时会触发LoadMoreRequested
-            switch (ScrollView.ComputedVerticalScrollMode, ScrollView.ComputedHorizontalScrollMode, ScrollView.VerticalScrollMode, ScrollView.HorizontalScrollMode)
+            if ((ScrollView.ScrollableHeight is 0 && ScrollView.ScrollableWidth is 0) ||
+                (ScrollView.ScrollableHeight > 0 &&
+                 ScrollView.ScrollableHeight - LoadingOffset < ScrollView.VerticalOffset) ||
+                (ScrollView.ScrollableWidth > 0 &&
+                 ScrollView.ScrollableWidth - LoadingOffset < ScrollView.HorizontalOffset))
             {
-                case (ScrollingScrollMode.Disabled, ScrollingScrollMode.Disabled, not ScrollingScrollMode.Disabled, not ScrollingScrollMode.Disabled):
-                case (ScrollingScrollMode.Enabled, ScrollingScrollMode.Disabled, _, not ScrollingScrollMode.Disabled)
-                    when ScrollView.ScrollableHeight - LoadingOffset < ScrollView.VerticalOffset:
-                case (ScrollingScrollMode.Disabled, ScrollingScrollMode.Enabled, not ScrollingScrollMode.Disabled, _)
-                    when ScrollView.ScrollableWidth - LoadingOffset < ScrollView.HorizontalOffset:
-                case (ScrollingScrollMode.Enabled, ScrollingScrollMode.Enabled, _, _)
-                    when ScrollView.ScrollableHeight - LoadingOffset < ScrollView.VerticalOffset
-                         || ScrollView.ScrollableWidth - LoadingOffset < ScrollView.HorizontalOffset:
+                IsLoadingMore = true;
+                var before = GetItemsCount();
+                if (await LoadMoreRequested(this, EventArgs.Empty))
                 {
-                    IsLoadingMore = true;
-                    var before = GetItemsCount();
-                    if (await LoadMoreRequested(this, EventArgs.Empty))
-                    {
-                        var after = GetItemsCount();
-                        // 这里可以设为一行的元素数，这样在加载过少数量的时候，也可以持续加载
-                        // 一般一次会加载20个元素，而一行元素数一般少于10，所以这里设为10
-                        if (before + 10 < after)
-                            loadMore = false;
-                    }
-                    else
+                    var after = GetItemsCount();
+                    // 这里可以设为一行的元素数，这样在加载过少数量的时候，也可以持续加载
+                    // 一般一次会加载20个元素，而一行元素数一般少于10，所以这里设为10
+                    if (before + 10 < after)
                         loadMore = false;
-                    IsLoadingMore = false;
-                    break;
                 }
-                // 如果填满了页面，也无需继续加载
-                default:
+                else
                     loadMore = false;
-                    break;
+
+                IsLoadingMore = false;
+            }
+            else
+            {
+                // 如果填满了页面，也无需继续加载
+                loadMore = false;
             }
         }
     }
