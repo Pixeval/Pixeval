@@ -108,7 +108,7 @@
 ## Лицензия JetBrains на открытый исходный код
 
 <div>
-  <a href="https://www.jetbrains.com/?from=Pixeval" align="right"><img src="https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.svg" alt="JetBrains" class="logo-footer" width="110" align="left"></a>
+  <a href="https://www.jetbrains.com/?from=Pixeval" align="right"><img src="https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.svg" alt="JetBrains" class="logo-footer" width="150" align="left"></a>
   <br/>
   
   В разработке этого проекта активно используется Jetbrains™ ReSharper. Благодарим компанию JetBrains s.r.o. за предоставление [Лицензии на открытый исходный код JetBrains](https://www.jetbrains.com/community/opensource/#support). Если вы один из увлеченных разработчиков, которые часто используют продукты JetBrains, вы можете попробовать подать заявку на Лицензию на открытый исходный код JetBrains через [официальный канал](https://www.jetbrains.com/shop/eform/opensource), чтобы помочь себе и вашим коллегам-разработчикам значительно повысить продуктивность.
