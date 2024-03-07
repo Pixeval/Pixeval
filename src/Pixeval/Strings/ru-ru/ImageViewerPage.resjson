@@ -1,0 +1,8 @@
+{
+    "CheckingCache": "Проверка кэша...",
+    "DownloadingUgoiraZipFormatted": "Загрузка архива с анимацией: {0}%",
+    "DownloadingImageFormatted": "Загрузка изображения: {0}%",
+    "LoadingFromCache": "Загрузка из кэша...",
+    "LoadingImage": "Декодирование изображения...",
+    "MergingUgoiraFrames": "Создание анимации..."
+}

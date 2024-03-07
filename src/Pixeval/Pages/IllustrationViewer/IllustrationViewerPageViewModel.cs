@@ -253,8 +253,8 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
 
     public string? NextButtonText => NextButtonAction switch
     {
-        true => IllustrateViewerPageResources.NextPageOrIllustration,
-        false => IllustrateViewerPageResources.NextIllustration,
+        true => EntryViewerPageResources.NextPageOrIllustration,
+        false => EntryViewerPageResources.NextIllustration,
         _ => null
     };
 
@@ -284,8 +284,8 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
 
     public string? PrevButtonText => PrevButtonAction switch
     {
-        true => IllustrateViewerPageResources.PrevPageOrIllustration,
-        false => IllustrateViewerPageResources.PrevIllustration,
+        true => EntryViewerPageResources.PrevPageOrIllustration,
+        false => EntryViewerPageResources.PrevIllustration,
         _ => null
     };
 
@@ -329,7 +329,7 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
     }
 
     public XamlUICommand IllustrationInfoAndCommentsCommand { get; } =
-        IllustrateViewerPageResources.IllustrationInfoAndComments.GetCommand(FontIconSymbol.InfoE946, VirtualKey.F12);
+        EntryViewerPageResources.IllustrationInfoAndComments.GetCommand(FontIconSymbol.InfoE946, VirtualKey.F12);
 
     public XamlUICommand FullScreenCommand { get; } = "".GetCommand(FontIconSymbol.FullScreenE740);
 

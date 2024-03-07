@@ -76,7 +76,7 @@ public partial record AppSettings : IWindowSettings
     public bool UseFileCache { get; set; }
 
     [SettingMetadata(SettingEntryCategory.Application, typeof(SettingsPageResources), nameof(SettingsPageResources.AppFontFamilyEntryHeader))]
-    public string AppFontFamilyName { get; set; } = "Microsoft YaHei UI";
+    public string AppFontFamilyName { get; set; } = AppSettingsResources.AppDefaultFontFamilyName;
 
     [SettingMetadata(SettingEntryCategory.Application, typeof(SettingsPageResources), nameof(SettingsPageResources.DefaultSelectedTabEntryHeader))]
     public MainPageTabItem DefaultSelectedTabItem { get; set; } = MainPageTabItem.DailyRecommendation;

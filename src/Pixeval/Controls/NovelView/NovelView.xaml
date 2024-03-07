@@ -18,13 +18,12 @@
         <local:EntryView.Content>
             <local:AdvancedItemsView
                 x:Name="NovelItemsView"
-                x:FieldModifier="public"
                 IsItemInvokedEnabled="True"
                 ItemInvoked="NovelItemsView_OnItemInvoked"
                 ItemsSource="{x:Bind ViewModel.DataProvider.View}"
                 LayoutType="Grid"
                 MinItemWidth="300"
-                SelectionMode="None">
+                SelectionMode="{x:Bind ViewModel.IsSelecting, Converter={StaticResource BoolToSelectionModeConverter}, Mode=OneWay}">
                 <local:AdvancedItemsView.ItemTemplate>
                     <DataTemplate x:DataType="local:NovelItemViewModel">
                         <ItemContainer>

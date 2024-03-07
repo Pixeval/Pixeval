@@ -24,8 +24,7 @@
     </br>
 </div>
 
-🌏: [简体中文](https://github.com/Pixeval/Pixeval/blob/main/README.md)，
-[**English**](https://github.com/Pixeval/Pixeval/blob/main/README.en.md)
+🌏: [简体中文](README.md)，[**English**](README.en.md)，[Русский](README.ru.md)
 
 ---
 
