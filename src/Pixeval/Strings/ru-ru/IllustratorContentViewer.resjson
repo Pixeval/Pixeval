@@ -5,7 +5,7 @@
     "IllustrationNavigationViewItem/Content": "Иллюстрации",
     "MangaNavigationViewItem/Content": "Манга",
     "MyPixivUserNavigationViewItem/Content": "Друзья в Pixiv",
-    "NovelNavigationViewItem/Content": "Рассказы",
+    "NovelNavigationViewItem/Content": "Новеллы",
     "NavigationViewAutoSuggestBox/PlaceholderText": "Быстрый фильтр по ID/тегу/названию/имени пользователя",
     "RecommendIllustratorsTitle/Text": "Рекомендуемые авторы",
     "ToggleShowExternalCommandBarItem/Text": "Показать дополнительную панель команд",
