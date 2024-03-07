@@ -347,28 +347,51 @@
                     Tag="{x:Bind misc2:SettingEntry.DisableDomainFronting}">
                     <ToggleSwitch IsOn="{x:Bind ViewModel.DisableDomainFronting, Mode=TwoWay}" />
                     <controls:SettingsExpander.Items>
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-                            <controls:SettingsCard
-                                x:Uid="/SettingsPage/PixivApiNameResolverEntry"
-                                Grid.Column="0"
-                                VerticalAlignment="Stretch"
-                                HorizontalContentAlignment="Stretch"
-                                ContentAlignment="Vertical">
-                                <controls1:IPListInput ItemsSource="{x:Bind ViewModel.PixivApiNameResolver, Mode=OneWay}" />
-                            </controls:SettingsCard>
-                            <controls:SettingsCard
-                                x:Uid="/SettingsPage/PixivImageNameResolverEntry"
-                                Grid.Column="1"
-                                VerticalAlignment="Stretch"
-                                HorizontalContentAlignment="Stretch"
-                                ContentAlignment="Vertical">
-                                <controls1:IPListInput ItemsSource="{x:Bind ViewModel.PixivImageNameResolver, Mode=OneWay}" />
-                            </controls:SettingsCard>
-                        </Grid>
+                        <controls:SettingsCard HorizontalContentAlignment="Stretch" ContentAlignment="Left">
+                            <Grid
+                                Padding="20"
+                                HorizontalAlignment="Stretch"
+                                ColumnSpacing="50"
+                                RowSpacing="10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <TextBlock
+                                    x:Uid="/SettingsPage/PixivApiNameResolverHeader"
+                                    Grid.Row="0"
+                                    Grid.Column="0" />
+                                <TextBlock
+                                    x:Uid="/SettingsPage/PixivApiNameResolverDescription"
+                                    Grid.Row="1"
+                                    Grid.Column="0"
+                                    Foreground="{StaticResource TextSecondaryAccentColor}"
+                                    Style="{StaticResource BaseTextBlockStyle}" />
+                                <controls1:IPListInput
+                                    Grid.Row="2"
+                                    Grid.Column="0"
+                                    ItemsSource="{x:Bind ViewModel.PixivApiNameResolver, Mode=OneWay}" />
+                                <TextBlock
+                                    x:Uid="/SettingsPage/PixivImageNameResolverHeader"
+                                    Grid.Row="0"
+                                    Grid.Column="1" />
+                                <TextBlock
+                                    x:Uid="/SettingsPage/PixivImageNameResolverDescription"
+                                    Grid.Row="1"
+                                    Grid.Column="1"
+                                    Foreground="{StaticResource TextSecondaryAccentColor}"
+                                    Style="{StaticResource BaseTextBlockStyle}" />
+                                <controls1:IPListInput
+                                    Grid.Row="2"
+                                    Grid.Column="1"
+                                    ItemsSource="{x:Bind ViewModel.PixivImageNameResolver, Mode=OneWay}" />
+                            </Grid>
+                        </controls:SettingsCard>
                     </controls:SettingsExpander.Items>
                 </controls:SettingsExpander>
 
