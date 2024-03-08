@@ -1,0 +1,4 @@
+{
+  "MessageTextBlock/Text": "The Reverse Search requires a correct SauceNAO API Key in order to work properly, please check your input and try again",
+  "SetApiKeyHyperlinkButton/Content": "Change API Key"
+}

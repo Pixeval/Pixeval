@@ -231,6 +231,9 @@
         <PRIResource Include="Strings\ru-ru\TokenInputTextBox.resjson" />
         <PRIResource Include="Strings\ru-ru\TagsEntry.resjson" />
         <PRIResource Include="Strings\ru-ru\IPListInput.resjson" />
+
+		
+
     </ItemGroup>
 
     <!--XAML-->

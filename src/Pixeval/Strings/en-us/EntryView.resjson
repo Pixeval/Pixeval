@@ -1,0 +1,13 @@
+{
+  "AddToBookmarkContextItem/Text": "Bookmark",
+  "CopyAppLinkContextItem/Text": "Copy application link",
+  "CopyWebLinkContextItem/Text": "Copy website link",
+  "OpenInBrowserContextItem/Text": "Open in browser",
+  "ResultIsEmptyTextBlock/Text": "Nothing here!",
+  "IsLoadingMoreTextBlock/Text": "Loading",
+  "SaveContextItem/Text": "Save",
+  "ShowPixEzQrCodeContextItem/Text": "Generate PixEz QR code",
+  "ShowQrCodeContextItem/Text": "Generate QR code",
+  "IllustrationQrCodeTeachingTip/TeachingTipTitle": "Generate QR code for the illustration",
+  "IllustratorQrCodeTeachingTip/TeachingTipTitle": "Generate QR code for the author"
+}

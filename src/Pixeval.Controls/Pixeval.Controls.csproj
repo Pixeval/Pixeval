@@ -58,6 +58,7 @@
     <ItemGroup>
         <PRIResource Include="Strings\zh-cn\PixevalBadge.resjson" />
         <PRIResource Include="Strings\zh-cn\AdvancedItemsView.resjson" />
+        <PRIResource Include="Strings\en-us\PixevalBadge.resjson" />
         <Page Update="IconText.xaml">
           <Generator>MSBuild:Compile</Generator>
         </Page>
