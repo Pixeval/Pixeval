@@ -232,8 +232,39 @@
         <PRIResource Include="Strings\ru-ru\TagsEntry.resjson" />
         <PRIResource Include="Strings\ru-ru\IPListInput.resjson" />
 
-		
 
+		<PRIResource Include="Strings\en-us\AppSettings.resjson" />
+		<PRIResource Include="Strings\en-us\CommentsPage.resjson" />
+		<PRIResource Include="Strings\en-us\FollowingUserBadge.resjson" />
+		<PRIResource Include="Strings\en-us\IllustratorContentViewer.resjson" />
+		<PRIResource Include="Strings\en-us\BookmarksPage.resjson" />
+		<PRIResource Include="Strings\en-us\EntryItem.resjson" />
+		<PRIResource Include="Strings\en-us\AboutPage.resjson" />
+		<PRIResource Include="Strings\en-us\Activations.resjson" />
+		<PRIResource Include="Strings\en-us\CommentRepliesBlock.resjson" />
+		<PRIResource Include="Strings\en-us\DownloadListEntry.resjson" />
+		<PRIResource Include="Strings\en-us\DownloadListPage.resjson" />
+		<PRIResource Include="Strings\en-us\DownloadListPageDeleteTasksDialog.resjson" />
+		<PRIResource Include="Strings\en-us\DownloadTask.resjson" />
+		<PRIResource Include="Strings\en-us\EntryView.resjson" />
+		<PRIResource Include="Strings\en-us\IllustrationInfoPage.resjson" />
+		<PRIResource Include="Strings\en-us\IllustrationResultFilterContent.resjson" />
+		<PRIResource Include="Strings\en-us\EntryViewerPage.resjson" />
+		<PRIResource Include="Strings\en-us\IllustratorViewerPage.resjson" />
+		<PRIResource Include="Strings\en-us\ImageViewerPage.resjson" />
+		<PRIResource Include="Strings\en-us\LoginPage.resjson" />
+		<PRIResource Include="Strings\en-us\MacroParser.resjson" />
+		<PRIResource Include="Strings\en-us\MainPage.resjson" />
+		<PRIResource Include="Strings\en-us\MessageContentDialog.resjson" />
+		<PRIResource Include="Strings\en-us\Misc.resjson" />
+		<PRIResource Include="Strings\en-us\RankingsPage.resjson" />
+		<PRIResource Include="Strings\en-us\RecommendationsPage.resjson" />
+		<PRIResource Include="Strings\en-us\PixivReplyBar.resjson" />
+		<PRIResource Include="Strings\en-us\ReverseSearchApiKeyNotPresentDialog.resjson" />
+		<PRIResource Include="Strings\en-us\SettingsPage.resjson" />
+		<PRIResource Include="Strings\en-us\TokenInputTextBox.resjson" />
+		<PRIResource Include="Strings\en-us\TagsEntry.resjson" />
+		<PRIResource Include="Strings\en-us\IPListInput.resjson" />
     </ItemGroup>
 
     <!--XAML-->
