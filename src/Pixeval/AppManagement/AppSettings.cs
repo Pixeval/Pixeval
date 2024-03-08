@@ -248,6 +248,10 @@ public partial record AppSettings : IWindowSettings
     [SyntheticSetting]
     public Size WindowSize { get; set; } = WindowHelper.EstimatedWindowSize().ToSize();
 
+    [AttributeIgnore(typeof(SettingsViewModelAttribute<>))]
+    [SyntheticSetting]
+    public bool IsMaximized { get; set; } = false;
+
     public MakoClientConfiguration ToMakoClientConfiguration()
     {
         return new MakoClientConfiguration(5000, !DisableDomainFronting, MirrorHost, CultureInfo.CurrentUICulture);

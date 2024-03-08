@@ -91,7 +91,7 @@ public partial class App
             .WithLoaded((s, _) => s.To<Frame>().NavigateTo<LoginPage>(w))
             .WithClosing((_, _) => AppInfo.SaveContext()) // TODO: 从运行打开应用的时候不会ExitApp，就算是调用App.Current.Exit();
             .WithSizeLimit(800, 360)
-            .Init(AppInfo.AppIdentifier, AppViewModel.AppSettings.WindowSize.ToSizeInt32())
+            .Init(AppInfo.AppIdentifier, AppViewModel.AppSettings.WindowSize.ToSizeInt32(), AppViewModel.AppSettings.IsMaximized)
             .Activate();
 
         RegisterUnhandledExceptionHandler();

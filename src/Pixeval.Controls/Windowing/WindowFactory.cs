@@ -50,7 +50,7 @@ public static class WindowFactory
         if (element.XamlRoot is null)
             ThrowHelper.ArgumentNull(element.XamlRoot, $"{nameof(element.XamlRoot)} should not be null.");
 
-        return _forkedWindowsInternal.Find(window => element.XamlRoot == window.Content.XamlRoot) 
+        return _forkedWindowsInternal.Find(window => element.XamlRoot == window.Content.XamlRoot)
                ?? ThrowHelper.ArgumentOutOfRange<UIElement, EnhancedWindow>(element, $"Specified {nameof(element)} is not existed in any of {nameof(ForkedWindows)}.");
     }
 
@@ -95,7 +95,7 @@ public static class WindowFactory
         return window;
     }
 
-    public static EnhancedWindow Init(this EnhancedWindow window, string title, SizeInt32 size = default)
+    public static EnhancedWindow Init(this EnhancedWindow window, string title, SizeInt32 size = default, bool isMaximized = false)
     {
         window.Initialize(new InitializeInfo
         {
@@ -105,6 +105,8 @@ public static class WindowFactory
             IconPath = IconAbsolutePath,
             Title = title
         });
+        if (isMaximized)
+            window.AppWindow.Presenter.To<OverlappedPresenter>().Maximize();
         window.FrameLoaded += (s, _) => s.To<FrameworkElement>().RequestedTheme = WindowSettings.Theme;
         return window;
     }
