@@ -38,6 +38,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Pixeval.Logging;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
+using Pixeval.Controls.DialogContent;
+
 #if DEBUG
 using System.Diagnostics;
 #endif
@@ -88,13 +90,34 @@ public partial class App
         await AppViewModel.InitializeAsync(isProtocolActivated);
 
         WindowFactory.Create(out var w)
-            .WithLoaded((s, _) => s.To<Frame>().NavigateTo<LoginPage>(w))
+            .WithLoaded(onLoaded: OnLoaded)
             .WithClosing((_, _) => AppInfo.SaveContext()) // TODO: 从运行打开应用的时候不会ExitApp，就算是调用App.Current.Exit();
             .WithSizeLimit(800, 360)
             .Init(AppInfo.AppIdentifier, AppViewModel.AppSettings.WindowSize.ToSizeInt32(), AppViewModel.AppSettings.IsMaximized)
             .Activate();
 
         RegisterUnhandledExceptionHandler();
+        return;
+
+        async void OnLoaded(object s, RoutedEventArgs _)
+        {
+            if (!AppViewModel.AppSettings.ExitedSuccessfully
+                && await w.Content.ShowContentDialogAsync(CheckExitedContentDialogResources.ContentDialogTitle,
+                    new CheckExitedDialog(),
+                    CheckExitedContentDialogResources.ContentDialogPrimaryButtonText,
+                    "",
+                    CheckExitedContentDialogResources.ContentDialogCloseButtonText) is ContentDialogResult.Primary)
+            {
+                AppInfo.SaveContext();
+                w.Close();
+                return;
+            }
+
+            AppViewModel.AppSettings.ExitedSuccessfully = false;
+            AppInfo.SaveConfig(AppViewModel.AppSettings);
+
+            s.To<Frame>().NavigateTo<LoginPage>(w);
+        }
     }
 
     private void RegisterUnhandledExceptionHandler()

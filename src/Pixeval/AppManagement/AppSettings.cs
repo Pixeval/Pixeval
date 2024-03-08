@@ -252,6 +252,10 @@ public partial record AppSettings : IWindowSettings
     [SyntheticSetting]
     public bool IsMaximized { get; set; } = false;
 
+    [AttributeIgnore(typeof(SettingsViewModelAttribute<>))]
+    [SyntheticSetting]
+    public bool ExitedSuccessfully { get; set; } = true;
+
     public MakoClientConfiguration ToMakoClientConfiguration()
     {
         return new MakoClientConfiguration(5000, !DisableDomainFronting, MirrorHost, CultureInfo.CurrentUICulture);

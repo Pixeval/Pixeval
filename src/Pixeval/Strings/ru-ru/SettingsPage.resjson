@@ -117,6 +117,7 @@
     "OpenLocalEntry/Header": "Открыть локальную папку",
     "OpenLocalEntry/Description": "Здесь хранятся важные конфигурационные файлы, пожалуйста, не изменяйте файлы в этой папке",
     "OpenRoamingEntry/Header": "Открыть папку данных",
+    "OpenRoamingEntry/Description": "Здесь хранятся важные конфигурационные файлы, пожалуйста, не изменяйте файлы в этой папке",
     "ResetDefaultSettingsButton/Content": "Сбросить настройки",
     "ResetDefaultSettingsEntry/Description": "Нажатие этой кнопки сбросит все настройки к значению по умолчанию. Это действие необратимо",
     "ResetDefaultSettingsEntry/Header": "Сброс настроек по умолчанию",

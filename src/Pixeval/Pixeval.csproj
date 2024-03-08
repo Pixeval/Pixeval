@@ -165,6 +165,7 @@
     <!--PRIResource-->
     <ItemGroup>
         <PRIResource Include="Assets\Svg.resjson" />
+        <PRIResource Include="Strings\zh-cn\CheckExitedContentDialog.resjson" />
         <PRIResource Include="Strings\zh-cn\AppSettings.resjson" />
         <PRIResource Include="Strings\zh-cn\CommentsPage.resjson" />
         <PRIResource Include="Strings\zh-cn\FollowingUserBadge.resjson" />
@@ -235,6 +236,7 @@
 
     <!--XAML-->
     <ItemGroup>
+        <None Remove="Controls\DialogContent\CheckExitedDialog.xaml" />
         <None Remove="Controls\NovelItem\NovelItem.xaml" />
         <None Remove="Controls\NovelView\NovelView.xaml" />
         <None Remove="IllustrationContainer.xaml" />
@@ -285,6 +287,9 @@
         <None Remove="IllustrationResultFilterContent.xaml" />
         <None Remove="IllustratorItem.xaml" />
         <None Remove="RecommendIllustratorItem.xaml" />
+        <Page Update="Controls\DialogContent\CheckExitedDialog.xaml">
+          <Generator>MSBuild:Compile</Generator>
+        </Page>
         <Page Update="Pages\Capability\IllustratorNovelPage.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>

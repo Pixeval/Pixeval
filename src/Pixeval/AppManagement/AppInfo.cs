@@ -192,6 +192,11 @@ public static partial class AppInfo
         }
     }
 
+    public static void ClearConfig()
+    {
+        Functions.IgnoreException(() => ApplicationData.Current.RoamingSettings.DeleteContainer(ConfigContainerKey));
+    }
+
     public static void ClearSession()
     {
         Functions.IgnoreException(() => ApplicationData.Current.LocalSettings.DeleteContainer(SessionContainerKey));
@@ -199,6 +204,7 @@ public static partial class AppInfo
 
     public static void SaveContext()
     {
+        App.AppViewModel.AppSettings.ExitedSuccessfully = true;
         // Save the current resolution
         if (WindowFactory.RootWindow.AppWindow.Presenter is OverlappedPresenter { State: OverlappedPresenterState.Maximized })
             App.AppViewModel.AppSettings.IsMaximized = true;
