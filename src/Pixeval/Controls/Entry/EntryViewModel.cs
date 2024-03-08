@@ -25,11 +25,11 @@ using Pixeval.CoreApi.Model;
 
 namespace Pixeval.Controls;
 
-[DebuggerDisplay("{Illustrate}")]
-public abstract class IllustrateViewModel<T>(T illustrate) : ObservableObject, IDisposable
+[DebuggerDisplay("{Entry}")]
+public abstract class EntryViewModel<T>(T entry) : ObservableObject, IDisposable
     where T : IEntry
 {
-    public T Illustrate { get; } = illustrate;
+    public T Entry { get; } = entry;
 
     public abstract void Dispose();
 }

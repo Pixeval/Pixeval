@@ -75,11 +75,11 @@
                     SelectionChanged="IllustrationInfoAndCommentsNavigationViewOnSelectionChanged">
                     <NavigationView.MenuItems>
                         <NavigationViewItem
-                            x:Uid="/IllustrateViewerPage/IllustrationInfoTab"
+                            x:Uid="/EntryViewerPage/IllustrationInfoTab"
                             IsSelected="True"
                             Tag="{x:Bind _viewModel.IllustrationInfoTag}" />
-                        <NavigationViewItem x:Uid="/IllustrateViewerPage/CommentsTab" Tag="{x:Bind _viewModel.CommentsTag}" />
-                        <NavigationViewItem x:Uid="/IllustrateViewerPage/RelatedWorksTab" Tag="{x:Bind _viewModel.RelatedWorksTag}" />
+                        <NavigationViewItem x:Uid="/EntryViewerPage/CommentsTab" Tag="{x:Bind _viewModel.CommentsTag}" />
+                        <NavigationViewItem x:Uid="/EntryViewerPage/RelatedWorksTab" Tag="{x:Bind _viewModel.RelatedWorksTag}" />
                     </NavigationView.MenuItems>
                     <Frame x:Name="IllustrationInfoAndCommentsFrame" Width="320" />
                 </NavigationView>
@@ -353,7 +353,7 @@
                     </Grid.ColumnDefinitions>
                     <controls:TitleBarIconText
                         x:Name="TitleBar"
-                        Title="{x:Bind _viewModel.CurrentIllustration.Illustrate.Title, Mode=OneWay}"
+                        Title="{x:Bind _viewModel.CurrentIllustration.Title, Mode=OneWay}"
                         Grid.Column="0" />
                     <CommandBar
                         x:Name="IllustrationViewerCommandBar"
@@ -417,7 +417,7 @@
                         ToolTipService.ToolTip="{x:Bind _viewModel.CurrentImage.Scale, Converter={StaticResource NumberToPercentageConverter}, ConverterParameter=2, Mode=OneWay}" />
                     <TeachingTip
                         x:Name="GenerateLinkTeachingTip"
-                        x:Uid="/IllustrateViewerPage/GenerateLinkToThisPageButtonTeachingTip"
+                        x:Uid="/EntryViewerPage/GenerateLinkToThisPageButtonTeachingTip"
                         Grid.Column="0"
                         ActionButtonClick="GenerateLinkToThisPageButtonTeachingTip_OnActionButtonClick"
                         Tag="{x:Bind GenerateLinkButton}">
@@ -430,7 +430,7 @@
                     </TeachingTip>
                     <TeachingTip
                         x:Name="ShowQrCodeTeachingTip"
-                        x:Uid="/IllustrateViewerPage/QrCodeTeachingTip"
+                        x:Uid="/EntryViewerPage/QrCodeTeachingTip"
                         Grid.Column="0"
                         IsLightDismissEnabled="True"
                         Tag="{x:Bind ShowQrCodeButton}">

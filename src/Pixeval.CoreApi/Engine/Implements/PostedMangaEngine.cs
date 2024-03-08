@@ -27,16 +27,18 @@ using Pixeval.Utilities;
 
 namespace Pixeval.CoreApi.Engine.Implements;
 
-public class PostedMangaEngine(MakoClient makoClient, long uid, TargetFilter targetFilter, EngineHandle? engineHandle)
+public class PostedMangaEngine(MakoClient makoClient, long uid, TargetFilter targetFilter,
+    EngineHandle? engineHandle)
     : AbstractPixivFetchEngine<Illustration>(makoClient, engineHandle)
 {
+    private readonly TargetFilter _targetFilter = targetFilter;
     private readonly long _uid = uid;
 
     public override IAsyncEnumerator<Illustration> GetAsyncEnumerator(CancellationToken cancellationToken = new CancellationToken())
     {
         return RecursivePixivAsyncEnumerators.Illustration<PostedMangaEngine>.WithInitialUrl(this, MakoApiKind.AppApi,
             engine => "/v1/user/illusts"
-                      + $"?filter={targetFilter.GetDescription()}"
+                      + $"?filter={engine._targetFilter.GetDescription()}"
                       + $"&user_id={engine._uid}"
                       + "&type=manga")!;
     }

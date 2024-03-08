@@ -70,8 +70,8 @@
                                 Orientation="Horizontal"
                                 Spacing="10">
                                 <TextBlock
-                                    FontSize="20"
                                     IsTextSelectionEnabled="True"
+                                    Style="{StaticResource TitleTextBlockStyle}"
                                     Text="{x:Bind _viewModel.Name}" />
                                 <controls:PixevalBadge Mode="Premium" Visibility="{x:Bind _viewModel.IsPremium, Converter={StaticResource BoolToVisibilityConverter}}" />
                             </StackPanel>
@@ -126,27 +126,27 @@
                                 </StackPanel>
                             </AppBarElementContainer>
                             <controls:AppButtonItem
-                                x:Uid="/IllustrateViewerPage/FollowingUserItem"
+                                x:Uid="/EntryViewerPage/FollowingUserItem"
                                 Number="{x:Bind _viewModel.Metrics.TotalFollowUsers, Mode=OneWay}"
                                 Symbol="AddFriendE8FA" />
                             <AppBarSeparator />
                             <controls:AppButtonItem
-                                x:Uid="/IllustrateViewerPage/MyPixivUserItem"
+                                x:Uid="/EntryViewerPage/MyPixivUserItem"
                                 Number="{x:Bind _viewModel.Metrics.TotalMyPixivUsers, Mode=OneWay}"
                                 Symbol="PeopleE716" />
                             <AppBarSeparator />
                             <controls:AppButtonItem
-                                x:Uid="/IllustrateViewerPage/IllustrationCountItem"
+                                x:Uid="/EntryViewerPage/IllustrationCountItem"
                                 Number="{x:Bind _viewModel.Metrics.TotalIllusts, Mode=OneWay}"
                                 Symbol="PhotoE91B" />
                             <AppBarSeparator />
                             <controls:AppButtonItem
-                                x:Uid="/IllustrateViewerPage/MangaCountItem"
+                                x:Uid="/EntryViewerPage/MangaCountItem"
                                 Number="{x:Bind _viewModel.Metrics.TotalManga, Mode=OneWay}"
                                 Symbol="PictureE8B9" />
                             <AppBarSeparator />
                             <controls:AppButtonItem
-                                x:Uid="/IllustrateViewerPage/NovelCountItem"
+                                x:Uid="/EntryViewerPage/NovelCountItem"
                                 Number="{x:Bind _viewModel.Metrics.TotalNovelSeries, Mode=OneWay}"
                                 Symbol="ReadingModeE736" />
                         </CommandBar>
@@ -174,38 +174,37 @@
                         SelectionChanged="IllustratorViewerSegmented_OnSelectionChanged">
                         <controls1:SegmentedItem
                             x:Name="IllustrationTab"
-                            x:Uid="/IllustrateViewerPage/IllustrationNavigationViewItem"
+                            x:Uid="/EntryViewerPage/IllustrationNavigationViewItem"
                             Icon="{markup:FontSymbolIcon Glyph=PhotoE91B}"
                             Tag="{x:Bind _viewModel.IllustrationTag}" />
                         <controls1:SegmentedItem
-                            x:Uid="/IllustrateViewerPage/MangaNavigationViewItem"
+                            x:Uid="/EntryViewerPage/MangaNavigationViewItem"
                             Icon="{markup:FontSymbolIcon Glyph=PictureE8B9}"
                             Tag="{x:Bind _viewModel.MangaTag}" />
                         <controls1:SegmentedItem
-                            x:Uid="/IllustrateViewerPage/NovelNavigationViewItem"
+                            x:Uid="/EntryViewerPage/NovelNavigationViewItem"
                             Icon="{markup:FontSymbolIcon Glyph=ReadingModeE736}"
-                            IsEnabled="False"
                             Tag="{x:Bind _viewModel.NovelTag}" />
                         <controls1:SegmentedItem
-                            x:Uid="/IllustrateViewerPage/BookmarkedIllustrationAndMangaNavigationViewItem"
+                            x:Uid="/EntryViewerPage/BookmarkedIllustrationAndMangaNavigationViewItem"
                             Icon="{markup:FontSymbolIcon Glyph=LibraryE8F1}"
                             Tag="{x:Bind _viewModel.BookmarkedIllustrationAndMangaTag}" />
                         <controls1:SegmentedItem
-                            x:Uid="/IllustrateViewerPage/BookmarkedNovelNavigationViewItem"
+                            x:Uid="/EntryViewerPage/BookmarkedNovelNavigationViewItem"
                             Icon="{markup:FontSymbolIcon Glyph=ReadingListE7BC}"
                             IsEnabled="False"
                             Tag="{x:Bind _viewModel.BookmarkedNovelTag}" />
                         <controls1:SegmentedItem
-                            x:Uid="/IllustrateViewerPage/FollowingUserNavigationViewItem"
+                            x:Uid="/EntryViewerPage/FollowingUserNavigationViewItem"
                             Icon="{markup:FontSymbolIcon Glyph=AddFriendE8FA}"
                             Tag="{x:Bind _viewModel.FollowingUserTag}" />
                         <controls1:SegmentedItem
-                            x:Uid="/IllustrateViewerPage/MyPixivUserNavigationViewItem"
+                            x:Uid="/EntryViewerPage/MyPixivUserNavigationViewItem"
                             Icon="{markup:FontSymbolIcon Glyph=PeopleE716}"
                             IsEnabled="False"
                             Tag="{x:Bind _viewModel.MyPixivUserTag}" />
                         <controls1:SegmentedItem
-                            x:Uid="/IllustrateViewerPage/RecommendUserNavigationViewItem"
+                            x:Uid="/EntryViewerPage/RecommendUserNavigationViewItem"
                             Icon="{markup:FontSymbolIcon Glyph=FamilyEBDA}"
                             Tag="{x:Bind _viewModel.RecommendUserTag}" />
                     </controls1:Segmented>
@@ -216,7 +215,7 @@
                     <Frame x:Name="IllustratorViewerFrame" />
                     <TeachingTip
                         x:Name="GenerateLinkTeachingTip"
-                        x:Uid="/IllustrateViewerPage/GenerateLinkToThisPageButtonTeachingTip"
+                        x:Uid="/EntryViewerPage/GenerateLinkToThisPageButtonTeachingTip"
                         ActionButtonClick="GenerateLinkToThisPageButtonTeachingTip_OnActionButtonClick"
                         Target="{x:Bind GenerateLinkButton}">
                         <TeachingTip.HeroContent>
@@ -225,7 +224,7 @@
                     </TeachingTip>
                     <TeachingTip
                         x:Name="ShowQrCodeTeachingTip"
-                        x:Uid="/IllustrateViewerPage/QrCodeTeachingTip"
+                        x:Uid="/EntryViewerPage/QrCodeTeachingTip"
                         IsLightDismissEnabled="True"
                         Target="{x:Bind ShowQrCodeButton}">
                         <TeachingTip.HeroContent>

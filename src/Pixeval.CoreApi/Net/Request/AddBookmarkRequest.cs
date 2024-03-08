@@ -22,4 +22,4 @@ using Refit;
 
 namespace Pixeval.CoreApi.Net.Request;
 
-internal record AddBookmarkRequest([property: AliasAs("restrict")] string Restrict, [property: AliasAs("illust_id")] string Id);
+internal record AddIllustBookmarkRequest([property: AliasAs("restrict")] string Restrict, [property: AliasAs("illust_id")] string Id);

@@ -18,17 +18,15 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Data;
-using Pixeval.CoreApi.Net;
 using Pixeval.CoreApi.Net.Response;
-using Pixeval.Util.IO;
+using Pixeval.Options;
+using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
 
 namespace Pixeval.Controls.FlyoutContent;
@@ -45,20 +43,36 @@ public sealed partial class CommentRepliesBlock
 
     private async void ReplyBar_OnSendButtonTapped(object? sender, SendButtonTappedEventArgs e)
     {
-        using var result = await App.AppViewModel.MakoClient.GetMakoHttpClient(MakoApiKind.AppApi).PostFormAsync(CommentBlockViewModel.AddCommentUrlSegment,
-            ("illust_id", ViewModel.IllustrationId.ToString()),
-            ("parent_comment_id", ViewModel.CommentId.ToString()),
-            ("comment", e.ReplyContentRichEditBoxStringContent));
+        using var result = ViewModel.EntryType switch
+        {
+            CommentType.Illustration => await App.AppViewModel.MakoClient.AddIllustCommentAsync(
+                ViewModel.EntryId,
+                ViewModel.CommentId,
+                e.ReplyContentRichEditBoxStringContent),
+            CommentType.Novel => await App.AppViewModel.MakoClient.AddNovelCommentAsync(
+                ViewModel.EntryId,
+                ViewModel.CommentId,
+                e.ReplyContentRichEditBoxStringContent),
+            _ => ThrowHelper.ArgumentOutOfRange<CommentType, HttpResponseMessage>(ViewModel.EntryType)
+        };
 
         await AddComment(result);
     }
 
     private async void ReplyBar_OnStickerTapped(object? sender, StickerTappedEventArgs e)
     {
-        using var result = await App.AppViewModel.MakoClient.GetMakoHttpClient(MakoApiKind.AppApi).PostFormAsync(CommentBlockViewModel.AddCommentUrlSegment,
-            ("illust_id", ViewModel.IllustrationId.ToString()),
-            ("parent_comment_id", ViewModel.CommentId.ToString()),
-            ("stamp_id", e.StickerViewModel.StickerId.ToString()));
+        using var result = ViewModel.EntryType switch
+        {
+            CommentType.Illustration => await App.AppViewModel.MakoClient.AddIllustCommentAsync(
+                ViewModel.EntryId,
+                ViewModel.CommentId,
+                e.StickerViewModel.StickerId),
+            CommentType.Novel => await App.AppViewModel.MakoClient.AddNovelCommentAsync(
+                ViewModel.EntryId,
+                ViewModel.CommentId,
+                e.StickerViewModel.StickerId),
+            _ => ThrowHelper.ArgumentOutOfRange<CommentType, HttpResponseMessage>(ViewModel.EntryType)
+        };
 
         await AddComment(result);
     }

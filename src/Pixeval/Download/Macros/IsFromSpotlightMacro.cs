@@ -30,6 +30,6 @@ public class IsFromSpotlightMacro : IMacro<IllustrationItemViewModel>.IPredicate
 
     public bool Match(IllustrationItemViewModel context)
     {
-        return context.Illustrate.FromSpotlight;
+        return context.Entry.FromSpotlight;
     }
 }

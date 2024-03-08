@@ -56,7 +56,7 @@ public partial class IllustratorViewerPageViewModel : UiObservableObject
 
     public NavigationViewTag<IllustratorMangaPage, long> MangaTag { get; }
 
-    public NavigationViewTag NovelTag { get; }
+    public NavigationViewTag<IllustratorNovelsPage, long> NovelTag { get; }
 
     public NavigationViewTag<BookmarksPage, long> BookmarkedIllustrationAndMangaTag { get; }
 
@@ -76,7 +76,7 @@ public partial class IllustratorViewerPageViewModel : UiObservableObject
 
         IllustrationTag = new(Id);
         MangaTag = new(Id);
-        NovelTag = null!;
+        NovelTag = new(Id);
         BookmarkedIllustrationAndMangaTag = new(Id);
         FollowingUserTag = new(Id);
         MyPixivUserTag = null!;
@@ -132,26 +132,26 @@ public partial class IllustratorViewerPageViewModel : UiObservableObject
 
     public XamlUICommand FollowPrivatelyCommand { get; } = XamlUiCommandHelper.GetNewFollowPrivatelyCommand();
 
-    public XamlUICommand GenerateLinkCommand { get; } = IllustrateItemResources.GenerateLink.GetCommand(FontIconSymbol.LinkE71B);
+    public XamlUICommand GenerateLinkCommand { get; } = EntryItemResources.GenerateLink.GetCommand(FontIconSymbol.LinkE71B);
 
-    public XamlUICommand GenerateWebLinkCommand { get; } = IllustrateItemResources.GenerateWebLink.GetCommand(FontIconSymbol.PreviewLinkE8A1);
+    public XamlUICommand GenerateWebLinkCommand { get; } = EntryItemResources.GenerateWebLink.GetCommand(FontIconSymbol.PreviewLinkE8A1);
 
-    public XamlUICommand OpenInWebBrowserCommand { get; } = IllustrateItemResources.OpenInWebBrowser.GetCommand(FontIconSymbol.WebSearchF6FA);
+    public XamlUICommand OpenInWebBrowserCommand { get; } = EntryItemResources.OpenInWebBrowser.GetCommand(FontIconSymbol.WebSearchF6FA);
 
-    public XamlUICommand ShowQrCodeCommand { get; } = IllustrateItemResources.ShowQRCode.GetCommand(FontIconSymbol.QRCodeED14);
+    public XamlUICommand ShowQrCodeCommand { get; } = EntryItemResources.ShowQRCode.GetCommand(FontIconSymbol.QRCodeED14);
 
     /// <summary>
     /// 还没用到
     /// </summary>
-    public XamlUICommand ShowPixEzQrCodeCommand { get; } = IllustrateItemResources.ShowPixEzQrCode.GetCommand(FontIconSymbol.Photo2EB9F);
+    public XamlUICommand ShowPixEzQrCodeCommand { get; } = EntryItemResources.ShowPixEzQrCode.GetCommand(FontIconSymbol.Photo2EB9F);
 
     private void InitializeCommands()
     {
-        FollowCommand.ExecuteRequested += (_, _) => IsFollowed = MakoHelper.SetFollow(Id, true);
+        FollowCommand.ExecuteRequested += async (_, _) => IsFollowed = await MakoHelper.SetFollowAsync(Id, true);
 
-        FollowPrivatelyCommand.ExecuteRequested += (_, _) => IsFollowed = MakoHelper.SetFollow(Id, true, true);
+        FollowPrivatelyCommand.ExecuteRequested += async (_, _) => IsFollowed = await MakoHelper.SetFollowAsync(Id, true, true);
 
-        UnfollowCommand.ExecuteRequested += (_, _) => IsFollowed = MakoHelper.SetFollow(Id, false);
+        UnfollowCommand.ExecuteRequested += async (_, _) => IsFollowed = await MakoHelper.SetFollowAsync(Id, false);
 
         GenerateLinkCommand.ExecuteRequested += GenerateLinkCommandOnExecuteRequested;
 
@@ -166,29 +166,29 @@ public partial class IllustratorViewerPageViewModel : UiObservableObject
 
     private void GenerateLinkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
-        UiHelper.ClipboardSetText(MakoHelper.GenerateIllustratorAppUri(Id).OriginalString);
+        UiHelper.ClipboardSetText(MakoHelper.GenerateUserAppUri(Id).OriginalString);
 
         if (args.Parameter is TeachingTip teachingTip)
         {
             if (App.AppViewModel.AppSettings.DisplayTeachingTipWhenGeneratingAppLink)
                 teachingTip.IsOpen = true;
             else
-                teachingTip?.ShowTeachingTipAndHide(IllustrateItemResources.LinkCopiedToClipboard);
+                teachingTip?.ShowTeachingTipAndHide(EntryItemResources.LinkCopiedToClipboard);
         }
         // 只提示
         else
-            (args.Parameter as FrameworkElement)?.ShowTeachingTipAndHide(IllustrateItemResources.LinkCopiedToClipboard);
+            (args.Parameter as FrameworkElement)?.ShowTeachingTipAndHide(EntryItemResources.LinkCopiedToClipboard);
     }
 
     private void GenerateWebLinkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
-        UiHelper.ClipboardSetText(MakoHelper.GenerateIllustratorWebUri(Id).OriginalString);
-        (args.Parameter as FrameworkElement)?.ShowTeachingTipAndHide(IllustrateItemResources.LinkCopiedToClipboard);
+        UiHelper.ClipboardSetText(MakoHelper.GenerateUserWebUri(Id).OriginalString);
+        (args.Parameter as FrameworkElement)?.ShowTeachingTipAndHide(EntryItemResources.LinkCopiedToClipboard);
     }
 
     private async void OpenInWebBrowserCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
-        _ = await Launcher.LaunchUriAsync(MakoHelper.GenerateIllustratorWebUri(Id));
+        _ = await Launcher.LaunchUriAsync(MakoHelper.GenerateUserWebUri(Id));
     }
 
     private async void ShowQrCodeCommandExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
@@ -196,7 +196,7 @@ public partial class IllustratorViewerPageViewModel : UiObservableObject
         if (args.Parameter is not TeachingTip showQrCodeTeachingTip)
             return;
 
-        var qrCodeSource = await IoHelper.GenerateQrCodeForUrlAsync(MakoHelper.GenerateIllustratorWebUri(Id).OriginalString);
+        var qrCodeSource = await IoHelper.GenerateQrCodeForUrlAsync(MakoHelper.GenerateUserWebUri(Id).OriginalString);
         ShowQrCodeCommandExecuteRequested(showQrCodeTeachingTip, qrCodeSource);
     }
 
@@ -205,7 +205,7 @@ public partial class IllustratorViewerPageViewModel : UiObservableObject
         if (args.Parameter is not TeachingTip showQrCodeTeachingTip)
             return;
 
-        var qrCodeSource = await IoHelper.GenerateQrCodeAsync(MakoHelper.GenerateIllustratorPixEzUri(Id).OriginalString);
+        var qrCodeSource = await IoHelper.GenerateQrCodeAsync(MakoHelper.GenerateUserPixEzUri(Id).OriginalString);
         ShowQrCodeCommandExecuteRequested(showQrCodeTeachingTip, qrCodeSource);
     }
 

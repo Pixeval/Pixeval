@@ -19,13 +19,11 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
-using Pixeval.CoreApi.Model;
 using Pixeval.Messages;
 using Pixeval.Pages.IllustratorViewer;
 using Pixeval.Utilities;
@@ -58,16 +56,6 @@ public sealed partial class IllustrationInfoPage
 
     #region Helper Functions
 
-    private IEnumerable<Tag> GetIllustrationTagItemSource()
-    {
-        return _viewModel.CurrentIllustration.Illustrate.Tags;
-    }
-
-    public static string GetMakoTagTranslatedNameText(string? name, string fallback)
-    {
-        return name.IsNullOrEmpty() ? fallback : name;
-    }
-
     private string GetIllustratorNameText()
     {
         return IllustrationInfoPageResources.IllustratorNameFormatted.Format(_viewModel.IllustratorName);
@@ -80,12 +68,7 @@ public sealed partial class IllustrationInfoPage
 
     private string GetIllustrationDimensionText()
     {
-        return _viewModel.CurrentIllustration.Illustrate.Let(i => $"{i.Width} x {i.Height}") ?? IllustrationInfoPageResources.IllustrationDimensionUnknown;
-    }
-
-    private string GetIllustrationUploadDateText()
-    {
-        return _viewModel.CurrentIllustration.Illustrate.CreateDate.ToString("yyyy-M-d HH:mm:ss");
+        return _viewModel.CurrentIllustration.Entry.Let(i => $"{i.Width} x {i.Height}") ?? IllustrationInfoPageResources.IllustrationDimensionUnknown;
     }
 
     private async void SetIllustrationCaptionText()
@@ -94,9 +77,9 @@ public sealed partial class IllustrationInfoPage
         var markdownConverter = new Converter(new Config
         {
             UnknownTags = Config.UnknownTagsOption.PassThrough,
-            GithubFlavored = true,
+            GithubFlavored = true
         });
-        var caption = _viewModel.CurrentIllustration.Illustrate.Caption;
+        var caption = _viewModel.CurrentIllustration.Entry.Caption;
         var md = string.IsNullOrEmpty(caption)
             ? IllustrationInfoPageResources.IllustrationCaptionEmpty
             : markdownConverter.Convert(caption);

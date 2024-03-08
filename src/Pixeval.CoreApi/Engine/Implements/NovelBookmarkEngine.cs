@@ -27,18 +27,20 @@ using Pixeval.Utilities;
 
 namespace Pixeval.CoreApi.Engine.Implements;
 
-public class NovelBookmarkEngine(MakoClient makoClient,
+public class NovelBookmarkEngine(
+    MakoClient makoClient,
     long uid,
-        PrivacyPolicy privacyPolicy,
-        TargetFilter targetFilter,
-        EngineHandle? engineHandle)
+    PrivacyPolicy privacyPolicy,
+    TargetFilter targetFilter,
+    EngineHandle? engineHandle)
     : AbstractPixivFetchEngine<Novel>(makoClient, engineHandle)
 {
     private readonly PrivacyPolicy _privacyPolicy = privacyPolicy;
     private readonly TargetFilter _targetFilter = targetFilter;
     private readonly long _uid = uid;
 
-    public override IAsyncEnumerator<Novel> GetAsyncEnumerator(CancellationToken cancellationToken = new CancellationToken())
+    public override IAsyncEnumerator<Novel> GetAsyncEnumerator(
+        CancellationToken cancellationToken = new CancellationToken())
     {
         return RecursivePixivAsyncEnumerators.Novel<NovelBookmarkEngine>.WithInitialUrl(this, MakoApiKind.AppApi,
             engine => "/v1/user/bookmarks/novel"

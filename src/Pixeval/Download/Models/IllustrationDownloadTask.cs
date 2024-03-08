@@ -71,7 +71,7 @@ public class IllustrationDownloadTask(DownloadHistoryEntry entry, IllustrationIt
     protected virtual async Task ManageStream(Stream stream, string destination)
     {
         using var image = await Image.LoadAsync(stream);
-        image.SetTags(IllustrationViewModel.Illustrate);
+        image.SetTags(IllustrationViewModel.Entry);
         await image.IllustrationSaveToFileAsync(destination);
     }
 }

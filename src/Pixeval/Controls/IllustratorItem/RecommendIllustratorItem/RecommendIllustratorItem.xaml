@@ -10,6 +10,25 @@
     AspectRatio="15:8"
     Background="{StaticResource CardBackgroundFillColorDefaultBrush}"
     mc:Ignorable="d">
+    <ToolTipService.ToolTip>
+        <ToolTip Padding="0">
+            <StackPanel Width="300">
+                <TextBlock
+                    Margin="10,5"
+                    Style="{StaticResource SubtitleTextBlockStyle}"
+                    Text="{x:Bind ViewModel.Username, Mode=OneWay}"
+                    TextTrimming="CharacterEllipsis"
+                    TextWrapping="NoWrap" />
+                <TextBlock
+                    Margin="10,0,10,10"
+                    HorizontalAlignment="Stretch"
+                    Style="{StaticResource ContentTextBlockStyle}"
+                    Text="{x:Bind ViewModel.Entry.Comment, Mode=OneWay}"
+                    TextTrimming="CharacterEllipsis"
+                    TextWrapping="Wrap" />
+            </StackPanel>
+        </ToolTip>
+    </ToolTipService.ToolTip>
     <controls:ConstrainedBox.Resources>
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
     </controls:ConstrainedBox.Resources>
@@ -31,25 +50,6 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <ToolTipService.ToolTip>
-            <ToolTip Padding="0">
-                <StackPanel Width="300">
-                    <TextBlock
-                        Margin="10,5"
-                        Style="{StaticResource SubtitleTextBlockStyle}"
-                        Text="{x:Bind ViewModel.Username}"
-                        TextTrimming="CharacterEllipsis"
-                        TextWrapping="NoWrap" />
-                    <TextBlock
-                        Margin="10,0,10,10"
-                        HorizontalAlignment="Stretch"
-                        Style="{StaticResource ContentTextBlockStyle}"
-                        Text="{x:Bind ViewModel.Illustrate.Comment, Mode=OneWay}"
-                        TextTrimming="CharacterEllipsis"
-                        TextWrapping="Wrap" />
-                </StackPanel>
-            </ToolTip>
-        </ToolTipService.ToolTip>
         <local:IllustratorIllustrationsOverview Grid.Row="0" ViewModel="{x:Bind ViewModel.OverviewViewModel, Mode=OneWay}" />
         <Grid
             Grid.Row="1"

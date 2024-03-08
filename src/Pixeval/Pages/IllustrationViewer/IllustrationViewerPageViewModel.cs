@@ -37,6 +37,7 @@ using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using Pixeval.Util.ComponentModels;
+using Pixeval.Options;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
@@ -95,9 +96,9 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
 
     public IllustrationItemViewModel[]? IllustrationsSource { get; }
 
-    public long IllustrationId => CurrentIllustration.Illustrate.Id;
+    public long IllustrationId => CurrentIllustration.Entry.Id;
 
-    public UserInfo Illustrator => CurrentIllustration.Illustrate.User;
+    public UserInfo Illustrator => CurrentIllustration.Entry.User;
 
     public string IllustratorName => Illustrator.Name;
 
@@ -116,7 +117,7 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
 
     public NavigationViewTag<IllustrationInfoPage, IllustrationViewerPageViewModel> IllustrationInfoTag { get; } = new(null!);
 
-    public NavigationViewTag<CommentsPage, (IAsyncEnumerable<Comment?>, long IllustrationId)> CommentsTag { get; } = new(default);
+    public NavigationViewTag<CommentsPage, (CommentType, long Id)> CommentsTag { get; } = new(default);
 
     public NavigationViewTag<RelatedWorksPage, long> RelatedWorksTag { get; } = new(default);
 
@@ -163,7 +164,7 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
 
             RelatedWorksTag.Parameter = IllustrationId;
             // IllustrationInfoTag.Parameter = this;
-            CommentsTag.Parameter = (App.AppViewModel.MakoClient.IllustrationComments(IllustrationId).Where(c => c is not null), IllustrationId);
+            CommentsTag.Parameter = (CommentType.Illustration, IllustrationId);
 
             _ = LoadUserProfile();
 
@@ -253,8 +254,8 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
 
     public string? NextButtonText => NextButtonAction switch
     {
-        true => IllustrateViewerPageResources.NextPageOrIllustration,
-        false => IllustrateViewerPageResources.NextIllustration,
+        true => EntryViewerPageResources.NextPageOrIllustration,
+        false => EntryViewerPageResources.NextIllustration,
         _ => null
     };
 
@@ -284,8 +285,8 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
 
     public string? PrevButtonText => PrevButtonAction switch
     {
-        true => IllustrateViewerPageResources.PrevPageOrIllustration,
-        false => IllustrateViewerPageResources.PrevIllustration,
+        true => EntryViewerPageResources.PrevPageOrIllustration,
+        false => EntryViewerPageResources.PrevIllustration,
         _ => null
     };
 
@@ -329,7 +330,7 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
     }
 
     public XamlUICommand IllustrationInfoAndCommentsCommand { get; } =
-        IllustrateViewerPageResources.IllustrationInfoAndComments.GetCommand(FontIconSymbol.InfoE946, VirtualKey.F12);
+        EntryViewerPageResources.IllustrationInfoAndComments.GetCommand(FontIconSymbol.InfoE946, VirtualKey.F12);
 
     public XamlUICommand FullScreenCommand { get; } = "".GetCommand(FontIconSymbol.FullScreenE740);
 

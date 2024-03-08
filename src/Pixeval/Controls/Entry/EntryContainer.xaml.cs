@@ -28,19 +28,20 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Pixeval.Controls.FlyoutContent;
-using Pixeval.Options;
 using Pixeval.Util;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using WinUI3Utilities;
 using Pixeval.Misc;
+using WinUI3Utilities.Attributes;
 
 namespace Pixeval.Controls;
 
 /// <summary>
 /// 所有插画集合通用的容器
 /// </summary>
-public sealed partial class IllustrationContainer : IScrollViewProvider
+[DependencyProperty<IEntryView<ISortableEntryViewViewModel>>("EntryView")]
+public sealed partial class EntryContainer : IScrollViewProvider
 {
     /// <summary>
     /// The command elements that will appear at the left of the TopCommandBar
@@ -51,7 +52,7 @@ public sealed partial class IllustrationContainer : IScrollViewProvider
 
     public ObservableCollection<ICommandBarElement> SecondaryCommandsSupplements { get; } = [];
 
-    public IllustrationContainer()
+    public EntryContainer()
     {
         InitializeComponent();
         CommandBarElements.CollectionChanged += (_, e) =>
@@ -64,14 +65,6 @@ public sealed partial class IllustrationContainer : IScrollViewProvider
         };
         PrimaryCommandsSupplements.CollectionChanged += (_, args) => AddCommandCallback(args, CommandBar.PrimaryCommands);
         SecondaryCommandsSupplements.CollectionChanged += (_, args) => AddCommandCallback(args, CommandBar.SecondaryCommands);
-        ViewModel.PropertyChanged+= (_, e) =>
-        {
-            if (e.PropertyName is nameof(IllustrationViewViewModel.IsSelecting))
-            {
-                CommandBar.UpdateLayout();
-            }
-        };
-
         return;
 
         static void AddCommandCallback(NotifyCollectionChangedEventArgs e, ICollection<ICommandBarElement> commands)
@@ -84,22 +77,18 @@ public sealed partial class IllustrationContainer : IScrollViewProvider
         }
     }
 
-    public ItemsViewLayoutType ItemsViewLayoutType => App.AppViewModel.AppSettings.ItemsViewLayoutType;
+    public ISortableEntryViewViewModel ViewModel => EntryView.ViewModel;
 
-    public ThumbnailDirection ThumbnailDirection => App.AppViewModel.AppSettings.ThumbnailDirection;
-
-    public IllustrationViewViewModel ViewModel => IllustrationView.ViewModel;
-
-    private void IllustrationContainer_OnLoaded(object sender, RoutedEventArgs e)
+    private void EntryContainer_OnLoaded(object sender, RoutedEventArgs e)
     {
-        _ = IllustrationView.Focus(FocusState.Programmatic);
+        _ = EntryView.Focus(FocusState.Programmatic);
     }
 
     private FilterSettings _lastFilterSettings = FilterSettings.Default;
 
     private void SelectAllToggleButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        IllustrationView.IllustrationItemsView.SelectAll();
+        EntryView.AdvancedItemsView.SelectAll();
     }
 
     private void SortOptionComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -123,17 +112,17 @@ public sealed partial class IllustrationContainer : IScrollViewProvider
 
     private void ScrollToTop()
     {
-        _ = IllustrationView.ScrollView.ScrollTo(0, 0);
+        _ = EntryView.ScrollView.ScrollTo(0, 0);
     }
 
     private async void AddAllToBookmarkButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
         // TODO custom bookmark tag
-        var notBookmarked = ViewModel.SelectedIllustrations.Where(i => !i.IsBookmarked);
+        var notBookmarked = ViewModel.SelectedEntries.Where(i => !i.IsBookmarked);
         var viewModelSelectedIllustrations = notBookmarked as IllustrationItemViewModel[] ?? notBookmarked.ToArray();
         if (viewModelSelectedIllustrations.Length > 5 &&
-            await this.CreateOkCancelAsync(IllustrationViewCommandBarResources.SelectedTooManyItemsForBookmarkTitle,
-                    IllustrationViewCommandBarResources.SelectedTooManyItemsForBookmarkContent) is not ContentDialogResult.Primary)
+            await this.CreateOkCancelAsync(EntryContainerResources.SelectedTooManyItemsForBookmarkTitle,
+                EntryContainerResources.SelectedTooManyItemsForBookmarkContent) is not ContentDialogResult.Primary)
         {
             return;
         }
@@ -146,31 +135,31 @@ public sealed partial class IllustrationContainer : IScrollViewProvider
 
         if (viewModelSelectedIllustrations.Length is var c and > 0)
         {
-            _ = this.CreateAcknowledgementAsync(IllustrationViewCommandBarResources.AddAllToBookmarkTitle,
-                IllustrationViewCommandBarResources.AddAllToBookmarkContentFormatted.Format(c));
+            _ = this.CreateAcknowledgementAsync(EntryContainerResources.AddAllToBookmarkTitle,
+                EntryContainerResources.AddAllToBookmarkContentFormatted.Format(c));
         }
     }
 
     private async void SaveAllButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        if (ViewModel.SelectedIllustrations.Length >= 20 && await this.CreateOkCancelAsync(IllustrationViewCommandBarResources.SelectedTooManyItemsTitle,
-                IllustrationViewCommandBarResources.SelectedTooManyItemsForSaveContent) is not ContentDialogResult.Primary)
+        if (ViewModel.SelectedEntries.Count >= 20 && await this.CreateOkCancelAsync(EntryContainerResources.SelectedTooManyItemsTitle,
+                EntryContainerResources.SelectedTooManyItemsForSaveContent) is not ContentDialogResult.Primary)
         {
             return;
         }
 
-        foreach (var i in ViewModel.SelectedIllustrations)
+        foreach (var i in ViewModel.SelectedEntries)
             i.SaveCommand.Execute(null);
 
-        this.ShowTeachingTipAndHide(IllustrationViewCommandBarResources.DownloadItemsQueuedFormatted.Format(ViewModel.SelectedIllustrations.Length));
+        this.ShowTeachingTipAndHide(EntryContainerResources.DownloadItemsQueuedFormatted.Format(ViewModel.SelectedEntries.Count));
     }
 
     private async void OpenAllInBrowserButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        if (ViewModel.SelectedIllustrations is { Length: var count } selected)
+        if (ViewModel.SelectedEntries is { Count: var count } selected)
         {
-            if (count > 15 && await this.CreateOkCancelAsync(IllustrationViewCommandBarResources.SelectedTooManyItemsTitle,
-                        IllustrationViewCommandBarResources.SelectedTooManyItemsForOpenInBrowserContent) is not ContentDialogResult.Primary)
+            if (count > 15 && await this.CreateOkCancelAsync(EntryContainerResources.SelectedTooManyItemsTitle,
+                    EntryContainerResources.SelectedTooManyItemsForOpenInBrowserContent) is not ContentDialogResult.Primary)
             {
                 return;
             }
@@ -184,7 +173,7 @@ public sealed partial class IllustrationContainer : IScrollViewProvider
 
     private void CancelSelectionButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        IllustrationView.IllustrationItemsView.DeselectAll();
+        EntryView.AdvancedItemsView.DeselectAll();
     }
 
     private void OpenConditionDialogButton_OnTapped(object sender, TappedRoutedEventArgs e)
@@ -220,17 +209,17 @@ public sealed partial class IllustrationContainer : IScrollViewProvider
 
         _lastFilterSettings = filterSettings;
 
-        ViewModel.DataProvider.View.Filter = o =>
+        ViewModel.Filter = o =>
         {
-            var stringTags = o.Illustrate.Tags.Select(t => t.Name).ToArray();
+            var stringTags = o.Tags.Select(t => t.Name).ToArray();
             var result =
                 ExamineExcludeTags(stringTags, excludeTags)
                 && ExamineIncludeTags(stringTags, includeTags)
                 && o.Bookmark >= leastBookmark
                 && o.Bookmark <= maximumBookmark
-                && illustrationName.Match(o.Illustrate.Title)
-                && illustratorName.Match(o.Illustrate.User.Name)
-                && (illustratorId is -1 || illustratorId == o.Illustrate.User.Id)
+                && illustrationName.Match(o.Title)
+                && illustratorName.Match(o.User.Name)
+                && (illustratorId is -1 || illustratorId == o.User.Id)
                 && illustrationId is -1 || illustrationId == o.Id
                 && o.PublishDate >= publishDateStart
                 && o.PublishDate <= publishDateEnd;
@@ -252,12 +241,12 @@ public sealed partial class IllustrationContainer : IScrollViewProvider
 
     public void PerformSearch(string text)
     {
-        ViewModel.DataProvider.View.Filter = text.IsNullOrBlank()
+        ViewModel.Filter = text.IsNullOrBlank()
             ? null
             : o => o.Id.ToString().Contains(text)
-                   || o.Illustrate.Tags.Any(x => x.Name.Contains(text) || (x.TranslatedName?.Contains(text) ?? false))
-                   || o.Illustrate.Title.Contains(text);
+                   || o.Tags.Any(x => x.Name.Contains(text) || (x.TranslatedName?.Contains(text) ?? false))
+                   || o.Title.Contains(text);
     }
 
-    public ScrollView ScrollView => IllustrationView.ScrollView;
+    public ScrollView ScrollView => EntryView.ScrollView;
 }

@@ -42,7 +42,7 @@ public sealed partial class EnhancedWindow : Window
         Content = _frame = new Frame
         {
             HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Stretch,
+            VerticalAlignment = VerticalAlignment.Stretch
         };
         Closed += OnClosed;
     }

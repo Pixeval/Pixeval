@@ -31,15 +31,15 @@ public sealed partial class IllustratorItemViewModel : UserItemViewModel<User>
 
     public IllustratorItemViewModel(User user) : base(user, new IllustratorIllustrationsOverviewViewModel(user.Illusts))
     {
-        IsFollowed = Illustrate.UserInfo.IsFollowed;
+        IsFollowed = Entry.UserInfo.IsFollowed;
 
         InitializeCommands();
         FollowCommand.GetFollowCommand(IsFollowed);
     }
 
-    public string Username => Illustrate.UserInfo.Name;
+    public string Username => Entry.UserInfo.Name;
 
-    public override long UserId => Illustrate.UserInfo.Id;
+    public override long UserId => Entry.UserInfo.Id;
 
-    public override string AvatarUrl => Illustrate.UserInfo.ProfileImageUrls.Medium;
+    public override string AvatarUrl => Entry.UserInfo.ProfileImageUrls.Medium;
 }

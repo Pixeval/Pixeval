@@ -295,7 +295,7 @@ public enum IllustType
 
     Manga,
 
-    Animation,
+    Animation
 }
 
 internal class StringArrayToNumberArrayConverter<T> : JsonConverter<T[]> where T : INumber<T>

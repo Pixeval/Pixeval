@@ -22,7 +22,7 @@ using Pixeval.CoreApi.Model;
 
 namespace Pixeval.Controls;
 
-public sealed class IllustratorViewViewModel : IllustrateViewViewModel<User, IllustratorItemViewModel>
+public sealed class IllustratorViewViewModel : EntryViewViewModel<User, IllustratorItemViewModel>
 {
     public override IllustratorViewDataProvider DataProvider { get; } = new();
 

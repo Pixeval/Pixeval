@@ -173,7 +173,7 @@ public sealed partial class AdvancedItemsView : ItemsView
                 ItemsStretch = LinedFlowLayoutItemsStretch.Fill,
                 LineHeight = minItemHeight,
                 LineSpacing = minRowSpacing,
-                MinItemSpacing = minColumnSpacing,
+                MinItemSpacing = minColumnSpacing
             },
             ItemsViewLayoutType.Grid => new UniformGridLayout
             {

@@ -1,8 +1,9 @@
-#region Copyright (c) Pixeval/Pixeval
+#region Copyright
+
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/IllustrateViewViewModel.cs
+// Copyright (c) 2024 Pixeval/NovelViewDataProvider.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -16,25 +17,16 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 #endregion
 
-using System;
-using CommunityToolkit.Mvvm.ComponentModel;
 using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Model;
 
 namespace Pixeval.Controls;
 
-public abstract class IllustrateViewViewModel<T, TViewModel> : ObservableObject, IDisposable where T : class, IEntry where TViewModel : IllustrateViewModel<T>
+/// <inheritdoc cref="EntryViewDataProvider{T, TViewModel, TSelf}"/>
+public class NovelViewDataProvider : EntryViewDataProvider<Novel, NovelItemViewModel, NovelViewDataProvider>
 {
-    /// <summary>
-    /// Avoid calls to <see cref="IDataProvider{T,TViewModel}.ResetEngine"/>, calls to <see cref="ResetEngine"/> instead.
-    /// </summary>
-    public abstract IDataProvider<T, TViewModel> DataProvider { get; }
-
-    public void Dispose() => DataProvider.Dispose();
-
-    public void ResetEngine(IFetchEngine<T?>? newEngine, int itemLimit = -1) => DataProvider.ResetEngine(newEngine, itemLimit);
-
-    public bool HasNoItem => DataProvider.View.Count is 0;
+    protected override FetchEngineIncrementalSource<Novel, NovelItemViewModel> NewFetchEngineIncrementalSource(IFetchEngine<Novel> fetchEngine, int limit = -1) => new NovelFetchEngineIncrementalSource(fetchEngine, limit);
 }

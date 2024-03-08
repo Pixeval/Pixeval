@@ -20,150 +20,30 @@
 
 using System;
 using Windows.Storage.Streams;
-using Windows.System;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
-using Pixeval.Controls.MarkupExtensions;
 using Pixeval.Util.UI;
 using Pixeval.Util;
 using WinUI3Utilities;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.Utilities;
 using System.Threading.Tasks;
 using System.IO;
 using Pixeval.Download;
 using Microsoft.Extensions.DependencyInjection;
 using Pixeval.Download.Models;
-using Pixeval.Util.IO;
 
 namespace Pixeval.Controls;
 
 public partial class IllustrationItemViewModel
 {
-    public XamlUICommand BookmarkCommand { get; } = "".GetCommand(FontIconSymbol.HeartEB51, VirtualKeyModifiers.Control, VirtualKey.D);
-
-    public XamlUICommand AddToBookmarkCommand { get; } = IllustrateItemResources.AddToBookmark.GetCommand(FontIconSymbol.BookmarksE8A4);
-
-    public XamlUICommand GenerateLinkCommand { get; } = IllustrateItemResources.GenerateLink.GetCommand(FontIconSymbol.LinkE71B);
-
-    public XamlUICommand GenerateWebLinkCommand { get; } = IllustrateItemResources.GenerateWebLink.GetCommand(FontIconSymbol.PreviewLinkE8A1);
-
-    public XamlUICommand OpenInWebBrowserCommand { get; } = IllustrateItemResources.OpenInWebBrowser.GetCommand(FontIconSymbol.WebSearchF6FA);
-
-    public XamlUICommand ShowQrCodeCommand { get; } = IllustrateItemResources.ShowQRCode.GetCommand(FontIconSymbol.QRCodeED14);
-
-    public XamlUICommand ShowPixEzQrCodeCommand { get; } = IllustrateItemResources.ShowPixEzQrCode.GetCommand(FontIconSymbol.Photo2EB9F);
-
-    /// <summary>
-    /// Parameter1: <see cref="ValueTuple{T1,T2}"/> where T1 is <see cref="FrameworkElement"/>? and T2 is <see cref="Func{T, TResult}"/>? where T is <see cref="IProgress{T}"/>? and TResult is <see cref="Stream"/>?<br/>
-    /// Parameter2: <see cref="FrameworkElement"/>?
-    /// </summary>
-    public XamlUICommand SaveCommand { get; } = IllustrateItemResources.Save.GetCommand(FontIconSymbol.SaveE74E, VirtualKeyModifiers.Control, VirtualKey.S);
-
-    /// <summary>
-    /// Parameter1: <see cref="ValueTuple{T1,T2}"/> where T1 is <see cref="Window"/> and T2 is <see cref="Func{T, TResult}"/>? where T is <see cref="IProgress{T}"/>? and TResult is <see cref="Stream"/>?<br/>
-    /// Parameter2: <see cref="Window"/>
-    /// </summary>
-    public XamlUICommand SaveAsCommand { get; } = IllustrateItemResources.SaveAs.GetCommand(FontIconSymbol.SaveAsE792, VirtualKeyModifiers.Control | VirtualKeyModifiers.Shift, VirtualKey.S);
-
-    /// <summary>
-    /// Parameter1: <see cref="ValueTuple{T1,T2}"/> where T1 is <see cref="FrameworkElement"/>? and T2 is <see cref="Func{T, TResult}"/> where T is <see cref="IProgress{T}"/>? and TResult is <see cref="Stream"/>?<br/>
-    /// Parameter2: <see cref="Func{T, TResult}"/> where T is <see cref="IProgress{T}"/>? and TResult is <see cref="Stream"/>?
-    /// </summary>
-    public XamlUICommand CopyCommand { get; } = IllustrateItemResources.Copy.GetCommand(FontIconSymbol.CopyE8C8, VirtualKeyModifiers.Control, VirtualKey.C);
-
-    private void InitializeCommands()
+    protected override async void BookmarkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
-        BookmarkCommand.GetBookmarkCommand(IsBookmarked);
-        BookmarkCommand.ExecuteRequested += BookmarkCommandOnExecuteRequested;
-
-        // TODO: AddToBookmarkCommand
-        AddToBookmarkCommand.CanExecuteRequested += (sender, args) => args.CanExecute = false;
-
-        GenerateLinkCommand.ExecuteRequested += GenerateLinkCommandOnExecuteRequested;
-
-        GenerateWebLinkCommand.ExecuteRequested += GenerateWebLinkCommandOnExecuteRequested;
-
-        OpenInWebBrowserCommand.ExecuteRequested += OpenInWebBrowserCommandOnExecuteRequested;
-
-        ShowQrCodeCommand.ExecuteRequested += ShowQrCodeCommandExecuteRequested;
-
-        ShowPixEzQrCodeCommand.ExecuteRequested += ShowPixEzQrCodeCommandExecuteRequested;
-
-        SaveCommand.ExecuteRequested += SaveCommandExecuteRequested;
-
-        SaveAsCommand.ExecuteRequested += SaveAsCommandExecuteRequested;
-
-        CopyCommand.ExecuteRequested += CopyCommandExecuteRequested;
-    }
-
-    private void BookmarkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
-    {
-        IsBookmarked = MakoHelper.SetBookmark(Id, !IsBookmarked);
+        IsBookmarked = await MakoHelper.SetIllustrationBookmarkAsync(Id, !IsBookmarked);
         BookmarkCommand.GetBookmarkCommand(IsBookmarked);
     }
 
-    private void GenerateLinkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
-    {
-        UiHelper.ClipboardSetText(MakoHelper.GenerateIllustrationAppUri(Id).OriginalString);
-
-        if (args.Parameter is TeachingTip teachingTip)
-        {
-            if (App.AppViewModel.AppSettings.DisplayTeachingTipWhenGeneratingAppLink)
-                teachingTip.IsOpen = true;
-            else
-                teachingTip?.ShowTeachingTipAndHide(IllustrateItemResources.LinkCopiedToClipboard);
-        }
-        // 只提示
-        else 
-            (args.Parameter as FrameworkElement)?.ShowTeachingTipAndHide(IllustrateItemResources.LinkCopiedToClipboard);
-    }
-
-    private void GenerateWebLinkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
-    {
-        UiHelper.ClipboardSetText(MakoHelper.GenerateIllustrationWebUri(Id).OriginalString);
-        (args.Parameter as FrameworkElement)?.ShowTeachingTipAndHide(IllustrateItemResources.LinkCopiedToClipboard);
-    }
-
-    private async void OpenInWebBrowserCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
-    {
-        _ = await Launcher.LaunchUriAsync(MakoHelper.GenerateIllustrationWebUri(Id));
-    }
-
-    private async void ShowQrCodeCommandExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
-    {
-        if (args.Parameter is not TeachingTip showQrCodeTeachingTip)
-            return;
-
-        var qrCodeSource = await IoHelper.GenerateQrCodeForUrlAsync(MakoHelper.GenerateIllustrationWebUri(Id).OriginalString);
-        ShowQrCodeCommandExecuteRequested(showQrCodeTeachingTip, qrCodeSource);
-    }
-
-    private async void ShowPixEzQrCodeCommandExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
-    {
-        if (args.Parameter is not TeachingTip showQrCodeTeachingTip)
-            return;
-
-        var qrCodeSource = await IoHelper.GenerateQrCodeAsync(MakoHelper.GenerateIllustrationPixEzUri(Id).OriginalString);
-        ShowQrCodeCommandExecuteRequested(showQrCodeTeachingTip, qrCodeSource);
-    }
-
-    private static void ShowQrCodeCommandExecuteRequested(TeachingTip teachingTip, SoftwareBitmapSource source)
-    {
-        teachingTip.HeroContent.To<Image>().Source = source;
-        teachingTip.IsOpen = true;
-        teachingTip.Closed += Closed;
-        return;
-
-        void Closed(TeachingTip s, TeachingTipClosedEventArgs ea)
-        {
-            source.Dispose();
-            s.Closed -= Closed;
-        }
-    }
-
-    private async void SaveCommandExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
+    protected override async void SaveCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
         var frameworkElement = null as FrameworkElement;
         var getOriginalImageSourceAsync = null as Func<IProgress<int>?, Task<Stream?>>;
@@ -181,7 +61,7 @@ public partial class IllustrationItemViewModel
         await SaveUtilityAsync(frameworkElement, getOriginalImageSourceAsync, App.AppViewModel.AppSettings.DefaultDownloadPathMacro);
     }
 
-    private async void SaveAsCommandExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
+    protected override async void SaveAsCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
         Window window;
         var getOriginalImageSourceAsync = null as Func<IProgress<int>?, Task<Stream?>>;
@@ -203,7 +83,7 @@ public partial class IllustrationItemViewModel
         var folder = await window.OpenFolderPickerAsync();
         if (folder is null)
         {
-            frameworkElement.ShowTeachingTipAndHide(IllustrateItemResources.SaveAsCancelled, TeachingTipSeverity.Information);
+            frameworkElement.ShowTeachingTipAndHide(EntryItemResources.SaveAsCancelled, TeachingTipSeverity.Information);
             return;
         }
 
@@ -225,9 +105,9 @@ public partial class IllustrationItemViewModel
 
         var progress = null as Progress<int>;
         if (IsUgoira)
-            progress = new(d => teachingTip?.Show(IllustrateItemResources.UgoiraProcessing.Format(d), TeachingTipSeverity.Processing, isLightDismissEnabled: true));
+            progress = new(d => teachingTip?.Show(EntryItemResources.UgoiraProcessing.Format(d), TeachingTipSeverity.Processing, isLightDismissEnabled: true));
         else
-            teachingTip?.Show(IllustrateItemResources.ImageProcessing, TeachingTipSeverity.Processing, isLightDismissEnabled: true);
+            teachingTip?.Show(EntryItemResources.ImageProcessing, TeachingTipSeverity.Processing, isLightDismissEnabled: true);
 
         var source = getOriginalImageSourceAsync is null ? null : await getOriginalImageSourceAsync.Invoke(progress);
         using var scope = App.AppViewModel.AppServicesScope;
@@ -236,17 +116,17 @@ public partial class IllustrationItemViewModel
         {
             var task = await factory.CreateAsync(this, path);
             App.AppViewModel.DownloadManager.QueueTask(task);
-            teachingTip?.ShowAndHide(IllustrateItemResources.DownloadTaskCreated);
+            teachingTip?.ShowAndHide(EntryItemResources.DownloadTaskCreated);
         }
         else
         {
             var task = await factory.TryCreateIntrinsicAsync(this, source, path);
             App.AppViewModel.DownloadManager.QueueTask(task);
-            teachingTip?.ShowAndHide(IllustrateItemResources.Saved);
+            teachingTip?.ShowAndHide(EntryItemResources.Saved);
         }
     }
 
-    private async void CopyCommandExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
+    protected override async void CopyCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
         var frameworkElement = null as FrameworkElement;
         Func<IProgress<int>?, Task<Stream?>> getOriginalImageSourceAsync;
@@ -267,13 +147,19 @@ public partial class IllustrationItemViewModel
 
         var progress = null as Progress<int>;
         if (IsUgoira)
-            progress = new(d => teachingTip?.Show(IllustrateItemResources.UgoiraProcessing.Format(d), TeachingTipSeverity.Processing, isLightDismissEnabled: true));
+            progress = new(d => teachingTip?.Show(EntryItemResources.UgoiraProcessing.Format(d), TeachingTipSeverity.Processing, isLightDismissEnabled: true));
         else
-            teachingTip?.Show(IllustrateItemResources.ImageProcessing, TeachingTipSeverity.Processing, isLightDismissEnabled: true);
+            teachingTip?.Show(EntryItemResources.ImageProcessing, TeachingTipSeverity.Processing, isLightDismissEnabled: true);
         if (await getOriginalImageSourceAsync(progress) is { } source)
         {
             await UiHelper.ClipboardSetBitmapAsync(source);
-            teachingTip?.ShowAndHide(IllustrateItemResources.ImageSetToClipBoard);
+            teachingTip?.ShowAndHide(EntryItemResources.ImageSetToClipBoard);
         }
     }
+
+    protected override Uri AppUri => MakoHelper.GenerateIllustrationAppUri(Id);
+
+    protected override Uri WebUri => MakoHelper.GenerateIllustrationWebUri(Id);
+
+    protected override Uri PixEzUri => MakoHelper.GenerateIllustrationPixEzUri(Id);
 }

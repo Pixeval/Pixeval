@@ -56,7 +56,7 @@ public class IllustrationBookmarkComparer : IComparer<IllustrationItemViewModel>
 
     public int Compare(IllustrationItemViewModel? x, IllustrationItemViewModel? y)
     {
-        if (x?.Illustrate is { } xi && y?.Illustrate is { } yi)
+        if (x?.Entry is { } xi && y?.Entry is { } yi)
         {
             return xi.TotalBookmarks.CompareTo(yi.TotalBookmarks);
         }

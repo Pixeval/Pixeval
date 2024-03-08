@@ -23,6 +23,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Pixeval.CoreApi.Global.Enum;
@@ -57,7 +59,7 @@ public partial class MakoClient
     /// <returns></returns>
     public Task<Illustration> GetIllustrationFromIdAsync(long id)
         => RunWithLoggerAsync(async t => (await t
-            .GetSingleAsync(id)
+            .GetSingleIllustAsync(id)
             .ConfigureAwait(false)).Illust);
 
     public Task<Tag[]> GetAutoCompletionForKeyword(string word)
@@ -68,8 +70,49 @@ public partial class MakoClient
 
     public Task<PixivSingleUserResponse> GetUserFromIdAsync(long id, TargetFilter targetFilter)
         => RunWithLoggerAsync(async t => await t
-            .GetSingleUserAsync(new SingleUserRequest(id.ToString(), targetFilter.GetDescription()))
+            .GetSingleUserAsync(new SingleUserRequest(id, targetFilter.GetDescription()))
             .ConfigureAwait(false));
+
+    public Task<Novel> GetNovelFromIdAsync(long id)
+        => RunWithLoggerAsync(async t => await t
+            .GetSingleNovelAsync(id)
+            .ConfigureAwait(false));
+
+    public Task<NovelContent> GetNovelContentAsync(long id)
+        => RunWithLoggerAsync(async t =>
+        {
+            var contentHtml = await t
+                .GetNovelContentAsync(id)
+                .ConfigureAwait(false);
+
+            var leftStack = -2;
+            var rightStack = 0;
+            var startIndex = -1;
+            var endIndex = -1;
+
+            for (var i = 0; i < contentHtml.Length; ++i)
+            {
+                if (contentHtml[i] is '{')
+                {
+                    ++leftStack;
+                    if (leftStack < 2)
+                        startIndex = i;
+                }
+                else if (contentHtml[i] is '}')
+                {
+                    ++rightStack;
+                    if (rightStack == leftStack)
+                    {
+                        endIndex = i + 1;
+                        break;
+                    }
+                }
+            }
+
+            var span = contentHtml[startIndex..endIndex];
+
+            return JsonSerializer.Deserialize<NovelContent>(span)!;
+        });
 
     /// <summary>
     /// Sends a request to the Pixiv to add it to the bookmark
@@ -77,9 +120,9 @@ public partial class MakoClient
     /// <param name="id">The ID of the illustration which needs to be bookmarked</param>
     /// <param name="privacyPolicy">Indicates the privacy of the illustration in the bookmark</param>
     /// <returns>A <see cref="Task" /> represents the operation</returns>
-    public Task PostBookmarkAsync(long id, PrivacyPolicy privacyPolicy) =>
+    public Task<HttpResponseMessage> PostIllustrationBookmarkAsync(long id, PrivacyPolicy privacyPolicy) =>
         RunWithLoggerAsync(async t => await t
-            .AddBookmarkAsync(new AddBookmarkRequest(privacyPolicy.GetDescription(), id.ToString()))
+            .AddIllustBookmarkAsync(new AddIllustBookmarkRequest(privacyPolicy.GetDescription(), id.ToString()))
             .ConfigureAwait(false));
 
     /// <summary>
@@ -87,9 +130,19 @@ public partial class MakoClient
     /// </summary>
     /// <param name="id">The ID of the illustration which needs to be removed from the bookmark</param>
     /// <returns>A <see cref="Task" /> represents the operation</returns>
-    public Task RemoveBookmarkAsync(long id)
+    public Task<HttpResponseMessage> RemoveIllustrationBookmarkAsync(long id)
         => RunWithLoggerAsync(async t => await t
-            .RemoveBookmarkAsync(new RemoveBookmarkRequest(id.ToString()))
+            .RemoveIllustBookmarkAsync(new RemoveIllustBookmarkRequest(id.ToString()))
+            .ConfigureAwait(false));
+
+    public Task<HttpResponseMessage> PostNovelBookmarkAsync(long id, PrivacyPolicy privacyPolicy) =>
+        RunWithLoggerAsync(async t => await t
+            .AddNovelBookmarkAsync(new AddNovelBookmarkRequest(privacyPolicy.GetDescription(), id.ToString()))
+            .ConfigureAwait(false));
+
+    public Task<HttpResponseMessage> RemoveNovelBookmarkAsync(long id)
+        => RunWithLoggerAsync(async t => await t
+            .RemoveNovelBookmarkAsync(new RemoveNovelBookmarkRequest(id.ToString()))
             .ConfigureAwait(false));
 
     /// <summary>
@@ -129,12 +182,12 @@ public partial class MakoClient
         }, entry.Intro, illustrations);
     }
 
-    public Task PostFollowUserAsync(long id, PrivacyPolicy privacyPolicy)
+    public Task<HttpResponseMessage> PostFollowUserAsync(long id, PrivacyPolicy privacyPolicy)
         => RunWithLoggerAsync(async t => await t
             .FollowUserAsync(new FollowUserRequest(id.ToString(), privacyPolicy.GetDescription()))
             .ConfigureAwait(false));
 
-    public Task RemoveFollowUserAsync(long id)
+    public Task<HttpResponseMessage> RemoveFollowUserAsync(long id)
         => RunWithLoggerAsync(async t => await t
             .RemoveFollowUserAsync(new RemoveFollowUserRequest(id.ToString()))
             .ConfigureAwait(false));
@@ -197,9 +250,45 @@ public partial class MakoClient
             .GetUgoiraMetadataAsync(id)
             .ConfigureAwait(false));
 
-    public Task DeleteCommentAsync(long commentId)
+    public Task<HttpResponseMessage> DeleteIllustCommentAsync(long commentId)
         => RunWithLoggerAsync(async t => await t
-            .DeleteCommentAsync(new DeleteCommentRequest(commentId)));
+            .DeleteIllustCommentAsync(new DeleteCommentRequest(commentId)));
+
+    public Task<HttpResponseMessage> DeleteNovelCommentAsync(long commentId)
+        => RunWithLoggerAsync(async t => await t
+            .DeleteNovelCommentAsync(new DeleteCommentRequest(commentId)));
+
+    public Task<HttpResponseMessage> AddIllustCommentAsync(long illustId, string content)
+        => RunWithLoggerAsync(async t => await t
+            .AddIllustCommentAsync(new AddNormalIllustCommentRequest(illustId, content)));
+
+    public Task<HttpResponseMessage> AddIllustCommentAsync(long illustId, int stampId)
+        => RunWithLoggerAsync(async t => await t
+            .AddIllustCommentAsync(new AddStampIllustCommentRequest(illustId, stampId)));
+
+    public Task<HttpResponseMessage> AddIllustCommentAsync(long illustId, long parentCommentId, string content)
+        => RunWithLoggerAsync(async t => await t
+            .AddIllustCommentAsync(new AddNormalIllustSubCommentRequest(illustId, parentCommentId, content)));
+
+    public Task<HttpResponseMessage> AddIllustCommentAsync(long illustId, long parentCommentId, int stampId)
+        => RunWithLoggerAsync(async t => await t
+            .AddIllustCommentAsync(new AddStampIllustSubCommentRequest(illustId, parentCommentId, stampId)));
+
+    public Task<HttpResponseMessage> AddNovelCommentAsync(long novelId, string content)
+        => RunWithLoggerAsync(async t => await t
+            .AddNovelCommentAsync(new AddNormalNovelCommentRequest(novelId, content)));
+
+    public Task<HttpResponseMessage> AddNovelCommentAsync(long novelId, int stampId)
+        => RunWithLoggerAsync(async t => await t
+            .AddNovelCommentAsync(new AddStampNovelCommentRequest(novelId, stampId)));
+
+    public Task<HttpResponseMessage> AddNovelCommentAsync(long novelId, long parentCommentId, string content)
+        => RunWithLoggerAsync(async t => await t
+            .AddNovelCommentAsync(new AddNormalNovelSubCommentRequest(novelId, parentCommentId, content)));
+
+    public Task<HttpResponseMessage> AddNovelCommentAsync(long novelId, long parentCommentId, int stampId)
+        => RunWithLoggerAsync(async t => await t
+            .AddNovelCommentAsync(new AddStampNovelSubCommentRequest(novelId, parentCommentId, stampId)));
 
     public Task<ReverseSearchResponse> ReverseSearchAsync(Stream imgStream, string apiKey)
         => RunWithLoggerAsync(async () => await MakoServices.GetRequiredService<IReverseSearchApiEndPoint>()

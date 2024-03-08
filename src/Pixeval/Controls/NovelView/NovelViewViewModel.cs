@@ -1,8 +1,9 @@
-#region Copyright (c) Pixeval/Pixeval
+#region Copyright
+
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/SortableIllustrateViewViewModel.cs
+// Copyright (c) 2024 Pixeval/NovelViewViewModel.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -16,25 +17,28 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 #endregion
 
-using CommunityToolkit.WinUI.Collections;
 using Pixeval.CoreApi.Model;
 
 namespace Pixeval.Controls;
 
-public abstract class SortableIllustrateViewViewModel<T, TViewModel> : IllustrateViewViewModel<T, TViewModel> where T : class, IEntry where TViewModel : IllustrateViewModel<T>
+public sealed class NovelViewViewModel : SortableEntryViewViewModel<Novel, NovelItemViewModel>
 {
-    public void SetSortDescription(SortDescription description)
+    public NovelViewViewModel(NovelViewViewModel viewModel) : this(viewModel.DataProvider.CloneRef())
     {
-        if (DataProvider.View.SortDescriptions.Count is 0)
-            DataProvider.View.SortDescriptions.Add(description);
-        else
-            DataProvider.View.SortDescriptions[0] = description;
     }
 
-    public void ClearSortDescription()
+    public NovelViewViewModel() : this(new NovelViewDataProvider())
     {
-        DataProvider.View.SortDescriptions.Clear();
     }
+
+    private NovelViewViewModel(NovelViewDataProvider dataProvider)
+    {
+        DataProvider = dataProvider;
+        dataProvider.View.CollectionChanged += (_, _) => OnPropertyChanged(nameof(HasNoItem));
+    }
+
+    public override NovelViewDataProvider DataProvider { get; }
 }

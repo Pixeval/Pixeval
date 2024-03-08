@@ -27,26 +27,36 @@ using Pixeval.Utilities;
 
 namespace Pixeval.CoreApi.Engine.Implements;
 
-internal class RecommendationEngine(MakoClient makoClient, RecommendationContentType? recommendContentType,
-        TargetFilter filter, uint? maxBookmarkIdForRecommend, uint? minBookmarkIdForRecentIllust,
-        EngineHandle? engineHandle)
+internal class RecommendIllustrationEngine(
+    MakoClient makoClient,
+    RecommendationContentType? recommendContentType,
+    TargetFilter filter,
+    uint? maxBookmarkIdForRecommend,
+    uint? minBookmarkIdForRecentIllust,
+    EngineHandle? engineHandle)
     : AbstractPixivFetchEngine<Illustration>(makoClient, engineHandle)
 {
     private readonly TargetFilter _filter = filter;
     private readonly uint? _maxBookmarkIdForRecommend = maxBookmarkIdForRecommend;
     private readonly uint? _minBookmarkIdForRecentIllust = minBookmarkIdForRecentIllust;
-    private readonly RecommendationContentType _recommendContentType = recommendContentType ?? RecommendationContentType.Illust;
 
-    public override IAsyncEnumerator<Illustration> GetAsyncEnumerator(CancellationToken cancellationToken = new CancellationToken())
-    {
-        return RecursivePixivAsyncEnumerators.Illustration<RecommendationEngine>.WithInitialUrl(this, MakoApiKind.AppApi,
+    private readonly RecommendationContentType _recommendContentType =
+        recommendContentType ?? RecommendationContentType.Illust;
+
+    public override IAsyncEnumerator<Illustration> GetAsyncEnumerator(
+        CancellationToken cancellationToken = new CancellationToken()) =>
+        RecursivePixivAsyncEnumerators.Illustration<RecommendIllustrationEngine>.WithInitialUrl(this,
+            MakoApiKind.AppApi,
             engine =>
             {
-                var maxBookmarkIdForRecommend = engine._maxBookmarkIdForRecommend?.Let(static s => $"&max_bookmark_id_for_recommend={s}") ?? string.Empty;
-                var maxBookmarkIdForRecentIllust = engine._minBookmarkIdForRecentIllust.Let(static s => $"&min_bookmark_id_for_recent_illust={s}") ?? string.Empty;
+                var maxBookmarkIdForRecommend =
+                    engine._maxBookmarkIdForRecommend?.Let(static s => $"&max_bookmark_id_for_recommend={s}");
+                var maxBookmarkIdForRecentIllust =
+                    engine._minBookmarkIdForRecentIllust?.Let(static s => $"&min_bookmark_id_for_recent_illust={s}");
                 return "/v1/illust/recommended"
                        + $"?filter={engine._filter.GetDescription()}"
-                       + $"&content_type={engine._recommendContentType.GetDescription()}{maxBookmarkIdForRecommend}{maxBookmarkIdForRecentIllust}";
+                       + $"&content_type={engine._recommendContentType.GetDescription()}"
+                       + maxBookmarkIdForRecommend
+                       + maxBookmarkIdForRecentIllust;
             })!;
-    }
 }

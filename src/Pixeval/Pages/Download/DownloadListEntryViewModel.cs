@@ -37,7 +37,7 @@ public sealed class DownloadListEntryViewModel : IllustrationItemViewModel
 {
     public IllustrationDownloadTask DownloadTask { get; }
 
-    public DownloadListEntryViewModel(IllustrationDownloadTask downloadTask) : base(downloadTask.IllustrationViewModel.Illustrate)
+    public DownloadListEntryViewModel(IllustrationDownloadTask downloadTask) : base(downloadTask.IllustrationViewModel.Entry)
     {
         DownloadTask = downloadTask;
         DownloadTask.PropertyChanged += (_, e) =>

@@ -11,15 +11,14 @@
     <UserControl.Resources>
         <converters1:BoolToSelectionModeConverter x:Key="BoolToSelectionModeConverter" />
     </UserControl.Resources>
-    <local:IllustrateView
+    <local:EntryView
         x:Name="IllustrateView"
-        x:Uid="/IllustrateView/IllustrationQrCodeTeachingTip"
+        x:Uid="/EntryView/IllustrationQrCodeTeachingTip"
         HasNoItem="{x:Bind ViewModel.HasNoItem, Mode=OneWay}"
         IsLoadingMore="{x:Bind IllustrationItemsView.IsLoadingMore, Mode=OneWay}">
-        <local:IllustrateView.Content>
+        <local:EntryView.Content>
             <local:AdvancedItemsView
                 x:Name="IllustrationItemsView"
-                x:FieldModifier="public"
                 IsItemInvokedEnabled="True"
                 ItemInvoked="IllustrationItemsView_OnItemInvoked"
                 ItemsSource="{x:Bind ViewModel.DataProvider.View}"
@@ -39,6 +38,6 @@
                     </DataTemplate>
                 </local:AdvancedItemsView.ItemTemplate>
             </local:AdvancedItemsView>
-        </local:IllustrateView.Content>
-    </local:IllustrateView>
+        </local:EntryView.Content>
+    </local:EntryView>
 </UserControl>

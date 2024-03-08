@@ -7,8 +7,8 @@
     xmlns:local="using:Pixeval.Pages.Capability"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
-    <controls:IllustrateView x:Name="IllustrateView" x:Uid="/IllustrateView/IllustratorQrCodeTeachingTip">
-        <controls:IllustrateView.Content>
+    <controls:EntryView x:Name="IllustrateView" x:Uid="/EntryView/IllustratorQrCodeTeachingTip">
+        <controls:EntryView.Content>
             <controls:AdvancedItemsView
                 x:Name="AdvancedItemsView"
                 CanLoadMore="False"
@@ -28,6 +28,6 @@
                     </DataTemplate>
                 </controls:AdvancedItemsView.ItemTemplate>
             </controls:AdvancedItemsView>
-        </controls:IllustrateView.Content>
-    </controls:IllustrateView>
+        </controls:EntryView.Content>
+    </controls:EntryView>
 </controls:EnhancedPage>

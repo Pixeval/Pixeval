@@ -22,7 +22,8 @@
         <controls:CommentList
             Grid.Row="1"
             ItemsSource="{x:Bind _viewModel.View}"
-            RepliesHyperlinkButtonTapped="CommentList_OnRepliesHyperlinkButtonTapped" />
+            RepliesHyperlinkButtonTapped="CommentList_OnRepliesHyperlinkButtonTapped" 
+            DeleteHyperlinkButtonTapped="CommentList_OnDeleteHyperlinkButtonTapped"/>
         <TeachingTip
             x:Name="CommentRepliesTeachingTip"
             x:Uid="/CommentsPage/CommentRepliesTeachingTip"

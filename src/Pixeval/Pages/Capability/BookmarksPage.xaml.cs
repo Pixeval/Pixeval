@@ -78,7 +78,7 @@ public sealed partial class BookmarksPage : IScrollViewProvider
         var tag = PrivacyPolicyComboBox.SelectedItem;
         if (tag is PrivacyPolicy.Private && !_viewModel.IsMe)
             tag = PrivacyPolicy.Public;
-        IllustrationContainer.ViewModel.ResetEngine(App.AppViewModel.MakoClient.Bookmarks(_viewModel.UserId, tag, App.AppViewModel.AppSettings.TargetFilter));
+        IllustrationContainer.ViewModel.ResetEngine(App.AppViewModel.MakoClient.IllustrationBookmarks(_viewModel.UserId, tag, App.AppViewModel.AppSettings.TargetFilter));
     }
 
     public ScrollView ScrollView => IllustrationContainer.ScrollView;

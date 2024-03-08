@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
 using System.Threading;
-using System.Diagnostics;
 
 namespace Pixeval.Controls;
 
@@ -96,7 +95,7 @@ public partial class ZoomableImage
             {
                 Source = _currentFrame,
                 TransformMatrix = transform,
-                InterpolationMode = CanvasImageInterpolation.MultiSampleLinear,
+                InterpolationMode = CanvasImageInterpolation.MultiSampleLinear
             };
 
             e.DrawingSession.DrawImage(image, new Vector2((float)x, (float)y));

@@ -115,7 +115,7 @@ public partial record AppSettings : IWindowSettings
     /// The tag match option for keyword search
     /// </summary>
     [SettingMetadata(SettingEntryCategory.Search, typeof(SettingsPageResources), nameof(SettingsPageResources.DefaultSearchTagMatchOptionEntryHeader))]
-    public SearchTagMatchOption TagMatchOption { get; set; } = SearchTagMatchOption.PartialMatchForTags;
+    public SearchIllustrationTagMatchOption TagMatchOption { get; set; } = SearchIllustrationTagMatchOption.PartialMatchForTags;
 
     /// <summary>
     /// Indicates the starting page's number of keyword search
@@ -189,7 +189,7 @@ public partial record AppSettings : IWindowSettings
 
     /// <summary>
     /// Indicates how many illustrations will be collected during
-    /// the enumeration of the <see cref="MakoClient.Recommendations" />
+    /// the enumeration of the <see cref="MakoClient.RecommendationIllustrations" />
     /// </summary>
     [SettingMetadata(SettingEntryCategory.Misc, typeof(SettingsPageResources), nameof(SettingsPageResources.RecommendationItemLimitEntryHeader))]
     public int ItemsNumberLimitForDailyRecommendations { get; set; } = 500;

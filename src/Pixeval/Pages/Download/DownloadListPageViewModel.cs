@@ -118,7 +118,7 @@ public partial class DownloadListPageViewModel : ObservableObject, IDisposable
         return;
 
         bool Query(DownloadListEntryViewModel viewModel) =>
-            viewModel.Illustrate.Title.Contains(key) ||
+            viewModel.Title.Contains(key) ||
                    (viewModel.DownloadTask is { } task ? task.IllustrationViewModel.Id : viewModel.DownloadTask.Id).ToString().Contains(key);
     }
 

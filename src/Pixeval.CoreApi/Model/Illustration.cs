@@ -51,7 +51,7 @@ public partial record Illustration : IEntry
     /// Original几乎总是null
     /// </summary>
     [JsonPropertyName("image_urls")]
-    public required IllustrationImageUrls ImageUrls { get; set; }
+    public required ImageUrls ImageUrls { get; set; }
 
     [JsonPropertyName("caption")]
     public required string Caption { get; set; } = "";
@@ -136,7 +136,7 @@ public partial record IllustrationMetaSinglePage
 }
 
 [Factory]
-public partial record IllustrationImageUrls
+public partial record ImageUrls
 {
     [JsonPropertyName("square_medium")]
     public required string SquareMedium { get; set; } = DefaultImageUrls.ImageNotAvailable;
@@ -158,7 +158,7 @@ public partial record MetaPage
     /// 多图时的原图链接
     /// </summary>
     [JsonPropertyName("image_urls")]
-    public required IllustrationImageUrls ImageUrls { get; set; }
+    public required ImageUrls ImageUrls { get; set; }
 }
 
 public enum XRestrict

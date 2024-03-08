@@ -33,6 +33,7 @@ public sealed partial class RecommendIllustratorItem
     public event Func<TeachingTip> RequestTeachingTip = null!;
 
     private TeachingTip QrCodeTeachingTip => RequestTeachingTip();
+
     private static void OnViewModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         if (d as RecommendIllustratorItem is { } item)

@@ -243,7 +243,7 @@ public sealed partial class MainPage : SupportCustomTitleBarDragRegionPage
 
         var setting = App.AppViewModel.AppSettings;
         NavigationView.SelectedItem = null;
-        _ = MainPageRootFrame.Navigate(typeof(SearchResultsPage), App.AppViewModel.MakoClient.Search(
+        _ = MainPageRootFrame.Navigate(typeof(SearchResultsPage), App.AppViewModel.MakoClient.SearchIllustrations(
             text,
             setting.SearchStartingFromPageNumber,
             setting.PageLimitForKeywordSearch,

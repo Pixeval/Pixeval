@@ -1,8 +1,9 @@
-#region Copyright (c) Pixeval/Pixeval
+#region Copyright
+
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/DataProvider.cs
+// Copyright (c) 2024 Pixeval/CommentType.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -16,23 +17,13 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 #endregion
 
-using System;
-using System.ComponentModel;
-using CommunityToolkit.WinUI.Collections;
-using Pixeval.Collections;
-using Pixeval.CoreApi.Engine;
+namespace Pixeval.Options;
 
-namespace Pixeval.Controls;
-
-public interface IDataProvider<T, TViewModel> : INotifyPropertyChanged, INotifyPropertyChanging, IDisposable where T : class where TViewModel : class
+public enum CommentType
 {
-    AdvancedObservableCollection<TViewModel> View { get; }
-
-    IncrementalLoadingCollection<FetchEngineIncrementalSource<T, TViewModel>, TViewModel> Source { get; }
-
-    IFetchEngine<T?>? FetchEngine { get; }
-
-    void ResetEngine(IFetchEngine<T?>? fetchEngine, int limit = -1);
+    Illustration,
+    Novel
 }

@@ -5,12 +5,15 @@
     xmlns:controls="using:Pixeval.Controls"
     xmlns:controls1="using:CommunityToolkit.WinUI.Controls"
     xmlns:converters="using:CommunityToolkit.WinUI.Converters"
+    xmlns:converters1="using:Pixeval.Controls.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:markup="using:Pixeval.Controls.MarkupExtensions"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
     <UserControl.Resources>
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+        <converters:StringFormatConverter x:Key="StringFormatConverter" />
+        <converters1:LabelNullableVisibilityConverter x:Key="LabelNullableVisibilityConverter" />
     </UserControl.Resources>
     <Grid ColumnSpacing="10" RowSpacing="5">
         <Grid.ColumnDefinitions>
@@ -59,7 +62,7 @@
                     Grid.Column="1"
                     FontSize="{StaticResource PixevalCaptionFontSize}"
                     Foreground="{ThemeResource PixevalTipTextForeground}"
-                    Text="{x:Bind ViewModel.PostDate, Mode=OneWay}" />
+                    Text="{x:Bind ViewModel.PostDate, Converter={StaticResource StringFormatConverter}, ConverterParameter='{}{0:yyyy-MM-dd dddd}', Mode=OneWay}" />
             </Grid>
         </Button>
         <CommandBar
@@ -76,7 +79,7 @@
             <AppBarButton
                 Icon="{markup:FontSymbolIcon Glyph=MessageE8BD}"
                 Label="{x:Bind ViewModel.RepliesCount, Mode=OneWay}"
-                Style="{x:Bind ViewModel.RepliesAppBarButtonStyleIsNotNull, Mode=OneWay}"
+                LabelPosition="{x:Bind ViewModel.RepliesCount, Converter={StaticResource LabelNullableVisibilityConverter}, Mode=OneWay}"
                 Tapped="OpenRepliesHyperlinkButton_OnTapped" />
         </CommandBar>
         <controls1:SwitchPresenter

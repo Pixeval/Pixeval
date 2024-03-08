@@ -19,21 +19,21 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
 namespace Pixeval.CoreApi.Model;
 
-public record Novel
+[Factory]
+public partial record Novel : IEntry
 {
     [JsonPropertyName("id")]
     public required long Id { get; set; }
 
     [JsonPropertyName("title")]
-    public required string Title { get; set; }
+    public required string Title { get; set; } = "";
 
     [JsonPropertyName("caption")]
-    public required string Caption { get; set; }
+    public required string Caption { get; set; } = "";
 
     [JsonPropertyName("restrict")]
     public required long Restrict { get; set; }
@@ -50,14 +50,14 @@ public record Novel
     [JsonPropertyName("create_date")]
     public required DateTimeOffset CreateDate { get; set; }
 
-    [JsonPropertyName("tags")]
-    public required List<Tag> Tags { get; set; }
+    [JsonPropertyName("tags")] 
+    public required Tag[] Tags { get; set; } = [];
 
     [JsonPropertyName("page_count")]
-    public required long PageCount { get; set; }
+    public required int PageCount { get; set; }
 
     [JsonPropertyName("text_length")]
-    public required long TextLength { get; set; }
+    public required int TextLength { get; set; }
 
     [JsonPropertyName("user")]
     public required UserInfo User { get; set; }
@@ -69,16 +69,16 @@ public record Novel
     public required bool IsBookmarked { get; set; }
 
     [JsonPropertyName("total_bookmarks")]
-    public required long TotalBookmarks { get; set; }
+    public required int TotalBookmarks { get; set; }
 
     [JsonPropertyName("total_view")]
-    public required long TotalView { get; set; }
+    public required int TotalView { get; set; }
 
     [JsonPropertyName("visible")]
     public required bool Visible { get; set; }
 
     [JsonPropertyName("total_comments")]
-    public required long TotalComments { get; set; }
+    public required int TotalComments { get; set; }
 
     [JsonPropertyName("is_muted")]
     public required bool IsMuted { get; set; }
@@ -89,54 +89,19 @@ public record Novel
     [JsonPropertyName("is_x_restricted")]
     public required bool IsXRestricted { get; set; }
 
-    public class ImageUrls
-    {
-        [JsonPropertyName("square_medium")]
-        public required string SquareMedium { get; set; }
+    [JsonPropertyName("novel_ai_type")]
+    public required int NovelAiType { get; set; }
 
-        [JsonPropertyName("medium")]
-        public required string Medium { get; set; }
+    [JsonPropertyName("comment_access_control")]
+    public int? CommentAccessControl { get; set; }
+}
 
-        [JsonPropertyName("large")]
-        public required string Large { get; set; }
-    }
+[Factory]
+public partial class Series
+{
+    [JsonPropertyName("id")]
+    public long Id { get; set; }
 
-    public class Series
-    {
-        [JsonPropertyName("id")]
-        public required long Id { get; set; }
-
-        [JsonPropertyName("title")]
-        public required string Title { get; set; }
-    }
-
-    public class Tag
-    {
-        [JsonPropertyName("name")]
-        public required string Name { get; set; }
-
-        [JsonPropertyName("translated_name")]
-        public required string TranslatedName { get; set; }
-
-        [JsonPropertyName("added_by_uploaded_user")]
-        public required bool AddedByUploadedUser { get; set; }
-    }
-
-    public class UserInfo
-    {
-        [JsonPropertyName("id")]
-        public required long Id { get; set; }
-
-        [JsonPropertyName("name")]
-        public required string Name { get; set; }
-
-        [JsonPropertyName("account")]
-        public required string Account { get; set; }
-
-        [JsonPropertyName("profile_image_urls")]
-        public required ProfileImageUrls ProfileImageUrls { get; set; }
-
-        [JsonPropertyName("is_followed")]
-        public required bool IsFollowed { get; set; }
-    }
+    [JsonPropertyName("title")]
+    public string Title { get; set; } = "";
 }

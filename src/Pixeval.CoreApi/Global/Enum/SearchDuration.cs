@@ -33,5 +33,11 @@ public enum SearchDuration
     WithinLastWeek,
 
     [Description("within_last_month")]
-    WithinLastMonth
+    WithinLastMonth,
+
+    [Description("within_last_half_year")]
+    WithinLastHalfYear,
+
+    [Description("within_last_year")]
+    WithinLastYear
 }

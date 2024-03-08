@@ -28,7 +28,7 @@ namespace Pixeval.Controls;
 
 public class IllustratorViewDataProvider : ObservableObject, IDataProvider<User, IllustratorItemViewModel>
 {
-    private IFetchEngine<User?>? _fetchEngine;
+    private IFetchEngine<User>? _fetchEngine;
 
     public AdvancedObservableCollection<IllustratorItemViewModel> View { get; } = [];
 
@@ -38,7 +38,7 @@ public class IllustratorViewDataProvider : ObservableObject, IDataProvider<User,
         protected set => View.Source = value;
     }
 
-    public IFetchEngine<User?>? FetchEngine
+    public IFetchEngine<User>? FetchEngine
     {
         get => _fetchEngine;
         protected set
@@ -59,7 +59,7 @@ public class IllustratorViewDataProvider : ObservableObject, IDataProvider<User,
         FetchEngine = null;
     }
 
-    public void ResetEngine(IFetchEngine<User?>? fetchEngine, int limit = -1)
+    public void ResetEngine(IFetchEngine<User>? fetchEngine, int limit = -1)
     {
         Dispose();
         FetchEngine = fetchEngine;
