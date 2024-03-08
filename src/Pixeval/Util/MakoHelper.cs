@@ -104,19 +104,19 @@ public static class MakoHelper
         return $"https://s.pximg.net/common/images/stamp/generated-stamps/{id}_s.jpg";
     }
 
-    public static bool SetFollow(long id, bool isFollowed, bool privately = false)
+    public static async Task<bool> SetFollowAsync(long id, bool isFollowed, bool privately = false)
     {
-        _ = isFollowed
+        var result = await (isFollowed
             ? App.AppViewModel.MakoClient.PostFollowUserAsync(id, privately ? PrivacyPolicy.Private : PrivacyPolicy.Public)
-            : App.AppViewModel.MakoClient.RemoveFollowUserAsync(id);
-        return isFollowed;
+            : App.AppViewModel.MakoClient.RemoveFollowUserAsync(id));
+        return result.IsSuccessStatusCode ? isFollowed : !isFollowed;
     }
 
-    public static bool SetIllustrationBookmark(long id, bool isBookmarked, bool privately = false)
+    public static async Task<bool> SetIllustrationBookmarkAsync(long id, bool isBookmarked, bool privately = false)
     {
-        _ = isBookmarked
+        var result = await (isBookmarked
             ? App.AppViewModel.MakoClient.PostIllustrationBookmarkAsync(id, privately ? PrivacyPolicy.Private : PrivacyPolicy.Public)
-            : App.AppViewModel.MakoClient.RemoveIllustrationBookmarkAsync(id);
-        return isBookmarked;
+            : App.AppViewModel.MakoClient.RemoveIllustrationBookmarkAsync(id));
+        return result.IsSuccessStatusCode ? isBookmarked : !isBookmarked;
     }
 }

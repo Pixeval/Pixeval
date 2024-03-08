@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Pixeval.CoreApi.Net.EndPoints;
@@ -36,6 +38,22 @@ public partial class MakoClient
         {
             LogException(e);
             return [];
+        }
+    }
+
+    private async Task<HttpResponseMessage> RunWithLoggerAsync(Func<IAppApiEndPoint, Task<HttpResponseMessage>> task)
+    {
+        try
+        {
+            EnsureNotCancelled();
+
+            return await task(MakoServices.GetRequiredService<IAppApiEndPoint>());
+        }
+        catch (Exception e)
+        {
+            LogException(e);
+
+            return new HttpResponseMessage(HttpStatusCode.RequestTimeout);
         }
     }
 

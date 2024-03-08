@@ -39,7 +39,7 @@ public sealed partial class CommentList
 
     private void CommentBlock_OnDeleteHyperlinkButtonTapped(CommentBlockViewModel viewModel)
     {
-        _ = App.AppViewModel.MakoClient.DeleteCommentAsync(viewModel.CommentId);
+        _ = App.AppViewModel.MakoClient.DeleteIllustCommentAsync(viewModel.CommentId);
         if (CommentsList.ItemsSource is IList<CommentBlockViewModel> list)
             _ = list.Remove(viewModel);
     }

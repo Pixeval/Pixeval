@@ -26,19 +26,22 @@ using CommunityToolkit.WinUI.Collections;
 using Pixeval.Collections;
 using Pixeval.Controls;
 using Pixeval.CoreApi.Model;
+using Pixeval.Options;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
-public class CommentsPageViewModel(IAsyncEnumerable<Comment> engine, long illustrationId)
+public class CommentsPageViewModel(IAsyncEnumerable<Comment?> engine, CommentType type, long entryId)
 {
-    public long IllustrationId { get; set; } = illustrationId;
+    public long EntryId { get; } = entryId;
+
+    public CommentType EntryType { get; } = type;
 
     public AdvancedObservableCollection<CommentBlockViewModel> View { get; } = new(
         new IncrementalLoadingCollection<CommentsIncrementalSource, CommentBlockViewModel>(
-            new CommentsIncrementalSource(engine.Select(c => new CommentBlockViewModel(c, illustrationId))), 30));
+            new CommentsIncrementalSource(engine.Where(c => c is not null).Select(c => new CommentBlockViewModel(c!, type, entryId))), 30));
 
     public void AddComment(Comment comment)
     {
-        View.Insert(0, new CommentBlockViewModel(comment, IllustrationId));
+        View.Insert(0, new CommentBlockViewModel(comment, EntryType, EntryId));
     }
 }

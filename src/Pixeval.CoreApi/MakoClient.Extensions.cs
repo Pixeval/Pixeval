@@ -25,7 +25,6 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
-using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Pixeval.CoreApi.Global.Enum;
@@ -121,7 +120,7 @@ public partial class MakoClient
     /// <param name="id">The ID of the illustration which needs to be bookmarked</param>
     /// <param name="privacyPolicy">Indicates the privacy of the illustration in the bookmark</param>
     /// <returns>A <see cref="Task" /> represents the operation</returns>
-    public Task PostIllustrationBookmarkAsync(long id, PrivacyPolicy privacyPolicy) =>
+    public Task<HttpResponseMessage> PostIllustrationBookmarkAsync(long id, PrivacyPolicy privacyPolicy) =>
         RunWithLoggerAsync(async t => await t
             .AddIllustBookmarkAsync(new AddBookmarkRequest(privacyPolicy.GetDescription(), id.ToString()))
             .ConfigureAwait(false));
@@ -131,7 +130,7 @@ public partial class MakoClient
     /// </summary>
     /// <param name="id">The ID of the illustration which needs to be removed from the bookmark</param>
     /// <returns>A <see cref="Task" /> represents the operation</returns>
-    public Task RemoveIllustrationBookmarkAsync(long id)
+    public Task<HttpResponseMessage> RemoveIllustrationBookmarkAsync(long id)
         => RunWithLoggerAsync(async t => await t
             .RemoveIllustBookmarkAsync(new RemoveBookmarkRequest(id.ToString()))
             .ConfigureAwait(false));
@@ -173,12 +172,12 @@ public partial class MakoClient
         }, entry.Intro, illustrations);
     }
 
-    public Task PostFollowUserAsync(long id, PrivacyPolicy privacyPolicy)
+    public Task<HttpResponseMessage> PostFollowUserAsync(long id, PrivacyPolicy privacyPolicy)
         => RunWithLoggerAsync(async t => await t
             .FollowUserAsync(new FollowUserRequest(id.ToString(), privacyPolicy.GetDescription()))
             .ConfigureAwait(false));
 
-    public Task RemoveFollowUserAsync(long id)
+    public Task<HttpResponseMessage> RemoveFollowUserAsync(long id)
         => RunWithLoggerAsync(async t => await t
             .RemoveFollowUserAsync(new RemoveFollowUserRequest(id.ToString()))
             .ConfigureAwait(false));
@@ -241,9 +240,45 @@ public partial class MakoClient
             .GetUgoiraMetadataAsync(id)
             .ConfigureAwait(false));
 
-    public Task DeleteCommentAsync(long commentId)
+    public Task DeleteIllustCommentAsync(long commentId)
         => RunWithLoggerAsync(async t => await t
             .DeleteIllustCommentAsync(new DeleteCommentRequest(commentId)));
+
+    public Task DeleteNovelCommentAsync(long commentId)
+        => RunWithLoggerAsync(async t => await t
+            .DeleteNovelCommentAsync(new DeleteCommentRequest(commentId)));
+
+    public Task<HttpResponseMessage> AddIllustCommentAsync(long illustId, string content)
+        => RunWithLoggerAsync(async t => await t
+            .AddIllustCommentAsync(new AddNormalIllustCommentRequest(illustId, content)));
+
+    public Task<HttpResponseMessage> AddIllustCommentAsync(long illustId, int stampId)
+        => RunWithLoggerAsync(async t => await t
+            .AddIllustCommentAsync(new AddStampIllustCommentRequest(illustId, stampId)));
+
+    public Task<HttpResponseMessage> AddIllustCommentAsync(long illustId, long parentCommentId, string content)
+        => RunWithLoggerAsync(async t => await t
+            .AddIllustCommentAsync(new AddNormalIllustSubCommentRequest(illustId, parentCommentId, content)));
+
+    public Task<HttpResponseMessage> AddIllustCommentAsync(long illustId, long parentCommentId, int stampId)
+        => RunWithLoggerAsync(async t => await t
+            .AddIllustCommentAsync(new AddStampIllustSubCommentRequest(illustId, parentCommentId, stampId)));
+
+    public Task<HttpResponseMessage> AddNovelCommentAsync(long novelId, string content)
+        => RunWithLoggerAsync(async t => await t
+            .AddNovelCommentAsync(new AddNormalNovelCommentRequest(novelId, content)));
+
+    public Task<HttpResponseMessage> AddNovelCommentAsync(long novelId, int stampId)
+        => RunWithLoggerAsync(async t => await t
+            .AddNovelCommentAsync(new AddStampNovelCommentRequest(novelId, stampId)));
+
+    public Task<HttpResponseMessage> AddNovelCommentAsync(long novelId, long parentCommentId, string content)
+        => RunWithLoggerAsync(async t => await t
+            .AddNovelCommentAsync(new AddNormalNovelSubCommentRequest(novelId, parentCommentId, content)));
+
+    public Task<HttpResponseMessage> AddNovelCommentAsync(long novelId, long parentCommentId, int stampId)
+        => RunWithLoggerAsync(async t => await t
+            .AddNovelCommentAsync(new AddStampNovelSubCommentRequest(novelId, parentCommentId, stampId)));
 
     public Task<ReverseSearchResponse> ReverseSearchAsync(Stream imgStream, string apiKey)
         => RunWithLoggerAsync(async () => await MakoServices.GetRequiredService<IReverseSearchApiEndPoint>()

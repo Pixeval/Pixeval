@@ -37,9 +37,9 @@ namespace Pixeval.Controls;
 
 public partial class IllustrationItemViewModel
 {
-    protected override void BookmarkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
+    protected override async void BookmarkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
-        IsBookmarked = MakoHelper.SetIllustrationBookmark(Id, !IsBookmarked);
+        IsBookmarked = await MakoHelper.SetIllustrationBookmarkAsync(Id, !IsBookmarked);
         BookmarkCommand.GetBookmarkCommand(IsBookmarked);
     }
 

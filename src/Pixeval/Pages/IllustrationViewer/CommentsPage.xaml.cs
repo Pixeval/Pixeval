@@ -25,9 +25,9 @@ using System.Threading.Tasks;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Controls;
 using Pixeval.CoreApi.Model;
-using Pixeval.CoreApi.Net;
 using Pixeval.CoreApi.Net.Response;
-using Pixeval.Util.IO;
+using Pixeval.Options;
+using WinUI3Utilities;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
@@ -39,8 +39,14 @@ public sealed partial class CommentsPage
 
     public override void OnPageActivated(NavigationEventArgs e)
     {
-        var (engine, illustrationId) = ((IAsyncEnumerable<Comment>, long))e.Parameter;
-        _viewModel = new CommentsPageViewModel(engine, illustrationId);
+        var (type, id) = ((CommentType, long))e.Parameter;
+        var engine = type switch
+        {
+            CommentType.Illustration => App.AppViewModel.MakoClient.IllustrationComments(id),
+            CommentType.Novel => App.AppViewModel.MakoClient.NovelComments(id),
+            _ => ThrowHelper.ArgumentOutOfRange<CommentType, IAsyncEnumerable<Comment?>>(type)
+        };
+        _viewModel = new CommentsPageViewModel(engine, type, id);
     }
 
     private void CommentList_OnRepliesHyperlinkButtonTapped(CommentBlockViewModel viewModel)
@@ -51,19 +57,32 @@ public sealed partial class CommentsPage
 
     private async void ReplyBar_OnSendButtonTapped(object? sender, SendButtonTappedEventArgs e)
     {
-        using var result = await App.AppViewModel.MakoClient.GetMakoHttpClient(MakoApiKind.AppApi)
-            .PostFormAsync(CommentBlockViewModel.AddCommentUrlSegment,
-                ("illust_id", _viewModel.IllustrationId.ToString()),
-                ("comment", e.ReplyContentRichEditBoxStringContent));
+        using var result = _viewModel.EntryType switch
+        {
+            CommentType.Illustration => await App.AppViewModel.MakoClient.AddIllustCommentAsync(
+                _viewModel.EntryId,
+                e.ReplyContentRichEditBoxStringContent),
+            CommentType.Novel => await App.AppViewModel.MakoClient.AddNovelCommentAsync(
+                _viewModel.EntryId,
+                e.ReplyContentRichEditBoxStringContent),
+            _ => ThrowHelper.ArgumentOutOfRange<CommentType, HttpResponseMessage>(_viewModel.EntryType)
+        };
 
         await AddComment(result);
     }
 
     private async void ReplyBar_OnStickerTapped(object? sender, StickerTappedEventArgs e)
     {
-        using var result = await App.AppViewModel.MakoClient.GetMakoHttpClient(MakoApiKind.AppApi).PostFormAsync(CommentBlockViewModel.AddCommentUrlSegment,
-            ("illust_id", _viewModel.IllustrationId.ToString()),
-            ("stamp_id", e.StickerViewModel.StickerId.ToString()));
+        using var result = _viewModel.EntryType switch
+        {
+            CommentType.Illustration => await App.AppViewModel.MakoClient.AddIllustCommentAsync(
+                _viewModel.EntryId,
+                e.StickerViewModel.StickerId),
+            CommentType.Novel => await App.AppViewModel.MakoClient.AddNovelCommentAsync(
+                _viewModel.EntryId,
+                e.StickerViewModel.StickerId),
+            _ => ThrowHelper.ArgumentOutOfRange<CommentType, HttpResponseMessage>(_viewModel.EntryType)
+        };
 
         await AddComment(result);
     }

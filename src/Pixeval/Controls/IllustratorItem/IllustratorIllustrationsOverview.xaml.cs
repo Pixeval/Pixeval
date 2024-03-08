@@ -23,7 +23,7 @@ public sealed partial class IllustratorIllustrationsOverview
             var image = new Image
             {
                 Source = source,
-                Stretch = Stretch.UniformToFill,
+                Stretch = Stretch.UniformToFill
             };
             UIElementExtensions.SetClipToBounds(image, true);
             Grid.SetColumn(image, i);

@@ -180,7 +180,7 @@ public partial record NovelIllustInfo
     public required NovelUser User { get; set; }
 
     [JsonPropertyName("id")]
-    public required string Id { get; set; }
+    public required string Id { get; set; } = "";
 
     [JsonPropertyName("page")]
     public required int Page { get; set; }
@@ -190,10 +190,10 @@ public partial record NovelIllustInfo
 public partial record NovelIllust
 {
     [JsonPropertyName("title")]
-    public required string Title { get; set; }
+    public required string Title { get; set; } = "";
 
     [JsonPropertyName("description")]
-    public required string Description { get; set; }
+    public required string Description { get; set; } = "";
 
     [JsonPropertyName("restrict")]
     public required int Restrict { get; set; }
@@ -215,10 +215,10 @@ public partial record NovelIllust
 public partial record NovelTag
 {
     [JsonPropertyName("tag")]
-    public required string Tag { get; set; }
+    public required string Tag { get; set; } = "";
 
     [JsonPropertyName("userId")]
-    public required string UserId { get; set; }
+    public required string UserId { get; set; } = "";
 }
 
 [Factory]
@@ -228,22 +228,23 @@ public partial record NovelIllustUrls
     public required string? Small { get; set; }
 
     [JsonPropertyName("medium")]
-    public required string Medium { get; set; }
+    public required string Medium { get; set; } = DefaultImageUrls.ImageNotAvailable;
 
     [JsonPropertyName("original")]
     public required string? Original { get; set; }
 }
 
+[Factory]
 public partial record NovelUser
 {
     [JsonPropertyName("id")]
-    public required string Id { get; set; }
+    public required string Id { get; set; } = "";
 
     [JsonPropertyName("name")]
-    public required string Name { get; set; }
+    public required string Name { get; set; } = "";
 
     [JsonPropertyName("image")]
-    public required string Image { get; set; }
+    public required string Image { get; set; } = DefaultImageUrls.NoProfile;
 }
 
 /// <summary>

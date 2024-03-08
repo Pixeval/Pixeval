@@ -330,6 +330,19 @@ public partial class MakoClient
     }
 
     /// <summary>
+    /// Request comments of an illustration.
+    /// </summary>
+    /// <param name="illustId">Illustration id</param>
+    /// <returns>
+    /// The <see cref="IllustrationCommentsEngine" /> containing comments of the illustration.
+    /// </returns>
+    public IFetchEngine<Comment?> NovelComments(long illustId)
+    {
+        EnsureNotCancelled();
+        return new NovelCommentsEngine(illustId, this, new EngineHandle(CancelInstance));
+    }
+
+    /// <summary>
     /// Request replies of a comment.
     /// </summary>
     /// <param name="commentId">Comment id</param>
@@ -340,6 +353,19 @@ public partial class MakoClient
     {
         EnsureNotCancelled();
         return new IllustrationCommentRepliesEngine(commentId.ToString(), this, new EngineHandle(CancelInstance));
+    }
+    
+    /// <summary>
+    /// Request replies of a comment.
+    /// </summary>
+    /// <param name="commentId">Comment id</param>
+    /// <returns>
+    /// The <see cref="IllustrationCommentRepliesEngine" /> containing replies of the comment.
+    /// </returns>
+    public IFetchEngine<Comment> NovelCommentReplies(long commentId)
+    {
+        EnsureNotCancelled();
+        return new NovelCommentRepliesEngine(commentId.ToString(), this, new EngineHandle(CancelInstance));
     }
 
     public IFetchEngine<Illustration> RelatedWorks(long illustId, TargetFilter targetFilter = TargetFilter.ForAndroid)

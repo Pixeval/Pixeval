@@ -75,9 +75,9 @@ public abstract partial class UserItemViewModel<T>(T illustrate, IllustratorIllu
         ShowPixEzQrCodeCommand.ExecuteRequested += ShowPixEzQrCodeCommandExecuteRequested;
     }
 
-    protected virtual void FollowCommandExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
+    protected virtual async void FollowCommandExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
-        IsFollowed = MakoHelper.SetFollow(UserId, !IsFollowed);
+        IsFollowed = await MakoHelper.SetFollowAsync(UserId, !IsFollowed);
         FollowCommand.GetFollowCommand(IsFollowed);
     }
 

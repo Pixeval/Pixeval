@@ -45,18 +45,19 @@ internal interface IAppApiEndPoint
     Task<Novel> GetSingleNovelAsync([AliasAs("novel_id")] long id);
 
     [Get("/webview/v2/novel")]
-    Task<string> GetNovelContentAsync([AliasAs("id")] long id
-        //[AliasAs("viewer_version")] string viewerVersion = "20221031_ai",
-        //[AliasAs("font")] string x1 = "mincho",
-        //[AliasAs("font_size")] string x2 = "1.0em",
-        //[AliasAs("line_height")] string x3 = "1.8",
-        //[AliasAs("color")] string x4 = "#1F1F1F",
-        //[AliasAs("background_color")] string x5 = "#FFFFFF",
-        //[AliasAs("mode")] string x6 = "horizontal",
-        //[AliasAs("theme")] string x7 = "light",
-        //[AliasAs("margin_top")] string x8 = "60px",
-        //[AliasAs("margin_bottom")] string x9 = "50px"
-    );
+    Task<string> GetNovelContentAsync([AliasAs("id")] long id);
+    /*
+    [AliasAs("viewer_version")] string viewerVersion = "20221031_ai",
+    [AliasAs("font")] string x1 = "mincho",
+    [AliasAs("font_size")] string x2 = "1.0em",
+    [AliasAs("line_height")] string x3 = "1.8",
+    [AliasAs("color")] string x4 = "#1F1F1F",
+    [AliasAs("background_color")] string x5 = "#FFFFFF",
+    [AliasAs("mode")] string x6 = "horizontal",
+    [AliasAs("theme")] string x7 = "light",
+    [AliasAs("margin_top")] string x8 = "60px",
+    [AliasAs("margin_bottom")] string x9 = "50px"
+    */
 
     [Post("/v1/user/follow/add")]
     Task<HttpResponseMessage> FollowUserAsync([Body(BodySerializationMethod.UrlEncoded)] FollowUserRequest request);
@@ -73,9 +74,36 @@ internal interface IAppApiEndPoint
     [Get("/v1/ugoira/metadata")]
     Task<UgoiraMetadataResponse> GetUgoiraMetadataAsync([AliasAs("illust_id")] long id);
 
+    [Get("/v2/search/autocomplete")]
+    Task<AutoCompletionResponse> GetAutoCompletionAsync(AutoCompletionRequest autoCompletionRequest);
+
+    [Post("/v1/illust/comment/add")]
+    Task<HttpResponseMessage> AddIllustCommentAsync([Body(BodySerializationMethod.UrlEncoded)] AddNormalIllustCommentRequest request);
+
+    [Post("/v1/illust/comment/add")]
+    Task<HttpResponseMessage> AddIllustCommentAsync([Body(BodySerializationMethod.UrlEncoded)] AddNormalIllustSubCommentRequest request);
+
+    [Post("/v1/illust/comment/add")]
+    Task<HttpResponseMessage> AddIllustCommentAsync([Body(BodySerializationMethod.UrlEncoded)] AddStampIllustCommentRequest request);
+
+    [Post("/v1/illust/comment/add")]
+    Task<HttpResponseMessage> AddIllustCommentAsync([Body(BodySerializationMethod.UrlEncoded)] AddStampIllustSubCommentRequest request);
+
     [Post("/v1/illust/comment/delete")]
     Task DeleteIllustCommentAsync([Body(BodySerializationMethod.UrlEncoded)] DeleteCommentRequest request);
 
-    [Get("/v2/search/autocomplete")]
-    Task<AutoCompletionResponse> GetAutoCompletionAsync(AutoCompletionRequest autoCompletionRequest);
+    [Post("/v1/novel/comment/add")]
+    Task<HttpResponseMessage> AddNovelCommentAsync([Body(BodySerializationMethod.UrlEncoded)] AddNormalNovelCommentRequest request);
+
+    [Post("/v1/novel/comment/add")]
+    Task<HttpResponseMessage> AddNovelCommentAsync([Body(BodySerializationMethod.UrlEncoded)] AddNormalNovelSubCommentRequest request);
+
+    [Post("/v1/novel/comment/add")]
+    Task<HttpResponseMessage> AddNovelCommentAsync([Body(BodySerializationMethod.UrlEncoded)] AddStampNovelCommentRequest request);
+
+    [Post("/v1/novel/comment/add")]
+    Task<HttpResponseMessage> AddNovelCommentAsync([Body(BodySerializationMethod.UrlEncoded)] AddStampNovelSubCommentRequest request);
+
+    [Post("/v1/novel/comment/delete")]
+    Task DeleteNovelCommentAsync([Body(BodySerializationMethod.UrlEncoded)] DeleteCommentRequest request);
 }

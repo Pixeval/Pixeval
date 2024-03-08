@@ -147,11 +147,11 @@ public partial class IllustratorViewerPageViewModel : UiObservableObject
 
     private void InitializeCommands()
     {
-        FollowCommand.ExecuteRequested += (_, _) => IsFollowed = MakoHelper.SetFollow(Id, true);
+        FollowCommand.ExecuteRequested += async (_, _) => IsFollowed = await MakoHelper.SetFollowAsync(Id, true);
 
-        FollowPrivatelyCommand.ExecuteRequested += (_, _) => IsFollowed = MakoHelper.SetFollow(Id, true, true);
+        FollowPrivatelyCommand.ExecuteRequested += async (_, _) => IsFollowed = await MakoHelper.SetFollowAsync(Id, true, true);
 
-        UnfollowCommand.ExecuteRequested += (_, _) => IsFollowed = MakoHelper.SetFollow(Id, false);
+        UnfollowCommand.ExecuteRequested += async (_, _) => IsFollowed = await MakoHelper.SetFollowAsync(Id, false);
 
         GenerateLinkCommand.ExecuteRequested += GenerateLinkCommandOnExecuteRequested;
 

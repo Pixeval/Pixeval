@@ -19,13 +19,11 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
-using Pixeval.CoreApi.Model;
 using Pixeval.Messages;
 using Pixeval.Pages.IllustratorViewer;
 using Pixeval.Utilities;
@@ -79,7 +77,7 @@ public sealed partial class IllustrationInfoPage
         var markdownConverter = new Converter(new Config
         {
             UnknownTags = Config.UnknownTagsOption.PassThrough,
-            GithubFlavored = true,
+            GithubFlavored = true
         });
         var caption = _viewModel.CurrentIllustration.Entry.Caption;
         var md = string.IsNullOrEmpty(caption)

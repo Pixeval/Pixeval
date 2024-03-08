@@ -39,7 +39,7 @@ public enum ItemsViewLayoutType
 
     VerticalStack,
 
-    HorizontalStack,
+    HorizontalStack
 }
 
 static file class AdvancedItemsViewResources
