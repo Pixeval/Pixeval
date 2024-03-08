@@ -1,8 +1,9 @@
-#region Copyright (c) Pixeval/Pixeval.CoreApi
+﻿#region Copyright
+
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
-// Copyright (c) 2023 Pixeval.CoreApi/SearchTagMatchOption.cs
+// Copyright (c) 2024 Pixeval.CoreApi/RemoveNovelBookmarkRequest.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -16,20 +17,11 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 #endregion
 
-using System.ComponentModel;
+using Refit;
 
-namespace Pixeval.CoreApi.Global.Enum;
+namespace Pixeval.CoreApi.Net.Request;
 
-public enum SearchTagMatchOption
-{
-    [Description("partial_match_for_tags")]
-    PartialMatchForTags,
-
-    [Description("exact_match_for_tags")]
-    ExactMatchForTags,
-
-    [Description("title_and_caption")]
-    TitleAndCaption
-}
+internal record RemoveNovelBookmarkRequest([property: AliasAs("novel_id")] string NovelId);

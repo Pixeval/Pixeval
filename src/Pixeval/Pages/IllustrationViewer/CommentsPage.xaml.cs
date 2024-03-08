@@ -87,9 +87,27 @@ public sealed partial class CommentsPage
         await AddComment(result);
     }
 
+    private async void CommentList_OnDeleteHyperlinkButtonTapped(CommentBlockViewModel viewModel)
+    {
+        using var result = _viewModel.EntryType switch
+        {
+            CommentType.Illustration => await App.AppViewModel.MakoClient.DeleteIllustCommentAsync(viewModel.CommentId),
+            CommentType.Novel => await App.AppViewModel.MakoClient.DeleteNovelCommentAsync(viewModel.CommentId),
+            _ => ThrowHelper.ArgumentOutOfRange<CommentType, HttpResponseMessage>(_viewModel.EntryType)
+        };
+
+        DeleteComment(result, viewModel);
+    }
+
     private async Task AddComment(HttpResponseMessage postCommentResponse)
     {
         if (postCommentResponse.IsSuccessStatusCode && await postCommentResponse.Content.ReadFromJsonAsync<PostCommentResponse>() is { Comment: { } comment })
             _viewModel.AddComment(comment);
+    }
+
+    private void DeleteComment(HttpResponseMessage postCommentResponse, CommentBlockViewModel viewModel)
+    {
+        if (postCommentResponse.IsSuccessStatusCode)
+            _viewModel.DeleteComment(viewModel);
     }
 }

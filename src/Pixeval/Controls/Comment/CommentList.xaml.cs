@@ -32,6 +32,8 @@ public sealed partial class CommentList
 
     public event Action<CommentBlockViewModel>? RepliesHyperlinkButtonTapped;
 
+    public event Action<CommentBlockViewModel>? DeleteHyperlinkButtonTapped;
+
     private void CommentBlock_OnRepliesHyperlinkButtonTapped(CommentBlockViewModel viewModel)
     {
         RepliesHyperlinkButtonTapped?.Invoke(viewModel);
@@ -39,9 +41,7 @@ public sealed partial class CommentList
 
     private void CommentBlock_OnDeleteHyperlinkButtonTapped(CommentBlockViewModel viewModel)
     {
-        _ = App.AppViewModel.MakoClient.DeleteIllustCommentAsync(viewModel.CommentId);
-        if (CommentsList.ItemsSource is IList<CommentBlockViewModel> list)
-            _ = list.Remove(viewModel);
+        DeleteHyperlinkButtonTapped?.Invoke(viewModel);
     }
 
     private void CommentList_OnUnloaded(object sender, RoutedEventArgs e)

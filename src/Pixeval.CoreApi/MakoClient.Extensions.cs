@@ -122,7 +122,7 @@ public partial class MakoClient
     /// <returns>A <see cref="Task" /> represents the operation</returns>
     public Task<HttpResponseMessage> PostIllustrationBookmarkAsync(long id, PrivacyPolicy privacyPolicy) =>
         RunWithLoggerAsync(async t => await t
-            .AddIllustBookmarkAsync(new AddBookmarkRequest(privacyPolicy.GetDescription(), id.ToString()))
+            .AddIllustBookmarkAsync(new AddIllustBookmarkRequest(privacyPolicy.GetDescription(), id.ToString()))
             .ConfigureAwait(false));
 
     /// <summary>
@@ -132,7 +132,17 @@ public partial class MakoClient
     /// <returns>A <see cref="Task" /> represents the operation</returns>
     public Task<HttpResponseMessage> RemoveIllustrationBookmarkAsync(long id)
         => RunWithLoggerAsync(async t => await t
-            .RemoveIllustBookmarkAsync(new RemoveBookmarkRequest(id.ToString()))
+            .RemoveIllustBookmarkAsync(new RemoveIllustBookmarkRequest(id.ToString()))
+            .ConfigureAwait(false));
+
+    public Task<HttpResponseMessage> PostNovelBookmarkAsync(long id, PrivacyPolicy privacyPolicy) =>
+        RunWithLoggerAsync(async t => await t
+            .AddNovelBookmarkAsync(new AddNovelBookmarkRequest(privacyPolicy.GetDescription(), id.ToString()))
+            .ConfigureAwait(false));
+
+    public Task<HttpResponseMessage> RemoveNovelBookmarkAsync(long id)
+        => RunWithLoggerAsync(async t => await t
+            .RemoveNovelBookmarkAsync(new RemoveNovelBookmarkRequest(id.ToString()))
             .ConfigureAwait(false));
 
     /// <summary>
@@ -240,11 +250,11 @@ public partial class MakoClient
             .GetUgoiraMetadataAsync(id)
             .ConfigureAwait(false));
 
-    public Task DeleteIllustCommentAsync(long commentId)
+    public Task<HttpResponseMessage> DeleteIllustCommentAsync(long commentId)
         => RunWithLoggerAsync(async t => await t
             .DeleteIllustCommentAsync(new DeleteCommentRequest(commentId)));
 
-    public Task DeleteNovelCommentAsync(long commentId)
+    public Task<HttpResponseMessage> DeleteNovelCommentAsync(long commentId)
         => RunWithLoggerAsync(async t => await t
             .DeleteNovelCommentAsync(new DeleteCommentRequest(commentId)));
 

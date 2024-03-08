@@ -44,4 +44,9 @@ public class CommentsPageViewModel(IAsyncEnumerable<Comment?> engine, CommentTyp
     {
         View.Insert(0, new CommentBlockViewModel(comment, EntryType, EntryId));
     }
+
+    public void DeleteComment(CommentBlockViewModel viewModel)
+    {
+        View.Remove(viewModel);
+    }
 }

@@ -119,4 +119,12 @@ public static class MakoHelper
             : App.AppViewModel.MakoClient.RemoveIllustrationBookmarkAsync(id));
         return result.IsSuccessStatusCode ? isBookmarked : !isBookmarked;
     }
+
+    public static async Task<bool> SetNovelBookmarkAsync(long id, bool isBookmarked, bool privately = false)
+    {
+        var result = await (isBookmarked
+            ? App.AppViewModel.MakoClient.PostNovelBookmarkAsync(id, privately ? PrivacyPolicy.Private : PrivacyPolicy.Public)
+            : App.AppViewModel.MakoClient.RemoveNovelBookmarkAsync(id));
+        return result.IsSuccessStatusCode ? isBookmarked : !isBookmarked;
+    }
 }

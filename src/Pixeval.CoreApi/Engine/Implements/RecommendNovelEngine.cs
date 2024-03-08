@@ -1,8 +1,9 @@
-#region Copyright (c) Pixeval/Pixeval.CoreApi
+#region Copyright
+
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
-// Copyright (c) 2023 Pixeval.CoreApi/NovelBookmarkEngine.cs
+// Copyright (c) 2024 Pixeval.CoreApi/RecommendNovelEngine.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -16,6 +17,7 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 #endregion
 
 using System.Collections.Generic;
@@ -27,25 +29,26 @@ using Pixeval.Utilities;
 
 namespace Pixeval.CoreApi.Engine.Implements;
 
-public class NovelBookmarkEngine(
+internal class RecommendNovelEngine(
     MakoClient makoClient,
-    long uid,
-    PrivacyPolicy privacyPolicy,
-    TargetFilter targetFilter,
+    TargetFilter filter,
+    uint? maxBookmarkIdForRecommend,
     EngineHandle? engineHandle)
     : AbstractPixivFetchEngine<Novel>(makoClient, engineHandle)
 {
-    private readonly PrivacyPolicy _privacyPolicy = privacyPolicy;
-    private readonly TargetFilter _targetFilter = targetFilter;
-    private readonly long _uid = uid;
+    private readonly TargetFilter _filter = filter;
+    private readonly uint? _maxBookmarkIdForRecommend = maxBookmarkIdForRecommend;
 
     public override IAsyncEnumerator<Novel> GetAsyncEnumerator(
-        CancellationToken cancellationToken = new CancellationToken())
-    {
-        return RecursivePixivAsyncEnumerators.Novel<NovelBookmarkEngine>.WithInitialUrl(this, MakoApiKind.AppApi,
-            engine => "/v1/user/bookmarks/novel"
-                      + $"?user_id={engine._uid}"
-                      + $"&restrict={engine._privacyPolicy.GetDescription()}"
-                      + $"&filter={engine._targetFilter.GetDescription()}")!;
-    }
+        CancellationToken cancellationToken = new CancellationToken()) =>
+        RecursivePixivAsyncEnumerators.Novel<RecommendNovelEngine>.WithInitialUrl(this,
+            MakoApiKind.AppApi,
+            engine =>
+            {
+                var maxBookmarkIdForRecommend =
+                    engine._maxBookmarkIdForRecommend?.Let(static s => $"&max_bookmark_id_for_recommend={s}");
+                return "/v1/novel/recommended"
+                       + $"?filter={engine._filter.GetDescription()}"
+                       + maxBookmarkIdForRecommend;
+            })!;
 }

@@ -91,9 +91,9 @@ public static class LocalizedResourceAttributeHelper
         [BackdropType.MicaAlt] = MiscResources.MicaAltBackdrop,
         [BackdropType.None] = MiscResources.NoneBackdrop,
 
-        [SearchTagMatchOption.PartialMatchForTags] = MiscResources.SearchTagMatchOptionPartialMatchForTags,
-        [SearchTagMatchOption.ExactMatchForTags] = MiscResources.SearchTagMatchOptionExactMatchForTags,
-        [SearchTagMatchOption.TitleAndCaption] = MiscResources.SearchTagMatchOptionTitleAndCaption,
+        [SearchIllustrationTagMatchOption.PartialMatchForTags] = MiscResources.SearchTagMatchOptionPartialMatchForTags,
+        [SearchIllustrationTagMatchOption.ExactMatchForTags] = MiscResources.SearchTagMatchOptionExactMatchForTags,
+        [SearchIllustrationTagMatchOption.TitleAndCaption] = MiscResources.SearchTagMatchOptionTitleAndCaption,
 
         [ElementTheme.Dark] = MiscResources.AppThemeDark,
         [ElementTheme.Light] = MiscResources.AppThemeLight,
@@ -108,6 +108,8 @@ public static class LocalizedResourceAttributeHelper
         [SearchDuration.WithinLastDay] = MiscResources.SearchDurationWithinLastDay,
         [SearchDuration.WithinLastWeek] = MiscResources.SearchDurationWithinLastWeek,
         [SearchDuration.WithinLastMonth] = MiscResources.SearchDurationWithinLastMonth,
+        [SearchDuration.WithinLastHalfYear] = MiscResources.SearchDurationWithinLastHalfYear,
+        [SearchDuration.WithinLastYear] = MiscResources.SearchDurationWithinLastYear,
 
         [PrivacyPolicy.Public] = MiscResources.PrivacyPolicyPublic,
         [PrivacyPolicy.Private] = MiscResources.PrivacyPolicyPrivate,

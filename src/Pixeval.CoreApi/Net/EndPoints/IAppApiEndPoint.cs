@@ -30,10 +30,16 @@ namespace Pixeval.CoreApi.Net.EndPoints;
 internal interface IAppApiEndPoint
 {
     [Post("/v2/illust/bookmark/add")]
-    Task<HttpResponseMessage> AddIllustBookmarkAsync([Body(BodySerializationMethod.UrlEncoded)] AddBookmarkRequest request);
+    Task<HttpResponseMessage> AddIllustBookmarkAsync([Body(BodySerializationMethod.UrlEncoded)] AddIllustBookmarkRequest request);
 
     [Post("/v1/illust/bookmark/delete")]
-    Task<HttpResponseMessage> RemoveIllustBookmarkAsync([Body(BodySerializationMethod.UrlEncoded)] RemoveBookmarkRequest request);
+    Task<HttpResponseMessage> RemoveIllustBookmarkAsync([Body(BodySerializationMethod.UrlEncoded)] RemoveIllustBookmarkRequest request);
+
+    [Post("/v2/novel/bookmark/add")]
+    Task<HttpResponseMessage> AddNovelBookmarkAsync([Body(BodySerializationMethod.UrlEncoded)] AddNovelBookmarkRequest request);
+
+    [Post("/v1/novel/bookmark/delete")]
+    Task<HttpResponseMessage> RemoveNovelBookmarkAsync([Body(BodySerializationMethod.UrlEncoded)] RemoveNovelBookmarkRequest request);
 
     [Get("/v1/illust/detail")]
     Task<PixivSingleIllustResponse> GetSingleIllustAsync([AliasAs("illust_id")] long id);
@@ -90,7 +96,7 @@ internal interface IAppApiEndPoint
     Task<HttpResponseMessage> AddIllustCommentAsync([Body(BodySerializationMethod.UrlEncoded)] AddStampIllustSubCommentRequest request);
 
     [Post("/v1/illust/comment/delete")]
-    Task DeleteIllustCommentAsync([Body(BodySerializationMethod.UrlEncoded)] DeleteCommentRequest request);
+    Task<HttpResponseMessage> DeleteIllustCommentAsync([Body(BodySerializationMethod.UrlEncoded)] DeleteCommentRequest request);
 
     [Post("/v1/novel/comment/add")]
     Task<HttpResponseMessage> AddNovelCommentAsync([Body(BodySerializationMethod.UrlEncoded)] AddNormalNovelCommentRequest request);
@@ -105,5 +111,5 @@ internal interface IAppApiEndPoint
     Task<HttpResponseMessage> AddNovelCommentAsync([Body(BodySerializationMethod.UrlEncoded)] AddStampNovelSubCommentRequest request);
 
     [Post("/v1/novel/comment/delete")]
-    Task DeleteNovelCommentAsync([Body(BodySerializationMethod.UrlEncoded)] DeleteCommentRequest request);
+    Task<HttpResponseMessage> DeleteNovelCommentAsync([Body(BodySerializationMethod.UrlEncoded)] DeleteCommentRequest request);
 }
