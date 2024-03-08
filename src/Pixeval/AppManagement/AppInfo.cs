@@ -200,7 +200,13 @@ public static partial class AppInfo
     public static void SaveContext()
     {
         // Save the current resolution
-        App.AppViewModel.AppSettings.WindowSize = WindowFactory.RootWindow.AppWindow.Size.ToSize();
+        if (WindowFactory.RootWindow.AppWindow.Presenter is OverlappedPresenter { State: OverlappedPresenterState.Maximized })
+            App.AppViewModel.AppSettings.IsMaximized = true;
+        else
+        {
+            App.AppViewModel.AppSettings.IsMaximized = false;
+            App.AppViewModel.AppSettings.WindowSize = WindowFactory.RootWindow.AppWindow.Size.ToSize();
+        }
         if (!App.AppViewModel.SignOutExit)
         {
             if (App.AppViewModel.MakoClient != null!)
