@@ -161,8 +161,9 @@
                         <Vector3Transition Duration="0:0:0.300" />
                     </StackPanel.TranslationTransition>
                     <Grid
-                        Width="400"
-                        Height="100"
+                        Width="600"
+                        Height="200"
+                        Padding="50"
                         Background="Transparent"
                         Opacity="0">
                         <Grid.OpacityTransition>
@@ -180,7 +181,7 @@
                         <Border
                             x:Name="CommandBorder"
                             HorizontalAlignment="Center"
-                            VerticalAlignment="Center"
+                            VerticalAlignment="Bottom"
                             Background="{StaticResource BottomCommandSectionBackground}"
                             BorderBrush="{StaticResource SecondaryAccentBorderBrush}"
                             BorderThickness="0.5"
