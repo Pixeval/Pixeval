@@ -117,6 +117,7 @@
     "OpenLocalEntry/Header": "打开本地文件夹",
     "OpenLocalEntry/Description": "此处存储了重要的配置文件，请不要修改此处的文件",
     "OpenRoamingEntry/Header": "打开漫游文件夹",
+    "OpenRoamingEntry/Description": "此处存储了重要的配置文件，请不要修改此处的文件",
     "ResetDefaultSettingsButton/Content": "重置设置",
     "ResetDefaultSettingsEntry/Description": "点击该按钮将会将所有设置重置会默认状态，该操作不可撤销",
     "ResetDefaultSettingsEntry/Header": "重置默认设置",

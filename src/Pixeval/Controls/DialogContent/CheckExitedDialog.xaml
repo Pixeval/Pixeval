@@ -1,0 +1,18 @@
+<UserControl
+    x:Class="Pixeval.Controls.DialogContent.CheckExitedDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:Pixeval.Controls.DialogContent"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <StackPanel Spacing="10">
+        <TextBlock x:Uid="/CheckExitedContentDialog/MainTextBlock" TextWrapping="WrapWholeWords" />
+        <HyperlinkButton x:Uid="/CheckExitedContentDialog/ClearConfig" Tapped="ClearConfig_OnTapped" />
+        <HyperlinkButton x:Uid="/CheckExitedContentDialog/ClearSession" Tapped="ClearSession_OnTapped" />
+        <HyperlinkButton x:Uid="/CheckExitedContentDialog/OpenLocalFolder" Tapped="OpenLocalFolder_OnTapped" />
+        <HyperlinkButton x:Uid="/CheckExitedContentDialog/OpenRoamingFolder" Tapped="OpenRoamingFolder_OnTapped" />
+        <HyperlinkButton x:Uid="/CheckExitedContentDialog/OpenLogFolder" Tapped="OpenLogFolder_OnTapped" />
+    </StackPanel>
+</UserControl>

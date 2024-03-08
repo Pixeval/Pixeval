@@ -18,6 +18,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using System;
 using Windows.Graphics;
 using Microsoft.UI.Input;
 using Microsoft.UI.Windowing;
@@ -42,8 +43,15 @@ public class SupportCustomTitleBarDragRegionPage : EnhancedWindowPage
 
     public void RaiseSetTitleBarDragRegion()
     {
-        if (!Window.AppWindow.IsVisible || !AppWindowTitleBar.IsCustomizationSupported())
+        try
+        {
+            if (!Window.AppWindow.IsVisible || !AppWindowTitleBar.IsCustomizationSupported())
+                return;
+        }
+        catch
+        {
             return;
+        }
         // UIElement.RasterizationScale 恒为1
         var source = InputNonClientPointerSource.GetForWindowId(Window.AppWindow.Id);
         var scaleFactor = XamlRoot.RasterizationScale;
