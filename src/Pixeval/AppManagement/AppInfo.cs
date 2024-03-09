@@ -45,6 +45,7 @@ namespace Pixeval.AppManagement;
 /// </summary>
 [AppContext<AppSettings>(ConfigKey = "Config", Type = ApplicationDataContainerType.Roaming, MethodName = "Config")]
 [AppContext<Session>(ConfigKey = "Session", MethodName = "Session")]
+[AppContext<AppDebugTrace>(ConfigKey = "DebugTrace", MethodName = "DebugTrace")]
 public static partial class AppInfo
 {
     public const string AppIdentifier = nameof(Pixeval);
@@ -81,6 +82,7 @@ public static partial class AppInfo
         // For more detailed information see https://docs.microsoft.com/en-us/windows/apps/design/app-settings/store-and-retrieve-app-data
         InitializeConfig();
         InitializeSession();
+        InitializeDebugTrace();
     }
 
     public static void SetNameResolver(AppSettings appSetting)
@@ -204,7 +206,6 @@ public static partial class AppInfo
 
     public static void SaveContext()
     {
-        App.AppViewModel.AppSettings.ExitedSuccessfully = true;
         // Save the current resolution
         if (WindowFactory.RootWindow.AppWindow.Presenter is OverlappedPresenter { State: OverlappedPresenterState.Maximized })
             App.AppViewModel.AppSettings.IsMaximized = true;
@@ -219,5 +220,12 @@ public static partial class AppInfo
                 SaveSession(App.AppViewModel.MakoClient.Session);
             SaveConfig(App.AppViewModel.AppSettings);
         }
+    }
+
+    public static void SaveContextWhenExit()
+    {
+        App.AppViewModel.AppDebugTrace.ExitedSuccessfully = true;
+        SaveDebugTrace(App.AppViewModel.AppDebugTrace);
+        SaveContext();
     }
 }

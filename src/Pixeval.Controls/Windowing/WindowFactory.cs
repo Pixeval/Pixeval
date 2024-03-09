@@ -23,12 +23,15 @@ using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Windows.Foundation;
 using Windows.Graphics;
+using Microsoft.UI;
 using WinUI3Utilities;
 
 namespace Pixeval.Controls.Windowing;
 
 public static class WindowFactory
 {
+    public static bool IsDarkMode { get; private set; }
+
     public static string IconAbsolutePath { get; set; } = "";
 
     public static IWindowSettings WindowSettings { get; set; } = null!;
@@ -41,6 +44,7 @@ public static class WindowFactory
 
     public static void Initialize(IWindowSettings windowSettings, string iconAbsolutePath)
     {
+        IsDarkMode = Application.Current.RequestedTheme is ApplicationTheme.Dark;
         WindowSettings = windowSettings;
         IconAbsolutePath = iconAbsolutePath;
     }
@@ -107,7 +111,7 @@ public static class WindowFactory
         });
         if (isMaximized)
             window.AppWindow.Presenter.To<OverlappedPresenter>().Maximize();
-        window.FrameLoaded += (s, _) => s.To<FrameworkElement>().RequestedTheme = WindowSettings.Theme;
+        window.FrameLoaded += (_, _) => SetTheme(window, WindowSettings.Theme);
         return window;
     }
 
@@ -119,9 +123,27 @@ public static class WindowFactory
 
     public static void SetTheme(ElementTheme theme)
     {
-        foreach (var window in _forkedWindowsInternal)
+        foreach (var window in _forkedWindowsInternal) 
+            SetTheme(window, theme);
+    }
+
+    public static void SetTheme(EnhancedWindow window, ElementTheme theme)
+    {
+        var actualTheme = theme switch
         {
-            window.Content.To<FrameworkElement>().RequestedTheme = theme;
-        }
+            ElementTheme.Default => IsDarkMode ? ElementTheme.Dark : ElementTheme.Light,
+            _ => theme
+        };
+        window.Content.To<FrameworkElement>().RequestedTheme = actualTheme;
+
+        var color = actualTheme switch
+        {
+            ElementTheme.Dark => Colors.White,
+            _ => Colors.Black,
+        };
+
+        var res = Application.Current.Resources;
+        res["WindowCaptionForeground"] = color;
+        window.AppWindow.TitleBar.ButtonForegroundColor = color;
     }
 }
