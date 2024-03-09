@@ -213,6 +213,7 @@
         <PRIResource Include="Strings\ru-ru\DownloadListPageDeleteTasksDialog.resjson" />
         <PRIResource Include="Strings\ru-ru\DownloadTask.resjson" />
         <PRIResource Include="Strings\ru-ru\EntryView.resjson" />
+        <PRIResource Include="Strings\ru-ru\EntryContainer.resjson" />
         <PRIResource Include="Strings\ru-ru\IllustrationInfoPage.resjson" />
         <PRIResource Include="Strings\ru-ru\IllustrationResultFilterContent.resjson" />
         <PRIResource Include="Strings\ru-ru\EntryViewerPage.resjson" />
@@ -247,6 +248,7 @@
 		<PRIResource Include="Strings\en-us\DownloadListPageDeleteTasksDialog.resjson" />
 		<PRIResource Include="Strings\en-us\DownloadTask.resjson" />
 		<PRIResource Include="Strings\en-us\EntryView.resjson" />
+        <PRIResource Include="Strings\en-us\EntryContainer.resjson" />
 		<PRIResource Include="Strings\en-us\IllustrationInfoPage.resjson" />
 		<PRIResource Include="Strings\en-us\IllustrationResultFilterContent.resjson" />
 		<PRIResource Include="Strings\en-us\EntryViewerPage.resjson" />
