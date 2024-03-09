@@ -43,6 +43,7 @@
             <Setter Property="TextAlignment" Value="Center" />
             <Setter Property="TextTrimming" Value="CharacterEllipsis" />
         </Style>
+        <Thickness x:Key="NormalMargin">0,48,0,0</Thickness>
     </controls:SupportCustomTitleBarDragRegionPage.Resources>
     <Page.KeyboardAccelerators>
         <KeyboardAccelerator
@@ -57,7 +58,7 @@
         <pages:WorkViewerSplitView.PaneContent>
             <Grid x:Name="IllustrationPresenterDockPanel" HorizontalAlignment="Stretch">
                 <!--  ReSharper disable once UnusedMember.Local  -->
-                <Grid x:Name="MainPanel">
+                <Grid x:Name="MainPanel" Margin="{StaticResource NormalMargin}">
                     <Frame
                         x:Name="IllustrationImageShowcaseFrame"
                         HorizontalAlignment="Stretch"
@@ -420,7 +421,7 @@
                         <StateTrigger IsActive="{x:Bind _viewModel.IsFullScreen, Converter={StaticResource BoolNegationConverter}, Mode=OneWay}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="MainPanel.Margin" Value="0,48,0,0" />
+                        <Setter Target="MainPanel.Margin" Value="{StaticResource NormalMargin}" />
                         <Setter Target="TopCommandBarTranslation.Y" Value="0" />
                         <Setter Target="TitleControlButtonsColumn.Width" Value="150" />
                         <Setter Target="TitleBarArea.Background" Value="{x:Null}" />

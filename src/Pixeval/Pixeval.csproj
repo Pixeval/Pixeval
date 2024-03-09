@@ -214,7 +214,7 @@
         <PRIResource Include="Strings\ru-ru\DownloadListPageDeleteTasksDialog.resjson" />
         <PRIResource Include="Strings\ru-ru\DownloadTask.resjson" />
         <PRIResource Include="Strings\ru-ru\EntryView.resjson" />
-        <PRIResource Include="Strings\zh-cn\WorkInfoPage.resjson" />
+        <PRIResource Include="Strings\ru-ru\WorkInfoPage.resjson" />
         <PRIResource Include="Strings\ru-ru\IllustrationResultFilterContent.resjson" />
         <PRIResource Include="Strings\ru-ru\EntryViewerPage.resjson" />
         <PRIResource Include="Strings\ru-ru\IllustratorViewerPage.resjson" />
@@ -455,8 +455,5 @@
       <Page Update="Pages\NovelViewer\NovelViewerPage.xaml">
         <Generator>MSBuild:Compile</Generator>
       </Page>
-    </ItemGroup>
-    <ItemGroup>
-      <Folder Include="Pages\EntryViewer\" />
     </ItemGroup>
 </Project>
