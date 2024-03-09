@@ -54,9 +54,15 @@ public partial class App
 
     public App()
     {
-        AppViewModel = new AppViewModel(this) { AppSettings = AppInfo.LoadConfig() ?? new AppSettings() };
+        AppViewModel = new AppViewModel(this);
         AppInfo.SetNameResolver(AppViewModel.AppSettings);
         WindowFactory.Initialize(AppViewModel.AppSettings, AppInfo.IconAbsolutePath);
+        RequestedTheme = AppViewModel.AppSettings.Theme switch
+        {
+            ElementTheme.Light => ApplicationTheme.Light,
+            ElementTheme.Dark => ApplicationTheme.Dark,
+            _ => RequestedTheme
+        };
         AppInstance.GetCurrent().Activated += (_, arguments) => ActivationRegistrar.Dispatch(arguments);
         InitializeComponent();
     }
@@ -91,7 +97,7 @@ public partial class App
 
         WindowFactory.Create(out var w)
             .WithLoaded(onLoaded: OnLoaded)
-            .WithClosing((_, _) => AppInfo.SaveContext()) // TODO: 从运行打开应用的时候不会ExitApp，就算是调用App.Current.Exit();
+            .WithClosing((_, _) => AppInfo.SaveContextWhenExit()) // TODO: 从运行打开应用的时候不会ExitApp，就算是调用App.Current.Exit();
             .WithSizeLimit(800, 360)
             .Init(AppInfo.AppIdentifier, AppViewModel.AppSettings.WindowSize.ToSizeInt32(), AppViewModel.AppSettings.IsMaximized)
             .Activate();
@@ -101,19 +107,19 @@ public partial class App
 
         async void OnLoaded(object s, RoutedEventArgs _)
         {
-            if (!AppViewModel.AppSettings.ExitedSuccessfully
+            if (!AppViewModel.AppDebugTrace.ExitedSuccessfully
                 && await w.Content.ShowContentDialogAsync(CheckExitedContentDialogResources.ContentDialogTitle,
                     new CheckExitedDialog(),
                     CheckExitedContentDialogResources.ContentDialogPrimaryButtonText,
                     "",
                     CheckExitedContentDialogResources.ContentDialogCloseButtonText) is ContentDialogResult.Primary)
             {
-                AppInfo.SaveContext();
+                AppInfo.SaveContextWhenExit();
                 w.Close();
                 return;
             }
 
-            AppViewModel.AppSettings.ExitedSuccessfully = false;
+            AppViewModel.AppDebugTrace.ExitedSuccessfully = false;
             AppInfo.SaveConfig(AppViewModel.AppSettings);
 
             s.To<Frame>().NavigateTo<LoginPage>(w);
