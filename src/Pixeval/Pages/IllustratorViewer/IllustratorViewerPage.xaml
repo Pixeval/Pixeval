@@ -213,15 +213,10 @@
             <controls:StickyHeaderScrollView.StickyContent>
                 <Grid>
                     <Frame x:Name="IllustratorViewerFrame" />
-                    <TeachingTip
+                    <controls:GenerateLinkTeachingTip
                         x:Name="GenerateLinkTeachingTip"
-                        x:Uid="/EntryViewerPage/GenerateLinkToThisPageButtonTeachingTip"
-                        ActionButtonClick="GenerateLinkToThisPageButtonTeachingTip_OnActionButtonClick"
-                        Target="{x:Bind GenerateLinkButton}">
-                        <TeachingTip.HeroContent>
-                            <Image Source="ms-appx:///Assets/Images/illust-app-link-sample.png" />
-                        </TeachingTip.HeroContent>
-                    </TeachingTip>
+                        Grid.Column="0"
+                        Target="{x:Bind GenerateLinkButton}" />
                     <TeachingTip
                         x:Name="ShowQrCodeTeachingTip"
                         x:Uid="/EntryViewerPage/QrCodeTeachingTip"

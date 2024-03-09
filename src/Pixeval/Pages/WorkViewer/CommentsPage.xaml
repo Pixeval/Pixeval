@@ -1,5 +1,5 @@
 <controls:EnhancedPage
-    x:Class="Pixeval.Pages.IllustrationViewer.CommentsPage"
+    x:Class="Pixeval.Pages.CommentsPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Pixeval.Controls"

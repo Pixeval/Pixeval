@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/IllustrationInfoPage.xaml.cs
+// Copyright (c) 2023 Pixeval/WorkInfoPage.xaml.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -31,22 +31,22 @@ using Pixeval.Pages.IllustratorViewer;
 using ReverseMarkdown;
 using WinUI3Utilities;
 
-namespace Pixeval.Pages.IllustrationViewer;
+namespace Pixeval.Pages;
 
-public sealed partial class IllustrationInfoPage
+public sealed partial class WorkInfoPage
 {
-    private IllustrationInfoPageViewModel _viewModel = null!;
+    private WorkInfoPageViewModel<IWorkEntry> _viewModel = null!;
 
-    public IllustrationInfoPage() => InitializeComponent();
+    public WorkInfoPage() => InitializeComponent();
 
     public override async void OnPageActivated(NavigationEventArgs e)
     {
-        _viewModel = new(e.Parameter.To<Illustration>());
-        await SetIllustrationCaptionTextAsync();
+        _viewModel = new(e.Parameter.To<IWorkEntry>());
+        await SetWorkCaptionTextAsync();
         await _viewModel.LoadAvatarAsync();
     }
 
-    private void IllustrationTagButton_OnTapped(object sender, TappedRoutedEventArgs e)
+    private void WorkTagButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
         _ = WeakReferenceMessenger.Default.Send(new IllustrationTagClickedMessage((string)((Button)sender).Content));
     }
@@ -56,15 +56,15 @@ public sealed partial class IllustrationInfoPage
         await IllustratorViewerHelper.CreateWindowWithPageAsync(_viewModel.Illustrator.Id);
     }
 
-    private void IllustrationInfoPage_OnUnloaded(object sender, RoutedEventArgs e) => _viewModel.Dispose();
+    private void WorkInfoPage_OnUnloaded(object sender, RoutedEventArgs e) => _viewModel.Dispose();
 
-    private async Task SetIllustrationCaptionTextAsync()
+    private async Task SetWorkCaptionTextAsync()
     {
         await Task.Yield();
-        var caption = _viewModel.Illustration.Caption;
+        var caption = _viewModel.Entry.Caption;
         string? md;
         if (string.IsNullOrEmpty(caption))
-            md = IllustrationInfoPageResources.IllustrationCaptionEmpty;
+            md = WorkInfoPageResources.WorkCaptionEmpty;
         else
         {
             var markdownConverter = new Converter(new Config
@@ -74,6 +74,6 @@ public sealed partial class IllustrationInfoPage
             });
             md = markdownConverter.Convert(caption);
         }
-        IllustrationCaptionMarkdownTextBlock.Text = md.ReplaceLineEndings(Environment.NewLine + Environment.NewLine);
+        WorkCaptionMarkdownTextBlock.Text = md.ReplaceLineEndings(Environment.NewLine + Environment.NewLine);
     }
 }

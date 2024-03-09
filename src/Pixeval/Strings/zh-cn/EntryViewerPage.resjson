@@ -7,8 +7,8 @@
 
     "Background": "壁纸",
     "CommentsTab/Content": "评论",
-    "IllustrationInfoAndComments": "详情",
-    "IllustrationInfoTab/Content": "详情",
+    "InfoAndComments": "详情",
+    "InfoTab/Content": "详情",
     "LockScreen": "锁屏",
     "Mirror": "镜像翻转",
     "RelatedWorksTab/Content": "推荐作品",

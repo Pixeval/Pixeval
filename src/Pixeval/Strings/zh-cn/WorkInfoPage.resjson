@@ -1,0 +1,16 @@
+{
+    "WorkCaptionEmpty": "无",
+    "WorkCaptionTextBlock/Text": "作品介绍",
+    "IllustrationDimensionTextBlock/Text": "作品分辨率",
+    "IllustrationDimensionUnknown": "未知",
+    "WorkIdTextBlock/Text": "作品ID",
+    "WorkTagListTextBlock/Text": "作品标签",
+    "WorkTitleTextBlock/Text": "作品名",
+    "WorkTotalBookmarksTextBlock/Text": "总收藏数",
+    "WorkTotalViewsTextBlock/Text": "总浏览量",
+    "WorkUploadDateTextBlock/Text": "上传日期",
+    "IllustratorId/Text": "作者ID: ",
+    "IllustratorName/Text": "作者名: ",
+    "IllustratorTextBlock/Text": "作者信息",
+    "TitleTextBlock/Text": "作品信息"
+}

@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/CommentsIncrementalSource.cs
+// Copyright (c) 2023 Pixeval/PixivReplyStickerViewModel.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,19 +18,8 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using CommunityToolkit.WinUI.Collections;
-using Pixeval.Controls;
+using Microsoft.UI.Xaml.Media;
 
-namespace Pixeval.Pages.IllustrationViewer;
+namespace Pixeval.Pages;
 
-public class CommentsIncrementalSource(IAsyncEnumerable<CommentBlockViewModel?> source) : IIncrementalSource<CommentBlockViewModel>
-{
-    public async Task<IEnumerable<CommentBlockViewModel>> GetPagedItemsAsync(int pageIndex, int pageSize, CancellationToken cancellationToken = new())
-    {
-        return (await source.Skip(pageIndex * pageSize).Take(pageSize).ToArrayAsync(cancellationToken))!;
-    }
-}
+public record PixivReplyStickerViewModel(int StickerId, ImageSource? ImageSource);

@@ -28,7 +28,7 @@ using Pixeval.Controls;
 using Pixeval.CoreApi.Model;
 using Pixeval.Options;
 
-namespace Pixeval.Pages.IllustrationViewer;
+namespace Pixeval.Pages;
 
 public class CommentsPageViewModel(IAsyncEnumerable<Comment?> engine, CommentType type, long entryId)
 {

@@ -91,8 +91,6 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
         ViewModelSource?.Dispose();
     }
 
-    #region Tags for IllustrationInfoAndCommentsNavigationView
-
     public NavigationViewTag[] Tags =>
     [
         IllustrationInfoTag,
@@ -100,16 +98,14 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
         RelatedWorksTag
     ];
 
-    public NavigationViewTag<IllustrationInfoPage, Illustration> IllustrationInfoTag { get; } =
-        new(null!) { Content = EntryViewerPageResources.IllustrationInfoTabContent };
+    public NavigationViewTag<WorkInfoPage, Illustration> IllustrationInfoTag { get; } =
+        new(null!) { Content = EntryViewerPageResources.InfoTabContent };
 
     public NavigationViewTag<CommentsPage, (CommentType, long Id)> CommentsTag { get; } =
         new(default) { Content = EntryViewerPageResources.CommentsTabContent };
 
     public NavigationViewTag<RelatedWorksPage, long> RelatedWorksTag { get; } =
         new(default) { Content = EntryViewerPageResources.RelatedWorksTabContent };
-
-    #endregion
 
     #region Current相关
 
@@ -303,8 +299,8 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
         FullScreenCommand.GetFullScreenCommand(IsFullScreen);
     }
 
-    public XamlUICommand IllustrationInfoAndCommentsCommand { get; } =
-        EntryViewerPageResources.IllustrationInfoAndComments.GetCommand(FontIconSymbol.InfoE946, VirtualKey.F12);
+    public XamlUICommand InfoAndCommentsCommand { get; } =
+        EntryViewerPageResources.InfoAndComments.GetCommand(FontIconSymbol.InfoE946, VirtualKey.F12);
 
     public XamlUICommand FullScreenCommand { get; } = "".GetCommand(FontIconSymbol.FullScreenE740);
 

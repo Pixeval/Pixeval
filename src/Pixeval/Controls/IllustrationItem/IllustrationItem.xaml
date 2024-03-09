@@ -93,8 +93,8 @@
                 Visibility="{x:Bind ViewModel.IsAiGenerated, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
             <controls:PixevalBadge
                 Grid.Column="1"
-                Mode="{x:Bind ViewModel.RestrictionCaption, Mode=OneWay}"
-                Visibility="{x:Bind ViewModel.IsRestricted, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
+                Mode="{x:Bind ViewModel.XRestrictionCaption, Mode=OneWay}"
+                Visibility="{x:Bind ViewModel.IsXRestricted, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
             <controls:PixevalBadge
                 Grid.Column="2"
                 Mode="Gif"

@@ -1,8 +1,9 @@
 #region Copyright
+
 // GPL v3 License
 // 
-// Pixeval/Pixeval.Controls
-// Copyright (c) 2024 Pixeval.Controls/CollapsedWhenInlineConverter.cs
+// Pixeval/Pixeval
+// Copyright (c) 2024 Pixeval/IBookmarkableViewModel.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -16,19 +17,40 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 #endregion
 
 using System;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Data;
-using WinUI3Utilities;
+using Microsoft.UI.Xaml.Input;
+using Pixeval.CoreApi.Model;
 
-namespace Pixeval.Controls.Converters;
+namespace Pixeval.Controls;
 
-public class CollapsedWhenInlineConverter : IValueConverter
+public interface IWorkViewModel
 {
-    public object Convert(object value, Type targetType, object parameter, string language) => value is SplitViewDisplayMode.Inline ? Visibility.Collapsed : Visibility.Visible;
+    long Id { get; }
 
-    public object ConvertBack(object value, Type targetType, object parameter, string language) => ThrowHelper.NotSupported<object>();
+    int Bookmark { get; }
+
+    bool IsBookmarked { get; set; }
+
+    Tag[] Tags { get; }
+
+    string Title { get; }
+
+    string Caption { get; }
+
+    UserInfo User { get; }
+
+    DateTimeOffset PublishDate { get; }
+
+    bool IsAiGenerated { get; }
+
+    bool IsXRestricted { get; }
+
+    BadgeMode XRestrictionCaption { get; }
+
+    XamlUICommand BookmarkCommand { get; }
+
+    XamlUICommand SaveCommand { get; }
 }

@@ -27,8 +27,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="CommunityToolkit.Labs.WinUI.Controls.MarkdownTextBlock" Version="0.1.240229-build.1650" />
-        <PackageReference Include="CommunityToolkit.Labs.WinUI.Shimmer" Version="0.1.240229-build.1650" />
+        <PackageReference Include="CommunityToolkit.Labs.WinUI.Controls.MarkdownTextBlock" Version="0.1.240305-build.1659" />
+        <PackageReference Include="CommunityToolkit.Labs.WinUI.Shimmer" Version="0.1.240305-build.1659" />
         <PackageReference Include="CommunityToolkit.WinUI.Behaviors" Version="8.0.240109" />
         <PackageReference Include="CommunityToolkit.WinUI.Collections" Version="8.0.240109" />
         <PackageReference Include="CommunityToolkit.WinUI.Animations" Version="8.0.240109" />
@@ -181,7 +181,7 @@
         <PRIResource Include="Strings\zh-cn\DownloadTask.resjson" />
         <PRIResource Include="Strings\zh-cn\EntryView.resjson" />
         <PRIResource Include="Strings\zh-cn\EntryContainer.resjson" />
-        <PRIResource Include="Strings\zh-cn\IllustrationInfoPage.resjson" />
+        <PRIResource Include="Strings\zh-cn\WorkInfoPage.resjson" />
         <PRIResource Include="Strings\zh-cn\IllustrationResultFilterContent.resjson" />
         <PRIResource Include="Strings\zh-cn\EntryViewerPage.resjson" />
         <PRIResource Include="Strings\zh-cn\IllustratorViewerPage.resjson" />
@@ -214,7 +214,7 @@
         <PRIResource Include="Strings\ru-ru\DownloadListPageDeleteTasksDialog.resjson" />
         <PRIResource Include="Strings\ru-ru\DownloadTask.resjson" />
         <PRIResource Include="Strings\ru-ru\EntryView.resjson" />
-        <PRIResource Include="Strings\ru-ru\IllustrationInfoPage.resjson" />
+        <PRIResource Include="Strings\zh-cn\WorkInfoPage.resjson" />
         <PRIResource Include="Strings\ru-ru\IllustrationResultFilterContent.resjson" />
         <PRIResource Include="Strings\ru-ru\EntryViewerPage.resjson" />
         <PRIResource Include="Strings\ru-ru\IllustratorViewerPage.resjson" />
@@ -237,12 +237,14 @@
     <!--XAML-->
     <ItemGroup>
         <None Remove="Controls\DialogContent\CheckExitedDialog.xaml" />
+        <None Remove="Controls\GenerateLinkTeachingTip.xaml" />
         <None Remove="Controls\NovelItem\NovelItem.xaml" />
         <None Remove="Controls\NovelView\NovelView.xaml" />
         <None Remove="IllustrationContainer.xaml" />
         <None Remove="IPListInput.xaml" />
         <None Remove="Pages\Capability\IllustratorNovelPage.xaml" />
         <None Remove="Pages\EntryViewerSplitView.xaml" />
+        <None Remove="Pages\NovelViewer\NovelViewerPage.xaml" />
         <None Remove="PrivacyPolicyComboBox.xaml" />
         <None Remove="SettingRadioButtons.xaml" />
         <None Remove="SortOptionComboBox.xaml" />
@@ -272,7 +274,7 @@
         <None Remove="DownloadListEntry.xaml" />
         <None Remove="DownloadListPage.xaml" />
         <None Remove="CommentsPage.xaml" />
-        <None Remove="IllustrationInfoPage.xaml" />
+        <None Remove="WorkInfoPage.xaml" />
         <None Remove="IllustrationViewerPage.xaml" />
         <None Remove="ImageViewerPage.xaml" />
         <None Remove="PixivReplyEmojiListPage.xaml" />
@@ -288,6 +290,9 @@
         <None Remove="IllustrationResultFilterContent.xaml" />
         <None Remove="IllustratorItem.xaml" />
         <None Remove="RecommendIllustratorItem.xaml" />
+        <Page Update="Controls\GenerateLinkTeachingTip.xaml">
+          <Generator>MSBuild:Compile</Generator>
+        </Page>
         <Page Update="Controls\DialogContent\CheckExitedDialog.xaml">
           <Generator>MSBuild:Compile</Generator>
         </Page>
@@ -388,7 +393,7 @@
         <Page Update="Pages\IllustrationViewer\CommentsPage.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
-        <Page Update="Pages\IllustrationViewer\IllustrationInfoPage.xaml">
+        <Page Update="Pages\IllustrationViewer\WorkInfoPage.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
         <Page Update="Pages\IllustrationViewer\IllustrationViewerPage.xaml">
@@ -447,6 +452,11 @@
       </Page>
     </ItemGroup>
     <ItemGroup>
-      <Folder Include="Pages\NovelViewer\" />
+      <Page Update="Pages\NovelViewer\NovelViewerPage.xaml">
+        <Generator>MSBuild:Compile</Generator>
+      </Page>
+    </ItemGroup>
+    <ItemGroup>
+      <Folder Include="Pages\EntryViewer\" />
     </ItemGroup>
 </Project>

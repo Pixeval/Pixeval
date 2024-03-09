@@ -14,13 +14,13 @@ namespace Pixeval.Pages;
 [DependencyProperty<object>("PaneContent")]
 [DependencyProperty<bool>("IsPaneOpen", "false", nameof(OnIsPaneOpenChanged))]
 [DependencyProperty<bool>("PinPane", "false", nameof(OnPinPaneChanged))]
-public sealed partial class EntryViewerSplitView
+public sealed partial class WorkViewerSplitView
 {
     public event EventHandler? RaiseSetTitleBarDragRegion;
 
     public const double OpenPaneLength = 330;
 
-    public EntryViewerSplitView() => InitializeComponent();
+    public WorkViewerSplitView() => InitializeComponent();
 
     private void NavigationViewOnSelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs e)
     {
@@ -38,13 +38,13 @@ public sealed partial class EntryViewerSplitView
 
     private static void OnIsPaneOpenChanged(DependencyObject o, DependencyPropertyChangedEventArgs e)
     {
-        if (o is EntryViewerSplitView { IsPaneOpen: false, PinPane: true } splitView)
+        if (o is WorkViewerSplitView { IsPaneOpen: false, PinPane: true } splitView)
             splitView.PinPane = false;
     }
 
     private static void OnPinPaneChanged(DependencyObject o, DependencyPropertyChangedEventArgs e)
     {
-        if (o is EntryViewerSplitView splitView)
+        if (o is WorkViewerSplitView splitView)
             if (splitView.PinPane)
             {
                 splitView.SplitView.DisplayMode = SplitViewDisplayMode.Inline;

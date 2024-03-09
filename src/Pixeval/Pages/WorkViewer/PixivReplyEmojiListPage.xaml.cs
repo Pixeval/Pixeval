@@ -34,7 +34,7 @@ using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using WinUI3Utilities;
 
-namespace Pixeval.Pages.IllustrationViewer;
+namespace Pixeval.Pages;
 
 public sealed partial class PixivReplyEmojiListPage
 {

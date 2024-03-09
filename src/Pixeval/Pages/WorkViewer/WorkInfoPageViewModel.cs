@@ -3,7 +3,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2024 Pixeval/IllustrationInfoPageViewModel.cs
+// Copyright (c) 2024 Pixeval/WorkInfoPageViewModel.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -29,15 +29,15 @@ using Pixeval.CoreApi.Model;
 using Pixeval.Util.IO;
 using Pixeval.Utilities;
 
-namespace Pixeval.Pages.IllustrationViewer;
+namespace Pixeval.Pages;
 
-public partial class IllustrationInfoPageViewModel(Illustration illustration) : ObservableObject, IDisposable
+public partial class WorkInfoPageViewModel<T>(T entry) : ObservableObject, IDisposable where T : class, IWorkEntry
 {
-    public Illustration Illustration { get; } = illustration;
+    public T Entry { get; } = entry;
 
-    public UserInfo Illustrator { get; } = illustration.User;
+    public UserInfo Illustrator { get; } = entry.User;
 
-    public string IllustrationDimensionText => $"{Illustration.Width} x {Illustration.Height}";
+    public string? IllustrationDimensionText => Entry is Illustration illustration ? $"{illustration.Width} x {illustration.Height}" : null;
 
     [ObservableProperty]
     private SoftwareBitmapSource? _avatarSource;

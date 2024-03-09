@@ -33,9 +33,9 @@ public interface ISortableEntryViewViewModel : INotifyPropertyChanged
 
     void ClearSortDescription();
 
-    IReadOnlyCollection<IBookmarkableViewModel> SelectedEntries { get; }
+    IReadOnlyCollection<IWorkViewModel> SelectedEntries { get; }
 
-    Func<IBookmarkableViewModel, bool>? Filter { get; set; }
+    Func<IWorkViewModel, bool>? Filter { get; set; }
 
     bool IsAnyEntrySelected { get; }
 

@@ -18,7 +18,7 @@
     Loaded="IllustrationViewerPage_OnLoaded"
     Unloaded="IllustrationViewerPage_OnUnloaded"
     mc:Ignorable="d">
-    <controls:EnhancedWindowPage.Resources>
+    <controls:SupportCustomTitleBarDragRegionPage.Resources>
         <ThemeShadow x:Name="SidePanelShadow" />
         <converters:BoolNegationConverter x:Key="BoolNegationConverter" />
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
@@ -32,11 +32,6 @@
             TintColor="{StaticResource SecondaryAccentColor}"
             TintLuminosityOpacity="0.8"
             TintOpacity="0.8" />
-        <SolidColorBrush x:Key="TransparentBrush" Color="Transparent" />
-        <Thickness x:Key="NormalMargin">0,48,0,0</Thickness>
-        <Thickness x:Key="FullScreenMargin">0</Thickness>
-        <x:Double x:Key="TitleBarHeight">48</x:Double>
-        <x:Double x:Key="NegativeTitleBarHeight">-48</x:Double>
         <Style
             x:Key="TextBlockStyle"
             BasedOn="{StaticResource BaseTextBlockStyle}"
@@ -48,21 +43,21 @@
             <Setter Property="TextAlignment" Value="Center" />
             <Setter Property="TextTrimming" Value="CharacterEllipsis" />
         </Style>
-    </controls:EnhancedWindowPage.Resources>
+    </controls:SupportCustomTitleBarDragRegionPage.Resources>
     <Page.KeyboardAccelerators>
         <KeyboardAccelerator
             Key="Escape"
             Invoked="ExitFullScreenKeyboardAccelerator_OnInvoked"
             Modifiers="None" />
     </Page.KeyboardAccelerators>
-    <pages:EntryViewerSplitView
+    <pages:WorkViewerSplitView
         x:Name="EntryViewerSplitView"
         MenuItemsSource="{x:Bind _viewModel.Tags}"
         RaiseSetTitleBarDragRegion="Placeholder_OnSizeChanged">
-        <pages:EntryViewerSplitView.PaneContent>
+        <pages:WorkViewerSplitView.PaneContent>
             <Grid x:Name="IllustrationPresenterDockPanel" HorizontalAlignment="Stretch">
                 <!--  ReSharper disable once UnusedMember.Local  -->
-                <Grid x:Name="ImagePanel" Margin="{StaticResource NormalMargin}">
+                <Grid x:Name="MainPanel">
                     <Frame
                         x:Name="IllustrationImageShowcaseFrame"
                         HorizontalAlignment="Stretch"
@@ -342,7 +337,7 @@
                             HorizontalAlignment="Center"
                             DefaultLabelPosition="Collapsed">
                             <AppBarToggleButton
-                                Command="{x:Bind _viewModel.IllustrationInfoAndCommentsCommand}"
+                                Command="{x:Bind _viewModel.InfoAndCommentsCommand}"
                                 IsChecked="{x:Bind EntryViewerSplitView.IsPaneOpen, Mode=TwoWay}"
                                 RightTapped="OpenPane_OnRightTapped" />
                             <AppBarButton Command="{x:Bind _viewModel.CurrentImage.PlayGifCommand, Mode=OneWay}" Visibility="{x:Bind _viewModel.CurrentIllustration.IsUgoira, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
@@ -399,19 +394,11 @@
                             Style="{StaticResource TextBlockStyle}"
                             Text="{x:Bind _viewModel.CurrentImage.Scale, Converter={StaticResource NumberToPercentageConverter}, ConverterParameter=2, Mode=OneWay}"
                             ToolTipService.ToolTip="{x:Bind _viewModel.CurrentImage.Scale, Converter={StaticResource NumberToPercentageConverter}, ConverterParameter=2, Mode=OneWay}" />
-                        <TeachingTip
+                        <controls:GenerateLinkTeachingTip
                             x:Name="GenerateLinkTeachingTip"
-                            x:Uid="/EntryViewerPage/GenerateLinkToThisPageButtonTeachingTip"
                             Grid.Column="0"
-                            ActionButtonClick="GenerateLinkToThisPageButtonTeachingTip_OnActionButtonClick"
-                            Tag="{x:Bind GenerateLinkButton}">
-                            <TeachingTip.HeroContent>
-                                <Image
-                                    Loading="Image_OnLoading"
-                                    Source="ms-appx:///Assets/Images/illust-app-link-sample.png"
-                                    Tag="{x:Bind GenerateLinkTeachingTip}" />
-                            </TeachingTip.HeroContent>
-                        </TeachingTip>
+                            ImageLoading="Image_OnLoading"
+                            Tag="{x:Bind GenerateLinkButton}" />
                         <TeachingTip
                             x:Name="ShowQrCodeTeachingTip"
                             x:Uid="/EntryViewerPage/QrCodeTeachingTip"
@@ -425,7 +412,7 @@
                     </Grid>
                 </Grid>
             </Grid>
-        </pages:EntryViewerSplitView.PaneContent>
+        </pages:WorkViewerSplitView.PaneContent>
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
                 <VisualState x:Name="Normal">
@@ -433,7 +420,7 @@
                         <StateTrigger IsActive="{x:Bind _viewModel.IsFullScreen, Converter={StaticResource BoolNegationConverter}, Mode=OneWay}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="ImagePanel.Margin" Value="{StaticResource NormalMargin}" />
+                        <Setter Target="MainPanel.Margin" Value="0,48,0,0" />
                         <Setter Target="TopCommandBarTranslation.Y" Value="0" />
                         <Setter Target="TitleControlButtonsColumn.Width" Value="150" />
                         <Setter Target="TitleBarArea.Background" Value="{x:Null}" />
@@ -445,14 +432,14 @@
                         <StateTrigger IsActive="{x:Bind _viewModel.IsFullScreen, Mode=OneWay}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="ImagePanel.Margin" Value="{StaticResource FullScreenMargin}" />
-                        <Setter Target="TopCommandBarTranslation.Y" Value="-48" />
+                        <Setter Target="MainPanel.Margin" Value="0" />
+                        <Setter Target="TopCommandBarTranslation.Y" Value="{StaticResource NegativeTitleBarHeight}" />
                         <Setter Target="TitleControlButtonsColumn.Width" Value="0" />
                         <Setter Target="TitleBarArea.Background" Value="{StaticResource PixevalAppAcrylicBrush}" />
-                        <Setter Target="TitleBarBorder.Background" Value="{StaticResource TransparentBrush}" />
+                        <Setter Target="TitleBarBorder.Background" Value="Transparent" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
-    </pages:EntryViewerSplitView>
+    </pages:WorkViewerSplitView>
 </controls:SupportCustomTitleBarDragRegionPage>

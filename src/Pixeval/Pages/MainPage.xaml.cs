@@ -57,6 +57,7 @@ using Pixeval.Controls.Windowing;
 using Pixeval.Logging;
 using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Pages.IllustratorViewer;
+using Pixeval.Pages.NovelViewer;
 
 namespace Pixeval.Pages;
 
@@ -204,6 +205,10 @@ public sealed partial class MainPage : SupportCustomTitleBarDragRegionPage
                 case SuggestionType.IllustId:
                     if (long.TryParse(sender.Text, out var illustId))
                         await IllustrationViewerHelper.CreateWindowWithPageAsync(illustId);
+                    break;
+                case SuggestionType.NovelId:
+                    if (long.TryParse(sender.Text, out var novelId))
+                        await NovelViewerHelper.CreateWindowWithPageAsync(novelId);
                     break;
                 case SuggestionType.UserId:
                     if (long.TryParse(sender.Text, out var userId))

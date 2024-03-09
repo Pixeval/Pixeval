@@ -27,7 +27,7 @@ using Pixeval.Utilities;
 
 namespace Pixeval.Controls;
 
-public abstract partial class SortableEntryViewViewModel<T, TViewModel> : EntryViewViewModel<T, TViewModel>, ISortableEntryViewViewModel where T : class, IEntry where TViewModel : EntryViewModel<T>, IBookmarkableViewModel
+public abstract partial class SortableEntryViewViewModel<T, TViewModel> : EntryViewViewModel<T, TViewModel>, ISortableEntryViewViewModel where T : class, IWorkEntry where TViewModel : EntryViewModel<T>, IWorkViewModel
 {
     [ObservableProperty]
     private bool _isSelecting;
@@ -37,7 +37,7 @@ public abstract partial class SortableEntryViewViewModel<T, TViewModel> : EntryV
     [NotifyPropertyChangedFor(nameof(SelectionLabel))]
     private TViewModel[] _selectedEntries = [];
 
-    IReadOnlyCollection<IBookmarkableViewModel> ISortableEntryViewViewModel.SelectedEntries => SelectedEntries;
+    IReadOnlyCollection<IWorkViewModel> ISortableEntryViewViewModel.SelectedEntries => SelectedEntries;
 
     public bool IsAnyEntrySelected => SelectedEntries.Length > 0;
 
@@ -58,9 +58,9 @@ public abstract partial class SortableEntryViewViewModel<T, TViewModel> : EntryV
         DataProvider.View.SortDescriptions.Clear();
     }
 
-    public Func<IBookmarkableViewModel, bool>? Filter
+    public Func<IWorkViewModel, bool>? Filter
     {
-        get => (Func<IBookmarkableViewModel, bool>?)DataProvider.View.Filter;
+        get => (Func<IWorkViewModel, bool>?)DataProvider.View.Filter;
         set => DataProvider.View.Filter = value;
     }
 }

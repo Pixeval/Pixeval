@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/PixivReplyEmojiViewModel.cs
+// Copyright (c) 2023 Pixeval/CommentsIncrementalSource.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,17 +18,19 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System.IO;
-using Microsoft.UI.Xaml.Media;
-using Pixeval.Misc;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using CommunityToolkit.WinUI.Collections;
+using Pixeval.Controls;
 
-namespace Pixeval.Pages.IllustrationViewer;
+namespace Pixeval.Pages;
 
-public class PixivReplyEmojiViewModel(PixivReplyEmoji emojiEnumValue, Stream imageStream)
+public class CommentsIncrementalSource(IAsyncEnumerable<CommentBlockViewModel?> source) : IIncrementalSource<CommentBlockViewModel>
 {
-    public PixivReplyEmoji EmojiEnumValue { get; } = emojiEnumValue;
-
-    public Stream ImageStream { get; } = imageStream;
-
-    public ImageSource? ImageSource { get; set; }
+    public async Task<IEnumerable<CommentBlockViewModel>> GetPagedItemsAsync(int pageIndex, int pageSize, CancellationToken cancellationToken = new())
+    {
+        return (await source.Skip(pageIndex * pageSize).Take(pageSize).ToArrayAsync(cancellationToken))!;
+    }
 }

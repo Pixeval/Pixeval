@@ -1,8 +1,8 @@
-#region Copyright (c) Pixeval/Pixeval
+#region Copyright
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/IllustrationAppActivationHandler.cs
+// Copyright (c) 2024 Pixeval/NovelAppActivationHandler.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -19,17 +19,17 @@
 #endregion
 
 using System;
-using System.Threading.Tasks;
-using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Util.Threading;
+using System.Threading.Tasks;
+using Pixeval.Pages.NovelViewer;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 
 namespace Pixeval.Activation;
 
-public class IllustrationAppActivationHandler : IAppActivationHandler
+public class NovelAppActivationHandler : IAppActivationHandler
 {
-    public string ActivationFragment => "illust";
+    public string ActivationFragment => "novel";
 
     public Task Execute(string param)
     {
@@ -42,7 +42,7 @@ public class IllustrationAppActivationHandler : IAppActivationHandler
         {
             try
             {
-                await IllustrationViewerHelper.CreateWindowWithPageAsync(id);
+                await NovelViewerHelper.CreateWindowWithPageAsync(id);
             }
             catch (Exception e)
             {
@@ -53,3 +53,4 @@ public class IllustrationAppActivationHandler : IAppActivationHandler
         });
     }
 }
+

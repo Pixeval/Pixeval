@@ -29,7 +29,7 @@ using Pixeval.CoreApi.Net.Response;
 using Pixeval.Options;
 using WinUI3Utilities;
 
-namespace Pixeval.Pages.IllustrationViewer;
+namespace Pixeval.Pages;
 
 public sealed partial class CommentsPage
 {

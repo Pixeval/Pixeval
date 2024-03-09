@@ -19,7 +19,6 @@
 #endregion
 
 using System;
-using System.Diagnostics;
 using System.Numerics;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
@@ -78,7 +77,7 @@ public sealed partial class IllustrationViewerPage : SupportCustomTitleBarDragRe
             titleBarHeight = 0;
             return;
         }
-        var leftIndent = new RectInt32(0, 0, EntryViewerSplitView.IsPaneOpen ? (int)EntryViewerSplitView.OpenPaneLength : 0, (int)TitleBarArea.ActualHeight);
+        var leftIndent = new RectInt32(0, 0, EntryViewerSplitView.IsPaneOpen ? (int)WorkViewerSplitView.OpenPaneLength : 0, (int)TitleBarArea.ActualHeight);
 
         if (TitleBar.Visibility is Visibility.Visible)
         {
@@ -253,8 +252,5 @@ public sealed partial class IllustrationViewerPage : SupportCustomTitleBarDragRe
         teachingTip.Target = appBarButton.IsInOverflow ? null : appBarButton;
     }
 
-    private void OpenPane_OnRightTapped(object sender, RightTappedRoutedEventArgs rightTappedRoutedEventArgs)
-    {
-        EntryViewerSplitView.PinPane = true;
-    }
+    private void OpenPane_OnRightTapped(object sender, RightTappedRoutedEventArgs rightTappedRoutedEventArgs) => EntryViewerSplitView.PinPane = true;
 }

@@ -59,6 +59,7 @@
     "PrivacyPolicyComboBox/PlaceholderText": "公开选项",
 
     "OpenUserId": "打开用户主页",
+    "OpenNovelId": "打开小说页面",
     "OpenIllustId": "打开作品页面",
 
     "CannotFindLoginProxyServerExecutable": "找不到用于登录的可执行文件，请重新打开应用或者联系开发者",
