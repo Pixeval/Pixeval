@@ -9,7 +9,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:model="using:Pixeval.CoreApi.Model"
     xmlns:pixevalControls="using:Pixeval.Controls"
-    xmlns:viewer="using:Pixeval.Pages.IllustrationViewer"
+    Unloaded="IllustrationInfoPage_OnUnloaded"
     Background="{ThemeResource PixevalPanelBackgroundThemeBrush}"
     mc:Ignorable="d">
     <pixevalControls:EnhancedPage.Resources>
@@ -57,27 +57,31 @@
                         Grid.Column="0"
                         Width="50"
                         Height="50"
-                        ProfilePicture="{x:Bind _viewModel.UserProfileImageSource, Mode=OneWay}" />
+                        ProfilePicture="{x:Bind _viewModel.AvatarSource, Mode=OneWay}" />
                     <TextBlock
                         Grid.Row="0"
                         Grid.Column="1"
-                        FontSize="{StaticResource PixevalContentFontSize}"
-                        Text="{x:Bind GetIllustratorNameText()}" />
+                        FontSize="{StaticResource PixevalContentFontSize}">
+                        <Run x:Uid="/IllustrationInfoPage/IllustratorName" />
+                        <Run Text="{x:Bind _viewModel.Illustrator.Name}" />
+                    </TextBlock>
                     <TextBlock
                         Grid.Row="1"
                         Grid.Column="1"
-                        FontSize="{StaticResource PixevalContentFontSize}"
-                        Text="{x:Bind GetIllustratorIdText()}" />
+                        FontSize="{StaticResource PixevalContentFontSize}">
+                        <Run x:Uid="/IllustrationInfoPage/IllustratorId" />
+                        <Run Text="{x:Bind _viewModel.Illustrator.Id}" />
+                    </TextBlock>
                 </Grid>
             </Button>
             <!--#endregion-->
             <!--#region Illustration Title-->
             <TextBlock x:Uid="/IllustrationInfoPage/IllustrationTitleTextBlock" Style="{StaticResource InfoPageSectionHeaderTextBlockStyle}" />
-            <TextBlock Style="{StaticResource InfoPageSectionContentTextBlockStyle}" Text="{x:Bind _viewModel.CurrentIllustration.Title}" />
+            <TextBlock Style="{StaticResource InfoPageSectionContentTextBlockStyle}" Text="{x:Bind _viewModel.Illustration.Title}" />
             <!--#endregion-->
             <!--#region Illustration Id-->
             <TextBlock x:Uid="/IllustrationInfoPage/IllustrationIdTextBlock" Style="{StaticResource InfoPageSectionHeaderTextBlockStyle}" />
-            <TextBlock Style="{StaticResource InfoPageSectionContentTextBlockStyle}" Text="{x:Bind _viewModel.CurrentIllustration.Id}" />
+            <TextBlock Style="{StaticResource InfoPageSectionContentTextBlockStyle}" Text="{x:Bind _viewModel.Illustration.Id}" />
             <!--#endregion-->
             <!--#region Illustration Caption-->
             <TextBlock x:Uid="/IllustrationInfoPage/IllustrationCaptionTextBlock" Style="{StaticResource InfoPageSectionHeaderTextBlockStyle}" />
@@ -92,15 +96,15 @@
             </labs:MarkdownTextBlock>
             <!--#endregion-->
             <TextBlock x:Uid="/IllustrationInfoPage/IllustrationTotalBookmarksTextBlock" Style="{StaticResource InfoPageSectionHeaderTextBlockStyle}" />
-            <TextBlock Style="{StaticResource InfoPageSectionContentTextBlockStyle}" Text="{x:Bind _viewModel.CurrentIllustration.Entry.TotalBookmarks}" />
+            <TextBlock Style="{StaticResource InfoPageSectionContentTextBlockStyle}" Text="{x:Bind _viewModel.Illustration.TotalBookmarks}" />
             <TextBlock x:Uid="/IllustrationInfoPage/IllustrationTotalViewsTextBlock" Style="{StaticResource InfoPageSectionHeaderTextBlockStyle}" />
-            <TextBlock Style="{StaticResource InfoPageSectionContentTextBlockStyle}" Text="{x:Bind _viewModel.CurrentIllustration.Entry.TotalView}" />
+            <TextBlock Style="{StaticResource InfoPageSectionContentTextBlockStyle}" Text="{x:Bind _viewModel.Illustration.TotalView}" />
             <TextBlock x:Uid="/IllustrationInfoPage/IllustrationDimensionTextBlock" Style="{StaticResource InfoPageSectionHeaderTextBlockStyle}" />
-            <TextBlock Style="{StaticResource InfoPageSectionContentTextBlockStyle}" Text="{x:Bind GetIllustrationDimensionText()}" />
+            <TextBlock Style="{StaticResource InfoPageSectionContentTextBlockStyle}" Text="{x:Bind _viewModel.IllustrationDimensionText}" />
             <TextBlock x:Uid="/IllustrationInfoPage/IllustrationUploadDateTextBlock" Style="{StaticResource InfoPageSectionHeaderTextBlockStyle}" />
-            <TextBlock Style="{StaticResource InfoPageSectionContentTextBlockStyle}" Text="{x:Bind _viewModel.CurrentIllustration.Entry.CreateDate, Converter={StaticResource StringFormatConverter}, ConverterParameter='{}{0:yyyy-M-d HH:mm:ss}'}" />
+            <TextBlock Style="{StaticResource InfoPageSectionContentTextBlockStyle}" Text="{x:Bind _viewModel.Illustration.CreateDate, Converter={StaticResource StringFormatConverter}, ConverterParameter='{}{0:yyyy-M-d HH:mm:ss}'}" />
             <TextBlock x:Uid="/IllustrationInfoPage/IllustrationTagListTextBlock" Style="{StaticResource InfoPageSectionHeaderTextBlockStyle}" />
-            <ItemsRepeater Margin="{StaticResource StackLayoutEntryPadding}" ItemsSource="{x:Bind _viewModel.CurrentIllustration.Entry.Tags}">
+            <ItemsRepeater Margin="{StaticResource StackLayoutEntryPadding}" ItemsSource="{x:Bind _viewModel.Illustration.Tags}">
                 <ItemsRepeater.Layout>
                     <controls:WrapLayout HorizontalSpacing="5" VerticalSpacing="5" />
                 </ItemsRepeater.Layout>

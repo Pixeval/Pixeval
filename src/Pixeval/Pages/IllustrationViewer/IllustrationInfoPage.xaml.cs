@@ -21,12 +21,13 @@
 using System;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Messaging;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
+using Pixeval.CoreApi.Model;
 using Pixeval.Messages;
 using Pixeval.Pages.IllustratorViewer;
-using Pixeval.Utilities;
 using ReverseMarkdown;
 using WinUI3Utilities;
 
@@ -34,14 +35,15 @@ namespace Pixeval.Pages.IllustrationViewer;
 
 public sealed partial class IllustrationInfoPage
 {
-    private IllustrationViewerPageViewModel _viewModel = null!;
+    private IllustrationInfoPageViewModel _viewModel = null!;
 
     public IllustrationInfoPage() => InitializeComponent();
 
-    public override void OnPageActivated(NavigationEventArgs e)
+    public override async void OnPageActivated(NavigationEventArgs e)
     {
-        _viewModel = e.Parameter.To<IllustrationViewerPageViewModel>();
-        SetIllustrationCaptionText();
+        _viewModel = new(e.Parameter.To<Illustration>());
+        await SetIllustrationCaptionTextAsync();
+        await _viewModel.LoadAvatarAsync();
     }
 
     private void IllustrationTagButton_OnTapped(object sender, TappedRoutedEventArgs e)
@@ -51,40 +53,27 @@ public sealed partial class IllustrationInfoPage
 
     private async void IllustratorPersonPicture_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        await IllustratorViewerHelper.CreateWindowWithPageAsync(_viewModel.IllustratorId);
+        await IllustratorViewerHelper.CreateWindowWithPageAsync(_viewModel.Illustrator.Id);
     }
 
-    #region Helper Functions
+    private void IllustrationInfoPage_OnUnloaded(object sender, RoutedEventArgs e) => _viewModel.Dispose();
 
-    private string GetIllustratorNameText()
-    {
-        return IllustrationInfoPageResources.IllustratorNameFormatted.Format(_viewModel.IllustratorName);
-    }
-
-    private string GetIllustratorIdText()
-    {
-        return IllustrationInfoPageResources.IllustratorIdFormatted.Format(_viewModel.IllustratorId);
-    }
-
-    private string GetIllustrationDimensionText()
-    {
-        return _viewModel.CurrentIllustration.Entry.Let(i => $"{i.Width} x {i.Height}") ?? IllustrationInfoPageResources.IllustrationDimensionUnknown;
-    }
-
-    private async void SetIllustrationCaptionText()
+    private async Task SetIllustrationCaptionTextAsync()
     {
         await Task.Yield();
-        var markdownConverter = new Converter(new Config
+        var caption = _viewModel.Illustration.Caption;
+        string? md;
+        if (string.IsNullOrEmpty(caption))
+            md = IllustrationInfoPageResources.IllustrationCaptionEmpty;
+        else
         {
-            UnknownTags = Config.UnknownTagsOption.PassThrough,
-            GithubFlavored = true
-        });
-        var caption = _viewModel.CurrentIllustration.Entry.Caption;
-        var md = string.IsNullOrEmpty(caption)
-            ? IllustrationInfoPageResources.IllustrationCaptionEmpty
-            : markdownConverter.Convert(caption);
+            var markdownConverter = new Converter(new Config
+            {
+                UnknownTags = Config.UnknownTagsOption.PassThrough,
+                GithubFlavored = true
+            });
+            md = markdownConverter.Convert(caption);
+        }
         IllustrationCaptionMarkdownTextBlock.Text = md.ReplaceLineEndings(Environment.NewLine + Environment.NewLine);
     }
-
-    #endregion
 }
