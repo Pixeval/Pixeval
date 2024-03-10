@@ -1,8 +1,9 @@
-#region Copyright (c) Pixeval/Pixeval.CoreApi
+#region Copyright
+
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
-// Copyright (c) 2023 Pixeval.CoreApi/FollowingEngine.cs
+// Copyright (c) 2024 Pixeval.CoreApi/IllustrationBookmarkTagEngine.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -16,6 +17,7 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 #endregion
 
 using System.Collections.Generic;
@@ -27,18 +29,17 @@ using Pixeval.Utilities;
 
 namespace Pixeval.CoreApi.Engine.Implements;
 
-internal class FollowingEngine(MakoClient makoClient, long uid, PrivacyPolicy privacyPolicy,
-        EngineHandle? engineHandle)
-    : AbstractPixivFetchEngine<User>(makoClient, engineHandle)
+internal class IllustrationBookmarkTagEngine(MakoClient makoClient, long uid, PrivacyPolicy privacyPolicy, EngineHandle? engineHandle)
+    : AbstractPixivFetchEngine<BookmarkTag>(makoClient, engineHandle)
 {
     private readonly PrivacyPolicy _privacyPolicy = privacyPolicy;
     private readonly long _uid = uid;
 
-    public override IAsyncEnumerator<User> GetAsyncEnumerator(CancellationToken cancellationToken = new())
+    public override IAsyncEnumerator<BookmarkTag> GetAsyncEnumerator(CancellationToken cancellationToken = new())
     {
-        return RecursivePixivAsyncEnumerators.User<FollowingEngine>
+        return RecursivePixivAsyncEnumerators.BookmarkTag<IllustrationBookmarkTagEngine>
             .WithInitialUrl(this, MakoApiKind.AppApi,
-                engine => "/v1/user/following"
+                engine => "/v1/user/bookmark-tags/illust"
                           + $"?user_id={engine._uid}"
                           + $"&restrict={engine._privacyPolicy.GetDescription()}")!;
     }

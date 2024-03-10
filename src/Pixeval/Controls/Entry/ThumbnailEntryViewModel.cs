@@ -162,7 +162,6 @@ public abstract partial class ThumbnailEntryViewModel<T> : EntryViewModel<T>, IW
         return false;
     }
 
-
     /// <summary>
     /// 直接获取对应缩略图
     /// </summary>

@@ -29,9 +29,13 @@ public sealed partial class RecommendationPage
 {
     public RecommendationPage() => InitializeComponent();
 
-    public override void OnPageActivated(NavigationEventArgs e)
+    public override async void OnPageActivated(NavigationEventArgs e)
     {
         ChangeSource();
+        await foreach (var bookmarkTag in App.AppViewModel.MakoClient.IllustrationBookmarkTag(21244857, PrivacyPolicy.Public))
+        {
+            
+        }
     }
 
     private void WorkTypeComboBox_OnSelectionChangedWhenLoaded(object? sender, SelectionChangedEventArgs e)

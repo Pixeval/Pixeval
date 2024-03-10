@@ -238,7 +238,29 @@ public partial class MakoClient
             ThrowUtils.Throw(new IllegalPrivatePolicyException(uid));
         }
 
-        return new FollowingEngine(this, privacyPolicy, uid, new EngineHandle(CancelInstance));
+        return new FollowingEngine(this, uid, privacyPolicy, new EngineHandle(CancelInstance));
+    }
+
+    public IFetchEngine<BookmarkTag> IllustrationBookmarkTag(long uid, PrivacyPolicy privacyPolicy)
+    {
+        EnsureNotCancelled();
+        if (!CheckPrivacyPolicy(uid, privacyPolicy))
+        {
+            ThrowUtils.Throw(new IllegalPrivatePolicyException(uid));
+        }
+
+        return new IllustrationBookmarkTagEngine(this, uid, privacyPolicy, new EngineHandle(CancelInstance));
+    }
+
+    public IFetchEngine<BookmarkTag> NovelBookmarkTag(long uid, PrivacyPolicy privacyPolicy)
+    {
+        EnsureNotCancelled();
+        if (!CheckPrivacyPolicy(uid, privacyPolicy))
+        {
+            ThrowUtils.Throw(new IllegalPrivatePolicyException(uid));
+        }
+
+        return new NovelBookmarkTagEngine(this, uid, privacyPolicy, new EngineHandle(CancelInstance));
     }
 
     /// <summary>

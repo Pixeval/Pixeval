@@ -1,8 +1,9 @@
-#region Copyright (c) Pixeval/Pixeval.CoreApi
+#region Copyright
+
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
-// Copyright (c) 2023 Pixeval.CoreApi/PixivSpotlightResponse.cs
+// Copyright (c) 2024 Pixeval.CoreApi/PixivBookmarkTagResponse.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -16,6 +17,7 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 #endregion
 
 using System.Text.Json.Serialization;
@@ -24,8 +26,8 @@ using Pixeval.CoreApi.Model;
 namespace Pixeval.CoreApi.Net.Response;
 
 [Factory]
-internal partial record PixivSpotlightResponse : PixivNextUrlResponse<SpotlightArticle>
+internal partial record PixivBookmarkTagResponse : PixivNextUrlResponse<BookmarkTag>
 {
-    [JsonPropertyName("spotlight_articles")]
-    public override required SpotlightArticle[] Entities { get; set; } = [];
+    [JsonPropertyName("bookmark_tags")]
+    public override required BookmarkTag[] Entities { get; set; } = [];
 }

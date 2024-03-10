@@ -39,7 +39,7 @@ internal class SpotlightArticleEngine(MakoClient makoClient, EngineHandle? engin
     {
         protected override bool ValidateResponse(PixivSpotlightResponse rawEntity)
         {
-            return rawEntity.SpotlightArticles.IsNotNullOrEmpty();
+            return rawEntity.Entities.IsNotNullOrEmpty();
         }
 
         protected override string? NextUrl(PixivSpotlightResponse? rawEntity)
@@ -54,7 +54,7 @@ internal class SpotlightArticleEngine(MakoClient makoClient, EngineHandle? engin
 
         protected override IEnumerator<SpotlightArticle>? GetNewEnumerator(PixivSpotlightResponse? rawEntity)
         {
-            return (rawEntity?.SpotlightArticles as IEnumerable<SpotlightArticle>)?.GetEnumerator();
+            return (rawEntity?.Entities as IEnumerable<SpotlightArticle>)?.GetEnumerator();
         }
     }
 }

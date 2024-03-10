@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Pixeval.Pages.NovelViewer;
@@ -14,6 +15,7 @@ using WinUI3Utilities.Attributes;
 namespace Pixeval.Controls;
 
 [DependencyProperty<ThumbnailDirection>("ThumbnailDirection", DependencyPropertyDefaultValue.Default)]
+[ObservableObject]
 public sealed partial class WorkView : IEntryView<ISortableEntryViewViewModel>
 {
     public const double LandscapeHeight = 180;
@@ -84,6 +86,7 @@ public sealed partial class WorkView : IEntryView<ISortableEntryViewViewModel>
                     ItemsView.LayoutType = LayoutType;
                     ItemsView.ItemTemplate = this.GetResource<DataTemplate>("IllustrationItemDataTemplate");
                     ViewModel = new IllustrationViewViewModel();
+                    OnPropertyChanged(nameof(ViewModel));
                     ViewModel.ResetEngine(newEngine, itemLimit);
                     ItemsView.ItemsSource = ViewModel.View;
                 }
@@ -97,6 +100,7 @@ public sealed partial class WorkView : IEntryView<ISortableEntryViewViewModel>
                     ItemsView.LayoutType = ItemsViewLayoutType.Grid;
                     ItemsView.ItemTemplate = this.GetResource<DataTemplate>("NovelItemDataTemplate");
                     ViewModel = new NovelViewViewModel();
+                    OnPropertyChanged(nameof(ViewModel));
                     ViewModel.ResetEngine(newEngine, itemLimit);
                     ItemsView.ItemsSource = ViewModel.View;
                 }

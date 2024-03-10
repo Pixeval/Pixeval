@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
-// Copyright (c) 2023 Pixeval.CoreApi/IllustrationCommentsResponse.cs
+// Copyright (c) 2023 Pixeval.CoreApi/PixivResponse.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -24,11 +24,8 @@ using Pixeval.CoreApi.Model;
 namespace Pixeval.CoreApi.Net.Response;
 
 [Factory]
-public partial record IllustrationCommentsResponse
+internal partial record PixivIllustrationResponse : PixivNextUrlResponse<Illustration>
 {
-    [JsonPropertyName("comments")]
-    public required Comment[] Comments { get; set; } = [];
-
-    [JsonPropertyName("next_url")]
-    public required string NextUrl { get; set; } = "";
+    [JsonPropertyName("illusts")]
+    public override required Illustration[] Entities { get; set; } = [];
 }
