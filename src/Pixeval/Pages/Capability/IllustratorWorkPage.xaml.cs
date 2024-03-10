@@ -20,19 +20,34 @@
 
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
+using Pixeval.Controls;
 using Pixeval.Misc;
 
 namespace Pixeval.Pages.Capability;
 
-public sealed partial class IllustratorIllustrationPage : IScrollViewProvider
+public sealed partial class IllustratorWorkPage : IScrollViewProvider
 {
-    public IllustratorIllustrationPage() => InitializeComponent();
+    public IllustratorWorkPage() => InitializeComponent();
 
-    public ScrollView ScrollView => IllustrationContainer.ScrollView;
+    public ScrollView ScrollView => WorkContainer.ScrollView;
+
+    private long _uid;
 
     public override void OnPageActivated(NavigationEventArgs e)
     {
-        if (e.Parameter is long id)
-            IllustrationContainer.ViewModel.ResetEngine(App.AppViewModel.MakoClient.Posts(id));
+        if (e.Parameter is not long id)
+            return;
+        _uid = id;
+        ChangeSource();
+    }
+
+    private void WorkTypeComboBox_OnSelectionChangedWhenLoaded(object sender, SelectionChangedEventArgs e)
+    {
+        ChangeSource();
+    }
+
+    private void ChangeSource()
+    {
+        WorkContainer.WorkView.ResetEngine(App.AppViewModel.MakoClient.WorkPosts(_uid, WorkTypeComboBox.SelectedItem, App.AppViewModel.AppSettings.TargetFilter), App.AppViewModel.AppSettings.ItemsNumberLimitForDailyRecommendations);
     }
 }

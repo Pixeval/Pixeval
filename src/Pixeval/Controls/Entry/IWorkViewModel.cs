@@ -21,6 +21,7 @@
 #endregion
 
 using System;
+using System.Threading.Tasks;
 using Microsoft.UI.Xaml.Input;
 using Pixeval.CoreApi.Model;
 
@@ -30,7 +31,7 @@ public interface IWorkViewModel
 {
     long Id { get; }
 
-    int Bookmark { get; }
+    int TotalBookmarks { get; }
 
     bool IsBookmarked { get; set; }
 
@@ -53,4 +54,6 @@ public interface IWorkViewModel
     XamlUICommand BookmarkCommand { get; }
 
     XamlUICommand SaveCommand { get; }
+
+    Task<bool> TryLoadThumbnailAsync(IDisposable key);
 }

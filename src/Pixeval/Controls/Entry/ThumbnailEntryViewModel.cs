@@ -39,7 +39,9 @@ public abstract partial class ThumbnailEntryViewModel<T> : EntryViewModel<T>, IW
 
     public long Id => Entry.Id;
 
-    public int Bookmark => Entry.TotalBookmarks;
+    public int TotalBookmarks => Entry.TotalBookmarks;
+
+    public int TotalView => Entry.TotalView;
 
     public bool IsBookmarked
     {

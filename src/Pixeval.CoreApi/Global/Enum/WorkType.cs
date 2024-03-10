@@ -22,11 +22,14 @@ using System.ComponentModel;
 
 namespace Pixeval.CoreApi.Global.Enum;
 
-public enum RecommendationContentType
+public enum WorkType
 {
     [Description("illust")]
     Illust,
 
     [Description("manga")]
-    Manga
+    Manga,
+
+    [Description("novel")]
+    Novel
 }

@@ -52,11 +52,7 @@ public partial class IllustratorViewerPageViewModel : UiObservableObject
     [ObservableProperty]
     private bool _isFollowed;
 
-    public NavigationViewTag<IllustratorIllustrationPage, long> IllustrationTag { get; }
-
-    public NavigationViewTag<IllustratorMangaPage, long> MangaTag { get; }
-
-    public NavigationViewTag<IllustratorNovelsPage, long> NovelTag { get; }
+    public NavigationViewTag<IllustratorWorkPage, long> WorkTag { get; }
 
     public NavigationViewTag<BookmarksPage, long> BookmarkedIllustrationAndMangaTag { get; }
 
@@ -74,9 +70,7 @@ public partial class IllustratorViewerPageViewModel : UiObservableObject
         IsFollowed = userDetail.UserEntity.IsFollowed;
         Metrics = userDetail.UserProfile;
 
-        IllustrationTag = new(Id);
-        MangaTag = new(Id);
-        NovelTag = new(Id);
+        WorkTag = new(Id);
         BookmarkedIllustrationAndMangaTag = new(Id);
         FollowingUserTag = new(Id);
         MyPixivUserTag = null!;

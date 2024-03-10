@@ -53,7 +53,7 @@ public sealed partial class IllustratorViewerPage
     private async void IllustratorViewerSegmented_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         var segmented = sender.To<Segmented>();
-        var currentTag = segmented.SelectedItem.GetTag<NavigationViewTag?>() ?? _viewModel.IllustrationTag;
+        var currentTag = segmented.SelectedItem.GetTag<NavigationViewTag?>() ?? _viewModel.WorkTag;
 
         IllustratorViewerFrame.NavigateTag(currentTag, new EntranceNavigationTransitionInfo());
         IllustratorViewerFrame.NavigateTag(currentTag, _lastNavigationViewTag is not -1

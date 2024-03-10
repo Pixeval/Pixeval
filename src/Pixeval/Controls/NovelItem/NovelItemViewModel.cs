@@ -20,17 +20,14 @@
 
 #endregion
 
+using System;
 using Pixeval.CoreApi.Model;
 
 namespace Pixeval.Controls;
 
 public partial class NovelItemViewModel(Novel novel) : ThumbnailEntryViewModel<Novel>(novel)
 {
-    public string Caption => Entry.Caption;
-
     public int TextLength => Entry.TextLength;
-
-    public int TotalView => Entry.TotalView;
 
     protected override string ThumbnailUrl => Entry.Cover.Medium;
 }

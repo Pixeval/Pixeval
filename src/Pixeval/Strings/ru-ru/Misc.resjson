@@ -43,6 +43,8 @@
     "TargetFilterForIOS": "Для iOS",
     "ThumbnailDirectionLandscape": "Горизонтальная",
     "ThumbnailDirectionPortrait": "Вертикальная",
+    "WorkTypeIllust": "Иллюстрации",
+    "WorkTypeManga": "Манга",
     "Bmp": "BMP (без потерь, большой размер, широкая поддержка)",
     "Jpg": "JPG (с потерями, маленький размер, широкая поддержка)",
     "Gif": "GIF (без потерь, только 256 цветов, маленький размер, широкая поддержка)",
@@ -55,6 +57,7 @@
 
     "SortOptionComboBox/PlaceholderText": "Опции сортировки",
     "PrivacyPolicyComboBox/PlaceholderText": "Опции конфиденциальности",
+    "WorkTypeComboBox/PlaceholderText": "Опции рекомендаций",
 
     "OpenUserId": "Открыть страницу пользователя",
     "OpenIllustId": "Открыть страницу произведения",

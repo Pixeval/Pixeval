@@ -14,14 +14,13 @@ public sealed partial class NovelItem : ConstrainedBox
 {
     public event Action<NovelItem, NovelItemViewModel>? ViewModelChanged;
 
-    public NovelItem()
-    {
-        InitializeComponent();
-    }
+    public NovelItem() => InitializeComponent();
+
+    public event Func<TeachingTip> RequestTeachingTip = null!;
 
     private static void OnViewModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        if (d as NovelItem is { } item)
+        if (d is NovelItem item)
         {
             item.ViewModelChanged?.Invoke(item, item.ViewModel);
         }

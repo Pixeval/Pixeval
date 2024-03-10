@@ -147,7 +147,7 @@ public partial class MakoClient
     /// <summary>
     /// Request recommended illustrations in Pixiv.
     /// </summary>
-    /// <param name="recommendContentType">The <see cref="RecommendationContentType" /> option for illust or manga</param>
+    /// <param name="recommendContentType">The <see cref="WorkType" />Option for illust or manga (not novel)</param>
     /// <param name="targetFilter">The <see cref="TargetFilter" /> option targeting android or ios</param>
     /// <param name="maxBookmarkIdForRecommend">Max bookmark id for recommendation</param>
     /// <param name="minBookmarkIdForRecentIllust">Min bookmark id for recent illust</param>
@@ -155,7 +155,7 @@ public partial class MakoClient
     /// The <see cref="RecommendIllustrationEngine" /> containing recommended illustrations.
     /// </returns>
     public IFetchEngine<Illustration> RecommendationIllustrations(
-        RecommendationContentType recommendContentType = RecommendationContentType.Illust,
+        WorkType recommendContentType = WorkType.Illust,
         TargetFilter targetFilter = TargetFilter.ForAndroid,
         uint? maxBookmarkIdForRecommend = null,
         uint? minBookmarkIdForRecentIllust = null)
@@ -170,6 +170,18 @@ public partial class MakoClient
     {
         EnsureNotCancelled();
         return new RecommendNovelEngine(this, targetFilter, maxBookmarkIdForRecommend, new EngineHandle(CancelInstance));
+    }
+
+    public IFetchEngine<IWorkEntry> RecommendationWorks(
+        WorkType recommendContentType = WorkType.Illust,
+        TargetFilter targetFilter = TargetFilter.ForAndroid,
+        uint? maxBookmarkIdForRecommend = null,
+        uint? minBookmarkIdForRecentIllust = null)
+    {
+        return recommendContentType is WorkType.Novel
+            ? RecommendationNovels(targetFilter, maxBookmarkIdForRecommend)
+            : RecommendationIllustrations(recommendContentType, targetFilter, maxBookmarkIdForRecommend,
+                minBookmarkIdForRecentIllust);
     }
 
     /// <summary>
@@ -207,19 +219,6 @@ public partial class MakoClient
     {
         EnsureNotCancelled();
         return new FeedEngine(this, new EngineHandle(CancelInstance));
-    }
-
-    /// <summary>
-    /// Request posts of a user.
-    /// </summary>
-    /// <param name="uid">User id.</param>
-    /// <returns>
-    /// The <see cref="PostedIllustrationEngine" /> containing posts of that user.
-    /// </returns>
-    public IFetchEngine<Illustration> Posts(long uid)
-    {
-        EnsureNotCancelled();
-        return new PostedIllustrationEngine(this, uid, new EngineHandle(CancelInstance));
     }
 
     /// <summary>
@@ -305,17 +304,20 @@ public partial class MakoClient
     }
 
     /// <summary>
-    /// Request manga posts of that user.
+    /// Request posts of a user.
     /// </summary>
-    /// <param name="uid">User id</param>
+    /// <param name="uid">User id.</param>
+    /// <param name="recommendContentType">The <see cref="WorkType" /> option for illust or manga (not novel)</param>
     /// <param name="targetFilter">The <see cref="TargetFilter" /> option targeting android or ios</param>
     /// <returns>
-    /// The <see cref="PostedMangaEngine" /> containing the manga posts of the user.
+    /// The <see cref="PostedIllustrationEngine" /> containing posts of that user.
     /// </returns>
-    public IFetchEngine<Illustration> MangaPosts(long uid, TargetFilter targetFilter = TargetFilter.ForAndroid)
+    public IFetchEngine<Illustration> IllustrationPosts(long uid,
+        WorkType recommendContentType = WorkType.Illust,
+        TargetFilter targetFilter = TargetFilter.ForAndroid)
     {
         EnsureNotCancelled();
-        return new PostedMangaEngine(this, uid, targetFilter, new EngineHandle(CancelInstance));
+        return new PostedIllustrationEngine(this, uid, recommendContentType, targetFilter, new EngineHandle(CancelInstance));
     }
 
     /// <summary>
@@ -330,6 +332,15 @@ public partial class MakoClient
     {
         EnsureNotCancelled();
         return new PostedNovelEngine(this, uid, targetFilter, new EngineHandle(CancelInstance));
+    }
+
+    public IFetchEngine<IWorkEntry> WorkPosts(long uid,
+        WorkType recommendContentType = WorkType.Illust,
+        TargetFilter targetFilter = TargetFilter.ForAndroid)
+    {
+        return recommendContentType is WorkType.Novel
+            ? NovelPosts(uid, targetFilter)
+            : IllustrationPosts(uid, recommendContentType, targetFilter);
     }
 
     /// <summary>

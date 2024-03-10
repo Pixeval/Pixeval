@@ -114,6 +114,10 @@ public static class LocalizedResourceAttributeHelper
         [PrivacyPolicy.Public] = MiscResources.PrivacyPolicyPublic,
         [PrivacyPolicy.Private] = MiscResources.PrivacyPolicyPrivate,
 
+        [WorkType.Illust] = MiscResources.WorkTypeIllust,
+        [WorkType.Manga] = MiscResources.WorkTypeManga,
+        [WorkType.Novel] = MiscResources.WorkTypeNovel,
+
         [RankOption.Day] = RankingsPageResources.RankOptionDay,
         [RankOption.Week] = RankingsPageResources.RankOptionWeek,
         [RankOption.Month] = RankingsPageResources.RankOptionMonth,

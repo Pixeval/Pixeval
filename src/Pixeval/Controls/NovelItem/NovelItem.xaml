@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    xmlns:converters="using:CommunityToolkit.WinUI.Converters"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
@@ -13,33 +14,38 @@
     AspectRatio="5:3"
     Background="{StaticResource CardBackgroundFillColorDefaultBrush}"
     mc:Ignorable="d">
+    <ToolTipService.ToolTip>
+        <ToolTip Content="{x:Bind ViewModel.Caption, Mode=OneWay}" Placement="Right" />
+    </ToolTipService.ToolTip>
+    <controls:ConstrainedBox.Resources>
+        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+        <ExponentialEase
+            x:Key="EasingFunction"
+            EasingMode="EaseOut"
+            Exponent="12" />
+        <Storyboard
+            x:Key="ThumbnailFadeInStoryboard"
+            TargetProperty="Opacity"
+            TargetName="ThumbnailGrid">
+            <DoubleAnimation
+                EasingFunction="{StaticResource EasingFunction}"
+                From="0"
+                To="1"
+                Duration="0:0:2" />
+        </Storyboard>
+        <Storyboard
+            x:Key="ThumbnailFadeOutStoryboard"
+            TargetProperty="Opacity"
+            TargetName="ThumbnailGrid">
+            <DoubleAnimation
+                EasingFunction="{StaticResource EasingFunction}"
+                From="1"
+                To="0"
+                Duration="0:0:2" />
+        </Storyboard>
+    </controls:ConstrainedBox.Resources>
     <Grid Background="Transparent">
-        <Grid.Resources>
-            <ExponentialEase
-                x:Key="EasingFunction"
-                EasingMode="EaseOut"
-                Exponent="12" />
-            <Storyboard
-                x:Key="ThumbnailFadeInStoryboard"
-                TargetProperty="Opacity"
-                TargetName="ThumbnailGrid">
-                <DoubleAnimation
-                    EasingFunction="{StaticResource EasingFunction}"
-                    From="0"
-                    To="1"
-                    Duration="0:0:2" />
-            </Storyboard>
-            <Storyboard
-                x:Key="ThumbnailFadeOutStoryboard"
-                TargetProperty="Opacity"
-                TargetName="ThumbnailGrid">
-                <DoubleAnimation
-                    EasingFunction="{StaticResource EasingFunction}"
-                    From="1"
-                    To="0"
-                    Duration="0:0:2" />
-            </Storyboard>
-        </Grid.Resources>
+
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="*" />
@@ -58,6 +64,25 @@
             Grid.Column="0"
             Source="{x:Bind ViewModel.ThumbnailSource, Mode=OneWay}"
             Stretch="Uniform" />
+        <Grid
+            Grid.Column="0"
+            Margin="10"
+            VerticalAlignment="Bottom"
+            ColumnSpacing="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <local:PixevalBadge
+                Grid.Column="0"
+                Mode="Ai"
+                Visibility="{x:Bind ViewModel.IsAiGenerated, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
+            <local:PixevalBadge
+                Grid.Column="1"
+                Mode="{x:Bind ViewModel.XRestrictionCaption, Mode=OneWay}"
+                Visibility="{x:Bind ViewModel.IsXRestricted, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
+        </Grid>
         <Grid
             x:Name="ThumbnailGrid"
             Grid.Column="0"
@@ -79,7 +104,7 @@
             <local:IconText
                 Grid.Row="2"
                 Symbol="HeartEB51"
-                Text="{x:Bind ViewModel.Bookmark, Mode=OneWay}" />
+                Text="{x:Bind ViewModel.TotalBookmarks, Mode=OneWay}" />
             <local:IconText
                 Grid.Row="3"
                 Symbol="ListEA37"

@@ -169,7 +169,6 @@
         <PRIResource Include="Strings\zh-cn\AppSettings.resjson" />
         <PRIResource Include="Strings\zh-cn\CommentsPage.resjson" />
         <PRIResource Include="Strings\zh-cn\FollowingUserBadge.resjson" />
-        <PRIResource Include="Strings\zh-cn\IllustratorContentViewer.resjson" />
         <PRIResource Include="Strings\zh-cn\BookmarksPage.resjson" />
         <PRIResource Include="Strings\zh-cn\EntryItem.resjson" />
         <PRIResource Include="Strings\zh-cn\AboutPage.resjson" />
@@ -192,7 +191,6 @@
         <PRIResource Include="Strings\zh-cn\MessageContentDialog.resjson" />
         <PRIResource Include="Strings\zh-cn\Misc.resjson" />
         <PRIResource Include="Strings\zh-cn\RankingsPage.resjson" />
-        <PRIResource Include="Strings\zh-cn\RecommendationsPage.resjson" />
         <PRIResource Include="Strings\zh-cn\PixivReplyBar.resjson" />
         <PRIResource Include="Strings\zh-cn\ReverseSearchApiKeyNotPresentDialog.resjson" />
         <PRIResource Include="Strings\zh-cn\SettingsPage.resjson" />
@@ -203,7 +201,6 @@
         <PRIResource Include="Strings\ru-ru\AppSettings.resjson" />
         <PRIResource Include="Strings\ru-ru\CommentsPage.resjson" />
         <PRIResource Include="Strings\ru-ru\FollowingUserBadge.resjson" />
-        <PRIResource Include="Strings\ru-ru\IllustratorContentViewer.resjson" />
         <PRIResource Include="Strings\ru-ru\BookmarksPage.resjson" />
         <PRIResource Include="Strings\ru-ru\EntryItem.resjson" />
         <PRIResource Include="Strings\ru-ru\AboutPage.resjson" />
@@ -225,7 +222,6 @@
         <PRIResource Include="Strings\ru-ru\MessageContentDialog.resjson" />
         <PRIResource Include="Strings\ru-ru\Misc.resjson" />
         <PRIResource Include="Strings\ru-ru\RankingsPage.resjson" />
-        <PRIResource Include="Strings\ru-ru\RecommendationsPage.resjson" />
         <PRIResource Include="Strings\ru-ru\PixivReplyBar.resjson" />
         <PRIResource Include="Strings\ru-ru\ReverseSearchApiKeyNotPresentDialog.resjson" />
         <PRIResource Include="Strings\ru-ru\SettingsPage.resjson" />
@@ -237,12 +233,13 @@
     <!--XAML-->
     <ItemGroup>
         <None Remove="Controls\DialogContent\CheckExitedDialog.xaml" />
+        <None Remove="Controls\Entry\WorkView.xaml" />
         <None Remove="Controls\GenerateLinkTeachingTip.xaml" />
         <None Remove="Controls\NovelItem\NovelItem.xaml" />
         <None Remove="Controls\NovelView\NovelView.xaml" />
+        <None Remove="Controls\WorkTypeComboBox.xaml" />
         <None Remove="IllustrationContainer.xaml" />
         <None Remove="IPListInput.xaml" />
-        <None Remove="Pages\Capability\IllustratorNovelPage.xaml" />
         <None Remove="Pages\EntryViewerSplitView.xaml" />
         <None Remove="Pages\NovelViewer\NovelViewerPage.xaml" />
         <None Remove="PrivacyPolicyComboBox.xaml" />
@@ -290,14 +287,17 @@
         <None Remove="IllustrationResultFilterContent.xaml" />
         <None Remove="IllustratorItem.xaml" />
         <None Remove="RecommendIllustratorItem.xaml" />
+        <Page Update="Controls\WorkTypeComboBox.xaml">
+          <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="Controls\Entry\WorkView.xaml">
+          <Generator>MSBuild:Compile</Generator>
+        </Page>
         <Page Update="Controls\GenerateLinkTeachingTip.xaml">
           <Generator>MSBuild:Compile</Generator>
         </Page>
         <Page Update="Controls\DialogContent\CheckExitedDialog.xaml">
           <Generator>MSBuild:Compile</Generator>
-        </Page>
-        <Page Update="Pages\Capability\IllustratorNovelPage.xaml">
-            <Generator>MSBuild:Compile</Generator>
         </Page>
 
         <Page Update="Controls\EntryContainer.xaml">
@@ -360,10 +360,7 @@
         <Page Update="Pages\Capability\FollowingsPage.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
-        <Page Update="Pages\Capability\IllustratorIllustrationPage.xaml">
-            <Generator>MSBuild:Compile</Generator>
-        </Page>
-        <Page Update="Pages\Capability\IllustratorMangaPage.xaml">
+        <Page Update="Pages\Capability\IllustratorWorkPage.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
         <Page Update="Pages\Capability\RankingsPage.xaml">
