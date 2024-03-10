@@ -20,7 +20,6 @@
 
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
-using Pixeval.Controls;
 using Pixeval.Misc;
 
 namespace Pixeval.Pages.Capability;

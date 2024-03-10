@@ -178,18 +178,13 @@
                             Icon="{markup:FontSymbolIcon Glyph=PhotoE91B}"
                             Tag="{x:Bind _viewModel.WorkTag}" />
                         <controls1:SegmentedItem
-                            x:Uid="/EntryViewerPage/BookmarkedIllustrationAndMangaNavigationViewItem"
+                            x:Uid="/EntryViewerPage/BookmarksNavigationViewItem"
                             Icon="{markup:FontSymbolIcon Glyph=LibraryE8F1}"
-                            Tag="{x:Bind _viewModel.BookmarkedIllustrationAndMangaTag}" />
+                            Tag="{x:Bind _viewModel.BookmarksTag}" />
                         <controls1:SegmentedItem
-                            x:Uid="/EntryViewerPage/BookmarkedNovelNavigationViewItem"
-                            Icon="{markup:FontSymbolIcon Glyph=ReadingListE7BC}"
-                            IsEnabled="False"
-                            Tag="{x:Bind _viewModel.BookmarkedNovelTag}" />
-                        <controls1:SegmentedItem
-                            x:Uid="/EntryViewerPage/FollowingUserNavigationViewItem"
+                            x:Uid="/EntryViewerPage/FollowingsNavigationViewItem"
                             Icon="{markup:FontSymbolIcon Glyph=AddFriendE8FA}"
-                            Tag="{x:Bind _viewModel.FollowingUserTag}" />
+                            Tag="{x:Bind _viewModel.FollowingsTag}" />
                         <controls1:SegmentedItem
                             x:Uid="/EntryViewerPage/MyPixivUserNavigationViewItem"
                             Icon="{markup:FontSymbolIcon Glyph=PeopleE716}"

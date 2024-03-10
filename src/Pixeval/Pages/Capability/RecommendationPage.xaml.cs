@@ -20,8 +20,6 @@
 
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
-using Pixeval.CoreApi.Global.Enum;
-using Pixeval.Util.UI;
 
 namespace Pixeval.Pages.Capability;
 
@@ -29,13 +27,9 @@ public sealed partial class RecommendationPage
 {
     public RecommendationPage() => InitializeComponent();
 
-    public override async void OnPageActivated(NavigationEventArgs e)
+    public override void OnPageActivated(NavigationEventArgs e)
     {
         ChangeSource();
-        await foreach (var bookmarkTag in App.AppViewModel.MakoClient.IllustrationBookmarkTag(21244857, PrivacyPolicy.Public))
-        {
-            
-        }
     }
 
     private void WorkTypeComboBox_OnSelectionChangedWhenLoaded(object? sender, SelectionChangedEventArgs e)

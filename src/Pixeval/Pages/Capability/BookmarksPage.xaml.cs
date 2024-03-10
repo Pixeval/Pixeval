@@ -18,12 +18,15 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using System;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Controls;
+using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Model;
 using Pixeval.Misc;
+using Pixeval.Options;
 
 namespace Pixeval.Pages.Capability;
 
@@ -33,53 +36,77 @@ public sealed partial class BookmarksPage : IScrollViewProvider
 
     public BookmarksPage() => InitializeComponent();
 
-    public override async void OnPageActivated(NavigationEventArgs e)
+    public override void OnPageActivated(NavigationEventArgs e)
     {
         if (e.Parameter is not long uid)
             uid = App.AppViewModel.PixivUid;
         _viewModel = new BookmarkPageViewModel(uid);
         ChangeSource();
         _viewModel.TagBookmarksIncrementallyLoaded += ViewModelOnTagBookmarksIncrementallyLoaded;
-        await _viewModel.LoadUserBookmarkTagsAsync();
     }
 
-    private void PrivacyPolicyComboBox_OnSelectionChangedWhenLoaded(object sender, SelectionChangedEventArgs e)
+    private void ComboBox_OnSelectionChangedWhenLoaded(object sender, SelectionChangedEventArgs e)
     {
         ChangeSource();
     }
 
     private void ViewModelOnTagBookmarksIncrementallyLoaded(object? sender, string e)
     {
-        if (TagComboBox.SelectedItem is CountedTag({ Name: var name }, _) && name == e)
+        if (TagComboBox.SelectedItem is BookmarkTag { Name: var name } && name == e)
         {
-            IllustrationContainer.ViewModel.DataProvider.View.Filter = o => BookmarkTagFilter(name, o);
+            SetFilter(o => BookmarkTagFilter(name, o));
         }
     }
 
     private void TagComboBox_OnSelectionChangedWhenLoaded(object? sender, SelectionChangedEventArgs e)
     {
-        if (TagComboBox.SelectedItem is CountedTag({ Name: var name }, _) tag && !ReferenceEquals(tag, BookmarkPageViewModel.EmptyCountedTag))
+        if (TagComboBox.SelectedItem is BookmarkTag { Name: var name } tag && !ReferenceEquals(tag, BookmarkPageViewModel.EmptyCountedTag))
         {
             // fetch the bookmark IDs for tag, but do not wait for it.
-            _ = _viewModel.LoadBookmarksForTagAsync(tag.Tag.Name);
+            _ = _viewModel.LoadBookmarksForTagAsync(name, GetBookmarksEngine(name));
 
             // refresh the filter when there are newly fetched IDs.
-            IllustrationContainer.ViewModel.DataProvider.View.Filter = o => BookmarkTagFilter(name, o);
+            SetFilter(o => BookmarkTagFilter(name, o));
             return;
         }
 
-        IllustrationContainer.ViewModel.DataProvider.View.Filter = null;
+        SetFilter(null);
     }
 
-    private bool BookmarkTagFilter(string name, object o) => o is IllustrationItemViewModel model && _viewModel.GetBookmarkIdsForTag(name).Contains(model.Id);
+    private bool BookmarkTagFilter(string name, IWorkViewModel viewModel) => _viewModel.ContainsTag(name, viewModel.Id);
 
-    private void ChangeSource()
+    private async void ChangeSource()
     {
-        var tag = PrivacyPolicyComboBox.SelectedItem;
-        if (tag is PrivacyPolicy.Private && !_viewModel.IsMe)
-            tag = PrivacyPolicy.Public;
-        IllustrationContainer.ViewModel.ResetEngine(App.AppViewModel.MakoClient.IllustrationBookmarks(_viewModel.UserId, tag, App.AppViewModel.AppSettings.TargetFilter));
+        var policy = GetPolicy();
+        var engine = GetBookmarksEngine(null);
+
+        SetFilter(null);
+        WorkContainer.WorkView.ResetEngine(engine);
+        TagComboBox.ItemsSource = await _viewModel.SetBookmarkTagsAsync(policy, SimpleWorkTypeComboBox.SelectedItem);
+        TagComboBox.SelectedItem = BookmarkPageViewModel.EmptyCountedTag;
     }
 
-    public ScrollView ScrollView => IllustrationContainer.ScrollView;
+    private IFetchEngine<IWorkEntry> GetBookmarksEngine(string? tag)
+    {
+        var policy = GetPolicy();
+        return SimpleWorkTypeComboBox.SelectedItem is SimpleWorkType.IllustAndManga
+            ? App.AppViewModel.MakoClient.IllustrationBookmarks(_viewModel.UserId, policy, tag, App.AppViewModel.AppSettings.TargetFilter)
+            : App.AppViewModel.MakoClient.NovelBookmarks(_viewModel.UserId, policy, tag, App.AppViewModel.AppSettings.TargetFilter);
+    }
+
+    private PrivacyPolicy GetPolicy()
+    {
+        var policy = PrivacyPolicyComboBox.SelectedItem;
+        if (policy is PrivacyPolicy.Private && !_viewModel.IsMe)
+            policy = PrivacyPolicy.Public;
+        return policy;
+    }
+
+    private void SetFilter(Func<IWorkViewModel, bool>? filter)
+    {
+        if (WorkContainer.ViewModel is { } vm)
+            vm.Filter = filter;
+    }
+
+    public ScrollView ScrollView => WorkContainer.ScrollView;
 }

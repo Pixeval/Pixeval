@@ -49,6 +49,7 @@ public class WorkContainer : UserControl, IScrollViewProvider
 
     public WorkView WorkView { get; }
 
+    /// <inheritdoc cref="WorkView.ViewModel"/>
     public ISortableEntryViewViewModel ViewModel => WorkView.ViewModel;
 
     public ScrollView ScrollView => WorkView.ScrollView;

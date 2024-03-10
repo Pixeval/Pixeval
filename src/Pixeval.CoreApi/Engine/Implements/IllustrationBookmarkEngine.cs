@@ -20,6 +20,7 @@
 
 using System.Collections.Generic;
 using System.Threading;
+using System.Web;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Model;
 using Pixeval.CoreApi.Net;
@@ -31,30 +32,37 @@ namespace Pixeval.CoreApi.Engine.Implements;
 /// An <see cref="IFetchEngine{E}" /> that fetches the bookmark of a specific user
 /// </summary>
 /// <remarks>
-/// Creates a <see cref="BookmarkEngine" />
+/// Creates a <see cref="IllustrationBookmarkEngine" />
 /// </remarks>
 /// <param name="makoClient">The <see cref="MakoClient" /> that owns this object</param>
 /// <param name="uid">Id of the user</param>
 /// <param name="privacyPolicy">The privacy option</param>
 /// <param name="targetFilter">Indicates the target API of the fetch operation</param>
 /// <param name="engineHandle"></param>
-internal class BookmarkEngine(
+internal class IllustrationBookmarkEngine(
     MakoClient makoClient,
     long uid,
+    string? tag,
     PrivacyPolicy privacyPolicy,
     TargetFilter targetFilter,
     EngineHandle? engineHandle = null) : AbstractPixivFetchEngine<Illustration>(makoClient, engineHandle)
 {
+    private readonly string? _tag = tag;
     private readonly PrivacyPolicy _privacyPolicy = privacyPolicy;
     private readonly TargetFilter _targetFilter = targetFilter;
     private readonly long _uid = uid;
 
     public override IAsyncEnumerator<Illustration> GetAsyncEnumerator(CancellationToken cancellationToken = new CancellationToken())
     {
-        return RecursivePixivAsyncEnumerators.Illustration<BookmarkEngine>.WithInitialUrl(this, MakoApiKind.AppApi,
-            engine => "/v1/user/bookmarks/illust"
-                      + $"?user_id={engine._uid}"
-                      + $"&restrict={engine._privacyPolicy.GetDescription()}"
-                      + $"&filter={engine._targetFilter.GetDescription()}")!;
+        return RecursivePixivAsyncEnumerators.Illustration<IllustrationBookmarkEngine>.WithInitialUrl(this, MakoApiKind.AppApi,
+            engine =>
+            {
+                var tagSegment = engine._tag is not null ? $"&tag={HttpUtility.UrlEncode(engine._tag)}" : null;
+                return "/v1/user/bookmarks/illust"
+                       + $"?user_id={engine._uid}"
+                       + $"&restrict={engine._privacyPolicy.GetDescription()}"
+                       + $"&filter={engine._targetFilter.GetDescription()}"
+                       + tagSegment;
+            })!;
     }
 }

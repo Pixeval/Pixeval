@@ -26,9 +26,7 @@
     "ZoomIn": "Увеличить",
     "ZoomOut": "Уменьшить",
 
-    "BookmarkedIllustrationAndMangaNavigationViewItem/Content": "Избранные иллюстрации и манга",
-    "BookmarkedNovelNavigationViewItem/Content": "Избранные новеллы",
-    "FollowingUserNavigationViewItem/Content": "Подписки",
+    "FollowingsNavigationViewItem/Content": "Подписки",
     "MyPixivUserNavigationViewItem/Content": "Друзья в Pixiv",
     "RecommendUserNavigationViewItem/Content": "Рекомендуемые пользователи",
     "FollowingUserItem/Title": "Подписки",

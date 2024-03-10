@@ -54,11 +54,9 @@ public partial class IllustratorViewerPageViewModel : UiObservableObject
 
     public NavigationViewTag<IllustratorWorkPage, long> WorkTag { get; }
 
-    public NavigationViewTag<BookmarksPage, long> BookmarkedIllustrationAndMangaTag { get; }
+    public NavigationViewTag<BookmarksPage, long> BookmarksTag { get; }
 
-    public NavigationViewTag BookmarkedNovelTag { get; }
-
-    public NavigationViewTag<FollowingsPage, long> FollowingUserTag { get; }
+    public NavigationViewTag<FollowingsPage, long> FollowingsTag { get; }
 
     public NavigationViewTag MyPixivUserTag { get; }
 
@@ -71,10 +69,9 @@ public partial class IllustratorViewerPageViewModel : UiObservableObject
         Metrics = userDetail.UserProfile;
 
         WorkTag = new(Id);
-        BookmarkedIllustrationAndMangaTag = new(Id);
-        FollowingUserTag = new(Id);
+        BookmarksTag = new(Id);
+        FollowingsTag = new(Id);
         MyPixivUserTag = null!;
-        BookmarkedNovelTag = null!;
         RecommendUserTag = new(Id);
 
         InitializeCommands();

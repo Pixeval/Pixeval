@@ -45,18 +45,35 @@ public partial class MakoClient
     /// <param name="privacyPolicy">The <see cref="PrivacyPolicy" /> options targeting private or public</param>
     /// <param name="targetFilter">The <see cref="TargetFilter" /> options targeting android or ios</param>
     /// <returns>
-    /// The <see cref="BookmarkEngine" />> iterator containing bookmarked illustrations for the user.
+    /// The <see cref="IllustrationBookmarkEngine" />> iterator containing bookmarked illustrations for the user.
     /// </returns>
     /// <exception cref="IllegalPrivatePolicyException">Requesting other user's private bookmarks will throw this exception.</exception>
-    public IFetchEngine<Illustration> IllustrationBookmarks(long uid, PrivacyPolicy privacyPolicy, TargetFilter targetFilter = TargetFilter.ForAndroid)
+    public IFetchEngine<Illustration> IllustrationBookmarks(long uid, PrivacyPolicy privacyPolicy, string? tag, TargetFilter targetFilter = TargetFilter.ForAndroid)
     {
         EnsureNotCancelled();
         if (!CheckPrivacyPolicy(uid, privacyPolicy))
-        {
             ThrowUtils.Throw(new IllegalPrivatePolicyException(uid));
-        }
 
-        return new BookmarkEngine(this, uid, privacyPolicy, targetFilter, new EngineHandle(CancelInstance)).Apply(RegisterInstance);
+        return new IllustrationBookmarkEngine(this, uid, tag, privacyPolicy, targetFilter, new EngineHandle(CancelInstance));
+    }
+
+    /// <summary>
+    /// Request bookmarked novels.
+    /// </summary>
+    /// <param name="uid">User id</param>
+    /// <param name="privacyPolicy">The <see cref="PrivacyPolicy" /> options targeting private or public</param>
+    /// <param name="tag"></param>
+    /// <param name="targetFilter">The <see cref="TargetFilter" /> option targeting android or ios</param>
+    /// <returns>
+    /// The <see cref="NovelBookmarkEngine" /> containing the bookmarked novels.
+    /// </returns>
+    public IFetchEngine<Novel> NovelBookmarks(long uid, PrivacyPolicy privacyPolicy, string? tag, TargetFilter targetFilter = TargetFilter.ForAndroid)
+    {
+        EnsureNotCancelled();
+        if (!CheckPrivacyPolicy(uid, privacyPolicy))
+            ThrowUtils.Throw(new IllegalPrivatePolicyException(uid));
+
+        return new NovelBookmarkEngine(this, uid, tag, privacyPolicy, targetFilter, new EngineHandle(CancelInstance));
     }
 
     /// <summary>
@@ -363,22 +380,6 @@ public partial class MakoClient
         return recommendContentType is WorkType.Novel
             ? NovelPosts(uid, targetFilter)
             : IllustrationPosts(uid, recommendContentType, targetFilter);
-    }
-
-    /// <summary>
-    /// Request bookmarked novels.
-    /// </summary>
-    /// <param name="uid">User id</param>
-    /// <param name="privacyPolicy">The <see cref="PrivacyPolicy" /> options targeting private or public</param>
-    /// <param name="targetFilter">The <see cref="TargetFilter" /> option targeting android or ios</param>
-    /// <returns>
-    /// The <see cref="NovelBookmarkEngine" /> containing the bookmarked novels.
-    /// </returns>
-    public IFetchEngine<Novel> NovelBookmarks(long uid, PrivacyPolicy privacyPolicy, TargetFilter targetFilter = TargetFilter.ForAndroid)
-    {
-        EnsureNotCancelled();
-        _ = CheckPrivacyPolicy(uid, privacyPolicy);
-        return new NovelBookmarkEngine(this, uid, privacyPolicy, targetFilter, new EngineHandle(CancelInstance));
     }
 
     /// <summary>

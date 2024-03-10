@@ -1,9 +1,8 @@
 #region Copyright
-
 // GPL v3 License
 // 
-// Pixeval/Pixeval.CoreApi
-// Copyright (c) 2024 Pixeval.CoreApi/BookmarkTag.cs
+// Pixeval/Pixeval
+// Copyright (c) 2024 Pixeval/SimpleWorkType.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -17,19 +16,17 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 #endregion
 
-using System.Text.Json.Serialization;
+using Pixeval.Attributes;
 
-namespace Pixeval.CoreApi.Model;
+namespace Pixeval.Options;
 
-[Factory]
-public partial record BookmarkTag : IEntry
+public enum SimpleWorkType
 {
-    [JsonPropertyName("name")]
-    public required string Name { get; set; } = "";
+    [LocalizedResource(typeof(MiscResources), nameof(MiscResources.SimpleWorkTypeIllustAndManga))]
+    IllustAndManga,
 
-    [JsonPropertyName("count")]
-    public required int Count { get; set; }
+    [LocalizedResource(typeof(MiscResources), nameof(MiscResources.SimpleWorkTypeNovel))]
+    Novel
 }

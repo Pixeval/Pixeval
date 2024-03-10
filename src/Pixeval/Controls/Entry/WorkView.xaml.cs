@@ -39,6 +39,9 @@ public sealed partial class WorkView : IEntryView<ISortableEntryViewViewModel>
 
     public WorkView() => InitializeComponent();
 
+    /// <summary>
+    /// 在调用<see cref="ResetEngine"/>前为<see langword="null"/>
+    /// </summary>
     public ISortableEntryViewViewModel ViewModel { get; private set; } = null!;
 
     public AdvancedItemsView AdvancedItemsView => ItemsView;

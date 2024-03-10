@@ -12,23 +12,23 @@
     <controls:EnhancedPage.Resources>
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
     </controls:EnhancedPage.Resources>
-    <controls:IllustrationContainer x:Name="IllustrationContainer">
-        <controls:IllustrationContainer.CommandBarElements>
+    <controls:WorkContainer x:Name="WorkContainer">
+        <controls:WorkContainer.CommandBarElements>
             <controls:PrivacyPolicyComboBox
                 x:Name="PrivacyPolicyComboBox"
-                SelectionChangedWhenLoaded="PrivacyPolicyComboBox_OnSelectionChangedWhenLoaded"
+                SelectionChangedWhenLoaded="ComboBox_OnSelectionChangedWhenLoaded"
                 Visibility="{x:Bind _viewModel.IsMe, Converter={StaticResource BoolToVisibilityConverter}}" />
             <controls:NotifyOnLoadedComboBox
                 x:Name="TagComboBox"
                 x:Uid="/BookmarksPage/TagComboBox"
-                ItemsSource="{x:Bind _viewModel.UserBookmarkTags, Mode=OneWay}"
                 SelectionChangedWhenLoaded="TagComboBox_OnSelectionChangedWhenLoaded">
                 <controls:NotifyOnLoadedComboBox.ItemTemplate>
-                    <DataTemplate x:DataType="model:CountedTag">
-                        <TextBlock Text="{x:Bind local:BookmarkPageViewModel.GetCountedTagDisplayText((model:CountedTag))}" />
+                    <DataTemplate x:DataType="model:BookmarkTag">
+                        <TextBlock Text="{x:Bind Name}" />
                     </DataTemplate>
                 </controls:NotifyOnLoadedComboBox.ItemTemplate>
             </controls:NotifyOnLoadedComboBox>
-        </controls:IllustrationContainer.CommandBarElements>
-    </controls:IllustrationContainer>
+            <controls:SimpleWorkTypeComboBox x:Name="SimpleWorkTypeComboBox" SelectionChangedWhenLoaded="ComboBox_OnSelectionChangedWhenLoaded" />
+        </controls:WorkContainer.CommandBarElements>
+    </controls:WorkContainer>
 </controls:EnhancedPage>
