@@ -46,7 +46,7 @@ public class IllustrationDownloadTaskFactory : IDownloadTaskFactory<Illustration
             _ = manager.Delete(entry => entry.Destination == path);
         }
 
-        var task = await Functions.Block<Task<IllustrationDownloadTask>>(async () =>
+        var task = await Functions.Block(async () =>
         {
             if (context.IsUgoira)
             {
@@ -59,7 +59,8 @@ public class IllustrationDownloadTaskFactory : IDownloadTaskFactory<Illustration
                     url);
                 return new UgoiraDownloadTask(downloadHistoryEntry, context, metadata);
             }
-            else if (context.MangaIndex is -1 && context.IsManga)
+
+            if (context.MangaIndex is -1 && context.IsManga)
             {
                 var downloadHistoryEntry = new DownloadHistoryEntry(
                     DownloadState.Queued,

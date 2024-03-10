@@ -64,12 +64,9 @@ public class MacroParser<TContext>
     public IMetaPathNode<TContext>? Parse()
     {
         var root = Path();
-        if (_lexer!.NextToken() is { } token)
-        {
-            return ThrowUtils.MacroParse<IMetaPathNode<TContext>?>(MacroParserResources.UnexpectedTokenFormatted.Format(token.Position.Start.Value - 1));
-        }
-
-        return root;
+        return _lexer!.NextToken() is { } token 
+            ? ThrowUtils.MacroParse<IMetaPathNode<TContext>?>(MacroParserResources.UnexpectedTokenFormatted.Format(token.Position.Start.Value - 1)) 
+            : root;
     }
 
     private Sequence<TContext>? Path()
