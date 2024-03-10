@@ -36,16 +36,24 @@ public sealed partial class Token : ObservableObject, IEquatable<Token>, IDeepCl
 
     [ObservableProperty] private string _tokenContent;
 
-    public Token(string tokenContent, bool caseSensitive, bool isRegularExpression)
+    [ObservableProperty]
+    private string _tooltip;
+
+    public Token(string tokenContent, bool caseSensitive, bool isRegularExpression, string tooltip = "")
     {
         _tokenContent = tokenContent;
         _caseSensitive = caseSensitive;
         _isRegularExpression = isRegularExpression;
+        _tooltip = tooltip;
         if (IsRegularExpression && !tokenContent.IsValidRegexPattern())
             ThrowHelper.Argument(tokenContent);
     }
 
-    public Token() => _tokenContent = "";
+    public Token()
+    {
+        _tokenContent = "";
+        _tooltip = "";
+    }
 
     /// <summary>
     /// 成员全部是类似于值类型，所以深拷贝和浅拷贝效果一样
@@ -53,7 +61,7 @@ public sealed partial class Token : ObservableObject, IEquatable<Token>, IDeepCl
     /// <returns></returns>
     public Token DeepClone()
     {
-        return (Token)MemberwiseClone();
+        return (Token) MemberwiseClone();
     }
 
     public bool Equals(Token? other)
