@@ -116,7 +116,8 @@ public partial class MakoClient
         return new SearchIllustrationEngine(this, new EngineHandle(CancelInstance), matchOption, tag, start, pages, sortOption, searchDuration, targetFilter, startDate, endDate, aiType);
     }
 
-    public IFetchEngine<Novel> SearchNovels(string tag,
+    public IFetchEngine<Novel> SearchNovels(
+        string tag,
         int start = 0,
         int pages = 100,
         SearchNovelTagMatchOption matchOption = SearchNovelTagMatchOption.Text,
@@ -145,12 +146,12 @@ public partial class MakoClient
     /// <param name="dateTime">The date of rankings</param>
     /// <param name="targetFilter">The <see cref="TargetFilter" /> option targeting android or ios</param>
     /// <returns>
-    /// The <see cref="RankingEngine" /> containing rankings.
+    /// The <see cref="IllustrationRankingEngine" /> containing rankings.
     /// </returns>
     /// <exception cref="RankingDateOutOfRangeException">
     /// Throw this exception if the date is not valid.
     /// </exception>
-    public IFetchEngine<Illustration> Ranking(RankOption rankOption, DateTime dateTime, TargetFilter targetFilter = TargetFilter.ForAndroid)
+    public IFetchEngine<Illustration> IllustrationRanking(RankOption rankOption, DateTime dateTime, TargetFilter targetFilter = TargetFilter.ForAndroid)
     {
         EnsureNotCancelled();
         if (DateTime.Today - dateTime.Date < TimeSpan.FromDays(2))
@@ -158,7 +159,18 @@ public partial class MakoClient
             ThrowUtils.Throw(new RankingDateOutOfRangeException());
         }
 
-        return new RankingEngine(this, rankOption, dateTime, targetFilter, new EngineHandle(CancelInstance));
+        return new IllustrationRankingEngine(this, rankOption, dateTime, targetFilter, new EngineHandle(CancelInstance));
+    }
+
+    public IFetchEngine<Novel> NovelRanking(RankOption rankOption, DateTime dateTime, TargetFilter targetFilter = TargetFilter.ForAndroid)
+    {
+        EnsureNotCancelled();
+        if (DateTime.Today - dateTime.Date < TimeSpan.FromDays(2))
+        {
+            ThrowUtils.Throw(new RankingDateOutOfRangeException());
+        }
+
+        return new NovelRankingEngine(this, rankOption, dateTime, targetFilter, new EngineHandle(CancelInstance));
     }
 
     /// <summary>

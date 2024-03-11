@@ -6,8 +6,12 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
-    <controls:IllustrationContainer x:Name="IllustrationContainer">
-        <controls:IllustrationContainer.CommandBarElements>
+    <controls:WorkContainer x:Name="WorkContainer">
+        <controls:WorkContainer.CommandBarElements>
+            <controls:NotifyOnLoadedCalendarDatePicker
+                x:Name="RankDateTimeCalendarDatePicker"
+                DateChangedWhenLoaded="RankDateTimeCalendarDatePicker_OnDateChangedWhenLoaded"
+                MaxDate="{x:Bind MaxDate}" />
             <controls:NotifyOnLoadedComboBox
                 x:Name="RankOptionComboBox"
                 x:Uid="/RankingsPage/RankOptionComboBox"
@@ -18,10 +22,7 @@
                     </DataTemplate>
                 </controls:NotifyOnLoadedComboBox.ItemTemplate>
             </controls:NotifyOnLoadedComboBox>
-            <controls:NotifyOnLoadedCalendarDatePicker
-                x:Name="RankDateTimeCalendarDatePicker"
-                DateChangedWhenLoaded="RankDateTimeCalendarDatePicker_OnDateChangedWhenLoaded"
-                MaxDate="{x:Bind MaxDate}" />
-        </controls:IllustrationContainer.CommandBarElements>
-    </controls:IllustrationContainer>
+            <controls:SimpleWorkTypeComboBox x:Name="SimpleWorkTypeComboBox" SelectionChangedWhenLoaded="SimpleWorkTypeComboBox_OnSelectionChangedWhenLoaded" />
+        </controls:WorkContainer.CommandBarElements>
+    </controls:WorkContainer>
 </controls:EnhancedPage>

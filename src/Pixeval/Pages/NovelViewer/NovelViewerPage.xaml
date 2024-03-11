@@ -23,7 +23,9 @@
         RaiseSetTitleBarDragRegion="Placeholder_OnSizeChanged">
         <pages:WorkViewerSplitView.PaneContent>
             <!--  ReSharper disable once UnusedMember.Local  -->
-            <Grid x:Name="MainPanel" Margin="{StaticResource NormalMargin}">
+            <Grid x:Name="NovelPresenterDockPanel">
+                <!--  ReSharper disable once UnusedMember.Local  -->
+                <Grid x:Name="MainPanel" Margin="{StaticResource NormalMargin}" />
                 <!--  ReSharper disable once UnusedMember.Local  -->
                 <Grid
                     x:Name="TitleBarBorder"

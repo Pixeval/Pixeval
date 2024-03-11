@@ -28,23 +28,45 @@ using Pixeval.Utilities;
 
 namespace Pixeval.CoreApi.Engine.Implements;
 
-internal class RankingEngine(MakoClient makoClient,
-        RankOption rankOption,
-        DateTime dateTime,
-        TargetFilter targetFilter,
-        EngineHandle? engineHandle)
+internal class IllustrationRankingEngine(
+    MakoClient makoClient,
+    RankOption rankOption,
+    DateTime dateTime,
+    TargetFilter targetFilter,
+    EngineHandle? engineHandle)
     : AbstractPixivFetchEngine<Illustration>(makoClient, engineHandle)
 {
     private readonly DateTime _dateTime = dateTime;
     private readonly RankOption _rankOption = rankOption;
     private readonly TargetFilter _targetFilter = targetFilter;
 
-    public override IAsyncEnumerator<Illustration> GetAsyncEnumerator(CancellationToken cancellationToken = new CancellationToken())
-    {
-        return RecursivePixivAsyncEnumerators.Illustration<RankingEngine>.WithInitialUrl(this, MakoApiKind.AppApi,
+    public override IAsyncEnumerator<Illustration> GetAsyncEnumerator(CancellationToken cancellationToken = new CancellationToken()) =>
+        RecursivePixivAsyncEnumerators.Illustration<IllustrationRankingEngine>.WithInitialUrl(this,
+            MakoApiKind.AppApi,
             engine => "/v1/illust/ranking"
                       + $"?filter={engine._targetFilter.GetDescription()}"
                       + $"&mode={engine._rankOption.GetDescription()}"
                       + $"&date={engine._dateTime:yyyy-MM-dd}")!;
-    }
+}
+
+
+internal class NovelRankingEngine(
+    MakoClient makoClient,
+    RankOption rankOption,
+    DateTime dateTime,
+    TargetFilter targetFilter,
+    EngineHandle? engineHandle)
+    : AbstractPixivFetchEngine<Novel>(makoClient, engineHandle)
+{
+    private readonly DateTime _dateTime = dateTime;
+    private readonly RankOption _rankOption = rankOption;
+    private readonly TargetFilter _targetFilter = targetFilter;
+
+    public override IAsyncEnumerator<Novel> GetAsyncEnumerator(CancellationToken cancellationToken = new CancellationToken()) =>
+        RecursivePixivAsyncEnumerators.Novel<NovelRankingEngine>.WithInitialUrl(this,
+            MakoApiKind.AppApi,
+            engine => "/v1/novel/ranking"
+                      + $"?filter={engine._targetFilter.GetDescription()}"
+                      + $"&mode={engine._rankOption.GetDescription()}"
+                      + $"&date={engine._dateTime:yyyy-MM-dd}")!;
 }

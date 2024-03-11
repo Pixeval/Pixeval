@@ -61,7 +61,7 @@ public abstract class EntryViewDataProvider<T, TViewModel, TSelf> : ObservableOb
             if (Equals(_entrySourceRef, value))
                 return;
 
-            DisposeIllustrationSourceRef();
+            DisposeEntrySourceRef();
             _entrySourceRef = value;
             View.Source = value.Value;
             OnPropertyChanged();
@@ -74,9 +74,12 @@ public abstract class EntryViewDataProvider<T, TViewModel, TSelf> : ObservableOb
 
     public IncrementalLoadingCollection<FetchEngineIncrementalSource<T, TViewModel>, TViewModel> Source => _entrySourceRef.Value;
 
+    /// <summary>
+    /// 多次释放可能导致崩溃
+    /// </summary>
     public void Dispose()
     {
-        DisposeIllustrationSourceRef();
+        DisposeEntrySourceRef();
         // 赋值为null会自动调用setter中的Dispose逻辑
         FetchEngineRef = null;
     }
@@ -100,12 +103,10 @@ public abstract class EntryViewDataProvider<T, TViewModel, TSelf> : ObservableOb
         return dataProvider;
     }
 
-    private void DisposeIllustrationSourceRef()
+    private void DisposeEntrySourceRef()
     {
         if (_entrySourceRef?.TryDispose(this) is true)
-            foreach (var illustrationViewModel in Source)
-                illustrationViewModel.Dispose();
+            foreach (var entryViewModel in Source)
+                entryViewModel.Dispose();
     }
-
-    ~EntryViewDataProvider() => Dispose();
 }
