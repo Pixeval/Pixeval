@@ -23,6 +23,7 @@
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
         <converters1:NumberToPercentageConverter x:Key="NumberToPercentageConverter" />
         <converters1:NullableToVisibilityConverter x:Key="NullableToVisibilityConverter" />
+        <converters1:CollapsedWhenInlineConverter x:Key="CollapsedWhenInlineConverter" />
         <converters1:DisplayIndexConverter x:Key="DisplayIndexConverter" />
         <AcrylicBrush
             x:Key="BottomCommandSectionBackground"
@@ -56,14 +57,13 @@
     <SplitView
         x:Name="IllustrationInfoAndCommentsSplitView"
         DisplayMode="Overlay"
+        IsPaneOpen="{x:Bind IsPaneOpenBindBack, Mode=TwoWay}"
         OpenPaneLength="330"
         PaneBackground="Transparent"
         PaneClosed="IllustrationInfoAndCommentsSplitView_OnPaneOpenedOrClosed"
         PaneOpened="IllustrationInfoAndCommentsSplitView_OnPaneOpenedOrClosed">
         <SplitView.Pane>
             <Grid
-                Width="320"
-                HorizontalAlignment="Left"
                 Background="{StaticResource SystemControlBackgroundChromeMediumLowBrush}"
                 Shadow="{x:Bind SidePanelShadow}"
                 Translation="0,0,40">
@@ -81,7 +81,7 @@
                         <NavigationViewItem x:Uid="/EntryViewerPage/CommentsTab" Tag="{x:Bind _viewModel.CommentsTag}" />
                         <NavigationViewItem x:Uid="/EntryViewerPage/RelatedWorksTab" Tag="{x:Bind _viewModel.RelatedWorksTag}" />
                     </NavigationView.MenuItems>
-                    <Frame x:Name="IllustrationInfoAndCommentsFrame" Width="320" />
+                    <Frame x:Name="IllustrationInfoAndCommentsFrame" />
                 </NavigationView>
             </Grid>
         </SplitView.Pane>
@@ -161,8 +161,9 @@
                         <Vector3Transition Duration="0:0:0.300" />
                     </StackPanel.TranslationTransition>
                     <Grid
-                        Width="400"
-                        Height="100"
+                        Width="600"
+                        Height="200"
+                        Padding="50"
                         Background="Transparent"
                         Opacity="0">
                         <Grid.OpacityTransition>
@@ -180,7 +181,7 @@
                         <Border
                             x:Name="CommandBorder"
                             HorizontalAlignment="Center"
-                            VerticalAlignment="Center"
+                            VerticalAlignment="Bottom"
                             Background="{StaticResource BottomCommandSectionBackground}"
                             BorderBrush="{StaticResource SecondaryAccentBorderBrush}"
                             BorderThickness="0.5"
@@ -354,13 +355,17 @@
                     <controls:TitleBarIconText
                         x:Name="TitleBar"
                         Title="{x:Bind _viewModel.CurrentIllustration.Title, Mode=OneWay}"
-                        Grid.Column="0" />
+                        Grid.Column="0"
+                        Visibility="{x:Bind IllustrationInfoAndCommentsSplitView.DisplayMode, Converter={StaticResource CollapsedWhenInlineConverter}, Mode=OneWay}" />
                     <CommandBar
                         x:Name="IllustrationViewerCommandBar"
                         Grid.Column="1"
                         HorizontalAlignment="Center"
                         DefaultLabelPosition="Collapsed">
-                        <AppBarToggleButton Command="{x:Bind _viewModel.IllustrationInfoAndCommentsCommand}" IsChecked="{x:Bind IllustrationInfoAndCommentsSplitView.IsPaneOpen, Mode=TwoWay}" />
+                        <AppBarToggleButton
+                            Command="{x:Bind _viewModel.IllustrationInfoAndCommentsCommand}"
+                            IsChecked="{x:Bind IllustrationInfoAndCommentsSplitView.IsPaneOpen, Mode=TwoWay}"
+                            RightTapped="OpenPane_OnRightTapped" />
                         <AppBarButton Command="{x:Bind _viewModel.CurrentImage.PlayGifCommand, Mode=OneWay}" Visibility="{x:Bind _viewModel.CurrentIllustration.IsUgoira, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
                         <AppBarSeparator />
                         <AppBarButton Command="{x:Bind _viewModel.CurrentImage.CopyCommand, Mode=OneWay}" />

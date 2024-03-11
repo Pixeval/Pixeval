@@ -40,6 +40,7 @@ namespace Pixeval;
 public class AppViewModel(App app)
 {
     private bool _activatedByProtocol;
+    private AppSettings _appSettings = AppInfo.LoadConfig() ?? new AppSettings();
 
     public ServiceProvider AppServiceProvider { get; private set; } = null!;
 
@@ -56,7 +57,13 @@ public class AppViewModel(App app)
 
     public MakoClient MakoClient { get; set; } = null!; // The null-state of MakoClient is transient
 
-    public AppSettings AppSettings { get; set; } = null!;
+    public AppSettings AppSettings
+    {
+        get => _appSettings;
+        set => WindowFactory.WindowSettings = _appSettings = value;
+    }
+
+    public AppDebugTrace AppDebugTrace { get; set; } = AppInfo.LoadDebugTrace() ?? new AppDebugTrace();
 
     public FileCache Cache { get; private set; } = null!;
 

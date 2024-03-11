@@ -1,8 +1,9 @@
-#region Copyright (c) Pixeval/Pixeval
+#region Copyright
+
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/IMetaPathParser.cs
+// Copyright (c) 2024 Pixeval/AppDebugTrace.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -16,15 +17,19 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 #endregion
 
-using System.Collections.Generic;
+using WinUI3Utilities.Attributes;
 
-namespace Pixeval.Download.MacroParser;
+namespace Pixeval.AppManagement;
 
-public interface IMetaPathParser<TContext>
+[GenerateConstructor]
+public partial record AppDebugTrace
 {
-    IMetaPathMacroProvider<TContext> MacroProvider { get; }
+    public AppDebugTrace()
+    {
+    }
 
-    string Reduce(string raw, TContext context);
+    public bool ExitedSuccessfully { get; set; } = true;
 }

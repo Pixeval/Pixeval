@@ -23,12 +23,15 @@ using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Windows.Foundation;
 using Windows.Graphics;
+using Microsoft.UI;
 using WinUI3Utilities;
 
 namespace Pixeval.Controls.Windowing;
 
 public static class WindowFactory
 {
+    public static bool IsDarkMode { get; private set; }
+
     public static string IconAbsolutePath { get; set; } = "";
 
     public static IWindowSettings WindowSettings { get; set; } = null!;
@@ -41,6 +44,7 @@ public static class WindowFactory
 
     public static void Initialize(IWindowSettings windowSettings, string iconAbsolutePath)
     {
+        IsDarkMode = Application.Current.RequestedTheme is ApplicationTheme.Dark;
         WindowSettings = windowSettings;
         IconAbsolutePath = iconAbsolutePath;
     }
@@ -50,7 +54,7 @@ public static class WindowFactory
         if (element.XamlRoot is null)
             ThrowHelper.ArgumentNull(element.XamlRoot, $"{nameof(element.XamlRoot)} should not be null.");
 
-        return _forkedWindowsInternal.Find(window => element.XamlRoot == window.Content.XamlRoot) 
+        return _forkedWindowsInternal.Find(window => element.XamlRoot == window.Content.XamlRoot)
                ?? ThrowHelper.ArgumentOutOfRange<UIElement, EnhancedWindow>(element, $"Specified {nameof(element)} is not existed in any of {nameof(ForkedWindows)}.");
     }
 
@@ -95,7 +99,7 @@ public static class WindowFactory
         return window;
     }
 
-    public static EnhancedWindow Init(this EnhancedWindow window, string title, SizeInt32 size = default)
+    public static EnhancedWindow Init(this EnhancedWindow window, string title, SizeInt32 size = default, bool isMaximized = false)
     {
         window.Initialize(new InitializeInfo
         {
@@ -105,7 +109,9 @@ public static class WindowFactory
             IconPath = IconAbsolutePath,
             Title = title
         });
-        window.FrameLoaded += (s, _) => s.To<FrameworkElement>().RequestedTheme = WindowSettings.Theme;
+        if (isMaximized)
+            window.AppWindow.Presenter.To<OverlappedPresenter>().Maximize();
+        window.FrameLoaded += (_, _) => SetTheme(window, WindowSettings.Theme);
         return window;
     }
 
@@ -117,9 +123,27 @@ public static class WindowFactory
 
     public static void SetTheme(ElementTheme theme)
     {
-        foreach (var window in _forkedWindowsInternal)
+        foreach (var window in _forkedWindowsInternal) 
+            SetTheme(window, theme);
+    }
+
+    public static void SetTheme(EnhancedWindow window, ElementTheme theme)
+    {
+        var actualTheme = theme switch
         {
-            window.Content.To<FrameworkElement>().RequestedTheme = theme;
-        }
+            ElementTheme.Default => IsDarkMode ? ElementTheme.Dark : ElementTheme.Light,
+            _ => theme
+        };
+        window.Content.To<FrameworkElement>().RequestedTheme = actualTheme;
+
+        var color = actualTheme switch
+        {
+            ElementTheme.Dark => Colors.White,
+            _ => Colors.Black,
+        };
+
+        var res = Application.Current.Resources;
+        res["WindowCaptionForeground"] = color;
+        window.AppWindow.TitleBar.ButtonForegroundColor = color;
     }
 }

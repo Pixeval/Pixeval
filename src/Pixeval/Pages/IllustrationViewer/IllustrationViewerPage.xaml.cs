@@ -80,7 +80,8 @@ public sealed partial class IllustrationViewerPage : SupportCustomTitleBarDragRe
         }
         var leftIndent = new RectInt32(0, 0, IllustrationInfoAndCommentsSplitView.IsPaneOpen ? (int)IllustrationInfoAndCommentsSplitView.OpenPaneLength : 0, (int)TitleBarArea.ActualHeight);
 
-        sender.SetRegionRects(NonClientRegionKind.Icon, [GetScaledRect(TitleBar.Icon)]);
+        if (TitleBar.Visibility is Visibility.Visible)
+            sender.SetRegionRects(NonClientRegionKind.Icon, [GetScaledRect(TitleBar.Icon)]);
         sender.SetRegionRects(NonClientRegionKind.Passthrough, [GetScaledRect(leftIndent), GetScaledRect(IllustrationViewerCommandBar), GetScaledRect(IllustrationViewerSubCommandBar)]);
         titleBarHeight = 48;
     }
@@ -123,6 +124,8 @@ public sealed partial class IllustrationViewerPage : SupportCustomTitleBarDragRe
                 if (oldTag == newTag)
                     return;
                 ThumbnailItemsView.StartBringItemIntoView(vm.CurrentIllustrationIndex, new BringIntoViewOptions { AnimationDesired = true });
+                if (IllustrationInfoAndCommentsSplitView.DisplayMode is SplitViewDisplayMode.Inline)
+                    InfoPaneNavigationView.SelectedItem = InfoPaneNavigationView.MenuItems[0];
             }
 
             Navigate<ImageViewerPage>(IllustrationImageShowcaseFrame, vm.CurrentImage, info);
@@ -252,5 +255,21 @@ public sealed partial class IllustrationViewerPage : SupportCustomTitleBarDragRe
         var teachingTip = sender.GetTag<TeachingTip>();
         var appBarButton = teachingTip.GetTag<AppBarButton>();
         teachingTip.Target = appBarButton.IsInOverflow ? null : appBarButton;
+    }
+
+    private void OpenPane_OnRightTapped(object sender, RightTappedRoutedEventArgs rightTappedRoutedEventArgs)
+    {
+        IllustrationInfoAndCommentsSplitView.IsPaneOpen = true;
+        IllustrationInfoAndCommentsSplitView.DisplayMode = SplitViewDisplayMode.Inline;
+    }
+
+    public bool IsPaneOpenBindBack
+    {
+        get => false;
+        set
+        {
+            if (!value)
+                IllustrationInfoAndCommentsSplitView.DisplayMode = SplitViewDisplayMode.Overlay;
+        }
     }
 }

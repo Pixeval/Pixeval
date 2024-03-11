@@ -22,6 +22,7 @@
                     <Button
                         FontSize="{StaticResource PixevalContentFontSize}"
                         Tag="{x:Bind}"
+                        ToolTipService.ToolTip="{x:Bind Tooltip, Mode=OneWay}"
                         Tapped="TokenContainer_OnTapped">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock VerticalAlignment="Center" Text="{x:Bind TokenContent}" />

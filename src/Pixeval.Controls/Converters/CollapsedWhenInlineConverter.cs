@@ -1,8 +1,8 @@
-#region Copyright (c) Pixeval/Pixeval
+#region Copyright
 // GPL v3 License
 // 
-// Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/IMetaPathParser.cs
+// Pixeval/Pixeval.Controls
+// Copyright (c) 2024 Pixeval.Controls/CollapsedWhenInlineConverter.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,13 +18,17 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System.Collections.Generic;
+using System;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Data;
+using WinUI3Utilities;
 
-namespace Pixeval.Download.MacroParser;
+namespace Pixeval.Controls.Converters;
 
-public interface IMetaPathParser<TContext>
+public class CollapsedWhenInlineConverter : IValueConverter
 {
-    IMetaPathMacroProvider<TContext> MacroProvider { get; }
+    public object Convert(object value, Type targetType, object parameter, string language) => value is SplitViewDisplayMode.Inline ? Visibility.Collapsed : Visibility.Visible;
 
-    string Reduce(string raw, TContext context);
+    public object ConvertBack(object value, Type targetType, object parameter, string language) => ThrowHelper.NotSupported<object>();
 }

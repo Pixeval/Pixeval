@@ -48,7 +48,7 @@ public sealed partial class LoginPage
         {
             _ = await this.CreateAcknowledgementAsync(LoginPageResources.ErrorWhileLoggingInTitle,
                     LoginPageResources.ErrorWhileLogginInContentFormatted.Format(exception + "\n" + exception.StackTrace));
-            _viewModel.ExitApp();
+            _viewModel.CloseWindow();
         }
 
         return;
@@ -72,7 +72,9 @@ public sealed partial class LoginPage
         {
             if (_viewModel.CheckRefreshAvailable() is { } session)
             {
-                await _viewModel.RefreshAsync(session);
+                if (!await _viewModel.RefreshAsync(session))
+                    return;
+
                 NavigateParent<MainPage>(null, new DrillInNavigationTransitionInfo());
             }
             else
@@ -85,7 +87,7 @@ public sealed partial class LoginPage
         {
             _ = await this.CreateAcknowledgementAsync(LoginPageResources.ErrorWhileLoggingInTitle,
                     LoginPageResources.ErrorWhileLogginInContentFormatted.Format(exception.StackTrace));
-            _viewModel.ExitApp();
+            _viewModel.CloseWindow();
         }
     }
 

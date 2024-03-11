@@ -35,6 +35,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.Win32;
 using Pixeval.AppManagement;
 using Pixeval.Attributes;
+using Pixeval.Controls.Windowing;
 using Pixeval.CoreApi;
 using Pixeval.CoreApi.Model;
 using Pixeval.CoreApi.Net;
@@ -157,7 +158,7 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject, IDi
             TimeSpan.FromDays(15); // check if the cookie is created within the last one week
     }
 
-    public async Task RefreshAsync(Session session)
+    public async Task<bool> RefreshAsync(Session session)
     {
         AdvancePhase(LoginPhaseEnum.Refreshing);
         using var scope = App.AppViewModel.AppServicesScope;
@@ -173,8 +174,11 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject, IDi
                 LoginPageResources.RefreshingSessionFailedContent);
             AppInfo.ClearSession();
             await AppKnownFolders.Local.ClearAsync();
-            ExitApp();
+            CloseWindow();
+            return false;
         }
+
+        return true;
     }
 
     private static int NegotiatePort(int preferPort = 49152)
@@ -242,13 +246,15 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject, IDi
         var proxyServer = null as PixivAuthenticationProxyServer;
         if (!DisableDomainFronting)
         {
-            await EnsureCertificateIsInstalled(userControl);
+            if (!await EnsureCertificateIsInstalled(userControl))
+                return;
             proxyServer = PixivAuthenticationProxyServer.Create(IPAddress.Loopback, port,
                 await AppInfo.GetFakeServerCertificateAsync());
             arguments += $" --ignore-certificate-errors --proxy-server=127.0.0.1:{port}";
         }
 
-        await EnsureWebView2IsInstalled(userControl);
+        if (!await EnsureWebView2IsInstalled(userControl))
+            return;
         Environment.SetEnvironmentVariable("WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS", arguments);
         WebView = new();
         await WebView.EnsureCoreWebView2Async();
@@ -270,7 +276,7 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject, IDi
                 {
                     _ = await owner.CreateAcknowledgementAsync(LoginPageResources.FetchingSessionFailedTitle,
                         LoginPageResources.FetchingSessionFailedContent);
-                    ExitApp();
+                    CloseWindow();
                     return;
                 }
                 IsFinished = true;
@@ -324,7 +330,7 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject, IDi
         WebView.Source = new Uri(PixivAuthSignature.GenerateWebPageUrl(verifier));
     }
 
-    private async Task EnsureCertificateIsInstalled(UIElement userControl)
+    private async Task<bool> EnsureCertificateIsInstalled(UIElement userControl)
     {
         if (!await CheckFakeRootCertificateInstallationAsync())
         {
@@ -336,12 +342,14 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject, IDi
             }
             else
             {
-                ExitApp();
+                CloseWindow();
+                return false;
             }
         }
+        return true;
     }
 
-    private async Task EnsureWebView2IsInstalled(UIElement userControl)
+    private async Task<bool> EnsureWebView2IsInstalled(UIElement userControl)
     {
         if (!CheckWebView2Installation())
         {
@@ -352,15 +360,14 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject, IDi
                 _ = await Launcher.LaunchUriAsync(new Uri("https://go.microsoft.com/fwlink/p/?LinkId=2124703"));
             }
 
-            Application.Current.Exit();
+            CloseWindow();
+            return false;
         }
+
+        return true;
     }
 
-    public void ExitApp()
-    {
-        Dispose();
-        Application.Current.Exit();
-    }
+    public void CloseWindow() => WindowFactory.GetWindowForElement(owner).Close();
 
     /// <summary>
     /// 退出App时关闭<see cref="WebView"/>可以保证不抛异常

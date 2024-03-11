@@ -45,6 +45,7 @@ namespace Pixeval.AppManagement;
 /// </summary>
 [AppContext<AppSettings>(ConfigKey = "Config", Type = ApplicationDataContainerType.Roaming, MethodName = "Config")]
 [AppContext<Session>(ConfigKey = "Session", MethodName = "Session")]
+[AppContext<AppDebugTrace>(ConfigKey = "DebugTrace", MethodName = "DebugTrace")]
 public static partial class AppInfo
 {
     public const string AppIdentifier = nameof(Pixeval);
@@ -81,6 +82,7 @@ public static partial class AppInfo
         // For more detailed information see https://docs.microsoft.com/en-us/windows/apps/design/app-settings/store-and-retrieve-app-data
         InitializeConfig();
         InitializeSession();
+        InitializeDebugTrace();
     }
 
     public static void SetNameResolver(AppSettings appSetting)
@@ -192,6 +194,11 @@ public static partial class AppInfo
         }
     }
 
+    public static void ClearConfig()
+    {
+        Functions.IgnoreException(() => ApplicationData.Current.RoamingSettings.DeleteContainer(ConfigContainerKey));
+    }
+
     public static void ClearSession()
     {
         Functions.IgnoreException(() => ApplicationData.Current.LocalSettings.DeleteContainer(SessionContainerKey));
@@ -200,12 +207,25 @@ public static partial class AppInfo
     public static void SaveContext()
     {
         // Save the current resolution
-        App.AppViewModel.AppSettings.WindowSize = WindowFactory.RootWindow.AppWindow.Size.ToSize();
+        if (WindowFactory.RootWindow.AppWindow.Presenter is OverlappedPresenter { State: OverlappedPresenterState.Maximized })
+            App.AppViewModel.AppSettings.IsMaximized = true;
+        else
+        {
+            App.AppViewModel.AppSettings.IsMaximized = false;
+            App.AppViewModel.AppSettings.WindowSize = WindowFactory.RootWindow.AppWindow.Size.ToSize();
+        }
         if (!App.AppViewModel.SignOutExit)
         {
             if (App.AppViewModel.MakoClient != null!)
                 SaveSession(App.AppViewModel.MakoClient.Session);
             SaveConfig(App.AppViewModel.AppSettings);
         }
+    }
+
+    public static void SaveContextWhenExit()
+    {
+        App.AppViewModel.AppDebugTrace.ExitedSuccessfully = true;
+        SaveDebugTrace(App.AppViewModel.AppDebugTrace);
+        SaveContext();
     }
 }
