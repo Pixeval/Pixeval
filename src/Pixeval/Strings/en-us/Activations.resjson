@@ -1,4 +1,4 @@
 {
-  "IllustrateActivationFailedContentFormatted": "Error detail: {0}",
-  "IllustrateActivationFailedTitle": "Failed to launch"
+  "ActivationFailedContentFormatted": "Error detail: {0}",
+  "ActivationFailedTitle": "Failed to launch"
 }
