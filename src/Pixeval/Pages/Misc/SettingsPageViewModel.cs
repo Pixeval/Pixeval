@@ -56,13 +56,28 @@ namespace Pixeval.Pages.Misc;
 [SettingsViewModel<AppSettings>(nameof(AppSetting))]
 public partial class SettingsPageViewModel(FrameworkElement frameworkElement) : UiObservableObject(frameworkElement), IDisposable
 {
+    private static readonly IDictionary<string, string> _macroTooltips = new Dictionary<string, string>
+    {
+        ["illust_ext"] = SettingsPageResources.IllustExtMacroTooltip,
+        ["illust_id"] = SettingsPageResources.IllustIdMacroTooltip,
+        ["illust_title"] = SettingsPageResources.IllustTitleMacroTooltip,
+        ["artist_id"] = SettingsPageResources.ArtistIdMacroTooltip,
+        ["artist_name"] = SettingsPageResources.ArtistNameMacroTooltip,
+        ["if_spot"] = SettingsPageResources.IfSpotMacroTooltip,
+        ["if_manga"] = SettingsPageResources.IfMangaMacroTooltip,
+        ["if_gif"] = SettingsPageResources.IfGifMacroTooltip,
+        ["manga_index"] = SettingsPageResources.MangaIndexMacroTooltip,
+        ["spot_id"] = SettingsPageResources.SpotIdMacroTooltip,
+        ["spot_title"] = SettingsPageResources.SpotTitleTooltip
+    };
+
     public static IEnumerable<string> AvailableFonts { get; }
 
     public static ICollection<Token> AvailableIllustMacros { get; }
 
     public static IEnumerable<CultureInfo> AvailableCultures { get; }
 
-    public static IEnumerable<LanguageModel> AvailableLanguages { get; } = [LanguageModel.DefaultLanguage, new("简体中文", "zh-Hans-CN"), new("Русский", "ru")];
+    public static IEnumerable<LanguageModel> AvailableLanguages { get; } = [LanguageModel.DefaultLanguage, new("简体中文", "zh-Hans-CN"), new("Русский", "ru"), new("English (United States)", "en-us")];
 
     public ObservableCollection<string> PixivApiNameResolver { get; set; } = [.. App.AppViewModel.AppSettings.PixivApiNameResolver];
 
@@ -212,8 +227,8 @@ public partial class SettingsPageViewModel(FrameworkElement frameworkElement) : 
         using var scope = App.AppViewModel.AppServicesScope;
         var factory = scope.ServiceProvider.GetRequiredService<IDownloadTaskFactory<IllustrationItemViewModel, IllustrationDownloadTask>>();
         AvailableIllustMacros = factory.PathParser.MacroProvider.AvailableMacros
-            .Select(m => $"@{{{(m is IMacro<IllustrationItemViewModel>.IPredicate ? $"{m.Name}=" : m.Name)}}}")
-            .Select(s => new Token(s, false, false))
+            .Select(m => ($"@{{{(m is IMacro<IllustrationItemViewModel>.IPredicate ? $"{m.Name}=" : m.Name)}}}", _macroTooltips[m.Name]))
+            .Select(s => new Token(s.Item1, false, false, s.Item2))
             .ToList();
     }
 

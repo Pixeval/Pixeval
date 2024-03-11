@@ -105,7 +105,7 @@ public partial class IllustrationItemViewModel
 
         var progress = null as Progress<int>;
         if (IsUgoira)
-            progress = new(d => teachingTip?.Show(EntryItemResources.UgoiraProcessing.Format(d), TeachingTipSeverity.Processing, isLightDismissEnabled: true));
+            progress = new Progress<int>(d => teachingTip?.Show(EntryItemResources.UgoiraProcessing.Format(d), TeachingTipSeverity.Processing, isLightDismissEnabled: true));
         else
             teachingTip?.Show(EntryItemResources.ImageProcessing, TeachingTipSeverity.Processing, isLightDismissEnabled: true);
 

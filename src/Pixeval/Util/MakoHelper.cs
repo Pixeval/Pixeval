@@ -77,6 +77,11 @@ public static class MakoHelper
         return $"thumbnail-{thumbnailUrlOption}-{url}";
     }
 
+    public static string GetCacheKeyForThumbnailAsync(string url, ThumbnailUrlOption thumbnailUrlOption = ThumbnailUrlOption.Medium)
+    {
+        return $"thumbnail-{thumbnailUrlOption}-{url}";
+    }
+
     public static async Task<string> GetIllustrationThumbnailCacheKeyAsync(this IllustrationItemViewModel illustration, ThumbnailUrlOption thumbnailUrlOption = ThumbnailUrlOption.Medium)
     {
         return $"thumbnail-{thumbnailUrlOption}-{await illustration.GetOriginalSourceUrlAsync()}";

@@ -635,6 +635,9 @@
                     x:Uid="/SettingsPage/DefaultDownloadPathMacroEntry"
                     HeaderIcon="{markup:FontSymbolIcon Glyph=RenameE8AC}"
                     Tag="{x:Bind misc2:SettingEntry.DefaultDownloadPathMacro}">
+                    <controls:SettingsExpander.Description>
+                        <HyperlinkButton x:Uid="/SettingsPage/DefaultDownloadPathMacroEntryDescription" Tapped="DefaultDownloadPathMacroEntry_OnTapped" />
+                    </controls:SettingsExpander.Description>
                     <controls:SettingsExpander.Items>
                         <controls:SettingsCard ContentAlignment="Left">
                             <StackPanel Spacing="3">
@@ -643,13 +646,15 @@
                                     TokenInputTextBoxVisibility="Collapsed"
                                     TokenSource="{x:Bind misc:SettingsPageViewModel.AvailableIllustMacros}"
                                     TokenTapped="PathMacroTokenInputBox_OnTokenTapped" />
-                                <TextBox
+                                <RichEditBox
                                     x:Name="DefaultDownloadPathMacroTextBox"
                                     x:Uid="/SettingsPage/DefaultDownloadPathMacroTextBox"
+                                    AcceptsReturn="False"
+                                    ContextMenuOpening="DefaultDownloadPathMacroTextBox_OnContextMenuOpening"
                                     GotFocus="DefaultDownloadPathMacroTextBox_OnGotFocus"
                                     IsSpellCheckEnabled="False"
                                     LostFocus="DefaultDownloadPathMacroTextBox_OnLostFocus"
-                                    Text="{x:Bind ViewModel.DefaultDownloadPathMacro, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    TextChanged="DefaultDownloadPathMacroTextBox_OnTextChanged" />
                             </StackPanel>
                         </controls:SettingsCard>
                     </controls:SettingsExpander.Items>

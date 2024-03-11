@@ -1,0 +1,17 @@
+{
+  "RankOptionComboBox/PlaceholderText": "Mode selection",
+  "RankOptionDay": "Daily",
+  "RankOptionDayFemale": "Daily female",
+  "RankOptionDayFemaleR18": "Daily R-18 female",
+  "RankOptionDayMale": "Daily male",
+  "RankOptionDayMaleR18": "Daily R-18 male",
+  "RankOptionDayManga": "Daily manga",
+  "RankOptionDayR18": "Daily R-18",
+  "RankOptionMonth": "Monthly",
+  "RankOptionWeek": "Weekly",
+  "RankOptionWeekManga": "Weekly manga",
+  "RankOptionWeekOriginal": "original",
+  "RankOptionWeekR18": "Weekly R-18",
+  "RankOptionWeekR18G": "Weekly R-18G",
+  "RankOptionWeekRookie": "Rookie"
+}

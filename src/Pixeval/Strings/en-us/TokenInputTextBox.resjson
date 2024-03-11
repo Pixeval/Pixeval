@@ -1,0 +1,5 @@
+{
+    "CaseSensitiveCheckBox/ToolTipService/ToolTip": "Case sensitive",
+    "IsRegularExpressionCheckBox/ToolTipService/ToolTip": "Use regular expression",
+    "SubmitButton/ToolTipService/ToolTip": "Submit"
+}

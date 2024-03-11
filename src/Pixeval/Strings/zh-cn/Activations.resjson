@@ -1,4 +1,4 @@
 {
-  "ActivationFailedContentFormatted": "错误详情: {0}",
-  "ActivationFailedTitle": "启动失败"
+    "ActivationFailedContentFormatted": "错误详情: {0}",
+    "ActivationFailedTitle": "启动失败"
 }

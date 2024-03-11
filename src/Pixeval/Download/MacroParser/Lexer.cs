@@ -18,6 +18,10 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using System.IO;
+using System.Linq;
+using Pixeval.Utilities;
+
 namespace Pixeval.Download.MacroParser;
 
 public class Lexer(string rawString)
@@ -53,11 +57,14 @@ public class Lexer(string rawString)
         }
     }
 
-    private TokenInfo PlainText()
+    private TokenInfo? PlainText()
     {
         var forward = _rawString.Forward;
         _rawString.AdvanceMarker();
         var str = _rawString.GetUntilIf(ch => ch is not '{' and not '}' and not '@' and not '=');
-        return new TokenInfo(TokenKind.PlainText, str, forward..(forward + str.Length));
+        var token = new TokenInfo(TokenKind.PlainText, str, forward..(forward + str.Length));
+        return Path.GetInvalidPathChars().Intersect(token.Text).IsNotNullOrEmpty()
+            ? null
+            : token;
     }
 }

@@ -106,7 +106,7 @@ public abstract class IllustrationDownloadTaskBase(DownloadHistoryEntry entry) :
         ProgressPercentage = 0;
         CurrentState = DownloadState.Queued;
         ErrorCause = null;
-        Completion = new();
+        Completion = new TaskCompletionSource();
     }
 
     public void Report(double value) => ProgressPercentage = value;

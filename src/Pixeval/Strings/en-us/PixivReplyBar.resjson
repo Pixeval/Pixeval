@@ -1,0 +1,6 @@
+{
+    "CommentIsTooShortOrTooLongToastContentFormatted": "Please send comment less than 140 characters，current: {0}",
+    "CommentIsTooShortOrTooLongToastTitle": "Comment format is illegal",
+    "ReplyContentRichEditBox/PlaceholderText": "Type your comment...",
+    "SendButton/ToolTipService/ToolTip": "Submit"
+}
