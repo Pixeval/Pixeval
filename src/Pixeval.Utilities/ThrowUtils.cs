@@ -66,6 +66,12 @@ public static class ThrowUtils
     public static TReturn NotSupported<TReturn>(string? message = null)
         => throw new NotSupportedException(message);
 
+    /// <exception cref="NotSupportedException"/>
+    [DoesNotReturn]
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static void NotSupported(string? message = null)
+        => throw new NotSupportedException(message);
+
     /// <exception cref="ArgumentException"/>
     [DoesNotReturn]
     [MethodImpl(MethodImplOptions.NoInlining)]

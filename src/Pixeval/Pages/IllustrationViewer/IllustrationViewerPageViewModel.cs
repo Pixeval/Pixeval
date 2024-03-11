@@ -37,6 +37,7 @@ using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using Pixeval.Util.ComponentModels;
+using Pixeval.Options;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
@@ -116,7 +117,7 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
 
     public NavigationViewTag<IllustrationInfoPage, IllustrationViewerPageViewModel> IllustrationInfoTag { get; } = new(null!);
 
-    public NavigationViewTag<CommentsPage, (IAsyncEnumerable<Comment?>, long IllustrationId)> CommentsTag { get; } = new(default);
+    public NavigationViewTag<CommentsPage, (CommentType, long Id)> CommentsTag { get; } = new(default);
 
     public NavigationViewTag<RelatedWorksPage, long> RelatedWorksTag { get; } = new(default);
 
@@ -163,7 +164,7 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
 
             RelatedWorksTag.Parameter = IllustrationId;
             // IllustrationInfoTag.Parameter = this;
-            CommentsTag.Parameter = (App.AppViewModel.MakoClient.IllustrationComments(IllustrationId).Where(c => c is not null), IllustrationId);
+            CommentsTag.Parameter = (CommentType.Illustration, IllustrationId);
 
             _ = LoadUserProfile();
 

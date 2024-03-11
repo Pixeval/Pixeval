@@ -1,8 +1,9 @@
-#region Copyright (c) Pixeval/Pixeval.CoreApi
+#region Copyright
+
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
-// Copyright (c) 2023 Pixeval.CoreApi/RelatedWorksFetchEngine.cs
+// Copyright (c) 2024 Pixeval.CoreApi/NovelCommentsEngine.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -16,27 +17,24 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 #endregion
 
 using System.Collections.Generic;
 using System.Threading;
-using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Model;
 using Pixeval.CoreApi.Net;
-using Pixeval.Utilities;
 
 namespace Pixeval.CoreApi.Engine.Implements;
 
-public class RelatedWorksFetchEngine(long illustId, MakoClient makoClient, TargetFilter targetFilter,
-    EngineHandle? engineHandle)
-    : AbstractPixivFetchEngine<Illustration>(makoClient, engineHandle)
+public class NovelCommentsEngine(long novelId, MakoClient makoClient, EngineHandle? engineHandle)
+    : AbstractPixivFetchEngine<Comment>(makoClient, engineHandle)
 {
-    private readonly TargetFilter _targetFilter = targetFilter;
-    private readonly long _illustId = illustId;
+    private readonly long _novelId = novelId;
 
-    public override IAsyncEnumerator<Illustration> GetAsyncEnumerator(CancellationToken cancellationToken = new CancellationToken())
+    public override IAsyncEnumerator<Comment> GetAsyncEnumerator(CancellationToken cancellationToken = new CancellationToken())
     {
-        return RecursivePixivAsyncEnumerators.Illustration<RelatedWorksFetchEngine>.WithInitialUrl(this, MakoApiKind.AppApi,
-            engine => $"/v2/illust/related?filter={engine._targetFilter.GetDescription()}&illust_id={engine._illustId}")!;
+        return RecursivePixivAsyncEnumerators.Comment<NovelCommentsEngine>.WithInitialUrl(this, MakoApiKind.AppApi,
+            engine => $"/v3/novel/comments?novel_id={engine._novelId}")!;
     }
 }

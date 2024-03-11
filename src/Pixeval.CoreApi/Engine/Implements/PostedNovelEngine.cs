@@ -27,10 +27,8 @@ using Pixeval.Utilities;
 
 namespace Pixeval.CoreApi.Engine.Implements;
 
-public class PostedNovelEngine(MakoClient makoClient,
-    long uid,
-        TargetFilter targetFilter,
-        EngineHandle? engineHandle)
+public class PostedNovelEngine(MakoClient makoClient, long uid, TargetFilter targetFilter,
+    EngineHandle? engineHandle)
     : AbstractPixivFetchEngine<Novel>(makoClient, engineHandle)
 {
     private readonly TargetFilter _targetFilter = targetFilter;

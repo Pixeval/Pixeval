@@ -32,17 +32,18 @@ using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.AppManagement;
 using Pixeval.CoreApi.Model;
 using Pixeval.Misc;
+using Pixeval.Options;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 
 namespace Pixeval.Controls;
 
-public partial class CommentBlockViewModel(Comment comment, long illustrationId) : ObservableObject, IDisposable
+public partial class CommentBlockViewModel(Comment comment, CommentType type, long entryId) : ObservableObject, IDisposable
 {
-    public const string AddCommentUrlSegment = "/v1/illust/comment/add";
+    public long EntryId { get; } = entryId;
 
-    public long IllustrationId { get; } = illustrationId;
+    public CommentType EntryType { get; } = type;
 
     public Comment Comment { get; } = comment;
 
@@ -53,7 +54,7 @@ public partial class CommentBlockViewModel(Comment comment, long illustrationId)
 
     public string? StampSource => Comment.CommentStamp?.StampUrl;
 
-    public string PostDate => Comment.Date.ToString("yyyy-MM-dd dddd");
+    public DateTimeOffset PostDate => Comment.Date;
 
     public string Poster => Comment.CommentPoster.Name;
 
@@ -69,32 +70,17 @@ public partial class CommentBlockViewModel(Comment comment, long illustrationId)
     private SoftwareBitmapSource _avatarSource = null!;
 
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(RepliesIsNotNull), nameof(RepliesCount), nameof(RepliesAppBarButtonStyleIsNotNull))]
+    [NotifyPropertyChangedFor(nameof(RepliesIsNotNull), nameof(RepliesCount))]
     private ObservableCollection<CommentBlockViewModel>? _replies;
 
     public bool RepliesIsNotNull => Replies is not null;
-
-    private static Style DefaultAppBarButtonStyle => (Style)Application.Current.Resources[$"Default{nameof(AppBarButton)}Style"];
-
-    private static readonly Style _noRepliesStyle = new()
-    {
-        BasedOn = DefaultAppBarButtonStyle,
-        TargetType = typeof(AppBarButton),
-        Setters =
-        {
-            new Setter(FrameworkElement.WidthProperty, Application.Current.Resources["CollapsedAppBarButtonWidth"]),
-            new Setter(AppBarButton.LabelPositionProperty, CommandBarLabelPosition.Collapsed)
-        }
-    };
-
-    public Style RepliesAppBarButtonStyleIsNotNull => RepliesIsNotNull ? DefaultAppBarButtonStyle : _noRepliesStyle;
 
     public string? RepliesCount => Replies?.Count.ToString();
 
     public async Task LoadRepliesAsync()
     {
         Replies = await App.AppViewModel.MakoClient.IllustrationCommentReplies(CommentId)
-            .Select(c => new CommentBlockViewModel(c, IllustrationId))
+            .Select(c => new CommentBlockViewModel(c, EntryType, EntryId))
             .ToObservableCollectionAsync();
     }
 
@@ -110,7 +96,7 @@ public partial class CommentBlockViewModel(Comment comment, long illustrationId)
     {
         Replies ??= [];
 
-        Replies.Insert(0, new CommentBlockViewModel(comment, IllustrationId));
+        Replies.Insert(0, new CommentBlockViewModel(comment, EntryType, EntryId));
     }
 
     public async Task<Paragraph> GetReplyContentParagraphAsync()

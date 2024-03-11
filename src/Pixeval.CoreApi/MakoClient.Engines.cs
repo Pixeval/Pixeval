@@ -48,7 +48,7 @@ public partial class MakoClient
     /// The <see cref="BookmarkEngine" />> iterator containing bookmarked illustrations for the user.
     /// </returns>
     /// <exception cref="IllegalPrivatePolicyException">Requesting other user's private bookmarks will throw this exception.</exception>
-    public IFetchEngine<Illustration> Bookmarks(long uid, PrivacyPolicy privacyPolicy, TargetFilter targetFilter = TargetFilter.ForAndroid)
+    public IFetchEngine<Illustration> IllustrationBookmarks(long uid, PrivacyPolicy privacyPolicy, TargetFilter targetFilter = TargetFilter.ForAndroid)
     {
         EnsureNotCancelled();
         if (!CheckPrivacyPolicy(uid, privacyPolicy))
@@ -66,7 +66,7 @@ public partial class MakoClient
     /// <param name="start">Start page</param>
     /// <param name="pages">Number of pages</param>
     /// <param name="matchOption">
-    /// The <see cref="SearchTagMatchOption.TitleAndCaption" /> option for the method of search
+    /// The <see cref="SearchIllustrationTagMatchOption.TitleAndCaption" /> option for the method of search
     /// matching
     /// </param>
     /// <param name="sortOption">The <see cref="IllustrationSortOption" /> option for sorting method</param>
@@ -74,19 +74,21 @@ public partial class MakoClient
     /// <param name="targetFilter">The <see cref="TargetFilter" /> option targeting android or ios</param>
     /// <param name="startDate">The starting date filtering the search results</param>
     /// <param name="endDate">The ending date filtering the searching results</param>
+    /// <param name="aiType"></param>
     /// <returns>
-    /// The <see cref="SearchEngine" /> iterator containing the searching results.
+    /// The <see cref="SearchIllustrationEngine" /> iterator containing the searching results.
     /// </returns>
-    public IFetchEngine<Illustration> Search(
+    public IFetchEngine<Illustration> SearchIllustrations(
         string tag,
         int start = 0,
         int pages = 100,
-        SearchTagMatchOption matchOption = SearchTagMatchOption.TitleAndCaption,
+        SearchIllustrationTagMatchOption matchOption = SearchIllustrationTagMatchOption.TitleAndCaption,
         IllustrationSortOption? sortOption = null,
         SearchDuration searchDuration = SearchDuration.Undecided,
         TargetFilter targetFilter = TargetFilter.ForAndroid,
         DateTimeOffset? startDate = null,
-        DateTimeOffset? endDate = null)
+        DateTimeOffset? endDate = null,
+        bool? aiType = null)
     {
         EnsureNotCancelled();
         if (sortOption == IllustrationSortOption.PopularityDescending && !Session.IsPremium)
@@ -94,7 +96,29 @@ public partial class MakoClient
             sortOption = IllustrationSortOption.DoNotSort;
         }
 
-        return new SearchEngine(this, new EngineHandle(CancelInstance), matchOption, tag, start, pages, sortOption, searchDuration, targetFilter, startDate, endDate);
+        return new SearchIllustrationEngine(this, new EngineHandle(CancelInstance), matchOption, tag, start, pages, sortOption, searchDuration, targetFilter, startDate, endDate, aiType);
+    }
+
+    public IFetchEngine<Novel> SearchNovels(string tag,
+        int start = 0,
+        int pages = 100,
+        SearchNovelTagMatchOption matchOption = SearchNovelTagMatchOption.Text,
+        IllustrationSortOption? sortOption = null,
+        SearchDuration searchDuration = SearchDuration.Undecided,
+        TargetFilter targetFilter = TargetFilter.ForAndroid,
+        DateTimeOffset? startDate = null,
+        DateTimeOffset? endDate = null,
+        bool mergePlainKeywordResults = true,
+        bool includeTranslatedTagResults = true,
+        bool? aiType = null)
+    {
+        EnsureNotCancelled();
+        if (sortOption == IllustrationSortOption.PopularityDescending && !Session.IsPremium)
+        {
+            sortOption = IllustrationSortOption.DoNotSort;
+        }
+
+        return new SearchNovelEngine(this, new EngineHandle(CancelInstance), matchOption, tag, start, pages, sortOption, searchDuration, targetFilter, startDate, endDate, mergePlainKeywordResults, includeTranslatedTagResults, aiType);
     }
 
     /// <summary>
@@ -128,16 +152,24 @@ public partial class MakoClient
     /// <param name="maxBookmarkIdForRecommend">Max bookmark id for recommendation</param>
     /// <param name="minBookmarkIdForRecentIllust">Min bookmark id for recent illust</param>
     /// <returns>
-    /// The <see cref="RecommendationEngine" /> containing recommended illustrations.
+    /// The <see cref="RecommendIllustrationEngine" /> containing recommended illustrations.
     /// </returns>
-    public IFetchEngine<Illustration> Recommendations(
+    public IFetchEngine<Illustration> RecommendationIllustrations(
         RecommendationContentType recommendContentType = RecommendationContentType.Illust,
         TargetFilter targetFilter = TargetFilter.ForAndroid,
         uint? maxBookmarkIdForRecommend = null,
         uint? minBookmarkIdForRecentIllust = null)
     {
         EnsureNotCancelled();
-        return new RecommendationEngine(this, recommendContentType, targetFilter, maxBookmarkIdForRecommend, minBookmarkIdForRecentIllust, new EngineHandle(CancelInstance));
+        return new RecommendIllustrationEngine(this, recommendContentType, targetFilter, maxBookmarkIdForRecommend, minBookmarkIdForRecentIllust, new EngineHandle(CancelInstance));
+    }
+
+    public IFetchEngine<Novel> RecommendationNovels(
+        TargetFilter targetFilter = TargetFilter.ForAndroid,
+        uint? maxBookmarkIdForRecommend = null)
+    {
+        EnsureNotCancelled();
+        return new RecommendNovelEngine(this, targetFilter, maxBookmarkIdForRecommend, new EngineHandle(CancelInstance));
     }
 
     /// <summary>
@@ -330,6 +362,19 @@ public partial class MakoClient
     }
 
     /// <summary>
+    /// Request comments of an illustration.
+    /// </summary>
+    /// <param name="illustId">Illustration id</param>
+    /// <returns>
+    /// The <see cref="IllustrationCommentsEngine" /> containing comments of the illustration.
+    /// </returns>
+    public IFetchEngine<Comment?> NovelComments(long illustId)
+    {
+        EnsureNotCancelled();
+        return new NovelCommentsEngine(illustId, this, new EngineHandle(CancelInstance));
+    }
+
+    /// <summary>
     /// Request replies of a comment.
     /// </summary>
     /// <param name="commentId">Comment id</param>
@@ -342,10 +387,23 @@ public partial class MakoClient
         return new IllustrationCommentRepliesEngine(commentId.ToString(), this, new EngineHandle(CancelInstance));
     }
 
-    public IFetchEngine<Illustration> RelatedWorks(long illustId)
+    /// <summary>
+    /// Request replies of a comment.
+    /// </summary>
+    /// <param name="commentId">Comment id</param>
+    /// <returns>
+    /// The <see cref="IllustrationCommentRepliesEngine" /> containing replies of the comment.
+    /// </returns>
+    public IFetchEngine<Comment> NovelCommentReplies(long commentId)
     {
         EnsureNotCancelled();
-        return new RelatedWorksFetchEngine(illustId, this, new EngineHandle(CancelInstance));
+        return new NovelCommentRepliesEngine(commentId.ToString(), this, new EngineHandle(CancelInstance));
+    }
+
+    public IFetchEngine<Illustration> RelatedWorks(long illustId, TargetFilter targetFilter = TargetFilter.ForAndroid)
+    {
+        EnsureNotCancelled();
+        return new RelatedWorksFetchEngine(illustId, this, targetFilter, new EngineHandle(CancelInstance));
     }
 
     public IFetchEngine<T> Computed<T>(IAsyncEnumerable<T> result)

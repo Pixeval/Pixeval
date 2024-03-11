@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
-// Copyright (c) 2023 Pixeval.CoreApi/AddBookmarkRequest.cs
+// Copyright (c) 2023 Pixeval.CoreApi/SearchTagMatchOption.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,8 +18,18 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using Refit;
+using System.ComponentModel;
 
-namespace Pixeval.CoreApi.Net.Request;
+namespace Pixeval.CoreApi.Global.Enum;
 
-internal record AddIllustBookmarkRequest([property: AliasAs("restrict")] string Restrict, [property: AliasAs("illust_id")] string Id);
+public enum SearchIllustrationTagMatchOption
+{
+    [Description("partial_match_for_tags")]
+    PartialMatchForTags,
+
+    [Description("exact_match_for_tags")]
+    ExactMatchForTags,
+
+    [Description("title_and_caption")]
+    TitleAndCaption
+}

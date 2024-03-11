@@ -2,7 +2,6 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml;
 using System;
-using System.Diagnostics;
 using Windows.Foundation;
 using WinUI3Utilities;
 using Microsoft.UI.Xaml.Media;

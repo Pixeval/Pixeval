@@ -1,8 +1,8 @@
-#region Copyright (c) Pixeval/Pixeval.CoreApi
+#region Copyright
 // GPL v3 License
 // 
-// Pixeval/Pixeval.CoreApi
-// Copyright (c) 2023 Pixeval.CoreApi/AddBookmarkRequest.cs
+// Pixeval/Pixeval.Controls
+// Copyright (c) 2024 Pixeval.Controls/LabelNullableVisibilityConverter.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,8 +18,16 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using Refit;
+using System;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Data;
+using WinUI3Utilities;
 
-namespace Pixeval.CoreApi.Net.Request;
+namespace Pixeval.Controls.Converters;
 
-internal record AddIllustBookmarkRequest([property: AliasAs("restrict")] string Restrict, [property: AliasAs("illust_id")] string Id);
+public class LabelNullableVisibilityConverter : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, string language) => value.To<string?>() is null ? CommandBarLabelPosition.Collapsed : CommandBarLabelPosition.Default;
+
+    public object ConvertBack(object value, Type targetType, object parameter, string language) => ThrowHelper.NotSupported<object>();
+}

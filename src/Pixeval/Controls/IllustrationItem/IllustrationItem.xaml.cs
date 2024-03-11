@@ -21,7 +21,6 @@
 using System;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Input;
 using Pixeval.Options;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;

@@ -53,9 +53,9 @@ public partial class RecommendIllustratorItemViewModel : UserItemViewModel<Recom
 
     public override string AvatarUrl => Entry.Image;
 
-    protected override void FollowCommandExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
+    protected override async void FollowCommandExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
-        IsFollowed = MakoHelper.SetFollow(UserId, !IsFollowed);
+        IsFollowed = await MakoHelper.SetFollowAsync(UserId, !IsFollowed);
         ButtonStyle = Application.Current.Resources[IsFollowed ? "DefaultButtonStyle" : "AccentButtonStyle"].To<Style>();
         FollowCommand.GetFollowCommand(IsFollowed);
     }

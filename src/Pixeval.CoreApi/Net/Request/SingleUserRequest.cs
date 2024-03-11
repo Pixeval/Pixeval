@@ -22,4 +22,4 @@ using Refit;
 
 namespace Pixeval.CoreApi.Net.Request;
 
-internal record SingleUserRequest([property: AliasAs("user_id")] string Id, [property: AliasAs("filter")] string Filter);
+internal record SingleUserRequest([property: AliasAs("user_id")] long Id, [property: AliasAs("filter")] string Filter);

@@ -46,7 +46,7 @@ public class FontSymbolIconSourceExtension : TextIconExtension
             FontWeight = FontWeight,
             FontStyle = FontStyle,
             IsTextScaleFactorEnabled = IsTextScaleFactorEnabled,
-            MirroredWhenRightToLeft = MirroredWhenRightToLeft,
+            MirroredWhenRightToLeft = MirroredWhenRightToLeft
         };
 
         if (Size is not Size.None)

@@ -1,8 +1,9 @@
-#region Copyright (c) Pixeval/Pixeval.CoreApi
+#region Copyright
+
 // GPL v3 License
 // 
-// Pixeval/Pixeval.CoreApi
-// Copyright (c) 2023 Pixeval.CoreApi/SearchTagMatchOption.cs
+// Pixeval/Pixeval
+// Copyright (c) 2024 Pixeval/CommentType.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -16,20 +17,13 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 #endregion
 
-using System.ComponentModel;
+namespace Pixeval.Options;
 
-namespace Pixeval.CoreApi.Global.Enum;
-
-public enum SearchTagMatchOption
+public enum CommentType
 {
-    [Description("partial_match_for_tags")]
-    PartialMatchForTags,
-
-    [Description("exact_match_for_tags")]
-    ExactMatchForTags,
-
-    [Description("title_and_caption")]
-    TitleAndCaption
+    Illustration,
+    Novel
 }

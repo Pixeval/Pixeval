@@ -75,9 +75,9 @@ public abstract partial class UserItemViewModel<T>(T illustrate, IllustratorIllu
         ShowPixEzQrCodeCommand.ExecuteRequested += ShowPixEzQrCodeCommandExecuteRequested;
     }
 
-    protected virtual void FollowCommandExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
+    protected virtual async void FollowCommandExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
-        IsFollowed = MakoHelper.SetFollow(UserId, !IsFollowed);
+        IsFollowed = await MakoHelper.SetFollowAsync(UserId, !IsFollowed);
         FollowCommand.GetFollowCommand(IsFollowed);
     }
 
@@ -95,13 +95,13 @@ public abstract partial class UserItemViewModel<T>(T illustrate, IllustratorIllu
 
     private void GenerateWebLinkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
-        UiHelper.ClipboardSetText(MakoHelper.GenerateIllustratorWebUri(UserId).OriginalString);
+        UiHelper.ClipboardSetText(MakoHelper.GenerateUserWebUri(UserId).OriginalString);
         (args.Parameter as FrameworkElement)?.ShowTeachingTipAndHide(EntryItemResources.LinkCopiedToClipboard);
     }
 
     private async void OpenInWebBrowserCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
-        _ = await Launcher.LaunchUriAsync(MakoHelper.GenerateIllustratorWebUri(UserId));
+        _ = await Launcher.LaunchUriAsync(MakoHelper.GenerateUserWebUri(UserId));
     }
 
     private async void ShowQrCodeCommandExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
@@ -109,7 +109,7 @@ public abstract partial class UserItemViewModel<T>(T illustrate, IllustratorIllu
         if (args.Parameter is not TeachingTip showQrCodeTeachingTip)
             return;
 
-        var qrCodeSource = await IoHelper.GenerateQrCodeForUrlAsync(MakoHelper.GenerateIllustratorWebUri(UserId).OriginalString);
+        var qrCodeSource = await IoHelper.GenerateQrCodeForUrlAsync(MakoHelper.GenerateUserWebUri(UserId).OriginalString);
         ShowQrCodeCommandExecuteRequested(showQrCodeTeachingTip, qrCodeSource);
     }
 
@@ -118,7 +118,7 @@ public abstract partial class UserItemViewModel<T>(T illustrate, IllustratorIllu
         if (args.Parameter is not TeachingTip showQrCodeTeachingTip)
             return;
 
-        var qrCodeSource = await IoHelper.GenerateQrCodeAsync(MakoHelper.GenerateIllustratorPixEzUri(UserId).OriginalString);
+        var qrCodeSource = await IoHelper.GenerateQrCodeAsync(MakoHelper.GenerateUserPixEzUri(UserId).OriginalString);
         ShowQrCodeCommandExecuteRequested(showQrCodeTeachingTip, qrCodeSource);
     }
 
