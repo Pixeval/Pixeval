@@ -25,31 +25,9 @@ using Pixeval.CoreApi.Model;
 
 namespace Pixeval.Controls;
 
-public partial class NovelItemViewModel(Novel novel) : ThumbnailEntryViewModel<Novel>(novel), IBookmarkableViewModel
+public partial class NovelItemViewModel(Novel novel) : ThumbnailEntryViewModel<Novel>(novel)
 {
-    public override string Title => Entry.Title;
-
-    public string Caption => Entry.Caption;
-
-    public override UserInfo User => Entry.User;
-
-    public override long Id => Entry.Id;
-
     public int TextLength => Entry.TextLength;
-
-    public override bool IsBookmarked
-    {
-        get => Entry.IsBookmarked;
-        set => Entry.IsBookmarked = value;
-    }
-
-    public override int Bookmark => Entry.TotalBookmarks;
-
-    public int TotalView => Entry.TotalView;
-
-    public override Tag[] Tags => Entry.Tags;
-
-    public override DateTimeOffset PublishDate => Entry.CreateDate;
 
     protected override string ThumbnailUrl => Entry.Cover.Medium;
 }

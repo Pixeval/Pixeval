@@ -84,7 +84,7 @@ public static class SyntaxHelper
         {
             foreach (var member in symbol.GetMembers())
             {
-                if (member is not IPropertySymbol { Name: not "EqualityContract" } property)
+                if (member is not IPropertySymbol { Name: not "EqualityContract", IsAbstract: false } property)
                     continue;
 
                 if (IgnoreAttribute(property, attribute))

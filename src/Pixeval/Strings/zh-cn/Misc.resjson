@@ -45,6 +45,11 @@
     "TargetFilterForIOS": "IOS",
     "ThumbnailDirectionLandscape": "横向",
     "ThumbnailDirectionPortrait": "纵向",
+    "WorkTypeIllust": "插画",
+    "WorkTypeManga": "漫画",
+    "WorkTypeNovel": "小说",
+    "SimpleWorkTypeIllustAndManga": "插画和漫画",
+    "SimpleWorkTypeNovel": "小说",
     "Bmp": "BMP（无损，文件大，支持广泛）",
     "Jpg": "JPG（有损，文件小，支持广泛）",
     "Gif": "GIF（无损，只支持256色，文件小，支持广泛）",
@@ -57,8 +62,10 @@
 
     "SortOptionComboBox/PlaceholderText": "排序选项",
     "PrivacyPolicyComboBox/PlaceholderText": "公开选项",
+    "WorkTypeComboBox/PlaceholderText": "作品类型",
 
     "OpenUserId": "打开用户主页",
+    "OpenNovelId": "打开小说页面",
     "OpenIllustId": "打开作品页面",
 
     "CannotFindLoginProxyServerExecutable": "找不到用于登录的可执行文件，请重新打开应用或者联系开发者",

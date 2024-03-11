@@ -1,0 +1,170 @@
+<controls:SupportCustomTitleBarDragRegionPage
+    x:Class="Pixeval.Pages.NovelViewer.NovelViewerPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:Pixeval.Controls"
+    xmlns:converters="using:CommunityToolkit.WinUI.Converters"
+    xmlns:converters1="using:Pixeval.Controls.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:media="using:Microsoft.Xaml.Interactions.Media"
+    xmlns:pages="using:Pixeval.Pages"
+    xmlns:triggers="using:Pixeval.Util.Triggers"
+    mc:Ignorable="d">
+    <controls:SupportCustomTitleBarDragRegionPage.Resources>
+        <converters:BoolNegationConverter x:Key="BoolNegationConverter" />
+        <converters1:BoolNegationToVisibilityConverter x:Key="BoolNegationToVisibilityConverter" />
+        <Thickness x:Key="NormalMargin">0,48,0,0</Thickness>
+    </controls:SupportCustomTitleBarDragRegionPage.Resources>
+    <pages:WorkViewerSplitView
+        x:Name="EntryViewerSplitView"
+        MenuItemsSource="{x:Bind _viewModel.Tags}"
+        RaiseSetTitleBarDragRegion="Placeholder_OnSizeChanged">
+        <pages:WorkViewerSplitView.PaneContent>
+            <!--  ReSharper disable once UnusedMember.Local  -->
+            <Grid x:Name="NovelPresenterDockPanel">
+                <!--  ReSharper disable once UnusedMember.Local  -->
+                <Grid x:Name="MainPanel" Margin="{StaticResource NormalMargin}" />
+                <!--  ReSharper disable once UnusedMember.Local  -->
+                <Grid
+                    x:Name="TitleBarBorder"
+                    Height="100"
+                    VerticalAlignment="Top">
+                    <interactivity:Interaction.Behaviors>
+                        <triggers:EventWithConditionTriggerBehavior EventName="PointerEntered" IsActive="{x:Bind _viewModel.IsFullScreen, Mode=OneWay}">
+                            <media:ControlStoryboardAction>
+                                <media:ControlStoryboardAction.Storyboard>
+                                    <Storyboard>
+                                        <DoubleAnimation
+                                            Storyboard.TargetName="TopCommandBarTranslation"
+                                            Storyboard.TargetProperty="Y"
+                                            To="0">
+                                            <DoubleAnimation.EasingFunction>
+                                                <ExponentialEase EasingMode="EaseOut" Exponent="7" />
+                                            </DoubleAnimation.EasingFunction>
+                                        </DoubleAnimation>
+                                    </Storyboard>
+                                </media:ControlStoryboardAction.Storyboard>
+                            </media:ControlStoryboardAction>
+                        </triggers:EventWithConditionTriggerBehavior>
+                        <triggers:EventWithConditionTriggerBehavior EventName="PointerExited" IsActive="{x:Bind _viewModel.IsFullScreen, Mode=OneWay}">
+                            <media:ControlStoryboardAction>
+                                <media:ControlStoryboardAction.Storyboard>
+                                    <Storyboard>
+                                        <DoubleAnimation
+                                            Storyboard.TargetName="TopCommandBarTranslation"
+                                            Storyboard.TargetProperty="Y"
+                                            To="{StaticResource NegativeTitleBarHeight}">
+                                            <DoubleAnimation.EasingFunction>
+                                                <ExponentialEase EasingMode="EaseOut" Exponent="7" />
+                                            </DoubleAnimation.EasingFunction>
+                                        </DoubleAnimation>
+                                    </Storyboard>
+                                </media:ControlStoryboardAction.Storyboard>
+                            </media:ControlStoryboardAction>
+                        </triggers:EventWithConditionTriggerBehavior>
+                    </interactivity:Interaction.Behaviors>
+
+                    <!--  ReSharper disable once UnusedMember.Local  -->
+                    <Grid
+                        x:Name="TitleBarArea"
+                        Height="{StaticResource TitleBarHeight}"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Top">
+                        <Grid.RenderTransform>
+                            <TranslateTransform x:Name="TopCommandBarTranslation" />
+                        </Grid.RenderTransform>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <!--  ReSharper disable once UnusedMember.Local  -->
+                            <ColumnDefinition x:Name="TitleControlButtonsColumn" Width="150" />
+                        </Grid.ColumnDefinitions>
+                        <controls:TitleBarIconText
+                            x:Name="TitleBar"
+                            Title="{x:Bind _viewModel.CurrentNovel.Title, Mode=OneWay}"
+                            Grid.Column="0"
+                            Visibility="{x:Bind EntryViewerSplitView.PinPane, Converter={StaticResource BoolNegationToVisibilityConverter}, Mode=OneWay}" />
+                        <Rectangle
+                            Grid.Column="1"
+                            HorizontalAlignment="Stretch"
+                            SizeChanged="Placeholder_OnSizeChanged" />
+                        <CommandBar
+                            x:Name="NovelViewerCommandBar"
+                            Grid.Column="1"
+                            HorizontalAlignment="Center"
+                            DefaultLabelPosition="Collapsed">
+                            <AppBarToggleButton
+                                Command="{x:Bind _viewModel.InfoAndCommentsCommand}"
+                                IsChecked="{x:Bind EntryViewerSplitView.IsPaneOpen, Mode=TwoWay}"
+                                RightTapped="OpenPane_OnRightTapped" />
+                            <AppBarSeparator />
+                            <AppBarButton Command="{x:Bind _viewModel.CurrentNovel.CopyCommand, Mode=OneWay}" />
+                            <AppBarButton Command="{x:Bind _viewModel.CurrentNovel.SaveCommand, Mode=OneWay}" />
+                            <AppBarButton Command="{x:Bind _viewModel.CurrentNovel.SaveAsCommand, Mode=OneWay}" />
+                            <AppBarSeparator />
+                            <AppBarButton Command="{x:Bind _viewModel.CurrentNovel.AddToBookmarkCommand, Mode=OneWay}" />
+                            <AppBarButton
+                                x:Name="GenerateLinkButton"
+                                Command="{x:Bind _viewModel.CurrentNovel.GenerateLinkCommand, Mode=OneWay}"
+                                CommandParameter="{x:Bind GenerateLinkTeachingTip}" />
+                            <AppBarButton Command="{x:Bind _viewModel.CurrentNovel.GenerateWebLinkCommand, Mode=OneWay}" CommandParameter="{x:Bind}" />
+                            <AppBarButton Command="{x:Bind _viewModel.CurrentNovel.OpenInWebBrowserCommand, Mode=OneWay}" />
+                            <AppBarButton
+                                x:Name="ShowQrCodeButton"
+                                Command="{x:Bind _viewModel.CurrentNovel.ShowQrCodeCommand, Mode=OneWay}"
+                                CommandParameter="{x:Bind ShowQrCodeTeachingTip}" />
+                        </CommandBar>
+                        <controls:GenerateLinkTeachingTip
+                            x:Name="GenerateLinkTeachingTip"
+                            Grid.Column="0"
+                            ImageLoading="Image_OnLoading"
+                            Tag="{x:Bind GenerateLinkButton}" />
+                        <TeachingTip
+                            x:Name="ShowQrCodeTeachingTip"
+                            x:Uid="/EntryViewerPage/QrCodeTeachingTip"
+                            Grid.Column="0"
+                            IsLightDismissEnabled="True"
+                            Tag="{x:Bind ShowQrCodeButton}">
+                            <TeachingTip.HeroContent>
+                                <Image Loading="Image_OnLoading" Tag="{x:Bind ShowQrCodeTeachingTip}" />
+                            </TeachingTip.HeroContent>
+                        </TeachingTip>
+                    </Grid>
+                </Grid>
+            </Grid>
+        </pages:WorkViewerSplitView.PaneContent>
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState x:Name="Normal">
+                    <VisualState.StateTriggers>
+                        <StateTrigger IsActive="{x:Bind _viewModel.IsFullScreen, Converter={StaticResource BoolNegationConverter}, Mode=OneWay}" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="MainPanel.Margin" Value="{StaticResource NormalMargin}" />
+                        <Setter Target="TopCommandBarTranslation.Y" Value="0" />
+                        <Setter Target="TitleControlButtonsColumn.Width" Value="150" />
+                        <Setter Target="TitleBarArea.Background" Value="{x:Null}" />
+                        <Setter Target="TitleBarBorder.Background" Value="{x:Null}" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="FullScreen">
+                    <VisualState.StateTriggers>
+                        <StateTrigger IsActive="{x:Bind _viewModel.IsFullScreen, Mode=OneWay}" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="MainPanel.Margin" Value="0" />
+                        <Setter Target="TopCommandBarTranslation.Y" Value="{StaticResource NegativeTitleBarHeight}" />
+                        <Setter Target="TitleControlButtonsColumn.Width" Value="0" />
+                        <Setter Target="TitleBarArea.Background" Value="{StaticResource PixevalAppAcrylicBrush}" />
+                        <Setter Target="TitleBarBorder.Background" Value="Transparent" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+    </pages:WorkViewerSplitView>
+</controls:SupportCustomTitleBarDragRegionPage>

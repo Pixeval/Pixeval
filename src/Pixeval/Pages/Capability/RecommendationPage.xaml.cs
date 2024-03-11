@@ -20,8 +20,6 @@
 
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
-using Pixeval.CoreApi.Global.Enum;
-using Pixeval.Util.UI;
 
 namespace Pixeval.Pages.Capability;
 
@@ -31,17 +29,16 @@ public sealed partial class RecommendationPage
 
     public override void OnPageActivated(NavigationEventArgs e)
     {
-        ModeSelectionComboBox.SelectedItem = ModeSelectionComboBoxIllustComboBoxItem;
         ChangeSource();
     }
 
-    private void ModeSelectionComboBox_OnSelectionChangedWhenLoaded(object? sender, SelectionChangedEventArgs e)
+    private void WorkTypeComboBox_OnSelectionChangedWhenLoaded(object? sender, SelectionChangedEventArgs e)
     {
         ChangeSource();
     }
 
     private void ChangeSource()
     {
-        IllustrationContainer.ViewModel.ResetEngine(App.AppViewModel.MakoClient.RecommendationIllustrations(ModeSelectionComboBox.GetComboBoxSelectedItemTag(RecommendationContentType.Illust), App.AppViewModel.AppSettings.TargetFilter), App.AppViewModel.AppSettings.ItemsNumberLimitForDailyRecommendations);
+        WorkContainer.WorkView.ResetEngine(App.AppViewModel.MakoClient.RecommendationWorks(WorkTypeComboBox.SelectedItem, App.AppViewModel.AppSettings.TargetFilter), App.AppViewModel.AppSettings.ItemsNumberLimitForDailyRecommendations);
     }
 }

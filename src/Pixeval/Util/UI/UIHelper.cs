@@ -236,11 +236,6 @@ public static partial class UiHelper
         return icon;
     }
 
-    public static T? GetComboBoxSelectedItemTag<T>(this ComboBox box, T? defaultValue = default)
-    {
-        return box is { SelectedItem: ComboBoxItem { Tag: T t } } ? t : defaultValue;
-    }
-
     public static bool IsFullyOrPartiallyVisible(this FrameworkElement child, FrameworkElement scrollViewer)
     {
         var childTransform = child.TransformToVisual(scrollViewer);

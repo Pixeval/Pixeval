@@ -21,19 +21,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Windows.System;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Media.Imaging;
-using Pixeval.AppManagement;
 using Pixeval.Controls;
 using Pixeval.Controls.MarkupExtensions;
 using Pixeval.Controls.Windowing;
 using Pixeval.CoreApi.Model;
-using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using Pixeval.Util.ComponentModels;
@@ -46,16 +41,6 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
     [ObservableProperty]
     private bool _isFullScreen;
 
-    // The reason why we don't put UserProfileImageSource into IllustrationViewModel
-    // is because the whole array of Illustrations is just representing the same 
-    // illustration's different manga pages, so all of them have the same illustrator
-    // If the UserProfileImageSource is in IllustrationViewModel and the illustration
-    // itself is a manga then all of IllustrationViewModel in Illustrations will
-    // request the same user profile image which is pointless and will (inevitably) causing
-    // the waste of system resource
-    [ObservableProperty]
-    private ImageSource? _userProfileImageSource;
-
     /// <summary>
     /// 
     /// </summary>
@@ -65,7 +50,6 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
     public IllustrationViewerPageViewModel(IEnumerable<IllustrationItemViewModel> illustrationViewModels, int currentIllustrationIndex, FrameworkElement content) : base(content)
     {
         IllustrationsSource = illustrationViewModels.ToArray();
-        IllustrationInfoTag.Parameter = this;
         CurrentIllustrationIndex = currentIllustrationIndex;
 
         InitializeCommands();
@@ -85,7 +69,6 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
     public IllustrationViewerPageViewModel(IllustrationViewViewModel viewModel, int currentIllustrationIndex, FrameworkElement content) : base(content)
     {
         ViewModelSource = new IllustrationViewViewModel(viewModel);
-        IllustrationInfoTag.Parameter = this;
         ViewModelSource.DataProvider.View.FilterChanged += (_, _) => CurrentIllustrationIndex = Illustrations.IndexOf(CurrentIllustration);
         CurrentIllustrationIndex = currentIllustrationIndex;
 
@@ -100,28 +83,29 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
 
     public UserInfo Illustrator => CurrentIllustration.Entry.User;
 
-    public string IllustratorName => Illustrator.Name;
-
-    public long IllustratorId => Illustrator.Id;
-
     public void Dispose()
     {
         foreach (var illustrationViewModel in Illustrations)
             illustrationViewModel.UnloadThumbnail(this);
         Pages = null!;
-        (UserProfileImageSource as SoftwareBitmapSource)?.Dispose();
         ViewModelSource?.Dispose();
     }
 
-    #region Tags for IllustrationInfoAndCommentsNavigationView
+    public NavigationViewTag[] Tags =>
+    [
+        IllustrationInfoTag,
+        CommentsTag,
+        RelatedWorksTag
+    ];
 
-    public NavigationViewTag<IllustrationInfoPage, IllustrationViewerPageViewModel> IllustrationInfoTag { get; } = new(null!);
+    public NavigationViewTag<WorkInfoPage, Illustration> IllustrationInfoTag { get; } =
+        new(null!) { Content = EntryViewerPageResources.InfoTabContent };
 
-    public NavigationViewTag<CommentsPage, (CommentType, long Id)> CommentsTag { get; } = new(default);
+    public NavigationViewTag<CommentsPage, (CommentType, long Id)> CommentsTag { get; } =
+        new(default) { Content = EntryViewerPageResources.CommentsTabContent };
 
-    public NavigationViewTag<RelatedWorksPage, long> RelatedWorksTag { get; } = new(default);
-
-    #endregion
+    public NavigationViewTag<RelatedWorksPage, long> RelatedWorksTag { get; } =
+        new(default) { Content = EntryViewerPageResources.RelatedWorksTabContent };
 
     #region Current相关
 
@@ -162,11 +146,9 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
             Pages = CurrentIllustration.GetMangaIllustrationViewModels().ToArray();
             // 保证_pages里所有的IllustrationViewModel都是生成的，从而删除的时候一律DisposeForce
 
-            RelatedWorksTag.Parameter = IllustrationId;
-            // IllustrationInfoTag.Parameter = this;
+            IllustrationInfoTag.Parameter = CurrentIllustration.Entry;
             CommentsTag.Parameter = (CommentType.Illustration, IllustrationId);
-
-            _ = LoadUserProfile();
+            RelatedWorksTag.Parameter = IllustrationId;
 
             // 此处不要触发CurrentPageIndex的OnDetailedPropertyChanged，否则会导航两次
             _currentPageIndex = 0;
@@ -177,18 +159,6 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
 
             OnDetailedPropertyChanged(oldValue, value, oldTag, CurrentPage.Id);
             OnPropertyChanged(nameof(CurrentIllustration));
-            return;
-
-            async Task LoadUserProfile()
-            {
-                if (Illustrator is { ProfileImageUrls.Medium: { } profileImage })
-                {
-                    var result = await App.AppViewModel.MakoClient.DownloadSoftwareBitmapSourceAsync(profileImage);
-                    UserProfileImageSource = result is Result<SoftwareBitmapSource>.Success { Value: var avatar }
-                        ? avatar
-                        : await AppInfo.GetPixivNoProfileImageAsync();
-                }
-            }
         }
     }
 
@@ -329,8 +299,8 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
         FullScreenCommand.GetFullScreenCommand(IsFullScreen);
     }
 
-    public XamlUICommand IllustrationInfoAndCommentsCommand { get; } =
-        EntryViewerPageResources.IllustrationInfoAndComments.GetCommand(FontIconSymbol.InfoE946, VirtualKey.F12);
+    public XamlUICommand InfoAndCommentsCommand { get; } =
+        EntryViewerPageResources.InfoAndComments.GetCommand(FontIconSymbol.InfoE946, VirtualKey.F12);
 
     public XamlUICommand FullScreenCommand { get; } = "".GetCommand(FontIconSymbol.FullScreenE740);
 

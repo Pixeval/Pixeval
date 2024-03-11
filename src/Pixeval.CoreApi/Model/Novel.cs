@@ -19,12 +19,15 @@
 #endregion
 
 using System;
+using System.Diagnostics;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace Pixeval.CoreApi.Model;
 
 [Factory]
-public partial record Novel : IEntry
+[DebuggerDisplay("{Id}: {Title} [{User}]")]
+public partial record Novel : IWorkEntry
 {
     [JsonPropertyName("id")]
     public required long Id { get; set; }
@@ -36,10 +39,11 @@ public partial record Novel : IEntry
     public required string Caption { get; set; } = "";
 
     [JsonPropertyName("restrict")]
-    public required long Restrict { get; set; }
+    [JsonConverter(typeof(BoolToNumberJsonConverter))]
+    public required bool IsPrivate { get; set; }
 
     [JsonPropertyName("x_restrict")]
-    public required long XRestrict { get; set; }
+    public required XRestrict XRestrict { get; set; }
 
     [JsonPropertyName("is_original")]
     public required bool IsOriginal { get; set; }
@@ -90,7 +94,7 @@ public partial record Novel : IEntry
     public required bool IsXRestricted { get; set; }
 
     [JsonPropertyName("novel_ai_type")]
-    public required int NovelAiType { get; set; }
+    public required int AiType { get; set; }
 
     [JsonPropertyName("comment_access_control")]
     public int? CommentAccessControl { get; set; }
@@ -104,4 +108,19 @@ public partial class Series
 
     [JsonPropertyName("title")]
     public string Title { get; set; } = "";
+}
+
+
+internal class BoolToNumberJsonConverter : JsonConverter<bool>
+{
+    public override bool Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    {
+        var num = reader.GetInt32();
+        return num is not 0;
+    }
+
+    public override void Write(Utf8JsonWriter writer, bool value, JsonSerializerOptions options)
+    {
+        writer.WriteNumberValue(value ? 1 : 0);
+    }
 }

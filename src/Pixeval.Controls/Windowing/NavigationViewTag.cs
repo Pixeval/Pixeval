@@ -19,12 +19,20 @@
 #endregion
 
 using System;
+using Pixeval.Controls.MarkupExtensions;
+using Pixeval.Utilities;
 
 namespace Pixeval.Controls.Windowing;
 
 public record NavigationViewTag(Type NavigateTo, object? Parameter, int? Index = null)
 {
     public object? Parameter { get; set; } = Parameter;
+
+    public string? Content { get; init; }
+
+    public FontIconSymbol? Symbol { get; init; }
+
+    public FontSymbolIcon? SymbolIcon => Symbol?.Let(t => new FontSymbolIcon { Symbol = t });
 }
 
 public sealed record NavigationViewTag<TPage>(int? Index = null) : NavigationViewTag(typeof(TPage), null, Index);

@@ -112,10 +112,16 @@ public partial record AppSettings : IWindowSettings
     public IllustrationSortOption DefaultSortOption { get; set; } = IllustrationSortOption.DoNotSort;
 
     /// <summary>
-    /// The tag match option for keyword search
+    /// The illustration tag match option for keyword search
     /// </summary>
     [SettingMetadata(SettingEntryCategory.Search, typeof(SettingsPageResources), nameof(SettingsPageResources.DefaultSearchTagMatchOptionEntryHeader))]
-    public SearchIllustrationTagMatchOption TagMatchOption { get; set; } = SearchIllustrationTagMatchOption.PartialMatchForTags;
+    public SearchIllustrationTagMatchOption SearchIllustrationTagMatchOption { get; set; } = SearchIllustrationTagMatchOption.PartialMatchForTags;
+
+    /// <summary>
+    /// The novel tag match option for keyword search
+    /// </summary>
+    [SettingMetadata(SettingEntryCategory.Search, typeof(SettingsPageResources), nameof(SettingsPageResources.DefaultSearchTagMatchOptionEntryHeader))]
+    public SearchNovelTagMatchOption SearchNovelTagMatchOption { get; set; } = SearchNovelTagMatchOption.PartialMatchForTags;
 
     /// <summary>
     /// Indicates the starting page's number of keyword search

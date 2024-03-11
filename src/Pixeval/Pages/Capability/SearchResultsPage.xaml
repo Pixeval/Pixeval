@@ -6,5 +6,9 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
-    <controls:IllustrationContainer x:Name="IllustrationContainer" />
+    <controls:WorkContainer x:Name="WorkContainer">
+        <controls:WorkContainer.CommandBarElements>
+            <controls:SimpleWorkTypeComboBox x:Name="SimpleWorkTypeComboBox" SelectionChangedWhenLoaded="SimpleWorkTypeComboBox_OnSelectionChangedWhenLoaded" />
+        </controls:WorkContainer.CommandBarElements>
+    </controls:WorkContainer>
 </controls:EnhancedPage>

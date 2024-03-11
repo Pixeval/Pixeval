@@ -174,30 +174,17 @@
                         SelectionChanged="IllustratorViewerSegmented_OnSelectionChanged">
                         <controls1:SegmentedItem
                             x:Name="IllustrationTab"
-                            x:Uid="/EntryViewerPage/IllustrationNavigationViewItem"
+                            x:Uid="/EntryViewerPage/WorkNavigationViewItem"
                             Icon="{markup:FontSymbolIcon Glyph=PhotoE91B}"
-                            Tag="{x:Bind _viewModel.IllustrationTag}" />
+                            Tag="{x:Bind _viewModel.WorkTag}" />
                         <controls1:SegmentedItem
-                            x:Uid="/EntryViewerPage/MangaNavigationViewItem"
-                            Icon="{markup:FontSymbolIcon Glyph=PictureE8B9}"
-                            Tag="{x:Bind _viewModel.MangaTag}" />
-                        <controls1:SegmentedItem
-                            x:Uid="/EntryViewerPage/NovelNavigationViewItem"
-                            Icon="{markup:FontSymbolIcon Glyph=ReadingModeE736}"
-                            Tag="{x:Bind _viewModel.NovelTag}" />
-                        <controls1:SegmentedItem
-                            x:Uid="/EntryViewerPage/BookmarkedIllustrationAndMangaNavigationViewItem"
+                            x:Uid="/EntryViewerPage/BookmarksNavigationViewItem"
                             Icon="{markup:FontSymbolIcon Glyph=LibraryE8F1}"
-                            Tag="{x:Bind _viewModel.BookmarkedIllustrationAndMangaTag}" />
+                            Tag="{x:Bind _viewModel.BookmarksTag}" />
                         <controls1:SegmentedItem
-                            x:Uid="/EntryViewerPage/BookmarkedNovelNavigationViewItem"
-                            Icon="{markup:FontSymbolIcon Glyph=ReadingListE7BC}"
-                            IsEnabled="False"
-                            Tag="{x:Bind _viewModel.BookmarkedNovelTag}" />
-                        <controls1:SegmentedItem
-                            x:Uid="/EntryViewerPage/FollowingUserNavigationViewItem"
+                            x:Uid="/EntryViewerPage/FollowingsNavigationViewItem"
                             Icon="{markup:FontSymbolIcon Glyph=AddFriendE8FA}"
-                            Tag="{x:Bind _viewModel.FollowingUserTag}" />
+                            Tag="{x:Bind _viewModel.FollowingsTag}" />
                         <controls1:SegmentedItem
                             x:Uid="/EntryViewerPage/MyPixivUserNavigationViewItem"
                             Icon="{markup:FontSymbolIcon Glyph=PeopleE716}"
@@ -213,15 +200,10 @@
             <controls:StickyHeaderScrollView.StickyContent>
                 <Grid>
                     <Frame x:Name="IllustratorViewerFrame" />
-                    <TeachingTip
+                    <controls:GenerateLinkTeachingTip
                         x:Name="GenerateLinkTeachingTip"
-                        x:Uid="/EntryViewerPage/GenerateLinkToThisPageButtonTeachingTip"
-                        ActionButtonClick="GenerateLinkToThisPageButtonTeachingTip_OnActionButtonClick"
-                        Target="{x:Bind GenerateLinkButton}">
-                        <TeachingTip.HeroContent>
-                            <Image Source="ms-appx:///Assets/Images/illust-app-link-sample.png" />
-                        </TeachingTip.HeroContent>
-                    </TeachingTip>
+                        Grid.Column="0"
+                        Target="{x:Bind GenerateLinkButton}" />
                     <TeachingTip
                         x:Name="ShowQrCodeTeachingTip"
                         x:Uid="/EntryViewerPage/QrCodeTeachingTip"

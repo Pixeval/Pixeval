@@ -124,10 +124,15 @@ public sealed partial class SettingsPage
     private async void ReleaseNotesHyperlink_OnTapped(object sender, TappedRoutedEventArgs e)
     {
         _ = await this.CreateAcknowledgementAsync(SettingsPageResources.ReleaseNotesHyperlinkButtonContent,
-            new MarkdownTextBlock
+            new ScrollView
             {
-                Config = new MarkdownConfig(),
-                Text = (sender.GetTag<string>() is "Newest" ? AppInfo.AppVersion.NewestAppReleaseModel : AppInfo.AppVersion.CurrentAppReleaseModel)?.ReleaseNote ?? ""
+                Content = new MarkdownTextBlock
+                {
+                    Config = new MarkdownConfig(),
+                    Text = (sender.GetTag<string>() is "Newest"
+                        ? AppInfo.AppVersion.NewestAppReleaseModel
+                        : AppInfo.AppVersion.CurrentAppReleaseModel)?.ReleaseNote ?? ""
+                }
             });
     }
 

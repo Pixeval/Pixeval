@@ -33,23 +33,47 @@ using Pixeval.Utilities.Threading;
 
 namespace Pixeval.Controls;
 
-public abstract partial class ThumbnailEntryViewModel<T> : EntryViewModel<T>, IBookmarkableViewModel where T : IEntry
+public abstract partial class ThumbnailEntryViewModel<T> : EntryViewModel<T>, IWorkViewModel where T : class, IWorkEntry
 {
-    protected ThumbnailEntryViewModel(T illustrate) : base(illustrate) => InitializeCommands();
+    protected ThumbnailEntryViewModel(T entry) : base(entry) => InitializeCommands();
 
-    public abstract long Id { get; }
+    public long Id => Entry.Id;
 
-    public abstract int Bookmark { get; }
+    public int TotalBookmarks => Entry.TotalBookmarks;
 
-    public abstract bool IsBookmarked { get; set; }
+    public int TotalView => Entry.TotalView;
 
-    public abstract Tag[] Tags { get; }
+    public bool IsBookmarked
+    {
+        get => Entry.IsBookmarked;
+        set => Entry.IsBookmarked = value;
+    }
 
-    public abstract string Title { get; }
+    public Tag[] Tags => Entry.Tags;
 
-    public abstract UserInfo User { get; }
+    public string Title => Entry.Title;
 
-    public abstract DateTimeOffset PublishDate { get; }
+    public string Caption => Entry.Caption;
+
+    public UserInfo User => Entry.User;
+
+    public DateTimeOffset PublishDate => Entry.CreateDate;
+
+    public bool IsAiGenerated => Entry.AiType is 2;
+
+    public bool IsXRestricted => Entry.XRestrict is not XRestrict.Ordinary;
+
+    public bool IsPrivate => Entry.IsPrivate;
+
+    public bool IsMuted => Entry.IsMuted;
+
+    public BadgeMode XRestrictionCaption =>
+        Entry.XRestrict switch
+        {
+            XRestrict.R18 => BadgeMode.R18,
+            XRestrict.R18G => BadgeMode.R18G,
+            _ => BadgeMode.R18
+        };
 
     protected abstract string ThumbnailUrl { get; }
 
@@ -138,7 +162,6 @@ public abstract partial class ThumbnailEntryViewModel<T> : EntryViewModel<T>, IB
         return false;
     }
 
-
     /// <summary>
     /// 直接获取对应缩略图
     /// </summary>
@@ -192,5 +215,11 @@ public abstract partial class ThumbnailEntryViewModel<T> : EntryViewModel<T>, IB
     protected virtual void DisposeOverride()
     {
     }
+
+    public bool Equals(ThumbnailEntryViewModel<T> x, ThumbnailEntryViewModel<T> y) => x.Entry.Equals(y.Entry);
+
+    public override bool Equals(object? obj) => obj is ThumbnailEntryViewModel<T> viewModel && Entry.Equals(viewModel.Entry);
+
+    public override int GetHashCode() => Entry.GetHashCode();
 }
 

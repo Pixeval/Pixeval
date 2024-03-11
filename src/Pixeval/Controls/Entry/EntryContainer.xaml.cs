@@ -215,8 +215,8 @@ public sealed partial class EntryContainer : IScrollViewProvider
             var result =
                 ExamineExcludeTags(stringTags, excludeTags)
                 && ExamineIncludeTags(stringTags, includeTags)
-                && o.Bookmark >= leastBookmark
-                && o.Bookmark <= maximumBookmark
+                && o.TotalBookmarks >= leastBookmark
+                && o.TotalBookmarks <= maximumBookmark
                 && illustrationName.Match(o.Title)
                 && illustratorName.Match(o.User.Name)
                 && (illustratorId is -1 || illustratorId == o.User.Id)

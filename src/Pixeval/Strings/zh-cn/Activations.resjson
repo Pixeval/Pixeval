@@ -1,4 +1,4 @@
 {
-  "IllustrateActivationFailedContentFormatted": "ErrorDetail: {0}",
-  "IllustrateActivationFailedTitle": "Failed to launch"
+    "ActivationFailedContentFormatted": "错误详情: {0}",
+    "ActivationFailedTitle": "启动失败"
 }

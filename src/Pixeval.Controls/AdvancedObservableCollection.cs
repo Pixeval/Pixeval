@@ -38,7 +38,7 @@ using System.Threading.Tasks;
 namespace Pixeval.Collections;
 
 [DebuggerDisplay("Count = {Count}")]
-public class AdvancedObservableCollection<T> : IList<T>, IList, INotifyCollectionChanged, INotifyPropertyChanged, ISupportIncrementalLoading, IComparer<T> where T : class
+public class AdvancedObservableCollection<T> : IList<T>, IList, IReadOnlyList<T>, INotifyCollectionChanged, INotifyPropertyChanged, ISupportIncrementalLoading, IComparer<T> where T : class
 {
     private readonly Dictionary<string, PropertyInfo> _sortProperties = [];
 

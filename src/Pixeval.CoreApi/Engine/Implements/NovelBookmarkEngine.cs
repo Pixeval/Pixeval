@@ -20,6 +20,7 @@
 
 using System.Collections.Generic;
 using System.Threading;
+using System.Web;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Model;
 using Pixeval.CoreApi.Net;
@@ -30,11 +31,13 @@ namespace Pixeval.CoreApi.Engine.Implements;
 public class NovelBookmarkEngine(
     MakoClient makoClient,
     long uid,
+    string? tag,
     PrivacyPolicy privacyPolicy,
     TargetFilter targetFilter,
     EngineHandle? engineHandle)
     : AbstractPixivFetchEngine<Novel>(makoClient, engineHandle)
 {
+    private readonly string? _tag = tag;
     private readonly PrivacyPolicy _privacyPolicy = privacyPolicy;
     private readonly TargetFilter _targetFilter = targetFilter;
     private readonly long _uid = uid;
@@ -43,9 +46,14 @@ public class NovelBookmarkEngine(
         CancellationToken cancellationToken = new CancellationToken())
     {
         return RecursivePixivAsyncEnumerators.Novel<NovelBookmarkEngine>.WithInitialUrl(this, MakoApiKind.AppApi,
-            engine => "/v1/user/bookmarks/novel"
-                      + $"?user_id={engine._uid}"
-                      + $"&restrict={engine._privacyPolicy.GetDescription()}"
-                      + $"&filter={engine._targetFilter.GetDescription()}")!;
+            engine =>
+            {
+                var tagSegment = engine._tag is not null ? $"&tag={HttpUtility.UrlEncode(engine._tag)}" : null;
+                return "/v1/user/bookmarks/novel"
+                       + $"?user_id={engine._uid}"
+                       + $"&restrict={engine._privacyPolicy.GetDescription()}"
+                       + $"&filter={engine._targetFilter.GetDescription()}"
+                       + tagSegment;
+            })!;
     }
 }

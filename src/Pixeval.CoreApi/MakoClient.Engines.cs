@@ -45,18 +45,35 @@ public partial class MakoClient
     /// <param name="privacyPolicy">The <see cref="PrivacyPolicy" /> options targeting private or public</param>
     /// <param name="targetFilter">The <see cref="TargetFilter" /> options targeting android or ios</param>
     /// <returns>
-    /// The <see cref="BookmarkEngine" />> iterator containing bookmarked illustrations for the user.
+    /// The <see cref="IllustrationBookmarkEngine" />> iterator containing bookmarked illustrations for the user.
     /// </returns>
     /// <exception cref="IllegalPrivatePolicyException">Requesting other user's private bookmarks will throw this exception.</exception>
-    public IFetchEngine<Illustration> IllustrationBookmarks(long uid, PrivacyPolicy privacyPolicy, TargetFilter targetFilter = TargetFilter.ForAndroid)
+    public IFetchEngine<Illustration> IllustrationBookmarks(long uid, PrivacyPolicy privacyPolicy, string? tag, TargetFilter targetFilter = TargetFilter.ForAndroid)
     {
         EnsureNotCancelled();
         if (!CheckPrivacyPolicy(uid, privacyPolicy))
-        {
             ThrowUtils.Throw(new IllegalPrivatePolicyException(uid));
-        }
 
-        return new BookmarkEngine(this, uid, privacyPolicy, targetFilter, new EngineHandle(CancelInstance)).Apply(RegisterInstance);
+        return new IllustrationBookmarkEngine(this, uid, tag, privacyPolicy, targetFilter, new EngineHandle(CancelInstance));
+    }
+
+    /// <summary>
+    /// Request bookmarked novels.
+    /// </summary>
+    /// <param name="uid">User id</param>
+    /// <param name="privacyPolicy">The <see cref="PrivacyPolicy" /> options targeting private or public</param>
+    /// <param name="tag"></param>
+    /// <param name="targetFilter">The <see cref="TargetFilter" /> option targeting android or ios</param>
+    /// <returns>
+    /// The <see cref="NovelBookmarkEngine" /> containing the bookmarked novels.
+    /// </returns>
+    public IFetchEngine<Novel> NovelBookmarks(long uid, PrivacyPolicy privacyPolicy, string? tag, TargetFilter targetFilter = TargetFilter.ForAndroid)
+    {
+        EnsureNotCancelled();
+        if (!CheckPrivacyPolicy(uid, privacyPolicy))
+            ThrowUtils.Throw(new IllegalPrivatePolicyException(uid));
+
+        return new NovelBookmarkEngine(this, uid, tag, privacyPolicy, targetFilter, new EngineHandle(CancelInstance));
     }
 
     /// <summary>
@@ -99,7 +116,8 @@ public partial class MakoClient
         return new SearchIllustrationEngine(this, new EngineHandle(CancelInstance), matchOption, tag, start, pages, sortOption, searchDuration, targetFilter, startDate, endDate, aiType);
     }
 
-    public IFetchEngine<Novel> SearchNovels(string tag,
+    public IFetchEngine<Novel> SearchNovels(
+        string tag,
         int start = 0,
         int pages = 100,
         SearchNovelTagMatchOption matchOption = SearchNovelTagMatchOption.Text,
@@ -128,12 +146,12 @@ public partial class MakoClient
     /// <param name="dateTime">The date of rankings</param>
     /// <param name="targetFilter">The <see cref="TargetFilter" /> option targeting android or ios</param>
     /// <returns>
-    /// The <see cref="RankingEngine" /> containing rankings.
+    /// The <see cref="IllustrationRankingEngine" /> containing rankings.
     /// </returns>
     /// <exception cref="RankingDateOutOfRangeException">
     /// Throw this exception if the date is not valid.
     /// </exception>
-    public IFetchEngine<Illustration> Ranking(RankOption rankOption, DateTime dateTime, TargetFilter targetFilter = TargetFilter.ForAndroid)
+    public IFetchEngine<Illustration> IllustrationRanking(RankOption rankOption, DateTime dateTime, TargetFilter targetFilter = TargetFilter.ForAndroid)
     {
         EnsureNotCancelled();
         if (DateTime.Today - dateTime.Date < TimeSpan.FromDays(2))
@@ -141,13 +159,24 @@ public partial class MakoClient
             ThrowUtils.Throw(new RankingDateOutOfRangeException());
         }
 
-        return new RankingEngine(this, rankOption, dateTime, targetFilter, new EngineHandle(CancelInstance));
+        return new IllustrationRankingEngine(this, rankOption, dateTime, targetFilter, new EngineHandle(CancelInstance));
+    }
+
+    public IFetchEngine<Novel> NovelRanking(RankOption rankOption, DateTime dateTime, TargetFilter targetFilter = TargetFilter.ForAndroid)
+    {
+        EnsureNotCancelled();
+        if (DateTime.Today - dateTime.Date < TimeSpan.FromDays(2))
+        {
+            ThrowUtils.Throw(new RankingDateOutOfRangeException());
+        }
+
+        return new NovelRankingEngine(this, rankOption, dateTime, targetFilter, new EngineHandle(CancelInstance));
     }
 
     /// <summary>
     /// Request recommended illustrations in Pixiv.
     /// </summary>
-    /// <param name="recommendContentType">The <see cref="RecommendationContentType" /> option for illust or manga</param>
+    /// <param name="recommendContentType">The <see cref="WorkType" />Option for illust or manga (not novel)</param>
     /// <param name="targetFilter">The <see cref="TargetFilter" /> option targeting android or ios</param>
     /// <param name="maxBookmarkIdForRecommend">Max bookmark id for recommendation</param>
     /// <param name="minBookmarkIdForRecentIllust">Min bookmark id for recent illust</param>
@@ -155,7 +184,7 @@ public partial class MakoClient
     /// The <see cref="RecommendIllustrationEngine" /> containing recommended illustrations.
     /// </returns>
     public IFetchEngine<Illustration> RecommendationIllustrations(
-        RecommendationContentType recommendContentType = RecommendationContentType.Illust,
+        WorkType recommendContentType = WorkType.Illust,
         TargetFilter targetFilter = TargetFilter.ForAndroid,
         uint? maxBookmarkIdForRecommend = null,
         uint? minBookmarkIdForRecentIllust = null)
@@ -170,6 +199,18 @@ public partial class MakoClient
     {
         EnsureNotCancelled();
         return new RecommendNovelEngine(this, targetFilter, maxBookmarkIdForRecommend, new EngineHandle(CancelInstance));
+    }
+
+    public IFetchEngine<IWorkEntry> RecommendationWorks(
+        WorkType recommendContentType = WorkType.Illust,
+        TargetFilter targetFilter = TargetFilter.ForAndroid,
+        uint? maxBookmarkIdForRecommend = null,
+        uint? minBookmarkIdForRecentIllust = null)
+    {
+        return recommendContentType is WorkType.Novel
+            ? RecommendationNovels(targetFilter, maxBookmarkIdForRecommend)
+            : RecommendationIllustrations(recommendContentType, targetFilter, maxBookmarkIdForRecommend,
+                minBookmarkIdForRecentIllust);
     }
 
     /// <summary>
@@ -210,19 +251,6 @@ public partial class MakoClient
     }
 
     /// <summary>
-    /// Request posts of a user.
-    /// </summary>
-    /// <param name="uid">User id.</param>
-    /// <returns>
-    /// The <see cref="PostedIllustrationEngine" /> containing posts of that user.
-    /// </returns>
-    public IFetchEngine<Illustration> Posts(long uid)
-    {
-        EnsureNotCancelled();
-        return new PostedIllustrationEngine(this, uid, new EngineHandle(CancelInstance));
-    }
-
-    /// <summary>
     /// Request following users of a user.
     /// </summary>
     /// <param name="uid">User id</param>
@@ -239,7 +267,29 @@ public partial class MakoClient
             ThrowUtils.Throw(new IllegalPrivatePolicyException(uid));
         }
 
-        return new FollowingEngine(this, privacyPolicy, uid, new EngineHandle(CancelInstance));
+        return new FollowingEngine(this, uid, privacyPolicy, new EngineHandle(CancelInstance));
+    }
+
+    public IFetchEngine<BookmarkTag> IllustrationBookmarkTag(long uid, PrivacyPolicy privacyPolicy)
+    {
+        EnsureNotCancelled();
+        if (!CheckPrivacyPolicy(uid, privacyPolicy))
+        {
+            ThrowUtils.Throw(new IllegalPrivatePolicyException(uid));
+        }
+
+        return new IllustrationBookmarkTagEngine(this, uid, privacyPolicy, new EngineHandle(CancelInstance));
+    }
+
+    public IFetchEngine<BookmarkTag> NovelBookmarkTag(long uid, PrivacyPolicy privacyPolicy)
+    {
+        EnsureNotCancelled();
+        if (!CheckPrivacyPolicy(uid, privacyPolicy))
+        {
+            ThrowUtils.Throw(new IllegalPrivatePolicyException(uid));
+        }
+
+        return new NovelBookmarkTagEngine(this, uid, privacyPolicy, new EngineHandle(CancelInstance));
     }
 
     /// <summary>
@@ -267,10 +317,16 @@ public partial class MakoClient
     /// <returns>
     /// The <see cref="RecentPostedIllustrationEngine" /> containing the recent posts.
     /// </returns>
-    public IFetchEngine<Illustration> RecentPosts(PrivacyPolicy privacyPolicy)
+    public IFetchEngine<Illustration> RecentIllustrationPosts(PrivacyPolicy privacyPolicy)
     {
         EnsureNotCancelled();
         return new RecentPostedIllustrationEngine(this, privacyPolicy, new EngineHandle(CancelInstance));
+    }
+
+    public IFetchEngine<Novel> RecentNovelPosts(PrivacyPolicy privacyPolicy)
+    {
+        EnsureNotCancelled();
+        return new RecentPostedNovelEngine(this, privacyPolicy, new EngineHandle(CancelInstance));
     }
 
     /// <summary>
@@ -305,17 +361,20 @@ public partial class MakoClient
     }
 
     /// <summary>
-    /// Request manga posts of that user.
+    /// Request posts of a user.
     /// </summary>
-    /// <param name="uid">User id</param>
+    /// <param name="uid">User id.</param>
+    /// <param name="recommendContentType">The <see cref="WorkType" /> option for illust or manga (not novel)</param>
     /// <param name="targetFilter">The <see cref="TargetFilter" /> option targeting android or ios</param>
     /// <returns>
-    /// The <see cref="PostedMangaEngine" /> containing the manga posts of the user.
+    /// The <see cref="PostedIllustrationEngine" /> containing posts of that user.
     /// </returns>
-    public IFetchEngine<Illustration> MangaPosts(long uid, TargetFilter targetFilter = TargetFilter.ForAndroid)
+    public IFetchEngine<Illustration> IllustrationPosts(long uid,
+        WorkType recommendContentType = WorkType.Illust,
+        TargetFilter targetFilter = TargetFilter.ForAndroid)
     {
         EnsureNotCancelled();
-        return new PostedMangaEngine(this, uid, targetFilter, new EngineHandle(CancelInstance));
+        return new PostedIllustrationEngine(this, uid, recommendContentType, targetFilter, new EngineHandle(CancelInstance));
     }
 
     /// <summary>
@@ -332,20 +391,13 @@ public partial class MakoClient
         return new PostedNovelEngine(this, uid, targetFilter, new EngineHandle(CancelInstance));
     }
 
-    /// <summary>
-    /// Request bookmarked novels.
-    /// </summary>
-    /// <param name="uid">User id</param>
-    /// <param name="privacyPolicy">The <see cref="PrivacyPolicy" /> options targeting private or public</param>
-    /// <param name="targetFilter">The <see cref="TargetFilter" /> option targeting android or ios</param>
-    /// <returns>
-    /// The <see cref="NovelBookmarkEngine" /> containing the bookmarked novels.
-    /// </returns>
-    public IFetchEngine<Novel> NovelBookmarks(long uid, PrivacyPolicy privacyPolicy, TargetFilter targetFilter = TargetFilter.ForAndroid)
+    public IFetchEngine<IWorkEntry> WorkPosts(long uid,
+        WorkType recommendContentType = WorkType.Illust,
+        TargetFilter targetFilter = TargetFilter.ForAndroid)
     {
-        EnsureNotCancelled();
-        _ = CheckPrivacyPolicy(uid, privacyPolicy);
-        return new NovelBookmarkEngine(this, uid, privacyPolicy, targetFilter, new EngineHandle(CancelInstance));
+        return recommendContentType is WorkType.Novel
+            ? NovelPosts(uid, targetFilter)
+            : IllustrationPosts(uid, recommendContentType, targetFilter);
     }
 
     /// <summary>

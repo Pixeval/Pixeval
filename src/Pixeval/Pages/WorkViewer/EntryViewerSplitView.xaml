@@ -1,0 +1,45 @@
+<UserControl
+    x:Class="Pixeval.Pages.WorkViewerSplitView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:Pixeval.Pages"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:windowing="using:Pixeval.Controls.Windowing"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <ThemeShadow x:Name="SidePanelShadow" />
+    </UserControl.Resources>
+    <SplitView
+        x:Name="SplitView"
+        DisplayMode="Overlay"
+        IsPaneOpen="{x:Bind IsPaneOpen, Mode=TwoWay}"
+        OpenPaneLength="{x:Bind local:WorkViewerSplitView.OpenPaneLength}"
+        PaneBackground="Transparent"
+        PaneClosed="SplitView_OnPaneOpenedOrClosed"
+        PaneOpened="SplitView_OnPaneOpenedOrClosed">
+        <SplitView.Pane>
+            <Grid
+                Background="{StaticResource SystemControlBackgroundChromeMediumLowBrush}"
+                Shadow="{x:Bind SidePanelShadow}"
+                Translation="0,0,40">
+                <NavigationView
+                    x:Name="NavigationView"
+                    IsBackButtonVisible="Collapsed"
+                    IsSettingsVisible="False"
+                    Loaded="NavigationView_OnLoaded"
+                    MenuItemsSource="{x:Bind MenuItemsSource}"
+                    PaneDisplayMode="Top"
+                    SelectionChanged="NavigationViewOnSelectionChanged">
+                    <NavigationView.MenuItemTemplate>
+                        <DataTemplate x:DataType="windowing:NavigationViewTag">
+                            <NavigationViewItem Content="{x:Bind Content}" Tag="{x:Bind}" />
+                        </DataTemplate>
+                    </NavigationView.MenuItemTemplate>
+                    <Frame x:Name="PaneFrame" x:FieldModifier="public" />
+                </NavigationView>
+            </Grid>
+        </SplitView.Pane>
+        <ContentPresenter Content="{x:Bind PaneContent}" />
+    </SplitView>
+</UserControl>

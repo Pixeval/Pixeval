@@ -31,7 +31,8 @@
                     <DataTemplate x:DataType="local:IllustrationItemViewModel">
                         <ItemContainer>
                             <local:IllustrationItem
-                                ThisRequired="IllustrationThumbnail_OnThisRequired"
+                                RequestTeachingTip="IllustrationItem_OnRequestTeachingTip"
+                                RequiredParam="IllustrationItem_OnRequiredParam"
                                 ViewModel="{x:Bind}"
                                 ViewModelChanged="IllustrationItem_OnViewModelChanged" />
                         </ItemContainer>
