@@ -27,6 +27,7 @@ using Pixeval.CoreApi.Global.Enum;
 using Pixeval.Misc;
 using Pixeval.Options;
 using Pixeval.Util;
+using WinRT;
 using WinUI3Utilities;
 
 namespace Pixeval.Pages.Capability;
@@ -78,15 +79,9 @@ public sealed partial class RankingsPage : IScrollViewProvider
             ? _illustrationRankOption : _novelRankOption;
         RankOptionComboBox.SelectedItem = _illustrationRankOption[0];
         ChangeSource();
-        // 触发RankOptionChanged
     }
 
-    private void RankOptionComboBox_OnSelectionChangedWhenPrepared(object sender, SelectionChangedEventArgs e)
-    {
-        ChangeSource();
-    }
-
-    private void RankDateTimeCalendarDatePicker_OnDateChangedWhenLoaded(CalendarDatePicker sender, CalendarDatePickerDateChangedEventArgs args)
+    private void OnSelectionChangedWhenPrepared(object sender, IWinRTObject e)
     {
         ChangeSource();
     }

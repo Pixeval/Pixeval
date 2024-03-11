@@ -11,7 +11,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:media="using:Microsoft.Xaml.Interactions.Media"
     xmlns:model="using:Pixeval.CoreApi.Model"
-    AspectRatio="5:3"
+    AspectRatio="10:3"
     Background="{StaticResource CardBackgroundFillColorDefaultBrush}"
     mc:Ignorable="d">
     <ToolTipService.ToolTip>

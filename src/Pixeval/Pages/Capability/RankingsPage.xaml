@@ -10,12 +10,12 @@
         <controls:WorkContainer.CommandBarElements>
             <controls:NotifyOnLoadedCalendarDatePicker
                 x:Name="RankDateTimeCalendarDatePicker"
-                DateChangedWhenLoaded="RankDateTimeCalendarDatePicker_OnDateChangedWhenLoaded"
+                DateChangedWhenLoaded="OnSelectionChangedWhenPrepared"
                 MaxDate="{x:Bind MaxDate}" />
             <controls:NotifyOnLoadedComboBox
                 x:Name="RankOptionComboBox"
                 x:Uid="/RankingsPage/RankOptionComboBox"
-                SelectionChangedWhenLoaded="RankOptionComboBox_OnSelectionChangedWhenPrepared">
+                SelectionChangedWhenLoaded="OnSelectionChangedWhenPrepared">
                 <controls:NotifyOnLoadedComboBox.ItemTemplate>
                     <DataTemplate x:DataType="controls:StringRepresentableItem">
                         <TextBlock Tag="{x:Bind}" Text="{x:Bind StringRepresentation}" />

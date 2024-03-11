@@ -18,9 +18,11 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using Pixeval.Options;
+
 namespace Pixeval.Messages;
 
 /// <summary>
 /// Raises when the tag in WorkInfoPage is clicked
 /// </summary>
-public record IllustrationTagClickedMessage(string Tag);
+public record WorkTagClickedMessage(SimpleWorkType Type, string Tag);

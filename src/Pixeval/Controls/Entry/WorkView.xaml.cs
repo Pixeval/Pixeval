@@ -95,10 +95,9 @@ public sealed partial class WorkView : IEntryView<ISortableEntryViewViewModel>
                 }
                 else if (type == typeof(Novel))
                 {
-
                     ViewModel?.Dispose();
                     ViewModel = null!;
-                    ItemsView.MinItemWidth = 300;
+                    ItemsView.MinItemWidth = 600;
                     ItemsView.MinItemHeight = 0;
                     ItemsView.LayoutType = ItemsViewLayoutType.Grid;
                     ItemsView.ItemTemplate = this.GetResource<DataTemplate>("NovelItemDataTemplate");

@@ -14,10 +14,6 @@
     </controls:EnhancedPage.Resources>
     <controls:WorkContainer x:Name="WorkContainer">
         <controls:WorkContainer.CommandBarElements>
-            <controls:PrivacyPolicyComboBox
-                x:Name="PrivacyPolicyComboBox"
-                SelectionChangedWhenLoaded="ComboBox_OnSelectionChangedWhenLoaded"
-                Visibility="{x:Bind _viewModel.IsMe, Converter={StaticResource BoolToVisibilityConverter}}" />
             <controls:NotifyOnLoadedComboBox
                 x:Name="TagComboBox"
                 x:Uid="/BookmarksPage/TagComboBox"
@@ -28,6 +24,10 @@
                     </DataTemplate>
                 </controls:NotifyOnLoadedComboBox.ItemTemplate>
             </controls:NotifyOnLoadedComboBox>
+            <controls:PrivacyPolicyComboBox
+                x:Name="PrivacyPolicyComboBox"
+                SelectionChangedWhenLoaded="ComboBox_OnSelectionChangedWhenLoaded"
+                Visibility="{x:Bind _viewModel.IsMe, Converter={StaticResource BoolToVisibilityConverter}}" />
             <controls:SimpleWorkTypeComboBox x:Name="SimpleWorkTypeComboBox" SelectionChangedWhenLoaded="ComboBox_OnSelectionChangedWhenLoaded" />
         </controls:WorkContainer.CommandBarElements>
     </controls:WorkContainer>

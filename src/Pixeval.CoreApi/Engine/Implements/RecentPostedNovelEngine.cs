@@ -1,8 +1,9 @@
-#region Copyright (c) Pixeval/Pixeval.CoreApi
+#region Copyright
+
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
-// Copyright (c) 2023 Pixeval.CoreApi/RecentPostedIllustrationEngine.cs
+// Copyright (c) 2024 Pixeval.CoreApi/RecentPostedNovelEngine.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -16,6 +17,7 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 #endregion
 
 using System.Collections.Generic;
@@ -27,14 +29,14 @@ using Pixeval.Utilities;
 
 namespace Pixeval.CoreApi.Engine.Implements;
 
-public class RecentPostedIllustrationEngine(MakoClient makoClient, PrivacyPolicy privacyPolicy,
-        EngineHandle? engineHandle)
-    : AbstractPixivFetchEngine<Illustration>(makoClient, engineHandle)
+public class RecentPostedNovelEngine(MakoClient makoClient, PrivacyPolicy privacyPolicy,
+    EngineHandle? engineHandle)
+    : AbstractPixivFetchEngine<Novel>(makoClient, engineHandle)
 {
     private readonly PrivacyPolicy _privacyPolicy = privacyPolicy;
 
-    public override IAsyncEnumerator<Illustration> GetAsyncEnumerator(CancellationToken cancellationToken = new CancellationToken()) =>
-        RecursivePixivAsyncEnumerators.Illustration<RecentPostedIllustrationEngine>
-            .WithInitialUrl(this, MakoApiKind.AppApi, engine => "/v2/illust/follow"
+    public override IAsyncEnumerator<Novel> GetAsyncEnumerator(CancellationToken cancellationToken = new CancellationToken()) =>
+        RecursivePixivAsyncEnumerators.Novel<RecentPostedNovelEngine>
+            .WithInitialUrl(this, MakoApiKind.AppApi, engine => "/v1/novel/follow"
                                                                 + $"?restrict={engine._privacyPolicy.GetDescription()}")!;
 }

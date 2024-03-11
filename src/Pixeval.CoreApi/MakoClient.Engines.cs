@@ -317,10 +317,16 @@ public partial class MakoClient
     /// <returns>
     /// The <see cref="RecentPostedIllustrationEngine" /> containing the recent posts.
     /// </returns>
-    public IFetchEngine<Illustration> RecentPosts(PrivacyPolicy privacyPolicy)
+    public IFetchEngine<Illustration> RecentIllustrationPosts(PrivacyPolicy privacyPolicy)
     {
         EnsureNotCancelled();
         return new RecentPostedIllustrationEngine(this, privacyPolicy, new EngineHandle(CancelInstance));
+    }
+
+    public IFetchEngine<Novel> RecentNovelPosts(PrivacyPolicy privacyPolicy)
+    {
+        EnsureNotCancelled();
+        return new RecentPostedNovelEngine(this, privacyPolicy, new EngineHandle(CancelInstance));
     }
 
     /// <summary>

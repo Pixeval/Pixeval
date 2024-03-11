@@ -27,6 +27,7 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.CoreApi.Model;
 using Pixeval.Messages;
+using Pixeval.Options;
 using Pixeval.Pages.IllustratorViewer;
 using ReverseMarkdown;
 using WinUI3Utilities;
@@ -48,7 +49,7 @@ public sealed partial class WorkInfoPage
 
     private void WorkTagButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        _ = WeakReferenceMessenger.Default.Send(new IllustrationTagClickedMessage((string)((Button)sender).Content));
+        _ = WeakReferenceMessenger.Default.Send(new WorkTagClickedMessage(_viewModel.Entry is Illustration ? SimpleWorkType.IllustAndManga : SimpleWorkType.Novel, (string)((Button)sender).Content));
     }
 
     private async void IllustratorPersonPicture_OnTapped(object sender, TappedRoutedEventArgs e)

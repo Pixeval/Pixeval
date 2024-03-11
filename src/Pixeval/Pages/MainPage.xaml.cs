@@ -55,6 +55,7 @@ using WinUI3Utilities;
 using Pixeval.AppManagement;
 using Pixeval.Controls.Windowing;
 using Pixeval.Logging;
+using Pixeval.Options;
 using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Pages.IllustratorViewer;
 using Pixeval.Pages.NovelViewer;
@@ -105,10 +106,10 @@ public sealed partial class MainPage : SupportCustomTitleBarDragRegionPage
             ActivationRegistrar.Dispatch(AppInstance.GetCurrent().GetActivatedEventArgs());
         }
 
-        _ = WeakReferenceMessenger.Default.TryRegister<MainPage, IllustrationTagClickedMessage>(this, (_, message) =>
+        _ = WeakReferenceMessenger.Default.TryRegister<MainPage, WorkTagClickedMessage>(this, (_, message) =>
         {
             Window.AppWindow.MoveInZOrderAtTop();
-            PerformSearch(message.Tag);
+            PerformSearch(message.Type, message.Tag);
         });
         using var client = new HttpClient();
         await AppInfo.AppVersion.GitHubCheckForUpdateAsync(client);
@@ -170,6 +171,7 @@ public sealed partial class MainPage : SupportCustomTitleBarDragRegionPage
                 SuggestionType:
                 SuggestionType.Settings or
                 SuggestionType.IllustId or
+                SuggestionType.NovelId or
                 SuggestionType.UserId or
                 SuggestionType.IllustrationAutoCompleteTagHeader or
                 SuggestionType.IllustrationTrendingTagHeader or
@@ -184,14 +186,15 @@ public sealed partial class MainPage : SupportCustomTitleBarDragRegionPage
                 MainPageResources.SearchKeywordCannotBeBlankContent);
             return;
         }
-
+        
         switch (args.ChosenSuggestion)
         {
             case SuggestionModel({ } name, var translatedName, _):
-                PerformSearch(name, translatedName);
+                PerformSearch(SimpleWorkType.IllustAndManga, name, translatedName);
                 break;
+            // TODO 小说Tag搜索
             default:
-                PerformSearch(args.QueryText);
+                PerformSearch(SimpleWorkType.IllustAndManga, args.QueryText);
                 break;
         }
     }
@@ -230,7 +233,7 @@ public sealed partial class MainPage : SupportCustomTitleBarDragRegionPage
         await _viewModel.SuggestionProvider.UpdateAsync(sender.Text);
     }
 
-    private void PerformSearch(string text, string? optTranslatedName = null)
+    private void PerformSearch(SimpleWorkType type, string text, string? optTranslatedName = null)
     {
         using (var scope = App.AppViewModel.AppServicesScope)
         {
@@ -246,18 +249,8 @@ public sealed partial class MainPage : SupportCustomTitleBarDragRegionPage
             }
         }
 
-        var setting = App.AppViewModel.AppSettings;
         NavigationView.SelectedItem = null;
-        _ = MainPageRootFrame.Navigate(typeof(SearchResultsPage), App.AppViewModel.MakoClient.SearchIllustrations(
-            text,
-            setting.SearchStartingFromPageNumber,
-            setting.PageLimitForKeywordSearch,
-            setting.TagMatchOption,
-            setting.DefaultSortOption,
-            setting.SearchDuration,
-            setting.TargetFilter,
-            setting.UsePreciseRangeForSearch ? setting.SearchStartDate : null,
-            setting.UsePreciseRangeForSearch ? setting.SearchEndDate : null));
+        _ = MainPageRootFrame.Navigate(typeof(SearchResultsPage), (type, text));
     }
 
     private async void OpenSearchSettingButton_OnTapped(object sender, TappedRoutedEventArgs e)
