@@ -30,12 +30,14 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Documents;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.AppManagement;
+using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Model;
 using Pixeval.Misc;
 using Pixeval.Options;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
+using WinUI3Utilities;
 
 namespace Pixeval.Controls;
 
@@ -79,8 +81,13 @@ public partial class CommentBlockViewModel(Comment comment, CommentType type, lo
 
     public async Task LoadRepliesAsync()
     {
-        Replies = await App.AppViewModel.MakoClient.IllustrationCommentReplies(CommentId)
-            .Select(c => new CommentBlockViewModel(c, EntryType, EntryId))
+        Replies = await
+            (EntryType switch
+            {
+                CommentType.Illustration => App.AppViewModel.MakoClient.IllustrationCommentReplies(CommentId),
+                CommentType.Novel => App.AppViewModel.MakoClient.NovelCommentReplies(CommentId),
+                _ => ThrowHelper.ArgumentOutOfRange<CommentType, IFetchEngine<Comment>>(EntryType)
+            }).Select(c => new CommentBlockViewModel(c, EntryType, EntryId))
             .ToObservableCollectionAsync();
     }
 

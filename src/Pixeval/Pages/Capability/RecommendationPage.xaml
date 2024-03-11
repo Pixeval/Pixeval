@@ -4,23 +4,11 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Pixeval.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:enum="using:Pixeval.CoreApi.Global.Enum"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
-    <controls:IllustrationContainer x:Name="IllustrationContainer">
-        <controls:IllustrationContainer.CommandBarElements>
-            <controls:NotifyOnLoadedComboBox
-                x:Name="ModeSelectionComboBox"
-                x:Uid="/RecommendationsPage/ModeSelectionComboBox"
-                SelectionChangedWhenLoaded="ModeSelectionComboBox_OnSelectionChangedWhenLoaded">
-                <ComboBox.Items>
-                    <ComboBoxItem
-                        x:Name="ModeSelectionComboBoxIllustComboBoxItem"
-                        x:Uid="/RecommendationsPage/ModeSelectionComboBoxIllustComboBoxItem"
-                        Tag="{x:Bind enum:RecommendationContentType.Illust}" />
-                    <ComboBoxItem x:Uid="/RecommendationsPage/ModeSelectionComboBoxMangaComboBoxItem" Tag="{x:Bind enum:RecommendationContentType.Manga}" />
-                </ComboBox.Items>
-            </controls:NotifyOnLoadedComboBox>
-        </controls:IllustrationContainer.CommandBarElements>
-    </controls:IllustrationContainer>
+    <controls:WorkContainer x:Name="WorkContainer">
+        <controls:WorkContainer.CommandBarElements>
+            <controls:WorkTypeComboBox x:Name="WorkTypeComboBox" SelectionChangedWhenLoaded="WorkTypeComboBox_OnSelectionChangedWhenLoaded" />
+        </controls:WorkContainer.CommandBarElements>
+    </controls:WorkContainer>
 </controls:EnhancedPage>

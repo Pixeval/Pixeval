@@ -6,9 +6,10 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
-    <controls:IllustrationContainer x:Name="IllustrationContainer">
-        <controls:IllustrationContainer.CommandBarElements>
-            <controls:PrivacyPolicyComboBox x:Name="PrivacyPolicyComboBox" SelectionChangedWhenLoaded="PrivacyPolicyComboBox_OnSelectionChangedWhenLoaded" />
-        </controls:IllustrationContainer.CommandBarElements>
-    </controls:IllustrationContainer>
+    <controls:WorkContainer x:Name="WorkContainer">
+        <controls:WorkContainer.CommandBarElements>
+            <controls:PrivacyPolicyComboBox x:Name="PrivacyPolicyComboBox" SelectionChangedWhenLoaded="ComboBox_OnSelectionChangedWhenLoaded" />
+            <controls:SimpleWorkTypeComboBox x:Name="SimpleWorkTypeComboBox" SelectionChangedWhenLoaded="ComboBox_OnSelectionChangedWhenLoaded" />
+        </controls:WorkContainer.CommandBarElements>
+    </controls:WorkContainer>
 </controls:EnhancedPage>

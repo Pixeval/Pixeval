@@ -46,8 +46,6 @@ public sealed partial class IllustrationView : IEntryView<IllustrationViewViewMo
 
     public ScrollView ScrollView => IllustrationItemsView.ScrollView;
 
-    public TeachingTip QrCodeTeachingTip => IllustrateView.QrCodeTeachingTip;
-
     public double DesiredHeight => ThumbnailDirection switch
     {
         ThumbnailDirection.Landscape => LandscapeHeight,
@@ -71,7 +69,7 @@ public sealed partial class IllustrationView : IEntryView<IllustrationViewViewMo
         ViewModel.Dispose();
     }
 
-    private IllustrationView IllustrationThumbnail_OnThisRequired() => this;
+    private (ThumbnailDirection ThumbnailDirection, double DesiredHeight) IllustrationItem_OnRequiredParam() => (ThumbnailDirection, DesiredHeight);
 
     private void IllustrationItemsView_OnItemInvoked(ItemsView sender, ItemsViewItemInvokedEventArgs e)
     {
@@ -95,4 +93,6 @@ public sealed partial class IllustrationView : IEntryView<IllustrationViewViewMo
     {
         ViewModel.SelectedEntries = sender.SelectedItems.Cast<IllustrationItemViewModel>().ToArray();
     }
+
+    private TeachingTip IllustrationItem_OnRequestTeachingTip() => IllustrateView.QrCodeTeachingTip;
 }

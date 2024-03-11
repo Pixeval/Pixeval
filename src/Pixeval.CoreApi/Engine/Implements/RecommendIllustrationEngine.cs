@@ -29,7 +29,7 @@ namespace Pixeval.CoreApi.Engine.Implements;
 
 internal class RecommendIllustrationEngine(
     MakoClient makoClient,
-    RecommendationContentType? recommendContentType,
+    WorkType? recommendContentType,
     TargetFilter filter,
     uint? maxBookmarkIdForRecommend,
     uint? minBookmarkIdForRecentIllust,
@@ -40,8 +40,8 @@ internal class RecommendIllustrationEngine(
     private readonly uint? _maxBookmarkIdForRecommend = maxBookmarkIdForRecommend;
     private readonly uint? _minBookmarkIdForRecentIllust = minBookmarkIdForRecentIllust;
 
-    private readonly RecommendationContentType _recommendContentType =
-        recommendContentType ?? RecommendationContentType.Illust;
+    private readonly WorkType _recommendContentType =
+        recommendContentType ?? WorkType.Illust;
 
     public override IAsyncEnumerator<Illustration> GetAsyncEnumerator(
         CancellationToken cancellationToken = new CancellationToken()) =>

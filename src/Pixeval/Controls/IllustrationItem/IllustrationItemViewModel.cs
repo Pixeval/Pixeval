@@ -36,44 +36,14 @@ namespace Pixeval.Controls;
 /// A view model that communicates between the model <see cref="Illustration" /> and the view <see cref="IllustrationView" />.
 /// It is responsible for being the elements of the <see cref="ItemsRepeater" /> to present the thumbnail of an illustration
 /// </summary>
-public partial class IllustrationItemViewModel(Illustration illustration) : ThumbnailEntryViewModel<Illustration>(illustration), IBookmarkableViewModel
+public partial class IllustrationItemViewModel(Illustration illustration) : ThumbnailEntryViewModel<Illustration>(illustration)
 {
     /// <summary>
     /// 当调用<see cref="GetMangaIllustrationViewModels"/>后，此属性会被赋值为当前<see cref="IllustrationItemViewModel"/>在Manga中的索引
     /// </summary>
     public int MangaIndex { get; set; } = -1;
 
-    public bool IsRestricted => Entry.XRestrict is not XRestrict.Ordinary;
-
     public bool IsManga => Entry.PageCount > 1;
-
-    public bool IsAiGenerated => Entry.AiType is 2;
-
-    public BadgeMode RestrictionCaption =>
-        Entry.XRestrict switch
-        {
-            XRestrict.R18 => BadgeMode.R18,
-            XRestrict.R18G => BadgeMode.R18G,
-            _ => BadgeMode.R18
-        };
-
-    public override long Id => Entry.Id;
-
-    public override int Bookmark => Entry.TotalBookmarks;
-
-    public override DateTimeOffset PublishDate => Entry.CreateDate;
-
-    public override Tag[] Tags => Entry.Tags;
-
-    public override string Title => Entry.Title;
-
-    public override UserInfo User => Entry.User;
-
-    public override bool IsBookmarked
-    {
-        get => Entry.IsBookmarked;
-        set => SetProperty(Entry.IsBookmarked, value, m => Entry.IsBookmarked = m);
-    }
 
     /// <summary>
     /// <see cref="IsUgoira"/>为<see langword="true"/>时，此属性不会抛异常<br/>
@@ -105,16 +75,11 @@ public partial class IllustrationItemViewModel(Illustration illustration) : Thum
         {
             var sb = new StringBuilder(Title);
             if (IsUgoira)
-            {
                 _ = sb.AppendLine()
                     .Append(EntryItemResources.TheIllustrationIsAnUgoira);
-            }
-
-            if (IsManga)
-            {
+            else if (IsManga)
                 _ = sb.AppendLine()
                     .Append(EntryItemResources.TheIllustrationIsAMangaFormatted.Format(Entry.PageCount));
-            }
 
             return sb.ToString();
         }
@@ -150,14 +115,6 @@ public partial class IllustrationItemViewModel(Illustration illustration) : Thum
     {
         return Entry.MetaPages.Select(m => m.ImageUrls.Original!);
     }
+
     protected override string ThumbnailUrl => Entry.GetThumbnailUrl();
-
-    public bool Equals(IllustrationItemViewModel x, IllustrationItemViewModel y)
-    {
-        return x.Entry.Equals(y.Entry);
-    }
-
-    public override bool Equals(object? obj) => obj is IllustrationItemViewModel viewModel && Entry.Equals(viewModel.Entry);
-
-    public override int GetHashCode() => Entry.GetHashCode();
 }

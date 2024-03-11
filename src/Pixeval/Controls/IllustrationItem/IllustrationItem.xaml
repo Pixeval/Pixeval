@@ -2,13 +2,13 @@
     x:Class="Pixeval.Controls.IllustrationItem"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:controls="using:Pixeval.Controls"
     xmlns:converters="using:CommunityToolkit.WinUI.Converters"
     xmlns:converters1="using:Pixeval.Controls.Converters"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:labs="using:CommunityToolkit.Labs.WinUI"
+    xmlns:local="using:Pixeval.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     x:Name="IllustrationThumbnailCard"
     Padding="0"
@@ -71,7 +71,7 @@
             Source="{x:Bind ViewModel.ThumbnailSource, Mode=OneWay}"
             Stretch="UniformToFill" />
         <labs:Shimmer Visibility="{x:Bind ViewModel.ThumbnailSource, Converter={StaticResource NullableToVisibilityConverter}, Mode=OneWay}" />
-        <controls:HeartButton
+        <local:HeartButton
             x:Name="HeartButton"
             HorizontalAlignment="Left"
             VerticalAlignment="Top"
@@ -87,25 +87,25 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <controls:PixevalBadge
-                Grid.Column="2"
+            <local:PixevalBadge
+                Grid.Column="0"
                 Mode="Ai"
                 Visibility="{x:Bind ViewModel.IsAiGenerated, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
-            <controls:PixevalBadge
+            <local:PixevalBadge
                 Grid.Column="1"
-                Mode="{x:Bind ViewModel.RestrictionCaption, Mode=OneWay}"
-                Visibility="{x:Bind ViewModel.IsRestricted, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
-            <controls:PixevalBadge
+                Mode="{x:Bind ViewModel.XRestrictionCaption, Mode=OneWay}"
+                Visibility="{x:Bind ViewModel.IsXRestricted, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
+            <local:PixevalBadge
                 Grid.Column="2"
                 Mode="Gif"
                 Visibility="{x:Bind ViewModel.IsUgoira, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
-            <controls:FontSymbolIcon
+            <local:FontSymbolIcon
                 Grid.Column="4"
                 IsBackLayer="True"
                 Size="Small"
                 Symbol="SetSolidF5EE"
                 Visibility="{x:Bind ViewModel.IsManga, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
-            <controls:FontSymbolIcon
+            <local:FontSymbolIcon
                 Grid.Column="4"
                 Symbol="SetF5ED"
                 Visibility="{x:Bind ViewModel.IsManga, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />

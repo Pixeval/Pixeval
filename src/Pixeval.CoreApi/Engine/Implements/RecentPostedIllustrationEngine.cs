@@ -33,10 +33,8 @@ public class RecentPostedIllustrationEngine(MakoClient makoClient, PrivacyPolicy
 {
     private readonly PrivacyPolicy _privacyPolicy = privacyPolicy;
 
-    public override IAsyncEnumerator<Illustration> GetAsyncEnumerator(CancellationToken cancellationToken = new CancellationToken())
-    {
-        return RecursivePixivAsyncEnumerators.Illustration<RecentPostedIllustrationEngine>
+    public override IAsyncEnumerator<Illustration> GetAsyncEnumerator(CancellationToken cancellationToken = new CancellationToken()) =>
+        RecursivePixivAsyncEnumerators.Illustration<RecentPostedIllustrationEngine>
             .WithInitialUrl(this, MakoApiKind.AppApi, engine => "/v2/illust/follow"
                                                                 + $"?restrict={engine._privacyPolicy.GetDescription()}")!;
-    }
 }

@@ -30,6 +30,9 @@ public enum RankOption
     [Description("week")]
     Week,
 
+    /// <summary>
+    /// Novel 不支持
+    /// </summary>
     [Description("month")]
     Month,
 
@@ -39,12 +42,27 @@ public enum RankOption
     [Description("day_female")]
     DayFemale,
 
+    /// <summary>
+    /// Novel 不支持
+    /// </summary>
     [Description("day_manga")]
     DayManga,
 
+    /// <summary>
+    /// Novel 不支持
+    /// </summary>
     [Description("week_manga")]
     WeekManga,
 
+    /// <summary>
+    /// Novel 不支持
+    /// </summary>
+    [Description("month_manga")]
+    MonthManga,
+
+    /// <summary>
+    /// Novel 不支持
+    /// </summary>
     [Description("week_original")]
     WeekOriginal,
 
@@ -64,5 +82,11 @@ public enum RankOption
     WeekR18,
 
     [Description("week_r18g")]
-    WeekR18G
+    WeekR18G,
+
+    [Description("day_ai")]
+    DayAi,
+
+    [Description("day_r18_ai")]
+    DayR18Ai
 }

@@ -44,10 +44,15 @@ public static class LocalizedResourceAttributeHelper
         return GetLocalizedResourceContents(Enum.GetValues<T>());
     }
 
-    public static List<StringRepresentableItem> GetLocalizedResourceContents(Array enumType)
+    public static List<StringRepresentableItem> GetLocalizedResourceContents<T>(T[] enumType)
+    {
+        return GetLocalizedResourceContents(enumType2: enumType);
+    }
+
+    public static List<StringRepresentableItem> GetLocalizedResourceContents(Array enumType2)
     {
         var items = new List<StringRepresentableItem>();
-        foreach (var value in enumType)
+        foreach (var value in enumType2)
             if (value is Enum t && t.GetLocalizedResourceContent() is { } content)
                 items.Add(new StringRepresentableItem(t, content));
         return items;
@@ -114,6 +119,10 @@ public static class LocalizedResourceAttributeHelper
         [PrivacyPolicy.Public] = MiscResources.PrivacyPolicyPublic,
         [PrivacyPolicy.Private] = MiscResources.PrivacyPolicyPrivate,
 
+        [WorkType.Illust] = MiscResources.WorkTypeIllust,
+        [WorkType.Manga] = MiscResources.WorkTypeManga,
+        [WorkType.Novel] = MiscResources.WorkTypeNovel,
+
         [RankOption.Day] = RankingsPageResources.RankOptionDay,
         [RankOption.Week] = RankingsPageResources.RankOptionWeek,
         [RankOption.Month] = RankingsPageResources.RankOptionMonth,
@@ -121,12 +130,15 @@ public static class LocalizedResourceAttributeHelper
         [RankOption.DayFemale] = RankingsPageResources.RankOptionDayFemale,
         [RankOption.DayManga] = RankingsPageResources.RankOptionDayManga,
         [RankOption.WeekManga] = RankingsPageResources.RankOptionWeekManga,
+        [RankOption.MonthManga] = RankingsPageResources.RankOptionMonthManga,
         [RankOption.WeekOriginal] = RankingsPageResources.RankOptionWeekOriginal,
         [RankOption.WeekRookie] = RankingsPageResources.RankOptionWeekRookie,
         [RankOption.DayR18] = RankingsPageResources.RankOptionDayR18,
         [RankOption.DayMaleR18] = RankingsPageResources.RankOptionDayMaleR18,
         [RankOption.DayFemaleR18] = RankingsPageResources.RankOptionDayFemaleR18,
         [RankOption.WeekR18] = RankingsPageResources.RankOptionWeekR18,
-        [RankOption.WeekR18G] = RankingsPageResources.RankOptionWeekR18G
+        [RankOption.WeekR18G] = RankingsPageResources.RankOptionWeekR18G,
+        [RankOption.DayAi] = RankingsPageResources.RankOptionDayAi,
+        [RankOption.DayR18Ai] = RankingsPageResources.RankOptionDayR18Ai
     };
 }

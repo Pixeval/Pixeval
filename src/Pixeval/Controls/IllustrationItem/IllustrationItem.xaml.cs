@@ -34,7 +34,7 @@ public sealed partial class IllustrationItem
 
     private static void OnViewModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        if (d as IllustrationItem is { } illustrationItem)
+        if (d is IllustrationItem illustrationItem)
         {
             illustrationItem.ViewModelChanged?.Invoke(illustrationItem, illustrationItem.ViewModel);
         }
@@ -42,14 +42,13 @@ public sealed partial class IllustrationItem
 
     public IllustrationItem() => InitializeComponent();
 
-    private double DesiredHeight => ThisRequired().DesiredHeight;
+    private double DesiredHeight => RequiredParam().DesiredHeight;
 
-    private TeachingTip QrCodeTeachingTip => ThisRequired().QrCodeTeachingTip;
+    private TeachingTip QrCodeTeachingTip => RequestTeachingTip();
 
-    /// <summary>
-    /// 请求获取承载本控件的<see cref="IllustrationView"/>
-    /// </summary>
-    public event Func<IllustrationView> ThisRequired = null!;
+    public event Func<(ThumbnailDirection ThumbnailDirection, double DesiredHeight)> RequiredParam = null!;
+
+    public event Func<TeachingTip> RequestTeachingTip = null!;
 
     // 这些方法本来用属性就可以实现，但在ViewModel更新的时候更新，使用了{x:Bind GetXXX(ViewModel)}的写法
     // 这样可以不需要写OnPropertyChange就实现更新
@@ -59,7 +58,7 @@ public sealed partial class IllustrationItem
     private double GetDesiredWidth(IllustrationItemViewModel viewModel)
     {
         var illustration = viewModel.Entry;
-        var thumbnailDirection = ThisRequired.Invoke().ThumbnailDirection;
+        var thumbnailDirection = RequiredParam().ThumbnailDirection;
         return thumbnailDirection switch
         {
             ThumbnailDirection.Landscape => IllustrationView.LandscapeHeight * illustration.Width / illustration.Height,

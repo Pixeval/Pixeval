@@ -27,7 +27,7 @@ namespace Pixeval.CoreApi.Model;
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 [DebuggerDisplay("{Id}: {Title} [{User}]")]
 [Factory]
-public partial record Illustration : IEntry
+public partial record Illustration : IWorkEntry
 {
     [JsonIgnore]
     public bool FromSpotlight { get; set; }
@@ -57,7 +57,8 @@ public partial record Illustration : IEntry
     public required string Caption { get; set; } = "";
 
     [JsonPropertyName("restrict")]
-    public required long Restrict { get; set; }
+    [JsonConverter(typeof(BoolToNumberJsonConverter))]
+    public required bool IsPrivate { get; set; }
 
     [JsonPropertyName("user")]
     public required UserInfo User { get; set; }
@@ -107,11 +108,11 @@ public partial record Illustration : IEntry
     [JsonPropertyName("is_muted")]
     public required bool IsMuted { get; set; }
 
-    /// <summary>
-    /// 值为2是AI生成
-    /// </summary>
     [JsonPropertyName("illust_ai_type")]
     public required int AiType { get; set; }
+
+    [JsonPropertyName("illust_book_style")]
+    public required int IllustBookStyle { get; set; }
 
     public override int GetHashCode()
     {

@@ -20,9 +20,9 @@
 
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
-using Pixeval.CoreApi.Engine;
-using Pixeval.CoreApi.Model;
 using Pixeval.Misc;
+using Pixeval.Options;
+using WinUI3Utilities;
 
 namespace Pixeval.Pages.Capability;
 
@@ -30,15 +30,45 @@ public sealed partial class SearchResultsPage : IScrollViewProvider
 {
     public SearchResultsPage() => InitializeComponent();
 
-    public override void OnPageActivated(NavigationEventArgs navigationEventArgs)
+    private string _searchText = "";
+
+    public override void OnPageActivated(NavigationEventArgs e)
     {
-        ChangeSource((IFetchEngine<Illustration>)navigationEventArgs.Parameter);
+        (SimpleWorkTypeComboBox.SelectedItem, _searchText) = e.Parameter.To<(SimpleWorkType, string)>();
+        ChangeSource();
     }
 
-    private void ChangeSource(IFetchEngine<Illustration> engine)
+    private void SimpleWorkTypeComboBox_OnSelectionChangedWhenLoaded(object sender, SelectionChangedEventArgs e)
     {
-        IllustrationContainer.ViewModel.ResetEngine(engine);
+        ChangeSource();
     }
 
-    public ScrollView ScrollView => IllustrationContainer.ScrollView;
+    private void ChangeSource()
+    {
+        var settings = App.AppViewModel.AppSettings;
+        WorkContainer.WorkView.ResetEngine(
+            SimpleWorkTypeComboBox.SelectedItem is SimpleWorkType.IllustAndManga
+                ? App.AppViewModel.MakoClient.SearchIllustrations(
+                    _searchText,
+                    settings.SearchStartingFromPageNumber,
+                    settings.PageLimitForKeywordSearch,
+                    settings.SearchIllustrationTagMatchOption,
+                    settings.DefaultSortOption,
+                    settings.SearchDuration,
+                    settings.TargetFilter,
+                    settings.UsePreciseRangeForSearch ? settings.SearchStartDate : null,
+                    settings.UsePreciseRangeForSearch ? settings.SearchEndDate : null)
+                : App.AppViewModel.MakoClient.SearchNovels(
+                    _searchText,
+                    settings.SearchStartingFromPageNumber,
+                    settings.PageLimitForKeywordSearch,
+                    settings.SearchNovelTagMatchOption,
+                    settings.DefaultSortOption,
+                    settings.SearchDuration,
+                    settings.TargetFilter,
+                    settings.UsePreciseRangeForSearch ? settings.SearchStartDate : null,
+                    settings.UsePreciseRangeForSearch ? settings.SearchEndDate : null));
+    }
+
+    public ScrollView ScrollView => WorkContainer.ScrollView;
 }

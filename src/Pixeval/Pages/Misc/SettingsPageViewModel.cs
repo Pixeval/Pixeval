@@ -77,7 +77,7 @@ public partial class SettingsPageViewModel(FrameworkElement frameworkElement) : 
 
     public static IEnumerable<CultureInfo> AvailableCultures { get; }
 
-    public static IEnumerable<LanguageModel> AvailableLanguages { get; } = [LanguageModel.DefaultLanguage, new LanguageModel("简体中文", "zh-Hans-CN"), new LanguageModel("Русский", "ru")];
+    public static IEnumerable<LanguageModel> AvailableLanguages { get; } = [LanguageModel.DefaultLanguage, new("简体中文", "zh-Hans-CN"), new("Русский", "ru"), new("English (United States)", "en-us")];
 
     public ObservableCollection<string> PixivApiNameResolver { get; set; } = [.. App.AppViewModel.AppSettings.PixivApiNameResolver];
 

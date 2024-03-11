@@ -1,0 +1,17 @@
+<TeachingTip
+    x:Class="Pixeval.Controls.GenerateLinkTeachingTip"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:Pixeval.Controls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    x:Uid="/EntryViewerPage/GenerateLinkToThisPageButtonTeachingTip"
+    ActionButtonClick="GenerateLinkToThisPageButtonTeachingTip_OnActionButtonClick"
+    mc:Ignorable="d">
+    <TeachingTip.HeroContent>
+        <Image
+            Loading="Image_OnLoading"
+            Source="ms-appx:///Assets/Images/illust-app-link-sample.png"
+            Tag="{x:Bind}" />
+    </TeachingTip.HeroContent>
+</TeachingTip>

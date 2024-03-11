@@ -24,22 +24,30 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using CommunityToolkit.WinUI.Collections;
+using Pixeval.CoreApi.Engine;
+using Pixeval.CoreApi.Model;
 
 namespace Pixeval.Controls;
 
-public interface ISortableEntryViewViewModel : INotifyPropertyChanged
+public interface ISortableEntryViewViewModel : INotifyPropertyChanged, IDisposable
 {
-    void SetSortDescription(SortDescription description);
-
-    void ClearSortDescription();
-
-    IReadOnlyCollection<IBookmarkableViewModel> SelectedEntries { get; }
-
-    Func<IBookmarkableViewModel, bool>? Filter { get; set; }
-
     bool IsAnyEntrySelected { get; }
 
     bool IsSelecting { get; set; }
 
+    bool HasNoItem { get; }
+
     string SelectionLabel { get; }
+
+    IReadOnlyCollection<IWorkViewModel> SelectedEntries { get; }
+
+    void SetSortDescription(SortDescription description);
+
+    void ClearSortDescription();
+
+    Func<IWorkViewModel, bool>? Filter { get; set; }
+
+    IReadOnlyCollection<IWorkViewModel> View { get; }
+
+    void ResetEngine(IFetchEngine<IWorkEntry>? newEngine, int itemLimit = -1);
 }

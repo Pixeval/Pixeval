@@ -27,7 +27,7 @@ using Pixeval.Utilities;
 
 namespace Pixeval.CoreApi.Engine.Implements;
 
-internal class FollowingEngine(MakoClient makoClient, PrivacyPolicy privacyPolicy, long uid,
+internal class FollowingEngine(MakoClient makoClient, long uid, PrivacyPolicy privacyPolicy,
         EngineHandle? engineHandle)
     : AbstractPixivFetchEngine<User>(makoClient, engineHandle)
 {

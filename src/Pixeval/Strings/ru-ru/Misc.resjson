@@ -43,6 +43,8 @@
     "TargetFilterForIOS": "Для iOS",
     "ThumbnailDirectionLandscape": "Горизонтальная",
     "ThumbnailDirectionPortrait": "Вертикальная",
+    "WorkTypeIllust": "Иллюстрации",
+    "WorkTypeManga": "Манга",
     "Bmp": "BMP (без потерь, большой размер, широкая поддержка)",
     "Jpg": "JPG (с потерями, маленький размер, широкая поддержка)",
     "Gif": "GIF (без потерь, только 256 цветов, маленький размер, широкая поддержка)",

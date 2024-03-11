@@ -55,7 +55,6 @@ public class FactoryGenerator : IIncrementalGenerator
             baseType = baseType.BaseType;
         }
 
-
         var generatedType = GetDeclaration(name, typeSymbol, method)
             .WithBaseList(BaseList(SeparatedList([(BaseTypeSyntax)SimpleBaseType(ParseTypeName($"{AttributeNamespace}.IFactory<{name}>"))])));
         var generatedNamespace = GetFileScopedNamespaceDeclaration(typeSymbol, generatedType, true);

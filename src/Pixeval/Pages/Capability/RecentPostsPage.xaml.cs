@@ -21,6 +21,7 @@
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Misc;
+using Pixeval.Options;
 
 namespace Pixeval.Pages.Capability;
 
@@ -33,15 +34,17 @@ public sealed partial class RecentPostsPage : IScrollViewProvider
         ChangeSource();
     }
 
-    private void PrivacyPolicyComboBox_OnSelectionChangedWhenLoaded(object sender, SelectionChangedEventArgs e)
+    private void ComboBox_OnSelectionChangedWhenLoaded(object sender, SelectionChangedEventArgs e)
     {
         ChangeSource();
     }
 
     private void ChangeSource()
     {
-        IllustrationContainer.ViewModel.ResetEngine(App.AppViewModel.MakoClient.RecentPosts(PrivacyPolicyComboBox.SelectedItem));
+        WorkContainer.WorkView.ResetEngine(SimpleWorkTypeComboBox.SelectedItem is SimpleWorkType.IllustAndManga
+            ? App.AppViewModel.MakoClient.RecentIllustrationPosts(PrivacyPolicyComboBox.SelectedItem)
+            : App.AppViewModel.MakoClient.RecentNovelPosts(PrivacyPolicyComboBox.SelectedItem));
     }
 
-    public ScrollView ScrollView => IllustrationContainer.ScrollView;
+    public ScrollView ScrollView => WorkContainer.ScrollView;
 }

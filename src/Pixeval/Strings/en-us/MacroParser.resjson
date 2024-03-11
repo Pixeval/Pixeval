@@ -1,0 +1,11 @@
+{
+  "NonParameterizedMacroBearingParameterFormatted": "Macro {0} can't contain any parameter",
+  "ParameterizedMacroMissingParameterFormatted": "Macro {0} missing parameter",
+  "ResultIsEmpty": "Parse failed: result is empty",
+  "UnexpectedTokenFormatted": "Illegal input：illegal character encountered at {0}",
+  "UnknownArtist": "Unknown artist",
+  "UnknownIllustrationTitle": "Unknwo work title",
+  "UnknownMacroNameFormatted": "Unknown macro name {0}",
+  "UnknownSpotlightId": "Unknown spotlight ID",
+  "UnknownSpotlightTitle": "Unknown spotlight"
+}

@@ -1,0 +1,16 @@
+{
+    "BookmarkedIllustrationAndMangaNavigationViewItem/Content": "Illustration·Manga bookmarks",
+    "BookmarkedNovelNavigationViewItem/Content": "Novel bookmarks",
+    "FollowingUserNavigationViewItem/Content": "Followings",
+    "IllustrationNavigationViewItem/Content": "Illustration",
+    "MangaNavigationViewItem/Content": "Manga",
+    "MyPixivUserNavigationViewItem/Content": "My Pixiv user",
+    "NovelNavigationViewItem/Content": "Novel",
+    "NavigationViewAutoSuggestBox/PlaceholderText": "Work ID/Tag/Title/User ID",
+    "RecommendIllustratorsTitle/Text": "Related people",
+    "ToggleShowExternalCommandBarItem/Text": "Show helper command bar",
+    "ToggleShowRecommendIllustratorItem/Text": "Show related people",
+    "UserMetricsFollowingUserTextBlock/Text": "Following",
+    "UserMetricsIllustrationCountTextBlock/Text": "Works",
+    "UserMetricsMyPixivUserTextBlock/Text": "My Pixiv users"
+}

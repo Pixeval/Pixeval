@@ -21,20 +21,21 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
+using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Model;
-using Pixeval.Utilities;
+using Pixeval.Options;
+using WinUI3Utilities;
 
 namespace Pixeval.Pages.Capability;
 
 public class BookmarkPageViewModel(long userId) : ObservableObject, IDisposable
 {
-    public static readonly CountedTag EmptyCountedTag = new(new Tag { Name = BookmarksPageResources.EmptyCountedTagName, TranslatedName = "" }, 0);
+    public static readonly BookmarkTag EmptyCountedTag = new() { Name = BookmarksPageResources.EmptyCountedTagName, Count = 0 };
 
     public long UserId { get; } = userId;
 
@@ -44,7 +45,25 @@ public class BookmarkPageViewModel(long userId) : ObservableObject, IDisposable
 
     private readonly ConcurrentDictionary<string, HashSet<long>> _bookmarkTagIllustrationIdDictionary = new();
 
-    public ObservableCollection<CountedTag> UserBookmarkTags { get; } = [EmptyCountedTag];
+    public BookmarkTag[]? IllustrationPrivateBookmarkTags { get; set; }
+
+    public BookmarkTag[]? IllustrationPublicBookmarkTags { get; set; }
+
+    public BookmarkTag[]? NovelPrivateBookmarkTags { get; set; }
+
+    public BookmarkTag[]? NovelPublicBookmarkTags { get; set; }
+
+    public async Task<BookmarkTag[]> SetBookmarkTagsAsync(PrivacyPolicy policy, SimpleWorkType type)
+    {
+        return (policy, type) switch
+        {
+            (PrivacyPolicy.Private, SimpleWorkType.IllustAndManga) => IllustrationPrivateBookmarkTags ??= [EmptyCountedTag, .. await App.AppViewModel.MakoClient.IllustrationBookmarkTag(UserId, policy).ToArrayAsync()],
+            (PrivacyPolicy.Public, SimpleWorkType.IllustAndManga) => IllustrationPublicBookmarkTags ??= [EmptyCountedTag, .. await App.AppViewModel.MakoClient.IllustrationBookmarkTag(UserId, policy).ToArrayAsync()],
+            (PrivacyPolicy.Private, SimpleWorkType.Novel) => NovelPrivateBookmarkTags ??= [EmptyCountedTag, .. await App.AppViewModel.MakoClient.NovelBookmarkTag(UserId, policy).ToArrayAsync()],
+            (PrivacyPolicy.Public, SimpleWorkType.Novel) => NovelPublicBookmarkTags ??= [EmptyCountedTag, .. await App.AppViewModel.MakoClient.NovelBookmarkTag(UserId, policy).ToArrayAsync()],
+            _ => ThrowHelper.ArgumentOutOfRange<(PrivacyPolicy, SimpleWorkType), BookmarkTag[]>((policy, type))
+        };
+    }
 
     public void Dispose()
     {
@@ -52,12 +71,6 @@ public class BookmarkPageViewModel(long userId) : ObservableObject, IDisposable
     }
 
     public event EventHandler<string>? TagBookmarksIncrementallyLoaded;
-
-    public async Task LoadUserBookmarkTagsAsync()
-    {
-        var result = await App.AppViewModel.MakoClient.GetUserSpecifiedBookmarkTagsAsync(UserId);
-        UserBookmarkTags.AddRange(result.Where(t => t.Value is PrivacyPolicy.Public).Select(t => t.Key));
-    }
 
     /// <summary>
     /// Fuck Pixiv: The results from web API and the results from app API have different formats and json schemas,
@@ -67,17 +80,17 @@ public class BookmarkPageViewModel(long userId) : ObservableObject, IDisposable
     /// after all IDs are fetched, we update the filter whenever new IDs are available.
     /// </summary>
     /// <param name="tag"></param>
+    /// <param name="engine"></param>
     /// <returns></returns>
-    public async Task LoadBookmarksForTagAsync(string tag)
+    public async Task LoadBookmarksForTagAsync(string tag, IFetchEngine<IWorkEntry> engine)
     {
         if (_bookmarkTagIllustrationIdDictionary.TryGetValue(tag, out var set) && set.Count > 0)
             return;
         // fork a token from the source
         var token = _bookmarksIdLoadingCancellationTokenSource.Token;
-        var engine = App.AppViewModel.MakoClient.UserTaggedBookmarksId(UserId, tag);
         var counter = 0;
         var hashSet = _bookmarkTagIllustrationIdDictionary.GetOrAdd(tag, []);
-        await foreach (var id in engine)
+        await foreach (var entry in engine)
         {
             if (token.IsCancellationRequested)
                 break;
@@ -90,21 +103,13 @@ public class BookmarkPageViewModel(long userId) : ObservableObject, IDisposable
                 TagBookmarksIncrementallyLoaded?.Invoke(this, tag);
             }
 
-            _ = hashSet.Add(id);
-            counter++;
+            _ = hashSet.Add(entry.Id);
+            ++counter;
         }
 
         if (counter is not 0)
             TagBookmarksIncrementallyLoaded?.Invoke(this, tag);
     }
 
-    public IReadOnlySet<long> GetBookmarkIdsForTag(string tag)
-    {
-        return _bookmarkTagIllustrationIdDictionary[tag];
-    }
-
-    public static string GetCountedTagDisplayText(CountedTag tag)
-    {
-        return ReferenceEquals(tag, EmptyCountedTag) ? tag.Tag.Name : $"#{(tag.Tag.TranslatedName is { Length: > 0 } str ? str : tag.Tag.Name)} ({tag.Count})";
-    }
+    public bool ContainsTag(string tag, long id) => _bookmarkTagIllustrationIdDictionary[tag].Contains(id);
 }

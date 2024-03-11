@@ -24,11 +24,8 @@ using Pixeval.CoreApi.Model;
 namespace Pixeval.CoreApi.Net.Response;
 
 [Factory]
-internal partial record PixivNovelResponse
+internal partial record PixivNovelResponse : PixivNextUrlResponse<Novel>
 {
     [JsonPropertyName("novels")]
-    public required Novel[] Novels { get; set; } = [];
-
-    [JsonPropertyName("next_url")]
-    public required string NextUrl { get; set; } = "";
+    public override required Novel[] Entities { get; set; } = [];
 }

@@ -30,7 +30,8 @@ public static class ActivationRegistrar
     public static readonly List<IAppActivationHandler> FeatureHandlers =
     [
         new IllustrationAppActivationHandler(),
-        new IllustratorAppActivationHandler()
+        new IllustratorAppActivationHandler(),
+        new NovelAppActivationHandler()
     ];
 
     public static void Dispatch(AppActivationArguments args)

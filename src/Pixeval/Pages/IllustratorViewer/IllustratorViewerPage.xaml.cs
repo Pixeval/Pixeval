@@ -24,12 +24,8 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using WinUI3Utilities;
-using System.Collections.Generic;
-using System;
-using System.Linq;
 using CommunityToolkit.WinUI.Controls;
 using Pixeval.Controls.Windowing;
-using Pixeval.Utilities;
 using Microsoft.UI.Xaml.Media.Animation;
 using Pixeval.Util.UI;
 using Pixeval.Misc;
@@ -38,21 +34,10 @@ namespace Pixeval.Pages.IllustratorViewer;
 
 public sealed partial class IllustratorViewerPage
 {
-    private readonly ISet<Page> _pageCache;
     private IllustratorViewerPageViewModel _viewModel = null!;
     private int _lastNavigationViewTag = -1;
 
-    public IllustratorViewerPage()
-    {
-        InitializeComponent();
-        _pageCache = new HashSet<Page>();
-    }
-
-    public void Dispose()
-    {
-        _pageCache.OfType<IDisposable>().ForEach(p => p.Dispose());
-        _pageCache.Clear();
-    }
+    public IllustratorViewerPage() => InitializeComponent();
 
     public override void OnPageActivated(NavigationEventArgs e, object? parameter)
     {
@@ -65,16 +50,10 @@ public sealed partial class IllustratorViewerPage
         titleBarHeight = 32;
     }
 
-    private void GenerateLinkToThisPageButtonTeachingTip_OnActionButtonClick(TeachingTip sender, object e)
-    {
-        GenerateLinkTeachingTip.IsOpen = false;
-        App.AppViewModel.AppSettings.DisplayTeachingTipWhenGeneratingAppLink = false;
-    }
-
     private async void IllustratorViewerSegmented_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         var segmented = sender.To<Segmented>();
-        var currentTag = segmented.SelectedItem.GetTag<NavigationViewTag?>() ?? _viewModel.IllustrationTag;
+        var currentTag = segmented.SelectedItem.GetTag<NavigationViewTag?>() ?? _viewModel.WorkTag;
 
         IllustratorViewerFrame.NavigateTag(currentTag, new EntranceNavigationTransitionInfo());
         IllustratorViewerFrame.NavigateTag(currentTag, _lastNavigationViewTag is not -1
@@ -82,8 +61,7 @@ public sealed partial class IllustratorViewerPage
             : new EntranceNavigationTransitionInfo());
         _lastNavigationViewTag = segmented.SelectedIndex;
 
-        var page = await IllustratorViewerFrame.AwaitPageTransitionAsync(currentTag.NavigateTo);
-        _ = _pageCache.Add(page);
+        _ = await IllustratorViewerFrame.AwaitPageTransitionAsync(currentTag.NavigateTo);
         StickyHeaderScrollView.RaiseSetInnerScrollView();
     }
 

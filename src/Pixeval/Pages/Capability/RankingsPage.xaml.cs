@@ -19,23 +19,50 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Controls;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.Misc;
+using Pixeval.Options;
 using Pixeval.Util;
+using WinRT;
 using WinUI3Utilities;
 
 namespace Pixeval.Pages.Capability;
 
 public sealed partial class RankingsPage : IScrollViewProvider
 {
+    private static readonly List<StringRepresentableItem> _illustrationRankOption = LocalizedResourceAttributeHelper.GetLocalizedResourceContents<RankOption>();
+
+    private static readonly List<StringRepresentableItem> _novelRankOption =
+        LocalizedResourceAttributeHelper.GetLocalizedResourceContents(
+        [
+            RankOption.Day,
+            RankOption.Week,
+            // RankOption.Month,
+            RankOption.DayMale,
+            RankOption.DayFemale,
+            // RankOption.DayManga,
+            // RankOption.WeekManga,
+            // RankOption.MonthManga,
+            RankOption.WeekOriginal,
+            RankOption.WeekRookie,
+            RankOption.DayR18,
+            RankOption.DayMaleR18,
+            RankOption.DayFemaleR18,
+            RankOption.WeekR18,
+            RankOption.WeekR18G,
+            RankOption.DayAi,
+            RankOption.DayR18Ai
+        ]);
+
     public RankingsPage()
     {
         InitializeComponent();
-        RankOptionComboBox.ItemsSource = LocalizedResourceAttributeHelper.GetLocalizedResourceContents<RankOption>();
-        RankOptionComboBox.SelectedItem = new StringRepresentableItem(RankOption.Day, null);
+        RankOptionComboBox.ItemsSource = _illustrationRankOption;
+        RankOptionComboBox.SelectedItem = _illustrationRankOption[0];
         RankDateTimeCalendarDatePicker.Date = MaxDate;
     }
 
@@ -46,12 +73,15 @@ public sealed partial class RankingsPage : IScrollViewProvider
         ChangeSource();
     }
 
-    private void RankOptionComboBox_OnSelectionChangedWhenPrepared(object sender, SelectionChangedEventArgs e)
+    private void SimpleWorkTypeComboBox_OnSelectionChangedWhenLoaded(object sender, SelectionChangedEventArgs e)
     {
+        RankOptionComboBox.ItemsSource = sender.To<SimpleWorkTypeComboBox>().SelectedItem is SimpleWorkType.IllustAndManga
+            ? _illustrationRankOption : _novelRankOption;
+        RankOptionComboBox.SelectedItem = _illustrationRankOption[0];
         ChangeSource();
     }
 
-    private void RankDateTimeCalendarDatePicker_OnDateChangedWhenLoaded(CalendarDatePicker sender, CalendarDatePickerDateChangedEventArgs args)
+    private void OnSelectionChangedWhenPrepared(object sender, IWinRTObject e)
     {
         ChangeSource();
     }
@@ -60,8 +90,10 @@ public sealed partial class RankingsPage : IScrollViewProvider
     {
         var rankOption = RankOptionComboBox.SelectedItem.To<StringRepresentableItem>().Item.To<RankOption>();
         var dateTime = RankDateTimeCalendarDatePicker.Date!.Value.DateTime;
-        IllustrationContainer.ViewModel.ResetEngine(App.AppViewModel.MakoClient.Ranking(rankOption, dateTime, App.AppViewModel.AppSettings.TargetFilter));
+        WorkContainer.WorkView.ResetEngine(SimpleWorkTypeComboBox.SelectedItem is SimpleWorkType.IllustAndManga
+            ? App.AppViewModel.MakoClient.IllustrationRanking(rankOption, dateTime, App.AppViewModel.AppSettings.TargetFilter)
+            : App.AppViewModel.MakoClient.NovelRanking(rankOption, dateTime, App.AppViewModel.AppSettings.TargetFilter));
     }
 
-    public ScrollView ScrollView => IllustrationContainer.ScrollView;
+    public ScrollView ScrollView => WorkContainer.ScrollView;
 }

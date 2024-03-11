@@ -33,7 +33,6 @@ using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.AppManagement;
 using Pixeval.Controls;
-using Pixeval.Controls.Windowing;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using WinUI3Utilities;
@@ -78,10 +77,12 @@ public sealed partial class IllustrationViewerPage : SupportCustomTitleBarDragRe
             titleBarHeight = 0;
             return;
         }
-        var leftIndent = new RectInt32(0, 0, IllustrationInfoAndCommentsSplitView.IsPaneOpen ? (int)IllustrationInfoAndCommentsSplitView.OpenPaneLength : 0, (int)TitleBarArea.ActualHeight);
+        var leftIndent = new RectInt32(0, 0, EntryViewerSplitView.IsPaneOpen ? (int)WorkViewerSplitView.OpenPaneLength : 0, (int)TitleBarArea.ActualHeight);
 
         if (TitleBar.Visibility is Visibility.Visible)
+        {
             sender.SetRegionRects(NonClientRegionKind.Icon, [GetScaledRect(TitleBar.Icon)]);
+        }
         sender.SetRegionRects(NonClientRegionKind.Passthrough, [GetScaledRect(leftIndent), GetScaledRect(IllustrationViewerCommandBar), GetScaledRect(IllustrationViewerSubCommandBar)]);
         titleBarHeight = 48;
     }
@@ -124,8 +125,8 @@ public sealed partial class IllustrationViewerPage : SupportCustomTitleBarDragRe
                 if (oldTag == newTag)
                     return;
                 ThumbnailItemsView.StartBringItemIntoView(vm.CurrentIllustrationIndex, new BringIntoViewOptions { AnimationDesired = true });
-                if (IllustrationInfoAndCommentsSplitView.DisplayMode is SplitViewDisplayMode.Inline)
-                    InfoPaneNavigationView.SelectedItem = InfoPaneNavigationView.MenuItems[0];
+                if (EntryViewerSplitView.PinPane)
+                    EntryViewerSplitView.NavigationViewSelect(vm.Tags[0]);
             }
 
             Navigate<ImageViewerPage>(IllustrationImageShowcaseFrame, vm.CurrentImage, info);
@@ -234,13 +235,7 @@ public sealed partial class IllustrationViewerPage : SupportCustomTitleBarDragRe
         App.AppViewModel.AppSettings.DisplayTeachingTipWhenGeneratingAppLink = false;
     }
 
-    private void IllustrationInfoAndCommentsNavigationViewOnSelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs e)
-    {
-        if (sender.SelectedItem is NavigationViewItem { Tag: NavigationViewTag tag })
-            _ = IllustrationInfoAndCommentsFrame.Navigate(tag.NavigateTo, tag.Parameter, e.RecommendedNavigationTransitionInfo);
-    }
-
-    private void IllustrationInfoAndCommentsSplitView_OnPaneOpenedOrClosed(SplitView sender, object args) => RaiseSetTitleBarDragRegion();
+    private void Placeholder_OnSizeChanged(object sender, object e) => RaiseSetTitleBarDragRegion();
 
     private async void IllustrationImageShowcaseFrame_OnTapped(object sender, TappedRoutedEventArgs e)
     {
@@ -257,19 +252,5 @@ public sealed partial class IllustrationViewerPage : SupportCustomTitleBarDragRe
         teachingTip.Target = appBarButton.IsInOverflow ? null : appBarButton;
     }
 
-    private void OpenPane_OnRightTapped(object sender, RightTappedRoutedEventArgs rightTappedRoutedEventArgs)
-    {
-        IllustrationInfoAndCommentsSplitView.IsPaneOpen = true;
-        IllustrationInfoAndCommentsSplitView.DisplayMode = SplitViewDisplayMode.Inline;
-    }
-
-    public bool IsPaneOpenBindBack
-    {
-        get => false;
-        set
-        {
-            if (!value)
-                IllustrationInfoAndCommentsSplitView.DisplayMode = SplitViewDisplayMode.Overlay;
-        }
-    }
+    private void OpenPane_OnRightTapped(object sender, RightTappedRoutedEventArgs rightTappedRoutedEventArgs) => EntryViewerSplitView.PinPane = true;
 }

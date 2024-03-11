@@ -42,7 +42,7 @@ public record SuggestionModel(string? Name, string? TranslatedName, SuggestionTy
 
     public FontIcon? FontIcon => SuggestionType switch
     {
-        SuggestionType.IllustId or SuggestionType.UserId => FontIconSymbol.OpenInNewWindowE8A7.GetFontIcon(12),
+        SuggestionType.IllustId or SuggestionType.NovelId or SuggestionType.UserId => FontIconSymbol.OpenInNewWindowE8A7.GetFontIcon(12),
         SuggestionType.Tag => FontIconSymbol.TagE8EC.GetFontIcon(12),
         SuggestionType.Settings => FontIconSymbol.SettingsE713.GetFontIcon(12),
         SuggestionType.History => FontIconSymbol.HistoryE81C.GetFontIcon(12),
@@ -54,6 +54,7 @@ public record SuggestionModel(string? Name, string? TranslatedName, SuggestionTy
         return
         [
             new SuggestionModel(MiscResources.OpenIllustId, null, SuggestionType.IllustId),
+            new SuggestionModel(MiscResources.OpenNovelId, null, SuggestionType.NovelId),
             new SuggestionModel(MiscResources.OpenUserId, null, SuggestionType.UserId)
         ];
     }
@@ -68,11 +69,10 @@ public record SuggestionModel(string? Name, string? TranslatedName, SuggestionTy
         return new SuggestionModel(history.Value, null, SuggestionType.History);
     }
 
-    public override string ToString()
-    {
-        // prevent the default behavior when user choose the suggestion
-        return string.Empty;
-    }
+    /// <summary>
+    /// prevent the default behavior when user choose the suggestion
+    /// </summary>
+    public override string ToString() => "";
 }
 
 public enum SuggestionType
@@ -82,6 +82,7 @@ public enum SuggestionType
     History,
     UserId,
     IllustId,
+    NovelId,
     IllustrationAutoCompleteTagHeader,
     IllustrationTrendingTagHeader,
     NovelTrendingTagHeader,

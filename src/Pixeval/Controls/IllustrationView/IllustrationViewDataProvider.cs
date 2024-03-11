@@ -18,13 +18,8 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.WinUI.Collections;
-using Pixeval.Collections;
 using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Model;
-using Pixeval.Utilities;
 
 namespace Pixeval.Controls;
 
@@ -32,84 +27,4 @@ namespace Pixeval.Controls;
 public class IllustrationViewDataProvider : EntryViewDataProvider<Illustration, IllustrationItemViewModel, IllustrationViewDataProvider>
 {
     protected override FetchEngineIncrementalSource<Illustration, IllustrationItemViewModel> NewFetchEngineIncrementalSource(IFetchEngine<Illustration> fetchEngine, int limit = -1) => new IllustrationFetchEngineIncrementalSource(fetchEngine, limit);
-}
-
-/// <summary>
-/// 复用时调用<see cref="CloneRef"/>，<see cref="FetchEngineRef"/>和<see cref="EntrySourceRef"/>会在所有复用对象都Dispose时Dispose。
-/// 初始化时调用<see cref="ResetEngine"/>
-/// </summary>
-public abstract class EntryViewDataProvider<T, TViewModel, TSelf> : ObservableObject, IDataProvider<T, TViewModel>, IDisposable where T : class, IEntry where TViewModel : EntryViewModel<T>, IDisposable where TSelf : EntryViewDataProvider<T, TViewModel, TSelf>, new()
-{
-    private SharedRef<IFetchEngine<T>?>? _fetchEngineRef;
-
-    private SharedRef<IncrementalLoadingCollection<FetchEngineIncrementalSource<T, TViewModel>, TViewModel>> _entrySourceRef = null!;
-
-    public SharedRef<IFetchEngine<T>?>? FetchEngineRef
-    {
-        get => _fetchEngineRef;
-        private set
-        {
-            if (Equals(value, _fetchEngineRef))
-                return;
-            if (_fetchEngineRef?.TryDispose(this) is true)
-                FetchEngine?.EngineHandle.Cancel();
-            _fetchEngineRef = value;
-        }
-    }
-
-    protected SharedRef<IncrementalLoadingCollection<FetchEngineIncrementalSource<T, TViewModel>, TViewModel>> EntrySourceRef
-    {
-        get => _entrySourceRef;
-        set
-        {
-            if (Equals(_entrySourceRef, value))
-                return;
-
-            DisposeIllustrationSourceRef();
-            _entrySourceRef = value;
-            View.Source = value.Value;
-            OnPropertyChanged();
-        }
-    }
-
-    public IFetchEngine<T>? FetchEngine => _fetchEngineRef?.Value;
-
-    public AdvancedObservableCollection<TViewModel> View { get; } = [];
-
-    public IncrementalLoadingCollection<FetchEngineIncrementalSource<T, TViewModel>, TViewModel> Source => _entrySourceRef.Value;
-
-    public void Dispose()
-    {
-        DisposeIllustrationSourceRef();
-        // 赋值为null会自动调用setter中的Dispose逻辑
-        FetchEngineRef = null;
-    }
-
-    public void ResetEngine(IFetchEngine<T>? fetchEngine, int limit = -1)
-    {
-        FetchEngineRef = new SharedRef<IFetchEngine<T>?>(fetchEngine, this);
-        EntrySourceRef = new SharedRef<IncrementalLoadingCollection<FetchEngineIncrementalSource<T, TViewModel>, TViewModel>>(new IncrementalLoadingCollection<FetchEngineIncrementalSource<T, TViewModel>, TViewModel>(NewFetchEngineIncrementalSource(FetchEngine!, limit)), this);
-    }
-
-    protected abstract FetchEngineIncrementalSource<T, TViewModel> NewFetchEngineIncrementalSource(IFetchEngine<T> fetchEngine, int limit = -1);
-
-    public TSelf CloneRef()
-    {
-        var dataProvider = new TSelf();
-        dataProvider.FetchEngineRef = FetchEngineRef?.MakeShared(dataProvider);
-        dataProvider.EntrySourceRef = EntrySourceRef.MakeShared(dataProvider);
-        dataProvider.View.Filter = View.Filter;
-        foreach (var viewSortDescription in View.SortDescriptions)
-            dataProvider.View.SortDescriptions.Add(viewSortDescription);
-        return dataProvider;
-    }
-
-    private void DisposeIllustrationSourceRef()
-    {
-        if (_entrySourceRef?.TryDispose(this) is true)
-            foreach (var illustrationViewModel in Source)
-                illustrationViewModel.Dispose();
-    }
-
-    ~EntryViewDataProvider() => Dispose();
 }
