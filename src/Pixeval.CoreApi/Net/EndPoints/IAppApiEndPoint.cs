@@ -51,7 +51,7 @@ internal interface IAppApiEndPoint
     Task<Novel> GetSingleNovelAsync([AliasAs("novel_id")] long id);
 
     [Get("/webview/v2/novel")]
-    Task<string> GetNovelContentAsync([AliasAs("id")] long id);
+    Task<string> GetNovelContentAsync([AliasAs("id")] long id, [AliasAs("raw")] bool raw = false);
     /*
     [AliasAs("viewer_version")] string viewerVersion = "20221031_ai",
     [AliasAs("font")] string x1 = "mincho",

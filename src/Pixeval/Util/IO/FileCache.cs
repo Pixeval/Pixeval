@@ -29,9 +29,8 @@ using System.Text;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using Windows.Storage;
-using Windows.Storage.Streams;
 using CommunityToolkit.Diagnostics;
+using Pixeval.AppManagement;
 using Pixeval.Utilities;
 using ThrowHelper = WinUI3Utilities.ThrowHelper;
 
@@ -47,13 +46,13 @@ public class FileCache
     private readonly SemaphoreSlim _indexLocker;
     private readonly Type[] _supportedKeyTypes;
 
-    private StorageFolder _baseDirectory = null!;
+    private readonly DirectoryInfo _baseDirectory = Directory.CreateDirectory(Path.Combine(AppKnownFolders.Cache.Self.Path, CacheFolderName));
 
     // The expiration time
     private Dictionary<Guid, DateTimeOffset> _expireIndex;
-    private StorageFile? _expireIndexFile;
+    private readonly FileInfo _expireIndexFile;
     private Dictionary<Guid, string> _index;
-    private StorageFile? _indexFile;
+    private readonly FileInfo _indexFile;
 
     private FileCache()
     {
@@ -61,6 +60,8 @@ public class FileCache
 
         _index = [];
         _expireIndex = [];
+        _indexFile = new(Path.Combine(_baseDirectory.FullName, IndexFileName));
+        _expireIndexFile = new(Path.Combine(_baseDirectory.FullName, ExpireIndexFileName));
 
         _indexLocker = new SemaphoreSlim(1, 1);
         _expireIndexLocker = new SemaphoreSlim(1, 1);
@@ -75,8 +76,6 @@ public class FileCache
         var fileCache = new FileCache
         {
             AutoExpire = true,
-            // use TempState instead of LocalCache, we don't need to rely on the cached data
-            _baseDirectory = await ApplicationData.Current.TemporaryFolder.GetOrCreateFolderAsync(CacheFolderName)
         };
         await fileCache.LoadIndexAsync();
         await fileCache.LoadExpireIndexAsync();
@@ -96,21 +95,24 @@ public class FileCache
         {
             await _indexLocker.WaitAsync();
 
-            var file = await _baseDirectory.GetOrCreateFileAsync(key.ToString("N"));
+            var filePath = Path.Combine(_baseDirectory.FullName, key.ToString("N"));
             switch (data)
             {
                 case byte[] bytes:
-                    await file.WriteBytesAsync(bytes);
+                    await File.WriteAllBytesAsync(filePath, bytes);
                     break;
-                case IRandomAccessStream stream:
-                    await stream.SaveToFileAsync(file);
+                case Stream stream:
+                {
+                    await using var s = File.OpenWrite(filePath);
+                    await stream.CopyToAsync(s);
                     break;
+                }
                 default:
-                    await file.WriteBytesAsync(JsonSerializer.SerializeToUtf8Bytes(data));
+                    await File.WriteAllBytesAsync(filePath, JsonSerializer.SerializeToUtf8Bytes(data));
                     break;
             }
 
-            _index[key] = eTag ?? string.Empty;
+            _index[key] = eTag ?? "";
             _expireIndex[key] = GetExpiration(expireIn);
 
             await WriteIndexAsync();
@@ -185,7 +187,7 @@ public class FileCache
             var k when arrElementType == typeof(Guid) => EmptyAsync(k.Cast<Guid>()),
             string[] arr => EmptyAsync(arr),
             var k when _supportedKeyTypes.Contains(arrElementType) => EmptyAsync(k.Select(HashToGuid)),
-            _ => ThrowHelper.Argument<object, Task>(@$"The element type of keys '{keys.GetType().GetElementType()} is not supported.'")
+            _ => ThrowHelper.Argument<object, Task>($"The element type of keys '{keys.GetType().GetElementType()} is not supported.'")
         };
     }
 
@@ -212,7 +214,7 @@ public class FileCache
         {
             foreach (var k in keys)
             {
-                _ = ((await _baseDirectory.TryGetItemAsync(HashToGuid(k).ToString("N")))?.DeleteAsync(StorageDeleteOption.PermanentDelete));
+                File.Delete(Path.Combine(_baseDirectory.FullName, HashToGuid(k).ToString("N")));
                 _ = _index.Remove(k);
             }
 
@@ -234,9 +236,8 @@ public class FileCache
 
         try
         {
-            _ = await Task.WhenAll(_index.Select(item => HashToGuid(item.Key))
-                .Select(guid => _baseDirectory.TryGetItemAsync(guid.ToString("N")).AsTask())
-                .Select(item => item.ContinueWith(t => t.Result?.DeleteAsync())));
+            foreach (var k in _index)
+                File.Delete(Path.Combine(_baseDirectory.FullName, HashToGuid(k).ToString("N")));
             _index.Clear();
             await WriteIndexAsync();
         }
@@ -260,7 +261,7 @@ public class FileCache
 
             foreach (var (key, _) in expired)
             {
-                await (await _baseDirectory.TryGetItemAsync(key.ToString("N")))?.DeleteAsync();
+                File.Delete(Path.Combine(_baseDirectory.FullName, key.ToString("N")));
                 _ = _index.Remove(key);
             }
 
@@ -346,7 +347,7 @@ public class FileCache
         }
         catch
         {
-            return Enumerable.Empty<Guid>();
+            return [];
         }
         finally
         {
@@ -354,7 +355,7 @@ public class FileCache
         }
     }
 
-    public Task<T> GetAsync<T>(object key)
+    public Task<T?> GetAsync<T>(object key) where T : class
     {
         Guard.IsNotNull(key);
 
@@ -363,16 +364,16 @@ public class FileCache
             Guid g => GetAsync<T>(g),
             string s => GetAsync<T>(s),
             _ when _supportedKeyTypes.Contains(key.GetType()) => GetAsync<T>(HashToGuid(key)),
-            _ => ThrowHelper.Argument<object, Task<T>>($"The type of key '{key.GetType()} is not supported.'")
+            _ => ThrowHelper.Argument<object, Task<T?>>($"The type of key '{key.GetType()} is not supported.'")
         };
     }
 
-    public async Task<T?> TryGetAsync<T>(string key)
+    public async Task<T?> TryGetAsync<T>(string key) where T : class
     {
         return await ExistsAsync(key) ? await GetAsync<T>(key) : default;
     }
 
-    public Task<T> GetAsync<T>(string key)
+    public Task<T?> GetAsync<T>(string key) where T : class
     {
         return GetAsync<T>(HashToGuid(key));
     }
@@ -382,28 +383,32 @@ public class FileCache
     /// </summary>
     /// <param name="key">Unique identifier for the entry to get</param>
     /// <returns>The data object that was stored if found, else default(T)</returns>
-    public async Task<T> GetAsync<T>(Guid key)
+    public async Task<T?> GetAsync<T>(Guid key) where T : class
     {
         await _indexLocker.WaitAsync();
 
         try
         {
-            var item = await _baseDirectory.TryGetItemAsync(key.ToString("N"));
+            var items = _baseDirectory.GetFiles(key.ToString("N"));
 
-            if (_index.ContainsKey(key) && item is StorageFile file && (!AutoExpire || AutoExpire && !await IsExpiredAsync(key)))
+            if (_index.ContainsKey(key) && items is [var file] && (!AutoExpire || AutoExpire && !await IsExpiredAsync(key)))
             {
-                HitCount++;
+                ++HitCount;
                 return typeof(T) switch
                 {
-                    var type when type == typeof(IRandomAccessStream) || type.IsSubclassOf(typeof(IRandomAccessStream)) => (T)await file.OpenAsync(FileAccessMode.Read),
-                    var type when type == typeof(byte[]) || type.IsSubclassOf(typeof(IEnumerable<byte>)) => (T)(object)(await file.ReadBytesAsync())!,
+                    var type when type == typeof(Stream) || type.IsAssignableTo(typeof(Stream)) => (T)(object)file.OpenRead(),
+                    var type when type == typeof(byte[]) => (T)(object)File.ReadAllBytesAsync(file.FullName),
                     _ => await Functions.Block(async () =>
                     {
-                        await using var stream = await file.OpenStreamForReadAsync();
+                        await using var stream = file.OpenRead();
                         return (await JsonSerializer.DeserializeAsync<T>(stream))!;
                     })
                 };
             }
+        }
+        catch
+        {
+            return null;
         }
         finally
         {
@@ -553,33 +558,29 @@ public class FileCache
 
     private async Task WriteIndexAsync()
     {
-        _indexFile ??= await _baseDirectory.CreateFileAsync(IndexFileName, CreationCollisionOption.ReplaceExisting);
-        await _indexFile.WriteBytesAsync(JsonSerializer.SerializeToUtf8Bytes(_index));
+        await File.WriteAllBytesAsync(_indexFile.FullName, JsonSerializer.SerializeToUtf8Bytes(_index));
     }
 
     private async Task LoadIndexAsync()
     {
-        if (await _baseDirectory.TryGetItemAsync(IndexFileName) is StorageFile file)
+        if (_indexFile.Exists)
         {
-            _indexFile = file;
-            await using var fileStream = await _indexFile.OpenStreamForReadAsync();
-            _index = (await JsonSerializer.DeserializeAsync<Dictionary<Guid, string>>(fileStream))!;
+            await using var openRead = _indexFile.OpenRead();
+            _index = (await JsonSerializer.DeserializeAsync<Dictionary<Guid, string>>(openRead))!;
         }
     }
 
     private async Task WriteExpireIndexAsync()
     {
-        _expireIndexFile ??= await _baseDirectory.CreateFileAsync(ExpireIndexFileName, CreationCollisionOption.ReplaceExisting);
-        await _expireIndexFile.WriteBytesAsync(JsonSerializer.SerializeToUtf8Bytes(_expireIndex));
+        await File.WriteAllBytesAsync(_expireIndexFile.FullName, JsonSerializer.SerializeToUtf8Bytes(_expireIndex));
     }
 
     private async Task LoadExpireIndexAsync()
     {
-        if (await _baseDirectory.TryGetItemAsync(ExpireIndexFileName) is StorageFile file)
+        if (_expireIndexFile.Exists)
         {
-            _expireIndexFile = file;
-            await using var fileStream = await _indexFile.OpenStreamForReadAsync();
-            _expireIndex = (await JsonSerializer.DeserializeAsync<Dictionary<Guid, DateTimeOffset>>(fileStream))!;
+            await using var openRead = _expireIndexFile.OpenRead();
+            _expireIndex = (await JsonSerializer.DeserializeAsync<Dictionary<Guid, DateTimeOffset>>(openRead))!;
         }
     }
 

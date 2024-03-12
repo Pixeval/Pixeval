@@ -228,7 +228,7 @@ public static partial class IoHelper
 
     public static async Task<Image> GetImageFromZipStreamAsync(Stream zipStream, UgoiraMetadataResponse ugoiraMetadataResponse)
     {
-        var entryStreams = await ReadZipArchiveEntries(zipStream);
+        var entryStreams = await ReadZipArchiveEntriesAsync(zipStream, true);
         return await entryStreams.UgoiraSaveToImageAsync(ugoiraMetadataResponse.UgoiraMetadataInfo.Frames.Select(t => (int)t.Delay));
     }
 

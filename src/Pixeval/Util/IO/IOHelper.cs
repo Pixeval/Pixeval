@@ -34,6 +34,7 @@ using Windows.Foundation;
 using Windows.Security.Cryptography;
 using Windows.Storage;
 using Windows.Storage.Streams;
+using Microsoft.IO;
 using Pixeval.Download.Models;
 using Pixeval.Utilities;
 using SixLabors.ImageSharp;
@@ -103,56 +104,6 @@ public static partial class IoHelper
         return $"data:image/{format?.Name.ToLower()},{base64Str}";
     }
 
-    public static async Task WriteBytesAsync(this Stream stream, byte[] bytes)
-    {
-        await stream.WriteAsync(bytes);
-    }
-
-    public static async Task WriteBytesAsync(this StorageStreamTransaction storageStreamTransaction, byte[] bytes)
-    {
-        _ = await storageStreamTransaction.Stream.WriteAsync(CryptographicBuffer.CreateFromByteArray(bytes));
-    }
-
-    public static IAsyncAction WriteStringAsync(this StorageFile storageFile, string str)
-    {
-        return storageFile.WriteBytesAsync(str.GetBytes());
-    }
-
-    public static IAsyncAction WriteBytesAsync(this StorageFile storageFile, byte[] bytes)
-    {
-        return FileIO.WriteBytesAsync(storageFile, bytes);
-    }
-
-    public static async Task<StorageFile> GetOrCreateFileAsync(this StorageFolder folder, string itemName)
-    {
-        return await folder.TryGetItemAsync(itemName) as StorageFile ?? await folder.CreateFileAsync(itemName, CreationCollisionOption.ReplaceExisting);
-    }
-
-    public static async Task<StorageFolder> GetOrCreateFolderAsync(this StorageFolder folder, string folderName)
-    {
-        return await folder.TryGetItemAsync(folderName) as StorageFolder ?? await folder.CreateFolderAsync(folderName, CreationCollisionOption.ReplaceExisting);
-    }
-
-    public static async Task<string?> ReadStringAsync(this StorageFile storageFile, Encoding? encoding = null)
-    {
-        return (await storageFile.ReadBytesAsync())?.GetString(encoding);
-    }
-
-    public static async Task<byte[]?> ReadBytesAsync(this StorageFile? file)
-    {
-        if (file is null)
-        {
-            return null;
-        }
-
-        using var stream = await file.OpenReadAsync();
-        using var reader = new DataReader(stream.GetInputStreamAt(0));
-        _ = await reader.LoadAsync((uint)stream.Size);
-        var bytes = new byte[stream.Size];
-        reader.ReadBytes(bytes);
-        return bytes;
-    }
-
     public static Task<HttpResponseMessage> PostFormAsync(this HttpClient httpClient, string url, params (string? Key, string? Value)[] parameters)
     {
         var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, url)
@@ -168,28 +119,41 @@ public static partial class IoHelper
         return httpClient.SendAsync(httpRequestMessage);
     }
 
-    public static async Task<MemoryStream[]> ReadZipArchiveEntries(Stream zipStream)
+    public static async Task<MemoryStream[]> ReadZipArchiveEntriesAsync(Stream zipStream, bool dispose)
     {
-        using var archive = new ZipArchive(zipStream, ZipArchiveMode.Read);
+        Stream s;
+        if (zipStream is FileStream)
+        {
+            s = _recyclableMemoryStreamManager.GetStream();
+            await zipStream.CopyToAsync(s);
+            s.Position = 0;
+            if (dispose)
+                await zipStream.DisposeAsync();
+            dispose = true;
+        }
+        else
+        {
+            s = zipStream;
+        }
+
+        using var archive = new ZipArchive(s, ZipArchiveMode.Read);
         // return the result of Select directly will cause the enumeration to be delayed
         // which will lead the program into ObjectDisposedException since the archive object
         // will be disposed after the execution of ReadZipArchiveEntries
         // So we must consume the archive.Entries.Select right here, prevent it from escaping
         // to the outside of the stackframe
-        return await Task.WhenAll(archive.Entries.Select(async entry =>
-        {
-            await using var stream = entry.Open();
-            var ms = _recyclableMemoryStreamManager.GetStream();
-            await stream.CopyToAsync(ms);
-            ms.Position = 0;
-            return ms;
-        }));
-    }
-
-    public static async Task SaveToFileAsync(this IRandomAccessStream stream, StorageFile file)
-    {
-        stream.Seek(0);
-        await stream.AsStreamForRead().CopyToAsync(await file.OpenStreamForWriteAsync());
+        MemoryStream[] result = await Task.WhenAll(
+            archive.Entries.Select(async entry =>
+            {
+                await using var stream = entry.Open();
+                var ms = _recyclableMemoryStreamManager.GetStream();
+                await stream.CopyToAsync(ms);
+                ms.Position = 0;
+                return ms;
+            }));
+        if (dispose)
+            await s.DisposeAsync();
+        return result;
     }
 
     public static async Task DeleteIllustrationTaskAsync(IllustrationDownloadTaskBase task)

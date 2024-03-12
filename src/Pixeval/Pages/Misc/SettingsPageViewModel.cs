@@ -287,9 +287,8 @@ public partial class SettingsPageViewModel(FrameworkElement frameworkElement) : 
         return SettingsPageResources.LastCheckedPrefix + lastChecked.ToString(CultureInfo.CurrentUICulture);
     }
 
-    public void ClearData<T, TModel>(ClearDataKind kind, IPersistentManager<T, TModel> manager) where T : new()
+    public void ShowClearData(ClearDataKind kind)
     {
-        manager.Clear();
         FrameworkElement.ShowTeachingTipAndHide(kind.GetLocalizedResourceContent()!);
     }
 
