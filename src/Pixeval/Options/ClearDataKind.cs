@@ -24,6 +24,9 @@ namespace Pixeval.Options;
 
 public enum ClearDataKind
 {
+    [LocalizedResource(typeof(SettingsPageResources), nameof(SettingsPageResources.FileCacheCleared))]
+    FileCache,
+
     [LocalizedResource(typeof(SettingsPageResources), nameof(SettingsPageResources.BrowseHistoriesCleared))]
     BrowseHistory,
 

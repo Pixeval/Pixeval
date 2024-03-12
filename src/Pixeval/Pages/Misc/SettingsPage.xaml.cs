@@ -217,10 +217,10 @@ public sealed partial class SettingsPage
         return tree switch
         {
             OptionalMacroParameter<string>(var sequence) => sequence is null ? (true, null) : ValidateMacro(sequence, macroProvider),
-            Macro<string>(var name, var optionalParams) => 
+            Macro<string>(var name, var optionalParams) =>
                 Functions.Block(() =>
                     macroProvider.PathParser.MacroProvider.TryResolve(name.Text) is IMacro<IllustrationItemViewModel>.Unknown
-                        ? (false, name.Text) 
+                        ? (false, name.Text)
                         : optionalParams is null ? (true, null) : ValidateMacro(optionalParams, macroProvider)),
             PlainText<string> plainText => (true, null),
             Sequence<string>(var first, var rests) =>
@@ -242,7 +242,7 @@ public sealed partial class SettingsPage
         document.SetText(TextSetOptions.None, position is -1 ? txt + text : txt.Insert(position, text));
         document.GetText(TextGetOptions.FormatRtf, out var rtf);
         document.SetText(TextSetOptions.FormatRtf, RtpNewLineRegex().Replace(rtf, ""));
-        
+
         return position is -1 ? (txt.Length - 1, txt.Length + text.Length - 1) : (position - 1, position - 1);
     }
 
@@ -315,25 +315,34 @@ public sealed partial class SettingsPage
         this.ShowTeachingTipAndHide(SettingsPageResources.MacroCopiedToClipboard);
     }
 
+    private void DeleteFileCacheEntryButton_OnTapped(object sender, TappedRoutedEventArgs e)
+    {
+        _ = AppKnownFolders.Cache.ClearAsync();
+        ViewModel.ShowClearData(ClearDataKind.FileCache);
+    }
+
     private void DeleteSearchHistoriesButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
         using var scope = App.AppViewModel.AppServicesScope;
         var manager = scope.ServiceProvider.GetRequiredService<SearchHistoryPersistentManager>();
-        ViewModel.ClearData(ClearDataKind.SearchHistory, manager);
+        manager.Clear();
+        ViewModel.ShowClearData(ClearDataKind.SearchHistory);
     }
 
     private void DeleteBrowseHistoriesButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
         using var scope = App.AppViewModel.AppServicesScope;
         var manager = scope.ServiceProvider.GetRequiredService<BrowseHistoryPersistentManager>();
-        ViewModel.ClearData(ClearDataKind.BrowseHistory, manager);
+        manager.Clear();
+        ViewModel.ShowClearData(ClearDataKind.BrowseHistory);
     }
 
     private void DeleteDownloadHistoriesButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
         using var scope = App.AppViewModel.AppServicesScope;
         var manager = scope.ServiceProvider.GetRequiredService<DownloadHistoryPersistentManager>();
-        ViewModel.ClearData(ClearDataKind.DownloadHistory, manager);
+        manager.Clear();
+        ViewModel.ShowClearData(ClearDataKind.DownloadHistory);
     }
 
     private void OpenFolder_OnTapped(object sender, TappedRoutedEventArgs e)

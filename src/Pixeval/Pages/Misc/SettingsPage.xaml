@@ -247,6 +247,11 @@
                     <Button x:Uid="/SettingsPage/ResetDefaultSettingsButton" Tapped="ResetDefaultSettingsButton_OnTapped" />
                     <controls:SettingsExpander.Items>
                         <controls:SettingsCard
+                            x:Uid="/SettingsPage/DeleteFileCacheEntry"
+                            HeaderIcon="{markup:FontSymbolIcon Glyph=DeleteE74D}"
+                            IsClickEnabled="True"
+                            Tapped="DeleteFileCacheEntryButton_OnTapped" />
+                        <controls:SettingsCard
                             x:Uid="/SettingsPage/DeleteSearchHistoriesEntry"
                             HeaderIcon="{markup:FontSymbolIcon Glyph=DeleteE74D}"
                             IsClickEnabled="True"

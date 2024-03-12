@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -36,7 +36,7 @@ namespace Pixeval.Database.Managers;
 /// var manager = scope.ServiceProvider.GetRequiredService&lt;IPersistentManager&lt;Entry, Model&gt;&gt;();
 /// </code>
 /// </example>
-/// <see cref="AppViewModel.CreateHostBuilder">Register the manager in AppViewModel</see>
+/// <see cref="AppViewModel.CreateServiceProvider">Register the manager in AppViewModel</see>
 /// <typeparam name="TEntry">Entry to be serialized in database</typeparam>
 /// <typeparam name="TModel">Data model in the program</typeparam>
 public interface IPersistentManager<TEntry, out TModel> where TEntry : new()

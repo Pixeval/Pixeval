@@ -43,8 +43,10 @@ using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using Pixeval.Utilities.Threading;
 using Pixeval.AppManagement;
+using Pixeval.CoreApi.Net.Response;
 using Pixeval.Download;
 using Pixeval.Util.ComponentModels;
+using ReverseMarkdown.Converters;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
@@ -183,15 +185,15 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
         if (!LoadSuccessfully || _disposed)
         {
             _disposed = false;
-            _ = LoadThumbnail();
+            _ = LoadThumbnailAsync();
             AddHistory();
-            await LoadOriginalImage();
+            await LoadOriginalImageAsync();
             IllustrationViewModel.UnloadThumbnail(this);
         }
 
         return;
 
-        async Task LoadThumbnail()
+        async Task LoadThumbnailAsync()
         {
             _ = await IllustrationViewModel.TryLoadThumbnailAsync(this);
             OriginalImageSources ??= [IllustrationViewModel.ThumbnailStream!];
@@ -205,67 +207,83 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
             manager.Insert(new BrowseHistoryEntry { Id = IllustrationViewModel.Id });
         }
 
-        async Task LoadOriginalImage()
+        async Task<Stream?> GetStreamAsync((UgoiraMetadataResponse Metadata, string UgoiraUrl)? ugoiraParameter)
         {
             var cacheKey = await IllustrationViewModel.GetIllustrationOriginalImageCacheKeyAsync();
-            AdvancePhase(LoadingPhase.CheckingCache);
+
             if (App.AppViewModel.AppSettings.UseFileCache && await App.AppViewModel.Cache.ExistsAsync(cacheKey))
             {
                 AdvancePhase(LoadingPhase.LoadingFromCache);
-                OriginalImageSources = await App.AppViewModel.Cache.GetAsync<IReadOnlyList<Stream>>(cacheKey);
-                LoadSuccessfully = true;
+
+                // 就算已经有该Key，只要取不出值，就重新加载
+                if (await App.AppViewModel.Cache.GetAsync<Stream>(cacheKey) is { } stream)
+                    return stream;
             }
-            else if (IllustrationViewModel.IsUgoira)
+            if (ugoiraParameter is { Metadata: var metadata, UgoiraUrl: var ugoiraUrl })
             {
-                AdvancePhase(LoadingPhase.DownloadingUgoiraZip);
-                var (metadata, url) = await IllustrationViewModel.GetUgoiraOriginalUrlAsync();
-                var downloadRes = await App.AppViewModel.MakoClient.DownloadStreamAsync(url, new Progress<double>(d =>
+                var downloadRes = await App.AppViewModel.MakoClient.DownloadStreamAsync(ugoiraUrl, new Progress<double>(d =>
                 {
                     LoadingProgress = d;
                     AdvancePhase(LoadingPhase.DownloadingUgoiraZip);
                 }), ImageLoadingCancellationHandle);
-                switch (downloadRes)
+                if (downloadRes is Result<Stream>.Success(var zipStream))
                 {
-                    case Result<Stream>.Success(var zipStream):
-                        AdvancePhase(LoadingPhase.MergingUgoiraFrames);
-                        OriginalImageSources = [.. await IoHelper.ReadZipArchiveEntries(zipStream)];
-                        MsIntervals = metadata.UgoiraMetadataInfo.Frames.Select(x => (int)x.Delay).ToArray();
-                        break;
-                    default:
-                        return;
+                    if (App.AppViewModel.AppSettings.UseFileCache)
+                    {
+                        await App.AppViewModel.Cache.AddAsync(cacheKey, zipStream, TimeSpan.FromDays(1));
+                        zipStream.Position = 0;
+                    }
+                    return zipStream;
                 }
-
-                LoadSuccessfully = true;
             }
             else
             {
-                var url = IllustrationViewModel.OriginalStaticUrl;
+                var url = IllustrationViewModel.OriginalStaticUrl!;
                 AdvancePhase(LoadingPhase.DownloadingImage);
-                var ras = await App.AppViewModel.MakoClient.DownloadStreamAsync(url, new Progress<double>(d =>
+                var result = await App.AppViewModel.MakoClient.DownloadStreamAsync(url, new Progress<double>(d =>
                 {
                     LoadingProgress = d;
                     AdvancePhase(LoadingPhase.DownloadingImage);
                 }), ImageLoadingCancellationHandle);
-                switch (ras)
+                if (result is Result<Stream>.Success(var s))
                 {
-                    case Result<Stream>.Success(var s):
-                        OriginalImageSources = [s];
-                        break;
-                    default:
-                        return;
+                    if (App.AppViewModel.AppSettings.UseFileCache)
+                    {
+                        await App.AppViewModel.Cache.AddAsync(cacheKey, s, TimeSpan.FromDays(1));
+                        s.Position = 0;
+                    }
+                    return s;
                 }
-
-                LoadSuccessfully = true;
             }
+
+            return null;
+        }
+
+        async Task LoadOriginalImageAsync()
+        {
+            var ugoiraParameter = null as (UgoiraMetadataResponse Metadata, string Url)?;
+            if (IllustrationViewModel.IsUgoira)
+                ugoiraParameter = await IllustrationViewModel.GetUgoiraOriginalUrlAsync();
+
+            var stream = await GetStreamAsync(ugoiraParameter);
+            if (stream is not null)
+            {
+                if (IllustrationViewModel.IsUgoira)
+                {
+                    AdvancePhase(LoadingPhase.MergingUgoiraFrames);
+                    OriginalImageSources = await IoHelper.ReadZipArchiveEntriesAsync(stream, true);
+                    MsIntervals = ugoiraParameter!.Value.Metadata.UgoiraMetadataInfo.Frames.Select(x => (int)x.Delay).ToArray();
+                }
+                else
+                {
+                    OriginalImageSources = [stream];
+                }
+            }
+
+            LoadSuccessfully = true;
 
             if (OriginalImageSources is not null && !_disposed)
-            {
                 UpdateCommandCanExecute();
-                if (App.AppViewModel.AppSettings.UseFileCache)
-                {
-                    _ = await App.AppViewModel.Cache.TryAddAsync(cacheKey, OriginalImageSources, TimeSpan.FromDays(1));
-                }
-            }
         }
     }
 

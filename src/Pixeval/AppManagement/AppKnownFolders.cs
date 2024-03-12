@@ -30,8 +30,10 @@ namespace Pixeval.AppManagement;
 public class AppKnownFolders(StorageFolder self)
 {
     public static AppKnownFolders Local = new(ApplicationData.Current.LocalFolder, _ => Task.CompletedTask);
-    
+
     public static AppKnownFolders Log = null!;
+
+    public static AppKnownFolders Cache = null!;
 
     public static AppKnownFolders Roaming = new(ApplicationData.Current.RoamingFolder, _ => Task.CompletedTask);
 
@@ -48,13 +50,14 @@ public class AppKnownFolders(StorageFolder self)
 
     private static async Task<AppKnownFolders> GetOrCreate(AppKnownFolders folder, string subfolderName)
     {
-        return new AppKnownFolders(await folder.Self.GetOrCreateFolderAsync(subfolderName));
+        return new AppKnownFolders(await folder.GetOrCreateFolderAsync(subfolderName));
     }
 
     public static async Task InitializeAsync()
     {
         SavedWallPaper = await GetOrCreate(Local, "Wallpapers");
         Log = await GetOrCreate(Local, "Logs");
+        Cache = await GetOrCreate(Local, "Cache");
     }
 
     /// <summary>
@@ -108,14 +111,14 @@ public class AppKnownFolders(StorageFolder self)
         return Self.CreateFolderAsync(name, collisionOption);
     }
 
-    public Task<StorageFile> GetOrCreateFileAsync(string name)
+    public async Task<StorageFile> GetOrCreateFileAsync(string name)
     {
-        return Self.GetOrCreateFileAsync(name);
+        return await Self.TryGetItemAsync(name) as StorageFile ?? await Self.CreateFileAsync(name, CreationCollisionOption.ReplaceExisting);
     }
 
-    public Task<StorageFolder> GetOrCreateFolderAsync(string name)
+    private async Task<StorageFolder> GetOrCreateFolderAsync(string folderName)
     {
-        return Self.GetOrCreateFolderAsync(name);
+        return await Self.TryGetItemAsync(folderName) as StorageFolder ?? await Self.CreateFolderAsync(folderName, CreationCollisionOption.ReplaceExisting);
     }
 
     public Task ClearAsync()
