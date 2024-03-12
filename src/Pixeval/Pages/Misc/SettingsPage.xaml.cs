@@ -196,7 +196,6 @@ public sealed partial class SettingsPage
         }
     }
 
-
     private void SetPathMacroRichEditBoxDocument(string path)
     {
         DefaultDownloadPathMacroTextBox.Document.SetText(TextSetOptions.None, "");
@@ -229,7 +228,6 @@ public sealed partial class SettingsPage
             _ => throw new ArgumentOutOfRangeException(nameof(tree))
         };
     }
-
 
     [GeneratedRegex(@"\\par(?!d)")]
     private static partial Regex RtpNewLineRegex();
