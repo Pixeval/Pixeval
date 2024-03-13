@@ -7,6 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Orientation="Vertical"
     mc:Ignorable="d">
+    <TextBlock Margin="10" Text="{x:Bind Header}" />
     <AutoSuggestBox
         x:Uid="/IPListInput/AddItemAutoSuggestBox"
         QueryIcon="Add"

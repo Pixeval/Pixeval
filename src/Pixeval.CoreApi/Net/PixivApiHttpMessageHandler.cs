@@ -55,9 +55,7 @@ internal class PixivApiHttpMessageHandler(MakoClient makoClient) : MakoClientSup
                 break;
         }
 
-        return (bypass
-                ? MakoClient.GetHttpMessageInvoker<PixivApiNameResolver>()
-                : MakoClient.GetHttpMessageInvoker<LocalMachineNameResolver>())
+        return GetHttpMessageInvoker(bypass)
             .SendAsync(request, cancellationToken);
     }
 }

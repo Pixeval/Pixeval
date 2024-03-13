@@ -9,6 +9,7 @@ using WinUI3Utilities.Attributes;
 
 namespace Pixeval.Controls;
 
+[DependencyProperty<string>("Header")]
 [DependencyProperty<ICollection<string>>("ItemsSource")]
 public sealed partial class IPListInput : StackPanel
 {

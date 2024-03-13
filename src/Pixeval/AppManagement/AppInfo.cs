@@ -20,6 +20,8 @@
 
 using System;
 using System.IO;
+using System.Linq;
+using System.Net;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Windows.Storage;
@@ -85,10 +87,13 @@ public static partial class AppInfo
         InitializeDebugTrace();
     }
 
-    public static void SetNameResolver(AppSettings appSetting)
+    public static void SetNameResolvers(AppSettings appSetting)
     {
-        PixivApiNameResolver.IPAddresses = appSetting.PixivApiNameResolver;
-        PixivImageNameResolver.IPAddresses = appSetting.PixivImageNameResolver;
+        MakoHttpOptions.SetNameResolver(MakoHttpOptions.AppApiHost, appSetting.PixivAppApiNameResolver);
+        MakoHttpOptions.SetNameResolver(MakoHttpOptions.ImageHost, appSetting.PixivImageNameResolver);
+        MakoHttpOptions.SetNameResolver(MakoHttpOptions.ImageHost2, appSetting.PixivImageNameResolver2);
+        MakoHttpOptions.SetNameResolver(MakoHttpOptions.OAuthHost, appSetting.PixivOAuthNameResolver);
+        MakoHttpOptions.SetNameResolver(MakoHttpOptions.WebApiHost, appSetting.PixivWebApiNameResolver);
     }
 
     public static string IconAbsolutePath => ApplicationUriToPath(new Uri(IconApplicationUri));

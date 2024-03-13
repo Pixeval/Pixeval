@@ -112,7 +112,7 @@ public partial record NovelNavigation
     public required bool Viewable { get; set; }
 
     [JsonPropertyName("contentOrder")]
-    public required string ContentOrder { get; set; }
+    public required string ContentOrder { get; set; } = "";
 
     [JsonPropertyName("title")]
     public required string Title { get; set; } = "";
@@ -132,7 +132,7 @@ public partial record NovelImage
     public required long NovelImageId { get; set; }
 
     [JsonPropertyName("sl")]
-    public required string Sl { get; set; }
+    public required string Sl { get; set; } = "";
 
     [JsonPropertyName("urls")]
     public required NovelImageUrls Urls { get; set; }

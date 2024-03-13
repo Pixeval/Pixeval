@@ -94,9 +94,6 @@ public partial class MakoClient : ICancellable, IAsyncDisposable
     private ServiceProvider BuildServiceProvider(IServiceCollection serviceCollection) =>
         serviceCollection
             .AddSingleton(this)
-            .AddSingleton<PixivApiNameResolver>()
-            .AddSingleton<PixivImageNameResolver>()
-            .AddSingleton<LocalMachineNameResolver>()
             .AddSingleton<PixivApiHttpMessageHandler>()
             .AddSingleton<PixivImageHttpMessageHandler>()
             .AddKeyedSingleton<HttpMessageHandler, MakoRetryHttpClientHandler>(typeof(PixivApiHttpMessageHandler),
@@ -127,12 +124,6 @@ public partial class MakoClient : ICancellable, IAsyncDisposable
                         UserAgent = { new("PixivIOSApp", "5.8.7") }
                     }
                 })
-            .AddKeyedSingleton(typeof(PixivApiNameResolver),
-                (s, _) => MakoHttpOptions.CreateHttpMessageInvoker(s.GetRequiredService<PixivApiNameResolver>()))
-            .AddKeyedSingleton(typeof(PixivImageNameResolver),
-                (s, _) => MakoHttpOptions.CreateHttpMessageInvoker(s.GetRequiredService<PixivImageNameResolver>()))
-            .AddKeyedSingleton(typeof(LocalMachineNameResolver),
-                (_, _) => MakoHttpOptions.CreateDirectHttpMessageInvoker())
             .AddSingleton(s => RestService.For<IAppApiEndPoint>(
                 s.GetRequiredKeyedService<HttpClient>(MakoApiKind.AppApi),
                 new RefitSettings
@@ -189,11 +180,6 @@ public partial class MakoClient : ICancellable, IAsyncDisposable
         {
             ThrowUtils.InvalidOperation($"MakoClient({Id}) has been cancelled");
         }
-    }
-
-    internal HttpMessageInvoker GetHttpMessageInvoker<T>() where T : INameResolver
-    {
-        return MakoServices.GetRequiredKeyedService<HttpMessageInvoker>(typeof(T));
     }
 
     /// <summary>

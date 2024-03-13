@@ -55,7 +55,7 @@ public partial class App
     public App()
     {
         AppViewModel = new AppViewModel(this);
-        AppInfo.SetNameResolver(AppViewModel.AppSettings);
+        AppInfo.SetNameResolvers(AppViewModel.AppSettings);
         WindowFactory.Initialize(AppViewModel.AppSettings, AppInfo.IconAbsolutePath);
         RequestedTheme = AppViewModel.AppSettings.Theme switch
         {

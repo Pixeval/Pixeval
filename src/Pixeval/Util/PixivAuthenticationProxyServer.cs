@@ -26,6 +26,7 @@ using System.Net.Sockets;
 using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using Pixeval.CoreApi.Net;
 using Pixeval.Utilities;
@@ -69,7 +70,7 @@ public partial class PixivAuthenticationProxyServer : IDisposable
                     var clientStream = client.GetStream();
                     var content = await new StreamReader(clientStream).ReadLineAsync();
                     // content starts with "CONNECT" means it's trying to establish an HTTPS connection
-                    if (content == null || !content.StartsWith("CONNECT"))
+                    if (content is null || !content.StartsWith("CONNECT"))
                     {
                         return;
                     }
@@ -85,7 +86,7 @@ public partial class PixivAuthenticationProxyServer : IDisposable
                     await clientSsl.AuthenticateAsServerAsync(_certificate!, false, SslProtocols.None, false);
                     // create an HTTP connection to the target IP
                     var host = HostRegex().Match(content).Groups["host"].Value;
-                    var serverSsl = await CreateConnection(await new PixivApiNameResolver().Lookup(host));
+                    var serverSsl = await CreateConnection(await MakoHttpOptions.GetAddressesAsync(host, CancellationToken.None));
                     var request = Functions.IgnoreExceptionAsync(() => clientSsl.CopyToAsync(serverSsl));
                     var response = Functions.IgnoreExceptionAsync(() => serverSsl.CopyToAsync(clientSsl));
                     _ = await Task.WhenAny(request, response);
