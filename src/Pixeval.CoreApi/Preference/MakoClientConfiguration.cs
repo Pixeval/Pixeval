@@ -27,12 +27,16 @@ namespace Pixeval.CoreApi.Preference;
 /// <summary>
 /// Contains all the user-configurable keys
 /// </summary>
-public record MakoClientConfiguration(int ConnectionTimeout, bool Bypass, string? MirrorHost, CultureInfo CultureInfo)
+public record MakoClientConfiguration(
+    int ConnectionTimeout,
+    bool Bypass,
+    bool OAuthBypass,
+    string? MirrorHost,
+    CultureInfo CultureInfo)
 {
-    public MakoClientConfiguration() : this(5000, false, "", CultureInfo.CurrentCulture) { }
+    public MakoClientConfiguration() : this(5000, false, false, "", CultureInfo.CurrentCulture) { }
 
-    [JsonIgnore]
-    public CultureInfo CultureInfo { get; set; } = CultureInfo;
+    [JsonIgnore] public CultureInfo CultureInfo { get; set; } = CultureInfo;
 
     [JsonPropertyName("userAgent")]
     public ProductInfoHeaderValue[] UserAgent { get; set; } =
@@ -57,6 +61,9 @@ public record MakoClientConfiguration(int ConnectionTimeout, bool Bypass, string
     /// </summary>
     [JsonPropertyName("bypass")]
     public bool Bypass { get; set; } = Bypass;
+
+    [JsonPropertyName("pAuthBypass")] 
+    public bool OAuthBypass { get; set; } = OAuthBypass;
 
     /// <summary>
     /// Mirror server's host of image downloading

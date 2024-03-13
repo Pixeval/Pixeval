@@ -5,6 +5,8 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Pixeval.CoreApi.Net;
 using Pixeval.CoreApi.Net.EndPoints;
 using Pixeval.Utilities;
 
@@ -113,8 +115,8 @@ public partial class MakoClient
             {
                 case Result<T>.Success { Value: var value }:
                     return value;
-                case Result<T>.Failure { Cause: var e }:
-                    Logger.LogError("", e);
+                case Result<T>.Failure { Cause: { } e }:
+                    LogException(e);
                     return createDefault();
                 default:
                     return ThrowUtils.ArgumentOutOfRange<Result<T>, T>(result);
@@ -132,7 +134,7 @@ public partial class MakoClient
         return RunWithLoggerAsync(task, T.CreateDefault);
     }
 
-    private void LogException(Exception e)
+    internal void LogException(Exception e)
     {
         Logger.LogError("MakoClient Exception", e);
         var now = DateTime.Now;
@@ -140,6 +142,16 @@ public partial class MakoClient
             return;
         CoolDown = now.AddSeconds(5);
         HttpClient.DefaultProxy = GetCurrentSystemProxy();
+        var oldCollection = ServiceCollection;
+        var old = MakoServices;
+        ServiceCollection = [];
+        MakoServices = BuildServiceProvider(ServiceCollection);
+        foreach (var item in oldCollection)
+            ((item.IsKeyedService
+                    ? item.KeyedImplementationInstance
+                    : item.ImplementationInstance)
+                as IDisposable)?.Dispose();
+        old.Dispose();
     }
 
     private DateTime CoolDown { get; set; } = DateTime.Now.AddSeconds(5);

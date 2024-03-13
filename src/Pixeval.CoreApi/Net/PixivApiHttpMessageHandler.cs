@@ -33,7 +33,7 @@ internal class PixivApiHttpMessageHandler(MakoClient makoClient) : MakoClientSup
         var headers = request.Headers;
         var host = request.RequestUri!.Host; // the 'RequestUri' is guaranteed to be nonnull here, because the 'HttpClient' will set it to 'BaseAddress' if it's null
 
-        var bypass = MakoHttpOptions.BypassRequiredHost.IsMatch(host) && MakoClient.Configuration.Bypass || host == MakoHttpOptions.OAuthHost;
+        var bypass = MakoHttpOptions.BypassRequiredHost.IsMatch(host) && MakoClient.Configuration.Bypass || host == MakoHttpOptions.OAuthHost && MakoClient.Configuration.OAuthBypass;
 
         if (bypass)
         {
@@ -55,7 +55,7 @@ internal class PixivApiHttpMessageHandler(MakoClient makoClient) : MakoClientSup
                 break;
         }
 
-        return (MakoClient.Configuration.Bypass
+        return (bypass
                 ? MakoClient.GetHttpMessageInvoker<PixivApiNameResolver>()
                 : MakoClient.GetHttpMessageInvoker<LocalMachineNameResolver>())
             .SendAsync(request, cancellationToken);

@@ -58,7 +58,7 @@ public partial class MakoClient : ICancellable
         Logger = logger;
         SessionUpdater = sessionUpdater ?? new RefreshTokenSessionUpdate();
         Session = session;
-        MakoServices = BuildServiceProvider();
+        MakoServices = BuildServiceProvider(ServiceCollection);
         Configuration = configuration;
         IsCancelled = false;
     }
@@ -83,7 +83,7 @@ public partial class MakoClient : ICancellable
         Logger = logger;
         SessionUpdater = sessionUpdater ?? new RefreshTokenSessionUpdate();
         Session = session;
-        MakoServices = BuildServiceProvider();
+        MakoServices = BuildServiceProvider(ServiceCollection);
         Configuration = new MakoClientConfiguration();
     }
 
@@ -91,8 +91,8 @@ public partial class MakoClient : ICancellable
     /// Injects necessary dependencies
     /// </summary>
     /// <returns>The <see cref="ServiceProvider" /> contains all the required dependencies</returns>
-    private ServiceProvider BuildServiceProvider() =>
-        new ServiceCollection()
+    private ServiceProvider BuildServiceProvider(ServiceCollection serviceCollection) =>
+        serviceCollection
             .AddSingleton(this)
             .AddSingleton<PixivApiNameResolver>()
             .AddSingleton<PixivImageNameResolver>()
@@ -129,9 +129,9 @@ public partial class MakoClient : ICancellable
                 })
             .AddKeyedSingleton(typeof(PixivApiNameResolver),
                 (s, _) => MakoHttpOptions.CreateHttpMessageInvoker(s.GetRequiredService<PixivApiNameResolver>()))
-            .AddKeyedSingleton(typeof(PixivImageNameResolver),
+            .AddKeyedSingleton(typeof(PixivImageNameResolver),  
                 (s, _) => MakoHttpOptions.CreateHttpMessageInvoker(s.GetRequiredService<PixivImageNameResolver>()))
-            .AddKeyedSingleton(typeof(LocalMachineNameResolver),
+            .AddKeyedSingleton(typeof(LocalMachineNameResolver),    
                 (_, _) => MakoHttpOptions.CreateDirectHttpMessageInvoker())
             .AddSingleton(s => RestService.For<IAppApiEndPoint>(
                 s.GetRequiredKeyedService<HttpClient>(MakoApiKind.AppApi),
