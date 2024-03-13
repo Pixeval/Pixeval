@@ -166,7 +166,6 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject, IDi
         App.AppViewModel.MakoClient = new MakoClient(session, App.AppViewModel.AppSettings.ToMakoClientConfiguration(), logger, new RefreshTokenSessionUpdate());
         try
         {
-            throw new();
             await App.AppViewModel.MakoClient.RefreshSessionAsync();
         }
         catch

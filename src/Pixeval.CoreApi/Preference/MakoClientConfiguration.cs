@@ -62,7 +62,7 @@ public record MakoClientConfiguration(
     [JsonPropertyName("bypass")]
     public bool Bypass { get; set; } = Bypass;
 
-    [JsonPropertyName("pAuthBypass")] 
+    [JsonPropertyName("oAuthBypass")] 
     public bool OAuthBypass { get; set; } = OAuthBypass;
 
     /// <summary>

@@ -21,7 +21,6 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media.Animation;
 using Pixeval.AppManagement;
 using Pixeval.Util.UI;

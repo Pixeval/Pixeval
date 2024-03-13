@@ -294,8 +294,14 @@ public partial class SettingsPageViewModel(FrameworkElement frameworkElement) : 
 
     public void SaveCollections()
     {
+        var apiNameSame = AppSetting.PixivApiNameResolver.SequenceEquals(PixivApiNameResolver);
+        var imageNameSame = AppSetting.PixivImageNameResolver.SequenceEqual(PixivImageNameResolver);
+
         AppSetting.PixivApiNameResolver = [.. PixivApiNameResolver];
         AppSetting.PixivImageNameResolver = [.. PixivImageNameResolver];
+
+        if (apiNameSame || imageNameSame)
+            AppInfo.SetNameResolver(AppSetting);
     }
 
     public void CancelToken()

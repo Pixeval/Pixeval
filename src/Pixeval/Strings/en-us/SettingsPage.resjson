@@ -34,7 +34,7 @@
     "DefaultSearchTagMatchOptionEntry/Header": "Default tag match stratege",
     "PixivApiNameResolverHeader/Text": "Pixiv API DNS resolver",
     "PixivApiNameResolverDescription/Text": "The app will resolve pixiv.net to the following IP addresses after domain fronting is enabled",
-    "PixivImageNameResolverHeader/Text": "Pixiv Image API DNS resolver (take effect after restart the app)",
+    "PixivImageNameResolverHeader/Text": "Pixiv Image API DNS resolver",
     "PixivImageNameResolverDescription/Text": "The app will resolve i.pximg.net to the following IP address after domain fronting is enabled",
     "DefaultSelectedTabEntry/Description": "The default tab that will be selected on app start",
     "DefaultSelectedTabEntry/Header": "Default tab",

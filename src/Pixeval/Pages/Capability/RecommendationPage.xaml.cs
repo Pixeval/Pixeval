@@ -27,10 +27,9 @@ public sealed partial class RecommendationPage
 {
     public RecommendationPage() => InitializeComponent();
 
-    public override async void OnPageActivated(NavigationEventArgs e)
+    public override void OnPageActivated(NavigationEventArgs e)
     {
         ChangeSource();
-        await App.AppViewModel.MakoClient.GetNovelContentAsync(10064248);
     }
 
     private void WorkTypeComboBox_OnSelectionChangedWhenLoaded(object? sender, SelectionChangedEventArgs e)
