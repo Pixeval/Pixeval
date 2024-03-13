@@ -166,6 +166,7 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject, IDi
         App.AppViewModel.MakoClient = new MakoClient(session, App.AppViewModel.AppSettings.ToMakoClientConfiguration(), logger, new RefreshTokenSessionUpdate());
         try
         {
+            throw new();
             await App.AppViewModel.MakoClient.RefreshSessionAsync();
         }
         catch
@@ -173,8 +174,8 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject, IDi
             _ = await owner.CreateAcknowledgementAsync(LoginPageResources.RefreshingSessionFailedTitle,
                 LoginPageResources.RefreshingSessionFailedContent);
             AppInfo.ClearSession();
-            await AppKnownFolders.Local.ClearAsync();
-            CloseWindow();
+            await App.AppViewModel.MakoClient.DisposeAsync();
+            App.AppViewModel.MakoClient = null!;
             return false;
         }
 
@@ -238,7 +239,7 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject, IDi
         return session;
     }
 
-    public async Task WebView2LoginAsync(UserControl userControl, Action navigated)
+    public async Task WebView2LoginAsync(UserControl userControl, bool useNewAccount, Action navigated)
     {
         var arguments = "";
         var port = NegotiatePort();
@@ -286,7 +287,7 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject, IDi
                 proxyServer?.Dispose();
                 navigated();
             }
-            else if (UserName != "" && Password != "" && e.Uri.Contains("accounts.pixiv.net"))
+            else if (e.Uri.Contains("accounts.pixiv.net"))
             {
                 _ = await sender.ExecuteScriptAsync(
                     $$"""
@@ -311,13 +312,17 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject, IDi
                           }
                       
                           if ((await checkElement("button")) && document.querySelectorAll("button").length === 3) {
-                              (await checkElement("button:nth-child(2)")).click();
+                              (await checkElement("button:nth-child({{(useNewAccount ? 2 : 1)}})")).click();
                           }
+                          {{(UserName != "" && Password != "" ? 
+                    $$"""
                           else {
                               await fill("input[autocomplete='username']", "{{UserName}}");
                               await fill("input[autocomplete='current-password']", "{{Password}}");
                               document.querySelectorAll("button[type='submit']")[4].click();
                           }
+                      """
+                              : "")}}
                       }
                       if (document.readyState === "loading") {
                           document.addEventListener("DOMContentLoaded", login);

@@ -36,7 +36,7 @@ using Refit;
 
 namespace Pixeval.CoreApi;
 
-public partial class MakoClient : ICancellable
+public partial class MakoClient : ICancellable, IAsyncDisposable
 {
     /// <summary>
     /// Create a new <see cref="MakoClient" /> based on given <see cref="Configuration" />, <see cref="Session" />, and
@@ -91,7 +91,7 @@ public partial class MakoClient : ICancellable
     /// Injects necessary dependencies
     /// </summary>
     /// <returns>The <see cref="ServiceProvider" /> contains all the required dependencies</returns>
-    private ServiceProvider BuildServiceProvider(ServiceCollection serviceCollection) =>
+    private ServiceProvider BuildServiceProvider(IServiceCollection serviceCollection) =>
         serviceCollection
             .AddSingleton(this)
             .AddSingleton<PixivApiNameResolver>()
@@ -129,9 +129,9 @@ public partial class MakoClient : ICancellable
                 })
             .AddKeyedSingleton(typeof(PixivApiNameResolver),
                 (s, _) => MakoHttpOptions.CreateHttpMessageInvoker(s.GetRequiredService<PixivApiNameResolver>()))
-            .AddKeyedSingleton(typeof(PixivImageNameResolver),  
+            .AddKeyedSingleton(typeof(PixivImageNameResolver),
                 (s, _) => MakoHttpOptions.CreateHttpMessageInvoker(s.GetRequiredService<PixivImageNameResolver>()))
-            .AddKeyedSingleton(typeof(LocalMachineNameResolver),    
+            .AddKeyedSingleton(typeof(LocalMachineNameResolver),
                 (_, _) => MakoHttpOptions.CreateDirectHttpMessageInvoker())
             .AddSingleton(s => RestService.For<IAppApiEndPoint>(
                 s.GetRequiredKeyedService<HttpClient>(MakoApiKind.AppApi),
@@ -261,5 +261,21 @@ public partial class MakoClient : ICancellable
     public async Task RefreshSessionAsync()
     {
         Session = await SessionUpdater.RefreshAsync(this).ConfigureAwait(false);
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        GC.SuppressFinalize(this);
+        Dispose(ServiceCollection);
+        await MakoServices.DisposeAsync();
+    }
+
+    private static void Dispose(ServiceCollection collection)
+    {
+        foreach (var item in collection)
+                ((item.IsKeyedService
+                        ? item.KeyedImplementationInstance
+                        :  item.ImplementationInstance)
+                    as IDisposable)?.Dispose();
     }
 }

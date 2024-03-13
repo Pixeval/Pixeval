@@ -146,11 +146,7 @@ public partial class MakoClient
         var old = MakoServices;
         ServiceCollection = [];
         MakoServices = BuildServiceProvider(ServiceCollection);
-        foreach (var item in oldCollection)
-            ((item.IsKeyedService
-                    ? item.KeyedImplementationInstance
-                    : item.ImplementationInstance)
-                as IDisposable)?.Dispose();
+        Dispose(oldCollection);
         old.Dispose();
     }
 

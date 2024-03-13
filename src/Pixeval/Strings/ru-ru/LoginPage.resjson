@@ -12,7 +12,6 @@
     "UserNameBox/PlaceholderText": "Email или pixiv ID",
     "PasswordBox/PlaceholderText": "Пароль",
     "DisableDomainFrontingToggleSwitch/Header": "Отключить Direct Connect",
-    "RefreshingSessionFailedContent": "Поврежденный файл сессии удален, пожалуйста, перезапустите приложение\nЕсли проблема повторяется, обратитесь к разработчику",
     "RefreshingSessionFailedTitle": "Не удалось обновить сессию",
     "FetchingSessionFailedContent": "Перезапустите приложение, если вы отключили Direct Connect, попробуйте включить его и повторить попытку\nЕсли проблема повторяется, обратитесь к разработчику",
     "FetchingSessionFailedTitle": "Не удалось получить сессию",

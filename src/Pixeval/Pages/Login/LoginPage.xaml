@@ -76,13 +76,19 @@
                 Grid.Column="0"
                 IsEnabled="{x:Bind _viewModel.IsEnabled, Mode=OneWay}"
                 IsOn="{x:Bind _viewModel.DisableDomainFronting, Mode=TwoWay}" />
-            <Button
+            <SplitButton
                 x:Uid="/LoginPage/SubmitButton"
                 Grid.Row="2"
                 Grid.Column="1"
-                IsEnabled="{x:Bind _viewModel.IsEnabled, Mode=OneWay}"
-                Style="{StaticResource AccentButtonStyle}"
-                Tapped="Login_OnTapped" />
+                Height="33"
+                Click="Login_OnTapped"
+                IsEnabled="{x:Bind _viewModel.IsEnabled, Mode=OneWay}">
+                <SplitButton.Flyout>
+                    <MenuFlyout>
+                        <MenuFlyoutItem x:Uid="/LoginPage/SubmitWithNewAccountButton" Click="LoginWithNewAccount_OnTapped" />
+                    </MenuFlyout>
+                </SplitButton.Flyout>
+            </SplitButton>
             <Button
                 x:Uid="/LoginPage/Help"
                 Grid.Row="2"
