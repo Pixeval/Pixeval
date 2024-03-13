@@ -160,6 +160,8 @@ public sealed partial class SettingsPage : IDisposable
 
     private void DefaultDownloadPathMacroTextBox_OnLostFocus(object sender, RoutedEventArgs e)
     {
+        if (_disposed)
+            return;
         if (ViewModel.DefaultDownloadPathMacro.IsNullOrBlank())
         {
             DownloadMacroInvalidTeachingTip.Subtitle = SettingsPageResources.DownloadMacroInvalidTeachingTipInputCannotBeBlank;
