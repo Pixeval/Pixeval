@@ -50,7 +50,7 @@ using Pixeval.Download;
 namespace Pixeval.Pages.Misc;
 
 [INotifyPropertyChanged]
-public sealed partial class SettingsPage
+public sealed partial class SettingsPage : IDisposable
 {
     /// <summary>
     /// This TestParser is used to test whether the user input meta path is legal
@@ -66,6 +66,8 @@ public sealed partial class SettingsPage
 
     private SettingsPageViewModel ViewModel { get; set; } = null!;
 
+    private bool _disposed;
+
     public SettingsPage() => InitializeComponent();
 
     public override void OnPageActivated(NavigationEventArgs e, object? parameter)
@@ -76,16 +78,9 @@ public sealed partial class SettingsPage
         _previousPath = ViewModel.DefaultDownloadPathMacro;
     }
 
-    private void SettingsPage_OnUnloaded(object sender, RoutedEventArgs e)
-    {
-        WeakReferenceMessenger.Default.UnregisterAll(this);
-        Bindings.StopTracking();
-        ViewModel.SaveCollections();
-        App.AppViewModel.AppSettings = ViewModel.AppSetting;
-        AppInfo.SaveConfig(ViewModel.AppSetting);
-        ViewModel.Dispose();
-        ViewModel = null!;
-    }
+    public override void OnPageDeactivated(NavigatingCancelEventArgs e) => Dispose();
+
+    private void SettingsPage_OnUnloaded(object sender, RoutedEventArgs e) => Dispose();
 
     private void Theme_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
@@ -165,6 +160,8 @@ public sealed partial class SettingsPage
 
     private void DefaultDownloadPathMacroTextBox_OnLostFocus(object sender, RoutedEventArgs e)
     {
+        if (_disposed)
+            return;
         if (ViewModel.DefaultDownloadPathMacro.IsNullOrBlank())
         {
             DownloadMacroInvalidTeachingTip.Subtitle = SettingsPageResources.DownloadMacroInvalidTeachingTipInputCannotBeBlank;
@@ -195,7 +192,6 @@ public sealed partial class SettingsPage
             ViewModel.DefaultDownloadPathMacro = _previousPath;
         }
     }
-
 
     private void SetPathMacroRichEditBoxDocument(string path)
     {
@@ -229,7 +225,6 @@ public sealed partial class SettingsPage
             _ => throw new ArgumentOutOfRangeException(nameof(tree))
         };
     }
-
 
     [GeneratedRegex(@"\\par(?!d)")]
     private static partial Regex RtpNewLineRegex();
@@ -362,5 +357,19 @@ public sealed partial class SettingsPage
     private void DefaultDownloadPathMacroEntry_OnTapped(object sender, TappedRoutedEventArgs e)
     {
         _ = this.CreateAcknowledgementAsync(SettingsPageResources.MacroTutorialDialogTitle, SettingsPageResources.MacroTutorialDialogContent);
+    }
+
+    public void Dispose()
+    {
+        if (_disposed)
+            return;
+        _disposed = true;
+        WeakReferenceMessenger.Default.UnregisterAll(this);
+        Bindings.StopTracking();
+        ViewModel.SaveCollections();
+        App.AppViewModel.AppSettings = ViewModel.AppSetting;
+        AppInfo.SaveConfig(ViewModel.AppSetting);
+        ViewModel.Dispose();
+        ViewModel = null!;
     }
 }

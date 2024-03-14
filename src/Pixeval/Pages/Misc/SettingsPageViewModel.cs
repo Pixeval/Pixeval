@@ -79,9 +79,17 @@ public partial class SettingsPageViewModel(FrameworkElement frameworkElement) : 
 
     public static IEnumerable<LanguageModel> AvailableLanguages { get; } = [LanguageModel.DefaultLanguage, new("简体中文", "zh-Hans-CN"), new("Русский", "ru"), new("English (United States)", "en-us")];
 
-    public ObservableCollection<string> PixivApiNameResolver { get; set; } = [.. App.AppViewModel.AppSettings.PixivApiNameResolver];
+    public ObservableCollection<string> PixivAppApiNameResolver { get; set; } = [.. App.AppViewModel.AppSettings.PixivAppApiNameResolver];
 
     public ObservableCollection<string> PixivImageNameResolver { get; set; } = [.. App.AppViewModel.AppSettings.PixivImageNameResolver];
+
+    public ObservableCollection<string> PixivImageNameResolver2 { get; set; } = [.. App.AppViewModel.AppSettings.PixivImageNameResolver2];
+
+    public ObservableCollection<string> PixivOAuthNameResolver { get; set; } = [.. App.AppViewModel.AppSettings.PixivOAuthNameResolver];
+
+    public ObservableCollection<string> PixivAccountNameResolver { get; set; } = [.. App.AppViewModel.AppSettings.PixivAccountNameResolver];
+
+    public ObservableCollection<string> PixivWebApiNameResolver { get; set; } = [.. App.AppViewModel.AppSettings.PixivWebApiNameResolver];
 
     public AppSettings AppSetting { get; set; } = App.AppViewModel.AppSettings with { };
 
@@ -268,8 +276,13 @@ public partial class SettingsPageViewModel(FrameworkElement frameworkElement) : 
     public void ResetDefault()
     {
         AppSetting = new() { LastCheckedUpdate = AppSetting.LastCheckedUpdate };
-        PixivApiNameResolver = [.. App.AppViewModel.AppSettings.PixivApiNameResolver];
-        PixivImageNameResolver = [.. App.AppViewModel.AppSettings.PixivImageNameResolver];
+        PixivAppApiNameResolver = [.. AppSetting.PixivAppApiNameResolver];
+        PixivImageNameResolver = [.. AppSetting.PixivImageNameResolver];
+        PixivImageNameResolver2 = [.. AppSetting.PixivImageNameResolver2];
+        PixivOAuthNameResolver = [.. AppSetting.PixivOAuthNameResolver];
+        PixivAccountNameResolver = [.. AppSetting.PixivAccountNameResolver];
+        PixivWebApiNameResolver = [.. AppSetting.PixivWebApiNameResolver];
+
         // see OnPropertyChanged
         OnPropertyChanged(nameof(DisableDomainFronting));
         OnPropertyChanged(nameof(MirrorHost));
@@ -294,8 +307,22 @@ public partial class SettingsPageViewModel(FrameworkElement frameworkElement) : 
 
     public void SaveCollections()
     {
-        AppSetting.PixivApiNameResolver = [.. PixivApiNameResolver];
+        var appApiNameSame = AppSetting.PixivAppApiNameResolver.SequenceEquals(PixivAppApiNameResolver);
+        var imageNameSame = AppSetting.PixivImageNameResolver.SequenceEqual(PixivImageNameResolver);
+        var imageName2Same = AppSetting.PixivImageNameResolver2.SequenceEqual(PixivImageNameResolver2);
+        var oAuthNameSame = AppSetting.PixivOAuthNameResolver.SequenceEqual(PixivOAuthNameResolver);
+        var accountNameSame = AppSetting.PixivAccountNameResolver.SequenceEqual(PixivAccountNameResolver);
+        var webApiNameSame = AppSetting.PixivWebApiNameResolver.SequenceEqual(PixivWebApiNameResolver);
+
+        AppSetting.PixivAppApiNameResolver = [.. PixivAppApiNameResolver];
         AppSetting.PixivImageNameResolver = [.. PixivImageNameResolver];
+        AppSetting.PixivImageNameResolver2 = [.. PixivImageNameResolver2];
+        AppSetting.PixivOAuthNameResolver = [.. PixivOAuthNameResolver];
+        AppSetting.PixivAccountNameResolver = [.. PixivAccountNameResolver];
+        AppSetting.PixivWebApiNameResolver = [.. PixivWebApiNameResolver];
+
+        if (appApiNameSame || imageNameSame || imageName2Same || oAuthNameSame || accountNameSame || webApiNameSame)
+            AppInfo.SetNameResolvers(AppSetting);
     }
 
     public void CancelToken()

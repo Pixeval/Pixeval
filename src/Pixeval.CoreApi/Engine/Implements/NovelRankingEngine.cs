@@ -1,8 +1,9 @@
-#region Copyright (c) Pixeval/Pixeval.CoreApi
+#region Copyright
+
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
-// Copyright (c) 2023 Pixeval.CoreApi/RankingEngine.cs
+// Copyright (c) 2024 Pixeval.CoreApi/NovelRankingEngine.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -16,6 +17,7 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 #endregion
 
 using System;
@@ -28,22 +30,22 @@ using Pixeval.Utilities;
 
 namespace Pixeval.CoreApi.Engine.Implements;
 
-internal class IllustrationRankingEngine(
+internal class NovelRankingEngine(
     MakoClient makoClient,
     RankOption rankOption,
     DateTime dateTime,
     TargetFilter targetFilter,
     EngineHandle? engineHandle)
-    : AbstractPixivFetchEngine<Illustration>(makoClient, engineHandle)
+    : AbstractPixivFetchEngine<Novel>(makoClient, engineHandle)
 {
     private readonly DateTime _dateTime = dateTime;
     private readonly RankOption _rankOption = rankOption;
     private readonly TargetFilter _targetFilter = targetFilter;
 
-    public override IAsyncEnumerator<Illustration> GetAsyncEnumerator(CancellationToken cancellationToken = new CancellationToken()) =>
-        RecursivePixivAsyncEnumerators.Illustration<IllustrationRankingEngine>.WithInitialUrl(this,
+    public override IAsyncEnumerator<Novel> GetAsyncEnumerator(CancellationToken cancellationToken = new CancellationToken()) =>
+        RecursivePixivAsyncEnumerators.Novel<NovelRankingEngine>.WithInitialUrl(this,
             MakoApiKind.AppApi,
-            engine => "/v1/illust/ranking"
+            engine => "/v1/novel/ranking"
                       + $"?filter={engine._targetFilter.GetDescription()}"
                       + $"&mode={engine._rankOption.GetDescription()}"
                       + $"&date={engine._dateTime:yyyy-MM-dd}")!;

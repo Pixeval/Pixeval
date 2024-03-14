@@ -7,6 +7,7 @@
     xmlns:controls1="using:Pixeval.Controls"
     xmlns:converters="using:CommunityToolkit.WinUI.Converters"
     xmlns:converters1="using:Pixeval.Controls.Converters"
+    xmlns:coreApi="using:Pixeval.CoreApi.Net"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:enum="using:Pixeval.CoreApi.Global.Enum"
     xmlns:markup="using:Pixeval.Controls.MarkupExtensions"
@@ -353,49 +354,21 @@
                     <ToggleSwitch IsOn="{x:Bind ViewModel.DisableDomainFronting, Mode=TwoWay}" />
                     <controls:SettingsExpander.Items>
                         <controls:SettingsCard HorizontalContentAlignment="Stretch" ContentAlignment="Left">
-                            <Grid
-                                Padding="20"
-                                HorizontalAlignment="Stretch"
-                                ColumnSpacing="50"
-                                RowSpacing="10">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="*" />
-                                </Grid.ColumnDefinitions>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                </Grid.RowDefinitions>
+                            <StackPanel Spacing="10">
+                                <TextBlock x:Uid="/SettingsPage/PixivNameResolverHeader" />
                                 <TextBlock
-                                    x:Uid="/SettingsPage/PixivApiNameResolverHeader"
-                                    Grid.Row="0"
-                                    Grid.Column="0" />
-                                <TextBlock
-                                    x:Uid="/SettingsPage/PixivApiNameResolverDescription"
-                                    Grid.Row="1"
-                                    Grid.Column="0"
+                                    x:Uid="/SettingsPage/PixivNameResolverDescription"
                                     Foreground="{StaticResource TextSecondaryAccentColor}"
                                     Style="{StaticResource BaseTextBlockStyle}" />
-                                <controls1:IPListInput
-                                    Grid.Row="2"
-                                    Grid.Column="0"
-                                    ItemsSource="{x:Bind ViewModel.PixivApiNameResolver, Mode=OneWay}" />
-                                <TextBlock
-                                    x:Uid="/SettingsPage/PixivImageNameResolverHeader"
-                                    Grid.Row="0"
-                                    Grid.Column="1" />
-                                <TextBlock
-                                    x:Uid="/SettingsPage/PixivImageNameResolverDescription"
-                                    Grid.Row="1"
-                                    Grid.Column="1"
-                                    Foreground="{StaticResource TextSecondaryAccentColor}"
-                                    Style="{StaticResource BaseTextBlockStyle}" />
-                                <controls1:IPListInput
-                                    Grid.Row="2"
-                                    Grid.Column="1"
-                                    ItemsSource="{x:Bind ViewModel.PixivImageNameResolver, Mode=OneWay}" />
-                            </Grid>
+                                <controls:WrapPanel HorizontalSpacing="10" VerticalSpacing="10">
+                                    <controls1:IPListInput Header="{x:Bind coreApi:MakoHttpOptions.AppApiHost}" ItemsSource="{x:Bind ViewModel.PixivAppApiNameResolver, Mode=OneWay}" />
+                                    <controls1:IPListInput Header="{x:Bind coreApi:MakoHttpOptions.ImageHost}" ItemsSource="{x:Bind ViewModel.PixivImageNameResolver, Mode=OneWay}" />
+                                    <controls1:IPListInput Header="{x:Bind coreApi:MakoHttpOptions.ImageHost2}" ItemsSource="{x:Bind ViewModel.PixivImageNameResolver2, Mode=OneWay}" />
+                                    <controls1:IPListInput Header="{x:Bind coreApi:MakoHttpOptions.OAuthHost}" ItemsSource="{x:Bind ViewModel.PixivOAuthNameResolver, Mode=OneWay}" />
+                                    <controls1:IPListInput Header="{x:Bind coreApi:MakoHttpOptions.AccountHost}" ItemsSource="{x:Bind ViewModel.PixivAccountNameResolver, Mode=OneWay}" />
+                                    <controls1:IPListInput Header="{x:Bind coreApi:MakoHttpOptions.WebApiHost}" ItemsSource="{x:Bind ViewModel.PixivWebApiNameResolver, Mode=OneWay}" />
+                                </controls:WrapPanel>
+                            </StackPanel>
                         </controls:SettingsCard>
                     </controls:SettingsExpander.Items>
                 </controls:SettingsExpander>

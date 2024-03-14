@@ -121,12 +121,15 @@ public class ExceptionModel
 {
     public ExceptionModel(Exception exception)
     {
+        Exception = exception;
         Source = exception.Source;
         Message = exception.Message;
         StackTrace = exception.StackTrace;
         if (exception.InnerException is not null)
             InnerException = new ExceptionModel(exception.InnerException);
     }
+
+    public Exception Exception { get; }
 
     public string? Source { get; }
 
@@ -138,6 +141,7 @@ public class ExceptionModel
 
     public string ToString(int indent) =>
         $"""
+         {Indent(indent)}Type: {Exception.GetType().FullName}
          {Indent(indent)}Source: {Source}
          {Indent(indent)}Message: {Message}
          {Indent(indent)}StackTrace: 

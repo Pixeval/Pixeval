@@ -19,6 +19,7 @@
 #endregion
 
 using System;
+using System.Threading.Tasks;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media.Animation;
 using Pixeval.AppManagement;
@@ -38,16 +39,20 @@ public sealed partial class LoginPage
         InitializeComponent();
     }
 
-    private async void Login_OnTapped(object sender, object e)
+    private async void Login_OnTapped(object sender, object e) => await LoginAsync(false);
+
+    private async void LoginWithNewAccount_OnTapped(object sender, RoutedEventArgs e) => await LoginAsync(true);
+
+    private async Task LoginAsync(bool useNewAccount)
     {
         try
         {
-            await _viewModel.WebView2LoginAsync(this, Navigated);
+            await _viewModel.WebView2LoginAsync(this, useNewAccount, Navigated);
         }
         catch (Exception exception)
         {
             _ = await this.CreateAcknowledgementAsync(LoginPageResources.ErrorWhileLoggingInTitle,
-                    LoginPageResources.ErrorWhileLogginInContentFormatted.Format(exception + "\n" + exception.StackTrace));
+                LoginPageResources.ErrorWhileLogginInContentFormatted.Format(exception + "\n" + exception.StackTrace));
             _viewModel.CloseWindow();
         }
 
@@ -70,11 +75,9 @@ public sealed partial class LoginPage
     {
         try
         {
-            if (_viewModel.CheckRefreshAvailable() is { } session)
+            if (_viewModel.CheckRefreshAvailable() is { } session
+                && await _viewModel.RefreshAsync(session))
             {
-                if (!await _viewModel.RefreshAsync(session))
-                    return;
-
                 NavigateParent<MainPage>(null, new DrillInNavigationTransitionInfo());
             }
             else

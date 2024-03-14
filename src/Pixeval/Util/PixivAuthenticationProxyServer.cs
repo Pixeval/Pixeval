@@ -26,7 +26,9 @@ using System.Net.Sockets;
 using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
+using Pixeval.CoreApi.Net;
 using Pixeval.Utilities;
 
 namespace Pixeval.Util;
@@ -50,18 +52,6 @@ public partial class PixivAuthenticationProxyServer : IDisposable
         _tcpListener?.Stop();
     }
 
-    private static Task<IPAddress[]> GetTargetIp(string host)
-    {
-        return !host.Contains("pixiv")
-            ? Dns.GetHostAddressesAsync(host)
-            : Task.FromResult(new[]
-            {
-                IPAddress.Parse("210.140.131.219"),
-                IPAddress.Parse("210.140.131.223"),
-                IPAddress.Parse("210.140.131.226")
-            });
-    }
-
     public static PixivAuthenticationProxyServer Create(IPAddress ip, int port, X509Certificate2 certificate)
     {
         return new PixivAuthenticationProxyServer(certificate, new TcpListener(ip, port));
@@ -80,7 +70,7 @@ public partial class PixivAuthenticationProxyServer : IDisposable
                     var clientStream = client.GetStream();
                     var content = await new StreamReader(clientStream).ReadLineAsync();
                     // content starts with "CONNECT" means it's trying to establish an HTTPS connection
-                    if (content == null || !content.StartsWith("CONNECT"))
+                    if (content is null || !content.StartsWith("CONNECT"))
                     {
                         return;
                     }
@@ -96,7 +86,7 @@ public partial class PixivAuthenticationProxyServer : IDisposable
                     await clientSsl.AuthenticateAsServerAsync(_certificate!, false, SslProtocols.None, false);
                     // create an HTTP connection to the target IP
                     var host = HostRegex().Match(content).Groups["host"].Value;
-                    var serverSsl = await CreateConnection(await GetTargetIp(host));
+                    var serverSsl = await CreateConnection(await MakoHttpOptions.GetAddressesAsync(true, host, CancellationToken.None));
                     var request = Functions.IgnoreExceptionAsync(() => clientSsl.CopyToAsync(serverSsl));
                     var response = Functions.IgnoreExceptionAsync(() => serverSsl.CopyToAsync(clientSsl));
                     _ = await Task.WhenAny(request, response);
@@ -128,6 +118,6 @@ public partial class PixivAuthenticationProxyServer : IDisposable
         }
     }
 
-    [GeneratedRegex("CONNECT (?<host>.+)\\:\\d+")]
+    [GeneratedRegex(@"CONNECT (?<host>.+)\:\d+")]
     private static partial Regex HostRegex();
 }

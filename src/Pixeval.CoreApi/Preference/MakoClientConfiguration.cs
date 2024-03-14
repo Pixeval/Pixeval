@@ -27,12 +27,15 @@ namespace Pixeval.CoreApi.Preference;
 /// <summary>
 /// Contains all the user-configurable keys
 /// </summary>
-public record MakoClientConfiguration(int ConnectionTimeout, bool Bypass, string? MirrorHost, CultureInfo CultureInfo)
+public record MakoClientConfiguration(
+    int ConnectionTimeout,
+    bool Bypass,
+    string? MirrorHost,
+    CultureInfo CultureInfo)
 {
     public MakoClientConfiguration() : this(5000, false, "", CultureInfo.CurrentCulture) { }
 
-    [JsonIgnore]
-    public CultureInfo CultureInfo { get; set; } = CultureInfo;
+    [JsonIgnore] public CultureInfo CultureInfo { get; set; } = CultureInfo;
 
     [JsonPropertyName("userAgent")]
     public ProductInfoHeaderValue[] UserAgent { get; set; } =

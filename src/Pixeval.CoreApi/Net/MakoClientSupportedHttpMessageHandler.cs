@@ -26,4 +26,9 @@ namespace Pixeval.CoreApi.Net;
 public abstract class MakoClientSupportedHttpMessageHandler(MakoClient makoClient) : HttpMessageHandler, IMakoClientSupport
 {
     public MakoClient MakoClient { get; set; } = makoClient;
+
+    public static HttpMessageInvoker GetHttpMessageInvoker(bool bypass)
+    {
+        return bypass ? MakoHttpOptions.CreateHttpMessageInvoker(bypass) : MakoHttpOptions.CreateDirectHttpMessageInvoker();
+    }
 }

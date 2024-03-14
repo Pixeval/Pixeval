@@ -12,7 +12,6 @@
     "UserNameBox/PlaceholderText": "Email or pixiv ID",
     "PasswordBox/PlaceholderText": "Password",
     "DisableDomainFrontingToggleSwitch/Header": "Disable domain fronting",
-    "RefreshingSessionFailedContent": "Deleted the corrupted session file, please restart the app\n If this problem persists, contact the developer for further help.",
     "RefreshingSessionFailedTitle": "Failed to refresh session",
     "FetchingSessionFailedContent": "Please restart the app, if you disabled domain fronting, try turn it on and retry\n  If this problem persists, contact the developer for further help.",
     "FetchingSessionFailedTitle": "Failed to fetch session",

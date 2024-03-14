@@ -92,7 +92,9 @@ public static class SyntaxHelper
 
                 yield return property;
             }
-        } while ((symbol = symbol.BaseType) is not null);
+
+            symbol = symbol.BaseType;
+        } while (symbol is not null);
     }
 
     internal static bool IgnoreAttribute(ISymbol symbol, INamedTypeSymbol attribute)

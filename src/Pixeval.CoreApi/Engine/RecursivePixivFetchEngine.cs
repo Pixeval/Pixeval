@@ -64,7 +64,7 @@ internal abstract class RecursivePixivAsyncEnumerator<TEntity, TRawEntity, TFetc
                 case Result<TRawEntity>.Failure(var exception):
                     if (exception is not null)
                     {
-                        MakoClient.Logger.LogError("", exception);
+                        MakoClient.LogException(exception);
                     }
 
                     PixivFetchEngine.EngineHandle.Complete();

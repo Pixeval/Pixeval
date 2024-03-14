@@ -9,10 +9,10 @@ public static class AfdianHelper
 
     public const string Api = $"https://afdian.net/api/creator/get-sponsors?user_id={UserId}&type={{0}}&page={{1}}";
 
-    public static async Task<Sponsor[]> QueryByAmount()
+    public static Task<Sponsor[]> QueryByAmount()
     {
         var a = Api.Format(QueryType.Amount, 0);
-        return [];
+        return Task.FromResult<Sponsor[]>([]);
     }
 }
 

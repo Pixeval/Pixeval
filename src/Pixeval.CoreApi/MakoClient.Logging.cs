@@ -2,8 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Pixeval.CoreApi.Net;
 using Pixeval.CoreApi.Net.EndPoints;
 using Pixeval.Utilities;
 
@@ -81,7 +84,7 @@ public partial class MakoClient
         }
         catch (Exception e)
         {
-            Logger.LogError("", e);
+            LogException(e);
             return T.CreateDefault();
         }
     }
@@ -112,8 +115,8 @@ public partial class MakoClient
             {
                 case Result<T>.Success { Value: var value }:
                     return value;
-                case Result<T>.Failure { Cause: var e }:
-                    Logger.LogError("", e);
+                case Result<T>.Failure { Cause: { } e }:
+                    LogException(e);
                     return createDefault();
                 default:
                     return ThrowUtils.ArgumentOutOfRange<Result<T>, T>(result);
@@ -131,8 +134,32 @@ public partial class MakoClient
         return RunWithLoggerAsync(task, T.CreateDefault);
     }
 
-    private void LogException(Exception e)
+    internal void LogException(Exception e)
     {
         Logger.LogError("MakoClient Exception", e);
+        var now = DateTime.Now;
+        if (now < CoolDown)
+            return;
+        CoolDown = now.AddSeconds(5);
+        HttpClient.DefaultProxy = GetCurrentSystemProxy();
+        var oldCollection = ServiceCollection;
+        var old = MakoServices;
+        ServiceCollection = [];
+        MakoServices = BuildServiceProvider(ServiceCollection);
+        Dispose(oldCollection);
+        old.Dispose();
     }
+
+    private DateTime CoolDown { get; set; } = DateTime.Now.AddSeconds(5);
+
+    static MakoClient()
+    {
+        var type = typeof(HttpClient).Assembly.GetType("System.Net.Http.SystemProxyInfo");
+        var method = type?.GetMethod("ConstructSystemProxy");
+        var @delegate = method?.CreateDelegate<Func<IWebProxy>>();
+
+        GetCurrentSystemProxy = @delegate ?? ThrowUtils.Throw<MissingMethodException, Func<IWebProxy>>("Unable to find proxy functions");
+    }
+
+    private static Func<IWebProxy> GetCurrentSystemProxy { get; }
 }

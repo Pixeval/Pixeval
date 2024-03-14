@@ -70,7 +70,7 @@ internal partial class FeedEngine(MakoClient makoClient, EngineHandle? engineHan
                     case Result<string>.Failure(var exception):
                         if (exception is not null)
                         {
-                            MakoClient.Logger.LogError("", exception);
+                            MakoClient.LogException(exception);
                         }
 
                         PixivFetchEngine.EngineHandle.Complete();
