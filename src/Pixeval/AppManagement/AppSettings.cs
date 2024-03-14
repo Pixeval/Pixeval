@@ -214,10 +214,6 @@ public partial record AppSettings : IWindowSettings
 
     [AttributeIgnore(typeof(SettingsViewModelAttribute<>))]
     [SyntheticSetting]
-    public bool LoginDisableDomainFronting { get; set; }
-
-    [AttributeIgnore(typeof(SettingsViewModelAttribute<>))]
-    [SyntheticSetting]
     public string[] PixivWebApiNameResolver { get; set; } =
     [
         "210.140.131.219",
@@ -229,7 +225,6 @@ public partial record AppSettings : IWindowSettings
     [SyntheticSetting]
     public string[] PixivOAuthNameResolver { get; set; } =
     [
-        "210.140.131.219",
         "210.140.131.219",
         "210.140.131.223",
         "210.140.131.226"
@@ -294,6 +289,6 @@ public partial record AppSettings : IWindowSettings
 
     public MakoClientConfiguration ToMakoClientConfiguration()
     {
-        return new MakoClientConfiguration(5000, !DisableDomainFronting, !LoginDisableDomainFronting, MirrorHost, CultureInfo.CurrentUICulture);
+        return new MakoClientConfiguration(5000, !DisableDomainFronting, MirrorHost, CultureInfo.CurrentUICulture);
     }
 }

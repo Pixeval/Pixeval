@@ -30,11 +30,10 @@ namespace Pixeval.CoreApi.Preference;
 public record MakoClientConfiguration(
     int ConnectionTimeout,
     bool Bypass,
-    bool OAuthBypass,
     string? MirrorHost,
     CultureInfo CultureInfo)
 {
-    public MakoClientConfiguration() : this(5000, false, false, "", CultureInfo.CurrentCulture) { }
+    public MakoClientConfiguration() : this(5000, false, "", CultureInfo.CurrentCulture) { }
 
     [JsonIgnore] public CultureInfo CultureInfo { get; set; } = CultureInfo;
 
@@ -61,9 +60,6 @@ public record MakoClientConfiguration(
     /// </summary>
     [JsonPropertyName("bypass")]
     public bool Bypass { get; set; } = Bypass;
-
-    [JsonPropertyName("oAuthBypass")] 
-    public bool OAuthBypass { get; set; } = OAuthBypass;
 
     /// <summary>
     /// Mirror server's host of image downloading

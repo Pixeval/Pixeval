@@ -123,7 +123,7 @@ public class AppKnownFolders(StorageFolder self)
 
     public Task ClearAsync()
     {
-        return _deleter is not null ? _deleter(Self) : Self.ClearDirectoryAsync();
+        return _deleter is null ? Self.ClearDirectoryAsync() : _deleter(Self);
     }
 
     public string Resolve(string path)

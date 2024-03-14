@@ -87,8 +87,8 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject, IDi
 
     public bool DisableDomainFronting
     {
-        get => App.AppViewModel.AppSettings.LoginDisableDomainFronting;
-        set => App.AppViewModel.AppSettings.LoginDisableDomainFronting = value;
+        get => App.AppViewModel.AppSettings.DisableDomainFronting;
+        set => App.AppViewModel.AppSettings.DisableDomainFronting = value;
     }
 
     public string UserName
