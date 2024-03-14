@@ -169,7 +169,7 @@ public sealed partial class IllustrationViewerPage : SupportCustomTitleBarDragRe
         _ = await viewModel.TryLoadThumbnailAsync(_viewModel);
     }
 
-    private void ExitFullScreenKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => _viewModel.FullScreenCommand.Execute(null);
+    private void ExitFullScreenKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => _viewModel.IsFullScreen = false;
 
     private async void OnDataTransferManagerOnDataRequested(DataTransferManager sender, DataRequestedEventArgs args)
     {
