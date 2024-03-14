@@ -48,12 +48,15 @@ public static partial class MakoHttpOptions
 
     public const string AppApiHost = "app-api.pixiv.net";
 
+    public const string AccountHost = "accounts.pixiv.net";
+
     public const string OAuthHost = "oauth.secure.pixiv.net";
 
     public static Dictionary<string, IPAddress[]> NameResolvers { get; } = new()
     {
         [ImageHost] = [],
         [WebApiHost] = [],
+        [AccountHost] = [],
         [AppApiHost] = [],
         [ImageHost2] = [],
         [OAuthHost] = []
@@ -96,7 +99,11 @@ public static partial class MakoHttpOptions
     public static async Task<IPAddress[]> GetAddressesAsync(string host, CancellationToken token)
     {
         if (!NameResolvers.TryGetValue(host, out var ips))
+        {
             ips = await Dns.GetHostAddressesAsync(host, token);
+            if (host.Contains("pixiv"))
+                ;
+        }
         return ips;
     }
 
