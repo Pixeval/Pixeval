@@ -83,11 +83,11 @@ public static partial class MakoHttpOptions
         }
     }
 
-    public static HttpMessageInvoker CreateHttpMessageInvoker(bool bypass)
+    public static HttpMessageInvoker CreateHttpMessageInvoker()
     {
         return new HttpMessageInvoker(new SocketsHttpHandler
         {
-            ConnectCallback = (context, token) => BypassedConnectCallback(bypass, context, token)
+            ConnectCallback = BypassedConnectCallback
         });
     }
 
@@ -96,18 +96,18 @@ public static partial class MakoHttpOptions
         return new HttpMessageInvoker(new SocketsHttpHandler());
     }
 
-    public static async Task<IPAddress[]> GetAddressesAsync(bool bypass, string host, CancellationToken token)
+    public static async Task<IPAddress[]> GetAddressesAsync(string host, CancellationToken token)
     {
-        if (!bypass || !NameResolvers.TryGetValue(host, out var ips)) 
+        if (!NameResolvers.TryGetValue(host, out var ips)) 
             ips = await Dns.GetHostAddressesAsync(host, token);
         return ips;
     }
 
-    private static async ValueTask<Stream> BypassedConnectCallback(bool bypass, SocketsHttpConnectionContext context, CancellationToken token)
+    private static async ValueTask<Stream> BypassedConnectCallback(SocketsHttpConnectionContext context, CancellationToken token)
     {
         var sockets = new Socket(SocketType.Stream, ProtocolType.Tcp); // disposed by networkStream
         var host = context.InitialRequestMessage.RequestUri!.Host;
-        await sockets.ConnectAsync(await GetAddressesAsync(bypass, host, token), 443, token).ConfigureAwait(false);
+        await sockets.ConnectAsync(await GetAddressesAsync(host, token), 443, token).ConfigureAwait(false);
         var networkStream = new NetworkStream(sockets, true); // disposed by sslStream
         var sslStream = new SslStream(networkStream, false, (_, _, _, _) => true);
         await sslStream.AuthenticateAsClientAsync("").ConfigureAwait(false);

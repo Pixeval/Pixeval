@@ -205,20 +205,12 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject, IDi
         // is intended to be called only once (at the start time) during the entire application's
         // lifetime, so the overhead is acceptable
 
-        var handler = new DelegatedHttpMessageHandler(MakoHttpOptions.CreateHttpMessageInvoker(!DisableDomainFronting));
+        var httpClient = DisableDomainFronting ? new() : new HttpClient(new DelegatedHttpMessageHandler(MakoHttpOptions.CreateDirectHttpMessageInvoker()));
+        httpClient.DefaultRequestHeaders.UserAgent.Add(new("PixivAndroidApp", "5.0.64"));
+        httpClient.DefaultRequestHeaders.UserAgent.Add(new("(Android 6.0)"));
+        var scheme = DisableDomainFronting ? "https" : "http";
 
-        var httpClient = new HttpClient(handler)
-        {
-            DefaultRequestHeaders =
-            {
-                UserAgent =
-                {
-                    new ProductInfoHeaderValue("PixivAndroidApp", "5.0.64"),
-                    new ProductInfoHeaderValue("(Android 6.0)")
-                }
-            }
-        };
-        using var result = await httpClient.PostFormAsync("http://oauth.secure.pixiv.net/auth/token",
+        using var result = await httpClient.PostFormAsync(scheme + "://oauth.secure.pixiv.net/auth/token",
             ("code", code),
             ("code_verifier", verifier),
             ("client_id", "MOBrBDS8blbauoSck0ZfDbtuzpyT"),
@@ -312,7 +304,7 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject, IDi
                           if ((await checkElement("button")) && document.querySelectorAll("button").length === 3) {
                               (await checkElement("button:nth-child({{(useNewAccount ? 2 : 1)}})")).click();
                           }
-                          {{(UserName != "" && Password != "" ? 
+                          {{(UserName != "" && Password != "" ?
                     $$"""
                           else {
                               await fill("input[autocomplete='username']", "{{UserName}}");
