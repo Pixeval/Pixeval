@@ -29,6 +29,6 @@ public abstract class MakoClientSupportedHttpMessageHandler(MakoClient makoClien
 
     public static HttpMessageInvoker GetHttpMessageInvoker(bool bypass)
     {
-        return bypass ? MakoHttpOptions.CreateHttpMessageInvoker() : MakoHttpOptions.CreateDirectHttpMessageInvoker();
+        return bypass ? MakoHttpOptions.CreateHttpMessageInvoker(bypass) : MakoHttpOptions.CreateDirectHttpMessageInvoker();
     }
 }

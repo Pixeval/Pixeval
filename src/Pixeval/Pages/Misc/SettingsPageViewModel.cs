@@ -87,6 +87,8 @@ public partial class SettingsPageViewModel(FrameworkElement frameworkElement) : 
 
     public ObservableCollection<string> PixivOAuthNameResolver { get; set; } = [.. App.AppViewModel.AppSettings.PixivOAuthNameResolver];
 
+    public ObservableCollection<string> PixivAccountNameResolver { get; set; } = [.. App.AppViewModel.AppSettings.PixivAccountNameResolver];
+
     public ObservableCollection<string> PixivWebApiNameResolver { get; set; } = [.. App.AppViewModel.AppSettings.PixivWebApiNameResolver];
 
     public AppSettings AppSetting { get; set; } = App.AppViewModel.AppSettings with { };
@@ -278,6 +280,7 @@ public partial class SettingsPageViewModel(FrameworkElement frameworkElement) : 
         PixivImageNameResolver = [.. AppSetting.PixivImageNameResolver];
         PixivImageNameResolver2 = [.. AppSetting.PixivImageNameResolver2];
         PixivOAuthNameResolver = [.. AppSetting.PixivOAuthNameResolver];
+        PixivAccountNameResolver = [.. AppSetting.PixivAccountNameResolver];
         PixivWebApiNameResolver = [.. AppSetting.PixivWebApiNameResolver];
 
         // see OnPropertyChanged
@@ -308,15 +311,17 @@ public partial class SettingsPageViewModel(FrameworkElement frameworkElement) : 
         var imageNameSame = AppSetting.PixivImageNameResolver.SequenceEqual(PixivImageNameResolver);
         var imageName2Same = AppSetting.PixivImageNameResolver2.SequenceEqual(PixivImageNameResolver2);
         var oAuthNameSame = AppSetting.PixivOAuthNameResolver.SequenceEqual(PixivOAuthNameResolver);
+        var accountNameSame = AppSetting.PixivAccountNameResolver.SequenceEqual(PixivAccountNameResolver);
         var webApiNameSame = AppSetting.PixivWebApiNameResolver.SequenceEqual(PixivWebApiNameResolver);
 
         AppSetting.PixivAppApiNameResolver = [.. PixivAppApiNameResolver];
         AppSetting.PixivImageNameResolver = [.. PixivImageNameResolver];
         AppSetting.PixivImageNameResolver2 = [.. PixivImageNameResolver2];
         AppSetting.PixivOAuthNameResolver = [.. PixivOAuthNameResolver];
+        AppSetting.PixivAccountNameResolver = [.. PixivAccountNameResolver];
         AppSetting.PixivWebApiNameResolver = [.. PixivWebApiNameResolver];
 
-        if (appApiNameSame || imageNameSame || imageName2Same || oAuthNameSame || webApiNameSame)
+        if (appApiNameSame || imageNameSame || imageName2Same || oAuthNameSame || accountNameSame || webApiNameSame)
             AppInfo.SetNameResolvers(AppSetting);
     }
 

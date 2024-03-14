@@ -365,6 +365,7 @@
                                     <controls1:IPListInput Header="{x:Bind coreApi:MakoHttpOptions.ImageHost}" ItemsSource="{x:Bind ViewModel.PixivImageNameResolver, Mode=OneWay}" />
                                     <controls1:IPListInput Header="{x:Bind coreApi:MakoHttpOptions.ImageHost2}" ItemsSource="{x:Bind ViewModel.PixivImageNameResolver2, Mode=OneWay}" />
                                     <controls1:IPListInput Header="{x:Bind coreApi:MakoHttpOptions.OAuthHost}" ItemsSource="{x:Bind ViewModel.PixivOAuthNameResolver, Mode=OneWay}" />
+                                    <controls1:IPListInput Header="{x:Bind coreApi:MakoHttpOptions.AccountHost}" ItemsSource="{x:Bind ViewModel.PixivAccountNameResolver, Mode=OneWay}" />
                                     <controls1:IPListInput Header="{x:Bind coreApi:MakoHttpOptions.WebApiHost}" ItemsSource="{x:Bind ViewModel.PixivWebApiNameResolver, Mode=OneWay}" />
                                 </controls:WrapPanel>
                             </StackPanel>

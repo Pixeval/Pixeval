@@ -223,6 +223,15 @@ public partial record AppSettings : IWindowSettings
 
     [AttributeIgnore(typeof(SettingsViewModelAttribute<>))]
     [SyntheticSetting]
+    public string[] PixivAccountNameResolver { get; set; } =
+    [
+        "210.140.131.219",
+        "210.140.131.223",
+        "210.140.131.226"
+    ];
+
+    [AttributeIgnore(typeof(SettingsViewModelAttribute<>))]
+    [SyntheticSetting]
     public string[] PixivOAuthNameResolver { get; set; } =
     [
         "210.140.131.219",

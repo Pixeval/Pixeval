@@ -46,6 +46,7 @@ using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
+using ReverseMarkdown.Converters;
 
 namespace Pixeval.Pages.Login;
 
@@ -204,7 +205,7 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject, IDi
         // is intended to be called only once (at the start time) during the entire application's
         // lifetime, so the overhead is acceptable
 
-        var handler = new DelegatedHttpMessageHandler(MakoClientSupportedHttpMessageHandler.GetHttpMessageInvoker(DisableDomainFronting));
+        var handler = new DelegatedHttpMessageHandler(MakoHttpOptions.CreateHttpMessageInvoker(!DisableDomainFronting));
 
         var httpClient = new HttpClient(handler)
         {

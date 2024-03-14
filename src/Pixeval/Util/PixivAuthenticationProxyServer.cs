@@ -86,7 +86,7 @@ public partial class PixivAuthenticationProxyServer : IDisposable
                     await clientSsl.AuthenticateAsServerAsync(_certificate!, false, SslProtocols.None, false);
                     // create an HTTP connection to the target IP
                     var host = HostRegex().Match(content).Groups["host"].Value;
-                    var serverSsl = await CreateConnection(await MakoHttpOptions.GetAddressesAsync(host, CancellationToken.None));
+                    var serverSsl = await CreateConnection(await MakoHttpOptions.GetAddressesAsync(true, host, CancellationToken.None));
                     var request = Functions.IgnoreExceptionAsync(() => clientSsl.CopyToAsync(serverSsl));
                     var response = Functions.IgnoreExceptionAsync(() => serverSsl.CopyToAsync(clientSsl));
                     _ = await Task.WhenAny(request, response);
