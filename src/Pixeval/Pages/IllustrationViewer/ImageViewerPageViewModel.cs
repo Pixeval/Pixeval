@@ -133,7 +133,7 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
         RestoreResolutionCommand.GetResolutionCommand(true);
     }
 
-    public async Task<Stream?> GetOriginalImageSourceAsync(bool usePng, IProgress<int>? progress = null, Stream? destination = null)
+    public async Task<Stream?> GetOriginalImageSourceAsync(IProgress<int>? progress = null, Stream? destination = null)
     {
         if (OriginalImageSources is null)
             return destination;
@@ -144,7 +144,7 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
         if (OriginalImageSources is [var stream, ..])
         {
             stream.Position = 0;
-            return await stream.IllustrationSaveToStreamAsync(destination, usePng ? IllustrationDownloadFormat.Png : null);
+            return stream;
         }
 
         return destination;
@@ -156,7 +156,7 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
         var path = IoHelper.NormalizePathSegment(new IllustrationMetaPathParser().Reduce(name, IllustrationViewModel));
         var file = await appKnownFolder.CreateFileAsync(path);
         await using var target = await file.OpenStreamForWriteAsync();
-        _ = await GetOriginalImageSourceAsync(false, null, target);
+        _ = await GetOriginalImageSourceAsync(null, target);
         return file;
     }
 
@@ -330,13 +330,13 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
     private void InitializeCommands()
     {
         SaveCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
-        SaveCommand.ExecuteRequested += (_, _) => IllustrationViewModel.SaveCommand.Execute((FrameworkElement, (Func<IProgress<int>?, Task<Stream?>>)(p => GetOriginalImageSourceAsync(false, p))));
+        SaveCommand.ExecuteRequested += (_, _) => IllustrationViewModel.SaveCommand.Execute((FrameworkElement, (Func<IProgress<int>?, Task<Stream?>>)(p => GetOriginalImageSourceAsync(p))));
 
         SaveAsCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
-        SaveAsCommand.ExecuteRequested += (_, _) => IllustrationViewModel.SaveAsCommand.Execute((Window, (Func<IProgress<int>?, Task<Stream?>>)(p => GetOriginalImageSourceAsync(false, p))));
+        SaveAsCommand.ExecuteRequested += (_, _) => IllustrationViewModel.SaveAsCommand.Execute((Window, (Func<IProgress<int>?, Task<Stream?>>)(p => GetOriginalImageSourceAsync(p))));
 
         CopyCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
-        CopyCommand.ExecuteRequested += (_, _) => IllustrationViewModel.CopyCommand.Execute((FrameworkElement, (Func<IProgress<int>?, Task<Stream?>>)(p => GetOriginalImageSourceAsync(true, p))));
+        CopyCommand.ExecuteRequested += (_, _) => IllustrationViewModel.CopyCommand.Execute((FrameworkElement, (Func<IProgress<int>?, Task<Stream?>>)(p => GetOriginalImageSourceAsync(p))));
 
         PlayGifCommand.CanExecuteRequested += (_, e) => e.CanExecute = IllustrationViewModel.IsUgoira && LoadSuccessfully;
         PlayGifCommand.ExecuteRequested += PlayGifCommandOnExecuteRequested;
