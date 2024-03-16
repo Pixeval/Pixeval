@@ -25,7 +25,9 @@
             <!--  ReSharper disable once UnusedMember.Local  -->
             <Grid x:Name="NovelPresenterDockPanel">
                 <!--  ReSharper disable once UnusedMember.Local  -->
-                <Grid x:Name="MainPanel" Margin="{StaticResource NormalMargin}" />
+                <Grid x:Name="MainPanel" Margin="{StaticResource NormalMargin}">
+                    <controls:DocumentViewer NovelId="{x:Bind _viewModel.NovelId}" />
+                </Grid>
                 <!--  ReSharper disable once UnusedMember.Local  -->
                 <Grid
                     x:Name="TitleBarBorder"

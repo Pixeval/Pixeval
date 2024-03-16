@@ -216,7 +216,7 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
                 AdvancePhase(LoadingPhase.LoadingFromCache);
 
                 // 就算已经有该Key，只要取不出值，就重新加载
-                if (await App.AppViewModel.Cache.GetAsync<Stream>(cacheKey) is { } stream)
+                if (await App.AppViewModel.Cache.TryGetAsync<Stream>(cacheKey) is { } stream)
                     return stream;
             }
             if (ugoiraParameter is { Metadata: var metadata, UgoiraUrl: var ugoiraUrl })

@@ -42,7 +42,7 @@ public static class NovelViewerHelper
     /// </summary>
     public static async Task CreateWindowWithPageAsync(long id)
     {
-        var viewModel = new NovelItemViewModel(await App.AppViewModel.MakoClient.GetNovelFromIdAsync(id));
+        var viewModel = new NovelItemViewModel((await App.AppViewModel.MakoClient.GetNovelFromIdAsync(id)).Novel);
 
         viewModel.CreateWindowWithPage([viewModel]);
     }

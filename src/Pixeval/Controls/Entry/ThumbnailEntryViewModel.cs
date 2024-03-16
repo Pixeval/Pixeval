@@ -143,27 +143,21 @@ public abstract partial class ThumbnailEntryViewModel<T> : EntryViewModel<T>, IW
             return true;
         }
 
-        if (await GetThumbnailAsync() is { } s)
-        {
-            if (App.AppViewModel.AppSettings.UseFileCache) 
-                await App.AppViewModel.Cache.AddAsync(cacheKey, s, TimeSpan.FromDays(1));
-            ThumbnailStream = s;
-            ThumbnailSourceRef = new SharedRef<SoftwareBitmapSource>(await s.GetSoftwareBitmapSourceAsync(false), key);
+        var s = await GetThumbnailAsync() ;
+        if (App.AppViewModel.AppSettings.UseFileCache)
+            await App.AppViewModel.Cache.AddAsync(cacheKey, s, TimeSpan.FromDays(1));
+        ThumbnailStream = s;
+        ThumbnailSourceRef = new SharedRef<SoftwareBitmapSource>(await s.GetSoftwareBitmapSourceAsync(false), key);
 
-            // 获取并加载完成
-            LoadingThumbnail = false;
-            return true;
-        }
-
-        // 加载失败
+        // 获取并加载完成
         LoadingThumbnail = false;
-        return false;
+        return true;
     }
 
     /// <summary>
     /// 直接获取对应缩略图
     /// </summary>
-    public async Task<Stream?> GetThumbnailAsync()
+    public async Task<Stream> GetThumbnailAsync()
     {
         switch (await App.AppViewModel.MakoClient.DownloadStreamAsync(ThumbnailUrl, cancellationHandle: LoadingThumbnailCancellationHandle))
         {
@@ -171,7 +165,7 @@ public abstract partial class ThumbnailEntryViewModel<T> : EntryViewModel<T>, IW
                 return stream;
             case Result<Stream>.Failure(OperationCanceledException):
                 LoadingThumbnailCancellationHandle.Reset();
-                return null;
+                break;
         }
 
         return AppInfo.GetNotAvailableImageStream();
@@ -188,9 +182,6 @@ public abstract partial class ThumbnailEntryViewModel<T> : EntryViewModel<T>, IW
             LoadingThumbnail = false;
             return;
         }
-
-        if (App.AppViewModel.AppSettings.UseFileCache)
-            return;
 
         if (!ThumbnailSourceRef?.TryDispose(key) ?? true)
             return;

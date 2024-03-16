@@ -48,7 +48,7 @@ internal interface IAppApiEndPoint
     Task<PixivSingleUserResponse> GetSingleUserAsync(SingleUserRequest request);
 
     [Get("/v2/novel/detail")]
-    Task<Novel> GetSingleNovelAsync([AliasAs("novel_id")] long id);
+    Task<PixivSingleNovelResponse> GetSingleNovelAsync([AliasAs("novel_id")] long id);
 
     [Get("/webview/v2/novel")]
     Task<string> GetNovelContentAsync([AliasAs("id")] long id, [AliasAs("raw")] bool raw = false);

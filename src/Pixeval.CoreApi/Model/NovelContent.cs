@@ -180,7 +180,8 @@ public partial record NovelIllustInfo
     public required NovelUser User { get; set; }
 
     [JsonPropertyName("id")]
-    public required string Id { get; set; } = "";
+    [JsonNumberHandling(JsonNumberHandling.AllowReadingFromString | JsonNumberHandling.WriteAsString)]
+    public required long Id { get; set; }
 
     [JsonPropertyName("page")]
     public required int Page { get; set; }
