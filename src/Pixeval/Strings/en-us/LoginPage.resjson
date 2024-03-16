@@ -13,7 +13,7 @@
     "PasswordBox/PlaceholderText": "Password",
     "DisableDomainFrontingToggleSwitch/Header": "Disable domain fronting",
     "RefreshingSessionFailedTitle": "Failed to refresh session",
-    "FetchingSessionFailedContent": "Please restart the app, if you disabled domain fronting, try turn it on and retry\n  If this problem persists, contact the developer for further help.",
+    "FetchingSessionFailedContent": "Please restart the app\nIf this problem persists, contact the developer for further help.",
     "FetchingSessionFailedTitle": "Failed to fetch session",
     "RootCertificateInstallationRequiredContent": "The certificate must be installed in order to login, the private key of this certificate is guaranteed not to be distributed, confirming this means you will accept the installation, please click OK in the dialog, if you refuse to install the certificate, you will not be able to use this app",
     "RootCertificateInstallationRequiredTitle": "You need to install the certificate to login",

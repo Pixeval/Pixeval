@@ -13,7 +13,7 @@
     "PasswordBox/PlaceholderText": "Пароль",
     "DisableDomainFrontingToggleSwitch/Header": "Отключить Direct Connect",
     "RefreshingSessionFailedTitle": "Не удалось обновить сессию",
-    "FetchingSessionFailedContent": "Перезапустите приложение, если вы отключили Direct Connect, попробуйте включить его и повторить попытку\nЕсли проблема повторяется, обратитесь к разработчику",
+    "FetchingSessionFailedContent": "Перезапустите приложение\nЕсли проблема повторяется, обратитесь к разработчику",
     "FetchingSessionFailedTitle": "Не удалось получить сессию",
     "RootCertificateInstallationRequiredContent": "Для нормального входа необходимо установить сертификат. Приватный ключ сертификата не будет распространяться. Выбором 'Подтвердить' вы соглашаетесь с установкой сертификата. Пожалуйста, подтвердите/нажмите OK в следующем диалоговом окне. Если вы откажетесь, использование приложения будет невозможно.",
     "RootCertificateInstallationRequiredTitle": "Требуется установка корневого сертификата",
