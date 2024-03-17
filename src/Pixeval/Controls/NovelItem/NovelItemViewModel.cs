@@ -20,13 +20,19 @@
 
 #endregion
 
-using System;
 using Pixeval.CoreApi.Model;
 
 namespace Pixeval.Controls;
 
-public partial class NovelItemViewModel(Novel novel) : ThumbnailEntryViewModel<Novel>(novel)
+public partial class NovelItemViewModel : ThumbnailEntryViewModel<Novel>
 {
+    public NovelItemViewModel(Novel novel) : base(novel)
+    {
+        SaveCommand.CanExecuteRequested += (_, e) => e.CanExecute = false;
+        SaveAsCommand.CanExecuteRequested += (_, e) => e.CanExecute = false;
+        CopyCommand.CanExecuteRequested += (_, e) => e.CanExecute = false;
+    }
+
     public int TextLength => Entry.TextLength;
 
     protected override string ThumbnailUrl => Entry.Cover.Medium;
