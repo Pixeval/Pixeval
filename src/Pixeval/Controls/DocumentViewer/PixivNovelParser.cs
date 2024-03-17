@@ -1,4 +1,4 @@
-﻿#region Copyright
+#region Copyright
 
 // GPL v3 License
 // 
@@ -23,6 +23,7 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.UI;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Documents;
 using Microsoft.UI.Xaml.Media;
 using Pixeval.Utilities;
@@ -32,17 +33,16 @@ namespace Pixeval.Controls;
 
 public static class PixivNovelParser
 {
-    public static List<Paragraph> Parse(string text, DocumentViewerViewModel viewModel)
+    public static List<Paragraph> Parse(string text, ref int startIndex, DocumentViewerViewModel viewModel)
     {
         var result = new List<Paragraph>();
-
         var currentParagraph = new Paragraph();
         result.Add(currentParagraph);
 
-        var span = text.AsSpan();
+        var currentIndex = 0;
+        var span = text.AsSpan(startIndex);
         var currentSpan = span;
         var loopSpan = span;
-        var currentIndex = 0;
 
         while (loopSpan.Length is not 0)
         {
@@ -52,7 +52,7 @@ public static class PixivNovelParser
             if (next is -1)
                 break;
 
-            Skip(ref loopSpan, ref currentSpan, next);
+            Skip(ref loopSpan, ref currentSpan, ref startIndex, next);
             AddLastRun(ref currentSpan);
 
             foreach (var token in _tokens)
@@ -60,38 +60,33 @@ public static class PixivNovelParser
                 if (breakForEach)
                     break;
                 if (!loopSpan.StartsWith(token))
-                {
                     continue;
-                }
 
                 switch (token)
                 {
                     case NewPageToken:
                     {
                         AddLastRun(ref currentSpan);
-                        currentParagraph = new();
-                        result.Add(currentParagraph);
-                        Skip(ref loopSpan, ref currentSpan, NewPageToken.Length, true);
-                        breakForEach = true;
-                        break;
+                        Skip(ref loopSpan, ref currentSpan, ref startIndex, token.Length, true);
+                        return result;
                     }
                     case RubyToken:
                     {
                         var separatorIndex = loopSpan.IndexOf(SeparatorToken);
                         if (separatorIndex is -1)
                         {
-                            Skip(ref loopSpan, ref currentSpan, RubyToken.Length);
+                            Skip(ref loopSpan, ref currentSpan, ref startIndex, token.Length);
                             break;
                         }
 
                         var endIndex = loopSpan.IndexOf(EndDoubleToken);
                         if (endIndex is -1)
                         {
-                            Skip(ref loopSpan, ref currentSpan, RubyToken.Length);
+                            Skip(ref loopSpan, ref currentSpan, ref startIndex, token.Length);
                             break;
                         }
 
-                        var kanji = loopSpan[RubyToken.Length..separatorIndex].Trim();
+                        var kanji = loopSpan[token.Length..separatorIndex].Trim();
                         var ruby = loopSpan[(separatorIndex + 1)..endIndex].Trim();
                         AddLastRun(ref currentSpan);
                         currentParagraph.Inlines.Add(new Run
@@ -104,7 +99,8 @@ public static class PixivNovelParser
                             Foreground = new SolidColorBrush(Colors.Gray)
                         });
 
-                        Skip(ref loopSpan, ref currentSpan, endIndex + 1, true);
+                        var end = endIndex + EndDoubleToken.Length;
+                        Skip(ref loopSpan, ref currentSpan, ref startIndex, end, true);
                         breakForEach = true;
                         break;
                     }
@@ -113,24 +109,24 @@ public static class PixivNovelParser
                         var separatorIndex = loopSpan.IndexOf(SeparatorToken);
                         if (separatorIndex is -1)
                         {
-                            Skip(ref loopSpan, ref currentSpan, JumpUriToken.Length);
+                            Skip(ref loopSpan, ref currentSpan, ref startIndex, token.Length);
                             break;
                         }
 
                         var endIndex = loopSpan.IndexOf(EndDoubleToken);
                         if (endIndex is -1)
                         {
-                            Skip(ref loopSpan, ref currentSpan, JumpUriToken.Length);
+                            Skip(ref loopSpan, ref currentSpan, ref startIndex, token.Length);
                             break;
                         }
 
-                        var content = loopSpan[JumpUriToken.Length..separatorIndex].Trim();
+                        var content = loopSpan[token.Length..separatorIndex].Trim();
                         var uriText = loopSpan[(separatorIndex + 1)..endIndex].Trim();
                         AddLastRun(ref currentSpan);
                         if (!Uri.TryCreate(uriText.ToString(), UriKind.Absolute, out var uri)
-                            || uri.Scheme is "http" or "https")
+                            || uri.Scheme is not ("http" or "https"))
                         {
-                            Skip(ref loopSpan, ref currentSpan, JumpUriToken.Length);
+                            Skip(ref loopSpan, ref currentSpan, ref startIndex, token.Length);
                             break;
                         }
 
@@ -139,7 +135,9 @@ public static class PixivNovelParser
                             NavigateUri = uri,
                             Inlines = { new Run { Text = content.ToString() } }
                         });
-                        Skip(ref loopSpan, ref currentSpan, endIndex + 1, true);
+
+                        var end = endIndex + EndDoubleToken.Length;
+                        Skip(ref loopSpan, ref currentSpan, ref startIndex, end, true);
                         breakForEach = true;
                         break;
                     }
@@ -148,24 +146,26 @@ public static class PixivNovelParser
                         var endIndex = loopSpan.IndexOf(EndSingleToken);
                         if (endIndex is -1)
                         {
-                            Skip(ref loopSpan, ref currentSpan, JumpToken.Length);
+                            Skip(ref loopSpan, ref currentSpan, ref startIndex, token.Length);
                             break;
                         }
 
                         // Pixiv也没有Trim
-                        var pageText = loopSpan[JumpToken.Length..endIndex];
+                        var pageText = loopSpan[token.Length..endIndex];
                         AddLastRun(ref currentSpan);
                         if (!uint.TryParse(pageText, null, out var page))
                         {
-                            Skip(ref loopSpan, ref currentSpan, JumpToken.Length);
+                            Skip(ref loopSpan, ref currentSpan, ref startIndex, token.Length);
                             break;
                         }
 
                         //todo
-                        var hyperlink = new Hyperlink { Inlines = { new Run { Text = "去{0}页".Format() } } };
-                        hyperlink.Click += (s, e) => viewModel.CurrentPage = (int)page;
+                        var hyperlink = new Hyperlink { Inlines = { new Run { Text = "去{0}页".Format(page) } } };
+                        hyperlink.Click += (s, e) => viewModel.JumpToPageRequested?.Invoke((int)page - 1);
                         currentParagraph.Inlines.Add(hyperlink);
-                        Skip(ref loopSpan, ref currentSpan, endIndex + 1, true);
+
+                        var end = endIndex + 1;
+                        Skip(ref loopSpan, ref currentSpan, ref startIndex, end, true);
                         breakForEach = true;
                         break;
                     }
@@ -174,16 +174,18 @@ public static class PixivNovelParser
                         var endIndex = loopSpan.IndexOf(EndSingleToken);
                         if (endIndex is -1)
                         {
-                            Skip(ref loopSpan, ref currentSpan, ChapterToken.Length);
+                            Skip(ref loopSpan, ref currentSpan, ref startIndex, token.Length);
                             break;
                         }
 
-                        var chapterText = loopSpan[ChapterToken.Length..endIndex].Trim();
+                        var chapterText = loopSpan[token.Length..endIndex].Trim();
                         AddLastRun(ref currentSpan);
                         currentParagraph.Inlines.Add(new LineBreak());
                         currentParagraph.Inlines.Add(new Run { Text = chapterText.ToString(), FontSize = 20, FontWeight = new(700) });
                         currentParagraph.Inlines.Add(new LineBreak());
-                        Skip(ref loopSpan, ref currentSpan, endIndex + 1, true);
+
+                        var end = endIndex + 1;
+                        Skip(ref loopSpan, ref currentSpan, ref startIndex, end, true);
                         breakForEach = true;
                         break;
                     }
@@ -192,29 +194,32 @@ public static class PixivNovelParser
                         var endIndex = loopSpan.IndexOf(EndSingleToken);
                         if (endIndex is -1)
                         {
-                            Skip(ref loopSpan, ref currentSpan, UploadedImageToken.Length);
+                            Skip(ref loopSpan, ref currentSpan, ref startIndex, token.Length);
                             break;
                         }
 
                         // Pixiv也没有Trim
-                        var imageIdText = loopSpan[UploadedImageToken.Length..endIndex];
+                        var imageIdText = loopSpan[token.Length..endIndex];
                         if (!long.TryParse(imageIdText, null, out var imageId))
                         {
-                            Skip(ref loopSpan, ref currentSpan, UploadedImageToken.Length);
+                            Skip(ref loopSpan, ref currentSpan, ref startIndex, token.Length);
                             break;
                         }
 
                         if (!viewModel.UploadedImages.ContainsKey(imageId))
                         {
-                            Skip(ref loopSpan, ref currentSpan, UploadedImageToken.Length);
+                            Skip(ref loopSpan, ref currentSpan, ref startIndex, token.Length);
                             break;
                         }
                         AddLastRun(ref currentSpan);
 
-                        var image = new LazyImage();
-                        currentParagraph.Inlines.Add(new LineBreak());
-                        currentParagraph.Inlines.Add(new InlineUIContainer { Child = image });
-                        currentParagraph.Inlines.Add(new LineBreak());
+                        var image = new LazyImage { Stretch = Stretch.None };
+                        result.Add(new()
+                        {
+                            Inlines = { new InlineUIContainer { Child = image } },
+                            TextAlignment = TextAlignment.Center
+                        });
+                        result.Add(currentParagraph = new());
                         viewModel.PropertyChanged += (s, e) =>
                         {
                             var vm = s.To<DocumentViewerViewModel>();
@@ -222,7 +227,8 @@ public static class PixivNovelParser
                                 image.Source = vm.UploadedImages[imageId];
                         };
 
-                        Skip(ref loopSpan, ref currentSpan, endIndex + 1, true);
+                        var end = endIndex + 1;
+                        Skip(ref loopSpan, ref currentSpan, ref startIndex, end, true);
                         breakForEach = true;
                         break;
                     }
@@ -231,29 +237,32 @@ public static class PixivNovelParser
                         var endIndex = loopSpan.IndexOf(EndSingleToken);
                         if (endIndex is -1)
                         {
-                            Skip(ref loopSpan, ref currentSpan, PixivImageToken.Length);
+                            Skip(ref loopSpan, ref currentSpan, ref startIndex, token.Length);
                             break;
                         }
 
                         // Pixiv也没有Trim
-                        var imageIdText = loopSpan[PixivImageToken.Length..endIndex];
+                        var imageIdText = loopSpan[token.Length..endIndex];
                         if (!long.TryParse(imageIdText, null, out var imageId))
                         {
-                            Skip(ref loopSpan, ref currentSpan, PixivImageToken.Length);
+                            Skip(ref loopSpan, ref currentSpan, ref startIndex, token.Length);
                             break;
                         }
 
                         if (!viewModel.IllustrationImages.ContainsKey(imageId))
                         {
-                            Skip(ref loopSpan, ref currentSpan, PixivImageToken.Length);
+                            Skip(ref loopSpan, ref currentSpan, ref startIndex, token.Length);
                             break;
                         }
                         AddLastRun(ref currentSpan);
 
-                        var image = new LazyImage();
-                        currentParagraph.Inlines.Add(new LineBreak());
-                        currentParagraph.Inlines.Add(new InlineUIContainer { Child = image });
-                        currentParagraph.Inlines.Add(new LineBreak());
+                        var image = new LazyImage { Stretch = Stretch.None };
+                        result.Add(new()
+                        {
+                            Inlines = { new InlineUIContainer { Child = image } },
+                            TextAlignment = TextAlignment.Center
+                        });
+                        result.Add(currentParagraph = new());
                         viewModel.PropertyChanged += (s, e) =>
                         {
                             var vm = s.To<DocumentViewerViewModel>();
@@ -261,7 +270,8 @@ public static class PixivNovelParser
                                 image.Source = vm.IllustrationImages[imageId];
                         };
 
-                        Skip(ref loopSpan, ref currentSpan, endIndex + 1, true);
+                        var end = endIndex + 1;
+                        Skip(ref loopSpan, ref currentSpan, ref startIndex, end, true);
                         breakForEach = true;
                         break;
                     }
@@ -269,9 +279,10 @@ public static class PixivNovelParser
             }
 
             if (!breakForEach)
-                Skip(ref loopSpan, ref currentSpan, 1);
+                Skip(ref loopSpan, ref currentSpan, ref startIndex, 1);
         }
 
+        startIndex = text.Length;
         currentIndex = currentSpan.Length;
         AddLastRun(ref currentSpan);
         return result;
@@ -285,8 +296,9 @@ public static class PixivNovelParser
                 currentParagraph.Inlines.Add(new Run { Text = lastRun.ToString() });
         }
 
-        void Skip(ref ReadOnlySpan<char> loopSpan, ref ReadOnlySpan<char> currentSpan, int count, bool resetCurrent = false)
+        void Skip(ref ReadOnlySpan<char> loopSpan, ref ReadOnlySpan<char> currentSpan, ref int startIndex, int count, bool resetCurrent = false)
         {
+            startIndex += count;
             currentIndex += count;
             loopSpan = loopSpan[count..];
             if (resetCurrent)

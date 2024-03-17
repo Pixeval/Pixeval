@@ -136,7 +136,7 @@
                     Icon="{markup:FontSymbolIcon Glyph=RingerEA8F}"
                     Tag="{x:Bind _viewModel.AboutTag}" />
                 <NavigationViewItemSeparator />
-                <NavigationViewItem SelectsOnInvoked="False">
+                <NavigationViewItem SelectsOnInvoked="False" Tapped="SelfNavigationViewItem_OnTapped">
                     <NavigationViewItem.Content>
                         <Grid Margin="-5,10" ColumnSpacing="10">
                             <Grid.ColumnDefinitions>
@@ -226,12 +226,10 @@
                         OverflowButtonVisibility="Collapsed">
                         <AppBarButton
                             x:Uid="/MainPage/ReverseSearchButton"
-                            Width="{StaticResource CollapsedAppBarButtonWidth}"
                             Content="{markup:FontSymbolIcon Glyph=CameraE722}"
                             Tapped="ReverseSearchButton_OnTapped" />
                         <AppBarButton
                             x:Uid="/MainPage/OpenSearchSettingButton"
-                            Width="{StaticResource CollapsedAppBarButtonWidth}"
                             Content="{markup:FontSymbolIcon Glyph=SettingsE713}"
                             Tapped="OpenSearchSettingButton_OnTapped" />
                     </CommandBar>

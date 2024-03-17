@@ -97,9 +97,9 @@ public sealed partial class WorkView : IEntryView<ISortableEntryViewViewModel>
                 {
                     ViewModel?.Dispose();
                     ViewModel = null!;
-                    ItemsView.MinItemWidth = 600;
+                    ItemsView.MinItemWidth = 200;
                     ItemsView.MinItemHeight = 0;
-                    ItemsView.LayoutType = ItemsViewLayoutType.Grid;
+                    ItemsView.LayoutType = ItemsViewLayoutType.Staggered;
                     ItemsView.ItemTemplate = this.GetResource<DataTemplate>("NovelItemDataTemplate");
                     ViewModel = new NovelViewViewModel();
                     OnPropertyChanged(nameof(ViewModel));

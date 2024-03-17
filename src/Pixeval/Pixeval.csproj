@@ -196,6 +196,7 @@
         <PRIResource Include="Strings\zh-cn\SettingsPage.resjson" />
         <PRIResource Include="Strings\zh-cn\TokenInputTextBox.resjson" />
         <PRIResource Include="Strings\zh-cn\TagsEntry.resjson" />
+        <PRIResource Include="Strings\zh-cn\TagsPage.resjson" />
         <PRIResource Include="Strings\zh-cn\IPListInput.resjson" />
 
         <PRIResource Include="Strings\ru-ru\AppSettings.resjson" />

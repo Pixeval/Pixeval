@@ -186,7 +186,7 @@ public sealed partial class MainPage : SupportCustomTitleBarDragRegionPage
                 MainPageResources.SearchKeywordCannotBeBlankContent);
             return;
         }
-        
+
         switch (args.ChosenSuggestion)
         {
             case SuggestionModel({ } name, var translatedName, _):
@@ -342,5 +342,10 @@ public sealed partial class MainPage : SupportCustomTitleBarDragRegionPage
         {
             await ShowReverseSearchApiKeyNotPresentDialog();
         }
+    }
+
+    private async void SelfNavigationViewItem_OnTapped(object sender, TappedRoutedEventArgs e)
+    {
+        await IllustratorViewerHelper.CreateWindowWithPageAsync(App.AppViewModel.PixivUid);
     }
 }

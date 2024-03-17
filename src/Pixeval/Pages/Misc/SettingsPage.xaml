@@ -319,7 +319,7 @@
                     <controls:SettingsExpander.Items>
                         <controls:SettingsCard x:Uid="/SettingsPage/AppFontFamilyComboBoxEntry" HeaderIcon="{markup:FontSymbolIcon Glyph=SpellingF87B}">
                             <ComboBox
-                                x:Uid="/SettingsPage/AppFontFamilyComboBoxEntryComboBox"
+                                x:Uid="/SettingsPage/AppFontFamilyComboBox"
                                 Width="200"
                                 ItemsSource="{x:Bind misc:SettingsPageViewModel.AvailableFonts}"
                                 SelectedItem="{x:Bind ViewModel.AppFontFamilyName, Mode=TwoWay}">

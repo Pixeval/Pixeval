@@ -24,6 +24,7 @@ using Windows.Foundation;
 using Microsoft.UI.Composition.SystemBackdrops;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
 using Pixeval.Attributes;
 using Pixeval.Controls;
 using Pixeval.Controls.Windowing;
@@ -287,6 +288,42 @@ public partial record AppSettings : IWindowSettings
     [AttributeIgnore(typeof(SettingsViewModelAttribute<>))]
     [SyntheticSetting]
     public string Password { get; set; } = "";
+
+    [AttributeIgnore(typeof(SettingsViewModelAttribute<>))]
+    [SyntheticSetting]
+    public uint NovelFontColorInDarkMode { get; set; } = 0xFFFFFFFF;
+
+    [AttributeIgnore(typeof(SettingsViewModelAttribute<>))]
+    [SyntheticSetting]
+    public uint NovelFontColorInLightMode { get; set; } = 0xFF000000;
+
+    [AttributeIgnore(typeof(SettingsViewModelAttribute<>))]
+    [SyntheticSetting]
+    public uint NovelBackgroundInDarkMode { get; set; } = 0;
+
+    [AttributeIgnore(typeof(SettingsViewModelAttribute<>))]
+    [SyntheticSetting]
+    public uint NovelBackgroundInLightMode { get; set; } = 0;
+
+    [AttributeIgnore(typeof(SettingsViewModelAttribute<>))]
+    [SyntheticSetting]
+    public FontWeightsOption NovelFontWeight { get; set; } = FontWeightsOption.Normal;
+
+    [AttributeIgnore(typeof(SettingsViewModelAttribute<>))]
+    [SyntheticSetting]
+    public string NovelFontFamily { get; set; } = AppSettingsResources.AppDefaultFontFamilyName;
+
+    [AttributeIgnore(typeof(SettingsViewModelAttribute<>))]
+    [SyntheticSetting]
+    public double NovelFontSize { get; set; } = 14;
+
+    [AttributeIgnore(typeof(SettingsViewModelAttribute<>))]
+    [SyntheticSetting]
+    public double NovelLineHeight { get; set; } = 28;
+
+    [AttributeIgnore(typeof(SettingsViewModelAttribute<>))]
+    [SyntheticSetting]
+    public double NovelMaxWidth { get; set; } = 1000;
 
     [AttributeIgnore(typeof(SettingsViewModelAttribute<>))]
     [SyntheticSetting]

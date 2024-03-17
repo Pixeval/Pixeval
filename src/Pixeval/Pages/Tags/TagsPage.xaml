@@ -26,9 +26,9 @@
             <TextBlock VerticalAlignment="Center" Text="{x:Bind _viewModel.WorkingDirectory, Mode=OneWay}" />
         </StackPanel>
         <controls1:TokenizingTextBox
+            x:Uid="/TagsPage/TagsFilterTokenizingTextBox"
             Grid.Row="1"
             ItemsSource="{x:Bind _viewModel.SelectedTags}"
-            PlaceholderText="输入标签以筛选"
             TokenDelimiter="," />
         <controls:AdvancedItemsView
             Grid.Row="2"

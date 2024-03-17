@@ -12,20 +12,19 @@
     xmlns:markup="using:Pixeval.Controls.MarkupExtensions"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:media="using:Microsoft.Xaml.Interactions.Media"
-    xmlns:pages="using:Pixeval.Pages"
     xmlns:triggers="using:Pixeval.Util.Triggers"
     KeyboardAcceleratorPlacementMode="Hidden"
     Loaded="IllustrationViewerPage_OnLoaded"
     Unloaded="IllustrationViewerPage_OnUnloaded"
     mc:Ignorable="d">
     <controls:SupportCustomTitleBarDragRegionPage.Resources>
-        <ThemeShadow x:Name="SidePanelShadow" />
         <converters:BoolNegationConverter x:Key="BoolNegationConverter" />
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
         <converters1:NumberToPercentageConverter x:Key="NumberToPercentageConverter" />
         <converters1:NullableToVisibilityConverter x:Key="NullableToVisibilityConverter" />
         <converters1:BoolNegationToVisibilityConverter x:Key="BoolNegationToVisibilityConverter" />
         <converters1:DisplayIndexConverter x:Key="DisplayIndexConverter" />
+        <Thickness x:Key="NormalMargin">0,48,0,0</Thickness>
         <AcrylicBrush
             x:Key="BottomCommandSectionBackground"
             FallbackColor="{StaticResource SecondaryAccentColor}"
@@ -43,19 +42,15 @@
             <Setter Property="TextAlignment" Value="Center" />
             <Setter Property="TextTrimming" Value="CharacterEllipsis" />
         </Style>
-        <Thickness x:Key="NormalMargin">0,48,0,0</Thickness>
     </controls:SupportCustomTitleBarDragRegionPage.Resources>
-    <Page.KeyboardAccelerators>
-        <KeyboardAccelerator
-            Key="Escape"
-            Invoked="ExitFullScreenKeyboardAccelerator_OnInvoked"
-            Modifiers="None" />
-    </Page.KeyboardAccelerators>
-    <pages:WorkViewerSplitView
+    <controls:SupportCustomTitleBarDragRegionPage.KeyboardAccelerators>
+        <KeyboardAccelerator Key="Escape" Invoked="ExitFullScreenKeyboardAccelerator_OnInvoked" />
+    </controls:SupportCustomTitleBarDragRegionPage.KeyboardAccelerators>
+    <controls:WorkViewerSplitView
         x:Name="EntryViewerSplitView"
         MenuItemsSource="{x:Bind _viewModel.Tags}"
         RaiseSetTitleBarDragRegion="Placeholder_OnSizeChanged">
-        <pages:WorkViewerSplitView.PaneContent>
+        <controls:WorkViewerSplitView.PaneContent>
             <Grid x:Name="IllustrationPresenterDockPanel" HorizontalAlignment="Stretch">
                 <!--  ReSharper disable once UnusedMember.Local  -->
                 <Grid x:Name="MainPanel" Margin="{StaticResource NormalMargin}">
@@ -383,10 +378,10 @@
                             HorizontalAlignment="Right"
                             VerticalAlignment="Center"
                             DefaultLabelPosition="Collapsed">
-                            <AppBarButton Width="{StaticResource CollapsedAppBarButtonWidth}" Command="{x:Bind _viewModel.FullScreenCommand}" />
-                            <AppBarButton Width="{StaticResource CollapsedAppBarButtonWidth}" Command="{x:Bind _viewModel.CurrentImage.RestoreResolutionCommand, Mode=OneWay}" />
-                            <AppBarButton Width="{StaticResource CollapsedAppBarButtonWidth}" Command="{x:Bind _viewModel.CurrentImage.ZoomOutCommand, Mode=OneWay}" />
-                            <AppBarButton Width="{StaticResource CollapsedAppBarButtonWidth}" Command="{x:Bind _viewModel.CurrentImage.ZoomInCommand, Mode=OneWay}" />
+                            <AppBarButton Command="{x:Bind _viewModel.FullScreenCommand}" />
+                            <AppBarButton Command="{x:Bind _viewModel.CurrentImage.RestoreResolutionCommand, Mode=OneWay}" />
+                            <AppBarButton Command="{x:Bind _viewModel.CurrentImage.ZoomOutCommand, Mode=OneWay}" />
+                            <AppBarButton Command="{x:Bind _viewModel.CurrentImage.ZoomInCommand, Mode=OneWay}" />
                         </CommandBar>
                         <TextBlock
                             Grid.Column="4"
@@ -413,7 +408,7 @@
                     </Grid>
                 </Grid>
             </Grid>
-        </pages:WorkViewerSplitView.PaneContent>
+        </controls:WorkViewerSplitView.PaneContent>
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
                 <VisualState x:Name="Normal">
@@ -442,5 +437,5 @@
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
-    </pages:WorkViewerSplitView>
+    </controls:WorkViewerSplitView>
 </controls:SupportCustomTitleBarDragRegionPage>

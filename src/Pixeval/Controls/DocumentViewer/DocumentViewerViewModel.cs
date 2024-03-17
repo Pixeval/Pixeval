@@ -37,21 +37,17 @@ using Pixeval.Utilities.Threading;
 
 namespace Pixeval.Controls;
 
-public partial class DocumentViewerViewModel : ObservableObject, IDisposable
+public class DocumentViewerViewModel : ObservableObject, IDisposable
 {
+    public Action<int>? JumpToPageRequested;
+
     public NovelContent NovelContent { get; }
 
     public Dictionary<long, SoftwareBitmapSource> IllustrationImages { get; } = [];
 
     public Dictionary<long, SoftwareBitmapSource> UploadedImages { get; } = [];
 
-    public ObservableCollection<Paragraph> Paragraphs { get; } = [];
-
-    public Paragraph? CurrentParagraph => CurrentPage > Paragraphs.Count ? Paragraphs[CurrentPage] : null;
-
-    [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(CurrentParagraph))]
-    private int _currentPage;
+    public ObservableCollection<List<Paragraph>> Pages { get; } = [];
 
     public DocumentViewerViewModel(NovelContent novelContent)
     {
@@ -62,7 +58,16 @@ public partial class DocumentViewerViewModel : ObservableObject, IDisposable
     {
         _ = LoadImagesAsync();
 
-        Paragraphs.AddRange(PixivNovelParser.Parse(NovelContent.Text, this));
+        var index = 0;
+        var length = NovelContent.Text.Length;
+        Pages.Add(PixivNovelParser.Parse(NovelContent.Text, ref index, this));
+        await Task.Yield();
+        while (index < length)
+        {
+            if (LoadingCancellationHandle.IsCancelled)
+                break;
+            Pages.Add(PixivNovelParser.Parse(NovelContent.Text, ref index, this));
+        }
     }
 
     public async Task LoadImagesAsync()
@@ -75,12 +80,16 @@ public partial class DocumentViewerViewModel : ObservableObject, IDisposable
 
         foreach (var illust in NovelContent.Illusts)
         {
+            if (LoadingCancellationHandle.IsCancelled)
+                break;
             IllustrationImages[illust.Id] = await LoadThumbnailAsync(illust.Illust.Images.Medium);
             OnPropertyChanged(nameof(IllustrationImages) + illust.Id);
         }
 
         foreach (var image in NovelContent.Images)
         {
+            if (LoadingCancellationHandle.IsCancelled)
+                break;
             UploadedImages[image.NovelImageId] = await LoadThumbnailAsync(image.Urls.X1200);
             OnPropertyChanged(nameof(UploadedImages) + image.NovelImageId);
         }
@@ -108,16 +117,10 @@ public partial class DocumentViewerViewModel : ObservableObject, IDisposable
     /// </summary>
     public async Task<Stream> GetThumbnailAsync(string url)
     {
-        switch (await App.AppViewModel.MakoClient.DownloadStreamAsync(url, cancellationHandle: LoadingCancellationHandle))
-        {
-            case Result<Stream>.Success(var stream):
-                return stream;
-            case Result<Stream>.Failure(OperationCanceledException):
-                LoadingCancellationHandle.Reset();
-                break;
-        }
-
-        return AppInfo.GetNotAvailableImageStream();
+        return await App.AppViewModel.MakoClient.DownloadStreamAsync(url, cancellationHandle: LoadingCancellationHandle) is
+            Result<Stream>.Success(var stream)
+            ? stream
+            : AppInfo.GetNotAvailableImageStream();
     }
 
     public static async Task<DocumentViewerViewModel> CreateAsync(long novelId)
@@ -131,5 +134,10 @@ public partial class DocumentViewerViewModel : ObservableObject, IDisposable
 
     public void Dispose()
     {
+        LoadingCancellationHandle.Cancel();
+        foreach (var (_, value) in IllustrationImages)
+            value?.Dispose();
+        foreach (var (_, value) in UploadedImages)
+            value?.Dispose();
     }
 }

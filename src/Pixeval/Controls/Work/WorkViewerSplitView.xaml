@@ -1,15 +1,12 @@
 <UserControl
-    x:Class="Pixeval.Pages.WorkViewerSplitView"
+    x:Class="Pixeval.Controls.WorkViewerSplitView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="using:Pixeval.Pages"
+    xmlns:local="using:Pixeval.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:windowing="using:Pixeval.Controls.Windowing"
     mc:Ignorable="d">
-    <UserControl.Resources>
-        <ThemeShadow x:Name="SidePanelShadow" />
-    </UserControl.Resources>
     <SplitView
         x:Name="SplitView"
         DisplayMode="Overlay"
@@ -19,10 +16,7 @@
         PaneClosed="SplitView_OnPaneOpenedOrClosed"
         PaneOpened="SplitView_OnPaneOpenedOrClosed">
         <SplitView.Pane>
-            <Grid
-                Background="{StaticResource SystemControlBackgroundChromeMediumLowBrush}"
-                Shadow="{x:Bind SidePanelShadow}"
-                Translation="0,0,40">
+            <Grid Background="{StaticResource SystemControlBackgroundChromeMediumLowBrush}" Translation="0,0,40">
                 <NavigationView
                     x:Name="NavigationView"
                     IsBackButtonVisible="Collapsed"

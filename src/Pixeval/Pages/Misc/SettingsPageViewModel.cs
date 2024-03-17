@@ -34,7 +34,6 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Pixeval.AppManagement;
 using Pixeval.Controls;
-using Pixeval.Database.Managers;
 using Pixeval.Download;
 using Pixeval.Download.MacroParser;
 using Pixeval.Download.Models;

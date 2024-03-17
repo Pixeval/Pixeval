@@ -1,3 +1,4 @@
+using System.Numerics;
 using System.Threading.Tasks;
 using Windows.Graphics;
 using WinUI3Utilities;
@@ -7,24 +8,54 @@ using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
+using Pixeval.Controls;
 
 namespace Pixeval.Pages.NovelViewer;
 
 public sealed partial class NovelViewerPage
 {
+    private bool _pointerNotInArea = true;
+
+    private bool _timeUp;
+
     private NovelViewerPageViewModel _viewModel = null!;
 
     public NovelViewerPage() => InitializeComponent();
 
+    public bool PointerNotInArea
+    {
+        get => _pointerNotInArea;
+        set
+        {
+            _pointerNotInArea = value;
+            if (IsLoaded && _pointerNotInArea && TimeUp)
+                BottomCommandSection.Translation = new Vector3(0, 120, 0);
+        }
+    }
+
+    public bool TimeUp
+    {
+        get => _timeUp;
+        set
+        {
+            _timeUp = value;
+            if (IsLoaded && _timeUp && PointerNotInArea)
+                BottomCommandSection.Translation = new Vector3(0, 120, 0);
+        }
+    }
+
     protected override void SetTitleBarDragRegion(InputNonClientPointerSource sender, SizeInt32 windowSize, double scaleFactor, out int titleBarHeight)
     {
+        if (_viewModel.IsFullScreen)
+        {
+            titleBarHeight = 0;
+            return;
+        }
         var leftIndent = new RectInt32(0, 0, EntryViewerSplitView.IsPaneOpen ? (int)WorkViewerSplitView.OpenPaneLength : 0, (int)TitleBarArea.ActualHeight);
 
         if (TitleBar.Visibility is Visibility.Visible)
-        {
             sender.SetRegionRects(NonClientRegionKind.Icon, [GetScaledRect(TitleBar.Icon)]);
-        }
-        sender.SetRegionRects(NonClientRegionKind.Passthrough, [GetScaledRect(leftIndent), GetScaledRect(NovelViewerCommandBar)]);
+        sender.SetRegionRects(NonClientRegionKind.Passthrough, [GetScaledRect(leftIndent), GetScaledRect(NovelViewerCommandBar), GetScaledRect(NovelViewerSubCommandBar)]);
         titleBarHeight = 48;
     }
 
@@ -43,10 +74,7 @@ public sealed partial class NovelViewerPage
             var oldIndex = args.OldValue.To<int>();
             var newIndex = args.NewValue.To<int>(); // vm.CurrentNovelIndex
 
-            //if (EntryViewerSplitView.PinPane)
-            //    EntryViewerSplitView.NavigationViewSelect(vm.Tags[0]);
-
-            // todo Set Control ViewModel
+            EntryViewerSplitView.NavigationViewSelect(vm.Tags[0]);
         };
 
         _viewModel.PropertyChanged += (sender, args) =>
@@ -63,14 +91,72 @@ public sealed partial class NovelViewerPage
                 }
             }
         };
+    }
 
-        // 第一次_viewModel.CurrentNovelIndex变化时，还没有订阅事件，所以不会触发DetailedPropertyChanged，需要手动触发
-        // TODO
+    private void NovelViewerPage_OnLoaded(object sender, RoutedEventArgs e)
+    {
+        CommandBorderDropShadow.Receivers.Add(DocumentViewer);
+        ThumbnailListDropShadow.Receivers.Add(DocumentViewer);
+
+        DocumentViewer_OnTapped(null!, null!);
+    }
+
+    private void NovelViewerPage_OnUnloaded(object sender, RoutedEventArgs e)
+    {
+        _viewModel.Dispose();
+    }
+
+    private async void FrameworkElement_OnDataContextChanged(FrameworkElement sender, DataContextChangedEventArgs args)
+    {
+        var viewModel = sender.GetDataContext<NovelItemViewModel>();
+        _ = await viewModel.TryLoadThumbnailAsync(_viewModel);
+    }
+
+    private void ExitFullScreenKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => _viewModel.IsFullScreen = false;
+
+    private void NextButton_OnTapped(object sender, TappedRoutedEventArgs e)
+    {
+        switch (_viewModel.NextButtonAction)
+        {
+            case true: ++PipsPager.SelectedPageIndex; break;
+            // 由于先后次序问题，必须操作SelectedIndex，而不是_viewModel.CurrentNovelIndex
+            case false: ++ThumbnailItemsView.SelectedIndex; break;
+            case null: break;
+        }
+    }
+
+    private void NextButton_OnRightTapped(object sender, RightTappedRoutedEventArgs e)
+    {
+        // 由于先后次序问题，必须操作SelectedIndex，而不是_viewModel.CurrentNovelIndex
+        ++ThumbnailItemsView.SelectedIndex;
+    }
+
+    private void PrevButton_OnTapped(object sender, TappedRoutedEventArgs e)
+    {
+        switch (_viewModel.PrevButtonAction)
+        {
+            case true: --PipsPager.SelectedPageIndex; break;
+            // 由于先后次序问题，必须操作SelectedIndex，而不是_viewModel.CurrentNovelIndex
+            case false: --ThumbnailItemsView.SelectedIndex; break;
+            case null: break;
+        }
+    }
+
+    private void PrevButton_OnRightTapped(object sender, RightTappedRoutedEventArgs e)
+    {
+        // 由于先后次序问题，必须操作SelectedIndex，而不是_viewModel.CurrentNovelIndex
+        --ThumbnailItemsView.SelectedIndex;
     }
 
     private void Placeholder_OnSizeChanged(object sender, object e) => RaiseSetTitleBarDragRegion();
 
-    private void OpenPane_OnRightTapped(object sender, RightTappedRoutedEventArgs e) => EntryViewerSplitView.PinPane = true;
+    private async void DocumentViewer_OnTapped(object sender, TappedRoutedEventArgs e)
+    {
+        BottomCommandSection.Translation = new Vector3();
+        TimeUp = false;
+        await Task.Delay(3000);
+        TimeUp = true;
+    }
 
     private void Image_OnLoading(FrameworkElement sender, object args)
     {
@@ -78,4 +164,6 @@ public sealed partial class NovelViewerPage
         var appBarButton = teachingTip.GetTag<AppBarButton>();
         teachingTip.Target = appBarButton.IsInOverflow ? null : appBarButton;
     }
+
+    private void OpenPane_OnRightTapped(object sender, RightTappedRoutedEventArgs e) => EntryViewerSplitView.PinPane = true;
 }
