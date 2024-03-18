@@ -30,6 +30,8 @@ public class MangaIndexMacro : IMacro<IllustrationItemViewModel>.ITransducer
 
     public string Substitute(IllustrationItemViewModel context)
     {
-        return context.MangaIndex is -1 ? "{0}" : context.MangaIndex.ToString();
+        // 下载单张漫画的时候，MangaIndex 不为 -1
+        // 下载多张漫画或者单张插画的时候，为 -1
+        return context.MangaIndex is -1 ? $"<{Name}>" : context.MangaIndex.ToString();
     }
 }
