@@ -13,6 +13,7 @@
         <DataTemplate x:Key="NovelItemDataTemplate" x:DataType="local:NovelItemViewModel">
             <ItemContainer>
                 <local:NovelItem
+                    OpenNovelRequested="NovelItem_OnOpenNovelRequested"
                     RequestTeachingTip="WorkItem_OnRequestTeachingTip"
                     ViewModel="{x:Bind}"
                     ViewModelChanged="WorkItem_OnViewModelChanged" />

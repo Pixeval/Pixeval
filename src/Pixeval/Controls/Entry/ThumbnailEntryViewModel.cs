@@ -143,7 +143,7 @@ public abstract partial class ThumbnailEntryViewModel<T> : EntryViewModel<T>, IW
             return true;
         }
 
-        var s = await GetThumbnailAsync() ;
+        var s = await GetThumbnailAsync();
         if (App.AppViewModel.AppSettings.UseFileCache)
             await App.AppViewModel.Cache.AddAsync(cacheKey, s, TimeSpan.FromDays(1));
         ThumbnailStream = s;

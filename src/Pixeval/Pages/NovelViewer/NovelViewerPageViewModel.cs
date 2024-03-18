@@ -113,12 +113,22 @@ public partial class NovelViewerPageViewModel : DetailedUiObservableObject, IDis
 
     #region Current相关
 
+    private int _pageCount;
+
+    private int _currentPageIndex = -1;
+
     /// <summary>
     /// setter只用于绑定反向更新
     /// </summary>
-    public int PageCount { get; set; }
-
-    private int _currentPageIndex = -1;
+    public int PageCount
+    {
+        get => _pageCount;
+        set
+        {
+            _pageCount = value;
+            OnButtonPropertiesChanged();
+        }
+    }
 
     /// <summary>
     /// setter只用于绑定反向更新

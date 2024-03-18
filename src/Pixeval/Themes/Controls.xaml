@@ -26,11 +26,11 @@
         <Setter Property="FontWeight" Value="SemiBold" />
         <Setter Property="FontSize" Value="{StaticResource PixevalSubtitleFontSize}" />
     </Style>
-    <Style x:Key="ContentTextBlockStyle" TargetType="TextBlock">
-        <Setter Property="FontSize" Value="{StaticResource PixevalContentFontSize}" />
-    </Style>
     <Style x:Key="ContentStrongTextBlockStyle" TargetType="TextBlock">
         <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="FontSize" Value="{StaticResource PixevalContentFontSize}" />
+    </Style>
+    <Style x:Key="ContentTextBlockStyle" TargetType="TextBlock">
         <Setter Property="FontSize" Value="{StaticResource PixevalContentFontSize}" />
     </Style>
     <Style x:Key="BaseTextBlockStyle" TargetType="TextBlock">

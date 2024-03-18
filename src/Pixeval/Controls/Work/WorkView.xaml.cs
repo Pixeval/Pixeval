@@ -5,6 +5,7 @@ using Windows.Foundation;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
 using Pixeval.Pages.NovelViewer;
 using Pixeval.Pages.IllustrationViewer;
 using WinUI3Utilities;
@@ -70,6 +71,12 @@ public sealed partial class WorkView : IEntryView<ISortableEntryViewViewModel>
         }
     }
 
+    private void NovelItem_OnOpenNovelRequested(NovelItem sender, NovelItemViewModel viewModel)
+    {
+        if (ViewModel is NovelViewViewModel viewViewModel)
+            viewModel.CreateWindowWithPage(viewViewModel);
+    }
+
     [MemberNotNull(nameof(ViewModel))]
     public void ResetEngine(IFetchEngine<IWorkEntry> newEngine, int itemLimit = -1)
     {
@@ -101,7 +108,7 @@ public sealed partial class WorkView : IEntryView<ISortableEntryViewViewModel>
                 {
                     ViewModel?.Dispose();
                     ViewModel = null!;
-                    ItemsView.MinItemWidth = 200;
+                    ItemsView.MinItemWidth = 350;
                     ItemsView.MinItemHeight = 200;
                     ItemsView.LayoutType = ItemsViewLayoutType.Grid;
                     ItemsView.ItemTemplate = this.GetResource<DataTemplate>("NovelItemDataTemplate");
