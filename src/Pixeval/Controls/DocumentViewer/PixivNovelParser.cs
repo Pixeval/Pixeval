@@ -213,7 +213,7 @@ public static class PixivNovelParser
                         }
                         AddLastRun(ref currentSpan);
 
-                        var image = new LazyImage { Stretch = Stretch.None };
+                        var image = new LazyImage { Stretch = Stretch.Uniform };
                         result.Add(new()
                         {
                             Inlines = { new InlineUIContainer { Child = image } },
@@ -243,20 +243,25 @@ public static class PixivNovelParser
 
                         // Pixiv也没有Trim
                         var imageIdText = loopSpan[token.Length..endIndex];
-                        if (!long.TryParse(imageIdText, null, out var imageId))
+                        var dest = new Span<Range>([new(), new(), new()]);
+                        var page = 1;
+                        var length = imageIdText.Split(dest, '-');
+                        var imageId = 0L;
+                        // 只有不包含空白字符的纯数字，或者被'-'分割的两个数字才能解析
+                        // 例如："12345678"、"12345678-1"
+                        // 反例："12345678-1-1"、" 12345678"、"12345678-1 "、"12345678-"
+                        if (length is not (1 or 2)
+                            || (length is 2 && (!long.TryParse(imageIdText[dest[0]], null, out imageId) || !int.TryParse(imageIdText[dest[1]], null, out page)))
+                            || (length is 1 && !long.TryParse(imageIdText, null, out imageId))
+                            || (imageId, page) is var key && !viewModel.IllustrationImages.ContainsKey(key))
                         {
                             Skip(ref loopSpan, ref currentSpan, ref startIndex, token.Length);
                             break;
                         }
 
-                        if (!viewModel.IllustrationImages.ContainsKey(imageId))
-                        {
-                            Skip(ref loopSpan, ref currentSpan, ref startIndex, token.Length);
-                            break;
-                        }
                         AddLastRun(ref currentSpan);
 
-                        var image = new LazyImage { Stretch = Stretch.None };
+                        var image = new LazyImage { Stretch = Stretch.Uniform };
                         result.Add(new()
                         {
                             Inlines = { new InlineUIContainer { Child = image } },
@@ -266,8 +271,8 @@ public static class PixivNovelParser
                         viewModel.PropertyChanged += (s, e) =>
                         {
                             var vm = s.To<DocumentViewerViewModel>();
-                            if (e.PropertyName == nameof(vm.IllustrationImages) + imageId)
-                                image.Source = vm.IllustrationImages[imageId];
+                            if (e.PropertyName == nameof(vm.IllustrationImages) + key.GetHashCode())
+                                image.Source = vm.IllustrationImages[key];
                         };
 
                         var end = endIndex + 1;

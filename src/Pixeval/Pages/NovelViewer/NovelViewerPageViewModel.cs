@@ -118,10 +118,20 @@ public partial class NovelViewerPageViewModel : DetailedUiObservableObject, IDis
     /// </summary>
     public int PageCount { get; set; }
 
+    private int _currentPageIndex = -1;
+
     /// <summary>
     /// setter只用于绑定反向更新
     /// </summary>
-    public int CurrentPageIndex { get; set; }
+    public int CurrentPageIndex
+    {
+        get => _currentPageIndex;
+        set
+        {
+            _currentPageIndex = value;
+            OnButtonPropertiesChanged();
+        }
+    }
 
     /// <summary>
     /// 插画列表
@@ -150,6 +160,7 @@ public partial class NovelViewerPageViewModel : DetailedUiObservableObject, IDis
             // ReSharper disable once ConditionalAccessQualifierIsNonNullableAccordingToAPIContract
 
             _currentNovelIndex = value;
+            CurrentPageIndex = 0;
 
             NovelInfoTag.Parameter = CurrentNovel.Entry;
             CommentsTag.Parameter = (CommentType.Novel, NovelId);
@@ -162,6 +173,12 @@ public partial class NovelViewerPageViewModel : DetailedUiObservableObject, IDis
 
     /// <inheritdoc cref="CurrentNovelIndex"/>
     private int _currentNovelIndex = -1;
+
+    private void OnButtonPropertiesChanged()
+    {
+        OnPropertyChanged(nameof(NextButtonText));
+        OnPropertyChanged(nameof(PrevButtonText));
+    }
 
     #endregion
 

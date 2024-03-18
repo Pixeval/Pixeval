@@ -28,7 +28,7 @@
     "DefaultDownloadPathMacroEntry/Header": "默认的下载位置",
     "DefaultDownloadPathMacroEntryDescription/Content": "查看路径宏的使用方法",
     "DefaultDownloadPathMacroTextBox/PlaceholderText": "下载路径宏",
-    "DefaultSearchSortOptionEntry/Description": "在搜索插画时的默认排序策略",
+    "DefaultSearchSortOptionEntry/Description": "在搜索作品时的默认排序策略",
     "DefaultSearchSortOptionEntry/Header": "默认排序方式",
     "DefaultSearchTagMatchOptionEntry/Description": "在使用侧边栏关键字搜索插画时如何匹配查找作品",
     "DefaultSearchTagMatchOptionEntry/Header": "默认的关键字匹配策略",

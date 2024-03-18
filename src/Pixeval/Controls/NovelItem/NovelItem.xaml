@@ -57,61 +57,61 @@
             <media:ControlStoryboardAction Storyboard="{StaticResource ThumbnailFadeOutStoryboard}" />
         </core:EventTriggerBehavior>
     </interactivity:Interaction.Behaviors>
-    <local:LazyImage
-        Grid.Row="0"
-        Source="{x:Bind ViewModel.ThumbnailSource, Mode=OneWay}"
-        Stretch="Uniform" />
-    <Grid
-        Grid.Row="0"
-        Margin="10"
-        VerticalAlignment="Bottom"
-        ColumnSpacing="3">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
-        <local:PixevalBadge
-            Grid.Column="0"
-            Mode="Ai"
-            Visibility="{x:Bind ViewModel.IsAiGenerated, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
-        <local:PixevalBadge
-            Grid.Column="1"
-            Mode="{x:Bind ViewModel.XRestrictionCaption, Mode=OneWay}"
-            Visibility="{x:Bind ViewModel.IsXRestricted, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
+    <Grid Grid.Row="0">
+        <local:LazyImage
+            CornerRadius="{StaticResource ControlLeftCornerRadius}"
+            Source="{x:Bind ViewModel.ThumbnailSource, Mode=OneWay}"
+            Stretch="Uniform" />
+        <Grid
+            Margin="10"
+            VerticalAlignment="Bottom"
+            ColumnSpacing="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <local:PixevalBadge
+                Grid.Column="0"
+                Mode="Ai"
+                Visibility="{x:Bind ViewModel.IsAiGenerated, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
+            <local:PixevalBadge
+                Grid.Column="1"
+                Mode="{x:Bind ViewModel.XRestrictionCaption, Mode=OneWay}"
+                Visibility="{x:Bind ViewModel.IsXRestricted, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
+        </Grid>
+        <Grid
+            x:Name="ThumbnailGrid"
+            Padding="5"
+            Background="{StaticResource PixevalAppAcrylicBrush}"
+            CornerRadius="{StaticResource ControlLeftCornerRadius}"
+            Opacity="0"
+            RowSpacing="5">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <local:IconText
+                Grid.Row="1"
+                Symbol="RedEyeE7B3"
+                Text="{x:Bind ViewModel.TotalView, Mode=OneWay}" />
+            <local:IconText
+                Grid.Row="2"
+                Symbol="HeartEB51"
+                Text="{x:Bind ViewModel.TotalBookmarks, Mode=OneWay}" />
+            <local:IconText
+                Grid.Row="3"
+                Symbol="ListEA37"
+                Text="{x:Bind ViewModel.TextLength, Mode=OneWay}" />
+        </Grid>
+        <local:HeartButton
+            x:Name="HeartButton"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            Command="{x:Bind ViewModel.BookmarkCommand, Mode=OneWay}" />
     </Grid>
-    <Grid
-        x:Name="ThumbnailGrid"
-        Grid.Row="0"
-        Padding="5"
-        Background="{StaticResource PixevalAppAcrylicBrush}"
-        CornerRadius="{StaticResource ControlCornerRadius}"
-        Opacity="0"
-        RowSpacing="5">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
-        <local:IconText
-            Grid.Row="1"
-            Symbol="RedEyeE7B3"
-            Text="{x:Bind ViewModel.TotalView, Mode=OneWay}" />
-        <local:IconText
-            Grid.Row="2"
-            Symbol="HeartEB51"
-            Text="{x:Bind ViewModel.TotalBookmarks, Mode=OneWay}" />
-        <local:IconText
-            Grid.Row="3"
-            Symbol="ListEA37"
-            Text="{x:Bind ViewModel.TextLength, Mode=OneWay}" />
-    </Grid>
-    <local:HeartButton
-        x:Name="HeartButton"
-        Grid.Row="0"
-        HorizontalAlignment="Left"
-        VerticalAlignment="Top" />
     <TextBlock
         Grid.Row="1"
         Margin="10"

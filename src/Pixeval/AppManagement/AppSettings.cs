@@ -110,7 +110,7 @@ public partial record AppSettings : IWindowSettings
     /// different orders will use this as its default value
     /// </summary>
     [SettingMetadata(SettingEntryCategory.Search, typeof(SettingsPageResources), nameof(SettingsPageResources.DefaultSearchSortOptionEntryHeader))]
-    public IllustrationSortOption DefaultSortOption { get; set; } = IllustrationSortOption.DoNotSort;
+    public WorkSortOption DefaultSortOption { get; set; } = WorkSortOption.DoNotSort;
 
     /// <summary>
     /// The illustration tag match option for keyword search

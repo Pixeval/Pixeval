@@ -29,7 +29,6 @@
     "DefaultDownloadPathMacroEntryDescription/Content": "Посмотреть руководство по макросу пути",
     "DefaultDownloadPathMacroEntry/Header": "Путь загрузки по умолчанию",
     "DefaultDownloadPathMacroTextBox/PlaceholderText": "Макрос пути загрузки",
-    "DefaultSearchSortOptionEntry/Description": "Стандартная стратегия сортировки при поиске иллюстраций",
     "DefaultSearchSortOptionEntry/Header": "Стандартная сортировка",
     "DefaultSearchTagMatchOptionEntry/Description": "Как искать работы при использовании ключевых слов в боковой панели",
     "DefaultSearchTagMatchOptionEntry/Header": "Стандартное совпадение по ключевым словам",

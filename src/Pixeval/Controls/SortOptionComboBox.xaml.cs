@@ -29,7 +29,7 @@ using System.Runtime.CompilerServices;
 
 namespace Pixeval.Controls;
 
-[DependencyProperty<IllustrationSortOption>("SelectedItem", propertyChanged: nameof(OnSelectedItemChanged))]
+[DependencyProperty<WorkSortOption>("SelectedItem", propertyChanged: nameof(OnSelectedItemChanged))]
 public sealed partial class SortOptionComboBox
 {
     public event SelectionChangedEventHandler? SelectionChangedWhenLoaded;
@@ -37,7 +37,7 @@ public sealed partial class SortOptionComboBox
     public SortOptionComboBox()
     {
         InitializeComponent();
-        ComboBox.ItemsSource = LocalizedResourceAttributeHelper.GetLocalizedResourceContents<IllustrationSortOption>();
+        ComboBox.ItemsSource = LocalizedResourceAttributeHelper.GetLocalizedResourceContents<WorkSortOption>();
         SelectedItem = App.AppViewModel.AppSettings.DefaultSortOption;
     }
 
@@ -54,7 +54,7 @@ public sealed partial class SortOptionComboBox
 
     private void SortOptionComboBox_OnSelectionChangedWhenPrepared(object sender, SelectionChangedEventArgs e)
     {
-        if (ComboBox is not { SelectedItem: StringRepresentableItem { Item: IllustrationSortOption option } } || option == SelectedItem)
+        if (ComboBox is not { SelectedItem: StringRepresentableItem { Item: WorkSortOption option } } || option == SelectedItem)
             return;
         SelectedItem = option;
         SelectionChangedWhenLoaded?.Invoke(this, e);

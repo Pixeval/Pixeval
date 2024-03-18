@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using Windows.Foundation;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -43,6 +44,8 @@ public sealed partial class WorkView : IEntryView<ISortableEntryViewViewModel>
     /// 在调用<see cref="ResetEngine"/>前为<see langword="null"/>
     /// </summary>
     public ISortableEntryViewViewModel ViewModel { get; private set; } = null!;
+
+    public event TypedEventHandler<WorkView, ISortableEntryViewViewModel>? ViewModelChanged;
 
     public AdvancedItemsView AdvancedItemsView => ItemsView;
 
@@ -91,6 +94,7 @@ public sealed partial class WorkView : IEntryView<ISortableEntryViewViewModel>
                     ViewModel = new IllustrationViewViewModel();
                     OnPropertyChanged(nameof(ViewModel));
                     ViewModel.ResetEngine(newEngine, itemLimit);
+                    ViewModelChanged?.Invoke(this, ViewModel);
                     ItemsView.ItemsSource = ViewModel.View;
                 }
                 else if (type == typeof(Novel))
@@ -98,12 +102,13 @@ public sealed partial class WorkView : IEntryView<ISortableEntryViewViewModel>
                     ViewModel?.Dispose();
                     ViewModel = null!;
                     ItemsView.MinItemWidth = 200;
-                    ItemsView.MinItemHeight = 0;
-                    ItemsView.LayoutType = ItemsViewLayoutType.Staggered;
+                    ItemsView.MinItemHeight = 200;
+                    ItemsView.LayoutType = ItemsViewLayoutType.Grid;
                     ItemsView.ItemTemplate = this.GetResource<DataTemplate>("NovelItemDataTemplate");
                     ViewModel = new NovelViewViewModel();
                     OnPropertyChanged(nameof(ViewModel));
                     ViewModel.ResetEngine(newEngine, itemLimit);
+                    ViewModelChanged?.Invoke(this, ViewModel);
                     ItemsView.ItemsSource = ViewModel.View;
                 }
                 else

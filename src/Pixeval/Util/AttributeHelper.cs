@@ -104,10 +104,10 @@ public static class LocalizedResourceAttributeHelper
         [ElementTheme.Light] = MiscResources.AppThemeLight,
         [ElementTheme.Default] = MiscResources.AppThemeSystemDefault,
 
-        [IllustrationSortOption.PopularityDescending] = MiscResources.IllustrationSortOptionPopularityDescending,
-        [IllustrationSortOption.PublishDateAscending] = MiscResources.IllustrationSortOptionPublishDateAscending,
-        [IllustrationSortOption.PublishDateDescending] = MiscResources.IllustrationSortOptionPublishDateDescending,
-        [IllustrationSortOption.DoNotSort] = MiscResources.IllustrationSortOptionDoNotSort,
+        [WorkSortOption.PopularityDescending] = MiscResources.IllustrationSortOptionPopularityDescending,
+        [WorkSortOption.PublishDateAscending] = MiscResources.IllustrationSortOptionPublishDateAscending,
+        [WorkSortOption.PublishDateDescending] = MiscResources.IllustrationSortOptionPublishDateDescending,
+        [WorkSortOption.DoNotSort] = MiscResources.IllustrationSortOptionDoNotSort,
 
         [SearchDuration.Undecided] = MiscResources.SearchDurationUndecided,
         [SearchDuration.WithinLastDay] = MiscResources.SearchDurationWithinLastDay,

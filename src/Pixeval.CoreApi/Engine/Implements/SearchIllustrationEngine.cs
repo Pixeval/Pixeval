@@ -50,7 +50,7 @@ internal class SearchIllustrationEngine(
     string tag,
     int start,
     int pages,
-    IllustrationSortOption? sortOption,
+    WorkSortOption? sortOption,
     SearchDuration searchDuration,
     TargetFilter targetFilter,
     DateTimeOffset? startDate,
@@ -63,7 +63,7 @@ internal class SearchIllustrationEngine(
     private readonly SearchIllustrationTagMatchOption _matchOption = matchOption;
     private readonly int _pages = pages;
     private readonly SearchDuration _searchDuration = searchDuration;
-    private readonly IllustrationSortOption _sortOption = sortOption ?? IllustrationSortOption.PublishDateDescending;
+    private readonly WorkSortOption _sortOption = sortOption ?? WorkSortOption.PublishDateDescending;
     private readonly DateTimeOffset? _startDate = startDate;
     private readonly string _tag = tag;
     private readonly TargetFilter _targetFilter = targetFilter;
@@ -94,7 +94,7 @@ internal class SearchIllustrationEngine(
             var durationSegment = PixivFetchEngine._searchDuration is SearchDuration.Undecided
                 ? null
                 : $"&duration={PixivFetchEngine._searchDuration.GetDescription()}";
-            var sortSegment = PixivFetchEngine._sortOption != IllustrationSortOption.DoNotSort
+            var sortSegment = PixivFetchEngine._sortOption != WorkSortOption.DoNotSort
                 ? $"&sort={PixivFetchEngine._sortOption.GetDescription()}"
                 : string.Empty;
             var aiTypeSegment = PixivFetchEngine._aiType?.Let(t => $"&search_ai_type={(t ? 1 : 0)}");
@@ -136,7 +136,7 @@ internal class SearchNovelEngine(
     string tag,
     int start,
     int pages,
-    IllustrationSortOption? sortOption,
+    WorkSortOption? sortOption,
     SearchDuration searchDuration,
     TargetFilter targetFilter,
     DateTimeOffset? startDate,
@@ -151,7 +151,7 @@ internal class SearchNovelEngine(
     private readonly SearchNovelTagMatchOption _matchOption = matchOption;
     private readonly int _pages = pages;
     private readonly SearchDuration _searchDuration = searchDuration;
-    private readonly IllustrationSortOption _sortOption = sortOption ?? IllustrationSortOption.PublishDateDescending;
+    private readonly WorkSortOption _sortOption = sortOption ?? WorkSortOption.PublishDateDescending;
     private readonly DateTimeOffset? _startDate = startDate;
     private readonly string _tag = tag;
     private readonly TargetFilter _targetFilter = targetFilter;
@@ -184,7 +184,7 @@ internal class SearchNovelEngine(
             var durationSegment = PixivFetchEngine._searchDuration is SearchDuration.Undecided
                 ? null
                 : $"&duration={PixivFetchEngine._searchDuration.GetDescription()}";
-            var sortSegment = PixivFetchEngine._sortOption != IllustrationSortOption.DoNotSort
+            var sortSegment = PixivFetchEngine._sortOption != WorkSortOption.DoNotSort
                 ? $"&sort={PixivFetchEngine._sortOption.GetDescription()}"
                 : string.Empty;
             var aiTypeSegment = PixivFetchEngine._aiType?.Let(t => $"&search_ai_type={(t ? 1 : 0)}");

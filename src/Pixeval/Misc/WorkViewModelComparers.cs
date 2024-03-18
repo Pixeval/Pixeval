@@ -24,43 +24,42 @@ using Pixeval.Controls;
 
 namespace Pixeval.Misc;
 
-public class IllustrationViewModelPublishDateComparer : IComparer<IllustrationItemViewModel>, IComparer
+public class WorkViewModelPublishDateComparer : IComparer<IWorkViewModel>, IComparer
 {
-    public static readonly IllustrationViewModelPublishDateComparer Instance =
-        new();
+    public static readonly WorkViewModelPublishDateComparer Instance = new();
 
     public int Compare(object? x, object? y)
     {
-        return Compare(x as IllustrationItemViewModel, y as IllustrationItemViewModel);
+        return Compare(x as IWorkViewModel, y as IWorkViewModel);
     }
 
-    public int Compare(IllustrationItemViewModel? x, IllustrationItemViewModel? y)
+    public int Compare(IWorkViewModel? x, IWorkViewModel? y)
     {
         if (x is null || y is null)
-        {
             return 0;
-        }
 
-        return x.PublishDate.CompareTo(y.PublishDate);
+        // 比较Id以保证稳定排序
+        var result = x.PublishDate.CompareTo(y.PublishDate);
+        return result is 0 ? x.Id.CompareTo(y.Id) : result;
     }
 }
 
-public class IllustrationBookmarkComparer : IComparer<IllustrationItemViewModel>, IComparer
+public class WorkViewModelBookmarkComparer : IComparer<IWorkViewModel>, IComparer
 {
-    public static readonly IllustrationBookmarkComparer Instance = new();
+    public static readonly WorkViewModelBookmarkComparer Instance = new();
 
     public int Compare(object? x, object? y)
     {
-        return Compare(x as IllustrationItemViewModel, y as IllustrationItemViewModel);
+        return Compare(x as IWorkViewModel, y as IWorkViewModel);
     }
 
-    public int Compare(IllustrationItemViewModel? x, IllustrationItemViewModel? y)
+    public int Compare(IWorkViewModel? x, IWorkViewModel? y)
     {
-        if (x?.Entry is { } xi && y?.Entry is { } yi)
-        {
-            return xi.TotalBookmarks.CompareTo(yi.TotalBookmarks);
-        }
+        if (x is null || y is null)
+            return 0;
 
-        return 0;
+        // 比较Id以保证稳定排序
+        var result = x.TotalBookmarks.CompareTo(y.TotalBookmarks);
+        return result is 0 ? x.Id.CompareTo(y.Id) : result;
     }
 }

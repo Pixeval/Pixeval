@@ -66,10 +66,11 @@ public partial record NovelContent
     public required SeriesNavigation? SeriesNavigation { get; set; }
 
     [JsonPropertyName("glossaryItems")]
-    public required string[] GlossaryItems { get; set; } = [];
+    public required NovelReplaceableGlossary[] GlossaryItems { get; set; } = [];
 
     [JsonPropertyName("replaceableItemIds")]
-    public required string[] ReplaceableItemIds { get; set; } = [];
+    [JsonNumberHandling(JsonNumberHandling.AllowReadingFromString | JsonNumberHandling.WriteAsString)]
+    public required long[] ReplaceableItemIds { get; set; } = [];
 
     [JsonPropertyName("aiType")]
     public required int AiType { get; set; }
@@ -183,8 +184,11 @@ public partial record NovelIllustInfo
     [JsonNumberHandling(JsonNumberHandling.AllowReadingFromString | JsonNumberHandling.WriteAsString)]
     public required long Id { get; set; }
 
+    /// <summary>
+    /// 表示当漫画时，在漫画的页数，从 1 开始
+    /// </summary>
     [JsonPropertyName("page")]
-    public required int Page { get; set; }
+    public required int Page { get; set; } = 1;
 }
 
 [Factory]
@@ -239,13 +243,31 @@ public partial record NovelIllustUrls
 public partial record NovelUser
 {
     [JsonPropertyName("id")]
-    public required string Id { get; set; } = "";
+    [JsonNumberHandling(JsonNumberHandling.AllowReadingFromString | JsonNumberHandling.WriteAsString)]
+    public required long Id { get; set; }
 
     [JsonPropertyName("name")]
     public required string Name { get; set; } = "";
 
     [JsonPropertyName("image")]
     public required string Image { get; set; } = DefaultImageUrls.NoProfile;
+}
+
+[Factory]
+public partial record NovelReplaceableGlossary
+{
+    [JsonPropertyName("id")]
+    [JsonNumberHandling(JsonNumberHandling.AllowReadingFromString | JsonNumberHandling.WriteAsString)]
+    public required long Id { get; set; }
+
+    [JsonPropertyName("name")]
+    public required string Name { get; set; } = "";
+
+    [JsonPropertyName("overview")]
+    public required string Overview { get; set; } = "";
+
+    [JsonPropertyName("coverImage")]
+    public required string Cover { get; set; } = DefaultImageUrls.ImageNotAvailable;
 }
 
 /// <summary>

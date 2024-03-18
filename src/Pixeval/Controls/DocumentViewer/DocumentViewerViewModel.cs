@@ -37,22 +37,17 @@ using Pixeval.Utilities.Threading;
 
 namespace Pixeval.Controls;
 
-public class DocumentViewerViewModel : ObservableObject, IDisposable
+public class DocumentViewerViewModel(NovelContent novelContent) : ObservableObject, IDisposable
 {
     public Action<int>? JumpToPageRequested;
 
-    public NovelContent NovelContent { get; }
+    public NovelContent NovelContent { get; } = novelContent;
 
-    public Dictionary<long, SoftwareBitmapSource> IllustrationImages { get; } = [];
+    public Dictionary<(long, int), SoftwareBitmapSource> IllustrationImages { get; } = [];
 
     public Dictionary<long, SoftwareBitmapSource> UploadedImages { get; } = [];
 
     public ObservableCollection<List<Paragraph>> Pages { get; } = [];
-
-    public DocumentViewerViewModel(NovelContent novelContent)
-    {
-        NovelContent = novelContent;
-    }
 
     public async Task LoadContentAsync()
     {
@@ -73,7 +68,7 @@ public class DocumentViewerViewModel : ObservableObject, IDisposable
     public async Task LoadImagesAsync()
     {
         foreach (var illust in NovelContent.Illusts)
-            IllustrationImages[illust.Id] = null!;
+            IllustrationImages[(illust.Id, illust.Page)] = null!;
 
         foreach (var image in NovelContent.Images)
             UploadedImages[image.NovelImageId] = null!;
@@ -82,8 +77,9 @@ public class DocumentViewerViewModel : ObservableObject, IDisposable
         {
             if (LoadingCancellationHandle.IsCancelled)
                 break;
-            IllustrationImages[illust.Id] = await LoadThumbnailAsync(illust.Illust.Images.Medium);
-            OnPropertyChanged(nameof(IllustrationImages) + illust.Id);
+            var key = (illust.Id, illust.Page);
+            IllustrationImages[key] = await LoadThumbnailAsync(illust.Illust.Images.Medium);
+            OnPropertyChanged(nameof(IllustrationImages) + key.GetHashCode());
         }
 
         foreach (var image in NovelContent.Images)

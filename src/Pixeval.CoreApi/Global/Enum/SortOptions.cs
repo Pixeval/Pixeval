@@ -22,7 +22,7 @@ using System.ComponentModel;
 
 namespace Pixeval.CoreApi.Global.Enum;
 
-public enum IllustrationSortOption
+public enum WorkSortOption
 {
     DoNotSort,
 

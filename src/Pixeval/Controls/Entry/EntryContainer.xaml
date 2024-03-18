@@ -28,7 +28,7 @@
                 controls:DockPanel.Dock="Left"
                 Orientation="Horizontal"
                 Spacing="10">
-                <controls:SortOptionComboBox SelectionChangedWhenLoaded="SortOptionComboBox_OnSelectionChanged" />
+                <controls:SortOptionComboBox x:Name="SortOptionComboBox" SelectionChangedWhenLoaded="SortOptionComboBox_OnSelectionChanged" />
                 <AutoSuggestBox
                     x:Uid="/EntryContainer/FastFilterAutoSuggestBox"
                     Width="250"

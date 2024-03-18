@@ -20,37 +20,19 @@
 
 #endregion
 
-using System.Collections.ObjectModel;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using Pixeval.Misc;
-
 namespace Pixeval.Controls;
 
-public class WorkContainer : UserControl, IScrollViewProvider
+public class WorkContainer : EntryContainer
 {
-    public ObservableCollection<UIElement> CommandBarElements => EntryContainer.CommandBarElements;
-
-    public ObservableCollection<ICommandBarElement> PrimaryCommandsSupplements => EntryContainer.PrimaryCommandsSupplements;
-
-    public ObservableCollection<ICommandBarElement> SecondaryCommandsSupplements => EntryContainer.SecondaryCommandsSupplements;
-
-    public WorkContainer() =>
-        Content = EntryContainer = new()
+    public WorkContainer()
+    {
+        EntryView = WorkView = new()
         {
-            EntryView = WorkView = new()
-            {
-                LayoutType = App.AppViewModel.AppSettings.ItemsViewLayoutType,
-                ThumbnailDirection = App.AppViewModel.AppSettings.ThumbnailDirection
-            }
+            LayoutType = App.AppViewModel.AppSettings.ItemsViewLayoutType,
+            ThumbnailDirection = App.AppViewModel.AppSettings.ThumbnailDirection
         };
-
-    public EntryContainer EntryContainer { get; }
+        WorkView.ViewModelChanged += (_, _) => SetSortOption();
+    }
 
     public WorkView WorkView { get; }
-
-    /// <inheritdoc cref="WorkView.ViewModel"/>
-    public ISortableEntryViewViewModel ViewModel => WorkView.ViewModel;
-
-    public ScrollView ScrollView => WorkView.ScrollView;
 }
