@@ -166,6 +166,8 @@
         <PRIResource Include="Assets\Svg.resjson" />
         <PRIResource Include="Strings\*\*.resjson" />
         <None Remove="**\*.xaml" />
+        <Content Remove="Assets\Images\next-arrow.png" />
+        <Content Remove="Assets\Images\prev-arrow.svg" />
         <Page Update="**\*.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
