@@ -23,11 +23,6 @@ public partial class ZoomableImage
 
     private int[]? ClonedMsIntervals { get; set; }
 
-    /// <summary>
-    /// 用于控制是否渲染（播放）
-    /// </summary>
-    private ManualResetEvent ManualResetEvent { get; } = new(true);
-
     private static void OnMsIntervalsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         if (EnsureNotDisposed(d) is not { } zoomableImage)
@@ -41,21 +36,49 @@ public partial class ZoomableImage
             return;
         zoomableImage.IsPlaying = true;
         zoomableImage._timerRunning = false;
-        _ = zoomableImage.ManualResetEvent.Reset();
         // 使CanvasControl具有大小，否则不会触发CanvasControlOnDraw
         zoomableImage.OriginalImageWidth = zoomableImage.OriginalImageHeight = 10;
-        zoomableImage.CanvasControl.Invalidate();
-        // 进入CanvasControlOnDraw的else分支，其中会令Mode = InitMode，从而触发OnModeChanged
+        zoomableImage.InitSource();
+    }
+
+    private async void InitSource()
+    {
+        _frames.Clear();
+        try
+        {
+            if (Sources is null)
+                return;
+            foreach (var source in Sources)
+                if (source is { CanRead: true })
+                {
+                    var randomAccessStream = source.AsRandomAccessStream();
+                    randomAccessStream.Seek(0);
+                    _frames.Add(await CanvasBitmap.LoadAsync(CanvasControl, randomAccessStream));
+                }
+        }
+        catch (Exception)
+        {
+            _frames.Clear();
+        }
+
+        if (_frames.Count is 0)
+            return;
+        OriginalImageWidth = _frames[0].Size.Width;
+        OriginalImageHeight = _frames[0].Size.Height;
+        _isInitMode = true;
+        Mode = InitMode; // 触发OnModeChanged
+        _timerRunning = true;
     }
 
     private static void OnIsPlayingChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         if (EnsureNotDisposed(d) is not { } zoomableImage)
             return;
-        _ = zoomableImage.IsPlaying ? zoomableImage.ManualResetEvent.Set() : zoomableImage.ManualResetEvent.Reset();
+
+        zoomableImage._isPlayingInternal = zoomableImage.IsPlaying;
     }
 
-    private async void CanvasControlOnDraw(CanvasControl sender, CanvasDrawEventArgs e)
+    private void CanvasControlOnDraw(CanvasControl sender, CanvasDrawEventArgs e)
     {
         if (!IsPlaying || _timerRunning)
         {
@@ -99,38 +122,6 @@ public partial class ZoomableImage
             };
 
             e.DrawingSession.DrawImage(image, new Vector2((float)x, (float)y));
-        }
-        else
-        {
-            // 进入此分支时ManualResetEvent一定为false
-            _frames.Clear();
-            try
-            {
-                if (Sources is null)
-                    return;
-                foreach (var source in Sources)
-                    if (source is { CanRead: true })
-                    {
-                        var randomAccessStream = source.AsRandomAccessStream();
-                        randomAccessStream.Seek(0);
-                        _frames.Add(await CanvasBitmap.LoadAsync(sender, randomAccessStream));
-                    }
-            }
-            catch (Exception)
-            {
-                _frames.Clear();
-            }
-
-            if (_frames.Count is 0)
-                return;
-            OriginalImageWidth = _frames[0].Size.Width;
-            OriginalImageHeight = _frames[0].Size.Height;
-            _isInitMode = true;
-            Mode = InitMode; // 触发OnModeChanged
-            _timerRunning = true;
-            // 防止此处ManualResetEvent已经Dispose了，绝大多数情况下不会发生
-            if (!IsDisposed)
-                _ = ManualResetEvent.Set();
         }
     }
 }
