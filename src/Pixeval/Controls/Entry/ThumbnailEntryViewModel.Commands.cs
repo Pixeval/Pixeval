@@ -34,8 +34,6 @@ namespace Pixeval.Controls;
 
 public partial class ThumbnailEntryViewModel<T>
 {
-    public XamlUICommand BookmarkCommand { get; } = "".GetCommand(FontIconSymbol.HeartEB51, VirtualKeyModifiers.Control, VirtualKey.D);
-
     public XamlUICommand AddToBookmarkCommand { get; } = EntryItemResources.AddToBookmark.GetCommand(FontIconSymbol.BookmarksE8A4);
 
     public XamlUICommand GenerateLinkCommand { get; } = EntryItemResources.GenerateLink.GetCommand(FontIconSymbol.LinkE71B);
@@ -47,6 +45,12 @@ public partial class ThumbnailEntryViewModel<T>
     public XamlUICommand ShowQrCodeCommand { get; } = EntryItemResources.ShowQRCode.GetCommand(FontIconSymbol.QRCodeED14);
 
     public XamlUICommand ShowPixEzQrCodeCommand { get; } = EntryItemResources.ShowPixEzQrCode.GetCommand(FontIconSymbol.Photo2EB9F);
+
+    /// <summary>
+    /// Parameter1: <see cref="ValueTuple{T1, T2}"/> where T1 is <see cref="FrameworkElement"/>? and T2 is <see cref="Func{T, TResult}"/>? where T is <see cref="IProgress{T}"/>? and TResult is <see cref="Stream"/>?<br/>
+    /// Parameter2: <see cref="FrameworkElement"/>?
+    /// </summary>
+    public XamlUICommand BookmarkCommand { get; } = "".GetCommand(FontIconSymbol.HeartEB51, VirtualKeyModifiers.Control, VirtualKey.D);
 
     /// <summary>
     /// Parameter1: <see cref="ValueTuple{T1, T2}"/> where T1 is <see cref="FrameworkElement"/>? and T2 is <see cref="Func{T, TResult}"/>? where T is <see cref="IProgress{T}"/>? and TResult is <see cref="Stream"/>?<br/>
@@ -68,9 +72,6 @@ public partial class ThumbnailEntryViewModel<T>
 
     private void InitializeCommands()
     {
-        BookmarkCommand.GetBookmarkCommand(IsBookmarked);
-        BookmarkCommand.ExecuteRequested += BookmarkCommandOnExecuteRequested;
-
         // TODO: AddToBookmarkCommand
         AddToBookmarkCommand.CanExecuteRequested += (sender, args) => args.CanExecute = false;
 
@@ -84,6 +85,9 @@ public partial class ThumbnailEntryViewModel<T>
 
         ShowPixEzQrCodeCommand.ExecuteRequested += ShowPixEzQrCodeCommandOnExecuteRequested;
 
+        BookmarkCommand.GetBookmarkCommand(IsBookmarked);
+        BookmarkCommand.ExecuteRequested += BookmarkCommandOnExecuteRequested;
+
         SaveCommand.ExecuteRequested += SaveCommandOnExecuteRequested;
 
         SaveAsCommand.ExecuteRequested += SaveAsCommandOnExecuteRequested;
@@ -91,8 +95,6 @@ public partial class ThumbnailEntryViewModel<T>
         CopyCommand.ExecuteRequested += CopyCommandOnExecuteRequested;
     }
 
-    protected abstract void BookmarkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs e);
-    
     private void GenerateLinkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
         UiHelper.ClipboardSetText(AppUri.OriginalString);
@@ -152,11 +154,13 @@ public partial class ThumbnailEntryViewModel<T>
         }
     }
 
-    protected abstract void SaveCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs e);
+    protected abstract void BookmarkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args);
 
-    protected abstract void SaveAsCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs e);
+    protected abstract void SaveCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args);
 
-    protected abstract void CopyCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs e);
+    protected abstract void SaveAsCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args);
+
+    protected abstract void CopyCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args);
 
     protected abstract Uri AppUri { get; }
 

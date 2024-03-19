@@ -189,7 +189,10 @@
                                         Grid.Row="1"
                                         DefaultLabelPosition="Collapsed"
                                         OverflowButtonVisibility="Collapsed">
-                                        <AppBarButton Width="50" Command="{x:Bind _viewModel.CurrentIllustration.BookmarkCommand, Mode=OneWay}" />
+                                        <AppBarButton
+                                            Width="50"
+                                            Command="{x:Bind _viewModel.CurrentIllustration.BookmarkCommand, Mode=OneWay}"
+                                            CommandParameter="{x:Bind _viewModel.CurrentImage.DownloadParameter, Mode=OneWay}" />
                                         <AppBarButton
                                             Width="50"
                                             Command="{x:Bind _viewModel.CurrentImage.RotateCounterclockwiseCommand, Mode=OneWay}"

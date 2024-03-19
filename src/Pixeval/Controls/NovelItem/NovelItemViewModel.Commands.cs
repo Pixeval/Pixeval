@@ -27,23 +27,25 @@ namespace Pixeval.Controls;
 
 public partial class NovelItemViewModel
 {
-    protected override async void BookmarkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs e)
+    protected override async void BookmarkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
         IsBookmarked = await MakoHelper.SetNovelBookmarkAsync(Id, !IsBookmarked);
         BookmarkCommand.GetBookmarkCommand(IsBookmarked);
+        if (App.AppViewModel.AppSettings.DownloadWhenBookmarked && IsBookmarked && !User.IsFollowed)
+            SaveCommandOnExecuteRequested(sender, args);
     }
 
-    protected override void SaveCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs e)
+    protected override void SaveCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
 
     }
 
-    protected override void SaveAsCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs e)
+    protected override void SaveAsCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
 
     }
 
-    protected override void CopyCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs e)
+    protected override void CopyCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
 
     }

@@ -105,6 +105,9 @@ public partial record AppSettings : IWindowSettings
     [SettingMetadata(SettingEntryCategory.Download, typeof(SettingsPageResources), nameof(SettingsPageResources.MaxDownloadConcurrencyLevelEntryHeader))]
     public int MaxDownloadTaskConcurrencyLevel { get; set; } = Environment.ProcessorCount / 2;
 
+    [SettingMetadata(SettingEntryCategory.Download, typeof(SettingsPageResources), nameof(SettingsPageResources.DownloadWhenBookmarkedEntryHeader))]
+    public bool DownloadWhenBookmarked { get; set; }
+
     /// <summary>
     /// The application-wide default sort option, any illustration page that supports
     /// different orders will use this as its default value
@@ -173,12 +176,6 @@ public partial record AppSettings : IWindowSettings
     /// </summary>
     [SettingMetadata(SettingEntryCategory.BrowsingExperience, typeof(SettingsPageResources), nameof(SettingsPageResources.FiltrateRestrictedContentEntryHeader))]
     public bool FiltrateRestrictedContent { get; set; }
-
-    /// <summary>
-    /// How many rows to be preloaded in illustration grid
-    /// </summary>
-    [SettingMetadata(SettingEntryCategory.Misc, typeof(SettingsPageResources), nameof(SettingsPageResources.PreloadRowsEntryHeader))]
-    public int PreLoadRows { get; set; } = 2;
 
     /// <summary>
     /// Indicates the maximum page count that are allowed to be retrieved during
