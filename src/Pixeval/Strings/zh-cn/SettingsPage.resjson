@@ -98,7 +98,7 @@
     "OverwriteDownloadedFileEntry/Description": "开启该选项则下载文件时将会覆写之前已经下载过的文件",
     "OverwriteDownloadedFileEntry/Header": "覆写已下载文件",
     "PerformSignOutButton/Content": "执行登出",
-    "DownloadWhenBookmarkedEntry/Description": "在某作者的收藏作品后，会自动下载作品",
+    "DownloadWhenBookmarkedEntry/Description": "在收藏作品后，会自动下载该作品",
     "DownloadWhenBookmarkedEntry/Header": "收藏作品时下载",
     "RecommendationItemLimitEntry/Description": "使用每日推荐功能时最多会获取多少条插画",
     "RecommendationItemLimitEntry/Header": "每日推荐结果数量限制",
