@@ -30,7 +30,6 @@
     "DefaultDownloadPathMacroEntry/Header": "Путь загрузки по умолчанию",
     "DefaultDownloadPathMacroTextBox/PlaceholderText": "Макрос пути загрузки",
     "DefaultSearchSortOptionEntry/Header": "Стандартная сортировка",
-    "DefaultSearchTagMatchOptionEntry/Description": "Как искать работы при использовании ключевых слов в боковой панели",
     "DefaultSearchTagMatchOptionEntry/Header": "Стандартное совпадение по ключевым словам",
     "DefaultSelectedTabEntry/Description": "При запуске приложения будет выбрана вкладка по умолчанию в боковом меню главной страницы",
     "DefaultSelectedTabEntry/Header": "Вкладка по умолчанию",

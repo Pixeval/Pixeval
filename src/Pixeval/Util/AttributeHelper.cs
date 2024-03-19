@@ -96,9 +96,14 @@ public static class LocalizedResourceAttributeHelper
         [BackdropType.MicaAlt] = MiscResources.MicaAltBackdrop,
         [BackdropType.None] = MiscResources.NoneBackdrop,
 
-        [SearchIllustrationTagMatchOption.PartialMatchForTags] = MiscResources.SearchTagMatchOptionPartialMatchForTags,
-        [SearchIllustrationTagMatchOption.ExactMatchForTags] = MiscResources.SearchTagMatchOptionExactMatchForTags,
-        [SearchIllustrationTagMatchOption.TitleAndCaption] = MiscResources.SearchTagMatchOptionTitleAndCaption,
+        [SearchIllustrationTagMatchOption.PartialMatchForTags] = MiscResources.SearchIllustrationTagMatchOptionPartialMatchForTags,
+        [SearchIllustrationTagMatchOption.ExactMatchForTags] = MiscResources.SearchIllustrationTagMatchOptionExactMatchForTags,
+        [SearchIllustrationTagMatchOption.TitleAndCaption] = MiscResources.SearchIllustrationTagMatchOptionTitleAndCaption,
+
+        [SearchNovelTagMatchOption.PartialMatchForTags] = MiscResources.SearchNovelTagMatchOptionPartialMatchForTags,
+        [SearchNovelTagMatchOption.ExactMatchForTags] = MiscResources.SearchNovelTagMatchOptionExactMatchForTags,
+        [SearchNovelTagMatchOption.Text] = MiscResources.SearchNovelTagMatchOptionText,
+        [SearchNovelTagMatchOption.Keyword] = MiscResources.SearchNovelTagMatchOptionCaption,
 
         [ElementTheme.Dark] = MiscResources.AppThemeDark,
         [ElementTheme.Light] = MiscResources.AppThemeLight,

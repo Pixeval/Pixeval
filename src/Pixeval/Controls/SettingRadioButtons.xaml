@@ -7,7 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Loaded="SettingRadioButtons_OnLoaded"
     mc:Ignorable="d">
-    <RadioButtons>
+    <RadioButtons Header="{x:Bind Header, Mode=OneWay}">
         <RadioButtons.ItemTemplate>
             <DataTemplate x:DataType="local:StringRepresentableItem">
                 <RadioButton
