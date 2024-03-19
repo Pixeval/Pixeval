@@ -23,6 +23,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Pixeval.Controls;
 using Pixeval.Database;
+using Pixeval.Options;
 using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Utilities;
@@ -40,7 +41,8 @@ public class IllustrationDownloadTask(DownloadHistoryEntry entry, IllustrationIt
 
     public override async Task DownloadAsync(Func<string, IProgress<double>?, CancellationHandle?, Task<Result<Stream>>> downloadStreamAsync)
     {
-        var dest = Destination.Replace("<manga_index>", "0");
+        Destination = IoHelper.GetPathFromUrlFormat(Destination, Url).Replace("<manga_index>", "0");
+
         await DownloadAsyncCore(downloadStreamAsync, Url, Destination);
     }
 
@@ -52,14 +54,14 @@ public class IllustrationDownloadTask(DownloadHistoryEntry entry, IllustrationIt
         if (App.AppViewModel.AppSettings.UseFileCache && await App.AppViewModel.Cache.TryGetAsync<Stream>(await IllustrationViewModel.GetIllustrationOriginalImageCacheKeyAsync()) is { } stream)
         {
             await using (stream)
-                await ManageStream(stream, destination);
+                await ManageStream(stream, url, destination);
             return;
         }
 
         if (await downloadStreamAsync(url, this, CancellationHandle) is Result<Stream>.Success result)
         {
-            await using var ras = result.Value;
-            await ManageStream(ras, destination);
+            await using var stream2 = result.Value;
+            await ManageStream(stream2, url, destination);
         }
     }
 
@@ -67,12 +69,20 @@ public class IllustrationDownloadTask(DownloadHistoryEntry entry, IllustrationIt
     /// 
     /// </summary>
     /// <param name="stream">会自动Dispose</param>
+    /// <param name="url"></param>
     /// <param name="destination"></param>
     /// <returns></returns>
-    protected virtual async Task ManageStream(Stream stream, string destination)
+    protected virtual async Task ManageStream(Stream stream, string url, string destination)
     {
-        using var image = await Image.LoadAsync(stream);
-        image.SetTags(IllustrationViewModel.Entry);
-        await image.IllustrationSaveToFileAsync(destination);
+        if (App.AppViewModel.AppSettings.IllustrationDownloadFormat is IllustrationDownloadFormat.Original)
+        {
+            await stream.StreamSaveToFileAsync(destination);
+        }
+        else
+        {
+            using var image = await Image.LoadAsync(stream);
+            image.SetTags(IllustrationViewModel.Entry);
+            await image.IllustrationSaveToFileAsync(destination);
+        }
     }
 }

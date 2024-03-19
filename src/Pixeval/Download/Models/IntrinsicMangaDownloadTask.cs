@@ -52,6 +52,6 @@ public class IntrinsicMangaDownloadTask : MangaDownloadTask
 
         Streams[CurrentIndex].Position = 0;
 
-        await ManageStream(Streams[CurrentIndex], destination);
+        await ManageStream(Streams[CurrentIndex], url, destination);
     }
 }

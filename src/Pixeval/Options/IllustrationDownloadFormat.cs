@@ -39,5 +39,8 @@ public enum IllustrationDownloadFormat
     WebPLossy,
 
     [LocalizedResource(typeof(MiscResources), nameof(MiscResources.WebPLossless))]
-    WebPLossless
+    WebPLossless,
+
+    [LocalizedResource(typeof(MiscResources), nameof(MiscResources.Original))]
+    Original,
 }

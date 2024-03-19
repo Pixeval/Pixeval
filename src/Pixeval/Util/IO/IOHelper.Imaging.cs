@@ -177,10 +177,11 @@ public static partial class IoHelper
         _ = await IllustrationSaveToStreamAsync(image, fileStream, illustrationDownloadFormat);
     }
 
-    public static async Task<Stream> IllustrationSaveToStreamAsync(this Stream stream, Stream? target = null, IllustrationDownloadFormat? illustrationDownloadFormat = null)
+    public static async Task StreamSaveToFileAsync(this Stream stream, string path)
     {
-        using var image = await Image.LoadAsync(stream);
-        return await IllustrationSaveToStreamAsync(image, target ?? _recyclableMemoryStreamManager.GetStream(), illustrationDownloadFormat);
+        CreateParentDirectories(path);
+        await using var fileStream = File.OpenWrite(path);
+        await stream.CopyToAsync(fileStream);
     }
 
     public static async Task<T> IllustrationSaveToStreamAsync<T>(this Image image, T destination, IllustrationDownloadFormat? illustrationDownloadFormat = null) where T : Stream
@@ -209,17 +210,19 @@ public static partial class IoHelper
         ugoiraDownloadFormat ??= App.AppViewModel.AppSettings.UgoiraDownloadFormat;
         return ugoiraDownloadFormat switch
         {
+            UgoiraDownloadFormat.OriginalZip => ".zip",
             UgoiraDownloadFormat.Tiff or UgoiraDownloadFormat.APng or UgoiraDownloadFormat.Gif => "." + ugoiraDownloadFormat.ToString()!.ToLower(),
             UgoiraDownloadFormat.WebPLossless or UgoiraDownloadFormat.WebPLossy => ".webp",
             _ => ThrowHelper.ArgumentOutOfRange<UgoiraDownloadFormat?, string>(ugoiraDownloadFormat)
         };
     }
 
-    public static string GetIllustrationExtension(IllustrationDownloadFormat? illustrationDownloadFormat = null)
+    public static string GetIllustrationExtension(string macroName, IllustrationDownloadFormat? illustrationDownloadFormat = null)
     {
         illustrationDownloadFormat ??= App.AppViewModel.AppSettings.IllustrationDownloadFormat;
         return illustrationDownloadFormat switch
         {
+            IllustrationDownloadFormat.Original => $"<{macroName}>",
             IllustrationDownloadFormat.Jpg or IllustrationDownloadFormat.Png or IllustrationDownloadFormat.Bmp => "." + illustrationDownloadFormat.ToString()!.ToLower(),
             IllustrationDownloadFormat.WebPLossless or IllustrationDownloadFormat.WebPLossy => ".webp",
             _ => ThrowHelper.ArgumentOutOfRange<IllustrationDownloadFormat?, string>(illustrationDownloadFormat)
@@ -249,5 +252,11 @@ public static partial class IoHelper
         var qrCode = new BitmapByteQRCode(qrCodeData);
         var bytes = qrCode.GetGraphic(20);
         return await _recyclableMemoryStreamManager.GetStream(bytes).GetSoftwareBitmapSourceAsync(true);
+    }
+
+    public static string GetPathFromUrlFormat(string path, string url)
+    {
+        var index = url.LastIndexOf('.');
+        return path.Replace("<illust_ext>", url[index..]);
     }
 }
