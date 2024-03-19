@@ -31,6 +31,6 @@ public class FileExtensionMacro : IMacro<IllustrationItemViewModel>.ITransducer
 
     public string Substitute(IllustrationItemViewModel context)
     {
-        return context.IsUgoira ? IoHelper.GetUgoiraExtension() : IoHelper.GetIllustrationExtension();
+        return context.IsUgoira ? IoHelper.GetUgoiraExtension() : IoHelper.GetIllustrationExtension(Name);
     }
 }

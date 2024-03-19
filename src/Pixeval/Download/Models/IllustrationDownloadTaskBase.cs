@@ -59,7 +59,11 @@ public abstract class IllustrationDownloadTaskBase(DownloadHistoryEntry entry) :
 
     public List<string> Urls => DatabaseEntry.Urls;
 
-    public string Destination => DatabaseEntry.Destination;
+    public string Destination
+    {
+        get => DatabaseEntry.Destination;
+        set => DatabaseEntry.Destination = value;
+    }
 
     public CancellationHandle CancellationHandle { get; set; } = new();
 

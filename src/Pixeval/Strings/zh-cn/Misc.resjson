@@ -55,6 +55,8 @@
     "Gif": "GIF（无损，只支持256色，文件小，支持广泛）",
     "Tiff": "TIFF（无损，无法自动播放，文件大）",
     "Png": "PNG/APNG（无损，文件小）",
+    "Original": "图片原始格式（JPG/PNG，无法自动添加标签）",
+    "OriginalZip": "动图原始格式（ZIP，无法添加标签）",
     "WebPLossless": "无损WebP（无损，文件小，支持广泛）",
     "WebPLossy": "有损WebP（有损，文件小，支持广泛）",
     "Thin": "极细",

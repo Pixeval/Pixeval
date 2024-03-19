@@ -23,6 +23,7 @@ using System.Threading.Tasks;
 using Pixeval.Controls;
 using Pixeval.CoreApi.Net.Response;
 using Pixeval.Database;
+using Pixeval.Options;
 using Pixeval.Util;
 using Pixeval.Util.IO;
 
@@ -36,10 +37,17 @@ public class UgoiraDownloadTask(
 {
     protected UgoiraMetadataResponse Metadata { get; set; } = metadata;
 
-    protected override async Task ManageStream(Stream stream, string destination)
+    protected override async Task ManageStream(Stream stream, string url, string destination)
     {
-        using var image = await IoHelper.GetImageFromZipStreamAsync(stream, Metadata);
-        image.SetTags(IllustrationViewModel.Entry);
-        await image.UgoiraSaveToFileAsync(destination);
+        if (App.AppViewModel.AppSettings.UgoiraDownloadFormat is UgoiraDownloadFormat.OriginalZip)
+        {
+            await stream.StreamSaveToFileAsync(destination);
+        }
+        else
+        {
+            using var image = await IoHelper.GetImageFromZipStreamAsync(stream, Metadata);
+            image.SetTags(IllustrationViewModel.Entry);
+            await image.UgoiraSaveToFileAsync(destination);
+        }
     }
 }

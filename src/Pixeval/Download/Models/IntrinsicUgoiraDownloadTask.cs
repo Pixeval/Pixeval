@@ -51,6 +51,6 @@ public class IntrinsicUgoiraDownloadTask : UgoiraDownloadTask
 
         Stream.Position = 0;
 
-        await ManageStream(Stream, destination);
+        await ManageStream(Stream, url, destination);
     }
 }

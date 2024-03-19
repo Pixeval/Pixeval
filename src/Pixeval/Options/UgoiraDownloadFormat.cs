@@ -37,5 +37,8 @@ public enum UgoiraDownloadFormat
     WebPLossy,
 
     [LocalizedResource(typeof(MiscResources), nameof(MiscResources.WebPLossless))]
-    WebPLossless
+    WebPLossless,
+
+    [LocalizedResource(typeof(MiscResources), nameof(MiscResources.OriginalZip))]
+    OriginalZip
 }
