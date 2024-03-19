@@ -21,7 +21,7 @@
     "UnknownUpdateState": "未知更新状态",
     "UpdateApp": "软件更新",
     "LanguageSystemDefault": "系统默认",
-    "DownloadedAndWaitingToInstall": "版本{0}下载完成，是否安装？或者你也可以在临时文件夹手动安装更新",
+    "DownloadedAndWaitingToInstall": "版本 {0} 下载完成，是否安装？或者你也可以在临时文件夹手动安装更新",
     "InstallCanceled": "安装取消",
     "UpdateFailed": "更新失败",
     "UpdateFailedInTempFolder": "更新失败，你可以在临时文件夹查看安装包",

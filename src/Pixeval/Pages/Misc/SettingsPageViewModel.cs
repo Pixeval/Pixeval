@@ -48,7 +48,9 @@ using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
 using System.ComponentModel;
 using System.Collections.ObjectModel;
+using Windows.System;
 using Pixeval.Utilities.Threading;
+using System.Formats.Tar;
 
 namespace Pixeval.Pages.Misc;
 
@@ -146,9 +148,15 @@ public partial class SettingsPageViewModel(FrameworkElement frameworkElement) : 
                 return;
             }
 
+            if (appReleaseModel?.ReleaseUri is null)
+            {
+                UpdateMessage = SettingsPageResources.UpdateFailed;
+                return;
+            }
+
             DownloadingUpdate = true;
             UpdateMessage = SettingsPageResources.DownloadingUpdate;
-            var result = await client.DownloadStreamAsync(appReleaseModel!.ReleaseUri,
+            var result = await client.DownloadStreamAsync(appReleaseModel.ReleaseUri.OriginalString,
                 new Progress<double>(progress => DownloadingUpdateProgress = progress), _cancellationHandle);
             // ReSharper disable once DisposeOnUsingVariable
             client.Dispose();
@@ -158,55 +166,31 @@ public partial class SettingsPageViewModel(FrameworkElement frameworkElement) : 
 
             if (result is Result<Stream>.Success { Value: var value })
             {
-                UpdateMessage = SettingsPageResources.Unzipping;
-                using var archive = new ZipArchive(value, ZipArchiveMode.Read);
-                var destUrl = null as string;
-                var directoryPath = Path.Combine(AppKnownFolders.Temporary.Self.Path, $"Pixeval {appReleaseModel.Version}\\");
-                foreach (var entry in archive.Entries)
-                {
-                    if (_cancellationHandle is { IsCancelled: true })
-                        return;
-                    var path = directoryPath + entry.FullName.Replace('/', '\\');
-                    if (entry.FullName.EndsWith('/'))
-                        continue;
-
-                    if (entry.FullName.EndsWith("Install.ps1"))
-                        destUrl = path;
-                    IoHelper.CreateParentDirectories(path);
-                    await using var stream = entry.Open();
-                    await using var fileStream = File.OpenWrite(path);
-                    await stream.CopyToAsync(fileStream);
-                }
+                var filePath = Path.Combine(AppKnownFolders.Temporary.Self.Path, appReleaseModel.ReleaseUri.Segments[^1]);
+                await using (var fileStream = File.OpenWrite(filePath))
+                    await value.CopyToAsync(fileStream);
 
                 downloaded = true;
-                if (destUrl is not null)
+                if (_cancellationHandle is { IsCancelled: true })
+                    return;
+                if (await FrameworkElement.CreateOkCancelAsync(SettingsPageResources.UpdateApp,
+                        SettingsPageResources.DownloadedAndWaitingToInstall.Format(appReleaseModel.Version)) is ContentDialogResult.Primary)
                 {
-                    if (_cancellationHandle is { IsCancelled: true })
-                        return;
-                    if (await FrameworkElement.CreateOkCancelAsync(SettingsPageResources.UpdateApp,
-                            SettingsPageResources.DownloadedAndWaitingToInstall) is ContentDialogResult.Primary)
+                    var process = new Process
                     {
-                        var process = new Process
+                        StartInfo =
                         {
-                            StartInfo =
-                                new ProcessStartInfo("powershell", $"-ExecutionPolicy Unrestricted -noexit \"&'{destUrl}'\"")
-                                {
-                                    UseShellExecute = false,
-                                    Verb = "runas"
-                                }
-                        };
-                        _ = process.Start();
-                        await process.WaitForExitAsync();
-                        UpdateMessage = null;
-                    }
-                    else
-                        UpdateMessage = SettingsPageResources.InstallCanceled;
+                            FileName = filePath,
+                            Verb = "runas",
+                            UseShellExecute = true
+                        }
+                    };
+                    _ = process.Start();
+                    await process.WaitForExitAsync();
+                    UpdateMessage = null;
                 }
                 else
-                {
-                    UpdateMessage = SettingsPageResources.UpdateFailedInTempFolder;
-                    ExpandExpander = true;
-                }
+                    UpdateMessage = SettingsPageResources.InstallCanceled;
             }
         }
         catch
