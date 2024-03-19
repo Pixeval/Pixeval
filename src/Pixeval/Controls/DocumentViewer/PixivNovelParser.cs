@@ -22,10 +22,13 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.UI;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Documents;
 using Microsoft.UI.Xaml.Media;
+using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Utilities;
 using WinUI3Utilities;
 
@@ -161,7 +164,7 @@ public static class PixivNovelParser
 
                         //todo
                         var hyperlink = new Hyperlink { Inlines = { new Run { Text = "去{0}页".Format(page) } } };
-                        hyperlink.Click += (s, e) => viewModel.JumpToPageRequested?.Invoke((int)page - 1);
+                        hyperlink.Click += (_, _) => viewModel.JumpToPageRequested?.Invoke((int)page - 1);
                         currentParagraph.Inlines.Add(hyperlink);
 
                         var end = endIndex + 1;
@@ -247,8 +250,8 @@ public static class PixivNovelParser
                         var page = 1;
                         var length = imageIdText.Split(dest, '-');
                         var imageId = 0L;
-                        // 只有不包含空白字符的纯数字，或者被'-'分割的两个数字才能解析
-                        // 例如："12345678"、"12345678-1"
+                        // 只有不包含空白字符的纯数字，或者被'-'分割的两个数字才能解析（后者序号从1开始）
+                        // 例如："12345678"、"12345678-2"
                         // 反例："12345678-1-1"、" 12345678"、"12345678-1 "、"12345678-"
                         if (length is not (1 or 2)
                             || (length is 2 && (!long.TryParse(imageIdText[dest[0]], null, out imageId) || !int.TryParse(imageIdText[dest[1]], null, out page)))
@@ -262,9 +265,13 @@ public static class PixivNovelParser
                         AddLastRun(ref currentSpan);
 
                         var image = new LazyImage { Stretch = Stretch.Uniform };
+                        var button = new Button { Content = image, Padding = new(5) };
+                        button.Click += async (_, _) => await IllustrationViewerHelper.CreateWindowWithPageAsync(imageId, viewModel.IllustrationLookup.Keys);
+                        var info = viewModel.IllustrationLookup[imageId];
+                        ToolTipService.SetToolTip(button, $"{info.Id}: {info.Illust.Title}");
                         result.Add(new()
                         {
-                            Inlines = { new InlineUIContainer { Child = image } },
+                            Inlines = { new InlineUIContainer { Child = button } },
                             TextAlignment = TextAlignment.Center
                         });
                         result.Add(currentParagraph = new());

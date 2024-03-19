@@ -22,8 +22,10 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml.Documents;
@@ -42,6 +44,8 @@ public class DocumentViewerViewModel(NovelContent novelContent) : ObservableObje
     public Action<int>? JumpToPageRequested;
 
     public NovelContent NovelContent { get; } = novelContent;
+
+    public Dictionary<long, NovelIllustInfo> IllustrationLookup { get; } = [];
 
     public Dictionary<(long, int), SoftwareBitmapSource> IllustrationImages { get; } = [];
 
@@ -68,7 +72,10 @@ public class DocumentViewerViewModel(NovelContent novelContent) : ObservableObje
     public async Task LoadImagesAsync()
     {
         foreach (var illust in NovelContent.Illusts)
+        {
+            IllustrationLookup[illust.Id] = illust;
             IllustrationImages[(illust.Id, illust.Page)] = null!;
+        }
 
         foreach (var image in NovelContent.Images)
             UploadedImages[image.NovelImageId] = null!;

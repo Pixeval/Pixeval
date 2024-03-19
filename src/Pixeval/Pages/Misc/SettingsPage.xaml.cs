@@ -23,7 +23,6 @@ using System.Collections.Generic;
 using Windows.System;
 using CommunityToolkit.Labs.WinUI.MarkdownTextBlock;
 using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI;
 using Microsoft.UI.Text;
@@ -364,7 +363,6 @@ public sealed partial class SettingsPage : IDisposable
         if (_disposed)
             return;
         _disposed = true;
-        WeakReferenceMessenger.Default.UnregisterAll(this);
         Bindings.StopTracking();
         ViewModel.SaveCollections();
         App.AppViewModel.AppSettings = ViewModel.AppSetting;

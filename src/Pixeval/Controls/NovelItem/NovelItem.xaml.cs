@@ -46,7 +46,7 @@ public sealed partial class NovelItem
                 var anim6 = ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation6", TagsList);
                 anim1.Configuration = new BasicConnectedAnimationConfiguration();
                 anim2.Configuration = new BasicConnectedAnimationConfiguration();
-                anim3.Configuration = new BasicConnectedAnimationConfiguration(); 
+                anim3.Configuration = new BasicConnectedAnimationConfiguration();
                 anim4.Configuration = new BasicConnectedAnimationConfiguration();
                 anim5.Configuration = new BasicConnectedAnimationConfiguration();
                 anim6.Configuration = new BasicConnectedAnimationConfiguration();
@@ -58,6 +58,12 @@ public sealed partial class NovelItem
                 _ = anim6.TryStart(PopupTagsList);
                 NovelItemPopup.Child.To<FrameworkElement>().Width = ActualWidth + 10;
             }
+
+            if (IsPointerOver <= 0 && old > 0)
+            {
+                // TODO: Backward connected animation
+            }
+
             NovelItemPopup.IsOpen = IsPointerOver > 0;
         }
     }
@@ -73,7 +79,7 @@ public sealed partial class NovelItem
     private void TagButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
         e.Handled = true;
-        _ = WeakReferenceMessenger.Default.Send(new WorkTagClickedMessage(SimpleWorkType.Novel, (string)((Button)sender).Content));
+        _ = WeakReferenceMessenger.Default.Send(new WorkTagClickedMessage(SimpleWorkType.Novel, ((TextBlock)((Button)sender).Content).Text));
     }
 
     private async void NovelItem_OnPointerEntered(object sender, PointerRoutedEventArgs e)
