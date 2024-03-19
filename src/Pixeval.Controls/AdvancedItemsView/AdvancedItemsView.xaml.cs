@@ -117,9 +117,14 @@ public sealed partial class AdvancedItemsView : ItemsView
     {
         var advancedItemsView = o.To<AdvancedItemsView>();
         var minItemWidth = advancedItemsView.MinItemWidth;
-        if (advancedItemsView.Layout is UniformGridLayout uniformGridLayout)
+        switch (advancedItemsView.Layout)
         {
-            uniformGridLayout.MinItemWidth = minItemWidth;
+            case StaggeredLayout staggeredLayout:
+                staggeredLayout.DesiredColumnWidth = minItemWidth;
+                break;
+            case UniformGridLayout uniformGridLayout:
+                uniformGridLayout.MinItemWidth = minItemWidth;
+                break;
         }
     }
 
@@ -134,6 +139,9 @@ public sealed partial class AdvancedItemsView : ItemsView
                 break;
             case UniformGridLayout uniformGridLayout:
                 uniformGridLayout.MinRowSpacing = minRowSpacing;
+                break;
+            case StaggeredLayout staggeredLayout:
+                staggeredLayout.RowSpacing = minRowSpacing;
                 break;
             case StackLayout stackLayout when advancedItemsView.LayoutType is ItemsViewLayoutType.VerticalStack:
                 stackLayout.Spacing = minRowSpacing;
@@ -152,6 +160,9 @@ public sealed partial class AdvancedItemsView : ItemsView
                 break;
             case UniformGridLayout uniformGridLayout:
                 uniformGridLayout.MinColumnSpacing = minColumnSpacing;
+                break;
+            case StaggeredLayout staggeredLayout:
+                staggeredLayout.ColumnSpacing = minColumnSpacing;
                 break;
             case StackLayout stackLayout when advancedItemsView.LayoutType is ItemsViewLayoutType.HorizontalStack:
                 stackLayout.Spacing = minColumnSpacing;
@@ -212,6 +223,12 @@ public sealed partial class AdvancedItemsView : ItemsView
             {
                 Spacing = minColumnSpacing,
                 Orientation = Orientation.Horizontal
+            },
+            ItemsViewLayoutType.Staggered => new StaggeredLayout
+            {
+                ColumnSpacing = minColumnSpacing,
+                RowSpacing = minRowSpacing,
+                DesiredColumnWidth = minItemWidth
             },
             _ => ThrowHelper.ArgumentOutOfRange<ItemsViewLayoutType, VirtualizingLayout>(advancedItemsView.LayoutType)
         };

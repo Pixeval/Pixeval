@@ -1,6 +1,5 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
@@ -12,7 +11,7 @@ namespace Pixeval.Controls;
 [DependencyProperty<HorizontalAlignment>("HorizontalImageAlignment", "Microsoft.UI.Xaml.HorizontalAlignment.Center")]
 [DependencyProperty<VerticalAlignment>("VerticalImageAlignment", "Microsoft.UI.Xaml.VerticalAlignment.Center")]
 [INotifyPropertyChanged]
-public sealed partial class LazyImage : UserControl
+public sealed partial class LazyImage
 {
     public LazyImage() => InitializeComponent();
 

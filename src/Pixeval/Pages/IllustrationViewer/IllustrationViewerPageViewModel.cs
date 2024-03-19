@@ -240,14 +240,10 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
         get
         {
             if (CurrentPageIndex < PageCount - 1)
-            {
                 return true;
-            }
 
             if (CurrentIllustrationIndex < Illustrations.Count - 1)
-            {
                 return false;
-            }
 
             return null;
         }
@@ -271,14 +267,10 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
         get
         {
             if (CurrentPageIndex > 0)
-            {
                 return true;
-            }
 
             if (CurrentIllustrationIndex > 0)
-            {
                 return false;
-            }
 
             return null;
         }

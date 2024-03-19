@@ -57,6 +57,18 @@
     "Png": "PNG/APNG（无损，文件小）",
     "WebPLossless": "无损WebP（无损，文件小，支持广泛）",
     "WebPLossy": "有损WebP（有损，文件小，支持广泛）",
+    "Thin": "极细",
+    "ExtraLight": "特细",
+    "Light": "细",
+    "SemiLight": "半细",
+    "Normal": "常规",
+    "Medium": "中等",
+    "SemiBold": "半粗",
+    "Bold": "粗",
+    "ExtraBold": "特粗",
+    "Black": "黑",
+    "ExtraBlack": "特黑",
+
     "DownloadListEntryOpenFailed": "打开文件（夹）失败",
     "DownloadListEntryMaybeDeleted": "可能你已经删除了该图片",
 

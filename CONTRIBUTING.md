@@ -23,6 +23,11 @@ pixiv的页面是使用react写的，设置自动化费了好大劲，最终参�
 如`IllustrationView`等，是包含了一个`AdvancedItemsView`来展示`XXXItem`的控件，方便控件的复用。
 也有一些`AdvancedItemsView`控件，由于目前没有复杂的复用需求，所以被直接包含在某些页面里了。
 
+### XXXContainer
+
+如`IllustrationContainer`等，是包含了一个`XXXView`的控件，并且加上了上部的工具栏，可以简单地往里面添加`ComboBox`等控件。
+由于逻辑过于简单，所以没有对应的XAML文件。
+
 ### XXXViewerPage
 
 如`IllustrationViewerPage`等（`ImageViewerPage`除外），表示用一个单独窗口来展示详细信息的页面，可以展示一个画师，一幅插画等。
@@ -31,7 +36,13 @@ pixiv的页面是使用react写的，设置自动化费了好大劲，最终参�
 
 ### EntryXXX
 
-一般表示被Illustration、Illustrator共用的模型，如`IllustrationView`、`IllustratorView`都包含`EntryView`。
+一般表示被Illustration、Illustrator、Novel共用的模型，如`IllustrationView`、`IllustratorView`都包含`EntryView`。
+本来打算是让`IllustrationView`、`IllustratorView`等继承`EntryView`，但由于都有XAML，会导致`InitializeComponent`重定义，所以最终没有这样做。
+
+### WorkXXX
+
+Work表示作品，所以这个一般表示被Illustration、Novel共用的模型，由于它的ViewModel既可以接受Illustration，也可以接受Novel，
+所以从理论上来说这个取代了相应的`IllustrationXXX`和`IllustratorXXX`。例如`WorkView`就取代了`IllustrationView`和`IllustratorView`。
 
 ### AdvancedItemsView
 

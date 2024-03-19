@@ -59,16 +59,16 @@
         </controls:ZoomableImage>
         <Grid Visibility="{x:Bind _viewModel.LoadSuccessfully, Converter={StaticResource BoolNegationToVisibilityConverter}, Mode=OneWay}">
             <Rectangle Fill="{ThemeResource PixevalAppAcrylicBrush}" />
-            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+            <StackPanel
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Spacing="10">
                 <ProgressRing
                     Width="50"
                     Height="50"
                     IsIndeterminate="False"
                     Value="{x:Bind _viewModel.LoadingProgress, Mode=OneWay}" />
-                <TextBlock
-                    Margin="0,10,0,0"
-                    FontSize="{StaticResource PixevalSubscriptFontSize}"
-                    Text="{x:Bind _viewModel.LoadingText, Mode=OneWay}" />
+                <TextBlock FontSize="{StaticResource PixevalSubscriptFontSize}" Text="{x:Bind _viewModel.LoadingText, Mode=OneWay}" />
             </StackPanel>
         </Grid>
     </Grid>

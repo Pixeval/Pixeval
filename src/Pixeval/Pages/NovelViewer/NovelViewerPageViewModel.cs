@@ -32,8 +32,11 @@ using Pixeval.Controls.MarkupExtensions;
 using Pixeval.Controls.Windowing;
 using Pixeval.CoreApi.Model;
 using Pixeval.Options;
+using Pixeval.Pages.Misc;
 using Pixeval.Util.ComponentModels;
 using Pixeval.Util.UI;
+using Pixeval.AppManagement;
+using System.Runtime.CompilerServices;
 
 namespace Pixeval.Pages.NovelViewer;
 
@@ -50,6 +53,11 @@ public partial class NovelViewerPageViewModel : DetailedUiObservableObject, IDis
     /// <param name="content"></param>
     public NovelViewerPageViewModel(IEnumerable<NovelItemViewModel> novelViewModels, int currentNovelIndex, FrameworkElement content) : base(content)
     {
+        content.ActualThemeChanged += (_, _) =>
+        {
+            OnPropertyChanged(nameof(NovelBackground));
+            OnPropertyChanged(nameof(NovelFontColor));
+        };
         NovelsSource = novelViewModels.ToArray();
         CurrentNovelIndex = currentNovelIndex;
 
@@ -105,6 +113,36 @@ public partial class NovelViewerPageViewModel : DetailedUiObservableObject, IDis
 
     #region Current相关
 
+    private int _pageCount;
+
+    private int _currentPageIndex = -1;
+
+    /// <summary>
+    /// setter只用于绑定反向更新
+    /// </summary>
+    public int PageCount
+    {
+        get => _pageCount;
+        set
+        {
+            _pageCount = value;
+            OnButtonPropertiesChanged();
+        }
+    }
+
+    /// <summary>
+    /// setter只用于绑定反向更新
+    /// </summary>
+    public int CurrentPageIndex
+    {
+        get => _currentPageIndex;
+        set
+        {
+            _currentPageIndex = value;
+            OnButtonPropertiesChanged();
+        }
+    }
+
     /// <summary>
     /// 插画列表
     /// </summary>
@@ -132,17 +170,83 @@ public partial class NovelViewerPageViewModel : DetailedUiObservableObject, IDis
             // ReSharper disable once ConditionalAccessQualifierIsNonNullableAccordingToAPIContract
 
             _currentNovelIndex = value;
+            CurrentPageIndex = 0;
 
             NovelInfoTag.Parameter = CurrentNovel.Entry;
             CommentsTag.Parameter = (CommentType.Novel, NovelId);
 
             OnDetailedPropertyChanged(oldValue, value);
             OnPropertyChanged(nameof(CurrentNovel));
+            OnPropertyChanged(nameof(NovelId));
         }
     }
 
     /// <inheritdoc cref="CurrentNovelIndex"/>
     private int _currentNovelIndex = -1;
+
+    private void OnButtonPropertiesChanged()
+    {
+        OnPropertyChanged(nameof(NextButtonText));
+        OnPropertyChanged(nameof(PrevButtonText));
+    }
+
+    #endregion
+
+    #region Helper Functions
+
+    public string? NextButtonText => NextButtonAction switch
+    {
+        true => EntryViewerPageResources.NextPageOrNovel,
+        false => EntryViewerPageResources.NextNovel,
+        _ => null
+    };
+
+    /// <summary>
+    /// <see langword="true"/>: next page<br/>
+    /// <see langword="false"/>: next novel<br/>
+    /// <see langword="null"/>: none
+    /// </summary>
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0046:转换为条件表达式")]
+    public bool? NextButtonAction
+    {
+        get
+        {
+            if (CurrentPageIndex < PageCount - 1)
+                return true;
+
+            if (CurrentNovelIndex < Novels.Count - 1)
+                return false;
+
+            return null;
+        }
+    }
+
+    public string? PrevButtonText => PrevButtonAction switch
+    {
+        true => EntryViewerPageResources.PrevPageOrNovel,
+        false => EntryViewerPageResources.PrevNovel,
+        _ => null
+    };
+
+    /// <summary>
+    /// <see langword="true"/>: prev page<br/>
+    /// <see langword="false"/>: prev novel<br/>
+    /// <see langword="null"/>: none
+    /// </summary>
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0046:转换为条件表达式")]
+    public bool? PrevButtonAction
+    {
+        get
+        {
+            if (CurrentPageIndex > 0)
+                return true;
+
+            if (CurrentNovelIndex > 0)
+                return false;
+
+            return null;
+        }
+    }
 
     #endregion
 
@@ -159,10 +263,85 @@ public partial class NovelViewerPageViewModel : DetailedUiObservableObject, IDis
         FullScreenCommand.GetFullScreenCommand(IsFullScreen);
     }
 
+    public XamlUICommand NovelSettingsCommand { get; } =
+        EntryViewerPageResources.NovelSettings.GetCommand(FontIconSymbol.SettingsE713);
+
     public XamlUICommand InfoAndCommentsCommand { get; } =
         EntryViewerPageResources.InfoAndComments.GetCommand(FontIconSymbol.InfoE946, VirtualKey.F12);
 
     public XamlUICommand FullScreenCommand { get; } = "".GetCommand(FontIconSymbol.FullScreenE740);
+
+    #endregion
+
+    #region Settings
+
+    public static IEnumerable<string> AvailableFonts => SettingsPageViewModel.AvailableFonts;
+
+    public uint NovelBackground
+    {
+        get => FrameworkElement.ActualTheme is ElementTheme.Light ? App.AppViewModel.AppSettings.NovelBackgroundInLightMode : App.AppViewModel.AppSettings.NovelBackgroundInDarkMode;
+        set => _ = FrameworkElement.ActualTheme is ElementTheme.Light
+            ? SetSettings(App.AppViewModel.AppSettings.NovelBackgroundInLightMode, value, App.AppViewModel.AppSettings, (setting, value) => setting.NovelBackgroundInLightMode = value)
+            : SetSettings(App.AppViewModel.AppSettings.NovelBackgroundInDarkMode, value, App.AppViewModel.AppSettings, (setting, value) => setting.NovelBackgroundInDarkMode = value);
+    }
+
+    public uint NovelFontColor
+    {
+        get => FrameworkElement.ActualTheme is ElementTheme.Light ? App.AppViewModel.AppSettings.NovelFontColorInLightMode : App.AppViewModel.AppSettings.NovelFontColorInDarkMode;
+        set => _ = FrameworkElement.ActualTheme is ElementTheme.Light
+            ? SetSettings(App.AppViewModel.AppSettings.NovelFontColorInLightMode, value, App.AppViewModel.AppSettings, (setting, value) => setting.NovelFontColorInLightMode = value)
+            : SetSettings(App.AppViewModel.AppSettings.NovelFontColorInDarkMode, value, App.AppViewModel.AppSettings, (setting, value) => setting.NovelFontColorInDarkMode = value);
+    }
+
+    public FontWeightsOption NovelFontWeight
+    {
+        get => App.AppViewModel.AppSettings.NovelFontWeight;
+        set => SetSettings(App.AppViewModel.AppSettings.NovelFontWeight, value, App.AppViewModel.AppSettings, (setting, value) => setting.NovelFontWeight = value);
+    }
+
+    public double NovelFontSize
+    {
+        get => App.AppViewModel.AppSettings.NovelFontSize;
+        set => SetSettings(App.AppViewModel.AppSettings.NovelFontSize, value, App.AppViewModel.AppSettings, (setting, value) => setting.NovelFontSize = value);
+    }
+
+    public double NovelLineHeight
+    {
+        get => App.AppViewModel.AppSettings.NovelLineHeight;
+        set => SetSettings(App.AppViewModel.AppSettings.NovelLineHeight, value, App.AppViewModel.AppSettings, (setting, value) => setting.NovelLineHeight = value);
+    }
+
+    public double NovelMaxWidth
+    {
+        get => App.AppViewModel.AppSettings.NovelMaxWidth;
+        set => SetSettings(App.AppViewModel.AppSettings.NovelMaxWidth, value, App.AppViewModel.AppSettings, (setting, value) => setting.NovelMaxWidth = value);
+    }
+
+    public string NovelFontFamily
+    {
+        get => App.AppViewModel.AppSettings.NovelFontFamily;
+        set => SetSettings(App.AppViewModel.AppSettings.NovelFontFamily, value, App.AppViewModel.AppSettings, (setting, value) => setting.NovelFontFamily = value);
+    }
+
+    protected bool SetSettings<TModel, T>(T oldValue, T newValue, TModel model, Action<TModel, T> callback, [CallerMemberName] string? propertyName = null)
+        where TModel : class
+    {
+        ArgumentNullException.ThrowIfNull(model);
+        ArgumentNullException.ThrowIfNull(callback);
+
+        if (EqualityComparer<T>.Default.Equals(oldValue, newValue))
+            return false;
+
+        OnPropertyChanging(propertyName);
+
+        callback(model, newValue);
+
+        OnPropertyChanged(propertyName);
+
+        AppInfo.SaveConfig(App.AppViewModel.AppSettings);
+
+        return true;
+    }
 
     #endregion
 }

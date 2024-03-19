@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -30,7 +30,7 @@ public static partial class ReplyEmojiHelper
     public static IEnumerable<ReplyContentToken> EnumerateTokens(string content)
     {
         var table = BuildEmojiReplacementIndexTableOfReplyContent(content);
-        if (!table.Any())
+        if (table.Count is 0)
         {
             yield return new ReplyContentToken.TextToken(content);
             yield break;
@@ -44,7 +44,7 @@ public static partial class ReplyEmojiHelper
                 _ = stringBuilder.Append(content[i++]);
             }
 
-            if (stringBuilder.Length != 0)
+            if (stringBuilder.Length is not 0)
             {
                 yield return new ReplyContentToken.TextToken(stringBuilder.ToString());
             }

@@ -1,56 +1,56 @@
-<UserControl
+<Grid
     x:Class="Pixeval.Controls.HeartButton"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:Pixeval.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    x:Name="This"
+    Width="26"
+    Height="26"
+    Padding="3"
+    Tapped="ToggleBookmarkButtonOnTapped"
     mc:Ignorable="d">
-    <Grid
-        x:Name="ImageBookmarkButtonGrid"
-        Width="20"
-        Height="20"
-        Margin="3"
-        Tapped="ToggleBookmarkButtonOnTapped">
-        <Grid.Resources>
-            <ExponentialEase
-                x:Key="EasingFunction"
-                EasingMode="EaseOut"
-                Exponent="12" />
-            <Storyboard x:Key="ThumbnailScaleInStoryboard">
-                <DoubleAnimation
-                    EasingFunction="{StaticResource EasingFunction}"
-                    Storyboard.TargetName="ImageBookmarkButtonGrid"
-                    Storyboard.TargetProperty="(Grid.RenderTransform).(ScaleTransform.ScaleX)"
-                    To="1"
-                    Duration="0:0:2" />
-                <DoubleAnimation
-                    EasingFunction="{StaticResource EasingFunction}"
-                    Storyboard.TargetName="ImageBookmarkButtonGrid"
-                    Storyboard.TargetProperty="(Grid.RenderTransform).(ScaleTransform.ScaleY)"
-                    To="1"
-                    Duration="0:0:2" />
-            </Storyboard>
-            <Storyboard x:Key="ThumbnailScaleOutStoryboard">
-                <DoubleAnimation
-                    EasingFunction="{StaticResource EasingFunction}"
-                    Storyboard.TargetName="ImageBookmarkButtonGrid"
-                    Storyboard.TargetProperty="(Grid.RenderTransform).(ScaleTransform.ScaleX)"
-                    To="0"
-                    Duration="0:0:2" />
-                <DoubleAnimation
-                    EasingFunction="{StaticResource EasingFunction}"
-                    Storyboard.TargetName="ImageBookmarkButtonGrid"
-                    Storyboard.TargetProperty="(Grid.RenderTransform).(ScaleTransform.ScaleY)"
-                    To="0"
-                    Duration="0:0:2" />
-            </Storyboard>
-        </Grid.Resources>
-        <Grid.RenderTransform>
-            <ScaleTransform CenterX="10" CenterY="10" ScaleX="0" ScaleY="0" />
-        </Grid.RenderTransform>
-        <local:FontSymbolIcon IsBackLayer="True" Symbol="HeartFillEB52" />
-        <IconSourceElement IconSource="{x:Bind Command.IconSource, Mode=OneWay}" />
-        <local:FontSymbolIcon Symbol="HeartEB51" />
-    </Grid>
-</UserControl>
+    <Grid.Resources>
+        <ExponentialEase
+            x:Key="EasingFunction"
+            EasingMode="EaseOut"
+            Exponent="12" />
+        <!--  ReSharper disable once Xaml.RedundantResource  -->
+        <Storyboard x:Key="ThumbnailScaleInStoryboard">
+            <DoubleAnimation
+                EasingFunction="{StaticResource EasingFunction}"
+                Storyboard.TargetName="This"
+                Storyboard.TargetProperty="(Grid.RenderTransform).(ScaleTransform.ScaleX)"
+                To="1"
+                Duration="0:0:2" />
+            <DoubleAnimation
+                EasingFunction="{StaticResource EasingFunction}"
+                Storyboard.TargetName="This"
+                Storyboard.TargetProperty="(Grid.RenderTransform).(ScaleTransform.ScaleY)"
+                To="1"
+                Duration="0:0:2" />
+        </Storyboard>
+        <!--  ReSharper disable once Xaml.RedundantResource  -->
+        <Storyboard x:Key="ThumbnailScaleOutStoryboard">
+            <DoubleAnimation
+                EasingFunction="{StaticResource EasingFunction}"
+                Storyboard.TargetName="This"
+                Storyboard.TargetProperty="(Grid.RenderTransform).(ScaleTransform.ScaleX)"
+                To="0"
+                Duration="0:0:2" />
+            <DoubleAnimation
+                EasingFunction="{StaticResource EasingFunction}"
+                Storyboard.TargetName="This"
+                Storyboard.TargetProperty="(Grid.RenderTransform).(ScaleTransform.ScaleY)"
+                To="0"
+                Duration="0:0:2" />
+        </Storyboard>
+    </Grid.Resources>
+    <Grid.RenderTransform>
+        <ScaleTransform CenterX="10" CenterY="10" ScaleX="0" ScaleY="0" />
+    </Grid.RenderTransform>
+    <local:FontSymbolIcon IsBackLayer="True" Symbol="HeartFillEB52" />
+    <IconSourceElement IconSource="{x:Bind Command.IconSource, Mode=OneWay}" />
+    <local:FontSymbolIcon Symbol="HeartEB51" />
+</Grid>

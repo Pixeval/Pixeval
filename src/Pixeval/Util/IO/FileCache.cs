@@ -370,7 +370,7 @@ public class FileCache
 
     public async Task<T?> TryGetAsync<T>(string key) where T : class
     {
-        return await ExistsAsync(key) ? await GetAsync<T>(key) : default;
+        return await ExistsAsync(key) && !await IsExpiredAsync(key) ? await GetAsync<T>(key) : default;
     }
 
     public Task<T?> GetAsync<T>(string key) where T : class

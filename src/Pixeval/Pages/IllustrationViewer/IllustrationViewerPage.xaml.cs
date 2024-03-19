@@ -44,6 +44,7 @@ public sealed partial class IllustrationViewerPage : SupportCustomTitleBarDragRe
     private bool _pointerNotInArea = true;
 
     private bool _timeUp;
+
     private IllustrationViewerPageViewModel _viewModel = null!;
 
     public IllustrationViewerPage() => InitializeComponent();
@@ -80,21 +81,9 @@ public sealed partial class IllustrationViewerPage : SupportCustomTitleBarDragRe
         var leftIndent = new RectInt32(0, 0, EntryViewerSplitView.IsPaneOpen ? (int)WorkViewerSplitView.OpenPaneLength : 0, (int)TitleBarArea.ActualHeight);
 
         if (TitleBar.Visibility is Visibility.Visible)
-        {
             sender.SetRegionRects(NonClientRegionKind.Icon, [GetScaledRect(TitleBar.Icon)]);
-        }
         sender.SetRegionRects(NonClientRegionKind.Passthrough, [GetScaledRect(leftIndent), GetScaledRect(IllustrationViewerCommandBar), GetScaledRect(IllustrationViewerSubCommandBar)]);
         titleBarHeight = 48;
-    }
-
-    /// <summary>
-    /// <see cref="EnhancedPage.OnPageDeactivated"/> might not be called when the window is closed
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    private void IllustrationViewerPage_OnUnloaded(object sender, RoutedEventArgs e)
-    {
-        _viewModel.Dispose();
     }
 
     public override void OnPageActivated(NavigationEventArgs e, object? parameter)
@@ -125,8 +114,7 @@ public sealed partial class IllustrationViewerPage : SupportCustomTitleBarDragRe
                 if (oldTag == newTag)
                     return;
                 ThumbnailItemsView.StartBringItemIntoView(vm.CurrentIllustrationIndex, new BringIntoViewOptions { AnimationDesired = true });
-                if (EntryViewerSplitView.PinPane)
-                    EntryViewerSplitView.NavigationViewSelect(vm.Tags[0]);
+                EntryViewerSplitView.NavigationViewSelect(vm.Tags[0]);
             }
 
             Navigate<ImageViewerPage>(IllustrationImageShowcaseFrame, vm.CurrentImage, info);
@@ -156,11 +144,15 @@ public sealed partial class IllustrationViewerPage : SupportCustomTitleBarDragRe
         var dataTransferManager = Window.GetDataTransferManager();
         dataTransferManager.DataRequested += OnDataTransferManagerOnDataRequested;
 
-        SidePanelShadow.Receivers.Add(IllustrationPresenterDockPanel);
         CommandBorderDropShadow.Receivers.Add(IllustrationImageShowcaseFrame);
         ThumbnailListDropShadow.Receivers.Add(IllustrationImageShowcaseFrame);
 
         IllustrationImageShowcaseFrame_OnTapped(null!, null!);
+    }
+
+    private void IllustrationViewerPage_OnUnloaded(object sender, RoutedEventArgs e)
+    {
+        _viewModel.Dispose();
     }
 
     private async void FrameworkElement_OnDataContextChanged(FrameworkElement sender, DataContextChangedEventArgs e)
@@ -227,12 +219,6 @@ public sealed partial class IllustrationViewerPage : SupportCustomTitleBarDragRe
     {
         // 由于先后次序问题，必须操作SelectedIndex，而不是_viewModel.CurrentIllustrationIndex
         --ThumbnailItemsView.SelectedIndex;
-    }
-
-    private void GenerateLinkToThisPageButtonTeachingTip_OnActionButtonClick(TeachingTip sender, object args)
-    {
-        GenerateLinkTeachingTip.IsOpen = false;
-        App.AppViewModel.AppSettings.DisplayTeachingTipWhenGeneratingAppLink = false;
     }
 
     private void Placeholder_OnSizeChanged(object sender, object e) => RaiseSetTitleBarDragRegion();

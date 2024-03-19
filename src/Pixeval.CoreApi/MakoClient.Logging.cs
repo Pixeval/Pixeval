@@ -2,11 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-using Pixeval.CoreApi.Net;
 using Pixeval.CoreApi.Net.EndPoints;
 using Pixeval.Utilities;
 

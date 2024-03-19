@@ -86,7 +86,7 @@ public partial class MakoClient
     /// The <see cref="SearchIllustrationTagMatchOption.TitleAndCaption" /> option for the method of search
     /// matching
     /// </param>
-    /// <param name="sortOption">The <see cref="IllustrationSortOption" /> option for sorting method</param>
+    /// <param name="sortOption">The <see cref="WorkSortOption" /> option for sorting method</param>
     /// <param name="searchDuration">The <see cref="SearchDuration" /> option for the duration of this search</param>
     /// <param name="targetFilter">The <see cref="TargetFilter" /> option targeting android or ios</param>
     /// <param name="startDate">The starting date filtering the search results</param>
@@ -100,7 +100,7 @@ public partial class MakoClient
         int start = 0,
         int pages = 100,
         SearchIllustrationTagMatchOption matchOption = SearchIllustrationTagMatchOption.TitleAndCaption,
-        IllustrationSortOption? sortOption = null,
+        WorkSortOption? sortOption = null,
         SearchDuration searchDuration = SearchDuration.Undecided,
         TargetFilter targetFilter = TargetFilter.ForAndroid,
         DateTimeOffset? startDate = null,
@@ -108,9 +108,9 @@ public partial class MakoClient
         bool? aiType = null)
     {
         EnsureNotCancelled();
-        if (sortOption == IllustrationSortOption.PopularityDescending && !Session.IsPremium)
+        if (sortOption == WorkSortOption.PopularityDescending && !Session.IsPremium)
         {
-            sortOption = IllustrationSortOption.DoNotSort;
+            sortOption = WorkSortOption.DoNotSort;
         }
 
         return new SearchIllustrationEngine(this, new EngineHandle(CancelInstance), matchOption, tag, start, pages, sortOption, searchDuration, targetFilter, startDate, endDate, aiType);
@@ -121,7 +121,7 @@ public partial class MakoClient
         int start = 0,
         int pages = 100,
         SearchNovelTagMatchOption matchOption = SearchNovelTagMatchOption.Text,
-        IllustrationSortOption? sortOption = null,
+        WorkSortOption? sortOption = null,
         SearchDuration searchDuration = SearchDuration.Undecided,
         TargetFilter targetFilter = TargetFilter.ForAndroid,
         DateTimeOffset? startDate = null,
@@ -131,9 +131,9 @@ public partial class MakoClient
         bool? aiType = null)
     {
         EnsureNotCancelled();
-        if (sortOption == IllustrationSortOption.PopularityDescending && !Session.IsPremium)
+        if (sortOption == WorkSortOption.PopularityDescending && !Session.IsPremium)
         {
-            sortOption = IllustrationSortOption.DoNotSort;
+            sortOption = WorkSortOption.DoNotSort;
         }
 
         return new SearchNovelEngine(this, new EngineHandle(CancelInstance), matchOption, tag, start, pages, sortOption, searchDuration, targetFilter, startDate, endDate, mergePlainKeywordResults, includeTranslatedTagResults, aiType);

@@ -57,12 +57,6 @@ public partial class App
         AppViewModel = new AppViewModel(this);
         AppInfo.SetNameResolvers(AppViewModel.AppSettings);
         WindowFactory.Initialize(AppViewModel.AppSettings, AppInfo.IconAbsolutePath);
-        RequestedTheme = AppViewModel.AppSettings.Theme switch
-        {
-            ElementTheme.Light => ApplicationTheme.Light,
-            ElementTheme.Dark => ApplicationTheme.Dark,
-            _ => RequestedTheme
-        };
         AppInstance.GetCurrent().Activated += (_, arguments) => ActivationRegistrar.Dispatch(arguments);
         InitializeComponent();
     }
@@ -77,9 +71,7 @@ public partial class App
             Resources[NavigationViewContentMargin] = new Thickness(0, 48, 0, 0);
 
         if (AppInstance.GetCurrent().GetActivatedEventArgs().Kind is ExtendedActivationKind.ToastNotification)
-        {
             return;
-        }
 
         var isProtocolActivated = AppInstance.GetCurrent().GetActivatedEventArgs() is { Kind: ExtendedActivationKind.Protocol };
         if (isProtocolActivated && AppInstance.GetInstances().Count > 1)

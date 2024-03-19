@@ -37,6 +37,29 @@ namespace Pixeval.Pages.IllustrationViewer;
 public static class IllustrationViewerHelper
 {
     /// <summary>
+    /// 此方法无法加载更多插画
+    /// </summary>
+    public static async Task CreateWindowWithPageAsync(long id, ICollection<long> otherIds)
+    {
+        var viewModel = null as IllustrationItemViewModel;
+        var viewModels = new List<IllustrationItemViewModel>();
+        foreach (var otherId in otherIds)
+        {
+            var illustrationItemViewModel = new IllustrationItemViewModel(await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(id));
+            viewModels.Add(illustrationItemViewModel);
+            if (otherId == id)
+            {
+                viewModel = illustrationItemViewModel;
+            }
+        }
+
+        if (viewModel is null)
+            ThrowHelper.InvalidOperation("Specified illustration not found in the list.");
+
+        viewModel.CreateWindowWithPage(viewModels);
+    }
+
+    /// <summary>
     /// 此方法无法加载更多插画，加载单张图使用
     /// </summary>
     public static async Task CreateWindowWithPageAsync(long id)

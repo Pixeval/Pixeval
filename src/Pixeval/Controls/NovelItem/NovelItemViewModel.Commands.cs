@@ -29,7 +29,7 @@ public partial class NovelItemViewModel
 {
     protected override async void BookmarkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs e)
     {
-        IsBookmarked = await MakoHelper.SetIllustrationBookmarkAsync(Id, !IsBookmarked);
+        IsBookmarked = await MakoHelper.SetNovelBookmarkAsync(Id, !IsBookmarked);
         BookmarkCommand.GetBookmarkCommand(IsBookmarked);
     }
 

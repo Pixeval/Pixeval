@@ -40,7 +40,7 @@ public class MangaDownloadTask(DownloadHistoryEntry entry, IllustrationItemViewM
     {
         for (CurrentIndex = 0; CurrentIndex < Urls.Count; ++CurrentIndex)
         {
-            var dest = Destination.Format(CurrentIndex);
+            var dest = Destination.Replace("<manga_index>", CurrentIndex.ToString());
             await base.DownloadAsyncCore((a1, a2, a3) => downloadStreamAsync(a1, new MyProgress(a2, Urls.Count, CurrentIndex), a3), Urls[CurrentIndex], dest);
         }
     }

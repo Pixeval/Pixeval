@@ -71,7 +71,6 @@
             DefaultLabelPosition="Right"
             OverflowButtonVisibility="Collapsed">
             <AppBarButton
-                Width="{StaticResource CollapsedAppBarButtonWidth}"
                 Icon="{markup:FontSymbolIcon Glyph=DeleteE74D}"
                 LabelPosition="Collapsed"
                 Tapped="DeleteReplyHyperlinkButton_OnTapped"

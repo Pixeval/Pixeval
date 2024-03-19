@@ -196,6 +196,7 @@
         <PRIResource Include="Strings\zh-cn\SettingsPage.resjson" />
         <PRIResource Include="Strings\zh-cn\TokenInputTextBox.resjson" />
         <PRIResource Include="Strings\zh-cn\TagsEntry.resjson" />
+        <PRIResource Include="Strings\zh-cn\TagsPage.resjson" />
         <PRIResource Include="Strings\zh-cn\IPListInput.resjson" />
 
         <PRIResource Include="Strings\ru-ru\AppSettings.resjson" />
@@ -241,6 +242,7 @@
         <None Remove="Controls\WorkTypeComboBox.xaml" />
         <None Remove="IllustrationContainer.xaml" />
         <None Remove="IPListInput.xaml" />
+        <None Remove="Controls\DocumentViewer\DocumentViewer.xaml" />
         <None Remove="Pages\EntryViewerSplitView.xaml" />
         <None Remove="Pages\NovelViewer\NovelViewerPage.xaml" />
         <None Remove="PrivacyPolicyComboBox.xaml" />
@@ -456,5 +458,8 @@
       <Page Update="Pages\NovelViewer\NovelViewerPage.xaml">
         <Generator>MSBuild:Compile</Generator>
       </Page>
+    </ItemGroup>
+    <ItemGroup>
+      <Folder Include="Controls\Work\" />
     </ItemGroup>
 </Project>

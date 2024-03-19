@@ -41,7 +41,7 @@ namespace Pixeval.Controls;
 /// 所有插画集合通用的容器
 /// </summary>
 [DependencyProperty<IEntryView<ISortableEntryViewViewModel>>("EntryView")]
-public sealed partial class EntryContainer : IScrollViewProvider
+public partial class EntryContainer : IScrollViewProvider
 {
     /// <summary>
     /// The command elements that will appear at the left of the TopCommandBar
@@ -93,9 +93,14 @@ public sealed partial class EntryContainer : IScrollViewProvider
 
     private void SortOptionComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
+        SetSortOption();
+    }
+
+    public void SetSortOption()
+    {
         if (ViewModel is { } vm)
         {
-            switch (sender.To<SortOptionComboBox>().GetSortDescription())
+            switch (SortOptionComboBox.GetSortDescription())
             {
                 case { } desc:
                     vm.SetSortDescription(desc);
@@ -112,7 +117,8 @@ public sealed partial class EntryContainer : IScrollViewProvider
 
     private void ScrollToTop()
     {
-        _ = EntryView.ScrollView.ScrollTo(0, 0);
+        if (EntryView.ScrollView is { } scrollView)
+            _ = scrollView.ScrollTo(0, 0);
     }
 
     private async void AddAllToBookmarkButton_OnTapped(object sender, TappedRoutedEventArgs e)
@@ -123,9 +129,7 @@ public sealed partial class EntryContainer : IScrollViewProvider
         if (viewModelSelectedIllustrations.Length > 5 &&
             await this.CreateOkCancelAsync(EntryContainerResources.SelectedTooManyItemsForBookmarkTitle,
                 EntryContainerResources.SelectedTooManyItemsForBookmarkContent) is not ContentDialogResult.Primary)
-        {
             return;
-        }
 
         foreach (var viewModelSelectedIllustration in viewModelSelectedIllustrations)
         {
@@ -144,9 +148,7 @@ public sealed partial class EntryContainer : IScrollViewProvider
     {
         if (ViewModel.SelectedEntries.Count >= 20 && await this.CreateOkCancelAsync(EntryContainerResources.SelectedTooManyItemsTitle,
                 EntryContainerResources.SelectedTooManyItemsForSaveContent) is not ContentDialogResult.Primary)
-        {
             return;
-        }
 
         foreach (var i in ViewModel.SelectedEntries)
             i.SaveCommand.Execute(null);
@@ -160,9 +162,7 @@ public sealed partial class EntryContainer : IScrollViewProvider
         {
             if (count > 15 && await this.CreateOkCancelAsync(EntryContainerResources.SelectedTooManyItemsTitle,
                     EntryContainerResources.SelectedTooManyItemsForOpenInBrowserContent) is not ContentDialogResult.Primary)
-            {
                 return;
-            }
 
             foreach (var illustrationViewModel in selected)
             {

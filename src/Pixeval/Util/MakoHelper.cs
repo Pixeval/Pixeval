@@ -87,15 +87,15 @@ public static class MakoHelper
         return $"original-{await illustration.GetOriginalSourceUrlAsync()}";
     }
 
-    public static SortDescription? GetSortDescriptionForIllustration(IllustrationSortOption sortOption)
+    public static SortDescription? GetSortDescriptionForIllustration(WorkSortOption sortOption)
     {
         return sortOption switch
         {
-            IllustrationSortOption.PopularityDescending => new(SortDirection.Descending, IllustrationBookmarkComparer.Instance),
-            IllustrationSortOption.PublishDateAscending => new(SortDirection.Ascending, IllustrationViewModelPublishDateComparer.Instance),
-            IllustrationSortOption.PublishDateDescending => new(SortDirection.Descending, IllustrationViewModelPublishDateComparer.Instance),
-            IllustrationSortOption.DoNotSort => null,
-            _ => ThrowHelper.ArgumentOutOfRange<IllustrationSortOption, SortDescription?>(sortOption)
+            WorkSortOption.PopularityDescending => new(SortDirection.Descending, WorkViewModelBookmarkComparer.Instance),
+            WorkSortOption.PublishDateAscending => new(SortDirection.Ascending, WorkViewModelPublishDateComparer.Instance),
+            WorkSortOption.PublishDateDescending => new(SortDirection.Descending, WorkViewModelPublishDateComparer.Instance),
+            WorkSortOption.DoNotSort => null,
+            _ => ThrowHelper.ArgumentOutOfRange<WorkSortOption, SortDescription?>(sortOption)
         };
     }
 

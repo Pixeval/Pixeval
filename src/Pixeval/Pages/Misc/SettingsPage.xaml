@@ -319,7 +319,7 @@
                     <controls:SettingsExpander.Items>
                         <controls:SettingsCard x:Uid="/SettingsPage/AppFontFamilyComboBoxEntry" HeaderIcon="{markup:FontSymbolIcon Glyph=SpellingF87B}">
                             <ComboBox
-                                x:Uid="/SettingsPage/AppFontFamilyComboBoxEntryComboBox"
+                                x:Uid="/SettingsPage/AppFontFamilyComboBox"
                                 Width="200"
                                 ItemsSource="{x:Bind misc:SettingsPageViewModel.AvailableFonts}"
                                 SelectedItem="{x:Bind ViewModel.AppFontFamilyName, Mode=TwoWay}">
@@ -503,7 +503,7 @@
 
                     <controls:SettingsExpander.Items>
                         <controls:SettingsCard ContentAlignment="Left">
-                            <controls1:SettingRadioButtons ItemsSource="{winUi:EnumValues Type=enum:IllustrationSortOption}" SelectedItem="{x:Bind ViewModel.DefaultSortOption, Mode=TwoWay}" />
+                            <controls1:SettingRadioButtons ItemsSource="{winUi:EnumValues Type=enum:WorkSortOption}" SelectedItem="{x:Bind ViewModel.DefaultSortOption, Mode=TwoWay}" />
                         </controls:SettingsCard>
                     </controls:SettingsExpander.Items>
                 </controls:SettingsExpander>

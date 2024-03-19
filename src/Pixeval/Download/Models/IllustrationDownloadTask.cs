@@ -40,6 +40,7 @@ public class IllustrationDownloadTask(DownloadHistoryEntry entry, IllustrationIt
 
     public override async Task DownloadAsync(Func<string, IProgress<double>?, CancellationHandle?, Task<Result<Stream>>> downloadStreamAsync)
     {
+        var dest = Destination.Replace("<manga_index>", "0");
         await DownloadAsyncCore(downloadStreamAsync, Url, Destination);
     }
 

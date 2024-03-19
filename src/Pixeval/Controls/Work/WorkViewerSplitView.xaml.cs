@@ -8,7 +8,7 @@ using Pixeval.Controls.Windowing;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
 
-namespace Pixeval.Pages;
+namespace Pixeval.Controls;
 
 [DependencyProperty<object>("MenuItemsSource")]
 [DependencyProperty<object>("PaneContent")]

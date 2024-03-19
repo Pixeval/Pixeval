@@ -13,6 +13,8 @@
     <x:Double x:Key="PixevalButtonIconSize">16</x:Double>
     <CornerRadius x:Key="ControlTopCornerRadius">4,4,0,0</CornerRadius>
     <CornerRadius x:Key="ControlBottomCornerRadius">0,0,4,4</CornerRadius>
+    <CornerRadius x:Key="ControlLeftCornerRadius">4,0,0,4</CornerRadius>
+    <CornerRadius x:Key="ControlRightCornerRadius">0,4,4,0</CornerRadius>
     <x:Double x:Key="PixevalButtonIconSmallSize">10</x:Double>
     <x:Double x:Key="TeachingTipContentMaxHeight">450</x:Double>
     <x:Double x:Key="TeachingTipContentMaxHeightWithTarget">430</x:Double>
@@ -24,11 +26,11 @@
         <Setter Property="FontWeight" Value="SemiBold" />
         <Setter Property="FontSize" Value="{StaticResource PixevalSubtitleFontSize}" />
     </Style>
-    <Style x:Key="ContentTextBlockStyle" TargetType="TextBlock">
-        <Setter Property="FontSize" Value="{StaticResource PixevalContentFontSize}" />
-    </Style>
     <Style x:Key="ContentStrongTextBlockStyle" TargetType="TextBlock">
         <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="FontSize" Value="{StaticResource PixevalContentFontSize}" />
+    </Style>
+    <Style x:Key="ContentTextBlockStyle" TargetType="TextBlock">
         <Setter Property="FontSize" Value="{StaticResource PixevalContentFontSize}" />
     </Style>
     <Style x:Key="BaseTextBlockStyle" TargetType="TextBlock">
