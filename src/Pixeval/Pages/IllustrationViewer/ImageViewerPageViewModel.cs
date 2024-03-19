@@ -330,13 +330,13 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
     private void InitializeCommands()
     {
         SaveCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
-        SaveCommand.ExecuteRequested += (_, _) => IllustrationViewModel.SaveCommand.Execute((FrameworkElement, (Func<IProgress<int>?, Task<Stream?>>)(p => GetOriginalImageSourceAsync(p))));
+        SaveCommand.ExecuteRequested += (_, _) => IllustrationViewModel.SaveCommand.Execute(DownloadParameter);
 
         SaveAsCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
         SaveAsCommand.ExecuteRequested += (_, _) => IllustrationViewModel.SaveAsCommand.Execute((Window, (Func<IProgress<int>?, Task<Stream?>>)(p => GetOriginalImageSourceAsync(p))));
 
         CopyCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
-        CopyCommand.ExecuteRequested += (_, _) => IllustrationViewModel.CopyCommand.Execute((FrameworkElement, (Func<IProgress<int>?, Task<Stream?>>)(p => GetOriginalImageSourceAsync(p))));
+        CopyCommand.ExecuteRequested += (_, _) => IllustrationViewModel.CopyCommand.Execute(DownloadParameter);
 
         PlayGifCommand.CanExecuteRequested += (_, e) => e.CanExecute = IllustrationViewModel.IsUgoira && LoadSuccessfully;
         PlayGifCommand.ExecuteRequested += PlayGifCommandOnExecuteRequested;
@@ -388,6 +388,8 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
     private void LoadingCompletedCanExecuteRequested(XamlUICommand _, CanExecuteRequestedEventArgs args) => args.CanExecute = LoadSuccessfully;
 
     private void IsNotUgoiraAndLoadingCompletedCanExecuteRequested(XamlUICommand sender, CanExecuteRequestedEventArgs args) => args.CanExecute = !IllustrationViewModel.IsUgoira && LoadSuccessfully;
+
+    public (FrameworkElement FrameworkElement, Func<IProgress<int>?, Task<Stream?>>) DownloadParameter => (FrameworkElement, p => GetOriginalImageSourceAsync(p));
 
     public XamlUICommand SaveCommand { get; } = EntryItemResources.Save.GetCommand(
         FontIconSymbol.SaveE74E, VirtualKeyModifiers.Control, VirtualKey.S);

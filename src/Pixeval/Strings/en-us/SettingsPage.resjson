@@ -91,8 +91,6 @@
     "OverwriteDownloadedFileEntry/Description": "The old file with same name will be overwritten once this setting is turned on",
     "OverwriteDownloadedFileEntry/Header": "Overwrite downloaded files",
     "PerformSignOutButton/Content": "Sign out",
-    "PreloadRowsEntry/Description": "How many rows will be preloaded, higher value indicates fluent experience, but uses more resources",
-    "PreloadRowsEntry/Header": "Preload rows",
     "RecommendationItemLimitEntry/Description": "How many works will be fetch in Recommend",
     "RecommendationItemLimitEntry/Header": "Maximum recommend work",
     "RecommendationItemLimitNumberBox/PlaceholderText": "[500, 2500]",

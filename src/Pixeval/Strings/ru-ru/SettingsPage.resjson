@@ -89,8 +89,6 @@
     "OverwriteDownloadedFileEntry/Description": "Если этот параметр включен, при загрузке файлы будут перезаписываться, если они уже существуют",
     "OverwriteDownloadedFileEntry/Header": "Перезаписывать скачанные файлы",
     "PerformSignOutButton/Content": "Выход из системы",
-    "PreloadRowsEntry/Description": "Количество строк иллюстраций, которые будут предварительно загружены во время просмотра, чтобы улучшить плавность прокрутки, но это увеличит использование сети и ресурсов",
-    "PreloadRowsEntry/Header": "Количество строк для предварительной загрузки",
     "RecommendationItemLimitEntry/Description": "Максимальное количество иллюстраций, получаемых при использовании функции ежедневных рекомендаций",
     "RecommendationItemLimitEntry/Header": "Ограничение на количество ежедневных рекомендаций",
     "RecommendationItemLimitNumberBox/PlaceholderText": "Ограничение на количество рекомендаций [500, 2500]",

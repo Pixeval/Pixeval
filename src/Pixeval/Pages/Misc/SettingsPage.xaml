@@ -659,6 +659,13 @@
                     </controls:SettingsExpander.Items>
                 </controls:SettingsExpander>
 
+                <controls:SettingsCard
+                    x:Uid="/SettingsPage/DownloadWhenBookmarkedEntry"
+                    HeaderIcon="{markup:FontSymbolIcon Glyph=SaveLocalE78C}"
+                    Tag="{x:Bind misc2:SettingEntry.DownloadWhenBookmarked}">
+                    <ToggleSwitch IsOn="{x:Bind ViewModel.DownloadWhenBookmarked, Mode=TwoWay}" />
+                </controls:SettingsCard>
+
                 <TextBlock x:Uid="/SettingsPage/MiscSettingsGroup" Style="{StaticResource SettingHeaderStyle}" />
 
                 <controls:SettingsCard
@@ -708,16 +715,6 @@
                         GotFocus="ImageMirrorServerTextBox_OnGotFocus"
                         LosingFocus="ImageMirrorServerTextBox_OnLosingFocus"
                         Text="{x:Bind ViewModel.MirrorHost, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                </controls:SettingsCard>
-
-                <controls:SettingsCard
-                    x:Uid="/SettingsPage/PreloadRowsEntry"
-                    HeaderIcon="{markup:FontSymbolIcon Glyph=ShowResultsE8BC}"
-                    Tag="{x:Bind misc2:SettingEntry.PreLoadRows}">
-                    <Slider
-                        Maximum="15"
-                        Minimum="0"
-                        Value="{x:Bind ViewModel.PreLoadRows, Mode=TwoWay}" />
                 </controls:SettingsCard>
                 <!--  endregion  -->
                 <TeachingTip

@@ -46,6 +46,7 @@
         HorizontalAlignment="Left"
         VerticalAlignment="Top"
         Command="{x:Bind ViewModel.BookmarkCommand, Mode=OneWay}"
+        CommandParameter="{x:Bind}"
         IsTapEnabled="False" />
     <local:DockPanel
         Grid.Column="1"
@@ -160,7 +161,8 @@
                     Grid.Row="0"
                     HorizontalAlignment="Left"
                     VerticalAlignment="Top"
-                    Command="{x:Bind ViewModel.BookmarkCommand, Mode=OneWay}">
+                    Command="{x:Bind ViewModel.BookmarkCommand, Mode=OneWay}"
+                    CommandParameter="{x:Bind}">
                     <Grid.RenderTransform>
                         <ScaleTransform ScaleX="1" ScaleY="1" />
                     </Grid.RenderTransform>

@@ -41,6 +41,8 @@ public partial class IllustrationItemViewModel
     {
         IsBookmarked = await MakoHelper.SetIllustrationBookmarkAsync(Id, !IsBookmarked);
         BookmarkCommand.GetBookmarkCommand(IsBookmarked);
+        if (App.AppViewModel.AppSettings.DownloadWhenBookmarked && IsBookmarked)
+            SaveCommandOnExecuteRequested(sender, args);
     }
 
     protected override async void SaveCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)

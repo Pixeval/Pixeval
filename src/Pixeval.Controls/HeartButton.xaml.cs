@@ -6,6 +6,7 @@ using WinUI3Utilities.Attributes;
 namespace Pixeval.Controls;
 
 [DependencyProperty<XamlUICommand>("Command")]
+[DependencyProperty<object>("CommandParameter", IsNullable = true)]
 public sealed partial class HeartButton
 {
     public HeartButton() => InitializeComponent();
@@ -14,7 +15,7 @@ public sealed partial class HeartButton
     {
         e.Handled = true;
         if (IsTapEnabled)
-            Command.Execute(null);
+            Command.Execute(CommandParameter);
     }
 
     // ReSharper disable UnusedMember.Global

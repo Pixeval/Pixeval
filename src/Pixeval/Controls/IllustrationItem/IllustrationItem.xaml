@@ -41,7 +41,7 @@
     </Grid.RenderTransform>
     <Grid.ContextFlyout>
         <MenuFlyout>
-            <MenuFlyoutItem Command="{x:Bind ViewModel.BookmarkCommand, Mode=OneWay}" />
+            <MenuFlyoutItem Command="{x:Bind ViewModel.BookmarkCommand, Mode=OneWay}" CommandParameter="{x:Bind}" />
             <MenuFlyoutItem Command="{x:Bind ViewModel.AddToBookmarkCommand, Mode=OneWay}" />
             <MenuFlyoutSeparator />
             <MenuFlyoutItem Command="{x:Bind ViewModel.SaveCommand, Mode=OneWay}" CommandParameter="{x:Bind}" />
@@ -75,7 +75,8 @@
             x:Name="HeartButton"
             HorizontalAlignment="Left"
             VerticalAlignment="Top"
-            Command="{x:Bind ViewModel.BookmarkCommand, Mode=OneWay}" />
+            Command="{x:Bind ViewModel.BookmarkCommand, Mode=OneWay}"
+            CommandParameter="{x:Bind}" />
         <Grid
             Margin="10"
             VerticalAlignment="Bottom"
