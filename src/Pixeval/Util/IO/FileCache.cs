@@ -396,7 +396,7 @@ public class FileCache
                 ++HitCount;
                 return typeof(T) switch
                 {
-                    var type when type == typeof(Stream) || type.IsAssignableTo(typeof(Stream)) => (T)(object)file.OpenRead(),
+                    var type when type == typeof(Stream) || type.IsAssignableTo(typeof(Stream)) => (T)(object)await file.OpenRead().CopyToMemoryStreamAsync(true),
                     var type when type == typeof(byte[]) => (T)(object)File.ReadAllBytesAsync(file.FullName),
                     _ => await Functions.Block(async () =>
                     {

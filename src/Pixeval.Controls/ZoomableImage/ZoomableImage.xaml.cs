@@ -78,6 +78,8 @@ public sealed partial class ZoomableImage : UserControl
             if (_frames.Count is 0)
             {
                 await Task.Delay(20, _token.Token);
+                // 尝试触发加载资源
+                CanvasControl.Invalidate();
             }
             else
             {

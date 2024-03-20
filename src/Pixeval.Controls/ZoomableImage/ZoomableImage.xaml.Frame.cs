@@ -38,8 +38,10 @@ public partial class ZoomableImage
         zoomableImage._timerRunning = false;
         // 使CanvasControl具有大小，否则不会触发CanvasControlOnDraw
         zoomableImage.OriginalImageWidth = zoomableImage.OriginalImageHeight = 10;
-        zoomableImage.InitSource();
+        zoomableImage._initSource = true;
     }
+
+    private bool _initSource;
 
     private async void InitSource()
     {
@@ -53,7 +55,8 @@ public partial class ZoomableImage
                 {
                     var randomAccessStream = source.AsRandomAccessStream();
                     randomAccessStream.Seek(0);
-                    _frames.Add(await CanvasBitmap.LoadAsync(CanvasControl, randomAccessStream));
+                    var frame = await CanvasBitmap.LoadAsync(CanvasControl, randomAccessStream);
+                    _frames.Add(frame);
                 }
         }
         catch (Exception)
@@ -80,6 +83,13 @@ public partial class ZoomableImage
 
     private void CanvasControlOnDraw(CanvasControl sender, CanvasDrawEventArgs e)
     {
+        if (_initSource)
+        {
+            _initSource = false;
+            InitSource();
+            return;
+        }
+
         if (!IsPlaying || _timerRunning)
         {
             if (_currentFrame is null)
