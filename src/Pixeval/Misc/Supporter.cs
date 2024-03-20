@@ -45,7 +45,8 @@ public record Supporter(string Nickname, string Name, ImageSource ProfilePicture
         (35005476, "当妈", "TheRealKamisama"),
         (5109850, "茶栗", "cqjjjzr"),
         (27049838, "cnbluefire", "cnbluefire"),
-        (42184238, "frg2089", "frg2089")
+        (42184238, "岛风", "frg2089"),
+        (57861007, "Ёж, просто ёж", "bropines")
     ];
     // ReSharper restore StringLiteralTypo
 

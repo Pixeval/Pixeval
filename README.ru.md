@@ -100,6 +100,8 @@
 * [TheRealKamisama](https://github.com/TheRealKamisama)
 * [Summpot](https://github.com/Summpot)
 * [Poker](https://github.com/Poker-sang)
+* [frg2089](https://github.com/frg2089)
+* [bropines](https://github.com/bropines)
 
 ## Поддержите меня
 

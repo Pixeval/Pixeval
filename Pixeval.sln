@@ -17,6 +17,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Pixeval_PublicKey.cer = Pixeval_PublicKey.cer
 		README.en.md = README.en.md
 		README.md = README.md
+		README.ru.md = README.ru.md
 		Settings.XamlStyler = Settings.XamlStyler
 	EndProjectSection
 EndProject
