@@ -73,10 +73,10 @@ public partial class MakoClient
             .GetSingleUserAsync(new SingleUserRequest(id, targetFilter.GetDescription()))
             .ConfigureAwait(false));
 
-    public Task<PixivSingleNovelResponse> GetNovelFromIdAsync(long id)
-        => RunWithLoggerAsync(async t => await t
+    public Task<Novel> GetNovelFromIdAsync(long id)
+        => RunWithLoggerAsync(async t => (await t
             .GetSingleNovelAsync(id)
-            .ConfigureAwait(false));
+            .ConfigureAwait(false)).Novel);
 
     public Task<NovelContent> GetNovelContentAsync(long id)
         => RunWithLoggerAsync(async t =>

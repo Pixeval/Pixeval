@@ -23,7 +23,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing.Text;
 using System.Globalization;
-using System.IO.Compression;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -48,9 +47,7 @@ using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
 using System.ComponentModel;
 using System.Collections.ObjectModel;
-using Windows.System;
 using Pixeval.Utilities.Threading;
-using System.Formats.Tar;
 
 namespace Pixeval.Pages.Misc;
 

@@ -24,6 +24,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Database.Managers;
 using Pixeval.Misc;
+using Pixeval.Options;
 
 namespace Pixeval.Pages.Misc;
 
@@ -34,20 +35,28 @@ public sealed partial class BrowsingHistoryPage : IScrollViewProvider
 {
     public BrowsingHistoryPage() => InitializeComponent();
 
-    public override void OnPageActivated(NavigationEventArgs navigationEventArgs)
-    {
-        FetchEngine();
-    }
+    public override void OnPageActivated(NavigationEventArgs navigationEventArgs) => ChangeSource();
 
-    private void FetchEngine()
+    private void ComboBox_OnSelectionChangedWhenLoaded(object sender, SelectionChangedEventArgs e) => ChangeSource();
+
+    private void ChangeSource()
     {
         using var scope = App.AppViewModel.AppServicesScope;
         var manager = scope.ServiceProvider.GetRequiredService<BrowseHistoryPersistentManager>();
-        IllustrationContainer.ViewModel.ResetEngine(
-            App.AppViewModel.MakoClient.Computed(
-                manager.Enumerate().Reverse().ToAsyncEnumerable()
-                    .SelectAwait(async t => await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(t.Id))));
+        var source = manager.Enumerate().Where(t => t.Type == SimpleWorkTypeComboBox.SelectedItem)
+            .Reverse()
+            .ToAsyncEnumerable();
+        // 由于 ResetEngine 需要根据泛型参数判断类型，所以不能将元素转为 IWorkEntry，而是要保持原始类型
+        WorkContainer.WorkView.ResetEngine(
+            SimpleWorkTypeComboBox.SelectedItem switch
+            {
+                SimpleWorkType.IllustAndManga => App.AppViewModel.MakoClient.Computed(source.SelectAwait(async t =>
+                    await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(t.Id))),
+                _ => App.AppViewModel.MakoClient.Computed(source.SelectAwait(async t =>
+                    await App.AppViewModel.MakoClient.GetNovelFromIdAsync(t.Id)))
+            });
+
     }
 
-    public ScrollView ScrollView => IllustrationContainer.ScrollView;
+    public ScrollView ScrollView => WorkContainer.ScrollView;
 }

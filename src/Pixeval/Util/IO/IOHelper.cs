@@ -28,15 +28,10 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Security.Cryptography;
-using System.Text;
 using System.Threading.Tasks;
-using Windows.Foundation;
-using Windows.Security.Cryptography;
 using Windows.Storage;
 using Windows.Storage.Streams;
-using Microsoft.IO;
 using Pixeval.Download.Models;
-using Pixeval.Utilities;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats;
 

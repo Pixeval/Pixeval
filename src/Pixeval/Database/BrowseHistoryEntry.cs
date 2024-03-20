@@ -19,6 +19,7 @@
 #endregion
 
 using LiteDB;
+using Pixeval.Options;
 
 namespace Pixeval.Database;
 
@@ -28,4 +29,6 @@ public class BrowseHistoryEntry
     public ObjectId? BrowseHistoryEntryId { get; set; }
 
     public long Id { get; set; }
+
+    public SimpleWorkType Type { get; set; }
 }
