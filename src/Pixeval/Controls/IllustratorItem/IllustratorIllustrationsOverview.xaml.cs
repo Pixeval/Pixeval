@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
@@ -25,7 +24,6 @@ public sealed partial class IllustratorIllustrationsOverview
                 Source = source,
                 Stretch = Stretch.UniformToFill
             };
-            UIElementExtensions.SetClipToBounds(image, true);
             Grid.SetColumn(image, i);
             BannerContainer.Children.Add(image);
             ++i;

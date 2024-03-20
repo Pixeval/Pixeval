@@ -320,13 +320,12 @@
                                     <controls:AdvancedItemsView.ItemTemplate>
                                         <DataTemplate x:DataType="controls:NovelItemViewModel">
                                             <ItemContainer Width="80" Height="80">
-                                                <Image
+                                                <controls:LazyImage
                                                     HorizontalAlignment="Center"
                                                     VerticalAlignment="Center"
                                                     DataContext="{x:Bind}"
                                                     DataContextChanged="FrameworkElement_OnDataContextChanged"
-                                                    Source="{x:Bind ThumbnailSource, Mode=OneWay}"
-                                                    Stretch="UniformToFill" />
+                                                    Source="{x:Bind ThumbnailSource, Mode=OneWay}" />
                                             </ItemContainer>
                                         </DataTemplate>
                                     </controls:AdvancedItemsView.ItemTemplate>
