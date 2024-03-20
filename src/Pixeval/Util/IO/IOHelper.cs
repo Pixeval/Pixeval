@@ -114,16 +114,22 @@ public static partial class IoHelper
         return httpClient.SendAsync(httpRequestMessage);
     }
 
+    public static async Task<MemoryStream> CopyToMemoryStreamAsync(this FileStream source, bool dispose)
+    {
+        var s = _recyclableMemoryStreamManager.GetStream();
+        await source.CopyToAsync(s);
+        s.Position = 0;
+        if (dispose)
+            await source.DisposeAsync();
+        return s;
+    }
+
     public static async Task<MemoryStream[]> ReadZipArchiveEntriesAsync(Stream zipStream, bool dispose)
     {
         Stream s;
-        if (zipStream is FileStream)
+        if (zipStream is FileStream fs)
         {
-            s = _recyclableMemoryStreamManager.GetStream();
-            await zipStream.CopyToAsync(s);
-            s.Position = 0;
-            if (dispose)
-                await zipStream.DisposeAsync();
+            s = await fs.CopyToMemoryStreamAsync(dispose);
             dispose = true;
         }
         else
