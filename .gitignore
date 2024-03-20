@@ -371,3 +371,6 @@ src/Pixeval.SourceGen/Generated
 
 # Package.appxmanifest
 Package.appxmanifest
+
+#key ignore
+*.pfx
