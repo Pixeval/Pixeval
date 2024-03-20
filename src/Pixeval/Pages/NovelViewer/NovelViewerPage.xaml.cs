@@ -1,6 +1,7 @@
 using System.Numerics;
 using System.Threading.Tasks;
 using Windows.Graphics;
+using Windows.System;
 using WinUI3Utilities;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Input;
@@ -9,6 +10,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Controls;
+using WinRT;
 
 namespace Pixeval.Pages.NovelViewer;
 
@@ -114,7 +116,7 @@ public sealed partial class NovelViewerPage
 
     private void ExitFullScreenKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => _viewModel.IsFullScreen = false;
 
-    private void NextButton_OnTapped(object sender, TappedRoutedEventArgs e)
+    private void NextButton_OnTapped(object sender, IWinRTObject e)
     {
         switch (_viewModel.NextButtonAction)
         {
@@ -125,13 +127,13 @@ public sealed partial class NovelViewerPage
         }
     }
 
-    private void NextButton_OnRightTapped(object sender, RightTappedRoutedEventArgs e)
+    private void NextButton_OnRightTapped(object sender, IWinRTObject e)
     {
         // 由于先后次序问题，必须操作SelectedIndex，而不是_viewModel.CurrentNovelIndex
         ++ThumbnailItemsView.SelectedIndex;
     }
 
-    private void PrevButton_OnTapped(object sender, TappedRoutedEventArgs e)
+    private void PrevButton_OnTapped(object sender, IWinRTObject e)
     {
         switch (_viewModel.PrevButtonAction)
         {
@@ -142,10 +144,30 @@ public sealed partial class NovelViewerPage
         }
     }
 
-    private void PrevButton_OnRightTapped(object sender, RightTappedRoutedEventArgs e)
+    private void PrevButton_OnRightTapped(object sender, IWinRTObject e)
     {
         // 由于先后次序问题，必须操作SelectedIndex，而不是_viewModel.CurrentNovelIndex
         --ThumbnailItemsView.SelectedIndex;
+    }
+
+    private void ThumbnailItemsView_OnPreviewKeyDown(object sender, KeyRoutedEventArgs e)
+    {
+        e.Handled = true;
+        switch (e.Key)
+        {
+            case VirtualKey.Left:
+                PrevButton_OnTapped(null!, null!);
+                break;
+            case VirtualKey.Right:
+                NextButton_OnTapped(null!, null!);
+                break;
+            case VirtualKey.Up:
+                PrevButton_OnRightTapped(null!, null!);
+                break;
+            case VirtualKey.Down:
+                NextButton_OnRightTapped(null!, null!);
+                break;
+        }
     }
 
     private void Placeholder_OnSizeChanged(object sender, object e) => RaiseSetTitleBarDragRegion();

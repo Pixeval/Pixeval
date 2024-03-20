@@ -51,6 +51,10 @@
     </controls:SupportCustomTitleBarDragRegionPage.Resources>
     <controls:SupportCustomTitleBarDragRegionPage.KeyboardAccelerators>
         <KeyboardAccelerator Key="Escape" Invoked="ExitFullScreenKeyboardAccelerator_OnInvoked" />
+        <KeyboardAccelerator Key="Left" Invoked="PrevButton_OnTapped" />
+        <KeyboardAccelerator Key="Right" Invoked="NextButton_OnTapped" />
+        <KeyboardAccelerator Key="Up" Invoked="PrevButton_OnRightTapped" />
+        <KeyboardAccelerator Key="Down" Invoked="NextButton_OnRightTapped" />
     </controls:SupportCustomTitleBarDragRegionPage.KeyboardAccelerators>
     <controls:WorkViewerSplitView
         x:Name="EntryViewerSplitView"
@@ -310,6 +314,7 @@
                                     LayoutType="HorizontalStack"
                                     MinItemHeight="80"
                                     MinItemWidth="80"
+                                    PreviewKeyDown="ThumbnailItemsView_OnPreviewKeyDown"
                                     SelectedIndex="{x:Bind _viewModel.CurrentNovelIndex, Mode=TwoWay}"
                                     SelectionMode="Single">
                                     <controls:AdvancedItemsView.ItemTemplate>
