@@ -35,7 +35,9 @@ using Pixeval.AppManagement;
 using Pixeval.Controls;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
+using WinRT;
 using WinUI3Utilities;
+using Windows.System;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
@@ -187,7 +189,7 @@ public sealed partial class IllustrationViewerPage : SupportCustomTitleBarDragRe
         async void FileDispose(DataPackage dataPackage, object o) => await file?.DeleteAsync(StorageDeleteOption.PermanentDelete);
     }
 
-    private void NextButton_OnTapped(object sender, TappedRoutedEventArgs e)
+    private void NextButton_OnTapped(object sender, IWinRTObject e)
     {
         switch (_viewModel.NextButtonAction)
         {
@@ -198,13 +200,13 @@ public sealed partial class IllustrationViewerPage : SupportCustomTitleBarDragRe
         }
     }
 
-    private void NextButton_OnRightTapped(object sender, RightTappedRoutedEventArgs e)
+    private void NextButton_OnRightTapped(object sender, IWinRTObject e)
     {
         // 由于先后次序问题，必须操作SelectedIndex，而不是_viewModel.CurrentIllustrationIndex
         ++ThumbnailItemsView.SelectedIndex;
     }
 
-    private void PrevButton_OnTapped(object sender, TappedRoutedEventArgs e)
+    private void PrevButton_OnTapped(object sender, IWinRTObject e)
     {
         switch (_viewModel.PrevButtonAction)
         {
@@ -215,10 +217,30 @@ public sealed partial class IllustrationViewerPage : SupportCustomTitleBarDragRe
         }
     }
 
-    private void PrevButton_OnRightTapped(object sender, RightTappedRoutedEventArgs e)
+    private void PrevButton_OnRightTapped(object sender, IWinRTObject e)
     {
         // 由于先后次序问题，必须操作SelectedIndex，而不是_viewModel.CurrentIllustrationIndex
         --ThumbnailItemsView.SelectedIndex;
+    }
+
+    private void ThumbnailItemsView_OnPreviewKeyDown(object sender, KeyRoutedEventArgs e)
+    {
+        e.Handled = true;
+        switch (e.Key)
+        {
+            case VirtualKey.Left:
+                PrevButton_OnTapped(null!, null!);
+                break;
+            case VirtualKey.Right:
+                NextButton_OnTapped(null!, null!);
+                break;
+            case VirtualKey.Up:
+                PrevButton_OnRightTapped(null!, null!);
+                break;
+            case VirtualKey.Down:
+                NextButton_OnRightTapped(null!, null!);
+                break;
+        }
     }
 
     private void Placeholder_OnSizeChanged(object sender, object e) => RaiseSetTitleBarDragRegion();
