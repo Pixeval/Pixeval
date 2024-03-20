@@ -92,17 +92,9 @@ After your development, Please create a [Pull Request](https://github.com/Pixeva
 
 ## Acknowledgements (In no particular order)
 
-* [sovetskyfish](https://github.com/sovetskyfish)
-* [Notsfsssf](https://github.com/Notsfsssf)
-* [ControlNet](https://github.com/ControlNet)
-* [wulunshijian](https://github.com/wulunshijian)
-* [duiweiya](https://github.com/duiweiya)
-* [LasmGratel](https://github.com/LasmGratel)
-* [TheRealKamisama](https://github.com/TheRealKamisama)
-* [Summpot](https://github.com/Summpot)
-* [Poker](https://github.com/Poker-sang)
-* [frg2089](https://github.com/frg2089)
-* [bropines](https://github.com/bropines)
+[![Toolkit Contributors](https://contrib.rocks/image?repo=Pixeval/Pixeval)](https://github.com/Pixeval/Pixeval/graphs/contributors)
+
+Made with [contrib.rocks](https://contrib.rocks).
 
 ## Support me
 
