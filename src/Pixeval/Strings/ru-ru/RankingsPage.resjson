@@ -11,5 +11,10 @@
   "RankOptionWeekOriginal": "Оригиналы",
   "RankOptionWeekR18": "Еженедельный R-18 рейтинг",
   "RankOptionWeekR18G": "Еженедельный R-18G рейтинг",
-  "RankOptionWeekRookie": "Новички"
+  "RankOptionWeekRookie": "Новички",
+  "RankOptionDayManga": "Ежедневный рейтинг манги",
+  "RankOptionWeekManga": "Еженедельный рейтинг манги",
+  "RankOptionMonthManga": "Ежемесячный рейтинг манги",
+  "RankOptionDayAi": "Ежедневный рейтинг ИИ",
+  "RankOptionDayR18Ai": "Ежедневный рейтинг ИИ R-18"
 }

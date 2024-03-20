@@ -6,7 +6,7 @@
     "WorkIdTextBlock/Text": "ID работы",
     "WorkTagListTextBlock/Text": "Теги работы",
     "WorkTitleTextBlock/Text": "Название работы",
-    "WorkTotalBookmarksTextBlock/Text": "Всего в закладках",
+    "WorkTotalBookmarksTextBlock/Text": "Всего в избранном",
     "WorkTotalViewsTextBlock/Text": "Всего просмотров",
     "WorkUploadDateTextBlock/Text": "Дата загрузки",
     "IllustratorId/Text": "ID автора: ",
