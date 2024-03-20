@@ -43,8 +43,8 @@ public abstract partial class SortableEntryViewViewModel<T, TViewModel> : EntryV
     public bool IsAnyEntrySelected => SelectedEntries.Length > 0;
 
     public string SelectionLabel => IsAnyEntrySelected
-        ? EntryContainerResources.CancelSelectionButtonFormatted.Format(SelectedEntries.Length)
-        : EntryContainerResources.CancelSelectionButtonDefaultLabel;
+        ? WorkContainerResources.CancelSelectionButtonFormatted.Format(SelectedEntries.Length)
+        : WorkContainerResources.CancelSelectionButtonDefaultLabel;
 
     public void SetSortDescription(SortDescription description)
     {

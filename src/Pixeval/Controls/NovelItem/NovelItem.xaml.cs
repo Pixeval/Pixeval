@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using CommunityToolkit.Mvvm.Messaging;

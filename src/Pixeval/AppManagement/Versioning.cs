@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Runtime.InteropServices;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
@@ -60,10 +61,20 @@ public class Versioning
                     if (Version.TryParse(tag, out var appVersion))
                     {
                         App.AppViewModel.AppSettings.LastCheckedUpdate = DateTimeOffset.Now;
-                        appReleaseModels.Add(new AppReleaseModel(appVersion, release.Notes,
-                            release.Assets[0].BrowserDownloadUrl));
+                        var str = release.Assets.FirstOrDefault(t =>
+                            t.BrowserDownloadUrl.EndsWith(RuntimeInformation.ProcessArchitecture + ".exe",
+                                StringComparison.OrdinalIgnoreCase))?.BrowserDownloadUrl;
+                        var uri = str is null ? null : new Uri(str);
+
+                        appReleaseModels.Add(new AppReleaseModel(
+                            appVersion,
+                            release.Notes,
+                            uri));
                     }
                 }
+
+                appReleaseModels.Sort();
+                appReleaseModels.Reverse();
 
                 AppReleaseModels = [.. appReleaseModels];
             }
@@ -80,7 +91,17 @@ public class Versioning
 public record AppReleaseModel(
     Version Version,
     string ReleaseNote,
-    string ReleaseUri);
+    Uri? ReleaseUri) : IComparable<AppReleaseModel>
+{
+    public int CompareTo(AppReleaseModel? other)
+    {
+        if (ReferenceEquals(this, other))
+            return 0;
+        if (other is null)
+            return 1;
+        return Version.CompareTo(other.Version);
+    }
+}
 
 file class GitHubRelease
 {

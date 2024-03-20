@@ -39,7 +39,7 @@ public partial class TokenInputTextBox : Control
     private const string PartTokenTextBox = "TokenTextBox";
     private const string PartSubmitButton = "SubmitButton";
 
-    private IconButton? _submitButton;
+    private Button? _submitButton;
 
     private TextBox? _tokenTextBox;
 
@@ -64,7 +64,7 @@ public partial class TokenInputTextBox : Control
             _submitButton.Tapped -= SubmitButtonOnTapped;
         }
 
-        if ((_submitButton = GetTemplateChild(PartSubmitButton) as IconButton) is not null)
+        if ((_submitButton = GetTemplateChild(PartSubmitButton) as Button) is not null)
         {
             _submitButton.Tapped += SubmitButtonOnTapped;
         }

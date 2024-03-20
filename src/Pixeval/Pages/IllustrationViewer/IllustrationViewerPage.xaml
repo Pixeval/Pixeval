@@ -66,54 +66,22 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="150" />
                         </Grid.ColumnDefinitions>
-                        <Grid
+                        <controls:PageButton
                             Grid.Column="0"
                             Width="150"
-                            Opacity="0">
-                            <interactivity:Interaction.Behaviors>
-                                <core:EventTriggerBehavior EventName="PointerEntered">
-                                    <core:ChangePropertyAction PropertyName="Opacity" Value="1" />
-                                </core:EventTriggerBehavior>
-                                <core:EventTriggerBehavior EventName="PointerExited">
-                                    <core:ChangePropertyAction PropertyName="Opacity" Value="0" />
-                                </core:EventTriggerBehavior>
-                            </interactivity:Interaction.Behaviors>
-                            <Button
-                                Width="50"
-                                Height="100"
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                Content="{markup:FontSymbolIcon Glyph=ChevronLeft20F743}"
-                                RightTapped="PrevButton_OnRightTapped"
-                                Style="{StaticResource AccentButtonStyle}"
-                                Tapped="PrevButton_OnTapped"
-                                ToolTipService.ToolTip="{x:Bind _viewModel.PrevButtonText, Mode=OneWay}"
-                                Visibility="{x:Bind _viewModel.PrevButtonText, Converter={StaticResource NullableToVisibilityConverter}, Mode=OneWay}" />
-                        </Grid>
-                        <Grid
+                            ButtonRightTapped="PrevButton_OnRightTapped"
+                            ButtonTapped="PrevButton_OnTapped"
+                            ButtonVisibility="{x:Bind _viewModel.PrevButtonText, Converter={StaticResource NullableToVisibilityConverter}, Mode=OneWay}"
+                            IsPrev="True"
+                            ToolTip="{x:Bind _viewModel.PrevButtonText, Mode=OneWay}" />
+                        <controls:PageButton
                             Grid.Column="2"
                             Width="150"
-                            Opacity="0">
-                            <interactivity:Interaction.Behaviors>
-                                <core:EventTriggerBehavior EventName="PointerEntered">
-                                    <core:ChangePropertyAction PropertyName="Opacity" Value="1" />
-                                </core:EventTriggerBehavior>
-                                <core:EventTriggerBehavior EventName="PointerExited">
-                                    <core:ChangePropertyAction PropertyName="Opacity" Value="0" />
-                                </core:EventTriggerBehavior>
-                            </interactivity:Interaction.Behaviors>
-                            <Button
-                                Width="50"
-                                Height="100"
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                Content="{markup:FontSymbolIcon Glyph=ChevronRight20F745}"
-                                RightTapped="NextButton_OnRightTapped"
-                                Style="{StaticResource AccentButtonStyle}"
-                                Tapped="NextButton_OnTapped"
-                                ToolTipService.ToolTip="{x:Bind _viewModel.NextButtonText, Mode=OneWay}"
-                                Visibility="{x:Bind _viewModel.NextButtonText, Converter={StaticResource NullableToVisibilityConverter}, Mode=OneWay}" />
-                        </Grid>
+                            ButtonRightTapped="NextButton_OnRightTapped"
+                            ButtonTapped="NextButton_OnTapped"
+                            ButtonVisibility="{x:Bind _viewModel.NextButtonText, Converter={StaticResource NullableToVisibilityConverter}, Mode=OneWay}"
+                            IsPrev="False"
+                            ToolTip="{x:Bind _viewModel.NextButtonText, Mode=OneWay}" />
                     </Grid>
 
                     <!--  工具栏的识别区  -->

@@ -5,18 +5,15 @@ using Windows.Foundation;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Input;
 using Pixeval.Pages.NovelViewer;
 using Pixeval.Pages.IllustrationViewer;
 using WinUI3Utilities;
 using Pixeval.CoreApi.Model;
 using Pixeval.CoreApi.Engine;
 using Pixeval.Options;
-using WinUI3Utilities.Attributes;
 
 namespace Pixeval.Controls;
 
-[DependencyProperty<ThumbnailDirection>("ThumbnailDirection", DependencyPropertyDefaultValue.Default)]
 [ObservableObject]
 public sealed partial class WorkView : IEntryView<ISortableEntryViewViewModel>
 {
@@ -38,6 +35,8 @@ public sealed partial class WorkView : IEntryView<ISortableEntryViewViewModel>
     };
 
     public ItemsViewLayoutType LayoutType { get; set; }
+
+    public ThumbnailDirection ThumbnailDirection { get; set; }
 
     public WorkView() => InitializeComponent();
 

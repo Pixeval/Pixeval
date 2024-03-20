@@ -1,5 +1,5 @@
 <UserControl
-    x:Class="Pixeval.Controls.EntryContainer"
+    x:Class="Pixeval.Controls.WorkContainer"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Pixeval.Controls"
@@ -8,7 +8,8 @@
     xmlns:flyoutContent="using:Pixeval.Controls.FlyoutContent"
     xmlns:markupExtensions="using:Pixeval.Controls.MarkupExtensions"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Loaded="EntryContainer_OnLoaded"
+    xmlns:pixeval="using:Pixeval"
+    Loaded="WorkContainer_OnLoaded"
     mc:Ignorable="d">
     <UserControl.Resources>
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
@@ -30,19 +31,19 @@
                 Spacing="10">
                 <controls:SortOptionComboBox x:Name="SortOptionComboBox" SelectionChangedWhenLoaded="SortOptionComboBox_OnSelectionChanged" />
                 <AutoSuggestBox
-                    x:Uid="/EntryContainer/FastFilterAutoSuggestBox"
+                    x:Uid="/WorkContainer/FastFilterAutoSuggestBox"
                     Width="250"
                     VerticalAlignment="Center"
                     TextChanged="FastFilterAutoSuggestBox_OnTextChanged" />
             </StackPanel>
             <CommandBar controls:DockPanel.Dock="Right" DefaultLabelPosition="Right">
                 <AppBarToggleButton
-                    x:Uid="/EntryContainer/SelectionButton"
+                    x:Uid="/WorkContainer/SelectionButton"
                     Icon="{markupExtensions:FontSymbolIcon Glyph=MultiSelectE762}"
                     IsChecked="{x:Bind ViewModel.IsSelecting, Mode=TwoWay}" />
                 <AppBarButton
                     x:Name="OpenConditionDialogButton"
-                    x:Uid="/EntryContainer/OpenConditionDialogButton"
+                    x:Uid="/WorkContainer/OpenConditionDialogButton"
                     Icon="{markupExtensions:FontSymbolIcon Glyph=FilterE71C}"
                     Tapped="OpenConditionDialogButton_OnTapped" />
             </CommandBar>
@@ -56,31 +57,35 @@
                     Label="{x:Bind ViewModel.SelectionLabel, Mode=OneWay}"
                     Tapped="CancelSelectionButton_OnTapped" />
                 <AppBarButton
-                    x:Uid="/EntryContainer/SelectAllButton"
+                    x:Uid="/WorkContainer/SelectAllButton"
                     Icon="{markupExtensions:FontSymbolIcon Glyph=SelectAllE8B3}"
                     Tapped="SelectAllToggleButton_OnTapped" />
                 <AppBarSeparator />
                 <AppBarButton
-                    x:Uid="/EntryContainer/AddAllToBookmarkButton"
+                    x:Uid="/WorkContainer/AddAllToBookmarkButton"
                     Icon="{markupExtensions:FontSymbolIcon Glyph=BookmarksE8A4}"
                     IsEnabled="False"
                     Tapped="AddAllToBookmarkButton_OnTapped" />
                 <AppBarButton
-                    x:Uid="/EntryContainer/SaveAllButton"
+                    x:Uid="/WorkContainer/SaveAllButton"
                     Icon="{markupExtensions:FontSymbolIcon Glyph=SaveE74E}"
                     IsEnabled="{x:Bind ViewModel.IsAnyEntrySelected, Mode=OneWay}"
                     Tapped="SaveAllButton_OnTapped" />
                 <AppBarButton
-                    x:Uid="/EntryContainer/OpenAllInBrowserButton"
+                    x:Uid="/WorkContainer/OpenAllInBrowserButton"
                     Icon="{markupExtensions:FontSymbolIcon Glyph=WebSearchF6FA}"
                     IsEnabled="{x:Bind ViewModel.IsAnyEntrySelected, Mode=OneWay}"
                     Tapped="OpenAllInBrowserButton_OnTapped" />
             </CommandBar>
         </controls:DockPanel>
-        <ContentPresenter Grid.Row="1" Content="{x:Bind EntryView}" />
+        <controls:WorkView
+            x:Name="WorkView"
+            Grid.Row="1"
+            x:FieldModifier="public"
+            ViewModelChanged="WorkView_OnViewModelChanged" />
         <TeachingTip
             x:Name="FilterTeachingTip"
-            x:Uid="/EntryContainer/FilterTeachingTip"
+            x:Uid="/WorkContainer/FilterTeachingTip"
             Grid.Row="1"
             ActionButtonClick="FilterTeachingTip_OnActionButtonClick"
             CloseButtonClick="FilterTeachingTip_OnCloseButtonClick"

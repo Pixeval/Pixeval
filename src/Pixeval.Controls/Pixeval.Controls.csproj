@@ -11,24 +11,6 @@
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <DefaultLanguage>zh-cn</DefaultLanguage>
     </PropertyGroup>
-    <ItemGroup>
-        <None Remove="AppButtonItem.xaml" />
-        <None Remove="CardControl\CardControl.xaml" />
-        <None Remove="ColorPickerButton.xaml" />
-        <None Remove="HeartButton.xaml" />
-        <None Remove="IconText.xaml" />
-        <None Remove="Themes\Controls.xaml" />
-        <None Remove="IconButton\IconButton.xaml" />
-        <None Remove="LazyImage\LazyImage.xaml" />
-        <None Remove="NotifyOnLoadedCalendarDatePicker\NotifyOnLoadedCalendarDatePicker.xaml" />
-        <None Remove="NotifyOnLoadedComboBox\NotifyOnLoadedComboBox.xaml" />
-        <None Remove="PersonView\PersonView.xaml" />
-        <None Remove="PixevalBadge\PixevalBadge.xaml" />
-        <None Remove="StickyHeaderScrollView.xaml" />
-        <None Remove="TitleBarIconText.xaml" />
-        <None Remove="ZoomableImage.xaml" />
-        <None Remove="ZoomableImage\ZoomableImage.xaml" />
-    </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="Microsoft.Graphics.Win2D" Version="1.1.1" />
@@ -55,56 +37,10 @@
         <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="SourceItemGroup" />
     </ItemGroup>
 
-    <!--PRIResource-->
     <ItemGroup>
-        <PRIResource Include="Strings\zh-cn\PixevalBadge.resjson" />
-        <PRIResource Include="Strings\zh-cn\AdvancedItemsView.resjson" />
-        <Page Update="ColorPickerButton.xaml">
-          <Generator>MSBuild:Compile</Generator>
-        </Page>
-        <Page Update="IconText.xaml">
-          <Generator>MSBuild:Compile</Generator>
-        </Page>
-        <Page Update="HeartButton.xaml">
-          <Generator>MSBuild:Compile</Generator>
-        </Page>
-        <Page Update="Themes\Controls.xaml">
-            <Generator>MSBuild:Compile</Generator>
-        </Page>
-        <Page Update="AppButtonItem.xaml">
-            <Generator>MSBuild:Compile</Generator>
-        </Page>
-        <Page Update="TitleBarIconText.xaml">
-            <Generator>MSBuild:Compile</Generator>
-        </Page>
-        <Page Update="StickyHeaderScrollView.xaml">
-            <Generator>MSBuild:Compile</Generator>
-        </Page>
-        <Page Update="ColorPickerButton.xaml">
-            <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-        </Page>
-        <Page Update="CardControl\CardControl.xaml">
-            <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-        </Page>
-        <Page Update="IconButton\IconButton.xaml">
-            <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-        </Page>
-        <Page Update="NotifyOnLoadedCalendarDatePicker\NotifyOnLoadedCalendarDatePicker.xaml">
-            <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-        </Page>
-        <Page Update="NotifyOnLoadedComboBox\NotifyOnLoadedComboBox.xaml">
-            <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-        </Page>
-        <Page Update="PersonView\PersonView.xaml">
-            <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-        </Page>
-        <Page Update="PixevalBadge\PixevalBadge.xaml">
-            <Generator>MSBuild:Compile</Generator>
-        </Page>
-        <Page Update="ZoomableImage\ZoomableImage.xaml">
-            <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-        </Page>
-        <Page Update="LazyImage\LazyImage.xaml">
+        <PRIResource Include="Strings\*\*.resjson" />
+        <None Remove="**\*.xaml" />
+        <Page Update="**\*.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
     </ItemGroup>

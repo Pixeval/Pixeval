@@ -33,15 +33,13 @@ using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using WinUI3Utilities;
 using Pixeval.Misc;
-using WinUI3Utilities.Attributes;
 
 namespace Pixeval.Controls;
 
 /// <summary>
 /// 所有插画集合通用的容器
 /// </summary>
-[DependencyProperty<IEntryView<ISortableEntryViewViewModel>>("EntryView")]
-public partial class EntryContainer : IScrollViewProvider
+public partial class WorkContainer : IScrollViewProvider
 {
     /// <summary>
     /// The command elements that will appear at the left of the TopCommandBar
@@ -52,7 +50,7 @@ public partial class EntryContainer : IScrollViewProvider
 
     public ObservableCollection<ICommandBarElement> SecondaryCommandsSupplements { get; } = [];
 
-    public EntryContainer()
+    public WorkContainer()
     {
         InitializeComponent();
         CommandBarElements.CollectionChanged += (_, e) =>
@@ -65,6 +63,11 @@ public partial class EntryContainer : IScrollViewProvider
         };
         PrimaryCommandsSupplements.CollectionChanged += (_, args) => AddCommandCallback(args, CommandBar.PrimaryCommands);
         SecondaryCommandsSupplements.CollectionChanged += (_, args) => AddCommandCallback(args, CommandBar.SecondaryCommands);
+
+        // 由于经常在Loaded之前ResetEngine，而WorkView里是在ResetEngine中决定View的属性的
+        // 而写在XAML中的属性会在Load之后才会被设置，所以我们不在XAML中设置而是手动
+        WorkView.LayoutType = App.AppViewModel.AppSettings.ItemsViewLayoutType;
+        WorkView.ThumbnailDirection = App.AppViewModel.AppSettings.ThumbnailDirection;
         return;
 
         static void AddCommandCallback(NotifyCollectionChangedEventArgs e, ICollection<ICommandBarElement> commands)
@@ -77,24 +80,20 @@ public partial class EntryContainer : IScrollViewProvider
         }
     }
 
-    public ISortableEntryViewViewModel ViewModel => EntryView.ViewModel;
+    public ISortableEntryViewViewModel ViewModel => WorkView.ViewModel;
 
-    private void EntryContainer_OnLoaded(object sender, RoutedEventArgs e)
-    {
-        _ = EntryView.Focus(FocusState.Programmatic);
-    }
+    private void WorkContainer_OnLoaded(object sender, RoutedEventArgs e) => _ = WorkView.Focus(FocusState.Programmatic);
 
     private FilterSettings _lastFilterSettings = FilterSettings.Default;
 
     private void SelectAllToggleButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        EntryView.AdvancedItemsView.SelectAll();
+        WorkView.AdvancedItemsView.SelectAll();
     }
 
-    private void SortOptionComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
-    {
-        SetSortOption();
-    }
+    private void SortOptionComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e) => SetSortOption();
+
+    private void WorkView_OnViewModelChanged(WorkView sender, ISortableEntryViewViewModel args) => SetSortOption();
 
     public void SetSortOption()
     {
@@ -117,7 +116,7 @@ public partial class EntryContainer : IScrollViewProvider
 
     private void ScrollToTop()
     {
-        if (EntryView.ScrollView is { } scrollView)
+        if (WorkView.ScrollView is { } scrollView)
             _ = scrollView.ScrollTo(0, 0);
     }
 
@@ -127,8 +126,8 @@ public partial class EntryContainer : IScrollViewProvider
         var notBookmarked = ViewModel.SelectedEntries.Where(i => !i.IsBookmarked);
         var viewModelSelectedIllustrations = notBookmarked as IllustrationItemViewModel[] ?? notBookmarked.ToArray();
         if (viewModelSelectedIllustrations.Length > 5 &&
-            await this.CreateOkCancelAsync(EntryContainerResources.SelectedTooManyItemsForBookmarkTitle,
-                EntryContainerResources.SelectedTooManyItemsForBookmarkContent) is not ContentDialogResult.Primary)
+            await this.CreateOkCancelAsync(WorkContainerResources.SelectedTooManyItemsForBookmarkTitle,
+                WorkContainerResources.SelectedTooManyItemsForBookmarkContent) is not ContentDialogResult.Primary)
             return;
 
         foreach (var viewModelSelectedIllustration in viewModelSelectedIllustrations)
@@ -139,29 +138,29 @@ public partial class EntryContainer : IScrollViewProvider
 
         if (viewModelSelectedIllustrations.Length is var c and > 0)
         {
-            _ = this.CreateAcknowledgementAsync(EntryContainerResources.AddAllToBookmarkTitle,
-                EntryContainerResources.AddAllToBookmarkContentFormatted.Format(c));
+            _ = this.CreateAcknowledgementAsync(WorkContainerResources.AddAllToBookmarkTitle,
+                WorkContainerResources.AddAllToBookmarkContentFormatted.Format(c));
         }
     }
 
     private async void SaveAllButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        if (ViewModel.SelectedEntries.Count >= 20 && await this.CreateOkCancelAsync(EntryContainerResources.SelectedTooManyItemsTitle,
-                EntryContainerResources.SelectedTooManyItemsForSaveContent) is not ContentDialogResult.Primary)
+        if (ViewModel.SelectedEntries.Count >= 20 && await this.CreateOkCancelAsync(WorkContainerResources.SelectedTooManyItemsTitle,
+                WorkContainerResources.SelectedTooManyItemsForSaveContent) is not ContentDialogResult.Primary)
             return;
 
         foreach (var i in ViewModel.SelectedEntries)
             i.SaveCommand.Execute(null);
 
-        this.ShowTeachingTipAndHide(EntryContainerResources.DownloadItemsQueuedFormatted.Format(ViewModel.SelectedEntries.Count));
+        this.ShowTeachingTipAndHide(WorkContainerResources.DownloadItemsQueuedFormatted.Format(ViewModel.SelectedEntries.Count));
     }
 
     private async void OpenAllInBrowserButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
         if (ViewModel.SelectedEntries is { Count: var count } selected)
         {
-            if (count > 15 && await this.CreateOkCancelAsync(EntryContainerResources.SelectedTooManyItemsTitle,
-                    EntryContainerResources.SelectedTooManyItemsForOpenInBrowserContent) is not ContentDialogResult.Primary)
+            if (count > 15 && await this.CreateOkCancelAsync(WorkContainerResources.SelectedTooManyItemsTitle,
+                    WorkContainerResources.SelectedTooManyItemsForOpenInBrowserContent) is not ContentDialogResult.Primary)
                 return;
 
             foreach (var illustrationViewModel in selected)
@@ -173,7 +172,7 @@ public partial class EntryContainer : IScrollViewProvider
 
     private void CancelSelectionButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        EntryView.AdvancedItemsView.DeselectAll();
+        WorkView.AdvancedItemsView.DeselectAll();
     }
 
     private void OpenConditionDialogButton_OnTapped(object sender, TappedRoutedEventArgs e)
@@ -248,5 +247,5 @@ public partial class EntryContainer : IScrollViewProvider
                    || o.Title.Contains(text);
     }
 
-    public ScrollView ScrollView => EntryView.ScrollView;
+    public ScrollView ScrollView => WorkView.ScrollView;
 }

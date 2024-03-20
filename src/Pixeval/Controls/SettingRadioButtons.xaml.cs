@@ -35,6 +35,7 @@ namespace Pixeval.Controls;
 
 [DependencyProperty<object>("ItemsSource", DependencyPropertyDefaultValue.Default, nameof(OnItemsSourceChanged))]
 [DependencyProperty<object>("SelectedItem", propertyChanged: nameof(OnSelectedItemChanged))]
+[DependencyProperty<object>("Header")]
 public sealed partial class SettingRadioButtons : UserControl
 {
     private RadioButtons Buttons => Content.To<RadioButtons>();
@@ -59,6 +60,7 @@ public sealed partial class SettingRadioButtons : UserControl
     private static void OnItemsSourceChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
     {
         var buttons = sender.To<SettingRadioButtons>();
+
         if (buttons.ItemsSource is Array enumType)
             buttons.Buttons.ItemsSource = LocalizedResourceAttributeHelper.GetLocalizedResourceContents(enumType);
     }
@@ -75,7 +77,6 @@ public sealed partial class SettingRadioButtons : UserControl
     {
         if (d is not SettingRadioButtons { Buttons: { } buttons, ItemsSource: not null })
             return;
-
         var correspondingItem = buttons.ItemsSource.To<IEnumerable<StringRepresentableItem>>().First(r => Equals(r.Item, newValue));
         // set RadioButtons.SelectedItem won't work
         foreach (var button in buttons.FindDescendants().OfType<RadioButton>())

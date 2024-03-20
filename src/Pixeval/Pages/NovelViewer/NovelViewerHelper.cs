@@ -42,7 +42,7 @@ public static class NovelViewerHelper
     /// </summary>
     public static async Task CreateWindowWithPageAsync(long id)
     {
-        var viewModel = new NovelItemViewModel((await App.AppViewModel.MakoClient.GetNovelFromIdAsync(id)).Novel);
+        var viewModel = new NovelItemViewModel((await App.AppViewModel.MakoClient.GetNovelFromIdAsync(id)));
 
         viewModel.CreateWindowWithPage([viewModel]);
     }
@@ -63,7 +63,7 @@ public static class NovelViewerHelper
     /// 此方法可以使用<paramref name="novelViewViewModel"/>的<see cref="NovelViewViewModel.DataProvider"/>来加载更多小说
     /// </summary>
     /// <param name="novelViewModel">指定的小说ViewModel</param>
-    /// <param name="novelViewViewModel">指定的小说ViewModel所在的<see cref="NovelView"/>的ViewModel</param>
+    /// <param name="novelViewViewModel">指定的小说ViewModel所在的<see cref="WorkView"/>的ViewModel</param>
     public static void CreateWindowWithPage(this NovelItemViewModel novelViewModel, NovelViewViewModel novelViewViewModel)
     {
         var index = novelViewViewModel.DataProvider.View.IndexOf(novelViewModel);

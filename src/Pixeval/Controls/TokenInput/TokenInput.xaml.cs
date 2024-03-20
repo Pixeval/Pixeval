@@ -59,9 +59,7 @@ public sealed partial class TokenInput
     private void TokenInputTextBox_OnTokenSubmitted(object? sender, Token e)
     {
         if (TokenSource.Any(t => t.Equals(Token)))
-        {
             return;
-        }
 
         var arg = new TokenAddingEventArgs(e, false);
         TokenAdding?.Invoke(this, arg);

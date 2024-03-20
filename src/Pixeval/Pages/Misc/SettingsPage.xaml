@@ -514,7 +514,16 @@
                     Tag="{x:Bind misc2:SettingEntry.SearchIllustrationTagMatchOption}">
                     <controls:SettingsExpander.Items>
                         <controls:SettingsCard ContentAlignment="Left">
-                            <controls1:SettingRadioButtons ItemsSource="{winUi:EnumValues Type=enum:SearchIllustrationTagMatchOption}" SelectedItem="{x:Bind ViewModel.SearchIllustrationTagMatchOption, Mode=TwoWay}" />
+                            <controls:WrapPanel HorizontalSpacing="50" VerticalSpacing="20">
+                                <controls1:SettingRadioButtons
+                                    x:Uid="/SettingsPage/DefaultSearchIllustrationTagMatchOptionRadioButtons"
+                                    ItemsSource="{winUi:EnumValues Type=enum:SearchIllustrationTagMatchOption}"
+                                    SelectedItem="{x:Bind ViewModel.SearchIllustrationTagMatchOption, Mode=TwoWay}" />
+                                <controls1:SettingRadioButtons
+                                    x:Uid="/SettingsPage/DefaultSearchNovelTagMatchOptionRadioButtons"
+                                    ItemsSource="{winUi:EnumValues Type=enum:SearchNovelTagMatchOption}"
+                                    SelectedItem="{x:Bind ViewModel.SearchNovelTagMatchOption, Mode=TwoWay}" />
+                            </controls:WrapPanel>
                         </controls:SettingsCard>
                     </controls:SettingsExpander.Items>
                 </controls:SettingsExpander>

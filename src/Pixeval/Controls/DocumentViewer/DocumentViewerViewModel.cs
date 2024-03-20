@@ -22,16 +22,18 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Documents;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.AppManagement;
 using Pixeval.CoreApi.Model;
+using Pixeval.Database.Managers;
+using Pixeval.Database;
+using Pixeval.Options;
 using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Utilities;
@@ -131,8 +133,17 @@ public class DocumentViewerViewModel(NovelContent novelContent) : ObservableObje
         var novelContent = await App.AppViewModel.MakoClient.GetNovelContentAsync(novelId);
         var vm = new DocumentViewerViewModel(novelContent);
         _ = vm.LoadContentAsync();
+        AddHistory();
 
         return vm;
+
+        void AddHistory()
+        {
+            using var scope = App.AppViewModel.AppServicesScope;
+            var manager = scope.ServiceProvider.GetRequiredService<BrowseHistoryPersistentManager>();
+            _ = manager.Delete(x => x.Id == novelId && x.Type == SimpleWorkType.Novel);
+            manager.Insert(new BrowseHistoryEntry { Id = novelId, Type = SimpleWorkType.Novel });
+        }
     }
 
     public void Dispose()

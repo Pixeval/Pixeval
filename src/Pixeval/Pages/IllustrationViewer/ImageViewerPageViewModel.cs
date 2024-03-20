@@ -46,7 +46,6 @@ using Pixeval.AppManagement;
 using Pixeval.CoreApi.Net.Response;
 using Pixeval.Download;
 using Pixeval.Util.ComponentModels;
-using ReverseMarkdown.Converters;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
@@ -203,8 +202,8 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
         {
             using var scope = App.AppViewModel.AppServicesScope;
             var manager = scope.ServiceProvider.GetRequiredService<BrowseHistoryPersistentManager>();
-            _ = manager.Delete(x => x.Id == IllustrationViewModel.Id);
-            manager.Insert(new BrowseHistoryEntry { Id = IllustrationViewModel.Id });
+            _ = manager.Delete(x => x.Id == IllustrationViewModel.Id && x.Type == SimpleWorkType.IllustAndManga);
+            manager.Insert(new BrowseHistoryEntry { Id = IllustrationViewModel.Id, Type = SimpleWorkType.IllustAndManga });
         }
 
         async Task<Stream?> GetStreamAsync((UgoiraMetadataResponse Metadata, string UgoiraUrl)? ugoiraParameter)

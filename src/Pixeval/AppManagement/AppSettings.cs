@@ -24,7 +24,6 @@ using Windows.Foundation;
 using Microsoft.UI.Composition.SystemBackdrops;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Media;
 using Pixeval.Attributes;
 using Pixeval.Controls;
 using Pixeval.Controls.Windowing;
