@@ -76,6 +76,11 @@ public sealed partial class WorkView : IEntryView<ISortableEntryViewViewModel>
             viewModel.CreateWindowWithPage(viewViewModel);
     }
 
+    private void WorkView_OnSelectionChanged(ItemsView sender, ItemsViewSelectionChangedEventArgs args)
+    {
+        ViewModel.SelectedEntries = sender.SelectedItems.Cast<IllustrationItemViewModel>().ToArray();
+    }
+
     [MemberNotNull(nameof(ViewModel))]
     public void ResetEngine(IFetchEngine<IWorkEntry> newEngine, int itemLimit = -1)
     {

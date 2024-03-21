@@ -39,7 +39,7 @@ public interface ISortableEntryViewViewModel : INotifyPropertyChanged, IDisposab
 
     string SelectionLabel { get; }
 
-    IReadOnlyCollection<IWorkViewModel> SelectedEntries { get; }
+    IReadOnlyCollection<IWorkViewModel> SelectedEntries { get; set; }
 
     void SetSortDescription(SortDescription description);
 

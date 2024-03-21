@@ -38,7 +38,11 @@ public abstract partial class SortableEntryViewViewModel<T, TViewModel> : EntryV
     [NotifyPropertyChangedFor(nameof(SelectionLabel))]
     private TViewModel[] _selectedEntries = [];
 
-    IReadOnlyCollection<IWorkViewModel> ISortableEntryViewViewModel.SelectedEntries => SelectedEntries;
+    IReadOnlyCollection<IWorkViewModel> ISortableEntryViewViewModel.SelectedEntries
+    {
+        get => SelectedEntries;
+        set => SelectedEntries = (TViewModel[])value;
+    }
 
     public bool IsAnyEntrySelected => SelectedEntries.Length > 0;
 
