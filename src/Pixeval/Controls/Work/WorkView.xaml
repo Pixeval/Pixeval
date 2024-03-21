@@ -39,6 +39,7 @@
                 x:Name="ItemsView"
                 IsItemInvokedEnabled="True"
                 ItemInvoked="ItemsView_OnItemInvoked"
+                SelectionChanged="WorkView_OnSelectionChanged"
                 SelectionMode="{x:Bind ViewModel.IsSelecting, Converter={StaticResource BoolToSelectionModeConverter}, Mode=OneWay}" />
         </local:EntryView.Content>
     </local:EntryView>
