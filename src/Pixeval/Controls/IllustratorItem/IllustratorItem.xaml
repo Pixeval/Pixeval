@@ -22,7 +22,18 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <local:IllustratorIllustrationsOverview Grid.Row="0" ViewModel="{x:Bind ViewModel.OverviewViewModel, Mode=OneWay}" />
+        <controls:ConstrainedBox Grid.Row="0" AspectRatio="3:1">
+            <Grid
+                x:Name="BannerContainer"
+                Margin="{x:Bind GetIllustrationAt(ViewModel.BannerSources), Mode=OneWay}"
+                CornerRadius="{StaticResource ControlTopCornerRadius}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+            </Grid>
+        </controls:ConstrainedBox>
         <StackPanel
             Grid.Row="1"
             Margin="105,0,15,0"
@@ -87,7 +98,7 @@
                     Height="80"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
-                    BorderBrush="{x:Bind ViewModel.OverviewViewModel.AvatarBorderBrush, Mode=OneWay}"
+                    BorderBrush="{x:Bind ViewModel.AvatarBorderBrush, Mode=OneWay}"
                     BorderThickness="2"
                     ProfilePicture="{x:Bind ViewModel.AvatarSource, Mode=OneWay}" />
             </Border>

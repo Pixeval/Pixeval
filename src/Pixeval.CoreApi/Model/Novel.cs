@@ -49,7 +49,7 @@ public partial record Novel : IWorkEntry
     public required bool IsOriginal { get; set; }
 
     [JsonPropertyName("image_urls")]
-    public required ImageUrls Cover { get; set; }
+    public required ImageUrls ThumbnailUrls { get; set; }
 
     [JsonPropertyName("create_date")]
     public required DateTimeOffset CreateDate { get; set; }

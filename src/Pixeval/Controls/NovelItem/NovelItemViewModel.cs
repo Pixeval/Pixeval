@@ -34,6 +34,4 @@ public partial class NovelItemViewModel : ThumbnailEntryViewModel<Novel>
     }
 
     public int TextLength => Entry.TextLength;
-
-    protected override string ThumbnailUrl => Entry.Cover.Medium;
 }

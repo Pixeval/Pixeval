@@ -106,7 +106,7 @@ public partial class IllustrationItemViewModel(Illustration illustration) : Thum
         // that only differs from the illustrations of a single work on the MetaPages property, this property
         // contains the download urls of the manga
 
-        return Entry.MetaPages.Select(m => Entry with { ImageUrls = m.ImageUrls })
+        return Entry.MetaPages.Select(m => Entry with { ThumbnailUrls = m.ImageUrls })
             .Select((p, i) => new IllustrationItemViewModel(p) { MangaIndex = i });
     }
 
@@ -114,6 +114,4 @@ public partial class IllustrationItemViewModel(Illustration illustration) : Thum
     {
         return Entry.MetaPages.Select(m => m.ImageUrls.Original!);
     }
-
-    protected override string ThumbnailUrl => Entry.GetThumbnailUrl();
 }

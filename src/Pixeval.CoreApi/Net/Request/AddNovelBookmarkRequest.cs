@@ -24,4 +24,4 @@ using Refit;
 
 namespace Pixeval.CoreApi.Net.Request;
 
-internal record AddNovelBookmarkRequest([property: AliasAs("restrict")] string Restrict, [property: AliasAs("novel_id")] string Id);
+internal record AddNovelBookmarkRequest([property: AliasAs("restrict")] string Restrict, [property: AliasAs("novel_id")] long Id);

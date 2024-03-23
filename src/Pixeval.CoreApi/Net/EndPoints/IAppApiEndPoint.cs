@@ -20,7 +20,6 @@
 
 using System.Net.Http;
 using System.Threading.Tasks;
-using Pixeval.CoreApi.Model;
 using Pixeval.CoreApi.Net.Request;
 using Pixeval.CoreApi.Net.Response;
 using Refit;
@@ -64,6 +63,9 @@ internal interface IAppApiEndPoint
     [AliasAs("margin_top")] string x8 = "60px",
     [AliasAs("margin_bottom")] string x9 = "50px"
     */
+
+    [Get("/v1/user/related")]
+    Task<PixivRelatedUsersResponse> RelatedUserAsync([AliasAs("filter")] string filter, [AliasAs("seed_user_id")] long userId);
 
     [Post("/v1/user/follow/add")]
     Task<HttpResponseMessage> FollowUserAsync([Body(BodySerializationMethod.UrlEncoded)] FollowUserRequest request);

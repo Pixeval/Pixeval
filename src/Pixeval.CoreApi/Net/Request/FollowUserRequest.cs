@@ -22,4 +22,4 @@ using Refit;
 
 namespace Pixeval.CoreApi.Net.Request;
 
-internal record FollowUserRequest([property: AliasAs("user_id")] string Id, [property: AliasAs("restrict")] string Restrict);
+internal record FollowUserRequest([property: AliasAs("user_id")] long Id, [property: AliasAs("restrict")] string Restrict);

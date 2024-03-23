@@ -43,13 +43,13 @@ public static class MakoHelper
         .. Enumerable.Range(101, 10)
     ];
 
-    public static string GetThumbnailUrl(this Illustration illustration, ThumbnailUrlOption option = ThumbnailUrlOption.Medium)
+    public static string GetThumbnailUrl(this IWorkEntry workEntry, ThumbnailUrlOption option = ThumbnailUrlOption.Medium)
     {
         return option switch
         {
-            ThumbnailUrlOption.Large => illustration.ImageUrls.Large,
-            ThumbnailUrlOption.Medium => illustration.ImageUrls.Medium,
-            ThumbnailUrlOption.SquareMedium => illustration.ImageUrls.SquareMedium,
+            ThumbnailUrlOption.Large => workEntry.ThumbnailUrls.Large,
+            ThumbnailUrlOption.Medium => workEntry.ThumbnailUrls.Medium,
+            ThumbnailUrlOption.SquareMedium => workEntry.ThumbnailUrls.SquareMedium,
             _ => ThrowHelper.ArgumentOutOfRange<ThumbnailUrlOption, string?>(option)
         };
     }
@@ -72,14 +72,9 @@ public static class MakoHelper
 
     public static Uri GenerateNovelAppUri(long id) => new($"{AppInfo.AppProtocol}://novel/{id}");
 
-    public static string GetCacheKeyForThumbnailAsync(string url, ThumbnailUrlOption thumbnailUrlOption = ThumbnailUrlOption.Medium)
+    public static string GetCacheKeyForThumbnailAsync(string url)
     {
-        return $"thumbnail-{thumbnailUrlOption}-{url}";
-    }
-
-    public static async Task<string> GetIllustrationThumbnailCacheKeyAsync(this IllustrationItemViewModel illustration, ThumbnailUrlOption thumbnailUrlOption = ThumbnailUrlOption.Medium)
-    {
-        return $"thumbnail-{thumbnailUrlOption}-{await illustration.GetOriginalSourceUrlAsync()}";
+        return $"thumbnail-{url}";
     }
 
     public static async Task<string> GetIllustrationOriginalImageCacheKeyAsync(this IllustrationItemViewModel illustration)

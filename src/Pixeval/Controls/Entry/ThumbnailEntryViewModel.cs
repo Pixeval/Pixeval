@@ -75,7 +75,7 @@ public abstract partial class ThumbnailEntryViewModel<T> : EntryViewModel<T>, IW
             _ => BadgeMode.R18
         };
 
-    protected abstract string ThumbnailUrl { get; }
+    protected string ThumbnailUrl => Entry.GetThumbnailUrl();
 
     /// <summary>
     /// 缩略图图片

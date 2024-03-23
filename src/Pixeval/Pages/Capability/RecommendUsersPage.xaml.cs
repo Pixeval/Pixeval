@@ -1,9 +1,7 @@
-using System.Globalization;
 using System.Linq;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Controls;
-using Pixeval.CoreApi.Net.Response;
 using Pixeval.Misc;
 using Pixeval.Pages.IllustratorViewer;
 using WinUI3Utilities;
@@ -20,31 +18,29 @@ public sealed partial class RecommendUsersPage : IScrollViewProvider
     {
         if (e.Parameter is not long userId)
             userId = App.AppViewModel.PixivUid;
-        var recommendIllustrators = await App.AppViewModel.MakoClient.GetRelatedRecommendUsersAsync(userId, isR18: !App.AppViewModel.AppSettings.FiltrateRestrictedContent, lang: CultureInfo.CurrentUICulture);
-        var viewModels = recommendIllustrators.ResponseBody.RecommendMaps
-            .Select(ru => ToRecommendIllustratorProfileViewModel(recommendIllustrators, ru)).ToArray();
-
-        IllustrateView.HasNoItem = viewModels.Length is 0;
-        AdvancedItemsView.ItemsSource = viewModels;
-        return;
-
-        static RecommendIllustratorItemViewModel ToRecommendIllustratorProfileViewModel(PixivRelatedRecommendUsersResponse context, RecommendMap recommendUser)
+        IllustrateView.IsLoadingMore = true;
+        try
         {
-            var users = context.ResponseBody.Users;
-            var userId = recommendUser.UserId;
-            var user = users.First(u => u.Id == userId);
-            return new RecommendIllustratorItemViewModel(user, recommendUser.IllustIds);
+            var users = (await App.AppViewModel.MakoClient.RelatedUserAsync(userId)).Users;
+            var viewModels = users.Select(t => new IllustratorItemViewModel(t));
+
+            IllustrateView.HasNoItem = users.Length is 0;
+            AdvancedItemsView.ItemsSource = viewModels;
+        }
+        finally
+        {
+            IllustrateView.IsLoadingMore = false;
         }
     }
 
-    private async void IllustratorItem_OnViewModelChanged(RecommendIllustratorItem sender, RecommendIllustratorItemViewModel viewModel)
+    private async void IllustratorItem_OnViewModelChanged(IllustratorItem sender, IllustratorItemViewModel viewModel)
     {
         await viewModel.LoadAvatarAsync();
     }
 
     private async void IllustratorItemsView_OnItemInvoked(ItemsView sender, ItemsViewItemInvokedEventArgs e)
     {
-        await IllustratorViewerHelper.CreateWindowWithPageAsync(e.InvokedItem.To<RecommendIllustratorItemViewModel>().UserId);
+        await IllustratorViewerHelper.CreateWindowWithPageAsync(e.InvokedItem.To<IllustratorItemViewModel>().UserId);
     }
 
     public ScrollView ScrollView => AdvancedItemsView.ScrollView;
