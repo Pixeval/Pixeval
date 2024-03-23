@@ -24,12 +24,12 @@ using Pixeval.Util.UI;
 
 namespace Pixeval.Controls;
 
-public sealed partial class IllustratorItemViewModel : UserItemViewModel<User>
+public sealed partial class IllustratorItemViewModel : EntryViewModel<User>
 {
     [ObservableProperty]
     private bool _isFollowed;
 
-    public IllustratorItemViewModel(User user) : base(user, new IllustratorIllustrationsOverviewViewModel(user.Illusts))
+    public IllustratorItemViewModel(User user) : base(user)
     {
         IsFollowed = Entry.UserInfo.IsFollowed;
 
@@ -39,7 +39,7 @@ public sealed partial class IllustratorItemViewModel : UserItemViewModel<User>
 
     public string Username => Entry.UserInfo.Name;
 
-    public override long UserId => Entry.UserInfo.Id;
+    public long UserId => Entry.UserInfo.Id;
 
-    public override string AvatarUrl => Entry.UserInfo.ProfileImageUrls.Medium;
+    public string AvatarUrl => Entry.UserInfo.ProfileImageUrls.Medium;
 }

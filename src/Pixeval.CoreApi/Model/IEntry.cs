@@ -48,6 +48,8 @@ public interface IWorkEntry : IEntry
 
     DateTimeOffset CreateDate { get; }
 
+    ImageUrls ThumbnailUrls { get; }
+
     /// <summary>
     /// 值为2是AI生成
     /// </summary>

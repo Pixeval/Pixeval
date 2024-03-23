@@ -1,5 +1,4 @@
 using System;
-using System.Threading.Tasks;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
@@ -7,46 +6,14 @@ using Pixeval.Controls.MarkupExtensions;
 using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
-using Windows.System;
-using CommunityToolkit.Mvvm.ComponentModel;
-using Microsoft.UI.Xaml.Media;
 using WinUI3Utilities;
 using Microsoft.UI.Xaml.Media.Imaging;
-using Pixeval.AppManagement;
-using Pixeval.CoreApi.Model;
-using Pixeval.Utilities;
+using Windows.System;
 
 namespace Pixeval.Controls;
 
-public abstract partial class UserItemViewModel<T>(T illustrate, IllustratorIllustrationsOverviewViewModel overviewViewModel) : EntryViewModel<T>(illustrate) where T : IEntry
+public partial class IllustratorItemViewModel
 {
-    [ObservableProperty]
-    private bool _isFollowed;
-
-    [ObservableProperty]
-    private ImageSource? _avatarSource;
-
-    public abstract long UserId { get; }
-
-    public abstract string AvatarUrl { get; }
-
-    public IllustratorIllustrationsOverviewViewModel OverviewViewModel { get; } = overviewViewModel;
-
-    public async Task LoadAvatarAsync()
-    {
-        var result = await App.AppViewModel.MakoClient.DownloadBitmapImageAsync(AvatarUrl, 100);
-        AvatarSource = result is Result<ImageSource>.Success { Value: var avatar }
-            ? avatar
-            : await AppInfo.GetPixivNoProfileImageAsync();
-        await OverviewViewModel.LoadBannerSource();
-    }
-
-    public override void Dispose()
-    {
-        AvatarSource = null;
-        OverviewViewModel.Dispose();
-    }
-
     public XamlUICommand FollowCommand { get; } = "".GetCommand(FontIconSymbol.ContactE77B);
 
     public XamlUICommand GenerateLinkCommand { get; } = EntryItemResources.GenerateLink.GetCommand(FontIconSymbol.LinkE71B);
@@ -59,7 +26,7 @@ public abstract partial class UserItemViewModel<T>(T illustrate, IllustratorIllu
 
     public XamlUICommand ShowPixEzQrCodeCommand { get; } = EntryItemResources.ShowPixEzQrCode.GetCommand(FontIconSymbol.Photo2EB9F);
 
-    protected void InitializeCommands()
+    private void InitializeCommands()
     {
         FollowCommand.GetFollowCommand(IsFollowed);
         FollowCommand.ExecuteRequested += FollowCommandExecuteRequested;
@@ -75,7 +42,7 @@ public abstract partial class UserItemViewModel<T>(T illustrate, IllustratorIllu
         ShowPixEzQrCodeCommand.ExecuteRequested += ShowPixEzQrCodeCommandExecuteRequested;
     }
 
-    protected virtual async void FollowCommandExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
+    private async void FollowCommandExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
         IsFollowed = await MakoHelper.SetFollowAsync(UserId, !IsFollowed);
         FollowCommand.GetFollowCommand(IsFollowed);

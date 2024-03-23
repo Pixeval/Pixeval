@@ -19,10 +19,13 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Numerics;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Media.Imaging;
+using Microsoft.UI.Xaml.Media;
 using WinUI3Utilities.Attributes;
 
 namespace Pixeval.Controls;
@@ -67,5 +70,25 @@ public sealed partial class IllustratorItem
             AvatarButton.Translation = _commonTranslation;
             AvatarButton.Rotation = CommonRotation;
         }
+    }
+
+    private Thickness GetIllustrationAt(List<SoftwareBitmapSource> sources)
+    {
+        BannerContainer.Children.Clear();
+        var i = 0;
+        // ReSharper disable once ForeachCanBePartlyConvertedToQueryUsingAnotherGetEnumerator
+        foreach (var source in sources)
+        {
+            var image = new Image
+            {
+                Source = source,
+                Stretch = Stretch.UniformToFill
+            };
+            Grid.SetColumn(image, i);
+            BannerContainer.Children.Add(image);
+            ++i;
+        }
+
+        return new Thickness();
     }
 }

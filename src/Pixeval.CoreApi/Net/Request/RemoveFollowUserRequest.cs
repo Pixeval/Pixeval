@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval.CoreApi
+#region Copyright (c) Pixeval/Pixeval.CoreApi
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
@@ -24,8 +24,4 @@ namespace Pixeval.CoreApi.Net.Request;
 
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 // ReSharper disable MemberCanBePrivate.Global
-internal class RemoveFollowUserRequest(string userId)
-{
-    [AliasAs("user_id")]
-    public string UserId { get; } = userId;
-}
+internal record RemoveFollowUserRequest([property: AliasAs("user_id")] long UserId);
