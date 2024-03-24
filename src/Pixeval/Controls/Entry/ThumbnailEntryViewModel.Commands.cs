@@ -22,29 +22,15 @@ using System;
 using System.IO;
 using Windows.System;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.Controls.MarkupExtensions;
-using Pixeval.Util.IO;
 using Pixeval.Util.UI;
-using WinUI3Utilities;
 
 namespace Pixeval.Controls;
 
 public partial class ThumbnailEntryViewModel<T>
 {
     public XamlUICommand AddToBookmarkCommand { get; } = EntryItemResources.AddToBookmark.GetCommand(FontIconSymbol.BookmarksE8A4);
-
-    public XamlUICommand GenerateLinkCommand { get; } = EntryItemResources.GenerateLink.GetCommand(FontIconSymbol.LinkE71B);
-
-    public XamlUICommand GenerateWebLinkCommand { get; } = EntryItemResources.GenerateWebLink.GetCommand(FontIconSymbol.PreviewLinkE8A1);
-
-    public XamlUICommand OpenInWebBrowserCommand { get; } = EntryItemResources.OpenInWebBrowser.GetCommand(FontIconSymbol.WebSearchF6FA);
-
-    public XamlUICommand ShowQrCodeCommand { get; } = EntryItemResources.ShowQRCode.GetCommand(FontIconSymbol.QRCodeED14);
-
-    public XamlUICommand ShowPixEzQrCodeCommand { get; } = EntryItemResources.ShowPixEzQrCode.GetCommand(FontIconSymbol.Photo2EB9F);
 
     /// <summary>
     /// Parameter1: <see cref="ValueTuple{T1, T2}"/> where T1 is <see cref="FrameworkElement"/>? and T2 is <see cref="Func{T, TResult}"/>? where T is <see cref="IProgress{T}"/>? and TResult is <see cref="Stream"/>?<br/>
@@ -72,18 +58,10 @@ public partial class ThumbnailEntryViewModel<T>
 
     private void InitializeCommands()
     {
+        InitializeCommandsBase();
+
         // TODO: AddToBookmarkCommand
         AddToBookmarkCommand.CanExecuteRequested += (sender, args) => args.CanExecute = false;
-
-        GenerateLinkCommand.ExecuteRequested += GenerateLinkCommandOnExecuteRequested;
-
-        GenerateWebLinkCommand.ExecuteRequested += GenerateWebLinkCommandOnExecuteRequested;
-
-        OpenInWebBrowserCommand.ExecuteRequested += OpenInWebBrowserCommandOnExecuteRequested;
-
-        ShowQrCodeCommand.ExecuteRequested += ShowQrCodeCommandOnExecuteRequested;
-
-        ShowPixEzQrCodeCommand.ExecuteRequested += ShowPixEzQrCodeCommandOnExecuteRequested;
 
         BookmarkCommand.GetBookmarkCommand(IsBookmarked);
         BookmarkCommand.ExecuteRequested += BookmarkCommandOnExecuteRequested;
@@ -95,65 +73,6 @@ public partial class ThumbnailEntryViewModel<T>
         CopyCommand.ExecuteRequested += CopyCommandOnExecuteRequested;
     }
 
-    private void GenerateLinkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
-    {
-        UiHelper.ClipboardSetText(AppUri.OriginalString);
-
-        if (args.Parameter is TeachingTip teachingTip)
-        {
-            if (App.AppViewModel.AppSettings.DisplayTeachingTipWhenGeneratingAppLink)
-                teachingTip.IsOpen = true;
-            else
-                teachingTip?.ShowTeachingTipAndHide(EntryItemResources.LinkCopiedToClipboard);
-        }
-        // 只提示
-        else
-            (args.Parameter as FrameworkElement)?.ShowTeachingTipAndHide(EntryItemResources.LinkCopiedToClipboard);
-    }
-
-    private void GenerateWebLinkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
-    {
-        UiHelper.ClipboardSetText(WebUri.OriginalString);
-        (args.Parameter as FrameworkElement)?.ShowTeachingTipAndHide(EntryItemResources.LinkCopiedToClipboard);
-    }
-
-    private async void OpenInWebBrowserCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
-    {
-        _ = await Launcher.LaunchUriAsync(WebUri);
-    }
-
-    private async void ShowQrCodeCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
-    {
-        if (args.Parameter is not TeachingTip showQrCodeTeachingTip)
-            return;
-
-        var qrCodeSource = await IoHelper.GenerateQrCodeForUrlAsync(WebUri.OriginalString);
-        ShowQrCodeCommandExecuteRequested(showQrCodeTeachingTip, qrCodeSource);
-    }
-
-    private async void ShowPixEzQrCodeCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
-    {
-        if (args.Parameter is not TeachingTip showQrCodeTeachingTip)
-            return;
-
-        var qrCodeSource = await IoHelper.GenerateQrCodeAsync(PixEzUri.OriginalString);
-        ShowQrCodeCommandExecuteRequested(showQrCodeTeachingTip, qrCodeSource);
-    }
-
-    private static void ShowQrCodeCommandExecuteRequested(TeachingTip teachingTip, SoftwareBitmapSource source)
-    {
-        teachingTip.HeroContent.To<Image>().Source = source;
-        teachingTip.IsOpen = true;
-        teachingTip.Closed += Closed;
-        return;
-
-        void Closed(TeachingTip s, TeachingTipClosedEventArgs ea)
-        {
-            source.Dispose();
-            s.Closed -= Closed;
-        }
-    }
-
     protected abstract void BookmarkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args);
 
     protected abstract void SaveCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args);
@@ -161,10 +80,4 @@ public partial class ThumbnailEntryViewModel<T>
     protected abstract void SaveAsCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args);
 
     protected abstract void CopyCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args);
-
-    protected abstract Uri AppUri { get; }
-
-    protected abstract Uri WebUri { get; }
-
-    protected abstract Uri PixEzUri { get; }
 }

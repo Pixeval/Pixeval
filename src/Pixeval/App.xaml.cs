@@ -112,7 +112,7 @@ public partial class App
             }
 
             AppViewModel.AppDebugTrace.ExitedSuccessfully = false;
-            AppInfo.SaveConfig(AppViewModel.AppSettings);
+            AppInfo.SaveDebugTrace(AppViewModel.AppDebugTrace);
 
             s.To<Frame>().NavigateTo<LoginPage>(w);
         }

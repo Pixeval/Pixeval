@@ -59,7 +59,6 @@ public class FactoryGenerator : IIncrementalGenerator
             .WithBaseList(BaseList(SeparatedList([(BaseTypeSyntax)SimpleBaseType(ParseTypeName($"{AttributeNamespace}.IFactory<{name}>"))])));
         var generatedNamespace = GetFileScopedNamespaceDeclaration(typeSymbol, generatedType, true);
         var compilationUnit = CompilationUnit()
-            .AddUsings([UsingDirective(ParseName(AttributeNamespace))])
             .AddMembers(generatedNamespace)
             .NormalizeWhitespace();
         return SyntaxTree(compilationUnit, encoding: Encoding.UTF8).GetText().ToString();

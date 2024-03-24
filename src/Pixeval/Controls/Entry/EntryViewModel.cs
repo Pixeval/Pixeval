@@ -20,8 +20,17 @@
 
 using System;
 using System.Diagnostics;
+using Windows.System;
 using CommunityToolkit.Mvvm.ComponentModel;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
+using Pixeval.Controls.MarkupExtensions;
 using Pixeval.CoreApi.Model;
+using Pixeval.Util.IO;
+using Pixeval.Util.UI;
+using WinUI3Utilities;
+using Microsoft.UI.Xaml.Media.Imaging;
 
 namespace Pixeval.Controls;
 
@@ -32,4 +41,92 @@ public abstract class EntryViewModel<T>(T entry) : ObservableObject, IDisposable
     public T Entry { get; } = entry;
 
     public abstract void Dispose();
+
+    protected void InitializeCommandsBase()
+    {
+        GenerateLinkCommand.ExecuteRequested += GenerateLinkCommandOnExecuteRequested;
+
+        GenerateWebLinkCommand.ExecuteRequested += GenerateWebLinkCommandOnExecuteRequested;
+
+        OpenInWebBrowserCommand.ExecuteRequested += OpenInWebBrowserCommandOnExecuteRequested;
+
+        ShowQrCodeCommand.ExecuteRequested += ShowQrCodeCommandOnExecuteRequested;
+
+        ShowPixEzQrCodeCommand.ExecuteRequested += ShowPixEzQrCodeCommandOnExecuteRequested;
+    }
+
+    protected abstract Uri AppUri { get; }
+
+    protected abstract Uri WebUri { get; }
+
+    protected abstract Uri PixEzUri { get; }
+
+    public XamlUICommand GenerateLinkCommand { get; } = EntryItemResources.GenerateLink.GetCommand(FontIconSymbol.LinkE71B);
+
+    public XamlUICommand GenerateWebLinkCommand { get; } = EntryItemResources.GenerateWebLink.GetCommand(FontIconSymbol.PreviewLinkE8A1);
+
+    public XamlUICommand OpenInWebBrowserCommand { get; } = EntryItemResources.OpenInWebBrowser.GetCommand(FontIconSymbol.WebSearchF6FA);
+
+    public XamlUICommand ShowQrCodeCommand { get; } = EntryItemResources.ShowQRCode.GetCommand(FontIconSymbol.QRCodeED14);
+
+    public XamlUICommand ShowPixEzQrCodeCommand { get; } = EntryItemResources.ShowPixEzQrCode.GetCommand(FontIconSymbol.Photo2EB9F);
+    
+    private void GenerateLinkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
+    {
+        UiHelper.ClipboardSetText(AppUri.OriginalString);
+
+        if (args.Parameter is TeachingTip teachingTip)
+        {
+            if (App.AppViewModel.AppSettings.DisplayTeachingTipWhenGeneratingAppLink)
+                teachingTip.IsOpen = true;
+            else
+                teachingTip?.ShowTeachingTipAndHide(EntryItemResources.LinkCopiedToClipboard);
+        }
+        // 只提示
+        else
+            (args.Parameter as FrameworkElement)?.ShowTeachingTipAndHide(EntryItemResources.LinkCopiedToClipboard);
+    }
+
+    private void GenerateWebLinkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
+    {
+        UiHelper.ClipboardSetText(WebUri.OriginalString);
+        (args.Parameter as FrameworkElement)?.ShowTeachingTipAndHide(EntryItemResources.LinkCopiedToClipboard);
+    }
+
+    private async void OpenInWebBrowserCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
+    {
+        _ = await Launcher.LaunchUriAsync(WebUri);
+    }
+
+    private async void ShowQrCodeCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
+    {
+        if (args.Parameter is not TeachingTip showQrCodeTeachingTip)
+            return;
+
+        var qrCodeSource = await IoHelper.GenerateQrCodeForUrlAsync(WebUri.OriginalString);
+        ShowQrCodeCommandExecuteRequested(showQrCodeTeachingTip, qrCodeSource);
+    }
+
+    private async void ShowPixEzQrCodeCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
+    {
+        if (args.Parameter is not TeachingTip showQrCodeTeachingTip)
+            return;
+
+        var qrCodeSource = await IoHelper.GenerateQrCodeAsync(PixEzUri.OriginalString);
+        ShowQrCodeCommandExecuteRequested(showQrCodeTeachingTip, qrCodeSource);
+    }
+
+    private static void ShowQrCodeCommandExecuteRequested(TeachingTip teachingTip, SoftwareBitmapSource source)
+    {
+        teachingTip.HeroContent.To<Image>().Source = source;
+        teachingTip.IsOpen = true;
+        teachingTip.Closed += Closed;
+        return;
+
+        void Closed(TeachingTip s, TeachingTipClosedEventArgs ea)
+        {
+            source.Dispose();
+            s.Closed -= Closed;
+        }
+    }
 }

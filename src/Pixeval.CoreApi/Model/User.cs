@@ -30,15 +30,9 @@ public partial record User : IEntry
     [JsonPropertyName("user")]
     public required UserInfo UserInfo { get; set; }
 
-    /// <summary>
-    /// 最多三个
-    /// </summary>
     [JsonPropertyName("illusts")] 
-    public required Illustration[] Illusts { get; set; } = [];
+    public required Illustration[] Illustrations { get; set; } = [];
 
-    /// <summary>
-    /// 最多三个
-    /// </summary>
     [JsonPropertyName("novels")] 
     public required Novel[] Novels { get; set; } = [];
 

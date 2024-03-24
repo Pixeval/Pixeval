@@ -18,6 +18,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using System;
 using Pixeval.CoreApi.Model;
 using Pixeval.Utilities;
 
@@ -26,4 +27,8 @@ namespace Pixeval.Controls.SpotlightArticleView;
 public class SpotlightArticleViewModel(SpotlightArticle illustrate) : EntryViewModel<SpotlightArticle>(illustrate)
 {
     public override void Dispose() => ThrowUtils.Throw(new());
+
+    protected override Uri AppUri { get; }
+    protected override Uri WebUri { get; }
+    protected override Uri PixEzUri { get; }
 }
