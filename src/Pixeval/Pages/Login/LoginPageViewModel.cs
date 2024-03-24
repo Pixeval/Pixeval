@@ -203,7 +203,7 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject, IDi
         // is intended to be called only once (at the start time) during the entire application's
         // lifetime, so the overhead is acceptable
 
-        var httpClient = DisableDomainFronting ? new() : new HttpClient(new DelegatedHttpMessageHandler(MakoHttpOptions.CreateDirectHttpMessageInvoker()));
+        var httpClient = DisableDomainFronting ? new() : new HttpClient(new DelegatedHttpMessageHandler(MakoHttpOptions.CreateHttpMessageInvoker()));
         httpClient.DefaultRequestHeaders.UserAgent.Add(new("PixivAndroidApp", "5.0.64"));
         httpClient.DefaultRequestHeaders.UserAgent.Add(new("(Android 6.0)"));
         var scheme = DisableDomainFronting ? "https" : "http";

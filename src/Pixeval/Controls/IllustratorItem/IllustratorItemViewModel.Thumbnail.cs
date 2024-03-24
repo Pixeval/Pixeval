@@ -53,7 +53,7 @@ public partial class IllustratorItemViewModel
 
     private async Task LoadBannerSourceAsync()
     {
-        foreach (var entry in Entry.Illusts)
+        foreach (var entry in Entry.Illustrations)
             if (!await AddBannerSource(entry))
                 break;
 
