@@ -179,7 +179,7 @@ public static partial class AppInfo
 
     public static async Task<X509Certificate2> GetFakeServerCertificateAsync()
     {
-        return new X509Certificate2(await GetAssetBytesAsync("Certs/pixeval_server_cert.pfx"), AppProtocol, X509KeyStorageFlags.UserKeySet);
+        return new X509Certificate2(await GetAssetBytesAsync("Certs/pixeval_server_cert.zip"), AppProtocol, X509KeyStorageFlags.UserKeySet);
     }
 
     public static void RestoreHistories()

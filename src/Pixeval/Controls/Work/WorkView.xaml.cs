@@ -11,6 +11,7 @@ using WinUI3Utilities;
 using Pixeval.CoreApi.Model;
 using Pixeval.CoreApi.Engine;
 using Pixeval.Options;
+using System.Collections.Generic;
 
 namespace Pixeval.Controls;
 
@@ -78,7 +79,17 @@ public sealed partial class WorkView : IEntryView<ISortableEntryViewViewModel>
 
     private void WorkView_OnSelectionChanged(ItemsView sender, ItemsViewSelectionChangedEventArgs args)
     {
-        ViewModel.SelectedEntries = sender.SelectedItems.Cast<IllustrationItemViewModel>().ToArray();
+        if (sender.SelectedItems is [not null, ..])
+            ViewModel.SelectedEntries = [];
+        else
+        {
+            ViewModel.SelectedEntries = ViewModel switch
+            {
+                NovelViewViewModel => sender.SelectedItems.Cast<NovelItemViewModel>().ToArray(),
+                IllustrationViewViewModel => sender.SelectedItems.Cast<IllustrationItemViewModel>().ToArray(),
+                _ => ViewModel.SelectedEntries
+            };
+        }
     }
 
     [MemberNotNull(nameof(ViewModel))]
