@@ -56,4 +56,6 @@ public interface IWorkViewModel
     XamlUICommand SaveCommand { get; }
 
     Task<bool> TryLoadThumbnailAsync(IDisposable key);
+
+    void UnloadThumbnail(IDisposable key);
 }

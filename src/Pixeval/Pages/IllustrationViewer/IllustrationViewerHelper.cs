@@ -85,7 +85,7 @@ public static class IllustrationViewerHelper
     /// 此方法可以使用<paramref name="illustrationViewViewModel"/>的<see cref="IllustrationViewViewModel.DataProvider"/>来加载更多插画
     /// </summary>
     /// <param name="illustrationViewModel">指定的插画ViewModel</param>
-    /// <param name="illustrationViewViewModel">指定的插画ViewModel所在的<see cref="IllustrationView"/>的ViewModel</param>
+    /// <param name="illustrationViewViewModel">指定的插画ViewModel所在的<see cref="WorkView"/>的ViewModel</param>
     public static void CreateWindowWithPage(this IllustrationItemViewModel illustrationViewModel, IllustrationViewViewModel illustrationViewViewModel)
     {
         var index = illustrationViewViewModel.DataProvider.View.IndexOf(illustrationViewModel);

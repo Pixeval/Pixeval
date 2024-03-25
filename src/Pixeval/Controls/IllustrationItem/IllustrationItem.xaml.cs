@@ -61,8 +61,8 @@ public sealed partial class IllustrationItem
         var thumbnailDirection = RequiredParam().ThumbnailDirection;
         return thumbnailDirection switch
         {
-            ThumbnailDirection.Landscape => IllustrationView.LandscapeHeight * illustration.Width / illustration.Height,
-            ThumbnailDirection.Portrait => IllustrationView.PortraitHeight * illustration.Width / illustration.Height,
+            ThumbnailDirection.Landscape => WorkView.LandscapeHeight * illustration.Width / illustration.Height,
+            ThumbnailDirection.Portrait => WorkView.PortraitHeight * illustration.Width / illustration.Height,
             _ => ThrowHelper.ArgumentOutOfRange<ThumbnailDirection, double>(thumbnailDirection)
         };
     }

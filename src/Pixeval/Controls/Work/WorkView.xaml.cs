@@ -11,7 +11,8 @@ using WinUI3Utilities;
 using Pixeval.CoreApi.Model;
 using Pixeval.CoreApi.Engine;
 using Pixeval.Options;
-using System.Collections.Generic;
+using Microsoft.UI.Xaml.Media.Animation;
+using Pixeval.Util.UI;
 
 namespace Pixeval.Controls;
 
@@ -55,7 +56,11 @@ public sealed partial class WorkView : IEntryView<ISortableEntryViewViewModel>
     private async void WorkItem_OnViewModelChanged(FrameworkElement sender, IWorkViewModel viewModel)
     {
         ArgumentNullException.ThrowIfNull(ViewModel);
-        _ = await viewModel.TryLoadThumbnailAsync(ViewModel);
+        if (await viewModel.TryLoadThumbnailAsync(ViewModel))
+            if (sender is IllustrationItem && sender.IsFullyOrPartiallyVisible(this))
+                sender.GetResource<Storyboard>("ThumbnailStoryboard").Begin();
+            else
+                sender.Opacity = 1;
     }
 
     private void ItemsView_OnItemInvoked(ItemsView sender, ItemsViewItemInvokedEventArgs e)
@@ -142,4 +147,12 @@ public sealed partial class WorkView : IEntryView<ISortableEntryViewViewModel>
     private TeachingTip WorkItem_OnRequestTeachingTip() => EntryView.QrCodeTeachingTip;
 
     private (ThumbnailDirection ThumbnailDirection, double DesiredHeight) IllustrationItem_OnRequiredParam() => (ThumbnailDirection, DesiredHeight);
+
+    private void WorkView_OnUnloaded(object sender, RoutedEventArgs e)
+    {
+        foreach (var viewModel in ViewModel.Source)
+            viewModel.UnloadThumbnail(ViewModel);
+        ViewModel?.Dispose();
+        ViewModel = null!;
+    }
 }
