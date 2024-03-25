@@ -26,7 +26,7 @@
             EasingMode="EaseOut"
             Exponent="12" />
         <!--  ReSharper disable once Xaml.RedundantResource  -->
-        <Storyboard x:Key="IllustrationThumbnailStoryboard">
+        <Storyboard x:Key="ThumbnailStoryboard">
             <DoubleAnimation
                 EasingFunction="{StaticResource EasingFunction}"
                 Storyboard.TargetName="IllustrationThumbnailCard"

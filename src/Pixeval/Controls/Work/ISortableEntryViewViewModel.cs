@@ -49,5 +49,7 @@ public interface ISortableEntryViewViewModel : INotifyPropertyChanged, IDisposab
 
     IReadOnlyCollection<IWorkViewModel> View { get; }
 
+    IReadOnlyCollection<IWorkViewModel> Source { get; }
+
     void ResetEngine(IFetchEngine<IWorkEntry>? newEngine, int itemLimit = -1);
 }

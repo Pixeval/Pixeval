@@ -370,7 +370,4 @@ src/Pixeval/Assets/Binary/Pixeval.LoginProxy.zip
 src/Pixeval.SourceGen/Generated
 
 # Package.appxmanifest
-Package.appxmanifest
-
-#key ignore
-*.pfx
+# Package.appxmanifest

@@ -26,13 +26,12 @@ using System.Threading.Tasks;
 using Microsoft.UI.Xaml.Controls;
 using Pixeval.CoreApi.Model;
 using Pixeval.CoreApi.Net.Response;
-using Pixeval.Util;
 using Pixeval.Utilities;
 
 namespace Pixeval.Controls;
 
 /// <summary>
-/// A view model that communicates between the model <see cref="Illustration" /> and the view <see cref="IllustrationView" />.
+/// A view model that communicates between the model <see cref="Illustration" /> and the view <see cref="WorkView" />.
 /// It is responsible for being the elements of the <see cref="ItemsRepeater" /> to present the thumbnail of an illustration
 /// </summary>
 public partial class IllustrationItemViewModel(Illustration illustration) : ThumbnailEntryViewModel<Illustration>(illustration)

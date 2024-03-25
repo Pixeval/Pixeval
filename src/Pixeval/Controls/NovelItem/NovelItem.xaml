@@ -20,6 +20,16 @@
         <converters:StringFormatConverter x:Key="StringFormatConverter" />
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
         <converters1:NumberEllipsisConverter x:Key="NumberEllipsisConverter" />
+        <!--  ReSharper disable once Xaml.RedundantResource  -->
+        <Storyboard x:Key="ThumbnailStoryboard">
+            <DoubleAnimation
+                EasingFunction="{StaticResource EasingFunction}"
+                Storyboard.TargetName="Image"
+                Storyboard.TargetProperty="Opacity"
+                From="0"
+                To="1"
+                Duration="0:0:2" />
+        </Storyboard>
     </Grid.Resources>
     <interactivity:Interaction.Behaviors>
         <core:EventTriggerBehavior EventName="PointerEntered">

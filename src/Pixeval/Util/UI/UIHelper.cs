@@ -236,11 +236,11 @@ public static partial class UiHelper
         return icon;
     }
 
-    public static bool IsFullyOrPartiallyVisible(this FrameworkElement child, FrameworkElement scrollViewer)
+    public static bool IsFullyOrPartiallyVisible(this FrameworkElement child, FrameworkElement parent)
     {
-        var childTransform = child.TransformToVisual(scrollViewer);
+        var childTransform = child.TransformToVisual(parent);
         var childRectangle = childTransform.TransformBounds(new Rect(new Point(0, 0), child.RenderSize));
-        var ownerRectangle = new Rect(new Point(0, 0), scrollViewer.RenderSize);
+        var ownerRectangle = new Rect(new Point(0, 0), parent.RenderSize);
         return ownerRectangle.IntersectsWith(childRectangle);
     }
 
