@@ -57,6 +57,7 @@ public sealed partial class WorkView : IEntryView<ISortableEntryViewViewModel>
     {
         ArgumentNullException.ThrowIfNull(ViewModel);
         if (await viewModel.TryLoadThumbnailAsync(ViewModel))
+            // TODO 不知道为什么NovelItem的Resource会有问题
             if (sender is IllustrationItem && sender.IsFullyOrPartiallyVisible(this))
                 sender.GetResource<Storyboard>("ThumbnailStoryboard").Begin();
             else

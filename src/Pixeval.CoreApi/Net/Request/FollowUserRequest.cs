@@ -18,8 +18,9 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using Pixeval.CoreApi.Global.Enum;
 using Refit;
 
 namespace Pixeval.CoreApi.Net.Request;
 
-internal record FollowUserRequest([property: AliasAs("user_id")] long Id, [property: AliasAs("restrict")] string Restrict);
+internal record FollowUserRequest([property: AliasAs("user_id")] long Id, [property: AliasAs("restrict")] PrivacyPolicy Restrict);

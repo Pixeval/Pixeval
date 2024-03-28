@@ -18,8 +18,12 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using Pixeval.CoreApi.Global.Enum;
 using Refit;
 
 namespace Pixeval.CoreApi.Net.Request;
 
-internal record AddIllustBookmarkRequest([property: AliasAs("restrict")] string Restrict, [property: AliasAs("illust_id")] string Id);
+internal record AddIllustBookmarkRequest(
+    [property: AliasAs("restrict")] PrivacyPolicy Restrict,
+    [property: AliasAs("illust_id")] long Id,
+    [property: AliasAs("tags[]")] string? Tags);
