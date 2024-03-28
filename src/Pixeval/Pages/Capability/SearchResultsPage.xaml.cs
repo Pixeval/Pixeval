@@ -34,11 +34,11 @@ public sealed partial class SearchResultsPage : IScrollViewProvider
 
     public override void OnPageActivated(NavigationEventArgs e)
     {
-        (SimpleWorkTypeComboBox.SelectedItem, _searchText) = e.Parameter.To<(SimpleWorkType, string)>();
+        (SimpleWorkTypeComboBox.SelectedEnum, _searchText) = e.Parameter.To<(SimpleWorkType, string)>();
         ChangeSource();
     }
 
-    private void SimpleWorkTypeComboBox_OnSelectionChangedWhenLoaded(object sender, SelectionChangedEventArgs e)
+    private void ComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         ChangeSource();
     }
@@ -47,7 +47,7 @@ public sealed partial class SearchResultsPage : IScrollViewProvider
     {
         var settings = App.AppViewModel.AppSettings;
         WorkContainer.WorkView.ResetEngine(
-            SimpleWorkTypeComboBox.SelectedItem is SimpleWorkType.IllustAndManga
+            SimpleWorkTypeComboBox.GetSelectedItem<SimpleWorkType>() is SimpleWorkType.IllustAndManga
                 ? App.AppViewModel.MakoClient.SearchIllustrations(
                     _searchText,
                     settings.SearchStartingFromPageNumber,

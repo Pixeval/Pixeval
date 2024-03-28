@@ -1,7 +1,11 @@
 <ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:numberFormatting="using:Windows.Globalization.NumberFormatting">
+    xmlns:controls="using:Pixeval.Controls"
+    xmlns:enum="using:Pixeval.CoreApi.Global.Enum"
+    xmlns:numberFormatting="using:Windows.Globalization.NumberFormatting"
+    xmlns:options="using:Pixeval.Options"
+    xmlns:winUi="using:CommunityToolkit.WinUI">
     <Style x:Key="PixevalRoundedButtonStyle" TargetType="Button">
         <Style.Setters>
             <Setter Property="CornerRadius" Value="16" />
@@ -69,4 +73,32 @@
             <numberFormatting:IncrementNumberRounder Increment="1" RoundingAlgorithm="RoundHalfUp" />
         </numberFormatting:DecimalFormatter.NumberRounder>
     </numberFormatting:DecimalFormatter>
+
+    <Style
+        x:Key="WorkTypeComboBoxStyle"
+        BasedOn="{StaticResource DefaultComboBoxStyle}"
+        TargetType="controls:EnumComboBox">
+        <Setter Property="EnumSource" Value="{winUi:EnumValues Type=enum:WorkType}" />
+    </Style>
+
+    <Style
+        x:Key="SimpleWorkTypeComboBoxStyle"
+        BasedOn="{StaticResource DefaultComboBoxStyle}"
+        TargetType="controls:EnumComboBox">
+        <Setter Property="EnumSource" Value="{winUi:EnumValues Type=options:SimpleWorkType}" />
+    </Style>
+
+    <Style
+        x:Key="PrivacyPolicyComboBoxStyle"
+        BasedOn="{StaticResource DefaultComboBoxStyle}"
+        TargetType="controls:EnumComboBox">
+        <Setter Property="EnumSource" Value="{winUi:EnumValues Type=enum:PrivacyPolicy}" />
+    </Style>
+
+    <Style
+        x:Key="WorkSortOptionComboBoxStyle"
+        BasedOn="{StaticResource DefaultComboBoxStyle}"
+        TargetType="controls:EnumComboBox">
+        <Setter Property="EnumSource" Value="{winUi:EnumValues Type=enum:WorkSortOption}" />
+    </Style>
 </ResourceDictionary>

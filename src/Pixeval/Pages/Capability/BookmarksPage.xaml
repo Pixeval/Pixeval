@@ -24,11 +24,15 @@
                     </DataTemplate>
                 </controls:NotifyOnLoadedComboBox.ItemTemplate>
             </controls:NotifyOnLoadedComboBox>
-            <controls:PrivacyPolicyComboBox
+            <controls:EnumComboBox
                 x:Name="PrivacyPolicyComboBox"
-                SelectionChangedWhenLoaded="ComboBox_OnSelectionChangedWhenLoaded"
+                SelectionChanged="ComboBox_OnSelectionChanged"
+                Style="{StaticResource PrivacyPolicyComboBoxStyle}"
                 Visibility="{x:Bind _viewModel.IsMe, Converter={StaticResource BoolToVisibilityConverter}}" />
-            <controls:SimpleWorkTypeComboBox x:Name="SimpleWorkTypeComboBox" SelectionChangedWhenLoaded="ComboBox_OnSelectionChangedWhenLoaded" />
+            <controls:EnumComboBox
+                x:Name="SimpleWorkTypeComboBox"
+                SelectionChanged="ComboBox_OnSelectionChanged"
+                Style="{StaticResource SimpleWorkTypeComboBoxStyle}" />
         </controls:WorkContainer.CommandBarElements>
     </controls:WorkContainer>
 </controls:EnhancedPage>

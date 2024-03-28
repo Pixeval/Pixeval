@@ -22,10 +22,11 @@
             Margin="{StaticResource ComboBoxLeftIndent}"
             Orientation="Horizontal"
             Visibility="{x:Bind IsMe, Converter={StaticResource BoolToVisibilityConverter}}">
-            <controls:PrivacyPolicyComboBox
+            <controls:EnumComboBox
                 x:Name="PrivacyPolicyComboBox"
                 VerticalAlignment="Center"
-                SelectionChangedWhenLoaded="PrivacyPolicyComboBox_OnSelectionChangedWhenLoaded"
+                SelectionChanged="PrivacyPolicyComboBox_OnSelectionChanged"
+                Style="{StaticResource PrivacyPolicyComboBoxStyle}"
                 Visibility="{x:Bind IsMe, Converter={StaticResource BoolToVisibilityConverter}}" />
         </StackPanel>
         <controls:IllustratorView x:Name="IllustratorView" Grid.Row="1" />

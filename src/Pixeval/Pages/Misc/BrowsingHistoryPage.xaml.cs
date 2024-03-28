@@ -37,18 +37,18 @@ public sealed partial class BrowsingHistoryPage : IScrollViewProvider
 
     public override void OnPageActivated(NavigationEventArgs navigationEventArgs) => ChangeSource();
 
-    private void ComboBox_OnSelectionChangedWhenLoaded(object sender, SelectionChangedEventArgs e) => ChangeSource();
+    private void ComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e) => ChangeSource();
 
     private void ChangeSource()
     {
         using var scope = App.AppViewModel.AppServicesScope;
         var manager = scope.ServiceProvider.GetRequiredService<BrowseHistoryPersistentManager>();
-        var source = manager.Enumerate().Where(t => t.Type == SimpleWorkTypeComboBox.SelectedItem)
+        var source = manager.Enumerate().Where(t => t.Type == SimpleWorkTypeComboBox.GetSelectedItem<SimpleWorkType>())
             .Reverse()
             .ToAsyncEnumerable();
         // 由于 ResetEngine 需要根据泛型参数判断类型，所以不能将元素转为 IWorkEntry，而是要保持原始类型
         WorkContainer.WorkView.ResetEngine(
-            SimpleWorkTypeComboBox.SelectedItem switch
+            SimpleWorkTypeComboBox.GetSelectedItem<SimpleWorkType>() switch
             {
                 SimpleWorkType.IllustAndManga => App.AppViewModel.MakoClient.Computed(source.SelectAwait(async t =>
                     await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(t.Id))),

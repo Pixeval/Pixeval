@@ -73,24 +73,21 @@ public sealed partial class RankingsPage : IScrollViewProvider
         ChangeSource();
     }
 
-    private void SimpleWorkTypeComboBox_OnSelectionChangedWhenLoaded(object sender, SelectionChangedEventArgs e)
+    private void ComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        RankOptionComboBox.ItemsSource = sender.To<SimpleWorkTypeComboBox>().SelectedItem is SimpleWorkType.IllustAndManga
+        RankOptionComboBox.ItemsSource = SimpleWorkTypeComboBox.GetSelectedItem<SimpleWorkType>() is SimpleWorkType.IllustAndManga
             ? _illustrationRankOption : _novelRankOption;
         RankOptionComboBox.SelectedItem = _illustrationRankOption[0];
         ChangeSource();
     }
 
-    private void OnSelectionChangedWhenPrepared(object sender, IWinRTObject e)
-    {
-        ChangeSource();
-    }
+    private void OnSelectionChangedWhenPrepared(object sender, IWinRTObject e) => ChangeSource();
 
     private void ChangeSource()
     {
         var rankOption = RankOptionComboBox.SelectedItem.To<StringRepresentableItem>().Item.To<RankOption>();
         var dateTime = RankDateTimeCalendarDatePicker.Date!.Value.DateTime;
-        WorkContainer.WorkView.ResetEngine(SimpleWorkTypeComboBox.SelectedItem is SimpleWorkType.IllustAndManga
+        WorkContainer.WorkView.ResetEngine(SimpleWorkTypeComboBox.GetSelectedItem<SimpleWorkType>() is SimpleWorkType.IllustAndManga
             ? App.AppViewModel.MakoClient.IllustrationRanking(rankOption, dateTime, App.AppViewModel.AppSettings.TargetFilter)
             : App.AppViewModel.MakoClient.NovelRanking(rankOption, dateTime, App.AppViewModel.AppSettings.TargetFilter));
     }

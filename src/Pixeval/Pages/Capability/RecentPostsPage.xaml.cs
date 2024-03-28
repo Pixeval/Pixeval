@@ -20,6 +20,7 @@
 
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
+using Pixeval.CoreApi.Global.Enum;
 using Pixeval.Misc;
 using Pixeval.Options;
 
@@ -34,16 +35,17 @@ public sealed partial class RecentPostsPage : IScrollViewProvider
         ChangeSource();
     }
 
-    private void ComboBox_OnSelectionChangedWhenLoaded(object sender, SelectionChangedEventArgs e)
+    private void ComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         ChangeSource();
     }
 
     private void ChangeSource()
     {
-        WorkContainer.WorkView.ResetEngine(SimpleWorkTypeComboBox.SelectedItem is SimpleWorkType.IllustAndManga
-            ? App.AppViewModel.MakoClient.RecentIllustrationPosts(PrivacyPolicyComboBox.SelectedItem)
-            : App.AppViewModel.MakoClient.RecentNovelPosts(PrivacyPolicyComboBox.SelectedItem));
+        var privacyPolicy = PrivacyPolicyComboBox.GetSelectedItem<PrivacyPolicy>();
+        WorkContainer.WorkView.ResetEngine(SimpleWorkTypeComboBox.GetSelectedItem<SimpleWorkType>() is SimpleWorkType.IllustAndManga
+            ? App.AppViewModel.MakoClient.RecentIllustrationPosts(privacyPolicy)
+            : App.AppViewModel.MakoClient.RecentNovelPosts(privacyPolicy));
     }
 
     public ScrollView ScrollView => WorkContainer.ScrollView;

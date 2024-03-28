@@ -42,6 +42,9 @@ public sealed partial class AdvancedItemsView : ItemsView
     /// <returns></returns>
     public async Task TryRaiseLoadMoreRequestedAsync()
     {
+        if (ScrollView is null)
+            return;
+
         var loadMore = true;
         // 加载直到有新元素加载进来
         while (loadMore)
@@ -341,6 +344,7 @@ public sealed partial class AdvancedItemsView : ItemsView
             Array array => array.Length,
             ICollection list => list.Count,
             IEnumerable enumerable => enumerable.Cast<object>().Count(),
+            null => 0,
             _ => ThrowHelper.ArgumentOutOfRange<object, int>(ItemsSource)
         };
     }

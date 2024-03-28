@@ -8,7 +8,10 @@
     mc:Ignorable="d">
     <controls:WorkContainer x:Name="WorkContainer">
         <controls:WorkContainer.CommandBarElements>
-            <controls:SimpleWorkTypeComboBox x:Name="SimpleWorkTypeComboBox" SelectionChangedWhenLoaded="ComboBox_OnSelectionChangedWhenLoaded" />
+            <controls:EnumComboBox
+                x:Name="SimpleWorkTypeComboBox"
+                SelectionChanged="ComboBox_OnSelectionChanged"
+                Style="{StaticResource SimpleWorkTypeComboBoxStyle}" />
         </controls:WorkContainer.CommandBarElements>
     </controls:WorkContainer>
 </controls:EnhancedPage>

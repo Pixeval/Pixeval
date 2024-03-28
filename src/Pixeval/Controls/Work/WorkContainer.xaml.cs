@@ -33,6 +33,7 @@ using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using WinUI3Utilities;
 using Pixeval.Misc;
+using Pixeval.CoreApi.Global.Enum;
 
 namespace Pixeval.Controls;
 
@@ -97,20 +98,19 @@ public partial class WorkContainer : IScrollViewProvider
 
     public void SetSortOption()
     {
-        if (ViewModel is { } vm)
+        if (WorkView is { ViewModel: { } vm } && SortOptionComboBox.ItemSelected)
         {
-            switch (SortOptionComboBox.GetSortDescription())
+            switch (MakoHelper.GetSortDescriptionForIllustration(SortOptionComboBox.GetSelectedItem<WorkSortOption>()))
             {
                 case { } desc:
                     vm.SetSortDescription(desc);
-                    ScrollToTop();
                     break;
                 default:
                     // reset the view so that it can resort its item to the initial order
                     vm.ClearSortDescription();
-                    ScrollToTop();
                     break;
             }
+            ScrollToTop();
         }
     }
 

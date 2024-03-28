@@ -151,9 +151,11 @@ public sealed partial class WorkView : IEntryView<ISortableEntryViewViewModel>
 
     private void WorkView_OnUnloaded(object sender, RoutedEventArgs e)
     {
+        if (ViewModel == null!)
+            return;
         foreach (var viewModel in ViewModel.Source)
             viewModel.UnloadThumbnail(ViewModel);
-        ViewModel?.Dispose();
+        ViewModel.Dispose();
         ViewModel = null!;
     }
 }

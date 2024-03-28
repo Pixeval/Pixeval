@@ -45,7 +45,7 @@ public sealed partial class BookmarksPage : IScrollViewProvider
         _viewModel.TagBookmarksIncrementallyLoaded += ViewModelOnTagBookmarksIncrementallyLoaded;
     }
 
-    private void ComboBox_OnSelectionChangedWhenLoaded(object sender, SelectionChangedEventArgs e)
+    private void ComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         ChangeSource();
     }
@@ -82,21 +82,21 @@ public sealed partial class BookmarksPage : IScrollViewProvider
 
         SetFilter(null);
         WorkContainer.WorkView.ResetEngine(engine);
-        TagComboBox.ItemsSource = await _viewModel.SetBookmarkTagsAsync(policy, SimpleWorkTypeComboBox.SelectedItem);
+        TagComboBox.ItemsSource = await _viewModel.SetBookmarkTagsAsync(policy, SimpleWorkTypeComboBox.GetSelectedItem<SimpleWorkType>());
         TagComboBox.SelectedItem = BookmarkPageViewModel.EmptyCountedTag;
     }
 
     private IFetchEngine<IWorkEntry> GetBookmarksEngine(string? tag)
     {
         var policy = GetPolicy();
-        return SimpleWorkTypeComboBox.SelectedItem is SimpleWorkType.IllustAndManga
+        return SimpleWorkTypeComboBox.GetSelectedItem<SimpleWorkType>() is SimpleWorkType.IllustAndManga
             ? App.AppViewModel.MakoClient.IllustrationBookmarks(_viewModel.UserId, policy, tag, App.AppViewModel.AppSettings.TargetFilter)
             : App.AppViewModel.MakoClient.NovelBookmarks(_viewModel.UserId, policy, tag, App.AppViewModel.AppSettings.TargetFilter);
     }
 
     private PrivacyPolicy GetPolicy()
     {
-        var policy = PrivacyPolicyComboBox.SelectedItem;
+        var policy = PrivacyPolicyComboBox.GetSelectedItem<PrivacyPolicy>();
         if (policy is PrivacyPolicy.Private && !_viewModel.IsMe)
             policy = PrivacyPolicy.Public;
         return policy;
