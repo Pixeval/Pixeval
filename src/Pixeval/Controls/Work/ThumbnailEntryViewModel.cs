@@ -174,7 +174,7 @@ public abstract partial class ThumbnailEntryViewModel<T> : EntryViewModel<T>, IW
     /// <summary>
     /// 当控件不显示，或者Unload时，调用此方法以尝试释放内存
     /// </summary>
-    public void UnloadThumbnail(object key)
+    public void UnloadThumbnail(IDisposable key)
     {
         if (LoadingThumbnail)
         {
