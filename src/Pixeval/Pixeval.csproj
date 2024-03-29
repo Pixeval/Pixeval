@@ -29,10 +29,11 @@
     <ItemGroup>
         <PackageReference Include="CommunityToolkit.Labs.WinUI.Controls.MarkdownTextBlock" Version="0.1.240305-build.1659" />
         <PackageReference Include="CommunityToolkit.Labs.WinUI.Shimmer" Version="0.1.240305-build.1659" />
+        <PackageReference Include="CommunityToolkit.Labs.WinUI.TokenView" Version="0.1.230830" />
         <PackageReference Include="CommunityToolkit.WinUI.Behaviors" Version="8.0.240109" />
         <PackageReference Include="CommunityToolkit.WinUI.Collections" Version="8.0.240109" />
         <PackageReference Include="CommunityToolkit.WinUI.Animations" Version="8.0.240109" />
-        <PackageReference Include="CommunityToolkit.WinUI.Controls.Primitives" Version="8.0.240109" />
+        <PackageReference Include="CommunityToolkit.WinUI.Controls.Primitives" Version="8.1.240328-rc" />
         <PackageReference Include="CommunityToolkit.WinUI.Controls.Segmented" Version="8.0.240109" />
         <PackageReference Include="CommunityToolkit.WinUI.Controls.SettingsControls" Version="8.0.240109" />
         <PackageReference Include="CommunityToolkit.WinUI.Controls.TokenizingTextBox" Version="8.0.240109" />
@@ -108,8 +109,6 @@
         <PRIResource Include="Assets\Svg.resjson" />
         <PRIResource Include="Strings\*\*.resjson" />
         <None Remove="**\*.xaml" />
-        <Content Remove="Assets\Images\next-arrow.png" />
-        <Content Remove="Assets\Images\prev-arrow.svg" />
         <Page Update="**\*.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>

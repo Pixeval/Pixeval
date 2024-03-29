@@ -1,8 +1,9 @@
 #region Copyright
+
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2024 Pixeval/SimpleWorkType.cs
+// Copyright (c) 2024 Pixeval/BookmarkTagSelectorViewModel.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -16,17 +17,18 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 #endregion
 
-using Pixeval.Attributes;
+using System.Collections.ObjectModel;
+using CommunityToolkit.Mvvm.ComponentModel;
+using Pixeval.CoreApi.Model;
 
-namespace Pixeval.Options;
+namespace Pixeval.Controls.FlyoutContent;
 
-public enum SimpleWorkType
+public partial class BookmarkTagSelectorViewModel : ObservableObject
 {
-    [LocalizedResource(typeof(MiscResources), nameof(MiscResources.SimpleWorkTypeIllustAndManga))]
-    IllustAndManga,
+    public ObservableCollection<string> SelectedTags { get; } = [];
 
-    [LocalizedResource(typeof(MiscResources), nameof(MiscResources.SimpleWorkTypeNovel))]
-    Novel
+    [ObservableProperty] private ObservableCollection<BookmarkTag> _tokenViewSource = null!;
 }

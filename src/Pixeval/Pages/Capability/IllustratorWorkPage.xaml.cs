@@ -20,6 +20,7 @@
 
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
+using Pixeval.CoreApi.Global.Enum;
 using Pixeval.Misc;
 
 namespace Pixeval.Pages.Capability;
@@ -40,13 +41,13 @@ public sealed partial class IllustratorWorkPage : IScrollViewProvider
         ChangeSource();
     }
 
-    private void WorkTypeComboBox_OnSelectionChangedWhenLoaded(object sender, SelectionChangedEventArgs e)
+    private void WorkTypeComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         ChangeSource();
     }
 
     private void ChangeSource()
     {
-        WorkContainer.WorkView.ResetEngine(App.AppViewModel.MakoClient.WorkPosts(_uid, WorkTypeComboBox.SelectedItem, App.AppViewModel.AppSettings.TargetFilter), App.AppViewModel.AppSettings.ItemsNumberLimitForDailyRecommendations);
+        WorkContainer.WorkView.ResetEngine(App.AppViewModel.MakoClient.WorkPosts(_uid, WorkTypeComboBox.GetSelectedItem<WorkType>(), App.AppViewModel.AppSettings.TargetFilter), App.AppViewModel.AppSettings.ItemsNumberLimitForDailyRecommendations);
     }
 }

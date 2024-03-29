@@ -74,6 +74,7 @@
     "ExtraBold": "特粗",
     "Black": "黑",
     "ExtraBlack": "特黑",
+    "AllCountedTagName": "所有标签",
 
     "DownloadListEntryOpenFailed": "打开文件（夹）失败",
     "DownloadListEntryMaybeDeleted": "可能你已经删除了该图片",

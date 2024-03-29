@@ -20,6 +20,7 @@
 
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
+using Pixeval.CoreApi.Global.Enum;
 using Pixeval.Misc;
 
 namespace Pixeval.Pages.Capability;
@@ -40,14 +41,14 @@ public sealed partial class FollowingsPage : IScrollViewProvider
         ChangeSource();
     }
 
-    private void PrivacyPolicyComboBox_OnSelectionChangedWhenLoaded(object sender, SelectionChangedEventArgs e)
+    private void PrivacyPolicyComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         ChangeSource();
     }
 
     private void ChangeSource()
     {
-        IllustratorView.ViewModel.ResetEngine(App.AppViewModel.MakoClient.Following(_uid, PrivacyPolicyComboBox.SelectedItem));
+        IllustratorView.ViewModel.ResetEngine(App.AppViewModel.MakoClient.Following(_uid, PrivacyPolicyComboBox.GetSelectedItem<PrivacyPolicy>()));
     }
 
     public ScrollView ScrollView => IllustratorView.ScrollView;

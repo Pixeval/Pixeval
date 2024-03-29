@@ -19,7 +19,7 @@
 #endregion
 
 using LiteDB;
-using Pixeval.Options;
+using Pixeval.CoreApi.Global.Enum;
 
 namespace Pixeval.Database;
 

@@ -25,34 +25,78 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
 using Pixeval.Controls.MarkupExtensions;
 using Pixeval.Util.UI;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Pixeval.Controls;
 
 public partial class ThumbnailEntryViewModel<T>
 {
+    /// <summary>
+    /// Parameter: <see cref="ValueTuple{T1, T2, T3}"/>
+    /// <list type="bullet">
+    /// <item><term>T1</term><description><see cref="IEnumerable{T}"/> where T is <see cref="string"/></description></item>
+    /// <item><term>T2</term><description><see cref="bool"/>?</description></item>
+    /// <item><term>T3</term><description><see cref="object"/> see <see cref="SaveCommand"/>'s parameter</description></item>
+    /// </list>
+    /// </summary>
     public XamlUICommand AddToBookmarkCommand { get; } = EntryItemResources.AddToBookmark.GetCommand(FontIconSymbol.BookmarksE8A4);
 
     /// <summary>
-    /// Parameter1: <see cref="ValueTuple{T1, T2}"/> where T1 is <see cref="FrameworkElement"/>? and T2 is <see cref="Func{T, TResult}"/>? where T is <see cref="IProgress{T}"/>? and TResult is <see cref="Stream"/>?<br/>
-    /// Parameter2: <see cref="FrameworkElement"/>?
+    /// Parameter: <see cref="object"/> see <see cref="SaveCommand"/>'s parameter
     /// </summary>
     public XamlUICommand BookmarkCommand { get; } = "".GetCommand(FontIconSymbol.HeartEB51, VirtualKeyModifiers.Control, VirtualKey.D);
 
     /// <summary>
-    /// Parameter1: <see cref="ValueTuple{T1, T2}"/> where T1 is <see cref="FrameworkElement"/>? and T2 is <see cref="Func{T, TResult}"/>? where T is <see cref="IProgress{T}"/>? and TResult is <see cref="Stream"/>?<br/>
+    /// Parameter1: <see cref="ValueTuple{T1, T2}"/>
+    /// <list type="bullet">
+    /// <item><term>T1</term><description><see cref="FrameworkElement"/>?</description></item>
+    /// <item><term>T2</term><description><see cref="Func{T, TResult}"/>?
+    /// <list type="bullet">
+    /// <item><term>T</term><description><see cref="IProgress{T}"/>?</description></item>
+    /// <item><term>TResult</term><description><see cref="Stream"/>?</description></item>
+    /// </list>
+    /// </description></item>
+    /// </list>
+    /// 
     /// Parameter2: <see cref="FrameworkElement"/>?
     /// </summary>
     public XamlUICommand SaveCommand { get; } = EntryItemResources.Save.GetCommand(FontIconSymbol.SaveE74E, VirtualKeyModifiers.Control, VirtualKey.S);
 
     /// <summary>
-    /// Parameter1: <see cref="ValueTuple{T1,T2}"/> where T1 is <see cref="Window"/> and T2 is <see cref="Func{T, TResult}"/>? where T is <see cref="IProgress{T}"/>? and TResult is <see cref="Stream"/>?<br/>
+    /// Parameter1: <see cref="ValueTuple{T1, T2}"/>
+    /// <list type="bullet">
+    /// <item><term>T1</term><description><see cref="Window"/></description></item>
+    /// <item><term>T2</term><description><see cref="Func{T, TResult}"/>?
+    /// <list type="bullet">
+    /// <item><term>T</term><description><see cref="IProgress{T}"/>?</description></item>
+    /// <item><term>TResult</term><description><see cref="Stream"/>?</description></item>
+    /// </list>
+    /// </description></item>
+    /// </list>
+    /// 
     /// Parameter2: <see cref="Window"/>
     /// </summary>
     public XamlUICommand SaveAsCommand { get; } = EntryItemResources.SaveAs.GetCommand(FontIconSymbol.SaveAsE792, VirtualKeyModifiers.Control | VirtualKeyModifiers.Shift, VirtualKey.S);
 
     /// <summary>
-    /// Parameter1: <see cref="ValueTuple{T1,T2}"/> where T1 is <see cref="FrameworkElement"/>? and T2 is <see cref="Func{T, TResult}"/> where T is <see cref="IProgress{T}"/>? and TResult is <see cref="Stream"/>?<br/>
-    /// Parameter2: <see cref="Func{T, TResult}"/> where T is <see cref="IProgress{T}"/>? and TResult is <see cref="Stream"/>?
+    /// Parameter1: <see cref="ValueTuple{T1, T2}"/>
+    /// <list type="bullet">
+    /// <item><term>T1</term><description><see cref="FrameworkElement"/>?</description></item>
+    /// <item><term>T2</term><description><see cref="Func{T, TResult}"/>?
+    /// <list type="bullet">
+    /// <item><term>T</term><description><see cref="IProgress{T}"/>?</description></item>
+    /// <item><term>TResult</term><description><see cref="Stream"/>? </description></item>
+    /// </list>
+    /// </description></item>
+    /// </list>
+    /// 
+    /// Parameter2: <see cref="ValueTuple{T1, T2}"/>
+    /// <see cref="Func{T, TResult}"/>?
+    /// <list type="bullet">
+    /// <item><term>T</term><description><see cref="IProgress{T}"/>?</description></item>
+    /// <item><term>TResult</term><description><see cref="Stream"/>?</description></item>
+    /// </list>
     /// </summary>
     public XamlUICommand CopyCommand { get; } = EntryItemResources.Copy.GetCommand(FontIconSymbol.CopyE8C8, VirtualKeyModifiers.Control, VirtualKey.C);
 
@@ -60,8 +104,7 @@ public partial class ThumbnailEntryViewModel<T>
     {
         InitializeCommandsBase();
 
-        // TODO: AddToBookmarkCommand
-        AddToBookmarkCommand.CanExecuteRequested += (sender, args) => args.CanExecute = false;
+        AddToBookmarkCommand.ExecuteRequested += AddToBookmarkCommandOnExecuteRequested;
 
         BookmarkCommand.GetBookmarkCommand(IsBookmarked);
         BookmarkCommand.ExecuteRequested += BookmarkCommandOnExecuteRequested;
@@ -73,7 +116,28 @@ public partial class ThumbnailEntryViewModel<T>
         CopyCommand.ExecuteRequested += CopyCommandOnExecuteRequested;
     }
 
-    protected abstract void BookmarkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args);
+    private async void BookmarkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
+    {
+        IsBookmarked = await SetBookmarkAsync(Id, !IsBookmarked);
+        BookmarkCommand.GetBookmarkCommand(IsBookmarked);
+        if (App.AppViewModel.AppSettings.DownloadWhenBookmarked && IsBookmarked)
+            SaveCommand.Execute(args.Parameter);
+    }
+
+    private async void AddToBookmarkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
+    {
+        if (args.Parameter is not (IEnumerable<string> userTags, bool isPrivate, var parameter))
+            return;
+        var success = await SetBookmarkAsync(Id, true, isPrivate, userTags);
+        if (!success)
+            return;
+        IsBookmarked = true;
+        BookmarkCommand.GetBookmarkCommand(IsBookmarked);
+        if (App.AppViewModel.AppSettings.DownloadWhenBookmarked)
+            SaveCommand.Execute(parameter);
+    }
+
+    protected abstract Task<bool> SetBookmarkAsync(long id, bool isBookmarked, bool privately = false, IEnumerable<string>? tags = null);
 
     protected abstract void SaveCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args);
 

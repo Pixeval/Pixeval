@@ -33,7 +33,7 @@ using WinUI3Utilities.Attributes;
 
 namespace Pixeval.Controls;
 
-[DependencyProperty<object>("ItemsSource", DependencyPropertyDefaultValue.Default, nameof(OnItemsSourceChanged))]
+[DependencyProperty<Array>("ItemsSource", DependencyPropertyDefaultValue.Default, nameof(OnItemsSourceChanged))]
 [DependencyProperty<object>("SelectedItem", propertyChanged: nameof(OnSelectedItemChanged))]
 [DependencyProperty<object>("Header")]
 public sealed partial class SettingRadioButtons : UserControl
@@ -61,8 +61,7 @@ public sealed partial class SettingRadioButtons : UserControl
     {
         var buttons = sender.To<SettingRadioButtons>();
 
-        if (buttons.ItemsSource is Array enumType)
-            buttons.Buttons.ItemsSource = LocalizedResourceAttributeHelper.GetLocalizedResourceContents(enumType);
+        buttons.Buttons.ItemsSource = LocalizedResourceAttributeHelper.GetLocalizedResourceContents(buttons.ItemsSource);
     }
 
     private static void OnSelectedItemChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)

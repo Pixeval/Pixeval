@@ -20,6 +20,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Engine.Implements;
 using Pixeval.CoreApi.Global.Enum;
@@ -279,6 +281,28 @@ public partial class MakoClient
         }
 
         return new IllustrationBookmarkTagEngine(this, uid, privacyPolicy, new EngineHandle(CancelInstance));
+    }
+
+    public async Task<List<BookmarkTag>> GetBookmarkTagAsync(long uid, SimpleWorkType type, PrivacyPolicy policy)
+    {
+        var array = (policy, type) switch
+        {
+            (PrivacyPolicy.Private, SimpleWorkType.IllustAndManga) => await IllustrationBookmarkTag(uid, policy).ToListAsync(),
+            (PrivacyPolicy.Public, SimpleWorkType.IllustAndManga) => await IllustrationBookmarkTag(uid, policy).ToListAsync(),
+            (PrivacyPolicy.Private, SimpleWorkType.Novel) => await NovelBookmarkTag(uid, policy).ToListAsync(),
+            (PrivacyPolicy.Public, SimpleWorkType.Novel) => await NovelBookmarkTag(uid, policy).ToListAsync(),
+            _ => ThrowUtils.ArgumentOutOfRange<(PrivacyPolicy, SimpleWorkType), List<BookmarkTag>>((policy, type))
+        };
+
+        var allTag = new BookmarkTag
+        {
+            Name = BookmarkTag.AllCountedTagString,
+            Count = array.Sum(t => t.Count)
+        };
+
+        array.Insert(0, allTag);
+
+        return array;
     }
 
     public IFetchEngine<BookmarkTag> NovelBookmarkTag(long uid, PrivacyPolicy privacyPolicy)

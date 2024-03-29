@@ -1,8 +1,8 @@
-#region Copyright (c) Pixeval/Pixeval.CoreApi
+#region Copyright
 // GPL v3 License
 // 
-// Pixeval/Pixeval.CoreApi
-// Copyright (c) 2023 Pixeval.CoreApi/AddBookmarkRequest.cs
+// Pixeval/Pixeval.Controls
+// Copyright (c) 2024 Pixeval.Controls/ResourceStringExtension.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,8 +18,21 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using Refit;
+using Microsoft.UI.Xaml.Markup;
+using Microsoft.Windows.ApplicationModel.Resources;
 
-namespace Pixeval.CoreApi.Net.Request;
+namespace Pixeval.Controls.MarkupExtensions;
 
-internal record AddIllustBookmarkRequest([property: AliasAs("restrict")] string Restrict, [property: AliasAs("illust_id")] string Id);
+[MarkupExtensionReturnType(ReturnType = typeof(string))]
+public class ResourceStringExtension : MarkupExtension
+{
+    public string ResourceFile { get; set; } = "";
+
+    public string ResourceKey { get; set; } = "";
+
+    protected override object ProvideValue()
+    {
+        var resourceLoader = new ResourceLoader(ResourceLoader.GetDefaultResourceFilePath(), ResourceFile);
+        return resourceLoader.GetString(ResourceKey);
+    }
+}

@@ -18,7 +18,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using Pixeval.Options;
+using Pixeval.CoreApi.Global.Enum;
 
 namespace Pixeval.Messages;
 

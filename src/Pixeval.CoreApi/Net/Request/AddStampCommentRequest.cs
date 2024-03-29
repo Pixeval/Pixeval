@@ -26,22 +26,12 @@ namespace Pixeval.CoreApi.Net.Request;
 
 public record AddStampIllustCommentRequest(
     [property: AliasAs("illust_id")] long Id,
+    [property: AliasAs("parent_comment_id")] long? ParentCommentId,
     [property: AliasAs("stamp_id")] int StampId
 );
 
 public record AddStampNovelCommentRequest(
     [property: AliasAs("novel_id")] long Id,
-    [property: AliasAs("stamp_id")] int StampId
-);
-
-public record AddStampIllustSubCommentRequest(
-    [property: AliasAs("illust_id")] long Id,
-    [property: AliasAs("parent_comment_id")] long ParentCommentId,
-    [property: AliasAs("stamp_id")] int StampId
-);
-
-public record AddStampNovelSubCommentRequest(
-    [property: AliasAs("novel_id")] long Id,
-    [property: AliasAs("parent_comment_id")] long ParentCommentId,
+    [property: AliasAs("parent_comment_id")] long? ParentCommentId,
     [property: AliasAs("stamp_id")] int StampId
 );

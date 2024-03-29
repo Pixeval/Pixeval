@@ -116,6 +116,13 @@ public sealed partial class NovelViewerPage
 
     private void ExitFullScreenKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => _viewModel.IsFullScreen = false;
 
+    private void AddToBookmarkTeachingTip_OnCloseButtonClick(TeachingTip sender, object args)
+    {
+        _viewModel.CurrentNovel.AddToBookmarkCommand.Execute((BookmarkTagSelector.SelectedTags, BookmarkTagSelector.IsPrivate, null as object));
+    }
+
+    private void AddToBookmarkButton_OnTapped(object sender, TappedRoutedEventArgs e) => AddToBookmarkTeachingTip.IsOpen = true;
+
     private void NextButton_OnTapped(object sender, IWinRTObject e)
     {
         switch (_viewModel.NextButtonAction)
@@ -180,7 +187,7 @@ public sealed partial class NovelViewerPage
         TimeUp = true;
     }
 
-    private void Image_OnLoading(FrameworkElement sender, object args)
+    private void Content_OnLoading(FrameworkElement sender, object args)
     {
         var teachingTip = sender.GetTag<TeachingTip>();
         var appBarButton = teachingTip.GetTag<AppBarButton>();

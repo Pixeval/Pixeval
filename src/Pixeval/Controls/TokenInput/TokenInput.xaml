@@ -2,11 +2,10 @@
     x:Class="Pixeval.Controls.TokenInput"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:controls1="using:Pixeval.Controls"
     xmlns:converters="using:CommunityToolkit.WinUI.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:markup="using:Pixeval.Controls.MarkupExtensions"
+    xmlns:labs="using:CommunityToolkit.Labs.WinUI"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
     <UserControl.Resources>
@@ -16,58 +15,36 @@
         HorizontalAlignment="Stretch"
         VerticalAlignment="Stretch"
         Spacing="5">
-        <ItemsControl HorizontalAlignment="Stretch" ItemsSource="{x:Bind TokenSource, Mode=OneWay}">
-            <ItemsControl.ItemTemplate>
+        <labs:TokenView
+            HorizontalAlignment="Stretch"
+            CanRemoveTokens="True"
+            IsWrapped="True"
+            ItemsSource="{x:Bind TokenSource, Mode=OneWay}"
+            SelectionMode="None">
+            <labs:TokenView.ItemTemplate>
                 <DataTemplate x:DataType="controls1:Token">
-                    <Button
-                        FontSize="{StaticResource PixevalContentFontSize}"
-                        Tag="{x:Bind}"
-                        ToolTipService.ToolTip="{x:Bind Tooltip, Mode=OneWay}"
-                        Tapped="TokenContainer_OnTapped">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock VerticalAlignment="Center" Text="{x:Bind TokenContent}" />
-                            <AppBarSeparator
-                                Height="15"
-                                Margin="10,0,5,0"
-                                Padding="0"
-                                Visibility="{x:Bind CaseSensitive, Converter={StaticResource BoolToVisibilityConverter}}" />
-                            <ContentPresenter
-                                VerticalAlignment="Center"
-                                Content="{markup:FontSymbolIcon Glyph=UpShiftKeyE84B,
-                                                                FontSize=15}"
-                                Visibility="{x:Bind CaseSensitive, Converter={StaticResource BoolToVisibilityConverter}}" />
-                            <AppBarSeparator
-                                Height="15"
-                                Margin="5,0,5,0"
-                                Padding="0"
-                                Visibility="{x:Bind IsRegularExpression, Converter={StaticResource BoolToVisibilityConverter}}" />
-                            <ContentPresenter
-                                Margin="5,0,0,0"
-                                VerticalAlignment="Center"
-                                Content="{markup:FontSymbolIcon Glyph=ProcessingE9F5,
-                                                                FontSize=15}"
-                                Visibility="{x:Bind IsRegularExpression, Converter={StaticResource BoolToVisibilityConverter}}" />
-                            <AppBarSeparator
-                                Height="15"
-                                Margin="5,0,0,0"
-                                Padding="0"
-                                Visibility="{x:Bind controls1:TokenInput.CalculateTokenIconRightmostSeparatorVisibility(CaseSensitive, IsRegularExpression), Mode=OneWay}" />
-                        </StackPanel>
-                    </Button>
+                    <StackPanel
+                        Orientation="Horizontal"
+                        Spacing="10"
+                        ToolTipService.ToolTip="{x:Bind Tooltip, Mode=OneWay}">
+                        <TextBlock Text="{x:Bind TokenContent}" />
+                        <controls1:FontSymbolIcon
+                            Size="Small"
+                            Symbol="UpArrowShiftKeyE752"
+                            Visibility="{x:Bind CaseSensitive, Converter={StaticResource BoolToVisibilityConverter}}" />
+                        <controls1:FontSymbolIcon
+                            Size="Small"
+                            Symbol="CodeE943"
+                            Visibility="{x:Bind IsRegularExpression, Converter={StaticResource BoolToVisibilityConverter}}" />
+                    </StackPanel>
                 </DataTemplate>
-            </ItemsControl.ItemTemplate>
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <controls:WrapPanel HorizontalSpacing="5" VerticalSpacing="5" />
-                </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-        </ItemsControl>
+            </labs:TokenView.ItemTemplate>
+        </labs:TokenView>
         <controls1:TokenInputTextBox
             HorizontalAlignment="Stretch"
             PlaceholderText="{x:Bind PlaceholderText, Mode=OneWay}"
             SubmitEnable="True"
             Token="{x:Bind Token, Mode=OneWay}"
-            TokenSubmitted="TokenInputTextBox_OnTokenSubmitted"
-            Visibility="{x:Bind TokenInputTextBoxVisibility, Mode=OneWay}" />
+            TokenSubmitted="TokenInputTextBox_OnTokenSubmitted" />
     </StackPanel>
 </UserControl>

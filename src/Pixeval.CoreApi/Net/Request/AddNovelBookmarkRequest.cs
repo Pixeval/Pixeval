@@ -20,8 +20,12 @@
 
 #endregion
 
+using Pixeval.CoreApi.Global.Enum;
 using Refit;
 
 namespace Pixeval.CoreApi.Net.Request;
 
-internal record AddNovelBookmarkRequest([property: AliasAs("restrict")] string Restrict, [property: AliasAs("novel_id")] long Id);
+internal record AddNovelBookmarkRequest(
+    [property: AliasAs("restrict")] PrivacyPolicy Restrict,
+    [property: AliasAs("novel_id")] long Id,
+    [property: AliasAs("tags[]")] string? Tags);

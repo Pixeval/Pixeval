@@ -20,6 +20,7 @@
 
 using System.Net.Http;
 using System.Threading.Tasks;
+using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Net.Request;
 using Pixeval.CoreApi.Net.Response;
 using Refit;
@@ -65,7 +66,7 @@ internal interface IAppApiEndPoint
     */
 
     [Get("/v1/user/related")]
-    Task<PixivRelatedUsersResponse> RelatedUserAsync([AliasAs("filter")] string filter, [AliasAs("seed_user_id")] long userId);
+    Task<PixivRelatedUsersResponse> RelatedUserAsync([AliasAs("filter")] TargetFilter filter, [AliasAs("seed_user_id")] long userId);
 
     [Post("/v1/user/follow/add")]
     Task<HttpResponseMessage> FollowUserAsync([Body(BodySerializationMethod.UrlEncoded)] FollowUserRequest request);
@@ -74,10 +75,10 @@ internal interface IAppApiEndPoint
     Task<HttpResponseMessage> RemoveFollowUserAsync([Body(BodySerializationMethod.UrlEncoded)] RemoveFollowUserRequest request);
 
     [Get("/v1/trending-tags/illust")]
-    Task<TrendingTagResponse> GetTrendingTagsAsync([AliasAs("filter")] string filter);
+    Task<TrendingTagResponse> GetTrendingTagsAsync([AliasAs("filter")] TargetFilter filter);
 
     [Get("/v1/trending-tags/novel")]
-    Task<TrendingTagResponse> GetTrendingTagsForNovelAsync([AliasAs("filter")] string filter);
+    Task<TrendingTagResponse> GetTrendingTagsForNovelAsync([AliasAs("filter")] TargetFilter filter);
 
     [Get("/v1/ugoira/metadata")]
     Task<UgoiraMetadataResponse> GetUgoiraMetadataAsync([AliasAs("illust_id")] long id);
@@ -89,13 +90,7 @@ internal interface IAppApiEndPoint
     Task<HttpResponseMessage> AddIllustCommentAsync([Body(BodySerializationMethod.UrlEncoded)] AddNormalIllustCommentRequest request);
 
     [Post("/v1/illust/comment/add")]
-    Task<HttpResponseMessage> AddIllustCommentAsync([Body(BodySerializationMethod.UrlEncoded)] AddNormalIllustSubCommentRequest request);
-
-    [Post("/v1/illust/comment/add")]
     Task<HttpResponseMessage> AddIllustCommentAsync([Body(BodySerializationMethod.UrlEncoded)] AddStampIllustCommentRequest request);
-
-    [Post("/v1/illust/comment/add")]
-    Task<HttpResponseMessage> AddIllustCommentAsync([Body(BodySerializationMethod.UrlEncoded)] AddStampIllustSubCommentRequest request);
 
     [Post("/v1/illust/comment/delete")]
     Task<HttpResponseMessage> DeleteIllustCommentAsync([Body(BodySerializationMethod.UrlEncoded)] DeleteCommentRequest request);
@@ -104,13 +99,7 @@ internal interface IAppApiEndPoint
     Task<HttpResponseMessage> AddNovelCommentAsync([Body(BodySerializationMethod.UrlEncoded)] AddNormalNovelCommentRequest request);
 
     [Post("/v1/novel/comment/add")]
-    Task<HttpResponseMessage> AddNovelCommentAsync([Body(BodySerializationMethod.UrlEncoded)] AddNormalNovelSubCommentRequest request);
-
-    [Post("/v1/novel/comment/add")]
     Task<HttpResponseMessage> AddNovelCommentAsync([Body(BodySerializationMethod.UrlEncoded)] AddStampNovelCommentRequest request);
-
-    [Post("/v1/novel/comment/add")]
-    Task<HttpResponseMessage> AddNovelCommentAsync([Body(BodySerializationMethod.UrlEncoded)] AddStampNovelSubCommentRequest request);
 
     [Post("/v1/novel/comment/delete")]
     Task<HttpResponseMessage> DeleteNovelCommentAsync([Body(BodySerializationMethod.UrlEncoded)] DeleteCommentRequest request);

@@ -3,11 +3,13 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Pixeval.Controls"
+    xmlns:controls1="using:CommunityToolkit.WinUI.Controls"
     xmlns:converters="using:CommunityToolkit.WinUI.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:flyoutContent="using:Pixeval.Controls.FlyoutContent"
     xmlns:markupExtensions="using:Pixeval.Controls.MarkupExtensions"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:pixeval="using:Pixeval"
     Loaded="WorkContainer_OnLoaded"
     mc:Ignorable="d">
     <UserControl.Resources>
@@ -18,24 +20,28 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <controls:DockPanel
+        <controls1:DockPanel
             Grid.Row="0"
             Margin="{StaticResource ComboBoxLeftIndent}"
             HorizontalSpacing="10">
             <StackPanel
                 x:Name="ExtraCommandsBar"
                 VerticalAlignment="Center"
-                controls:DockPanel.Dock="Left"
+                controls1:DockPanel.Dock="Left"
                 Orientation="Horizontal"
                 Spacing="10">
-                <controls:SortOptionComboBox x:Name="SortOptionComboBox" SelectionChangedWhenLoaded="SortOptionComboBox_OnSelectionChanged" />
+                <controls:EnumComboBox
+                    x:Name="SortOptionComboBox"
+                    SelectedEnum="{x:Bind pixeval:App.AppViewModel.AppSettings.DefaultSortOption}"
+                    SelectionChanged="SortOptionComboBox_OnSelectionChanged"
+                    Style="{StaticResource WorkSortOptionComboBoxStyle}" />
                 <AutoSuggestBox
                     x:Uid="/WorkContainer/FastFilterAutoSuggestBox"
                     Width="250"
                     VerticalAlignment="Center"
                     TextChanged="FastFilterAutoSuggestBox_OnTextChanged" />
             </StackPanel>
-            <CommandBar controls:DockPanel.Dock="Right" DefaultLabelPosition="Right">
+            <CommandBar controls1:DockPanel.Dock="Right" DefaultLabelPosition="Right">
                 <AppBarToggleButton
                     x:Uid="/WorkContainer/SelectionButton"
                     Icon="{markupExtensions:FontSymbolIcon Glyph=MultiSelectE762}"
@@ -61,9 +67,10 @@
                     Tapped="SelectAllToggleButton_OnTapped" />
                 <AppBarSeparator />
                 <AppBarButton
+                    x:Name="AddAllToBookmarkButton"
                     x:Uid="/WorkContainer/AddAllToBookmarkButton"
                     Icon="{markupExtensions:FontSymbolIcon Glyph=BookmarksE8A4}"
-                    IsEnabled="False"
+                    IsEnabled="{x:Bind ViewModel.IsAnyEntrySelected, Mode=OneWay}"
                     Tapped="AddAllToBookmarkButton_OnTapped" />
                 <AppBarButton
                     x:Uid="/WorkContainer/SaveAllButton"
@@ -76,12 +83,26 @@
                     IsEnabled="{x:Bind ViewModel.IsAnyEntrySelected, Mode=OneWay}"
                     Tapped="OpenAllInBrowserButton_OnTapped" />
             </CommandBar>
-        </controls:DockPanel>
+        </controls1:DockPanel>
         <controls:WorkView
             x:Name="WorkView"
             Grid.Row="1"
             x:FieldModifier="public"
             ViewModelChanged="WorkView_OnViewModelChanged" />
+        <TeachingTip
+            x:Name="AddToBookmarkTeachingTip"
+            x:Uid="/WorkContainer/AddToBookmarkTeachingTip"
+            Grid.Row="1"
+            CloseButtonClick="AddToBookmarkTeachingTip_OnCloseButtonClick"
+            IsLightDismissEnabled="True"
+            Tag="{x:Bind AddAllToBookmarkButton}">
+            <flyoutContent:BookmarkTagSelector
+                x:Name="BookmarkTagSelector"
+                MaxHeight="{StaticResource TeachingTipContentMaxHeightWithTarget}"
+                Loading="Content_OnLoading"
+                Tag="{x:Bind AddToBookmarkTeachingTip}"
+                Type="{x:Bind Type}" />
+        </TeachingTip>
         <TeachingTip
             x:Name="FilterTeachingTip"
             x:Uid="/WorkContainer/FilterTeachingTip"
@@ -89,8 +110,12 @@
             ActionButtonClick="FilterTeachingTip_OnActionButtonClick"
             CloseButtonClick="FilterTeachingTip_OnCloseButtonClick"
             IsLightDismissEnabled="True"
-            Target="{x:Bind OpenConditionDialogButton}">
-            <flyoutContent:IllustrationResultFilterContent x:Name="FilterContent" MaxHeight="{StaticResource TeachingTipContentMaxHeightWithTarget}" />
+            Tag="{x:Bind OpenConditionDialogButton}">
+            <flyoutContent:IllustrationResultFilterContent
+                x:Name="FilterContent"
+                MaxHeight="{StaticResource TeachingTipContentMaxHeightWithTarget}"
+                Loading="Content_OnLoading"
+                Tag="{x:Bind FilterTeachingTip}" />
         </TeachingTip>
     </Grid>
 </UserControl>

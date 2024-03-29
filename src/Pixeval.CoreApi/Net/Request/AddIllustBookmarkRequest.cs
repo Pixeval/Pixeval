@@ -1,8 +1,8 @@
-#region Copyright
+#region Copyright (c) Pixeval/Pixeval.CoreApi
 // GPL v3 License
 // 
-// Pixeval/Pixeval.Controls
-// Copyright (c) 2024 Pixeval.Controls/StaggeredColumnLayout.cs
+// Pixeval/Pixeval.CoreApi
+// Copyright (c) 2023 Pixeval.CoreApi/AddBookmarkRequest.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,25 +18,12 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System.Collections.Generic;
-using System.Diagnostics;
+using Pixeval.CoreApi.Global.Enum;
+using Refit;
 
-namespace Pixeval.Controls;
+namespace Pixeval.CoreApi.Net.Request;
 
-[DebuggerDisplay("Count = {Count}, Height = {Height}")]
-internal class StaggeredColumnLayout : List<StaggeredItem>
-{
-    public double Height { get; private set; }
-
-    public new void Add(StaggeredItem item)
-    {
-        Height = item.Top + item.Height;
-        base.Add(item);
-    }
-
-    public new void Clear()
-    {
-        Height = 0;
-        base.Clear();
-    }
-}
+internal record AddIllustBookmarkRequest(
+    [property: AliasAs("restrict")] PrivacyPolicy Restrict,
+    [property: AliasAs("illust_id")] long Id,
+    [property: AliasAs("tags[]")] string? Tags);

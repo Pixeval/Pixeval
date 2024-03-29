@@ -19,6 +19,7 @@
 #endregion
 
 using System.ComponentModel;
+using System.Runtime.Serialization;
 
 namespace Pixeval.CoreApi.Global.Enum;
 
@@ -29,8 +30,10 @@ namespace Pixeval.CoreApi.Global.Enum;
 public enum PrivacyPolicy
 {
     [Description("public")]
+    [EnumMember(Value = "public")]
     Public,
 
     [Description("private")]
+    [EnumMember(Value = "private")]
     Private
 }

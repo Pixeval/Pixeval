@@ -128,6 +128,9 @@ public static class LocalizedResourceAttributeHelper
         [WorkType.Manga] = MiscResources.WorkTypeManga,
         [WorkType.Novel] = MiscResources.WorkTypeNovel,
 
+        [SimpleWorkType.IllustAndManga] = MiscResources.SimpleWorkTypeIllustAndManga,
+        [SimpleWorkType.Novel] = MiscResources.SimpleWorkTypeNovel,
+
         [RankOption.Day] = RankingsPageResources.RankOptionDay,
         [RankOption.Week] = RankingsPageResources.RankOptionWeek,
         [RankOption.Month] = RankingsPageResources.RankOptionMonth,

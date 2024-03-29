@@ -12,6 +12,7 @@ using Pixeval.CoreApi.Model;
 using Pixeval.CoreApi.Engine;
 using Pixeval.Options;
 using Microsoft.UI.Xaml.Media.Animation;
+using Pixeval.CoreApi.Global.Enum;
 using Pixeval.Util.UI;
 
 namespace Pixeval.Controls;
@@ -53,10 +54,13 @@ public sealed partial class WorkView : IEntryView<ISortableEntryViewViewModel>
 
     public ScrollView ScrollView => ItemsView.ScrollView;
 
+    public SimpleWorkType Type { get; private set; }
+
     private async void WorkItem_OnViewModelChanged(FrameworkElement sender, IWorkViewModel viewModel)
     {
         ArgumentNullException.ThrowIfNull(ViewModel);
         if (await viewModel.TryLoadThumbnailAsync(ViewModel))
+            // TODO 不知道为什么NovelItem的Resource会有问题
             if (sender is IllustrationItem && sender.IsFullyOrPartiallyVisible(this))
                 sender.GetResource<Storyboard>("ThumbnailStoryboard").Begin();
             else
@@ -84,17 +88,12 @@ public sealed partial class WorkView : IEntryView<ISortableEntryViewViewModel>
 
     private void WorkView_OnSelectionChanged(ItemsView sender, ItemsViewSelectionChangedEventArgs args)
     {
-        if (sender.SelectedItems is [not null, ..])
-            ViewModel.SelectedEntries = [];
-        else
+        ViewModel.SelectedEntries = ViewModel switch
         {
-            ViewModel.SelectedEntries = ViewModel switch
-            {
-                NovelViewViewModel => sender.SelectedItems.Cast<NovelItemViewModel>().ToArray(),
-                IllustrationViewViewModel => sender.SelectedItems.Cast<IllustrationItemViewModel>().ToArray(),
-                _ => ViewModel.SelectedEntries
-            };
-        }
+            NovelViewViewModel => sender.SelectedItems.Cast<NovelItemViewModel>().ToArray(),
+            IllustrationViewViewModel => sender.SelectedItems.Cast<IllustrationItemViewModel>().ToArray(),
+            _ => ViewModel.SelectedEntries
+        };
     }
 
     [MemberNotNull(nameof(ViewModel))]
@@ -112,6 +111,7 @@ public sealed partial class WorkView : IEntryView<ISortableEntryViewViewModel>
             default:
                 if (type == typeof(Illustration))
                 {
+                    Type = SimpleWorkType.IllustAndManga;
                     ViewModel?.Dispose();
                     ViewModel = null!;
                     ItemsView.MinItemWidth = DesiredWidth;
@@ -126,6 +126,7 @@ public sealed partial class WorkView : IEntryView<ISortableEntryViewViewModel>
                 }
                 else if (type == typeof(Novel))
                 {
+                    Type = SimpleWorkType.Novel;
                     ViewModel?.Dispose();
                     ViewModel = null!;
                     ItemsView.MinItemWidth = 350;
@@ -150,9 +151,11 @@ public sealed partial class WorkView : IEntryView<ISortableEntryViewViewModel>
 
     private void WorkView_OnUnloaded(object sender, RoutedEventArgs e)
     {
+        if (ViewModel == null!)
+            return;
         foreach (var viewModel in ViewModel.Source)
             viewModel.UnloadThumbnail(ViewModel);
-        ViewModel?.Dispose();
+        ViewModel.Dispose();
         ViewModel = null!;
     }
 }

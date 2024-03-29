@@ -24,7 +24,7 @@ public class FactoryGenerator : IIncrementalGenerator
         var typeSyntax = typeSymbol.GetTypeSyntax(false);
         const string createDefault = "CreateDefault";
         var list = typeSymbol.GetProperties(attributeList[0].AttributeClass!)
-            .Where(symbol => !symbol.IsReadOnly)
+            .Where(symbol => !symbol.IsReadOnly && !symbol.IsStatic)
             .Select(symbol =>
             {
                 var syntax = (PropertyDeclarationSyntax)symbol.DeclaringSyntaxReferences[0].GetSyntax();

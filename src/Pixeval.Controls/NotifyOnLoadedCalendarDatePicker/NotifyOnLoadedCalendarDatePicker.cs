@@ -18,8 +18,10 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using System;
 using Microsoft.UI.Xaml.Controls;
 using Windows.Foundation;
+using WinUI3Utilities;
 
 namespace Pixeval.Controls;
 
@@ -30,12 +32,24 @@ public class NotifyOnLoadedCalendarDatePicker : CalendarDatePicker
         DefaultStyleKey = typeof(NotifyOnLoadedCalendarDatePicker);
         DateChanged += (sender, args) =>
         {
-            if (IsLoaded)
+            var picker = sender.To<NotifyOnLoadedCalendarDatePicker>();
+            if (picker.Date is null)
+                picker.Date = args.OldDate;
+            else if (IsLoaded && picker._oldDate != picker.Date)
             {
                 DateChangedWhenLoaded?.Invoke(sender, args);
+                picker._oldDate = picker.Date;
             }
         };
+
+        Loaded += (sender, args) =>
+        {
+            var picker = sender.To<NotifyOnLoadedCalendarDatePicker>();
+            picker._oldDate = picker.Date;
+        };
     }
+
+    private DateTimeOffset? _oldDate;
 
     public event TypedEventHandler<CalendarDatePicker, CalendarDatePickerDateChangedEventArgs>? DateChangedWhenLoaded;
 }
