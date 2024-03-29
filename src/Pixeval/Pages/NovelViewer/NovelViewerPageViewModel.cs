@@ -269,6 +269,8 @@ public partial class NovelViewerPageViewModel : DetailedUiObservableObject, IDis
     public XamlUICommand InfoAndCommentsCommand { get; } =
         EntryViewerPageResources.InfoAndComments.GetCommand(FontIconSymbol.InfoE946, VirtualKey.F12);
 
+    public XamlUICommand AddToBookmarkCommand { get; } = EntryItemResources.AddToBookmark.GetCommand(FontIconSymbol.BookmarksE8A4);
+
     public XamlUICommand FullScreenCommand { get; } = "".GetCommand(FontIconSymbol.FullScreenE740);
 
     #endregion

@@ -20,6 +20,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.WinUI.Collections;
@@ -29,6 +30,7 @@ using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Model;
 using Pixeval.Misc;
 using Pixeval.Options;
+using Pixeval.Pages.Capability;
 using WinUI3Utilities;
 
 namespace Pixeval.Util;
@@ -42,6 +44,47 @@ public static class MakoHelper
         .. Enumerable.Range(201, 10),
         .. Enumerable.Range(101, 10)
     ];
+
+    public static List<BookmarkTag>? IllustrationPrivateBookmarkTags { get; set; }
+
+    public static List<BookmarkTag>? IllustrationPublicBookmarkTags { get; set; }
+
+    public static List<BookmarkTag>? NovelPrivateBookmarkTags { get; set; }
+
+    public static List<BookmarkTag>? NovelPublicBookmarkTags { get; set; }
+
+    public static async Task<List<BookmarkTag>> GetBookmarkTagsAsync(PrivacyPolicy policy, SimpleWorkType type)
+    {
+        var refreshed = false;
+        while (true)
+        {
+            var result = (policy, type) switch
+            {
+                (PrivacyPolicy.Private, SimpleWorkType.IllustAndManga) => IllustrationPrivateBookmarkTags,
+                (PrivacyPolicy.Public, SimpleWorkType.IllustAndManga) => IllustrationPublicBookmarkTags,
+                (PrivacyPolicy.Private, SimpleWorkType.Novel) => NovelPrivateBookmarkTags,
+                (PrivacyPolicy.Public, SimpleWorkType.Novel) => NovelPublicBookmarkTags,
+                _ => ThrowHelper.ArgumentOutOfRange<(PrivacyPolicy, SimpleWorkType), List<BookmarkTag>>((policy, type))
+            };
+
+            if (result is not null)
+                return result;
+
+            if (refreshed)
+                ThrowHelper.Exception();
+
+            await RefreshBookmarkTagsAsync();
+            refreshed = true;
+        }
+    }
+
+    public static async Task RefreshBookmarkTagsAsync()
+    {
+        IllustrationPrivateBookmarkTags = await App.AppViewModel.MakoClient.GetBookmarkTagAsync(App.AppViewModel.PixivUid, SimpleWorkType.IllustAndManga, PrivacyPolicy.Private);
+        IllustrationPublicBookmarkTags = await App.AppViewModel.MakoClient.GetBookmarkTagAsync(App.AppViewModel.PixivUid, SimpleWorkType.IllustAndManga, PrivacyPolicy.Public);
+        NovelPrivateBookmarkTags = await App.AppViewModel.MakoClient.GetBookmarkTagAsync(App.AppViewModel.PixivUid, SimpleWorkType.Novel, PrivacyPolicy.Private);
+        NovelPublicBookmarkTags = await App.AppViewModel.MakoClient.GetBookmarkTagAsync(App.AppViewModel.PixivUid, SimpleWorkType.Novel, PrivacyPolicy.Public);
+    }
 
     public static string GetThumbnailUrl(this IWorkEntry workEntry, ThumbnailUrlOption option = ThumbnailUrlOption.Medium)
     {
@@ -107,19 +150,29 @@ public static class MakoHelper
         return result.IsSuccessStatusCode ? isFollowed : !isFollowed;
     }
 
-    public static async Task<bool> SetIllustrationBookmarkAsync(long id, bool isBookmarked, bool privately = false)
+    public static async Task<bool> SetIllustrationBookmarkAsync(long id, bool isBookmarked, bool privately = false, IEnumerable<string>? tags = null)
     {
         var result = await (isBookmarked
-            ? App.AppViewModel.MakoClient.PostIllustrationBookmarkAsync(id, privately ? PrivacyPolicy.Private : PrivacyPolicy.Public)
+            ? App.AppViewModel.MakoClient.PostIllustrationBookmarkAsync(id, privately ? PrivacyPolicy.Private : PrivacyPolicy.Public, tags)
             : App.AppViewModel.MakoClient.RemoveIllustrationBookmarkAsync(id));
-        return result.IsSuccessStatusCode ? isBookmarked : !isBookmarked;
+        if (result.IsSuccessStatusCode)
+        {
+            await RefreshBookmarkTagsAsync();
+            return isBookmarked;
+        }
+        return !isBookmarked;
     }
 
-    public static async Task<bool> SetNovelBookmarkAsync(long id, bool isBookmarked, bool privately = false)
+    public static async Task<bool> SetNovelBookmarkAsync(long id, bool isBookmarked, bool privately = false, IEnumerable<string>? tags = null)
     {
         var result = await (isBookmarked
-            ? App.AppViewModel.MakoClient.PostNovelBookmarkAsync(id, privately ? PrivacyPolicy.Private : PrivacyPolicy.Public)
+            ? App.AppViewModel.MakoClient.PostNovelBookmarkAsync(id, privately ? PrivacyPolicy.Private : PrivacyPolicy.Public, tags)
             : App.AppViewModel.MakoClient.RemoveNovelBookmarkAsync(id));
-        return result.IsSuccessStatusCode ? isBookmarked : !isBookmarked;
+        if (result.IsSuccessStatusCode)
+        {
+            await RefreshBookmarkTagsAsync();
+            return isBookmarked;
+        }
+        return !isBookmarked;
     }
 }

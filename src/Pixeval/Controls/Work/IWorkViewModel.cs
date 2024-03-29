@@ -51,11 +51,18 @@ public interface IWorkViewModel
 
     BadgeMode XRestrictionCaption { get; }
 
+    /// <inheritdoc cref="ThumbnailEntryViewModel{T}.AddToBookmarkCommand"/>
+    XamlUICommand AddToBookmarkCommand { get; }
+
+    /// <inheritdoc cref="ThumbnailEntryViewModel{T}.BookmarkCommand"/>
     XamlUICommand BookmarkCommand { get; }
 
+    /// <inheritdoc cref="ThumbnailEntryViewModel{T}.SaveCommand"/>
     XamlUICommand SaveCommand { get; }
 
+    /// <inheritdoc cref="ThumbnailEntryViewModel{T}.TryLoadThumbnailAsync"/>
     Task<bool> TryLoadThumbnailAsync(IDisposable key);
 
+    /// <inheritdoc cref="ThumbnailEntryViewModel{T}.UnloadThumbnail"/>
     void UnloadThumbnail(IDisposable key);
 }

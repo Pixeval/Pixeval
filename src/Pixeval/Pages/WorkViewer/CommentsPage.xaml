@@ -21,9 +21,9 @@
             StickerTapped="ReplyBar_OnStickerTapped" />
         <controls:CommentList
             Grid.Row="1"
+            DeleteHyperlinkButtonTapped="CommentList_OnDeleteHyperlinkButtonTapped"
             ItemsSource="{x:Bind _viewModel.View}"
-            RepliesHyperlinkButtonTapped="CommentList_OnRepliesHyperlinkButtonTapped" 
-            DeleteHyperlinkButtonTapped="CommentList_OnDeleteHyperlinkButtonTapped"/>
+            RepliesHyperlinkButtonTapped="CommentList_OnRepliesHyperlinkButtonTapped" />
         <TeachingTip
             x:Name="CommentRepliesTeachingTip"
             x:Uid="/CommentsPage/CommentRepliesTeachingTip"

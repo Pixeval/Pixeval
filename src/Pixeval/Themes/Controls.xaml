@@ -5,7 +5,6 @@
     xmlns:enum="using:Pixeval.CoreApi.Global.Enum"
     xmlns:markupExtensions="using:Pixeval.Controls.MarkupExtensions"
     xmlns:numberFormatting="using:Windows.Globalization.NumberFormatting"
-    xmlns:options="using:Pixeval.Options"
     xmlns:winUi="using:CommunityToolkit.WinUI">
     <Style x:Key="PixevalRoundedButtonStyle" TargetType="Button">
         <Style.Setters>
@@ -87,7 +86,7 @@
         x:Key="SimpleWorkTypeComboBoxStyle"
         BasedOn="{StaticResource DefaultComboBoxStyle}"
         TargetType="controls:EnumComboBox">
-        <Setter Property="EnumSource" Value="{winUi:EnumValues Type=options:SimpleWorkType}" />
+        <Setter Property="EnumSource" Value="{winUi:EnumValues Type=enum:SimpleWorkType}" />
         <Setter Property="PlaceholderText" Value="{markupExtensions:ResourceString ResourceKey='WorkTypeComboBox/PlaceholderText', ResourceFile=Misc}" />
     </Style>
 

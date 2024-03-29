@@ -7,6 +7,7 @@
     xmlns:converters1="using:Pixeval.Controls.Converters"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:flyoutContent="using:Pixeval.Controls.FlyoutContent"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:local="using:Pixeval.Pages.IllustrationViewer"
     xmlns:markup="using:Pixeval.Controls.MarkupExtensions"
@@ -175,8 +176,8 @@
                                             Width="50"
                                             Command="{x:Bind _viewModel.CurrentImage.MirrorCommand, Mode=OneWay}"
                                             IsChecked="{x:Bind _viewModel.CurrentImage.IsMirrored, Mode=OneWay}" />
-                                        <AppBarButton Width="50" Command="{x:Bind _viewModel.CurrentImage.RotateClockwiseCommand, Mode=OneWay}" />
-                                        <AppBarButton Width="50" Command="{x:Bind _viewModel.CurrentImage.SaveCommand, Mode=OneWay}" />
+                                        <AppBarButton Command="{x:Bind _viewModel.CurrentImage.RotateClockwiseCommand, Mode=OneWay}" />
+                                        <AppBarButton Command="{x:Bind _viewModel.CurrentImage.SaveCommand, Mode=OneWay}" />
                                     </CommandBar>
                                 </Grid>
                             </Border>
@@ -326,7 +327,10 @@
                                 </AppBarButton.Flyout>
                             </AppBarButton>
                             <AppBarSeparator />
-                            <AppBarButton Command="{x:Bind _viewModel.CurrentIllustration.AddToBookmarkCommand, Mode=OneWay}" />
+                            <AppBarButton
+                                x:Name="AddToBookmarkButton"
+                                Command="{x:Bind _viewModel.AddToBookmarkCommand}"
+                                Tapped="AddToBookmarkButton_OnTapped" />
                             <AppBarButton
                                 x:Name="GenerateLinkButton"
                                 Command="{x:Bind _viewModel.CurrentIllustration.GenerateLinkCommand, Mode=OneWay}"
@@ -368,7 +372,7 @@
                         <controls:GenerateLinkTeachingTip
                             x:Name="GenerateLinkTeachingTip"
                             Grid.Column="0"
-                            ImageLoading="Image_OnLoading"
+                            ImageLoading="Content_OnLoading"
                             Tag="{x:Bind GenerateLinkButton}" />
                         <TeachingTip
                             x:Name="ShowQrCodeTeachingTip"
@@ -377,8 +381,22 @@
                             IsLightDismissEnabled="True"
                             Tag="{x:Bind ShowQrCodeButton}">
                             <TeachingTip.HeroContent>
-                                <Image Loading="Image_OnLoading" Tag="{x:Bind ShowQrCodeTeachingTip}" />
+                                <Image Loading="Content_OnLoading" Tag="{x:Bind ShowQrCodeTeachingTip}" />
                             </TeachingTip.HeroContent>
+                        </TeachingTip>
+                        <TeachingTip
+                            x:Name="AddToBookmarkTeachingTip"
+                            x:Uid="/EntryViewerPage/AddToBookmarkTeachingTip"
+                            Grid.Column="0"
+                            CloseButtonClick="AddToBookmarkTeachingTip_OnCloseButtonClick"
+                            IsLightDismissEnabled="True"
+                            Tag="{x:Bind AddToBookmarkButton}">
+                            <flyoutContent:BookmarkTagSelector
+                                x:Name="BookmarkTagSelector"
+                                MaxHeight="{StaticResource TeachingTipContentMaxHeightWithTarget}"
+                                Loading="Content_OnLoading"
+                                Tag="{x:Bind AddToBookmarkTeachingTip}"
+                                Type="IllustAndManga" />
                         </TeachingTip>
                     </Grid>
                 </Grid>

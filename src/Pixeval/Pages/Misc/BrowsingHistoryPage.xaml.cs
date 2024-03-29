@@ -22,9 +22,9 @@ using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
+using Pixeval.CoreApi.Global.Enum;
 using Pixeval.Database.Managers;
 using Pixeval.Misc;
-using Pixeval.Options;
 
 namespace Pixeval.Pages.Misc;
 

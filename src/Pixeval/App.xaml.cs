@@ -35,11 +35,11 @@ using Pixeval.Pages.Login;
 using WinUI3Utilities;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Windows.ApplicationModel.Resources;
 using Pixeval.Logging;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using Pixeval.Controls.DialogContent;
+using Pixeval.CoreApi.Model;
 
 #if DEBUG
 using System.Diagnostics;
@@ -56,6 +56,7 @@ public partial class App
     public App()
     {
         AppViewModel = new AppViewModel(this);
+        BookmarkTag.AllCountedTagString = MiscResources.AllCountedTagName;
         AppInfo.SetNameResolvers(AppViewModel.AppSettings);
         WindowFactory.Initialize(AppViewModel.AppSettings, AppInfo.IconAbsolutePath);
         AppInstance.GetCurrent().Activated += (_, arguments) => ActivationRegistrar.Dispatch(arguments);

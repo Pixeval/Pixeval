@@ -19,6 +19,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using Windows.Storage.Streams;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
@@ -37,13 +38,7 @@ namespace Pixeval.Controls;
 
 public partial class IllustrationItemViewModel
 {
-    protected override async void BookmarkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
-    {
-        IsBookmarked = await MakoHelper.SetIllustrationBookmarkAsync(Id, !IsBookmarked);
-        BookmarkCommand.GetBookmarkCommand(IsBookmarked);
-        if (App.AppViewModel.AppSettings.DownloadWhenBookmarked && IsBookmarked)
-            SaveCommandOnExecuteRequested(sender, args);
-    }
+    protected override Task<bool> SetBookmarkAsync(long id, bool isBookmarked, bool privately = false, IEnumerable<string>? tags = null) => MakoHelper.SetIllustrationBookmarkAsync(id, isBookmarked, privately, tags);
 
     protected override async void SaveCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {

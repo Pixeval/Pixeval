@@ -10,12 +10,12 @@
         <controls:WorkContainer.CommandBarElements>
             <controls:NotifyOnLoadedCalendarDatePicker
                 x:Name="RankDateTimeCalendarDatePicker"
-                DateChangedWhenLoaded="OnSelectionChangedWhenPrepared"
+                DateChangedWhenLoaded="OnSelectionChanged"
                 MaxDate="{x:Bind MaxDate}" />
             <controls:NotifyOnLoadedComboBox
                 x:Name="RankOptionComboBox"
                 x:Uid="/RankingsPage/RankOptionComboBox"
-                SelectionChangedWhenLoaded="OnSelectionChangedWhenPrepared" />
+                SelectionChangedWhenLoaded="OnSelectionChanged" />
             <controls:EnumComboBox
                 x:Name="SimpleWorkTypeComboBox"
                 SelectionChanged="ComboBox_OnSelectionChanged"

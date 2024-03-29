@@ -460,7 +460,8 @@
         "dependencies": {
           "Microsoft.Extensions.DependencyInjection": "[8.0.0, )",
           "Pixeval.Utilities": "[1.0.0, )",
-          "Refit": "[7.0.0, )"
+          "Refit": "[7.0.0, )",
+          "System.Linq.Async": "[6.0.1, )"
         }
       },
       "pixeval.utilities": {

@@ -33,3 +33,10 @@ public enum WorkType
     [Description("novel")]
     Novel
 }
+
+public enum SimpleWorkType
+{
+    IllustAndManga,
+
+    Novel
+}

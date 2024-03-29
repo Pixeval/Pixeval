@@ -81,7 +81,7 @@ public sealed partial class RankingsPage : IScrollViewProvider
         ChangeSource();
     }
 
-    private void OnSelectionChangedWhenPrepared(object sender, IWinRTObject e) => ChangeSource();
+    private void OnSelectionChanged(object sender, IWinRTObject e) => ChangeSource();
 
     private void ChangeSource()
     {

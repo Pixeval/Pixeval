@@ -81,6 +81,8 @@ public partial class WorkContainer : IScrollViewProvider
         }
     }
 
+    public SimpleWorkType Type => WorkView.Type;
+
     public ISortableEntryViewViewModel ViewModel => WorkView.ViewModel;
 
     private void WorkContainer_OnLoaded(object sender, RoutedEventArgs e) => _ = WorkView.Focus(FocusState.Programmatic);
@@ -120,28 +122,7 @@ public partial class WorkContainer : IScrollViewProvider
             _ = scrollView.ScrollTo(0, 0);
     }
 
-    private async void AddAllToBookmarkButton_OnTapped(object sender, TappedRoutedEventArgs e)
-    {
-        // TODO custom bookmark tag
-        var notBookmarked = ViewModel.SelectedEntries.Where(i => !i.IsBookmarked);
-        var viewModelSelectedIllustrations = notBookmarked as IllustrationItemViewModel[] ?? notBookmarked.ToArray();
-        if (viewModelSelectedIllustrations.Length > 5 &&
-            await this.CreateOkCancelAsync(WorkContainerResources.SelectedTooManyItemsForBookmarkTitle,
-                WorkContainerResources.SelectedTooManyItemsForBookmarkContent) is not ContentDialogResult.Primary)
-            return;
-
-        foreach (var viewModelSelectedIllustration in viewModelSelectedIllustrations)
-        {
-            if (!viewModelSelectedIllustration.IsBookmarked)
-                viewModelSelectedIllustration.BookmarkCommand.Execute(null);
-        }
-
-        if (viewModelSelectedIllustrations.Length is var c and > 0)
-        {
-            _ = this.CreateAcknowledgementAsync(WorkContainerResources.AddAllToBookmarkTitle,
-                WorkContainerResources.AddAllToBookmarkContentFormatted.Format(c));
-        }
-    }
+    private void AddAllToBookmarkButton_OnTapped(object sender, TappedRoutedEventArgs e) => AddToBookmarkTeachingTip.IsOpen = true;
 
     private async void SaveAllButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
@@ -157,17 +138,28 @@ public partial class WorkContainer : IScrollViewProvider
 
     private async void OpenAllInBrowserButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        if (ViewModel.SelectedEntries is { Count: var count } selected)
+        if (ViewModel.SelectedEntries.Count > 15 && await this.CreateOkCancelAsync(
+                WorkContainerResources.SelectedTooManyItemsTitle,
+                WorkContainerResources.SelectedTooManyItemsForOpenInBrowserContent) is not ContentDialogResult.Primary)
+            return;
+        foreach (var illustrationViewModel in ViewModel.SelectedEntries)
         {
-            if (count > 15 && await this.CreateOkCancelAsync(WorkContainerResources.SelectedTooManyItemsTitle,
-                    WorkContainerResources.SelectedTooManyItemsForOpenInBrowserContent) is not ContentDialogResult.Primary)
-                return;
-
-            foreach (var illustrationViewModel in selected)
-            {
-                _ = await Launcher.LaunchUriAsync(MakoHelper.GenerateIllustrationWebUri(illustrationViewModel.Id));
-            }
+            _ = await Launcher.LaunchUriAsync(MakoHelper.GenerateIllustrationWebUri(illustrationViewModel.Id));
         }
+    }
+
+    private async void AddToBookmarkTeachingTip_OnCloseButtonClick(TeachingTip sender, object args)
+    {
+        if (ViewModel.SelectedEntries.Count > 5 &&
+            await this.CreateOkCancelAsync(WorkContainerResources.SelectedTooManyItemsForBookmarkTitle,
+                WorkContainerResources.SelectedTooManyItemsForBookmarkContent) is not ContentDialogResult.Primary)
+            return;
+
+        foreach (var i in ViewModel.SelectedEntries)
+            i.AddToBookmarkCommand.Execute((BookmarkTagSelector.SelectedTags, BookmarkTagSelector.IsPrivate, null as object));
+
+        if (ViewModel.SelectedEntries.Count is var c and > 0) 
+            this.ShowTeachingTipAndHide(WorkContainerResources.AddAllToBookmarkContentFormatted.Format(c));
     }
 
     private void CancelSelectionButton_OnTapped(object sender, TappedRoutedEventArgs e)
@@ -183,6 +175,13 @@ public partial class WorkContainer : IScrollViewProvider
     private void FilterTeachingTip_OnActionButtonClick(TeachingTip sender, object args)
     {
         FilterContent.Reset();
+    }
+
+    private void Content_OnLoading(FrameworkElement sender, object e)
+    {
+        var teachingTip = sender.GetTag<TeachingTip>();
+        var appBarButton = teachingTip.GetTag<AppBarButton>();
+        teachingTip.Target = appBarButton.IsInOverflow ? null : appBarButton;
     }
 
     private void FilterTeachingTip_OnCloseButtonClick(TeachingTip sender, object args)
