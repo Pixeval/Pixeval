@@ -11,7 +11,6 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Controls;
 using WinRT;
-using Pixeval.Controls.FlyoutContent;
 
 namespace Pixeval.Pages.NovelViewer;
 

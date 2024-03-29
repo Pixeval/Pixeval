@@ -18,7 +18,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System;
 using Windows.Graphics;
 using Microsoft.UI.Input;
 using Microsoft.UI.Windowing;

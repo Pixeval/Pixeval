@@ -20,7 +20,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.WinUI.Collections;
@@ -30,7 +29,6 @@ using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Model;
 using Pixeval.Misc;
 using Pixeval.Options;
-using Pixeval.Pages.Capability;
 using WinUI3Utilities;
 
 namespace Pixeval.Util;

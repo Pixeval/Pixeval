@@ -18,8 +18,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System;
-
 namespace Pixeval.Controls;
 
 public record StringRepresentableItem(object Item, string StringRepresentation)
