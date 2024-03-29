@@ -10,6 +10,7 @@
     xmlns:coreApi="using:Pixeval.CoreApi.Net"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:enum="using:Pixeval.CoreApi.Global.Enum"
+    xmlns:labs="using:CommunityToolkit.Labs.WinUI"
     xmlns:markup="using:Pixeval.Controls.MarkupExtensions"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:misc="using:Pixeval.Pages.Misc"
@@ -628,11 +629,18 @@
                     <controls:SettingsExpander.Items>
                         <controls:SettingsCard ContentAlignment="Left">
                             <StackPanel Spacing="3">
-                                <controls1:TokenInput
-                                    IsTokenTappedDefaultBehaviorEnabled="False"
-                                    TokenInputTextBoxVisibility="Collapsed"
-                                    TokenSource="{x:Bind misc:SettingsPageViewModel.AvailableIllustMacros}"
-                                    TokenTapped="PathMacroTokenInputBox_OnTokenTapped" />
+                                <labs:TokenView
+                                    IsItemClickEnabled="True"
+                                    IsWrapped="True"
+                                    ItemClick="PathMacroTokenInputBox_OnTokenTapped"
+                                    ItemsSource="{x:Bind misc:SettingsPageViewModel.AvailableIllustMacros}"
+                                    SelectionMode="None">
+                                    <labs:TokenView.ItemTemplate>
+                                        <DataTemplate x:DataType="controls1:StringRepresentableItem">
+                                            <TextBlock Text="{x:Bind StringRepresentation}" ToolTipService.ToolTip="{x:Bind Item}" />
+                                        </DataTemplate>
+                                    </labs:TokenView.ItemTemplate>
+                                </labs:TokenView>
                                 <RichEditBox
                                     x:Name="DefaultDownloadPathMacroTextBox"
                                     x:Uid="/SettingsPage/DefaultDownloadPathMacroTextBox"

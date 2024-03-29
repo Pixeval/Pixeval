@@ -71,7 +71,7 @@ public partial class SettingsPageViewModel(FrameworkElement frameworkElement) : 
 
     public static IEnumerable<string> AvailableFonts { get; }
 
-    public static ICollection<Token> AvailableIllustMacros { get; }
+    public static ICollection<StringRepresentableItem> AvailableIllustMacros { get; }
 
     public static IEnumerable<CultureInfo> AvailableCultures { get; }
 
@@ -215,8 +215,7 @@ public partial class SettingsPageViewModel(FrameworkElement frameworkElement) : 
         using var scope = App.AppViewModel.AppServicesScope;
         var factory = scope.ServiceProvider.GetRequiredService<IDownloadTaskFactory<IllustrationItemViewModel, IllustrationDownloadTask>>();
         AvailableIllustMacros = factory.PathParser.MacroProvider.AvailableMacros
-            .Select(m => ($"@{{{(m is IMacro<IllustrationItemViewModel>.IPredicate ? $"{m.Name}=" : m.Name)}}}", _macroTooltips[m.Name]))
-            .Select(s => new Token(s.Item1, false, false, s.Item2))
+            .Select(m => new StringRepresentableItem(_macroTooltips[m.Name], $"@{{{(m is IMacro<IllustrationItemViewModel>.IPredicate ? $"{m.Name}=" : m.Name)}}}"))
             .ToList();
     }
 

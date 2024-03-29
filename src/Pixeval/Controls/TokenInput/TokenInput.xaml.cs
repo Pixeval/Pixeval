@@ -18,77 +18,25 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Input;
-using Pixeval.Util.UI;
-using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
 
 namespace Pixeval.Controls;
 
 [DependencyProperty<string>("PlaceholderText")]
 [DependencyProperty<ICollection<Token>>("TokenSource")]
-[DependencyProperty<Visibility>("TokenInputTextBoxVisibility", "Microsoft.UI.Xaml.Visibility.Visible")]
-[DependencyProperty<bool>("IsTokenTappedDefaultBehaviorEnabled", "true")]
 public sealed partial class TokenInput
 {
-    public TokenInput()
-    {
-        InitializeComponent();
-        Token = new Token();
-    }
+    public TokenInput() => InitializeComponent();
 
-    public Token Token { get; }
-
-    public event EventHandler<TokenAddingEventArgs>? TokenAdding;
-
-    public event EventHandler<Token>? TokenAdded;
-
-    /// <summary>
-    /// Only works when <see cref="IsTokenTappedDefaultBehaviorEnabled" /> is set to <see langword="true" />
-    /// </summary>
-    public event EventHandler<TokenDeletingEventArgs>? TokenDeleting;
-
-    public event EventHandler<Token>? TokenDeleted;
-
-    public event EventHandler<Token>? TokenTapped;
+    public Token Token { get; } = new();
 
     private void TokenInputTextBox_OnTokenSubmitted(object? sender, Token e)
     {
         if (TokenSource.Any(t => t.Equals(Token)))
             return;
 
-        var arg = new TokenAddingEventArgs(e, false);
-        TokenAdding?.Invoke(this, arg);
-        if (!arg.Cancel)
-        {
-            TokenSource.Add(e);
-            TokenAdded?.Invoke(this, e);
-        }
-    }
-
-    private void TokenContainer_OnTapped(object sender, TappedRoutedEventArgs e)
-    {
-        if (IsTokenTappedDefaultBehaviorEnabled)
-        {
-            var token = sender.GetTag<Token>();
-            var arg = new TokenDeletingEventArgs(token, false);
-            TokenDeleting?.Invoke(this, arg);
-            if (!arg.Cancel)
-            {
-                _ = TokenSource.Remove(token);
-                TokenDeleted?.Invoke(this, token);
-            }
-        }
-
-        TokenTapped?.Invoke(sender, sender.GetTag<Token>());
-    }
-
-    public static Visibility CalculateTokenIconRightmostSeparatorVisibility(bool caseSensitive, bool isRegex)
-    {
-        return (caseSensitive || isRegex).ToVisibility();
+        TokenSource.Add(e);
     }
 }

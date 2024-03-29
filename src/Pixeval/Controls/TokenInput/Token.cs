@@ -36,8 +36,7 @@ public sealed partial class Token : ObservableObject, IEquatable<Token>, IDeepCl
 
     [ObservableProperty] private string _tokenContent;
 
-    [ObservableProperty]
-    private string _tooltip;
+    [ObservableProperty] private string _tooltip;
 
     public Token(string tokenContent, bool caseSensitive, bool isRegularExpression, string tooltip = "")
     {
@@ -61,7 +60,7 @@ public sealed partial class Token : ObservableObject, IEquatable<Token>, IDeepCl
     /// <returns></returns>
     public Token DeepClone()
     {
-        return (Token) MemberwiseClone();
+        return (Token)MemberwiseClone();
     }
 
     public bool Equals(Token? other)

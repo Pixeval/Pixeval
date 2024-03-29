@@ -303,9 +303,9 @@ public sealed partial class SettingsPage : IDisposable
         e.Handled = true;
     }
 
-    private void PathMacroTokenInputBox_OnTokenTapped(object? sender, Token e)
+    private void PathMacroTokenInputBox_OnTokenTapped(object sender, ItemClickEventArgs e)
     {
-        UiHelper.ClipboardSetText(e.TokenContent);
+        UiHelper.ClipboardSetText(e.ClickedItem.To<StringRepresentableItem>().StringRepresentation);
         this.ShowTeachingTipAndHide(SettingsPageResources.MacroCopiedToClipboard);
     }
 

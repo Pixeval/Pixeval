@@ -85,17 +85,12 @@ public sealed partial class WorkView : IEntryView<ISortableEntryViewViewModel>
 
     private void WorkView_OnSelectionChanged(ItemsView sender, ItemsViewSelectionChangedEventArgs args)
     {
-        if (sender.SelectedItems is [not null, ..])
-            ViewModel.SelectedEntries = [];
-        else
+        ViewModel.SelectedEntries = ViewModel switch
         {
-            ViewModel.SelectedEntries = ViewModel switch
-            {
-                NovelViewViewModel => sender.SelectedItems.Cast<NovelItemViewModel>().ToArray(),
-                IllustrationViewViewModel => sender.SelectedItems.Cast<IllustrationItemViewModel>().ToArray(),
-                _ => ViewModel.SelectedEntries
-            };
-        }
+            NovelViewViewModel => sender.SelectedItems.Cast<NovelItemViewModel>().ToArray(),
+            IllustrationViewViewModel => sender.SelectedItems.Cast<IllustrationItemViewModel>().ToArray(),
+            _ => ViewModel.SelectedEntries
+        };
     }
 
     [MemberNotNull(nameof(ViewModel))]

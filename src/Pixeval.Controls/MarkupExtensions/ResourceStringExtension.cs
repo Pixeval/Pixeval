@@ -1,8 +1,8 @@
-#region Copyright (c) Pixeval/Pixeval.Controls
+#region Copyright
 // GPL v3 License
 // 
 // Pixeval/Pixeval.Controls
-// Copyright (c) 2023 Pixeval.Controls/StringRepresentableItem.cs
+// Copyright (c) 2024 Pixeval.Controls/ResourceStringExtension.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,18 +18,21 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System;
+using Microsoft.UI.Xaml.Markup;
+using Microsoft.Windows.ApplicationModel.Resources;
 
-namespace Pixeval.Controls;
+namespace Pixeval.Controls.MarkupExtensions;
 
-public record StringRepresentableItem(object Item, string StringRepresentation)
+[MarkupExtensionReturnType(ReturnType = typeof(string))]
+public class ResourceStringExtension : MarkupExtension
 {
-    public virtual bool Equals(StringRepresentableItem? other)
+    public string ResourceFile { get; set; } = "";
+
+    public string ResourceKey { get; set; } = "";
+
+    protected override object ProvideValue()
     {
-        return other is not null && (ReferenceEquals(this, other) || Item.Equals(other.Item));
+        var resourceLoader = new ResourceLoader(ResourceLoader.GetDefaultResourceFilePath(), ResourceFile);
+        return resourceLoader.GetString(ResourceKey);
     }
-
-    public override int GetHashCode() => Item.GetHashCode();
-
-    public override string? ToString() => StringRepresentation;
 }

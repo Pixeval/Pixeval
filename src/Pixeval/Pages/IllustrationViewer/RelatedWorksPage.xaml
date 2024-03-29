@@ -9,7 +9,6 @@
     mc:Ignorable="d">
     <controls:WorkView
         x:Name="RelatedWorksIllustrationGrid"
-        Margin="5,0"
         LayoutType="VerticalUniformStack"
         ThumbnailDirection="{x:Bind ThumbnailDirection}" />
 </controls:EnhancedPage>

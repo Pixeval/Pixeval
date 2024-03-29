@@ -35,6 +35,7 @@ using Pixeval.Pages.Login;
 using WinUI3Utilities;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Windows.ApplicationModel.Resources;
 using Pixeval.Logging;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
@@ -67,10 +68,6 @@ public partial class App
     {
         Resources["DefaultAppBarButtonStyle"].To<Style>().Setters[7] = new Setter(FrameworkElement.WidthProperty, 45);
         Resources["DefaultAppBarToggleButtonStyle"].To<Style>().Setters[8] = new Setter(FrameworkElement.WidthProperty, 45);
-        Resources["WorkTypeComboBoxStyle"].To<Style>().Setters.Add(new Setter(ComboBox.PlaceholderTextProperty, MiscResources.WorkTypeComboBoxPlaceholderText));
-        Resources["SimpleWorkTypeComboBoxStyle"].To<Style>().Setters.Add(new Setter(ComboBox.PlaceholderTextProperty, MiscResources.WorkTypeComboBoxPlaceholderText));
-        Resources["PrivacyPolicyComboBoxStyle"].To<Style>().Setters.Add(new Setter(ComboBox.PlaceholderTextProperty, MiscResources.PrivacyPolicyComboBoxPlaceholderText));
-        Resources["WorkSortOptionComboBoxStyle"].To<Style>().Setters.Add(new Setter(ComboBox.PlaceholderTextProperty, MiscResources.SortOptionComboBoxPlaceholderText));
 
         if (AppInfo.CustomizeTitleBarSupported)
             Resources[NavigationViewContentMargin] = new Thickness(0, 48, 0, 0);
