@@ -63,6 +63,6 @@ public sealed partial class AboutPage
 
     private async void LaunchUri(object sender, TappedRoutedEventArgs e)
     {
-        _ = await Launcher.LaunchUriAsync(new Uri(sender.GetTag<string>()));
+        _ = await Launcher.LaunchUriAsync(new Uri(sender.To<FrameworkElement>().GetTag<string>()));
     }
 }
