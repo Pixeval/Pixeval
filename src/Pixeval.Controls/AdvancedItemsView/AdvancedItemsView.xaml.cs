@@ -1,8 +1,10 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Threading.Tasks;
+using Windows.Foundation;
 using CommunityToolkit.WinUI.Controls;
 using CommunityToolkit.WinUI.Helpers;
 using Microsoft.UI.Xaml;
@@ -108,7 +110,7 @@ public sealed partial class AdvancedItemsView : ItemsView
         var minItemHeight = advancedItemsView.MinItemHeight;
         switch (advancedItemsView.Layout)
         {
-            case LinedFlowLayout linedFlowLayout:
+            case RiverFlowLayout linedFlowLayout:
                 linedFlowLayout.LineHeight = minItemHeight;
                 break;
             case UniformGridLayout uniformGridLayout:
@@ -138,8 +140,8 @@ public sealed partial class AdvancedItemsView : ItemsView
         var minRowSpacing = advancedItemsView.MinRowSpacing;
         switch (advancedItemsView.Layout)
         {
-            case LinedFlowLayout linedFlowLayout:
-                linedFlowLayout.LineSpacing = minRowSpacing;
+            case RiverFlowLayout linedFlowLayout:
+                linedFlowLayout.VerticalSpacing = minRowSpacing;
                 break;
             case UniformGridLayout uniformGridLayout:
                 uniformGridLayout.MinRowSpacing = minRowSpacing;
@@ -159,8 +161,8 @@ public sealed partial class AdvancedItemsView : ItemsView
         var minColumnSpacing = advancedItemsView.MinColumnSpacing;
         switch (advancedItemsView.Layout)
         {
-            case LinedFlowLayout linedFlowLayout:
-                linedFlowLayout.MinItemSpacing = minColumnSpacing;
+            case RiverFlowLayout linedFlowLayout:
+                linedFlowLayout.HorizontalSpacing = minColumnSpacing;
                 break;
             case UniformGridLayout uniformGridLayout:
                 uniformGridLayout.MinColumnSpacing = minColumnSpacing;
@@ -183,12 +185,12 @@ public sealed partial class AdvancedItemsView : ItemsView
         var minColumnSpacing = advancedItemsView.MinColumnSpacing;
         advancedItemsView.Layout = advancedItemsView.LayoutType switch
         {
-            ItemsViewLayoutType.LinedFlow => new LinedFlowLayout
+            ItemsViewLayoutType.LinedFlow => new RiverFlowLayout
             {
-                ItemsStretch = LinedFlowLayoutItemsStretch.Fill,
+                // ItemsStretch = LinedFlowLayoutItemsStretch.Fill,
                 LineHeight = minItemHeight,
-                LineSpacing = minRowSpacing,
-                MinItemSpacing = minColumnSpacing
+                VerticalSpacing = minRowSpacing,
+                HorizontalSpacing = minColumnSpacing
             },
             ItemsViewLayoutType.Grid => new UniformGridLayout
             {
@@ -352,3 +354,4 @@ public sealed partial class AdvancedItemsView : ItemsView
 
     #endregion
 }
+
