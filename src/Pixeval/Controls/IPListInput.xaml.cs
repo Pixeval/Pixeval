@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Net;
 using Microsoft.UI;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
@@ -43,5 +44,5 @@ public sealed partial class IPListInput : StackPanel
     }
 
     private void RemoveTapped(object sender, TappedRoutedEventArgs e) =>
-        ItemsSource.Remove(sender.GetTag<string>());
+        ItemsSource.Remove(sender.To<FrameworkElement>().GetTag<string>());
 }

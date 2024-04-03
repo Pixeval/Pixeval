@@ -23,6 +23,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
@@ -67,6 +68,6 @@ public sealed partial class PixivReplyStickerListPage
 
     private void StickerImage_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        _replyBarStickerTappedEventHandler?.Invoke(sender, new StickerTappedEventArgs(e, sender.GetTag<PixivReplyStickerViewModel>()));
+        _replyBarStickerTappedEventHandler?.Invoke(sender, new StickerTappedEventArgs(e, sender.To<FrameworkElement>().GetTag<PixivReplyStickerViewModel>()));
     }
 }

@@ -112,7 +112,7 @@ public sealed partial class SettingsPage : IDisposable
 
     private async void OpenHyperlinkButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        _ = await Launcher.LaunchUriAsync(new Uri(sender.GetTag<string>()));
+        _ = await Launcher.LaunchUriAsync(new Uri(sender.To<FrameworkElement>().GetTag<string>()));
     }
 
     private async void ReleaseNotesHyperlink_OnTapped(object sender, TappedRoutedEventArgs e)
@@ -123,7 +123,7 @@ public sealed partial class SettingsPage : IDisposable
                 Content = new MarkdownTextBlock
                 {
                     Config = new MarkdownConfig(),
-                    Text = (sender.GetTag<string>() is "Newest"
+                    Text = (sender.To<FrameworkElement>().GetTag<string>() is "Newest"
                         ? AppInfo.AppVersion.NewestAppReleaseModel
                         : AppInfo.AppVersion.CurrentAppReleaseModel)?.ReleaseNote ?? ""
                 }
@@ -341,7 +341,7 @@ public sealed partial class SettingsPage : IDisposable
 
     private void OpenFolder_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        var folder = sender.GetTag<string>() switch
+        var folder = sender.To<FrameworkElement>().GetTag<string>() switch
         {
             "Log" => AppKnownFolders.Log.Self,
             "Temp" => AppKnownFolders.Temporary.Self,

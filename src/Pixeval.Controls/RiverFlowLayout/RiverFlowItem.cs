@@ -1,9 +1,9 @@
-#region Copyright (c) Pixeval/Pixeval.Controls
+#region Copyright
 
 // GPL v3 License
 // 
 // Pixeval/Pixeval.Controls
-// Copyright (c) 2023 Pixeval.Controls/ItemsViewLayoutType.cs
+// Copyright (c) 2024 Pixeval.Controls/RiverFlowItem.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -20,25 +20,20 @@
 
 #endregion
 
-using Pixeval.Attributes;
+using Windows.Foundation;
+using Microsoft.UI.Xaml;
 
 namespace Pixeval.Controls;
 
-public enum ItemsViewLayoutType
+internal class RiverFlowItem(int index)
 {
-    [LocalizedResource(typeof(AdvancedItemsViewResources), nameof(AdvancedItemsViewResources.LinedFlow))]
-    LinedFlow,
+    public int Index { get; } = index;
 
-    [LocalizedResource(typeof(AdvancedItemsViewResources), nameof(AdvancedItemsViewResources.Grid))]
-    Grid,
+    public Size? DesiredSize { get; internal set; }
 
-    VerticalUniformStack,
+    public Size? Measure { get; internal set; }
 
-    HorizontalUniformStack,
+    public Point? Position { get; internal set; }
 
-    VerticalStack,
-
-    HorizontalStack,
-
-    Staggered
+    public UIElement? Element { get; internal set; }
 }

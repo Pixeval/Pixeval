@@ -268,12 +268,12 @@
       },
       "WinUI3Utilities": {
         "type": "Direct",
-        "requested": "[1.1.6.2, )",
-        "resolved": "1.1.6.2",
-        "contentHash": "x69eHB+6rcxz6+asg7sZaYTH+CYcoI8pAQQjcWPVpTOR4yhPG1d/c4bJv3MXU6fnxnvgZMGiS4qYBdiY9JACBA==",
+        "requested": "[1.1.6.3, )",
+        "resolved": "1.1.6.3",
+        "contentHash": "tloZd//pw5fujNIT1UdKqszTN53YrzyqhtBb6ZcOcZBN8tpPtlONE/OKoj/OABwSgUuJj8090DMr+dLP7BlGsw==",
         "dependencies": {
           "Microsoft.Windows.SDK.BuildTools": "10.0.22621.3233",
-          "Microsoft.WindowsAppSDK": "1.5.240227000"
+          "Microsoft.WindowsAppSDK": "1.5.240311000"
         }
       },
       "CommunityToolkit.Common": {
@@ -452,7 +452,7 @@
           "Microsoft.WindowsAppSDK": "[1.5.240311000, )",
           "Microsoft.Xaml.Behaviors.WinUI.Managed": "[2.0.9, )",
           "Pixeval.Utilities": "[1.0.0, )",
-          "WinUI3Utilities": "[1.1.6.2, )"
+          "WinUI3Utilities": "[1.1.6.3, )"
         }
       },
       "pixeval.coreapi": {

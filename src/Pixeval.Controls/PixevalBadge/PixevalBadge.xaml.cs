@@ -24,7 +24,6 @@ using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
-using Microsoft.Windows.ApplicationModel.Resources;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
 
@@ -68,11 +67,4 @@ public sealed partial class PixevalBadge : UserControl
     {
         _ = VisualStateManager.GoToState(this, useSmall ? SmallState : NormalState, true);
     }
-}
-
-static file class PixevalBadgeResources
-{
-    private static readonly ResourceLoader _resourceLoader = ResourceHelper.GetResourceLoader("PixevalBadge");
-
-    public static string Following { get; } = _resourceLoader.GetString("Following");
 }
