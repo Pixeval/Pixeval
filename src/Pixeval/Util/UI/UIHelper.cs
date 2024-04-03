@@ -254,40 +254,9 @@ public static partial class UiHelper
         box.Document.SetText(TextSetOptions.None, "");
     }
 
-    public static IAsyncOperation<StorageFolder?> OpenFolderPickerAsync(this Window window)
-    {
-        var folderPicker = new FolderPicker
-        {
-            SuggestedStartLocation = PickerLocationId.PicturesLibrary,
-            FileTypeFilter = { "*" }
-        };
-        return folderPicker.InitializeWithWindow(window).PickSingleFolderAsync();
-    }
+    public static IAsyncOperation<StorageFolder?> OpenFolderPickerAsync(this Window window) => window.PickSingleFolderAsync(PickerLocationId.PicturesLibrary);
 
-    public static IAsyncOperation<StorageFile?> OpenFileSavePickerAsync(this Window window, string suggestedFileName, string fileTypeId)
-    {
-        var savePicker = new FileSavePicker
-        {
-            SuggestedStartLocation = PickerLocationId.PicturesLibrary,
-            FileTypeChoices =
-            {
-                [fileTypeId] = [fileTypeId]
-            },
-            SuggestedFileName = suggestedFileName
-        };
-        return savePicker.InitializeWithWindow(window).PickSaveFileAsync();
-    }
-
-    public static IAsyncOperation<StorageFile?> OpenFileOpenPickerAsync(this Window window)
-    {
-        var openPicker = new FileOpenPicker
-        {
-            SuggestedStartLocation = PickerLocationId.PicturesLibrary,
-            ViewMode = PickerViewMode.Thumbnail,
-            FileTypeFilter = { "*" }
-        };
-        return openPicker.InitializeWithWindow(window).PickSingleFileAsync();
-    }
+    public static IAsyncOperation<StorageFile?> OpenFileOpenPickerAsync(this Window window) => window.PickSingleFileAsync(PickerLocationId.PicturesLibrary);
 
     public static async Task<T> AwaitPageTransitionAsync<T>(this Frame root) where T : Page
     {
