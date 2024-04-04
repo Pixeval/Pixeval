@@ -56,6 +56,7 @@ public partial class ZoomableImage
                     var randomAccessStream = source.AsRandomAccessStream();
                     randomAccessStream.Seek(0);
                     var frame = await CanvasBitmap.LoadAsync(CanvasControl, randomAccessStream);
+                    source.Position = 0;
                     _frames.Add(frame);
                 }
         }

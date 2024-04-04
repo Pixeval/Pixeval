@@ -18,6 +18,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using System;
 using Windows.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -47,7 +48,11 @@ public partial class FontSymbolIcon : FontIcon
     private static void IsBackLayerPropertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         if (e.NewValue is true)
-            d.To<FontSymbolIcon>().Foreground = new SolidColorBrush(Color.FromArgb(0x80, 0, 0, 0));
+        {
+            var icon = d.To<FontSymbolIcon>();
+            var color = icon.Foreground.To<SolidColorBrush>().Color;
+            icon.Foreground = new SolidColorBrush(Color.FromArgb(0x80, (byte)~color.R, (byte)~color.G, (byte)~color.B));
+        }
     }
 }
 
@@ -70,6 +75,10 @@ public partial class FontSymbolIconSource : FontIconSource
     private static void IsBackLayerPropertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         if (e.NewValue is true)
-            d.To<FontSymbolIcon>().Foreground = new SolidColorBrush(Color.FromArgb(0x80, 0, 0, 0));
+        {
+            var icon = d.To<FontSymbolIcon>();
+            var color = icon.Foreground.To<SolidColorBrush>().Color;
+            icon.Foreground = new SolidColorBrush(Color.FromArgb(0x80, (byte)~color.R, (byte)~color.G, (byte)~color.B));
+        }
     }
 }
