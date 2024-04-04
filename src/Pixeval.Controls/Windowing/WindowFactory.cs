@@ -23,15 +23,12 @@ using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Windows.Foundation;
 using Windows.Graphics;
-using Microsoft.UI;
 using WinUI3Utilities;
 
 namespace Pixeval.Controls.Windowing;
 
 public static class WindowFactory
 {
-    public static bool IsDarkMode { get; private set; }
-
     public static string IconAbsolutePath { get; set; } = "";
 
     public static IWindowSettings WindowSettings { get; set; } = null!;
@@ -44,8 +41,14 @@ public static class WindowFactory
 
     public static void Initialize(IWindowSettings windowSettings, string iconAbsolutePath)
     {
-        IsDarkMode = Application.Current.RequestedTheme is ApplicationTheme.Dark;
+        AppHelper.InitializeIsDarkMode();
         WindowSettings = windowSettings;
+        Application.Current.RequestedTheme = WindowSettings.Theme switch
+        {
+            ElementTheme.Light => ApplicationTheme.Light,
+            ElementTheme.Dark => ApplicationTheme.Dark,
+            _ => Application.Current.RequestedTheme
+        };
         IconAbsolutePath = iconAbsolutePath;
     }
 
@@ -107,43 +110,25 @@ public static class WindowFactory
             ExtendTitleBar = true,
             Size = size,
             IconPath = IconAbsolutePath,
-            Title = title
+            Title = title,
+            IsMaximized = isMaximized,
+            Theme = WindowSettings.Theme
         });
         if (isMaximized)
             window.AppWindow.Presenter.To<OverlappedPresenter>().Maximize();
-        window.FrameLoaded += (_, _) => SetTheme(window, WindowSettings.Theme);
+        window.FrameLoaded += (_, _) => window.SetTheme(WindowSettings.Theme);
         return window;
     }
 
     public static void SetBackdrop(BackdropType backdropType)
     {
-        foreach (var window in _forkedWindowsInternal)
+        foreach (var window in _forkedWindowsInternal) 
             window.SetBackdrop(backdropType);
     }
 
     public static void SetTheme(ElementTheme theme)
     {
         foreach (var window in _forkedWindowsInternal) 
-            SetTheme(window, theme);
-    }
-
-    public static void SetTheme(EnhancedWindow window, ElementTheme theme)
-    {
-        var actualTheme = theme switch
-        {
-            ElementTheme.Default => IsDarkMode ? ElementTheme.Dark : ElementTheme.Light,
-            _ => theme
-        };
-        window.Content.To<FrameworkElement>().RequestedTheme = actualTheme;
-
-        var color = actualTheme switch
-        {
-            ElementTheme.Dark => Colors.White,
-            _ => Colors.Black,
-        };
-
-        var res = Application.Current.Resources;
-        res["WindowCaptionForeground"] = color;
-        window.AppWindow.TitleBar.ButtonForegroundColor = color;
+            window.SetTheme(theme);
     }
 }

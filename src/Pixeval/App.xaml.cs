@@ -35,7 +35,6 @@ using Pixeval.Pages.Login;
 using WinUI3Utilities;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Windows.ApplicationModel.Resources;
 using Pixeval.Logging;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
