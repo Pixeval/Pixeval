@@ -39,6 +39,7 @@ using Pixeval.Logging;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using Pixeval.Controls.DialogContent;
+using Pixeval.CoreApi.Model;
 
 #if DEBUG
 using System.Diagnostics;
@@ -55,6 +56,7 @@ public partial class App
     public App()
     {
         AppViewModel = new AppViewModel(this);
+        BookmarkTag.AllCountedTagString = MiscResources.AllCountedTagName;
         AppInfo.SetNameResolvers(AppViewModel.AppSettings);
         WindowFactory.Initialize(AppViewModel.AppSettings, AppInfo.IconAbsolutePath);
         AppInstance.GetCurrent().Activated += (_, arguments) => ActivationRegistrar.Dispatch(arguments);
@@ -67,6 +69,7 @@ public partial class App
     {
         Resources["DefaultAppBarButtonStyle"].To<Style>().Setters[7] = new Setter(FrameworkElement.WidthProperty, 45);
         Resources["DefaultAppBarToggleButtonStyle"].To<Style>().Setters[8] = new Setter(FrameworkElement.WidthProperty, 45);
+
         if (AppInfo.CustomizeTitleBarSupported)
             Resources[NavigationViewContentMargin] = new Thickness(0, 48, 0, 0);
 
@@ -112,7 +115,7 @@ public partial class App
             }
 
             AppViewModel.AppDebugTrace.ExitedSuccessfully = false;
-            AppInfo.SaveConfig(AppViewModel.AppSettings);
+            AppInfo.SaveDebugTrace(AppViewModel.AppDebugTrace);
 
             s.To<Frame>().NavigateTo<LoginPage>(w);
         }

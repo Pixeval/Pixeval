@@ -1,1 +1,3 @@
-// [assembly: LocalizedStringResources(nameof(Pixeval))]
+using WinUI3Utilities.Attributes;
+
+[assembly: LocalizedStringResources(nameof(Pixeval), true)]

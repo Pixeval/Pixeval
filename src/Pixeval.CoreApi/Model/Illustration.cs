@@ -51,7 +51,7 @@ public partial record Illustration : IWorkEntry
     /// Original几乎总是null
     /// </summary>
     [JsonPropertyName("image_urls")]
-    public required ImageUrls ImageUrls { get; set; }
+    public required ImageUrls ThumbnailUrls { get; set; }
 
     [JsonPropertyName("caption")]
     public required string Caption { get; set; } = "";

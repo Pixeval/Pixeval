@@ -1,7 +1,7 @@
 <ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:controls="using:Pixeval.Controls"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:local="using:Pixeval.Controls"
     xmlns:markup="using:Pixeval.Controls.MarkupExtensions">
     <Style TargetType="local:TokenInputTextBox">
@@ -11,62 +11,48 @@
             <Setter.Value>
                 <ControlTemplate TargetType="local:TokenInputTextBox">
                     <!--  ReSharper disable Xaml.ConstructorWarning  -->
-                    <!--  ReSharper disable MarkupAttributeTypo  -->
-                    <Grid
+                    <controls:DockPanel
                         Height="{TemplateBinding Height}"
                         HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
                         VerticalAlignment="{TemplateBinding VerticalAlignment}"
-                        ColumnSpacing="5">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-                        <!--  ReSharper disable once UnusedMember.Local  -->
-                        <TextBox
-                            x:Name="TokenTextBox"
-                            Grid.Column="0"
-                            HorizontalAlignment="Stretch"
-                            VerticalAlignment="Center"
-                            PlaceholderText="{TemplateBinding PlaceholderText}"
-                            Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Token.TokenContent, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                        <ToggleButton
-                            x:Uid="/TokenInputTextBox/CaseSensitiveCheckBox"
-                            Grid.Column="1"
-                            Width="32"
-                            Height="32"
-                            Padding="0"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center"
-                            Content="{markup:FontSymbolIcon Glyph=UpArrowShiftKeyE752,
-                                                            FontSize={StaticResource PixevalButtonIconSize}}"
-                            IsChecked="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Token.CaseSensitive, Mode=TwoWay}" />
-                        <ToggleButton
-                            x:Uid="/TokenInputTextBox/IsRegularExpressionCheckBox"
-                            Grid.Column="2"
-                            Width="32"
-                            Height="32"
-                            Padding="0"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center"
-                            Content="{markup:FontSymbolIcon Glyph=CodeE943,
-                                                            FontSize={StaticResource PixevalButtonIconSize}}"
-                            IsChecked="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Token.IsRegularExpression, Mode=TwoWay}" />
+                        HorizontalSpacing="5">
                         <!--  ReSharper disable once UnusedMember.Local  -->
                         <Button
                             x:Name="SubmitButton"
                             x:Uid="/TokenInputTextBox/SubmitButton"
-                            Grid.Column="3"
                             Width="32"
                             Height="32"
                             Padding="0"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center"
+                            controls:DockPanel.Dock="Right"
                             Content="{markup:FontSymbolIcon Glyph=ReturnKeyE751,
                                                             FontSize={StaticResource PixevalButtonIconSize}}"
                             Visibility="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=SubmitEnable, Mode=OneWay}" />
-                    </Grid>
+                        <ToggleButton
+                            x:Uid="/TokenInputTextBox/IsRegularExpressionCheckBox"
+                            Width="32"
+                            Height="32"
+                            Padding="0"
+                            controls:DockPanel.Dock="Right"
+                            Content="{markup:FontSymbolIcon Glyph=CodeE943,
+                                                            FontSize={StaticResource PixevalButtonIconSize}}"
+                            IsChecked="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Token.IsRegularExpression, Mode=TwoWay}" />
+                        <ToggleButton
+                            x:Uid="/TokenInputTextBox/CaseSensitiveCheckBox"
+                            Width="32"
+                            Height="32"
+                            Padding="0"
+                            controls:DockPanel.Dock="Right"
+                            Content="{markup:FontSymbolIcon Glyph=UpArrowShiftKeyE752,
+                                                            FontSize={StaticResource PixevalButtonIconSize}}"
+                            IsChecked="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Token.CaseSensitive, Mode=TwoWay}" />
+                        <!--  ReSharper disable once UnusedMember.Local  -->
+                        <TextBox
+                            x:Name="TokenTextBox"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Center"
+                            PlaceholderText="{TemplateBinding PlaceholderText}"
+                            Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Token.TokenContent, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    </controls:DockPanel>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

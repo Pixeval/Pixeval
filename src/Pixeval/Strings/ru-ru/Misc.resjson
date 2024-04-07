@@ -54,13 +54,10 @@
   "WebPLossy": "С потерями WebP (с потерями, маленький размер, широкая поддержка)",
   "DownloadListEntryOpenFailed": "Не удалось открыть файл (папку)",
   "DownloadListEntryMaybeDeleted": "Возможно, изображение было удалено",
-
   "SortOptionComboBox/PlaceholderText": "Опции сортировки",
   "PrivacyPolicyComboBox/PlaceholderText": "Опции конфиденциальности",
-
   "OpenUserId": "Открыть страницу пользователя",
   "OpenIllustId": "Открыть страницу произведения",
-  
   "CannotFindLoginProxyServerExecutable": "Не удалось найти исполняемый файл для входа, попробуйте перезапустить приложение или свяжитесь с разработчиком",
   "UnexpectedBehavior": "Произошло неожиданное поведение, если вы видите это сообщение, обратитесь за помощью к разработчику",
   "ReplyContentTooLong": "Слишком длинный ответ, пожалуйста, отредактируйте его",
@@ -87,5 +84,6 @@
   "Black": "Черный",
   "ExtraBlack": "Сверхчерный",
   "WorkTypeComboBox/PlaceholderText": "Тип произведения",
-  "OpenNovelId": "Открыть страницу новеллы"
+  "OpenNovelId": "Открыть страницу новеллы",
+  "AllCountedTagName": "Все теги"
 }

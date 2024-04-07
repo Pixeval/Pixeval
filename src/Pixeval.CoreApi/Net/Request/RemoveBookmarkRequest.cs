@@ -22,4 +22,4 @@ using Refit;
 
 namespace Pixeval.CoreApi.Net.Request;
 
-internal record RemoveIllustBookmarkRequest([property: AliasAs("illust_id")] string IllustId);
+internal record RemoveIllustBookmarkRequest([property: AliasAs("illust_id")] long IllustId);

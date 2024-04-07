@@ -18,7 +18,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Navigation;
 
 namespace Pixeval.Pages.IllustrationViewer;
@@ -34,6 +33,4 @@ public sealed partial class ImageViewerPage
         if (parameter is ImageViewerPageViewModel viewModel) 
             _viewModel = viewModel;
     }
-
-    private void ImageViewerPage_OnUnloaded(object sender, RoutedEventArgs e) => _viewModel.Dispose();
 }

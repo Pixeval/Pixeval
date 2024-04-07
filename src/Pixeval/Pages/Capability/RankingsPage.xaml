@@ -10,19 +10,16 @@
         <controls:WorkContainer.CommandBarElements>
             <controls:NotifyOnLoadedCalendarDatePicker
                 x:Name="RankDateTimeCalendarDatePicker"
-                DateChangedWhenLoaded="OnSelectionChangedWhenPrepared"
+                DateChangedWhenLoaded="OnSelectionChanged"
                 MaxDate="{x:Bind MaxDate}" />
             <controls:NotifyOnLoadedComboBox
                 x:Name="RankOptionComboBox"
                 x:Uid="/RankingsPage/RankOptionComboBox"
-                SelectionChangedWhenLoaded="OnSelectionChangedWhenPrepared">
-                <controls:NotifyOnLoadedComboBox.ItemTemplate>
-                    <DataTemplate x:DataType="controls:StringRepresentableItem">
-                        <TextBlock Tag="{x:Bind}" Text="{x:Bind StringRepresentation}" />
-                    </DataTemplate>
-                </controls:NotifyOnLoadedComboBox.ItemTemplate>
-            </controls:NotifyOnLoadedComboBox>
-            <controls:SimpleWorkTypeComboBox x:Name="SimpleWorkTypeComboBox" SelectionChangedWhenLoaded="SimpleWorkTypeComboBox_OnSelectionChangedWhenLoaded" />
+                SelectionChangedWhenLoaded="OnSelectionChanged" />
+            <controls:EnumComboBox
+                x:Name="SimpleWorkTypeComboBox"
+                SelectionChanged="ComboBox_OnSelectionChanged"
+                Style="{StaticResource SimpleWorkTypeComboBoxStyle}" />
         </controls:WorkContainer.CommandBarElements>
     </controls:WorkContainer>
 </controls:EnhancedPage>

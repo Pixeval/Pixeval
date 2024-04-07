@@ -20,6 +20,16 @@
         <converters:StringFormatConverter x:Key="StringFormatConverter" />
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
         <converters1:NumberEllipsisConverter x:Key="NumberEllipsisConverter" />
+        <!--  ReSharper disable once Xaml.RedundantResource  -->
+        <Storyboard x:Key="ThumbnailStoryboard">
+            <DoubleAnimation
+                EasingFunction="{StaticResource EasingFunction}"
+                Storyboard.TargetName="Image"
+                Storyboard.TargetProperty="Opacity"
+                From="0"
+                To="1"
+                Duration="0:0:2" />
+        </Storyboard>
     </Grid.Resources>
     <interactivity:Interaction.Behaviors>
         <core:EventTriggerBehavior EventName="PointerEntered">
@@ -47,22 +57,22 @@
         Command="{x:Bind ViewModel.BookmarkCommand, Mode=OneWay}"
         CommandParameter="{x:Bind}"
         IsTapEnabled="False" />
-    <local:DockPanel
+    <controls:DockPanel
         Grid.Column="1"
         Padding="10"
         HorizontalSpacing="10"
         VerticalSpacing="10">
         <TextBlock
             x:Name="TitleTextBlock"
-            local:DockPanel.Dock="Top"
+            controls:DockPanel.Dock="Top"
             MaxLines="3"
             Style="{StaticResource ContentStrongTextBlockStyle}"
             Text="{x:Bind ViewModel.Title, Mode=OneWay}"
             TextTrimming="CharacterEllipsis"
             TextWrapping="WrapWholeWords" />
-        <local:DockPanel local:DockPanel.Dock="Top">
+        <controls:DockPanel controls:DockPanel.Dock="Top">
             <TextBlock
-                local:DockPanel.Dock="Right"
+                controls:DockPanel.Dock="Right"
                 Foreground="DarkGray"
                 MaxLines="1"
                 Style="{StaticResource ContentTextBlockStyle}"
@@ -77,40 +87,40 @@
                 Text="{x:Bind ViewModel.User.Name, Mode=OneWay}"
                 TextTrimming="CharacterEllipsis"
                 TextWrapping="WrapWholeWords" />
-        </local:DockPanel>
-        <local:DockPanel
-            local:DockPanel.Dock="Bottom"
+        </controls:DockPanel>
+        <controls:DockPanel
+            controls:DockPanel.Dock="Bottom"
             HorizontalSpacing="10"
             LastChildFill="False">
             <local:IconText
-                local:DockPanel.Dock="Right"
+                controls:DockPanel.Dock="Right"
                 Symbol="ListEA37"
                 Text="{x:Bind ViewModel.TextLength, Converter={StaticResource NumberEllipsisConverter}, Mode=OneWay}" />
             <local:IconText
-                local:DockPanel.Dock="Right"
+                controls:DockPanel.Dock="Right"
                 Symbol="HeartEB51"
                 Text="{x:Bind ViewModel.TotalBookmarks, Converter={StaticResource NumberEllipsisConverter}, Mode=OneWay}" />
             <local:IconText
-                local:DockPanel.Dock="Right"
+                controls:DockPanel.Dock="Right"
                 Symbol="RedEyeE7B3"
                 Text="{x:Bind ViewModel.TotalView, Converter={StaticResource NumberEllipsisConverter}, Mode=OneWay}" />
-        </local:DockPanel>
-        <local:DockPanel
-            local:DockPanel.Dock="Bottom"
+        </controls:DockPanel>
+        <controls:DockPanel
+            controls:DockPanel.Dock="Bottom"
             HorizontalSpacing="3"
             LastChildFill="False">
             <local:PixevalBadge
-                local:DockPanel.Dock="Right"
+                controls:DockPanel.Dock="Right"
                 Mode="Ai"
                 Visibility="{x:Bind ViewModel.IsAiGenerated, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
             <local:PixevalBadge
-                local:DockPanel.Dock="Right"
+                controls:DockPanel.Dock="Right"
                 Mode="{x:Bind ViewModel.XRestrictionCaption, Mode=OneWay}"
                 Visibility="{x:Bind ViewModel.IsXRestricted, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
-        </local:DockPanel>
+        </controls:DockPanel>
         <ItemsControl
             x:Name="TagsList"
-            local:DockPanel.Dock="Top"
+            controls:DockPanel.Dock="Top"
             ItemsSource="{x:Bind ViewModel.Tags, Mode=OneWay}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
@@ -128,7 +138,7 @@
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
-    </local:DockPanel>
+    </controls:DockPanel>
     <Popup
         x:Name="NovelItemPopup"
         Grid.Column="0"
@@ -178,13 +188,13 @@
                     <AppBarButton Command="{x:Bind ViewModel.OpenInWebBrowserCommand, Mode=OneWay}" />
                 </CommandBar>
             </Grid>
-            <local:DockPanel
+            <controls:DockPanel
                 Grid.Column="1"
                 HorizontalSpacing="10"
                 VerticalSpacing="10">
                 <TextBlock
                     x:Name="PopupTitleTextBlock"
-                    local:DockPanel.Dock="Top"
+                    controls:DockPanel.Dock="Top"
                     MaxLines="1"
                     Style="{StaticResource ContentStrongTextBlockStyle}"
                     Text="{x:Bind ViewModel.Title, Mode=OneWay}"
@@ -192,7 +202,7 @@
                     TextWrapping="WrapWholeWords" />
                 <TextBlock
                     x:Name="PopupAuthorTextBlock"
-                    local:DockPanel.Dock="Top"
+                    controls:DockPanel.Dock="Top"
                     Foreground="DarkGray"
                     MaxLines="1"
                     Style="{StaticResource ContentTextBlockStyle}"
@@ -203,7 +213,7 @@
                     <StackPanel Spacing="10">
                         <ItemsControl
                             x:Name="PopupTagsList"
-                            local:DockPanel.Dock="Top"
+                            controls:DockPanel.Dock="Top"
                             ItemsSource="{x:Bind ViewModel.Tags, Mode=OneWay}">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
@@ -229,7 +239,7 @@
                         </labs:MarkdownTextBlock>
                     </StackPanel>
                 </ScrollView>
-            </local:DockPanel>
+            </controls:DockPanel>
         </Grid>
     </Popup>
 </Grid>

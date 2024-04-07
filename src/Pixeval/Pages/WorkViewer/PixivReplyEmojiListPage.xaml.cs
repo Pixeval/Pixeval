@@ -25,6 +25,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.UI.Text;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Controls;
@@ -70,7 +71,7 @@ public sealed partial class PixivReplyEmojiListPage
 
     private void EmojiImage_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        var viewModel = sender.GetTag<PixivReplyEmojiViewModel>();
+        var viewModel = sender.To<FrameworkElement>().GetTag<PixivReplyEmojiViewModel>();
         _replyBar?.ReplyContentRichEditBox.Document.Selection.InsertImage(20, 20, 17, VerticalCharacterAlignment.Baseline, viewModel.EmojiEnumValue.GetReplyEmojiPlaceholderKey(), viewModel.ImageStream.AsRandomAccessStream());
     }
 }

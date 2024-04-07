@@ -21,22 +21,19 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Model;
-using Pixeval.Options;
+using Pixeval.Util;
 using WinUI3Utilities;
 
 namespace Pixeval.Pages.Capability;
 
 public class BookmarkPageViewModel(long userId) : ObservableObject, IDisposable
 {
-    public static readonly BookmarkTag EmptyCountedTag = new() { Name = BookmarksPageResources.EmptyCountedTagName, Count = 0 };
-
     public long UserId { get; } = userId;
 
     public bool IsMe => App.AppViewModel.PixivUid == UserId;
@@ -45,23 +42,27 @@ public class BookmarkPageViewModel(long userId) : ObservableObject, IDisposable
 
     private readonly ConcurrentDictionary<string, HashSet<long>> _bookmarkTagIllustrationIdDictionary = new();
 
-    public BookmarkTag[]? IllustrationPrivateBookmarkTags { get; set; }
+    public IList<BookmarkTag>? IllustrationPrivateBookmarkTags { get; private set; }
 
-    public BookmarkTag[]? IllustrationPublicBookmarkTags { get; set; }
+    public IList<BookmarkTag>? IllustrationPublicBookmarkTags { get; private set; }
 
-    public BookmarkTag[]? NovelPrivateBookmarkTags { get; set; }
+    public IList<BookmarkTag>? NovelPrivateBookmarkTags { get; private set; }
 
-    public BookmarkTag[]? NovelPublicBookmarkTags { get; set; }
+    public IList<BookmarkTag>? NovelPublicBookmarkTags { get; private set; }
 
-    public async Task<BookmarkTag[]> SetBookmarkTagsAsync(PrivacyPolicy policy, SimpleWorkType type)
+    public async Task<IList<BookmarkTag>> SetBookmarkTagsAsync(PrivacyPolicy policy, SimpleWorkType type)
     {
+        if (IsMe)
+            return await MakoHelper.GetBookmarkTagsAsync(policy, type);
+
+        var lazy = new Lazy<Task<List<BookmarkTag>>>(() => App.AppViewModel.MakoClient.GetBookmarkTagAsync(UserId, type, policy));
         return (policy, type) switch
         {
-            (PrivacyPolicy.Private, SimpleWorkType.IllustAndManga) => IllustrationPrivateBookmarkTags ??= [EmptyCountedTag, .. await App.AppViewModel.MakoClient.IllustrationBookmarkTag(UserId, policy).ToArrayAsync()],
-            (PrivacyPolicy.Public, SimpleWorkType.IllustAndManga) => IllustrationPublicBookmarkTags ??= [EmptyCountedTag, .. await App.AppViewModel.MakoClient.IllustrationBookmarkTag(UserId, policy).ToArrayAsync()],
-            (PrivacyPolicy.Private, SimpleWorkType.Novel) => NovelPrivateBookmarkTags ??= [EmptyCountedTag, .. await App.AppViewModel.MakoClient.NovelBookmarkTag(UserId, policy).ToArrayAsync()],
-            (PrivacyPolicy.Public, SimpleWorkType.Novel) => NovelPublicBookmarkTags ??= [EmptyCountedTag, .. await App.AppViewModel.MakoClient.NovelBookmarkTag(UserId, policy).ToArrayAsync()],
-            _ => ThrowHelper.ArgumentOutOfRange<(PrivacyPolicy, SimpleWorkType), BookmarkTag[]>((policy, type))
+            (PrivacyPolicy.Private, SimpleWorkType.IllustAndManga) => IllustrationPrivateBookmarkTags ??= await lazy.Value,
+            (PrivacyPolicy.Public, SimpleWorkType.IllustAndManga) => IllustrationPublicBookmarkTags ??= await lazy.Value,
+            (PrivacyPolicy.Private, SimpleWorkType.Novel) => NovelPrivateBookmarkTags ??= await lazy.Value,
+            (PrivacyPolicy.Public, SimpleWorkType.Novel) => NovelPublicBookmarkTags ??= await lazy.Value,
+            _ => ThrowHelper.ArgumentOutOfRange<(PrivacyPolicy, SimpleWorkType), IList<BookmarkTag>>((policy, type))
         };
     }
 

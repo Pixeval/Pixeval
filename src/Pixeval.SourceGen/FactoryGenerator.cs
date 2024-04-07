@@ -24,7 +24,7 @@ public class FactoryGenerator : IIncrementalGenerator
         var typeSyntax = typeSymbol.GetTypeSyntax(false);
         const string createDefault = "CreateDefault";
         var list = typeSymbol.GetProperties(attributeList[0].AttributeClass!)
-            .Where(symbol => !symbol.IsReadOnly)
+            .Where(symbol => !symbol.IsReadOnly && !symbol.IsStatic)
             .Select(symbol =>
             {
                 var syntax = (PropertyDeclarationSyntax)symbol.DeclaringSyntaxReferences[0].GetSyntax();
@@ -59,7 +59,6 @@ public class FactoryGenerator : IIncrementalGenerator
             .WithBaseList(BaseList(SeparatedList([(BaseTypeSyntax)SimpleBaseType(ParseTypeName($"{AttributeNamespace}.IFactory<{name}>"))])));
         var generatedNamespace = GetFileScopedNamespaceDeclaration(typeSymbol, generatedType, true);
         var compilationUnit = CompilationUnit()
-            .AddUsings([UsingDirective(ParseName(AttributeNamespace))])
             .AddMembers(generatedNamespace)
             .NormalizeWhitespace();
         return SyntaxTree(compilationUnit, encoding: Encoding.UTF8).GetText().ToString();

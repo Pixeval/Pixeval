@@ -20,6 +20,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Engine.Implements;
 using Pixeval.CoreApi.Global.Enum;
@@ -281,6 +283,28 @@ public partial class MakoClient
         return new IllustrationBookmarkTagEngine(this, uid, privacyPolicy, new EngineHandle(CancelInstance));
     }
 
+    public async Task<List<BookmarkTag>> GetBookmarkTagAsync(long uid, SimpleWorkType type, PrivacyPolicy policy)
+    {
+        var array = (policy, type) switch
+        {
+            (PrivacyPolicy.Private, SimpleWorkType.IllustAndManga) => await IllustrationBookmarkTag(uid, policy).ToListAsync(),
+            (PrivacyPolicy.Public, SimpleWorkType.IllustAndManga) => await IllustrationBookmarkTag(uid, policy).ToListAsync(),
+            (PrivacyPolicy.Private, SimpleWorkType.Novel) => await NovelBookmarkTag(uid, policy).ToListAsync(),
+            (PrivacyPolicy.Public, SimpleWorkType.Novel) => await NovelBookmarkTag(uid, policy).ToListAsync(),
+            _ => ThrowUtils.ArgumentOutOfRange<(PrivacyPolicy, SimpleWorkType), List<BookmarkTag>>((policy, type))
+        };
+
+        var allTag = new BookmarkTag
+        {
+            Name = BookmarkTag.AllCountedTagString,
+            Count = array.Sum(t => t.Count)
+        };
+
+        array.Insert(0, allTag);
+
+        return array;
+    }
+
     public IFetchEngine<BookmarkTag> NovelBookmarkTag(long uid, PrivacyPolicy privacyPolicy)
     {
         EnsureNotCancelled();
@@ -327,37 +351,6 @@ public partial class MakoClient
     {
         EnsureNotCancelled();
         return new RecentPostedNovelEngine(this, privacyPolicy, new EngineHandle(CancelInstance));
-    }
-
-    /// <summary>
-    /// This function is intended to be cooperated with <see cref="GetUserSpecifiedBookmarkTagsAsync" />, because
-    /// it requires an untranslated tag, for example, "未分類" is the untranslated name for "uncategorized",
-    /// and the API only recognizes the former one, while the latter one is usually works as the display
-    /// name
-    /// </summary>
-    /// <param name="uid">User id</param>
-    /// <param name="tagWithOriginalName">The untranslated name of the tag</param>
-    /// <returns>
-    /// The <see cref="TaggedBookmarksIdEngine" /> containing the illustrations ID for the bookmark tag.
-    /// </returns>
-    public IFetchEngine<long> UserTaggedBookmarksId(long uid, string tagWithOriginalName)
-    {
-        EnsureNotCancelled();
-        return new TaggedBookmarksIdEngine(this, new EngineHandle(CancelInstance), uid, tagWithOriginalName);
-    }
-
-    /// <summary>
-    /// Similar to <see cref="UserTaggedBookmarksId" /> but get the illustrations.
-    /// </summary>
-    /// <param name="uid">User id</param>
-    /// <param name="tagWithOriginalName">The untranslated name of the tag</param>
-    /// <returns>
-    /// The <see cref="TaggedBookmarksIdEngine" /> containing the illustrations for the bookmark tag.
-    /// </returns>
-    public IFetchEngine<Illustration> UserTaggedBookmarks(long uid, string tagWithOriginalName)
-    {
-        EnsureNotCancelled();
-        return new FetchEngineSelector<long, Illustration>(new TaggedBookmarksIdEngine(this, new EngineHandle(CancelInstance), uid, tagWithOriginalName), GetIllustrationFromIdAsync);
     }
 
     /// <summary>

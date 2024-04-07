@@ -18,11 +18,9 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System;
-
 namespace Pixeval.Controls;
 
-public record StringRepresentableItem(Enum Item, string? StringRepresentation)
+public record StringRepresentableItem(object Item, string StringRepresentation)
 {
     public virtual bool Equals(StringRepresentableItem? other)
     {

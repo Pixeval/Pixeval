@@ -13,16 +13,16 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.Graphics.Win2D" Version="1.1.1" />
+        <PackageReference Include="Microsoft.Graphics.Win2D" Version="1.2.0" />
         <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.3233" />
-        <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.5.240227000" />
+        <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.5.240311000" />
         <PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.0.9" />
         <PackageReference Include="CommunityToolkit.WinUI.Triggers" Version="8.0.240109" />
         <PackageReference Include="CommunityToolkit.WinUI.Collections" Version="8.0.240109" />
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
-        <PackageReference Include="CommunityToolkit.WinUI.Controls.Primitives" Version="8.0.240109" />
-        <PackageReference Include="CommunityToolkit.WinUI.Extensions" Version="8.0.240109" />
-        <PackageReference Include="WinUI3Utilities" Version="1.1.6.2" />
+        <PackageReference Include="CommunityToolkit.WinUI.Controls.Primitives" Version="8.1.240328-rc" />
+        <PackageReference Include="CommunityToolkit.WinUI.Extensions" Version="8.1.240328-rc" />
+        <PackageReference Include="WinUI3Utilities" Version="1.1.6.5" />
 
         <ProjectReference Include="..\Pixeval.Utilities\Pixeval.Utilities.csproj" />
     </ItemGroup>

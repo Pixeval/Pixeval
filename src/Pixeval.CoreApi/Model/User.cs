@@ -31,7 +31,10 @@ public partial record User : IEntry
     public required UserInfo UserInfo { get; set; }
 
     [JsonPropertyName("illusts")] 
-    public required Illustration[] Illusts { get; set; } = [];
+    public required Illustration[] Illustrations { get; set; } = [];
+
+    [JsonPropertyName("novels")] 
+    public required Novel[] Novels { get; set; } = [];
 
     [JsonPropertyName("is_muted")]
     public required bool IsMuted { get; set; }

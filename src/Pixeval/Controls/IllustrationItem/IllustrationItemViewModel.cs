@@ -26,13 +26,12 @@ using System.Threading.Tasks;
 using Microsoft.UI.Xaml.Controls;
 using Pixeval.CoreApi.Model;
 using Pixeval.CoreApi.Net.Response;
-using Pixeval.Util;
 using Pixeval.Utilities;
 
 namespace Pixeval.Controls;
 
 /// <summary>
-/// A view model that communicates between the model <see cref="Illustration" /> and the view <see cref="IllustrationView" />.
+/// A view model that communicates between the model <see cref="Illustration" /> and the view <see cref="WorkView" />.
 /// It is responsible for being the elements of the <see cref="ItemsRepeater" /> to present the thumbnail of an illustration
 /// </summary>
 public partial class IllustrationItemViewModel(Illustration illustration) : ThumbnailEntryViewModel<Illustration>(illustration)
@@ -106,7 +105,7 @@ public partial class IllustrationItemViewModel(Illustration illustration) : Thum
         // that only differs from the illustrations of a single work on the MetaPages property, this property
         // contains the download urls of the manga
 
-        return Entry.MetaPages.Select(m => Entry with { ImageUrls = m.ImageUrls })
+        return Entry.MetaPages.Select(m => Entry with { ThumbnailUrls = m.ImageUrls })
             .Select((p, i) => new IllustrationItemViewModel(p) { MangaIndex = i });
     }
 
@@ -114,6 +113,4 @@ public partial class IllustrationItemViewModel(Illustration illustration) : Thum
     {
         return Entry.MetaPages.Select(m => m.ImageUrls.Original!);
     }
-
-    protected override string ThumbnailUrl => Entry.GetThumbnailUrl();
 }

@@ -24,12 +24,7 @@ public sealed partial class IllustratorView : IScrollViewProvider
         await IllustratorViewerHelper.CreateWindowWithPageAsync(e.InvokedItem.To<IllustratorItemViewModel>().UserId);
     }
 
-    private void IllustratorViewOnUnloaded(object sender, RoutedEventArgs e)
-    {
-        foreach (var illustrationViewModel in ViewModel.DataProvider.Source)
-            illustrationViewModel.Dispose();
-        ViewModel.Dispose();
-    }
+    private void IllustratorViewOnUnloaded(object sender, RoutedEventArgs e) => ViewModel.Dispose();
 
     public ScrollView ScrollView => AdvancedItemsView.ScrollView;
 }

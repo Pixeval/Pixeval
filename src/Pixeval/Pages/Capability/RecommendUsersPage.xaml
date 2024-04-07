@@ -18,9 +18,9 @@
                 MinItemWidth="300"
                 SelectionMode="None">
                 <controls:AdvancedItemsView.ItemTemplate>
-                    <DataTemplate x:DataType="controls:RecommendIllustratorItemViewModel">
+                    <DataTemplate x:DataType="controls:IllustratorItemViewModel">
                         <ItemContainer>
-                            <controls:RecommendIllustratorItem
+                            <controls:IllustratorItem
                                 RequestTeachingTip="RecommendIllustratorItemOnRequestTeachingTip"
                                 ViewModel="{x:Bind}"
                                 ViewModelChanged="IllustratorItem_OnViewModelChanged" />

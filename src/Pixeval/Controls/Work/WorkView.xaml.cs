@@ -11,6 +11,9 @@ using WinUI3Utilities;
 using Pixeval.CoreApi.Model;
 using Pixeval.CoreApi.Engine;
 using Pixeval.Options;
+using Microsoft.UI.Xaml.Media.Animation;
+using Pixeval.CoreApi.Global.Enum;
+using Pixeval.Util.UI;
 
 namespace Pixeval.Controls;
 
@@ -51,10 +54,17 @@ public sealed partial class WorkView : IEntryView<ISortableEntryViewViewModel>
 
     public ScrollView ScrollView => ItemsView.ScrollView;
 
+    public SimpleWorkType Type { get; private set; }
+
     private async void WorkItem_OnViewModelChanged(FrameworkElement sender, IWorkViewModel viewModel)
     {
         ArgumentNullException.ThrowIfNull(ViewModel);
-        _ = await viewModel.TryLoadThumbnailAsync(ViewModel);
+        if (await viewModel.TryLoadThumbnailAsync(ViewModel))
+            // TODO 不知道为什么NovelItem的Resource会有问题
+            if (sender is IllustrationItem && sender.IsFullyOrPartiallyVisible(this))
+                sender.GetResource<Storyboard>("ThumbnailStoryboard").Begin();
+            else
+                sender.Opacity = 1;
     }
 
     private void ItemsView_OnItemInvoked(ItemsView sender, ItemsViewItemInvokedEventArgs e)
@@ -76,6 +86,16 @@ public sealed partial class WorkView : IEntryView<ISortableEntryViewViewModel>
             viewModel.CreateWindowWithPage(viewViewModel);
     }
 
+    private void WorkView_OnSelectionChanged(ItemsView sender, ItemsViewSelectionChangedEventArgs args)
+    {
+        ViewModel.SelectedEntries = ViewModel switch
+        {
+            NovelViewViewModel => sender.SelectedItems.Cast<NovelItemViewModel>().ToArray(),
+            IllustrationViewViewModel => sender.SelectedItems.Cast<IllustrationItemViewModel>().ToArray(),
+            _ => ViewModel.SelectedEntries
+        };
+    }
+
     [MemberNotNull(nameof(ViewModel))]
     public void ResetEngine(IFetchEngine<IWorkEntry> newEngine, int itemLimit = -1)
     {
@@ -91,6 +111,7 @@ public sealed partial class WorkView : IEntryView<ISortableEntryViewViewModel>
             default:
                 if (type == typeof(Illustration))
                 {
+                    Type = SimpleWorkType.IllustAndManga;
                     ViewModel?.Dispose();
                     ViewModel = null!;
                     ItemsView.MinItemWidth = DesiredWidth;
@@ -105,6 +126,7 @@ public sealed partial class WorkView : IEntryView<ISortableEntryViewViewModel>
                 }
                 else if (type == typeof(Novel))
                 {
+                    Type = SimpleWorkType.Novel;
                     ViewModel?.Dispose();
                     ViewModel = null!;
                     ItemsView.MinItemWidth = 350;
@@ -126,4 +148,14 @@ public sealed partial class WorkView : IEntryView<ISortableEntryViewViewModel>
     private TeachingTip WorkItem_OnRequestTeachingTip() => EntryView.QrCodeTeachingTip;
 
     private (ThumbnailDirection ThumbnailDirection, double DesiredHeight) IllustrationItem_OnRequiredParam() => (ThumbnailDirection, DesiredHeight);
+
+    private void WorkView_OnUnloaded(object sender, RoutedEventArgs e)
+    {
+        if (ViewModel == null!)
+            return;
+        foreach (var viewModel in ViewModel.Source)
+            viewModel.UnloadThumbnail(ViewModel);
+        ViewModel.Dispose();
+        ViewModel = null!;
+    }
 }

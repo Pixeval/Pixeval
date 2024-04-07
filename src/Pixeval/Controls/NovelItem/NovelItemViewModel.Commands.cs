@@ -20,20 +20,15 @@
 
 using System;
 using Microsoft.UI.Xaml.Input;
-using Pixeval.Util.UI;
 using Pixeval.Util;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Pixeval.Controls;
 
 public partial class NovelItemViewModel
 {
-    protected override async void BookmarkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
-    {
-        IsBookmarked = await MakoHelper.SetNovelBookmarkAsync(Id, !IsBookmarked);
-        BookmarkCommand.GetBookmarkCommand(IsBookmarked);
-        if (App.AppViewModel.AppSettings.DownloadWhenBookmarked && IsBookmarked && !User.IsFollowed)
-            SaveCommandOnExecuteRequested(sender, args);
-    }
+    protected override Task<bool> SetBookmarkAsync(long id, bool isBookmarked, bool privately = false, IEnumerable<string>? tags = null) => MakoHelper.SetNovelBookmarkAsync(id, isBookmarked, privately, tags);
 
     protected override void SaveCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {

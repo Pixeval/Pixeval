@@ -1,4 +1,4 @@
-﻿#region Copyright
+#region Copyright
 
 // GPL v3 License
 // 
@@ -24,4 +24,4 @@ using Refit;
 
 namespace Pixeval.CoreApi.Net.Request;
 
-internal record RemoveNovelBookmarkRequest([property: AliasAs("novel_id")] string NovelId);
+internal record RemoveNovelBookmarkRequest([property: AliasAs("novel_id")] long NovelId);

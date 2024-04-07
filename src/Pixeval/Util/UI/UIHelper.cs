@@ -236,11 +236,11 @@ public static partial class UiHelper
         return icon;
     }
 
-    public static bool IsFullyOrPartiallyVisible(this FrameworkElement child, FrameworkElement scrollViewer)
+    public static bool IsFullyOrPartiallyVisible(this FrameworkElement child, FrameworkElement parent)
     {
-        var childTransform = child.TransformToVisual(scrollViewer);
+        var childTransform = child.TransformToVisual(parent);
         var childRectangle = childTransform.TransformBounds(new Rect(new Point(0, 0), child.RenderSize));
-        var ownerRectangle = new Rect(new Point(0, 0), scrollViewer.RenderSize);
+        var ownerRectangle = new Rect(new Point(0, 0), parent.RenderSize);
         return ownerRectangle.IntersectsWith(childRectangle);
     }
 
@@ -254,40 +254,9 @@ public static partial class UiHelper
         box.Document.SetText(TextSetOptions.None, "");
     }
 
-    public static IAsyncOperation<StorageFolder?> OpenFolderPickerAsync(this Window window)
-    {
-        var folderPicker = new FolderPicker
-        {
-            SuggestedStartLocation = PickerLocationId.PicturesLibrary,
-            FileTypeFilter = { "*" }
-        };
-        return folderPicker.InitializeWithWindow(window).PickSingleFolderAsync();
-    }
+    public static IAsyncOperation<StorageFolder?> OpenFolderPickerAsync(this Window window) => window.PickSingleFolderAsync(PickerLocationId.PicturesLibrary);
 
-    public static IAsyncOperation<StorageFile?> OpenFileSavePickerAsync(this Window window, string suggestedFileName, string fileTypeId)
-    {
-        var savePicker = new FileSavePicker
-        {
-            SuggestedStartLocation = PickerLocationId.PicturesLibrary,
-            FileTypeChoices =
-            {
-                [fileTypeId] = [fileTypeId]
-            },
-            SuggestedFileName = suggestedFileName
-        };
-        return savePicker.InitializeWithWindow(window).PickSaveFileAsync();
-    }
-
-    public static IAsyncOperation<StorageFile?> OpenFileOpenPickerAsync(this Window window)
-    {
-        var openPicker = new FileOpenPicker
-        {
-            SuggestedStartLocation = PickerLocationId.PicturesLibrary,
-            ViewMode = PickerViewMode.Thumbnail,
-            FileTypeFilter = { "*" }
-        };
-        return openPicker.InitializeWithWindow(window).PickSingleFileAsync();
-    }
+    public static IAsyncOperation<StorageFile?> OpenFileOpenPickerAsync(this Window window) => window.PickSingleFileAsync(PickerLocationId.PicturesLibrary);
 
     public static async Task<T> AwaitPageTransitionAsync<T>(this Frame root) where T : Page
     {

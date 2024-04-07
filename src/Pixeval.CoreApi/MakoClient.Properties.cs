@@ -20,7 +20,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Net;
 using Microsoft.Extensions.DependencyInjection;
 using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Preference;

@@ -87,8 +87,21 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
     {
         foreach (var illustrationViewModel in Illustrations)
             illustrationViewModel.UnloadThumbnail(this);
+        DisposePages();
         Pages = null!;
         ViewModelSource?.Dispose();
+    }
+
+    private void DisposePages()
+    {
+        // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
+        if (Pages is not null)
+            foreach (var illustrationItemViewModel in Pages)
+                illustrationItemViewModel.Dispose();
+        // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
+        if (Images is not null)
+            foreach (var imageViewModel in Images)
+                imageViewModel.Dispose();
     }
 
     public NavigationViewTag[] Tags =>
@@ -110,11 +123,6 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
     #region Current相关
 
     /// <summary>
-    /// 插画列表
-    /// </summary>
-    public IList<IllustrationItemViewModel> Illustrations => ViewModelSource?.DataProvider.View ?? (IList<IllustrationItemViewModel>)IllustrationsSource!;
-
-    /// <summary>
     /// 当前插画
     /// </summary>
     public IllustrationItemViewModel CurrentIllustration => Illustrations[CurrentIllustrationIndex];
@@ -123,6 +131,11 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
     /// 当前插画的页面
     /// </summary>
     public IllustrationItemViewModel CurrentPage => Pages[CurrentPageIndex];
+
+    /// <summary>
+    /// 当前图片的ViewModel
+    /// </summary>
+    public ImageViewerPageViewModel CurrentImage => Images[CurrentPageIndex];
 
     /// <summary>
     /// 当前插画的索引
@@ -142,9 +155,11 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
             var oldTag = Pages?[CurrentPageIndex].Id ?? 0;
 
             _currentIllustrationIndex = value;
+            DisposePages();
             // 这里可以触发总页数的更新
             Pages = CurrentIllustration.GetMangaIllustrationViewModels().ToArray();
             // 保证_pages里所有的IllustrationViewModel都是生成的，从而删除的时候一律DisposeForce
+            Images = Pages.Select(p => new ImageViewerPageViewModel(p, FrameworkElement)).ToArray();
 
             IllustrationInfoTag.Parameter = CurrentIllustration.Entry;
             CommentsTag.Parameter = (CommentType.Illustration, IllustrationId);
@@ -155,7 +170,7 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
             OnButtonPropertiesChanged();
             // 用OnPropertyChanged不会触发导航，但可以让UI页码更新
             OnPropertyChanged(nameof(CurrentPageIndex));
-            CurrentImage = new ImageViewerPageViewModel(CurrentPage, FrameworkElement);
+            OnPropertyChanged(nameof(CurrentImage));
 
             OnDetailedPropertyChanged(oldValue, value, oldTag, CurrentPage.Id);
             OnPropertyChanged(nameof(CurrentIllustration));
@@ -175,7 +190,7 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
             var oldValue = _currentPageIndex;
             _currentPageIndex = value;
             OnButtonPropertiesChanged();
-            CurrentImage = new ImageViewerPageViewModel(CurrentPage, FrameworkElement);
+            OnPropertyChanged(nameof(CurrentImage));
             OnDetailedPropertyChanged(oldValue, value);
         }
     }
@@ -195,6 +210,11 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
     private int _currentPageIndex = -1;
 
     /// <summary>
+    /// 插画列表
+    /// </summary>
+    public IList<IllustrationItemViewModel> Illustrations => ViewModelSource?.DataProvider.View ?? (IList<IllustrationItemViewModel>)IllustrationsSource!;
+
+    /// <summary>
     /// 一个插画所有的页面
     /// </summary>
     public IllustrationItemViewModel[] Pages
@@ -211,12 +231,21 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
         }
     }
 
+    public ImageViewerPageViewModel[] Images
+    {
+        get => _images;
+        set
+        {
+            if (_images == value)
+                return;
+            _images?.ForEach(i => i.Dispose());
+            _images = value;
+        }
+    }
+
     private IllustrationItemViewModel[] _pages = null!;
 
-    /// <summary>
-    /// 当前图片的ViewModel
-    /// </summary>
-    [ObservableProperty] private ImageViewerPageViewModel _currentImage = null!;
+    private ImageViewerPageViewModel[] _images = null!;
 
     #endregion
 
@@ -293,6 +322,8 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
 
     public XamlUICommand InfoAndCommentsCommand { get; } =
         EntryViewerPageResources.InfoAndComments.GetCommand(FontIconSymbol.InfoE946, VirtualKey.F12);
+
+    public XamlUICommand AddToBookmarkCommand { get; } = EntryItemResources.AddToBookmark.GetCommand(FontIconSymbol.BookmarksE8A4);
 
     public XamlUICommand FullScreenCommand { get; } = "".GetCommand(FontIconSymbol.FullScreenE740);
 

@@ -6,11 +6,9 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     NavigationCacheMode="Required"
-    Unloaded="RelatedWorksPage_OnUnloaded"
     mc:Ignorable="d">
-    <controls:IllustrationView
+    <controls:WorkView
         x:Name="RelatedWorksIllustrationGrid"
-        Margin="5,0,0,0"
         LayoutType="VerticalUniformStack"
         ThumbnailDirection="{x:Bind ThumbnailDirection}" />
 </controls:EnhancedPage>
