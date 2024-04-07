@@ -52,9 +52,7 @@ public static partial class AppInfo
 
     public const string AppProtocol = "pixeval";
 
-    public const string AppLogoNoCaptionUri = "ms-appx:///Assets/Images/logo-no-caption.png";
-
-    public const string IconApplicationUri = "ms-appx:///Assets/Images/logo44x44.ico";
+    public const string IconApplicationUri = "ms-appx:///Assets/Images/logo.ico";
 
     public static readonly string AppIconFontFamilyName = AppHelper.IsWindows11 ? "Segoe Fluent Icons" : "Segoe MDL2 Assets";
 
@@ -148,7 +146,7 @@ public static partial class AppInfo
     public static Stream GetIconImageStream()
     {
         if (!_iconStream.TryGetTarget(out var target))
-            _iconStream.SetTarget(target = GetAssetStream("Images/logo44x44.ico"));
+            _iconStream.SetTarget(target = GetAssetStream("Images/logo.ico"));
         return target;
     }
 

@@ -37,14 +37,14 @@ public partial class ZoomableImage
     /// Get the scale factor of the original image when it is contained inside a <see cref="Image"/> control, and the <see cref="Image.Stretch"/>
     /// property is set to <see cref="Stretch.UniformToFill"/> or <see cref="Stretch.Uniform"/>
     /// </summary>
-    /// <remarks>当图片按原比例显示，并占满画布时，图片的缩放比例</remarks>>
+    /// <remarks>当图片按原比例显示，并占满画布时，图片的缩放比例</remarks>
     private double ScaledFactor => GetScaledFactor(new Size(CanvasControl.ActualWidth, CanvasControl.ActualHeight));
 
     /// <summary>
     /// Get the scale factor of the original image when it is contained inside a <see cref="Image"/> control, and the <see cref="Image.Stretch"/>
     /// property is set to <see cref="Stretch.UniformToFill"/> or <see cref="Stretch.Uniform"/>
     /// </summary>
-    /// <remarks>当图片按原比例显示，并占满画布时，图片的缩放比例</remarks>>
+    /// <remarks>当图片按原比例显示，并占满画布时，图片的缩放比例</remarks>
     private double GetScaledFactor(Size canvasSize)
     {
         var canvasWidth = canvasSize.Width;
@@ -92,23 +92,15 @@ public partial class ZoomableImage
     {
         if (EnsureNotDisposed(d) is not { } zoomableImage)
             return;
-        var imageScale = zoomableImage.ImageScale;
         switch (zoomableImage.Mode)
         {
             case ZoomableImageMode.Original:
-                if (imageScale is not 1)
-                {
-                    zoomableImage.ImageScale = 1;
-                    zoomableImage.SetPosition(zoomableImage.InitPosition);
-                }
+                zoomableImage.ImageScale = 1;
+                zoomableImage.SetPosition(zoomableImage.InitPosition);
                 break;
             case ZoomableImageMode.Fit:
-                var scale = zoomableImage.ScaledFactor;
-                if (Math.Abs(scale - imageScale) > 0.01 || imageScale is float.NaN)
-                {
-                    zoomableImage.ImageScale = (float)scale;
-                    zoomableImage.SetPosition(zoomableImage.InitPosition);
-                }
+                zoomableImage.ImageScale = (float)zoomableImage.ScaledFactor;
+                zoomableImage.SetPosition(zoomableImage.InitPosition);
                 break;
             case ZoomableImageMode.NotFit:
                 break;

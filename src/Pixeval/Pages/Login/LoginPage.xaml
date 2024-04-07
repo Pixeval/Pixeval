@@ -26,17 +26,17 @@
         <StackPanel
             Grid.Column="0"
             HorizontalAlignment="Center"
-            VerticalAlignment="Center">
+            VerticalAlignment="Center"
+            Spacing="25">
             <Image
-                Width="150"
-                Height="150"
-                Source="../../Assets/Images/logo.png" />
+                Width="100"
+                Height="100"
+                Source="../../Assets/Images/logo400.png" />
             <ProgressRing
                 Width="30"
                 Height="30"
                 Visibility="{x:Bind _viewModel.ProcessingRingVisible, Mode=OneWay}" />
             <TextBlock
-                Margin="0,15,0,0"
                 HorizontalAlignment="Center"
                 FontSize="10"
                 Text="{x:Bind util:LocalizedResourceAttributeHelper.GetLocalizedResourceContent(_viewModel.LoginPhase), Mode=OneWay}" />
