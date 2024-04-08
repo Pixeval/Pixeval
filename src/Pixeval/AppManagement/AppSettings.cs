@@ -114,6 +114,15 @@ public partial record AppSettings : IWindowSettings
     [SettingMetadata(SettingEntryCategory.Search, typeof(SettingsPageResources), nameof(SettingsPageResources.DefaultSearchSortOptionEntryHeader))]
     public WorkSortOption DefaultSortOption { get; set; } = WorkSortOption.DoNotSort;
 
+    [SettingMetadata(SettingEntryCategory.Search, typeof(SettingsPageResources), nameof(SettingsPageResources.DefaultSearchTagMatchOptionEntryHeader))]
+    public SimpleWorkType SimpleWorkType { get; set; } = SimpleWorkType.IllustAndManga;
+
+    [SettingMetadata(SettingEntryCategory.Search, typeof(SettingsPageResources), nameof(SettingsPageResources.DefaultSearchTagMatchOptionEntryHeader))]
+    public RankOption IllustrationRankOption { get; set; } = RankOption.Day;
+
+    [SettingMetadata(SettingEntryCategory.Search, typeof(SettingsPageResources), nameof(SettingsPageResources.DefaultSearchTagMatchOptionEntryHeader))]
+    public RankOption NovelRankOption { get; set; } = RankOption.Day;
+
     /// <summary>
     /// The illustration tag match option for keyword search
     /// </summary>
@@ -328,6 +337,9 @@ public partial record AppSettings : IWindowSettings
     [AttributeIgnore(typeof(SettingsViewModelAttribute<>))]
     [SyntheticSetting]
     public bool IsMaximized { get; set; } = false;
+
+    [AttributeIgnore(typeof(SettingsViewModelAttribute<>), typeof(GenerateConstructorAttribute), typeof(AppContextAttribute<>))]
+    public WorkType WorkType => SimpleWorkType is SimpleWorkType.IllustAndManga ? WorkType.Illust : WorkType.Novel;
 
     public MakoClientConfiguration ToMakoClientConfiguration()
     {

@@ -1,9 +1,7 @@
 {
     "AppDescriptionTextBlock/Text": "Pixeval is a third-party Pixiv client developed on top of Windows UI 3. It provides extra functionalities in addition to standard pixiv experiences，including local collections and domain fronting in China mainland\n\n You can find more information about Pixeval below",
-    "AppFontFamilyComboBoxEntry/Description": "This setting will take effect after restart the app",
-    "AppFontFamilyComboBoxEntry/Header": "Select font",
     "AppFontFamilyComboBox/PlaceholderText": "Select font",
-    "AppFontFamilyEntry/Header": "Font setting",
+    "AppFontFamilyEntry/Header": "Font setting (take effect after restart the app)",
     "AppLanguageEntry/Header": "Language setting (take effect after restart the app)",
     "OpenLanguageSettingsHyperlinkButton/Content": "Open system language setting",
     "AppLanguageEntryComboBox/PlaceholderText": "Select language",
