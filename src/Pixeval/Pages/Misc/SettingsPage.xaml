@@ -5,13 +5,13 @@
     xmlns:appManagement="using:Pixeval.AppManagement"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:controls1="using:Pixeval.Controls"
+    xmlns:controls2="using:WinUI3Utilities.Controls"
     xmlns:converters="using:CommunityToolkit.WinUI.Converters"
     xmlns:converters1="using:Pixeval.Controls.Converters"
     xmlns:coreApi="using:Pixeval.CoreApi.Net"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:enum="using:Pixeval.CoreApi.Global.Enum"
     xmlns:labs="using:CommunityToolkit.Labs.WinUI"
-    xmlns:markup="using:Pixeval.Controls.MarkupExtensions"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:misc="using:Pixeval.Pages.Misc"
     xmlns:misc2="using:Pixeval.Misc"
@@ -100,7 +100,7 @@
                 <!--  region Setting Entries  -->
                 <TextBlock x:Uid="/SettingsPage/VersionSettingsGroup" Style="{StaticResource SettingHeaderStyle}" />
 
-                <controls:SettingsExpander HeaderIcon="{markup:FontSymbolIcon Glyph=SyncE895}" IsExpanded="{x:Bind ViewModel.ExpandExpander, Mode=OneWay}">
+                <controls:SettingsExpander HeaderIcon="{controls2:GlyphIcon Glyph=SyncE895}" IsExpanded="{x:Bind ViewModel.ExpandExpander, Mode=OneWay}">
                     <controls:SettingsExpander.Header>
                         <HyperlinkButton
                             Padding="0"
@@ -134,8 +134,8 @@
                     <controls:SettingsExpander.Items>
                         <controls:SettingsCard
                             x:Uid="/SettingsPage/OpenTempEntry"
-                            ActionIcon="{markup:FontSymbolIcon Glyph=OpenInNewWindowE8A7}"
-                            HeaderIcon="{markup:FontSymbolIcon Glyph=FolderE8B7}"
+                            ActionIcon="{controls2:GlyphIcon Glyph=OpenInNewWindowE8A7}"
+                            HeaderIcon="{controls2:GlyphIcon Glyph=FolderE8B7}"
                             IsClickEnabled="True"
                             Tag="Temp"
                             Tapped="OpenFolder_OnTapped" />
@@ -170,14 +170,14 @@
 
                 <controls:SettingsCard
                     x:Uid="/SettingsPage/DownloadUpdateAutomaticallyEntry"
-                    HeaderIcon="{markup:FontSymbolIcon Glyph=CommunicationsE95A}"
+                    HeaderIcon="{controls2:GlyphIcon Glyph=CommunicationsE95A}"
                     Tag="{x:Bind misc2:SettingEntry.AutoUpdate}">
                     <ToggleSwitch IsOn="{x:Bind ViewModel.DownloadUpdateAutomatically, Mode=TwoWay}" />
                 </controls:SettingsCard>
 
-                <controls:SettingsExpander x:Uid="/SettingsPage/BugReportEntry" HeaderIcon="{markup:FontSymbolIcon Glyph=BugEBE8}">
+                <controls:SettingsExpander x:Uid="/SettingsPage/BugReportEntry" HeaderIcon="{controls2:GlyphIcon Glyph=BugEBE8}">
                     <controls:SettingsExpander.Items>
-                        <controls:SettingsCard x:Uid="/SettingsPage/BugReportEntry" HeaderIcon="{markup:FontSymbolIcon Glyph=SendE724}">
+                        <controls:SettingsCard x:Uid="/SettingsPage/BugReportEntry" HeaderIcon="{controls2:GlyphIcon Glyph=SendE724}">
                             <CommandBar OverflowButtonVisibility="Collapsed">
                                 <AppBarButton
                                     x:Uid="/SettingsPage/GitHubBugReportEntry"
@@ -189,7 +189,7 @@
                                 </AppBarButton>
                                 <AppBarButton
                                     x:Uid="/SettingsPage/EMailBugReportEntry"
-                                    Icon="{markup:FontSymbolIcon Glyph=MailE715}"
+                                    Icon="{controls2:GlyphIcon Glyph=MailE715}"
                                     Tag="mailto:decem0730@hotmail.com"
                                     Tapped="OpenHyperlinkButton_OnTapped" />
                                 <AppBarButton
@@ -204,29 +204,29 @@
                         </controls:SettingsCard>
                         <controls:SettingsCard
                             x:Uid="/SettingsPage/OpenLogEntry"
-                            ActionIcon="{markup:FontSymbolIcon Glyph=OpenInNewWindowE8A7}"
-                            HeaderIcon="{markup:FontSymbolIcon Glyph=FolderFillE8D5}"
+                            ActionIcon="{controls2:GlyphIcon Glyph=OpenInNewWindowE8A7}"
+                            HeaderIcon="{controls2:GlyphIcon Glyph=FolderFillE8D5}"
                             IsClickEnabled="True"
                             Tag="Log"
                             Tapped="OpenFolder_OnTapped" />
                         <controls:SettingsCard
                             x:Uid="/SettingsPage/OpenTempEntry"
-                            ActionIcon="{markup:FontSymbolIcon Glyph=OpenInNewWindowE8A7}"
-                            HeaderIcon="{markup:FontSymbolIcon Glyph=FolderE8B7}"
+                            ActionIcon="{controls2:GlyphIcon Glyph=OpenInNewWindowE8A7}"
+                            HeaderIcon="{controls2:GlyphIcon Glyph=FolderE8B7}"
                             IsClickEnabled="True"
                             Tag="Temp"
                             Tapped="OpenFolder_OnTapped" />
                         <controls:SettingsCard
                             x:Uid="/SettingsPage/OpenLocalEntry"
-                            ActionIcon="{markup:FontSymbolIcon Glyph=OpenInNewWindowE8A7}"
-                            HeaderIcon="{markup:FontSymbolIcon Glyph=UnsyncFolderE8F6}"
+                            ActionIcon="{controls2:GlyphIcon Glyph=OpenInNewWindowE8A7}"
+                            HeaderIcon="{controls2:GlyphIcon Glyph=UnsyncFolderE8F6}"
                             IsClickEnabled="True"
                             Tag="Local"
                             Tapped="OpenFolder_OnTapped" />
                         <controls:SettingsCard
                             x:Uid="/SettingsPage/OpenRoamingEntry"
-                            ActionIcon="{markup:FontSymbolIcon Glyph=OpenInNewWindowE8A7}"
-                            HeaderIcon="{markup:FontSymbolIcon Glyph=SyncFolderE8F7}"
+                            ActionIcon="{controls2:GlyphIcon Glyph=OpenInNewWindowE8A7}"
+                            HeaderIcon="{controls2:GlyphIcon Glyph=SyncFolderE8F7}"
                             IsClickEnabled="True"
                             Tag="Roaming"
                             Tapped="OpenFolder_OnTapped" />
@@ -237,35 +237,35 @@
 
                 <controls:SettingsCard
                     x:Uid="/SettingsPage/SignOutEntry"
-                    HeaderIcon="{markup:FontSymbolIcon Glyph=SignOutF3B1}"
+                    HeaderIcon="{controls2:GlyphIcon Glyph=SignOutF3B1}"
                     IsClickEnabled="True"
                     Tag="{x:Bind misc2:SettingEntry.SignOut}"
                     Tapped="PerformSignOutButton_OnTapped" />
 
                 <controls:SettingsExpander
                     x:Uid="/SettingsPage/ResetDefaultSettingsEntry"
-                    HeaderIcon="{markup:FontSymbolIcon Glyph=AppIconDefaultECAA}"
+                    HeaderIcon="{controls2:GlyphIcon Glyph=AppIconDefaultECAA}"
                     Tag="{x:Bind misc2:SettingEntry.ResetSettings}">
                     <Button x:Uid="/SettingsPage/ResetDefaultSettingsButton" Tapped="ResetDefaultSettingsButton_OnTapped" />
                     <controls:SettingsExpander.Items>
                         <controls:SettingsCard
                             x:Uid="/SettingsPage/DeleteFileCacheEntry"
-                            HeaderIcon="{markup:FontSymbolIcon Glyph=DeleteE74D}"
+                            HeaderIcon="{controls2:GlyphIcon Glyph=DeleteE74D}"
                             IsClickEnabled="True"
                             Tapped="DeleteFileCacheEntryButton_OnTapped" />
                         <controls:SettingsCard
                             x:Uid="/SettingsPage/DeleteSearchHistoriesEntry"
-                            HeaderIcon="{markup:FontSymbolIcon Glyph=DeleteE74D}"
+                            HeaderIcon="{controls2:GlyphIcon Glyph=DeleteE74D}"
                             IsClickEnabled="True"
                             Tapped="DeleteSearchHistoriesButton_OnTapped" />
                         <controls:SettingsCard
                             x:Uid="/SettingsPage/DeleteBrowseHistoriesEntry"
-                            HeaderIcon="{markup:FontSymbolIcon Glyph=DeleteE74D}"
+                            HeaderIcon="{controls2:GlyphIcon Glyph=DeleteE74D}"
                             IsClickEnabled="True"
                             Tapped="DeleteBrowseHistoriesButton_OnTapped" />
                         <controls:SettingsCard
                             x:Uid="/SettingsPage/DeleteDownloadHistoriesEntry"
-                            HeaderIcon="{markup:FontSymbolIcon Glyph=DeleteE74D}"
+                            HeaderIcon="{controls2:GlyphIcon Glyph=DeleteE74D}"
                             IsClickEnabled="True"
                             Tapped="DeleteDownloadHistoriesButton_OnTapped" />
                     </controls:SettingsExpander.Items>
@@ -275,7 +275,7 @@
 
                 <controls:SettingsExpander
                     x:Uid="/SettingsPage/ThemeEntry"
-                    HeaderIcon="{markup:FontSymbolIcon Glyph=PersonalizeE771}"
+                    HeaderIcon="{controls2:GlyphIcon Glyph=PersonalizeE771}"
                     Tag="{x:Bind misc2:SettingEntry.Theme}">
                     <controls:SettingsExpander.Description>
                         <HyperlinkButton
@@ -295,7 +295,7 @@
 
                 <controls:SettingsExpander
                     x:Uid="/SettingsPage/BackdropEntry"
-                    HeaderIcon="{markup:FontSymbolIcon Glyph=ColorE790}"
+                    HeaderIcon="{controls2:GlyphIcon Glyph=ColorE790}"
                     Tag="{x:Bind misc2:SettingEntry.Backdrop}">
                     <controls:SettingsExpander.Items>
                         <controls:SettingsCard ContentAlignment="Left">
@@ -309,7 +309,7 @@
 
                 <controls:SettingsExpander
                     x:Uid="/SettingsPage/AppFontFamilyEntry"
-                    HeaderIcon="{markup:FontSymbolIcon Glyph=FontE8D2}"
+                    HeaderIcon="{controls2:GlyphIcon Glyph=FontE8D2}"
                     Tag="{x:Bind misc2:SettingEntry.AppFontFamilyName}">
                     <controls:SettingsExpander.Description>
                         <HyperlinkButton
@@ -318,7 +318,7 @@
                             Tapped="OpenHyperlinkButton_OnTapped" />
                     </controls:SettingsExpander.Description>
                     <controls:SettingsExpander.Items>
-                        <controls:SettingsCard x:Uid="/SettingsPage/AppFontFamilyComboBoxEntry" HeaderIcon="{markup:FontSymbolIcon Glyph=SpellingF87B}">
+                        <controls:SettingsCard x:Uid="/SettingsPage/AppFontFamilyComboBoxEntry" HeaderIcon="{controls2:GlyphIcon Glyph=SpellingF87B}">
                             <ComboBox
                                 x:Uid="/SettingsPage/AppFontFamilyComboBox"
                                 Width="200"
@@ -334,7 +334,7 @@
                     </controls:SettingsExpander.Items>
                 </controls:SettingsExpander>
 
-                <controls:SettingsCard x:Uid="/SettingsPage/AppLanguageEntry" HeaderIcon="{markup:FontSymbolIcon Glyph=LocaleLanguageF2B7}">
+                <controls:SettingsCard x:Uid="/SettingsPage/AppLanguageEntry" HeaderIcon="{controls2:GlyphIcon Glyph=LocaleLanguageF2B7}">
                     <controls:SettingsCard.Description>
                         <HyperlinkButton
                             x:Uid="/SettingsPage/OpenLanguageSettingsHyperlinkButton"
@@ -350,7 +350,7 @@
 
                 <controls:SettingsExpander
                     x:Uid="/SettingsPage/DisableDomainFrontingEntry"
-                    HeaderIcon="{markup:FontSymbolIcon Glyph=DisableUpdatesE8D8}"
+                    HeaderIcon="{controls2:GlyphIcon Glyph=DisableUpdatesE8D8}"
                     Tag="{x:Bind misc2:SettingEntry.DisableDomainFronting}">
                     <ToggleSwitch IsOn="{x:Bind ViewModel.DisableDomainFronting, Mode=TwoWay}" />
                     <controls:SettingsExpander.Items>
@@ -376,21 +376,21 @@
 
                 <controls:SettingsCard
                     x:Uid="/SettingsPage/UseFileCacheEntry"
-                    HeaderIcon="{markup:FontSymbolIcon Glyph=FileExplorerEC50}"
+                    HeaderIcon="{controls2:GlyphIcon Glyph=FileExplorerEC50}"
                     Tag="{x:Bind misc2:SettingEntry.UseFileCache}">
                     <ToggleSwitch IsOn="{x:Bind ViewModel.UseFileCache, Mode=TwoWay}" />
                 </controls:SettingsCard>
 
                 <controls:SettingsCard
                     x:Uid="/SettingsPage/GenerateHelpLinkEntry"
-                    HeaderIcon="{markup:FontSymbolIcon Glyph=LinkE71B}"
+                    HeaderIcon="{controls2:GlyphIcon Glyph=LinkE71B}"
                     Tag="{x:Bind misc2:SettingEntry.DisplayTeachingTipWhenGeneratingAppLink}">
                     <ToggleSwitch IsOn="{x:Bind ViewModel.DisplayTeachingTipWhenGeneratingAppLink, Mode=TwoWay}" />
                 </controls:SettingsCard>
 
                 <controls:SettingsExpander
                     x:Uid="/SettingsPage/DefaultSelectedTabEntry"
-                    HeaderIcon="{markup:FontSymbolIcon Glyph=CheckMarkE73E}"
+                    HeaderIcon="{controls2:GlyphIcon Glyph=CheckMarkE73E}"
                     Tag="{x:Bind misc2:SettingEntry.DefaultSelectedTabItem}">
                     <controls:SettingsExpander.Items>
                         <controls:SettingsCard ContentAlignment="Left">
@@ -403,7 +403,7 @@
 
                 <controls:SettingsExpander
                     x:Uid="/SettingsPage/ThumbnailDirectionEntry"
-                    HeaderIcon="{markup:FontSymbolIcon Glyph=TypeE97C}"
+                    HeaderIcon="{controls2:GlyphIcon Glyph=TypeE97C}"
                     Tag="{x:Bind misc2:SettingEntry.ThumbnailDirection}">
                     <controls:SettingsExpander.Items>
                         <controls:SettingsCard ContentAlignment="Left">
@@ -414,7 +414,7 @@
 
                 <controls:SettingsExpander
                     x:Uid="/SettingsPage/ItemsViewLayoutTypeEntry"
-                    HeaderIcon="{markup:FontSymbolIcon Glyph=TilesECA5}"
+                    HeaderIcon="{controls2:GlyphIcon Glyph=TilesECA5}"
                     Tag="{x:Bind misc2:SettingEntry.ItemsViewLayoutType}">
                     <controls:SettingsExpander.Items>
                         <controls:SettingsCard ContentAlignment="Left">
@@ -425,7 +425,7 @@
 
                 <controls:SettingsCard
                     x:Uid="/SettingsPage/FiltrateRestrictedContentEntry"
-                    HeaderIcon="{markup:FontSymbolIcon Glyph=BlockContactE8F8}"
+                    HeaderIcon="{controls2:GlyphIcon Glyph=BlockContactE8F8}"
                     IsEnabled="False"
                     Tag="{x:Bind misc2:SettingEntry.FiltrateRestrictedContent}">
                     <ToggleSwitch IsOn="{x:Bind ViewModel.FiltrateRestrictedContent, Mode=TwoWay}" />
@@ -433,7 +433,7 @@
 
                 <controls:SettingsExpander
                     x:Uid="/SettingsPage/TargetAPIPlatformEntry"
-                    HeaderIcon="{markup:FontSymbolIcon Glyph=CommandPromptE756}"
+                    HeaderIcon="{controls2:GlyphIcon Glyph=CommandPromptE756}"
                     Tag="{x:Bind misc2:SettingEntry.TargetFilter}">
                     <controls:SettingsExpander.Items>
                         <controls:SettingsCard ContentAlignment="Left">
@@ -449,7 +449,7 @@
 
                 <controls:SettingsCard
                     x:Uid="/SettingsPage/ReverseSearchResultSimilarityThresholdEntry"
-                    HeaderIcon="{markup:FontSymbolIcon Glyph=FilterE71C}"
+                    HeaderIcon="{controls2:GlyphIcon Glyph=FilterE71C}"
                     Tag="{x:Bind misc2:SettingEntry.ReverseSearchResultSimilarityThreshold}">
                     <Slider
                         Maximum="100"
@@ -459,7 +459,7 @@
 
                 <controls:SettingsCard
                     x:Uid="/SettingsPage/ReverseSearchApiKeyEntry"
-                    HeaderIcon="{markup:FontSymbolIcon Glyph=SearchAndAppsE773}"
+                    HeaderIcon="{controls2:GlyphIcon Glyph=SearchAndAppsE773}"
                     Tag="{x:Bind misc2:SettingEntry.ReverseSearchApiKey}">
                     <controls:SettingsCard.Description>
                         <TextBlock>
@@ -475,7 +475,7 @@
 
                 <controls:SettingsCard
                     x:Uid="/SettingsPage/MaximumSearchHistoryRecordsEntry"
-                    HeaderIcon="{markup:FontSymbolIcon Glyph=HistoryE81C}"
+                    HeaderIcon="{controls2:GlyphIcon Glyph=HistoryE81C}"
                     Tag="{x:Bind misc2:SettingEntry.MaximumSearchHistoryRecords}">
                     <NumberBox
                         x:Uid="/SettingsPage/MaximumSearchHistoryRecordsNumberBox"
@@ -487,7 +487,7 @@
 
                 <controls:SettingsCard
                     x:Uid="/SettingsPage/MaximumSuggestionBoxSearchHistoryEntry"
-                    HeaderIcon="{markup:FontSymbolIcon Glyph=SetHistoryStatus2F739}"
+                    HeaderIcon="{controls2:GlyphIcon Glyph=SetHistoryStatus2F739}"
                     Tag="{x:Bind misc2:SettingEntry.MaximumSuggestionBoxSearchHistory}">
                     <NumberBox
                         x:Uid="/SettingsPage/MaximumSuggestionBoxSearchHistoryEntryNumberBox"
@@ -499,7 +499,7 @@
 
                 <controls:SettingsExpander
                     x:Uid="/SettingsPage/DefaultSearchSortOptionEntry"
-                    HeaderIcon="{markup:FontSymbolIcon Glyph=SortE8CB}"
+                    HeaderIcon="{controls2:GlyphIcon Glyph=SortE8CB}"
                     Tag="{x:Bind misc2:SettingEntry.DefaultSortOption}">
 
                     <controls:SettingsExpander.Items>
@@ -511,7 +511,7 @@
 
                 <controls:SettingsExpander
                     x:Uid="/SettingsPage/DefaultSearchTagMatchOptionEntry"
-                    HeaderIcon="{markup:FontSymbolIcon Glyph=PassiveAuthenticationF32A}"
+                    HeaderIcon="{controls2:GlyphIcon Glyph=PassiveAuthenticationF32A}"
                     Tag="{x:Bind misc2:SettingEntry.SearchIllustrationTagMatchOption}">
                     <controls:SettingsExpander.Items>
                         <controls:SettingsCard ContentAlignment="Left">
@@ -531,7 +531,7 @@
 
                 <controls:SettingsCard
                     x:Uid="/SettingsPage/MaximumSearchPageLimit"
-                    HeaderIcon="{markup:FontSymbolIcon Glyph=RulerED5E}"
+                    HeaderIcon="{controls2:GlyphIcon Glyph=RulerED5E}"
                     Tag="{x:Bind misc2:SettingEntry.PageLimitForKeywordSearch}">
                     <NumberBox
                         x:Uid="/SettingsPage/MaximumSearchPageLimitNumberBox"
@@ -543,7 +543,7 @@
 
                 <controls:SettingsCard
                     x:Uid="/SettingsPage/SearchStartsFromEntry"
-                    HeaderIcon="{markup:FontSymbolIcon Glyph=StartPointE819}"
+                    HeaderIcon="{controls2:GlyphIcon Glyph=StartPointE819}"
                     Tag="{x:Bind misc2:SettingEntry.SearchStartingFromPageNumber}">
                     <NumberBox
                         x:Uid="/SettingsPage/SearchStartsFromNumberBox"
@@ -555,7 +555,7 @@
 
                 <controls:SettingsExpander
                     x:Uid="/SettingsPage/SearchDurationEntry"
-                    HeaderIcon="{markup:FontSymbolIcon Glyph=EaseOfAccessE776}"
+                    HeaderIcon="{controls2:GlyphIcon Glyph=EaseOfAccessE776}"
                     Tag="{x:Bind misc2:SettingEntry.SearchDuration}">
                     <controls:SettingsExpander.Items>
                         <controls:SettingsCard ContentAlignment="Left">
@@ -566,19 +566,19 @@
 
                 <controls:SettingsExpander
                     x:Uid="/SettingsPage/UsePreciseRangeForSearchEntry"
-                    HeaderIcon="{markup:FontSymbolIcon Glyph=StopwatchE916}"
+                    HeaderIcon="{controls2:GlyphIcon Glyph=StopwatchE916}"
                     Tag="{x:Bind misc2:SettingEntry.UsePreciseRangeForSearch}">
                     <ToggleSwitch IsOn="{x:Bind ViewModel.UsePreciseRangeForSearch, Mode=TwoWay}" />
                     <controls:SettingsExpander.Items>
                         <controls:SettingsCard
                             x:Uid="/SettingsPage/SearchStartDateEntry"
-                            HeaderIcon="{markup:FontSymbolIcon Glyph=PageLeftE760}"
+                            HeaderIcon="{controls2:GlyphIcon Glyph=PageLeftE760}"
                             IsEnabled="{x:Bind ViewModel.UsePreciseRangeForSearch, Mode=OneWay}">
                             <CalendarDatePicker x:Uid="/SettingsPage/SearchStartCalendarDatePicker" Date="{x:Bind ViewModel.SearchStartDate, Mode=TwoWay}" />
                         </controls:SettingsCard>
                         <controls:SettingsCard
                             x:Uid="/SettingsPage/SearchEndDateEntry"
-                            HeaderIcon="{markup:FontSymbolIcon Glyph=PageRightE761}"
+                            HeaderIcon="{controls2:GlyphIcon Glyph=PageRightE761}"
                             IsEnabled="{x:Bind ViewModel.UsePreciseRangeForSearch, Mode=OneWay}">
                             <CalendarDatePicker
                                 x:Uid="/SettingsPage/SearchEndCalendarDatePicker"
@@ -592,7 +592,7 @@
 
                 <controls:SettingsCard
                     x:Uid="/SettingsPage/MaximumDownloadHistoryRecordsEntry"
-                    HeaderIcon="{markup:FontSymbolIcon Glyph=HistoryE81C}"
+                    HeaderIcon="{controls2:GlyphIcon Glyph=HistoryE81C}"
                     Tag="{x:Bind misc2:SettingEntry.MaximumDownloadHistoryRecords}">
                     <NumberBox
                         x:Uid="/SettingsPage/MaximumDownloadHistoryRecordsNumberBox"
@@ -604,14 +604,14 @@
 
                 <controls:SettingsCard
                     x:Uid="/SettingsPage/OverwriteDownloadedFileEntry"
-                    HeaderIcon="{markup:FontSymbolIcon Glyph=ScanE8FE}"
+                    HeaderIcon="{controls2:GlyphIcon Glyph=ScanE8FE}"
                     Tag="{x:Bind misc2:SettingEntry.OverwriteDownloadedFile}">
                     <ToggleSwitch IsOn="{x:Bind ViewModel.OverwriteDownloadedFile, Mode=TwoWay}" />
                 </controls:SettingsCard>
 
                 <controls:SettingsCard
                     x:Uid="/SettingsPage/MaxDownloadConcurrencyLevelEntry"
-                    HeaderIcon="{markup:FontSymbolIcon Glyph=LightningBoltE945}"
+                    HeaderIcon="{controls2:GlyphIcon Glyph=LightningBoltE945}"
                     Tag="{x:Bind misc2:SettingEntry.MaxDownloadTaskConcurrencyLevel}">
                     <Slider
                         Maximum="{x:Bind system:Environment.ProcessorCount}"
@@ -621,7 +621,7 @@
 
                 <controls:SettingsExpander
                     x:Uid="/SettingsPage/DefaultDownloadPathMacroEntry"
-                    HeaderIcon="{markup:FontSymbolIcon Glyph=RenameE8AC}"
+                    HeaderIcon="{controls2:GlyphIcon Glyph=RenameE8AC}"
                     Tag="{x:Bind misc2:SettingEntry.DefaultDownloadPathMacro}">
                     <controls:SettingsExpander.Description>
                         <HyperlinkButton x:Uid="/SettingsPage/DefaultDownloadPathMacroEntryDescription" Tapped="DefaultDownloadPathMacroEntry_OnTapped" />
@@ -657,7 +657,7 @@
 
                 <controls:SettingsExpander
                     x:Uid="/SettingsPage/IllustrationDownloadFormatEntry"
-                    HeaderIcon="{markup:FontSymbolIcon Glyph=CaptionE8BA}"
+                    HeaderIcon="{controls2:GlyphIcon Glyph=CaptionE8BA}"
                     Tag="{x:Bind misc2:SettingEntry.IllustrationDownloadFormat}">
                     <controls:SettingsExpander.Items>
                         <controls:SettingsCard ContentAlignment="Left">
@@ -667,7 +667,7 @@
                 </controls:SettingsExpander>
                 <controls:SettingsExpander
                     x:Uid="/SettingsPage/UgoiraDownloadFormatEntry"
-                    HeaderIcon="{markup:FontSymbolIcon Glyph=GIFF4A9}"
+                    HeaderIcon="{controls2:GlyphIcon Glyph=GIFF4A9}"
                     Tag="{x:Bind misc2:SettingEntry.UgoiraDownloadFormat}">
                     <controls:SettingsExpander.Items>
                         <controls:SettingsCard ContentAlignment="Left">
@@ -678,7 +678,7 @@
 
                 <controls:SettingsCard
                     x:Uid="/SettingsPage/DownloadWhenBookmarkedEntry"
-                    HeaderIcon="{markup:FontSymbolIcon Glyph=SaveLocalE78C}"
+                    HeaderIcon="{controls2:GlyphIcon Glyph=SaveLocalE78C}"
                     Tag="{x:Bind misc2:SettingEntry.DownloadWhenBookmarked}">
                     <ToggleSwitch IsOn="{x:Bind ViewModel.DownloadWhenBookmarked, Mode=TwoWay}" />
                 </controls:SettingsCard>
@@ -687,7 +687,7 @@
 
                 <controls:SettingsCard
                     x:Uid="/SettingsPage/SpotlightSearchPageLimitEntry"
-                    HeaderIcon="{markup:FontSymbolIcon Glyph=PictureE8B9}"
+                    HeaderIcon="{controls2:GlyphIcon Glyph=PictureE8B9}"
                     Tag="{x:Bind misc2:SettingEntry.PageLimitForSpotlight}">
                     <NumberBox
                         x:Uid="/SettingsPage/SpotlightSearchPageLimitNumberBox"
@@ -699,7 +699,7 @@
 
                 <controls:SettingsCard
                     x:Uid="/SettingsPage/RecommendationItemLimitEntry"
-                    HeaderIcon="{markup:FontSymbolIcon Glyph=DialShape1F156}"
+                    HeaderIcon="{controls2:GlyphIcon Glyph=DialShape1F156}"
                     Tag="{x:Bind misc2:SettingEntry.ItemsNumberLimitForDailyRecommendations}">
                     <NumberBox
                         x:Uid="/SettingsPage/RecommendationItemLimitNumberBox"
@@ -711,7 +711,7 @@
 
                 <controls:SettingsCard
                     x:Uid="/SettingsPage/MaximumBrowseHistoryRecordsEntry"
-                    HeaderIcon="{markup:FontSymbolIcon Glyph=HistoryE81C}"
+                    HeaderIcon="{controls2:GlyphIcon Glyph=HistoryE81C}"
                     Tag="{x:Bind misc2:SettingEntry.MaximumBrowseHistoryRecords}">
                     <NumberBox
                         x:Uid="/SettingsPage/MaximumBrowseHistoryRecordsNumberBox"
@@ -723,7 +723,7 @@
 
                 <controls:SettingsCard
                     x:Uid="/SettingsPage/ImageMirrorServerEntry"
-                    HeaderIcon="{markup:FontSymbolIcon Glyph=HardDriveEDA2}"
+                    HeaderIcon="{controls2:GlyphIcon Glyph=HardDriveEDA2}"
                     Tag="{x:Bind misc2:SettingEntry.MirrorHost}">
                     <TextBox
                         x:Name="ImageMirrorServerTextBox"
@@ -737,13 +737,13 @@
                 <TeachingTip
                     x:Name="ImageMirrorServerTextBoxTeachingTip"
                     x:Uid="/SettingsPage/ImageMirrorServerTextBoxTeachingTip"
-                    IconSource="{markup:FontSymbolIconSource Glyph=ErrorE783}"
+                    IconSource="{controls2:GlyphIconSource Glyph=ErrorE783}"
                     Target="{x:Bind ImageMirrorServerTextBox}" />
 
                 <TeachingTip
                     x:Name="DownloadMacroInvalidTeachingTip"
                     x:Uid="/SettingsPage/DownloadMacroInvalidTeachingTip"
-                    IconSource="{markup:FontSymbolIconSource Glyph=ErrorE783}"
+                    IconSource="{controls2:GlyphIconSource Glyph=ErrorE783}"
                     Target="{x:Bind DefaultDownloadPathMacroTextBox}" />
             </StackPanel>
         </ScrollView>

@@ -39,7 +39,6 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using Pixeval.AppManagement;
-using Pixeval.Controls.MarkupExtensions;
 using Pixeval.Util.Threading;
 using Pixeval.Utilities;
 using SixLabors.ImageSharp.PixelFormats;
@@ -52,6 +51,7 @@ using FontFamily = Microsoft.UI.Xaml.Media.FontFamily;
 using Image = SixLabors.ImageSharp.Image;
 using Point = Windows.Foundation.Point;
 using Pixeval.Controls.Windowing;
+using WinUI3Utilities.Controls;
 using Size = Windows.Foundation.Size;
 
 namespace Pixeval.Util.UI;
@@ -199,7 +199,7 @@ public static partial class UiHelper
         return value ? Visibility.Visible : Visibility.Collapsed;
     }
 
-    public static FontIcon GetFontIcon(this FontIconSymbol symbol, double? fontSize = null)
+    public static FontIcon GetFontIcon(this IconGlyph symbol, double? fontSize = null)
     {
         var systemThemeFontFamily = new FontFamily(AppInfo.AppIconFontFamilyName);
         var icon = new FontIcon
@@ -215,7 +215,7 @@ public static partial class UiHelper
         return icon;
     }
 
-    public static FontIconSource GetFontIconSource(this FontIconSymbol symbol, double? fontSize = null, Brush? foregroundBrush = null)
+    public static FontIconSource GetFontIconSource(this IconGlyph symbol, double? fontSize = null, Brush? foregroundBrush = null)
     {
         var systemThemeFontFamily = new FontFamily(AppInfo.AppIconFontFamilyName);
         var icon = new FontIconSource

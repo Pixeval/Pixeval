@@ -19,8 +19,8 @@
 #endregion
 
 using System;
-using Pixeval.Controls.MarkupExtensions;
 using Pixeval.Utilities;
+using WinUI3Utilities.Controls;
 
 namespace Pixeval.Controls.Windowing;
 
@@ -30,9 +30,9 @@ public record NavigationViewTag(Type NavigateTo, object? Parameter, int? Index =
 
     public string? Content { get; init; }
 
-    public FontIconSymbol? Symbol { get; init; }
+    public IconGlyph? Symbol { get; init; }
 
-    public FontSymbolIcon? SymbolIcon => Symbol?.Let(t => new FontSymbolIcon { Symbol = t });
+    public GlyphIcon? SymbolIcon => Symbol?.Let(t => new GlyphIcon { IconGlyph = t });
 }
 
 public sealed record NavigationViewTag<TPage>(int? Index = null) : NavigationViewTag(typeof(TPage), null, Index);

@@ -4,10 +4,10 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Pixeval.Controls"
     xmlns:controls1="using:CommunityToolkit.WinUI.Controls"
+    xmlns:controls2="using:WinUI3Utilities.Controls"
     xmlns:converters="using:CommunityToolkit.WinUI.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:flyoutContent="using:Pixeval.Controls.FlyoutContent"
-    xmlns:markupExtensions="using:Pixeval.Controls.MarkupExtensions"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pixeval="using:Pixeval"
     Loaded="WorkContainer_OnLoaded"
@@ -44,12 +44,12 @@
             <CommandBar controls1:DockPanel.Dock="Right" DefaultLabelPosition="Right">
                 <AppBarToggleButton
                     x:Uid="/WorkContainer/SelectionButton"
-                    Icon="{markupExtensions:FontSymbolIcon Glyph=MultiSelectE762}"
+                    Icon="{controls2:GlyphIcon Glyph=MultiSelectE762}"
                     IsChecked="{x:Bind ViewModel.IsSelecting, Mode=TwoWay}" />
                 <AppBarButton
                     x:Name="OpenConditionDialogButton"
                     x:Uid="/WorkContainer/OpenConditionDialogButton"
-                    Icon="{markupExtensions:FontSymbolIcon Glyph=FilterE71C}"
+                    Icon="{controls2:GlyphIcon Glyph=FilterE71C}"
                     Tapped="OpenConditionDialogButton_OnTapped" />
             </CommandBar>
             <CommandBar
@@ -57,29 +57,29 @@
                 DefaultLabelPosition="Right"
                 Visibility="{x:Bind ViewModel.IsSelecting, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
                 <AppBarButton
-                    Icon="{markupExtensions:FontSymbolIcon Glyph=CancelE711}"
+                    Icon="{controls2:GlyphIcon Glyph=CancelE711}"
                     IsEnabled="{x:Bind ViewModel.IsAnyEntrySelected, Mode=OneWay}"
                     Label="{x:Bind ViewModel.SelectionLabel, Mode=OneWay}"
                     Tapped="CancelSelectionButton_OnTapped" />
                 <AppBarButton
                     x:Uid="/WorkContainer/SelectAllButton"
-                    Icon="{markupExtensions:FontSymbolIcon Glyph=SelectAllE8B3}"
+                    Icon="{controls2:GlyphIcon Glyph=SelectAllE8B3}"
                     Tapped="SelectAllToggleButton_OnTapped" />
                 <AppBarSeparator />
                 <AppBarButton
                     x:Name="AddAllToBookmarkButton"
                     x:Uid="/WorkContainer/AddAllToBookmarkButton"
-                    Icon="{markupExtensions:FontSymbolIcon Glyph=BookmarksE8A4}"
+                    Icon="{controls2:GlyphIcon Glyph=BookmarksE8A4}"
                     IsEnabled="{x:Bind ViewModel.IsAnyEntrySelected, Mode=OneWay}"
                     Tapped="AddAllToBookmarkButton_OnTapped" />
                 <AppBarButton
                     x:Uid="/WorkContainer/SaveAllButton"
-                    Icon="{markupExtensions:FontSymbolIcon Glyph=SaveE74E}"
+                    Icon="{controls2:GlyphIcon Glyph=SaveE74E}"
                     IsEnabled="{x:Bind ViewModel.IsAnyEntrySelected, Mode=OneWay}"
                     Tapped="SaveAllButton_OnTapped" />
                 <AppBarButton
                     x:Uid="/WorkContainer/OpenAllInBrowserButton"
-                    Icon="{markupExtensions:FontSymbolIcon Glyph=WebSearchF6FA}"
+                    Icon="{controls2:GlyphIcon Glyph=WebSearchF6FA}"
                     IsEnabled="{x:Bind ViewModel.IsAnyEntrySelected, Mode=OneWay}"
                     Tapped="OpenAllInBrowserButton_OnTapped" />
             </CommandBar>

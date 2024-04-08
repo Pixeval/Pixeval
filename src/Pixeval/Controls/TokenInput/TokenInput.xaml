@@ -2,6 +2,7 @@
     x:Class="Pixeval.Controls.TokenInput"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:WinUI3Utilities.Controls"
     xmlns:controls1="using:Pixeval.Controls"
     xmlns:converters="using:CommunityToolkit.WinUI.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -28,13 +29,13 @@
                         Spacing="10"
                         ToolTipService.ToolTip="{x:Bind Tooltip, Mode=OneWay}">
                         <TextBlock Text="{x:Bind TokenContent}" />
-                        <controls1:FontSymbolIcon
+                        <controls:GlyphIcon
+                            IconGlyph="UpArrowShiftKeyE752"
                             Size="Small"
-                            Symbol="UpArrowShiftKeyE752"
                             Visibility="{x:Bind CaseSensitive, Converter={StaticResource BoolToVisibilityConverter}}" />
-                        <controls1:FontSymbolIcon
+                        <controls:GlyphIcon
+                            IconGlyph="CodeE943"
                             Size="Small"
-                            Symbol="CodeE943"
                             Visibility="{x:Bind IsRegularExpression, Converter={StaticResource BoolToVisibilityConverter}}" />
                     </StackPanel>
                 </DataTemplate>

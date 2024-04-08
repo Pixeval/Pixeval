@@ -63,7 +63,7 @@ public partial record AppSettings : IWindowSettings
     /// GFW
     /// </summary>
     [SettingMetadata(SettingEntryCategory.Application, typeof(SettingsPageResources), nameof(SettingsPageResources.DisableDomainFrontingEntryHeader))]
-    public bool DisableDomainFronting { get; set; } = true;
+    public bool DisableDomainFronting { get; set; }
 
     /// <summary>
     /// Indicates whether a <see cref="TeachingTip" /> should be displayed

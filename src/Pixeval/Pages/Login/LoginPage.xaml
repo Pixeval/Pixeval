@@ -3,9 +3,9 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Pixeval.Controls"
+    xmlns:controls1="using:WinUI3Utilities.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:Pixeval.Pages.Login"
-    xmlns:markup="using:Pixeval.Controls.MarkupExtensions"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:util="using:Pixeval.Util"
     Loaded="LoginPage_OnLoaded"
@@ -93,7 +93,7 @@
                 x:Uid="/LoginPage/Help"
                 Grid.Row="2"
                 Grid.Column="2"
-                Content="{markup:FontSymbolIcon Glyph=HelpE897}"
+                Content="{controls1:GlyphIcon Glyph=HelpE897}"
                 IsTabStop="False" />
         </Grid>
         <Border

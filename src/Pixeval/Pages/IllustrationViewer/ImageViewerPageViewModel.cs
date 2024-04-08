@@ -33,7 +33,6 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
 using Pixeval.Attributes;
 using Pixeval.Controls;
-using Pixeval.Controls.MarkupExtensions;
 using Pixeval.Database;
 using Pixeval.Database.Managers;
 using Pixeval.Util;
@@ -46,6 +45,7 @@ using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Net.Response;
 using Pixeval.Download;
 using Pixeval.Util.ComponentModels;
+using WinUI3Utilities.Controls;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
@@ -391,36 +391,36 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
     public (FrameworkElement FrameworkElement, Func<IProgress<int>?, Task<Stream?>>) DownloadParameter => (FrameworkElement, p => GetOriginalImageSourceAsync(p));
 
     public XamlUICommand SaveCommand { get; } = EntryItemResources.Save.GetCommand(
-        FontIconSymbol.SaveE74E, VirtualKeyModifiers.Control, VirtualKey.S);
+        IconGlyph.SaveE74E, VirtualKeyModifiers.Control, VirtualKey.S);
 
     public XamlUICommand SaveAsCommand { get; } = EntryItemResources.SaveAs.GetCommand(
-        FontIconSymbol.SaveAsE792, VirtualKeyModifiers.Control | VirtualKeyModifiers.Shift, VirtualKey.S);
+        IconGlyph.SaveAsE792, VirtualKeyModifiers.Control | VirtualKeyModifiers.Shift, VirtualKey.S);
 
     public XamlUICommand CopyCommand { get; } = EntryItemResources.Copy.GetCommand(
-        FontIconSymbol.CopyE8C8, VirtualKeyModifiers.Control, VirtualKey.C);
+        IconGlyph.CopyE8C8, VirtualKeyModifiers.Control, VirtualKey.C);
 
-    public XamlUICommand PlayGifCommand { get; } = "".GetCommand(FontIconSymbol.StopE71A);
+    public XamlUICommand PlayGifCommand { get; } = "".GetCommand(IconGlyph.StopE71A);
 
     public XamlUICommand ZoomOutCommand { get; } = EntryViewerPageResources.ZoomOut.GetCommand(
-        FontIconSymbol.ZoomOutE71F, VirtualKey.Subtract);
+        IconGlyph.ZoomOutE71F, VirtualKey.Subtract);
 
     public XamlUICommand ZoomInCommand { get; } = EntryViewerPageResources.ZoomIn.GetCommand(
-        FontIconSymbol.ZoomInE8A3, VirtualKey.Add);
+        IconGlyph.ZoomInE8A3, VirtualKey.Add);
 
     public XamlUICommand RotateClockwiseCommand { get; } = EntryViewerPageResources.RotateClockwise.GetCommand(
-        FontIconSymbol.RotateE7AD, VirtualKeyModifiers.Control, VirtualKey.R);
+        IconGlyph.RotateE7AD, VirtualKeyModifiers.Control, VirtualKey.R);
 
     public XamlUICommand RotateCounterclockwiseCommand { get; } = EntryViewerPageResources.RotateCounterclockwise.GetCommand(
             null!, VirtualKeyModifiers.Control, VirtualKey.L);
 
     public XamlUICommand MirrorCommand { get; } = EntryViewerPageResources.Mirror.GetCommand(
-            FontIconSymbol.CollatePortraitF57C, VirtualKeyModifiers.Control, VirtualKey.M);
+            IconGlyph.CollatePortraitF57C, VirtualKeyModifiers.Control, VirtualKey.M);
 
-    public XamlUICommand RestoreResolutionCommand { get; } = "".GetCommand(FontIconSymbol.WebcamE8B8);
+    public XamlUICommand RestoreResolutionCommand { get; } = "".GetCommand(IconGlyph.WebcamE8B8);
 
     public StandardUICommand ShareCommand { get; } = new(StandardUICommandKind.Share);
 
-    public XamlUICommand SetAsCommand { get; } = EntryViewerPageResources.SetAs.GetCommand(FontIconSymbol.PersonalizeE771);
+    public XamlUICommand SetAsCommand { get; } = EntryViewerPageResources.SetAs.GetCommand(IconGlyph.PersonalizeE771);
 
     public XamlUICommand SetAsLockScreenCommand { get; } = new() { Label = EntryViewerPageResources.LockScreen };
 

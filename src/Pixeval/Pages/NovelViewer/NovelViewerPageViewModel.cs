@@ -28,7 +28,6 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
 using Pixeval.Controls;
-using Pixeval.Controls.MarkupExtensions;
 using Pixeval.Controls.Windowing;
 using Pixeval.CoreApi.Model;
 using Pixeval.Options;
@@ -37,6 +36,7 @@ using Pixeval.Util.ComponentModels;
 using Pixeval.Util.UI;
 using Pixeval.AppManagement;
 using System.Runtime.CompilerServices;
+using WinUI3Utilities.Controls;
 
 namespace Pixeval.Pages.NovelViewer;
 
@@ -264,14 +264,14 @@ public partial class NovelViewerPageViewModel : DetailedUiObservableObject, IDis
     }
 
     public XamlUICommand NovelSettingsCommand { get; } =
-        EntryViewerPageResources.NovelSettings.GetCommand(FontIconSymbol.SettingsE713);
+        EntryViewerPageResources.NovelSettings.GetCommand(IconGlyph.SettingsE713);
 
     public XamlUICommand InfoAndCommentsCommand { get; } =
-        EntryViewerPageResources.InfoAndComments.GetCommand(FontIconSymbol.InfoE946, VirtualKey.F12);
+        EntryViewerPageResources.InfoAndComments.GetCommand(IconGlyph.InfoE946, VirtualKey.F12);
 
-    public XamlUICommand AddToBookmarkCommand { get; } = EntryItemResources.AddToBookmark.GetCommand(FontIconSymbol.BookmarksE8A4);
+    public XamlUICommand AddToBookmarkCommand { get; } = EntryItemResources.AddToBookmark.GetCommand(IconGlyph.BookmarksE8A4);
 
-    public XamlUICommand FullScreenCommand { get; } = "".GetCommand(FontIconSymbol.FullScreenE740);
+    public XamlUICommand FullScreenCommand { get; } = "".GetCommand(IconGlyph.FullScreenE740);
 
     #endregion
 

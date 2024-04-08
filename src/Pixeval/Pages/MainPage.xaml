@@ -4,10 +4,10 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:animatedVisuals="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
     xmlns:controls="using:Pixeval.Controls"
+    xmlns:controls1="using:WinUI3Utilities.Controls"
     xmlns:converters="using:CommunityToolkit.WinUI.Converters"
     xmlns:converters1="using:Pixeval.Controls.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:markup="using:Pixeval.Controls.MarkupExtensions"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pages="using:Pixeval.Pages"
     xmlns:pixeval="using:Pixeval.AppManagement"
@@ -83,57 +83,57 @@
             <NavigationView.MenuItems>
                 <NavigationViewItem
                     x:Uid="/MainPage/RecommendationsTab"
-                    Icon="{markup:FontSymbolIcon Glyph=CalendarE787}"
+                    Icon="{controls1:GlyphIcon Glyph=CalendarE787}"
                     Tag="{x:Bind _viewModel.RecommendsTag}" />
                 <NavigationViewItem
                     x:Uid="/MainPage/RankingsTab"
-                    Icon="{markup:FontSymbolIcon Glyph=MarketEAFC}"
+                    Icon="{controls1:GlyphIcon Glyph=MarketEAFC}"
                     Tag="{x:Bind _viewModel.RankingsTag}" />
                 <NavigationViewItem
                     x:Uid="/MainPage/BookmarksTab"
-                    Icon="{markup:FontSymbolIcon Glyph=HeartEB51}"
+                    Icon="{controls1:GlyphIcon Glyph=HeartEB51}"
                     Tag="{x:Bind _viewModel.BookmarksTag}" />
                 <NavigationViewItem
                     x:Uid="/MainPage/FollowingsTab"
-                    Icon="{markup:FontSymbolIcon Glyph=PeopleE716}"
+                    Icon="{controls1:GlyphIcon Glyph=PeopleE716}"
                     Tag="{x:Bind _viewModel.FollowingsTag}" />
                 <NavigationViewItem
                     x:Uid="/MainPage/SpotlightsTab"
-                    Icon="{markup:FontSymbolIcon Glyph=LibraryE8F1}"
+                    Icon="{controls1:GlyphIcon Glyph=LibraryE8F1}"
                     IsEnabled="False"
                     Tag="{x:Bind _viewModel.SpotlightsTag}" />
                 <NavigationViewItem
                     x:Uid="/MainPage/FeedsTab"
-                    Icon="{markup:FontSymbolIcon Glyph=LocationE81D}"
+                    Icon="{controls1:GlyphIcon Glyph=LocationE81D}"
                     IsEnabled="False" />
                 <NavigationViewItem
                     x:Uid="/MainPage/RecentPostsTab"
-                    Icon="{markup:FontSymbolIcon Glyph=CaloriesECAD}"
+                    Icon="{controls1:GlyphIcon Glyph=CaloriesECAD}"
                     Tag="{x:Bind _viewModel.RecentPostsTag}" />
                 <NavigationViewItemHeader x:Uid="/MainPage/DownloadAndHistoriesTab" />
                 <NavigationViewItem
                     x:Name="TagsTab"
                     x:Uid="/MainPage/TagsTab"
-                    Icon="{markup:FontSymbolIcon Glyph=TagE8EC}"
+                    Icon="{controls1:GlyphIcon Glyph=TagE8EC}"
                     Tag="{x:Bind _viewModel.TagsTag}" />
                 <NavigationViewItem
                     x:Uid="/MainPage/HistoriesTab"
-                    Icon="{markup:FontSymbolIcon Glyph=HistoryE81C}"
+                    Icon="{controls1:GlyphIcon Glyph=HistoryE81C}"
                     Tag="{x:Bind _viewModel.HistoriesTag}" />
                 <NavigationViewItem
                     x:Name="DownloadListTab"
                     x:Uid="/MainPage/DownloadListTab"
-                    Icon="{markup:FontSymbolIcon Glyph=DownloadE896}"
+                    Icon="{controls1:GlyphIcon Glyph=DownloadE896}"
                     Tag="{x:Bind _viewModel.DownloadListTag}" />
             </NavigationView.MenuItems>
             <NavigationView.FooterMenuItems>
                 <NavigationViewItem
                     x:Uid="/MainPage/HelpTab"
-                    Icon="{markup:FontSymbolIcon Glyph=HelpE897}"
+                    Icon="{controls1:GlyphIcon Glyph=HelpE897}"
                     IsEnabled="False" />
                 <NavigationViewItem
                     x:Uid="/MainPage/AboutTab"
-                    Icon="{markup:FontSymbolIcon Glyph=RingerEA8F}"
+                    Icon="{controls1:GlyphIcon Glyph=RingerEA8F}"
                     Tag="{x:Bind _viewModel.AboutTag}" />
                 <NavigationViewItemSeparator />
                 <NavigationViewItem SelectsOnInvoked="False" Tapped="SelfNavigationViewItem_OnTapped">
@@ -226,11 +226,11 @@
                         OverflowButtonVisibility="Collapsed">
                         <AppBarButton
                             x:Uid="/MainPage/ReverseSearchButton"
-                            Content="{markup:FontSymbolIcon Glyph=CameraE722}"
+                            Content="{controls1:GlyphIcon Glyph=CameraE722}"
                             Tapped="ReverseSearchButton_OnTapped" />
                         <AppBarButton
                             x:Uid="/MainPage/OpenSearchSettingButton"
-                            Content="{markup:FontSymbolIcon Glyph=SettingsE713}"
+                            Content="{controls1:GlyphIcon Glyph=SettingsE713}"
                             Tapped="OpenSearchSettingButton_OnTapped" />
                     </CommandBar>
                 </Grid>

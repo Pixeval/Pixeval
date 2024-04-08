@@ -4,10 +4,10 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:controls1="using:Pixeval.Controls"
+    xmlns:controls2="using:WinUI3Utilities.Controls"
     xmlns:converters="using:Pixeval.Controls.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:Pixeval.Pages.Tags"
-    xmlns:markup="using:Pixeval.Controls.MarkupExtensions"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     ColumnSpacing="20"
     mc:Ignorable="d">
@@ -59,24 +59,24 @@
         <!--  Width="125" 是试出来刚好只显示一个按钮的宽度  -->
         <AppBarButton
             x:Uid="/TagsEntry/EditTagItem"
-            Icon="{markup:FontSymbolIcon Glyph=TagE8EC}"
+            Icon="{controls2:GlyphIcon Glyph=TagE8EC}"
             Tapped="EditTagItem_OnTapped" />
         <AppBarButton
             x:Uid="/TagsEntry/OpenItem"
-            Icon="{markup:FontSymbolIcon Glyph=OpenInNewWindowE8A7}"
+            Icon="{controls2:GlyphIcon Glyph=OpenInNewWindowE8A7}"
             Tapped="OpenItem_OnTapped" />
         <AppBarButton
             x:Uid="/TagsEntry/GoToPageItem"
-            Icon="{markup:FontSymbolIcon Glyph=SlideshowE786}"
+            Icon="{controls2:GlyphIcon Glyph=SlideshowE786}"
             IsEnabled="{x:Bind ViewModel.Illustration, Converter={StaticResource NullableToBoolConverter}, Mode=OneWay}"
             Tapped="GoToPageItem_OnTapped" />
         <AppBarButton
             x:Uid="/TagsEntry/DeleteItem"
-            Icon="{markup:FontSymbolIcon Glyph=DeleteE74D}"
+            Icon="{controls2:GlyphIcon Glyph=DeleteE74D}"
             Tapped="DeleteItem_OnTapped" />
         <AppBarButton
             x:Uid="/TagsEntry/OpenLocationItem"
-            Icon="{markup:FontSymbolIcon Glyph=OpenLocalE8DA}"
+            Icon="{controls2:GlyphIcon Glyph=OpenLocalE8DA}"
             Tapped="OpenLocationItem_OnTapped" />
     </CommandBar>
 </Grid>
