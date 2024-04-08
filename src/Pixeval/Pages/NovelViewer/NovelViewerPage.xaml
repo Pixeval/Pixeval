@@ -176,11 +176,12 @@
                             </StackPanel>
                         </Grid>
 
-                        <Grid>
+                        <!--  滚动条的宽度  -->
+                        <Grid Margin="0,0,15,0">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="150" />
                                 <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="150" />
+                                <ColumnDefinition Width="135" />
                             </Grid.ColumnDefinitions>
                             <controls:PageButton
                                 Grid.Column="0"
