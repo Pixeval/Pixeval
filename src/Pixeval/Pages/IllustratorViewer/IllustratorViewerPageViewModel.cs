@@ -58,7 +58,7 @@ public partial class IllustratorViewerPageViewModel : UiObservableObject
 
     public NavigationViewTag<FollowingsPage, long> FollowingsTag { get; }
 
-    public NavigationViewTag MyPixivUserTag { get; }
+    public NavigationViewTag<MyPixivPage, long> MyPixivUserTag { get; }
 
     public NavigationViewTag<RecommendUsersPage, long> RecommendUserTag { get; }
 
@@ -71,7 +71,7 @@ public partial class IllustratorViewerPageViewModel : UiObservableObject
         WorkTag = new(Id);
         BookmarksTag = new(Id);
         FollowingsTag = new(Id);
-        MyPixivUserTag = null!;
+        MyPixivUserTag = new(Id);
         RecommendUserTag = new(Id);
 
         InitializeCommands();

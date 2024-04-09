@@ -126,7 +126,13 @@ public static class Enumerates
         return enumerable is not null && enumerable.Any();
     }
 
-    // https://stackoverflow.com/a/15407252/10439146 FirstOrDefault on value types
+    /// <summary>
+    /// https://stackoverflow.com/a/15407252/10439146 FirstOrDefault on value types
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="enumerable"></param>
+    /// <param name="predicate"></param>
+    /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static T? FirstOrNull<T>(this IEnumerable<T> enumerable, Func<T, bool> predicate) where T : struct
     {
@@ -139,11 +145,6 @@ public static class Enumerates
     {
         var matches = enumerable.Take(1).ToArray();
         return matches.Length is 0 ? null : matches[0];
-    }
-
-    public static IAsyncEnumerable<T> ToAsyncEnumerable<T>(this IEnumerable<T> source)
-    {
-        return new AdaptedAsyncEnumerable<T>(source);
     }
 
     public static async Task<ObservableCollection<T>> ToObservableCollectionAsync<T>(this IAsyncEnumerable<T> that)

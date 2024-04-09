@@ -45,6 +45,7 @@ public partial class MakoClient
     /// </summary>
     /// <param name="uid">User id</param>
     /// <param name="privacyPolicy">The <see cref="PrivacyPolicy" /> options targeting private or public</param>
+    /// <param name="tag"></param>
     /// <param name="targetFilter">The <see cref="TargetFilter" /> options targeting android or ios</param>
     /// <returns>
     /// The <see cref="IllustrationBookmarkEngine" />> iterator containing bookmarked illustrations for the user.
@@ -110,7 +111,7 @@ public partial class MakoClient
         bool? aiType = null)
     {
         EnsureNotCancelled();
-        if (sortOption == WorkSortOption.PopularityDescending && !Session.IsPremium)
+        if (sortOption is WorkSortOption.PopularityDescending && !Session.IsPremium)
         {
             sortOption = WorkSortOption.DoNotSort;
         }
@@ -226,6 +227,12 @@ public partial class MakoClient
     {
         EnsureNotCancelled();
         return new RecommendIllustratorEngine(this, targetFilter, new EngineHandle(CancelInstance));
+    }
+
+    public IFetchEngine<User> MyPixiv(long userId)
+    {
+        EnsureNotCancelled();
+        return new MyPixivEngine(this, userId, new EngineHandle(CancelInstance));
     }
 
     /// <summary>
