@@ -10,7 +10,7 @@
     xmlns:misc="using:Pixeval.Misc"
     Loaded="AboutPage_OnLoaded"
     mc:Ignorable="d">
-    <Grid Margin="20,40,20,20">
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="10" />
@@ -19,9 +19,10 @@
         <TextBlock
             x:Uid="/AboutPage/TitleTextBlock"
             Grid.Row="0"
+            Margin="20,40,20,20"
             Style="{StaticResource TitleTextBlockStyle}" />
         <ScrollView Grid.Row="2">
-            <StackPanel Spacing="20">
+            <StackPanel Margin="20,0,20,20" Spacing="20">
                 <StackPanel Spacing="10">
                     <TextBlock x:Uid="/AboutPage/SpecialThanksSubtitleTextBlock" Style="{StaticResource SubtitleTextBlockStyle}" />
                     <TextBlock

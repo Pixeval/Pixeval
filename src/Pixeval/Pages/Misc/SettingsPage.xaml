@@ -514,23 +514,19 @@
                     HeaderIcon="{controls2:GlyphIcon Glyph=MarketEAFC}"
                     Tag="{x:Bind misc2:SettingEntry.IllustrationRankOption}">
                     <controls:SettingsExpander.Items>
-                        <controls:SettingsCard ContentAlignment="Left">
-                            <controls:WrapPanel HorizontalSpacing="50" VerticalSpacing="20">
-                                <controls1:SettingRadioButtons
-                                    x:Uid="/SettingsPage/DefaultIllustrationOptionRadioButtons"
-                                    ItemsSource="{winUi:EnumValues Type=enum:RankOption}"
-                                    SelectedItem="{x:Bind ViewModel.IllustrationRankOption, Mode=TwoWay}" />
-                                <controls1:SettingRadioButtons
-                                    x:Uid="/SettingsPage/DefaultNovelOptionRadioButtons"
-                                    ItemsSource="{x:Bind enum:RankOptionExtension.NovelRankOptions}"
-                                    SelectedItem="{x:Bind ViewModel.NovelRankOption, Mode=TwoWay}" />
-                            </controls:WrapPanel>
+                        <controls:SettingsCard x:Uid="/SettingsPage/IllustrationOptionEntry" HeaderIcon="{controls2:GlyphIcon Glyph=PhotoE91B}">
+                            <controls1:EnumComboBox
+                                EnumSource="{winUi:EnumValues Type=enum:RankOption}"
+                                SelectedEnum="{x:Bind ViewModel.IllustrationRankOption, Mode=TwoWay}"
+                                Style="{StaticResource SettingsEnumComboBoxStyle}" />
+                        </controls:SettingsCard>
+                        <controls:SettingsCard x:Uid="/SettingsPage/NovelOptionEntry" HeaderIcon="{controls2:GlyphIcon Glyph=ReadingModeE736}">
+                            <controls1:EnumComboBox
+                                EnumSource="{x:Bind enum:RankOptionExtension.NovelRankOptions}"
+                                SelectedEnum="{x:Bind ViewModel.NovelRankOption, Mode=TwoWay}"
+                                Style="{StaticResource SettingsEnumComboBoxStyle}" />
                         </controls:SettingsCard>
                     </controls:SettingsExpander.Items>
-                    <controls1:EnumComboBox
-                        EnumSource="{winUi:EnumValues Type=enum:RankOption}"
-                        SelectedEnum="{x:Bind ViewModel.IllustrationRankOption, Mode=TwoWay}"
-                        Style="{StaticResource SettingsEnumComboBoxStyle}" />
                 </controls:SettingsExpander>
 
                 <controls:SettingsExpander
@@ -538,17 +534,17 @@
                     HeaderIcon="{controls2:GlyphIcon Glyph=PassiveAuthenticationF32A}"
                     Tag="{x:Bind misc2:SettingEntry.SearchIllustrationTagMatchOption}">
                     <controls:SettingsExpander.Items>
-                        <controls:SettingsCard ContentAlignment="Left">
-                            <controls:WrapPanel HorizontalSpacing="50" VerticalSpacing="20">
-                                <controls1:SettingRadioButtons
-                                    x:Uid="/SettingsPage/DefaultIllustrationOptionRadioButtons"
-                                    ItemsSource="{winUi:EnumValues Type=enum:SearchIllustrationTagMatchOption}"
-                                    SelectedItem="{x:Bind ViewModel.SearchIllustrationTagMatchOption, Mode=TwoWay}" />
-                                <controls1:SettingRadioButtons
-                                    x:Uid="/SettingsPage/DefaultNovelOptionRadioButtons"
-                                    ItemsSource="{winUi:EnumValues Type=enum:SearchNovelTagMatchOption}"
-                                    SelectedItem="{x:Bind ViewModel.SearchNovelTagMatchOption, Mode=TwoWay}" />
-                            </controls:WrapPanel>
+                        <controls:SettingsCard x:Uid="/SettingsPage/IllustrationOptionEntry" HeaderIcon="{controls2:GlyphIcon Glyph=PhotoE91B}">
+                            <controls1:EnumComboBox
+                                EnumSource="{winUi:EnumValues Type=enum:SearchIllustrationTagMatchOption}"
+                                SelectedEnum="{x:Bind ViewModel.SearchIllustrationTagMatchOption, Mode=TwoWay}"
+                                Style="{StaticResource SettingsEnumComboBoxStyle}" />
+                        </controls:SettingsCard>
+                        <controls:SettingsCard x:Uid="/SettingsPage/NovelOptionEntry" HeaderIcon="{controls2:GlyphIcon Glyph=ReadingModeE736}">
+                            <controls1:EnumComboBox
+                                EnumSource="{winUi:EnumValues Type=enum:SearchNovelTagMatchOption}"
+                                SelectedEnum="{x:Bind ViewModel.SearchNovelTagMatchOption, Mode=TwoWay}"
+                                Style="{StaticResource SettingsEnumComboBoxStyle}" />
                         </controls:SettingsCard>
                     </controls:SettingsExpander.Items>
                 </controls:SettingsExpander>
@@ -678,24 +674,28 @@
                     </controls:SettingsExpander.Items>
                 </controls:SettingsExpander>
 
-                <controls:SettingsCard
-                    x:Uid="/SettingsPage/IllustrationDownloadFormatEntry"
+                <controls:SettingsExpander
+                    x:Uid="/SettingsPage/WorkDownloadFormatEntry"
                     HeaderIcon="{controls2:GlyphIcon Glyph=CaptionE8BA}"
                     Tag="{x:Bind misc2:SettingEntry.IllustrationDownloadFormat}">
-                    <controls1:EnumComboBox
-                        EnumSource="{winUi:EnumValues Type=options:IllustrationDownloadFormat}"
-                        SelectedEnum="{x:Bind ViewModel.IllustrationDownloadFormat, Mode=TwoWay}"
-                        Style="{StaticResource SettingsEnumComboBoxStyle}" />
-                </controls:SettingsCard>
-                <controls:SettingsCard
-                    x:Uid="/SettingsPage/UgoiraDownloadFormatEntry"
-                    HeaderIcon="{controls2:GlyphIcon Glyph=GIFF4A9}"
-                    Tag="{x:Bind misc2:SettingEntry.UgoiraDownloadFormat}">
-                    <controls1:EnumComboBox
-                        EnumSource="{winUi:EnumValues Type=options:UgoiraDownloadFormat}"
-                        SelectedEnum="{x:Bind ViewModel.UgoiraDownloadFormat, Mode=TwoWay}"
-                        Style="{StaticResource SettingsEnumComboBoxStyle}" />
-                </controls:SettingsCard>
+                    <controls:SettingsExpander.Items>
+                        <controls:SettingsCard x:Uid="/SettingsPage/IllustrationOptionEntry" HeaderIcon="{controls2:GlyphIcon Glyph=PhotoE91B}">
+                            <controls1:EnumComboBox
+                                EnumSource="{winUi:EnumValues Type=options:IllustrationDownloadFormat}"
+                                SelectedEnum="{x:Bind ViewModel.IllustrationDownloadFormat, Mode=TwoWay}"
+                                Style="{StaticResource SettingsEnumComboBoxStyle}" />
+                        </controls:SettingsCard>
+                        <controls:SettingsCard x:Uid="/SettingsPage/UgoiraOptionEntry" HeaderIcon="{controls2:GlyphIcon Glyph=GIFF4A9}">
+                            <controls1:EnumComboBox
+                                EnumSource="{winUi:EnumValues Type=options:UgoiraDownloadFormat}"
+                                SelectedEnum="{x:Bind ViewModel.UgoiraDownloadFormat, Mode=TwoWay}"
+                                Style="{StaticResource SettingsEnumComboBoxStyle}" />
+                        </controls:SettingsCard>
+                        <controls:SettingsCard x:Uid="/SettingsPage/NovelOptionEntry" HeaderIcon="{controls2:GlyphIcon Glyph=ReadingModeE736}">
+                            <controls1:EnumComboBox IsEnabled="False" Style="{StaticResource SettingsEnumComboBoxStyle}" />
+                        </controls:SettingsCard>
+                    </controls:SettingsExpander.Items>
+                </controls:SettingsExpander>
 
                 <controls:SettingsCard
                     x:Uid="/SettingsPage/DownloadWhenBookmarkedEntry"

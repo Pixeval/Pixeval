@@ -147,14 +147,12 @@
     "ThumbnailDirectionEntry/Description": "The direction of the thumbnail",
     "ThumbnailDirectionEntry/Header": "Thumbnail direction",
     "TitleTextBlock/Text": "Pixeval Settings",
-    "UgoiraDownloadFormatEntry/Description": "Set the format of downloaded ugoira",
-    "UgoiraDownloadFormatEntry/Header": "Ugoira format",
     "UseFileCacheEntry/Description": "By enabling this setting, the app reduces network requests and improves user experiences, however, more CPU resources is required and frequent disk I/O is expected",
     "UseFileCacheEntry/Header": "Use file cache",
     "UsePreciseRangeForSearchEntry/Description": "Use a precise date range while searching, the search result will be confined within the given date range, by enabling this the app will ignore \"Search range limit\" setting",
     "UsePreciseRangeForSearchEntry/Header": "Use precise search range",
     "VersionSettingsGroup/Text": "Version",
     "ViewPixevalWebsiteHyperlinkButton/Content": "Pixeval website",
-    "IllustrationDownloadFormatEntry/Description": "Set the format of the downloaded static images",
-    "IllustrationDownloadFormatEntry/Header": "Image format"
+    "WorkDownloadFormatEntry/Description": "Set the format of the downloaded works",
+    "WorkDownloadFormatEntry/Header": "Work format"
 }

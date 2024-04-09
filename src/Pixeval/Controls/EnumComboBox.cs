@@ -58,7 +58,7 @@ public sealed partial class EnumComboBox : ComboBox
     private static void OnSelectedEnumChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
     {
         var comboBox = sender.To<EnumComboBox>();
-        comboBox.SelectedItem = comboBox.ItemsSource.To<IEnumerable<StringRepresentableItem>>().First(r => Equals(r.Item, comboBox.SelectedEnum));
+        comboBox.SelectedItem = comboBox.ItemsSource?.To<IEnumerable<StringRepresentableItem>>().FirstOrDefault(r => Equals(r.Item, comboBox.SelectedEnum));
         if (comboBox is { RaiseEventAfterLoaded: true, IsLoaded: false })
             return;
         comboBox.SelectionChanged?.Invoke(comboBox, new([], []));
@@ -68,6 +68,9 @@ public sealed partial class EnumComboBox : ComboBox
     {
         var comboBox = sender.To<EnumComboBox>();
         comboBox.ItemsSource = LocalizedResourceAttributeHelper.GetLocalizedResourceContents(comboBox.EnumSource);
-        comboBox.SelectedEnum = comboBox.EnumSource.GetValue(0);
+        if (comboBox.SelectedEnum is null)
+            comboBox.SelectedEnum = comboBox.EnumSource.GetValue(0);
+        else
+            comboBox.SelectedItem = comboBox.ItemsSource.To<IEnumerable<StringRepresentableItem>>().FirstOrDefault(r => Equals(r.Item, comboBox.SelectedEnum));
     }
 }

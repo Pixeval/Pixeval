@@ -28,6 +28,7 @@
         <controls1:TokenizingTextBox
             x:Uid="/TagsPage/TagsFilterTokenizingTextBox"
             Grid.Row="1"
+            Margin="5,0,5,5"
             ItemsSource="{x:Bind _viewModel.SelectedTags}"
             TokenDelimiter="," />
         <controls:AdvancedItemsView
