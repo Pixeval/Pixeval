@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Pixeval.Controls"
     xmlns:controls1="using:CommunityToolkit.WinUI.Controls"
+    xmlns:controls2="using:WinUI3Utilities.Controls"
     xmlns:converters="using:CommunityToolkit.WinUI.Converters"
     xmlns:converters1="using:Pixeval.Controls.Converters"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
@@ -11,7 +12,6 @@
     xmlns:flyoutContent="using:Pixeval.Controls.FlyoutContent"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:local="using:Pixeval.Pages.NovelViewer"
-    xmlns:markup="using:Pixeval.Controls.MarkupExtensions"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:media="using:Microsoft.Xaml.Interactions.Media"
     xmlns:options="using:Pixeval.Options"
@@ -78,7 +78,7 @@
                         </ContentPresenter>
                         <ScrollView>
                             <StackPanel>
-                                <controls1:SettingsCard x:Uid="/EntryViewerPage/NovelSettingsFontFamilyEntry" HeaderIcon="{markup:FontSymbolIcon Glyph=FontE8D2}">
+                                <controls1:SettingsCard x:Uid="/EntryViewerPage/NovelSettingsFontFamilyEntry" HeaderIcon="{controls2:GlyphIcon Glyph=FontE8D2}">
                                     <ComboBox
                                         x:Uid="/EntryViewerPage/NovelFontFamilyComboBox"
                                         Width="200"
@@ -91,7 +91,7 @@
                                         </ComboBox.ItemTemplate>
                                     </ComboBox>
                                 </controls1:SettingsCard>
-                                <controls1:SettingsCard x:Uid="/EntryViewerPage/NovelSettingsFontColorEntry" HeaderIcon="{markup:FontSymbolIcon Glyph=FontColorE8D3}">
+                                <controls1:SettingsCard x:Uid="/EntryViewerPage/NovelSettingsFontColorEntry" HeaderIcon="{controls2:GlyphIcon Glyph=FontColorE8D3}">
                                     <controls:ColorPickerButton>
                                         <controls:ColorPickerButton.ColorPicker>
                                             <ColorPicker
@@ -101,7 +101,7 @@
                                         </controls:ColorPickerButton.ColorPicker>
                                     </controls:ColorPickerButton>
                                 </controls1:SettingsCard>
-                                <controls1:SettingsCard x:Uid="/EntryViewerPage/NovelSettingsBackgroundEntry" HeaderIcon="{markup:FontSymbolIcon Glyph=ColorE790}">
+                                <controls1:SettingsCard x:Uid="/EntryViewerPage/NovelSettingsBackgroundEntry" HeaderIcon="{controls2:GlyphIcon Glyph=ColorE790}">
                                     <controls:ColorPickerButton>
                                         <controls:ColorPickerButton.ColorPicker>
                                             <ColorPicker
@@ -111,28 +111,28 @@
                                         </controls:ColorPickerButton.ColorPicker>
                                     </controls:ColorPickerButton>
                                 </controls1:SettingsCard>
-                                <controls1:SettingsCard x:Uid="/EntryViewerPage/NovelSettingsFontWeightEntry" HeaderIcon="{markup:FontSymbolIcon Glyph=BrushSizeEDA8}">
+                                <controls1:SettingsCard x:Uid="/EntryViewerPage/NovelSettingsFontWeightEntry" HeaderIcon="{controls2:GlyphIcon Glyph=BrushSizeEDA8}">
                                     <ComboBox
                                         x:Uid="/EntryViewerPage/NovelFontWeightComboBox"
                                         Width="200"
                                         ItemsSource="{winUi:EnumValues Type=options:FontWeightsOption}"
                                         SelectedItem="{x:Bind _viewModel.NovelFontWeight, Mode=TwoWay}" />
                                 </controls1:SettingsCard>
-                                <controls1:SettingsCard x:Uid="/EntryViewerPage/NovelSettingsFontSizeEntry" HeaderIcon="{markup:FontSymbolIcon Glyph=FontSizeE8E9}">
+                                <controls1:SettingsCard x:Uid="/EntryViewerPage/NovelSettingsFontSizeEntry" HeaderIcon="{controls2:GlyphIcon Glyph=FontSizeE8E9}">
                                     <NumberBox
                                         Maximum="100"
                                         Minimum="5"
                                         Style="{StaticResource PixevalNumberBoxStyle}"
                                         Value="{x:Bind _viewModel.NovelFontSize, Mode=TwoWay}" />
                                 </controls1:SettingsCard>
-                                <controls1:SettingsCard x:Uid="/EntryViewerPage/NovelSettingsLineHeightEntry" HeaderIcon="{markup:FontSymbolIcon Glyph=ListEA37}">
+                                <controls1:SettingsCard x:Uid="/EntryViewerPage/NovelSettingsLineHeightEntry" HeaderIcon="{controls2:GlyphIcon Glyph=ListEA37}">
                                     <NumberBox
                                         Maximum="150"
                                         Minimum="0"
                                         Style="{StaticResource PixevalNumberBoxStyle}"
                                         Value="{x:Bind _viewModel.NovelLineHeight, Mode=TwoWay}" />
                                 </controls1:SettingsCard>
-                                <controls1:SettingsCard x:Uid="/EntryViewerPage/NovelSettingsMaxWidthEntry" HeaderIcon="{markup:FontSymbolIcon Glyph=PageE7C3}">
+                                <controls1:SettingsCard x:Uid="/EntryViewerPage/NovelSettingsMaxWidthEntry" HeaderIcon="{controls2:GlyphIcon Glyph=PageE7C3}">
                                     <NumberBox
                                         LargeChange="100"
                                         Maximum="10000"
@@ -176,11 +176,12 @@
                             </StackPanel>
                         </Grid>
 
-                        <Grid>
+                        <!--  滚动条的宽度  -->
+                        <Grid Margin="0,0,15,0">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="150" />
                                 <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="150" />
+                                <ColumnDefinition Width="135" />
                             </Grid.ColumnDefinitions>
                             <controls:PageButton
                                 Grid.Column="0"

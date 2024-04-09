@@ -1,9 +1,9 @@
-using Pixeval.Controls.MarkupExtensions;
 using WinUI3Utilities.Attributes;
+using WinUI3Utilities.Controls;
 
 namespace Pixeval.Controls;
 
-[DependencyProperty<FontIconSymbol>("Symbol")]
+[DependencyProperty<IconGlyph>("Glyph")]
 [DependencyProperty<string>("Text")]
 public sealed partial class IconText
 {

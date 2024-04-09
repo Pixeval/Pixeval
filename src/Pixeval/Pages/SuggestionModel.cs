@@ -19,10 +19,10 @@
 #endregion
 
 using Microsoft.UI.Xaml.Controls;
-using Pixeval.Controls.MarkupExtensions;
 using Pixeval.CoreApi.Model;
 using Pixeval.Database;
 using Pixeval.Util.UI;
+using WinUI3Utilities.Controls;
 
 namespace Pixeval.Pages;
 
@@ -42,10 +42,10 @@ public record SuggestionModel(string? Name, string? TranslatedName, SuggestionTy
 
     public FontIcon? FontIcon => SuggestionType switch
     {
-        SuggestionType.IllustId or SuggestionType.NovelId or SuggestionType.UserId => FontIconSymbol.OpenInNewWindowE8A7.GetFontIcon(12),
-        SuggestionType.Tag => FontIconSymbol.TagE8EC.GetFontIcon(12),
-        SuggestionType.Settings => FontIconSymbol.SettingsE713.GetFontIcon(12),
-        SuggestionType.History => FontIconSymbol.HistoryE81C.GetFontIcon(12),
+        SuggestionType.IllustId or SuggestionType.NovelId or SuggestionType.UserId => IconGlyph.OpenInNewWindowE8A7.GetFontIcon(12),
+        SuggestionType.Tag => IconGlyph.TagE8EC.GetFontIcon(12),
+        SuggestionType.Settings => IconGlyph.SettingsE713.GetFontIcon(12),
+        SuggestionType.History => IconGlyph.HistoryE81C.GetFontIcon(12),
         _ => null
     };
 

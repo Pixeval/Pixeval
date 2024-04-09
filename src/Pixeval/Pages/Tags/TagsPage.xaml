@@ -4,9 +4,9 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Pixeval.Controls"
     xmlns:controls1="using:CommunityToolkit.WinUI.Controls"
+    xmlns:controls2="using:WinUI3Utilities.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:Pixeval.Pages.Tags"
-    xmlns:markup="using:Pixeval.Controls.MarkupExtensions"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Unloaded="TagsPage_OnUnloaded"
     mc:Ignorable="d">
@@ -20,7 +20,7 @@
             <CommandBar DefaultLabelPosition="Collapsed" OverflowButtonVisibility="Collapsed">
                 <AppBarButton
                     Width="40"
-                    Icon="{markup:FontSymbolIcon Glyph=MoreE712}"
+                    Icon="{controls2:GlyphIcon Glyph=MoreE712}"
                     Tapped="ChangeWorkingPath_OnTapped" />
             </CommandBar>
             <TextBlock VerticalAlignment="Center" Text="{x:Bind _viewModel.WorkingDirectory, Mode=OneWay}" />
@@ -28,6 +28,7 @@
         <controls1:TokenizingTextBox
             x:Uid="/TagsPage/TagsFilterTokenizingTextBox"
             Grid.Row="1"
+            Margin="5,0,5,5"
             ItemsSource="{x:Bind _viewModel.SelectedTags}"
             TokenDelimiter="," />
         <controls:AdvancedItemsView

@@ -6,12 +6,12 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media.Animation;
-using Pixeval.Controls.MarkupExtensions;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.Messages;
 using Pixeval.Util.UI;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
+using WinUI3Utilities.Controls;
 
 namespace Pixeval.Controls;
 
@@ -119,5 +119,5 @@ public sealed partial class NovelItem
         OpenNovelRequested?.Invoke(this, ViewModel);
     }
 
-    private XamlUICommand OpenNovelCommand { get; } = EntryItemResources.OpenNovel.GetCommand(FontIconSymbol.ReadingModeE736);
+    private XamlUICommand OpenNovelCommand { get; } = EntryItemResources.OpenNovel.GetCommand(IconGlyph.ReadingModeE736);
 }

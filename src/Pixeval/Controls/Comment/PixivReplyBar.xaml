@@ -2,9 +2,9 @@
     x:Class="Pixeval.Controls.PixivReplyBar"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:controls="using:Pixeval.Controls"
+    xmlns:controls1="using:WinUI3Utilities.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:markup="using:Pixeval.Controls.MarkupExtensions"
+    xmlns:local="using:Pixeval.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Loaded="PixivReplyBar_OnLoaded"
     mc:Ignorable="d">
@@ -19,8 +19,8 @@
             Grid.Column="0"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
-            Content="{markup:FontSymbolIcon Glyph=Emoji2E76E,
-                                            FontSize={StaticResource PixevalButtonIconSize}}"
+            Content="{controls1:GlyphIcon Glyph=Emoji2E76E,
+                                          FontSize={StaticResource PixevalButtonIconSize}}"
             Style="{StaticResource PixevalRoundedButtonStyle}">
             <Button.Flyout>
                 <Flyout>
@@ -33,12 +33,12 @@
                             <NavigationViewItem
                                 x:Name="EmojiButtonFlyoutEmojiSectionNavigationViewItem"
                                 x:Uid="/CommentRepliesBlock/EmojiButtonFlyoutEmojiSectionNavigationViewItem"
-                                Icon="{markup:FontSymbolIcon Glyph=Emoji2E76E}"
+                                Icon="{controls1:GlyphIcon Glyph=Emoji2E76E}"
                                 IsSelected="True" />
                             <NavigationViewItem
                                 x:Name="EmojiButtonFlyoutStickersSectionNavigationViewItem"
                                 x:Uid="/CommentRepliesBlock/EmojiButtonFlyoutStickersSectionNavigationViewItem"
-                                Icon="{markup:FontSymbolIcon Glyph=Sticker2F4AA}" />
+                                Icon="{controls1:GlyphIcon Glyph=Sticker2F4AA}" />
                         </NavigationView.MenuItems>
                         <Frame
                             x:Name="EmojiButtonFlyoutFrame"
@@ -62,8 +62,8 @@
             Width="32"
             Height="32"
             Padding="0"
-            Content="{markup:FontSymbolIcon Glyph=SendE724,
-                                            FontSize={StaticResource PixevalButtonIconSize}}"
+            Content="{controls1:GlyphIcon Glyph=SendE724,
+                                          FontSize={StaticResource PixevalButtonIconSize}}"
             Tapped="SendButton_OnTapped" />
     </Grid>
 </UserControl>

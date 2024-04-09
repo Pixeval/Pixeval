@@ -8,6 +8,7 @@
     xmlns:local="using:Pixeval.Pages.Capability"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:model="using:Pixeval.CoreApi.Model"
+    xmlns:pixeval="using:Pixeval"
     mc:Ignorable="d">
     <controls:EnhancedPage.Resources>
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
@@ -31,6 +32,7 @@
                 Visibility="{x:Bind _viewModel.IsMe, Converter={StaticResource BoolToVisibilityConverter}}" />
             <controls:EnumComboBox
                 x:Name="SimpleWorkTypeComboBox"
+                SelectedEnum="{x:Bind pixeval:App.AppViewModel.AppSettings.SimpleWorkType}"
                 SelectionChanged="ComboBox_OnSelectionChanged"
                 Style="{StaticResource SimpleWorkTypeComboBoxStyle}" />
         </controls:WorkContainer.CommandBarElements>

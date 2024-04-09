@@ -63,7 +63,7 @@ public partial record AppSettings : IWindowSettings
     /// GFW
     /// </summary>
     [SettingMetadata(SettingEntryCategory.Application, typeof(SettingsPageResources), nameof(SettingsPageResources.DisableDomainFrontingEntryHeader))]
-    public bool DisableDomainFronting { get; set; } = true;
+    public bool DisableDomainFronting { get; set; }
 
     /// <summary>
     /// Indicates whether a <see cref="TeachingTip" /> should be displayed
@@ -86,10 +86,10 @@ public partial record AppSettings : IWindowSettings
         Environment.GetFolderPath(Environment.SpecialFolder.MyPictures, Environment.SpecialFolderOption.Create)
         + @"\@{if_spot=@{spot_title}}\@{if_manga=[@{artist_name}] @{illust_title}}\[@{artist_name}] @{illust_id}@{if_manga=p@{manga_index}}@{illust_ext}";
 
-    [SettingMetadata(SettingEntryCategory.Download, typeof(SettingsPageResources), nameof(SettingsPageResources.UgoiraDownloadFormatEntryHeader))]
+    [SettingMetadata(SettingEntryCategory.Download, typeof(SettingsPageResources), nameof(SettingsPageResources.WorkDownloadFormatEntryHeader))]
     public UgoiraDownloadFormat UgoiraDownloadFormat { get; set; } = UgoiraDownloadFormat.WebPLossless;
 
-    [SettingMetadata(SettingEntryCategory.Download, typeof(SettingsPageResources), nameof(SettingsPageResources.IllustrationDownloadFormatEntryHeader))]
+    [SettingMetadata(SettingEntryCategory.Download, typeof(SettingsPageResources), nameof(SettingsPageResources.WorkDownloadFormatEntryHeader))]
     public IllustrationDownloadFormat IllustrationDownloadFormat { get; set; } = IllustrationDownloadFormat.Png;
 
     [SettingMetadata(SettingEntryCategory.Download, typeof(SettingsPageResources), nameof(SettingsPageResources.OverwriteDownloadedFileEntryHeader))]
@@ -113,6 +113,15 @@ public partial record AppSettings : IWindowSettings
     /// </summary>
     [SettingMetadata(SettingEntryCategory.Search, typeof(SettingsPageResources), nameof(SettingsPageResources.DefaultSearchSortOptionEntryHeader))]
     public WorkSortOption DefaultSortOption { get; set; } = WorkSortOption.DoNotSort;
+
+    [SettingMetadata(SettingEntryCategory.Search, typeof(SettingsPageResources), nameof(SettingsPageResources.DefaultSearchTagMatchOptionEntryHeader))]
+    public SimpleWorkType SimpleWorkType { get; set; } = SimpleWorkType.IllustAndManga;
+
+    [SettingMetadata(SettingEntryCategory.Search, typeof(SettingsPageResources), nameof(SettingsPageResources.DefaultSearchTagMatchOptionEntryHeader))]
+    public RankOption IllustrationRankOption { get; set; } = RankOption.Day;
+
+    [SettingMetadata(SettingEntryCategory.Search, typeof(SettingsPageResources), nameof(SettingsPageResources.DefaultSearchTagMatchOptionEntryHeader))]
+    public RankOption NovelRankOption { get; set; } = RankOption.Day;
 
     /// <summary>
     /// The illustration tag match option for keyword search
@@ -328,6 +337,9 @@ public partial record AppSettings : IWindowSettings
     [AttributeIgnore(typeof(SettingsViewModelAttribute<>))]
     [SyntheticSetting]
     public bool IsMaximized { get; set; } = false;
+
+    [AttributeIgnore(typeof(SettingsViewModelAttribute<>), typeof(GenerateConstructorAttribute), typeof(AppContextAttribute<>))]
+    public WorkType WorkType => SimpleWorkType is SimpleWorkType.IllustAndManga ? WorkType.Illust : WorkType.Novel;
 
     public MakoClientConfiguration ToMakoClientConfiguration()
     {

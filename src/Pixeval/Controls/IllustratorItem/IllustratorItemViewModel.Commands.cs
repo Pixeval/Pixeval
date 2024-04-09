@@ -1,14 +1,14 @@
 using System;
 using Microsoft.UI.Xaml.Input;
-using Pixeval.Controls.MarkupExtensions;
 using Pixeval.Util;
 using Pixeval.Util.UI;
+using WinUI3Utilities.Controls;
 
 namespace Pixeval.Controls;
 
 public partial class IllustratorItemViewModel
 {
-    public XamlUICommand FollowCommand { get; } = "".GetCommand(FontIconSymbol.ContactE77B);
+    public XamlUICommand FollowCommand { get; } = "".GetCommand(IconGlyph.ContactE77B);
 
     private void InitializeCommands()
     {

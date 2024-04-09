@@ -23,10 +23,10 @@ using System.IO;
 using Windows.System;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
-using Pixeval.Controls.MarkupExtensions;
 using Pixeval.Util.UI;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using WinUI3Utilities.Controls;
 
 namespace Pixeval.Controls;
 
@@ -40,12 +40,12 @@ public partial class ThumbnailEntryViewModel<T>
     /// <item><term>T3</term><description><see cref="object"/> see <see cref="SaveCommand"/>'s parameter</description></item>
     /// </list>
     /// </summary>
-    public XamlUICommand AddToBookmarkCommand { get; } = EntryItemResources.AddToBookmark.GetCommand(FontIconSymbol.BookmarksE8A4);
+    public XamlUICommand AddToBookmarkCommand { get; } = EntryItemResources.AddToBookmark.GetCommand(IconGlyph.BookmarksE8A4);
 
     /// <summary>
     /// Parameter: <see cref="object"/> see <see cref="SaveCommand"/>'s parameter
     /// </summary>
-    public XamlUICommand BookmarkCommand { get; } = "".GetCommand(FontIconSymbol.HeartEB51, VirtualKeyModifiers.Control, VirtualKey.D);
+    public XamlUICommand BookmarkCommand { get; } = "".GetCommand(IconGlyph.HeartEB51, VirtualKeyModifiers.Control, VirtualKey.D);
 
     /// <summary>
     /// Parameter1: <see cref="ValueTuple{T1, T2}"/>
@@ -61,7 +61,7 @@ public partial class ThumbnailEntryViewModel<T>
     /// 
     /// Parameter2: <see cref="FrameworkElement"/>?
     /// </summary>
-    public XamlUICommand SaveCommand { get; } = EntryItemResources.Save.GetCommand(FontIconSymbol.SaveE74E, VirtualKeyModifiers.Control, VirtualKey.S);
+    public XamlUICommand SaveCommand { get; } = EntryItemResources.Save.GetCommand(IconGlyph.SaveE74E, VirtualKeyModifiers.Control, VirtualKey.S);
 
     /// <summary>
     /// Parameter1: <see cref="ValueTuple{T1, T2}"/>
@@ -77,7 +77,7 @@ public partial class ThumbnailEntryViewModel<T>
     /// 
     /// Parameter2: <see cref="Window"/>
     /// </summary>
-    public XamlUICommand SaveAsCommand { get; } = EntryItemResources.SaveAs.GetCommand(FontIconSymbol.SaveAsE792, VirtualKeyModifiers.Control | VirtualKeyModifiers.Shift, VirtualKey.S);
+    public XamlUICommand SaveAsCommand { get; } = EntryItemResources.SaveAs.GetCommand(IconGlyph.SaveAsE792, VirtualKeyModifiers.Control | VirtualKeyModifiers.Shift, VirtualKey.S);
 
     /// <summary>
     /// Parameter1: <see cref="ValueTuple{T1, T2}"/>
@@ -98,7 +98,7 @@ public partial class ThumbnailEntryViewModel<T>
     /// <item><term>TResult</term><description><see cref="Stream"/>?</description></item>
     /// </list>
     /// </summary>
-    public XamlUICommand CopyCommand { get; } = EntryItemResources.Copy.GetCommand(FontIconSymbol.CopyE8C8, VirtualKeyModifiers.Control, VirtualKey.C);
+    public XamlUICommand CopyCommand { get; } = EntryItemResources.Copy.GetCommand(IconGlyph.CopyE8C8, VirtualKeyModifiers.Control, VirtualKey.C);
 
     private void InitializeCommands()
     {

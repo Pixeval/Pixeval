@@ -4,10 +4,10 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Pixeval.Controls"
     xmlns:controls1="using:CommunityToolkit.WinUI.Controls"
+    xmlns:controls2="using:WinUI3Utilities.Controls"
     xmlns:converters="using:CommunityToolkit.WinUI.Converters"
     xmlns:converters1="using:Pixeval.Controls.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:markup="using:Pixeval.Controls.MarkupExtensions"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
     <controls:EnhancedPage.Resources>
@@ -127,28 +127,28 @@
                             </AppBarElementContainer>
                             <controls:AppButtonItem
                                 x:Uid="/EntryViewerPage/FollowingUserItem"
-                                Number="{x:Bind _viewModel.Metrics.TotalFollowUsers, Mode=OneWay}"
-                                Symbol="AddFriendE8FA" />
+                                Glyph="AddFriendE8FA"
+                                Number="{x:Bind _viewModel.Metrics.TotalFollowUsers, Mode=OneWay}" />
                             <AppBarSeparator />
                             <controls:AppButtonItem
                                 x:Uid="/EntryViewerPage/MyPixivUserItem"
-                                Number="{x:Bind _viewModel.Metrics.TotalMyPixivUsers, Mode=OneWay}"
-                                Symbol="PeopleE716" />
+                                Glyph="PeopleE716"
+                                Number="{x:Bind _viewModel.Metrics.TotalMyPixivUsers, Mode=OneWay}" />
                             <AppBarSeparator />
                             <controls:AppButtonItem
                                 x:Uid="/EntryViewerPage/IllustrationCountItem"
-                                Number="{x:Bind _viewModel.Metrics.TotalIllusts, Mode=OneWay}"
-                                Symbol="PhotoE91B" />
+                                Glyph="PhotoE91B"
+                                Number="{x:Bind _viewModel.Metrics.TotalIllusts, Mode=OneWay}" />
                             <AppBarSeparator />
                             <controls:AppButtonItem
                                 x:Uid="/EntryViewerPage/MangaCountItem"
-                                Number="{x:Bind _viewModel.Metrics.TotalManga, Mode=OneWay}"
-                                Symbol="PictureE8B9" />
+                                Glyph="PictureE8B9"
+                                Number="{x:Bind _viewModel.Metrics.TotalManga, Mode=OneWay}" />
                             <AppBarSeparator />
                             <controls:AppButtonItem
                                 x:Uid="/EntryViewerPage/NovelCountItem"
-                                Number="{x:Bind _viewModel.Metrics.TotalNovelSeries, Mode=OneWay}"
-                                Symbol="ReadingModeE736" />
+                                Glyph="ReadingModeE736"
+                                Number="{x:Bind _viewModel.Metrics.TotalNovelSeries, Mode=OneWay}" />
                         </CommandBar>
                         <CommandBar Grid.Column="1" DefaultLabelPosition="Right">
                             <AppBarButton Command="{x:Bind _viewModel.FollowCommand}" Visibility="{x:Bind _viewModel.IsFollowed, Converter={StaticResource BoolNegationToVisibilityConverter}, Mode=OneWay}" />
@@ -175,24 +175,24 @@
                         <controls1:SegmentedItem
                             x:Name="IllustrationTab"
                             x:Uid="/EntryViewerPage/WorkNavigationViewItem"
-                            Icon="{markup:FontSymbolIcon Glyph=PhotoE91B}"
+                            Icon="{controls2:GlyphIcon Glyph=PhotoE91B}"
                             Tag="{x:Bind _viewModel.WorkTag}" />
                         <controls1:SegmentedItem
                             x:Uid="/EntryViewerPage/BookmarksNavigationViewItem"
-                            Icon="{markup:FontSymbolIcon Glyph=LibraryE8F1}"
+                            Icon="{controls2:GlyphIcon Glyph=LibraryE8F1}"
                             Tag="{x:Bind _viewModel.BookmarksTag}" />
                         <controls1:SegmentedItem
                             x:Uid="/EntryViewerPage/FollowingsNavigationViewItem"
-                            Icon="{markup:FontSymbolIcon Glyph=AddFriendE8FA}"
+                            Icon="{controls2:GlyphIcon Glyph=AddFriendE8FA}"
                             Tag="{x:Bind _viewModel.FollowingsTag}" />
                         <controls1:SegmentedItem
                             x:Uid="/EntryViewerPage/MyPixivUserNavigationViewItem"
-                            Icon="{markup:FontSymbolIcon Glyph=PeopleE716}"
+                            Icon="{controls2:GlyphIcon Glyph=PeopleE716}"
                             IsEnabled="False"
                             Tag="{x:Bind _viewModel.MyPixivUserTag}" />
                         <controls1:SegmentedItem
                             x:Uid="/EntryViewerPage/RecommendUserNavigationViewItem"
-                            Icon="{markup:FontSymbolIcon Glyph=FamilyEBDA}"
+                            Icon="{controls2:GlyphIcon Glyph=FamilyEBDA}"
                             Tag="{x:Bind _viewModel.RecommendUserTag}" />
                     </controls1:Segmented>
                 </Grid>

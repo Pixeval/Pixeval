@@ -2,6 +2,7 @@
     x:Class="Pixeval.Controls.IllustrationItem"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:WinUI3Utilities.Controls"
     xmlns:converters="using:CommunityToolkit.WinUI.Converters"
     xmlns:converters1="using:Pixeval.Controls.Converters"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
@@ -100,15 +101,15 @@
                 Grid.Column="2"
                 Mode="Gif"
                 Visibility="{x:Bind ViewModel.IsUgoira, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
-            <local:FontSymbolIcon
+            <controls:GlyphIcon
                 Grid.Column="4"
+                IconGlyph="SetSolidF5EE"
                 IsBackLayer="True"
                 Size="Small"
-                Symbol="SetSolidF5EE"
                 Visibility="{x:Bind ViewModel.IsManga, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
-            <local:FontSymbolIcon
+            <controls:GlyphIcon
                 Grid.Column="4"
-                Symbol="SetF5ED"
+                IconGlyph="SetF5ED"
                 Visibility="{x:Bind ViewModel.IsManga, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
         </Grid>
     </Grid>
