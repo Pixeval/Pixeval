@@ -188,7 +188,6 @@
                         <controls1:SegmentedItem
                             x:Uid="/EntryViewerPage/MyPixivUserNavigationViewItem"
                             Icon="{controls2:GlyphIcon Glyph=PeopleE716}"
-                            IsEnabled="False"
                             Tag="{x:Bind _viewModel.MyPixivUserTag}" />
                         <controls1:SegmentedItem
                             x:Uid="/EntryViewerPage/RecommendUserNavigationViewItem"
