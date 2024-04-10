@@ -46,11 +46,6 @@ public class AppViewModel(App app)
 
     public IServiceScope AppServicesScope => AppServiceProvider.CreateScope();
 
-    /// <summary>
-    /// Indicates whether the exit is caused by a logout action
-    /// </summary>
-    public bool SignOutExit { get; set; }
-
     public App App { get; } = app;
 
     public DownloadManager<IllustrationDownloadTask> DownloadManager { get; private set; } = null!;
@@ -62,6 +57,8 @@ public class AppViewModel(App app)
         get => _appSettings;
         set => WindowFactory.WindowSettings = _appSettings = value;
     }
+
+    public LoginContext LoginContext { get; set; } = AppInfo.LoadLoginContext() ?? new LoginContext();
 
     public AppDebugTrace AppDebugTrace { get; set; } = AppInfo.LoadDebugTrace() ?? new AppDebugTrace();
 

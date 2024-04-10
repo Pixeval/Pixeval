@@ -26,7 +26,6 @@ using Windows.Storage;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.Controls.Windowing;
-using Pixeval.CoreApi.Preference;
 using Pixeval.Database.Managers;
 using Pixeval.Download;
 using Pixeval.Util.IO;
@@ -44,7 +43,7 @@ namespace Pixeval.AppManagement;
 /// Provide miscellaneous information about the app
 /// </summary>
 [AppContext<AppSettings>(ConfigKey = "Config", Type = ApplicationDataContainerType.Roaming, MethodName = "Config")]
-[AppContext<Session>(ConfigKey = "Session", MethodName = "Session")]
+[AppContext<LoginContext>(ConfigKey = "LoginContext", MethodName = "LoginContext")]
 [AppContext<AppDebugTrace>(ConfigKey = "DebugTrace", MethodName = "DebugTrace")]
 public static partial class AppInfo
 {
@@ -79,7 +78,7 @@ public static partial class AppInfo
         // Keys in the RoamingSettings will be synced through the devices of the same user
         // For more detailed information see https://docs.microsoft.com/en-us/windows/apps/design/app-settings/store-and-retrieve-app-data
         InitializeConfig();
-        InitializeSession();
+        InitializeLoginContext();
         InitializeDebugTrace();
     }
 
@@ -201,9 +200,9 @@ public static partial class AppInfo
         Functions.IgnoreException(() => ApplicationData.Current.RoamingSettings.DeleteContainer(ConfigContainerKey));
     }
 
-    public static void ClearSession()
+    public static void ClearLoginContext()
     {
-        Functions.IgnoreException(() => ApplicationData.Current.LocalSettings.DeleteContainer(SessionContainerKey));
+        Functions.IgnoreException(() => ApplicationData.Current.LocalSettings.DeleteContainer(LoginContextContainerKey));
     }
 
     public static void SaveContext()
@@ -216,12 +215,8 @@ public static partial class AppInfo
             App.AppViewModel.AppSettings.IsMaximized = false;
             App.AppViewModel.AppSettings.WindowSize = WindowFactory.RootWindow.AppWindow.Size.ToSize();
         }
-        if (!App.AppViewModel.SignOutExit)
-        {
-            if (App.AppViewModel.MakoClient != null!)
-                SaveSession(App.AppViewModel.MakoClient.Session);
-            SaveConfig(App.AppViewModel.AppSettings);
-        }
+        SaveLoginContext(App.AppViewModel.LoginContext);
+        SaveConfig(App.AppViewModel.AppSettings);
     }
 
     public static void SaveContextWhenExit()

@@ -43,70 +43,108 @@
                 Text="{x:Bind util:LocalizedResourceAttributeHelper.GetLocalizedResourceContent(_viewModel.LoginPhase), Mode=OneWay}" />
         </StackPanel>
         <Pivot
-            x:Name="Pivot"
             Grid.Column="1"
-            MaxWidth="300"
-            Padding="10"
+            MaxWidth="350"
             HorizontalAlignment="Stretch"
-            controls2:DockPanel.Dock="Top">
+            controls2:DockPanel.Dock="Top"
+            IsEnabled="{x:Bind _viewModel.IsEnabled, Mode=OneWay}">
             <Pivot.Items>
-                <PivotItem Header="代码">
-                    <controls2:DockPanel HorizontalSpacing="10" VerticalSpacing="20">
+                <PivotItem x:Uid="/LoginPage/RefreshTokenPivotItem">
+                    <Grid
+                        Padding="10"
+                        VerticalAlignment="Top"
+                        ColumnSpacing="10"
+                        RowSpacing="20">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
                         <TextBox
-                            x:Uid="/LoginPage/UserNameBox"
+                            x:Uid="/LoginPage/RefreshTokenBox"
+                            Grid.Row="0"
+                            Grid.Column="0"
+                            Grid.ColumnSpan="2"
                             controls2:DockPanel.Dock="Top"
-                            IsEnabled="{x:Bind _viewModel.IsEnabled, Mode=OneWay}"
                             IsSpellCheckEnabled="False"
-                            Text="{x:Bind _viewModel.Token, Mode=TwoWay}" />
+                            Text="{x:Bind _viewModel.RefreshToken, Mode=TwoWay}" />
+                        <ToggleSwitch
+                            x:Uid="/LoginPage/DisableDomainFrontingToggleSwitch"
+                            Grid.Row="1"
+                            Grid.Column="0"
+                            controls2:DockPanel.Dock="Left"
+                            IsOn="{x:Bind _viewModel.DisableDomainFronting, Mode=TwoWay}" />
                         <Button
                             x:Uid="/LoginPage/SubmitButton"
+                            Grid.Row="1"
+                            Grid.Column="1"
                             Height="33"
                             controls2:DockPanel.Dock="Right"
                             Click="TokenLogin_OnTapped"
                             IsEnabled="{x:Bind _viewModel.IsEnabled, Mode=OneWay}" />
-                        <ToggleSwitch
-                            x:Uid="/LoginPage/DisableDomainFrontingToggleSwitch"
-                            controls2:DockPanel.Dock="Left"
-                            IsEnabled="{x:Bind _viewModel.IsEnabled, Mode=OneWay}"
-                            IsOn="{x:Bind _viewModel.DisableDomainFronting, Mode=TwoWay}" />
-                    </controls2:DockPanel>
+                    </Grid>
                 </PivotItem>
-                <PivotItem Header="账密">
-                    <controls2:DockPanel HorizontalSpacing="10" VerticalSpacing="20">
+                <PivotItem x:Uid="/LoginPage/AccountPivotItem">
+                    <Grid
+                        Padding="10"
+                        VerticalAlignment="Top"
+                        ColumnSpacing="10"
+                        RowSpacing="20">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
                         <TextBox
                             x:Uid="/LoginPage/UserNameBox"
+                            Grid.Row="0"
+                            Grid.Column="0"
+                            Grid.ColumnSpan="3"
                             controls2:DockPanel.Dock="Top"
-                            IsEnabled="{x:Bind _viewModel.IsEnabled, Mode=OneWay}"
                             IsSpellCheckEnabled="False"
                             Text="{x:Bind _viewModel.UserName, Mode=TwoWay}" />
                         <PasswordBox
                             x:Uid="/LoginPage/PasswordBox"
+                            Grid.Row="1"
+                            Grid.Column="0"
+                            Grid.ColumnSpan="3"
                             controls2:DockPanel.Dock="Top"
-                            IsEnabled="{x:Bind _viewModel.IsEnabled, Mode=OneWay}"
                             Password="{x:Bind _viewModel.Password, Mode=TwoWay}" />
-                        <Button
-                            x:Uid="/LoginPage/Help"
-                            controls2:DockPanel.Dock="Right"
-                            Content="{controls1:GlyphIcon Glyph=HelpE897}"
-                            IsTabStop="False" />
+                        <ToggleSwitch
+                            x:Uid="/LoginPage/DisableDomainFrontingToggleSwitch"
+                            Grid.Row="2"
+                            Grid.Column="0"
+                            controls2:DockPanel.Dock="Left"
+                            IsOn="{x:Bind _viewModel.DisableDomainFronting, Mode=TwoWay}" />
                         <SplitButton
                             x:Uid="/LoginPage/SubmitButton"
+                            Grid.Row="2"
+                            Grid.Column="1"
                             Height="33"
                             controls2:DockPanel.Dock="Right"
-                            Click="Login_OnTapped"
-                            IsEnabled="{x:Bind _viewModel.IsEnabled, Mode=OneWay}">
+                            Click="Login_OnTapped">
                             <SplitButton.Flyout>
                                 <MenuFlyout>
                                     <MenuFlyoutItem x:Uid="/LoginPage/SubmitWithNewAccountButton" Click="LoginWithNewAccount_OnTapped" />
                                 </MenuFlyout>
                             </SplitButton.Flyout>
                         </SplitButton>
-                        <ToggleSwitch
-                            x:Uid="/LoginPage/DisableDomainFrontingToggleSwitch"
-                            controls2:DockPanel.Dock="Left"
-                            IsEnabled="{x:Bind _viewModel.IsEnabled, Mode=OneWay}"
-                            IsOn="{x:Bind _viewModel.DisableDomainFronting, Mode=TwoWay}" />
-                    </controls2:DockPanel>
+                        <Button
+                            x:Uid="/LoginPage/Help"
+                            Grid.Row="2"
+                            Grid.Column="2"
+                            controls2:DockPanel.Dock="Right"
+                            Content="{controls1:GlyphIcon Glyph=HelpE897}"
+                            IsTabStop="False" />
+                    </Grid>
                 </PivotItem>
             </Pivot.Items>
         </Pivot>

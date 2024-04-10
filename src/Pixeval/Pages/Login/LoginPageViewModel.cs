@@ -45,6 +45,7 @@ using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
+using Windows.Media.Protection.PlayReady;
 
 namespace Pixeval.Pages.Login;
 
@@ -90,22 +91,28 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject, IDi
         set => App.AppViewModel.AppSettings.DisableDomainFronting = value;
     }
 
-    public string Token
+    public string RefreshToken
     {
-        get => App.AppViewModel.AppSettings.Token;
-        set => App.AppViewModel.AppSettings.Token = value;
+        get => App.AppViewModel.LoginContext.RefreshToken;
+        set => App.AppViewModel.LoginContext.RefreshToken = value;
     }
 
     public string UserName
     {
-        get => App.AppViewModel.AppSettings.UserName;
-        set => App.AppViewModel.AppSettings.UserName = value;
+        get => App.AppViewModel.LoginContext.UserName;
+        set => App.AppViewModel.LoginContext.UserName = value;
     }
 
     public string Password
     {
-        get => App.AppViewModel.AppSettings.Password;
-        set => App.AppViewModel.AppSettings.Password = value;
+        get => App.AppViewModel.LoginContext.Password;
+        set => App.AppViewModel.LoginContext.Password = value;
+    }
+
+    public bool LogoutExit
+    {
+        get => App.AppViewModel.LoginContext.LogoutExit;
+        set => App.AppViewModel.LoginContext.LogoutExit = value;
     }
 
     public Visibility ProcessingRingVisible => LoginPhase is LoginPhaseEnum.WaitingForUserInput ? Visibility.Collapsed : Visibility.Visible;
@@ -138,24 +145,6 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject, IDi
         fakeCertMgr.Install(StoreName.Root, StoreLocation.CurrentUser);
     }
 
-    /// <summary>
-    /// Check if the session file exists and satisfies the following four conditions: <br/>
-    /// 1. The <see cref="Session" /> object deserialized from the file is not null <br/>
-    /// 2. The <see cref="Session.RefreshToken" /> is not null <br/>
-    /// </summary>
-    /// <returns></returns>
-    public Session? CheckRefreshAvailable()
-    {
-        AdvancePhase(LoginPhaseEnum.CheckingRefreshAvailable);
-
-        return AppInfo.LoadSession() is { } session && CheckRefreshAvailableInternal(session) ? session : null;
-    }
-
-    private static bool CheckRefreshAvailableInternal(Session? session)
-    {
-        return session is not null && session.RefreshToken.IsNotNullOrEmpty();
-    }
-
     public async Task<bool> RefreshAsync(string refreshToken)
     {
         AdvancePhase(LoginPhaseEnum.Refreshing);
@@ -165,12 +154,12 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject, IDi
         if (client is not null)
         {
             App.AppViewModel.MakoClient = client;
+            RefreshToken = client.Session.RefreshToken;
             return true;
         }
 
         _ = await owner.CreateAcknowledgementAsync(LoginPageResources.RefreshingSessionFailedTitle,
             LoginPageResources.RefreshingSessionFailedContent);
-        AppInfo.ClearSession();
         await App.AppViewModel.MakoClient.DisposeAsync();
         App.AppViewModel.MakoClient = null!;
         return false;
@@ -216,6 +205,7 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject, IDi
         httpClient.Dispose();
         _ = result.EnsureSuccessStatusCode();
         var session = (await result.Content.ReadAsStringAsync()).FromJson<TokenResponse>()!.ToSession();
+        RefreshToken = session.RefreshToken;
         return session;
     }
 

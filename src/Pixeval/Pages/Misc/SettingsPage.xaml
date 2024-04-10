@@ -709,6 +709,7 @@
                 <controls:SettingsCard
                     x:Uid="/SettingsPage/SpotlightSearchPageLimitEntry"
                     HeaderIcon="{controls2:GlyphIcon Glyph=PictureE8B9}"
+                    IsEnabled="False"
                     Tag="{x:Bind misc2:SettingEntry.PageLimitForSpotlight}">
                     <NumberBox
                         x:Uid="/SettingsPage/SpotlightSearchPageLimitNumberBox"

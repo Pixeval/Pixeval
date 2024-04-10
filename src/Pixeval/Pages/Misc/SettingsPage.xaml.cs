@@ -135,9 +135,9 @@ public sealed partial class SettingsPage : IDisposable
         if (await this.CreateOkCancelAsync(SettingsPageResources.SignOutConfirmationDialogTitle,
                 SettingsPageResources.SignOutConfirmationDialogContent) is ContentDialogResult.Primary)
         {
-            AppInfo.ClearSession();
-            App.AppViewModel.SignOutExit = true;
-            AppInfo.SaveDebugTrace();
+            App.AppViewModel.LoginContext.LogoutExit = true;
+            // Close 不触发 Closing 事件
+            AppInfo.SaveContextWhenExit();
             Window.Close();
         }
     }

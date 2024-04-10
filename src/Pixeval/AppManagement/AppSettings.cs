@@ -288,18 +288,6 @@ public partial record AppSettings : IWindowSettings
 
     [AttributeIgnore(typeof(SettingsViewModelAttribute<>))]
     [SyntheticSetting]
-    public string Token { get; set; } = "";
-
-    [AttributeIgnore(typeof(SettingsViewModelAttribute<>))]
-    [SyntheticSetting]
-    public string UserName { get; set; } = "";
-
-    [AttributeIgnore(typeof(SettingsViewModelAttribute<>))]
-    [SyntheticSetting]
-    public string Password { get; set; } = "";
-
-    [AttributeIgnore(typeof(SettingsViewModelAttribute<>))]
-    [SyntheticSetting]
     public uint NovelFontColorInDarkMode { get; set; } = 0xFFFFFFFF;
 
     [AttributeIgnore(typeof(SettingsViewModelAttribute<>))]

@@ -39,7 +39,7 @@ public sealed partial class LoginPage
         InitializeComponent();
     }
 
-    private void TokenLogin_OnTapped(object sender, object e) => RefreshToken(_viewModel.Token);
+    private void TokenLogin_OnTapped(object sender, object e) => RefreshToken(_viewModel.RefreshToken);
 
     private async void Login_OnTapped(object sender, object e) => await LoginAsync(false);
 
@@ -64,27 +64,30 @@ public sealed partial class LoginPage
             if (App.AppViewModel.MakoClient == null!)
                 ThrowHelper.Exception();
 
-            _ = DispatcherQueue.TryEnqueue(() =>
-            {
-                _viewModel.AdvancePhase(LoginPageViewModel.LoginPhaseEnum.SuccessNavigating);
-                NavigateParent<MainPage>(null, new DrillInNavigationTransitionInfo());
-                AppInfo.SaveContext();
-            });
+            _ = DispatcherQueue.TryEnqueue(SuccessNavigating);
         }
     }
 
     private void LoginPage_OnLoaded(object sender, RoutedEventArgs e)
     {
-        RefreshToken(_viewModel.CheckRefreshAvailable()?.RefreshToken);
+        if (_viewModel.LogoutExit)
+        {
+            _viewModel.AdvancePhase(LoginPageViewModel.LoginPhaseEnum.WaitingForUserInput);
+            _viewModel.IsFinished = _viewModel.IsEnabled = true;
+        }
+        else
+        {
+            RefreshToken(App.AppViewModel.LoginContext.RefreshToken);
+        }
     }
 
-    private async void RefreshToken(string? refreshToken = null)
+    private async void RefreshToken(string refreshToken)
     {
         try
         {
-            if (refreshToken is not null && await _viewModel.RefreshAsync(refreshToken))
+            if (refreshToken.IsNotNullOrEmpty() && await _viewModel.RefreshAsync(refreshToken))
             {
-                NavigateParent<MainPage>(null, new DrillInNavigationTransitionInfo());
+                SuccessNavigating();
             }
             else
             {
@@ -98,6 +101,14 @@ public sealed partial class LoginPage
                 LoginPageResources.ErrorWhileLogginInContentFormatted.Format(exception.StackTrace));
             _viewModel.CloseWindow();
         }
+    }
+
+    private void SuccessNavigating()
+    {
+        _viewModel.AdvancePhase(LoginPageViewModel.LoginPhaseEnum.SuccessNavigating);
+        NavigateParent<MainPage>(null, new DrillInNavigationTransitionInfo());
+        _viewModel.LogoutExit = false;
+        AppInfo.SaveContext();
     }
 
     private void LoginPage_OnUnloaded(object sender, RoutedEventArgs e)
