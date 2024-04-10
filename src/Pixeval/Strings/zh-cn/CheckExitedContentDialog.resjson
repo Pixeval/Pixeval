@@ -2,7 +2,7 @@
     "ContentDialog/Title": "提示",
     "ContentDialog/PrimaryButtonText": "关闭应用",
     "ContentDialog/CloseButtonText": "继续进入应用",
-    "MainTextBlock/Text": "检测到上次软件以没有正常方式推出，你可以（清除设置后需要重启）：",
+    "MainTextBlock/Text": "检测到上次软件以没有正常方式退出，你可以（清除设置后需要重启）：",
     "ClearConfig/Content": "清空设置（软件设置）",
     "ClearSession/Content": "清空会话（登录状态）",
     "OpenLocalFolder/Content": "打开本地文件夹",

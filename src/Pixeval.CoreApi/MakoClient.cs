@@ -29,6 +29,7 @@ using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Global.Exception;
 using Pixeval.CoreApi.Net;
 using Pixeval.CoreApi.Net.EndPoints;
+using Pixeval.CoreApi.Net.Request;
 using Pixeval.CoreApi.Preference;
 using Pixeval.Logging;
 using Pixeval.Utilities;
@@ -39,52 +40,36 @@ namespace Pixeval.CoreApi;
 public partial class MakoClient : ICancellable, IAsyncDisposable
 {
     /// <summary>
-    /// Create a new <see cref="MakoClient" /> based on given <see cref="Configuration" />, <see cref="Session" />, and
-    /// <see cref="ISessionUpdate" />
+    /// Create a new <see cref="MakoClient" /> based on given <see cref="Configuration" />, <see cref="Session" />
     /// </summary>
     /// <remarks>
-    /// The <see cref="MakoClient" /> is not responsible for the <see cref="Session" />'s refreshment, you need to check
-    /// the
-    /// <see cref="P:Session.Expire" /> and call <see cref="RefreshSession(Preference.Session)" /> or
-    /// <see cref="RefreshSessionAsync" />
-    /// periodically
+    /// The <see cref="MakoClient" /> is not responsible for the <see cref="Session" />'s refreshment.
     /// </remarks>
     /// <param name="session">The <see cref="Preference.Session" /></param>
     /// <param name="configuration">The <see cref="Configuration" /></param>
     /// <param name="logger"></param>
-    /// <param name="sessionUpdater">The updater of <see cref="Preference.Session" /></param>
-    public MakoClient(Session session, MakoClientConfiguration configuration, FileLogger logger, ISessionUpdate? sessionUpdater = null)
+    public MakoClient(Session session, MakoClientConfiguration configuration, FileLogger logger)
     {
         Logger = logger;
-        SessionUpdater = sessionUpdater ?? new RefreshTokenSessionUpdate();
         Session = session;
         MakoServices = BuildServiceProvider(ServiceCollection);
         Configuration = configuration;
         IsCancelled = false;
     }
 
-    /// <summary>
-    /// Creates a <see cref="MakoClient" /> based on given <see cref="Session" /> and <see cref="ISessionUpdate" />, the
-    /// configurations will stay
-    /// as default
-    /// </summary>
-    /// <remarks>
-    /// The <see cref="MakoClient" /> is not responsible for the <see cref="Session" />'s refreshment, you need to check
-    /// the
-    /// <see cref="P:Session.Expire" /> and call <see cref="RefreshSession(Preference.Session)" /> or
-    /// <see cref="RefreshSessionAsync" />
-    /// periodically
-    /// </remarks>
-    /// <param name="session">The <see cref="Preference.Session" /></param>
-    /// <param name="logger"></param>
-    /// <param name="sessionUpdater">The updater of <see cref="Preference.Session" /></param>
-    public MakoClient(Session session, FileLogger logger, ISessionUpdate? sessionUpdater = null)
+    public static async Task<MakoClient?> TryGetMakoClientAsync(string refreshToken, MakoClientConfiguration configuration, FileLogger logger)
     {
-        Logger = logger;
-        SessionUpdater = sessionUpdater ?? new RefreshTokenSessionUpdate();
-        Session = session;
-        MakoServices = BuildServiceProvider(ServiceCollection);
-        Configuration = new MakoClientConfiguration();
+        var makoClient = new MakoClient(null!, configuration, logger);
+        try
+        {
+            makoClient.Session = (await makoClient.MakoServices.GetRequiredService<IAuthEndPoint>().RefreshAsync(new RefreshSessionRequest(refreshToken)).ConfigureAwait(false)).ToSession();
+            return makoClient;
+        }
+        catch
+        {
+            await makoClient.DisposeAsync();
+            return null;
+        }
     }
 
     /// <summary>
@@ -165,7 +150,7 @@ public partial class MakoClient : ICancellable, IAsyncDisposable
     /// </summary>
     public void Cancel()
     {
-        Session = new Session();
+        Session = null!;
         _runningInstances.ForEach(instance => instance.EngineHandle.Cancel());
     }
 
@@ -232,23 +217,6 @@ public partial class MakoClient : ICancellable, IAsyncDisposable
         return MakoServices.GetRequiredKeyedService<HttpClient>(makoApiKind);
     }
 
-    /// <summary>
-    /// Sets the <see cref="Session" /> to a new value
-    /// </summary>
-    /// <param name="newSession">The new <see cref="Preference.Session" /></param>
-    public void RefreshSession(Session newSession)
-    {
-        Session = newSession;
-    }
-
-    /// <summary>
-    /// Refresh session using the provided <see cref="ISessionUpdate" />
-    /// </summary>
-    public async Task RefreshSessionAsync()
-    {
-        Session = await SessionUpdater.RefreshAsync(this).ConfigureAwait(false);
-    }
-
     public async ValueTask DisposeAsync()
     {
         GC.SuppressFinalize(this);
@@ -259,9 +227,9 @@ public partial class MakoClient : ICancellable, IAsyncDisposable
     private static void Dispose(ServiceCollection collection)
     {
         foreach (var item in collection)
-                ((item.IsKeyedService
-                        ? item.KeyedImplementationInstance
-                        :  item.ImplementationInstance)
-                    as IDisposable)?.Dispose();
+            ((item.IsKeyedService
+                    ? item.KeyedImplementationInstance
+                    : item.ImplementationInstance)
+                as IDisposable)?.Dispose();
     }
 }

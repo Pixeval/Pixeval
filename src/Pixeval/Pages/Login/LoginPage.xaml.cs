@@ -39,6 +39,8 @@ public sealed partial class LoginPage
         InitializeComponent();
     }
 
+    private void TokenLogin_OnTapped(object sender, object e) => RefreshToken(_viewModel.Token);
+
     private async void Login_OnTapped(object sender, object e) => await LoginAsync(false);
 
     private async void LoginWithNewAccount_OnTapped(object sender, RoutedEventArgs e) => await LoginAsync(true);
@@ -71,12 +73,16 @@ public sealed partial class LoginPage
         }
     }
 
-    private async void LoginPage_OnLoaded(object sender, RoutedEventArgs e)
+    private void LoginPage_OnLoaded(object sender, RoutedEventArgs e)
+    {
+        RefreshToken(_viewModel.CheckRefreshAvailable()?.RefreshToken);
+    }
+
+    private async void RefreshToken(string? refreshToken = null)
     {
         try
         {
-            if (_viewModel.CheckRefreshAvailable() is { } session
-                && await _viewModel.RefreshAsync(session))
+            if (refreshToken is not null && await _viewModel.RefreshAsync(refreshToken))
             {
                 NavigateParent<MainPage>(null, new DrillInNavigationTransitionInfo());
             }
@@ -89,7 +95,7 @@ public sealed partial class LoginPage
         catch (Exception exception)
         {
             _ = await this.CreateAcknowledgementAsync(LoginPageResources.ErrorWhileLoggingInTitle,
-                    LoginPageResources.ErrorWhileLogginInContentFormatted.Format(exception.StackTrace));
+                LoginPageResources.ErrorWhileLogginInContentFormatted.Format(exception.StackTrace));
             _viewModel.CloseWindow();
         }
     }

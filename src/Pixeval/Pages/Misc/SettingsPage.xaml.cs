@@ -137,6 +137,7 @@ public sealed partial class SettingsPage : IDisposable
         {
             AppInfo.ClearSession();
             App.AppViewModel.SignOutExit = true;
+            AppInfo.SaveDebugTrace();
             Window.Close();
         }
     }

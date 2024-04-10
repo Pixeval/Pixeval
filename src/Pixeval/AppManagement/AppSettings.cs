@@ -288,6 +288,10 @@ public partial record AppSettings : IWindowSettings
 
     [AttributeIgnore(typeof(SettingsViewModelAttribute<>))]
     [SyntheticSetting]
+    public string Token { get; set; } = "";
+
+    [AttributeIgnore(typeof(SettingsViewModelAttribute<>))]
+    [SyntheticSetting]
     public string UserName { get; set; } = "";
 
     [AttributeIgnore(typeof(SettingsViewModelAttribute<>))]

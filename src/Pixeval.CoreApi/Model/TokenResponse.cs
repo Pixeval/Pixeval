@@ -51,16 +51,17 @@ public record TokenResponse
     public Session ToSession()
     {
         return new Session
-        {
-            AccessToken = AccessToken,
-            Account = User.Account,
-            AvatarUrl = User.ProfileImageUrls.Px170X170,
-            ExpireIn = DateTime.Now + TimeSpan.FromSeconds(ExpiresIn) - TimeSpan.FromMinutes(5), // 减去5分钟是考虑到网络延迟会导致精确时间不可能恰好是一小时(TokenResponse的ExpireIn是60分钟)
-            Id = User.Id,
-            IsPremium = User.IsPremium,
-            RefreshToken = RefreshToken,
-            Name = User.Name
-        };
+        (
+            User.Name,
+            DateTime.Now + TimeSpan.FromSeconds(ExpiresIn) -
+            TimeSpan.FromMinutes(5), // 减去5分钟是考虑到网络延迟会导致精确时间不可能恰好是一小时(TokenResponse的ExpireIn是60分钟)
+            AccessToken,
+            RefreshToken,
+            User.ProfileImageUrls.Px170X170,
+            User.Id,
+            User.Account,
+            User.IsPremium
+        );
     }
 
     public class TokenUser

@@ -226,8 +226,13 @@ public static partial class AppInfo
 
     public static void SaveContextWhenExit()
     {
+        SaveDebugTrace();
+        SaveContext();
+    }
+
+    public static void SaveDebugTrace()
+    {
         App.AppViewModel.AppDebugTrace.ExitedSuccessfully = true;
         SaveDebugTrace(App.AppViewModel.AppDebugTrace);
-        SaveContext();
     }
 }

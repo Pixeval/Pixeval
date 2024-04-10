@@ -36,24 +36,13 @@ internal class PixivApiHttpMessageHandler(MakoClient makoClient) : MakoClientSup
         var bypass = (MakoHttpOptions.BypassRequiredHost.IsMatch(host) || host is MakoHttpOptions.OAuthHost) && MakoClient.Configuration.Bypass;
 
         if (bypass)
-        {
             MakoHttpOptions.UseHttpScheme(request);
-        }
 
         headers.UserAgent.AddRange(MakoClient.Configuration.UserAgent);
         headers.AcceptLanguage.Add(new StringWithQualityHeaderValue(MakoClient.Configuration.CultureInfo.Name));
 
-        var session = MakoClient.Session;
-
-        switch (host)
-        {
-            case MakoHttpOptions.WebApiHost:
-                _ = headers.TryAddWithoutValidation("Cookie", session.Cookie);
-                break;
-            case MakoHttpOptions.AppApiHost:
-                headers.Authorization = new AuthenticationHeaderValue("Bearer", session.AccessToken);
-                break;
-        }
+        if (host is MakoHttpOptions.AppApiHost)
+            headers.Authorization = new AuthenticationHeaderValue("Bearer", MakoClient.Session.AccessToken);
 
         return GetHttpMessageInvoker(bypass)
             .SendAsync(request, cancellationToken);
