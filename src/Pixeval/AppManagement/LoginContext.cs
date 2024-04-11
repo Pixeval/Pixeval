@@ -1,8 +1,8 @@
-﻿#region Copyright (c) Pixeval/Pixeval.CoreApi
+#region Copyright
 // GPL v3 License
 // 
-// Pixeval/Pixeval.CoreApi
-// Copyright (c) 2023 Pixeval.CoreApi/ISessionUpdate.cs
+// Pixeval/Pixeval
+// Copyright (c) 2024 Pixeval/LoginContext.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,11 +18,22 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System.Threading.Tasks;
+using WinUI3Utilities.Attributes;
 
-namespace Pixeval.CoreApi.Preference;
+namespace Pixeval.AppManagement;
 
-public interface ISessionUpdate
+[GenerateConstructor]
+public partial record LoginContext
 {
-    Task<Session> RefreshAsync(MakoClient makoClient);
+    public LoginContext()
+    {
+    }
+
+    public string RefreshToken { get; set; } = "";
+
+    public string UserName { get; set; } = "";
+
+    public string Password { get; set; } = "";
+
+    public bool LogoutExit { get; set; }
 }

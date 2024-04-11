@@ -12,7 +12,7 @@ public sealed partial class CheckExitedDialog : UserControl
 
     private void ClearConfig_OnTapped(object sender, TappedRoutedEventArgs e) => AppInfo.ClearConfig();
 
-    private void ClearSession_OnTapped(object sender, TappedRoutedEventArgs e) => AppInfo.ClearSession();
+    private void ClearContext_OnTapped(object sender, TappedRoutedEventArgs e) => AppInfo.ClearLoginContext();
 
     private async void OpenLocalFolder_OnTapped(object sender, TappedRoutedEventArgs e) => await Launcher.LaunchFolderAsync(AppKnownFolders.Local.Self);
 

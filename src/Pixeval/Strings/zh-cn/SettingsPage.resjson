@@ -180,7 +180,7 @@
     "IfSpotMacroTooltip": "如果当前正在下载特辑内的作品，该宏会被替换为其参数",
     "IfMangaMacroTooltip": "如果当前正在下载漫画内的作品，该宏会被替换为其参数",
     "IfGifMacroTooltip": "如果当前正在下载动图，该宏会被替换为其参数",
-    "MangaIndexMacroTooltip": "如果当前正在下载漫画，该宏会被替换为当前图片在多图中的索引（第几张）,如果没有在下载漫画，则该宏会被替换为 {0}，建议与 @{if_manga=} 宏配合使用",
+    "MangaIndexMacroTooltip": "如果当前正在下载漫画，该宏会被替换为当前图片在多图中的索引（第几张），如果没有在下载漫画，则该宏会被替换为 0，建议与 @{if_manga=} 宏配合使用",
     "SpotIdMacroTooltip": "特辑ID",
     "SpotTitleTooltip": "特辑标题"
 }

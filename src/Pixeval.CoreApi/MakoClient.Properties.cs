@@ -40,8 +40,6 @@ public partial class MakoClient
 
     public MakoClientConfiguration Configuration { get; set; }
 
-    internal ISessionUpdate SessionUpdater { get; }
-
     public FileLogger Logger { get; }
 
     /// <summary>

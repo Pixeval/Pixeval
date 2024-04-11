@@ -24,86 +24,27 @@ using Pixeval.Utilities;
 
 namespace Pixeval.CoreApi.Preference;
 
-public record Session
+/// <summary>
+/// 
+/// </summary>
+/// <param name="Name">User name</param>
+/// <param name="ExpireIn">Token expiration</param>
+/// <param name="AccessToken">Current access token</param>
+/// <param name="RefreshToken">Current refresh token</param>
+/// <param name="AvatarUrl">Avatar</param>
+/// <param name="Id">User id</param>
+/// <param name="Account">Account for login</param>
+/// <param name="IsPremium">Indicates whether current user is Pixiv Premium or not</param>
+public record Session(
+    [property: JsonPropertyName("name")] string Name,
+    [property: JsonPropertyName("expireIn")] DateTimeOffset ExpireIn,
+    [property: JsonPropertyName("accessToken")] string AccessToken,
+    [property: JsonPropertyName("refreshToken")] string RefreshToken,
+    [property: JsonPropertyName("avatarUrl")] string AvatarUrl,
+    [property: JsonNumberHandling(JsonNumberHandling.AllowReadingFromString | JsonNumberHandling.WriteAsString)]
+    [property: JsonPropertyName("id")] long Id,
+    [property: JsonPropertyName("account")] string Account,
+    [property: JsonPropertyName("isPremium")] bool IsPremium)
 {
-    public Session()
-    {
-    }
-
-    public Session(string? name, DateTimeOffset expireIn, string? accessToken, string? refreshToken, string? avatarUrl, long id, string? account, bool isPremium, string? cookie, DateTimeOffset cookieCreation)
-    {
-        Name = name;
-        ExpireIn = expireIn;
-        AccessToken = accessToken;
-        RefreshToken = refreshToken;
-        AvatarUrl = avatarUrl;
-        Id = id;
-        Account = account;
-        IsPremium = isPremium;
-        Cookie = cookie;
-        CookieCreation = cookieCreation;
-    }
-
-    /// <summary>
-    /// User name
-    /// </summary>
-    [JsonPropertyName("name")]
-    public string? Name { get; set; }
-
-    /// <summary>
-    /// Token expiration
-    /// </summary>
-    [JsonPropertyName("expireIn")]
-    public DateTimeOffset ExpireIn { get; set; }
-
-    /// <summary>
-    /// Current access token
-    /// </summary>
-    [JsonPropertyName("accessToken")]
-    public string? AccessToken { get; set; }
-
-    /// <summary>
-    /// Current refresh token
-    /// </summary>
-    [JsonPropertyName("refreshToken")]
-    public string? RefreshToken { get; set; }
-
-    /// <summary>
-    /// Avatar
-    /// </summary>
-    [JsonPropertyName("avatarUrl")]
-    public string? AvatarUrl { get; set; }
-
-    /// <summary>
-    /// User id
-    /// </summary>
-    [JsonPropertyName("id")]
-    [JsonNumberHandling(JsonNumberHandling.AllowReadingFromString | JsonNumberHandling.WriteAsString)]
-    public long Id { get; set; }
-
-    /// <summary>
-    /// Account for login
-    /// </summary>
-    [JsonPropertyName("account")]
-    public string? Account { get; set; }
-
-    /// <summary>
-    /// Indicates whether current user is Pixiv Premium or not
-    /// </summary>
-    [JsonPropertyName("isPremium")]
-    public bool IsPremium { get; set; }
-
-    /// <summary>
-    /// WebAPI cookie
-    /// </summary>
-    [JsonPropertyName("cookie")]
-    public string? Cookie { get; set; }
-
-    [JsonPropertyName("cookieCreation")]
-    public DateTimeOffset CookieCreation { get; set; }
-
-    public override string? ToString()
-    {
-        return this.ToJson();
-    }
+    public override string? ToString() => this.ToJson();
 }

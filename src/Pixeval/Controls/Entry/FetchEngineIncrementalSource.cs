@@ -43,7 +43,7 @@ public abstract class FetchEngineIncrementalSource<T, TModel>(IAsyncEnumerable<T
         var i = 0;
         while (i < pageSize)
         {
-            if (limit is not -1 && _yieldedCounter > limit)
+            if (limit is not -1 && _yieldedCounter >= limit)
             {
                 return result;
             }

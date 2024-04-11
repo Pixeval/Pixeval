@@ -45,6 +45,7 @@ using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
+using Windows.Media.Protection.PlayReady;
 
 namespace Pixeval.Pages.Login;
 
@@ -90,16 +91,28 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject, IDi
         set => App.AppViewModel.AppSettings.DisableDomainFronting = value;
     }
 
+    public string RefreshToken
+    {
+        get => App.AppViewModel.LoginContext.RefreshToken;
+        set => App.AppViewModel.LoginContext.RefreshToken = value;
+    }
+
     public string UserName
     {
-        get => App.AppViewModel.AppSettings.UserName;
-        set => App.AppViewModel.AppSettings.UserName = value;
+        get => App.AppViewModel.LoginContext.UserName;
+        set => App.AppViewModel.LoginContext.UserName = value;
     }
 
     public string Password
     {
-        get => App.AppViewModel.AppSettings.Password;
-        set => App.AppViewModel.AppSettings.Password = value;
+        get => App.AppViewModel.LoginContext.Password;
+        set => App.AppViewModel.LoginContext.Password = value;
+    }
+
+    public bool LogoutExit
+    {
+        get => App.AppViewModel.LoginContext.LogoutExit;
+        set => App.AppViewModel.LoginContext.LogoutExit = value;
     }
 
     public Visibility ProcessingRingVisible => LoginPhase is LoginPhaseEnum.WaitingForUserInput ? Visibility.Collapsed : Visibility.Visible;
@@ -132,52 +145,24 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject, IDi
         fakeCertMgr.Install(StoreName.Root, StoreLocation.CurrentUser);
     }
 
-    /// <summary>
-    /// Check if the session file exists and satisfies the following four conditions: <br/>
-    /// 1. The <see cref="Session" /> object deserialized from the file is not null <br/>
-    /// 2. The <see cref="Session.RefreshToken" /> is not null <br/>
-    /// 3. The <see cref="Session.Cookie" /> is not null <br/>
-    /// 4. The <see cref="Session.CookieCreation" /> is within last 15 days
-    /// </summary>
-    /// <returns></returns>
-    public Session? CheckRefreshAvailable()
-    {
-        AdvancePhase(LoginPhaseEnum.CheckingRefreshAvailable);
-
-        return AppInfo.LoadSession() is { } session && CheckRefreshAvailableInternal(session) ? session : null;
-    }
-
-    private static bool CheckRefreshAvailableInternal(Session? session)
-    {
-        return session is not null && session.RefreshToken.IsNotNullOrEmpty() &&
-               session.Cookie.IsNotNullOrEmpty() && CookieNotExpired(session);
-
-        static bool CookieNotExpired(Session session) =>
-            DateTimeOffset.Now - session.CookieCreation <=
-            TimeSpan.FromDays(15); // check if the cookie is created within the last one week
-    }
-
-    public async Task<bool> RefreshAsync(Session session)
+    public async Task<bool> RefreshAsync(string refreshToken)
     {
         AdvancePhase(LoginPhaseEnum.Refreshing);
         using var scope = App.AppViewModel.AppServicesScope;
         var logger = scope.ServiceProvider.GetRequiredService<FileLogger>();
-        App.AppViewModel.MakoClient = new MakoClient(session, App.AppViewModel.AppSettings.ToMakoClientConfiguration(), logger, new RefreshTokenSessionUpdate());
-        try
+        var client = await MakoClient.TryGetMakoClientAsync(refreshToken, App.AppViewModel.AppSettings.ToMakoClientConfiguration(), logger);
+        if (client is not null)
         {
-            await App.AppViewModel.MakoClient.RefreshSessionAsync();
-        }
-        catch
-        {
-            _ = await owner.CreateAcknowledgementAsync(LoginPageResources.RefreshingSessionFailedTitle,
-                LoginPageResources.RefreshingSessionFailedContent);
-            AppInfo.ClearSession();
-            await App.AppViewModel.MakoClient.DisposeAsync();
-            App.AppViewModel.MakoClient = null!;
-            return false;
+            App.AppViewModel.MakoClient = client;
+            RefreshToken = client.Session.RefreshToken;
+            return true;
         }
 
-        return true;
+        _ = await owner.CreateAcknowledgementAsync(LoginPageResources.RefreshingSessionFailedTitle,
+            LoginPageResources.RefreshingSessionFailedContent);
+        await App.AppViewModel.MakoClient.DisposeAsync();
+        App.AppViewModel.MakoClient = null!;
+        return false;
     }
 
     private static int NegotiatePort(int preferPort = 49152)
@@ -196,7 +181,7 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject, IDi
         return preferPort;
     }
 
-    public async Task<Session> AuthCodeToSessionAsync(string code, string verifier, string cookie)
+    public async Task<Session> AuthCodeToSessionAsync(string code, string verifier)
     {
         // HttpClient is designed to be used through whole application lifetime, create and
         // dispose it in a function is a commonly misused anti-pattern, but this function
@@ -219,11 +204,8 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject, IDi
         // using会有resharper警告，所以这里用Dispose
         httpClient.Dispose();
         _ = result.EnsureSuccessStatusCode();
-        var session = (await result.Content.ReadAsStringAsync()).FromJson<TokenResponse>()!.ToSession() with
-        {
-            Cookie = cookie,
-            CookieCreation = DateTimeOffset.Now
-        };
+        var session = (await result.Content.ReadAsStringAsync()).FromJson<TokenResponse>()!.ToSession();
+        RefreshToken = session.RefreshToken;
         return session;
     }
 
@@ -253,13 +235,11 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject, IDi
         {
             if (e.Uri.StartsWith("pixiv://"))
             {
-                var cookies = await sender.CoreWebView2.CookieManager.GetCookiesAsync("https://pixiv.net");
-                var cookie = string.Join(';', cookies.Select(c => $"{c.Name}={c.Value}"));
                 var code = HttpUtility.ParseQueryString(new Uri(e.Uri).Query)["code"]!;
                 Session session;
                 try
                 {
-                    session = await AuthCodeToSessionAsync(code, verifier, cookie);
+                    session = await AuthCodeToSessionAsync(code, verifier);
                 }
                 catch
                 {
@@ -271,7 +251,7 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject, IDi
                 IsFinished = true;
                 using var scope = App.AppViewModel.AppServicesScope;
                 var logger = scope.ServiceProvider.GetRequiredService<FileLogger>();
-                App.AppViewModel.MakoClient = new MakoClient(session, App.AppViewModel.AppSettings.ToMakoClientConfiguration(), logger, new RefreshTokenSessionUpdate());
+                App.AppViewModel.MakoClient = new MakoClient(session, App.AppViewModel.AppSettings.ToMakoClientConfiguration(), logger);
                 proxyServer?.Dispose();
                 navigated();
             }
