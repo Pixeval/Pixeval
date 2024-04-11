@@ -61,7 +61,7 @@ public interface IWorkViewModel
     XamlUICommand SaveCommand { get; }
 
     /// <inheritdoc cref="ThumbnailEntryViewModel{T}.TryLoadThumbnailAsync"/>
-    Task<bool> TryLoadThumbnailAsync(IDisposable key);
+    ValueTask<bool> TryLoadThumbnailAsync(IDisposable key);
 
     /// <inheritdoc cref="ThumbnailEntryViewModel{T}.UnloadThumbnail"/>
     void UnloadThumbnail(IDisposable key);
