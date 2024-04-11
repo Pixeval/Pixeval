@@ -28,8 +28,10 @@ using Windows.Graphics.Imaging;
 using Windows.Storage;
 using Windows.Storage.FileProperties;
 using Microsoft.UI.Xaml.Media.Imaging;
+using Pixeval.AppManagement;
 using Pixeval.CoreApi.Net.Response;
 using Pixeval.Options;
+using Pixeval.Utilities;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats;
 using SixLabors.ImageSharp.Formats.Bmp;
@@ -48,15 +50,31 @@ public static partial class IoHelper
 {
     public static async Task<SoftwareBitmapSource> GetSoftwareBitmapSourceAsync(this Stream stream, bool disposeOfImageStream)
     {
-        // 此处Position可能为负数
-        stream.Position = 0;
-
-        var bitmap = await GetSoftwareBitmapFromStreamAsync(stream);
-        if (disposeOfImageStream)
-            await stream.DisposeAsync();
-        var source = new SoftwareBitmapSource();
-        await source.SetBitmapAsync(bitmap);
-        return source;
+        try
+        {
+            // 此处Position可能为负数
+            stream.Position = 0;
+            using var image = await Image.LoadAsync<Bgra32>(stream);
+            var softwareBitmap = new SoftwareBitmap(BitmapPixelFormat.Bgra8, image.Width, image.Height, BitmapAlphaMode.Premultiplied);
+            var buffer = new byte[4 * image.Width * image.Height];
+            image.CopyPixelDataTo(buffer);
+            softwareBitmap.CopyFromBuffer(buffer.AsBuffer());
+            var source = new SoftwareBitmapSource();
+            await source.SetBitmapAsync(softwareBitmap);
+            return source;
+            // BitmapDecoder Bug多
+            // var decoder = await BitmapDecoder.CreateAsync(imageStream);
+            // return await decoder.GetSoftwareBitmapAsync(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Premultiplied);
+        }
+        catch
+        {
+            return await AppInfo.GetNotAvailableImageAsync();
+        }
+        finally
+        {
+            if (disposeOfImageStream)
+                await Functions.IgnoreExceptionAsync(stream.DisposeAsync);
+        }
     }
 
     public static async Task<BitmapImage> GetBitmapImageAsync(this Stream imageStream, bool disposeOfImageStream, int? desiredWidth = null)
@@ -72,22 +90,6 @@ public static partial class IoHelper
             await imageStream.DisposeAsync();
 
         return bitmapImage;
-    }
-
-    /// <summary>
-    /// Decodes the <paramref name="stream" /> to a <see cref="SoftwareBitmap" />
-    /// </summary>
-    public static async Task<SoftwareBitmap> GetSoftwareBitmapFromStreamAsync(Stream stream)
-    {
-        using var image = await Image.LoadAsync<Bgra32>(stream);
-        var softwareBitmap = new SoftwareBitmap(BitmapPixelFormat.Bgra8, image.Width, image.Height, BitmapAlphaMode.Premultiplied);
-        var buffer = new byte[4 * image.Width * image.Height];
-        image.CopyPixelDataTo(buffer);
-        softwareBitmap.CopyFromBuffer(buffer.AsBuffer());
-        return softwareBitmap;
-        // BitmapDecoder Bug多
-        // var decoder = await BitmapDecoder.CreateAsync(imageStream);
-        // return await decoder.GetSoftwareBitmapAsync(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Premultiplied);
     }
 
     public static async Task<Stream> GetFileThumbnailAsync(string path, uint size = 64)

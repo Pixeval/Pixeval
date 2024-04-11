@@ -113,7 +113,7 @@ public abstract partial class ThumbnailEntryViewModel<T> : EntryViewModel<T>, IW
     /// </summary>
     /// <param name="key">使用<see cref="IDisposable"/>对象，防止复用本对象的时候，本对象持有对<paramref name="key"/>的引用，导致<paramref name="key"/>无法释放</param>
     /// <returns>缩略图首次加载完成则返回<see langword="true"/>，之前已加载、正在加载或加载失败则返回<see langword="false"/></returns>
-    public virtual async Task<bool> TryLoadThumbnailAsync(IDisposable key)
+    public virtual async ValueTask<bool> TryLoadThumbnailAsync(IDisposable key)
     {
         if (ThumbnailSourceRef is not null)
         {

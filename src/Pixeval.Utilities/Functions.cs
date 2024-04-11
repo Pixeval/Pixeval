@@ -130,4 +130,16 @@ public static class Functions
             // ignore
         }
     }
+
+    public static async Task IgnoreExceptionAsync(Func<ValueTask> action)
+    {
+        try
+        {
+            await action();
+        }
+        catch
+        {
+            // ignore
+        }
+    }
 }

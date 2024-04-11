@@ -80,7 +80,7 @@ public sealed class DownloadListEntryViewModel : IllustrationItemViewModel
         _ => ThrowHelper.ArgumentOutOfRange<DownloadState, string>(DownloadTask.CurrentState)
     };
 
-    public override async Task<bool> TryLoadThumbnailAsync(IDisposable key)
+    public override async ValueTask<bool> TryLoadThumbnailAsync(IDisposable key)
     {
         if (ThumbnailSourceRef is not null)
         {

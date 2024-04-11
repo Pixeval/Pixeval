@@ -60,7 +60,7 @@ public partial class IllustrationItemViewModel(Illustration illustration) : Thum
         ? Entry.MetaPages[MangaIndex is -1 ? 0 : MangaIndex].ImageUrls.Original
         : Entry.MetaSinglePage.OriginalImageUrl;
 
-    public async Task<string> GetOriginalSourceUrlAsync() => IsUgoira
+    public async ValueTask<string> GetOriginalSourceUrlAsync() => IsUgoira
         ? (await GetUgoiraOriginalUrlAsync()).Url
         : OriginalStaticUrl;
 
