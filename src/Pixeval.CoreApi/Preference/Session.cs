@@ -41,9 +41,8 @@ public record Session(
     [property: JsonPropertyName("accessToken")] string AccessToken,
     [property: JsonPropertyName("refreshToken")] string RefreshToken,
     [property: JsonPropertyName("avatarUrl")] string AvatarUrl,
-    [property: JsonPropertyName("id")]
     [property: JsonNumberHandling(JsonNumberHandling.AllowReadingFromString | JsonNumberHandling.WriteAsString)]
-    long Id,
+    [property: JsonPropertyName("id")] long Id,
     [property: JsonPropertyName("account")] string Account,
     [property: JsonPropertyName("isPremium")] bool IsPremium)
 {
