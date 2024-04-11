@@ -49,6 +49,9 @@ public sealed partial class EnumComboBox : ComboBox
         if (Equals(newEnum, SelectedEnum))
             return;
         SelectedEnum = newEnum;
+        if (RaiseEventAfterLoaded && !IsLoaded)
+            return;
+        SelectionChanged?.Invoke(this, new([], []));
     }
 
     public bool ItemSelected => SelectedItem is not null;
@@ -59,9 +62,6 @@ public sealed partial class EnumComboBox : ComboBox
     {
         var comboBox = sender.To<EnumComboBox>();
         comboBox.SelectedItem = comboBox.ItemsSource?.To<IEnumerable<StringRepresentableItem>>().FirstOrDefault(r => Equals(r.Item, comboBox.SelectedEnum));
-        if (comboBox is { RaiseEventAfterLoaded: true, IsLoaded: false })
-            return;
-        comboBox.SelectionChanged?.Invoke(comboBox, new([], []));
     }
 
     private static void OnEnumSourceChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
