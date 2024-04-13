@@ -2,7 +2,7 @@
     {
         "identifier": "ErrorWhileLoggingInTitle",
         "source_string": "登录过程出现异常",
-        "translation": "登录过程出现异常",
+        "translation": "Login process aborted: error occured.",
         "context": null,
         "labels": null,
         "max_length": null
@@ -10,7 +10,7 @@
     {
         "identifier": "ErrorWhileLogginInContentFormatted",
         "source_string": "应用程序即将退出，以下是异常信息：\n{0}",
-        "translation": "应用程序即将退出，以下是异常信息：\n{0}",
+        "translation": "The app is about to exit, error message：\n{0}",
         "context": null,
         "labels": null,
         "max_length": null
@@ -18,7 +18,7 @@
     {
         "identifier": "LoginPhaseCheckingCertificateInstallation",
         "source_string": "正在检查证书安装情况...",
-        "translation": "正在检查证书安装情况...",
+        "translation": "Checking certificate installation...",
         "context": null,
         "labels": null,
         "max_length": null
@@ -26,7 +26,7 @@
     {
         "identifier": "LoginPhaseCheckingRefreshAvailable",
         "source_string": "正在检查是否可以刷新现有会话...",
-        "translation": "正在检查是否可以刷新现有会话...",
+        "translation": "Checking session refreshment...",
         "context": null,
         "labels": null,
         "max_length": null
@@ -34,7 +34,7 @@
     {
         "identifier": "LoginPhaseCheckingWebView2Installation",
         "source_string": "正在检查WebView2安装情况...",
-        "translation": "正在检查WebView2安装情况...",
+        "translation": "Ensuring WebView2 installed...",
         "context": null,
         "labels": null,
         "max_length": null
@@ -42,7 +42,7 @@
     {
         "identifier": "LoginPhaseInstallingCertificate",
         "source_string": "正在安装证书，请在打开的对话框中点击确认...",
-        "translation": "正在安装证书，请在打开的对话框中点击确认...",
+        "translation": "Installing certificate, please confirm in the dialog...",
         "context": null,
         "labels": null,
         "max_length": null
@@ -50,7 +50,7 @@
     {
         "identifier": "LoginPhaseRefreshing",
         "source_string": "正在刷新现有会话...",
-        "translation": "正在刷新现有会话...",
+        "translation": "Refreshing session...",
         "context": null,
         "labels": null,
         "max_length": null
@@ -58,7 +58,7 @@
     {
         "identifier": "LoginPhaseSuccessNavigating",
         "source_string": "登录成功，正在导航到主页",
-        "translation": "登录成功，正在导航到主页",
+        "translation": "Login success, navigating to the welcome page",
         "context": null,
         "labels": null,
         "max_length": null
@@ -66,7 +66,7 @@
     {
         "identifier": "LoginPhaseWaitingForUserInput",
         "source_string": "等待用户输入",
-        "translation": "等待用户输入",
+        "translation": "Waiting for user input",
         "context": null,
         "labels": null,
         "max_length": null
@@ -82,7 +82,7 @@
     {
         "identifier": "SubmitButton/Content",
         "source_string": "登录",
-        "translation": "登录",
+        "translation": "Login",
         "context": null,
         "labels": null,
         "max_length": null
@@ -90,7 +90,7 @@
     {
         "identifier": "RefreshTokenPivotItem/Header",
         "source_string": "令牌",
-        "translation": "令牌",
+        "translation": "Token",
         "context": null,
         "labels": null,
         "max_length": null
@@ -98,7 +98,7 @@
     {
         "identifier": "AccountPivotItem/Header",
         "source_string": "账号",
-        "translation": "账号",
+        "translation": "Account",
         "context": null,
         "labels": null,
         "max_length": null
@@ -106,7 +106,7 @@
     {
         "identifier": "RefreshTokenBox/PlaceholderText",
         "source_string": "刷新令牌",
-        "translation": "刷新令牌",
+        "translation": "Refresh token",
         "context": null,
         "labels": null,
         "max_length": null
@@ -114,7 +114,7 @@
     {
         "identifier": "UserNameBox/PlaceholderText",
         "source_string": "邮箱地址或pixiv ID",
-        "translation": "邮箱地址或pixiv ID",
+        "translation": "Email or pixiv ID",
         "context": null,
         "labels": null,
         "max_length": null
@@ -122,7 +122,7 @@
     {
         "identifier": "PasswordBox/PlaceholderText",
         "source_string": "密码",
-        "translation": "密码",
+        "translation": "Password",
         "context": null,
         "labels": null,
         "max_length": null
@@ -130,7 +130,7 @@
     {
         "identifier": "DisableDomainFrontingToggleSwitch/OnContent",
         "source_string": "禁用前域直连",
-        "translation": "禁用前域直连",
+        "translation": "Disable domain fronting",
         "context": null,
         "labels": null,
         "max_length": null
@@ -154,7 +154,7 @@
     {
         "identifier": "RefreshingSessionFailedTitle",
         "source_string": "刷新对话失败",
-        "translation": "刷新对话失败",
+        "translation": "Failed to refresh session",
         "context": null,
         "labels": null,
         "max_length": null
@@ -162,7 +162,7 @@
     {
         "identifier": "FetchingSessionFailedContent",
         "source_string": "请重新启动应用程序\n如果该问题反复出现，请联系开发者寻求解决",
-        "translation": "请重新启动应用程序\n如果该问题反复出现，请联系开发者寻求解决",
+        "translation": "Please restart the app\nIf this problem persists, contact the developer for further help.",
         "context": null,
         "labels": null,
         "max_length": null
@@ -170,7 +170,7 @@
     {
         "identifier": "FetchingSessionFailedTitle",
         "source_string": "获取对话失败",
-        "translation": "获取对话失败",
+        "translation": "Failed to fetch session",
         "context": null,
         "labels": null,
         "max_length": null
@@ -178,7 +178,7 @@
     {
         "identifier": "RootCertificateInstallationRequiredContent",
         "source_string": "如不安装证书则无法正常登录，本证书的私钥不会被分发，选择确认即代表您将会安装该证书，请在接下来弹出的对话框中选择确认/OK，如果您拒绝安装则无法继续使用本应用",
-        "translation": "如不安装证书则无法正常登录，本证书的私钥不会被分发，选择确认即代表您将会安装该证书，请在接下来弹出的对话框中选择确认/OK，如果您拒绝安装则无法继续使用本应用",
+        "translation": "The certificate must be installed in order to login, the private key of this certificate is guaranteed not to be distributed, confirming this means you will accept the installation, please click OK in the dialog, if you refuse to install the certificate, you will not be able to use this app",
         "context": null,
         "labels": null,
         "max_length": null
@@ -186,7 +186,7 @@
     {
         "identifier": "RootCertificateInstallationRequiredTitle",
         "source_string": "检测到本用户尚未安装证书",
-        "translation": "检测到本用户尚未安装证书",
+        "translation": "You need to install the certificate to login",
         "context": null,
         "labels": null,
         "max_length": null
@@ -194,7 +194,7 @@
     {
         "identifier": "WebView2InstallationRequiredContent",
         "source_string": "如不安装WebView2则无法正常登录，选择确认将会自动打开浏览器为您下载WebView2 Runtime，请您双击exe文件安装后重启应用。如果选择取消则无法继续使用本应用",
-        "translation": "如不安装WebView2则无法正常登录，选择确认将会自动打开浏览器为您下载WebView2 Runtime，请您双击exe文件安装后重启应用。如果选择取消则无法继续使用本应用",
+        "translation": "The WebView2 is required in order to login, by clicking OK the browser will be opened to download the WebView2 Runtime automatically, please restart the app after the installation, if you refuse to install WebView2 Runtime, you will not be able to use this app",
         "context": null,
         "labels": null,
         "max_length": null
@@ -202,7 +202,7 @@
     {
         "identifier": "WebView2InstallationRequiredTitle",
         "source_string": "检测到本机尚未安装WebView2 Runtime",
-        "translation": "检测到本机尚未安装WebView2 Runtime",
+        "translation": "You need to install the WebView2 Runtime to login",
         "context": null,
         "labels": null,
         "max_length": null
@@ -210,7 +210,7 @@
     {
         "identifier": "Help/ToolTipService/ToolTip",
         "source_string": "填写账号、密码后，软件会一直保存它们\n\n点击“登录”按钮后，会打开WebView进行快速自动登录，全程不需要用户操作，但如果遇到脚本没有执行完毕就停止、或者需要输入验证码的情况，也需要你手动完成\n\n如果你不信任软件帮你保存、填写，也可以直接留空并点击“登录”，然后手动在WebView中输入\n\n前域直连：禁用后将使用当前本机的IE代理。如果你此时不能直接访问pixiv，则应该不要禁止此选项",
-        "translation": "填写账号、密码后，软件会一直保存它们\n\n点击“登录”按钮后，会打开WebView进行快速自动登录，全程不需要用户操作，但如果遇到脚本没有执行完毕就停止、或者需要输入验证码的情况，也需要你手动完成\n\n如果你不信任软件帮你保存、填写，也可以直接留空并点击“登录”，然后手动在WebView中输入\n\n前域直连：禁用后将使用当前本机的IE代理。如果你此时不能直接访问pixiv，则应该不要禁止此选项",
+        "translation": "After you input the account and password, the app will keep it in the local storage\n\nClick on the \"Login\" button will open WebView2 to login automatically，However, if the error occurred while executing the script, or a captcha popped up, you will need to complete the login process manually\n\nIf you don't trust the app, you can leave the text box empty, click login, and manually fill your credentials in the WebView\n\nDomain Fronting：Disabling this will force the app to use the system proxy. If you cannot access Pixiv properly, then it is better not to disable this option.",
         "context": null,
         "labels": null,
         "max_length": null
