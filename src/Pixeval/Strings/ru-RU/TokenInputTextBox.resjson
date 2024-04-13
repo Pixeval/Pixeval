@@ -1,0 +1,26 @@
+[
+    {
+        "identifier": "CaseSensitiveCheckBox/ToolTipService/ToolTip",
+        "source_string": "大小写敏感",
+        "translation": "Учитывать регистр",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "IsRegularExpressionCheckBox/ToolTipService/ToolTip",
+        "source_string": "使用正则表达式",
+        "translation": "Использовать регулярные выражения",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "SubmitButton/ToolTipService/ToolTip",
+        "source_string": "提交",
+        "translation": "Применить",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    }
+]
