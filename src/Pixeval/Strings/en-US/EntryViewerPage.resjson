@@ -1,0 +1,474 @@
+[
+    {
+        "identifier": "GenerateLinkToThisPageButtonTeachingTip/ActionButtonContent",
+        "source_string": "不再显示",
+        "translation": "Do not show again",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "GenerateLinkToThisPageButtonTeachingTip/CloseButtonContent",
+        "source_string": "知道了",
+        "translation": "OK",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "GenerateLinkToThisPageButtonTeachingTip/Subtitle",
+        "source_string": "分享给你的朋友或者在浏览器或者Windows运行中输入该链接以直接打开当前页面",
+        "translation": "Send to your friends, or navigate to here directly by opening it in your browser or Windows Run dialog",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "GenerateLinkToThisPageButtonTeachingTip/Title",
+        "source_string": "链接已经复制到剪切板",
+        "translation": "Link copied to the clipboard",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "QrCodeTeachingTip/Title",
+        "source_string": "作品链接二维码",
+        "translation": "Generate QR code",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "AddToBookmarkTeachingTip/CloseButtonContent",
+        "source_string": "添加收藏",
+        "translation": "添加收藏",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "WorkNavigationViewItem/Content",
+        "source_string": "作品",
+        "translation": "Works",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "BookmarksNavigationViewItem/Content",
+        "source_string": "收藏作品",
+        "translation": "Bookmarks",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "FollowingsNavigationViewItem/Content",
+        "source_string": "关注的人",
+        "translation": "Followings",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "MyPixivUserNavigationViewItem/Content",
+        "source_string": "好P友",
+        "translation": "My Pixiv users",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "RecommendUserNavigationViewItem/Content",
+        "source_string": "推荐用户",
+        "translation": "Related people",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "FollowingUserItem/Title",
+        "source_string": "关注中",
+        "translation": "Followings",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "MyPixivUserItem/Title",
+        "source_string": "好P友",
+        "translation": "My Pixiv users",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "IllustrationCountItem/Title",
+        "source_string": "插画数",
+        "translation": "Illustrations",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "MangaCountItem/Title",
+        "source_string": "漫画数",
+        "translation": "Mangas",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "NovelCountItem/Title",
+        "source_string": "小说数",
+        "translation": "Novels",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "CommentsTab/Content",
+        "source_string": "评论",
+        "translation": "Comments",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "InfoAndComments",
+        "source_string": "详情",
+        "translation": "Info",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "InfoTab/Content",
+        "source_string": "详情",
+        "translation": "Info",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "LockScreen",
+        "source_string": "锁屏",
+        "translation": "Lockscreen",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "Background",
+        "source_string": "壁纸",
+        "translation": "Wallpaper",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "RelatedWorksTab/Content",
+        "source_string": "推荐作品",
+        "translation": "Related works",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "RotateClockwise",
+        "source_string": "顺时针旋转",
+        "translation": "Rotate clockwise",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "RotateCounterclockwise",
+        "source_string": "逆时针旋转",
+        "translation": "Rotate counterclockwise",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "Mirror",
+        "source_string": "镜像翻转",
+        "translation": "Mirrored",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "SetAs",
+        "source_string": "设置为",
+        "translation": "Set as...",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "SetAsBackgroundSucceededTitle",
+        "source_string": "已设置背景",
+        "translation": "Set as background",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "SetAsLockScreenSucceededTitle",
+        "source_string": "已设置锁屏",
+        "translation": "Set as lockscreen",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "PrevPageOrIllustration",
+        "source_string": "L：上一页漫画\nR：上一个画集",
+        "translation": "L：Previous manga\nR：Previous collection",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "PrevIllustration",
+        "source_string": "L/R：上一个画集",
+        "translation": "L/R：Previous collection",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "NextPageOrIllustration",
+        "source_string": "L：下一页漫画\nR：下一个画集",
+        "translation": "L：Next manga\nR：Next collection",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "NextIllustration",
+        "source_string": "L/R：下一个画集",
+        "translation": "L/R：Next collection",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "SetAsSucceededTitle",
+        "source_string": "设置成功",
+        "translation": "Succussfully set",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "ShareTitleFormatted",
+        "source_string": "分享{0}",
+        "translation": "Share {0}",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "ZoomIn",
+        "source_string": "放大",
+        "translation": "Zoom in",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "ZoomOut",
+        "source_string": "缩小",
+        "translation": "Zoom out",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "PrevPageOrNovel",
+        "source_string": "L：上一页小说\nR：上一篇小说",
+        "translation": "L：上一页小说\nR：上一篇小说",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "PrevNovel",
+        "source_string": "L/R：上一篇小说",
+        "translation": "L/R：上一篇小说",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "NextPageOrNovel",
+        "source_string": "L：下一页小说\nR：下一篇小说",
+        "translation": "L：下一页小说\nR：下一篇小说",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "NextNovel",
+        "source_string": "L/R：下一篇小说",
+        "translation": "L/R：下一篇小说",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "LoadingNovelTextBlock/Text",
+        "source_string": "正在加载小说",
+        "translation": "正在加载小说",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "NovelSettings",
+        "source_string": "小说设置",
+        "translation": "小说设置",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "NovelSettingsHeaderTextBlock/Text",
+        "source_string": "小说设置",
+        "translation": "小说设置",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "NovelFontFamilyComboBox/PlaceholderText",
+        "source_string": "选择字体",
+        "translation": "选择字体",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "NovelFontWeightComboBox/PlaceholderText",
+        "source_string": "选择字体粗细",
+        "translation": "选择字体粗细",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "NovelSettingsFontFamilyEntry/Header",
+        "source_string": "字体",
+        "translation": "字体",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "NovelSettingsFontFamilyEntry/Description",
+        "source_string": "正文字体",
+        "translation": "正文字体",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "NovelSettingsFontColorEntry/Header",
+        "source_string": "字体颜色",
+        "translation": "字体颜色",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "NovelSettingsFontColorEntry/Description",
+        "source_string": "正文字体颜色",
+        "translation": "正文字体颜色",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "NovelSettingsBackgroundEntry/Header",
+        "source_string": "背景色",
+        "translation": "背景色",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "NovelSettingsBackgroundEntry/Description",
+        "source_string": "页面背景色",
+        "translation": "页面背景色",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "NovelSettingsFontWeightEntry/Header",
+        "source_string": "字体粗细",
+        "translation": "字体粗细",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "NovelSettingsFontWeightEntry/Description",
+        "source_string": "正文字体粗细",
+        "translation": "正文字体粗细",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "NovelSettingsFontSizeEntry/Header",
+        "source_string": "字号",
+        "translation": "字号",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "NovelSettingsFontSizeEntry/Description",
+        "source_string": "正文字号",
+        "translation": "正文字号",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "NovelSettingsLineHeightEntry/Header",
+        "source_string": "行高",
+        "translation": "行高",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "NovelSettingsLineHeightEntry/Description",
+        "source_string": "正文行距",
+        "translation": "正文行距",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "NovelSettingsMaxWidthEntry/Header",
+        "source_string": "页面宽度",
+        "translation": "页面宽度",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "NovelSettingsMaxWidthEntry/Description",
+        "source_string": "页面的最大宽度",
+        "translation": "页面的最大宽度",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    }
+]
