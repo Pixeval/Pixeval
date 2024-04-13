@@ -2,7 +2,7 @@
     {
         "identifier": "BookmarksTab/Content",
         "source_string": "我的收藏",
-        "translation": "我的收藏",
+        "translation": "Bookmark",
         "context": null,
         "labels": null,
         "max_length": null
@@ -10,7 +10,7 @@
     {
         "identifier": "FeedsTab/Content",
         "source_string": "关注动态",
-        "translation": "关注动态",
+        "translation": "Feed",
         "context": null,
         "labels": null,
         "max_length": null
@@ -18,7 +18,7 @@
     {
         "identifier": "FollowingsTab/Content",
         "source_string": "我的关注",
-        "translation": "我的关注",
+        "translation": "Following",
         "context": null,
         "labels": null,
         "max_length": null
@@ -26,7 +26,7 @@
     {
         "identifier": "HistoriesTab/Content",
         "source_string": "浏览历史",
-        "translation": "浏览历史",
+        "translation": "History",
         "context": null,
         "labels": null,
         "max_length": null
@@ -34,7 +34,7 @@
     {
         "identifier": "TagsTab/Content",
         "source_string": "标签管理",
-        "translation": "标签管理",
+        "translation": "My Tags",
         "context": null,
         "labels": null,
         "max_length": null
@@ -42,7 +42,7 @@
     {
         "identifier": "RecentPostsTab/Content",
         "source_string": "关注新作",
-        "translation": "关注新作",
+        "translation": "Updates",
         "context": null,
         "labels": null,
         "max_length": null
@@ -50,7 +50,7 @@
     {
         "identifier": "SpotlightsTab/Content",
         "source_string": "特辑推荐",
-        "translation": "特辑推荐",
+        "translation": "Spotlight",
         "context": null,
         "labels": null,
         "max_length": null
@@ -58,7 +58,7 @@
     {
         "identifier": "RankingsTab/Content",
         "source_string": "作品榜单",
-        "translation": "作品榜单",
+        "translation": "Ranking",
         "context": null,
         "labels": null,
         "max_length": null
@@ -66,7 +66,7 @@
     {
         "identifier": "RecommendationsTab/Content",
         "source_string": "每日推荐",
-        "translation": "每日推荐",
+        "translation": "Recommendation",
         "context": null,
         "labels": null,
         "max_length": null
@@ -74,7 +74,7 @@
     {
         "identifier": "DownloadAndHistoriesTab/Content",
         "source_string": "下载与历史",
-        "translation": "下载与历史",
+        "translation": "Download & History",
         "context": null,
         "labels": null,
         "max_length": null
@@ -82,7 +82,7 @@
     {
         "identifier": "DownloadListTab/Content",
         "source_string": "下载列表",
-        "translation": "下载列表",
+        "translation": "Download Manager",
         "context": null,
         "labels": null,
         "max_length": null
@@ -90,7 +90,7 @@
     {
         "identifier": "HelpTab/Content",
         "source_string": "帮助",
-        "translation": "帮助",
+        "translation": "Help",
         "context": null,
         "labels": null,
         "max_length": null
@@ -98,7 +98,7 @@
     {
         "identifier": "AboutTab/Content",
         "source_string": "关于",
-        "translation": "关于",
+        "translation": "About",
         "context": null,
         "labels": null,
         "max_length": null
@@ -106,7 +106,7 @@
     {
         "identifier": "SettingsTab/Content",
         "source_string": "设置",
-        "translation": "设置",
+        "translation": "Setting",
         "context": null,
         "labels": null,
         "max_length": null
@@ -114,7 +114,7 @@
     {
         "identifier": "OpenSearchSettingButton/ToolTipService/ToolTip",
         "source_string": "搜索设置",
-        "translation": "搜索设置",
+        "translation": "Search for settings",
         "context": null,
         "labels": null,
         "max_length": null
@@ -122,7 +122,7 @@
     {
         "identifier": "ReverseSearchButton/ToolTipService/ToolTip",
         "source_string": "以图搜图",
-        "translation": "以图搜图",
+        "translation": "Reverse search",
         "context": null,
         "labels": null,
         "max_length": null
@@ -130,7 +130,7 @@
     {
         "identifier": "MainPageAutoSuggestionBox/PlaceholderText",
         "source_string": "请输入作品ID/作品名/作者ID/作者名/设置项",
-        "translation": "请输入作品ID/作品名/作者ID/作者名/设置项",
+        "translation": "Work ID/Work title/Artist ID/Artist title/Setting entry",
         "context": null,
         "labels": null,
         "max_length": null
@@ -138,7 +138,7 @@
     {
         "identifier": "SearchKeywordCannotBeBlankContent",
         "source_string": "关键字的长度不能为空",
-        "translation": "关键字的长度不能为空",
+        "translation": "The keyword must not be empty",
         "context": null,
         "labels": null,
         "max_length": null
@@ -146,7 +146,7 @@
     {
         "identifier": "SearchKeywordCannotBeBlankTitle",
         "source_string": "输入非法",
-        "translation": "输入非法",
+        "translation": "The keyword is illegal",
         "context": null,
         "labels": null,
         "max_length": null
@@ -154,7 +154,7 @@
     {
         "identifier": "ReverseSearchApiKeyNotPresentTitle",
         "source_string": "未填写API Key或API Key错误",
-        "translation": "未填写API Key或API Key错误",
+        "translation": "Empty API key/API key illegal",
         "context": null,
         "labels": null,
         "max_length": null
@@ -162,7 +162,7 @@
     {
         "identifier": "ReverseSearchClientSideErrorContent",
         "source_string": "图片格式错误或者图片过大或者请求频率过高，请仔细检查后稍后再试",
-        "translation": "图片格式错误或者图片过大或者请求频率过高，请仔细检查后稍后再试",
+        "translation": "Illegal image format/Image is too big/Request is too frequent, please try again later",
         "context": null,
         "labels": null,
         "max_length": null
@@ -170,7 +170,7 @@
     {
         "identifier": "ReverseSearchErrorTitle",
         "source_string": "逆向搜索发生错误",
-        "translation": "逆向搜索发生错误",
+        "translation": "Reverse search failed",
         "context": null,
         "labels": null,
         "max_length": null
@@ -178,7 +178,7 @@
     {
         "identifier": "ReverseSearchNotFoundContent",
         "source_string": "很遗憾，逆向搜索功能未能在Pixiv数据库中找到任何对应的结果，该功能仅限于搜索Pixiv上面的作品哦",
-        "translation": "很遗憾，逆向搜索功能未能在Pixiv数据库中找到任何对应的结果，该功能仅限于搜索Pixiv上面的作品哦",
+        "translation": "We can't find any matching work on Pixiv. The reverse search can only find works on Pixiv",
         "context": null,
         "labels": null,
         "max_length": null
@@ -186,7 +186,7 @@
     {
         "identifier": "ReverseSearchNotFoundTitle",
         "source_string": "未找到任何结果",
-        "translation": "未找到任何结果",
+        "translation": "Didn't find any result",
         "context": null,
         "labels": null,
         "max_length": null
@@ -194,7 +194,7 @@
     {
         "identifier": "ReverseSearchResponseContentIsEmpty",
         "source_string": "返回结果为空",
-        "translation": "返回结果为空",
+        "translation": "Result is empty",
         "context": null,
         "labels": null,
         "max_length": null
@@ -202,7 +202,7 @@
     {
         "identifier": "ReverseSearchServerSideErrorContent",
         "source_string": "服务器端发生错误",
-        "translation": "服务器端发生错误",
+        "translation": "Server error",
         "context": null,
         "labels": null,
         "max_length": null
@@ -210,7 +210,7 @@
     {
         "identifier": "IllustrationHeaderSuggestionTextBlock/Text",
         "source_string": "插画趋势",
-        "translation": "插画趋势",
+        "translation": "Work trending",
         "context": null,
         "labels": null,
         "max_length": null
@@ -218,7 +218,7 @@
     {
         "identifier": "NovelHeaderSuggestionTextBlock/Text",
         "source_string": "小说趋势",
-        "translation": "小说趋势",
+        "translation": "Novel trending",
         "context": null,
         "labels": null,
         "max_length": null
@@ -226,7 +226,7 @@
     {
         "identifier": "SettingsEntryHeaderSuggestionTextBlock/Text",
         "source_string": "相关设置项",
-        "translation": "相关设置项",
+        "translation": "Suggested settings",
         "context": null,
         "labels": null,
         "max_length": null
@@ -234,7 +234,7 @@
     {
         "identifier": "TagAutoCompletionSuggestionTextBlock/Text",
         "source_string": "相关标签",
-        "translation": "相关标签",
+        "translation": "Suggestions",
         "context": null,
         "labels": null,
         "max_length": null
