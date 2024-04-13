@@ -1,0 +1,26 @@
+[
+    {
+        "identifier": "InvalidIPFormat",
+        "source_string": "无效的IP格式",
+        "translation": "无效的IP格式",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "DuplicatesWithExistingIP",
+        "source_string": "与现有IP重复",
+        "translation": "与现有IP重复",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "AddItemAutoSuggestBox/PlaceholderText",
+        "source_string": "输入一条IP，并点击“+”添加",
+        "translation": "输入一条IP，并点击“+”添加",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    }
+]
