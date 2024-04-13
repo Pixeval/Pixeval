@@ -1,0 +1,186 @@
+[
+    {
+        "identifier": "GenerateLink",
+        "source_string": "复制应用链接",
+        "translation": "Copy application link",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "GenerateWebLink",
+        "source_string": "复制网页链接",
+        "translation": "Copy website link",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "OpenInWebBrowser",
+        "source_string": "打开网页",
+        "translation": "Open in browser",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "LinkCopiedToClipboard",
+        "source_string": "链接已复制到剪切板",
+        "translation": "Link copied to the clipboard",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "ShowPixEzQrCode",
+        "source_string": "生成PixEz二维码",
+        "translation": "Generate PixEz QR code",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "ShowQRCode",
+        "source_string": "生成二维码",
+        "translation": "Generate QR code",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "AddToBookmark",
+        "source_string": "添加到收藏夹",
+        "translation": "Bookmark",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "Share",
+        "source_string": "分享",
+        "translation": "Share",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "Save",
+        "source_string": "保存",
+        "translation": "Save",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "SaveAs",
+        "source_string": "另存为",
+        "translation": "Save as",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "Copy",
+        "source_string": "复制图片到剪切板",
+        "translation": "Copy to clipboard",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "SaveAsCancelled",
+        "source_string": "已取消另存为操作",
+        "translation": "Cancelled the \"save as\" operation",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "Saved",
+        "source_string": "已保存",
+        "translation": "Saved",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "DownloadTaskCreated",
+        "source_string": "已创建下载任务",
+        "translation": "Created download task",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "UgoiraProcessing",
+        "source_string": "正在处理动图：{0}%",
+        "translation": "Processing ugoira：{0}%",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "ImageProcessing",
+        "source_string": "正在处理图片",
+        "translation": "Processing image",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "ImageSetToClipBoard",
+        "source_string": "图片已复制到剪切板",
+        "translation": "Image copied to clipboard",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "TheIllustrationIsAMangaFormatted",
+        "source_string": "这是一副图集，内含{0}张图片",
+        "translation": "This work contains {0} pictures",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "TheIllustrationIsAnUgoira",
+        "source_string": "这是一张动图",
+        "translation": "This is an ugoira",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "OpenNovel",
+        "source_string": "阅读小说",
+        "translation": "阅读小说",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "UserMetricsFollowingsTextBlock/Text",
+        "source_string": "正在关注",
+        "translation": "Follwings",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "UserMetricsIllustrationCountTextBlock/Text",
+        "source_string": "作品数",
+        "translation": "Works",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "UserMetricsMyPixivUsersTextBlock/Text",
+        "source_string": "好P友",
+        "translation": "My Pixiv users",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    }
+]
