@@ -1,0 +1,5 @@
+{
+    "InvalidIPFormat": "\u65e0\u6548\u7684IP\u683c\u5f0f",
+    "DuplicatesWithExistingIP": "\u4e0e\u73b0\u6709IP\u91cd\u590d",
+    "AddItemAutoSuggestBox\/PlaceholderText": "\u8f93\u5165\u4e00\u6761IP\uff0c\u5e76\u70b9\u51fb\u201c+\u201d\u6dfb\u52a0"
+}
