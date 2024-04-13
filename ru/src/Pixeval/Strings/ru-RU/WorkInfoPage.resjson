@@ -1,0 +1,16 @@
+{
+    "WorkCaptionEmpty": "\u65e0",
+    "WorkCaptionTextBlock\/Text": "\u4f5c\u54c1\u4ecb\u7ecd",
+    "IllustrationDimensionTextBlock\/Text": "\u4f5c\u54c1\u5206\u8fa8\u7387",
+    "IllustrationDimensionUnknown": "\u672a\u77e5",
+    "WorkIdTextBlock\/Text": "\u4f5c\u54c1ID",
+    "WorkTagListTextBlock\/Text": "\u4f5c\u54c1\u6807\u7b7e",
+    "WorkTitleTextBlock\/Text": "\u4f5c\u54c1\u540d",
+    "WorkTotalBookmarksTextBlock\/Text": "\u603b\u6536\u85cf\u6570",
+    "WorkTotalViewsTextBlock\/Text": "\u603b\u6d4f\u89c8\u91cf",
+    "WorkUploadDateTextBlock\/Text": "\u4e0a\u4f20\u65e5\u671f",
+    "IllustratorId\/Text": "\u4f5c\u8005ID: ",
+    "IllustratorName\/Text": "\u4f5c\u8005\u540d: ",
+    "IllustratorTextBlock\/Text": "\u4f5c\u8005\u4fe1\u606f",
+    "TitleTextBlock\/Text": "\u4f5c\u54c1\u4fe1\u606f"
+}
