@@ -2,7 +2,7 @@
     {
         "identifier": "CancelButtonContent",
         "source_string": "取消",
-        "translation": "取消",
+        "translation": "Отмена",
         "context": null,
         "labels": null,
         "max_length": null
@@ -10,7 +10,7 @@
     {
         "identifier": "OkButtonContent",
         "source_string": "确认",
-        "translation": "确认",
+        "translation": "ОК",
         "context": null,
         "labels": null,
         "max_length": null
