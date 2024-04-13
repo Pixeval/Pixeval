@@ -1,0 +1,50 @@
+[
+    {
+        "identifier": "CheckingCache",
+        "source_string": "正在检查缓存...",
+        "translation": "Проверка кэша...",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "DownloadingUgoiraZipFormatted",
+        "source_string": "正在下载包含动图的压缩包：{0}%",
+        "translation": "Загрузка архива с анимацией: {0}%",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "DownloadingImageFormatted",
+        "source_string": "正在下载图片：{0}%",
+        "translation": "Загрузка изображения: {0}%",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "LoadingFromCache",
+        "source_string": "正在从缓存中加载...",
+        "translation": "Загрузка из кэша...",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "LoadingImage",
+        "source_string": "正在解码图片...",
+        "translation": "Декодирование изображения...",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "MergingUgoiraFrames",
+        "source_string": "正在合成动图...",
+        "translation": "Создание анимации...",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    }
+]
