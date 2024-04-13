@@ -1,0 +1,20 @@
+{
+  "ActionButtonContentOpen": "\u6253\u5f00",
+  "ActionButtonContentPause": "\u6682\u505c",
+  "ActionButtonContentRedownload": "\u91cd\u65b0\u4e0b\u8f7d",
+  "ActionButtonContentResume": "\u6062\u590d",
+  "ActionButtonContentRetry": "\u91cd\u8bd5",
+  "CancelDownloadItem\/Label": "\u53d6\u6d88\u4e0b\u8f7d",
+  "CheckErrorMessageInDetailItem\/Label": "\u67e5\u770b\u8be6\u7ec6\u9519\u8bef\u4fe1\u606f",
+  "DownloadCancelled": "\u4e0b\u8f7d\u5df2\u53d6\u6d88",
+  "DownloadCancelledAction": "\u53d6\u6d88",
+  "DownloadCompleted": "\u4e0b\u8f7d\u5b8c\u6210",
+  "DownloadErrorMessageFormatted": "\u4e0b\u8f7d\u5931\u8d25: {0}",
+  "DownloadPaused": "\u4e0b\u8f7d\u5df2\u6682\u505c",
+  "DownloadQueued": "\u5728\u961f\u5217\u4e2d",
+  "DownloadRunningFormatted": "\u4e0b\u8f7d\u8fdb\u5ea6: {0}%",
+  "ErrorMessageDialogTitle": "\u9519\u8bef\u4fe1\u606f",
+  "GoToPageItem\/Label": "\u67e5\u770b\u9875\u9762",
+  "OpenDownloadLocationItem\/Label": "\u6253\u5f00\u4e0b\u8f7d\u4f4d\u7f6e",
+  "RedownloadItem\/Label": "\u91cd\u65b0\u4e0b\u8f7d"
+}
