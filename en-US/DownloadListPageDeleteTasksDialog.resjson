@@ -2,7 +2,7 @@
     {
         "identifier": "DeleteLocalFiles/Content",
         "source_string": "同时删除本地文件",
-        "translation": "同时删除本地文件",
+        "translation": "Also delete local files",
         "context": null,
         "labels": null,
         "max_length": null
@@ -10,7 +10,7 @@
     {
         "identifier": "MessageTextBlock/Text",
         "source_string": "请问你确定要从列表中删除这些记录吗（无法恢复）",
-        "translation": "请问你确定要从列表中删除这些记录吗（无法恢复）",
+        "translation": "Are you sure you want to delete these records from the list (irreversible!)?",
         "context": null,
         "labels": null,
         "max_length": null
