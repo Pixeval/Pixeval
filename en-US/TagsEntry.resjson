@@ -2,7 +2,7 @@
     {
         "identifier": "EditTagItem/Label",
         "source_string": "编辑",
-        "translation": "编辑",
+        "translation": "Edit",
         "context": null,
         "labels": null,
         "max_length": null
@@ -10,7 +10,7 @@
     {
         "identifier": "OpenItem/Label",
         "source_string": "打开图片",
-        "translation": "打开图片",
+        "translation": "Open",
         "context": null,
         "labels": null,
         "max_length": null
@@ -18,7 +18,7 @@
     {
         "identifier": "GoToPageItem/Label",
         "source_string": "查看页面",
-        "translation": "查看页面",
+        "translation": "View",
         "context": null,
         "labels": null,
         "max_length": null
@@ -26,7 +26,7 @@
     {
         "identifier": "DeleteItem/Label",
         "source_string": "删除图片",
-        "translation": "删除图片",
+        "translation": "Delete",
         "context": null,
         "labels": null,
         "max_length": null
@@ -34,7 +34,7 @@
     {
         "identifier": "OpenLocationItem/Label",
         "source_string": "打开图片位置",
-        "translation": "打开图片位置",
+        "translation": "Open file location",
         "context": null,
         "labels": null,
         "max_length": null
@@ -42,7 +42,7 @@
     {
         "identifier": "EditTag",
         "source_string": "编辑图片标签（用英文逗号分隔）",
-        "translation": "编辑图片标签（用英文逗号分隔）",
+        "translation": "Edit tag (split different tags with comma)",
         "context": null,
         "labels": null,
         "max_length": null
@@ -50,7 +50,7 @@
     {
         "identifier": "TagsIsUnloaded",
         "source_string": "标签还未加载",
-        "translation": "标签还未加载",
+        "translation": "Tags not loaded yet",
         "context": null,
         "labels": null,
         "max_length": null
@@ -58,7 +58,7 @@
     {
         "identifier": "EditTagFailed",
         "source_string": "编辑标签失败",
-        "translation": "编辑标签失败",
+        "translation": "Failed to edit the tag",
         "context": null,
         "labels": null,
         "max_length": null
