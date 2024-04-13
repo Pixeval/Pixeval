@@ -1,0 +1,74 @@
+[
+    {
+        "identifier": "ContentDialog/Title",
+        "source_string": "提示",
+        "translation": "Prompt",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "ContentDialog/PrimaryButtonText",
+        "source_string": "关闭应用",
+        "translation": "Close App",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "ContentDialog/CloseButtonText",
+        "source_string": "继续进入应用",
+        "translation": "继续进入应用",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "MainTextBlock/Text",
+        "source_string": "检测到上次软件以没有正常方式退出，你可以（清除设置后需要重启）：",
+        "translation": "检测到上次软件以没有正常方式退出，你可以（清除设置后需要重启）：",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "ClearConfig/Content",
+        "source_string": "清空设置（软件设置）",
+        "translation": "清空设置（软件设置）",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "ClearContext/Content",
+        "source_string": "清空登录状态",
+        "translation": "清空登录状态",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "OpenLocalFolder/Content",
+        "source_string": "打开本地文件夹",
+        "translation": "打开本地文件夹",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "OpenRoamingFolder/Content",
+        "source_string": "打开漫游文件夹",
+        "translation": "打开漫游文件夹",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "OpenLogFolder/Content",
+        "source_string": "打开日志文件夹",
+        "translation": "打开日志文件夹",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    }
+]
