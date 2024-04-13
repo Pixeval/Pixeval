@@ -1,0 +1,8 @@
+{
+    "CheckingCache": "\u6b63\u5728\u68c0\u67e5\u7f13\u5b58...",
+    "DownloadingUgoiraZipFormatted": "\u6b63\u5728\u4e0b\u8f7d\u5305\u542b\u52a8\u56fe\u7684\u538b\u7f29\u5305\uff1a{0}%",
+    "DownloadingImageFormatted": "\u6b63\u5728\u4e0b\u8f7d\u56fe\u7247\uff1a{0}%",
+    "LoadingFromCache": "\u6b63\u5728\u4ece\u7f13\u5b58\u4e2d\u52a0\u8f7d...",
+    "LoadingImage": "\u6b63\u5728\u89e3\u7801\u56fe\u7247...",
+    "MergingUgoiraFrames": "\u6b63\u5728\u5408\u6210\u52a8\u56fe..."
+}
