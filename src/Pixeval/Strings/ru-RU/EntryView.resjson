@@ -1,0 +1,90 @@
+[
+    {
+        "identifier": "AddToBookmarkContextItem/Text",
+        "source_string": "添加到收藏夹",
+        "translation": "Добавить в избранное",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "CopyAppLinkContextItem/Text",
+        "source_string": "复制应用链接",
+        "translation": "Копировать ссылку приложения",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "CopyWebLinkContextItem/Text",
+        "source_string": "复制网页链接",
+        "translation": "Копировать веб-ссылку",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "OpenInBrowserContextItem/Text",
+        "source_string": "在浏览器中打开",
+        "translation": "Открыть в браузере",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "ResultIsEmptyTextBlock/Text",
+        "source_string": "这里空空如也",
+        "translation": "Здесь пусто",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "IsLoadingMoreTextBlock/Text",
+        "source_string": "正在加载",
+        "translation": "Загружается",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "SaveContextItem/Text",
+        "source_string": "保存",
+        "translation": "Сохранить",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "ShowPixEzQrCodeContextItem/Text",
+        "source_string": "PixEz二维码",
+        "translation": "QR-код PixEz",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "ShowQrCodeContextItem/Text",
+        "source_string": "作品链接二维码",
+        "translation": "QR-код работы",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "IllustrationQrCodeTeachingTip/TeachingTipTitle",
+        "source_string": "作品链接二维码",
+        "translation": "QR-код работы",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "IllustratorQrCodeTeachingTip/TeachingTipTitle",
+        "source_string": "画师链接二维码",
+        "translation": "QR-код иллюстратора",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    }
+]
