@@ -2,7 +2,7 @@
     {
         "identifier": "ContentDialog/Title",
         "source_string": "提示",
-        "translation": "提示",
+        "translation": "Prompt",
         "context": null,
         "labels": null,
         "max_length": null
@@ -10,7 +10,7 @@
     {
         "identifier": "ContentDialog/PrimaryButtonText",
         "source_string": "关闭应用",
-        "translation": "关闭应用",
+        "translation": "Close App",
         "context": null,
         "labels": null,
         "max_length": null
