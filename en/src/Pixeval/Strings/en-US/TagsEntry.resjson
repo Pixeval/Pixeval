@@ -1,0 +1,10 @@
+{
+    "EditTagItem\/Label": "\u7f16\u8f91",
+    "OpenItem\/Label": "\u6253\u5f00\u56fe\u7247",
+    "GoToPageItem\/Label": "\u67e5\u770b\u9875\u9762",
+    "DeleteItem\/Label": "\u5220\u9664\u56fe\u7247",
+    "OpenLocationItem\/Label": "\u6253\u5f00\u56fe\u7247\u4f4d\u7f6e",
+    "EditTag": "\u7f16\u8f91\u56fe\u7247\u6807\u7b7e\uff08\u7528\u82f1\u6587\u9017\u53f7\u5206\u9694\uff09",
+    "TagsIsUnloaded": "\u6807\u7b7e\u8fd8\u672a\u52a0\u8f7d",
+    "EditTagFailed": "\u7f16\u8f91\u6807\u7b7e\u5931\u8d25"
+}
