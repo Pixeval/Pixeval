@@ -1,0 +1,242 @@
+[
+    {
+        "identifier": "BookmarksTab/Content",
+        "source_string": "我的收藏",
+        "translation": "Моё избранное",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "FeedsTab/Content",
+        "source_string": "关注动态",
+        "translation": "Лента подписок",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "FollowingsTab/Content",
+        "source_string": "我的关注",
+        "translation": "Мои подписки",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "HistoriesTab/Content",
+        "source_string": "浏览历史",
+        "translation": "История просмотров",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "TagsTab/Content",
+        "source_string": "标签管理",
+        "translation": "Управление тегами",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "RecentPostsTab/Content",
+        "source_string": "关注新作",
+        "translation": "Новинки от подписок",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "SpotlightsTab/Content",
+        "source_string": "特辑推荐",
+        "translation": "Рекомендации",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "RankingsTab/Content",
+        "source_string": "作品榜单",
+        "translation": "Рейтинги",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "RecommendationsTab/Content",
+        "source_string": "每日推荐",
+        "translation": "Рекомендации дня",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "DownloadAndHistoriesTab/Content",
+        "source_string": "下载与历史",
+        "translation": "Загрузки и история",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "DownloadListTab/Content",
+        "source_string": "下载列表",
+        "translation": "Список загрузок",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "HelpTab/Content",
+        "source_string": "帮助",
+        "translation": "Помощь",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "AboutTab/Content",
+        "source_string": "关于",
+        "translation": "О приложении",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "SettingsTab/Content",
+        "source_string": "设置",
+        "translation": "Настройки",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "OpenSearchSettingButton/ToolTipService/ToolTip",
+        "source_string": "搜索设置",
+        "translation": "Настройки поиска",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "ReverseSearchButton/ToolTipService/ToolTip",
+        "source_string": "以图搜图",
+        "translation": "Поиск по изображению",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "MainPageAutoSuggestionBox/PlaceholderText",
+        "source_string": "请输入作品ID/作品名/作者ID/作者名/设置项",
+        "translation": "Введите ID произведения/название/ID автора/имя автора/настройку",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "SearchKeywordCannotBeBlankContent",
+        "source_string": "关键字的长度不能为空",
+        "translation": "Ключевое слово не может быть пустым",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "SearchKeywordCannotBeBlankTitle",
+        "source_string": "输入非法",
+        "translation": "Неверный ввод",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "ReverseSearchApiKeyNotPresentTitle",
+        "source_string": "未填写API Key或API Key错误",
+        "translation": "Не указан API ключ или ключ неверный",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "ReverseSearchClientSideErrorContent",
+        "source_string": "图片格式错误或者图片过大或者请求频率过高，请仔细检查后稍后再试",
+        "translation": "Ошибка формата изображения или изображение слишком большое, или слишком частые запросы. Пожалуйста, проверьте и попробуйте позже",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "ReverseSearchErrorTitle",
+        "source_string": "逆向搜索发生错误",
+        "translation": "Ошибка обратного поиска",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "ReverseSearchNotFoundContent",
+        "source_string": "很遗憾，逆向搜索功能未能在Pixiv数据库中找到任何对应的结果，该功能仅限于搜索Pixiv上面的作品哦",
+        "translation": "К сожалению, поиск не нашел совпадений в базе Pixiv. Эта функция ограничена поиском только по Pixiv",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "ReverseSearchNotFoundTitle",
+        "source_string": "未找到任何结果",
+        "translation": "Результаты не найдены",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "ReverseSearchResponseContentIsEmpty",
+        "source_string": "返回结果为空",
+        "translation": "Пустой ответ сервера",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "ReverseSearchServerSideErrorContent",
+        "source_string": "服务器端发生错误",
+        "translation": "Ошибка на стороне сервера",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "IllustrationHeaderSuggestionTextBlock/Text",
+        "source_string": "插画趋势",
+        "translation": "Тенденции иллюстраций",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "NovelHeaderSuggestionTextBlock/Text",
+        "source_string": "小说趋势",
+        "translation": "Тенденции рассказов",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "SettingsEntryHeaderSuggestionTextBlock/Text",
+        "source_string": "相关设置项",
+        "translation": "Соответствующие настройки",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "TagAutoCompletionSuggestionTextBlock/Text",
+        "source_string": "相关标签",
+        "translation": "Соответствующие теги",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    }
+]
