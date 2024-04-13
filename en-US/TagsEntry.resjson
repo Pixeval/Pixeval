@@ -1,0 +1,66 @@
+[
+    {
+        "identifier": "EditTagItem/Label",
+        "source_string": "编辑",
+        "translation": "编辑",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "OpenItem/Label",
+        "source_string": "打开图片",
+        "translation": "打开图片",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "GoToPageItem/Label",
+        "source_string": "查看页面",
+        "translation": "查看页面",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "DeleteItem/Label",
+        "source_string": "删除图片",
+        "translation": "删除图片",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "OpenLocationItem/Label",
+        "source_string": "打开图片位置",
+        "translation": "打开图片位置",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "EditTag",
+        "source_string": "编辑图片标签（用英文逗号分隔）",
+        "translation": "编辑图片标签（用英文逗号分隔）",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "TagsIsUnloaded",
+        "source_string": "标签还未加载",
+        "translation": "标签还未加载",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "EditTagFailed",
+        "source_string": "编辑标签失败",
+        "translation": "编辑标签失败",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    }
+]
