@@ -2,7 +2,7 @@
     {
         "identifier": "TagsFilterTokenizingTextBox/PlaceholderText",
         "source_string": "输入标签以筛选",
-        "translation": "输入标签以筛选",
+        "translation": "Введите теги для фильтрации",
         "context": null,
         "labels": null,
         "max_length": null
