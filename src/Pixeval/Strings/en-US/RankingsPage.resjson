@@ -1,0 +1,146 @@
+[
+    {
+        "identifier": "RankOptionComboBox/PlaceholderText",
+        "source_string": "选择模式",
+        "translation": "Mode selection",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "RankOptionDay",
+        "source_string": "每日榜单",
+        "translation": "Daily",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "RankOptionWeek",
+        "source_string": "每周榜单",
+        "translation": "Weekly",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "RankOptionMonth",
+        "source_string": "每月榜单",
+        "translation": "Monthly",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "RankOptionDayMale",
+        "source_string": "男性向日榜",
+        "translation": "Daily male",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "RankOptionDayFemale",
+        "source_string": "女性向日榜",
+        "translation": "Daily female",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "RankOptionWeekOriginal",
+        "source_string": "原创周榜",
+        "translation": "original",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "RankOptionWeekRookie",
+        "source_string": "新人周榜",
+        "translation": "Rookie",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "RankOptionDayManga",
+        "source_string": "漫画日榜",
+        "translation": "Daily manga",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "RankOptionWeekManga",
+        "source_string": "漫画周榜",
+        "translation": "Weekly manga",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "RankOptionMonthManga",
+        "source_string": "漫画月榜",
+        "translation": "漫画月榜",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "RankOptionDayR18",
+        "source_string": "R-18日榜",
+        "translation": "Daily R-18",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "RankOptionDayMaleR18",
+        "source_string": "男性向R-18日榜",
+        "translation": "Daily R-18 male",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "RankOptionDayFemaleR18",
+        "source_string": "女性向R-18日榜",
+        "translation": "Daily R-18 female",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "RankOptionWeekR18",
+        "source_string": "R-18周榜",
+        "translation": "Weekly R-18",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "RankOptionWeekR18G",
+        "source_string": "R-18G周榜",
+        "translation": "Weekly R-18G",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "RankOptionDayAi",
+        "source_string": "AI日榜",
+        "translation": "AI日榜",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "RankOptionDayR18Ai",
+        "source_string": "AI R-18日榜",
+        "translation": "AI R-18日榜",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    }
+]
