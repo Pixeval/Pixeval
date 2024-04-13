@@ -1,5 +1,5 @@
 bundles:
-  - 2
+  - 4
 files:
   - source: src/Pixeval/Strings/zh-cn/*.resjson
     translation: src/Pixeval/Strings/%locale%/%original_file_name%
