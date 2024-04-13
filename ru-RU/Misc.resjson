@@ -2,7 +2,7 @@
     {
         "identifier": "AddBookmark",
         "source_string": "收藏",
-        "translation": "收藏",
+        "translation": "Добавить в избранное",
         "context": null,
         "labels": null,
         "max_length": null
@@ -10,7 +10,7 @@
     {
         "identifier": "RemoveBookmark",
         "source_string": "取消收藏",
-        "translation": "取消收藏",
+        "translation": "Удалить из избранного",
         "context": null,
         "labels": null,
         "max_length": null
@@ -18,7 +18,7 @@
     {
         "identifier": "Follow",
         "source_string": "关注",
-        "translation": "关注",
+        "translation": "Подписаться",
         "context": null,
         "labels": null,
         "max_length": null
@@ -26,7 +26,7 @@
     {
         "identifier": "FollowPrivately",
         "source_string": "悄悄关注",
-        "translation": "悄悄关注",
+        "translation": "Подписаться тайно",
         "context": null,
         "labels": null,
         "max_length": null
@@ -34,7 +34,7 @@
     {
         "identifier": "Unfollow",
         "source_string": "取消关注",
-        "translation": "取消关注",
+        "translation": "Отписаться",
         "context": null,
         "labels": null,
         "max_length": null
@@ -42,7 +42,7 @@
     {
         "identifier": "Pause",
         "source_string": "暂停",
-        "translation": "暂停",
+        "translation": "Пауза",
         "context": null,
         "labels": null,
         "max_length": null
@@ -50,7 +50,7 @@
     {
         "identifier": "Play",
         "source_string": "播放",
-        "translation": "播放",
+        "translation": "Воспроизвести",
         "context": null,
         "labels": null,
         "max_length": null
@@ -58,7 +58,7 @@
     {
         "identifier": "RestoreOriginalResolution",
         "source_string": "缩放到图片实际大小",
-        "translation": "缩放到图片实际大小",
+        "translation": "Оригинальный размер",
         "context": null,
         "labels": null,
         "max_length": null
@@ -66,7 +66,7 @@
     {
         "identifier": "UniformToFillResolution",
         "source_string": "缩放到适应窗口大小",
-        "translation": "缩放到适应窗口大小",
+        "translation": "Подогнать размер",
         "context": null,
         "labels": null,
         "max_length": null
@@ -74,7 +74,7 @@
     {
         "identifier": "FullScreen",
         "source_string": "全屏",
-        "translation": "全屏",
+        "translation": "На весь экран",
         "context": null,
         "labels": null,
         "max_length": null
@@ -82,7 +82,7 @@
     {
         "identifier": "BackToWindow",
         "source_string": "恢复窗口化",
-        "translation": "恢复窗口化",
+        "translation": "В оконный режим",
         "context": null,
         "labels": null,
         "max_length": null
@@ -90,7 +90,7 @@
     {
         "identifier": "AppThemeLight",
         "source_string": "亮色",
-        "translation": "亮色",
+        "translation": "Светлая тема",
         "context": null,
         "labels": null,
         "max_length": null
@@ -98,7 +98,7 @@
     {
         "identifier": "AppThemeDark",
         "source_string": "暗色",
-        "translation": "暗色",
+        "translation": "Темная тема",
         "context": null,
         "labels": null,
         "max_length": null
@@ -106,7 +106,7 @@
     {
         "identifier": "AppThemeSystemDefault",
         "source_string": "跟随系统主题",
-        "translation": "跟随系统主题",
+        "translation": "Системная тема",
         "context": null,
         "labels": null,
         "max_length": null
@@ -114,7 +114,7 @@
     {
         "identifier": "ExceptionEncountered",
         "source_string": "应用程序遇到了异常",
-        "translation": "应用程序遇到了异常",
+        "translation": "Обнаружена ошибка",
         "context": null,
         "labels": null,
         "max_length": null
@@ -122,7 +122,7 @@
     {
         "identifier": "IllustrationSortOptionDoNotSort",
         "source_string": "不进行任何排序",
-        "translation": "不进行任何排序",
+        "translation": "Без сортировки",
         "context": null,
         "labels": null,
         "max_length": null
@@ -130,7 +130,7 @@
     {
         "identifier": "IllustrationSortOptionPopularityDescending",
         "source_string": "收藏数降序",
-        "translation": "收藏数降序",
+        "translation": "По популярности",
         "context": null,
         "labels": null,
         "max_length": null
@@ -138,7 +138,7 @@
     {
         "identifier": "IllustrationSortOptionPublishDateAscending",
         "source_string": "发布日期升序",
-        "translation": "发布日期升序",
+        "translation": "По дате публикации (возр.)",
         "context": null,
         "labels": null,
         "max_length": null
@@ -146,7 +146,7 @@
     {
         "identifier": "IllustrationSortOptionPublishDateDescending",
         "source_string": "发布日期降序",
-        "translation": "发布日期降序",
+        "translation": "По дате публикации (убыв.)",
         "context": null,
         "labels": null,
         "max_length": null
@@ -154,7 +154,7 @@
     {
         "identifier": "MainPageTabDailyRecommendations",
         "source_string": "每日推荐",
-        "translation": "每日推荐",
+        "translation": "Ежедневные рекомендации",
         "context": null,
         "labels": null,
         "max_length": null
@@ -162,7 +162,7 @@
     {
         "identifier": "MainPageTabBookmark",
         "source_string": "我的收藏",
-        "translation": "我的收藏",
+        "translation": "Моё избранное",
         "context": null,
         "labels": null,
         "max_length": null
@@ -170,7 +170,7 @@
     {
         "identifier": "MainPageTabFeed",
         "source_string": "关注动态",
-        "translation": "关注动态",
+        "translation": "Лента подписок",
         "context": null,
         "labels": null,
         "max_length": null
@@ -178,7 +178,7 @@
     {
         "identifier": "MainPageTabFollow",
         "source_string": "我的关注",
-        "translation": "我的关注",
+        "translation": "Мои подписки",
         "context": null,
         "labels": null,
         "max_length": null
@@ -186,7 +186,7 @@
     {
         "identifier": "MainPageTabRanking",
         "source_string": "作品榜单",
-        "translation": "作品榜单",
+        "translation": "Рейтинги",
         "context": null,
         "labels": null,
         "max_length": null
@@ -194,7 +194,7 @@
     {
         "identifier": "MainPageTabReverseSearch",
         "source_string": "以图搜图",
-        "translation": "以图搜图",
+        "translation": "Поиск по изображению",
         "context": null,
         "labels": null,
         "max_length": null
@@ -202,7 +202,7 @@
     {
         "identifier": "MainPageTabSpotlight",
         "source_string": "特辑推荐",
-        "translation": "特辑推荐",
+        "translation": "Рекомендации",
         "context": null,
         "labels": null,
         "max_length": null
@@ -210,7 +210,7 @@
     {
         "identifier": "MainPageTabUpdate",
         "source_string": "关注新作",
-        "translation": "关注新作",
+        "translation": "Новинки от подписок",
         "context": null,
         "labels": null,
         "max_length": null
@@ -218,7 +218,7 @@
     {
         "identifier": "NoneBackdrop",
         "source_string": "不使用",
-        "translation": "不使用",
+        "translation": "Отключено",
         "context": null,
         "labels": null,
         "max_length": null
@@ -226,7 +226,7 @@
     {
         "identifier": "AcrylicBackdrop",
         "source_string": "亚克力材质 (该选项对低端电脑不友好)",
-        "translation": "亚克力材质 (该选项对低端电脑不友好)",
+        "translation": "Акриловый эффект (не рекомендуется для слабых ПК)",
         "context": null,
         "labels": null,
         "max_length": null
@@ -234,7 +234,7 @@
     {
         "identifier": "MicaBackdrop",
         "source_string": "Mica (云母) 材质",
-        "translation": "Mica (云母) 材质",
+        "translation": "Эффект Mica",
         "context": null,
         "labels": null,
         "max_length": null
@@ -242,7 +242,7 @@
     {
         "identifier": "MicaAltBackdrop",
         "source_string": "Mica Alt (更鲜艳的云母) 材质",
-        "translation": "Mica Alt (更鲜艳的云母) 材质",
+        "translation": "Альтернативный эффект Mica",
         "context": null,
         "labels": null,
         "max_length": null
@@ -250,7 +250,7 @@
     {
         "identifier": "SearchDurationUndecided",
         "source_string": "默认",
-        "translation": "默认",
+        "translation": "По умолчанию",
         "context": null,
         "labels": null,
         "max_length": null
@@ -258,7 +258,7 @@
     {
         "identifier": "SearchDurationWithinLastDay",
         "source_string": "一天内",
-        "translation": "一天内",
+        "translation": "За последний день",
         "context": null,
         "labels": null,
         "max_length": null
@@ -266,7 +266,7 @@
     {
         "identifier": "SearchDurationWithinLastWeek",
         "source_string": "一周内",
-        "translation": "一周内",
+        "translation": "За последнюю неделю",
         "context": null,
         "labels": null,
         "max_length": null
@@ -274,7 +274,7 @@
     {
         "identifier": "SearchDurationWithinLastMonth",
         "source_string": "一月内",
-        "translation": "一月内",
+        "translation": "За последний месяц",
         "context": null,
         "labels": null,
         "max_length": null
@@ -282,7 +282,7 @@
     {
         "identifier": "SearchDurationWithinLastHalfYear",
         "source_string": "半年内",
-        "translation": "半年内",
+        "translation": "За последние полгода",
         "context": null,
         "labels": null,
         "max_length": null
@@ -290,7 +290,7 @@
     {
         "identifier": "SearchDurationWithinLastYear",
         "source_string": "一年内",
-        "translation": "一年内",
+        "translation": "За последний год",
         "context": null,
         "labels": null,
         "max_length": null
@@ -298,7 +298,7 @@
     {
         "identifier": "PrivacyPolicyPublic",
         "source_string": "公开",
-        "translation": "公开",
+        "translation": "Публично",
         "context": null,
         "labels": null,
         "max_length": null
@@ -306,7 +306,7 @@
     {
         "identifier": "PrivacyPolicyPrivate",
         "source_string": "私有",
-        "translation": "私有",
+        "translation": "Приватно",
         "context": null,
         "labels": null,
         "max_length": null
@@ -314,7 +314,7 @@
     {
         "identifier": "SearchIllustrationTagMatchOptionExactMatchForTags",
         "source_string": "与关键字完全一致",
-        "translation": "与关键字完全一致",
+        "translation": "Точное совпадение",
         "context": null,
         "labels": null,
         "max_length": null
@@ -322,7 +322,7 @@
     {
         "identifier": "SearchIllustrationTagMatchOptionPartialMatchForTags",
         "source_string": "与关键字部分一致",
-        "translation": "与关键字部分一致",
+        "translation": "Частичное совпадение",
         "context": null,
         "labels": null,
         "max_length": null
@@ -330,7 +330,7 @@
     {
         "identifier": "SearchIllustrationTagMatchOptionTitleAndCaption",
         "source_string": "匹配标题与说明文",
-        "translation": "匹配标题与说明文",
+        "translation": "Поиск по заголовку и описанию",
         "context": null,
         "labels": null,
         "max_length": null
@@ -338,7 +338,7 @@
     {
         "identifier": "SearchNovelTagMatchOptionExactMatchForTags",
         "source_string": "与关键字完全一致",
-        "translation": "与关键字完全一致",
+        "translation": "Точное соответствие ключевым словам",
         "context": null,
         "labels": null,
         "max_length": null
@@ -346,7 +346,7 @@
     {
         "identifier": "SearchNovelTagMatchOptionPartialMatchForTags",
         "source_string": "与关键字部分一致",
-        "translation": "与关键字部分一致",
+        "translation": "Частичное соответствие ключевым словам",
         "context": null,
         "labels": null,
         "max_length": null
@@ -354,7 +354,7 @@
     {
         "identifier": "SearchNovelTagMatchOptionText",
         "source_string": "匹配正文",
-        "translation": "匹配正文",
+        "translation": "Соответствие тексту",
         "context": null,
         "labels": null,
         "max_length": null
@@ -362,7 +362,7 @@
     {
         "identifier": "SearchNovelTagMatchOptionCaption",
         "source_string": "匹配说明文",
-        "translation": "匹配说明文",
+        "translation": "Соответствие описанию",
         "context": null,
         "labels": null,
         "max_length": null
@@ -370,7 +370,7 @@
     {
         "identifier": "TargetFilterForAndroid",
         "source_string": "Android",
-        "translation": "Android",
+        "translation": "Для Android",
         "context": null,
         "labels": null,
         "max_length": null
@@ -378,7 +378,7 @@
     {
         "identifier": "TargetFilterForIOS",
         "source_string": "IOS",
-        "translation": "IOS",
+        "translation": "Для iOS",
         "context": null,
         "labels": null,
         "max_length": null
@@ -386,7 +386,7 @@
     {
         "identifier": "ThumbnailDirectionLandscape",
         "source_string": "横向",
-        "translation": "横向",
+        "translation": "Горизонтальная",
         "context": null,
         "labels": null,
         "max_length": null
@@ -394,7 +394,7 @@
     {
         "identifier": "ThumbnailDirectionPortrait",
         "source_string": "纵向",
-        "translation": "纵向",
+        "translation": "Вертикальная",
         "context": null,
         "labels": null,
         "max_length": null
@@ -402,7 +402,7 @@
     {
         "identifier": "WorkTypeIllust",
         "source_string": "插画",
-        "translation": "插画",
+        "translation": "Иллюстрации",
         "context": null,
         "labels": null,
         "max_length": null
@@ -410,7 +410,7 @@
     {
         "identifier": "WorkTypeManga",
         "source_string": "漫画",
-        "translation": "漫画",
+        "translation": "Манга",
         "context": null,
         "labels": null,
         "max_length": null
@@ -418,7 +418,7 @@
     {
         "identifier": "WorkTypeNovel",
         "source_string": "小说",
-        "translation": "小说",
+        "translation": "Новеллы",
         "context": null,
         "labels": null,
         "max_length": null
@@ -426,7 +426,7 @@
     {
         "identifier": "SimpleWorkTypeIllustAndManga",
         "source_string": "插画和漫画",
-        "translation": "插画和漫画",
+        "translation": "Иллюстрации и манга",
         "context": null,
         "labels": null,
         "max_length": null
@@ -434,7 +434,7 @@
     {
         "identifier": "SimpleWorkTypeNovel",
         "source_string": "小说",
-        "translation": "小说",
+        "translation": "Новеллы",
         "context": null,
         "labels": null,
         "max_length": null
@@ -442,7 +442,7 @@
     {
         "identifier": "Bmp",
         "source_string": "BMP（无损，文件大，支持广泛）",
-        "translation": "BMP（无损，文件大，支持广泛）",
+        "translation": "BMP (без потерь, большой размер, широкая поддержка)",
         "context": null,
         "labels": null,
         "max_length": null
@@ -450,7 +450,7 @@
     {
         "identifier": "Jpg",
         "source_string": "JPG（有损，文件小，支持广泛）",
-        "translation": "JPG（有损，文件小，支持广泛）",
+        "translation": "JPG (с потерями, маленький размер, широкая поддержка)",
         "context": null,
         "labels": null,
         "max_length": null
@@ -458,7 +458,7 @@
     {
         "identifier": "Gif",
         "source_string": "GIF（无损，只支持256色，文件小，支持广泛）",
-        "translation": "GIF（无损，只支持256色，文件小，支持广泛）",
+        "translation": "GIF (без потерь, только 256 цветов, маленький размер, широкая поддержка)",
         "context": null,
         "labels": null,
         "max_length": null
@@ -466,7 +466,7 @@
     {
         "identifier": "Tiff",
         "source_string": "TIFF（无损，无法自动播放，文件大）",
-        "translation": "TIFF（无损，无法自动播放，文件大）",
+        "translation": "TIFF (без потерь, не поддерживается автовоспроизведение, большой размер)",
         "context": null,
         "labels": null,
         "max_length": null
@@ -474,7 +474,7 @@
     {
         "identifier": "Png",
         "source_string": "PNG/APNG（无损，文件小）",
-        "translation": "PNG/APNG（无损，文件小）",
+        "translation": "PNG/APNG (без потерь, маленький размер)",
         "context": null,
         "labels": null,
         "max_length": null
@@ -482,7 +482,7 @@
     {
         "identifier": "Original",
         "source_string": "图片原始格式（JPG/PNG，无法自动添加标签）",
-        "translation": "图片原始格式（JPG/PNG，无法自动添加标签）",
+        "translation": "Оригинальный формат изображения (JPG/PNG, автоматические теги невозможны)",
         "context": null,
         "labels": null,
         "max_length": null
@@ -490,7 +490,7 @@
     {
         "identifier": "OriginalZip",
         "source_string": "动图原始格式（ZIP，无法添加标签）",
-        "translation": "动图原始格式（ZIP，无法添加标签）",
+        "translation": "Оригинальный формат динамического изображения (ZIP, теги невозможны)",
         "context": null,
         "labels": null,
         "max_length": null
@@ -498,7 +498,7 @@
     {
         "identifier": "WebPLossless",
         "source_string": "无损WebP（无损，文件小，支持广泛）",
-        "translation": "无损WebP（无损，文件小，支持广泛）",
+        "translation": "Без потерь WebP (без потерь, маленький размер, широкая поддержка)",
         "context": null,
         "labels": null,
         "max_length": null
@@ -506,7 +506,7 @@
     {
         "identifier": "WebPLossy",
         "source_string": "有损WebP（有损，文件小，支持广泛）",
-        "translation": "有损WebP（有损，文件小，支持广泛）",
+        "translation": "С потерями WebP (с потерями, маленький размер, широкая поддержка)",
         "context": null,
         "labels": null,
         "max_length": null
@@ -514,7 +514,7 @@
     {
         "identifier": "Thin",
         "source_string": "极细",
-        "translation": "极细",
+        "translation": "Очень тонкий",
         "context": null,
         "labels": null,
         "max_length": null
@@ -522,7 +522,7 @@
     {
         "identifier": "ExtraLight",
         "source_string": "特细",
-        "translation": "特细",
+        "translation": "Сверхсветлый",
         "context": null,
         "labels": null,
         "max_length": null
@@ -530,7 +530,7 @@
     {
         "identifier": "Light",
         "source_string": "细",
-        "translation": "细",
+        "translation": "Светлый",
         "context": null,
         "labels": null,
         "max_length": null
@@ -538,7 +538,7 @@
     {
         "identifier": "SemiLight",
         "source_string": "半细",
-        "translation": "半细",
+        "translation": "Полусветлый",
         "context": null,
         "labels": null,
         "max_length": null
@@ -546,7 +546,7 @@
     {
         "identifier": "Normal",
         "source_string": "常规",
-        "translation": "常规",
+        "translation": "Нормальный",
         "context": null,
         "labels": null,
         "max_length": null
@@ -554,7 +554,7 @@
     {
         "identifier": "Medium",
         "source_string": "中等",
-        "translation": "中等",
+        "translation": "Средний",
         "context": null,
         "labels": null,
         "max_length": null
@@ -562,7 +562,7 @@
     {
         "identifier": "SemiBold",
         "source_string": "半粗",
-        "translation": "半粗",
+        "translation": "Полужирный",
         "context": null,
         "labels": null,
         "max_length": null
@@ -570,7 +570,7 @@
     {
         "identifier": "Bold",
         "source_string": "粗",
-        "translation": "粗",
+        "translation": "Жирный",
         "context": null,
         "labels": null,
         "max_length": null
@@ -578,7 +578,7 @@
     {
         "identifier": "ExtraBold",
         "source_string": "特粗",
-        "translation": "特粗",
+        "translation": "Сверхжирный",
         "context": null,
         "labels": null,
         "max_length": null
@@ -586,7 +586,7 @@
     {
         "identifier": "Black",
         "source_string": "黑",
-        "translation": "黑",
+        "translation": "Черный",
         "context": null,
         "labels": null,
         "max_length": null
@@ -594,7 +594,7 @@
     {
         "identifier": "ExtraBlack",
         "source_string": "特黑",
-        "translation": "特黑",
+        "translation": "Сверхчерный",
         "context": null,
         "labels": null,
         "max_length": null
@@ -602,7 +602,7 @@
     {
         "identifier": "AllCountedTagName",
         "source_string": "所有标签",
-        "translation": "所有标签",
+        "translation": "Все теги",
         "context": null,
         "labels": null,
         "max_length": null
@@ -610,7 +610,7 @@
     {
         "identifier": "DownloadListEntryOpenFailed",
         "source_string": "打开文件（夹）失败",
-        "translation": "打开文件（夹）失败",
+        "translation": "Не удалось открыть файл (папку)",
         "context": null,
         "labels": null,
         "max_length": null
@@ -618,7 +618,7 @@
     {
         "identifier": "DownloadListEntryMaybeDeleted",
         "source_string": "可能你已经删除了该图片",
-        "translation": "可能你已经删除了该图片",
+        "translation": "Возможно, изображение было удалено",
         "context": null,
         "labels": null,
         "max_length": null
@@ -626,7 +626,7 @@
     {
         "identifier": "SortOptionComboBox/PlaceholderText",
         "source_string": "排序选项",
-        "translation": "排序选项",
+        "translation": "Опции сортировки",
         "context": null,
         "labels": null,
         "max_length": null
@@ -634,7 +634,7 @@
     {
         "identifier": "PrivacyPolicyComboBox/PlaceholderText",
         "source_string": "公开选项",
-        "translation": "公开选项",
+        "translation": "Опции конфиденциальности",
         "context": null,
         "labels": null,
         "max_length": null
@@ -642,7 +642,7 @@
     {
         "identifier": "WorkTypeComboBox/PlaceholderText",
         "source_string": "作品类型",
-        "translation": "作品类型",
+        "translation": "Тип произведения",
         "context": null,
         "labels": null,
         "max_length": null
@@ -650,7 +650,7 @@
     {
         "identifier": "OpenUserId",
         "source_string": "打开用户主页",
-        "translation": "打开用户主页",
+        "translation": "Открыть страницу пользователя",
         "context": null,
         "labels": null,
         "max_length": null
@@ -658,7 +658,7 @@
     {
         "identifier": "OpenNovelId",
         "source_string": "打开小说页面",
-        "translation": "打开小说页面",
+        "translation": "Открыть страницу новеллы",
         "context": null,
         "labels": null,
         "max_length": null
@@ -666,7 +666,7 @@
     {
         "identifier": "OpenIllustId",
         "source_string": "打开作品页面",
-        "translation": "打开作品页面",
+        "translation": "Открыть страницу произведения",
         "context": null,
         "labels": null,
         "max_length": null
@@ -674,7 +674,7 @@
     {
         "identifier": "CannotFindLoginProxyServerExecutable",
         "source_string": "找不到用于登录的可执行文件，请重新打开应用或者联系开发者",
-        "translation": "找不到用于登录的可执行文件，请重新打开应用或者联系开发者",
+        "translation": "Не удалось найти исполняемый файл для входа, попробуйте перезапустить приложение или свяжитесь с разработчиком",
         "context": null,
         "labels": null,
         "max_length": null
@@ -682,7 +682,7 @@
     {
         "identifier": "UnexpectedBehavior",
         "source_string": "发生了未定义的行为，如果你看到了该信息，请联系开发者寻求帮助",
-        "translation": "发生了未定义的行为，如果你看到了该信息，请联系开发者寻求帮助",
+        "translation": "Произошло неожиданное поведение, если вы видите это сообщение, обратитесь за помощью к разработчику",
         "context": null,
         "labels": null,
         "max_length": null
@@ -690,7 +690,7 @@
     {
         "identifier": "ReplyContentTooLong",
         "source_string": "回复内容超过140字，请重新编辑",
-        "translation": "回复内容超过140字，请重新编辑",
+        "translation": "Слишком длинный ответ, пожалуйста, отредактируйте его",
         "context": null,
         "labels": null,
         "max_length": null
