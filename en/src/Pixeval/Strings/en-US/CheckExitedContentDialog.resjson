@@ -1,0 +1,11 @@
+{
+    "ContentDialog\/Title": "\u63d0\u793a",
+    "ContentDialog\/PrimaryButtonText": "\u5173\u95ed\u5e94\u7528",
+    "ContentDialog\/CloseButtonText": "\u7ee7\u7eed\u8fdb\u5165\u5e94\u7528",
+    "MainTextBlock\/Text": "\u68c0\u6d4b\u5230\u4e0a\u6b21\u8f6f\u4ef6\u4ee5\u6ca1\u6709\u6b63\u5e38\u65b9\u5f0f\u9000\u51fa\uff0c\u4f60\u53ef\u4ee5\uff08\u6e05\u9664\u8bbe\u7f6e\u540e\u9700\u8981\u91cd\u542f\uff09\uff1a",
+    "ClearConfig\/Content": "\u6e05\u7a7a\u8bbe\u7f6e\uff08\u8f6f\u4ef6\u8bbe\u7f6e\uff09",
+    "ClearContext\/Content": "\u6e05\u7a7a\u767b\u5f55\u72b6\u6001",
+    "OpenLocalFolder\/Content": "\u6253\u5f00\u672c\u5730\u6587\u4ef6\u5939",
+    "OpenRoamingFolder\/Content": "\u6253\u5f00\u6f2b\u6e38\u6587\u4ef6\u5939",
+    "OpenLogFolder\/Content": "\u6253\u5f00\u65e5\u5fd7\u6587\u4ef6\u5939"
+}
