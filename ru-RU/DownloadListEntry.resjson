@@ -2,7 +2,7 @@
     {
         "identifier": "ActionButtonContentOpen",
         "source_string": "打开",
-        "translation": "打开",
+        "translation": "Открыть",
         "context": null,
         "labels": null,
         "max_length": null
@@ -10,7 +10,7 @@
     {
         "identifier": "ActionButtonContentPause",
         "source_string": "暂停",
-        "translation": "暂停",
+        "translation": "Пауза",
         "context": null,
         "labels": null,
         "max_length": null
@@ -18,7 +18,7 @@
     {
         "identifier": "ActionButtonContentRedownload",
         "source_string": "重新下载",
-        "translation": "重新下载",
+        "translation": "Перезагрузить",
         "context": null,
         "labels": null,
         "max_length": null
@@ -26,7 +26,7 @@
     {
         "identifier": "ActionButtonContentResume",
         "source_string": "恢复",
-        "translation": "恢复",
+        "translation": "Возобновить",
         "context": null,
         "labels": null,
         "max_length": null
@@ -34,7 +34,7 @@
     {
         "identifier": "ActionButtonContentRetry",
         "source_string": "重试",
-        "translation": "重试",
+        "translation": "Повторить",
         "context": null,
         "labels": null,
         "max_length": null
@@ -42,7 +42,7 @@
     {
         "identifier": "CancelDownloadItem/Label",
         "source_string": "取消下载",
-        "translation": "取消下载",
+        "translation": "Отменить загрузку",
         "context": null,
         "labels": null,
         "max_length": null
@@ -50,7 +50,7 @@
     {
         "identifier": "CheckErrorMessageInDetailItem/Label",
         "source_string": "查看详细错误信息",
-        "translation": "查看详细错误信息",
+        "translation": "Проверить сообщение об ошибке",
         "context": null,
         "labels": null,
         "max_length": null
@@ -58,7 +58,7 @@
     {
         "identifier": "DownloadCancelled",
         "source_string": "下载已取消",
-        "translation": "下载已取消",
+        "translation": "Загрузка отменена",
         "context": null,
         "labels": null,
         "max_length": null
@@ -66,7 +66,7 @@
     {
         "identifier": "DownloadCancelledAction",
         "source_string": "取消",
-        "translation": "取消",
+        "translation": "Отменено",
         "context": null,
         "labels": null,
         "max_length": null
@@ -74,7 +74,7 @@
     {
         "identifier": "DownloadCompleted",
         "source_string": "下载完成",
-        "translation": "下载完成",
+        "translation": "Загрузка завершена",
         "context": null,
         "labels": null,
         "max_length": null
@@ -82,7 +82,7 @@
     {
         "identifier": "DownloadErrorMessageFormatted",
         "source_string": "下载失败: {0}",
-        "translation": "下载失败: {0}",
+        "translation": "Ошибка загрузки: {0}",
         "context": null,
         "labels": null,
         "max_length": null
@@ -90,7 +90,7 @@
     {
         "identifier": "DownloadPaused",
         "source_string": "下载已暂停",
-        "translation": "下载已暂停",
+        "translation": "Загрузка приостановлена",
         "context": null,
         "labels": null,
         "max_length": null
@@ -98,7 +98,7 @@
     {
         "identifier": "DownloadQueued",
         "source_string": "在队列中",
-        "translation": "在队列中",
+        "translation": "В очереди",
         "context": null,
         "labels": null,
         "max_length": null
@@ -106,7 +106,7 @@
     {
         "identifier": "DownloadRunningFormatted",
         "source_string": "下载进度: {0}%",
-        "translation": "下载进度: {0}%",
+        "translation": "Загрузка: {0}%",
         "context": null,
         "labels": null,
         "max_length": null
@@ -114,7 +114,7 @@
     {
         "identifier": "ErrorMessageDialogTitle",
         "source_string": "错误信息",
-        "translation": "错误信息",
+        "translation": "Сообщение об ошибке",
         "context": null,
         "labels": null,
         "max_length": null
@@ -122,7 +122,7 @@
     {
         "identifier": "GoToPageItem/Label",
         "source_string": "查看页面",
-        "translation": "查看页面",
+        "translation": "Перейти на страницу",
         "context": null,
         "labels": null,
         "max_length": null
@@ -130,7 +130,7 @@
     {
         "identifier": "OpenDownloadLocationItem/Label",
         "source_string": "打开下载位置",
-        "translation": "打开下载位置",
+        "translation": "Открыть расположение загрузки",
         "context": null,
         "labels": null,
         "max_length": null
@@ -138,7 +138,7 @@
     {
         "identifier": "RedownloadItem/Label",
         "source_string": "重新下载",
-        "translation": "重新下载",
+        "translation": "Загрузить заново",
         "context": null,
         "labels": null,
         "max_length": null
