@@ -1,0 +1,114 @@
+[
+    {
+        "identifier": "WorkCaptionEmpty",
+        "source_string": "无",
+        "translation": "Нет описания",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "WorkCaptionTextBlock/Text",
+        "source_string": "作品介绍",
+        "translation": "Описание работы",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "IllustrationDimensionTextBlock/Text",
+        "source_string": "作品分辨率",
+        "translation": "Размеры работы",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "IllustrationDimensionUnknown",
+        "source_string": "未知",
+        "translation": "Неизвестно",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "WorkIdTextBlock/Text",
+        "source_string": "作品ID",
+        "translation": "ID работы",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "WorkTagListTextBlock/Text",
+        "source_string": "作品标签",
+        "translation": "Теги работы",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "WorkTitleTextBlock/Text",
+        "source_string": "作品名",
+        "translation": "Название работы",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "WorkTotalBookmarksTextBlock/Text",
+        "source_string": "总收藏数",
+        "translation": "Всего в избранном",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "WorkTotalViewsTextBlock/Text",
+        "source_string": "总浏览量",
+        "translation": "Всего просмотров",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "WorkUploadDateTextBlock/Text",
+        "source_string": "上传日期",
+        "translation": "Дата загрузки",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "IllustratorId/Text",
+        "source_string": "作者ID: ",
+        "translation": "ID автора: ",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "IllustratorName/Text",
+        "source_string": "作者名: ",
+        "translation": "Имя автора: ",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "IllustratorTextBlock/Text",
+        "source_string": "作者信息",
+        "translation": "Информация об авторе",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "TitleTextBlock/Text",
+        "source_string": "作品信息",
+        "translation": "Информация о работе",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    }
+]
