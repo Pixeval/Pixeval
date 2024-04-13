@@ -2,7 +2,7 @@
     {
         "identifier": "GenerateLinkToThisPageButtonTeachingTip/ActionButtonContent",
         "source_string": "不再显示",
-        "translation": "不再显示",
+        "translation": "Больше не показывать",
         "context": null,
         "labels": null,
         "max_length": null
@@ -10,7 +10,7 @@
     {
         "identifier": "GenerateLinkToThisPageButtonTeachingTip/CloseButtonContent",
         "source_string": "知道了",
-        "translation": "知道了",
+        "translation": "Понял",
         "context": null,
         "labels": null,
         "max_length": null
@@ -18,7 +18,7 @@
     {
         "identifier": "GenerateLinkToThisPageButtonTeachingTip/Subtitle",
         "source_string": "分享给你的朋友或者在浏览器或者Windows运行中输入该链接以直接打开当前页面",
-        "translation": "分享给你的朋友或者在浏览器或者Windows运行中输入该链接以直接打开当前页面",
+        "translation": "Поделитесь этой ссылкой с друзьями или введите её в браузере или в Windows, чтобы открыть текущую страницу напрямую",
         "context": null,
         "labels": null,
         "max_length": null
@@ -26,7 +26,7 @@
     {
         "identifier": "GenerateLinkToThisPageButtonTeachingTip/Title",
         "source_string": "链接已经复制到剪切板",
-        "translation": "链接已经复制到剪切板",
+        "translation": "Ссылка скопирована в буфер обмена",
         "context": null,
         "labels": null,
         "max_length": null
@@ -34,7 +34,7 @@
     {
         "identifier": "QrCodeTeachingTip/Title",
         "source_string": "作品链接二维码",
-        "translation": "作品链接二维码",
+        "translation": "QR-код работы",
         "context": null,
         "labels": null,
         "max_length": null
@@ -50,7 +50,7 @@
     {
         "identifier": "WorkNavigationViewItem/Content",
         "source_string": "作品",
-        "translation": "作品",
+        "translation": "Произведения",
         "context": null,
         "labels": null,
         "max_length": null
@@ -58,7 +58,7 @@
     {
         "identifier": "BookmarksNavigationViewItem/Content",
         "source_string": "收藏作品",
-        "translation": "收藏作品",
+        "translation": "Избранные произведения",
         "context": null,
         "labels": null,
         "max_length": null
@@ -66,7 +66,7 @@
     {
         "identifier": "FollowingsNavigationViewItem/Content",
         "source_string": "关注的人",
-        "translation": "关注的人",
+        "translation": "Подписки",
         "context": null,
         "labels": null,
         "max_length": null
@@ -74,7 +74,7 @@
     {
         "identifier": "MyPixivUserNavigationViewItem/Content",
         "source_string": "好P友",
-        "translation": "好P友",
+        "translation": "Друзья в Pixiv",
         "context": null,
         "labels": null,
         "max_length": null
@@ -82,7 +82,7 @@
     {
         "identifier": "RecommendUserNavigationViewItem/Content",
         "source_string": "推荐用户",
-        "translation": "推荐用户",
+        "translation": "Рекомендуемые пользователи",
         "context": null,
         "labels": null,
         "max_length": null
@@ -90,7 +90,7 @@
     {
         "identifier": "FollowingUserItem/Title",
         "source_string": "关注中",
-        "translation": "关注中",
+        "translation": "Подписки",
         "context": null,
         "labels": null,
         "max_length": null
@@ -98,7 +98,7 @@
     {
         "identifier": "MyPixivUserItem/Title",
         "source_string": "好P友",
-        "translation": "好P友",
+        "translation": "Друзья в Pixiv",
         "context": null,
         "labels": null,
         "max_length": null
@@ -106,7 +106,7 @@
     {
         "identifier": "IllustrationCountItem/Title",
         "source_string": "插画数",
-        "translation": "插画数",
+        "translation": "Количество иллюстраций",
         "context": null,
         "labels": null,
         "max_length": null
@@ -114,7 +114,7 @@
     {
         "identifier": "MangaCountItem/Title",
         "source_string": "漫画数",
-        "translation": "漫画数",
+        "translation": "Количество манги",
         "context": null,
         "labels": null,
         "max_length": null
@@ -122,7 +122,7 @@
     {
         "identifier": "NovelCountItem/Title",
         "source_string": "小说数",
-        "translation": "小说数",
+        "translation": "Количество рассказов",
         "context": null,
         "labels": null,
         "max_length": null
@@ -130,7 +130,7 @@
     {
         "identifier": "CommentsTab/Content",
         "source_string": "评论",
-        "translation": "评论",
+        "translation": "Комментарии",
         "context": null,
         "labels": null,
         "max_length": null
@@ -138,7 +138,7 @@
     {
         "identifier": "InfoAndComments",
         "source_string": "详情",
-        "translation": "详情",
+        "translation": "Детали",
         "context": null,
         "labels": null,
         "max_length": null
@@ -146,7 +146,7 @@
     {
         "identifier": "InfoTab/Content",
         "source_string": "详情",
-        "translation": "详情",
+        "translation": "Детали",
         "context": null,
         "labels": null,
         "max_length": null
@@ -154,7 +154,7 @@
     {
         "identifier": "LockScreen",
         "source_string": "锁屏",
-        "translation": "锁屏",
+        "translation": "Экран блокировки",
         "context": null,
         "labels": null,
         "max_length": null
@@ -162,7 +162,7 @@
     {
         "identifier": "Background",
         "source_string": "壁纸",
-        "translation": "壁纸",
+        "translation": "Обои",
         "context": null,
         "labels": null,
         "max_length": null
@@ -170,7 +170,7 @@
     {
         "identifier": "RelatedWorksTab/Content",
         "source_string": "推荐作品",
-        "translation": "推荐作品",
+        "translation": "Рекомендованные работы",
         "context": null,
         "labels": null,
         "max_length": null
@@ -178,7 +178,7 @@
     {
         "identifier": "RotateClockwise",
         "source_string": "顺时针旋转",
-        "translation": "顺时针旋转",
+        "translation": "Повернуть по часовой стрелке",
         "context": null,
         "labels": null,
         "max_length": null
@@ -186,7 +186,7 @@
     {
         "identifier": "RotateCounterclockwise",
         "source_string": "逆时针旋转",
-        "translation": "逆时针旋转",
+        "translation": "Повернуть против часовой стрелки",
         "context": null,
         "labels": null,
         "max_length": null
@@ -194,7 +194,7 @@
     {
         "identifier": "Mirror",
         "source_string": "镜像翻转",
-        "translation": "镜像翻转",
+        "translation": "Зеркальное отражение",
         "context": null,
         "labels": null,
         "max_length": null
@@ -202,7 +202,7 @@
     {
         "identifier": "SetAs",
         "source_string": "设置为",
-        "translation": "设置为",
+        "translation": "Установить как",
         "context": null,
         "labels": null,
         "max_length": null
@@ -210,7 +210,7 @@
     {
         "identifier": "SetAsBackgroundSucceededTitle",
         "source_string": "已设置背景",
-        "translation": "已设置背景",
+        "translation": "Фон установлен",
         "context": null,
         "labels": null,
         "max_length": null
@@ -218,7 +218,7 @@
     {
         "identifier": "SetAsLockScreenSucceededTitle",
         "source_string": "已设置锁屏",
-        "translation": "已设置锁屏",
+        "translation": "Экран блокировки установлен",
         "context": null,
         "labels": null,
         "max_length": null
@@ -226,7 +226,7 @@
     {
         "identifier": "PrevPageOrIllustration",
         "source_string": "L：上一页漫画\nR：上一个画集",
-        "translation": "L：上一页漫画\nR：上一个画集",
+        "translation": "L: Предыдущая страница манги\nR: Предыдущая иллюстрация",
         "context": null,
         "labels": null,
         "max_length": null
@@ -234,7 +234,7 @@
     {
         "identifier": "PrevIllustration",
         "source_string": "L/R：上一个画集",
-        "translation": "L/R：上一个画集",
+        "translation": "L/R: Предыдущая иллюстрация",
         "context": null,
         "labels": null,
         "max_length": null
@@ -242,7 +242,7 @@
     {
         "identifier": "NextPageOrIllustration",
         "source_string": "L：下一页漫画\nR：下一个画集",
-        "translation": "L：下一页漫画\nR：下一个画集",
+        "translation": "L: Следующая страница манги\nR: Следующая иллюстрация",
         "context": null,
         "labels": null,
         "max_length": null
@@ -250,7 +250,7 @@
     {
         "identifier": "NextIllustration",
         "source_string": "L/R：下一个画集",
-        "translation": "L/R：下一个画集",
+        "translation": "L/R: Следующая иллюстрация",
         "context": null,
         "labels": null,
         "max_length": null
@@ -258,7 +258,7 @@
     {
         "identifier": "SetAsSucceededTitle",
         "source_string": "设置成功",
-        "translation": "设置成功",
+        "translation": "Установлено успешно",
         "context": null,
         "labels": null,
         "max_length": null
@@ -266,7 +266,7 @@
     {
         "identifier": "ShareTitleFormatted",
         "source_string": "分享{0}",
-        "translation": "分享{0}",
+        "translation": "Поделиться {0}",
         "context": null,
         "labels": null,
         "max_length": null
@@ -274,7 +274,7 @@
     {
         "identifier": "ZoomIn",
         "source_string": "放大",
-        "translation": "放大",
+        "translation": "Увеличить",
         "context": null,
         "labels": null,
         "max_length": null
@@ -282,7 +282,7 @@
     {
         "identifier": "ZoomOut",
         "source_string": "缩小",
-        "translation": "缩小",
+        "translation": "Уменьшить",
         "context": null,
         "labels": null,
         "max_length": null
@@ -290,7 +290,7 @@
     {
         "identifier": "PrevPageOrNovel",
         "source_string": "L：上一页小说\nR：上一篇小说",
-        "translation": "L：上一页小说\nR：上一篇小说",
+        "translation": "L: Предыдущая страница/новелла",
         "context": null,
         "labels": null,
         "max_length": null
@@ -298,7 +298,7 @@
     {
         "identifier": "PrevNovel",
         "source_string": "L/R：上一篇小说",
-        "translation": "L/R：上一篇小说",
+        "translation": "L/R: Предыдущая новелла",
         "context": null,
         "labels": null,
         "max_length": null
@@ -306,7 +306,7 @@
     {
         "identifier": "NextPageOrNovel",
         "source_string": "L：下一页小说\nR：下一篇小说",
-        "translation": "L：下一页小说\nR：下一篇小说",
+        "translation": "L: Следующая страница/новелла",
         "context": null,
         "labels": null,
         "max_length": null
@@ -314,7 +314,7 @@
     {
         "identifier": "NextNovel",
         "source_string": "L/R：下一篇小说",
-        "translation": "L/R：下一篇小说",
+        "translation": "L/R: Следующая новелла",
         "context": null,
         "labels": null,
         "max_length": null
@@ -322,7 +322,7 @@
     {
         "identifier": "LoadingNovelTextBlock/Text",
         "source_string": "正在加载小说",
-        "translation": "正在加载小说",
+        "translation": "Загрузка новеллы",
         "context": null,
         "labels": null,
         "max_length": null
@@ -330,7 +330,7 @@
     {
         "identifier": "NovelSettings",
         "source_string": "小说设置",
-        "translation": "小说设置",
+        "translation": "Настройки новеллы",
         "context": null,
         "labels": null,
         "max_length": null
@@ -338,7 +338,7 @@
     {
         "identifier": "NovelSettingsHeaderTextBlock/Text",
         "source_string": "小说设置",
-        "translation": "小说设置",
+        "translation": "Настройки новеллы",
         "context": null,
         "labels": null,
         "max_length": null
@@ -346,7 +346,7 @@
     {
         "identifier": "NovelFontFamilyComboBox/PlaceholderText",
         "source_string": "选择字体",
-        "translation": "选择字体",
+        "translation": "Выберите шрифт",
         "context": null,
         "labels": null,
         "max_length": null
@@ -354,7 +354,7 @@
     {
         "identifier": "NovelFontWeightComboBox/PlaceholderText",
         "source_string": "选择字体粗细",
-        "translation": "选择字体粗细",
+        "translation": "Выберите толщину шрифта",
         "context": null,
         "labels": null,
         "max_length": null
@@ -362,7 +362,7 @@
     {
         "identifier": "NovelSettingsFontFamilyEntry/Header",
         "source_string": "字体",
-        "translation": "字体",
+        "translation": "Шрифт",
         "context": null,
         "labels": null,
         "max_length": null
@@ -370,7 +370,7 @@
     {
         "identifier": "NovelSettingsFontFamilyEntry/Description",
         "source_string": "正文字体",
-        "translation": "正文字体",
+        "translation": "Шрифт основного текста",
         "context": null,
         "labels": null,
         "max_length": null
@@ -378,7 +378,7 @@
     {
         "identifier": "NovelSettingsFontColorEntry/Header",
         "source_string": "字体颜色",
-        "translation": "字体颜色",
+        "translation": "Цвет шрифта",
         "context": null,
         "labels": null,
         "max_length": null
@@ -386,7 +386,7 @@
     {
         "identifier": "NovelSettingsFontColorEntry/Description",
         "source_string": "正文字体颜色",
-        "translation": "正文字体颜色",
+        "translation": "Цвет основного текста",
         "context": null,
         "labels": null,
         "max_length": null
@@ -394,7 +394,7 @@
     {
         "identifier": "NovelSettingsBackgroundEntry/Header",
         "source_string": "背景色",
-        "translation": "背景色",
+        "translation": "Цвет фона",
         "context": null,
         "labels": null,
         "max_length": null
@@ -402,7 +402,7 @@
     {
         "identifier": "NovelSettingsBackgroundEntry/Description",
         "source_string": "页面背景色",
-        "translation": "页面背景色",
+        "translation": "Цвет фона страницы",
         "context": null,
         "labels": null,
         "max_length": null
@@ -410,7 +410,7 @@
     {
         "identifier": "NovelSettingsFontWeightEntry/Header",
         "source_string": "字体粗细",
-        "translation": "字体粗细",
+        "translation": "Толщина шрифта",
         "context": null,
         "labels": null,
         "max_length": null
@@ -418,7 +418,7 @@
     {
         "identifier": "NovelSettingsFontWeightEntry/Description",
         "source_string": "正文字体粗细",
-        "translation": "正文字体粗细",
+        "translation": "Толщина основного текста",
         "context": null,
         "labels": null,
         "max_length": null
@@ -426,7 +426,7 @@
     {
         "identifier": "NovelSettingsFontSizeEntry/Header",
         "source_string": "字号",
-        "translation": "字号",
+        "translation": "Размер шрифта",
         "context": null,
         "labels": null,
         "max_length": null
@@ -434,7 +434,7 @@
     {
         "identifier": "NovelSettingsFontSizeEntry/Description",
         "source_string": "正文字号",
-        "translation": "正文字号",
+        "translation": "Размер основного текста",
         "context": null,
         "labels": null,
         "max_length": null
@@ -442,7 +442,7 @@
     {
         "identifier": "NovelSettingsLineHeightEntry/Header",
         "source_string": "行高",
-        "translation": "行高",
+        "translation": "Высота строки",
         "context": null,
         "labels": null,
         "max_length": null
@@ -450,7 +450,7 @@
     {
         "identifier": "NovelSettingsLineHeightEntry/Description",
         "source_string": "正文行距",
-        "translation": "正文行距",
+        "translation": "Межстрочный интервал основного текста",
         "context": null,
         "labels": null,
         "max_length": null
@@ -458,7 +458,7 @@
     {
         "identifier": "NovelSettingsMaxWidthEntry/Header",
         "source_string": "页面宽度",
-        "translation": "页面宽度",
+        "translation": "Максимальная ширина страницы",
         "context": null,
         "labels": null,
         "max_length": null
@@ -466,7 +466,7 @@
     {
         "identifier": "NovelSettingsMaxWidthEntry/Description",
         "source_string": "页面的最大宽度",
-        "translation": "页面的最大宽度",
+        "translation": "Максимальная ширина страницы",
         "context": null,
         "labels": null,
         "max_length": null
