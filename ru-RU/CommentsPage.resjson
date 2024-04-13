@@ -2,7 +2,7 @@
     {
         "identifier": "CommentRepliesTeachingTip/Title",
         "source_string": "评论详情",
-        "translation": "评论详情",
+        "translation": "Подробности комментариев",
         "context": null,
         "labels": null,
         "max_length": null
