@@ -1,0 +1,13 @@
+{
+    "AddToBookmarkContextItem\/Text": "\u6dfb\u52a0\u5230\u6536\u85cf\u5939",
+    "CopyAppLinkContextItem\/Text": "\u590d\u5236\u5e94\u7528\u94fe\u63a5",
+    "CopyWebLinkContextItem\/Text": "\u590d\u5236\u7f51\u9875\u94fe\u63a5",
+    "OpenInBrowserContextItem\/Text": "\u5728\u6d4f\u89c8\u5668\u4e2d\u6253\u5f00",
+    "ResultIsEmptyTextBlock\/Text": "\u8fd9\u91cc\u7a7a\u7a7a\u5982\u4e5f",
+    "IsLoadingMoreTextBlock\/Text": "\u6b63\u5728\u52a0\u8f7d",
+    "SaveContextItem\/Text": "\u4fdd\u5b58",
+    "ShowPixEzQrCodeContextItem\/Text": "PixEz\u4e8c\u7ef4\u7801",
+    "ShowQrCodeContextItem\/Text": "\u4f5c\u54c1\u94fe\u63a5\u4e8c\u7ef4\u7801",
+    "IllustrationQrCodeTeachingTip\/TeachingTipTitle": "\u4f5c\u54c1\u94fe\u63a5\u4e8c\u7ef4\u7801",
+    "IllustratorQrCodeTeachingTip\/TeachingTipTitle": "\u753b\u5e08\u94fe\u63a5\u4e8c\u7ef4\u7801"
+}
