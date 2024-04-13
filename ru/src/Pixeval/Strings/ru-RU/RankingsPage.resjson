@@ -1,0 +1,20 @@
+{
+    "RankOptionComboBox\/PlaceholderText": "\u9009\u62e9\u6a21\u5f0f",
+    "RankOptionDay": "\u6bcf\u65e5\u699c\u5355",
+    "RankOptionWeek": "\u6bcf\u5468\u699c\u5355",
+    "RankOptionMonth": "\u6bcf\u6708\u699c\u5355",
+    "RankOptionDayMale": "\u7537\u6027\u5411\u65e5\u699c",
+    "RankOptionDayFemale": "\u5973\u6027\u5411\u65e5\u699c",
+    "RankOptionWeekOriginal": "\u539f\u521b\u5468\u699c",
+    "RankOptionWeekRookie": "\u65b0\u4eba\u5468\u699c",
+    "RankOptionDayManga": "\u6f2b\u753b\u65e5\u699c",
+    "RankOptionWeekManga": "\u6f2b\u753b\u5468\u699c",
+    "RankOptionMonthManga": "\u6f2b\u753b\u6708\u699c",
+    "RankOptionDayR18": "R-18\u65e5\u699c",
+    "RankOptionDayMaleR18": "\u7537\u6027\u5411R-18\u65e5\u699c",
+    "RankOptionDayFemaleR18": "\u5973\u6027\u5411R-18\u65e5\u699c",
+    "RankOptionWeekR18": "R-18\u5468\u699c",
+    "RankOptionWeekR18G": "R-18G\u5468\u699c",
+    "RankOptionDayAi": "AI\u65e5\u699c",
+    "RankOptionDayR18Ai": "AI R-18\u65e5\u699c"
+}
