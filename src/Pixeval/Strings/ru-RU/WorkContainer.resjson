@@ -1,0 +1,162 @@
+[
+    {
+        "identifier": "CancelSelectionButtonFormatted",
+        "source_string": "取消选择 ({0})",
+        "translation": "Отменить выбор ({0})",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "AddAllToBookmarkButton/Label",
+        "source_string": "添加到收藏夹",
+        "translation": "Добавить все в избранное",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "AddAllToBookmarkContentFormatted",
+        "source_string": "收藏了{0}张图片",
+        "translation": "Добавлено в избранное: {0} изображений",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "AddAllToBookmarkTitle",
+        "source_string": "成功添加到收藏",
+        "translation": "Успешно добавлено в избранное",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "OpenAllInBrowserButton/Label",
+        "source_string": "在浏览器中打开",
+        "translation": "Открыть все в браузере",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "OpenConditionDialogButton/Label",
+        "source_string": "过滤",
+        "translation": "Фильтр",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "SaveAllButton/Label",
+        "source_string": "全部保存",
+        "translation": "Сохранить все",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "SelectAllButton/Label",
+        "source_string": "全选",
+        "translation": "Выбрать все",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "SelectedTooManyItemsForBookmarkContent",
+        "source_string": "一旦完成该操作不可撤销，请确认你是否真的想要这么做",
+        "translation": "Это действие необратимо, пожалуйста, подтвердите, что вы действительно хотите это сделать",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "SelectedTooManyItemsForBookmarkTitle",
+        "source_string": "检测到批量收藏的操作",
+        "translation": "Обнаружена попытка массового добавления в избранное",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "SelectedTooManyItemsForOpenInBrowserContent",
+        "source_string": "你选择了超过15幅作品并决定在浏览器中打开，这可能会在内存不足的计算机上导致系统资源耗尽，请问您确定要这么做吗？",
+        "translation": "Вы выбрали более 15 работ для открытия в браузере, что может привести к истощению системных ресурсов на компьютерах с ограниченным объемом памяти. Вы уверены, что хотите продолжить?",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "SelectedTooManyItemsForSaveContent",
+        "source_string": "你选择了超过20幅作品并决定下载到本地，这可能会在CPU性能不足的电脑上导致系统资源耗尽，请问您确定要这么做吗？",
+        "translation": "Вы выбрали более 20 работ для загрузки, что может привести к истощению системных ресурсов на компьютерах с ограниченной производительностью ЦП. Вы уверены, что хотите продолжить?",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "SelectedTooManyItemsTitle",
+        "source_string": "该操作可能会导致性能问题",
+        "translation": "Это действие может вызвать проблемы с производительностью",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "SelectionButton/Label",
+        "source_string": "多选",
+        "translation": "Множественный выбор",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "CancelSelectionButtonDefaultLabel",
+        "source_string": "取消选择",
+        "translation": "Отменить выбор",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "DownloadItemsQueuedFormatted",
+        "source_string": "已将{0}个作品添加至下载列表",
+        "translation": "{0} работ добавлено в список загрузок",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "FastFilterAutoSuggestBox/PlaceholderText",
+        "source_string": "输入ID/标签/作品名进行快速过滤",
+        "translation": "Быстрый фильтр по ID/тегу/названию",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "FilterTeachingTip/ActionButtonContent",
+        "source_string": "清空过滤器",
+        "translation": "Очистить фильтр",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "FilterTeachingTip/CloseButtonContent",
+        "source_string": "应用",
+        "translation": "Применить",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "AddToBookmarkTeachingTip/CloseButtonContent",
+        "source_string": "添加收藏",
+        "translation": "添加收藏",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    }
+]
