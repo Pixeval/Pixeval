@@ -1,0 +1,74 @@
+[
+    {
+        "identifier": "NonParameterizedMacroBearingParameterFormatted",
+        "source_string": "宏{0}不能包含任何参数",
+        "translation": "Макрос {0} не может содержать параметров",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "ParameterizedMacroMissingParameterFormatted",
+        "source_string": "宏{0}参数缺失",
+        "translation": "Отсутствует параметр макроса {0}",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "ResultIsEmpty",
+        "source_string": "解析失败：解析结果为空",
+        "translation": "Ошибка разбора: результат пуст",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "UnexpectedTokenFormatted",
+        "source_string": "输入非法：在第{0}个字符处遇到了非法符号",
+        "translation": "Недопустимый ввод: недопустимый символ на позиции {0}",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "UnknownArtist",
+        "source_string": "未知作者",
+        "translation": "Неизвестный художник",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "UnknownIllustrationTitle",
+        "source_string": "未知作品",
+        "translation": "Неизвестное произведение",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "UnknownMacroNameFormatted",
+        "source_string": "未知的宏名称：{0}",
+        "translation": "Неизвестное имя макроса: {0}",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "UnknownSpotlightId",
+        "source_string": "未知特辑ID",
+        "translation": "Неизвестный ID спецпроекта",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "UnknownSpotlightTitle",
+        "source_string": "未知特辑",
+        "translation": "Неизвестное название спецпроекта",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    }
+]
