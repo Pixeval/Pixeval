@@ -2,7 +2,7 @@
     {
         "identifier": "LinedFlow",
         "source_string": "流式布局",
-        "translation": "流式布局",
+        "translation": "Flow Layout",
         "context": null,
         "labels": null,
         "max_length": null
@@ -10,7 +10,7 @@
     {
         "identifier": "Grid",
         "source_string": "网格布局",
-        "translation": "网格布局",
+        "translation": "Grid Layout",
         "context": null,
         "labels": null,
         "max_length": null
