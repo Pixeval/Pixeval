@@ -1,0 +1,22 @@
+{
+    "CancelSelectionButtonFormatted": "\u53d6\u6d88\u9009\u62e9 ({0})",
+    "AddAllToBookmarkButton\/Label": "\u6dfb\u52a0\u5230\u6536\u85cf\u5939",
+    "AddAllToBookmarkContentFormatted": "\u6536\u85cf\u4e86{0}\u5f20\u56fe\u7247",
+    "AddAllToBookmarkTitle": "\u6210\u529f\u6dfb\u52a0\u5230\u6536\u85cf",
+    "OpenAllInBrowserButton\/Label": "\u5728\u6d4f\u89c8\u5668\u4e2d\u6253\u5f00",
+    "OpenConditionDialogButton\/Label": "\u8fc7\u6ee4",
+    "SaveAllButton\/Label": "\u5168\u90e8\u4fdd\u5b58",
+    "SelectAllButton\/Label": "\u5168\u9009",
+    "SelectedTooManyItemsForBookmarkContent": "\u4e00\u65e6\u5b8c\u6210\u8be5\u64cd\u4f5c\u4e0d\u53ef\u64a4\u9500\uff0c\u8bf7\u786e\u8ba4\u4f60\u662f\u5426\u771f\u7684\u60f3\u8981\u8fd9\u4e48\u505a",
+    "SelectedTooManyItemsForBookmarkTitle": "\u68c0\u6d4b\u5230\u6279\u91cf\u6536\u85cf\u7684\u64cd\u4f5c",
+    "SelectedTooManyItemsForOpenInBrowserContent": "\u4f60\u9009\u62e9\u4e86\u8d85\u8fc715\u5e45\u4f5c\u54c1\u5e76\u51b3\u5b9a\u5728\u6d4f\u89c8\u5668\u4e2d\u6253\u5f00\uff0c\u8fd9\u53ef\u80fd\u4f1a\u5728\u5185\u5b58\u4e0d\u8db3\u7684\u8ba1\u7b97\u673a\u4e0a\u5bfc\u81f4\u7cfb\u7edf\u8d44\u6e90\u8017\u5c3d\uff0c\u8bf7\u95ee\u60a8\u786e\u5b9a\u8981\u8fd9\u4e48\u505a\u5417\uff1f",
+    "SelectedTooManyItemsForSaveContent": "\u4f60\u9009\u62e9\u4e86\u8d85\u8fc720\u5e45\u4f5c\u54c1\u5e76\u51b3\u5b9a\u4e0b\u8f7d\u5230\u672c\u5730\uff0c\u8fd9\u53ef\u80fd\u4f1a\u5728CPU\u6027\u80fd\u4e0d\u8db3\u7684\u7535\u8111\u4e0a\u5bfc\u81f4\u7cfb\u7edf\u8d44\u6e90\u8017\u5c3d\uff0c\u8bf7\u95ee\u60a8\u786e\u5b9a\u8981\u8fd9\u4e48\u505a\u5417\uff1f",
+    "SelectedTooManyItemsTitle": "\u8be5\u64cd\u4f5c\u53ef\u80fd\u4f1a\u5bfc\u81f4\u6027\u80fd\u95ee\u9898",
+    "SelectionButton\/Label": "\u591a\u9009",
+    "CancelSelectionButtonDefaultLabel": "\u53d6\u6d88\u9009\u62e9",
+    "DownloadItemsQueuedFormatted": "\u5df2\u5c06{0}\u4e2a\u4f5c\u54c1\u6dfb\u52a0\u81f3\u4e0b\u8f7d\u5217\u8868",
+    "FastFilterAutoSuggestBox\/PlaceholderText": "\u8f93\u5165ID\/\u6807\u7b7e\/\u4f5c\u54c1\u540d\u8fdb\u884c\u5feb\u901f\u8fc7\u6ee4",
+    "FilterTeachingTip\/ActionButtonContent": "\u6e05\u7a7a\u8fc7\u6ee4\u5668",
+    "FilterTeachingTip\/CloseButtonContent": "\u5e94\u7528",
+    "AddToBookmarkTeachingTip\/CloseButtonContent": "\u6dfb\u52a0\u6536\u85cf"
+}
