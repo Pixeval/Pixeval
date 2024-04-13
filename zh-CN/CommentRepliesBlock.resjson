@@ -1,0 +1,26 @@
+[
+    {
+        "identifier": "EmojiButtonFlyoutEmojiSectionNavigationViewItem/Content",
+        "source_string": "绘文字",
+        "translation": "绘文字",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "EmojiButtonFlyoutStickersSectionNavigationViewItem/Content",
+        "source_string": "表情贴图",
+        "translation": "表情贴图",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "RepliesAreEmptyTextBlock/Text",
+        "source_string": "本评论暂时没有任何回复",
+        "translation": "本评论暂时没有任何回复",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    }
+]
