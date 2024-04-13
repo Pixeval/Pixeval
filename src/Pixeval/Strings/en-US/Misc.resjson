@@ -1,0 +1,698 @@
+[
+    {
+        "identifier": "AddBookmark",
+        "source_string": "收藏",
+        "translation": "Bookmark",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "RemoveBookmark",
+        "source_string": "取消收藏",
+        "translation": "Remove bookmark",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "Follow",
+        "source_string": "关注",
+        "translation": "Follow",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "FollowPrivately",
+        "source_string": "悄悄关注",
+        "translation": "Follow privately",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "Unfollow",
+        "source_string": "取消关注",
+        "translation": "Followed",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "Pause",
+        "source_string": "暂停",
+        "translation": "Pause",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "Play",
+        "source_string": "播放",
+        "translation": "Play",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "RestoreOriginalResolution",
+        "source_string": "缩放到图片实际大小",
+        "translation": "Zoom to actual size",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "UniformToFillResolution",
+        "source_string": "缩放到适应窗口大小",
+        "translation": "Zoom to fit the window",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "FullScreen",
+        "source_string": "全屏",
+        "translation": "Fullscreen",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "BackToWindow",
+        "source_string": "恢复窗口化",
+        "translation": "Restore",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "AppThemeLight",
+        "source_string": "亮色",
+        "translation": "Light theme",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "AppThemeDark",
+        "source_string": "暗色",
+        "translation": "Dark theme",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "AppThemeSystemDefault",
+        "source_string": "跟随系统主题",
+        "translation": "Follow system",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "ExceptionEncountered",
+        "source_string": "应用程序遇到了异常",
+        "translation": "Error encountered",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "IllustrationSortOptionDoNotSort",
+        "source_string": "不进行任何排序",
+        "translation": "Do not perform any sort",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "IllustrationSortOptionPopularityDescending",
+        "source_string": "收藏数降序",
+        "translation": "Popularity descending",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "IllustrationSortOptionPublishDateAscending",
+        "source_string": "发布日期升序",
+        "translation": "Publish date ascending",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "IllustrationSortOptionPublishDateDescending",
+        "source_string": "发布日期降序",
+        "translation": "Publish date descending",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "MainPageTabDailyRecommendations",
+        "source_string": "每日推荐",
+        "translation": "Recommend",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "MainPageTabBookmark",
+        "source_string": "我的收藏",
+        "translation": "Bookmark",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "MainPageTabFeed",
+        "source_string": "关注动态",
+        "translation": "Feed",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "MainPageTabFollow",
+        "source_string": "我的关注",
+        "translation": "Following",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "MainPageTabRanking",
+        "source_string": "作品榜单",
+        "translation": "Ranking",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "MainPageTabReverseSearch",
+        "source_string": "以图搜图",
+        "translation": "Reverse Search",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "MainPageTabSpotlight",
+        "source_string": "特辑推荐",
+        "translation": "Spotlight",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "MainPageTabUpdate",
+        "source_string": "关注新作",
+        "translation": "Update",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "NoneBackdrop",
+        "source_string": "不使用",
+        "translation": "None",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "AcrylicBackdrop",
+        "source_string": "亚克力材质 (该选项对低端电脑不友好)",
+        "translation": "Acrylic Material (May perform poorly on low-end PCs)",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "MicaBackdrop",
+        "source_string": "Mica (云母) 材质",
+        "translation": "Mica Material",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "MicaAltBackdrop",
+        "source_string": "Mica Alt (更鲜艳的云母) 材质",
+        "translation": "Mica Alt Material",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "SearchDurationUndecided",
+        "source_string": "默认",
+        "translation": "Default",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "SearchDurationWithinLastDay",
+        "source_string": "一天内",
+        "translation": "1 Day",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "SearchDurationWithinLastWeek",
+        "source_string": "一周内",
+        "translation": "1 Week",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "SearchDurationWithinLastMonth",
+        "source_string": "一月内",
+        "translation": "1 Month",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "SearchDurationWithinLastHalfYear",
+        "source_string": "半年内",
+        "translation": "半年内",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "SearchDurationWithinLastYear",
+        "source_string": "一年内",
+        "translation": "一年内",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "PrivacyPolicyPublic",
+        "source_string": "公开",
+        "translation": "Public",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "PrivacyPolicyPrivate",
+        "source_string": "私有",
+        "translation": "Private",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "SearchIllustrationTagMatchOptionExactMatchForTags",
+        "source_string": "与关键字完全一致",
+        "translation": "Exact match",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "SearchIllustrationTagMatchOptionPartialMatchForTags",
+        "source_string": "与关键字部分一致",
+        "translation": "Partiao match",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "SearchIllustrationTagMatchOptionTitleAndCaption",
+        "source_string": "匹配标题与说明文",
+        "translation": "Title and caption",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "SearchNovelTagMatchOptionExactMatchForTags",
+        "source_string": "与关键字完全一致",
+        "translation": "与关键字完全一致",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "SearchNovelTagMatchOptionPartialMatchForTags",
+        "source_string": "与关键字部分一致",
+        "translation": "与关键字部分一致",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "SearchNovelTagMatchOptionText",
+        "source_string": "匹配正文",
+        "translation": "匹配正文",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "SearchNovelTagMatchOptionCaption",
+        "source_string": "匹配说明文",
+        "translation": "匹配说明文",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "TargetFilterForAndroid",
+        "source_string": "Android",
+        "translation": "Android",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "TargetFilterForIOS",
+        "source_string": "IOS",
+        "translation": "IOS",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "ThumbnailDirectionLandscape",
+        "source_string": "横向",
+        "translation": "Landscape",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "ThumbnailDirectionPortrait",
+        "source_string": "纵向",
+        "translation": "Portrait",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "WorkTypeIllust",
+        "source_string": "插画",
+        "translation": "插画",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "WorkTypeManga",
+        "source_string": "漫画",
+        "translation": "漫画",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "WorkTypeNovel",
+        "source_string": "小说",
+        "translation": "小说",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "SimpleWorkTypeIllustAndManga",
+        "source_string": "插画和漫画",
+        "translation": "插画和漫画",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "SimpleWorkTypeNovel",
+        "source_string": "小说",
+        "translation": "小说",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "Bmp",
+        "source_string": "BMP（无损，文件大，支持广泛）",
+        "translation": "BMP（loss，large，general）",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "Jpg",
+        "source_string": "JPG（有损，文件小，支持广泛）",
+        "translation": "JPG（loss，small，general）",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "Gif",
+        "source_string": "GIF（无损，只支持256色，文件小，支持广泛）",
+        "translation": "GIF（lossless，only 255 colors，small，general）",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "Tiff",
+        "source_string": "TIFF（无损，无法自动播放，文件大）",
+        "translation": "TIFF（loss，can't autoplay，large）",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "Png",
+        "source_string": "PNG/APNG（无损，文件小）",
+        "translation": "PNG/APNG（lossless，small）",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "Original",
+        "source_string": "图片原始格式（JPG/PNG，无法自动添加标签）",
+        "translation": "图片原始格式（JPG/PNG，无法自动添加标签）",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "OriginalZip",
+        "source_string": "动图原始格式（ZIP，无法添加标签）",
+        "translation": "动图原始格式（ZIP，无法添加标签）",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "WebPLossless",
+        "source_string": "无损WebP（无损，文件小，支持广泛）",
+        "translation": "Lossless WebP（lossless，small，general）",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "WebPLossy",
+        "source_string": "有损WebP（有损，文件小，支持广泛）",
+        "translation": "Loss WebP（loss，small，general）",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "Thin",
+        "source_string": "极细",
+        "translation": "极细",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "ExtraLight",
+        "source_string": "特细",
+        "translation": "特细",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "Light",
+        "source_string": "细",
+        "translation": "细",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "SemiLight",
+        "source_string": "半细",
+        "translation": "半细",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "Normal",
+        "source_string": "常规",
+        "translation": "常规",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "Medium",
+        "source_string": "中等",
+        "translation": "中等",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "SemiBold",
+        "source_string": "半粗",
+        "translation": "半粗",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "Bold",
+        "source_string": "粗",
+        "translation": "粗",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "ExtraBold",
+        "source_string": "特粗",
+        "translation": "特粗",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "Black",
+        "source_string": "黑",
+        "translation": "黑",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "ExtraBlack",
+        "source_string": "特黑",
+        "translation": "特黑",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "AllCountedTagName",
+        "source_string": "所有标签",
+        "translation": "All tags",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "DownloadListEntryOpenFailed",
+        "source_string": "打开文件（夹）失败",
+        "translation": "Failed to open file (or folder)",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "DownloadListEntryMaybeDeleted",
+        "source_string": "可能你已经删除了该图片",
+        "translation": "It seems that you've deleted the work",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "SortOptionComboBox/PlaceholderText",
+        "source_string": "排序选项",
+        "translation": "Sort option",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "PrivacyPolicyComboBox/PlaceholderText",
+        "source_string": "公开选项",
+        "translation": "Privacy policy",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "WorkTypeComboBox/PlaceholderText",
+        "source_string": "作品类型",
+        "translation": "作品类型",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "OpenUserId",
+        "source_string": "打开用户主页",
+        "translation": "Open user homepage",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "OpenNovelId",
+        "source_string": "打开小说页面",
+        "translation": "打开小说页面",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "OpenIllustId",
+        "source_string": "打开作品页面",
+        "translation": "Open work page",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "CannotFindLoginProxyServerExecutable",
+        "source_string": "找不到用于登录的可执行文件，请重新打开应用或者联系开发者",
+        "translation": "Can't find the executable to login, please contact the developer for further help",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "UnexpectedBehavior",
+        "source_string": "发生了未定义的行为，如果你看到了该信息，请联系开发者寻求帮助",
+        "translation": "Undefined behavior occured, if you see this message, please contact the developer for further help",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "ReplyContentTooLong",
+        "source_string": "回复内容超过140字，请重新编辑",
+        "translation": "The reply content is too long",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    }
+]
