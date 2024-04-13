@@ -2,7 +2,7 @@
     {
         "identifier": "AppDefaultFontFamilyName",
         "source_string": "Microsoft YaHei UI",
-        "translation": "Microsoft YaHei UI",
+        "translation": "Segoe UI",
         "context": null,
         "labels": null,
         "max_length": null
