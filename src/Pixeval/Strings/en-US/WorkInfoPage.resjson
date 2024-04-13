@@ -1,0 +1,114 @@
+[
+    {
+        "identifier": "WorkCaptionEmpty",
+        "source_string": "无",
+        "translation": "None",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "WorkCaptionTextBlock/Text",
+        "source_string": "作品介绍",
+        "translation": "Introduction",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "IllustrationDimensionTextBlock/Text",
+        "source_string": "作品分辨率",
+        "translation": "Resolution",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "IllustrationDimensionUnknown",
+        "source_string": "未知",
+        "translation": "Unknown",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "WorkIdTextBlock/Text",
+        "source_string": "作品ID",
+        "translation": "Work ID",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "WorkTagListTextBlock/Text",
+        "source_string": "作品标签",
+        "translation": "Work tags",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "WorkTitleTextBlock/Text",
+        "source_string": "作品名",
+        "translation": "Work title",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "WorkTotalBookmarksTextBlock/Text",
+        "source_string": "总收藏数",
+        "translation": "Total bookmarks",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "WorkTotalViewsTextBlock/Text",
+        "source_string": "总浏览量",
+        "translation": "Total views",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "WorkUploadDateTextBlock/Text",
+        "source_string": "上传日期",
+        "translation": "Upload date",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "IllustratorId/Text",
+        "source_string": "作者ID: ",
+        "translation": "Illustrator ID: ",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "IllustratorName/Text",
+        "source_string": "作者名: ",
+        "translation": "Illustrator name: ",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "IllustratorTextBlock/Text",
+        "source_string": "作者信息",
+        "translation": "Illustrator info",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "TitleTextBlock/Text",
+        "source_string": "作品信息",
+        "translation": "Work info",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    }
+]
