@@ -1,0 +1,178 @@
+[
+    {
+        "identifier": "CancelAllButton/Content",
+        "source_string": "取消所有任务",
+        "translation": "Отменить все задания",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "CancelSelectionButtonDefaultLabel",
+        "source_string": "取消选择",
+        "translation": "Отменить выбор",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "CancelSelectionButtonFormatted",
+        "source_string": "取消选择 ({0})",
+        "translation": "Отменить выбор ({0})",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "ClearDownloadListButton/Content",
+        "source_string": "清空下载列表",
+        "translation": "Очистить список загрузок",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "DeleteButton/Label",
+        "source_string": "删除",
+        "translation": "Удалить",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "DeleteDownloadHistoryRecordsFormatted",
+        "source_string": "删除{0}条历史记录",
+        "translation": "Удалить {0} записей истории",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "DownloadListOptionAllQueued",
+        "source_string": "所有下载任务",
+        "translation": "Все задания на загрузку",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "DownloadListOptionCancelled",
+        "source_string": "已取消",
+        "translation": "Отменено",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "DownloadListOptionCompleted",
+        "source_string": "已下载",
+        "translation": "Загружено",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "DownloadListOptionCustomSearch",
+        "source_string": "自定义搜索",
+        "translation": "Пользовательский поиск",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "DownloadListOptionError",
+        "source_string": "下载失败",
+        "translation": "Ошибка загрузки",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "DownloadListOptionRunning",
+        "source_string": "正在下载",
+        "translation": "В процессе",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "FilterAutoSuggestBox/PlaceholderText",
+        "source_string": "作品名/作品ID",
+        "translation": "Название/ID произведения",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "FilterAutoSuggestBoxNoResultFound",
+        "source_string": "未找到任何结果",
+        "translation": "Результаты не найдены",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "ModeFilterComboBox/PlaceholderText",
+        "source_string": "过滤选项",
+        "translation": "Опции фильтра",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "PageTitleTextBlock/Text",
+        "source_string": "下载列表",
+        "translation": "Список загрузок",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "PauseAllButton/Content",
+        "source_string": "暂停所有任务",
+        "translation": "Приостановить все задания",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "PauseButton/Label",
+        "source_string": "暂停",
+        "translation": "Пауза",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "ResumeAllButton/Content",
+        "source_string": "恢复所有任务",
+        "translation": "Возобновить все задания",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "ResumeButton/Label",
+        "source_string": "恢复",
+        "translation": "Возобновить",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "SelectAllButton/Label",
+        "source_string": "全选",
+        "translation": "Выбрать все",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "StopButton/Label",
+        "source_string": "取消下载",
+        "translation": "Отменить загрузку",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    }
+]
