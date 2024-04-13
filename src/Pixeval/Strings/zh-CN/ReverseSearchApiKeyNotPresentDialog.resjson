@@ -1,0 +1,18 @@
+[
+    {
+        "identifier": "MessageTextBlock/Text",
+        "source_string": "逆向搜索需要正确的填写SauceNAO API Key，您未填写或者填写的API Key错误，请仔细检查后再使用该功能",
+        "translation": "逆向搜索需要正确的填写SauceNAO API Key，您未填写或者填写的API Key错误，请仔细检查后再使用该功能",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "SetApiKeyHyperlinkButton/Content",
+        "source_string": "修改API Key",
+        "translation": "修改API Key",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    }
+]
