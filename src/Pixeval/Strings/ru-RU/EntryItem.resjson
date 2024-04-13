@@ -1,0 +1,186 @@
+[
+    {
+        "identifier": "GenerateLink",
+        "source_string": "复制应用链接",
+        "translation": "Копировать ссылку приложения",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "GenerateWebLink",
+        "source_string": "复制网页链接",
+        "translation": "Копировать веб-ссылку",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "OpenInWebBrowser",
+        "source_string": "打开网页",
+        "translation": "Открыть в браузере",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "LinkCopiedToClipboard",
+        "source_string": "链接已复制到剪切板",
+        "translation": "Ссылка скопирована в буфер обмена",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "ShowPixEzQrCode",
+        "source_string": "生成PixEz二维码",
+        "translation": "Создать QR-код для PixEz",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "ShowQRCode",
+        "source_string": "生成二维码",
+        "translation": "Создать QR-код",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "AddToBookmark",
+        "source_string": "添加到收藏夹",
+        "translation": "Добавить в избранное",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "Share",
+        "source_string": "分享",
+        "translation": "Поделиться",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "Save",
+        "source_string": "保存",
+        "translation": "Сохранить",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "SaveAs",
+        "source_string": "另存为",
+        "translation": "Сохранить как",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "Copy",
+        "source_string": "复制图片到剪切板",
+        "translation": "Скопировать изображение в буфер обмена",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "SaveAsCancelled",
+        "source_string": "已取消另存为操作",
+        "translation": "Операция 'Сохранить как' отменена",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "Saved",
+        "source_string": "已保存",
+        "translation": "Сохранено",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "DownloadTaskCreated",
+        "source_string": "已创建下载任务",
+        "translation": "Задание на скачивание создано",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "UgoiraProcessing",
+        "source_string": "正在处理动图：{0}%",
+        "translation": "Обработка анимации: {0}%",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "ImageProcessing",
+        "source_string": "正在处理图片",
+        "translation": "Обработка изображения",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "ImageSetToClipBoard",
+        "source_string": "图片已复制到剪切板",
+        "translation": "Изображение скопировано в буфер обмена",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "TheIllustrationIsAMangaFormatted",
+        "source_string": "这是一副图集，内含{0}张图片",
+        "translation": "Это набор иллюстраций, содержащий {0} изображений",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "TheIllustrationIsAnUgoira",
+        "source_string": "这是一张动图",
+        "translation": "Это анимированное изображение",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "OpenNovel",
+        "source_string": "阅读小说",
+        "translation": "Читать Новеллу",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "UserMetricsFollowingsTextBlock/Text",
+        "source_string": "正在关注",
+        "translation": "Подписки",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "UserMetricsIllustrationCountTextBlock/Text",
+        "source_string": "作品数",
+        "translation": "Количество работ",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "UserMetricsMyPixivUsersTextBlock/Text",
+        "source_string": "好P友",
+        "translation": "Друзья в Pixiv",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    }
+]
