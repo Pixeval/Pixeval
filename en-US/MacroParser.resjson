@@ -2,7 +2,7 @@
     {
         "identifier": "NonParameterizedMacroBearingParameterFormatted",
         "source_string": "宏{0}不能包含任何参数",
-        "translation": "宏{0}不能包含任何参数",
+        "translation": "Macro {0} can't contain any parameter",
         "context": null,
         "labels": null,
         "max_length": null
@@ -10,7 +10,7 @@
     {
         "identifier": "ParameterizedMacroMissingParameterFormatted",
         "source_string": "宏{0}参数缺失",
-        "translation": "宏{0}参数缺失",
+        "translation": "Macro {0} missing parameter",
         "context": null,
         "labels": null,
         "max_length": null
@@ -18,7 +18,7 @@
     {
         "identifier": "ResultIsEmpty",
         "source_string": "解析失败：解析结果为空",
-        "translation": "解析失败：解析结果为空",
+        "translation": "Parse failed: result is empty",
         "context": null,
         "labels": null,
         "max_length": null
@@ -26,7 +26,7 @@
     {
         "identifier": "UnexpectedTokenFormatted",
         "source_string": "输入非法：在第{0}个字符处遇到了非法符号",
-        "translation": "输入非法：在第{0}个字符处遇到了非法符号",
+        "translation": "Illegal input：illegal character encountered at {0}",
         "context": null,
         "labels": null,
         "max_length": null
@@ -34,7 +34,7 @@
     {
         "identifier": "UnknownArtist",
         "source_string": "未知作者",
-        "translation": "未知作者",
+        "translation": "Unknown artist",
         "context": null,
         "labels": null,
         "max_length": null
@@ -42,7 +42,7 @@
     {
         "identifier": "UnknownIllustrationTitle",
         "source_string": "未知作品",
-        "translation": "未知作品",
+        "translation": "Unknwo work title",
         "context": null,
         "labels": null,
         "max_length": null
@@ -50,7 +50,7 @@
     {
         "identifier": "UnknownMacroNameFormatted",
         "source_string": "未知的宏名称：{0}",
-        "translation": "未知的宏名称：{0}",
+        "translation": "Unknown macro name {0}",
         "context": null,
         "labels": null,
         "max_length": null
@@ -58,7 +58,7 @@
     {
         "identifier": "UnknownSpotlightId",
         "source_string": "未知特辑ID",
-        "translation": "未知特辑ID",
+        "translation": "Unknown spotlight ID",
         "context": null,
         "labels": null,
         "max_length": null
@@ -66,7 +66,7 @@
     {
         "identifier": "UnknownSpotlightTitle",
         "source_string": "未知特辑",
-        "translation": "未知特辑",
+        "translation": "Unknown spotlight",
         "context": null,
         "labels": null,
         "max_length": null
