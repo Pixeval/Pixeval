@@ -1,0 +1,178 @@
+[
+    {
+        "identifier": "ExcludeTagsEntry/Header",
+        "source_string": "要排除的Tag",
+        "translation": "Исключить теги",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "ExcludeTagTokenInput/PlaceholderText",
+        "source_string": "输入结果不能包含的Tag",
+        "translation": "Введите теги, которые не должны быть включены в результаты",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "IllustrationIdEntry/Header",
+        "source_string": "过滤结果的作品ID",
+        "translation": "Фильтровать по ID работы",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "IllustrationIdInput/PlaceholderText",
+        "source_string": "输入想要过滤出的作品ID",
+        "translation": "Введите ID работы для фильтрации",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "IllustrationNameEntry/Header",
+        "source_string": "过滤结果的作品名",
+        "translation": "Фильтровать по названию работы",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "IllustrationNameInput/PlaceholderText",
+        "source_string": "输入想要过滤出的作品名",
+        "translation": "Введите название работы для фильтрации",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "IllustratorIdEntry/Header",
+        "source_string": "过滤结果的作者ID",
+        "translation": "Фильтровать по ID автора",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "IllustratorIdInput/PlaceholderText",
+        "source_string": "输入想要过滤出的作者ID",
+        "translation": "Введите ID автора для фильтрации",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "IllustratorNameEntry/Header",
+        "source_string": "过滤结果的作者名",
+        "translation": "Фильтровать по имени автора",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "IllustratorNameInput/PlaceholderText",
+        "source_string": "输入想要过滤出的作者名",
+        "translation": "Введите имя автора для фильтрации",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "IncludeTagsEntry/Header",
+        "source_string": "必须包含的Tag",
+        "translation": "Обязательные теги",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "IncludeTagTokenInput/PlaceholderText",
+        "source_string": "输入结果必须包含的Tag",
+        "translation": "Введите теги, которые должны быть включены в результаты",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "LeastBookmarkCountEntry/Header",
+        "source_string": "最低收藏数",
+        "translation": "Минимальное количество избранного",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "LeastBookmarkCountNumberBox/PlaceholderText",
+        "source_string": "输入最低收藏数[0,+∞)",
+        "translation": "Введите минимальное количество избранного [0,+∞)",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "MaximumBookmarkCountEntry/Header",
+        "source_string": "最高收藏数",
+        "translation": "Максимальное количество избранного",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "MaximumBookmarkCountNumberBox/PlaceholderText",
+        "source_string": "输入最高收藏数[0,-∞)",
+        "translation": "Введите максимальное количество избранного [0,-∞)",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "PublishDateEndEntry/Header",
+        "source_string": "过滤结果的结束日期",
+        "translation": "Конечная дата фильтрации",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "PublishDateEndPicker/PlaceholderText",
+        "source_string": "只会包含该日期前发布的作品",
+        "translation": "Будут включены работы, опубликованные до этой даты",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "PublishDateStartEntry/Header",
+        "source_string": "过滤结果的起始日期",
+        "translation": "Начальная дата фильтрации",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "PublishDateStartPicker/PlaceholderText",
+        "source_string": "只会包含该日期后发布的作品",
+        "translation": "Будут включены работы, опубликованные после этой даты",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "UserGroupNameEntry/Header",
+        "source_string": "自定义收藏夹的名称",
+        "translation": "Название пользовательской коллекции",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "UserGroupNameInput/PlaceholderText",
+        "source_string": "过滤结果只会包含在指定收藏夹中的作品",
+        "translation": "Результаты будут включать только работы из указанной коллекции",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    }
+]
