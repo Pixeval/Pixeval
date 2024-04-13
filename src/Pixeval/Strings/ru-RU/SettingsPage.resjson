@@ -1,0 +1,1474 @@
+[
+    {
+        "identifier": "AppDescriptionTextBlock/Text",
+        "source_string": "Pixeval 是一个基于 Windows UI 3 开发的第三方 Pixiv 客户端。在保证对 Pixiv 绝大部分功能的支持的同时，提供了大量有助于提高用户体验的额外特性，包括本地收藏夹以及中国大陆地区无需代理的浏览体验等。\n\n你可以在下方链接中找到更多有关 Pixeval 的信息。",
+        "translation": "Pixeval — это сторонний клиент Pixiv, разработанный на базе WinUI 3. Он обеспечивает поддержку большинства функций Pixiv и предлагает ряд дополнительных возможностей для улучшения пользовательского опыта, включая локальное избранное и возможность просмотра без прокси в Китае и России.\n\nБольше информации о Pixeval можно найти по ссылкам ниже.",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "AppFontFamilyComboBox/PlaceholderText",
+        "source_string": "选择字体",
+        "translation": "Выбор шрифта",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "AppFontFamilyEntry/Header",
+        "source_string": "字体设置（重启应用后生效）",
+        "translation": "Настройки шрифта (вступают в силу после перезапуска)",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "AppLanguageEntry/Header",
+        "source_string": "语言设置（重启应用后生效）",
+        "translation": "Настройки языка (вступают в силу после перезапуска)",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "OpenLanguageSettingsHyperlinkButton/Content",
+        "source_string": "打开 Windows 系统语言设置",
+        "translation": "Открыть настройки языка Windows",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "AppLanguageEntryComboBox/PlaceholderText",
+        "source_string": "选择语言",
+        "translation": "Выбор языка",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "ApplicationSettingsGroup/Text",
+        "source_string": "应用程序相关设置",
+        "translation": "Настройки приложения",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "BackdropEntry/Header",
+        "source_string": "应用的背景材质",
+        "translation": "Фоновая текстура приложения",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "BrowsingExperienceSettingsGroup/Text",
+        "source_string": "浏览体验设置",
+        "translation": "Настройки просмотра",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "CheckingForUpdate",
+        "source_string": "正在检查更新",
+        "translation": "Проверка обновлений",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "DownloadingUpdate",
+        "source_string": "正在下载更新",
+        "translation": "Загрузка обновления",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "Unzipping",
+        "source_string": "正在解压",
+        "translation": "Распаковка",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "IsUpToDate",
+        "source_string": "当前已经是最新版本",
+        "translation": "У вас последняя версия",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "IsInsider",
+        "source_string": "正在使用内部版本",
+        "translation": "Вы используете тестовую версию",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "MajorUpdateAvailable",
+        "source_string": "有可用的主要更新",
+        "translation": "Доступно крупное обновление",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "MinorUpdateAvailable",
+        "source_string": "有可用的次要更新",
+        "translation": "Доступно минорное обновление",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "BuildUpdateAvailable",
+        "source_string": "有可用的生成更新",
+        "translation": "Доступно обновление сборки",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "UnknownUpdateState",
+        "source_string": "未知更新状态",
+        "translation": "Неизвестное состояние обновления",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "UpdateApp",
+        "source_string": "软件更新",
+        "translation": "Обновить приложение",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "LanguageSystemDefault",
+        "source_string": "系统默认",
+        "translation": "Системный язык по умолчанию",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "DownloadedAndWaitingToInstall",
+        "source_string": "版本 {0} 下载完成，是否安装？或者你也可以在临时文件夹手动安装更新",
+        "translation": "Версия {0} загружена, установить сейчас? Вы также можете установить обновление вручную из временной папки",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "InstallCanceled",
+        "source_string": "安装取消",
+        "translation": "Установка отменена",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "UpdateFailed",
+        "source_string": "更新失败",
+        "translation": "Обновление не удалось",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "UpdateFailedInTempFolder",
+        "source_string": "更新失败，你可以在临时文件夹查看安装包",
+        "translation": "Обновление не удалось, вы можете проверить установочный пакет во временной папке",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "DefaultDownloadPathMacroEntry/Header",
+        "source_string": "默认的下载位置",
+        "translation": "Путь загрузки по умолчанию",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "DefaultDownloadPathMacroEntryDescription/Content",
+        "source_string": "查看路径宏的使用方法",
+        "translation": "Посмотреть руководство по макросу пути",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "DefaultDownloadPathMacroTextBox/PlaceholderText",
+        "source_string": "下载路径宏",
+        "translation": "Макрос пути загрузки",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "RankOptionEntry/Description",
+        "source_string": "每日榜单的默认选项",
+        "translation": "每日榜单的默认选项",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "RankOptionEntry/Header",
+        "source_string": "默认榜单类型",
+        "translation": "默认榜单类型",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "DefaultSearchSortOptionEntry/Description",
+        "source_string": "在搜索作品时的默认排序策略",
+        "translation": "Стандартная стратегия сортировки при поиске произведений",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "DefaultSearchSortOptionEntry/Header",
+        "source_string": "默认排序方式",
+        "translation": "Стандартная сортировка",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "SimpleWorkTypeEntry/Description",
+        "source_string": "在浏览作品时的默认选择的作品类型",
+        "translation": "在浏览作品时的默认选择的作品类型",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "SimpleWorkTypeEntry/Header",
+        "source_string": "默认作品类型",
+        "translation": "默认作品类型",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "DefaultSearchTagMatchOptionEntry/Description",
+        "source_string": "在使用关键字搜索插画时如何匹配查找作品",
+        "translation": "Как осуществляется поиск иллюстраций по ключевым словам",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "DefaultSearchTagMatchOptionEntry/Header",
+        "source_string": "默认的关键字匹配策略",
+        "translation": "Стандартное совпадение по ключевым словам",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "IllustrationOptionEntry/Header",
+        "source_string": "插画",
+        "translation": "Иллюстрации",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "UgoiraOptionEntry/Header",
+        "source_string": "动图",
+        "translation": "动图",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "NovelOptionEntry/Header",
+        "source_string": "小说",
+        "translation": "Романы",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "PixivNameResolverHeader/Text",
+        "source_string": "名字解析器",
+        "translation": "Резолвер имен",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "PixivNameResolverDescription/Text",
+        "source_string": "使用前域直连后，会将域名解析到以下IP地址",
+        "translation": "После прямого подключения к домену, доменное имя будет разрешено к следующим IP-адресам",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "DefaultSelectedTabEntry/Description",
+        "source_string": "应用启动时将会选中主页侧边导航栏中由该项所指定的默认标签栏",
+        "translation": "При запуске приложения будет выбрана вкладка по умолчанию в боковом меню главной страницы",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "DefaultSelectedTabEntry/Header",
+        "source_string": "默认标签栏",
+        "translation": "Вкладка по умолчанию",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "DeleteBrowseHistoriesButton/Content",
+        "source_string": "删除记录",
+        "translation": "Очистить историю",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "DeleteBrowseHistoriesEntry/Description",
+        "source_string": "该按钮会清空所有的浏览记录",
+        "translation": "Эта кнопка очистит всю историю просмотра",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "DeleteBrowseHistoriesEntry/Header",
+        "source_string": "清空浏览记录",
+        "translation": "Очистить историю просмотра",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "DeleteDownloadHistoriesButton/Content",
+        "source_string": "删除记录",
+        "translation": "Очистить историю",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "DeleteDownloadHistoriesEntry/Description",
+        "source_string": "该按钮会清空所有的下载记录",
+        "translation": "Эта кнопка очистит всю историю загрузок",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "DeleteDownloadHistoriesEntry/Header",
+        "source_string": "清空下载记录",
+        "translation": "Очистить историю загрузок",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "DeleteSearchHistoriesButton/Content",
+        "source_string": "删除记录",
+        "translation": "Очистить историю",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "DeleteFileCacheEntry/Description",
+        "source_string": "该按钮会清空所有的文件缓存",
+        "translation": "Эта кнопка очищает все файловые кэши",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "DeleteFileCacheEntry/Header",
+        "source_string": "清空文件缓存",
+        "translation": "Очистить файловый кэш",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "DeleteSearchHistoriesEntry/Description",
+        "source_string": "该按钮会清空所有的搜索记录",
+        "translation": "Эта кнопка очистит всю историю поиска",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "DeleteSearchHistoriesEntry/Header",
+        "source_string": "清空搜索记录",
+        "translation": "Очистить историю поиска",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "DisableDomainFrontingEntry/Description",
+        "source_string": "开启此选项将导致在 Pixiv 被屏蔽的国家或地区的用户无法正常使用",
+        "translation": "Включение этой опции приведет к тому, что пользователи в странах или регионах, где Pixiv заблокирован, не смогут нормально использовать его",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "DisableDomainFrontingEntry/Header",
+        "source_string": "禁用域前置直连",
+        "translation": "Отключить прямое подключение к домену",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "DonateDeveloperHyperlinkButton/Content",
+        "source_string": "支持作者",
+        "translation": "Поддержать разработчика",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "FileCacheCleared",
+        "source_string": "已删除所有的文件缓存",
+        "translation": "Все файловые кэши были удалены",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "DownloadHistoriesCleared",
+        "source_string": "已删除所有的下载记录",
+        "translation": "История загрузок очищена",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "SearchHistoriesCleared",
+        "source_string": "已删除所有的搜索记录",
+        "translation": "История поиска очищена",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "BrowseHistoriesCleared",
+        "source_string": "已删除所有的浏览记录",
+        "translation": "История просмотров очищена",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "DownloadMacroInvalidTeachingTip/Title",
+        "source_string": "宏解析失败",
+        "translation": "Ошибка разрешения макроса",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "DownloadMacroInvalidTeachingTipInputCannotBeBlank",
+        "source_string": "输入不能为空",
+        "translation": "Поле ввода не может быть пустым",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "DownloadMacroInvalidTeachingTipMacroInvalidFormatted",
+        "source_string": "{0}, 请更正后重新填写",
+        "translation": "{0}, пожалуйста, исправьте и повторите ввод",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "DownloadSettingsGroup/Text",
+        "source_string": "下载设置",
+        "translation": "Настройки загрузки",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "DownloadUpdateAutomaticallyEntry/Description",
+        "source_string": "计费网络除外",
+        "translation": "За исключением сетей с оплатой за трафик",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "DownloadUpdateAutomaticallyEntry/Header",
+        "source_string": "自动下载更新",
+        "translation": "Автоматическая загрузка обновлений",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "FeedbackByEmailHyperlinkButton/Content",
+        "source_string": "邮件联系作者",
+        "translation": "Обратная связь с разработчиком по электронной почте",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "FiltrateRestrictedContentEntry/Description",
+        "source_string": "在 Pixiv 官方账号设置开启 R-18 内容的同时关闭该选项以浏览 R-18 以及 R-18G 内容",
+        "translation": "Включите R-18 контент в настройках официального аккаунта Pixiv и отключите эту опцию, чтобы просматривать контент R-18 и R-18G",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "FiltrateRestrictedContentEntry/Header",
+        "source_string": "过滤敏感内容",
+        "translation": "Фильтрация чувствительного контента",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "GenerateHelpLinkEntry/Description",
+        "source_string": "该帮助提示会指示用户如何使用链接",
+        "translation": "Эта подсказка поможет пользователям понять, как использовать ссылки",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "GenerateHelpLinkEntry/Header",
+        "source_string": "生成页面链接时显示帮助提示",
+        "translation": "Показывать подсказку при генерации ссылок на страницы",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "GitHubRepositoryHyperlinkButton/Content",
+        "source_string": "GitHub 仓库",
+        "translation": "Репозиторий на GitHub",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "ItemsViewLayoutTypeEntry/Description",
+        "source_string": "选择网格布局则每张图片大小相同；选择流式布局则只有每一行的两端会被对齐",
+        "translation": "Выбор между сеткой, где все изображения одинакового размера, и потоковым макетом, где выравниваются только края строк",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "ItemsViewLayoutTypeEntry/Header",
+        "source_string": "缩略图视图对齐规则",
+        "translation": "Правила выравнивания миниатюр",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "ImageMirrorServerEntry/Description",
+        "source_string": "下载图片时所使用的的镜像站的主机名，如果不明白是什么意思请留空",
+        "translation": "Имя хоста зеркала для загрузки изображений, оставьте пустым, если не уверены в его назначении",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "ImageMirrorServerEntry/Header",
+        "source_string": "图片镜像站的主机名",
+        "translation": "Имя хоста зеркала изображений",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "ImageMirrorServerTextBox/PlaceholderText",
+        "source_string": "主机名",
+        "translation": "Имя хоста",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "ImageMirrorServerTextBoxTeachingTip/Subtitle",
+        "source_string": "请检查 URL 格式后重新提交",
+        "translation": "Пожалуйста, проверьте формат URL и повторите попытку",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "ImageMirrorServerTextBoxTeachingTip/Title",
+        "source_string": "URL 格式错误",
+        "translation": "Неверный формат URL",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "JoinFeedbackGroupHyperlinkButton/Content",
+        "source_string": "加入反馈群",
+        "translation": "Присоединиться к группе обратной связи",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "LastCheckedPrefix",
+        "source_string": "上次检查时间：",
+        "translation": "Последняя проверка: ",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "MaxDownloadConcurrencyLevelEntry/Description",
+        "source_string": "该设置项限制了并行下载任务的数量，可以设置的最大值是你的 CPU 核心数，请酌情调节，过多可能造成系统卡顿",
+        "translation": "Этот параметр ограничивает количество одновременных задач на загрузку. Максимум — количество ядер вашего процессора. Пожалуйста, настройте с умом, так как избыточное количество может привести к зависанию системы",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "MaxDownloadConcurrencyLevelEntry/Header",
+        "source_string": "最大并行下载任务数",
+        "translation": "Максимальное количество одновременных загрузок",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "MaximumBrowseHistoryRecordsEntry/Description",
+        "source_string": "若浏览历史数量超出该限制，旧的记录将会被删除",
+        "translation": "Если количество записей истории просмотров превысит этот предел, старые записи будут удалены",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "MaximumBrowseHistoryRecordsEntry/Header",
+        "source_string": "浏览历史限制",
+        "translation": "Ограничение истории просмотров",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "MaximumBrowseHistoryRecordsNumerBox/PlaceholderText",
+        "source_string": "输入数量限制[10, 200]",
+        "translation": "Ограничение количества записей [10, 200]",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "MaximumDownloadHistoryRecordsEntry/Description",
+        "source_string": "若下载历史数量超出该限制，旧的记录将会被删除",
+        "translation": "Если количество записей истории загрузок превысит этот предел, старые записи будут удалены",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "MaximumDownloadHistoryRecordsEntry/Header",
+        "source_string": "下载历史限制",
+        "translation": "Ограничение истории загрузок",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "MaximumDownloadHistoryRecordsNumberBox/PlaceholderText",
+        "source_string": "输入数量限制[10, 200]",
+        "translation": "Ограничение количества записей [10, 200]",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "MaximumSearchHistoryRecordsEntry/Description",
+        "source_string": "若搜索历史数量超出该限制，旧的记录将会被删除",
+        "translation": "Если количество записей истории поиска превысит этот предел, старые записи будут удалены",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "MaximumSearchHistoryRecordsEntry/Header",
+        "source_string": "搜索历史限制",
+        "translation": "Ограничение истории поиска",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "MaximumSearchHistoryRecordsNumberBox/PlaceholderText",
+        "source_string": "输入数量限制[10, 50]",
+        "translation": "Ограничение количества записей [10, 50]",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "MaximumSearchPageLimit/Description",
+        "source_string": "在使用关键字搜索插画时，最多会搜索多少页（每页包含30张）",
+        "translation": "При поиске иллюстраций будет просмотрено максимум столько страниц (каждая страница содержит 30 изображений)",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "MaximumSearchPageLimit/Header",
+        "source_string": "最大搜索页数限制",
+        "translation": "Ограничение на количество страниц поиска",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "MaximumSearchPageLimitNumberBox/PlaceholderText",
+        "source_string": "搜索页数限制[1, 100]",
+        "translation": "Ограничение на количество страниц [1, 100]",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "MaximumSuggestionBoxSearchHistoryEntry/Description",
+        "source_string": "如果保存的搜索历史条目数多于该选项指定的数量，则在主页的搜索框中只会显示该项指定数量的条目(按照日期倒序排序)",
+        "translation": "Если количество сохраненных записей истории поиска превысит это число, в поле поиска на главной странице будут отображаться только последние записи (отсортированные по дате)",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "MaximumSuggestionBoxSearchHistoryEntry/Header",
+        "source_string": "搜索框搜索历史数量限制",
+        "translation": "Ограничение на количество записей в истории поиска",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "MiscSettingsGroup/Text",
+        "source_string": "杂项",
+        "translation": "Разное",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "OpenFontSettingsHyperlinkButton/Content",
+        "source_string": "打开 Windows 系统字体设置",
+        "translation": "Открыть настройки шрифтов Windows",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "OverwriteDownloadedFileEntry/Description",
+        "source_string": "开启该选项则下载文件时将会覆写之前已经下载过的文件",
+        "translation": "Если этот параметр включен, при загрузке файлы будут перезаписываться, если они уже существуют",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "OverwriteDownloadedFileEntry/Header",
+        "source_string": "覆写已下载文件",
+        "translation": "Перезаписывать скачанные файлы",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "PerformSignOutButton/Content",
+        "source_string": "执行登出",
+        "translation": "Выход из системы",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "DownloadWhenBookmarkedEntry/Description",
+        "source_string": "在收藏作品后，会自动下载该作品",
+        "translation": "После добавления произведения в избранное, оно будет автоматически загружено",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "DownloadWhenBookmarkedEntry/Header",
+        "source_string": "收藏作品时下载",
+        "translation": "Загрузка при добавлении в избранное",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "RecommendationItemLimitEntry/Description",
+        "source_string": "使用每日推荐功能时最多会获取多少条插画",
+        "translation": "Максимальное количество иллюстраций, получаемых при использовании функции ежедневных рекомендаций",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "RecommendationItemLimitEntry/Header",
+        "source_string": "每日推荐结果数量限制",
+        "translation": "Ограничение на количество ежедневных рекомендаций",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "RecommendationItemLimitNumberBox/PlaceholderText",
+        "source_string": "每日推荐数量限制[500, 2500]",
+        "translation": "Ограничение на количество рекомендаций [500, 2500]",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "ReleaseNotesHyperlinkButton/Content",
+        "source_string": "更新日志",
+        "translation": "Примечания к выпуску",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "ReportBugHyperlinkButton/Content",
+        "source_string": "在 GitHub 上汇报问题",
+        "translation": "Сообщить о проблеме на GitHub",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "CheckForUpdatesButton/Content",
+        "source_string": "检查更新",
+        "translation": "Проверить обновления",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "GitHubCheckForUpdatesEntry/Header",
+        "source_string": "从GitHub获取更新",
+        "translation": "Проверка обновлений на GitHub",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "BugReportEntry/Header",
+        "source_string": "软件问题反馈",
+        "translation": "Сообщение о проблеме с программой",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "BugReportEntry/Description",
+        "source_string": "关于软件BUG或者新功能提案（反馈软件BUG请附上相关日志文件）",
+        "translation": "Отчеты о ошибках в программе или предложения по новым функциям (при сообщении об ошибках пожалуйста прилагайте соответствующие файлы журналов)",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "BugReportChannelsEntry/Header",
+        "source_string": "汇报问题渠道",
+        "translation": "Каналы для сообщений об ошибках",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "BugReportChannelsEntry/Description",
+        "source_string": "可以通过以下渠道汇编问题",
+        "translation": "Вы можете сообщить о проблеме через следующие каналы",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "GitHubBugReportEntry/ToolTipService/ToolTip",
+        "source_string": "在 GitHub 上汇报问题",
+        "translation": "Сообщить о проблеме на GitHub",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "EMailBugReportEntry/ToolTipService/ToolTip",
+        "source_string": "使用电子邮件汇报问题",
+        "translation": "Сообщить о проблеме по электронной почте",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "QQBugReportEntry/ToolTipService/ToolTip",
+        "source_string": "在QQ群内汇报问题",
+        "translation": "Сообщить о проблеме в группе QQ",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "OpenLogEntry/Header",
+        "source_string": "打开日志文件夹",
+        "translation": "Открыть папку с журналами",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "OpenLogEntry/Description",
+        "source_string": "反馈软件BUG请附上本文件夹内相关的日志文件",
+        "translation": "При сообщении о проблеме с программой прилагайте соответствующие файлы журналов из этой папки",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "OpenTempEntry/Header",
+        "source_string": "打开临时文件夹",
+        "translation": "Открыть временную папку",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "OpenTempEntry/Description",
+        "source_string": "此处存储的都是临时文件，每次打开软件时都会删除",
+        "translation": "Здесь хранятся временные файлы, которые удаляются при каждом запуске программы",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "OpenLocalEntry/Header",
+        "source_string": "打开本地文件夹",
+        "translation": "Открыть локальную папку",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "OpenLocalEntry/Description",
+        "source_string": "此处存储了重要的配置文件，请不要修改此处的文件",
+        "translation": "Здесь хранятся важные конфигурационные файлы, пожалуйста, не изменяйте файлы в этой папке",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "OpenRoamingEntry/Header",
+        "source_string": "打开漫游文件夹",
+        "translation": "Открыть папку данных",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "OpenRoamingEntry/Description",
+        "source_string": "此处存储了重要的配置文件，请不要修改此处的文件",
+        "translation": "Здесь хранятся важные конфигурационные файлы, пожалуйста, не изменяйте файлы в этой папке",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "ResetDefaultSettingsButton/Content",
+        "source_string": "重置设置",
+        "translation": "Сбросить настройки",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "ResetDefaultSettingsEntry/Description",
+        "source_string": "点击该按钮将会将所有设置重置会默认状态，该操作不可撤销",
+        "translation": "Нажатие этой кнопки сбросит все настройки к значению по умолчанию. Это действие необратимо",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "ResetDefaultSettingsEntry/Header",
+        "source_string": "重置默认设置",
+        "translation": "Сброс настроек по умолчанию",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "ResetSettingConfirmationDialogContent",
+        "source_string": "该操作将会无法撤销",
+        "translation": "Это действие необратимо",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "ResetSettingConfirmationDialogTitle",
+        "source_string": "你确定要重置所有设置项吗？",
+        "translation": "Вы уверены, что хотите сбросить все настройки?",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "ReverseSearchApiKeyEntry/Header",
+        "source_string": "SauceNAO的API Key",
+        "translation": "API ключ SauceNAO",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "ReverseSearchApiKeyEntryDescriptionTextBlock/Text",
+        "source_string": "在这里获取SauceNAO的API Key（需要注册/登录）",
+        "translation": "Получите API ключ SauceNAO здесь (требуется регистрация/вход)",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "ReverseSearchApiKeyTextBox/PlaceholderText",
+        "source_string": "请输入API Key",
+        "translation": "Введите API ключ",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "ReverseSearchResultSimilarityThresholdEntry/Description",
+        "source_string": "逆向搜索结果的阈值，如果搜索结果低于该阈值则会被忽略，值越高则说明搜索结果和原图越相似",
+        "translation": "Порог сходства результатов обратного поиска. Результаты ниже этого порога будут игнорироваться. Чем выше значение, тем больше сходство между результатами и исходным изображением",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "ReverseSearchResultSimilarityThresholdEntry/Header",
+        "source_string": "逆向搜索阈值",
+        "translation": "Порог сходства обратного поиска",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "SearchDurationEntry/Description",
+        "source_string": "搜索结果将会被限制在指定的时间区间内，如果”使用更精确的搜索范围限制“启用则此项被忽略",
+        "translation": "Результаты поиска будут ограничены указанным временным диапазоном. Если включена опция «Использовать более точные ограничения диапазона поиска», этот параметр будет игнорироваться",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "SearchDurationEntry/Header",
+        "source_string": "搜索范围限制",
+        "translation": "Ограничения временного диапазона поиска",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "SearchEndDateEntry/Description",
+        "source_string": "搜索结果只会包含该日期以前提交的作品，该设置项的值必须比起始日期的值大至少1",
+        "translation": "Результаты поиска будут включать только произведения, опубликованные до этой даты. Значение этого параметра должно быть на один день больше, чем значение даты начала",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "SearchEndDateEntry/Header",
+        "source_string": "设置搜索的结束日期",
+        "translation": "Установить конечную дату поиска",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "SearchSettingsGroup/Text",
+        "source_string": "搜索设置",
+        "translation": "Настройки поиска",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "SearchStartCalendarDatePicker/PlaceholderText",
+        "source_string": "起始日期",
+        "translation": "Начальная дата",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "SearchStartDateEntry/Description",
+        "source_string": "搜索结果只会包含该日期以后提交的作品",
+        "translation": "Результаты поиска будут включать только произведения, опубликованные после этой даты",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "SearchStartDateEntry/Header",
+        "source_string": "设置搜索的起始日期",
+        "translation": "Установить начальную дату поиска",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "SearchStartsFromEntry/Description",
+        "source_string": "在使用关键字搜索插画时，会从该设置项所指定的页数开始搜索，对于插画作品每页包含30张",
+        "translation": "При поиске иллюстраций поиск начнется с указанной страницы. Каждая страница содержит 30 изображений",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "SearchStartsFromEntry/Header",
+        "source_string": "从第几页开始搜索",
+        "translation": "Начать поиск со страницы",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "SearchStartsFromNumberBox/PlaceholderText",
+        "source_string": "从第几页开始搜索[1,150]",
+        "translation": "Начальная страница поиска [1,150]",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "SessionSettingsGroup/Text",
+        "source_string": "会话设置",
+        "translation": "Настройки сессии",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "SignOutConfirmationDialogContent",
+        "source_string": "该操作将会无法撤销",
+        "translation": "Это действие необратимо",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "SignOutConfirmationDialogTitle",
+        "source_string": "你确定要登出吗？",
+        "translation": "Вы уверены, что хотите выйти?",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "SignOutEntry/Description",
+        "source_string": "退出登录将会清除你的缓存与包括跨设备同步在内的所有个人信息并关闭应用程序",
+        "translation": "Выход из системы удалит все ваши кэшированные и личные данные, включая синхронизацию между устройствами, и закроет приложение",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "SignOutEntry/Header",
+        "source_string": "退出登录",
+        "translation": "Выход из системы",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "SpotlightSearchPageLimitEntry/Description",
+        "source_string": "在搜索特辑时，最多会获取多少页的结果（每一页包含10条结果）",
+        "translation": "При поиске в спотлайте будет просмотрено максимум столько страниц (каждая страница содержит 10 результатов)",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "SpotlightSearchPageLimitEntry/Header",
+        "source_string": "特辑搜索页数限制",
+        "translation": "Ограничение на количество страниц поиска в спотлайте",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "SpotlightSearchPageLimitNumberBox/PlaceholderText",
+        "source_string": "特辑搜索页数限制[1, 100]",
+        "translation": "Ограничение на количество страниц [1, 100]",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "TargetAPIPlatformEntry/Description",
+        "source_string": "指定发送请求时使用哪个平台对应的 API，如果不知道这是什么意思请保持默认",
+        "translation": "Указать, какой API платформы использовать для запросов. Если не уверены, оставьте значение по умолчанию",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "TargetAPIPlatformEntry/Header",
+        "source_string": "使用的 API 平台",
+        "translation": "Целевая API платформа",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "ThemeEntry/Header",
+        "source_string": "应用程序主题",
+        "translation": "Тема приложения",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "ThemeEntryDescriptionHyperlinkButton/Content",
+        "source_string": "打开 Windows 系统主题设置",
+        "translation": "Открыть настройки темы Windows",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "ThumbnailDirectionEntry/Description",
+        "source_string": "浏览图片时使用的页面方向",
+        "translation": "Направление страницы при просмотре изображений",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "ThumbnailDirectionEntry/Header",
+        "source_string": "缩略图方向",
+        "translation": "Направление миниатюр",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "TitleTextBlock/Text",
+        "source_string": "Pixeval 设置",
+        "translation": "Настройки Pixeval",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "UseFileCacheEntry/Description",
+        "source_string": "开启此选项后会减少网络流量消耗并提升浏览体验，但是会增加 CPU 占用以及硬盘读写",
+        "translation": "Включение этого параметра снизит потребление сетевого трафика и улучшит просмотр, но увеличит нагрузку на ЦП и диск",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "UseFileCacheEntry/Header",
+        "source_string": "使用文件缓存",
+        "translation": "Использовать файловый кэш",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "UsePreciseRangeForSearchEntry/Description",
+        "source_string": "使用更精确的(基于准确日期)的搜索范围限制，搜索结果将会被限制在指定的时间区间内，如果该项被启用则“搜索范围限制”一栏将会被忽略",
+        "translation": "Использовать более точные ограничения для диапазона поиска на основе конкретных дат. Если этот параметр включен, опция «Ограничения временного диапазона поиска» будет игнорироваться",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "UsePreciseRangeForSearchEntry/Header",
+        "source_string": "使用更精确的搜索范围限制",
+        "translation": "Использовать более точные ограничения для диапазона поиска",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "VersionSettingsGroup/Text",
+        "source_string": "版本",
+        "translation": "Версия",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "ViewPixevalWebsiteHyperlinkButton/Content",
+        "source_string": "介绍网页",
+        "translation": "Веб-сайт",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "WorkDownloadFormatEntry/Description",
+        "source_string": "指定下载作品的格式",
+        "translation": "指定下载作品的格式",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "WorkDownloadFormatEntry/Header",
+        "source_string": "下载作品的格式",
+        "translation": "下载作品的格式",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "MacroCopiedToClipboard",
+        "source_string": "已复制宏到剪切板",
+        "translation": "Макрос скопирован в буфер обмена",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "MacroTutorialDialogTitle",
+        "source_string": "路径宏的使用方法",
+        "translation": "Как использовать макросы для путей",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "MacroTutorialDialogContent",
+        "source_string": "Pixeval 提供路径宏用于更精细的设定下载路径，每个路径宏的形式均为 @{name}，有些有参数的宏则是 @{name=...}，在下载图片时，这些宏会被替换为对应的文本，例如，@{illust_id} 宏会在下载时被自动替换为作品ID，如果一个宏带有参数，则说明是一个条件宏，该宏会在条件满足时被替换为其参数内容，例如如果正在下载一副漫画作品，则 @{if_manga=\\漫画\\} 会被替换为 \"\\漫画\\\"。要查看每个宏的作用，请将鼠标指针移动到对应宏的按钮上。",
+        "translation": "Pixeval предлагает макросы для более точной настройки путей загрузки. Каждый макрос представлен в форме @{name}, некоторые макросы имеют параметры и представлены как @{name=...}. Во время загрузки изображений эти макросы заменяются соответствующим текстом. Например, макрос @{illust_id} автоматически заменяется на ID произведения. Если макрос содержит параметры, он считается условным и заменяется на свои параметры при соблюдении условий. Например, при загрузке манги макрос @{if_manga=\\манга\\} будет заменен на \"манга\". Для просмотра функций каждого макроса наведите курсор на кнопку с макросом.",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "IllustExtMacroTooltip",
+        "source_string": "插画的图片格式后缀，类似 .jpg, .png 等，注意该宏已经包含了后缀名前面的点号 '.'",
+        "translation": "Расширение файла иллюстрации, например .jpg или .png, обратите внимание, что макрос уже включает точку перед расширением.",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "IllustIdMacroTooltip",
+        "source_string": "插画ID",
+        "translation": "ID иллюстрации",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "IllustTitleMacroTooltip",
+        "source_string": "插画标题",
+        "translation": "Название иллюстрации",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "ArtistIdMacroTooltip",
+        "source_string": "作者ID",
+        "translation": "ID автора",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "ArtistNameMacroTooltip",
+        "source_string": "作者名",
+        "translation": "Имя автора",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "IfSpotMacroTooltip",
+        "source_string": "如果当前正在下载特辑内的作品，该宏会被替换为其参数",
+        "translation": "Если загружается произведение из специального раздела, этот макрос заменяется на его параметры",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "IfMangaMacroTooltip",
+        "source_string": "如果当前正在下载漫画内的作品，该宏会被替换为其参数",
+        "translation": "Если загружается манга, этот макрос заменяется на его параметры",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "IfGifMacroTooltip",
+        "source_string": "如果当前正在下载动图，该宏会被替换为其参数",
+        "translation": "Если загружается анимированное изображение, этот макрос заменяется на его параметры",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "MangaIndexMacroTooltip",
+        "source_string": "如果当前正在下载漫画，该宏会被替换为当前图片在多图中的索引（第几张），如果没有在下载漫画，则该宏会被替换为 0，建议与 @{if_manga=} 宏配合使用",
+        "translation": "Если загружается манга, этот макрос заменяется на индекс текущего изображения в серии. Если манга не загружается, макрос заменяется на 0. Рекомендуется использовать вместе с макросом @{if_manga=}.",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "SpotIdMacroTooltip",
+        "source_string": "特辑ID",
+        "translation": "ID специального раздела",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "SpotTitleTooltip",
+        "source_string": "特辑标题",
+        "translation": "Название специального раздела",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    }
+]
