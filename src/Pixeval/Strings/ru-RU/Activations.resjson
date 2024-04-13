@@ -1,0 +1,18 @@
+[
+    {
+        "identifier": "ActivationFailedContentFormatted",
+        "source_string": "错误详情: {0}",
+        "translation": "Детали ошибки: {0}",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "ActivationFailedTitle",
+        "source_string": "启动失败",
+        "translation": "Ошибка запуска",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    }
+]
