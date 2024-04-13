@@ -1,0 +1,6 @@
+{
+    "CommentIsTooShortOrTooLongToastContentFormatted": "\u8bf7\u53d1\u5e03\u957f\u5ea6\u57280\u5230140\u4e4b\u95f4\u7684\u8bc4\u8bba\uff0c\u5f53\u524d\u8bc4\u8bba\u5b57\u6570\uff1a{0}",
+    "CommentIsTooShortOrTooLongToastTitle": "\u8bc4\u8bba\u957f\u5ea6\u4e0d\u7b26\u5408\u89c4\u8303",
+    "ReplyContentRichEditBox\/PlaceholderText": "\u8f93\u5165\u8bc4\u8bba",
+    "SendButton\/ToolTipService\/ToolTip": "\u53d1\u9001"
+}
