@@ -1,0 +1,106 @@
+[
+    {
+        "identifier": "DependenciesContentTextBlock/Text",
+        "source_string": "Pixeval依赖了许多开源项目，我在此感谢这些开源项目作者的付出以及无私奉献的精神",
+        "translation": "Pixeval依赖了许多开源项目，我在此感谢这些开源项目作者的付出以及无私奉献的精神",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "DependenciesSubtitleTextBlock/Text",
+        "source_string": "项目依赖",
+        "translation": "项目依赖",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "OpenSourceLicenseContentPartI/Text",
+        "source_string": "Pixeval是一个基于GPL-v3协议的开源软件，该协议的原文本如下，如果您使用了Pixeval中的代码，或者正在基于Pixeval的代码开发，请确保遵循该许可证分发您的软件，您可以在",
+        "translation": "Pixeval是一个基于GPL-v3协议的开源软件，该协议的原文本如下，如果您使用了Pixeval中的代码，或者正在基于Pixeval的代码开发，请确保遵循该许可证分发您的软件，您可以在",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "OpenSourceLicenseContentPartII/Text",
+        "source_string": "查看到有关GNU General Public License v3的更多详细信息",
+        "translation": "查看到有关GNU General Public License v3的更多详细信息",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "OpenSourceLicenseHyperlinkContent/Text",
+        "source_string": "这里",
+        "translation": "这里",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "OpenSourceLicenseSubtitleTextBlock/Text",
+        "source_string": "开源许可",
+        "translation": "开源许可",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "SpecialThanksContentTextBlock/Text",
+        "source_string": "我的朋友们在该项目上给予我了极大的支持，才得以使我一直维持当初的热忱",
+        "translation": "我的朋友们在该项目上给予我了极大的支持，才得以使我一直维持当初的热忱",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "SpecialThanksSubtitleTextBlock/Text",
+        "source_string": "鸣谢（排名不分先后）",
+        "translation": "鸣谢（排名不分先后）",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "SupportMeContentPartI/Text",
+        "source_string": "作者除了日常的学业任务外，会抽出大量的时间放在维护Pixeval上，如果你觉得Pixeval做的还不错，欢迎前往",
+        "translation": "作者除了日常的学业任务外，会抽出大量的时间放在维护Pixeval上，如果你觉得Pixeval做的还不错，欢迎前往",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "SupportMeContentPartII/Text",
+        "source_string": "赞助我，你的支持将会成为我维护的动力",
+        "translation": "赞助我，你的支持将会成为我维护的动力",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "SupportMeHyperlinkContent/Text",
+        "source_string": "这里",
+        "translation": "这里",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "SupportMeSubtitleTextBlock/Text",
+        "source_string": "支持作者",
+        "translation": "支持作者",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "TitleTextBlock/Text",
+        "source_string": "关于Pixeval",
+        "translation": "关于Pixeval",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    }
+]
