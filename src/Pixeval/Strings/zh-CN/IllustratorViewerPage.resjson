@@ -1,0 +1,34 @@
+[
+    {
+        "identifier": "Follow",
+        "source_string": "关注",
+        "translation": "关注",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "OpenInWebBrowser",
+        "source_string": "打开网页",
+        "translation": "打开网页",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "PrivateFollow",
+        "source_string": "私密关注",
+        "translation": "私密关注",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "Unfollow",
+        "source_string": "取消关注",
+        "translation": "取消关注",
+        "context": null,
+        "labels": null,
+        "max_length": null
+    }
+]
