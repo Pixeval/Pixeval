@@ -2,7 +2,7 @@
     {
         "identifier": "CancelAllButton/Content",
         "source_string": "取消所有任务",
-        "translation": "取消所有任务",
+        "translation": "Cancel all tasks",
         "context": null,
         "labels": null,
         "max_length": null
@@ -10,7 +10,7 @@
     {
         "identifier": "CancelSelectionButtonDefaultLabel",
         "source_string": "取消选择",
-        "translation": "取消选择",
+        "translation": "Cancel selection",
         "context": null,
         "labels": null,
         "max_length": null
@@ -18,7 +18,7 @@
     {
         "identifier": "CancelSelectionButtonFormatted",
         "source_string": "取消选择 ({0})",
-        "translation": "取消选择 ({0})",
+        "translation": "Cancel selection ({0})",
         "context": null,
         "labels": null,
         "max_length": null
@@ -26,7 +26,7 @@
     {
         "identifier": "ClearDownloadListButton/Content",
         "source_string": "清空下载列表",
-        "translation": "清空下载列表",
+        "translation": "Clear download list",
         "context": null,
         "labels": null,
         "max_length": null
@@ -34,7 +34,7 @@
     {
         "identifier": "DeleteButton/Label",
         "source_string": "删除",
-        "translation": "删除",
+        "translation": "Delete",
         "context": null,
         "labels": null,
         "max_length": null
@@ -42,7 +42,7 @@
     {
         "identifier": "DeleteDownloadHistoryRecordsFormatted",
         "source_string": "删除{0}条历史记录",
-        "translation": "删除{0}条历史记录",
+        "translation": "Delete {0} history records",
         "context": null,
         "labels": null,
         "max_length": null
@@ -50,7 +50,7 @@
     {
         "identifier": "DownloadListOptionAllQueued",
         "source_string": "所有下载任务",
-        "translation": "所有下载任务",
+        "translation": "All tasks queued",
         "context": null,
         "labels": null,
         "max_length": null
@@ -58,7 +58,7 @@
     {
         "identifier": "DownloadListOptionCancelled",
         "source_string": "已取消",
-        "translation": "已取消",
+        "translation": "Cancelled",
         "context": null,
         "labels": null,
         "max_length": null
@@ -66,7 +66,7 @@
     {
         "identifier": "DownloadListOptionCompleted",
         "source_string": "已下载",
-        "translation": "已下载",
+        "translation": "Downloaded",
         "context": null,
         "labels": null,
         "max_length": null
@@ -74,7 +74,7 @@
     {
         "identifier": "DownloadListOptionCustomSearch",
         "source_string": "自定义搜索",
-        "translation": "自定义搜索",
+        "translation": "Custom download",
         "context": null,
         "labels": null,
         "max_length": null
@@ -82,7 +82,7 @@
     {
         "identifier": "DownloadListOptionError",
         "source_string": "下载失败",
-        "translation": "下载失败",
+        "translation": "Download failed",
         "context": null,
         "labels": null,
         "max_length": null
@@ -90,7 +90,7 @@
     {
         "identifier": "DownloadListOptionRunning",
         "source_string": "正在下载",
-        "translation": "正在下载",
+        "translation": "Downloading",
         "context": null,
         "labels": null,
         "max_length": null
@@ -98,7 +98,7 @@
     {
         "identifier": "FilterAutoSuggestBox/PlaceholderText",
         "source_string": "作品名/作品ID",
-        "translation": "作品名/作品ID",
+        "translation": "Illustration Title/ID",
         "context": null,
         "labels": null,
         "max_length": null
@@ -106,7 +106,7 @@
     {
         "identifier": "FilterAutoSuggestBoxNoResultFound",
         "source_string": "未找到任何结果",
-        "translation": "未找到任何结果",
+        "translation": "Can't find any result",
         "context": null,
         "labels": null,
         "max_length": null
@@ -114,7 +114,7 @@
     {
         "identifier": "ModeFilterComboBox/PlaceholderText",
         "source_string": "过滤选项",
-        "translation": "过滤选项",
+        "translation": "Filter option",
         "context": null,
         "labels": null,
         "max_length": null
@@ -122,7 +122,7 @@
     {
         "identifier": "PageTitleTextBlock/Text",
         "source_string": "下载列表",
-        "translation": "下载列表",
+        "translation": "Download List",
         "context": null,
         "labels": null,
         "max_length": null
@@ -130,7 +130,7 @@
     {
         "identifier": "PauseAllButton/Content",
         "source_string": "暂停所有任务",
-        "translation": "暂停所有任务",
+        "translation": "Pause all tasks",
         "context": null,
         "labels": null,
         "max_length": null
@@ -138,7 +138,7 @@
     {
         "identifier": "PauseButton/Label",
         "source_string": "暂停",
-        "translation": "暂停",
+        "translation": "Pause",
         "context": null,
         "labels": null,
         "max_length": null
@@ -146,7 +146,7 @@
     {
         "identifier": "ResumeAllButton/Content",
         "source_string": "恢复所有任务",
-        "translation": "恢复所有任务",
+        "translation": "Resume all tasks",
         "context": null,
         "labels": null,
         "max_length": null
@@ -154,7 +154,7 @@
     {
         "identifier": "ResumeButton/Label",
         "source_string": "恢复",
-        "translation": "恢复",
+        "translation": "Resume",
         "context": null,
         "labels": null,
         "max_length": null
@@ -162,7 +162,7 @@
     {
         "identifier": "SelectAllButton/Label",
         "source_string": "全选",
-        "translation": "全选",
+        "translation": "Select all",
         "context": null,
         "labels": null,
         "max_length": null
@@ -170,7 +170,7 @@
     {
         "identifier": "StopButton/Label",
         "source_string": "取消下载",
-        "translation": "取消下载",
+        "translation": "Cancel download",
         "context": null,
         "labels": null,
         "max_length": null
