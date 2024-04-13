@@ -1,0 +1,11 @@
+{
+  "NonParameterizedMacroBearingParameterFormatted": "\u5b8f{0}\u4e0d\u80fd\u5305\u542b\u4efb\u4f55\u53c2\u6570",
+  "ParameterizedMacroMissingParameterFormatted": "\u5b8f{0}\u53c2\u6570\u7f3a\u5931",
+  "ResultIsEmpty": "\u89e3\u6790\u5931\u8d25\uff1a\u89e3\u6790\u7ed3\u679c\u4e3a\u7a7a",
+  "UnexpectedTokenFormatted": "\u8f93\u5165\u975e\u6cd5\uff1a\u5728\u7b2c{0}\u4e2a\u5b57\u7b26\u5904\u9047\u5230\u4e86\u975e\u6cd5\u7b26\u53f7",
+  "UnknownArtist": "\u672a\u77e5\u4f5c\u8005",
+  "UnknownIllustrationTitle": "\u672a\u77e5\u4f5c\u54c1",
+  "UnknownMacroNameFormatted": "\u672a\u77e5\u7684\u5b8f\u540d\u79f0\uff1a{0}",
+  "UnknownSpotlightId": "\u672a\u77e5\u7279\u8f91ID",
+  "UnknownSpotlightTitle": "\u672a\u77e5\u7279\u8f91"
+}
