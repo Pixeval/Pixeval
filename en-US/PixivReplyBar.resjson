@@ -2,7 +2,7 @@
     {
         "identifier": "CommentIsTooShortOrTooLongToastContentFormatted",
         "source_string": "请发布长度在0到140之间的评论，当前评论字数：{0}",
-        "translation": "请发布长度在0到140之间的评论，当前评论字数：{0}",
+        "translation": "Please send comment less than 140 characters，current: {0}",
         "context": null,
         "labels": null,
         "max_length": null
@@ -10,7 +10,7 @@
     {
         "identifier": "CommentIsTooShortOrTooLongToastTitle",
         "source_string": "评论长度不符合规范",
-        "translation": "评论长度不符合规范",
+        "translation": "Comment format is illegal",
         "context": null,
         "labels": null,
         "max_length": null
@@ -18,7 +18,7 @@
     {
         "identifier": "ReplyContentRichEditBox/PlaceholderText",
         "source_string": "输入评论",
-        "translation": "输入评论",
+        "translation": "Type your comment...",
         "context": null,
         "labels": null,
         "max_length": null
@@ -26,7 +26,7 @@
     {
         "identifier": "SendButton/ToolTipService/ToolTip",
         "source_string": "发送",
-        "translation": "发送",
+        "translation": "Submit",
         "context": null,
         "labels": null,
         "max_length": null
