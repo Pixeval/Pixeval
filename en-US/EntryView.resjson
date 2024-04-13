@@ -2,7 +2,7 @@
     {
         "identifier": "AddToBookmarkContextItem/Text",
         "source_string": "添加到收藏夹",
-        "translation": "添加到收藏夹",
+        "translation": "Bookmark",
         "context": null,
         "labels": null,
         "max_length": null
@@ -10,7 +10,7 @@
     {
         "identifier": "CopyAppLinkContextItem/Text",
         "source_string": "复制应用链接",
-        "translation": "复制应用链接",
+        "translation": "Copy application link",
         "context": null,
         "labels": null,
         "max_length": null
@@ -18,7 +18,7 @@
     {
         "identifier": "CopyWebLinkContextItem/Text",
         "source_string": "复制网页链接",
-        "translation": "复制网页链接",
+        "translation": "Copy website link",
         "context": null,
         "labels": null,
         "max_length": null
@@ -26,7 +26,7 @@
     {
         "identifier": "OpenInBrowserContextItem/Text",
         "source_string": "在浏览器中打开",
-        "translation": "在浏览器中打开",
+        "translation": "Open in browser",
         "context": null,
         "labels": null,
         "max_length": null
@@ -34,7 +34,7 @@
     {
         "identifier": "ResultIsEmptyTextBlock/Text",
         "source_string": "这里空空如也",
-        "translation": "这里空空如也",
+        "translation": "Nothing here!",
         "context": null,
         "labels": null,
         "max_length": null
@@ -42,7 +42,7 @@
     {
         "identifier": "IsLoadingMoreTextBlock/Text",
         "source_string": "正在加载",
-        "translation": "正在加载",
+        "translation": "Loading",
         "context": null,
         "labels": null,
         "max_length": null
@@ -50,7 +50,7 @@
     {
         "identifier": "SaveContextItem/Text",
         "source_string": "保存",
-        "translation": "保存",
+        "translation": "Save",
         "context": null,
         "labels": null,
         "max_length": null
@@ -58,7 +58,7 @@
     {
         "identifier": "ShowPixEzQrCodeContextItem/Text",
         "source_string": "PixEz二维码",
-        "translation": "PixEz二维码",
+        "translation": "Generate PixEz QR code",
         "context": null,
         "labels": null,
         "max_length": null
@@ -66,7 +66,7 @@
     {
         "identifier": "ShowQrCodeContextItem/Text",
         "source_string": "作品链接二维码",
-        "translation": "作品链接二维码",
+        "translation": "Generate QR code",
         "context": null,
         "labels": null,
         "max_length": null
@@ -74,7 +74,7 @@
     {
         "identifier": "IllustrationQrCodeTeachingTip/TeachingTipTitle",
         "source_string": "作品链接二维码",
-        "translation": "作品链接二维码",
+        "translation": "Generate QR code for the illustration",
         "context": null,
         "labels": null,
         "max_length": null
@@ -82,7 +82,7 @@
     {
         "identifier": "IllustratorQrCodeTeachingTip/TeachingTipTitle",
         "source_string": "画师链接二维码",
-        "translation": "画师链接二维码",
+        "translation": "Generate QR code for the author",
         "context": null,
         "labels": null,
         "max_length": null
