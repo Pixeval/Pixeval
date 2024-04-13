@@ -2,7 +2,7 @@
     {
         "identifier": "ExcludeTagsEntry/Header",
         "source_string": "要排除的Tag",
-        "translation": "要排除的Tag",
+        "translation": "Tags to be excluded",
         "context": null,
         "labels": null,
         "max_length": null
@@ -10,7 +10,7 @@
     {
         "identifier": "ExcludeTagTokenInput/PlaceholderText",
         "source_string": "输入结果不能包含的Tag",
-        "translation": "输入结果不能包含的Tag",
+        "translation": "Only include works that do not contain given tags",
         "context": null,
         "labels": null,
         "max_length": null
@@ -18,7 +18,7 @@
     {
         "identifier": "IllustrationIdEntry/Header",
         "source_string": "过滤结果的作品ID",
-        "translation": "过滤结果的作品ID",
+        "translation": "Work ID",
         "context": null,
         "labels": null,
         "max_length": null
@@ -26,7 +26,7 @@
     {
         "identifier": "IllustrationIdInput/PlaceholderText",
         "source_string": "输入想要过滤出的作品ID",
-        "translation": "输入想要过滤出的作品ID",
+        "translation": "Only include works with given work ID",
         "context": null,
         "labels": null,
         "max_length": null
@@ -34,7 +34,7 @@
     {
         "identifier": "IllustrationNameEntry/Header",
         "source_string": "过滤结果的作品名",
-        "translation": "过滤结果的作品名",
+        "translation": "Work title",
         "context": null,
         "labels": null,
         "max_length": null
@@ -42,7 +42,7 @@
     {
         "identifier": "IllustrationNameInput/PlaceholderText",
         "source_string": "输入想要过滤出的作品名",
-        "translation": "输入想要过滤出的作品名",
+        "translation": "Only include works with given work title",
         "context": null,
         "labels": null,
         "max_length": null
@@ -50,7 +50,7 @@
     {
         "identifier": "IllustratorIdEntry/Header",
         "source_string": "过滤结果的作者ID",
-        "translation": "过滤结果的作者ID",
+        "translation": "Illustrator ID",
         "context": null,
         "labels": null,
         "max_length": null
@@ -58,7 +58,7 @@
     {
         "identifier": "IllustratorIdInput/PlaceholderText",
         "source_string": "输入想要过滤出的作者ID",
-        "translation": "输入想要过滤出的作者ID",
+        "translation": "Only include works of given illustrator ID",
         "context": null,
         "labels": null,
         "max_length": null
@@ -66,7 +66,7 @@
     {
         "identifier": "IllustratorNameEntry/Header",
         "source_string": "过滤结果的作者名",
-        "translation": "过滤结果的作者名",
+        "translation": "Illustrator name",
         "context": null,
         "labels": null,
         "max_length": null
@@ -74,7 +74,7 @@
     {
         "identifier": "IllustratorNameInput/PlaceholderText",
         "source_string": "输入想要过滤出的作者名",
-        "translation": "输入想要过滤出的作者名",
+        "translation": "Only include works of given illustrator name",
         "context": null,
         "labels": null,
         "max_length": null
@@ -82,7 +82,7 @@
     {
         "identifier": "IncludeTagsEntry/Header",
         "source_string": "必须包含的Tag",
-        "translation": "必须包含的Tag",
+        "translation": "Tags must be included",
         "context": null,
         "labels": null,
         "max_length": null
@@ -90,7 +90,7 @@
     {
         "identifier": "IncludeTagTokenInput/PlaceholderText",
         "source_string": "输入结果必须包含的Tag",
-        "translation": "输入结果必须包含的Tag",
+        "translation": "Only include works with these tags",
         "context": null,
         "labels": null,
         "max_length": null
@@ -98,7 +98,7 @@
     {
         "identifier": "LeastBookmarkCountEntry/Header",
         "source_string": "最低收藏数",
-        "translation": "最低收藏数",
+        "translation": "Minimum bookmark required",
         "context": null,
         "labels": null,
         "max_length": null
@@ -106,7 +106,7 @@
     {
         "identifier": "LeastBookmarkCountNumberBox/PlaceholderText",
         "source_string": "输入最低收藏数[0,+∞)",
-        "translation": "输入最低收藏数[0,+∞)",
+        "translation": "Minimum bookmark count [0,+∞)",
         "context": null,
         "labels": null,
         "max_length": null
@@ -114,7 +114,7 @@
     {
         "identifier": "MaximumBookmarkCountEntry/Header",
         "source_string": "最高收藏数",
-        "translation": "最高收藏数",
+        "translation": "Maximum bookmark required",
         "context": null,
         "labels": null,
         "max_length": null
@@ -122,7 +122,7 @@
     {
         "identifier": "MaximumBookmarkCountNumberBox/PlaceholderText",
         "source_string": "输入最高收藏数[0,-∞)",
-        "translation": "输入最高收藏数[0,-∞)",
+        "translation": "Maximum bookmark count[0,-∞)",
         "context": null,
         "labels": null,
         "max_length": null
@@ -130,7 +130,7 @@
     {
         "identifier": "PublishDateEndEntry/Header",
         "source_string": "过滤结果的结束日期",
-        "translation": "过滤结果的结束日期",
+        "translation": "Date range end",
         "context": null,
         "labels": null,
         "max_length": null
@@ -138,7 +138,7 @@
     {
         "identifier": "PublishDateEndPicker/PlaceholderText",
         "source_string": "只会包含该日期前发布的作品",
-        "translation": "只会包含该日期前发布的作品",
+        "translation": "Only include works published before this date",
         "context": null,
         "labels": null,
         "max_length": null
@@ -146,7 +146,7 @@
     {
         "identifier": "PublishDateStartEntry/Header",
         "source_string": "过滤结果的起始日期",
-        "translation": "过滤结果的起始日期",
+        "translation": "Date range start",
         "context": null,
         "labels": null,
         "max_length": null
@@ -154,7 +154,7 @@
     {
         "identifier": "PublishDateStartPicker/PlaceholderText",
         "source_string": "只会包含该日期后发布的作品",
-        "translation": "只会包含该日期后发布的作品",
+        "translation": "Only include works published after this date",
         "context": null,
         "labels": null,
         "max_length": null
@@ -162,7 +162,7 @@
     {
         "identifier": "UserGroupNameEntry/Header",
         "source_string": "自定义收藏夹的名称",
-        "translation": "自定义收藏夹的名称",
+        "translation": "Custom collection name",
         "context": null,
         "labels": null,
         "max_length": null
@@ -170,7 +170,7 @@
     {
         "identifier": "UserGroupNameInput/PlaceholderText",
         "source_string": "过滤结果只会包含在指定收藏夹中的作品",
-        "translation": "过滤结果只会包含在指定收藏夹中的作品",
+        "translation": "Only include works presented in the given collection",
         "context": null,
         "labels": null,
         "max_length": null
