@@ -1,2 +1,5 @@
 bundles:
   - 2
+files:
+  - source: src/*/Strings/zh-cn/*.resjson
+    translation: '%original_path%/%locale%/%original_file_name%'
