@@ -1,5 +1,5 @@
 bundles:
   - 2
 files:
-  - source: src/*/Strings/zh-cn/*.resjson
-    translation: '%original_path%/%locale%/%original_file_name%'
+  - source: src/Pixeval/Strings/zh-cn/*.resjson
+    translation: src/Pixeval/Strings/%locale%/%original_file_name%
