@@ -2,7 +2,7 @@
     {
         "identifier": "TagComboBox/PlaceholderText",
         "source_string": "收藏标签",
-        "translation": "收藏标签",
+        "translation": "Теги избранного",
         "context": null,
         "labels": null,
         "max_length": null
