@@ -1,13 +1,12 @@
-using System.Linq;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Misc;
 
 namespace Pixeval.Pages;
 
-public sealed partial class MyPixivPage : IScrollViewProvider
+public sealed partial class MyPixivUsersPage : IScrollViewProvider
 {
-    public MyPixivPage() => InitializeComponent();
+    public MyPixivUsersPage() => InitializeComponent();
 
     public override void OnPageActivated(NavigationEventArgs e)
     {

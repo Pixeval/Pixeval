@@ -190,9 +190,9 @@
                             Icon="{controls2:GlyphIcon Glyph=PeopleE716}"
                             Tag="{x:Bind _viewModel.MyPixivUserTag}" />
                         <controls1:SegmentedItem
-                            x:Uid="/EntryViewerPage/RecommendUserNavigationViewItem"
+                            x:Uid="/EntryViewerPage/RelatedUserNavigationViewItem"
                             Icon="{controls2:GlyphIcon Glyph=FamilyEBDA}"
-                            Tag="{x:Bind _viewModel.RecommendUserTag}" />
+                            Tag="{x:Bind _viewModel.RelatedUserTag}" />
                     </controls1:Segmented>
                 </Grid>
             </controls:StickyHeaderScrollView.Header>

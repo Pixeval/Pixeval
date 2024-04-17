@@ -30,7 +30,7 @@
     "FollowingsNavigationViewItem/Content": "Followings",
     "WorkNavigationViewItem/Content": "Works",
     "MyPixivUserNavigationViewItem/Content": "My Pixiv users",
-    "RecommendUserNavigationViewItem/Content": "Related people",
+    "RelatedUserNavigationViewItem/Content": "Related users",
     "FollowingUserItem/Title": "Followings",
     "MyPixivUserItem/Title": "My Pixiv users",
     "IllustrationCountItem/Title": "Illustrations",
