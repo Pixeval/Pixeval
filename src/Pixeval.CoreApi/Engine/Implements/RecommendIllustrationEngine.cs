@@ -40,8 +40,7 @@ internal class RecommendIllustrationEngine(
     private readonly uint? _maxBookmarkIdForRecommend = maxBookmarkIdForRecommend;
     private readonly uint? _minBookmarkIdForRecentIllust = minBookmarkIdForRecentIllust;
 
-    private readonly WorkType _recommendContentType =
-        recommendContentType ?? WorkType.Illust;
+    private readonly WorkType? _recommendContentType = recommendContentType;
 
     public override IAsyncEnumerator<Illustration> GetAsyncEnumerator(
         CancellationToken cancellationToken = new CancellationToken()) =>
@@ -53,9 +52,11 @@ internal class RecommendIllustrationEngine(
                     engine._maxBookmarkIdForRecommend?.Let(static s => $"&max_bookmark_id_for_recommend={s}");
                 var maxBookmarkIdForRecentIllust =
                     engine._minBookmarkIdForRecentIllust?.Let(static s => $"&min_bookmark_id_for_recent_illust={s}");
+                var contentType =
+                    engine._recommendContentType?.Let(static s => $"&content_type={s.GetDescription()}");
                 return "/v1/illust/recommended"
                        + $"?filter={engine._filter.GetDescription()}"
-                       + $"&content_type={engine._recommendContentType.GetDescription()}"
+                       + contentType
                        + maxBookmarkIdForRecommend
                        + maxBookmarkIdForRecentIllust;
             })!;

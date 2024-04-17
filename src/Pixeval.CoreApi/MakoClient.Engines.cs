@@ -187,13 +187,20 @@ public partial class MakoClient
     /// The <see cref="RecommendIllustrationEngine" /> containing recommended illustrations.
     /// </returns>
     public IFetchEngine<Illustration> RecommendationIllustrations(
-        WorkType recommendContentType = WorkType.Illust,
         TargetFilter targetFilter = TargetFilter.ForAndroid,
+        WorkType? recommendContentType = null,
         uint? maxBookmarkIdForRecommend = null,
         uint? minBookmarkIdForRecentIllust = null)
     {
         EnsureNotCancelled();
         return new RecommendIllustrationEngine(this, recommendContentType, targetFilter, maxBookmarkIdForRecommend, minBookmarkIdForRecentIllust, new EngineHandle(CancelInstance));
+    }
+
+    public IFetchEngine<Illustration> RecommendationMangas(
+        TargetFilter targetFilter = TargetFilter.ForAndroid)
+    {
+        EnsureNotCancelled();
+        return new RecommendMangaEngine(this, targetFilter, new EngineHandle(CancelInstance));
     }
 
     public IFetchEngine<Novel> RecommendationNovels(
@@ -206,14 +213,15 @@ public partial class MakoClient
 
     public IFetchEngine<IWorkEntry> RecommendationWorks(
         WorkType recommendContentType = WorkType.Illust,
-        TargetFilter targetFilter = TargetFilter.ForAndroid,
-        uint? maxBookmarkIdForRecommend = null,
-        uint? minBookmarkIdForRecentIllust = null)
+        TargetFilter targetFilter = TargetFilter.ForAndroid)
     {
-        return recommendContentType is WorkType.Novel
-            ? RecommendationNovels(targetFilter, maxBookmarkIdForRecommend)
-            : RecommendationIllustrations(recommendContentType, targetFilter, maxBookmarkIdForRecommend,
-                minBookmarkIdForRecentIllust);
+        return recommendContentType switch
+        {
+            WorkType.Novel => RecommendationNovels(targetFilter),
+            WorkType.Manga => RecommendationMangas(targetFilter),
+            _ => RecommendationIllustrations(targetFilter)
+        };
+
     }
 
     /// <summary>

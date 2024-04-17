@@ -18,9 +18,11 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using System.Linq;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.CoreApi.Global.Enum;
+using Pixeval.CoreApi.Model;
 
 namespace Pixeval.Pages.Capability;
 
@@ -32,8 +34,16 @@ public sealed partial class RecommendationPage
 
     private void WorkTypeComboBox_OnSelectionChanged(object? sender, SelectionChangedEventArgs e) => ChangeSource();
 
-    private void ChangeSource()
+    private async void ChangeSource()
     {
+        var recommendationWorks = App.AppViewModel.MakoClient.RecommendationWorks(WorkType.Manga, App.AppViewModel.AppSettings.TargetFilter);
+
+        await foreach (var recommendationWork in recommendationWorks)
+        {
+            if (recommendationWork is Illustration{ })
+                WorkContainer.WorkView.Add(recommendationWork)
+        }
+
         WorkContainer.WorkView.ResetEngine(App.AppViewModel.MakoClient.RecommendationWorks(WorkTypeComboBox.GetSelectedItem<WorkType>(), App.AppViewModel.AppSettings.TargetFilter));
     }
 }
