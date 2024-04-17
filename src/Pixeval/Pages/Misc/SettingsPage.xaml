@@ -188,7 +188,7 @@
                                 <AppBarButton
                                     x:Uid="/SettingsPage/GitHubBugReportEntry"
                                     Tag="https://github.com/Pixeval/Pixeval/issues/new/choose"
-                                    Tapped="OpenHyperlinkButton_OnTapped">
+                                    Tapped="OpenLinkViaTag_OnTapped">
                                     <AppBarButton.Icon>
                                         <PathIcon Data="{x:Bind pixeval:SvgResources.GitHub}" />
                                     </AppBarButton.Icon>
@@ -197,11 +197,11 @@
                                     x:Uid="/SettingsPage/EMailBugReportEntry"
                                     Icon="{controls2:GlyphIcon Glyph=MailE715}"
                                     Tag="mailto:decem0730@hotmail.com"
-                                    Tapped="OpenHyperlinkButton_OnTapped" />
+                                    Tapped="OpenLinkViaTag_OnTapped" />
                                 <AppBarButton
                                     x:Uid="/SettingsPage/QQBugReportEntry"
                                     Tag="https://jq.qq.com/?_wv=1027&amp;k=trDeCrog"
-                                    Tapped="OpenHyperlinkButton_OnTapped">
+                                    Tapped="OpenLinkViaTag_OnTapped">
                                     <AppBarButton.Icon>
                                         <PathIcon Data="{x:Bind pixeval:SvgResources.QQ}" />
                                     </AppBarButton.Icon>
@@ -287,7 +287,7 @@
                         <HyperlinkButton
                             x:Uid="/SettingsPage/ThemeEntryDescriptionHyperlinkButton"
                             Tag="ms-settings:themes"
-                            Tapped="OpenHyperlinkButton_OnTapped" />
+                            Tapped="OpenLinkViaTag_OnTapped" />
                     </controls:SettingsCard.Description>
                     <controls1:EnumComboBox
                         EnumSource="{winUi:EnumValues Type=ElementTheme}"
@@ -315,7 +315,7 @@
                         <HyperlinkButton
                             x:Uid="/SettingsPage/OpenFontSettingsHyperlinkButton"
                             Tag="ms-settings:fonts"
-                            Tapped="OpenHyperlinkButton_OnTapped" />
+                            Tapped="OpenLinkViaTag_OnTapped" />
                     </controls:SettingsCard.Description>
                     <ComboBox
                         x:Uid="/SettingsPage/AppFontFamilyComboBox"
@@ -335,7 +335,7 @@
                         <HyperlinkButton
                             x:Uid="/SettingsPage/OpenLanguageSettingsHyperlinkButton"
                             Tag="ms-settings:regionlanguage"
-                            Tapped="OpenHyperlinkButton_OnTapped" />
+                            Tapped="OpenLinkViaTag_OnTapped" />
                     </controls:SettingsCard.Description>
                     <ComboBox
                         x:Uid="/SettingsPage/AppLanguageEntryComboBox"
@@ -417,14 +417,6 @@
                 </controls:SettingsCard>
 
                 <controls:SettingsCard
-                    x:Uid="/SettingsPage/FiltrateRestrictedContentEntry"
-                    HeaderIcon="{controls2:GlyphIcon Glyph=BlockContactE8F8}"
-                    IsEnabled="False"
-                    Tag="{x:Bind misc2:SettingEntry.FiltrateRestrictedContent}">
-                    <ToggleSwitch IsOn="{x:Bind ViewModel.FiltrateRestrictedContent, Mode=TwoWay}" />
-                </controls:SettingsCard>
-
-                <controls:SettingsCard
                     x:Uid="/SettingsPage/TargetAPIPlatformEntry"
                     HeaderIcon="{controls2:GlyphIcon Glyph=CommandPromptE756}"
                     Tag="{x:Bind misc2:SettingEntry.TargetFilter}">
@@ -433,6 +425,14 @@
                         SelectedEnum="{x:Bind ViewModel.TargetFilter, Mode=TwoWay}"
                         Style="{StaticResource SettingsEnumComboBoxStyle}" />
                 </controls:SettingsCard>
+
+                <controls:SettingsCard
+                    x:Uid="/SettingsPage/ViewingRestrictionEntry"
+                    ActionIcon="{controls2:GlyphIcon Glyph=OpenInNewWindowE8A7}"
+                    HeaderIcon="{controls2:GlyphIcon Glyph=BlockContactE8F8}"
+                    IsClickEnabled="True"
+                    Tag="https://www.pixiv.net/setting_user.php"
+                    Tapped="OpenLinkViaTag_OnTapped" />
 
                 <TextBlock
                     x:Uid="/SettingsPage/SearchSettingsGroup"
@@ -454,10 +454,7 @@
                     HeaderIcon="{controls2:GlyphIcon Glyph=SearchAndAppsE773}"
                     Tag="{x:Bind misc2:SettingEntry.ReverseSearchApiKey}">
                     <controls:SettingsCard.Description>
-                        <TextBlock>
-                            <Run x:Uid="/SettingsPage/ReverseSearchApiKeyEntryDescriptionTextBlock" />
-                            <Hyperlink NavigateUri="https://saucenao.com/user.php?page=search-api" />
-                        </TextBlock>
+                        <HyperlinkButton x:Uid="/SettingsPage/ReverseSearchApiKeyEntryDescriptionHyperlinkButton" NavigateUri="https://saucenao.com/user.php?page=search-api" />
                     </controls:SettingsCard.Description>
                     <TextBox
                         x:Uid="/SettingsPage/ReverseSearchApiKeyTextBox"

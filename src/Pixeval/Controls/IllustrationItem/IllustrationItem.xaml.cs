@@ -50,11 +50,10 @@ public sealed partial class IllustrationItem
 
     public event Func<TeachingTip> RequestTeachingTip = null!;
 
-    // 这些方法本来用属性就可以实现，但在ViewModel更新的时候更新，使用了{x:Bind GetXXX(ViewModel)}的写法
-    // 这样可以不需要写OnPropertyChange就实现更新
-
-    #region XAML用的Get方法
-
+    /// <summary>
+    /// 这些方法本来用属性就可以实现，但在ViewModel更新的时候更新，使用了{x:Bind GetXXX(ViewModel)}的写法。
+    /// 这样可以不需要写OnPropertyChanged就实现更新
+    /// </summary>
     private double GetDesiredWidth(IllustrationItemViewModel viewModel)
     {
         var illustration = viewModel.Entry;
@@ -66,6 +65,4 @@ public sealed partial class IllustrationItem
             _ => ThrowHelper.ArgumentOutOfRange<ThumbnailDirection, double>(thumbnailDirection)
         };
     }
-
-    #endregion
 }
