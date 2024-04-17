@@ -55,6 +55,8 @@ public partial class MainPageViewModel : ObservableObject
 
     public readonly NavigationViewTag<RecommendationPage> RecommendsTag = new();
 
+    public readonly NavigationViewTag<RecommendUsersPage> RecommendUsersTag = new();
+
     public readonly NavigationViewTag<TagsPage> TagsTag = new();
 
     public readonly NavigationViewTag<DownloadListPage> DownloadListTag = new();

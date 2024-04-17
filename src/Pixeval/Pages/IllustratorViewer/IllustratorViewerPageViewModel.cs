@@ -58,9 +58,9 @@ public partial class IllustratorViewerPageViewModel : UiObservableObject
 
     public NavigationViewTag<FollowingsPage, long> FollowingsTag { get; }
 
-    public NavigationViewTag<MyPixivPage, long> MyPixivUserTag { get; }
+    public NavigationViewTag<MyPixivUsersPage, long> MyPixivUserTag { get; }
 
-    public NavigationViewTag<RecommendUsersPage, long> RecommendUserTag { get; }
+    public NavigationViewTag<RelatedUsersPage, long> RelatedUserTag { get; }
 
     public IllustratorViewerPageViewModel(PixivSingleUserResponse userDetail, FrameworkElement content) : base(content)
     {
@@ -72,7 +72,7 @@ public partial class IllustratorViewerPageViewModel : UiObservableObject
         BookmarksTag = new(Id);
         FollowingsTag = new(Id);
         MyPixivUserTag = new(Id);
-        RecommendUserTag = new(Id);
+        RelatedUserTag = new(Id);
 
         InitializeCommands();
         _ = SetAvatarAndBackgroundAsync();

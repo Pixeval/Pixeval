@@ -103,9 +103,9 @@
                     IsEnabled="False"
                     Tag="{x:Bind _viewModel.SpotlightsTag}" />
                 <NavigationViewItem
-                    x:Uid="/MainPage/FeedsTab"
-                    Icon="{controls1:GlyphIcon Glyph=LocationE81D}"
-                    IsEnabled="False" />
+                    x:Uid="/MainPage/RecommendUsersTab"
+                    Icon="{controls1:GlyphIcon Glyph=GroupE902}"
+                    Tag="{x:Bind _viewModel.RecommendUsersTag}" />
                 <NavigationViewItem
                     x:Uid="/MainPage/RecentPostsTab"
                     Icon="{controls1:GlyphIcon Glyph=CaloriesECAD}"

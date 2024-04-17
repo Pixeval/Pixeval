@@ -10,7 +10,7 @@
     "BookmarksNavigationViewItem/Content": "收藏作品",
     "FollowingsNavigationViewItem/Content": "关注的人",
     "MyPixivUserNavigationViewItem/Content": "好P友",
-    "RecommendUserNavigationViewItem/Content": "推荐用户",
+    "RelatedUserNavigationViewItem/Content": "相关用户",
     "FollowingUserItem/Title": "关注中",
     "MyPixivUserItem/Title": "好P友",
     "IllustrationCountItem/Title": "插画数",
