@@ -110,7 +110,7 @@ public sealed partial class SettingsPage : IDisposable
         ViewModel.CheckForUpdate();
     }
 
-    private async void OpenHyperlinkButton_OnTapped(object sender, TappedRoutedEventArgs e)
+    private async void OpenLinkViaTag_OnTapped(object sender, TappedRoutedEventArgs e)
     {
         _ = await Launcher.LaunchUriAsync(new Uri(sender.To<FrameworkElement>().GetTag<string>()));
     }

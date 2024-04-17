@@ -179,13 +179,6 @@ public partial record AppSettings : IWindowSettings
     public ItemsViewLayoutType ItemsViewLayoutType { get; set; } = ItemsViewLayoutType.LinedFlow;
 
     /// <summary>
-    /// Indicates whether the restricted content are permitted to be included
-    /// in the searching results, including R-18 and R-18G
-    /// </summary>
-    [SettingMetadata(SettingEntryCategory.BrowsingExperience, typeof(SettingsPageResources), nameof(SettingsPageResources.FiltrateRestrictedContentEntryHeader))]
-    public bool FiltrateRestrictedContent { get; set; }
-
-    /// <summary>
     /// Indicates the maximum page count that are allowed to be retrieved during
     /// spotlight retrieval(10 entries per page)
     /// </summary>
