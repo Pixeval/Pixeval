@@ -30,13 +30,13 @@ namespace Pixeval.Util.UI;
 public static class XamlUiCommandHelper
 {
     public static XamlUICommand GetCommand(this string label, IconGlyph icon) =>
-        GetCommand(label, icon.GetFontIconSource());
+        GetCommand(label, icon.GetGlyphIconSource());
 
     public static XamlUICommand GetCommand(this string label, IconGlyph icon, VirtualKey key) =>
-        GetCommand(label, icon.GetFontIconSource(), key);
+        GetCommand(label, icon.GetGlyphIconSource(), key);
 
     public static XamlUICommand GetCommand(this string label, IconGlyph icon, VirtualKeyModifiers modifiers, VirtualKey key) =>
-        GetCommand(label, icon.GetFontIconSource(), modifiers, key);
+        GetCommand(label, icon.GetGlyphIconSource(), modifiers, key);
 
     public static XamlUICommand GetCommand(this string label, IconSource icon) =>
         new()
@@ -61,16 +61,16 @@ public static class XamlUiCommandHelper
     {
         command.Label = command.Description = isBookmarked ? MiscResources.RemoveBookmark : MiscResources.AddBookmark;
         command.IconSource = isBookmarked
-            ? IconGlyph.HeartFillEB52.GetFontIconSource(foregroundBrush: new SolidColorBrush(Colors.Crimson))
-            : IconGlyph.HeartEB51.GetFontIconSource();
+            ? IconGlyph.HeartFillEB52.GetGlyphIconSource(foregroundBrush: new SolidColorBrush(Colors.Crimson))
+            : IconGlyph.HeartEB51.GetGlyphIconSource();
     }
 
     public static void GetFollowCommand(this XamlUICommand command, bool isFollowed)
     {
         command.Label = command.Description = isFollowed ? MiscResources.Unfollow : MiscResources.Follow;
         command.IconSource = isFollowed
-            ? IconGlyph.ContactSolidEA8C.GetFontIconSource(foregroundBrush: new SolidColorBrush(Colors.Crimson))
-            : IconGlyph.ContactE77B.GetFontIconSource();
+            ? IconGlyph.ContactSolidEA8C.GetGlyphIconSource(foregroundBrush: new SolidColorBrush(Colors.Crimson))
+            : IconGlyph.ContactE77B.GetGlyphIconSource();
     }
 
     public static XamlUICommand GetNewFollowCommand(bool isFollowed)
@@ -90,7 +90,7 @@ public static class XamlUiCommandHelper
         command.Label = command.Description = isPlaying ? MiscResources.Pause : MiscResources.Play;
         command.IconSource = (isPlaying
             ? IconGlyph.StopE71A
-            : IconGlyph.Play36EE4A).GetFontIconSource();
+            : IconGlyph.Play36EE4A).GetGlyphIconSource();
     }
 
     public static void GetResolutionCommand(this XamlUICommand command, bool isFit)
@@ -98,7 +98,7 @@ public static class XamlUiCommandHelper
         command.Label = command.Description = isFit ? MiscResources.RestoreOriginalResolution : MiscResources.UniformToFillResolution;
         command.IconSource = (isFit
             ? IconGlyph.AspectRatioE799
-            : IconGlyph.FitPageE9A6).GetFontIconSource();
+            : IconGlyph.FitPageE9A6).GetGlyphIconSource();
     }
 
     public static void GetFullScreenCommand(this XamlUICommand command, bool isFullScreen)
@@ -106,6 +106,6 @@ public static class XamlUiCommandHelper
         command.Label = command.Description = isFullScreen ? MiscResources.BackToWindow : MiscResources.FullScreen;
         command.IconSource = (isFullScreen
             ? IconGlyph.BackToWindowE73F
-            : IconGlyph.FullScreenE740).GetFontIconSource();
+            : IconGlyph.FullScreenE740).GetGlyphIconSource();
     }
 }

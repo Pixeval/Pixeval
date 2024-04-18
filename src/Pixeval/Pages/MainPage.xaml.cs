@@ -189,12 +189,17 @@ public sealed partial class MainPage : SupportCustomTitleBarDragRegionPage
 
         switch (args.ChosenSuggestion)
         {
-            case SuggestionModel({ } name, var translatedName, _):
+            case SuggestionModel({ } name, var translatedName, SuggestionType.IllustrationTag):
                 PerformSearch(SimpleWorkType.IllustAndManga, name, translatedName);
                 break;
-            // TODO 小说Tag搜索
+            case SuggestionModel({ } name, var translatedName, SuggestionType.NovelTag):
+                PerformSearch(SimpleWorkType.Novel, name, translatedName);
+                break;
+            case SuggestionModel({ } name, var translatedName, SuggestionType.Tag):
+                PerformSearch(App.AppViewModel.AppSettings.SimpleWorkType, name, translatedName);
+                break;
             default:
-                PerformSearch(SimpleWorkType.IllustAndManga, args.QueryText);
+                PerformSearch(App.AppViewModel.AppSettings.SimpleWorkType, args.QueryText);
                 break;
         }
     }
@@ -250,7 +255,7 @@ public sealed partial class MainPage : SupportCustomTitleBarDragRegionPage
         }
 
         NavigationView.SelectedItem = null;
-        _ = MainPageRootFrame.Navigate(typeof(SearchResultsPage), (type, text));
+        _ = MainPageRootFrame.Navigate(typeof(SearchWorksPage), (type, text));
     }
 
     private async void OpenSearchSettingButton_OnTapped(object sender, TappedRoutedEventArgs e)

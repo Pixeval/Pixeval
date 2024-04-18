@@ -26,9 +26,9 @@ using WinUI3Utilities;
 
 namespace Pixeval.Pages.Capability;
 
-public sealed partial class SearchResultsPage : IScrollViewProvider
+public sealed partial class SearchWorksPage : IScrollViewProvider
 {
-    public SearchResultsPage() => InitializeComponent();
+    public SearchWorksPage() => InitializeComponent();
 
     private string _searchText = "";
 

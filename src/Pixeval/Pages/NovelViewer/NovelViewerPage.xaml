@@ -474,7 +474,7 @@
                                     MaxHeight="{StaticResource TeachingTipContentMaxHeightWithTarget}"
                                     Loading="Content_OnLoading"
                                     Tag="{x:Bind AddToBookmarkTeachingTip}"
-                                    Type="IllustAndManga" />
+                                    Type="Novel" />
                             </TeachingTip>
                         </Grid>
                     </Grid>
