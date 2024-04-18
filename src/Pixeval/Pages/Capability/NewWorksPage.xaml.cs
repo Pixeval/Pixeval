@@ -1,11 +1,11 @@
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
-using Pixeval.Controls;
 using Pixeval.CoreApi.Global.Enum;
+using Pixeval.Misc;
 
 namespace Pixeval.Pages.Capability;
 
-public sealed partial class NewWorksPage 
+public sealed partial class NewWorksPage : IScrollViewProvider
 {
     public NewWorksPage() => InitializeComponent();
 
@@ -17,4 +17,6 @@ public sealed partial class NewWorksPage
     {
         WorkContainer.WorkView.ResetEngine(App.AppViewModel.MakoClient.NewWorks(WorkTypeComboBox.GetSelectedItem<WorkType>(), App.AppViewModel.AppSettings.TargetFilter));
     }
+
+    public ScrollView ScrollView => WorkContainer.ScrollView;
 }

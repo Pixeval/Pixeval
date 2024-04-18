@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
-// Copyright (c) 2023 Pixeval.CoreApi/SortOptions.cs
+// Copyright (c) 2023 Pixeval.CoreApi/WorkSortOption.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -34,15 +34,4 @@ public enum WorkSortOption
 
     [Description("date_desc")]
     PublishDateDescending
-}
-
-public enum UserSortOption
-{
-    DoNotSort,
-
-    [Description("date_asc")]
-    DateAscending,
-
-    [Description("date_desc")]
-    DateDescending
 }

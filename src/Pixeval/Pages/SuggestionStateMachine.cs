@@ -27,6 +27,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using PininSharp;
 using PininSharp.Searchers;
+using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Model;
 using Pixeval.Database.Managers;
 using Pixeval.Util;
@@ -42,13 +43,13 @@ public class SuggestionStateMachine
 
     private readonly Lazy<Task<IEnumerable<SuggestionModel>>> _illustrationTrendingTagCache =
         new(() => App.AppViewModel.MakoClient.GetTrendingTagsAsync(App.AppViewModel.AppSettings.TargetFilter)
-                .SelectAsync(t => new Tag { Name = t.Tag, TranslatedName = t.Translation })
-                .SelectAsync(SuggestionModel.FromTag), LazyThreadSafetyMode.ExecutionAndPublication);
+            .SelectAsync(t => new Tag { Name = t.Tag, TranslatedName = t.Translation })
+            .SelectAsync(SuggestionModel.FromIllustrationTag), LazyThreadSafetyMode.ExecutionAndPublication);
 
     private readonly Lazy<Task<IEnumerable<SuggestionModel>>> _novelTrendingTagCache =
         new(() => App.AppViewModel.MakoClient.GetTrendingTagsForNovelAsync(App.AppViewModel.AppSettings.TargetFilter)
-                .SelectAsync(t => new Tag { Name = t.Tag, TranslatedName = t.Translation })
-                .SelectAsync(SuggestionModel.FromTag), LazyThreadSafetyMode.ExecutionAndPublication);
+            .SelectAsync(t => new Tag { Name = t.Tag, TranslatedName = t.Translation })
+            .SelectAsync(SuggestionModel.FromNovelTag), LazyThreadSafetyMode.ExecutionAndPublication);
 
     static SuggestionStateMachine()
     {
@@ -87,6 +88,8 @@ public class SuggestionStateMachine
             suggestions.AddRange(settingSuggestions.Select(settingSuggestion => new SuggestionModel(settingSuggestion.GetLocalizedResourceContent()!, settingSuggestion.Category.GetLocalizedResourceContent(), SuggestionType.Settings)));
         }
 
+        suggestions.Add(SuggestionModel.FromUserSearch());
+
         if (settingSuggestions.IsNotNullOrEmpty() && tagSuggestions.IsNotNullOrEmpty())
         {
             suggestions.Add(SuggestionModel.IllustrationAutoCompleteTagHeader);
@@ -102,10 +105,19 @@ public class SuggestionStateMachine
         var manager = scope.ServiceProvider.GetRequiredService<SearchHistoryPersistentManager>();
         var histories = manager.Select(count: App.AppViewModel.AppSettings.MaximumSuggestionBoxSearchHistory).OrderByDescending(e => e.Time).SelectNotNull(SuggestionModel.FromHistory);
         newItems.AddRange(histories);
-        newItems.Add(SuggestionModel.IllustrationTrendingTagHeader);
-        newItems.AddRange(await _illustrationTrendingTagCache.Value);
+        var prior = App.AppViewModel.AppSettings.SimpleWorkType is SimpleWorkType.IllustAndManga;
+        if (prior)
+        {
+            newItems.Add(SuggestionModel.IllustrationTrendingTagHeader);
+            newItems.AddRange(await _illustrationTrendingTagCache.Value);
+        }
         newItems.Add(SuggestionModel.NovelTrendingTagHeader);
         newItems.AddRange(await _novelTrendingTagCache.Value);
+        if (!prior)
+        {
+            newItems.Add(SuggestionModel.IllustrationTrendingTagHeader);
+            newItems.AddRange(await _illustrationTrendingTagCache.Value);
+        }
         Suggestions.AddRange(newItems);
     }
 

@@ -1,8 +1,9 @@
-#region Copyright (c) Pixeval/Pixeval.CoreApi
+#region Copyright
+
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
-// Copyright (c) 2023 Pixeval.CoreApi/SearchEngine.cs
+// Copyright (c) 2024 Pixeval.CoreApi/NovelSearchEngine.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -16,6 +17,7 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 #endregion
 
 using System;
@@ -23,7 +25,6 @@ using System.Collections.Generic;
 using System.Threading;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Model;
-using Pixeval.CoreApi.Net;
 using Pixeval.Utilities;
 
 namespace Pixeval.CoreApi.Engine.Implements;
@@ -42,92 +43,10 @@ namespace Pixeval.CoreApi.Engine.Implements;
 /// <param name="targetFilter"></param>
 /// <param name="startDate"></param>
 /// <param name="endDate"></param>
-/// <param name="aiType">false：过滤AI</param>
-internal class SearchIllustrationEngine(
-    MakoClient makoClient,
-    EngineHandle? engineHandle,
-    SearchIllustrationTagMatchOption matchOption,
-    string tag,
-    int start,
-    int pages,
-    WorkSortOption? sortOption,
-    SearchDuration searchDuration,
-    TargetFilter targetFilter,
-    DateTimeOffset? startDate,
-    DateTimeOffset? endDate,
-    bool? aiType)
-    : AbstractPixivFetchEngine<Illustration>(makoClient, engineHandle)
-{
-    private readonly int _current = start;
-    private readonly DateTimeOffset? _endDate = endDate;
-    private readonly SearchIllustrationTagMatchOption _matchOption = matchOption;
-    private readonly int _pages = pages;
-    private readonly SearchDuration _searchDuration = searchDuration;
-    private readonly WorkSortOption _sortOption = sortOption ?? WorkSortOption.PublishDateDescending;
-    private readonly DateTimeOffset? _startDate = startDate;
-    private readonly string _tag = tag;
-    private readonly TargetFilter _targetFilter = targetFilter;
-    private readonly bool? _aiType = aiType;
-
-    public override IAsyncEnumerator<Illustration> GetAsyncEnumerator(CancellationToken cancellationToken = new CancellationToken())
-    {
-        return new SearchAsyncEnumerator(this);
-    }
-
-    private class SearchAsyncEnumerator(SearchIllustrationEngine pixivFetchEngine) : RecursivePixivAsyncEnumerators.Illustration<SearchIllustrationEngine>(pixivFetchEngine, null!)
-    {
-        protected override string InitialUrl
-        {
-            get
-            {
-                var match = PixivFetchEngine._matchOption.GetDescription();
-                var startDateSegment = PixivFetchEngine._startDate?.Let(dn => $"&start_date={dn:yyyy-MM-dd}");
-                var endDateSegment = PixivFetchEngine._endDate?.Let(dn => $"&start_date={dn:yyyy-MM-dd}");
-                var durationSegment = PixivFetchEngine._searchDuration is SearchDuration.Undecided
-                    ? null
-                    : $"&duration={PixivFetchEngine._searchDuration.GetDescription()}";
-                var sortSegment = PixivFetchEngine._sortOption != WorkSortOption.DoNotSort
-                    ? $"&sort={PixivFetchEngine._sortOption.GetDescription()}"
-                    : string.Empty;
-                var aiTypeSegment = PixivFetchEngine._aiType?.Let(t => $"&search_ai_type={(t ? 1 : 0)}");
-                return "/v1/search/illust"
-                       + $"?search_target={match}"
-                       + $"&word={PixivFetchEngine._tag}"
-                       + $"&filter={PixivFetchEngine._targetFilter.GetDescription()}"
-                       + $"&offset={PixivFetchEngine._current}"
-                       + sortSegment
-                       + startDateSegment
-                       + endDateSegment
-                       + durationSegment
-                       + aiTypeSegment;
-            }
-        }
-
-        protected override bool HasNextPage()
-        {
-            return PixivFetchEngine.RequestedPages <= PixivFetchEngine._pages - 1;
-        }
-    }
-}
-
-/// <summary>
-/// 
-/// </summary>
-/// <param name="makoClient"></param>
-/// <param name="engineHandle"></param>
-/// <param name="matchOption"></param>
-/// <param name="tag"></param>
-/// <param name="start"></param>
-/// <param name="pages"></param>
-/// <param name="sortOption"></param>
-/// <param name="searchDuration"></param>
-/// <param name="targetFilter"></param>
-/// <param name="startDate"></param>
-/// <param name="endDate"></param>
 /// <param name="mergePlainKeywordResults"></param>
 /// <param name="includeTranslatedTagResults"></param>
 /// <param name="aiType">false：过滤AI</param>
-internal class SearchNovelEngine(
+internal class NovelSearchEngine(
     MakoClient makoClient,
     EngineHandle? engineHandle,
     SearchNovelTagMatchOption matchOption,
@@ -162,7 +81,7 @@ internal class SearchNovelEngine(
         return new SearchAsyncEnumerator(this);
     }
 
-    private class SearchAsyncEnumerator(SearchNovelEngine pixivFetchEngine) : RecursivePixivAsyncEnumerators.Novel<SearchNovelEngine>(pixivFetchEngine, null!)
+    private class SearchAsyncEnumerator(NovelSearchEngine pixivFetchEngine) : RecursivePixivAsyncEnumerators.Novel<NovelSearchEngine>(pixivFetchEngine, null!)
     {
         protected override string InitialUrl
         {

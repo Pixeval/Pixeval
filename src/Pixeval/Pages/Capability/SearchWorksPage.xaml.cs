@@ -26,9 +26,9 @@ using WinUI3Utilities;
 
 namespace Pixeval.Pages.Capability;
 
-public sealed partial class SearchResultsPage : IScrollViewProvider
+public sealed partial class SearchWorksPage : IScrollViewProvider
 {
-    public SearchResultsPage() => InitializeComponent();
+    public SearchWorksPage() => InitializeComponent();
 
     private string _searchText = "";
 
@@ -53,7 +53,7 @@ public sealed partial class SearchResultsPage : IScrollViewProvider
                     settings.SearchStartingFromPageNumber,
                     settings.PageLimitForKeywordSearch,
                     settings.SearchIllustrationTagMatchOption,
-                    settings.DefaultSortOption,
+                    settings.WorkSortOption,
                     settings.SearchDuration,
                     settings.TargetFilter,
                     settings.UsePreciseRangeForSearch ? settings.SearchStartDate : null,
@@ -63,7 +63,7 @@ public sealed partial class SearchResultsPage : IScrollViewProvider
                     settings.SearchStartingFromPageNumber,
                     settings.PageLimitForKeywordSearch,
                     settings.SearchNovelTagMatchOption,
-                    settings.DefaultSortOption,
+                    settings.WorkSortOption,
                     settings.SearchDuration,
                     settings.TargetFilter,
                     settings.UsePreciseRangeForSearch ? settings.SearchStartDate : null,

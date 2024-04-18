@@ -112,7 +112,7 @@ public partial record AppSettings : IWindowSettings
     /// different orders will use this as its default value
     /// </summary>
     [SettingMetadata(SettingEntryCategory.Search, typeof(SettingsPageResources), nameof(SettingsPageResources.DefaultSearchSortOptionEntryHeader))]
-    public WorkSortOption DefaultSortOption { get; set; } = WorkSortOption.DoNotSort;
+    public WorkSortOption WorkSortOption { get; set; } = WorkSortOption.DoNotSort;
 
     [SettingMetadata(SettingEntryCategory.Search, typeof(SettingsPageResources), nameof(SettingsPageResources.DefaultSearchTagMatchOptionEntryHeader))]
     public SimpleWorkType SimpleWorkType { get; set; } = SimpleWorkType.IllustAndManga;

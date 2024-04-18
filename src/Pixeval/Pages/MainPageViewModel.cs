@@ -121,9 +121,9 @@ public partial class MainPageViewModel : ObservableObject
             else
             {
                 _ = await _owner.CreateAcknowledgementAsync(MainPageResources.ReverseSearchErrorTitle,
-                        result.Header.Status > 0
-                            ? MainPageResources.ReverseSearchServerSideErrorContent
-                            : MainPageResources.ReverseSearchClientSideErrorContent);
+                    result.Header.Status > 0
+                        ? MainPageResources.ReverseSearchServerSideErrorContent
+                        : MainPageResources.ReverseSearchClientSideErrorContent);
             }
         }
         catch (Exception e)

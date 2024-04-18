@@ -17,7 +17,7 @@
     "PasswordBox/PlaceholderText": "密码",
     "DisableDomainFrontingToggleSwitch/OnContent": "禁用前域直连",
     "DisableDomainFrontingToggleSwitch/OffContent": "启用前域直连",
-    "RefreshingSessionFailedContent": "已经删除损坏的对话文件，请重新登录\n如果该问题反复出现，请联系开发者寻求解决",
+    "RefreshingSessionFailedContent": "请重新登录\n如果该问题反复出现，请联系开发者寻求解决",
     "RefreshingSessionFailedTitle": "刷新对话失败",
     "FetchingSessionFailedContent": "请重新启动应用程序\n如果该问题反复出现，请联系开发者寻求解决",
     "FetchingSessionFailedTitle": "获取对话失败",

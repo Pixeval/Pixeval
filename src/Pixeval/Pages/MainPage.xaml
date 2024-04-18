@@ -19,7 +19,7 @@
         <DataTemplate x:Key="CommonSuggestionModelTemplate" x:DataType="pages:SuggestionModel">
             <Grid Padding="0,10" ColumnSpacing="10">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="13" />
+                    <ColumnDefinition Width="Auto" />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
                 <ContentPresenter

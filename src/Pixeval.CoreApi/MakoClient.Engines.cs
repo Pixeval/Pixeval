@@ -94,7 +94,7 @@ public partial class MakoClient
     /// <param name="endDate">The ending date filtering the searching results</param>
     /// <param name="aiType"></param>
     /// <returns>
-    /// The <see cref="SearchIllustrationEngine" /> iterator containing the searching results.
+    /// The <see cref="IllustrationSearchEngine" /> iterator containing the searching results.
     /// </returns>
     public IFetchEngine<Illustration> SearchIllustrations(
         string tag,
@@ -110,11 +110,9 @@ public partial class MakoClient
     {
         EnsureNotCancelled();
         if (sortOption is WorkSortOption.PopularityDescending && !Session.IsPremium)
-        {
             sortOption = WorkSortOption.DoNotSort;
-        }
 
-        return new SearchIllustrationEngine(this, new EngineHandle(CancelInstance), matchOption, tag, start, pages, sortOption, searchDuration, targetFilter, startDate, endDate, aiType);
+        return new IllustrationSearchEngine(this, new EngineHandle(CancelInstance), matchOption, tag, start, pages, sortOption, searchDuration, targetFilter, startDate, endDate, aiType);
     }
 
     public IFetchEngine<Novel> SearchNovels(
@@ -132,12 +130,26 @@ public partial class MakoClient
         bool? aiType = null)
     {
         EnsureNotCancelled();
-        if (sortOption == WorkSortOption.PopularityDescending && !Session.IsPremium)
-        {
+        if (sortOption is WorkSortOption.PopularityDescending && !Session.IsPremium)
             sortOption = WorkSortOption.DoNotSort;
-        }
 
-        return new SearchNovelEngine(this, new EngineHandle(CancelInstance), matchOption, tag, start, pages, sortOption, searchDuration, targetFilter, startDate, endDate, mergePlainKeywordResults, includeTranslatedTagResults, aiType);
+        return new NovelSearchEngine(this, new EngineHandle(CancelInstance), matchOption, tag, start, pages, sortOption, searchDuration, targetFilter, startDate, endDate, mergePlainKeywordResults, includeTranslatedTagResults, aiType);
+    }
+
+    /// <summary>
+    /// Search user in Pixiv.
+    /// </summary>
+    /// <param name="keyword">The text in searching</param>
+    /// <param name="targetFilter">The <see cref="TargetFilter" /> option targeting android or ios</param>
+    /// <returns>
+    /// The <see cref="UserSearchEngine" /> containing the search results for users.
+    /// </returns>
+    public IFetchEngine<User> SearchUser(
+        string keyword,
+        TargetFilter targetFilter = TargetFilter.ForAndroid)
+    {
+        EnsureNotCancelled();
+        return new UserSearchEngine(this, targetFilter, keyword, new EngineHandle(CancelInstance));
     }
 
     /// <summary>
@@ -237,13 +249,13 @@ public partial class MakoClient
     public IFetchEngine<Illustration> NewIllustrations(WorkType workType, TargetFilter targetFilter = TargetFilter.ForAndroid, uint? maxIllustId = null)
     {
         EnsureNotCancelled();
-        return new NewIllustrationEngine(this, workType, targetFilter, maxIllustId, new EngineHandle(CancelInstance));
+        return new IllustrationNewEngine(this, workType, targetFilter, maxIllustId, new EngineHandle(CancelInstance));
     }
 
     public IFetchEngine<Novel> NewNovels(TargetFilter targetFilter = TargetFilter.ForAndroid, uint? maxNovelId = null)
     {
         EnsureNotCancelled();
-        return new NewNovelEngine(this, targetFilter, maxNovelId, new EngineHandle(CancelInstance));
+        return new NovelNewEngine(this, targetFilter, maxNovelId, new EngineHandle(CancelInstance));
     }
 
     public IFetchEngine<IWorkEntry> NewWorks(WorkType type,
@@ -339,24 +351,6 @@ public partial class MakoClient
         CheckPrivacyPolicy(uid, privacyPolicy);
 
         return new NovelBookmarkTagEngine(this, uid, privacyPolicy, new EngineHandle(CancelInstance));
-    }
-
-    /// <summary>
-    /// Search user in Pixiv.
-    /// </summary>
-    /// <param name="keyword">The text in searching</param>
-    /// <param name="userSortOption">The <see cref="UserSortOption" /> enum as date ascending or descending.</param>
-    /// <param name="targetFilter">The <see cref="TargetFilter" /> option targeting android or ios</param>
-    /// <returns>
-    /// The <see cref="UserSearchEngine" /> containing the search results for users.
-    /// </returns>
-    public IFetchEngine<User> SearchUser(
-        string keyword,
-        UserSortOption userSortOption = UserSortOption.DateDescending,
-        TargetFilter targetFilter = TargetFilter.ForAndroid)
-    {
-        EnsureNotCancelled();
-        return new UserSearchEngine(this, targetFilter, userSortOption, keyword, new EngineHandle(CancelInstance));
     }
 
     /// <summary>

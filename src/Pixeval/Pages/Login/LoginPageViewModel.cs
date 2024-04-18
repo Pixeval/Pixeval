@@ -45,10 +45,11 @@ using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
-using Windows.Media.Protection.PlayReady;
+using WinUI3Utilities.Attributes;
 
 namespace Pixeval.Pages.Login;
 
+[SettingsViewModel<LoginContext>(nameof(LoginContext))]
 public partial class LoginPageViewModel(UIElement owner) : ObservableObject, IDisposable
 {
     public enum LoginPhaseEnum
@@ -85,34 +86,12 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject, IDi
 
     [ObservableProperty] private WebView2? _webView;
 
+    public LoginContext LoginContext => App.AppViewModel.LoginContext;
+
     public bool DisableDomainFronting
     {
         get => App.AppViewModel.AppSettings.DisableDomainFronting;
         set => App.AppViewModel.AppSettings.DisableDomainFronting = value;
-    }
-
-    public string RefreshToken
-    {
-        get => App.AppViewModel.LoginContext.RefreshToken;
-        set => App.AppViewModel.LoginContext.RefreshToken = value;
-    }
-
-    public string UserName
-    {
-        get => App.AppViewModel.LoginContext.UserName;
-        set => App.AppViewModel.LoginContext.UserName = value;
-    }
-
-    public string Password
-    {
-        get => App.AppViewModel.LoginContext.Password;
-        set => App.AppViewModel.LoginContext.Password = value;
-    }
-
-    public bool LogoutExit
-    {
-        get => App.AppViewModel.LoginContext.LogoutExit;
-        set => App.AppViewModel.LoginContext.LogoutExit = value;
     }
 
     public Visibility ProcessingRingVisible => LoginPhase is LoginPhaseEnum.WaitingForUserInput ? Visibility.Collapsed : Visibility.Visible;
@@ -160,8 +139,6 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject, IDi
 
         _ = await owner.CreateAcknowledgementAsync(LoginPageResources.RefreshingSessionFailedTitle,
             LoginPageResources.RefreshingSessionFailedContent);
-        await App.AppViewModel.MakoClient.DisposeAsync();
-        App.AppViewModel.MakoClient = null!;
         return false;
     }
 

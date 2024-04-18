@@ -42,10 +42,11 @@ public record SuggestionModel(string? Name, string? TranslatedName, SuggestionTy
 
     public FontIcon? FontIcon => SuggestionType switch
     {
-        SuggestionType.IllustId or SuggestionType.NovelId or SuggestionType.UserId => IconGlyph.OpenInNewWindowE8A7.GetFontIcon(12),
-        SuggestionType.Tag => IconGlyph.TagE8EC.GetFontIcon(12),
-        SuggestionType.Settings => IconGlyph.SettingsE713.GetFontIcon(12),
-        SuggestionType.History => IconGlyph.HistoryE81C.GetFontIcon(12),
+        SuggestionType.IllustId or SuggestionType.NovelId or SuggestionType.UserId => IconGlyph.OpenInNewWindowE8A7.GetGlyphIcon(FontSizeType.Small),
+        SuggestionType.Tag or SuggestionType.IllustrationTag or SuggestionType.NovelTag => IconGlyph.TagE8EC.GetGlyphIcon(FontSizeType.Small),
+        SuggestionType.UserSearch => IconGlyph.ContactE77B.GetGlyphIcon(FontSizeType.Small),
+        SuggestionType.Settings => IconGlyph.SettingsE713.GetGlyphIcon(FontSizeType.Small),
+        SuggestionType.History => IconGlyph.HistoryE81C.GetGlyphIcon(FontSizeType.Small),
         _ => null
     };
 
@@ -59,9 +60,24 @@ public record SuggestionModel(string? Name, string? TranslatedName, SuggestionTy
         ];
     }
 
+    public static SuggestionModel FromUserSearch()
+    {
+        return new SuggestionModel(MiscResources.SearchUser, null, SuggestionType.UserSearch);
+    }
+
     public static SuggestionModel FromTag(Tag tag)
     {
         return new SuggestionModel(tag.Name, tag.TranslatedName, SuggestionType.Tag);
+    }
+
+    public static SuggestionModel FromIllustrationTag(Tag tag)
+    {
+        return new SuggestionModel(tag.Name, tag.TranslatedName, SuggestionType.IllustrationTag);
+    }
+
+    public static SuggestionModel FromNovelTag(Tag tag)
+    {
+        return new SuggestionModel(tag.Name, tag.TranslatedName, SuggestionType.NovelTag);
     }
 
     public static SuggestionModel FromHistory(SearchHistoryEntry history)
@@ -78,11 +94,14 @@ public record SuggestionModel(string? Name, string? TranslatedName, SuggestionTy
 public enum SuggestionType
 {
     Tag,
+    IllustrationTag,
+    NovelTag,
     Settings,
     History,
     UserId,
     IllustId,
     NovelId,
+    UserSearch,
     IllustrationAutoCompleteTagHeader,
     IllustrationTrendingTagHeader,
     NovelTrendingTagHeader,

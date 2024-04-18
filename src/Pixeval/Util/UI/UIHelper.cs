@@ -189,49 +189,25 @@ public static partial class UiHelper
         _ = frame.Navigate(tag.NavigateTo, tag.Parameter, transitionInfo);
     }
 
-    public static Visibility Inverse(this Visibility visibility)
+    public static GlyphIcon GetGlyphIcon(this IconGlyph iconGlyph, FontSizeType fontSize = FontSizeType.None)
     {
-        return visibility == Visibility.Collapsed ? Visibility.Visible : Visibility.Collapsed;
-    }
-
-    public static Visibility ToVisibility(this bool value)
-    {
-        return value ? Visibility.Visible : Visibility.Collapsed;
-    }
-
-    public static FontIcon GetFontIcon(this IconGlyph symbol, double? fontSize = null)
-    {
-        var systemThemeFontFamily = new FontFamily(AppInfo.AppIconFontFamilyName);
-        var icon = new FontIcon
+        return new GlyphIcon
         {
-            Glyph = ((char)symbol).ToString(),
-            FontFamily = systemThemeFontFamily
+            IconGlyph = iconGlyph,
+            Size = fontSize
         };
-        if (fontSize is not null)
-        {
-            icon.FontSize = fontSize.Value;
-        }
-
-        return icon;
     }
 
-    public static FontIconSource GetFontIconSource(this IconGlyph symbol, double? fontSize = null, Brush? foregroundBrush = null)
+    public static GlyphIconSource GetGlyphIconSource(this IconGlyph iconGlyph, FontSizeType fontSize = FontSizeType.None, Brush? foregroundBrush = null)
     {
-        var systemThemeFontFamily = new FontFamily(AppInfo.AppIconFontFamilyName);
-        var icon = new FontIconSource
+        var icon = new GlyphIconSource
         {
-            Glyph = ((char)symbol).ToString(),
-            FontFamily = systemThemeFontFamily
+            IconGlyph = iconGlyph,
+            Size = fontSize
         };
-        if (fontSize is not null)
-        {
-            icon.FontSize = fontSize.Value;
-        }
 
-        if (foregroundBrush is not null)
-        {
+        if (foregroundBrush is not null) 
             icon.Foreground = foregroundBrush;
-        }
 
         return icon;
     }
@@ -242,11 +218,6 @@ public static partial class UiHelper
         var childRectangle = childTransform.TransformBounds(new Rect(new Point(0, 0), child.RenderSize));
         var ownerRectangle = new Rect(new Point(0, 0), parent.RenderSize);
         return ownerRectangle.IntersectsWith(childRectangle);
-    }
-
-    public static IEnumerable<T> FindChildren<T>(this FrameworkElement startNode) where T : DependencyObject
-    {
-        return startNode.FindChildren().OfType<T>();
     }
 
     public static void ClearContent(this RichEditBox box)
