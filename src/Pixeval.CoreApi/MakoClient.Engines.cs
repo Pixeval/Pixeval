@@ -54,8 +54,7 @@ public partial class MakoClient
     public IFetchEngine<Illustration> IllustrationBookmarks(long uid, PrivacyPolicy privacyPolicy, string? tag, TargetFilter targetFilter = TargetFilter.ForAndroid)
     {
         EnsureNotCancelled();
-        if (!CheckPrivacyPolicy(uid, privacyPolicy))
-            ThrowUtils.Throw(new IllegalPrivatePolicyException(uid));
+        CheckPrivacyPolicy(uid, privacyPolicy);
 
         return new IllustrationBookmarkEngine(this, uid, tag, privacyPolicy, targetFilter, new EngineHandle(CancelInstance));
     }
@@ -73,8 +72,7 @@ public partial class MakoClient
     public IFetchEngine<Novel> NovelBookmarks(long uid, PrivacyPolicy privacyPolicy, string? tag, TargetFilter targetFilter = TargetFilter.ForAndroid)
     {
         EnsureNotCancelled();
-        if (!CheckPrivacyPolicy(uid, privacyPolicy))
-            ThrowUtils.Throw(new IllegalPrivatePolicyException(uid));
+        CheckPrivacyPolicy(uid, privacyPolicy);
 
         return new NovelBookmarkEngine(this, uid, tag, privacyPolicy, targetFilter, new EngineHandle(CancelInstance));
     }
@@ -212,7 +210,7 @@ public partial class MakoClient
     }
 
     public IFetchEngine<IWorkEntry> RecommendationWorks(
-        WorkType recommendContentType = WorkType.Illust,
+        WorkType recommendContentType,
         TargetFilter targetFilter = TargetFilter.ForAndroid)
     {
         return recommendContentType switch
@@ -221,7 +219,6 @@ public partial class MakoClient
             WorkType.Manga => RecommendationMangas(targetFilter),
             _ => RecommendationIllustrations(targetFilter)
         };
-
     }
 
     /// <summary>
@@ -237,10 +234,32 @@ public partial class MakoClient
         return new RecommendIllustratorEngine(this, targetFilter, new EngineHandle(CancelInstance));
     }
 
-    public IFetchEngine<User> MyPixiv(long userId)
+    public IFetchEngine<Illustration> NewIllustrations(WorkType workType, TargetFilter targetFilter = TargetFilter.ForAndroid, uint? maxIllustId = null)
     {
         EnsureNotCancelled();
-        return new MyPixivEngine(this, userId, new EngineHandle(CancelInstance));
+        return new NewIllustrationEngine(this, workType, targetFilter, maxIllustId, new EngineHandle(CancelInstance));
+    }
+
+    public IFetchEngine<Novel> NewNovels(TargetFilter targetFilter = TargetFilter.ForAndroid, uint? maxNovelId = null)
+    {
+        EnsureNotCancelled();
+        return new NewNovelEngine(this, targetFilter, maxNovelId, new EngineHandle(CancelInstance));
+    }
+
+    public IFetchEngine<IWorkEntry> NewWorks(WorkType type,
+        TargetFilter targetFilter = TargetFilter.ForAndroid,
+        uint ? maxId = null)
+    {
+        return type switch
+        {
+            WorkType.Novel => NewNovels(targetFilter, maxId),
+            _ => NewIllustrations(type, targetFilter, maxId)
+        };
+    }
+    public IFetchEngine<User> MyPixivUsers(long userId)
+    {
+        EnsureNotCancelled();
+        return new MyPixivUserEngine(this, userId, new EngineHandle(CancelInstance));
     }
 
     /// <summary>
@@ -279,10 +298,7 @@ public partial class MakoClient
     public IFetchEngine<User> Following(long uid, PrivacyPolicy privacyPolicy)
     {
         EnsureNotCancelled();
-        if (!CheckPrivacyPolicy(uid, privacyPolicy))
-        {
-            ThrowUtils.Throw(new IllegalPrivatePolicyException(uid));
-        }
+        CheckPrivacyPolicy(uid, privacyPolicy);
 
         return new FollowingEngine(this, uid, privacyPolicy, new EngineHandle(CancelInstance));
     }
@@ -290,10 +306,7 @@ public partial class MakoClient
     public IFetchEngine<BookmarkTag> IllustrationBookmarkTag(long uid, PrivacyPolicy privacyPolicy)
     {
         EnsureNotCancelled();
-        if (!CheckPrivacyPolicy(uid, privacyPolicy))
-        {
-            ThrowUtils.Throw(new IllegalPrivatePolicyException(uid));
-        }
+        CheckPrivacyPolicy(uid, privacyPolicy);
 
         return new IllustrationBookmarkTagEngine(this, uid, privacyPolicy, new EngineHandle(CancelInstance));
     }
@@ -323,10 +336,7 @@ public partial class MakoClient
     public IFetchEngine<BookmarkTag> NovelBookmarkTag(long uid, PrivacyPolicy privacyPolicy)
     {
         EnsureNotCancelled();
-        if (!CheckPrivacyPolicy(uid, privacyPolicy))
-        {
-            ThrowUtils.Throw(new IllegalPrivatePolicyException(uid));
-        }
+        CheckPrivacyPolicy(uid, privacyPolicy);
 
         return new NovelBookmarkTagEngine(this, uid, privacyPolicy, new EngineHandle(CancelInstance));
     }

@@ -191,9 +191,10 @@ public partial class MakoClient : ICancellable, IAsyncDisposable
     /// <param name="uid"></param>
     /// <param name="privacyPolicy"></param>
     /// <returns></returns>
-    private bool CheckPrivacyPolicy(long uid, PrivacyPolicy privacyPolicy)
+    private void CheckPrivacyPolicy(long uid, PrivacyPolicy privacyPolicy)
     {
-        return !(privacyPolicy is PrivacyPolicy.Private && Session.Id != uid);
+        if (privacyPolicy is PrivacyPolicy.Private && Session.Id != uid)
+            ThrowUtils.Throw(new IllegalPrivatePolicyException(uid));
     }
 
     /// <summary>

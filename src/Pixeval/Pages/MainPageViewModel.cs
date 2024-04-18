@@ -53,6 +53,8 @@ public partial class MainPageViewModel : ObservableObject
 
     public readonly NavigationViewTag<RecentPostsPage> RecentPostsTag = new();
 
+    public readonly NavigationViewTag<NewWorksPage> NewWorksTag = new();
+
     public readonly NavigationViewTag<RecommendationPage> RecommendsTag = new();
 
     public readonly NavigationViewTag<RecommendUsersPage> RecommendUsersTag = new();

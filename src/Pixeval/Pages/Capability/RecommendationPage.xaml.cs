@@ -34,16 +34,8 @@ public sealed partial class RecommendationPage
 
     private void WorkTypeComboBox_OnSelectionChanged(object? sender, SelectionChangedEventArgs e) => ChangeSource();
 
-    private async void ChangeSource()
+    private void ChangeSource()
     {
-        var recommendationWorks = App.AppViewModel.MakoClient.RecommendationWorks(WorkType.Manga, App.AppViewModel.AppSettings.TargetFilter);
-
-        await foreach (var recommendationWork in recommendationWorks)
-        {
-            if (recommendationWork is Illustration{ })
-                WorkContainer.WorkView.Add(recommendationWork)
-        }
-
         WorkContainer.WorkView.ResetEngine(App.AppViewModel.MakoClient.RecommendationWorks(WorkTypeComboBox.GetSelectedItem<WorkType>(), App.AppViewModel.AppSettings.TargetFilter));
     }
 }

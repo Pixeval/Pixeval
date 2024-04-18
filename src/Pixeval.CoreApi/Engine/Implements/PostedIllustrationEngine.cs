@@ -22,24 +22,18 @@ using System.Collections.Generic;
 using System.Threading;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Model;
-using Pixeval.CoreApi.Net;
 using Pixeval.Utilities;
 
 namespace Pixeval.CoreApi.Engine.Implements;
 
-internal class PostedIllustrationEngine(MakoClient makoClient, long uid, WorkType recommendContentType, TargetFilter targetFilter, EngineHandle? engineHandle)
+internal class PostedIllustrationEngine(MakoClient makoClient, long uid, WorkType type, TargetFilter targetFilter, EngineHandle? engineHandle)
     : AbstractPixivFetchEngine<Illustration>(makoClient, engineHandle)
 {
-    private readonly WorkType _recommendContentType = recommendContentType;
-    private readonly TargetFilter _targetFilter = targetFilter;
-    private readonly long _uid = uid;
-
-    public override IAsyncEnumerator<Illustration> GetAsyncEnumerator(CancellationToken cancellationToken = new CancellationToken())
-    {
-        return RecursivePixivAsyncEnumerators.Illustration<PostedIllustrationEngine>.WithInitialUrl(this, MakoApiKind.AppApi,
-            engine => "/v1/user/illusts"
-                      + $"?user_id={engine._uid}"
-                      + $"&filter={engine._targetFilter.GetDescription()}"
-                      + $"&type={engine._recommendContentType.GetDescription()}")!;
-    }
+    public override IAsyncEnumerator<Illustration> GetAsyncEnumerator(CancellationToken cancellationToken = new CancellationToken()) =>
+        new RecursivePixivAsyncEnumerators.Illustration<PostedIllustrationEngine>(
+            this,
+            "/v1/user/illusts"
+            + $"?user_id={uid}"
+            + $"&filter={targetFilter.GetDescription()}"
+            + $"&type={type.GetDescription()}");
 }

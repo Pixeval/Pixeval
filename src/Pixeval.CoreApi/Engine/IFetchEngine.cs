@@ -24,7 +24,7 @@ using Pixeval.CoreApi.Global;
 namespace Pixeval.CoreApi.Engine;
 
 /// <summary>
-/// An highly abstracted fetch engine that fetches pages and yields results asynchronously
+/// A highly abstracted fetch engine that fetches pages and yields results asynchronously
 /// <para>
 ///     Just like a fetch engine, it continuously fetches pages, and each page may contain either multiple
 ///     result entries or an error response, at each iteration, it fetches a single page and tries to

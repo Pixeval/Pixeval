@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval.CoreApi
+#region Copyright (c) Pixeval/Pixeval.CoreApi
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
@@ -22,7 +22,7 @@ using System;
 
 namespace Pixeval.CoreApi.Model;
 
-public record Feed
+public record Feed : IEntry
 {
     /// <summary>
     /// May points to user, illustration or novel
@@ -31,7 +31,7 @@ public record Feed
 
     /// <summary>
     /// The name of the target of this feed if it has one
-    /// e.g. illust title or the user name
+    /// e.g. illust title or the username
     /// </summary>
     public string? FeedName { get; set; }
 

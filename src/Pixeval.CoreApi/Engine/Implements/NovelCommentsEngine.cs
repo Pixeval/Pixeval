@@ -23,18 +23,15 @@
 using System.Collections.Generic;
 using System.Threading;
 using Pixeval.CoreApi.Model;
-using Pixeval.CoreApi.Net;
 
 namespace Pixeval.CoreApi.Engine.Implements;
 
 public class NovelCommentsEngine(long novelId, MakoClient makoClient, EngineHandle? engineHandle)
     : AbstractPixivFetchEngine<Comment>(makoClient, engineHandle)
 {
-    private readonly long _novelId = novelId;
-
-    public override IAsyncEnumerator<Comment> GetAsyncEnumerator(CancellationToken cancellationToken = new CancellationToken())
-    {
-        return RecursivePixivAsyncEnumerators.Comment<NovelCommentsEngine>.WithInitialUrl(this, MakoApiKind.AppApi,
-            engine => $"/v3/novel/comments?novel_id={engine._novelId}")!;
-    }
+    public override IAsyncEnumerator<Comment> GetAsyncEnumerator(CancellationToken cancellationToken = new CancellationToken()) =>
+        new RecursivePixivAsyncEnumerators.Comment<NovelCommentsEngine>(
+            this,
+            "/v3/novel/comments" +
+            $"?novel_id={novelId}");
 }

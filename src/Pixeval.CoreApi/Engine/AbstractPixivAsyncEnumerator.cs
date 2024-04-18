@@ -23,6 +23,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Pixeval.CoreApi.Global.Exception;
+using Pixeval.CoreApi.Model;
 using Pixeval.CoreApi.Net;
 using Pixeval.Utilities;
 
@@ -41,8 +42,10 @@ namespace Pixeval.CoreApi.Engine;
 /// <typeparam name="TRawEntity">The entity class corresponding to the result entry</typeparam>
 /// <typeparam name="TFetchEngine">The fetch engine</typeparam>
 public abstract class AbstractPixivAsyncEnumerator<TEntity, TRawEntity, TFetchEngine>(TFetchEngine pixivFetchEngine,
-    MakoApiKind apiKind) : IAsyncEnumerator<TEntity?>
-    where TFetchEngine : class, IFetchEngine<TEntity>
+    MakoApiKind apiKind) : IAsyncEnumerator<TEntity>
+    where TFetchEngine : class, IFetchEngine<TEntity> 
+    where TEntity : class, IEntry
+    where TRawEntity : class
 {
     protected readonly MakoClient MakoClient = pixivFetchEngine.MakoClient;
     protected readonly TFetchEngine PixivFetchEngine = pixivFetchEngine;
@@ -65,7 +68,7 @@ public abstract class AbstractPixivAsyncEnumerator<TEntity, TRawEntity, TFetchEn
     /// <summary>
     /// The current result entry of <see cref="CurrentEntityEnumerator" />
     /// </summary>
-    public TEntity? Current => CurrentEntityEnumerator is null ? default : CurrentEntityEnumerator.Current;
+    public TEntity Current => CurrentEntityEnumerator?.Current!;
 
     /// <summary>
     /// Moves the <see cref="MoveNextAsync" /> one step ahead, if fails, it will try to
@@ -98,14 +101,12 @@ public abstract class AbstractPixivAsyncEnumerator<TEntity, TRawEntity, TFetchEn
             }
 
             var result = (await responseMessage.Content.ReadAsStringAsync().ConfigureAwait(false)).FromJson<TRawEntity>();
-            if (result is null)
-            {
-                return Result<TRawEntity>.AsFailure();
-            }
 
-            return ValidateResponse(result)
-                ? Result<TRawEntity>.AsSuccess(result)
-                : Result<TRawEntity>.AsFailure();
+            return result is null
+                ? Result<TRawEntity>.AsFailure()
+                : ValidateResponse(result)
+                    ? Result<TRawEntity>.AsSuccess(result)
+                    : Result<TRawEntity>.AsFailure();
         }
         catch (Exception e)
         {

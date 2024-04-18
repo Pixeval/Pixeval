@@ -18,7 +18,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Pixeval.CoreApi.Model;
@@ -30,13 +29,15 @@ namespace Pixeval.CoreApi.Engine;
 
 internal abstract class RecursivePixivAsyncEnumerator<TEntity, TRawEntity, TFetchEngine>(TFetchEngine pixivFetchEngine, MakoApiKind makoApiKind)
     : AbstractPixivAsyncEnumerator<TEntity, TRawEntity, TFetchEngine>(pixivFetchEngine, makoApiKind)
-    where TFetchEngine : class, IFetchEngine<TEntity>
+    where TEntity : class, IEntry 
+    where TRawEntity : class
+    where TFetchEngine : class, IFetchEngine<TEntity> 
 {
     private TRawEntity? RawEntity { get; set; }
 
     protected abstract string? NextUrl(TRawEntity? rawEntity);
 
-    protected abstract string InitialUrl();
+    protected abstract string InitialUrl { get; }
 
     protected abstract IEnumerator<TEntity>? GetNewEnumerator(TRawEntity? rawEntity);
 
@@ -55,8 +56,7 @@ internal abstract class RecursivePixivAsyncEnumerator<TEntity, TRawEntity, TFetc
 
         if (RawEntity is null)
         {
-            var first = InitialUrl();
-            switch (await GetJsonResponseAsync(first).ConfigureAwait(false))
+            switch (await GetJsonResponseAsync(InitialUrl).ConfigureAwait(false))
             {
                 case Result<TRawEntity>.Success(var raw):
                     Update(raw);
@@ -110,123 +110,38 @@ internal abstract class RecursivePixivAsyncEnumerator<TEntity, TRawEntity, TFetc
 
 internal static class RecursivePixivAsyncEnumerators
 {
-    public abstract class BaseRecursivePixivAsyncEnumerator<TEntity, TRawEntity, TFetchEngine>(TFetchEngine pixivFetchEngine, MakoApiKind makoApiKind)
+    public abstract class BaseRecursivePixivAsyncEnumerator<TEntity, TRawEntity, TFetchEngine>(TFetchEngine pixivFetchEngine, MakoApiKind makoApiKind, string initialUrl)
         : RecursivePixivAsyncEnumerator<TEntity, TRawEntity, TFetchEngine>(pixivFetchEngine, makoApiKind)
-        where TFetchEngine : class, IFetchEngine<TEntity> where TEntity : class, IEntry where TRawEntity : PixivNextUrlResponse<TEntity>
+        where TEntity : class, IEntry 
+        where TRawEntity : PixivNextUrlResponse<TEntity>
+        where TFetchEngine : class, IFetchEngine<TEntity> 
     {
-        protected sealed override bool ValidateResponse(TRawEntity rawEntity)
-        {
-            return rawEntity.Entities.IsNotNullOrEmpty();
-        }
+        protected override string InitialUrl => initialUrl;
 
-        protected sealed override string? NextUrl(TRawEntity? rawEntity)
-        {
-            return rawEntity?.NextUrl;
-        }
+        protected sealed override bool ValidateResponse(TRawEntity rawEntity) => rawEntity.Entities.IsNotNullOrEmpty();
 
-        protected sealed override IEnumerator<TEntity>? GetNewEnumerator(TRawEntity? rawEntity)
-        {
-            return (rawEntity?.Entities as IEnumerable<TEntity>)?.GetEnumerator();
-        }
+        protected sealed override string? NextUrl(TRawEntity? rawEntity) => rawEntity?.NextUrl;
+
+        protected sealed override IEnumerator<TEntity>? GetNewEnumerator(TRawEntity? rawEntity) => (rawEntity?.Entities as IEnumerable<TEntity>)?.GetEnumerator();
     }
 
-    public abstract class User<TFetchEngine>(TFetchEngine pixivFetchEngine, MakoApiKind makoApiKind)
-        : BaseRecursivePixivAsyncEnumerator<User, PixivUserResponse, TFetchEngine>(pixivFetchEngine, makoApiKind)
-        where TFetchEngine : class, IFetchEngine<User>
-    {
-        public static User<TFetchEngine> WithInitialUrl(TFetchEngine engine, MakoApiKind kind, Func<TFetchEngine, string> initialUrlFactory)
-        {
-            return new UserImpl<TFetchEngine>(engine, kind, initialUrlFactory);
-        }
-    }
+    public class User<TFetchEngine>(TFetchEngine pixivFetchEngine, string initialUrl)
+        : BaseRecursivePixivAsyncEnumerator<User, PixivUserResponse, TFetchEngine>(pixivFetchEngine, MakoApiKind.AppApi, initialUrl)
+        where TFetchEngine : class, IFetchEngine<User>;
 
-    private class UserImpl<TFetchEngine>(TFetchEngine pixivFetchEngine, MakoApiKind makoApiKind, Func<TFetchEngine, string> initialUrlFactory)
-        : User<TFetchEngine>(pixivFetchEngine, makoApiKind)
-        where TFetchEngine : class, IFetchEngine<User>
-    {
-        protected override string InitialUrl()
-        {
-            return initialUrlFactory(PixivFetchEngine);
-        }
-    }
+    public class Illustration<TFetchEngine>(TFetchEngine pixivFetchEngine, string initialUrl)
+        : BaseRecursivePixivAsyncEnumerator<Illustration, PixivIllustrationResponse, TFetchEngine>(pixivFetchEngine, MakoApiKind.AppApi, initialUrl)
+        where TFetchEngine : class, IFetchEngine<Illustration>;
 
-    public abstract class Illustration<TFetchEngine>(TFetchEngine pixivFetchEngine, MakoApiKind makoApiKind)
-        : BaseRecursivePixivAsyncEnumerator<Illustration, PixivIllustrationResponse, TFetchEngine>(pixivFetchEngine, makoApiKind)
-        where TFetchEngine : class, IFetchEngine<Illustration>
-    {
-        public static Illustration<TFetchEngine> WithInitialUrl(TFetchEngine engine, MakoApiKind kind, Func<TFetchEngine, string> initialUrlFactory)
-        {
-            return new IllustrationImpl<TFetchEngine>(engine, kind, initialUrlFactory);
-        }
-    }
+    public class Novel<TFetchEngine>(TFetchEngine pixivFetchEngine, string initialUrl)
+        : BaseRecursivePixivAsyncEnumerator<Novel, PixivNovelResponse, TFetchEngine>(pixivFetchEngine, MakoApiKind.AppApi, initialUrl)
+        where TFetchEngine : class, IFetchEngine<Novel>;
 
-    private class IllustrationImpl<TFetchEngine>(TFetchEngine pixivFetchEngine, MakoApiKind makoApiKind, Func<TFetchEngine, string> initialUrlFactory)
-        : Illustration<TFetchEngine>(pixivFetchEngine, makoApiKind)
-        where TFetchEngine : class, IFetchEngine<Illustration>
-    {
-        protected override string InitialUrl()
-        {
-            return initialUrlFactory(PixivFetchEngine);
-        }
-    }
+    public class Comment<TFetchEngine>(TFetchEngine pixivFetchEngine, string initialUrl)
+        : BaseRecursivePixivAsyncEnumerator<Comment, PixivCommentResponse, TFetchEngine>(pixivFetchEngine, MakoApiKind.AppApi, initialUrl)
+        where TFetchEngine : class, IFetchEngine<Comment>;
 
-    public abstract class Novel<TFetchEngine>(TFetchEngine pixivFetchEngine, MakoApiKind makoApiKind)
-        : BaseRecursivePixivAsyncEnumerator<Novel, PixivNovelResponse, TFetchEngine>(pixivFetchEngine, makoApiKind)
-        where TFetchEngine : class, IFetchEngine<Novel>
-    {
-        public static Novel<TFetchEngine> WithInitialUrl(TFetchEngine engine, MakoApiKind kind, Func<TFetchEngine, string> initialUrlFactory)
-        {
-            return new NovelImpl<TFetchEngine>(engine, kind, initialUrlFactory);
-        }
-    }
-
-    private class NovelImpl<TFetchEngine>(TFetchEngine pixivFetchEngine, MakoApiKind makoApiKind, Func<TFetchEngine, string> initialUrlFactory)
-        : Novel<TFetchEngine>(pixivFetchEngine, makoApiKind)
-        where TFetchEngine : class, IFetchEngine<Novel>
-    {
-        protected override string InitialUrl()
-        {
-            return initialUrlFactory(PixivFetchEngine);
-        }
-    }
-
-    public abstract class Comment<TFetchEngine>(TFetchEngine pixivFetchEngine, MakoApiKind makoApiKind)
-        : BaseRecursivePixivAsyncEnumerator<Comment, PixivCommentResponse, TFetchEngine>(pixivFetchEngine, makoApiKind)
-        where TFetchEngine : class, IFetchEngine<Comment>
-    {
-        public static Comment<TFetchEngine> WithInitialUrl(TFetchEngine engine, MakoApiKind kind, Func<TFetchEngine, string> initialUrlFactory)
-        {
-            return new CommentImpl<TFetchEngine>(engine, kind, initialUrlFactory);
-        }
-    }
-
-    private class CommentImpl<TFetchEngine>(TFetchEngine pixivFetchEngine, MakoApiKind makoApiKind, Func<TFetchEngine, string> initialUrlFactory)
-        : Comment<TFetchEngine>(pixivFetchEngine, makoApiKind)
-        where TFetchEngine : class, IFetchEngine<Comment>
-    {
-        protected override string InitialUrl()
-        {
-            return initialUrlFactory(PixivFetchEngine);
-        }
-    }
-
-    public abstract class BookmarkTag<TFetchEngine>(TFetchEngine pixivFetchEngine, MakoApiKind makoApiKind)
-        : BaseRecursivePixivAsyncEnumerator<BookmarkTag, PixivBookmarkTagResponse, TFetchEngine>(pixivFetchEngine, makoApiKind)
-        where TFetchEngine : class, IFetchEngine<BookmarkTag>
-    {
-        public static BookmarkTag<TFetchEngine> WithInitialUrl(TFetchEngine engine, MakoApiKind kind, Func<TFetchEngine, string> initialUrlFactory)
-        {
-            return new BookmarkTagImpl<TFetchEngine>(engine, kind, initialUrlFactory);
-        }
-    }
-
-    private class BookmarkTagImpl<TFetchEngine>(TFetchEngine pixivFetchEngine, MakoApiKind makoApiKind, Func<TFetchEngine, string> initialUrlFactory)
-        : BookmarkTag<TFetchEngine>(pixivFetchEngine, makoApiKind)
-        where TFetchEngine : class, IFetchEngine<BookmarkTag>
-    {
-        protected override string InitialUrl()
-        {
-            return initialUrlFactory(PixivFetchEngine);
-        }
-    }
+    public class BookmarkTag<TFetchEngine>(TFetchEngine pixivFetchEngine, string initialUrl)
+        : BaseRecursivePixivAsyncEnumerator<BookmarkTag, PixivBookmarkTagResponse, TFetchEngine>(pixivFetchEngine, MakoApiKind.AppApi, initialUrl)
+        where TFetchEngine : class, IFetchEngine<BookmarkTag>;
 }

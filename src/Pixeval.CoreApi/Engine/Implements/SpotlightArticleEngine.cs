@@ -31,7 +31,7 @@ internal class SpotlightArticleEngine(MakoClient makoClient, EngineHandle? engin
 {
     public override IAsyncEnumerator<SpotlightArticle> GetAsyncEnumerator(CancellationToken cancellationToken = new CancellationToken())
     {
-        return new SpotlightArticleAsyncEnumerator(this, MakoApiKind.AppApi)!;
+        return new SpotlightArticleAsyncEnumerator(this, MakoApiKind.AppApi);
     }
 
     private class SpotlightArticleAsyncEnumerator(SpotlightArticleEngine pixivFetchEngine, MakoApiKind makoApiKind)
@@ -47,10 +47,8 @@ internal class SpotlightArticleEngine(MakoClient makoClient, EngineHandle? engin
             return rawEntity?.NextUrl;
         }
 
-        protected override string InitialUrl()
-        {
-            return "/v1/spotlight/articles?category=all";
-        }
+        protected override string InitialUrl => "/v1/spotlight/articles?category=all";
+        
 
         protected override IEnumerator<SpotlightArticle>? GetNewEnumerator(PixivSpotlightResponse? rawEntity)
         {

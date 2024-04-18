@@ -22,7 +22,6 @@ using System.Collections.Generic;
 using System.Threading;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Model;
-using Pixeval.CoreApi.Net;
 using Pixeval.Utilities;
 
 namespace Pixeval.CoreApi.Engine.Implements;
@@ -30,12 +29,9 @@ namespace Pixeval.CoreApi.Engine.Implements;
 internal class RecommendIllustratorEngine(MakoClient makoClient, TargetFilter targetFilter, EngineHandle? engineHandle)
     : AbstractPixivFetchEngine<User>(makoClient, engineHandle)
 {
-    private readonly TargetFilter _targetFilter = targetFilter;
-
-    public override IAsyncEnumerator<User> GetAsyncEnumerator(CancellationToken cancellationToken = new CancellationToken())
-    {
-        return RecursivePixivAsyncEnumerators.User<RecommendIllustratorEngine>
-            .WithInitialUrl(this, MakoApiKind.AppApi, engine => "/v1/user/recommended"
-                                                                + $"?filter={engine._targetFilter.GetDescription()}")!;
-    }
+    public override IAsyncEnumerator<User> GetAsyncEnumerator(CancellationToken cancellationToken = new CancellationToken()) =>
+        new RecursivePixivAsyncEnumerators.User<RecommendIllustratorEngine>(
+            this, 
+            "/v1/user/recommended" +
+            $"?filter={targetFilter.GetDescription()}");
 }

@@ -24,7 +24,6 @@ using System.Collections.Generic;
 using System.Threading;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Model;
-using Pixeval.CoreApi.Net;
 using Pixeval.Utilities;
 
 namespace Pixeval.CoreApi.Engine.Implements;
@@ -35,12 +34,8 @@ internal class RecommendMangaEngine(
     EngineHandle? engineHandle)
     : AbstractPixivFetchEngine<Illustration>(makoClient, engineHandle)
 {
-    private readonly TargetFilter _filter = filter;
-
-    public override IAsyncEnumerator<Illustration> GetAsyncEnumerator(
-        CancellationToken cancellationToken = new CancellationToken()) =>
-        RecursivePixivAsyncEnumerators.Illustration<RecommendMangaEngine>.WithInitialUrl(this,
-            MakoApiKind.AppApi,
-            engine => $"/v1/manga/recommended" +
-                      $"?filter={engine._filter.GetDescription()}")!;
+    public override IAsyncEnumerator<Illustration> GetAsyncEnumerator(CancellationToken cancellationToken = new CancellationToken()) =>
+        new RecursivePixivAsyncEnumerators.Illustration<RecommendMangaEngine>(this,
+            $"/v1/manga/recommended" +
+            $"?filter={filter.GetDescription()}");
 }
