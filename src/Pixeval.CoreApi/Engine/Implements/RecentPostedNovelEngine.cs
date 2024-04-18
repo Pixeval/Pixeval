@@ -24,7 +24,6 @@ using System.Collections.Generic;
 using System.Threading;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Model;
-using Pixeval.CoreApi.Net;
 using Pixeval.Utilities;
 
 namespace Pixeval.CoreApi.Engine.Implements;
@@ -33,10 +32,10 @@ public class RecentPostedNovelEngine(MakoClient makoClient, PrivacyPolicy privac
     EngineHandle? engineHandle)
     : AbstractPixivFetchEngine<Novel>(makoClient, engineHandle)
 {
-    private readonly PrivacyPolicy _privacyPolicy = privacyPolicy;
 
     public override IAsyncEnumerator<Novel> GetAsyncEnumerator(CancellationToken cancellationToken = new CancellationToken()) =>
-        RecursivePixivAsyncEnumerators.Novel<RecentPostedNovelEngine>
-            .WithInitialUrl(this, MakoApiKind.AppApi, engine => "/v1/novel/follow"
-                                                                + $"?restrict={engine._privacyPolicy.GetDescription()}")!;
+        new RecursivePixivAsyncEnumerators.Novel<RecentPostedNovelEngine>(
+            this, 
+            "/v1/novel/follow"
+            + $"?restrict={privacyPolicy.GetDescription()}");
 }

@@ -71,43 +71,41 @@ internal class SearchIllustrationEngine(
 
     public override IAsyncEnumerator<Illustration> GetAsyncEnumerator(CancellationToken cancellationToken = new CancellationToken())
     {
-        return new SearchAsyncEnumerator(this, MakoApiKind.AppApi)!;
+        return new SearchAsyncEnumerator(this);
     }
 
-    private class SearchAsyncEnumerator(SearchIllustrationEngine pixivFetchEngine, MakoApiKind makoApiKind) : RecursivePixivAsyncEnumerators.Illustration<SearchIllustrationEngine>(pixivFetchEngine, makoApiKind)
+    private class SearchAsyncEnumerator(SearchIllustrationEngine pixivFetchEngine) : RecursivePixivAsyncEnumerators.Illustration<SearchIllustrationEngine>(pixivFetchEngine, null!)
     {
-        protected override string InitialUrl()
+        protected override string InitialUrl
         {
-            return GetSearchUrl();
+            get
+            {
+                var match = PixivFetchEngine._matchOption.GetDescription();
+                var startDateSegment = PixivFetchEngine._startDate?.Let(dn => $"&start_date={dn:yyyy-MM-dd}");
+                var endDateSegment = PixivFetchEngine._endDate?.Let(dn => $"&start_date={dn:yyyy-MM-dd}");
+                var durationSegment = PixivFetchEngine._searchDuration is SearchDuration.Undecided
+                    ? null
+                    : $"&duration={PixivFetchEngine._searchDuration.GetDescription()}";
+                var sortSegment = PixivFetchEngine._sortOption != WorkSortOption.DoNotSort
+                    ? $"&sort={PixivFetchEngine._sortOption.GetDescription()}"
+                    : string.Empty;
+                var aiTypeSegment = PixivFetchEngine._aiType?.Let(t => $"&search_ai_type={(t ? 1 : 0)}");
+                return "/v1/search/illust"
+                       + $"?search_target={match}"
+                       + $"&word={PixivFetchEngine._tag}"
+                       + $"&filter={PixivFetchEngine._targetFilter.GetDescription()}"
+                       + $"&offset={PixivFetchEngine._current}"
+                       + sortSegment
+                       + startDateSegment
+                       + endDateSegment
+                       + durationSegment
+                       + aiTypeSegment;
+            }
         }
 
         protected override bool HasNextPage()
         {
             return PixivFetchEngine.RequestedPages <= PixivFetchEngine._pages - 1;
-        }
-
-        private string GetSearchUrl()
-        {
-            var match = PixivFetchEngine._matchOption.GetDescription();
-            var startDateSegment = PixivFetchEngine._startDate?.Let(dn => $"&start_date={dn:yyyy-MM-dd}");
-            var endDateSegment = PixivFetchEngine._endDate?.Let(dn => $"&start_date={dn:yyyy-MM-dd}");
-            var durationSegment = PixivFetchEngine._searchDuration is SearchDuration.Undecided
-                ? null
-                : $"&duration={PixivFetchEngine._searchDuration.GetDescription()}";
-            var sortSegment = PixivFetchEngine._sortOption != WorkSortOption.DoNotSort
-                ? $"&sort={PixivFetchEngine._sortOption.GetDescription()}"
-                : string.Empty;
-            var aiTypeSegment = PixivFetchEngine._aiType?.Let(t => $"&search_ai_type={(t ? 1 : 0)}");
-            return "/v1/search/illust"
-                   + $"?search_target={match}"
-                   + $"&word={PixivFetchEngine._tag}"
-                   + $"&filter={PixivFetchEngine._targetFilter.GetDescription()}"
-                   + $"&offset={PixivFetchEngine._current}"
-                   + sortSegment
-                   + startDateSegment
-                   + endDateSegment
-                   + durationSegment
-                   + aiTypeSegment;
         }
     }
 }
@@ -161,45 +159,43 @@ internal class SearchNovelEngine(
 
     public override IAsyncEnumerator<Novel> GetAsyncEnumerator(CancellationToken cancellationToken = new CancellationToken())
     {
-        return new SearchAsyncEnumerator(this, MakoApiKind.AppApi)!;
+        return new SearchAsyncEnumerator(this);
     }
 
-    private class SearchAsyncEnumerator(SearchNovelEngine pixivFetchEngine, MakoApiKind makoApiKind) : RecursivePixivAsyncEnumerators.Novel<SearchNovelEngine>(pixivFetchEngine, makoApiKind)
+    private class SearchAsyncEnumerator(SearchNovelEngine pixivFetchEngine) : RecursivePixivAsyncEnumerators.Novel<SearchNovelEngine>(pixivFetchEngine, null!)
     {
-        protected override string InitialUrl()
+        protected override string InitialUrl
         {
-            return GetSearchUrl();
+            get
+            {
+                var match = PixivFetchEngine._matchOption.GetDescription();
+                var startDateSegment = PixivFetchEngine._startDate?.Let(dn => $"&start_date={dn:yyyy-MM-dd}");
+                var endDateSegment = PixivFetchEngine._endDate?.Let(dn => $"&start_date={dn:yyyy-MM-dd}");
+                var durationSegment = PixivFetchEngine._searchDuration is SearchDuration.Undecided
+                    ? null
+                    : $"&duration={PixivFetchEngine._searchDuration.GetDescription()}";
+                var sortSegment = PixivFetchEngine._sortOption != WorkSortOption.DoNotSort
+                    ? $"&sort={PixivFetchEngine._sortOption.GetDescription()}"
+                    : string.Empty;
+                var aiTypeSegment = PixivFetchEngine._aiType?.Let(t => $"&search_ai_type={(t ? 1 : 0)}");
+                return "/v1/search/novel"
+                       + $"?search_target={match}"
+                       + $"&word={PixivFetchEngine._tag}"
+                       + $"&filter={PixivFetchEngine._targetFilter.GetDescription()}"
+                       + $"&offset={PixivFetchEngine._current}"
+                       + $"&merge_plain_keyword_results={PixivFetchEngine._mergePlainKeywordResults.ToString().ToLower()}"
+                       + $"&include_translated_tag_results={PixivFetchEngine._includeTranslatedTagResults.ToString().ToLower()}"
+                       + sortSegment
+                       + startDateSegment
+                       + endDateSegment
+                       + durationSegment
+                       + aiTypeSegment;
+            }
         }
 
         protected override bool HasNextPage()
         {
             return PixivFetchEngine.RequestedPages <= PixivFetchEngine._pages - 1;
-        }
-
-        private string GetSearchUrl()
-        {
-            var match = PixivFetchEngine._matchOption.GetDescription();
-            var startDateSegment = PixivFetchEngine._startDate?.Let(dn => $"&start_date={dn:yyyy-MM-dd}");
-            var endDateSegment = PixivFetchEngine._endDate?.Let(dn => $"&start_date={dn:yyyy-MM-dd}");
-            var durationSegment = PixivFetchEngine._searchDuration is SearchDuration.Undecided
-                ? null
-                : $"&duration={PixivFetchEngine._searchDuration.GetDescription()}";
-            var sortSegment = PixivFetchEngine._sortOption != WorkSortOption.DoNotSort
-                ? $"&sort={PixivFetchEngine._sortOption.GetDescription()}"
-                : string.Empty;
-            var aiTypeSegment = PixivFetchEngine._aiType?.Let(t => $"&search_ai_type={(t ? 1 : 0)}");
-            return "/v1/search/novel"
-                   + $"?search_target={match}"
-                   + $"&word={PixivFetchEngine._tag}"
-                   + $"&filter={PixivFetchEngine._targetFilter.GetDescription()}"
-                   + $"&offset={PixivFetchEngine._current}"
-                   + $"&merge_plain_keyword_results={PixivFetchEngine._mergePlainKeywordResults.ToString().ToLower()}"
-                   + $"&include_translated_tag_results={PixivFetchEngine._includeTranslatedTagResults.ToString().ToLower()}"
-                   + sortSegment
-                   + startDateSegment
-                   + endDateSegment
-                   + durationSegment
-                   + aiTypeSegment;
         }
     }
 }

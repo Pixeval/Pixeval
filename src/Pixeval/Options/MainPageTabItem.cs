@@ -30,27 +30,27 @@ namespace Pixeval.Options;
 /// </summary>
 public enum MainPageTabItem
 {
-    [LocalizedResource(typeof(MiscResources), nameof(MiscResources.MainPageTabDailyRecommendations))]
-    DailyRecommendation = 0,
+    [LocalizedResource(typeof(MainPageResources), nameof(MainPageResources.RecommendationsTabContent))]
+    Recommendation = 0,
 
-    [LocalizedResource(typeof(MiscResources), nameof(MiscResources.MainPageTabRanking))]
+    [LocalizedResource(typeof(MainPageResources), nameof(MainPageResources.RankingsTabContent))]
     Ranking = 1,
 
-    [LocalizedResource(typeof(MiscResources), nameof(MiscResources.MainPageTabBookmark))]
+    [LocalizedResource(typeof(MainPageResources), nameof(MainPageResources.BookmarksTabContent))]
     Bookmark = 2,
 
-    [LocalizedResource(typeof(MiscResources), nameof(MiscResources.MainPageTabFollow))]
+    [LocalizedResource(typeof(MainPageResources), nameof(MainPageResources.FollowingsTabContent))]
     Follow = 3,
 
-    [LocalizedResource(typeof(MiscResources), nameof(MiscResources.MainPageTabSpotlight))]
+    [LocalizedResource(typeof(MainPageResources), nameof(MainPageResources.SpotlightsTabContent))]
     Spotlight = 4,
 
-    [LocalizedResource(typeof(MiscResources), nameof(MiscResources.MainPageTabFeed))]
-    Feed = 5,
+    [LocalizedResource(typeof(MainPageResources), nameof(MainPageResources.RecommendUsersTabContent))]
+    RecommendUser = 5,
 
-    [LocalizedResource(typeof(MiscResources), nameof(MiscResources.MainPageTabUpdate))]
-    Update = 6,
+    [LocalizedResource(typeof(MainPageResources), nameof(MainPageResources.RecentPostsTabContent))]
+    RecentPost = 6,
 
-    [LocalizedResource(typeof(MiscResources), nameof(MiscResources.MainPageTabReverseSearch))]
-    ReverseSearch = 7
+    [LocalizedResource(typeof(MainPageResources), nameof(MainPageResources.NewWorksTabContent))]
+    NewWork = 7
 }

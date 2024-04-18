@@ -22,19 +22,16 @@ using System.Collections.Generic;
 using System.Threading;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Model;
-using Pixeval.CoreApi.Net;
 using Pixeval.Utilities;
 
 namespace Pixeval.CoreApi.Engine.Implements;
 
-public class RecentPostedIllustrationEngine(MakoClient makoClient, PrivacyPolicy privacyPolicy,
-        EngineHandle? engineHandle)
+public class RecentPostedIllustrationEngine(MakoClient makoClient, PrivacyPolicy privacyPolicy, EngineHandle? engineHandle)
     : AbstractPixivFetchEngine<Illustration>(makoClient, engineHandle)
 {
-    private readonly PrivacyPolicy _privacyPolicy = privacyPolicy;
-
     public override IAsyncEnumerator<Illustration> GetAsyncEnumerator(CancellationToken cancellationToken = new CancellationToken()) =>
-        RecursivePixivAsyncEnumerators.Illustration<RecentPostedIllustrationEngine>
-            .WithInitialUrl(this, MakoApiKind.AppApi, engine => "/v2/illust/follow"
-                                                                + $"?restrict={engine._privacyPolicy.GetDescription()}")!;
+        new RecursivePixivAsyncEnumerators.Illustration<RecentPostedIllustrationEngine>(
+            this, 
+            "/v2/illust/follow" + 
+            $"?restrict={privacyPolicy.GetDescription()}");
 }

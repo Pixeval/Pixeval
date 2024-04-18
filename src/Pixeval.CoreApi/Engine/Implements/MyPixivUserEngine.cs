@@ -23,19 +23,15 @@
 using System.Collections.Generic;
 using System.Threading;
 using Pixeval.CoreApi.Model;
-using Pixeval.CoreApi.Net;
 
 namespace Pixeval.CoreApi.Engine.Implements;
 
-internal class MyPixivEngine(MakoClient makoClient, long userId, EngineHandle? engineHandle)
+internal class MyPixivUserEngine(MakoClient makoClient, long userId, EngineHandle? engineHandle)
     : AbstractPixivFetchEngine<User>(makoClient, engineHandle)
 {
-    private readonly long _userId = userId;
-
-    public override IAsyncEnumerator<User> GetAsyncEnumerator(CancellationToken cancellationToken = new CancellationToken())
-    {
-        return RecursivePixivAsyncEnumerators.User<MyPixivEngine>
-            .WithInitialUrl(this, MakoApiKind.AppApi, engine => "/v1/user/mypixiv"
-                                                                + $"?user_id={engine._userId}")!;
-    }
+    public override IAsyncEnumerator<User> GetAsyncEnumerator(CancellationToken cancellationToken = new CancellationToken()) =>
+        new RecursivePixivAsyncEnumerators.User<MyPixivUserEngine>(
+            this, 
+            "/v1/user/mypixiv" + 
+            $"?user_id={userId}");
 }

@@ -1,8 +1,9 @@
-#region Copyright (c) Pixeval/Pixeval.CoreApi
+#region Copyright
+
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
-// Copyright (c) 2023 Pixeval.CoreApi/RecommendationEngine.cs
+// Copyright (c) 2024 Pixeval.CoreApi/NewNovelEngine.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -16,6 +17,7 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 #endregion
 
 using System.Collections.Generic;
@@ -26,20 +28,16 @@ using Pixeval.Utilities;
 
 namespace Pixeval.CoreApi.Engine.Implements;
 
-internal class RecommendIllustrationEngine(
+internal class NewNovelEngine(
     MakoClient makoClient,
-    WorkType? contentType,
     TargetFilter filter,
-    uint? maxBookmarkIdForRecommend,
-    uint? minBookmarkIdForRecentIllust,
+    uint? maxNovelId,
     EngineHandle? engineHandle)
-    : AbstractPixivFetchEngine<Illustration>(makoClient, engineHandle)
+    : AbstractPixivFetchEngine<Novel>(makoClient, engineHandle)
 {
-    public override IAsyncEnumerator<Illustration> GetAsyncEnumerator(CancellationToken cancellationToken = new CancellationToken()) =>
-        new RecursivePixivAsyncEnumerators.Illustration<RecommendIllustrationEngine>(this,
-            "/v1/illust/recommended"
+    public override IAsyncEnumerator<Novel> GetAsyncEnumerator(CancellationToken cancellationToken = new CancellationToken()) =>
+        new RecursivePixivAsyncEnumerators.Novel<NewNovelEngine>(this,
+            "/v1/novel/new"
             + $"?filter={filter.GetDescription()}"
-            + contentType?.Let(static s => $"&content_type={s.GetDescription()}")
-            + maxBookmarkIdForRecommend?.Let(static s => $"&max_bookmark_id_for_recommend={s}")
-            + minBookmarkIdForRecentIllust?.Let(static s => $"&min_bookmark_id_for_recent_illust={s}"));
+            + maxNovelId?.Let(static s => $"&max_novel_id={s}"));
 }

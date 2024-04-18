@@ -16,7 +16,6 @@
     <controls:SupportCustomTitleBarDragRegionPage.Resources>
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
         <converters1:NullableToVisibilityConverter x:Key="NullableToVisibilityConverter" />
-
         <DataTemplate x:Key="CommonSuggestionModelTemplate" x:DataType="pages:SuggestionModel">
             <Grid Padding="0,10" ColumnSpacing="10">
                 <Grid.ColumnDefinitions>
@@ -110,6 +109,10 @@
                     x:Uid="/MainPage/RecentPostsTab"
                     Icon="{controls1:GlyphIcon Glyph=CaloriesECAD}"
                     Tag="{x:Bind _viewModel.RecentPostsTag}" />
+                <NavigationViewItem
+                    x:Uid="/MainPage/NewWorksTab"
+                    Icon="{controls1:GlyphIcon Glyph=RecordE7C8}"
+                    Tag="{x:Bind _viewModel.NewWorksTag}" />
                 <NavigationViewItemHeader x:Uid="/MainPage/DownloadAndHistoriesTab" />
                 <NavigationViewItem
                     x:Name="TagsTab"

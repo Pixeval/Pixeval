@@ -110,7 +110,6 @@ public partial class Series
     public string Title { get; set; } = "";
 }
 
-
 internal class BoolToNumberJsonConverter : JsonConverter<bool>
 {
     public override bool Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)

@@ -22,7 +22,6 @@ using System.Collections.Generic;
 using System.Threading;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Model;
-using Pixeval.CoreApi.Net;
 using Pixeval.Utilities;
 
 namespace Pixeval.CoreApi.Engine.Implements;
@@ -31,14 +30,13 @@ public class UserSearchEngine(MakoClient makoClient, TargetFilter targetFilter, 
         string keyword, EngineHandle? engineHandle)
     : AbstractPixivFetchEngine<User>(makoClient, engineHandle)
 {
-    private readonly string _keyword = keyword;
-    private readonly TargetFilter _targetFilter = targetFilter;
     private readonly UserSortOption _userSortOption = userSortOption ?? UserSortOption.DateDescending;
 
-    public override IAsyncEnumerator<User> GetAsyncEnumerator(CancellationToken cancellationToken = new CancellationToken())
-    {
-        var sortSegment = _userSortOption != UserSortOption.DoNotSort ? $"&sort={_userSortOption.GetDescription()}" : string.Empty;
-        return RecursivePixivAsyncEnumerators.User<UserSearchEngine>.WithInitialUrl(this, MakoApiKind.AppApi,
-            engine => $"https://app-api.pixiv.net/v1/search/user?filter={engine._targetFilter.GetDescription()}&word={engine._keyword}{sortSegment}")!;
-    }
+    public override IAsyncEnumerator<User> GetAsyncEnumerator(CancellationToken cancellationToken = new CancellationToken()) =>
+        new RecursivePixivAsyncEnumerators.User<UserSearchEngine>(
+            this,
+            "/v1/search/user" +
+            $"?filter={targetFilter.GetDescription()}" +
+            $"&word={keyword}" +
+            (_userSortOption is UserSortOption.DoNotSort ? null : $"&sort={_userSortOption.GetDescription()}"));
 }

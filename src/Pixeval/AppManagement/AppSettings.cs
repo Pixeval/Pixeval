@@ -79,7 +79,7 @@ public partial record AppSettings : IWindowSettings
     public string AppFontFamilyName { get; set; } = AppSettingsResources.AppDefaultFontFamilyName;
 
     [SettingMetadata(SettingEntryCategory.Application, typeof(SettingsPageResources), nameof(SettingsPageResources.DefaultSelectedTabEntryHeader))]
-    public MainPageTabItem DefaultSelectedTabItem { get; set; } = MainPageTabItem.DailyRecommendation;
+    public MainPageTabItem DefaultSelectedTabItem { get; set; } = MainPageTabItem.Recommendation;
 
     [SettingMetadata(SettingEntryCategory.Download, typeof(SettingsPageResources), nameof(SettingsPageResources.DefaultDownloadPathMacroEntryHeader))]
     public string DefaultDownloadPathMacro { get; set; } =

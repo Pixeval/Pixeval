@@ -38,7 +38,7 @@ internal partial class FeedEngine(MakoClient makoClient, EngineHandle? engineHan
 {
     public override IAsyncEnumerator<Feed> GetAsyncEnumerator(CancellationToken cancellationToken = new CancellationToken())
     {
-        return new UserFeedsAsyncEnumerator(this, MakoApiKind.WebApi)!;
+        return new UserFeedsAsyncEnumerator(this, MakoApiKind.WebApi);
     }
 
     private partial class UserFeedsAsyncEnumerator
@@ -140,7 +140,7 @@ internal partial class FeedEngine(MakoClient makoClient, EngineHandle? engineHan
                 return true;
             }
 
-            result = Array.Empty<Task<Feed?>>();
+            result = [];
             return false;
         }
 
