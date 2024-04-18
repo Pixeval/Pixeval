@@ -489,10 +489,10 @@
                 <controls:SettingsCard
                     x:Uid="/SettingsPage/DefaultSearchSortOptionEntry"
                     HeaderIcon="{controls2:GlyphIcon Glyph=SortE8CB}"
-                    Tag="{x:Bind misc2:SettingEntry.DefaultSortOption}">
+                    Tag="{x:Bind misc2:SettingEntry.WorkSortOption}">
                     <controls1:EnumComboBox
                         EnumSource="{winUi:EnumValues Type=enum:WorkSortOption}"
-                        SelectedEnum="{x:Bind ViewModel.DefaultSortOption, Mode=TwoWay}"
+                        SelectedEnum="{x:Bind ViewModel.WorkSortOption, Mode=TwoWay}"
                         Style="{StaticResource SettingsEnumComboBoxStyle}" />
                 </controls:SettingsCard>
 

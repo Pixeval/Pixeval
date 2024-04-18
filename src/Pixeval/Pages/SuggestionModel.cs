@@ -44,6 +44,7 @@ public record SuggestionModel(string? Name, string? TranslatedName, SuggestionTy
     {
         SuggestionType.IllustId or SuggestionType.NovelId or SuggestionType.UserId => IconGlyph.OpenInNewWindowE8A7.GetGlyphIcon(FontSizeType.Small),
         SuggestionType.Tag or SuggestionType.IllustrationTag or SuggestionType.NovelTag => IconGlyph.TagE8EC.GetGlyphIcon(FontSizeType.Small),
+        SuggestionType.UserSearch => IconGlyph.ContactE77B.GetGlyphIcon(FontSizeType.Small),
         SuggestionType.Settings => IconGlyph.SettingsE713.GetGlyphIcon(FontSizeType.Small),
         SuggestionType.History => IconGlyph.HistoryE81C.GetGlyphIcon(FontSizeType.Small),
         _ => null
@@ -57,6 +58,11 @@ public record SuggestionModel(string? Name, string? TranslatedName, SuggestionTy
             new SuggestionModel(MiscResources.OpenNovelId, null, SuggestionType.NovelId),
             new SuggestionModel(MiscResources.OpenUserId, null, SuggestionType.UserId)
         ];
+    }
+
+    public static SuggestionModel FromUserSearch()
+    {
+        return new SuggestionModel(MiscResources.SearchUser, null, SuggestionType.UserSearch);
     }
 
     public static SuggestionModel FromTag(Tag tag)
@@ -95,6 +101,7 @@ public enum SuggestionType
     UserId,
     IllustId,
     NovelId,
+    UserSearch,
     IllustrationAutoCompleteTagHeader,
     IllustrationTrendingTagHeader,
     NovelTrendingTagHeader,

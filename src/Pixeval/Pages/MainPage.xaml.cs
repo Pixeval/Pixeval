@@ -109,7 +109,7 @@ public sealed partial class MainPage : SupportCustomTitleBarDragRegionPage
         _ = WeakReferenceMessenger.Default.TryRegister<MainPage, WorkTagClickedMessage>(this, (_, message) =>
         {
             Window.AppWindow.MoveInZOrderAtTop();
-            PerformSearch(message.Type, message.Tag);
+            PerformSearchWork(message.Type, message.Tag);
         });
         using var client = new HttpClient();
         await AppInfo.AppVersion.GitHubCheckForUpdateAsync(client);
@@ -173,6 +173,7 @@ public sealed partial class MainPage : SupportCustomTitleBarDragRegionPage
                 SuggestionType.IllustId or
                 SuggestionType.NovelId or
                 SuggestionType.UserId or
+                SuggestionType.UserSearch or
                 SuggestionType.IllustrationAutoCompleteTagHeader or
                 SuggestionType.IllustrationTrendingTagHeader or
                 SuggestionType.NovelTrendingTagHeader or
@@ -190,16 +191,16 @@ public sealed partial class MainPage : SupportCustomTitleBarDragRegionPage
         switch (args.ChosenSuggestion)
         {
             case SuggestionModel({ } name, var translatedName, SuggestionType.IllustrationTag):
-                PerformSearch(SimpleWorkType.IllustAndManga, name, translatedName);
+                PerformSearchWork(SimpleWorkType.IllustAndManga, name, translatedName);
                 break;
             case SuggestionModel({ } name, var translatedName, SuggestionType.NovelTag):
-                PerformSearch(SimpleWorkType.Novel, name, translatedName);
+                PerformSearchWork(SimpleWorkType.Novel, name, translatedName);
                 break;
             case SuggestionModel({ } name, var translatedName, SuggestionType.Tag):
-                PerformSearch(App.AppViewModel.AppSettings.SimpleWorkType, name, translatedName);
+                PerformSearchWork(App.AppViewModel.AppSettings.SimpleWorkType, name, translatedName);
                 break;
             default:
-                PerformSearch(App.AppViewModel.AppSettings.SimpleWorkType, args.QueryText);
+                PerformSearchWork(App.AppViewModel.AppSettings.SimpleWorkType, args.QueryText);
                 break;
         }
     }
@@ -222,6 +223,9 @@ public sealed partial class MainPage : SupportCustomTitleBarDragRegionPage
                     if (long.TryParse(sender.Text, out var userId))
                         await IllustratorViewerHelper.CreateWindowWithPageAsync(userId);
                     break;
+                case SuggestionType.UserSearch:
+                    PerformSearchUser(sender.Text);
+                    break;
                 case SuggestionType.Settings:
                     if (SettingEntry.LazyValues.Value.FirstOrDefault(se => se.GetLocalizedResourceContent() == name) is { } entry)
                         await NavigateToSettingEntryAsync(entry);
@@ -238,7 +242,19 @@ public sealed partial class MainPage : SupportCustomTitleBarDragRegionPage
         await _viewModel.SuggestionProvider.UpdateAsync(sender.Text);
     }
 
-    private void PerformSearch(SimpleWorkType type, string text, string? optTranslatedName = null)
+    private void PerformSearchWork(SimpleWorkType type, string text, string? optTranslatedName = null)
+    {
+        PerformSearch(text, optTranslatedName);
+        _ = MainPageRootFrame.Navigate(typeof(SearchWorksPage), (type, text));
+    }
+
+    private void PerformSearchUser(string text)
+    {
+        PerformSearch(text);
+        _ = MainPageRootFrame.Navigate(typeof(SearchUsersPage), text);
+    }
+
+    private void PerformSearch(string text, string? optTranslatedName = null)
     {
         using (var scope = App.AppViewModel.AppServicesScope)
         {
@@ -255,7 +271,6 @@ public sealed partial class MainPage : SupportCustomTitleBarDragRegionPage
         }
 
         NavigationView.SelectedItem = null;
-        _ = MainPageRootFrame.Navigate(typeof(SearchWorksPage), (type, text));
     }
 
     private async void OpenSearchSettingButton_OnTapped(object sender, TappedRoutedEventArgs e)

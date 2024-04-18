@@ -88,6 +88,8 @@ public class SuggestionStateMachine
             suggestions.AddRange(settingSuggestions.Select(settingSuggestion => new SuggestionModel(settingSuggestion.GetLocalizedResourceContent()!, settingSuggestion.Category.GetLocalizedResourceContent(), SuggestionType.Settings)));
         }
 
+        suggestions.Add(SuggestionModel.FromUserSearch());
+
         if (settingSuggestions.IsNotNullOrEmpty() && tagSuggestions.IsNotNullOrEmpty())
         {
             suggestions.Add(SuggestionModel.IllustrationAutoCompleteTagHeader);

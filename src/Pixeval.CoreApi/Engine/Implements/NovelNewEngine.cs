@@ -3,7 +3,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
-// Copyright (c) 2024 Pixeval.CoreApi/NewIllustrationEngine.cs
+// Copyright (c) 2024 Pixeval.CoreApi/NewNovelEngine.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -28,18 +28,16 @@ using Pixeval.Utilities;
 
 namespace Pixeval.CoreApi.Engine.Implements;
 
-internal class NewIllustrationEngine(
+internal class NovelNewEngine(
     MakoClient makoClient,
-    WorkType contentType,
     TargetFilter filter,
-    uint? maxIllustId,
+    uint? maxNovelId,
     EngineHandle? engineHandle)
-    : AbstractPixivFetchEngine<Illustration>(makoClient, engineHandle)
+    : AbstractPixivFetchEngine<Novel>(makoClient, engineHandle)
 {
-    public override IAsyncEnumerator<Illustration> GetAsyncEnumerator(CancellationToken cancellationToken = new CancellationToken()) =>
-        new RecursivePixivAsyncEnumerators.Illustration<NewIllustrationEngine>(this,
-            "/v1/illust/new"
-            + $"?content_type={contentType.GetDescription()}"
-            + $"&filter={filter.GetDescription()}"
-            + maxIllustId?.Let(static s => $"&max_illust_id={s}"));
+    public override IAsyncEnumerator<Novel> GetAsyncEnumerator(CancellationToken cancellationToken = new CancellationToken()) =>
+        new RecursivePixivAsyncEnumerators.Novel<NovelNewEngine>(this,
+            "/v1/novel/new"
+            + $"?filter={filter.GetDescription()}"
+            + maxNovelId?.Let(static s => $"&max_novel_id={s}"));
 }

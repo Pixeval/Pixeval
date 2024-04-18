@@ -139,8 +139,6 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject, IDi
 
         _ = await owner.CreateAcknowledgementAsync(LoginPageResources.RefreshingSessionFailedTitle,
             LoginPageResources.RefreshingSessionFailedContent);
-        await App.AppViewModel.MakoClient.DisposeAsync();
-        App.AppViewModel.MakoClient = null!;
         return false;
     }
 
