@@ -223,6 +223,12 @@
         "resolved": "1.2.0",
         "contentHash": "ydbxAOLd4oXWiWDBS7kVDlMf6JaKNcy7nbaQv7+1HSVqCW44TDFY/aeTolVzOSLddk0BEbCljXZjXDecYXHExg=="
       },
+      "Pixeval.Bypass": {
+        "type": "Direct",
+        "requested": "[1.0.8, )",
+        "resolved": "1.0.8",
+        "contentHash": "uaYb2lcpVlv3zJzUoaynAun0g6wusbbsN56PF4JuQbrDqPfPPXZJuwYJ13/lPZKCBm4FnflUXMDz0MX5I0tc7g=="
+      },
       "Pixeval.QRCoder": {
         "type": "Direct",
         "requested": "[1.4.5, )",
@@ -481,6 +487,12 @@
           "Microsoft.Windows.SDK.BuildTools": "10.0.22621.756"
         }
       },
+      "Pixeval.Bypass": {
+        "type": "Direct",
+        "requested": "[1.0.8, )",
+        "resolved": "1.0.8",
+        "contentHash": "uaYb2lcpVlv3zJzUoaynAun0g6wusbbsN56PF4JuQbrDqPfPPXZJuwYJ13/lPZKCBm4FnflUXMDz0MX5I0tc7g=="
+      },
       "Microsoft.Graphics.Win2D": {
         "type": "Transitive",
         "resolved": "1.2.0",
@@ -545,6 +557,12 @@
           "Microsoft.Windows.SDK.BuildTools": "10.0.22621.756"
         }
       },
+      "Pixeval.Bypass": {
+        "type": "Direct",
+        "requested": "[1.0.8, )",
+        "resolved": "1.0.8",
+        "contentHash": "uaYb2lcpVlv3zJzUoaynAun0g6wusbbsN56PF4JuQbrDqPfPPXZJuwYJ13/lPZKCBm4FnflUXMDz0MX5I0tc7g=="
+      },
       "Microsoft.Graphics.Win2D": {
         "type": "Transitive",
         "resolved": "1.2.0",
@@ -608,6 +626,12 @@
         "dependencies": {
           "Microsoft.Windows.SDK.BuildTools": "10.0.22621.756"
         }
+      },
+      "Pixeval.Bypass": {
+        "type": "Direct",
+        "requested": "[1.0.8, )",
+        "resolved": "1.0.8",
+        "contentHash": "uaYb2lcpVlv3zJzUoaynAun0g6wusbbsN56PF4JuQbrDqPfPPXZJuwYJ13/lPZKCBm4FnflUXMDz0MX5I0tc7g=="
       },
       "Microsoft.Graphics.Win2D": {
         "type": "Transitive",

@@ -49,7 +49,7 @@ public sealed partial class LoginPage
     {
         try
         {
-            await _viewModel.WebView2LoginAsync(this, useNewAccount, Navigated);
+            await _viewModel.LoginAsync(this, useNewAccount, Navigated);
         }
         catch (Exception exception)
         {
@@ -111,8 +111,4 @@ public sealed partial class LoginPage
         AppInfo.SaveContext();
     }
 
-    private void LoginPage_OnUnloaded(object sender, RoutedEventArgs e)
-    {
-        _viewModel.Dispose();
-    }
 }

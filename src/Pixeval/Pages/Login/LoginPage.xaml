@@ -10,7 +10,6 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:util="using:Pixeval.Util"
     Loaded="LoginPage_OnLoaded"
-    Unloaded="LoginPage_OnUnloaded"
     mc:Ignorable="d">
     <Grid
         Margin="0,32,0,0"
@@ -148,9 +147,5 @@
                 </PivotItem>
             </Pivot.Items>
         </Pivot>
-        <Border
-            Grid.Column="0"
-            Child="{x:Bind _viewModel.WebView, Mode=OneWay}"
-            CornerRadius="{ThemeResource ControlCornerRadius}" />
     </Grid>
 </controls:EnhancedWindowPage>
