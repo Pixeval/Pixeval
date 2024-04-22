@@ -95,7 +95,7 @@
                         IsTabStop="False"
                         Orientation="Horizontal">
                         <HyperlinkButton x:Uid="/SettingsPage/ViewPixevalWebsiteHyperlinkButton" NavigateUri="https://piexval.github.io/" />
-                        <HyperlinkButton x:Uid="/SettingsPage/GitHubRepositoryHyperlinkButton" NavigateUri="https://github.com/misc2/Pixeval" />
+                        <HyperlinkButton x:Uid="/SettingsPage/GitHubRepositoryHyperlinkButton" NavigateUri="https://github.com/Pixeval/Pixeval" />
                         <HyperlinkButton x:Uid="/SettingsPage/ReportBugHyperlinkButton" NavigateUri="https://github.com/Pixeval/Pixeval/issues/new/choose" />
                         <HyperlinkButton x:Uid="/SettingsPage/FeedbackByEmailHyperlinkButton" NavigateUri="mailto:decem0730@hotmail.com" />
                         <HyperlinkButton x:Uid="/SettingsPage/DonateDeveloperHyperlinkButton" NavigateUri="https://afdian.net/a/dylech30th" />
