@@ -25,6 +25,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
+using Pixeval.AppManagement;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Model;
 using Pixeval.Messages;
@@ -76,5 +77,15 @@ public sealed partial class WorkInfoPage
             md = markdownConverter.Convert(caption);
         }
         WorkCaptionMarkdownTextBlock.Text = md.ReplaceLineEndings(Environment.NewLine + Environment.NewLine);
+    }
+
+    private void MenuFlyoutItem_OnClick(object sender, RoutedEventArgs e)
+    {
+        var tag = sender.To<FrameworkElement>().GetTag<Tag>();
+        if (!App.AppViewModel.AppSettings.BlockedTags.Contains(tag.Name))
+        {
+            _ = App.AppViewModel.AppSettings.BlockedTags.Add(tag.Name);
+            AppInfo.SaveConfig(App.AppViewModel.AppSettings);
+        }
     }
 }

@@ -430,6 +430,7 @@
                     <controls:SettingsExpander.Items>
                         <controls:SettingsCard HorizontalContentAlignment="Stretch" ContentAlignment="Left">
                             <controls:TokenizingTextBox
+                                x:Uid="/SettingsPage/BlockedTagsTokenizingTextBox"
                                 ItemsSource="{x:Bind ViewModel.BlockedTags, Mode=OneWay}"
                                 TokenDelimiter=","
                                 TokenItemAdding="TokenizingTextBox_OnTokenItemAdding" />

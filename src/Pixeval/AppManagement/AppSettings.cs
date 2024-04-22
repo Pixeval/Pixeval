@@ -19,7 +19,7 @@
 #endregion
 
 using System;
-using System.Collections.Frozen;
+using System.Collections.Generic;
 using System.Globalization;
 using Windows.Foundation;
 using Microsoft.UI.Composition.SystemBackdrops;
@@ -167,7 +167,7 @@ public partial record AppSettings : IWindowSettings
 
     [SettingMetadata(SettingEntryCategory.BrowsingExperience, typeof(SettingsPageResources), nameof(SettingsPageResources.BlockedTagsEntryHeader))]
     [AttributeIgnore(typeof(SettingsViewModelAttribute<>))]
-    public FrozenSet<string> BlockedTags { get; set; } = Array.Empty<string>().ToFrozenSet();
+    public HashSet<string> BlockedTags { get; set; } = [];
 
     /// <summary>
     /// Indicates the maximum page count that are allowed to be retrieved during

@@ -19,7 +19,6 @@
 #endregion
 
 using System;
-using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing.Text;
@@ -47,7 +46,6 @@ using System.ComponentModel;
 using System.Collections.ObjectModel;
 using Pixeval.Download.Macros;
 using Pixeval.Utilities.Threading;
-using CommunityToolkit.WinUI.Controls;
 
 namespace Pixeval.Pages.Misc;
 
@@ -303,7 +301,7 @@ public partial class SettingsPageViewModel(FrameworkElement frameworkElement) : 
         if (appApiNameSame || imageNameSame || imageName2Same || oAuthNameSame || accountNameSame || webApiNameSame)
             AppInfo.SetNameResolvers(AppSetting);
 
-        AppSetting.BlockedTags = BlockedTags.ToFrozenSet();
+        AppSetting.BlockedTags = [.. BlockedTags];
     }
 
     public void CancelToken()
