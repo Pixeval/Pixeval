@@ -18,11 +18,9 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System.Linq;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.CoreApi.Global.Enum;
-using Pixeval.CoreApi.Model;
 
 namespace Pixeval.Pages.Capability;
 

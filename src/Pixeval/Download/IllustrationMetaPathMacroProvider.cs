@@ -25,7 +25,7 @@ using Pixeval.Download.Macros;
 
 namespace Pixeval.Download;
 
-public class IllustrationMetaPathMacroProvider : IMetaPathMacroProvider<IllustrationItemViewModel>
+public class IllustrationMetaPathMacroProvider : IMetaPathMacroProvider
 {
-    public IEnumerable<IMacro<IllustrationItemViewModel>> AvailableMacros { get; } = MetaPathMacroAttributeHelper.GetAttachedTypeInstances<IMacro<IllustrationItemViewModel>>(typeof(IllustrationItemViewModel));
+    public IEnumerable<IMacro> AvailableMacros { get; } = MetaPathMacroAttributeHelper.GetAttachedTypeInstances<IllustrationItemViewModel>();
 }

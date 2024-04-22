@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/SpotlightIdMacro.cs
+// Copyright (c) 2023 Pixeval/IllustratorIdMacro.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -23,13 +23,13 @@ using Pixeval.Download.MacroParser;
 
 namespace Pixeval.Download.Macros;
 
-[MetaPathMacro(typeof(IllustrationItemViewModel))]
-public class SpotlightIdMacro : IMacro<IllustrationItemViewModel>.ITransducer
+[MetaPathMacro<IWorkViewModel>]
+public class ArtistIdMacro : ITransducer<IWorkViewModel>
 {
-    public string Name => "spot_id";
+    public string Name => "artist_id";
 
-    public string Substitute(IllustrationItemViewModel context)
+    public string Substitute(IWorkViewModel context)
     {
-        return context.Entry.SpotlightId ?? MacroParserResources.UnknownSpotlightId;
+        return context.User.Id.ToString();
     }
 }

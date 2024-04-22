@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -23,12 +23,12 @@ using System.Linq;
 
 namespace Pixeval.Download.MacroParser;
 
-public interface IMetaPathMacroProvider<TContext>
+public interface IMetaPathMacroProvider
 {
-    IEnumerable<IMacro<TContext>> AvailableMacros { get; }
+    IEnumerable<IMacro> AvailableMacros { get; }
 
-    IMacro<TContext> TryResolve(string macro)
+    IMacro TryResolve(string macro)
     {
-        return AvailableMacros.FirstOrDefault(m => m.Name == macro) ?? new IMacro<TContext>.Unknown();
+        return AvailableMacros.FirstOrDefault(m => m.Name == macro) ?? new Unknown();
     }
 }

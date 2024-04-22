@@ -18,7 +18,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Pixeval.Controls.FlyoutContent;
@@ -31,11 +30,11 @@ public sealed partial class IllustrationResultFilterContent
     [ObservableProperty] private IllustrationResultFilterContentModel _viewModel = new();
 
     public FilterSettings GetFilterSettings =>
-        new(ViewModel.IncludeTags.ToArray(),
-            ViewModel.ExcludeTags.ToArray(),
+        new([.. ViewModel.IncludeTags],
+            [.. ViewModel.ExcludeTags],
             ViewModel.LeastBookmark,
             ViewModel.MaximumBookmark,
-            ViewModel.UserGroupName.ToArray(),
+            [.. ViewModel.UserGroupName],
             ViewModel.IllustratorName.DeepClone(),
             ViewModel.IllustratorId,
             ViewModel.IllustrationName.DeepClone(),

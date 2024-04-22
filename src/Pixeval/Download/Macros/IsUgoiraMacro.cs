@@ -23,8 +23,8 @@ using Pixeval.Download.MacroParser;
 
 namespace Pixeval.Download.Macros;
 
-[MetaPathMacro(typeof(IllustrationItemViewModel))]
-public class IsUgoiraMacro : IMacro<IllustrationItemViewModel>.IPredicate
+[MetaPathMacro<IllustrationItemViewModel>]
+public class IsUgoiraMacro : IPredicate<IllustrationItemViewModel>
 {
     public string Name => "if_gif";
 
@@ -32,4 +32,56 @@ public class IsUgoiraMacro : IMacro<IllustrationItemViewModel>.IPredicate
     {
         return context.IsUgoira;
     }
+}
+
+/// <summary>
+/// 包含R18G
+/// </summary>
+[MetaPathMacro<IWorkViewModel>]
+public class IsR18Macro : IPredicate<IWorkViewModel>
+{
+    public string Name => "if_r18";
+
+    public bool Match(IWorkViewModel context)
+    {
+        return context.IsXRestricted;
+    }
+}
+
+[MetaPathMacro<IWorkViewModel>]
+public class IsR18GMacro : IPredicate<IWorkViewModel>
+{
+    public string Name => "if_r18g";
+
+    public bool Match(IWorkViewModel context)
+    {
+        return context is { IsXRestricted: true, XRestrictionCaption: BadgeMode.R18G };
+    }
+}
+
+[MetaPathMacro<IWorkViewModel>]
+public class IsAiMacro : IPredicate<IWorkViewModel>
+{
+    public string Name => "if_ai";
+
+    public bool Match(IWorkViewModel context)
+    {
+        return context.IsAiGenerated;
+    }
+}
+
+[MetaPathMacro<IllustrationItemViewModel>]
+public class IsIllustrationMacro : IPredicate<IllustrationItemViewModel>
+{
+    public string Name => "if_illust";
+
+    public bool Match(IllustrationItemViewModel context) => true;
+}
+
+[MetaPathMacro<NovelItemViewModel>]
+public class IsNovelMacro : IPredicate<NovelItemViewModel>
+{
+    public string Name => "if_novel";
+
+    public bool Match(NovelItemViewModel context) => true;
 }

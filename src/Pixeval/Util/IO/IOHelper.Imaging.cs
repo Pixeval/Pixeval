@@ -30,6 +30,7 @@ using Windows.Storage.FileProperties;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.AppManagement;
 using Pixeval.CoreApi.Net.Response;
+using Pixeval.Download.Macros;
 using Pixeval.Options;
 using Pixeval.Utilities;
 using SixLabors.ImageSharp;
@@ -219,16 +220,21 @@ public static partial class IoHelper
         };
     }
 
-    public static string GetIllustrationExtension(string macroName, IllustrationDownloadFormat? illustrationDownloadFormat = null)
+    public static string GetIllustrationExtension(IllustrationDownloadFormat? illustrationDownloadFormat = null)
     {
         illustrationDownloadFormat ??= App.AppViewModel.AppSettings.IllustrationDownloadFormat;
         return illustrationDownloadFormat switch
         {
-            IllustrationDownloadFormat.Original => $"<{macroName}>",
+            IllustrationDownloadFormat.Original => FileExtensionMacro.NameConst,
             IllustrationDownloadFormat.Jpg or IllustrationDownloadFormat.Png or IllustrationDownloadFormat.Bmp => "." + illustrationDownloadFormat.ToString()!.ToLower(),
             IllustrationDownloadFormat.WebPLossless or IllustrationDownloadFormat.WebPLossy => ".webp",
             _ => ThrowHelper.ArgumentOutOfRange<IllustrationDownloadFormat?, string>(illustrationDownloadFormat)
         };
+    }
+
+    public static string GetNovelExtension()
+    {
+        return ".txt";
     }
 
     public static async Task<Image> GetImageFromZipStreamAsync(Stream zipStream, UgoiraMetadataResponse ugoiraMetadataResponse)
@@ -259,6 +265,6 @@ public static partial class IoHelper
     public static string GetPathFromUrlFormat(string path, string url)
     {
         var index = url.LastIndexOf('.');
-        return path.Replace("<illust_ext>", url[index..]);
+        return path.Replace($"<{FileExtensionMacro.NameConst}>", url[index..]);
     }
 }

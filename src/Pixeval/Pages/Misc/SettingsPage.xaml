@@ -625,7 +625,7 @@
                                     IsItemClickEnabled="True"
                                     IsWrapped="True"
                                     ItemClick="PathMacroTokenInputBox_OnTokenTapped"
-                                    ItemsSource="{x:Bind misc:SettingsPageViewModel.AvailableIllustMacros}"
+                                    ItemsSource="{x:Bind misc:SettingsPageViewModel.AvailableMacros}"
                                     SelectionMode="None">
                                     <labs:TokenView.ItemTemplate>
                                         <DataTemplate x:DataType="controls1:StringRepresentableItem">

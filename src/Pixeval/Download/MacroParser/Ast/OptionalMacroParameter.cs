@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -22,7 +22,7 @@ namespace Pixeval.Download.MacroParser.Ast;
 
 public record OptionalMacroParameter<TContext>(Sequence<TContext>? Content) : IMetaPathNode<TContext>
 {
-    public string Evaluate(IMetaPathMacroProvider<TContext> env, TContext context)
+    public string Evaluate(IMetaPathMacroProvider env, TContext context)
     {
         return Content?.Evaluate(env, context) ?? string.Empty;
     }

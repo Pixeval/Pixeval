@@ -23,8 +23,8 @@ using Pixeval.Download.MacroParser;
 
 namespace Pixeval.Download.Macros;
 
-[MetaPathMacro(typeof(IllustrationItemViewModel))]
-public class IsMangaMacro : IMacro<IllustrationItemViewModel>.IPredicate
+[MetaPathMacro<IllustrationItemViewModel>]
+public class IsMangaMacro : IPredicate<IllustrationItemViewModel>
 {
     public string Name => "if_manga";
 

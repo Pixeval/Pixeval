@@ -23,10 +23,12 @@ using Pixeval.Download.MacroParser;
 
 namespace Pixeval.Download.Macros;
 
-[MetaPathMacro(typeof(IllustrationItemViewModel))]
-public class MangaIndexMacro : IMacro<IllustrationItemViewModel>.ITransducer
+[MetaPathMacro<IllustrationItemViewModel>]
+public class MangaIndexMacro : ITransducer<IllustrationItemViewModel>
 {
-    public string Name => "manga_index";
+    public const string NameConst = "manga_index";
+
+    public string Name => NameConst;
 
     public string Substitute(IllustrationItemViewModel context)
     {
