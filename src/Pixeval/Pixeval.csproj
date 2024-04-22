@@ -27,8 +27,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="CommunityToolkit.Labs.WinUI.Controls.MarkdownTextBlock" Version="0.1.240305-build.1659" />
-        <PackageReference Include="CommunityToolkit.Labs.WinUI.Shimmer" Version="0.1.240305-build.1659" />
+        <PackageReference Include="CommunityToolkit.Labs.WinUI.Controls.MarkdownTextBlock" Version="0.1.240404-build.1669" />
+        <PackageReference Include="CommunityToolkit.Labs.WinUI.Shimmer" Version="0.1.240404-build.1669" />
         <PackageReference Include="CommunityToolkit.Labs.WinUI.TokenView" Version="0.1.230830" />
         <PackageReference Include="CommunityToolkit.WinUI.Behaviors" Version="8.0.240109" />
         <PackageReference Include="CommunityToolkit.WinUI.Collections" Version="8.0.240109" />

@@ -35,6 +35,7 @@ public sealed class IllustrationViewViewModel : SortableEntryViewViewModel<Illus
     private IllustrationViewViewModel(IllustrationViewDataProvider dataProvider)
     {
         DataProvider = dataProvider;
+        dataProvider.View.Filter = DefaultFilter;
         dataProvider.View.CollectionChanged += (_, _) => OnPropertyChanged(nameof(HasNoItem));
     }
 

@@ -20,6 +20,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.WinUI.Collections;
 using Pixeval.CoreApi.Engine;
@@ -63,11 +64,7 @@ public abstract partial class SortableEntryViewViewModel<T, TViewModel> : EntryV
         DataProvider.View.SortDescriptions.Clear();
     }
 
-    public Func<IWorkViewModel, bool>? Filter
-    {
-        get => (Func<IWorkViewModel, bool>?)DataProvider.View.Filter;
-        set => DataProvider.View.Filter = value;
-    }
+    public Func<IWorkViewModel, bool>? Filter { get; set; }
 
     public IReadOnlyCollection<IWorkViewModel> View => DataProvider.View;
 
@@ -76,5 +73,13 @@ public abstract partial class SortableEntryViewViewModel<T, TViewModel> : EntryV
     public void ResetEngine(IFetchEngine<IWorkEntry>? newEngine, int itemLimit = -1)
     {
         DataProvider.ResetEngine((IFetchEngine<T>?)newEngine, itemLimit);
+    }
+
+    protected bool DefaultFilter(IWorkViewModel entry)
+    {
+        if (entry.Tags.Any(tag => App.AppViewModel.AppSettings.BlockedTags.Contains(tag.Name)))
+            return false;
+
+        return Filter?.Invoke(entry) is not false;
     }
 }

@@ -3,7 +3,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2024 Pixeval/NovelViewViewModel.cs
+// Copyright (c) 2024 Pixeval/IsAiMacro.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -20,26 +20,18 @@
 
 #endregion
 
-using Pixeval.CoreApi.Model;
+using Pixeval.Controls;
+using Pixeval.Download.MacroParser;
 
-namespace Pixeval.Controls;
+namespace Pixeval.Download.Macros;
 
-public sealed class NovelViewViewModel : SortableEntryViewViewModel<Novel, NovelItemViewModel>
+[MetaPathMacro<IWorkViewModel>]
+public class IsAiMacro : IPredicate<IWorkViewModel>
 {
-    public NovelViewViewModel(NovelViewViewModel viewModel) : this(viewModel.DataProvider.CloneRef())
-    {
-    }
+    public string Name => "if_ai";
 
-    public NovelViewViewModel() : this(new NovelViewDataProvider())
+    public bool Match(IWorkViewModel context)
     {
+        return context.IsAiGenerated;
     }
-
-    private NovelViewViewModel(NovelViewDataProvider dataProvider)
-    {
-        DataProvider = dataProvider;
-        dataProvider.View.Filter = DefaultFilter;
-        dataProvider.View.CollectionChanged += (_, _) => OnPropertyChanged(nameof(HasNoItem));
-    }
-
-    public override NovelViewDataProvider DataProvider { get; }
 }

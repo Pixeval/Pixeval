@@ -121,9 +121,10 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
         }
     }
 
-    public ImageViewerPageViewModel(IllustrationItemViewModel illustrationViewModel, FrameworkElement frameworkElement) : base(frameworkElement)
+    public ImageViewerPageViewModel(IllustrationItemViewModel illustrationViewModel, IllustrationItemViewModel originalIllustrationViewModel, FrameworkElement frameworkElement) : base(frameworkElement)
     {
         IllustrationViewModel = illustrationViewModel;
+        OriginalIllustrationViewModel = originalIllustrationViewModel;
         _ = LoadImage();
 
         InitializeCommands();
@@ -162,6 +163,8 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
     public CancellationHandle ImageLoadingCancellationHandle { get; } = new();
 
     public IllustrationItemViewModel IllustrationViewModel { get; }
+
+    public IllustrationItemViewModel OriginalIllustrationViewModel { get; }
 
     public void Dispose()
     {

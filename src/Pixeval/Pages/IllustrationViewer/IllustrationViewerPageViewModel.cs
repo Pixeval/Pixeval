@@ -159,7 +159,7 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
             // 这里可以触发总页数的更新
             Pages = CurrentIllustration.GetMangaIllustrationViewModels().ToArray();
             // 保证_pages里所有的IllustrationViewModel都是生成的，从而删除的时候一律DisposeForce
-            Images = Pages.Select(p => new ImageViewerPageViewModel(p, FrameworkElement)).ToArray();
+            Images = Pages.Select(p => new ImageViewerPageViewModel(p, CurrentIllustration, FrameworkElement)).ToArray();
 
             IllustrationInfoTag.Parameter = CurrentIllustration.Entry;
             CommentsTag.Parameter = (CommentType.Illustration, IllustrationId);

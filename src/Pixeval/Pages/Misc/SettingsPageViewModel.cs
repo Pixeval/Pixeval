@@ -89,6 +89,8 @@ public partial class SettingsPageViewModel(FrameworkElement frameworkElement) : 
 
     public ObservableCollection<string> PixivWebApiNameResolver { get; set; } = [.. App.AppViewModel.AppSettings.PixivWebApiNameResolver];
 
+    public ObservableCollection<string> BlockedTags { get; set; } = [.. App.AppViewModel.AppSettings.BlockedTags];
+
     public AppSettings AppSetting { get; set; } = App.AppViewModel.AppSettings with { };
 
     [ObservableProperty] private bool _checkingUpdate;
@@ -256,6 +258,7 @@ public partial class SettingsPageViewModel(FrameworkElement frameworkElement) : 
         PixivOAuthNameResolver = [.. AppSetting.PixivOAuthNameResolver];
         PixivAccountNameResolver = [.. AppSetting.PixivAccountNameResolver];
         PixivWebApiNameResolver = [.. AppSetting.PixivWebApiNameResolver];
+        BlockedTags = [.. AppSetting.BlockedTags];
 
         // see OnPropertyChanged
         OnPropertyChanged(nameof(DisableDomainFronting));
@@ -297,6 +300,8 @@ public partial class SettingsPageViewModel(FrameworkElement frameworkElement) : 
 
         if (appApiNameSame || imageNameSame || imageName2Same || oAuthNameSame || accountNameSame || webApiNameSame)
             AppInfo.SetNameResolvers(AppSetting);
+
+        AppSetting.BlockedTags = [.. BlockedTags];
     }
 
     public void CancelToken()
