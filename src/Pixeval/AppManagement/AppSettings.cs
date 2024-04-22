@@ -135,12 +135,6 @@ public partial record AppSettings : IWindowSettings
     [SettingMetadata(SettingEntryCategory.Search, typeof(SettingsPageResources), nameof(SettingsPageResources.DefaultSearchTagMatchOptionEntryHeader))]
     public SearchNovelTagMatchOption SearchNovelTagMatchOption { get; set; } = SearchNovelTagMatchOption.PartialMatchForTags;
 
-    /// <summary>
-    /// Indicates the starting page's number of keyword search
-    /// </summary>
-    [SettingMetadata(SettingEntryCategory.Search, typeof(SettingsPageResources), nameof(SettingsPageResources.SearchStartsFromEntryHeader))]
-    public int SearchStartingFromPageNumber { get; set; } = 1;
-
     [SettingMetadata(SettingEntryCategory.Search, typeof(SettingsPageResources), nameof(SettingsPageResources.MaximumSearchHistoryRecordsEntryHeader))]
     public int MaximumSearchHistoryRecords { get; set; } = 50;
 
@@ -158,13 +152,6 @@ public partial record AppSettings : IWindowSettings
 
     [SettingMetadata(SettingEntryCategory.Search, typeof(SettingsPageResources), nameof(SettingsPageResources.MaximumSuggestionBoxSearchHistoryEntryHeader))]
     public int MaximumSuggestionBoxSearchHistory { get; set; } = 10;
-
-    /// <summary>
-    /// Indicates the maximum page count that are allowed to be retrieved during
-    /// keyword search(30 entries per page)
-    /// </summary>
-    [SettingMetadata(SettingEntryCategory.Search, typeof(SettingsPageResources), nameof(SettingsPageResources.MaximumSearchPageLimitHeader))]
-    public int PageLimitForKeywordSearch { get; set; } = 100;
 
     /// <summary>
     /// The target filter that indicates the type of the client

@@ -547,30 +547,6 @@
                 </controls:SettingsExpander>
 
                 <controls:SettingsCard
-                    x:Uid="/SettingsPage/MaximumSearchPageLimit"
-                    HeaderIcon="{controls2:GlyphIcon Glyph=RulerED5E}"
-                    Tag="{x:Bind misc2:SettingEntry.PageLimitForKeywordSearch}">
-                    <NumberBox
-                        x:Uid="/SettingsPage/MaximumSearchPageLimitNumberBox"
-                        Maximum="100"
-                        Minimum="1"
-                        Style="{StaticResource SettingsNumberBoxStyle}"
-                        Value="{x:Bind ViewModel.PageLimitForKeywordSearch, Mode=TwoWay}" />
-                </controls:SettingsCard>
-
-                <controls:SettingsCard
-                    x:Uid="/SettingsPage/SearchStartsFromEntry"
-                    HeaderIcon="{controls2:GlyphIcon Glyph=StartPointE819}"
-                    Tag="{x:Bind misc2:SettingEntry.SearchStartingFromPageNumber}">
-                    <NumberBox
-                        x:Uid="/SettingsPage/SearchStartsFromNumberBox"
-                        Maximum="150"
-                        Minimum="1"
-                        Style="{StaticResource SettingsNumberBoxStyle}"
-                        Value="{x:Bind ViewModel.SearchStartingFromPageNumber, Mode=TwoWay}" />
-                </controls:SettingsCard>
-
-                <controls:SettingsCard
                     x:Uid="/SettingsPage/SearchDurationEntry"
                     HeaderIcon="{controls2:GlyphIcon Glyph=EaseOfAccessE776}"
                     Tag="{x:Bind misc2:SettingEntry.SearchDuration}">

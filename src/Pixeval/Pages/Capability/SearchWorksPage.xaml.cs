@@ -50,8 +50,6 @@ public sealed partial class SearchWorksPage : IScrollViewProvider
             SimpleWorkTypeComboBox.GetSelectedItem<SimpleWorkType>() is SimpleWorkType.IllustAndManga
                 ? App.AppViewModel.MakoClient.SearchIllustrations(
                     _searchText,
-                    settings.SearchStartingFromPageNumber,
-                    settings.PageLimitForKeywordSearch,
                     settings.SearchIllustrationTagMatchOption,
                     settings.WorkSortOption,
                     settings.SearchDuration,
@@ -60,8 +58,6 @@ public sealed partial class SearchWorksPage : IScrollViewProvider
                     settings.UsePreciseRangeForSearch ? settings.SearchEndDate : null)
                 : App.AppViewModel.MakoClient.SearchNovels(
                     _searchText,
-                    settings.SearchStartingFromPageNumber,
-                    settings.PageLimitForKeywordSearch,
                     settings.SearchNovelTagMatchOption,
                     settings.WorkSortOption,
                     settings.SearchDuration,
