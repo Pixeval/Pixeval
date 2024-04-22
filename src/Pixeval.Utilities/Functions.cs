@@ -34,9 +34,9 @@ public static class Functions
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static ROut? Let<TIn, ROut>(this TIn obj, Func<TIn, ROut> block)
+    public static ROut Let<TIn, ROut>(this TIn obj, Func<TIn, ROut> block)
     {
-        return obj is not null ? block(obj) : default;
+        return block(obj);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

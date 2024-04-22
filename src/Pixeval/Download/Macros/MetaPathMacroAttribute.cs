@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -22,29 +22,30 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Pixeval.Download.MacroParser;
 
 namespace Pixeval.Download.Macros;
 
-public class MetaPathMacroAttribute(object key) : Attribute
-{
-    public object Key = key;
-}
+[AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
+public class MetaPathMacroAttribute<TContext> : Attribute;
 
 public static class MetaPathMacroAttributeHelper
 {
-    public static IEnumerable<T> GetAttachedTypeInstances<T>()
+    public static IEnumerable<IMacro> GetAttachedTypeInstances()
     {
         return Assembly.GetExecutingAssembly().GetTypes()
-            .Where(it => it.GetCustomAttribute<MetaPathMacroAttribute>() is not null)
+            .Where(t => t.GetCustomAttribute(typeof(MetaPathMacroAttribute<>))?.GetType() is not null)
             .Select(Activator.CreateInstance)
-            .OfType<T>();
+            .OfType<IMacro>();
     }
 
-    public static IEnumerable<T> GetAttachedTypeInstances<T>(object key)
+    public static IEnumerable<IMacro> GetAttachedTypeInstances<TContext>()
     {
         return Assembly.GetExecutingAssembly().GetTypes()
-            .Where(it => it.GetCustomAttribute<MetaPathMacroAttribute>() is { Key: var attrKey } && attrKey.Equals(key))
+            .Where(t =>
+                t.GetCustomAttribute(typeof(MetaPathMacroAttribute<>))?.GetType()
+                    .GenericTypeArguments is [var type] && type.IsAssignableFrom(typeof(TContext)))
             .Select(Activator.CreateInstance)
-            .OfType<T>();
+            .OfType<IMacro>();
     }
 }

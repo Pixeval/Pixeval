@@ -84,7 +84,7 @@ public partial record AppSettings : IWindowSettings
     [SettingMetadata(SettingEntryCategory.Download, typeof(SettingsPageResources), nameof(SettingsPageResources.DefaultDownloadPathMacroEntryHeader))]
     public string DefaultDownloadPathMacro { get; set; } =
         Environment.GetFolderPath(Environment.SpecialFolder.MyPictures, Environment.SpecialFolderOption.Create)
-        + @"\@{if_spot=@{spot_title}}\@{if_manga=[@{artist_name}] @{illust_title}}\[@{artist_name}] @{illust_id}@{if_manga=p@{manga_index}}@{illust_ext}";
+        + @"\@{if_manga=[@{artist_name}] @{title}}\[@{artist_name}] @{id}@{if_manga=p@{manga_index}}@{ext}";
 
     [SettingMetadata(SettingEntryCategory.Download, typeof(SettingsPageResources), nameof(SettingsPageResources.WorkDownloadFormatEntryHeader))]
     public UgoiraDownloadFormat UgoiraDownloadFormat { get; set; } = UgoiraDownloadFormat.WebPLossless;
@@ -135,12 +135,6 @@ public partial record AppSettings : IWindowSettings
     [SettingMetadata(SettingEntryCategory.Search, typeof(SettingsPageResources), nameof(SettingsPageResources.DefaultSearchTagMatchOptionEntryHeader))]
     public SearchNovelTagMatchOption SearchNovelTagMatchOption { get; set; } = SearchNovelTagMatchOption.PartialMatchForTags;
 
-    /// <summary>
-    /// Indicates the starting page's number of keyword search
-    /// </summary>
-    [SettingMetadata(SettingEntryCategory.Search, typeof(SettingsPageResources), nameof(SettingsPageResources.SearchStartsFromEntryHeader))]
-    public int SearchStartingFromPageNumber { get; set; } = 1;
-
     [SettingMetadata(SettingEntryCategory.Search, typeof(SettingsPageResources), nameof(SettingsPageResources.MaximumSearchHistoryRecordsEntryHeader))]
     public int MaximumSearchHistoryRecords { get; set; } = 50;
 
@@ -158,13 +152,6 @@ public partial record AppSettings : IWindowSettings
 
     [SettingMetadata(SettingEntryCategory.Search, typeof(SettingsPageResources), nameof(SettingsPageResources.MaximumSuggestionBoxSearchHistoryEntryHeader))]
     public int MaximumSuggestionBoxSearchHistory { get; set; } = 10;
-
-    /// <summary>
-    /// Indicates the maximum page count that are allowed to be retrieved during
-    /// keyword search(30 entries per page)
-    /// </summary>
-    [SettingMetadata(SettingEntryCategory.Search, typeof(SettingsPageResources), nameof(SettingsPageResources.MaximumSearchPageLimitHeader))]
-    public int PageLimitForKeywordSearch { get; set; } = 100;
 
     /// <summary>
     /// The target filter that indicates the type of the client

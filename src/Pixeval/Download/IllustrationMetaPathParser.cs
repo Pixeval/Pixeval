@@ -28,7 +28,7 @@ public class IllustrationMetaPathParser : IMetaPathParser<IllustrationItemViewMo
 {
     private readonly MacroParser<IllustrationItemViewModel> _parser = new();
 
-    public IMetaPathMacroProvider<IllustrationItemViewModel> MacroProvider { get; } = new IllustrationMetaPathMacroProvider();
+    public IMetaPathMacroProvider MacroProvider { get; } = new IllustrationMetaPathMacroProvider();
 
     public string Reduce(string raw, IllustrationItemViewModel context)
     {

@@ -19,11 +19,9 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
@@ -38,7 +36,6 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
-using Pixeval.AppManagement;
 using Pixeval.Util.Threading;
 using Pixeval.Utilities;
 using SixLabors.ImageSharp.PixelFormats;
@@ -47,7 +44,6 @@ using SixLabors.ImageSharp.Processing.Processors.Quantization;
 using WinUI3Utilities;
 using Brush = Microsoft.UI.Xaml.Media.Brush;
 using Color = Windows.UI.Color;
-using FontFamily = Microsoft.UI.Xaml.Media.FontFamily;
 using Image = SixLabors.ImageSharp.Image;
 using Point = Windows.Foundation.Point;
 using Pixeval.Controls.Windowing;

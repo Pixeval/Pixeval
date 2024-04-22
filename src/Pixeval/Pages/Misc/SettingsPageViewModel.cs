@@ -28,14 +28,11 @@ using System.Linq;
 using System.Net.Http;
 using Windows.Globalization;
 using CommunityToolkit.Mvvm.ComponentModel;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Pixeval.AppManagement;
 using Pixeval.Controls;
-using Pixeval.Download;
 using Pixeval.Download.MacroParser;
-using Pixeval.Download.Models;
 using Pixeval.Misc;
 using Pixeval.Options;
 using Pixeval.Util;
@@ -47,6 +44,7 @@ using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
 using System.ComponentModel;
 using System.Collections.ObjectModel;
+using Pixeval.Download.Macros;
 using Pixeval.Utilities.Threading;
 
 namespace Pixeval.Pages.Misc;
@@ -56,22 +54,24 @@ public partial class SettingsPageViewModel(FrameworkElement frameworkElement) : 
 {
     private static readonly IDictionary<string, string> _macroTooltips = new Dictionary<string, string>
     {
-        ["illust_ext"] = SettingsPageResources.IllustExtMacroTooltip,
-        ["illust_id"] = SettingsPageResources.IllustIdMacroTooltip,
-        ["illust_title"] = SettingsPageResources.IllustTitleMacroTooltip,
+        ["ext"] = SettingsPageResources.ExtMacroTooltip,
+        ["id"] = SettingsPageResources.IdMacroTooltip,
+        ["title"] = SettingsPageResources.TitleMacroTooltip,
         ["artist_id"] = SettingsPageResources.ArtistIdMacroTooltip,
         ["artist_name"] = SettingsPageResources.ArtistNameMacroTooltip,
-        ["if_spot"] = SettingsPageResources.IfSpotMacroTooltip,
+        ["if_r18"] = SettingsPageResources.IfR18MacroTooltip,
+        ["if_r18g"] = SettingsPageResources.IfR18GMacroTooltip,
+        ["if_ai"] = SettingsPageResources.IfAiMacroTooltip,
+        ["if_illust"] = SettingsPageResources.IfIllustMacroTooltip,
+        ["if_novel"] = SettingsPageResources.IfNovelMacroTooltip,
         ["if_manga"] = SettingsPageResources.IfMangaMacroTooltip,
         ["if_gif"] = SettingsPageResources.IfGifMacroTooltip,
-        ["manga_index"] = SettingsPageResources.MangaIndexMacroTooltip,
-        ["spot_id"] = SettingsPageResources.SpotIdMacroTooltip,
-        ["spot_title"] = SettingsPageResources.SpotTitleTooltip
+        ["manga_index"] = SettingsPageResources.MangaIndexMacroTooltip
     };
 
     public static IEnumerable<string> AvailableFonts { get; }
 
-    public static ICollection<StringRepresentableItem> AvailableIllustMacros { get; }
+    public static ICollection<StringRepresentableItem> AvailableMacros { get; }
 
     public static IEnumerable<CultureInfo> AvailableCultures { get; }
 
@@ -212,10 +212,8 @@ public partial class SettingsPageViewModel(FrameworkElement frameworkElement) : 
         AvailableCultures = [CultureInfo.GetCultureInfo("zh-cn")];
         using var collection = new InstalledFontCollection();
         AvailableFonts = collection.Families.Select(t => t.Name);
-        using var scope = App.AppViewModel.AppServicesScope;
-        var factory = scope.ServiceProvider.GetRequiredService<IDownloadTaskFactory<IllustrationItemViewModel, IllustrationDownloadTask>>();
-        AvailableIllustMacros = factory.PathParser.MacroProvider.AvailableMacros
-            .Select(m => new StringRepresentableItem(_macroTooltips[m.Name], $"@{{{(m is IMacro<IllustrationItemViewModel>.IPredicate ? $"{m.Name}=" : m.Name)}}}"))
+        AvailableMacros = MetaPathMacroAttributeHelper.GetAttachedTypeInstances()
+            .Select(m => new StringRepresentableItem(_macroTooltips[m.Name], $"@{{{(m is IPredicate ? $"{m.Name}=" : m.Name)}}}"))
             .ToList();
     }
 

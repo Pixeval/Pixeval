@@ -70,7 +70,6 @@ public abstract partial class ThumbnailEntryViewModel<T> : EntryViewModel<T>, IW
     public BadgeMode XRestrictionCaption =>
         Entry.XRestrict switch
         {
-            XRestrict.R18 => BadgeMode.R18,
             XRestrict.R18G => BadgeMode.R18G,
             _ => BadgeMode.R18
         };

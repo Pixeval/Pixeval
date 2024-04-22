@@ -215,14 +215,14 @@ public sealed partial class SettingsPage : IDisposable
             OptionalMacroParameter<string>(var sequence) => sequence is null ? (true, null) : ValidateMacro(sequence, macroProvider),
             Macro<string>(var name, var optionalParams) =>
                 Functions.Block(() =>
-                    macroProvider.PathParser.MacroProvider.TryResolve(name.Text) is IMacro<IllustrationItemViewModel>.Unknown
+                    macroProvider.PathParser.MacroProvider.TryResolve(name.Text) is Unknown
                         ? (false, name.Text)
                         : optionalParams is null ? (true, null) : ValidateMacro(optionalParams, macroProvider)),
             PlainText<string> plainText => (true, null),
             Sequence<string>(var first, var rests) =>
                 Functions.Block(() =>
                     ValidateMacro(first, macroProvider) is (false, _) result ? result : rests is null ? (true, null) : ValidateMacro(rests, macroProvider)),
-            _ => throw new ArgumentOutOfRangeException(nameof(tree))
+            _ => ThrowHelper.ArgumentOutOfRange<IMetaPathNode<string>, (bool, string?)>(tree)
         };
     }
 

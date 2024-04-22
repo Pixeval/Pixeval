@@ -36,8 +36,6 @@ namespace Pixeval.CoreApi.Engine.Implements;
 /// <param name="engineHandle"></param>
 /// <param name="matchOption"></param>
 /// <param name="tag"></param>
-/// <param name="start"></param>
-/// <param name="pages"></param>
 /// <param name="sortOption"></param>
 /// <param name="searchDuration"></param>
 /// <param name="targetFilter"></param>
@@ -51,9 +49,7 @@ internal class NovelSearchEngine(
     EngineHandle? engineHandle,
     SearchNovelTagMatchOption matchOption,
     string tag,
-    int start,
-    int pages,
-    WorkSortOption? sortOption,
+    WorkSortOption sortOption,
     SearchDuration searchDuration,
     TargetFilter targetFilter,
     DateTimeOffset? startDate,
@@ -63,58 +59,24 @@ internal class NovelSearchEngine(
     bool? aiType)
     : AbstractPixivFetchEngine<Novel>(makoClient, engineHandle)
 {
-    private readonly int _current = start;
-    private readonly DateTimeOffset? _endDate = endDate;
-    private readonly SearchNovelTagMatchOption _matchOption = matchOption;
-    private readonly int _pages = pages;
-    private readonly SearchDuration _searchDuration = searchDuration;
-    private readonly WorkSortOption _sortOption = sortOption ?? WorkSortOption.PublishDateDescending;
-    private readonly DateTimeOffset? _startDate = startDate;
-    private readonly string _tag = tag;
-    private readonly TargetFilter _targetFilter = targetFilter;
-    private readonly bool _mergePlainKeywordResults = mergePlainKeywordResults;
-    private readonly bool _includeTranslatedTagResults = includeTranslatedTagResults;
-    private readonly bool? _aiType = aiType;
-
     public override IAsyncEnumerator<Novel> GetAsyncEnumerator(CancellationToken cancellationToken = new CancellationToken())
     {
-        return new SearchAsyncEnumerator(this);
-    }
-
-    private class SearchAsyncEnumerator(NovelSearchEngine pixivFetchEngine) : RecursivePixivAsyncEnumerators.Novel<NovelSearchEngine>(pixivFetchEngine, null!)
-    {
-        protected override string InitialUrl
-        {
-            get
-            {
-                var match = PixivFetchEngine._matchOption.GetDescription();
-                var startDateSegment = PixivFetchEngine._startDate?.Let(dn => $"&start_date={dn:yyyy-MM-dd}");
-                var endDateSegment = PixivFetchEngine._endDate?.Let(dn => $"&start_date={dn:yyyy-MM-dd}");
-                var durationSegment = PixivFetchEngine._searchDuration is SearchDuration.Undecided
-                    ? null
-                    : $"&duration={PixivFetchEngine._searchDuration.GetDescription()}";
-                var sortSegment = PixivFetchEngine._sortOption != WorkSortOption.DoNotSort
-                    ? $"&sort={PixivFetchEngine._sortOption.GetDescription()}"
-                    : string.Empty;
-                var aiTypeSegment = PixivFetchEngine._aiType?.Let(t => $"&search_ai_type={(t ? 1 : 0)}");
-                return "/v1/search/novel"
-                       + $"?search_target={match}"
-                       + $"&word={PixivFetchEngine._tag}"
-                       + $"&filter={PixivFetchEngine._targetFilter.GetDescription()}"
-                       + $"&offset={PixivFetchEngine._current}"
-                       + $"&merge_plain_keyword_results={PixivFetchEngine._mergePlainKeywordResults.ToString().ToLower()}"
-                       + $"&include_translated_tag_results={PixivFetchEngine._includeTranslatedTagResults.ToString().ToLower()}"
-                       + sortSegment
-                       + startDateSegment
-                       + endDateSegment
-                       + durationSegment
-                       + aiTypeSegment;
-            }
-        }
-
-        protected override bool HasNextPage()
-        {
-            return PixivFetchEngine.RequestedPages <= PixivFetchEngine._pages - 1;
-        }
+        return new RecursivePixivAsyncEnumerators.Novel<NovelSearchEngine>(
+            this,
+            "/v1/search/novel"
+            + $"?search_target={matchOption.GetDescription()}"
+            + $"&word={tag}"
+            + $"&filter={targetFilter.GetDescription()}"
+            + $"&merge_plain_keyword_results={mergePlainKeywordResults.ToString().ToLower()}"
+            + $"&include_translated_tag_results={includeTranslatedTagResults.ToString().ToLower()}"
+            + (sortOption is WorkSortOption.DoNotSort
+                ? null
+                : $"&sort={sortOption.GetDescription()}")
+            + startDate?.Let(dn => $"&start_date={dn:yyyy-MM-dd}")
+            + endDate?.Let(dn => $"&start_date={dn:yyyy-MM-dd}")
+            + (searchDuration is SearchDuration.Undecided
+                ? null
+                : $"&duration={searchDuration.GetDescription()}")
+            + aiType?.Let(t => $"&search_ai_type={(t ? 1 : 0)}"));
     }
 }

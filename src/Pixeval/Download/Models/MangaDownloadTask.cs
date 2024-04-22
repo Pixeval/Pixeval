@@ -25,6 +25,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Pixeval.Controls;
 using Pixeval.Database;
+using Pixeval.Download.Macros;
 using Pixeval.Util.IO;
 using Pixeval.Utilities;
 using Pixeval.Utilities.Threading;
@@ -41,7 +42,7 @@ public class MangaDownloadTask(DownloadHistoryEntry entry, IllustrationItemViewM
     {
         for (CurrentIndex = 0; CurrentIndex < Urls.Count; ++CurrentIndex)
         {
-            var dest = IoHelper.GetPathFromUrlFormat(Destination, Url).Replace("<manga_index>", CurrentIndex.ToString());
+            var dest = IoHelper.GetPathFromUrlFormat(Destination, Url).Replace($"<{MangaIndexMacro.NameConst}>", CurrentIndex.ToString());
             await base.DownloadAsyncCore((a1, a2, a3) => downloadStreamAsync(a1, new MyProgress(a2, Urls.Count, CurrentIndex), a3), Urls[CurrentIndex], dest);
         }
     }
