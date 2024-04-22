@@ -104,7 +104,7 @@ internal abstract class RecursivePixivAsyncEnumerator<TEntity, TRawEntity, TFetc
     {
         RawEntity = rawEntity;
         CurrentEntityEnumerator = GetNewEnumerator(rawEntity) ?? EmptyEnumerators<TEntity>.Sync;
-        PixivFetchEngine.RequestedPages++;
+        ++PixivFetchEngine.RequestedPages;
     }
 }
 

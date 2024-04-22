@@ -163,7 +163,7 @@
     "TitleTextBlock/Text": "Pixeval 设置",
     "UseFileCacheEntry/Description": "开启此选项后会减少网络流量消耗并提升浏览体验，但是会增加 CPU 占用以及硬盘读写",
     "UseFileCacheEntry/Header": "使用文件缓存",
-    "UsePreciseRangeForSearchEntry/Description": "使用更精确的(基于准确日期)的搜索范围限制，搜索结果将会被限制在指定的时间区间内，如果该项被启用则“搜索范围限制”一栏将会被忽略",
+    "UsePreciseRangeForSearchEntry/Description": "使用更精确的（基于准确日期）的搜索范围限制，搜索结果将会被限制在指定的时间区间内，如果该项被启用则“搜索范围限制”一栏将会被忽略",
     "UsePreciseRangeForSearchEntry/Header": "使用更精确的搜索范围限制",
     "VersionSettingsGroup/Text": "版本",
     "ViewPixevalWebsiteHyperlinkButton/Content": "介绍网页",

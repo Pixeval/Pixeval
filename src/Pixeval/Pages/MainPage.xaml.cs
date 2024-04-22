@@ -124,8 +124,10 @@ public sealed partial class MainPage : SupportCustomTitleBarDragRegionPage
         NavigationView.SelectedItem = NavigationView.MenuItems[(int)App.AppViewModel.AppSettings.DefaultSelectedTabItem];
     }
 
-    private void NavigationView_OnSelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
+    private async void NavigationView_OnSelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
     {
+        await Task.Yield();
+
         // The App.AppViewModel.IllustrationDownloadManager will be initialized after that of MainPage object
         // so, we cannot put a navigation tag inside MainPage and treat it as a field, since it will be initialized immediately after
         // the creation of the object while the App.AppViewModel.IllustrationDownloadManager is still null which
@@ -148,6 +150,7 @@ public sealed partial class MainPage : SupportCustomTitleBarDragRegionPage
     {
         GCSettings.LargeObjectHeapCompactionMode = GCLargeObjectHeapCompactionMode.CompactOnce;
         GC.Collect();
+        // sender.To<Frame>().BackStack.Clear();
     }
 
     private async void KeywordAutoSuggestBox_GotFocus(object sender, RoutedEventArgs e)

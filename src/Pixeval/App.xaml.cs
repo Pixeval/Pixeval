@@ -140,6 +140,7 @@ public partial class App
             using var scope = AppViewModel.AppServicesScope;
             var logger = scope.ServiceProvider.GetRequiredService<FileLogger>();
             logger.LogError(e.Message, e.Exception);
+            e.Handled = true;
 #if DEBUG
             if (Debugger.IsAttached)
                 Debugger.Break();
