@@ -3,7 +3,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2024 Pixeval/NovelViewViewModel.cs
+// Copyright (c) 2024 Pixeval/IsR18Macro.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -20,26 +20,21 @@
 
 #endregion
 
-using Pixeval.CoreApi.Model;
+using Pixeval.Controls;
+using Pixeval.Download.MacroParser;
 
-namespace Pixeval.Controls;
+namespace Pixeval.Download.Macros;
 
-public sealed class NovelViewViewModel : SortableEntryViewViewModel<Novel, NovelItemViewModel>
+/// <summary>
+/// 包含R18G
+/// </summary>
+[MetaPathMacro<IWorkViewModel>]
+public class IsR18Macro : IPredicate<IWorkViewModel>
 {
-    public NovelViewViewModel(NovelViewViewModel viewModel) : this(viewModel.DataProvider.CloneRef())
-    {
-    }
+    public string Name => "if_r18";
 
-    public NovelViewViewModel() : this(new NovelViewDataProvider())
+    public bool Match(IWorkViewModel context)
     {
+        return context.IsXRestricted;
     }
-
-    private NovelViewViewModel(NovelViewDataProvider dataProvider)
-    {
-        DataProvider = dataProvider;
-        dataProvider.View.Filter = DefaultFilter;
-        dataProvider.View.CollectionChanged += (_, _) => OnPropertyChanged(nameof(HasNoItem));
-    }
-
-    public override NovelViewDataProvider DataProvider { get; }
 }

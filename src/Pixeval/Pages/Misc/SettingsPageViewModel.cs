@@ -19,6 +19,7 @@
 #endregion
 
 using System;
+using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing.Text;
@@ -46,6 +47,7 @@ using System.ComponentModel;
 using System.Collections.ObjectModel;
 using Pixeval.Download.Macros;
 using Pixeval.Utilities.Threading;
+using CommunityToolkit.WinUI.Controls;
 
 namespace Pixeval.Pages.Misc;
 
@@ -88,6 +90,8 @@ public partial class SettingsPageViewModel(FrameworkElement frameworkElement) : 
     public ObservableCollection<string> PixivAccountNameResolver { get; set; } = [.. App.AppViewModel.AppSettings.PixivAccountNameResolver];
 
     public ObservableCollection<string> PixivWebApiNameResolver { get; set; } = [.. App.AppViewModel.AppSettings.PixivWebApiNameResolver];
+
+    public ObservableCollection<string> BlockedTags { get; set; } = [.. App.AppViewModel.AppSettings.BlockedTags];
 
     public AppSettings AppSetting { get; set; } = App.AppViewModel.AppSettings with { };
 
@@ -256,6 +260,7 @@ public partial class SettingsPageViewModel(FrameworkElement frameworkElement) : 
         PixivOAuthNameResolver = [.. AppSetting.PixivOAuthNameResolver];
         PixivAccountNameResolver = [.. AppSetting.PixivAccountNameResolver];
         PixivWebApiNameResolver = [.. AppSetting.PixivWebApiNameResolver];
+        BlockedTags = [.. AppSetting.BlockedTags];
 
         // see OnPropertyChanged
         OnPropertyChanged(nameof(DisableDomainFronting));
@@ -297,6 +302,8 @@ public partial class SettingsPageViewModel(FrameworkElement frameworkElement) : 
 
         if (appApiNameSame || imageNameSame || imageName2Same || oAuthNameSame || accountNameSame || webApiNameSame)
             AppInfo.SetNameResolvers(AppSetting);
+
+        AppSetting.BlockedTags = BlockedTags.ToFrozenSet();
     }
 
     public void CancelToken()

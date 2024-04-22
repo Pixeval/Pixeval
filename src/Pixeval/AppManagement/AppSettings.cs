@@ -19,6 +19,7 @@
 #endregion
 
 using System;
+using System.Collections.Frozen;
 using System.Globalization;
 using Windows.Foundation;
 using Microsoft.UI.Composition.SystemBackdrops;
@@ -27,7 +28,6 @@ using Microsoft.UI.Xaml.Controls;
 using Pixeval.Attributes;
 using Pixeval.Controls;
 using Pixeval.Controls.Windowing;
-using Pixeval.CoreApi;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Preference;
 using Pixeval.Misc;
@@ -165,6 +165,10 @@ public partial record AppSettings : IWindowSettings
     [SettingMetadata(SettingEntryCategory.BrowsingExperience, typeof(SettingsPageResources), nameof(SettingsPageResources.ItemsViewLayoutTypeEntryHeader))]
     public ItemsViewLayoutType ItemsViewLayoutType { get; set; } = ItemsViewLayoutType.LinedFlow;
 
+    [SettingMetadata(SettingEntryCategory.BrowsingExperience, typeof(SettingsPageResources), nameof(SettingsPageResources.BlockedTagsEntryHeader))]
+    [AttributeIgnore(typeof(SettingsViewModelAttribute<>))]
+    public FrozenSet<string> BlockedTags { get; set; } = Array.Empty<string>().ToFrozenSet();
+
     /// <summary>
     /// Indicates the maximum page count that are allowed to be retrieved during
     /// spotlight retrieval(10 entries per page)
@@ -178,13 +182,6 @@ public partial record AppSettings : IWindowSettings
     /// </summary>
     [SettingMetadata(SettingEntryCategory.Misc, typeof(SettingsPageResources), nameof(SettingsPageResources.ImageMirrorServerEntryHeader))]
     public string? MirrorHost { get; set; } = null;
-
-    /// <summary>
-    /// Indicates how many illustrations will be collected during
-    /// the enumeration of the <see cref="MakoClient.RecommendationIllustrations" />
-    /// </summary>
-    [SettingMetadata(SettingEntryCategory.Misc, typeof(SettingsPageResources), nameof(SettingsPageResources.RecommendationItemLimitEntryHeader))]
-    public int ItemsNumberLimitForDailyRecommendations { get; set; } = 500;
 
     [SettingMetadata(SettingEntryCategory.Misc, typeof(SettingsPageResources), nameof(SettingsPageResources.MaximumBrowseHistoryRecordsEntryHeader))]
     public int MaximumBrowseHistoryRecords { get; set; } = 100;

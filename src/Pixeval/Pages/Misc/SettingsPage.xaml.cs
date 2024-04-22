@@ -45,6 +45,7 @@ using System.Text.RegularExpressions;
 using Windows.UI;
 using Pixeval.Download.Models;
 using Pixeval.Download;
+using CommunityToolkit.WinUI.Controls;
 
 namespace Pixeval.Pages.Misc;
 
@@ -151,6 +152,13 @@ public sealed partial class SettingsPage : IDisposable
             OnPropertyChanged(nameof(ViewModel));
         }
     }
+
+    private void TokenizingTextBox_OnTokenItemAdding(TokenizingTextBox sender, TokenItemAddingEventArgs e)
+    {
+        if (ViewModel.BlockedTags.Contains(e.TokenText))
+            e.Cancel = true;
+    }
+
     private void DefaultDownloadPathMacroTextBox_OnGotFocus(object sender, RoutedEventArgs e)
     {
         DownloadMacroInvalidTeachingTip.IsOpen = false;

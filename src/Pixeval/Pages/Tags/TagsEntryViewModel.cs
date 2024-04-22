@@ -79,7 +79,6 @@ public partial class TagsEntryViewModel : ObservableObject, IEntry, IDisposable
                 catch (Exception e)
                 {
                     return e.Message;
-                    // ignored
                 }
             });
     }

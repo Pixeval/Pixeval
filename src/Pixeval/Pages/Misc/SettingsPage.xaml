@@ -426,6 +426,17 @@
                         Style="{StaticResource SettingsEnumComboBoxStyle}" />
                 </controls:SettingsCard>
 
+                <controls:SettingsExpander x:Uid="/SettingsPage/BlockedTagsEntry" HeaderIcon="{controls2:GlyphIcon Glyph=Blocked2ECE4}">
+                    <controls:SettingsExpander.Items>
+                        <controls:SettingsCard HorizontalContentAlignment="Stretch" ContentAlignment="Left">
+                            <controls:TokenizingTextBox
+                                ItemsSource="{x:Bind ViewModel.BlockedTags, Mode=OneWay}"
+                                TokenDelimiter=","
+                                TokenItemAdding="TokenizingTextBox_OnTokenItemAdding" />
+                        </controls:SettingsCard>
+                    </controls:SettingsExpander.Items>
+                </controls:SettingsExpander>
+
                 <controls:SettingsCard
                     x:Uid="/SettingsPage/ViewingRestrictionEntry"
                     ActionIcon="{controls2:GlyphIcon Glyph=OpenInNewWindowE8A7}"
@@ -691,18 +702,6 @@
                         Style="{StaticResource SettingsNumberBoxStyle}"
                         Value="{x:Bind ViewModel.PageLimitForSpotlight, Mode=TwoWay}" />
                 </controls:SettingsCard>
-
-                <!--<controls:SettingsCard
-                    x:Uid="/SettingsPage/RecommendationItemLimitEntry"
-                    HeaderIcon="{controls2:GlyphIcon Glyph=DialShape1F156}"
-                    Tag="{x:Bind misc2:SettingEntry.ItemsNumberLimitForDailyRecommendations}">
-                    <NumberBox
-                        x:Uid="/SettingsPage/RecommendationItemLimitNumberBox"
-                        Maximum="2500"
-                        Minimum="500"
-                        Style="{StaticResource SettingsNumberBoxStyle}"
-                        Value="{x:Bind ViewModel.ItemsNumberLimitForDailyRecommendations, Mode=TwoWay}" />
-                </controls:SettingsCard>-->
 
                 <controls:SettingsCard
                     x:Uid="/SettingsPage/MaximumBrowseHistoryRecordsEntry"
