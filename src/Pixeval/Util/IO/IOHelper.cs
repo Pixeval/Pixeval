@@ -47,14 +47,16 @@ public static partial class IoHelper
         return result.Select(b => b.ToString("X2")).Aggregate((acc, str) => acc + str);
     }
 
+    public static string GetInvalidPathChars { get; } = @"\/:*?""<>|" + new string(Path.GetInvalidPathChars());
+
     public static string NormalizePath(string path)
     {
-        return Path.GetFullPath(Path.GetInvalidPathChars().Aggregate(path, (s, c) => s.Replace(c.ToString(), string.Empty)));
+        return Path.GetFullPath(GetInvalidPathChars.Aggregate(path, (s, c) => s.Replace(c.ToString(), ""))).TrimEnd('.');
     }
 
     public static string NormalizePathSegment(string path)
     {
-        return Path.GetInvalidFileNameChars().Aggregate(path, (s, c) => s.Replace(c.ToString(), string.Empty));
+        return GetInvalidPathChars.Aggregate(path, (s, c) => s.Replace(c.ToString(), "")).TrimEnd('.');
     }
 
     public static void CreateParentDirectories(string fullPath)
