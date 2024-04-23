@@ -1,7 +1,7 @@
 {
   "CancelSelectionButtonFormatted": "Отменить выбор ({0})",
   "AddAllToBookmarkButton/Label": "Добавить все в избранное",
-  "AddAllToBookmarkContentFormatted": "Добавлено в избранное: {0} изображений",
+  "AddedAllToBookmarkContentFormatted": "Добавлено в избранное: {0} изображений",
   "AddAllToBookmarkTitle": "Успешно добавлено в избранное",
   "OpenAllInBrowserButton/Label": "Открыть все в браузере",
   "OpenConditionDialogButton/Label": "Фильтр",

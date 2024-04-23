@@ -39,6 +39,8 @@ public abstract partial class SortableEntryViewViewModel<T, TViewModel> : EntryV
     [NotifyPropertyChangedFor(nameof(SelectionLabel))]
     private TViewModel[] _selectedEntries = [];
 
+    private Func<IWorkViewModel, bool>? _filter;
+
     IReadOnlyCollection<IWorkViewModel> ISortableEntryViewViewModel.SelectedEntries
     {
         get => SelectedEntries;
@@ -64,7 +66,18 @@ public abstract partial class SortableEntryViewViewModel<T, TViewModel> : EntryV
         DataProvider.View.SortDescriptions.Clear();
     }
 
-    public Func<IWorkViewModel, bool>? Filter { get; set; }
+    public Func<IWorkViewModel, bool>? Filter
+    {
+        get => _filter;
+        set
+        {
+            if (Equals(value, _filter))
+                return;
+            _filter = value;
+            OnFilterChanged();
+            OnPropertyChanged();
+        }
+    }
 
     public IReadOnlyCollection<IWorkViewModel> View => DataProvider.View;
 
@@ -82,4 +95,6 @@ public abstract partial class SortableEntryViewViewModel<T, TViewModel> : EntryV
 
         return Filter?.Invoke(entry) is not false;
     }
+
+    protected abstract void OnFilterChanged();
 }

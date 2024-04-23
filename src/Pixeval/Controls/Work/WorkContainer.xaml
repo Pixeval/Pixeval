@@ -45,7 +45,7 @@
                 <AppBarToggleButton
                     x:Uid="/WorkContainer/SelectionButton"
                     Icon="{controls2:GlyphIcon Glyph=MultiSelectE762}"
-                    IsChecked="{x:Bind ViewModel.IsSelecting, Mode=TwoWay}" />
+                    IsChecked="{x:Bind WorkView.ViewModel.IsSelecting, Mode=TwoWay}" />
                 <AppBarButton
                     x:Name="OpenConditionDialogButton"
                     x:Uid="/WorkContainer/OpenConditionDialogButton"
@@ -55,11 +55,11 @@
             <CommandBar
                 x:Name="CommandBar"
                 DefaultLabelPosition="Right"
-                Visibility="{x:Bind ViewModel.IsSelecting, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
+                Visibility="{x:Bind WorkView.ViewModel.IsSelecting, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
                 <AppBarButton
                     Icon="{controls2:GlyphIcon Glyph=CancelE711}"
-                    IsEnabled="{x:Bind ViewModel.IsAnyEntrySelected, Mode=OneWay}"
-                    Label="{x:Bind ViewModel.SelectionLabel, Mode=OneWay}"
+                    IsEnabled="{x:Bind WorkView.ViewModel.IsAnyEntrySelected, Mode=OneWay}"
+                    Label="{x:Bind WorkView.ViewModel.SelectionLabel, Mode=OneWay}"
                     Tapped="CancelSelectionButton_OnTapped" />
                 <AppBarButton
                     x:Uid="/WorkContainer/SelectAllButton"
@@ -70,17 +70,17 @@
                     x:Name="AddAllToBookmarkButton"
                     x:Uid="/WorkContainer/AddAllToBookmarkButton"
                     Icon="{controls2:GlyphIcon Glyph=BookmarksE8A4}"
-                    IsEnabled="{x:Bind ViewModel.IsAnyEntrySelected, Mode=OneWay}"
+                    IsEnabled="{x:Bind WorkView.ViewModel.IsAnyEntrySelected, Mode=OneWay}"
                     Tapped="AddAllToBookmarkButton_OnTapped" />
                 <AppBarButton
                     x:Uid="/WorkContainer/SaveAllButton"
                     Icon="{controls2:GlyphIcon Glyph=SaveE74E}"
-                    IsEnabled="{x:Bind ViewModel.IsAnyEntrySelected, Mode=OneWay}"
+                    IsEnabled="{x:Bind WorkView.ViewModel.IsAnyEntrySelected, Mode=OneWay}"
                     Tapped="SaveAllButton_OnTapped" />
                 <AppBarButton
                     x:Uid="/WorkContainer/OpenAllInBrowserButton"
                     Icon="{controls2:GlyphIcon Glyph=WebSearchF6FA}"
-                    IsEnabled="{x:Bind ViewModel.IsAnyEntrySelected, Mode=OneWay}"
+                    IsEnabled="{x:Bind WorkView.ViewModel.IsAnyEntrySelected, Mode=OneWay}"
                     Tapped="OpenAllInBrowserButton_OnTapped" />
             </CommandBar>
         </controls1:DockPanel>
@@ -101,7 +101,7 @@
                 MaxHeight="{StaticResource TeachingTipContentMaxHeightWithTarget}"
                 Loading="Content_OnLoading"
                 Tag="{x:Bind AddToBookmarkTeachingTip}"
-                Type="{x:Bind Type}" />
+                Type="{x:Bind WorkView.Type, Mode=OneWay}" />
         </TeachingTip>
         <TeachingTip
             x:Name="FilterTeachingTip"

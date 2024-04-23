@@ -183,7 +183,7 @@
                     DefaultLabelPosition="Collapsed"
                     OverflowButtonVisibility="Collapsed">
                     <AppBarButton Command="{x:Bind OpenNovelCommand}" Tapped="OpenNovel_OnTapped" />
-                    <AppBarButton Command="{x:Bind ViewModel.AddToBookmarkCommand, Mode=OneWay}" />
+                    <AppBarButton Command="{x:Bind ViewModel.AddToBookmarkCommand, Mode=OneWay}" Tapped="AddToBookmark_OnTapped" />
                     <AppBarButton Command="{x:Bind ViewModel.SaveCommand, Mode=OneWay}" />
                     <AppBarButton Command="{x:Bind ViewModel.OpenInWebBrowserCommand, Mode=OneWay}" />
                 </CommandBar>

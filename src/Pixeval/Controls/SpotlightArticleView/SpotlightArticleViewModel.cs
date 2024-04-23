@@ -28,7 +28,7 @@ public class SpotlightArticleViewModel(SpotlightArticle illustrate) : EntryViewM
 {
     public override void Dispose() => ThrowUtils.Throw(new());
 
-    protected override Uri AppUri => null!;
-    protected override Uri WebUri => null!;
-    protected override Uri PixEzUri => null!;
+    public override Uri AppUri => null!;
+    public override Uri WebUri => null!;
+    public override Uri PixEzUri => null!;
 }

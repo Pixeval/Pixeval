@@ -24,9 +24,9 @@ public partial class IllustratorItemViewModel
         FollowCommand.GetFollowCommand(IsFollowed);
     }
 
-    protected override Uri AppUri => MakoHelper.GenerateUserAppUri(UserId);
+    public override Uri AppUri => MakoHelper.GenerateUserAppUri(UserId);
 
-    protected override Uri WebUri => MakoHelper.GenerateUserWebUri(UserId);
+    public override Uri WebUri => MakoHelper.GenerateUserWebUri(UserId);
 
-    protected override Uri PixEzUri => MakoHelper.GenerateUserPixEzUri(UserId);
+    public override Uri PixEzUri => MakoHelper.GenerateUserPixEzUri(UserId);
 }

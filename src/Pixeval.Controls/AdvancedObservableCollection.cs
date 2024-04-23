@@ -174,8 +174,7 @@ public class AdvancedObservableCollection<T> : IList<T>, IList, IReadOnlyList<T>
                 return;
 
             _filter = value;
-            HandleFilterChanged();
-            FilterChanged?.Invoke(this, _filter);
+            RaiseFilterChanged();
         }
     }
 
@@ -354,7 +353,7 @@ public class AdvancedObservableCollection<T> : IList<T>, IList, IReadOnlyList<T>
         OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
     }
 
-    private void HandleFilterChanged()
+    public void RaiseFilterChanged()
     {
         if (_filter is not null)
         {
@@ -383,6 +382,8 @@ public class AdvancedObservableCollection<T> : IList<T>, IList, IReadOnlyList<T>
             if (HandleItemAdded(index, item, viewIndex))
                 ++viewIndex;
         }
+
+        FilterChanged?.Invoke(this, _filter);
     }
 
     private void HandleSourceChanged()

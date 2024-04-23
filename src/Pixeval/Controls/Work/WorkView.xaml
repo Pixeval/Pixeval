@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:converters="using:Pixeval.Controls.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:flyoutContent="using:Pixeval.Controls.FlyoutContent"
     xmlns:local="using:Pixeval.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Unloaded="WorkView_OnUnloaded"
@@ -14,6 +15,7 @@
             <ItemContainer>
                 <local:NovelItem
                     OpenNovelRequested="NovelItem_OnOpenNovelRequested"
+                    RequestAddToBookmark="WorkItem_OnRequestAddToBookmark"
                     RequestTeachingTip="WorkItem_OnRequestTeachingTip"
                     ViewModel="{x:Bind}"
                     ViewModelChanged="WorkItem_OnViewModelChanged" />
@@ -22,6 +24,7 @@
         <DataTemplate x:Key="IllustrationItemDataTemplate" x:DataType="local:IllustrationItemViewModel">
             <ItemContainer>
                 <local:IllustrationItem
+                    RequestAddToBookmark="WorkItem_OnRequestAddToBookmark"
                     RequestTeachingTip="WorkItem_OnRequestTeachingTip"
                     RequiredParam="IllustrationItem_OnRequiredParam"
                     ViewModel="{x:Bind}"
@@ -29,18 +32,30 @@
             </ItemContainer>
         </DataTemplate>
     </UserControl.Resources>
-    <local:EntryView
-        x:Name="EntryView"
-        x:Uid="/EntryView/IllustrationQrCodeTeachingTip"
-        HasNoItem="{x:Bind ViewModel.HasNoItem, Mode=OneWay}"
-        IsLoadingMore="{x:Bind ItemsView.IsLoadingMore, Mode=OneWay}">
-        <local:EntryView.Content>
-            <local:AdvancedItemsView
-                x:Name="ItemsView"
-                IsItemInvokedEnabled="True"
-                ItemInvoked="ItemsView_OnItemInvoked"
-                SelectionChanged="WorkView_OnSelectionChanged"
-                SelectionMode="{x:Bind ViewModel.IsSelecting, Converter={StaticResource BoolToSelectionModeConverter}, Mode=OneWay}" />
-        </local:EntryView.Content>
-    </local:EntryView>
+    <Grid>
+        <local:EntryView
+            x:Name="EntryView"
+            x:Uid="/EntryView/IllustrationQrCodeTeachingTip"
+            HasNoItem="{x:Bind ViewModel.HasNoItem, Mode=OneWay}"
+            IsLoadingMore="{x:Bind ItemsView.IsLoadingMore, Mode=OneWay}">
+            <local:EntryView.Content>
+                <local:AdvancedItemsView
+                    x:Name="ItemsView"
+                    IsItemInvokedEnabled="True"
+                    ItemInvoked="ItemsView_OnItemInvoked"
+                    SelectionChanged="WorkView_OnSelectionChanged"
+                    SelectionMode="{x:Bind ViewModel.IsSelecting, Converter={StaticResource BoolToSelectionModeConverter}, Mode=OneWay}" />
+            </local:EntryView.Content>
+        </local:EntryView>
+        <TeachingTip
+            x:Name="AddToBookmarkTeachingTip"
+            x:Uid="/EntryView/AddToBookmarkTeachingTip"
+            CloseButtonClick="AddToBookmarkTeachingTip_OnCloseButtonClick"
+            IsLightDismissEnabled="True">
+            <flyoutContent:BookmarkTagSelector
+                x:Name="BookmarkTagSelector"
+                MaxHeight="{StaticResource TeachingTipContentMaxHeight}"
+                Type="{x:Bind Type, Mode=OneWay}" />
+        </TeachingTip>
+    </Grid>
 </UserControl>

@@ -142,9 +142,9 @@ public partial class WorkContainer : IScrollViewProvider
                 WorkContainerResources.SelectedTooManyItemsTitle,
                 WorkContainerResources.SelectedTooManyItemsForOpenInBrowserContent) is not ContentDialogResult.Primary)
             return;
-        foreach (var illustrationViewModel in ViewModel.SelectedEntries)
+        foreach (var selectedEntry in ViewModel.SelectedEntries)
         {
-            _ = await Launcher.LaunchUriAsync(MakoHelper.GenerateIllustrationWebUri(illustrationViewModel.Id));
+            _ = await Launcher.LaunchUriAsync(selectedEntry.WebUri);
         }
     }
 
@@ -159,7 +159,7 @@ public partial class WorkContainer : IScrollViewProvider
             i.AddToBookmarkCommand.Execute((BookmarkTagSelector.SelectedTags, BookmarkTagSelector.IsPrivate, null as object));
 
         if (ViewModel.SelectedEntries.Count is var c and > 0) 
-            this.ShowTeachingTipAndHide(WorkContainerResources.AddAllToBookmarkContentFormatted.Format(c));
+            this.ShowTeachingTipAndHide(WorkContainerResources.AddedAllToBookmarkContentFormatted.Format(c));
     }
 
     private void CancelSelectionButton_OnTapped(object sender, TappedRoutedEventArgs e)

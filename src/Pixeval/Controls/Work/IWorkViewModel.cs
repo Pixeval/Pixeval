@@ -51,6 +51,12 @@ public interface IWorkViewModel
 
     BadgeMode XRestrictionCaption { get; }
 
+    Uri AppUri { get; }
+
+    Uri WebUri { get; }
+
+    Uri PixEzUri { get; }
+
     /// <inheritdoc cref="ThumbnailEntryViewModel{T}.AddToBookmarkCommand"/>
     XamlUICommand AddToBookmarkCommand { get; }
 

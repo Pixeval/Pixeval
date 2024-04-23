@@ -22,9 +22,11 @@ public sealed partial class NovelItem
 
     public event TypedEventHandler<NovelItem, NovelItemViewModel>? OpenNovelRequested;
 
-    public NovelItem() => InitializeComponent();
+    public event TypedEventHandler<NovelItem, NovelItemViewModel>? RequestAddToBookmark;
 
     public event Func<TeachingTip> RequestTeachingTip = null!;
+
+    public NovelItem() => InitializeComponent();
 
     private int _isPointerOver;
 
@@ -120,4 +122,9 @@ public sealed partial class NovelItem
     }
 
     private XamlUICommand OpenNovelCommand { get; } = EntryItemResources.OpenNovel.GetCommand(IconGlyph.ReadingModeE736);
+
+    private void AddToBookmark_OnTapped(object sender, TappedRoutedEventArgs e)
+    {
+        RequestAddToBookmark?.Invoke(this, ViewModel);
+    }
 }
