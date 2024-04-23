@@ -40,4 +40,6 @@ public sealed class IllustrationViewViewModel : SortableEntryViewViewModel<Illus
     }
 
     public override IllustrationViewDataProvider DataProvider { get; }
+
+    protected override void OnFilterChanged() => DataProvider.View.RaiseFilterChanged();
 }

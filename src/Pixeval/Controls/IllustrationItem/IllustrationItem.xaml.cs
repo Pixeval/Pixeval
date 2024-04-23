@@ -21,7 +21,9 @@
 using System;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
 using Pixeval.Options;
+using Windows.Foundation;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
 
@@ -30,7 +32,13 @@ namespace Pixeval.Controls;
 [DependencyProperty<IllustrationItemViewModel>("ViewModel", propertyChanged: nameof(OnViewModelChanged))]
 public sealed partial class IllustrationItem
 {
-    public event Action<IllustrationItem, IllustrationItemViewModel>? ViewModelChanged;
+    public event TypedEventHandler<IllustrationItem, IllustrationItemViewModel>? ViewModelChanged;
+
+    public event TypedEventHandler<IllustrationItem, IllustrationItemViewModel>? RequestAddToBookmark;
+
+    public event Func<(ThumbnailDirection ThumbnailDirection, double DesiredHeight)> RequiredParam = null!;
+
+    public event Func<TeachingTip> RequestTeachingTip = null!;
 
     private static void OnViewModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
@@ -46,10 +54,6 @@ public sealed partial class IllustrationItem
 
     private TeachingTip QrCodeTeachingTip => RequestTeachingTip();
 
-    public event Func<(ThumbnailDirection ThumbnailDirection, double DesiredHeight)> RequiredParam = null!;
-
-    public event Func<TeachingTip> RequestTeachingTip = null!;
-
     /// <summary>
     /// 这些方法本来用属性就可以实现，但在ViewModel更新的时候更新，使用了{x:Bind GetXXX(ViewModel)}的写法。
     /// 这样可以不需要写OnPropertyChanged就实现更新
@@ -64,5 +68,10 @@ public sealed partial class IllustrationItem
             ThumbnailDirection.Portrait => WorkView.PortraitHeight * illustration.Width / illustration.Height,
             _ => ThrowHelper.ArgumentOutOfRange<ThumbnailDirection, double>(thumbnailDirection)
         };
+    }
+
+    private void AddToBookmark_OnTapped(object sender, RoutedEventArgs e)
+    {
+        RequestAddToBookmark?.Invoke(this, ViewModel);
     }
 }

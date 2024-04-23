@@ -192,6 +192,8 @@ public sealed partial class IllustrationViewerPage : SupportCustomTitleBarDragRe
     private void AddToBookmarkTeachingTip_OnCloseButtonClick(TeachingTip sender, object args)
     {
         _viewModel.CurrentIllustration.AddToBookmarkCommand.Execute((BookmarkTagSelector.SelectedTags, BookmarkTagSelector.IsPrivate, _viewModel.CurrentImage.DownloadParameter));
+
+        this.ShowTeachingTipAndHide(EntryViewerPageResources.AddedToBookmark);
     }
 
     private void AddToBookmarkButton_OnTapped(object sender, TappedRoutedEventArgs e) => AddToBookmarkTeachingTip.IsOpen = true;

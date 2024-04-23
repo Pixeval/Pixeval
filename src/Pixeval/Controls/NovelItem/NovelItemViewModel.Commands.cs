@@ -45,9 +45,9 @@ public partial class NovelItemViewModel
 
     }
 
-    protected override Uri AppUri => MakoHelper.GenerateNovelAppUri(Id);
+    public override Uri AppUri => MakoHelper.GenerateNovelAppUri(Id);
 
-    protected override Uri WebUri => MakoHelper.GenerateNovelWebUri(Id);
+    public override Uri WebUri => MakoHelper.GenerateNovelWebUri(Id);
 
-    protected override Uri PixEzUri => MakoHelper.GenerateNovelPixEzUri(Id);
+    public override Uri PixEzUri => MakoHelper.GenerateNovelPixEzUri(Id);
 }

@@ -1,7 +1,7 @@
 {
     "CancelSelectionButtonFormatted": "取消选择 ({0})",
     "AddAllToBookmarkButton/Label": "添加到收藏夹",
-    "AddAllToBookmarkContentFormatted": "收藏了{0}张图片",
+    "AddedAllToBookmarkContentFormatted": "收藏了{0}张图片",
     "AddAllToBookmarkTitle": "成功添加到收藏",
     "OpenAllInBrowserButton/Label": "在浏览器中打开",
     "OpenConditionDialogButton/Label": "过滤",

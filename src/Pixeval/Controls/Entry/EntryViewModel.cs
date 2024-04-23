@@ -55,11 +55,11 @@ public abstract class EntryViewModel<T>(T entry) : ObservableObject, IDisposable
         ShowPixEzQrCodeCommand.ExecuteRequested += ShowPixEzQrCodeCommandOnExecuteRequested;
     }
 
-    protected abstract Uri AppUri { get; }
+    public abstract Uri AppUri { get; }
 
-    protected abstract Uri WebUri { get; }
+    public abstract Uri WebUri { get; }
 
-    protected abstract Uri PixEzUri { get; }
+    public abstract Uri PixEzUri { get; }
 
     public XamlUICommand GenerateLinkCommand { get; } = EntryItemResources.GenerateLink.GetCommand(IconGlyph.LinkE71B);
 

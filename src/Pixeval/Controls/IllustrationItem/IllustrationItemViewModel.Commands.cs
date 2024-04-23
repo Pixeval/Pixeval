@@ -154,9 +154,9 @@ public partial class IllustrationItemViewModel
         }
     }
 
-    protected override Uri AppUri => MakoHelper.GenerateIllustrationAppUri(Id);
+    public override Uri AppUri => MakoHelper.GenerateIllustrationAppUri(Id);
 
-    protected override Uri WebUri => MakoHelper.GenerateIllustrationWebUri(Id);
+    public override Uri WebUri => MakoHelper.GenerateIllustrationWebUri(Id);
 
-    protected override Uri PixEzUri => MakoHelper.GenerateIllustrationPixEzUri(Id);
+    public override Uri PixEzUri => MakoHelper.GenerateIllustrationPixEzUri(Id);
 }

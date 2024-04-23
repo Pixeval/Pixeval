@@ -42,4 +42,6 @@ public sealed class NovelViewViewModel : SortableEntryViewViewModel<Novel, Novel
     }
 
     public override NovelViewDataProvider DataProvider { get; }
+
+    protected override void OnFilterChanged() => DataProvider.View.RaiseFilterChanged();
 }
