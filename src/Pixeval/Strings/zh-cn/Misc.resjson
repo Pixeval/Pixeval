@@ -83,5 +83,7 @@
     "CannotFindLoginProxyServerExecutable": "找不到用于登录的可执行文件，请重新打开应用或者联系开发者",
     "UnexpectedBehavior": "发生了未定义的行为，如果你看到了该信息，请联系开发者寻求帮助",
     "ReplyContentTooLong": "回复内容超过140字，请重新编辑",
-    "BookmarkTagSelectorPrivateCheckBox/Content": "私人"
+    "BookmarkTagSelectorPrivateCheckBox/Content": "私人",
+
+    "GoToPageFormatted": "去{0}页"
 }

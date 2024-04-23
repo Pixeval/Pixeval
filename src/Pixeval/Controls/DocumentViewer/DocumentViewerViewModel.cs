@@ -61,13 +61,14 @@ public class DocumentViewerViewModel(NovelContent novelContent) : ObservableObje
 
         var index = 0;
         var length = NovelContent.Text.Length;
-        Pages.Add(PixivNovelParser.Parse(NovelContent.Text, ref index, this));
+        var parser = new PixivNovelRtfParser();
+        Pages.Add(parser.Parse(NovelContent.Text, ref index, this));
         await Task.Yield();
         while (index < length)
         {
             if (LoadingCancellationHandle.IsCancelled)
                 break;
-            Pages.Add(PixivNovelParser.Parse(NovelContent.Text, ref index, this));
+            Pages.Add(parser.Parse(NovelContent.Text, ref index, this));
         }
     }
 
