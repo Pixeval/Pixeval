@@ -21,7 +21,6 @@
 using System.Threading.Tasks;
 using Pixeval.Download.MacroParser;
 using Pixeval.Download.Models;
-using System.IO;
 
 namespace Pixeval.Download;
 
@@ -31,5 +30,5 @@ public interface IDownloadTaskFactory<in TContext, TDownloadTask> where TDownloa
 
     Task<TDownloadTask> CreateAsync(TContext context, string rawPath);
 
-    Task<TDownloadTask> TryCreateIntrinsicAsync(TContext context, Stream stream, string rawPath);
+    TDownloadTask CreateIntrinsic(TContext context, object param, string rawPath);
 }

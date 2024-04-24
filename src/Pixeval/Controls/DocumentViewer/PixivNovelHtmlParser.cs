@@ -28,7 +28,7 @@ using Pixeval.Utilities;
 
 namespace Pixeval.Controls;
 
-public class PixivNovelHtmlParser(StringBuilder sb, int pageIndex) : PixivNovelParser<StringBuilder, Stream, FileParserViewModel>
+public class PixivNovelHtmlParser(StringBuilder sb, int pageIndex) : PixivNovelParser<StringBuilder, Stream, INovelParserViewModel<Stream>>
 {
     protected override StringBuilder Vector => sb.AppendLine($"<div id=\"page{pageIndex}\" /><br/>");
 
@@ -47,7 +47,7 @@ public class PixivNovelHtmlParser(StringBuilder sb, int pageIndex) : PixivNovelP
         _ = currentText.Append($"<a href=\"{uri.OriginalString}\">{content}</a>");
     }
 
-    protected override void AddInlineHyperlink(StringBuilder currentText, uint page, FileParserViewModel viewModel)
+    protected override void AddInlineHyperlink(StringBuilder currentText, uint page, INovelParserViewModel<Stream> viewModel)
     {
         _ = currentText.Append($"<a href=\"page{page - 1}\">{MiscResources.GoToPageFormatted.Format(page)}</a>");
     }
@@ -63,20 +63,20 @@ public class PixivNovelHtmlParser(StringBuilder sb, int pageIndex) : PixivNovelP
             .AppendLine("<br/><br/>");
     }
 
-    protected override void AddUploadedImage(StringBuilder currentText, FileParserViewModel viewModel, long imageId)
+    protected override void AddUploadedImage(StringBuilder currentText, INovelParserViewModel<Stream> viewModel, long imageId)
     {
         _ = currentText
-            .AppendLine("<br/><br/>")
-            .AppendLine($"<img src=\"{imageId}\" />")
+        .AppendLine("<br/><br/>")
+            .AppendLine($"<img src=\"{imageId}{viewModel.ImageExtension}\" alt=\"{imageId}\" />")
             .AppendLine("<br/><br/>");
     }
 
-    protected override void AddPixivImage(StringBuilder currentText, FileParserViewModel viewModel, long imageId, int page)
+    protected override void AddPixivImage(StringBuilder currentText, INovelParserViewModel<Stream> viewModel, long imageId, int page)
     {
-        var key = (imageId, page);
+        // var key = (imageId, page);
         _ = currentText
             .AppendLine("<br/><br/>")
-            .AppendLine($"<a href=\"{MakoHelper.GenerateIllustrationWebUri(imageId).OriginalString}\"><img src=\"{imageId}-{page}\" /></a>")
+            .AppendLine($"<a href=\"{MakoHelper.GenerateIllustrationWebUri(imageId).OriginalString}\"><img src=\"{imageId}-{page}{viewModel.ImageExtension}\" alt=\"{imageId}-{page}\" /></a>")
             .AppendLine("<br/><br/>");
         // var info = viewModel.IllustrationLookup[imageId];
     }

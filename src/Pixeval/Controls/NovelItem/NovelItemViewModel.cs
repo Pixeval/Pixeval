@@ -20,6 +20,7 @@
 
 #endregion
 
+using System.Threading.Tasks;
 using Pixeval.CoreApi.Model;
 
 namespace Pixeval.Controls;
@@ -27,4 +28,11 @@ namespace Pixeval.Controls;
 public partial class NovelItemViewModel(Novel novel) : ThumbnailEntryViewModel<Novel>(novel)
 {
     public int TextLength => Entry.TextLength;
+
+    public NovelContent? NovelContent { get; private set; }
+
+    public async Task<NovelContent> GetNovelContentAsync()
+    {
+        return NovelContent ??= await App.AppViewModel.MakoClient.GetNovelContentAsync(Id);
+    }
 }

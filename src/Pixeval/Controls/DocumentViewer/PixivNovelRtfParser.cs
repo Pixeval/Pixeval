@@ -22,6 +22,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.UI;
 using Microsoft.UI.Text;
 using Microsoft.UI.Xaml;
@@ -113,8 +114,8 @@ public sealed class PixivNovelRtfParser : PixivNovelParser<List<Paragraph>, Soft
 
         var image = new LazyImage { Stretch = Stretch.Uniform };
         var button = new Button { Content = image, Padding = new(5) };
-        button.Click += async (_, _) => await IllustrationViewerHelper.CreateWindowWithPageAsync(imageId, viewModel.IllustrationLookup.Keys);
-        var info = viewModel.IllustrationLookup[imageId];
+        button.Click += async (_, _) => await IllustrationViewerHelper.CreateWindowWithPageAsync(imageId, viewModel.IllustrationLookup.Keys.Select(t => t.Item1).ToArray());
+        var info = viewModel.IllustrationLookup[key];
         ToolTipService.SetToolTip(button, $"{info.Id}: {info.Illust.Title}");
         result.Add(new()
         {

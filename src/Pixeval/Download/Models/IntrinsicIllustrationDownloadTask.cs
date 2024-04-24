@@ -18,17 +18,14 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System;
 using System.IO;
 using System.Threading.Tasks;
 using Pixeval.Controls;
 using Pixeval.Database;
-using Pixeval.Utilities;
-using Pixeval.Utilities.Threading;
 
 namespace Pixeval.Download.Models;
 
-public class IntrinsicIllustrationDownloadTask : IllustrationDownloadTask
+public sealed class IntrinsicIllustrationDownloadTask : IllustrationDownloadTask
 {
     /// <summary>
     /// The disposal of <paramref name="stream" /> is not handled
@@ -41,7 +38,7 @@ public class IntrinsicIllustrationDownloadTask : IllustrationDownloadTask
 
     public Stream Stream { get; }
 
-    protected override async Task DownloadAsyncCore(Func<string, IProgress<double>?, CancellationHandle?, Task<Result<Stream>>> _, string url, string destination)
+    protected override async Task DownloadAsyncCore(Downloader _, string url, string destination)
     {
         if (!App.AppViewModel.AppSettings.OverwriteDownloadedFile && File.Exists(destination))
             return;

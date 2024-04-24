@@ -22,8 +22,16 @@ using System;
 using Microsoft.UI.Xaml.Input;
 using Pixeval.Util;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
-using QuestPDF.Fluent;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Pixeval.CoreApi.Model;
+using Pixeval.Download;
+using Pixeval.Download.Models;
+using Pixeval.Util.UI;
+using WinUI3Utilities;
 
 namespace Pixeval.Controls;
 
@@ -33,21 +41,108 @@ public partial class NovelItemViewModel
 
     protected override async void SaveCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
-        var x = await App.AppViewModel.MakoClient.GetNovelContentAsync(Id);
+        var frameworkElement = null as FrameworkElement;
+        var getNovelContentAsync = null as Func<IProgress<int>?, Task<IStreamNovelParserViewModel?>>;
+        switch (args.Parameter)
+        {
+            case ValueTuple<FrameworkElement?, Func<IProgress<int>?, Task<IStreamNovelParserViewModel?>>?> tuple:
+                frameworkElement = tuple.Item1;
+                getNovelContentAsync = tuple.Item2;
+                break;
+            case FrameworkElement f:
+                frameworkElement = f;
+                break;
+        }
 
-        var a = new FileParserViewModel(x);
-        var loadPdfContentAsync = await a.LoadPdfContentAsync();
-        loadPdfContentAsync.GeneratePdf($@"C:\Users\poker\Desktop\{Title}.pdf");
+        await SaveUtilityAsync(frameworkElement, getNovelContentAsync, App.AppViewModel.AppSettings.DefaultDownloadPathMacro);
     }
 
-    protected override void SaveAsCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
+    protected override async void SaveAsCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
+        Window window;
+        var getNovelContentAsync = null as Func<IProgress<int>?, Task<IStreamNovelParserViewModel?>>;
+        switch (args.Parameter)
+        {
+            case ValueTuple<Window, Func<IProgress<int>?, Task<IStreamNovelParserViewModel?>>?> tuple:
+                window = tuple.Item1;
+                getNovelContentAsync = tuple.Item2;
+                break;
+            case Window w:
+                window = w;
+                break;
+            default:
+                // 必须有Window来显示Picker
+                return;
+        }
 
+        var frameworkElement = window.Content.To<FrameworkElement>();
+        var folder = await window.OpenFolderPickerAsync();
+        if (folder is null)
+        {
+            frameworkElement.ShowTeachingTipAndHide(EntryItemResources.SaveAsCancelled, TeachingTipSeverity.Information);
+            return;
+        }
+
+        var name = Path.GetFileName(App.AppViewModel.AppSettings.DefaultDownloadPathMacro);
+        var path = Path.Combine(folder.Path, name);
+        await SaveUtilityAsync(frameworkElement, getNovelContentAsync, path);
     }
 
+    /// <summary>
+    /// <see cref="IllustrationDownloadTaskFactory"/>
+    /// </summary>
+    /// <param name="frameworkElement">承载提示<see cref="TeachingTip"/>的控件，为<see langword="null"/>则不显示</param>
+    /// <param name="getNovelContentAsync">获取原图的<see cref="Stream"/>，支持进度显示，为<see langword="null"/>则创建新的下载任务</param>
+    /// <param name="path">文件路径</param>
+    /// <returns></returns>
+    private async Task SaveUtilityAsync(FrameworkElement? frameworkElement, Func<IProgress<int>?, Task<IStreamNovelParserViewModel?>>? getNovelContentAsync, string path)
+    {
+        var teachingTip = frameworkElement?.CreateTeachingTip();
+
+        var progress = null as Progress<int>;
+        teachingTip?.Show(EntryItemResources.ImageProcessing, TeachingTipSeverity.Processing, isLightDismissEnabled: true);
+
+        var source = getNovelContentAsync is null ? null : await getNovelContentAsync.Invoke(progress);
+        using var scope = App.AppViewModel.AppServicesScope;
+        var factory = scope.ServiceProvider.GetRequiredService<IDownloadTaskFactory<NovelItemViewModel, NovelDownloadTask>>();
+        if (source is null)
+        {
+            var task = await factory.CreateAsync(this, path);
+            App.AppViewModel.DownloadManager.QueueTask(task);
+            teachingTip?.ShowAndHide(EntryItemResources.DownloadTaskCreated);
+        }
+        else
+        {
+            var task = factory.CreateIntrinsic(this, source, path);
+            App.AppViewModel.DownloadManager.QueueTask(task);
+            teachingTip?.ShowAndHide(EntryItemResources.Saved);
+        }
+    }
+
+    /// <summary>
+    /// 此处只会将文章内容设置到剪贴板，所以不需要异步就可以很快结束
+    /// </summary>
     protected override void CopyCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
+        var frameworkElement = null as FrameworkElement;
+        NovelContent? novelContent;
+        switch (args.Parameter)
+        {
+            case ValueTuple<FrameworkElement?, NovelContent> tuple:
+                frameworkElement = tuple.Item1;
+                novelContent = tuple.Item2;
+                break;
+            case NovelContent f:
+                novelContent = f;
+                break;
+            default:
+                return;
+        }
 
+        var teachingTip = frameworkElement?.CreateTeachingTip();
+
+        UiHelper.ClipboardSetText(novelContent.Text);
+        teachingTip?.ShowAndHide(EntryItemResources.NovelSetToClipBoard);
     }
 
     public override Uri AppUri => MakoHelper.GenerateNovelAppUri(Id);

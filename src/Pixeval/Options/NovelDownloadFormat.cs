@@ -1,8 +1,9 @@
-#region Copyright (c) Pixeval/Pixeval
+#region Copyright
+
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/IMetaPathMacroProvider.cs
+// Copyright (c) 2024 Pixeval/NovelDownloadFormat.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -16,19 +17,24 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 #endregion
 
-using System.Collections.Generic;
-using System.Linq;
+using Pixeval.Attributes;
 
-namespace Pixeval.Download.MacroParser;
+namespace Pixeval.Options;
 
-public interface IMetaPathMacroProvider
+public enum NovelDownloadFormat
 {
-    IEnumerable<IMacro> AvailableMacros { get; }
+    [LocalizedResource(typeof(MiscResources), nameof(MiscResources.Pdf))]
+    Pdf,
 
-    IMacro TryResolve(string macro)
-    {
-        return AvailableMacros.FirstOrDefault(m => m.Name == macro) ?? new Unknown();
-    }
+    [LocalizedResource(typeof(MiscResources), nameof(MiscResources.Html))]
+    Html,
+
+    [LocalizedResource(typeof(MiscResources), nameof(MiscResources.Md))]
+    Md,
+
+    [LocalizedResource(typeof(MiscResources), nameof(MiscResources.OriginalTxt))]
+    OriginalTxt
 }

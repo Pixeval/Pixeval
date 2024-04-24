@@ -157,7 +157,7 @@
                             FontWeight="{x:Bind _viewModel.NovelFontWeight, Converter={StaticResource FontWeightConverter}, Mode=OneWay}"
                             Foreground="{x:Bind _viewModel.NovelFontColor, Converter={StaticResource UIntToBrushConverter}, Mode=OneWay}"
                             LineHeight="{x:Bind _viewModel.NovelLineHeight, Mode=OneWay}"
-                            NovelId="{x:Bind _viewModel.NovelId, Mode=OneWay}"
+                            NovelItem="{x:Bind _viewModel.CurrentNovel, Mode=OneWay}"
                             NovelMaxWidth="{x:Bind _viewModel.NovelMaxWidth, Mode=OneWay}"
                             PageCount="{x:Bind _viewModel.PageCount, Mode=TwoWay}"
                             Tapped="DocumentViewer_OnTapped" />

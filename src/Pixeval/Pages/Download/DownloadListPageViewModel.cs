@@ -50,7 +50,7 @@ public partial class DownloadListPageViewModel : ObservableObject, IDisposable
 
     private DownloadListEntryViewModel[] _selectedEntries = [];
 
-    public DownloadListPageViewModel(IEnumerable<IllustrationDownloadTask> source)
+    public DownloadListPageViewModel(IEnumerable<DownloadTaskBase> source)
     {
         DataProvider.To<DownloadListEntryDataProvider>().ResetEngine(source);
         _selectionLabel = DownloadListPageResources.CancelSelectionButtonDefaultLabel;
@@ -119,7 +119,8 @@ public partial class DownloadListPageViewModel : ObservableObject, IDisposable
 
         bool Query(DownloadListEntryViewModel viewModel) =>
             viewModel.Title.Contains(key) ||
-                   (viewModel.DownloadTask is { } task ? task.IllustrationViewModel.Id : viewModel.DownloadTask.Id).ToString().Contains(key);
+            (viewModel.DownloadTask is { } task ? task.ViewModel.Id : viewModel.DownloadTask.Id).ToString()
+            .Contains(key);
     }
 
     public void ResetFilter(IEnumerable<DownloadListEntryViewModel>? customSearchResultTask = null)

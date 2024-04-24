@@ -43,14 +43,15 @@ public partial class IllustrationItemViewModel(Illustration illustration) : Thum
 
     public bool IsManga => Entry.PageCount > 1;
 
+    public UgoiraMetadataResponse? UgoiraMetadata { get; private set; }
+
     /// <summary>
     /// <see cref="IsUgoira"/>为<see langword="true"/>时，此属性不会抛异常<br/>
     /// 同一个漫画图片的格式会不会不同？
     /// </summary>
-    public async Task<(UgoiraMetadataResponse Metadata, string Url)> GetUgoiraOriginalUrlAsync()
+    public async Task<UgoiraMetadataResponse> GetUgoiraMetadataAsync()
     {
-        var metadata = await App.AppViewModel.MakoClient.GetUgoiraMetadataAsync(Id);
-        return (metadata, metadata.UgoiraMetadataInfo.ZipUrls.Large);
+        return UgoiraMetadata ??= await App.AppViewModel.MakoClient.GetUgoiraMetadataAsync(Id);
     }
 
     /// <summary>
@@ -61,7 +62,7 @@ public partial class IllustrationItemViewModel(Illustration illustration) : Thum
         : Entry.MetaSinglePage.OriginalImageUrl;
 
     public async ValueTask<string> GetOriginalSourceUrlAsync() => IsUgoira
-        ? (await GetUgoiraOriginalUrlAsync()).Url
+        ? (await GetUgoiraMetadataAsync()).LargeUrl
         : OriginalStaticUrl;
 
     [MemberNotNullWhen(false, nameof(OriginalStaticUrl))]

@@ -18,41 +18,40 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System;
 using System.IO;
 using System.Threading.Tasks;
 using Pixeval.Controls;
 using Pixeval.Database;
-using Pixeval.Download.Macros;
 using Pixeval.Options;
 using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Utilities;
-using Pixeval.Utilities.Threading;
 using SixLabors.ImageSharp;
 
 namespace Pixeval.Download.Models;
 
 public class IllustrationDownloadTask(DownloadHistoryEntry entry, IllustrationItemViewModel illustration)
-    : IllustrationDownloadTaskBase(entry)
+    : DownloadTaskBase(entry)
 {
-    public string Url => Urls[0];
+    public override IWorkViewModel ViewModel => IllustrationViewModel;
 
     public IllustrationItemViewModel IllustrationViewModel { get; protected set; } = illustration;
 
-    public override async Task DownloadAsync(Func<string, IProgress<double>?, CancellationHandle?, Task<Result<Stream>>> downloadStreamAsync)
+    public override async Task DownloadAsync(Downloader downloadStreamAsync)
     {
-        Destination = IoHelper.GetPathFromUrlFormat(Destination, Url).Replace($"<{MangaIndexMacro.NameConst}>", "0");
+        var url = IllustrationViewModel.OriginalStaticUrl!;
 
-        await DownloadAsyncCore(downloadStreamAsync, Url, Destination);
+        Destination = IoHelper.ReplaceTokenExtensionFromUrl(Destination, url).RemoveTokens();
+
+        await DownloadAsyncCore(downloadStreamAsync, url, Destination);
     }
 
-    protected virtual async Task DownloadAsyncCore(Func<string, IProgress<double>?, CancellationHandle?, Task<Result<Stream>>> downloadStreamAsync, string url, string destination)
+    protected virtual async Task DownloadAsyncCore(Downloader downloadStreamAsync, string url, string destination)
     {
         if (!App.AppViewModel.AppSettings.OverwriteDownloadedFile && File.Exists(destination))
             return;
 
-        if (App.AppViewModel.AppSettings.UseFileCache && await App.AppViewModel.Cache.TryGetAsync<Stream>(await IllustrationViewModel.GetIllustrationOriginalImageCacheKeyAsync()) is { } stream)
+        if (App.AppViewModel.AppSettings.UseFileCache && await App.AppViewModel.Cache.TryGetAsync<Stream>(MakoHelper.GetOriginalCacheKey(url)) is { } stream)
         {
             await using (stream)
                 await ManageStream(stream, url, destination);

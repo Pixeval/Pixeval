@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/IllustrationMetaPathMacroProvider.cs
+// Copyright (c) 2023 Pixeval/IMetaPathMacroProvider.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -19,13 +19,14 @@
 #endregion
 
 using System.Collections.Generic;
-using Pixeval.Controls;
-using Pixeval.Download.MacroParser;
-using Pixeval.Download.Macros;
+using System.Linq;
 
-namespace Pixeval.Download;
+namespace Pixeval.Download.MacroParser;
 
-public class IllustrationMetaPathMacroProvider : IMetaPathMacroProvider
+public static class MetaPathMacroProviderHelper
 {
-    public IEnumerable<IMacro> AvailableMacros { get; } = MetaPathMacroAttributeHelper.GetAttachedTypeInstances<IllustrationItemViewModel>();
+    public static IMacro TryResolve(this IEnumerable<IMacro> availableMacros, string macro)
+    {
+        return availableMacros.FirstOrDefault(m => m.Name == macro) ?? new Unknown();
+    }
 }

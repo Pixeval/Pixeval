@@ -20,7 +20,6 @@
 
 using System;
 using System.Collections.Generic;
-using Windows.Storage.Streams;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
 using Pixeval.Util.UI;
@@ -93,7 +92,7 @@ public partial class IllustrationItemViewModel
     /// <see cref="IllustrationDownloadTaskFactory"/>
     /// </summary>
     /// <param name="frameworkElement">承载提示<see cref="TeachingTip"/>的控件，为<see langword="null"/>则不显示</param>
-    /// <param name="getOriginalImageSourceAsync">获取原图的<see cref="IRandomAccessStream"/>，支持进度显示，为<see langword="null"/>则创建新的下载任务</param>
+    /// <param name="getOriginalImageSourceAsync">获取原图的<see cref="Stream"/>，支持进度显示，为<see langword="null"/>则创建新的下载任务</param>
     /// <param name="path">文件路径</param>
     /// <returns></returns>
     private async Task SaveUtilityAsync(FrameworkElement? frameworkElement, Func<IProgress<int>?, Task<Stream?>>? getOriginalImageSourceAsync, string path)
@@ -117,7 +116,7 @@ public partial class IllustrationItemViewModel
         }
         else
         {
-            var task = await factory.TryCreateIntrinsicAsync(this, source, path);
+            var task = factory.CreateIntrinsic(this, IsUgoira ? (source, UgoiraMetadata) : source, path);
             App.AppViewModel.DownloadManager.QueueTask(task);
             teachingTip?.ShowAndHide(EntryItemResources.Saved);
         }

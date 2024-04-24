@@ -7,7 +7,7 @@ using WinUI3Utilities.Attributes;
 
 namespace Pixeval.Controls;
 
-[DependencyProperty<long>("NovelId", "-1", nameof(OnNovelIdChanged))]
+[DependencyProperty<NovelItemViewModel>("NovelItem", DependencyPropertyDefaultValue.UnsetValue, nameof(OnNovelNovelItemChanged), IsNullable = true)]
 [DependencyProperty<double>("NovelMaxWidth", "1000d")]
 [DependencyProperty<double>("LineHeight", "28d")]
 [DependencyProperty<int>("CurrentPage", "0", nameof(OnCurrentPageChanged))]
@@ -20,10 +20,10 @@ public sealed partial class DocumentViewer
 
     public DocumentViewer() => InitializeComponent();
 
-    public static async void OnNovelIdChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    public static async void OnNovelNovelItemChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         var viewer = d.To<DocumentViewer>();
-        if (viewer.NovelId is -1)
+        if (viewer.NovelItem is null)
         {
             viewer.ViewModel = null;
             return;
@@ -32,7 +32,7 @@ public sealed partial class DocumentViewer
         try
         {
             viewer.IsLoading = true;
-            viewer.ViewModel = await DocumentViewerViewModel.CreateAsync(viewer.NovelId);
+            viewer.ViewModel = await DocumentViewerViewModel.CreateAsync(viewer.NovelItem);
             viewer.ViewModel.JumpToPageRequested += newPage => viewer.CurrentPage = newPage;
             viewer.ViewModel.Pages.CollectionChanged += (_, _) => viewer.PageCount = viewer.ViewModel.Pages.Count;
             viewer.PageCount = viewer.ViewModel.Pages.Count;
@@ -50,7 +50,7 @@ public sealed partial class DocumentViewer
     public static void OnCurrentPageChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         var viewer = d.To<DocumentViewer>();
-        if (viewer.NovelId is -1)
+        if (viewer.NovelItem is null)
             return;
 
         viewer.UpdateContent();

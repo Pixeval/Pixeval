@@ -47,7 +47,9 @@ public static partial class IoHelper
         return result.Select(b => b.ToString("X2")).Aggregate((acc, str) => acc + str);
     }
 
-    public static string GetInvalidPathChars { get; } = @"\/:*?""<>|" + new string(Path.GetInvalidPathChars());
+    public static string GetInvalidPathChars { get; } = @"*?""|" + new string(Path.GetInvalidPathChars());
+    
+    public static string GetInvalidNameChars { get; } = @"\/*:?""|<>" + new string(Path.GetInvalidPathChars());
 
     public static string NormalizePath(string path)
     {
@@ -56,7 +58,7 @@ public static partial class IoHelper
 
     public static string NormalizePathSegment(string path)
     {
-        return GetInvalidPathChars.Aggregate(path, (s, c) => s.Replace(c.ToString(), "")).TrimEnd('.');
+        return GetInvalidNameChars.Aggregate(path, (s, c) => s.Replace(c.ToString(), "")).TrimEnd('.');
     }
 
     public static void CreateParentDirectories(string fullPath)
@@ -159,14 +161,34 @@ public static partial class IoHelper
         return result;
     }
 
-    public static async Task DeleteIllustrationTaskAsync(IllustrationDownloadTaskBase task)
+    public static async Task DeleteTaskAsync(IDownloadTask task)
     {
         try
         {
-            if (task is MangaDownloadTask)
-                await (await StorageFolder.GetFolderFromPathAsync(Path.GetDirectoryName(task.Destination))).DeleteAsync(StorageDeleteOption.Default);
-            else
-                await (await StorageFile.GetFileFromPathAsync(task.Destination)).DeleteAsync(StorageDeleteOption.Default);
+            switch (task)
+            {
+                case NovelDownloadTask novel:
+                {
+                    foreach (var destination in novel.Destinations)
+                        await (await StorageFile.GetFileFromPathAsync(destination)).DeleteAsync(StorageDeleteOption.Default);
+                    var folder = await StorageFolder.GetFolderFromPathAsync(Path.GetDirectoryName(novel.Destination));
+                    if ((await folder.GetItemsAsync()).Count is 0)
+                        await folder.DeleteAsync(StorageDeleteOption.Default);
+                    break;
+                }
+                case MangaDownloadTask manga:
+                {
+                    foreach (var destination in manga.ActualDestinations)
+                        await (await StorageFile.GetFileFromPathAsync(destination)).DeleteAsync(StorageDeleteOption.Default);
+                    var folder = await StorageFolder.GetFolderFromPathAsync(Path.GetDirectoryName(manga.Destination));
+                    if ((await folder.GetItemsAsync()).Count is 0)
+                        await folder.DeleteAsync(StorageDeleteOption.Default);
+                    break;
+                }
+                case IllustrationDownloadTask:
+                    await (await StorageFile.GetFileFromPathAsync(task.Destination)).DeleteAsync(StorageDeleteOption.Default);
+                    break;
+            }
         }
         catch
         {

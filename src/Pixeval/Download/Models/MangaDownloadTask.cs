@@ -20,15 +20,12 @@
 
 #endregion
 
-using System;
-using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Pixeval.Controls;
 using Pixeval.Database;
 using Pixeval.Download.Macros;
 using Pixeval.Util.IO;
-using Pixeval.Utilities;
-using Pixeval.Utilities.Threading;
 
 namespace Pixeval.Download.Models;
 
@@ -37,18 +34,24 @@ public class MangaDownloadTask(DownloadHistoryEntry entry, IllustrationItemViewM
 {
     protected int CurrentIndex { get; private set; }
 
-    public override async Task DownloadAsync(
-        Func<string, IProgress<double>?, CancellationHandle?, Task<Result<Stream>>> downloadStreamAsync)
+    public string[] Urls => IllustrationViewModel.GetMangaImageUrls().ToArray();
+
+    public string[] ActualDestinations => Urls.Select((t, i) => IoHelper.ReplaceTokenExtensionFromUrl(Destination, t).Replace(MangaIndexMacro.NameConstToken, i.ToString())).ToArray();
+
+    public override async Task DownloadAsync(Downloader downloadStreamAsync)
     {
-        for (CurrentIndex = 0; CurrentIndex < Urls.Count; ++CurrentIndex)
+        StartProgress = 0;
+        ProgressRatio = 1.0 / Urls.Length;
+        for (CurrentIndex = 0; CurrentIndex < Urls.Length; ++CurrentIndex)
         {
-            var dest = IoHelper.GetPathFromUrlFormat(Destination, Url).Replace($"<{MangaIndexMacro.NameConst}>", CurrentIndex.ToString());
-            await base.DownloadAsyncCore((a1, a2, a3) => downloadStreamAsync(a1, new MyProgress(a2, Urls.Count, CurrentIndex), a3), Urls[CurrentIndex], dest);
+            await base.DownloadAsyncCore(downloadStreamAsync, Urls[CurrentIndex], ActualDestinations[CurrentIndex]);
+            StartProgress = 100 * ProgressRatio;
         }
     }
-}
 
-file class MyProgress(IProgress<double>? dest, int count, int index) : IProgress<double>
-{
-    public void Report(double value) => dest?.Report((100 * index + value) / count);
+    private double StartProgress { get; set; }
+
+    private double ProgressRatio { get; set; }
+
+    public override void Report(double value) => base.Report(StartProgress + ProgressRatio * value);
 }

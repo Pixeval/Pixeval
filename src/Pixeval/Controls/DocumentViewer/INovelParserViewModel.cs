@@ -20,18 +20,21 @@
 
 #endregion
 
+using System;
 using System.Collections.Generic;
 using Pixeval.CoreApi.Model;
 
 namespace Pixeval.Controls;
 
-public interface INovelParserViewModel<TImage>
+public interface INovelParserViewModel<TImage> : IDisposable
 {
     NovelContent NovelContent { get; } 
 
-    Dictionary<long, NovelIllustInfo> IllustrationLookup { get; }
+    Dictionary<(long, int), NovelIllustInfo> IllustrationLookup { get; }
 
     Dictionary<(long, int), TImage> IllustrationImages { get; }
 
     Dictionary<long, TImage> UploadedImages { get; }
+
+    public string? ImageExtension { get; }
 }

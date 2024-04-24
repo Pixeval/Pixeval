@@ -19,9 +19,7 @@
 #endregion
 
 using System;
-using System.IO;
 using System.Threading.Tasks;
-using Pixeval.Utilities;
 using Pixeval.Utilities.Threading;
 
 namespace Pixeval.Download.Models;
@@ -40,5 +38,5 @@ public interface IDownloadTask
 
     double ProgressPercentage { get; }
 
-    Task DownloadAsync(Func<string, IProgress<double>?, CancellationHandle?, Task<Result<Stream>>> downloadStreamAsync);
+    Task DownloadAsync(Downloader downloadStreamAsync);
 }

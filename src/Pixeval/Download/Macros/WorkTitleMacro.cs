@@ -26,11 +26,11 @@ using Pixeval.Utilities;
 namespace Pixeval.Download.Macros;
 
 [MetaPathMacro<IWorkViewModel>]
-public class WorkTitleMacro : ITransducer<IllustrationItemViewModel>
+public class WorkTitleMacro : ITransducer<IWorkViewModel>
 {
     public string Name => "title";
 
-    public string Substitute(IllustrationItemViewModel context)
+    public string Substitute(IWorkViewModel context)
     {
         return context.Title.Let(IoHelper.NormalizePathSegment);
     }

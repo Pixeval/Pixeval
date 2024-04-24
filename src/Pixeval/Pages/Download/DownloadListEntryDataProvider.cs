@@ -29,7 +29,7 @@ public class DownloadListEntryDataProvider : ObservableObject, IDisposable
         View.Clear();
     }
 
-    public void ResetEngine(IEnumerable<IllustrationDownloadTask> source)
+    public void ResetEngine(IEnumerable<DownloadTaskBase> source)
     {
         Source = new IncrementalLoadingCollection<DownloadListEntryIncrementalSource, DownloadListEntryViewModel>(new DownloadListEntryIncrementalSource(source));
     }

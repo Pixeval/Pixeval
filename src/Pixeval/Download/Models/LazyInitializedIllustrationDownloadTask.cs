@@ -18,12 +18,8 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System;
-using System.IO;
 using System.Threading.Tasks;
 using Pixeval.Database;
-using Pixeval.Utilities;
-using Pixeval.Utilities.Threading;
 
 namespace Pixeval.Download.Models;
 
@@ -32,8 +28,7 @@ public class LazyInitializedIllustrationDownloadTask(DownloadHistoryEntry entry)
 {
     private readonly long _illustId = entry.Id;
 
-    public override async Task DownloadAsync(
-        Func<string, IProgress<double>?, CancellationHandle?, Task<Result<Stream>>> downloadStreamAsync)
+    public override async Task DownloadAsync(Downloader downloadStreamAsync)
     {
         await LazyLoadAsync(_illustId);
 
