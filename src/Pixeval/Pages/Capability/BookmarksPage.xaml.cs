@@ -19,6 +19,7 @@
 #endregion
 
 using System;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Controls;
@@ -40,14 +41,12 @@ public sealed partial class BookmarksPage : IScrollViewProvider
         if (e.Parameter is not long uid)
             uid = App.AppViewModel.PixivUid;
         _viewModel = new BookmarkPageViewModel(uid);
-        ChangeSource();
         _viewModel.TagBookmarksIncrementallyLoaded += ViewModelOnTagBookmarksIncrementallyLoaded;
     }
 
-    private void ComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
-    {
-        ChangeSource();
-    }
+    private void BookmarksPage_OnLoaded(object sender, RoutedEventArgs e) => ChangeSource();
+
+    private void ComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e) => ChangeSource();
 
     private void ViewModelOnTagBookmarksIncrementallyLoaded(object? sender, string e)
     {

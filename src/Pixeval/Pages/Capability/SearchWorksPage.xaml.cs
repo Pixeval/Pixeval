@@ -18,6 +18,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.CoreApi.Global.Enum;
@@ -35,13 +36,11 @@ public sealed partial class SearchWorksPage : IScrollViewProvider
     public override void OnPageActivated(NavigationEventArgs e)
     {
         (SimpleWorkTypeComboBox.SelectedEnum, _searchText) = e.Parameter.To<(SimpleWorkType, string)>();
-        ChangeSource();
     }
 
-    private void ComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
-    {
-        ChangeSource();
-    }
+    private void SearchWorksPage_OnLoaded(object sender, RoutedEventArgs e) => ChangeSource();
+
+    private void ComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e) => ChangeSource();
 
     private void ChangeSource()
     {

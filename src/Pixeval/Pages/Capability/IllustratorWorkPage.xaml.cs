@@ -18,6 +18,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.CoreApi.Global.Enum;
@@ -38,13 +39,11 @@ public sealed partial class IllustratorWorkPage : IScrollViewProvider
         if (e.Parameter is not long id)
             return;
         _uid = id;
-        ChangeSource();
     }
 
-    private void WorkTypeComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
-    {
-        ChangeSource();
-    }
+    private void IllustratorWorkPage_OnLoaded(object sender, RoutedEventArgs e) => ChangeSource();
+
+    private void WorkTypeComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e) => ChangeSource();
 
     private void ChangeSource()
     {
