@@ -23,6 +23,7 @@ using Microsoft.UI.Xaml.Input;
 using Pixeval.Util;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using QuestPDF.Fluent;
 
 namespace Pixeval.Controls;
 
@@ -30,9 +31,13 @@ public partial class NovelItemViewModel
 {
     protected override Task<bool> SetBookmarkAsync(long id, bool isBookmarked, bool privately = false, IEnumerable<string>? tags = null) => MakoHelper.SetNovelBookmarkAsync(id, isBookmarked, privately, tags);
 
-    protected override void SaveCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
+    protected override async void SaveCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
+        var x = await App.AppViewModel.MakoClient.GetNovelContentAsync(Id);
 
+        var a = new FileParserViewModel(x);
+        var loadPdfContentAsync = await a.LoadPdfContentAsync();
+        loadPdfContentAsync.GeneratePdf($@"C:\Users\poker\Desktop\{Title}.pdf");
     }
 
     protected override void SaveAsCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)

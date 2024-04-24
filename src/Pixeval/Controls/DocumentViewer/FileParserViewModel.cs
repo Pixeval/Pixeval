@@ -3,7 +3,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2024 Pixeval/DocumentViewerViewModel.cs
+// Copyright (c) 2024 Pixeval/PdfParserViewModel.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -22,54 +22,95 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
 using System.Threading.Tasks;
-using CommunityToolkit.Mvvm.ComponentModel;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.UI.Xaml.Documents;
-using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.AppManagement;
-using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Model;
-using Pixeval.Database.Managers;
-using Pixeval.Database;
-using Pixeval.Util;
 using Pixeval.Util.IO;
-using Pixeval.Utilities;
+using Pixeval.Util;
 using Pixeval.Utilities.Threading;
+using Pixeval.Utilities;
+using System.Text;
+using QuestPDF.Fluent;
+using QuestPDF.Infrastructure;
 
 namespace Pixeval.Controls;
 
-public class DocumentViewerViewModel(NovelContent novelContent) : ObservableObject, IDisposable, INovelParserViewModel<SoftwareBitmapSource>
+public class FileParserViewModel(NovelContent novelContent) : INovelParserViewModel<Stream>
 {
-    public Action<int>? JumpToPageRequested;
-
     public NovelContent NovelContent { get; } = novelContent;
 
     public Dictionary<long, NovelIllustInfo> IllustrationLookup { get; } = [];
 
-    public Dictionary<(long, int), SoftwareBitmapSource> IllustrationImages { get; } = [];
+    public Dictionary<(long, int), Stream> IllustrationImages { get; } = [];
 
-    public Dictionary<long, SoftwareBitmapSource> UploadedImages { get; } = [];
+    public Dictionary<long, Stream> UploadedImages { get; } = [];
 
-    public ObservableCollection<List<Paragraph>> Pages { get; } = [];
-
-    public async Task LoadContentAsync()
+    public async Task<StringBuilder> LoadMdContentAsync()
     {
-        _ = LoadImagesAsync();
+        await LoadImagesAsync();
 
         var index = 0;
         var length = NovelContent.Text.Length;
-        var parser = new PixivNovelRtfParser();
-        Pages.Add(parser.Parse(NovelContent.Text, ref index, this));
-        await Task.Yield();
-        while (index < length)
+
+        var a = new StringBuilder();
+        for (var i = 0; index < length; ++i)
         {
+            var parser = new PixivNovelMdParser(a, i);
+            _ = parser.Parse(NovelContent.Text, ref index, this);
             if (LoadingCancellationHandle.IsCancelled)
                 break;
-            Pages.Add(parser.Parse(NovelContent.Text, ref index, this));
         }
+
+        return a;
+    }
+
+    public async Task<StringBuilder> LoadHtmlContentAsync()
+    {
+        await LoadImagesAsync();
+
+        var index = 0;
+        var length = NovelContent.Text.Length;
+
+        var a = new StringBuilder();
+        for (var i = 0; index < length; ++i)
+        {
+            var parser = new PixivNovelHtmlParser(a, i);
+            _ = parser.Parse(NovelContent.Text, ref index, this);
+            if (LoadingCancellationHandle.IsCancelled)
+                break;
+        }
+
+        return a;
+    }
+
+    public async Task<Document> LoadPdfContentAsync()
+    {
+        await LoadImagesAsync();
+
+        var index = 0;
+        var length = NovelContent.Text.Length;
+
+        PixivNovelPdfParser.Init();
+
+        return
+            Document.Create(t =>
+                t.Page(p =>
+                {
+                    p.MarginHorizontal(90);
+                    p.MarginVertical(72);
+                    p.DefaultTextStyle(new TextStyle().LineHeight(2));
+                    p.Content().Column(c =>
+                    {
+                        for (var i = 0; index < length; ++i)
+                        {
+                            var parser = new PixivNovelPdfParser(c, i);
+                            _ = parser.Parse(NovelContent.Text, ref index, this);
+                            if (LoadingCancellationHandle.IsCancelled)
+                                break;
+                        }
+                    });
+                }));
     }
 
     public async Task LoadImagesAsync()
@@ -89,7 +130,6 @@ public class DocumentViewerViewModel(NovelContent novelContent) : ObservableObje
                 break;
             var key = (illust.Id, illust.Page);
             IllustrationImages[key] = await LoadThumbnailAsync(illust.Illust.Images.Medium);
-            OnPropertyChanged(nameof(IllustrationImages) + key.GetHashCode());
         }
 
         foreach (var image in NovelContent.Images)
@@ -97,23 +137,22 @@ public class DocumentViewerViewModel(NovelContent novelContent) : ObservableObje
             if (LoadingCancellationHandle.IsCancelled)
                 break;
             UploadedImages[image.NovelImageId] = await LoadThumbnailAsync(image.Urls.X1200);
-            OnPropertyChanged(nameof(UploadedImages) + image.NovelImageId);
         }
     }
 
-    private async Task<SoftwareBitmapSource> LoadThumbnailAsync(string url)
+    private async Task<Stream> LoadThumbnailAsync(string url)
     {
         var cacheKey = MakoHelper.GetCacheKeyForThumbnailAsync(url);
 
         if (App.AppViewModel.AppSettings.UseFileCache && await App.AppViewModel.Cache.TryGetAsync<Stream>(cacheKey) is { } stream)
         {
-            return await stream.GetSoftwareBitmapSourceAsync(true);
+            return stream;
         }
 
         var s = await GetThumbnailAsync(url);
         if (App.AppViewModel.AppSettings.UseFileCache)
             await App.AppViewModel.Cache.AddAsync(cacheKey, s, TimeSpan.FromDays(1));
-        return await s.GetSoftwareBitmapSourceAsync(true);
+        return s;
     }
 
     private CancellationHandle LoadingCancellationHandle { get; } = new();
@@ -127,24 +166,6 @@ public class DocumentViewerViewModel(NovelContent novelContent) : ObservableObje
             Result<Stream>.Success(var stream)
             ? stream
             : AppInfo.GetNotAvailableImageStream();
-    }
-
-    public static async Task<DocumentViewerViewModel> CreateAsync(long novelId)
-    {
-        var novelContent = await App.AppViewModel.MakoClient.GetNovelContentAsync(novelId);
-        var vm = new DocumentViewerViewModel(novelContent);
-        _ = vm.LoadContentAsync();
-        AddHistory();
-
-        return vm;
-
-        void AddHistory()
-        {
-            using var scope = App.AppViewModel.AppServicesScope;
-            var manager = scope.ServiceProvider.GetRequiredService<BrowseHistoryPersistentManager>();
-            _ = manager.Delete(x => x.Id == novelId && x.Type == SimpleWorkType.Novel);
-            manager.Insert(new BrowseHistoryEntry { Id = novelId, Type = SimpleWorkType.Novel });
-        }
     }
 
     public void Dispose()

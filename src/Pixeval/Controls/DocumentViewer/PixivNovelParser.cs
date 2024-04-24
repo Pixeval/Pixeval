@@ -24,25 +24,36 @@ using System;
 
 namespace Pixeval.Controls;
 
-public abstract class PixivNovelParser<T>
+public abstract class PixivNovelParser<T, TImage, TViewModel> where TViewModel : INovelParserViewModel<TImage>
 {
     protected abstract T Vector { get; }
 
-    protected abstract void AddLastSpan(T result, ref ReadOnlySpan<char> currentSpan);
+    protected abstract void AddLastSpan(T result, string lastSpan);
 
-    protected abstract void AddRuby(T result, ref ReadOnlySpan<char> kanji, ref ReadOnlySpan<char> ruby);
+    protected abstract void AddRuby(T result, string kanji, string ruby);
 
-    protected abstract void AddHyperlink(T result, ref ReadOnlySpan<char> content, Uri page);
+    protected abstract void AddHyperlink(T result, string content, Uri page);
 
-    protected abstract void AddInlineHyperlink(T result, uint uri, DocumentViewerViewModel viewModel);
+    protected abstract void AddInlineHyperlink(T result, uint uri, TViewModel viewModel);
 
-    protected abstract void AddChapter(T result, ref ReadOnlySpan<char> chapterText);
+    protected abstract void AddChapter(T result, string chapterText);
 
-    protected abstract void AddUploadedImage(T result, DocumentViewerViewModel viewModel, long imageId);
+    protected abstract void AddUploadedImage(T result, TViewModel viewModel, long imageId);
 
-    protected abstract void AddPixivImage(T paragraphs, DocumentViewerViewModel viewModel, long imageId, int page);
+    /// <summary>
+    /// 此处<paramref name="page"/>是从1开始的
+    /// </summary>
+    protected abstract void AddPixivImage(T paragraphs, TViewModel viewModel, long imageId, int page);
 
-    public T Parse(string text, ref int startIndex, DocumentViewerViewModel viewModel)
+    protected virtual void Finish(T result)
+    {
+    }
+
+    protected virtual void NewPage(T result)
+    {
+    }
+
+    public T Parse(string text, ref int startIndex, TViewModel viewModel)
     {
         var result = Vector;
 
@@ -75,6 +86,7 @@ public abstract class PixivNovelParser<T>
                     {
                         AddLastRun(ref currentSpan);
                         Skip(ref loopSpan, ref currentSpan, ref startIndex, token.Length, true);
+                        NewPage(result);
                         return result;
                     }
                     case PixivTokens.RubyToken:
@@ -96,7 +108,7 @@ public abstract class PixivNovelParser<T>
                         var kanji = loopSpan[token.Length..separatorIndex].Trim();
                         var ruby = loopSpan[(separatorIndex + 1)..endIndex].Trim();
                         AddLastRun(ref currentSpan);
-                        AddRuby(result, ref kanji, ref ruby);
+                        AddRuby(result, kanji.ToString(), ruby.ToString());
 
                         var end = endIndex + PixivTokens.EndDoubleToken.Length;
                         Skip(ref loopSpan, ref currentSpan, ref startIndex, end, true);
@@ -129,7 +141,7 @@ public abstract class PixivNovelParser<T>
                             break;
                         }
 
-                        AddHyperlink(result, ref content, uri);
+                        AddHyperlink(result, content.ToString(), uri);
 
                         var end = endIndex + PixivTokens.EndDoubleToken.Length;
                         Skip(ref loopSpan, ref currentSpan, ref startIndex, end, true);
@@ -173,7 +185,7 @@ public abstract class PixivNovelParser<T>
                         var chapterText = loopSpan[token.Length..endIndex].Trim();
                         AddLastRun(ref currentSpan);
 
-                        AddChapter(result, ref chapterText);
+                        AddChapter(result, chapterText.ToString());
 
                         var end = endIndex + 1;
                         Skip(ref loopSpan, ref currentSpan, ref startIndex, end, true);
@@ -257,6 +269,7 @@ public abstract class PixivNovelParser<T>
         startIndex = text.Length;
         currentIndex = currentSpan.Length;
         AddLastRun(ref currentSpan);
+        Finish(result);
         return result;
 
         void AddLastRun(ref ReadOnlySpan<char> currentSpan)
@@ -265,7 +278,7 @@ public abstract class PixivNovelParser<T>
             currentSpan = currentSpan[currentIndex..];
             currentIndex = 0;
             if (lastRun.Length is not 0)
-                AddLastSpan(result, ref lastRun);
+                AddLastSpan(result, lastRun.ToString());
         }
 
         void Skip(ref ReadOnlySpan<char> loopSpan, ref ReadOnlySpan<char> currentSpan, ref int startIndex, int count, bool resetCurrent = false)

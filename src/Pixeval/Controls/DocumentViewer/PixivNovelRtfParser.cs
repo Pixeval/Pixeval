@@ -28,46 +28,47 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Documents;
 using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Utilities;
 using WinUI3Utilities;
 
 namespace Pixeval.Controls;
 
-public sealed class PixivNovelRtfParser : PixivNovelParser<List<Paragraph>>
-{ 
+public sealed class PixivNovelRtfParser : PixivNovelParser<List<Paragraph>, SoftwareBitmapSource, DocumentViewerViewModel>
+{
     protected override List<Paragraph> Vector => [new()];
 
-    protected override void AddLastSpan(List<Paragraph> result, ref ReadOnlySpan<char> currentSpan)
+    protected override void AddLastSpan(List<Paragraph> result, string lastSpan)
     {
         var currentParagraph = result[^1];
 
-        currentParagraph.Inlines.Add(new Run { Text = currentSpan.ToString() });
+        currentParagraph.Inlines.Add(new Run { Text = lastSpan });
     }
 
-    protected override void AddRuby(List<Paragraph> result, ref ReadOnlySpan<char> kanji, ref ReadOnlySpan<char> ruby)
+    protected override void AddRuby(List<Paragraph> result, string kanji, string ruby)
     {
         var currentParagraph = result[^1];
 
         currentParagraph.Inlines.Add(new Run
         {
-            Text = kanji.ToString(),
+            Text = kanji,
         });
         currentParagraph.Inlines.Add(new Run
         {
-            Text = $"（{ruby.ToString()}）",
+            Text = $"（{ruby}）",
             Foreground = new SolidColorBrush(Colors.Gray)
         });
     }
 
-    protected override void AddHyperlink(List<Paragraph> result, ref ReadOnlySpan<char> content, Uri uri)
+    protected override void AddHyperlink(List<Paragraph> result, string content, Uri uri)
     {
         var currentParagraph = result[^1];
 
         currentParagraph.Inlines.Add(new Hyperlink
         {
             NavigateUri = uri,
-            Inlines = { new Run { Text = content.ToString() } }
+            Inlines = { new Run { Text = content } }
         });
     }
 
@@ -80,12 +81,12 @@ public sealed class PixivNovelRtfParser : PixivNovelParser<List<Paragraph>>
         currentParagraph.Inlines.Add(hyperlink);
     }
 
-    protected override void AddChapter(List<Paragraph> result, ref ReadOnlySpan<char> chapterText)
+    protected override void AddChapter(List<Paragraph> result, string chapterText)
     {
         var currentParagraph = result[^1];
 
         currentParagraph.Inlines.Add(new LineBreak());
-        currentParagraph.Inlines.Add(new Run { Text = chapterText.ToString(), FontSize = 20, FontWeight = FontWeights.Bold });
+        currentParagraph.Inlines.Add(new Run { Text = chapterText, FontSize = 20, FontWeight = FontWeights.Bold });
         currentParagraph.Inlines.Add(new LineBreak());
     }
 

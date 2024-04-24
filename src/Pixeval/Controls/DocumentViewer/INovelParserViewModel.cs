@@ -3,7 +3,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2024 Pixeval/NovelItemViewModel.cs
+// Copyright (c) 2024 Pixeval/INovelParserViewModel.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -20,11 +20,18 @@
 
 #endregion
 
+using System.Collections.Generic;
 using Pixeval.CoreApi.Model;
 
 namespace Pixeval.Controls;
 
-public partial class NovelItemViewModel(Novel novel) : ThumbnailEntryViewModel<Novel>(novel)
+public interface INovelParserViewModel<TImage>
 {
-    public int TextLength => Entry.TextLength;
+    NovelContent NovelContent { get; } 
+
+    Dictionary<long, NovelIllustInfo> IllustrationLookup { get; }
+
+    Dictionary<(long, int), TImage> IllustrationImages { get; }
+
+    Dictionary<long, TImage> UploadedImages { get; }
 }
