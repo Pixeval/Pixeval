@@ -18,6 +18,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Pixeval.Controls;
@@ -35,15 +36,18 @@ public class IllustrationDownloadTask(DownloadHistoryEntry entry, IllustrationIt
 {
     public override IWorkViewModel ViewModel => IllustrationViewModel;
 
+    public override IReadOnlyList<string> ActualDestinations =>
+    [
+        IoHelper.ReplaceTokenExtensionFromUrl(Destination, IllustrationViewModel.OriginalStaticUrl!).RemoveTokens()
+    ];
+
+    public override bool IsFolder => false;
+
     public IllustrationItemViewModel IllustrationViewModel { get; protected set; } = illustration;
 
     public override async Task DownloadAsync(Downloader downloadStreamAsync)
     {
-        var url = IllustrationViewModel.OriginalStaticUrl!;
-
-        Destination = IoHelper.ReplaceTokenExtensionFromUrl(Destination, url).RemoveTokens();
-
-        await DownloadAsyncCore(downloadStreamAsync, url, Destination);
+        await DownloadAsyncCore(downloadStreamAsync, IllustrationViewModel.OriginalStaticUrl!, ActualDestination);
     }
 
     protected virtual async Task DownloadAsyncCore(Downloader downloadStreamAsync, string url, string destination)

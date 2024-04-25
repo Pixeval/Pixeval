@@ -41,9 +41,9 @@ public class UgoiraDownloadTask(
     {
         var url = Metadata.LargeUrl;
 
-        Destination = IoHelper.ReplaceTokenExtensionFromUrl(Destination, url).RemoveTokens();
+        var destination = IoHelper.ReplaceTokenExtensionFromUrl(Destination, url).RemoveTokens();
 
-        await DownloadAsyncCore(downloadStreamAsync, url, Destination);
+        await DownloadAsyncCore(downloadStreamAsync, url, destination);
     }
 
     protected override async Task ManageStream(Stream stream, string url, string destination)

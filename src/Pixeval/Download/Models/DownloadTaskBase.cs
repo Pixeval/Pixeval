@@ -19,6 +19,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -31,7 +32,7 @@ using Pixeval.Utilities.Threading;
 
 namespace Pixeval.Download.Models;
 
-public abstract class DownloadTaskBase(DownloadHistoryEntry entry) : ObservableObject, IDownloadTask, IProgress<double>, IEntry
+public abstract class DownloadTaskBase(DownloadHistoryEntry entry) : ObservableObject, IProgress<double>, IEntry
 {
     public abstract IWorkViewModel ViewModel { get; }
     private Exception? _errorCause;
@@ -52,12 +53,25 @@ public abstract class DownloadTaskBase(DownloadHistoryEntry entry) : ObservableO
         }
     }
 
+    /// <summary>
+    /// 文件的真正下载地址，若<see cref="IsFolder"/>为假，则一定只有一个元素
+    /// </summary>
+    public abstract IReadOnlyList<string> ActualDestinations { get; }
+
+    public string ActualDestination => ActualDestinations[0];
+
+    /// <summary>
+    /// 是否是一个文件夹包含的下载内容
+    /// </summary>
+    public abstract bool IsFolder { get; }
+
     public DownloadHistoryEntry DatabaseEntry { get; } = entry;
 
     public long Id => DatabaseEntry.Id;
 
     public DownloadItemType Type => DatabaseEntry.Type;
 
+    /// <inheritdoc cref="DownloadHistoryEntry.Destination"/>
     public string Destination
     {
         get => DatabaseEntry.Destination;

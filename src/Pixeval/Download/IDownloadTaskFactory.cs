@@ -24,7 +24,7 @@ using Pixeval.Download.Models;
 
 namespace Pixeval.Download;
 
-public interface IDownloadTaskFactory<in TContext, TDownloadTask> where TDownloadTask : IDownloadTask
+public interface IDownloadTaskFactory<in TContext, TDownloadTask> where TDownloadTask : DownloadTaskBase
 {
     IMetaPathParser<TContext> PathParser { get; }
 

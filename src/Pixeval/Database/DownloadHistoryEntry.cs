@@ -57,8 +57,8 @@ public partial class DownloadHistoryEntry : ObservableObject
     public ObjectId? DownloadHistoryEntryId { get; set; }
 
     /// <summary>
-    /// 表示文件所在的地址，不能包含未解析的宏@{...}，
-    /// 当是一个文件时必须是一个有效的地址（不能是token&lt;...&gt;）
+    /// 表示文件所在的地址，可能无法被直接解析，且不能包含未解析的宏@{...}，<br/>
+    /// 当是一个文件时必须是一个有效的地址（不能是token&lt;...&gt;）<br/>
     /// 当是多个文件时，文件名可以包含token&lt;...&gt;，但其文件夹路径不能包含token&lt;...&gt;
     /// </summary>
     public string Destination { get; set; } = null!;

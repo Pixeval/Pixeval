@@ -20,6 +20,8 @@
 
 #endregion
 
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Pixeval.Controls;
@@ -34,17 +36,20 @@ public class MangaDownloadTask(DownloadHistoryEntry entry, IllustrationItemViewM
 {
     protected int CurrentIndex { get; private set; }
 
+    public override bool IsFolder => true;
+
     public string[] Urls => IllustrationViewModel.GetMangaImageUrls().ToArray();
 
-    public string[] ActualDestinations => Urls.Select((t, i) => IoHelper.ReplaceTokenExtensionFromUrl(Destination, t).Replace(MangaIndexMacro.NameConstToken, i.ToString())).ToArray();
+    public override IReadOnlyList<string> ActualDestinations => Urls.Select((t, i) => IoHelper.ReplaceTokenExtensionFromUrl(Destination, t).Replace(MangaIndexMacro.NameConstToken, i.ToString())).ToArray();
 
     public override async Task DownloadAsync(Downloader downloadStreamAsync)
     {
         StartProgress = 0;
         ProgressRatio = 1.0 / Urls.Length;
+        var actualDestinations = ActualDestinations;
         for (CurrentIndex = 0; CurrentIndex < Urls.Length; ++CurrentIndex)
         {
-            await base.DownloadAsyncCore(downloadStreamAsync, Urls[CurrentIndex], ActualDestinations[CurrentIndex]);
+            await base.DownloadAsyncCore(downloadStreamAsync, Urls[CurrentIndex], actualDestinations[CurrentIndex]);
             StartProgress = 100 * ProgressRatio;
         }
     }

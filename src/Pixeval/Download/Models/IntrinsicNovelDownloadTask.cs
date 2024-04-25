@@ -1,8 +1,9 @@
-#region Copyright (c) Pixeval/Pixeval
+#region Copyright
+
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/IDownloadTask.cs
+// Copyright (c) 2024 Pixeval/IntrinsicNovelDownloadTask.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -16,27 +17,23 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 #endregion
 
-using System;
 using System.Threading.Tasks;
-using Pixeval.Utilities.Threading;
+using Pixeval.Controls;
+using Pixeval.Database;
 
 namespace Pixeval.Download.Models;
 
-public interface IDownloadTask
+public sealed class IntrinsicNovelDownloadTask : NovelDownloadTask
 {
-    string Destination { get; }
+    public IntrinsicNovelDownloadTask(DownloadHistoryEntry entry, NovelItemViewModel novel, DocumentViewerViewModel viewModel) :
+        base(entry, novel, viewModel.NovelContent, viewModel) =>
+        Report(90);
 
-    CancellationHandle CancellationHandle { get; set; }
-
-    TaskCompletionSource Completion { get; }
-
-    DownloadState CurrentState { get; set; }
-
-    Exception? ErrorCause { get; set; }
-
-    double ProgressPercentage { get; }
-
-    Task DownloadAsync(Downloader downloadStreamAsync);
+    public override async Task DownloadAsync(Downloader downloadStreamAsync)
+    {
+        await ManageResult();
+    }
 }

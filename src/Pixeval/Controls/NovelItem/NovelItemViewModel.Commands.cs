@@ -42,10 +42,10 @@ public partial class NovelItemViewModel
     protected override async void SaveCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
         var frameworkElement = null as FrameworkElement;
-        var getNovelContentAsync = null as Func<IProgress<int>?, Task<IStreamNovelParserViewModel?>>;
+        var getNovelContentAsync = null as Func<IProgress<int>?, Task<DocumentViewerViewModel?>>;
         switch (args.Parameter)
         {
-            case ValueTuple<FrameworkElement?, Func<IProgress<int>?, Task<IStreamNovelParserViewModel?>>?> tuple:
+            case ValueTuple<FrameworkElement?, Func<IProgress<int>?, Task<DocumentViewerViewModel?>>?> tuple:
                 frameworkElement = tuple.Item1;
                 getNovelContentAsync = tuple.Item2;
                 break;
@@ -60,10 +60,10 @@ public partial class NovelItemViewModel
     protected override async void SaveAsCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
         Window window;
-        var getNovelContentAsync = null as Func<IProgress<int>?, Task<IStreamNovelParserViewModel?>>;
+        var getNovelContentAsync = null as Func<IProgress<int>?, Task<DocumentViewerViewModel?>>;
         switch (args.Parameter)
         {
-            case ValueTuple<Window, Func<IProgress<int>?, Task<IStreamNovelParserViewModel?>>?> tuple:
+            case ValueTuple<Window, Func<IProgress<int>?, Task<DocumentViewerViewModel?>>?> tuple:
                 window = tuple.Item1;
                 getNovelContentAsync = tuple.Item2;
                 break;
@@ -95,7 +95,7 @@ public partial class NovelItemViewModel
     /// <param name="getNovelContentAsync">获取原图的<see cref="Stream"/>，支持进度显示，为<see langword="null"/>则创建新的下载任务</param>
     /// <param name="path">文件路径</param>
     /// <returns></returns>
-    private async Task SaveUtilityAsync(FrameworkElement? frameworkElement, Func<IProgress<int>?, Task<IStreamNovelParserViewModel?>>? getNovelContentAsync, string path)
+    private async Task SaveUtilityAsync(FrameworkElement? frameworkElement, Func<IProgress<int>?, Task<DocumentViewerViewModel?>>? getNovelContentAsync, string path)
     {
         var teachingTip = frameworkElement?.CreateTeachingTip();
 

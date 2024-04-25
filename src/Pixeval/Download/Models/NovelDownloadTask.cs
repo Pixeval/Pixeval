@@ -36,26 +36,40 @@ using WinUI3Utilities;
 
 namespace Pixeval.Download.Models;
 
-public class NovelDownloadTask(
-    DownloadHistoryEntry entry,
-    NovelItemViewModel novel,
-    NovelContent novelContent)
-    : DownloadTaskBase(entry)
+public class NovelDownloadTask : DownloadTaskBase
 {
+    public NovelDownloadTask(
+        DownloadHistoryEntry entry,
+        NovelItemViewModel novel,
+        NovelContent novelContent)
+        : this(entry, novel, novelContent, new DocumentViewerViewModel(novelContent))
+    {
+    }
+
+    protected NovelDownloadTask(
+        DownloadHistoryEntry entry,
+        NovelItemViewModel novel,
+        NovelContent novelContent,
+        DocumentViewerViewModel viewModel) : base(entry)
+    {
+        NovelItemViewModel = novel;
+        NovelContent = novelContent;
+        DocumentViewModel = viewModel;
+    }
+
     public override IWorkViewModel ViewModel => NovelItemViewModel;
 
-    public NovelItemViewModel NovelItemViewModel { get; protected set; } = novel;
+    public NovelItemViewModel NovelItemViewModel { get; protected set; }
 
-    public NovelContent NovelContent { get; protected set; } = novelContent;
+    public NovelContent NovelContent { get; protected set; }
 
-    public DocumentViewerViewModel DocumentViewModel { get; protected set; } = new DocumentViewerViewModel(novelContent);
+    public DocumentViewerViewModel DocumentViewModel { get; protected set; }
 
-    public List<string> Destinations
+    public override IReadOnlyList<string> ActualDestinations
     {
         get
         {
-            // 只有pdf是单文件
-            if (Destination.EndsWith(".pdf"))
+            if (!IsFolder)
                 return [Destination.RemoveTokens()];
 
             var destinations = new List<string>();
@@ -85,6 +99,11 @@ public class NovelDownloadTask(
         }
     }
 
+    /// <summary>
+    /// 只有pdf是单文件
+    /// </summary>
+    public override bool IsFolder => !Destination.EndsWith(".pdf");
+
     public override async Task DownloadAsync(Downloader downloadStreamAsync)
     {
         var count = DocumentViewModel.TotalCount;
@@ -93,7 +112,7 @@ public class NovelDownloadTask(
         ProgressRatio = .9 / count;
         for (var i = 0; i < count; ++i)
         {
-            var dest = Destinations.Count > i + 1 ? Destinations[i + 1] : null;
+            var dest = ActualDestinations.Count > i + 1 ? ActualDestinations[i + 1] : null;
             var stream = await DownloadAsyncCore(downloadStreamAsync, DocumentViewModel.AllUrls[i], dest);
             DocumentViewModel.SetStream(i, stream);
             StartProgress = 100 * ProgressRatio;
@@ -121,19 +140,19 @@ public class NovelDownloadTask(
         {
             case NovelDownloadFormat.Pdf:
                 var document = DocumentViewModel.LoadPdfContent(CancellationHandle);
-                document.GeneratePdf(Destinations[0]);
+                document.GeneratePdf(ActualDestinations[0]);
                 Report(100);
                 return;
             case NovelDownloadFormat.OriginalTxt:
-                await File.WriteAllTextAsync(Destinations[0], NovelContent.Text);
+                await File.WriteAllTextAsync(ActualDestinations[0], NovelContent.Text);
                 break;
             case NovelDownloadFormat.Html:
                 var sbHtml = DocumentViewModel.LoadHtmlContent(CancellationHandle);
-                await File.WriteAllTextAsync(Destinations[0], sbHtml.ToString());
+                await File.WriteAllTextAsync(ActualDestinations[0], sbHtml.ToString());
                 break;
             case NovelDownloadFormat.Md:
                 var sbMd = DocumentViewModel.LoadHtmlContent(CancellationHandle);
-                await File.WriteAllTextAsync(Destinations[0], sbMd.ToString());
+                await File.WriteAllTextAsync(ActualDestinations[0], sbMd.ToString());
                 break;
             default:
                 ThrowHelper.ArgumentOutOfRange(App.AppViewModel.AppSettings.NovelDownloadFormat);
@@ -144,7 +163,7 @@ public class NovelDownloadTask(
         {
             var stream = DocumentViewModel.GetStream(i);
             stream.Position = 0;
-            var destination = Destinations[i + 1];
+            var destination = ActualDestinations[i + 1];
             if (App.AppViewModel.AppSettings.IllustrationDownloadFormat is IllustrationDownloadFormat.Original)
             {
                 await stream.StreamSaveToFileAsync(destination);
