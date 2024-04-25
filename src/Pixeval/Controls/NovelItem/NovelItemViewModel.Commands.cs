@@ -42,30 +42,30 @@ public partial class NovelItemViewModel
     protected override async void SaveCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
         var frameworkElement = null as FrameworkElement;
-        var getNovelContentAsync = null as Func<IProgress<int>?, Task<DocumentViewerViewModel?>>;
+        var documentViewerViewModel = null as DocumentViewerViewModel;
         switch (args.Parameter)
         {
-            case ValueTuple<FrameworkElement?, Func<IProgress<int>?, Task<DocumentViewerViewModel?>>?> tuple:
+            case ValueTuple<FrameworkElement?, DocumentViewerViewModel?> tuple:
                 frameworkElement = tuple.Item1;
-                getNovelContentAsync = tuple.Item2;
+                documentViewerViewModel = tuple.Item2;
                 break;
             case FrameworkElement f:
                 frameworkElement = f;
                 break;
         }
 
-        await SaveUtilityAsync(frameworkElement, getNovelContentAsync, App.AppViewModel.AppSettings.DefaultDownloadPathMacro);
+        await SaveUtilityAsync(frameworkElement, documentViewerViewModel, App.AppViewModel.AppSettings.DefaultDownloadPathMacro);
     }
 
     protected override async void SaveAsCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
         Window window;
-        var getNovelContentAsync = null as Func<IProgress<int>?, Task<DocumentViewerViewModel?>>;
+        var documentViewerViewModel = null as DocumentViewerViewModel;
         switch (args.Parameter)
         {
-            case ValueTuple<Window, Func<IProgress<int>?, Task<DocumentViewerViewModel?>>?> tuple:
+            case ValueTuple<Window, DocumentViewerViewModel?> tuple:
                 window = tuple.Item1;
-                getNovelContentAsync = tuple.Item2;
+                documentViewerViewModel = tuple.Item2;
                 break;
             case Window w:
                 window = w;
@@ -85,24 +85,22 @@ public partial class NovelItemViewModel
 
         var name = Path.GetFileName(App.AppViewModel.AppSettings.DefaultDownloadPathMacro);
         var path = Path.Combine(folder.Path, name);
-        await SaveUtilityAsync(frameworkElement, getNovelContentAsync, path);
+        await SaveUtilityAsync(frameworkElement, documentViewerViewModel, path);
     }
 
     /// <summary>
     /// <see cref="IllustrationDownloadTaskFactory"/>
     /// </summary>
     /// <param name="frameworkElement">承载提示<see cref="TeachingTip"/>的控件，为<see langword="null"/>则不显示</param>
-    /// <param name="getNovelContentAsync">获取原图的<see cref="Stream"/>，支持进度显示，为<see langword="null"/>则创建新的下载任务</param>
+    /// <param name="source">为<see langword="null"/>则创建新的下载任务</param>
     /// <param name="path">文件路径</param>
     /// <returns></returns>
-    private async Task SaveUtilityAsync(FrameworkElement? frameworkElement, Func<IProgress<int>?, Task<DocumentViewerViewModel?>>? getNovelContentAsync, string path)
+    private async Task SaveUtilityAsync(FrameworkElement? frameworkElement, DocumentViewerViewModel? source, string path)
     {
         var teachingTip = frameworkElement?.CreateTeachingTip();
 
-        var progress = null as Progress<int>;
-        teachingTip?.Show(EntryItemResources.ImageProcessing, TeachingTipSeverity.Processing, isLightDismissEnabled: true);
+        teachingTip?.Show(EntryItemResources.NovelContentFetching, TeachingTipSeverity.Processing, isLightDismissEnabled: true);
 
-        var source = getNovelContentAsync is null ? null : await getNovelContentAsync.Invoke(progress);
         using var scope = App.AppViewModel.AppServicesScope;
         var factory = scope.ServiceProvider.GetRequiredService<IDownloadTaskFactory<NovelItemViewModel, NovelDownloadTask>>();
         if (source is null)

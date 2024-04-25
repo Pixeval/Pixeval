@@ -118,7 +118,7 @@ public sealed partial class NovelViewerPage
 
     private void AddToBookmarkTeachingTip_OnCloseButtonClick(TeachingTip sender, object args)
     {
-        _viewModel.CurrentNovel.AddToBookmarkCommand.Execute((BookmarkTagSelector.SelectedTags, BookmarkTagSelector.IsPrivate, null as object));
+        _viewModel.CurrentNovel.AddToBookmarkCommand.Execute((BookmarkTagSelector.SelectedTags, BookmarkTagSelector.IsPrivate, DocumentViewer.DownloadParameter));
     }
 
     private void AddToBookmarkButton_OnTapped(object sender, TappedRoutedEventArgs e) => AddToBookmarkTeachingTip.IsOpen = true;

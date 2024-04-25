@@ -136,6 +136,12 @@ public class NovelDownloadTask : DownloadTaskBase
 
     protected virtual async Task ManageResult()
     {
+        for (var i = 0; i < DocumentViewModel.TotalCount; ++i)
+        {
+            var stream = DocumentViewModel.GetStream(i);
+            stream.Position = 0;
+        }
+
         switch (App.AppViewModel.AppSettings.NovelDownloadFormat)
         {
             case NovelDownloadFormat.Pdf:
@@ -162,7 +168,6 @@ public class NovelDownloadTask : DownloadTaskBase
         for (var i = 0; i < DocumentViewModel.TotalCount; ++i)
         {
             var stream = DocumentViewModel.GetStream(i);
-            stream.Position = 0;
             var destination = ActualDestinations[i + 1];
             if (App.AppViewModel.AppSettings.IllustrationDownloadFormat is IllustrationDownloadFormat.Original)
             {

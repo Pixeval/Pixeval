@@ -341,15 +341,6 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
 
     private void InitializeCommands()
     {
-        SaveCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
-        SaveCommand.ExecuteRequested += (_, _) => IllustrationViewModel.SaveCommand.Execute(DownloadParameter);
-
-        SaveAsCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
-        SaveAsCommand.ExecuteRequested += (_, _) => IllustrationViewModel.SaveAsCommand.Execute((Window, (Func<IProgress<int>?, Task<Stream?>>)GetOriginalImageSourceAsync));
-
-        CopyCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
-        CopyCommand.ExecuteRequested += (_, _) => IllustrationViewModel.CopyCommand.Execute(DownloadParameter);
-
         PlayGifCommand.CanExecuteRequested += (_, e) => e.CanExecute = IllustrationViewModel.IsUgoira && LoadSuccessfully;
         PlayGifCommand.ExecuteRequested += PlayGifCommandOnExecuteRequested;
 
@@ -384,9 +375,6 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
 
     private void UpdateCommandCanExecute()
     {
-        SaveCommand.NotifyCanExecuteChanged();
-        SaveAsCommand.NotifyCanExecuteChanged();
-        CopyCommand.NotifyCanExecuteChanged();
         PlayGifCommand.NotifyCanExecuteChanged();
         RestoreResolutionCommand.NotifyCanExecuteChanged();
         ZoomInCommand.NotifyCanExecuteChanged();
@@ -401,16 +389,9 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
 
     private void IsNotUgoiraAndLoadingCompletedCanExecuteRequested(XamlUICommand sender, CanExecuteRequestedEventArgs args) => args.CanExecute = !IllustrationViewModel.IsUgoira && LoadSuccessfully;
 
-    public (FrameworkElement FrameworkElement, Func<IProgress<int>?, Task<Stream?>>) DownloadParameter => (FrameworkElement, GetOriginalImageSourceAsync);
+    public (FrameworkElement, Func<IProgress<int>?, Task<Stream?>>) DownloadParameter => (FrameworkElement, GetOriginalImageSourceAsync);
 
-    public XamlUICommand SaveCommand { get; } = EntryItemResources.Save.GetCommand(
-        IconGlyph.SaveE74E, VirtualKeyModifiers.Control, VirtualKey.S);
-
-    public XamlUICommand SaveAsCommand { get; } = EntryItemResources.SaveAs.GetCommand(
-        IconGlyph.SaveAsE792, VirtualKeyModifiers.Control | VirtualKeyModifiers.Shift, VirtualKey.S);
-
-    public XamlUICommand CopyCommand { get; } = EntryItemResources.Copy.GetCommand(
-        IconGlyph.CopyE8C8, VirtualKeyModifiers.Control, VirtualKey.C);
+    public (Window, Func<IProgress<int>?, Task<Stream?>>) DownloadAsParameter => (Window, GetOriginalImageSourceAsync);
 
     public XamlUICommand PlayGifCommand { get; } = "".GetCommand(IconGlyph.StopE71A);
 

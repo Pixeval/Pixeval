@@ -89,8 +89,6 @@ public class DocumentViewerViewModel(NovelContent novelContent) : ObservableObje
 
     public async Task LoadRtfContentAsync()
     {
-        _ = LoadImagesAsync();
-
         var index = 0;
         var length = NovelContent.Text.Length;
         var parser = new PixivNovelRtfParser();
@@ -199,14 +197,10 @@ public class DocumentViewerViewModel(NovelContent novelContent) : ObservableObje
 
     public IEnumerable<string>? GetTags(int index)
     {
-
         if (index >= NovelContent.Images.Length)
             return null;
-        else
-        {
-            var illust = NovelContent.Illusts[index - NovelContent.Images.Length];
-            return illust.Illust.Tags.Select(t => t.Tag);
-        }
+        var illust = NovelContent.Illusts[index - NovelContent.Images.Length];
+        return illust.Illust.Tags.Select(t => t.Tag);
     }
 
     public Stream GetStream(int index)
@@ -260,11 +254,13 @@ public class DocumentViewerViewModel(NovelContent novelContent) : ObservableObje
             : AppInfo.GetNotAvailableImageStream();
     }
 
-    public static async Task<DocumentViewerViewModel> CreateAsync(NovelItemViewModel novelItem)
+    public static async Task<DocumentViewerViewModel> CreateAsync(NovelItemViewModel novelItem, Action<Task> callback)
     {
         var novelContent = await novelItem.GetNovelContentAsync();
         var vm = new DocumentViewerViewModel(novelContent);
-        _ = vm.LoadRtfContentAsync();
+        var task1 = vm.LoadImagesAsync();
+        var task2 = vm.LoadRtfContentAsync();
+        _ = Task.WhenAll(task1, task2).ContinueWith(callback);
         AddHistory();
 
         return vm;
