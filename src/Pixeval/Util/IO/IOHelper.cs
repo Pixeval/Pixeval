@@ -34,7 +34,6 @@ using Windows.Storage.Streams;
 using Pixeval.Download.Models;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats;
-using Pixeval.CoreApi.Model;
 
 namespace Pixeval.Util.IO;
 

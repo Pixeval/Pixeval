@@ -40,11 +40,11 @@ public class SupportCustomTitleBarDragRegionPage : EnhancedWindowPage
         titleBarHeight = -1;
     }
 
-    public void RaiseSetTitleBarDragRegion()
+    public void RaiseSetTitleBarDragRegion(Window window)
     {
         try
         {
-            if (!Window.AppWindow.IsVisible || !AppWindowTitleBar.IsCustomizationSupported())
+            if (!window.AppWindow.IsVisible || !AppWindowTitleBar.IsCustomizationSupported())
                 return;
         }
         catch
@@ -52,13 +52,13 @@ public class SupportCustomTitleBarDragRegionPage : EnhancedWindowPage
             return;
         }
         // UIElement.RasterizationScale 恒为1
-        var source = InputNonClientPointerSource.GetForWindowId(Window.AppWindow.Id);
+        var source = InputNonClientPointerSource.GetForWindowId(window.AppWindow.Id);
         var scaleFactor = XamlRoot.RasterizationScale;
-        var size = Window.AppWindow.Size;
+        var size = window.AppWindow.Size;
         // 区域数量为0或1时，下次AppWindow会自动恢复为默认的区域；>=2的时候不会，需要手动清除
         source.ClearRegionRects(NonClientRegionKind.Passthrough);
         SetTitleBarDragRegion(source, size, scaleFactor, out var titleBarHeight);
-        Window.SetCaptionAndBorder(titleBarHeight, this);
+        window.SetCaptionAndBorder(titleBarHeight, this);
     }
 
     protected RectInt32 GetScaledRect(RectInt32 rect)

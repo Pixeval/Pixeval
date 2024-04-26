@@ -50,7 +50,7 @@ using Pixeval.Utilities.Threading;
 namespace Pixeval.Pages.Misc;
 
 [SettingsViewModel<AppSettings>(nameof(AppSetting))]
-public partial class SettingsPageViewModel(FrameworkElement frameworkElement) : UiObservableObject(frameworkElement), IDisposable
+public partial class SettingsPageViewModel(ulong hWnd) : UiObservableObject(hWnd), IDisposable
 {
     private static readonly IDictionary<string, string> _macroTooltips = new Dictionary<string, string>
     {
@@ -172,7 +172,7 @@ public partial class SettingsPageViewModel(FrameworkElement frameworkElement) : 
                 downloaded = true;
                 if (_cancellationHandle is { IsCancelled: true })
                     return;
-                if (await FrameworkElement.CreateOkCancelAsync(SettingsPageResources.UpdateApp,
+                if (await HWnd.CreateOkCancelAsync(SettingsPageResources.UpdateApp,
                         SettingsPageResources.DownloadedAndWaitingToInstall.Format(appReleaseModel.Version)) is ContentDialogResult.Primary)
                 {
                     var process = new Process
@@ -279,7 +279,7 @@ public partial class SettingsPageViewModel(FrameworkElement frameworkElement) : 
 
     public void ShowClearData(ClearDataKind kind)
     {
-        FrameworkElement.ShowTeachingTipAndHide(kind.GetLocalizedResourceContent()!);
+        HWnd.SuccessGrowl(kind.GetLocalizedResourceContent()!);
     }
 
     public void SaveCollections()

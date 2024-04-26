@@ -108,7 +108,8 @@ public sealed partial class MainPage : SupportCustomTitleBarDragRegionPage
 
         _ = WeakReferenceMessenger.Default.TryRegister<MainPage, WorkTagClickedMessage>(this, (_, message) =>
         {
-            Window.AppWindow.MoveInZOrderAtTop();
+            var window = WindowFactory.ForkedWindows[HWnd];
+            window.AppWindow.MoveInZOrderAtTop();
             PerformSearchWork(message.Type, message.Tag);
         });
         using var client = new HttpClient();
@@ -326,7 +327,7 @@ public sealed partial class MainPage : SupportCustomTitleBarDragRegionPage
     {
         if (App.AppViewModel.AppSettings.ReverseSearchApiKey is { Length: > 0 })
         {
-            if (await Window.OpenFileOpenPickerAsync() is { } file)
+            if (await HWnd.OpenFileOpenPickerAsync() is { } file)
             {
                 await using var stream = await file.OpenStreamForReadAsync();
                 await _viewModel.ReverseSearchAsync(stream);

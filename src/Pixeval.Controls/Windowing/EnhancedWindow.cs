@@ -30,6 +30,8 @@ namespace Pixeval.Controls.Windowing;
 [WindowSizeHelper]
 public sealed partial class EnhancedWindow : Window
 {
+    public ulong HWnd => AppWindow.Id.Value;
+
     private readonly Frame _frame;
 
     private readonly EnhancedWindow? _owner;
@@ -39,10 +41,25 @@ public sealed partial class EnhancedWindow : Window
     /// </summary>
     internal EnhancedWindow()
     {
-        Content = _frame = new Frame
+        _frame = new Frame
         {
             HorizontalAlignment = HorizontalAlignment.Stretch,
             VerticalAlignment = VerticalAlignment.Stretch
+        };
+        var stackPanel = new StackPanel
+        {
+            HorizontalAlignment = HorizontalAlignment.Right,
+            VerticalAlignment = VerticalAlignment.Bottom
+        };
+        Growl.SetGrowlParent(stackPanel, true);
+        Growl.SetToken(stackPanel, HWnd);
+        Content = new Grid
+        {
+            Children =
+            {
+                _frame,
+                stackPanel
+            }
         };
         Closed += OnClosed;
     }

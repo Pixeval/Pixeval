@@ -115,7 +115,7 @@ public class NovelDownloadTask : DownloadTaskBase
             var dest = ActualDestinations.Count > i + 1 ? ActualDestinations[i + 1] : null;
             var stream = await DownloadAsyncCore(downloadStreamAsync, DocumentViewModel.AllUrls[i], dest);
             DocumentViewModel.SetStream(i, stream);
-            StartProgress = 100 * ProgressRatio;
+            StartProgress += 100 * ProgressRatio;
         }
         await ManageResult();
     }

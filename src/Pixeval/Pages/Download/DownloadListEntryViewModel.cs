@@ -93,7 +93,7 @@ public sealed class DownloadListEntryViewModel : ThumbnailEntryViewModel<IWorkEn
             return false;
         }
 
-        if (DownloadTask.CurrentState is DownloadState.Completed || DownloadTask.Type is DownloadItemType.Manga)
+        if (DownloadTask.CurrentState is DownloadState.Completed || DownloadTask.Type is DownloadItemType.Manga or DownloadItemType.Novel)
         {
             var path = DownloadTask.Destination.Format(0);
             if (File.Exists(path) && !LoadingThumbnail)

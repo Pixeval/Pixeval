@@ -50,7 +50,7 @@ public class MangaDownloadTask(DownloadHistoryEntry entry, IllustrationItemViewM
         for (CurrentIndex = 0; CurrentIndex < Urls.Length; ++CurrentIndex)
         {
             await base.DownloadAsyncCore(downloadStreamAsync, Urls[CurrentIndex], actualDestinations[CurrentIndex]);
-            StartProgress = 100 * ProgressRatio;
+            StartProgress += 100 * ProgressRatio;
         }
     }
 

@@ -34,6 +34,7 @@ using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using Windows.System;
+using Pixeval.Controls;
 using Pixeval.CoreApi.Net.Response;
 using Pixeval.Pages.Capability;
 using WinUI3Utilities;
@@ -62,7 +63,7 @@ public partial class IllustratorViewerPageViewModel : UiObservableObject
 
     public NavigationViewTag<RelatedUsersPage, long> RelatedUserTag { get; }
 
-    public IllustratorViewerPageViewModel(PixivSingleUserResponse userDetail, FrameworkElement content) : base(content)
+    public IllustratorViewerPageViewModel(PixivSingleUserResponse userDetail, ulong hWnd) : base(hWnd)
     {
         UserDetail = userDetail;
         IsFollowed = userDetail.UserEntity.IsFollowed;
@@ -162,22 +163,19 @@ public partial class IllustratorViewerPageViewModel : UiObservableObject
     {
         UiHelper.ClipboardSetText(MakoHelper.GenerateUserAppUri(Id).OriginalString);
 
-        if (args.Parameter is TeachingTip teachingTip)
+        if (args.Parameter is TeachingTip teachingTip && App.AppViewModel.AppSettings.DisplayTeachingTipWhenGeneratingAppLink)
         {
-            if (App.AppViewModel.AppSettings.DisplayTeachingTipWhenGeneratingAppLink)
-                teachingTip.IsOpen = true;
-            else
-                teachingTip?.ShowTeachingTipAndHide(EntryItemResources.LinkCopiedToClipboard);
+            teachingTip.IsOpen = true;
+            return;
         }
-        // 只提示
-        else
-            (args.Parameter as FrameworkElement)?.ShowTeachingTipAndHide(EntryItemResources.LinkCopiedToClipboard);
+
+        HWnd.SuccessGrowl(EntryItemResources.LinkCopiedToClipboard);
     }
 
     private void GenerateWebLinkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
         UiHelper.ClipboardSetText(MakoHelper.GenerateUserWebUri(Id).OriginalString);
-        (args.Parameter as FrameworkElement)?.ShowTeachingTipAndHide(EntryItemResources.LinkCopiedToClipboard);
+        (args.Parameter as ulong?)?.SuccessGrowl(EntryItemResources.LinkCopiedToClipboard);
     }
 
     private async void OpenInWebBrowserCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)

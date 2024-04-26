@@ -34,6 +34,7 @@ using Pixeval.Utilities;
 using WinUI3Utilities;
 using Pixeval.Misc;
 using Pixeval.CoreApi.Global.Enum;
+using Pixeval.Controls.Windowing;
 
 namespace Pixeval.Controls;
 
@@ -50,6 +51,8 @@ public partial class WorkContainer : IScrollViewProvider
     public ObservableCollection<ICommandBarElement> PrimaryCommandsSupplements { get; } = [];
 
     public ObservableCollection<ICommandBarElement> SecondaryCommandsSupplements { get; } = [];
+
+    public ulong HWnd => WindowFactory.GetWindowForElement(this).HWnd;
 
     public WorkContainer()
     {
@@ -133,7 +136,7 @@ public partial class WorkContainer : IScrollViewProvider
         foreach (var i in ViewModel.SelectedEntries)
             i.SaveCommand.Execute(null);
 
-        this.ShowTeachingTipAndHide(WorkContainerResources.DownloadItemsQueuedFormatted.Format(ViewModel.SelectedEntries.Count));
+        HWnd.InfoGrowl(WorkContainerResources.DownloadItemsQueuedFormatted.Format(ViewModel.SelectedEntries.Count));
     }
 
     private async void OpenAllInBrowserButton_OnTapped(object sender, TappedRoutedEventArgs e)
@@ -158,8 +161,8 @@ public partial class WorkContainer : IScrollViewProvider
         foreach (var i in ViewModel.SelectedEntries)
             i.AddToBookmarkCommand.Execute((BookmarkTagSelector.SelectedTags, BookmarkTagSelector.IsPrivate, null as object));
 
-        if (ViewModel.SelectedEntries.Count is var c and > 0) 
-            this.ShowTeachingTipAndHide(WorkContainerResources.AddedAllToBookmarkContentFormatted.Format(c));
+        if (ViewModel.SelectedEntries.Count is var c and > 0)
+            HWnd.SuccessGrowl(WorkContainerResources.AddedAllToBookmarkContentFormatted.Format(c));
     }
 
     private void CancelSelectionButton_OnTapped(object sender, TappedRoutedEventArgs e)

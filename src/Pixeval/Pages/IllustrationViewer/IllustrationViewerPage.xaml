@@ -328,7 +328,7 @@
                                 IsEnabled="{x:Bind _viewModel.CurrentImage.LoadSuccessfully, Mode=OneWay}" />
                             <AppBarButton
                                 Command="{x:Bind _viewModel.CurrentIllustration.SaveAsCommand, Mode=OneWay}"
-                                CommandParameter="{x:Bind _viewModel.CurrentImage.DownloadAsParameter, Mode=OneWay}"
+                                CommandParameter="{x:Bind _viewModel.CurrentImage.DownloadParameter, Mode=OneWay}"
                                 IsEnabled="{x:Bind _viewModel.CurrentImage.LoadSuccessfully, Mode=OneWay}" />
                             <AppBarSeparator />
                             <AppBarButton Command="{x:Bind _viewModel.CurrentImage.SetAsCommand, Mode=OneWay}">
@@ -349,7 +349,7 @@
                                 x:Name="GenerateLinkButton"
                                 Command="{x:Bind _viewModel.CurrentIllustration.GenerateLinkCommand, Mode=OneWay}"
                                 CommandParameter="{x:Bind GenerateLinkTeachingTip}" />
-                            <AppBarButton Command="{x:Bind _viewModel.CurrentIllustration.GenerateWebLinkCommand, Mode=OneWay}" CommandParameter="{x:Bind}" />
+                            <AppBarButton Command="{x:Bind _viewModel.CurrentIllustration.GenerateWebLinkCommand, Mode=OneWay}" CommandParameter="{x:Bind HWnd}" />
                             <AppBarButton Command="{x:Bind _viewModel.CurrentIllustration.OpenInWebBrowserCommand, Mode=OneWay}" />
                             <AppBarButton
                                 x:Name="ShowQrCodeButton"

@@ -96,8 +96,17 @@ public static partial class IoHelper
     public static async Task<Stream> GetFileThumbnailAsync(string path, uint size = 64)
     {
         var file = await StorageFile.GetFileFromPathAsync(path);
-        var thumbnail = await file.GetThumbnailAsync(ThumbnailMode.SingleItem, size);
-        return thumbnail.AsStreamForRead();
+        Stream stream;
+        try
+        {
+            var thumbnail = await file.GetThumbnailAsync(ThumbnailMode.SingleItem, size);
+            stream = thumbnail.AsStreamForRead();
+        }
+        catch
+        {
+            stream = AppInfo.GetNotAvailableImageStream();
+        }
+        return stream;
     }
 
     public static async Task UgoiraSaveToFileAsync(this Image image, string path, UgoiraDownloadFormat? ugoiraDownloadFormat = null)
