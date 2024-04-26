@@ -1,8 +1,9 @@
-#region Copyright (c) Pixeval/Pixeval
+#region Copyright
+
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/IllustrationTitleMacro.cs
+// Copyright (c) 2024 Pixeval/NovelDownloadFormat.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -16,22 +17,24 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 #endregion
 
-using Pixeval.Controls;
-using Pixeval.Download.MacroParser;
-using Pixeval.Util.IO;
-using Pixeval.Utilities;
+using Pixeval.Attributes;
 
-namespace Pixeval.Download.Macros;
+namespace Pixeval.Options;
 
-[MetaPathMacro<IWorkViewModel>]
-public class WorkTitleMacro : ITransducer<IWorkViewModel>
+public enum NovelDownloadFormat
 {
-    public string Name => "title";
+    [LocalizedResource(typeof(MiscResources), nameof(MiscResources.Pdf))]
+    Pdf,
 
-    public string Substitute(IWorkViewModel context)
-    {
-        return context.Title.Let(IoHelper.NormalizePathSegment);
-    }
+    [LocalizedResource(typeof(MiscResources), nameof(MiscResources.Html))]
+    Html,
+
+    [LocalizedResource(typeof(MiscResources), nameof(MiscResources.Md))]
+    Md,
+
+    [LocalizedResource(typeof(MiscResources), nameof(MiscResources.OriginalTxt))]
+    OriginalTxt
 }

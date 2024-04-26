@@ -1,8 +1,9 @@
-#region Copyright (c) Pixeval/Pixeval
+#region Copyright
+
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/IllustrationMetaPathParser.cs
+// Copyright (c) 2024 Pixeval/NovelMetaPathParser.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -16,6 +17,7 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 #endregion
 
 using System.Linq;
@@ -26,15 +28,15 @@ using Pixeval.Utilities;
 
 namespace Pixeval.Download;
 
-public class IllustrationMetaPathParser : IMetaPathParser<IllustrationItemViewModel>
+public class NovelMetaPathParser : IMetaPathParser<NovelItemViewModel>
 {
-    private readonly MacroParser<IllustrationItemViewModel> _parser = new();
+    private readonly MacroParser<NovelItemViewModel> _parser = new();
 
-    public static IMacro[] MacroProviderStatic { get; } = MetaPathMacroAttributeHelper.GetAttachedTypeInstances<IllustrationItemViewModel>().ToArray();
+    public static IMacro[] MacroProviderStatic { get; } = MetaPathMacroAttributeHelper.GetAttachedTypeInstances<NovelItemViewModel>().ToArray();
  
     public IMacro[] MacroProvider => MacroProviderStatic;
 
-    public string Reduce(string raw, IllustrationItemViewModel context)
+    public string Reduce(string raw, NovelItemViewModel context)
     {
         _parser.SetupParsingEnvironment(new Lexer(raw));
         if (_parser.Parse() is { } root)

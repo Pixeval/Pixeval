@@ -26,7 +26,7 @@ namespace Pixeval.Download.MacroParser.Ast;
 public record Macro<TContext>(PlainText<TContext> MacroName, OptionalMacroParameter<TContext>? OptionalParameters)
     : SingleNode<TContext>
 {
-    public override string Evaluate(IMetaPathMacroProvider env, TContext context)
+    public override string Evaluate(IMacro[] env, TContext context)
     {
         var result = env.TryResolve(MacroName.Text);
         switch (result)

@@ -225,16 +225,22 @@ public static partial class IoHelper
         illustrationDownloadFormat ??= App.AppViewModel.AppSettings.IllustrationDownloadFormat;
         return illustrationDownloadFormat switch
         {
-            IllustrationDownloadFormat.Original => FileExtensionMacro.NameConst,
+            IllustrationDownloadFormat.Original => FileExtensionMacro.NameConstToken,
             IllustrationDownloadFormat.Jpg or IllustrationDownloadFormat.Png or IllustrationDownloadFormat.Bmp => "." + illustrationDownloadFormat.ToString()!.ToLower(),
             IllustrationDownloadFormat.WebPLossless or IllustrationDownloadFormat.WebPLossy => ".webp",
             _ => ThrowHelper.ArgumentOutOfRange<IllustrationDownloadFormat?, string>(illustrationDownloadFormat)
         };
     }
 
-    public static string GetNovelExtension()
+    public static string GetNovelExtension(NovelDownloadFormat? novelDownloadFormat = null)
     {
-        return ".txt";
+        novelDownloadFormat ??= App.AppViewModel.AppSettings.NovelDownloadFormat;
+        return novelDownloadFormat switch
+        {
+            NovelDownloadFormat.OriginalTxt => ".txt",
+            NovelDownloadFormat.Pdf or NovelDownloadFormat.Html or NovelDownloadFormat.Md => "." + novelDownloadFormat.ToString()!.ToLower(),
+            _ => ThrowHelper.ArgumentOutOfRange<NovelDownloadFormat?, string>(novelDownloadFormat)
+        };
     }
 
     public static async Task<Image> GetImageFromZipStreamAsync(Stream zipStream, UgoiraMetadataResponse ugoiraMetadataResponse)
@@ -262,9 +268,21 @@ public static partial class IoHelper
         return await _recyclableMemoryStreamManager.GetStream(bytes).GetSoftwareBitmapSourceAsync(true);
     }
 
-    public static string GetPathFromUrlFormat(string path, string url)
+    public static string ChangeExtensionFromUrl(string path, string url)
     {
         var index = url.LastIndexOf('.');
-        return path.Replace($"<{FileExtensionMacro.NameConst}>", url[index..]);
+        return Path.ChangeExtension(path, url[index..]);
+    }
+
+    public static string ReplaceTokenExtensionFromUrl(string path, string url)
+    {
+        var index = url.LastIndexOf('.');
+        return path.Replace(FileExtensionMacro.NameConstToken, url[index..]);
+    }
+
+    public static string RemoveTokens(this string path)
+    {
+        // .Replace(FileExtensionMacro.NameConstToken, "")
+        return path.Replace(MangaIndexMacro.NameConstToken, "");
     }
 }

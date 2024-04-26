@@ -37,6 +37,15 @@ public class UgoiraDownloadTask(
 {
     protected UgoiraMetadataResponse Metadata { get; set; } = metadata;
 
+    public override async Task DownloadAsync(Downloader downloadStreamAsync)
+    {
+        var url = Metadata.LargeUrl;
+
+        var destination = IoHelper.ReplaceTokenExtensionFromUrl(Destination, url).RemoveTokens();
+
+        await DownloadAsyncCore(downloadStreamAsync, url, destination);
+    }
+
     protected override async Task ManageStream(Stream stream, string url, string destination)
     {
         if (App.AppViewModel.AppSettings.UgoiraDownloadFormat is UgoiraDownloadFormat.OriginalZip)

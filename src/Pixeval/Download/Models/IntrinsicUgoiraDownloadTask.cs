@@ -20,18 +20,15 @@
 
 #endregion
 
-using System;
 using System.IO;
 using System.Threading.Tasks;
 using Pixeval.Controls;
 using Pixeval.CoreApi.Net.Response;
 using Pixeval.Database;
-using Pixeval.Utilities;
-using Pixeval.Utilities.Threading;
 
 namespace Pixeval.Download.Models;
 
-public class IntrinsicUgoiraDownloadTask : UgoiraDownloadTask
+public sealed class IntrinsicUgoiraDownloadTask : UgoiraDownloadTask
 {
     /// <summary>
     /// The disposal of <paramref name="stream" /> is not handled
@@ -44,7 +41,7 @@ public class IntrinsicUgoiraDownloadTask : UgoiraDownloadTask
 
     public Stream Stream { get; }
 
-    protected override async Task DownloadAsyncCore(Func<string, IProgress<double>?, CancellationHandle?, Task<Result<Stream>>> _, string url, string destination)
+    protected override async Task DownloadAsyncCore(Downloader _, string url, string destination)
     {
         if (!App.AppViewModel.AppSettings.OverwriteDownloadedFile && File.Exists(destination))
             return;

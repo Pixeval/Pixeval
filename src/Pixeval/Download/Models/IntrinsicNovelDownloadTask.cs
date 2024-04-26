@@ -1,8 +1,9 @@
-#region Copyright (c) Pixeval/Pixeval
+#region Copyright
+
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/IMetaPathMacroProvider.cs
+// Copyright (c) 2024 Pixeval/IntrinsicNovelDownloadTask.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -16,19 +17,23 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 #endregion
 
-using System.Collections.Generic;
-using System.Linq;
+using System.Threading.Tasks;
+using Pixeval.Controls;
+using Pixeval.Database;
 
-namespace Pixeval.Download.MacroParser;
+namespace Pixeval.Download.Models;
 
-public interface IMetaPathMacroProvider
+public sealed class IntrinsicNovelDownloadTask : NovelDownloadTask
 {
-    IEnumerable<IMacro> AvailableMacros { get; }
+    public IntrinsicNovelDownloadTask(DownloadHistoryEntry entry, NovelItemViewModel novel, DocumentViewerViewModel viewModel) :
+        base(entry, novel, viewModel.NovelContent, viewModel) =>
+        Report(90);
 
-    IMacro TryResolve(string macro)
+    public override async Task DownloadAsync(Downloader downloadStreamAsync)
     {
-        return AvailableMacros.FirstOrDefault(m => m.Name == macro) ?? new Unknown();
+        await ManageResult();
     }
 }

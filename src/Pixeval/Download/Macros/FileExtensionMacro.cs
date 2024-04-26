@@ -29,6 +29,8 @@ public class FileExtensionMacro : ITransducer<IWorkViewModel>
 {
     public const string NameConst = "ext";
 
+    public const string NameConstToken = $"<{NameConst}>";
+
     public string Name => NameConst;
 
     public string Substitute(IWorkViewModel context)

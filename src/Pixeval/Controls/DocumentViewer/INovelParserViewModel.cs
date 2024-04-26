@@ -1,8 +1,9 @@
-#region Copyright (c) Pixeval/Pixeval
+#region Copyright
+
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/IDownloadTask.cs
+// Copyright (c) 2024 Pixeval/INovelParserViewModel.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -16,29 +17,24 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 #endregion
 
 using System;
-using System.IO;
-using System.Threading.Tasks;
-using Pixeval.Utilities;
-using Pixeval.Utilities.Threading;
+using System.Collections.Generic;
+using Pixeval.CoreApi.Model;
 
-namespace Pixeval.Download.Models;
+namespace Pixeval.Controls;
 
-public interface IDownloadTask
+public interface INovelParserViewModel<TImage> : IDisposable
 {
-    string Destination { get; }
+    NovelContent NovelContent { get; } 
 
-    CancellationHandle CancellationHandle { get; set; }
+    Dictionary<(long, int), NovelIllustInfo> IllustrationLookup { get; }
 
-    TaskCompletionSource Completion { get; }
+    Dictionary<(long, int), TImage> IllustrationImages { get; }
 
-    DownloadState CurrentState { get; set; }
+    Dictionary<long, TImage> UploadedImages { get; }
 
-    Exception? ErrorCause { get; set; }
-
-    double ProgressPercentage { get; }
-
-    Task DownloadAsync(Func<string, IProgress<double>?, CancellationHandle?, Task<Result<Stream>>> downloadStreamAsync);
+    public string? ImageExtension { get; }
 }

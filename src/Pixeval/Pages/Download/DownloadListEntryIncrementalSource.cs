@@ -28,7 +28,7 @@ using Pixeval.Utilities;
 
 namespace Pixeval.Pages.Download;
 
-public class DownloadListEntryIncrementalSource(IEnumerable<IllustrationDownloadTask> source)
+public class DownloadListEntryIncrementalSource(IEnumerable<DownloadTaskBase> source)
     : IIncrementalSource<DownloadListEntryViewModel>
 {
     public async Task<IEnumerable<DownloadListEntryViewModel>> GetPagedItemsAsync(int pageIndex, int pageSize, CancellationToken cancellationToken = new CancellationToken())

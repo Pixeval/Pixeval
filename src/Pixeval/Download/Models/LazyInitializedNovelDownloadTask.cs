@@ -1,8 +1,9 @@
-#region Copyright (c) Pixeval/Pixeval
+#region Copyright
+
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/LazyInitializedIllustrationDownloadTask.cs
+// Copyright (c) 2024 Pixeval/LazyInitializedNovelDownloadTask.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -16,6 +17,7 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 #endregion
 
 using System.Threading.Tasks;
@@ -23,20 +25,22 @@ using Pixeval.Database;
 
 namespace Pixeval.Download.Models;
 
-public class LazyInitializedIllustrationDownloadTask(DownloadHistoryEntry entry)
-    : IllustrationDownloadTask(entry, null!), ILazyLoadDownloadTask
+public class LazyInitializedNovelDownloadTask(DownloadHistoryEntry entry)
+    : NovelDownloadTask(entry, null!, null!, null!), ILazyLoadDownloadTask
 {
-    private readonly long _illustId = entry.Id;
+    private readonly long _novelId = entry.Id;
 
     public override async Task DownloadAsync(Downloader downloadStreamAsync)
     {
-        await LazyLoadAsync(_illustId);
+        await LazyLoadAsync(_novelId);
 
         await base.DownloadAsync(downloadStreamAsync);
     }
 
     public async Task LazyLoadAsync(long id)
     {
-        IllustrationViewModel ??= new(await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(id));
+        NovelItemViewModel ??= new(await App.AppViewModel.MakoClient.GetNovelFromIdAsync(id));
+        NovelContent ??= await App.AppViewModel.MakoClient.GetNovelContentAsync(id);
+        DocumentViewModel ??= new(NovelContent);
     }
 }

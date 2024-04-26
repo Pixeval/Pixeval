@@ -27,6 +27,8 @@ namespace Pixeval.Download.Macros;
 public class MangaIndexMacro : ITransducer<IllustrationItemViewModel>
 {
     public const string NameConst = "manga_index";
+    
+    public const string NameConstToken = $"<{NameConst}>";
 
     public string Name => NameConst;
 

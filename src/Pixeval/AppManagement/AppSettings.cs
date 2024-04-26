@@ -92,6 +92,9 @@ public partial record AppSettings : IWindowSettings
     [SettingMetadata(SettingEntryCategory.Download, typeof(SettingsPageResources), nameof(SettingsPageResources.WorkDownloadFormatEntryHeader))]
     public IllustrationDownloadFormat IllustrationDownloadFormat { get; set; } = IllustrationDownloadFormat.Png;
 
+    [SettingMetadata(SettingEntryCategory.Download, typeof(SettingsPageResources), nameof(SettingsPageResources.WorkDownloadFormatEntryHeader))]
+    public NovelDownloadFormat NovelDownloadFormat { get; set; } = NovelDownloadFormat.Pdf;
+
     [SettingMetadata(SettingEntryCategory.Download, typeof(SettingsPageResources), nameof(SettingsPageResources.OverwriteDownloadedFileEntryHeader))]
     public bool OverwriteDownloadedFile { get; set; }
 

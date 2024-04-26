@@ -29,6 +29,8 @@ namespace Pixeval.Controls;
 
 public interface IWorkViewModel
 {
+    IWorkEntry Entry { get; }
+
     long Id { get; }
 
     int TotalBookmarks { get; }

@@ -24,7 +24,9 @@ public sealed partial class NovelItem
 
     public event TypedEventHandler<NovelItem, NovelItemViewModel>? RequestAddToBookmark;
 
+#pragma warning disable CS0067 // Event is never used
     public event Func<TeachingTip> RequestTeachingTip = null!;
+#pragma warning restore CS0067 // Event is never used
 
     public NovelItem() => InitializeComponent();
 

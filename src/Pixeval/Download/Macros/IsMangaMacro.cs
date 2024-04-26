@@ -23,13 +23,13 @@ using Pixeval.Download.MacroParser;
 
 namespace Pixeval.Download.Macros;
 
-[MetaPathMacro<IllustrationItemViewModel>]
-public class IsMangaMacro : IPredicate<IllustrationItemViewModel>
+[MetaPathMacro<IWorkViewModel>]
+public class IsMangaMacro : IPredicate<IWorkViewModel>
 {
     public string Name => "if_manga";
 
-    public bool Match(IllustrationItemViewModel context)
+    public bool Match(IWorkViewModel context)
     {
-        return context.IsManga;
+        return context is IllustrationItemViewModel { IsManga: true };
     }
 }

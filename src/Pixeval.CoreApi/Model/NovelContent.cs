@@ -137,6 +137,8 @@ public partial record NovelImage
 
     [JsonPropertyName("urls")]
     public required NovelImageUrls Urls { get; set; }
+
+    public string ThumbnailUrl => Urls.X1200;
 }
 
 [Factory]
@@ -189,6 +191,8 @@ public partial record NovelIllustInfo
     /// </summary>
     [JsonPropertyName("page")]
     public required int Page { get; set; } = 1;
+
+    public string ThumbnailUrl => Illust.Images.Medium;
 }
 
 [Factory]

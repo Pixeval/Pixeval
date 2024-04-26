@@ -677,7 +677,10 @@
                                 Style="{StaticResource SettingsEnumComboBoxStyle}" />
                         </controls:SettingsCard>
                         <controls:SettingsCard x:Uid="/SettingsPage/NovelOptionEntry" HeaderIcon="{controls2:GlyphIcon Glyph=ReadingModeE736}">
-                            <controls1:EnumComboBox IsEnabled="False" Style="{StaticResource SettingsEnumComboBoxStyle}" />
+                            <controls1:EnumComboBox
+                                EnumSource="{winUi:EnumValues Type=options:NovelDownloadFormat}"
+                                SelectedEnum="{x:Bind ViewModel.NovelDownloadFormat, Mode=TwoWay}"
+                                Style="{StaticResource SettingsEnumComboBoxStyle}" />
                         </controls:SettingsCard>
                     </controls:SettingsExpander.Items>
                 </controls:SettingsExpander>

@@ -34,6 +34,7 @@ using Windows.Storage.Streams;
 using Pixeval.Download.Models;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats;
+using Pixeval.CoreApi.Model;
 
 namespace Pixeval.Util.IO;
 
@@ -47,7 +48,9 @@ public static partial class IoHelper
         return result.Select(b => b.ToString("X2")).Aggregate((acc, str) => acc + str);
     }
 
-    public static string GetInvalidPathChars { get; } = @"\/:*?""<>|" + new string(Path.GetInvalidPathChars());
+    public static string GetInvalidPathChars { get; } = @"*?""|" + new string(Path.GetInvalidPathChars());
+
+    public static string GetInvalidNameChars { get; } = @"\/*:?""|<>" + new string(Path.GetInvalidPathChars());
 
     public static string NormalizePath(string path)
     {
@@ -56,7 +59,7 @@ public static partial class IoHelper
 
     public static string NormalizePathSegment(string path)
     {
-        return GetInvalidPathChars.Aggregate(path, (s, c) => s.Replace(c.ToString(), "")).TrimEnd('.');
+        return GetInvalidNameChars.Aggregate(path, (s, c) => s.Replace(c.ToString(), "")).TrimEnd('.');
     }
 
     public static void CreateParentDirectories(string fullPath)
@@ -159,14 +162,23 @@ public static partial class IoHelper
         return result;
     }
 
-    public static async Task DeleteIllustrationTaskAsync(IllustrationDownloadTaskBase task)
+    public static async Task DeleteTaskAsync(DownloadTaskBase task)
     {
         try
         {
-            if (task is MangaDownloadTask)
-                await (await StorageFolder.GetFolderFromPathAsync(Path.GetDirectoryName(task.Destination))).DeleteAsync(StorageDeleteOption.Default);
-            else
-                await (await StorageFile.GetFileFromPathAsync(task.Destination)).DeleteAsync(StorageDeleteOption.Default);
+            var actualDestinations = task.ActualDestinations;
+            foreach (var destination in actualDestinations)
+                await (await StorageFile.GetFileFromPathAsync(destination)).DeleteAsync(StorageDeleteOption.Default);
+
+            if (task.IsFolder)
+                await DeleteEmptyFolderAsync(task);
+
+            static async Task DeleteEmptyFolderAsync(DownloadTaskBase t)
+            {
+                var folder = await StorageFolder.GetFolderFromPathAsync(Path.GetDirectoryName(t.Destination));
+                if ((await folder.GetItemsAsync()).Count is 0)
+                    await folder.DeleteAsync(StorageDeleteOption.Default);
+            }
         }
         catch
         {

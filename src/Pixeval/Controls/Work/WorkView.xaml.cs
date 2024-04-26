@@ -14,7 +14,6 @@ using Pixeval.Options;
 using Microsoft.UI.Xaml.Media.Animation;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.Util.UI;
-using Pixeval.Utilities;
 
 namespace Pixeval.Controls;
 

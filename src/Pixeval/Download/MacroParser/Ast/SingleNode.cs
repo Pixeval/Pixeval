@@ -22,5 +22,5 @@ namespace Pixeval.Download.MacroParser.Ast;
 
 public abstract record SingleNode<TContext> : IMetaPathNode<TContext>
 {
-    public abstract string Evaluate(IMetaPathMacroProvider env, TContext context);
+    public abstract string Evaluate(IMacro[] env, TContext context);
 }

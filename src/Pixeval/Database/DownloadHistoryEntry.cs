@@ -18,7 +18,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System.Collections.Generic;
 using CommunityToolkit.Mvvm.ComponentModel;
 using LiteDB;
 using Pixeval.Download;
@@ -33,12 +32,7 @@ public partial class DownloadHistoryEntry : ObservableObject
     [ObservableProperty]
     private DownloadState _state;
 
-    public DownloadHistoryEntry(DownloadState state, string? destination, DownloadItemType type, long id, params string?[] urls)
-        : this(state, destination, type, id, (IEnumerable<string?>)urls)
-    {
-    }
-
-    public DownloadHistoryEntry(DownloadState state, string? destination, DownloadItemType type, long id, IEnumerable<string?> urls)
+    public DownloadHistoryEntry(DownloadState state, string? destination, DownloadItemType type, long id)
     {
         _state = state;
         if (string.IsNullOrWhiteSpace(destination))
@@ -52,18 +46,6 @@ public partial class DownloadHistoryEntry : ObservableObject
 
         Type = type;
         Id = id;
-
-        var set = new HashSet<string>();
-        foreach (var url in urls)
-            if (url is not null)
-                if (set.Add(url))
-                    Urls.Add(url);
-
-        if (Urls.Count is 0)
-        {
-            _state = DownloadState.Error;
-            _errorCause = "No available url.\n";
-        }
     }
 
     // ReSharper disable once UnusedMember.Global
@@ -74,11 +56,14 @@ public partial class DownloadHistoryEntry : ObservableObject
     [BsonId(true)]
     public ObjectId? DownloadHistoryEntryId { get; set; }
 
+    /// <summary>
+    /// 表示文件所在的地址，可能无法被直接解析，且不能包含未解析的宏@{...}，<br/>
+    /// 当是一个文件时必须是一个有效的地址（不能是token&lt;...&gt;）<br/>
+    /// 当是多个文件时，文件名可以包含token&lt;...&gt;，但其文件夹路径不能包含token&lt;...&gt;
+    /// </summary>
     public string Destination { get; set; } = null!;
 
     public DownloadItemType Type { get; set; }
 
     public long Id { get; set; }
-
-    public List<string> Urls { get; set; } = [];
 }

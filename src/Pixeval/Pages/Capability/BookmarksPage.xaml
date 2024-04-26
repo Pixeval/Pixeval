@@ -9,6 +9,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:model="using:Pixeval.CoreApi.Model"
     xmlns:pixeval="using:Pixeval"
+    Loaded="BookmarksPage_OnLoaded"
     mc:Ignorable="d">
     <controls:EnhancedPage.Resources>
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />

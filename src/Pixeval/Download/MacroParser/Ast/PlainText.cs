@@ -22,7 +22,7 @@ namespace Pixeval.Download.MacroParser.Ast;
 
 public record PlainText<TContext>(string Text) : SingleNode<TContext>
 {
-    public override string Evaluate(IMetaPathMacroProvider env, TContext context)
+    public override string Evaluate(IMacro[] env, TContext context)
     {
         return Text;
     }
