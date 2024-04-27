@@ -29,7 +29,6 @@ using Windows.System;
 using Windows.System.UserProfile;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
 using Pixeval.Attributes;
 using Pixeval.Controls;
@@ -121,9 +120,10 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
         }
     }
 
-    public ImageViewerPageViewModel(IllustrationItemViewModel illustrationViewModel, FrameworkElement frameworkElement) : base(frameworkElement)
+    public ImageViewerPageViewModel(IllustrationItemViewModel illustrationViewModel, IllustrationItemViewModel originalIllustrationViewModel, ulong hWnd) : base(hWnd)
     {
         IllustrationViewModel = illustrationViewModel;
+        OriginalIllustrationViewModel = originalIllustrationViewModel;
         _ = LoadImage();
 
         InitializeCommands();
@@ -132,36 +132,48 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
         RestoreResolutionCommand.GetResolutionCommand(true);
     }
 
-    public async Task<Stream?> GetOriginalImageSourceAsync(IProgress<int>? progress = null, Stream? destination = null)
+    public async Task<Stream?> GetOriginalImageSourceAsync(IProgress<int>? progress = null)
     {
-        if (OriginalImageSources is null)
-            return destination;
+        if (OriginalImageSources is not [var stream, ..])
+            return null;
 
         if (IllustrationViewModel.IsUgoira)
-            return await OriginalImageSources.UgoiraSaveToStreamAsync(MsIntervals ?? [], destination, progress);
+            return await OriginalImageSources.UgoiraSaveToStreamAsync(MsIntervals ?? [], null, progress);
 
-        if (OriginalImageSources is [var stream, ..])
+        stream.Position = 0;
+        return stream;
+    }
+
+    public async Task GetOriginalImageSourceAsync(Stream destination, IProgress<int>? progress = null)
+    {
+        if (OriginalImageSources is not [var stream, ..])
+            return;
+
+        if (IllustrationViewModel.IsUgoira)
         {
-            stream.Position = 0;
-            return stream;
+            _ = await OriginalImageSources.UgoiraSaveToStreamAsync(MsIntervals ?? [], destination, progress);
+            return;
         }
 
-        return destination;
+        stream.Position = 0;
+        await stream.CopyToAsync(destination);
     }
 
     public async Task<StorageFile> SaveToFolderAsync(AppKnownFolders appKnownFolder)
     {
         var name = Path.GetFileName(App.AppViewModel.AppSettings.DefaultDownloadPathMacro);
-        var path = IoHelper.NormalizePathSegment(new IllustrationMetaPathParser().Reduce(name, IllustrationViewModel));
+        var path = IoHelper.NormalizePath(new IllustrationMetaPathParser().Reduce(name, IllustrationViewModel));
         var file = await appKnownFolder.CreateFileAsync(path);
         await using var target = await file.OpenStreamForWriteAsync();
-        _ = await GetOriginalImageSourceAsync(null, target);
+        await GetOriginalImageSourceAsync(target);
         return file;
     }
 
     public CancellationHandle ImageLoadingCancellationHandle { get; } = new();
 
     public IllustrationItemViewModel IllustrationViewModel { get; }
+
+    public IllustrationItemViewModel OriginalIllustrationViewModel { get; }
 
     public void Dispose()
     {
@@ -206,9 +218,9 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
             manager.Insert(new BrowseHistoryEntry { Id = IllustrationViewModel.Id, Type = SimpleWorkType.IllustAndManga });
         }
 
-        async Task<Stream?> GetStreamAsync((UgoiraMetadataResponse Metadata, string UgoiraUrl)? ugoiraParameter)
+        async Task<Stream?> GetStreamAsync(UgoiraMetadataResponse? ugoiraParameter)
         {
-            var cacheKey = await IllustrationViewModel.GetIllustrationOriginalImageCacheKeyAsync();
+            var cacheKey = await IllustrationViewModel.GetIllustrationOriginalCacheKeyAsync();
 
             if (App.AppViewModel.AppSettings.UseFileCache && await App.AppViewModel.Cache.ExistsAsync(cacheKey))
             {
@@ -218,7 +230,7 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
                 if (await App.AppViewModel.Cache.TryGetAsync<Stream>(cacheKey) is { } stream)
                     return stream;
             }
-            if (ugoiraParameter is { Metadata: var metadata, UgoiraUrl: var ugoiraUrl })
+            if (ugoiraParameter is { LargeUrl: var ugoiraUrl })
             {
                 var downloadRes = await App.AppViewModel.MakoClient.DownloadStreamAsync(ugoiraUrl, new Progress<double>(d =>
                 {
@@ -260,18 +272,18 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
 
         async Task LoadOriginalImageAsync()
         {
-            var ugoiraParameter = null as (UgoiraMetadataResponse Metadata, string Url)?;
+            var metadata = null as UgoiraMetadataResponse;
             if (IllustrationViewModel.IsUgoira)
-                ugoiraParameter = await IllustrationViewModel.GetUgoiraOriginalUrlAsync();
+                metadata = await IllustrationViewModel.GetUgoiraMetadataAsync();
 
-            var stream = await GetStreamAsync(ugoiraParameter);
+            var stream = await GetStreamAsync(metadata);
             if (stream is not null)
             {
                 if (IllustrationViewModel.IsUgoira)
                 {
                     AdvancePhase(LoadingPhase.MergingUgoiraFrames);
                     OriginalImageSources = await IoHelper.ReadZipArchiveEntriesAsync(stream, true);
-                    MsIntervals = ugoiraParameter!.Value.Metadata.UgoiraMetadataInfo.Frames.Select(x => (int)x.Delay).ToArray();
+                    MsIntervals = metadata!.UgoiraMetadataInfo.Frames.Select(x => (int)x.Delay).ToArray();
                 }
                 else
                 {
@@ -323,20 +335,11 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
 
     private void ShareCommandExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
-        Window.ShowShareUi();
+        HWnd.ShowShareUi();
     }
 
     private void InitializeCommands()
     {
-        SaveCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
-        SaveCommand.ExecuteRequested += (_, _) => IllustrationViewModel.SaveCommand.Execute(DownloadParameter);
-
-        SaveAsCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
-        SaveAsCommand.ExecuteRequested += (_, _) => IllustrationViewModel.SaveAsCommand.Execute((Window, (Func<IProgress<int>?, Task<Stream?>>)(p => GetOriginalImageSourceAsync(p))));
-
-        CopyCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
-        CopyCommand.ExecuteRequested += (_, _) => IllustrationViewModel.CopyCommand.Execute(DownloadParameter);
-
         PlayGifCommand.CanExecuteRequested += (_, e) => e.CanExecute = IllustrationViewModel.IsUgoira && LoadSuccessfully;
         PlayGifCommand.ExecuteRequested += PlayGifCommandOnExecuteRequested;
 
@@ -371,9 +374,6 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
 
     private void UpdateCommandCanExecute()
     {
-        SaveCommand.NotifyCanExecuteChanged();
-        SaveAsCommand.NotifyCanExecuteChanged();
-        CopyCommand.NotifyCanExecuteChanged();
         PlayGifCommand.NotifyCanExecuteChanged();
         RestoreResolutionCommand.NotifyCanExecuteChanged();
         ZoomInCommand.NotifyCanExecuteChanged();
@@ -388,16 +388,7 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
 
     private void IsNotUgoiraAndLoadingCompletedCanExecuteRequested(XamlUICommand sender, CanExecuteRequestedEventArgs args) => args.CanExecute = !IllustrationViewModel.IsUgoira && LoadSuccessfully;
 
-    public (FrameworkElement FrameworkElement, Func<IProgress<int>?, Task<Stream?>>) DownloadParameter => (FrameworkElement, p => GetOriginalImageSourceAsync(p));
-
-    public XamlUICommand SaveCommand { get; } = EntryItemResources.Save.GetCommand(
-        IconGlyph.SaveE74E, VirtualKeyModifiers.Control, VirtualKey.S);
-
-    public XamlUICommand SaveAsCommand { get; } = EntryItemResources.SaveAs.GetCommand(
-        IconGlyph.SaveAsE792, VirtualKeyModifiers.Control | VirtualKeyModifiers.Shift, VirtualKey.S);
-
-    public XamlUICommand CopyCommand { get; } = EntryItemResources.Copy.GetCommand(
-        IconGlyph.CopyE8C8, VirtualKeyModifiers.Control, VirtualKey.C);
+    public (ulong, Func<IProgress<int>?, Task<Stream?>>) DownloadParameter => (HWnd, GetOriginalImageSourceAsync);
 
     public XamlUICommand PlayGifCommand { get; } = "".GetCommand(IconGlyph.StopE71A);
 

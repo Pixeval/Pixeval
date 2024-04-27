@@ -1,8 +1,9 @@
-#region Copyright (c) Pixeval/Pixeval
+#region Copyright
+
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/IllustratorNameMacro.cs
+// Copyright (c) 2024 Pixeval/IsNovelMacro.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -16,22 +17,18 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 #endregion
 
 using Pixeval.Controls;
 using Pixeval.Download.MacroParser;
-using Pixeval.Util.IO;
-using Pixeval.Utilities;
 
 namespace Pixeval.Download.Macros;
 
-[MetaPathMacro(typeof(IllustrationItemViewModel))]
-public class IllustratorNameMacro : IMacro<IllustrationItemViewModel>.ITransducer
+[MetaPathMacro<NovelItemViewModel>]
+public class IsNovelMacro : IPredicate<NovelItemViewModel>
 {
-    public string Name => "artist_name";
+    public string Name => "if_novel";
 
-    public string Substitute(IllustrationItemViewModel context)
-    {
-        return context.Entry.User?.Name?.Let(IoHelper.NormalizePathSegment) ?? MacroParserResources.UnknownArtist;
-    }
+    public bool Match(NovelItemViewModel context) => true;
 }

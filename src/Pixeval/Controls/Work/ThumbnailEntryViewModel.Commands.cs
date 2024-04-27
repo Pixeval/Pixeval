@@ -21,11 +21,11 @@
 using System;
 using System.IO;
 using Windows.System;
-using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
 using Pixeval.Util.UI;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Pixeval.CoreApi.Model;
 using WinUI3Utilities.Controls;
 
 namespace Pixeval.Controls;
@@ -50,40 +50,43 @@ public partial class ThumbnailEntryViewModel<T>
     /// <summary>
     /// Parameter1: <see cref="ValueTuple{T1, T2}"/>
     /// <list type="bullet">
-    /// <item><term>T1</term><description><see cref="FrameworkElement"/>?</description></item>
-    /// <item><term>T2</term><description><see cref="Func{T, TResult}"/>?
+    /// <item><term>T1</term><description><see cref="ulong"/>?</description></item>
+    /// <item><term>T2</term><description><see cref="Func{T, TResult}"/>?(<see cref="IllustrationItemViewModel"/>)
     /// <list type="bullet">
     /// <item><term>T</term><description><see cref="IProgress{T}"/>?</description></item>
     /// <item><term>TResult</term><description><see cref="Stream"/>?</description></item>
     /// </list>
     /// </description></item>
+    /// <item><term>T2</term><description><see cref="DocumentViewerViewModel"/>?(<see cref="NovelItemViewModel"/>)</description></item>
     /// </list>
     /// 
-    /// Parameter2: <see cref="FrameworkElement"/>?
+    /// Parameter2: <see cref="ulong"/>?
     /// </summary>
     public XamlUICommand SaveCommand { get; } = EntryItemResources.Save.GetCommand(IconGlyph.SaveE74E, VirtualKeyModifiers.Control, VirtualKey.S);
 
     /// <summary>
     /// Parameter1: <see cref="ValueTuple{T1, T2}"/>
     /// <list type="bullet">
-    /// <item><term>T1</term><description><see cref="Window"/></description></item>
-    /// <item><term>T2</term><description><see cref="Func{T, TResult}"/>?
+    /// <item><term>T1</term><description><see cref="ulong"/></description></item>
+    /// <item><term>T2</term><description><see cref="Func{T, TResult}"/>?(<see cref="IllustrationItemViewModel"/>)
     /// <list type="bullet">
     /// <item><term>T</term><description><see cref="IProgress{T}"/>?</description></item>
     /// <item><term>TResult</term><description><see cref="Stream"/>?</description></item>
     /// </list>
     /// </description></item>
+    /// <item><term>T2</term><description><see cref="DocumentViewerViewModel"/>?(<see cref="NovelItemViewModel"/>)</description></item>
     /// </list>
     /// 
-    /// Parameter2: <see cref="Window"/>
+    /// Parameter2: <see cref="ulong"/>
     /// </summary>
     public XamlUICommand SaveAsCommand { get; } = EntryItemResources.SaveAs.GetCommand(IconGlyph.SaveAsE792, VirtualKeyModifiers.Control | VirtualKeyModifiers.Shift, VirtualKey.S);
 
     /// <summary>
+    /// <see cref="IllustrationItemViewModel"/>:<br/>
     /// Parameter1: <see cref="ValueTuple{T1, T2}"/>
     /// <list type="bullet">
-    /// <item><term>T1</term><description><see cref="FrameworkElement"/>?</description></item>
-    /// <item><term>T2</term><description><see cref="Func{T, TResult}"/>?
+    /// <item><term>T1</term><description><see cref="ulong"/>?</description></item>
+    /// <item><term>T2</term><description><see cref="Func{T, TResult}"/>
     /// <list type="bullet">
     /// <item><term>T</term><description><see cref="IProgress{T}"/>?</description></item>
     /// <item><term>TResult</term><description><see cref="Stream"/>? </description></item>
@@ -91,12 +94,20 @@ public partial class ThumbnailEntryViewModel<T>
     /// </description></item>
     /// </list>
     /// 
-    /// Parameter2: <see cref="ValueTuple{T1, T2}"/>
-    /// <see cref="Func{T, TResult}"/>?
+    /// Parameter2: <see cref="Func{T, TResult}"/>
     /// <list type="bullet">
     /// <item><term>T</term><description><see cref="IProgress{T}"/>?</description></item>
     /// <item><term>TResult</term><description><see cref="Stream"/>?</description></item>
     /// </list>
+    /// <br/>
+    /// <see cref="NovelItemViewModel"/>:<br/>
+    /// Parameter1: <see cref="ValueTuple{T1, T2}"/>
+    /// <list type="bullet">
+    /// <item><term>T1</term><description><see cref="ulong"/>?</description></item>
+    /// <item><term>T2</term><description><see cref="NovelContent"/></description></item>
+    /// </list>
+    /// 
+    /// Parameter2: <see cref="NovelContent"/>
     /// </summary>
     public XamlUICommand CopyCommand { get; } = EntryItemResources.Copy.GetCommand(IconGlyph.CopyE8C8, VirtualKeyModifiers.Control, VirtualKey.C);
 

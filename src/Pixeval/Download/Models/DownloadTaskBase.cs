@@ -23,6 +23,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
+using Pixeval.Controls;
 using Pixeval.CoreApi.Model;
 using Pixeval.Database;
 using Pixeval.Util.IO;
@@ -31,8 +32,9 @@ using Pixeval.Utilities.Threading;
 
 namespace Pixeval.Download.Models;
 
-public abstract class IllustrationDownloadTaskBase(DownloadHistoryEntry entry) : ObservableObject, IDownloadTask, IProgress<double>, IEntry
+public abstract class DownloadTaskBase(DownloadHistoryEntry entry) : ObservableObject, IProgress<double>, IEntry
 {
+    public abstract IWorkViewModel ViewModel { get; }
     private Exception? _errorCause;
     private double _progressPercentage = entry.State is DownloadState.Completed ? 100 : 0;
 
@@ -51,14 +53,25 @@ public abstract class IllustrationDownloadTaskBase(DownloadHistoryEntry entry) :
         }
     }
 
+    /// <summary>
+    /// 文件的真正下载地址，若<see cref="IsFolder"/>为假，则一定只有一个元素
+    /// </summary>
+    public abstract IReadOnlyList<string> ActualDestinations { get; }
+
+    public string ActualDestination => ActualDestinations[0];
+
+    /// <summary>
+    /// 是否是一个文件夹包含的下载内容
+    /// </summary>
+    public abstract bool IsFolder { get; }
+
     public DownloadHistoryEntry DatabaseEntry { get; } = entry;
 
     public long Id => DatabaseEntry.Id;
 
     public DownloadItemType Type => DatabaseEntry.Type;
 
-    public List<string> Urls => DatabaseEntry.Urls;
-
+    /// <inheritdoc cref="DownloadHistoryEntry.Destination"/>
     public string Destination
     {
         get => DatabaseEntry.Destination;
@@ -102,16 +115,18 @@ public abstract class IllustrationDownloadTaskBase(DownloadHistoryEntry entry) :
         }
     }
 
-    public abstract Task DownloadAsync(Func<string, IProgress<double>?, CancellationHandle?, Task<Result<Stream>>> downloadStreamAsync);
+    public abstract Task DownloadAsync(Downloader downloadStreamAsync);
 
     public async Task ResetAsync()
     {
-        await IoHelper.DeleteIllustrationTaskAsync(this);
+        await IoHelper.DeleteTaskAsync(this);
         ProgressPercentage = 0;
         CurrentState = DownloadState.Queued;
         ErrorCause = null;
         Completion = new TaskCompletionSource();
     }
 
-    public void Report(double value) => ProgressPercentage = value;
+    public virtual void Report(double value) => ProgressPercentage = value;
 }
+
+public delegate Task<Result<Stream>> Downloader(string url, IProgress<double>? progress, CancellationHandle? cancellationHandle);

@@ -30,6 +30,7 @@ using Windows.Storage.FileProperties;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.AppManagement;
 using Pixeval.CoreApi.Net.Response;
+using Pixeval.Download.Macros;
 using Pixeval.Options;
 using Pixeval.Utilities;
 using SixLabors.ImageSharp;
@@ -95,8 +96,17 @@ public static partial class IoHelper
     public static async Task<Stream> GetFileThumbnailAsync(string path, uint size = 64)
     {
         var file = await StorageFile.GetFileFromPathAsync(path);
-        var thumbnail = await file.GetThumbnailAsync(ThumbnailMode.SingleItem, size);
-        return thumbnail.AsStreamForRead();
+        Stream stream;
+        try
+        {
+            var thumbnail = await file.GetThumbnailAsync(ThumbnailMode.SingleItem, size);
+            stream = thumbnail.AsStreamForRead();
+        }
+        catch
+        {
+            stream = AppInfo.GetNotAvailableImageStream();
+        }
+        return stream;
     }
 
     public static async Task UgoiraSaveToFileAsync(this Image image, string path, UgoiraDownloadFormat? ugoiraDownloadFormat = null)
@@ -219,15 +229,26 @@ public static partial class IoHelper
         };
     }
 
-    public static string GetIllustrationExtension(string macroName, IllustrationDownloadFormat? illustrationDownloadFormat = null)
+    public static string GetIllustrationExtension(IllustrationDownloadFormat? illustrationDownloadFormat = null)
     {
         illustrationDownloadFormat ??= App.AppViewModel.AppSettings.IllustrationDownloadFormat;
         return illustrationDownloadFormat switch
         {
-            IllustrationDownloadFormat.Original => $"<{macroName}>",
+            IllustrationDownloadFormat.Original => FileExtensionMacro.NameConstToken,
             IllustrationDownloadFormat.Jpg or IllustrationDownloadFormat.Png or IllustrationDownloadFormat.Bmp => "." + illustrationDownloadFormat.ToString()!.ToLower(),
             IllustrationDownloadFormat.WebPLossless or IllustrationDownloadFormat.WebPLossy => ".webp",
             _ => ThrowHelper.ArgumentOutOfRange<IllustrationDownloadFormat?, string>(illustrationDownloadFormat)
+        };
+    }
+
+    public static string GetNovelExtension(NovelDownloadFormat? novelDownloadFormat = null)
+    {
+        novelDownloadFormat ??= App.AppViewModel.AppSettings.NovelDownloadFormat;
+        return novelDownloadFormat switch
+        {
+            NovelDownloadFormat.OriginalTxt => ".txt",
+            NovelDownloadFormat.Pdf or NovelDownloadFormat.Html or NovelDownloadFormat.Md => "." + novelDownloadFormat.ToString()!.ToLower(),
+            _ => ThrowHelper.ArgumentOutOfRange<NovelDownloadFormat?, string>(novelDownloadFormat)
         };
     }
 
@@ -256,9 +277,21 @@ public static partial class IoHelper
         return await _recyclableMemoryStreamManager.GetStream(bytes).GetSoftwareBitmapSourceAsync(true);
     }
 
-    public static string GetPathFromUrlFormat(string path, string url)
+    public static string ChangeExtensionFromUrl(string path, string url)
     {
         var index = url.LastIndexOf('.');
-        return path.Replace("<illust_ext>", url[index..]);
+        return Path.ChangeExtension(path, url[index..]);
+    }
+
+    public static string ReplaceTokenExtensionFromUrl(string path, string url)
+    {
+        var index = url.LastIndexOf('.');
+        return path.Replace(FileExtensionMacro.NameConstToken, url[index..]);
+    }
+
+    public static string RemoveTokens(this string path)
+    {
+        // .Replace(FileExtensionMacro.NameConstToken, "")
+        return path.Replace(MangaIndexMacro.NameConstToken, "");
     }
 }

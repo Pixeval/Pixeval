@@ -1,8 +1,9 @@
-#region Copyright (c) Pixeval/Pixeval
+#region Copyright
+
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/IllustrationMetaPathMacroProvider.cs
+// Copyright (c) 2024 Pixeval/IsIllustrationMacro.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -16,16 +17,18 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 #endregion
 
-using System.Collections.Generic;
 using Pixeval.Controls;
 using Pixeval.Download.MacroParser;
-using Pixeval.Download.Macros;
 
-namespace Pixeval.Download;
+namespace Pixeval.Download.Macros;
 
-public class IllustrationMetaPathMacroProvider : IMetaPathMacroProvider<IllustrationItemViewModel>
+[MetaPathMacro<IllustrationItemViewModel>]
+public class IsIllustrationMacro : IPredicate<IllustrationItemViewModel>
 {
-    public IEnumerable<IMacro<IllustrationItemViewModel>> AvailableMacros { get; } = MetaPathMacroAttributeHelper.GetAttachedTypeInstances<IMacro<IllustrationItemViewModel>>(typeof(IllustrationItemViewModel));
+    public string Name => "if_illust";
+
+    public bool Match(IllustrationItemViewModel context) => true;
 }

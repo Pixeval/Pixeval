@@ -37,8 +37,11 @@ public sealed class NovelViewViewModel : SortableEntryViewViewModel<Novel, Novel
     private NovelViewViewModel(NovelViewDataProvider dataProvider)
     {
         DataProvider = dataProvider;
+        dataProvider.View.Filter = DefaultFilter;
         dataProvider.View.CollectionChanged += (_, _) => OnPropertyChanged(nameof(HasNoItem));
     }
 
     public override NovelViewDataProvider DataProvider { get; }
+
+    protected override void OnFilterChanged() => DataProvider.View.RaiseFilterChanged();
 }

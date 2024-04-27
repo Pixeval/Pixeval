@@ -20,32 +20,29 @@
 
 #endregion
 
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Pixeval.Controls;
 using Pixeval.Database;
-using Pixeval.Utilities;
-using Pixeval.Utilities.Threading;
 using WinUI3Utilities;
 
 namespace Pixeval.Download.Models;
 
-public class IntrinsicMangaDownloadTask : MangaDownloadTask
+public sealed class IntrinsicMangaDownloadTask : MangaDownloadTask
 {
-    public IList<Stream> Streams { get; }
-
     public IntrinsicMangaDownloadTask(DownloadHistoryEntry entry, IllustrationItemViewModel illustrationViewModel, IList<Stream> streams) : base(entry, illustrationViewModel)
     {
         Report(100);
-        if (streams.Count == Urls.Count)
+        if (streams.Count == Urls.Length)
             Streams = streams;
         else
             ThrowHelper.Argument(streams);
     }
 
-    protected override async Task DownloadAsyncCore(Func<string, IProgress<double>?, CancellationHandle?, Task<Result<Stream>>> _, string url, string destination)
+    public IList<Stream> Streams { get; }
+
+    protected override async Task DownloadAsyncCore(Downloader _, string url, string destination)
     {
         if (!App.AppViewModel.AppSettings.OverwriteDownloadedFile && File.Exists(destination))
             return;

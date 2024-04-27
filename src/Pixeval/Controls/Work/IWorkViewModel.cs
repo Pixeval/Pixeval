@@ -29,6 +29,8 @@ namespace Pixeval.Controls;
 
 public interface IWorkViewModel
 {
+    IWorkEntry Entry { get; }
+
     long Id { get; }
 
     int TotalBookmarks { get; }
@@ -50,6 +52,12 @@ public interface IWorkViewModel
     bool IsXRestricted { get; }
 
     BadgeMode XRestrictionCaption { get; }
+
+    Uri AppUri { get; }
+
+    Uri WebUri { get; }
+
+    Uri PixEzUri { get; }
 
     /// <inheritdoc cref="ThumbnailEntryViewModel{T}.AddToBookmarkCommand"/>
     XamlUICommand AddToBookmarkCommand { get; }

@@ -20,9 +20,9 @@
 
 namespace Pixeval.Download.MacroParser;
 
-public interface IMetaPathParser<TContext>
+public interface IMetaPathParser<in TContext>
 {
-    IMetaPathMacroProvider<TContext> MacroProvider { get; }
+    IMacro[] MacroProvider { get; }
 
     string Reduce(string raw, TContext context);
 }

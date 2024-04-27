@@ -55,7 +55,7 @@
         HorizontalAlignment="Left"
         VerticalAlignment="Top"
         Command="{x:Bind ViewModel.BookmarkCommand, Mode=OneWay}"
-        CommandParameter="{x:Bind}"
+        CommandParameter="{x:Bind HWnd}"
         IsTapEnabled="False" />
     <controls:DockPanel
         Grid.Column="1"
@@ -171,7 +171,7 @@
                     HorizontalAlignment="Left"
                     VerticalAlignment="Top"
                     Command="{x:Bind ViewModel.BookmarkCommand, Mode=OneWay}"
-                    CommandParameter="{x:Bind}">
+                    CommandParameter="{x:Bind HWnd}">
                     <Grid.RenderTransform>
                         <ScaleTransform ScaleX="1" ScaleY="1" />
                     </Grid.RenderTransform>
@@ -183,8 +183,8 @@
                     DefaultLabelPosition="Collapsed"
                     OverflowButtonVisibility="Collapsed">
                     <AppBarButton Command="{x:Bind OpenNovelCommand}" Tapped="OpenNovel_OnTapped" />
-                    <AppBarButton Command="{x:Bind ViewModel.AddToBookmarkCommand, Mode=OneWay}" />
-                    <AppBarButton Command="{x:Bind ViewModel.SaveCommand, Mode=OneWay}" />
+                    <AppBarButton Command="{x:Bind ViewModel.AddToBookmarkCommand, Mode=OneWay}" Tapped="AddToBookmark_OnTapped" />
+                    <AppBarButton Command="{x:Bind ViewModel.SaveCommand, Mode=OneWay}" CommandParameter="{x:Bind HWnd}" />
                     <AppBarButton Command="{x:Bind ViewModel.OpenInWebBrowserCommand, Mode=OneWay}" />
                 </CommandBar>
             </Grid>

@@ -81,8 +81,6 @@ public partial class MakoClient
     /// Search in Pixiv.
     /// </summary>
     /// <param name="tag">Texts for searching</param>
-    /// <param name="start">Start page</param>
-    /// <param name="pages">Number of pages</param>
     /// <param name="matchOption">
     /// The <see cref="SearchIllustrationTagMatchOption.TitleAndCaption" /> option for the method of search
     /// matching
@@ -98,10 +96,8 @@ public partial class MakoClient
     /// </returns>
     public IFetchEngine<Illustration> SearchIllustrations(
         string tag,
-        int start = 0,
-        int pages = 100,
         SearchIllustrationTagMatchOption matchOption = SearchIllustrationTagMatchOption.TitleAndCaption,
-        WorkSortOption? sortOption = null,
+        WorkSortOption sortOption = WorkSortOption.DoNotSort,
         SearchDuration searchDuration = SearchDuration.Undecided,
         TargetFilter targetFilter = TargetFilter.ForAndroid,
         DateTimeOffset? startDate = null,
@@ -112,15 +108,13 @@ public partial class MakoClient
         if (sortOption is WorkSortOption.PopularityDescending && !Session.IsPremium)
             sortOption = WorkSortOption.DoNotSort;
 
-        return new IllustrationSearchEngine(this, new EngineHandle(CancelInstance), matchOption, tag, start, pages, sortOption, searchDuration, targetFilter, startDate, endDate, aiType);
+        return new IllustrationSearchEngine(this, new EngineHandle(CancelInstance), matchOption, tag, sortOption, searchDuration, targetFilter, startDate, endDate, aiType);
     }
 
     public IFetchEngine<Novel> SearchNovels(
         string tag,
-        int start = 0,
-        int pages = 100,
         SearchNovelTagMatchOption matchOption = SearchNovelTagMatchOption.Text,
-        WorkSortOption? sortOption = null,
+        WorkSortOption sortOption = WorkSortOption.DoNotSort,
         SearchDuration searchDuration = SearchDuration.Undecided,
         TargetFilter targetFilter = TargetFilter.ForAndroid,
         DateTimeOffset? startDate = null,
@@ -133,7 +127,7 @@ public partial class MakoClient
         if (sortOption is WorkSortOption.PopularityDescending && !Session.IsPremium)
             sortOption = WorkSortOption.DoNotSort;
 
-        return new NovelSearchEngine(this, new EngineHandle(CancelInstance), matchOption, tag, start, pages, sortOption, searchDuration, targetFilter, startDate, endDate, mergePlainKeywordResults, includeTranslatedTagResults, aiType);
+        return new NovelSearchEngine(this, new EngineHandle(CancelInstance), matchOption, tag, sortOption, searchDuration, targetFilter, startDate, endDate, mergePlainKeywordResults, includeTranslatedTagResults, aiType);
     }
 
     /// <summary>

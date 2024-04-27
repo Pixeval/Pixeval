@@ -14,7 +14,7 @@ public sealed partial class TagsEntryEditTagDialog : UserControl
     public TagsEntryEditTagDialog(TagsEntryViewModel viewModel)
     {
         _viewModel = viewModel;
-        Tags = [.. viewModel.TagsSet];
+        Tags = [.. viewModel.TagsSet!];
         InitializeComponent();
     }
 

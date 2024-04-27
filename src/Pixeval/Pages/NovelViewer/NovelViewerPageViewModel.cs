@@ -50,10 +50,10 @@ public partial class NovelViewerPageViewModel : DetailedUiObservableObject, IDis
     /// </summary>
     /// <param name="novelViewModels"></param>
     /// <param name="currentNovelIndex"></param>
-    /// <param name="content"></param>
-    public NovelViewerPageViewModel(IEnumerable<NovelItemViewModel> novelViewModels, int currentNovelIndex, FrameworkElement content) : base(content)
+    /// <param name="hWnd"></param>
+    public NovelViewerPageViewModel(IEnumerable<NovelItemViewModel> novelViewModels, int currentNovelIndex, ulong hWnd) : base(hWnd)
     {
-        content.ActualThemeChanged += (_, _) =>
+        FrameworkElement.ActualThemeChanged += (_, _) =>
         {
             OnPropertyChanged(nameof(NovelBackground));
             OnPropertyChanged(nameof(NovelFontColor));
@@ -70,12 +70,8 @@ public partial class NovelViewerPageViewModel : DetailedUiObservableObject, IDis
     /// </summary>
     /// <param name="viewModel"></param>
     /// <param name="currentNovelIndex"></param>
-    /// <param name="content"></param>
-    /// <remarks>
-    /// novels should contain only one item if the novel is a single
-    /// otherwise it contains the entire manga data
-    /// </remarks>
-    public NovelViewerPageViewModel(NovelViewViewModel viewModel, int currentNovelIndex, FrameworkElement content) : base(content)
+    /// <param name="hWnd"></param>
+    public NovelViewerPageViewModel(NovelViewViewModel viewModel, int currentNovelIndex, ulong hWnd) : base(hWnd)
     {
         ViewModelSource = new NovelViewViewModel(viewModel);
         ViewModelSource.DataProvider.View.FilterChanged += (_, _) => CurrentNovelIndex = Novels.IndexOf(CurrentNovel);

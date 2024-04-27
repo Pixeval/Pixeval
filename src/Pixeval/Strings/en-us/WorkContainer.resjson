@@ -1,7 +1,7 @@
 {
   "CancelSelectionButtonFormatted": "Cancel selection ({0})",
   "AddAllToBookmarkButton/Label": "Add to bookmark",
-  "AddAllToBookmarkContentFormatted": "Bookmarked {0} works",
+  "AddedAllToBookmarkContentFormatted": "Bookmarked {0} works",
   "AddAllToBookmarkTitle": "Successfully bookmarked",
   "OpenAllInBrowserButton/Label": "Open in browser",
   "OpenConditionDialogButton/Label": "Filter",

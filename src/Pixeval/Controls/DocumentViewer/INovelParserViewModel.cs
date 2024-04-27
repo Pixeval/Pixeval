@@ -1,8 +1,9 @@
-#region Copyright (c) Pixeval/Pixeval
+#region Copyright
+
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/SpotlightTitleMacro.cs
+// Copyright (c) 2024 Pixeval/INovelParserViewModel.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -16,22 +17,24 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 #endregion
 
-using Pixeval.Controls;
-using Pixeval.Download.MacroParser;
-using Pixeval.Util.IO;
-using Pixeval.Utilities;
+using System;
+using System.Collections.Generic;
+using Pixeval.CoreApi.Model;
 
-namespace Pixeval.Download.Macros;
+namespace Pixeval.Controls;
 
-[MetaPathMacro(typeof(IllustrationItemViewModel))]
-public class SpotlightTitleMacro : IMacro<IllustrationItemViewModel>.ITransducer
+public interface INovelParserViewModel<TImage> : IDisposable
 {
-    public string Name => "spot_title";
+    NovelContent NovelContent { get; } 
 
-    public string Substitute(IllustrationItemViewModel context)
-    {
-        return context.Entry.SpotlightTitle?.Let(IoHelper.NormalizePathSegment) ?? MacroParserResources.UnknownSpotlightTitle;
-    }
+    Dictionary<(long, int), NovelIllustInfo> IllustrationLookup { get; }
+
+    Dictionary<(long, int), TImage> IllustrationImages { get; }
+
+    Dictionary<long, TImage> UploadedImages { get; }
+
+    public string? ImageExtension { get; }
 }

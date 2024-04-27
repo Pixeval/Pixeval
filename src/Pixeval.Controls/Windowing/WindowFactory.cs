@@ -19,6 +19,7 @@
 #endregion
 
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Windows.Foundation;
@@ -33,11 +34,11 @@ public static class WindowFactory
 
     public static IWindowSettings WindowSettings { get; set; } = null!;
 
-    public static EnhancedWindow RootWindow => _forkedWindowsInternal[0];
+    public static EnhancedWindow RootWindow { get; private set; } = null!;
 
-    private static readonly List<EnhancedWindow> _forkedWindowsInternal = [];
+    private static readonly Dictionary<ulong, EnhancedWindow> _forkedWindowsInternal = [];
 
-    public static IReadOnlyList<EnhancedWindow> ForkedWindows => _forkedWindowsInternal;
+    public static IReadOnlyDictionary<ulong, EnhancedWindow> ForkedWindows => _forkedWindowsInternal;
 
     public static void Initialize(IWindowSettings windowSettings, string iconAbsolutePath)
     {
@@ -52,28 +53,34 @@ public static class WindowFactory
         IconAbsolutePath = iconAbsolutePath;
     }
 
+    public static FrameworkElement GetContentFromHWnd(ulong hWnd)
+    {
+        return _forkedWindowsInternal[hWnd].Content.To<FrameworkElement>();
+    }
+
     public static EnhancedWindow GetWindowForElement(UIElement element)
     {
         if (element.XamlRoot is null)
             ThrowHelper.ArgumentNull(element.XamlRoot, $"{nameof(element.XamlRoot)} should not be null.");
 
-        return _forkedWindowsInternal.Find(window => element.XamlRoot == window.Content.XamlRoot)
+        return _forkedWindowsInternal.Values.FirstOrDefault(window => element.XamlRoot == window.Content.XamlRoot)
                ?? ThrowHelper.ArgumentOutOfRange<UIElement, EnhancedWindow>(element, $"Specified {nameof(element)} is not existed in any of {nameof(ForkedWindows)}.");
     }
 
     public static EnhancedWindow Create(out EnhancedWindow window)
     {
-        window = new EnhancedWindow();
-        window.Closed += (sender, _) => _forkedWindowsInternal.Remove(sender.To<EnhancedWindow>());
-        _forkedWindowsInternal.Add(window);
+        RootWindow = window = new EnhancedWindow();
+        window.Closed += (sender, _) => _forkedWindowsInternal.Remove(sender.To<EnhancedWindow>().HWnd);
+        _forkedWindowsInternal[window.HWnd] = window;
         return window;
     }
 
-    public static EnhancedWindow Fork(this EnhancedWindow owner, out EnhancedWindow window)
+    public static EnhancedWindow Fork(this EnhancedWindow owner, out ulong hWnd)
     {
-        window = new EnhancedWindow(owner);
-        window.Closed += (sender, _) => _forkedWindowsInternal.Remove(sender.To<EnhancedWindow>());
-        _forkedWindowsInternal.Add(window);
+        var window = new EnhancedWindow(owner);
+        hWnd = window.HWnd;
+        window.Closed += (sender, _) => _forkedWindowsInternal.Remove(sender.To<EnhancedWindow>().HWnd);
+        _forkedWindowsInternal[window.HWnd] = window;
         return window;
     }
 
@@ -122,13 +129,13 @@ public static class WindowFactory
 
     public static void SetBackdrop(BackdropType backdropType)
     {
-        foreach (var window in _forkedWindowsInternal) 
+        foreach (var window in _forkedWindowsInternal.Values)
             window.SetBackdrop(backdropType);
     }
 
     public static void SetTheme(ElementTheme theme)
     {
-        foreach (var window in _forkedWindowsInternal) 
+        foreach (var window in _forkedWindowsInternal.Values)
             window.SetTheme(theme);
     }
 }

@@ -28,7 +28,7 @@ using Pixeval.Download.Models;
 
 namespace Pixeval.Database.Managers;
 
-public class DownloadHistoryPersistentManager(ILiteDatabase collection, int maximumRecords) : IPersistentManager<DownloadHistoryEntry, IllustrationDownloadTask>
+public class DownloadHistoryPersistentManager(ILiteDatabase collection, int maximumRecords) : IPersistentManager<DownloadHistoryEntry, DownloadTaskBase>
 {
     public ILiteCollection<DownloadHistoryEntry> Collection { get; init; } = collection.GetCollection<DownloadHistoryEntry>(nameof(DownloadHistoryEntry));
 
@@ -53,12 +53,12 @@ public class DownloadHistoryPersistentManager(ILiteDatabase collection, int maxi
         };
     }
 
-    public IEnumerable<IllustrationDownloadTask> Query(Expression<Func<DownloadHistoryEntry, bool>> predicate)
+    public IEnumerable<DownloadTaskBase> Query(Expression<Func<DownloadHistoryEntry, bool>> predicate)
     {
         return Collection.Find(predicate).Select(ToObservableDownloadTask);
     }
 
-    public IEnumerable<IllustrationDownloadTask> Select(Expression<Func<DownloadHistoryEntry, bool>>? predicate = null, int? count = null)
+    public IEnumerable<DownloadTaskBase> Select(Expression<Func<DownloadHistoryEntry, bool>>? predicate = null, int? count = null)
     {
         var query = Collection.FindAll();
         if (count.HasValue)
@@ -79,7 +79,7 @@ public class DownloadHistoryPersistentManager(ILiteDatabase collection, int maxi
         return Collection.DeleteMany(predicate);
     }
 
-    public IEnumerable<IllustrationDownloadTask> Enumerate()
+    public IEnumerable<DownloadTaskBase> Enumerate()
     {
         return Collection.FindAll().Select(ToObservableDownloadTask);
     }
@@ -99,10 +99,11 @@ public class DownloadHistoryPersistentManager(ILiteDatabase collection, int maxi
         App.AppViewModel.DownloadManager.ClearTasks();
     }
 
-    private static IllustrationDownloadTask ToObservableDownloadTask(DownloadHistoryEntry entry)
+    private static DownloadTaskBase ToObservableDownloadTask(DownloadHistoryEntry entry)
     {
         return entry.Type switch
         {
+            DownloadItemType.Novel => new LazyInitializedNovelDownloadTask(entry) { CurrentState = DownloadState.Completed },
             DownloadItemType.Ugoira => new LazyInitializedUgoiraDownloadTask(entry) { CurrentState = DownloadState.Completed },
             DownloadItemType.Manga => new LazyInitializedMangaDownloadTask(entry) { CurrentState = DownloadState.Completed },
             _ => new LazyInitializedIllustrationDownloadTask(entry) { CurrentState = DownloadState.Completed }

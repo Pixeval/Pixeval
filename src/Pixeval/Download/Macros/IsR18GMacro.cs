@@ -1,8 +1,9 @@
-#region Copyright (c) Pixeval/Pixeval
+#region Copyright
+
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/IsFromSpotlightMacro.cs
+// Copyright (c) 2024 Pixeval/IsR18GMacro.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -16,6 +17,7 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 #endregion
 
 using Pixeval.Controls;
@@ -23,13 +25,13 @@ using Pixeval.Download.MacroParser;
 
 namespace Pixeval.Download.Macros;
 
-[MetaPathMacro(typeof(IllustrationItemViewModel))]
-public class IsFromSpotlightMacro : IMacro<IllustrationItemViewModel>.IPredicate
+[MetaPathMacro<IWorkViewModel>]
+public class IsR18GMacro : IPredicate<IWorkViewModel>
 {
-    public string Name => "if_spot";
+    public string Name => "if_r18g";
 
-    public bool Match(IllustrationItemViewModel context)
+    public bool Match(IWorkViewModel context)
     {
-        return context.Entry.FromSpotlight;
+        return context is { IsXRestricted: true, XRestrictionCaption: BadgeMode.R18G };
     }
 }

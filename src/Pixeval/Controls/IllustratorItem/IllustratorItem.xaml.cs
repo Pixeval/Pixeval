@@ -27,6 +27,7 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.UI.Xaml.Media;
 using WinUI3Utilities.Attributes;
+using Pixeval.Controls.Windowing;
 
 namespace Pixeval.Controls;
 
@@ -36,6 +37,8 @@ public sealed partial class IllustratorItem
     public event Action<IllustratorItem, IllustratorItemViewModel>? ViewModelChanged;
 
     public event Func<TeachingTip> RequestTeachingTip = null!;
+
+    public ulong HWnd => WindowFactory.GetWindowForElement(this).HWnd;
 
     private static void OnViewModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {

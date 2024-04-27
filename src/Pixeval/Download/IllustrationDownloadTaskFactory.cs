@@ -22,6 +22,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Pixeval.Controls;
+using Pixeval.CoreApi.Net.Response;
 using Pixeval.Database;
 using Pixeval.Database.Managers;
 using Pixeval.Download.MacroParser;
@@ -50,13 +51,12 @@ public class IllustrationDownloadTaskFactory : IDownloadTaskFactory<Illustration
         {
             if (context.IsUgoira)
             {
-                var (metadata, url) = await context.GetUgoiraOriginalUrlAsync();
+                var metadata = await context.GetUgoiraMetadataAsync();
                 var downloadHistoryEntry = new DownloadHistoryEntry(
                     DownloadState.Queued,
                     path,
                     DownloadItemType.Ugoira,
-                    context.Id,
-                    url);
+                    context.Id);
                 return new UgoiraDownloadTask(downloadHistoryEntry, context, metadata);
             }
 
@@ -66,8 +66,7 @@ public class IllustrationDownloadTaskFactory : IDownloadTaskFactory<Illustration
                     DownloadState.Queued,
                     path,
                     DownloadItemType.Manga,
-                    context.Id,
-                    context.GetMangaImageUrls());
+                    context.Id);
                 return new MangaDownloadTask(downloadHistoryEntry, context);
             }
             else
@@ -76,8 +75,7 @@ public class IllustrationDownloadTaskFactory : IDownloadTaskFactory<Illustration
                     DownloadState.Queued,
                     path,
                     DownloadItemType.Illustration,
-                    context.Id,
-                    context.OriginalStaticUrl);
+                    context.Id);
                 return new IllustrationDownloadTask(downloadHistoryEntry, context);
             }
         });
@@ -86,7 +84,7 @@ public class IllustrationDownloadTaskFactory : IDownloadTaskFactory<Illustration
         return task;
     }
 
-    public async Task<IllustrationDownloadTask> TryCreateIntrinsicAsync(IllustrationItemViewModel context, Stream stream, string rawPath)
+    public IllustrationDownloadTask CreateIntrinsic(IllustrationItemViewModel context, object param, string rawPath)
     {
         using var scope = App.AppViewModel.AppServicesScope;
         var manager = scope.ServiceProvider.GetRequiredService<DownloadHistoryPersistentManager>();
@@ -101,20 +99,20 @@ public class IllustrationDownloadTaskFactory : IDownloadTaskFactory<Illustration
         {
             case { IsUgoira: true }:
             {
-                var (metadata, url) = await context.GetUgoiraOriginalUrlAsync();
-                var entry = new DownloadHistoryEntry(DownloadState.Queued, path, DownloadItemType.Ugoira, context.Id, url);
+                var (stream, metadata) = ((Stream, UgoiraMetadataResponse))param;
+                var entry = new DownloadHistoryEntry(DownloadState.Queued, path, DownloadItemType.Ugoira, context.Id);
                 return new IntrinsicUgoiraDownloadTask(entry, context, metadata, stream);
             }
-            case { IsManga: true, MangaIndex: -1 }: // 未使用的分支
+            case { IsManga: true, MangaIndex: -1 }: // 下载一篇漫画（未使用的分支）
             {
-                var url = context.OriginalStaticUrl;
-                var entry = new DownloadHistoryEntry(DownloadState.Queued, path, DownloadItemType.Manga, context.Id, url);
+                var stream = (Stream)param;
+                var entry = new DownloadHistoryEntry(DownloadState.Queued, path, DownloadItemType.Manga, context.Id);
                 return new IntrinsicMangaDownloadTask(entry, context, [stream]);
             }
             default:
             {
-                var url = context.OriginalStaticUrl;
-                var entry = new DownloadHistoryEntry(DownloadState.Queued, path, DownloadItemType.Illustration, context.Id, url);
+                var stream = (Stream)param;
+                var entry = new DownloadHistoryEntry(DownloadState.Queued, path, DownloadItemType.Illustration, context.Id);
                 return new IntrinsicIllustrationDownloadTask(entry, context, stream);
             }
         }

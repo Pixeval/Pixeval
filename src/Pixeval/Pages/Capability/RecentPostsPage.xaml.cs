@@ -18,8 +18,8 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Navigation;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.Misc;
 
@@ -29,15 +29,9 @@ public sealed partial class RecentPostsPage : IScrollViewProvider
 {
     public RecentPostsPage() => InitializeComponent();
 
-    public override void OnPageActivated(NavigationEventArgs e)
-    {
-        ChangeSource();
-    }
+    private void RecentPostsPage_OnLoaded(object sender, RoutedEventArgs e) => ChangeSource();
 
-    private void ComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
-    {
-        ChangeSource();
-    }
+    private void ComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e) => ChangeSource();
 
     private void ChangeSource()
     {

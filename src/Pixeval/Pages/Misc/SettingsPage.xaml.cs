@@ -45,6 +45,7 @@ using System.Text.RegularExpressions;
 using Windows.UI;
 using Pixeval.Download.Models;
 using Pixeval.Download;
+using CommunityToolkit.WinUI.Controls;
 
 namespace Pixeval.Pages.Misc;
 
@@ -71,7 +72,7 @@ public sealed partial class SettingsPage : IDisposable
 
     public override void OnPageActivated(NavigationEventArgs e, object? parameter)
     {
-        ViewModel = new SettingsPageViewModel(Window.Content.To<FrameworkElement>());
+        ViewModel = new SettingsPageViewModel(HWnd);
         // The first time viewmodel get the value of DefaultDownloadPathMacro from AppSettings won't trigger the property changed event
         SetPathMacroRichEditBoxDocument(ViewModel.DefaultDownloadPathMacro);
         _previousPath = ViewModel.DefaultDownloadPathMacro;
@@ -138,7 +139,7 @@ public sealed partial class SettingsPage : IDisposable
             App.AppViewModel.LoginContext.LogoutExit = true;
             // Close 不触发 Closing 事件
             AppInfo.SaveContextWhenExit();
-            Window.Close();
+            WindowFactory.RootWindow.Close();
         }
     }
 
@@ -151,6 +152,13 @@ public sealed partial class SettingsPage : IDisposable
             OnPropertyChanged(nameof(ViewModel));
         }
     }
+
+    private void TokenizingTextBox_OnTokenItemAdding(TokenizingTextBox sender, TokenItemAddingEventArgs e)
+    {
+        if (ViewModel.BlockedTags.Contains(e.TokenText))
+            e.Cancel = true;
+    }
+
     private void DefaultDownloadPathMacroTextBox_OnGotFocus(object sender, RoutedEventArgs e)
     {
         DownloadMacroInvalidTeachingTip.IsOpen = false;
@@ -215,14 +223,14 @@ public sealed partial class SettingsPage : IDisposable
             OptionalMacroParameter<string>(var sequence) => sequence is null ? (true, null) : ValidateMacro(sequence, macroProvider),
             Macro<string>(var name, var optionalParams) =>
                 Functions.Block(() =>
-                    macroProvider.PathParser.MacroProvider.TryResolve(name.Text) is IMacro<IllustrationItemViewModel>.Unknown
+                    macroProvider.PathParser.MacroProvider.TryResolve(name.Text) is Unknown
                         ? (false, name.Text)
                         : optionalParams is null ? (true, null) : ValidateMacro(optionalParams, macroProvider)),
             PlainText<string> plainText => (true, null),
             Sequence<string>(var first, var rests) =>
                 Functions.Block(() =>
                     ValidateMacro(first, macroProvider) is (false, _) result ? result : rests is null ? (true, null) : ValidateMacro(rests, macroProvider)),
-            _ => throw new ArgumentOutOfRangeException(nameof(tree))
+            _ => ThrowHelper.ArgumentOutOfRange<IMetaPathNode<string>, (bool, string?)>(tree)
         };
     }
 
@@ -307,7 +315,7 @@ public sealed partial class SettingsPage : IDisposable
     private void PathMacroTokenInputBox_OnTokenTapped(object sender, ItemClickEventArgs e)
     {
         UiHelper.ClipboardSetText(e.ClickedItem.To<StringRepresentableItem>().StringRepresentation);
-        this.ShowTeachingTipAndHide(SettingsPageResources.MacroCopiedToClipboard);
+        HWnd.SuccessGrowl(SettingsPageResources.MacroCopiedToClipboard);
     }
 
     private void DeleteFileCacheEntryButton_OnTapped(object sender, TappedRoutedEventArgs e)

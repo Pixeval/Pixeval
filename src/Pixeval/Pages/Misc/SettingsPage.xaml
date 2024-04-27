@@ -95,7 +95,7 @@
                         IsTabStop="False"
                         Orientation="Horizontal">
                         <HyperlinkButton x:Uid="/SettingsPage/ViewPixevalWebsiteHyperlinkButton" NavigateUri="https://piexval.github.io/" />
-                        <HyperlinkButton x:Uid="/SettingsPage/GitHubRepositoryHyperlinkButton" NavigateUri="https://github.com/misc2/Pixeval" />
+                        <HyperlinkButton x:Uid="/SettingsPage/GitHubRepositoryHyperlinkButton" NavigateUri="https://github.com/Pixeval/Pixeval" />
                         <HyperlinkButton x:Uid="/SettingsPage/ReportBugHyperlinkButton" NavigateUri="https://github.com/Pixeval/Pixeval/issues/new/choose" />
                         <HyperlinkButton x:Uid="/SettingsPage/FeedbackByEmailHyperlinkButton" NavigateUri="mailto:decem0730@hotmail.com" />
                         <HyperlinkButton x:Uid="/SettingsPage/DonateDeveloperHyperlinkButton" NavigateUri="https://afdian.net/a/dylech30th" />
@@ -426,6 +426,18 @@
                         Style="{StaticResource SettingsEnumComboBoxStyle}" />
                 </controls:SettingsCard>
 
+                <controls:SettingsExpander x:Uid="/SettingsPage/BlockedTagsEntry" HeaderIcon="{controls2:GlyphIcon Glyph=Blocked2ECE4}">
+                    <controls:SettingsExpander.Items>
+                        <controls:SettingsCard HorizontalContentAlignment="Stretch" ContentAlignment="Left">
+                            <controls:TokenizingTextBox
+                                x:Uid="/SettingsPage/BlockedTagsTokenizingTextBox"
+                                ItemsSource="{x:Bind ViewModel.BlockedTags, Mode=OneWay}"
+                                TokenDelimiter=","
+                                TokenItemAdding="TokenizingTextBox_OnTokenItemAdding" />
+                        </controls:SettingsCard>
+                    </controls:SettingsExpander.Items>
+                </controls:SettingsExpander>
+
                 <controls:SettingsCard
                     x:Uid="/SettingsPage/ViewingRestrictionEntry"
                     ActionIcon="{controls2:GlyphIcon Glyph=OpenInNewWindowE8A7}"
@@ -547,30 +559,6 @@
                 </controls:SettingsExpander>
 
                 <controls:SettingsCard
-                    x:Uid="/SettingsPage/MaximumSearchPageLimit"
-                    HeaderIcon="{controls2:GlyphIcon Glyph=RulerED5E}"
-                    Tag="{x:Bind misc2:SettingEntry.PageLimitForKeywordSearch}">
-                    <NumberBox
-                        x:Uid="/SettingsPage/MaximumSearchPageLimitNumberBox"
-                        Maximum="100"
-                        Minimum="1"
-                        Style="{StaticResource SettingsNumberBoxStyle}"
-                        Value="{x:Bind ViewModel.PageLimitForKeywordSearch, Mode=TwoWay}" />
-                </controls:SettingsCard>
-
-                <controls:SettingsCard
-                    x:Uid="/SettingsPage/SearchStartsFromEntry"
-                    HeaderIcon="{controls2:GlyphIcon Glyph=StartPointE819}"
-                    Tag="{x:Bind misc2:SettingEntry.SearchStartingFromPageNumber}">
-                    <NumberBox
-                        x:Uid="/SettingsPage/SearchStartsFromNumberBox"
-                        Maximum="150"
-                        Minimum="1"
-                        Style="{StaticResource SettingsNumberBoxStyle}"
-                        Value="{x:Bind ViewModel.SearchStartingFromPageNumber, Mode=TwoWay}" />
-                </controls:SettingsCard>
-
-                <controls:SettingsCard
                     x:Uid="/SettingsPage/SearchDurationEntry"
                     HeaderIcon="{controls2:GlyphIcon Glyph=EaseOfAccessE776}"
                     Tag="{x:Bind misc2:SettingEntry.SearchDuration}">
@@ -649,7 +637,7 @@
                                     IsItemClickEnabled="True"
                                     IsWrapped="True"
                                     ItemClick="PathMacroTokenInputBox_OnTokenTapped"
-                                    ItemsSource="{x:Bind misc:SettingsPageViewModel.AvailableIllustMacros}"
+                                    ItemsSource="{x:Bind misc:SettingsPageViewModel.AvailableMacros}"
                                     SelectionMode="None">
                                     <labs:TokenView.ItemTemplate>
                                         <DataTemplate x:DataType="controls1:StringRepresentableItem">
@@ -689,7 +677,10 @@
                                 Style="{StaticResource SettingsEnumComboBoxStyle}" />
                         </controls:SettingsCard>
                         <controls:SettingsCard x:Uid="/SettingsPage/NovelOptionEntry" HeaderIcon="{controls2:GlyphIcon Glyph=ReadingModeE736}">
-                            <controls1:EnumComboBox IsEnabled="False" Style="{StaticResource SettingsEnumComboBoxStyle}" />
+                            <controls1:EnumComboBox
+                                EnumSource="{winUi:EnumValues Type=options:NovelDownloadFormat}"
+                                SelectedEnum="{x:Bind ViewModel.NovelDownloadFormat, Mode=TwoWay}"
+                                Style="{StaticResource SettingsEnumComboBoxStyle}" />
                         </controls:SettingsCard>
                     </controls:SettingsExpander.Items>
                 </controls:SettingsExpander>
@@ -715,18 +706,6 @@
                         Style="{StaticResource SettingsNumberBoxStyle}"
                         Value="{x:Bind ViewModel.PageLimitForSpotlight, Mode=TwoWay}" />
                 </controls:SettingsCard>
-
-                <!--<controls:SettingsCard
-                    x:Uid="/SettingsPage/RecommendationItemLimitEntry"
-                    HeaderIcon="{controls2:GlyphIcon Glyph=DialShape1F156}"
-                    Tag="{x:Bind misc2:SettingEntry.ItemsNumberLimitForDailyRecommendations}">
-                    <NumberBox
-                        x:Uid="/SettingsPage/RecommendationItemLimitNumberBox"
-                        Maximum="2500"
-                        Minimum="500"
-                        Style="{StaticResource SettingsNumberBoxStyle}"
-                        Value="{x:Bind ViewModel.ItemsNumberLimitForDailyRecommendations, Mode=TwoWay}" />
-                </controls:SettingsCard>-->
 
                 <controls:SettingsCard
                     x:Uid="/SettingsPage/MaximumBrowseHistoryRecordsEntry"

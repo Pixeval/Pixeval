@@ -33,7 +33,7 @@ using Pixeval.Utilities.Threading;
 
 namespace Pixeval.Download;
 
-public class DownloadManager<TDownloadTask> : IDisposable where TDownloadTask : IDownloadTask
+public class DownloadManager<TDownloadTask> : IDisposable where TDownloadTask : DownloadTaskBase
 {
     private readonly Channel<TDownloadTask> _downloadTaskChannel;
     private readonly HttpClient _httpClient;
@@ -171,7 +171,7 @@ public class DownloadManager<TDownloadTask> : IDisposable where TDownloadTask : 
         catch (Exception e)
         {
             if (task is IllustrationDownloadTask t)
-                await IoHelper.DeleteIllustrationTaskAsync(t);
+                await IoHelper.DeleteTaskAsync(t);
             ThreadingHelper.DispatchTask(() => task.ErrorCause = e);
             return;
         }

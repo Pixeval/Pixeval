@@ -14,6 +14,7 @@ using Pixeval.Options;
 using Microsoft.UI.Xaml.Media.Animation;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.Util.UI;
+using Pixeval.Controls.Windowing;
 
 namespace Pixeval.Controls;
 
@@ -22,6 +23,8 @@ public sealed partial class WorkView : IEntryView<ISortableEntryViewViewModel>
 {
     public const double LandscapeHeight = 180;
     public const double PortraitHeight = 250;
+
+    public ulong HWnd => WindowFactory.GetWindowForElement(this).HWnd;
 
     public double DesiredHeight => ThumbnailDirection switch
     {
@@ -43,18 +46,18 @@ public sealed partial class WorkView : IEntryView<ISortableEntryViewViewModel>
 
     public WorkView() => InitializeComponent();
 
-    /// <summary>
-    /// 在调用<see cref="ResetEngine"/>前为<see langword="null"/>
-    /// </summary>
-    public ISortableEntryViewViewModel ViewModel { get; private set; } = null!;
-
     public event TypedEventHandler<WorkView, ISortableEntryViewViewModel>? ViewModelChanged;
 
     public AdvancedItemsView AdvancedItemsView => ItemsView;
 
     public ScrollView ScrollView => ItemsView.ScrollView;
 
-    public SimpleWorkType Type { get; private set; }
+    /// <summary>
+    /// 在调用<see cref="ResetEngine"/>前为<see langword="null"/>
+    /// </summary>
+    [ObservableProperty] private ISortableEntryViewViewModel _viewModel = null!;
+
+    [ObservableProperty] private SimpleWorkType _type;
 
     private async void WorkItem_OnViewModelChanged(FrameworkElement sender, IWorkViewModel viewModel)
     {
@@ -157,5 +160,18 @@ public sealed partial class WorkView : IEntryView<ISortableEntryViewViewModel>
             viewModel.UnloadThumbnail(ViewModel);
         ViewModel.Dispose();
         ViewModel = null!;
+    }
+
+    private void AddToBookmarkTeachingTip_OnCloseButtonClick(TeachingTip sender, object args)
+    {
+        sender.GetTag<IWorkViewModel>().AddToBookmarkCommand.Execute((BookmarkTagSelector.SelectedTags, BookmarkTagSelector.IsPrivate, null as object));
+
+        HWnd.SuccessGrowl(EntryViewResources.AddedToBookmark);
+    }
+
+    private void WorkItem_OnRequestAddToBookmark(FrameworkElement sender, IWorkViewModel args)
+    {
+        AddToBookmarkTeachingTip.Tag = args;
+        AddToBookmarkTeachingTip.IsOpen = true;
     }
 }

@@ -1,26 +1,12 @@
-using System.Diagnostics.CodeAnalysis;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml;
 using Pixeval.Controls.Windowing;
 
 namespace Pixeval.Util.ComponentModels;
 
-public class UiObservableObject : ObservableObject
+public class UiObservableObject(ulong hWnd) : ObservableObject
 {
-    public Window Window { get; private init; }
+    public ulong HWnd { get; } = hWnd;
 
-    private readonly FrameworkElement _frameworkElement;
-
-    public FrameworkElement FrameworkElement
-    {
-        get => _frameworkElement;
-        [MemberNotNull(nameof(_frameworkElement), nameof(Window))]
-        private init
-        {
-            _frameworkElement = value;
-            Window = WindowFactory.GetWindowForElement(_frameworkElement);
-        }
-    }
-
-    public UiObservableObject(FrameworkElement element) => FrameworkElement = element;
+    public FrameworkElement FrameworkElement => WindowFactory.GetContentFromHWnd(HWnd);
 }

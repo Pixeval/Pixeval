@@ -32,7 +32,7 @@ public partial class TagsEntryViewModel : ObservableObject, IEntry, IDisposable
     /// <remarks>
     /// Should be private set
     /// </remarks>
-    [ObservableProperty] private SoftwareBitmapSource _thumbnail = null!;
+    [ObservableProperty] private SoftwareBitmapSource? _thumbnail;
 
     private FrozenSet<string>? _tagsSet;
 
@@ -79,7 +79,6 @@ public partial class TagsEntryViewModel : ObservableObject, IEntry, IDisposable
                 catch (Exception e)
                 {
                     return e.Message;
-                    // ignored
                 }
             });
     }
@@ -127,5 +126,5 @@ public partial class TagsEntryViewModel : ObservableObject, IEntry, IDisposable
         entry.Thumbnail = await (await IoHelper.GetFileThumbnailAsync(path)).GetSoftwareBitmapSourceAsync(true);
     }
 
-    public void Dispose() => Thumbnail.Dispose();
+    public void Dispose() => Thumbnail?.Dispose();
 }

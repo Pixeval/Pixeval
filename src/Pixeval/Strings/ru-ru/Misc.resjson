@@ -45,7 +45,6 @@
   "WebPLossless": "Без потерь WebP (без потерь, маленький размер, широкая поддержка)",
   "WebPLossy": "С потерями WebP (с потерями, маленький размер, широкая поддержка)",
   "DownloadListEntryOpenFailed": "Не удалось открыть файл (папку)",
-  "DownloadListEntryMaybeDeleted": "Возможно, изображение было удалено",
   "SortOptionComboBox/PlaceholderText": "Опции сортировки",
   "PrivacyPolicyComboBox/PlaceholderText": "Опции конфиденциальности",
   "OpenUserId": "Открыть страницу пользователя",

@@ -108,7 +108,8 @@ public sealed partial class MainPage : SupportCustomTitleBarDragRegionPage
 
         _ = WeakReferenceMessenger.Default.TryRegister<MainPage, WorkTagClickedMessage>(this, (_, message) =>
         {
-            Window.AppWindow.MoveInZOrderAtTop();
+            var window = WindowFactory.ForkedWindows[HWnd];
+            window.AppWindow.MoveInZOrderAtTop();
             PerformSearchWork(message.Type, message.Tag);
         });
         using var client = new HttpClient();
@@ -124,8 +125,10 @@ public sealed partial class MainPage : SupportCustomTitleBarDragRegionPage
         NavigationView.SelectedItem = NavigationView.MenuItems[(int)App.AppViewModel.AppSettings.DefaultSelectedTabItem];
     }
 
-    private void NavigationView_OnSelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
+    private async void NavigationView_OnSelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
     {
+        await Task.Yield();
+
         // The App.AppViewModel.IllustrationDownloadManager will be initialized after that of MainPage object
         // so, we cannot put a navigation tag inside MainPage and treat it as a field, since it will be initialized immediately after
         // the creation of the object while the App.AppViewModel.IllustrationDownloadManager is still null which
@@ -148,6 +151,7 @@ public sealed partial class MainPage : SupportCustomTitleBarDragRegionPage
     {
         GCSettings.LargeObjectHeapCompactionMode = GCLargeObjectHeapCompactionMode.CompactOnce;
         GC.Collect();
+        // sender.To<Frame>().BackStack.Clear();
     }
 
     private async void KeywordAutoSuggestBox_GotFocus(object sender, RoutedEventArgs e)
@@ -323,7 +327,7 @@ public sealed partial class MainPage : SupportCustomTitleBarDragRegionPage
     {
         if (App.AppViewModel.AppSettings.ReverseSearchApiKey is { Length: > 0 })
         {
-            if (await Window.OpenFileOpenPickerAsync() is { } file)
+            if (await HWnd.OpenFileOpenPickerAsync() is { } file)
             {
                 await using var stream = await file.OpenStreamForReadAsync();
                 await _viewModel.ReverseSearchAsync(stream);

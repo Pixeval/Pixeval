@@ -20,6 +20,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.WinUI.Collections;
 using Pixeval.CoreApi.Engine;
@@ -37,6 +38,8 @@ public abstract partial class SortableEntryViewViewModel<T, TViewModel> : EntryV
     [NotifyPropertyChangedFor(nameof(IsAnyEntrySelected))]
     [NotifyPropertyChangedFor(nameof(SelectionLabel))]
     private TViewModel[] _selectedEntries = [];
+
+    private Func<IWorkViewModel, bool>? _filter;
 
     IReadOnlyCollection<IWorkViewModel> ISortableEntryViewViewModel.SelectedEntries
     {
@@ -65,8 +68,15 @@ public abstract partial class SortableEntryViewViewModel<T, TViewModel> : EntryV
 
     public Func<IWorkViewModel, bool>? Filter
     {
-        get => (Func<IWorkViewModel, bool>?)DataProvider.View.Filter;
-        set => DataProvider.View.Filter = value;
+        get => _filter;
+        set
+        {
+            if (Equals(value, _filter))
+                return;
+            _filter = value;
+            OnFilterChanged();
+            OnPropertyChanged();
+        }
     }
 
     public IReadOnlyCollection<IWorkViewModel> View => DataProvider.View;
@@ -77,4 +87,14 @@ public abstract partial class SortableEntryViewViewModel<T, TViewModel> : EntryV
     {
         DataProvider.ResetEngine((IFetchEngine<T>?)newEngine, itemLimit);
     }
+
+    protected bool DefaultFilter(IWorkViewModel entry)
+    {
+        if (entry.Tags.Any(tag => App.AppViewModel.AppSettings.BlockedTags.Contains(tag.Name)))
+            return false;
+
+        return Filter?.Invoke(entry) is not false;
+    }
+
+    protected abstract void OnFilterChanged();
 }

@@ -16,7 +16,9 @@
     "DownloadTaskCreated": "已创建下载任务",
     "UgoiraProcessing": "正在处理动图：{0}%",
     "ImageProcessing": "正在处理图片",
+    "NovelContentFetching": "正在获取小说内容",
     "ImageSetToClipBoard": "图片已复制到剪切板",
+    "NovelSetToClipBoard": "小说已复制到剪切板",
     "TheIllustrationIsAMangaFormatted": "这是一副图集，内含{0}张图片",
     "TheIllustrationIsAnUgoira": "这是一张动图",
 

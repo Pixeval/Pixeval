@@ -1,8 +1,9 @@
-#region Copyright (c) Pixeval/Pixeval
+#region Copyright
+
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/IllustrationTitleMacro.cs
+// Copyright (c) 2024 Pixeval/IsAiMacro.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -16,22 +17,21 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 #endregion
 
 using Pixeval.Controls;
 using Pixeval.Download.MacroParser;
-using Pixeval.Util.IO;
-using Pixeval.Utilities;
 
 namespace Pixeval.Download.Macros;
 
-[MetaPathMacro(typeof(IllustrationItemViewModel))]
-public class IllustrationTitleMacro : IMacro<IllustrationItemViewModel>.ITransducer
+[MetaPathMacro<IWorkViewModel>]
+public class IsAiMacro : IPredicate<IWorkViewModel>
 {
-    public string Name => "illust_title";
+    public string Name => "if_ai";
 
-    public string Substitute(IllustrationItemViewModel context)
+    public bool Match(IWorkViewModel context)
     {
-        return context.Title.Let(IoHelper.NormalizePathSegment) ?? MacroParserResources.UnknownIllustrationTitle;
+        return context.IsAiGenerated;
     }
 }

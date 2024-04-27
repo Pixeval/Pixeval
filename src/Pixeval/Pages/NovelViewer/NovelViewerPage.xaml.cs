@@ -11,6 +11,7 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Controls;
 using WinRT;
+using Pixeval.Controls.Windowing;
 
 namespace Pixeval.Pages.NovelViewer;
 
@@ -64,7 +65,7 @@ public sealed partial class NovelViewerPage
     public override void OnPageActivated(NavigationEventArgs e, object? parameter)
     {
         // 此处this.XamlRoot为null
-        _viewModel = Window.Content.To<FrameworkElement>().GetViewModel(parameter);
+        _viewModel = HWnd.GetViewModel(parameter);
 
         _viewModel.DetailedPropertyChanged += (sender, args) =>
         {
@@ -86,9 +87,10 @@ public sealed partial class NovelViewerPage
             {
                 case nameof(NovelViewerPageViewModel.IsFullScreen):
                 {
-                    Window.AppWindow.SetPresenter(vm.IsFullScreen ? AppWindowPresenterKind.FullScreen : AppWindowPresenterKind.Default);
+                    var window = WindowFactory.ForkedWindows[HWnd];
+                    window.AppWindow.SetPresenter(vm.IsFullScreen ? AppWindowPresenterKind.FullScreen : AppWindowPresenterKind.Default);
                     // 加载完之后设置标题栏
-                    _ = Task.Delay(500).ContinueWith(_ => RaiseSetTitleBarDragRegion(), TaskScheduler.FromCurrentSynchronizationContext());
+                    _ = Task.Delay(500).ContinueWith(_ => RaiseSetTitleBarDragRegion(window), TaskScheduler.FromCurrentSynchronizationContext());
                     break;
                 }
             }
@@ -118,7 +120,7 @@ public sealed partial class NovelViewerPage
 
     private void AddToBookmarkTeachingTip_OnCloseButtonClick(TeachingTip sender, object args)
     {
-        _viewModel.CurrentNovel.AddToBookmarkCommand.Execute((BookmarkTagSelector.SelectedTags, BookmarkTagSelector.IsPrivate, null as object));
+        _viewModel.CurrentNovel.AddToBookmarkCommand.Execute((BookmarkTagSelector.SelectedTags, BookmarkTagSelector.IsPrivate, DownloadParameter(DocumentViewer.ViewModel)));
     }
 
     private void AddToBookmarkButton_OnTapped(object sender, TappedRoutedEventArgs e) => AddToBookmarkTeachingTip.IsOpen = true;
@@ -177,7 +179,7 @@ public sealed partial class NovelViewerPage
         }
     }
 
-    private void Placeholder_OnSizeChanged(object sender, object e) => RaiseSetTitleBarDragRegion();
+    private void Placeholder_OnSizeChanged(object sender, object e) => RaiseSetTitleBarDragRegion(WindowFactory.ForkedWindows[HWnd]);
 
     private async void DocumentViewer_OnTapped(object sender, TappedRoutedEventArgs e)
     {
@@ -195,4 +197,6 @@ public sealed partial class NovelViewerPage
     }
 
     private void OpenPane_OnRightTapped(object sender, RightTappedRoutedEventArgs e) => EntryViewerSplitView.PinPane = true;
+
+    public (ulong, DocumentViewerViewModel?) DownloadParameter(DocumentViewerViewModel? viewModel) => (HWnd, viewModel);
 }

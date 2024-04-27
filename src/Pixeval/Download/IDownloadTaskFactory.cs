@@ -21,15 +21,14 @@
 using System.Threading.Tasks;
 using Pixeval.Download.MacroParser;
 using Pixeval.Download.Models;
-using System.IO;
 
 namespace Pixeval.Download;
 
-public interface IDownloadTaskFactory<T, TDownloadTask> where TDownloadTask : IDownloadTask
+public interface IDownloadTaskFactory<in TContext, TDownloadTask> where TDownloadTask : DownloadTaskBase
 {
-    IMetaPathParser<T> PathParser { get; }
+    IMetaPathParser<TContext> PathParser { get; }
 
-    Task<TDownloadTask> CreateAsync(T context, string rawPath);
+    Task<TDownloadTask> CreateAsync(TContext context, string rawPath);
 
-    Task<TDownloadTask> TryCreateIntrinsicAsync(T context, Stream stream, string rawPath);
+    TDownloadTask CreateIntrinsic(TContext context, object param, string rawPath);
 }

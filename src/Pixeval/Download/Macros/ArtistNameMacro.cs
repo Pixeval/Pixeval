@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/IDownloadTask.cs
+// Copyright (c) 2023 Pixeval/IllustratorNameMacro.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,27 +18,20 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System;
-using System.IO;
-using System.Threading.Tasks;
+using Pixeval.Controls;
+using Pixeval.Download.MacroParser;
+using Pixeval.Util.IO;
 using Pixeval.Utilities;
-using Pixeval.Utilities.Threading;
 
-namespace Pixeval.Download.Models;
+namespace Pixeval.Download.Macros;
 
-public interface IDownloadTask
+[MetaPathMacro<IWorkViewModel>]
+public class ArtistNameMacro : ITransducer<IWorkViewModel>
 {
-    string Destination { get; }
+    public string Name => "artist_name";
 
-    CancellationHandle CancellationHandle { get; set; }
-
-    TaskCompletionSource Completion { get; }
-
-    DownloadState CurrentState { get; set; }
-
-    Exception? ErrorCause { get; set; }
-
-    double ProgressPercentage { get; }
-
-    Task DownloadAsync(Func<string, IProgress<double>?, CancellationHandle?, Task<Result<Stream>>> downloadStreamAsync);
+    public string Substitute(IWorkViewModel context)
+    {
+        return context.User.Name.Let(IoHelper.NormalizePathSegment);
+    }
 }

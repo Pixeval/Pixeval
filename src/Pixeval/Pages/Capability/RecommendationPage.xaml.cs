@@ -18,11 +18,9 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System.Linq;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Navigation;
 using Pixeval.CoreApi.Global.Enum;
-using Pixeval.CoreApi.Model;
 
 namespace Pixeval.Pages.Capability;
 
@@ -30,7 +28,7 @@ public sealed partial class RecommendationPage
 {
     public RecommendationPage() => InitializeComponent();
 
-    public override void OnPageActivated(NavigationEventArgs e) => ChangeSource();
+    private void RecommendationPage_OnLoaded(object sender, RoutedEventArgs e) => ChangeSource();
 
     private void WorkTypeComboBox_OnSelectionChanged(object? sender, SelectionChangedEventArgs e) => ChangeSource();
 

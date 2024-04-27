@@ -41,7 +41,7 @@ public sealed partial class IllustratorViewerPage
 
     public override void OnPageActivated(NavigationEventArgs e, object? parameter)
     {
-        _viewModel = Window.Content.To<FrameworkElement>().GetViewModel(parameter);
+        _viewModel = HWnd.GetViewModel(parameter);
     }
 
     protected override void SetTitleBarDragRegion(InputNonClientPointerSource sender, SizeInt32 windowSize, double scaleFactor, out int titleBarHeight)

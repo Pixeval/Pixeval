@@ -25,7 +25,9 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Pixeval.Controls.DialogContent;
+using Pixeval.CoreApi.Model;
 using Pixeval.Pages.IllustrationViewer;
+using Pixeval.Pages.NovelViewer;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
@@ -68,7 +70,7 @@ public sealed partial class DownloadListPage
         {
             if (dialogContent.DeleteLocalFiles)
                 await Task.WhenAll(_viewModel.SelectedEntries
-                    .Select(async t => await IoHelper.DeleteIllustrationTaskAsync(t.DownloadTask))
+                    .Select(async t => await IoHelper.DeleteTaskAsync(t.DownloadTask))
                     .ToArray());
 
             _viewModel.RemoveSelectedItems();
@@ -124,9 +126,17 @@ public sealed partial class DownloadListPage
         _viewModel.SelectedEntries = sender.SelectedItems.Cast<DownloadListEntryViewModel>().ToArray();
     }
 
-    private void DownloadListEntry_OnOpenIllustrationRequested(DownloadListEntry sender, DownloadListEntryViewModel viewModel)
+    private async void DownloadListEntry_OnOpenIllustrationRequested(DownloadListEntry sender, DownloadListEntryViewModel viewModel)
     {
-        viewModel.CreateWindowWithPage(_viewModel.DataProvider.Source);
+        switch (viewModel.Entry)
+        {
+            case Illustration illustration:
+                await IllustrationViewerHelper.CreateWindowWithPageAsync(illustration.Id);
+                break;
+            case Novel novel:
+                await NovelViewerHelper.CreateWindowWithPageAsync(novel.Id);
+                break;
+        }
     }
 
     private async void DownloadListEntry_OnViewModelChanged(DownloadListEntry sender, DownloadListEntryViewModel viewModel)

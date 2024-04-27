@@ -37,6 +37,8 @@ public abstract partial class ThumbnailEntryViewModel<T> : EntryViewModel<T>, IW
 {
     protected ThumbnailEntryViewModel(T entry) : base(entry) => InitializeCommands();
 
+    IWorkEntry IWorkViewModel.Entry => Entry;
+
     public long Id => Entry.Id;
 
     public int TotalBookmarks => Entry.TotalBookmarks;
@@ -70,7 +72,6 @@ public abstract partial class ThumbnailEntryViewModel<T> : EntryViewModel<T>, IW
     public BadgeMode XRestrictionCaption =>
         Entry.XRestrict switch
         {
-            XRestrict.R18 => BadgeMode.R18,
             XRestrict.R18G => BadgeMode.R18G,
             _ => BadgeMode.R18
         };
@@ -129,7 +130,7 @@ public abstract partial class ThumbnailEntryViewModel<T> : EntryViewModel<T>, IW
             return false;
         }
 
-        var cacheKey = MakoHelper.GetCacheKeyForThumbnailAsync(ThumbnailUrl);
+        var cacheKey = MakoHelper.GetThumbnailCacheKey(ThumbnailUrl);
 
         LoadingThumbnail = true;
         if (App.AppViewModel.AppSettings.UseFileCache && await App.AppViewModel.Cache.TryGetAsync<Stream>(cacheKey) is { } stream)

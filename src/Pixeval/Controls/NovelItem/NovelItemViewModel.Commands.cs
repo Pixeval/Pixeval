@@ -22,7 +22,14 @@ using System;
 using Microsoft.UI.Xaml.Input;
 using Pixeval.Util;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.UI.Xaml.Controls;
+using Pixeval.CoreApi.Model;
+using Pixeval.Download;
+using Pixeval.Download.Models;
+using Pixeval.Util.UI;
 
 namespace Pixeval.Controls;
 
@@ -30,24 +37,112 @@ public partial class NovelItemViewModel
 {
     protected override Task<bool> SetBookmarkAsync(long id, bool isBookmarked, bool privately = false, IEnumerable<string>? tags = null) => MakoHelper.SetNovelBookmarkAsync(id, isBookmarked, privately, tags);
 
-    protected override void SaveCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
+    protected override async void SaveCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
+        var hWnd = null as ulong?;
+        var documentViewerViewModel = null as DocumentViewerViewModel;
+        switch (args.Parameter)
+        {
+            case ValueTuple<ulong, DocumentViewerViewModel?> tuple:
+                hWnd = tuple.Item1;
+                documentViewerViewModel = tuple.Item2;
+                break;
+            case ValueTuple<ulong?, DocumentViewerViewModel?> tuple:
+                hWnd = tuple.Item1;
+                documentViewerViewModel = tuple.Item2;
+                break;
+            case ulong h:
+                hWnd = h;
+                break;
+        }
 
+        await SaveUtilityAsync(hWnd, documentViewerViewModel, App.AppViewModel.AppSettings.DefaultDownloadPathMacro);
     }
 
-    protected override void SaveAsCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
+    protected override async void SaveAsCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
+        ulong hWnd;
+        var documentViewerViewModel = null as DocumentViewerViewModel;
+        switch (args.Parameter)
+        {
+            case ValueTuple<ulong, DocumentViewerViewModel?> tuple:
+                hWnd = tuple.Item1;
+                documentViewerViewModel = tuple.Item2;
+                break;
+            case ulong h:
+                hWnd = h;
+                break;
+            default:
+                // 必须有Window来显示Picker
+                return;
+        }
 
+        var folder = await hWnd.OpenFolderPickerAsync();
+        if (folder is null)
+        {
+            hWnd.InfoGrowl(EntryItemResources.SaveAsCancelled);
+            return;
+        }
+
+        var name = Path.GetFileName(App.AppViewModel.AppSettings.DefaultDownloadPathMacro);
+        var path = Path.Combine(folder.Path, name);
+        await SaveUtilityAsync(hWnd, documentViewerViewModel, path);
     }
 
+    /// <summary>
+    /// <see cref="IllustrationDownloadTaskFactory"/>
+    /// </summary>
+    /// <param name="hWnd">承载提示<see cref="TeachingTip"/>的控件，为<see langword="null"/>则不显示</param>
+    /// <param name="source">为<see langword="null"/>则创建新的下载任务</param>
+    /// <param name="path">文件路径</param>
+    /// <returns></returns>
+    private async Task SaveUtilityAsync(ulong? hWnd, DocumentViewerViewModel? source, string path)
+    {
+        var ib = hWnd?.InfoGrowlReturn(EntryItemResources.NovelContentFetching);
+
+        using var scope = App.AppViewModel.AppServicesScope;
+        var factory = scope.ServiceProvider.GetRequiredService<IDownloadTaskFactory<NovelItemViewModel, NovelDownloadTask>>();
+        if (source is null)
+        {
+            var task = await factory.CreateAsync(this, path);
+            App.AppViewModel.DownloadManager.QueueTask(task);
+            hWnd?.RemoveSuccessGrowlAfterDelay(ib!, EntryItemResources.DownloadTaskCreated);
+        }
+        else
+        {
+            var task = factory.CreateIntrinsic(this, source, path);
+            App.AppViewModel.DownloadManager.QueueTask(task);
+            hWnd?.RemoveSuccessGrowlAfterDelay(ib!, EntryItemResources.Saved);
+        }
+    }
+
+    /// <summary>
+    /// 此处只会将文章内容设置到剪贴板，所以不需要异步就可以很快结束
+    /// </summary>
     protected override void CopyCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
+        var hWnd = null as ulong?;
+        NovelContent? novelContent;
+        switch (args.Parameter)
+        {
+            case ValueTuple<ulong?, NovelContent> tuple:
+                hWnd = tuple.Item1;
+                novelContent = tuple.Item2;
+                break;
+            case NovelContent f:
+                novelContent = f;
+                break;
+            default:
+                return;
+        }
 
+        UiHelper.ClipboardSetText(novelContent.Text);
+        hWnd?.SuccessGrowl(EntryItemResources.NovelSetToClipBoard);
     }
 
-    protected override Uri AppUri => MakoHelper.GenerateNovelAppUri(Id);
+    public override Uri AppUri => MakoHelper.GenerateNovelAppUri(Id);
 
-    protected override Uri WebUri => MakoHelper.GenerateNovelWebUri(Id);
+    public override Uri WebUri => MakoHelper.GenerateNovelWebUri(Id);
 
-    protected override Uri PixEzUri => MakoHelper.GenerateNovelPixEzUri(Id);
+    public override Uri PixEzUri => MakoHelper.GenerateNovelPixEzUri(Id);
 }

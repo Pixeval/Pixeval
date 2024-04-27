@@ -113,15 +113,11 @@ public static class MakoHelper
 
     public static Uri GenerateNovelAppUri(long id) => new($"{AppInfo.AppProtocol}://novel/{id}");
 
-    public static string GetCacheKeyForThumbnailAsync(string url)
-    {
-        return $"thumbnail-{url}";
-    }
+    public static string GetThumbnailCacheKey(string url) => $"thumbnail-{url}";
 
-    public static async ValueTask<string> GetIllustrationOriginalImageCacheKeyAsync(this IllustrationItemViewModel illustration)
-    {
-        return $"original-{await illustration.GetOriginalSourceUrlAsync()}";
-    }
+    public static string GetOriginalCacheKey(string url) => $"original-{url}";
+
+    public static async ValueTask<string> GetIllustrationOriginalCacheKeyAsync(this IllustrationItemViewModel illustration) => GetOriginalCacheKey(await illustration.GetOriginalSourceUrlAsync());
 
     public static SortDescription? GetSortDescriptionForIllustration(WorkSortOption sortOption)
     {

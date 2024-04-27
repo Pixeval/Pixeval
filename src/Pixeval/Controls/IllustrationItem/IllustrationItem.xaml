@@ -42,13 +42,13 @@
     </Grid.RenderTransform>
     <Grid.ContextFlyout>
         <MenuFlyout>
-            <MenuFlyoutItem Command="{x:Bind ViewModel.BookmarkCommand, Mode=OneWay}" CommandParameter="{x:Bind}" />
-            <MenuFlyoutItem Command="{x:Bind ViewModel.AddToBookmarkCommand, Mode=OneWay}" />
+            <MenuFlyoutItem Command="{x:Bind ViewModel.BookmarkCommand, Mode=OneWay}" CommandParameter="{x:Bind HWnd}" />
+            <MenuFlyoutItem Click="AddToBookmark_OnTapped" Command="{x:Bind ViewModel.AddToBookmarkCommand, Mode=OneWay}" />
             <MenuFlyoutSeparator />
-            <MenuFlyoutItem Command="{x:Bind ViewModel.SaveCommand, Mode=OneWay}" CommandParameter="{x:Bind}" />
+            <MenuFlyoutItem Command="{x:Bind ViewModel.SaveCommand, Mode=OneWay}" CommandParameter="{x:Bind HWnd}" />
             <MenuFlyoutSeparator />
             <MenuFlyoutItem Command="{x:Bind ViewModel.OpenInWebBrowserCommand, Mode=OneWay}" />
-            <MenuFlyoutItem Command="{x:Bind ViewModel.GenerateWebLinkCommand, Mode=OneWay}" CommandParameter="{x:Bind}" />
+            <MenuFlyoutItem Command="{x:Bind ViewModel.GenerateWebLinkCommand, Mode=OneWay}" CommandParameter="{x:Bind HWnd}" />
             <MenuFlyoutItem Command="{x:Bind ViewModel.GenerateLinkCommand, Mode=OneWay}" CommandParameter="{x:Bind}" />
             <MenuFlyoutSeparator />
             <MenuFlyoutItem Command="{x:Bind ViewModel.ShowQrCodeCommand, Mode=OneWay}" CommandParameter="{x:Bind QrCodeTeachingTip}" />
@@ -77,7 +77,7 @@
             HorizontalAlignment="Left"
             VerticalAlignment="Top"
             Command="{x:Bind ViewModel.BookmarkCommand, Mode=OneWay}"
-            CommandParameter="{x:Bind}" />
+            CommandParameter="{x:Bind HWnd}" />
         <Grid
             Margin="10"
             VerticalAlignment="Bottom"

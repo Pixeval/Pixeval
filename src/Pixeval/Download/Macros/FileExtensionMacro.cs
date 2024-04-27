@@ -24,13 +24,24 @@ using Pixeval.Util.IO;
 
 namespace Pixeval.Download.Macros;
 
-[MetaPathMacro(typeof(IllustrationItemViewModel))]
-public class FileExtensionMacro : IMacro<IllustrationItemViewModel>.ITransducer
+[MetaPathMacro<IWorkViewModel>]
+public class FileExtensionMacro : ITransducer<IWorkViewModel>
 {
-    public string Name => "illust_ext";
+    public const string NameConst = "ext";
 
-    public string Substitute(IllustrationItemViewModel context)
+    public const string NameConstToken = $"<{NameConst}>";
+
+    public string Name => NameConst;
+
+    public string Substitute(IWorkViewModel context)
     {
-        return context.IsUgoira ? IoHelper.GetUgoiraExtension() : IoHelper.GetIllustrationExtension(Name);
+        return context switch
+        {
+            IllustrationItemViewModel illustrationItemViewModel => illustrationItemViewModel.IsUgoira
+                ? IoHelper.GetUgoiraExtension()
+                : IoHelper.GetIllustrationExtension(),
+            NovelItemViewModel => IoHelper.GetNovelExtension(),
+            _ => ""
+        };
     }
 }

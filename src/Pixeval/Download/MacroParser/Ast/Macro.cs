@@ -26,26 +26,26 @@ namespace Pixeval.Download.MacroParser.Ast;
 public record Macro<TContext>(PlainText<TContext> MacroName, OptionalMacroParameter<TContext>? OptionalParameters)
     : SingleNode<TContext>
 {
-    public override string Evaluate(IMetaPathMacroProvider<TContext> env, TContext context)
+    public override string Evaluate(IMacro[] env, TContext context)
     {
         var result = env.TryResolve(MacroName.Text);
         switch (result)
         {
-            case IMacro<TContext>.ITransducer transducer:
+            case ITransducer<TContext> transducer:
                 return OptionalParameters is not null
                     ? ThrowUtils.Throw<string>(new IllegalMacroException(MacroParserResources.NonParameterizedMacroBearingParameterFormatted.Format(MacroName)))
                     : transducer.Substitute(context);
-            case IMacro<TContext>.IPredicate predicate:
+            case IPredicate<TContext> predicate:
                 if (predicate.Match(context))
                 {
                     return OptionalParameters?.Evaluate(env, context) ?? ThrowUtils.Throw<string>(new IllegalMacroException(MacroParserResources.ParameterizedMacroMissingParameterFormatted.Format(MacroName)));
                 }
 
                 return "";
-            case IMacro<TContext>.Unknown:
+            case Unknown:
                 return ThrowUtils.Throw<string>(new IllegalMacroException(MacroParserResources.UnknownMacroNameFormatted.Format(MacroName)));
             default:
-                return ThrowHelper.ArgumentOutOfRange<IMacro<TContext>, string>(result);
+                return ThrowHelper.ArgumentOutOfRange<IMacro, string>(result);
         }
     }
 }

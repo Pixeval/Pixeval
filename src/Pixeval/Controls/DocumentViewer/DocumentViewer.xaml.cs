@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Documents;
 using Pixeval.Utilities;
@@ -7,23 +8,26 @@ using WinUI3Utilities.Attributes;
 
 namespace Pixeval.Controls;
 
-[DependencyProperty<long>("NovelId", "-1", nameof(OnNovelIdChanged))]
+[DependencyProperty<NovelItemViewModel>("NovelItem", DependencyPropertyDefaultValue.UnsetValue, nameof(OnNovelItemChanged), IsNullable = true)]
 [DependencyProperty<double>("NovelMaxWidth", "1000d")]
 [DependencyProperty<double>("LineHeight", "28d")]
 [DependencyProperty<int>("CurrentPage", "0", nameof(OnCurrentPageChanged))]
 [DependencyProperty<int>("PageCount", "0", nameof(OnPageCountChanged))]
 [DependencyProperty<bool>("IsMultiPage", "false")]
+[DependencyProperty<bool>("LoadSuccessfully", "true")]
 [DependencyProperty<bool>("IsLoading", "false")]
+[INotifyPropertyChanged]
 public sealed partial class DocumentViewer
 {
-    private DocumentViewerViewModel? ViewModel { get; set; }
+    [ObservableProperty]
+    private DocumentViewerViewModel? _viewModel;
 
     public DocumentViewer() => InitializeComponent();
 
-    public static async void OnNovelIdChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    public static async void OnNovelItemChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         var viewer = d.To<DocumentViewer>();
-        if (viewer.NovelId is -1)
+        if (viewer.NovelItem is null)
         {
             viewer.ViewModel = null;
             return;
@@ -31,8 +35,9 @@ public sealed partial class DocumentViewer
 
         try
         {
+            viewer.LoadSuccessfully = false;
             viewer.IsLoading = true;
-            viewer.ViewModel = await DocumentViewerViewModel.CreateAsync(viewer.NovelId);
+            viewer.ViewModel = await DocumentViewerViewModel.CreateAsync(viewer.NovelItem, _ => viewer.LoadSuccessfully = true);
             viewer.ViewModel.JumpToPageRequested += newPage => viewer.CurrentPage = newPage;
             viewer.ViewModel.Pages.CollectionChanged += (_, _) => viewer.PageCount = viewer.ViewModel.Pages.Count;
             viewer.PageCount = viewer.ViewModel.Pages.Count;
@@ -50,7 +55,7 @@ public sealed partial class DocumentViewer
     public static void OnCurrentPageChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         var viewer = d.To<DocumentViewer>();
-        if (viewer.NovelId is -1)
+        if (viewer.NovelItem is null)
             return;
 
         viewer.UpdateContent();

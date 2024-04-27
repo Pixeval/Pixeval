@@ -19,8 +19,10 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using Microsoft.UI.Xaml.Input;
 using Pixeval.Controls;
 using Pixeval.Database;
 using Pixeval.Download;
@@ -29,15 +31,16 @@ using Pixeval.Util.IO;
 using Pixeval.Utilities;
 using WinUI3Utilities;
 using Microsoft.UI.Xaml.Media.Imaging;
+using Pixeval.CoreApi.Model;
 
 namespace Pixeval.Pages.Download;
 
 /// <inheritdoc/>
-public sealed class DownloadListEntryViewModel : IllustrationItemViewModel
+public sealed class DownloadListEntryViewModel : ThumbnailEntryViewModel<IWorkEntry>
 {
-    public IllustrationDownloadTask DownloadTask { get; }
+    public DownloadTaskBase DownloadTask { get; }
 
-    public DownloadListEntryViewModel(IllustrationDownloadTask downloadTask) : base(downloadTask.IllustrationViewModel.Entry)
+    public DownloadListEntryViewModel(DownloadTaskBase downloadTask) : base(downloadTask.ViewModel.Entry)
     {
         DownloadTask = downloadTask;
         DownloadTask.PropertyChanged += (_, e) =>
@@ -90,7 +93,7 @@ public sealed class DownloadListEntryViewModel : IllustrationItemViewModel
             return false;
         }
 
-        if (DownloadTask.CurrentState is DownloadState.Completed || DownloadTask.Type is DownloadItemType.Manga)
+        if (DownloadTask.CurrentState is DownloadState.Completed || DownloadTask.Type is DownloadItemType.Manga or DownloadItemType.Novel)
         {
             var path = DownloadTask.Destination.Format(0);
             if (File.Exists(path) && !LoadingThumbnail)
@@ -106,7 +109,6 @@ public sealed class DownloadListEntryViewModel : IllustrationItemViewModel
 
         return await base.TryLoadThumbnailAsync(key);
     }
-
     public bool IsRedownloadItemEnabled => DownloadTask.CurrentState is DownloadState.Completed or DownloadState.Error;
 
     public bool IsCancelItemEnabled => DownloadTask.CurrentState is DownloadState.Running or DownloadState.Queued;
@@ -114,4 +116,18 @@ public sealed class DownloadListEntryViewModel : IllustrationItemViewModel
     public bool IsError => DownloadTask.CurrentState is DownloadState.Error;
 
     public bool IsPaused => DownloadTask.CurrentState is DownloadState.Paused;
+
+    public override Uri AppUri => ThrowHelper.NotSupported<Uri>();
+
+    public override Uri WebUri => ThrowHelper.NotSupported<Uri>();
+
+    public override Uri PixEzUri => ThrowHelper.NotSupported<Uri>();
+
+    protected override Task<bool> SetBookmarkAsync(long id, bool isBookmarked, bool privately = false, IEnumerable<string>? tags = null) => ThrowHelper.NotSupported<Task<bool>>();
+
+    protected override void SaveCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args) => ThrowHelper.NotSupported();
+
+    protected override void SaveAsCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args) => ThrowHelper.NotSupported();
+
+    protected override void CopyCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args) => ThrowHelper.NotSupported();
 }

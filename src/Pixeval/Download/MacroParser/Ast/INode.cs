@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -20,7 +20,7 @@
 
 namespace Pixeval.Download.MacroParser.Ast;
 
-public interface IMetaPathNode<TContext>
+public interface IMetaPathNode<in TContext>
 {
-    string Evaluate(IMetaPathMacroProvider<TContext> env, TContext context);
+    string Evaluate(IMacro[] env, TContext context);
 }

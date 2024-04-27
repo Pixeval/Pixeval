@@ -27,6 +27,8 @@ public partial record UgoiraMetadataResponse
 {
     [JsonPropertyName("ugoira_metadata")]
     public required UgoiraMetadata UgoiraMetadataInfo { get; set; }
+
+    public string LargeUrl => UgoiraMetadataInfo.ZipUrls.Large;
 }
 
 [Factory]

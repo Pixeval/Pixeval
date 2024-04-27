@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Extensions.DependencyInjection;
@@ -38,45 +39,128 @@ using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Utilities;
 using Pixeval.Utilities.Threading;
+using System.Text;
+using QuestPDF.Fluent;
+using QuestPDF.Infrastructure;
 
 namespace Pixeval.Controls;
 
-public class DocumentViewerViewModel(NovelContent novelContent) : ObservableObject, IDisposable
+public class DocumentViewerViewModel(NovelContent novelContent) : ObservableObject, IDisposable, INovelParserViewModel<SoftwareBitmapSource>, INovelParserViewModel<Stream>
 {
+    /// <summary>
+    /// 需要从外部Invoke
+    /// </summary>
     public Action<int>? JumpToPageRequested;
 
     public NovelContent NovelContent { get; } = novelContent;
 
-    public Dictionary<long, NovelIllustInfo> IllustrationLookup { get; } = [];
+    public int TotalCount { get; } = novelContent.Images.Length + novelContent.Illusts.Length;
+
+    public string? ImageExtension { get; set; }
+
+    public string[] AllUrls { get; } = novelContent.Images.Select(x => x.ThumbnailUrl).Concat(novelContent.Illusts.Select(x => x.ThumbnailUrl)).ToArray();
+
+    public string[] AllTokens { get; } = novelContent.Images.Select(x => x.NovelImageId.ToString()).Concat(novelContent.Illusts.Select(x => $"{x.Id}-{x.Page}")).ToArray();
+
+    public Dictionary<(long, int), NovelIllustInfo> IllustrationLookup { get; } = [];
+
+    Dictionary<(long, int), Stream> INovelParserViewModel<Stream>.IllustrationImages => IllustrationStreams;
+
+    Dictionary<long, Stream> INovelParserViewModel<Stream>.UploadedImages => UploadedStreams;
 
     public Dictionary<(long, int), SoftwareBitmapSource> IllustrationImages { get; } = [];
 
     public Dictionary<long, SoftwareBitmapSource> UploadedImages { get; } = [];
 
+    public Dictionary<(long, int), Stream> IllustrationStreams { get; } = [];
+
+    public Dictionary<long, Stream> UploadedStreams { get; } = [];
+
     public ObservableCollection<List<Paragraph>> Pages { get; } = [];
 
-    public async Task LoadContentAsync()
+    public async Task LoadRtfContentAsync()
     {
-        _ = LoadImagesAsync();
-
         var index = 0;
         var length = NovelContent.Text.Length;
-        Pages.Add(PixivNovelParser.Parse(NovelContent.Text, ref index, this));
+        var parser = new PixivNovelRtfParser();
+        Pages.Add(parser.Parse(NovelContent.Text, ref index, this));
         await Task.Yield();
         while (index < length)
         {
             if (LoadingCancellationHandle.IsCancelled)
                 break;
-            Pages.Add(PixivNovelParser.Parse(NovelContent.Text, ref index, this));
+            Pages.Add(parser.Parse(NovelContent.Text, ref index, this));
         }
+    }
+
+    public StringBuilder LoadMdContent(CancellationHandle handle)
+    {
+        var index = 0;
+        var length = NovelContent.Text.Length;
+
+        var sb = new StringBuilder();
+        for (var i = 0; index < length; ++i)
+        {
+            var parser = new PixivNovelMdParser(sb, i);
+            _ = parser.Parse(NovelContent.Text, ref index, this);
+            if (handle.IsCancelled)
+                break;
+        }
+
+        return sb;
+    }
+
+    public StringBuilder LoadHtmlContent(CancellationHandle handle)
+    {
+        var index = 0;
+        var length = NovelContent.Text.Length;
+
+        var sb = new StringBuilder();
+        for (var i = 0; index < length; ++i)
+        {
+            var parser = new PixivNovelHtmlParser(sb, i);
+            _ = parser.Parse(NovelContent.Text, ref index, this);
+            if (handle.IsCancelled)
+                break;
+        }
+
+        return sb;
+    }
+
+    public Document LoadPdfContent(CancellationHandle handle)
+    {
+        var index = 0;
+        var length = NovelContent.Text.Length;
+
+        PixivNovelPdfParser.Init();
+
+        return
+            Document.Create(t =>
+                t.Page(p =>
+                {
+                    p.MarginHorizontal(90);
+                    p.MarginVertical(72);
+                    p.DefaultTextStyle(new TextStyle().LineHeight(2));
+                    p.Content().Column(c =>
+                    {
+                        for (var i = 0; index < length; ++i)
+                        {
+                            var parser = new PixivNovelPdfParser(c, i);
+                            _ = parser.Parse(NovelContent.Text, ref index, this);
+                            if (handle.IsCancelled)
+                                break;
+                        }
+                    });
+                }));
     }
 
     public async Task LoadImagesAsync()
     {
         foreach (var illust in NovelContent.Illusts)
         {
-            IllustrationLookup[illust.Id] = illust;
-            IllustrationImages[(illust.Id, illust.Page)] = null!;
+            var key = (illust.Id, illust.Page);
+            IllustrationLookup[key] = illust;
+            IllustrationImages[key] = null!;
         }
 
         foreach (var image in NovelContent.Images)
@@ -87,7 +171,8 @@ public class DocumentViewerViewModel(NovelContent novelContent) : ObservableObje
             if (LoadingCancellationHandle.IsCancelled)
                 break;
             var key = (illust.Id, illust.Page);
-            IllustrationImages[key] = await LoadThumbnailAsync(illust.Illust.Images.Medium);
+            var temp = IllustrationStreams[key] = await GetThumbnailAsync(illust.ThumbnailUrl);
+            IllustrationImages[key] = await temp.GetSoftwareBitmapSourceAsync(false);
             OnPropertyChanged(nameof(IllustrationImages) + key.GetHashCode());
         }
 
@@ -95,24 +180,56 @@ public class DocumentViewerViewModel(NovelContent novelContent) : ObservableObje
         {
             if (LoadingCancellationHandle.IsCancelled)
                 break;
-            UploadedImages[image.NovelImageId] = await LoadThumbnailAsync(image.Urls.X1200);
+            var temp = UploadedStreams[image.NovelImageId] = await LoadThumbnailAsync(image.ThumbnailUrl);
+            UploadedImages[image.NovelImageId] = await temp.GetSoftwareBitmapSourceAsync(false);
             OnPropertyChanged(nameof(UploadedImages) + image.NovelImageId);
         }
     }
 
-    private async Task<SoftwareBitmapSource> LoadThumbnailAsync(string url)
+    public IEnumerable<string>? GetTags(int index)
     {
-        var cacheKey = MakoHelper.GetCacheKeyForThumbnailAsync(url);
+        if (index >= NovelContent.Images.Length)
+            return null;
+        var illust = NovelContent.Illusts[index - NovelContent.Images.Length];
+        return illust.Illust.Tags.Select(t => t.Tag);
+    }
+
+    public Stream GetStream(int index)
+    {
+        if (index < NovelContent.Images.Length)
+            return UploadedStreams[NovelContent.Images[index].NovelImageId];
+        var illust = NovelContent.Illusts[index - NovelContent.Images.Length];
+        return IllustrationStreams[(illust.Id, illust.Page)];
+    }
+
+    public void SetStream(int index, Stream? stream)
+    {
+        if (index < NovelContent.Images.Length)
+        {
+            UploadedStreams[NovelContent.Images[index].NovelImageId] = TryGetNotAvailableImageStream(stream);
+        }
+        else
+        {
+            var illust = NovelContent.Illusts[index - NovelContent.Images.Length];
+            IllustrationStreams[(illust.Id, illust.Page)] = TryGetNotAvailableImageStream(stream);
+        }
+    }
+
+    public Stream TryGetNotAvailableImageStream(Stream? result) => result ?? AppInfo.GetNotAvailableImageStream();
+
+    private async Task<Stream> LoadThumbnailAsync(string url)
+    {
+        var cacheKey = MakoHelper.GetThumbnailCacheKey(url);
 
         if (App.AppViewModel.AppSettings.UseFileCache && await App.AppViewModel.Cache.TryGetAsync<Stream>(cacheKey) is { } stream)
         {
-            return await stream.GetSoftwareBitmapSourceAsync(false);
+            return stream;
         }
 
         var s = await GetThumbnailAsync(url);
         if (App.AppViewModel.AppSettings.UseFileCache)
             await App.AppViewModel.Cache.AddAsync(cacheKey, s, TimeSpan.FromDays(1));
-        return await s.GetSoftwareBitmapSourceAsync(false);
+        return s;
     }
 
     private CancellationHandle LoadingCancellationHandle { get; } = new();
@@ -128,11 +245,13 @@ public class DocumentViewerViewModel(NovelContent novelContent) : ObservableObje
             : AppInfo.GetNotAvailableImageStream();
     }
 
-    public static async Task<DocumentViewerViewModel> CreateAsync(long novelId)
+    public static async Task<DocumentViewerViewModel> CreateAsync(NovelItemViewModel novelItem, Action<Task> callback)
     {
-        var novelContent = await App.AppViewModel.MakoClient.GetNovelContentAsync(novelId);
+        var novelContent = await novelItem.GetNovelContentAsync();
         var vm = new DocumentViewerViewModel(novelContent);
-        _ = vm.LoadContentAsync();
+        var task1 = vm.LoadImagesAsync();
+        var task2 = vm.LoadRtfContentAsync();
+        _ = Task.WhenAll(task1, task2).ContinueWith(callback, TaskScheduler.FromCurrentSynchronizationContext());
         AddHistory();
 
         return vm;
@@ -141,9 +260,21 @@ public class DocumentViewerViewModel(NovelContent novelContent) : ObservableObje
         {
             using var scope = App.AppViewModel.AppServicesScope;
             var manager = scope.ServiceProvider.GetRequiredService<BrowseHistoryPersistentManager>();
-            _ = manager.Delete(x => x.Id == novelId && x.Type == SimpleWorkType.Novel);
-            manager.Insert(new BrowseHistoryEntry { Id = novelId, Type = SimpleWorkType.Novel });
+            _ = manager.Delete(x => x.Id == novelItem.Id && x.Type == SimpleWorkType.Novel);
+            manager.Insert(new BrowseHistoryEntry { Id = novelItem.Id, Type = SimpleWorkType.Novel });
         }
+    }
+
+    public INovelParserViewModel<Stream> Clone()
+    {
+        var vm = new DocumentViewerViewModel(NovelContent);
+        foreach (var (key, value) in IllustrationLookup)
+            vm.IllustrationLookup[key] = value;
+        foreach (var (key, value) in IllustrationStreams)
+            vm.IllustrationStreams[key] = value;
+        foreach (var (key, value) in UploadedStreams)
+            vm.UploadedStreams[key] = value;
+        return vm;
     }
 
     public void Dispose()
@@ -151,7 +282,16 @@ public class DocumentViewerViewModel(NovelContent novelContent) : ObservableObje
         LoadingCancellationHandle.Cancel();
         foreach (var (_, value) in IllustrationImages)
             value?.Dispose();
+        IllustrationImages.Clear();
         foreach (var (_, value) in UploadedImages)
             value?.Dispose();
+        UploadedImages.Clear();
+        foreach (var (_, value) in IllustrationStreams)
+            value?.Dispose();
+        IllustrationStreams.Clear();
+        foreach (var (_, value) in UploadedStreams)
+            value?.Dispose();
+        UploadedStreams.Clear();
+        IllustrationLookup.Clear();
     }
 }

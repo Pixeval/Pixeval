@@ -80,8 +80,8 @@ public static class LocalizedResourceAttributeHelper
     {
         return resourceLoader.GetMember(key, BindingFlags.Static | BindingFlags.Public) switch
         {
-        [FieldInfo fi] => fi?.GetValue(null),
-        [PropertyInfo pi] => pi?.GetValue(null),
+            [FieldInfo fi] => fi?.GetValue(null),
+            [PropertyInfo pi] => pi?.GetValue(null),
             _ => null
         } as string;
     }

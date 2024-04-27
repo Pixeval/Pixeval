@@ -117,7 +117,7 @@ public partial class App
             AppViewModel.AppDebugTrace.ExitedSuccessfully = false;
             AppInfo.SaveDebugTrace(AppViewModel.AppDebugTrace);
 
-            s.To<Frame>().NavigateTo<LoginPage>(w);
+            s.To<Frame>().NavigateTo<LoginPage>(w.HWnd);
         }
     }
 
@@ -140,6 +140,7 @@ public partial class App
             using var scope = AppViewModel.AppServicesScope;
             var logger = scope.ServiceProvider.GetRequiredService<FileLogger>();
             logger.LogError(e.Message, e.Exception);
+            e.Handled = true;
 #if DEBUG
             if (Debugger.IsAttached)
                 Debugger.Break();

@@ -21,6 +21,7 @@
 using Windows.Foundation;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Pixeval.Controls.Windowing;
 using WinUI3Utilities;
 
 namespace Pixeval.Util.UI;
@@ -42,5 +43,26 @@ public static class ContentDialogBuilder
             title,
             content,
             okButtonContent ?? MessageContentDialogResources.OkButtonContent);
+    }
+    public static IAsyncOperation<ContentDialogResult> CreateOkCancelAsync(this ulong hWnd, object? title, object? content, string? okButtonContent = null, string? cancelButtonContent = null)
+    {
+        return WindowFactory.ForkedWindows[hWnd].Content.ShowContentDialogAsync(
+            title,
+            content,
+            okButtonContent ?? MessageContentDialogResources.OkButtonContent,
+            cancelButtonContent ?? MessageContentDialogResources.CancelButtonContent);
+    }
+
+    public static IAsyncOperation<ContentDialogResult> CreateAcknowledgementAsync(this ulong hWnd, object? title, object? content, string? okButtonContent = null)
+    {
+        return WindowFactory.ForkedWindows[hWnd].Content.ShowContentDialogAsync(
+            title,
+            content,
+            okButtonContent ?? MessageContentDialogResources.OkButtonContent);
+    }
+
+    public static IAsyncOperation<ContentDialogResult> ShowContentDialogAsync(this ulong hWnd, object? title, object? content, string primaryButtonText = "", string secondaryButtonText = "", string closeButtonText = "")
+    {
+        return WindowFactory.ForkedWindows[hWnd].Content.ShowContentDialogAsync(title, content, primaryButtonText, secondaryButtonText, closeButtonText);
     }
 }

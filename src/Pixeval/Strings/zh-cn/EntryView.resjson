@@ -8,6 +8,8 @@
     "SaveContextItem/Text": "保存",
     "ShowPixEzQrCodeContextItem/Text": "PixEz二维码",
     "ShowQrCodeContextItem/Text": "作品链接二维码",
+    "AddToBookmarkTeachingTip/CloseButtonContent": "添加收藏",
+    "AddedToBookmark": "已添加收藏",
     "IllustrationQrCodeTeachingTip/TeachingTipTitle": "作品链接二维码",
     "IllustratorQrCodeTeachingTip/TeachingTipTitle": "画师链接二维码"
 }

@@ -6,6 +6,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media.Animation;
+using Pixeval.Controls.Windowing;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.Messages;
 using Pixeval.Util.UI;
@@ -22,9 +23,15 @@ public sealed partial class NovelItem
 
     public event TypedEventHandler<NovelItem, NovelItemViewModel>? OpenNovelRequested;
 
-    public NovelItem() => InitializeComponent();
+    public event TypedEventHandler<NovelItem, NovelItemViewModel>? RequestAddToBookmark;
 
+    public ulong HWnd => WindowFactory.GetWindowForElement(this).HWnd;
+
+#pragma warning disable CS0067 // Event is never used
     public event Func<TeachingTip> RequestTeachingTip = null!;
+#pragma warning restore CS0067 // Event is never used
+
+    public NovelItem() => InitializeComponent();
 
     private int _isPointerOver;
 
@@ -120,4 +127,9 @@ public sealed partial class NovelItem
     }
 
     private XamlUICommand OpenNovelCommand { get; } = EntryItemResources.OpenNovel.GetCommand(IconGlyph.ReadingModeE736);
+
+    private void AddToBookmark_OnTapped(object sender, TappedRoutedEventArgs e)
+    {
+        RequestAddToBookmark?.Invoke(this, ViewModel);
+    }
 }
