@@ -115,7 +115,7 @@ public class NovelDownloadTask : DownloadTaskBase
             var dest = ActualDestinations.Count > i + 1 ? ActualDestinations[i + 1] : null;
             var stream = await DownloadAsyncCore(downloadStreamAsync, DocumentViewModel.AllUrls[i], dest);
             DocumentViewModel.SetStream(i, stream);
-            StartProgress = 100 * ProgressRatio;
+            StartProgress += 100 * ProgressRatio;
         }
         await ManageResult();
     }
@@ -157,7 +157,7 @@ public class NovelDownloadTask : DownloadTaskBase
                 await File.WriteAllTextAsync(ActualDestinations[0], sbHtml.ToString());
                 break;
             case NovelDownloadFormat.Md:
-                var sbMd = DocumentViewModel.LoadHtmlContent(CancellationHandle);
+                var sbMd = DocumentViewModel.LoadMdContent(CancellationHandle);
                 await File.WriteAllTextAsync(ActualDestinations[0], sbMd.ToString());
                 break;
             default:

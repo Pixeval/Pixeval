@@ -25,7 +25,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.Graphics;
-using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
 using Pixeval.Controls;
@@ -70,22 +69,22 @@ public static class NovelViewerHelper
         CreateWindowWithPage(novelViewModel.Entry, (novelViewViewModel, index));
     }
 
-    public static NovelViewerPageViewModel GetViewModel(this FrameworkElement element, object? param)
+    public static NovelViewerPageViewModel GetViewModel(this ulong hWnd, object? param)
     {
         return param switch
         {
             (NovelViewViewModel novelViewViewModel, int index) => new NovelViewerPageViewModel(
-                novelViewViewModel, index, element),
+                novelViewViewModel, index, hWnd),
             (IEnumerable novelViewModels, int index) => new NovelViewerPageViewModel(
-                novelViewModels.Cast<NovelItemViewModel>(), index, element),
+                novelViewModels.Cast<NovelItemViewModel>(), index, hWnd),
             _ => ThrowHelper.Argument<object, NovelViewerPageViewModel>(param, "Invalid parameter type.")
         };
     }
 
     public static void CreateWindowWithPage(Novel novel, object param)
     {
-        WindowFactory.RootWindow.Fork(out var w)
-            .WithLoaded((o, _) => o.To<Frame>().NavigateTo<NovelViewerPage>(w,
+        WindowFactory.RootWindow.Fork(out var h)
+            .WithLoaded((o, _) => o.To<Frame>().NavigateTo<NovelViewerPage>(h,
                 param,
                 new SuppressNavigationTransitionInfo()))
             .WithSizeLimit(640, 360)

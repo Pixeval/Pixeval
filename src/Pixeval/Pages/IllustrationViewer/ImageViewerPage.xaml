@@ -54,7 +54,7 @@
                         </AppBarButton>
                         <AppBarSeparator />
                         <!--<AppBarButton Command="{x:Bind _viewModel.IllustrationViewModel.GenerateLinkCommand}" />-->
-                        <AppBarButton Command="{x:Bind _viewModel.IllustrationViewModel.GenerateWebLinkCommand}" CommandParameter="{x:Bind}" />
+                        <AppBarButton Command="{x:Bind _viewModel.IllustrationViewModel.GenerateWebLinkCommand}" CommandParameter="{x:Bind HWnd}" />
                         <AppBarButton Command="{x:Bind _viewModel.IllustrationViewModel.OpenInWebBrowserCommand}" />
                         <!--<AppBarButton
                                 Command="{x:Bind _viewModel.ShowQrCodeCommand}"

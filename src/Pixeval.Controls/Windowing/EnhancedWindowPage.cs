@@ -30,34 +30,35 @@ namespace Pixeval.Controls;
 
 public static class EnhancedWindowPageExtension
 {
-    public static void NavigateTo<T>(this Frame frame, EnhancedWindow window, object? parameter = null, NavigationTransitionInfo? info = null) where T : EnhancedWindowPage
+    public static void NavigateTo<T>(this Frame frame, ulong hWnd, object? parameter = null, NavigationTransitionInfo? info = null) where T : EnhancedWindowPage
     {
-        _ = frame.Navigate(typeof(T), new NavigateParameter(parameter, window), info);
+        _ = frame.Navigate(typeof(T), new NavigateParameter(parameter, hWnd), info);
     }
 }
 
-file record NavigateParameter(object? Parameter, EnhancedWindow Window);
+file record NavigateParameter(object? Parameter, ulong HWnd);
 
 public class EnhancedWindowPage : EnhancedPage
 {
-    protected EnhancedWindow Window { get; private set; } = null!;
+    protected ulong HWnd { get; private set; } = 0;
 
     public sealed override void OnPageActivated(NavigationEventArgs e)
     {
         var parameter = e.Parameter.To<NavigateParameter>();
-        Window = parameter.Window;
+        HWnd = parameter.HWnd;
         if (this is SupportCustomTitleBarDragRegionPage page)
             Loaded += (_, _) =>
             {
-                page.RaiseSetTitleBarDragRegion();
-                Window.AppWindow.Changed += (s, args) =>
+                var window = WindowFactory.ForkedWindows[HWnd];
+                page.RaiseSetTitleBarDragRegion(window);
+                window.AppWindow.Changed += (s, args) =>
                 {
                     // 等待XAML元素变化后计算
                     if (args.DidSizeChange)
                         _ = Task.Delay(500).ContinueWith(_ =>
-                             page.RaiseSetTitleBarDragRegion(), TaskScheduler.FromCurrentSynchronizationContext());
+                             page.RaiseSetTitleBarDragRegion(window), TaskScheduler.FromCurrentSynchronizationContext());
                     else
-                        page.RaiseSetTitleBarDragRegion();
+                        page.RaiseSetTitleBarDragRegion(window);
                 };
             };
 
@@ -66,7 +67,7 @@ public class EnhancedWindowPage : EnhancedPage
 
     protected void Navigate(Type type, Frame frame, object? parameter, NavigationTransitionInfo? info = null)
     {
-        _ = frame.Navigate(type, new NavigateParameter(parameter, Window), info);
+        _ = frame.Navigate(type, new NavigateParameter(parameter, HWnd), info);
     }
 
     protected void Navigate<TPage>(Frame frame, object? parameter, NavigationTransitionInfo? info = null) where TPage : EnhancedWindowPage

@@ -29,7 +29,6 @@ using Windows.System;
 using Windows.System.UserProfile;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
 using Pixeval.Attributes;
 using Pixeval.Controls;
@@ -121,7 +120,7 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
         }
     }
 
-    public ImageViewerPageViewModel(IllustrationItemViewModel illustrationViewModel, IllustrationItemViewModel originalIllustrationViewModel, FrameworkElement frameworkElement) : base(frameworkElement)
+    public ImageViewerPageViewModel(IllustrationItemViewModel illustrationViewModel, IllustrationItemViewModel originalIllustrationViewModel, ulong hWnd) : base(hWnd)
     {
         IllustrationViewModel = illustrationViewModel;
         OriginalIllustrationViewModel = originalIllustrationViewModel;
@@ -336,7 +335,7 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
 
     private void ShareCommandExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
-        Window.ShowShareUi();
+        HWnd.ShowShareUi();
     }
 
     private void InitializeCommands()
@@ -389,9 +388,7 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
 
     private void IsNotUgoiraAndLoadingCompletedCanExecuteRequested(XamlUICommand sender, CanExecuteRequestedEventArgs args) => args.CanExecute = !IllustrationViewModel.IsUgoira && LoadSuccessfully;
 
-    public (FrameworkElement, Func<IProgress<int>?, Task<Stream?>>) DownloadParameter => (FrameworkElement, GetOriginalImageSourceAsync);
-
-    public (Window, Func<IProgress<int>?, Task<Stream?>>) DownloadAsParameter => (Window, GetOriginalImageSourceAsync);
+    public (ulong, Func<IProgress<int>?, Task<Stream?>>) DownloadParameter => (HWnd, GetOriginalImageSourceAsync);
 
     public XamlUICommand PlayGifCommand { get; } = "".GetCommand(IconGlyph.StopE71A);
 

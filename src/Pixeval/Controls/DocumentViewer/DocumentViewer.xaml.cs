@@ -20,11 +20,7 @@ namespace Pixeval.Controls;
 public sealed partial class DocumentViewer
 {
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(DownloadParameter))]
-    [NotifyPropertyChangedFor(nameof(DownloadAsParameter))]
     private DocumentViewerViewModel? _viewModel;
-
-    public Window Window { get; set; } = null!;
 
     public DocumentViewer() => InitializeComponent();
 
@@ -41,8 +37,7 @@ public sealed partial class DocumentViewer
         {
             viewer.LoadSuccessfully = false;
             viewer.IsLoading = true;
-            viewer.ViewModel = await DocumentViewerViewModel.CreateAsync(viewer.NovelItem, _ =>
-                viewer.DispatcherQueue.TryEnqueue(() => viewer.LoadSuccessfully = true));
+            viewer.ViewModel = await DocumentViewerViewModel.CreateAsync(viewer.NovelItem, _ => viewer.LoadSuccessfully = true);
             viewer.ViewModel.JumpToPageRequested += newPage => viewer.CurrentPage = newPage;
             viewer.ViewModel.Pages.CollectionChanged += (_, _) => viewer.PageCount = viewer.ViewModel.Pages.Count;
             viewer.PageCount = viewer.ViewModel.Pages.Count;
@@ -80,8 +75,4 @@ public sealed partial class DocumentViewer
     }
 
     private List<Paragraph>? CurrentParagraph => ViewModel is not null && CurrentPage < PageCount ? ViewModel.Pages[CurrentPage] : null;
-
-    public (FrameworkElement, DocumentViewerViewModel?) DownloadParameter => (this, ViewModel);
-
-    public (Window, DocumentViewerViewModel?) DownloadAsParameter => (Window, ViewModel);
 }

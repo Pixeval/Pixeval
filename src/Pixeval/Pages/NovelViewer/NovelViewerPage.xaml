@@ -160,8 +160,7 @@
                             NovelItem="{x:Bind _viewModel.CurrentNovel, Mode=OneWay}"
                             NovelMaxWidth="{x:Bind _viewModel.NovelMaxWidth, Mode=OneWay}"
                             PageCount="{x:Bind _viewModel.PageCount, Mode=TwoWay}"
-                            Tapped="DocumentViewer_OnTapped"
-                            Window="{x:Bind Window}" />
+                            Tapped="DocumentViewer_OnTapped" />
 
                         <Grid Visibility="{x:Bind DocumentViewer.IsLoading, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
                             <Rectangle Fill="{ThemeResource PixevalAppAcrylicBrush}" />
@@ -278,11 +277,11 @@
                                             OverflowButtonVisibility="Collapsed">
                                             <AppBarButton
                                                 Command="{x:Bind _viewModel.CurrentNovel.BookmarkCommand, Mode=OneWay}"
-                                                CommandParameter="{x:Bind DocumentViewer.DownloadParameter, Mode=OneWay}"
+                                                CommandParameter="{x:Bind DownloadParameter(DocumentViewer.ViewModel), Mode=OneWay}"
                                                 IsEnabled="{x:Bind DocumentViewer.LoadSuccessfully, Mode=OneWay}" />
                                             <AppBarButton
                                                 Command="{x:Bind _viewModel.CurrentNovel.SaveCommand, Mode=OneWay}"
-                                                CommandParameter="{x:Bind DocumentViewer.DownloadParameter, Mode=OneWay}"
+                                                CommandParameter="{x:Bind DownloadParameter(DocumentViewer.ViewModel), Mode=OneWay}"
                                                 IsEnabled="{x:Bind DocumentViewer.LoadSuccessfully, Mode=OneWay}" />
                                         </CommandBar>
                                     </Grid>
@@ -420,15 +419,15 @@
                                 <AppBarSeparator />
                                 <AppBarButton
                                     Command="{x:Bind _viewModel.CurrentNovel.CopyCommand, Mode=OneWay}"
-                                    CommandParameter="{x:Bind DocumentViewer.DownloadParameter, Mode=OneWay}"
+                                    CommandParameter="{x:Bind DownloadParameter(DocumentViewer.ViewModel), Mode=OneWay}"
                                     IsEnabled="{x:Bind DocumentViewer.LoadSuccessfully, Mode=OneWay}" />
                                 <AppBarButton
                                     Command="{x:Bind _viewModel.CurrentNovel.SaveCommand, Mode=OneWay}"
-                                    CommandParameter="{x:Bind DocumentViewer.DownloadParameter, Mode=OneWay}"
+                                    CommandParameter="{x:Bind DownloadParameter(DocumentViewer.ViewModel), Mode=OneWay}"
                                     IsEnabled="{x:Bind DocumentViewer.LoadSuccessfully, Mode=OneWay}" />
                                 <AppBarButton
                                     Command="{x:Bind _viewModel.CurrentNovel.SaveAsCommand, Mode=OneWay}"
-                                    CommandParameter="{x:Bind DocumentViewer.DownloadAsParameter, Mode=OneWay}"
+                                    CommandParameter="{x:Bind DownloadParameter(DocumentViewer.ViewModel), Mode=OneWay}"
                                     IsEnabled="{x:Bind DocumentViewer.LoadSuccessfully, Mode=OneWay}" />
                                 <AppBarSeparator />
                                 <AppBarButton
@@ -439,7 +438,7 @@
                                     x:Name="GenerateLinkButton"
                                     Command="{x:Bind _viewModel.CurrentNovel.GenerateLinkCommand, Mode=OneWay}"
                                     CommandParameter="{x:Bind GenerateLinkTeachingTip}" />
-                                <AppBarButton Command="{x:Bind _viewModel.CurrentNovel.GenerateWebLinkCommand, Mode=OneWay}" CommandParameter="{x:Bind}" />
+                                <AppBarButton Command="{x:Bind _viewModel.CurrentNovel.GenerateWebLinkCommand, Mode=OneWay}" CommandParameter="{x:Bind HWnd}" />
                                 <AppBarButton Command="{x:Bind _viewModel.CurrentNovel.OpenInWebBrowserCommand, Mode=OneWay}" />
                                 <AppBarButton
                                     x:Name="ShowQrCodeButton"

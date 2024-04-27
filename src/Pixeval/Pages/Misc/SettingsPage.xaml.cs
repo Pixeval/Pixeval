@@ -72,7 +72,7 @@ public sealed partial class SettingsPage : IDisposable
 
     public override void OnPageActivated(NavigationEventArgs e, object? parameter)
     {
-        ViewModel = new SettingsPageViewModel(Window.Content.To<FrameworkElement>());
+        ViewModel = new SettingsPageViewModel(HWnd);
         // The first time viewmodel get the value of DefaultDownloadPathMacro from AppSettings won't trigger the property changed event
         SetPathMacroRichEditBoxDocument(ViewModel.DefaultDownloadPathMacro);
         _previousPath = ViewModel.DefaultDownloadPathMacro;
@@ -139,7 +139,7 @@ public sealed partial class SettingsPage : IDisposable
             App.AppViewModel.LoginContext.LogoutExit = true;
             // Close 不触发 Closing 事件
             AppInfo.SaveContextWhenExit();
-            Window.Close();
+            WindowFactory.RootWindow.Close();
         }
     }
 
@@ -315,7 +315,7 @@ public sealed partial class SettingsPage : IDisposable
     private void PathMacroTokenInputBox_OnTokenTapped(object sender, ItemClickEventArgs e)
     {
         UiHelper.ClipboardSetText(e.ClickedItem.To<StringRepresentableItem>().StringRepresentation);
-        this.ShowTeachingTipAndHide(SettingsPageResources.MacroCopiedToClipboard);
+        HWnd.SuccessGrowl(SettingsPageResources.MacroCopiedToClipboard);
     }
 
     private void DeleteFileCacheEntryButton_OnTapped(object sender, TappedRoutedEventArgs e)

@@ -25,13 +25,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Pixeval.CoreApi.Model;
 using Pixeval.Download;
 using Pixeval.Download.Models;
 using Pixeval.Util.UI;
-using WinUI3Utilities;
 
 namespace Pixeval.Controls;
 
@@ -41,65 +39,66 @@ public partial class NovelItemViewModel
 
     protected override async void SaveCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
-        var frameworkElement = null as FrameworkElement;
+        var hWnd = null as ulong?;
         var documentViewerViewModel = null as DocumentViewerViewModel;
         switch (args.Parameter)
         {
-            case ValueTuple<FrameworkElement?, DocumentViewerViewModel?> tuple:
-                frameworkElement = tuple.Item1;
+            case ValueTuple<ulong, DocumentViewerViewModel?> tuple:
+                hWnd = tuple.Item1;
                 documentViewerViewModel = tuple.Item2;
                 break;
-            case FrameworkElement f:
-                frameworkElement = f;
+            case ValueTuple<ulong?, DocumentViewerViewModel?> tuple:
+                hWnd = tuple.Item1;
+                documentViewerViewModel = tuple.Item2;
+                break;
+            case ulong h:
+                hWnd = h;
                 break;
         }
 
-        await SaveUtilityAsync(frameworkElement, documentViewerViewModel, App.AppViewModel.AppSettings.DefaultDownloadPathMacro);
+        await SaveUtilityAsync(hWnd, documentViewerViewModel, App.AppViewModel.AppSettings.DefaultDownloadPathMacro);
     }
 
     protected override async void SaveAsCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
-        Window window;
+        ulong hWnd;
         var documentViewerViewModel = null as DocumentViewerViewModel;
         switch (args.Parameter)
         {
-            case ValueTuple<Window, DocumentViewerViewModel?> tuple:
-                window = tuple.Item1;
+            case ValueTuple<ulong, DocumentViewerViewModel?> tuple:
+                hWnd = tuple.Item1;
                 documentViewerViewModel = tuple.Item2;
                 break;
-            case Window w:
-                window = w;
+            case ulong h:
+                hWnd = h;
                 break;
             default:
                 // 必须有Window来显示Picker
                 return;
         }
 
-        var frameworkElement = window.Content.To<FrameworkElement>();
-        var folder = await window.OpenFolderPickerAsync();
+        var folder = await hWnd.OpenFolderPickerAsync();
         if (folder is null)
         {
-            frameworkElement.ShowTeachingTipAndHide(EntryItemResources.SaveAsCancelled, TeachingTipSeverity.Information);
+            hWnd.InfoGrowl(EntryItemResources.SaveAsCancelled);
             return;
         }
 
         var name = Path.GetFileName(App.AppViewModel.AppSettings.DefaultDownloadPathMacro);
         var path = Path.Combine(folder.Path, name);
-        await SaveUtilityAsync(frameworkElement, documentViewerViewModel, path);
+        await SaveUtilityAsync(hWnd, documentViewerViewModel, path);
     }
 
     /// <summary>
     /// <see cref="IllustrationDownloadTaskFactory"/>
     /// </summary>
-    /// <param name="frameworkElement">承载提示<see cref="TeachingTip"/>的控件，为<see langword="null"/>则不显示</param>
+    /// <param name="hWnd">承载提示<see cref="TeachingTip"/>的控件，为<see langword="null"/>则不显示</param>
     /// <param name="source">为<see langword="null"/>则创建新的下载任务</param>
     /// <param name="path">文件路径</param>
     /// <returns></returns>
-    private async Task SaveUtilityAsync(FrameworkElement? frameworkElement, DocumentViewerViewModel? source, string path)
+    private async Task SaveUtilityAsync(ulong? hWnd, DocumentViewerViewModel? source, string path)
     {
-        var teachingTip = frameworkElement?.CreateTeachingTip();
-
-        teachingTip?.Show(EntryItemResources.NovelContentFetching, TeachingTipSeverity.Processing, isLightDismissEnabled: true);
+        var ib = hWnd?.InfoGrowlReturn(EntryItemResources.NovelContentFetching);
 
         using var scope = App.AppViewModel.AppServicesScope;
         var factory = scope.ServiceProvider.GetRequiredService<IDownloadTaskFactory<NovelItemViewModel, NovelDownloadTask>>();
@@ -107,13 +106,13 @@ public partial class NovelItemViewModel
         {
             var task = await factory.CreateAsync(this, path);
             App.AppViewModel.DownloadManager.QueueTask(task);
-            teachingTip?.ShowAndHide(EntryItemResources.DownloadTaskCreated);
+            hWnd?.RemoveSuccessGrowlAfterDelay(ib!, EntryItemResources.DownloadTaskCreated);
         }
         else
         {
             var task = factory.CreateIntrinsic(this, source, path);
             App.AppViewModel.DownloadManager.QueueTask(task);
-            teachingTip?.ShowAndHide(EntryItemResources.Saved);
+            hWnd?.RemoveSuccessGrowlAfterDelay(ib!, EntryItemResources.Saved);
         }
     }
 
@@ -122,12 +121,12 @@ public partial class NovelItemViewModel
     /// </summary>
     protected override void CopyCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
-        var frameworkElement = null as FrameworkElement;
+        var hWnd = null as ulong?;
         NovelContent? novelContent;
         switch (args.Parameter)
         {
-            case ValueTuple<FrameworkElement?, NovelContent> tuple:
-                frameworkElement = tuple.Item1;
+            case ValueTuple<ulong?, NovelContent> tuple:
+                hWnd = tuple.Item1;
                 novelContent = tuple.Item2;
                 break;
             case NovelContent f:
@@ -137,10 +136,8 @@ public partial class NovelItemViewModel
                 return;
         }
 
-        var teachingTip = frameworkElement?.CreateTeachingTip();
-
         UiHelper.ClipboardSetText(novelContent.Text);
-        teachingTip?.ShowAndHide(EntryItemResources.NovelSetToClipBoard);
+        hWnd?.SuccessGrowl(EntryItemResources.NovelSetToClipBoard);
     }
 
     public override Uri AppUri => MakoHelper.GenerateNovelAppUri(Id);

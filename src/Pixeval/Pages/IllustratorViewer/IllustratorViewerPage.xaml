@@ -159,7 +159,7 @@
                                 x:Name="GenerateLinkButton"
                                 Command="{x:Bind _viewModel.GenerateLinkCommand}"
                                 CommandParameter="{x:Bind GenerateLinkTeachingTip}" />
-                            <AppBarButton Command="{x:Bind _viewModel.GenerateWebLinkCommand}" CommandParameter="{x:Bind}" />
+                            <AppBarButton Command="{x:Bind _viewModel.GenerateWebLinkCommand}" CommandParameter="{x:Bind HWnd}" />
                             <AppBarButton Command="{x:Bind _viewModel.OpenInWebBrowserCommand}" />
                             <AppBarButton
                                 x:Name="ShowQrCodeButton"

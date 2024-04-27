@@ -225,6 +225,10 @@ public static partial class UiHelper
 
     public static IAsyncOperation<StorageFile?> OpenFileOpenPickerAsync(this Window window) => window.PickSingleFileAsync(PickerLocationId.PicturesLibrary);
 
+    public static IAsyncOperation<StorageFolder?> OpenFolderPickerAsync(this ulong hWnd) => WindowFactory.ForkedWindows[hWnd].PickSingleFolderAsync(PickerLocationId.PicturesLibrary);
+
+    public static IAsyncOperation<StorageFile?> OpenFileOpenPickerAsync(this ulong hWnd) => WindowFactory.ForkedWindows[hWnd].PickSingleFileAsync(PickerLocationId.PicturesLibrary);
+
     public static async Task<T> AwaitPageTransitionAsync<T>(this Frame root) where T : Page
     {
         await ThreadingHelper.SpinWaitAsync(() => root.Content is not T { IsLoaded: true });

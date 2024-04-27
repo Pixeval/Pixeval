@@ -20,11 +20,9 @@
 
 using System;
 using System.Collections.Generic;
-using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
 using Pixeval.Util.UI;
 using Pixeval.Util;
-using WinUI3Utilities;
 using Microsoft.UI.Xaml.Controls;
 using Pixeval.Utilities;
 using System.Threading.Tasks;
@@ -41,69 +39,72 @@ public partial class IllustrationItemViewModel
 
     protected override async void SaveCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
-        var frameworkElement = null as FrameworkElement;
+        var hWnd = null as ulong?;
         var getOriginalImageSourceAsync = null as Func<IProgress<int>?, Task<Stream?>>;
         switch (args.Parameter)
         {
-            case ValueTuple<FrameworkElement?, Func<IProgress<int>?, Task<Stream?>>?> tuple:
-                frameworkElement = tuple.Item1;
+            case ValueTuple<ulong, Func<IProgress<int>?, Task<Stream?>>?> tuple:
+                hWnd = tuple.Item1;
                 getOriginalImageSourceAsync = tuple.Item2;
                 break;
-            case FrameworkElement f:
-                frameworkElement = f;
+            case ValueTuple<ulong?, Func<IProgress<int>?, Task<Stream?>>?> tuple:
+                hWnd = tuple.Item1;
+                getOriginalImageSourceAsync = tuple.Item2;
+                break;
+            case ulong h:
+                hWnd = h;
                 break;
         }
 
-        await SaveUtilityAsync(frameworkElement, getOriginalImageSourceAsync, App.AppViewModel.AppSettings.DefaultDownloadPathMacro);
+        await SaveUtilityAsync(hWnd, getOriginalImageSourceAsync, App.AppViewModel.AppSettings.DefaultDownloadPathMacro);
     }
 
     protected override async void SaveAsCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
-        Window window;
+        ulong hWnd;
         var getOriginalImageSourceAsync = null as Func<IProgress<int>?, Task<Stream?>>;
         switch (args.Parameter)
         {
-            case ValueTuple<Window, Func<IProgress<int>?, Task<Stream?>>?> tuple:
-                window = tuple.Item1;
+            case ValueTuple<ulong, Func<IProgress<int>?, Task<Stream?>>?> tuple:
+                hWnd = tuple.Item1;
                 getOriginalImageSourceAsync = tuple.Item2;
                 break;
-            case Window w:
-                window = w;
+            case ulong h:
+                hWnd = h;
                 break;
             default:
                 // 必须有Window来显示Picker
                 return;
         }
 
-        var frameworkElement = window.Content.To<FrameworkElement>();
-        var folder = await window.OpenFolderPickerAsync();
+        var folder = await hWnd.OpenFolderPickerAsync();
         if (folder is null)
         {
-            frameworkElement.ShowTeachingTipAndHide(EntryItemResources.SaveAsCancelled, TeachingTipSeverity.Information);
+            hWnd.InfoGrowl(EntryItemResources.SaveAsCancelled);
             return;
         }
 
         var name = Path.GetFileName(App.AppViewModel.AppSettings.DefaultDownloadPathMacro);
         var path = Path.Combine(folder.Path, name);
-        await SaveUtilityAsync(frameworkElement, getOriginalImageSourceAsync, path);
+        await SaveUtilityAsync(hWnd, getOriginalImageSourceAsync, path);
     }
 
     /// <summary>
     /// <see cref="IllustrationDownloadTaskFactory"/>
     /// </summary>
-    /// <param name="frameworkElement">承载提示<see cref="TeachingTip"/>的控件，为<see langword="null"/>则不显示</param>
+    /// <param name="hWnd">承载提示<see cref="TeachingTip"/>的控件，为<see langword="null"/>则不显示</param>
     /// <param name="getOriginalImageSourceAsync">获取原图的<see cref="Stream"/>，支持进度显示，为<see langword="null"/>则创建新的下载任务</param>
     /// <param name="path">文件路径</param>
     /// <returns></returns>
-    private async Task SaveUtilityAsync(FrameworkElement? frameworkElement, Func<IProgress<int>?, Task<Stream?>>? getOriginalImageSourceAsync, string path)
+    private async Task SaveUtilityAsync(ulong? hWnd, Func<IProgress<int>?, Task<Stream?>>? getOriginalImageSourceAsync, string path)
     {
-        var teachingTip = frameworkElement?.CreateTeachingTip();
-
+        var ib = hWnd?.InfoGrowlReturn("");
         var progress = null as Progress<int>;
-        if (IsUgoira)
-            progress = new Progress<int>(d => teachingTip?.Show(EntryItemResources.UgoiraProcessing.Format(d), TeachingTipSeverity.Processing, isLightDismissEnabled: true));
-        else
-            teachingTip?.Show(EntryItemResources.ImageProcessing, TeachingTipSeverity.Processing, isLightDismissEnabled: true);
+        if (ib is not null)
+            if (IsUgoira)
+                progress = new Progress<int>(d => ib.Title = EntryItemResources.UgoiraProcessing.Format(d));
+            else
+                ib.Title = EntryItemResources.ImageProcessing;
 
         var source = getOriginalImageSourceAsync is null ? null : await getOriginalImageSourceAsync.Invoke(progress);
         using var scope = App.AppViewModel.AppServicesScope;
@@ -112,24 +113,24 @@ public partial class IllustrationItemViewModel
         {
             var task = await factory.CreateAsync(this, path);
             App.AppViewModel.DownloadManager.QueueTask(task);
-            teachingTip?.ShowAndHide(EntryItemResources.DownloadTaskCreated);
+            hWnd?.RemoveSuccessGrowlAfterDelay(ib!, EntryItemResources.DownloadTaskCreated);
         }
         else
         {
             var task = factory.CreateIntrinsic(this, IsUgoira ? (source, UgoiraMetadata) : source, path);
             App.AppViewModel.DownloadManager.QueueTask(task);
-            teachingTip?.ShowAndHide(EntryItemResources.Saved);
+            hWnd?.RemoveSuccessGrowlAfterDelay(ib!, EntryItemResources.Saved);
         }
     }
 
     protected override async void CopyCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
-        var frameworkElement = null as FrameworkElement;
+        var hWnd = null as ulong?;
         Func<IProgress<int>?, Task<Stream?>> getOriginalImageSourceAsync;
         switch (args.Parameter)
         {
-            case ValueTuple<FrameworkElement?, Func<IProgress<int>?, Task<Stream?>>> tuple:
-                frameworkElement = tuple.Item1;
+            case ValueTuple<ulong?, Func<IProgress<int>?, Task<Stream?>>> tuple:
+                hWnd = tuple.Item1;
                 getOriginalImageSourceAsync = tuple.Item2;
                 break;
             case Func<IProgress<int>?, Task<Stream?>> f:
@@ -139,17 +140,18 @@ public partial class IllustrationItemViewModel
                 return;
         }
 
-        var teachingTip = frameworkElement?.CreateTeachingTip();
+        var ib = hWnd?.InfoGrowlReturn("");
 
         var progress = null as Progress<int>;
-        if (IsUgoira)
-            progress = new(d => teachingTip?.Show(EntryItemResources.UgoiraProcessing.Format(d), TeachingTipSeverity.Processing, isLightDismissEnabled: true));
-        else
-            teachingTip?.Show(EntryItemResources.ImageProcessing, TeachingTipSeverity.Processing, isLightDismissEnabled: true);
+        if (ib is not null)
+            if (IsUgoira)
+                progress = new Progress<int>(d => ib.Title = EntryItemResources.UgoiraProcessing.Format(d));
+            else
+                ib.Title = EntryItemResources.ImageProcessing;
         if (await getOriginalImageSourceAsync(progress) is { } source)
         {
             await UiHelper.ClipboardSetBitmapAsync(source);
-            teachingTip?.ShowAndHide(EntryItemResources.ImageSetToClipBoard);
+            hWnd?.RemoveSuccessGrowlAfterDelay(ib!, EntryItemResources.ImageSetToClipBoard);
         }
     }
 

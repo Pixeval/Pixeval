@@ -30,13 +30,13 @@ using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using WinUI3Utilities;
 using Microsoft.UI.Xaml.Media.Imaging;
+using Pixeval.Controls.Windowing;
 using WinUI3Utilities.Controls;
 
 namespace Pixeval.Controls;
 
 [DebuggerDisplay("{Entry}")]
-public abstract class EntryViewModel<T>(T entry) : ObservableObject, IDisposable
-    where T : IEntry
+public abstract class EntryViewModel<T>(T entry) : ObservableObject, IDisposable where T : IEntry
 {
     public T Entry { get; } = entry;
 
@@ -75,22 +75,22 @@ public abstract class EntryViewModel<T>(T entry) : ObservableObject, IDisposable
     {
         UiHelper.ClipboardSetText(AppUri.OriginalString);
 
-        if (args.Parameter is TeachingTip teachingTip)
+
+        if (args.Parameter is TeachingTip teachingTip && App.AppViewModel.AppSettings.DisplayTeachingTipWhenGeneratingAppLink)
         {
-            if (App.AppViewModel.AppSettings.DisplayTeachingTipWhenGeneratingAppLink)
-                teachingTip.IsOpen = true;
-            else
-                teachingTip?.ShowTeachingTipAndHide(EntryItemResources.LinkCopiedToClipboard);
+            teachingTip.IsOpen = true;
+            return;
         }
+
         // 只提示
-        else
-            (args.Parameter as FrameworkElement)?.ShowTeachingTipAndHide(EntryItemResources.LinkCopiedToClipboard);
+        if (args.Parameter is FrameworkElement frameworkElement)
+            WindowFactory.GetWindowForElement(frameworkElement).HWnd.SuccessGrowl(EntryItemResources.LinkCopiedToClipboard);
     }
 
     private void GenerateWebLinkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
         UiHelper.ClipboardSetText(WebUri.OriginalString);
-        (args.Parameter as FrameworkElement)?.ShowTeachingTipAndHide(EntryItemResources.LinkCopiedToClipboard);
+        (args.Parameter as ulong?)?.SuccessGrowl(EntryItemResources.LinkCopiedToClipboard);
     }
 
     private async void OpenInWebBrowserCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)

@@ -45,16 +45,7 @@ using QuestPDF.Infrastructure;
 
 namespace Pixeval.Controls;
 
-public interface IStreamNovelParserViewModel : INovelParserViewModel<Stream>
-{
-    StringBuilder LoadMdContent(CancellationHandle handle);
-
-    StringBuilder LoadHtmlContent(CancellationHandle handle);
-
-    Document LoadPdfContent(CancellationHandle handle);
-}
-
-public class DocumentViewerViewModel(NovelContent novelContent) : ObservableObject, IDisposable, INovelParserViewModel<SoftwareBitmapSource>, IStreamNovelParserViewModel
+public class DocumentViewerViewModel(NovelContent novelContent) : ObservableObject, IDisposable, INovelParserViewModel<SoftwareBitmapSource>, INovelParserViewModel<Stream>
 {
     /// <summary>
     /// 需要从外部Invoke
@@ -260,7 +251,7 @@ public class DocumentViewerViewModel(NovelContent novelContent) : ObservableObje
         var vm = new DocumentViewerViewModel(novelContent);
         var task1 = vm.LoadImagesAsync();
         var task2 = vm.LoadRtfContentAsync();
-        _ = Task.WhenAll(task1, task2).ContinueWith(callback);
+        _ = Task.WhenAll(task1, task2).ContinueWith(callback, TaskScheduler.FromCurrentSynchronizationContext());
         AddHistory();
 
         return vm;
