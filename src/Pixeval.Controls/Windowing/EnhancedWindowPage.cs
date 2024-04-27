@@ -40,7 +40,7 @@ file record NavigateParameter(object? Parameter, ulong HWnd);
 
 public class EnhancedWindowPage : EnhancedPage
 {
-    protected ulong HWnd { get; private set; } = 0;
+    protected ulong HWnd { get; private set; }
 
     public sealed override void OnPageActivated(NavigationEventArgs e)
     {

@@ -57,13 +57,8 @@ public partial record AppSettings : IWindowSettings
     [SettingMetadata(SettingEntryCategory.Application, typeof(SettingsPageResources), nameof(SettingsPageResources.BackdropEntryHeader))]
     public BackdropType Backdrop { get; set; } = MicaController.IsSupported() ? BackdropType.MicaAlt : DesktopAcrylicController.IsSupported() ? BackdropType.Acrylic : BackdropType.None;
 
-    /// <summary>
-    /// Disable the domain fronting technology, once disabled, the users
-    /// from China mainland are required to have other countermeasures to bypass
-    /// GFW
-    /// </summary>
-    [SettingMetadata(SettingEntryCategory.Application, typeof(SettingsPageResources), nameof(SettingsPageResources.DisableDomainFrontingEntryHeader))]
-    public bool DisableDomainFronting { get; set; }
+    [SettingMetadata(SettingEntryCategory.Application, typeof(SettingsPageResources), nameof(SettingsPageResources.EnableDomainFrontingEntryHeader))]
+    public bool EnableDomainFronting { get; set; } = true;
 
     /// <summary>
     /// Indicates whether a <see cref="TeachingTip" /> should be displayed
@@ -315,6 +310,6 @@ public partial record AppSettings : IWindowSettings
 
     public MakoClientConfiguration ToMakoClientConfiguration()
     {
-        return new MakoClientConfiguration(5000, !DisableDomainFronting, MirrorHost, CultureInfo.CurrentUICulture);
+        return new MakoClientConfiguration(5000, EnableDomainFronting, MirrorHost, CultureInfo.CurrentUICulture);
     }
 }

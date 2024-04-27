@@ -97,7 +97,7 @@ public abstract class AbstractPixivAsyncEnumerator<TEntity, TRawEntity, TFetchEn
             var responseMessage = await MakoClient.GetMakoHttpClient(ApiKind).GetAsync(url).ConfigureAwait(false);
             if (!responseMessage.IsSuccessStatusCode)
             {
-                return Result<TRawEntity>.AsFailure(await MakoNetworkException.FromHttpResponseMessageAsync(responseMessage, MakoClient.Configuration.Bypass).ConfigureAwait(false));
+                return Result<TRawEntity>.AsFailure(await MakoNetworkException.FromHttpResponseMessageAsync(responseMessage, MakoClient.Configuration.DomainFronting).ConfigureAwait(false));
             }
 
             var result = (await responseMessage.Content.ReadAsStringAsync().ConfigureAwait(false)).FromJson<TRawEntity>();
@@ -110,7 +110,7 @@ public abstract class AbstractPixivAsyncEnumerator<TEntity, TRawEntity, TFetchEn
         }
         catch (Exception e)
         {
-            return Result<TRawEntity>.AsFailure(new MakoNetworkException(url, MakoClient.Configuration.Bypass, e.Message, (int?)(e as HttpRequestException)?.StatusCode ?? -1));
+            return Result<TRawEntity>.AsFailure(new MakoNetworkException(url, MakoClient.Configuration.DomainFronting, e.Message, (int?)(e as HttpRequestException)?.StatusCode ?? -1));
         }
     }
 }

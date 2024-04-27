@@ -15,8 +15,9 @@
     "RefreshTokenBox/PlaceholderText": "刷新令牌",
     "UserNameBox/PlaceholderText": "邮箱地址或pixiv ID",
     "PasswordBox/PlaceholderText": "密码",
-    "DisableDomainFrontingToggleSwitch/OnContent": "禁用前域直连",
-    "DisableDomainFrontingToggleSwitch/OffContent": "启用前域直连",
+    "DisableDomainFrontingToggleSwitch/Header": "域前置",
+    "DisableDomainFrontingToggleSwitch/OnContent": "启用",
+    "DisableDomainFrontingToggleSwitch/OffContent": "禁用",
     "RefreshingSessionFailedContent": "请重新登录\n如果该问题反复出现，请联系开发者寻求解决",
     "RefreshingSessionFailedTitle": "刷新对话失败",
     "FetchingSessionFailedContent": "请重新启动应用程序\n如果该问题反复出现，请联系开发者寻求解决",
@@ -25,6 +26,6 @@
     "RootCertificateInstallationRequiredTitle": "检测到本用户尚未安装证书",
     "WebView2InstallationRequiredContent": "使用本方式登录需要安装WebView2，选择确认将会自动打开浏览器为您下载WebView2 Runtime，请您双击exe文件安装后重启应用",
     "WebView2InstallationRequiredTitle": "检测到本机尚未安装WebView2 Runtime",
-    "WebViewHelp/ToolTipService/ToolTip": "使用本方式登录需要安装WebView2。\n填写账号、密码后，软件会一直保存它们\n\n点击“登录”按钮后，会打开WebView进行快速自动登录，全程不需要用户操作，但如果遇到脚本没有执行完毕就停止、或者需要输入验证码的情况，也需要你手动完成\n\n如果你不信任软件帮你保存、填写，也可以直接留空并点击“登录”，然后手动在WebView中输入\n\n前域直连：禁用后将使用当前本机的IE代理。如果你此时不能直接访问pixiv，则应该不要禁止此选项",
-    "BrowserHelp/ToolTipService/ToolTip": "点击登录将使用外部的Chrome或Edge等Chromium内核的浏览器登录。如果此种方法登录失败可以使用其他方法尝试登录\n\n前域直连：禁用后将使用当前本机的IE代理。如果你此时不能直接访问pixiv，则应该不要禁止此选项"
+    "WebViewHelp/ToolTipService/ToolTip": "使用本方式登录需要安装WebView2。\n填写账号、密码后，软件会一直保存它们\n\n点击“登录”按钮后，会打开WebView进行快速自动登录，全程不需要用户操作，但如果遇到脚本没有执行完毕就停止、或者需要输入验证码的情况，也需要你手动完成\n\n如果你不信任软件帮你保存、填写，也可以直接留空并点击“登录”，然后手动在WebView中输入\n\n域前置：禁用后将使用当前本机的IE代理。如果你此时不能直接访问pixiv，则应该不要禁止此选项",
+    "BrowserHelp/ToolTipService/ToolTip": "点击登录将使用外部的Chrome或Edge等Chromium内核的浏览器登录。如果此种方法登录失败可以使用其他方法尝试登录\n\n域前置：禁用后将使用当前本机的IE代理。如果你此时不能直接访问pixiv，则应该不要禁止此选项"
 }

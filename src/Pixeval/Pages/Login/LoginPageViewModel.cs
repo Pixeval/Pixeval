@@ -88,10 +88,10 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject
 
     public LoginContext LoginContext => App.AppViewModel.LoginContext;
 
-    public bool DisableDomainFronting
+    public bool EnableDomainFronting
     {
-        get => App.AppViewModel.AppSettings.DisableDomainFronting;
-        set => App.AppViewModel.AppSettings.DisableDomainFronting = value;
+        get => App.AppViewModel.AppSettings.EnableDomainFronting;
+        set => App.AppViewModel.AppSettings.EnableDomainFronting = value;
     }
 
     public Visibility ProcessingRingVisible => LoginPhase is LoginPhaseEnum.WaitingForUserInput ? Visibility.Collapsed : Visibility.Visible;
@@ -171,10 +171,10 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject
         // is intended to be called only once (at the start time) during the entire application's
         // lifetime, so the overhead is acceptable
 
-        var httpClient = DisableDomainFronting ? new() : new HttpClient(new DelegatedHttpMessageHandler(MakoHttpOptions.CreateHttpMessageInvoker()));
+        var httpClient = EnableDomainFronting ? new HttpClient(new DelegatedHttpMessageHandler(MakoHttpOptions.CreateHttpMessageInvoker())) : new();
         httpClient.DefaultRequestHeaders.UserAgent.Add(new("PixivAndroidApp", "5.0.64"));
         httpClient.DefaultRequestHeaders.UserAgent.Add(new("(Android 6.0)"));
-        var scheme = DisableDomainFronting ? "https" : "http";
+        var scheme = EnableDomainFronting ? "http" : "https";
 
         using var result = await httpClient.PostFormAsync(scheme + "://oauth.secure.pixiv.net/auth/token",
             ("code", code),
@@ -198,7 +198,7 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject
         var port = NegotiatePort();
 
         var proxyServer = null as PixivAuthenticationProxyServer;
-        if (!DisableDomainFronting)
+        if (EnableDomainFronting)
         {
             if (!await EnsureCertificateIsInstalled(userControl))
                 return;
@@ -377,10 +377,10 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject
         var commonArgs = $"--disable-sync --no-default-browser-check --no-first-run --user-data-dir={userDataDir} {url}";
         var startInfo = new ProcessStartInfo(browserPath)
         {
-            Arguments = !DisableDomainFronting ? $"--no-proxy-server --dns-prefetch-disable {commonArgs}" : $"{commonArgs}"
+            Arguments = EnableDomainFronting ? $"--no-proxy-server --dns-prefetch-disable {commonArgs}" : $"{commonArgs}"
         };
         var process = Process.Start(startInfo);
-        if (!DisableDomainFronting)
+        if (EnableDomainFronting)
         {
             var pid = process!.Id;
             var dllPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "runtimes",

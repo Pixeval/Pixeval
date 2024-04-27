@@ -4,7 +4,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Pixeval.Controls"
     xmlns:controls1="using:WinUI3Utilities.Controls"
-    xmlns:controls2="using:CommunityToolkit.WinUI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:Pixeval.Pages.Login"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -70,7 +69,7 @@
                             x:Uid="/LoginPage/DisableDomainFrontingToggleSwitch"
                             Grid.Row="1"
                             Grid.Column="0"
-                            IsOn="{x:Bind _viewModel.DisableDomainFronting, Mode=TwoWay}" />
+                            IsOn="{x:Bind _viewModel.EnableDomainFronting, Mode=TwoWay}" />
                         <Button
                             x:Uid="/LoginPage/SubmitButton"
                             Grid.Row="1"
@@ -94,7 +93,7 @@
                         <ToggleSwitch
                             x:Uid="/LoginPage/DisableDomainFrontingToggleSwitch"
                             Grid.Column="0"
-                            IsOn="{x:Bind _viewModel.DisableDomainFronting, Mode=TwoWay}" />
+                            IsOn="{x:Bind _viewModel.EnableDomainFronting, Mode=TwoWay}" />
                         <Button
                             x:Uid="/LoginPage/SubmitButton"
                             Grid.Column="1"
@@ -141,7 +140,7 @@
                             <ToggleSwitch
                                 x:Uid="/LoginPage/DisableDomainFrontingToggleSwitch"
                                 Grid.Column="0"
-                                IsOn="{x:Bind _viewModel.DisableDomainFronting, Mode=TwoWay}" />
+                                IsOn="{x:Bind _viewModel.EnableDomainFronting, Mode=TwoWay}" />
                             <SplitButton
                                 x:Uid="/LoginPage/SubmitButton"
                                 Grid.Column="1"

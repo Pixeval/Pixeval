@@ -45,7 +45,7 @@ public static class ActivationRegistrar
                 Kind: ExtendedActivationKind.Protocol, Data: IProtocolActivatedEventArgs { Uri: var activationUri }
             })
         {
-            if (activationUri.Scheme == "pixeval")
+            if (activationUri.Scheme is "pixeval")
             {
                 if (FeatureHandlers.FirstOrDefault(f => f.ActivationFragment == activationUri.Host) is { } handler)
                 {
@@ -54,7 +54,7 @@ public static class ActivationRegistrar
                     }
                 }
             }
-            else if (activationUri.Scheme == "pixiv")
+            else if (activationUri.Scheme is "pixiv")
             {
                 var code = HttpUtility.ParseQueryString(activationUri.Query)["code"]!;
                 _ = PixivAuth.AuthCodeToSessionAsync(code, PixivAuth.GetCodeVerify());

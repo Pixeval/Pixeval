@@ -10,7 +10,6 @@
     "SubmitButton/Content": "Войти",
     "UserNameBox/PlaceholderText": "Email или pixiv ID",
     "PasswordBox/PlaceholderText": "Пароль",
-    "DisableDomainFrontingToggleSwitch/OnContent": "Отключить Direct Connect",
     "RefreshingSessionFailedTitle": "Не удалось обновить сессию",
     "FetchingSessionFailedContent": "Перезапустите приложение\nЕсли проблема повторяется, обратитесь к разработчику",
     "FetchingSessionFailedTitle": "Не удалось получить сессию",
