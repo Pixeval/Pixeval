@@ -39,35 +39,6 @@ public sealed partial class LoginPage
         InitializeComponent();
     }
 
-    private void TokenLogin_OnTapped(object sender, object e) => RefreshToken(_viewModel.RefreshToken);
-
-    private async void Login_OnTapped(object sender, object e) => await LoginAsync(false);
-
-    private async void LoginWithNewAccount_OnTapped(object sender, RoutedEventArgs e) => await LoginAsync(true);
-
-    private async Task LoginAsync(bool useNewAccount)
-    {
-        try
-        {
-            await _viewModel.LoginAsync(this, useNewAccount, Navigated);
-        }
-        catch (Exception exception)
-        {
-            _ = await this.CreateAcknowledgementAsync(LoginPageResources.ErrorWhileLoggingInTitle,
-                LoginPageResources.ErrorWhileLogginInContentFormatted.Format(exception + "\n" + exception.StackTrace));
-            _viewModel.CloseWindow();
-        }
-
-        return;
-        void Navigated()
-        {
-            if (App.AppViewModel.MakoClient == null!)
-                ThrowHelper.Exception();
-
-            _ = DispatcherQueue.TryEnqueue(SuccessNavigating);
-        }
-    }
-
     private void LoginPage_OnLoaded(object sender, RoutedEventArgs e)
     {
         if (_viewModel.LogoutExit)
@@ -111,4 +82,51 @@ public sealed partial class LoginPage
         AppInfo.SaveContext();
     }
 
+    #region Token
+
+    private void TokenLogin_OnTapped(object sender, object e) => RefreshToken(_viewModel.RefreshToken);
+
+    #endregion
+
+    #region Browser
+
+    private void BrowserLogin_OnTapped(object sender, RoutedEventArgs e) => _viewModel.BrowserLogin();
+
+    #endregion
+
+    #region WebView
+
+    private async void WebViewLogin_OnTapped(object sender, object e) => await WebView2LoginAsync(false);
+
+    private async void WebViewLoginNewAccount_OnTapped(object sender, RoutedEventArgs e) => await WebView2LoginAsync(true);
+
+    private async Task WebView2LoginAsync(bool useNewAccount)
+    {
+        try
+        {
+            await _viewModel.WebView2LoginAsync(this, useNewAccount, Navigated);
+        }
+        catch (Exception exception)
+        {
+            _ = await this.CreateAcknowledgementAsync(LoginPageResources.ErrorWhileLoggingInTitle,
+                LoginPageResources.ErrorWhileLogginInContentFormatted.Format(exception + "\n" + exception.StackTrace));
+            _viewModel.CloseWindow();
+        }
+
+        return;
+        void Navigated()
+        {
+            if (App.AppViewModel.MakoClient == null!)
+                ThrowHelper.Exception();
+
+            _ = DispatcherQueue.TryEnqueue(SuccessNavigating);
+        }
+    }
+
+    private void LoginPage_OnUnloaded(object sender, RoutedEventArgs e)
+    {
+        _viewModel.Dispose();
+    }
+
+    #endregion
 }

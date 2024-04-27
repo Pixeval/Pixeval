@@ -2,7 +2,6 @@
     "ErrorWhileLoggingInTitle": "Login process aborted: error occured.",
     "ErrorWhileLogginInContentFormatted": "The app is about to exit, error message：\n{0}",
     "LoginPhaseCheckingCertificateInstallation": "Checking certificate installation...",
-    "LoginPhaseCheckingRefreshAvailable": "Checking session refreshment...",
     "LoginPhaseCheckingWebView2Installation": "Ensuring WebView2 installed...",
     "LoginPhaseInstallingCertificate": "Installing certificate, please confirm in the dialog...",
     "LoginPhaseRefreshing": "Refreshing session...",
@@ -10,7 +9,7 @@
     "LoginPhaseWaitingForUserInput": "Waiting for user input",
     "SubmitButton/Content": "Login",
     "RefreshTokenPivotItem/Header": "Token",
-    "AccountPivotItem/Header": "Account",
+    "WebViewPivotItem/Header": "WebView",
     "RefreshTokenBox/PlaceholderText": "Refresh token",
     "UserNameBox/PlaceholderText": "Email or pixiv ID",
     "PasswordBox/PlaceholderText": "Password",
@@ -20,7 +19,7 @@
     "FetchingSessionFailedTitle": "Failed to fetch session",
     "RootCertificateInstallationRequiredContent": "The certificate must be installed in order to login, the private key of this certificate is guaranteed not to be distributed, confirming this means you will accept the installation, please click OK in the dialog, if you refuse to install the certificate, you will not be able to use this app",
     "RootCertificateInstallationRequiredTitle": "You need to install the certificate to login",
-    "WebView2InstallationRequiredContent": "The WebView2 is required in order to login, by clicking OK the browser will be opened to download the WebView2 Runtime automatically, please restart the app after the installation, if you refuse to install WebView2 Runtime, you will not be able to use this app",
-    "WebView2InstallationRequiredTitle": "You need to install the WebView2 Runtime to login",
-    "Help/ToolTipService/ToolTip": "After you input the account and password, the app will keep it in the local storage\n\nClick on the \"Login\" button will open WebView2 to login automatically，However, if the error occurred while executing the script, or a captcha popped up, you will need to complete the login process manually\n\nIf you don't trust the app, you can leave the text box empty, click login, and manually fill your credentials in the WebView\n\nDomain Fronting：Disabling this will force the app to use the system proxy. If you cannot access Pixiv properly, then it is better not to disable this option."
+    "WebView2InstallationRequiredContent": "WebView2 is required to log in using this method. By clicking OK the browser will be opened to download the WebView2 Runtime automatically, please restart the app after the installation.",
+    "WebView2InstallationRequiredTitle": "WebView2 is required to log in using this method",
+    "WebViewHelp/ToolTipService/ToolTip": "WebView2 is required to log in using this method.\nAfter you input the account and password, the app will keep it in the local storage\n\nClick on the \"Login\" button will open WebView2 to login automatically，However, if the error occurred while executing the script, or a captcha popped up, you will need to complete the login process manually\n\nIf you don't trust the app, you can leave the text box empty, click login, and manually fill your credentials in the WebView\n\nDomain Fronting：Disabling this will force the app to use the system proxy. If you cannot access Pixiv properly, then it is better not to disable this option."
 }

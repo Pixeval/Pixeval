@@ -10,6 +10,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:util="using:Pixeval.Util"
     Loaded="LoginPage_OnLoaded"
+    Unloaded="LoginPage_OnUnloaded"
     mc:Ignorable="d">
     <Grid
         Margin="0,32,0,0"
@@ -20,9 +21,6 @@
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="Auto" MinWidth="300" />
         </Grid.ColumnDefinitions>
-        <Grid.KeyboardAccelerators>
-            <KeyboardAccelerator Key="Enter" Invoked="Login_OnTapped" />
-        </Grid.KeyboardAccelerators>
         <StackPanel
             Grid.Column="0"
             HorizontalAlignment="Center"
@@ -45,7 +43,6 @@
             Grid.Column="1"
             MaxWidth="350"
             HorizontalAlignment="Stretch"
-            controls2:DockPanel.Dock="Top"
             IsEnabled="{x:Bind _viewModel.IsEnabled, Mode=OneWay}">
             <Pivot.Items>
                 <PivotItem x:Uid="/LoginPage/RefreshTokenPivotItem">
@@ -67,26 +64,23 @@
                             Grid.Row="0"
                             Grid.Column="0"
                             Grid.ColumnSpan="2"
-                            controls2:DockPanel.Dock="Top"
                             IsSpellCheckEnabled="False"
                             Text="{x:Bind _viewModel.RefreshToken, Mode=TwoWay}" />
                         <ToggleSwitch
                             x:Uid="/LoginPage/DisableDomainFrontingToggleSwitch"
                             Grid.Row="1"
                             Grid.Column="0"
-                            controls2:DockPanel.Dock="Left"
                             IsOn="{x:Bind _viewModel.DisableDomainFronting, Mode=TwoWay}" />
                         <Button
                             x:Uid="/LoginPage/SubmitButton"
                             Grid.Row="1"
                             Grid.Column="1"
                             Height="33"
-                            controls2:DockPanel.Dock="Right"
                             Click="TokenLogin_OnTapped"
                             IsEnabled="{x:Bind _viewModel.IsEnabled, Mode=OneWay}" />
                     </Grid>
                 </PivotItem>
-                <PivotItem x:Uid="/LoginPage/AccountPivotItem">
+                <PivotItem x:Uid="/LoginPage/BrowserPivotItem">
                     <Grid
                         Padding="10"
                         VerticalAlignment="Top"
@@ -97,6 +91,31 @@
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
+                        <ToggleSwitch
+                            x:Uid="/LoginPage/DisableDomainFrontingToggleSwitch"
+                            Grid.Column="0"
+                            IsOn="{x:Bind _viewModel.DisableDomainFronting, Mode=TwoWay}" />
+                        <Button
+                            x:Uid="/LoginPage/SubmitButton"
+                            Grid.Column="1"
+                            Height="33"
+                            Tapped="BrowserLogin_OnTapped" />
+                        <Button
+                            x:Uid="/LoginPage/BrowserHelp"
+                            Grid.Column="2"
+                            Content="{controls1:GlyphIcon Glyph=HelpE897}"
+                            IsTabStop="False" />
+                    </Grid>
+                </PivotItem>
+                <PivotItem x:Uid="/LoginPage/WebViewPivotItem">
+                    <Grid
+                        Padding="10"
+                        VerticalAlignment="Top"
+                        ColumnSpacing="10"
+                        RowSpacing="20">
+                        <Grid.KeyboardAccelerators>
+                            <KeyboardAccelerator Key="Enter" Invoked="WebViewLogin_OnTapped" />
+                        </Grid.KeyboardAccelerators>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
@@ -106,46 +125,47 @@
                             x:Uid="/LoginPage/UserNameBox"
                             Grid.Row="0"
                             Grid.Column="0"
-                            Grid.ColumnSpan="3"
-                            controls2:DockPanel.Dock="Top"
                             IsSpellCheckEnabled="False"
                             Text="{x:Bind _viewModel.UserName, Mode=TwoWay}" />
                         <PasswordBox
                             x:Uid="/LoginPage/PasswordBox"
                             Grid.Row="1"
                             Grid.Column="0"
-                            Grid.ColumnSpan="3"
-                            controls2:DockPanel.Dock="Top"
                             Password="{x:Bind _viewModel.Password, Mode=TwoWay}" />
-                        <ToggleSwitch
-                            x:Uid="/LoginPage/DisableDomainFrontingToggleSwitch"
-                            Grid.Row="2"
-                            Grid.Column="0"
-                            controls2:DockPanel.Dock="Left"
-                            IsOn="{x:Bind _viewModel.DisableDomainFronting, Mode=TwoWay}" />
-                        <SplitButton
-                            x:Uid="/LoginPage/SubmitButton"
-                            Grid.Row="2"
-                            Grid.Column="1"
-                            Height="33"
-                            controls2:DockPanel.Dock="Right"
-                            Click="Login_OnTapped">
-                            <SplitButton.Flyout>
-                                <MenuFlyout>
-                                    <MenuFlyoutItem x:Uid="/LoginPage/SubmitWithNewAccountButton" Click="LoginWithNewAccount_OnTapped" />
-                                </MenuFlyout>
-                            </SplitButton.Flyout>
-                        </SplitButton>
-                        <Button
-                            x:Uid="/LoginPage/Help"
-                            Grid.Row="2"
-                            Grid.Column="2"
-                            controls2:DockPanel.Dock="Right"
-                            Content="{controls1:GlyphIcon Glyph=HelpE897}"
-                            IsTabStop="False" />
+                        <Grid Grid.Row="2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <ToggleSwitch
+                                x:Uid="/LoginPage/DisableDomainFrontingToggleSwitch"
+                                Grid.Column="0"
+                                IsOn="{x:Bind _viewModel.DisableDomainFronting, Mode=TwoWay}" />
+                            <SplitButton
+                                x:Uid="/LoginPage/SubmitButton"
+                                Grid.Column="1"
+                                Height="33"
+                                Click="WebViewLogin_OnTapped">
+                                <SplitButton.Flyout>
+                                    <MenuFlyout>
+                                        <MenuFlyoutItem x:Uid="/LoginPage/SubmitWithNewAccountButton" Click="WebViewLoginNewAccount_OnTapped" />
+                                    </MenuFlyout>
+                                </SplitButton.Flyout>
+                            </SplitButton>
+                            <Button
+                                x:Uid="/LoginPage/WebViewHelp"
+                                Grid.Column="2"
+                                Content="{controls1:GlyphIcon Glyph=HelpE897}"
+                                IsTabStop="False" />
+                        </Grid>
                     </Grid>
                 </PivotItem>
             </Pivot.Items>
         </Pivot>
+        <Border
+            Grid.Column="0"
+            Child="{x:Bind _viewModel.WebView, Mode=OneWay}"
+            CornerRadius="{ThemeResource ControlCornerRadius}" />
     </Grid>
 </controls:EnhancedWindowPage>
