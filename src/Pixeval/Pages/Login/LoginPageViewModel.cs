@@ -109,35 +109,7 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject
         return false;
     }
 
-    public async Task<Session> AuthCodeToSessionAsync(string code, string verifier)
-    {
-        // HttpClient is designed to be used through whole application lifetime, create and
-        // dispose it in a function is a commonly misused anti-pattern, but this function
-        // is intended to be called only once (at the start time) during the entire application's
-        // lifetime, so the overhead is acceptable
-
-        var httpClient = DisableDomainFronting
-            ? new()
-            : new HttpClient(new DelegatedHttpMessageHandler(MakoHttpOptions.CreateHttpMessageInvoker()));
-        httpClient.DefaultRequestHeaders.UserAgent.Add(new("PixivAndroidApp", "5.0.64"));
-        httpClient.DefaultRequestHeaders.UserAgent.Add(new("(Android 6.0)"));
-        var scheme = DisableDomainFronting ? "https" : "http";
-
-        using var result = await httpClient.PostFormAsync(scheme + "://oauth.secure.pixiv.net/auth/token",
-            ("code", code),
-            ("code_verifier", verifier),
-            ("client_id", "MOBrBDS8blbauoSck0ZfDbtuzpyT"),
-            ("client_secret", "lsACyCD94FhDUtGTXi3QzcFE2uU1hqtDaKeqrdwj"),
-            ("grant_type", "authorization_code"),
-            ("include_policy", "true"),
-            ("redirect_uri", "https://app-api.pixiv.net/web/v1/users/auth/pixiv/callback"));
-        // using会有resharper警告，所以这里用Dispose
-        httpClient.Dispose();
-        _ = result.EnsureSuccessStatusCode();
-        var session = (await result.Content.ReadAsStringAsync()).FromJson<TokenResponse>()!.ToSession();
-        RefreshToken = session.RefreshToken;
-        return session;
-    }
+    
 
     private static string ChooseBrowser()
     {
@@ -175,8 +147,8 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject
 
     public async Task LoginAsync(UserControl userControl, bool useNewAccount, Action navigated)
     {
-        var verifier = PixivAuthSignature.GetCodeVerify();
-        var url = PixivAuthSignature.GenerateWebPageUrl(verifier);
+        var verifier = PixivAuth.GetCodeVerify();
+        var url = PixivAuth.GenerateWebPageUrl(verifier);
         var browserPath = ChooseBrowser();
         var userDataDir = Path.Combine(Path.GetTempPath(), "Pixeval", "browser-user-data-dir");
         var commonArgs = $"--disable-sync --no-default-browser-check --no-first-run --user-data-dir={userDataDir} {url}";

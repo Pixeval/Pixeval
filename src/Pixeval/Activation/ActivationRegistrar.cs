@@ -25,6 +25,7 @@ using Windows.ApplicationModel.Activation;
 using Microsoft.Windows.AppLifecycle;
 using System.Web;
 using Pixeval.CoreApi.Preference;
+using Pixeval.Pages.Login;
 
 namespace Pixeval.Activation;
 
@@ -56,11 +57,7 @@ public static class ActivationRegistrar
             else if (activationUri.Scheme == "pixiv")
             {
                 var code = HttpUtility.ParseQueryString(activationUri.Query)["code"]!;
-                Session session;
-                try
-                {
-                    session = await 
-                }
+                _ = PixivAuth.AuthCodeToSessionAsync(code, PixivAuth.GetCodeVerify());
             }
         }
     }
