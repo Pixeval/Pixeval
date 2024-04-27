@@ -20,7 +20,6 @@
 
 using System;
 using Windows.ApplicationModel.DataTransfer;
-using Microsoft.UI.Xaml;
 using Pixeval.Controls.Windowing;
 using Pixeval.Interop;
 

@@ -157,7 +157,7 @@ public class NovelDownloadTask : DownloadTaskBase
                 await File.WriteAllTextAsync(ActualDestinations[0], sbHtml.ToString());
                 break;
             case NovelDownloadFormat.Md:
-                var sbMd = DocumentViewModel.LoadHtmlContent(CancellationHandle);
+                var sbMd = DocumentViewModel.LoadMdContent(CancellationHandle);
                 await File.WriteAllTextAsync(ActualDestinations[0], sbMd.ToString());
                 break;
             default:

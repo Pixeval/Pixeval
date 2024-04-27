@@ -251,7 +251,7 @@ public class DocumentViewerViewModel(NovelContent novelContent) : ObservableObje
         var vm = new DocumentViewerViewModel(novelContent);
         var task1 = vm.LoadImagesAsync();
         var task2 = vm.LoadRtfContentAsync();
-        _ = Task.WhenAll(task1, task2).ContinueWith(callback);
+        _ = Task.WhenAll(task1, task2).ContinueWith(callback, TaskScheduler.FromCurrentSynchronizationContext());
         AddHistory();
 
         return vm;

@@ -20,18 +20,15 @@
 
 using System;
 using System.Collections.Generic;
-using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
 using Pixeval.Util.UI;
 using Pixeval.Util;
-using WinUI3Utilities;
 using Microsoft.UI.Xaml.Controls;
 using Pixeval.Utilities;
 using System.Threading.Tasks;
 using System.IO;
 using Pixeval.Download;
 using Microsoft.Extensions.DependencyInjection;
-using Pixeval.Controls.Windowing;
 using Pixeval.Download.Models;
 
 namespace Pixeval.Controls;

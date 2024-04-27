@@ -24,7 +24,6 @@ using Windows.Foundation;
 using Windows.System;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
-using Pixeval.Database;
 using Pixeval.Download;
 using Pixeval.Util.UI;
 using WinUI3Utilities;
