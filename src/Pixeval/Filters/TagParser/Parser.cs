@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Pixeval.Controls.FlyoutContent;
-using Pixeval.Controls;
 
 namespace Pixeval.Filters.TagParser
 {
@@ -39,6 +37,9 @@ namespace Pixeval.Filters.TagParser
         public FilterSetting Build()
         {
             ParseFilter();
+            this.FilterSettingBuilder.IncludeTags = this.FilterSettingBuilder.IncludeTags.ToList();
+            this.FilterSettingBuilder.ExcludeTags = this.FilterSettingBuilder.ExcludeTags.ToList();
+            this.FilterSettingBuilder.ExcludeUserName = this.FilterSettingBuilder.ExcludeUserName.ToList();
             return this.FilterSettingBuilder.Build();
         }
 
@@ -70,6 +71,7 @@ namespace Pixeval.Filters.TagParser
          * 
          */
 
+        // top-level entrypoint
         public void ParseFilter()
         {
             ParseArgumentList();
@@ -77,6 +79,26 @@ namespace Pixeval.Filters.TagParser
 
         public void ParseArgumentList()
         {
+            // If all tokens are eaten, return gracefully
+            if (this.Position == this.Tokens.Count)
+            {
+                return;
+            }
+            // If this position is overflow, throw error
+            if (this.Position > this.Tokens.Count)
+            {
+                throw new Exception("Expected an argument, actual: empty token flow");
+            }
+            // If the correct token is meet, call to parse argument
+            if (this.CurrentFilterToken is QueryFragmentNode.Data or QueryFragmentNode.Hashtag or QueryFragmentNode.Arobase or QueryFragmentNode.A or QueryFragmentNode.C)
+            {
+                ParseArgument();
+            }
+            // Unexpected type of token, error
+            else
+            {
+                throw new Exception("Not a starting token of argument");
+            }
             ParseArgument();
             ParseArgumentList();
         }
@@ -87,6 +109,8 @@ namespace Pixeval.Filters.TagParser
             {
                 var data = eatData();
 
+                // The current parsing for `like` and `index` are retrieving them from Data token, it would be better to put them into dedicated tokens
+                // in the current use case.
                 if (data.data == "like")
                 {
                     eatColon();
@@ -105,7 +129,9 @@ namespace Pixeval.Filters.TagParser
                 {
                     eatColon();
                     var (lo, hi) = ParseRangeDesc();
+                    
 
+                    // local variable minIndex and maxIndex correspond to retrieved data, they are used no where in current FilterSetting definition
                     if (lo is { } l)
                     {
                         var minIndex = l;
@@ -190,12 +216,12 @@ namespace Pixeval.Filters.TagParser
             var b = eatNumeric();
 
             bool rightInclusive = false;
-            if (this.CurrentFilterToken is QueryFragmentNode.LeftBracket)
+            if (this.CurrentFilterToken is QueryFragmentNode.RightBracket)
             {
                 eatRightBracket();
                 rightInclusive = true;
             }
-            else if (this.CurrentFilterToken is QueryFragmentNode.LeftParen)
+            else if (this.CurrentFilterToken is QueryFragmentNode.RightParen)
             {
                 eatRightParen();
                 rightInclusive = false;
