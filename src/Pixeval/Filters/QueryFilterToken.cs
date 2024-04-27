@@ -6,5 +6,5 @@ using System.Threading.Tasks;
 
 namespace Pixeval.Filters
 {
-    internal record FilterToken(string Content) { }
+    internal record QueryFilterToken(string Content) { }
 }
