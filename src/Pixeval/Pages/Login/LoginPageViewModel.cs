@@ -26,7 +26,6 @@ using System.Linq;
 using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
-using System.Web;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
@@ -45,7 +44,6 @@ using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
-using Windows.System;
 using WinUI3Utilities.Attributes;
 
 namespace Pixeval.Pages.Login;
@@ -180,16 +178,12 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject
         var verifier = PixivAuthSignature.GetCodeVerify();
         var url = PixivAuthSignature.GenerateWebPageUrl(verifier);
         var browserPath = ChooseBrowser();
-        var startInfo = new ProcessStartInfo(browserPath);
-        if (!DisableDomainFronting)
+        var userDataDir = Path.Combine(Path.GetTempPath(), "Pixeval", "browser-user-data-dir");
+        var commonArgs = $"--disable-sync --no-default-browser-check --no-first-run --user-data-dir={userDataDir} {url}";
+        var startInfo = new ProcessStartInfo(browserPath)
         {
-            startInfo.Arguments = $"--no-proxy-server {url}";
-        }
-        else
-        {
-            startInfo.Arguments = $"{url}";
-        }
-
+            Arguments = !DisableDomainFronting ? $"--no-proxy-server --dns-prefetch-disable {commonArgs}" : $"{commonArgs}"
+        };
         var process = Process.Start(startInfo);
         if (!DisableDomainFronting)
         {
@@ -200,9 +194,6 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject
             Injector.InstallChromeHook(injection, true, dllPath);
         }
     }
-
-
-
 
     public void CloseWindow() => WindowFactory.GetWindowForElement(owner).Close();
 }
