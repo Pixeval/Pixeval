@@ -18,10 +18,13 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Windows.ApplicationModel.Activation;
 using Microsoft.Windows.AppLifecycle;
+using System.Web;
+using Pixeval.CoreApi.Preference;
 
 namespace Pixeval.Activation;
 
@@ -36,10 +39,29 @@ public static class ActivationRegistrar
 
     public static void Dispatch(AppActivationArguments args)
     {
-        if (args is { Kind: ExtendedActivationKind.Protocol, Data: IProtocolActivatedEventArgs { Uri: var activationUri } } &&
-            FeatureHandlers.FirstOrDefault(f => f.ActivationFragment == activationUri.Host) is { } handler)
+        if (args is
+            {
+                Kind: ExtendedActivationKind.Protocol, Data: IProtocolActivatedEventArgs { Uri: var activationUri }
+            })
         {
-            _ = handler.Execute(activationUri.PathAndQuery[1..]);
+            if (activationUri.Scheme == "pixeval")
+            {
+                if (FeatureHandlers.FirstOrDefault(f => f.ActivationFragment == activationUri.Host) is { } handler)
+                {
+                    {
+                        _ = handler.Execute(activationUri.PathAndQuery[1..]);
+                    }
+                }
+            }
+            else if (activationUri.Scheme == "pixiv")
+            {
+                var code = HttpUtility.ParseQueryString(activationUri.Query)["code"]!;
+                Session session;
+                try
+                {
+                    session = await 
+                }
+            }
         }
     }
 }

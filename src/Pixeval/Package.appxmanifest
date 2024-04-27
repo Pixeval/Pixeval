@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
     xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
     xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
@@ -37,6 +37,11 @@
                 <uap:Extension Category="windows.protocol">
                     <uap:Protocol Name="pixeval">
                         <uap:DisplayName>Pixeval App Protocol</uap:DisplayName>
+                    </uap:Protocol>
+                </uap:Extension>
+                <uap:Extension Category="windows.protocol">
+                    <uap:Protocol Name="pixiv">
+                        <uap:DisplayName>pixiv</uap:DisplayName>
                     </uap:Protocol>
                 </uap:Extension>
             </Extensions>
