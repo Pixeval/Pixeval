@@ -1,39 +1,34 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace Pixeval.Filters.TagParser;
-/**
- * Fragments of data that a query string carries, could be a data or numeric value, or some labels like #, @, : or standalone characters like a or c.
- */
-internal interface QueryFragmentNode
+
+/// <summary>
+/// Fragments of data that a query string carries, could be a data or numeric value, or some labels like #, @, : or standalone characters like a or c.
+/// </summary>
+internal interface IQueryFragmentNode
 {
-    internal record A() : QueryFragmentNode;
+    internal record A : IQueryFragmentNode;
 
-    internal record C() : QueryFragmentNode;
+    internal record C : IQueryFragmentNode;
 
-    internal record Data(String data) : QueryFragmentNode;
+    internal record Data(string Value) : IQueryFragmentNode;
 
-    internal record Numeric(long value) : QueryFragmentNode;
+    internal record Numeric(long Value) : IQueryFragmentNode;
 
-    internal record Dash() : QueryFragmentNode;
+    internal record Dash : IQueryFragmentNode;
 
-    internal record Hashtag() : QueryFragmentNode;
+    internal record Hashtag : IQueryFragmentNode;
 
-    internal record Arobase() : QueryFragmentNode;
+    internal record Arobase : IQueryFragmentNode;
 
-    internal record Colon() : QueryFragmentNode;
+    internal record Colon : IQueryFragmentNode;
 
-    internal record Comma() : QueryFragmentNode;
+    internal record Comma : IQueryFragmentNode;
 
-    internal record LeftParen() : QueryFragmentNode;
+    internal record LeftParen : IQueryFragmentNode;
 
-    internal record RightParen() : QueryFragmentNode;
+    internal record RightParen : IQueryFragmentNode;
 
-    internal record LeftBracket() : QueryFragmentNode;
+    internal record LeftBracket : IQueryFragmentNode;
 
-    internal record RightBracket() : QueryFragmentNode;
+    internal record RightBracket : IQueryFragmentNode;
     
 }

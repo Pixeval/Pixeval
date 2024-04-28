@@ -1,18 +1,16 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Pixeval.Filters.TagParser;
 
-internal class Parser
+internal class Parser(List<IQueryFragmentNode> filterTokens)
 {
-    private List<QueryFragmentNode> Tokens { get; }
+    private List<IQueryFragmentNode> Tokens { get; } = filterTokens;
 
-    private int Position { get; set; }
+    private int Position { get; set; } = 0;
 
-    private QueryFragmentNode Eat()
+    private IQueryFragmentNode Eat()
     {
         if (Position == Tokens.Count)
         {
@@ -23,24 +21,17 @@ internal class Parser
         return tok;
     }
 
-    private QueryFragmentNode CurrentFilterToken => this.Tokens[Position];
+    private IQueryFragmentNode CurrentFilterToken => Tokens[Position];
 
-    private FilterSettingBuilder FilterSettingBuilder;
-
-    public Parser(List<QueryFragmentNode> FilterTokens)
-    {
-        this.Position = 0;
-        this.Tokens = FilterTokens;
-        this.FilterSettingBuilder = new FilterSettingBuilder();
-    }
+    private FilterSettingBuilder _filterSettingBuilder = new();
 
     public FilterSetting Build()
     {
         ParseFilter();
-        this.FilterSettingBuilder.IncludeTags = this.FilterSettingBuilder.IncludeTags.ToList();
-        this.FilterSettingBuilder.ExcludeTags = this.FilterSettingBuilder.ExcludeTags.ToList();
-        this.FilterSettingBuilder.ExcludeUserName = this.FilterSettingBuilder.ExcludeUserName.ToList();
-        return this.FilterSettingBuilder.Build();
+        _filterSettingBuilder.IncludeTags = _filterSettingBuilder.IncludeTags.ToList();
+        _filterSettingBuilder.ExcludeTags = _filterSettingBuilder.ExcludeTags.ToList();
+        _filterSettingBuilder.ExcludeUserName = _filterSettingBuilder.ExcludeUserName.ToList();
+        return _filterSettingBuilder.Build();
     }
 
     /*
@@ -71,7 +62,9 @@ internal class Parser
      * 
      */
 
-    // top-level entrypoint
+    /// <summary>
+    /// top-level entrypoint
+    /// </summary>
     public void ParseFilter()
     {
         ParseArgumentList();
@@ -80,17 +73,17 @@ internal class Parser
     public void ParseArgumentList()
     {
         // If all tokens are eaten, return gracefully
-        if (this.Position == this.Tokens.Count)
+        if (Position == Tokens.Count)
         {
             return;
         }
         // If this position is overflow, throw error
-        if (this.Position > this.Tokens.Count)
+        if (Position > Tokens.Count)
         {
             throw new Exception("Expected an argument, actual: empty token flow");
         }
         // If the correct token is meet, call to parse argument
-        if (this.CurrentFilterToken is QueryFragmentNode.Data or QueryFragmentNode.Hashtag or QueryFragmentNode.Arobase or QueryFragmentNode.A or QueryFragmentNode.C)
+        if (CurrentFilterToken is IQueryFragmentNode.Data or IQueryFragmentNode.Hashtag or IQueryFragmentNode.Arobase or IQueryFragmentNode.A or IQueryFragmentNode.C)
         {
             ParseArgument();
         }
@@ -105,236 +98,239 @@ internal class Parser
 
     public void ParseArgument()
     {
-        if (this.CurrentFilterToken is QueryFragmentNode.Data)
+        switch (CurrentFilterToken)
         {
-            var data = eatData();
-
-            // The current parsing for `like` and `index` are retrieving them from Data token, it would be better to put them into dedicated tokens
-            // in the current use case.
-            if (data.data == "like")
+            case IQueryFragmentNode.Data:
             {
-                eatColon();
-                var (lo, hi) = ParseRangeDesc();
+                var data = EatData();
 
-                if (lo is { } l)
+                switch (data.Value)
                 {
-                    this.FilterSettingBuilder.LeastBookmark = l;
-                }
-                if (hi is { } h)
-                {
-                    this.FilterSettingBuilder.MaximumBookmark = h;
-                }
-            }
-            else if (data.data == "index")
-            {
-                eatColon();
-                var (lo, hi) = ParseRangeDesc();
+                    // The current parsing for `like` and `index` are retrieving them from Data token, it would be better to put them into dedicated tokens
+                    // in the current use case.
+                    case "like":
+                    {
+                        EatColon();
+                        var (lo, hi) = ParseRangeDesc();
+
+                        if (lo is { } l)
+                        {
+                            _filterSettingBuilder.LeastBookmark = l;
+                        }
+                        if (hi is { } h)
+                        {
+                            _filterSettingBuilder.MaximumBookmark = h;
+                        }
+
+                        break;
+                    }
+                    case "index":
+                    {
+                        EatColon();
+                        var (lo, hi) = ParseRangeDesc();
                 
 
-                // local variable minIndex and maxIndex correspond to retrieved data, they are used no where in current FilterSetting definition
-                if (lo is { } l)
-                {
-                    var minIndex = l;
-                }
-                if (hi is { } h)
-                {
-                    var maxIndex = h;
-                }
-            }
-            else
-            {
-                this.FilterSettingBuilder.IncludeTags
-                    = this.FilterSettingBuilder.IncludeTags.Append(new QueryFilterToken(data.data));
-            }
-            return;
-        }
-        else if (this.CurrentFilterToken is QueryFragmentNode.Hashtag)
-        {
-            eatHash();
-            var tag = eatData();
-            this.FilterSettingBuilder.IncludeTags
-                = this.FilterSettingBuilder.IncludeTags.Append(new QueryFilterToken(tag.data));
-            return;
-        }
-        else if (this.CurrentFilterToken is QueryFragmentNode.Arobase)
-        {
-            eatArobase();
-            var author = eatData();
-            this.FilterSettingBuilder.IllustratorName = new QueryFilterToken(author.data);
-            return;
-        }
-        else if (this.CurrentFilterToken is QueryFragmentNode.A)
-        {
-            eatA();
-            var author = eatData();
-            this.FilterSettingBuilder.IllustratorName = new QueryFilterToken(author.data);
-            return;
-        }
-        else if (this.CurrentFilterToken is QueryFragmentNode.C)
-        {
-            eatC();
-            var character = eatData();
-            this.FilterSettingBuilder.IncludeTags
-                = this.FilterSettingBuilder.IncludeTags.Append(new QueryFilterToken(character.data));
-            return;
-        }
+                        // local variable minIndex and maxIndex correspond to retrieved data, they are used no where in current FilterSetting definition
+                        if (lo is { } l)
+                        {
+                            var minIndex = l;
+                        }
+                        if (hi is { } h)
+                        {
+                            var maxIndex = h;
+                        }
 
+                        break;
+                    }
+                    default:
+                        _filterSettingBuilder.IncludeTags
+                            = _filterSettingBuilder.IncludeTags.Append(new QueryFilterToken(data.Value));
+                        break;
+                }
+                return;
+            }
+            case IQueryFragmentNode.Hashtag:
+            {
+                EatHash();
+                var tag = EatData();
+                _filterSettingBuilder.IncludeTags
+                    = _filterSettingBuilder.IncludeTags.Append(new QueryFilterToken(tag.Value));
+                return;
+            }
+            case IQueryFragmentNode.Arobase:
+            {
+                EatArobase();
+                var author = EatData();
+                _filterSettingBuilder.IllustratorName = new QueryFilterToken(author.Value);
+                return;
+            }
+            case IQueryFragmentNode.A:
+            {
+                EatA();
+                var author = EatData();
+                _filterSettingBuilder.IllustratorName = new QueryFilterToken(author.Value);
+                return;
+            }
+            case IQueryFragmentNode.C:
+            {
+                EatC();
+                var character = EatData();
+                _filterSettingBuilder.IncludeTags
+                    = _filterSettingBuilder.IncludeTags.Append(new QueryFilterToken(character.Value));
+                return;
+            }
+        }
     }
 
     public (long?, long?) ParseRangeDesc()
     {
-        if (this.CurrentFilterToken is QueryFragmentNode.LeftBracket or QueryFragmentNode.LeftParen)
+        return CurrentFilterToken switch
         {
-            return ParseIntervalForm();
-        }
-        else if (this.CurrentFilterToken is QueryFragmentNode.Dash or QueryFragmentNode.Numeric)
-        {
-            return ParseDashForm();
-        }
-
-        return (null, null);
+            IQueryFragmentNode.LeftBracket or IQueryFragmentNode.LeftParen => ParseIntervalForm(),
+            IQueryFragmentNode.Dash or IQueryFragmentNode.Numeric => ParseDashForm(),
+            _ => (null, null)
+        };
     }
 
     public (long, long) ParseIntervalForm()
     {
-        bool leftInclusive = false;
+        var leftInclusive = false;
 
-        if (this.CurrentFilterToken is QueryFragmentNode.LeftBracket)
+        switch (CurrentFilterToken)
         {
-            eatLeftBracket();
-            leftInclusive = true;
-        }
-        else if (this.CurrentFilterToken is QueryFragmentNode.LeftParen)
-        {
-            eatLeftParen();
-            leftInclusive = false;
-        }
-
-
-        var a = eatNumeric();
-        eatComma();
-        var b = eatNumeric();
-
-        bool rightInclusive = false;
-        if (this.CurrentFilterToken is QueryFragmentNode.RightBracket)
-        {
-            eatRightBracket();
-            rightInclusive = true;
-        }
-        else if (this.CurrentFilterToken is QueryFragmentNode.RightParen)
-        {
-            eatRightParen();
-            rightInclusive = false;
+            case IQueryFragmentNode.LeftBracket:
+                EatLeftBracket();
+                leftInclusive = true;
+                break;
+            case IQueryFragmentNode.LeftParen:
+                EatLeftParen();
+                leftInclusive = false;
+                break;
         }
 
-        switch (leftInclusive, rightInclusive)
+
+        var a = EatNumeric();
+        EatComma();
+        var b = EatNumeric();
+
+        var rightInclusive = false;
+        switch (CurrentFilterToken)
         {
-            case (true, true):
-                return (a.value, b.value);
-            case (false, true):
-                return (a.value + 1, b.value);
-            case (true, false):
-                return (a.value, b.value - 1);
-            case (false, false):
-                return (a.value + 1, b.value - 1);
+            case IQueryFragmentNode.RightBracket:
+                EatRightBracket();
+                rightInclusive = true;
+                break;
+            case IQueryFragmentNode.RightParen:
+                EatRightParen();
+                rightInclusive = false;
+                break;
         }
+
+        return (leftInclusive, rightInclusive) switch
+        {
+            (true, true) => (a.Value, b.Value),
+            (false, true) => (a.Value + 1, b.Value),
+            (true, false) => (a.Value, b.Value - 1),
+            (false, false) => (a.Value + 1, b.Value - 1)
+        };
     }
 
     public (long?, long?) ParseDashForm()
     {
-        if (this.CurrentFilterToken is QueryFragmentNode.Dash)
+        switch (CurrentFilterToken)
         {
-            eatDash();
-            var a = eatNumeric();
-            return (null, a.value);
-        }
-        else if (this.CurrentFilterToken is QueryFragmentNode.Numeric)
-        {
-            var a = eatNumeric();
-            eatDash();
-            if (this.CurrentFilterToken is QueryFragmentNode.Numeric)
+            case IQueryFragmentNode.Dash:
             {
-                var b = eatNumeric();
-                return (a.value, b.value);
+                EatDash();
+                var a = EatNumeric();
+                return (null, a.Value);
             }
+            case IQueryFragmentNode.Numeric:
+            {
+                var a = EatNumeric();
+                EatDash();
+                if (CurrentFilterToken is IQueryFragmentNode.Numeric)
+                {
+                    var b = EatNumeric();
+                    return (a.Value, b.Value);
+                }
 
-            return (a.value, null);
+                return (a.Value, null);
+            }
+            default:
+                return (null, null);
         }
-
-        return (null, null);
     }
 
+    #region Lexical rules
 
-    /*
-     * Lexical rules
-     */
-
-
-    private QueryFragmentNode.Data eatData()
+    private IQueryFragmentNode.Data EatData()
     {
-        var data = (QueryFragmentNode.Data)Eat();
+        var data = (IQueryFragmentNode.Data)Eat();
         return data;
     }
 
-    private QueryFragmentNode.Numeric eatNumeric()
+    private IQueryFragmentNode.Numeric EatNumeric()
     {
-        var num = (QueryFragmentNode.Numeric)Eat();
+        var num = (IQueryFragmentNode.Numeric)Eat();
         return num;
     }
 
-    private void eatHash()
+    private void EatHash()
     {
-        var hash = (QueryFragmentNode.Hashtag)Eat();
+        var hash = (IQueryFragmentNode.Hashtag)Eat();
     }
 
-    private void eatArobase()
+    private void EatArobase()
     {
-        var arobase = (QueryFragmentNode.Arobase)Eat();
+        var arobase = (IQueryFragmentNode.Arobase)Eat();
     }
 
-    private void eatA()
+    private void EatA()
     {
-        var a = (QueryFragmentNode.A)Eat();
+        var a = (IQueryFragmentNode.A)Eat();
     }
 
-    private void eatC()
+    private void EatC()
     {
-        var c = (QueryFragmentNode.C)Eat();
+        var c = (IQueryFragmentNode.C)Eat();
     }
 
-    private void eatColon()
+    private void EatColon()
     {
-        var colon = (QueryFragmentNode.Colon)Eat();
+        var colon = (IQueryFragmentNode.Colon)Eat();
     }
 
-    private void eatComma()
+    private void EatComma()
     {
-        var colon = (QueryFragmentNode.Comma)Eat();
+        var colon = (IQueryFragmentNode.Comma)Eat();
     }
 
-    private void eatLeftBracket()
+    private void EatLeftBracket()
     {
-        var lb = (QueryFragmentNode.LeftBracket)Eat();
+        var lb = (IQueryFragmentNode.LeftBracket)Eat();
     }
 
-    private void eatRightBracket()
+    private void EatRightBracket()
     {
-        var rb = (QueryFragmentNode.RightBracket)Eat();
+        var rb = (IQueryFragmentNode.RightBracket)Eat();
     }
 
-    private void eatLeftParen()
+    private void EatLeftParen()
     {
-        var lp = (QueryFragmentNode.LeftParen)Eat();
+        var lp = (IQueryFragmentNode.LeftParen)Eat();
     }
 
-    private void eatRightParen()
+    private void EatRightParen()
     {
-        var rp = (QueryFragmentNode.RightParen)Eat();
+        var rp = (IQueryFragmentNode.RightParen)Eat();
     }
 
-    private void eatDash()
+    private void EatDash()
     {
-        var dash = (QueryFragmentNode.Dash)Eat();
+        var dash = (IQueryFragmentNode.Dash)Eat();
     }
+
+    #endregion
 }
 

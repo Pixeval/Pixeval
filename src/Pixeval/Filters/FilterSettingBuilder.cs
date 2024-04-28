@@ -1,17 +1,16 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Pixeval.Filters;
+
 internal class FilterSettingBuilder
 {
-    public IEnumerable<QueryFilterToken> IncludeTags = new List<QueryFilterToken>();
-    public IEnumerable<QueryFilterToken> ExcludeTags = new List<QueryFilterToken>();
+    public IEnumerable<QueryFilterToken> IncludeTags = [];
+    public IEnumerable<QueryFilterToken> ExcludeTags = [];
     public long LeastBookmark = 0;
     public long MaximumBookmark = 0;
-    public IEnumerable<QueryFilterToken> ExcludeUserName = new List<QueryFilterToken>();
+    public IEnumerable<QueryFilterToken> ExcludeUserName = [];
     public QueryFilterToken IllustratorName = new("");
     public long IllustratorId = 0;
     public QueryFilterToken IllustrationName = new("");
@@ -30,22 +29,17 @@ internal class FilterSettingBuilder
 
     public override bool Equals(object? obj)
     {
-        if (obj is FilterSettingBuilder fb)
-        {
-            return fb.IncludeTags.SequenceEqual(this.IncludeTags)
-                   && fb.ExcludeTags.SequenceEqual(this.ExcludeTags)
-                   && fb.LeastBookmark == this.LeastBookmark
-                   && fb.MaximumBookmark == this.MaximumBookmark
-                   && fb.ExcludeUserName.SequenceEqual(this.ExcludeUserName)
-                   && fb.IllustratorName == this.IllustratorName
-                   && fb.IllustrationName == this.IllustrationName
-                   && fb.IllustratorId == this.IllustratorId
-                   && fb.IllustrationId == this.IllustrationId
-                   && fb.PublishDateStart == this.PublishDateStart
-                   && fb.PublishDateEnd == this.PublishDateEnd;
-        }
-
-        return false;
+        return obj is FilterSettingBuilder fb
+               && fb.IncludeTags.SequenceEqual(IncludeTags)
+               && fb.ExcludeTags.SequenceEqual(ExcludeTags)
+               && fb.LeastBookmark == LeastBookmark
+               && fb.MaximumBookmark == MaximumBookmark
+               && fb.ExcludeUserName.SequenceEqual(ExcludeUserName)
+               && fb.IllustratorName == IllustratorName
+               && fb.IllustrationName == IllustrationName
+               && fb.IllustratorId == IllustratorId
+               && fb.IllustrationId == IllustrationId
+               && fb.PublishDateStart == PublishDateStart
+               && fb.PublishDateEnd == PublishDateEnd;
     }
-
 }

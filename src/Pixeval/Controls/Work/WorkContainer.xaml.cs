@@ -27,7 +27,6 @@ using Windows.System;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
-using Pixeval.Controls.FlyoutContent;
 using Pixeval.Util;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
@@ -35,6 +34,8 @@ using WinUI3Utilities;
 using Pixeval.Misc;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.Controls.Windowing;
+using Pixeval.Filters;
+using Pixeval.Filters.TagParser;
 
 namespace Pixeval.Controls;
 
@@ -89,8 +90,6 @@ public partial class WorkContainer : IScrollViewProvider
     public ISortableEntryViewViewModel ViewModel => WorkView.ViewModel;
 
     private void WorkContainer_OnLoaded(object sender, RoutedEventArgs e) => _ = WorkView.Focus(FocusState.Programmatic);
-
-    private FilterSettings _lastFilterSettings = FilterSettings.Default;
 
     private void SelectAllToggleButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
@@ -170,69 +169,11 @@ public partial class WorkContainer : IScrollViewProvider
         WorkView.AdvancedItemsView.DeselectAll();
     }
 
-    private void OpenConditionDialogButton_OnTapped(object sender, TappedRoutedEventArgs e)
-    {
-        FilterTeachingTip.IsOpen = true;
-    }
-
-    private void FilterTeachingTip_OnActionButtonClick(TeachingTip sender, object args)
-    {
-        FilterContent.Reset();
-    }
-
     private void Content_OnLoading(FrameworkElement sender, object e)
     {
         var teachingTip = sender.GetTag<TeachingTip>();
         var appBarButton = teachingTip.GetTag<AppBarButton>();
         teachingTip.Target = appBarButton.IsInOverflow ? null : appBarButton;
-    }
-
-    private void FilterTeachingTip_OnCloseButtonClick(TeachingTip sender, object args)
-    {
-        if (FilterContent.GetFilterSettings is not (
-            var includeTags,
-            var excludeTags,
-            var leastBookmark,
-            var maximumBookmark,
-            _, // TODO user group name
-            var illustratorName,
-            var illustratorId,
-            var illustrationName,
-            var illustrationId,
-            var publishDateStart,
-            var publishDateEnd) filterSettings)
-            return;
-
-        if (filterSettings == _lastFilterSettings)
-        {
-            return;
-        }
-
-        _lastFilterSettings = filterSettings;
-
-        ViewModel.Filter = o =>
-        {
-            var stringTags = o.Tags.Select(t => t.Name).ToArray();
-            var result =
-                ExamineExcludeTags(stringTags, excludeTags)
-                && ExamineIncludeTags(stringTags, includeTags)
-                && o.TotalBookmarks >= leastBookmark
-                && o.TotalBookmarks <= maximumBookmark
-                && illustrationName.Match(o.Title)
-                && illustratorName.Match(o.User.Name)
-                && (illustratorId is -1 || illustratorId == o.User.Id)
-                && illustrationId is -1 || illustrationId == o.Id
-                && o.PublishDate >= publishDateStart
-                && o.PublishDate <= publishDateEnd;
-            return result;
-        };
-        return;
-
-        static bool ExamineExcludeTags(IEnumerable<string> tags, IEnumerable<Token> predicates)
-            => predicates.Aggregate(true, (acc, token) => acc && tags.None(token.Match));
-
-        static bool ExamineIncludeTags(ICollection<string> tags, IEnumerable<Token> predicates)
-            => tags.Count is 0 || predicates.Aggregate(true, (acc, token) => acc && tags.Any(token.Match));
     }
 
     private void FastFilterAutoSuggestBox_OnTextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
@@ -242,11 +183,41 @@ public partial class WorkContainer : IScrollViewProvider
 
     public void PerformSearch(string text)
     {
-        ViewModel.Filter = text.IsNullOrBlank()
-            ? null
-            : o => o.Id.ToString().Contains(text)
-                   || o.Tags.Any(x => x.Name.Contains(text) || (x.TranslatedName?.Contains(text) ?? false))
-                   || o.Title.Contains(text);
+        var tokens = new Tokenizer().Tokenize(text).ToList();
+        var parser = new Parser(tokens);
+        var settings = parser.Build();
+        if (settings is not var (
+            includeTags, excludeTags,
+            leastBookmark, maximumBookmark,
+            _, 
+            illustratorName, illustratorId, 
+            illustrationName, illustrationId, 
+            publishDateStart, publishDateEnd))
+            return;
+
+        ViewModel.Filter = o =>
+        {
+            var stringTags = o.Tags.Select(t => t.Name).ToArray();
+            var result =
+                ExamineExcludeTags(stringTags, excludeTags)
+                && ExamineIncludeTags(stringTags, includeTags)
+                && o.TotalBookmarks >= leastBookmark
+                && o.TotalBookmarks <= maximumBookmark
+                && o.Title.Contains(illustrationName.Content)
+                && o.User.Name.Contains(illustratorName.Content)
+                && (illustratorId is -1 || illustratorId == o.User.Id)
+                && illustrationId is -1 || illustrationId == o.Id
+                && o.PublishDate >= publishDateStart
+                && o.PublishDate <= publishDateEnd;
+            return result;
+        };
+        return;
+
+        static bool ExamineExcludeTags(IEnumerable<string> tags, IEnumerable<QueryFilterToken> predicates)
+            => predicates.Aggregate(true, (acc, token) => acc && tags.All(t => t != token.Content));
+
+        static bool ExamineIncludeTags(ICollection<string> tags, IEnumerable<QueryFilterToken> predicates)
+            => tags.Count is 0 || predicates.Aggregate(true, (acc, token) => acc && tags.Any(t => t == token.Content));
     }
 
     public ScrollView ScrollView => WorkView.ScrollView;
