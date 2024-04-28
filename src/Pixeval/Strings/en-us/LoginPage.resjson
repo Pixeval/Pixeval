@@ -8,8 +8,6 @@
     "LoginPhaseSuccessNavigating": "Login success, navigating to the welcome page",
     "LoginPhaseWaitingForUserInput": "Waiting for user input",
     "SubmitButton/Content": "Login",
-    "RefreshTokenPivotItem/Header": "Token",
-    "WebViewPivotItem/Header": "WebView",
     "RefreshTokenBox/PlaceholderText": "Refresh token",
     "UserNameBox/PlaceholderText": "Email or pixiv ID",
     "PasswordBox/PlaceholderText": "Password",

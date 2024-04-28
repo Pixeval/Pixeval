@@ -21,6 +21,7 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media.Animation;
 using Pixeval.AppManagement;
 using Pixeval.Util.UI;
@@ -32,6 +33,10 @@ namespace Pixeval.Pages.Login;
 public sealed partial class LoginPage
 {
     private readonly LoginPageViewModel _viewModel;
+
+    private const string RefreshToken = nameof(RefreshToken);
+    private const string Browser = nameof(Browser);
+    private const string WebView = nameof(WebView);
 
     public LoginPage()
     {
@@ -48,11 +53,11 @@ public sealed partial class LoginPage
         }
         else
         {
-            RefreshToken(App.AppViewModel.LoginContext.RefreshToken);
+            Refresh(App.AppViewModel.LoginContext.RefreshToken);
         }
     }
 
-    private async void RefreshToken(string refreshToken)
+    private async void Refresh(string refreshToken)
     {
         try
         {
@@ -82,9 +87,11 @@ public sealed partial class LoginPage
         AppInfo.SaveContext();
     }
 
+    private void SwitchPresenterButton_OnTapped(object sender, TappedRoutedEventArgs e) => SwitchPresenter.Value = sender.To<FrameworkElement>().GetTag<string>();
+
     #region Token
 
-    private void TokenLogin_OnTapped(object sender, object e) => RefreshToken(_viewModel.RefreshToken);
+    private void TokenLogin_OnTapped(object sender, object e) => Refresh(_viewModel.RefreshToken);
 
     #endregion
 
