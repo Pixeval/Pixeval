@@ -213,7 +213,7 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject
         WebView = new();
         await WebView.EnsureCoreWebView2Async();
         IsEnabled = IsFinished = false;
-        var verifier = PixivAuthSignature.GetCodeVerify();
+        var verifier = PixivAuth.GetCodeVerify();
         WebView.NavigationStarting += async (sender, e) =>
         {
             if (e.Uri.StartsWith("pixiv://"))
@@ -283,7 +283,7 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject
                       """);
             }
         };
-        WebView.Source = new Uri(PixivAuthSignature.GenerateWebPageUrl(verifier));
+        WebView.Source = new Uri(PixivAuth.GenerateWebPageUrl(verifier));
     }
 
     private async Task<bool> EnsureCertificateIsInstalled(UIElement userControl)
@@ -373,7 +373,7 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject
         var verifier = PixivAuth.GetCodeVerify();
         var url = PixivAuth.GenerateWebPageUrl(verifier);
         var browserPath = ChooseBrowser();
-        var userDataDir = Path.Combine(Path.GetTempPath(), "Pixeval", "browser-user-data-dir");
+        var userDataDir = Path.Combine(Path.GetTempPath(), "Pixeval", "browser-user-data");
         var commonArgs = $"--disable-sync --no-default-browser-check --no-first-run --user-data-dir={userDataDir} {url}";
         var startInfo = new ProcessStartInfo(browserPath)
         {
