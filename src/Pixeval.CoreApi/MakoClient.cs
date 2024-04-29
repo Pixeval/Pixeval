@@ -117,7 +117,7 @@ public partial class MakoClient : ICancellable, IAsyncDisposable
                         !message.IsSuccessStatusCode
                             ? await MakoNetworkException
                                 .FromHttpResponseMessageAsync(message,
-                                    s.GetRequiredService<MakoClient>().Configuration.Bypass).ConfigureAwait(false)
+                                    s.GetRequiredService<MakoClient>().Configuration.DomainFronting).ConfigureAwait(false)
                             : null
                 }))
             .AddSingleton(s => RestService.For<IAuthEndPoint>(
@@ -128,7 +128,7 @@ public partial class MakoClient : ICancellable, IAsyncDisposable
                         !message.IsSuccessStatusCode
                             ? await MakoNetworkException
                                 .FromHttpResponseMessageAsync(message,
-                                    s.GetRequiredService<MakoClient>().Configuration.Bypass).ConfigureAwait(false)
+                                    s.GetRequiredService<MakoClient>().Configuration.DomainFronting).ConfigureAwait(false)
                             : null
                 }))
             .AddSingleton(s => RestService.For<IReverseSearchApiEndPoint>("https://saucenao.com/",
@@ -138,7 +138,7 @@ public partial class MakoClient : ICancellable, IAsyncDisposable
                         !message.IsSuccessStatusCode
                             ? await MakoNetworkException
                                 .FromHttpResponseMessageAsync(message,
-                                    s.GetRequiredService<MakoClient>().Configuration.Bypass).ConfigureAwait(false)
+                                    s.GetRequiredService<MakoClient>().Configuration.DomainFronting).ConfigureAwait(false)
                             : null
                 }))
             .BuildServiceProvider();

@@ -53,8 +53,6 @@ public static partial class AppInfo
 
     public const string IconApplicationUri = "ms-appx:///Assets/Images/logo.ico";
 
-    public static readonly string AppIconFontFamilyName = AppHelper.IsWindows11 ? "Segoe Fluent Icons" : "Segoe MDL2 Assets";
-
     public static readonly string DatabaseFilePath = AppKnownFolders.Local.Resolve("PixevalData.litedb");
 
     public static Versioning AppVersion { get; } = new();

@@ -19,10 +19,13 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Net.NetworkInformation;
+using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using System.Web;
@@ -34,29 +37,23 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.Win32;
 using Pixeval.AppManagement;
 using Pixeval.Attributes;
+using Pixeval.Bypass;
 using Pixeval.Controls.Windowing;
 using Pixeval.CoreApi;
-using Pixeval.CoreApi.Model;
-using Pixeval.CoreApi.Net;
 using Pixeval.CoreApi.Preference;
 using Pixeval.Logging;
 using Pixeval.Misc;
 using Pixeval.Util;
-using Pixeval.Util.IO;
 using Pixeval.Util.UI;
-using Pixeval.Utilities;
 using WinUI3Utilities.Attributes;
 
 namespace Pixeval.Pages.Login;
 
 [SettingsViewModel<LoginContext>(nameof(LoginContext))]
-public partial class LoginPageViewModel(UIElement owner) : ObservableObject, IDisposable
+public partial class LoginPageViewModel(UIElement owner) : ObservableObject
 {
     public enum LoginPhaseEnum
     {
-        [LocalizedResource(typeof(LoginPageResources), nameof(LoginPageResources.LoginPhaseCheckingRefreshAvailable))]
-        CheckingRefreshAvailable,
-
         [LocalizedResource(typeof(LoginPageResources), nameof(LoginPageResources.LoginPhaseRefreshing))]
         Refreshing,
 
@@ -76,30 +73,59 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject, IDi
         SuccessNavigating
     }
 
-    public bool IsFinished { get; set; }
+    /// <summary>
+    /// 表示要不要展示<see cref="WebView"/>
+    /// </summary>
+    [ObservableProperty] private bool _isFinished = true;
 
+    /// <summary>
+    /// 表示右侧按钮是否可用
+    /// </summary>
     [ObservableProperty] private bool _isEnabled;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(ProcessingRingVisible))]
     private LoginPhaseEnum _loginPhase;
 
-    [ObservableProperty] private WebView2? _webView;
-
     public LoginContext LoginContext => App.AppViewModel.LoginContext;
 
-    public bool DisableDomainFronting
+    public bool EnableDomainFronting
     {
-        get => App.AppViewModel.AppSettings.DisableDomainFronting;
-        set => App.AppViewModel.AppSettings.DisableDomainFronting = value;
+        get => App.AppViewModel.AppSettings.EnableDomainFronting;
+        set => App.AppViewModel.AppSettings.EnableDomainFronting = value;
     }
 
     public Visibility ProcessingRingVisible => LoginPhase is LoginPhaseEnum.WaitingForUserInput ? Visibility.Collapsed : Visibility.Visible;
 
-    public void AdvancePhase(LoginPhaseEnum newPhase)
+    public void AdvancePhase(LoginPhaseEnum newPhase) => LoginPhase = newPhase;
+
+    public void CloseWindow() => WindowFactory.GetWindowForElement(owner).Close();
+
+    #region Token (Common use)
+
+    public async Task<bool> RefreshAsync(string refreshToken)
     {
-        LoginPhase = newPhase;
+        AdvancePhase(LoginPhaseEnum.Refreshing);
+        using var scope = App.AppViewModel.AppServicesScope;
+        var logger = scope.ServiceProvider.GetRequiredService<FileLogger>();
+        var client = await MakoClient.TryGetMakoClientAsync(refreshToken, App.AppViewModel.AppSettings.ToMakoClientConfiguration(), logger);
+        if (client is not null)
+        {
+            App.AppViewModel.MakoClient = client;
+            RefreshToken = client.Session.RefreshToken;
+            return true;
+        }
+
+        _ = await owner.CreateAcknowledgementAsync(LoginPageResources.RefreshingSessionFailedTitle,
+            LoginPageResources.RefreshingSessionFailedContent);
+        return false;
     }
+
+    #endregion
+
+    #region WebView
+
+    [ObservableProperty] private WebView2? _webView;
 
     public bool CheckWebView2Installation()
     {
@@ -123,25 +149,6 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject, IDi
         var fakeCertMgr = new CertificateManager(cert);
         fakeCertMgr.Install(StoreName.Root, StoreLocation.CurrentUser);
     }
-
-    public async Task<bool> RefreshAsync(string refreshToken)
-    {
-        AdvancePhase(LoginPhaseEnum.Refreshing);
-        using var scope = App.AppViewModel.AppServicesScope;
-        var logger = scope.ServiceProvider.GetRequiredService<FileLogger>();
-        var client = await MakoClient.TryGetMakoClientAsync(refreshToken, App.AppViewModel.AppSettings.ToMakoClientConfiguration(), logger);
-        if (client is not null)
-        {
-            App.AppViewModel.MakoClient = client;
-            RefreshToken = client.Session.RefreshToken;
-            return true;
-        }
-
-        _ = await owner.CreateAcknowledgementAsync(LoginPageResources.RefreshingSessionFailedTitle,
-            LoginPageResources.RefreshingSessionFailedContent);
-        return false;
-    }
-
     private static int NegotiatePort(int preferPort = 49152)
     {
         var unavailable = IPGlobalProperties.GetIPGlobalProperties().GetActiveTcpConnections().Select(t => t.LocalEndPoint.Port).ToHashSet();
@@ -158,41 +165,13 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject, IDi
         return preferPort;
     }
 
-    public async Task<Session> AuthCodeToSessionAsync(string code, string verifier)
-    {
-        // HttpClient is designed to be used through whole application lifetime, create and
-        // dispose it in a function is a commonly misused anti-pattern, but this function
-        // is intended to be called only once (at the start time) during the entire application's
-        // lifetime, so the overhead is acceptable
-
-        var httpClient = DisableDomainFronting ? new() : new HttpClient(new DelegatedHttpMessageHandler(MakoHttpOptions.CreateHttpMessageInvoker()));
-        httpClient.DefaultRequestHeaders.UserAgent.Add(new("PixivAndroidApp", "5.0.64"));
-        httpClient.DefaultRequestHeaders.UserAgent.Add(new("(Android 6.0)"));
-        var scheme = DisableDomainFronting ? "https" : "http";
-
-        using var result = await httpClient.PostFormAsync(scheme + "://oauth.secure.pixiv.net/auth/token",
-            ("code", code),
-            ("code_verifier", verifier),
-            ("client_id", "MOBrBDS8blbauoSck0ZfDbtuzpyT"),
-            ("client_secret", "lsACyCD94FhDUtGTXi3QzcFE2uU1hqtDaKeqrdwj"),
-            ("grant_type", "authorization_code"),
-            ("include_policy", "true"),
-            ("redirect_uri", "https://app-api.pixiv.net/web/v1/users/auth/pixiv/callback"));
-        // using会有resharper警告，所以这里用Dispose
-        httpClient.Dispose();
-        _ = result.EnsureSuccessStatusCode();
-        var session = (await result.Content.ReadAsStringAsync()).FromJson<TokenResponse>()!.ToSession();
-        RefreshToken = session.RefreshToken;
-        return session;
-    }
-
     public async Task WebView2LoginAsync(UserControl userControl, bool useNewAccount, Action navigated)
     {
         var arguments = "";
         var port = NegotiatePort();
 
         var proxyServer = null as PixivAuthenticationProxyServer;
-        if (!DisableDomainFronting)
+        if (EnableDomainFronting)
         {
             if (!await EnsureCertificateIsInstalled(userControl))
                 return;
@@ -207,16 +186,17 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject, IDi
         WebView = new();
         await WebView.EnsureCoreWebView2Async();
         IsEnabled = IsFinished = false;
-        var verifier = PixivAuthSignature.GetCodeVerify();
+        var verifier = PixivAuth.GetCodeVerify();
         WebView.NavigationStarting += async (sender, e) =>
         {
             if (e.Uri.StartsWith("pixiv://"))
             {
+                IsFinished = true;
                 var code = HttpUtility.ParseQueryString(new Uri(e.Uri).Query)["code"]!;
                 Session session;
                 try
                 {
-                    session = await AuthCodeToSessionAsync(code, verifier);
+                    session = await PixivAuth.AuthCodeToSessionAsync(code, verifier);
                 }
                 catch
                 {
@@ -225,7 +205,6 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject, IDi
                     CloseWindow();
                     return;
                 }
-                IsFinished = true;
                 using var scope = App.AppViewModel.AppServicesScope;
                 var logger = scope.ServiceProvider.GetRequiredService<FileLogger>();
                 App.AppViewModel.MakoClient = new MakoClient(session, App.AppViewModel.AppSettings.ToMakoClientConfiguration(), logger);
@@ -246,7 +225,7 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject, IDi
                                   return await checkElement(selector);
                               }
                           }
-                      
+
                           async function fill(selector, value)
                           {
                               const input = (await checkElement(selector));
@@ -255,7 +234,7 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject, IDi
                               const ev = new Event("input", { bubbles: true });
                               input.dispatchEvent(ev);
                           }
-                      
+
                           if ((await checkElement("button")) && document.querySelectorAll("button").length === 3) {
                               (await checkElement("button:nth-child({{(useNewAccount ? 2 : 1)}})")).click();
                           }
@@ -277,7 +256,7 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject, IDi
                       """);
             }
         };
-        WebView.Source = new Uri(PixivAuthSignature.GenerateWebPageUrl(verifier));
+        WebView.Source = new Uri(PixivAuth.GenerateWebPageUrl(verifier));
     }
 
     private async Task<bool> EnsureCertificateIsInstalled(UIElement userControl)
@@ -317,8 +296,6 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject, IDi
         return true;
     }
 
-    public void CloseWindow() => WindowFactory.GetWindowForElement(owner).Close();
-
     /// <summary>
     /// 退出App时关闭<see cref="WebView"/>可以保证不抛异常
     /// </summary>
@@ -327,4 +304,64 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject, IDi
         WebView?.Close();
         WebView = null;
     }
+
+    #endregion
+
+    #region Browser
+
+    private static string ChooseBrowser()
+    {
+        using var startMenuInternetKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Clients\StartMenuInternet");
+        var browsers = new Dictionary<string, string>();
+        if (startMenuInternetKey != null)
+        {
+            var subKeyNames = startMenuInternetKey.GetSubKeyNames();
+            foreach (var subKeyName in subKeyNames)
+            {
+                using var subKey =
+                    startMenuInternetKey.OpenSubKey($@"{subKeyName}\Capabilities\URLAssociations");
+                var httpsValue = subKey?.GetValue("https");
+                var shellKey = startMenuInternetKey.OpenSubKey($@"{subKeyName}\shell\open\command");
+                var location = shellKey?.GetValue(null);
+                if (httpsValue is string httpValueString)
+                {
+                    browsers[httpValueString] = (string)location!;
+                }
+            }
+        }
+        browsers = browsers.Join(["ChromeHTML", "MSEdgeHTM"], outer => outer.Key, inner => inner, ((pair, s) => pair))
+            .ToDictionary();
+        var userChoiceKey = Registry.CurrentUser.OpenSubKey(
+            @"Software\Microsoft\Windows\Shell\Associations\UrlAssociations\https\UserChoice");
+        if (userChoiceKey?.GetValue("ProgId") is not string id || !browsers.TryGetValue(id, out var ret))
+        {
+            return browsers.Values.First();
+        }
+
+        return ret;
+    }
+
+    public void BrowserLogin()
+    {
+        var verifier = PixivAuth.GetCodeVerify();
+        var url = PixivAuth.GenerateWebPageUrl(verifier);
+        var browserPath = ChooseBrowser();
+        var userDataDir = Path.Combine(Path.GetTempPath(), "Pixeval", "browser-user-data");
+        var commonArgs = $"--disable-sync --no-default-browser-check --no-first-run --user-data-dir={userDataDir} {url}";
+        var startInfo = new ProcessStartInfo(browserPath)
+        {
+            Arguments = EnableDomainFronting ? $"--no-proxy-server --dns-prefetch-disable {commonArgs}" : $"{commonArgs}"
+        };
+        var process = Process.Start(startInfo);
+        if (EnableDomainFronting)
+        {
+            var pid = process!.Id;
+            var dllPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "runtimes",
+                "win-x64", "native", "bypass.dll");
+            var injection = Injector.Inject((uint)pid, dllPath);
+            Injector.InstallChromeHook(injection, true, dllPath);
+        }
+    }
+
+    #endregion
 }

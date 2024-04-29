@@ -5,6 +5,7 @@
     xmlns:controls="using:Pixeval.Controls"
     xmlns:controls1="using:WinUI3Utilities.Controls"
     xmlns:controls2="using:CommunityToolkit.WinUI.Controls"
+    xmlns:converters="using:Pixeval.Controls.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:Pixeval.Pages.Login"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -12,6 +13,9 @@
     Loaded="LoginPage_OnLoaded"
     Unloaded="LoginPage_OnUnloaded"
     mc:Ignorable="d">
+    <controls:EnhancedWindowPage.Resources>
+        <converters:BoolNegationToVisibilityConverter x:Key="BoolNegationToVisibilityConverter" />
+    </controls:EnhancedWindowPage.Resources>
     <Grid
         Margin="0,32,0,0"
         Padding="50"
@@ -21,9 +25,6 @@
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="Auto" MinWidth="300" />
         </Grid.ColumnDefinitions>
-        <Grid.KeyboardAccelerators>
-            <KeyboardAccelerator Key="Enter" Invoked="Login_OnTapped" />
-        </Grid.KeyboardAccelerators>
         <StackPanel
             Grid.Column="0"
             HorizontalAlignment="Center"
@@ -42,115 +43,143 @@
                 FontSize="10"
                 Text="{x:Bind util:LocalizedResourceAttributeHelper.GetLocalizedResourceContent(_viewModel.LoginPhase), Mode=OneWay}" />
         </StackPanel>
-        <Pivot
+        <ContentControl
             Grid.Column="1"
-            MaxWidth="350"
             HorizontalAlignment="Stretch"
-            controls2:DockPanel.Dock="Top"
             IsEnabled="{x:Bind _viewModel.IsEnabled, Mode=OneWay}">
-            <Pivot.Items>
-                <PivotItem x:Uid="/LoginPage/RefreshTokenPivotItem">
-                    <Grid
-                        Padding="10"
+            <controls2:SwitchPresenter
+                x:Name="SwitchPresenter"
+                Width="350"
+                HorizontalAlignment="Stretch"
+                TargetType="x:String"
+                Value="{x:Bind local:LoginPage.RefreshToken}">
+                <controls2:Case Value="{x:Bind local:LoginPage.RefreshToken}">
+                    <controls2:DockPanel
                         VerticalAlignment="Top"
-                        ColumnSpacing="10"
-                        RowSpacing="20">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                        </Grid.RowDefinitions>
+                        LastChildFill="False"
+                        VerticalSpacing="10">
                         <TextBox
                             x:Uid="/LoginPage/RefreshTokenBox"
-                            Grid.Row="0"
-                            Grid.Column="0"
-                            Grid.ColumnSpan="2"
                             controls2:DockPanel.Dock="Top"
                             IsSpellCheckEnabled="False"
                             Text="{x:Bind _viewModel.RefreshToken, Mode=TwoWay}" />
-                        <ToggleSwitch
-                            x:Uid="/LoginPage/DisableDomainFrontingToggleSwitch"
-                            Grid.Row="1"
-                            Grid.Column="0"
-                            controls2:DockPanel.Dock="Left"
-                            IsOn="{x:Bind _viewModel.DisableDomainFronting, Mode=TwoWay}" />
-                        <Button
-                            x:Uid="/LoginPage/SubmitButton"
-                            Grid.Row="1"
-                            Grid.Column="1"
-                            Height="33"
-                            controls2:DockPanel.Dock="Right"
-                            Click="TokenLogin_OnTapped"
-                            IsEnabled="{x:Bind _viewModel.IsEnabled, Mode=OneWay}" />
-                    </Grid>
-                </PivotItem>
-                <PivotItem x:Uid="/LoginPage/AccountPivotItem">
-                    <Grid
-                        Padding="10"
+                        <controls2:DockPanel controls2:DockPanel.Dock="Top" HorizontalSpacing="10">
+                            <Button
+                                x:Uid="/LoginPage/SubmitButton"
+                                Height="33"
+                                controls2:DockPanel.Dock="Right"
+                                Click="TokenLogin_OnTapped"
+                                IsEnabled="{x:Bind _viewModel.IsEnabled, Mode=OneWay}" />
+                            <ToggleSwitch x:Uid="/LoginPage/DisableDomainFrontingToggleSwitch" IsOn="{x:Bind _viewModel.EnableDomainFronting, Mode=TwoWay}" />
+                        </controls2:DockPanel>
+                        <HyperlinkButton
+                            x:Uid="/LoginPage/BrowserButton"
+                            controls2:DockPanel.Dock="Top"
+                            Tag="{x:Bind local:LoginPage.Browser}"
+                            Tapped="SwitchPresenterButton_OnTapped" />
+                        <HyperlinkButton
+                            x:Uid="/LoginPage/WebViewButton"
+                            controls2:DockPanel.Dock="Top"
+                            Tag="{x:Bind local:LoginPage.WebView}"
+                            Tapped="SwitchPresenterButton_OnTapped" />
+                    </controls2:DockPanel>
+                </controls2:Case>
+                <controls2:Case Value="{x:Bind local:LoginPage.Browser}">
+                    <controls2:DockPanel
                         VerticalAlignment="Top"
-                        ColumnSpacing="10"
-                        RowSpacing="20">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                        </Grid.RowDefinitions>
+                        LastChildFill="False"
+                        VerticalSpacing="10">
+                        <InfoBar
+                            x:Uid="/LoginPage/BrowserLoginTip"
+                            controls2:DockPanel.Dock="Top"
+                            IsClosable="False"
+                            IsOpen="True"
+                            Severity="Informational" />
+                        <controls2:DockPanel controls2:DockPanel.Dock="Top" HorizontalSpacing="10">
+                            <Button
+                                x:Uid="/LoginPage/BrowserHelp"
+                                controls2:DockPanel.Dock="Right"
+                                Content="{controls1:GlyphIcon Glyph=HelpE897}"
+                                IsTabStop="False" />
+                            <Button
+                                x:Uid="/LoginPage/SubmitButton"
+                                Height="33"
+                                controls2:DockPanel.Dock="Right"
+                                Tapped="BrowserLogin_OnTapped" />
+                            <ToggleSwitch x:Uid="/LoginPage/DisableDomainFrontingToggleSwitch" IsOn="{x:Bind _viewModel.EnableDomainFronting, Mode=TwoWay}" />
+                        </controls2:DockPanel>
+                        <HyperlinkButton
+                            x:Uid="/LoginPage/RefreshTokenButton"
+                            controls2:DockPanel.Dock="Top"
+                            Tag="{x:Bind local:LoginPage.RefreshToken}"
+                            Tapped="SwitchPresenterButton_OnTapped" />
+                        <HyperlinkButton
+                            x:Uid="/LoginPage/WebViewButton"
+                            controls2:DockPanel.Dock="Top"
+                            Tag="{x:Bind local:LoginPage.WebView}"
+                            Tapped="SwitchPresenterButton_OnTapped" />
+                    </controls2:DockPanel>
+                </controls2:Case>
+                <controls2:Case Value="{x:Bind local:LoginPage.WebView}">
+                    <controls2:DockPanel
+                        VerticalAlignment="Top"
+                        LastChildFill="False"
+                        VerticalSpacing="10">
+                        <controls2:DockPanel.KeyboardAccelerators>
+                            <KeyboardAccelerator Key="Enter" Invoked="WebViewLogin_OnTapped" />
+                        </controls2:DockPanel.KeyboardAccelerators>
+                        <InfoBar
+                            x:Uid="/LoginPage/WebViewLoginTip"
+                            controls2:DockPanel.Dock="Top"
+                            IsClosable="False"
+                            IsOpen="True"
+                            Severity="Informational" />
                         <TextBox
                             x:Uid="/LoginPage/UserNameBox"
-                            Grid.Row="0"
-                            Grid.Column="0"
-                            Grid.ColumnSpan="3"
                             controls2:DockPanel.Dock="Top"
                             IsSpellCheckEnabled="False"
                             Text="{x:Bind _viewModel.UserName, Mode=TwoWay}" />
                         <PasswordBox
                             x:Uid="/LoginPage/PasswordBox"
-                            Grid.Row="1"
-                            Grid.Column="0"
-                            Grid.ColumnSpan="3"
                             controls2:DockPanel.Dock="Top"
                             Password="{x:Bind _viewModel.Password, Mode=TwoWay}" />
-                        <ToggleSwitch
-                            x:Uid="/LoginPage/DisableDomainFrontingToggleSwitch"
-                            Grid.Row="2"
-                            Grid.Column="0"
-                            controls2:DockPanel.Dock="Left"
-                            IsOn="{x:Bind _viewModel.DisableDomainFronting, Mode=TwoWay}" />
-                        <SplitButton
-                            x:Uid="/LoginPage/SubmitButton"
-                            Grid.Row="2"
-                            Grid.Column="1"
-                            Height="33"
-                            controls2:DockPanel.Dock="Right"
-                            Click="Login_OnTapped">
-                            <SplitButton.Flyout>
-                                <MenuFlyout>
-                                    <MenuFlyoutItem x:Uid="/LoginPage/SubmitWithNewAccountButton" Click="LoginWithNewAccount_OnTapped" />
-                                </MenuFlyout>
-                            </SplitButton.Flyout>
-                        </SplitButton>
-                        <Button
-                            x:Uid="/LoginPage/Help"
-                            Grid.Row="2"
-                            Grid.Column="2"
-                            controls2:DockPanel.Dock="Right"
-                            Content="{controls1:GlyphIcon Glyph=HelpE897}"
-                            IsTabStop="False" />
-                    </Grid>
-                </PivotItem>
-            </Pivot.Items>
-        </Pivot>
+                        <controls2:DockPanel controls2:DockPanel.Dock="Top" HorizontalSpacing="10">
+                            <Button
+                                x:Uid="/LoginPage/WebViewHelp"
+                                controls2:DockPanel.Dock="Right"
+                                Content="{controls1:GlyphIcon Glyph=HelpE897}"
+                                IsTabStop="False" />
+                            <SplitButton
+                                x:Uid="/LoginPage/SubmitButton"
+                                Height="33"
+                                controls2:DockPanel.Dock="Right"
+                                Click="WebViewLogin_OnTapped">
+                                <SplitButton.Flyout>
+                                    <MenuFlyout>
+                                        <MenuFlyoutItem x:Uid="/LoginPage/SubmitWithNewAccountButton" Click="WebViewLoginNewAccount_OnTapped" />
+                                    </MenuFlyout>
+                                </SplitButton.Flyout>
+                            </SplitButton>
+                            <ToggleSwitch x:Uid="/LoginPage/DisableDomainFrontingToggleSwitch" IsOn="{x:Bind _viewModel.EnableDomainFronting, Mode=TwoWay}" />
+                        </controls2:DockPanel>
+                        <HyperlinkButton
+                            x:Uid="/LoginPage/RefreshTokenButton"
+                            controls2:DockPanel.Dock="Top"
+                            Tag="{x:Bind local:LoginPage.RefreshToken}"
+                            Tapped="SwitchPresenterButton_OnTapped" />
+                        <HyperlinkButton
+                            x:Uid="/LoginPage/BrowserButton"
+                            controls2:DockPanel.Dock="Top"
+                            Tag="{x:Bind local:LoginPage.Browser}"
+                            Tapped="SwitchPresenterButton_OnTapped" />
+                    </controls2:DockPanel>
+                </controls2:Case>
+            </controls2:SwitchPresenter>
+        </ContentControl>
         <Border
             Grid.Column="0"
             Child="{x:Bind _viewModel.WebView, Mode=OneWay}"
-            CornerRadius="{ThemeResource ControlCornerRadius}" />
+            CornerRadius="{ThemeResource ControlCornerRadius}"
+            Visibility="{x:Bind _viewModel.IsFinished, Converter={StaticResource BoolNegationToVisibilityConverter}, Mode=OneWay}" />
     </Grid>
 </controls:EnhancedWindowPage>

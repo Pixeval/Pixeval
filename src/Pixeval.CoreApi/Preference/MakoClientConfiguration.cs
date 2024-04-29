@@ -29,7 +29,7 @@ namespace Pixeval.CoreApi.Preference;
 /// </summary>
 public record MakoClientConfiguration(
     int ConnectionTimeout,
-    bool Bypass,
+    bool DomainFronting,
     string? MirrorHost,
     CultureInfo CultureInfo)
 {
@@ -52,14 +52,8 @@ public record MakoClientConfiguration(
     [JsonPropertyName("connectionTimeout")]
     public int ConnectionTimeout { get; set; } = ConnectionTimeout;
 
-    /// <summary>
-    /// Automatically bypass GFW or not, default is set to true.
-    /// If you are currently living in China Mainland, turn it on to make sure
-    /// you can use Mako without using any kind of proxy, otherwise you will
-    /// need a proper proxy server to bypass the GFW
-    /// </summary>
-    [JsonPropertyName("bypass")]
-    public bool Bypass { get; set; } = Bypass;
+    [JsonPropertyName("domainFronting")]
+    public bool DomainFronting { get; set; } = DomainFronting;
 
     /// <summary>
     /// Mirror server's host of image downloading

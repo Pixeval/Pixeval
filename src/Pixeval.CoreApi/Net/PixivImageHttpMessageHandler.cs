@@ -30,7 +30,7 @@ internal class PixivImageHttpMessageHandler(MakoClient makoClient) : MakoClientS
 {
     protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
-        if (MakoClient.Configuration.Bypass)
+        if (MakoClient.Configuration.DomainFronting)
         {
             MakoHttpOptions.UseHttpScheme(request);
         }
@@ -48,7 +48,7 @@ internal class PixivImageHttpMessageHandler(MakoClient makoClient) : MakoClientS
             };
         }
         
-        return GetHttpMessageInvoker(MakoClient.Configuration.Bypass)
+        return GetHttpMessageInvoker(MakoClient.Configuration.DomainFronting)
             .SendAsync(request, cancellationToken);
     }
 }

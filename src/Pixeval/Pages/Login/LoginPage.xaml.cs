@@ -21,6 +21,7 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media.Animation;
 using Pixeval.AppManagement;
 using Pixeval.Util.UI;
@@ -33,19 +34,80 @@ public sealed partial class LoginPage
 {
     private readonly LoginPageViewModel _viewModel;
 
+    private const string RefreshToken = nameof(RefreshToken);
+    private const string Browser = nameof(Browser);
+    private const string WebView = nameof(WebView);
+
     public LoginPage()
     {
         _viewModel = new(this);
         InitializeComponent();
     }
 
-    private void TokenLogin_OnTapped(object sender, object e) => RefreshToken(_viewModel.RefreshToken);
+    private void LoginPage_OnLoaded(object sender, RoutedEventArgs e)
+    {
+        if (_viewModel.LogoutExit)
+        {
+            _viewModel.AdvancePhase(LoginPageViewModel.LoginPhaseEnum.WaitingForUserInput);
+            _viewModel.IsEnabled = true;
+        }
+        else
+        {
+            Refresh(App.AppViewModel.LoginContext.RefreshToken);
+        }
+    }
 
-    private async void Login_OnTapped(object sender, object e) => await LoginAsync(false);
+    private async void Refresh(string refreshToken)
+    {
+        try
+        {
+            if (refreshToken.IsNotNullOrEmpty() && await _viewModel.RefreshAsync(refreshToken))
+            {
+                SuccessNavigating();
+            }
+            else
+            {
+                _viewModel.AdvancePhase(LoginPageViewModel.LoginPhaseEnum.WaitingForUserInput);
+                _viewModel.IsEnabled = true;
+            }
+        }
+        catch (Exception exception)
+        {
+            _ = await this.CreateAcknowledgementAsync(LoginPageResources.ErrorWhileLoggingInTitle,
+                LoginPageResources.ErrorWhileLogginInContentFormatted.Format(exception.StackTrace));
+            _viewModel.CloseWindow();
+        }
+    }
 
-    private async void LoginWithNewAccount_OnTapped(object sender, RoutedEventArgs e) => await LoginAsync(true);
+    private void SuccessNavigating()
+    {
+        _viewModel.AdvancePhase(LoginPageViewModel.LoginPhaseEnum.SuccessNavigating);
+        NavigateParent<MainPage>(null, new DrillInNavigationTransitionInfo());
+        _viewModel.LogoutExit = false;
+        AppInfo.SaveContext();
+    }
 
-    private async Task LoginAsync(bool useNewAccount)
+    private void SwitchPresenterButton_OnTapped(object sender, TappedRoutedEventArgs e) => SwitchPresenter.Value = sender.To<FrameworkElement>().GetTag<string>();
+
+    #region Token
+
+    private void TokenLogin_OnTapped(object sender, object e) => Refresh(_viewModel.RefreshToken);
+
+    #endregion
+
+    #region Browser
+
+    private void BrowserLogin_OnTapped(object sender, RoutedEventArgs e) => _viewModel.BrowserLogin();
+
+    #endregion
+
+    #region WebView
+
+    private async void WebViewLogin_OnTapped(object sender, object e) => await WebView2LoginAsync(false);
+
+    private async void WebViewLoginNewAccount_OnTapped(object sender, RoutedEventArgs e) => await WebView2LoginAsync(true);
+
+    private async Task WebView2LoginAsync(bool useNewAccount)
     {
         try
         {
@@ -68,51 +130,10 @@ public sealed partial class LoginPage
         }
     }
 
-    private void LoginPage_OnLoaded(object sender, RoutedEventArgs e)
-    {
-        if (_viewModel.LogoutExit)
-        {
-            _viewModel.AdvancePhase(LoginPageViewModel.LoginPhaseEnum.WaitingForUserInput);
-            _viewModel.IsFinished = _viewModel.IsEnabled = true;
-        }
-        else
-        {
-            RefreshToken(App.AppViewModel.LoginContext.RefreshToken);
-        }
-    }
-
-    private async void RefreshToken(string refreshToken)
-    {
-        try
-        {
-            if (refreshToken.IsNotNullOrEmpty() && await _viewModel.RefreshAsync(refreshToken))
-            {
-                SuccessNavigating();
-            }
-            else
-            {
-                _viewModel.AdvancePhase(LoginPageViewModel.LoginPhaseEnum.WaitingForUserInput);
-                _viewModel.IsFinished = _viewModel.IsEnabled = true;
-            }
-        }
-        catch (Exception exception)
-        {
-            _ = await this.CreateAcknowledgementAsync(LoginPageResources.ErrorWhileLoggingInTitle,
-                LoginPageResources.ErrorWhileLogginInContentFormatted.Format(exception.StackTrace));
-            _viewModel.CloseWindow();
-        }
-    }
-
-    private void SuccessNavigating()
-    {
-        _viewModel.AdvancePhase(LoginPageViewModel.LoginPhaseEnum.SuccessNavigating);
-        NavigateParent<MainPage>(null, new DrillInNavigationTransitionInfo());
-        _viewModel.LogoutExit = false;
-        AppInfo.SaveContext();
-    }
-
     private void LoginPage_OnUnloaded(object sender, RoutedEventArgs e)
     {
         _viewModel.Dispose();
     }
+
+    #endregion
 }

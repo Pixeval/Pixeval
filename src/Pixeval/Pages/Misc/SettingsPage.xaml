@@ -345,10 +345,10 @@
                 </controls:SettingsCard>
 
                 <controls:SettingsExpander
-                    x:Uid="/SettingsPage/DisableDomainFrontingEntry"
-                    HeaderIcon="{controls2:GlyphIcon Glyph=DisableUpdatesE8D8}"
-                    Tag="{x:Bind misc2:SettingEntry.DisableDomainFronting}">
-                    <ToggleSwitch IsOn="{x:Bind ViewModel.DisableDomainFronting, Mode=TwoWay}" />
+                    x:Uid="/SettingsPage/EnableDomainFrontingEntry"
+                    HeaderIcon="{controls2:GlyphIcon Glyph=NetworkE968}"
+                    Tag="{x:Bind misc2:SettingEntry.EnableDomainFronting}">
+                    <ToggleSwitch IsOn="{x:Bind ViewModel.EnableDomainFronting, Mode=TwoWay}" />
                     <controls:SettingsExpander.Items>
                         <controls:SettingsCard HorizontalContentAlignment="Stretch" ContentAlignment="Left">
                             <StackPanel Spacing="10">

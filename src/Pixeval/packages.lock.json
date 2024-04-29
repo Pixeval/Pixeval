@@ -223,6 +223,12 @@
         "resolved": "1.2.0",
         "contentHash": "ydbxAOLd4oXWiWDBS7kVDlMf6JaKNcy7nbaQv7+1HSVqCW44TDFY/aeTolVzOSLddk0BEbCljXZjXDecYXHExg=="
       },
+      "Pixeval.Bypass": {
+        "type": "Direct",
+        "requested": "[1.1.7, )",
+        "resolved": "1.1.7",
+        "contentHash": "78mssP2bnSMCzraMZ6srACA20jwYxP1qPQJxOcYo7gS4BGjoq0YQY5C0y8rSdsDcMLj8O3xPl3B4vrc6B91oaQ=="
+      },
       "Pixeval.QRCoder": {
         "type": "Direct",
         "requested": "[1.4.5, )",
@@ -234,9 +240,9 @@
       },
       "QuestPDF": {
         "type": "Direct",
-        "requested": "[2024.3.1, )",
-        "resolved": "2024.3.1",
-        "contentHash": "O68YSBL3Ttd+Qc/9uKjr2NAiszKKa71yWmBlvER7zpZZ/aRSZCwse7vv9O1btkQQJVGTJCwTwVhvqGSpj+ioHQ=="
+        "requested": "[2024.3.2, )",
+        "resolved": "2024.3.2",
+        "contentHash": "dYdoKyYyKWyWFYjw18puHNjFVJ4clEnDNQufC5Ia01Jyduy4XYKc7LMnggpLHWk1xhmcSCGk35ViZQHA2/DFGw=="
       },
       "ReverseMarkdown": {
         "type": "Direct",
@@ -537,11 +543,17 @@
           "Microsoft.Windows.SDK.BuildTools": "10.0.22621.756"
         }
       },
+      "Pixeval.Bypass": {
+        "type": "Direct",
+        "requested": "[1.1.7, )",
+        "resolved": "1.1.7",
+        "contentHash": "78mssP2bnSMCzraMZ6srACA20jwYxP1qPQJxOcYo7gS4BGjoq0YQY5C0y8rSdsDcMLj8O3xPl3B4vrc6B91oaQ=="
+      },
       "QuestPDF": {
         "type": "Direct",
-        "requested": "[2024.3.1, )",
-        "resolved": "2024.3.1",
-        "contentHash": "O68YSBL3Ttd+Qc/9uKjr2NAiszKKa71yWmBlvER7zpZZ/aRSZCwse7vv9O1btkQQJVGTJCwTwVhvqGSpj+ioHQ=="
+        "requested": "[2024.3.2, )",
+        "resolved": "2024.3.2",
+        "contentHash": "dYdoKyYyKWyWFYjw18puHNjFVJ4clEnDNQufC5Ia01Jyduy4XYKc7LMnggpLHWk1xhmcSCGk35ViZQHA2/DFGw=="
       },
       "Microsoft.Graphics.Win2D": {
         "type": "Transitive",
@@ -616,11 +628,17 @@
           "Microsoft.Windows.SDK.BuildTools": "10.0.22621.756"
         }
       },
+      "Pixeval.Bypass": {
+        "type": "Direct",
+        "requested": "[1.1.7, )",
+        "resolved": "1.1.7",
+        "contentHash": "78mssP2bnSMCzraMZ6srACA20jwYxP1qPQJxOcYo7gS4BGjoq0YQY5C0y8rSdsDcMLj8O3xPl3B4vrc6B91oaQ=="
+      },
       "QuestPDF": {
         "type": "Direct",
-        "requested": "[2024.3.1, )",
-        "resolved": "2024.3.1",
-        "contentHash": "O68YSBL3Ttd+Qc/9uKjr2NAiszKKa71yWmBlvER7zpZZ/aRSZCwse7vv9O1btkQQJVGTJCwTwVhvqGSpj+ioHQ=="
+        "requested": "[2024.3.2, )",
+        "resolved": "2024.3.2",
+        "contentHash": "dYdoKyYyKWyWFYjw18puHNjFVJ4clEnDNQufC5Ia01Jyduy4XYKc7LMnggpLHWk1xhmcSCGk35ViZQHA2/DFGw=="
       },
       "Microsoft.Graphics.Win2D": {
         "type": "Transitive",
@@ -695,11 +713,17 @@
           "Microsoft.Windows.SDK.BuildTools": "10.0.22621.756"
         }
       },
+      "Pixeval.Bypass": {
+        "type": "Direct",
+        "requested": "[1.1.7, )",
+        "resolved": "1.1.7",
+        "contentHash": "78mssP2bnSMCzraMZ6srACA20jwYxP1qPQJxOcYo7gS4BGjoq0YQY5C0y8rSdsDcMLj8O3xPl3B4vrc6B91oaQ=="
+      },
       "QuestPDF": {
         "type": "Direct",
-        "requested": "[2024.3.1, )",
-        "resolved": "2024.3.1",
-        "contentHash": "O68YSBL3Ttd+Qc/9uKjr2NAiszKKa71yWmBlvER7zpZZ/aRSZCwse7vv9O1btkQQJVGTJCwTwVhvqGSpj+ioHQ=="
+        "requested": "[2024.3.2, )",
+        "resolved": "2024.3.2",
+        "contentHash": "dYdoKyYyKWyWFYjw18puHNjFVJ4clEnDNQufC5Ia01Jyduy4XYKc7LMnggpLHWk1xhmcSCGk35ViZQHA2/DFGw=="
       },
       "Microsoft.Graphics.Win2D": {
         "type": "Transitive",

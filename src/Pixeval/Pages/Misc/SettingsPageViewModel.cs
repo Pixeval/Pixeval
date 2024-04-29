@@ -223,8 +223,8 @@ public partial class SettingsPageViewModel(ulong hWnd) : UiObservableObject(hWnd
 
         switch (e.PropertyName)
         {
-            case nameof(DisableDomainFronting):
-                App.AppViewModel.MakoClient.Configuration.Bypass = !DisableDomainFronting;
+            case nameof(EnableDomainFronting):
+                App.AppViewModel.MakoClient.Configuration.DomainFronting = EnableDomainFronting;
                 break;
             case nameof(MirrorHost):
                 App.AppViewModel.MakoClient.Configuration.MirrorHost = MirrorHost;
@@ -259,7 +259,7 @@ public partial class SettingsPageViewModel(ulong hWnd) : UiObservableObject(hWnd
         BlockedTags = [.. AppSetting.BlockedTags];
 
         // see OnPropertyChanged
-        OnPropertyChanged(nameof(DisableDomainFronting));
+        OnPropertyChanged(nameof(EnableDomainFronting));
         OnPropertyChanged(nameof(MirrorHost));
         OnPropertyChanged(nameof(MaxDownloadTaskConcurrencyLevel));
         AppLanguage = LanguageModel.DefaultLanguage;

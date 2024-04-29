@@ -287,12 +287,12 @@ internal partial class FeedEngine(MakoClient makoClient, EngineHandle? engineHan
             try
             {
                 return await MakoClient.MakoServices.GetRequiredKeyedService<HttpClient>(MakoApiKind.WebApi)
-                    .GetStringResultAsync(url, async responseMessage => new MakoNetworkException(url, MakoClient.Configuration.Bypass, await responseMessage.Content.ReadAsStringAsync(), (int)responseMessage.StatusCode))
+                    .GetStringResultAsync(url, async responseMessage => new MakoNetworkException(url, MakoClient.Configuration.DomainFronting, await responseMessage.Content.ReadAsStringAsync(), (int)responseMessage.StatusCode))
                     .ConfigureAwait(false);
             }
             catch (HttpRequestException e)
             {
-                return Result<string>.AsFailure(new MakoNetworkException(url, MakoClient.Configuration.Bypass, e.Message, (int?)e.StatusCode ?? -1));
+                return Result<string>.AsFailure(new MakoNetworkException(url, MakoClient.Configuration.DomainFronting, e.Message, (int?)e.StatusCode ?? -1));
             }
         }
 

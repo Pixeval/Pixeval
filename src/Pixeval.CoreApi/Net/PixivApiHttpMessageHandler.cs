@@ -33,9 +33,9 @@ internal class PixivApiHttpMessageHandler(MakoClient makoClient) : MakoClientSup
         var headers = request.Headers;
         var host = request.RequestUri!.Host; // the 'RequestUri' is guaranteed to be nonnull here, because the 'HttpClient' will set it to 'BaseAddress' if it's null
 
-        var bypass = (MakoHttpOptions.BypassRequiredHost.IsMatch(host) || host is MakoHttpOptions.OAuthHost) && MakoClient.Configuration.Bypass;
+        var domainFronting = (MakoHttpOptions.DomainFrontingRequiredHost.IsMatch(host) || host is MakoHttpOptions.OAuthHost) && MakoClient.Configuration.DomainFronting;
 
-        if (bypass)
+        if (domainFronting)
             MakoHttpOptions.UseHttpScheme(request);
 
         headers.UserAgent.AddRange(MakoClient.Configuration.UserAgent);
@@ -44,7 +44,7 @@ internal class PixivApiHttpMessageHandler(MakoClient makoClient) : MakoClientSup
         if (host is MakoHttpOptions.AppApiHost)
             headers.Authorization = new AuthenticationHeaderValue("Bearer", MakoClient.Session.AccessToken);
 
-        return GetHttpMessageInvoker(bypass)
+        return GetHttpMessageInvoker(domainFronting)
             .SendAsync(request, cancellationToken);
     }
 }
