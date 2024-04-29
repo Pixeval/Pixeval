@@ -149,6 +149,7 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject
         var fakeCertMgr = new CertificateManager(cert);
         fakeCertMgr.Install(StoreName.Root, StoreLocation.CurrentUser);
     }
+
     private static int NegotiatePort(int preferPort = 49152)
     {
         var unavailable = IPGlobalProperties.GetIPGlobalProperties().GetActiveTcpConnections().Select(t => t.LocalEndPoint.Port).ToHashSet();

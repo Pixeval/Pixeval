@@ -28,6 +28,7 @@ public sealed class NovelViewViewModel : SortableEntryViewViewModel<Novel, Novel
 {
     public NovelViewViewModel(NovelViewViewModel viewModel) : this(viewModel.DataProvider.CloneRef())
     {
+        Filter = viewModel.Filter;
     }
 
     public NovelViewViewModel() : this(new NovelViewDataProvider())

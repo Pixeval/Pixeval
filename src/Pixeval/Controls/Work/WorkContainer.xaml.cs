@@ -189,9 +189,9 @@ public partial class WorkContainer : IScrollViewProvider
         if (settings is not var (
             includeTags, excludeTags,
             leastBookmark, maximumBookmark,
-            _, 
-            illustratorName, illustratorId, 
-            illustrationName, illustrationId, 
+            _,
+            illustratorName, illustratorId,
+            illustrationName, illustrationId,
             publishDateStart, publishDateEnd))
             return;
 
