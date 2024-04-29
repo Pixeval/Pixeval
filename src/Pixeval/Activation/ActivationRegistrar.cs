@@ -18,13 +18,11 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Windows.ApplicationModel.Activation;
 using Microsoft.Windows.AppLifecycle;
 using System.Web;
-using Pixeval.CoreApi.Preference;
 using Pixeval.Pages.Login;
 
 namespace Pixeval.Activation;

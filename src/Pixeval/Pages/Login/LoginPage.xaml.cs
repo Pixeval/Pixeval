@@ -49,7 +49,7 @@ public sealed partial class LoginPage
         if (_viewModel.LogoutExit)
         {
             _viewModel.AdvancePhase(LoginPageViewModel.LoginPhaseEnum.WaitingForUserInput);
-            _viewModel.IsFinished = _viewModel.IsEnabled = true;
+            _viewModel.IsEnabled = true;
         }
         else
         {
@@ -68,7 +68,7 @@ public sealed partial class LoginPage
             else
             {
                 _viewModel.AdvancePhase(LoginPageViewModel.LoginPhaseEnum.WaitingForUserInput);
-                _viewModel.IsFinished = _viewModel.IsEnabled = true;
+                _viewModel.IsEnabled = true;
             }
         }
         catch (Exception exception)

@@ -24,7 +24,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Net.NetworkInformation;
 using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
@@ -41,15 +40,11 @@ using Pixeval.Attributes;
 using Pixeval.Bypass;
 using Pixeval.Controls.Windowing;
 using Pixeval.CoreApi;
-using Pixeval.CoreApi.Model;
-using Pixeval.CoreApi.Net;
 using Pixeval.CoreApi.Preference;
 using Pixeval.Logging;
 using Pixeval.Misc;
 using Pixeval.Util;
-using Pixeval.Util.IO;
 using Pixeval.Util.UI;
-using Pixeval.Utilities;
 using WinUI3Utilities.Attributes;
 
 namespace Pixeval.Pages.Login;
@@ -78,8 +73,14 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject
         SuccessNavigating
     }
 
-    public bool IsFinished { get; set; }
+    /// <summary>
+    /// 表示要不要展示<see cref="WebView"/>
+    /// </summary>
+    [ObservableProperty] private bool _isFinished = true;
 
+    /// <summary>
+    /// 表示右侧按钮是否可用
+    /// </summary>
     [ObservableProperty] private bool _isEnabled;
 
     [ObservableProperty]
@@ -164,34 +165,6 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject
         return preferPort;
     }
 
-    public async Task<Session> AuthCodeToSessionAsync(string code, string verifier)
-    {
-        // HttpClient is designed to be used through whole application lifetime, create and
-        // dispose it in a function is a commonly misused anti-pattern, but this function
-        // is intended to be called only once (at the start time) during the entire application's
-        // lifetime, so the overhead is acceptable
-
-        var httpClient = EnableDomainFronting ? new HttpClient(new DelegatedHttpMessageHandler(MakoHttpOptions.CreateHttpMessageInvoker())) : new();
-        httpClient.DefaultRequestHeaders.UserAgent.Add(new("PixivAndroidApp", "5.0.64"));
-        httpClient.DefaultRequestHeaders.UserAgent.Add(new("(Android 6.0)"));
-        var scheme = EnableDomainFronting ? "http" : "https";
-
-        using var result = await httpClient.PostFormAsync(scheme + "://oauth.secure.pixiv.net/auth/token",
-            ("code", code),
-            ("code_verifier", verifier),
-            ("client_id", "MOBrBDS8blbauoSck0ZfDbtuzpyT"),
-            ("client_secret", "lsACyCD94FhDUtGTXi3QzcFE2uU1hqtDaKeqrdwj"),
-            ("grant_type", "authorization_code"),
-            ("include_policy", "true"),
-            ("redirect_uri", "https://app-api.pixiv.net/web/v1/users/auth/pixiv/callback"));
-        // using会有resharper警告，所以这里用Dispose
-        httpClient.Dispose();
-        _ = result.EnsureSuccessStatusCode();
-        var session = (await result.Content.ReadAsStringAsync()).FromJson<TokenResponse>()!.ToSession();
-        RefreshToken = session.RefreshToken;
-        return session;
-    }
-
     public async Task WebView2LoginAsync(UserControl userControl, bool useNewAccount, Action navigated)
     {
         var arguments = "";
@@ -218,11 +191,12 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject
         {
             if (e.Uri.StartsWith("pixiv://"))
             {
+                IsFinished = true;
                 var code = HttpUtility.ParseQueryString(new Uri(e.Uri).Query)["code"]!;
                 Session session;
                 try
                 {
-                    session = await AuthCodeToSessionAsync(code, verifier);
+                    session = await PixivAuth.AuthCodeToSessionAsync(code, verifier);
                 }
                 catch
                 {
@@ -231,7 +205,6 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject
                     CloseWindow();
                     return;
                 }
-                IsFinished = true;
                 using var scope = App.AppViewModel.AppServicesScope;
                 var logger = scope.ServiceProvider.GetRequiredService<FileLogger>();
                 App.AppViewModel.MakoClient = new MakoClient(session, App.AppViewModel.AppSettings.ToMakoClientConfiguration(), logger);
