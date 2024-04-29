@@ -97,7 +97,7 @@ public abstract class EntryViewDataProvider<T, TViewModel, TSelf> : ObservableOb
         var dataProvider = new TSelf();
         dataProvider.FetchEngineRef = FetchEngineRef?.MakeShared(dataProvider);
         dataProvider.EntrySourceRef = EntrySourceRef.MakeShared(dataProvider);
-        dataProvider.View.Filter = View.Filter;
+        // dataProvider.View.Filter = View.Filter;
         foreach (var viewSortDescription in View.SortDescriptions)
             dataProvider.View.SortDescriptions.Add(viewSortDescription);
         return dataProvider;

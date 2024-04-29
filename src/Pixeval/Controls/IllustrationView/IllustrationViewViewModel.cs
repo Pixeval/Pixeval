@@ -26,6 +26,7 @@ public sealed class IllustrationViewViewModel : SortableEntryViewViewModel<Illus
 {
     public IllustrationViewViewModel(IllustrationViewViewModel viewModel) : this(viewModel.DataProvider.CloneRef())
     {
+        Filter = viewModel.Filter;
     }
 
     public IllustrationViewViewModel() : this(new IllustrationViewDataProvider())
