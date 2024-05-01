@@ -39,6 +39,7 @@ using WinUI3Utilities.Attributes;
 namespace Pixeval.AppManagement;
 
 [GenerateConstructor, SettingPoco]
+[Reset]
 public partial record AppSettings : IWindowSettings
 {
     public AppSettings()
@@ -168,13 +169,6 @@ public partial record AppSettings : IWindowSettings
     public HashSet<string> BlockedTags { get; set; } = [];
 
     /// <summary>
-    /// Indicates the maximum page count that are allowed to be retrieved during
-    /// spotlight retrieval(10 entries per page)
-    /// </summary>
-    [SettingMetadata(SettingEntryCategory.Misc, typeof(SettingsPageResources), nameof(SettingsPageResources.SpotlightSearchPageLimitEntryHeader))]
-    public int PageLimitForSpotlight { get; set; } = 50;
-
-    /// <summary>
     /// The mirror host for image server, Pixeval will do a simple substitution that
     /// changes the host of the original url(i.pximg.net) to this one.
     /// </summary>
@@ -191,6 +185,7 @@ public partial record AppSettings : IWindowSettings
     public DateTimeOffset SearchEndDate { get; set; } = DateTimeOffset.Now;
 
     [SyntheticSetting]
+    [AttributeIgnore(typeof(ResetAttribute))]
     public DateTimeOffset LastCheckedUpdate { get; set; } = DateTimeOffset.MinValue;
 
     [AttributeIgnore(typeof(SettingsViewModelAttribute<>))]

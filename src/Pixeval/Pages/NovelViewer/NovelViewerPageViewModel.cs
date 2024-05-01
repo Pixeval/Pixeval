@@ -31,11 +31,11 @@ using Pixeval.Controls;
 using Pixeval.Controls.Windowing;
 using Pixeval.CoreApi.Model;
 using Pixeval.Options;
-using Pixeval.Pages.Misc;
 using Pixeval.Util.ComponentModels;
 using Pixeval.Util.UI;
 using Pixeval.AppManagement;
 using System.Runtime.CompilerServices;
+using Pixeval.Settings;
 using WinUI3Utilities.Controls;
 
 namespace Pixeval.Pages.NovelViewer;
@@ -273,7 +273,7 @@ public partial class NovelViewerPageViewModel : DetailedUiObservableObject, IDis
 
     #region Settings
 
-    public static IEnumerable<string> AvailableFonts => SettingsPageViewModel.AvailableFonts;
+    public static IEnumerable<string> AvailableFonts => FontAppSettingsEntry.AvailableFonts;
 
     public uint NovelBackground
     {

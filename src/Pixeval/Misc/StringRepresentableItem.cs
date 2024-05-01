@@ -29,5 +29,5 @@ public record StringRepresentableItem(object Item, string StringRepresentation)
 
     public override int GetHashCode() => Item.GetHashCode();
 
-    public override string? ToString() => StringRepresentation;
+    public override string ToString() => StringRepresentation;
 }

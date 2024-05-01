@@ -1,0 +1,24 @@
+<controls:SettingsCard
+    x:Class="Pixeval.Settings.LanguageSettingsCard"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    xmlns:controls1="using:WinUI3Utilities.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:Pixeval.Settings"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    x:Uid="/SettingsPage/AppLanguageEntry"
+    HeaderIcon="{controls1:GlyphIcon Glyph=LocaleLanguageF2B7}"
+    mc:Ignorable="d">
+    <controls:SettingsCard.Description>
+        <HyperlinkButton
+            x:Uid="/SettingsPage/OpenLanguageSettingsHyperlinkButton"
+            Tag="ms-settings://regionlanguage"
+            Tapped="OpenLinkViaTag_OnTapped" />
+    </controls:SettingsCard.Description>
+    <ComboBox
+        x:Uid="/SettingsPage/AppLanguageEntryComboBox"
+        Width="200"
+        ItemsSource="{x:Bind local:LanguageAppSettingsEntry.AvailableLanguages}"
+        SelectedItem="{x:Bind Entry.AppLanguage, Mode=TwoWay}" />
+</controls:SettingsCard>

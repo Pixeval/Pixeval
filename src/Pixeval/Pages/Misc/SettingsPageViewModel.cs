@@ -19,77 +19,47 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Drawing.Text;
 using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Net.Http;
-using Windows.Globalization;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml.Controls;
 using Pixeval.AppManagement;
 using Pixeval.Controls;
-using Pixeval.Download.MacroParser;
-using Pixeval.Misc;
 using Pixeval.Options;
 using Pixeval.Util;
 using Pixeval.Util.ComponentModels;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
-using WinUI3Utilities.Attributes;
-using System.ComponentModel;
-using System.Collections.ObjectModel;
-using Pixeval.Download.Macros;
 using Pixeval.Utilities.Threading;
+using Pixeval.Settings;
+using System.Collections.Generic;
+using Windows.System;
+using Microsoft.UI.Xaml;
+using Pixeval.Controls.Windowing;
+using Pixeval.CoreApi.Global.Enum;
+using WinUI3Utilities;
+using WinUI3Utilities.Controls;
 
 namespace Pixeval.Pages.Misc;
 
-[SettingsViewModel<AppSettings>(nameof(AppSetting))]
-public partial class SettingsPageViewModel(ulong hWnd) : UiObservableObject(hWnd), IDisposable
+public partial class SettingsPageViewModel : UiObservableObject, IDisposable
 {
-    private static readonly IDictionary<string, string> _macroTooltips = new Dictionary<string, string>
+    public DateTimeOffset LastCheckedUpdate
     {
-        ["ext"] = SettingsPageResources.ExtMacroTooltip,
-        ["id"] = SettingsPageResources.IdMacroTooltip,
-        ["title"] = SettingsPageResources.TitleMacroTooltip,
-        ["artist_id"] = SettingsPageResources.ArtistIdMacroTooltip,
-        ["artist_name"] = SettingsPageResources.ArtistNameMacroTooltip,
-        ["if_r18"] = SettingsPageResources.IfR18MacroTooltip,
-        ["if_r18g"] = SettingsPageResources.IfR18GMacroTooltip,
-        ["if_ai"] = SettingsPageResources.IfAiMacroTooltip,
-        ["if_illust"] = SettingsPageResources.IfIllustMacroTooltip,
-        ["if_novel"] = SettingsPageResources.IfNovelMacroTooltip,
-        ["if_manga"] = SettingsPageResources.IfMangaMacroTooltip,
-        ["if_gif"] = SettingsPageResources.IfGifMacroTooltip,
-        ["manga_index"] = SettingsPageResources.MangaIndexMacroTooltip
-    };
+        get => AppSetting.LastCheckedUpdate;
+        set => SetProperty(AppSetting.LastCheckedUpdate, value, AppSetting, (@setting, @value) => @setting.LastCheckedUpdate = @value);
+    }
+    
+    public bool DownloadUpdateAutomatically
+    {
+        get => AppSetting.DownloadUpdateAutomatically;
+        set => SetProperty(AppSetting.DownloadUpdateAutomatically, value, AppSetting, (@setting, @value) => @setting.DownloadUpdateAutomatically = @value);
+    }
 
-    public static IEnumerable<string> AvailableFonts { get; }
-
-    public static ICollection<StringRepresentableItem> AvailableMacros { get; }
-
-    public static IEnumerable<CultureInfo> AvailableCultures { get; }
-
-    public static IEnumerable<LanguageModel> AvailableLanguages { get; } = [LanguageModel.DefaultLanguage, new("简体中文", "zh-Hans-CN"), new("Русский", "ru"), new("English (United States)", "en-US")];
-
-    public ObservableCollection<string> PixivAppApiNameResolver { get; set; } = [.. App.AppViewModel.AppSettings.PixivAppApiNameResolver];
-
-    public ObservableCollection<string> PixivImageNameResolver { get; set; } = [.. App.AppViewModel.AppSettings.PixivImageNameResolver];
-
-    public ObservableCollection<string> PixivImageNameResolver2 { get; set; } = [.. App.AppViewModel.AppSettings.PixivImageNameResolver2];
-
-    public ObservableCollection<string> PixivOAuthNameResolver { get; set; } = [.. App.AppViewModel.AppSettings.PixivOAuthNameResolver];
-
-    public ObservableCollection<string> PixivAccountNameResolver { get; set; } = [.. App.AppViewModel.AppSettings.PixivAccountNameResolver];
-
-    public ObservableCollection<string> PixivWebApiNameResolver { get; set; } = [.. App.AppViewModel.AppSettings.PixivWebApiNameResolver];
-
-    public ObservableCollection<string> BlockedTags { get; set; } = [.. App.AppViewModel.AppSettings.BlockedTags];
-
-    public AppSettings AppSetting { get; set; } = App.AppViewModel.AppSettings with { };
+    public AppSettings AppSetting => App.AppViewModel.AppSettings;
 
     [ObservableProperty] private bool _checkingUpdate;
 
@@ -102,6 +72,222 @@ public partial class SettingsPageViewModel(ulong hWnd) : UiObservableObject(hWnd
     [ObservableProperty] private bool _expandExpander;
 
     private CancellationHandle? _cancellationHandle;
+
+    /// <inheritdoc/>
+    public SettingsPageViewModel(ulong hWnd) : base(hWnd)
+    {
+        Entries =
+        [
+            new(SettingsPageResources.ApplicationSettingsGroupText)
+            {
+                new EnumAppSettingsEntry<ElementTheme>(AppSetting,
+                    SettingsPageResources.ThemeEntryHeader,
+                    SettingsPageResources.ThemeEntryDescriptionHyperlinkButtonContent,
+                    IconGlyph.PersonalizeE771,
+                    nameof(AppSettings.Theme)) { ValueChanged = t => WindowFactory.SetTheme((ElementTheme)t) },
+                new EnumAppSettingsEntry<BackdropType>(AppSetting,
+                    SettingsPageResources.BackdropEntryHeader,
+                    "",
+                    IconGlyph.ColorE790,
+                    nameof(AppSettings.Backdrop)) { ValueChanged = t => WindowFactory.SetBackdrop((BackdropType)t) },
+                new FontAppSettingsEntry(AppSetting),
+                new LanguageAppSettingsEntry(AppSetting),
+                new IpWithSwitchAppSettingsEntry(AppSetting)
+                {
+                    ValueChanged = t => App.AppViewModel.MakoClient.Configuration.DomainFronting = t
+                },
+                new BoolAppSettingsEntry(AppSetting,
+                    SettingsPageResources.UseFileCacheEntryHeader,
+                    SettingsPageResources.UseFileCacheEntryDescription,
+                    IconGlyph.FileExplorerEC50,
+                    nameof(AppSettings.UseFileCache)),
+                new BoolAppSettingsEntry(AppSetting,
+                    SettingsPageResources.GenerateHelpLinkEntryHeader,
+                    SettingsPageResources.GenerateHelpLinkEntryDescription,
+                    IconGlyph.LinkE71B,
+                    nameof(AppSettings.DisplayTeachingTipWhenGeneratingAppLink)),
+                new EnumAppSettingsEntry<MainPageTabItem>(AppSetting,
+                    SettingsPageResources.DefaultSelectedTabEntryHeader,
+                    SettingsPageResources.DefaultSelectedTabEntryDescription,
+                    IconGlyph.CheckMarkE73E,
+                    nameof(AppSettings.DefaultSelectedTabItem))
+            },
+            new(SettingsPageResources.BrowsingExperienceSettingsGroupText)
+            {
+                new EnumAppSettingsEntry<ThumbnailDirection>(AppSetting,
+                    SettingsPageResources.ThumbnailDirectionEntryHeader,
+                    SettingsPageResources.ThumbnailDirectionEntryDescription,
+                    IconGlyph.TypeE97C,
+                    nameof(AppSettings.ThumbnailDirection)),
+                new EnumAppSettingsEntry<ItemsViewLayoutType>(AppSetting,
+                    SettingsPageResources.ItemsViewLayoutTypeEntryHeader,
+                    SettingsPageResources.ItemsViewLayoutTypeEntryDescription,
+                    IconGlyph.TilesECA5,
+                    nameof(AppSettings.ItemsViewLayoutType)),
+                new EnumAppSettingsEntry<TargetFilter>(AppSetting,
+                    SettingsPageResources.TargetAPIPlatformEntryHeader,
+                    SettingsPageResources.TargetAPIPlatformEntryDescription,
+                    IconGlyph.CommandPromptE756,
+                    nameof(AppSettings.TargetFilter)),
+                new TokenizingAppSettingsEntry(AppSetting),
+                new ClickableAppSettingsEntry(AppSetting,
+                    SettingsPageResources.ViewingRestrictionEntryHeader,
+                    SettingsPageResources.ViewingRestrictionEntryDescription,
+                    IconGlyph.BlockContactE8F8,
+                    () => Launcher.LaunchUriAsync(new Uri("https://www.pixiv.net/setting_user.php")))
+            },
+            new(SettingsPageResources.SearchSettingsGroupText)
+            {
+                new IntAppSettingsEntry(AppSetting,
+                    SettingsPageResources.ReverseSearchResultSimilarityThresholdEntryHeader,
+                    SettingsPageResources.ReverseSearchResultSimilarityThresholdEntryDescription,
+                    IconGlyph.FilterE71C,
+                    nameof(AppSettings.ReverseSearchResultSimilarityThreshold))
+                {
+                    Max = 100,
+                    Min = 1
+                },
+                new StringAppSettingsEntry(AppSetting,
+                    SettingsPageResources.ReverseSearchApiKeyEntryHeader,
+                    SettingsPageResources.ReverseSearchApiKeyEntryDescriptionHyperlinkButtonContent,
+                    IconGlyph.SearchAndAppsE773,
+                    nameof(AppSettings.ReverseSearchApiKey))
+                {
+                    DescriptionUri = new Uri("https://saucenao.com/user.php?page=search-api"),
+                    Placeholder = SettingsPageResources.ReverseSearchApiKeyTextBoxPlaceholderText
+                },
+                new IntAppSettingsEntry(AppSetting,
+                    SettingsPageResources.MaximumSearchHistoryRecordsEntryHeader,
+                    SettingsPageResources.MaximumSearchHistoryRecordsEntryDescription,
+                    IconGlyph.HistoryE81C,
+                    nameof(AppSettings.MaximumSearchHistoryRecords))
+                {
+                    Max = 200,
+                    Min = 10
+                },
+                new IntAppSettingsEntry(AppSetting,
+                    SettingsPageResources.MaximumSuggestionBoxSearchHistoryEntryHeader,
+                    SettingsPageResources.MaximumSuggestionBoxSearchHistoryEntryDescription,
+                    IconGlyph.SetHistoryStatus2F739,
+                    nameof(AppSettings.MaximumSuggestionBoxSearchHistory))
+                {
+                    Max = 20,
+                    Min = 0
+                },
+                new EnumAppSettingsEntry<WorkSortOption>(AppSetting,
+                    SettingsPageResources.DefaultSearchSortOptionEntryHeader,
+                    SettingsPageResources.DefaultSearchSortOptionEntryDescription,
+                    IconGlyph.SortE8CB,
+                    nameof(AppSettings.WorkSortOption)),
+                new EnumAppSettingsEntry<SimpleWorkType>(AppSetting,
+                    SettingsPageResources.SimpleWorkTypeEntryHeader,
+                    SettingsPageResources.SimpleWorkTypeEntryDescription,
+                    IconGlyph.ViewAllE8A9,
+                    nameof(AppSettings.SimpleWorkType)),
+                new MultiValuesAppSettingsEntry(AppSetting,
+                    SettingsPageResources.RankOptionEntryHeader,
+                    SettingsPageResources.RankOptionEntryDescription,
+                    IconGlyph.MarketEAFC,
+                    [
+                        new EnumAppSettingsEntry<IllustrationDownloadFormat>(AppSetting,
+                            WorkTypeEnum.Illustration,
+                            nameof(AppSettings.IllustrationDownloadFormat)),
+                        new EnumAppSettingsEntry<NovelDownloadFormat>(AppSetting,
+                            WorkTypeEnum.Novel,
+                            nameof(AppSettings.NovelDownloadFormat))
+                    ]),
+                new MultiValuesAppSettingsEntry(AppSetting,
+                    SettingsPageResources.DefaultSearchTagMatchOptionEntryHeader,
+                    SettingsPageResources.DefaultSearchTagMatchOptionEntryDescription,
+                    IconGlyph.PassiveAuthenticationF32A,
+                    [
+                        new EnumAppSettingsEntry<SearchIllustrationTagMatchOption>(AppSetting,
+                            WorkTypeEnum.Illustration,
+                            nameof(AppSettings.SearchIllustrationTagMatchOption)),
+                        new EnumAppSettingsEntry<SearchNovelTagMatchOption>(AppSetting,
+                            WorkTypeEnum.Novel,
+                            nameof(AppSettings.SearchNovelTagMatchOption))
+                    ]),
+                new EnumAppSettingsEntry<SearchDuration>(AppSetting,
+                    SettingsPageResources.SearchDurationEntryHeader,
+                    SettingsPageResources.SearchDurationEntryDescription,
+                    IconGlyph.EaseOfAccessE776,
+                    nameof(AppSettings.SearchDuration)),
+                new DateRangeWithSwitchAppSettingsEntry(AppSetting)
+            },
+            new(SettingsPageResources.DownloadSettingsGroupText)
+            {
+                new IntAppSettingsEntry(AppSetting,
+                    SettingsPageResources.MaximumDownloadHistoryRecordsEntryHeader,
+                    SettingsPageResources.MaximumDownloadHistoryRecordsEntryDescription,
+                    IconGlyph.HistoryE81C,
+                    nameof(AppSettings.MaximumDownloadHistoryRecords))
+                {
+                    Max = 200,
+                    Min = 10
+                },
+                new BoolAppSettingsEntry(AppSetting,
+                    SettingsPageResources.OverwriteDownloadedFileEntryHeader,
+                    SettingsPageResources.OverwriteDownloadedFileEntryDescription,
+                    IconGlyph.ScanE8FE,
+                    nameof(AppSettings.OverwriteDownloadedFile)),
+                new IntAppSettingsEntry(AppSetting,
+                    SettingsPageResources.MaxDownloadConcurrencyLevelEntryHeader,
+                    SettingsPageResources.MaxDownloadConcurrencyLevelEntryDescription,
+                    IconGlyph.LightningBoltE945,
+                    nameof(AppSettings.MaxDownloadTaskConcurrencyLevel))
+                {
+                    Max = Environment.ProcessorCount,
+                    Min = 1,
+                    ValueChanged = t => App.AppViewModel.DownloadManager.ConcurrencyDegree = t
+                },
+                new DownloadMacroAppSettingsEntry(AppSetting),
+                new MultiValuesAppSettingsEntry(AppSetting,
+                    SettingsPageResources.WorkDownloadFormatEntryHeader,
+                    SettingsPageResources.WorkDownloadFormatEntryDescription,
+                    IconGlyph.CaptionE8BA,
+                    [
+                        new EnumAppSettingsEntry<IllustrationDownloadFormat>(AppSetting,
+                            WorkTypeEnum.Illustration,
+                            nameof(AppSettings.IllustrationDownloadFormat)),
+                        new EnumAppSettingsEntry<UgoiraDownloadFormat>(AppSetting,
+                            WorkTypeEnum.Ugoira,
+                            nameof(AppSettings.UgoiraDownloadFormat)),
+                        new EnumAppSettingsEntry<NovelDownloadFormat>(AppSetting,
+                            WorkTypeEnum.Novel,
+                            nameof(AppSettings.NovelDownloadFormat))
+                    ]),
+                new BoolAppSettingsEntry(AppSetting,
+                    SettingsPageResources.DownloadWhenBookmarkedEntryHeader,
+                    SettingsPageResources.DownloadWhenBookmarkedEntryDescription,
+                    IconGlyph.SaveLocalE78C,
+                    nameof(AppSettings.DownloadWhenBookmarked))
+            },
+            new(SettingsPageResources.MiscSettingsGroupText)
+            {
+                new IntAppSettingsEntry(AppSetting,
+                    SettingsPageResources.MaximumBrowseHistoryRecordsEntryHeader,
+                    SettingsPageResources.MaximumBrowseHistoryRecordsEntryDescription,
+                    IconGlyph.HistoryE81C,
+                    nameof(AppSettings.MaximumBrowseHistoryRecords))
+                {
+                    Max = 200,
+                    Min = 10
+                },
+                new StringAppSettingsEntry(AppSetting,
+                    SettingsPageResources.ImageMirrorServerEntryHeader,
+                    SettingsPageResources.ImageMirrorServerEntryDescription,
+                    IconGlyph.HardDriveEDA2,
+                    nameof(AppSettings.MirrorHost))
+                {
+                    Placeholder = SettingsPageResources.ImageMirrorServerTextBoxPlaceholderText,
+                    ValueChanged = t => App.AppViewModel.MakoClient.Configuration.MirrorHost = t
+                }
+            }
+        ];
+    }
+
+    public IEnumerable<SimpleSettingsGroup> Entries { get; }
 
     public string UpdateInfo => AppInfo.AppVersion.UpdateState switch
     {
@@ -207,69 +393,6 @@ public partial class SettingsPageViewModel(ulong hWnd) : UiObservableObject(hWnd
         }
     }
 
-    static SettingsPageViewModel()
-    {
-        AvailableCultures = [CultureInfo.GetCultureInfo("zh-cn")];
-        using var collection = new InstalledFontCollection();
-        AvailableFonts = collection.Families.Select(t => t.Name);
-        AvailableMacros = MetaPathMacroAttributeHelper.GetAttachedTypeInstances()
-            .Select(m => new StringRepresentableItem(_macroTooltips[m.Name], $"@{{{(m is IPredicate ? $"{m.Name}=" : m.Name)}}}"))
-            .ToList();
-    }
-
-    protected override void OnPropertyChanged(PropertyChangedEventArgs e)
-    {
-        base.OnPropertyChanged(e);
-
-        switch (e.PropertyName)
-        {
-            case nameof(EnableDomainFronting):
-                App.AppViewModel.MakoClient.Configuration.DomainFronting = EnableDomainFronting;
-                break;
-            case nameof(MirrorHost):
-                App.AppViewModel.MakoClient.Configuration.MirrorHost = MirrorHost;
-                break;
-            case nameof(MaxDownloadTaskConcurrencyLevel):
-                App.AppViewModel.DownloadManager.ConcurrencyDegree = MaxDownloadTaskConcurrencyLevel;
-                break;
-        }
-    }
-
-    public LanguageModel AppLanguage
-    {
-        get => AvailableLanguages.FirstOrDefault(t => t.Name == ApplicationLanguages.PrimaryLanguageOverride) ?? LanguageModel.DefaultLanguage;
-        set
-        {
-            if (ApplicationLanguages.PrimaryLanguageOverride == value.Name)
-                return;
-            ApplicationLanguages.PrimaryLanguageOverride = value.Name;
-            OnPropertyChanged();
-        }
-    }
-
-    public void ResetDefault()
-    {
-        AppSetting = new() { LastCheckedUpdate = AppSetting.LastCheckedUpdate };
-        PixivAppApiNameResolver = [.. AppSetting.PixivAppApiNameResolver];
-        PixivImageNameResolver = [.. AppSetting.PixivImageNameResolver];
-        PixivImageNameResolver2 = [.. AppSetting.PixivImageNameResolver2];
-        PixivOAuthNameResolver = [.. AppSetting.PixivOAuthNameResolver];
-        PixivAccountNameResolver = [.. AppSetting.PixivAccountNameResolver];
-        PixivWebApiNameResolver = [.. AppSetting.PixivWebApiNameResolver];
-        BlockedTags = [.. AppSetting.BlockedTags];
-
-        // see OnPropertyChanged
-        OnPropertyChanged(nameof(EnableDomainFronting));
-        OnPropertyChanged(nameof(MirrorHost));
-        OnPropertyChanged(nameof(MaxDownloadTaskConcurrencyLevel));
-        AppLanguage = LanguageModel.DefaultLanguage;
-    }
-
-    public DateTimeOffset GetMinSearchEndDate(DateTimeOffset startDate)
-    {
-        return startDate.AddDays(1);
-    }
-
     public string GetLastUpdateCheckDisplayString(DateTimeOffset lastChecked)
     {
         return SettingsPageResources.LastCheckedPrefix + lastChecked.ToString(CultureInfo.CurrentUICulture);
@@ -278,28 +401,6 @@ public partial class SettingsPageViewModel(ulong hWnd) : UiObservableObject(hWnd
     public void ShowClearData(ClearDataKind kind)
     {
         HWnd.SuccessGrowl(kind.GetLocalizedResourceContent()!);
-    }
-
-    public void SaveCollections()
-    {
-        var appApiNameSame = AppSetting.PixivAppApiNameResolver.SequenceEquals(PixivAppApiNameResolver);
-        var imageNameSame = AppSetting.PixivImageNameResolver.SequenceEqual(PixivImageNameResolver);
-        var imageName2Same = AppSetting.PixivImageNameResolver2.SequenceEqual(PixivImageNameResolver2);
-        var oAuthNameSame = AppSetting.PixivOAuthNameResolver.SequenceEqual(PixivOAuthNameResolver);
-        var accountNameSame = AppSetting.PixivAccountNameResolver.SequenceEqual(PixivAccountNameResolver);
-        var webApiNameSame = AppSetting.PixivWebApiNameResolver.SequenceEqual(PixivWebApiNameResolver);
-
-        AppSetting.PixivAppApiNameResolver = [.. PixivAppApiNameResolver];
-        AppSetting.PixivImageNameResolver = [.. PixivImageNameResolver];
-        AppSetting.PixivImageNameResolver2 = [.. PixivImageNameResolver2];
-        AppSetting.PixivOAuthNameResolver = [.. PixivOAuthNameResolver];
-        AppSetting.PixivAccountNameResolver = [.. PixivAccountNameResolver];
-        AppSetting.PixivWebApiNameResolver = [.. PixivWebApiNameResolver];
-
-        if (appApiNameSame || imageNameSame || imageName2Same || oAuthNameSame || accountNameSame || webApiNameSame)
-            AppInfo.SetNameResolvers(AppSetting);
-
-        AppSetting.BlockedTags = [.. BlockedTags];
     }
 
     public void CancelToken()

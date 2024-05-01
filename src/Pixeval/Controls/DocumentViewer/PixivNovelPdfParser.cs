@@ -24,7 +24,6 @@ using System;
 using System.IO;
 using Pixeval.Util;
 using Pixeval.Utilities;
-using QuestPDF;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
@@ -36,7 +35,7 @@ public sealed class PixivNovelPdfParser(ColumnDescriptor descriptor, int pageInd
 {
     public static void Init() { }
 
-    static PixivNovelPdfParser() => Settings.License = LicenseType.Community;
+    static PixivNovelPdfParser() => QuestPDF.Settings.License = LicenseType.Community;
 
     protected override ColumnDescriptor Vector
     {
