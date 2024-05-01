@@ -52,7 +52,7 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
         get => AppSetting.LastCheckedUpdate;
         set => SetProperty(AppSetting.LastCheckedUpdate, value, AppSetting, (@setting, @value) => @setting.LastCheckedUpdate = @value);
     }
-    
+
     public bool DownloadUpdateAutomatically
     {
         get => AppSetting.DownloadUpdateAutomatically;
@@ -134,7 +134,7 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
                     SettingsPageResources.ViewingRestrictionEntryHeader,
                     SettingsPageResources.ViewingRestrictionEntryDescription,
                     IconGlyph.BlockContactE8F8,
-                    () => Launcher.LaunchUriAsync(new Uri("https://www.pixiv.net/setting_user.php")))
+                    () => _ = Launcher.LaunchUriAsync(new Uri("https://www.pixiv.net/setting_user.php")))
             },
             new(SettingsPageResources.SearchSettingsGroupText)
             {

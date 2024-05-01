@@ -154,6 +154,12 @@ public static class SyntaxHelper
             .WithNamespaceKeyword(Token(SyntaxKind.NamespaceKeyword))
             .WithLeadingTrivia(Trivia(NullableDirectiveTrivia(Token(SyntaxKind.EnableKeyword), nullableEnable)));
 
+    internal static FileScopedNamespaceDeclarationSyntax GetFileScopedNamespaceDeclaration(string namespaceName, MemberDeclarationSyntax generatedClass, bool nullableEnable)
+        => FileScopedNamespaceDeclaration(ParseName(namespaceName))
+            .AddMembers(generatedClass)
+            .WithNamespaceKeyword(Token(SyntaxKind.NamespaceKeyword))
+            .WithLeadingTrivia(Trivia(NullableDirectiveTrivia(Token(SyntaxKind.EnableKeyword), nullableEnable)));
+
     /// <summary>
     /// Generate the following code
     /// <code>

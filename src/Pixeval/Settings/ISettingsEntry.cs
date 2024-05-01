@@ -53,7 +53,9 @@ public abstract class SettingsEntryBase<TSettings>(
                     b.NavigateUri = DescriptionUri;
                     return b;
                 }
-                b.Click += (_, _) => Launcher.LaunchUriAsync(DescriptionUri);
+
+                var uri = DescriptionUri;
+                b.Click += (_, _) => _ = Launcher.LaunchUriAsync(uri);
                 return b;
             }
             return Description;
