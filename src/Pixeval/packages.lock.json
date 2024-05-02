@@ -52,13 +52,13 @@
       },
       "CommunityToolkit.WinUI.Animations": {
         "type": "Direct",
-        "requested": "[8.0.240109, )",
-        "resolved": "8.0.240109",
-        "contentHash": "63zWEFpGc4lr/lT5f8F0tr4leUqCc8tZe7J4uhJ0ZoP1GdwGZnKNBqtQApbXoxvGCLSU/5zuM3/cZIBId5dDdA==",
+        "requested": "[8.1.240328-rc, )",
+        "resolved": "8.1.240328-rc",
+        "contentHash": "4xGcdjPBnWd4oduLv6tEu7QNBj0eg4Vd9sodiqEoO/1SBKpLZLwk3zhusXEUd2PIRZikGztBQKpq7j13hAoyQA==",
         "dependencies": {
-          "CommunityToolkit.WinUI.Extensions": "8.0.240109",
+          "CommunityToolkit.WinUI.Extensions": "8.1.240328-rc",
           "Microsoft.Windows.SDK.BuildTools": "10.0.22621.756",
-          "Microsoft.WindowsAppSDK": "1.3.230331000"
+          "Microsoft.WindowsAppSDK": "1.5.240311000"
         }
       },
       "CommunityToolkit.WinUI.Behaviors": {
@@ -85,6 +85,22 @@
           "Microsoft.WindowsAppSDK": "1.3.230331000"
         }
       },
+      "CommunityToolkit.WinUI.Controls.ColorPicker": {
+        "type": "Direct",
+        "requested": "[8.1.240328-rc, )",
+        "resolved": "8.1.240328-rc",
+        "contentHash": "KZpAB5bVwW8nLe8NQ1X2EY5R7cThIaWehTNc4fdVeJ5VaWEWw9PpUQsdOy5Q+Le8/oqUJzpmLH1TfppWxkxCfA==",
+        "dependencies": {
+          "CommunityToolkit.WinUI.Animations": "8.1.240328-rc",
+          "CommunityToolkit.WinUI.Controls.Primitives": "8.1.240328-rc",
+          "CommunityToolkit.WinUI.Controls.Segmented": "8.1.240328-rc",
+          "CommunityToolkit.WinUI.Converters": "8.1.240328-rc",
+          "CommunityToolkit.WinUI.Extensions": "8.1.240328-rc",
+          "CommunityToolkit.WinUI.Helpers": "8.1.240328-rc",
+          "Microsoft.Windows.SDK.BuildTools": "10.0.22621.756",
+          "Microsoft.WindowsAppSDK": "1.5.240311000"
+        }
+      },
       "CommunityToolkit.WinUI.Controls.Primitives": {
         "type": "Direct",
         "requested": "[8.1.240328-rc, )",
@@ -98,13 +114,13 @@
       },
       "CommunityToolkit.WinUI.Controls.Segmented": {
         "type": "Direct",
-        "requested": "[8.0.240109, )",
-        "resolved": "8.0.240109",
-        "contentHash": "F/gfWjlYZoFMEBnMGzGiS1Pd9fIqKtGtYF5HAX9c4qL00BpNMj4MPw15eG6b/kQC0eEANR1GyOx7RXki2I+dSg==",
+        "requested": "[8.1.240328-rc, )",
+        "resolved": "8.1.240328-rc",
+        "contentHash": "JBkMEX4jH8cOMoxxIP6IELzMFKCbpCCJh5vNpoLdziyRYN0YL/P4M2OLdg1NVl46TYLjJ1yhWMY/Q5sB+6E+eg==",
         "dependencies": {
-          "CommunityToolkit.WinUI.Extensions": "8.0.240109",
+          "CommunityToolkit.WinUI.Extensions": "8.1.240328-rc",
           "Microsoft.Windows.SDK.BuildTools": "10.0.22621.756",
-          "Microsoft.WindowsAppSDK": "1.3.230331000"
+          "Microsoft.WindowsAppSDK": "1.5.240311000"
         }
       },
       "CommunityToolkit.WinUI.Controls.SettingsControls": {
@@ -133,13 +149,13 @@
       },
       "CommunityToolkit.WinUI.Converters": {
         "type": "Direct",
-        "requested": "[8.0.240109, )",
-        "resolved": "8.0.240109",
-        "contentHash": "WYY2zP9WiByHzyW0OVLQFU4tFnCFpWsa7uz/NRIOgYD5RQn5cK6KbRlaN+D6G2fgFdqAJP453fKemojPcBsvoQ==",
+        "requested": "[8.1.240328-rc, )",
+        "resolved": "8.1.240328-rc",
+        "contentHash": "CRq7+Fam/B7TetLh6Mo4EV7PhaHJw7XT87YFpOE8DH85cq3ZlK9PnD6ajum8Ho55pRJELoU/vGsmqOfsQhFdWQ==",
         "dependencies": {
           "CommunityToolkit.Common": "8.2.1",
           "Microsoft.Windows.SDK.BuildTools": "10.0.22621.756",
-          "Microsoft.WindowsAppSDK": "1.3.230331000"
+          "Microsoft.WindowsAppSDK": "1.5.240311000"
         }
       },
       "CommunityToolkit.WinUI.Media": {
@@ -201,9 +217,9 @@
       },
       "Microsoft.WindowsAppSDK": {
         "type": "Direct",
-        "requested": "[1.5.240404000, )",
-        "resolved": "1.5.240404000",
-        "contentHash": "B06pJv0nH31vf4Df72Qoa8A+i12LBUQ/3LhpyWVEQ83opd2a5U49XnqqYrK/T8J6Zf4JTxfLvKBSM5fgXb1YXg==",
+        "requested": "[1.5.240428000, )",
+        "resolved": "1.5.240428000",
+        "contentHash": "gV+UHuwtbZLypWIysNlIX+WHqcm7q3I00E5n+GiDrX28fHXW4yr56d6GwP2banJLDl/JVku5zX2YUOW5X2WRZQ==",
         "dependencies": {
           "Microsoft.Windows.SDK.BuildTools": "10.0.22621.756"
         }
@@ -240,9 +256,9 @@
       },
       "QuestPDF": {
         "type": "Direct",
-        "requested": "[2024.3.2, )",
-        "resolved": "2024.3.2",
-        "contentHash": "dYdoKyYyKWyWFYjw18puHNjFVJ4clEnDNQufC5Ia01Jyduy4XYKc7LMnggpLHWk1xhmcSCGk35ViZQHA2/DFGw=="
+        "requested": "[2024.3.3, )",
+        "resolved": "2024.3.3",
+        "contentHash": "S2T+iE8RGw3OCBZ6bZmPhw6oIbXa92MuewcvwzJgeNKGIoc6t1lHnCWwH+UTGVFV9eGUCEjkxQCC6xooDYOUGw=="
       },
       "ReverseMarkdown": {
         "type": "Direct",
@@ -326,12 +342,12 @@
       },
       "CommunityToolkit.WinUI.Helpers": {
         "type": "Transitive",
-        "resolved": "8.0.240109",
-        "contentHash": "KzIyOq455H8YtjZVNKXyQ6tS/KwFTiud+Usi9+Y3tJSqsGAu00ToNaDSVcJmec116BZ7dGA12+pdEynOQo9yEA==",
+        "resolved": "8.1.240328-rc",
+        "contentHash": "5GxVmbQ8h2USjum4UJug9tepA6nF5GPGnwwNUeWU5d54XWnQQDBk+lXWFZ1M0gc9hcQp5syosvZ26o6X8I2WOQ==",
         "dependencies": {
-          "CommunityToolkit.WinUI.Extensions": "8.0.240109",
+          "CommunityToolkit.WinUI.Extensions": "8.1.240328-rc",
           "Microsoft.Windows.SDK.BuildTools": "10.0.22621.756",
-          "Microsoft.WindowsAppSDK": "1.3.230331000"
+          "Microsoft.WindowsAppSDK": "1.5.240311000"
         }
       },
       "CommunityToolkit.WinUI.Triggers": {
@@ -511,7 +527,7 @@
           "CommunityToolkit.WinUI.Triggers": "[8.0.240109, )",
           "Microsoft.Graphics.Win2D": "[1.2.0, )",
           "Microsoft.Windows.SDK.BuildTools": "[10.0.22621.3233, )",
-          "Microsoft.WindowsAppSDK": "[1.5.240404000, )",
+          "Microsoft.WindowsAppSDK": "[1.5.240428000, )",
           "Microsoft.Xaml.Behaviors.WinUI.Managed": "[2.0.9, )",
           "Pixeval.Utilities": "[1.0.0, )",
           "WinUI3Utilities": "[1.1.6.7, )"
@@ -536,9 +552,9 @@
     "net8.0-windows10.0.22621/win-arm64": {
       "Microsoft.WindowsAppSDK": {
         "type": "Direct",
-        "requested": "[1.5.240404000, )",
-        "resolved": "1.5.240404000",
-        "contentHash": "B06pJv0nH31vf4Df72Qoa8A+i12LBUQ/3LhpyWVEQ83opd2a5U49XnqqYrK/T8J6Zf4JTxfLvKBSM5fgXb1YXg==",
+        "requested": "[1.5.240428000, )",
+        "resolved": "1.5.240428000",
+        "contentHash": "gV+UHuwtbZLypWIysNlIX+WHqcm7q3I00E5n+GiDrX28fHXW4yr56d6GwP2banJLDl/JVku5zX2YUOW5X2WRZQ==",
         "dependencies": {
           "Microsoft.Windows.SDK.BuildTools": "10.0.22621.756"
         }
@@ -551,9 +567,9 @@
       },
       "QuestPDF": {
         "type": "Direct",
-        "requested": "[2024.3.2, )",
-        "resolved": "2024.3.2",
-        "contentHash": "dYdoKyYyKWyWFYjw18puHNjFVJ4clEnDNQufC5Ia01Jyduy4XYKc7LMnggpLHWk1xhmcSCGk35ViZQHA2/DFGw=="
+        "requested": "[2024.3.3, )",
+        "resolved": "2024.3.3",
+        "contentHash": "S2T+iE8RGw3OCBZ6bZmPhw6oIbXa92MuewcvwzJgeNKGIoc6t1lHnCWwH+UTGVFV9eGUCEjkxQCC6xooDYOUGw=="
       },
       "Microsoft.Graphics.Win2D": {
         "type": "Transitive",
@@ -621,9 +637,9 @@
     "net8.0-windows10.0.22621/win-x64": {
       "Microsoft.WindowsAppSDK": {
         "type": "Direct",
-        "requested": "[1.5.240404000, )",
-        "resolved": "1.5.240404000",
-        "contentHash": "B06pJv0nH31vf4Df72Qoa8A+i12LBUQ/3LhpyWVEQ83opd2a5U49XnqqYrK/T8J6Zf4JTxfLvKBSM5fgXb1YXg==",
+        "requested": "[1.5.240428000, )",
+        "resolved": "1.5.240428000",
+        "contentHash": "gV+UHuwtbZLypWIysNlIX+WHqcm7q3I00E5n+GiDrX28fHXW4yr56d6GwP2banJLDl/JVku5zX2YUOW5X2WRZQ==",
         "dependencies": {
           "Microsoft.Windows.SDK.BuildTools": "10.0.22621.756"
         }
@@ -636,9 +652,9 @@
       },
       "QuestPDF": {
         "type": "Direct",
-        "requested": "[2024.3.2, )",
-        "resolved": "2024.3.2",
-        "contentHash": "dYdoKyYyKWyWFYjw18puHNjFVJ4clEnDNQufC5Ia01Jyduy4XYKc7LMnggpLHWk1xhmcSCGk35ViZQHA2/DFGw=="
+        "requested": "[2024.3.3, )",
+        "resolved": "2024.3.3",
+        "contentHash": "S2T+iE8RGw3OCBZ6bZmPhw6oIbXa92MuewcvwzJgeNKGIoc6t1lHnCWwH+UTGVFV9eGUCEjkxQCC6xooDYOUGw=="
       },
       "Microsoft.Graphics.Win2D": {
         "type": "Transitive",
@@ -706,9 +722,9 @@
     "net8.0-windows10.0.22621/win-x86": {
       "Microsoft.WindowsAppSDK": {
         "type": "Direct",
-        "requested": "[1.5.240404000, )",
-        "resolved": "1.5.240404000",
-        "contentHash": "B06pJv0nH31vf4Df72Qoa8A+i12LBUQ/3LhpyWVEQ83opd2a5U49XnqqYrK/T8J6Zf4JTxfLvKBSM5fgXb1YXg==",
+        "requested": "[1.5.240428000, )",
+        "resolved": "1.5.240428000",
+        "contentHash": "gV+UHuwtbZLypWIysNlIX+WHqcm7q3I00E5n+GiDrX28fHXW4yr56d6GwP2banJLDl/JVku5zX2YUOW5X2WRZQ==",
         "dependencies": {
           "Microsoft.Windows.SDK.BuildTools": "10.0.22621.756"
         }
@@ -721,9 +737,9 @@
       },
       "QuestPDF": {
         "type": "Direct",
-        "requested": "[2024.3.2, )",
-        "resolved": "2024.3.2",
-        "contentHash": "dYdoKyYyKWyWFYjw18puHNjFVJ4clEnDNQufC5Ia01Jyduy4XYKc7LMnggpLHWk1xhmcSCGk35ViZQHA2/DFGw=="
+        "requested": "[2024.3.3, )",
+        "resolved": "2024.3.3",
+        "contentHash": "S2T+iE8RGw3OCBZ6bZmPhw6oIbXa92MuewcvwzJgeNKGIoc6t1lHnCWwH+UTGVFV9eGUCEjkxQCC6xooDYOUGw=="
       },
       "Microsoft.Graphics.Win2D": {
         "type": "Transitive",
