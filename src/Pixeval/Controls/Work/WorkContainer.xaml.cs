@@ -31,7 +31,6 @@ using Pixeval.Util;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using WinUI3Utilities;
-using Pixeval.Misc;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.Controls.Windowing;
 using Pixeval.Filters;

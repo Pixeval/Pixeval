@@ -27,7 +27,6 @@ using Pixeval.AppManagement;
 using Pixeval.Controls;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Model;
-using Pixeval.Misc;
 using Pixeval.Options;
 using WinUI3Utilities;
 

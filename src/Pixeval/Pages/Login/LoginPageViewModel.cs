@@ -42,7 +42,6 @@ using Pixeval.Controls.Windowing;
 using Pixeval.CoreApi;
 using Pixeval.CoreApi.Preference;
 using Pixeval.Logging;
-using Pixeval.Misc;
 using Pixeval.Util;
 using Pixeval.Util.UI;
 using WinUI3Utilities.Attributes;

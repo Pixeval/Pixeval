@@ -1,5 +1,5 @@
 using System.Reflection;
-using Pixeval.Misc;
+using Pixeval.Attributes;
 using WinUI3Utilities;
 
 namespace Pixeval.Settings;

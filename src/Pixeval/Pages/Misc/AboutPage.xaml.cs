@@ -27,7 +27,6 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
 using Pixeval.AppManagement;
 using Pixeval.Controls;
-using Pixeval.Misc;
 using WinUI3Utilities;
 
 namespace Pixeval.Pages.Misc;

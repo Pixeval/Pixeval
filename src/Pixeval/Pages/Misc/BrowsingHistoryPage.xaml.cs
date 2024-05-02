@@ -25,7 +25,6 @@ using Microsoft.UI.Xaml.Controls;
 using Pixeval.Controls;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.Database.Managers;
-using Pixeval.Misc;
 
 namespace Pixeval.Pages.Misc;
 

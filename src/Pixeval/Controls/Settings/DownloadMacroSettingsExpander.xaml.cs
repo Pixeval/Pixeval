@@ -203,8 +203,15 @@ public sealed partial class DownloadMacroSettingsExpander
 
     private void DownloadMacroSettingsExpander_OnLoading(FrameworkElement sender, object args)
     {
-        // The first time viewmodel get the value of DefaultDownloadPathMacro from AppSettings won't trigger the property changed event
-        SetPathMacroRichEditBoxDocument(Entry.DefaultDownloadPathMacro);
-        _previousPath = Entry.DefaultDownloadPathMacro;
+        Entry.PropertyChanged += (_, _) => EntryOnPropertyChanged();
+        EntryOnPropertyChanged();
+
+        return;
+        void EntryOnPropertyChanged()
+        {
+            // The first time viewmodel get the value of DefaultDownloadPathMacro from AppSettings won't trigger the property changed event
+            _previousPath = Entry.DefaultDownloadPathMacro;
+            SetPathMacroRichEditBoxDocument(Entry.DefaultDownloadPathMacro);
+        }
     }
 }

@@ -3,7 +3,6 @@ using System.Linq;
 using Windows.Globalization;
 using Pixeval.AppManagement;
 using Pixeval.Controls.Settings;
-using Pixeval.Misc;
 using Pixeval.Pages.Misc;
 
 namespace Pixeval.Settings.Models;

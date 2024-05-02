@@ -23,7 +23,6 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Controls;
 using Pixeval.CoreApi.Global.Enum;
-using Pixeval.Misc;
 using WinUI3Utilities;
 
 namespace Pixeval.Pages.Capability;

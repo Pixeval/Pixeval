@@ -40,7 +40,6 @@ using Windows.System;
 using Microsoft.UI.Xaml;
 using Pixeval.Controls.Windowing;
 using Pixeval.CoreApi.Global.Enum;
-using Pixeval.Misc;
 using Pixeval.Settings.Models;
 using WinUI3Utilities;
 using WinUI3Utilities.Controls;

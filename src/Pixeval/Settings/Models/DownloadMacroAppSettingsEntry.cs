@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Pixeval.AppManagement;
 using Pixeval.Controls;
+using Pixeval.Controls.Settings;
 using Pixeval.Download.MacroParser;
 using Pixeval.Download.Macros;
 
@@ -11,7 +12,7 @@ public class DownloadMacroAppSettingsEntry(
     AppSettings appSettings)
     : ObservableSettingsEntryBase<AppSettings>(appSettings, "", "", default)
 {
-    public override Controls.Settings.DownloadMacroSettingsExpander Element => new() { Entry = this };
+    public override DownloadMacroSettingsExpander Element => new() { Entry = this };
 
     public string DefaultDownloadPathMacro
     {

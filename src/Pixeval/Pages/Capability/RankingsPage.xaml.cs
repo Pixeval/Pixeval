@@ -25,7 +25,6 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Pixeval.Controls;
 using Pixeval.CoreApi.Global.Enum;
-using Pixeval.Misc;
 using Pixeval.Util;
 using WinRT;
 using WinUI3Utilities;

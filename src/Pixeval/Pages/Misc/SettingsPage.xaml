@@ -10,7 +10,8 @@
     xmlns:converters1="using:Pixeval.Controls.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:misc="using:Pixeval.Misc"
+    xmlns:misc="using:Pixeval.Attributes"
+    xmlns:misc1="using:Pixeval.Pages.Misc"
     xmlns:pixeval="using:Pixeval"
     Unloaded="SettingsPage_OnUnloaded"
     mc:Ignorable="d">
@@ -83,7 +84,7 @@
                 <TextBlock
                     x:Uid="/SettingsPage/VersionSettingsGroup"
                     Style="{StaticResource SettingHeaderStyle}"
-                    Tag="{x:Bind misc:SettingsEntryCategory.Version}" />
+                    Tag="{x:Bind misc1:SettingsEntryCategory.Version}" />
 
                 <controls:SettingsExpander HeaderIcon="{controls2:GlyphIcon Glyph=SyncE895}" IsExpanded="{x:Bind ViewModel.ExpandExpander, Mode=OneWay}">
                     <controls:SettingsExpander.Header>
@@ -221,7 +222,7 @@
                 <TextBlock
                     x:Uid="/SettingsPage/SessionSettingsGroup"
                     Style="{StaticResource SettingHeaderStyle}"
-                    Tag="{x:Bind misc:SettingsEntryCategory.Version}" />
+                    Tag="{x:Bind misc1:SettingsEntryCategory.Version}" />
 
                 <controls:SettingsCard
                     x:Uid="/SettingsPage/SignOutEntry"

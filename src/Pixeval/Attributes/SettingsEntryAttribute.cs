@@ -20,40 +20,14 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using Pixeval.AppManagement;
-using Pixeval.Attributes;
 using Pixeval.Util;
 using Pixeval.Utilities;
 using WinUI3Utilities;
 using WinUI3Utilities.Controls;
 
-namespace Pixeval.Misc;
-
-public enum SettingsEntryCategory
-{
-    [LocalizedResource(typeof(SettingsPageResources), nameof(SettingsPageResources.VersionSettingsGroupText))]
-    Version,
-
-    [LocalizedResource(typeof(SettingsPageResources), nameof(SettingsPageResources.SessionSettingsGroupText))]
-    Session,
-
-    [LocalizedResource(typeof(SettingsPageResources), nameof(SettingsPageResources.ApplicationSettingsGroupText))]
-    Application,
-
-    [LocalizedResource(typeof(SettingsPageResources), nameof(SettingsPageResources.BrowsingExperienceSettingsGroupText))]
-    BrowsingExperience,
-
-    [LocalizedResource(typeof(SettingsPageResources), nameof(SettingsPageResources.SearchSettingsGroupText))]
-    Search,
-
-    [LocalizedResource(typeof(SettingsPageResources), nameof(SettingsPageResources.DownloadSettingsGroupText))]
-    Download,
-
-    [LocalizedResource(typeof(SettingsPageResources), nameof(SettingsPageResources.MiscSettingsGroupText))]
-    Misc
-}
+namespace Pixeval.Attributes;
 
 [AttributeUsage(AttributeTargets.Property)]
 public class SettingsEntryAttribute(IconGlyph iconGlyph, string resourceKeyHeader, string? resourceKeyDescription) : Attribute
@@ -79,7 +53,7 @@ public class SettingsEntryAttribute(IconGlyph iconGlyph, string resourceKeyHeade
     public IconGlyph IconGlyph { get; } = iconGlyph;
 
     public string LocalizedResourceHeader { get; } =
-         LocalizedResourceAttributeHelper.GetLocalizedResourceContent(ResourceLoader, resourceKeyHeader) ?? "";
+        LocalizedResourceAttributeHelper.GetLocalizedResourceContent(ResourceLoader, resourceKeyHeader) ?? "";
 
     public string LocalizedResourceDescription { get; } =
         resourceKeyDescription is null

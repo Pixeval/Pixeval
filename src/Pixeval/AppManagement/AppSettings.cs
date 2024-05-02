@@ -21,6 +21,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using Windows.Foundation;
 using Microsoft.UI.Composition.SystemBackdrops;
 using Microsoft.UI.Xaml;
@@ -30,7 +31,6 @@ using Pixeval.Controls;
 using Pixeval.Controls.Windowing;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Preference;
-using Pixeval.Misc;
 using Pixeval.Options;
 using Pixeval.Util.UI;
 using WinUI3Utilities;
@@ -78,9 +78,7 @@ public partial record AppSettings : IWindowSettings
     public MainPageTabItem DefaultSelectedTabItem { get; set; } = MainPageTabItem.Recommendation;
 
     [SettingsEntry(IconGlyph.RenameE8AC, nameof(SettingsPageResources.DefaultDownloadPathMacroEntryHeader), nameof(SettingsPageResources.DefaultDownloadPathMacroEntryDescriptionContent))]
-    public string DefaultDownloadPathMacro { get; set; } =
-        Environment.GetFolderPath(Environment.SpecialFolder.MyPictures, Environment.SpecialFolderOption.Create)
-        + @"\@{if_manga=[@{artist_name}] @{title}}\[@{artist_name}] @{id}@{if_manga=p@{manga_index}}@{ext}";
+    public string DefaultDownloadPathMacro { get; set; } = GetSpecialFolder() + @"\@{if_manga=[@{artist_name}] @{title}}\[@{artist_name}] @{id}@{if_manga=p@{manga_index}}@{ext}";
 
     public UgoiraDownloadFormat UgoiraDownloadFormat { get; set; } = UgoiraDownloadFormat.WebPLossless;
 
@@ -158,7 +156,6 @@ public partial record AppSettings : IWindowSettings
     public ItemsViewLayoutType ItemsViewLayoutType { get; set; } = ItemsViewLayoutType.LinedFlow;
 
     [SettingsEntry(IconGlyph.Blocked2ECE4, nameof(SettingsPageResources.BlockedTagsEntryHeader), nameof(SettingsPageResources.BlockedTagsEntryDescription))]
-    [AttributeIgnore(typeof(SettingsViewModelAttribute<>))]
     public HashSet<string> BlockedTags { get; set; } = [];
 
     /// <summary>
@@ -178,7 +175,6 @@ public partial record AppSettings : IWindowSettings
     [AttributeIgnore(typeof(ResetAttribute))]
     public DateTimeOffset LastCheckedUpdate { get; set; } = DateTimeOffset.MinValue;
 
-    [AttributeIgnore(typeof(SettingsViewModelAttribute<>))]
     public string[] PixivWebApiNameResolver { get; set; } =
     [
         "210.140.131.219",
@@ -186,7 +182,6 @@ public partial record AppSettings : IWindowSettings
         "210.140.131.226"
     ];
 
-    [AttributeIgnore(typeof(SettingsViewModelAttribute<>))]
     public string[] PixivAccountNameResolver { get; set; } =
     [
         "210.140.131.219",
@@ -194,7 +189,6 @@ public partial record AppSettings : IWindowSettings
         "210.140.131.226"
     ];
 
-    [AttributeIgnore(typeof(SettingsViewModelAttribute<>))]
     public string[] PixivOAuthNameResolver { get; set; } =
     [
         "210.140.131.219",
@@ -202,7 +196,6 @@ public partial record AppSettings : IWindowSettings
         "210.140.131.226"
     ];
 
-    [AttributeIgnore(typeof(SettingsViewModelAttribute<>))]
     public string[] PixivAppApiNameResolver { get; set; } =
     [
         "210.140.131.199",
@@ -211,7 +204,6 @@ public partial record AppSettings : IWindowSettings
         "210.140.131.226"
     ];
 
-    [AttributeIgnore(typeof(SettingsViewModelAttribute<>))]
     public string[] PixivImageNameResolver { get; set; } =
     [
         "210.140.92.144",
@@ -220,7 +212,6 @@ public partial record AppSettings : IWindowSettings
         "210.140.92.143"
     ];
 
-    [AttributeIgnore(typeof(SettingsViewModelAttribute<>))]
     public string[] PixivImageNameResolver2 { get; set; } =
     [
         "210.140.92.143",
@@ -228,47 +219,46 @@ public partial record AppSettings : IWindowSettings
         "210.140.92.142"
     ];
 
-    [AttributeIgnore(typeof(SettingsViewModelAttribute<>))]
     public string TagsManagerWorkingPath { get; set; } = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures, Environment.SpecialFolderOption.Create);
 
-    [AttributeIgnore(typeof(SettingsViewModelAttribute<>))]
     public uint NovelFontColorInDarkMode { get; set; } = 0xFFFFFFFF;
 
-    [AttributeIgnore(typeof(SettingsViewModelAttribute<>))]
     public uint NovelFontColorInLightMode { get; set; } = 0xFF000000;
 
-    [AttributeIgnore(typeof(SettingsViewModelAttribute<>))]
     public uint NovelBackgroundInDarkMode { get; set; } = 0;
 
-    [AttributeIgnore(typeof(SettingsViewModelAttribute<>))]
     public uint NovelBackgroundInLightMode { get; set; } = 0;
 
-    [AttributeIgnore(typeof(SettingsViewModelAttribute<>))]
     public FontWeightsOption NovelFontWeight { get; set; } = FontWeightsOption.Normal;
 
-    [AttributeIgnore(typeof(SettingsViewModelAttribute<>))]
     public string NovelFontFamily { get; set; } = AppSettingsResources.AppDefaultFontFamilyName;
 
-    [AttributeIgnore(typeof(SettingsViewModelAttribute<>))]
     public double NovelFontSize { get; set; } = 14;
 
-    [AttributeIgnore(typeof(SettingsViewModelAttribute<>))]
     public double NovelLineHeight { get; set; } = 28;
 
-    [AttributeIgnore(typeof(SettingsViewModelAttribute<>))]
     public double NovelMaxWidth { get; set; } = 1000;
 
-    [AttributeIgnore(typeof(SettingsViewModelAttribute<>))]
     public Size WindowSize { get; set; } = WindowHelper.EstimatedWindowSize().ToSize();
 
-    [AttributeIgnore(typeof(SettingsViewModelAttribute<>))]
     public bool IsMaximized { get; set; } = false;
 
-    [AttributeIgnore(typeof(SettingsViewModelAttribute<>), typeof(GenerateConstructorAttribute), typeof(AppContextAttribute<>))]
+    [AttributeIgnore(typeof(GenerateConstructorAttribute), typeof(AppContextAttribute<>))]
     public WorkType WorkType => SimpleWorkType is SimpleWorkType.IllustAndManga ? WorkType.Illust : WorkType.Novel;
 
     public MakoClientConfiguration ToMakoClientConfiguration()
     {
         return new MakoClientConfiguration(5000, EnableDomainFronting, MirrorHost, CultureInfo.CurrentUICulture);
+    }
+
+    private static string GetSpecialFolder()
+    {
+        var picPath = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures, Environment.SpecialFolderOption.Create);
+        var docPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments, Environment.SpecialFolderOption.Create);
+        var picDirectory = Path.GetDirectoryName(picPath);
+        return picDirectory == Path.GetDirectoryName(docPath)
+            ? picDirectory +
+              @$"\@{{if_illust={Path.GetFileName(picPath)}}}@{{if_novel={Path.GetFileName(docPath)}}}"
+            : @$"\@{{if_illust={picPath}}}@{{if_novel={docPath}}}";
     }
 }

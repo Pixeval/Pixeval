@@ -29,7 +29,6 @@ using Pixeval.Controls.Windowing;
 using Microsoft.UI.Xaml.Media.Animation;
 using Pixeval.Controls;
 using Pixeval.Util.UI;
-using Pixeval.Misc;
 
 namespace Pixeval.Pages.IllustratorViewer;
 

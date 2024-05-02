@@ -7,7 +7,6 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:labs="using:CommunityToolkit.Labs.WinUI.MarkdownTextBlock"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:misc="using:Pixeval.Misc"
     xmlns:misc1="using:Pixeval.Pages.Misc"
     Loaded="AboutPage_OnLoaded"
     mc:Ignorable="d">
