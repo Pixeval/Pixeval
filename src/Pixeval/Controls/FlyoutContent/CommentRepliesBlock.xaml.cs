@@ -24,8 +24,8 @@ using System.Threading.Tasks;
 using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Net.Response;
-using Pixeval.Options;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
 
@@ -45,15 +45,15 @@ public sealed partial class CommentRepliesBlock
     {
         using var result = ViewModel.EntryType switch
         {
-            CommentType.Illustration => await App.AppViewModel.MakoClient.AddIllustCommentAsync(
+            SimpleWorkType.IllustAndManga => await App.AppViewModel.MakoClient.AddIllustCommentAsync(
                 ViewModel.EntryId,
                 ViewModel.CommentId,
                 e.ReplyContentRichEditBoxStringContent),
-            CommentType.Novel => await App.AppViewModel.MakoClient.AddNovelCommentAsync(
+            SimpleWorkType.Novel => await App.AppViewModel.MakoClient.AddNovelCommentAsync(
                 ViewModel.EntryId,
                 ViewModel.CommentId,
                 e.ReplyContentRichEditBoxStringContent),
-            _ => ThrowHelper.ArgumentOutOfRange<CommentType, HttpResponseMessage>(ViewModel.EntryType)
+            _ => ThrowHelper.ArgumentOutOfRange<SimpleWorkType, HttpResponseMessage>(ViewModel.EntryType)
         };
 
         await AddComment(result);
@@ -63,15 +63,15 @@ public sealed partial class CommentRepliesBlock
     {
         using var result = ViewModel.EntryType switch
         {
-            CommentType.Illustration => await App.AppViewModel.MakoClient.AddIllustCommentAsync(
+            SimpleWorkType.IllustAndManga => await App.AppViewModel.MakoClient.AddIllustCommentAsync(
                 ViewModel.EntryId,
                 ViewModel.CommentId,
                 e.StickerViewModel.StickerId),
-            CommentType.Novel => await App.AppViewModel.MakoClient.AddNovelCommentAsync(
+            SimpleWorkType.Novel => await App.AppViewModel.MakoClient.AddNovelCommentAsync(
                 ViewModel.EntryId,
                 ViewModel.CommentId,
                 e.StickerViewModel.StickerId),
-            _ => ThrowHelper.ArgumentOutOfRange<CommentType, HttpResponseMessage>(ViewModel.EntryType)
+            _ => ThrowHelper.ArgumentOutOfRange<SimpleWorkType, HttpResponseMessage>(ViewModel.EntryType)
         };
 
         await AddComment(result);

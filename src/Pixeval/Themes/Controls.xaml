@@ -105,4 +105,17 @@
         <Setter Property="EnumSource" Value="{winUi:EnumValues Type=enum:WorkSortOption}" />
         <Setter Property="PlaceholderText" Value="{markup:ResourceString ResourceKey='SortOptionComboBox/PlaceholderText', ResourceFile=Misc}" />
     </Style>
+
+    <Style
+        x:Key="SettingsEnumComboBoxStyle"
+        BasedOn="{StaticResource DefaultComboBoxStyle}"
+        TargetType="controls:EnumComboBox">
+        <Setter Property="Width" Value="200" />
+    </Style>
+    <Style
+        x:Key="SettingsNumberBoxStyle"
+        BasedOn="{StaticResource PixevalNumberBoxStyle}"
+        TargetType="NumberBox">
+        <Setter Property="Width" Value="200" />
+    </Style>
 </ResourceDictionary>

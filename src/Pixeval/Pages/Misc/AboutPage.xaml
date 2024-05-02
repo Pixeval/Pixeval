@@ -7,7 +7,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:labs="using:CommunityToolkit.Labs.WinUI.MarkdownTextBlock"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:misc="using:Pixeval.Misc"
+    xmlns:misc1="using:Pixeval.Pages.Misc"
     Loaded="AboutPage_OnLoaded"
     mc:Ignorable="d">
     <Grid>
@@ -61,12 +61,12 @@
                         Margin="0,10"
                         FontSize="{StaticResource PixevalContentFontSize}"
                         TextWrapping="Wrap" />
-                    <ItemsRepeater ItemsSource="{x:Bind misc:DependencyViewModel.DependencyViewModels}">
+                    <ItemsRepeater ItemsSource="{x:Bind misc1:DependencyViewModel.DependencyViewModels}">
                         <ItemsRepeater.Layout>
                             <StackLayout Orientation="Vertical" />
                         </ItemsRepeater.Layout>
                         <ItemsRepeater.ItemTemplate>
-                            <DataTemplate x:DataType="misc:DependencyViewModel">
+                            <DataTemplate x:DataType="misc1:DependencyViewModel">
                                 <controls:SettingsCard
                                     MinHeight="0"
                                     ActionIcon="{controls1:GlyphIcon Glyph=OpenInNewWindowE8A7}"

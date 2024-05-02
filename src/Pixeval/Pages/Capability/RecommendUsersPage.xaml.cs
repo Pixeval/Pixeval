@@ -1,10 +1,10 @@
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
-using Pixeval.Misc;
+using Pixeval.Controls;
 
 namespace Pixeval.Pages.Capability;
 
-public sealed partial class RecommendUsersPage : IScrollViewProvider
+public sealed partial class RecommendUsersPage : IScrollViewHost
 {
     public RecommendUsersPage() => InitializeComponent();
 

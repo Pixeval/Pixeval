@@ -26,11 +26,11 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml.Input;
 using Pixeval.Controls;
 using Pixeval.Controls.Windowing;
+using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Model;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using Pixeval.Util.ComponentModels;
-using Pixeval.Options;
 using WinUI3Utilities.Controls;
 
 namespace Pixeval.Pages.IllustrationViewer;
@@ -113,7 +113,7 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
     public NavigationViewTag<WorkInfoPage, Illustration> IllustrationInfoTag { get; } =
         new(null!) { Content = EntryViewerPageResources.InfoTabContent };
 
-    public NavigationViewTag<CommentsPage, (CommentType, long Id)> CommentsTag { get; } =
+    public NavigationViewTag<CommentsPage, (SimpleWorkType, long Id)> CommentsTag { get; } =
         new(default) { Content = EntryViewerPageResources.CommentsTabContent };
 
     public NavigationViewTag<RelatedWorksPage, long> RelatedWorksTag { get; } =
@@ -161,7 +161,7 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
             Images = Pages.Select(p => new ImageViewerPageViewModel(p, CurrentIllustration, HWnd)).ToArray();
 
             IllustrationInfoTag.Parameter = CurrentIllustration.Entry;
-            CommentsTag.Parameter = (CommentType.Illustration, IllustrationId);
+            CommentsTag.Parameter = (SimpleWorkType.IllustAndManga, IllustrationId);
             RelatedWorksTag.Parameter = IllustrationId;
 
             // 此处不要触发CurrentPageIndex的OnDetailedPropertyChanged，否则会导航两次

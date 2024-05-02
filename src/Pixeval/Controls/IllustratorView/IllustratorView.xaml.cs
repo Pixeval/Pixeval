@@ -1,12 +1,11 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Pixeval.Misc;
 using Pixeval.Pages.IllustratorViewer;
 using WinUI3Utilities;
 
 namespace Pixeval.Controls;
 
-public sealed partial class IllustratorView : IScrollViewProvider
+public sealed partial class IllustratorView : IScrollViewHost
 {
     public IllustratorViewViewModel ViewModel { get; } = new();
 

@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Json;
 using System.Runtime.InteropServices;
-using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using CommunityToolkit.HighPerformance;
@@ -49,8 +49,7 @@ public class Versioning
             AppReleaseModels = null;
             if (client.DefaultRequestHeaders.UserAgent.Count is 0)
                 client.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36 Edg/121.0.0.0");
-            var stringAsync = await client.GetStringAsync("https://api.github.com/repos/Pixeval/Pixeval/releases");
-            if (JsonSerializer.Deserialize<GitHubRelease[]>(stringAsync) is { Length: > 0 } gitHubReleases)
+            if (await client.GetFromJsonAsync<GitHubRelease[]>("https://api.github.com/repos/Pixeval/Pixeval/releases") is { Length: > 0 } gitHubReleases)
             {
                 var appReleaseModels = new List<AppReleaseModel>(gitHubReleases.Length);
                 foreach (var release in gitHubReleases)

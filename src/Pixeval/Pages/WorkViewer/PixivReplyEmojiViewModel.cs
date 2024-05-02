@@ -20,7 +20,7 @@
 
 using System.IO;
 using Microsoft.UI.Xaml.Media;
-using Pixeval.Misc;
+using Pixeval.Util.UI;
 
 namespace Pixeval.Pages;
 

@@ -39,7 +39,7 @@ namespace Pixeval.Database.Managers;
 /// <see cref="AppViewModel.CreateServiceProvider">Register the manager in AppViewModel</see>
 /// <typeparam name="TEntry">Entry to be serialized in database</typeparam>
 /// <typeparam name="TModel">Data model in the program</typeparam>
-public interface IPersistentManager<TEntry, out TModel> where TEntry : new()
+public interface IPersistentManager<TEntry, out TModel>
 {
     ILiteCollection<TEntry> Collection { get; init; }
 

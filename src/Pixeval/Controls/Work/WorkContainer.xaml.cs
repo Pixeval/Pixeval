@@ -31,7 +31,6 @@ using Pixeval.Util;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using WinUI3Utilities;
-using Pixeval.Misc;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.Controls.Windowing;
 using Pixeval.Filters;
@@ -42,7 +41,7 @@ namespace Pixeval.Controls;
 /// <summary>
 /// 所有插画集合通用的容器
 /// </summary>
-public partial class WorkContainer : IScrollViewProvider
+public partial class WorkContainer : IScrollViewHost
 {
     /// <summary>
     /// The command elements that will appear at the left of the TopCommandBar

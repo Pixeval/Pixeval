@@ -8,18 +8,11 @@
     xmlns:controls2="using:WinUI3Utilities.Controls"
     xmlns:converters="using:CommunityToolkit.WinUI.Converters"
     xmlns:converters1="using:Pixeval.Controls.Converters"
-    xmlns:coreApi="using:Pixeval.CoreApi.Net"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:enum="using:Pixeval.CoreApi.Global.Enum"
-    xmlns:labs="using:CommunityToolkit.Labs.WinUI"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:misc="using:Pixeval.Pages.Misc"
-    xmlns:misc2="using:Pixeval.Misc"
-    xmlns:options="using:Pixeval.Options"
+    xmlns:misc="using:Pixeval.Attributes"
+    xmlns:misc1="using:Pixeval.Pages.Misc"
     xmlns:pixeval="using:Pixeval"
-    xmlns:system="using:System"
-    xmlns:utilities="using:WinUI3Utilities"
-    xmlns:winUi="using:CommunityToolkit.WinUI"
     Unloaded="SettingsPage_OnUnloaded"
     mc:Ignorable="d">
     <controls1:EnhancedWindowPage.Resources>
@@ -31,21 +24,8 @@
                 <Setter Property="Margin" Value="1,28,0,4" />
             </Style.Setters>
         </Style>
-        <Style
-            x:Key="SettingsNumberBoxStyle"
-            BasedOn="{StaticResource PixevalNumberBoxStyle}"
-            TargetType="NumberBox">
-            <Setter Property="Width" Value="200" />
-        </Style>
-        <Style
-            x:Key="SettingsEnumComboBoxStyle"
-            BasedOn="{StaticResource DefaultComboBoxStyle}"
-            TargetType="controls1:EnumComboBox">
-            <Setter Property="Width" Value="200" />
-        </Style>
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
         <converters:BoolNegationConverter x:Key="BoolNegationConverter" />
-        <converters1:StringToFontFamilyConverter x:Key="StringToFontFamilyConverter" />
         <converters1:NullableToVisibilityConverter x:Key="NullableToVisibilityConverter" />
     </controls1:EnhancedWindowPage.Resources>
     <Grid>
@@ -58,11 +38,8 @@
             Grid.Row="0"
             Margin="20,40,20,20"
             Style="{StaticResource TitleTextBlockStyle}" />
-        <ScrollView
-            x:Name="SettingsPageScrollView"
-            Grid.Row="1"
-            x:FieldModifier="public">
-            <StackPanel Margin="20,0,20,20">
+        <ScrollView x:Name="SettingsPageScrollView" Grid.Row="1">
+            <StackPanel Margin="20,0,20,20" Loaded="Panel_OnLoaded">
                 <!--  region Header  -->
                 <Grid ColumnSpacing="20" RowSpacing="10">
                     <Grid.RowDefinitions>
@@ -104,7 +81,10 @@
                 </Grid>
                 <!--  endregion  -->
                 <!--  region Setting Entries  -->
-                <TextBlock x:Uid="/SettingsPage/VersionSettingsGroup" Style="{StaticResource SettingHeaderStyle}" />
+                <TextBlock
+                    x:Uid="/SettingsPage/VersionSettingsGroup"
+                    Style="{StaticResource SettingHeaderStyle}"
+                    Tag="{x:Bind misc1:SettingsEntryCategory.Version}" />
 
                 <controls:SettingsExpander HeaderIcon="{controls2:GlyphIcon Glyph=SyncE895}" IsExpanded="{x:Bind ViewModel.ExpandExpander, Mode=OneWay}">
                     <controls:SettingsExpander.Header>
@@ -177,7 +157,7 @@
                 <controls:SettingsCard
                     x:Uid="/SettingsPage/DownloadUpdateAutomaticallyEntry"
                     HeaderIcon="{controls2:GlyphIcon Glyph=CommunicationsE95A}"
-                    Tag="{x:Bind misc2:SettingEntry.AutoUpdate}">
+                    Tag="{x:Bind misc:SettingsEntryAttribute.AutoUpdate}">
                     <ToggleSwitch IsOn="{x:Bind ViewModel.DownloadUpdateAutomatically, Mode=TwoWay}" />
                 </controls:SettingsCard>
 
@@ -239,19 +219,22 @@
                     </controls:SettingsExpander.Items>
                 </controls:SettingsExpander>
 
-                <TextBlock x:Uid="/SettingsPage/SessionSettingsGroup" Style="{StaticResource SettingHeaderStyle}" />
+                <TextBlock
+                    x:Uid="/SettingsPage/SessionSettingsGroup"
+                    Style="{StaticResource SettingHeaderStyle}"
+                    Tag="{x:Bind misc1:SettingsEntryCategory.Version}" />
 
                 <controls:SettingsCard
                     x:Uid="/SettingsPage/SignOutEntry"
                     HeaderIcon="{controls2:GlyphIcon Glyph=SignOutF3B1}"
                     IsClickEnabled="True"
-                    Tag="{x:Bind misc2:SettingEntry.SignOut}"
+                    Tag="{x:Bind misc:SettingsEntryAttribute.SignOut}"
                     Tapped="PerformSignOutButton_OnTapped" />
 
                 <controls:SettingsExpander
                     x:Uid="/SettingsPage/ResetDefaultSettingsEntry"
                     HeaderIcon="{controls2:GlyphIcon Glyph=AppIconDefaultECAA}"
-                    Tag="{x:Bind misc2:SettingEntry.ResetSettings}">
+                    Tag="{x:Bind misc:SettingsEntryAttribute.ResetSettings}">
                     <Button x:Uid="/SettingsPage/ResetDefaultSettingsButton" Tapped="ResetDefaultSettingsButton_OnTapped" />
                     <controls:SettingsExpander.Items>
                         <controls:SettingsCard
@@ -276,473 +259,7 @@
                             Tapped="DeleteDownloadHistoriesButton_OnTapped" />
                     </controls:SettingsExpander.Items>
                 </controls:SettingsExpander>
-
-                <TextBlock x:Uid="/SettingsPage/ApplicationSettingsGroup" Style="{StaticResource SettingHeaderStyle}" />
-
-                <controls:SettingsCard
-                    x:Uid="/SettingsPage/ThemeEntry"
-                    HeaderIcon="{controls2:GlyphIcon Glyph=PersonalizeE771}"
-                    Tag="{x:Bind misc2:SettingEntry.Theme}">
-                    <controls:SettingsCard.Description>
-                        <HyperlinkButton
-                            x:Uid="/SettingsPage/ThemeEntryDescriptionHyperlinkButton"
-                            Tag="ms-settings:themes"
-                            Tapped="OpenLinkViaTag_OnTapped" />
-                    </controls:SettingsCard.Description>
-                    <controls1:EnumComboBox
-                        EnumSource="{winUi:EnumValues Type=ElementTheme}"
-                        SelectedEnum="{x:Bind ViewModel.Theme, Mode=TwoWay}"
-                        SelectionChanged="Theme_OnSelectionChanged"
-                        Style="{StaticResource SettingsEnumComboBoxStyle}" />
-                </controls:SettingsCard>
-
-                <controls:SettingsCard
-                    x:Uid="/SettingsPage/BackdropEntry"
-                    HeaderIcon="{controls2:GlyphIcon Glyph=ColorE790}"
-                    Tag="{x:Bind misc2:SettingEntry.Backdrop}">
-                    <controls1:EnumComboBox
-                        EnumSource="{winUi:EnumValues Type=utilities:BackdropType}"
-                        SelectedEnum="{x:Bind ViewModel.Backdrop, Mode=TwoWay}"
-                        SelectionChanged="Backdrop_OnSelectionChanged"
-                        Style="{StaticResource SettingsEnumComboBoxStyle}" />
-                </controls:SettingsCard>
-
-                <controls:SettingsCard
-                    x:Uid="/SettingsPage/AppFontFamilyEntry"
-                    HeaderIcon="{controls2:GlyphIcon Glyph=FontE8D2}"
-                    Tag="{x:Bind misc2:SettingEntry.AppFontFamilyName}">
-                    <controls:SettingsCard.Description>
-                        <HyperlinkButton
-                            x:Uid="/SettingsPage/OpenFontSettingsHyperlinkButton"
-                            Tag="ms-settings:fonts"
-                            Tapped="OpenLinkViaTag_OnTapped" />
-                    </controls:SettingsCard.Description>
-                    <ComboBox
-                        x:Uid="/SettingsPage/AppFontFamilyComboBox"
-                        Width="200"
-                        ItemsSource="{x:Bind misc:SettingsPageViewModel.AvailableFonts}"
-                        SelectedItem="{x:Bind ViewModel.AppFontFamilyName, Mode=TwoWay}">
-                        <ComboBox.ItemTemplate>
-                            <DataTemplate x:DataType="x:String">
-                                <TextBlock FontFamily="{x:Bind Converter={StaticResource StringToFontFamilyConverter}}" Text="{x:Bind}" />
-                            </DataTemplate>
-                        </ComboBox.ItemTemplate>
-                    </ComboBox>
-                </controls:SettingsCard>
-
-                <controls:SettingsCard x:Uid="/SettingsPage/AppLanguageEntry" HeaderIcon="{controls2:GlyphIcon Glyph=LocaleLanguageF2B7}">
-                    <controls:SettingsCard.Description>
-                        <HyperlinkButton
-                            x:Uid="/SettingsPage/OpenLanguageSettingsHyperlinkButton"
-                            Tag="ms-settings:regionlanguage"
-                            Tapped="OpenLinkViaTag_OnTapped" />
-                    </controls:SettingsCard.Description>
-                    <ComboBox
-                        x:Uid="/SettingsPage/AppLanguageEntryComboBox"
-                        Width="200"
-                        ItemsSource="{x:Bind misc:SettingsPageViewModel.AvailableLanguages}"
-                        SelectedItem="{x:Bind ViewModel.AppLanguage, Mode=TwoWay}" />
-                </controls:SettingsCard>
-
-                <controls:SettingsExpander
-                    x:Uid="/SettingsPage/EnableDomainFrontingEntry"
-                    HeaderIcon="{controls2:GlyphIcon Glyph=NetworkE968}"
-                    Tag="{x:Bind misc2:SettingEntry.EnableDomainFronting}">
-                    <ToggleSwitch IsOn="{x:Bind ViewModel.EnableDomainFronting, Mode=TwoWay}" />
-                    <controls:SettingsExpander.Items>
-                        <controls:SettingsCard HorizontalContentAlignment="Stretch" ContentAlignment="Left">
-                            <StackPanel Spacing="10">
-                                <TextBlock x:Uid="/SettingsPage/PixivNameResolverHeader" />
-                                <TextBlock
-                                    x:Uid="/SettingsPage/PixivNameResolverDescription"
-                                    Foreground="{StaticResource TextSecondaryAccentColor}"
-                                    Style="{StaticResource BaseTextBlockStyle}" />
-                                <controls:WrapPanel HorizontalSpacing="10" VerticalSpacing="10">
-                                    <controls1:IPListInput Header="{x:Bind coreApi:MakoHttpOptions.AppApiHost}" ItemsSource="{x:Bind ViewModel.PixivAppApiNameResolver, Mode=OneWay}" />
-                                    <controls1:IPListInput Header="{x:Bind coreApi:MakoHttpOptions.ImageHost}" ItemsSource="{x:Bind ViewModel.PixivImageNameResolver, Mode=OneWay}" />
-                                    <controls1:IPListInput Header="{x:Bind coreApi:MakoHttpOptions.ImageHost2}" ItemsSource="{x:Bind ViewModel.PixivImageNameResolver2, Mode=OneWay}" />
-                                    <controls1:IPListInput Header="{x:Bind coreApi:MakoHttpOptions.OAuthHost}" ItemsSource="{x:Bind ViewModel.PixivOAuthNameResolver, Mode=OneWay}" />
-                                    <controls1:IPListInput Header="{x:Bind coreApi:MakoHttpOptions.AccountHost}" ItemsSource="{x:Bind ViewModel.PixivAccountNameResolver, Mode=OneWay}" />
-                                    <controls1:IPListInput Header="{x:Bind coreApi:MakoHttpOptions.WebApiHost}" ItemsSource="{x:Bind ViewModel.PixivWebApiNameResolver, Mode=OneWay}" />
-                                </controls:WrapPanel>
-                            </StackPanel>
-                        </controls:SettingsCard>
-                    </controls:SettingsExpander.Items>
-                </controls:SettingsExpander>
-
-                <controls:SettingsCard
-                    x:Uid="/SettingsPage/UseFileCacheEntry"
-                    HeaderIcon="{controls2:GlyphIcon Glyph=FileExplorerEC50}"
-                    Tag="{x:Bind misc2:SettingEntry.UseFileCache}">
-                    <ToggleSwitch IsOn="{x:Bind ViewModel.UseFileCache, Mode=TwoWay}" />
-                </controls:SettingsCard>
-
-                <controls:SettingsCard
-                    x:Uid="/SettingsPage/GenerateHelpLinkEntry"
-                    HeaderIcon="{controls2:GlyphIcon Glyph=LinkE71B}"
-                    Tag="{x:Bind misc2:SettingEntry.DisplayTeachingTipWhenGeneratingAppLink}">
-                    <ToggleSwitch IsOn="{x:Bind ViewModel.DisplayTeachingTipWhenGeneratingAppLink, Mode=TwoWay}" />
-                </controls:SettingsCard>
-
-                <controls:SettingsCard
-                    x:Uid="/SettingsPage/DefaultSelectedTabEntry"
-                    HeaderIcon="{controls2:GlyphIcon Glyph=CheckMarkE73E}"
-                    Tag="{x:Bind misc2:SettingEntry.DefaultSelectedTabItem}">
-                    <controls1:EnumComboBox
-                        EnumSource="{winUi:EnumValues Type=options:MainPageTabItem}"
-                        SelectedEnum="{x:Bind ViewModel.DefaultSelectedTabItem, Mode=TwoWay}"
-                        Style="{StaticResource SettingsEnumComboBoxStyle}" />
-                </controls:SettingsCard>
-
-                <TextBlock x:Uid="/SettingsPage/BrowsingExperienceSettingsGroup" Style="{StaticResource SettingHeaderStyle}" />
-
-                <controls:SettingsCard
-                    x:Uid="/SettingsPage/ThumbnailDirectionEntry"
-                    HeaderIcon="{controls2:GlyphIcon Glyph=TypeE97C}"
-                    Tag="{x:Bind misc2:SettingEntry.ThumbnailDirection}">
-                    <controls1:EnumComboBox
-                        EnumSource="{winUi:EnumValues Type=options:ThumbnailDirection}"
-                        SelectedEnum="{x:Bind ViewModel.ThumbnailDirection, Mode=TwoWay}"
-                        Style="{StaticResource SettingsEnumComboBoxStyle}" />
-                </controls:SettingsCard>
-
-                <controls:SettingsCard
-                    x:Uid="/SettingsPage/ItemsViewLayoutTypeEntry"
-                    HeaderIcon="{controls2:GlyphIcon Glyph=TilesECA5}"
-                    Tag="{x:Bind misc2:SettingEntry.ItemsViewLayoutType}">
-                    <controls1:EnumComboBox
-                        EnumSource="{winUi:EnumValues Type=controls1:ItemsViewLayoutType}"
-                        SelectedEnum="{x:Bind ViewModel.ItemsViewLayoutType, Mode=TwoWay}"
-                        Style="{StaticResource SettingsEnumComboBoxStyle}" />
-                </controls:SettingsCard>
-
-                <controls:SettingsCard
-                    x:Uid="/SettingsPage/TargetAPIPlatformEntry"
-                    HeaderIcon="{controls2:GlyphIcon Glyph=CommandPromptE756}"
-                    Tag="{x:Bind misc2:SettingEntry.TargetFilter}">
-                    <controls1:EnumComboBox
-                        EnumSource="{winUi:EnumValues Type=enum:TargetFilter}"
-                        SelectedEnum="{x:Bind ViewModel.TargetFilter, Mode=TwoWay}"
-                        Style="{StaticResource SettingsEnumComboBoxStyle}" />
-                </controls:SettingsCard>
-
-                <controls:SettingsExpander x:Uid="/SettingsPage/BlockedTagsEntry" HeaderIcon="{controls2:GlyphIcon Glyph=Blocked2ECE4}">
-                    <controls:SettingsExpander.Items>
-                        <controls:SettingsCard HorizontalContentAlignment="Stretch" ContentAlignment="Left">
-                            <controls:TokenizingTextBox
-                                x:Uid="/SettingsPage/BlockedTagsTokenizingTextBox"
-                                ItemsSource="{x:Bind ViewModel.BlockedTags, Mode=OneWay}"
-                                TokenDelimiter=","
-                                TokenItemAdding="TokenizingTextBox_OnTokenItemAdding" />
-                        </controls:SettingsCard>
-                    </controls:SettingsExpander.Items>
-                </controls:SettingsExpander>
-
-                <controls:SettingsCard
-                    x:Uid="/SettingsPage/ViewingRestrictionEntry"
-                    ActionIcon="{controls2:GlyphIcon Glyph=OpenInNewWindowE8A7}"
-                    HeaderIcon="{controls2:GlyphIcon Glyph=BlockContactE8F8}"
-                    IsClickEnabled="True"
-                    Tag="https://www.pixiv.net/setting_user.php"
-                    Tapped="OpenLinkViaTag_OnTapped" />
-
-                <TextBlock
-                    x:Uid="/SettingsPage/SearchSettingsGroup"
-                    Style="{StaticResource SettingHeaderStyle}"
-                    Tag="{x:Bind misc2:SettingEntry.SearchCategory}" />
-
-                <controls:SettingsCard
-                    x:Uid="/SettingsPage/ReverseSearchResultSimilarityThresholdEntry"
-                    HeaderIcon="{controls2:GlyphIcon Glyph=FilterE71C}"
-                    Tag="{x:Bind misc2:SettingEntry.ReverseSearchResultSimilarityThreshold}">
-                    <Slider
-                        Maximum="100"
-                        Minimum="1"
-                        Value="{x:Bind ViewModel.ReverseSearchResultSimilarityThreshold}" />
-                </controls:SettingsCard>
-
-                <controls:SettingsCard
-                    x:Uid="/SettingsPage/ReverseSearchApiKeyEntry"
-                    HeaderIcon="{controls2:GlyphIcon Glyph=SearchAndAppsE773}"
-                    Tag="{x:Bind misc2:SettingEntry.ReverseSearchApiKey}">
-                    <controls:SettingsCard.Description>
-                        <HyperlinkButton x:Uid="/SettingsPage/ReverseSearchApiKeyEntryDescriptionHyperlinkButton" NavigateUri="https://saucenao.com/user.php?page=search-api" />
-                    </controls:SettingsCard.Description>
-                    <TextBox
-                        x:Uid="/SettingsPage/ReverseSearchApiKeyTextBox"
-                        Width="200"
-                        Text="{x:Bind ViewModel.ReverseSearchApiKey, Mode=TwoWay}" />
-                </controls:SettingsCard>
-
-                <controls:SettingsCard
-                    x:Uid="/SettingsPage/MaximumSearchHistoryRecordsEntry"
-                    HeaderIcon="{controls2:GlyphIcon Glyph=HistoryE81C}"
-                    Tag="{x:Bind misc2:SettingEntry.MaximumSearchHistoryRecords}">
-                    <NumberBox
-                        x:Uid="/SettingsPage/MaximumSearchHistoryRecordsNumberBox"
-                        Maximum="200"
-                        Minimum="10"
-                        Style="{StaticResource SettingsNumberBoxStyle}"
-                        Value="{x:Bind ViewModel.MaximumSearchHistoryRecords, Mode=TwoWay}" />
-                </controls:SettingsCard>
-
-                <controls:SettingsCard
-                    x:Uid="/SettingsPage/MaximumSuggestionBoxSearchHistoryEntry"
-                    HeaderIcon="{controls2:GlyphIcon Glyph=SetHistoryStatus2F739}"
-                    Tag="{x:Bind misc2:SettingEntry.MaximumSuggestionBoxSearchHistory}">
-                    <NumberBox
-                        x:Uid="/SettingsPage/MaximumSuggestionBoxSearchHistoryEntryNumberBox"
-                        Maximum="{x:Bind ViewModel.MaximumSearchHistoryRecords}"
-                        Minimum="0"
-                        Style="{StaticResource SettingsNumberBoxStyle}"
-                        Value="{x:Bind ViewModel.MaximumSuggestionBoxSearchHistory, Mode=TwoWay}" />
-                </controls:SettingsCard>
-
-                <controls:SettingsCard
-                    x:Uid="/SettingsPage/DefaultSearchSortOptionEntry"
-                    HeaderIcon="{controls2:GlyphIcon Glyph=SortE8CB}"
-                    Tag="{x:Bind misc2:SettingEntry.WorkSortOption}">
-                    <controls1:EnumComboBox
-                        EnumSource="{winUi:EnumValues Type=enum:WorkSortOption}"
-                        SelectedEnum="{x:Bind ViewModel.WorkSortOption, Mode=TwoWay}"
-                        Style="{StaticResource SettingsEnumComboBoxStyle}" />
-                </controls:SettingsCard>
-
-                <controls:SettingsCard
-                    x:Uid="/SettingsPage/SimpleWorkTypeEntry"
-                    HeaderIcon="{controls2:GlyphIcon Glyph=ViewAllE8A9}"
-                    Tag="{x:Bind misc2:SettingEntry.SimpleWorkType}">
-                    <controls1:EnumComboBox
-                        EnumSource="{winUi:EnumValues Type=enum:SimpleWorkType}"
-                        SelectedEnum="{x:Bind ViewModel.SimpleWorkType, Mode=TwoWay}"
-                        Style="{StaticResource SettingsEnumComboBoxStyle}" />
-                </controls:SettingsCard>
-
-                <controls:SettingsExpander
-                    x:Uid="/SettingsPage/RankOptionEntry"
-                    HeaderIcon="{controls2:GlyphIcon Glyph=MarketEAFC}"
-                    Tag="{x:Bind misc2:SettingEntry.IllustrationRankOption}">
-                    <controls:SettingsExpander.Items>
-                        <controls:SettingsCard x:Uid="/SettingsPage/IllustrationOptionEntry" HeaderIcon="{controls2:GlyphIcon Glyph=PhotoE91B}">
-                            <controls1:EnumComboBox
-                                EnumSource="{winUi:EnumValues Type=enum:RankOption}"
-                                SelectedEnum="{x:Bind ViewModel.IllustrationRankOption, Mode=TwoWay}"
-                                Style="{StaticResource SettingsEnumComboBoxStyle}" />
-                        </controls:SettingsCard>
-                        <controls:SettingsCard x:Uid="/SettingsPage/NovelOptionEntry" HeaderIcon="{controls2:GlyphIcon Glyph=ReadingModeE736}">
-                            <controls1:EnumComboBox
-                                EnumSource="{x:Bind enum:RankOptionExtension.NovelRankOptions}"
-                                SelectedEnum="{x:Bind ViewModel.NovelRankOption, Mode=TwoWay}"
-                                Style="{StaticResource SettingsEnumComboBoxStyle}" />
-                        </controls:SettingsCard>
-                    </controls:SettingsExpander.Items>
-                </controls:SettingsExpander>
-
-                <controls:SettingsExpander
-                    x:Uid="/SettingsPage/DefaultSearchTagMatchOptionEntry"
-                    HeaderIcon="{controls2:GlyphIcon Glyph=PassiveAuthenticationF32A}"
-                    Tag="{x:Bind misc2:SettingEntry.SearchIllustrationTagMatchOption}">
-                    <controls:SettingsExpander.Items>
-                        <controls:SettingsCard x:Uid="/SettingsPage/IllustrationOptionEntry" HeaderIcon="{controls2:GlyphIcon Glyph=PhotoE91B}">
-                            <controls1:EnumComboBox
-                                EnumSource="{winUi:EnumValues Type=enum:SearchIllustrationTagMatchOption}"
-                                SelectedEnum="{x:Bind ViewModel.SearchIllustrationTagMatchOption, Mode=TwoWay}"
-                                Style="{StaticResource SettingsEnumComboBoxStyle}" />
-                        </controls:SettingsCard>
-                        <controls:SettingsCard x:Uid="/SettingsPage/NovelOptionEntry" HeaderIcon="{controls2:GlyphIcon Glyph=ReadingModeE736}">
-                            <controls1:EnumComboBox
-                                EnumSource="{winUi:EnumValues Type=enum:SearchNovelTagMatchOption}"
-                                SelectedEnum="{x:Bind ViewModel.SearchNovelTagMatchOption, Mode=TwoWay}"
-                                Style="{StaticResource SettingsEnumComboBoxStyle}" />
-                        </controls:SettingsCard>
-                    </controls:SettingsExpander.Items>
-                </controls:SettingsExpander>
-
-                <controls:SettingsCard
-                    x:Uid="/SettingsPage/SearchDurationEntry"
-                    HeaderIcon="{controls2:GlyphIcon Glyph=EaseOfAccessE776}"
-                    Tag="{x:Bind misc2:SettingEntry.SearchDuration}">
-                    <controls1:EnumComboBox
-                        EnumSource="{winUi:EnumValues Type=enum:SearchDuration}"
-                        SelectedEnum="{x:Bind ViewModel.SearchDuration, Mode=TwoWay}"
-                        Style="{StaticResource SettingsEnumComboBoxStyle}" />
-                </controls:SettingsCard>
-
-                <controls:SettingsExpander
-                    x:Uid="/SettingsPage/UsePreciseRangeForSearchEntry"
-                    HeaderIcon="{controls2:GlyphIcon Glyph=StopwatchE916}"
-                    Tag="{x:Bind misc2:SettingEntry.UsePreciseRangeForSearch}">
-                    <ToggleSwitch IsOn="{x:Bind ViewModel.UsePreciseRangeForSearch, Mode=TwoWay}" />
-                    <controls:SettingsExpander.Items>
-                        <controls:SettingsCard
-                            x:Uid="/SettingsPage/SearchStartDateEntry"
-                            HeaderIcon="{controls2:GlyphIcon Glyph=PageLeftE760}"
-                            IsEnabled="{x:Bind ViewModel.UsePreciseRangeForSearch, Mode=OneWay}">
-                            <CalendarDatePicker x:Uid="/SettingsPage/SearchStartCalendarDatePicker" Date="{x:Bind ViewModel.SearchStartDate, Mode=TwoWay}" />
-                        </controls:SettingsCard>
-                        <controls:SettingsCard
-                            x:Uid="/SettingsPage/SearchEndDateEntry"
-                            HeaderIcon="{controls2:GlyphIcon Glyph=PageRightE761}"
-                            IsEnabled="{x:Bind ViewModel.UsePreciseRangeForSearch, Mode=OneWay}">
-                            <CalendarDatePicker
-                                x:Uid="/SettingsPage/SearchEndCalendarDatePicker"
-                                Date="{x:Bind ViewModel.SearchEndDate, Mode=TwoWay}"
-                                MinDate="{x:Bind ViewModel.GetMinSearchEndDate(ViewModel.SearchStartDate), Mode=OneWay}" />
-                        </controls:SettingsCard>
-                    </controls:SettingsExpander.Items>
-                </controls:SettingsExpander>
-
-                <TextBlock x:Uid="/SettingsPage/DownloadSettingsGroup" Style="{StaticResource SettingHeaderStyle}" />
-
-                <controls:SettingsCard
-                    x:Uid="/SettingsPage/MaximumDownloadHistoryRecordsEntry"
-                    HeaderIcon="{controls2:GlyphIcon Glyph=HistoryE81C}"
-                    Tag="{x:Bind misc2:SettingEntry.MaximumDownloadHistoryRecords}">
-                    <NumberBox
-                        x:Uid="/SettingsPage/MaximumDownloadHistoryRecordsNumberBox"
-                        Maximum="200"
-                        Minimum="10"
-                        Style="{StaticResource SettingsNumberBoxStyle}"
-                        Value="{x:Bind ViewModel.MaximumDownloadHistoryRecords, Mode=TwoWay}" />
-                </controls:SettingsCard>
-
-                <controls:SettingsCard
-                    x:Uid="/SettingsPage/OverwriteDownloadedFileEntry"
-                    HeaderIcon="{controls2:GlyphIcon Glyph=ScanE8FE}"
-                    Tag="{x:Bind misc2:SettingEntry.OverwriteDownloadedFile}">
-                    <ToggleSwitch IsOn="{x:Bind ViewModel.OverwriteDownloadedFile, Mode=TwoWay}" />
-                </controls:SettingsCard>
-
-                <controls:SettingsCard
-                    x:Uid="/SettingsPage/MaxDownloadConcurrencyLevelEntry"
-                    HeaderIcon="{controls2:GlyphIcon Glyph=LightningBoltE945}"
-                    Tag="{x:Bind misc2:SettingEntry.MaxDownloadTaskConcurrencyLevel}">
-                    <Slider
-                        Maximum="{x:Bind system:Environment.ProcessorCount}"
-                        Minimum="1"
-                        Value="{x:Bind ViewModel.MaxDownloadTaskConcurrencyLevel, Mode=TwoWay}" />
-                </controls:SettingsCard>
-
-                <controls:SettingsExpander
-                    x:Uid="/SettingsPage/DefaultDownloadPathMacroEntry"
-                    HeaderIcon="{controls2:GlyphIcon Glyph=RenameE8AC}"
-                    Tag="{x:Bind misc2:SettingEntry.DefaultDownloadPathMacro}">
-                    <controls:SettingsExpander.Description>
-                        <HyperlinkButton x:Uid="/SettingsPage/DefaultDownloadPathMacroEntryDescription" Tapped="DefaultDownloadPathMacroEntry_OnTapped" />
-                    </controls:SettingsExpander.Description>
-                    <controls:SettingsExpander.Items>
-                        <controls:SettingsCard ContentAlignment="Left">
-                            <StackPanel Spacing="3">
-                                <labs:TokenView
-                                    IsItemClickEnabled="True"
-                                    IsWrapped="True"
-                                    ItemClick="PathMacroTokenInputBox_OnTokenTapped"
-                                    ItemsSource="{x:Bind misc:SettingsPageViewModel.AvailableMacros}"
-                                    SelectionMode="None">
-                                    <labs:TokenView.ItemTemplate>
-                                        <DataTemplate x:DataType="controls1:StringRepresentableItem">
-                                            <TextBlock Text="{x:Bind StringRepresentation}" ToolTipService.ToolTip="{x:Bind Item}" />
-                                        </DataTemplate>
-                                    </labs:TokenView.ItemTemplate>
-                                </labs:TokenView>
-                                <RichEditBox
-                                    x:Name="DefaultDownloadPathMacroTextBox"
-                                    x:Uid="/SettingsPage/DefaultDownloadPathMacroTextBox"
-                                    AcceptsReturn="False"
-                                    ContextMenuOpening="DefaultDownloadPathMacroTextBox_OnContextMenuOpening"
-                                    GotFocus="DefaultDownloadPathMacroTextBox_OnGotFocus"
-                                    IsSpellCheckEnabled="False"
-                                    LostFocus="DefaultDownloadPathMacroTextBox_OnLostFocus"
-                                    TextChanged="DefaultDownloadPathMacroTextBox_OnTextChanged" />
-                            </StackPanel>
-                        </controls:SettingsCard>
-                    </controls:SettingsExpander.Items>
-                </controls:SettingsExpander>
-
-                <controls:SettingsExpander
-                    x:Uid="/SettingsPage/WorkDownloadFormatEntry"
-                    HeaderIcon="{controls2:GlyphIcon Glyph=CaptionE8BA}"
-                    Tag="{x:Bind misc2:SettingEntry.IllustrationDownloadFormat}">
-                    <controls:SettingsExpander.Items>
-                        <controls:SettingsCard x:Uid="/SettingsPage/IllustrationOptionEntry" HeaderIcon="{controls2:GlyphIcon Glyph=PhotoE91B}">
-                            <controls1:EnumComboBox
-                                EnumSource="{winUi:EnumValues Type=options:IllustrationDownloadFormat}"
-                                SelectedEnum="{x:Bind ViewModel.IllustrationDownloadFormat, Mode=TwoWay}"
-                                Style="{StaticResource SettingsEnumComboBoxStyle}" />
-                        </controls:SettingsCard>
-                        <controls:SettingsCard x:Uid="/SettingsPage/UgoiraOptionEntry" HeaderIcon="{controls2:GlyphIcon Glyph=GIFF4A9}">
-                            <controls1:EnumComboBox
-                                EnumSource="{winUi:EnumValues Type=options:UgoiraDownloadFormat}"
-                                SelectedEnum="{x:Bind ViewModel.UgoiraDownloadFormat, Mode=TwoWay}"
-                                Style="{StaticResource SettingsEnumComboBoxStyle}" />
-                        </controls:SettingsCard>
-                        <controls:SettingsCard x:Uid="/SettingsPage/NovelOptionEntry" HeaderIcon="{controls2:GlyphIcon Glyph=ReadingModeE736}">
-                            <controls1:EnumComboBox
-                                EnumSource="{winUi:EnumValues Type=options:NovelDownloadFormat}"
-                                SelectedEnum="{x:Bind ViewModel.NovelDownloadFormat, Mode=TwoWay}"
-                                Style="{StaticResource SettingsEnumComboBoxStyle}" />
-                        </controls:SettingsCard>
-                    </controls:SettingsExpander.Items>
-                </controls:SettingsExpander>
-
-                <controls:SettingsCard
-                    x:Uid="/SettingsPage/DownloadWhenBookmarkedEntry"
-                    HeaderIcon="{controls2:GlyphIcon Glyph=SaveLocalE78C}"
-                    Tag="{x:Bind misc2:SettingEntry.DownloadWhenBookmarked}">
-                    <ToggleSwitch IsOn="{x:Bind ViewModel.DownloadWhenBookmarked, Mode=TwoWay}" />
-                </controls:SettingsCard>
-
-                <TextBlock x:Uid="/SettingsPage/MiscSettingsGroup" Style="{StaticResource SettingHeaderStyle}" />
-
-                <controls:SettingsCard
-                    x:Uid="/SettingsPage/SpotlightSearchPageLimitEntry"
-                    HeaderIcon="{controls2:GlyphIcon Glyph=PictureE8B9}"
-                    IsEnabled="False"
-                    Tag="{x:Bind misc2:SettingEntry.PageLimitForSpotlight}">
-                    <NumberBox
-                        x:Uid="/SettingsPage/SpotlightSearchPageLimitNumberBox"
-                        Maximum="100"
-                        Minimum="1"
-                        Style="{StaticResource SettingsNumberBoxStyle}"
-                        Value="{x:Bind ViewModel.PageLimitForSpotlight, Mode=TwoWay}" />
-                </controls:SettingsCard>
-
-                <controls:SettingsCard
-                    x:Uid="/SettingsPage/MaximumBrowseHistoryRecordsEntry"
-                    HeaderIcon="{controls2:GlyphIcon Glyph=HistoryE81C}"
-                    Tag="{x:Bind misc2:SettingEntry.MaximumBrowseHistoryRecords}">
-                    <NumberBox
-                        x:Uid="/SettingsPage/MaximumBrowseHistoryRecordsNumberBox"
-                        Maximum="200"
-                        Minimum="10"
-                        Style="{StaticResource SettingsNumberBoxStyle}"
-                        Value="{x:Bind ViewModel.MaximumBrowseHistoryRecords, Mode=TwoWay}" />
-                </controls:SettingsCard>
-
-                <controls:SettingsCard
-                    x:Uid="/SettingsPage/ImageMirrorServerEntry"
-                    HeaderIcon="{controls2:GlyphIcon Glyph=HardDriveEDA2}"
-                    Tag="{x:Bind misc2:SettingEntry.MirrorHost}">
-                    <TextBox
-                        x:Name="ImageMirrorServerTextBox"
-                        x:Uid="/SettingsPage/ImageMirrorServerTextBox"
-                        Width="200"
-                        GotFocus="ImageMirrorServerTextBox_OnGotFocus"
-                        LosingFocus="ImageMirrorServerTextBox_OnLosingFocus"
-                        Text="{x:Bind ViewModel.MirrorHost, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                </controls:SettingsCard>
-                <!--  endregion  -->
-                <TeachingTip
-                    x:Name="ImageMirrorServerTextBoxTeachingTip"
-                    x:Uid="/SettingsPage/ImageMirrorServerTextBoxTeachingTip"
-                    IconSource="{controls2:GlyphIconSource Glyph=ErrorE783}"
-                    Target="{x:Bind ImageMirrorServerTextBox}" />
-
-                <TeachingTip
-                    x:Name="DownloadMacroInvalidTeachingTip"
-                    x:Uid="/SettingsPage/DownloadMacroInvalidTeachingTip"
-                    IconSource="{controls2:GlyphIconSource Glyph=ErrorE783}"
-                    Target="{x:Bind DefaultDownloadPathMacroTextBox}" />
+                <!--  设置项插入处  -->
             </StackPanel>
         </ScrollView>
     </Grid>

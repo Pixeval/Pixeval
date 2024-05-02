@@ -26,11 +26,10 @@ using Pixeval.Controls;
 using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Model;
-using Pixeval.Misc;
 
 namespace Pixeval.Pages.Capability;
 
-public sealed partial class BookmarksPage : IScrollViewProvider
+public sealed partial class BookmarksPage : IScrollViewHost
 {
     private BookmarkPageViewModel _viewModel = null!;
 

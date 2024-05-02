@@ -21,13 +21,13 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
+using Pixeval.Controls;
 using Pixeval.CoreApi.Global.Enum;
-using Pixeval.Misc;
 using WinUI3Utilities;
 
 namespace Pixeval.Pages.Capability;
 
-public sealed partial class SearchWorksPage : IScrollViewProvider
+public sealed partial class SearchWorksPage : IScrollViewHost
 {
     public SearchWorksPage() => InitializeComponent();
 

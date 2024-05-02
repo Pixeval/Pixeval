@@ -40,12 +40,14 @@ public record SuggestionModel(string? Name, string? TranslatedName, SuggestionTy
     public static readonly SuggestionModel NovelTrendingTagHeader =
         new(null, null, SuggestionType.NovelTrendingTagHeader);
 
+    public IconGlyph SettingsIconGlyph { get; init; }
+
     public FontIcon? FontIcon => SuggestionType switch
     {
         SuggestionType.IllustId or SuggestionType.NovelId or SuggestionType.UserId => IconGlyph.OpenInNewWindowE8A7.GetGlyphIcon(FontSizeType.Small),
         SuggestionType.Tag or SuggestionType.IllustrationTag or SuggestionType.NovelTag => IconGlyph.TagE8EC.GetGlyphIcon(FontSizeType.Small),
         SuggestionType.UserSearch => IconGlyph.ContactE77B.GetGlyphIcon(FontSizeType.Small),
-        SuggestionType.Settings => IconGlyph.SettingsE713.GetGlyphIcon(FontSizeType.Small),
+        SuggestionType.Settings => SettingsIconGlyph.GetGlyphIcon(FontSizeType.Small),
         SuggestionType.History => IconGlyph.HistoryE81C.GetGlyphIcon(FontSizeType.Small),
         _ => null
     };

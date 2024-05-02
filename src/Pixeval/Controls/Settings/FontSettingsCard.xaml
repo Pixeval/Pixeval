@@ -1,0 +1,35 @@
+<controls:SettingsCard
+    x:Class="Pixeval.Controls.Settings.FontSettingsCard"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    xmlns:controls1="using:WinUI3Utilities.Controls"
+    xmlns:converters="using:Pixeval.Controls.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:Pixeval.Settings"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="using:Pixeval.Settings.Models"
+    x:Uid="/SettingsPage/AppFontFamilyEntry"
+    HeaderIcon="{controls1:GlyphIcon Glyph=FontE8D2}"
+    mc:Ignorable="d">
+    <controls:SettingsCard.Resources>
+        <converters:StringToFontFamilyConverter x:Key="StringToFontFamilyConverter" />
+    </controls:SettingsCard.Resources>
+    <controls:SettingsCard.Description>
+        <HyperlinkButton
+            x:Uid="/SettingsPage/OpenFontSettingsHyperlinkButton"
+            Tag="ms-settings://fonts"
+            Tapped="OpenLinkViaTag_OnTapped" />
+    </controls:SettingsCard.Description>
+    <ComboBox
+        x:Uid="/SettingsPage/AppFontFamilyComboBox"
+        Width="200"
+        ItemsSource="{x:Bind models:FontAppSettingsEntry.AvailableFonts}"
+        SelectedItem="{x:Bind Entry.AppFontFamilyName, Mode=TwoWay}">
+        <ComboBox.ItemTemplate>
+            <DataTemplate x:DataType="x:String">
+                <TextBlock FontFamily="{x:Bind Converter={StaticResource StringToFontFamilyConverter}}" Text="{x:Bind}" />
+            </DataTemplate>
+        </ComboBox.ItemTemplate>
+    </ComboBox>
+</controls:SettingsCard>

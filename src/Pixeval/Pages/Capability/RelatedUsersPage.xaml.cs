@@ -1,11 +1,11 @@
 using System.Linq;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
-using Pixeval.Misc;
+using Pixeval.Controls;
 
 namespace Pixeval.Pages.Capability;
 
-public sealed partial class RelatedUsersPage : IScrollViewProvider
+public sealed partial class RelatedUsersPage : IScrollViewHost
 {
     public RelatedUsersPage() => InitializeComponent();
 

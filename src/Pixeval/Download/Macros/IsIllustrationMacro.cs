@@ -25,10 +25,10 @@ using Pixeval.Download.MacroParser;
 
 namespace Pixeval.Download.Macros;
 
-[MetaPathMacro<IllustrationItemViewModel>]
-public class IsIllustrationMacro : IPredicate<IllustrationItemViewModel>
+[MetaPathMacro<IWorkViewModel>]
+public class IsIllustrationMacro : IPredicate<IWorkViewModel>
 {
     public string Name => "if_illust";
 
-    public bool Match(IllustrationItemViewModel context) => true;
+    public bool Match(IWorkViewModel context) => context is IllustrationItemViewModel;
 }
