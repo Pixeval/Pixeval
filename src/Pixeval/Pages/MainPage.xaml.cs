@@ -32,6 +32,7 @@ using Windows.System;
 using Windows.UI.Core;
 using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.WinUI;
+using CommunityToolkit.WinUI.Controls;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
@@ -231,7 +232,7 @@ public sealed partial class MainPage : SupportCustomTitleBarDragRegionPage
                     PerformSearchUser(sender.Text);
                     break;
                 case SuggestionType.Settings:
-                    if (SettingEntry.LazyValues.Value.FirstOrDefault(se => se.GetLocalizedResourceContent() == name) is { } entry)
+                    if (SettingsEntryAttribute.LazyValues.Value.FirstOrDefault(se => se.LocalizedResourceHeader == name) is { } entry)
                         await NavigateToSettingEntryAsync(entry);
                     break;
                 default:
@@ -279,15 +280,15 @@ public sealed partial class MainPage : SupportCustomTitleBarDragRegionPage
 
     private async void OpenSearchSettingButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        await NavigateToSettingEntryAsync(SettingEntry.SearchCategory);
+        await NavigateToSettingEntryAsync(ReverseSearchApiKeyAttribute.Value);
     }
 
-    private async Task NavigateToSettingEntryAsync(SettingEntry entry)
+    private async Task NavigateToSettingEntryAsync(SettingsEntryAttribute entry)
     {
         NavigationView.SelectedItem = SettingsTab;
         var settingsPage = await MainPageRootFrame.AwaitPageTransitionAsync<SettingsPage>();
-        var panel = settingsPage.SettingsPageScrollView.ScrollPresenter.Content.To<FrameworkElement>();
-        var frameworkElement = panel.FindChild<FrameworkElement>(element => element.Tag is SettingEntry e && e == entry);
+        var panel = settingsPage.ScrollView.ScrollPresenter.Content.To<FrameworkElement>();
+        var frameworkElement = panel.FindChild<SettingsCard>(element => element.Tag is SettingsEntryAttribute e && Equals(e, entry));
 
         if (frameworkElement is not null)
         {
@@ -298,7 +299,7 @@ public sealed partial class MainPage : SupportCustomTitleBarDragRegionPage
                 .TransformToVisual(panel)
                 .TransformPoint(new Point(0, 0));
 
-            _ = settingsPage.SettingsPageScrollView.ScrollTo(position.X, position.Y);
+            _ = settingsPage.ScrollView.ScrollTo(position.X, position.Y);
         }
     }
 
@@ -339,12 +340,15 @@ public sealed partial class MainPage : SupportCustomTitleBarDragRegionPage
         }
     }
 
+    private Lazy<SettingsEntryAttribute> ReverseSearchApiKeyAttribute { get; } = new(() =>
+        SettingsEntryAttribute.GetFromPropertyName(nameof(AppSettings.ReverseSearchApiKey)));
+
     private async Task ShowReverseSearchApiKeyNotPresentDialog()
     {
         var result = await this.CreateOkCancelAsync(MainPageResources.ReverseSearchApiKeyNotPresentTitle, ReverseSearchApiKeyNotPresentDialogResources.MessageTextBlockText, ReverseSearchApiKeyNotPresentDialogResources.SetApiKeyHyperlinkButtonContent);
         if (result is ContentDialogResult.Primary)
         {
-            await NavigateToSettingEntryAsync(SettingEntry.ReverseSearchApiKey);
+            await NavigateToSettingEntryAsync(ReverseSearchApiKeyAttribute.Value);
         }
     }
 

@@ -1,10 +1,11 @@
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
+using Pixeval.Controls;
 using Pixeval.Misc;
 
 namespace Pixeval.Pages;
 
-public sealed partial class MyPixivUsersPage : IScrollViewProvider
+public sealed partial class MyPixivUsersPage : IScrollViewHost
 {
     public MyPixivUsersPage() => InitializeComponent();
 

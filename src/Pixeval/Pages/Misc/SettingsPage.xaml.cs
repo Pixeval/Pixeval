@@ -28,18 +28,17 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.AppManagement;
+using Pixeval.Controls;
 using Pixeval.Controls.Windowing;
 using Pixeval.Database.Managers;
 using Pixeval.Util.UI;
-using Pixeval.Options;
 using WinUI3Utilities;
 
 namespace Pixeval.Pages.Misc;
 
 [INotifyPropertyChanged]
-public sealed partial class SettingsPage : IDisposable
+public sealed partial class SettingsPage : IScrollViewHost, IDisposable
 {
-
     private SettingsPageViewModel ViewModel { get; set; } = null!;
 
     private bool _disposed;
@@ -98,7 +97,7 @@ public sealed partial class SettingsPage : IDisposable
                 SettingsPageResources.ResetSettingConfirmationDialogContent) is ContentDialogResult.Primary)
         {
             ViewModel.AppSetting.ResetDefault();
-            foreach (var simpleSettingsGroup in ViewModel.Entries)
+            foreach (var simpleSettingsGroup in ViewModel.Groups)
                 foreach (var settingsEntry in simpleSettingsGroup)
                     settingsEntry.ValueReset();
             OnPropertyChanged(nameof(ViewModel));
@@ -155,11 +154,36 @@ public sealed partial class SettingsPage : IDisposable
             return;
         _disposed = true;
         Bindings.StopTracking();
-        foreach (var simpleSettingsGroup in ViewModel.Entries)
+        foreach (var simpleSettingsGroup in ViewModel.Groups)
             foreach (var settingsEntry in simpleSettingsGroup)
                 settingsEntry.ValueSaving();
         AppInfo.SaveConfig(ViewModel.AppSetting);
         ViewModel.Dispose();
         ViewModel = null!;
     }
+
+    /// <summary>
+    /// <see cref="ItemsControl"/>会有缓动动画，<see cref="ItemsRepeater"/>会延迟加载，
+    /// 使用只好手动一次全部加载，以方便根据Tag导航
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void Panel_OnLoaded(object sender, RoutedEventArgs e)
+    {
+        var panel = sender.To<StackPanel>();
+        var style = Resources["SettingHeaderStyle"] as Style;
+
+        foreach (var group in ViewModel.Groups)
+        {
+            panel.Children.Add(new TextBlock
+            {
+                Style = style,
+                Text = group.Header
+            });
+            foreach (var entry in group)
+                panel.Children.Add(entry.Element);
+        }
+    }
+
+    public ScrollView ScrollView => SettingsPageScrollView;
 }

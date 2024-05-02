@@ -20,12 +20,13 @@
 
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Pixeval.Controls;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.Misc;
 
 namespace Pixeval.Pages.Capability;
 
-public sealed partial class RecentPostsPage : IScrollViewProvider
+public sealed partial class RecentPostsPage : IScrollViewHost
 {
     public RecentPostsPage() => InitializeComponent();
 

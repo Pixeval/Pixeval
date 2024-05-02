@@ -32,7 +32,7 @@ using WinUI3Utilities;
 
 namespace Pixeval.Pages.Capability;
 
-public sealed partial class RankingsPage : IScrollViewProvider
+public sealed partial class RankingsPage : IScrollViewHost
 {
     private static readonly List<StringRepresentableItem> _illustrationRankOption = LocalizedResourceAttributeHelper.GetLocalizedResourceContents<RankOption>();
 

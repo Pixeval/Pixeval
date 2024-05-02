@@ -25,16 +25,16 @@ using System.Linq;
 using CommunityToolkit.WinUI.Collections;
 using Pixeval.Collections;
 using Pixeval.Controls;
+using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Model;
-using Pixeval.Options;
 
 namespace Pixeval.Pages;
 
-public class CommentsPageViewModel(IAsyncEnumerable<Comment?> engine, CommentType type, long entryId)
+public class CommentsPageViewModel(IAsyncEnumerable<Comment?> engine, SimpleWorkType type, long entryId)
 {
     public long EntryId { get; } = entryId;
 
-    public CommentType EntryType { get; } = type;
+    public SimpleWorkType EntryType { get; } = type;
 
     public AdvancedObservableCollection<CommentBlockViewModel> View { get; } = new(
         new IncrementalLoadingCollection<CommentsIncrementalSource, CommentBlockViewModel>(

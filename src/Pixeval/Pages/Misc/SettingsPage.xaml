@@ -10,9 +10,8 @@
     xmlns:converters1="using:Pixeval.Controls.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:misc2="using:Pixeval.Misc"
+    xmlns:misc="using:Pixeval.Misc"
     xmlns:pixeval="using:Pixeval"
-    xmlns:settings="using:Pixeval.Settings"
     Unloaded="SettingsPage_OnUnloaded"
     mc:Ignorable="d">
     <controls1:EnhancedWindowPage.Resources>
@@ -26,7 +25,6 @@
         </Style>
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
         <converters:BoolNegationConverter x:Key="BoolNegationConverter" />
-        <converters1:StringToFontFamilyConverter x:Key="StringToFontFamilyConverter" />
         <converters1:NullableToVisibilityConverter x:Key="NullableToVisibilityConverter" />
     </controls1:EnhancedWindowPage.Resources>
     <Grid>
@@ -39,11 +37,8 @@
             Grid.Row="0"
             Margin="20,40,20,20"
             Style="{StaticResource TitleTextBlockStyle}" />
-        <ScrollView
-            x:Name="SettingsPageScrollView"
-            Grid.Row="1"
-            x:FieldModifier="public">
-            <StackPanel Margin="20,0,20,20">
+        <ScrollView x:Name="SettingsPageScrollView" Grid.Row="1">
+            <StackPanel Margin="20,0,20,20" Loaded="Panel_OnLoaded">
                 <!--  region Header  -->
                 <Grid ColumnSpacing="20" RowSpacing="10">
                     <Grid.RowDefinitions>
@@ -85,7 +80,10 @@
                 </Grid>
                 <!--  endregion  -->
                 <!--  region Setting Entries  -->
-                <TextBlock x:Uid="/SettingsPage/VersionSettingsGroup" Style="{StaticResource SettingHeaderStyle}" />
+                <TextBlock
+                    x:Uid="/SettingsPage/VersionSettingsGroup"
+                    Style="{StaticResource SettingHeaderStyle}"
+                    Tag="{x:Bind misc:SettingsEntryCategory.Version}" />
 
                 <controls:SettingsExpander HeaderIcon="{controls2:GlyphIcon Glyph=SyncE895}" IsExpanded="{x:Bind ViewModel.ExpandExpander, Mode=OneWay}">
                     <controls:SettingsExpander.Header>
@@ -158,7 +156,7 @@
                 <controls:SettingsCard
                     x:Uid="/SettingsPage/DownloadUpdateAutomaticallyEntry"
                     HeaderIcon="{controls2:GlyphIcon Glyph=CommunicationsE95A}"
-                    Tag="{x:Bind misc2:SettingEntry.AutoUpdate}">
+                    Tag="{x:Bind misc:SettingsEntryAttribute.AutoUpdate}">
                     <ToggleSwitch IsOn="{x:Bind ViewModel.DownloadUpdateAutomatically, Mode=TwoWay}" />
                 </controls:SettingsCard>
 
@@ -220,19 +218,22 @@
                     </controls:SettingsExpander.Items>
                 </controls:SettingsExpander>
 
-                <TextBlock x:Uid="/SettingsPage/SessionSettingsGroup" Style="{StaticResource SettingHeaderStyle}" />
+                <TextBlock
+                    x:Uid="/SettingsPage/SessionSettingsGroup"
+                    Style="{StaticResource SettingHeaderStyle}"
+                    Tag="{x:Bind misc:SettingsEntryCategory.Version}" />
 
                 <controls:SettingsCard
                     x:Uid="/SettingsPage/SignOutEntry"
                     HeaderIcon="{controls2:GlyphIcon Glyph=SignOutF3B1}"
                     IsClickEnabled="True"
-                    Tag="{x:Bind misc2:SettingEntry.SignOut}"
+                    Tag="{x:Bind misc:SettingsEntryAttribute.SignOut}"
                     Tapped="PerformSignOutButton_OnTapped" />
 
                 <controls:SettingsExpander
                     x:Uid="/SettingsPage/ResetDefaultSettingsEntry"
                     HeaderIcon="{controls2:GlyphIcon Glyph=AppIconDefaultECAA}"
-                    Tag="{x:Bind misc2:SettingEntry.ResetSettings}">
+                    Tag="{x:Bind misc:SettingsEntryAttribute.ResetSettings}">
                     <Button x:Uid="/SettingsPage/ResetDefaultSettingsButton" Tapped="ResetDefaultSettingsButton_OnTapped" />
                     <controls:SettingsExpander.Items>
                         <controls:SettingsCard
@@ -257,30 +258,7 @@
                             Tapped="DeleteDownloadHistoriesButton_OnTapped" />
                     </controls:SettingsExpander.Items>
                 </controls:SettingsExpander>
-
-                <ItemsRepeater ItemsSource="{x:Bind ViewModel.Entries}">
-                    <ItemsRepeater.ItemTemplate>
-                        <DataTemplate x:DataType="settings:SimpleSettingsGroup">
-                            <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                </Grid.RowDefinitions>
-                                <TextBlock
-                                    Grid.Row="0"
-                                    Style="{ThemeResource SettingHeaderStyle}"
-                                    Text="{x:Bind Header}" />
-                                <ItemsRepeater Grid.Row="1" ItemsSource="{x:Bind}">
-                                    <ItemsRepeater.ItemTemplate>
-                                        <DataTemplate x:DataType="settings:ISettingsEntry">
-                                            <ContentPresenter Content="{x:Bind Element}" />
-                                        </DataTemplate>
-                                    </ItemsRepeater.ItemTemplate>
-                                </ItemsRepeater>
-                            </Grid>
-                        </DataTemplate>
-                    </ItemsRepeater.ItemTemplate>
-                </ItemsRepeater>
+                <!--  设置项插入处  -->
             </StackPanel>
         </ScrollView>
     </Grid>

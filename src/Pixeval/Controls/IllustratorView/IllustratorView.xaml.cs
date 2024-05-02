@@ -6,7 +6,7 @@ using WinUI3Utilities;
 
 namespace Pixeval.Controls;
 
-public sealed partial class IllustratorView : IScrollViewProvider
+public sealed partial class IllustratorView : IScrollViewHost
 {
     public IllustratorViewViewModel ViewModel { get; } = new();
 

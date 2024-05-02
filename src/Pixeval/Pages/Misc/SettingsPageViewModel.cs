@@ -40,6 +40,8 @@ using Windows.System;
 using Microsoft.UI.Xaml;
 using Pixeval.Controls.Windowing;
 using Pixeval.CoreApi.Global.Enum;
+using Pixeval.Misc;
+using Pixeval.Settings.Models;
 using WinUI3Utilities;
 using WinUI3Utilities.Controls;
 
@@ -76,19 +78,13 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
     /// <inheritdoc/>
     public SettingsPageViewModel(ulong hWnd) : base(hWnd)
     {
-        Entries =
+        Groups =
         [
-            new(SettingsPageResources.ApplicationSettingsGroupText)
+            new(SettingsEntryCategory.Application)
             {
                 new EnumAppSettingsEntry<ElementTheme>(AppSetting,
-                    SettingsPageResources.ThemeEntryHeader,
-                    SettingsPageResources.ThemeEntryDescriptionHyperlinkButtonContent,
-                    IconGlyph.PersonalizeE771,
                     nameof(AppSettings.Theme)) { ValueChanged = t => WindowFactory.SetTheme((ElementTheme)t) },
                 new EnumAppSettingsEntry<BackdropType>(AppSetting,
-                    SettingsPageResources.BackdropEntryHeader,
-                    "",
-                    IconGlyph.ColorE790,
                     nameof(AppSettings.Backdrop)) { ValueChanged = t => WindowFactory.SetBackdrop((BackdropType)t) },
                 new FontAppSettingsEntry(AppSetting),
                 new LanguageAppSettingsEntry(AppSetting),
@@ -97,37 +93,19 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
                     ValueChanged = t => App.AppViewModel.MakoClient.Configuration.DomainFronting = t
                 },
                 new BoolAppSettingsEntry(AppSetting,
-                    SettingsPageResources.UseFileCacheEntryHeader,
-                    SettingsPageResources.UseFileCacheEntryDescription,
-                    IconGlyph.FileExplorerEC50,
                     nameof(AppSettings.UseFileCache)),
                 new BoolAppSettingsEntry(AppSetting,
-                    SettingsPageResources.GenerateHelpLinkEntryHeader,
-                    SettingsPageResources.GenerateHelpLinkEntryDescription,
-                    IconGlyph.LinkE71B,
                     nameof(AppSettings.DisplayTeachingTipWhenGeneratingAppLink)),
                 new EnumAppSettingsEntry<MainPageTabItem>(AppSetting,
-                    SettingsPageResources.DefaultSelectedTabEntryHeader,
-                    SettingsPageResources.DefaultSelectedTabEntryDescription,
-                    IconGlyph.CheckMarkE73E,
                     nameof(AppSettings.DefaultSelectedTabItem))
             },
-            new(SettingsPageResources.BrowsingExperienceSettingsGroupText)
+            new(SettingsEntryCategory.BrowsingExperience)
             {
                 new EnumAppSettingsEntry<ThumbnailDirection>(AppSetting,
-                    SettingsPageResources.ThumbnailDirectionEntryHeader,
-                    SettingsPageResources.ThumbnailDirectionEntryDescription,
-                    IconGlyph.TypeE97C,
                     nameof(AppSettings.ThumbnailDirection)),
                 new EnumAppSettingsEntry<ItemsViewLayoutType>(AppSetting,
-                    SettingsPageResources.ItemsViewLayoutTypeEntryHeader,
-                    SettingsPageResources.ItemsViewLayoutTypeEntryDescription,
-                    IconGlyph.TilesECA5,
                     nameof(AppSettings.ItemsViewLayoutType)),
                 new EnumAppSettingsEntry<TargetFilter>(AppSetting,
-                    SettingsPageResources.TargetAPIPlatformEntryHeader,
-                    SettingsPageResources.TargetAPIPlatformEntryDescription,
-                    IconGlyph.CommandPromptE756,
                     nameof(AppSettings.TargetFilter)),
                 new TokenizingAppSettingsEntry(AppSetting),
                 new ClickableAppSettingsEntry(AppSetting,
@@ -136,53 +114,35 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
                     IconGlyph.BlockContactE8F8,
                     () => _ = Launcher.LaunchUriAsync(new Uri("https://www.pixiv.net/setting_user.php")))
             },
-            new(SettingsPageResources.SearchSettingsGroupText)
+            new(SettingsEntryCategory.Search)
             {
-                new IntAppSettingsEntry(AppSetting,
-                    SettingsPageResources.ReverseSearchResultSimilarityThresholdEntryHeader,
-                    SettingsPageResources.ReverseSearchResultSimilarityThresholdEntryDescription,
-                    IconGlyph.FilterE71C,
-                    nameof(AppSettings.ReverseSearchResultSimilarityThreshold))
-                {
-                    Max = 100,
-                    Min = 1
-                },
                 new StringAppSettingsEntry(AppSetting,
-                    SettingsPageResources.ReverseSearchApiKeyEntryHeader,
-                    SettingsPageResources.ReverseSearchApiKeyEntryDescriptionHyperlinkButtonContent,
-                    IconGlyph.SearchAndAppsE773,
                     nameof(AppSettings.ReverseSearchApiKey))
                 {
                     DescriptionUri = new Uri("https://saucenao.com/user.php?page=search-api"),
                     Placeholder = SettingsPageResources.ReverseSearchApiKeyTextBoxPlaceholderText
                 },
                 new IntAppSettingsEntry(AppSetting,
-                    SettingsPageResources.MaximumSearchHistoryRecordsEntryHeader,
-                    SettingsPageResources.MaximumSearchHistoryRecordsEntryDescription,
-                    IconGlyph.HistoryE81C,
+                    nameof(AppSettings.ReverseSearchResultSimilarityThreshold))
+                {
+                    Max = 100,
+                    Min = 1
+                },
+                new IntAppSettingsEntry(AppSetting,
                     nameof(AppSettings.MaximumSearchHistoryRecords))
                 {
                     Max = 200,
                     Min = 10
                 },
                 new IntAppSettingsEntry(AppSetting,
-                    SettingsPageResources.MaximumSuggestionBoxSearchHistoryEntryHeader,
-                    SettingsPageResources.MaximumSuggestionBoxSearchHistoryEntryDescription,
-                    IconGlyph.SetHistoryStatus2F739,
                     nameof(AppSettings.MaximumSuggestionBoxSearchHistory))
                 {
                     Max = 20,
                     Min = 0
                 },
                 new EnumAppSettingsEntry<WorkSortOption>(AppSetting,
-                    SettingsPageResources.DefaultSearchSortOptionEntryHeader,
-                    SettingsPageResources.DefaultSearchSortOptionEntryDescription,
-                    IconGlyph.SortE8CB,
                     nameof(AppSettings.WorkSortOption)),
                 new EnumAppSettingsEntry<SimpleWorkType>(AppSetting,
-                    SettingsPageResources.SimpleWorkTypeEntryHeader,
-                    SettingsPageResources.SimpleWorkTypeEntryDescription,
-                    IconGlyph.ViewAllE8A9,
                     nameof(AppSettings.SimpleWorkType)),
                 new MultiValuesAppSettingsEntry(AppSetting,
                     SettingsPageResources.RankOptionEntryHeader,
@@ -209,32 +169,20 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
                             nameof(AppSettings.SearchNovelTagMatchOption))
                     ]),
                 new EnumAppSettingsEntry<SearchDuration>(AppSetting,
-                    SettingsPageResources.SearchDurationEntryHeader,
-                    SettingsPageResources.SearchDurationEntryDescription,
-                    IconGlyph.EaseOfAccessE776,
                     nameof(AppSettings.SearchDuration)),
                 new DateRangeWithSwitchAppSettingsEntry(AppSetting)
             },
-            new(SettingsPageResources.DownloadSettingsGroupText)
+            new(SettingsEntryCategory.Download)
             {
                 new IntAppSettingsEntry(AppSetting,
-                    SettingsPageResources.MaximumDownloadHistoryRecordsEntryHeader,
-                    SettingsPageResources.MaximumDownloadHistoryRecordsEntryDescription,
-                    IconGlyph.HistoryE81C,
                     nameof(AppSettings.MaximumDownloadHistoryRecords))
                 {
                     Max = 200,
                     Min = 10
                 },
                 new BoolAppSettingsEntry(AppSetting,
-                    SettingsPageResources.OverwriteDownloadedFileEntryHeader,
-                    SettingsPageResources.OverwriteDownloadedFileEntryDescription,
-                    IconGlyph.ScanE8FE,
                     nameof(AppSettings.OverwriteDownloadedFile)),
                 new IntAppSettingsEntry(AppSetting,
-                    SettingsPageResources.MaxDownloadConcurrencyLevelEntryHeader,
-                    SettingsPageResources.MaxDownloadConcurrencyLevelEntryDescription,
-                    IconGlyph.LightningBoltE945,
                     nameof(AppSettings.MaxDownloadTaskConcurrencyLevel))
                 {
                     Max = Environment.ProcessorCount,
@@ -258,26 +206,17 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
                             nameof(AppSettings.NovelDownloadFormat))
                     ]),
                 new BoolAppSettingsEntry(AppSetting,
-                    SettingsPageResources.DownloadWhenBookmarkedEntryHeader,
-                    SettingsPageResources.DownloadWhenBookmarkedEntryDescription,
-                    IconGlyph.SaveLocalE78C,
                     nameof(AppSettings.DownloadWhenBookmarked))
             },
-            new(SettingsPageResources.MiscSettingsGroupText)
+            new(SettingsEntryCategory.Misc)
             {
                 new IntAppSettingsEntry(AppSetting,
-                    SettingsPageResources.MaximumBrowseHistoryRecordsEntryHeader,
-                    SettingsPageResources.MaximumBrowseHistoryRecordsEntryDescription,
-                    IconGlyph.HistoryE81C,
                     nameof(AppSettings.MaximumBrowseHistoryRecords))
                 {
                     Max = 200,
                     Min = 10
                 },
                 new StringAppSettingsEntry(AppSetting,
-                    SettingsPageResources.ImageMirrorServerEntryHeader,
-                    SettingsPageResources.ImageMirrorServerEntryDescription,
-                    IconGlyph.HardDriveEDA2,
                     nameof(AppSettings.MirrorHost))
                 {
                     Placeholder = SettingsPageResources.ImageMirrorServerTextBoxPlaceholderText,
@@ -287,7 +226,7 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
         ];
     }
 
-    public IEnumerable<SimpleSettingsGroup> Entries { get; }
+    public IEnumerable<SimpleSettingsGroup> Groups { get; }
 
     public string UpdateInfo => AppInfo.AppVersion.UpdateState switch
     {

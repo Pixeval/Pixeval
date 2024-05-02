@@ -1,11 +1,12 @@
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
+using Pixeval.Controls;
 using Pixeval.Misc;
 using WinUI3Utilities;
 
 namespace Pixeval.Pages.Capability;
 
-public sealed partial class SearchUsersPage : IScrollViewProvider
+public sealed partial class SearchUsersPage : IScrollViewHost
 {
     public SearchUsersPage() => InitializeComponent();
 

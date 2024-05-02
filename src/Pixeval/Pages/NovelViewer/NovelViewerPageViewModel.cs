@@ -35,7 +35,8 @@ using Pixeval.Util.ComponentModels;
 using Pixeval.Util.UI;
 using Pixeval.AppManagement;
 using System.Runtime.CompilerServices;
-using Pixeval.Settings;
+using Pixeval.CoreApi.Global.Enum;
+using Pixeval.Settings.Models;
 using WinUI3Utilities.Controls;
 
 namespace Pixeval.Pages.NovelViewer;
@@ -104,7 +105,7 @@ public partial class NovelViewerPageViewModel : DetailedUiObservableObject, IDis
     public NavigationViewTag<WorkInfoPage, Novel> NovelInfoTag { get; } =
         new(null!) { Content = EntryViewerPageResources.InfoTabContent };
 
-    public NavigationViewTag<CommentsPage, (CommentType, long Id)> CommentsTag { get; } =
+    public NavigationViewTag<CommentsPage, (SimpleWorkType, long Id)> CommentsTag { get; } =
         new(default) { Content = EntryViewerPageResources.CommentsTabContent };
 
     #region Current相关
@@ -169,7 +170,7 @@ public partial class NovelViewerPageViewModel : DetailedUiObservableObject, IDis
             CurrentPageIndex = 0;
 
             NovelInfoTag.Parameter = CurrentNovel.Entry;
-            CommentsTag.Parameter = (CommentType.Novel, NovelId);
+            CommentsTag.Parameter = (SimpleWorkType.Novel, NovelId);
 
             OnDetailedPropertyChanged(oldValue, value);
             OnPropertyChanged(nameof(CurrentNovel));

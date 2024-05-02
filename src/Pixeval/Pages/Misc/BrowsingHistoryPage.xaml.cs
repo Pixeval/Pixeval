@@ -22,6 +22,7 @@ using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Pixeval.Controls;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.Database.Managers;
 using Pixeval.Misc;
@@ -31,7 +32,7 @@ namespace Pixeval.Pages.Misc;
 /// <summary>
 /// An empty page that can be used on its own or navigated to within a Frame.
 /// </summary>
-public sealed partial class BrowsingHistoryPage : IScrollViewProvider
+public sealed partial class BrowsingHistoryPage : IScrollViewHost
 {
     public BrowsingHistoryPage() => InitializeComponent();
 

@@ -42,7 +42,7 @@ namespace Pixeval.Controls;
 /// <summary>
 /// 所有插画集合通用的容器
 /// </summary>
-public partial class WorkContainer : IScrollViewProvider
+public partial class WorkContainer : IScrollViewHost
 {
     /// <summary>
     /// The command elements that will appear at the left of the TopCommandBar

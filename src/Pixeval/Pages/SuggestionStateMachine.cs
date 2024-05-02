@@ -30,7 +30,6 @@ using PininSharp.Searchers;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Model;
 using Pixeval.Database.Managers;
-using Pixeval.Util;
 using Pixeval.Misc;
 using Pixeval.Utilities;
 
@@ -38,7 +37,7 @@ namespace Pixeval.Pages;
 
 public class SuggestionStateMachine
 {
-    private static readonly TreeSearcher<SettingEntry> _settingEntriesTreeSearcher =
+    private static readonly TreeSearcher<SettingsEntryAttribute> _settingEntriesTreeSearcher =
         new(SearcherLogic.Contain, PinIn.CreateDefault());
 
     private readonly Lazy<Task<IEnumerable<SuggestionModel>>> _illustrationTrendingTagCache =
@@ -53,9 +52,9 @@ public class SuggestionStateMachine
 
     static SuggestionStateMachine()
     {
-        foreach (var settingsEntry in SettingEntry.LazyValues.Value)
+        foreach (var settingsEntry in SettingsEntryAttribute.LazyValues.Value)
         {
-            _settingEntriesTreeSearcher.Put(settingsEntry.GetLocalizedResourceContent()!, settingsEntry);
+            _settingEntriesTreeSearcher.Put(settingsEntry.LocalizedResourceHeader, settingsEntry);
         }
     }
 
@@ -82,13 +81,16 @@ public class SuggestionStateMachine
             suggestions.AddRange(SuggestionModel.FromId());
         }
 
+        suggestions.Add(SuggestionModel.FromUserSearch());
+
         if (settingSuggestions.IsNotNullOrEmpty())
         {
             suggestions.Add(SuggestionModel.SettingEntryHeader);
-            suggestions.AddRange(settingSuggestions.Select(settingSuggestion => new SuggestionModel(settingSuggestion.GetLocalizedResourceContent()!, settingSuggestion.Category.GetLocalizedResourceContent(), SuggestionType.Settings)));
+            suggestions.AddRange(settingSuggestions.Select(settingSuggestion => new SuggestionModel(settingSuggestion.LocalizedResourceHeader, settingSuggestion.LocalizedResourceHeader, SuggestionType.Settings)
+            {
+                SettingsIconGlyph = settingSuggestion.IconGlyph
+            }));
         }
-
-        suggestions.Add(SuggestionModel.FromUserSearch());
 
         if (settingSuggestions.IsNotNullOrEmpty() && tagSuggestions.IsNotNullOrEmpty())
         {
@@ -121,10 +123,10 @@ public class SuggestionStateMachine
         Suggestions.AddRange(newItems);
     }
 
-    private static IReadOnlySet<SettingEntry> MatchSettings(string keyword)
+    private static IReadOnlySet<SettingsEntryAttribute> MatchSettings(string keyword)
     {
         var pinInResult = _settingEntriesTreeSearcher.Search(keyword).ToHashSet();
-        var nonPinInResult = SettingEntry.LazyValues.Value.Where(it => it.GetLocalizedResourceContent()!.Contains(keyword));
+        var nonPinInResult = SettingsEntryAttribute.LazyValues.Value.Where(it => it.LocalizedResourceHeader.Contains(keyword));
         pinInResult.AddRange(nonPinInResult);
         return pinInResult;
     }
