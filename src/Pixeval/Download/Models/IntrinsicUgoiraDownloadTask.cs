@@ -25,6 +25,7 @@ using System.Threading.Tasks;
 using Pixeval.Controls;
 using Pixeval.CoreApi.Net.Response;
 using Pixeval.Database;
+using SixLabors.ImageSharp;
 
 namespace Pixeval.Download.Models;
 
@@ -41,13 +42,14 @@ public sealed class IntrinsicUgoiraDownloadTask : UgoiraDownloadTask
 
     public Stream Stream { get; }
 
-    protected override async Task DownloadAsyncCore(Downloader _, string url, string destination)
+    public override async Task DownloadAsync(Downloader downloadStreamAsync)
     {
-        if (!App.AppViewModel.AppSettings.OverwriteDownloadedFile && File.Exists(destination))
+        var actualDestination = ActualDestination;
+
+        if (!ShouldOverwrite(actualDestination))
             return;
 
-        Stream.Position = 0;
-
-        await ManageStream(Stream, url, destination);
+        using var image = await Image.LoadAsync(Stream);
+        await ManageImageAsync(image, actualDestination);
     }
 }

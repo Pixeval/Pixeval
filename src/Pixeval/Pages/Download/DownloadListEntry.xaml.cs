@@ -61,6 +61,9 @@ public sealed partial class DownloadListEntry
                 break;
             case DownloadState.Error:
             case DownloadState.Cancelled:
+                await ViewModel.DownloadTask.ResetAsync();
+                _ = App.AppViewModel.DownloadManager.TryExecuteInline(ViewModel.DownloadTask);
+                break;
             case DownloadState.Completed:
                 if (!await (ViewModel.DownloadTask.IsFolder
                         ? Launcher.LaunchFolderPathAsync(Path.GetDirectoryName(ViewModel.DownloadTask.Destination))

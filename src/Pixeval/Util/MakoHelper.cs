@@ -116,7 +116,25 @@ public static class MakoHelper
 
     public static string GetOriginalCacheKey(string url) => $"original-{url}";
 
-    public static async ValueTask<string> GetIllustrationOriginalCacheKeyAsync(this IllustrationItemViewModel illustration) => GetOriginalCacheKey(await illustration.GetOriginalSourceUrlAsync());
+    public static async ValueTask<string> GetIllustrationCacheKeyAsync(this IllustrationItemViewModel illustration, bool isOriginal)
+    {
+        if (illustration.IsManga)
+        {
+            var staticUrl = illustration.StaticUrl(isOriginal);
+            return isOriginal ? GetOriginalCacheKey(staticUrl) : GetThumbnailCacheKey(staticUrl);
+        }
+
+        if (illustration.IsUgoira)
+        {
+            if (isOriginal)
+                ThrowHelper.Argument(isOriginal);
+            else
+                return GetThumbnailCacheKey(await illustration.UgoiraLargeZipUrlAsync());
+        }
+
+        var staticUrl2 = illustration.StaticUrl(isOriginal);
+        return isOriginal ? GetOriginalCacheKey(staticUrl2) : GetThumbnailCacheKey(staticUrl2);
+    }
 
     public static SortDescription? GetSortDescriptionForIllustration(WorkSortOption sortOption)
     {

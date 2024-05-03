@@ -165,13 +165,13 @@ public partial record AppSettings : IWindowSettings
     [SettingsEntry(IconGlyph.HardDriveEDA2, nameof(SettingsPageResources.ImageMirrorServerEntryHeader), nameof(SettingsPageResources.ImageMirrorServerEntryDescription))]
     public string? MirrorHost { get; set; } = null;
 
-    [SettingsEntry(IconGlyph.HistoryE81C, nameof(SettingsPageResources.MaximumBrowseHistoryRecordsEntryHeader), nameof(SettingsPageResources.MaximumBrowseHistoryRecordsEntryDescription))]
     public int MaximumBrowseHistoryRecords { get; set; } = 100;
 
     public DateTimeOffset SearchStartDate { get; set; } = DateTimeOffset.Now - TimeSpan.FromDays(1);
 
     public DateTimeOffset SearchEndDate { get; set; } = DateTimeOffset.Now;
 
+    [SettingsEntry(IconGlyph.FitPageE9A6, nameof(SettingsPageResources.BrowserOriginalImageEntryHeader), nameof(SettingsPageResources.BrowserOriginalImageEntryDescription))]
     public bool BrowserOriginalImage { get; set; }
 
     [AttributeIgnore(typeof(ResetAttribute))]

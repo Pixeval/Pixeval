@@ -169,6 +169,7 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
             OnButtonPropertiesChanged();
             // 用OnPropertyChanged不会触发导航，但可以让UI页码更新
             OnPropertyChanged(nameof(CurrentPageIndex));
+            OnPropertyChanged(nameof(CurrentPage));
             OnPropertyChanged(nameof(CurrentImage));
 
             OnDetailedPropertyChanged(oldValue, value, oldTag, CurrentPage.Id);
@@ -189,6 +190,7 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
             var oldValue = _currentPageIndex;
             _currentPageIndex = value;
             OnButtonPropertiesChanged();
+            OnPropertyChanged(nameof(CurrentPage));
             OnPropertyChanged(nameof(CurrentImage));
             OnDetailedPropertyChanged(oldValue, value);
         }

@@ -37,11 +37,11 @@
                     <AppBarButton Command="{x:Bind _viewModel.ShareCommand}" />
                     <CommandBarFlyout.SecondaryCommands>
                         <AppBarButton
-                            Command="{x:Bind _viewModel.OriginalIllustrationViewModel.CopyCommand}"
+                            Command="{x:Bind _viewModel.IllustrationViewModel.CopyCommand}"
                             CommandParameter="{x:Bind _viewModel.DownloadParameter}"
                             IsEnabled="{x:Bind _viewModel.LoadSuccessfully, Mode=OneWay}" />
                         <AppBarButton
-                            Command="{x:Bind _viewModel.OriginalIllustrationViewModel.SaveCommand}"
+                            Command="{x:Bind _viewModel.IllustrationViewModel.SaveCommand}"
                             CommandParameter="{x:Bind _viewModel.DownloadParameter}"
                             IsEnabled="{x:Bind _viewModel.LoadSuccessfully, Mode=OneWay}" />
                         <AppBarButton Command="{x:Bind _viewModel.SetAsCommand}">

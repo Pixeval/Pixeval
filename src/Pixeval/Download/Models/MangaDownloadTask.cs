@@ -33,29 +33,36 @@ namespace Pixeval.Download.Models;
 public class MangaDownloadTask(DownloadHistoryEntry entry, IllustrationItemViewModel illustration)
     : IllustrationDownloadTask(entry, illustration)
 {
-    protected int CurrentIndex { get; private set; }
+    protected int CurrentIndex { get; set; }
 
     public override bool IsFolder => true;
 
-    public string[] Urls => IllustrationViewModel.MangaOriginalUrls.ToArray();
+    public virtual IReadOnlyList<string> Urls => IllustrationViewModel.MangaOriginalUrls;
 
     public override IReadOnlyList<string> ActualDestinations => Urls.Select((t, i) => IoHelper.ReplaceTokenExtensionFromUrl(Destination, t).Replace(MangaIndexMacro.NameConstToken, i.ToString())).ToArray();
 
     public override async Task DownloadAsync(Downloader downloadStreamAsync)
     {
         StartProgress = 0;
-        ProgressRatio = 1.0 / Urls.Length;
+        var urls = Urls;
+        ProgressRatio = 1.0 / urls.Count;
         var actualDestinations = ActualDestinations;
-        for (CurrentIndex = 0; CurrentIndex < Urls.Length; ++CurrentIndex)
+        for (CurrentIndex = 0; CurrentIndex < urls.Count; ++CurrentIndex)
         {
-            await base.DownloadAsyncCore(downloadStreamAsync, Urls[CurrentIndex], actualDestinations[CurrentIndex]);
+            if (await base.DownloadAsyncCore(downloadStreamAsync, urls[CurrentIndex], actualDestinations[CurrentIndex]) is { } stream)
+            {
+                await ManageStreamAsync(stream, actualDestinations[CurrentIndex]);
+                if (Dispose)
+                    await stream.DisposeAsync();
+            }
+
             StartProgress += 100 * ProgressRatio;
         }
     }
 
-    private double StartProgress { get; set; }
+    protected double StartProgress { get; set; }
 
-    private double ProgressRatio { get; set; }
+    protected double ProgressRatio { get; set; }
 
     public override void Report(double value) => base.Report(StartProgress + ProgressRatio * value);
 }

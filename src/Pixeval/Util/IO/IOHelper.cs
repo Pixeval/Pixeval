@@ -32,6 +32,7 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Streams;
 using Pixeval.Download.Models;
+using Pixeval.Utilities;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats;
 
@@ -128,7 +129,7 @@ public static partial class IoHelper
         return s;
     }
 
-    public static async Task<MemoryStream[]> ReadZipArchiveEntriesAsync(Stream zipStream, bool dispose)
+    public static async Task<MemoryStream[]> ReadZipAsync(Stream zipStream, bool dispose)
     {
         Stream s;
         if (zipStream is FileStream fs)
@@ -159,6 +160,31 @@ public static partial class IoHelper
         if (dispose)
             await s.DisposeAsync();
         return result;
+    }
+
+    public static async Task<MemoryStream> WriteZipAsync(IReadOnlyDictionary<string, Stream> streams, bool dispose)
+    {
+        var zipStream = _recyclableMemoryStreamManager.GetStream();
+
+        var zipArchive = new ZipArchive(zipStream, ZipArchiveMode.Create, true);
+
+        foreach (var (key, value) in streams)
+        {
+            // ReSharper disable once AccessToDisposedClosure
+            var entry = zipArchive.CreateEntry(key);
+            await using var entryStream = entry.Open();
+            await value.CopyToAsync(entryStream);
+            if (dispose)
+                await value.DisposeAsync();
+        }
+
+        zipArchive.Dispose();
+        // see-also https://stackoverflow.com/questions/47707862/ziparchive-gives-unexpected-end-of-data-corrupted-error/47707973
+        // 在flush前释放ZipArchive
+        zipStream.Position = 0;
+        await zipStream.FlushAsync();
+
+        return zipStream;
     }
 
     public static async Task DeleteTaskAsync(DownloadTaskBase task)

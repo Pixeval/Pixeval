@@ -19,7 +19,9 @@
 #endregion
 
 using System;
+using System.ComponentModel;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 
 namespace Pixeval.CoreApi.Model;
@@ -38,9 +40,6 @@ public partial record Illustration : IWorkEntry
     [JsonPropertyName("type")]
     public required string Type { get; set; } = "";
 
-    /// <summary>
-    /// Original几乎总是null
-    /// </summary>
     [JsonPropertyName("image_urls")]
     public required ImageUrls ThumbnailUrls { get; set; }
 
@@ -79,7 +78,10 @@ public partial record Illustration : IWorkEntry
     public required XRestrict XRestrict { get; set; }
 
     [JsonPropertyName("meta_single_page")]
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public required MetaSinglePage MetaSinglePage { get; set; }
+
+    public string? OriginalSingleUrl => MetaSinglePage.OriginalImageUrl;
 
     [JsonPropertyName("meta_pages")]
     public required MetaPage[] MetaPages { get; set; } = [];
@@ -105,8 +107,10 @@ public partial record Illustration : IWorkEntry
     [JsonPropertyName("illust_book_style")]
     public required int IllustBookStyle { get; set; }
 
+    [MemberNotNullWhen(true, nameof(OriginalSingleUrl))]
     public bool IsUgoira => Type is "ugoira";
 
+    [MemberNotNullWhen(false, nameof(OriginalSingleUrl))]
     public bool IsManga => PageCount > 1;
 
     public override int GetHashCode()

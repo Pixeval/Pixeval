@@ -120,7 +120,7 @@ public static partial class IoHelper
     /// Writes the frames that are contained in <paramref name="streams" /> into <see cref="Stream"/>
     /// and encodes to <paramref name="ugoiraDownloadFormat"/> format
     /// </summary>
-    public static async Task<Stream> UgoiraSaveToStreamAsync(this IEnumerable<Stream> streams, IEnumerable<int> delays, Stream? target = null, IProgress<int>? progress = null, UgoiraDownloadFormat? ugoiraDownloadFormat = null)
+    public static async Task<Stream> UgoiraSaveToStreamAsync(this IEnumerable<Stream> streams, IEnumerable<int> delays, Stream? target = null, IProgress<double>? progress = null, UgoiraDownloadFormat? ugoiraDownloadFormat = null)
     {
         using var image = await streams.UgoiraSaveToImageAsync(delays, progress);
         var s = await image.UgoiraSaveToStreamAsync(target ?? _recyclableMemoryStreamManager.GetStream());
@@ -149,37 +149,39 @@ public static partial class IoHelper
         });
     }
 
-    public static async Task<Image> UgoiraSaveToImageAsync(this IEnumerable<Stream> streams, IEnumerable<int> delays, IProgress<int>? progress = null)
+    public static async Task<Image> UgoiraSaveToImageAsync(this IEnumerable<Stream> streams, IEnumerable<int> delays, IProgress<double>? progress = null, bool dispose = false)
     {
-        return await Task.Run(async () =>
+        var s = streams as IList<Stream> ?? streams.ToArray();
+        var average = 50d / s.Count;
+        var d = delays as IList<int> ?? delays.ToArray();
+        var progressValue = 0d;
+
+        var images = new Image[s.Count];
+        var options = new ParallelOptions();
+        if (progress is not null)
+            options.TaskScheduler = TaskScheduler.FromCurrentSynchronizationContext();
+        await Parallel.ForAsync(0, s.Count, options, async (i, token) =>
         {
-            var s = streams as IList<Stream> ?? streams.ToArray();
-            var average = 50d / s.Count;
-            var d = delays as IList<int> ?? delays.ToArray();
-            var progressValue = 0d;
-
-            var images = new Image[s.Count];
-            await Parallel.ForAsync(0, s.Count, async (i, token) =>
-            {
-                var delay = d.Count > i ? (uint)d[i] : 10u;
-                s[i].Position = 0;
-                images[i] = await Image.LoadAsync(s[i], token);
-                images[i].Frames[0].Metadata.GetFormatMetadata(WebpFormat.Instance).FrameDelay = delay;
-                progressValue += average;
-                progress?.Report((int)progressValue);
-            });
-
-            var image = images[0];
-            foreach (var img in images.Skip(1))
-            {
-                using (img)
-                    _ = image.Frames.AddFrame(img.Frames[0]);
-                progressValue += average / 2;
-                progress?.Report((int)progressValue);
-            }
-
-            return image;
+            var delay = d.Count > i ? (uint)d[i] : 10u;
+            s[i].Position = 0;
+            images[i] = await Image.LoadAsync(s[i], token);
+            if (dispose)
+                await s[i].DisposeAsync();
+            images[i].Frames[0].Metadata.GetFormatMetadata(WebpFormat.Instance).FrameDelay = delay;
+            progressValue += average;
+            progress?.Report((int)progressValue);
         });
+
+        var image = images[0];
+        foreach (var img in images.Skip(1))
+        {
+            using (img)
+                _ = image.Frames.AddFrame(img.Frames[0]);
+            progressValue += average / 2;
+            progress?.Report((int)progressValue);
+        }
+
+        return image;
     }
 
     public static async Task IllustrationSaveToFileAsync(this Image image, string path, IllustrationDownloadFormat? illustrationDownloadFormat = null)
@@ -190,6 +192,13 @@ public static partial class IoHelper
     }
 
     public static async Task StreamSaveToFileAsync(this Stream stream, string path)
+    {
+        CreateParentDirectories(path);
+        await using var fileStream = File.OpenWrite(path);
+        await stream.CopyToAsync(fileStream);
+    }
+
+    public static async Task StreamsCompressSaveToFileAsync(this Stream stream, string path)
     {
         CreateParentDirectories(path);
         await using var fileStream = File.OpenWrite(path);
@@ -254,8 +263,8 @@ public static partial class IoHelper
 
     public static async Task<Image> GetImageFromZipStreamAsync(Stream zipStream, UgoiraMetadataResponse ugoiraMetadataResponse)
     {
-        var entryStreams = await ReadZipArchiveEntriesAsync(zipStream, true);
-        return await entryStreams.UgoiraSaveToImageAsync(ugoiraMetadataResponse.UgoiraMetadataInfo.Frames.Select(t => (int)t.Delay));
+        var entryStreams = await ReadZipAsync(zipStream, true);
+        return await entryStreams.UgoiraSaveToImageAsync(ugoiraMetadataResponse.Delays);
     }
 
     public static async Task<SoftwareBitmapSource> GenerateQrCodeForUrlAsync(string url)

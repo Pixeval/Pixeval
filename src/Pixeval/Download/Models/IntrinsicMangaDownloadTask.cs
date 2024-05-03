@@ -31,24 +31,25 @@ namespace Pixeval.Download.Models;
 
 public sealed class IntrinsicMangaDownloadTask : MangaDownloadTask
 {
-    public IntrinsicMangaDownloadTask(DownloadHistoryEntry entry, IllustrationItemViewModel illustrationViewModel, IList<Stream> streams) : base(entry, illustrationViewModel)
+    public IntrinsicMangaDownloadTask(DownloadHistoryEntry entry, IllustrationItemViewModel illustrationViewModel, IReadOnlyList<Stream> streams) : base(entry, illustrationViewModel)
     {
         Report(100);
-        if (streams.Count == Urls.Length)
+        Dispose = false;
+        if (streams.Count == Urls.Count)
             Streams = streams;
         else
             ThrowHelper.Argument(streams);
     }
 
-    public IList<Stream> Streams { get; }
+    public IReadOnlyList<Stream> Streams { get; }
 
-    protected override async Task DownloadAsyncCore(Downloader _, string url, string destination)
+    protected override Task<Stream?> DownloadAsyncCore(Downloader downloadStreamAsync, string url, string? destination)
     {
-        if (!App.AppViewModel.AppSettings.OverwriteDownloadedFile && File.Exists(destination))
-            return;
+        if (destination is not null && !ShouldOverwrite(destination))
+            return Task.FromResult<Stream?>(null);
 
         Streams[CurrentIndex].Position = 0;
 
-        await ManageStream(Streams[CurrentIndex], url, destination);
+        return Task.FromResult<Stream?>(Streams[CurrentIndex]);
     }
 }

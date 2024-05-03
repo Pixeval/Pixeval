@@ -58,9 +58,6 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
         [LocalizedResource(typeof(ImageViewerPageResources), nameof(ImageViewerPageResources.LoadingFromCache))]
         LoadingFromCache,
 
-        [LocalizedResource(typeof(ImageViewerPageResources), nameof(ImageViewerPageResources.DownloadingUgoiraZipFormatted), DownloadingUgoiraZip)]
-        DownloadingUgoiraZip,
-
         [LocalizedResource(typeof(ImageViewerPageResources), nameof(ImageViewerPageResources.MergingUgoiraFrames))]
         MergingUgoiraFrames,
 
@@ -102,6 +99,11 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
     private ZoomableImageMode _showMode;
 
     /// <summary>
+    /// 由于多窗口，可能在加载图片后改变设置，所以此处缓存原图设置
+    /// </summary>
+    private bool _isOriginal;
+
+    /// <summary>
     /// <see cref="ShowMode"/> is <see cref="ZoomableImageMode.Fit"/> or not
     /// </summary>
     public bool IsFit => ShowMode is ZoomableImageMode.Fit;
@@ -132,8 +134,16 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
         RestoreResolutionCommand.GetResolutionCommand(true);
     }
 
-    public async Task<Stream?> GetOriginalImageSourceAsync(IProgress<int>? progress = null)
+    /// <summary>
+    /// 如果之前下载的图片就是原图，则可以直接返回下载的图片
+    /// </summary>
+    /// <param name="progress">压缩动图为一张图片的时候用</param>
+    /// <returns></returns>
+    public async Task<Stream?> GetOriginalImageSourceAsync(IProgress<double>? progress = null)
     {
+        if (!_isOriginal)
+            return null;
+
         if (OriginalImageSources is not [var stream, ..])
             return null;
 
@@ -144,7 +154,7 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
         return stream;
     }
 
-    public async Task GetOriginalImageSourceAsync(Stream destination, IProgress<int>? progress = null)
+    public async Task GetOriginalImageSourceAsync(Stream destination, IProgress<double>? progress = null)
     {
         if (OriginalImageSources is not [var stream, ..])
             return;
@@ -161,6 +171,7 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
 
     public async Task<StorageFile> SaveToFolderAsync(AppKnownFolders appKnownFolder)
     {
+        // TODO 是否下载原图
         var name = Path.GetFileName(App.AppViewModel.AppSettings.DefaultDownloadPathMacro);
         var path = IoHelper.NormalizePath(new IllustrationMetaPathParser().Reduce(name, IllustrationViewModel));
         var file = await appKnownFolder.CreateFileAsync(path);
@@ -182,11 +193,11 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
         GC.SuppressFinalize(this);
     }
 
-    private void AdvancePhase(LoadingPhase phase)
+    private void AdvancePhase(LoadingPhase phase, double progress = 0)
     {
         LoadingText = phase.GetLocalizedResource() switch
         {
-            { FormatKey: LoadingPhase } attr => attr.GetLocalizedResourceContent()?.Format((int)LoadingProgress),
+            { FormatKey: LoadingPhase } attr => attr.GetLocalizedResourceContent()?.Format((int)(LoadingProgress = progress)),
             var attr => attr?.GetLocalizedResourceContent()
         };
     }
@@ -218,78 +229,92 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
             manager.Insert(new BrowseHistoryEntry { Id = IllustrationViewModel.Id, Type = SimpleWorkType.IllustAndManga });
         }
 
-        async Task<Stream?> GetStreamAsync(UgoiraMetadataResponse? ugoiraParameter)
+        async Task<IReadOnlyList<Stream>?> GetStreamsAsync(string? ugoiraLargeUrl)
         {
-            var cacheKey = await IllustrationViewModel.GetIllustrationOriginalCacheKeyAsync();
+            _isOriginal = App.AppViewModel.AppSettings.BrowserOriginalImage;
 
-            AdvancePhase(LoadingPhase.CheckingCache);
-            if (App.AppViewModel.AppSettings.UseFileCache && await App.AppViewModel.Cache.ExistsAsync(cacheKey))
+            if (ugoiraLargeUrl is null)
             {
-                AdvancePhase(LoadingPhase.LoadingFromCache);
-
-                // 就算已经有该Key，只要取不出值，就重新加载
-                if (await App.AppViewModel.Cache.TryGetAsync<Stream>(cacheKey) is { } stream)
-                    return stream;
-            }
-            if (ugoiraParameter is { LargeUrl: var ugoiraUrl })
-            {
-                var downloadRes = await App.AppViewModel.MakoClient.DownloadStreamAsync(ugoiraUrl, new Progress<double>(d =>
-                {
-                    LoadingProgress = d;
-                    AdvancePhase(LoadingPhase.DownloadingUgoiraZip);
-                }), ImageLoadingCancellationHandle);
-                if (downloadRes is Result<Stream>.Success(var zipStream))
-                {
-                    if (App.AppViewModel.AppSettings.UseFileCache)
-                    {
-                        await App.AppViewModel.Cache.AddAsync(cacheKey, zipStream, TimeSpan.FromDays(1));
-                        zipStream.Position = 0;
-                    }
-                    return zipStream;
-                }
+                var url = IllustrationViewModel.StaticUrl(_isOriginal);
+                if (await DownloadUrlAsync(url) is { } stream)
+                    return [stream];
             }
             else
             {
-                var url = IllustrationViewModel.OriginalStaticUrl!;
-                AdvancePhase(LoadingPhase.DownloadingImage);
-                var result = await App.AppViewModel.MakoClient.DownloadStreamAsync(url, new Progress<double>(d =>
+                if (await DownloadUrlAsync(ugoiraLargeUrl) is { } downloadStream)
+                    return await UnzipUgoiraAsync(downloadStream);
+
+                if (_isOriginal)
                 {
-                    LoadingProgress = d;
-                    AdvancePhase(LoadingPhase.DownloadingImage);
-                }), ImageLoadingCancellationHandle);
-                if (result is Result<Stream>.Success(var s))
-                {
-                    if (App.AppViewModel.AppSettings.UseFileCache)
+                    var urls = await IllustrationViewModel.UgoiraOriginalUrlsAsync();
+                    var list = new List<Stream>();
+                    var ratio = 1d / urls.Count;
+                    var startProgress = 0d;
+                    foreach (var url in urls)
                     {
-                        await App.AppViewModel.Cache.AddAsync(cacheKey, s, TimeSpan.FromDays(1));
-                        s.Position = 0;
+                        var stream = await DownloadUrlAsync(url, startProgress, ratio);
+                        if (stream is null)
+                            return null;
+                        list.Add(stream);
+                        startProgress += 100 * ratio;
                     }
-                    return s;
+
+                    return list;
                 }
             }
 
             return null;
+
+            async Task<Stream[]> UnzipUgoiraAsync(Stream zipStream)
+            {
+                AdvancePhase(LoadingPhase.MergingUgoiraFrames);
+                return await IoHelper.ReadZipAsync(zipStream, true);
+            }
+
+            async Task<Stream?> DownloadUrlAsync(string url, double startProgress = 0, double ratio = 1)
+            {
+                var cacheKey = _isOriginal ? MakoHelper.GetOriginalCacheKey(url) : MakoHelper.GetThumbnailCacheKey(url);
+                AdvancePhase(LoadingPhase.CheckingCache);
+                if (App.AppViewModel.AppSettings.UseFileCache && await App.AppViewModel.Cache.ExistsAsync(cacheKey))
+                {
+                    AdvancePhase(LoadingPhase.LoadingFromCache);
+
+                    // 就算已经有该Key，只要取不出值，就重新加载
+                    if (await App.AppViewModel.Cache.TryGetAsync<Stream>(cacheKey) is { } stream)
+                        return stream;
+                }
+
+                var downloadRes = await App.AppViewModel.MakoClient.DownloadStreamAsync(url, new Progress<double>(d => AdvancePhase(LoadingPhase.DownloadingImage, startProgress + ratio * d)), ImageLoadingCancellationHandle);
+                if (downloadRes is Result<Stream>.Success(var stream2))
+                {
+                    if (App.AppViewModel.AppSettings.UseFileCache)
+                    {
+                        await App.AppViewModel.Cache.AddAsync(cacheKey, stream2, TimeSpan.FromDays(1));
+                        stream2.Position = 0;
+                    }
+
+                    return stream2;
+                }
+
+                return null;
+            }
         }
 
         async Task LoadOriginalImageAsync()
         {
             var metadata = null as UgoiraMetadataResponse;
             if (IllustrationViewModel.IsUgoira)
-                metadata = await IllustrationViewModel.GetUgoiraMetadataAsync();
+                metadata = await IllustrationViewModel.UgoiraMetadata.ValueAsync;
 
-            var stream = await GetStreamAsync(metadata);
-            if (stream is not null)
+            var streams = await GetStreamsAsync(metadata?.LargeUrl);
+            if (streams is not null)
             {
                 if (IllustrationViewModel.IsUgoira)
                 {
-                    AdvancePhase(LoadingPhase.MergingUgoiraFrames);
-                    OriginalImageSources = await IoHelper.ReadZipArchiveEntriesAsync(stream, true);
-                    MsIntervals = metadata!.UgoiraMetadataInfo.Frames.Select(x => (int)x.Delay).ToArray();
+                    MsIntervals = metadata!.Delays.ToArray();
                 }
-                else
-                {
-                    OriginalImageSources = [stream];
-                }
+
+                OriginalImageSources = streams;
             }
 
             LoadSuccessfully = true;
@@ -389,7 +414,7 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
 
     private void IsNotUgoiraAndLoadingCompletedCanExecuteRequested(XamlUICommand sender, CanExecuteRequestedEventArgs args) => args.CanExecute = !IllustrationViewModel.IsUgoira && LoadSuccessfully;
 
-    public (ulong, Func<IProgress<int>?, Task<Stream?>>) DownloadParameter => (HWnd, GetOriginalImageSourceAsync);
+    public (ulong, Func<IProgress<double>?, Task<Stream?>>) DownloadParameter => (HWnd, GetOriginalImageSourceAsync);
 
     public XamlUICommand PlayGifCommand { get; } = "".GetCommand(IconGlyph.StopE71A);
 

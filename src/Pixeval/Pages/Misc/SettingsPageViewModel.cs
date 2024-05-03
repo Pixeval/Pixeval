@@ -107,6 +107,8 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
                 new EnumAppSettingsEntry<TargetFilter>(AppSetting,
                     nameof(AppSettings.TargetFilter)),
                 new TokenizingAppSettingsEntry(AppSetting),
+                new BoolAppSettingsEntry(AppSetting,
+                    nameof(AppSettings.BrowserOriginalImage)),
                 new ClickableAppSettingsEntry(AppSetting,
                     SettingsPageResources.ViewingRestrictionEntryHeader,
                     SettingsPageResources.ViewingRestrictionEntryDescription,

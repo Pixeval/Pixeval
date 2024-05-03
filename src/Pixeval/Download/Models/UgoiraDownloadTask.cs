@@ -18,6 +18,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Pixeval.Controls;
@@ -26,6 +27,7 @@ using Pixeval.Database;
 using Pixeval.Options;
 using Pixeval.Util;
 using Pixeval.Util.IO;
+using SixLabors.ImageSharp;
 
 namespace Pixeval.Download.Models;
 
@@ -33,30 +35,62 @@ public class UgoiraDownloadTask(
     DownloadHistoryEntry entry,
     IllustrationItemViewModel illustration,
     UgoiraMetadataResponse metadata)
-    : IllustrationDownloadTask(entry, illustration)
+    : MangaDownloadTask(entry, illustration)
 {
     protected UgoiraMetadataResponse Metadata { get; set; } = metadata;
 
+    public override IReadOnlyList<string> Urls => IllustrationViewModel.UgoiraOriginalUrls;
+
+    public override IReadOnlyList<string> ActualDestinations => [Destination.RemoveTokens()];
+
     public override async Task DownloadAsync(Downloader downloadStreamAsync)
     {
-        var url = Metadata.LargeUrl;
+        StartProgress = 0;
+        var urls = Urls;
+        ProgressRatio = 0.9 / urls.Count;
+        var actualDestination = ActualDestination;
+        var list = new List<Stream>();
 
-        var destination = IoHelper.ReplaceTokenExtensionFromUrl(Destination, url).RemoveTokens();
+        if (!ShouldOverwrite(actualDestination))
+            return;
 
-        await DownloadAsyncCore(downloadStreamAsync, url, destination);
+        for (CurrentIndex = 0; CurrentIndex < urls.Count; ++CurrentIndex)
+        {
+            if (await base.DownloadAsyncCore(downloadStreamAsync, urls[CurrentIndex], null) is { } stream)
+                list.Add(stream);
+
+            StartProgress += 100 * ProgressRatio;
+        }
+
+        await ManageStreamsAsync(list, urls, actualDestination);
     }
 
-    protected override async Task ManageStream(Stream stream, string url, string destination)
+    protected async Task ManageStreamsAsync(IReadOnlyList<Stream> streams, IReadOnlyList<string> urls, string destination)
     {
         if (App.AppViewModel.AppSettings.UgoiraDownloadFormat is UgoiraDownloadFormat.OriginalZip)
         {
-            await stream.StreamSaveToFileAsync(destination);
+            var dict = new Dictionary<string, Stream>();
+            for (var i = 0; i < urls.Count; ++i)
+            {
+                var extension = Path.GetExtension(urls[i]);
+                dict.Add($"{i}{extension}", streams[i]);
+            }
+            var zipStream = await IoHelper.WriteZipAsync(dict, Dispose);
+            await zipStream.StreamSaveToFileAsync(destination);
+            Report(100);
         }
         else
         {
-            using var image = await IoHelper.GetImageFromZipStreamAsync(stream, Metadata);
-            image.SetTags(IllustrationViewModel.Entry);
-            await image.UgoiraSaveToFileAsync(destination);
+            StartProgress = 90;
+            ProgressRatio = .1;
+            using var image = await streams.UgoiraSaveToImageAsync(Metadata.Delays, this, Dispose);
+            await ManageImageAsync(image, destination);
         }
+    }
+
+    protected async Task ManageImageAsync(Image image, string destination)
+    {
+        image.SetTags(IllustrationViewModel.Entry);
+        await image.UgoiraSaveToFileAsync(destination);
     }
 }

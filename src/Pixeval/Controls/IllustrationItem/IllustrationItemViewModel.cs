@@ -19,6 +19,7 @@
 #endregion
 
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
@@ -49,48 +50,52 @@ public partial class IllustrationItemViewModel : ThumbnailEntryViewModel<Illustr
 
     public bool IsManga => Entry.IsManga;
 
-    [MemberNotNullWhen(false, nameof(OriginalStaticUrl))]
     public bool IsUgoira => Entry.IsUgoira;
 
     public AsyncLazy<UgoiraMetadataResponse> UgoiraMetadata { get; }
 
-    /// <summary>
-    /// <see cref="IsUgoira"/>为<see langword="false"/>时，此属性不为<see langword="null"/>
-    /// </summary>
-    public string OriginalStaticUrl => IsManga
-        ? Entry.MetaPages[MangaIndex is -1 ? 0 : MangaIndex].ImageUrls.Original
-        : Entry.MetaSinglePage.OriginalImageUrl!;
-
-    public async ValueTask<string> GetOriginalSourceUrlAsync() => IsUgoira
-        ? (await UgoiraMetadata.ValueAsync).LargeUrl
-        : OriginalStaticUrl;
-
-    /// <summary>
-    /// <see cref="IsUgoira"/>为<see langword="false"/>时，此属性不为<see langword="null"/>
-    /// </summary>
-    public string LargeStaticUrl => IsManga
-        ? Entry.MetaPages[MangaIndex is -1 ? 0 : MangaIndex].ImageUrls.Large
-        : Entry.ThumbnailUrls.Large;
-
-    public string IllustrationLargeUrl => Entry.MetaSinglePage.OriginalImageUrl!;
+    public string IllustrationLargeUrl => Entry.OriginalSingleUrl!;
 
     public string MangaSingleLargeUrl => Entry.MetaPages[MangaIndex is -1 ? 0 : MangaIndex].ImageUrls.Large;
 
-    public async ValueTask<string> UgoiraLargeZipUrl() => (await UgoiraMetadata.ValueAsync).LargeUrl;
+    public async ValueTask<string> UgoiraLargeZipUrlAsync() => (await UgoiraMetadata.ValueAsync).LargeUrl;
 
-    public string IllustrationOriginalUrl => Entry.MetaSinglePage.OriginalImageUrl!;
+    public string IllustrationOriginalUrl => Entry.OriginalSingleUrl!;
 
     public string MangaSingleOriginalUrl => Entry.MetaPages[MangaIndex is -1 ? 0 : MangaIndex].ImageUrls.Original;
 
-    public IEnumerable<string> MangaOriginalUrls => Entry.MetaPages.Select(m => m.ImageUrls.Original);
+    public IReadOnlyList<string> MangaOriginalUrls => Entry.MetaPages.Select(m => m.ImageUrls.Original).ToArray();
+
+    public List<string> UgoiraOriginalUrls
+    {
+        get
+        {
+            Debug.Assert(Entry.IsUgoira);
+            var metadata = UgoiraMetadata.Value;
+            var list = new List<string>();
+            for (var i = 0; i < metadata.FrameCount; ++i)
+                list.Add(Entry.OriginalSingleUrl.Replace("ugoira0", $"ugoira{i}"));
+            return list;
+        }
+    }
 
     public async ValueTask<List<string>> UgoiraOriginalUrlsAsync()
     {
+        Debug.Assert(Entry.IsUgoira);
         var metadata = await UgoiraMetadata.ValueAsync;
         var list = new List<string>();
-        for (var i = 0; i < metadata.UgoiraMetadataInfo.Frames.Length; ++i)
-            list.Add(Entry.MetaSinglePage.OriginalImageUrl!.Replace("ugoira0", $"ugoira{i}"));
+        for (var i = 0; i < metadata.FrameCount; ++i)
+            list.Add(Entry.OriginalSingleUrl.Replace("ugoira0", $"ugoira{i}"));
         return list;
+    }
+
+    /// <summary>
+    /// 单图和单图漫画的连接
+    /// </summary>
+    public string StaticUrl(bool original)
+    {
+        return IsManga ? original ? MangaSingleOriginalUrl : MangaSingleLargeUrl :
+            original ? IllustrationOriginalUrl : IllustrationLargeUrl;
     }
 
     public string Tooltip
@@ -131,7 +136,10 @@ public partial class IllustrationItemViewModel : ThumbnailEntryViewModel<Illustr
         // that only differs from the illustrations of a single work on the MetaPages property, this property
         // contains the download urls of the manga
 
-        return Entry.MetaPages.Select(m => Entry with { ThumbnailUrls = m.ImageUrls })
-            .Select((p, i) => new IllustrationItemViewModel(p) { MangaIndex = i });
+        return Entry.MetaPages.Select(m => Entry with
+        {
+            MetaSinglePage = new() { OriginalImageUrl = m.ImageUrls.Original },
+            ThumbnailUrls = m.ImageUrls
+        }).Select((p, i) => new IllustrationItemViewModel(p) { MangaIndex = i });
     }
 }
