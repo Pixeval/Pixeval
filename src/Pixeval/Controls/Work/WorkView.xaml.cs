@@ -162,16 +162,16 @@ public sealed partial class WorkView : IEntryView<ISortableEntryViewViewModel>
         ViewModel = null!;
     }
 
-    private void AddToBookmarkTeachingTip_OnCloseButtonClick(TeachingTip sender, object args)
+    private void AddToBookmarkTeachingTip_OnCloseButtonClick(TeachingTip sender, object e)
     {
         sender.GetTag<IWorkViewModel>().AddToBookmarkCommand.Execute((BookmarkTagSelector.SelectedTags, BookmarkTagSelector.IsPrivate, null as object));
 
         HWnd.SuccessGrowl(EntryViewResources.AddedToBookmark);
     }
 
-    private void WorkItem_OnRequestAddToBookmark(FrameworkElement sender, IWorkViewModel args)
+    private void WorkItem_OnRequestAddToBookmark(FrameworkElement sender, IWorkViewModel e)
     {
-        AddToBookmarkTeachingTip.Tag = args;
+        AddToBookmarkTeachingTip.Tag = e;
         AddToBookmarkTeachingTip.IsOpen = true;
     }
 }

@@ -28,6 +28,8 @@ public partial record UgoiraMetadataResponse
     [JsonPropertyName("ugoira_metadata")]
     public required UgoiraMetadata UgoiraMetadataInfo { get; set; }
 
+    public string MediumUrl => UgoiraMetadataInfo.ZipUrls.Medium;
+
     public string LargeUrl => UgoiraMetadataInfo.ZipUrls.Large;
 }
 

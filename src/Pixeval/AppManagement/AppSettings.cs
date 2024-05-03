@@ -53,7 +53,7 @@ public partial record AppSettings : IWindowSettings
     /// The Application Theme
     /// </summary>
     [SettingsEntry(IconGlyph.PersonalizeE771, nameof(SettingsPageResources.ThemeEntryHeader), nameof(SettingsPageResources.ThemeEntryDescriptionHyperlinkButtonContent))]
-    public ElementTheme Theme { get; set; } = ElementTheme.Default;
+    public ElementTheme Theme { get; set; }
 
     [SettingsEntry(IconGlyph.ColorE790, nameof(SettingsPageResources.BackdropEntryHeader), null)]
     public BackdropType Backdrop { get; set; } = MicaController.IsSupported() ? BackdropType.MicaAlt : DesktopAcrylicController.IsSupported() ? BackdropType.Acrylic : BackdropType.None;
@@ -75,7 +75,7 @@ public partial record AppSettings : IWindowSettings
     public string AppFontFamilyName { get; set; } = AppSettingsResources.AppDefaultFontFamilyName;
 
     [SettingsEntry(IconGlyph.CheckMarkE73E, nameof(SettingsPageResources.DefaultSelectedTabEntryHeader), nameof(SettingsPageResources.DefaultSelectedTabEntryDescription))]
-    public MainPageTabItem DefaultSelectedTabItem { get; set; } = MainPageTabItem.Recommendation;
+    public MainPageTabItem DefaultSelectedTabItem { get; set; }
 
     [SettingsEntry(IconGlyph.RenameE8AC, nameof(SettingsPageResources.DefaultDownloadPathMacroEntryHeader), nameof(SettingsPageResources.DefaultDownloadPathMacroEntryDescriptionContent))]
     public string DefaultDownloadPathMacro { get; set; } = GetSpecialFolder() + @"\@{if_manga=[@{artist_name}] @{title}}\[@{artist_name}] @{id}@{if_manga=p@{manga_index}}@{ext}";
@@ -84,7 +84,7 @@ public partial record AppSettings : IWindowSettings
 
     public IllustrationDownloadFormat IllustrationDownloadFormat { get; set; } = IllustrationDownloadFormat.Png;
 
-    public NovelDownloadFormat NovelDownloadFormat { get; set; } = NovelDownloadFormat.Pdf;
+    public NovelDownloadFormat NovelDownloadFormat { get; set; }
 
     [SettingsEntry(IconGlyph.ScanE8FE, nameof(SettingsPageResources.OverwriteDownloadedFileEntryHeader), nameof(SettingsPageResources.OverwriteDownloadedFileEntryDescription))]
     public bool OverwriteDownloadedFile { get; set; }
@@ -106,14 +106,14 @@ public partial record AppSettings : IWindowSettings
     /// different orders will use this as its default value
     /// </summary>
     [SettingsEntry(IconGlyph.SortE8CB, nameof(SettingsPageResources.DefaultSearchSortOptionEntryHeader), nameof(SettingsPageResources.DefaultSearchSortOptionEntryDescription))]
-    public WorkSortOption WorkSortOption { get; set; } = WorkSortOption.DoNotSort;
+    public WorkSortOption WorkSortOption { get; set; }
 
     [SettingsEntry(IconGlyph.ViewAllE8A9, nameof(SettingsPageResources.DefaultSearchTagMatchOptionEntryHeader), nameof(SettingsPageResources.DefaultSearchTagMatchOptionEntryDescription))]
-    public SimpleWorkType SimpleWorkType { get; set; } = SimpleWorkType.IllustAndManga;
+    public SimpleWorkType SimpleWorkType { get; set; }
 
-    public RankOption IllustrationRankOption { get; set; } = RankOption.Day;
+    public RankOption IllustrationRankOption { get; set; }
 
-    public RankOption NovelRankOption { get; set; } = RankOption.Day;
+    public RankOption NovelRankOption { get; set; }
 
     /// <summary>
     /// The illustration tag match option for keyword search
@@ -171,6 +171,8 @@ public partial record AppSettings : IWindowSettings
     public DateTimeOffset SearchStartDate { get; set; } = DateTimeOffset.Now - TimeSpan.FromDays(1);
 
     public DateTimeOffset SearchEndDate { get; set; } = DateTimeOffset.Now;
+
+    public bool BrowserOriginalImage { get; set; }
 
     [AttributeIgnore(typeof(ResetAttribute))]
     public DateTimeOffset LastCheckedUpdate { get; set; } = DateTimeOffset.MinValue;
@@ -241,7 +243,7 @@ public partial record AppSettings : IWindowSettings
 
     public Size WindowSize { get; set; } = WindowHelper.EstimatedWindowSize().ToSize();
 
-    public bool IsMaximized { get; set; } = false;
+    public bool IsMaximized { get; set; }
 
     [AttributeIgnore(typeof(GenerateConstructorAttribute), typeof(AppContextAttribute<>))]
     public WorkType WorkType => SimpleWorkType is SimpleWorkType.IllustAndManga ? WorkType.Illust : WorkType.Novel;

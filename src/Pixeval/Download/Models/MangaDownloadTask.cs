@@ -37,7 +37,7 @@ public class MangaDownloadTask(DownloadHistoryEntry entry, IllustrationItemViewM
 
     public override bool IsFolder => true;
 
-    public string[] Urls => IllustrationViewModel.GetMangaImageUrls().ToArray();
+    public string[] Urls => IllustrationViewModel.MangaOriginalUrls.ToArray();
 
     public override IReadOnlyList<string> ActualDestinations => Urls.Select((t, i) => IoHelper.ReplaceTokenExtensionFromUrl(Destination, t).Replace(MangaIndexMacro.NameConstToken, i.ToString())).ToArray();
 

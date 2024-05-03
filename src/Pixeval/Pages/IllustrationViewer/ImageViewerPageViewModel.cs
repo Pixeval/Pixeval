@@ -222,6 +222,7 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
         {
             var cacheKey = await IllustrationViewModel.GetIllustrationOriginalCacheKeyAsync();
 
+            AdvancePhase(LoadingPhase.CheckingCache);
             if (App.AppViewModel.AppSettings.UseFileCache && await App.AppViewModel.Cache.ExistsAsync(cacheKey))
             {
                 AdvancePhase(LoadingPhase.LoadingFromCache);
