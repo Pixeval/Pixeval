@@ -19,7 +19,9 @@
 #endregion
 
 using System;
+using System.ComponentModel;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 
 namespace Pixeval.CoreApi.Model;
@@ -38,9 +40,6 @@ public partial record Illustration : IWorkEntry
     [JsonPropertyName("type")]
     public required string Type { get; set; } = "";
 
-    /// <summary>
-    /// Original几乎总是null
-    /// </summary>
     [JsonPropertyName("image_urls")]
     public required ImageUrls ThumbnailUrls { get; set; }
 
@@ -79,7 +78,10 @@ public partial record Illustration : IWorkEntry
     public required XRestrict XRestrict { get; set; }
 
     [JsonPropertyName("meta_single_page")]
-    public required IllustrationMetaSinglePage MetaSinglePage { get; set; }
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public required MetaSinglePage MetaSinglePage { get; set; }
+
+    public string? OriginalSingleUrl => MetaSinglePage.OriginalImageUrl;
 
     [JsonPropertyName("meta_pages")]
     public required MetaPage[] MetaPages { get; set; } = [];
@@ -105,6 +107,12 @@ public partial record Illustration : IWorkEntry
     [JsonPropertyName("illust_book_style")]
     public required int IllustBookStyle { get; set; }
 
+    [MemberNotNullWhen(true, nameof(OriginalSingleUrl))]
+    public bool IsUgoira => Type is "ugoira";
+
+    [MemberNotNullWhen(false, nameof(OriginalSingleUrl))]
+    public bool IsManga => PageCount > 1;
+
     public override int GetHashCode()
     {
         // ReSharper disable once NonReadonlyMemberInGetHashCode
@@ -118,10 +126,10 @@ public partial record Illustration : IWorkEntry
 }
 
 [Factory]
-public partial record IllustrationMetaSinglePage
+public partial record MetaSinglePage
 {
     /// <summary>
-    /// 单图时的原图链接
+    /// 单图或多图时的原图链接
     /// </summary>
     [JsonPropertyName("original_image_url")]
     public string? OriginalImageUrl { get; set; } = DefaultImageUrls.ImageNotAvailable;
@@ -138,19 +146,32 @@ public partial record ImageUrls
 
     [JsonPropertyName("large")]
     public required string Large { get; set; } = DefaultImageUrls.ImageNotAvailable;
+}
 
+[Factory]
+public partial record MangaImageUrls : ImageUrls
+{
+    /// <summary>
+    /// 多图时的原图链接
+    /// </summary>
     [JsonPropertyName("original")]
-    public string? Original { get; set; } = DefaultImageUrls.ImageNotAvailable;
+    public required string Original { get; set; } = DefaultImageUrls.ImageNotAvailable;
 }
 
 [Factory]
 public partial record MetaPage
 {
-    /// <summary>
-    /// 多图时的原图链接
-    /// </summary>
     [JsonPropertyName("image_urls")]
-    public required ImageUrls ImageUrls { get; set; }
+    public required MangaImageUrls ImageUrls { get; set; }
+
+    public string SquareMediumUrl => ImageUrls.SquareMedium;
+
+    public string MediumUrl => ImageUrls.Medium;
+
+    public string LargeUrl => ImageUrls.Large;
+
+    /// <inheritdoc cref="MangaImageUrls.Original"/>
+    public string OriginalUrl => ImageUrls.Original;
 }
 
 public enum XRestrict

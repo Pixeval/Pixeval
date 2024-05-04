@@ -51,7 +51,7 @@ public class IllustrationDownloadTaskFactory : IDownloadTaskFactory<Illustration
         {
             if (context.IsUgoira)
             {
-                var metadata = await context.GetUgoiraMetadataAsync();
+                var metadata = await context.UgoiraMetadata.ValueAsync;
                 var downloadHistoryEntry = new DownloadHistoryEntry(
                     DownloadState.Queued,
                     path,

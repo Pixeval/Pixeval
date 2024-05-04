@@ -19,7 +19,7 @@
 #endregion
 
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -34,39 +34,68 @@ namespace Pixeval.Controls;
 /// A view model that communicates between the model <see cref="Illustration" /> and the view <see cref="WorkView" />.
 /// It is responsible for being the elements of the <see cref="ItemsRepeater" /> to present the thumbnail of an illustration
 /// </summary>
-public partial class IllustrationItemViewModel(Illustration illustration) : ThumbnailEntryViewModel<Illustration>(illustration)
+public partial class IllustrationItemViewModel : ThumbnailEntryViewModel<Illustration>
 {
+    public IllustrationItemViewModel(Illustration illustration) : base(illustration)
+    {
+        var id = illustration.Id;
+        UgoiraMetadata = new(() => App.AppViewModel.MakoClient.GetUgoiraMetadataAsync(id));
+    }
+
     /// <summary>
     /// 当调用<see cref="GetMangaIllustrationViewModels"/>后，此属性会被赋值为当前<see cref="IllustrationItemViewModel"/>在Manga中的索引
     /// </summary>
     public int MangaIndex { get; set; } = -1;
 
-    public bool IsManga => Entry.PageCount > 1;
+    public bool IsManga => Entry.IsManga;
 
-    public UgoiraMetadataResponse? UgoiraMetadata { get; private set; }
+    public bool IsUgoira => Entry.IsUgoira;
 
-    /// <summary>
-    /// <see cref="IsUgoira"/>为<see langword="true"/>时，此属性不会抛异常<br/>
-    /// 同一个漫画图片的格式会不会不同？
-    /// </summary>
-    public async Task<UgoiraMetadataResponse> GetUgoiraMetadataAsync()
+    public AsyncLazy<UgoiraMetadataResponse> UgoiraMetadata { get; }
+
+    public string IllustrationLargeUrl => Entry.ThumbnailUrls.Large;
+
+    public string MangaSingleLargeUrl => Entry.MetaPages[MangaIndex is -1 ? 0 : MangaIndex].ImageUrls.Large;
+
+    public async ValueTask<string> UgoiraMediumZipUrlAsync() => (await UgoiraMetadata.ValueAsync).MediumUrl;
+
+    public string IllustrationOriginalUrl => Entry.OriginalSingleUrl!;
+
+    public string MangaSingleOriginalUrl => Entry.MetaPages[MangaIndex is -1 ? 0 : MangaIndex].ImageUrls.Original;
+
+    public IReadOnlyList<string> MangaOriginalUrls => Entry.MetaPages.Select(m => m.ImageUrls.Original).ToArray();
+
+    public List<string> UgoiraOriginalUrls
     {
-        return UgoiraMetadata ??= await App.AppViewModel.MakoClient.GetUgoiraMetadataAsync(Id);
+        get
+        {
+            Debug.Assert(Entry.IsUgoira);
+            var metadata = UgoiraMetadata.Value;
+            var list = new List<string>();
+            for (var i = 0; i < metadata.FrameCount; ++i)
+                list.Add(Entry.OriginalSingleUrl.Replace("ugoira0", $"ugoira{i}"));
+            return list;
+        }
+    }
+
+    public async ValueTask<List<string>> UgoiraOriginalUrlsAsync()
+    {
+        Debug.Assert(Entry.IsUgoira);
+        var metadata = await UgoiraMetadata.ValueAsync;
+        var list = new List<string>();
+        for (var i = 0; i < metadata.FrameCount; ++i)
+            list.Add(Entry.OriginalSingleUrl.Replace("ugoira0", $"ugoira{i}"));
+        return list;
     }
 
     /// <summary>
-    /// <see cref="IsUgoira"/>为<see langword="false"/>时，此属性不为<see langword="null"/>
+    /// 单图和单图漫画的连接
     /// </summary>
-    public string? OriginalStaticUrl => IsManga
-        ? Entry.MetaPages[MangaIndex is -1 ? 0 : MangaIndex].ImageUrls.Original
-        : Entry.MetaSinglePage.OriginalImageUrl;
-
-    public async ValueTask<string> GetOriginalSourceUrlAsync() => IsUgoira
-        ? (await GetUgoiraMetadataAsync()).LargeUrl
-        : OriginalStaticUrl;
-
-    [MemberNotNullWhen(false, nameof(OriginalStaticUrl))]
-    public bool IsUgoira => Entry.Type is "ugoira";
+    public string StaticUrl(bool original)
+    {
+        return IsManga ? original ? MangaSingleOriginalUrl : MangaSingleLargeUrl :
+            original ? IllustrationOriginalUrl : IllustrationLargeUrl;
+    }
 
     public string Tooltip
     {
@@ -106,12 +135,10 @@ public partial class IllustrationItemViewModel(Illustration illustration) : Thum
         // that only differs from the illustrations of a single work on the MetaPages property, this property
         // contains the download urls of the manga
 
-        return Entry.MetaPages.Select(m => Entry with { ThumbnailUrls = m.ImageUrls })
-            .Select((p, i) => new IllustrationItemViewModel(p) { MangaIndex = i });
-    }
-
-    public IEnumerable<string> GetMangaImageUrls()
-    {
-        return Entry.MetaPages.Select(m => m.ImageUrls.Original!);
+        return Entry.MetaPages.Select(m => Entry with
+        {
+            MetaSinglePage = new() { OriginalImageUrl = m.ImageUrls.Original },
+            ThumbnailUrls = m.ImageUrls
+        }).Select((p, i) => new IllustrationItemViewModel(p) { MangaIndex = i });
     }
 }

@@ -1,6 +1,5 @@
 using System.Threading.Tasks;
 using Microsoft.UI.Xaml.Controls;
-using WinUI3Utilities;
 
 namespace Pixeval.Controls;
 

@@ -28,6 +28,7 @@ using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Utilities;
 using SixLabors.ImageSharp;
+using WinUI3Utilities;
 
 namespace Pixeval.Download.Models;
 
@@ -38,45 +39,47 @@ public class IllustrationDownloadTask(DownloadHistoryEntry entry, IllustrationIt
 
     public override IReadOnlyList<string> ActualDestinations =>
     [
-        IoHelper.ReplaceTokenExtensionFromUrl(Destination, IllustrationViewModel.OriginalStaticUrl!).RemoveTokens()
+        IoHelper.ReplaceTokenExtensionFromUrl(Destination, IllustrationViewModel.IllustrationOriginalUrl).RemoveTokens()
     ];
 
     public override bool IsFolder => false;
 
     public IllustrationItemViewModel IllustrationViewModel { get; protected set; } = illustration;
 
+    protected bool Dispose { get; set; } = true;
+
     public override async Task DownloadAsync(Downloader downloadStreamAsync)
     {
-        await DownloadAsyncCore(downloadStreamAsync, IllustrationViewModel.OriginalStaticUrl!, ActualDestination);
+        var actualDestination = ActualDestination;
+        if (await DownloadAsyncCore(downloadStreamAsync, IllustrationViewModel.IllustrationOriginalUrl, actualDestination) is { } stream)
+        {
+            await ManageStreamAsync(stream, actualDestination);
+            if (Dispose)
+                await stream.DisposeAsync();
+        }
     }
 
-    protected virtual async Task DownloadAsyncCore(Downloader downloadStreamAsync, string url, string destination)
+    protected virtual async Task<Stream?> DownloadAsyncCore(Downloader downloadStreamAsync, string url, string? destination)
     {
-        if (!App.AppViewModel.AppSettings.OverwriteDownloadedFile && File.Exists(destination))
-            return;
+        if (destination is not null && !ShouldOverwrite(destination))
+            return null;
 
         if (App.AppViewModel.AppSettings.UseFileCache && await App.AppViewModel.Cache.TryGetAsync<Stream>(MakoHelper.GetOriginalCacheKey(url)) is { } stream)
-        {
-            await using (stream)
-                await ManageStream(stream, url, destination);
-            return;
-        }
+            return stream;
 
-        if (await downloadStreamAsync(url, this, CancellationHandle) is Result<Stream>.Success result)
-        {
-            await using var stream2 = result.Value;
-            await ManageStream(stream2, url, destination);
-        }
+        if (await downloadStreamAsync(url, this, CancellationHandle) is Result<Stream>.Success success)
+            return success.Value;
+
+        return ThrowHelper.Exception<Stream?>($"Error occurred when downloading {url}.");
     }
 
     /// <summary>
     /// 
     /// </summary>
     /// <param name="stream">会自动Dispose</param>
-    /// <param name="url"></param>
     /// <param name="destination"></param>
     /// <returns></returns>
-    protected virtual async Task ManageStream(Stream stream, string url, string destination)
+    protected async Task ManageStreamAsync(Stream stream, string destination)
     {
         if (App.AppViewModel.AppSettings.IllustrationDownloadFormat is IllustrationDownloadFormat.Original)
         {
@@ -89,4 +92,6 @@ public class IllustrationDownloadTask(DownloadHistoryEntry entry, IllustrationIt
             await image.IllustrationSaveToFileAsync(destination);
         }
     }
+
+    public static bool ShouldOverwrite(string url) => App.AppViewModel.AppSettings.OverwriteDownloadedFile || !File.Exists(url);
 }

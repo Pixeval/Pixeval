@@ -49,6 +49,10 @@
             <Setter Property="TextAlignment" Value="Center" />
             <Setter Property="TextTrimming" Value="CharacterEllipsis" />
         </Style>
+        <Style x:Name="ColorPickerStyle" TargetType="controls1:ColorPicker">
+            <Setter Property="IsMoreButtonVisible" Value="True" />
+            <Setter Property="IsAlphaEnabled" Value="True" />
+        </Style>
     </controls:SupportCustomTitleBarDragRegionPage.Resources>
     <controls:SupportCustomTitleBarDragRegionPage.KeyboardAccelerators>
         <KeyboardAccelerator Key="Escape" Invoked="ExitFullScreenKeyboardAccelerator_OnInvoked" />
@@ -92,24 +96,10 @@
                                     </ComboBox>
                                 </controls1:SettingsCard>
                                 <controls1:SettingsCard x:Uid="/EntryViewerPage/NovelSettingsFontColorEntry" HeaderIcon="{controls2:GlyphIcon Glyph=FontColorE8D3}">
-                                    <controls:ColorPickerButton>
-                                        <controls:ColorPickerButton.ColorPicker>
-                                            <ColorPicker
-                                                IsAlphaEnabled="True"
-                                                IsMoreButtonVisible="True"
-                                                Color="{x:Bind _viewModel.NovelFontColor, Converter={StaticResource UIntToColorConverter}, Mode=TwoWay}" />
-                                        </controls:ColorPickerButton.ColorPicker>
-                                    </controls:ColorPickerButton>
+                                    <controls1:ColorPickerButton ColorPickerStyle="{StaticResource ColorPickerStyle}" SelectedColor="{x:Bind _viewModel.NovelFontColor, Converter={StaticResource UIntToColorConverter}, Mode=TwoWay}" />
                                 </controls1:SettingsCard>
                                 <controls1:SettingsCard x:Uid="/EntryViewerPage/NovelSettingsBackgroundEntry" HeaderIcon="{controls2:GlyphIcon Glyph=ColorE790}">
-                                    <controls:ColorPickerButton>
-                                        <controls:ColorPickerButton.ColorPicker>
-                                            <ColorPicker
-                                                IsAlphaEnabled="True"
-                                                IsMoreButtonVisible="True"
-                                                Color="{x:Bind _viewModel.NovelBackground, Converter={StaticResource UIntToColorConverter}, Mode=TwoWay}" />
-                                        </controls:ColorPickerButton.ColorPicker>
-                                    </controls:ColorPickerButton>
+                                    <controls1:ColorPickerButton ColorPickerStyle="{StaticResource ColorPickerStyle}" SelectedColor="{x:Bind _viewModel.NovelBackground, Converter={StaticResource UIntToColorConverter}, Mode=TwoWay}" />
                                 </controls1:SettingsCard>
                                 <controls1:SettingsCard x:Uid="/EntryViewerPage/NovelSettingsFontWeightEntry" HeaderIcon="{controls2:GlyphIcon Glyph=BrushSizeEDA8}">
                                     <ComboBox

@@ -36,7 +36,7 @@ public class LazyInitializedUgoiraDownloadTask(DownloadHistoryEntry databaseEntr
 
     public async Task LazyLoadAsync(long id)
     {
-        Metadata ??= await App.AppViewModel.MakoClient.GetUgoiraMetadataAsync(id);
         IllustrationViewModel ??= new(await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(id));
+        Metadata ??= await IllustrationViewModel.UgoiraMetadata.ValueAsync;
     }
 }

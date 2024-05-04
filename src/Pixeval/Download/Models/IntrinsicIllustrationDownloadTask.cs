@@ -33,18 +33,19 @@ public sealed class IntrinsicIllustrationDownloadTask : IllustrationDownloadTask
     public IntrinsicIllustrationDownloadTask(DownloadHistoryEntry entry, IllustrationItemViewModel illustrationViewModel, Stream stream) : base(entry, illustrationViewModel)
     {
         Report(100);
+        Dispose = false;
         Stream = stream;
     }
 
     public Stream Stream { get; }
 
-    protected override async Task DownloadAsyncCore(Downloader _, string url, string destination)
+    protected override Task<Stream?> DownloadAsyncCore(Downloader downloadStreamAsync, string url, string? destination)
     {
-        if (!App.AppViewModel.AppSettings.OverwriteDownloadedFile && File.Exists(destination))
-            return;
+        if (destination is not null && !ShouldOverwrite(destination))
+            return Task.FromResult<Stream?>(null);
 
         Stream.Position = 0;
 
-        await ManageStream(Stream, url, destination);
+        return Task.FromResult<Stream?>(Stream);
     }
 }

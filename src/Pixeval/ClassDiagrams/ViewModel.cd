@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Class Name="Pixeval.Pages.Tags.TagsEntryViewModel" Collapsed="true">
-    <Position X="24.5" Y="0.5" Width="1.5" />
+    <Position X="27.5" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>CACAAAAAACAAAABAQAAAAAQAAAAAAEAEAAAAQIAAEAA=</HashCode>
       <FileName>Pages\Tags\TagsEntryViewModel.cs</FileName>
@@ -9,21 +9,21 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="Pixeval.Controls.SpotlightArticleView.SpotlightArticleViewModel" Collapsed="true">
-    <Position X="10.75" Y="2" Width="2.25" />
+    <Position X="7.75" Y="2" Width="2.25" />
     <TypeIdentifier>
       <HashCode>ABAAAAAAACAAAAAgAAAAAAAAAAACAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Controls\SpotlightArticleView\SpotlightArticleViewModel.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Pixeval.Controls.IllustratorItemViewModel" Collapsed="true">
-    <Position X="7.75" Y="2" Width="2.25" />
+    <Position X="10.75" Y="2" Width="2.25" />
     <TypeIdentifier>
       <HashCode>ABAAIAAAAKAQQAAoAQIAABgCAACCAAAAAAIAAAEAAAA=</HashCode>
       <FileName>Controls\IllustratorItem\IllustratorItemViewModel.Commands.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Pixeval.Controls.EntryViewModel&lt;T&gt;" Collapsed="true">
-    <Position X="15" Y="0.5" Width="1.75" />
+    <Position X="16.25" Y="0.5" Width="1.75" />
     <TypeIdentifier>
       <HashCode>ABAQIAAAAKAIAAAgAAAAEAGACAAGBCAAAAAAAAAgAAg=</HashCode>
       <FileName>Controls\Entry\EntryViewModel.cs</FileName>
@@ -31,28 +31,28 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="Pixeval.Controls.IllustrationItemViewModel" Collapsed="true">
-    <Position X="17.5" Y="3.25" Width="2.75" />
+    <Position X="17.25" Y="3.25" Width="2.75" />
     <TypeIdentifier>
-      <HashCode>AhAAAAAAAAAAAAAwAIASAAAABoACAACAACAAYASAAAA=</HashCode>
+      <HashCode>ABAAAACAAAAAAAAyAAASEAAAAoCCEwCAACAAYAwAAAA=</HashCode>
       <FileName>Controls\IllustrationItem\IllustrationItemViewModel.Commands.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Pixeval.Controls.NovelItemViewModel" Collapsed="true">
-    <Position X="21" Y="3.25" Width="2.5" />
+    <Position X="20.75" Y="3.25" Width="2.5" />
     <TypeIdentifier>
       <HashCode>ABAAAAAAAEAAACAgAAAAAAAAAoACAACAACAABAQAAAA=</HashCode>
       <FileName>Controls\NovelItem\NovelItemViewModel.Commands.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Pixeval.Pages.Download.DownloadListEntryViewModel" Collapsed="true">
-    <Position X="14" Y="3.25" Width="2.75" />
+    <Position X="13.75" Y="3.25" Width="2.75" />
     <TypeIdentifier>
       <HashCode>ABAAAAQAAAAAgAAgAAgAAAgAAIATAACABCAgAAQAAAA=</HashCode>
       <FileName>Pages\Download\DownloadListEntryViewModel.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Pixeval.Controls.ThumbnailEntryViewModel&lt;T&gt;" Collapsed="true">
-    <Position X="17.75" Y="2" Width="2.25" />
+    <Position X="17.5" Y="2" Width="2.5" />
     <TypeIdentifier>
       <HashCode>AAADBAAARCAAAEEAiAQAAoABAAAAAcAEDQQAABJUEAA=</HashCode>
       <FileName>Controls\Work\ThumbnailEntryViewModel.cs</FileName>

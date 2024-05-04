@@ -239,18 +239,10 @@ public sealed partial class IllustrationViewerPage : SupportCustomTitleBarDragRe
         e.Handled = true;
         switch (e.Key)
         {
-            case VirtualKey.Left:
-                PrevButton_OnTapped(null!, null!);
-                break;
-            case VirtualKey.Right:
-                NextButton_OnTapped(null!, null!);
-                break;
-            case VirtualKey.Up:
-                PrevButton_OnRightTapped(null!, null!);
-                break;
-            case VirtualKey.Down:
-                NextButton_OnRightTapped(null!, null!);
-                break;
+            case VirtualKey.Left: PrevButton_OnTapped(null!, null!); break;
+            case VirtualKey.Right: NextButton_OnTapped(null!, null!); break;
+            case VirtualKey.Up: PrevButton_OnRightTapped(null!, null!); break;
+            case VirtualKey.Down: NextButton_OnRightTapped(null!, null!); break;
         }
     }
 
