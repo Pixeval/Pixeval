@@ -215,6 +215,7 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
                 new IntAppSettingsEntry(AppSetting,
                     nameof(AppSettings.MaximumBrowseHistoryRecords))
                 {
+                    Placeholder = SettingsPageResources.MaximumBrowseHistoryRecordsNumerBoxPlaceholderText,
                     Max = 200,
                     Min = 10
                 },
