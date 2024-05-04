@@ -19,7 +19,6 @@
 #endregion
 
 using System;
-using System.IO;
 using Windows.System;
 using Microsoft.UI.Xaml.Input;
 using Pixeval.Util.UI;
@@ -51,12 +50,7 @@ public partial class ThumbnailEntryViewModel<T>
     /// Parameter1: <see cref="ValueTuple{T1, T2}"/>
     /// <list type="bullet">
     /// <item><term>T1</term><description><see cref="ulong"/>?</description></item>
-    /// <item><term>T2</term><description><see cref="Func{T, TResult}"/>?(<see cref="IllustrationItemViewModel"/>)
-    /// <list type="bullet">
-    /// <item><term>T</term><description><see cref="IProgress{T}"/>?</description></item>
-    /// <item><term>TResult</term><description><see cref="Stream"/>?</description></item>
-    /// </list>
-    /// </description></item>
+    /// <item><term>T2</term><description><see cref="GetImageStream"/>?(<see cref="IllustrationItemViewModel"/>)</description></item>
     /// <item><term>T2</term><description><see cref="DocumentViewerViewModel"/>?(<see cref="NovelItemViewModel"/>)</description></item>
     /// </list>
     /// 
@@ -68,12 +62,7 @@ public partial class ThumbnailEntryViewModel<T>
     /// Parameter1: <see cref="ValueTuple{T1, T2}"/>
     /// <list type="bullet">
     /// <item><term>T1</term><description><see cref="ulong"/></description></item>
-    /// <item><term>T2</term><description><see cref="Func{T, TResult}"/>?(<see cref="IllustrationItemViewModel"/>)
-    /// <list type="bullet">
-    /// <item><term>T</term><description><see cref="IProgress{T}"/>?</description></item>
-    /// <item><term>TResult</term><description><see cref="Stream"/>?</description></item>
-    /// </list>
-    /// </description></item>
+    /// <item><term>T2</term><description><see cref="GetImageStream"/>?(<see cref="IllustrationItemViewModel"/>)</description></item>
     /// <item><term>T2</term><description><see cref="DocumentViewerViewModel"/>?(<see cref="NovelItemViewModel"/>)</description></item>
     /// </list>
     /// 
@@ -86,20 +75,10 @@ public partial class ThumbnailEntryViewModel<T>
     /// Parameter1: <see cref="ValueTuple{T1, T2}"/>
     /// <list type="bullet">
     /// <item><term>T1</term><description><see cref="ulong"/>?</description></item>
-    /// <item><term>T2</term><description><see cref="Func{T, TResult}"/>
-    /// <list type="bullet">
-    /// <item><term>T</term><description><see cref="IProgress{T}"/>?</description></item>
-    /// <item><term>TResult</term><description><see cref="Stream"/>? </description></item>
-    /// </list>
-    /// </description></item>
+    /// <item><term>T2</term><description><see cref="GetImageStream"/></description></item>
     /// </list>
     /// 
-    /// Parameter2: <see cref="Func{T, TResult}"/>
-    /// <list type="bullet">
-    /// <item><term>T</term><description><see cref="IProgress{T}"/>?</description></item>
-    /// <item><term>TResult</term><description><see cref="Stream"/>?</description></item>
-    /// </list>
-    /// <br/>
+    /// Parameter2: <see cref="GetImageStream"/><br/>
     /// <see cref="NovelItemViewModel"/>:<br/>
     /// Parameter1: <see cref="ValueTuple{T1, T2}"/>
     /// <list type="bullet">

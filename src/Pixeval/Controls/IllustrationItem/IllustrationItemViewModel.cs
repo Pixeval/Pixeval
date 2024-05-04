@@ -20,7 +20,6 @@
 
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -54,11 +53,11 @@ public partial class IllustrationItemViewModel : ThumbnailEntryViewModel<Illustr
 
     public AsyncLazy<UgoiraMetadataResponse> UgoiraMetadata { get; }
 
-    public string IllustrationLargeUrl => Entry.OriginalSingleUrl!;
+    public string IllustrationLargeUrl => Entry.ThumbnailUrls.Large;
 
     public string MangaSingleLargeUrl => Entry.MetaPages[MangaIndex is -1 ? 0 : MangaIndex].ImageUrls.Large;
 
-    public async ValueTask<string> UgoiraLargeZipUrlAsync() => (await UgoiraMetadata.ValueAsync).LargeUrl;
+    public async ValueTask<string> UgoiraMediumZipUrlAsync() => (await UgoiraMetadata.ValueAsync).MediumUrl;
 
     public string IllustrationOriginalUrl => Entry.OriginalSingleUrl!;
 

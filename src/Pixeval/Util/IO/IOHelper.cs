@@ -32,7 +32,6 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Streams;
 using Pixeval.Download.Models;
-using Pixeval.Utilities;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats;
 

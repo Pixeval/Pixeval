@@ -129,7 +129,7 @@ public static class MakoHelper
             if (isOriginal)
                 ThrowHelper.Argument(isOriginal);
             else
-                return GetThumbnailCacheKey(await illustration.UgoiraLargeZipUrlAsync());
+                return GetThumbnailCacheKey(await illustration.UgoiraMediumZipUrlAsync());
         }
 
         var staticUrl2 = illustration.StaticUrl(isOriginal);

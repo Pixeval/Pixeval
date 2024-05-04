@@ -40,14 +40,14 @@ public partial class IllustrationItemViewModel
     protected override async void SaveCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
         var hWnd = null as ulong?;
-        var getOriginalImageSourceAsync = null as Func<IProgress<double>?, Task<Stream?>>;
+        var getOriginalImageSourceAsync = null as GetImageStream;
         switch (args.Parameter)
         {
-            case ValueTuple<ulong, Func<IProgress<double>?, Task<Stream?>>?> tuple:
+            case ValueTuple<ulong, GetImageStream?> tuple:
                 hWnd = tuple.Item1;
                 getOriginalImageSourceAsync = tuple.Item2;
                 break;
-            case ValueTuple<ulong?, Func<IProgress<double>?, Task<Stream?>>?> tuple:
+            case ValueTuple<ulong?, GetImageStream?> tuple:
                 hWnd = tuple.Item1;
                 getOriginalImageSourceAsync = tuple.Item2;
                 break;
@@ -62,10 +62,10 @@ public partial class IllustrationItemViewModel
     protected override async void SaveAsCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
         ulong hWnd;
-        var getOriginalImageSourceAsync = null as Func<IProgress<double>?, Task<Stream?>>;
+        var getOriginalImageSourceAsync = null as GetImageStream;
         switch (args.Parameter)
         {
-            case ValueTuple<ulong, Func<IProgress<double>?, Task<Stream?>>?> tuple:
+            case ValueTuple<ulong, GetImageStream?> tuple:
                 hWnd = tuple.Item1;
                 getOriginalImageSourceAsync = tuple.Item2;
                 break;
@@ -96,7 +96,7 @@ public partial class IllustrationItemViewModel
     /// <param name="getOriginalImageSourceAsync">获取原图的<see cref="Stream"/>，支持进度显示，为<see langword="null"/>则创建新的下载任务</param>
     /// <param name="path">文件路径</param>
     /// <returns></returns>
-    private async Task SaveUtilityAsync(ulong? hWnd, Func<IProgress<double>?, Task<Stream?>>? getOriginalImageSourceAsync, string path)
+    private async Task SaveUtilityAsync(ulong? hWnd, GetImageStream? getOriginalImageSourceAsync, string path)
     {
         var ib = hWnd?.InfoGrowlReturn("");
         var progress = null as Progress<double>;
@@ -106,7 +106,7 @@ public partial class IllustrationItemViewModel
             else
                 ib.Title = EntryItemResources.ImageProcessing;
 
-        var source = getOriginalImageSourceAsync is null ? null : await getOriginalImageSourceAsync.Invoke(progress);
+        var source = getOriginalImageSourceAsync is null ? null : await getOriginalImageSourceAsync.Invoke(progress, true);
         using var scope = App.AppViewModel.AppServicesScope;
         var factory = scope.ServiceProvider.GetRequiredService<IDownloadTaskFactory<IllustrationItemViewModel, IllustrationDownloadTask>>();
         if (source is null)
@@ -126,14 +126,18 @@ public partial class IllustrationItemViewModel
     protected override async void CopyCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
         var hWnd = null as ulong?;
-        Func<IProgress<double>?, Task<Stream?>> getOriginalImageSourceAsync;
+        GetImageStream getOriginalImageSourceAsync;
         switch (args.Parameter)
         {
-            case ValueTuple<ulong?, Func<IProgress<double>?, Task<Stream?>>> tuple:
+            case ValueTuple<ulong, GetImageStream> tuple:
                 hWnd = tuple.Item1;
                 getOriginalImageSourceAsync = tuple.Item2;
                 break;
-            case Func<IProgress<double>?, Task<Stream?>> f:
+            case ValueTuple<ulong?, GetImageStream> tuple:
+                hWnd = tuple.Item1;
+                getOriginalImageSourceAsync = tuple.Item2;
+                break;
+            case GetImageStream f:
                 getOriginalImageSourceAsync = f;
                 break;
             default:
@@ -148,7 +152,7 @@ public partial class IllustrationItemViewModel
                 progress = new Progress<double>(d => ib.Title = EntryItemResources.UgoiraProcessing.Format(d));
             else
                 ib.Title = EntryItemResources.ImageProcessing;
-        if (await getOriginalImageSourceAsync(progress) is { } source)
+        if (await getOriginalImageSourceAsync(progress, false) is { } source)
         {
             await UiHelper.ClipboardSetBitmapAsync(source);
             hWnd?.RemoveSuccessGrowlAfterDelay(ib!, EntryItemResources.ImageSetToClipBoard);
@@ -161,3 +165,5 @@ public partial class IllustrationItemViewModel
 
     public override Uri PixEzUri => MakoHelper.GenerateIllustrationPixEzUri(Id);
 }
+
+public delegate Task<Stream?> GetImageStream(IProgress<double>? progress, bool needOriginal);

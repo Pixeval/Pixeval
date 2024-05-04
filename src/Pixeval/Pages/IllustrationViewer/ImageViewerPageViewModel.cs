@@ -139,9 +139,9 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
     /// </summary>
     /// <param name="progress">压缩动图为一张图片的时候用</param>
     /// <returns></returns>
-    public async Task<Stream?> GetOriginalImageSourceAsync(IProgress<double>? progress = null)
+    public async Task<Stream?> GetImageStreamAsync(IProgress<double>? progress, bool needOriginal)
     {
-        if (!_isOriginal)
+        if (needOriginal && !_isOriginal)
             return null;
 
         if (OriginalImageSources is not [var stream, ..])
@@ -171,7 +171,6 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
 
     public async Task<StorageFile> SaveToFolderAsync(AppKnownFolders appKnownFolder)
     {
-        // TODO 是否下载原图
         var name = Path.GetFileName(App.AppViewModel.AppSettings.DefaultDownloadPathMacro);
         var path = IoHelper.NormalizePath(new IllustrationMetaPathParser().Reduce(name, IllustrationViewModel));
         var file = await appKnownFolder.CreateFileAsync(path);
@@ -348,6 +347,7 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
 
     private async void SetPersonalization(Func<StorageFile, IAsyncOperation<bool>> operation)
     {
+        // 这里是否应该用原图设置？
         if (OriginalImageSources is not [not null, ..])
             return;
 
@@ -414,7 +414,7 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
 
     private void IsNotUgoiraAndLoadingCompletedCanExecuteRequested(XamlUICommand sender, CanExecuteRequestedEventArgs args) => args.CanExecute = !IllustrationViewModel.IsUgoira && LoadSuccessfully;
 
-    public (ulong, Func<IProgress<double>?, Task<Stream?>>) DownloadParameter => (HWnd, GetOriginalImageSourceAsync);
+    public (ulong, GetImageStream) DownloadParameter => (HWnd, GetImageStreamAsync);
 
     public XamlUICommand PlayGifCommand { get; } = "".GetCommand(IconGlyph.StopE71A);
 
