@@ -13,9 +13,9 @@ public class LanguageAppSettingsEntry(
 {
     public override LanguageSettingsCard Element => new() { Entry = this };
 
-    public static IEnumerable<LanguageModel> AvailableLanguages { get; } = [LanguageModel.DefaultLanguage, new("简体中文", "zh-Hans-CN"), new("Русский", "ru"), new("English (United States)", "en-US")];
+    public static IEnumerable<LanguageModel> AvailableLanguages { get; } = [LanguageModel.DefaultLanguage, LanguageModel.FromBcl47("zh-Hans"), LanguageModel.FromBcl47("ru-ru"), LanguageModel.FromBcl47("en-us")];
 
-    public LanguageModel AppLanguage
+    public static LanguageModel AppLanguage
     {
         get => AvailableLanguages.FirstOrDefault(t => t.Name == ApplicationLanguages.PrimaryLanguageOverride) ?? LanguageModel.DefaultLanguage;
         set => ApplicationLanguages.PrimaryLanguageOverride = value.Name;

@@ -20,10 +20,13 @@
 
 using System;
 using System.Threading.Tasks;
+using Windows.Globalization;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media.Animation;
 using Pixeval.AppManagement;
+using Pixeval.Settings.Models;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using WinUI3Utilities;
@@ -55,6 +58,33 @@ public sealed partial class LoginPage
         {
             Refresh(App.AppViewModel.LoginContext.RefreshToken);
         }
+
+        // 首页语言
+        foreach (var (displayName, name) in LanguageAppSettingsEntry.AvailableLanguages)
+        {
+            var radioMenuFlyoutItem = new RadioMenuFlyoutItem
+            {
+                Text = displayName,
+                Tag = name
+            };
+            if (name == ApplicationLanguages.PrimaryLanguageOverride)
+                radioMenuFlyoutItem.IsChecked = true;
+            radioMenuFlyoutItem.Click += RadioMenuFlyoutItemClick;
+            MenuFlyout.Items.Add(radioMenuFlyoutItem);
+        }
+
+        return;
+
+        static void RadioMenuFlyoutItemClick(object sender2, RoutedEventArgs e2)
+        {
+            var item = sender2.To<RadioMenuFlyoutItem>();
+            ApplicationLanguages.PrimaryLanguageOverride = item.Tag.To<string>();
+        }
+    }
+
+    private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
+    {
+        MenuFlyout.ShowAt(sender.To<FrameworkElement>());
     }
 
     private async void Refresh(string refreshToken)
