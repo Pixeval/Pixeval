@@ -18,7 +18,7 @@
     <controls:SettingsCard.Description>
         <HyperlinkButton
             x:Uid="/SettingsPage/OpenFontSettingsHyperlinkButton"
-            Tag="ms-settings://fonts"
+            Tag="ms-settings:fonts"
             Tapped="OpenLinkViaTag_OnTapped" />
     </controls:SettingsCard.Description>
     <ComboBox

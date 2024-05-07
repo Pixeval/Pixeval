@@ -14,12 +14,12 @@
     <controls:SettingsCard.Description>
         <HyperlinkButton
             x:Uid="/SettingsPage/OpenLanguageSettingsHyperlinkButton"
-            Tag="ms-settings://regionlanguage"
+            Tag="ms-settings:regionlanguage"
             Tapped="OpenLinkViaTag_OnTapped" />
     </controls:SettingsCard.Description>
     <ComboBox
         x:Uid="/SettingsPage/AppLanguageEntryComboBox"
         Width="200"
         ItemsSource="{x:Bind models:LanguageAppSettingsEntry.AvailableLanguages}"
-        SelectedItem="{x:Bind Entry.AppLanguage, Mode=TwoWay}" />
+        SelectedItem="{x:Bind models:LanguageAppSettingsEntry.AppLanguage, Mode=TwoWay}" />
 </controls:SettingsCard>
