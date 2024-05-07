@@ -150,12 +150,13 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
                     SettingsPageResources.RankOptionEntryDescription,
                     IconGlyph.MarketEAFC,
                     [
-                        new EnumAppSettingsEntry<IllustrationDownloadFormat>(AppSetting,
+                        new EnumAppSettingsEntry<RankOption>(AppSetting,
                             WorkTypeEnum.Illustration,
-                            nameof(AppSettings.IllustrationDownloadFormat)),
-                        new EnumAppSettingsEntry<NovelDownloadFormat>(AppSetting,
+                            nameof(AppSettings.IllustrationRankOption)),
+                        new EnumAppSettingsEntry(AppSetting,
                             WorkTypeEnum.Novel,
-                            nameof(AppSettings.NovelDownloadFormat))
+                            nameof(AppSettings.NovelRankOption),
+                            RankOptionExtension.NovelRankOptions)
                     ]),
                 new MultiValuesAppSettingsEntry(AppSetting,
                     SettingsPageResources.DefaultSearchTagMatchOptionEntryHeader,
@@ -214,6 +215,7 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
                 new IntAppSettingsEntry(AppSetting,
                     nameof(AppSettings.MaximumBrowseHistoryRecords))
                 {
+                    Placeholder = SettingsPageResources.MaximumBrowseHistoryRecordsNumerBoxPlaceholderText,
                     Max = 200,
                     Min = 10
                 },
