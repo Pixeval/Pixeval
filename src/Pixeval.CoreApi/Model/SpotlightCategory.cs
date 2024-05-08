@@ -2,8 +2,8 @@
 
 // GPL v3 License
 // 
-// Pixeval/Pixeval
-// Copyright (c) 2024 Pixeval/NovelViewDataProvider.cs
+// Pixeval/Pixeval.CoreApi
+// Copyright (c) 2024 Pixeval.CoreApi/SpotlightCategory.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -20,13 +20,11 @@
 
 #endregion
 
-using Pixeval.CoreApi.Engine;
-using Pixeval.CoreApi.Model;
+namespace Pixeval.CoreApi.Model;
 
-namespace Pixeval.Controls;
-
-/// <inheritdoc cref="EntryViewDataProvider{T, TViewModel, TSelf}"/>
-public class NovelViewDataProvider : EntryViewDataProvider<Novel, NovelItemViewModel, NovelViewDataProvider>
+public enum SpotlightCategory
 {
-    protected override FetchEngineIncrementalSource<Novel, NovelItemViewModel> NewFetchEngineIncrementalSource(IFetchEngine<Novel> fetchEngine, int limit = -1) => new NovelFetchEngineIncrementalSource(fetchEngine, limit);
+    Spotlight,
+    Tutorial,
+    Inspiration
 }

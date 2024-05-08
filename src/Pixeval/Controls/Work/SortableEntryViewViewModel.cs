@@ -29,7 +29,10 @@ using Pixeval.Utilities;
 
 namespace Pixeval.Controls;
 
-public abstract partial class SortableEntryViewViewModel<T, TViewModel> : EntryViewViewModel<T, TViewModel>, ISortableEntryViewViewModel where T : class, IWorkEntry where TViewModel : EntryViewModel<T>, IWorkViewModel
+public abstract partial class SortableEntryViewViewModel<T, TViewModel>
+    : EntryViewViewModel<T, TViewModel>, ISortableEntryViewViewModel
+    where T : class, IWorkEntry
+    where TViewModel : EntryViewModel<T>, IViewModelFactory<T, TViewModel>, IWorkViewModel
 {
     [ObservableProperty]
     private bool _isSelecting;

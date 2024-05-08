@@ -30,7 +30,6 @@ using QuestPDF.Infrastructure;
 
 namespace Pixeval.Controls;
 
-
 public sealed class PixivNovelPdfParser(ColumnDescriptor descriptor, int pageIndex) : PixivNovelParser<ColumnDescriptor, Stream, INovelParserViewModel<Stream>>
 {
     public static void Init() { }

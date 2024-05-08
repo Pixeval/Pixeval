@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/IllustrationViewDataProvider.cs
+// Copyright (c) 2023 Pixeval/IllustratorViewModel.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,13 +18,30 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using Pixeval.CoreApi.Engine;
+using CommunityToolkit.Mvvm.ComponentModel;
 using Pixeval.CoreApi.Model;
+using Pixeval.Util.UI;
 
 namespace Pixeval.Controls;
 
-/// <inheritdoc cref="EntryViewDataProvider{T, TViewModel, TSelf}"/>
-public class IllustrationViewDataProvider : EntryViewDataProvider<Illustration, IllustrationItemViewModel, IllustrationViewDataProvider>
+public sealed partial class IllustratorItemViewModel : EntryViewModel<User>, IViewModelFactory<User, IllustratorItemViewModel>
 {
-    protected override FetchEngineIncrementalSource<Illustration, IllustrationItemViewModel> NewFetchEngineIncrementalSource(IFetchEngine<Illustration> fetchEngine, int limit = -1) => new IllustrationFetchEngineIncrementalSource(fetchEngine, limit);
+    public static IllustratorItemViewModel CreateInstance(User entry) => new(entry);
+
+    [ObservableProperty]
+    private bool _isFollowed;
+
+    public IllustratorItemViewModel(User user) : base(user)
+    {
+        IsFollowed = Entry.UserInfo.IsFollowed;
+
+        InitializeCommands();
+        FollowCommand.GetFollowCommand(IsFollowed);
+    }
+
+    public string Username => Entry.UserInfo.Name;
+
+    public long UserId => Entry.Id;
+
+    public string AvatarUrl => Entry.UserInfo.ProfileImageUrls.Medium;
 }

@@ -3,7 +3,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2024 Pixeval/NovelFetchEngineIncrementalSource.cs
+// Copyright (c) 2024 Pixeval/IIncrementalSourceFactory.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -20,14 +20,11 @@
 
 #endregion
 
-using System.Collections.Generic;
-using Pixeval.CoreApi.Model;
+using Pixeval.CoreApi.Engine;
 
 namespace Pixeval.Controls;
 
-public class NovelFetchEngineIncrementalSource(IAsyncEnumerable<Novel> asyncEnumerator, int limit = -1) : FetchEngineIncrementalSource<Novel, NovelItemViewModel>(asyncEnumerator, limit)
+public interface IIncrementalSourceFactory<in T, out TSelf>
 {
-    protected override long Identifier(Novel entity) => entity.Id;
-
-    protected override NovelItemViewModel Select(Novel entity) => new(entity);
+    static abstract TSelf CreateInstance(IFetchEngine<T> fetchEngine, int limit = -1);
 }

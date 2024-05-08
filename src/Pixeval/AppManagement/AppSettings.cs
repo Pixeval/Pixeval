@@ -36,6 +36,7 @@ using Pixeval.Util.UI;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
 using WinUI3Utilities.Controls;
+using Windows.Globalization;
 
 namespace Pixeval.AppManagement;
 
@@ -251,7 +252,10 @@ public partial record AppSettings : IWindowSettings
 
     public MakoClientConfiguration ToMakoClientConfiguration()
     {
-        return new MakoClientConfiguration(5000, EnableDomainFronting, MirrorHost, CultureInfo.CurrentUICulture);
+        var language = ApplicationLanguages.PrimaryLanguageOverride;
+        if (string.IsNullOrEmpty(language))
+            language = CultureInfo.CurrentUICulture.Name;
+        return new MakoClientConfiguration(5000, EnableDomainFronting, MirrorHost, CultureInfo.GetCultureInfo(language));
     }
 
     private static string GetSpecialFolder()

@@ -18,6 +18,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using System;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.WinUI.Collections;
 using Pixeval.Collections;
@@ -26,19 +27,21 @@ using Pixeval.CoreApi.Model;
 
 namespace Pixeval.Controls;
 
-public class IllustratorViewDataProvider : ObservableObject, IDataProvider<User, IllustratorItemViewModel>
+public class SimpleViewDataProvider<T, TViewModel> : ObservableObject, IDataProvider<T, TViewModel> 
+    where T : class, IIdEntry
+    where TViewModel : class, IViewModelFactory<T, TViewModel>, IDisposable
 {
-    private IFetchEngine<User>? _fetchEngine;
+    private IFetchEngine<T>? _fetchEngine;
 
-    public AdvancedObservableCollection<IllustratorItemViewModel> View { get; } = [];
+    public AdvancedObservableCollection<TViewModel> View { get; } = [];
 
-    public IncrementalLoadingCollection<FetchEngineIncrementalSource<User, IllustratorItemViewModel>, IllustratorItemViewModel> Source
+    public IncrementalLoadingCollection<FetchEngineIncrementalSource<T, TViewModel>, TViewModel> Source
     {
-        get => (View.Source as IncrementalLoadingCollection<FetchEngineIncrementalSource<User, IllustratorItemViewModel>, IllustratorItemViewModel>)!;
+        get => (View.Source as IncrementalLoadingCollection<FetchEngineIncrementalSource<T, TViewModel>, TViewModel>)!;
         protected set => View.Source = value;
     }
 
-    public IFetchEngine<User>? FetchEngine
+    public IFetchEngine<T>? FetchEngine
     {
         get => _fetchEngine;
         protected set
@@ -53,17 +56,17 @@ public class IllustratorViewDataProvider : ObservableObject, IDataProvider<User,
     public void Dispose()
     {
         if (Source is { } source)
-            foreach (var illustratorViewModel in source)
-                illustratorViewModel.Dispose();
+            foreach (var entry in source)
+                entry.Dispose();
 
         FetchEngine = null;
     }
 
-    public void ResetEngine(IFetchEngine<User>? fetchEngine, int limit = -1)
+    public void ResetEngine(IFetchEngine<T>? fetchEngine, int limit = -1)
     {
         Dispose();
         FetchEngine = fetchEngine;
 
-        Source = new IncrementalLoadingCollection<FetchEngineIncrementalSource<User, IllustratorItemViewModel>, IllustratorItemViewModel>(new IllustratorFetchEngineIncrementalSource(FetchEngine!, limit));
+        Source = new IncrementalLoadingCollection<FetchEngineIncrementalSource<T, TViewModel>, TViewModel>(FetchEngineIncrementalSource<T, TViewModel>.CreateInstance(FetchEngine!, limit));
     }
 }

@@ -25,7 +25,10 @@ using Pixeval.CoreApi.Model;
 
 namespace Pixeval.Controls;
 
-public abstract class EntryViewViewModel<T, TViewModel> : ObservableObject, IDisposable where T : class, IEntry where TViewModel : EntryViewModel<T>
+public abstract class EntryViewViewModel<T, TViewModel>
+    : ObservableObject, IDisposable
+    where T : class, IIdEntry
+    where TViewModel : EntryViewModel<T>, IViewModelFactory<T, TViewModel>
 {
     /// <summary>
     /// Avoid calls to <see cref="IDataProvider{T,TViewModel}.ResetEngine"/>, calls to <see cref="ResetEngine"/> instead.

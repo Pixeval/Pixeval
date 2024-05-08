@@ -34,7 +34,10 @@ namespace Pixeval.Controls;
 /// 复用时调用<see cref="CloneRef"/>，<see cref="FetchEngineRef"/>和<see cref="EntrySourceRef"/>会在所有复用对象都Dispose时Dispose<br/>
 /// 初始化时调用<see cref="ResetEngine"/>
 /// </summary>
-public abstract class EntryViewDataProvider<T, TViewModel, TSelf> : ObservableObject, IDataProvider<T, TViewModel>, IDisposable where T : class, IEntry where TViewModel : EntryViewModel<T>, IDisposable where TSelf : EntryViewDataProvider<T, TViewModel, TSelf>, new()
+public class SharableViewDataProvider<T, TViewModel>
+    : ObservableObject, IDataProvider<T, TViewModel>, IDisposable
+    where T : class, IIdEntry
+    where TViewModel : EntryViewModel<T>, IViewModelFactory<T, TViewModel>, IDisposable
 {
     private SharedRef<IFetchEngine<T>?>? _fetchEngineRef;
 
@@ -87,14 +90,12 @@ public abstract class EntryViewDataProvider<T, TViewModel, TSelf> : ObservableOb
     public void ResetEngine(IFetchEngine<T>? fetchEngine, int limit = -1)
     {
         FetchEngineRef = new SharedRef<IFetchEngine<T>?>(fetchEngine, this);
-        EntrySourceRef = new SharedRef<IncrementalLoadingCollection<FetchEngineIncrementalSource<T, TViewModel>, TViewModel>>(new IncrementalLoadingCollection<FetchEngineIncrementalSource<T, TViewModel>, TViewModel>(NewFetchEngineIncrementalSource(FetchEngine!, limit)), this);
+        EntrySourceRef = new SharedRef<IncrementalLoadingCollection<FetchEngineIncrementalSource<T, TViewModel>, TViewModel>>(new IncrementalLoadingCollection<FetchEngineIncrementalSource<T, TViewModel>, TViewModel>(FetchEngineIncrementalSource<T, TViewModel>.CreateInstance(FetchEngine!, limit)), this);
     }
 
-    protected abstract FetchEngineIncrementalSource<T, TViewModel> NewFetchEngineIncrementalSource(IFetchEngine<T> fetchEngine, int limit = -1);
-
-    public TSelf CloneRef()
+    public SharableViewDataProvider<T, TViewModel> CloneRef()
     {
-        var dataProvider = new TSelf();
+        var dataProvider = new SharableViewDataProvider<T, TViewModel>();
         dataProvider.FetchEngineRef = FetchEngineRef?.MakeShared(dataProvider);
         dataProvider.EntrySourceRef = EntrySourceRef.MakeShared(dataProvider);
         // dataProvider.View.Filter = View.Filter;

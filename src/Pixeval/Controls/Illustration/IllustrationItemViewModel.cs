@@ -34,8 +34,10 @@ namespace Pixeval.Controls;
 /// A view model that communicates between the model <see cref="Illustration" /> and the view <see cref="WorkView" />.
 /// It is responsible for being the elements of the <see cref="ItemsRepeater" /> to present the thumbnail of an illustration
 /// </summary>
-public partial class IllustrationItemViewModel : ThumbnailEntryViewModel<Illustration>
+public partial class IllustrationItemViewModel : WorkEntryViewModel<Illustration>, IViewModelFactory<Illustration, IllustrationItemViewModel>
 {
+    public static IllustrationItemViewModel CreateInstance(Illustration entry) => new(entry);
+
     public IllustrationItemViewModel(Illustration illustration) : base(illustration)
     {
         var id = illustration.Id;

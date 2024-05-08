@@ -19,6 +19,9 @@
 #endregion
 
 using Pixeval.CoreApi.Model;
+using IllustratorViewDataProvider = Pixeval.Controls.SimpleViewDataProvider<
+    Pixeval.CoreApi.Model.User,
+    Pixeval.Controls.IllustratorItemViewModel>;
 
 namespace Pixeval.Controls;
 

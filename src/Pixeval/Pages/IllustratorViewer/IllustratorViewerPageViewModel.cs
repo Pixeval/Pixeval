@@ -173,7 +173,7 @@ public partial class IllustratorViewerPageViewModel : UiObservableObject
 
     private void GenerateWebLinkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
-        UiHelper.ClipboardSetText(MakoHelper.GenerateUserWebUri(Id).OriginalString);
+        UiHelper.ClipboardSetText( MakoHelper.GenerateUserWebUri(Id).OriginalString);
         (args.Parameter as ulong?)?.SuccessGrowl(EntryItemResources.LinkCopiedToClipboard);
     }
 

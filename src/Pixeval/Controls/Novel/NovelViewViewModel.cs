@@ -21,6 +21,9 @@
 #endregion
 
 using Pixeval.CoreApi.Model;
+using NovelViewDataProvider = Pixeval.Controls.SharableViewDataProvider<
+    Pixeval.CoreApi.Model.Novel,
+    Pixeval.Controls.NovelItemViewModel>;
 
 namespace Pixeval.Controls;
 

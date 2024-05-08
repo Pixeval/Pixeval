@@ -3,7 +3,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2024 Pixeval/IllustrationItemViewModel.Thumbnail.cs
+// Copyright (c) 2024 Pixeval/ThumbnailEntryViewModel.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -33,50 +33,12 @@ using Pixeval.Utilities.Threading;
 
 namespace Pixeval.Controls;
 
-public abstract partial class ThumbnailEntryViewModel<T> : EntryViewModel<T>, IWorkViewModel where T : class, IWorkEntry
+public abstract class ThumbnailEntryViewModel<T>(T entry) : EntryViewModel<T>(entry)
+    where T : class, IIdEntry
 {
-    protected ThumbnailEntryViewModel(T entry) : base(entry) => InitializeCommands();
-
-    IWorkEntry IWorkViewModel.Entry => Entry;
-
     public long Id => Entry.Id;
 
-    public int TotalBookmarks => Entry.TotalBookmarks;
-
-    public int TotalView => Entry.TotalView;
-
-    public bool IsBookmarked
-    {
-        get => Entry.IsBookmarked;
-        set => Entry.IsBookmarked = value;
-    }
-
-    public Tag[] Tags => Entry.Tags;
-
-    public string Title => Entry.Title;
-
-    public string Caption => Entry.Caption;
-
-    public UserInfo User => Entry.User;
-
-    public DateTimeOffset PublishDate => Entry.CreateDate;
-
-    public bool IsAiGenerated => Entry.AiType is 2;
-
-    public bool IsXRestricted => Entry.XRestrict is not XRestrict.Ordinary;
-
-    public bool IsPrivate => Entry.IsPrivate;
-
-    public bool IsMuted => Entry.IsMuted;
-
-    public BadgeMode XRestrictionCaption =>
-        Entry.XRestrict switch
-        {
-            XRestrict.R18G => BadgeMode.R18G,
-            _ => BadgeMode.R18
-        };
-
-    protected string ThumbnailUrl => Entry.GetThumbnailUrl();
+    protected abstract string ThumbnailUrl { get; }
 
     /// <summary>
     /// 缩略图图片
@@ -206,10 +168,7 @@ public abstract partial class ThumbnailEntryViewModel<T> : EntryViewModel<T>, IW
     {
     }
 
-    public bool Equals(ThumbnailEntryViewModel<T> x, ThumbnailEntryViewModel<T> y) => x.Entry.Equals(y.Entry);
-
     public override bool Equals(object? obj) => obj is ThumbnailEntryViewModel<T> viewModel && Entry.Equals(viewModel.Entry);
 
     public override int GetHashCode() => Entry.GetHashCode();
 }
-

@@ -23,7 +23,7 @@ using System.Text.Json.Serialization;
 
 namespace Pixeval.CoreApi.Model;
 
-public class Comment : IEntry
+public class Comment : IIdEntry
 {
     [JsonPropertyName("id")]
     public required long Id { get; set; }

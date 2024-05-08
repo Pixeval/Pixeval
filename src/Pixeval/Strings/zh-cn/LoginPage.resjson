@@ -10,7 +10,7 @@
     "SubmitWithNewAccountButton/Text": "登录并且不使用当前账号",
     "SubmitButton/Content": "登录",
     "RefreshTokenButton/Content": "使用刷新令牌登录",
-    "BrowserButton/Content": "使用Chrome/Edge浏览器登录🚧（测试）",
+    "BrowserButton/Content": "使用Chrome/Edge浏览器登录（测试🧪）",
     "WebViewButton/Content": "使用WebView登录",
     "RefreshTokenBox/PlaceholderText": "刷新令牌",
     "UserNameBox/PlaceholderText": "邮箱地址或pixiv ID",

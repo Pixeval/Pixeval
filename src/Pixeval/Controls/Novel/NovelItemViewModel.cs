@@ -1,8 +1,9 @@
-#region Copyright (c) Pixeval/Pixeval
+#region Copyright
+
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/SpotlightArticleViewModel.cs
+// Copyright (c) 2024 Pixeval/NovelItemViewModel.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -16,19 +17,24 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 #endregion
 
-using System;
+using System.Threading.Tasks;
 using Pixeval.CoreApi.Model;
-using Pixeval.Utilities;
 
-namespace Pixeval.Controls.SpotlightArticleView;
+namespace Pixeval.Controls;
 
-public class SpotlightArticleViewModel(SpotlightArticle illustrate) : EntryViewModel<SpotlightArticle>(illustrate)
+public partial class NovelItemViewModel(Novel novel) : WorkEntryViewModel<Novel>(novel), IViewModelFactory<Novel, NovelItemViewModel>
 {
-    public override void Dispose() => ThrowUtils.Throw(new());
+    public static NovelItemViewModel CreateInstance(Novel entry) => new(entry);
 
-    public override Uri AppUri => null!;
-    public override Uri WebUri => null!;
-    public override Uri PixEzUri => null!;
+    public int TextLength => Entry.TextLength;
+
+    public NovelContent? NovelContent { get; private set; }
+
+    public async Task<NovelContent> GetNovelContentAsync()
+    {
+        return NovelContent ??= await App.AppViewModel.MakoClient.GetNovelContentAsync(Id);
+    }
 }

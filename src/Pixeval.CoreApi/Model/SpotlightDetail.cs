@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval.CoreApi
+#region Copyright (c) Pixeval/Pixeval.CoreApi
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
@@ -22,4 +22,4 @@ using System.Collections.Generic;
 
 namespace Pixeval.CoreApi.Model;
 
-public record SpotlightDetail(SpotlightArticle SpotlightArticle, string Introduction, IEnumerable<Illustration> Illustrations);
+public record SpotlightDetail(Spotlight SpotlightArticle, string Introduction, IEnumerable<Illustration> Illustrations);

@@ -25,8 +25,10 @@ namespace Pixeval.CoreApi.Model;
 
 [DebuggerDisplay("{UserInfo}")]
 [Factory]
-public partial record User : IEntry
+public partial record User : IIdEntry
 {
+    public long Id => UserInfo.Id;
+
     [JsonPropertyName("user")]
     public required UserInfo UserInfo { get; set; }
 

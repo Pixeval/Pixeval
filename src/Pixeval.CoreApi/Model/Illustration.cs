@@ -38,7 +38,8 @@ public partial record Illustration : IWorkEntry
     public required string Title { get; set; } = "";
 
     [JsonPropertyName("type")]
-    public required string Type { get; set; } = "";
+    [JsonConverter(typeof(JsonStringEnumConverter<IllustrationType>))]
+    public required IllustrationType Type { get; set; }
 
     [JsonPropertyName("image_urls")]
     public required ImageUrls ThumbnailUrls { get; set; }
@@ -108,7 +109,7 @@ public partial record Illustration : IWorkEntry
     public required int IllustBookStyle { get; set; }
 
     [MemberNotNullWhen(true, nameof(OriginalSingleUrl))]
-    public bool IsUgoira => Type is "ugoira";
+    public bool IsUgoira => Type is IllustrationType.Ugoira;
 
     [MemberNotNullWhen(false, nameof(OriginalSingleUrl))]
     public bool IsManga => PageCount > 1;
@@ -179,4 +180,11 @@ public enum XRestrict
     Ordinary = 0,
     R18 = 1,
     R18G = 2
+}
+
+public enum IllustrationType
+{
+    Illust,
+    Manga,
+    Ugoira
 }

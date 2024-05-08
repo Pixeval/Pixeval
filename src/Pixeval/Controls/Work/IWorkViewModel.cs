@@ -59,18 +59,18 @@ public interface IWorkViewModel
 
     Uri PixEzUri { get; }
 
-    /// <inheritdoc cref="ThumbnailEntryViewModel{T}.AddToBookmarkCommand"/>
+    /// <inheritdoc cref="WorkEntryViewModel{T}.AddToBookmarkCommand"/>
     XamlUICommand AddToBookmarkCommand { get; }
 
-    /// <inheritdoc cref="ThumbnailEntryViewModel{T}.BookmarkCommand"/>
+    /// <inheritdoc cref="WorkEntryViewModel{T}.BookmarkCommand"/>
     XamlUICommand BookmarkCommand { get; }
 
-    /// <inheritdoc cref="ThumbnailEntryViewModel{T}.SaveCommand"/>
+    /// <inheritdoc cref="WorkEntryViewModel{T}.SaveCommand"/>
     XamlUICommand SaveCommand { get; }
 
-    /// <inheritdoc cref="ThumbnailEntryViewModel{T}.TryLoadThumbnailAsync"/>
+    /// <inheritdoc cref="WorkEntryViewModel{T}.TryLoadThumbnailAsync"/>
     ValueTask<bool> TryLoadThumbnailAsync(IDisposable key);
 
-    /// <inheritdoc cref="ThumbnailEntryViewModel{T}.UnloadThumbnail"/>
+    /// <inheritdoc cref="WorkEntryViewModel{T}.UnloadThumbnail"/>
     void UnloadThumbnail(IDisposable key);
 }

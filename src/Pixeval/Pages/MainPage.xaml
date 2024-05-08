@@ -99,7 +99,6 @@
                 <NavigationViewItem
                     x:Uid="/MainPage/SpotlightsTab"
                     Icon="{controls1:GlyphIcon Glyph=LibraryE8F1}"
-                    IsEnabled="False"
                     Tag="{x:Bind _viewModel.SpotlightsTag}" />
                 <NavigationViewItem
                     x:Uid="/MainPage/RecommendUsersTab"

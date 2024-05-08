@@ -75,7 +75,6 @@ public abstract class EntryViewModel<T>(T entry) : ObservableObject, IDisposable
     {
         UiHelper.ClipboardSetText(AppUri.OriginalString);
 
-
         if (args.Parameter is TeachingTip teachingTip && App.AppViewModel.AppSettings.DisplayTeachingTipWhenGeneratingAppLink)
         {
             teachingTip.IsOpen = true;

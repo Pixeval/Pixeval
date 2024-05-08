@@ -19,6 +19,9 @@
 #endregion
 
 using Pixeval.CoreApi.Model;
+using IllustrationViewDataProvider = Pixeval.Controls.SharableViewDataProvider<
+    Pixeval.CoreApi.Model.Illustration,
+    Pixeval.Controls.IllustrationItemViewModel>;
 
 namespace Pixeval.Controls;
 

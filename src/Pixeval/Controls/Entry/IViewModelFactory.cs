@@ -1,8 +1,9 @@
-#region Copyright (c) Pixeval/Pixeval
+#region Copyright
+
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/SpotlightArticleFetchEngineIncrementalSource.cs
+// Copyright (c) 2024 Pixeval/IViewModelFactory.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -16,17 +17,12 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 #endregion
 
-using System.Collections.Generic;
-using Pixeval.CoreApi.Model;
+namespace Pixeval.Controls;
 
-namespace Pixeval.Controls.SpotlightArticleView;
-
-public class SpotlightArticleFetchEngineIncrementalSource(IAsyncEnumerable<SpotlightArticle> asyncEnumerator, int limit = -1)
-    : FetchEngineIncrementalSource<SpotlightArticle, SpotlightArticleViewModel>(asyncEnumerator, limit)
+public interface IViewModelFactory<in T, out TSelf>
 {
-    protected override long Identifier(SpotlightArticle entity) => entity.Id;
-
-    protected override SpotlightArticleViewModel Select(SpotlightArticle entity) => new(entity);
+    static abstract TSelf CreateInstance(T entry);
 }

@@ -112,6 +112,12 @@ public static class MakoHelper
 
     public static Uri GenerateNovelAppUri(long id) => new($"{AppInfo.AppProtocol}://novel/{id}");
 
+    public static Uri GenerateSpotlightWebUri(long id) => new($"https://www.pixivision.net/a/{id}");
+
+    public static Uri GenerateSpotlightPixEzUri(long id) => new($"pixez://www.pixivision.net/a/{id}");
+
+    public static Uri GenerateSpotlightAppUri(long id) => new($"{AppInfo.AppProtocol}://spotlight/{id}");
+
     public static string GetThumbnailCacheKey(string url) => $"thumbnail-{url}";
 
     public static string GetOriginalCacheKey(string url) => $"original-{url}";

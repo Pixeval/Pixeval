@@ -272,12 +272,12 @@ public partial class MakoClient
     /// Request the spotlights in Pixiv.
     /// </summary>
     /// <returns>
-    /// The <see cref="SpotlightArticleEngine" /> containing the spotlight articles.
+    /// The <see cref="SpotlightEngine" /> containing the spotlight articles.
     /// </returns>
-    public IFetchEngine<SpotlightArticle> Spotlights()
+    public IFetchEngine<Spotlight> Spotlights()
     {
         EnsureNotCancelled();
-        return new SpotlightArticleEngine(this, new EngineHandle(CancelInstance));
+        return new SpotlightEngine(this, new EngineHandle(CancelInstance));
     }
 
     /// <summary>

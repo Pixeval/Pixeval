@@ -1,8 +1,8 @@
-#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval.CoreApi
 // GPL v3 License
 // 
-// Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/IllustratorViewModel.cs
+// Pixeval/Pixeval.CoreApi
+// Copyright (c) 2023 Pixeval.CoreApi/SpotlightArticleEngine.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,28 +18,18 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using CommunityToolkit.Mvvm.ComponentModel;
+using System.Collections.Generic;
+using System.Threading;
 using Pixeval.CoreApi.Model;
-using Pixeval.Util.UI;
 
-namespace Pixeval.Controls;
+namespace Pixeval.CoreApi.Engine.Implements;
 
-public sealed partial class IllustratorItemViewModel : EntryViewModel<User>
+internal class SpotlightEngine(MakoClient makoClient, EngineHandle? engineHandle)
+    : AbstractPixivFetchEngine<Spotlight>(makoClient, engineHandle)
 {
-    [ObservableProperty]
-    private bool _isFollowed;
-
-    public IllustratorItemViewModel(User user) : base(user)
-    {
-        IsFollowed = Entry.UserInfo.IsFollowed;
-
-        InitializeCommands();
-        FollowCommand.GetFollowCommand(IsFollowed);
-    }
-
-    public string Username => Entry.UserInfo.Name;
-
-    public long UserId => Entry.UserInfo.Id;
-
-    public string AvatarUrl => Entry.UserInfo.ProfileImageUrls.Medium;
+    public override IAsyncEnumerator<Spotlight> GetAsyncEnumerator(
+        CancellationToken cancellationToken = new CancellationToken()) =>
+        new RecursivePixivAsyncEnumerators.Spotlight<SpotlightEngine>(
+            this,
+            "/v1/spotlight/articles");
 }

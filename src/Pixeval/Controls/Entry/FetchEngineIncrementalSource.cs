@@ -22,12 +22,18 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.WinUI.Collections;
+using Pixeval.CoreApi.Engine;
+using Pixeval.CoreApi.Model;
 
 namespace Pixeval.Controls;
 
-public abstract class FetchEngineIncrementalSource<T, TModel>(IAsyncEnumerable<T?> asyncEnumerator, int limit = -1)
-    : IIncrementalSource<TModel>
+public class FetchEngineIncrementalSource<T, TViewModel>(IAsyncEnumerable<T?> asyncEnumerator, int limit = -1)
+    : IIncrementalSource<TViewModel>, IIncrementalSourceFactory<T, FetchEngineIncrementalSource<T, TViewModel>>
+    where T : IIdEntry
+    where TViewModel : IViewModelFactory<T, TViewModel>
 {
+    public static FetchEngineIncrementalSource<T, TViewModel> CreateInstance(IFetchEngine<T> fetchEngine, int limit = -1) => new(fetchEngine, limit);
+
     /// <summary>
     /// 当为null时暂时不报错
     /// </summary>
@@ -37,9 +43,9 @@ public abstract class FetchEngineIncrementalSource<T, TModel>(IAsyncEnumerable<T
 
     private int _yieldedCounter;
 
-    public virtual async Task<IEnumerable<TModel>> GetPagedItemsAsync(int pageIndex, int pageSize, CancellationToken cancellationToken = new CancellationToken())
+    public virtual async Task<IEnumerable<TViewModel>> GetPagedItemsAsync(int pageIndex, int pageSize, CancellationToken cancellationToken = new CancellationToken())
     {
-        var result = new List<TModel>();
+        var result = new List<TViewModel>();
         var i = 0;
         while (i < pageSize)
         {
@@ -67,7 +73,7 @@ public abstract class FetchEngineIncrementalSource<T, TModel>(IAsyncEnumerable<T
         return result;
     }
 
-    protected abstract long Identifier(T entity);
+    protected long Identifier(T entity) => entity.Id;
 
-    protected abstract TModel Select(T entity);
+    protected TViewModel Select(T entity) => TViewModel.CreateInstance(entity);
 }

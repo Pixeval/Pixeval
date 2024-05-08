@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/IllustratorFetchEngineIncrementalSource.cs
+// Copyright (c) 2023 Pixeval/SpotlightArticleViewModel.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,14 +18,23 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System.Collections.Generic;
+using System;
 using Pixeval.CoreApi.Model;
+using Pixeval.Util;
 
 namespace Pixeval.Controls;
 
-public class IllustratorFetchEngineIncrementalSource(IAsyncEnumerable<User> asyncEnumerator, int limit = -1) : FetchEngineIncrementalSource<User, IllustratorItemViewModel>(asyncEnumerator, limit)
+public class SpotlightItemViewModel : ThumbnailEntryViewModel<Spotlight>, IViewModelFactory<Spotlight, SpotlightItemViewModel>
 {
-    protected override long Identifier(User entity) => entity.UserInfo.Id;
+    public static SpotlightItemViewModel CreateInstance(Spotlight entry) => new(entry);
 
-    protected override IllustratorItemViewModel Select(User entity) => new(entity);
+    public SpotlightItemViewModel(Spotlight spotlight) : base(spotlight) => InitializeCommandsBase();
+
+    protected override string ThumbnailUrl => Entry.Thumbnail;
+
+    public override Uri AppUri => MakoHelper.GenerateSpotlightAppUri(Id);
+
+    public override Uri WebUri => MakoHelper.GenerateSpotlightWebUri(Id);
+
+    public override Uri PixEzUri => MakoHelper.GenerateSpotlightPixEzUri(Id);
 }
