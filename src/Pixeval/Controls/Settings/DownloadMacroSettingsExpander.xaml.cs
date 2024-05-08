@@ -16,7 +16,6 @@ using Pixeval.Download.Models;
 using Pixeval.Settings.Models;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
-using WinRT;
 using WinUI3Utilities;
 
 namespace Pixeval.Controls.Settings;
