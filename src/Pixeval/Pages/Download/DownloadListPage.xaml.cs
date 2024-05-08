@@ -144,5 +144,11 @@ public sealed partial class DownloadListPage
         _ = await viewModel.TryLoadThumbnailAsync(_viewModel);
     }
 
-    private void DownloadListPage_OnUnloaded(object sender, RoutedEventArgs e) => _viewModel.Dispose();
+    private void DownloadListPage_OnUnloaded(object sender, RoutedEventArgs e)
+    {
+        var dataProvider = _viewModel.DataProvider;
+        foreach (var viewModel in dataProvider.Source)
+            viewModel.UnloadThumbnail(dataProvider);
+        _viewModel.Dispose();
+    }
 }

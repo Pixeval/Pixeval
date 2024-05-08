@@ -27,7 +27,10 @@ using Pixeval.CoreApi.Model;
 
 namespace Pixeval.Controls;
 
-public interface IDataProvider<T, TViewModel> : INotifyPropertyChanged, INotifyPropertyChanging, IDisposable where T : class, IEntry where TViewModel : class
+public interface IDataProvider<T, TViewModel>
+    : INotifyPropertyChanged, INotifyPropertyChanging, IDisposable
+    where T : class, IIdEntry
+    where TViewModel : class, IViewModelFactory<T, TViewModel>
 {
     AdvancedObservableCollection<TViewModel> View { get; }
 

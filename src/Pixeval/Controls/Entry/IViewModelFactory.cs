@@ -1,8 +1,9 @@
-#region Copyright (c) Pixeval/Pixeval
+#region Copyright
+
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/IllustratorFetchEngineIncrementalSource.cs
+// Copyright (c) 2024 Pixeval/IViewModelFactory.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -16,16 +17,12 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#endregion
 
-using System.Collections.Generic;
-using Pixeval.CoreApi.Model;
+#endregion
 
 namespace Pixeval.Controls;
 
-public class IllustratorFetchEngineIncrementalSource(IAsyncEnumerable<User> asyncEnumerator, int limit = -1) : FetchEngineIncrementalSource<User, IllustratorItemViewModel>(asyncEnumerator, limit)
+public interface IViewModelFactory<in T, out TSelf>
 {
-    protected override long Identifier(User entity) => entity.Id;
-
-    protected override IllustratorItemViewModel Select(User entity) => new(entity);
+    static abstract TSelf CreateInstance(T entry);
 }

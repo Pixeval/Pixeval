@@ -19,6 +19,9 @@
 #endregion
 
 using Pixeval.CoreApi.Model;
+using SpotlightViewDataProvider = Pixeval.Controls.SimpleViewDataProvider<
+    Pixeval.CoreApi.Model.Spotlight,
+    Pixeval.Controls.SpotlightItemViewModel>;
 
 namespace Pixeval.Controls;
 

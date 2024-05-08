@@ -24,8 +24,10 @@ using Pixeval.Util.UI;
 
 namespace Pixeval.Controls;
 
-public sealed partial class IllustratorItemViewModel : EntryViewModel<User>
+public sealed partial class IllustratorItemViewModel : EntryViewModel<User>, IViewModelFactory<User, IllustratorItemViewModel>
 {
+    public static IllustratorItemViewModel CreateInstance(User entry) => new(entry);
+
     [ObservableProperty]
     private bool _isFollowed;
 

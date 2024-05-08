@@ -20,11 +20,8 @@ public class DownloadListEntryDataProvider : ObservableObject, IDisposable
     public void Dispose()
     {
         if (Source is { } source)
-            foreach (var illustrationViewModel in source)
-            {
-                illustrationViewModel.UnloadThumbnail(this);
-                illustrationViewModel.Dispose();
-            }
+            foreach (var downloadListEntry in source)
+                downloadListEntry.Dispose();
 
         View.Clear();
     }

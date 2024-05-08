@@ -25,8 +25,10 @@ using Pixeval.CoreApi.Model;
 
 namespace Pixeval.Controls;
 
-public partial class NovelItemViewModel(Novel novel) : WorkEntryViewModel<Novel>(novel)
+public partial class NovelItemViewModel(Novel novel) : WorkEntryViewModel<Novel>(novel), IViewModelFactory<Novel, NovelItemViewModel>
 {
+    public static NovelItemViewModel CreateInstance(Novel entry) => new(entry);
+
     public int TextLength => Entry.TextLength;
 
     public NovelContent? NovelContent { get; private set; }

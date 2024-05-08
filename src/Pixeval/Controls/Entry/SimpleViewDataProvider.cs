@@ -27,14 +27,9 @@ using Pixeval.CoreApi.Model;
 
 namespace Pixeval.Controls;
 
-public class IllustratorViewDataProvider : SimpleViewDataProvider<User, IllustratorItemViewModel>
-{
-    protected override FetchEngineIncrementalSource<User, IllustratorItemViewModel> NewFetchEngineIncrementalSource(IFetchEngine<User> fetchEngine, int limit = -1) => new IllustratorFetchEngineIncrementalSource(fetchEngine, limit);
-}
-
-public abstract class SimpleViewDataProvider<T, TViewModel> : ObservableObject, IDataProvider<T, TViewModel> 
-    where T : class, IEntry
-    where TViewModel : class, IDisposable
+public class SimpleViewDataProvider<T, TViewModel> : ObservableObject, IDataProvider<T, TViewModel> 
+    where T : class, IIdEntry
+    where TViewModel : class, IViewModelFactory<T, TViewModel>, IDisposable
 {
     private IFetchEngine<T>? _fetchEngine;
 
@@ -72,8 +67,6 @@ public abstract class SimpleViewDataProvider<T, TViewModel> : ObservableObject, 
         Dispose();
         FetchEngine = fetchEngine;
 
-        Source = new IncrementalLoadingCollection<FetchEngineIncrementalSource<T, TViewModel>, TViewModel>(NewFetchEngineIncrementalSource(FetchEngine!, limit));
+        Source = new IncrementalLoadingCollection<FetchEngineIncrementalSource<T, TViewModel>, TViewModel>(FetchEngineIncrementalSource<T, TViewModel>.CreateInstance(FetchEngine!, limit));
     }
-
-    protected abstract FetchEngineIncrementalSource<T, TViewModel> NewFetchEngineIncrementalSource(IFetchEngine<T> fetchEngine, int limit = -1);
 }
