@@ -50,17 +50,17 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
 {
     public DateTimeOffset LastCheckedUpdate
     {
-        get => AppSetting.LastCheckedUpdate;
-        set => SetProperty(AppSetting.LastCheckedUpdate, value, AppSetting, (@setting, @value) => @setting.LastCheckedUpdate = @value);
+        get => AppSettings.LastCheckedUpdate;
+        set => SetProperty(AppSettings.LastCheckedUpdate, value, AppSettings, (@setting, @value) => @setting.LastCheckedUpdate = @value);
     }
 
     public bool DownloadUpdateAutomatically
     {
-        get => AppSetting.DownloadUpdateAutomatically;
-        set => SetProperty(AppSetting.DownloadUpdateAutomatically, value, AppSetting, (@setting, @value) => @setting.DownloadUpdateAutomatically = @value);
+        get => AppSettings.DownloadUpdateAutomatically;
+        set => SetProperty(AppSettings.DownloadUpdateAutomatically, value, AppSettings, (@setting, @value) => @setting.DownloadUpdateAutomatically = @value);
     }
 
-    public AppSettings AppSetting => App.AppViewModel.AppSettings;
+    public AppSettings AppSettings => App.AppViewModel.AppSettings;
 
     [ObservableProperty] private bool _checkingUpdate;
 
@@ -81,35 +81,35 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
         [
             new(SettingsEntryCategory.Application)
             {
-                new EnumAppSettingsEntry<ElementTheme>(AppSetting,
+                new EnumAppSettingsEntry<ElementTheme>(AppSettings,
                     nameof(AppSettings.Theme)) { ValueChanged = t => WindowFactory.SetTheme((ElementTheme)t) },
-                new EnumAppSettingsEntry<BackdropType>(AppSetting,
+                new EnumAppSettingsEntry<BackdropType>(AppSettings,
                     nameof(AppSettings.Backdrop)) { ValueChanged = t => WindowFactory.SetBackdrop((BackdropType)t) },
-                new FontAppSettingsEntry(AppSetting),
-                new LanguageAppSettingsEntry(AppSetting),
-                new IpWithSwitchAppSettingsEntry(AppSetting)
+                new FontAppSettingsEntry(AppSettings),
+                new LanguageAppSettingsEntry(AppSettings),
+                new IpWithSwitchAppSettingsEntry(AppSettings)
                 {
                     ValueChanged = t => App.AppViewModel.MakoClient.Configuration.DomainFronting = t
                 },
-                new BoolAppSettingsEntry(AppSetting,
+                new BoolAppSettingsEntry(AppSettings,
                     nameof(AppSettings.UseFileCache)),
-                new BoolAppSettingsEntry(AppSetting,
+                new BoolAppSettingsEntry(AppSettings,
                     nameof(AppSettings.DisplayTeachingTipWhenGeneratingAppLink)),
-                new EnumAppSettingsEntry<MainPageTabItem>(AppSetting,
+                new EnumAppSettingsEntry<MainPageTabItem>(AppSettings,
                     nameof(AppSettings.DefaultSelectedTabItem))
             },
             new(SettingsEntryCategory.BrowsingExperience)
             {
-                new EnumAppSettingsEntry<ThumbnailDirection>(AppSetting,
+                new EnumAppSettingsEntry<ThumbnailDirection>(AppSettings,
                     nameof(AppSettings.ThumbnailDirection)),
-                new EnumAppSettingsEntry<ItemsViewLayoutType>(AppSetting,
+                new EnumAppSettingsEntry<ItemsViewLayoutType>(AppSettings,
                     nameof(AppSettings.ItemsViewLayoutType)),
-                new EnumAppSettingsEntry<TargetFilter>(AppSetting,
+                new EnumAppSettingsEntry<TargetFilter>(AppSettings,
                     nameof(AppSettings.TargetFilter)),
-                new TokenizingAppSettingsEntry(AppSetting),
-                new BoolAppSettingsEntry(AppSetting,
+                new TokenizingAppSettingsEntry(AppSettings),
+                new BoolAppSettingsEntry(AppSettings,
                     nameof(AppSettings.BrowserOriginalImage)),
-                new ClickableAppSettingsEntry(AppSetting,
+                new ClickableAppSettingsEntry(AppSettings,
                     SettingsPageResources.ViewingRestrictionEntryHeader,
                     SettingsPageResources.ViewingRestrictionEntryDescription,
                     IconGlyph.BlockContactE8F8,
@@ -117,109 +117,109 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
             },
             new(SettingsEntryCategory.Search)
             {
-                new StringAppSettingsEntry(AppSetting,
+                new StringAppSettingsEntry(AppSettings,
                     nameof(AppSettings.ReverseSearchApiKey))
                 {
                     DescriptionUri = new Uri("https://saucenao.com/user.php?page=search-api"),
                     Placeholder = SettingsPageResources.ReverseSearchApiKeyTextBoxPlaceholderText
                 },
-                new IntAppSettingsEntry(AppSetting,
+                new IntAppSettingsEntry(AppSettings,
                     nameof(AppSettings.ReverseSearchResultSimilarityThreshold))
                 {
                     Max = 100,
                     Min = 1
                 },
-                new IntAppSettingsEntry(AppSetting,
+                new IntAppSettingsEntry(AppSettings,
                     nameof(AppSettings.MaximumSearchHistoryRecords))
                 {
                     Max = 200,
                     Min = 10
                 },
-                new IntAppSettingsEntry(AppSetting,
+                new IntAppSettingsEntry(AppSettings,
                     nameof(AppSettings.MaximumSuggestionBoxSearchHistory))
                 {
                     Max = 20,
                     Min = 0
                 },
-                new EnumAppSettingsEntry<WorkSortOption>(AppSetting,
+                new EnumAppSettingsEntry<WorkSortOption>(AppSettings,
                     nameof(AppSettings.WorkSortOption)),
-                new EnumAppSettingsEntry<SimpleWorkType>(AppSetting,
+                new EnumAppSettingsEntry<SimpleWorkType>(AppSettings,
                     nameof(AppSettings.SimpleWorkType)),
-                new MultiValuesAppSettingsEntry(AppSetting,
+                new MultiValuesAppSettingsEntry(AppSettings,
                     SettingsPageResources.RankOptionEntryHeader,
                     SettingsPageResources.RankOptionEntryDescription,
                     IconGlyph.MarketEAFC,
                     [
-                        new EnumAppSettingsEntry<RankOption>(AppSetting,
+                        new EnumAppSettingsEntry<RankOption>(AppSettings,
                             WorkTypeEnum.Illustration,
                             nameof(AppSettings.IllustrationRankOption)),
-                        new EnumAppSettingsEntry(AppSetting,
+                        new EnumAppSettingsEntry(AppSettings,
                             WorkTypeEnum.Novel,
                             nameof(AppSettings.NovelRankOption),
                             RankOptionExtension.NovelRankOptions)
                     ]),
-                new MultiValuesAppSettingsEntry(AppSetting,
+                new MultiValuesAppSettingsEntry(AppSettings,
                     SettingsPageResources.DefaultSearchTagMatchOptionEntryHeader,
                     SettingsPageResources.DefaultSearchTagMatchOptionEntryDescription,
                     IconGlyph.PassiveAuthenticationF32A,
                     [
-                        new EnumAppSettingsEntry<SearchIllustrationTagMatchOption>(AppSetting,
+                        new EnumAppSettingsEntry<SearchIllustrationTagMatchOption>(AppSettings,
                             WorkTypeEnum.Illustration,
                             nameof(AppSettings.SearchIllustrationTagMatchOption)),
-                        new EnumAppSettingsEntry<SearchNovelTagMatchOption>(AppSetting,
+                        new EnumAppSettingsEntry<SearchNovelTagMatchOption>(AppSettings,
                             WorkTypeEnum.Novel,
                             nameof(AppSettings.SearchNovelTagMatchOption))
                     ]),
-                new EnumAppSettingsEntry<SearchDuration>(AppSetting,
+                new EnumAppSettingsEntry<SearchDuration>(AppSettings,
                     nameof(AppSettings.SearchDuration)),
-                new DateRangeWithSwitchAppSettingsEntry(AppSetting)
+                new DateRangeWithSwitchAppSettingsEntry(AppSettings)
             },
             new(SettingsEntryCategory.Download)
             {
-                new IntAppSettingsEntry(AppSetting,
+                new IntAppSettingsEntry(AppSettings,
                     nameof(AppSettings.MaximumDownloadHistoryRecords))
                 {
                     Max = 200,
                     Min = 10
                 },
-                new BoolAppSettingsEntry(AppSetting,
+                new BoolAppSettingsEntry(AppSettings,
                     nameof(AppSettings.OverwriteDownloadedFile)),
-                new IntAppSettingsEntry(AppSetting,
+                new IntAppSettingsEntry(AppSettings,
                     nameof(AppSettings.MaxDownloadTaskConcurrencyLevel))
                 {
                     Max = Environment.ProcessorCount,
                     Min = 1,
                     ValueChanged = t => App.AppViewModel.DownloadManager.ConcurrencyDegree = t
                 },
-                new DownloadMacroAppSettingsEntry(AppSetting),
-                new MultiValuesAppSettingsEntry(AppSetting,
+                new DownloadMacroAppSettingsEntry(AppSettings),
+                new MultiValuesAppSettingsEntry(AppSettings,
                     SettingsPageResources.WorkDownloadFormatEntryHeader,
                     SettingsPageResources.WorkDownloadFormatEntryDescription,
                     IconGlyph.CaptionE8BA,
                     [
-                        new EnumAppSettingsEntry<IllustrationDownloadFormat>(AppSetting,
+                        new EnumAppSettingsEntry<IllustrationDownloadFormat>(AppSettings,
                             WorkTypeEnum.Illustration,
                             nameof(AppSettings.IllustrationDownloadFormat)),
-                        new EnumAppSettingsEntry<UgoiraDownloadFormat>(AppSetting,
+                        new EnumAppSettingsEntry<UgoiraDownloadFormat>(AppSettings,
                             WorkTypeEnum.Ugoira,
                             nameof(AppSettings.UgoiraDownloadFormat)),
-                        new EnumAppSettingsEntry<NovelDownloadFormat>(AppSetting,
+                        new EnumAppSettingsEntry<NovelDownloadFormat>(AppSettings,
                             WorkTypeEnum.Novel,
                             nameof(AppSettings.NovelDownloadFormat))
                     ]),
-                new BoolAppSettingsEntry(AppSetting,
+                new BoolAppSettingsEntry(AppSettings,
                     nameof(AppSettings.DownloadWhenBookmarked))
             },
             new(SettingsEntryCategory.Misc)
             {
-                new IntAppSettingsEntry(AppSetting,
+                new IntAppSettingsEntry(AppSettings,
                     nameof(AppSettings.MaximumBrowseHistoryRecords))
                 {
                     Placeholder = SettingsPageResources.MaximumBrowseHistoryRecordsNumerBoxPlaceholderText,
                     Max = 200,
                     Min = 10
                 },
-                new StringAppSettingsEntry(AppSetting,
+                new StringAppSettingsEntry(AppSettings,
                     nameof(AppSettings.MirrorHost))
                 {
                     Placeholder = SettingsPageResources.ImageMirrorServerTextBoxPlaceholderText,

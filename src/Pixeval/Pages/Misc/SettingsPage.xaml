@@ -80,7 +80,7 @@
                     </controls:WrapPanel>
                 </Grid>
                 <!--  endregion  -->
-                <!--  region Setting Entries  -->
+                <!--  region Settings Entries  -->
                 <TextBlock
                     x:Uid="/SettingsPage/VersionSettingsGroup"
                     Style="{StaticResource SettingHeaderStyle}"

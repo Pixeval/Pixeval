@@ -36,7 +36,7 @@ using Pixeval.CoreApi.Model;
 namespace Pixeval.Pages.Download;
 
 /// <inheritdoc/>
-public sealed class DownloadListEntryViewModel : ThumbnailEntryViewModel<IWorkEntry>
+public sealed class DownloadListEntryViewModel : WorkEntryViewModel<IWorkEntry>
 {
     public DownloadTaskBase DownloadTask { get; }
 

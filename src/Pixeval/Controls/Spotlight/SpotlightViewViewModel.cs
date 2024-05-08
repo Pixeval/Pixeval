@@ -1,8 +1,8 @@
-#region Copyright (c) Pixeval/Pixeval.CoreApi
+#region Copyright
 // GPL v3 License
 // 
-// Pixeval/Pixeval.CoreApi
-// Copyright (c) 2023 Pixeval.CoreApi/SpotlightArticle.cs
+// Pixeval/Pixeval
+// Copyright (c) 2024 Pixeval/SpotlightViewViewModel.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,25 +18,13 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System;
-using System.Text.Json.Serialization;
+using Pixeval.CoreApi.Model;
 
-namespace Pixeval.CoreApi.Model;
+namespace Pixeval.Controls;
 
-public record SpotlightArticle : IEntry
+public sealed class SpotlightViewViewModel : EntryViewViewModel<Spotlight, SpotlightItemViewModel>
 {
-    [JsonPropertyName("id")]
-    public required long Id { get; set; }
+    public override SpotlightViewDataProvider DataProvider { get; } = new();
 
-    [JsonPropertyName("title")]
-    public required string Title { get; set; }
-
-    [JsonPropertyName("thumbnail")]
-    public required string Thumbnail { get; set; }
-
-    [JsonPropertyName("article_url")]
-    public required string ArticleUrl { get; set; }
-
-    [JsonPropertyName("publish_date")]
-    public required DateTimeOffset PublishDate { get; set; }
+    public SpotlightViewViewModel() => DataProvider.View.CollectionChanged += (_, _) => OnPropertyChanged(nameof(HasNoItem));
 }

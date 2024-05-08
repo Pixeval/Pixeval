@@ -1,8 +1,9 @@
-#region Copyright (c) Pixeval/Pixeval.CoreApi
+#region Copyright
+
 // GPL v3 License
 // 
-// Pixeval/Pixeval.CoreApi
-// Copyright (c) 2023 Pixeval.CoreApi/PixivSpotlightResponse.cs
+// Pixeval/Pixeval
+// Copyright (c) 2024 Pixeval/NovelItemViewModel.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -16,16 +17,22 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 #endregion
 
-using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 using Pixeval.CoreApi.Model;
 
-namespace Pixeval.CoreApi.Net.Response;
+namespace Pixeval.Controls;
 
-[Factory]
-internal partial record PixivSpotlightResponse : PixivNextUrlResponse<Spotlight>
+public partial class NovelItemViewModel(Novel novel) : WorkEntryViewModel<Novel>(novel)
 {
-    [JsonPropertyName("spotlight_articles")]
-    public override required Spotlight[] Entities { get; set; } = [];
+    public int TextLength => Entry.TextLength;
+
+    public NovelContent? NovelContent { get; private set; }
+
+    public async Task<NovelContent> GetNovelContentAsync()
+    {
+        return NovelContent ??= await App.AppViewModel.MakoClient.GetNovelContentAsync(Id);
+    }
 }

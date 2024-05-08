@@ -39,7 +39,7 @@ public sealed partial class IllustratorItemViewModel : EntryViewModel<User>
 
     public string Username => Entry.UserInfo.Name;
 
-    public long UserId => Entry.UserInfo.Id;
+    public long UserId => Entry.Id;
 
     public string AvatarUrl => Entry.UserInfo.ProfileImageUrls.Medium;
 }

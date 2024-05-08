@@ -20,15 +20,19 @@
 
 using System;
 using Pixeval.CoreApi.Model;
-using Pixeval.Utilities;
+using Pixeval.Util;
 
-namespace Pixeval.Controls.SpotlightArticleView;
+namespace Pixeval.Controls;
 
-public class SpotlightArticleViewModel(SpotlightArticle illustrate) : EntryViewModel<SpotlightArticle>(illustrate)
+public class SpotlightItemViewModel : ThumbnailEntryViewModel<Spotlight>
 {
-    public override void Dispose() => ThrowUtils.Throw(new());
+    public SpotlightItemViewModel(Spotlight spotlight) : base(spotlight) => InitializeCommandsBase();
 
-    public override Uri AppUri => null!;
-    public override Uri WebUri => null!;
-    public override Uri PixEzUri => null!;
+    protected override string ThumbnailUrl => Entry.Thumbnail;
+
+    public override Uri AppUri => MakoHelper.GenerateSpotlightAppUri(Id);
+
+    public override Uri WebUri => MakoHelper.GenerateSpotlightWebUri(Id);
+
+    public override Uri PixEzUri => MakoHelper.GenerateSpotlightPixEzUri(Id);
 }

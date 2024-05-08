@@ -33,13 +33,11 @@ using Pixeval.Utilities.Threading;
 
 namespace Pixeval.Controls;
 
-public abstract partial class ThumbnailEntryViewModel<T> : EntryViewModel<T>, IWorkViewModel where T : class, IWorkEntry
+public abstract partial class WorkEntryViewModel<T> : ThumbnailEntryViewModel<T>, IWorkViewModel where T : class, IWorkEntry
 {
-    protected ThumbnailEntryViewModel(T entry) : base(entry) => InitializeCommands();
+    protected WorkEntryViewModel(T entry) : base(entry) => InitializeCommands();
 
     IWorkEntry IWorkViewModel.Entry => Entry;
-
-    public long Id => Entry.Id;
 
     public int TotalBookmarks => Entry.TotalBookmarks;
 
@@ -76,7 +74,17 @@ public abstract partial class ThumbnailEntryViewModel<T> : EntryViewModel<T>, IW
             _ => BadgeMode.R18
         };
 
-    protected string ThumbnailUrl => Entry.GetThumbnailUrl();
+    protected override string ThumbnailUrl => Entry.GetThumbnailUrl();
+}
+
+
+
+public abstract class ThumbnailEntryViewModel<T>(T entry) : EntryViewModel<T>(entry)
+    where T : class, IIdEntry
+{
+    public long Id => Entry.Id;
+
+    protected abstract string ThumbnailUrl { get; }
 
     /// <summary>
     /// 缩略图图片
@@ -206,10 +214,7 @@ public abstract partial class ThumbnailEntryViewModel<T> : EntryViewModel<T>, IW
     {
     }
 
-    public bool Equals(ThumbnailEntryViewModel<T> x, ThumbnailEntryViewModel<T> y) => x.Entry.Equals(y.Entry);
-
     public override bool Equals(object? obj) => obj is ThumbnailEntryViewModel<T> viewModel && Entry.Equals(viewModel.Entry);
 
     public override int GetHashCode() => Entry.GetHashCode();
 }
-

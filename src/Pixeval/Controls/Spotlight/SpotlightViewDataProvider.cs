@@ -1,8 +1,8 @@
-#region Copyright (c) Pixeval/Pixeval.CoreApi
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
-// Pixeval/Pixeval.CoreApi
-// Copyright (c) 2023 Pixeval.CoreApi/PixivSpotlightResponse.cs
+// Pixeval/Pixeval
+// Copyright (c) 2023 Pixeval/SpotlightArticleViewDataProvider.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,14 +18,12 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System.Text.Json.Serialization;
+using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Model;
 
-namespace Pixeval.CoreApi.Net.Response;
+namespace Pixeval.Controls;
 
-[Factory]
-internal partial record PixivSpotlightResponse : PixivNextUrlResponse<Spotlight>
+public class SpotlightViewDataProvider : SimpleViewDataProvider<Spotlight, SpotlightItemViewModel>
 {
-    [JsonPropertyName("spotlight_articles")]
-    public override required Spotlight[] Entities { get; set; } = [];
+    protected override FetchEngineIncrementalSource<Spotlight, SpotlightItemViewModel> NewFetchEngineIncrementalSource(IFetchEngine<Spotlight> fetchEngine, int limit = -1) => new SpotlightFetchEngineIncrementalSource(fetchEngine, limit);
 }

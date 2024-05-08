@@ -12,7 +12,7 @@
     "DownloadListTab/Content": "Download Manager",
     "HelpTab/Content": "Help",
     "AboutTab/Content": "About",
-    "SettingsTab/Content": "Setting",
+    "SettingsTab/Content": "Settings",
     "OpenSearchSettingButton/ToolTipService/ToolTip": "Search for settings",
     "ReverseSearchButton/ToolTipService/ToolTip": "Reverse search",
     "MainPageAutoSuggestionBox/PlaceholderText": "Work ID/Work title/Artist ID/Artist title/Setting entry",

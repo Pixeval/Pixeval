@@ -1,9 +1,8 @@
-#region Copyright
-
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2024 Pixeval/NovelItemViewModel.cs
+// Copyright (c) 2023 Pixeval/SpotlightArticleFetchEngineIncrementalSource.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -17,22 +16,17 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 #endregion
 
-using System.Threading.Tasks;
+using System.Collections.Generic;
 using Pixeval.CoreApi.Model;
 
 namespace Pixeval.Controls;
 
-public partial class NovelItemViewModel(Novel novel) : ThumbnailEntryViewModel<Novel>(novel)
+public class SpotlightFetchEngineIncrementalSource(IAsyncEnumerable<Spotlight> asyncEnumerator, int limit = -1)
+    : FetchEngineIncrementalSource<Spotlight, SpotlightItemViewModel>(asyncEnumerator, limit)
 {
-    public int TextLength => Entry.TextLength;
+    protected override long Identifier(Spotlight entity) => entity.Id;
 
-    public NovelContent? NovelContent { get; private set; }
-
-    public async Task<NovelContent> GetNovelContentAsync()
-    {
-        return NovelContent ??= await App.AppViewModel.MakoClient.GetNovelContentAsync(Id);
-    }
+    protected override SpotlightItemViewModel Select(Spotlight entity) => new(entity);
 }

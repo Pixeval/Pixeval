@@ -77,7 +77,7 @@ public class BookmarkPageViewModel(long userId) : ObservableObject, IDisposable
     /// Fuck Pixiv: The results from web API and the results from app API have different formats and json schemas,
     /// so the only useful thing we can get from web API are the IDs of those illustrations belonging to the specific tag,
     /// but the API is paged, which means we can get at most 100 IDs per request, so this is a gradual process, to prevent
-    /// from waiting for too long before all IDs are fetched, we choose an incremental way, i.e., instead of setting the filter
+    /// from waiting for too long before all IDs are fetched, we choose an incremental way, i.e., instead of settings the filter
     /// after all IDs are fetched, we update the filter whenever new IDs are available.
     /// </summary>
     /// <param name="tag"></param>

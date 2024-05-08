@@ -23,10 +23,11 @@ using System.ComponentModel;
 using CommunityToolkit.WinUI.Collections;
 using Pixeval.Collections;
 using Pixeval.CoreApi.Engine;
+using Pixeval.CoreApi.Model;
 
 namespace Pixeval.Controls;
 
-public interface IDataProvider<T, TViewModel> : INotifyPropertyChanged, INotifyPropertyChanging, IDisposable where T : class where TViewModel : class
+public interface IDataProvider<T, TViewModel> : INotifyPropertyChanged, INotifyPropertyChanging, IDisposable where T : class, IEntry where TViewModel : class
 {
     AdvancedObservableCollection<TViewModel> View { get; }
 

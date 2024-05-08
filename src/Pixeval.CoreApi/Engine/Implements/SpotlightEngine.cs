@@ -1,8 +1,8 @@
-#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval.CoreApi
 // GPL v3 License
 // 
-// Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/IllustratorFetchEngineIncrementalSource.cs
+// Pixeval/Pixeval.CoreApi
+// Copyright (c) 2023 Pixeval.CoreApi/SpotlightArticleEngine.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -19,13 +19,17 @@
 #endregion
 
 using System.Collections.Generic;
+using System.Threading;
 using Pixeval.CoreApi.Model;
 
-namespace Pixeval.Controls;
+namespace Pixeval.CoreApi.Engine.Implements;
 
-public class IllustratorFetchEngineIncrementalSource(IAsyncEnumerable<User> asyncEnumerator, int limit = -1) : FetchEngineIncrementalSource<User, IllustratorItemViewModel>(asyncEnumerator, limit)
+internal class SpotlightEngine(MakoClient makoClient, EngineHandle? engineHandle)
+    : AbstractPixivFetchEngine<Spotlight>(makoClient, engineHandle)
 {
-    protected override long Identifier(User entity) => entity.UserInfo.Id;
-
-    protected override IllustratorItemViewModel Select(User entity) => new(entity);
+    public override IAsyncEnumerator<Spotlight> GetAsyncEnumerator(
+        CancellationToken cancellationToken = new CancellationToken()) =>
+        new RecursivePixivAsyncEnumerators.Spotlight<SpotlightEngine>(
+            this,
+            "/v1/spotlight/articles");
 }

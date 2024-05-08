@@ -32,7 +32,7 @@ using Pixeval.Utilities.Threading;
 
 namespace Pixeval.Download.Models;
 
-public abstract class DownloadTaskBase(DownloadHistoryEntry entry) : ObservableObject, IProgress<double>, IEntry
+public abstract class DownloadTaskBase(DownloadHistoryEntry entry) : ObservableObject, IProgress<double>, IIdEntry
 {
     public abstract IWorkViewModel ViewModel { get; }
     private Exception? _errorCause;

@@ -29,7 +29,7 @@ using WinUI3Utilities.Controls;
 
 namespace Pixeval.Controls;
 
-public partial class ThumbnailEntryViewModel<T>
+public partial class WorkEntryViewModel<T>
 {
     /// <summary>
     /// Parameter: <see cref="ValueTuple{T1, T2, T3}"/>

@@ -144,4 +144,8 @@ internal static class RecursivePixivAsyncEnumerators
     public class BookmarkTag<TFetchEngine>(TFetchEngine pixivFetchEngine, string initialUrl)
         : BaseRecursivePixivAsyncEnumerator<BookmarkTag, PixivBookmarkTagResponse, TFetchEngine>(pixivFetchEngine, MakoApiKind.AppApi, initialUrl)
         where TFetchEngine : class, IFetchEngine<BookmarkTag>;
+
+    public class Spotlight<TFetchEngine>(TFetchEngine pixivFetchEngine, string initialUrl)
+        : BaseRecursivePixivAsyncEnumerator<Spotlight, PixivSpotlightResponse, TFetchEngine>(pixivFetchEngine, MakoApiKind.AppApi, initialUrl)
+        where TFetchEngine : class, IFetchEngine<Spotlight>;
 }

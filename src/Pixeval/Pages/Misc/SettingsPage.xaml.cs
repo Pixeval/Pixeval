@@ -96,7 +96,7 @@ public sealed partial class SettingsPage : IScrollViewHost, IDisposable
         if (await this.CreateOkCancelAsync(SettingsPageResources.ResetSettingConfirmationDialogTitle,
                 SettingsPageResources.ResetSettingConfirmationDialogContent) is ContentDialogResult.Primary)
         {
-            ViewModel.AppSetting.ResetDefault();
+            ViewModel.AppSettings.ResetDefault();
             foreach (var simpleSettingsGroup in ViewModel.Groups)
                 foreach (var settingsEntry in simpleSettingsGroup)
                     settingsEntry.ValueReset();
@@ -157,7 +157,7 @@ public sealed partial class SettingsPage : IScrollViewHost, IDisposable
         foreach (var simpleSettingsGroup in ViewModel.Groups)
             foreach (var settingsEntry in simpleSettingsGroup)
                 settingsEntry.ValueSaving();
-        AppInfo.SaveConfig(ViewModel.AppSetting);
+        AppInfo.SaveConfig(ViewModel.AppSettings);
         ViewModel.Dispose();
         ViewModel = null!;
     }
