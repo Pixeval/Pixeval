@@ -126,15 +126,24 @@
                             Tag="Temp"
                             Tapped="OpenFolder_OnTapped" />
                         <controls:SettingsCard
-                            x:Uid="/SettingsPage/GitHubCheckForUpdatesEntry"
+                            x:Uid="/SettingsPage/MsStoreCheckForUpdatesEntry"
+                            Description="ms-windows-store://pdp/?ProductId=9P1RZL9Z8454"
                             IsClickEnabled="True"
-                            Tapped="CheckForUpdateButton_OnTapped">
+                            Tag="ms-windows-store://pdp/?ProductId=9P1RZL9Z8454"
+                            Tapped="OpenLinkViaTag_OnTapped">
+                            <controls:SettingsCard.HeaderIcon>
+                                <PathIcon Data="{x:Bind pixeval:SvgResources.MsStore}" />
+                            </controls:SettingsCard.HeaderIcon>
+                        </controls:SettingsCard>
+                        <controls:SettingsCard
+                            x:Uid="/SettingsPage/GitHubCheckForUpdatesEntry"
+                            Description="https://github.com/Pixeval/Pixeval/releases"
+                            IsClickEnabled="True"
+                            Tag="https://github.com/Pixeval/Pixeval/releases"
+                            Tapped="OpenLinkViaTag_OnTapped">
                             <controls:SettingsCard.HeaderIcon>
                                 <PathIcon Data="{x:Bind pixeval:SvgResources.GitHub}" />
                             </controls:SettingsCard.HeaderIcon>
-                            <controls:SettingsCard.Description>
-                                <HyperlinkButton Content="https://github.com/Pixeval/Pixeval/releases" NavigateUri="https://github.com/Pixeval/Pixeval/releases" />
-                            </controls:SettingsCard.Description>
                         </controls:SettingsCard>
                     </controls:SettingsExpander.Items>
                 </controls:SettingsExpander>
@@ -218,6 +227,14 @@
                             Tapped="OpenFolder_OnTapped" />
                     </controls:SettingsExpander.Items>
                 </controls:SettingsExpander>
+
+                <controls:SettingsCard
+                    x:Uid="/SettingsPage/RateEntry"
+                    ActionIcon="{controls2:GlyphIcon Glyph=OpenInNewWindowE8A7}"
+                    HeaderIcon="{controls2:GlyphIcon Glyph=FavoriteStarE734}"
+                    IsClickEnabled="True"
+                    Tag="ms-windows-store://pdp/?ProductId=9P1RZL9Z8454"
+                    Tapped="OpenLinkViaTag_OnTapped" />
 
                 <TextBlock
                     x:Uid="/SettingsPage/SessionSettingsGroup"
