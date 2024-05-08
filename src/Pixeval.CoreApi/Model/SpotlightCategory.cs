@@ -1,8 +1,9 @@
-#region Copyright (c) Pixeval/Pixeval
+#region Copyright
+
 // GPL v3 License
 // 
-// Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/SpotlightsPage.xaml.cs
+// Pixeval/Pixeval.CoreApi
+// Copyright (c) 2024 Pixeval.CoreApi/SpotlightCategory.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -16,27 +17,14 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 #endregion
 
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Navigation;
-using Pixeval.Controls;
+namespace Pixeval.CoreApi.Model;
 
-namespace Pixeval.Pages.Capability;
-
-public sealed partial class SpotlightsPage : IScrollViewHost
+public enum SpotlightCategory
 {
-    public SpotlightsPage() => InitializeComponent();
-
-    public override void OnPageActivated(NavigationEventArgs e)
-    {
-        ChangeSource();
-    }
-
-    private void ChangeSource()
-    {
-        SpotlightView.ViewModel.ResetEngine(App.AppViewModel.MakoClient.Spotlights());
-    }
-
-    public ScrollView ScrollView => SpotlightView.ScrollView;
+    Spotlight,
+    Tutorial,
+    Inspiration
 }

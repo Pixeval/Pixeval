@@ -32,7 +32,7 @@ public record Spotlight : IIdEntry
     public required string Title { get; set; }
 
     [JsonPropertyName("pure_title")]
-    public required string PureTitle { get; set; } 
+    public required string PureTitle { get; set; }
 
     [JsonPropertyName("thumbnail")]
     public required string Thumbnail { get; set; } = DefaultImageUrls.ImageNotAvailable;
@@ -44,7 +44,8 @@ public record Spotlight : IIdEntry
     public required DateTimeOffset PublishDate { get; set; }
 
     [JsonPropertyName("category")]
-    public required string Category { get; set; }
+    [JsonConverter(typeof(JsonStringEnumConverter<SpotlightCategory>))]
+    public required SpotlightCategory Category { get; set; }
 
     [JsonPropertyName("subcategory_label")]
     public required string SubcategoryLabel { get; set; }

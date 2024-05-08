@@ -24,6 +24,7 @@ using System.Threading.Tasks;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
+using Pixeval.Controls;
 using Pixeval.Controls.DialogContent;
 using Pixeval.CoreApi.Model;
 using Pixeval.Pages.IllustrationViewer;
@@ -146,9 +147,8 @@ public sealed partial class DownloadListPage
 
     private void DownloadListPage_OnUnloaded(object sender, RoutedEventArgs e)
     {
-        var dataProvider = _viewModel.DataProvider;
-        foreach (var viewModel in dataProvider.Source)
-            viewModel.UnloadThumbnail(dataProvider);
+        foreach (var viewModel in _viewModel.DataProvider.Source)
+            viewModel.UnloadThumbnail(_viewModel);
         _viewModel.Dispose();
     }
 }
