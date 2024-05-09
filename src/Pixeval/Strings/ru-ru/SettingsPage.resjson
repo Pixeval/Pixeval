@@ -150,5 +150,20 @@
     "FileCacheCleared": "Все файловые кэши были удалены",
     "DownloadWhenBookmarkedEntry/Description": "После добавления произведения в избранное, оно будет автоматически загружено",
     "DownloadWhenBookmarkedEntry/Header": "Загрузка при добавлении в избранное",
-    "MacroCopiedToClipboard": "Макрос скопирован в буфер обмена"
+    "MacroCopiedToClipboard": "Макрос скопирован в буфер обмена",
+    "NovelFontFamilyComboBox/PlaceholderText": "Выберите шрифт",
+    "NovelFontWeightComboBox/PlaceholderText": "Выберите толщину шрифта",
+    "NovelSettingsFontFamilyEntry/Header": "Шрифт",
+    "NovelSettingsFontColorEntry/Header": "Цвет шрифта",
+    "NovelSettingsFontColorEntry/Description": "Цвет основного текста",
+    "NovelSettingsBackgroundEntry/Header": "Цвет фона",
+    "NovelSettingsBackgroundEntry/Description": "Цвет фона страницы",
+    "NovelSettingsFontWeightEntry/Header": "Толщина шрифта",
+    "NovelSettingsFontWeightEntry/Description": "Толщина основного текста",
+    "NovelSettingsFontSizeEntry/Header": "Размер шрифта",
+    "NovelSettingsFontSizeEntry/Description": "Размер основного текста",
+    "NovelSettingsLineHeightEntry/Header": "Высота строки",
+    "NovelSettingsLineHeightEntry/Description": "Межстрочный интервал основного текста",
+    "NovelSettingsMaxWidthEntry/Header": "Максимальная ширина страницы",
+    "NovelSettingsMaxWidthEntry/Description": "Максимальная ширина страницы"
 }

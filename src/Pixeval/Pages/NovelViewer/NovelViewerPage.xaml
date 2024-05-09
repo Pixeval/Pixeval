@@ -77,78 +77,28 @@
                                 x:Uid="/EntryViewerPage/NovelSettingsHeaderTextBlock"
                                 Margin="20,0"
                                 VerticalAlignment="Center"
-                                Style="{StaticResource SubtitleTextBlockStyle}"
-                                Text="小说设置" />
+                                Style="{StaticResource SubtitleTextBlockStyle}" />
                         </ContentPresenter>
                         <ScrollView>
-                            <StackPanel>
-                                <controls1:SettingsCard x:Uid="/EntryViewerPage/NovelSettingsFontFamilyEntry" HeaderIcon="{controls2:GlyphIcon Glyph=FontE8D2}">
-                                    <ComboBox
-                                        x:Uid="/EntryViewerPage/NovelFontFamilyComboBox"
-                                        Width="200"
-                                        ItemsSource="{x:Bind local:NovelViewerPageViewModel.AvailableFonts}"
-                                        SelectedItem="{x:Bind _viewModel.NovelFontFamily, Mode=TwoWay}">
-                                        <ComboBox.ItemTemplate>
-                                            <DataTemplate x:DataType="x:String">
-                                                <TextBlock FontFamily="{x:Bind Converter={StaticResource StringToFontFamilyConverter}}" Text="{x:Bind}" />
-                                            </DataTemplate>
-                                        </ComboBox.ItemTemplate>
-                                    </ComboBox>
-                                </controls1:SettingsCard>
-                                <controls1:SettingsCard x:Uid="/EntryViewerPage/NovelSettingsFontColorEntry" HeaderIcon="{controls2:GlyphIcon Glyph=FontColorE8D3}">
-                                    <controls1:ColorPickerButton ColorPickerStyle="{StaticResource ColorPickerStyle}" SelectedColor="{x:Bind _viewModel.NovelFontColor, Converter={StaticResource UIntToColorConverter}, Mode=TwoWay}" />
-                                </controls1:SettingsCard>
-                                <controls1:SettingsCard x:Uid="/EntryViewerPage/NovelSettingsBackgroundEntry" HeaderIcon="{controls2:GlyphIcon Glyph=ColorE790}">
-                                    <controls1:ColorPickerButton ColorPickerStyle="{StaticResource ColorPickerStyle}" SelectedColor="{x:Bind _viewModel.NovelBackground, Converter={StaticResource UIntToColorConverter}, Mode=TwoWay}" />
-                                </controls1:SettingsCard>
-                                <controls1:SettingsCard x:Uid="/EntryViewerPage/NovelSettingsFontWeightEntry" HeaderIcon="{controls2:GlyphIcon Glyph=BrushSizeEDA8}">
-                                    <ComboBox
-                                        x:Uid="/EntryViewerPage/NovelFontWeightComboBox"
-                                        Width="200"
-                                        ItemsSource="{winUi:EnumValues Type=options:FontWeightsOption}"
-                                        SelectedItem="{x:Bind _viewModel.NovelFontWeight, Mode=TwoWay}" />
-                                </controls1:SettingsCard>
-                                <controls1:SettingsCard x:Uid="/EntryViewerPage/NovelSettingsFontSizeEntry" HeaderIcon="{controls2:GlyphIcon Glyph=FontSizeE8E9}">
-                                    <NumberBox
-                                        Maximum="100"
-                                        Minimum="5"
-                                        Style="{StaticResource PixevalNumberBoxStyle}"
-                                        Value="{x:Bind _viewModel.NovelFontSize, Mode=TwoWay}" />
-                                </controls1:SettingsCard>
-                                <controls1:SettingsCard x:Uid="/EntryViewerPage/NovelSettingsLineHeightEntry" HeaderIcon="{controls2:GlyphIcon Glyph=ListEA37}">
-                                    <NumberBox
-                                        Maximum="150"
-                                        Minimum="0"
-                                        Style="{StaticResource PixevalNumberBoxStyle}"
-                                        Value="{x:Bind _viewModel.NovelLineHeight, Mode=TwoWay}" />
-                                </controls1:SettingsCard>
-                                <controls1:SettingsCard x:Uid="/EntryViewerPage/NovelSettingsMaxWidthEntry" HeaderIcon="{controls2:GlyphIcon Glyph=PageE7C3}">
-                                    <NumberBox
-                                        LargeChange="100"
-                                        Maximum="10000"
-                                        Minimum="50"
-                                        SmallChange="50"
-                                        Style="{StaticResource PixevalNumberBoxStyle}"
-                                        Value="{x:Bind _viewModel.NovelMaxWidth, Mode=TwoWay}" />
-                                </controls1:SettingsCard>
-                            </StackPanel>
+                            <StackPanel Loaded="Panel_OnLoaded" />
                         </ScrollView>
                     </controls1:DockPanel>
                 </SplitView.Pane>
                 <!--  ReSharper disable once UnusedMember.Local  -->
-                <Grid x:Name="NovelPresenterDockPanel" Background="{x:Bind _viewModel.NovelBackground, Converter={StaticResource UIntToBrushConverter}, Mode=OneWay}">
+                <Grid x:Name="NovelPresenterDockPanel" Background="{x:Bind _viewModel.NovelBackgroundEntry.Value, Converter={StaticResource UIntToBrushConverter}, Mode=OneWay}">
                     <!--  ReSharper disable once UnusedMember.Local  -->
                     <Grid x:Name="MainPanel" Margin="{StaticResource NormalMargin}">
                         <controls:DocumentViewer
                             x:Name="DocumentViewer"
+                            ActualThemeChanged="{x:Bind _viewModel.OnFrameworkElementOnActualThemeChanged}"
                             CurrentPage="{x:Bind _viewModel.CurrentPageIndex, Mode=TwoWay}"
-                            FontFamily="{x:Bind _viewModel.NovelFontFamily, Converter={StaticResource StringToFontFamilyConverter}, Mode=OneWay}"
-                            FontSize="{x:Bind _viewModel.NovelFontSize, Mode=OneWay}"
-                            FontWeight="{x:Bind _viewModel.NovelFontWeight, Converter={StaticResource FontWeightConverter}, Mode=OneWay}"
-                            Foreground="{x:Bind _viewModel.NovelFontColor, Converter={StaticResource UIntToBrushConverter}, Mode=OneWay}"
-                            LineHeight="{x:Bind _viewModel.NovelLineHeight, Mode=OneWay}"
+                            FontFamily="{x:Bind _viewModel.NovelFontFamilyEntry.Value, Converter={StaticResource StringToFontFamilyConverter}, Mode=OneWay}"
+                            FontSize="{x:Bind _viewModel.NovelFontSizeEntry.Value, Mode=OneWay}"
+                            FontWeight="{x:Bind _viewModel.NovelFontWeightEntry.Value, Converter={StaticResource FontWeightConverter}, Mode=OneWay}"
+                            Foreground="{x:Bind _viewModel.NovelFontColorEntry.Value, Converter={StaticResource UIntToBrushConverter}, Mode=OneWay}"
+                            LineHeight="{x:Bind _viewModel.NovelLineHeightEntry.Value, Mode=OneWay}"
                             NovelItem="{x:Bind _viewModel.CurrentNovel, Mode=OneWay}"
-                            NovelMaxWidth="{x:Bind _viewModel.NovelMaxWidth, Mode=OneWay}"
+                            NovelMaxWidth="{x:Bind _viewModel.NovelMaxWidthEntry.Value, Mode=OneWay}"
                             PageCount="{x:Bind _viewModel.PageCount, Mode=TwoWay}"
                             Tapped="DocumentViewer_OnTapped" />
 

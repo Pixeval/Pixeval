@@ -35,8 +35,6 @@ using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using Pixeval.Utilities.Threading;
 using Pixeval.Settings;
-using System.Collections.Generic;
-using System.Linq.Expressions;
 using Windows.System;
 using Microsoft.UI.Xaml;
 using Pixeval.Controls.Windowing;
@@ -86,7 +84,8 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
                     t => t.Theme) { ValueChanged = t => WindowFactory.SetTheme((ElementTheme)t) },
                 new EnumAppSettingsEntry<BackdropType>(AppSettings,
                     t => t.Backdrop) { ValueChanged = t => WindowFactory.SetBackdrop((BackdropType)t) },
-                new FontAppSettingsEntry(AppSettings),
+                new FontAppSettingsEntry(AppSettings,
+                    t => t.AppFontFamilyName),
                 new LanguageAppSettingsEntry(AppSettings),
                 new IpWithSwitchAppSettingsEntry(AppSettings)
                 {
@@ -230,7 +229,7 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
         ];
     }
 
-    public IEnumerable<SimpleSettingsGroup> Groups { get; }
+    public SimpleSettingsGroup[] Groups { get; }
 
     public string UpdateInfo => AppInfo.AppVersion.UpdateState switch
     {

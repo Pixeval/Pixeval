@@ -16,9 +16,13 @@ public class IntAppSettingsEntry(
 
     public string? Placeholder { get; set; }
 
-    public double Min { get; set; } = double.NaN;
+    public double Max { get; set; } = double.MaxValue;
 
-    public double Max { get; set; } = double.NaN;
+    public double Min { get; set; } = double.MinValue;
+
+    public double LargeChange { get; set; } = 10;
+
+    public double SmallChange { get; set; } = 1;
 
     public IntAppSettingsEntry(
         AppSettings appSettings,

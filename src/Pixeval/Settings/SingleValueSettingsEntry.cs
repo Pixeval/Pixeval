@@ -21,6 +21,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
 using Pixeval.Attributes;
@@ -87,7 +88,13 @@ public abstract class SingleValueSettingsEntry<TSettings, TValue> : SingleValueS
     public TValue Value
     {
         get => _getter(Settings);
-        set => _setter(Settings, value);
+        set
+        {
+            if (EqualityComparer<TValue>.Default.Equals(Value, value))
+                return;
+            _setter(Settings, value);
+            OnPropertyChanged();
+        }
     }
 
     public override void ValueReset() => OnPropertyChanged(nameof(Value));
