@@ -4,9 +4,20 @@ using System.Linq;
 
 namespace Pixeval.Filters.TagParser;
 
-internal class Parser(List<IQueryFragmentNode> filterTokens)
+public class Parser
 {
-    private List<IQueryFragmentNode> Tokens { get; } = filterTokens;
+    private List<IQueryFragmentNode> Tokens { get; }
+    
+    private ITokenTreeNode QueryTokenTree;
+
+    private ITokenTreeNode CurrentTopLevel;
+
+    public Parser(List<IQueryFragmentNode> filterTokens)
+    {
+        this.Tokens = filterTokens;
+        this.QueryTokenTree = new TokenOrNode(new List<ITokenTreeNode>());
+        this.CurrentTopLevel = this.QueryTokenTree;
+    }
 
     private int Position { get; set; } = 0;
 
@@ -23,38 +34,44 @@ internal class Parser(List<IQueryFragmentNode> filterTokens)
 
     private IQueryFragmentNode CurrentFilterToken => Tokens[Position];
 
-    private FilterSettingBuilder _filterSettingBuilder = new();
-
-    public FilterSetting Build()
+    public ITokenTreeNode Build()
     {
-        ParseFilter();
-        _filterSettingBuilder.IncludeTags = _filterSettingBuilder.IncludeTags.ToList();
-        _filterSettingBuilder.ExcludeTags = _filterSettingBuilder.ExcludeTags.ToList();
-        _filterSettingBuilder.ExcludeUserName = _filterSettingBuilder.ExcludeUserName.ToList();
-        return _filterSettingBuilder.Build();
+        return this.QueryTokenTree;
     }
 
     /*
      * 
      *      filter          ::= argument_list
      *      argument_list   ::= {} | argument argument_list
-     *      argument        ::= keyword
+     *      argument        ::=
+     *                         and_list
+     *                       | or_list
+     *                       | keyword
      *                       | tag
      *                       | author
      *                       | char
      *                       | like_range
      *                       | index_range
+     *                       | starting_date
+     *                       | ending_date
      *
-     *      keyword     ::= DATA
+     *      and_list    ::= LP AND argument_list RP
+     *      or_list     ::= LP OR argument_list RP
+     *
+     *      keyword     ::= DATA | STRING
      *      tag         ::= HASH DATA
      *      author      ::= AROBASE DATA | A COLON DATA
      *      char        ::= C COLON DATA
-     *      like_range  ::= d"like" COLON range_desc
-     *      index_range ::= d"index" COLON range_desc
+     *      like_range  ::= L COLON range_desc
+     *      sequence_range ::= N COLON range_desc
+     *      starting_date  ::= S COLON date_desc
+     *      ending_date    ::= E COLON date_desc
      *
      *      range_desc     ::= interval_form | dash_form
      *      interval_form  ::= (LB | LP) NUM COMMA NUM (RB | RP)
      *      dash_form      ::= DASH NUM | NUM DASH NUM?
+     *
+     *      date_desc      ::= 
      */
 
     /*
@@ -92,7 +109,6 @@ internal class Parser(List<IQueryFragmentNode> filterTokens)
         {
             throw new Exception("Not a starting token of argument");
         }
-        ParseArgument();
         ParseArgumentList();
     }
 
@@ -100,86 +116,162 @@ internal class Parser(List<IQueryFragmentNode> filterTokens)
     {
         switch (CurrentFilterToken)
         {
+            // And/Or
+            case IQueryFragmentNode.LeftParen:
+            {
+                EatLeftParen();
+                if (CurrentFilterToken is IQueryFragmentNode.And)
+                {
+                    var nextAndNode = new TokenAndNode(new List<ITokenTreeNode>());
+                    this.CurrentTopLevel.Insert(nextAndNode);
+                    this.CurrentTopLevel = nextAndNode;
+                    
+                    ParseAndList();
+                    
+                    if (CurrentTopLevel.Parent != null)
+                    {
+                        this.CurrentTopLevel = CurrentTopLevel.Parent;
+                    }
+                    
+                } else if (CurrentFilterToken is IQueryFragmentNode.Or)
+                {
+                    var nextOrNode = new TokenOrNode(new List<ITokenTreeNode>());
+                    this.CurrentTopLevel.Insert(nextOrNode);
+                    this.CurrentTopLevel = nextOrNode;
+                    
+                    ParseAndList();
+                    
+                    if (CurrentTopLevel.Parent != null)
+                    {
+                        this.CurrentTopLevel = CurrentTopLevel.Parent;
+                    }
+                }
+                else
+                {
+                    throw new Exception("Expected either and/or token after eating left paren");
+                }
+
+                return;
+            }
+            // Data or keyword
             case IQueryFragmentNode.Data:
             {
                 var data = EatData();
 
-                switch (data.Value)
-                {
-                    // The current parsing for `like` and `index` are retrieving them from Data token, it would be better to put them into dedicated tokens
-                    // in the current use case.
-                    case "like":
-                    {
-                        EatColon();
-                        var (lo, hi) = ParseRangeDesc();
+                var tagToken = new TagToken(data.Value);
+                CurrentTopLevel.Insert(tagToken);
 
-                        if (lo is { } l)
-                        {
-                            _filterSettingBuilder.LeastBookmark = l;
-                        }
-                        if (hi is { } h)
-                        {
-                            _filterSettingBuilder.MaximumBookmark = h;
-                        }
-
-                        break;
-                    }
-                    case "index":
-                    {
-                        EatColon();
-                        var (lo, hi) = ParseRangeDesc();
-                
-
-                        // local variable minIndex and maxIndex correspond to retrieved data, they are used no where in current FilterSetting definition
-                        if (lo is { } l)
-                        {
-                            var minIndex = l;
-                        }
-                        if (hi is { } h)
-                        {
-                            var maxIndex = h;
-                        }
-
-                        break;
-                    }
-                    default:
-                        _filterSettingBuilder.IncludeTags
-                            = _filterSettingBuilder.IncludeTags.Append(new QueryFilterToken(data.Value));
-                        break;
-                }
                 return;
             }
             case IQueryFragmentNode.Hashtag:
             {
                 EatHash();
-                var tag = EatData();
-                _filterSettingBuilder.IncludeTags
-                    = _filterSettingBuilder.IncludeTags.Append(new QueryFilterToken(tag.Value));
+                var data = EatData();
+                
+                var tagToken = new TagToken(data.Value);
+                CurrentTopLevel.Insert(tagToken);
+                
                 return;
             }
             case IQueryFragmentNode.Arobase:
             {
                 EatArobase();
                 var author = EatData();
-                _filterSettingBuilder.IllustratorName = new QueryFilterToken(author.Value);
+                
+                var authorTagToken = new TagToken(author.Value);
+                CurrentTopLevel.Insert(authorTagToken);
+                
                 return;
             }
             case IQueryFragmentNode.A:
             {
                 EatA();
+                EatColon();
                 var author = EatData();
-                _filterSettingBuilder.IllustratorName = new QueryFilterToken(author.Value);
+                
+                var authorTagToken = new TagToken(author.Value);
+                CurrentTopLevel.Insert(authorTagToken);
+                
                 return;
             }
             case IQueryFragmentNode.C:
             {
                 EatC();
+                EatColon();
                 var character = EatData();
-                _filterSettingBuilder.IncludeTags
-                    = _filterSettingBuilder.IncludeTags.Append(new QueryFilterToken(character.Value));
+                
+                var characterTagToken = new TagToken(character.Value);
+                CurrentTopLevel.Insert(characterTagToken);
+                
+                return;
+            }
+            case IQueryFragmentNode.E:
+            {
+                EatC();
+                EatColon();
+                var (year, month, day) = ParseDateDesc();
+
+                var date = new DateTime(year ?? DateTime.Today.Year, month, day);
+
+                var dateOffset = new DateTimeOffset(date);
+                
+                var dateToken = new DateToken(RangeEdge.Ending, dateOffset);
+                CurrentTopLevel.Insert(dateToken);
+                
+                return;
+            }
+            case IQueryFragmentNode.L:
+            {
+                EatC();
+                EatColon();
+                var (start, end) = ParseRangeDesc();
+
+                var rangeToken = new NumericRangeToken(RangeType.Collection, start, end);
+                CurrentTopLevel.Insert(rangeToken);
+                
+                return;
+            }
+            case IQueryFragmentNode.N:
+            {
+                EatC();
+                EatColon();
+                var (start, end) = ParseRangeDesc();
+
+                var rangeToken = new NumericRangeToken(RangeType.Sequences, start, end);
+                CurrentTopLevel.Insert(rangeToken);
+                
+                return;
+            }
+            case IQueryFragmentNode.S:
+            {
+                EatC();
+                EatColon();
+                var (year, month, day) = ParseDateDesc();
+
+                var date = new DateTime(year ?? DateTime.Today.Year, month, day);
+
+                var dateOffset = new DateTimeOffset(date);
+                
+                var dateToken = new DateToken(RangeEdge.Starting, dateOffset);
+                CurrentTopLevel.Insert(dateToken);
+                
                 return;
             }
         }
+    }
+
+    public void ParseAndList()
+    {
+        EatAnd();
+        ParseArgumentList();
+        EatRightParen();
+    }
+
+    public void ParseOrList()
+    {
+        EatOr();
+        ParseArgumentList();
+        EatRightParen();
     }
 
     public (long?, long?) ParseRangeDesc()
@@ -262,6 +354,30 @@ internal class Parser(List<IQueryFragmentNode> filterTokens)
         }
     }
 
+    public (int?, int, int) ParseDateDesc()
+    {
+        var firstPart = EatNumeric();
+        if (CurrentFilterToken is IQueryFragmentNode.Dash or IQueryFragmentNode.Dot)
+        {
+            var secondPart = EatNumeric();
+
+            if (CurrentFilterToken is IQueryFragmentNode.Dash or IQueryFragmentNode.Dot)
+            {
+                var thirdPart = EatNumeric();
+
+                return ((int) firstPart.Value, (int) secondPart.Value, (int) thirdPart.Value);
+            }
+            else
+            {
+                return (null, (int) firstPart.Value, (int) secondPart.Value);
+            }
+        }
+        else
+        {
+            throw new Exception("At least two numeric parts should be contained in a date segment");
+        }
+    }
+
     #region Lexical rules
 
     private IQueryFragmentNode.Data EatData()
@@ -276,6 +392,16 @@ internal class Parser(List<IQueryFragmentNode> filterTokens)
         return num;
     }
 
+    private void EatAnd()
+    {
+        var and = (IQueryFragmentNode.And)Eat();
+    }
+    
+    private void EatOr()
+    {
+        var or = (IQueryFragmentNode.And)Eat();
+    }
+    
     private void EatHash()
     {
         var hash = (IQueryFragmentNode.Hashtag)Eat();
@@ -294,6 +420,26 @@ internal class Parser(List<IQueryFragmentNode> filterTokens)
     private void EatC()
     {
         var c = (IQueryFragmentNode.C)Eat();
+    }
+    
+    private void EatE()
+    {
+        var c = (IQueryFragmentNode.E)Eat();
+    }
+    
+    private void EatL()
+    {
+        var c = (IQueryFragmentNode.L)Eat();
+    }
+    
+    private void EatN()
+    {
+        var c = (IQueryFragmentNode.N)Eat();
+    }
+    
+    private void EatS()
+    {
+        var c = (IQueryFragmentNode.S)Eat();
     }
 
     private void EatColon()

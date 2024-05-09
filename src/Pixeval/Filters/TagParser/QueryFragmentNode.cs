@@ -3,32 +3,65 @@ namespace Pixeval.Filters.TagParser;
 /// <summary>
 /// Fragments of data that a query string carries, could be a data or numeric value, or some labels like #, @, : or standalone characters like a or c.
 /// </summary>
-internal interface IQueryFragmentNode
+public interface IQueryFragmentNode
 {
-    internal record A : IQueryFragmentNode;
+    bool isNotEmpty()
+    {
+        return true;
+    }
+    
+    public record A : IQueryFragmentNode;
 
-    internal record C : IQueryFragmentNode;
+    public record C : IQueryFragmentNode;
 
-    internal record Data(string Value) : IQueryFragmentNode;
+    public record E : IQueryFragmentNode;
 
-    internal record Numeric(long Value) : IQueryFragmentNode;
+    public record L : IQueryFragmentNode;
 
-    internal record Dash : IQueryFragmentNode;
+    public record N : IQueryFragmentNode;
 
-    internal record Hashtag : IQueryFragmentNode;
+    public record S : IQueryFragmentNode;
 
-    internal record Arobase : IQueryFragmentNode;
+    public record Data(string Value) : IQueryFragmentNode
+    {
+        public bool isNotEmpty()
+        {
+            return Value.Length > 0;
+        }
+    }
 
-    internal record Colon : IQueryFragmentNode;
+    public record Numeric(long Value) : IQueryFragmentNode
+    {
+        public bool isNotEmpty()
+        {
+            return Value >= 0;
+        }
+    }
 
-    internal record Comma : IQueryFragmentNode;
+    public record Dash : IQueryFragmentNode;
 
-    internal record LeftParen : IQueryFragmentNode;
+    public record Hashtag : IQueryFragmentNode;
 
-    internal record RightParen : IQueryFragmentNode;
+    public record Arobase : IQueryFragmentNode;
 
-    internal record LeftBracket : IQueryFragmentNode;
+    public record Not : IQueryFragmentNode;
 
-    internal record RightBracket : IQueryFragmentNode;
+    public record Or : IQueryFragmentNode;
+
+    public record And : IQueryFragmentNode;
+
+    public record Dot : IQueryFragmentNode;
+
+    public record Colon : IQueryFragmentNode;
+
+    public record Comma : IQueryFragmentNode;
+
+    public record LeftParen : IQueryFragmentNode;
+
+    public record RightParen : IQueryFragmentNode;
+
+    public record LeftBracket : IQueryFragmentNode;
+
+    public record RightBracket : IQueryFragmentNode;
     
 }
