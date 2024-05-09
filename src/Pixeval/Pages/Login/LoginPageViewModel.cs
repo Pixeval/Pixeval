@@ -197,6 +197,7 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject
                 try
                 {
                     session = await PixivAuth.AuthCodeToSessionAsync(code, verifier);
+                    proxyServer?.Dispose();
                 }
                 catch
                 {
@@ -208,7 +209,6 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject
                 using var scope = App.AppViewModel.AppServicesScope;
                 var logger = scope.ServiceProvider.GetRequiredService<FileLogger>();
                 App.AppViewModel.MakoClient = new MakoClient(session, App.AppViewModel.AppSettings.ToMakoClientConfiguration(), logger);
-                proxyServer?.Dispose();
                 navigated();
             }
             else if (e.Uri.Contains("accounts.pixiv.net"))

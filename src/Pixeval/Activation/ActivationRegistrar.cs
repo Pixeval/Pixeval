@@ -24,6 +24,9 @@ using Windows.ApplicationModel.Activation;
 using Microsoft.Windows.AppLifecycle;
 using System.Web;
 using Pixeval.Pages.Login;
+using Microsoft.Extensions.DependencyInjection;
+using Pixeval.CoreApi;
+using Pixeval.Logging;
 
 namespace Pixeval.Activation;
 
@@ -36,26 +39,36 @@ public static class ActivationRegistrar
         new NovelAppActivationHandler()
     ];
 
-    public static void Dispatch(AppActivationArguments args)
+    public static async void Dispatch(AppActivationArguments args)
     {
         if (args is
             {
                 Kind: ExtendedActivationKind.Protocol, Data: IProtocolActivatedEventArgs { Uri: var activationUri }
             })
         {
-            if (activationUri.Scheme is "pixeval")
+            switch (activationUri.Scheme)
             {
-                if (FeatureHandlers.FirstOrDefault(f => f.ActivationFragment == activationUri.Host) is { } handler)
+                case "pixeval":
                 {
+                    if (FeatureHandlers.FirstOrDefault(f => f.ActivationFragment == activationUri.Host) is { } handler)
                     {
                         _ = handler.Execute(activationUri.PathAndQuery[1..]);
                     }
+
+                    break;
                 }
-            }
-            else if (activationUri.Scheme is "pixiv")
-            {
-                var code = HttpUtility.ParseQueryString(activationUri.Query)["code"]!;
-                _ = PixivAuth.AuthCodeToSessionAsync(code, PixivAuth.GetCodeVerify());
+                case "pixiv":
+                {
+                    if (LoginPage.Current is null || App.AppViewModel.MakoClient != null!)
+                        return;
+                    var code = HttpUtility.ParseQueryString(activationUri.Query)["code"]!;
+                    var session = await PixivAuth.AuthCodeToSessionAsync(code, PixivAuth.GetCodeVerify());
+                    using var scope = App.AppViewModel.AppServicesScope;
+                    var logger = scope.ServiceProvider.GetRequiredService<FileLogger>();
+                    App.AppViewModel.MakoClient = new MakoClient(session, App.AppViewModel.AppSettings.ToMakoClientConfiguration(), logger);
+                    LoginPage.SuccessNavigating();
+                    break;
+                }
             }
         }
     }

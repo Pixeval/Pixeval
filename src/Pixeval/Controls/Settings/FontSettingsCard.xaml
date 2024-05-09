@@ -9,15 +9,18 @@
     xmlns:local="using:Pixeval.Settings"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="using:Pixeval.Settings.Models"
-    x:Uid="/SettingsPage/AppFontFamilyEntry"
-    HeaderIcon="{controls1:GlyphIcon Glyph=FontE8D2}"
+    Header="{x:Bind Entry.Header}"
+    Tag="{x:Bind Entry.Attribute}"
     mc:Ignorable="d">
+    <controls:SettingsCard.HeaderIcon>
+        <controls1:GlyphIcon IconGlyph="{x:Bind Entry.HeaderIcon}" />
+    </controls:SettingsCard.HeaderIcon>
     <controls:SettingsCard.Resources>
         <converters:StringToFontFamilyConverter x:Key="StringToFontFamilyConverter" />
     </controls:SettingsCard.Resources>
     <controls:SettingsCard.Description>
         <HyperlinkButton
-            x:Uid="/SettingsPage/OpenFontSettingsHyperlinkButton"
+            Content="{x:Bind Entry.Description}"
             Tag="ms-settings:fonts"
             Tapped="OpenLinkViaTag_OnTapped" />
     </controls:SettingsCard.Description>
@@ -25,7 +28,8 @@
         x:Uid="/SettingsPage/AppFontFamilyComboBox"
         Width="200"
         ItemsSource="{x:Bind models:FontAppSettingsEntry.AvailableFonts}"
-        SelectedItem="{x:Bind Entry.AppFontFamilyName, Mode=TwoWay}">
+        SelectedItem="{x:Bind Entry.Value, Mode=TwoWay}"
+        SelectionChanged="Selector_OnSelectionChanged">
         <ComboBox.ItemTemplate>
             <DataTemplate x:DataType="x:String">
                 <TextBlock FontFamily="{x:Bind Converter={StaticResource StringToFontFamilyConverter}}" Text="{x:Bind}" />

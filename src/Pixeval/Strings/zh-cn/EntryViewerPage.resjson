@@ -46,21 +46,5 @@
     "NextNovel": "L/R：下一篇小说",
     "LoadingNovelTextBlock/Text": "正在加载小说",
     "NovelSettings": "小说设置",
-    "NovelSettingsHeaderTextBlock/Text": "小说设置",
-    "NovelFontFamilyComboBox/PlaceholderText": "选择字体",
-    "NovelFontWeightComboBox/PlaceholderText": "选择字体粗细",
-    "NovelSettingsFontFamilyEntry/Header": "字体",
-    "NovelSettingsFontFamilyEntry/Description": "正文字体",
-    "NovelSettingsFontColorEntry/Header": "字体颜色",
-    "NovelSettingsFontColorEntry/Description": "正文字体颜色",
-    "NovelSettingsBackgroundEntry/Header": "背景色",
-    "NovelSettingsBackgroundEntry/Description": "页面背景色",
-    "NovelSettingsFontWeightEntry/Header": "字体粗细",
-    "NovelSettingsFontWeightEntry/Description": "正文字体粗细",
-    "NovelSettingsFontSizeEntry/Header": "字号",
-    "NovelSettingsFontSizeEntry/Description": "正文字号",
-    "NovelSettingsLineHeightEntry/Header": "行高",
-    "NovelSettingsLineHeightEntry/Description": "正文行距",
-    "NovelSettingsMaxWidthEntry/Header": "页面宽度",
-    "NovelSettingsMaxWidthEntry/Description": "页面的最大宽度"
+    "NovelSettingsHeaderTextBlock/Text": "小说设置"
 }

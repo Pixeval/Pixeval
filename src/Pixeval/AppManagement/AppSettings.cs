@@ -37,6 +37,7 @@ using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
 using WinUI3Utilities.Controls;
 using Windows.Globalization;
+using static Pixeval.SettingsPageResources;
 
 namespace Pixeval.AppManagement;
 
@@ -47,39 +48,39 @@ public partial record AppSettings : IWindowSettings
     {
     }
 
-    [SettingsEntry(IconGlyph.CommunicationsE95A, nameof(SettingsPageResources.DownloadUpdateAutomaticallyEntryHeader), nameof(SettingsPageResources.DownloadUpdateAutomaticallyEntryDescription))]
+    [SettingsEntry(IconGlyph.CommunicationsE95A, nameof(DownloadUpdateAutomaticallyEntryHeader), nameof(DownloadUpdateAutomaticallyEntryDescription))]
     public bool DownloadUpdateAutomatically { get; set; }
 
     /// <summary>
     /// The Application Theme
     /// </summary>
-    [SettingsEntry(IconGlyph.PersonalizeE771, nameof(SettingsPageResources.ThemeEntryHeader), nameof(SettingsPageResources.ThemeEntryDescriptionHyperlinkButtonContent))]
+    [SettingsEntry(IconGlyph.PersonalizeE771, nameof(ThemeEntryHeader), nameof(ThemeEntryDescriptionHyperlinkButtonContent))]
     public ElementTheme Theme { get; set; }
 
-    [SettingsEntry(IconGlyph.ColorE790, nameof(SettingsPageResources.BackdropEntryHeader), null)]
+    [SettingsEntry(IconGlyph.ColorE790, nameof(BackdropEntryHeader), null)]
     public BackdropType Backdrop { get; set; } = MicaController.IsSupported() ? BackdropType.MicaAlt : DesktopAcrylicController.IsSupported() ? BackdropType.Acrylic : BackdropType.None;
 
-    [SettingsEntry(IconGlyph.NetworkE968, nameof(SettingsPageResources.EnableDomainFrontingEntryHeader), nameof(SettingsPageResources.EnableDomainFrontingEntryDescription))]
+    [SettingsEntry(IconGlyph.NetworkE968, nameof(EnableDomainFrontingEntryHeader), nameof(EnableDomainFrontingEntryDescription))]
     public bool EnableDomainFronting { get; set; } = true;
 
     /// <summary>
     /// Indicates whether a <see cref="TeachingTip" /> should be displayed
     /// when user clicks "Generate Link"
     /// </summary>
-    [SettingsEntry(IconGlyph.LinkE71B, nameof(SettingsPageResources.GenerateHelpLinkEntryHeader), nameof(SettingsPageResources.GenerateHelpLinkEntryDescription))]
+    [SettingsEntry(IconGlyph.LinkE71B, nameof(GenerateHelpLinkEntryHeader), nameof(GenerateHelpLinkEntryDescription))]
     public bool DisplayTeachingTipWhenGeneratingAppLink { get; set; } = true;
 
-    [SettingsEntry(IconGlyph.FileExplorerEC50, nameof(SettingsPageResources.UseFileCacheEntryHeader), nameof(SettingsPageResources.UseFileCacheEntryDescription))]
+    [SettingsEntry(IconGlyph.FileExplorerEC50, nameof(UseFileCacheEntryHeader), nameof(UseFileCacheEntryDescription))]
     public bool UseFileCache { get; set; }
 
-    [SettingsEntry(IconGlyph.FontE8D2, nameof(SettingsPageResources.AppFontFamilyEntryHeader), nameof(SettingsPageResources.OpenFontSettingsHyperlinkButtonContent))]
+    [SettingsEntry(IconGlyph.FontE8D2, nameof(AppFontFamilyEntryHeader), nameof(OpenFontSettingsHyperlinkButtonContent))]
     public string AppFontFamilyName { get; set; } = AppSettingsResources.AppDefaultFontFamilyName;
 
-    [SettingsEntry(IconGlyph.CheckMarkE73E, nameof(SettingsPageResources.DefaultSelectedTabEntryHeader), nameof(SettingsPageResources.DefaultSelectedTabEntryDescription))]
+    [SettingsEntry(IconGlyph.CheckMarkE73E, nameof(DefaultSelectedTabEntryHeader), nameof(DefaultSelectedTabEntryDescription))]
     public MainPageTabItem DefaultSelectedTabItem { get; set; }
 
-    [SettingsEntry(IconGlyph.RenameE8AC, nameof(SettingsPageResources.DefaultDownloadPathMacroEntryHeader), nameof(SettingsPageResources.DefaultDownloadPathMacroEntryDescriptionContent))]
-    public string DefaultDownloadPathMacro { get; set; } = GetSpecialFolder() + @"\@{if_manga=[@{artist_name}] @{title}}\[@{artist_name}] @{id}@{if_manga=p@{manga_index}}@{ext}";
+    [SettingsEntry(IconGlyph.RenameE8AC, nameof(DownloadPathMacroEntryHeader), nameof(DownloadPathMacroEntryDescriptionContent))]
+    public string DownloadPathMacro { get; set; } = GetSpecialFolder() + @"\@{if_manga=[@{artist_name}] @{title}}\[@{artist_name}] @{id}@{if_manga=p@{manga_index}}@{ext}";
 
     public UgoiraDownloadFormat UgoiraDownloadFormat { get; set; } = UgoiraDownloadFormat.WebPLossless;
 
@@ -87,29 +88,29 @@ public partial record AppSettings : IWindowSettings
 
     public NovelDownloadFormat NovelDownloadFormat { get; set; }
 
-    [SettingsEntry(IconGlyph.ScanE8FE, nameof(SettingsPageResources.OverwriteDownloadedFileEntryHeader), nameof(SettingsPageResources.OverwriteDownloadedFileEntryDescription))]
+    [SettingsEntry(IconGlyph.ScanE8FE, nameof(OverwriteDownloadedFileEntryHeader), nameof(OverwriteDownloadedFileEntryDescription))]
     public bool OverwriteDownloadedFile { get; set; }
 
-    [SettingsEntry(IconGlyph.HistoryE81C, nameof(SettingsPageResources.MaximumDownloadHistoryRecordsEntryHeader), nameof(SettingsPageResources.MaximumDownloadHistoryRecordsEntryDescription))]
+    [SettingsEntry(IconGlyph.HistoryE81C, nameof(MaximumDownloadHistoryRecordsEntryHeader), nameof(MaximumDownloadHistoryRecordsEntryDescription))]
     public int MaximumDownloadHistoryRecords { get; set; } = 100;
 
     /// <summary>
     /// The max download tasks that are allowed to run concurrently
     /// </summary>
-    [SettingsEntry(IconGlyph.LightningBoltE945, nameof(SettingsPageResources.MaxDownloadConcurrencyLevelEntryHeader), nameof(SettingsPageResources.MaxDownloadConcurrencyLevelEntryDescription))]
+    [SettingsEntry(IconGlyph.LightningBoltE945, nameof(MaxDownloadConcurrencyLevelEntryHeader), nameof(MaxDownloadConcurrencyLevelEntryDescription))]
     public int MaxDownloadTaskConcurrencyLevel { get; set; } = Environment.ProcessorCount / 2;
 
-    [SettingsEntry(IconGlyph.SaveLocalE78C, nameof(SettingsPageResources.DownloadWhenBookmarkedEntryHeader), nameof(SettingsPageResources.DownloadWhenBookmarkedEntryDescription))]
+    [SettingsEntry(IconGlyph.SaveLocalE78C, nameof(DownloadWhenBookmarkedEntryHeader), nameof(DownloadWhenBookmarkedEntryDescription))]
     public bool DownloadWhenBookmarked { get; set; }
 
     /// <summary>
     /// The application-wide default sort option, any illustration page that supports
     /// different orders will use this as its default value
     /// </summary>
-    [SettingsEntry(IconGlyph.SortE8CB, nameof(SettingsPageResources.DefaultSearchSortOptionEntryHeader), nameof(SettingsPageResources.DefaultSearchSortOptionEntryDescription))]
+    [SettingsEntry(IconGlyph.SortE8CB, nameof(DefaultSearchSortOptionEntryHeader), nameof(DefaultSearchSortOptionEntryDescription))]
     public WorkSortOption WorkSortOption { get; set; }
 
-    [SettingsEntry(IconGlyph.ViewAllE8A9, nameof(SettingsPageResources.DefaultSearchTagMatchOptionEntryHeader), nameof(SettingsPageResources.DefaultSearchTagMatchOptionEntryDescription))]
+    [SettingsEntry(IconGlyph.ViewAllE8A9, nameof(DefaultSearchTagMatchOptionEntryHeader), nameof(DefaultSearchTagMatchOptionEntryDescription))]
     public SimpleWorkType SimpleWorkType { get; set; }
 
     public RankOption IllustrationRankOption { get; set; }
@@ -126,54 +127,54 @@ public partial record AppSettings : IWindowSettings
     /// </summary>
     public SearchNovelTagMatchOption SearchNovelTagMatchOption { get; set; } = SearchNovelTagMatchOption.PartialMatchForTags;
 
-    [SettingsEntry(IconGlyph.HistoryE81C, nameof(SettingsPageResources.MaximumSearchHistoryRecordsEntryHeader), nameof(SettingsPageResources.MaximumSearchHistoryRecordsEntryDescription))]
+    [SettingsEntry(IconGlyph.HistoryE81C, nameof(MaximumSearchHistoryRecordsEntryHeader), nameof(MaximumSearchHistoryRecordsEntryDescription))]
     public int MaximumSearchHistoryRecords { get; set; } = 50;
 
-    [SettingsEntry(IconGlyph.EaseOfAccessE776, nameof(SettingsPageResources.SearchDurationEntryHeader), nameof(SettingsPageResources.SearchDurationEntryDescription))]
+    [SettingsEntry(IconGlyph.EaseOfAccessE776, nameof(SearchDurationEntryHeader), nameof(SearchDurationEntryDescription))]
     public SearchDuration SearchDuration { get; set; } = SearchDuration.Undecided;
 
-    [SettingsEntry(IconGlyph.StopwatchE916, nameof(SettingsPageResources.UsePreciseRangeForSearchEntryHeader), nameof(SettingsPageResources.UsePreciseRangeForSearchEntryDescription))]
+    [SettingsEntry(IconGlyph.StopwatchE916, nameof(UsePreciseRangeForSearchEntryHeader), nameof(UsePreciseRangeForSearchEntryDescription))]
     public bool UsePreciseRangeForSearch { get; set; }
 
-    [SettingsEntry(IconGlyph.SearchAndAppsE773, nameof(SettingsPageResources.ReverseSearchApiKeyEntryHeader), nameof(SettingsPageResources.ReverseSearchApiKeyEntryDescriptionHyperlinkButtonContent))]
+    [SettingsEntry(IconGlyph.SearchAndAppsE773, nameof(ReverseSearchApiKeyEntryHeader), nameof(ReverseSearchApiKeyEntryDescriptionHyperlinkButtonContent))]
     public string? ReverseSearchApiKey { get; set; }
 
-    [SettingsEntry(IconGlyph.FilterE71C, nameof(SettingsPageResources.ReverseSearchResultSimilarityThresholdEntryHeader), nameof(SettingsPageResources.ReverseSearchResultSimilarityThresholdEntryDescription))]
+    [SettingsEntry(IconGlyph.FilterE71C, nameof(ReverseSearchResultSimilarityThresholdEntryHeader), nameof(ReverseSearchResultSimilarityThresholdEntryDescription))]
     public int ReverseSearchResultSimilarityThreshold { get; set; } = 80;
 
-    [SettingsEntry(IconGlyph.SetHistoryStatus2F739, nameof(SettingsPageResources.MaximumSuggestionBoxSearchHistoryEntryHeader), nameof(SettingsPageResources.MaximumSuggestionBoxSearchHistoryEntryDescription))]
+    [SettingsEntry(IconGlyph.SetHistoryStatus2F739, nameof(MaximumSuggestionBoxSearchHistoryEntryHeader), nameof(MaximumSuggestionBoxSearchHistoryEntryDescription))]
     public int MaximumSuggestionBoxSearchHistory { get; set; } = 10;
 
     /// <summary>
     /// The target filter that indicates the type of the client
     /// </summary>
-    [SettingsEntry(IconGlyph.CommandPromptE756, nameof(SettingsPageResources.TargetAPIPlatformEntryHeader), nameof(SettingsPageResources.TargetAPIPlatformEntryDescription))]
+    [SettingsEntry(IconGlyph.CommandPromptE756, nameof(TargetAPIPlatformEntryHeader), nameof(TargetAPIPlatformEntryDescription))]
     public TargetFilter TargetFilter { get; set; } = TargetFilter.ForAndroid;
 
-    [SettingsEntry(IconGlyph.TypeE97C, nameof(SettingsPageResources.ThumbnailDirectionEntryHeader), nameof(SettingsPageResources.ThumbnailDirectionEntryDescription))]
+    [SettingsEntry(IconGlyph.TypeE97C, nameof(ThumbnailDirectionEntryHeader), nameof(ThumbnailDirectionEntryDescription))]
     public ThumbnailDirection ThumbnailDirection { get; set; } = ThumbnailDirection.Portrait;
 
-    [SettingsEntry(IconGlyph.TilesECA5, nameof(SettingsPageResources.ItemsViewLayoutTypeEntryHeader), nameof(SettingsPageResources.ItemsViewLayoutTypeEntryDescription))]
+    [SettingsEntry(IconGlyph.TilesECA5, nameof(ItemsViewLayoutTypeEntryHeader), nameof(ItemsViewLayoutTypeEntryDescription))]
     public ItemsViewLayoutType ItemsViewLayoutType { get; set; } = ItemsViewLayoutType.LinedFlow;
 
-    [SettingsEntry(IconGlyph.Blocked2ECE4, nameof(SettingsPageResources.BlockedTagsEntryHeader), nameof(SettingsPageResources.BlockedTagsEntryDescription))]
+    [SettingsEntry(IconGlyph.Blocked2ECE4, nameof(BlockedTagsEntryHeader), nameof(BlockedTagsEntryDescription))]
     public HashSet<string> BlockedTags { get; set; } = [];
 
     /// <summary>
     /// The mirror host for image server, Pixeval will do a simple substitution that
     /// changes the host of the original url(i.pximg.net) to this one.
     /// </summary>
-    [SettingsEntry(IconGlyph.HardDriveEDA2, nameof(SettingsPageResources.ImageMirrorServerEntryHeader), nameof(SettingsPageResources.ImageMirrorServerEntryDescription))]
+    [SettingsEntry(IconGlyph.HardDriveEDA2, nameof(ImageMirrorServerEntryHeader), nameof(ImageMirrorServerEntryDescription))]
     public string? MirrorHost { get; set; } = null;
 
-    [SettingsEntry(IconGlyph.HistoryE81C, nameof(SettingsPageResources.MaximumBrowseHistoryRecordsEntryHeader), nameof(SettingsPageResources.MaximumBrowseHistoryRecordsEntryDescription))]
+    [SettingsEntry(IconGlyph.HistoryE81C, nameof(MaximumBrowseHistoryRecordsEntryHeader), nameof(MaximumBrowseHistoryRecordsEntryDescription))]
     public int MaximumBrowseHistoryRecords { get; set; } = 100;
 
     public DateTimeOffset SearchStartDate { get; set; } = DateTimeOffset.Now - TimeSpan.FromDays(1);
 
     public DateTimeOffset SearchEndDate { get; set; } = DateTimeOffset.Now;
 
-    [SettingsEntry(IconGlyph.FitPageE9A6, nameof(SettingsPageResources.BrowserOriginalImageEntryHeader), nameof(SettingsPageResources.BrowserOriginalImageEntryDescription))]
+    [SettingsEntry(IconGlyph.FitPageE9A6, nameof(BrowserOriginalImageEntryHeader), nameof(BrowserOriginalImageEntryDescription))]
     public bool BrowserOriginalImage { get; set; }
 
     [AttributeIgnore(typeof(ResetAttribute))]
@@ -229,19 +230,24 @@ public partial record AppSettings : IWindowSettings
 
     public uint NovelFontColorInLightMode { get; set; } = 0xFF000000;
 
-    public uint NovelBackgroundInDarkMode { get; set; } = 0;
+    public uint NovelBackgroundInDarkMode { get; set; }
 
-    public uint NovelBackgroundInLightMode { get; set; } = 0;
+    public uint NovelBackgroundInLightMode { get; set; }
 
+    [SettingsEntry(IconGlyph.BrushSizeEDA8, nameof(NovelSettingsFontWeightEntryHeader), nameof(NovelSettingsFontWeightEntryDescription))]
     public FontWeightsOption NovelFontWeight { get; set; } = FontWeightsOption.Normal;
 
+    [SettingsEntry(IconGlyph.FontE8D2, nameof(NovelSettingsFontFamilyEntryHeader), nameof(OpenFontSettingsHyperlinkButtonContent))]
     public string NovelFontFamily { get; set; } = AppSettingsResources.AppDefaultFontFamilyName;
 
-    public double NovelFontSize { get; set; } = 14;
+    [SettingsEntry(IconGlyph.FontSizeE8E9, nameof(NovelSettingsFontSizeEntryHeader), nameof(NovelSettingsFontSizeEntryDescription))]
+    public int NovelFontSize { get; set; } = 14;
 
-    public double NovelLineHeight { get; set; } = 28;
+    [SettingsEntry(IconGlyph.ListEA37, nameof(NovelSettingsLineHeightEntryHeader), nameof(NovelSettingsLineHeightEntryDescription))]
+    public int NovelLineHeight { get; set; } = 28;
 
-    public double NovelMaxWidth { get; set; } = 1000;
+    [SettingsEntry(IconGlyph.PageMarginLandscapeWideF57A, nameof(NovelSettingsMaxWidthEntryHeader), nameof(NovelSettingsMaxWidthEntryDescription))]
+    public int NovelMaxWidth { get; set; } = 1000;
 
     public Size WindowSize { get; set; } = WindowHelper.EstimatedWindowSize().ToSize();
 
@@ -249,6 +255,39 @@ public partial record AppSettings : IWindowSettings
 
     [AttributeIgnore(typeof(GenerateConstructorAttribute), typeof(AppContextAttribute<>))]
     public WorkType WorkType => SimpleWorkType is SimpleWorkType.IllustAndManga ? WorkType.Illust : WorkType.Novel;
+
+    [AttributeIgnore(typeof(GenerateConstructorAttribute), typeof(AppContextAttribute<>))]
+    public ElementTheme ActualTheme => Theme is ElementTheme.Default
+        ? AppHelper.IsDarkMode ? ElementTheme.Dark : ElementTheme.Light
+        : Theme;
+
+    [AttributeIgnore(typeof(GenerateConstructorAttribute), typeof(AppContextAttribute<>))]
+    [SettingsEntry(IconGlyph.ColorE790, nameof(NovelSettingsBackgroundEntryHeader), nameof(NovelSettingsBackgroundEntryDescription))]
+    public uint NovelBackground
+    {
+        get => ActualTheme is ElementTheme.Light ? NovelBackgroundInLightMode : NovelBackgroundInDarkMode;
+        set
+        {
+            if (ActualTheme is ElementTheme.Light)
+                NovelBackgroundInLightMode = value;
+            else
+                NovelBackgroundInDarkMode = value;
+        }
+    }
+
+    [AttributeIgnore(typeof(GenerateConstructorAttribute), typeof(AppContextAttribute<>))]
+    [SettingsEntry(IconGlyph.FontColorE8D3, nameof(NovelSettingsFontColorEntryHeader), nameof(NovelSettingsFontColorEntryDescription))]
+    public uint NovelFontColor
+    {
+        get => ActualTheme is ElementTheme.Light ? NovelFontColorInLightMode : NovelFontColorInDarkMode;
+        set
+        {
+            if (ActualTheme is ElementTheme.Light)
+                NovelFontColorInLightMode = value;
+            else
+                NovelFontColorInDarkMode = value;
+        }
+    }
 
     public MakoClientConfiguration ToMakoClientConfiguration()
     {

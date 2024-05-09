@@ -105,6 +105,14 @@ public sealed partial class NovelViewerPage
         DocumentViewer_OnTapped(null!, null!);
     }
 
+    private void Panel_OnLoaded(object sender, RoutedEventArgs e)
+    {
+        var panel = sender.To<StackPanel>();
+
+        foreach (var entry in _viewModel.Entries)
+            panel.Children.Add(entry.Element);
+    }
+
     private void NovelViewerPage_OnUnloaded(object sender, RoutedEventArgs e)
     {
         _viewModel.Dispose();

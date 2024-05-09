@@ -14,13 +14,13 @@ public class DownloadMacroAppSettingsEntry(
 {
     public override DownloadMacroSettingsExpander Element => new() { Entry = this };
 
-    public string DefaultDownloadPathMacro
+    public string DownloadPathMacro
     {
-        get => Settings.DefaultDownloadPathMacro;
-        set => Settings.DefaultDownloadPathMacro = value;
+        get => Settings.DownloadPathMacro;
+        set => Settings.DownloadPathMacro = value;
     }
 
-    public override void ValueReset() => OnPropertyChanged(nameof(DefaultDownloadPathMacro));
+    public override void ValueReset() => OnPropertyChanged(nameof(DownloadPathMacro));
 
     private static readonly IDictionary<string, string> _macroTooltips = new Dictionary<string, string>
     {

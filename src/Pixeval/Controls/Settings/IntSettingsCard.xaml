@@ -15,9 +15,11 @@
         <controls1:GlyphIcon IconGlyph="{x:Bind Entry.HeaderIcon}" />
     </controls:SettingsCard.HeaderIcon>
     <NumberBox
+        LargeChange="{x:Bind Entry.LargeChange}"
         Maximum="{x:Bind Entry.Max}"
         Minimum="{x:Bind Entry.Min}"
         PlaceholderText="{x:Bind Entry.Placeholder}"
+        SmallChange="{x:Bind Entry.SmallChange}"
         Style="{StaticResource SettingsNumberBoxStyle}"
         ValueChanged="NumberBox_OnValueChanged"
         Value="{x:Bind Entry.Value, Mode=TwoWay}" />

@@ -36,6 +36,7 @@ namespace Pixeval.Pages.Login;
 public sealed partial class LoginPage
 {
     private readonly LoginPageViewModel _viewModel;
+    public static LoginPage? Current { get; private set; }
 
     private const string RefreshToken = nameof(RefreshToken);
     private const string Browser = nameof(Browser);
@@ -43,6 +44,7 @@ public sealed partial class LoginPage
 
     public LoginPage()
     {
+        Current = this;
         _viewModel = new(this);
         InitializeComponent();
     }
@@ -109,11 +111,13 @@ public sealed partial class LoginPage
         }
     }
 
-    private void SuccessNavigating()
+    public static void SuccessNavigating()
     {
-        _viewModel.AdvancePhase(LoginPageViewModel.LoginPhaseEnum.SuccessNavigating);
-        NavigateParent<MainPage>(null, new DrillInNavigationTransitionInfo());
-        _viewModel.LogoutExit = false;
+        if (Current is null || App.AppViewModel.MakoClient == null!)
+            ThrowHelper.Exception();
+        Current._viewModel.AdvancePhase(LoginPageViewModel.LoginPhaseEnum.SuccessNavigating);
+        Current.NavigateParent<MainPage>(null, new DrillInNavigationTransitionInfo());
+        Current._viewModel.LogoutExit = false;
         AppInfo.SaveContext();
     }
 
@@ -141,22 +145,13 @@ public sealed partial class LoginPage
     {
         try
         {
-            await _viewModel.WebView2LoginAsync(this, useNewAccount, Navigated);
+            await _viewModel.WebView2LoginAsync(this, useNewAccount, () => DispatcherQueue.TryEnqueue(SuccessNavigating));
         }
         catch (Exception exception)
         {
             _ = await this.CreateAcknowledgementAsync(LoginPageResources.ErrorWhileLoggingInTitle,
                 LoginPageResources.ErrorWhileLogginInContentFormatted.Format(exception + "\n" + exception.StackTrace));
             _viewModel.CloseWindow();
-        }
-
-        return;
-        void Navigated()
-        {
-            if (App.AppViewModel.MakoClient == null!)
-                ThrowHelper.Exception();
-
-            _ = DispatcherQueue.TryEnqueue(SuccessNavigating);
         }
     }
 

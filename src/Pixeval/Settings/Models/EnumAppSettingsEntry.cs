@@ -1,4 +1,5 @@
 using System;
+using System.Linq.Expressions;
 using Pixeval.AppManagement;
 using Pixeval.Controls.Settings;
 
@@ -6,17 +7,11 @@ namespace Pixeval.Settings.Models;
 
 public class EnumAppSettingsEntry(
     AppSettings appSettings,
-    string propertyName,
+    Expression<Func<AppSettings, Enum>> property,
     Array array)
-    : SingleValueSettingsEntryBase<AppSettings>(appSettings, propertyName)
+    : SingleValueSettingsEntry<AppSettings, Enum>(appSettings, property)
 {
     public override EnumSettingsCard Element => new() { Entry = this };
-
-    public Enum Value
-    {
-        get => (Enum)ValueBase!;
-        set => ValueBase = value;
-    }
 
     public Action<Enum>? ValueChanged { get; set; }
 
@@ -25,9 +20,9 @@ public class EnumAppSettingsEntry(
     public EnumAppSettingsEntry(
         AppSettings appSettings,
         WorkTypeEnum workType,
-        string propertyName,
+        Expression<Func<AppSettings, Enum>> property,
         Array array)
-        : this(appSettings, propertyName, array)
+        : this(appSettings, property, array)
     {
         Header = SubHeader(workType);
         HeaderIcon = SubHeaderIcon(workType);
@@ -36,15 +31,15 @@ public class EnumAppSettingsEntry(
 
 public class EnumAppSettingsEntry<TEnum>(
     AppSettings appSettings,
-    string propertyName)
-    : EnumAppSettingsEntry(appSettings, propertyName, Enum.GetValues<TEnum>())
+    Expression<Func<AppSettings, Enum>> property)
+    : EnumAppSettingsEntry(appSettings, property, Enum.GetValues<TEnum>())
     where TEnum : struct, Enum
 {
     public EnumAppSettingsEntry(
         AppSettings appSettings,
         WorkTypeEnum workType,
-        string propertyName)
-        : this(appSettings, propertyName)
+        Expression<Func<AppSettings, Enum>> property)
+        : this(appSettings, property)
     {
         Header = SubHeader(workType);
         HeaderIcon = SubHeaderIcon(workType);
