@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Pixeval.AppManagement;
 using WinUI3Utilities.Controls;
 
 namespace Pixeval.Settings;
@@ -8,9 +9,9 @@ public abstract class MultiValuesSettingsEntryBase<TSettings>(
     string header,
     string description,
     IconGlyph headerIcon,
-    IReadOnlyList<SingleValueSettingsEntryBase<TSettings>> entries) : SettingsEntryBase<TSettings>(settings, header, description, headerIcon)
+    IReadOnlyList<SingleValueSettingsEntryBase<AppSettings>> entries) : SettingsEntryBase<TSettings>(settings, header, description, headerIcon)
 {
-    public IReadOnlyList<SingleValueSettingsEntryBase<TSettings>> Entries { get; } = entries;
+    public IReadOnlyList<SingleValueSettingsEntryBase<AppSettings>> Entries { get; } = entries;
 
     public override void ValueReset()
     {

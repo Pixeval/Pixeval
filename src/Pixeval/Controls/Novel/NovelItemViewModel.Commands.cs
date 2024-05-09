@@ -56,7 +56,7 @@ public partial class NovelItemViewModel
                 break;
         }
 
-        await SaveUtilityAsync(hWnd, documentViewerViewModel, App.AppViewModel.AppSettings.DefaultDownloadPathMacro);
+        await SaveUtilityAsync(hWnd, documentViewerViewModel, App.AppViewModel.AppSettings.DownloadPathMacro);
     }
 
     protected override async void SaveAsCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
@@ -84,7 +84,7 @@ public partial class NovelItemViewModel
             return;
         }
 
-        var name = Path.GetFileName(App.AppViewModel.AppSettings.DefaultDownloadPathMacro);
+        var name = Path.GetFileName(App.AppViewModel.AppSettings.DownloadPathMacro);
         var path = Path.Combine(folder.Path, name);
         await SaveUtilityAsync(hWnd, documentViewerViewModel, path);
     }

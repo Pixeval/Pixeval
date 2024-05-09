@@ -56,7 +56,7 @@ public partial class IllustrationItemViewModel
                 break;
         }
 
-        await SaveUtilityAsync(hWnd, getOriginalImageSourceAsync, App.AppViewModel.AppSettings.DefaultDownloadPathMacro);
+        await SaveUtilityAsync(hWnd, getOriginalImageSourceAsync, App.AppViewModel.AppSettings.DownloadPathMacro);
     }
 
     protected override async void SaveAsCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
@@ -84,7 +84,7 @@ public partial class IllustrationItemViewModel
             return;
         }
 
-        var name = Path.GetFileName(App.AppViewModel.AppSettings.DefaultDownloadPathMacro);
+        var name = Path.GetFileName(App.AppViewModel.AppSettings.DownloadPathMacro);
         var path = Path.Combine(folder.Path, name);
         await SaveUtilityAsync(hWnd, getOriginalImageSourceAsync, path);
     }

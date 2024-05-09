@@ -10,12 +10,12 @@
     xmlns:local="using:Pixeval.Settings"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="using:Pixeval.Settings.Models"
-    x:Uid="/SettingsPage/DefaultDownloadPathMacroEntry"
+    x:Uid="/SettingsPage/DownloadPathMacroEntry"
     HeaderIcon="{controls1:GlyphIcon Glyph=RenameE8AC}"
     Loading="DownloadMacroSettingsExpander_OnLoading"
     mc:Ignorable="d">
     <controls:SettingsExpander.Description>
-        <HyperlinkButton x:Uid="/SettingsPage/DefaultDownloadPathMacroEntryDescription" Tapped="DefaultDownloadPathMacroEntry_OnTapped" />
+        <HyperlinkButton x:Uid="/SettingsPage/DownloadPathMacroEntryDescription" Tapped="DownloadPathMacroEntry_OnTapped" />
     </controls:SettingsExpander.Description>
     <controls:SettingsExpander.Items>
         <controls:SettingsCard ContentAlignment="Left">
@@ -33,14 +33,14 @@
                     </labs:TokenView.ItemTemplate>
                 </labs:TokenView>
                 <RichEditBox
-                    x:Name="DefaultDownloadPathMacroTextBox"
-                    x:Uid="/SettingsPage/DefaultDownloadPathMacroTextBox"
+                    x:Name="DownloadPathMacroTextBox"
+                    x:Uid="/SettingsPage/DownloadPathMacroTextBox"
                     AcceptsReturn="False"
-                    ContextMenuOpening="DefaultDownloadPathMacroTextBox_OnContextMenuOpening"
-                    GotFocus="DefaultDownloadPathMacroTextBox_OnGotFocus"
+                    ContextMenuOpening="DownloadPathMacroTextBox_OnContextMenuOpening"
+                    GotFocus="DownloadPathMacroTextBox_OnGotFocus"
                     IsSpellCheckEnabled="False"
-                    LostFocus="DefaultDownloadPathMacroTextBox_OnLostFocus"
-                    TextChanged="DefaultDownloadPathMacroTextBox_OnTextChanged" />
+                    LostFocus="DownloadPathMacroTextBox_OnLostFocus"
+                    TextChanged="DownloadPathMacroTextBox_OnTextChanged" />
                 <InfoBar
                     x:Name="DownloadMacroInvalidInfoBar"
                     x:Uid="/SettingsPage/DownloadMacroInvalidInfoBar"

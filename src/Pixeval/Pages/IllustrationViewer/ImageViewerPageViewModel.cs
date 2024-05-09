@@ -171,7 +171,7 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
 
     public async Task<StorageFile> SaveToFolderAsync(AppKnownFolders appKnownFolder)
     {
-        var name = Path.GetFileName(App.AppViewModel.AppSettings.DefaultDownloadPathMacro);
+        var name = Path.GetFileName(App.AppViewModel.AppSettings.DownloadPathMacro);
         var path = IoHelper.NormalizePath(new IllustrationMetaPathParser().Reduce(name, IllustrationViewModel));
         var file = await appKnownFolder.CreateFileAsync(path);
         await using var target = await file.OpenStreamForWriteAsync();

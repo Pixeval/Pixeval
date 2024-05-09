@@ -1,4 +1,5 @@
 using System;
+using System.Linq.Expressions;
 using Pixeval.AppManagement;
 using Pixeval.Controls.Settings;
 
@@ -6,16 +7,10 @@ namespace Pixeval.Settings.Models;
 
 public class StringAppSettingsEntry(
     AppSettings appSettings,
-    string propertyName)
-    : SingleValueSettingsEntryBase<AppSettings>(appSettings, propertyName)
+    Expression<Func<AppSettings, string?>> property)
+    : SingleValueSettingsEntry<AppSettings, string?>(appSettings, property)
 {
     public override StringSettingsCard Element => new() { Entry = this };
-
-    public string? Value
-    {
-        get => (string?)ValueBase;
-        set => ValueBase = value;
-    }
 
     public Action<string?>? ValueChanged { get; set; }
 
@@ -24,8 +19,8 @@ public class StringAppSettingsEntry(
     public StringAppSettingsEntry(
         AppSettings appSettings,
         WorkTypeEnum workType,
-        string propertyName)
-        : this(appSettings, propertyName)
+        Expression<Func<AppSettings, string?>> property)
+        : this(appSettings, property)
     {
         Header = SubHeader(workType);
         HeaderIcon = SubHeaderIcon(workType);

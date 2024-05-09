@@ -78,8 +78,8 @@ public partial record AppSettings : IWindowSettings
     [SettingsEntry(IconGlyph.CheckMarkE73E, nameof(SettingsPageResources.DefaultSelectedTabEntryHeader), nameof(SettingsPageResources.DefaultSelectedTabEntryDescription))]
     public MainPageTabItem DefaultSelectedTabItem { get; set; }
 
-    [SettingsEntry(IconGlyph.RenameE8AC, nameof(SettingsPageResources.DefaultDownloadPathMacroEntryHeader), nameof(SettingsPageResources.DefaultDownloadPathMacroEntryDescriptionContent))]
-    public string DefaultDownloadPathMacro { get; set; } = GetSpecialFolder() + @"\@{if_manga=[@{artist_name}] @{title}}\[@{artist_name}] @{id}@{if_manga=p@{manga_index}}@{ext}";
+    [SettingsEntry(IconGlyph.RenameE8AC, nameof(SettingsPageResources.DownloadPathMacroEntryHeader), nameof(SettingsPageResources.DownloadPathMacroEntryDescriptionContent))]
+    public string DownloadPathMacro { get; set; } = GetSpecialFolder() + @"\@{if_manga=[@{artist_name}] @{title}}\[@{artist_name}] @{id}@{if_manga=p@{manga_index}}@{ext}";
 
     public UgoiraDownloadFormat UgoiraDownloadFormat { get; set; } = UgoiraDownloadFormat.WebPLossless;
 
