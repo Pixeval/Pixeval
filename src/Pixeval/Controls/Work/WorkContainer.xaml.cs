@@ -34,7 +34,6 @@ using WinUI3Utilities;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.Controls.Windowing;
 using Pixeval.Filters;
-using Pixeval.Filters.TagParser;
 
 namespace Pixeval.Controls;
 
@@ -182,8 +181,7 @@ public partial class WorkContainer : IScrollViewHost
 
     public void PerformSearch(string text)
     {
-        var tokens = new Tokenizer().Tokenize(text).ToList();
-        var parser = new Parser(tokens);
+        var sequence = Parser.Parse(text);
         //var settings = parser.Build();
         //if (settings is not var (
         //    includeTags, excludeTags,
@@ -212,11 +210,11 @@ public partial class WorkContainer : IScrollViewHost
         //};
         return;
 
-        static bool ExamineExcludeTags(IEnumerable<string> tags, IEnumerable<QueryFilterToken> predicates)
-            => predicates.Aggregate(true, (acc, token) => acc && tags.All(t => t != token.Content));
+        //static bool ExamineExcludeTags(IEnumerable<string> tags, IEnumerable<QueryFilterToken> predicates)
+        //    => predicates.Aggregate(true, (acc, token) => acc && tags.All(t => t != token.Content));
 
-        static bool ExamineIncludeTags(ICollection<string> tags, IEnumerable<QueryFilterToken> predicates)
-            => tags.Count is 0 || predicates.Aggregate(true, (acc, token) => acc && tags.Any(t => t == token.Content));
+        //static bool ExamineIncludeTags(ICollection<string> tags, IEnumerable<TreeNodeBase> predicates)
+        //    => tags.Count is 0 || predicates.Aggregate(true, (acc, token) => acc && tags.Any(t => t == token.Content));
     }
 
     public ScrollView ScrollView => WorkView.ScrollView;

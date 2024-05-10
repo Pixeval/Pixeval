@@ -1,26 +1,25 @@
 using System;
 using System.Collections.Generic;
-using static Pixeval.Filters.IQueryNode;
 
 namespace Pixeval.Filters;
 
 public class Parser
 {
-    private IReadOnlyList<IQueryNode> Tokens { get; }
+    private IReadOnlyList<IQueryToken> Tokens { get; }
 
-    private readonly TokenSequence _queryTokenTree;
+    private readonly LeafSequence _queryTokenTree;
 
-    private TokenSequence _currentTopLevel;
+    private LeafSequence _currentTopLevel;
 
-    private Parser(IReadOnlyList<IQueryNode> filterTokens)
+    private Parser(IReadOnlyList<IQueryToken> filterTokens)
     {
         Tokens = filterTokens;
-        _currentTopLevel = _queryTokenTree = new TokenSequence(SequenceType.And, [], false);
+        _currentTopLevel = _queryTokenTree = new LeafSequence(SequenceType.And, [], false);
     }
 
     private int Position { get; set; }
 
-    private T Eat<T>() where T : IQueryNode
+    private T Eat<T>() where T : IQueryToken
     {
         var tok = Peek ?? throw new Exception("FilterToken finished");
         if (tok is T t)
@@ -32,52 +31,47 @@ public class Parser
         throw new Exception($"Expected {typeof(T).Name}, actual: {tok?.GetType().Name}");
     }
 
-    private IQueryNode? Peek => Position >= Tokens.Count ? null : Tokens[Position];
+    private IQueryToken? Peek => Position >= Tokens.Count ? null : Tokens[Position];
 
     /// <summary>
     /// top-level entrypoint
     /// </summary>
-    private TokenSequence Parse()
+    private LeafSequence Parse()
     {
         ParseArgumentList();
         return Peek is null ? _queryTokenTree : throw new Exception("Unbalanced token");
     }
 
-    public static TokenSequence Parse(IReadOnlyList<IQueryNode> filterTokens) => new Parser(filterTokens).Parse();
+    public static LeafSequence Parse(string str) => Parse((IReadOnlyList<IQueryToken>)Tokenizer.Tokenize(str));
+
+    public static LeafSequence Parse(IReadOnlyList<IQueryToken> filterTokens) => new Parser(filterTokens).Parse();
 
     /*
      * 
-     *      filter          ::= argument_list
-     *      argument_list   ::= {} | argument argument_list
-     *      argument        ::=
-     *                         and_list
-     *                       | or_list
-     *                       | keyword
-     *                       | tag
-     *                       | author
-     *                       | char
-     *                       | like_range
-     *                       | index_range
-     *                       | starting_date
-     *                       | ending_date
+     *      filter             ::= argument_list
+     *      argument_list      ::= {} | argument argument_list
+     *      argument           ::= and_list   | or_list     | title
+     *                           | tag        | author      | like_bool
+     *                           | like_range | index_range | starting_date
+     *                           | ending_date
      *
-     *      and_list    ::= LP AND argument_list RP
-     *      or_list     ::= LP OR argument_list RP
+     *      and_list           ::= LP AND argument_list RP
+     *      or_list            ::= LP OR argument_list RP
      *
-     *      keyword     ::= DATA | STRING
-     *      tag         ::= HASH DATA
-     *      author      ::= AROBASE DATA | A COLON DATA
-     *      char        ::= C COLON DATA
-     *      like_range  ::= L COLON range_desc
-     *      sequence_range ::= N COLON range_desc
-     *      starting_date  ::= S COLON date_desc
-     *      ending_date    ::= E COLON date_desc
+     *      title              ::= DATA
+     *      tag                ::= HASH DATA
+     *      author             ::= AT DATA
+     *      like_bool          ::= (ADD | DASH) enum
+     *          enum           ::= R18 | R18G | GIF
+     *      like_range         ::= L COLON range_desc
+     *      sequence_range     ::= I COLON range_desc
+     *      starting_date      ::= S COLON date_desc
+     *      ending_date        ::= E COLON date_desc
      *
-     *      range_desc     ::= interval_form | dash_form
-     *      interval_form  ::= (LB | LP) NUM COMMA NUM (RB | RP)
-     *      dash_form      ::= DASH NUM | NUM DASH NUM?
-     *
-     *      date_desc      ::= 
+     *      range_desc         ::= interval_form | dash_form
+     *          interval_form  ::= (LB | LP) NUM COMMA NUM (RB | RP)
+     *          dash_form      ::= (DASH NUM) | (NUM DASH NUM) | (NUM DASH)
+     *      date_desc          ::= [Num (DASH | DOT)] Num (DASH | DOT) Num
      */
 
     /*
@@ -107,26 +101,26 @@ public class Parser
     private bool ParseArgument()
     {
         var isNot = false;
-        if (Peek is Not)
+        if (Peek is IQueryToken.Not)
         {
-            _ = Eat<Not>();
+            _ = Eat<IQueryToken.Not>();
             isNot = true;
         }
 
         switch (Peek)
         {
             // And/Or
-            case LeftParen:
+            case IQueryToken.LeftParen:
             {
-                _ = Eat<LeftParen>();
+                _ = Eat<IQueryToken.LeftParen>();
                 switch (Peek)
                 {
-                    case And:
+                    case IQueryToken.And:
                     {
                         EatSequence(SequenceType.And);
                         break;
                     }
-                    case Or:
+                    case IQueryToken.Or:
                     {
                         EatSequence(SequenceType.Or);
                         break;
@@ -138,56 +132,56 @@ public class Parser
                 return true;
             }
             // Data or keyword
-            case Data:
+            case IQueryToken.Data:
             {
                 EatString(StringType.Title);
                 return true;
             }
-            case Hashtag:
+            case IQueryToken.Hashtag:
             {
-                _ = Eat<Hashtag>();
+                _ = Eat<IQueryToken.Hashtag>();
                 EatString(StringType.Tag);
                 return true;
             }
-            case Arobase:
+            case IQueryToken.At:
             {
-                _ = Eat<Arobase>();
+                _ = Eat<IQueryToken.At>();
                 EatString(StringType.Author);
                 return true;
             }
-            case Plus:
+            case IQueryToken.Plus:
             {
-                _ = Eat<Plus>();
+                _ = Eat<IQueryToken.Plus>();
                 EatBool(true);
                 return true;
             }
-            case Dash:
+            case IQueryToken.Dash:
             {
-                _ = Eat<Dash>();
+                _ = Eat<IQueryToken.Dash>();
                 EatBool(false);
                 return true;
             }
-            case Like:
+            case IQueryToken.Like:
             {
-                _ = Eat<Like>();
+                _ = Eat<IQueryToken.Like>();
                 EatRange(RangeType.Bookmark);
                 return true;
             }
-            case IQueryNode.Index:
+            case IQueryToken.Index:
             {
-                _ = Eat<IQueryNode.Index>();
+                _ = Eat<IQueryToken.Index>();
                 EatRange(RangeType.Index);
                 return true;
             }
-            case StartDate:
+            case IQueryToken.StartDate:
             {
-                _ = Eat<StartDate>();
+                _ = Eat<IQueryToken.StartDate>();
                 EatDate(RangeEdge.Starting);
                 return true;
             }
-            case EndDate:
+            case IQueryToken.EndDate:
             {
-                _ = Eat<EndDate>();
+                _ = Eat<IQueryToken.EndDate>();
                 EatDate(RangeEdge.Ending);
                 return true;
             }
@@ -197,13 +191,13 @@ public class Parser
 
         void EatSequence(SequenceType type)
         {
-            var nextAndNode = new TokenSequence(type, [], isNot);
+            var nextAndNode = new LeafSequence(type, [], isNot);
             _currentTopLevel.Insert(nextAndNode);
             _currentTopLevel = nextAndNode;
 
-            _ = type is SequenceType.And ? Eat<And>() : (IQueryNode)Eat<Or>();
+            _ = type is SequenceType.And ? Eat<IQueryToken.And>() : (IQueryToken)Eat<IQueryToken.Or>();
             ParseArgumentList();
-            _ = Eat<RightParen>();
+            _ = Eat<IQueryToken.RightParen>();
 
             if (_currentTopLevel.Parent != null)
             {
@@ -213,35 +207,35 @@ public class Parser
 
         void EatString(StringType type)
         {
-            var data = Eat<Data>();
-            var authorTagToken = new StringToken(type, data, isNot);
+            var data = Eat<IQueryToken.Data>();
+            var authorTagToken = new StringLeaf(type, data, isNot);
             _currentTopLevel.Insert(authorTagToken);
         }
 
         void EatRange(RangeType type)
         {
-            _ = Eat<Colon>();
+            _ = Eat<IQueryToken.Colon>();
             var (start, end) = ParseRangeDesc();
-            var rangeToken = new NumericRangeToken(type, start, end, isNot);
+            var rangeToken = new NumericRangeLeaf(type, start, end, isNot);
             _currentTopLevel.Insert(rangeToken);
         }
 
         void EatDate(RangeEdge type)
         {
-            _ = Eat<Colon>();
+            _ = Eat<IQueryToken.Colon>();
             var (year, month, day) = ParseDateDesc();
 
             var date = new DateTime(year ?? DateTime.Today.Year, month, day);
 
             var dateOffset = new DateTimeOffset(date);
 
-            var dateToken = new DateToken(type, dateOffset, isNot);
+            var dateToken = new DateLeaf(type, dateOffset, isNot);
             _currentTopLevel.Insert(dateToken);
         }
 
         void EatBool(bool isInclude)
         {
-            var content = Eat<Data>();
+            var content = Eat<IQueryToken.Data>();
             var type = content.Value.ToLower() switch
             {
                 "r18" => BoolType.R18,
@@ -250,7 +244,7 @@ public class Parser
                 _ => throw new Exception("Invalid bool type")
             };
 
-            var rangeToken = new BoolToken(isInclude, type, isNot);
+            var rangeToken = new BoolLeaf(isInclude, type, isNot);
             _currentTopLevel.Insert(rangeToken);
         }
     }
@@ -259,8 +253,8 @@ public class Parser
     {
         return Peek switch
         {
-            LeftBracket or LeftParen => ParseIntervalForm(),
-            Dash or Numeric => ParseDashForm(),
+            IQueryToken.LeftBracket or IQueryToken.LeftParen => ParseIntervalForm(),
+            IQueryToken.Dash or IQueryToken.Numeric => ParseDashForm(),
             _ => (null, null)
         };
 
@@ -270,29 +264,29 @@ public class Parser
 
             switch (Peek)
             {
-                case LeftBracket:
-                    _ = Eat<LeftBracket>();
+                case IQueryToken.LeftBracket:
+                    _ = Eat<IQueryToken.LeftBracket>();
                     leftInclusive = true;
                     break;
-                case LeftParen:
-                    _ = Eat<LeftParen>();
+                case IQueryToken.LeftParen:
+                    _ = Eat<IQueryToken.LeftParen>();
                     leftInclusive = false;
                     break;
             }
 
-            var a = Eat<Numeric>();
-            _ = Eat<Comma>();
-            var b = Eat<Numeric>();
+            var a = Eat<IQueryToken.Numeric>();
+            _ = Eat<IQueryToken.Comma>();
+            var b = Eat<IQueryToken.Numeric>();
 
             var rightInclusive = false;
             switch (Peek)
             {
-                case RightBracket:
-                    _ = Eat<RightBracket>();
+                case IQueryToken.RightBracket:
+                    _ = Eat<IQueryToken.RightBracket>();
                     rightInclusive = true;
                     break;
-                case RightParen:
-                    _ = Eat<RightParen>();
+                case IQueryToken.RightParen:
+                    _ = Eat<IQueryToken.RightParen>();
                     rightInclusive = false;
                     break;
             }
@@ -310,19 +304,19 @@ public class Parser
         {
             switch (Peek)
             {
-                case Dash:
+                case IQueryToken.Dash:
                 {
-                    _ = Eat<Dash>();
-                    var a = Eat<Numeric>();
+                    _ = Eat<IQueryToken.Dash>();
+                    var a = Eat<IQueryToken.Numeric>();
                     return (null, a.Value);
                 }
-                case Numeric:
+                case IQueryToken.Numeric:
                 {
-                    var a = Eat<Numeric>();
-                    _ = Eat<Dash>();
-                    if (Peek is Numeric)
+                    var a = Eat<IQueryToken.Numeric>();
+                    _ = Eat<IQueryToken.Dash>();
+                    if (Peek is IQueryToken.Numeric)
                     {
-                        var b = Eat<Numeric>();
+                        var b = Eat<IQueryToken.Numeric>();
                         return (a.Value, b.Value);
                     }
 
@@ -336,14 +330,14 @@ public class Parser
 
     private (int?, int, int) ParseDateDesc()
     {
-        var firstPart = Eat<Numeric>();
+        var firstPart = Eat<IQueryToken.Numeric>();
         if (TryEatDateSeparator())
         {
-            var secondPart = Eat<Numeric>();
+            var secondPart = Eat<IQueryToken.Numeric>();
 
             if (TryEatDateSeparator())
             {
-                var thirdPart = Eat<Numeric>();
+                var thirdPart = Eat<IQueryToken.Numeric>();
 
                 return ((int)firstPart.Value, (int)secondPart.Value, (int)thirdPart.Value);
             }
@@ -357,14 +351,14 @@ public class Parser
         {
             switch (Peek)
             {
-                case Dash:
+                case IQueryToken.Dash:
                 {
-                    _ = Eat<Dash>();
+                    _ = Eat<IQueryToken.Dash>();
                     return true;
                 }
-                case Dot:
+                case IQueryToken.Dot:
                 {
-                    _ = Eat<Dot>();
+                    _ = Eat<IQueryToken.Dot>();
                     return true;
                 }
                 default:
@@ -373,4 +367,3 @@ public class Parser
         }
     }
 }
-
