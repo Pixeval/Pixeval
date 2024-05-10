@@ -12,23 +12,17 @@ public interface IQueryNode
         public bool IsNotEmpty();
     }
 
-    [DebuggerDisplay("a")]
-    public record A : IQueryNode;
-
-    [DebuggerDisplay("c")]
-    public record C : IQueryNode;
-
     [DebuggerDisplay("e")]
-    public record E : IQueryNode;
+    public record EndDate : IQueryNode;
 
     [DebuggerDisplay("l")]
-    public record L : IQueryNode;
+    public record Like : IQueryNode;
 
-    [DebuggerDisplay("n")]
-    public record N : IQueryNode;
+    [DebuggerDisplay("i")]
+    public record Index : IQueryNode;
 
     [DebuggerDisplay("s")]
-    public record S : IQueryNode;
+    public record StartDate : IQueryNode;
 
     [DebuggerDisplay("{Value} ({IsPrecise})")]
     public record Data(string Value, bool IsPrecise) : INullableNode
@@ -52,6 +46,9 @@ public interface IQueryNode
             return Value >= 0;
         }
     }
+
+    [DebuggerDisplay("+")]
+    public record Plus : IQueryNode;
 
     [DebuggerDisplay("-")]
     public record Dash : IQueryNode;

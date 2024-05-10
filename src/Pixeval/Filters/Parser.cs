@@ -8,14 +8,14 @@ public class Parser
 {
     private IReadOnlyList<IQueryNode> Tokens { get; }
 
-    private readonly TokenTreeNode _queryTokenTree;
+    private readonly TokenSequence _queryTokenTree;
 
-    private TokenTreeNode _currentTopLevel;
+    private TokenSequence _currentTopLevel;
 
     private Parser(IReadOnlyList<IQueryNode> filterTokens)
     {
         Tokens = filterTokens;
-        _currentTopLevel = _queryTokenTree = new TokenTreeNode(TreeType.And, [], false);
+        _currentTopLevel = _queryTokenTree = new TokenSequence(SequenceType.And, [], false);
     }
 
     private int Position { get; set; }
@@ -37,17 +37,13 @@ public class Parser
     /// <summary>
     /// top-level entrypoint
     /// </summary>
-    private TokenTreeNode Parse()
+    private TokenSequence Parse()
     {
         ParseArgumentList();
-        if (Peek is not null)
-        {
-            throw new Exception("Unbalanced token");
-        }
-        return _queryTokenTree;
+        return Peek is null ? _queryTokenTree : throw new Exception("Unbalanced token");
     }
 
-    public static TokenTreeNode Parse(IReadOnlyList<IQueryNode> filterTokens) => new Parser(filterTokens).Parse();
+    public static TokenSequence Parse(IReadOnlyList<IQueryNode> filterTokens) => new Parser(filterTokens).Parse();
 
     /*
      * 
@@ -95,22 +91,16 @@ public class Parser
         {
             // If all tokens are eaten, return gracefully
             if (Position == Tokens.Count)
-            {
                 return;
-            }
 
             // If this position is overflow, throw error
             if (Position > Tokens.Count)
-            {
                 throw new Exception("Expected an argument, actual: empty token flow");
-            }
 
             // If the correct token is meet, call to parse argument
             // Unexpected type of token, error
             if (!ParseArgument())
-            {
                 break;
-            }
         }
     }
 
@@ -133,32 +123,12 @@ public class Parser
                 {
                     case And:
                     {
-                        var nextAndNode = new TokenTreeNode(TreeType.And, [], isNot);
-                        _currentTopLevel.Insert(nextAndNode);
-                        _currentTopLevel = nextAndNode;
-
-                        ParseAndList();
-
-                        if (_currentTopLevel.Parent != null)
-                        {
-                            _currentTopLevel = _currentTopLevel.Parent;
-                        }
-
+                        EatSequence(SequenceType.And);
                         break;
                     }
                     case Or:
                     {
-                        var nextOrNode = new TokenTreeNode(TreeType.Or, [], isNot);
-                        _currentTopLevel.Insert(nextOrNode);
-                        _currentTopLevel = nextOrNode;
-
-                        ParseOrList();
-
-                        if (_currentTopLevel.Parent != null)
-                        {
-                            _currentTopLevel = _currentTopLevel.Parent;
-                        }
-
+                        EatSequence(SequenceType.Or);
                         break;
                     }
                     default:
@@ -166,130 +136,123 @@ public class Parser
                 }
 
                 return true;
-
-                void ParseAndList()
-                {
-                    _ = Eat<And>();
-                    ParseArgumentList();
-                    _ = Eat<RightParen>();
-                }
-
-                void ParseOrList()
-                {
-                    _ = Eat<Or>();
-                    ParseArgumentList();
-                    _ = Eat<RightParen>();
-                }
             }
             // Data or keyword
             case Data:
             {
-                var data = Eat<Data>();
-
-                var tagToken = new StringToken(StringType.Title, data, isNot);
-                _currentTopLevel.Insert(tagToken);
-
+                EatString(StringType.Title);
                 return true;
             }
             case Hashtag:
             {
                 _ = Eat<Hashtag>();
-                var data = Eat<Data>();
-
-                var tagToken = new StringToken(StringType.Tag, data, isNot);
-                _currentTopLevel.Insert(tagToken);
-
+                EatString(StringType.Tag);
                 return true;
             }
             case Arobase:
             {
                 _ = Eat<Arobase>();
-                var author = Eat<Data>();
-
-                var authorTagToken = new StringToken(StringType.Author, author, isNot);
-                _currentTopLevel.Insert(authorTagToken);
-
+                EatString(StringType.Author);
                 return true;
             }
-            case A:
+            case Plus:
             {
-                _ = Eat<A>();
-                _ = Eat<Colon>();
-                var author = Eat<Data>();
-
-                var authorTagToken = new StringToken(StringType.Author, author, isNot);
-                _currentTopLevel.Insert(authorTagToken);
-
+                _ = Eat<Plus>();
+                EatBool(true);
                 return true;
             }
-            /*
-            case IQueryFragmentNode.C:
+            case Dash:
             {
-                Eat<C>();
-                Eat<Colon>();
-                var character = Eat<Data>();
-
-                var characterTagToken = new TagToken(character);
-                _currentTopLevel.Insert(characterTagToken);
-
+                _ = Eat<Dash>();
+                EatBool(false);
                 return true;
             }
-            */
-            case L:
+            case Like:
             {
-                _ = Eat<L>();
-                _ = Eat<Colon>();
-                var (start, end) = ParseRangeDesc();
-
-                var rangeToken = new NumericRangeToken(RangeType.Bookmark, start, end, isNot);
-                _currentTopLevel.Insert(rangeToken);
-
+                _ = Eat<Like>();
+                EatRange(RangeType.Bookmark);
                 return true;
             }
-            case N:
+            case IQueryNode.Index:
             {
-                _ = Eat<N>();
-                _ = Eat<Colon>();
-                var (start, end) = ParseRangeDesc();
-
-                var rangeToken = new NumericRangeToken(RangeType.Index, start, end, isNot);
-                _currentTopLevel.Insert(rangeToken);
-
+                _ = Eat<IQueryNode.Index>();
+                EatRange(RangeType.Index);
                 return true;
             }
-            case S:
+            case StartDate:
             {
-                _ = Eat<S>();
-                _ = Eat<Colon>();
-                var (year, month, day) = ParseDateDesc();
-
-                var date = new DateTime(year ?? DateTime.Today.Year, month, day);
-
-                var dateOffset = new DateTimeOffset(date);
-
-                var dateToken = new DateToken(RangeEdge.Starting, dateOffset, isNot);
-                _currentTopLevel.Insert(dateToken);
-
+                _ = Eat<StartDate>();
+                EatDate(RangeEdge.Starting);
                 return true;
             }
-            case E:
+            case EndDate:
             {
-                _ = Eat<E>();
-                _ = Eat<Colon>();
-                var (year, month, day) = ParseDateDesc();
-
-                var date = new DateTime(year ?? DateTime.Today.Year, month, day);
-
-                var dateOffset = new DateTimeOffset(date);
-
-                var dateToken = new DateToken(RangeEdge.Ending, dateOffset, isNot);
-                _currentTopLevel.Insert(dateToken);
-
+                _ = Eat<EndDate>();
+                EatDate(RangeEdge.Ending);
                 return true;
             }
         }
 
         return false;
+
+        void EatSequence(SequenceType type)
+        {
+            var nextAndNode = new TokenSequence(type, [], isNot);
+            _currentTopLevel.Insert(nextAndNode);
+            _currentTopLevel = nextAndNode;
+
+            _ = type is SequenceType.And ? Eat<And>() : (IQueryNode)Eat<Or>();
+            ParseArgumentList();
+            _ = Eat<RightParen>();
+
+            if (_currentTopLevel.Parent != null)
+            {
+                _currentTopLevel = _currentTopLevel.Parent;
+            }
+        }
+
+        void EatString(StringType type)
+        {
+            var data = Eat<Data>();
+            var authorTagToken = new StringToken(type, data, isNot);
+            _currentTopLevel.Insert(authorTagToken);
+        }
+
+        void EatRange(RangeType type)
+        {
+            _ = Eat<Colon>();
+            var (start, end) = ParseRangeDesc();
+            var rangeToken = new NumericRangeToken(type, start, end, isNot);
+            _currentTopLevel.Insert(rangeToken);
+        }
+
+        void EatDate(RangeEdge type)
+        {
+            _ = Eat<Colon>();
+            var (year, month, day) = ParseDateDesc();
+
+            var date = new DateTime(year ?? DateTime.Today.Year, month, day);
+
+            var dateOffset = new DateTimeOffset(date);
+
+            var dateToken = new DateToken(type, dateOffset, isNot);
+            _currentTopLevel.Insert(dateToken);
+        }
+
+        void EatBool(bool isInclude)
+        {
+            var content = Eat<Data>();
+            var type = content.Value.ToLower() switch
+            {
+                "r18" => BoolType.R18,
+                "r18g" => BoolType.R18G,
+                "gif" => BoolType.Gif,
+                _ => throw new Exception("Invalid bool type")
+            };
+
+            var rangeToken = new BoolToken(isInclude, type, isNot);
+            _currentTopLevel.Insert(rangeToken);
+        }
     }
 
     private (long?, long?) ParseRangeDesc()

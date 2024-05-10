@@ -6,13 +6,6 @@ namespace Pixeval.Filters;
 public static class Tokenizer
 {
     /// <summary>
-    /// Put reserved symbols here, these symbols will be used for matching first character or used as skip condition while matching variable length tokens.
-    /// </summary>
-    internal const string Reserved = "-.#@:,[]()\"!";
-
-    internal const string DisallowedInTags = "#@:,[]()\"!";
-
-    /// <summary>
     /// Tokenize function for tag parser, this function need to be reworked for performance in the future.
     /// Returns a flow of tokenized nodes carrying data of the input string, structured.
     /// </summary>
@@ -20,31 +13,35 @@ public static class Tokenizer
     /// <returns></returns>
     public static IList<IQueryNode> Tokenize(string src) => src switch
     {
-        [] => [],
-        ['-', .. var rem] => Tokenize(rem).Prepend(new IQueryNode.Dash()),
-        ['.', .. var rem] => Tokenize(rem).Prepend(new IQueryNode.Dot()),
-        ['@', .. var rem] => Tokenize(rem).Prepend(new IQueryNode.Arobase()),
-        [':', .. var rem] => Tokenize(rem).Prepend(new IQueryNode.Colon()),
-        [',', .. var rem] => Tokenize(rem).Prepend(new IQueryNode.Comma()),
-        ['(', .. var rem] => Tokenize(rem).Prepend(new IQueryNode.LeftParen()),
-        ['[', .. var rem] => Tokenize(rem).Prepend(new IQueryNode.LeftBracket()),
-        [')', .. var rem] => Tokenize(rem).Prepend(new IQueryNode.RightParen()),
-        [']', .. var rem] => Tokenize(rem).Prepend(new IQueryNode.RightBracket()),
-        ['a', ':', .. var rem] => Tokenize(rem).Prepend(new IQueryNode.Colon()).Prepend(new IQueryNode.A()),
-        ['c', ':', .. var rem] => Tokenize(rem).Prepend(new IQueryNode.Colon()).Prepend(new IQueryNode.C()),
-        ['e', ':', .. var rem] => Tokenize(rem).Prepend(new IQueryNode.Colon()).Prepend(new IQueryNode.E()),
-        ['l', ':', .. var rem] => Tokenize(rem).Prepend(new IQueryNode.Colon()).Prepend(new IQueryNode.L()),
-        ['n', ':', .. var rem] => Tokenize(rem).Prepend(new IQueryNode.Colon()).Prepend(new IQueryNode.N()),
-        ['s', ':', .. var rem] => Tokenize(rem).Prepend(new IQueryNode.Colon()).Prepend(new IQueryNode.S()),
-        ['a', 'n', 'd', .. var rem] => Tokenize(rem).Prepend(new IQueryNode.And()),
-        ['o', 'r', .. var rem] => Tokenize(rem).Prepend(new IQueryNode.Or()),
-        ['!', .. var rem] => Tokenize(rem).Prepend(new IQueryNode.Not()),
-        ['#', .. var rem] => TokenizeAndPrepend(rem, EatDataPredicate).Prepend(new IQueryNode.Hashtag()),
-        ['"', .. var rem] => TokenizeAndPrepend(rem, t => t.IndexOf('"'), 1),
-        [var x, ..] when char.IsWhiteSpace(x) => TokenizeAndSkip(src, char.IsWhiteSpace),
-        [var x, ..] when char.IsDigit(x) => TokenizeNumeric(src),
+    [] => [],
+    ['+', .. var rem] => Tokenize(rem).Prepend(new IQueryNode.Plus()),
+    ['-', .. var rem] => Tokenize(rem).Prepend(new IQueryNode.Dash()),
+    ['.', .. var rem] => Tokenize(rem).Prepend(new IQueryNode.Dot()),
+    ['@', .. var rem] => Tokenize(rem).Prepend(new IQueryNode.Arobase()),
+    [':', .. var rem] => Tokenize(rem).Prepend(new IQueryNode.Colon()),
+    [',', .. var rem] => Tokenize(rem).Prepend(new IQueryNode.Comma()),
+    ['(', .. var rem] => Tokenize(rem).Prepend(new IQueryNode.LeftParen()),
+    ['[', .. var rem] => Tokenize(rem).Prepend(new IQueryNode.LeftBracket()),
+    [')', .. var rem] => Tokenize(rem).Prepend(new IQueryNode.RightParen()),
+    [']', .. var rem] => Tokenize(rem).Prepend(new IQueryNode.RightBracket()),
+    ['#', .. var rem] => Tokenize(rem).Prepend(new IQueryNode.Hashtag()),
+    ['!', .. var rem] => Tokenize(rem).Prepend(new IQueryNode.Not()),
+    ['e', ':', .. var rem] => Tokenize(rem).Prepend(new IQueryNode.Colon()).Prepend(new IQueryNode.EndDate()),
+    ['l', ':', .. var rem] => Tokenize(rem).Prepend(new IQueryNode.Colon()).Prepend(new IQueryNode.Like()),
+    ['i', ':', .. var rem] => Tokenize(rem).Prepend(new IQueryNode.Colon()).Prepend(new IQueryNode.Index()),
+    ['s', ':', .. var rem] => Tokenize(rem).Prepend(new IQueryNode.Colon()).Prepend(new IQueryNode.StartDate()),
+    ['a', 'n', 'd', .. var rem] => Tokenize(rem).Prepend(new IQueryNode.And()),
+    ['o', 'r', .. var rem] => Tokenize(rem).Prepend(new IQueryNode.Or()),
+    ['"', .. var rem] => TokenizeAndPrepend(rem, t => t.IndexOf('"'), 1),
+    [var x, ..] when char.IsWhiteSpace(x) => TokenizeAndSkip(src, char.IsWhiteSpace),
+    [var x, ..] when char.IsDigit(x) => TokenizeNumeric(src),
         _ => TokenizeAndPrepend(src, EatDataPredicate)
     };
+
+    private static bool EatDataPredicate(char ch)
+    {
+        return ch is ']' or ')' || char.IsWhiteSpace(ch);
+    }
 
     public static IList<IQueryNode> TokenizeNumeric(string src)
     {
@@ -52,7 +49,7 @@ public static class Tokenizer
         for (var i = 0; i < src.Length; ++i)
         {
             var c = src[i];
-            if (EatDataPredicate(c))
+            if (c is '-' or '.' or ',' or ']' or ')' || char.IsWhiteSpace(c))
                 return Tokenize(src[i..]).Prepend(isData
                     ? new IQueryNode.Data(src[..i])
                     : new IQueryNode.Numeric(long.Parse(src[..i])));
@@ -63,11 +60,6 @@ public static class Tokenizer
         return Tokenize("").Prepend(isData
             ? new IQueryNode.Data(src)
             : new IQueryNode.Numeric(long.Parse(src)));
-    }
-
-    private static bool EatDataPredicate(char ch)
-    {
-        return Reserved.Contains(ch) || char.IsWhiteSpace(ch);
     }
 
     private static IList<IQueryNode> TokenizeAndPrepend(string src, Func<string, int> indexOf, int offset = 0)
