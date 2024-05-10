@@ -84,6 +84,12 @@ public static class ThrowUtils
     public static TReturn ArgumentOutOfRange<T, TReturn>(T? actualValue, string? message = null, [CallerArgumentExpression(nameof(actualValue))] string? paraName = null)
         => throw new ArgumentOutOfRangeException(paraName, actualValue, message);
 
+    /// <exception cref="MacroParseException"/>
+    [DoesNotReturn]
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static void MacroParse(string? message = null)
+        => throw new MacroParseException(message);
+
     /// <exception cref="FormatException"/>
     [DoesNotReturn]
     [MethodImpl(MethodImplOptions.NoInlining)]

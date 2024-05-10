@@ -1,5 +1,5 @@
-using System;
 using System.ComponentModel;
+using WinUI3Utilities;
 using WinUI3Utilities.Controls;
 
 namespace Pixeval.Settings;
@@ -24,7 +24,7 @@ public abstract class ObservableSettingsEntryBase<TSettings>(
         WorkTypeEnum.Manga => SettingsPageResources.MangaOptionEntryHeader,
         WorkTypeEnum.Ugoira => SettingsPageResources.UgoiraOptionEntryHeader,
         WorkTypeEnum.Novel => SettingsPageResources.NovelOptionEntryHeader,
-        _ => throw new ArgumentOutOfRangeException()
+        _ => ThrowHelper.ArgumentOutOfRange<WorkTypeEnum, string>(workType)
     };
 
     public static IconGlyph SubHeaderIcon(WorkTypeEnum workType) => workType switch
@@ -33,6 +33,6 @@ public abstract class ObservableSettingsEntryBase<TSettings>(
         WorkTypeEnum.Manga => IconGlyph.PictureE8B9,
         WorkTypeEnum.Ugoira => IconGlyph.GIFF4A9,
         WorkTypeEnum.Novel => IconGlyph.ReadingModeE736,
-        _ => throw new ArgumentOutOfRangeException()
+        _ => ThrowHelper.ArgumentOutOfRange<WorkTypeEnum, IconGlyph>(workType)
     };
 }

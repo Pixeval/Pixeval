@@ -114,6 +114,7 @@ public static partial class Growl
         Token = token,
         StaysOpen = true
     });
+
     public static void Error(string title, string message) => InitGrowl(new GrowlInfo
     {
         Title = title,

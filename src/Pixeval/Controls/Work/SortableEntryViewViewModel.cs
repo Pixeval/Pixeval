@@ -86,6 +86,12 @@ public abstract partial class SortableEntryViewViewModel<T, TViewModel>
 
     public IReadOnlyCollection<IWorkViewModel> Source => DataProvider.Source;
 
+    public Range ViewRange
+    {
+        get => DataProvider.View.Range;
+        set => DataProvider.View.Range = value;
+    }
+
     public void ResetEngine(IFetchEngine<IWorkEntry>? newEngine, int itemLimit = -1)
     {
         DataProvider.ResetEngine((IFetchEngine<T>?)newEngine, itemLimit);

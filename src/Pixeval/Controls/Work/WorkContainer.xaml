@@ -36,10 +36,11 @@
                     SelectionChanged="SortOptionComboBox_OnSelectionChanged"
                     Style="{StaticResource WorkSortOptionComboBoxStyle}" />
                 <AutoSuggestBox
-                    x:Uid="/WorkContainer/FastFilterAutoSuggestBox"
+                    x:Uid="/WorkContainer/FilterAutoSuggestBox"
                     Width="250"
                     VerticalAlignment="Center"
-                    TextChanged="FastFilterAutoSuggestBox_OnTextChanged" />
+                    QueryIcon="Filter"
+                    QuerySubmitted="FilterAutoSuggestBox_QuerySubmitted" />
             </StackPanel>
             <CommandBar controls1:DockPanel.Dock="Right" DefaultLabelPosition="Right">
                 <AppBarToggleButton
