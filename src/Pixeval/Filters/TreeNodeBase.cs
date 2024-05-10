@@ -33,7 +33,7 @@ public abstract record QueryLeaf(bool IsNot) : TreeNodeBase(IsNot);
 
 public enum BoolType
 {
-    R18, R18G, Gif
+    R18, R18G, Ai, Gif
 }
 
 public enum StringType
@@ -61,7 +61,13 @@ public record NumericLeaf(long Value, bool IsNot) : QueryLeaf(IsNot);
 public record StringLeaf(StringType Type, IQueryToken.Data Content, bool IsNot) : QueryLeaf(IsNot);
 
 [DebuggerDisplay("{Range} ({Type})")]
-public record NumericRangeLeaf(RangeType Type, Range Range, bool IsNot) : QueryLeaf(IsNot);
+public record NumericRangeLeaf(RangeType Type, Range Range, bool IsNot) : QueryLeaf(IsNot)
+{
+    public bool IsInRange(int value)
+    {
+        return value >= Range.Start.Value && (value < Range.End.Value || Range.End.IsFromEnd);
+    }
+}
 
 [DebuggerDisplay("{Date} ({Edge})")]
 public record DateLeaf(RangeEdge Edge, DateTimeOffset Date, bool IsNot) : QueryLeaf(IsNot);

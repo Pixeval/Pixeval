@@ -21,9 +21,12 @@
 #endregion
 
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.UI.Xaml.Input;
 using Pixeval.CoreApi.Model;
+using Pixeval.Filters;
+using WinUI3Utilities;
 
 namespace Pixeval.Controls;
 
@@ -49,6 +52,9 @@ public interface IWorkViewModel
 
     bool IsAiGenerated { get; }
 
+    /// <summary>
+    /// R18 or R18G
+    /// </summary>
     bool IsXRestricted { get; }
 
     BadgeMode XRestrictionCaption { get; }
@@ -73,4 +79,66 @@ public interface IWorkViewModel
 
     /// <inheritdoc cref="WorkEntryViewModel{T}.UnloadThumbnail"/>
     void UnloadThumbnail(IDisposable key);
+
+    public bool Filter(TreeNodeBase node) => node switch
+    {
+        LeafSequence sequence => sequence switch
+        {
+            {
+                IsNot: var isNot,
+                Type: SequenceType.And,
+                Children: { Count: > 0 } children
+            } => isNot ^ children.Select(Filter).All(t => t),
+            {
+                IsNot: var isNot,
+                Type: SequenceType.Or,
+                Children: { Count: > 0 } children
+            } => isNot ^ children.Select(Filter).Any(t => t),
+            _ => true
+        },
+        QueryLeaf
+        {
+            IsNot: var isNot
+        } q => isNot ^ FilterQuery(q),
+        _ => ThrowHelper.ArgumentOutOfRange<TreeNodeBase, bool>(node),
+    };
+
+    public bool FilterQuery(QueryLeaf queryToken)
+    {
+        return queryToken switch
+        {
+            StringLeaf stringLeaf => stringLeaf.Type switch
+            {
+                StringType.Title => StringCompare(stringLeaf.Content, Title),
+                StringType.Author => StringCompare(stringLeaf.Content, User.Name),
+                StringType.Tag => Tags.Any(t => StringCompare(stringLeaf.Content, t.Name)),
+                _ => ThrowHelper.ArgumentOutOfRange<StringType, bool>(stringLeaf.Type),
+            },
+            BoolLeaf boolLeaf => boolLeaf.Type switch
+            {
+                BoolType.R18 => IsXRestricted,
+                BoolType.R18G => XRestrictionCaption is BadgeMode.R18G,
+                BoolType.Ai => IsAiGenerated,
+                BoolType.Gif => Entry is Illustration { IsUgoira: true },
+                _ => ThrowHelper.ArgumentOutOfRange<BoolType, bool>(boolLeaf.Type),
+            },
+            NumericLeaf numericLeaf => User.Id == numericLeaf.Value,
+            NumericRangeLeaf numericRangeLeaf => numericRangeLeaf.Type switch
+            {
+                RangeType.Bookmark => numericRangeLeaf.IsInRange(TotalBookmarks),
+                RangeType.Index => true,
+                _ => ThrowHelper.ArgumentOutOfRange<RangeType, bool>(numericRangeLeaf.Type),
+            },
+            DateLeaf dateLeaf => dateLeaf.Edge switch
+            {
+                RangeEdge.Starting => PublishDate >= dateLeaf.Date,
+                RangeEdge.Ending => PublishDate < dateLeaf.Date,
+                _ => ThrowHelper.ArgumentOutOfRange<RangeEdge, bool>(dateLeaf.Edge),
+            },
+            _ => ThrowHelper.ArgumentOutOfRange<QueryLeaf, bool>(queryToken),
+        };
+
+        static bool StringCompare(IQueryToken.Data data, string target)
+            => data.IsPrecise ? data.Value == target : target.Contains(data.Value);
+    }
 }

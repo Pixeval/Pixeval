@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Pixeval.Utilities;
 
 namespace Pixeval.Filters;
 
@@ -11,7 +12,7 @@ public class Parser
 
     private LeafSequence _currentTopLevel;
 
-    private bool _hasIndex = false;
+    private NumericRangeLeaf? _index;
 
     private Parser(IReadOnlyList<IQueryToken> filterTokens)
     {
@@ -23,14 +24,14 @@ public class Parser
 
     private T Eat<T>() where T : IQueryToken
     {
-        var tok = Peek ?? throw new Exception("FilterToken finished");
+        var tok = Peek ?? ThrowUtils.MacroParse<T>(MacroParserResources.FilterTokenFinishedFormatted.Format(typeof(T)));
         if (tok is T t)
         {
             Position++;
             return t;
         }
 
-        throw new Exception($"Expected {typeof(T).Name}, actual: {tok?.GetType().Name}");
+        return ThrowUtils.MacroParse<T>(MacroParserResources.UnexpactedTokenFormatted.Format(typeof(T), tok.GetType()));
     }
 
     private IQueryToken? Peek => Position >= Tokens.Count ? null : Tokens[Position];
@@ -38,19 +39,20 @@ public class Parser
     /// <summary>
     /// top-level entrypoint
     /// </summary>
-    private LeafSequence Parse()
+    private LeafSequence Parse(out NumericRangeLeaf? index)
     {
-        _hasIndex = false;
+        _index = null;
         ParseArgumentList();
-        return Peek is null ? _queryTokenTree : throw new Exception("Unbalanced token");
+        index = _index;
+        return Peek is null ? _queryTokenTree : ThrowUtils.MacroParse<LeafSequence>(MacroParserResources.UnbalancedParFormatted.Format(Peek));
     }
 
-    public static LeafSequence Parse(string str) => Parse((IReadOnlyList<IQueryToken>)Tokenizer.Tokenize(str));
+    public static LeafSequence Parse(string str, out NumericRangeLeaf? index) => Parse((IReadOnlyList<IQueryToken>)Tokenizer.Tokenize(str), out index);
 
-    public static LeafSequence Parse(IReadOnlyList<IQueryToken> filterTokens) => new Parser(filterTokens).Parse();
+    public static LeafSequence Parse(IReadOnlyList<IQueryToken> filterTokens, out NumericRangeLeaf? index) => new Parser(filterTokens).Parse(out index);
 
     /*
-     * 
+     *
      *      filter             ::= argument_list
      *      argument_list      ::= {} | argument argument_list
      *      argument           ::= and_list   | or_list     | title
@@ -92,7 +94,7 @@ public class Parser
 
             // If this position is overflow, throw error
             if (Position > Tokens.Count)
-                throw new Exception("Expected an argument, actual: empty token flow");
+                ThrowUtils.MacroParse(MacroParserResources.ParserOutOfRange);
 
             // If the correct token is meet, call to parse argument
             // Unexpected type of token, error
@@ -129,7 +131,7 @@ public class Parser
                         break;
                     }
                     default:
-                        throw new Exception("Expected either and/or token after eating left paren");
+                        return ThrowUtils.MacroParse<bool>(MacroParserResources.ExpectedAndOrAfterLeftParFormatted.Format(Peek));
                 }
 
                 return true;
@@ -154,16 +156,16 @@ public class Parser
                     {
                         _ = Eat<IQueryToken.At>();
                         EatString(StringType.Author);
-                        return true;
+                        break;
                     }
                     case IQueryToken.Numeric:
                     {
                         _ = Eat<IQueryToken.Numeric>();
                         EatNumeric();
-                        return true;
+                        break;
                     }
                     default:
-                        throw new Exception("Expected either data or numeric token after eating at token");
+                        return ThrowUtils.MacroParse<bool>(MacroParserResources.ExpectedTokenAfterAtMarkFormatted.Format(Peek));
                 }
                 return true;
             }
@@ -182,16 +184,15 @@ public class Parser
             case IQueryToken.Like:
             {
                 _ = Eat<IQueryToken.Like>();
-                EatRange(RangeType.Bookmark);
+                _ = EatRange(RangeType.Bookmark);
                 return true;
             }
             case IQueryToken.Index:
             {
-                if (_hasIndex)
-                    throw new Exception("Index range can only be used once");
-                _hasIndex = true;
+                if (_index is not null)
+                    ThrowUtils.MacroParse(MacroParserResources.IndexRangeUsedMoreThanOnce);
                 _ = Eat<IQueryToken.Index>();
-                EatRange(RangeType.Index);
+                _index = EatRange(RangeType.Index);
                 return true;
             }
             case IQueryToken.StartDate:
@@ -240,12 +241,13 @@ public class Parser
             _currentTopLevel.Insert(authorTagToken);
         }
 
-        void EatRange(RangeType type)
+        NumericRangeLeaf EatRange(RangeType type)
         {
             _ = Eat<IQueryToken.Colon>();
             var range = ParseRangeDesc();
             var rangeToken = new NumericRangeLeaf(type, range, isNot);
             _currentTopLevel.Insert(rangeToken);
+            return rangeToken;
         }
 
         void EatDate(RangeEdge type)
@@ -268,8 +270,9 @@ public class Parser
             {
                 "r18" => BoolType.R18,
                 "r18g" => BoolType.R18G,
+                "ai" => BoolType.Ai,
                 "gif" => BoolType.Gif,
-                _ => throw new Exception("Invalid bool type")
+                _ => ThrowUtils.MacroParse<BoolType>(MacroParserResources.InvalidConstraintFormatted.Format("r18, r18g, ai, gif", content.Value))
             };
 
             var rangeToken = new BoolLeaf(isInclude, type, isNot);
@@ -286,12 +289,7 @@ public class Parser
             _ => (0, null)
         };
 
-        if (range.Item1 > int.MaxValue)
-            throw new Exception("Range start is too large" + range.Item1);
-        if (range.Item2 > int.MaxValue)
-            throw new Exception("Range end is too large" + range.Item2);
-
-        return new Range(new Index((int)range.Item1), range.Item2 is null ? new Index(0, true) : new Index((int)range.Item2));
+        return new Range(new Index(TryNarrow(range.Item1)), range.Item2 is { } l ? new Index(TryNarrow(l)) : new Index(0, true));
 
         (long, long) ParseIntervalForm()
         {
@@ -353,22 +351,22 @@ public class Parser
 
     private (int?, int, int) ParseDateDesc()
     {
-        var firstPart = Eat<IQueryToken.Numeric>();
+        var firstPart = TryNarrow(Eat<IQueryToken.Numeric>().Value);
         if (TryEatDateSeparator())
         {
-            var secondPart = Eat<IQueryToken.Numeric>();
+            var secondPart = TryNarrow(Eat<IQueryToken.Numeric>().Value);
 
             if (TryEatDateSeparator())
             {
-                var thirdPart = Eat<IQueryToken.Numeric>();
+                var thirdPart = TryNarrow(Eat<IQueryToken.Numeric>().Value);
 
-                return ((int)firstPart.Value, (int)secondPart.Value, (int)thirdPart.Value);
+                return (firstPart, secondPart, thirdPart);
             }
 
-            return (null, (int)firstPart.Value, (int)secondPart.Value);
+            return (null, firstPart, secondPart);
         }
 
-        throw new Exception("At least two numeric parts should be contained in a date segment");
+        return ThrowUtils.MacroParse<(int?, int, int)>(MacroParserResources.ExpectedAtLeastTwoNumericInDateFormatted.Format(firstPart));
 
         bool TryEatDateSeparator()
         {
@@ -388,5 +386,12 @@ public class Parser
                     return false;
             }
         }
+    }
+
+    private static int TryNarrow(long value)
+    {
+        if (value > int.MaxValue)
+            ThrowUtils.MacroParse(MacroParserResources.NumericTooLargeFormatted.Format(value));
+        return (int)value;
     }
 }

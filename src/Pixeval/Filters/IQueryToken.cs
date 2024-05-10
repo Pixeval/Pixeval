@@ -12,17 +12,25 @@ public interface IQueryToken
         public bool IsNotEmpty();
     }
 
-    [DebuggerDisplay("l")]
-    public readonly record struct Like : IQueryToken;
+    public readonly record struct Like : IQueryToken
+    {
+        public override string ToString() => "l";
+    }
 
-    [DebuggerDisplay("i")]
-    public readonly record struct Index : IQueryToken;
+    public readonly record struct Index : IQueryToken
+    {
+        public override string ToString() => "i";
+    }
 
-    [DebuggerDisplay("s")]
-    public readonly record struct StartDate : IQueryToken;
+    public readonly record struct StartDate : IQueryToken
+    {
+        public override string ToString() => "s";
+    }
 
-    [DebuggerDisplay("e")]
-    public readonly record struct EndDate : IQueryToken;
+    public readonly record struct EndDate : IQueryToken
+    {
+        public override string ToString() => "e";
+    }
 
     [DebuggerDisplay("{Value} ({IsPrecise})")]
     public readonly record struct Data(string Value) : INullableToken
@@ -32,53 +40,85 @@ public interface IQueryToken
         public bool IsPrecise { get; } = Value.EndsWith('$');
 
         public bool IsNotEmpty() => Value.Length > 0;
+
+        public override string ToString() => Value;
     }
 
     [DebuggerDisplay("Value")]
     public readonly record struct Numeric(long Value) : INullableToken
     {
         public bool IsNotEmpty() => Value >= 0;
+
+        public override string ToString() => Value.ToString();
     }
 
-    [DebuggerDisplay("+")]
-    public readonly record struct Plus : IQueryToken;
+    public readonly record struct Plus : IQueryToken
+    {
+        public override string ToString() => "+";
+    }
 
-    [DebuggerDisplay("-")]
-    public readonly record struct Dash : IQueryToken;
+    public readonly record struct Dash : IQueryToken
+    {
+        public override string ToString() => "-";
+    }
 
-    [DebuggerDisplay("#")]
-    public readonly record struct Hashtag : IQueryToken;
+    public readonly record struct Hashtag : IQueryToken
+    {
+        public override string ToString() => "#";
+    }
 
-    [DebuggerDisplay("@")]
-    public readonly record struct At : IQueryToken;
+    public readonly record struct At : IQueryToken
+    {
+        public override string ToString() => "@";
+    }
 
-    [DebuggerDisplay("!")]
-    public readonly record struct Not : IQueryToken;
+    public readonly record struct Not : IQueryToken
+    {
+        public override string ToString() => "!";
+    }
 
-    [DebuggerDisplay("or")]
-    public readonly record struct Or : IQueryToken;
+    public readonly record struct Or : IQueryToken
+    {
+        public override string ToString() => "or";
+    }
 
-    [DebuggerDisplay("and")]
-    public readonly record struct And : IQueryToken;
+    public readonly record struct And : IQueryToken
+    {
+        public override string ToString() => "and";
+    }
 
-    [DebuggerDisplay(".")]
-    public readonly record struct Dot : IQueryToken;
+    public readonly record struct Dot : IQueryToken
+    {
+        public override string ToString() => ".";
+    }
 
-    [DebuggerDisplay(":")]
-    public readonly record struct Colon : IQueryToken;
+    public readonly record struct Colon : IQueryToken
+    {
+        public override string ToString() => ":";
+    }
 
-    [DebuggerDisplay(",")]
-    public readonly record struct Comma : IQueryToken;
+    public readonly record struct Comma : IQueryToken
+    {
+        public override string ToString() => ",";
+    }
 
-    [DebuggerDisplay("(")]
-    public readonly record struct LeftParen : IQueryToken;
+    public readonly record struct LeftParen : IQueryToken
+    {
+        public override string ToString() => "(";
+    }
 
-    [DebuggerDisplay(")")]
-    public readonly record struct RightParen : IQueryToken;
+    public readonly record struct RightParen : IQueryToken
+    {
+        public override string ToString() => ")";
+    }
 
-    [DebuggerDisplay("[")]
-    public readonly record struct LeftBracket : IQueryToken;
+    public readonly record struct LeftBracket : IQueryToken
+    {
+        public override string ToString() => "[";
+    }
 
-    [DebuggerDisplay("]")]
-    public readonly record struct RightBracket : IQueryToken;
+    public readonly record struct RightBracket : IQueryToken
+    {
+        public override string ToString() => "]";
+    }
 }

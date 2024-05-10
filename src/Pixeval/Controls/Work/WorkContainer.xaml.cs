@@ -22,7 +22,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.Linq;
 using Windows.System;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -174,47 +173,26 @@ public partial class WorkContainer : IScrollViewHost
         teachingTip.Target = appBarButton.IsInOverflow ? null : appBarButton;
     }
 
-    private void FastFilterAutoSuggestBox_OnTextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+    private void FilterAutoSuggestBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs e)
     {
-        PerformSearch(sender.Text);
+        if (!string.IsNullOrWhiteSpace(sender.Text))
+            PerformSearch(sender.Text);
     }
 
     public void PerformSearch(string text)
     {
-        var sequence = Parser.Parse(text);
-        //var settings = parser.Build();
-        //if (settings is not var (
-        //    includeTags, excludeTags,
-        //    leastBookmark, maximumBookmark,
-        //    _,
-        //    illustratorName, illustratorId,
-        //    illustrationName, illustrationId,
-        //    publishDateStart, publishDateEnd))
-        //    return;
+        try
+        {
+            var sequence = Parser.Parse(text, out var index);
 
-        //ViewModel.Filter = o =>
-        //{
-        //    var stringTags = o.Tags.Select(t => t.Name).ToArray();
-        //    var result =
-        //        ExamineExcludeTags(stringTags, excludeTags)
-        //        && ExamineIncludeTags(stringTags, includeTags)
-        //        && o.TotalBookmarks >= leastBookmark
-        //        && o.TotalBookmarks <= maximumBookmark
-        //        && o.Title.Contains(illustrationName.Content)
-        //        && o.User.Name.Contains(illustratorName.Content)
-        //        && (illustratorId is -1 || illustratorId == o.User.Id)
-        //        && illustrationId is -1 || illustrationId == o.Id
-        //        && o.PublishDate >= publishDateStart
-        //        && o.PublishDate <= publishDateEnd;
-        //    return result;
-        //};
-        return;
-
-        //static bool ExamineExcludeTags(IEnumerable<string> tags, IEnumerable<QueryFilterToken> predicates)
-        //    => predicates.Aggregate(true, (acc, token) => acc && tags.All(t => t != token.Content));
-
-        //static bool ExamineIncludeTags(ICollection<string> tags, IEnumerable<TreeNodeBase> predicates)
-        //    => tags.Count is 0 || predicates.Aggregate(true, (acc, token) => acc && tags.Any(t => t == token.Content));
+            ViewModel.Filter = o => o.Filter(sequence);
+            if (index is not null)
+                ViewModel.ViewRange = index.Range;
+        }
+        catch (Exception e)
+        {
+            HWnd.ErrorGrowl(MacroParserResources.FilterQueryError, e.Message);
+        }
     }
 
     public ScrollView ScrollView => WorkView.ScrollView;
