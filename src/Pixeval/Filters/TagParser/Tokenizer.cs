@@ -14,17 +14,7 @@ public class Tokenizer
 
     private bool ShouldEatAfterHashTag(char ch)
     {
-        if (DisallowedInTags.Contains(ch))
-        {
-            return false;
-        }
-
-        if (char.IsWhiteSpace(ch))
-        {
-            return false;
-        }
-
-        return true;
+        return !DisallowedInTags.Contains(ch) && !char.IsWhiteSpace(ch);
     }
 
     /// <summary>
@@ -34,9 +24,9 @@ public class Tokenizer
     /// <param name="src"></param>
     /// <returns></returns>
     public IEnumerable<IQueryFragmentNode> Tokenize(string src)
-        => TokenizeInner(src).Where(tok => tok.isNotEmpty());
+        => TokenizeInner(src).Where(tok => tok.IsNotEmpty());
     
-    public IEnumerable<IQueryFragmentNode> TokenizeInner(string src)
+    private IEnumerable<IQueryFragmentNode> TokenizeInner(string src)
         => src switch
         {
         [] => [],
@@ -64,8 +54,8 @@ public class Tokenizer
         ['a', 'n', 'd', .. var rem] => Tokenize(rem).Prepend(new IQueryFragmentNode.And()),
         ['n', 'o', 't', .. var rem] => Tokenize(rem).Prepend(new IQueryFragmentNode.Not()),
         ['o', 'r', .. var rem] => Tokenize(rem).Prepend(new IQueryFragmentNode.Or()),
-        ['#', .. var rem] => Tokenize(string.Concat(rem.SkipWhile(ch => ShouldEatAfterHashTag(ch))))
-            .Prepend(new IQueryFragmentNode.Data(string.Concat(rem.TakeWhile(ch => ShouldEatAfterHashTag(ch)))))
+        ['#', .. var rem] => Tokenize(string.Concat(rem.SkipWhile(ShouldEatAfterHashTag)))
+            .Prepend(new IQueryFragmentNode.Data(string.Concat(rem.TakeWhile(ShouldEatAfterHashTag))))
             .Prepend(new IQueryFragmentNode.Hashtag()),
         ['"', .. var rem] =>
             Tokenize(string.Concat(rem.SkipWhile(ch => ch != '"').Skip(1)))

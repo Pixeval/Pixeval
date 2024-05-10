@@ -1,5 +1,7 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace Pixeval.Filters.TagParser;
@@ -11,51 +13,61 @@ public interface ITokenTree
 
 public interface ITokenTreeNode : ITokenTree
 {
-    
     public void Insert(ITokenTree subElem);
 }
 
 public interface IQueryToken : ITokenTree;
 
-public record TokenAndNode(IEnumerable<ITokenTreeNode> Children) : ITokenTreeNode
+[DebuggerDisplay("(and ...)")]
+public record TokenAndNode(IList<ITokenTree> Children) : ITokenTreeNode, IEnumerable<ITokenTree>
 {
     public ITokenTreeNode? Parent { get; set; } = null;
-    
+
     public virtual bool Equals(TokenAndNode? other)
     {
-        return other?.Children.SequenceEqual(this.Children) ?? false;
+        return other?.Children.SequenceEqual(Children) ?? false;
     }
 
     public void Insert(ITokenTree subElem)
     {
-        this.Children.Append(subElem);
+        Children.Add(subElem);
         subElem.Parent = this;
     }
+
+    IEnumerator<ITokenTree> IEnumerable<ITokenTree>.GetEnumerator() => Children.GetEnumerator();
+
+    IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)Children).GetEnumerator();
 }
 
-public record TokenOrNode(IEnumerable<ITokenTreeNode> Children) : ITokenTreeNode
+[DebuggerDisplay("(or ...)")]
+public record TokenOrNode(IList<ITokenTree> Children) : ITokenTreeNode, IEnumerable<ITokenTree>
 {
     public ITokenTreeNode? Parent { get; set; } = null;
-    
+
     public virtual bool Equals(TokenOrNode? other)
     {
-        return other?.Children.SequenceEqual(this.Children) ?? false;
+        return other?.Children.SequenceEqual(Children) ?? false;
     }
-    
+
     public void Insert(ITokenTree subElem)
     {
-        this.Children.Append(subElem);
+        Children.Add(subElem);
         subElem.Parent = this;
     }
+
+    IEnumerator<ITokenTree> IEnumerable<ITokenTree>.GetEnumerator() => Children.GetEnumerator();
+
+    IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)Children).GetEnumerator();
 }
 
+[DebuggerDisplay("#{Content}")]
 public record TagToken(string Content) : IQueryToken
 {
     public ITokenTreeNode? Parent { get; set; } = null;
-    
+
     public virtual bool Equals(TagToken? other)
     {
-        return other?.Content.Equals(this.Content) ?? false;
+        return other?.Content.Equals(Content) ?? false;
     }
 }
 
@@ -69,26 +81,24 @@ public enum RangeEdge
     Starting, Ending
 }
 
+[DebuggerDisplay("{Start}-{End} ({Type})")]
 public record NumericRangeToken(RangeType Type, long? Start, long? End) : IQueryToken
 {
     public ITokenTreeNode? Parent { get; set; } = null;
-    
+
     public virtual bool Equals(NumericRangeToken? other)
     {
-        return other?.Type == this.Type && other?.Start == this.Start && other?.End == this.End;
+        return other?.Type == Type && other?.Start == Start && other?.End == End;
     }
 }
 
+[DebuggerDisplay("{Date} ({Edge})")]
 public record DateToken(RangeEdge Edge, DateTimeOffset? Date) : IQueryToken
 {
     public ITokenTreeNode? Parent { get; set; } = null;
-    
+
     public virtual bool Equals(DateToken? other)
     {
-        return other?.Date == this.Date && other?.Edge == this.Edge;
+        return other?.Date == Date && other?.Edge == Edge;
     }
 }
-
-public record FilterSetting(
-    ITokenTreeNode TagTree
-);

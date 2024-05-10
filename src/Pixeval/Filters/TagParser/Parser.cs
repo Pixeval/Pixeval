@@ -1,25 +1,24 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Pixeval.Filters.TagParser;
 
 public class Parser
 {
-    private List<IQueryFragmentNode> Tokens { get; }
-    
-    private ITokenTreeNode QueryTokenTree;
+    private IReadOnlyList<IQueryFragmentNode> Tokens { get; }
 
-    private ITokenTreeNode CurrentTopLevel;
+    private readonly ITokenTreeNode _queryTokenTree;
 
-    public Parser(List<IQueryFragmentNode> filterTokens)
+    private ITokenTreeNode _currentTopLevel;
+
+    public Parser(IReadOnlyList<IQueryFragmentNode> filterTokens)
     {
-        this.Tokens = filterTokens;
-        this.QueryTokenTree = new TokenOrNode(new List<ITokenTreeNode>());
-        this.CurrentTopLevel = this.QueryTokenTree;
+        Tokens = filterTokens;
+        _queryTokenTree = new TokenAndNode([]);
+        _currentTopLevel = _queryTokenTree;
     }
 
-    private int Position { get; set; } = 0;
+    private int Position { get; set; }
 
     private IQueryFragmentNode Eat()
     {
@@ -36,7 +35,7 @@ public class Parser
 
     public ITokenTreeNode Build()
     {
-        return this.QueryTokenTree;
+        return _queryTokenTree;
     }
 
     /*
@@ -120,35 +119,40 @@ public class Parser
             case IQueryFragmentNode.LeftParen:
             {
                 EatLeftParen();
-                if (CurrentFilterToken is IQueryFragmentNode.And)
+                switch (CurrentFilterToken)
                 {
-                    var nextAndNode = new TokenAndNode(new List<ITokenTreeNode>());
-                    this.CurrentTopLevel.Insert(nextAndNode);
-                    this.CurrentTopLevel = nextAndNode;
-                    
-                    ParseAndList();
-                    
-                    if (CurrentTopLevel.Parent != null)
+                    case IQueryFragmentNode.And:
                     {
-                        this.CurrentTopLevel = CurrentTopLevel.Parent;
+                        var nextAndNode = new TokenAndNode([]);
+                        _currentTopLevel.Insert(nextAndNode);
+                        _currentTopLevel = nextAndNode;
+
+                        ParseAndList();
+
+                        if (_currentTopLevel.Parent != null)
+                        {
+                            _currentTopLevel = _currentTopLevel.Parent;
+                        }
+
+                        break;
                     }
-                    
-                } else if (CurrentFilterToken is IQueryFragmentNode.Or)
-                {
-                    var nextOrNode = new TokenOrNode(new List<ITokenTreeNode>());
-                    this.CurrentTopLevel.Insert(nextOrNode);
-                    this.CurrentTopLevel = nextOrNode;
-                    
-                    ParseAndList();
-                    
-                    if (CurrentTopLevel.Parent != null)
+                    case IQueryFragmentNode.Or:
                     {
-                        this.CurrentTopLevel = CurrentTopLevel.Parent;
+                        var nextOrNode = new TokenOrNode([]);
+                        _currentTopLevel.Insert(nextOrNode);
+                        _currentTopLevel = nextOrNode;
+
+                        ParseAndList();
+
+                        if (_currentTopLevel.Parent != null)
+                        {
+                            _currentTopLevel = _currentTopLevel.Parent;
+                        }
+
+                        break;
                     }
-                }
-                else
-                {
-                    throw new Exception("Expected either and/or token after eating left paren");
+                    default:
+                        throw new Exception("Expected either and/or token after eating left paren");
                 }
 
                 return;
@@ -159,7 +163,7 @@ public class Parser
                 var data = EatData();
 
                 var tagToken = new TagToken(data.Value);
-                CurrentTopLevel.Insert(tagToken);
+                _currentTopLevel.Insert(tagToken);
 
                 return;
             }
@@ -167,20 +171,20 @@ public class Parser
             {
                 EatHash();
                 var data = EatData();
-                
+
                 var tagToken = new TagToken(data.Value);
-                CurrentTopLevel.Insert(tagToken);
-                
+                _currentTopLevel.Insert(tagToken);
+
                 return;
             }
             case IQueryFragmentNode.Arobase:
             {
                 EatArobase();
                 var author = EatData();
-                
+
                 var authorTagToken = new TagToken(author.Value);
-                CurrentTopLevel.Insert(authorTagToken);
-                
+                _currentTopLevel.Insert(authorTagToken);
+
                 return;
             }
             case IQueryFragmentNode.A:
@@ -188,10 +192,10 @@ public class Parser
                 EatA();
                 EatColon();
                 var author = EatData();
-                
+
                 var authorTagToken = new TagToken(author.Value);
-                CurrentTopLevel.Insert(authorTagToken);
-                
+                _currentTopLevel.Insert(authorTagToken);
+
                 return;
             }
             case IQueryFragmentNode.C:
@@ -199,10 +203,10 @@ public class Parser
                 EatC();
                 EatColon();
                 var character = EatData();
-                
+
                 var characterTagToken = new TagToken(character.Value);
-                CurrentTopLevel.Insert(characterTagToken);
-                
+                _currentTopLevel.Insert(characterTagToken);
+
                 return;
             }
             case IQueryFragmentNode.E:
@@ -214,10 +218,10 @@ public class Parser
                 var date = new DateTime(year ?? DateTime.Today.Year, month, day);
 
                 var dateOffset = new DateTimeOffset(date);
-                
+
                 var dateToken = new DateToken(RangeEdge.Ending, dateOffset);
-                CurrentTopLevel.Insert(dateToken);
-                
+                _currentTopLevel.Insert(dateToken);
+
                 return;
             }
             case IQueryFragmentNode.L:
@@ -227,8 +231,8 @@ public class Parser
                 var (start, end) = ParseRangeDesc();
 
                 var rangeToken = new NumericRangeToken(RangeType.Collection, start, end);
-                CurrentTopLevel.Insert(rangeToken);
-                
+                _currentTopLevel.Insert(rangeToken);
+
                 return;
             }
             case IQueryFragmentNode.N:
@@ -238,8 +242,8 @@ public class Parser
                 var (start, end) = ParseRangeDesc();
 
                 var rangeToken = new NumericRangeToken(RangeType.Sequences, start, end);
-                CurrentTopLevel.Insert(rangeToken);
-                
+                _currentTopLevel.Insert(rangeToken);
+
                 return;
             }
             case IQueryFragmentNode.S:
@@ -251,10 +255,10 @@ public class Parser
                 var date = new DateTime(year ?? DateTime.Today.Year, month, day);
 
                 var dateOffset = new DateTimeOffset(date);
-                
+
                 var dateToken = new DateToken(RangeEdge.Starting, dateOffset);
-                CurrentTopLevel.Insert(dateToken);
-                
+                _currentTopLevel.Insert(dateToken);
+
                 return;
             }
         }
@@ -365,11 +369,11 @@ public class Parser
             {
                 var thirdPart = EatNumeric();
 
-                return ((int) firstPart.Value, (int) secondPart.Value, (int) thirdPart.Value);
+                return ((int)firstPart.Value, (int)secondPart.Value, (int)thirdPart.Value);
             }
             else
             {
-                return (null, (int) firstPart.Value, (int) secondPart.Value);
+                return (null, (int)firstPart.Value, (int)secondPart.Value);
             }
         }
         else
@@ -396,12 +400,12 @@ public class Parser
     {
         var and = (IQueryFragmentNode.And)Eat();
     }
-    
+
     private void EatOr()
     {
         var or = (IQueryFragmentNode.And)Eat();
     }
-    
+
     private void EatHash()
     {
         var hash = (IQueryFragmentNode.Hashtag)Eat();
@@ -421,22 +425,22 @@ public class Parser
     {
         var c = (IQueryFragmentNode.C)Eat();
     }
-    
+
     private void EatE()
     {
         var c = (IQueryFragmentNode.E)Eat();
     }
-    
+
     private void EatL()
     {
         var c = (IQueryFragmentNode.L)Eat();
     }
-    
+
     private void EatN()
     {
         var c = (IQueryFragmentNode.N)Eat();
     }
-    
+
     private void EatS()
     {
         var c = (IQueryFragmentNode.S)Eat();

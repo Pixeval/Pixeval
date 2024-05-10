@@ -184,32 +184,32 @@ public partial class WorkContainer : IScrollViewHost
     {
         var tokens = new Tokenizer().Tokenize(text).ToList();
         var parser = new Parser(tokens);
-        var settings = parser.Build();
-        if (settings is not var (
-            includeTags, excludeTags,
-            leastBookmark, maximumBookmark,
-            _,
-            illustratorName, illustratorId,
-            illustrationName, illustrationId,
-            publishDateStart, publishDateEnd))
-            return;
+        //var settings = parser.Build();
+        //if (settings is not var (
+        //    includeTags, excludeTags,
+        //    leastBookmark, maximumBookmark,
+        //    _,
+        //    illustratorName, illustratorId,
+        //    illustrationName, illustrationId,
+        //    publishDateStart, publishDateEnd))
+        //    return;
 
-        ViewModel.Filter = o =>
-        {
-            var stringTags = o.Tags.Select(t => t.Name).ToArray();
-            var result =
-                ExamineExcludeTags(stringTags, excludeTags)
-                && ExamineIncludeTags(stringTags, includeTags)
-                && o.TotalBookmarks >= leastBookmark
-                && o.TotalBookmarks <= maximumBookmark
-                && o.Title.Contains(illustrationName.Content)
-                && o.User.Name.Contains(illustratorName.Content)
-                && (illustratorId is -1 || illustratorId == o.User.Id)
-                && illustrationId is -1 || illustrationId == o.Id
-                && o.PublishDate >= publishDateStart
-                && o.PublishDate <= publishDateEnd;
-            return result;
-        };
+        //ViewModel.Filter = o =>
+        //{
+        //    var stringTags = o.Tags.Select(t => t.Name).ToArray();
+        //    var result =
+        //        ExamineExcludeTags(stringTags, excludeTags)
+        //        && ExamineIncludeTags(stringTags, includeTags)
+        //        && o.TotalBookmarks >= leastBookmark
+        //        && o.TotalBookmarks <= maximumBookmark
+        //        && o.Title.Contains(illustrationName.Content)
+        //        && o.User.Name.Contains(illustratorName.Content)
+        //        && (illustratorId is -1 || illustratorId == o.User.Id)
+        //        && illustrationId is -1 || illustrationId == o.Id
+        //        && o.PublishDate >= publishDateStart
+        //        && o.PublishDate <= publishDateEnd;
+        //    return result;
+        //};
         return;
 
         static bool ExamineExcludeTags(IEnumerable<string> tags, IEnumerable<QueryFilterToken> predicates)
