@@ -11,6 +11,8 @@ public class Parser
 
     private LeafSequence _currentTopLevel;
 
+    private bool _hasIndex = false;
+
     private Parser(IReadOnlyList<IQueryToken> filterTokens)
     {
         Tokens = filterTokens;
@@ -38,6 +40,7 @@ public class Parser
     /// </summary>
     private LeafSequence Parse()
     {
+        _hasIndex = false;
         ParseArgumentList();
         return Peek is null ? _queryTokenTree : throw new Exception("Unbalanced token");
     }
@@ -94,7 +97,7 @@ public class Parser
             // If the correct token is meet, call to parse argument
             // Unexpected type of token, error
             if (!ParseArgument())
-                break;
+                return;
         }
     }
 
@@ -145,8 +148,23 @@ public class Parser
             }
             case IQueryToken.At:
             {
-                _ = Eat<IQueryToken.At>();
-                EatString(StringType.Author);
+                switch (Peek)
+                {
+                    case IQueryToken.At:
+                    {
+                        _ = Eat<IQueryToken.At>();
+                        EatString(StringType.Author);
+                        return true;
+                    }
+                    case IQueryToken.Numeric:
+                    {
+                        _ = Eat<IQueryToken.Numeric>();
+                        EatNumeric();
+                        return true;
+                    }
+                    default:
+                        throw new Exception("Expected either data or numeric token after eating at token");
+                }
                 return true;
             }
             case IQueryToken.Plus:
@@ -169,6 +187,9 @@ public class Parser
             }
             case IQueryToken.Index:
             {
+                if (_hasIndex)
+                    throw new Exception("Index range can only be used once");
+                _hasIndex = true;
                 _ = Eat<IQueryToken.Index>();
                 EatRange(RangeType.Index);
                 return true;
@@ -212,11 +233,18 @@ public class Parser
             _currentTopLevel.Insert(authorTagToken);
         }
 
+        void EatNumeric()
+        {
+            var numeric = Eat<IQueryToken.Numeric>();
+            var authorTagToken = new NumericLeaf(numeric.Value, isNot);
+            _currentTopLevel.Insert(authorTagToken);
+        }
+
         void EatRange(RangeType type)
         {
             _ = Eat<IQueryToken.Colon>();
-            var (start, end) = ParseRangeDesc();
-            var rangeToken = new NumericRangeLeaf(type, start, end, isNot);
+            var range = ParseRangeDesc();
+            var rangeToken = new NumericRangeLeaf(type, range, isNot);
             _currentTopLevel.Insert(rangeToken);
         }
 
@@ -249,29 +277,30 @@ public class Parser
         }
     }
 
-    private (long?, long?) ParseRangeDesc()
+    private Range ParseRangeDesc()
     {
-        return Peek switch
+        var range = Peek switch
         {
             IQueryToken.LeftBracket or IQueryToken.LeftParen => ParseIntervalForm(),
             IQueryToken.Dash or IQueryToken.Numeric => ParseDashForm(),
-            _ => (null, null)
+            _ => (0, null)
         };
+
+        if (range.Item1 > int.MaxValue)
+            throw new Exception("Range start is too large" + range.Item1);
+        if (range.Item2 > int.MaxValue)
+            throw new Exception("Range end is too large" + range.Item2);
+
+        return new Range(new Index((int)range.Item1), range.Item2 is null ? new Index(0, true) : new Index((int)range.Item2));
 
         (long, long) ParseIntervalForm()
         {
             var leftInclusive = false;
 
-            switch (Peek)
+            if (Peek is IQueryToken.LeftBracket)
             {
-                case IQueryToken.LeftBracket:
-                    _ = Eat<IQueryToken.LeftBracket>();
-                    leftInclusive = true;
-                    break;
-                case IQueryToken.LeftParen:
-                    _ = Eat<IQueryToken.LeftParen>();
-                    leftInclusive = false;
-                    break;
+                _ = Eat<IQueryToken.LeftBracket>();
+                leftInclusive = true;
             }
 
             var a = Eat<IQueryToken.Numeric>();
@@ -279,16 +308,10 @@ public class Parser
             var b = Eat<IQueryToken.Numeric>();
 
             var rightInclusive = false;
-            switch (Peek)
+            if (Peek is IQueryToken.RightBracket)
             {
-                case IQueryToken.RightBracket:
-                    _ = Eat<IQueryToken.RightBracket>();
-                    rightInclusive = true;
-                    break;
-                case IQueryToken.RightParen:
-                    _ = Eat<IQueryToken.RightParen>();
-                    rightInclusive = false;
-                    break;
+                _ = Eat<IQueryToken.RightBracket>();
+                rightInclusive = true;
             }
 
             return (leftInclusive, rightInclusive) switch
@@ -300,7 +323,7 @@ public class Parser
             };
         }
 
-        (long?, long?) ParseDashForm()
+        (long, long?) ParseDashForm()
         {
             switch (Peek)
             {
@@ -308,7 +331,7 @@ public class Parser
                 {
                     _ = Eat<IQueryToken.Dash>();
                     var a = Eat<IQueryToken.Numeric>();
-                    return (null, a.Value);
+                    return (0, a.Value);
                 }
                 case IQueryToken.Numeric:
                 {
@@ -323,7 +346,7 @@ public class Parser
                     return (a.Value, null);
                 }
                 default:
-                    return (null, null);
+                    return (0, null);
             }
         }
     }

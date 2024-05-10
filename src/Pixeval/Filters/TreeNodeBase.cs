@@ -54,11 +54,14 @@ public enum RangeEdge
 [DebuggerDisplay("{Type} ({IsInclude})")]
 public record BoolLeaf(bool IsInclude, BoolType Type, bool IsNot) : QueryLeaf(IsNot);
 
+[DebuggerDisplay("@{Value}")]
+public record NumericLeaf(long Value, bool IsNot) : QueryLeaf(IsNot);
+
 [DebuggerDisplay("{Content} ({Type})")]
 public record StringLeaf(StringType Type, IQueryToken.Data Content, bool IsNot) : QueryLeaf(IsNot);
 
-[DebuggerDisplay("{Start}-{End} ({Type})")]
-public record NumericRangeLeaf(RangeType Type, long? Start, long? End, bool IsNot) : QueryLeaf(IsNot);
+[DebuggerDisplay("{Range} ({Type})")]
+public record NumericRangeLeaf(RangeType Type, Range Range, bool IsNot) : QueryLeaf(IsNot);
 
 [DebuggerDisplay("{Date} ({Edge})")]
 public record DateLeaf(RangeEdge Edge, DateTimeOffset Date, bool IsNot) : QueryLeaf(IsNot);

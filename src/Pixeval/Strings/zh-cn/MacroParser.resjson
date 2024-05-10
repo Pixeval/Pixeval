@@ -1,11 +1,9 @@
 {
-  "NonParameterizedMacroBearingParameterFormatted": "宏{0}不能包含任何参数",
-  "ParameterizedMacroMissingParameterFormatted": "宏{0}参数缺失",
-  "ResultIsEmpty": "解析失败：解析结果为空",
-  "UnexpectedTokenFormatted": "输入非法：在第{0}个字符处遇到了非法符号",
-  "UnknownArtist": "未知作者",
-  "UnknownIllustrationTitle": "未知作品",
-  "UnknownMacroNameFormatted": "未知的宏名称：{0}",
-  "UnknownSpotlightId": "未知特辑ID",
-  "UnknownSpotlightTitle": "未知特辑"
+    "NonParameterizedMacroBearingParameterFormatted": "宏{0}不能包含任何参数",
+    "ParameterizedMacroMissingParameterFormatted": "宏{0}参数缺失",
+    "ResultIsEmpty": "解析失败：解析结果为空",
+    "UnexpectedTokenFormatted": "输入非法：在第{0}个字符处遇到了非法符号",
+    "UnknownArtist": "未知作者",
+    "UnknownIllustrationTitle": "未知作品",
+    "UnknownMacroNameFormatted": "未知的宏名称：{0}"
 }
