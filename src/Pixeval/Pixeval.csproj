@@ -90,7 +90,7 @@
 
         <TextFile Include="Strings\*\*.txt" >
             <OutputTarget>Generated\%(RecursiveDir)\TextGenerated.resjson</OutputTarget>
-            <Content>    "%(Filename)" : "$([System.IO.File]::ReadAllText(%(FullPath)).Replace('&#xD;&#xA;', '\n').Replace('&quot;', '&amp;quot;'))"</Content>
+            <Content>    "$([System.String]::Concat(%(Filename), '"').Replace('_', '/')) : "$([System.IO.File]::ReadAllText(%(FullPath)).Replace('\', '\\').Replace('&#xD;&#xA;', '\n').Replace('&quot;', '\&quot;'))"</Content>
         </TextFile>
     </ItemGroup>
 

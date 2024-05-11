@@ -28,17 +28,13 @@
         <converters:BoolNegationConverter x:Key="BoolNegationConverter" />
         <converters1:NullableToVisibilityConverter x:Key="NullableToVisibilityConverter" />
     </controls1:EnhancedWindowPage.Resources>
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
+    <controls:DockPanel VerticalSpacing="10">
         <TextBlock
             x:Uid="/SettingsPage/TitleTextBlock"
-            Grid.Row="0"
             Margin="20,40,20,20"
+            controls:DockPanel.Dock="Top"
             Style="{StaticResource TitleTextBlockStyle}" />
-        <ScrollView x:Name="SettingsPageScrollView" Grid.Row="1">
+        <ScrollView x:Name="SettingsPageScrollView">
             <StackPanel Margin="20,0,20,20" Loaded="Panel_OnLoaded">
                 <!--  region Header  -->
                 <Grid ColumnSpacing="20" RowSpacing="10">
@@ -279,5 +275,5 @@
                 <!--  设置项插入处  -->
             </StackPanel>
         </ScrollView>
-    </Grid>
+    </controls:DockPanel>
 </controls1:EnhancedWindowPage>

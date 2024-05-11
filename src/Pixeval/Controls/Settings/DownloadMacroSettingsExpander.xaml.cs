@@ -212,9 +212,4 @@ public sealed partial class DownloadMacroSettingsExpander
         UiHelper.ClipboardSetText(e.ClickedItem.To<StringRepresentableItem>().StringRepresentation);
         WindowFactory.GetWindowForElement(this).HWnd.SuccessGrowl(SettingsPageResources.MacroCopiedToClipboard);
     }
-
-    private void DownloadPathMacroEntry_OnTapped(object sender, TappedRoutedEventArgs e)
-    {
-        _ = this.CreateAcknowledgementAsync(SettingsPageResources.MacroTutorialDialogTitle, SettingsPageResources.MacroTutorialDialogContent);
-    }
 }
