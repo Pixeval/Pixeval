@@ -155,10 +155,7 @@
                             <AppBarButton Command="{x:Bind _viewModel.FollowPrivatelyCommand}" Visibility="{x:Bind _viewModel.IsFollowed, Converter={StaticResource BoolNegationToVisibilityConverter}, Mode=OneWay}" />
                             <AppBarButton Command="{x:Bind _viewModel.UnfollowCommand}" Visibility="{x:Bind _viewModel.IsFollowed, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
                             <AppBarSeparator />
-                            <AppBarButton
-                                x:Name="GenerateLinkButton"
-                                Command="{x:Bind _viewModel.GenerateLinkCommand}"
-                                CommandParameter="{x:Bind GenerateLinkTeachingTip}" />
+                            <AppBarButton Command="{x:Bind _viewModel.GenerateLinkCommand}" CommandParameter="{x:Bind HWnd}" />
                             <AppBarButton Command="{x:Bind _viewModel.GenerateWebLinkCommand}" CommandParameter="{x:Bind HWnd}" />
                             <AppBarButton Command="{x:Bind _viewModel.OpenInWebBrowserCommand}" />
                             <AppBarButton
@@ -199,10 +196,6 @@
             <controls:StickyHeaderScrollView.StickyContent>
                 <Grid>
                     <Frame x:Name="IllustratorViewerFrame" />
-                    <controls:GenerateLinkTeachingTip
-                        x:Name="GenerateLinkTeachingTip"
-                        Grid.Column="0"
-                        Target="{x:Bind GenerateLinkButton}" />
                     <TeachingTip
                         x:Name="ShowQrCodeTeachingTip"
                         x:Uid="/EntryViewerPage/QrCodeTeachingTip"

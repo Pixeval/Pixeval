@@ -114,7 +114,7 @@ public interface IWorkViewModel
                 StringType.Tag => Tags.Any(t => StringCompare(stringLeaf.Content, t.Name)),
                 _ => ThrowHelper.ArgumentOutOfRange<StringType, bool>(stringLeaf.Type),
             },
-            BoolLeaf boolLeaf => boolLeaf.Type switch
+            BoolLeaf boolLeaf => boolLeaf.IsExclude ^ boolLeaf.Type switch
             {
                 BoolType.R18 => IsXRestricted,
                 BoolType.R18G => XRestrictionCaption is BadgeMode.R18G,

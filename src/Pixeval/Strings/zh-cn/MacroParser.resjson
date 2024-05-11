@@ -17,5 +17,8 @@
     "IndexRangeUsedMoreThanOnce": "索引范围最多指定一次",
     "InvalidConstraintFormatted": "无效的约束，有效值：{0}，实际值：{1}",
     "NumericTooLargeFormatted": "整数值太大，实际值：{0}",
-    "ExpectedAtLeastTwoNumericInDateFormatted": "表示日期至少需要两个数字（月、日），实际值：{0}"
+    "ExpectedAtLeastTwoNumericInDateFormatted": "表示日期至少需要两个数字（月、日），实际值：{0}",
+    "ExpectedRightBracketOrParenInRangeFormatted": "在范围中应以\")\"或者\"]\"结尾，实际值：{0}",
+    "NumericTooSmallInRangeFormatted": "范围中整数值太小，实际值：{0}",
+    "MinimumShouldBeSmallerThanMaximiumFormatted": "范围中最小值（{0}）应小于最大值（{1}）"
 }

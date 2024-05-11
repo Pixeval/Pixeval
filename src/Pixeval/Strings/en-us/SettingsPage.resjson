@@ -55,8 +55,6 @@
     "DownloadUpdateAutomaticallyEntry/Header": "Download update automatically",
     "FeedbackByEmailHyperlinkButton/Content": "Contact the developers",
     "ViewingRestrictionEntry/Header": "Viewing restriction",
-    "GenerateHelpLinkEntry/Description": "This tooltip helps user to use the link",
-    "GenerateHelpLinkEntry/Header": "Show tooltip while generating links",
     "GitHubRepositoryHyperlinkButton/Content": "GitHub repository",
     "ItemsViewLayoutTypeEntry/Description": "The grid layout constraints images in the same width and height, while flow layout only forces vertical alignments",
     "ItemsViewLayoutTypeEntry/Header": "Alignment rules for thumbnails",

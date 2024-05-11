@@ -132,7 +132,7 @@
                 <NavigationViewItem
                     x:Uid="/MainPage/HelpTab"
                     Icon="{controls1:GlyphIcon Glyph=HelpE897}"
-                    IsEnabled="False" />
+                    Tag="{x:Bind _viewModel.HelpTag}" />
                 <NavigationViewItem
                     x:Uid="/MainPage/AboutTab"
                     Icon="{controls1:GlyphIcon Glyph=RingerEA8F}"

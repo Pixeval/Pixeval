@@ -25,7 +25,6 @@ using System.IO;
 using Windows.Foundation;
 using Microsoft.UI.Composition.SystemBackdrops;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
 using Pixeval.Attributes;
 using Pixeval.Controls;
 using Pixeval.Controls.Windowing;
@@ -63,13 +62,6 @@ public partial record AppSettings : IWindowSettings
     [SettingsEntry(IconGlyph.NetworkE968, nameof(EnableDomainFrontingEntryHeader), nameof(EnableDomainFrontingEntryDescription))]
     public bool EnableDomainFronting { get; set; } = true;
 
-    /// <summary>
-    /// Indicates whether a <see cref="TeachingTip" /> should be displayed
-    /// when user clicks "Generate Link"
-    /// </summary>
-    [SettingsEntry(IconGlyph.LinkE71B, nameof(GenerateHelpLinkEntryHeader), nameof(GenerateHelpLinkEntryDescription))]
-    public bool DisplayTeachingTipWhenGeneratingAppLink { get; set; } = true;
-
     [SettingsEntry(IconGlyph.FileExplorerEC50, nameof(UseFileCacheEntryHeader), nameof(UseFileCacheEntryDescription))]
     public bool UseFileCache { get; set; }
 
@@ -79,7 +71,7 @@ public partial record AppSettings : IWindowSettings
     [SettingsEntry(IconGlyph.CheckMarkE73E, nameof(DefaultSelectedTabEntryHeader), nameof(DefaultSelectedTabEntryDescription))]
     public MainPageTabItem DefaultSelectedTabItem { get; set; }
 
-    [SettingsEntry(IconGlyph.RenameE8AC, nameof(DownloadPathMacroEntryHeader), nameof(DownloadPathMacroEntryDescriptionContent))]
+    [SettingsEntry(IconGlyph.RenameE8AC, nameof(DownloadPathMacroEntryHeader), nameof(DownloadPathMacroEntryDescription))]
     public string DownloadPathMacro { get; set; } = GetSpecialFolder() + @"\@{if_manga=[@{artist_name}] @{title}}\[@{artist_name}] @{id}@{if_manga=p@{manga_index}}@{ext}";
 
     public UgoiraDownloadFormat UgoiraDownloadFormat { get; set; } = UgoiraDownloadFormat.WebPLossless;

@@ -367,7 +367,7 @@ src/Pixeval/Assets/Binary/Pixeval.LoginProxy.zip
 *.sln.iml
 
 # Poly#
-src/Pixeval.SourceGen/Generated
+src/*/Generated
 
 # Package.appxmanifest
 # Package.appxmanifest

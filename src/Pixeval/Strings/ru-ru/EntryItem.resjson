@@ -2,7 +2,6 @@
   "GenerateLink": "Копировать ссылку приложения",
   "GenerateWebLink": "Копировать веб-ссылку",
   "OpenInWebBrowser": "Открыть в браузере",
-  "LinkCopiedToClipboard": "Ссылка скопирована в буфер обмена",
   "ShowPixEzQrCode": "Создать QR-код для PixEz",
   "ShowQRCode": "Создать QR-код",
   

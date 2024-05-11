@@ -345,10 +345,7 @@
                                 Command="{x:Bind _viewModel.AddToBookmarkCommand}"
                                 CommandParameter="{x:Bind _viewModel.CurrentImage.DownloadParameter, Mode=OneWay}"
                                 Tapped="AddToBookmarkButton_OnTapped" />
-                            <AppBarButton
-                                x:Name="GenerateLinkButton"
-                                Command="{x:Bind _viewModel.CurrentIllustration.GenerateLinkCommand, Mode=OneWay}"
-                                CommandParameter="{x:Bind GenerateLinkTeachingTip}" />
+                            <AppBarButton Command="{x:Bind _viewModel.CurrentIllustration.GenerateLinkCommand, Mode=OneWay}" CommandParameter="{x:Bind HWnd}" />
                             <AppBarButton Command="{x:Bind _viewModel.CurrentIllustration.GenerateWebLinkCommand, Mode=OneWay}" CommandParameter="{x:Bind HWnd}" />
                             <AppBarButton Command="{x:Bind _viewModel.CurrentIllustration.OpenInWebBrowserCommand, Mode=OneWay}" />
                             <AppBarButton
@@ -383,11 +380,6 @@
                             Style="{StaticResource TextBlockStyle}"
                             Text="{x:Bind _viewModel.CurrentImage.Scale, Converter={StaticResource NumberToPercentageConverter}, ConverterParameter=2, Mode=OneWay}"
                             ToolTipService.ToolTip="{x:Bind _viewModel.CurrentImage.Scale, Converter={StaticResource NumberToPercentageConverter}, ConverterParameter=2, Mode=OneWay}" />
-                        <controls:GenerateLinkTeachingTip
-                            x:Name="GenerateLinkTeachingTip"
-                            Grid.Column="0"
-                            ImageLoading="Content_OnLoading"
-                            Tag="{x:Bind GenerateLinkButton}" />
                         <TeachingTip
                             x:Name="ShowQrCodeTeachingTip"
                             x:Uid="/EntryViewerPage/QrCodeTeachingTip"

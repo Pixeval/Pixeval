@@ -22,7 +22,6 @@ using System;
 using System.Diagnostics;
 using Windows.System;
 using CommunityToolkit.Mvvm.ComponentModel;
-using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Pixeval.CoreApi.Model;
@@ -30,7 +29,6 @@ using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using WinUI3Utilities;
 using Microsoft.UI.Xaml.Media.Imaging;
-using Pixeval.Controls.Windowing;
 using WinUI3Utilities.Controls;
 
 namespace Pixeval.Controls;
@@ -75,15 +73,7 @@ public abstract class EntryViewModel<T>(T entry) : ObservableObject, IDisposable
     {
         UiHelper.ClipboardSetText(AppUri.OriginalString);
 
-        if (args.Parameter is TeachingTip teachingTip && App.AppViewModel.AppSettings.DisplayTeachingTipWhenGeneratingAppLink)
-        {
-            teachingTip.IsOpen = true;
-            return;
-        }
-
-        // 只提示
-        if (args.Parameter is FrameworkElement frameworkElement)
-            WindowFactory.GetWindowForElement(frameworkElement).HWnd.SuccessGrowl(EntryItemResources.LinkCopiedToClipboard);
+        (args.Parameter as ulong?)?.SuccessGrowl(EntryItemResources.LinkCopiedToClipboard);
     }
 
     private void GenerateWebLinkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)

@@ -14,9 +14,6 @@
     HeaderIcon="{controls1:GlyphIcon Glyph=RenameE8AC}"
     Loading="DownloadMacroSettingsExpander_OnLoading"
     mc:Ignorable="d">
-    <controls:SettingsExpander.Description>
-        <HyperlinkButton x:Uid="/SettingsPage/DownloadPathMacroEntryDescription" Tapped="DownloadPathMacroEntry_OnTapped" />
-    </controls:SettingsExpander.Description>
     <controls:SettingsExpander.Items>
         <controls:SettingsCard ContentAlignment="Left">
             <StackPanel Spacing="3">

@@ -41,6 +41,8 @@ namespace Pixeval.Pages;
 
 public partial class MainPageViewModel : ObservableObject
 {
+    public readonly NavigationViewTag<HelpPage> HelpTag = new();
+
     public readonly NavigationViewTag<AboutPage> AboutTag = new();
 
     public readonly NavigationViewTag<BookmarksPage> BookmarksTag = new();
@@ -70,7 +72,7 @@ public partial class MainPageViewModel : ObservableObject
     [ObservableProperty]
     private SoftwareBitmapSource? _avatarSource;
 
-    public string? UserName => App.AppViewModel.MakoClient.Session.Name;
+    public string UserName => App.AppViewModel.MakoClient.Session.Name;
 
     private readonly UIElement _owner;
 
