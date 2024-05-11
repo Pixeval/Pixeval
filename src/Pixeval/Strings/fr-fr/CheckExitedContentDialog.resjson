@@ -1,0 +1,11 @@
+{
+    "ContentDialog/Title": "Notification",
+    "ContentDialog/PrimaryButtonText": "Quitter l'application",
+    "ContentDialog/CloseButtonText": "Continuer à utiliser",
+    "MainTextBlock/Text": "Il est détecté que l'application n'ait pas été terminé correctement, vous pouvez essayer de (redémarrage nécessaire):",
+    "ClearConfig/Content": "Remise à zéro de configuration de l'application",
+    "ClearContext/Content": "Remise à zéro de session",
+    "OpenLocalFolder/Content": "Ouvrir le répertoire local",
+    "OpenRoamingFolder/Content": "Ouvrir le répertoire synchronisé",
+    "OpenLogFolder/Content": "Ouvrir le répertoire des logs"
+}

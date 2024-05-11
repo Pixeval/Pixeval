@@ -1,0 +1,30 @@
+{
+    "GenerateLink": "Copier le lien d'application",
+    "GenerateWebLink": "Copier le lien du page",
+    "OpenInWebBrowser": "Ouvrir la page dans navigateur",
+    "LinkCopiedToClipboard": "Lien copié sur le clipboard",
+    "ShowPixEzQrCode": "Générer un QR Code PixEz",
+    "ShowQRCode": "Générer un QR Code",
+
+    "AddToBookmark": "Ajouter à mes favoris",
+    "Share": "Partager",
+    "Save": "Sauvegarder",
+    "SaveAs": "Sauvegarder en copie",
+    "Copy": "Copier l'image",
+    "SaveAsCancelled": "Sauvegarde en copie annulée",
+    "Saved": "Sauvegarde finalisée",
+    "DownloadTaskCreated": "Téléchargement créé",
+    "UgoiraProcessing": "Ugoira en traitement: {0}%",
+    "ImageProcessing": "Image en traitement",
+    "NovelContentFetching": "Récupération du contenu de roman en cours",
+    "ImageSetToClipBoard": "Image copiée",
+    "NovelSetToClipBoard": "Roman copié",
+    "TheIllustrationIsAMangaFormatted": "Cette collection contient {0} illustrations",
+    "TheIllustrationIsAnUgoira": "Cette illustration est un ugoira",
+
+    "OpenNovel": "Lire le roman",
+
+    "UserMetricsFollowingsTextBlock/Text": "Utilisateurs suivis",
+    "UserMetricsIllustrationCountTextBlock/Text": "Nombre des artworks",
+    "UserMetricsMyPixivUsersTextBlock/Text": "Mes amis du Pixiv"
+}

@@ -1,0 +1,4 @@
+{
+  "MessageTextBlock/Text": "La recherche inverse nécessaire une API Key SauceNAO configurée. Vous ne l'avez pas encore configuré ou vous l'avez mal configuré. Pensez à le revérifier.",
+  "SetApiKeyHyperlinkButton/Content": "Modifier l'API Key"
+}

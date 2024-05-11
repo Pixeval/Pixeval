@@ -1,0 +1,21 @@
+{
+    "NonParameterizedMacroBearingParameterFormatted": "Le macro {0} ne peut contient aucun paramètre",
+    "ParameterizedMacroMissingParameterFormatted": "Le macro {0} manque un paramètre",
+    "ResultIsEmpty": "Erreur de parsing: le résultat est vide",
+    "UnexpectedTokenFormatted": "Entrée illégale: symbole non voulu dans l'offset {0} des caractères",
+    "UnknownArtist": "Auteur inconnu",
+    "UnknownIllustrationTitle": "Titre d'illustration inconnu",
+    "UnknownMacroNameFormatted": "Nom de macro inconnu: {0}",
+
+    "FilterQueryError": "Erreur de query du filtrage",
+    "FilterTokenFinishedFormatted": "Symbol {0} voulu, mais le query est terminé",
+    "UnexpactedTokenFormatted": "Symbol {0} voulu, mais {0} rencontré",
+    "UnbalancedParFormatted": "Des parenthèses ne s'accordent, la première position d'impaire: {0}",
+    "ParserOutOfRange": "Le parseur est en dehors de la portée",
+    "ExpectedAndOrAfterLeftParFormatted": "Un \"(\" doit être suivi par un \"and\" ou \"or\", actuel: {0}",
+    "ExpectedTokenAfterAtMarkFormatted": "Un \"@\" doit être suivi par un nom d'auteur ou son ID, actuel: {0}",
+    "IndexRangeUsedMoreThanOnce": "Au plus un range est valide",
+    "InvalidConstraintFormatted": "Contraint illégal, valeur valide: {0}, actuel: {1}",
+    "NumericTooLargeFormatted": "La valeur d'entier est trop large, actuel: {0}",
+    "ExpectedAtLeastTwoNumericInDateFormatted": "Au moins deux chiffres (MM-DD) sont nécessaire pour représenter une date, actuel: {0}"
+}
