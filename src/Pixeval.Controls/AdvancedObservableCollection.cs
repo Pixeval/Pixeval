@@ -113,7 +113,24 @@ public class AdvancedObservableCollection<T> : IList<T>, IList, IReadOnlyList<T>
 
     #region IList<T>
 
-    private List<T> RangedView => _view[Range];
+    private List<T> RangedView
+    {
+        get
+        {
+            var viewCount = _view.Count;
+            var start = Range.Start.GetOffset(viewCount);
+            if (start > viewCount)
+                return [];
+            var end = Range.End.GetOffset(viewCount);
+            if (end < 0)
+                return [];
+            if (start > end)
+                return [];
+            start = Math.Max(0, start);
+            end = Math.Min(viewCount, end);
+            return _view[start..end];
+        }
+    }
 
     /// <inheritdoc />
     public IEnumerator<T> GetEnumerator() => RangedView.GetEnumerator();

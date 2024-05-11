@@ -27,7 +27,7 @@ public class Parser
         var tok = Peek ?? ThrowUtils.MacroParse<T>(MacroParserResources.FilterTokenFinishedFormatted.Format(typeof(T)));
         if (tok is T t)
         {
-            Position++;
+            ++Position;
             return t;
         }
 
@@ -172,13 +172,13 @@ public class Parser
             case IQueryToken.Plus:
             {
                 _ = Eat<IQueryToken.Plus>();
-                EatBool(true);
+                EatBool(false);
                 return true;
             }
             case IQueryToken.Dash:
             {
                 _ = Eat<IQueryToken.Dash>();
-                EatBool(false);
+                EatBool(true);
                 return true;
             }
             case IQueryToken.Like:
@@ -263,7 +263,7 @@ public class Parser
             _currentTopLevel.Insert(dateToken);
         }
 
-        void EatBool(bool isInclude)
+        void EatBool(bool isExclude)
         {
             var content = Eat<IQueryToken.Data>();
             var type = content.Value.ToLower() switch
@@ -275,7 +275,7 @@ public class Parser
                 _ => ThrowUtils.MacroParse<BoolType>(MacroParserResources.InvalidConstraintFormatted.Format("r18, r18g, ai, gif", content.Value))
             };
 
-            var rangeToken = new BoolLeaf(isInclude, type, isNot);
+            var rangeToken = new BoolLeaf(isExclude, type, isNot);
             _currentTopLevel.Insert(rangeToken);
         }
     }
@@ -295,30 +295,47 @@ public class Parser
         {
             var leftInclusive = false;
 
-            if (Peek is IQueryToken.LeftBracket)
+            switch (Peek)
             {
-                _ = Eat<IQueryToken.LeftBracket>();
-                leftInclusive = true;
+                case IQueryToken.LeftBracket:
+                    _ = Eat<IQueryToken.LeftBracket>();
+                    leftInclusive = true;
+                    break;
+                case IQueryToken.LeftParen:
+                    _ = Eat<IQueryToken.LeftParen>();
+                    break;
             }
 
-            var a = Eat<IQueryToken.Numeric>();
+            var oa = Eat<IQueryToken.Numeric>().Value;
+            var a = oa - 1;
             _ = Eat<IQueryToken.Comma>();
-            var b = Eat<IQueryToken.Numeric>();
+            var ob = Eat<IQueryToken.Numeric>().Value;
+            var b = ob - 1;
 
             var rightInclusive = false;
-            if (Peek is IQueryToken.RightBracket)
+            switch (Peek)
             {
-                _ = Eat<IQueryToken.RightBracket>();
-                rightInclusive = true;
+                case IQueryToken.RightBracket:
+                    _ = Eat<IQueryToken.RightBracket>();
+                    rightInclusive = true;
+                    break;
+                case IQueryToken.RightParen:
+                    _ = Eat<IQueryToken.RightParen>();
+                    break;
+                default:
+                    return ThrowUtils.MacroParse<(long, long)>(MacroParserResources.ExpectedRightBracketOrParenInRangeFormatted.Format(Peek));
             }
 
-            return (leftInclusive, rightInclusive) switch
-            {
-                (true, true) => (a.Value, b.Value - 1),
-                (false, true) => (a.Value + 1, b.Value - 1),
-                (true, false) => (a.Value, b.Value),
-                (false, false) => (a.Value + 1, b.Value)
-            };
+            if (!leftInclusive)
+                a += 1;
+            if (rightInclusive)
+                b -= 1;
+            if (a < 0)
+                ThrowUtils.MacroParse(MacroParserResources.NumericTooSmallInRangeFormatted.Format(oa));
+            if (a > b)
+                ThrowUtils.MacroParse(MacroParserResources.MinimumShouldBeSmallerThanMaximiumFormatted.Format(oa, ob));
+
+            return (a, b);
         }
 
         (long, long?) ParseDashForm()
@@ -328,20 +345,28 @@ public class Parser
                 case IQueryToken.Dash:
                 {
                     _ = Eat<IQueryToken.Dash>();
-                    var a = Eat<IQueryToken.Numeric>();
-                    return (0, a.Value);
+                    var b = Eat<IQueryToken.Numeric>().Value;
+                    return (0, b);
                 }
                 case IQueryToken.Numeric:
                 {
-                    var a = Eat<IQueryToken.Numeric>();
+                    // 为了符合从1开始的习惯，这里减一，即：
+                    // 1-：第一张及以后
+                    // 1-2：第一张及第二张图
+                    var oa = Eat<IQueryToken.Numeric>().Value;
+                    var a = oa - 1;
+                    if (a < 0)
+                        ThrowUtils.MacroParse(MacroParserResources.NumericTooSmallInRangeFormatted.Format(oa));
                     _ = Eat<IQueryToken.Dash>();
                     if (Peek is IQueryToken.Numeric)
                     {
-                        var b = Eat<IQueryToken.Numeric>();
-                        return (a.Value, b.Value);
+                        var b = Eat<IQueryToken.Numeric>().Value;
+                        if (a > b)
+                            ThrowUtils.MacroParse(MacroParserResources.MinimumShouldBeSmallerThanMaximiumFormatted.Format(oa, b));
+                        return (a, b);
                     }
 
-                    return (a.Value, null);
+                    return (a, null);
                 }
                 default:
                     return (0, null);

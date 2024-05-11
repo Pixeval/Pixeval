@@ -44,7 +44,7 @@ public interface IQueryToken
         public override string ToString() => Value;
     }
 
-    [DebuggerDisplay("Value")]
+    [DebuggerDisplay("{Value}")]
     public readonly record struct Numeric(long Value) : INullableToken
     {
         public bool IsNotEmpty() => Value >= 0;

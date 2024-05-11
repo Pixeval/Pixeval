@@ -51,8 +51,8 @@ public enum RangeEdge
     Starting, Ending
 }
 
-[DebuggerDisplay("{Type} ({IsInclude})")]
-public record BoolLeaf(bool IsInclude, BoolType Type, bool IsNot) : QueryLeaf(IsNot);
+[DebuggerDisplay("{Type} ({IsExclude})")]
+public record BoolLeaf(bool IsExclude, BoolType Type, bool IsNot) : QueryLeaf(IsNot);
 
 [DebuggerDisplay("@{Value}")]
 public record NumericLeaf(long Value, bool IsNot) : QueryLeaf(IsNot);
