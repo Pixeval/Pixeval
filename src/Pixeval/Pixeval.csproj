@@ -73,12 +73,25 @@
 
     <!--Exposes PRI resources-->
     <Target Name="InjectAdditionalFiles" BeforeTargets="GenerateMSBuildEditorConfigFileShouldRun">
+        <RemoveDir Directories="Generated" />
         <ItemGroup>
+            <TextFiles Include="%(TextFile.OutputTarget)">
+                <Content>{&#xD;&#xA;@(TextFile->Metadata('Content'), ',&#xD;&#xA;')&#xD;&#xA;}</Content>
+            </TextFiles>
+        </ItemGroup>
+        <WriteLinesToFile Condition="%(TextFiles.Identity) != ''" File="%(TextFiles.Identity)" Overwrite="true" Lines="@(TextFiles->'%(Content)')" />
+        <ItemGroup>
+            <PRIResource Include="@(TextFiles)" />
             <AdditionalFiles Include="@(PRIResource)" SourceItemGroup="PRIResource" />
         </ItemGroup>
     </Target>
     <ItemGroup>
         <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="SourceItemGroup" />
+
+        <TextFile Include="Strings\*\*.txt" >
+            <OutputTarget>Generated\%(RecursiveDir)\TextGenerated.resjson</OutputTarget>
+            <Content>    "%(Filename)" : "$([System.IO.File]::ReadAllText(%(FullPath)).Replace('&#xD;&#xA;', '\n').Replace('&quot;', '&amp;quot;'))"</Content>
+        </TextFile>
     </ItemGroup>
 
     <!--PackageManifest-->
