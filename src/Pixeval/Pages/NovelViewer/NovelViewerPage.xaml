@@ -374,10 +374,7 @@
                                     x:Name="AddToBookmarkButton"
                                     Command="{x:Bind _viewModel.AddToBookmarkCommand}"
                                     Tapped="AddToBookmarkButton_OnTapped" />
-                                <AppBarButton
-                                    x:Name="GenerateLinkButton"
-                                    Command="{x:Bind _viewModel.CurrentNovel.GenerateLinkCommand, Mode=OneWay}"
-                                    CommandParameter="{x:Bind GenerateLinkTeachingTip}" />
+                                <AppBarButton Command="{x:Bind _viewModel.CurrentNovel.GenerateLinkCommand, Mode=OneWay}" CommandParameter="{x:Bind HWnd}" />
                                 <AppBarButton Command="{x:Bind _viewModel.CurrentNovel.GenerateWebLinkCommand, Mode=OneWay}" CommandParameter="{x:Bind HWnd}" />
                                 <AppBarButton Command="{x:Bind _viewModel.CurrentNovel.OpenInWebBrowserCommand, Mode=OneWay}" />
                                 <AppBarButton
@@ -402,11 +399,6 @@
                                 DefaultLabelPosition="Collapsed">
                                 <AppBarButton Command="{x:Bind _viewModel.FullScreenCommand}" />
                             </CommandBar>
-                            <controls:GenerateLinkTeachingTip
-                                x:Name="GenerateLinkTeachingTip"
-                                Grid.Column="0"
-                                ImageLoading="Content_OnLoading"
-                                Tag="{x:Bind GenerateLinkButton}" />
                             <TeachingTip
                                 x:Name="ShowQrCodeTeachingTip"
                                 x:Uid="/EntryViewerPage/QrCodeTeachingTip"

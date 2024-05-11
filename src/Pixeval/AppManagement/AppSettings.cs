@@ -25,7 +25,6 @@ using System.IO;
 using Windows.Foundation;
 using Microsoft.UI.Composition.SystemBackdrops;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
 using Pixeval.Attributes;
 using Pixeval.Controls;
 using Pixeval.Controls.Windowing;
@@ -62,13 +61,6 @@ public partial record AppSettings : IWindowSettings
 
     [SettingsEntry(IconGlyph.NetworkE968, nameof(EnableDomainFrontingEntryHeader), nameof(EnableDomainFrontingEntryDescription))]
     public bool EnableDomainFronting { get; set; } = true;
-
-    /// <summary>
-    /// Indicates whether a <see cref="TeachingTip" /> should be displayed
-    /// when user clicks "Generate Link"
-    /// </summary>
-    [SettingsEntry(IconGlyph.LinkE71B, nameof(GenerateHelpLinkEntryHeader), nameof(GenerateHelpLinkEntryDescription))]
-    public bool DisplayTeachingTipWhenGeneratingAppLink { get; set; } = true;
 
     [SettingsEntry(IconGlyph.FileExplorerEC50, nameof(UseFileCacheEntryHeader), nameof(UseFileCacheEntryDescription))]
     public bool UseFileCache { get; set; }

@@ -25,15 +25,30 @@
             Style="{StaticResource TitleTextBlockStyle}" />
         <ScrollView>
             <StackPanel Margin="20,0,20,20">
+                <controls:SettingsExpander x:Uid="/HelpPage/AppLinkHelpExpander" HeaderIcon="{controls1:GlyphIcon Glyph=LinkE71B}">
+                    <controls:SettingsExpander.Items>
+                        <controls:SettingsCard HorizontalContentAlignment="Stretch" ContentAlignment="Left">
+                            <StackPanel Spacing="20">
+                                <Image MaxWidth="300" Source="ms-appx:///Assets/Images/illust-app-link-sample.png" />
+                                <TextBlock x:Uid="/HelpPage/AppLinkHelp" />
+                            </StackPanel>
+                        </controls:SettingsCard>
+                    </controls:SettingsExpander.Items>
+                </controls:SettingsExpander>
+                <controls:SettingsExpander x:Uid="/HelpPage/DownloadMacroHelpExpander" HeaderIcon="{controls1:GlyphIcon Glyph=RenameE8AC}">
+                    <controls:SettingsExpander.Items>
+                        <controls:SettingsCard HorizontalContentAlignment="Stretch" ContentAlignment="Left">
+                            <TextBlock x:Uid="/TextGenerated/DownloadMacroHelp" />
+                        </controls:SettingsCard>
+                    </controls:SettingsExpander.Items>
+                </controls:SettingsExpander>
                 <controls:SettingsExpander x:Uid="/HelpPage/QueryFilterHelpExpander" HeaderIcon="{controls1:GlyphIcon Glyph=FilterE71C}">
                     <controls:SettingsExpander.Items>
                         <controls:SettingsCard HorizontalContentAlignment="Stretch" ContentAlignment="Vertical">
                             <controls:SettingsCard.Header>
                                 <TextBlock x:Uid="/HelpPage/QueryFilterSimpleHelpHeader" Style="{StaticResource HelpHeaderTextBlockStyle}" />
                             </controls:SettingsCard.Header>
-                            <StackPanel>
-                                <TextBlock x:Uid="/TextGenerated/QueryFilterSimpleHelp" />
-                            </StackPanel>
+                            <TextBlock x:Uid="/TextGenerated/QueryFilterSimpleHelp" />
                         </controls:SettingsCard>
                         <controls:SettingsCard HorizontalContentAlignment="Stretch" ContentAlignment="Vertical">
                             <controls:SettingsCard.Header>
@@ -43,15 +58,7 @@
                         </controls:SettingsCard>
                     </controls:SettingsExpander.Items>
                 </controls:SettingsExpander>
-                <controls:SettingsExpander x:Uid="/HelpPage/DownloadMacroHelpExpander" HeaderIcon="{controls1:GlyphIcon Glyph=RenameE8AC}">
-                    <controls:SettingsExpander.Items>
-                        <controls:SettingsCard HorizontalContentAlignment="Stretch" ContentAlignment="Left">
-                            <StackPanel>
-                                <TextBlock x:Uid="/TextGenerated/DownloadMacroHelp" />
-                            </StackPanel>
-                        </controls:SettingsCard>
-                    </controls:SettingsExpander.Items>
-                </controls:SettingsExpander>
+
             </StackPanel>
         </ScrollView>
     </controls:DockPanel>

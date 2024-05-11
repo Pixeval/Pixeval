@@ -1,8 +1,4 @@
 {
-    "GenerateLinkToThisPageButtonTeachingTip/ActionButtonContent": "Do not show again",
-    "GenerateLinkToThisPageButtonTeachingTip/CloseButtonContent": "OK",
-    "GenerateLinkToThisPageButtonTeachingTip/Subtitle": "Send to your friends, or navigate to here directly by opening it in your browser or Windows Run dialog",
-    "GenerateLinkToThisPageButtonTeachingTip/Title": "Link copied to the clipboard",
     "QrCodeTeachingTip/Title": "Generate QR code",
 
     "Background": "Wallpaper",

@@ -1,8 +1,4 @@
 {
-  "GenerateLinkToThisPageButtonTeachingTip/ActionButtonContent": "Больше не показывать",
-  "GenerateLinkToThisPageButtonTeachingTip/CloseButtonContent": "Понял",
-  "GenerateLinkToThisPageButtonTeachingTip/Subtitle": "Поделитесь этой ссылкой с друзьями или введите её в браузере или в Windows, чтобы открыть текущую страницу напрямую",
-  "GenerateLinkToThisPageButtonTeachingTip/Title": "Ссылка скопирована в буфер обмена",
   "QrCodeTeachingTip/Title": "QR-код работы",
 
   "Background": "Обои",

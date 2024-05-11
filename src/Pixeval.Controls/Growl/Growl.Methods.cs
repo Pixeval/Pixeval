@@ -53,6 +53,7 @@ public static partial class Growl
         Severity = InfoBarSeverity.Success,
         Token = token
     });
+
     public static void Success(string title, string message) => InitGrowl(new GrowlInfo
     {
         Title = title,

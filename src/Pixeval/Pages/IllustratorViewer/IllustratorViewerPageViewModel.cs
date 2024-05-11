@@ -162,12 +162,6 @@ public partial class IllustratorViewerPageViewModel : UiObservableObject
     {
         UiHelper.ClipboardSetText(MakoHelper.GenerateUserAppUri(Id).OriginalString);
 
-        if (args.Parameter is TeachingTip teachingTip && App.AppViewModel.AppSettings.DisplayTeachingTipWhenGeneratingAppLink)
-        {
-            teachingTip.IsOpen = true;
-            return;
-        }
-
         HWnd.SuccessGrowl(EntryItemResources.LinkCopiedToClipboard);
     }
 

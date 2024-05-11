@@ -93,8 +93,6 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
                 },
                 new BoolAppSettingsEntry(AppSettings,
                     t => t.UseFileCache),
-                new BoolAppSettingsEntry(AppSettings,
-                    t => t.DisplayTeachingTipWhenGeneratingAppLink),
                 new EnumAppSettingsEntry<MainPageTabItem>(AppSettings,
                     t => t.DefaultSelectedTabItem)
             },

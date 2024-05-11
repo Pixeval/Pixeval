@@ -69,8 +69,6 @@
     "FeedbackByEmailHyperlinkButton/Content": "邮件联系作者",
     "ViewingRestrictionEntry/Description": "在 Pixiv 官方账号设置是否显示 R-18/R-18G/AI生成 的内容",
     "ViewingRestrictionEntry/Header": "浏览限制",
-    "GenerateHelpLinkEntry/Description": "该帮助提示会指示用户如何使用链接",
-    "GenerateHelpLinkEntry/Header": "生成页面链接时显示帮助提示",
     "GitHubRepositoryHyperlinkButton/Content": "GitHub 仓库",
     "ItemsViewLayoutTypeEntry/Description": "选择网格布局则每张图片大小相同；选择流式布局则只有每一行的两端会被对齐",
     "ItemsViewLayoutTypeEntry/Header": "缩略图视图对齐规则",
