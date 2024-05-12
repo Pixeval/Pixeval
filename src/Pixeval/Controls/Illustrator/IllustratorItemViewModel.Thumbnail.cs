@@ -33,7 +33,7 @@ public partial class IllustratorItemViewModel
         var result = await App.AppViewModel.MakoClient.DownloadStreamAsync(AvatarUrl);
         var stream = result is Result<Stream>.Success { Value: var avatar }
             ? avatar
-            : AppInfo.GetPixivNoProfileImageStream();
+            : AppInfo.GetPixivNoProfileStream();
         var dominantColor = await UiHelper.GetDominantColorAsync(stream, false);
         AvatarBorderBrush = new SolidColorBrush(dominantColor);
         stream.Position = 0;

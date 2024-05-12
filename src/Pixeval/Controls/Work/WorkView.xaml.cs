@@ -156,10 +156,11 @@ public sealed partial class WorkView : IEntryView<ISortableEntryViewViewModel>
     {
         if (ViewModel == null!)
             return;
-        foreach (var viewModel in ViewModel.Source)
-            viewModel.UnloadThumbnail(ViewModel);
-        ViewModel.Dispose();
+        var viewModel = ViewModel;
         ViewModel = null!;
+        foreach (var vm in viewModel.Source)
+            vm.UnloadThumbnail(viewModel);
+        viewModel.Dispose();
     }
 
     private void AddToBookmarkTeachingTip_OnCloseButtonClick(TeachingTip sender, object e)

@@ -131,7 +131,7 @@ public abstract class ThumbnailEntryViewModel<T>(T entry) : EntryViewModel<T>(en
                 break;
         }
 
-        return AppInfo.GetNotAvailableImageStream();
+        return AppInfo.GetImageNotAvailableStream();
     }
 
     /// <summary>

@@ -69,7 +69,7 @@ public static partial class IoHelper
         }
         catch
         {
-            return await AppInfo.GetNotAvailableImageAsync();
+            return await AppInfo.ImageNotAvailable.ValueAsync;
         }
         finally
         {
@@ -104,7 +104,7 @@ public static partial class IoHelper
         }
         catch
         {
-            stream = AppInfo.GetNotAvailableImageStream();
+            stream = AppInfo.GetImageNotAvailableStream();
         }
         return stream;
     }

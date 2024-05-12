@@ -97,7 +97,7 @@ public partial class MainPageViewModel : ObservableObject
         var result = await makoClient.DownloadSoftwareBitmapSourceAsync(makoClient.Session.AvatarUrl!);
         AvatarSource = result is Result<SoftwareBitmapSource>.Success { Value: var avatar }
             ? avatar
-            : await AppInfo.GetNotAvailableImageAsync();
+            : await AppInfo.ImageNotAvailable.ValueAsync;
     }
 
     public async Task ReverseSearchAsync(Stream stream)

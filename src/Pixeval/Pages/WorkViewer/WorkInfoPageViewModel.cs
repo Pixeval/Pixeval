@@ -49,7 +49,7 @@ public partial class WorkInfoPageViewModel<T>(T entry) : ObservableObject, IDisp
             var result = await App.AppViewModel.MakoClient.DownloadSoftwareBitmapSourceAsync(profileImage);
             AvatarSource = result is Result<SoftwareBitmapSource>.Success { Value: var avatar }
                 ? avatar
-                : await AppInfo.GetPixivNoProfileImageAsync();
+                : await AppInfo.PixivNoProfile.ValueAsync;
         }
     }
 

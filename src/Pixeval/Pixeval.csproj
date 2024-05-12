@@ -56,9 +56,8 @@
         <PackageReference Include="PininSharp" Version="1.2.0" />
         <PackageReference Include="Pixeval.Bypass" Version="1.1.7" />
         <PackageReference Include="Pixeval.QRCoder" Version="1.4.5" />
-        <PackageReference Include="QuestPDF" Version="2024.3.3" />
-        <PackageReference Include="ReverseMarkdown" Version="4.3.0" />
-        <PackageReference Include="Select.HtmlToPdf.NetCore" Version="23.2.0" />
+        <PackageReference Include="QuestPDF" Version="2024.3.5" />
+        <PackageReference Include="ReverseMarkdown" Version="4.4.0" />
         <PackageReference Include="SixLabors.ImageSharp" Version="3.1.4" />
         <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="2.1.3" />
         <PackageReference Include="System.Linq.Async" Version="6.0.1" />
@@ -76,7 +75,10 @@
         <RemoveDir Directories="Generated" />
         <ItemGroup>
             <TextFiles Include="%(TextFile.OutputTarget)">
-                <Content>{&#xD;&#xA;@(TextFile->Metadata('Content'), ',&#xD;&#xA;')&#xD;&#xA;}</Content>
+                <Content>{
+@(TextFile-&gt;Metadata('Content'), ',
+')
+}</Content>
             </TextFiles>
         </ItemGroup>
         <WriteLinesToFile Condition="%(TextFiles.Identity) != ''" File="%(TextFiles.Identity)" Overwrite="true" Lines="@(TextFiles->'%(Content)')" />
@@ -88,9 +90,10 @@
     <ItemGroup>
         <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="SourceItemGroup" />
 
-        <TextFile Include="Strings\*\*.txt" >
+        <TextFile Include="Strings\*\*.txt">
             <OutputTarget>Generated\%(RecursiveDir)\TextGenerated.resjson</OutputTarget>
-            <Content>    "$([System.String]::Concat(%(Filename), '"').Replace('_', '/')) : "$([System.IO.File]::ReadAllText(%(FullPath)).Replace('\', '\\').Replace('&#xD;&#xA;', '\n').Replace('&quot;', '\&quot;'))"</Content>
+            <Content>    "$([System.String]::Concat(%(Filename), '"').Replace('_', '/')) : "$([System.IO.File]::ReadAllText(%(FullPath)).Replace('\', '\\').Replace('
+', '\n').Replace('"', '\"'))"</Content>
         </TextFile>
     </ItemGroup>
 
@@ -129,5 +132,81 @@
         <Page Update="**\*.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="C:\Users\poker\.nuget\packages\questpdf\2024.3.5\buildTransitive\..\LatoFont\OFL.txt" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="C:\Users\poker\.nuget\packages\questpdf\2024.3.5\buildTransitive\..\LatoFont\Lato-ThinItalic.ttf" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="C:\Users\poker\.nuget\packages\questpdf\2024.3.5\buildTransitive\..\LatoFont\Lato-Thin.ttf" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="C:\Users\poker\.nuget\packages\questpdf\2024.3.5\buildTransitive\..\LatoFont\Lato-SemiBoldItalic.ttf" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="C:\Users\poker\.nuget\packages\questpdf\2024.3.5\buildTransitive\..\LatoFont\Lato-SemiBold.ttf" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="C:\Users\poker\.nuget\packages\questpdf\2024.3.5\buildTransitive\..\LatoFont\Lato-Regular.ttf" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="C:\Users\poker\.nuget\packages\questpdf\2024.3.5\buildTransitive\..\LatoFont\Lato-MediumItalic.ttf" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="C:\Users\poker\.nuget\packages\questpdf\2024.3.5\buildTransitive\..\LatoFont\Lato-Medium.ttf" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="C:\Users\poker\.nuget\packages\questpdf\2024.3.5\buildTransitive\..\LatoFont\Lato-LightItalic.ttf" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="C:\Users\poker\.nuget\packages\questpdf\2024.3.5\buildTransitive\..\LatoFont\Lato-Light.ttf" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="C:\Users\poker\.nuget\packages\questpdf\2024.3.5\buildTransitive\..\LatoFont\Lato-Italic.ttf" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="C:\Users\poker\.nuget\packages\questpdf\2024.3.5\buildTransitive\..\LatoFont\Lato-ExtraLightItalic.ttf" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="C:\Users\poker\.nuget\packages\questpdf\2024.3.5\buildTransitive\..\LatoFont\Lato-ExtraLight.ttf" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="C:\Users\poker\.nuget\packages\questpdf\2024.3.5\buildTransitive\..\LatoFont\Lato-ExtraBoldItalic.ttf" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="C:\Users\poker\.nuget\packages\questpdf\2024.3.5\buildTransitive\..\LatoFont\Lato-ExtraBold.ttf" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="C:\Users\poker\.nuget\packages\questpdf\2024.3.5\buildTransitive\..\LatoFont\Lato-BoldItalic.ttf" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="C:\Users\poker\.nuget\packages\questpdf\2024.3.5\buildTransitive\..\LatoFont\Lato-Bold.ttf" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="C:\Users\poker\.nuget\packages\questpdf\2024.3.5\buildTransitive\..\LatoFont\Lato-BlackItalic.ttf" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="C:\Users\poker\.nuget\packages\questpdf\2024.3.5\buildTransitive\..\LatoFont\Lato-Black.ttf" />
     </ItemGroup>
 </Project>

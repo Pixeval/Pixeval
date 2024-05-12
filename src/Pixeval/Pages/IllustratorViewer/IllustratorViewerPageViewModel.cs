@@ -101,13 +101,13 @@ public partial class IllustratorViewerPageViewModel : UiObservableObject
         var result = await App.AppViewModel.MakoClient.DownloadBitmapImageAsync(AvatarUrl, 100);
         AvatarSource = result is Result<ImageSource>.Success { Value: var avatar }
             ? avatar
-            : await AppInfo.GetPixivNoProfileImageAsync();
+            : await AppInfo.PixivNoProfile.ValueAsync;
         if (BackgroundUrl is not null)
         {
             var result2 = await App.AppViewModel.MakoClient.DownloadBitmapImageAsync(BackgroundUrl);
             BackgroundSource = result2 is Result<ImageSource>.Success { Value: var background }
                 ? background
-                : await AppInfo.GetNotAvailableImageAsync();
+                : await AppInfo.ImageNotAvailable.ValueAsync;
         }
         else
         {

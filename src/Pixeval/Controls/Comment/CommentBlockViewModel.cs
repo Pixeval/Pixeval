@@ -96,7 +96,7 @@ public partial class CommentBlockViewModel(Comment comment, SimpleWorkType type,
         var result = await App.AppViewModel.MakoClient.DownloadSoftwareBitmapSourceAsync(Comment.CommentPoster.ProfileImageUrls.Medium);
         AvatarSource = result is Result<SoftwareBitmapSource>.Success { Value: var avatar }
             ? avatar
-            : await AppInfo.GetPixivNoProfileImageAsync();
+            : await AppInfo.PixivNoProfile.ValueAsync;
     }
 
     public void AddComment(Comment comment)
