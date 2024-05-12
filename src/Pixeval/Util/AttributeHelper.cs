@@ -25,6 +25,7 @@ using Microsoft.UI.Xaml;
 using Pixeval.Attributes;
 using Pixeval.Controls;
 using Pixeval.CoreApi.Global.Enum;
+using Pixeval.Options;
 using WinUI3Utilities;
 
 namespace Pixeval.Util;
@@ -80,14 +81,19 @@ public static class LocalizedResourceAttributeHelper
     {
         return resourceLoader.GetMember(key, BindingFlags.Static | BindingFlags.Public) switch
         {
-            [FieldInfo fi] => fi?.GetValue(null),
-            [PropertyInfo pi] => pi?.GetValue(null),
+        [FieldInfo fi] => fi?.GetValue(null),
+        [PropertyInfo pi] => pi?.GetValue(null),
             _ => null
         } as string;
     }
 
     private static readonly Dictionary<Enum, string> _predefinedResources = new()
     {
+        [ProxyType.Http] = "http/https",
+        [ProxyType.Socks4] = "socks4",
+        [ProxyType.Socks4A] = "socks4a",
+        [ProxyType.Socks5] = "socks5",
+
         [TargetFilter.ForAndroid] = MiscResources.TargetFilterForAndroid,
         [TargetFilter.ForIos] = MiscResources.TargetFilterForIOS,
 

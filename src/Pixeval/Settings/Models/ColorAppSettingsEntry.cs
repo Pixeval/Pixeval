@@ -32,7 +32,5 @@ public class ColorAppSettingsEntry(
     Expression<Func<AppSettings, uint>> property)
     : SingleValueSettingsEntry<AppSettings, uint>(appSettings, property)
 {
-    public Action<uint>? ValueChanged { get; set; }
-
     public override ColorSettingsCard Element => new() { Entry = this };
 }

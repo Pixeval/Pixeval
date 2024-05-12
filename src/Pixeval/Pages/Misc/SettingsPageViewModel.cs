@@ -91,6 +91,10 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
                 {
                     ValueChanged = t => App.AppViewModel.MakoClient.Configuration.DomainFronting = t
                 },
+                new ProxyAppSettingsEntry(AppSettings)
+                {
+                    ProxyChanged = t => App.AppViewModel.MakoClient.Configuration.Proxy = t
+                },
                 new BoolAppSettingsEntry(AppSettings,
                     t => t.UseFileCache),
                 new EnumAppSettingsEntry<MainPageTabItem>(AppSettings,

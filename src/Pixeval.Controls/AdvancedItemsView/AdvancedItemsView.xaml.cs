@@ -96,8 +96,13 @@ public sealed partial class AdvancedItemsView : ItemsView
 
             return false;
         };
-        _ = RegisterPropertyChangedCallback(ScrollViewProperty, ScrollViewOnPropertyChanged);
-        _ = RegisterPropertyChangedCallback(ItemsSourceProperty, ItemsSourceOnPropertyChanged);
+        _scrollViewOnPropertyChangedToken = RegisterPropertyChangedCallback(ScrollViewProperty, ScrollViewOnPropertyChanged);
+        var itemsSourceOnPropertyChangedToken = RegisterPropertyChangedCallback(ItemsSourceProperty, ItemsSourceOnPropertyChanged);
+        Unloaded += (_, _) =>
+        {
+            UnregisterPropertyChangedCallback(ScrollViewProperty, _scrollViewOnPropertyChangedToken);
+            UnregisterPropertyChangedCallback(ItemsSourceProperty, itemsSourceOnPropertyChangedToken);
+        };
     }
 
     #region PropertyChanged
@@ -250,14 +255,18 @@ public sealed partial class AdvancedItemsView : ItemsView
 
     #region EventHandlers
 
+    private readonly long _scrollViewOnPropertyChangedToken;
+
     /// <summary>
     /// 本方法之后会触发<see cref="AdvancedItemsViewOnSizeChanged"/>
     /// </summary>
     private void ScrollViewOnPropertyChanged(DependencyObject sender, DependencyProperty dp)
     {
+        UnregisterPropertyChangedCallback(ScrollViewProperty, _scrollViewOnPropertyChangedToken);
         ScrollView.ViewChanged += ScrollView_ViewChanged;
         ScrollView.PointerWheelChanged += ScrollView_PointerWheelChanged;
         _itemsRepeater = ScrollView.Content.To<ItemsRepeater>();
+        ScrollView.Content = new Grid { Children = { _itemsRepeater } };
         _itemsRepeater.SizeChanged += AdvancedItemsViewOnSizeChanged;
     }
 

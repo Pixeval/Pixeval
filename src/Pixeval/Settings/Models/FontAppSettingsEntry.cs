@@ -15,8 +15,6 @@ public class FontAppSettingsEntry(
 {
     public static IEnumerable<string> AvailableFonts { get; }
 
-    public Action<string>? ValueChanged { get; set; }
-
     static FontAppSettingsEntry()
     {
         using var collection = new InstalledFontCollection();

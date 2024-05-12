@@ -81,9 +81,7 @@ public abstract class SingleValueSettingsEntry<TSettings, TValue> : SingleValueS
 
     public SettingsEntryAttribute? Attribute { get; }
 
-    private readonly Func<TSettings, TValue> _getter;
-
-    private readonly Action<TSettings, TValue> _setter;
+    public Action<TValue>? ValueChanged { get; set; }
 
     public TValue Value
     {
@@ -97,5 +95,13 @@ public abstract class SingleValueSettingsEntry<TSettings, TValue> : SingleValueS
         }
     }
 
-    public override void ValueReset() => OnPropertyChanged(nameof(Value));
+    public override void ValueReset()
+    {
+        OnPropertyChanged(nameof(Value));
+        ValueChanged?.Invoke(Value);
+    }
+
+    private readonly Func<TSettings, TValue> _getter;
+
+    private readonly Action<TSettings, TValue> _setter;
 }

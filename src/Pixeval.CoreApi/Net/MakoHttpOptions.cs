@@ -91,14 +91,19 @@ public static partial class MakoHttpOptions
         });
     }
 
-    public static HttpMessageInvoker CreateDirectHttpMessageInvoker()
+    public static HttpMessageInvoker CreateDirectHttpMessageInvoker(MakoClient makoClient)
     {
-        return new HttpMessageInvoker(new SocketsHttpHandler());
+        var useProxy = makoClient.CurrentSystemProxy is not null;
+        return new HttpMessageInvoker(new SocketsHttpHandler
+        {
+            UseProxy = useProxy,
+            Proxy = makoClient.CurrentSystemProxy
+        });
     }
 
     public static async Task<IPAddress[]> GetAddressesAsync(string host, CancellationToken token)
     {
-        if (!NameResolvers.TryGetValue(host, out var ips)) 
+        if (!NameResolvers.TryGetValue(host, out var ips))
             ips = await Dns.GetHostAddressesAsync(host, token);
         return ips;
     }

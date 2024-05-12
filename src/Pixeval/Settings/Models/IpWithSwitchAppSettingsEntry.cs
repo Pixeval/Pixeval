@@ -1,4 +1,3 @@
-using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using Pixeval.AppManagement;
@@ -9,14 +8,13 @@ namespace Pixeval.Settings.Models;
 
 public class IpWithSwitchAppSettingsEntry(
     AppSettings appSettings)
-    : ObservableSettingsEntryBase<AppSettings>(appSettings, "", "", default)
+    : BoolAppSettingsEntry(appSettings, t => t.EnableDomainFronting)
 {
     public override IpWithSwitchSettingsExpander Element => new() { Entry = this };
 
-    public Action<bool>? ValueChanged { get; set; }
-
     public override void ValueReset()
     {
+        base.ValueReset();
         PixivAppApiNameResolver = [.. Settings.PixivAppApiNameResolver];
         PixivImageNameResolver = [.. Settings.PixivImageNameResolver];
         PixivImageNameResolver2 = [.. Settings.PixivImageNameResolver2];

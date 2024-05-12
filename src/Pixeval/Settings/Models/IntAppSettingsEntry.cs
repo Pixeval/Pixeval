@@ -12,8 +12,6 @@ public class IntAppSettingsEntry(
 {
     public override IntSettingsCard Element => new() { Entry = this };
 
-    public Action<int>? ValueChanged { get; set; }
-
     public string? Placeholder { get; set; }
 
     public double Max { get; set; } = double.MaxValue;

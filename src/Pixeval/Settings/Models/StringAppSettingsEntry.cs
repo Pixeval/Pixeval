@@ -12,8 +12,6 @@ public class StringAppSettingsEntry(
 {
     public override StringSettingsCard Element => new() { Entry = this };
 
-    public Action<string?>? ValueChanged { get; set; }
-
     public string? Placeholder { get; set; }
 
     public StringAppSettingsEntry(
