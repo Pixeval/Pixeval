@@ -256,33 +256,17 @@
       },
       "QuestPDF": {
         "type": "Direct",
-        "requested": "[2024.3.3, )",
-        "resolved": "2024.3.3",
-        "contentHash": "S2T+iE8RGw3OCBZ6bZmPhw6oIbXa92MuewcvwzJgeNKGIoc6t1lHnCWwH+UTGVFV9eGUCEjkxQCC6xooDYOUGw=="
+        "requested": "[2024.3.5, )",
+        "resolved": "2024.3.5",
+        "contentHash": "KLBgMYx0+/88B1F2V8Qr9J6N51fMxn9jQ1LCF7P4wE6d5R/7qnsz5ahFychICdsiYzQ96ZWJJOTMQjy2hzFOAw=="
       },
       "ReverseMarkdown": {
         "type": "Direct",
-        "requested": "[4.3.0, )",
-        "resolved": "4.3.0",
-        "contentHash": "KykyBe7Q26pkYbmMP7zwRgAy74xglCCU4lPilii0Vj++LMdvTcm2EZ6EvzaNKvaBNhWQtcI69V/4tW52sceEOw==",
+        "requested": "[4.4.0, )",
+        "resolved": "4.4.0",
+        "contentHash": "16jv/gdvhmIpPxQpsdVCSAkAioXZkWX6ttxpb3ddaD+LJ4Dc+KlAhk1t21y+NZ6VMihJCw3Tum36b41N1J6cvA==",
         "dependencies": {
-          "HtmlAgilityPack": "1.11.57"
-        }
-      },
-      "Select.HtmlToPdf.NetCore": {
-        "type": "Direct",
-        "requested": "[23.2.0, )",
-        "resolved": "23.2.0",
-        "contentHash": "1npSC6l2TVqRSvBocT865LBcgqcrhA+lAQPzFNUyq3xHu5hh7c/ERPcEbZA5QKE2TFUj10wrIBmxgTUihVz5+w==",
-        "dependencies": {
-          "Microsoft.Bcl.AsyncInterfaces": "1.1.0",
-          "Newtonsoft.Json": "13.0.1",
-          "System.Buffers": "4.5.1",
-          "System.Drawing.Common": "4.5.1",
-          "System.Numerics.Vectors": "4.5.0",
-          "System.Security.Principal.Windows": "4.5.1",
-          "System.Text.Encoding.CodePages": "4.5.1",
-          "System.Threading.Tasks.Extensions": "4.5.2"
+          "HtmlAgilityPack": "1.11.61"
         }
       },
       "SixLabors.ImageSharp": {
@@ -362,8 +346,8 @@
       },
       "HtmlAgilityPack": {
         "type": "Transitive",
-        "resolved": "1.11.57",
-        "contentHash": "zDxnHcAvi+qhZG602eKaPJKmzm0T8npKVML0RMwjrRBabpmTRtu2OVpfNkMUfYMgQ+5EllOkSeGxu0uFVV2zFw=="
+        "resolved": "1.11.61",
+        "contentHash": "hqZASeEFHS9quHvfZSwaULoAJLWkOYVPiQjc3P9J4pQS8vSYzrP3bxe04Vm7vYYuxwbQhq9hCSVvZVLTyRaNaQ=="
       },
       "Markdig": {
         "type": "Transitive",
@@ -410,11 +394,6 @@
           "Microsoft.NETCore.Platforms": "3.1.0"
         }
       },
-      "Newtonsoft.Json": {
-        "type": "Transitive",
-        "resolved": "13.0.1",
-        "contentHash": "ppPFpBcvxdsfUonNcvITKqLl3bqxWbDCZIzDWHzjpdAHRFfZe0Dw9HmA0+za13IdyrgJwpkDTDA9fHaxOrt20A=="
-      },
       "Refit": {
         "type": "Transitive",
         "resolved": "7.0.0",
@@ -434,11 +413,6 @@
         "resolved": "2.0.3",
         "contentHash": "IY+i5JsUoFTyLvNOlLFUak4nJajSZdfxYqCbDCSYeGDGwHNBtJo0ICduAFGaYaqdL41+YHn7LMrp1AwIU/29Ag=="
       },
-      "System.Buffers": {
-        "type": "Transitive",
-        "resolved": "4.5.1",
-        "contentHash": "Rw7ijyl1qqRS0YQD/WycNst8hUUMgrMH4FCn1nNm27M4VxchZ1js3fVjQaANHO5f3sN4isvP4a+Met9Y4YomAg=="
-      },
       "System.Drawing.Common": {
         "type": "Transitive",
         "resolved": "4.7.0",
@@ -456,20 +430,10 @@
           "System.Text.Json": "7.0.2"
         }
       },
-      "System.Numerics.Vectors": {
-        "type": "Transitive",
-        "resolved": "4.5.0",
-        "contentHash": "QQTlPTl06J/iiDbJCiepZ4H//BVraReU4O4EoRw1U02H5TLUIT7xn3GnDp9AXPSlJUDyFs4uWjWafNX6WrAojQ=="
-      },
       "System.Reflection.Emit": {
         "type": "Transitive",
         "resolved": "4.7.0",
         "contentHash": "VR4kk8XLKebQ4MZuKuIni/7oh+QGFmZW3qORd1GvBq/8026OpW501SzT/oypwiQl4TvT8ErnReh/NzY9u+C6wQ=="
-      },
-      "System.Runtime.CompilerServices.Unsafe": {
-        "type": "Transitive",
-        "resolved": "4.5.2",
-        "contentHash": "wprSFgext8cwqymChhrBLu62LMg/1u92bU+VOwyfBimSPVFXtsNqEWC92Pf9ofzJFlk4IHmJA75EDJn1b2goAQ=="
       },
       "System.Security.AccessControl": {
         "type": "Transitive",
@@ -485,15 +449,6 @@
         "resolved": "4.7.0",
         "contentHash": "ojD0PX0XhneCsUbAZVKdb7h/70vyYMDYs85lwEI+LngEONe/17A0cFaRFqZU+sOEidcVswYWikYOQ9PPfjlbtQ=="
       },
-      "System.Text.Encoding.CodePages": {
-        "type": "Transitive",
-        "resolved": "4.5.1",
-        "contentHash": "4J2JQXbftjPMppIHJ7IC+VXQ9XfEagN92vZZNoG12i+zReYlim5dMoXFC1Zzg7tsnKDM7JPo5bYfFK4Jheq44w==",
-        "dependencies": {
-          "Microsoft.NETCore.Platforms": "2.1.2",
-          "System.Runtime.CompilerServices.Unsafe": "4.5.2"
-        }
-      },
       "System.Text.Encodings.Web": {
         "type": "Transitive",
         "resolved": "7.0.0",
@@ -506,11 +461,6 @@
         "dependencies": {
           "System.Text.Encodings.Web": "7.0.0"
         }
-      },
-      "System.Threading.Tasks.Extensions": {
-        "type": "Transitive",
-        "resolved": "4.5.2",
-        "contentHash": "BG/TNxDFv0svAzx8OiMXDlsHfGw623BZ8tCXw4YLhDFDvDhNUEV58jKYMGRnkbJNm7c3JNNJDiN7JBMzxRBR2w=="
       },
       "System.ValueTuple": {
         "type": "Transitive",
@@ -567,9 +517,9 @@
       },
       "QuestPDF": {
         "type": "Direct",
-        "requested": "[2024.3.3, )",
-        "resolved": "2024.3.3",
-        "contentHash": "S2T+iE8RGw3OCBZ6bZmPhw6oIbXa92MuewcvwzJgeNKGIoc6t1lHnCWwH+UTGVFV9eGUCEjkxQCC6xooDYOUGw=="
+        "requested": "[2024.3.5, )",
+        "resolved": "2024.3.5",
+        "contentHash": "KLBgMYx0+/88B1F2V8Qr9J6N51fMxn9jQ1LCF7P4wE6d5R/7qnsz5ahFychICdsiYzQ96ZWJJOTMQjy2hzFOAw=="
       },
       "Microsoft.Graphics.Win2D": {
         "type": "Transitive",
@@ -618,15 +568,6 @@
         "type": "Transitive",
         "resolved": "4.7.0",
         "contentHash": "ojD0PX0XhneCsUbAZVKdb7h/70vyYMDYs85lwEI+LngEONe/17A0cFaRFqZU+sOEidcVswYWikYOQ9PPfjlbtQ=="
-      },
-      "System.Text.Encoding.CodePages": {
-        "type": "Transitive",
-        "resolved": "4.5.1",
-        "contentHash": "4J2JQXbftjPMppIHJ7IC+VXQ9XfEagN92vZZNoG12i+zReYlim5dMoXFC1Zzg7tsnKDM7JPo5bYfFK4Jheq44w==",
-        "dependencies": {
-          "Microsoft.NETCore.Platforms": "2.1.2",
-          "System.Runtime.CompilerServices.Unsafe": "4.5.2"
-        }
       },
       "System.Text.Encodings.Web": {
         "type": "Transitive",
@@ -652,9 +593,9 @@
       },
       "QuestPDF": {
         "type": "Direct",
-        "requested": "[2024.3.3, )",
-        "resolved": "2024.3.3",
-        "contentHash": "S2T+iE8RGw3OCBZ6bZmPhw6oIbXa92MuewcvwzJgeNKGIoc6t1lHnCWwH+UTGVFV9eGUCEjkxQCC6xooDYOUGw=="
+        "requested": "[2024.3.5, )",
+        "resolved": "2024.3.5",
+        "contentHash": "KLBgMYx0+/88B1F2V8Qr9J6N51fMxn9jQ1LCF7P4wE6d5R/7qnsz5ahFychICdsiYzQ96ZWJJOTMQjy2hzFOAw=="
       },
       "Microsoft.Graphics.Win2D": {
         "type": "Transitive",
@@ -703,15 +644,6 @@
         "type": "Transitive",
         "resolved": "4.7.0",
         "contentHash": "ojD0PX0XhneCsUbAZVKdb7h/70vyYMDYs85lwEI+LngEONe/17A0cFaRFqZU+sOEidcVswYWikYOQ9PPfjlbtQ=="
-      },
-      "System.Text.Encoding.CodePages": {
-        "type": "Transitive",
-        "resolved": "4.5.1",
-        "contentHash": "4J2JQXbftjPMppIHJ7IC+VXQ9XfEagN92vZZNoG12i+zReYlim5dMoXFC1Zzg7tsnKDM7JPo5bYfFK4Jheq44w==",
-        "dependencies": {
-          "Microsoft.NETCore.Platforms": "2.1.2",
-          "System.Runtime.CompilerServices.Unsafe": "4.5.2"
-        }
       },
       "System.Text.Encodings.Web": {
         "type": "Transitive",
@@ -737,9 +669,9 @@
       },
       "QuestPDF": {
         "type": "Direct",
-        "requested": "[2024.3.3, )",
-        "resolved": "2024.3.3",
-        "contentHash": "S2T+iE8RGw3OCBZ6bZmPhw6oIbXa92MuewcvwzJgeNKGIoc6t1lHnCWwH+UTGVFV9eGUCEjkxQCC6xooDYOUGw=="
+        "requested": "[2024.3.5, )",
+        "resolved": "2024.3.5",
+        "contentHash": "KLBgMYx0+/88B1F2V8Qr9J6N51fMxn9jQ1LCF7P4wE6d5R/7qnsz5ahFychICdsiYzQ96ZWJJOTMQjy2hzFOAw=="
       },
       "Microsoft.Graphics.Win2D": {
         "type": "Transitive",
@@ -788,15 +720,6 @@
         "type": "Transitive",
         "resolved": "4.7.0",
         "contentHash": "ojD0PX0XhneCsUbAZVKdb7h/70vyYMDYs85lwEI+LngEONe/17A0cFaRFqZU+sOEidcVswYWikYOQ9PPfjlbtQ=="
-      },
-      "System.Text.Encoding.CodePages": {
-        "type": "Transitive",
-        "resolved": "4.5.1",
-        "contentHash": "4J2JQXbftjPMppIHJ7IC+VXQ9XfEagN92vZZNoG12i+zReYlim5dMoXFC1Zzg7tsnKDM7JPo5bYfFK4Jheq44w==",
-        "dependencies": {
-          "Microsoft.NETCore.Platforms": "2.1.2",
-          "System.Runtime.CompilerServices.Unsafe": "4.5.2"
-        }
       },
       "System.Text.Encodings.Web": {
         "type": "Transitive",

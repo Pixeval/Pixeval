@@ -215,7 +215,7 @@ public class DocumentViewerViewModel(NovelContent novelContent) : ObservableObje
         }
     }
 
-    public Stream TryGetNotAvailableImageStream(Stream? result) => result ?? AppInfo.GetNotAvailableImageStream();
+    public Stream TryGetNotAvailableImageStream(Stream? result) => result ?? AppInfo.GetImageNotAvailableStream();
 
     private async Task<Stream> LoadThumbnailAsync(string url)
     {
@@ -242,7 +242,7 @@ public class DocumentViewerViewModel(NovelContent novelContent) : ObservableObje
         return await App.AppViewModel.MakoClient.DownloadStreamAsync(url, cancellationHandle: LoadingCancellationHandle) is
             Result<Stream>.Success(var stream)
             ? stream
-            : AppInfo.GetNotAvailableImageStream();
+            : AppInfo.GetImageNotAvailableStream();
     }
 
     public static async Task<DocumentViewerViewModel> CreateAsync(NovelItemViewModel novelItem, Action<Task> callback)

@@ -59,17 +59,15 @@ public static partial class AppInfo
 
     public static bool CustomizeTitleBarSupported => AppWindowTitleBar.IsCustomizationSupported();
 
-    private static readonly WeakReference<SoftwareBitmapSource?> _imageNotAvailable = new(null);
+    public static AsyncLazy<SoftwareBitmapSource> ImageNotAvailable { get; } = new(async () => await GetImageNotAvailableStream().GetSoftwareBitmapSourceAsync(true));
 
-    private static readonly WeakReference<Stream?> _imageNotAvailableStream = new(null);
+    public static Stream GetImageNotAvailableStream() => GetAssetStream("Images/image-not-available.png");
 
-    private static readonly WeakReference<SoftwareBitmapSource?> _pixivNoProfile = new(null);
+    public static AsyncLazy<SoftwareBitmapSource> PixivNoProfile { get; } = new(async () => await GetPixivNoProfileStream().GetSoftwareBitmapSourceAsync(true));
 
-    private static readonly WeakReference<Stream?> _pixivNoProfileStream = new(null);
+    public static Stream GetPixivNoProfileStream() => GetAssetStream("Images/pixiv_no_profile.png");
 
-    private static readonly WeakReference<SoftwareBitmapSource?> _icon = new(null);
-
-    private static readonly WeakReference<Stream?> _iconStream = new(null);
+    public static AsyncLazy<SoftwareBitmapSource> Icon { get; } = new(async () => await GetAssetStream("Images/logo.ico").GetSoftwareBitmapSourceAsync(true));
 
     static AppInfo()
     {
@@ -103,48 +101,6 @@ public static partial class AppInfo
         var path = Uri.UnescapeDataString(uri.PathAndQuery).TrimStart('/');
 
         return Path.Combine(Package.Current.InstalledPath, uri.Host, path);
-    }
-
-    public static async Task<SoftwareBitmapSource> GetNotAvailableImageAsync()
-    {
-        if (!_imageNotAvailable.TryGetTarget(out var target))
-            _imageNotAvailable.SetTarget(target = await GetNotAvailableImageStream().GetSoftwareBitmapSourceAsync(false));
-        return target;
-    }
-
-    public static Stream GetNotAvailableImageStream()
-    {
-        if (!_imageNotAvailableStream.TryGetTarget(out var target))
-            _imageNotAvailableStream.SetTarget(target = GetAssetStream("Images/image-not-available.png"));
-        return target;
-    }
-
-    public static async Task<SoftwareBitmapSource> GetPixivNoProfileImageAsync()
-    {
-        if (!_pixivNoProfile.TryGetTarget(out var target))
-            _pixivNoProfile.SetTarget(target = await GetPixivNoProfileImageStream().GetSoftwareBitmapSourceAsync(false));
-        return target;
-    }
-
-    public static Stream GetPixivNoProfileImageStream()
-    {
-        if (!_pixivNoProfileStream.TryGetTarget(out var target))
-            _pixivNoProfileStream.SetTarget(target = GetAssetStream("Images/pixiv_no_profile.png"));
-        return target;
-    }
-
-    public static async Task<SoftwareBitmapSource> GetIconImageAsync()
-    {
-        if (!_icon.TryGetTarget(out var target))
-            _icon.SetTarget(target = await GetIconImageStream().GetSoftwareBitmapSourceAsync(false));
-        return target;
-    }
-
-    public static Stream GetIconImageStream()
-    {
-        if (!_iconStream.TryGetTarget(out var target))
-            _iconStream.SetTarget(target = GetAssetStream("Images/logo.ico"));
-        return target;
     }
 
     /// <summary>
