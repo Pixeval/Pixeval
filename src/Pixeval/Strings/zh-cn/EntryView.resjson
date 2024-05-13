@@ -4,7 +4,6 @@
     "CopyWebLinkContextItem/Text": "复制网页链接",
     "OpenInBrowserContextItem/Text": "在浏览器中打开",
     "ResultIsEmptyTextBlock/Text": "这里空空如也",
-    "IsLoadingMoreTextBlock/Text": "正在加载",
     "SaveContextItem/Text": "保存",
     "ShowPixEzQrCodeContextItem/Text": "PixEz二维码",
     "ShowQrCodeContextItem/Text": "作品链接二维码",

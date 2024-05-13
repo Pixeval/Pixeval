@@ -4,7 +4,6 @@
     "CopyWebLinkContextItem/Text": "Копировать веб-ссылку",
     "OpenInBrowserContextItem/Text": "Открыть в браузере",
     "ResultIsEmptyTextBlock/Text": "Здесь пусто",
-    "IsLoadingMoreTextBlock/Text": "Загружается",
     "SaveContextItem/Text": "Сохранить",
     "ShowPixEzQrCodeContextItem/Text": "QR-код PixEz",
     "ShowQrCodeContextItem/Text": "QR-код работы",

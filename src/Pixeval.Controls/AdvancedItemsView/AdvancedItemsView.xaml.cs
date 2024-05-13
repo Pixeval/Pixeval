@@ -10,6 +10,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Pixeval.Collections;
+using Pixeval.Utilities;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
 
@@ -27,8 +28,9 @@ namespace Pixeval.Controls;
 [DependencyProperty<double>("LoadingOffset", "100d")]
 [DependencyProperty<int>("SelectedIndex", "-1", nameof(OnSelectedIndexChanged))]
 [DependencyProperty<bool>("CanLoadMore", "true")]
-[DependencyProperty<bool>("IsLoadingMore", "false")]
+[DependencyProperty<bool>("IsLoadingMore", "false", nameof(OnIsLoadingMoreChanged))]
 [DependencyProperty<int>("LoadCount", "20")]
+[DependencyProperty<bool>("DisableLoadingText", "false")]
 public sealed partial class AdvancedItemsView : ItemsView
 {
     public event Func<AdvancedItemsView, EventArgs, Task<bool>> LoadMoreRequested;
@@ -251,6 +253,12 @@ public sealed partial class AdvancedItemsView : ItemsView
             advancedItemsView.Select(advancedItemsView.SelectedIndex);
     }
 
+    private static void OnIsLoadingMoreChanged(DependencyObject o, DependencyPropertyChangedEventArgs e)
+    {
+        var aiv = o.To<AdvancedItemsView>();
+        aiv._loadingGrid.Visibility = aiv is { IsLoadingMore: true, DisableLoadingText: false } ? Visibility.Visible : Visibility.Collapsed;
+    }
+
     #endregion
 
     #region EventHandlers
@@ -266,7 +274,51 @@ public sealed partial class AdvancedItemsView : ItemsView
         ScrollView.ViewChanged += ScrollView_ViewChanged;
         ScrollView.PointerWheelChanged += ScrollView_PointerWheelChanged;
         _itemsRepeater = ScrollView.Content.To<ItemsRepeater>();
-        ScrollView.Content = new Grid { Children = { _itemsRepeater } };
+
+        _loadingGrid = new Grid
+        {
+            HorizontalAlignment = HorizontalAlignment.Center,
+            VerticalAlignment = VerticalAlignment.Center,
+            Visibility = Visibility.Collapsed,
+            Padding = new(40),
+            RowSpacing = 40,
+            RowDefinitions =
+            {
+                new() { Height = GridLength.Auto },
+                new() { Height = GridLength.Auto }
+            },
+            Children =
+            {
+                new ProgressRing
+                {
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    IsActive = true,
+                    IsIndeterminate = true,
+                    Width = 50,
+                    Height = 50
+                }.LetChain(t => Grid.SetRow(t, 0)),
+                new TextBlock
+                {
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    Text = AdvancedItemsViewResources.LoadingMore,
+                    FontSize = 28
+                }.LetChain(t => Grid.SetRow(t, 1))
+            }
+        }.LetChain(t => Grid.SetRow(t, 1));
+
+        ScrollView.Content = new Grid
+        {
+            RowDefinitions =
+            {
+                new() { Height = GridLength.Auto },
+                new() { Height = new(1, GridUnitType.Star) }
+            },
+            Children =
+            {
+                _itemsRepeater.LetChain(t => Grid.SetRow(t, 0)),
+                _loadingGrid
+            }
+        };
         _itemsRepeater.SizeChanged += AdvancedItemsViewOnSizeChanged;
     }
 
@@ -328,6 +380,8 @@ public sealed partial class AdvancedItemsView : ItemsView
 
     #region HelperMembers
 
+    private Grid _loadingGrid = null!;
+
     private ItemsRepeater _itemsRepeater = null!;
 
     private WeakEventListener<AdvancedItemsView, object?, NotifyCollectionChangedEventArgs> _sourceWeakEventListener = null!;
@@ -361,4 +415,3 @@ public sealed partial class AdvancedItemsView : ItemsView
 
     #endregion
 }
-

@@ -4,7 +4,6 @@
   "CopyWebLinkContextItem/Text": "Copy website link",
   "OpenInBrowserContextItem/Text": "Open in browser",
   "ResultIsEmptyTextBlock/Text": "Nothing here!",
-  "IsLoadingMoreTextBlock/Text": "Loading",
   "SaveContextItem/Text": "Save",
   "ShowPixEzQrCodeContextItem/Text": "Generate PixEz QR code",
   "ShowQrCodeContextItem/Text": "Generate QR code",
