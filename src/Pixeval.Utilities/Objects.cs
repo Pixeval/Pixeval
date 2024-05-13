@@ -52,6 +52,11 @@ public static class Objects
         return (value - min) / (max - min);
     }
 
+    public static TReturn Using<T, TReturn>(this T disposable, Func<T, TReturn> action) where T : IDisposable
+    {
+        return action(disposable);
+    }
+
     /// <summary>
     /// 当<paramref name="str"/>为<see langword="const"/>时使用<see cref="GeneratedRegexAttribute"/>代替
     /// </summary>

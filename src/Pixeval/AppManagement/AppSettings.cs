@@ -129,7 +129,7 @@ public partial record AppSettings : IWindowSettings
     public bool UsePreciseRangeForSearch { get; set; }
 
     [SettingsEntry(IconGlyph.SearchAndAppsE773, nameof(ReverseSearchApiKeyEntryHeader), nameof(ReverseSearchApiKeyEntryDescriptionHyperlinkButtonContent))]
-    public string? ReverseSearchApiKey { get; set; }
+    public string ReverseSearchApiKey { get; set; } = "";
 
     [SettingsEntry(IconGlyph.FilterE71C, nameof(ReverseSearchResultSimilarityThresholdEntryHeader), nameof(ReverseSearchResultSimilarityThresholdEntryDescription))]
     public int ReverseSearchResultSimilarityThreshold { get; set; } = 80;
@@ -155,14 +155,14 @@ public partial record AppSettings : IWindowSettings
     [SettingsEntry(IconGlyph.NetworkE968, nameof(ProxyTypeEntryHeader), nameof(ProxyTypeEntryDescription))]
     public ProxyType ProxyType { get; set; }
 
-    public string? Proxy { get; set; } = null;
+    public string Proxy { get; set; } = "";
 
     /// <summary>
     /// The mirror host for image server, Pixeval will do a simple substitution that
     /// changes the host of the original url(i.pximg.net) to this one.
     /// </summary>
     [SettingsEntry(IconGlyph.HardDriveEDA2, nameof(ImageMirrorServerEntryHeader), nameof(ImageMirrorServerEntryDescription))]
-    public string? MirrorHost { get; set; } = null;
+    public string MirrorHost { get; set; } = "";
 
     [SettingsEntry(IconGlyph.HistoryE81C, nameof(MaximumBrowseHistoryRecordsEntryHeader), nameof(MaximumBrowseHistoryRecordsEntryDescription))]
     public int MaximumBrowseHistoryRecords { get; set; } = 100;

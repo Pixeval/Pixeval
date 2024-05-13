@@ -46,32 +46,32 @@ public sealed partial class DownloadMacroSettingsExpander
         void EntryOnPropertyChanged()
         {
             // The first time viewmodel get the value of DownloadPathMacro from AppSettings won't trigger the property changed event
-            _previousPath = Entry.DownloadPathMacro;
-            SetPathMacroRichEditBoxDocument(Entry.DownloadPathMacro);
+            _previousPath = Entry.Value;
+            SetPathMacroRichEditBoxDocument(Entry.Value);
         }
     }
 
     private void DownloadPathMacroTextBox_OnGotFocus(object sender, RoutedEventArgs e)
     {
         DownloadMacroInvalidInfoBar.IsOpen = false;
-        _previousPath = Entry.DownloadPathMacro;
+        _previousPath = Entry.Value;
         if (sender.To<RichEditBox>().Document.Selection is { Length: 0 } selection)
             selection.CharacterFormat.ForegroundColor = Application.Current.GetResource<SolidColorBrush>("TextFillColorPrimaryBrush").Color;
     }
 
     private void DownloadPathMacroTextBox_OnLostFocus(object sender, RoutedEventArgs e)
     {
-        if (Entry.DownloadPathMacro.IsNullOrBlank())
+        if (Entry.Value.IsNullOrBlank())
         {
             DownloadMacroInvalidInfoBar.Message = SettingsPageResources.DownloadMacroInvalidInfoBarInputCannotBeBlank;
             DownloadMacroInvalidInfoBar.IsOpen = true;
-            Entry.DownloadPathMacro = _previousPath;
+            Entry.Value = _previousPath;
             return;
         }
 
         try
         {
-            _testParser.SetupParsingEnvironment(new Lexer(Entry.DownloadPathMacro));
+            _testParser.SetupParsingEnvironment(new Lexer(Entry.Value));
             var result = _testParser.Parse();
             if (result is not null)
             {
@@ -81,14 +81,14 @@ public sealed partial class DownloadMacroSettingsExpander
                 {
                     _ = ThrowUtils.MacroParse<MacroParseException>(MacroParserResources.UnknownMacroNameFormatted.Format(name));
                 }
-                SetPathMacroRichEditBoxDocument(Entry.DownloadPathMacro);
+                SetPathMacroRichEditBoxDocument(Entry.Value);
             }
         }
         catch (Exception exception)
         {
             DownloadMacroInvalidInfoBar.Message = SettingsPageResources.DownloadMacroInvalidInfoBarMacroInvalidFormatted.Format(exception.Message);
             DownloadMacroInvalidInfoBar.IsOpen = true;
-            Entry.DownloadPathMacro = _previousPath;
+            Entry.Value = _previousPath;
         }
     }
 
@@ -198,7 +198,7 @@ public sealed partial class DownloadMacroSettingsExpander
         sender.To<RichEditBox>().Document.GetText(TextGetOptions.None, out var text);
         if (sender.To<RichEditBox>().Document.Selection is { Length: 0 } selection)
             selection.CharacterFormat.ForegroundColor = Application.Current.GetResource<SolidColorBrush>("TextFillColorPrimaryBrush").Color;
-        Entry.DownloadPathMacro = text.ReplaceLineEndings("");
+        Entry.Value = text.ReplaceLineEndings("");
     }
 
     private void DownloadPathMacroTextBox_OnContextMenuOpening(object sender, ContextMenuEventArgs e)
