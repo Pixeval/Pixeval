@@ -11,9 +11,14 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="using:Pixeval.Settings.Models"
     x:Uid="/SettingsPage/DownloadPathMacroEntry"
-    HeaderIcon="{controls1:GlyphIcon Glyph=RenameE8AC}"
+    Description="{x:Bind Entry.DescriptionControl}"
+    Header="{x:Bind Entry.Header}"
     Loading="DownloadMacroSettingsExpander_OnLoading"
+    Tag="{x:Bind Entry.Attribute}"
     mc:Ignorable="d">
+    <controls:SettingsExpander.HeaderIcon>
+        <controls1:GlyphIcon IconGlyph="{x:Bind Entry.HeaderIcon}" />
+    </controls:SettingsExpander.HeaderIcon>
     <controls:SettingsExpander.Items>
         <controls:SettingsCard ContentAlignment="Left">
             <StackPanel Spacing="3">

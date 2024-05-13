@@ -1,5 +1,6 @@
 using System;
 using System.Linq.Expressions;
+using Microsoft.UI.Xaml;
 using Pixeval.AppManagement;
 using Pixeval.Controls.Settings;
 
@@ -11,9 +12,7 @@ public class EnumAppSettingsEntry(
     Array array)
     : SingleValueSettingsEntry<AppSettings, Enum>(appSettings, property)
 {
-    public override EnumSettingsCard Element => new() { Entry = this };
-
-    public Action<Enum>? ValueChanged { get; set; }
+    public override FrameworkElement Element => new EnumSettingsCard { Entry = this };
 
     public Array EnumValues { get; set; } = array;
 

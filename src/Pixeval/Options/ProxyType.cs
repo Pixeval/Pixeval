@@ -1,8 +1,8 @@
-#region Copyright (c) Pixeval/Pixeval.CoreApi
+#region Copyright
 // GPL v3 License
 // 
-// Pixeval/Pixeval.CoreApi
-// Copyright (c) 2023 Pixeval.CoreApi/MakoClientSupportedHttpMessageHandler.cs
+// Pixeval/Pixeval
+// Copyright (c) 2024 Pixeval/ProxyType.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,17 +18,23 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System.Net.Http;
-using Pixeval.CoreApi.Global;
+using Pixeval.Attributes;
 
-namespace Pixeval.CoreApi.Net;
+namespace Pixeval.Options;
 
-public abstract class MakoClientSupportedHttpMessageHandler(MakoClient makoClient) : HttpMessageHandler, IMakoClientSupport
+public enum ProxyType
 {
-    public MakoClient MakoClient { get; set; } = makoClient;
+    [LocalizedResource(typeof(MiscResources), nameof(MiscResources.ProxyOptionSystem))]
+    System,
 
-    public HttpMessageInvoker GetHttpMessageInvoker(bool domainFronting)
-    {
-        return domainFronting ? MakoHttpOptions.CreateHttpMessageInvoker() : MakoHttpOptions.CreateDirectHttpMessageInvoker(MakoClient);
-    }
+    [LocalizedResource(typeof(MiscResources), nameof(MiscResources.ProxyOptionNone))]
+    None,
+
+    Http,
+    
+    Socks4,
+    
+    Socks4A,
+    
+    Socks5
 }

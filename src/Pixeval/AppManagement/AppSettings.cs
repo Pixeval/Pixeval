@@ -59,7 +59,7 @@ public partial record AppSettings : IWindowSettings
     [SettingsEntry(IconGlyph.ColorE790, nameof(BackdropEntryHeader), null)]
     public BackdropType Backdrop { get; set; } = MicaController.IsSupported() ? BackdropType.MicaAlt : DesktopAcrylicController.IsSupported() ? BackdropType.Acrylic : BackdropType.None;
 
-    [SettingsEntry(IconGlyph.NetworkE968, nameof(EnableDomainFrontingEntryHeader), nameof(EnableDomainFrontingEntryDescription))]
+    [SettingsEntry(IconGlyph.NetworkTowerEC05, nameof(EnableDomainFrontingEntryHeader), nameof(EnableDomainFrontingEntryDescription))]
     public bool EnableDomainFronting { get; set; } = true;
 
     [SettingsEntry(IconGlyph.FileExplorerEC50, nameof(UseFileCacheEntryHeader), nameof(UseFileCacheEntryDescription))]
@@ -129,7 +129,7 @@ public partial record AppSettings : IWindowSettings
     public bool UsePreciseRangeForSearch { get; set; }
 
     [SettingsEntry(IconGlyph.SearchAndAppsE773, nameof(ReverseSearchApiKeyEntryHeader), nameof(ReverseSearchApiKeyEntryDescriptionHyperlinkButtonContent))]
-    public string? ReverseSearchApiKey { get; set; }
+    public string ReverseSearchApiKey { get; set; } = "";
 
     [SettingsEntry(IconGlyph.FilterE71C, nameof(ReverseSearchResultSimilarityThresholdEntryHeader), nameof(ReverseSearchResultSimilarityThresholdEntryDescription))]
     public int ReverseSearchResultSimilarityThreshold { get; set; } = 80;
@@ -152,12 +152,17 @@ public partial record AppSettings : IWindowSettings
     [SettingsEntry(IconGlyph.Blocked2ECE4, nameof(BlockedTagsEntryHeader), nameof(BlockedTagsEntryDescription))]
     public HashSet<string> BlockedTags { get; set; } = [];
 
+    [SettingsEntry(IconGlyph.NetworkE968, nameof(ProxyTypeEntryHeader), nameof(ProxyTypeEntryDescription))]
+    public ProxyType ProxyType { get; set; }
+
+    public string Proxy { get; set; } = "";
+
     /// <summary>
     /// The mirror host for image server, Pixeval will do a simple substitution that
     /// changes the host of the original url(i.pximg.net) to this one.
     /// </summary>
     [SettingsEntry(IconGlyph.HardDriveEDA2, nameof(ImageMirrorServerEntryHeader), nameof(ImageMirrorServerEntryDescription))]
-    public string? MirrorHost { get; set; } = null;
+    public string MirrorHost { get; set; } = "";
 
     [SettingsEntry(IconGlyph.HistoryE81C, nameof(MaximumBrowseHistoryRecordsEntryHeader), nameof(MaximumBrowseHistoryRecordsEntryDescription))]
     public int MaximumBrowseHistoryRecords { get; set; } = 100;
@@ -286,7 +291,7 @@ public partial record AppSettings : IWindowSettings
         var language = ApplicationLanguages.PrimaryLanguageOverride;
         if (string.IsNullOrEmpty(language))
             language = CultureInfo.CurrentUICulture.Name;
-        return new MakoClientConfiguration(5000, EnableDomainFronting, MirrorHost, CultureInfo.GetCultureInfo(language));
+        return new MakoClientConfiguration(5000, EnableDomainFronting, Proxy, MirrorHost, CultureInfo.GetCultureInfo(language));
     }
 
     private static string GetSpecialFolder()

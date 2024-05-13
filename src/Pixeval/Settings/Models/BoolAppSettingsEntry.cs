@@ -1,5 +1,6 @@
 using System;
 using System.Linq.Expressions;
+using Microsoft.UI.Xaml;
 using Pixeval.AppManagement;
 using Pixeval.Controls.Settings;
 
@@ -10,9 +11,7 @@ public class BoolAppSettingsEntry(
     Expression<Func<AppSettings, bool>> property)
     : SingleValueSettingsEntry<AppSettings, bool>(appSettings, property)
 {
-    public override BoolSettingsCard Element => new() { Entry = this };
-
-    public Action<bool>? ValueChanged { get; set; }
+    public override FrameworkElement Element => new BoolSettingsCard { Entry = this };
 
     public BoolAppSettingsEntry(
         AppSettings appSettings,

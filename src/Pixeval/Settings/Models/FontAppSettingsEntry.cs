@@ -1,27 +1,19 @@
 using System;
-using System.Collections.Generic;
 using System.Drawing.Text;
 using System.Linq;
 using System.Linq.Expressions;
 using Pixeval.AppManagement;
 using Pixeval.Controls.Settings;
+using Pixeval.Utilities;
 
 namespace Pixeval.Settings.Models;
 
 public class FontAppSettingsEntry(
     AppSettings appSettings,
     Expression<Func<AppSettings, string>> property)
-    : SingleValueSettingsEntry<AppSettings, string>(appSettings, property)
+    : StringAppSettingsEntry(appSettings, property)
 {
-    public static IEnumerable<string> AvailableFonts { get; }
-
-    public Action<string>? ValueChanged { get; set; }
-
-    static FontAppSettingsEntry()
-    {
-        using var collection = new InstalledFontCollection();
-        AvailableFonts = collection.Families.Select(t => t.Name);
-    }
-
     public override FontSettingsCard Element => new() { Entry = this };
+
+    public static string[] AvailableFonts { get; } = new InstalledFontCollection().Using(t => t.Families.Select(t => t.Name).ToArray());
 }

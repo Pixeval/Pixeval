@@ -4,31 +4,29 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:controls1="using:WinUI3Utilities.Controls"
-    xmlns:converters="using:CommunityToolkit.WinUI.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:Pixeval.Settings"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    x:Uid="/SettingsPage/UsePreciseRangeForSearchEntry"
-    HeaderIcon="{controls1:GlyphIcon Glyph=StopwatchE916}"
+    Description="{x:Bind Entry.DescriptionControl}"
+    Header="{x:Bind Entry.Header}"
+    Tag="{x:Bind Entry.Attribute}"
     mc:Ignorable="d">
-    <controls:SettingsExpander.Resources>
-        <converters:BoolNegationConverter x:Key="BoolNegationConverter" />
-    </controls:SettingsExpander.Resources>
-    <ToggleSwitch IsOn="{x:Bind Entry.Settings.UsePreciseRangeForSearch, Mode=TwoWay}" Toggled="ToggleSwitch_OnToggled" />
+    <controls:SettingsExpander.HeaderIcon>
+        <controls1:GlyphIcon IconGlyph="{x:Bind Entry.HeaderIcon}" />
+    </controls:SettingsExpander.HeaderIcon>
+    <ToggleSwitch IsOn="{x:Bind Entry.Value, Mode=TwoWay}" Toggled="ToggleSwitch_OnToggled" />
     <controls:SettingsExpander.Items>
         <controls:SettingsCard
-            x:Name="SettingsCard"
             x:Uid="/SettingsPage/SearchStartDateEntry"
             HeaderIcon="{controls1:GlyphIcon Glyph=PageLeftE760}"
-            IsEnabled="{x:Bind Entry.Settings.UsePreciseRangeForSearch, Converter={StaticResource BoolNegationConverter}}">
-            <CalendarDatePicker x:Uid="/SettingsPage/SearchStartCalendarDatePicker" Date="{x:Bind Entry.Settings.SearchStartDate, Mode=TwoWay}" />
+            IsEnabled="{x:Bind Entry.Value, Mode=OneWay}">
+            <CalendarDatePicker x:Uid="/SettingsPage/SearchStartCalendarDatePicker" Date="{x:Bind Entry.SearchStartDate, Mode=TwoWay}" />
         </controls:SettingsCard>
         <controls:SettingsCard
-            x:Name="SettingsCard2"
             x:Uid="/SettingsPage/SearchEndDateEntry"
             HeaderIcon="{controls1:GlyphIcon Glyph=PageRightE761}"
-            IsEnabled="{x:Bind Entry.Settings.UsePreciseRangeForSearch, Converter={StaticResource BoolNegationConverter}}">
-            <CalendarDatePicker x:Uid="/SettingsPage/SearchEndCalendarDatePicker" Date="{x:Bind Entry.Settings.SearchEndDate, Mode=TwoWay}" />
+            IsEnabled="{x:Bind Entry.Value, Mode=OneWay}">
+            <CalendarDatePicker x:Uid="/SettingsPage/SearchEndCalendarDatePicker" Date="{x:Bind Entry.SearchEndDate, Mode=TwoWay}" />
         </controls:SettingsCard>
     </controls:SettingsExpander.Items>
 </controls:SettingsExpander>

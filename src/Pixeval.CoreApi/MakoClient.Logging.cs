@@ -131,23 +131,7 @@ public partial class MakoClient
         return RunWithLoggerAsync(task, T.CreateDefault);
     }
 
-    internal void LogException(Exception e)
-    {
-        Logger.LogError("MakoClient Exception", e);
-        var now = DateTime.Now;
-        if (now < CoolDown)
-            return;
-        CoolDown = now.AddSeconds(5);
-        HttpClient.DefaultProxy = GetCurrentSystemProxy();
-        var oldCollection = ServiceCollection;
-        var old = MakoServices;
-        ServiceCollection = [];
-        MakoServices = BuildServiceProvider(ServiceCollection);
-        Dispose(oldCollection);
-        old.Dispose();
-    }
-
-    private DateTime CoolDown { get; set; } = DateTime.Now.AddSeconds(5);
+    internal void LogException(Exception e) => Logger.LogError("MakoClient Exception", e);
 
     static MakoClient()
     {
@@ -155,8 +139,33 @@ public partial class MakoClient
         var method = type?.GetMethod("ConstructSystemProxy");
         var @delegate = method?.CreateDelegate<Func<IWebProxy>>();
 
-        GetCurrentSystemProxy = @delegate ?? ThrowUtils.Throw<MissingMethodException, Func<IWebProxy>>("Unable to find proxy functions");
+        _getCurrentSystemProxy = @delegate ?? ThrowUtils.Throw<MissingMethodException, Func<IWebProxy>>("Unable to find proxy functions");
+        HttpClient.DefaultProxy = _getCurrentSystemProxy();
     }
 
-    private static Func<IWebProxy> GetCurrentSystemProxy { get; }
+    private static readonly Func<IWebProxy> _getCurrentSystemProxy;
+
+    public IWebProxy? CurrentSystemProxy
+    {
+        get
+        {
+            switch (Configuration.Proxy)
+            {
+                case null:
+                    return null;
+                case "":
+                {
+                    var now = DateTime.Now;
+                    if (now < CoolDown)
+                        return HttpClient.DefaultProxy;
+                    CoolDown = now.AddSeconds(2);
+                    return HttpClient.DefaultProxy = _getCurrentSystemProxy();
+                }
+                default:
+                    return new WebProxy(Configuration.Proxy);
+            }
+        }
+    }
+
+    private static DateTime CoolDown { get; set; } = DateTime.Now.AddSeconds(2);
 }

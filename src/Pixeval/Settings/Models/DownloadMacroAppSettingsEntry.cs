@@ -10,17 +10,9 @@ namespace Pixeval.Settings.Models;
 
 public class DownloadMacroAppSettingsEntry(
     AppSettings appSettings)
-    : ObservableSettingsEntryBase<AppSettings>(appSettings, "", "", default)
+    : StringAppSettingsEntry(appSettings, t => t.DownloadPathMacro)
 {
     public override DownloadMacroSettingsExpander Element => new() { Entry = this };
-
-    public string DownloadPathMacro
-    {
-        get => Settings.DownloadPathMacro;
-        set => Settings.DownloadPathMacro = value;
-    }
-
-    public override void ValueReset() => OnPropertyChanged(nameof(DownloadPathMacro));
 
     private static readonly IDictionary<string, string> _macroTooltips = new Dictionary<string, string>
     {
