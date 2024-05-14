@@ -175,7 +175,12 @@ public partial class WorkContainer : IScrollViewHost
 
     private void FilterAutoSuggestBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs e)
     {
-        if (!string.IsNullOrWhiteSpace(sender.Text))
+        if (string.IsNullOrWhiteSpace(sender.Text))
+        {
+            ViewModel.Filter = null;
+            ViewModel.ViewRange = Range.All;
+        }
+        else
             PerformSearch(sender.Text);
     }
 
@@ -186,8 +191,7 @@ public partial class WorkContainer : IScrollViewHost
             var sequence = Parser.Parse(text, out var index);
 
             ViewModel.Filter = o => o.Filter(sequence);
-            if (index is not null)
-                ViewModel.ViewRange = index.Range;
+            ViewModel.ViewRange = index?.Range ?? Range.All;
         }
         catch (Exception e)
         {
