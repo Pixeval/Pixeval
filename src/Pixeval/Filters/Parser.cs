@@ -24,14 +24,14 @@ public class Parser
 
     private T Eat<T>() where T : IQueryToken
     {
-        var tok = Peek ?? ThrowUtils.MacroParse<T>(MacroParserResources.FilterTokenFinishedFormatted.Format(typeof(T)));
+        var tok = Peek ?? ThrowUtils.MacroParse<T>(MacroParserResources.FilterTokenFinishedFormatted.Format(T.Name));
         if (tok is T t)
         {
             ++Position;
             return t;
         }
 
-        return ThrowUtils.MacroParse<T>(MacroParserResources.UnexpactedTokenFormatted.Format(typeof(T), tok.GetType()));
+        return ThrowUtils.MacroParse<T>(MacroParserResources.UnexpactedTokenFormatted.Format(T.Name, tok));
     }
 
     private IQueryToken? Peek => Position >= Tokens.Count ? null : Tokens[Position];
