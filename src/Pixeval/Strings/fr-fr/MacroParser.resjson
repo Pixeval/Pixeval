@@ -17,5 +17,8 @@
     "IndexRangeUsedMoreThanOnce": "Au plus un range est valide",
     "InvalidConstraintFormatted": "Contraint illégal, valeur valide: {0}, actuel: {1}",
     "NumericTooLargeFormatted": "La valeur d'entier est trop large, actuel: {0}",
-    "ExpectedAtLeastTwoNumericInDateFormatted": "Au moins deux chiffres (MM-DD) sont nécessaire pour représenter une date, actuel: {0}"
+    "ExpectedAtLeastTwoNumericInDateFormatted": "Au moins deux chiffres (MM-DD) sont nécessaire pour représenter une date, actuel: {0}",
+    "ExpectedRightBracketOrParenInRangeFormatted": "Un segment de type portée (range) doit se termine avec soit ')' ou ']', valeur actuelle: {0}",
+    "NumericTooSmallInRangeFormatted": "Le nombre entier dans la portée est trop petit, actuellement: {0}",
+    "MinimumShouldBeSmallerThanMaximiumFormatted": "La valeur minimale ({0}) dans la portée doit être strictement inférieure à la valeur maximale ({1})"
 }
