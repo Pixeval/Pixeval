@@ -54,8 +54,7 @@ public sealed partial class BrowsingHistoryPage : IScrollViewHost
                     await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(t.Id))),
                 _ => App.AppViewModel.MakoClient.Computed(source.SelectAwait(async t =>
                     await App.AppViewModel.MakoClient.GetNovelFromIdAsync(t.Id)))
-            });
-
+            }, 10);
     }
 
     public ScrollView ScrollView => WorkContainer.ScrollView;

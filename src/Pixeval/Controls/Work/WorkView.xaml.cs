@@ -100,16 +100,16 @@ public sealed partial class WorkView : IEntryView<ISortableEntryViewViewModel>
     }
 
     [MemberNotNull(nameof(ViewModel))]
-    public void ResetEngine(IFetchEngine<IWorkEntry> newEngine, int itemLimit = -1)
+    public void ResetEngine(IFetchEngine<IWorkEntry> newEngine, int itemsPerPage = 20, int itemLimit = -1)
     {
         var type = newEngine.GetType().GetInterfaces()[0].GenericTypeArguments.FirstOrDefault();
         switch (ViewModel)
         {
             case NovelViewViewModel when type == typeof(Novel):
-                ViewModel.ResetEngine(newEngine, itemLimit);
+                ViewModel.ResetEngine(newEngine, itemsPerPage, itemLimit);
                 break;
             case IllustrationViewViewModel when type == typeof(Illustration):
-                ViewModel.ResetEngine(newEngine, itemLimit);
+                ViewModel.ResetEngine(newEngine, itemsPerPage, itemLimit);
                 break;
             default:
                 if (type == typeof(Illustration))
@@ -123,7 +123,7 @@ public sealed partial class WorkView : IEntryView<ISortableEntryViewViewModel>
                     ItemsView.ItemTemplate = this.GetResource<DataTemplate>("IllustrationItemDataTemplate");
                     ViewModel = new IllustrationViewViewModel();
                     OnPropertyChanged(nameof(ViewModel));
-                    ViewModel.ResetEngine(newEngine, itemLimit);
+                    ViewModel.ResetEngine(newEngine, itemsPerPage, itemLimit);
                     ViewModelChanged?.Invoke(this, ViewModel);
                     ItemsView.ItemsSource = ViewModel.View;
                 }
@@ -138,7 +138,7 @@ public sealed partial class WorkView : IEntryView<ISortableEntryViewViewModel>
                     ItemsView.ItemTemplate = this.GetResource<DataTemplate>("NovelItemDataTemplate");
                     ViewModel = new NovelViewViewModel();
                     OnPropertyChanged(nameof(ViewModel));
-                    ViewModel.ResetEngine(newEngine, itemLimit);
+                    ViewModel.ResetEngine(newEngine, itemsPerPage, itemLimit);
                     ViewModelChanged?.Invoke(this, ViewModel);
                     ItemsView.ItemsSource = ViewModel.View;
                 }

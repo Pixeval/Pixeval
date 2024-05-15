@@ -53,5 +53,5 @@ public interface ISortableEntryViewViewModel : INotifyPropertyChanged, IDisposab
 
     Range ViewRange { get; set; }
 
-    void ResetEngine(IFetchEngine<IWorkEntry>? newEngine, int itemLimit = -1);
+    void ResetEngine(IFetchEngine<IWorkEntry>? newEngine, int itemsPerPage = 20, int itemLimit = -1);
 }

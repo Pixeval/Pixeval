@@ -62,11 +62,11 @@ public class SimpleViewDataProvider<T, TViewModel> : ObservableObject, IDataProv
         FetchEngine = null;
     }
 
-    public void ResetEngine(IFetchEngine<T>? fetchEngine, int limit = -1)
+    public void ResetEngine(IFetchEngine<T>? fetchEngine, int itemsPerPage = 20, int limit = -1)
     {
         Dispose();
         FetchEngine = fetchEngine;
 
-        Source = new IncrementalLoadingCollection<FetchEngineIncrementalSource<T, TViewModel>, TViewModel>(FetchEngineIncrementalSource<T, TViewModel>.CreateInstance(FetchEngine!, limit));
+        Source = new IncrementalLoadingCollection<FetchEngineIncrementalSource<T, TViewModel>, TViewModel>(FetchEngineIncrementalSource<T, TViewModel>.CreateInstance(FetchEngine!, limit), itemsPerPage);
     }
 }

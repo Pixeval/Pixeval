@@ -95,8 +95,13 @@ public partial class IllustrationItemViewModel : WorkEntryViewModel<Illustration
     /// </summary>
     public string StaticUrl(bool original)
     {
-        return IsManga ? original ? MangaSingleOriginalUrl : MangaSingleLargeUrl :
-            original ? IllustrationOriginalUrl : IllustrationLargeUrl;
+        return (IsManga, original) switch
+        {
+            (true, true) => MangaSingleOriginalUrl,
+            (true, false) => MangaSingleLargeUrl,
+            (false, true) => IllustrationOriginalUrl,
+            _ => IllustrationLargeUrl
+        };
     }
 
     public string Tooltip
