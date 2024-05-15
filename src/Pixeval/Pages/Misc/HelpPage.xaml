@@ -29,7 +29,9 @@
                     <controls:SettingsExpander.Items>
                         <controls:SettingsCard HorizontalContentAlignment="Stretch" ContentAlignment="Left">
                             <StackPanel Spacing="20">
-                                <Image MaxWidth="300" Source="ms-appx:///Assets/Images/illust-app-link-sample.png" />
+                                <ContentPresenter MaxWidth="300" CornerRadius="{StaticResource ControlCornerRadius}">
+                                    <Image Source="ms-appx:///Assets/Images/illust-app-link-sample.png" />
+                                </ContentPresenter>
                                 <TextBlock x:Uid="/HelpPage/AppLinkHelp" />
                             </StackPanel>
                         </controls:SettingsCard>

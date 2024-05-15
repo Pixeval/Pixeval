@@ -256,7 +256,8 @@ public sealed partial class AdvancedItemsView : ItemsView
     private static void OnIsLoadingMoreChanged(DependencyObject o, DependencyPropertyChangedEventArgs e)
     {
         var aiv = o.To<AdvancedItemsView>();
-        aiv._loadingGrid.Visibility = aiv is { IsLoadingMore: true, DisableLoadingText: false } ? Visibility.Visible : Visibility.Collapsed;
+        if (aiv is { DisableLoadingText: false, _loadingGrid: not null })
+            aiv._loadingGrid.Visibility = aiv is { IsLoadingMore: true } ? Visibility.Visible : Visibility.Collapsed;
     }
 
     #endregion
@@ -275,50 +276,53 @@ public sealed partial class AdvancedItemsView : ItemsView
         ScrollView.PointerWheelChanged += ScrollView_PointerWheelChanged;
         _itemsRepeater = ScrollView.Content.To<ItemsRepeater>();
 
-        _loadingGrid = new Grid
+        if (!DisableLoadingText)
         {
-            HorizontalAlignment = HorizontalAlignment.Center,
-            VerticalAlignment = VerticalAlignment.Center,
-            Visibility = Visibility.Collapsed,
-            Padding = new(40),
-            RowSpacing = 40,
-            RowDefinitions =
+            _loadingGrid = new Grid
             {
-                new() { Height = GridLength.Auto },
-                new() { Height = GridLength.Auto }
-            },
-            Children =
-            {
-                new ProgressRing
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center,
+                Visibility = Visibility.Collapsed,
+                Padding = new(40),
+                RowSpacing = 40,
+                RowDefinitions =
                 {
-                    HorizontalAlignment = HorizontalAlignment.Center,
-                    IsActive = true,
-                    IsIndeterminate = true,
-                    Width = 50,
-                    Height = 50
-                }.LetChain(t => Grid.SetRow(t, 0)),
-                new TextBlock
+                    new() { Height = GridLength.Auto },
+                    new() { Height = GridLength.Auto }
+                },
+                Children =
                 {
-                    HorizontalAlignment = HorizontalAlignment.Center,
-                    Text = AdvancedItemsViewResources.LoadingMore,
-                    FontSize = 28
-                }.LetChain(t => Grid.SetRow(t, 1))
-            }
-        }.LetChain(t => Grid.SetRow(t, 1));
+                    new ProgressRing
+                    {
+                        HorizontalAlignment = HorizontalAlignment.Center,
+                        IsActive = true,
+                        IsIndeterminate = true,
+                        Width = 50,
+                        Height = 50
+                    }.LetChain(t => Grid.SetRow(t, 0)),
+                    new TextBlock
+                    {
+                        HorizontalAlignment = HorizontalAlignment.Center,
+                        Text = AdvancedItemsViewResources.LoadingMore,
+                        FontSize = 28
+                    }.LetChain(t => Grid.SetRow(t, 1))
+                }
+            }.LetChain(t => Grid.SetRow(t, 1));
 
-        ScrollView.Content = new Grid
-        {
-            RowDefinitions =
+            ScrollView.Content = new Grid
             {
-                new() { Height = GridLength.Auto },
-                new() { Height = new(1, GridUnitType.Star) }
-            },
-            Children =
-            {
-                _itemsRepeater.LetChain(t => Grid.SetRow(t, 0)),
-                _loadingGrid
-            }
-        };
+                RowDefinitions =
+                {
+                    new() { Height = GridLength.Auto },
+                    new() { Height = GridLength.Auto },
+                },
+                Children =
+                {
+                    _itemsRepeater.LetChain(t => Grid.SetRow(t, 0)),
+                    _loadingGrid
+                }
+            };
+        }
         _itemsRepeater.SizeChanged += AdvancedItemsViewOnSizeChanged;
     }
 
@@ -380,7 +384,7 @@ public sealed partial class AdvancedItemsView : ItemsView
 
     #region HelperMembers
 
-    private Grid _loadingGrid = null!;
+    private Grid? _loadingGrid;
 
     private ItemsRepeater _itemsRepeater = null!;
 

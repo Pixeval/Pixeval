@@ -293,7 +293,7 @@ public sealed partial class MainPage : SupportCustomTitleBarDragRegionPage
         if (frameworkElement is not null)
         {
             // ScrollView第一次导航的时候会有一个偏移，等待大小确定后滚动
-            await Task.Delay(10);
+            await Task.Delay(20);
 
             var position = frameworkElement
                 .TransformToVisual(panel)
@@ -308,7 +308,7 @@ public sealed partial class MainPage : SupportCustomTitleBarDragRegionPage
     /// </summary>
     private async void KeywordAutoSuggestionBox_OnKeyDown(object sender, KeyRoutedEventArgs e)
     {
-        if (InputKeyboardSource.GetKeyStateForCurrentThread(VirtualKey.LeftControl).HasFlag(CoreVirtualKeyStates.Down) && e.Key == VirtualKey.V)
+        if (InputKeyboardSource.GetKeyStateForCurrentThread(VirtualKey.LeftControl).HasFlag(CoreVirtualKeyStates.Down) && e.Key is VirtualKey.V)
         {
             var content = Clipboard.GetContent();
             if (content.AvailableFormats.Contains(StandardDataFormats.StorageItems) &&
@@ -316,7 +316,7 @@ public sealed partial class MainPage : SupportCustomTitleBarDragRegionPage
             {
                 e.Handled = true; // prevent the event from bubbling if it contains an image, since it means that we want to do reverse search.
                 await using var stream = await file.OpenStreamForReadAsync();
-                if (App.AppViewModel.AppSettings.ReverseSearchApiKey is not { Length: > 0 })
+                if (string.IsNullOrWhiteSpace(App.AppViewModel.AppSettings.ReverseSearchApiKey))
                     await ShowReverseSearchApiKeyNotPresentDialog();
                 else
                     await _viewModel.ReverseSearchAsync(stream);
