@@ -4,7 +4,6 @@
     "CopyWebLinkContextItem/Text": "Copier le lien du page",
     "OpenInBrowserContextItem/Text": "Ouvrir la page dans navigateur",
     "ResultIsEmptyTextBlock/Text": "Il n'y a rien sauf nos poulets",
-    "IsLoadingMoreTextBlock/Text": "Chargement en cours",
     "SaveContextItem/Text": "Sauvegarder",
     "ShowPixEzQrCodeContextItem/Text": "QR Code PixEz",
     "ShowQrCodeContextItem/Text": "QR Code de l'artwork",
