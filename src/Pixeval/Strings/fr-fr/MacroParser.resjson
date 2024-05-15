@@ -9,7 +9,7 @@
 
     "FilterQueryError": "Erreur de query du filtrage",
     "FilterTokenFinishedFormatted": "Symbol {0} voulu, mais le query est terminé",
-    "UnexpactedTokenFormatted": "Symbol {0} voulu, mais {0} rencontré",
+    "UnexpactedTokenFormatted": "Symbol {0} voulu, mais {1} rencontré",
     "UnbalancedParFormatted": "Des parenthèses ne s'accordent, la première position d'impaire: {0}",
     "ParserOutOfRange": "Le parseur est en dehors de la portée",
     "ExpectedAndOrAfterLeftParFormatted": "Un \"(\" doit être suivi par un \"and\" ou \"or\", actuel: {0}",
