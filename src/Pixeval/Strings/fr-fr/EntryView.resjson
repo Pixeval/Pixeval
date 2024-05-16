@@ -1,0 +1,14 @@
+{
+    "AddToBookmarkContextItem/Text": "Ajouter à mes favoris",
+    "CopyAppLinkContextItem/Text": "Copier le lien d'application",
+    "CopyWebLinkContextItem/Text": "Copier le lien du page",
+    "OpenInBrowserContextItem/Text": "Ouvrir la page dans navigateur",
+    "ResultIsEmptyTextBlock/Text": "Il n'y a rien sauf nos poulets",
+    "SaveContextItem/Text": "Sauvegarder",
+    "ShowPixEzQrCodeContextItem/Text": "QR Code PixEz",
+    "ShowQrCodeContextItem/Text": "QR Code de l'artwork",
+    "AddToBookmarkTeachingTip/CloseButtonContent": "Ajouter un favori",
+    "AddedToBookmark": "Ajouté à mes favoris",
+    "IllustrationQrCodeTeachingTip/TeachingTipTitle": "QR Code de l'artwork",
+    "IllustratorQrCodeTeachingTip/TeachingTipTitle": "QR Code de l'auteur"
+}

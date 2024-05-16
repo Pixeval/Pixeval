@@ -1,0 +1,17 @@
+{
+    "WorkCaptionEmpty": "Vide",
+    "WorkCaptionTextBlock/Text": "Description de l'artwork",
+    "IllustrationDimensionTextBlock/Text": "Dimension",
+    "IllustrationDimensionUnknown": "Inconnu",
+    "BlockTagMenuItem/Text": "Bloquer un tag",
+    "WorkIdTextBlock/Text": "ID de l'artwork",
+    "WorkTagListTextBlock/Text": "Tags de l'artwork",
+    "WorkTitleTextBlock/Text": "Nom",
+    "WorkTotalBookmarksTextBlock/Text": "Nombre de favoris",
+    "WorkTotalViewsTextBlock/Text": "Nombre de vus",
+    "WorkUploadDateTextBlock/Text": "Date de mise en ligne",
+    "IllustratorId/Text": "ID de l'auteur",
+    "IllustratorName/Text": "Nom de l'auteur",
+    "IllustratorTextBlock/Text": "Info de l'auteur",
+    "TitleTextBlock/Text": "Info de l'artwork"
+}
