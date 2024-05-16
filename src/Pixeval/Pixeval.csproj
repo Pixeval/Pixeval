@@ -90,6 +90,11 @@
     <ItemGroup>
         <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="SourceItemGroup" />
 
+        <TextFile Include="Strings\*\*.md">
+            <OutputTarget>Generated\%(RecursiveDir)\TextGenerated.resjson</OutputTarget>
+            <Content>    "$([System.String]::Concat(%(Filename), '"').Replace('_', '/')) : "$([System.IO.File]::ReadAllText(%(FullPath)).Replace('\', '\\').Replace('
+', '\n').Replace('"', '\"'))"</Content>
+        </TextFile>
         <TextFile Include="Strings\*\*.txt">
             <OutputTarget>Generated\%(RecursiveDir)\TextGenerated.resjson</OutputTarget>
             <Content>    "$([System.String]::Concat(%(Filename), '"').Replace('_', '/')) : "$([System.IO.File]::ReadAllText(%(FullPath)).Replace('\', '\\').Replace('
