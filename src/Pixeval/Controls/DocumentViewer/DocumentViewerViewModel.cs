@@ -188,7 +188,7 @@ public class DocumentViewerViewModel(NovelContent novelContent) : ObservableObje
 
     public IEnumerable<string>? GetTags(int index)
     {
-        if (index >= NovelContent.Images.Length)
+        if (index < NovelContent.Images.Length)
             return null;
         var illust = NovelContent.Illusts[index - NovelContent.Images.Length];
         return illust.Illust.Tags.Select(t => t.Tag);

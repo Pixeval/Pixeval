@@ -38,5 +38,5 @@ public interface IDataProvider<T, TViewModel>
 
     IFetchEngine<T>? FetchEngine { get; }
 
-    void ResetEngine(IFetchEngine<T>? fetchEngine, int limit = -1);
+    void ResetEngine(IFetchEngine<T>? fetchEngine, int itemsPerPage = 20, int limit = -1);
 }

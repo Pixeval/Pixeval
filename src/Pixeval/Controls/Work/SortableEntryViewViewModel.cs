@@ -92,9 +92,9 @@ public abstract partial class SortableEntryViewViewModel<T, TViewModel>
         set => DataProvider.View.Range = value;
     }
 
-    public void ResetEngine(IFetchEngine<IWorkEntry>? newEngine, int itemLimit = -1)
+    public void ResetEngine(IFetchEngine<IWorkEntry>? newEngine, int itemsPerPage = 20, int itemLimit = -1)
     {
-        DataProvider.ResetEngine((IFetchEngine<T>?)newEngine, itemLimit);
+        DataProvider.ResetEngine((IFetchEngine<T>?)newEngine, itemsPerPage, itemLimit);
     }
 
     protected bool DefaultFilter(IWorkViewModel entry)

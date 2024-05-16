@@ -37,7 +37,7 @@ public abstract class EntryViewViewModel<T, TViewModel>
 
     public void Dispose() => DataProvider.Dispose();
 
-    public void ResetEngine(IFetchEngine<T>? newEngine, int itemLimit = -1) => DataProvider.ResetEngine(newEngine, itemLimit);
+    public void ResetEngine(IFetchEngine<T>? newEngine, int itemsPerPage = 20, int itemLimit = -1) => DataProvider.ResetEngine(newEngine, itemsPerPage, itemLimit);
 
     public bool HasNoItem => DataProvider.View.Count is 0;
 }

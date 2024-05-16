@@ -13,7 +13,7 @@ public class LanguageAppSettingsEntry(
 {
     public override LanguageSettingsCard Element => new() { Entry = this };
 
-    public static IEnumerable<LanguageModel> AvailableLanguages { get; } = [LanguageModel.DefaultLanguage, LanguageModel.FromBcl47("zh-Hans"), LanguageModel.FromBcl47("ru-ru"), LanguageModel.FromBcl47("en-us")];
+    public static IEnumerable<LanguageModel> AvailableLanguages { get; } = [LanguageModel.DefaultLanguage, LanguageModel.FromBcl47("zh-Hans"), LanguageModel.FromBcl47("ru-ru"), LanguageModel.FromBcl47("fr-fr"), LanguageModel.FromBcl47("en-us")];
 
     public static LanguageModel AppLanguage
     {

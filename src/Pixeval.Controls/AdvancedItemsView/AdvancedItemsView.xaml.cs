@@ -25,7 +25,7 @@ namespace Pixeval.Controls;
 [DependencyProperty<double>("MinItemWidth", "0d", nameof(OnItemWidthChanged))]
 [DependencyProperty<double>("MinRowSpacing", "5d", nameof(OnMinRowSpacingChanged))]
 [DependencyProperty<double>("MinColumnSpacing", "5d", nameof(OnMinColumnSpacingChanged))]
-[DependencyProperty<double>("LoadingOffset", "100d")]
+[DependencyProperty<double>("LoadingOffset", "200d")]
 [DependencyProperty<int>("SelectedIndex", "-1", nameof(OnSelectedIndexChanged))]
 [DependencyProperty<bool>("CanLoadMore", "true")]
 [DependencyProperty<bool>("IsLoadingMore", "false", nameof(OnIsLoadingMoreChanged))]
@@ -69,7 +69,7 @@ public sealed partial class AdvancedItemsView : ItemsView
                     var after = GetItemsCount();
                     // 这里可以设为一行的元素数，这样在加载过少数量的时候，也可以持续加载
                     // 一般一次会加载20个元素，而一行元素数一般少于10，所以这里设为10
-                    if (before + 10 < after)
+                    if (before + 10 <= after)
                         loadMore = false;
                 }
                 else
