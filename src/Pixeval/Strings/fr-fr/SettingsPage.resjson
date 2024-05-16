@@ -24,7 +24,7 @@
     "UpdateFailed": "Installation échouée",
     "UpdateFailedInTempFolder": "Mise à jour échouée, vous pouvez consulter le paquet d'installation dans le répertoire temporaire",
     "DownloadPathMacroEntry/Header": "Endroit de téléchargement par défaut",
-    "DownloadPathMacroEntryDescription": "Voir le mode d'emploi des Path Macros dans la page d'aide",
+    "DownloadPathMacroEntry/Description": "Voir le mode d'emploi des Path Macros dans la page d'aide",
     "DownloadPathMacroTextBox/PlaceholderText": "Path Macro",
     "RankOptionEntry/Description": "Paramètres des classements",
     "RankOptionEntry/Header": "Type de classement",
