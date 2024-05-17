@@ -17,8 +17,8 @@
     PointerExited="NovelItem_OnPointerExited"
     mc:Ignorable="d">
     <Grid.Resources>
-        <converters:StringFormatConverter x:Key="StringFormatConverter" />
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+        <converters1:CultureDateConverter x:Key="CultureDateConverter" />
         <converters1:NumberEllipsisConverter x:Key="NumberEllipsisConverter" />
         <!--  ReSharper disable once Xaml.RedundantResource  -->
         <Storyboard x:Key="ThumbnailStoryboard">
@@ -76,7 +76,7 @@
                 Foreground="DarkGray"
                 MaxLines="1"
                 Style="{StaticResource ContentTextBlockStyle}"
-                Text="{x:Bind ViewModel.PublishDate, Converter={StaticResource StringFormatConverter}, ConverterParameter='{}{0:yyyy-MM-dd}', Mode=OneWay}"
+                Text="{x:Bind ViewModel.PublishDate, Converter={StaticResource CultureDateConverter}, Mode=OneWay}"
                 TextTrimming="CharacterEllipsis"
                 TextWrapping="WrapWholeWords" />
             <TextBlock

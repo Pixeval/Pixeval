@@ -339,7 +339,7 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
 
     public string GetLastUpdateCheckDisplayString(DateTimeOffset lastChecked)
     {
-        return SettingsPageResources.LastCheckedPrefix + lastChecked.ToString(CultureInfo.CurrentUICulture);
+        return SettingsPageResources.LastCheckedPrefix + lastChecked.ToString(AppSettings.CurrentCulture);
     }
 
     public void ShowClearData(ClearDataKind kind)

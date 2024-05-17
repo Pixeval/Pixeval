@@ -12,7 +12,7 @@
     mc:Ignorable="d">
     <UserControl.Resources>
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
-        <converters:StringFormatConverter x:Key="StringFormatConverter" />
+        <converters1:CultureDateConverter x:Key="CultureDateConverter" />
         <converters1:LabelNullableVisibilityConverter x:Key="LabelNullableVisibilityConverter" />
     </UserControl.Resources>
     <Grid ColumnSpacing="10" RowSpacing="5">
@@ -62,7 +62,7 @@
                     Grid.Column="1"
                     FontSize="{StaticResource PixevalCaptionFontSize}"
                     Foreground="{ThemeResource PixevalTipTextForeground}"
-                    Text="{x:Bind ViewModel.PostDate, Converter={StaticResource StringFormatConverter}, ConverterParameter='{}{0:yyyy-MM-dd dddd}', Mode=OneWay}" />
+                    Text="{x:Bind ViewModel.PostDate, Converter={StaticResource CultureDateConverter}, Mode=OneWay}" />
             </Grid>
         </Button>
         <CommandBar
