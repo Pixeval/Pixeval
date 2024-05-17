@@ -225,7 +225,7 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
             using var scope = App.AppViewModel.AppServicesScope;
             var manager = scope.ServiceProvider.GetRequiredService<BrowseHistoryPersistentManager>();
             _ = manager.Delete(x => x.Id == IllustrationViewModel.Id && x.Type == SimpleWorkType.IllustAndManga);
-            manager.Insert(new BrowseHistoryEntry { Id = IllustrationViewModel.Id, Type = SimpleWorkType.IllustAndManga });
+            manager.Insert(new BrowseHistoryEntry(IllustrationViewModel.Entry));
         }
 
         async Task<IReadOnlyList<Stream>?> GetStreamsAsync(string? ugoiraLargeUrl)

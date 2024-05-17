@@ -24,7 +24,9 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Pixeval.Controls;
 using Pixeval.CoreApi.Global.Enum;
+using Pixeval.CoreApi.Model;
 using Pixeval.Database.Managers;
+using Pixeval.Utilities;
 
 namespace Pixeval.Pages.Misc;
 
@@ -43,18 +45,17 @@ public sealed partial class BrowsingHistoryPage : IScrollViewHost
     {
         using var scope = App.AppViewModel.AppServicesScope;
         var manager = scope.ServiceProvider.GetRequiredService<BrowseHistoryPersistentManager>();
-        var source = manager.Enumerate().Where(t => t.Type == SimpleWorkTypeComboBox.GetSelectedItem<SimpleWorkType>())
+        var type = SimpleWorkTypeComboBox.GetSelectedItem<SimpleWorkType>();
+        var source = manager.Enumerate()
+            .SelectNotNull(t => t.TryGetEntry(type))
             .Reverse()
             .ToAsyncEnumerable();
-        // 由于 ResetEngine 需要根据泛型参数判断类型，所以不能将元素转为 IWorkEntry，而是要保持原始类型
-        WorkContainer.WorkView.ResetEngine(
-            SimpleWorkTypeComboBox.GetSelectedItem<SimpleWorkType>() switch
-            {
-                SimpleWorkType.IllustAndManga => App.AppViewModel.MakoClient.Computed(source.SelectAwait(async t =>
-                    await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(t.Id))),
-                _ => App.AppViewModel.MakoClient.Computed(source.SelectAwait(async t =>
-                    await App.AppViewModel.MakoClient.GetNovelFromIdAsync(t.Id)))
-            }, 10);
+
+        WorkContainer.WorkView.ResetEngine(type switch
+        {
+            SimpleWorkType.IllustAndManga => App.AppViewModel.MakoClient.Computed(source.Cast<Illustration>()),
+            _ => App.AppViewModel.MakoClient.Computed(source.Cast<Novel>()),
+        });
     }
 
     public ScrollView ScrollView => WorkContainer.ScrollView;

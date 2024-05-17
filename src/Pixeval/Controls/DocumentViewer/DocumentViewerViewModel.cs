@@ -261,7 +261,7 @@ public class DocumentViewerViewModel(NovelContent novelContent) : ObservableObje
             using var scope = App.AppViewModel.AppServicesScope;
             var manager = scope.ServiceProvider.GetRequiredService<BrowseHistoryPersistentManager>();
             _ = manager.Delete(x => x.Id == novelItem.Id && x.Type == SimpleWorkType.Novel);
-            manager.Insert(new BrowseHistoryEntry { Id = novelItem.Id, Type = SimpleWorkType.Novel });
+            manager.Insert(new BrowseHistoryEntry(novelItem.Entry));
         }
     }
 
