@@ -18,7 +18,7 @@ Powerful, fast and beautiful Pixiv third-party desktop program based on .NET 8 a
 
 </div>
 
-🌏: [简体中文](README.md)，[**English**](README.en.md)，[Русский](README.ru.md)
+🌏: [简体中文](README.md), [**English**](README.en.md), [Русский](README.ru.md), [Français](README.fr.md)
 
 ---
 
