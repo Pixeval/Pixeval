@@ -94,11 +94,12 @@ Made with [contrib.rocks](https://contrib.rocks).
 
 Si ce projet vous plaît parfaitment, vous pouvez acheter un café pour moi dans [afdian](https://afdian.net/@dylech30th). Je le recevrai avec grand plaisir, merci!
 
-## JetBrains Open Source License
+## Licence Open Source JetBrains
 
 <div>
-  <a href="https://www.jetbrains.com/?from=Pixeval" align="right"><img src="https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.svg" alt="JetBrains" class="logo-footer" width="100" align="left"></a>
+  <a href="https://www.jetbrains.com/?from=Pixeval" align="right"><img src="https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.svg" alt="JetBrains" class="logo-footer" width="130" align="left"></a>
   <br/>
   
-  The Jetbrains™ ReSharper is heavily used during the development of this project. Thank JetBrains s.r.o for providing the [JetBrains Open Source License]((https://www.jetbrains.com/community/opensource/#support)), If you are one of the passionate developers who often put JetBrains products into use, you can try to apply the JetBrains Open Source License from the [official channel](https://www.jetbrains.com/shop/eform/opensource) to help you and your developer teammates to significantly improve the productivities
+  Le Jetbrains™ ReSharper est fortement utilisé lors du développement de ce projet. Merci à JetBrains s.r.o pour avoir fourni la [JetBrains Open Source License](https://www.jetbrains.com/community/opensource/#support), Si vous êtes un des développeurs passionnés qui utilisent souvent les produits JetBrains, vous pouvez essayer d'appliquer la JetBrains Open Source License depuis le [canal officiel](https://www.jetbrains.com/shop/eform/opensource) pour vous aider, vous et vos coéquipiers développeurs, à améliorer significativement les productivités.
+
 </div>
