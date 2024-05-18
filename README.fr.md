@@ -88,7 +88,7 @@ Après votre développement, vous devez créer un [Pull Request](https://github.
 
 [![Toolkit Contributors](https://contrib.rocks/image?repo=Pixeval/Pixeval)](https://github.com/Pixeval/Pixeval/graphs/contributors)
 
-Développé avec [contrib.rocks](https://contrib.rocks).
+Made with [contrib.rocks](https://contrib.rocks).
 
 ## Me sponsoriser
 
