@@ -16,6 +16,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Pixeval.sln.DotSettings = Pixeval.sln.DotSettings
 		Pixeval_PublicKey.cer = Pixeval_PublicKey.cer
 		README.en.md = README.en.md
+		README.fr.md = README.fr.md
 		README.md = README.md
 		README.ru.md = README.ru.md
 		SECURITY.md = SECURITY.md

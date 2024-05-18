@@ -18,7 +18,7 @@ Powerful, fast and beautiful Pixiv third-party desktop program based on .NET 8 a
 
 </div>
 
-🌏: [简体中文](README.md)，[**English**](README.en.md)，[Русский](README.ru.md)
+🌏: [简体中文](README.md), [**English**](README.en.md), [Русский](README.ru.md), [Français](README.fr.md)
 
 ---
 
@@ -97,8 +97,8 @@ If this project meets your requirements perfectly, welcome the buy me a coffee a
 ## JetBrains Open Source License
 
 <div>
-  <a href="https://www.jetbrains.com/?from=Pixeval" align="right"><img src="https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.svg" alt="JetBrains" class="logo-footer" width="100" align="left"></a>
+  <a href="https://www.jetbrains.com/?from=Pixeval" align="right"><img src="https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.svg" alt="JetBrains" class="logo-footer" width="130" align="left"></a>
   <br/>
   
-  The Jetbrains™ ReSharper is heavily used during the development of this project. Thank JetBrains s.r.o for providing the [JetBrains Open Source License]((https://www.jetbrains.com/community/opensource/#support)), If you are one of the passionate developers who often put JetBrains products into use, you can try to apply the JetBrains Open Source License from the [official channel](https://www.jetbrains.com/shop/eform/opensource) to help you and your developer teammates to significantly improve the productivities
+  The Jetbrains™ ReSharper is heavily used during the development of this project. Thank JetBrains s.r.o for providing the [JetBrains Open Source License](https://www.jetbrains.com/community/opensource/#support), If you are one of the passionate developers who often put JetBrains products into use, you can try to apply the JetBrains Open Source License from the [official channel](https://www.jetbrains.com/shop/eform/opensource) to help you and your developer teammates to significantly improve the productivities
 </div>
