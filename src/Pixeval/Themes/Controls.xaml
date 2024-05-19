@@ -44,7 +44,8 @@
     <Style x:Key="BaseTextBlockStyle" TargetType="TextBlock">
         <Setter Property="FontSize" Value="{StaticResource PixevalBaseFontSize}" />
     </Style>
-    <Style x:Key="CaptionTextBlockStyle" TargetType="TextBlock">
+    <!--  以防和TitleBar冲突  -->
+    <Style x:Key="PixevalCaptionTextBlockStyle" TargetType="TextBlock">
         <Setter Property="FontSize" Value="{StaticResource PixevalCaptionFontSize}" />
     </Style>
     <Style x:Key="SubscriptTextBlockStyle" TargetType="TextBlock">

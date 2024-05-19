@@ -1,4 +1,4 @@
-<controls:SupportCustomTitleBarDragRegionPage
+<controls:EnhancedWindowPage
     x:Class="Pixeval.Pages.IllustratorViewer.IllustratorViewerPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -9,6 +9,7 @@
     xmlns:converters1="using:Pixeval.Controls.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:windowing="using:Pixeval.Controls.Windowing"
     mc:Ignorable="d">
     <controls:EnhancedPage.Resources>
         <converters1:BoolNegationToVisibilityConverter x:Key="BoolNegationToVisibilityConverter" />
@@ -208,9 +209,14 @@
                 </Grid>
             </controls:StickyHeaderScrollView.StickyContent>
         </controls:StickyHeaderScrollView>
-        <controls:TitleBarIconText
-            x:Name="TitleBar"
+        <controls1:TitleBar
             Title="{x:Bind _viewModel.Name}"
-            Grid.Row="0" />
+            Grid.Row="0"
+            VerticalAlignment="Top"
+            Window="{x:Bind windowing:WindowFactory.GetForkedWindows(HWnd)}">
+            <controls1:TitleBar.Icon>
+                <ImageIcon Source="ms-appx:///Assets/Images/logo.svg" />
+            </controls1:TitleBar.Icon>
+        </controls1:TitleBar>
     </Grid>
-</controls:SupportCustomTitleBarDragRegionPage>
+</controls:EnhancedWindowPage>

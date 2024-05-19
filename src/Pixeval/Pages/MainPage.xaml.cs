@@ -26,7 +26,6 @@ using System.Runtime;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
-using Windows.Graphics;
 using Windows.Storage;
 using Windows.System;
 using Windows.UI.Core;
@@ -42,7 +41,6 @@ using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
 using Microsoft.Windows.AppLifecycle;
 using Pixeval.Activation;
-using Pixeval.Controls;
 using Pixeval.Database;
 using Pixeval.Database.Managers;
 using Pixeval.Messages;
@@ -63,7 +61,7 @@ using Pixeval.Pages.NovelViewer;
 
 namespace Pixeval.Pages;
 
-public sealed partial class MainPage : SupportCustomTitleBarDragRegionPage
+public sealed partial class MainPage
 {
     private readonly MainPageViewModel _viewModel;
 
@@ -74,27 +72,15 @@ public sealed partial class MainPage : SupportCustomTitleBarDragRegionPage
         CustomizeTitleBar();
     }
 
-    private async void CustomizeTitleBar()
+    private static async void CustomizeTitleBar()
     {
         if (AppInfo.CustomizeTitleBarSupported)
             return;
-        AutoSuggestBoxWidth.Width = new GridLength(1, GridUnitType.Star);
-        PaneCustomContentPresenter.Content = TitleBarPresenter.Content;
-        TitleBarPresenter.Content = null;
 
         await Task.Yield();
         using var scope = App.AppViewModel.AppServicesScope;
         var logger = scope.ServiceProvider.GetRequiredService<FileLogger>();
         logger.LogInformation("Customize title bar is not supported", null);
-    }
-
-    protected override void SetTitleBarDragRegion(InputNonClientPointerSource sender, SizeInt32 windowSize, double scaleFactor, out int titleBarHeight)
-    {
-        titleBarHeight = 48;
-        // NavigationView的Pane按钮
-        var leftIndent = new RectInt32(0, 0, titleBarHeight, titleBarHeight);
-        sender.SetRegionRects(NonClientRegionKind.Icon, [GetScaledRect(TitleBar.Icon)]);
-        sender.SetRegionRects(NonClientRegionKind.Passthrough, [GetScaledRect(TitleBarPresenter), GetScaledRect(leftIndent)]);
     }
 
     public override async void OnPageActivated(NavigationEventArgs e, object? parameter)
@@ -141,11 +127,6 @@ public sealed partial class MainPage : SupportCustomTitleBarDragRegionPage
                 Navigate(MainPageRootFrame, tag);
             else
                 MainPageRootFrame.NavigateTag(tag, new SuppressNavigationTransitionInfo());
-    }
-
-    private void NavigationView_OnPaneChanging(NavigationView sender, object e)
-    {
-        sender.UpdateAppTitleMargin(TitleBar.TitleBlock);
     }
 
     private void MainPageRootFrame_OnNavigated(object sender, NavigationEventArgs e)
@@ -372,8 +353,13 @@ public sealed partial class MainPage : SupportCustomTitleBarDragRegionPage
         }
     }
 
-    private async void SelfNavigationViewItem_OnTapped(object sender, TappedRoutedEventArgs e)
+    private async void SelfAvatar_OnTapped(object sender, TappedRoutedEventArgs e)
     {
         await IllustratorViewerHelper.CreateWindowWithPageAsync(App.AppViewModel.PixivUid);
+    }
+
+    private void TitleBar_OnPaneButtonClick(object? sender, RoutedEventArgs e)
+    {
+        NavigationView.IsPaneOpen = !NavigationView.IsPaneOpen;
     }
 }
