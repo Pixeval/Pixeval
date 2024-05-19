@@ -36,7 +36,6 @@ using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
 using WinUI3Utilities.Controls;
 using Windows.Globalization;
-using Pixeval.Pages.Misc;
 using Pixeval.Utilities;
 using static Pixeval.SettingsPageResources;
 
