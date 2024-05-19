@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Text;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Pixeval.Controls.Windowing;
 using Pixeval.Download;
@@ -37,7 +38,7 @@ public sealed partial class DownloadMacroSettingsExpander
     /// </summary>
     private string _previousPath = "";
 
-    private void DownloadMacroSettingsExpander_OnLoading(FrameworkElement sender, object args)
+    private void DownloadMacroSettingsExpander_OnLoaded(object sender, RoutedEventArgs e)
     {
         Entry.PropertyChanged += (_, _) => EntryOnPropertyChanged();
         EntryOnPropertyChanged();
@@ -45,6 +46,10 @@ public sealed partial class DownloadMacroSettingsExpander
         return;
         void EntryOnPropertyChanged()
         {
+            DownloadPathMacroTextBox.Document.GetText(TextGetOptions.None, out var text);
+            var t = text.ReplaceLineEndings("");
+            if (t == Entry.Value)
+                return;
             // The first time viewmodel get the value of DownloadPathMacro from AppSettings won't trigger the property changed event
             _previousPath = Entry.Value;
             SetPathMacroRichEditBoxDocument(Entry.Value);
@@ -90,6 +95,25 @@ public sealed partial class DownloadMacroSettingsExpander
             DownloadMacroInvalidInfoBar.IsOpen = true;
             Entry.Value = _previousPath;
         }
+    }
+
+    private void DownloadPathMacroTextBox_OnTextChanged(object sender, RoutedEventArgs e)
+    {
+        sender.To<RichEditBox>().Document.GetText(TextGetOptions.None, out var text);
+        if (sender.To<RichEditBox>().Document.Selection is { Length: 0 } selection)
+            selection.CharacterFormat.ForegroundColor = Application.Current.GetResource<SolidColorBrush>("TextFillColorPrimaryBrush").Color;
+        Entry.Value = text.ReplaceLineEndings("");
+    }
+
+    private void DownloadPathMacroTextBox_OnContextMenuOpening(object sender, ContextMenuEventArgs e)
+    {
+        e.Handled = true;
+    }
+
+    private void PathMacroTokenInputBox_OnTokenTapped(object sender, ItemClickEventArgs e)
+    {
+        UiHelper.ClipboardSetText(e.ClickedItem.To<StringRepresentableItem>().StringRepresentation);
+        WindowFactory.GetWindowForElement(this).HWnd.SuccessGrowl(SettingsPageResources.MacroCopiedToClipboard);
     }
 
     private void SetPathMacroRichEditBoxDocument(string path)
@@ -191,24 +215,5 @@ public sealed partial class DownloadMacroSettingsExpander
         }
 
         return manipulators;
-    }
-
-    private void DownloadPathMacroTextBox_OnTextChanged(object sender, RoutedEventArgs e)
-    {
-        sender.To<RichEditBox>().Document.GetText(TextGetOptions.None, out var text);
-        if (sender.To<RichEditBox>().Document.Selection is { Length: 0 } selection)
-            selection.CharacterFormat.ForegroundColor = Application.Current.GetResource<SolidColorBrush>("TextFillColorPrimaryBrush").Color;
-        Entry.Value = text.ReplaceLineEndings("");
-    }
-
-    private void DownloadPathMacroTextBox_OnContextMenuOpening(object sender, ContextMenuEventArgs e)
-    {
-        e.Handled = true;
-    }
-
-    private void PathMacroTokenInputBox_OnTokenTapped(object sender, ItemClickEventArgs e)
-    {
-        UiHelper.ClipboardSetText(e.ClickedItem.To<StringRepresentableItem>().StringRepresentation);
-        WindowFactory.GetWindowForElement(this).HWnd.SuccessGrowl(SettingsPageResources.MacroCopiedToClipboard);
     }
 }

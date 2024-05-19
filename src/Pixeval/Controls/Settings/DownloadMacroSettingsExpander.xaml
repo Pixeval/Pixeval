@@ -13,7 +13,7 @@
     x:Uid="/SettingsPage/DownloadPathMacroEntry"
     Description="{x:Bind Entry.DescriptionControl}"
     Header="{x:Bind Entry.Header}"
-    Loading="DownloadMacroSettingsExpander_OnLoading"
+    Loaded="DownloadMacroSettingsExpander_OnLoaded"
     Tag="{x:Bind Entry.Attribute}"
     mc:Ignorable="d">
     <controls:SettingsExpander.HeaderIcon>
