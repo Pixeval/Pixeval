@@ -296,12 +296,12 @@
       },
       "WinUI3Utilities": {
         "type": "Direct",
-        "requested": "[1.1.6.7, )",
-        "resolved": "1.1.6.7",
-        "contentHash": "CrrehLG3hzR0EkAc701Ro+1romztjkZ26TLL0B+oWKn4GRWOGvs/B2xlSaeZ7xHIN6y/62OGulVACz9tNWWc1Q==",
+        "requested": "[1.1.7, )",
+        "resolved": "1.1.7",
+        "contentHash": "/YbkYu3GzNkpx7NSrYbwf+rjbg08fYqDuk0VoVwWe6PSEY3koXI2hpYdQjsm4jP2WjH7g7mlZNDocSbF9RtS2w==",
         "dependencies": {
           "Microsoft.Windows.SDK.BuildTools": "10.0.22621.3233",
-          "Microsoft.WindowsAppSDK": "1.5.240311000"
+          "Microsoft.WindowsAppSDK": "1.5.240428000"
         }
       },
       "CommunityToolkit.Common": {
