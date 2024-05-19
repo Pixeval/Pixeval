@@ -58,7 +58,7 @@ public partial class NovelViewerPageViewModel : DetailedUiObservableObject, IDis
         CurrentNovelIndex = currentNovelIndex;
 
         InitializeCommands();
-        FullScreenCommand.GetFullScreenCommand(false);
+        FullScreenCommand.RefreshFullScreenCommand(false);
     }
 
     public void OnFrameworkElementOnActualThemeChanged(FrameworkElement frameworkElement, object o)
@@ -258,7 +258,7 @@ public partial class NovelViewerPageViewModel : DetailedUiObservableObject, IDis
     private void FullScreenCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
         IsFullScreen = !IsFullScreen;
-        FullScreenCommand.GetFullScreenCommand(IsFullScreen);
+        FullScreenCommand.RefreshFullScreenCommand(IsFullScreen);
     }
 
     public XamlUICommand NovelSettingsCommand { get; } =

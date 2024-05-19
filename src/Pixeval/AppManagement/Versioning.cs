@@ -12,7 +12,7 @@ namespace Pixeval.AppManagement;
 
 public class Versioning
 {
-    public Version CurrentVersion { get; } = Version.Parse(GitVersionInformation.AssemblySemVer);
+    public Version CurrentVersion { get; } = Version.Parse("4.1.1"/*TODO:GitVersionInformation.AssemblySemVer*/);
 
     public Version? NewestVersion => NewestAppReleaseModel?.Version;
 

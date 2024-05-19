@@ -43,7 +43,7 @@ namespace Pixeval.AppManagement;
 /// <summary>
 /// Provide miscellaneous information about the app
 /// </summary>
-[AppContext<AppSettings>(ConfigKey = "Config", Type = ApplicationDataContainerType.Roaming, MethodName = "Config")]
+[AppContext<AppSettings>(ConfigKey = "Config", MethodName = "Config")]
 [AppContext<LoginContext>(ConfigKey = "LoginContext", MethodName = "LoginContext")]
 [AppContext<AppDebugTrace>(ConfigKey = "DebugTrace", MethodName = "DebugTrace")]
 public static partial class AppInfo
@@ -90,6 +90,9 @@ public static partial class AppInfo
     }
 
     public static string IconAbsolutePath => ApplicationUriToPath(new Uri(IconApplicationUri));
+
+    public static Uri NavigationIconUri(string name) => new Uri($"ms-appx:///Assets/Images/Icons/{name}.png");
+
 
     public static string ApplicationUriToPath(Uri uri)
     {

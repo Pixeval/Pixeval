@@ -27,7 +27,7 @@ namespace Pixeval.Controls;
 
 public partial class NovelItemViewModel(Novel novel) : WorkEntryViewModel<Novel>(novel), IFactory<Novel, NovelItemViewModel>
 {
-    public static NovelItemViewModel CreateInstance(Novel entry) => new(entry);
+    public static NovelItemViewModel CreateInstance(Novel entry, int _) => new(entry);
 
     public int TextLength => Entry.TextLength;
 

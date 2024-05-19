@@ -149,7 +149,7 @@ public partial class DownloadManager : IDisposable
     }
 
     /// <summary>
-    /// Tries to redownload a task only if its already queued and not running
+    /// Attempts to re-download a task only if its already queued and not running
     /// </summary>
     /// <remarks>
     /// Execute the task only if it's already queued

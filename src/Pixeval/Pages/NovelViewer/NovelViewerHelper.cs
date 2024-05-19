@@ -69,7 +69,7 @@ public static class NovelViewerHelper
         CreateWindowWithPage(novelViewModel.Entry, (novelViewViewModel, index));
     }
 
-    public static NovelViewerPageViewModel GetViewModel(this ulong hWnd, object? param)
+    public static NovelViewerPageViewModel GetNovelViewerPageViewModelFromHandle(this ulong hWnd, object? param)
     {
         return param switch
         {

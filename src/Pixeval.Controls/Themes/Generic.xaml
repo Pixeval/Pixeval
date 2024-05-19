@@ -7,6 +7,8 @@
         <ResourceDictionary Source="ms-appx:///Pixeval.Controls/IconButton/IconButton.xaml" />
         <ResourceDictionary Source="ms-appx:///Pixeval.Controls/NotifyOnLoadedComboBox/NotifyOnLoadedComboBox.xaml" />
         <ResourceDictionary Source="ms-appx:///Pixeval.Controls/NotifyOnLoadedCalendarDatePicker/NotifyOnLoadedCalendarDatePicker.xaml" />
+        <ResourceDictionary Source="ms-appx:///Pixeval.Controls/Timeline/TimelineUnit.xaml" />
+        <ResourceDictionary Source="ms-appx:///Pixeval.Controls/CardControl/CardControl.xaml" />
         <!--  ReSharper restore Xaml.PathError  -->
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

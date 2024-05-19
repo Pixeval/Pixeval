@@ -24,5 +24,5 @@ namespace Pixeval.Controls;
 
 public interface IFactory<in T, out TSelf>
 {
-    static abstract TSelf CreateInstance(T entry);
+    static abstract TSelf CreateInstance(T entry, int index);
 }

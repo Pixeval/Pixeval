@@ -179,14 +179,14 @@ internal partial class FeedEngine(MakoClient makoClient, EngineHandle? engineHan
                 FeedType? feedType = status.Value.GetPropertyString("type") switch
                 {
                     "add_bookmark" => FeedType.AddBookmark,
-                    "add_illust" => FeedType.AddIllust,
+                    "add_illust" => FeedType.PostIllust,
                     "add_novel_bookmark" => FeedType.AddNovelBookmark,
                     "add_favorite" => FeedType.AddFavorite,
                     _ => null
                 };
                 var feedTargetId = feedType switch
                 {
-                    FeedType.AddBookmark or FeedType.AddIllust => status.Value.GetProperty("ref_illust").GetPropertyString("id"),
+                    FeedType.AddBookmark or FeedType.PostIllust => status.Value.GetProperty("ref_illust").GetPropertyString("id"),
                     FeedType.AddFavorite => status.Value.GetProperty("ref_user").GetPropertyLong("id").ToString(), // long & string in two objects with almost the same properties? fuck pixiv
                     FeedType.AddNovelBookmark => status.Value.GetProperty("ref_novel").GetPropertyString("id"),
                     _ => null
@@ -198,7 +198,7 @@ internal partial class FeedEngine(MakoClient makoClient, EngineHandle? engineHan
 
                 var feedTargetThumbnail = feedType switch
                 {
-                    FeedType.AddBookmark or FeedType.AddIllust => illusts.FirstOrNull(i => i.Name == feedTargetId)
+                    FeedType.AddBookmark or FeedType.PostIllust => illusts.FirstOrNull(i => i.Name == feedTargetId)
                         ?.GetPropertyOrNull("url")
                         ?.GetPropertyOrNull("m")
                         ?.GetString(),
@@ -231,20 +231,26 @@ internal partial class FeedEngine(MakoClient makoClient, EngineHandle? engineHan
                     ?.GetPropertyOrNull("url")
                     ?.GetPropertyOrNull("m")
                     ?.GetString();
+
+                if (!long.TryParse(feedTargetId, out var feedIdLong))
+                {
+                    return null;
+                }
+                
                 var feedObject = new Feed
                 {
-                    FeedId = feedTargetId,
+                    Id = feedIdLong,
                     FeedThumbnail = feedTargetThumbnail,
                     Type = feedType,
                     PostDate = postDate,
                     PostUserId = postUserId,
-                    PostUserName = postUserName,
+                    PostUsername = postUserName,
                     PostUserThumbnail = postUserThumbnail
                 };
 
                 switch (feedType)
                 {
-                    case FeedType.AddBookmark or FeedType.AddIllust:
+                    case FeedType.AddBookmark or FeedType.PostIllust:
                     {
                         var illustration = illusts.FirstOrNull(i => i.Name == feedTargetId);
                         feedObject.ArtistName = users.FirstOrNull(u => u.Name == (illustration?.GetPropertyOrNull("post_user")?.GetPropertyOrNull("id")?.GetString() ?? string.Empty))?.GetPropertyOrNull("name")?.GetString();

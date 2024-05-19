@@ -20,10 +20,10 @@
 
 using System;
 using System.Threading.Tasks;
-using Windows.Globalization;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
+using Microsoft.Windows.Globalization;
 using Pixeval.AppManagement;
 using Pixeval.Settings.Models;
 using Pixeval.Util.UI;

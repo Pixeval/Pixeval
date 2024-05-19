@@ -14,14 +14,14 @@ public partial class IllustratorItemViewModel
     {
         InitializeCommandsBase();
 
-        FollowCommand.GetFollowCommand(IsFollowed);
+        FollowCommand.RefreshFollowCommand(IsFollowed);
         FollowCommand.ExecuteRequested += FollowCommandExecuteRequested;
     }
 
     private async void FollowCommandExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
         IsFollowed = await MakoHelper.SetFollowAsync(UserId, !IsFollowed);
-        FollowCommand.GetFollowCommand(IsFollowed);
+        FollowCommand.RefreshFollowCommand(IsFollowed);
     }
 
     public override Uri AppUri => MakoHelper.GenerateUserAppUri(UserId);

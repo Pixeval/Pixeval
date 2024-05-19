@@ -65,6 +65,8 @@ public sealed partial class MainPage
 {
     private readonly MainPageViewModel _viewModel;
 
+    private NavigationViewItem? _lastSelected;
+
     public MainPage()
     {
         _viewModel = new MainPageViewModel(this);
@@ -122,10 +124,21 @@ public sealed partial class MainPage
 
         // args.SelectedItem may be null here
         if (sender.SelectedItem is NavigationViewItem { Tag: NavigationViewTag tag } selectedItem)
+        {
+            if (Equals(selectedItem, FeedTab) && App.AppViewModel.AppSettings.WebCookie.IsNullOrBlank())
+            {
+                _ = this.CreateAcknowledgementAsync(MainPageResources.FeedTabCannotBeOpenedTitle, MainPageResources.FeedTabCannotBeOpenedContent);
+                sender.SelectedItem = _lastSelected;
+                return;
+            }
+
             if (Equals(selectedItem, DownloadListTab) || Equals(selectedItem, SettingsTab) || Equals(selectedItem, TagsTab))
                 Navigate(MainPageRootFrame, tag);
             else
                 MainPageRootFrame.NavigateTag(tag, new SuppressNavigationTransitionInfo());
+        }
+
+        _lastSelected = sender.SelectedItem as NavigationViewItem;
     }
 
     private void MainPageRootFrame_OnNavigated(object sender, NavigationEventArgs e)
