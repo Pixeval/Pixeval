@@ -39,8 +39,8 @@ public static class ThrowUtils
 
     [DoesNotReturn]
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public static TResult Throw<TException, TResult>(params object[] parameters) where TException : Exception
-        => throw ((Exception)Activator.CreateInstance(typeof(TException), parameters)!);
+    public static TResult Throw<TException, TResult>(TException e) where TException : Exception
+        => throw e;
 
     /// <exception cref="InvalidOperationException"/>
     [DoesNotReturn]
@@ -77,6 +77,12 @@ public static class ThrowUtils
     [MethodImpl(MethodImplOptions.NoInlining)]
     public static void Argument(string? message = null, Exception? innerException = null)
         => throw new ArgumentException(message, innerException);
+
+    /// <exception cref="ArgumentOutOfRangeException"/>
+    [DoesNotReturn]
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static void ArgumentOutOfRange<T>(T? actualValue, string? message = null, [CallerArgumentExpression(nameof(actualValue))] string? paraName = null)
+        => throw new ArgumentOutOfRangeException(paraName, actualValue, message);
 
     /// <exception cref="ArgumentOutOfRangeException"/>
     [DoesNotReturn]

@@ -24,8 +24,11 @@ using Pixeval.CoreApi.Model;
 namespace Pixeval.CoreApi.Net.Response;
 
 [Factory]
-public partial record PixivCommentResponse : PixivNextUrlResponse<Comment>
+public partial record PixivCommentResponse : IPixivNextUrlResponse<Comment>
 {
+    [JsonPropertyName("next_url")]
+    public required string? NextUrl { get; set; }
+
     [JsonPropertyName("comments")]
-    public override required Comment[] Entities { get; set; } = [];
+    public /*override*/ required Comment[] Entities { get; set; } = [];
 }

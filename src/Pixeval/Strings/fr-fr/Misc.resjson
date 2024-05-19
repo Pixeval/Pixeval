@@ -74,8 +74,8 @@
     "ProxyOptionSystem": "Proxy par défault (système)",
     "ProxyOptionNone": "Aucun",
 
-    "DownloadListEntryOpenFailed": "Ouverture de répertoire échouée",
-    "DownloadListEntryMaybeDeleted": "Peut être vous avez supprimé le fichier",
+    "DownloadItemOpenFailed": "Ouverture de répertoire échouée",
+    "DownloadItemMaybeDeleted": "Peut être vous avez supprimé le fichier",
 
     "SortOptionComboBox/PlaceholderText": "Option de tri",
     "PrivacyPolicyComboBox/PlaceholderText": "Option de public/privé",

@@ -22,9 +22,7 @@ using System;
 using System.Numerics;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
-using Windows.Graphics;
 using Windows.Storage;
-using Microsoft.UI.Input;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -42,7 +40,7 @@ using Pixeval.Controls.Windowing;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
-public sealed partial class IllustrationViewerPage : SupportCustomTitleBarDragRegionPage
+public sealed partial class IllustrationViewerPage
 {
     private bool _pointerNotInArea = true;
 
@@ -74,25 +72,10 @@ public sealed partial class IllustrationViewerPage : SupportCustomTitleBarDragRe
         }
     }
 
-    protected override void SetTitleBarDragRegion(InputNonClientPointerSource sender, SizeInt32 windowSize, double scaleFactor, out int titleBarHeight)
-    {
-        if (_viewModel.IsFullScreen)
-        {
-            titleBarHeight = 0;
-            return;
-        }
-        var leftIndent = new RectInt32(0, 0, EntryViewerSplitView.IsPaneOpen ? (int)WorkViewerSplitView.OpenPaneLength : 0, (int)TitleBarArea.ActualHeight);
-
-        if (TitleBar.Visibility is Visibility.Visible)
-            sender.SetRegionRects(NonClientRegionKind.Icon, [GetScaledRect(TitleBar.Icon)]);
-        sender.SetRegionRects(NonClientRegionKind.Passthrough, [GetScaledRect(leftIndent), GetScaledRect(IllustrationViewerCommandBar), GetScaledRect(IllustrationViewerSubCommandBar)]);
-        titleBarHeight = 48;
-    }
-
     public override void OnPageActivated(NavigationEventArgs e, object? parameter)
     {
         // 此处this.XamlRoot为null
-        _viewModel = HWnd.GetViewModel(parameter);
+        _viewModel = HWnd.GetIllustrationViewerPageViewModelFromHandle(parameter);
 
         _viewModel.DetailedPropertyChanged += (sender, args) =>
         {
@@ -104,7 +87,7 @@ public sealed partial class IllustrationViewerPage : SupportCustomTitleBarDragRe
             var oldIndex = args.OldValue.To<int>();
             var newIndex = args.NewValue.To<int>(); // vm.CurrentIllustrationIndex
 
-            var info = null as NavigationTransitionInfo;
+            NavigationTransitionInfo? info = null;
             if (oldIndex < newIndex && oldIndex is not -1)
                 info = new SlideNavigationTransitionInfo { Effect = SlideNavigationTransitionEffect.FromRight };
             else if (oldIndex > newIndex)
@@ -132,8 +115,6 @@ public sealed partial class IllustrationViewerPage : SupportCustomTitleBarDragRe
                 {
                     var window = WindowFactory.ForkedWindows[HWnd];
                     window.AppWindow.SetPresenter(vm.IsFullScreen ? AppWindowPresenterKind.FullScreen : AppWindowPresenterKind.Default);
-                    // 加载完之后设置标题栏
-                    _ = Task.Delay(500).ContinueWith(_ => RaiseSetTitleBarDragRegion(window), TaskScheduler.FromCurrentSynchronizationContext());
                     break;
                 }
             }
@@ -145,12 +126,15 @@ public sealed partial class IllustrationViewerPage : SupportCustomTitleBarDragRe
 
     private void IllustrationViewerPage_OnLoaded(object sender, RoutedEventArgs e)
     {
+        // Invokes the drag region calculation manually 9/11/2024
+        TitleBarArea.SetDragRegionForCustomTitleBar();
         var dataTransferManager = HWnd.GetDataTransferManager();
         dataTransferManager.DataRequested += OnDataTransferManagerOnDataRequested;
 
         CommandBorderDropShadow.Receivers.Add(IllustrationImageShowcaseFrame);
         ThumbnailListDropShadow.Receivers.Add(IllustrationImageShowcaseFrame);
 
+        ThumbnailItemsView.StartBringItemIntoView(_viewModel.CurrentIllustrationIndex, new BringIntoViewOptions { AnimationDesired = true });
         IllustrationImageShowcaseFrame_OnTapped(null!, null!);
     }
 
@@ -198,9 +182,9 @@ public sealed partial class IllustrationViewerPage : SupportCustomTitleBarDragRe
         HWnd.SuccessGrowl(EntryViewerPageResources.AddedToBookmark);
     }
 
-    private void AddToBookmarkButton_OnTapped(object sender, TappedRoutedEventArgs e) => AddToBookmarkTeachingTip.IsOpen = true;
+    private void AddToBookmarkButton_OnClicked(object sender, RoutedEventArgs e) => AddToBookmarkTeachingTip.IsOpen = true;
 
-    private void NextButton_OnTapped(object sender, IWinRTObject e)
+    private void NextButton_OnClicked(object sender, IWinRTObject e)
     {
         switch (_viewModel.NextButtonAction)
         {
@@ -217,7 +201,7 @@ public sealed partial class IllustrationViewerPage : SupportCustomTitleBarDragRe
         ++ThumbnailItemsView.SelectedIndex;
     }
 
-    private void PrevButton_OnTapped(object sender, IWinRTObject e)
+    private void PrevButton_OnClicked(object sender, IWinRTObject e)
     {
         switch (_viewModel.PrevButtonAction)
         {
@@ -239,14 +223,12 @@ public sealed partial class IllustrationViewerPage : SupportCustomTitleBarDragRe
         e.Handled = true;
         switch (e.Key)
         {
-            case VirtualKey.Left: PrevButton_OnTapped(null!, null!); break;
-            case VirtualKey.Right: NextButton_OnTapped(null!, null!); break;
+            case VirtualKey.Left: PrevButton_OnClicked(null!, null!); break;
+            case VirtualKey.Right: NextButton_OnClicked(null!, null!); break;
             case VirtualKey.Up: PrevButton_OnRightTapped(null!, null!); break;
             case VirtualKey.Down: NextButton_OnRightTapped(null!, null!); break;
         }
     }
-
-    private void Placeholder_OnSizeChanged(object sender, object e) => RaiseSetTitleBarDragRegion(WindowFactory.ForkedWindows[HWnd]);
 
     private async void IllustrationImageShowcaseFrame_OnTapped(object sender, TappedRoutedEventArgs e)
     {
@@ -263,5 +245,12 @@ public sealed partial class IllustrationViewerPage : SupportCustomTitleBarDragRe
         teachingTip.Target = appBarButton.IsInOverflow ? null : appBarButton;
     }
 
-    private void OpenPane_OnRightTapped(object sender, RightTappedRoutedEventArgs rightTappedRoutedEventArgs) => EntryViewerSplitView.PinPane = true;
+    private void OpenPane_OnRightTapped(object sender, RightTappedRoutedEventArgs e) => EntryViewerSplitView.PinPane = true;
+
+    public Visibility IsLogoVisible()
+    {
+        return WindowFactory.GetWindowForElement(this).HWnd != WindowFactory.RootWindow.HWnd
+            ? Visibility.Visible
+            : Visibility.Collapsed;
+    }
 }

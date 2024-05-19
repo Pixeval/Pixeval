@@ -14,5 +14,7 @@
     "SelectedTooManyItemsTitle": "Это действие может вызвать проблемы с производительностью",
     "SelectionButton/Label": "Множественный выбор",
     "CancelSelectionButtonDefaultLabel": "Отменить выбор",
-    "DownloadItemsQueuedFormatted": "{0} работ добавлено в список загрузок"
+    "FilterAutoSuggestBox/PlaceholderText": "Фильтрация работает (см. страницу помощи по использованию)",
+    "DownloadItemsQueuedFormatted": "{0} работ добавлено в список загрузок",
+    "AddToBookmarkTeachingTip/CloseButtonContent": "Добавить в закладки"
 }

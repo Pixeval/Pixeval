@@ -8,5 +8,7 @@
   "ShowPixEzQrCodeContextItem/Text": "Generate PixEz QR code",
   "ShowQrCodeContextItem/Text": "Generate QR code",
   "IllustrationQrCodeTeachingTip/TeachingTipTitle": "Generate QR code for the illustration",
-  "IllustratorQrCodeTeachingTip/TeachingTipTitle": "Generate QR code for the author"
+  "IllustratorQrCodeTeachingTip/TeachingTipTitle": "Generate QR code for the author",
+  "AddToBookmarkTeachingTip/CloseButtonContent": "Add to bookmark",
+  "AddedToBookmark": "Added to bookmark"
 }

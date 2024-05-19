@@ -1,13 +1,13 @@
 using System.Collections.Generic;
 using System.Linq;
-using Windows.Globalization;
+using Microsoft.Windows.Globalization;
 using Pixeval.AppManagement;
 using Pixeval.Controls.Settings;
 using Pixeval.Pages.Misc;
 
 namespace Pixeval.Settings.Models;
 
-public class LanguageAppSettingsEntry(
+public partial class LanguageAppSettingsEntry(
     AppSettings appSettings)
     : ObservableSettingsEntryBase<AppSettings>(appSettings, "", "", default)
 {

@@ -7,9 +7,11 @@
     "ShowQRCode": "生成二维码",
 
     "AddToBookmark": "添加到收藏夹",
-    "Share": "分享",
     "Save": "保存",
     "SaveAs": "另存为",
+    "OpenUserInfoPage": "作者信息",
+    "MangaSave": "保存漫画",
+    "MangaSaveAs": "另存漫画为",
     "Copy": "复制图片到剪切板",
     "SaveAsCancelled": "已取消另存为操作",
     "Saved": "已保存",

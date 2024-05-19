@@ -25,7 +25,7 @@ using WinUI3Utilities;
 
 namespace Pixeval.Pages;
 
-public class SuggestionModelDataTemplateSelector : DataTemplateSelector
+public partial class SuggestionModelDataTemplateSelector : DataTemplateSelector
 {
     public string? IllustrationHeader { get; set; }
 
@@ -50,7 +50,7 @@ public class SuggestionModelDataTemplateSelector : DataTemplateSelector
         {
             var xaml = $$"""
                          <DataTemplate xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-                             <TextBlock x:Uid="{{header}}" Style="{StaticResource ContentBoldTextBlockStyle}" />
+                             <TextBlock x:Uid="{{header}}" Style="{StaticResource BodyStrongTextBlockStyle}" />
                          </DataTemplate>
                          """;
             return XamlReader.Load(xaml).To<DataTemplate>();

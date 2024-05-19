@@ -19,8 +19,9 @@
 #endregion
 
 using System;
+using FluentIcons.Common;
+using FluentIcons.WinUI;
 using Pixeval.Utilities;
-using WinUI3Utilities.Controls;
 
 namespace Pixeval.Controls.Windowing;
 
@@ -30,9 +31,9 @@ public record NavigationViewTag(Type NavigateTo, object? Parameter, int? Index =
 
     public string? Content { get; init; }
 
-    public IconGlyph? Symbol { get; init; }
+    public Symbol? Symbol { get; init; }
 
-    public GlyphIcon? SymbolIcon => Symbol?.Let(t => new GlyphIcon { IconGlyph = t });
+    public SymbolIcon? SymbolIcon => Symbol?.Let(t => new SymbolIcon { Symbol = t });
 }
 
 public sealed record NavigationViewTag<TPage>(int? Index = null) : NavigationViewTag(typeof(TPage), null, Index);

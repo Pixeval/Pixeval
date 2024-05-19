@@ -20,6 +20,7 @@
 
 using System;
 using System.IO;
+using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Windows.Storage;
@@ -42,7 +43,7 @@ namespace Pixeval.AppManagement;
 /// <summary>
 /// Provide miscellaneous information about the app
 /// </summary>
-[AppContext<AppSettings>(ConfigKey = "Config", Type = ApplicationDataContainerType.Roaming, MethodName = "Config")]
+[AppContext<AppSettings>(ConfigKey = "Config", MethodName = "Config")]
 [AppContext<LoginContext>(ConfigKey = "LoginContext", MethodName = "LoginContext")]
 [AppContext<AppDebugTrace>(ConfigKey = "DebugTrace", MethodName = "DebugTrace")]
 public static partial class AppInfo
@@ -53,21 +54,21 @@ public static partial class AppInfo
 
     public const string IconApplicationUri = "ms-appx:///Assets/Images/logo.ico";
 
-    public static readonly string DatabaseFilePath = AppKnownFolders.Local.Resolve("PixevalData4.2.1.litedb");
+    public static readonly string DatabaseFilePath = AppKnownFolders.Local.Resolve("PixevalData4.2.2.litedb");
 
     public static Versioning AppVersion { get; } = new();
 
     public static bool CustomizeTitleBarSupported => AppWindowTitleBar.IsCustomizationSupported();
 
-    public static AsyncLazy<SoftwareBitmapSource> ImageNotAvailable { get; } = new(async () => await GetImageNotAvailableStream().GetSoftwareBitmapSourceAsync(true));
+    public static Task<SoftwareBitmapSource> ImageNotAvailable { get; } = GetImageNotAvailableStream().GetSoftwareBitmapSourceAsync(true);
 
     public static Stream GetImageNotAvailableStream() => GetAssetStream("Images/image-not-available.png");
 
-    public static AsyncLazy<SoftwareBitmapSource> PixivNoProfile { get; } = new(async () => await GetPixivNoProfileStream().GetSoftwareBitmapSourceAsync(true));
+    public static Task<SoftwareBitmapSource> PixivNoProfile { get; } = GetPixivNoProfileStream().GetSoftwareBitmapSourceAsync(true);
 
     public static Stream GetPixivNoProfileStream() => GetAssetStream("Images/pixiv_no_profile.png");
 
-    public static AsyncLazy<SoftwareBitmapSource> Icon { get; } = new(async () => await GetAssetStream("Images/logo.ico").GetSoftwareBitmapSourceAsync(true));
+    public static Task<SoftwareBitmapSource> Icon { get; } = GetAssetStream("Images/logo.ico").GetSoftwareBitmapSourceAsync(true);
 
     static AppInfo()
     {
@@ -89,6 +90,9 @@ public static partial class AppInfo
     }
 
     public static string IconAbsolutePath => ApplicationUriToPath(new Uri(IconApplicationUri));
+
+    public static Uri NavigationIconUri(string name) => new Uri($"ms-appx:///Assets/Images/Icons/{name}.png");
+
 
     public static string ApplicationUriToPath(Uri uri)
     {
@@ -135,18 +139,14 @@ public static partial class AppInfo
 
     public static void RestoreHistories()
     {
-        using var scope = App.AppViewModel.AppServicesScope;
-        var downloadHistoryManager = scope.ServiceProvider.GetRequiredService<DownloadHistoryPersistentManager>();
-        // the HasFlag is not allow in expression tree
-        _ = downloadHistoryManager.Delete(
-            entry => entry.State == DownloadState.Running ||
-                     entry.State == DownloadState.Queued ||
-                     entry.State == DownloadState.Paused);
+        var downloadHistoryPersistentManager = App.AppViewModel.AppServiceProvider.GetRequiredService<DownloadHistoryPersistentManager>();
+        var browseHistoryPersistentManager = App.AppViewModel.AppServiceProvider.GetRequiredService<BrowseHistoryPersistentManager>();
 
-        foreach (var observableDownloadTask in downloadHistoryManager.Enumerate())
-        {
-            App.AppViewModel.DownloadManager.QueueTask(observableDownloadTask);
-        }
+        foreach (var downloadTaskGroup in downloadHistoryPersistentManager.Enumerate())
+            App.AppViewModel.DownloadManager.QueueTask(downloadTaskGroup);
+
+        foreach (var browseHistoryEntry in browseHistoryPersistentManager.Enumerate())
+            browseHistoryPersistentManager.ObservableEntries.Insert(0, browseHistoryEntry);
     }
 
     public static void ClearConfig()
@@ -177,6 +177,7 @@ public static partial class AppInfo
     {
         SaveDebugTrace();
         SaveContext();
+        App.AppViewModel.Dispose();
     }
 
     public static void SaveDebugTrace()

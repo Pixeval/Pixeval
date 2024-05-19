@@ -13,7 +13,7 @@
                 <RadioButton
                     Content="{x:Bind StringRepresentation}"
                     Tag="{x:Bind}"
-                    Tapped="RadioButton_OnTapped" />
+                    Click="RadioButton_OnClicked" />
             </DataTemplate>
         </RadioButtons.ItemTemplate>
     </RadioButtons>

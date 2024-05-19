@@ -7,7 +7,7 @@ using Pixeval.Collections;
 
 namespace Pixeval.Pages.Tags;
 
-public class TagsEntryDataProvider : ObservableObject, IDisposable
+public partial class TagsEntryDataProvider : ObservableObject, IDisposable
 {
     public TagsEntryDataProvider() => View.ObserveFilterProperty(nameof(TagsEntryViewModel.Tags));
 

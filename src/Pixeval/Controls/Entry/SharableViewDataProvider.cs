@@ -21,6 +21,7 @@
 #endregion
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.WinUI.Collections;
 using Pixeval.Collections;
@@ -34,10 +35,10 @@ namespace Pixeval.Controls;
 /// 复用时调用<see cref="CloneRef"/>，<see cref="FetchEngineRef"/>和<see cref="EntrySourceRef"/>会在所有复用对象都Dispose时Dispose<br/>
 /// 初始化时调用<see cref="ResetEngine"/>
 /// </summary>
-public class SharableViewDataProvider<T, TViewModel>
+public partial class SharableViewDataProvider<T, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] TViewModel>
     : ObservableObject, IDataProvider<T, TViewModel>, IDisposable
     where T : class, IIdEntry
-    where TViewModel : EntryViewModel<T>, IViewModelFactory<T, TViewModel>, IDisposable
+    where TViewModel : EntryViewModel<T>, IFactory<T, TViewModel>, IDisposable
 {
     private SharedRef<IFetchEngine<T>?>? _fetchEngineRef;
 

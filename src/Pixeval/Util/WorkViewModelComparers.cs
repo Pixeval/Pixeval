@@ -38,8 +38,8 @@ public class WorkViewModelPublishDateComparer : IComparer<IWorkViewModel>, IComp
         if (x is null || y is null)
             return 0;
 
-        // 比较Id以保证稳定排序
         var result = x.PublishDate.CompareTo(y.PublishDate);
+        // 比较Id以保证稳定排序
         return result is 0 ? x.Id.CompareTo(y.Id) : result;
     }
 }
@@ -58,8 +58,8 @@ public class WorkViewModelBookmarkComparer : IComparer<IWorkViewModel>, ICompare
         if (x is null || y is null)
             return 0;
 
-        // 比较Id以保证稳定排序
         var result = x.TotalBookmarks.CompareTo(y.TotalBookmarks);
+        // 比较Id以保证稳定排序
         return result is 0 ? x.Id.CompareTo(y.Id) : result;
     }
 }

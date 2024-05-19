@@ -20,19 +20,22 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.WinUI.Collections;
 using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Model;
 using Pixeval.Utilities;
+using WinUI3Utilities;
 
 namespace Pixeval.Controls;
 
-public abstract partial class SortableEntryViewViewModel<T, TViewModel>
+public abstract partial class SortableEntryViewViewModel<T, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] TViewModel>
     : EntryViewViewModel<T, TViewModel>, ISortableEntryViewViewModel
     where T : class, IWorkEntry
-    where TViewModel : EntryViewModel<T>, IViewModelFactory<T, TViewModel>, IWorkViewModel
+    where TViewModel : EntryViewModel<T>, IFactory<T, TViewModel>, IWorkViewModel
 {
     [ObservableProperty]
     private bool _isSelecting;
@@ -96,6 +99,8 @@ public abstract partial class SortableEntryViewViewModel<T, TViewModel>
     {
         DataProvider.ResetEngine((IFetchEngine<T>?)newEngine, itemsPerPage, itemLimit);
     }
+
+    public void ResetSource(ObservableCollection<IWorkEntry>? source) => ThrowHelper.NotSupported();
 
     protected bool DefaultFilter(IWorkViewModel entry)
     {

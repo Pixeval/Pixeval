@@ -12,10 +12,7 @@ public sealed partial class SpotlightItem
 {
     public event Action<SpotlightItem, SpotlightItemViewModel>? ViewModelChanged;
 
-    public SpotlightItem()
-    {
-        InitializeComponent();
-    }
+    public SpotlightItem() => InitializeComponent();
 
     private static void OnViewModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {

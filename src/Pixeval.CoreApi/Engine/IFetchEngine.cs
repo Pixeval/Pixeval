@@ -31,8 +31,8 @@ namespace Pixeval.CoreApi.Engine;
 ///     deserialize its content into a list of result entries or stops and reports the iteration is over
 /// </para>
 /// </summary>
-/// <typeparam name="TE">The type of the results of the <see cref="IFetchEngine{TE}" /></typeparam>
-public interface IFetchEngine<out TE> : IAsyncEnumerable<TE>, IMakoClientSupport, IEngineHandleSource
+/// <typeparam name="TResult">The type of the results of the <see cref="IFetchEngine{TE}" /></typeparam>
+public interface IFetchEngine<out TResult> : IAsyncEnumerable<TResult>, IMakoClientSupport, IEngineHandleSource
 {
     /// <summary>
     /// How many pages have been fetches

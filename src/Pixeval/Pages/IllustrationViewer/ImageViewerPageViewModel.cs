@@ -22,52 +22,31 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Storage;
 using Windows.System;
 using Windows.System.UserProfile;
 using CommunityToolkit.Mvvm.ComponentModel;
-using Microsoft.Extensions.DependencyInjection;
+using FluentIcons.Common;
 using Microsoft.UI.Xaml.Input;
 using Pixeval.Attributes;
 using Pixeval.Controls;
-using Pixeval.Database;
 using Pixeval.Database.Managers;
 using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
-using Pixeval.Utilities.Threading;
 using Pixeval.AppManagement;
-using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Net.Response;
 using Pixeval.Download;
 using Pixeval.Util.ComponentModels;
-using WinUI3Utilities.Controls;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
 public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
 {
-    public enum LoadingPhase
-    {
-        [LocalizedResource(typeof(ImageViewerPageResources), nameof(ImageViewerPageResources.CheckingCache))]
-        CheckingCache,
-
-        [LocalizedResource(typeof(ImageViewerPageResources), nameof(ImageViewerPageResources.LoadingFromCache))]
-        LoadingFromCache,
-
-        [LocalizedResource(typeof(ImageViewerPageResources), nameof(ImageViewerPageResources.MergingUgoiraFrames))]
-        MergingUgoiraFrames,
-
-        [LocalizedResource(typeof(ImageViewerPageResources), nameof(ImageViewerPageResources.DownloadingImageFormatted), DownloadingImage)]
-        DownloadingImage,
-
-        [LocalizedResource(typeof(ImageViewerPageResources), nameof(ImageViewerPageResources.LoadingImage))]
-        LoadingImage
-    }
-
     private bool _disposed;
 
     [ObservableProperty]
@@ -130,16 +109,14 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
 
         InitializeCommands();
         // 此时IsPlaying为true，IsFit为true
-        PlayGifCommand.GetPlayCommand(true);
-        RestoreResolutionCommand.GetResolutionCommand(true);
+        PlayGifCommand.RefreshPlayCommand(true);
+        RestoreResolutionCommand.RefreshResolutionCommand(true);
     }
 
     /// <summary>
     /// 如果之前下载的图片就是原图，则可以直接返回下载的图片
     /// </summary>
-    /// <param name="progress">压缩动图为一张图片的时候用</param>
-    /// <returns></returns>
-    public async Task<Stream?> GetImageStreamAsync(IProgress<double>? progress, bool needOriginal)
+    public IReadOnlyList<Stream>? GetImageStreams(bool needOriginal)
     {
         if (needOriginal && !_isOriginal)
             return null;
@@ -147,11 +124,11 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
         if (OriginalImageSources is not [var stream, ..])
             return null;
 
-        if (IllustrationViewModel.IsUgoira)
-            return await OriginalImageSources.UgoiraSaveToStreamAsync(MsIntervals ?? [], null, progress);
+        var ret = IllustrationViewModel.IsUgoira ? OriginalImageSources : [stream];
 
-        stream.Position = 0;
-        return stream;
+        foreach (var s in ret)
+            s.Position = 0;
+        return ret;
     }
 
     public async Task GetOriginalImageSourceAsync(Stream destination, IProgress<double>? progress = null)
@@ -172,14 +149,15 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
     public async Task<StorageFile> SaveToFolderAsync(AppKnownFolders appKnownFolder)
     {
         var name = Path.GetFileName(App.AppViewModel.AppSettings.DownloadPathMacro);
-        var path = IoHelper.NormalizePath(new IllustrationMetaPathParser().Reduce(name, IllustrationViewModel));
+        var path = IoHelper.NormalizePathSegment(new IllustrationMetaPathParser().Reduce(name, IllustrationViewModel));
+        path = IoHelper.ReplaceTokenExtensionFromUrl(path, IllustrationViewModel.IllustrationOriginalUrl);
         var file = await appKnownFolder.CreateFileAsync(path);
         await using var target = await file.OpenStreamForWriteAsync();
         await GetOriginalImageSourceAsync(target);
         return file;
     }
 
-    public CancellationHandle ImageLoadingCancellationHandle { get; } = new();
+    public CancellationTokenSource ImageLoadingCancellationTokenSource { get; } = new();
 
     public IllustrationItemViewModel IllustrationViewModel { get; }
 
@@ -187,6 +165,8 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
 
     public void Dispose()
     {
+        if (_disposed)
+            return;
         _disposed = true;
         DisposeInternal();
         GC.SuppressFinalize(this);
@@ -194,24 +174,22 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
 
     private void AdvancePhase(LoadingPhase phase, double progress = 0)
     {
-        LoadingText = phase.GetLocalizedResource() switch
-        {
-            { FormatKey: LoadingPhase } attr => attr.GetLocalizedResourceContent()?.Format((int)(LoadingProgress = progress)),
-            var attr => attr?.GetLocalizedResourceContent()
-        };
+        if (phase is LoadingPhase.DownloadingImage)
+            LoadingText = LoadingPhaseExtension.GetResource(LoadingPhase.DownloadingImage)
+                ?.Format((int)(LoadingProgress = progress));
+        else
+            LoadingText = LoadingPhaseExtension.GetResource(phase);
     }
 
     private async Task LoadImage()
     {
-        if (!LoadSuccessfully || _disposed)
-        {
-            _disposed = false;
-            _ = LoadThumbnailAsync();
-            AddHistory();
-            await LoadOriginalImageAsync();
-            IllustrationViewModel.UnloadThumbnail(this);
-        }
-
+        if (LoadSuccessfully && !_disposed)
+            return;
+        _disposed = false;
+        _ = LoadThumbnailAsync();
+        BrowseHistoryPersistentManager.AddHistory(IllustrationViewModel.Entry);
+        await LoadOriginalImageAsync();
+        IllustrationViewModel.UnloadThumbnail(this);
         return;
 
         async Task LoadThumbnailAsync()
@@ -220,17 +198,9 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
             OriginalImageSources ??= [IllustrationViewModel.ThumbnailStream!];
         }
 
-        void AddHistory()
-        {
-            using var scope = App.AppViewModel.AppServicesScope;
-            var manager = scope.ServiceProvider.GetRequiredService<BrowseHistoryPersistentManager>();
-            _ = manager.Delete(x => x.Id == IllustrationViewModel.Id && x.Type == SimpleWorkType.IllustAndManga);
-            manager.Insert(new BrowseHistoryEntry(IllustrationViewModel.Entry));
-        }
-
         async Task<IReadOnlyList<Stream>?> GetStreamsAsync(string? ugoiraLargeUrl)
         {
-            _isOriginal = App.AppViewModel.AppSettings.BrowserOriginalImage;
+            _isOriginal = App.AppViewModel.AppSettings.BrowseOriginalImage;
 
             if (ugoiraLargeUrl is null)
             {
@@ -283,7 +253,7 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
                         return stream;
                 }
 
-                var downloadRes = await App.AppViewModel.MakoClient.DownloadStreamAsync(url, new Progress<double>(d => AdvancePhase(LoadingPhase.DownloadingImage, startProgress + ratio * d)), ImageLoadingCancellationHandle);
+                var downloadRes = await App.AppViewModel.MakoClient.DownloadMemoryStreamAsync(url, new Progress<double>(d => AdvancePhase(LoadingPhase.DownloadingImage, startProgress + ratio * d)), ImageLoadingCancellationTokenSource.Token);
                 if (downloadRes is Result<Stream>.Success(var stream2))
                 {
                     if (App.AppViewModel.AppSettings.UseFileCache)
@@ -303,7 +273,7 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
         {
             var metadata = null as UgoiraMetadataResponse;
             if (IllustrationViewModel.IsUgoira)
-                metadata = await IllustrationViewModel.UgoiraMetadata.ValueAsync;
+                metadata = await IllustrationViewModel.UgoiraMetadata;
 
             var streams = await GetStreamsAsync(metadata?.LargeUrl);
             if (streams is not null)
@@ -326,13 +296,13 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
     private void PlayGifCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
         IsPlaying = !IsPlaying;
-        PlayGifCommand.GetPlayCommand(IsPlaying);
+        PlayGifCommand.RefreshPlayCommand(IsPlaying);
     }
 
     public void RestoreResolutionCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
         ShowMode = IsFit ? ZoomableImageMode.Original : ZoomableImageMode.Fit;
-        RestoreResolutionCommand.GetResolutionCommand(IsFit);
+        RestoreResolutionCommand.RefreshResolutionCommand(IsFit);
     }
 
     private void SetAsBackgroundCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
@@ -414,30 +384,30 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
 
     private void IsNotUgoiraAndLoadingCompletedCanExecuteRequested(XamlUICommand sender, CanExecuteRequestedEventArgs args) => args.CanExecute = !IllustrationViewModel.IsUgoira && LoadSuccessfully;
 
-    public (ulong, GetImageStream) DownloadParameter => (HWnd, GetImageStreamAsync);
+    public (ulong, GetImageStreams) DownloadParameter => (HWnd, GetImageStreams);
 
-    public XamlUICommand PlayGifCommand { get; } = "".GetCommand(IconGlyph.StopE71A);
+    public XamlUICommand PlayGifCommand { get; } = "".GetCommand(Symbol.Pause);
 
     public XamlUICommand ZoomOutCommand { get; } = EntryViewerPageResources.ZoomOut.GetCommand(
-        IconGlyph.ZoomOutE71F, VirtualKey.Subtract);
+        Symbol.ZoomOut, VirtualKey.Subtract);
 
     public XamlUICommand ZoomInCommand { get; } = EntryViewerPageResources.ZoomIn.GetCommand(
-        IconGlyph.ZoomInE8A3, VirtualKey.Add);
+        Symbol.ZoomIn, VirtualKey.Add);
 
     public XamlUICommand RotateClockwiseCommand { get; } = EntryViewerPageResources.RotateClockwise.GetCommand(
-        IconGlyph.RotateE7AD, VirtualKeyModifiers.Control, VirtualKey.R);
+        Symbol.ArrowRotateClockwise, VirtualKeyModifiers.Control, VirtualKey.R);
 
     public XamlUICommand RotateCounterclockwiseCommand { get; } = EntryViewerPageResources.RotateCounterclockwise.GetCommand(
-            null!, VirtualKeyModifiers.Control, VirtualKey.L);
+        Symbol.ArrowRotateCounterclockwise, VirtualKeyModifiers.Control, VirtualKey.L);
 
     public XamlUICommand MirrorCommand { get; } = EntryViewerPageResources.Mirror.GetCommand(
-            IconGlyph.CollatePortraitF57C, VirtualKeyModifiers.Control, VirtualKey.M);
+        Symbol.FlipHorizontal, VirtualKeyModifiers.Control, VirtualKey.M);
 
-    public XamlUICommand RestoreResolutionCommand { get; } = "".GetCommand(IconGlyph.WebcamE8B8);
+    public XamlUICommand RestoreResolutionCommand { get; } = "".GetCommand(Symbol.RatioOneToOne);
 
-    public StandardUICommand ShareCommand { get; } = new(StandardUICommandKind.Share);
+    public XamlUICommand ShareCommand { get; } = EntryViewerPageResources.Share.GetCommand(Symbol.Share);
 
-    public XamlUICommand SetAsCommand { get; } = EntryViewerPageResources.SetAs.GetCommand(IconGlyph.PersonalizeE771);
+    public XamlUICommand SetAsCommand { get; } = EntryViewerPageResources.SetAs.GetCommand(Symbol.PaintBrush);
 
     public XamlUICommand SetAsLockScreenCommand { get; } = new() { Label = EntryViewerPageResources.LockScreen };
 
@@ -445,6 +415,8 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
 
     private void DisposeInternal()
     {
+        ImageLoadingCancellationTokenSource.Cancel();
+        ImageLoadingCancellationTokenSource.Dispose();
         IllustrationViewModel.UnloadThumbnail(this);
         // if the loading task is null or hasn't been completed yet, the 
         // OriginalImageSources would be the thumbnail source, its disposal may 
@@ -460,4 +432,23 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
 
         LoadSuccessfully = false;
     }
+}
+
+[LocalizationMetadata(typeof(ImageViewerPageResources))]
+public enum LoadingPhase
+{
+    [LocalizedResource(typeof(ImageViewerPageResources), nameof(ImageViewerPageResources.CheckingCache))]
+    CheckingCache,
+
+    [LocalizedResource(typeof(ImageViewerPageResources), nameof(ImageViewerPageResources.LoadingFromCache))]
+    LoadingFromCache,
+
+    [LocalizedResource(typeof(ImageViewerPageResources), nameof(ImageViewerPageResources.MergingUgoiraFrames))]
+    MergingUgoiraFrames,
+
+    [LocalizedResource(typeof(ImageViewerPageResources), nameof(ImageViewerPageResources.DownloadingImageFormatted), DownloadingImage)]
+    DownloadingImage,
+
+    [LocalizedResource(typeof(ImageViewerPageResources), nameof(ImageViewerPageResources.LoadingImage))]
+    LoadingImage
 }

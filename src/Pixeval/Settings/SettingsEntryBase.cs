@@ -2,7 +2,7 @@ using System;
 using Windows.System;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using WinUI3Utilities.Controls;
+using Symbol = FluentIcons.Common.Symbol;
 
 namespace Pixeval.Settings;
 
@@ -10,11 +10,11 @@ public abstract class SettingsEntryBase<TSettings>(
     TSettings settings,
     string header,
     string description,
-    IconGlyph headerIcon) : ISettingsEntry
+    Symbol headerIcon) : ISettingsEntry
 {
     public abstract FrameworkElement Element { get; }
 
-    public IconGlyph HeaderIcon { get; set; } = headerIcon;
+    public Symbol HeaderIcon { get; set; } = headerIcon;
 
     public string Header { get; set; } = header;
 

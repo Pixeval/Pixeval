@@ -23,6 +23,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Windows.System;
 using CommunityToolkit.Mvvm.ComponentModel;
+using FluentIcons.Common;
 using Microsoft.UI.Xaml.Input;
 using Pixeval.Controls;
 using Pixeval.Controls.Windowing;
@@ -31,7 +32,6 @@ using Pixeval.CoreApi.Model;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using Pixeval.Util.ComponentModels;
-using WinUI3Utilities.Controls;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
@@ -39,6 +39,9 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
 {
     [ObservableProperty]
     private bool _isFullScreen;
+
+    [ObservableProperty]
+    private bool _showPixevalIcon = true;
 
     /// <summary>
     /// 
@@ -52,7 +55,7 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
         CurrentIllustrationIndex = currentIllustrationIndex;
 
         InitializeCommands();
-        FullScreenCommand.GetFullScreenCommand(false);
+        FullScreenCommand.RefreshFullScreenCommand(false);
     }
 
     /// <summary>
@@ -86,21 +89,9 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
     {
         foreach (var illustrationViewModel in Illustrations)
             illustrationViewModel.UnloadThumbnail(this);
-        DisposePages();
         Pages = null!;
+        Images = null!;
         ViewModelSource?.Dispose();
-    }
-
-    private void DisposePages()
-    {
-        // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
-        if (Pages is not null)
-            foreach (var illustrationItemViewModel in Pages)
-                illustrationItemViewModel.Dispose();
-        // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
-        if (Images is not null)
-            foreach (var imageViewModel in Images)
-                imageViewModel.Dispose();
     }
 
     public NavigationViewTag[] Tags =>
@@ -154,7 +145,6 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
             var oldTag = Pages?[CurrentPageIndex].Id ?? 0;
 
             _currentIllustrationIndex = value;
-            DisposePages();
             // 这里可以触发总页数的更新
             Pages = CurrentIllustration.GetMangaIllustrationViewModels().ToArray();
             // 保证_pages里所有的IllustrationViewModel都是生成的，从而删除的时候一律DisposeForce
@@ -313,20 +303,21 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
     private void InitializeCommands()
     {
         FullScreenCommand.ExecuteRequested += FullScreenCommandOnExecuteRequested;
+        FullScreenCommand.RefreshFullScreenCommand(false);
     }
 
     private void FullScreenCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
         IsFullScreen = !IsFullScreen;
-        FullScreenCommand.GetFullScreenCommand(IsFullScreen);
+        FullScreenCommand.RefreshFullScreenCommand(IsFullScreen);
     }
 
     public XamlUICommand InfoAndCommentsCommand { get; } =
-        EntryViewerPageResources.InfoAndComments.GetCommand(IconGlyph.InfoE946, VirtualKey.F12);
+        EntryViewerPageResources.InfoAndComments.GetCommand(Symbol.Info, VirtualKey.F12);
 
-    public XamlUICommand AddToBookmarkCommand { get; } = EntryItemResources.AddToBookmark.GetCommand(IconGlyph.BookmarksE8A4);
+    public XamlUICommand AddToBookmarkCommand { get; } = EntryItemResources.AddToBookmark.GetCommand(Symbol.Bookmark);
 
-    public XamlUICommand FullScreenCommand { get; } = "".GetCommand(IconGlyph.FullScreenE740);
+    public XamlUICommand FullScreenCommand { get; } = "".GetCommand(Symbol.ArrowMaximize);
 
     #endregion
 }

@@ -26,8 +26,8 @@
         Height="100"
         HorizontalAlignment="Center"
         VerticalAlignment="Center"
+        Click="NextButton_OnClicked"
         RightTapped="NextButton_OnRightTapped"
-        Tapped="NextButton_OnTapped"
         ToolTipService.ToolTip="{x:Bind ToolTip, Mode=OneWay}"
         Visibility="{x:Bind ButtonVisibility, Mode=OneWay}">
         <Image x:Name="Image" RenderTransformOrigin="0.5,0.5">

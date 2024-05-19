@@ -1,27 +1,27 @@
 using System;
+using FluentIcons.Common;
 using Microsoft.UI.Xaml.Input;
 using Pixeval.Util;
 using Pixeval.Util.UI;
-using WinUI3Utilities.Controls;
 
 namespace Pixeval.Controls;
 
 public partial class IllustratorItemViewModel
 {
-    public XamlUICommand FollowCommand { get; } = "".GetCommand(IconGlyph.ContactE77B);
+    public XamlUICommand FollowCommand { get; } = "".GetCommand(Symbol.Person);
 
     private void InitializeCommands()
     {
         InitializeCommandsBase();
 
-        FollowCommand.GetFollowCommand(IsFollowed);
+        FollowCommand.RefreshFollowCommand(IsFollowed);
         FollowCommand.ExecuteRequested += FollowCommandExecuteRequested;
     }
 
     private async void FollowCommandExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
         IsFollowed = await MakoHelper.SetFollowAsync(UserId, !IsFollowed);
-        FollowCommand.GetFollowCommand(IsFollowed);
+        FollowCommand.RefreshFollowCommand(IsFollowed);
     }
 
     public override Uri AppUri => MakoHelper.GenerateUserAppUri(UserId);

@@ -24,6 +24,7 @@ using System.Net.Http.Json;
 using System.Threading.Tasks;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Controls;
+using Pixeval.CoreApi;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Model;
 using Pixeval.CoreApi.Net.Response;
@@ -49,13 +50,13 @@ public sealed partial class CommentsPage
         _viewModel = new CommentsPageViewModel(engine, type, id);
     }
 
-    private void CommentList_OnRepliesHyperlinkButtonTapped(CommentBlockViewModel viewModel)
+    private void CommentView_OnRepliesHyperlinkButtonClick(CommentItemViewModel viewModel)
     {
         CommentRepliesBlock.ViewModel = viewModel;
         CommentRepliesTeachingTip.IsOpen = true;
     }
 
-    private async void ReplyBar_OnSendButtonTapped(object? sender, SendButtonTappedEventArgs e)
+    private async void ReplyBar_OnSendButtonClick(object? sender, SendButtonClickEventArgs e)
     {
         using var result = _viewModel.EntryType switch
         {
@@ -71,7 +72,7 @@ public sealed partial class CommentsPage
         await AddComment(result);
     }
 
-    private async void ReplyBar_OnStickerTapped(object? sender, StickerTappedEventArgs e)
+    private async void ReplyBar_OnStickerClick(object? sender, StickerClickEventArgs e)
     {
         using var result = _viewModel.EntryType switch
         {
@@ -87,7 +88,7 @@ public sealed partial class CommentsPage
         await AddComment(result);
     }
 
-    private async void CommentList_OnDeleteHyperlinkButtonTapped(CommentBlockViewModel viewModel)
+    private async void CommentView_OnDeleteHyperlinkButtonClick(CommentItemViewModel viewModel)
     {
         using var result = _viewModel.EntryType switch
         {
@@ -101,11 +102,11 @@ public sealed partial class CommentsPage
 
     private async Task AddComment(HttpResponseMessage postCommentResponse)
     {
-        if (postCommentResponse.IsSuccessStatusCode && await postCommentResponse.Content.ReadFromJsonAsync<PostCommentResponse>() is { Comment: { } comment })
+        if (postCommentResponse.IsSuccessStatusCode && await postCommentResponse.Content.ReadFromJsonAsync(typeof(PostCommentResponse), AppJsonSerializerContext.Default) is PostCommentResponse { Comment: { } comment })
             _viewModel.AddComment(comment);
     }
 
-    private void DeleteComment(HttpResponseMessage postCommentResponse, CommentBlockViewModel viewModel)
+    private void DeleteComment(HttpResponseMessage postCommentResponse, CommentItemViewModel viewModel)
     {
         if (postCommentResponse.IsSuccessStatusCode)
             _viewModel.DeleteComment(viewModel);

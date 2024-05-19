@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Linq;
 using System.Text.RegularExpressions;
 using Windows.UI;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,6 +13,7 @@ using Pixeval.Controls.Windowing;
 using Pixeval.Download;
 using Pixeval.Download.MacroParser;
 using Pixeval.Download.MacroParser.Ast;
+using Pixeval.Download.Macros;
 using Pixeval.Download.Models;
 using Pixeval.Settings.Models;
 using Pixeval.Util.UI;
@@ -37,7 +40,7 @@ public sealed partial class DownloadMacroSettingsExpander
     /// </summary>
     private string _previousPath = "";
 
-    private void DownloadMacroSettingsExpander_OnLoading(FrameworkElement sender, object args)
+    private void DownloadMacroSettingsExpander_OnLoaded(object sender, RoutedEventArgs e)
     {
         Entry.PropertyChanged += (_, _) => EntryOnPropertyChanged();
         EntryOnPropertyChanged();
@@ -45,6 +48,10 @@ public sealed partial class DownloadMacroSettingsExpander
         return;
         void EntryOnPropertyChanged()
         {
+            DownloadPathMacroTextBox.Document.GetText(TextGetOptions.None, out var text);
+            var t = text.ReplaceLineEndings("");
+            if (t == Entry.Value)
+                return;
             // The first time viewmodel get the value of DownloadPathMacro from AppSettings won't trigger the property changed event
             _previousPath = Entry.Value;
             SetPathMacroRichEditBoxDocument(Entry.Value);
@@ -75,11 +82,12 @@ public sealed partial class DownloadMacroSettingsExpander
             var result = _testParser.Parse();
             if (result is not null)
             {
-                using var scope = App.AppViewModel.AppServicesScope;
-                var legitimatedNames = scope.ServiceProvider.GetRequiredService<IDownloadTaskFactory<IllustrationItemViewModel, IllustrationDownloadTask>>();
-                if (ValidateMacro(result, legitimatedNames) is (false, var name))
+                var legitimatedNames = App.AppViewModel.AppServiceProvider.GetRequiredService<IllustrationDownloadTaskFactory>();
+                if (ValidateMacro(result, legitimatedNames) is { } ex)
                 {
-                    _ = ThrowUtils.MacroParse<MacroParseException>(MacroParserResources.UnknownMacroNameFormatted.Format(name));
+                    DownloadMacroInvalidInfoBar.Message = ex;
+                    DownloadMacroInvalidInfoBar.IsOpen = true;
+                    Entry.Value = _previousPath;
                 }
                 SetPathMacroRichEditBoxDocument(Entry.Value);
             }
@@ -90,6 +98,25 @@ public sealed partial class DownloadMacroSettingsExpander
             DownloadMacroInvalidInfoBar.IsOpen = true;
             Entry.Value = _previousPath;
         }
+    }
+
+    private void DownloadPathMacroTextBox_OnTextChanged(object sender, RoutedEventArgs e)
+    {
+        sender.To<RichEditBox>().Document.GetText(TextGetOptions.None, out var text);
+        if (sender.To<RichEditBox>().Document.Selection is { Length: 0 } selection)
+            selection.CharacterFormat.ForegroundColor = Application.Current.GetResource<SolidColorBrush>("TextFillColorPrimaryBrush").Color;
+        Entry.Value = text.ReplaceLineEndings("");
+    }
+
+    private void DownloadPathMacroTextBox_OnContextMenuOpening(object sender, ContextMenuEventArgs e)
+    {
+        e.Handled = true;
+    }
+
+    private void PathMacroTokenInputBox_OnTokenClick(object sender, ItemClickEventArgs e)
+    {
+        UiHelper.ClipboardSetText(e.ClickedItem.To<StringRepresentableItem>().StringRepresentation);
+        WindowFactory.GetWindowForElement(this).HWnd.SuccessGrowl(SettingsPageResources.MacroCopiedToClipboard);
     }
 
     private void SetPathMacroRichEditBoxDocument(string path)
@@ -109,21 +136,50 @@ public sealed partial class DownloadMacroSettingsExpander
         DownloadPathMacroTextBox.Document.EndUndoGroup();
     }
 
-    private static (bool, string?) ValidateMacro(IMetaPathNode<string> tree, IDownloadTaskFactory<IllustrationItemViewModel, IllustrationDownloadTask> macroProvider)
+    private static string? ValidateMacro(
+        IMetaPathNode<string> tree, IDownloadTaskFactory<IllustrationItemViewModel, IDownloadTaskGroup> macroProvider)
+    {
+        return ValidateMacro(tree, ImmutableDictionary<string, bool>.Empty, [], macroProvider);
+    }
+
+    private static string? ValidateMacro(
+        IMetaPathNode<string> tree,
+        ImmutableDictionary<string, bool> context,
+        List<(string Name, ImmutableDictionary<string, bool> Context)> lastSegmentContexts,
+        IDownloadTaskFactory<IllustrationItemViewModel, IDownloadTaskGroup> macroProvider)
     {
         return tree switch
         {
-            OptionalMacroParameter<string>(var sequence) => sequence is null ? (true, null) : ValidateMacro(sequence, macroProvider),
-            Macro<string>(var name, var optionalParams) =>
-                Functions.Block(() =>
-                    macroProvider.PathParser.MacroProvider.TryResolve(name.Text) is Unknown
-                        ? (false, name.Text)
-                        : optionalParams is null ? (true, null) : ValidateMacro(optionalParams, macroProvider)),
-            PlainText<string> plainText => (true, null),
+            PlainText<string>(var t) when t.Contains('\\') => lastSegmentContexts.Let(x =>
+            {
+                foreach (var (name, ctx) in x)
+                    if (!ctx.Any(y => context.TryGetValue(y.Key, out var actual) && y.Value != actual))
+                        return MacroParserResources.MacroShouldBeInLastSegmentFormatted.Format(name);
+                return null;
+            }),
+            PlainText<string> => null,
+            OptionalMacroParameter<string>(var sequence) => ValidateMacro(sequence, context, lastSegmentContexts, macroProvider),
+            Macro<string>({ Text: var name }, var optionalParams, var isNot) =>
+                macroProvider.PathParser.MacroProvider.TryResolve(name, isNot) switch
+                {
+                    Unknown => MacroParserResources.UnknownMacroNameFormatted.Format(name),
+                    // ITransducer
+                    ITransducer when isNot => MacroParserResources.NegationNotAllowedFormatted.Format(name),
+                    ITransducer when optionalParams is not null => MacroParserResources.NonParameterizedMacroBearingParameterFormatted.Format(name),
+                    MangaIndexMacro m when !(context.TryGetValue(IsMangaMacro.NameConst, out var v) && v) => MacroParserResources.MacroShouldBeContainedFormatted.Format(m.Name, IsMangaMacro.NameConst),
+                    ILastSegment l => (null as string).Apply(_ => lastSegmentContexts.Add((l.Name, context))),
+                    ITransducer => null,
+                    // IPredicate
+                    IPredicate when optionalParams is null => MacroParserResources.ParameterizedMacroMissingParameterFormatted.Format(name),
+                    IPredicate p => ValidateMacro(optionalParams, context.Let(t => t.SetItem(p.Name, !p.IsNot)), lastSegmentContexts, macroProvider),
+                    _ => MacroParserResources.UnknownMacroNameFormatted.Format(name)
+                },
             Sequence<string>(var first, var rests) =>
-                Functions.Block(() =>
-                    ValidateMacro(first, macroProvider) is (false, _) result ? result : rests is null ? (true, null) : ValidateMacro(rests, macroProvider)),
-            _ => ThrowHelper.ArgumentOutOfRange<IMetaPathNode<string>, (bool, string?)>(tree)
+                ValidateMacro(first, context, lastSegmentContexts, macroProvider)
+                ?? (rests is null
+                    ? null
+                    : ValidateMacro(rests, context, lastSegmentContexts, macroProvider)),
+            _ => ThrowHelper.ArgumentOutOfRange<IMetaPathNode<string>, string?>(tree)
         };
     }
 
@@ -151,7 +207,7 @@ public sealed partial class DownloadMacroSettingsExpander
     private static Dictionary<(int start, int endExclusive), Action<ITextRange>> RenderPathRichText(IMetaPathNode<string> tree, RichEditTextDocument document, int nestedLevel = 0)
     {
         var manipulators = new Dictionary<(int start, int endExclusive), Action<ITextRange>>();
-        List<Color> highlightColor = [
+        Color[] highlightColor = [
             Color.FromArgb(255, 192, 134, 192),
             Color.FromArgb(255, 154, 198, 206),
             Color.FromArgb(255, 220, 220, 163),
@@ -160,13 +216,14 @@ public sealed partial class DownloadMacroSettingsExpander
         switch (tree)
         {
             case OptionalMacroParameter<string>(var sequence):
-                if (sequence is not null)
-                {
-                    manipulators.AddRange(RenderPathRichText(sequence, document, nestedLevel));
-                }
+                manipulators.AddRange(RenderPathRichText(sequence, document, nestedLevel));
                 break;
-            case Macro<string>((var name) _, var optionalParameters):
+            case Macro<string>((var name) _, var optionalParameters, var isNot):
                 manipulators[AppendDocumentText(document, "@{")] = range => range.CharacterFormat.ForegroundColor = highlightColor[nestedLevel % 4];
+                if (isNot)
+                {
+                    manipulators[AppendDocumentText(document, "!")] = range => range.CharacterFormat.ForegroundColor = highlightColor[nestedLevel % 4];
+                }
                 manipulators[AppendDocumentText(document, name)] = range => range.CharacterFormat.ForegroundColor = highlightColor[nestedLevel % 4];
                 if (optionalParameters is not null)
                 {
@@ -191,24 +248,5 @@ public sealed partial class DownloadMacroSettingsExpander
         }
 
         return manipulators;
-    }
-
-    private void DownloadPathMacroTextBox_OnTextChanged(object sender, RoutedEventArgs e)
-    {
-        sender.To<RichEditBox>().Document.GetText(TextGetOptions.None, out var text);
-        if (sender.To<RichEditBox>().Document.Selection is { Length: 0 } selection)
-            selection.CharacterFormat.ForegroundColor = Application.Current.GetResource<SolidColorBrush>("TextFillColorPrimaryBrush").Color;
-        Entry.Value = text.ReplaceLineEndings("");
-    }
-
-    private void DownloadPathMacroTextBox_OnContextMenuOpening(object sender, ContextMenuEventArgs e)
-    {
-        e.Handled = true;
-    }
-
-    private void PathMacroTokenInputBox_OnTokenTapped(object sender, ItemClickEventArgs e)
-    {
-        UiHelper.ClipboardSetText(e.ClickedItem.To<StringRepresentableItem>().StringRepresentation);
-        WindowFactory.GetWindowForElement(this).HWnd.SuccessGrowl(SettingsPageResources.MacroCopiedToClipboard);
     }
 }

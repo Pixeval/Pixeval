@@ -22,13 +22,14 @@ using System;
 using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.Json;
 using Pixeval.CoreApi.Model;
 using Pixeval.CoreApi.Net;
 using Pixeval.CoreApi.Preference;
 using Pixeval.Util;
 using System.Threading.Tasks;
+using Pixeval.CoreApi;
 using Pixeval.Util.IO;
-using Pixeval.Utilities;
 
 namespace Pixeval.Pages.Login;
 
@@ -82,7 +83,8 @@ public static class PixivAuth
         // using会有resharper警告，所以这里用Dispose
         httpClient.Dispose();
         _ = result.EnsureSuccessStatusCode();
-        var session = (await result.Content.ReadAsStringAsync()).FromJson<TokenResponse>()!.ToSession();
+        var str = await result.Content.ReadAsStringAsync();
+        var session = ((TokenResponse)JsonSerializer.Deserialize(str, typeof(TokenResponse), AppJsonSerializerContext.Default)!).ToSession();
         App.AppViewModel.LoginContext.RefreshToken = session.RefreshToken;
         return session;
     }

@@ -286,7 +286,7 @@ public partial class MakoClient
     /// <returns>
     /// The <see cref="FeedEngine" /> containing the feeds.
     /// </returns>
-    public IFetchEngine<Feed> Feeds()
+    public IFetchEngine<Feed?> Feeds()
     {
         EnsureNotCancelled();
         return new FeedEngine(this, new EngineHandle(CancelInstance));

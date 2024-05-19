@@ -1,0 +1,36 @@
+<UserControl
+    x:Class="Pixeval.Controls.DownloadView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:Pixeval.Controls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Unloaded="DownloadView_OnUnloaded"
+    mc:Ignorable="d">
+    <local:EntryView HasNoItem="{x:Bind ViewModel.HasNoItem, Mode=OneWay}" IsLoadingMore="{x:Bind ItemsView.IsLoadingMore, Mode=OneWay}">
+        <local:EntryView.Content>
+            <local:AdvancedItemsView
+                x:Name="ItemsView"
+                x:FieldModifier="public"
+                ItemsSource="{x:Bind ViewModel.View}"
+                LayoutType="VerticalStack"
+                SelectionChanged="ItemsView_OnSelectionChanged"
+                SelectionMode="Multiple">
+                <local:AdvancedItemsView.ItemTemplate>
+                    <DataTemplate x:DataType="local:DownloadItemViewModel">
+                        <ItemContainer>
+                            <local:DownloadItem
+                                Margin="{StaticResource CardControlPadding}"
+                                OpenIllustrationRequested="DownloadItem_OnOpenIllustrationRequested"
+                                ViewModel="{x:Bind}"
+                                ViewModelChanged="DownloadItem_OnViewModelChanged" />
+                        </ItemContainer>
+                    </DataTemplate>
+                </local:AdvancedItemsView.ItemTemplate>
+                <local:AdvancedItemsView.ItemTransitionProvider>
+                    <LinedFlowLayoutItemCollectionTransitionProvider />
+                </local:AdvancedItemsView.ItemTransitionProvider>
+            </local:AdvancedItemsView>
+        </local:EntryView.Content>
+    </local:EntryView>
+</UserControl>

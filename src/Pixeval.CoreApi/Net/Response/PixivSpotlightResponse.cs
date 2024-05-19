@@ -24,8 +24,11 @@ using Pixeval.CoreApi.Model;
 namespace Pixeval.CoreApi.Net.Response;
 
 [Factory]
-internal partial record PixivSpotlightResponse : PixivNextUrlResponse<Spotlight>
+public partial record PixivSpotlightResponse : IPixivNextUrlResponse<Spotlight>
 {
+    [JsonPropertyName("next_url")]
+    public required string? NextUrl { get; set; }
+
     [JsonPropertyName("spotlight_articles")]
-    public override required Spotlight[] Entities { get; set; } = [];
+    public /*override*/ required Spotlight[] Entities { get; set; } = [];
 }

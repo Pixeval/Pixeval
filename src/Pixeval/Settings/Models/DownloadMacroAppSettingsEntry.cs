@@ -8,19 +8,22 @@ using Pixeval.Download.Macros;
 
 namespace Pixeval.Settings.Models;
 
-public class DownloadMacroAppSettingsEntry(
+public partial class DownloadMacroAppSettingsEntry(
     AppSettings appSettings)
     : StringAppSettingsEntry(appSettings, t => t.DownloadPathMacro)
 {
     public override DownloadMacroSettingsExpander Element => new() { Entry = this };
 
-    private static readonly IDictionary<string, string> _macroTooltips = new Dictionary<string, string>
+    private static readonly IReadOnlyDictionary<string, string> _macroTooltips = new Dictionary<string, string>
     {
         ["ext"] = SettingsPageResources.ExtMacroTooltip,
         ["id"] = SettingsPageResources.IdMacroTooltip,
         ["title"] = SettingsPageResources.TitleMacroTooltip,
         ["artist_id"] = SettingsPageResources.ArtistIdMacroTooltip,
         ["artist_name"] = SettingsPageResources.ArtistNameMacroTooltip,
+        ["publish_year"] = SettingsPageResources.PublishYearMacroTooltip,
+        ["publish_month"] = SettingsPageResources.PublishMonthMacroTooltip,
+        ["publish_day"] = SettingsPageResources.PublishDayMacroTooltip,
         ["if_r18"] = SettingsPageResources.IfR18MacroTooltip,
         ["if_r18g"] = SettingsPageResources.IfR18GMacroTooltip,
         ["if_ai"] = SettingsPageResources.IfAiMacroTooltip,
@@ -31,7 +34,7 @@ public class DownloadMacroAppSettingsEntry(
         ["manga_index"] = SettingsPageResources.MangaIndexMacroTooltip
     };
 
-    public static ICollection<StringRepresentableItem> AvailableMacros { get; } = MetaPathMacroAttributeHelper.GetAttachedTypeInstances()
+    public static ICollection<StringRepresentableItem> AvailableMacros { get; } = MetaPathMacroAttributeHelper.GetIWorkViewModelInstances()
         .Select(m => new StringRepresentableItem(_macroTooltips[m.Name], $"@{{{(m is IPredicate ? $"{m.Name}=" : m.Name)}}}"))
         .ToList();
 }

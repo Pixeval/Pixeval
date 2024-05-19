@@ -18,8 +18,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using Windows.Graphics;
-using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
@@ -41,13 +39,7 @@ public sealed partial class IllustratorViewerPage
 
     public override void OnPageActivated(NavigationEventArgs e, object? parameter)
     {
-        _viewModel = HWnd.GetViewModel(parameter);
-    }
-
-    protected override void SetTitleBarDragRegion(InputNonClientPointerSource sender, SizeInt32 windowSize, double scaleFactor, out int titleBarHeight)
-    {
-        sender.SetRegionRects(NonClientRegionKind.Icon, [GetScaledRect(TitleBar.Icon)]);
-        titleBarHeight = 32;
+        _viewModel = HWnd.GetIllustratorViewerPageViewModel(parameter);
     }
 
     private async void IllustratorViewerSegmented_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -184,4 +176,10 @@ public sealed partial class IllustratorViewerPage
         }
     }
 #endif
+    public Visibility IsLogoVisible()
+    {
+        return WindowFactory.GetWindowForElement(this).HWnd != WindowFactory.RootWindow.HWnd
+            ? Visibility.Visible
+            : Visibility.Collapsed;
+    }
 }

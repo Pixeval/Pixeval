@@ -1,4 +1,5 @@
 using System;
+using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Windows.Foundation;
@@ -15,6 +16,7 @@ using Microsoft.UI.Xaml.Media.Animation;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.Util.UI;
 using Pixeval.Controls.Windowing;
+using Pixeval.Pages.IllustratorViewer;
 
 namespace Pixeval.Controls;
 
@@ -63,8 +65,7 @@ public sealed partial class WorkView : IEntryView<ISortableEntryViewViewModel>
     {
         ArgumentNullException.ThrowIfNull(ViewModel);
         if (await viewModel.TryLoadThumbnailAsync(ViewModel))
-            // TODO 不知道为什么NovelItem的Resource会有问题
-            if (sender is IllustrationItem && sender.IsFullyOrPartiallyVisible(this))
+            if (sender.IsFullyOrPartiallyVisible(this))
                 sender.GetResource<Storyboard>("ThumbnailStoryboard").Begin();
             else
                 sender.Opacity = 1;
@@ -91,10 +92,21 @@ public sealed partial class WorkView : IEntryView<ISortableEntryViewViewModel>
 
     private void WorkView_OnSelectionChanged(ItemsView sender, ItemsViewSelectionChangedEventArgs args)
     {
+        if (sender.SelectedItems is not { Count: > 0 })
+        {
+            ViewModel.SelectedEntries = ViewModel switch
+            {
+                NovelViewViewModel => (NovelItemViewModel[])[],
+                IllustrationViewViewModel => (IllustrationItemViewModel[])[],
+                _ => ViewModel.SelectedEntries
+            };
+            return;
+        }
+
         ViewModel.SelectedEntries = ViewModel switch
         {
-            NovelViewViewModel => sender.SelectedItems?.Cast<NovelItemViewModel>().ToArray() ?? [],
-            IllustrationViewViewModel => sender.SelectedItems?.Cast<IllustrationItemViewModel>().ToArray() ?? [],
+            NovelViewViewModel => sender.SelectedItems.Cast<NovelItemViewModel>().ToArray(),
+            IllustrationViewViewModel => sender.SelectedItems.Cast<IllustrationItemViewModel>().ToArray(),
             _ => ViewModel.SelectedEntries
         };
     }
@@ -174,5 +186,10 @@ public sealed partial class WorkView : IEntryView<ISortableEntryViewViewModel>
     {
         AddToBookmarkTeachingTip.Tag = e;
         AddToBookmarkTeachingTip.IsOpen = true;
+    }
+
+    public async void WorkItem_OnRequestOpenUserInfoPage(FrameworkElement sender, IWorkViewModel e)
+    {
+        await IllustratorViewerHelper.CreateWindowWithPageAsync(e.User.Id);
     }
 }

@@ -1,0 +1,20 @@
+{
+  "ActionButtonContentOpen": "Открыть",
+  "ActionButtonContentPause": "Пауза",
+  "ActionButtonContentRedownload": "Перезагрузить",
+  "ActionButtonContentResume": "Возобновить",
+  "ActionButtonContentRetry": "Повторить",
+  "CancelDownloadItem/Label": "Отменить загрузку",
+  "CheckErrorMessageInDetailItem/Label": "Проверить сообщение об ошибке",
+  "DownloadCancelled": "Загрузка отменена",
+  "ActionDownloadCancelled": "Отменено",
+  "DownloadCompleted": "Загрузка завершена",
+  "DownloadErrorMessageFormatted": "Ошибка загрузки: {0}",
+  "DownloadPaused": "Загрузка приостановлена",
+  "DownloadQueued": "В очереди",
+  "DownloadRunningFormatted": "Загрузка: {0}%",
+  "ErrorMessageDialogTitle": "Сообщение об ошибке",
+  "GoToPageItem/Label": "Перейти на страницу",
+  "OpenDownloadLocationItem/Label": "Открыть расположение загрузки",
+  "RedownloadItem/Label": "Загрузить заново"
+}

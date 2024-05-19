@@ -6,5 +6,7 @@
     "OpenLocationItem/Label": "Open file location",
     "EditTag": "Edit tag (split different tags with comma)",
     "TagsIsUnloaded": "Tags not loaded yet",
-    "EditTagFailed": "Failed to edit the tag"
+    "EditTagFailed": "Failed to edit the tag",
+    "FetchingWorkInfo": "Fetching work info",
+    "FetchingWorkInfoFailed": "Fetching work info failed"
 }

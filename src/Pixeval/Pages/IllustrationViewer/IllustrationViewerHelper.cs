@@ -91,7 +91,7 @@ public static class IllustrationViewerHelper
         CreateWindowWithPage(illustrationViewModel.Entry, (illustrationViewViewModel, index));
     }
 
-    public static IllustrationViewerPageViewModel GetViewModel(this ulong hWnd, object? param)
+    public static IllustrationViewerPageViewModel GetIllustrationViewerPageViewModelFromHandle(this ulong hWnd, object? param)
     {
         return param switch
         {
@@ -112,7 +112,7 @@ public static class IllustrationViewerHelper
                 param,
                 new SuppressNavigationTransitionInfo()))
             .WithSizeLimit(640, 360)
-            .Init(illustration.Title, new SizeInt32(width, height))
+            .Init(illustration.Title, new SizeInt32(width, height), WindowFactory.RootWindow.IsMaximize)
             .Activate();
         return;
 
@@ -136,7 +136,13 @@ public static class IllustrationViewerHelper
 
             var determinedWidth = illustWidth switch
             {
-                not 1500 => 1500 + Random.Shared.Next(0, 200),
+                not 1500 => 1500 +
+#if DISPLAY
+                100
+#else
+                Random.Shared.Next(0, 200)
+#endif
+                ,
                 _ => 1500
             };
             var windowWidth = determinedWidth > monitorWidth ? monitorWidth - 100 : determinedWidth;

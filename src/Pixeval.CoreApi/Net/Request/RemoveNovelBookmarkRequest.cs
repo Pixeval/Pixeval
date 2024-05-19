@@ -20,8 +20,8 @@
 
 #endregion
 
-using Refit;
+using System.Text.Json.Serialization;
 
 namespace Pixeval.CoreApi.Net.Request;
 
-internal record RemoveNovelBookmarkRequest([property: AliasAs("novel_id")] long NovelId);
+public record RemoveNovelBookmarkRequest([property: JsonPropertyName("novel_id")] long NovelId);

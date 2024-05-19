@@ -8,7 +8,7 @@ using Pixeval.Utilities;
 
 namespace Pixeval.Settings.Models;
 
-public class FontAppSettingsEntry(
+public partial class FontAppSettingsEntry(
     AppSettings appSettings,
     Expression<Func<AppSettings, string>> property)
     : StringAppSettingsEntry(appSettings, property)

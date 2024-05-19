@@ -20,6 +20,7 @@
 
 using System;
 using Windows.System;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using WinUI3Utilities.Attributes;
@@ -61,18 +62,18 @@ public partial class TokenInputTextBox : Control
 
         if (_submitButton is not null)
         {
-            _submitButton.Tapped -= SubmitButtonOnTapped;
+            _submitButton.Click -= SubmitButtonOnClicked;
         }
 
         if ((_submitButton = GetTemplateChild(PartSubmitButton) as Button) is not null)
         {
-            _submitButton.Tapped += SubmitButtonOnTapped;
+            _submitButton.Click += SubmitButtonOnClicked;
         }
 
         base.OnApplyTemplate();
     }
 
-    private void SubmitButtonOnTapped(object sender, TappedRoutedEventArgs e)
+    private void SubmitButtonOnClicked(object sender, RoutedEventArgs e)
     {
         SubmitToken();
     }

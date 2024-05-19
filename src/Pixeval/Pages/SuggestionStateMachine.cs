@@ -18,11 +18,9 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using PininSharp;
@@ -40,15 +38,15 @@ public class SuggestionStateMachine
     private static readonly TreeSearcher<SettingsEntryAttribute> _settingEntriesTreeSearcher =
         new(SearcherLogic.Contain, PinIn.CreateDefault());
 
-    private readonly Lazy<Task<IEnumerable<SuggestionModel>>> _illustrationTrendingTagCache =
-        new(() => App.AppViewModel.MakoClient.GetTrendingTagsAsync(App.AppViewModel.AppSettings.TargetFilter)
-            .SelectAsync(t => new Tag { Name = t.Tag, TranslatedName = t.Translation })
-            .SelectAsync(SuggestionModel.FromIllustrationTag), LazyThreadSafetyMode.ExecutionAndPublication);
+    private readonly Task<IEnumerable<SuggestionModel>> _illustrationTrendingTagCache =
+        Functions.Block(async () => (await App.AppViewModel.MakoClient.GetTrendingTagsAsync(App.AppViewModel.AppSettings.TargetFilter))
+            .Select(t => new Tag { Name = t.Tag, TranslatedName = t.TranslatedName })
+            .Select(SuggestionModel.FromNovelTag));
 
-    private readonly Lazy<Task<IEnumerable<SuggestionModel>>> _novelTrendingTagCache =
-        new(() => App.AppViewModel.MakoClient.GetTrendingTagsForNovelAsync(App.AppViewModel.AppSettings.TargetFilter)
-            .SelectAsync(t => new Tag { Name = t.Tag, TranslatedName = t.Translation })
-            .SelectAsync(SuggestionModel.FromNovelTag), LazyThreadSafetyMode.ExecutionAndPublication);
+    private readonly Task<IEnumerable<SuggestionModel>> _novelTrendingTagCache =
+        Functions.Block(async () => (await App.AppViewModel.MakoClient.GetTrendingTagsForNovelAsync(App.AppViewModel.AppSettings.TargetFilter))
+            .Select(t => new Tag { Name = t.Tag, TranslatedName = t.TranslatedName })
+            .Select(SuggestionModel.FromNovelTag));
 
     static SuggestionStateMachine()
     {
@@ -88,7 +86,7 @@ public class SuggestionStateMachine
             suggestions.Add(SuggestionModel.SettingEntryHeader);
             suggestions.AddRange(settingSuggestions.Select(settingSuggestion => new SuggestionModel(settingSuggestion.LocalizedResourceHeader, settingSuggestion.LocalizedResourceHeader, SuggestionType.Settings)
             {
-                SettingsIconGlyph = settingSuggestion.IconGlyph
+                SettingsSymbol = settingSuggestion.Symbol
             }));
         }
 
@@ -103,22 +101,21 @@ public class SuggestionStateMachine
     private async Task FillHistoryAndRecommendTags()
     {
         var newItems = new List<SuggestionModel>();
-        using var scope = App.AppViewModel.AppServicesScope;
-        var manager = scope.ServiceProvider.GetRequiredService<SearchHistoryPersistentManager>();
+        var manager = App.AppViewModel.AppServiceProvider.GetRequiredService<SearchHistoryPersistentManager>();
         var histories = manager.Select(count: App.AppViewModel.AppSettings.MaximumSuggestionBoxSearchHistory).OrderByDescending(e => e.Time).SelectNotNull(SuggestionModel.FromHistory);
         newItems.AddRange(histories);
         var prior = App.AppViewModel.AppSettings.SimpleWorkType is SimpleWorkType.IllustAndManga;
         if (prior)
         {
             newItems.Add(SuggestionModel.IllustrationTrendingTagHeader);
-            newItems.AddRange(await _illustrationTrendingTagCache.Value);
+            newItems.AddRange(await _illustrationTrendingTagCache);
         }
         newItems.Add(SuggestionModel.NovelTrendingTagHeader);
-        newItems.AddRange(await _novelTrendingTagCache.Value);
+        newItems.AddRange(await _novelTrendingTagCache);
         if (!prior)
         {
             newItems.Add(SuggestionModel.IllustrationTrendingTagHeader);
-            newItems.AddRange(await _illustrationTrendingTagCache.Value);
+            newItems.AddRange(await _illustrationTrendingTagCache);
         }
         Suggestions.AddRange(newItems);
     }

@@ -2,11 +2,10 @@
     x:Class="Pixeval.Controls.IllustrationItem"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:controls="using:WinUI3Utilities.Controls"
-    xmlns:converters="using:CommunityToolkit.WinUI.Converters"
-    xmlns:converters1="using:Pixeval.Controls.Converters"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:fluent="using:FluentIcons.WinUI"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:labs="using:CommunityToolkit.Labs.WinUI"
     xmlns:local="using:Pixeval.Controls"
@@ -20,8 +19,6 @@
         <ToolTip Content="{x:Bind ViewModel.Tooltip, Mode=OneWay}" Placement="Right" />
     </ToolTipService.ToolTip>
     <Grid.Resources>
-        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
-        <converters1:NullableToVisibilityConverter x:Key="NullableToVisibilityConverter" Negative="True" />
         <ExponentialEase
             x:Key="EasingFunction"
             EasingMode="EaseOut"
@@ -43,13 +40,14 @@
     <Grid.ContextFlyout>
         <MenuFlyout>
             <MenuFlyoutItem Command="{x:Bind ViewModel.BookmarkCommand, Mode=OneWay}" CommandParameter="{x:Bind HWnd}" />
-            <MenuFlyoutItem Click="AddToBookmark_OnTapped" Command="{x:Bind ViewModel.AddToBookmarkCommand, Mode=OneWay}" />
+            <MenuFlyoutItem Click="AddToBookmark_OnClicked" Command="{x:Bind ViewModel.AddToBookmarkCommand, Mode=OneWay}" />
+            <MenuFlyoutItem Click="OpenUserInfoPage_OnClicked" Command="{x:Bind ViewModel.OpenUserInfoPage, Mode=OneWay}" />
             <MenuFlyoutSeparator />
             <MenuFlyoutItem Command="{x:Bind ViewModel.SaveCommand, Mode=OneWay}" CommandParameter="{x:Bind HWnd}" />
             <MenuFlyoutSeparator />
             <MenuFlyoutItem Command="{x:Bind ViewModel.OpenInWebBrowserCommand, Mode=OneWay}" />
             <MenuFlyoutItem Command="{x:Bind ViewModel.GenerateWebLinkCommand, Mode=OneWay}" CommandParameter="{x:Bind HWnd}" />
-            <MenuFlyoutItem Command="{x:Bind ViewModel.GenerateLinkCommand, Mode=OneWay}" CommandParameter="{x:Bind}" />
+            <MenuFlyoutItem Command="{x:Bind ViewModel.GenerateLinkCommand, Mode=OneWay}" CommandParameter="{x:Bind HWnd}" />
             <MenuFlyoutSeparator />
             <MenuFlyoutItem Command="{x:Bind ViewModel.ShowQrCodeCommand, Mode=OneWay}" CommandParameter="{x:Bind QrCodeTeachingTip}" />
             <MenuFlyoutItem Command="{x:Bind ViewModel.ShowPixEzQrCodeCommand, Mode=OneWay}" CommandParameter="{x:Bind QrCodeTeachingTip}" />
@@ -71,46 +69,38 @@
             VerticalAlignment="Center"
             Source="{x:Bind ViewModel.ThumbnailSource, Mode=OneWay}"
             Stretch="UniformToFill" />
-        <labs:Shimmer Visibility="{x:Bind ViewModel.ThumbnailSource, Converter={StaticResource NullableToVisibilityConverter}, Mode=OneWay}" />
+        <labs:Shimmer Visibility="{x:Bind local:C.IsNullToVisibility(ViewModel.ThumbnailSource), Mode=OneWay}" />
         <local:HeartButton
             x:Name="HeartButton"
             HorizontalAlignment="Left"
             VerticalAlignment="Top"
             Command="{x:Bind ViewModel.BookmarkCommand, Mode=OneWay}"
             CommandParameter="{x:Bind HWnd}" />
-        <Grid
+        <controls:DockPanel
             Margin="10"
             VerticalAlignment="Bottom"
-            ColumnSpacing="3">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
+            HorizontalSpacing="3"
+            LastChildFill="False">
             <local:PixevalBadge
-                Grid.Column="0"
+                controls:DockPanel.Dock="Left"
                 Mode="Ai"
-                Visibility="{x:Bind ViewModel.IsAiGenerated, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
+                Visibility="{x:Bind local:C.ToVisibility(ViewModel.IsAiGenerated), Mode=OneWay}" />
             <local:PixevalBadge
-                Grid.Column="1"
+                controls:DockPanel.Dock="Left"
                 Mode="{x:Bind ViewModel.XRestrictionCaption, Mode=OneWay}"
-                Visibility="{x:Bind ViewModel.IsXRestricted, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
+                Visibility="{x:Bind local:C.ToVisibility(ViewModel.IsXRestricted), Mode=OneWay}" />
             <local:PixevalBadge
-                Grid.Column="2"
+                controls:DockPanel.Dock="Left"
                 Mode="Gif"
-                Visibility="{x:Bind ViewModel.IsUgoira, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
-            <controls:GlyphIcon
-                Grid.Column="4"
-                IconGlyph="SetSolidF5EE"
-                IsBackLayer="True"
-                Size="Small"
-                Visibility="{x:Bind ViewModel.IsManga, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
-            <controls:GlyphIcon
-                Grid.Column="4"
-                IconGlyph="SetF5ED"
-                Visibility="{x:Bind ViewModel.IsManga, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
-        </Grid>
+                Visibility="{x:Bind local:C.ToVisibility(ViewModel.IsUgoira), Mode=OneWay}" />
+            <Grid controls:DockPanel.Dock="Right">
+                <fluent:SymbolIcon
+                    Foreground="{StaticResource LayerFillColorDefaultBrush}"
+                    IconVariant="Filled"
+                    Symbol="SquareMultiple"
+                    Visibility="{x:Bind local:C.ToVisibility(ViewModel.IsManga), Mode=OneWay}" />
+                <fluent:SymbolIcon Symbol="SquareMultiple" Visibility="{x:Bind local:C.ToVisibility(ViewModel.IsManga), Mode=OneWay}" />
+            </Grid>
+        </controls:DockPanel>
     </Grid>
 </Grid>

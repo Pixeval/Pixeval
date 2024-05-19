@@ -3,11 +3,11 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
-    xmlns:controls1="using:WinUI3Utilities.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:fluent="using:FluentIcons.WinUI"
     xmlns:labs="using:CommunityToolkit.Labs.WinUI.MarkdownTextBlock"
+    xmlns:local="using:Pixeval.Pages.Misc"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:misc1="using:Pixeval.Pages.Misc"
     Loaded="AboutPage_OnLoaded"
     mc:Ignorable="d">
     <controls:DockPanel VerticalSpacing="10">
@@ -22,7 +22,7 @@
                     <TextBlock x:Uid="/AboutPage/SpecialThanksSubtitleTextBlock" Style="{StaticResource SubtitleTextBlockStyle}" />
                     <TextBlock
                         x:Uid="/AboutPage/SpecialThanksContentTextBlock"
-                        FontSize="{StaticResource PixevalContentFontSize}"
+                        Style="{StaticResource CaptionTextBlockStyle}"
                         TextWrapping="Wrap" />
                     <controls:UniformGrid
                         x:Name="UniformGrid"
@@ -54,20 +54,20 @@
                     <TextBlock
                         x:Uid="/AboutPage/DependenciesContentTextBlock"
                         Margin="0,10"
-                        FontSize="{StaticResource PixevalContentFontSize}"
+                        Style="{StaticResource CaptionTextBlockStyle}"
                         TextWrapping="Wrap" />
-                    <ItemsRepeater ItemsSource="{x:Bind misc1:DependencyViewModel.DependencyViewModels}">
+                    <ItemsRepeater ItemsSource="{x:Bind local:DependencyViewModel.DependencyViewModels}">
                         <ItemsRepeater.Layout>
                             <StackLayout Orientation="Vertical" />
                         </ItemsRepeater.Layout>
                         <ItemsRepeater.ItemTemplate>
-                            <DataTemplate x:DataType="misc1:DependencyViewModel">
+                            <DataTemplate x:DataType="local:DependencyViewModel">
                                 <controls:SettingsCard
                                     MinHeight="0"
-                                    ActionIcon="{controls1:GlyphIcon Glyph=OpenInNewWindowE8A7}"
+                                    ActionIcon="{fluent:SymbolIcon Symbol=Open}"
+                                    Click="LaunchUri"
                                     IsClickEnabled="True"
-                                    Tag="{x:Bind Url}"
-                                    Tapped="LaunchUri">
+                                    Tag="{x:Bind Url}">
                                     <controls:SettingsCard.Header>
                                         <TextBlock>
                                             <Run FontWeight="Bold" Text="{x:Bind Name}" />
@@ -82,7 +82,7 @@
                 </StackPanel>
                 <StackPanel Spacing="10">
                     <TextBlock x:Uid="/AboutPage/SupportMeSubtitleTextBlock" Style="{StaticResource SubtitleTextBlockStyle}" />
-                    <TextBlock FontSize="{StaticResource PixevalContentFontSize}" TextWrapping="Wrap">
+                    <TextBlock Style="{StaticResource CaptionTextBlockStyle}" TextWrapping="Wrap">
                         <Run x:Uid="/AboutPage/SupportMeContentPartI" />
                         <Hyperlink NavigateUri="https://afdian.net/@dylech30th">
                             <Hyperlink.Inlines>
@@ -94,7 +94,7 @@
                 </StackPanel>
                 <StackPanel Spacing="10">
                     <TextBlock x:Uid="/AboutPage/OpenSourceLicenseSubtitleTextBlock" Style="{StaticResource SubtitleTextBlockStyle}" />
-                    <TextBlock FontSize="{StaticResource PixevalContentFontSize}" TextWrapping="Wrap">
+                    <TextBlock Style="{StaticResource CaptionTextBlockStyle}" TextWrapping="Wrap">
                         <Run x:Uid="/AboutPage/OpenSourceLicenseContentPartI" />
                         <Hyperlink NavigateUri="https://www.gnu.org/licenses/gpl-3.0.en.html">
                             <Hyperlink.Inlines>

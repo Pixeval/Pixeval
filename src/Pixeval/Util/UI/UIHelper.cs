@@ -31,6 +31,7 @@ using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.Storage.Streams;
 using CommunityToolkit.WinUI;
+using FluentIcons.Common;
 using Microsoft.UI.Text;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -49,11 +50,25 @@ using Point = Windows.Foundation.Point;
 using Pixeval.Controls.Windowing;
 using WinUI3Utilities.Controls;
 using Size = Windows.Foundation.Size;
+using Symbol = FluentIcons.Common.Symbol;
+using SymbolIcon = FluentIcons.WinUI.SymbolIcon;
+using SymbolIconSource = FluentIcons.WinUI.SymbolIconSource;
 
 namespace Pixeval.Util.UI;
 
 public static partial class UiHelper
 {
+    /// <summary>
+    /// Detects the perceived brightness of a color, returns <c>true</c> if the color is perceived as light
+    /// and returns <c>false</c> if the color is perceived as dark.
+    /// </summary>
+    /// <param name="color"></param>
+    /// <returns></returns>
+    public static bool PerceivedBright(Color color)
+    {
+        return 0.2126 * color.R + 0.7152 * color.G + 0.0722 * color.B >= 128;
+    }
+
     /// <summary>
     /// With higher <paramref name="magnitude"/> you will get brighter color and vice-versa.
     /// </summary>
@@ -185,24 +200,31 @@ public static partial class UiHelper
         _ = frame.Navigate(tag.NavigateTo, tag.Parameter, transitionInfo);
     }
 
-    public static GlyphIcon GetGlyphIcon(this IconGlyph iconGlyph, FontSizeType fontSize = FontSizeType.None)
+    public static SymbolIcon GetSymbolIcon(this Symbol symbol, FontSizeType fontSize = FontSizeType.None)
     {
-        return new GlyphIcon
+        var icon = new SymbolIcon()
         {
-            IconGlyph = iconGlyph,
-            Size = fontSize
+            Symbol = symbol
         };
+
+        if (fontSize is not FontSizeType.None)
+            icon.FontSize = (int)fontSize;
+
+        return icon;
     }
 
-    public static GlyphIconSource GetGlyphIconSource(this IconGlyph iconGlyph, FontSizeType fontSize = FontSizeType.None, Brush? foregroundBrush = null)
+    public static SymbolIconSource GetSymbolIconSource(this Symbol symbol, bool isFilled = false, Brush? foregroundBrush = null, FontSizeType fontSize = FontSizeType.None)
     {
-        var icon = new GlyphIconSource
+        var icon = new SymbolIconSource
         {
-            IconGlyph = iconGlyph,
-            Size = fontSize
+            IconVariant = isFilled ? IconVariant.Filled : IconVariant.Regular,
+            Symbol = symbol
         };
 
-        if (foregroundBrush is not null) 
+        if (fontSize is not FontSizeType.None)
+            icon.FontSize = (int)fontSize;
+
+        if (foregroundBrush is not null)
             icon.Foreground = foregroundBrush;
 
         return icon;

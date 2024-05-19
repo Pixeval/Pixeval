@@ -69,7 +69,7 @@ public static class NovelViewerHelper
         CreateWindowWithPage(novelViewModel.Entry, (novelViewViewModel, index));
     }
 
-    public static NovelViewerPageViewModel GetViewModel(this ulong hWnd, object? param)
+    public static NovelViewerPageViewModel GetNovelViewerPageViewModelFromHandle(this ulong hWnd, object? param)
     {
         return param switch
         {
@@ -88,7 +88,7 @@ public static class NovelViewerHelper
                 param,
                 new SuppressNavigationTransitionInfo()))
             .WithSizeLimit(640, 360)
-            .Init(novel.Title, new SizeInt32(1280, 720))
+            .Init(novel.Title, new SizeInt32(1280, 720), WindowFactory.RootWindow.IsMaximize)
             .Activate();
     }
 }

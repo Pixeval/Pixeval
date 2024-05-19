@@ -1,0 +1,74 @@
+<controls:EnhancedWindowPage
+    x:Class="Pixeval.Pages.Download.DownloadPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:Pixeval.Controls"
+    xmlns:controls1="using:CommunityToolkit.WinUI.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:fluent="using:FluentIcons.WinUI"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+    <controls1:DockPanel>
+        <controls1:DockPanel
+            Margin="{StaticResource ComboBoxLeftIndent}"
+            controls1:DockPanel.Dock="Top"
+            HorizontalSpacing="10">
+            <controls:EnumComboBox
+                x:Uid="/DownloadPage/ModeFilterComboBox"
+                VerticalAlignment="Center"
+                controls1:DockPanel.Dock="Left"
+                ItemsSource="{controls:EnumValues Type=DownloadListOption}"
+                SelectedEnum="{x:Bind DownloadView.ViewModel.CurrentOption, Mode=TwoWay}"
+                SelectionChanged="ModeFilterComboBox_OnSelectionChanged" />
+            <AutoSuggestBox
+                x:Uid="/DownloadPage/FilterAutoSuggestBox"
+                VerticalAlignment="Center"
+                controls1:DockPanel.Dock="Left"
+                ItemsSource="{x:Bind DownloadView.ViewModel.FilteredTasks}"
+                QueryIcon="{fluent:SymbolIcon Symbol=Search,
+                                              FontSize={StaticResource SmallIconFontSize}}"
+                QuerySubmitted="FilterAutoSuggestBox_OnQuerySubmitted"
+                SuggestionChosen="FilterAutoSuggestBox_OnSuggestionChosen"
+                TextChanged="FilterAutoSuggestBox_OnTextChanged">
+                <AutoSuggestBox.ItemTemplate>
+                    <DataTemplate x:DataType="controls:DownloadItemViewModel">
+                        <TextBlock Text="{x:Bind Entry.Title}" />
+                    </DataTemplate>
+                </AutoSuggestBox.ItemTemplate>
+            </AutoSuggestBox>
+            <CommandBar DefaultLabelPosition="Right">
+                <AppBarButton
+                    Click="CancelSelectButton_OnClicked"
+                    Icon="{fluent:SymbolIcon Symbol=SelectAllOff}"
+                    IsEnabled="{x:Bind DownloadView.ViewModel.IsAnyEntrySelected, Mode=OneWay}"
+                    Label="{x:Bind DownloadView.ViewModel.SelectionLabel, Mode=OneWay}" />
+                <AppBarButton
+                    x:Uid="/DownloadPage/SelectAllButton"
+                    Click="SelectAllButton_OnClicked"
+                    Icon="{fluent:SymbolIcon Symbol=SelectAllOn}" />
+                <AppBarSeparator />
+                <AppBarButton
+                    x:Uid="/DownloadPage/ResumeButton"
+                    Click="ResumeAllButton_OnClicked"
+                    Icon="{fluent:SymbolIcon Symbol=Play}"
+                    IsEnabled="{x:Bind DownloadView.ViewModel.IsAnyEntrySelected, Mode=OneWay}" />
+                <AppBarButton
+                    x:Uid="/DownloadPage/PauseButton"
+                    Click="PauseAllButton_OnClicked"
+                    Icon="{fluent:SymbolIcon Symbol=Pause}"
+                    IsEnabled="{x:Bind DownloadView.ViewModel.IsAnyEntrySelected, Mode=OneWay}" />
+                <AppBarButton
+                    x:Uid="/DownloadPage/StopButton"
+                    Click="CancelAllButton_OnClicked"
+                    Icon="{fluent:SymbolIcon Symbol=Stop}"
+                    IsEnabled="{x:Bind DownloadView.ViewModel.IsAnyEntrySelected, Mode=OneWay}" />
+                <AppBarButton
+                    x:Uid="/DownloadPage/DeleteButton"
+                    Click="ClearDownloadListButton_OnClicked"
+                    Icon="{fluent:SymbolIcon Symbol=Delete}"
+                    IsEnabled="{x:Bind DownloadView.ViewModel.IsAnyEntrySelected, Mode=OneWay}" />
+            </CommandBar>
+        </controls1:DockPanel>
+        <controls:DownloadView x:Name="DownloadView" />
+    </controls1:DockPanel>
+</controls:EnhancedWindowPage>

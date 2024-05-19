@@ -23,7 +23,6 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.AppManagement;
 using Pixeval.CoreApi.Global.Enum;
@@ -48,12 +47,12 @@ public sealed partial class WorkInfoPage
         await _viewModel.LoadAvatarAsync();
     }
 
-    private void WorkTagButton_OnTapped(object sender, TappedRoutedEventArgs e)
+    private void WorkTagButton_OnClicked(object sender, RoutedEventArgs e)
     {
         _ = WeakReferenceMessenger.Default.Send(new WorkTagClickedMessage(_viewModel.Entry is Illustration ? SimpleWorkType.IllustAndManga : SimpleWorkType.Novel, (string)((Button)sender).Content));
     }
 
-    private async void IllustratorPersonPicture_OnTapped(object sender, TappedRoutedEventArgs e)
+    private async void IllustratorPersonPicture_OnClicked(object sender, RoutedEventArgs e)
     {
         await IllustratorViewerHelper.CreateWindowWithPageAsync(_viewModel.Illustrator.Id);
     }

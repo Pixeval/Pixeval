@@ -1,7 +1,7 @@
 using System.Collections.Generic;
+using FluentIcons.Common;
 using Pixeval.AppManagement;
 using Pixeval.Controls.Settings;
-using WinUI3Utilities.Controls;
 
 namespace Pixeval.Settings.Models;
 
@@ -9,7 +9,7 @@ public class MultiValuesAppSettingsEntry(
     AppSettings appSettings,
     string header,
     string description,
-    IconGlyph headerIcon,
+    Symbol headerIcon,
     IReadOnlyList<SingleValueSettingsEntryBase<AppSettings>> entries)
     : MultiValuesSettingsEntryBase<AppSettings>(appSettings, header, description, headerIcon, entries)
 {

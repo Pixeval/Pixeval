@@ -20,20 +20,18 @@
 
 using System;
 using System.Diagnostics;
-using System.Globalization;
 using System.IO;
 using System.Net.Http;
+using System.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml.Controls;
 using Pixeval.AppManagement;
 using Pixeval.Controls;
 using Pixeval.Options;
-using Pixeval.Util;
 using Pixeval.Util.ComponentModels;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
-using Pixeval.Utilities.Threading;
 using Pixeval.Settings;
 using Windows.System;
 using Microsoft.UI.Xaml;
@@ -41,7 +39,7 @@ using Pixeval.Controls.Windowing;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.Settings.Models;
 using WinUI3Utilities;
-using WinUI3Utilities.Controls;
+using Symbol = FluentIcons.Common.Symbol;
 
 namespace Pixeval.Pages.Misc;
 
@@ -71,7 +69,7 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
 
     [ObservableProperty] private bool _expandExpander;
 
-    private CancellationHandle? _cancellationHandle;
+    private CancellationTokenSource? _cancellationTokenSource;
 
     /// <inheritdoc/>
     public SettingsPageViewModel(ulong hWnd) : base(hWnd)
@@ -80,10 +78,12 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
         [
             new(SettingsEntryCategory.Application)
             {
-                new EnumAppSettingsEntry<ElementTheme>(AppSettings,
-                    t => t.Theme) { ValueChanged = t => WindowFactory.SetTheme((ElementTheme)t) },
-                new EnumAppSettingsEntry<BackdropType>(AppSettings,
-                    t => t.Backdrop) { ValueChanged = t => WindowFactory.SetBackdrop((BackdropType)t) },
+                new EnumAppSettingsEntry(AppSettings,
+                    t => t.Theme,
+                    ElementThemeExtension.GetItems()) { ValueChanged = t => WindowFactory.SetTheme((ElementTheme)t) },
+                new EnumAppSettingsEntry(AppSettings,
+                    t => t.Backdrop,
+                    BackdropTypeExtension.GetItems()) { ValueChanged = t => WindowFactory.SetBackdrop((BackdropType)t) },
                 new FontAppSettingsEntry(AppSettings,
                     t => t.AppFontFamilyName),
                 new LanguageAppSettingsEntry(AppSettings),
@@ -95,27 +95,42 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
                 {
                     ProxyChanged = t => App.AppViewModel.MakoClient.Configuration.Proxy = t
                 },
+                new StringAppSettingsEntry(AppSettings,
+                    t => t.MirrorHost)
+                {
+                    Placeholder = SettingsPageResources.ImageMirrorServerTextBoxPlaceholderText,
+                    ValueChanged = t => App.AppViewModel.MakoClient.Configuration.MirrorHost = t
+                },
                 new BoolAppSettingsEntry(AppSettings,
                     t => t.UseFileCache),
-                new EnumAppSettingsEntry<MainPageTabItem>(AppSettings,
-                    t => t.DefaultSelectedTabItem)
+                new EnumAppSettingsEntry(AppSettings,
+                    t => t.DefaultSelectedTabItem,
+                    MainPageTabItemExtension.GetItems()),
+                new StringAppSettingsEntry(AppSettings, 
+                    t => t.WebCookie)
+                {
+                    Placeholder = SettingsPageResources.WebCookieTextBoxPlaceholderText
+                }
             },
             new(SettingsEntryCategory.BrowsingExperience)
             {
-                new EnumAppSettingsEntry<ThumbnailDirection>(AppSettings,
-                    t => t.ThumbnailDirection),
-                new EnumAppSettingsEntry<ItemsViewLayoutType>(AppSettings,
-                    t => t.ItemsViewLayoutType),
-                new EnumAppSettingsEntry<TargetFilter>(AppSettings,
-                    t => t.TargetFilter),
+                new EnumAppSettingsEntry(AppSettings,
+                    t => t.ThumbnailDirection,
+                    ThumbnailDirectionExtension.GetItems()),
+                new EnumAppSettingsEntry(AppSettings,
+                    t => t.ItemsViewLayoutType,
+                    ItemsViewLayoutTypeExtension.GetItems()),
+                new EnumAppSettingsEntry(AppSettings,
+                    t => t.TargetFilter,
+                    TargetFilterExtension.GetItems()),
                 new TokenizingAppSettingsEntry(AppSettings),
                 new BoolAppSettingsEntry(AppSettings,
-                    t => t.BrowserOriginalImage),
+                    t => t.BrowseOriginalImage),
                 new ClickableAppSettingsEntry(AppSettings,
                     SettingsPageResources.ViewingRestrictionEntryHeader,
                     SettingsPageResources.ViewingRestrictionEntryDescription,
-                    IconGlyph.BlockContactE8F8,
-                    () => _ = Launcher.LaunchUriAsync(new Uri("https://www.pixiv.net/setting_user.php")))
+                    Symbol.SubtractCircle,
+                    () => _ = Launcher.LaunchUriAsync(new Uri("https://www.pixiv.net/settings/viewing")))
             },
             new(SettingsEntryCategory.Search)
             {
@@ -143,37 +158,43 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
                     Max = 20,
                     Min = 0
                 },
-                new EnumAppSettingsEntry<WorkSortOption>(AppSettings,
-                    t => t.WorkSortOption),
-                new EnumAppSettingsEntry<SimpleWorkType>(AppSettings,
-                    t => t.SimpleWorkType),
+                new EnumAppSettingsEntry(AppSettings,
+                    t => t.WorkSortOption,
+                    WorkSortOptionExtension.GetItems()),
+                new EnumAppSettingsEntry(AppSettings,
+                    t => t.SimpleWorkType,
+                    SimpleWorkTypeExtension.GetItems()),
                 new MultiValuesAppSettingsEntry(AppSettings,
                     SettingsPageResources.RankOptionEntryHeader,
                     SettingsPageResources.RankOptionEntryDescription,
-                    IconGlyph.MarketEAFC,
+                    Symbol.ArrowTrending,
                     [
-                        new EnumAppSettingsEntry<RankOption>(AppSettings,
+                        new EnumAppSettingsEntry(AppSettings,
                             WorkTypeEnum.Illustration,
-                            t => t.IllustrationRankOption),
+                            t => t.IllustrationRankOption,
+                            RankOptionExtension.GetItems()),
                         new EnumAppSettingsEntry(AppSettings,
                             WorkTypeEnum.Novel,
                             t => t.NovelRankOption,
-                            RankOptionExtension.NovelRankOptions)
+                            NovelRankOptionExtension.GetItems())
                     ]),
                 new MultiValuesAppSettingsEntry(AppSettings,
                     SettingsPageResources.DefaultSearchTagMatchOptionEntryHeader,
                     SettingsPageResources.DefaultSearchTagMatchOptionEntryDescription,
-                    IconGlyph.PassiveAuthenticationF32A,
+                    Symbol.CheckmarkCircleSquare,
                     [
-                        new EnumAppSettingsEntry<SearchIllustrationTagMatchOption>(AppSettings,
+                        new EnumAppSettingsEntry(AppSettings,
                             WorkTypeEnum.Illustration,
-                            t => t.SearchIllustrationTagMatchOption),
-                        new EnumAppSettingsEntry<SearchNovelTagMatchOption>(AppSettings,
+                            t => t.SearchIllustrationTagMatchOption,
+                            SearchIllustrationTagMatchOptionExtension.GetItems()),
+                        new EnumAppSettingsEntry(AppSettings,
                             WorkTypeEnum.Novel,
-                            t => t.SearchNovelTagMatchOption)
+                            t => t.SearchNovelTagMatchOption,
+                            SearchNovelTagMatchOptionExtension.GetItems())
                     ]),
-                new EnumAppSettingsEntry<SearchDuration>(AppSettings,
-                    t => t.SearchDuration),
+                new EnumAppSettingsEntry(AppSettings,
+                    t => t.SearchDuration,
+                    SearchDurationExtension.GetItems()),
                 new DateRangeWithSwitchAppSettingsEntry(AppSettings)
             },
             new(SettingsEntryCategory.Download)
@@ -181,7 +202,7 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
                 new IntAppSettingsEntry(AppSettings,
                     t => t.MaximumDownloadHistoryRecords)
                 {
-                    Max = 200,
+                    Max = ushort.MaxValue,
                     Min = 10
                 },
                 new BoolAppSettingsEntry(AppSettings,
@@ -197,17 +218,20 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
                 new MultiValuesAppSettingsEntry(AppSettings,
                     SettingsPageResources.WorkDownloadFormatEntryHeader,
                     SettingsPageResources.WorkDownloadFormatEntryDescription,
-                    IconGlyph.CaptionE8BA,
+                    Symbol.TextPeriodAsterisk,
                     [
-                        new EnumAppSettingsEntry<IllustrationDownloadFormat>(AppSettings,
+                        new EnumAppSettingsEntry(AppSettings,
                             WorkTypeEnum.Illustration,
-                            t => t.IllustrationDownloadFormat),
-                        new EnumAppSettingsEntry<UgoiraDownloadFormat>(AppSettings,
+                            t => t.IllustrationDownloadFormat,
+                            IllustrationDownloadFormatExtension.GetItems()),
+                        new EnumAppSettingsEntry(AppSettings,
                             WorkTypeEnum.Ugoira,
-                            t => t.UgoiraDownloadFormat),
-                        new EnumAppSettingsEntry<NovelDownloadFormat>(AppSettings,
+                            t => t.UgoiraDownloadFormat,
+                            UgoiraDownloadFormatExtension.GetItems()),
+                        new EnumAppSettingsEntry(AppSettings,
                             WorkTypeEnum.Novel,
-                            t => t.NovelDownloadFormat)
+                            t => t.NovelDownloadFormat,
+                            NovelDownloadFormatExtension.GetItems())
                     ]),
                 new BoolAppSettingsEntry(AppSettings,
                     t => t.DownloadWhenBookmarked)
@@ -218,14 +242,8 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
                     t => t.MaximumBrowseHistoryRecords)
                 {
                     Placeholder = SettingsPageResources.MaximumBrowseHistoryRecordsNumerBoxPlaceholderText,
-                    Max = 200,
+                    Max = ushort.MaxValue,
                     Min = 10
-                },
-                new StringAppSettingsEntry(AppSettings,
-                    t => t.MirrorHost)
-                {
-                    Placeholder = SettingsPageResources.ImageMirrorServerTextBoxPlaceholderText,
-                    ValueChanged = t => App.AppViewModel.MakoClient.Configuration.MirrorHost = t
                 }
             }
         ];
@@ -259,7 +277,7 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
         var downloaded = false;
         try
         {
-            _cancellationHandle = new CancellationHandle();
+            _cancellationTokenSource = new CancellationTokenSource();
             CheckingUpdate = true;
             UpdateMessage = SettingsPageResources.CheckingForUpdate;
             using var client = new HttpClient();
@@ -283,22 +301,20 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
 
             DownloadingUpdate = true;
             UpdateMessage = SettingsPageResources.DownloadingUpdate;
-            var result = await client.DownloadStreamAsync(appReleaseModel.ReleaseUri.OriginalString,
-                new Progress<double>(progress => DownloadingUpdateProgress = progress), _cancellationHandle);
+            var filePath = Path.Combine(AppKnownFolders.Temporary.Self.Path, appReleaseModel.ReleaseUri.Segments[^1]);
+            await using var fileStream = File.OpenWrite(filePath);
+            var exception = await client.DownloadStreamAsync(fileStream, appReleaseModel.ReleaseUri, _cancellationTokenSource.Token,
+                new Progress<double>(progress => DownloadingUpdateProgress = progress));
             // ReSharper disable once DisposeOnUsingVariable
             client.Dispose();
 
             DownloadingUpdate = false;
             DownloadingUpdateProgress = 0;
 
-            if (result is Result<Stream>.Success { Value: var value })
+            if (exception is null)
             {
-                var filePath = Path.Combine(AppKnownFolders.Temporary.Self.Path, appReleaseModel.ReleaseUri.Segments[^1]);
-                await using (var fileStream = File.OpenWrite(filePath))
-                    await value.CopyToAsync(fileStream);
-
                 downloaded = true;
-                if (_cancellationHandle is { IsCancelled: true })
+                if (_cancellationTokenSource is { IsCancellationRequested: true })
                     return;
                 if (await HWnd.CreateOkCancelAsync(SettingsPageResources.UpdateApp,
                         SettingsPageResources.DownloadedAndWaitingToInstall.Format(appReleaseModel.Version)) is ContentDialogResult.Primary)
@@ -344,17 +360,20 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
 
     public void ShowClearData(ClearDataKind kind)
     {
-        HWnd.SuccessGrowl(kind.GetLocalizedResourceContent()!);
+        HWnd.SuccessGrowl(ClearDataKindExtension.GetResource(kind));
     }
 
     public void CancelToken()
     {
-        _cancellationHandle?.Cancel();
-        _cancellationHandle = null;
+        var cts = _cancellationTokenSource;
+        _cancellationTokenSource = null;
+        cts?.Cancel();
+        cts?.Dispose();
     }
 
     public void Dispose()
     {
+        GC.SuppressFinalize(this);
         CancelToken();
     }
 }

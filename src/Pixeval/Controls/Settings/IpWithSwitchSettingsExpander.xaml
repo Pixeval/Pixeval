@@ -4,9 +4,9 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:controls1="using:Pixeval.Controls"
-    xmlns:controls2="using:WinUI3Utilities.Controls"
     xmlns:coreApi="using:Pixeval.CoreApi.Net"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:fluent="using:FluentIcons.WinUI"
     xmlns:local="using:Pixeval.Settings"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Description="{x:Bind Entry.DescriptionControl}"
@@ -14,26 +14,27 @@
     Tag="{x:Bind Entry.Attribute}"
     mc:Ignorable="d">
     <controls:SettingsExpander.HeaderIcon>
-        <controls2:GlyphIcon IconGlyph="{x:Bind Entry.HeaderIcon}" />
+        <fluent:SymbolIcon Symbol="{x:Bind Entry.HeaderIcon}" />
     </controls:SettingsExpander.HeaderIcon>
     <ToggleSwitch IsOn="{x:Bind Entry.Settings.EnableDomainFronting, Mode=TwoWay}" Toggled="ToggleSwitch_OnToggled" />
     <controls:SettingsExpander.Items>
-        <controls:SettingsCard HorizontalContentAlignment="Stretch" ContentAlignment="Left">
-            <StackPanel Spacing="10">
-                <TextBlock x:Uid="/SettingsPage/PixivNameResolverHeader" />
-                <TextBlock
-                    x:Uid="/SettingsPage/PixivNameResolverDescription"
-                    Foreground="{StaticResource TextSecondaryAccentColor}"
-                    Style="{StaticResource BaseTextBlockStyle}" />
-                <controls:WrapPanel HorizontalSpacing="10" VerticalSpacing="10">
-                    <controls1:IPListInput Header="{x:Bind coreApi:MakoHttpOptions.AppApiHost}" ItemsSource="{x:Bind Entry.PixivAppApiNameResolver, Mode=OneWay}" />
-                    <controls1:IPListInput Header="{x:Bind coreApi:MakoHttpOptions.ImageHost}" ItemsSource="{x:Bind Entry.PixivImageNameResolver, Mode=OneWay}" />
-                    <controls1:IPListInput Header="{x:Bind coreApi:MakoHttpOptions.ImageHost2}" ItemsSource="{x:Bind Entry.PixivImageNameResolver2, Mode=OneWay}" />
-                    <controls1:IPListInput Header="{x:Bind coreApi:MakoHttpOptions.OAuthHost}" ItemsSource="{x:Bind Entry.PixivOAuthNameResolver, Mode=OneWay}" />
-                    <controls1:IPListInput Header="{x:Bind coreApi:MakoHttpOptions.AccountHost}" ItemsSource="{x:Bind Entry.PixivAccountNameResolver, Mode=OneWay}" />
-                    <controls1:IPListInput Header="{x:Bind coreApi:MakoHttpOptions.WebApiHost}" ItemsSource="{x:Bind Entry.PixivWebApiNameResolver, Mode=OneWay}" />
-                </controls:WrapPanel>
-            </StackPanel>
+        <controls:SettingsCard
+            HorizontalContentAlignment="Left"
+            ContentAlignment="Vertical"
+            Description="{x:Bind Entry.DescriptionControl2}"
+            Header="{x:Bind Entry.Header2}"
+            Tag="{x:Bind Entry.Attribute2}">
+            <controls:SettingsCard.HeaderIcon>
+                <fluent:SymbolIcon Symbol="{x:Bind Entry.HeaderIcon2}" />
+            </controls:SettingsCard.HeaderIcon>
+            <controls:WrapPanel HorizontalSpacing="10" VerticalSpacing="10">
+                <controls1:IPListInput Header="{x:Bind coreApi:MakoHttpOptions.AppApiHost}" ItemsSource="{x:Bind Entry.PixivAppApiNameResolver, Mode=OneWay}" />
+                <controls1:IPListInput Header="{x:Bind coreApi:MakoHttpOptions.ImageHost}" ItemsSource="{x:Bind Entry.PixivImageNameResolver, Mode=OneWay}" />
+                <controls1:IPListInput Header="{x:Bind coreApi:MakoHttpOptions.ImageHost2}" ItemsSource="{x:Bind Entry.PixivImageNameResolver2, Mode=OneWay}" />
+                <controls1:IPListInput Header="{x:Bind coreApi:MakoHttpOptions.OAuthHost}" ItemsSource="{x:Bind Entry.PixivOAuthNameResolver, Mode=OneWay}" />
+                <controls1:IPListInput Header="{x:Bind coreApi:MakoHttpOptions.AccountHost}" ItemsSource="{x:Bind Entry.PixivAccountNameResolver, Mode=OneWay}" />
+                <controls1:IPListInput Header="{x:Bind coreApi:MakoHttpOptions.WebApiHost}" ItemsSource="{x:Bind Entry.PixivWebApiNameResolver, Mode=OneWay}" />
+            </controls:WrapPanel>
         </controls:SettingsCard>
     </controls:SettingsExpander.Items>
 </controls:SettingsExpander>

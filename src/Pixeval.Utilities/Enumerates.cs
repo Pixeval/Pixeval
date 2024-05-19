@@ -21,6 +21,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
@@ -60,6 +61,37 @@ public static class Enumerates
     public static IList<T> AsList<T>(this IEnumerable<T> enumerable)
     {
         return enumerable as IList<T> ?? enumerable.ToList();
+    }
+
+    private class KeyedEqualityComparer<T, TKey>(Func<T, TKey> selector) : IEqualityComparer<T> where TKey : IEquatable<TKey>
+    {
+        public bool Equals(T? x, T? y)
+        {
+            if (x is null && y is null)
+                return true;
+            if (x is null || y is null)
+                return false;
+            return selector(x).Equals(selector(y));
+        }
+
+        public int GetHashCode([DisallowNull] T obj)
+        {
+            return selector(obj).GetHashCode();
+        }
+    }
+
+    public static bool SequenceEquals<T, TKey>(this IEnumerable<T> @this,
+        IEnumerable<T> another,
+        Func<T, TKey> keySelector,
+        SequenceComparison comparison = SequenceComparison.Sequential) 
+    where TKey : IEquatable<TKey>
+    {
+        return comparison switch
+        {
+            SequenceComparison.Sequential => @this.SequenceEqual(another, new KeyedEqualityComparer<T,TKey>(keySelector)),
+            SequenceComparison.Unordered => @this.Order().SequenceEqual(another.Order(), new KeyedEqualityComparer<T, TKey>(keySelector)), // not the fastest way, but still enough
+            _ => ThrowUtils.ArgumentOutOfRange<SequenceComparison, bool>(comparison)
+        };
     }
 
     public static bool SequenceEquals<T>(this IEnumerable<T> @this,

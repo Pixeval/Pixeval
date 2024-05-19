@@ -20,6 +20,7 @@
 
 using System;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage.Streams;
 using Microsoft.UI.Xaml.Media;
@@ -27,37 +28,37 @@ using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.CoreApi;
 using Pixeval.CoreApi.Net;
 using Pixeval.Utilities;
-using Pixeval.Utilities.Threading;
 
 namespace Pixeval.Util.IO;
 
 public static partial class IoHelper
 {
-    public static async Task<Result<Stream>> DownloadStreamAsync(
+    public static Task<Result<Stream>> DownloadMemoryStreamAsync(
         this MakoClient client,
         string url,
         IProgress<double>? progress = null,
-        CancellationHandle? cancellationHandle = null)
+        CancellationToken cancellationToken = default)
     {
-        return await client.GetMakoHttpClient(MakoApiKind.ImageApi).DownloadStreamAsync(url, progress, cancellationHandle);
+        return client.GetMakoHttpClient(MakoApiKind.ImageApi)
+            .DownloadMemoryStreamAsync(url, cancellationToken, progress);
     }
 
     public static async Task<Result<IRandomAccessStream>> DownloadRandomAccessStreamAsync(
         this MakoClient client,
         string url,
         IProgress<double>? progress = null,
-        CancellationHandle? cancellationHandle = null)
+        CancellationToken cancellationToken = default)
     {
-        return (await client.DownloadStreamAsync(url, progress, cancellationHandle)).Rewrap(stream => stream.AsRandomAccessStream());
+        return (await client.DownloadMemoryStreamAsync(url, progress, cancellationToken)).Rewrap(stream => stream.AsRandomAccessStream());
     }
 
     public static async Task<Result<SoftwareBitmapSource>> DownloadSoftwareBitmapSourceAsync(
         this MakoClient client,
         string url,
         IProgress<double>? progress = null,
-        CancellationHandle? cancellationHandle = null)
+        CancellationToken cancellationToken = default)
     {
-        return await (await client.DownloadStreamAsync(url, progress, cancellationHandle)).RewrapAsync(m => m.GetSoftwareBitmapSourceAsync(true));
+        return await (await client.DownloadMemoryStreamAsync(url, progress, cancellationToken)).RewrapAsync(m => m.GetSoftwareBitmapSourceAsync(true));
     }
 
     public static async Task<Result<ImageSource>> DownloadBitmapImageAsync(
@@ -65,9 +66,9 @@ public static partial class IoHelper
         string url,
         int? desiredWidth = null,
         IProgress<double>? progress = null,
-        CancellationHandle? cancellationHandle = null)
+        CancellationToken cancellationToken = default)
     {
-        return await (await client.DownloadStreamAsync(url, progress, cancellationHandle))
+        return await (await client.DownloadMemoryStreamAsync(url, progress, cancellationToken))
             .RewrapAsync(async m => (ImageSource)await m.GetBitmapImageAsync(true, desiredWidth));
     }
 }

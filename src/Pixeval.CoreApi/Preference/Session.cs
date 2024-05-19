@@ -19,8 +19,8 @@
 #endregion
 
 using System;
+using System.Text.Json;
 using System.Text.Json.Serialization;
-using Pixeval.Utilities;
 
 namespace Pixeval.CoreApi.Preference;
 
@@ -46,5 +46,5 @@ public record Session(
     [property: JsonPropertyName("account")] string Account,
     [property: JsonPropertyName("isPremium")] bool IsPremium)
 {
-    public override string? ToString() => this.ToJson();
+    public override string ToString() => JsonSerializer.Serialize(this, typeof(Session), AppJsonSerializerContext.Default);
 }

@@ -31,7 +31,6 @@ using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Streams;
-using Pixeval.Download.Models;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats;
 
@@ -49,7 +48,7 @@ public static partial class IoHelper
 
     public static string GetInvalidPathChars { get; } = @"*?""|" + new string(Path.GetInvalidPathChars());
 
-    public static string GetInvalidNameChars { get; } = @"\/*:?""|<>" + new string(Path.GetInvalidPathChars());
+    public static string GetInvalidNameChars { get; } = @"\/*:?""|" + new string(Path.GetInvalidPathChars());
 
     public static string NormalizePath(string path)
     {
@@ -161,20 +160,20 @@ public static partial class IoHelper
         return result;
     }
 
-    public static async Task<MemoryStream> WriteZipAsync(IReadOnlyDictionary<string, Stream> streams, bool dispose)
+    public static async Task<MemoryStream> WriteZipAsync(IReadOnlyList<string> names, IReadOnlyList<Stream> streams, bool dispose)
     {
         var zipStream = _recyclableMemoryStreamManager.GetStream();
 
         var zipArchive = new ZipArchive(zipStream, ZipArchiveMode.Create, true);
 
-        foreach (var (key, value) in streams)
+        for (var i = 0; i < streams.Count; i++)
         {
             // ReSharper disable once AccessToDisposedClosure
-            var entry = zipArchive.CreateEntry(key);
+            var entry = zipArchive.CreateEntry(names[i]);
             await using var entryStream = entry.Open();
-            await value.CopyToAsync(entryStream);
+            await streams[i].CopyToAsync(entryStream);
             if (dispose)
-                await value.DisposeAsync();
+                await streams[i].DisposeAsync();
         }
 
         zipArchive.Dispose();
@@ -186,27 +185,10 @@ public static partial class IoHelper
         return zipStream;
     }
 
-    public static async Task DeleteTaskAsync(DownloadTaskBase task)
+    public static void DeleteEmptyFolder(string? path)
     {
-        try
-        {
-            var actualDestinations = task.ActualDestinations;
-            foreach (var destination in actualDestinations)
-                await (await StorageFile.GetFileFromPathAsync(destination)).DeleteAsync(StorageDeleteOption.Default);
-
-            if (task.IsFolder)
-                await DeleteEmptyFolderAsync(task);
-
-            static async Task DeleteEmptyFolderAsync(DownloadTaskBase t)
-            {
-                var folder = await StorageFolder.GetFolderFromPathAsync(Path.GetDirectoryName(t.Destination));
-                if ((await folder.GetItemsAsync()).Count is 0)
-                    await folder.DeleteAsync(StorageDeleteOption.Default);
-            }
-        }
-        catch
-        {
-            // ignored
-        }
+        if (Directory.Exists(path))
+            if (!Directory.EnumerateFileSystemEntries(path).Any())
+                Directory.Delete(path);
     }
 }

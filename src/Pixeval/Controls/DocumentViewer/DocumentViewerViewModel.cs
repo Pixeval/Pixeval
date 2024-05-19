@@ -27,25 +27,22 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Documents;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.AppManagement;
-using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Model;
 using Pixeval.Database.Managers;
-using Pixeval.Database;
 using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Utilities;
-using Pixeval.Utilities.Threading;
 using System.Text;
+using System.Threading;
 using QuestPDF.Fluent;
 using QuestPDF.Infrastructure;
 
 namespace Pixeval.Controls;
 
-public class DocumentViewerViewModel(NovelContent novelContent) : ObservableObject, IDisposable, INovelParserViewModel<SoftwareBitmapSource>, INovelParserViewModel<Stream>
+public partial class DocumentViewerViewModel(NovelContent novelContent) : ObservableObject, INovelParserViewModel<SoftwareBitmapSource>, INovelParserViewModel<Stream>
 {
     /// <summary>
     /// 需要从外部Invoke
@@ -58,6 +55,9 @@ public class DocumentViewerViewModel(NovelContent novelContent) : ObservableObje
 
     public string? ImageExtension { get; set; }
 
+    /// <summary>
+    /// 所有图片的URL
+    /// </summary>
     public string[] AllUrls { get; } = novelContent.Images.Select(x => x.ThumbnailUrl).Concat(novelContent.Illusts.Select(x => x.ThumbnailUrl)).ToArray();
 
     public string[] AllTokens { get; } = novelContent.Images.Select(x => x.NovelImageId.ToString()).Concat(novelContent.Illusts.Select(x => $"{x.Id}-{x.Page}")).ToArray();
@@ -87,13 +87,13 @@ public class DocumentViewerViewModel(NovelContent novelContent) : ObservableObje
         await Task.Yield();
         while (index < length)
         {
-            if (LoadingCancellationHandle.IsCancelled)
+            if (LoadingCancellationTokenSource.IsCancellationRequested)
                 break;
             Pages.Add(parser.Parse(NovelContent.Text, ref index, this));
         }
     }
 
-    public StringBuilder LoadMdContent(CancellationHandle handle)
+    public StringBuilder LoadMdContent()
     {
         var index = 0;
         var length = NovelContent.Text.Length;
@@ -103,14 +103,14 @@ public class DocumentViewerViewModel(NovelContent novelContent) : ObservableObje
         {
             var parser = new PixivNovelMdParser(sb, i);
             _ = parser.Parse(NovelContent.Text, ref index, this);
-            if (handle.IsCancelled)
+            if (LoadingCancellationTokenSource.IsCancellationRequested)
                 break;
         }
 
         return sb;
     }
 
-    public StringBuilder LoadHtmlContent(CancellationHandle handle)
+    public StringBuilder LoadHtmlContent()
     {
         var index = 0;
         var length = NovelContent.Text.Length;
@@ -120,14 +120,14 @@ public class DocumentViewerViewModel(NovelContent novelContent) : ObservableObje
         {
             var parser = new PixivNovelHtmlParser(sb, i);
             _ = parser.Parse(NovelContent.Text, ref index, this);
-            if (handle.IsCancelled)
+            if (LoadingCancellationTokenSource.IsCancellationRequested)
                 break;
         }
 
         return sb;
     }
 
-    public Document LoadPdfContent(CancellationHandle handle)
+    public Document LoadPdfContent()
     {
         var index = 0;
         var length = NovelContent.Text.Length;
@@ -147,7 +147,7 @@ public class DocumentViewerViewModel(NovelContent novelContent) : ObservableObje
                         {
                             var parser = new PixivNovelPdfParser(c, i);
                             _ = parser.Parse(NovelContent.Text, ref index, this);
-                            if (handle.IsCancelled)
+                            if (LoadingCancellationTokenSource.IsCancellationRequested)
                                 break;
                         }
                     });
@@ -168,7 +168,7 @@ public class DocumentViewerViewModel(NovelContent novelContent) : ObservableObje
 
         foreach (var illust in NovelContent.Illusts)
         {
-            if (LoadingCancellationHandle.IsCancelled)
+            if (LoadingCancellationTokenSource.IsCancellationRequested)
                 break;
             var key = (illust.Id, illust.Page);
             var temp = IllustrationStreams[key] = await GetThumbnailAsync(illust.ThumbnailUrl);
@@ -178,7 +178,7 @@ public class DocumentViewerViewModel(NovelContent novelContent) : ObservableObje
 
         foreach (var image in NovelContent.Images)
         {
-            if (LoadingCancellationHandle.IsCancelled)
+            if (LoadingCancellationTokenSource.IsCancellationRequested)
                 break;
             var temp = UploadedStreams[image.NovelImageId] = await LoadThumbnailAsync(image.ThumbnailUrl);
             UploadedImages[image.NovelImageId] = await temp.GetSoftwareBitmapSourceAsync(false);
@@ -186,20 +186,20 @@ public class DocumentViewerViewModel(NovelContent novelContent) : ObservableObje
         }
     }
 
-    public IEnumerable<string>? GetTags(int index)
+    public (long Id, IEnumerable<string> Tags)? GetIdTags(int index)
     {
         if (index < NovelContent.Images.Length)
             return null;
         var illust = NovelContent.Illusts[index - NovelContent.Images.Length];
-        return illust.Illust.Tags.Select(t => t.Tag);
+        return (illust.Id, illust.Illust.Tags.Select(t => t.Tag));
     }
 
-    public Stream GetStream(int index)
+    public Stream? TryGetStream(int index)
     {
         if (index < NovelContent.Images.Length)
-            return UploadedStreams[NovelContent.Images[index].NovelImageId];
+            return UploadedStreams.GetValueOrDefault(NovelContent.Images[index].NovelImageId);
         var illust = NovelContent.Illusts[index - NovelContent.Images.Length];
-        return IllustrationStreams[(illust.Id, illust.Page)];
+        return IllustrationStreams.GetValueOrDefault((illust.Id, illust.Page));
     }
 
     public void SetStream(int index, Stream? stream)
@@ -232,14 +232,14 @@ public class DocumentViewerViewModel(NovelContent novelContent) : ObservableObje
         return s;
     }
 
-    private CancellationHandle LoadingCancellationHandle { get; } = new();
+    private CancellationTokenSource LoadingCancellationTokenSource { get; } = new();
 
     /// <summary>
     /// 直接获取对应缩略图
     /// </summary>
     public async Task<Stream> GetThumbnailAsync(string url)
     {
-        return await App.AppViewModel.MakoClient.DownloadStreamAsync(url, cancellationHandle: LoadingCancellationHandle) is
+        return await App.AppViewModel.MakoClient.DownloadMemoryStreamAsync(url, cancellationToken: LoadingCancellationTokenSource.Token) is
             Result<Stream>.Success(var stream)
             ? stream
             : AppInfo.GetImageNotAvailableStream();
@@ -252,17 +252,8 @@ public class DocumentViewerViewModel(NovelContent novelContent) : ObservableObje
         var task1 = vm.LoadImagesAsync();
         var task2 = vm.LoadRtfContentAsync();
         _ = Task.WhenAll(task1, task2).ContinueWith(callback, TaskScheduler.FromCurrentSynchronizationContext());
-        AddHistory();
-
+        BrowseHistoryPersistentManager.AddHistory(novelItem.Entry);
         return vm;
-
-        void AddHistory()
-        {
-            using var scope = App.AppViewModel.AppServicesScope;
-            var manager = scope.ServiceProvider.GetRequiredService<BrowseHistoryPersistentManager>();
-            _ = manager.Delete(x => x.Id == novelItem.Id && x.Type == SimpleWorkType.Novel);
-            manager.Insert(new BrowseHistoryEntry(novelItem.Entry));
-        }
     }
 
     public INovelParserViewModel<Stream> Clone()
@@ -279,7 +270,8 @@ public class DocumentViewerViewModel(NovelContent novelContent) : ObservableObje
 
     public void Dispose()
     {
-        LoadingCancellationHandle.Cancel();
+        LoadingCancellationTokenSource.Cancel();
+        LoadingCancellationTokenSource.Dispose();
         foreach (var (_, value) in IllustrationImages)
             value?.Dispose();
         IllustrationImages.Clear();
@@ -293,5 +285,6 @@ public class DocumentViewerViewModel(NovelContent novelContent) : ObservableObje
             value?.Dispose();
         UploadedStreams.Clear();
         IllustrationLookup.Clear();
+        GC.SuppressFinalize(this);
     }
 }

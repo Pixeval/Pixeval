@@ -20,7 +20,7 @@
 
 #endregion
 
-using System.Linq;
+using System.Collections.Generic;
 using Pixeval.Controls;
 using Pixeval.Download.MacroParser;
 using Pixeval.Download.Macros;
@@ -32,9 +32,9 @@ public class NovelMetaPathParser : IMetaPathParser<NovelItemViewModel>
 {
     private readonly MacroParser<NovelItemViewModel> _parser = new();
 
-    public static IMacro[] MacroProviderStatic { get; } = MetaPathMacroAttributeHelper.GetAttachedTypeInstances<NovelItemViewModel>().ToArray();
- 
-    public IMacro[] MacroProvider => MacroProviderStatic;
+    private static readonly IReadOnlyList<IMacro> _macroProviderStatic = MetaPathMacroAttributeHelper.GetIWorkViewModelInstances();
+
+    public IReadOnlyList<IMacro> MacroProvider => _macroProviderStatic;
 
     public string Reduce(string raw, NovelItemViewModel context)
     {

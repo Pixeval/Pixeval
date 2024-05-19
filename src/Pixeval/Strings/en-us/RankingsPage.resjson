@@ -10,8 +10,11 @@
   "RankOptionMonth": "Monthly",
   "RankOptionWeek": "Weekly",
   "RankOptionWeekManga": "Weekly manga",
-  "RankOptionWeekOriginal": "original",
+  "RankOptionWeekOriginal": "Weekly original",
   "RankOptionWeekR18": "Weekly R-18",
   "RankOptionWeekR18G": "Weekly R-18G",
-  "RankOptionWeekRookie": "Rookie"
+  "RankOptionWeekRookie": "Weekly rookie",
+  "RankOptionMonthManga": "Monthly manga",
+  "RankOptionDayAi": "Daily AI",
+  "RankOptionDayR18Ai": "Daily AI R-18"
 }

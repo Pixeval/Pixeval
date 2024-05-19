@@ -10,7 +10,7 @@ namespace Pixeval.Pages.IllustratorViewer;
 
 public static class IllustratorViewerHelper
 {
-    public static IllustratorViewerPageViewModel GetViewModel(this ulong hWnd, object? param)
+    public static IllustratorViewerPageViewModel GetIllustratorViewerPageViewModel(this ulong hWnd, object? param)
     {
         return param switch
         {
@@ -32,7 +32,7 @@ public static class IllustratorViewerHelper
                 userDetail,
                 new SuppressNavigationTransitionInfo()))
             .WithSizeLimit(640, 360)
-            .Init(userDetail.UserEntity.Name, new SizeInt32(1280, 720))
+            .Init(userDetail.UserEntity.Name, new SizeInt32(1280, 720), WindowFactory.RootWindow.IsMaximize)
             .Activate();
     }
 }

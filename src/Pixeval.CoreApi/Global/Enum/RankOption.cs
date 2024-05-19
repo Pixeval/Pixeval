@@ -90,27 +90,3 @@ public enum RankOption
     [Description("day_r18_ai")]
     DayR18Ai
 }
-
-public static class RankOptionExtension
-{
-    public static readonly RankOption[] NovelRankOptions =
-    [
-        RankOption.Day,
-        RankOption.Week,
-        // RankOption.Month,
-        RankOption.DayMale,
-        RankOption.DayFemale,
-        // RankOption.DayManga,
-        // RankOption.WeekManga,
-        // RankOption.MonthManga,
-        RankOption.WeekOriginal,
-        RankOption.WeekRookie,
-        RankOption.DayR18,
-        RankOption.DayMaleR18,
-        RankOption.DayFemaleR18,
-        RankOption.WeekR18,
-        RankOption.WeekR18G,
-        RankOption.DayAi,
-        RankOption.DayR18Ai
-    ];
-}

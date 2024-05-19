@@ -10,7 +10,7 @@
         Padding="{StaticResource CardControlPadding}"
         HorizontalAlignment="Stretch"
         VerticalAlignment="Stretch"
-        Tapped="ContentContainerOnTapped">
+        Click="ContentContainerOnClicked">
         <Grid RowSpacing="10">
             <Grid.RowDefinitions>
                 <RowDefinition Height="2.3*" />
@@ -26,11 +26,11 @@
             <StackPanel Grid.Row="1" HorizontalAlignment="Center">
                 <TextBlock
                     HorizontalAlignment="Center"
-                    FontSize="{StaticResource PixevalContentFontSize}"
+                    Style="{StaticResource CaptionTextBlockStyle}"
                     Text="{x:Bind PersonNickname, Mode=OneWay}" />
                 <TextBlock
                     HorizontalAlignment="Center"
-                    Foreground="{ThemeResource PixevalTipTextForeground}"
+                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                     Style="{StaticResource CaptionTextBlockStyle}"
                     Text="{x:Bind PersonName, Mode=OneWay}" />
             </StackPanel>

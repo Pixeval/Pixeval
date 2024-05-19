@@ -33,11 +33,10 @@ using Pixeval.CoreApi.Net.Request;
 using Pixeval.CoreApi.Preference;
 using Pixeval.Logging;
 using Pixeval.Utilities;
-using Refit;
 
 namespace Pixeval.CoreApi;
 
-public partial class MakoClient : ICancellable, IAsyncDisposable
+public partial class MakoClient : ICancellable, IDisposable, IAsyncDisposable
 {
     /// <summary>
     /// Create a new <see cref="MakoClient" /> based on given <see cref="Configuration" />, <see cref="Session" />
@@ -52,8 +51,8 @@ public partial class MakoClient : ICancellable, IAsyncDisposable
     {
         Logger = logger;
         Session = session;
-        MakoServices = BuildServiceProvider(ServiceCollection);
         Configuration = configuration;
+        Provider = BuildServiceProvider(Services);
         IsCancelled = false;
     }
 
@@ -62,11 +61,12 @@ public partial class MakoClient : ICancellable, IAsyncDisposable
         var makoClient = new MakoClient(null!, configuration, logger);
         try
         {
-            makoClient.Session = (await makoClient.MakoServices.GetRequiredService<IAuthEndPoint>().RefreshAsync(new RefreshSessionRequest(refreshToken)).ConfigureAwait(false)).ToSession();
+            makoClient.Session = (await makoClient.Provider.GetRequiredService<IAuthEndPoint>().RefreshAsync(new RefreshSessionRequest(refreshToken)).ConfigureAwait(false)).ToSession();
             return makoClient;
         }
-        catch
+        catch (Exception e)
         {
+            logger.LogError("Login error", e);
             await makoClient.DisposeAsync();
             return null;
         }
@@ -76,8 +76,9 @@ public partial class MakoClient : ICancellable, IAsyncDisposable
     /// Injects necessary dependencies
     /// </summary>
     /// <returns>The <see cref="ServiceProvider" /> contains all the required dependencies</returns>
-    private ServiceProvider BuildServiceProvider(IServiceCollection serviceCollection) =>
-        serviceCollection
+    private ServiceProvider BuildServiceProvider(IServiceCollection serviceCollection)
+    {
+        _ = serviceCollection
             .AddSingleton(this)
             .AddSingleton<PixivApiHttpMessageHandler>()
             .AddSingleton<PixivImageHttpMessageHandler>()
@@ -90,11 +91,11 @@ public partial class MakoClient : ICancellable, IAsyncDisposable
                 {
                     BaseAddress = new Uri(MakoHttpOptions.AppApiBaseUrl)
                 })
-            .AddKeyedSingleton<HttpClient, MakoHttpClient>(MakoApiKind.WebApi,
-                (s, _) => new(s.GetRequiredKeyedService<HttpMessageHandler>(typeof(PixivApiHttpMessageHandler)))
-                {
-                    BaseAddress = new Uri(MakoHttpOptions.WebApiBaseUrl)
-                })
+            .AddKeyedSingleton<HttpClient, MakoHttpClient>(MakoApiKind.WebApi, 
+                (s, _) => new MakoHttpClient(s.GetRequiredKeyedService<HttpMessageHandler>(typeof(PixivApiHttpMessageHandler)))
+            {
+                BaseAddress = new Uri(MakoHttpOptions.WebApiBaseUrl),
+            })
             .AddKeyedSingleton<HttpClient, MakoHttpClient>(MakoApiKind.AuthApi,
                 (s, _) => new(s.GetRequiredKeyedService<HttpMessageHandler>(typeof(PixivApiHttpMessageHandler)))
                 {
@@ -109,39 +110,18 @@ public partial class MakoClient : ICancellable, IAsyncDisposable
                         UserAgent = { new("PixivIOSApp", "5.8.7") }
                     }
                 })
-            .AddSingleton(s => RestService.For<IAppApiEndPoint>(
-                s.GetRequiredKeyedService<HttpClient>(MakoApiKind.AppApi),
-                new RefitSettings
-                {
-                    ExceptionFactory = async message =>
-                        !message.IsSuccessStatusCode
-                            ? await MakoNetworkException
-                                .FromHttpResponseMessageAsync(message,
-                                    s.GetRequiredService<MakoClient>().Configuration.DomainFronting).ConfigureAwait(false)
-                            : null
-                }))
-            .AddSingleton(s => RestService.For<IAuthEndPoint>(
-                s.GetRequiredKeyedService<HttpClient>(MakoApiKind.AuthApi),
-                new RefitSettings
-                {
-                    ExceptionFactory = async message =>
-                        !message.IsSuccessStatusCode
-                            ? await MakoNetworkException
-                                .FromHttpResponseMessageAsync(message,
-                                    s.GetRequiredService<MakoClient>().Configuration.DomainFronting).ConfigureAwait(false)
-                            : null
-                }))
-            .AddSingleton(s => RestService.For<IReverseSearchApiEndPoint>("https://saucenao.com/",
-                new RefitSettings
-                {
-                    ExceptionFactory = async message =>
-                        !message.IsSuccessStatusCode
-                            ? await MakoNetworkException
-                                .FromHttpResponseMessageAsync(message,
-                                    s.GetRequiredService<MakoClient>().Configuration.DomainFronting).ConfigureAwait(false)
-                            : null
-                }))
-            .BuildServiceProvider();
+            .AddWebApiClient()
+            .UseSourceGeneratorHttpApiActivator()
+            .ConfigureHttpApi(t => t.PrependJsonSerializerContext(AppJsonSerializerContext.Default));
+        
+        _ = serviceCollection.AddHttpApi<IAppApiEndPoint>()
+            .ConfigurePrimaryHttpMessageHandler<PixivApiHttpMessageHandler>();
+        _ = serviceCollection.AddHttpApi<IAuthEndPoint>()
+            .ConfigurePrimaryHttpMessageHandler<PixivApiHttpMessageHandler>();
+        _ = serviceCollection.AddHttpApi<IReverseSearchApiEndPoint>();
+
+        return serviceCollection.BuildServiceProvider();
+    }
 
     /// <summary>
     /// Cancels this <see cref="MakoClient" />, including all the running instances, the
@@ -215,22 +195,30 @@ public partial class MakoClient : ICancellable, IAsyncDisposable
     /// <returns>The <see cref="HttpClient" /> corresponding to <paramref name="makoApiKind" /></returns>
     public HttpClient GetMakoHttpClient(MakoApiKind makoApiKind)
     {
-        return MakoServices.GetRequiredKeyedService<HttpClient>(makoApiKind);
+        return Provider.GetRequiredKeyedService<HttpClient>(makoApiKind);
     }
 
     public async ValueTask DisposeAsync()
     {
         GC.SuppressFinalize(this);
-        Dispose(ServiceCollection);
-        await MakoServices.DisposeAsync();
+        Dispose(Services);
+        await Provider.DisposeAsync();
     }
 
-    private static void Dispose(ServiceCollection collection)
+    public void Dispose()
+    {
+        GC.SuppressFinalize(this);
+        Dispose(Services);
+        Provider.Dispose();
+    }
+
+    private void Dispose(ServiceCollection collection)
     {
         foreach (var item in collection)
-            ((item.IsKeyedService
+            if ((item.IsKeyedService
                     ? item.KeyedImplementationInstance
                     : item.ImplementationInstance)
-                as IDisposable)?.Dispose();
+                is IDisposable d && !Equals(d))
+                d.Dispose();
     }
 }

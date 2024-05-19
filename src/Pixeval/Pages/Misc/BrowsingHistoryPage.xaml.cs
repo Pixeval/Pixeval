@@ -43,12 +43,10 @@ public sealed partial class BrowsingHistoryPage : IScrollViewHost
 
     private void ChangeSource()
     {
-        using var scope = App.AppViewModel.AppServicesScope;
-        var manager = scope.ServiceProvider.GetRequiredService<BrowseHistoryPersistentManager>();
+        var manager = App.AppViewModel.AppServiceProvider.GetRequiredService<BrowseHistoryPersistentManager>();
         var type = SimpleWorkTypeComboBox.GetSelectedItem<SimpleWorkType>();
-        var source = manager.Enumerate()
+        var source = manager.ObservableEntries
             .SelectNotNull(t => t.TryGetEntry(type))
-            .Reverse()
             .ToAsyncEnumerable();
 
         WorkContainer.WorkView.ResetEngine(type switch

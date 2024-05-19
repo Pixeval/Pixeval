@@ -18,8 +18,8 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using Refit;
+using System.Text.Json.Serialization;
 
 namespace Pixeval.CoreApi.Net.Request;
 
-public record DeleteCommentRequest([property: AliasAs("comment_id")] long CommentId);
+public record DeleteCommentRequest([property: JsonPropertyName("comment_id")] long CommentId);

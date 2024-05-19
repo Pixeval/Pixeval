@@ -23,14 +23,18 @@ using Windows.System;
 using Microsoft.UI.Xaml.Input;
 using Pixeval.Util.UI;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
+using FluentIcons.Common;
 using Pixeval.CoreApi.Model;
-using WinUI3Utilities.Controls;
+using Pixeval.Utilities;
 
 namespace Pixeval.Controls;
 
 public partial class WorkEntryViewModel<T>
 {
+
+
     /// <summary>
     /// Parameter: <see cref="ValueTuple{T1, T2, T3}"/>
     /// <list type="bullet">
@@ -39,56 +43,59 @@ public partial class WorkEntryViewModel<T>
     /// <item><term>T3</term><description><see cref="object"/> see <see cref="SaveCommand"/>'s parameter</description></item>
     /// </list>
     /// </summary>
-    public XamlUICommand AddToBookmarkCommand { get; } = EntryItemResources.AddToBookmark.GetCommand(IconGlyph.BookmarksE8A4);
+    public XamlUICommand AddToBookmarkCommand { get; } = EntryItemResources.AddToBookmark.GetCommand(Symbol.Bookmark);
 
     /// <summary>
     /// Parameter: <see cref="object"/> see <see cref="SaveCommand"/>'s parameter
     /// </summary>
-    public XamlUICommand BookmarkCommand { get; } = "".GetCommand(IconGlyph.HeartEB51, VirtualKeyModifiers.Control, VirtualKey.D);
-
-    /// <summary>
-    /// Parameter1: <see cref="ValueTuple{T1, T2}"/>
-    /// <list type="bullet">
-    /// <item><term>T1</term><description><see cref="ulong"/>?</description></item>
-    /// <item><term>T2</term><description><see cref="GetImageStream"/>?(<see cref="IllustrationItemViewModel"/>)</description></item>
-    /// <item><term>T2</term><description><see cref="DocumentViewerViewModel"/>?(<see cref="NovelItemViewModel"/>)</description></item>
-    /// </list>
-    /// 
-    /// Parameter2: <see cref="ulong"/>?
-    /// </summary>
-    public XamlUICommand SaveCommand { get; } = EntryItemResources.Save.GetCommand(IconGlyph.SaveE74E, VirtualKeyModifiers.Control, VirtualKey.S);
+    public XamlUICommand BookmarkCommand { get; } = "".GetCommand(Symbol.Heart, VirtualKeyModifiers.Control, VirtualKey.D);
 
     /// <summary>
     /// Parameter1: <see cref="ValueTuple{T1, T2}"/>
     /// <list type="bullet">
     /// <item><term>T1</term><description><see cref="ulong"/></description></item>
-    /// <item><term>T2</term><description><see cref="GetImageStream"/>?(<see cref="IllustrationItemViewModel"/>)</description></item>
+    /// <item><term>T2</term><description><see cref="GetImageStreams"/>?(<see cref="IllustrationItemViewModel"/>)</description></item>
+    /// <item><term>T2</term><description><see cref="DocumentViewerViewModel"/>?(<see cref="NovelItemViewModel"/>)</description></item>
+    /// </list>
+    /// 
+    /// Parameter2: <see cref="ulong"/><br/>
+    /// Parameter3: <see langword="null"/>
+    /// </summary>
+    public XamlUICommand SaveCommand { get; } = EntryItemResources.Save.GetCommand(Symbol.Save, VirtualKeyModifiers.Control, VirtualKey.S);
+
+    /// <summary>
+    /// Parameter1: <see cref="ValueTuple{T1, T2}"/>
+    /// <list type="bullet">
+    /// <item><term>T1</term><description><see cref="ulong"/></description></item>
+    /// <item><term>T2</term><description><see cref="GetImageStreams"/>?(<see cref="IllustrationItemViewModel"/>)</description></item>
     /// <item><term>T2</term><description><see cref="DocumentViewerViewModel"/>?(<see cref="NovelItemViewModel"/>)</description></item>
     /// </list>
     /// 
     /// Parameter2: <see cref="ulong"/>
     /// </summary>
-    public XamlUICommand SaveAsCommand { get; } = EntryItemResources.SaveAs.GetCommand(IconGlyph.SaveAsE792, VirtualKeyModifiers.Control | VirtualKeyModifiers.Shift, VirtualKey.S);
+    public XamlUICommand SaveAsCommand { get; } = EntryItemResources.SaveAs.GetCommand(Symbol.SaveEdit, VirtualKeyModifiers.Control | VirtualKeyModifiers.Shift, VirtualKey.S);
 
     /// <summary>
     /// <see cref="IllustrationItemViewModel"/>:<br/>
     /// Parameter1: <see cref="ValueTuple{T1, T2}"/>
     /// <list type="bullet">
-    /// <item><term>T1</term><description><see cref="ulong"/>?</description></item>
-    /// <item><term>T2</term><description><see cref="GetImageStream"/></description></item>
+    /// <item><term>T1</term><description><see cref="ulong"/></description></item>
+    /// <item><term>T2</term><description><see cref="GetImageStreams"/></description></item>
     /// </list>
     /// 
-    /// Parameter2: <see cref="GetImageStream"/><br/>
+    /// Parameter2: <see cref="GetImageStreams"/><br/>
     /// <see cref="NovelItemViewModel"/>:<br/>
     /// Parameter1: <see cref="ValueTuple{T1, T2}"/>
     /// <list type="bullet">
-    /// <item><term>T1</term><description><see cref="ulong"/>?</description></item>
+    /// <item><term>T1</term><description><see cref="ulong"/></description></item>
     /// <item><term>T2</term><description><see cref="NovelContent"/></description></item>
     /// </list>
     /// 
     /// Parameter2: <see cref="NovelContent"/>
     /// </summary>
-    public XamlUICommand CopyCommand { get; } = EntryItemResources.Copy.GetCommand(IconGlyph.CopyE8C8, VirtualKeyModifiers.Control, VirtualKey.C);
+    public XamlUICommand CopyCommand { get; } = EntryItemResources.Copy.GetCommand(Symbol.Copy, VirtualKeyModifiers.Control, VirtualKey.C);
+
+    public XamlUICommand OpenUserInfoPage { get; } = EntryItemResources.OpenUserInfoPage.GetCommand(Symbol.Person);
 
     private void InitializeCommands()
     {
@@ -96,7 +103,7 @@ public partial class WorkEntryViewModel<T>
 
         AddToBookmarkCommand.ExecuteRequested += AddToBookmarkCommandOnExecuteRequested;
 
-        BookmarkCommand.GetBookmarkCommand(IsBookmarked);
+        BookmarkCommand.RefreshBookmarkCommand(IsBookmarked);
         BookmarkCommand.ExecuteRequested += BookmarkCommandOnExecuteRequested;
 
         SaveCommand.ExecuteRequested += SaveCommandOnExecuteRequested;
@@ -106,23 +113,24 @@ public partial class WorkEntryViewModel<T>
         CopyCommand.ExecuteRequested += CopyCommandOnExecuteRequested;
     }
 
-    private async void BookmarkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
+    private void BookmarkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
-        IsBookmarked = await SetBookmarkAsync(Id, !IsBookmarked);
-        BookmarkCommand.GetBookmarkCommand(IsBookmarked);
+        
+        IsBookmarked = !IsBookmarked; // pre-update
+        BookmarkCommand.RefreshBookmarkCommand(IsBookmarked); // pre-update
+        _ = _bookmarkDebounce.ExecuteAsync(IsBookmarked ? new BookmarkDebounceTask(this, false, null) : new RemoveBookmarkDebounceTask(this, false, null));
         if (App.AppViewModel.AppSettings.DownloadWhenBookmarked && IsBookmarked)
             SaveCommand.Execute(args.Parameter);
     }
 
-    private async void AddToBookmarkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
+    private void AddToBookmarkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
+
         if (args.Parameter is not (IEnumerable<string> userTags, bool isPrivate, var parameter))
             return;
-        var success = await SetBookmarkAsync(Id, true, isPrivate, userTags);
-        if (!success)
-            return;
         IsBookmarked = true;
-        BookmarkCommand.GetBookmarkCommand(IsBookmarked);
+        BookmarkCommand.RefreshBookmarkCommand(IsBookmarked);
+        _ = _bookmarkDebounce.ExecuteAsync(IsBookmarked ? new BookmarkDebounceTask(this, isPrivate, userTags) : new RemoveBookmarkDebounceTask(this, isPrivate, userTags));
         if (App.AppViewModel.AppSettings.DownloadWhenBookmarked)
             SaveCommand.Execute(parameter);
     }

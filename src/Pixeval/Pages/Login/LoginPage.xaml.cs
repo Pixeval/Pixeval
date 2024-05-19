@@ -20,11 +20,10 @@
 
 using System;
 using System.Threading.Tasks;
-using Windows.Globalization;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media.Animation;
+using Microsoft.Windows.Globalization;
 using Pixeval.AppManagement;
 using Pixeval.Settings.Models;
 using Pixeval.Util.UI;
@@ -53,7 +52,7 @@ public sealed partial class LoginPage
     {
         if (_viewModel.LogoutExit)
         {
-            _viewModel.AdvancePhase(LoginPageViewModel.LoginPhaseEnum.WaitingForUserInput);
+            _viewModel.AdvancePhase(LoginPhaseEnum.WaitingForUserInput);
             _viewModel.IsEnabled = true;
         }
         else
@@ -99,7 +98,7 @@ public sealed partial class LoginPage
             }
             else
             {
-                _viewModel.AdvancePhase(LoginPageViewModel.LoginPhaseEnum.WaitingForUserInput);
+                _viewModel.AdvancePhase(LoginPhaseEnum.WaitingForUserInput);
                 _viewModel.IsEnabled = true;
             }
         }
@@ -115,41 +114,42 @@ public sealed partial class LoginPage
     {
         if (Current is null || App.AppViewModel.MakoClient == null!)
             ThrowHelper.Exception();
-        Current._viewModel.AdvancePhase(LoginPageViewModel.LoginPhaseEnum.SuccessNavigating);
+        Current._viewModel.AdvancePhase(LoginPhaseEnum.SuccessNavigating);
         Current.NavigateParent<MainPage>(null, new DrillInNavigationTransitionInfo());
         Current._viewModel.LogoutExit = false;
         AppInfo.SaveContext();
     }
 
-    private void SwitchPresenterButton_OnTapped(object sender, TappedRoutedEventArgs e) => SwitchPresenter.Value = sender.To<FrameworkElement>().GetTag<string>();
+    private void SwitchPresenterButton_OnClicked(object sender, RoutedEventArgs e) => SwitchPresenter.Value = sender.To<FrameworkElement>().GetTag<string>();
 
     #region Token
 
-    private void TokenLogin_OnTapped(object sender, object e) => Refresh(_viewModel.RefreshToken);
+    private void TokenLogin_OnClicked(object sender, object e) => Refresh(_viewModel.RefreshToken);
 
     #endregion
 
     #region Browser
 
-    private void BrowserLogin_OnTapped(object sender, RoutedEventArgs e) => _viewModel.BrowserLogin();
+    private void BrowserLogin_OnClicked(object sender, RoutedEventArgs e) => _viewModel.BrowserLogin();
 
     #endregion
 
     #region WebView
 
-    private async void WebViewLogin_OnTapped(object sender, object e) => await WebView2LoginAsync(false);
+    private async void WebViewLogin_OnClicked(object sender, object e) => await WebView2LoginAsync(false);
 
-    private async void WebViewLoginNewAccount_OnTapped(object sender, RoutedEventArgs e) => await WebView2LoginAsync(true);
+    private async void WebViewLoginNewAccount_OnClicked(object sender, RoutedEventArgs e) => await WebView2LoginAsync(true);
 
     private async Task WebView2LoginAsync(bool useNewAccount)
     {
         try
         {
-            await _viewModel.WebView2LoginAsync(this, useNewAccount, () => DispatcherQueue.TryEnqueue(SuccessNavigating));
+            await _viewModel.WebView2LoginAsync(HWnd, useNewAccount, () => DispatcherQueue.TryEnqueue(SuccessNavigating));
+            _viewModel.AdvancePhase(LoginPhaseEnum.WaitingForUserInput);
         }
         catch (Exception exception)
         {
-            _ = await this.CreateAcknowledgementAsync(LoginPageResources.ErrorWhileLoggingInTitle,
+            _ = await HWnd.CreateAcknowledgementAsync(LoginPageResources.ErrorWhileLoggingInTitle,
                 LoginPageResources.ErrorWhileLogginInContentFormatted.Format(exception + "\n" + exception.StackTrace));
             _viewModel.CloseWindow();
         }

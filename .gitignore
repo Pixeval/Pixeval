@@ -184,7 +184,7 @@ publish/
 *.azurePubxml
 # Note: Comment the next line if you want to checkin your web deploy settings,
 # but database connection strings (with potential passwords) will be unencrypted
-*.pubxml
+# *.pubxml
 *.publishproj
 
 # Microsoft Azure Web App publish settings. Comment the next line if you want to
@@ -217,7 +217,7 @@ rcf/
 # Windows Store app package directories and files
 AppPackages/
 BundleArtifacts/
-Package.StoreAssociation.xml
+# Package.StoreAssociation.xml
 _pkginfo.txt
 *.appx
 *.appxbundle

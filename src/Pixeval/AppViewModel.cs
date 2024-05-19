@@ -37,7 +37,7 @@ using Windows.Storage;
 
 namespace Pixeval;
 
-public class AppViewModel(App app)
+public partial class AppViewModel(App app) : IDisposable
 {
     private bool _activatedByProtocol;
 
@@ -47,7 +47,7 @@ public class AppViewModel(App app)
 
     public App App { get; } = app;
 
-    public DownloadManager<DownloadTaskBase> DownloadManager { get; private set; } = null!;
+    public DownloadManager DownloadManager { get; private set; } = null!;
 
     public MakoClient MakoClient { get; set; } = null!; // The null-state of MakoClient is transient
 
@@ -63,7 +63,7 @@ public class AppViewModel(App app)
 
     public void AppLoggedIn()
     {
-        DownloadManager = new DownloadManager<DownloadTaskBase>(AppSettings.MaxDownloadTaskConcurrencyLevel, MakoClient.GetMakoHttpClient(MakoApiKind.ImageApi));
+        DownloadManager = new DownloadManager(MakoClient.GetMakoHttpClient(MakoApiKind.ImageApi), AppSettings.MaxDownloadTaskConcurrencyLevel);
         AppInfo.RestoreHistories();
     }
 
@@ -71,8 +71,8 @@ public class AppViewModel(App app)
     {
         var fileLogger = new FileLogger(ApplicationData.Current.LocalFolder.Path + @"\Logs\");
         return new ServiceCollection()
-            .AddSingleton<IDownloadTaskFactory<IllustrationItemViewModel, IllustrationDownloadTask>, IllustrationDownloadTaskFactory>()
-            .AddSingleton<IDownloadTaskFactory<NovelItemViewModel, NovelDownloadTask>, NovelDownloadTaskFactory>()
+            .AddSingleton<IllustrationDownloadTaskFactory>()
+            .AddSingleton<NovelDownloadTaskFactory>()
             .AddSingleton(new LiteDatabase(AppInfo.DatabaseFilePath))
             .AddSingleton(provider => new DownloadHistoryPersistentManager(provider.GetRequiredService<LiteDatabase>(), App.AppViewModel.AppSettings.MaximumDownloadHistoryRecords))
             .AddSingleton(provider => new SearchHistoryPersistentManager(provider.GetRequiredService<LiteDatabase>(), App.AppViewModel.AppSettings.MaximumSearchHistoryRecords))
@@ -105,5 +105,14 @@ public class AppViewModel(App app)
         var original = _activatedByProtocol;
         _activatedByProtocol = false;
         return original;
+    }
+
+    public void Dispose()
+    {
+        AppServiceProvider?.GetRequiredService<LiteDatabase>().Dispose();
+        AppServiceProvider?.Dispose();
+        DownloadManager?.Dispose();
+        MakoClient?.Dispose();
+        GC.SuppressFinalize(this);
     }
 }

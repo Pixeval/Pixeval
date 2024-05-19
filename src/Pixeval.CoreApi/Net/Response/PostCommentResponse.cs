@@ -18,13 +18,13 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using System.Text.Json.Serialization;
 using Pixeval.CoreApi.Model;
-using Refit;
 
 namespace Pixeval.CoreApi.Net.Response;
 
 public class PostCommentResponse
 {
-    [AliasAs("comment")]
+    [JsonPropertyName("comment")]
     public required Comment Comment { get; set; }
 }

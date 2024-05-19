@@ -1,47 +1,23 @@
-<Grid
+<controls1:DockPanel
     x:Class="Pixeval.Controls.FlyoutContent.CommentRepliesBlock"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Pixeval.Controls"
-    xmlns:converters="using:CommunityToolkit.WinUI.Converters"
+    xmlns:controls1="using:CommunityToolkit.WinUI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:Pixeval.Controls.FlyoutContent"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
-    <Grid.Resources>
-        <converters:BoolNegationConverter x:Key="BoolNegationConverter" />
-    </Grid.Resources>
-    <Grid.RowDefinitions>
-        <RowDefinition Height="*" />
-        <RowDefinition Height="Auto" />
-    </Grid.RowDefinitions>
-    <!--  ReSharper disable once UnusedMember.Local  -->
-    <StackPanel
-        x:Name="RepliesAreEmptyPanel"
-        Grid.Row="0"
-        x:Load="{x:Bind ViewModel.RepliesIsNotNull, Converter={StaticResource BoolNegationConverter}, Mode=OneWay}">
-        <Image
-            Width="200"
-            Height="200"
-            Source="/Assets/Images/empty-box.png"
-            Stretch="Uniform" />
-        <TextBlock
-            x:Uid="/CommentRepliesBlock/RepliesAreEmptyTextBlock"
-            Margin="0,10"
-            HorizontalAlignment="Center"
-            FontSize="{StaticResource PixevalSubtitleFontSize}" />
-    </StackPanel>
-    <!--  ReSharper disable once UnusedMember.Local  -->
-    <controls:CommentList
-        x:Name="CommentList"
-        Grid.Row="0"
-        x:Load="{x:Bind ViewModel.RepliesIsNotNull, Mode=OneWay}"
-        ItemsSource="{x:Bind ViewModel.Replies, Mode=OneWay}"
-        RepliesHyperlinkButtonTapped="CommentList_OnRepliesHyperlinkButtonTapped" />
     <controls:PixivReplyBar
         x:Name="ReplyBar"
-        Grid.Row="1"
         Margin="10"
-        SendButtonTapped="ReplyBar_OnSendButtonTapped"
-        StickerTapped="ReplyBar_OnStickerTapped" />
-</Grid>
+        controls1:DockPanel.Dock="Bottom"
+        SendButtonClick="ReplyBar_OnSendButtonClick"
+        StickerClick="ReplyBar_OnStickerClick" />
+    <!--  ReSharper disable once UnusedMember.Local  -->
+    <controls:CommentView
+        x:Name="CommentView"
+        HasNoItem="{x:Bind controls:C.Negation(ViewModel.RepliesIsNotNull), Mode=OneWay}"
+        ItemsSource="{x:Bind ViewModel.Replies, Mode=OneWay}"
+        RepliesHyperlinkButtonClick="CommentView_OnRepliesHyperlinkButtonClick" />
+</controls1:DockPanel>

@@ -33,12 +33,13 @@ using Windows.Foundation;
 using CommunityToolkit.WinUI.Collections;
 using CommunityToolkit.WinUI.Helpers;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 
 namespace Pixeval.Collections;
 
 [DebuggerDisplay("Count = {Count}")]
-public class AdvancedObservableCollection<T> : IList<T>, IList, IReadOnlyList<T>, INotifyCollectionChanged, INotifyPropertyChanged, ISupportIncrementalLoading, IComparer<T> where T : class
+public class AdvancedObservableCollection<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] T> : IList<T>, IList, IReadOnlyList<T>, INotifyCollectionChanged, INotifyPropertyChanged, ISupportIncrementalLoading, IComparer<T> where T : class
 {
     private readonly Dictionary<string, PropertyInfo> _sortProperties = [];
 
@@ -69,7 +70,7 @@ public class AdvancedObservableCollection<T> : IList<T>, IList, IReadOnlyList<T>
     /// Initializes a new instance of the <see cref="AdvancedObservableCollection{T}"/> class.
     /// </summary>
     /// <param name="source">source IEnumerable</param>
-    /// <param name="isLiveShaping">Denotes whether this ACV should re-filter/re-sort if a PropertyChanged is raised for an observed property.</param>
+    /// <param name="isLiveShaping">Denotes whether this AOC should re-filter/re-sort if a PropertyChanged is raised for an observed property.</param>
     public AdvancedObservableCollection(ObservableCollection<T> source, bool isLiveShaping = false)
     {
         _liveShapingEnabled = isLiveShaping;

@@ -9,7 +9,7 @@ namespace Pixeval.Pages.Tags;
 
 public class TagsEntryIncrementalSource(IEnumerable<FileInfo> source) : IIncrementalSource<TagsEntryViewModel>
 {
-    public async Task<IEnumerable<TagsEntryViewModel>> GetPagedItemsAsync(int pageIndex, int pageSize, CancellationToken cancellationToken = new CancellationToken())
+    public async Task<IEnumerable<TagsEntryViewModel>> GetPagedItemsAsync(int pageIndex, int pageSize, CancellationToken cancellationToken = default)
     {
         var list = new List<TagsEntryViewModel>();
         foreach (var fileInfo in source.Skip(pageIndex * pageSize))

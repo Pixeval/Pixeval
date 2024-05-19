@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval.CoreApi
+#region Copyright (c) Pixeval/Pixeval.CoreApi
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
@@ -18,28 +18,28 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using Refit;
+using System.Text.Json.Serialization;
 
 namespace Pixeval.CoreApi.Net.Request;
 // ReSharper disable UnusedMember.Global
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 // ReSharper disable MemberCanBePrivate.Global
 #pragma warning disable CA1822
-internal class RefreshSessionRequest(string? refreshToken)
+public class RefreshSessionRequest(string? refreshToken)
 {
-    [AliasAs("refresh_token")]
+    [JsonPropertyName("refresh_token")]
     public string? RefreshToken { get; } = refreshToken;
 
-    [AliasAs("grant_type")]
+    [JsonPropertyName("grant_type")]
     public string GrantType => "refresh_token";
 
-    [AliasAs("client_id")]
+    [JsonPropertyName("client_id")]
     public string ClientId => "MOBrBDS8blbauoSck0ZfDbtuzpyT";
 
-    [AliasAs("client_secret")]
+    [JsonPropertyName("client_secret")]
     public string ClientSecret => "lsACyCD94FhDUtGTXi3QzcFE2uU1hqtDaKeqrdwj";
 
-    [AliasAs("include_policy")]
+    [JsonPropertyName("include_policy")]
     public string IncludePolicy => "true";
 }
 #pragma warning restore CA1822

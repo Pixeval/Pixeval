@@ -23,6 +23,7 @@ using Pixeval.CoreApi.Model;
 using Pixeval.Database;
 using Pixeval.Util.UI;
 using WinUI3Utilities.Controls;
+using Symbol = FluentIcons.Common.Symbol;
 
 namespace Pixeval.Pages;
 
@@ -40,15 +41,15 @@ public record SuggestionModel(string? Name, string? TranslatedName, SuggestionTy
     public static readonly SuggestionModel NovelTrendingTagHeader =
         new(null, null, SuggestionType.NovelTrendingTagHeader);
 
-    public IconGlyph SettingsIconGlyph { get; init; }
+    public Symbol SettingsSymbol { get; init; }
 
     public FontIcon? FontIcon => SuggestionType switch
     {
-        SuggestionType.IllustId or SuggestionType.NovelId or SuggestionType.UserId => IconGlyph.OpenInNewWindowE8A7.GetGlyphIcon(FontSizeType.Small),
-        SuggestionType.Tag or SuggestionType.IllustrationTag or SuggestionType.NovelTag => IconGlyph.TagE8EC.GetGlyphIcon(FontSizeType.Small),
-        SuggestionType.UserSearch => IconGlyph.ContactE77B.GetGlyphIcon(FontSizeType.Small),
-        SuggestionType.Settings => SettingsIconGlyph.GetGlyphIcon(FontSizeType.Small),
-        SuggestionType.History => IconGlyph.HistoryE81C.GetGlyphIcon(FontSizeType.Small),
+        SuggestionType.IllustId or SuggestionType.NovelId or SuggestionType.UserId => Symbol.Open.GetSymbolIcon(FontSizeType.Small),
+        SuggestionType.Tag or SuggestionType.IllustrationTag or SuggestionType.NovelTag => Symbol.Tag.GetSymbolIcon(FontSizeType.Small),
+        SuggestionType.UserSearch => Symbol.Person.GetSymbolIcon(FontSizeType.Small),
+        SuggestionType.Settings => SettingsSymbol.GetSymbolIcon(FontSizeType.Small),
+        SuggestionType.History => Symbol.History.GetSymbolIcon(FontSizeType.Small),
         _ => null
     };
 

@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval.CoreApi
+#region Copyright (c) Pixeval/Pixeval.CoreApi
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
@@ -21,13 +21,16 @@
 using System.Threading.Tasks;
 using Pixeval.CoreApi.Model;
 using Pixeval.CoreApi.Net.Request;
-using Refit;
+using WebApiClientCore;
+using WebApiClientCore.Attributes;
 
 namespace Pixeval.CoreApi.Net.EndPoints;
 
-[Headers("User-Agent: PixivAndroidApp/5.0.64 (Android 6.0)", "Content-Type: application/x-www-form-urlencoded")]
-internal interface IAuthEndPoint
+[Header(HttpRequestHeader.UserAgent, "PixivAndroidApp/5.0.64 (Android 6.0)")]
+[Header(HttpRequestHeader.ContentType, "application/x-www-form-urlencoded")]
+[HttpHost(MakoHttpOptions.OAuthBaseUrl)]
+public interface IAuthEndPoint
 {
-    [Post("/auth/token")]
-    Task<TokenResponse> RefreshAsync([Body(BodySerializationMethod.UrlEncoded)] RefreshSessionRequest request);
+    [HttpPost("/auth/token")]
+    Task<TokenResponse> RefreshAsync([FormContent] RefreshSessionRequest request);
 }

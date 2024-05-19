@@ -12,7 +12,7 @@ namespace Pixeval.AppManagement;
 
 public class Versioning
 {
-    public Version CurrentVersion { get; } = Version.Parse(GitVersionInformation.AssemblySemVer);
+    public Version CurrentVersion { get; } = Version.Parse("4.1.1"/*TODO:GitVersionInformation.AssemblySemVer*/);
 
     public Version? NewestVersion => NewestAppReleaseModel?.Version;
 
@@ -49,7 +49,7 @@ public class Versioning
             AppReleaseModels = null;
             if (client.DefaultRequestHeaders.UserAgent.Count is 0)
                 client.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36 Edg/121.0.0.0");
-            if (await client.GetFromJsonAsync<GitHubRelease[]>("https://api.github.com/repos/Pixeval/Pixeval/releases") is { Length: > 0 } gitHubReleases)
+            if (await client.GetFromJsonAsync("https://api.github.com/repos/Pixeval/Pixeval/releases", typeof(GitHubRelease[]), GitHubReleaseSerializeContext.Default) is GitHubRelease[] { Length: > 0 } gitHubReleases)
             {
                 var appReleaseModels = new List<AppReleaseModel>(gitHubReleases.Length);
                 foreach (var release in gitHubReleases)
@@ -102,7 +102,11 @@ public record AppReleaseModel(
     }
 }
 
-file class GitHubRelease
+[JsonSerializable(typeof(GitHubRelease[]))]
+[JsonSerializable(typeof(Assets[]))]
+public partial class GitHubReleaseSerializeContext : JsonSerializerContext;
+
+public class GitHubRelease
 {
     [JsonPropertyName("tag_name")]
     public required string TagName { get; init; }
@@ -114,7 +118,7 @@ file class GitHubRelease
     public required string Notes { get; init; }
 }
 
-file class Assets
+public class Assets
 {
     [JsonPropertyName("browser_download_url")]
     public required string BrowserDownloadUrl { get; init; }
