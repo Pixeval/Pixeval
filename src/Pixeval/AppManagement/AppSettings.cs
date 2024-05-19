@@ -41,13 +41,9 @@ using static Pixeval.SettingsPageResources;
 
 namespace Pixeval.AppManagement;
 
-[GenerateConstructor, Reset]
-public partial record AppSettings : IWindowSettings
+[GenerateConstructor(CallParameterlessConstructor = true), Reset]
+public partial record AppSettings() : IWindowSettings
 {
-    public AppSettings()
-    {
-    }
-
     [SettingsEntry(IconGlyph.CommunicationsE95A, nameof(DownloadUpdateAutomaticallyEntryHeader), nameof(DownloadUpdateAutomaticallyEntryDescription))]
     public bool DownloadUpdateAutomatically { get; set; }
 
@@ -137,7 +133,7 @@ public partial record AppSettings : IWindowSettings
 
     [SettingsEntry(IconGlyph.SetHistoryStatus2F739, nameof(MaximumSuggestionBoxSearchHistoryEntryHeader), nameof(MaximumSuggestionBoxSearchHistoryEntryDescription))]
     public int MaximumSuggestionBoxSearchHistory { get; set; } = 10;
-
+    
     /// <summary>
     /// The target filter that indicates the type of the client
     /// </summary>
@@ -251,10 +247,8 @@ public partial record AppSettings : IWindowSettings
 
     public bool IsMaximized { get; set; }
 
-    [AttributeIgnore(typeof(GenerateConstructorAttribute), typeof(AppContextAttribute<>))]
     public WorkType WorkType => SimpleWorkType is SimpleWorkType.IllustAndManga ? WorkType.Illust : WorkType.Novel;
 
-    [AttributeIgnore(typeof(GenerateConstructorAttribute), typeof(AppContextAttribute<>))]
     public ElementTheme ActualTheme => Theme is ElementTheme.Default
         ? AppHelper.IsDarkMode ? ElementTheme.Dark : ElementTheme.Light
         : Theme;
@@ -287,7 +281,6 @@ public partial record AppSettings : IWindowSettings
         }
     }
 
-    [AttributeIgnore(typeof(GenerateConstructorAttribute), typeof(AppContextAttribute<>))]
     public static CultureInfo CurrentCulture => ApplicationLanguages.PrimaryLanguageOverride.Let(language => string.IsNullOrEmpty(language) ? CultureInfo.CurrentUICulture : CultureInfo.GetCultureInfo(language));
 
     public MakoClientConfiguration ToMakoClientConfiguration()

@@ -51,8 +51,6 @@ public partial class App
 {
     private const string ApplicationWideFontKey = "ContentControlThemeFontFamily";
 
-    private const string NavigationViewContentMargin = "NavigationViewContentMargin";
-
     public App()
     {
         AppViewModel = new AppViewModel(this);
@@ -69,9 +67,6 @@ public partial class App
     {
         Resources["DefaultAppBarButtonStyle"].To<Style>().Setters[7] = new Setter(FrameworkElement.WidthProperty, 45);
         Resources["DefaultAppBarToggleButtonStyle"].To<Style>().Setters[8] = new Setter(FrameworkElement.WidthProperty, 45);
-
-        if (AppInfo.CustomizeTitleBarSupported)
-            Resources[NavigationViewContentMargin] = new Thickness(0, 48, 0, 0);
 
         if (AppInstance.GetCurrent().GetActivatedEventArgs().Kind is ExtendedActivationKind.ToastNotification)
             return;

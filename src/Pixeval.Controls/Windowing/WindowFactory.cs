@@ -40,6 +40,8 @@ public static class WindowFactory
 
     public static IReadOnlyDictionary<ulong, EnhancedWindow> ForkedWindows => _forkedWindowsInternal;
 
+    public static EnhancedWindow GetForkedWindows(ulong key) => _forkedWindowsInternal[key];
+
     public static void Initialize(IWindowSettings windowSettings, string iconAbsolutePath)
     {
         AppHelper.InitializeIsDarkMode();
