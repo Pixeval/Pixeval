@@ -50,7 +50,7 @@
 
 > Interval style doesn't support half-opened infinitive intervals like '2-' or '-3'.
 
-### [date] | Date
+### [date] Date
 
 | Syntax     | Meaning                                |
 | ---------- | -------------------------------------- |

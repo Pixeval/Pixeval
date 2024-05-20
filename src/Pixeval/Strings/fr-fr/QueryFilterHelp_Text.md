@@ -50,7 +50,7 @@
 
 > Les intervalles demi ouvertes comme '2-' ou '-3' ne sont pas supportées par le format d'intervalle.
 
-### [date] | Date
+### [date] Date
 
 | Syntaxe    | Signification                      |
 | ---------- | ---------------------------------- |
