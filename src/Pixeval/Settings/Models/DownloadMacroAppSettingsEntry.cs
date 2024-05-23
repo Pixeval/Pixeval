@@ -14,13 +14,16 @@ public class DownloadMacroAppSettingsEntry(
 {
     public override DownloadMacroSettingsExpander Element => new() { Entry = this };
 
-    private static readonly IDictionary<string, string> _macroTooltips = new Dictionary<string, string>
+    private static readonly IReadOnlyDictionary<string, string> _macroTooltips = new Dictionary<string, string>
     {
         ["ext"] = SettingsPageResources.ExtMacroTooltip,
         ["id"] = SettingsPageResources.IdMacroTooltip,
         ["title"] = SettingsPageResources.TitleMacroTooltip,
         ["artist_id"] = SettingsPageResources.ArtistIdMacroTooltip,
         ["artist_name"] = SettingsPageResources.ArtistNameMacroTooltip,
+        ["publish_year"] = SettingsPageResources.PublishYearMacroTooltip,
+        ["publish_month"] = SettingsPageResources.PublishMonthMacroTooltip,
+        ["publish_day"] = SettingsPageResources.PublishDayMacroTooltip,
         ["if_r18"] = SettingsPageResources.IfR18MacroTooltip,
         ["if_r18g"] = SettingsPageResources.IfR18GMacroTooltip,
         ["if_ai"] = SettingsPageResources.IfAiMacroTooltip,
