@@ -480,6 +480,7 @@
       "pixeval.controls": {
         "type": "Project",
         "dependencies": {
+          "CommunityToolkit.Labs.WinUI.Shimmer": "[0.1.240517-build.1678, )",
           "CommunityToolkit.Mvvm": "[8.2.2, )",
           "CommunityToolkit.WinUI.Collections": "[8.0.240109, )",
           "CommunityToolkit.WinUI.Controls.Primitives": "[8.1.240328-rc, )",
