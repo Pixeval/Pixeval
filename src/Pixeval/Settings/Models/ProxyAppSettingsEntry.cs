@@ -37,9 +37,9 @@ public class ProxyAppSettingsEntry(AppSettings appSettings)
         get => Settings.Proxy;
         set
         {
-            if (Settings.Proxy != value)
+            if (Settings.Proxy == value)
                 return;
-            Settings.Proxy = value;
+            Settings.Proxy = value ?? "";
             OnPropertyChanged();
         }
     }
