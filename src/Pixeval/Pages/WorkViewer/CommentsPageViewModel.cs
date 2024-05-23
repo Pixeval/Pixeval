@@ -28,7 +28,6 @@ using Pixeval.Collections;
 using Pixeval.Controls;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Model;
-using Pixeval.Utilities;
 
 namespace Pixeval.Pages;
 
