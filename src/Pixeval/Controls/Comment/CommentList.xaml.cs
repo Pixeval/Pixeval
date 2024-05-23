@@ -26,6 +26,8 @@ using WinUI3Utilities.Attributes;
 namespace Pixeval.Controls;
 
 [DependencyProperty<object>("ItemsSource")]
+[DependencyProperty<bool>("HasNoItem", "true", nameof(OnHasNoItemChanged))]
+[DependencyProperty<bool>("IsLoadingMore", "false", nameof(OnHasNoItemChanged))]
 public sealed partial class CommentList
 {
     public CommentList() => InitializeComponent();
@@ -49,5 +51,12 @@ public sealed partial class CommentList
         if (CommentsList.ItemsSource is IEnumerable<CommentBlockViewModel> list)
             foreach (var commentBlockViewModel in list)
                 commentBlockViewModel.Dispose();
+    }
+
+    private static void OnHasNoItemChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        var control = (CommentList)d;
+        control.HasNoItemStackPanel.Visibility = control is { HasNoItem: true, IsLoadingMore: false } ? Visibility.Visible : Visibility.Collapsed;
+        control.SkeletonView.Visibility = control is { HasNoItem: true, IsLoadingMore: true } ? Visibility.Visible : Visibility.Collapsed;
     }
 }
