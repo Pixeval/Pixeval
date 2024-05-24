@@ -120,7 +120,7 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
                     SettingsPageResources.ViewingRestrictionEntryHeader,
                     SettingsPageResources.ViewingRestrictionEntryDescription,
                     IconGlyph.BlockContactE8F8,
-                    () => Launcher.LaunchUriAsync(new Uri("https://www.pixiv.net/setting_user.php")))
+                    () => Launcher.LaunchUriAsync(new Uri("https://www.pixiv.net/settings/viewing")))
             },
             new(SettingsEntryCategory.Search)
             {

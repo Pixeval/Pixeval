@@ -91,7 +91,7 @@ public sealed partial class SettingsPage : IScrollViewHost, IDisposable
         }
     }
 
-    private async void ResetDefaultSettingsButton_OnTapped(object sender, TappedRoutedEventArgs e)
+    private async void ResetDefaultSettings_OnClicked(object sender, RoutedEventArgs e)
     {
         if (await this.CreateOkCancelAsync(SettingsPageResources.ResetSettingConfirmationDialogTitle,
                 SettingsPageResources.ResetSettingConfirmationDialogContent) is ContentDialogResult.Primary)
