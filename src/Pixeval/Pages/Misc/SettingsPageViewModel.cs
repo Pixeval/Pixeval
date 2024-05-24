@@ -120,7 +120,7 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
                     SettingsPageResources.ViewingRestrictionEntryHeader,
                     SettingsPageResources.ViewingRestrictionEntryDescription,
                     IconGlyph.BlockContactE8F8,
-                    () => _ = Launcher.LaunchUriAsync(new Uri("https://www.pixiv.net/setting_user.php")))
+                    () => Launcher.LaunchUriAsync(new Uri("https://www.pixiv.net/setting_user.php")))
             },
             new(SettingsEntryCategory.Search)
             {
@@ -186,7 +186,7 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
                 new IntAppSettingsEntry(AppSettings,
                     t => t.MaximumDownloadHistoryRecords)
                 {
-                    Max = 200,
+                    Max = ushort.MaxValue,
                     Min = 10
                 },
                 new BoolAppSettingsEntry(AppSettings,
@@ -223,7 +223,7 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
                     t => t.MaximumBrowseHistoryRecords)
                 {
                     Placeholder = SettingsPageResources.MaximumBrowseHistoryRecordsNumerBoxPlaceholderText,
-                    Max = 200,
+                    Max = ushort.MaxValue,
                     Min = 10
                 }
             }
