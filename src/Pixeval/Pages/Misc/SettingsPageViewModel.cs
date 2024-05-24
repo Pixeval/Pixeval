@@ -94,6 +94,12 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
                 {
                     ProxyChanged = t => App.AppViewModel.MakoClient.Configuration.Proxy = t
                 },
+                new StringAppSettingsEntry(AppSettings,
+                    t => t.MirrorHost)
+                {
+                    Placeholder = SettingsPageResources.ImageMirrorServerTextBoxPlaceholderText,
+                    ValueChanged = t => App.AppViewModel.MakoClient.Configuration.MirrorHost = t
+                },
                 new BoolAppSettingsEntry(AppSettings,
                     t => t.UseFileCache),
                 new EnumAppSettingsEntry<MainPageTabItem>(AppSettings,
@@ -219,12 +225,6 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
                     Placeholder = SettingsPageResources.MaximumBrowseHistoryRecordsNumerBoxPlaceholderText,
                     Max = 200,
                     Min = 10
-                },
-                new StringAppSettingsEntry(AppSettings,
-                    t => t.MirrorHost)
-                {
-                    Placeholder = SettingsPageResources.ImageMirrorServerTextBoxPlaceholderText,
-                    ValueChanged = t => App.AppViewModel.MakoClient.Configuration.MirrorHost = t
                 }
             }
         ];
