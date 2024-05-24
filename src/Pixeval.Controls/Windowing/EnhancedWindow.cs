@@ -36,6 +36,8 @@ public sealed partial class EnhancedWindow : Window
 
     private readonly EnhancedWindow? _owner;
 
+    public bool IsMaximize => AppWindow.Presenter is OverlappedPresenter { State: OverlappedPresenterState.Maximized };
+
     /// <summary>
     /// IT IS FORBIDDEN TO USE THIS CONSTRUCTOR DIRECTLY, USE <see cref="WindowFactory.Fork"/> INSTEAD
     /// </summary>

@@ -94,6 +94,12 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
                 {
                     ProxyChanged = t => App.AppViewModel.MakoClient.Configuration.Proxy = t
                 },
+                new StringAppSettingsEntry(AppSettings,
+                    t => t.MirrorHost)
+                {
+                    Placeholder = SettingsPageResources.ImageMirrorServerTextBoxPlaceholderText,
+                    ValueChanged = t => App.AppViewModel.MakoClient.Configuration.MirrorHost = t
+                },
                 new BoolAppSettingsEntry(AppSettings,
                     t => t.UseFileCache),
                 new EnumAppSettingsEntry<MainPageTabItem>(AppSettings,
@@ -114,7 +120,7 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
                     SettingsPageResources.ViewingRestrictionEntryHeader,
                     SettingsPageResources.ViewingRestrictionEntryDescription,
                     IconGlyph.BlockContactE8F8,
-                    () => _ = Launcher.LaunchUriAsync(new Uri("https://www.pixiv.net/setting_user.php")))
+                    () => Launcher.LaunchUriAsync(new Uri("https://www.pixiv.net/settings/viewing")))
             },
             new(SettingsEntryCategory.Search)
             {
@@ -180,7 +186,7 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
                 new IntAppSettingsEntry(AppSettings,
                     t => t.MaximumDownloadHistoryRecords)
                 {
-                    Max = 200,
+                    Max = ushort.MaxValue,
                     Min = 10
                 },
                 new BoolAppSettingsEntry(AppSettings,
@@ -217,14 +223,8 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
                     t => t.MaximumBrowseHistoryRecords)
                 {
                     Placeholder = SettingsPageResources.MaximumBrowseHistoryRecordsNumerBoxPlaceholderText,
-                    Max = 200,
+                    Max = ushort.MaxValue,
                     Min = 10
-                },
-                new StringAppSettingsEntry(AppSettings,
-                    t => t.MirrorHost)
-                {
-                    Placeholder = SettingsPageResources.ImageMirrorServerTextBoxPlaceholderText,
-                    ValueChanged = t => App.AppViewModel.MakoClient.Configuration.MirrorHost = t
                 }
             }
         ];

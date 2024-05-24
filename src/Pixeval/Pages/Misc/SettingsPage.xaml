@@ -244,11 +244,18 @@
                     Tag="{x:Bind misc:SettingsEntryAttribute.SignOut}"
                     Tapped="PerformSignOutButton_OnTapped" />
 
-                <controls:SettingsExpander
+                <controls:SettingsCard
                     x:Uid="/SettingsPage/ResetDefaultSettingsEntry"
+                    ActionIcon="{controls2:GlyphIcon Glyph=RefreshE72C}"
+                    Click="ResetDefaultSettings_OnClicked"
                     HeaderIcon="{controls2:GlyphIcon Glyph=AppIconDefaultECAA}"
-                    Tag="{x:Bind misc:SettingsEntryAttribute.ResetSettings}">
-                    <Button x:Uid="/SettingsPage/ResetDefaultSettingsButton" Tapped="ResetDefaultSettingsButton_OnTapped" />
+                    IsClickEnabled="True"
+                    Tag="{x:Bind misc:SettingsEntryAttribute.ResetSettings}" />
+
+                <controls:SettingsExpander
+                    x:Uid="/SettingsPage/DeleteHistoriesEntry"
+                    HeaderIcon="{controls2:GlyphIcon Glyph=DeleteE74D}"
+                    Tag="{x:Bind misc:SettingsEntryAttribute.DeleteHistories}">
                     <controls:SettingsExpander.Items>
                         <controls:SettingsCard
                             x:Uid="/SettingsPage/DeleteFileCacheEntry"

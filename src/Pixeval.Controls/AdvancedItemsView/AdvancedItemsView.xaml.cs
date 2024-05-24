@@ -266,7 +266,6 @@ public sealed partial class AdvancedItemsView : ItemsView
         ScrollView.ViewChanged += ScrollView_ViewChanged;
         ScrollView.PointerWheelChanged += ScrollView_PointerWheelChanged;
         _itemsRepeater = ScrollView.Content.To<ItemsRepeater>();
-        ScrollView.Content = new Grid { Children = { _itemsRepeater } };
         _itemsRepeater.SizeChanged += AdvancedItemsViewOnSizeChanged;
     }
 

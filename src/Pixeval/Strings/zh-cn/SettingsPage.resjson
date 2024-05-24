@@ -51,6 +51,7 @@
     "DeleteSearchHistoriesButton/Content": "删除记录",
     "DeleteFileCacheEntry/Description": "该按钮会清空所有的文件缓存",
     "DeleteFileCacheEntry/Header": "清空文件缓存",
+    "DeleteHistoriesEntry/Header": "清理记录",
     "DeleteSearchHistoriesEntry/Description": "该按钮会清空所有的搜索记录",
     "DeleteSearchHistoriesEntry/Header": "清空搜索记录",
     "EnableDomainFrontingEntry/Description": "禁用此选项将导致在 Pixiv 被屏蔽的国家或地区的用户无法正常使用",

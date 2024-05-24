@@ -112,7 +112,7 @@ public static class IllustrationViewerHelper
                 param,
                 new SuppressNavigationTransitionInfo()))
             .WithSizeLimit(640, 360)
-            .Init(illustration.Title, new SizeInt32(width, height))
+            .Init(illustration.Title, new SizeInt32(width, height), WindowFactory.RootWindow.IsMaximize)
             .Activate();
         return;
 

@@ -88,7 +88,7 @@ public static class NovelViewerHelper
                 param,
                 new SuppressNavigationTransitionInfo()))
             .WithSizeLimit(640, 360)
-            .Init(novel.Title, new SizeInt32(1280, 720))
+            .Init(novel.Title, new SizeInt32(1280, 720), WindowFactory.RootWindow.IsMaximize)
             .Activate();
     }
 }
