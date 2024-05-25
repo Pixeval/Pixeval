@@ -136,7 +136,13 @@ public static class IllustrationViewerHelper
 
             var determinedWidth = illustWidth switch
             {
-                not 1500 => 1500 + Random.Shared.Next(0, 200),
+                not 1500 => 1500 +
+#if DISPLAY
+                100
+#else
+                Random.Shared.Next(0, 200)
+#endif
+                ,
                 _ => 1500
             };
             var windowWidth = determinedWidth > monitorWidth ? monitorWidth - 100 : determinedWidth;
