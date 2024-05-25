@@ -24,6 +24,9 @@ using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Windows.Foundation;
 using Windows.Graphics;
+using Windows.Win32;
+using Windows.Win32.Foundation;
+using Windows.Win32.Graphics.Gdi;
 using WinUI3Utilities;
 
 namespace Pixeval.Controls.Windowing;
@@ -123,8 +126,8 @@ public static class WindowFactory
             IsMaximized = isMaximized,
             Theme = WindowSettings.Theme
         });
-        if (isMaximized)
-            window.AppWindow.Presenter.To<OverlappedPresenter>().Maximize();
+        if (!isMaximized)
+            window.AppWindow.FullDisplayOnScreen();
         window.FrameLoaded += (_, _) => window.SetTheme(WindowSettings.Theme);
         return window;
     }
@@ -139,5 +142,21 @@ public static class WindowFactory
     {
         foreach (var window in _forkedWindowsInternal.Values)
             window.SetTheme(theme);
+    }
+
+    private static void FullDisplayOnScreen(this AppWindow appWindow)
+    {
+        var hWnd = (nint)appWindow.Id.Value;
+        var hWndDesktop = PInvoke.MonitorFromWindow(new HWND(hWnd), MONITOR_FROM_FLAGS.MONITOR_DEFAULTTONEAREST);
+        var info = new MONITORINFO { cbSize = 40 };
+        _ = PInvoke.GetMonitorInfo(hWndDesktop, ref info);
+        var position = appWindow.Position;
+        var left = info.rcMonitor.Width - appWindow.Size.Width;
+        if (position.X > left)
+            position.X = left;
+        var top = info.rcMonitor.Height - appWindow.Size.Height;
+        if (position.Y > top)
+            position.Y = top;
+        appWindow.Move(position);
     }
 }

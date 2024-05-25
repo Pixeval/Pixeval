@@ -44,6 +44,10 @@ public class SettingsEntryAttribute(IconGlyph iconGlyph, string resourceKeyHeade
         nameof(SettingsPageResources.ResetDefaultSettingsEntryHeader),
         nameof(SettingsPageResources.ResetDefaultSettingsEntryDescription));
 
+    public static readonly SettingsEntryAttribute DeleteHistories = new(IconGlyph.DeleteE74D,
+        nameof(SettingsPageResources.DeleteHistoriesEntryHeader),
+        null);
+
     public static readonly Lazy<IEnumerable<SettingsEntryAttribute>> LazyValues = new(() =>
         typeof(AppSettings).GetProperties(BindingFlags.Instance | BindingFlags.Public)
             .SelectNotNull(f => f.GetCustomAttribute<SettingsEntryAttribute>()));

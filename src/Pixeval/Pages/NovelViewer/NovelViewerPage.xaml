@@ -258,7 +258,6 @@
                                     Padding="0"
                                     HorizontalAlignment="Stretch"
                                     VerticalAlignment="Stretch"
-                                    DisableLoadingText="True"
                                     ItemsSource="{x:Bind _viewModel.Novels}"
                                     LayoutType="HorizontalStack"
                                     MinItemHeight="80"

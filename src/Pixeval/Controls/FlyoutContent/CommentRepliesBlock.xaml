@@ -16,26 +16,10 @@
         <RowDefinition Height="Auto" />
     </Grid.RowDefinitions>
     <!--  ReSharper disable once UnusedMember.Local  -->
-    <StackPanel
-        x:Name="RepliesAreEmptyPanel"
-        Grid.Row="0"
-        x:Load="{x:Bind ViewModel.RepliesIsNotNull, Converter={StaticResource BoolNegationConverter}, Mode=OneWay}">
-        <Image
-            Width="200"
-            Height="200"
-            Source="/Assets/Images/empty-box.png"
-            Stretch="Uniform" />
-        <TextBlock
-            x:Uid="/CommentRepliesBlock/RepliesAreEmptyTextBlock"
-            Margin="0,10"
-            HorizontalAlignment="Center"
-            FontSize="{StaticResource PixevalSubtitleFontSize}" />
-    </StackPanel>
-    <!--  ReSharper disable once UnusedMember.Local  -->
     <controls:CommentList
         x:Name="CommentList"
         Grid.Row="0"
-        x:Load="{x:Bind ViewModel.RepliesIsNotNull, Mode=OneWay}"
+        HasNoItem="{x:Bind ViewModel.RepliesIsNotNull, Converter={StaticResource BoolNegationConverter}, Mode=OneWay}"
         ItemsSource="{x:Bind ViewModel.Replies, Mode=OneWay}"
         RepliesHyperlinkButtonTapped="CommentList_OnRepliesHyperlinkButtonTapped" />
     <controls:PixivReplyBar

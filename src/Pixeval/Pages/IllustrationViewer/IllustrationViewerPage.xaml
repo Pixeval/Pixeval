@@ -208,7 +208,6 @@
                                 Padding="0"
                                 HorizontalAlignment="Stretch"
                                 VerticalAlignment="Stretch"
-                                DisableLoadingText="True"
                                 ItemsSource="{x:Bind _viewModel.Illustrations}"
                                 LayoutType="HorizontalStack"
                                 MinItemHeight="80"

@@ -18,5 +18,6 @@ public sealed partial class EntryView
     {
         var control = (EntryView)d;
         control.HasNoItemStackPanel.Visibility = control is { HasNoItem: true, IsLoadingMore: false } ? Visibility.Visible : Visibility.Collapsed;
+        control.SkeletonView.Visibility = control is { HasNoItem: true, IsLoadingMore: true } ? Visibility.Visible : Visibility.Collapsed;
     }
 }

@@ -20,6 +20,7 @@
 
 using System;
 using CommunityToolkit.Mvvm.ComponentModel;
+using Pixeval.Collections;
 using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Model;
 
@@ -39,5 +40,8 @@ public abstract class EntryViewViewModel<T, TViewModel>
 
     public void ResetEngine(IFetchEngine<T>? newEngine, int itemsPerPage = 20, int itemLimit = -1) => DataProvider.ResetEngine(newEngine, itemsPerPage, itemLimit);
 
+    /// <summary>
+    /// 不用!<see cref="AdvancedObservableCollection{T}.HasMoreItems"/>，此处只是为了表示集合有没有元素
+    /// </summary>
     public bool HasNoItem => DataProvider.View.Count is 0;
 }

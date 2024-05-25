@@ -22,6 +22,7 @@
         <controls:CommentList
             Grid.Row="1"
             DeleteHyperlinkButtonTapped="CommentList_OnDeleteHyperlinkButtonTapped"
+            HasNoItem="{x:Bind _viewModel.HasNoItem, Mode=OneWay}"
             ItemsSource="{x:Bind _viewModel.View}"
             RepliesHyperlinkButtonTapped="CommentList_OnRepliesHyperlinkButtonTapped" />
         <TeachingTip
