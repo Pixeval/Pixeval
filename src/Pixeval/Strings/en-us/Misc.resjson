@@ -47,7 +47,7 @@
   "SortOptionComboBox/PlaceholderText": "Sort option",
   "PrivacyPolicyComboBox/PlaceholderText": "Privacy policy",
   "OpenUserId": "Open user homepage",
-  "OpenIllustId": "Open work page",
+  "OpenIllustId": "Open image page",
   "CannotFindLoginProxyServerExecutable": "Cannot find the executable to login, please contact the developer for further help",
   "UnexpectedBehavior": "Undefined behavior occured, if you see this message, please contact the developer for further help",
   "ReplyContentTooLong": "The reply content is too long",

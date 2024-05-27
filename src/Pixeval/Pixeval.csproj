@@ -42,6 +42,7 @@
         <PackageReference Include="CommunityToolkit.WinUI.Media" Version="8.0.240109" />
         <PackageReference Include="CommunityToolkit.Diagnostics" Version="8.2.2" />
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
+        <PackageReference Include="FluentIcons.WinUI" Version="1.1.240" />
         <PackageReference Include="GitVersion.MsBuild" Version="5.12.0">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -56,7 +57,7 @@
         <PackageReference Include="PininSharp" Version="1.2.0" />
         <PackageReference Include="Pixeval.Bypass" Version="1.1.7" />
         <PackageReference Include="Pixeval.QRCoder" Version="1.4.5" />
-        <PackageReference Include="QuestPDF" Version="2024.3.9" />
+        <PackageReference Include="QuestPDF" Version="2024.3.10" />
         <PackageReference Include="ReverseMarkdown" Version="4.4.0" />
         <PackageReference Include="SixLabors.ImageSharp" Version="3.1.4" />
         <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="2.1.3" />
@@ -91,12 +92,12 @@
         <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="SourceItemGroup" />
 
         <TextFile Include="Strings\*\*.md">
-            <OutputTarget>Generated\%(RecursiveDir)\TextGenerated.resjson</OutputTarget>
+            <OutputTarget>Generated\%(RecursiveDir)\TextGenerated.g.resjson</OutputTarget>
             <Content>    "$([System.String]::Concat(%(Filename), '"').Replace('_', '/')) : "$([System.IO.File]::ReadAllText(%(FullPath)).Replace('\', '\\').Replace('
 ', '\n').Replace('"', '\"'))"</Content>
         </TextFile>
         <TextFile Include="Strings\*\*.txt">
-            <OutputTarget>Generated\%(RecursiveDir)\TextGenerated.resjson</OutputTarget>
+            <OutputTarget>Generated\%(RecursiveDir)\TextGenerated.g.resjson</OutputTarget>
             <Content>    "$([System.String]::Concat(%(Filename), '"').Replace('_', '/')) : "$([System.IO.File]::ReadAllText(%(FullPath)).Replace('\', '\\').Replace('
 ', '\n').Replace('"', '\"'))"</Content>
         </TextFile>
