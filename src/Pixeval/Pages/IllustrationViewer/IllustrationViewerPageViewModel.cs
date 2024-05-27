@@ -313,6 +313,7 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
     private void InitializeCommands()
     {
         FullScreenCommand.ExecuteRequested += FullScreenCommandOnExecuteRequested;
+        FullScreenCommand.GetFullScreenCommand(false);
     }
 
     private void FullScreenCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)

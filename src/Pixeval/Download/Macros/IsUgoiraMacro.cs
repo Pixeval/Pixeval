@@ -23,13 +23,13 @@ using Pixeval.Download.MacroParser;
 
 namespace Pixeval.Download.Macros;
 
-[MetaPathMacro<IllustrationItemViewModel>]
-public class IsUgoiraMacro : IPredicate<IllustrationItemViewModel>
+[MetaPathMacro<IWorkViewModel>]
+public class IsUgoiraMacro : IPredicate<IWorkViewModel>
 {
     public string Name => "if_gif";
 
-    public bool Match(IllustrationItemViewModel context)
+    public bool Match(IWorkViewModel context)
     {
-        return context.IsUgoira;
+        return context is IllustrationItemViewModel { IsUgoira: true };
     }
 }
