@@ -4,8 +4,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:controls1="using:Pixeval.Controls"
-    xmlns:controls2="using:WinUI3Utilities.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:fluent="using:FluentIcons.WinUI"
     xmlns:local="using:Pixeval.Settings"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Description="{x:Bind Entry.DescriptionControl}"
@@ -13,7 +13,7 @@
     Tag="{x:Bind Entry.Attribute}"
     mc:Ignorable="d">
     <controls:SettingsCard.HeaderIcon>
-        <controls2:GlyphIcon IconGlyph="{x:Bind Entry.HeaderIcon}" />
+        <fluent:SymbolIcon Symbol="{x:Bind Entry.HeaderIcon}" />
     </controls:SettingsCard.HeaderIcon>
     <controls1:EnumComboBox
         EnumSource="{x:Bind Entry.EnumValues}"

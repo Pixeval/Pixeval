@@ -1,9 +1,9 @@
+using FluentIcons.Common;
 using WinUI3Utilities.Attributes;
-using WinUI3Utilities.Controls;
 
 namespace Pixeval.Controls;
 
-[DependencyProperty<IconGlyph>("Glyph")]
+[DependencyProperty<Symbol>("Symbol")]
 [DependencyProperty<string>("Text")]
 public sealed partial class IconText
 {

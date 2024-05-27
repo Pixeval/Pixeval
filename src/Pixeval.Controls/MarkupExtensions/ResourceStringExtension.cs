@@ -21,7 +21,7 @@
 using Microsoft.UI.Xaml.Markup;
 using Microsoft.Windows.ApplicationModel.Resources;
 
-namespace Pixeval.Controls.MarkupExtensions;
+namespace Pixeval.Controls;
 
 [MarkupExtensionReturnType(ReturnType = typeof(string))]
 public class ResourceStringExtension : MarkupExtension

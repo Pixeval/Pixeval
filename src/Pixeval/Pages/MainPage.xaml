@@ -4,11 +4,11 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:animatedVisuals="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
     xmlns:controls="using:Pixeval.Controls"
-    xmlns:controls1="using:WinUI3Utilities.Controls"
     xmlns:controls2="using:CommunityToolkit.WinUI.Controls"
     xmlns:converters="using:CommunityToolkit.WinUI.Converters"
     xmlns:converters1="using:Pixeval.Controls.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:fluent="using:FluentIcons.WinUI"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pages="using:Pixeval.Pages"
     xmlns:pixeval="using:Pixeval.AppManagement"
@@ -82,76 +82,67 @@
             <NavigationView.MenuItems>
                 <NavigationViewItem
                     x:Uid="/MainPage/RecommendationsTab"
-                    Icon="{controls1:GlyphIcon Glyph=CalendarE787}"
+                    Icon="{fluent:SymbolIcon Symbol=Calendar}"
                     Tag="{x:Bind _viewModel.RecommendsTag}" />
                 <NavigationViewItem
                     x:Uid="/MainPage/RankingsTab"
-                    Icon="{controls1:GlyphIcon Glyph=MarketEAFC}"
+                    Icon="{fluent:SymbolIcon Symbol=ArrowTrending}"
                     Tag="{x:Bind _viewModel.RankingsTag}" />
                 <NavigationViewItem
                     x:Uid="/MainPage/BookmarksTab"
-                    Icon="{controls1:GlyphIcon Glyph=HeartEB51}"
+                    Icon="{fluent:SymbolIcon Symbol=Heart}"
                     Tag="{x:Bind _viewModel.BookmarksTag}" />
                 <NavigationViewItem
                     x:Uid="/MainPage/FollowingsTab"
-                    Icon="{controls1:GlyphIcon Glyph=PeopleE716}"
+                    Icon="{fluent:SymbolIcon Symbol=People}"
                     Tag="{x:Bind _viewModel.FollowingsTag}" />
                 <NavigationViewItem
                     x:Uid="/MainPage/SpotlightsTab"
-                    Icon="{controls1:GlyphIcon Glyph=LibraryE8F1}"
+                    Icon="{fluent:SymbolIcon Symbol=Library}"
                     Tag="{x:Bind _viewModel.SpotlightsTag}" />
                 <NavigationViewItem
                     x:Uid="/MainPage/RecommendUsersTab"
-                    Icon="{controls1:GlyphIcon Glyph=GroupE902}"
+                    Icon="{fluent:SymbolIcon Symbol=PeopleCommunity}"
                     Tag="{x:Bind _viewModel.RecommendUsersTag}" />
                 <NavigationViewItem
                     x:Uid="/MainPage/RecentPostsTab"
-                    Icon="{controls1:GlyphIcon Glyph=CaloriesECAD}"
+                    Icon="{fluent:SymbolIcon Symbol=Fire}"
                     Tag="{x:Bind _viewModel.RecentPostsTag}" />
                 <NavigationViewItem
                     x:Uid="/MainPage/NewWorksTab"
-                    Icon="{controls1:GlyphIcon Glyph=RecordE7C8}"
+                    Icon="{fluent:SymbolIcon Symbol=Record}"
                     Tag="{x:Bind _viewModel.NewWorksTag}" />
                 <NavigationViewItemHeader x:Uid="/MainPage/DownloadAndHistoriesTab" />
                 <NavigationViewItem
                     x:Name="TagsTab"
                     x:Uid="/MainPage/TagsTab"
-                    Icon="{controls1:GlyphIcon Glyph=TagE8EC}"
+                    Icon="{fluent:SymbolIcon Symbol=Tag}"
                     Tag="{x:Bind _viewModel.TagsTag}" />
                 <NavigationViewItem
                     x:Uid="/MainPage/HistoriesTab"
-                    Icon="{controls1:GlyphIcon Glyph=HistoryE81C}"
+                    Icon="{fluent:SymbolIcon Symbol=History}"
                     Tag="{x:Bind _viewModel.HistoriesTag}" />
                 <NavigationViewItem
                     x:Name="DownloadListTab"
                     x:Uid="/MainPage/DownloadListTab"
-                    Icon="{controls1:GlyphIcon Glyph=DownloadE896}"
+                    Icon="{fluent:SymbolIcon Symbol=ArrowDownload}"
                     Tag="{x:Bind _viewModel.DownloadListTag}" />
             </NavigationView.MenuItems>
             <NavigationView.FooterMenuItems>
                 <NavigationViewItem
                     x:Uid="/MainPage/HelpTab"
-                    Icon="{controls1:GlyphIcon Glyph=HelpE897}"
+                    Icon="{fluent:SymbolIcon Symbol=Question}"
                     Tag="{x:Bind _viewModel.HelpTag}" />
                 <NavigationViewItem
                     x:Uid="/MainPage/AboutTab"
-                    Icon="{controls1:GlyphIcon Glyph=RingerEA8F}"
+                    Icon="{fluent:SymbolIcon Symbol=Info}"
                     Tag="{x:Bind _viewModel.AboutTag}" />
                 <NavigationViewItemSeparator />
                 <NavigationViewItem
                     x:Name="SettingsTab"
                     x:Uid="/MainPage/SettingsTab"
+                    Icon="{fluent:SymbolIcon Symbol=Settings}"
                     Tag="{x:Bind _viewModel.SettingsTag}">
-                    <NavigationViewItem.Icon>
-                        <AnimatedIcon>
-                            <AnimatedIcon.Source>
-                                <animatedVisuals:AnimatedSettingsVisualSource />
-                            </AnimatedIcon.Source>
-                            <AnimatedIcon.FallbackIconSource>
-                                <SymbolIconSource Symbol="Setting" />
-                            </AnimatedIcon.FallbackIconSource>
-                        </AnimatedIcon>
-                    </NavigationViewItem.Icon>
                     <NavigationViewItem.InfoBadge>
                         <InfoBadge
                             x:Name="InfoBadge"
@@ -217,11 +208,11 @@
                         OverflowButtonVisibility="Collapsed">
                         <AppBarButton
                             x:Uid="/MainPage/ReverseSearchButton"
-                            Content="{controls1:GlyphIcon Glyph=CameraE722}"
+                            Content="{fluent:SymbolIcon Symbol=ImageSearch}"
                             Tapped="ReverseSearchButton_OnTapped" />
                         <AppBarButton
                             x:Uid="/MainPage/OpenSearchSettingButton"
-                            Content="{controls1:GlyphIcon Glyph=SettingsE713}"
+                            Content="{fluent:SymbolIcon Symbol=Settings}"
                             Tapped="OpenSearchSettingButton_OnTapped" />
                     </CommandBar>
                 </Grid>

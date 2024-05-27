@@ -3,8 +3,8 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
-    xmlns:controls1="using:WinUI3Utilities.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:fluent="using:FluentIcons.WinUI"
     xmlns:local="using:Pixeval.Settings"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Description="{x:Bind Entry.DescriptionControl}"
@@ -12,6 +12,6 @@
     Loaded="MultiValuesAppSettingsExpander_OnLoaded"
     mc:Ignorable="d">
     <controls:SettingsExpander.HeaderIcon>
-        <controls1:GlyphIcon IconGlyph="{x:Bind Entry.HeaderIcon}" />
+        <fluent:SymbolIcon Symbol="{x:Bind Entry.HeaderIcon}" />
     </controls:SettingsExpander.HeaderIcon>
 </controls:SettingsExpander>

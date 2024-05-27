@@ -49,6 +49,9 @@ using Point = Windows.Foundation.Point;
 using Pixeval.Controls.Windowing;
 using WinUI3Utilities.Controls;
 using Size = Windows.Foundation.Size;
+using Symbol = FluentIcons.Common.Symbol;
+using SymbolIcon = FluentIcons.WinUI.SymbolIcon;
+using SymbolIconSource = FluentIcons.WinUI.SymbolIconSource;
 
 namespace Pixeval.Util.UI;
 
@@ -185,24 +188,31 @@ public static partial class UiHelper
         _ = frame.Navigate(tag.NavigateTo, tag.Parameter, transitionInfo);
     }
 
-    public static GlyphIcon GetGlyphIcon(this IconGlyph iconGlyph, FontSizeType fontSize = FontSizeType.None)
+    public static SymbolIcon GetSymbolIcon(this Symbol symbol, FontSizeType fontSize = FontSizeType.None)
     {
-        return new GlyphIcon
+        var icon = new SymbolIcon()
         {
-            IconGlyph = iconGlyph,
-            Size = fontSize
+            Symbol = symbol
         };
+
+        if (fontSize is not FontSizeType.None)
+            icon.FontSize = (int)fontSize;
+
+        return icon;
     }
 
-    public static GlyphIconSource GetGlyphIconSource(this IconGlyph iconGlyph, FontSizeType fontSize = FontSizeType.None, Brush? foregroundBrush = null)
+    public static SymbolIconSource GetSymbolIconSource(this Symbol symbol, bool isFilled = false, Brush? foregroundBrush = null, FontSizeType fontSize = FontSizeType.None)
     {
-        var icon = new GlyphIconSource
+        var icon = new SymbolIconSource
         {
-            IconGlyph = iconGlyph,
-            Size = fontSize
+            IsFilled = isFilled,
+            Symbol = symbol
         };
 
-        if (foregroundBrush is not null) 
+        if (fontSize is not FontSizeType.None)
+            icon.FontSize = (int)fontSize;
+
+        if (foregroundBrush is not null)
             icon.Foreground = foregroundBrush;
 
         return icon;

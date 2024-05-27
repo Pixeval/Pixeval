@@ -75,7 +75,7 @@ public abstract class SingleValueSettingsEntry<TSettings, TValue> : SingleValueS
         {
             Header = attribute.LocalizedResourceHeader;
             Description = attribute.LocalizedResourceDescription;
-            HeaderIcon = attribute.IconGlyph;
+            HeaderIcon = attribute.Symbol;
         }
     }
 

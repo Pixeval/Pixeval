@@ -3,9 +3,9 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Pixeval.Controls"
-    xmlns:controls1="using:WinUI3Utilities.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:download="using:Pixeval.Pages.Download"
+    xmlns:fluent="using:FluentIcons.WinUI"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:system="using:System"
     xmlns:util="using:Pixeval.Util"
@@ -55,33 +55,33 @@
             </AutoSuggestBox>
             <CommandBar Grid.Column="2" DefaultLabelPosition="Right">
                 <AppBarButton
-                    Icon="{controls1:GlyphIcon Glyph=CancelE711}"
+                    Icon="{fluent:SymbolIcon Symbol=SelectAllOff}"
                     IsEnabled="{x:Bind _viewModel.IsAnyEntrySelected, Mode=OneWay}"
                     Label="{x:Bind _viewModel.SelectionLabel, Mode=OneWay}"
                     Tapped="CancelSelectButton_OnTapped" />
                 <AppBarButton
                     x:Uid="/DownloadListPage/SelectAllButton"
-                    Icon="{controls1:GlyphIcon Glyph=SelectAllE8B3}"
+                    Icon="{fluent:SymbolIcon Symbol=SelectAllOn}"
                     Tapped="SelectAllButton_OnTapped" />
                 <AppBarSeparator />
                 <AppBarButton
                     x:Uid="/DownloadListPage/ResumeButton"
-                    Icon="{controls1:GlyphIcon Glyph=PlayE768}"
+                    Icon="{fluent:SymbolIcon Symbol=Play}"
                     IsEnabled="{x:Bind _viewModel.IsAnyEntrySelected, Mode=OneWay}"
                     Tapped="ResumeAllButton_OnTapped" />
                 <AppBarButton
                     x:Uid="/DownloadListPage/PauseButton"
-                    Icon="{controls1:GlyphIcon Glyph=PauseE769}"
+                    Icon="{fluent:SymbolIcon Symbol=Pause}"
                     IsEnabled="{x:Bind _viewModel.IsAnyEntrySelected, Mode=OneWay}"
                     Tapped="PauseAllButton_OnTapped" />
                 <AppBarButton
                     x:Uid="/DownloadListPage/StopButton"
-                    Icon="{controls1:GlyphIcon Glyph=CancelE711}"
+                    Icon="{fluent:SymbolIcon Symbol=Stop}"
                     IsEnabled="{x:Bind _viewModel.IsAnyEntrySelected, Mode=OneWay}"
                     Tapped="CancelAllButton_OnTapped" />
                 <AppBarButton
                     x:Uid="/DownloadListPage/DeleteButton"
-                    Icon="{controls1:GlyphIcon Glyph=DeleteE74D}"
+                    Icon="{fluent:SymbolIcon Symbol=Delete}"
                     IsEnabled="{x:Bind _viewModel.IsAnyEntrySelected, Mode=OneWay}"
                     Tapped="ClearDownloadListButton_OnTapped" />
             </CommandBar>

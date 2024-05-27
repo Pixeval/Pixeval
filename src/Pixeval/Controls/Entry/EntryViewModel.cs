@@ -29,7 +29,7 @@ using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using WinUI3Utilities;
 using Microsoft.UI.Xaml.Media.Imaging;
-using WinUI3Utilities.Controls;
+using Symbol = FluentIcons.Common.Symbol;
 
 namespace Pixeval.Controls;
 
@@ -59,15 +59,15 @@ public abstract class EntryViewModel<T>(T entry) : ObservableObject, IDisposable
 
     public abstract Uri PixEzUri { get; }
 
-    public XamlUICommand GenerateLinkCommand { get; } = EntryItemResources.GenerateLink.GetCommand(IconGlyph.LinkE71B);
+    public XamlUICommand GenerateLinkCommand { get; } = EntryItemResources.GenerateLink.GetCommand(Symbol.Link);
 
-    public XamlUICommand GenerateWebLinkCommand { get; } = EntryItemResources.GenerateWebLink.GetCommand(IconGlyph.PreviewLinkE8A1);
+    public XamlUICommand GenerateWebLinkCommand { get; } = EntryItemResources.GenerateWebLink.GetCommand(Symbol.LinkMultiple);
 
-    public XamlUICommand OpenInWebBrowserCommand { get; } = EntryItemResources.OpenInWebBrowser.GetCommand(IconGlyph.WebSearchF6FA);
+    public XamlUICommand OpenInWebBrowserCommand { get; } = EntryItemResources.OpenInWebBrowser.GetCommand(Symbol.GlobeArrowUp);
 
-    public XamlUICommand ShowQrCodeCommand { get; } = EntryItemResources.ShowQRCode.GetCommand(IconGlyph.QRCodeED14);
+    public XamlUICommand ShowQrCodeCommand { get; } = EntryItemResources.ShowQRCode.GetCommand(Symbol.QrCode);
 
-    public XamlUICommand ShowPixEzQrCodeCommand { get; } = EntryItemResources.ShowPixEzQrCode.GetCommand(IconGlyph.Photo2EB9F);
+    public XamlUICommand ShowPixEzQrCodeCommand { get; } = EntryItemResources.ShowPixEzQrCode.GetCommand(Symbol.Image);
 
     private void GenerateLinkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
