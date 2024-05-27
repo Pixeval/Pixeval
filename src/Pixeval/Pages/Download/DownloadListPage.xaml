@@ -43,7 +43,8 @@
                 Grid.Column="1"
                 VerticalAlignment="Center"
                 ItemsSource="{x:Bind _viewModel.FilteredTasks}"
-                QueryIcon="Find"
+                QueryIcon="{fluent:SymbolIcon Symbol=Search,
+                                              Size=Small}"
                 QuerySubmitted="FilterAutoSuggestBox_OnQuerySubmitted"
                 SuggestionChosen="FilterAutoSuggestBox_OnSuggestionChosen"
                 TextChanged="FilterAutoSuggestBox_OnTextChanged">

@@ -191,7 +191,8 @@
                         ItemTemplateSelector="{StaticResource SuggestionModelDataTemplateSelector}"
                         ItemsSource="{x:Bind _viewModel.SuggestionProvider.Suggestions, Mode=OneWay}"
                         KeyDown="KeywordAutoSuggestionBox_OnKeyDown"
-                        QueryIcon="Find"
+                        QueryIcon="{fluent:SymbolIcon Symbol=Search,
+                                                      Size=Small}"
                         QuerySubmitted="KeywordAutoSuggestBox_QuerySubmitted"
                         SuggestionChosen="KeywordAutoSuggestBox_OnSuggestionChosen"
                         TextChanged="KeywordAutoSuggestBox_OnTextChanged">

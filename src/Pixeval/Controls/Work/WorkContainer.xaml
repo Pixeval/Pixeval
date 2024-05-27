@@ -39,7 +39,8 @@
                     x:Uid="/WorkContainer/FilterAutoSuggestBox"
                     Width="250"
                     VerticalAlignment="Center"
-                    QueryIcon="Filter"
+                    QueryIcon="{fluent:SymbolIcon Symbol=Filter,
+                                                  Size=Small}"
                     QuerySubmitted="FilterAutoSuggestBox_QuerySubmitted" />
             </StackPanel>
             <CommandBar controls1:DockPanel.Dock="Right" DefaultLabelPosition="Right">
