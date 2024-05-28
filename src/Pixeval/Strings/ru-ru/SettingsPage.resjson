@@ -132,7 +132,6 @@
     "ViewPixevalWebsiteHyperlinkButton/Content": "Веб-сайт",
     "ArtistIdMacroTooltip": "ID автора",
     "ArtistNameMacroTooltip": "Имя автора",
-    "MangaIndexMacroTooltip": "Если загружается манга, этот макрос заменяется на индекс текущего изображения в серии. Если манга не загружается, макрос заменяется на 0. Рекомендуется использовать вместе с макросом @{if_manga=}.",
     "DefaultSearchSortOptionEntry/Description": "Стандартная стратегия сортировки при поиске произведений",
     "DefaultSearchTagMatchOptionEntry/Description": "Как осуществляется поиск иллюстраций по ключевым словам",
     "IllustrationOptionEntry/Header": "Иллюстрации",

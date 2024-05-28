@@ -185,7 +185,6 @@
   "NovelSettingsMaxWidthEntry/Header": "Largeur de page",
   "NovelSettingsMaxWidthEntry/Description": "Largeur maximale de page",
   "MacroCopiedToClipboard": "Le macro a été copié sur le clipboard",
-  "ExtMacroTooltip": "Suffixe de fichier, e.g. .jpg, .png, attention à ne pas inclure le point \u0027.\u0027 qui est compris dans le macro",
   "IdMacroTooltip": "ID d\u0027art",
   "TitleMacroTooltip": "Titre d\u0027art",
   "ArtistIdMacroTooltip": "ID d\u0027auteur",
@@ -199,6 +198,5 @@
   "IfAiMacroTooltip": "Ce marco sera remplacé par son argument s\u0027il s\u0027agit d\u0027un art généré par l\u0027IA",
   "IfIllustMacroTooltip": "Ce marco sera remplacé par son argument s\u0027il s\u0027agit d\u0027une illustration",
   "IfNovelMacroTooltip": "Ce marco sera remplacé par son argument s\u0027il s\u0027agit d\u0027un roman",
-  "IfGifMacroTooltip": "Ce marco sera remplacé par son argument s\u0027il s\u0027agit d\u0027une  image animée",
-  "MangaIndexMacroTooltip": "Ce marco sera remplacé par l\u0027indice de l\u0027image actuelle dans le manga, ou 0 si le manga n\u0027est pas en téléchargement, s\u0027il s\u0027agit d\u0027un manga. Il est conseillé d\u0027utiliser ce macro avec le macro \u0027@{if_manga=}\u0027"
+  "IfGifMacroTooltip": "Ce marco sera remplacé par son argument s\u0027il s\u0027agit d\u0027une  image animée"
 }

@@ -19,7 +19,6 @@ using Pixeval.Settings.Models;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using WinUI3Utilities;
-using System.Xml.Linq;
 
 namespace Pixeval.Controls.Settings;
 
@@ -156,7 +155,7 @@ public sealed partial class DownloadMacroSettingsExpander
             {
                 foreach (var (name, ctx) in x)
                     if (!ctx.Any(y => context.TryGetValue(y.Key, out var actual) && y.Value != actual))
-                        return name;
+                        return MacroParserResources.MacroShouldBeInLastSegmentFormatted.Format(name);
                 return null;
             }),
             PlainText<string> => null,
