@@ -78,7 +78,9 @@ public sealed partial class NovelViewerPage
             var newIndex = args.NewValue.To<int>(); // vm.CurrentNovelIndex
 
             EntryViewerSplitView.NavigationViewSelect(vm.Tags[0]);
+            ThumbnailItemsView.StartBringItemIntoView(vm.CurrentNovelIndex, new BringIntoViewOptions { AnimationDesired = true });
         };
+
 
         _viewModel.PropertyChanged += (sender, args) =>
         {
@@ -94,7 +96,7 @@ public sealed partial class NovelViewerPage
                     break;
                 }
             }
-        };
+        }; 
     }
 
     private void NovelViewerPage_OnLoaded(object sender, RoutedEventArgs e)
@@ -102,6 +104,7 @@ public sealed partial class NovelViewerPage
         CommandBorderDropShadow.Receivers.Add(DocumentViewer);
         ThumbnailListDropShadow.Receivers.Add(DocumentViewer);
 
+        ThumbnailItemsView.StartBringItemIntoView(_viewModel.CurrentNovelIndex, new BringIntoViewOptions { AnimationDesired = true });
         DocumentViewer_OnTapped(null!, null!);
     }
 

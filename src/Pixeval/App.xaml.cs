@@ -34,6 +34,7 @@ using Pixeval.Controls.Windowing;
 using Pixeval.Pages.Login;
 using WinUI3Utilities;
 using System.Threading.Tasks;
+using FluentIcons.WinUI;
 using Microsoft.Extensions.DependencyInjection;
 using Pixeval.Logging;
 using Pixeval.Util.UI;
@@ -53,6 +54,7 @@ public partial class App
 
     public App()
     {
+        _ = this.UseSegoeMetrics();
         AppViewModel = new AppViewModel(this);
         BookmarkTag.AllCountedTagString = MiscResources.AllCountedTagName;
         AppInfo.SetNameResolvers(AppViewModel.AppSettings);

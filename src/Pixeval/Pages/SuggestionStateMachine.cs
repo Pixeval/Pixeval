@@ -88,7 +88,7 @@ public class SuggestionStateMachine
             suggestions.Add(SuggestionModel.SettingEntryHeader);
             suggestions.AddRange(settingSuggestions.Select(settingSuggestion => new SuggestionModel(settingSuggestion.LocalizedResourceHeader, settingSuggestion.LocalizedResourceHeader, SuggestionType.Settings)
             {
-                SettingsIconGlyph = settingSuggestion.IconGlyph
+                SettingsSymbol = settingSuggestion.Symbol
             }));
         }
 

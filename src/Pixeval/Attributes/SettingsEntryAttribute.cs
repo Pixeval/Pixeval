@@ -21,30 +21,30 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using FluentIcons.Common;
 using Pixeval.AppManagement;
 using Pixeval.Util;
 using Pixeval.Utilities;
 using WinUI3Utilities;
-using WinUI3Utilities.Controls;
 
 namespace Pixeval.Attributes;
 
 [AttributeUsage(AttributeTargets.Property)]
-public class SettingsEntryAttribute(IconGlyph iconGlyph, string resourceKeyHeader, string? resourceKeyDescription) : Attribute
+public class SettingsEntryAttribute(Symbol symbol, string resourceKeyHeader, string? resourceKeyDescription) : Attribute
 {
-    public static readonly SettingsEntryAttribute AutoUpdate = new(IconGlyph.CommunicationsE95A,
+    public static readonly SettingsEntryAttribute AutoUpdate = new(Symbol.Communication,
         nameof(SettingsPageResources.DownloadUpdateAutomaticallyEntryHeader),
         nameof(SettingsPageResources.DownloadUpdateAutomaticallyEntryDescription));
 
-    public static readonly SettingsEntryAttribute SignOut = new(IconGlyph.SignOutF3B1,
+    public static readonly SettingsEntryAttribute SignOut = new(Symbol.SignOut,
         nameof(SettingsPageResources.SignOutEntryHeader),
         nameof(SettingsPageResources.SignOutEntryDescription));
 
-    public static readonly SettingsEntryAttribute ResetSettings = new(IconGlyph.AppIconDefaultECAA,
+    public static readonly SettingsEntryAttribute ResetSettings = new(Symbol.Apps,
         nameof(SettingsPageResources.ResetDefaultSettingsEntryHeader),
         nameof(SettingsPageResources.ResetDefaultSettingsEntryDescription));
 
-    public static readonly SettingsEntryAttribute DeleteHistories = new(IconGlyph.DeleteE74D,
+    public static readonly SettingsEntryAttribute DeleteHistories = new(Symbol.Delete,
         nameof(SettingsPageResources.DeleteHistoriesEntryHeader),
         null);
 
@@ -54,7 +54,7 @@ public class SettingsEntryAttribute(IconGlyph iconGlyph, string resourceKeyHeade
 
     private static Type ResourceLoader => typeof(SettingsPageResources);
 
-    public IconGlyph IconGlyph { get; } = iconGlyph;
+    public Symbol Symbol { get; } = symbol;
 
     public string LocalizedResourceHeader { get; } =
         LocalizedResourceAttributeHelper.GetLocalizedResourceContent(ResourceLoader, resourceKeyHeader) ?? "";

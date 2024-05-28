@@ -1,6 +1,6 @@
 using System.ComponentModel;
+using FluentIcons.Common;
 using WinUI3Utilities;
-using WinUI3Utilities.Controls;
 
 namespace Pixeval.Settings;
 
@@ -8,7 +8,7 @@ public abstract class ObservableSettingsEntryBase<TSettings>(
     TSettings settings,
     string header,
     string description,
-    IconGlyph headerIcon)
+    Symbol headerIcon)
     : SettingsEntryBase<TSettings>(settings, header, description, headerIcon), INotifyPropertyChanged
 {
     public event PropertyChangedEventHandler? PropertyChanged;
@@ -27,12 +27,12 @@ public abstract class ObservableSettingsEntryBase<TSettings>(
         _ => ThrowHelper.ArgumentOutOfRange<WorkTypeEnum, string>(workType)
     };
 
-    public static IconGlyph SubHeaderIcon(WorkTypeEnum workType) => workType switch
+    public static Symbol SubHeaderIcon(WorkTypeEnum workType) => workType switch
     {
-        WorkTypeEnum.Illustration => IconGlyph.PhotoE91B,
-        WorkTypeEnum.Manga => IconGlyph.PictureE8B9,
-        WorkTypeEnum.Ugoira => IconGlyph.GIFF4A9,
-        WorkTypeEnum.Novel => IconGlyph.ReadingModeE736,
-        _ => ThrowHelper.ArgumentOutOfRange<WorkTypeEnum, IconGlyph>(workType)
+        WorkTypeEnum.Illustration => Symbol.Image,
+        WorkTypeEnum.Manga => Symbol.ImageMultiple,
+        WorkTypeEnum.Ugoira => Symbol.Gif,
+        WorkTypeEnum.Novel => Symbol.BookOpen,
+        _ => ThrowHelper.ArgumentOutOfRange<WorkTypeEnum, Symbol>(workType)
     };
 }

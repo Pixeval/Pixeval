@@ -5,10 +5,10 @@
     xmlns:appManagement="using:Pixeval.AppManagement"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:controls1="using:Pixeval.Controls"
-    xmlns:controls2="using:WinUI3Utilities.Controls"
     xmlns:converters="using:CommunityToolkit.WinUI.Converters"
     xmlns:converters1="using:Pixeval.Controls.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:fluent="using:FluentIcons.WinUI"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:misc="using:Pixeval.Attributes"
     xmlns:misc1="using:Pixeval.Pages.Misc"
@@ -82,7 +82,7 @@
                     Style="{StaticResource SettingHeaderStyle}"
                     Tag="{x:Bind misc1:SettingsEntryCategory.Version}" />
 
-                <controls:SettingsExpander HeaderIcon="{controls2:GlyphIcon Glyph=SyncE895}" IsExpanded="{x:Bind ViewModel.ExpandExpander, Mode=OneWay}">
+                <controls:SettingsExpander HeaderIcon="{fluent:SymbolIcon Symbol=ArrowSync}" IsExpanded="{x:Bind ViewModel.ExpandExpander, Mode=OneWay}">
                     <controls:SettingsExpander.Header>
                         <HyperlinkButton
                             Padding="0"
@@ -116,21 +116,18 @@
                     <controls:SettingsExpander.Items>
                         <controls:SettingsCard
                             x:Uid="/SettingsPage/OpenTempEntry"
-                            ActionIcon="{controls2:GlyphIcon Glyph=OpenInNewWindowE8A7}"
-                            HeaderIcon="{controls2:GlyphIcon Glyph=FolderE8B7}"
+                            ActionIcon="{fluent:SymbolIcon Symbol=Open}"
+                            HeaderIcon="{fluent:SymbolIcon Symbol=FolderLightning}"
                             IsClickEnabled="True"
                             Tag="Temp"
                             Tapped="OpenFolder_OnTapped" />
                         <controls:SettingsCard
                             x:Uid="/SettingsPage/MsStoreCheckForUpdatesEntry"
                             Description="ms-windows-store://pdp/?ProductId=9P1RZL9Z8454"
+                            HeaderIcon="{fluent:SymbolIcon Symbol=StoreMicrosoft}"
                             IsClickEnabled="True"
                             Tag="ms-windows-store://pdp/?ProductId=9P1RZL9Z8454"
-                            Tapped="OpenLinkViaTag_OnTapped">
-                            <controls:SettingsCard.HeaderIcon>
-                                <PathIcon Data="{x:Bind pixeval:SvgResources.MsStore}" />
-                            </controls:SettingsCard.HeaderIcon>
-                        </controls:SettingsCard>
+                            Tapped="OpenLinkViaTag_OnTapped" />
                         <controls:SettingsCard
                             x:Uid="/SettingsPage/GitHubCheckForUpdatesEntry"
                             Description="https://github.com/Pixeval/Pixeval/releases"
@@ -161,14 +158,14 @@
 
                 <controls:SettingsCard
                     x:Uid="/SettingsPage/DownloadUpdateAutomaticallyEntry"
-                    HeaderIcon="{controls2:GlyphIcon Glyph=CommunicationsE95A}"
+                    HeaderIcon="{fluent:SymbolIcon Symbol=Communication}"
                     Tag="{x:Bind misc:SettingsEntryAttribute.AutoUpdate}">
                     <ToggleSwitch IsOn="{x:Bind ViewModel.DownloadUpdateAutomatically, Mode=TwoWay}" />
                 </controls:SettingsCard>
 
-                <controls:SettingsExpander x:Uid="/SettingsPage/BugReportEntry" HeaderIcon="{controls2:GlyphIcon Glyph=BugEBE8}">
+                <controls:SettingsExpander x:Uid="/SettingsPage/BugReportEntry" HeaderIcon="{fluent:SymbolIcon Symbol=Bug}">
                     <controls:SettingsExpander.Items>
-                        <controls:SettingsCard x:Uid="/SettingsPage/BugReportEntry" HeaderIcon="{controls2:GlyphIcon Glyph=SendE724}">
+                        <controls:SettingsCard x:Uid="/SettingsPage/BugReportEntry" HeaderIcon="{fluent:SymbolIcon Symbol=Send}">
                             <CommandBar OverflowButtonVisibility="Collapsed">
                                 <AppBarButton
                                     x:Uid="/SettingsPage/GitHubBugReportEntry"
@@ -180,7 +177,7 @@
                                 </AppBarButton>
                                 <AppBarButton
                                     x:Uid="/SettingsPage/EMailBugReportEntry"
-                                    Icon="{controls2:GlyphIcon Glyph=MailE715}"
+                                    Icon="{fluent:SymbolIcon Symbol=Mail}"
                                     Tag="mailto:decem0730@hotmail.com"
                                     Tapped="OpenLinkViaTag_OnTapped" />
                                 <AppBarButton
@@ -195,29 +192,29 @@
                         </controls:SettingsCard>
                         <controls:SettingsCard
                             x:Uid="/SettingsPage/OpenLogEntry"
-                            ActionIcon="{controls2:GlyphIcon Glyph=OpenInNewWindowE8A7}"
-                            HeaderIcon="{controls2:GlyphIcon Glyph=FolderFillE8D5}"
+                            ActionIcon="{fluent:SymbolIcon Symbol=Open}"
+                            HeaderIcon="{fluent:SymbolIcon Symbol=FolderList}"
                             IsClickEnabled="True"
                             Tag="Log"
                             Tapped="OpenFolder_OnTapped" />
                         <controls:SettingsCard
                             x:Uid="/SettingsPage/OpenTempEntry"
-                            ActionIcon="{controls2:GlyphIcon Glyph=OpenInNewWindowE8A7}"
-                            HeaderIcon="{controls2:GlyphIcon Glyph=FolderE8B7}"
+                            ActionIcon="{fluent:SymbolIcon Symbol=Open}"
+                            HeaderIcon="{fluent:SymbolIcon Symbol=FolderLightning}"
                             IsClickEnabled="True"
                             Tag="Temp"
                             Tapped="OpenFolder_OnTapped" />
                         <controls:SettingsCard
                             x:Uid="/SettingsPage/OpenLocalEntry"
-                            ActionIcon="{controls2:GlyphIcon Glyph=OpenInNewWindowE8A7}"
-                            HeaderIcon="{controls2:GlyphIcon Glyph=UnsyncFolderE8F6}"
+                            ActionIcon="{fluent:SymbolIcon Symbol=Open}"
+                            HeaderIcon="{fluent:SymbolIcon Symbol=FolderBriefcase}"
                             IsClickEnabled="True"
                             Tag="Local"
                             Tapped="OpenFolder_OnTapped" />
                         <controls:SettingsCard
                             x:Uid="/SettingsPage/OpenRoamingEntry"
-                            ActionIcon="{controls2:GlyphIcon Glyph=OpenInNewWindowE8A7}"
-                            HeaderIcon="{controls2:GlyphIcon Glyph=SyncFolderE8F7}"
+                            ActionIcon="{fluent:SymbolIcon Symbol=Open}"
+                            HeaderIcon="{fluent:SymbolIcon Symbol=FolderGlobe}"
                             IsClickEnabled="True"
                             Tag="Roaming"
                             Tapped="OpenFolder_OnTapped" />
@@ -226,8 +223,8 @@
 
                 <controls:SettingsCard
                     x:Uid="/SettingsPage/RateEntry"
-                    ActionIcon="{controls2:GlyphIcon Glyph=OpenInNewWindowE8A7}"
-                    HeaderIcon="{controls2:GlyphIcon Glyph=FavoriteStarE734}"
+                    ActionIcon="{fluent:SymbolIcon Symbol=Open}"
+                    HeaderIcon="{fluent:SymbolIcon Symbol=Star}"
                     IsClickEnabled="True"
                     Tag="ms-windows-store://pdp/?ProductId=9P1RZL9Z8454"
                     Tapped="OpenLinkViaTag_OnTapped" />
@@ -239,42 +236,42 @@
 
                 <controls:SettingsCard
                     x:Uid="/SettingsPage/SignOutEntry"
-                    HeaderIcon="{controls2:GlyphIcon Glyph=SignOutF3B1}"
+                    HeaderIcon="{fluent:SymbolIcon Symbol=SignOut}"
                     IsClickEnabled="True"
                     Tag="{x:Bind misc:SettingsEntryAttribute.SignOut}"
                     Tapped="PerformSignOutButton_OnTapped" />
 
                 <controls:SettingsCard
                     x:Uid="/SettingsPage/ResetDefaultSettingsEntry"
-                    ActionIcon="{controls2:GlyphIcon Glyph=RefreshE72C}"
+                    ActionIcon="{fluent:SymbolIcon Symbol=ArrowReset}"
                     Click="ResetDefaultSettings_OnClicked"
-                    HeaderIcon="{controls2:GlyphIcon Glyph=AppIconDefaultECAA}"
+                    HeaderIcon="{fluent:SymbolIcon Symbol=Apps}"
                     IsClickEnabled="True"
                     Tag="{x:Bind misc:SettingsEntryAttribute.ResetSettings}" />
 
                 <controls:SettingsExpander
                     x:Uid="/SettingsPage/DeleteHistoriesEntry"
-                    HeaderIcon="{controls2:GlyphIcon Glyph=DeleteE74D}"
+                    HeaderIcon="{fluent:SymbolIcon Symbol=HistoryDismiss}"
                     Tag="{x:Bind misc:SettingsEntryAttribute.DeleteHistories}">
                     <controls:SettingsExpander.Items>
                         <controls:SettingsCard
                             x:Uid="/SettingsPage/DeleteFileCacheEntry"
-                            HeaderIcon="{controls2:GlyphIcon Glyph=DeleteE74D}"
+                            HeaderIcon="{fluent:SymbolIcon Symbol=HistoryDismiss}"
                             IsClickEnabled="True"
                             Tapped="DeleteFileCacheEntryButton_OnTapped" />
                         <controls:SettingsCard
                             x:Uid="/SettingsPage/DeleteSearchHistoriesEntry"
-                            HeaderIcon="{controls2:GlyphIcon Glyph=DeleteE74D}"
+                            HeaderIcon="{fluent:SymbolIcon Symbol=HistoryDismiss}"
                             IsClickEnabled="True"
                             Tapped="DeleteSearchHistoriesButton_OnTapped" />
                         <controls:SettingsCard
                             x:Uid="/SettingsPage/DeleteBrowseHistoriesEntry"
-                            HeaderIcon="{controls2:GlyphIcon Glyph=DeleteE74D}"
+                            HeaderIcon="{fluent:SymbolIcon Symbol=HistoryDismiss}"
                             IsClickEnabled="True"
                             Tapped="DeleteBrowseHistoriesButton_OnTapped" />
                         <controls:SettingsCard
                             x:Uid="/SettingsPage/DeleteDownloadHistoriesEntry"
-                            HeaderIcon="{controls2:GlyphIcon Glyph=DeleteE74D}"
+                            HeaderIcon="{fluent:SymbolIcon Symbol=HistoryDismiss}"
                             IsClickEnabled="True"
                             Tapped="DeleteDownloadHistoriesButton_OnTapped" />
                     </controls:SettingsExpander.Items>

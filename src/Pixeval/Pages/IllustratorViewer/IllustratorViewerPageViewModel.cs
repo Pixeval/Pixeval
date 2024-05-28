@@ -21,7 +21,6 @@
 using System;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
-using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
@@ -33,11 +32,12 @@ using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using Windows.System;
+using Microsoft.UI.Xaml.Controls;
 using Pixeval.Controls;
 using Pixeval.CoreApi.Net.Response;
 using Pixeval.Pages.Capability;
 using WinUI3Utilities;
-using WinUI3Utilities.Controls;
+using Symbol = FluentIcons.Common.Symbol;
 
 namespace Pixeval.Pages.IllustratorViewer;
 
@@ -123,18 +123,18 @@ public partial class IllustratorViewerPageViewModel : UiObservableObject
 
     public XamlUICommand FollowPrivatelyCommand { get; } = XamlUiCommandHelper.GetNewFollowPrivatelyCommand();
 
-    public XamlUICommand GenerateLinkCommand { get; } = EntryItemResources.GenerateLink.GetCommand(IconGlyph.LinkE71B);
+    public XamlUICommand GenerateLinkCommand { get; } = EntryItemResources.GenerateLink.GetCommand(Symbol.Link);
 
-    public XamlUICommand GenerateWebLinkCommand { get; } = EntryItemResources.GenerateWebLink.GetCommand(IconGlyph.PreviewLinkE8A1);
+    public XamlUICommand GenerateWebLinkCommand { get; } = EntryItemResources.GenerateWebLink.GetCommand(Symbol.LinkMultiple);
 
-    public XamlUICommand OpenInWebBrowserCommand { get; } = EntryItemResources.OpenInWebBrowser.GetCommand(IconGlyph.WebSearchF6FA);
+    public XamlUICommand OpenInWebBrowserCommand { get; } = EntryItemResources.OpenInWebBrowser.GetCommand(Symbol.GlobeArrowUp);
 
-    public XamlUICommand ShowQrCodeCommand { get; } = EntryItemResources.ShowQRCode.GetCommand(IconGlyph.QRCodeED14);
+    public XamlUICommand ShowQrCodeCommand { get; } = EntryItemResources.ShowQRCode.GetCommand(Symbol.QrCode);
 
     /// <summary>
     /// 还没用到
     /// </summary>
-    public XamlUICommand ShowPixEzQrCodeCommand { get; } = EntryItemResources.ShowPixEzQrCode.GetCommand(IconGlyph.Photo2EB9F);
+    public XamlUICommand ShowPixEzQrCodeCommand { get; } = EntryItemResources.ShowPixEzQrCode.GetCommand(Symbol.Image);
 
     private void InitializeCommands()
     {

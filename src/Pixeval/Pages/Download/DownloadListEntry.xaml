@@ -3,8 +3,8 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Pixeval.Controls"
-    xmlns:controls1="using:WinUI3Utilities.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:fluent="using:FluentIcons.WinUI"
     xmlns:local="using:Pixeval.Pages.Download"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     ColumnSpacing="20"
@@ -66,30 +66,30 @@
         OverflowButtonVisibility="Visible">
         <!--  Width="125" 是试出来刚好只显示一个按钮的宽度  -->
         <AppBarButton
-            Icon="{controls1:GlyphIcon Glyph=OpenInNewWindowE8A7}"
+            Icon="{fluent:SymbolIcon Symbol=Open}"
             Label="{x:Bind ViewModel.ActionButtonContent, Mode=OneWay}"
             Tapped="ActionButton_OnTapped" />
         <AppBarButton
             x:Uid="/DownloadListEntry/RedownloadItem"
-            Icon="{controls1:GlyphIcon Glyph=DownloadE896}"
+            Icon="{fluent:SymbolIcon Symbol=ArrowDownload}"
             IsEnabled="{x:Bind ViewModel.IsRedownloadItemEnabled, Mode=OneWay}"
             Tapped="RedownloadItem_OnTapped" />
         <AppBarButton
             x:Uid="/DownloadListEntry/CancelDownloadItem"
-            Icon="{controls1:GlyphIcon Glyph=CancelE711}"
+            Icon="{fluent:SymbolIcon Symbol=Dismiss}"
             IsEnabled="{x:Bind ViewModel.IsCancelItemEnabled, Mode=OneWay}"
             Tapped="CancelDownloadItem_OnTapped" />
         <AppBarButton
             x:Uid="/DownloadListEntry/OpenDownloadLocationItem"
-            Icon="{controls1:GlyphIcon Glyph=OpenLocalE8DA}"
+            Icon="{fluent:SymbolIcon Symbol=FolderArrowRight}"
             Tapped="OpenDownloadLocationItem_OnTapped" />
         <AppBarButton
             x:Uid="/DownloadListEntry/GoToPageItem"
-            Icon="{controls1:GlyphIcon Glyph=SlideshowE786}"
+            Icon="{fluent:SymbolIcon Symbol=OpenFolder}"
             Tapped="GoToPageItem_OnTapped" />
         <AppBarButton
             x:Uid="/DownloadListEntry/CheckErrorMessageInDetailItem"
-            Icon="{controls1:GlyphIcon Glyph=DocumentE8A5}"
+            Icon="{fluent:SymbolIcon Symbol=DocumentError}"
             IsEnabled="{x:Bind ViewModel.IsError, Mode=OneWay}"
             Tapped="CheckErrorMessageInDetail_OnTapped" />
     </CommandBar>

@@ -94,15 +94,15 @@
             LastChildFill="False">
             <local:IconText
                 controls:DockPanel.Dock="Right"
-                Glyph="ListEA37"
+                Symbol="TextAlignLeft"
                 Text="{x:Bind ViewModel.TextLength, Converter={StaticResource NumberEllipsisConverter}, Mode=OneWay}" />
             <local:IconText
                 controls:DockPanel.Dock="Right"
-                Glyph="HeartEB51"
+                Symbol="Heart"
                 Text="{x:Bind ViewModel.TotalBookmarks, Converter={StaticResource NumberEllipsisConverter}, Mode=OneWay}" />
             <local:IconText
                 controls:DockPanel.Dock="Right"
-                Glyph="RedEyeE7B3"
+                Symbol="Eye"
                 Text="{x:Bind ViewModel.TotalView, Converter={StaticResource NumberEllipsisConverter}, Mode=OneWay}" />
         </controls:DockPanel>
         <controls:DockPanel

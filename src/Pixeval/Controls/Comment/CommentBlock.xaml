@@ -4,10 +4,10 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Pixeval.Controls"
     xmlns:controls1="using:CommunityToolkit.WinUI.Controls"
-    xmlns:controls2="using:WinUI3Utilities.Controls"
     xmlns:converters="using:CommunityToolkit.WinUI.Converters"
     xmlns:converters1="using:Pixeval.Controls.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:fluent="using:FluentIcons.WinUI"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
     <UserControl.Resources>
@@ -71,12 +71,12 @@
             DefaultLabelPosition="Right"
             OverflowButtonVisibility="Collapsed">
             <AppBarButton
-                Icon="{controls2:GlyphIcon Glyph=DeleteE74D}"
+                Icon="{fluent:SymbolIcon Symbol=Delete}"
                 LabelPosition="Collapsed"
                 Tapped="DeleteReplyHyperlinkButton_OnTapped"
                 Visibility="{x:Bind ViewModel.IsMe, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
             <AppBarButton
-                Icon="{controls2:GlyphIcon Glyph=MessageE8BD}"
+                Icon="{fluent:SymbolIcon Symbol=Chat}"
                 Label="{x:Bind ViewModel.RepliesCount, Mode=OneWay}"
                 LabelPosition="{x:Bind ViewModel.RepliesCount, Converter={StaticResource LabelNullableVisibilityConverter}, Mode=OneWay}"
                 Tapped="OpenRepliesHyperlinkButton_OnTapped" />
