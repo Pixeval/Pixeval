@@ -61,11 +61,11 @@ public class MacroParser<TContext>
         return false;
     }
 
-    public IMetaPathNode<TContext>? Parse()
+    public Sequence<TContext>? Parse()
     {
         var root = Path();
-        return _lexer!.NextToken() is { } token 
-            ? ThrowUtils.MacroParse<IMetaPathNode<TContext>?>(MacroParserResources.UnexpectedTokenFormatted.Format(token.Position.Start.Value - 1)) 
+        return _lexer!.NextToken() is { } token
+            ? ThrowUtils.MacroParse<Sequence<TContext>?>(MacroParserResources.UnexpectedTokenFormatted.Format(token.Position.Start.Value - 1))
             : root;
     }
 
@@ -76,7 +76,7 @@ public class MacroParser<TContext>
 
     private Sequence<TContext>? Sequence()
     {
-        if (_currentToken is not { TokenKind: TokenKind.RBrace } and not null && SingleNode() is { } node) 
+        if (_currentToken is not { TokenKind: TokenKind.RBrace } and not null && SingleNode() is { } node)
             return new Sequence<TContext>(node, Sequence());
 
         return null;
@@ -97,9 +97,10 @@ public class MacroParser<TContext>
     {
         _ = EatToken(TokenKind.At);
         _ = EatToken(TokenKind.LBrace);
+        var isNot = TryEatToken(TokenKind.Exclamation, out _);
         var macroName = PlainText();
         _expectContextualEqual = true;
-        var node = new Macro<TContext>(macroName, OptionalMacroParameter());
+        var node = new Macro<TContext>(macroName, OptionalMacroParameter(), isNot);
         _ = EatToken(TokenKind.RBrace);
         return node;
     }
@@ -107,7 +108,7 @@ public class MacroParser<TContext>
     private OptionalMacroParameter<TContext>? OptionalMacroParameter()
     {
         _expectContextualEqual = false;
-        return TryEatToken(TokenKind.Equal, out _) ? new OptionalMacroParameter<TContext>(Sequence()) : null;
+        return TryEatToken(TokenKind.Equal, out _) && Sequence() is { } sequence ? new OptionalMacroParameter<TContext>(sequence) : null;
     }
 
     private PlainText<TContext> PlainText()

@@ -30,7 +30,10 @@ public sealed record Unknown : IMacro
     public string Name => "";
 }
 
-public interface IPredicate : IMacro;
+public interface IPredicate : IMacro
+{
+    bool IsNot { get; internal set; }
+}
 
 public interface IPredicate<in TContext> : IPredicate
 {
@@ -42,4 +45,11 @@ public interface ITransducer : IMacro;
 public interface ITransducer<in TContext> : ITransducer
 {
     string Substitute(TContext context);
+}
+
+public interface ILastSegment : ITransducer
+{
+    static abstract string NameConst { get; }
+
+    static abstract string NameConstToken { get; }
 }

@@ -26,6 +26,8 @@ namespace Pixeval.Download.Macros;
 [MetaPathMacro<IWorkViewModel>]
 public class IsUgoiraMacro : IPredicate<IWorkViewModel>
 {
+    public bool IsNot { get; set; }
+
     public string Name => "if_gif";
 
     public bool Match(IWorkViewModel context)
