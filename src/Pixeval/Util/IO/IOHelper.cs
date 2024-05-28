@@ -49,7 +49,7 @@ public static partial class IoHelper
 
     public static string GetInvalidPathChars { get; } = @"*?""|" + new string(Path.GetInvalidPathChars());
 
-    public static string GetInvalidNameChars { get; } = @"\/*:?""|<>" + new string(Path.GetInvalidPathChars());
+    public static string GetInvalidNameChars { get; } = @"\/*:?""|" + new string(Path.GetInvalidPathChars());
 
     public static string NormalizePath(string path)
     {

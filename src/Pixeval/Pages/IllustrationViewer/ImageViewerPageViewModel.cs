@@ -138,6 +138,7 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
     /// 如果之前下载的图片就是原图，则可以直接返回下载的图片
     /// </summary>
     /// <param name="progress">压缩动图为一张图片的时候用</param>
+    /// <param name="needOriginal"></param>
     /// <returns></returns>
     public async Task<Stream?> GetImageStreamAsync(IProgress<double>? progress, bool needOriginal)
     {
@@ -172,7 +173,8 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
     public async Task<StorageFile> SaveToFolderAsync(AppKnownFolders appKnownFolder)
     {
         var name = Path.GetFileName(App.AppViewModel.AppSettings.DownloadPathMacro);
-        var path = IoHelper.NormalizePath(new IllustrationMetaPathParser().Reduce(name, IllustrationViewModel));
+        var path = IoHelper.NormalizePathSegment(new IllustrationMetaPathParser().Reduce(name, IllustrationViewModel));
+        path = IoHelper.ReplaceTokenExtensionFromUrl(path, IllustrationViewModel.IllustrationOriginalUrl).RemoveTokens();
         var file = await appKnownFolder.CreateFileAsync(path);
         await using var target = await file.OpenStreamForWriteAsync();
         await GetOriginalImageSourceAsync(target);
@@ -435,7 +437,7 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
 
     public XamlUICommand RestoreResolutionCommand { get; } = "".GetCommand(Symbol.RatioOneToOne);
 
-    public XamlUICommand ShareCommand { get; } = "".GetCommand(Symbol.Share);
+    public XamlUICommand ShareCommand { get; } = EntryViewerPageResources.Share.GetCommand(Symbol.Share);
 
     public XamlUICommand SetAsCommand { get; } = EntryViewerPageResources.SetAs.GetCommand(Symbol.PaintBrush);
 
