@@ -3,7 +3,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Pixeval.Controls"
     xmlns:enum="using:Pixeval.CoreApi.Global.Enum"
-    xmlns:markup="using:Pixeval.Controls.MarkupExtensions"
     xmlns:numberFormatting="using:Windows.Globalization.NumberFormatting"
     xmlns:winUi="using:CommunityToolkit.WinUI">
     <Style x:Key="PixevalRoundedButtonStyle" TargetType="Button">
@@ -84,7 +83,7 @@
         BasedOn="{StaticResource DefaultComboBoxStyle}"
         TargetType="controls:EnumComboBox">
         <Setter Property="EnumSource" Value="{winUi:EnumValues Type=enum:WorkType}" />
-        <Setter Property="PlaceholderText" Value="{markup:ResourceString ResourceKey='WorkTypeComboBox/PlaceholderText', ResourceFile=Misc}" />
+        <Setter Property="PlaceholderText" Value="{controls:ResourceString ResourceKey='WorkTypeComboBox/PlaceholderText', ResourceFile=Misc}" />
     </Style>
 
     <Style
@@ -92,7 +91,7 @@
         BasedOn="{StaticResource DefaultComboBoxStyle}"
         TargetType="controls:EnumComboBox">
         <Setter Property="EnumSource" Value="{winUi:EnumValues Type=enum:SimpleWorkType}" />
-        <Setter Property="PlaceholderText" Value="{markup:ResourceString ResourceKey='WorkTypeComboBox/PlaceholderText', ResourceFile=Misc}" />
+        <Setter Property="PlaceholderText" Value="{controls:ResourceString ResourceKey='WorkTypeComboBox/PlaceholderText', ResourceFile=Misc}" />
     </Style>
 
     <Style
@@ -100,7 +99,7 @@
         BasedOn="{StaticResource DefaultComboBoxStyle}"
         TargetType="controls:EnumComboBox">
         <Setter Property="EnumSource" Value="{winUi:EnumValues Type=enum:PrivacyPolicy}" />
-        <Setter Property="PlaceholderText" Value="{markup:ResourceString ResourceKey='PrivacyPolicyComboBox/PlaceholderText', ResourceFile=Misc}" />
+        <Setter Property="PlaceholderText" Value="{controls:ResourceString ResourceKey='PrivacyPolicyComboBox/PlaceholderText', ResourceFile=Misc}" />
     </Style>
 
     <Style
@@ -108,7 +107,7 @@
         BasedOn="{StaticResource DefaultComboBoxStyle}"
         TargetType="controls:EnumComboBox">
         <Setter Property="EnumSource" Value="{winUi:EnumValues Type=enum:WorkSortOption}" />
-        <Setter Property="PlaceholderText" Value="{markup:ResourceString ResourceKey='SortOptionComboBox/PlaceholderText', ResourceFile=Misc}" />
+        <Setter Property="PlaceholderText" Value="{controls:ResourceString ResourceKey='SortOptionComboBox/PlaceholderText', ResourceFile=Misc}" />
     </Style>
 
     <Style

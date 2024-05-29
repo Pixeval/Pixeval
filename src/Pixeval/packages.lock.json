@@ -180,6 +180,18 @@
           "Microsoft.WindowsAppSDK": "1.3.230331000"
         }
       },
+      "FluentIcons.WinUI": {
+        "type": "Direct",
+        "requested": "[1.1.240, )",
+        "resolved": "1.1.240",
+        "contentHash": "xF2YeBgqD58nDAGVlXvuZ/rObWEnKi+eyYloZKetb1dQAxVug2gFqzRqgAEeYBubmFC87H5JHN4JsW8XiRdEWQ==",
+        "dependencies": {
+          "FluentIcons.Common": "[1.1.240]",
+          "Microsoft.Extensions.Hosting.Abstractions": "8.0.0",
+          "Microsoft.Windows.SDK.BuildTools": "10.0.22621.1",
+          "Microsoft.WindowsAppSDK": "1.2.221109.1"
+        }
+      },
       "GitVersion.MsBuild": {
         "type": "Direct",
         "requested": "[5.12.0, )",
@@ -221,9 +233,9 @@
       },
       "Microsoft.Windows.SDK.BuildTools": {
         "type": "Direct",
-        "requested": "[10.0.26100.1, )",
-        "resolved": "10.0.26100.1",
-        "contentHash": "ju02pHSp1LDEIvFgLIDbCbXGPpTTrXJrH90HxC6neclpbRpdS8RxeRbYOzPQFByUPCgT/Egbz4s/cpNMamW1Sg=="
+        "requested": "[10.0.22621.3233, )",
+        "resolved": "10.0.22621.3233",
+        "contentHash": "v67zwCb9JOpfPxdSroZukIKHruU6FUB+KwcmSPcVvUFyYtcyvcUign5y8jPQNi54CVzWvaTg646e62LbanUkxg=="
       },
       "Microsoft.WindowsAppSDK": {
         "type": "Direct",
@@ -266,9 +278,9 @@
       },
       "QuestPDF": {
         "type": "Direct",
-        "requested": "[2024.3.9, )",
-        "resolved": "2024.3.9",
-        "contentHash": "OvYSDRfg+hs3SWHIC97SxLZJrS/ijR7wTqix0NSNJE/fEvLp/q8I44sfmV9oaCh+nu0AfaBrs0BQ/UofnkqnWw=="
+        "requested": "[2024.3.10, )",
+        "resolved": "2024.3.10",
+        "contentHash": "AMvGTBBcQBcFX6az4uORt3CKsL6z6f26WnZdeZhCUcGF/p+5zQf9am0Y4DwNl7+JljuiNs4aC2QNflY5l50FtA=="
       },
       "ReverseMarkdown": {
         "type": "Direct",
@@ -354,6 +366,11 @@
           "Microsoft.WindowsAppSDK": "1.3.230331000"
         }
       },
+      "FluentIcons.Common": {
+        "type": "Transitive",
+        "resolved": "1.1.240",
+        "contentHash": "CGit9S60sd9uC0lJQQEvj6y/jYncOC2QUoVcrsj48dfAoGmm6mswxT1tnYem/1Gwkb6XWCNXxF2UMncvVBJ2uQ=="
+      },
       "HtmlAgilityPack": {
         "type": "Transitive",
         "resolved": "1.11.61",
@@ -369,10 +386,70 @@
         "resolved": "6.0.0",
         "contentHash": "UcSjPsst+DfAdJGVDsu346FX0ci0ah+lw3WRtn18NUwEqRt70HaOQ7lI72vy3+1LxtqI3T5GWwV39rQSrCzAeg=="
       },
+      "Microsoft.Extensions.Configuration.Abstractions": {
+        "type": "Transitive",
+        "resolved": "8.0.0",
+        "contentHash": "3lE/iLSutpgX1CC0NOW70FJoGARRHbyKmG7dc0klnUZ9Dd9hS6N/POPWhKhMLCEuNN5nXEY5agmlFtH562vqhQ==",
+        "dependencies": {
+          "Microsoft.Extensions.Primitives": "8.0.0"
+        }
+      },
       "Microsoft.Extensions.DependencyInjection.Abstractions": {
         "type": "Transitive",
         "resolved": "8.0.0",
         "contentHash": "cjWrLkJXK0rs4zofsK4bSdg+jhDLTaxrkXu4gS6Y7MAlCvRyNNgwY/lJi5RDlQOnSZweHqoyvgvbdvQsRIW+hg=="
+      },
+      "Microsoft.Extensions.Diagnostics.Abstractions": {
+        "type": "Transitive",
+        "resolved": "8.0.0",
+        "contentHash": "JHYCQG7HmugNYUhOl368g+NMxYE/N/AiclCYRNlgCY9eVyiBkOHMwK4x60RYMxv9EL3+rmj1mqHvdCiPpC+D4Q==",
+        "dependencies": {
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "8.0.0",
+          "Microsoft.Extensions.Options": "8.0.0",
+          "System.Diagnostics.DiagnosticSource": "8.0.0"
+        }
+      },
+      "Microsoft.Extensions.FileProviders.Abstractions": {
+        "type": "Transitive",
+        "resolved": "8.0.0",
+        "contentHash": "ZbaMlhJlpisjuWbvXr4LdAst/1XxH3vZ6A0BsgTphZ2L4PGuxRLz7Jr/S7mkAAnOn78Vu0fKhEgNF5JO3zfjqQ==",
+        "dependencies": {
+          "Microsoft.Extensions.Primitives": "8.0.0"
+        }
+      },
+      "Microsoft.Extensions.Hosting.Abstractions": {
+        "type": "Transitive",
+        "resolved": "8.0.0",
+        "contentHash": "AG7HWwVRdCHlaA++1oKDxLsXIBxmDpMPb3VoyOoAghEWnkUvEAdYQUwnV4jJbAaa/nMYNiEh5ByoLauZBEiovg==",
+        "dependencies": {
+          "Microsoft.Extensions.Configuration.Abstractions": "8.0.0",
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "8.0.0",
+          "Microsoft.Extensions.Diagnostics.Abstractions": "8.0.0",
+          "Microsoft.Extensions.FileProviders.Abstractions": "8.0.0",
+          "Microsoft.Extensions.Logging.Abstractions": "8.0.0"
+        }
+      },
+      "Microsoft.Extensions.Logging.Abstractions": {
+        "type": "Transitive",
+        "resolved": "8.0.0",
+        "contentHash": "arDBqTgFCyS0EvRV7O3MZturChstm50OJ0y9bDJvAcmEPJm0FFpFyjU/JLYyStNGGey081DvnQYlncNX5SJJGA==",
+        "dependencies": {
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "8.0.0"
+        }
+      },
+      "Microsoft.Extensions.Options": {
+        "type": "Transitive",
+        "resolved": "8.0.0",
+        "contentHash": "JOVOfqpnqlVLUzINQ2fox8evY2SKLYJ3BV8QDe/Jyp21u1T7r45x/R/5QdteURMR5r01GxeJSBBUOCOyaNXA3g==",
+        "dependencies": {
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "8.0.0",
+          "Microsoft.Extensions.Primitives": "8.0.0"
+        }
+      },
+      "Microsoft.Extensions.Primitives": {
+        "type": "Transitive",
+        "resolved": "8.0.0",
+        "contentHash": "bXJEZrW9ny8vjMF1JV253WeLhpEVzFo1lyaZu1vQ4ZxWUlVvknZ/+ftFgVheLubb4eZPSwwxBeqS1JkCOjxd8g=="
       },
       "Microsoft.Graphics.Win2D": {
         "type": "Transitive",
@@ -422,6 +499,11 @@
         "type": "Transitive",
         "resolved": "2.0.3",
         "contentHash": "IY+i5JsUoFTyLvNOlLFUak4nJajSZdfxYqCbDCSYeGDGwHNBtJo0ICduAFGaYaqdL41+YHn7LMrp1AwIU/29Ag=="
+      },
+      "System.Diagnostics.DiagnosticSource": {
+        "type": "Transitive",
+        "resolved": "8.0.0",
+        "contentHash": "c9xLpVz6PL9lp/djOWtk5KPDZq3cSYpmXoJQY524EOtuFl5z9ZtsotpsyrDW40U1DRnQSYvcPKEUV0X//u6gkQ=="
       },
       "System.Drawing.Common": {
         "type": "Transitive",
@@ -486,8 +568,9 @@
           "CommunityToolkit.WinUI.Controls.Primitives": "[8.1.240328-rc, )",
           "CommunityToolkit.WinUI.Extensions": "[8.1.240328-rc, )",
           "CommunityToolkit.WinUI.Triggers": "[8.0.240109, )",
+          "FluentIcons.WinUI": "[1.1.240, )",
           "Microsoft.Graphics.Win2D": "[1.2.0, )",
-          "Microsoft.Windows.SDK.BuildTools": "[10.0.26100.1, )",
+          "Microsoft.Windows.SDK.BuildTools": "[10.0.22621.3233, )",
           "Microsoft.WindowsAppSDK": "[1.5.240428000, )",
           "Microsoft.Xaml.Behaviors.WinUI.Managed": "[2.0.9, )",
           "Pixeval.Utilities": "[1.0.0, )",
@@ -528,9 +611,9 @@
       },
       "QuestPDF": {
         "type": "Direct",
-        "requested": "[2024.3.9, )",
-        "resolved": "2024.3.9",
-        "contentHash": "OvYSDRfg+hs3SWHIC97SxLZJrS/ijR7wTqix0NSNJE/fEvLp/q8I44sfmV9oaCh+nu0AfaBrs0BQ/UofnkqnWw=="
+        "requested": "[2024.3.10, )",
+        "resolved": "2024.3.10",
+        "contentHash": "AMvGTBBcQBcFX6az4uORt3CKsL6z6f26WnZdeZhCUcGF/p+5zQf9am0Y4DwNl7+JljuiNs4aC2QNflY5l50FtA=="
       },
       "Microsoft.Graphics.Win2D": {
         "type": "Transitive",
@@ -604,9 +687,9 @@
       },
       "QuestPDF": {
         "type": "Direct",
-        "requested": "[2024.3.9, )",
-        "resolved": "2024.3.9",
-        "contentHash": "OvYSDRfg+hs3SWHIC97SxLZJrS/ijR7wTqix0NSNJE/fEvLp/q8I44sfmV9oaCh+nu0AfaBrs0BQ/UofnkqnWw=="
+        "requested": "[2024.3.10, )",
+        "resolved": "2024.3.10",
+        "contentHash": "AMvGTBBcQBcFX6az4uORt3CKsL6z6f26WnZdeZhCUcGF/p+5zQf9am0Y4DwNl7+JljuiNs4aC2QNflY5l50FtA=="
       },
       "Microsoft.Graphics.Win2D": {
         "type": "Transitive",
@@ -680,9 +763,9 @@
       },
       "QuestPDF": {
         "type": "Direct",
-        "requested": "[2024.3.9, )",
-        "resolved": "2024.3.9",
-        "contentHash": "OvYSDRfg+hs3SWHIC97SxLZJrS/ijR7wTqix0NSNJE/fEvLp/q8I44sfmV9oaCh+nu0AfaBrs0BQ/UofnkqnWw=="
+        "requested": "[2024.3.10, )",
+        "resolved": "2024.3.10",
+        "contentHash": "AMvGTBBcQBcFX6az4uORt3CKsL6z6f26WnZdeZhCUcGF/p+5zQf9am0Y4DwNl7+JljuiNs4aC2QNflY5l50FtA=="
       },
       "Microsoft.Graphics.Win2D": {
         "type": "Transitive",

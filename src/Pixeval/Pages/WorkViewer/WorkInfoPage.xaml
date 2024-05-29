@@ -3,10 +3,10 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
-    xmlns:controls1="using:WinUI3Utilities.Controls"
     xmlns:converters="using:CommunityToolkit.WinUI.Converters"
     xmlns:converters1="using:Pixeval.Controls.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:fluent="using:FluentIcons.WinUI"
     xmlns:labs="using:CommunityToolkit.Labs.WinUI.MarkdownTextBlock"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:model="using:Pixeval.CoreApi.Model"
@@ -129,7 +129,7 @@
                                     <MenuFlyoutItem
                                         x:Uid="/WorkInfoPage/BlockTagMenuItem"
                                         Click="MenuFlyoutItem_OnClick"
-                                        Icon="{controls1:GlyphIcon Glyph=Blocked2ECE4}"
+                                        Icon="{fluent:SymbolIcon Symbol=TagDismiss}"
                                         Tag="{x:Bind}" />
                                 </MenuFlyout>
                             </Button.ContextFlyout>

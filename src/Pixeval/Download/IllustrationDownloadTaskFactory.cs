@@ -38,8 +38,7 @@ public class IllustrationDownloadTaskFactory : IDownloadTaskFactory<Illustration
 
     public async Task<IllustrationDownloadTask> CreateAsync(IllustrationItemViewModel context, string rawPath)
     {
-        using var scope = App.AppViewModel.AppServicesScope;
-        var manager = scope.ServiceProvider.GetRequiredService<DownloadHistoryPersistentManager>();
+        var manager = App.AppViewModel.AppServiceProvider.GetRequiredService<DownloadHistoryPersistentManager>();
         var path = IoHelper.NormalizePath(PathParser.Reduce(rawPath, context));
         if (manager.Collection.Exists(entry => entry.Destination == path))
         {
@@ -86,8 +85,7 @@ public class IllustrationDownloadTaskFactory : IDownloadTaskFactory<Illustration
 
     public IllustrationDownloadTask CreateIntrinsic(IllustrationItemViewModel context, object param, string rawPath)
     {
-        using var scope = App.AppViewModel.AppServicesScope;
-        var manager = scope.ServiceProvider.GetRequiredService<DownloadHistoryPersistentManager>();
+        var manager = App.AppViewModel.AppServiceProvider.GetRequiredService<DownloadHistoryPersistentManager>();
         var path = IoHelper.NormalizePath(PathParser.Reduce(rawPath, context));
         if (manager.Collection.Exists(entry => entry.Destination == path))
         {

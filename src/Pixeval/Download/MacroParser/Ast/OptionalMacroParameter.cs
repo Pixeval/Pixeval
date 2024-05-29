@@ -18,12 +18,15 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using System.Diagnostics;
+
 namespace Pixeval.Download.MacroParser.Ast;
 
-public record OptionalMacroParameter<TContext>(Sequence<TContext>? Content) : IMetaPathNode<TContext>
+[DebuggerDisplay("{Content}")]
+public record OptionalMacroParameter<TContext>(Sequence<TContext> Content) : IMetaPathNode<TContext>
 {
     public string Evaluate(IMacro[] env, TContext context)
     {
-        return Content?.Evaluate(env, context) ?? string.Empty;
+        return Content.Evaluate(env, context);
     }
 }

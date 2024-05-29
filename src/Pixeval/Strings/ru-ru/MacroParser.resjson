@@ -1,6 +1,5 @@
 {
   "NonParameterizedMacroBearingParameterFormatted": "Макрос {0} не может содержать параметров",
-  "ParameterizedMacroMissingParameterFormatted": "Отсутствует параметр макроса {0}",
   "ResultIsEmpty": "Ошибка разбора: результат пуст",
   "UnexpectedTokenFormatted": "Недопустимый ввод: недопустимый символ на позиции {0}",
   "UnknownArtist": "Неизвестный художник",

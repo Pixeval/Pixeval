@@ -40,7 +40,7 @@ using Pixeval.Controls.Windowing;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.Settings.Models;
 using WinUI3Utilities;
-using WinUI3Utilities.Controls;
+using Symbol = FluentIcons.Common.Symbol;
 
 namespace Pixeval.Pages.Misc;
 
@@ -115,12 +115,12 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
                     t => t.TargetFilter),
                 new TokenizingAppSettingsEntry(AppSettings),
                 new BoolAppSettingsEntry(AppSettings,
-                    t => t.BrowserOriginalImage),
+                    t => t.BrowseOriginalImage),
                 new ClickableAppSettingsEntry(AppSettings,
                     SettingsPageResources.ViewingRestrictionEntryHeader,
                     SettingsPageResources.ViewingRestrictionEntryDescription,
-                    IconGlyph.BlockContactE8F8,
-                    () => Launcher.LaunchUriAsync(new Uri("https://www.pixiv.net/settings/viewing")))
+                    Symbol.SubtractCircle,
+                    () => _ = Launcher.LaunchUriAsync(new Uri("https://www.pixiv.net/settings/viewing")))
             },
             new(SettingsEntryCategory.Search)
             {
@@ -155,7 +155,7 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
                 new MultiValuesAppSettingsEntry(AppSettings,
                     SettingsPageResources.RankOptionEntryHeader,
                     SettingsPageResources.RankOptionEntryDescription,
-                    IconGlyph.MarketEAFC,
+                    Symbol.ArrowTrending,
                     [
                         new EnumAppSettingsEntry<RankOption>(AppSettings,
                             WorkTypeEnum.Illustration,
@@ -168,7 +168,7 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
                 new MultiValuesAppSettingsEntry(AppSettings,
                     SettingsPageResources.DefaultSearchTagMatchOptionEntryHeader,
                     SettingsPageResources.DefaultSearchTagMatchOptionEntryDescription,
-                    IconGlyph.PassiveAuthenticationF32A,
+                    Symbol.CheckmarkCircleSquare,
                     [
                         new EnumAppSettingsEntry<SearchIllustrationTagMatchOption>(AppSettings,
                             WorkTypeEnum.Illustration,
@@ -202,7 +202,7 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
                 new MultiValuesAppSettingsEntry(AppSettings,
                     SettingsPageResources.WorkDownloadFormatEntryHeader,
                     SettingsPageResources.WorkDownloadFormatEntryDescription,
-                    IconGlyph.CaptionE8BA,
+                    Symbol.TextPeriodAsterisk,
                     [
                         new EnumAppSettingsEntry<IllustrationDownloadFormat>(AppSettings,
                             WorkTypeEnum.Illustration,

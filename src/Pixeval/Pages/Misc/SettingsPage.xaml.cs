@@ -112,24 +112,21 @@ public sealed partial class SettingsPage : IScrollViewHost, IDisposable
 
     private void DeleteSearchHistoriesButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        using var scope = App.AppViewModel.AppServicesScope;
-        var manager = scope.ServiceProvider.GetRequiredService<SearchHistoryPersistentManager>();
+        var manager = App.AppViewModel.AppServiceProvider.GetRequiredService<SearchHistoryPersistentManager>();
         manager.Clear();
         ViewModel.ShowClearData(ClearDataKind.SearchHistory);
     }
 
     private void DeleteBrowseHistoriesButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        using var scope = App.AppViewModel.AppServicesScope;
-        var manager = scope.ServiceProvider.GetRequiredService<BrowseHistoryPersistentManager>();
+        var manager = App.AppViewModel.AppServiceProvider.GetRequiredService<BrowseHistoryPersistentManager>();
         manager.Clear();
         ViewModel.ShowClearData(ClearDataKind.BrowseHistory);
     }
 
     private void DeleteDownloadHistoriesButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        using var scope = App.AppViewModel.AppServicesScope;
-        var manager = scope.ServiceProvider.GetRequiredService<DownloadHistoryPersistentManager>();
+        var manager = App.AppViewModel.AppServiceProvider.GetRequiredService<DownloadHistoryPersistentManager>();
         manager.Clear();
         ViewModel.ShowClearData(ClearDataKind.DownloadHistory);
     }

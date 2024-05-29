@@ -23,6 +23,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Windows.System;
 using CommunityToolkit.Mvvm.ComponentModel;
+using FluentIcons.Common;
 using Microsoft.UI.Xaml.Input;
 using Pixeval.Controls;
 using Pixeval.Controls.Windowing;
@@ -31,7 +32,6 @@ using Pixeval.CoreApi.Model;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using Pixeval.Util.ComponentModels;
-using WinUI3Utilities.Controls;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
@@ -313,6 +313,7 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
     private void InitializeCommands()
     {
         FullScreenCommand.ExecuteRequested += FullScreenCommandOnExecuteRequested;
+        FullScreenCommand.GetFullScreenCommand(false);
     }
 
     private void FullScreenCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
@@ -322,11 +323,11 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
     }
 
     public XamlUICommand InfoAndCommentsCommand { get; } =
-        EntryViewerPageResources.InfoAndComments.GetCommand(IconGlyph.InfoE946, VirtualKey.F12);
+        EntryViewerPageResources.InfoAndComments.GetCommand(Symbol.Info, VirtualKey.F12);
 
-    public XamlUICommand AddToBookmarkCommand { get; } = EntryItemResources.AddToBookmark.GetCommand(IconGlyph.BookmarksE8A4);
+    public XamlUICommand AddToBookmarkCommand { get; } = EntryItemResources.AddToBookmark.GetCommand(Symbol.Bookmark);
 
-    public XamlUICommand FullScreenCommand { get; } = "".GetCommand(IconGlyph.FullScreenE740);
+    public XamlUICommand FullScreenCommand { get; } = "".GetCommand(Symbol.ArrowMaximize);
 
     #endregion
 }

@@ -26,7 +26,11 @@ namespace Pixeval.Download.Macros;
 [MetaPathMacro<IWorkViewModel>]
 public class IsMangaMacro : IPredicate<IWorkViewModel>
 {
-    public string Name => "if_manga";
+    public bool IsNot { get; set; }
+
+    public const string NameConst = "if_manga";
+
+    public string Name => NameConst;
 
     public bool Match(IWorkViewModel context)
     {

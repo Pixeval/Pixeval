@@ -151,6 +151,7 @@ public sealed partial class IllustrationViewerPage : SupportCustomTitleBarDragRe
         CommandBorderDropShadow.Receivers.Add(IllustrationImageShowcaseFrame);
         ThumbnailListDropShadow.Receivers.Add(IllustrationImageShowcaseFrame);
 
+        ThumbnailItemsView.StartBringItemIntoView(_viewModel.CurrentIllustrationIndex, new BringIntoViewOptions { AnimationDesired = true });
         IllustrationImageShowcaseFrame_OnTapped(null!, null!);
     }
 

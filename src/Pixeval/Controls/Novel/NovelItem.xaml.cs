@@ -12,7 +12,7 @@ using Pixeval.Messages;
 using Pixeval.Util.UI;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
-using WinUI3Utilities.Controls;
+using Symbol = FluentIcons.Common.Symbol;
 
 namespace Pixeval.Controls;
 
@@ -126,7 +126,7 @@ public sealed partial class NovelItem
         OpenNovelRequested?.Invoke(this, ViewModel);
     }
 
-    private XamlUICommand OpenNovelCommand { get; } = EntryItemResources.OpenNovel.GetCommand(IconGlyph.ReadingModeE736);
+    private XamlUICommand OpenNovelCommand { get; } = EntryItemResources.OpenNovel.GetCommand(Symbol.BookOpen);
 
     private void AddToBookmark_OnTapped(object sender, TappedRoutedEventArgs e)
     {

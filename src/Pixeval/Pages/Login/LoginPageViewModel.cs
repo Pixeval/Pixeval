@@ -105,8 +105,7 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject
     public async Task<bool> RefreshAsync(string refreshToken)
     {
         AdvancePhase(LoginPhaseEnum.Refreshing);
-        using var scope = App.AppViewModel.AppServicesScope;
-        var logger = scope.ServiceProvider.GetRequiredService<FileLogger>();
+        var logger = App.AppViewModel.AppServiceProvider.GetRequiredService<FileLogger>();
         var client = await MakoClient.TryGetMakoClientAsync(refreshToken, App.AppViewModel.AppSettings.ToMakoClientConfiguration(), logger);
         if (client is not null)
         {
@@ -206,8 +205,7 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject
                     CloseWindow();
                     return;
                 }
-                using var scope = App.AppViewModel.AppServicesScope;
-                var logger = scope.ServiceProvider.GetRequiredService<FileLogger>();
+                var logger = App.AppViewModel.AppServiceProvider.GetRequiredService<FileLogger>();
                 App.AppViewModel.MakoClient = new MakoClient(session, App.AppViewModel.AppSettings.ToMakoClientConfiguration(), logger);
                 navigated();
             }

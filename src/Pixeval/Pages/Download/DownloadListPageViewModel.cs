@@ -95,8 +95,7 @@ public partial class DownloadListPageViewModel : ObservableObject, IDisposable
 
     public void RemoveSelectedItems()
     {
-        using var scope = App.AppViewModel.AppServicesScope;
-        var manager = scope.ServiceProvider.GetRequiredService<DownloadHistoryPersistentManager>();
+        var manager = App.AppViewModel.AppServiceProvider.GetRequiredService<DownloadHistoryPersistentManager>();
         SelectedEntries.ForEach(task =>
         {
             App.AppViewModel.DownloadManager.RemoveTask(task.DownloadTask);

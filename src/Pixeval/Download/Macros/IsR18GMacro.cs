@@ -28,6 +28,8 @@ namespace Pixeval.Download.Macros;
 [MetaPathMacro<IWorkViewModel>]
 public class IsR18GMacro : IPredicate<IWorkViewModel>
 {
+    public bool IsNot { get; set; }
+
     public string Name => "if_r18g";
 
     public bool Match(IWorkViewModel context)

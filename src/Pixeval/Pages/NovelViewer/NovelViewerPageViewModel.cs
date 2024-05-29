@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Windows.System;
 using CommunityToolkit.Mvvm.ComponentModel;
+using FluentIcons.Common;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
 using Pixeval.Controls;
@@ -37,7 +38,6 @@ using Pixeval.AppManagement;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.Settings;
 using Pixeval.Settings.Models;
-using WinUI3Utilities.Controls;
 
 namespace Pixeval.Pages.NovelViewer;
 
@@ -262,14 +262,14 @@ public partial class NovelViewerPageViewModel : DetailedUiObservableObject, IDis
     }
 
     public XamlUICommand NovelSettingsCommand { get; } =
-        EntryViewerPageResources.NovelSettings.GetCommand(IconGlyph.SettingsE713);
+        EntryViewerPageResources.NovelSettings.GetCommand(Symbol.Settings);
 
     public XamlUICommand InfoAndCommentsCommand { get; } =
-        EntryViewerPageResources.InfoAndComments.GetCommand(IconGlyph.InfoE946, VirtualKey.F12);
+        EntryViewerPageResources.InfoAndComments.GetCommand(Symbol.Info, VirtualKey.F12);
 
-    public XamlUICommand AddToBookmarkCommand { get; } = EntryItemResources.AddToBookmark.GetCommand(IconGlyph.BookmarksE8A4);
+    public XamlUICommand AddToBookmarkCommand { get; } = EntryItemResources.AddToBookmark.GetCommand(Symbol.Bookmark);
 
-    public XamlUICommand FullScreenCommand { get; } = "".GetCommand(IconGlyph.FullScreenE740);
+    public XamlUICommand FullScreenCommand { get; } = "".GetCommand(Symbol.ArrowMaximize);
 
     #endregion
 

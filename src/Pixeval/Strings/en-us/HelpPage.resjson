@@ -1,0 +1,9 @@
+{
+  "TitleTextBlock/Text": "Pixeval Help",
+  "QueryFilterHelpExpander/Header": "Help for filter queries",
+  "QueryFilterSimpleHelpHeader/Text": "Brief instruction",
+  "QueryFilterHelpHeader/Text": "Detailed instruction",
+  "DownloadMacroHelpExpander/Header": "Help for Download Macros",
+  "AppLinkHelpExpander/Header": "Help for application links",
+  "AppLinkHelp/Text": "Share this link with your friends or type in this link to open the current page in Pixeval in your browser or Windows Run"
+}

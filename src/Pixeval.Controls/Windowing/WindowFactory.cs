@@ -151,12 +151,17 @@ public static class WindowFactory
         var info = new MONITORINFO { cbSize = 40 };
         _ = PInvoke.GetMonitorInfo(hWndDesktop, ref info);
         var position = appWindow.Position;
+#if DISPLAY
+        position.X = info.rcMonitor.Width / 2 + info.rcMonitor.X - appWindow.Size.Width / 2;
+        position.Y = info.rcMonitor.Height / 2 + info.rcMonitor.Y - appWindow.Size.Height / 2;
+#else
         var left = info.rcMonitor.Width - appWindow.Size.Width;
         if (position.X > left)
             position.X = left;
         var top = info.rcMonitor.Height - appWindow.Size.Height;
         if (position.Y > top)
             position.Y = top;
+#endif
         appWindow.Move(position);
     }
 }

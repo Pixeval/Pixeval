@@ -1,5 +1,7 @@
 {
     "BookmarksTab/Content": "Моё избранное",
+    "RecommendUsersTab/Content": "Рекомендованные художники",
+    "NewWorksTab/Content": "Все новые работы",
     "FollowingsTab/Content": "Мои подписки",
     "HistoriesTab/Content": "История просмотров",
     "TagsTab/Content": "Управление тегами",
