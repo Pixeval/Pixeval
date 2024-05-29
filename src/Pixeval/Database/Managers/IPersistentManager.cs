@@ -29,14 +29,15 @@ namespace Pixeval.Database.Managers;
 /// Manage persistent data stored in SQLite.
 /// You may call CreateTable in the constructor.
 /// </summary>
+/// <remarks>
 /// <example>
 /// This example shows how to get a registered manager.
 /// <code>
-/// using var scope = App.AppViewModel.AppServicesScope;
-/// var manager = scope.ServiceProvider.GetRequiredService&lt;IPersistentManager&lt;Entry, Model&gt;&gt;();
+/// var manager = <see cref="App.AppViewModel"/>.AppServiceProvider.GetRequiredService&lt;<see cref="IPersistentManager{T, T}"/>&gt;();
 /// </code>
 /// </example>
 /// <see cref="AppViewModel.CreateServiceProvider">Register the manager in AppViewModel</see>
+/// </remarks>
 /// <typeparam name="TEntry">Entry to be serialized in database</typeparam>
 /// <typeparam name="TModel">Data model in the program</typeparam>
 public interface IPersistentManager<TEntry, out TModel>

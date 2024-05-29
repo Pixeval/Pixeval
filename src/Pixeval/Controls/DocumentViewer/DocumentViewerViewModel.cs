@@ -27,14 +27,11 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Documents;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.AppManagement;
-using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Model;
 using Pixeval.Database.Managers;
-using Pixeval.Database;
 using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Utilities;
@@ -252,17 +249,8 @@ public class DocumentViewerViewModel(NovelContent novelContent) : ObservableObje
         var task1 = vm.LoadImagesAsync();
         var task2 = vm.LoadRtfContentAsync();
         _ = Task.WhenAll(task1, task2).ContinueWith(callback, TaskScheduler.FromCurrentSynchronizationContext());
-        AddHistory();
-
+        BrowseHistoryPersistentManager.AddHistory(novelItem.Entry);
         return vm;
-
-        void AddHistory()
-        {
-            using var scope = App.AppViewModel.AppServicesScope;
-            var manager = scope.ServiceProvider.GetRequiredService<BrowseHistoryPersistentManager>();
-            _ = manager.Delete(x => x.Id == novelItem.Id && x.Type == SimpleWorkType.Novel);
-            manager.Insert(new BrowseHistoryEntry(novelItem.Entry));
-        }
     }
 
     public INovelParserViewModel<Stream> Clone()

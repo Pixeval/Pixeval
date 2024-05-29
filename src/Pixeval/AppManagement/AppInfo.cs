@@ -135,8 +135,7 @@ public static partial class AppInfo
 
     public static void RestoreHistories()
     {
-        using var scope = App.AppViewModel.AppServicesScope;
-        var downloadHistoryManager = scope.ServiceProvider.GetRequiredService<DownloadHistoryPersistentManager>();
+        var downloadHistoryManager = App.AppViewModel.AppServiceProvider.GetRequiredService<DownloadHistoryPersistentManager>();
         // the HasFlag is not allow in expression tree
         _ = downloadHistoryManager.Delete(
             entry => entry.State == DownloadState.Running ||
@@ -177,6 +176,7 @@ public static partial class AppInfo
     {
         SaveDebugTrace();
         SaveContext();
+        App.AppViewModel.Dispose();
     }
 
     public static void SaveDebugTrace()

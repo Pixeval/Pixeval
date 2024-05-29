@@ -122,20 +122,17 @@ public partial class App
     {
         DebugSettings.BindingFailed += (o, e) =>
         {
-            using var scope = AppViewModel.AppServicesScope;
-            var logger = scope.ServiceProvider.GetRequiredService<FileLogger>();
+            var logger = AppViewModel.AppServiceProvider.GetRequiredService<FileLogger>();
             logger.LogWarning(e.Message, null);
         };
         DebugSettings.XamlResourceReferenceFailed += (o, e) =>
         {
-            using var scope = AppViewModel.AppServicesScope;
-            var logger = scope.ServiceProvider.GetRequiredService<FileLogger>();
+            var logger = AppViewModel.AppServiceProvider.GetRequiredService<FileLogger>();
             logger.LogWarning(e.Message, null);
         };
         UnhandledException += (o, e) =>
         {
-            using var scope = AppViewModel.AppServicesScope;
-            var logger = scope.ServiceProvider.GetRequiredService<FileLogger>();
+            var logger = AppViewModel.AppServiceProvider.GetRequiredService<FileLogger>();
             logger.LogError(e.Message, e.Exception);
             e.Handled = true;
 #if DEBUG
@@ -145,8 +142,7 @@ public partial class App
         };
         TaskScheduler.UnobservedTaskException += (o, e) =>
         {
-            using var scope = AppViewModel.AppServicesScope;
-            var logger = scope.ServiceProvider.GetRequiredService<FileLogger>();
+            var logger = AppViewModel.AppServiceProvider.GetRequiredService<FileLogger>();
             logger.LogError(nameof(TaskScheduler.UnobservedTaskException), e.Exception);
             e.SetObserved();
 #if DEBUG
@@ -156,8 +152,7 @@ public partial class App
         };
         AppDomain.CurrentDomain.UnhandledException += (o, e) =>
         {
-            using var scope = AppViewModel.AppServicesScope;
-            var logger = scope.ServiceProvider.GetRequiredService<FileLogger>();
+            var logger = AppViewModel.AppServiceProvider.GetRequiredService<FileLogger>();
             if (e.IsTerminating)
                 logger.LogCritical(nameof(AppDomain.UnhandledException), e.ExceptionObject as Exception);
             else

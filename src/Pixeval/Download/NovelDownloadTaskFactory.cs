@@ -39,8 +39,7 @@ public class NovelDownloadTaskFactory : IDownloadTaskFactory<NovelItemViewModel,
 
     public async Task<NovelDownloadTask> CreateAsync(NovelItemViewModel context, string rawPath)
     {
-        using var scope = App.AppViewModel.AppServicesScope;
-        var manager = scope.ServiceProvider.GetRequiredService<DownloadHistoryPersistentManager>();
+        var manager = App.AppViewModel.AppServiceProvider.GetRequiredService<DownloadHistoryPersistentManager>();
         var path = IoHelper.NormalizePath(PathParser.Reduce(rawPath, context));
         if (App.AppViewModel.AppSettings.NovelDownloadFormat is not NovelDownloadFormat.Pdf)
             path += IoHelper.GetIllustrationExtension();
@@ -67,8 +66,7 @@ public class NovelDownloadTaskFactory : IDownloadTaskFactory<NovelItemViewModel,
 
     public NovelDownloadTask CreateIntrinsic(NovelItemViewModel context, object param, string rawPath)
     {
-        using var scope = App.AppViewModel.AppServicesScope;
-        var manager = scope.ServiceProvider.GetRequiredService<DownloadHistoryPersistentManager>();
+        var manager = App.AppViewModel.AppServiceProvider.GetRequiredService<DownloadHistoryPersistentManager>();
         var path = IoHelper.NormalizePath(PathParser.Reduce(rawPath, context));
         if (App.AppViewModel.AppSettings.NovelDownloadFormat is not NovelDownloadFormat.Pdf)
             path += IoHelper.GetIllustrationExtension();

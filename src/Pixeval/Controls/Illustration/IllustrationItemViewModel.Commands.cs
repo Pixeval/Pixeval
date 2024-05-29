@@ -107,8 +107,7 @@ public partial class IllustrationItemViewModel
                 ib.Title = EntryItemResources.ImageProcessing;
 
         var source = getOriginalImageSourceAsync is null ? null : await getOriginalImageSourceAsync.Invoke(progress, true);
-        using var scope = App.AppViewModel.AppServicesScope;
-        var factory = scope.ServiceProvider.GetRequiredService<IDownloadTaskFactory<IllustrationItemViewModel, IllustrationDownloadTask>>();
+        var factory = App.AppViewModel.AppServiceProvider.GetRequiredService<IDownloadTaskFactory<IllustrationItemViewModel, IllustrationDownloadTask>>();
         if (source is null)
         {
             var task = await factory.CreateAsync(this, path);

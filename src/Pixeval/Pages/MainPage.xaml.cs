@@ -78,8 +78,7 @@ public sealed partial class MainPage
             return;
 
         await Task.Yield();
-        using var scope = App.AppViewModel.AppServicesScope;
-        var logger = scope.ServiceProvider.GetRequiredService<FileLogger>();
+        var logger = App.AppViewModel.AppServiceProvider.GetRequiredService<FileLogger>();
         logger.LogInformation("Customize title bar is not supported", null);
     }
 
@@ -242,18 +241,15 @@ public sealed partial class MainPage
 
     private void PerformSearch(string text, string? optTranslatedName = null)
     {
-        using (var scope = App.AppViewModel.AppServicesScope)
+        var manager = App.AppViewModel.AppServiceProvider.GetRequiredService<SearchHistoryPersistentManager>();
+        if (manager.Count is 0 || manager.Select(count: 1).AsList() is [{ Value: var last }, ..] && last != text)
         {
-            var manager = scope.ServiceProvider.GetRequiredService<SearchHistoryPersistentManager>();
-            if (manager.Count is 0 || manager.Select(count: 1).AsList() is [{ Value: var last }, ..] && last != text)
+            manager.Insert(new SearchHistoryEntry
             {
-                manager.Insert(new SearchHistoryEntry
-                {
-                    Value = text,
-                    TranslatedName = optTranslatedName,
-                    Time = DateTime.Now
-                });
-            }
+                Value = text,
+                TranslatedName = optTranslatedName,
+                Time = DateTime.Now
+            });
         }
 
         NavigationView.SelectedItem = null;

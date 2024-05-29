@@ -37,7 +37,7 @@ using Windows.Storage;
 
 namespace Pixeval;
 
-public class AppViewModel(App app)
+public class AppViewModel(App app) : IDisposable
 {
     private bool _activatedByProtocol;
 
@@ -105,5 +105,12 @@ public class AppViewModel(App app)
         var original = _activatedByProtocol;
         _activatedByProtocol = false;
         return original;
+    }
+
+    public void Dispose()
+    {
+        AppServiceProvider.Dispose();
+        DownloadManager.Dispose();
+        MakoClient.Dispose();
     }
 }
