@@ -24,11 +24,11 @@ using Pixeval.Download.MacroParser;
 namespace Pixeval.Download.Macros;
 
 [MetaPathMacro<IWorkViewModel>]
-public class MangaIndexMacro : ITransducer<IWorkViewModel>
+public class MangaIndexMacro : ITransducer<IWorkViewModel>, ILastSegment
 {
-    public const string NameConst = "manga_index";
+    public static string NameConst => "manga_index";
 
-    public const string NameConstToken = $"<{NameConst}>";
+    public static string NameConstToken => $"<{NameConst}>";
 
     public string Name => NameConst;
 

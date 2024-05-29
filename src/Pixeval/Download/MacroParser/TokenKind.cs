@@ -27,5 +27,6 @@ public enum TokenKind
     At,
     LBrace,
     RBrace,
+    Exclamation,
     Equal
 }

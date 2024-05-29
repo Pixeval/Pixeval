@@ -42,19 +42,13 @@ public static class Functions
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void Let<T>(this T obj, Action<T> block)
     {
-        if (obj is not null)
-        {
-            block(obj);
-        }
+        block(obj);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static T LetChain<T>(this T obj, Action<T> block)
     {
-        if (obj is not null)
-        {
-            block(obj);
-        }
+        block(obj);
         return obj;
     }
 

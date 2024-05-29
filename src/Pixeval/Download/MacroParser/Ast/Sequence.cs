@@ -18,8 +18,11 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using System.Diagnostics;
+
 namespace Pixeval.Download.MacroParser.Ast;
 
+[DebuggerDisplay("{First} {Remains}")]
 public record Sequence<TContext>(SingleNode<TContext> First, Sequence<TContext>? Remains) : IMetaPathNode<TContext>
 {
     public string Evaluate(IMacro[] env, TContext context)

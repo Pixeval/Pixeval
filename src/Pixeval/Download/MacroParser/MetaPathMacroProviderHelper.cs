@@ -25,8 +25,11 @@ namespace Pixeval.Download.MacroParser;
 
 public static class MetaPathMacroProviderHelper
 {
-    public static IMacro TryResolve(this IEnumerable<IMacro> availableMacros, string macro)
+    public static IMacro TryResolve(this IEnumerable<IMacro> availableMacros, string macro, bool isNot)
     {
-        return availableMacros.FirstOrDefault(m => m.Name == macro) ?? new Unknown();
+        var m = availableMacros.FirstOrDefault(m => m.Name == macro) ?? new Unknown();
+        if (m is IPredicate p) 
+            p.IsNot = isNot;
+        return m;
     }
 }

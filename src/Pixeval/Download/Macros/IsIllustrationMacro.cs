@@ -28,6 +28,8 @@ namespace Pixeval.Download.Macros;
 [MetaPathMacro<IWorkViewModel>]
 public class IsIllustrationMacro : IPredicate<IWorkViewModel>
 {
+    public bool IsNot { get; set; }
+
     public string Name => "if_illust";
 
     public bool Match(IWorkViewModel context) => context is IllustrationItemViewModel;
