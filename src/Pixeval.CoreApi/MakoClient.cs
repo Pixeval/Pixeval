@@ -37,7 +37,7 @@ using Refit;
 
 namespace Pixeval.CoreApi;
 
-public partial class MakoClient : ICancellable, IAsyncDisposable
+public partial class MakoClient : ICancellable, IDisposable, IAsyncDisposable
 {
     /// <summary>
     /// Create a new <see cref="MakoClient" /> based on given <see cref="Configuration" />, <see cref="Session" />
@@ -225,12 +225,20 @@ public partial class MakoClient : ICancellable, IAsyncDisposable
         await MakoServices.DisposeAsync();
     }
 
-    private static void Dispose(ServiceCollection collection)
+    public void Dispose()
+    {
+        GC.SuppressFinalize(this);
+        Dispose(ServiceCollection);
+        MakoServices.Dispose();
+    }
+
+    private void Dispose(ServiceCollection collection)
     {
         foreach (var item in collection)
-            ((item.IsKeyedService
+            if ((item.IsKeyedService
                     ? item.KeyedImplementationInstance
                     : item.ImplementationInstance)
-                as IDisposable)?.Dispose();
+                is IDisposable d && !Equals(d))
+                d.Dispose();
     }
 }

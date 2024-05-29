@@ -29,11 +29,9 @@ using Windows.System;
 using Windows.System.UserProfile;
 using CommunityToolkit.Mvvm.ComponentModel;
 using FluentIcons.Common;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Input;
 using Pixeval.Attributes;
 using Pixeval.Controls;
-using Pixeval.Database;
 using Pixeval.Database.Managers;
 using Pixeval.Util;
 using Pixeval.Util.IO;
@@ -41,7 +39,6 @@ using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using Pixeval.Utilities.Threading;
 using Pixeval.AppManagement;
-using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Net.Response;
 using Pixeval.Download;
 using Pixeval.Util.ComponentModels;
@@ -205,29 +202,19 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
 
     private async Task LoadImage()
     {
-        if (!LoadSuccessfully || _disposed)
-        {
-            _disposed = false;
-            _ = LoadThumbnailAsync();
-            AddHistory();
-            await LoadOriginalImageAsync();
-            IllustrationViewModel.UnloadThumbnail(this);
-        }
-
+        if (LoadSuccessfully && !_disposed)
+            return;
+        _disposed = false;
+        _ = LoadThumbnailAsync();
+        BrowseHistoryPersistentManager.AddHistory(IllustrationViewModel.Entry);
+        await LoadOriginalImageAsync();
+        IllustrationViewModel.UnloadThumbnail(this);
         return;
 
         async Task LoadThumbnailAsync()
         {
             _ = await IllustrationViewModel.TryLoadThumbnailAsync(this);
             OriginalImageSources ??= [IllustrationViewModel.ThumbnailStream!];
-        }
-
-        void AddHistory()
-        {
-            using var scope = App.AppViewModel.AppServicesScope;
-            var manager = scope.ServiceProvider.GetRequiredService<BrowseHistoryPersistentManager>();
-            _ = manager.Delete(x => x.Id == IllustrationViewModel.Id && x.Type == SimpleWorkType.IllustAndManga);
-            manager.Insert(new BrowseHistoryEntry(IllustrationViewModel.Entry));
         }
 
         async Task<IReadOnlyList<Stream>?> GetStreamsAsync(string? ugoiraLargeUrl)

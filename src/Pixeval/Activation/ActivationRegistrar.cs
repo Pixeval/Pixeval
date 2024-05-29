@@ -63,8 +63,7 @@ public static class ActivationRegistrar
                         return;
                     var code = HttpUtility.ParseQueryString(activationUri.Query)["code"]!;
                     var session = await PixivAuth.AuthCodeToSessionAsync(code, PixivAuth.GetCodeVerify());
-                    using var scope = App.AppViewModel.AppServicesScope;
-                    var logger = scope.ServiceProvider.GetRequiredService<FileLogger>();
+                    var logger = App.AppViewModel.AppServiceProvider.GetRequiredService<FileLogger>();
                     App.AppViewModel.MakoClient = new MakoClient(session, App.AppViewModel.AppSettings.ToMakoClientConfiguration(), logger);
                     LoginPage.SuccessNavigating();
                     break;
