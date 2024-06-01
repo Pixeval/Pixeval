@@ -214,6 +214,6 @@ public partial class MakoClient
             .AddNovelCommentAsync(new AddStampNovelCommentRequest(novelId, parentCommentId, stampId)));
 
     public Task<ReverseSearchResponse> ReverseSearchAsync(Stream imgStream, string apiKey)
-        => RunWithLoggerAsync(async () => await MakoServices.GetRequiredService<IReverseSearchApiEndPoint>()
+        => RunWithLoggerAsync(async () => await Provider.GetRequiredService<IReverseSearchApiEndPoint>()
             .GetSauceAsync(new ReverseSearchRequest(apiKey), new StreamPart(imgStream, "img")));
 }

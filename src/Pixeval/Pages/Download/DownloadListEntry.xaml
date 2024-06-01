@@ -25,16 +25,15 @@
         Source="{x:Bind ViewModel.ThumbnailSource, Mode=OneWay}" />
     <StackPanel
         Grid.Column="1"
+        HorizontalAlignment="Left"
         VerticalAlignment="Center"
         Spacing="1">
         <TextBlock
-            MaxWidth="250"
             FontSize="{StaticResource PixevalBaseFontSize}"
             Text="{x:Bind ViewModel.Title, Mode=OneWay}"
             TextTrimming="CharacterEllipsis"
             TextWrapping="NoWrap" />
         <TextBlock
-            MaxWidth="250"
             FontSize="{StaticResource PixevalCaptionFontSize}"
             Foreground="{ThemeResource PixevalTipTextForeground}"
             Text="{x:Bind ViewModel.User.Name, Mode=OneWay}"
@@ -65,10 +64,11 @@
         DefaultLabelPosition="Right"
         OverflowButtonVisibility="Visible">
         <!--  Width="125" 是试出来刚好只显示一个按钮的宽度  -->
-        <AppBarButton
-            Icon="{fluent:SymbolIcon Symbol=Open}"
-            Label="{x:Bind ViewModel.ActionButtonContent, Mode=OneWay}"
-            Tapped="ActionButton_OnTapped" />
+        <AppBarButton Label="{x:Bind ViewModel.ActionButtonContent, Mode=OneWay}" Tapped="ActionButton_OnTapped">
+            <AppBarButton.Icon>
+                <fluent:SymbolIcon Symbol="{x:Bind ViewModel.ActionButtonSymbol, Mode=OneWay}" />
+            </AppBarButton.Icon>
+        </AppBarButton>
         <AppBarButton
             x:Uid="/DownloadListEntry/RedownloadItem"
             Icon="{fluent:SymbolIcon Symbol=ArrowDownload}"

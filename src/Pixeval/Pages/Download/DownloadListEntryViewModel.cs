@@ -22,6 +22,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using FluentIcons.Common;
 using Microsoft.UI.Xaml.Input;
 using Pixeval.Controls;
 using Pixeval.Database;
@@ -50,6 +51,7 @@ public sealed class DownloadListEntryViewModel : WorkEntryViewModel<IWorkEntry>
                 case nameof(IllustrationDownloadTask.CurrentState):
                     OnPropertyChanged(nameof(ProgressMessage));
                     OnPropertyChanged(nameof(ActionButtonContent));
+                    OnPropertyChanged(nameof(ActionButtonSymbol));
                     OnPropertyChanged(nameof(IsRedownloadItemEnabled));
                     OnPropertyChanged(nameof(IsCancelItemEnabled));
                     OnPropertyChanged(nameof(IsError));
@@ -81,6 +83,16 @@ public sealed class DownloadListEntryViewModel : WorkEntryViewModel<IWorkEntry>
         DownloadState.Completed => DownloadListEntryResources.ActionButtonContentOpen,
         DownloadState.Paused => DownloadListEntryResources.ActionButtonContentResume,
         _ => ThrowHelper.ArgumentOutOfRange<DownloadState, string>(DownloadTask.CurrentState)
+    };
+
+    public Symbol ActionButtonSymbol => DownloadTask.CurrentState switch
+    {
+        DownloadState.Queued => Symbol.Dismiss,
+        DownloadState.Running => Symbol.Pause,
+        DownloadState.Cancelled or DownloadState.Error => Symbol.ArrowRepeatAll,
+        DownloadState.Completed => Symbol.Open,
+        DownloadState.Paused => Symbol.Play,
+        _ => ThrowHelper.ArgumentOutOfRange<DownloadState, Symbol>(DownloadTask.CurrentState)
     };
 
     public override async ValueTask<bool> TryLoadThumbnailAsync(IDisposable key)

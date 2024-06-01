@@ -31,10 +31,10 @@ public partial class NovelItemViewModel(Novel novel) : WorkEntryViewModel<Novel>
 
     public int TextLength => Entry.TextLength;
 
-    public NovelContent? NovelContent { get; private set; }
+    public NovelContent? Content { get; private set; }
 
     public async Task<NovelContent> GetNovelContentAsync()
     {
-        return NovelContent ??= await App.AppViewModel.MakoClient.GetNovelContentAsync(Id);
+        return Content ??= await App.AppViewModel.MakoClient.GetNovelContentAsync(Id);
     }
 }

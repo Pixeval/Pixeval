@@ -1,14 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Class Name="Pixeval.Controls.IllustratorViewViewModel" Collapsed="true">
-    <Position X="3.75" Y="3.75" Width="3.5" />
+    <Position X="8" Y="3.75" Width="3.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Controls\IllustratorView\IllustratorViewViewModel.cs</FileName>
+      <FileName>Controls\Illustrator\IllustratorViewViewModel.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Pixeval.Controls.EntryViewViewModel&lt;T, TViewModel&gt;" Collapsed="true">
-    <Position X="8.75" Y="2.25" Width="2.75" />
+    <Position X="10.75" Y="2.25" Width="2.75" />
     <TypeIdentifier>
       <HashCode>AAAAAAEAACAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Controls\Entry\EntryViewViewModel.cs</FileName>
@@ -16,7 +16,7 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="Pixeval.Pages.Download.DownloadListPageViewModel" Collapsed="true">
-    <Position X="17.75" Y="2.25" Width="1.5" />
+    <Position X="22" Y="2.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAgASgCAAAAAAABCABBBAAAgAAAAAABAAIAAAg=</HashCode>
       <FileName>Pages\Download\DownloadListPageViewModel.cs</FileName>
@@ -24,14 +24,14 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="Pixeval.Controls.IllustrationViewViewModel" Collapsed="true">
-    <Position X="8" Y="5" Width="4.25" />
+    <Position X="12.25" Y="5" Width="4.25" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAABAAAAAAABAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Controls\IllustrationView\IllustrationViewViewModel.cs</FileName>
+      <FileName>Controls\Illustration\IllustrationViewViewModel.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Pixeval.Pages.Tags.TagsPageViewModel" Collapsed="true">
-    <Position X="19.5" Y="2.25" Width="1.5" />
+    <Position X="23.75" Y="2.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAEAACAAAAAAAAAAAABAAAAAAAAAAAAAAAQCAAA=</HashCode>
       <FileName>Pages\Tags\TagsPageViewModel.cs</FileName>
@@ -39,18 +39,25 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="Pixeval.Controls.SortableEntryViewViewModel&lt;T, TViewModel&gt;" Collapsed="true">
-    <Position X="10.75" Y="3.75" Width="3.25" />
+    <Position X="15" Y="3.75" Width="3.25" />
     <TypeIdentifier>
-      <HashCode>BAAAAAEAAggAIABAAAAAAAAAIBMBAIAAAAAAEAAAAAA=</HashCode>
+      <HashCode>BAAAAAEAAgoAIABAAAAAAAAAIBMBAIAAAAAAEAAAAAA=</HashCode>
       <FileName>Controls\Work\SortableEntryViewViewModel.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="Pixeval.Controls.NovelViewViewModel" Collapsed="true">
-    <Position X="13" Y="5" Width="3.75" />
+    <Position X="17.25" Y="5" Width="3.75" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAABAAAAAAABAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Controls\NovelView\NovelViewViewModel.cs</FileName>
+      <FileName>Controls\Novel\NovelViewViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Pixeval.Controls.SpotlightViewViewModel" Collapsed="true">
+    <Position X="3.5" Y="3.75" Width="3.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Controls\Spotlight\SpotlightViewViewModel.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Font Name="Microsoft YaHei UI" Size="9" />
