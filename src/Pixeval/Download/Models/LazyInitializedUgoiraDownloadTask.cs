@@ -19,24 +19,29 @@
 #endregion
 
 using System.Threading.Tasks;
+using Pixeval.CoreApi.Model;
 using Pixeval.Database;
+using WinUI3Utilities;
 
 namespace Pixeval.Download.Models;
 
 public class LazyInitializedUgoiraDownloadTask(DownloadHistoryEntry databaseEntry) : UgoiraDownloadTask(databaseEntry, null!, null!), ILazyLoadDownloadTask
 {
-    private readonly long _illustId = databaseEntry.Id;
-
     public override async Task DownloadAsync(Downloader downloadStreamAsync)
     {
-        await LazyLoadAsync(_illustId);
+        await LazyLoadAsync(DatabaseEntry.Entry);
 
         await base.DownloadAsync(downloadStreamAsync);
     }
 
-    public async Task LazyLoadAsync(long id)
+    public async Task LazyLoadAsync(IWorkEntry workEntry)
     {
-        IllustrationViewModel ??= new(await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(id));
+        if (workEntry is not Illustration illustration)
+        {
+            ThrowHelper.Argument(workEntry);
+            return;
+        }
+        IllustrationViewModel ??= new(illustration);
         Metadata ??= await IllustrationViewModel.UgoiraMetadata.ValueAsync;
     }
 }

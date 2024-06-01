@@ -20,6 +20,7 @@
 
 using CommunityToolkit.Mvvm.ComponentModel;
 using LiteDB;
+using Pixeval.CoreApi.Model;
 using Pixeval.Download;
 
 namespace Pixeval.Database;
@@ -32,7 +33,7 @@ public partial class DownloadHistoryEntry : ObservableObject
     [ObservableProperty]
     private DownloadState _state;
 
-    public DownloadHistoryEntry(DownloadState state, string? destination, DownloadItemType type, long id)
+    public DownloadHistoryEntry(DownloadState state, string? destination, DownloadItemType type, IWorkEntry entry)
     {
         _state = state;
         if (string.IsNullOrWhiteSpace(destination))
@@ -45,7 +46,7 @@ public partial class DownloadHistoryEntry : ObservableObject
             Destination = destination;
 
         Type = type;
-        Id = id;
+        Entry = entry;
     }
 
     // ReSharper disable once UnusedMember.Global
@@ -65,5 +66,5 @@ public partial class DownloadHistoryEntry : ObservableObject
 
     public DownloadItemType Type { get; set; }
 
-    public long Id { get; set; }
+    public IWorkEntry Entry { get; set; } = null!;
 }

@@ -67,7 +67,7 @@ public abstract class DownloadTaskBase(DownloadHistoryEntry entry) : ObservableO
 
     public DownloadHistoryEntry DatabaseEntry { get; } = entry;
 
-    public long Id => DatabaseEntry.Id;
+    public long Id => DatabaseEntry.Entry.Id;
 
     public DownloadItemType Type => DatabaseEntry.Type;
 

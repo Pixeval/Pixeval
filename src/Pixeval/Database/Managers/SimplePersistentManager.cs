@@ -80,6 +80,11 @@ public abstract class SimplePersistentManager<T>(ILiteDatabase db, int maximumRe
         return Collection.FindAll();
     }
 
+    public IEnumerable<T> Reverse()
+    {
+        return Collection.Find(LiteDB.Query.All(LiteDB.Query.Descending));
+    }
+
     public void Purge(int limit)
     {
         if (Collection.Count() > limit)
