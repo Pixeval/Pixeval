@@ -39,7 +39,7 @@ public class DownloadListEntryIncrementalSource(IEnumerable<DownloadTaskBase> so
             .Select(async o =>
             {
                 if (o is ILazyLoadDownloadTask lazy)
-                    await lazy.LazyLoadAsync(o.Id);
+                    await lazy.LazyLoadAsync(o.DatabaseEntry.Entry);
                 return new DownloadListEntryViewModel(o);
             }).WhenAll();
     }

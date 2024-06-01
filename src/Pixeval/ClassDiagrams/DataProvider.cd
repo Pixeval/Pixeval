@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Class Name="Pixeval.Pages.Download.DownloadListEntryIncrementalSource" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="10.75" Y="0.75" Width="1.5" />
+    <Position X="15.25" Y="0.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Pages\Download\DownloadListEntryIncrementalSource.cs</FileName>
@@ -9,7 +9,7 @@
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="Pixeval.Pages.Download.DownloadListEntryDataProvider" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="9" Y="0.75" Width="1.5" />
+    <Position X="5" Y="2" Width="2.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAEAAiAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Pages\Download\DownloadListEntryDataProvider.cs</FileName>
@@ -17,7 +17,7 @@
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="Pixeval.Pages.Tags.TagsEntryIncrementalSource" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="10.75" Y="1.75" Width="1.5" />
+    <Position X="15.25" Y="1.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Pages\Tags\TagsEntryIncrementalSource.cs</FileName>
@@ -25,7 +25,7 @@
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="Pixeval.Pages.Tags.TagsEntryDataProvider" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="9" Y="1.75" Width="1.5" />
+    <Position X="12.25" Y="2" Width="2" />
     <TypeIdentifier>
       <HashCode>AAAAAAEAAiAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Pages\Tags\TagsEntryDataProvider.cs</FileName>
@@ -33,19 +33,39 @@
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="Pixeval.Controls.FetchEngineIncrementalSource&lt;T, TViewModel&gt;" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="12.5" Y="0.75" Width="1.5" />
+    <Position X="17" Y="0.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAABAIAAAAAQAAAAAgQAAAAAAAAAAAAAAAAQAAAAAA=</HashCode>
       <FileName>Controls\Entry\FetchEngineIncrementalSource.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
+  <Class Name="Pixeval.Controls.SharableViewDataProvider&lt;T, TViewModel&gt;" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="0.75" Y="2" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>EAAEAAEAAjAAAACAAAAAAAIAAAABggAAAAAAAAAAAAA=</HashCode>
+      <FileName>Controls\Entry\SharableViewDataProvider.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Pixeval.Controls.SimpleViewDataProvider&lt;T, TViewModel&gt;" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="8.25" Y="2" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAEAAiAEAAAAAAAAAAAAAAABAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Controls\Entry\SimpleViewDataProvider.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="CommunityToolkit.Mvvm.ComponentModel.ObservableObject" Collapsed="true">
+    <Position X="6.75" Y="0.75" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
   <Interface Name="Pixeval.CoreApi.Engine.IFetchEngine&lt;TE&gt;" Collapsed="true">
-    <Position X="10.75" Y="3" Width="1.5" />
+    <Position X="17" Y="3" Width="1.5" />
     <TypeIdentifier />
   </Interface>
   <Interface Name="Pixeval.Controls.IDataProvider&lt;T, TViewModel&gt;" Collapsed="true">
-    <Position X="9" Y="3" Width="1.5" />
+    <Position X="15.25" Y="3" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAEAAEAAgAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Controls\Entry\IDataProvider.cs</FileName>

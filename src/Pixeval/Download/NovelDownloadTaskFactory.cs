@@ -56,7 +56,7 @@ public class NovelDownloadTaskFactory : IDownloadTaskFactory<NovelItemViewModel,
                 DownloadState.Queued,
                 path,
                 DownloadItemType.Novel,
-                context.Id);
+                context.Entry);
             return new NovelDownloadTask(downloadHistoryEntry, context, novelContent);
         });
 
@@ -76,7 +76,7 @@ public class NovelDownloadTaskFactory : IDownloadTaskFactory<NovelItemViewModel,
             _ = manager.Delete(entry => entry.Destination == path);
         }
         var viewModel = (DocumentViewerViewModel)param;
-        var entry = new DownloadHistoryEntry(DownloadState.Queued, path, DownloadItemType.Novel, context.Id);
+        var entry = new DownloadHistoryEntry(DownloadState.Queued, path, DownloadItemType.Novel, context.Entry);
         return new IntrinsicNovelDownloadTask(entry, context, viewModel);
     }
 }

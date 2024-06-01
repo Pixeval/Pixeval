@@ -53,7 +53,7 @@ public static partial class AppInfo
 
     public const string IconApplicationUri = "ms-appx:///Assets/Images/logo.ico";
 
-    public static readonly string DatabaseFilePath = AppKnownFolders.Local.Resolve("PixevalData4.2.1.litedb");
+    public static readonly string DatabaseFilePath = AppKnownFolders.Local.Resolve("PixevalData4.2.2.litedb");
 
     public static Versioning AppVersion { get; } = new();
 

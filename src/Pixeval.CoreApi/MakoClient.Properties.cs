@@ -45,9 +45,9 @@ public partial class MakoClient
     /// <summary>
     /// The IoC container
     /// </summary>
-    internal ServiceCollection ServiceCollection { get; } = [];
+    internal ServiceCollection Services { get; } = [];
 
-    internal ServiceProvider MakoServices { get; }
+    internal ServiceProvider Provider { get; }
 
     public bool IsCancelled { get; set; }
 }

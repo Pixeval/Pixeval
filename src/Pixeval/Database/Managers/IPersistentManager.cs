@@ -58,6 +58,8 @@ public interface IPersistentManager<TEntry, out TModel>
 
     IEnumerable<TModel> Enumerate();
 
+    IEnumerable<TModel> Reverse();
+
     void Purge(int limit);
 
     void Clear();
