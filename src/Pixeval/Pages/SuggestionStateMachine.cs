@@ -18,11 +18,9 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using PininSharp;
@@ -40,15 +38,15 @@ public class SuggestionStateMachine
     private static readonly TreeSearcher<SettingsEntryAttribute> _settingEntriesTreeSearcher =
         new(SearcherLogic.Contain, PinIn.CreateDefault());
 
-    private readonly Lazy<Task<IEnumerable<SuggestionModel>>> _illustrationTrendingTagCache =
-        new(() => App.AppViewModel.MakoClient.GetTrendingTagsAsync(App.AppViewModel.AppSettings.TargetFilter)
-            .SelectAsync(t => new Tag { Name = t.Tag, TranslatedName = t.Translation })
-            .SelectAsync(SuggestionModel.FromIllustrationTag), LazyThreadSafetyMode.ExecutionAndPublication);
+    private readonly AsyncLazy<IEnumerable<SuggestionModel>> _illustrationTrendingTagCache =
+        new(async () => (await App.AppViewModel.MakoClient.GetTrendingTagsAsync(App.AppViewModel.AppSettings.TargetFilter))
+            .Select(t => new Tag { Name = t.Tag, TranslatedName = t.TranslatedName })
+            .Select(SuggestionModel.FromNovelTag));
 
-    private readonly Lazy<Task<IEnumerable<SuggestionModel>>> _novelTrendingTagCache =
-        new(() => App.AppViewModel.MakoClient.GetTrendingTagsForNovelAsync(App.AppViewModel.AppSettings.TargetFilter)
-            .SelectAsync(t => new Tag { Name = t.Tag, TranslatedName = t.Translation })
-            .SelectAsync(SuggestionModel.FromNovelTag), LazyThreadSafetyMode.ExecutionAndPublication);
+    private readonly AsyncLazy<IEnumerable<SuggestionModel>> _novelTrendingTagCache =
+        new(async () => (await App.AppViewModel.MakoClient.GetTrendingTagsForNovelAsync(App.AppViewModel.AppSettings.TargetFilter))
+            .Select(t => new Tag { Name = t.Tag, TranslatedName = t.TranslatedName })
+            .Select(SuggestionModel.FromNovelTag));
 
     static SuggestionStateMachine()
     {
@@ -110,14 +108,14 @@ public class SuggestionStateMachine
         if (prior)
         {
             newItems.Add(SuggestionModel.IllustrationTrendingTagHeader);
-            newItems.AddRange(await _illustrationTrendingTagCache.Value);
+            newItems.AddRange(await _illustrationTrendingTagCache.ValueAsync);
         }
         newItems.Add(SuggestionModel.NovelTrendingTagHeader);
-        newItems.AddRange(await _novelTrendingTagCache.Value);
+        newItems.AddRange(await _novelTrendingTagCache.ValueAsync);
         if (!prior)
         {
             newItems.Add(SuggestionModel.IllustrationTrendingTagHeader);
-            newItems.AddRange(await _illustrationTrendingTagCache.Value);
+            newItems.AddRange(await _illustrationTrendingTagCache.ValueAsync);
         }
         Suggestions.AddRange(newItems);
     }
