@@ -43,7 +43,7 @@
     <Grid.ContextFlyout>
         <MenuFlyout>
             <MenuFlyoutItem Command="{x:Bind ViewModel.BookmarkCommand, Mode=OneWay}" CommandParameter="{x:Bind HWnd}" />
-            <MenuFlyoutItem Click="AddToBookmark_OnTapped" Command="{x:Bind ViewModel.AddToBookmarkCommand, Mode=OneWay}" />
+            <MenuFlyoutItem Click="AddToBookmark_OnClicked" Command="{x:Bind ViewModel.AddToBookmarkCommand, Mode=OneWay}" />
             <MenuFlyoutSeparator />
             <MenuFlyoutItem Command="{x:Bind ViewModel.SaveCommand, Mode=OneWay}" CommandParameter="{x:Bind HWnd}" />
             <MenuFlyoutSeparator />

@@ -59,32 +59,32 @@
                     Icon="{fluent:SymbolIcon Symbol=SelectAllOff}"
                     IsEnabled="{x:Bind _viewModel.IsAnyEntrySelected, Mode=OneWay}"
                     Label="{x:Bind _viewModel.SelectionLabel, Mode=OneWay}"
-                    Tapped="CancelSelectButton_OnTapped" />
+                    Click="CancelSelectButton_OnClicked" />
                 <AppBarButton
                     x:Uid="/DownloadListPage/SelectAllButton"
                     Icon="{fluent:SymbolIcon Symbol=SelectAllOn}"
-                    Tapped="SelectAllButton_OnTapped" />
+                    Click="SelectAllButton_OnClicked" />
                 <AppBarSeparator />
                 <AppBarButton
                     x:Uid="/DownloadListPage/ResumeButton"
                     Icon="{fluent:SymbolIcon Symbol=Play}"
                     IsEnabled="{x:Bind _viewModel.IsAnyEntrySelected, Mode=OneWay}"
-                    Tapped="ResumeAllButton_OnTapped" />
+                    Click="ResumeAllButton_OnClicked" />
                 <AppBarButton
                     x:Uid="/DownloadListPage/PauseButton"
                     Icon="{fluent:SymbolIcon Symbol=Pause}"
                     IsEnabled="{x:Bind _viewModel.IsAnyEntrySelected, Mode=OneWay}"
-                    Tapped="PauseAllButton_OnTapped" />
+                    Click="PauseAllButton_OnClicked" />
                 <AppBarButton
                     x:Uid="/DownloadListPage/StopButton"
                     Icon="{fluent:SymbolIcon Symbol=Stop}"
                     IsEnabled="{x:Bind _viewModel.IsAnyEntrySelected, Mode=OneWay}"
-                    Tapped="CancelAllButton_OnTapped" />
+                    Click="CancelAllButton_OnClicked" />
                 <AppBarButton
                     x:Uid="/DownloadListPage/DeleteButton"
                     Icon="{fluent:SymbolIcon Symbol=Delete}"
                     IsEnabled="{x:Bind _viewModel.IsAnyEntrySelected, Mode=OneWay}"
-                    Tapped="ClearDownloadListButton_OnTapped" />
+                    Click="ClearDownloadListButton_OnClicked" />
             </CommandBar>
         </Grid>
         <controls:AdvancedItemsView

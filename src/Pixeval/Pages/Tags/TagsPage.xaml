@@ -21,7 +21,7 @@
                 <AppBarButton
                     Width="40"
                     Icon="{fluent:SymbolIcon Symbol=MoreHorizontal}"
-                    Tapped="ChangeWorkingPath_OnTapped" />
+                    Click="ChangeWorkingPath_OnClicked" />
             </CommandBar>
             <TextBlock VerticalAlignment="Center" Text="{x:Bind _viewModel.WorkingDirectory, Mode=OneWay}" />
         </StackPanel>
@@ -41,7 +41,7 @@
                         <local:TagsEntry
                             Margin="16"
                             FileDeleted="TagsEntry_OnFileDeleted"
-                            TagTapped="TagsEntry_OnTagTapped"
+                            TagClick="TagsEntry_OnTagClick"
                             ViewModel="{x:Bind}" />
                     </ItemContainer>
                 </DataTemplate>

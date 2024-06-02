@@ -98,9 +98,8 @@ public sealed partial class NovelItem
         }
     }
 
-    private void TagButton_OnTapped(object sender, TappedRoutedEventArgs e)
+    private void TagButton_OnClicked(object sender, RoutedEventArgs e)
     {
-        e.Handled = true;
         _ = WeakReferenceMessenger.Default.Send(new WorkTagClickedMessage(SimpleWorkType.Novel, ((TextBlock)((Button)sender).Content).Text));
     }
 
@@ -121,14 +120,14 @@ public sealed partial class NovelItem
         IsPointerOver += 1;
     }
 
-    private void OpenNovel_OnTapped(object sender, TappedRoutedEventArgs e)
+    private void OpenNovel_OnClicked(object sender, RoutedEventArgs e)
     {
         OpenNovelRequested?.Invoke(this, ViewModel);
     }
 
     private XamlUICommand OpenNovelCommand { get; } = EntryItemResources.OpenNovel.GetCommand(Symbol.BookOpen);
 
-    private void AddToBookmark_OnTapped(object sender, TappedRoutedEventArgs e)
+    private void AddToBookmark_OnClicked(object sender, RoutedEventArgs e)
     {
         RequestAddToBookmark?.Invoke(this, ViewModel);
     }

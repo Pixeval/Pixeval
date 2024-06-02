@@ -159,7 +159,7 @@
             VerticalAlignment="Top"
             DisplayMode="Tall"
             IsPaneButtonVisible="True"
-            PaneButtonClick="TitleBar_OnPaneButtonClick"
+            PaneButtonClick="TitleBar_OnPaneButtonClicked"
             Visibility="{x:Bind pixeval:AppInfo.CustomizeTitleBarSupported, Converter={StaticResource BoolToVisibilityConverter}}"
             Window="{x:Bind windowing:WindowFactory.GetForkedWindows(HWnd)}">
             <controls2:TitleBar.Icon>
@@ -209,12 +209,12 @@
                         OverflowButtonVisibility="Collapsed">
                         <AppBarButton
                             x:Uid="/MainPage/ReverseSearchButton"
-                            Content="{fluent:SymbolIcon Symbol=ImageSearch}"
-                            Tapped="ReverseSearchButton_OnTapped" />
+                            Click="ReverseSearchButton_OnClicked"
+                            Content="{fluent:SymbolIcon Symbol=ImageSearch}" />
                         <AppBarButton
                             x:Uid="/MainPage/OpenSearchSettingButton"
-                            Content="{fluent:SymbolIcon Symbol=Settings}"
-                            Tapped="OpenSearchSettingButton_OnTapped" />
+                            Click="OpenSearchSettingButton_OnClicked"
+                            Content="{fluent:SymbolIcon Symbol=Settings}" />
                     </CommandBar>
                 </Grid>
             </controls2:TitleBar.Content>

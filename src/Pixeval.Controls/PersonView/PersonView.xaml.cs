@@ -22,6 +22,7 @@ using System;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Windows.System;
+using Microsoft.UI.Xaml;
 using WinUI3Utilities.Attributes;
 
 namespace Pixeval.Controls;
@@ -37,5 +38,5 @@ public partial class PersonView
 {
     public PersonView() => InitializeComponent();
 
-    private async void ContentContainerOnTapped(object sender, TappedRoutedEventArgs e) => await Launcher.LaunchUriAsync(PersonProfileNavigateUri);
+    private async void ContentContainerOnClicked(object sender, RoutedEventArgs e) => await Launcher.LaunchUriAsync(PersonProfileNavigateUri);
 }

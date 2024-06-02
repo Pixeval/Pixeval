@@ -33,7 +33,7 @@
             HorizontalContentAlignment="Left"
             Background="Transparent"
             BorderThickness="0"
-            Tapped="PosterPersonPicture_OnTapped">
+            Click="PosterPersonPicture_OnClicked">
             <Grid ColumnSpacing="10">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -71,15 +71,15 @@
             DefaultLabelPosition="Right"
             OverflowButtonVisibility="Collapsed">
             <AppBarButton
+                Click="DeleteReplyHyperlinkButton_OnClicked"
                 Icon="{fluent:SymbolIcon Symbol=Delete}"
                 LabelPosition="Collapsed"
-                Tapped="DeleteReplyHyperlinkButton_OnTapped"
                 Visibility="{x:Bind ViewModel.IsMe, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
             <AppBarButton
+                Click="OpenRepliesHyperlinkButton_OnClicked"
                 Icon="{fluent:SymbolIcon Symbol=Chat}"
                 Label="{x:Bind ViewModel.RepliesCount, Mode=OneWay}"
-                LabelPosition="{x:Bind ViewModel.RepliesCount, Converter={StaticResource LabelNullableVisibilityConverter}, Mode=OneWay}"
-                Tapped="OpenRepliesHyperlinkButton_OnTapped" />
+                LabelPosition="{x:Bind ViewModel.RepliesCount, Converter={StaticResource LabelNullableVisibilityConverter}, Mode=OneWay}" />
         </CommandBar>
         <controls1:SwitchPresenter
             Grid.Row="1"

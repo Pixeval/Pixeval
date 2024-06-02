@@ -48,9 +48,8 @@ public sealed partial class DownloadListEntry
 
     public DownloadListEntry() => InitializeComponent();
 
-    private async void ActionButton_OnTapped(object sender, TappedRoutedEventArgs e)
+    private async void ActionButton_OnClicked(object sender, RoutedEventArgs e)
     {
-        e.Handled = true;
         switch (ViewModel.DownloadTask.CurrentState)
         {
             case DownloadState.Queued:
@@ -79,25 +78,25 @@ public sealed partial class DownloadListEntry
         }
     }
 
-    private async void RedownloadItem_OnTapped(object sender, TappedRoutedEventArgs e)
+    private async void RedownloadItem_OnClicked(object sender, RoutedEventArgs e)
     {
         await ViewModel.DownloadTask.ResetAsync();
         _ = App.AppViewModel.DownloadManager.TryExecuteInline(ViewModel.DownloadTask);
     }
 
-    private void CancelDownloadItem_OnTapped(object sender, TappedRoutedEventArgs e)
+    private void CancelDownloadItem_OnClicked(object sender, RoutedEventArgs e)
     {
         ViewModel.DownloadTask.CancellationHandle.Cancel();
     }
 
-    private async void OpenDownloadLocationItem_OnTapped(object sender, TappedRoutedEventArgs e)
+    private async void OpenDownloadLocationItem_OnClicked(object sender, RoutedEventArgs e)
     {
         _ = await Launcher.LaunchFolderPathAsync(Path.GetDirectoryName(ViewModel.DownloadTask.Destination));
     }
 
-    private void GoToPageItem_OnTapped(object sender, TappedRoutedEventArgs e) => OpenIllustrationRequested?.Invoke(this, ViewModel);
+    private void GoToPageItem_OnClicked(object sender, RoutedEventArgs e) => OpenIllustrationRequested?.Invoke(this, ViewModel);
 
-    private async void CheckErrorMessageInDetail_OnTapped(object sender, TappedRoutedEventArgs e)
+    private async void CheckErrorMessageInDetail_OnClicked(object sender, RoutedEventArgs e)
     {
         _ = await this.CreateAcknowledgementAsync(DownloadListEntryResources.ErrorMessageDialogTitle, ViewModel.DownloadTask.ErrorCause?.ToString());
     }

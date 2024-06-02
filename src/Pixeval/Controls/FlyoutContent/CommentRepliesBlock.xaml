@@ -21,11 +21,11 @@
         Grid.Row="0"
         HasNoItem="{x:Bind ViewModel.RepliesIsNotNull, Converter={StaticResource BoolNegationConverter}, Mode=OneWay}"
         ItemsSource="{x:Bind ViewModel.Replies, Mode=OneWay}"
-        RepliesHyperlinkButtonTapped="CommentList_OnRepliesHyperlinkButtonTapped" />
+        RepliesHyperlinkButtonClick="CommentList_OnRepliesHyperlinkButtonClick" />
     <controls:PixivReplyBar
         x:Name="ReplyBar"
         Grid.Row="1"
         Margin="10"
-        SendButtonTapped="ReplyBar_OnSendButtonTapped"
-        StickerTapped="ReplyBar_OnStickerTapped" />
+        SendButtonClick="ReplyBar_OnSendButtonClick"
+        StickerClick="ReplyBar_OnStickerClick" />
 </Grid>

@@ -35,9 +35,9 @@ public sealed partial class CommentBlock
 {
     public CommentBlock() => InitializeComponent();
 
-    public event Action<CommentBlockViewModel>? RepliesHyperlinkButtonTapped;
+    public event Action<CommentBlockViewModel>? RepliesHyperlinkButtonClick;
 
-    public event Action<CommentBlockViewModel>? DeleteHyperlinkButtonTapped;
+    public event Action<CommentBlockViewModel>? DeleteHyperlinkButtonClick;
 
     private static async void OnViewModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
@@ -60,12 +60,12 @@ public sealed partial class CommentBlock
         }
     }
 
-    private async void PosterPersonPicture_OnTapped(object sender, TappedRoutedEventArgs e)
+    private async void PosterPersonPicture_OnClicked(object sender, RoutedEventArgs e)
     {
         await IllustratorViewerHelper.CreateWindowWithPageAsync(ViewModel.PosterId);
     }
 
-    private void OpenRepliesHyperlinkButton_OnTapped(object sender, TappedRoutedEventArgs e) => RepliesHyperlinkButtonTapped?.Invoke(ViewModel);
+    private void OpenRepliesHyperlinkButton_OnClicked(object sender, RoutedEventArgs e) => RepliesHyperlinkButtonClick?.Invoke(ViewModel);
 
-    private void DeleteReplyHyperlinkButton_OnTapped(object sender, TappedRoutedEventArgs e) => DeleteHyperlinkButtonTapped?.Invoke(ViewModel);
+    private void DeleteReplyHyperlinkButton_OnClicked(object sender, RoutedEventArgs e) => DeleteHyperlinkButtonClick?.Invoke(ViewModel);
 }

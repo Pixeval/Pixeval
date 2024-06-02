@@ -49,13 +49,13 @@ public sealed partial class CommentsPage
         _viewModel = new CommentsPageViewModel(engine, type, id);
     }
 
-    private void CommentList_OnRepliesHyperlinkButtonTapped(CommentBlockViewModel viewModel)
+    private void CommentList_OnRepliesHyperlinkButtonClick(CommentBlockViewModel viewModel)
     {
         CommentRepliesBlock.ViewModel = viewModel;
         CommentRepliesTeachingTip.IsOpen = true;
     }
 
-    private async void ReplyBar_OnSendButtonTapped(object? sender, SendButtonTappedEventArgs e)
+    private async void ReplyBar_OnSendButtonClick(object? sender, SendButtonClickEventArgs e)
     {
         using var result = _viewModel.EntryType switch
         {
@@ -71,7 +71,7 @@ public sealed partial class CommentsPage
         await AddComment(result);
     }
 
-    private async void ReplyBar_OnStickerTapped(object? sender, StickerTappedEventArgs e)
+    private async void ReplyBar_OnStickerClick(object? sender, StickerClickEventArgs e)
     {
         using var result = _viewModel.EntryType switch
         {
@@ -87,7 +87,7 @@ public sealed partial class CommentsPage
         await AddComment(result);
     }
 
-    private async void CommentList_OnDeleteHyperlinkButtonTapped(CommentBlockViewModel viewModel)
+    private async void CommentList_OnDeleteHyperlinkButtonClick(CommentBlockViewModel viewModel)
     {
         using var result = _viewModel.EntryType switch
         {

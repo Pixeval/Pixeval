@@ -65,9 +65,9 @@
                                 <controls:SettingsCard
                                     MinHeight="0"
                                     ActionIcon="{fluent:SymbolIcon Symbol=Open}"
+                                    Click="LaunchUri"
                                     IsClickEnabled="True"
-                                    Tag="{x:Bind Url}"
-                                    Tapped="LaunchUri">
+                                    Tag="{x:Bind Url}">
                                     <controls:SettingsCard.Header>
                                         <TextBlock>
                                             <Run FontWeight="Bold" Text="{x:Bind Name}" />

@@ -64,6 +64,6 @@
             Padding="0"
             Content="{fluent:SymbolIcon Symbol=Send,
                                         Size=Small}"
-            Tapped="SendButton_OnTapped" />
+            Click="SendButton_OnClicked" />
     </Grid>
 </UserControl>

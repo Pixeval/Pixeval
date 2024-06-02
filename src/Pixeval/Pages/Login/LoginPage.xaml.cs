@@ -121,25 +121,25 @@ public sealed partial class LoginPage
         AppInfo.SaveContext();
     }
 
-    private void SwitchPresenterButton_OnTapped(object sender, TappedRoutedEventArgs e) => SwitchPresenter.Value = sender.To<FrameworkElement>().GetTag<string>();
+    private void SwitchPresenterButton_OnClicked(object sender, RoutedEventArgs e) => SwitchPresenter.Value = sender.To<FrameworkElement>().GetTag<string>();
 
     #region Token
 
-    private void TokenLogin_OnTapped(object sender, object e) => Refresh(_viewModel.RefreshToken);
+    private void TokenLogin_OnClicked(object sender, object e) => Refresh(_viewModel.RefreshToken);
 
     #endregion
 
     #region Browser
 
-    private void BrowserLogin_OnTapped(object sender, RoutedEventArgs e) => _viewModel.BrowserLogin();
+    private void BrowserLogin_OnClicked(object sender, RoutedEventArgs e) => _viewModel.BrowserLogin();
 
     #endregion
 
     #region WebView
 
-    private async void WebViewLogin_OnTapped(object sender, object e) => await WebView2LoginAsync(false);
+    private async void WebViewLogin_OnClicked(object sender, object e) => await WebView2LoginAsync(false);
 
-    private async void WebViewLoginNewAccount_OnTapped(object sender, RoutedEventArgs e) => await WebView2LoginAsync(true);
+    private async void WebViewLoginNewAccount_OnClicked(object sender, RoutedEventArgs e) => await WebView2LoginAsync(true);
 
     private async Task WebView2LoginAsync(bool useNewAccount)
     {

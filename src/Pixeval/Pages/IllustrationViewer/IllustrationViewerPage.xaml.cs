@@ -199,9 +199,9 @@ public sealed partial class IllustrationViewerPage : SupportCustomTitleBarDragRe
         HWnd.SuccessGrowl(EntryViewerPageResources.AddedToBookmark);
     }
 
-    private void AddToBookmarkButton_OnTapped(object sender, TappedRoutedEventArgs e) => AddToBookmarkTeachingTip.IsOpen = true;
+    private void AddToBookmarkButton_OnClicked(object sender, RoutedEventArgs e) => AddToBookmarkTeachingTip.IsOpen = true;
 
-    private void NextButton_OnTapped(object sender, IWinRTObject e)
+    private void NextButton_OnClicked(object sender, IWinRTObject e)
     {
         switch (_viewModel.NextButtonAction)
         {
@@ -218,7 +218,7 @@ public sealed partial class IllustrationViewerPage : SupportCustomTitleBarDragRe
         ++ThumbnailItemsView.SelectedIndex;
     }
 
-    private void PrevButton_OnTapped(object sender, IWinRTObject e)
+    private void PrevButton_OnClicked(object sender, IWinRTObject e)
     {
         switch (_viewModel.PrevButtonAction)
         {
@@ -240,8 +240,8 @@ public sealed partial class IllustrationViewerPage : SupportCustomTitleBarDragRe
         e.Handled = true;
         switch (e.Key)
         {
-            case VirtualKey.Left: PrevButton_OnTapped(null!, null!); break;
-            case VirtualKey.Right: NextButton_OnTapped(null!, null!); break;
+            case VirtualKey.Left: PrevButton_OnClicked(null!, null!); break;
+            case VirtualKey.Right: NextButton_OnClicked(null!, null!); break;
             case VirtualKey.Up: PrevButton_OnRightTapped(null!, null!); break;
             case VirtualKey.Down: NextButton_OnRightTapped(null!, null!); break;
         }
@@ -264,5 +264,5 @@ public sealed partial class IllustrationViewerPage : SupportCustomTitleBarDragRe
         teachingTip.Target = appBarButton.IsInOverflow ? null : appBarButton;
     }
 
-    private void OpenPane_OnRightTapped(object sender, RightTappedRoutedEventArgs rightTappedRoutedEventArgs) => EntryViewerSplitView.PinPane = true;
+    private void OpenPane_OnRightTapped(object sender, RightTappedRoutedEventArgs e) => EntryViewerSplitView.PinPane = true;
 }

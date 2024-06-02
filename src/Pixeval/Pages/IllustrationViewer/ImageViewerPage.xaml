@@ -60,7 +60,7 @@
                                 Command="{x:Bind _viewModel.ShowQrCodeCommand}"
                                 x:Uid="/ImageViewerPage/ShowQRCode"
                                 Icon="{ui:FontIcon Glyph=QRCodeED14}"
-                                Tapped="ShowQrCodeCommandOnExecuteRequested" />-->
+                                Click="ShowQrCodeCommandOnExecuteRequested" />-->
                     </CommandBarFlyout.SecondaryCommands>
                 </CommandBarFlyout>
             </controls:ZoomableImage.ContextFlyout>

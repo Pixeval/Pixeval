@@ -44,7 +44,7 @@
             <Button
                 Margin="{StaticResource StackLayoutEntryPadding}"
                 Style="{StaticResource CardControlButton}"
-                Tapped="IllustratorPersonPicture_OnTapped">
+                Click="IllustratorPersonPicture_OnClicked">
                 <Grid ColumnSpacing="10" RowSpacing="5">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
@@ -122,7 +122,7 @@
                         <Button
                             Content="{x:Bind Name}"
                             FontSize="{StaticResource PixevalSubscriptFontSize}"
-                            Tapped="WorkTagButton_OnTapped"
+                            Click="WorkTagButton_OnClicked"
                             ToolTipService.ToolTip="{x:Bind ToolTip}">
                             <Button.ContextFlyout>
                                 <MenuFlyout>

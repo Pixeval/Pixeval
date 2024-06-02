@@ -81,7 +81,7 @@
                                         x:Uid="/LoginPage/SubmitButton"
                                         Height="33"
                                         controls2:DockPanel.Dock="Right"
-                                        Click="TokenLogin_OnTapped"
+                                        Click="TokenLogin_OnClicked"
                                         IsEnabled="{x:Bind _viewModel.IsEnabled, Mode=OneWay}" />
                                     <ToggleSwitch x:Uid="/LoginPage/DisableDomainFrontingToggleSwitch" IsOn="{x:Bind _viewModel.EnableDomainFronting, Mode=TwoWay}" />
                                 </controls2:DockPanel>
@@ -89,12 +89,12 @@
                                     x:Uid="/LoginPage/BrowserButton"
                                     controls2:DockPanel.Dock="Top"
                                     Tag="{x:Bind local:LoginPage.Browser}"
-                                    Tapped="SwitchPresenterButton_OnTapped" />
+                                    Click="SwitchPresenterButton_OnClicked" />
                                 <HyperlinkButton
                                     x:Uid="/LoginPage/WebViewButton"
                                     controls2:DockPanel.Dock="Top"
                                     Tag="{x:Bind local:LoginPage.WebView}"
-                                    Tapped="SwitchPresenterButton_OnTapped" />
+                                    Click="SwitchPresenterButton_OnClicked" />
                             </controls2:DockPanel>
                         </controls2:Case>
                         <controls2:Case Value="{x:Bind local:LoginPage.Browser}">
@@ -118,19 +118,19 @@
                                         x:Uid="/LoginPage/SubmitButton"
                                         Height="33"
                                         controls2:DockPanel.Dock="Right"
-                                        Tapped="BrowserLogin_OnTapped" />
+                                        Click="BrowserLogin_OnClicked" />
                                     <ToggleSwitch x:Uid="/LoginPage/DisableDomainFrontingToggleSwitch" IsOn="{x:Bind _viewModel.EnableDomainFronting, Mode=TwoWay}" />
                                 </controls2:DockPanel>
                                 <HyperlinkButton
                                     x:Uid="/LoginPage/RefreshTokenButton"
                                     controls2:DockPanel.Dock="Top"
                                     Tag="{x:Bind local:LoginPage.RefreshToken}"
-                                    Tapped="SwitchPresenterButton_OnTapped" />
+                                    Click="SwitchPresenterButton_OnClicked" />
                                 <HyperlinkButton
                                     x:Uid="/LoginPage/WebViewButton"
                                     controls2:DockPanel.Dock="Top"
                                     Tag="{x:Bind local:LoginPage.WebView}"
-                                    Tapped="SwitchPresenterButton_OnTapped" />
+                                    Click="SwitchPresenterButton_OnClicked" />
                             </controls2:DockPanel>
                         </controls2:Case>
                         <controls2:Case Value="{x:Bind local:LoginPage.WebView}">
@@ -139,7 +139,7 @@
                                 LastChildFill="False"
                                 VerticalSpacing="10">
                                 <controls2:DockPanel.KeyboardAccelerators>
-                                    <KeyboardAccelerator Key="Enter" Invoked="WebViewLogin_OnTapped" />
+                                    <KeyboardAccelerator Key="Enter" Invoked="WebViewLogin_OnClicked" />
                                 </controls2:DockPanel.KeyboardAccelerators>
                                 <InfoBar
                                     x:Uid="/LoginPage/WebViewLoginTip"
@@ -166,10 +166,10 @@
                                         x:Uid="/LoginPage/SubmitButton"
                                         Height="33"
                                         controls2:DockPanel.Dock="Right"
-                                        Click="WebViewLogin_OnTapped">
+                                        Click="WebViewLogin_OnClicked">
                                         <SplitButton.Flyout>
                                             <MenuFlyout>
-                                                <MenuFlyoutItem x:Uid="/LoginPage/SubmitWithNewAccountButton" Click="WebViewLoginNewAccount_OnTapped" />
+                                                <MenuFlyoutItem x:Uid="/LoginPage/SubmitWithNewAccountButton" Click="WebViewLoginNewAccount_OnClicked" />
                                             </MenuFlyout>
                                         </SplitButton.Flyout>
                                     </SplitButton>
@@ -179,12 +179,12 @@
                                     x:Uid="/LoginPage/RefreshTokenButton"
                                     controls2:DockPanel.Dock="Top"
                                     Tag="{x:Bind local:LoginPage.RefreshToken}"
-                                    Tapped="SwitchPresenterButton_OnTapped" />
+                                    Click="SwitchPresenterButton_OnClicked" />
                                 <HyperlinkButton
                                     x:Uid="/LoginPage/BrowserButton"
                                     controls2:DockPanel.Dock="Top"
                                     Tag="{x:Bind local:LoginPage.Browser}"
-                                    Tapped="SwitchPresenterButton_OnTapped" />
+                                    Click="SwitchPresenterButton_OnClicked" />
                             </controls2:DockPanel>
                         </controls2:Case>
                     </controls2:SwitchPresenter>

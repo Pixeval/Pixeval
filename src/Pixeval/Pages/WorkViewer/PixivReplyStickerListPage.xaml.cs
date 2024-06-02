@@ -39,7 +39,7 @@ public sealed partial class PixivReplyStickerListPage
 {
     public static readonly ObservableCollection<PixivReplyStickerViewModel> Stickers = [];
 
-    private EventHandler<StickerTappedEventArgs>? _replyBarStickerTappedEventHandler;
+    private EventHandler<StickerClickEventArgs>? _replyBarStickerClickEventHandler;
 
     static PixivReplyStickerListPage() => LoadStickers();
 
@@ -47,7 +47,7 @@ public sealed partial class PixivReplyStickerListPage
 
     public override void OnPageActivated(NavigationEventArgs e)
     {
-        _replyBarStickerTappedEventHandler = (((Guid, EventHandler<StickerTappedEventArgs>))e.Parameter).Item2;
+        _replyBarStickerClickEventHandler = (((Guid, EventHandler<StickerClickEventArgs>))e.Parameter).Item2;
     }
 
     /// <summary>
@@ -68,6 +68,6 @@ public sealed partial class PixivReplyStickerListPage
 
     private void StickerImage_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        _replyBarStickerTappedEventHandler?.Invoke(sender, new StickerTappedEventArgs(e, sender.To<FrameworkElement>().GetTag<PixivReplyStickerViewModel>()));
+        _replyBarStickerClickEventHandler?.Invoke(sender, new StickerClickEventArgs(e, sender.To<FrameworkElement>().GetTag<PixivReplyStickerViewModel>()));
     }
 }

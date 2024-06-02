@@ -46,22 +46,22 @@ public sealed partial class DownloadListPage
         _viewModel.ResetFilter();
     }
 
-    private void PauseAllButton_OnTapped(object sender, TappedRoutedEventArgs e)
+    private void PauseAllButton_OnClicked(object sender, RoutedEventArgs e)
     {
         _viewModel.PauseSelectedItems();
     }
 
-    private void ResumeAllButton_OnTapped(object sender, TappedRoutedEventArgs e)
+    private void ResumeAllButton_OnClicked(object sender, RoutedEventArgs e)
     {
         _viewModel.ResumeSelectedItems();
     }
 
-    private void CancelAllButton_OnTapped(object sender, TappedRoutedEventArgs e)
+    private void CancelAllButton_OnClicked(object sender, RoutedEventArgs e)
     {
         _viewModel.CancelSelectedItems();
     }
 
-    private async void ClearDownloadListButton_OnTapped(object sender, TappedRoutedEventArgs e)
+    private async void ClearDownloadListButton_OnClicked(object sender, RoutedEventArgs e)
     {
         var dialogContent = new DownloadListPageDeleteTasksDialog();
         if (await this.CreateOkCancelAsync(
@@ -111,12 +111,12 @@ public sealed partial class DownloadListPage
         }
     }
 
-    private void SelectAllButton_OnTapped(object sender, TappedRoutedEventArgs e)
+    private void SelectAllButton_OnClicked(object sender, RoutedEventArgs e)
     {
         AdvancedItemsView.SelectAll();
     }
 
-    private void CancelSelectButton_OnTapped(object sender, TappedRoutedEventArgs e)
+    private void CancelSelectButton_OnClicked(object sender, RoutedEventArgs e)
     {
         AdvancedItemsView.DeselectAll();
     }

@@ -45,8 +45,8 @@
     </controls:SupportCustomTitleBarDragRegionPage.Resources>
     <controls:SupportCustomTitleBarDragRegionPage.KeyboardAccelerators>
         <KeyboardAccelerator Key="Escape" Invoked="ExitFullScreenKeyboardAccelerator_OnInvoked" />
-        <KeyboardAccelerator Key="Left" Invoked="PrevButton_OnTapped" />
-        <KeyboardAccelerator Key="Right" Invoked="NextButton_OnTapped" />
+        <KeyboardAccelerator Key="Left" Invoked="PrevButton_OnClicked" />
+        <KeyboardAccelerator Key="Right" Invoked="NextButton_OnClicked" />
         <KeyboardAccelerator Key="Up" Invoked="PrevButton_OnRightTapped" />
         <KeyboardAccelerator Key="Down" Invoked="NextButton_OnRightTapped" />
     </controls:SupportCustomTitleBarDragRegionPage.KeyboardAccelerators>
@@ -73,16 +73,16 @@
                         <controls:PageButton
                             Grid.Column="0"
                             Width="150"
+                            ButtonClick="PrevButton_OnClicked"
                             ButtonRightTapped="PrevButton_OnRightTapped"
-                            ButtonTapped="PrevButton_OnTapped"
                             ButtonVisibility="{x:Bind _viewModel.PrevButtonText, Converter={StaticResource NullableToVisibilityConverter}, Mode=OneWay}"
                             IsPrev="True"
                             ToolTip="{x:Bind _viewModel.PrevButtonText, Mode=OneWay}" />
                         <controls:PageButton
                             Grid.Column="2"
                             Width="150"
+                            ButtonClick="NextButton_OnClicked"
                             ButtonRightTapped="NextButton_OnRightTapped"
-                            ButtonTapped="NextButton_OnTapped"
                             ButtonVisibility="{x:Bind _viewModel.NextButtonText, Converter={StaticResource NullableToVisibilityConverter}, Mode=OneWay}"
                             IsPrev="False"
                             ToolTip="{x:Bind _viewModel.NextButtonText, Mode=OneWay}" />
@@ -332,9 +332,9 @@
                             <AppBarSeparator />
                             <AppBarButton
                                 x:Name="AddToBookmarkButton"
+                                Click="AddToBookmarkButton_OnClicked"
                                 Command="{x:Bind _viewModel.AddToBookmarkCommand}"
-                                CommandParameter="{x:Bind _viewModel.CurrentImage.DownloadParameter, Mode=OneWay}"
-                                Tapped="AddToBookmarkButton_OnTapped" />
+                                CommandParameter="{x:Bind _viewModel.CurrentImage.DownloadParameter, Mode=OneWay}" />
                             <AppBarButton Command="{x:Bind _viewModel.CurrentIllustration.GenerateLinkCommand, Mode=OneWay}" CommandParameter="{x:Bind HWnd}" />
                             <AppBarButton Command="{x:Bind _viewModel.CurrentIllustration.GenerateWebLinkCommand, Mode=OneWay}" CommandParameter="{x:Bind HWnd}" />
                             <AppBarButton Command="{x:Bind _viewModel.CurrentIllustration.OpenInWebBrowserCommand, Mode=OneWay}" />

@@ -64,7 +64,7 @@
         DefaultLabelPosition="Right"
         OverflowButtonVisibility="Visible">
         <!--  Width="125" 是试出来刚好只显示一个按钮的宽度  -->
-        <AppBarButton Label="{x:Bind ViewModel.ActionButtonContent, Mode=OneWay}" Tapped="ActionButton_OnTapped">
+        <AppBarButton Label="{x:Bind ViewModel.ActionButtonContent, Mode=OneWay}" Click="ActionButton_OnClicked">
             <AppBarButton.Icon>
                 <fluent:SymbolIcon Symbol="{x:Bind ViewModel.ActionButtonSymbol, Mode=OneWay}" />
             </AppBarButton.Icon>
@@ -73,24 +73,24 @@
             x:Uid="/DownloadListEntry/RedownloadItem"
             Icon="{fluent:SymbolIcon Symbol=ArrowDownload}"
             IsEnabled="{x:Bind ViewModel.IsRedownloadItemEnabled, Mode=OneWay}"
-            Tapped="RedownloadItem_OnTapped" />
+            Click="RedownloadItem_OnClicked" />
         <AppBarButton
             x:Uid="/DownloadListEntry/CancelDownloadItem"
             Icon="{fluent:SymbolIcon Symbol=Dismiss}"
             IsEnabled="{x:Bind ViewModel.IsCancelItemEnabled, Mode=OneWay}"
-            Tapped="CancelDownloadItem_OnTapped" />
+            Click="CancelDownloadItem_OnClicked" />
         <AppBarButton
             x:Uid="/DownloadListEntry/OpenDownloadLocationItem"
             Icon="{fluent:SymbolIcon Symbol=FolderArrowRight}"
-            Tapped="OpenDownloadLocationItem_OnTapped" />
+            Click="OpenDownloadLocationItem_OnClicked" />
         <AppBarButton
             x:Uid="/DownloadListEntry/GoToPageItem"
             Icon="{fluent:SymbolIcon Symbol=OpenFolder}"
-            Tapped="GoToPageItem_OnTapped" />
+            Click="GoToPageItem_OnClicked" />
         <AppBarButton
             x:Uid="/DownloadListEntry/CheckErrorMessageInDetailItem"
             Icon="{fluent:SymbolIcon Symbol=DocumentError}"
             IsEnabled="{x:Bind ViewModel.IsError, Mode=OneWay}"
-            Tapped="CheckErrorMessageInDetail_OnTapped" />
+            Click="CheckErrorMessageInDetail_OnClicked" />
     </CommandBar>
 </Grid>

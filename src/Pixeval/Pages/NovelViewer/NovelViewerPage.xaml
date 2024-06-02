@@ -4,11 +4,11 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Pixeval.Controls"
     xmlns:controls1="using:CommunityToolkit.WinUI.Controls"
-    xmlns:fluent="using:FluentIcons.WinUI"
     xmlns:converters="using:CommunityToolkit.WinUI.Converters"
     xmlns:converters1="using:Pixeval.Controls.Converters"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:fluent="using:FluentIcons.WinUI"
     xmlns:flyoutContent="using:Pixeval.Controls.FlyoutContent"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:local="using:Pixeval.Pages.NovelViewer"
@@ -56,8 +56,8 @@
     </controls:SupportCustomTitleBarDragRegionPage.Resources>
     <controls:SupportCustomTitleBarDragRegionPage.KeyboardAccelerators>
         <KeyboardAccelerator Key="Escape" Invoked="ExitFullScreenKeyboardAccelerator_OnInvoked" />
-        <KeyboardAccelerator Key="Left" Invoked="PrevButton_OnTapped" />
-        <KeyboardAccelerator Key="Right" Invoked="NextButton_OnTapped" />
+        <KeyboardAccelerator Key="Left" Invoked="PrevButton_OnClicked" />
+        <KeyboardAccelerator Key="Right" Invoked="NextButton_OnClicked" />
         <KeyboardAccelerator Key="Up" Invoked="PrevButton_OnRightTapped" />
         <KeyboardAccelerator Key="Down" Invoked="NextButton_OnRightTapped" />
     </controls:SupportCustomTitleBarDragRegionPage.KeyboardAccelerators>
@@ -126,16 +126,16 @@
                             <controls:PageButton
                                 Grid.Column="0"
                                 Width="150"
+                                ButtonClick="PrevButton_OnClicked"
                                 ButtonRightTapped="PrevButton_OnRightTapped"
-                                ButtonTapped="PrevButton_OnTapped"
                                 ButtonVisibility="{x:Bind _viewModel.PrevButtonText, Converter={StaticResource NullableToVisibilityConverter}, Mode=OneWay}"
                                 IsPrev="True"
                                 ToolTip="{x:Bind _viewModel.PrevButtonText, Mode=OneWay}" />
                             <controls:PageButton
                                 Grid.Column="2"
                                 Width="150"
+                                ButtonClick="NextButton_OnClicked"
                                 ButtonRightTapped="NextButton_OnRightTapped"
-                                ButtonTapped="NextButton_OnTapped"
                                 ButtonVisibility="{x:Bind _viewModel.NextButtonText, Converter={StaticResource NullableToVisibilityConverter}, Mode=OneWay}"
                                 IsPrev="False"
                                 ToolTip="{x:Bind _viewModel.NextButtonText, Mode=OneWay}" />
@@ -372,8 +372,8 @@
                                 <AppBarSeparator />
                                 <AppBarButton
                                     x:Name="AddToBookmarkButton"
-                                    Command="{x:Bind _viewModel.AddToBookmarkCommand}"
-                                    Tapped="AddToBookmarkButton_OnTapped" />
+                                    Click="AddToBookmarkButton_OnClicked"
+                                    Command="{x:Bind _viewModel.AddToBookmarkCommand}" />
                                 <AppBarButton Command="{x:Bind _viewModel.CurrentNovel.GenerateLinkCommand, Mode=OneWay}" CommandParameter="{x:Bind HWnd}" />
                                 <AppBarButton Command="{x:Bind _viewModel.CurrentNovel.GenerateWebLinkCommand, Mode=OneWay}" CommandParameter="{x:Bind HWnd}" />
                                 <AppBarButton Command="{x:Bind _viewModel.CurrentNovel.OpenInWebBrowserCommand, Mode=OneWay}" />

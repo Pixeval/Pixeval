@@ -128,7 +128,7 @@ public partial class CardControl : ButtonBase
         PointerCaptureLost += Control_PointerCaptureLost;
         PointerCanceled += Control_PointerCanceled;
         PreviewKeyDown += Control_PreviewKeyDown;
-        Tapped += Control_Tapped;
+        Click += Control_Clicked;
     }
 
     private void DisableButtonInteraction()
@@ -140,10 +140,10 @@ public partial class CardControl : ButtonBase
         PointerCanceled -= Control_PointerCanceled;
         PreviewKeyDown -= Control_PreviewKeyDown;
         PreviewKeyUp -= Control_PreviewKeyUp;
-        Tapped -= Control_Tapped;
+        Click -= Control_Clicked;
     }
 
-    private void Control_Tapped(object sender, TappedRoutedEventArgs e)
+    private void Control_Clicked(object sender, RoutedEventArgs e)
     {
         if (IsSelectEnabled && IsEnabled)
         {

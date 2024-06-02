@@ -182,8 +182,8 @@
                     HorizontalAlignment="Left"
                     DefaultLabelPosition="Collapsed"
                     OverflowButtonVisibility="Collapsed">
-                    <AppBarButton Command="{x:Bind OpenNovelCommand}" Tapped="OpenNovel_OnTapped" />
-                    <AppBarButton Command="{x:Bind ViewModel.AddToBookmarkCommand, Mode=OneWay}" Tapped="AddToBookmark_OnTapped" />
+                    <AppBarButton Command="{x:Bind OpenNovelCommand}" Click="OpenNovel_OnClicked" />
+                    <AppBarButton Command="{x:Bind ViewModel.AddToBookmarkCommand, Mode=OneWay}" Click="AddToBookmark_OnClicked" />
                     <AppBarButton Command="{x:Bind ViewModel.SaveCommand, Mode=OneWay}" CommandParameter="{x:Bind HWnd}" />
                     <AppBarButton Command="{x:Bind ViewModel.OpenInWebBrowserCommand, Mode=OneWay}" />
                 </CommandBar>
@@ -226,7 +226,7 @@
                                         Padding="2"
                                         Background="#7F7F7F7F"
                                         CornerRadius="{StaticResource ControlCornerRadius}"
-                                        Tapped="TagButton_OnTapped">
+                                        Click="TagButton_OnClicked">
                                         <TextBlock FontSize="{StaticResource PixevalSubscriptFontSize}" Text="{x:Bind Name}" />
                                     </Button>
                                 </DataTemplate>

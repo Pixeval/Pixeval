@@ -134,9 +134,9 @@ public sealed partial class NovelViewerPage
         _viewModel.CurrentNovel.AddToBookmarkCommand.Execute((BookmarkTagSelector.SelectedTags, BookmarkTagSelector.IsPrivate, DownloadParameter(DocumentViewer.ViewModel)));
     }
 
-    private void AddToBookmarkButton_OnTapped(object sender, TappedRoutedEventArgs e) => AddToBookmarkTeachingTip.IsOpen = true;
+    private void AddToBookmarkButton_OnClicked(object sender, RoutedEventArgs e) => AddToBookmarkTeachingTip.IsOpen = true;
 
-    private void NextButton_OnTapped(object sender, IWinRTObject e)
+    private void NextButton_OnClicked(object sender, IWinRTObject e)
     {
         switch (_viewModel.NextButtonAction)
         {
@@ -153,7 +153,7 @@ public sealed partial class NovelViewerPage
         ++ThumbnailItemsView.SelectedIndex;
     }
 
-    private void PrevButton_OnTapped(object sender, IWinRTObject e)
+    private void PrevButton_OnClicked(object sender, IWinRTObject e)
     {
         switch (_viewModel.PrevButtonAction)
         {
@@ -176,10 +176,10 @@ public sealed partial class NovelViewerPage
         switch (e.Key)
         {
             case VirtualKey.Left:
-                PrevButton_OnTapped(null!, null!);
+                PrevButton_OnClicked(null!, null!);
                 break;
             case VirtualKey.Right:
-                NextButton_OnTapped(null!, null!);
+                NextButton_OnClicked(null!, null!);
                 break;
             case VirtualKey.Up:
                 PrevButton_OnRightTapped(null!, null!);

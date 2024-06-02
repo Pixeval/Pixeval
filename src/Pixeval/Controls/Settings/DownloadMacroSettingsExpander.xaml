@@ -25,7 +25,7 @@
                 <labs:TokenView
                     IsItemClickEnabled="True"
                     IsWrapped="True"
-                    ItemClick="PathMacroTokenInputBox_OnTokenTapped"
+                    ItemClick="PathMacroTokenInputBox_OnTokenClick"
                     ItemsSource="{x:Bind models:DownloadMacroAppSettingsEntry.AvailableMacros}"
                     SelectionMode="None">
                     <labs:TokenView.ItemTemplate>

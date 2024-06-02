@@ -54,17 +54,17 @@ public sealed partial class SettingsPage : IScrollViewHost, IDisposable
 
     private void SettingsPage_OnUnloaded(object sender, RoutedEventArgs e) => Dispose();
 
-    private void CheckForUpdateButton_OnTapped(object sender, TappedRoutedEventArgs e)
+    private void CheckForUpdateButton_OnClicked(object sender, RoutedEventArgs e)
     {
         ViewModel.CheckForUpdate();
     }
 
-    private async void OpenLinkViaTag_OnTapped(object sender, TappedRoutedEventArgs e)
+    private async void OpenLinkViaTag_OnClicked(object sender, RoutedEventArgs e)
     {
         _ = await Launcher.LaunchUriAsync(new Uri(sender.To<FrameworkElement>().GetTag<string>()));
     }
 
-    private async void ReleaseNotesHyperlink_OnTapped(object sender, TappedRoutedEventArgs e)
+    private async void ReleaseNotesHyperlink_OnClicked(object sender, RoutedEventArgs e)
     {
         _ = await this.CreateAcknowledgementAsync(SettingsPageResources.ReleaseNotesHyperlinkButtonContent,
             new ScrollView
@@ -79,7 +79,7 @@ public sealed partial class SettingsPage : IScrollViewHost, IDisposable
             });
     }
 
-    private async void PerformSignOutButton_OnTapped(object sender, TappedRoutedEventArgs e)
+    private async void PerformSignOutButton_OnClicked(object sender, RoutedEventArgs e)
     {
         if (await this.CreateOkCancelAsync(SettingsPageResources.SignOutConfirmationDialogTitle,
                 SettingsPageResources.SignOutConfirmationDialogContent) is ContentDialogResult.Primary)
@@ -104,34 +104,34 @@ public sealed partial class SettingsPage : IScrollViewHost, IDisposable
         }
     }
 
-    private void DeleteFileCacheEntryButton_OnTapped(object sender, TappedRoutedEventArgs e)
+    private void DeleteFileCacheEntryButton_OnClicked(object sender, RoutedEventArgs e)
     {
         _ = AppKnownFolders.Cache.ClearAsync();
         ViewModel.ShowClearData(ClearDataKind.FileCache);
     }
 
-    private void DeleteSearchHistoriesButton_OnTapped(object sender, TappedRoutedEventArgs e)
+    private void DeleteSearchHistoriesButton_OnClicked(object sender, RoutedEventArgs e)
     {
         var manager = App.AppViewModel.AppServiceProvider.GetRequiredService<SearchHistoryPersistentManager>();
         manager.Clear();
         ViewModel.ShowClearData(ClearDataKind.SearchHistory);
     }
 
-    private void DeleteBrowseHistoriesButton_OnTapped(object sender, TappedRoutedEventArgs e)
+    private void DeleteBrowseHistoriesButton_OnClicked(object sender, RoutedEventArgs e)
     {
         var manager = App.AppViewModel.AppServiceProvider.GetRequiredService<BrowseHistoryPersistentManager>();
         manager.Clear();
         ViewModel.ShowClearData(ClearDataKind.BrowseHistory);
     }
 
-    private void DeleteDownloadHistoriesButton_OnTapped(object sender, TappedRoutedEventArgs e)
+    private void DeleteDownloadHistoriesButton_OnClicked(object sender, RoutedEventArgs e)
     {
         var manager = App.AppViewModel.AppServiceProvider.GetRequiredService<DownloadHistoryPersistentManager>();
         manager.Clear();
         ViewModel.ShowClearData(ClearDataKind.DownloadHistory);
     }
 
-    private void OpenFolder_OnTapped(object sender, TappedRoutedEventArgs e)
+    private void OpenFolder_OnClicked(object sender, RoutedEventArgs e)
     {
         var folder = sender.To<FrameworkElement>().GetTag<string>() switch
         {
