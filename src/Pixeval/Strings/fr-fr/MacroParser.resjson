@@ -1,5 +1,8 @@
 {
     "NonParameterizedMacroBearingParameterFormatted": "Le macro {0} ne peut contient aucun paramètre",
+    "MacroShouldBeInLastSegmentFormatted": "Le macro {0} doit être utilisé dans un nom de fichier",
+    "MacroShouldBeContainedFormatted": "Le macro {0} doit être contenu dans un macro de condition {1}",
+    "NegationNotAllowedFormatted": "Les négations ne peuvent être utilisées dans le macro {0}",
     "ParameterizedMacroMissingParameterFormatted": "Le macro conditionnnel {0} manque un paramètre",
     "ResultIsEmpty": "Erreur de parsing: le résultat est vide",
     "UnexpectedTokenFormatted": "Entrée illégale: symbole non voulu dans l\u0027offset {0} des caractères",
