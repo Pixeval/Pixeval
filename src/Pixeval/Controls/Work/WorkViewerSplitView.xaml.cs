@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.UI.Xaml;
@@ -16,8 +15,6 @@ namespace Pixeval.Controls;
 [DependencyProperty<bool>("PinPane", "false", nameof(OnPinPaneChanged))]
 public sealed partial class WorkViewerSplitView
 {
-    public event EventHandler? RaiseSetTitleBarDragRegion;
-
     public const double OpenPaneLength = 330;
 
     public WorkViewerSplitView() => InitializeComponent();
@@ -33,8 +30,6 @@ public sealed partial class WorkViewerSplitView
         if (NavigationView.SelectedItem.To<NavigationViewTag>() == tag)
             _ = PaneFrame.Navigate(tag.NavigateTo, tag.Parameter, info);
     }
-
-    private void SplitView_OnPaneOpenedOrClosed(SplitView sender, object e) => RaiseSetTitleBarDragRegion?.Invoke(this, EventArgs.Empty);
 
     private static void OnIsPaneOpenChanged(DependencyObject o, DependencyPropertyChangedEventArgs e)
     {

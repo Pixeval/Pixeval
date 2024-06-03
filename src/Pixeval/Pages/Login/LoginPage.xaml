@@ -24,6 +24,7 @@
             Title="{x:Bind app:AppInfo.AppIdentifier}"
             VerticalAlignment="Top"
             controls2:DockPanel.Dock="Top"
+            DisplayMode="Tall"
             Window="{x:Bind windowing:WindowFactory.GetForkedWindows(HWnd)}">
             <controls2:TitleBar.Icon>
                 <ImageIcon Source="ms-appx:///Assets/Images/logo.svg" />
