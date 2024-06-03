@@ -12,13 +12,6 @@
                 <ResourceDictionary Source="ms-appx:///Pixeval.Controls/Themes/Controls.xaml" />
                 <!--  Other merged dictionaries here  -->
             </ResourceDictionary.MergedDictionaries>
-            <x:Double x:Key="PixevalTitleFontSize">28</x:Double>
-            <x:Double x:Key="PixevalSubtitleFontSize">18</x:Double>
-            <x:Double x:Key="PixevalSubSubtitleFontSize">16</x:Double>
-            <x:Double x:Key="PixevalContentFontSize">14</x:Double>
-            <x:Double x:Key="PixevalBaseFontSize">12</x:Double>
-            <x:Double x:Key="PixevalSubscriptFontSize">11</x:Double>
-            <x:Double x:Key="PixevalCaptionFontSize">10</x:Double>
             <x:Double x:Key="CollapsedAppBarButtonWidth">45</x:Double>
             <x:Double x:Key="CommandBarHeight">48</x:Double>
             <x:Double x:Key="TitleBarHeight">48</x:Double>

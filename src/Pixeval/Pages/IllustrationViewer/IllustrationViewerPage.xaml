@@ -33,11 +33,9 @@
             TintOpacity="0.8" />
         <Style
             x:Key="TextBlockStyle"
-            BasedOn="{StaticResource BaseTextBlockStyle}"
+            BasedOn="{StaticResource CaptionStrongTextBlockStyle}"
             TargetType="TextBlock">
             <Setter Property="VerticalAlignment" Value="Center" />
-            <Setter Property="FontSize" Value="{StaticResource PixevalContentFontSize}" />
-            <Setter Property="FontWeight" Value="SemiBold" />
             <Setter Property="HorizontalTextAlignment" Value="Center" />
             <Setter Property="TextAlignment" Value="Center" />
             <Setter Property="TextTrimming" Value="CharacterEllipsis" />

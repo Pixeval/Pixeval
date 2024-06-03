@@ -29,13 +29,13 @@
         VerticalAlignment="Center"
         Spacing="1">
         <TextBlock
-            FontSize="{StaticResource PixevalBaseFontSize}"
+            Style="{StaticResource CaptionTextBlockStyle}"
             Text="{x:Bind ViewModel.Title, Mode=OneWay}"
             TextTrimming="CharacterEllipsis"
             TextWrapping="NoWrap" />
         <TextBlock
-            FontSize="{StaticResource PixevalCaptionFontSize}"
             Foreground="{ThemeResource PixevalTipTextForeground}"
+            Style="{StaticResource CaptionTextBlockStyle}"
             Text="{x:Bind ViewModel.User.Name, Mode=OneWay}"
             TextTrimming="CharacterEllipsis"
             TextWrapping="NoWrap" />
@@ -51,8 +51,8 @@
             ShowPaused="{x:Bind ViewModel.IsPaused, Mode=OneWay}"
             Value="{x:Bind ViewModel.DownloadTask.ProgressPercentage, Mode=OneWay}" />
         <TextBlock
-            FontSize="{StaticResource PixevalSubscriptFontSize}"
             Foreground="{ThemeResource PixevalTipTextForeground}"
+            Style="{StaticResource CaptionTextBlockStyle}"
             Text="{x:Bind ViewModel.ProgressMessage, Mode=OneWay}"
             TextTrimming="CharacterEllipsis"
             TextWrapping="NoWrap" />
@@ -64,33 +64,33 @@
         DefaultLabelPosition="Right"
         OverflowButtonVisibility="Visible">
         <!--  Width="125" 是试出来刚好只显示一个按钮的宽度  -->
-        <AppBarButton Label="{x:Bind ViewModel.ActionButtonContent, Mode=OneWay}" Click="ActionButton_OnClicked">
+        <AppBarButton Click="ActionButton_OnClicked" Label="{x:Bind ViewModel.ActionButtonContent, Mode=OneWay}">
             <AppBarButton.Icon>
                 <fluent:SymbolIcon Symbol="{x:Bind ViewModel.ActionButtonSymbol, Mode=OneWay}" />
             </AppBarButton.Icon>
         </AppBarButton>
         <AppBarButton
             x:Uid="/DownloadListEntry/RedownloadItem"
+            Click="RedownloadItem_OnClicked"
             Icon="{fluent:SymbolIcon Symbol=ArrowDownload}"
-            IsEnabled="{x:Bind ViewModel.IsRedownloadItemEnabled, Mode=OneWay}"
-            Click="RedownloadItem_OnClicked" />
+            IsEnabled="{x:Bind ViewModel.IsRedownloadItemEnabled, Mode=OneWay}" />
         <AppBarButton
             x:Uid="/DownloadListEntry/CancelDownloadItem"
+            Click="CancelDownloadItem_OnClicked"
             Icon="{fluent:SymbolIcon Symbol=Dismiss}"
-            IsEnabled="{x:Bind ViewModel.IsCancelItemEnabled, Mode=OneWay}"
-            Click="CancelDownloadItem_OnClicked" />
+            IsEnabled="{x:Bind ViewModel.IsCancelItemEnabled, Mode=OneWay}" />
         <AppBarButton
             x:Uid="/DownloadListEntry/OpenDownloadLocationItem"
-            Icon="{fluent:SymbolIcon Symbol=FolderArrowRight}"
-            Click="OpenDownloadLocationItem_OnClicked" />
+            Click="OpenDownloadLocationItem_OnClicked"
+            Icon="{fluent:SymbolIcon Symbol=FolderArrowRight}" />
         <AppBarButton
             x:Uid="/DownloadListEntry/GoToPageItem"
-            Icon="{fluent:SymbolIcon Symbol=OpenFolder}"
-            Click="GoToPageItem_OnClicked" />
+            Click="GoToPageItem_OnClicked"
+            Icon="{fluent:SymbolIcon Symbol=OpenFolder}" />
         <AppBarButton
             x:Uid="/DownloadListEntry/CheckErrorMessageInDetailItem"
+            Click="CheckErrorMessageInDetail_OnClicked"
             Icon="{fluent:SymbolIcon Symbol=DocumentError}"
-            IsEnabled="{x:Bind ViewModel.IsError, Mode=OneWay}"
-            Click="CheckErrorMessageInDetail_OnClicked" />
+            IsEnabled="{x:Bind ViewModel.IsError, Mode=OneWay}" />
     </CommandBar>
 </Grid>

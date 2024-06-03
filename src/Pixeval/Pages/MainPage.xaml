@@ -36,14 +36,14 @@
                     Spacing="1">
                     <TextBlock
                         MaxHeight="35"
-                        FontSize="{StaticResource PixevalBaseFontSize}"
+                        Style="{StaticResource BodyTextBlockStyle}"
                         Text="{x:Bind Name}"
                         TextTrimming="CharacterEllipsis"
                         TextWrapping="WrapWholeWords" />
                     <TextBlock
                         MaxHeight="15"
-                        FontSize="{StaticResource PixevalCaptionFontSize}"
                         Foreground="{ThemeResource PixevalTipTextForeground}"
+                        Style="{StaticResource CaptionTextBlockStyle}"
                         Text="{x:Bind TranslatedName}"
                         TextTrimming="CharacterEllipsis"
                         TextWrapping="WrapWholeWords"

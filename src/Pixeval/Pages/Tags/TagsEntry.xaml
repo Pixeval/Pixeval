@@ -29,7 +29,7 @@
         VerticalAlignment="Center"
         Spacing="5">
         <TextBlock
-            FontSize="{StaticResource PixevalBaseFontSize}"
+            Style="{StaticResource CaptionTextBlockStyle}"
             Text="{x:Bind ViewModel.Name, Mode=OneWay}"
             TextTrimming="CharacterEllipsis"
             TextWrapping="NoWrap" />
@@ -42,10 +42,7 @@
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
                 <DataTemplate x:DataType="x:String">
-                    <Button
-                        Content="{x:Bind}"
-                        FontSize="{StaticResource PixevalSubscriptFontSize}"
-                        Click="TagButton_OnClicked" />
+                    <Button Click="TagButton_OnClicked" Content="{x:Bind}" />
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
@@ -59,24 +56,24 @@
         <!--  Width="125" 是试出来刚好只显示一个按钮的宽度  -->
         <AppBarButton
             x:Uid="/TagsEntry/EditTagItem"
-            Icon="{fluent:SymbolIcon Symbol=Tag}"
-            Click="EditTagItem_OnClicked" />
+            Click="EditTagItem_OnClicked"
+            Icon="{fluent:SymbolIcon Symbol=Tag}" />
         <AppBarButton
             x:Uid="/TagsEntry/OpenItem"
-            Icon="{fluent:SymbolIcon Symbol=Open}"
-            Click="OpenItem_OnClicked" />
+            Click="OpenItem_OnClicked"
+            Icon="{fluent:SymbolIcon Symbol=Open}" />
         <AppBarButton
             x:Uid="/TagsEntry/GoToPageItem"
+            Click="GoToPageItem_OnClicked"
             Icon="{fluent:SymbolIcon Symbol=OpenFolder}"
-            IsEnabled="{x:Bind ViewModel.Illustration, Converter={StaticResource NullableToBoolConverter}, Mode=OneWay}"
-            Click="GoToPageItem_OnClicked" />
+            IsEnabled="{x:Bind ViewModel.Illustration, Converter={StaticResource NullableToBoolConverter}, Mode=OneWay}" />
         <AppBarButton
             x:Uid="/TagsEntry/DeleteItem"
-            Icon="{fluent:SymbolIcon Symbol=Delete}"
-            Click="DeleteItem_OnClicked" />
+            Click="DeleteItem_OnClicked"
+            Icon="{fluent:SymbolIcon Symbol=Delete}" />
         <AppBarButton
             x:Uid="/TagsEntry/OpenLocationItem"
-            Icon="{fluent:SymbolIcon Symbol=FolderArrowRight}"
-            Click="OpenLocationItem_OnClicked" />
+            Click="OpenLocationItem_OnClicked"
+            Icon="{fluent:SymbolIcon Symbol=FolderArrowRight}" />
     </CommandBar>
 </Grid>

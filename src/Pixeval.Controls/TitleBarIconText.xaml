@@ -25,7 +25,7 @@
         Grid.Column="1"
         MaxWidth="200"
         VerticalAlignment="Center"
-        FontSize="{StaticResource PixevalContentFontSize}"
+        Style="{StaticResource CaptionTextBlockStyle}"
         Text="{x:Bind Title, Mode=OneWay}"
         TextTrimming="CharacterEllipsis" />
 </Grid>

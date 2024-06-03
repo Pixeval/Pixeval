@@ -13,7 +13,7 @@
     <controls2:EnhancedPage.Resources>
         <Style
             x:Key="HelpHeaderTextBlockStyle"
-            BasedOn="{StaticResource SubSubtitleTextBlockStyle}"
+            BasedOn="{StaticResource SubtitleTextBlockStyle}"
             TargetType="TextBlock">
             <Setter Property="Margin" Value="0,10" />
         </Style>

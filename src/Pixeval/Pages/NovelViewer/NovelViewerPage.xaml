@@ -8,15 +8,12 @@
     xmlns:converters1="using:Pixeval.Controls.Converters"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:fluent="using:FluentIcons.WinUI"
     xmlns:flyoutContent="using:Pixeval.Controls.FlyoutContent"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:local="using:Pixeval.Pages.NovelViewer"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:media="using:Microsoft.Xaml.Interactions.Media"
-    xmlns:options="using:Pixeval.Options"
     xmlns:triggers="using:Pixeval.Util.Triggers"
-    xmlns:winUi="using:CommunityToolkit.WinUI"
     KeyboardAcceleratorPlacementMode="Hidden"
     Loaded="NovelViewerPage_OnLoaded"
     Unloaded="NovelViewerPage_OnUnloaded"
@@ -25,7 +22,6 @@
         <converters:BoolNegationConverter x:Key="BoolNegationConverter" />
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
         <converters1:NullableToVisibilityConverter x:Key="NullableToVisibilityConverter" />
-        <converters1:UIntToColorConverter x:Key="UIntToColorConverter" />
         <converters1:DisplayIndexConverter x:Key="DisplayIndexConverter" />
         <converters1:UIntToBrushConverter x:Key="UIntToBrushConverter" />
         <converters1:FontWeightConverter x:Key="FontWeightConverter" />
@@ -40,18 +36,13 @@
             TintOpacity="0.8" />
         <Style
             x:Key="TextBlockStyle"
-            BasedOn="{StaticResource BaseTextBlockStyle}"
+            BasedOn="{StaticResource CaptionTextBlockStyle}"
             TargetType="TextBlock">
             <Setter Property="VerticalAlignment" Value="Center" />
-            <Setter Property="FontSize" Value="{StaticResource PixevalContentFontSize}" />
             <Setter Property="FontWeight" Value="SemiBold" />
             <Setter Property="HorizontalTextAlignment" Value="Center" />
             <Setter Property="TextAlignment" Value="Center" />
             <Setter Property="TextTrimming" Value="CharacterEllipsis" />
-        </Style>
-        <Style x:Name="ColorPickerStyle" TargetType="controls1:ColorPicker">
-            <Setter Property="IsMoreButtonVisible" Value="True" />
-            <Setter Property="IsAlphaEnabled" Value="True" />
         </Style>
     </controls:SupportCustomTitleBarDragRegionPage.Resources>
     <controls:SupportCustomTitleBarDragRegionPage.KeyboardAccelerators>
@@ -112,7 +103,7 @@
                                     Width="50"
                                     Height="50"
                                     IsIndeterminate="True" />
-                                <TextBlock x:Uid="/EntryViewerPage/LoadingNovelTextBlock" FontSize="{StaticResource PixevalSubscriptFontSize}" />
+                                <TextBlock x:Uid="/EntryViewerPage/LoadingNovelTextBlock" Style="{StaticResource CaptionTextBlockStyle}" />
                             </StackPanel>
                         </Grid>
 

@@ -54,14 +54,14 @@
                 <TextBlock
                     Grid.Row="0"
                     Grid.Column="1"
-                    FontSize="{StaticResource PixevalContentFontSize}"
+                    Style="{StaticResource CaptionTextBlockStyle}"
                     Text="{x:Bind ViewModel.Poster, Mode=OneWay}" />
                 <!--  TipTextColor  -->
                 <TextBlock
                     Grid.Row="2"
                     Grid.Column="1"
-                    FontSize="{StaticResource PixevalCaptionFontSize}"
                     Foreground="{ThemeResource PixevalTipTextForeground}"
+                    Style="{StaticResource CaptionTextBlockStyle}"
                     Text="{x:Bind ViewModel.PostDate, Converter={StaticResource CultureDateConverter}, Mode=OneWay}" />
             </Grid>
         </Button>
@@ -102,7 +102,7 @@
                 </controls1:Case.Value>
                 <RichTextBlock
                     x:Name="CommentContent"
-                    FontSize="{StaticResource PixevalBaseFontSize}"
+                    FontSize="{StaticResource CaptionTextBlockFontSize}"
                     LineHeight="14.4"
                     TextWrapping="Wrap" />
             </controls1:Case>

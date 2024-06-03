@@ -115,7 +115,7 @@
                                 <StackPanel Padding="5,0" Spacing="2">
                                     <TextBlock
                                         MaxWidth="80"
-                                        Style="{StaticResource ContentStrongTextBlockStyle}"
+                                        Style="{StaticResource CaptionStrongTextBlockStyle}"
                                         Text="{x:Bind _viewModel.Name}"
                                         TextTrimming="CharacterEllipsis"
                                         TextWrapping="NoWrap" />

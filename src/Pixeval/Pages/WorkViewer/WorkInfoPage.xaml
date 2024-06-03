@@ -17,14 +17,18 @@
     <pixevalControls:EnhancedPage.Resources>
         <converters:StringFormatConverter x:Key="StringFormatConverter" />
         <converters1:NullableToVisibilityConverter x:Key="NullableToVisibilityConverter" />
-        <Style x:Key="InfoPageSectionHeaderTextBlockStyle" TargetType="TextBlock">
+        <Style
+            x:Key="InfoPageSectionHeaderTextBlockStyle"
+            BasedOn="{StaticResource CaptionTextBlockStyle}"
+            TargetType="TextBlock">
             <Setter Property="Margin" Value="{StaticResource StackLayoutEntriesMargin}" />
-            <Setter Property="FontSize" Value="{StaticResource PixevalContentFontSize}" />
             <Setter Property="Foreground" Value="{ThemeResource TextBoxDisabledForegroundThemeBrush}" />
         </Style>
-        <Style x:Key="InfoPageSectionContentTextBlockStyle" TargetType="TextBlock">
+        <Style
+            x:Key="InfoPageSectionContentTextBlockStyle"
+            BasedOn="{StaticResource CaptionTextBlockStyle}"
+            TargetType="TextBlock">
             <Setter Property="Margin" Value="{StaticResource StackLayoutEntryPadding}" />
-            <Setter Property="FontSize" Value="{StaticResource PixevalContentFontSize}" />
             <Setter Property="TextTrimming" Value="CharacterEllipsis" />
             <Setter Property="TextWrapping" Value="Wrap" />
             <Setter Property="MaxHeight" Value="200" />
@@ -35,16 +39,13 @@
         HorizontalScrollMode="Disabled"
         VerticalScrollBarVisibility="Auto">
         <StackPanel Margin="20,15">
-            <TextBlock
-                x:Uid="/WorkInfoPage/TitleTextBlock"
-                FontSize="{StaticResource PixevalSubtitleFontSize}"
-                FontWeight="Bold" />
+            <TextBlock x:Uid="/WorkInfoPage/TitleTextBlock" Style="{StaticResource SubtitleTextBlockStyle}" />
             <!--#region Illustrator Info-->
             <TextBlock x:Uid="/WorkInfoPage/IllustratorTextBlock" Style="{StaticResource InfoPageSectionHeaderTextBlockStyle}" />
             <Button
                 Margin="{StaticResource StackLayoutEntryPadding}"
-                Style="{StaticResource CardControlButton}"
-                Click="IllustratorPersonPicture_OnClicked">
+                Click="IllustratorPersonPicture_OnClicked"
+                Style="{StaticResource CardControlButton}">
                 <Grid ColumnSpacing="10" RowSpacing="5">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
@@ -64,14 +65,14 @@
                     <TextBlock
                         Grid.Row="0"
                         Grid.Column="1"
-                        FontSize="{StaticResource PixevalContentFontSize}">
+                        Style="{StaticResource CaptionTextBlockStyle}">
                         <Run x:Uid="/WorkInfoPage/IllustratorName" />
                         <Run Text="{x:Bind _viewModel.Illustrator.Name}" />
                     </TextBlock>
                     <TextBlock
                         Grid.Row="1"
                         Grid.Column="1"
-                        FontSize="{StaticResource PixevalContentFontSize}">
+                        Style="{StaticResource CaptionTextBlockStyle}">
                         <Run x:Uid="/WorkInfoPage/IllustratorId" />
                         <Run Text="{x:Bind _viewModel.Illustrator.Id}" />
                     </TextBlock>
@@ -91,7 +92,7 @@
             <labs:MarkdownTextBlock
                 x:Name="WorkCaptionMarkdownTextBlock"
                 Margin="{StaticResource StackLayoutEntryPadding}"
-                FontSize="{StaticResource PixevalContentFontSize}"
+                FontSize="{StaticResource CaptionTextBlockFontSize}"
                 Text="">
                 <labs:MarkdownTextBlock.Config>
                     <labs:MarkdownConfig />
@@ -120,9 +121,9 @@
                 <ItemsRepeater.ItemTemplate>
                     <DataTemplate x:DataType="model:Tag">
                         <Button
-                            Content="{x:Bind Name}"
-                            FontSize="{StaticResource PixevalSubscriptFontSize}"
                             Click="WorkTagButton_OnClicked"
+                            Content="{x:Bind Name}"
+                            FontSize="{StaticResource CaptionTextBlockFontSize}"
                             ToolTipService.ToolTip="{x:Bind ToolTip}">
                             <Button.ContextFlyout>
                                 <MenuFlyout>

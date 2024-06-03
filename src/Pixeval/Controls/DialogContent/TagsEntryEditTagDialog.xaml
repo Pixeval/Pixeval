@@ -23,7 +23,7 @@
                 Source="{x:Bind _viewModel.Thumbnail, Mode=OneWay}" />
             <TextBlock
                 VerticalAlignment="Center"
-                FontSize="{StaticResource PixevalBaseFontSize}"
+                Style="{StaticResource CaptionTextBlockStyle}"
                 Text="{x:Bind _viewModel.Name, Mode=OneWay}"
                 TextTrimming="CharacterEllipsis"
                 TextWrapping="NoWrap" />

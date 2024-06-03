@@ -53,7 +53,7 @@
                 <TextBlock
                     VerticalAlignment="Center"
                     Foreground="{StaticResource TextSecondaryAccentColor}"
-                    Style="{StaticResource SubscriptTextBlockStyle}"
+                    Style="{StaticResource CaptionStrongTextBlockStyle}"
                     Text="{x:Bind ViewModel.UserId, Mode=OneWay}" />
                 <local:PixevalBadge
                     Mode="Following"
