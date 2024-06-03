@@ -192,7 +192,7 @@
                         ItemsSource="{x:Bind _viewModel.SuggestionProvider.Suggestions, Mode=OneWay}"
                         KeyDown="KeywordAutoSuggestionBox_OnKeyDown"
                         QueryIcon="{fluent:SymbolIcon Symbol=Search,
-                                                      Size=Small}"
+                                                      FontSize={StaticResource SmallIconFontSize}}"
                         QuerySubmitted="KeywordAutoSuggestBox_QuerySubmitted"
                         SuggestionChosen="KeywordAutoSuggestBox_OnSuggestionChosen"
                         TextChanged="KeywordAutoSuggestBox_OnTextChanged">

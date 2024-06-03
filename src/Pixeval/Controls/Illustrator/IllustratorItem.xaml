@@ -48,7 +48,7 @@
                 <ContentControl
                     VerticalAlignment="Center"
                     Content="{fluent:SymbolIcon Symbol=Guest,
-                                                FontSize=11}"
+                                                FontSize=12}"
                     Foreground="{StaticResource TextSecondaryAccentColor}" />
                 <TextBlock
                     VerticalAlignment="Center"

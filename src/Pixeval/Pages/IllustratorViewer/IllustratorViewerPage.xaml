@@ -85,7 +85,7 @@
                             <TextBlock
                                 x:Name="Blurb"
                                 Grid.Row="2"
-                                FontSize="16"
+                                FontSize="{StaticResource SmallIconFontSize}"
                                 IsTextSelectionEnabled="True"
                                 MaxLines="3"
                                 Text="{x:Bind _viewModel.Comment}"

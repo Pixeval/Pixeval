@@ -40,7 +40,7 @@
                     Width="250"
                     VerticalAlignment="Center"
                     QueryIcon="{fluent:SymbolIcon Symbol=Filter,
-                                                  Size=Small}"
+                                                  FontSize={StaticResource SmallIconFontSize}}"
                     QuerySubmitted="FilterAutoSuggestBox_QuerySubmitted" />
             </StackPanel>
             <CommandBar controls1:DockPanel.Dock="Right" DefaultLabelPosition="Right">

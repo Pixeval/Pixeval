@@ -44,7 +44,7 @@
                 VerticalAlignment="Center"
                 ItemsSource="{x:Bind _viewModel.FilteredTasks}"
                 QueryIcon="{fluent:SymbolIcon Symbol=Search,
-                                              Size=Small}"
+                                              FontSize={StaticResource SmallIconFontSize}}"
                 QuerySubmitted="FilterAutoSuggestBox_OnQuerySubmitted"
                 SuggestionChosen="FilterAutoSuggestBox_OnSuggestionChosen"
                 TextChanged="FilterAutoSuggestBox_OnTextChanged">
