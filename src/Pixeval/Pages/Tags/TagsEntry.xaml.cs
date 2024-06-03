@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Frozen;
+using System.Collections.Generic;
 using System.IO;
 using Windows.Storage;
 using Windows.System;
@@ -24,7 +25,7 @@ public sealed partial class TagsEntry
 
     public TagsEntry() => InitializeComponent();
 
-    private void TagButton_OnClicked(object sender, RoutedEventArgs e) => TagClick?.Invoke(this, sender.To<Button>().Content.To<string>());
+    private void TagButton_OnClicked(object sender, ItemClickEventArgs e) => TagClick?.Invoke(this, e.ClickedItem.To<string>());
 
     private void GoToPageItem_OnClicked(object sender, RoutedEventArgs e)
     {

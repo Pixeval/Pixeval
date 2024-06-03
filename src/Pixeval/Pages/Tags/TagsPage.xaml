@@ -20,8 +20,8 @@
             <CommandBar DefaultLabelPosition="Collapsed" OverflowButtonVisibility="Collapsed">
                 <AppBarButton
                     Width="40"
-                    Icon="{fluent:SymbolIcon Symbol=MoreHorizontal}"
-                    Click="ChangeWorkingPath_OnClicked" />
+                    Click="ChangeWorkingPath_OnClicked"
+                    Icon="{fluent:SymbolIcon Symbol=MoreHorizontal}" />
             </CommandBar>
             <TextBlock VerticalAlignment="Center" Text="{x:Bind _viewModel.WorkingDirectory, Mode=OneWay}" />
         </StackPanel>

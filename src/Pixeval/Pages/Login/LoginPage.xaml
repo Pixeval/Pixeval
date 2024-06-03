@@ -52,7 +52,7 @@
                     Visibility="{x:Bind _viewModel.ProcessingRingVisible, Mode=OneWay}" />
                 <TextBlock
                     HorizontalAlignment="Center"
-                    FontSize="10"
+                    Style="{StaticResource CaptionTextBlockStyle}"
                     Text="{x:Bind util:LocalizedResourceAttributeHelper.GetLocalizedResourceContent(_viewModel.LoginPhase), Mode=OneWay}" />
             </StackPanel>
             <controls2:DockPanel Grid.Column="1" LastChildFill="False">
@@ -88,13 +88,13 @@
                                 <HyperlinkButton
                                     x:Uid="/LoginPage/BrowserButton"
                                     controls2:DockPanel.Dock="Top"
-                                    Tag="{x:Bind local:LoginPage.Browser}"
-                                    Click="SwitchPresenterButton_OnClicked" />
+                                    Click="SwitchPresenterButton_OnClicked"
+                                    Tag="{x:Bind local:LoginPage.Browser}" />
                                 <HyperlinkButton
                                     x:Uid="/LoginPage/WebViewButton"
                                     controls2:DockPanel.Dock="Top"
-                                    Tag="{x:Bind local:LoginPage.WebView}"
-                                    Click="SwitchPresenterButton_OnClicked" />
+                                    Click="SwitchPresenterButton_OnClicked"
+                                    Tag="{x:Bind local:LoginPage.WebView}" />
                             </controls2:DockPanel>
                         </controls2:Case>
                         <controls2:Case Value="{x:Bind local:LoginPage.Browser}">
@@ -124,13 +124,13 @@
                                 <HyperlinkButton
                                     x:Uid="/LoginPage/RefreshTokenButton"
                                     controls2:DockPanel.Dock="Top"
-                                    Tag="{x:Bind local:LoginPage.RefreshToken}"
-                                    Click="SwitchPresenterButton_OnClicked" />
+                                    Click="SwitchPresenterButton_OnClicked"
+                                    Tag="{x:Bind local:LoginPage.RefreshToken}" />
                                 <HyperlinkButton
                                     x:Uid="/LoginPage/WebViewButton"
                                     controls2:DockPanel.Dock="Top"
-                                    Tag="{x:Bind local:LoginPage.WebView}"
-                                    Click="SwitchPresenterButton_OnClicked" />
+                                    Click="SwitchPresenterButton_OnClicked"
+                                    Tag="{x:Bind local:LoginPage.WebView}" />
                             </controls2:DockPanel>
                         </controls2:Case>
                         <controls2:Case Value="{x:Bind local:LoginPage.WebView}">
@@ -178,13 +178,13 @@
                                 <HyperlinkButton
                                     x:Uid="/LoginPage/RefreshTokenButton"
                                     controls2:DockPanel.Dock="Top"
-                                    Tag="{x:Bind local:LoginPage.RefreshToken}"
-                                    Click="SwitchPresenterButton_OnClicked" />
+                                    Click="SwitchPresenterButton_OnClicked"
+                                    Tag="{x:Bind local:LoginPage.RefreshToken}" />
                                 <HyperlinkButton
                                     x:Uid="/LoginPage/BrowserButton"
                                     controls2:DockPanel.Dock="Top"
-                                    Tag="{x:Bind local:LoginPage.Browser}"
-                                    Click="SwitchPresenterButton_OnClicked" />
+                                    Click="SwitchPresenterButton_OnClicked"
+                                    Tag="{x:Bind local:LoginPage.Browser}" />
                             </controls2:DockPanel>
                         </controls2:Case>
                     </controls2:SwitchPresenter>

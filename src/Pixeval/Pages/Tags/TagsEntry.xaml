@@ -7,6 +7,7 @@
     xmlns:converters="using:Pixeval.Controls.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:fluent="using:FluentIcons.WinUI"
+    xmlns:labs="using:CommunityToolkit.Labs.WinUI"
     xmlns:local="using:Pixeval.Pages.Tags"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     ColumnSpacing="20"
@@ -34,18 +35,12 @@
             TextTrimming="CharacterEllipsis"
             TextWrapping="NoWrap" />
         <!--  ItemsRepeater+WrapLayout，回收后的控件会出现重叠bug，不知道怎么解决  -->
-        <ItemsControl MinHeight="10" ItemsSource="{x:Bind ViewModel.Tags, Mode=OneWay}">
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <controls:WrapPanel HorizontalSpacing="5" VerticalSpacing="5" />
-                </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-            <ItemsControl.ItemTemplate>
-                <DataTemplate x:DataType="x:String">
-                    <Button Click="TagButton_OnClicked" Content="{x:Bind}" />
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
+        <labs:TokenView
+            MinHeight="10"
+            IsItemClickEnabled="True"
+            ItemClick="TagButton_OnClicked"
+            ItemsSource="{x:Bind ViewModel.Tags, Mode=OneWay}"
+            SelectionMode="None" />
     </StackPanel>
     <CommandBar
         Grid.Column="2"
