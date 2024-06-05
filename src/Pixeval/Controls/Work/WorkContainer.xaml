@@ -40,7 +40,7 @@
                     Width="250"
                     VerticalAlignment="Center"
                     QueryIcon="{fluent:SymbolIcon Symbol=Filter,
-                                                  Size=Small}"
+                                                  FontSize={StaticResource SmallIconFontSize}}"
                     QuerySubmitted="FilterAutoSuggestBox_QuerySubmitted" />
             </StackPanel>
             <CommandBar controls1:DockPanel.Dock="Right" DefaultLabelPosition="Right">
@@ -57,28 +57,28 @@
                     Icon="{fluent:SymbolIcon Symbol=SelectAllOff}"
                     IsEnabled="{x:Bind WorkView.ViewModel.IsAnyEntrySelected, Mode=OneWay}"
                     Label="{x:Bind WorkView.ViewModel.SelectionLabel, Mode=OneWay}"
-                    Tapped="CancelSelectionButton_OnTapped" />
+                    Click="CancelSelectionButton_OnClicked" />
                 <AppBarButton
                     x:Uid="/WorkContainer/SelectAllButton"
                     Icon="{fluent:SymbolIcon Symbol=SelectAllOn}"
-                    Tapped="SelectAllToggleButton_OnTapped" />
+                    Click="SelectAllToggleButton_OnClicked" />
                 <AppBarSeparator />
                 <AppBarButton
                     x:Name="AddAllToBookmarkButton"
                     x:Uid="/WorkContainer/AddAllToBookmarkButton"
                     Icon="{fluent:SymbolIcon Symbol=Bookmark}"
                     IsEnabled="{x:Bind WorkView.ViewModel.IsAnyEntrySelected, Mode=OneWay}"
-                    Tapped="AddAllToBookmarkButton_OnTapped" />
+                    Click="AddAllToBookmarkButton_OnClicked" />
                 <AppBarButton
                     x:Uid="/WorkContainer/SaveAllButton"
                     Icon="{fluent:SymbolIcon Symbol=Save}"
                     IsEnabled="{x:Bind WorkView.ViewModel.IsAnyEntrySelected, Mode=OneWay}"
-                    Tapped="SaveAllButton_OnTapped" />
+                    Click="SaveAllButton_OnClicked" />
                 <AppBarButton
                     x:Uid="/WorkContainer/OpenAllInBrowserButton"
                     Icon="{fluent:SymbolIcon Symbol=GlobeArrowUp}"
                     IsEnabled="{x:Bind WorkView.ViewModel.IsAnyEntrySelected, Mode=OneWay}"
-                    Tapped="OpenAllInBrowserButton_OnTapped" />
+                    Click="OpenAllInBrowserButton_OnClicked" />
             </CommandBar>
         </controls1:DockPanel>
         <controls:WorkView

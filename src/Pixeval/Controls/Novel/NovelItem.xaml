@@ -66,7 +66,7 @@
             x:Name="TitleTextBlock"
             controls:DockPanel.Dock="Top"
             MaxLines="3"
-            Style="{StaticResource ContentStrongTextBlockStyle}"
+            Style="{StaticResource CaptionStrongTextBlockStyle}"
             Text="{x:Bind ViewModel.Title, Mode=OneWay}"
             TextTrimming="CharacterEllipsis"
             TextWrapping="WrapWholeWords" />
@@ -75,7 +75,7 @@
                 controls:DockPanel.Dock="Right"
                 Foreground="DarkGray"
                 MaxLines="1"
-                Style="{StaticResource ContentTextBlockStyle}"
+                Style="{StaticResource BodyTextBlockStyle}"
                 Text="{x:Bind ViewModel.PublishDate, Converter={StaticResource CultureDateConverter}, Mode=OneWay}"
                 TextTrimming="CharacterEllipsis"
                 TextWrapping="WrapWholeWords" />
@@ -83,7 +83,7 @@
                 x:Name="AuthorTextBlock"
                 Foreground="DarkGray"
                 MaxLines="1"
-                Style="{StaticResource ContentTextBlockStyle}"
+                Style="{StaticResource BodyTextBlockStyle}"
                 Text="{x:Bind ViewModel.User.Name, Mode=OneWay}"
                 TextTrimming="CharacterEllipsis"
                 TextWrapping="WrapWholeWords" />
@@ -133,7 +133,7 @@
                         Padding="2"
                         Background="#7F7F7F7F"
                         CornerRadius="{StaticResource ControlCornerRadius}">
-                        <TextBlock FontSize="{StaticResource PixevalSubscriptFontSize}" Text="{x:Bind Name}" />
+                        <TextBlock Style="{StaticResource CaptionTextBlockStyle}" Text="{x:Bind Name}" />
                     </Border>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
@@ -182,8 +182,8 @@
                     HorizontalAlignment="Left"
                     DefaultLabelPosition="Collapsed"
                     OverflowButtonVisibility="Collapsed">
-                    <AppBarButton Command="{x:Bind OpenNovelCommand}" Tapped="OpenNovel_OnTapped" />
-                    <AppBarButton Command="{x:Bind ViewModel.AddToBookmarkCommand, Mode=OneWay}" Tapped="AddToBookmark_OnTapped" />
+                    <AppBarButton Click="OpenNovel_OnClicked" Command="{x:Bind OpenNovelCommand}" />
+                    <AppBarButton Click="AddToBookmark_OnClicked" Command="{x:Bind ViewModel.AddToBookmarkCommand, Mode=OneWay}" />
                     <AppBarButton Command="{x:Bind ViewModel.SaveCommand, Mode=OneWay}" CommandParameter="{x:Bind HWnd}" />
                     <AppBarButton Command="{x:Bind ViewModel.OpenInWebBrowserCommand, Mode=OneWay}" />
                 </CommandBar>
@@ -196,7 +196,7 @@
                     x:Name="PopupTitleTextBlock"
                     controls:DockPanel.Dock="Top"
                     MaxLines="1"
-                    Style="{StaticResource ContentStrongTextBlockStyle}"
+                    Style="{StaticResource CaptionStrongTextBlockStyle}"
                     Text="{x:Bind ViewModel.Title, Mode=OneWay}"
                     TextTrimming="CharacterEllipsis"
                     TextWrapping="WrapWholeWords" />
@@ -205,7 +205,7 @@
                     controls:DockPanel.Dock="Top"
                     Foreground="DarkGray"
                     MaxLines="1"
-                    Style="{StaticResource ContentTextBlockStyle}"
+                    Style="{StaticResource BodyTextBlockStyle}"
                     Text="{x:Bind ViewModel.User.Name, Mode=OneWay}"
                     TextTrimming="CharacterEllipsis"
                     TextWrapping="WrapWholeWords" />
@@ -225,9 +225,9 @@
                                     <Button
                                         Padding="2"
                                         Background="#7F7F7F7F"
-                                        CornerRadius="{StaticResource ControlCornerRadius}"
-                                        Tapped="TagButton_OnTapped">
-                                        <TextBlock FontSize="{StaticResource PixevalSubscriptFontSize}" Text="{x:Bind Name}" />
+                                        Click="TagButton_OnClicked"
+                                        CornerRadius="{StaticResource ControlCornerRadius}">
+                                        <TextBlock Style="{StaticResource CaptionTextBlockStyle}" Text="{x:Bind Name}" />
                                     </Button>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>

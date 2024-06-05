@@ -30,7 +30,7 @@
         <TextBlock
             x:Uid="/EntryView/ResultIsEmptyTextBlock"
             HorizontalAlignment="Center"
-            FontSize="{StaticResource PixevalTitleFontSize}" />
+            Style="{StaticResource TitleTextBlockStyle}" />
     </StackPanel>
     <local:SkeletonView x:Name="SkeletonView" Grid.Row="0" />
     <ContentPresenter Grid.Row="0" Content="{x:Bind Content, Mode=OneWay}" />

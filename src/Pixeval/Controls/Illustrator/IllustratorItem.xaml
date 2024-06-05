@@ -48,12 +48,12 @@
                 <ContentControl
                     VerticalAlignment="Center"
                     Content="{fluent:SymbolIcon Symbol=Guest,
-                                                FontSize=11}"
+                                                FontSize=12}"
                     Foreground="{StaticResource TextSecondaryAccentColor}" />
                 <TextBlock
                     VerticalAlignment="Center"
                     Foreground="{StaticResource TextSecondaryAccentColor}"
-                    Style="{StaticResource SubscriptTextBlockStyle}"
+                    Style="{StaticResource CaptionStrongTextBlockStyle}"
                     Text="{x:Bind ViewModel.UserId, Mode=OneWay}" />
                 <local:PixevalBadge
                     Mode="Following"

@@ -25,7 +25,7 @@
                             Padding="0"
                             controls:DockPanel.Dock="Right"
                             Content="{fluent:SymbolIcon Symbol=ArrowTurnDownLeft,
-                                                        Size=Small}"
+                                                        FontSize={StaticResource SmallIconFontSize}}"
                             Visibility="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=SubmitEnable, Mode=OneWay}" />
                         <ToggleButton
                             x:Uid="/TokenInputTextBox/IsRegularExpressionCheckBox"
@@ -34,7 +34,7 @@
                             Padding="0"
                             controls:DockPanel.Dock="Right"
                             Content="{fluent:SymbolIcon Symbol=Code,
-                                                        Size=Small}"
+                                                        FontSize={StaticResource SmallIconFontSize}}"
                             IsChecked="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Token.IsRegularExpression, Mode=TwoWay}" />
                         <ToggleButton
                             x:Uid="/TokenInputTextBox/CaseSensitiveCheckBox"
@@ -43,7 +43,7 @@
                             Padding="0"
                             controls:DockPanel.Dock="Right"
                             Content="{fluent:SymbolIcon Symbol=TextChangeCase,
-                                                        Size=Small}"
+                                                        FontSize={StaticResource SmallIconFontSize}}"
                             IsChecked="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Token.CaseSensitive, Mode=TwoWay}" />
                         <!--  ReSharper disable once UnusedMember.Local  -->
                         <TextBox

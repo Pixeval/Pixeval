@@ -87,7 +87,7 @@
                         <HyperlinkButton
                             Padding="0"
                             Content="{x:Bind appManagement:AppInfo.AppVersion.CurrentVersion}"
-                            Tapped="ReleaseNotesHyperlink_OnTapped" />
+                            Click="ReleaseNotesHyperlink_OnClicked" />
                     </controls:SettingsExpander.Header>
                     <controls:SettingsExpander.Description>
                         <StackPanel Spacing="3">
@@ -111,7 +111,7 @@
                         <Button
                             x:Uid="/SettingsPage/CheckForUpdatesButton"
                             IsEnabled="{x:Bind ViewModel.CheckingUpdate, Converter={StaticResource BoolNegationConverter}, Mode=OneWay}"
-                            Tapped="CheckForUpdateButton_OnTapped" />
+                            Click="CheckForUpdateButton_OnClicked" />
                     </StackPanel>
                     <controls:SettingsExpander.Items>
                         <controls:SettingsCard
@@ -120,20 +120,20 @@
                             HeaderIcon="{fluent:SymbolIcon Symbol=FolderLightning}"
                             IsClickEnabled="True"
                             Tag="Temp"
-                            Tapped="OpenFolder_OnTapped" />
+                            Click="OpenFolder_OnClicked" />
                         <controls:SettingsCard
                             x:Uid="/SettingsPage/MsStoreCheckForUpdatesEntry"
                             Description="ms-windows-store://pdp/?ProductId=9P1RZL9Z8454"
                             HeaderIcon="{fluent:SymbolIcon Symbol=StoreMicrosoft}"
                             IsClickEnabled="True"
                             Tag="ms-windows-store://pdp/?ProductId=9P1RZL9Z8454"
-                            Tapped="OpenLinkViaTag_OnTapped" />
+                            Click="OpenLinkViaTag_OnClicked" />
                         <controls:SettingsCard
                             x:Uid="/SettingsPage/GitHubCheckForUpdatesEntry"
                             Description="https://github.com/Pixeval/Pixeval/releases"
                             IsClickEnabled="True"
                             Tag="https://github.com/Pixeval/Pixeval/releases"
-                            Tapped="OpenLinkViaTag_OnTapped">
+                            Click="OpenLinkViaTag_OnClicked">
                             <controls:SettingsCard.HeaderIcon>
                                 <PathIcon Data="{x:Bind pixeval:SvgResources.GitHub}" />
                             </controls:SettingsCard.HeaderIcon>
@@ -151,7 +151,7 @@
                         <HyperlinkButton
                             x:Uid="/SettingsPage/ReleaseNotesHyperlinkButton"
                             Tag="Newest"
-                            Tapped="ReleaseNotesHyperlink_OnTapped"
+                            Click="ReleaseNotesHyperlink_OnClicked"
                             Visibility="{x:Bind ViewModel.NewestVersion, Converter={StaticResource NullableToVisibilityConverter}, Mode=OneWay}" />
                     </InfoBar.ActionButton>
                 </InfoBar>
@@ -170,7 +170,7 @@
                                 <AppBarButton
                                     x:Uid="/SettingsPage/GitHubBugReportEntry"
                                     Tag="https://github.com/Pixeval/Pixeval/issues/new/choose"
-                                    Tapped="OpenLinkViaTag_OnTapped">
+                                    Click="OpenLinkViaTag_OnClicked">
                                     <AppBarButton.Icon>
                                         <PathIcon Data="{x:Bind pixeval:SvgResources.GitHub}" />
                                     </AppBarButton.Icon>
@@ -179,11 +179,11 @@
                                     x:Uid="/SettingsPage/EMailBugReportEntry"
                                     Icon="{fluent:SymbolIcon Symbol=Mail}"
                                     Tag="mailto:decem0730@hotmail.com"
-                                    Tapped="OpenLinkViaTag_OnTapped" />
+                                    Click="OpenLinkViaTag_OnClicked" />
                                 <AppBarButton
                                     x:Uid="/SettingsPage/QQBugReportEntry"
                                     Tag="https://jq.qq.com/?_wv=1027&amp;k=trDeCrog"
-                                    Tapped="OpenLinkViaTag_OnTapped">
+                                    Click="OpenLinkViaTag_OnClicked">
                                     <AppBarButton.Icon>
                                         <PathIcon Data="{x:Bind pixeval:SvgResources.QQ}" />
                                     </AppBarButton.Icon>
@@ -196,28 +196,28 @@
                             HeaderIcon="{fluent:SymbolIcon Symbol=FolderList}"
                             IsClickEnabled="True"
                             Tag="Log"
-                            Tapped="OpenFolder_OnTapped" />
+                            Click="OpenFolder_OnClicked" />
                         <controls:SettingsCard
                             x:Uid="/SettingsPage/OpenTempEntry"
                             ActionIcon="{fluent:SymbolIcon Symbol=Open}"
                             HeaderIcon="{fluent:SymbolIcon Symbol=FolderLightning}"
                             IsClickEnabled="True"
                             Tag="Temp"
-                            Tapped="OpenFolder_OnTapped" />
+                            Click="OpenFolder_OnClicked" />
                         <controls:SettingsCard
                             x:Uid="/SettingsPage/OpenLocalEntry"
                             ActionIcon="{fluent:SymbolIcon Symbol=Open}"
                             HeaderIcon="{fluent:SymbolIcon Symbol=FolderBriefcase}"
                             IsClickEnabled="True"
                             Tag="Local"
-                            Tapped="OpenFolder_OnTapped" />
+                            Click="OpenFolder_OnClicked" />
                         <controls:SettingsCard
                             x:Uid="/SettingsPage/OpenRoamingEntry"
                             ActionIcon="{fluent:SymbolIcon Symbol=Open}"
                             HeaderIcon="{fluent:SymbolIcon Symbol=FolderGlobe}"
                             IsClickEnabled="True"
                             Tag="Roaming"
-                            Tapped="OpenFolder_OnTapped" />
+                            Click="OpenFolder_OnClicked" />
                     </controls:SettingsExpander.Items>
                 </controls:SettingsExpander>
 
@@ -227,7 +227,7 @@
                     HeaderIcon="{fluent:SymbolIcon Symbol=Star}"
                     IsClickEnabled="True"
                     Tag="ms-windows-store://pdp/?ProductId=9P1RZL9Z8454"
-                    Tapped="OpenLinkViaTag_OnTapped" />
+                    Click="OpenLinkViaTag_OnClicked" />
 
                 <TextBlock
                     x:Uid="/SettingsPage/SessionSettingsGroup"
@@ -239,7 +239,7 @@
                     HeaderIcon="{fluent:SymbolIcon Symbol=SignOut}"
                     IsClickEnabled="True"
                     Tag="{x:Bind misc:SettingsEntryAttribute.SignOut}"
-                    Tapped="PerformSignOutButton_OnTapped" />
+                    Click="PerformSignOutButton_OnClicked" />
 
                 <controls:SettingsCard
                     x:Uid="/SettingsPage/ResetDefaultSettingsEntry"
@@ -258,22 +258,22 @@
                             x:Uid="/SettingsPage/DeleteFileCacheEntry"
                             HeaderIcon="{fluent:SymbolIcon Symbol=HistoryDismiss}"
                             IsClickEnabled="True"
-                            Tapped="DeleteFileCacheEntryButton_OnTapped" />
+                            Click="DeleteFileCacheEntryButton_OnClicked" />
                         <controls:SettingsCard
                             x:Uid="/SettingsPage/DeleteSearchHistoriesEntry"
                             HeaderIcon="{fluent:SymbolIcon Symbol=HistoryDismiss}"
                             IsClickEnabled="True"
-                            Tapped="DeleteSearchHistoriesButton_OnTapped" />
+                            Click="DeleteSearchHistoriesButton_OnClicked" />
                         <controls:SettingsCard
                             x:Uid="/SettingsPage/DeleteBrowseHistoriesEntry"
                             HeaderIcon="{fluent:SymbolIcon Symbol=HistoryDismiss}"
                             IsClickEnabled="True"
-                            Tapped="DeleteBrowseHistoriesButton_OnTapped" />
+                            Click="DeleteBrowseHistoriesButton_OnClicked" />
                         <controls:SettingsCard
                             x:Uid="/SettingsPage/DeleteDownloadHistoriesEntry"
                             HeaderIcon="{fluent:SymbolIcon Symbol=HistoryDismiss}"
                             IsClickEnabled="True"
-                            Tapped="DeleteDownloadHistoriesButton_OnTapped" />
+                            Click="DeleteDownloadHistoriesButton_OnClicked" />
                     </controls:SettingsExpander.Items>
                 </controls:SettingsExpander>
                 <!--  设置项插入处  -->

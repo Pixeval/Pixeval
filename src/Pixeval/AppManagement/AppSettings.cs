@@ -128,7 +128,7 @@ public partial record AppSettings() : IWindowSettings
     [SettingsEntry(Symbol.Key, nameof(ReverseSearchApiKeyEntryHeader), nameof(ReverseSearchApiKeyEntryDescriptionHyperlinkButtonContent))]
     public string ReverseSearchApiKey { get; set; } = "";
 
-    [SettingsEntry(Symbol.Filter, nameof(ReverseSearchResultSimilarityThresholdEntryHeader), nameof(ReverseSearchResultSimilarityThresholdEntryDescription))]
+    [SettingsEntry(Symbol.TargetArrow, nameof(ReverseSearchResultSimilarityThresholdEntryHeader), nameof(ReverseSearchResultSimilarityThresholdEntryDescription))]
     public int ReverseSearchResultSimilarityThreshold { get; set; } = 80;
 
     [SettingsEntry(Symbol.History, nameof(MaximumSuggestionBoxSearchHistoryEntryHeader), nameof(MaximumSuggestionBoxSearchHistoryEntryDescription))]
@@ -152,6 +152,7 @@ public partial record AppSettings() : IWindowSettings
     [SettingsEntry(Symbol.Router, nameof(ProxyTypeEntryHeader), nameof(ProxyTypeEntryDescription))]
     public ProxyType ProxyType { get; set; }
 
+    [SettingsEntry(Symbol.Server, nameof(ProxyTextBoxEntryHeader), nameof(ProxyTextBoxEntryDescription))]
     public string Proxy { get; set; } = "";
 
     /// <summary>
@@ -174,6 +175,15 @@ public partial record AppSettings() : IWindowSettings
     [AttributeIgnore(typeof(ResetAttribute))]
     public DateTimeOffset LastCheckedUpdate { get; set; } = DateTimeOffset.MinValue;
 
+    [SettingsEntry(Symbol.Box, nameof(PixivNameResolverHeaderText), nameof(PixivNameResolverDescriptionText))]
+    public string[] PixivAppApiNameResolver { get; set; } =
+    [
+        "210.140.131.199",
+        "210.140.131.219",
+        "210.140.131.223",
+        "210.140.131.226"
+    ];
+
     public string[] PixivWebApiNameResolver { get; set; } =
     [
         "210.140.131.219",
@@ -190,14 +200,6 @@ public partial record AppSettings() : IWindowSettings
 
     public string[] PixivOAuthNameResolver { get; set; } =
     [
-        "210.140.131.219",
-        "210.140.131.223",
-        "210.140.131.226"
-    ];
-
-    public string[] PixivAppApiNameResolver { get; set; } =
-    [
-        "210.140.131.199",
         "210.140.131.219",
         "210.140.131.223",
         "210.140.131.226"

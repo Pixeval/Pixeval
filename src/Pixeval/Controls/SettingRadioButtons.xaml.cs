@@ -42,7 +42,7 @@ public sealed partial class SettingRadioButtons : UserControl
 
     public SettingRadioButtons() => InitializeComponent();
 
-    private void RadioButton_OnTapped(object sender, TappedRoutedEventArgs e)
+    private void RadioButton_OnClicked(object sender, RoutedEventArgs e)
     {
         var select = sender.To<RadioButton>().GetTag<StringRepresentableItem>();
         if (!Equals(SelectedItem, select.Item))

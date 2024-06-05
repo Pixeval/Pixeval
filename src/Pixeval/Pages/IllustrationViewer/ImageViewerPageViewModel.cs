@@ -405,7 +405,7 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
 
     public (ulong, GetImageStream) DownloadParameter => (HWnd, GetImageStreamAsync);
 
-    public XamlUICommand PlayGifCommand { get; } = "".GetCommand(Symbol.Stop);
+    public XamlUICommand PlayGifCommand { get; } = "".GetCommand(Symbol.Pause);
 
     public XamlUICommand ZoomOutCommand { get; } = EntryViewerPageResources.ZoomOut.GetCommand(
         Symbol.ZoomOut, VirtualKey.Subtract);

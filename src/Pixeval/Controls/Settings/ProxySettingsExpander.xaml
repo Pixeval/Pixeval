@@ -21,7 +21,14 @@
         SelectionChanged="EnumComboBox_OnSelectionChanged"
         Style="{StaticResource SettingsEnumComboBoxStyle}" />
     <controls:SettingsExpander.Items>
-        <controls:SettingsCard x:Uid="/SettingsPage/ProxyTextBoxEntry" HorizontalContentAlignment="Stretch">
+        <controls:SettingsCard
+            HorizontalContentAlignment="Stretch"
+            Description="{x:Bind Entry.DescriptionControl2}"
+            Header="{x:Bind Entry.Header2}"
+            Tag="{x:Bind Entry.Attribute2}">
+            <controls:SettingsCard.HeaderIcon>
+                <fluent:SymbolIcon Symbol="{x:Bind Entry.HeaderIcon2}" />
+            </controls:SettingsCard.HeaderIcon>
             <TextBox
                 MinWidth="200"
                 LostFocus="TextBox_OnLostFocus"

@@ -19,15 +19,67 @@
 #endregion
 
 using System;
+using System.Reflection;
+using Windows.System;
+using Microsoft.UI.Xaml.Controls;
 using Pixeval.AppManagement;
+using Pixeval.Attributes;
 using Pixeval.Controls.Settings;
 using Pixeval.Options;
+using Symbol = FluentIcons.Common.Symbol;
 
 namespace Pixeval.Settings.Models;
 
-public class ProxyAppSettingsEntry(AppSettings appSettings)
-    : EnumAppSettingsEntry<ProxyType>(appSettings, t => t.ProxyType)
+public class ProxyAppSettingsEntry : EnumAppSettingsEntry<ProxyType>
 {
+    public ProxyAppSettingsEntry(AppSettings appSettings) : base(appSettings, t => t.ProxyType)
+    {
+        var member = typeof(AppSettings).GetProperty(nameof(AppSettings.Proxy));
+        Attribute2 = member?.GetCustomAttribute<SettingsEntryAttribute>();
+
+        if (Attribute2 is { } attribute)
+        {
+            Header2 = attribute.LocalizedResourceHeader;
+            Description2 = attribute.LocalizedResourceDescription;
+            HeaderIcon2 = attribute.Symbol;
+        }
+    }
+
+    #region Entry2
+
+    public Symbol HeaderIcon2 { get; set; }
+
+    public string Header2 { get; set; } = "";
+
+    public object DescriptionControl2
+    {
+        get
+        {
+            if (DescriptionUri2 is not null)
+            {
+                var b = new HyperlinkButton { Content = Description2 };
+                if (DescriptionUri2.Scheme is "http" or "https")
+                {
+                    b.NavigateUri = DescriptionUri2;
+                    return b;
+                }
+
+                var uri = DescriptionUri2;
+                b.Click += (_, _) => _ = Launcher.LaunchUriAsync(uri);
+                return b;
+            }
+            return Description2;
+        }
+    }
+
+    public string Description2 { get; set; } = "";
+
+    public Uri? DescriptionUri2 { get; set; }
+
+    public SettingsEntryAttribute? Attribute2 { get; }
+
+    #endregion
+
     public override ProxySettingsExpander Element => new() { Entry = this };
 
     public Action<string?>? ProxyChanged { get; set; }

@@ -20,7 +20,7 @@
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
             Content="{fluent:SymbolIcon Symbol=Emoji,
-                                        Size=Small}"
+                                        FontSize={StaticResource SmallIconFontSize}}"
             Style="{StaticResource PixevalRoundedButtonStyle}">
             <Button.Flyout>
                 <Flyout>
@@ -63,7 +63,7 @@
             Height="32"
             Padding="0"
             Content="{fluent:SymbolIcon Symbol=Send,
-                                        Size=Small}"
-            Tapped="SendButton_OnTapped" />
+                                        FontSize={StaticResource SmallIconFontSize}}"
+            Click="SendButton_OnClicked" />
     </Grid>
 </UserControl>

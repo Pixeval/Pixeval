@@ -25,10 +25,8 @@
         <!--  ReSharper disable once UnusedMember.Local  -->
         <TextBlock
             x:Name="BadgeTextBlock"
-            Margin="2"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
-            FontSize="7"
             Text="{x:Bind Text, Mode=OneWay}" />
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="CommonStates">

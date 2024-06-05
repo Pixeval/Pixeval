@@ -7,6 +7,7 @@
     xmlns:converters="using:Pixeval.Controls.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:fluent="using:FluentIcons.WinUI"
+    xmlns:labs="using:CommunityToolkit.Labs.WinUI"
     xmlns:local="using:Pixeval.Pages.Tags"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     ColumnSpacing="20"
@@ -29,26 +30,17 @@
         VerticalAlignment="Center"
         Spacing="5">
         <TextBlock
-            FontSize="{StaticResource PixevalBaseFontSize}"
+            Style="{StaticResource CaptionTextBlockStyle}"
             Text="{x:Bind ViewModel.Name, Mode=OneWay}"
             TextTrimming="CharacterEllipsis"
             TextWrapping="NoWrap" />
         <!--  ItemsRepeater+WrapLayout，回收后的控件会出现重叠bug，不知道怎么解决  -->
-        <ItemsControl MinHeight="10" ItemsSource="{x:Bind ViewModel.Tags, Mode=OneWay}">
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <controls:WrapPanel HorizontalSpacing="5" VerticalSpacing="5" />
-                </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-            <ItemsControl.ItemTemplate>
-                <DataTemplate x:DataType="x:String">
-                    <Button
-                        Content="{x:Bind}"
-                        FontSize="{StaticResource PixevalSubscriptFontSize}"
-                        Tapped="TagButton_OnTapped" />
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
+        <labs:TokenView
+            MinHeight="10"
+            IsItemClickEnabled="True"
+            ItemClick="TagButton_OnClicked"
+            ItemsSource="{x:Bind ViewModel.Tags, Mode=OneWay}"
+            SelectionMode="None" />
     </StackPanel>
     <CommandBar
         Grid.Column="2"
@@ -59,24 +51,24 @@
         <!--  Width="125" 是试出来刚好只显示一个按钮的宽度  -->
         <AppBarButton
             x:Uid="/TagsEntry/EditTagItem"
-            Icon="{fluent:SymbolIcon Symbol=Tag}"
-            Tapped="EditTagItem_OnTapped" />
+            Click="EditTagItem_OnClicked"
+            Icon="{fluent:SymbolIcon Symbol=Tag}" />
         <AppBarButton
             x:Uid="/TagsEntry/OpenItem"
-            Icon="{fluent:SymbolIcon Symbol=Open}"
-            Tapped="OpenItem_OnTapped" />
+            Click="OpenItem_OnClicked"
+            Icon="{fluent:SymbolIcon Symbol=Open}" />
         <AppBarButton
             x:Uid="/TagsEntry/GoToPageItem"
+            Click="GoToPageItem_OnClicked"
             Icon="{fluent:SymbolIcon Symbol=OpenFolder}"
-            IsEnabled="{x:Bind ViewModel.Illustration, Converter={StaticResource NullableToBoolConverter}, Mode=OneWay}"
-            Tapped="GoToPageItem_OnTapped" />
+            IsEnabled="{x:Bind ViewModel.Illustration, Converter={StaticResource NullableToBoolConverter}, Mode=OneWay}" />
         <AppBarButton
             x:Uid="/TagsEntry/DeleteItem"
-            Icon="{fluent:SymbolIcon Symbol=Delete}"
-            Tapped="DeleteItem_OnTapped" />
+            Click="DeleteItem_OnClicked"
+            Icon="{fluent:SymbolIcon Symbol=Delete}" />
         <AppBarButton
             x:Uid="/TagsEntry/OpenLocationItem"
-            Icon="{fluent:SymbolIcon Symbol=FolderArrowRight}"
-            Tapped="OpenLocationItem_OnTapped" />
+            Click="OpenLocationItem_OnClicked"
+            Icon="{fluent:SymbolIcon Symbol=FolderArrowRight}" />
     </CommandBar>
 </Grid>

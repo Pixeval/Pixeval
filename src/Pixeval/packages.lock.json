@@ -182,11 +182,11 @@
       },
       "FluentIcons.WinUI": {
         "type": "Direct",
-        "requested": "[1.1.240, )",
-        "resolved": "1.1.240",
-        "contentHash": "xF2YeBgqD58nDAGVlXvuZ/rObWEnKi+eyYloZKetb1dQAxVug2gFqzRqgAEeYBubmFC87H5JHN4JsW8XiRdEWQ==",
+        "requested": "[1.1.242, )",
+        "resolved": "1.1.242",
+        "contentHash": "AXRE5hClL0KeGcrffCHGRiL7ftsaDcCZLQIm7cyrBPw7RVbnLJuN6w21udwbK+yIEIUAstsDwhXK2nFwcMq4yQ==",
         "dependencies": {
-          "FluentIcons.Common": "[1.1.240]",
+          "FluentIcons.Common": "[1.1.242]",
           "Microsoft.Extensions.Hosting.Abstractions": "8.0.0",
           "Microsoft.Windows.SDK.BuildTools": "10.0.22621.1",
           "Microsoft.WindowsAppSDK": "1.2.221109.1"
@@ -368,8 +368,8 @@
       },
       "FluentIcons.Common": {
         "type": "Transitive",
-        "resolved": "1.1.240",
-        "contentHash": "CGit9S60sd9uC0lJQQEvj6y/jYncOC2QUoVcrsj48dfAoGmm6mswxT1tnYem/1Gwkb6XWCNXxF2UMncvVBJ2uQ=="
+        "resolved": "1.1.242",
+        "contentHash": "mAsDhfwdgxK+myqBbhnxfTtnknUX8nqQzyKTg9WNjsKVsDTaC0isrpG3MBAyhml3J54Zq3NQT1b0xjrx4vvbJw=="
       },
       "HtmlAgilityPack": {
         "type": "Transitive",
@@ -568,7 +568,7 @@
           "CommunityToolkit.WinUI.Controls.Primitives": "[8.1.240328-rc, )",
           "CommunityToolkit.WinUI.Extensions": "[8.1.240328-rc, )",
           "CommunityToolkit.WinUI.Triggers": "[8.0.240109, )",
-          "FluentIcons.WinUI": "[1.1.240, )",
+          "FluentIcons.WinUI": "[1.1.242, )",
           "Microsoft.Graphics.Win2D": "[1.2.0, )",
           "Microsoft.Windows.SDK.BuildTools": "[10.0.22621.3233, )",
           "Microsoft.WindowsAppSDK": "[1.5.240428000, )",

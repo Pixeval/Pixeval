@@ -60,7 +60,7 @@
                                 Command="{x:Bind _viewModel.ShowQrCodeCommand}"
                                 x:Uid="/ImageViewerPage/ShowQRCode"
                                 Icon="{ui:FontIcon Glyph=QRCodeED14}"
-                                Tapped="ShowQrCodeCommandOnExecuteRequested" />-->
+                                Click="ShowQrCodeCommandOnExecuteRequested" />-->
                     </CommandBarFlyout.SecondaryCommands>
                 </CommandBarFlyout>
             </controls:ZoomableImage.ContextFlyout>
@@ -76,7 +76,7 @@
                     Height="50"
                     IsIndeterminate="False"
                     Value="{x:Bind _viewModel.LoadingProgress, Mode=OneWay}" />
-                <TextBlock FontSize="{StaticResource PixevalSubscriptFontSize}" Text="{x:Bind _viewModel.LoadingText, Mode=OneWay}" />
+                <TextBlock Style="{StaticResource CaptionTextBlockStyle}" Text="{x:Bind _viewModel.LoadingText, Mode=OneWay}" />
             </StackPanel>
         </Grid>
     </Grid>

@@ -12,7 +12,7 @@
     <AutoSuggestBox
         x:Uid="/IPListInput/AddItemAutoSuggestBox"
         QueryIcon="{fluent:SymbolIcon Symbol=Add,
-                                      Size=Small}"
+                                      FontSize={StaticResource SmallIconFontSize}}"
         QuerySubmitted="AddItem"
         TextChanged="TextChanged" />
     <InfoBar x:Name="ErrorInfoBar" IsClosable="True" />

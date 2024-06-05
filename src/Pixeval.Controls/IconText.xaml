@@ -15,7 +15,7 @@
     <fluent:SymbolIcon
         Grid.Column="0"
         VerticalAlignment="Center"
-        FontSize="16"
+        FontSize="{StaticResource SmallIconFontSize}"
         Symbol="{x:Bind Symbol, Mode=OneWay}" />
     <TextBlock
         Grid.Column="1"

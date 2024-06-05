@@ -30,7 +30,7 @@
         <TextBlock
             x:Uid="/EntryView/ResultIsEmptyTextBlock"
             HorizontalAlignment="Center"
-            FontSize="{StaticResource PixevalTitleFontSize}" />
+            Style="{StaticResource TitleTextBlockStyle}" />
     </StackPanel>
     <local:SkeletonView x:Name="SkeletonView" Grid.Row="0" />
     <local:AdvancedItemsView
@@ -46,8 +46,8 @@
                 <ItemContainer>
                     <local:CommentBlock
                         Margin="{StaticResource CardControlPadding}"
-                        DeleteHyperlinkButtonTapped="CommentBlock_OnDeleteHyperlinkButtonTapped"
-                        RepliesHyperlinkButtonTapped="CommentBlock_OnRepliesHyperlinkButtonTapped"
+                        DeleteHyperlinkButtonClick="CommentBlock_OnDeleteHyperlinkButtonClick"
+                        RepliesHyperlinkButtonClick="CommentBlock_OnRepliesHyperlinkButtonClick"
                         ViewModel="{x:Bind}" />
                 </ItemContainer>
             </DataTemplate>

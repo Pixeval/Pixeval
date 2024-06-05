@@ -139,10 +139,11 @@ public partial class MakoClient
             .RemoveNovelBookmarkAsync(new RemoveNovelBookmarkRequest(id))
             .ConfigureAwait(false));
 
-    public Task<PixivRelatedUsersResponse> RelatedUserAsync(long id, TargetFilter filter = TargetFilter.ForAndroid)
-        => RunWithLoggerAsync(async t => await t
-            .RelatedUserAsync(filter, id)
-            .ConfigureAwait(false));
+    public Task<User[]> RelatedUserAsync(long id, TargetFilter filter = TargetFilter.ForAndroid)
+        => RunWithLoggerAsync(async t => (await t
+                .RelatedUserAsync(filter, id)
+                .ConfigureAwait(false))
+            .Users);
 
     public Task<HttpResponseMessage> PostFollowUserAsync(long id, PrivacyPolicy privacyPolicy)
         => RunWithLoggerAsync(async t => await t
@@ -154,19 +155,17 @@ public partial class MakoClient
             .RemoveFollowUserAsync(new RemoveFollowUserRequest(id))
             .ConfigureAwait(false));
 
-    public Task<IEnumerable<TrendingTag>> GetTrendingTagsAsync(TargetFilter targetFilter)
+    public Task<TrendingTag[]> GetTrendingTagsAsync(TargetFilter targetFilter)
         => RunWithLoggerAsync(async t => (await t
-            .GetTrendingTagsAsync(targetFilter)
-            .ConfigureAwait(false))
-            .TrendTags
-            .Select(tag => new TrendingTag(tag.TagStr, tag.TranslatedName, tag.Illust)));
+                .GetTrendingTagsAsync(targetFilter)
+                .ConfigureAwait(false))
+            .TrendTags);
 
-    public Task<IEnumerable<TrendingTag>> GetTrendingTagsForNovelAsync(TargetFilter targetFilter)
+    public Task<TrendingTag[]> GetTrendingTagsForNovelAsync(TargetFilter targetFilter)
         => RunWithLoggerAsync(async t => (await t
-            .GetTrendingTagsForNovelAsync(targetFilter)
-            .ConfigureAwait(false))
-            .TrendTags
-            .Select(tag => new TrendingTag(tag.TagStr, tag.TranslatedName, tag.Illust)));
+                .GetTrendingTagsForNovelAsync(targetFilter)
+                .ConfigureAwait(false))
+            .TrendTags);
 
     public Task<UgoiraMetadataResponse> GetUgoiraMetadataAsync(long id)
         => RunWithLoggerAsync(async t => await t

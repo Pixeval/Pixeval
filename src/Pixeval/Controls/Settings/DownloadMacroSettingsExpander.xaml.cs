@@ -113,7 +113,7 @@ public sealed partial class DownloadMacroSettingsExpander
         e.Handled = true;
     }
 
-    private void PathMacroTokenInputBox_OnTokenTapped(object sender, ItemClickEventArgs e)
+    private void PathMacroTokenInputBox_OnTokenClick(object sender, ItemClickEventArgs e)
     {
         UiHelper.ClipboardSetText(e.ClickedItem.To<StringRepresentableItem>().StringRepresentation);
         WindowFactory.GetWindowForElement(this).HWnd.SuccessGrowl(SettingsPageResources.MacroCopiedToClipboard);

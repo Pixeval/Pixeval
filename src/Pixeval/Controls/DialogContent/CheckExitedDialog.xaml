@@ -9,10 +9,10 @@
 
     <StackPanel Spacing="10">
         <TextBlock x:Uid="/CheckExitedContentDialog/MainTextBlock" TextWrapping="WrapWholeWords" />
-        <HyperlinkButton x:Uid="/CheckExitedContentDialog/ClearConfig" Tapped="ClearConfig_OnTapped" />
-        <HyperlinkButton x:Uid="/CheckExitedContentDialog/ClearContext" Tapped="ClearContext_OnTapped" />
-        <HyperlinkButton x:Uid="/CheckExitedContentDialog/OpenLocalFolder" Tapped="OpenLocalFolder_OnTapped" />
-        <HyperlinkButton x:Uid="/CheckExitedContentDialog/OpenRoamingFolder" Tapped="OpenRoamingFolder_OnTapped" />
-        <HyperlinkButton x:Uid="/CheckExitedContentDialog/OpenLogFolder" Tapped="OpenLogFolder_OnTapped" />
+        <HyperlinkButton x:Uid="/CheckExitedContentDialog/ClearConfig" Click="ClearConfig_OnClicked" />
+        <HyperlinkButton x:Uid="/CheckExitedContentDialog/ClearContext" Click="ClearContext_OnClicked" />
+        <HyperlinkButton x:Uid="/CheckExitedContentDialog/OpenLocalFolder" Click="OpenLocalFolder_OnClicked" />
+        <HyperlinkButton x:Uid="/CheckExitedContentDialog/OpenRoamingFolder" Click="OpenRoamingFolder_OnClicked" />
+        <HyperlinkButton x:Uid="/CheckExitedContentDialog/OpenLogFolder" Click="OpenLogFolder_OnClicked" />
     </StackPanel>
 </UserControl>

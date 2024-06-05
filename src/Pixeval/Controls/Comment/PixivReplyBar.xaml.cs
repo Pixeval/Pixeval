@@ -36,17 +36,17 @@ public sealed partial class PixivReplyBar
     public PixivReplyBar()
     {
         InitializeComponent();
-        StickerTapped += (_, _) => EmojiButton.Flyout.Hide();
+        StickerClick += (_, _) => EmojiButton.Flyout.Hide();
     }
 
-    public event EventHandler<SendButtonTappedEventArgs>? SendButtonTapped;
+    public event EventHandler<SendButtonClickEventArgs>? SendButtonClick;
 
-    public event EventHandler<StickerTappedEventArgs>? StickerTapped;
+    public event EventHandler<StickerClickEventArgs>? StickerClick;
 
     private void PixivReplyBar_OnLoaded(object sender, RoutedEventArgs e)
     {
         EmojiButtonFlyoutEmojiSectionNavigationViewItem.Tag = new NavigationViewTag(typeof(PixivReplyEmojiListPage), this);
-        EmojiButtonFlyoutStickersSectionNavigationViewItem.Tag = new NavigationViewTag(typeof(PixivReplyStickerListPage), (Guid.NewGuid(), StickerTapped) /* just to support the serialization, see https://docs.microsoft.com/en-us/windows/winui/api/microsoft.ui.xaml.controls.frame.navigate?view=winui-3.0#Microsoft_UI_Xaml_Controls_Frame_Navigate_Windows_UI_Xaml_Interop_TypeName_System_Object_Microsoft_UI_Xaml_Media_Animation_NavigationTransitionInfo_ */);
+        EmojiButtonFlyoutStickersSectionNavigationViewItem.Tag = new NavigationViewTag(typeof(PixivReplyStickerListPage), (Guid.NewGuid(), StickerClick) /* just to support the serialization, see https://docs.microsoft.com/en-us/windows/winui/api/microsoft.ui.xaml.controls.frame.navigate?view=winui-3.0#Microsoft_UI_Xaml_Controls_Frame_Navigate_Windows_UI_Xaml_Interop_TypeName_System_Object_Microsoft_UI_Xaml_Media_Animation_NavigationTransitionInfo_ */);
     }
 
     private void EmojiButtonFlyoutNavigationView_OnSelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
@@ -59,7 +59,7 @@ public sealed partial class PixivReplyBar
         });
     }
 
-    private void SendButton_OnTapped(object sender, TappedRoutedEventArgs e)
+    private void SendButton_OnClicked(object sender, RoutedEventArgs e)
     {
         ReplyContentRichEditBox.Document.GetText(TextGetOptions.UseObjectText, out var content);
         if (content.Length is 0 or > 140)
@@ -69,7 +69,7 @@ public sealed partial class PixivReplyBar
             return;
         }
 
-        SendButtonTapped?.Invoke(this, new SendButtonTappedEventArgs(e, content));
+        SendButtonClick?.Invoke(this, new SendButtonClickEventArgs(e, content));
         ReplyContentRichEditBox.ClearContent();
     }
 
@@ -80,19 +80,19 @@ public sealed partial class PixivReplyBar
     }
 }
 
-public class SendButtonTappedEventArgs(TappedRoutedEventArgs tappedEventArgs,
+public class SendButtonClickEventArgs(RoutedEventArgs tappedEventArgs,
         string replyContentRichEditBoxStringContent)
     : EventArgs
 {
-    public TappedRoutedEventArgs TappedEventArgs { get; } = tappedEventArgs;
+    public RoutedEventArgs ClickEventArgs { get; } = tappedEventArgs;
 
     public string ReplyContentRichEditBoxStringContent { get; } = replyContentRichEditBoxStringContent;
 }
 
-public class StickerTappedEventArgs(TappedRoutedEventArgs tappedEventArgs, PixivReplyStickerViewModel stickerViewModel)
+public class StickerClickEventArgs(RoutedEventArgs tappedEventArgs, PixivReplyStickerViewModel stickerViewModel)
     : EventArgs
 {
-    public TappedRoutedEventArgs TappedEventArgs { get; } = tappedEventArgs;
+    public RoutedEventArgs ClickEventArgs { get; } = tappedEventArgs;
 
     public PixivReplyStickerViewModel StickerViewModel { get; } = stickerViewModel;
 }

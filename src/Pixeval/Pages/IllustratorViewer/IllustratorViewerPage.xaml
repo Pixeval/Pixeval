@@ -85,7 +85,7 @@
                             <TextBlock
                                 x:Name="Blurb"
                                 Grid.Row="2"
-                                FontSize="16"
+                                FontSize="{StaticResource SmallIconFontSize}"
                                 IsTextSelectionEnabled="True"
                                 MaxLines="3"
                                 Text="{x:Bind _viewModel.Comment}"
@@ -115,7 +115,7 @@
                                 <StackPanel Padding="5,0" Spacing="2">
                                     <TextBlock
                                         MaxWidth="80"
-                                        Style="{StaticResource ContentStrongTextBlockStyle}"
+                                        Style="{StaticResource CaptionStrongTextBlockStyle}"
                                         Text="{x:Bind _viewModel.Name}"
                                         TextTrimming="CharacterEllipsis"
                                         TextWrapping="NoWrap" />

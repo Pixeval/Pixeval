@@ -14,7 +14,7 @@ public sealed partial class FontSettingsCard
 
     public FontSettingsCard() => InitializeComponent();
 
-    private async void OpenLinkViaTag_OnTapped(object sender, TappedRoutedEventArgs e)
+    private async void OpenLinkViaTag_OnClicked(object sender, RoutedEventArgs e)
     {
         _ = await Launcher.LaunchUriAsync(new Uri(sender.To<FrameworkElement>().GetTag<string>()));
     }

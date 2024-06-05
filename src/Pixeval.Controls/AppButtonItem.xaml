@@ -32,7 +32,7 @@
             Grid.Row="1"
             Grid.Column="0"
             VerticalAlignment="Center"
-            FontSize="16"
+            FontSize="{StaticResource SmallIconFontSize}"
             Foreground="{StaticResource TextSecondaryAccentColor}"
             Symbol="{x:Bind Symbol, Mode=OneWay}" />
         <TextBlock

@@ -88,7 +88,7 @@ public partial class WorkContainer : IScrollViewHost
 
     private void WorkContainer_OnLoaded(object sender, RoutedEventArgs e) => _ = WorkView.Focus(FocusState.Programmatic);
 
-    private void SelectAllToggleButton_OnTapped(object sender, TappedRoutedEventArgs e)
+    private void SelectAllToggleButton_OnClicked(object sender, RoutedEventArgs e)
     {
         WorkView.AdvancedItemsView.SelectAll();
     }
@@ -121,9 +121,9 @@ public partial class WorkContainer : IScrollViewHost
             _ = scrollView.ScrollTo(0, 0);
     }
 
-    private void AddAllToBookmarkButton_OnTapped(object sender, TappedRoutedEventArgs e) => AddToBookmarkTeachingTip.IsOpen = true;
+    private void AddAllToBookmarkButton_OnClicked(object sender, RoutedEventArgs e) => AddToBookmarkTeachingTip.IsOpen = true;
 
-    private async void SaveAllButton_OnTapped(object sender, TappedRoutedEventArgs e)
+    private async void SaveAllButton_OnClicked(object sender, RoutedEventArgs e)
     {
         if (ViewModel.SelectedEntries.Count >= 20 && await this.CreateOkCancelAsync(WorkContainerResources.SelectedTooManyItemsTitle,
                 WorkContainerResources.SelectedTooManyItemsForSaveContent) is not ContentDialogResult.Primary)
@@ -135,7 +135,7 @@ public partial class WorkContainer : IScrollViewHost
         HWnd.InfoGrowl(WorkContainerResources.DownloadItemsQueuedFormatted.Format(ViewModel.SelectedEntries.Count));
     }
 
-    private async void OpenAllInBrowserButton_OnTapped(object sender, TappedRoutedEventArgs e)
+    private async void OpenAllInBrowserButton_OnClicked(object sender, RoutedEventArgs e)
     {
         if (ViewModel.SelectedEntries.Count > 15 && await this.CreateOkCancelAsync(
                 WorkContainerResources.SelectedTooManyItemsTitle,
@@ -161,7 +161,7 @@ public partial class WorkContainer : IScrollViewHost
             HWnd.SuccessGrowl(WorkContainerResources.AddedAllToBookmarkContentFormatted.Format(c));
     }
 
-    private void CancelSelectionButton_OnTapped(object sender, TappedRoutedEventArgs e)
+    private void CancelSelectionButton_OnClicked(object sender, RoutedEventArgs e)
     {
         WorkView.AdvancedItemsView.DeselectAll();
     }

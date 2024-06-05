@@ -17,14 +17,14 @@
             Grid.Row="0"
             Margin="10"
             VerticalAlignment="Center"
-            SendButtonTapped="ReplyBar_OnSendButtonTapped"
-            StickerTapped="ReplyBar_OnStickerTapped" />
+            SendButtonClick="ReplyBar_OnSendButtonClick"
+            StickerClick="ReplyBar_OnStickerClick" />
         <controls:CommentList
             Grid.Row="1"
-            DeleteHyperlinkButtonTapped="CommentList_OnDeleteHyperlinkButtonTapped"
+            DeleteHyperlinkButtonClick="CommentList_OnDeleteHyperlinkButtonClick"
             HasNoItem="{x:Bind _viewModel.HasNoItem, Mode=OneWay}"
             ItemsSource="{x:Bind _viewModel.View}"
-            RepliesHyperlinkButtonTapped="CommentList_OnRepliesHyperlinkButtonTapped" />
+            RepliesHyperlinkButtonClick="CommentList_OnRepliesHyperlinkButtonClick" />
         <TeachingTip
             x:Name="CommentRepliesTeachingTip"
             x:Uid="/CommentsPage/CommentRepliesTeachingTip"

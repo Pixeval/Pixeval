@@ -32,18 +32,18 @@ public sealed partial class CommentList
 {
     public CommentList() => InitializeComponent();
 
-    public event Action<CommentBlockViewModel>? RepliesHyperlinkButtonTapped;
+    public event Action<CommentBlockViewModel>? RepliesHyperlinkButtonClick;
 
-    public event Action<CommentBlockViewModel>? DeleteHyperlinkButtonTapped;
+    public event Action<CommentBlockViewModel>? DeleteHyperlinkButtonClick;
 
-    private void CommentBlock_OnRepliesHyperlinkButtonTapped(CommentBlockViewModel viewModel)
+    private void CommentBlock_OnRepliesHyperlinkButtonClick(CommentBlockViewModel viewModel)
     {
-        RepliesHyperlinkButtonTapped?.Invoke(viewModel);
+        RepliesHyperlinkButtonClick?.Invoke(viewModel);
     }
 
-    private void CommentBlock_OnDeleteHyperlinkButtonTapped(CommentBlockViewModel viewModel)
+    private void CommentBlock_OnDeleteHyperlinkButtonClick(CommentBlockViewModel viewModel)
     {
-        DeleteHyperlinkButtonTapped?.Invoke(viewModel);
+        DeleteHyperlinkButtonClick?.Invoke(viewModel);
     }
 
     private void CommentList_OnUnloaded(object sender, RoutedEventArgs e)
