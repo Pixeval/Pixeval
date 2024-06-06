@@ -4,23 +4,15 @@
         <TargetFramework>net8.0-windows10.0.22621.0</TargetFramework>
         <TargetPlatformMinVersion>10.0.19041.0</TargetPlatformMinVersion>
         <RootNamespace>Pixeval</RootNamespace>
-        <Configurations>Debug;Release;Display</Configurations>
-        <Platforms>x86;x64;arm64</Platforms>
+        <Platforms>x86;x64;ARM64</Platforms>
         <RuntimeIdentifiers>win-x86;win-x64;win-arm64</RuntimeIdentifiers>
+        <PublishProfile>win-$(Platform).pubxml</PublishProfile>
         <ApplicationManifest>app.manifest</ApplicationManifest>
-        <UseWinUI>true</UseWinUI>
         <Nullable>enable</Nullable>
-        <EnableNETAnalyzers>false</EnableNETAnalyzers>
-        <EnablePreviewFeatures>true</EnablePreviewFeatures>
-        <ApplicationIcon></ApplicationIcon>
-        <StartupObject>Pixeval.Program</StartupObject>
-        <EnablePreviewMsixTooling>true</EnablePreviewMsixTooling>
-        <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+        <UseWinUI>true</UseWinUI>
+        <EnableMsixTooling>true</EnableMsixTooling>
         <EnableDefaultPriItems>false</EnableDefaultPriItems>
         <DefaultLanguage>zh-cn</DefaultLanguage>
-        <AppxPackageSigningEnabled Condition="'$(Configuration)' == 'Release'">true</AppxPackageSigningEnabled>
-        <AppxPackageSigningEnabled Condition="'$(Configuration)' == 'Debug'">false</AppxPackageSigningEnabled>
-        <RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
         <LangVersion>preview</LangVersion>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <WindowsSdkPackageVersion>10.0.22621.35-preview</WindowsSdkPackageVersion>
@@ -71,7 +63,7 @@
         <ProjectReference Include="..\Pixeval.SourceGen\Pixeval.SourceGen.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="False" />
         <Manifest Include="$(ApplicationManifest)" />
     </ItemGroup>
-
+    
     <!--Exposes PRI resources-->
     <Target Name="InjectAdditionalFiles" BeforeTargets="GenerateMSBuildEditorConfigFileShouldRun">
         <RemoveDir Directories="Generated" />
@@ -135,9 +127,13 @@
     <ItemGroup>
         <PRIResource Include="Assets\Svg.resjson" />
         <PRIResource Include="Strings\*\*.resjson" />
-        <None Remove="**\*.xaml" />
-        <Page Update="**\*.xaml">
-            <Generator>MSBuild:Compile</Generator>
-        </Page>
     </ItemGroup>
+
+    <ItemGroup Condition="'$(DisableMsixProjectCapabilityAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
+        <ProjectCapability Include="Msix" />
+    </ItemGroup>
+
+    <PropertyGroup Condition="'$(DisableHasPackageAndPublishMenuAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
+        <HasPackageAndPublishMenu>true</HasPackageAndPublishMenu>
+    </PropertyGroup>
 </Project>

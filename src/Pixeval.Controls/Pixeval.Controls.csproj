@@ -46,9 +46,5 @@
 
     <ItemGroup>
         <PRIResource Include="Strings\*\*.resjson" />
-        <None Remove="**\*.xaml" />
-        <Page Update="**\*.xaml">
-            <Generator>MSBuild:Compile</Generator>
-        </Page>
     </ItemGroup>
 </Project>
