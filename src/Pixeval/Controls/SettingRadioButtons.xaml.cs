@@ -24,7 +24,6 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Input;
 using Windows.Foundation;
 using CommunityToolkit.WinUI;
 using Pixeval.Util;

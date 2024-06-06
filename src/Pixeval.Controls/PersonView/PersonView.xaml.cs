@@ -19,7 +19,6 @@
 #endregion
 
 using System;
-using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Windows.System;
 using Microsoft.UI.Xaml;

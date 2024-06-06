@@ -224,6 +224,9 @@
                                         </ItemContainer>
                                     </DataTemplate>
                                 </controls:AdvancedItemsView.ItemTemplate>
+                                <controls:AdvancedItemsView.ItemTransitionProvider>
+                                    <LinedFlowLayoutItemCollectionTransitionProvider />
+                                </controls:AdvancedItemsView.ItemTransitionProvider>
                             </controls:AdvancedItemsView>
                         </Grid>
                     </StackPanel>

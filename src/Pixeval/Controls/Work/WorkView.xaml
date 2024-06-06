@@ -44,7 +44,11 @@
                     IsItemInvokedEnabled="True"
                     ItemInvoked="ItemsView_OnItemInvoked"
                     SelectionChanged="WorkView_OnSelectionChanged"
-                    SelectionMode="{x:Bind ViewModel.IsSelecting, Converter={StaticResource BoolToSelectionModeConverter}, Mode=OneWay}" />
+                    SelectionMode="{x:Bind ViewModel.IsSelecting, Converter={StaticResource BoolToSelectionModeConverter}, Mode=OneWay}">
+                    <local:AdvancedItemsView.ItemTransitionProvider>
+                        <LinedFlowLayoutItemCollectionTransitionProvider />
+                    </local:AdvancedItemsView.ItemTransitionProvider>
+                </local:AdvancedItemsView>
             </local:EntryView.Content>
         </local:EntryView>
         <TeachingTip

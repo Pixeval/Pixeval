@@ -1,12 +1,10 @@
 using System;
 using System.Collections.Frozen;
-using System.Collections.Generic;
 using System.IO;
 using Windows.Storage;
 using Windows.System;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Input;
 using Pixeval.Controls;
 using Pixeval.Controls.DialogContent;
 using Pixeval.Pages.IllustrationViewer;

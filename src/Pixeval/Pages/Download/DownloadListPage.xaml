@@ -56,35 +56,35 @@
             </AutoSuggestBox>
             <CommandBar Grid.Column="2" DefaultLabelPosition="Right">
                 <AppBarButton
+                    Click="CancelSelectButton_OnClicked"
                     Icon="{fluent:SymbolIcon Symbol=SelectAllOff}"
                     IsEnabled="{x:Bind _viewModel.IsAnyEntrySelected, Mode=OneWay}"
-                    Label="{x:Bind _viewModel.SelectionLabel, Mode=OneWay}"
-                    Click="CancelSelectButton_OnClicked" />
+                    Label="{x:Bind _viewModel.SelectionLabel, Mode=OneWay}" />
                 <AppBarButton
                     x:Uid="/DownloadListPage/SelectAllButton"
-                    Icon="{fluent:SymbolIcon Symbol=SelectAllOn}"
-                    Click="SelectAllButton_OnClicked" />
+                    Click="SelectAllButton_OnClicked"
+                    Icon="{fluent:SymbolIcon Symbol=SelectAllOn}" />
                 <AppBarSeparator />
                 <AppBarButton
                     x:Uid="/DownloadListPage/ResumeButton"
+                    Click="ResumeAllButton_OnClicked"
                     Icon="{fluent:SymbolIcon Symbol=Play}"
-                    IsEnabled="{x:Bind _viewModel.IsAnyEntrySelected, Mode=OneWay}"
-                    Click="ResumeAllButton_OnClicked" />
+                    IsEnabled="{x:Bind _viewModel.IsAnyEntrySelected, Mode=OneWay}" />
                 <AppBarButton
                     x:Uid="/DownloadListPage/PauseButton"
+                    Click="PauseAllButton_OnClicked"
                     Icon="{fluent:SymbolIcon Symbol=Pause}"
-                    IsEnabled="{x:Bind _viewModel.IsAnyEntrySelected, Mode=OneWay}"
-                    Click="PauseAllButton_OnClicked" />
+                    IsEnabled="{x:Bind _viewModel.IsAnyEntrySelected, Mode=OneWay}" />
                 <AppBarButton
                     x:Uid="/DownloadListPage/StopButton"
+                    Click="CancelAllButton_OnClicked"
                     Icon="{fluent:SymbolIcon Symbol=Stop}"
-                    IsEnabled="{x:Bind _viewModel.IsAnyEntrySelected, Mode=OneWay}"
-                    Click="CancelAllButton_OnClicked" />
+                    IsEnabled="{x:Bind _viewModel.IsAnyEntrySelected, Mode=OneWay}" />
                 <AppBarButton
                     x:Uid="/DownloadListPage/DeleteButton"
+                    Click="ClearDownloadListButton_OnClicked"
                     Icon="{fluent:SymbolIcon Symbol=Delete}"
-                    IsEnabled="{x:Bind _viewModel.IsAnyEntrySelected, Mode=OneWay}"
-                    Click="ClearDownloadListButton_OnClicked" />
+                    IsEnabled="{x:Bind _viewModel.IsAnyEntrySelected, Mode=OneWay}" />
             </CommandBar>
         </Grid>
         <controls:AdvancedItemsView
@@ -105,6 +105,9 @@
                     </ItemContainer>
                 </DataTemplate>
             </controls:AdvancedItemsView.ItemTemplate>
+            <controls:AdvancedItemsView.ItemTransitionProvider>
+                <LinedFlowLayoutItemCollectionTransitionProvider />
+            </controls:AdvancedItemsView.ItemTransitionProvider>
         </controls:AdvancedItemsView>
     </Grid>
 </controls:EnhancedWindowPage>

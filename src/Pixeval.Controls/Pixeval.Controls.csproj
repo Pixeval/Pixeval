@@ -10,7 +10,7 @@
         <LangVersion>preview</LangVersion>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <DefaultLanguage>zh-cn</DefaultLanguage>
-        <Configurations>Debug;Release</Configurations>
+        <WindowsSdkPackageVersion>10.0.22621.35-preview</WindowsSdkPackageVersion>
     </PropertyGroup>
 
     <ItemGroup>
@@ -22,7 +22,7 @@
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.3233" />
-        <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.5.240428000" />
+        <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.6.240531000-experimental1" />
         <PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.0.9" />
         <PackageReference Include="CommunityToolkit.WinUI.Triggers" Version="8.0.240109" />
         <PackageReference Include="CommunityToolkit.WinUI.Collections" Version="8.0.240109" />

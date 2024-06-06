@@ -65,7 +65,6 @@
                         x:Name="SwitchPresenter"
                         Width="350"
                         HorizontalAlignment="Stretch"
-                        TargetType="x:String"
                         Value="{x:Bind local:LoginPage.RefreshToken}">
                         <controls2:Case Value="{x:Bind local:LoginPage.RefreshToken}">
                             <controls2:DockPanel

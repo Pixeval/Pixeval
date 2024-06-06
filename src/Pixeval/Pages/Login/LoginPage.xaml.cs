@@ -23,7 +23,6 @@ using System.Threading.Tasks;
 using Windows.Globalization;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media.Animation;
 using Pixeval.AppManagement;
 using Pixeval.Settings.Models;
