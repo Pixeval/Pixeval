@@ -32,23 +32,6 @@ namespace Pixeval.Controls;
 [DependencyProperty<double>("MinItemWidth", "350d")]
 public partial class SkeletonView : UniformGrid
 {
-    protected override Size MeasureOverride(Size availableSize)
-    {
-        Columns = availableSize.Width is double.PositiveInfinity or double.NegativeInfinity or double.NaN
-            ? 1 : (int)Math.Ceiling(availableSize.Width / MinItemWidth);
-        Rows = availableSize.Height is double.PositiveInfinity or double.NegativeInfinity or double.NaN
-            ? 1 : (int)Math.Ceiling(availableSize.Height / MinItemHeight);
-        var count = Rows * Columns;
-        while (count != Children.Count)
-        {
-            if (count > Children.Count)
-                Children.Add(new Shimmer());
-            else
-                Children.RemoveAt(Children.Count - 1);
-        }
-        return base.MeasureOverride(availableSize);
-    }
-
     private static void OnLayoutTypeChanged(DependencyObject o, DependencyPropertyChangedEventArgs e)
     {
     }
@@ -57,5 +40,20 @@ public partial class SkeletonView : UniformGrid
     {
         RowSpacing = 5;
         ColumnSpacing = 5;
+        SizeChanged += (_, _) =>
+        {
+            Columns = ActualWidth is double.PositiveInfinity or double.NegativeInfinity or double.NaN
+                ? 1 : (int)Math.Ceiling(ActualWidth / MinItemWidth);
+            Rows = ActualHeight is double.PositiveInfinity or double.NegativeInfinity or double.NaN
+                ? 1 : (int)Math.Ceiling(ActualHeight / MinItemHeight);
+            var count = Rows * Columns;
+            while (count != Children.Count)
+            {
+                if (count > Children.Count)
+                    Children.Add(new Shimmer());
+                else
+                    Children.RemoveAt(Children.Count - 1);
+            }
+        };
     }
 }

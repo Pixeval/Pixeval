@@ -30,33 +30,14 @@
                 <ImageIcon Source="ms-appx:///Assets/Images/logo.svg" />
             </controls2:TitleBar.Icon>
         </controls2:TitleBar>
-        <Grid
+        <controls2:DockPanel
             Padding="50"
-            ColumnSpacing="20"
+            HorizontalSpacing="20"
             KeyboardAcceleratorPlacementMode="Hidden">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" MinWidth="300" />
-            </Grid.ColumnDefinitions>
-            <StackPanel
-                Grid.Column="0"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                Spacing="25">
-                <Image
-                    Width="100"
-                    Height="100"
-                    Source="../../Assets/Images/logo400.png" />
-                <ProgressRing
-                    Width="30"
-                    Height="30"
-                    Visibility="{x:Bind _viewModel.ProcessingRingVisible, Mode=OneWay}" />
-                <TextBlock
-                    HorizontalAlignment="Center"
-                    Style="{StaticResource CaptionTextBlockStyle}"
-                    Text="{x:Bind util:LocalizedResourceAttributeHelper.GetLocalizedResourceContent(_viewModel.LoginPhase), Mode=OneWay}" />
-            </StackPanel>
-            <controls2:DockPanel Grid.Column="1" LastChildFill="False">
+            <controls2:DockPanel
+                MinWidth="300"
+                controls2:DockPanel.Dock="Right"
+                LastChildFill="False">
                 <ContentControl
                     HorizontalAlignment="Stretch"
                     controls2:DockPanel.Dock="Top"
@@ -200,11 +181,31 @@
                     </Button.ContextFlyout>
                 </Button>
             </controls2:DockPanel>
-            <Border
-                Grid.Column="0"
-                Child="{x:Bind _viewModel.WebView, Mode=OneWay}"
-                CornerRadius="{ThemeResource ControlCornerRadius}"
-                Visibility="{x:Bind _viewModel.IsFinished, Converter={StaticResource BoolNegationToVisibilityConverter}, Mode=OneWay}" />
-        </Grid>
+            <Grid>
+                <StackPanel
+                    Grid.Column="0"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Spacing="25">
+                    <Image
+                        Width="100"
+                        Height="100"
+                        Source="../../Assets/Images/logo400.png" />
+                    <ProgressRing
+                        Width="30"
+                        Height="30"
+                        Visibility="{x:Bind _viewModel.ProcessingRingVisible, Mode=OneWay}" />
+                    <TextBlock
+                        HorizontalAlignment="Center"
+                        Style="{StaticResource CaptionTextBlockStyle}"
+                        Text="{x:Bind util:LocalizedResourceAttributeHelper.GetLocalizedResourceContent(_viewModel.LoginPhase), Mode=OneWay}" />
+                </StackPanel>
+                <Border
+                    Grid.Column="0"
+                    Child="{x:Bind _viewModel.WebView, Mode=OneWay}"
+                    CornerRadius="{ThemeResource ControlCornerRadius}"
+                    Visibility="{x:Bind _viewModel.IsFinished, Converter={StaticResource BoolNegationToVisibilityConverter}, Mode=OneWay}" />
+            </Grid>
+        </controls2:DockPanel>
     </controls2:DockPanel>
 </controls:EnhancedWindowPage>

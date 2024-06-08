@@ -31,26 +31,6 @@
                     ViewModelChanged="WorkItem_OnViewModelChanged" />
             </ItemContainer>
         </DataTemplate>
-    </UserControl.Resources>
-    <Grid>
-        <local:EntryView
-            x:Name="EntryView"
-            x:Uid="/EntryView/IllustrationQrCodeTeachingTip"
-            HasNoItem="{x:Bind ViewModel.HasNoItem, Mode=OneWay}"
-            IsLoadingMore="{x:Bind ItemsView.IsLoadingMore, Mode=OneWay}">
-            <local:EntryView.Content>
-                <local:AdvancedItemsView
-                    x:Name="ItemsView"
-                    IsItemInvokedEnabled="True"
-                    ItemInvoked="ItemsView_OnItemInvoked"
-                    SelectionChanged="WorkView_OnSelectionChanged"
-                    SelectionMode="{x:Bind ViewModel.IsSelecting, Converter={StaticResource BoolToSelectionModeConverter}, Mode=OneWay}">
-                    <local:AdvancedItemsView.ItemTransitionProvider>
-                        <LinedFlowLayoutItemCollectionTransitionProvider />
-                    </local:AdvancedItemsView.ItemTransitionProvider>
-                </local:AdvancedItemsView>
-            </local:EntryView.Content>
-        </local:EntryView>
         <TeachingTip
             x:Name="AddToBookmarkTeachingTip"
             x:Uid="/EntryView/AddToBookmarkTeachingTip"
@@ -61,5 +41,23 @@
                 MaxHeight="{StaticResource TeachingTipContentMaxHeight}"
                 Type="{x:Bind Type, Mode=OneWay}" />
         </TeachingTip>
-    </Grid>
+    </UserControl.Resources>
+    <local:EntryView
+        x:Name="EntryView"
+        x:Uid="/EntryView/IllustrationQrCodeTeachingTip"
+        HasNoItem="{x:Bind ViewModel.HasNoItem, Mode=OneWay}"
+        IsLoadingMore="{x:Bind ItemsView.IsLoadingMore, Mode=OneWay}">
+        <local:EntryView.Content>
+            <local:AdvancedItemsView
+                x:Name="ItemsView"
+                IsItemInvokedEnabled="True"
+                ItemInvoked="ItemsView_OnItemInvoked"
+                SelectionChanged="WorkView_OnSelectionChanged"
+                SelectionMode="{x:Bind ViewModel.IsSelecting, Converter={StaticResource BoolToSelectionModeConverter}, Mode=OneWay}">
+                <local:AdvancedItemsView.ItemTransitionProvider>
+                    <LinedFlowLayoutItemCollectionTransitionProvider />
+                </local:AdvancedItemsView.ItemTransitionProvider>
+            </local:AdvancedItemsView>
+        </local:EntryView.Content>
+    </local:EntryView>
 </UserControl>

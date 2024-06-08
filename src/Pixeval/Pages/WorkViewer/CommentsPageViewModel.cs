@@ -37,9 +37,9 @@ public class CommentsPageViewModel : ObservableObject
     {
         EntryId = entryId;
         EntryType = type;
-        View = new(new IncrementalLoadingCollection<CommentsIncrementalSource, CommentBlockViewModel>(
+        View = new(new IncrementalLoadingCollection<CommentsIncrementalSource, CommentItemViewModel>(
             new CommentsIncrementalSource(engine.Where(c => c is not null)
-                .Select(c => new CommentBlockViewModel(c!, type, entryId))), 30));
+                .Select(c => new CommentItemViewModel(c!, type, entryId))), 30));
         View.CollectionChanged += (_, _) => OnPropertyChanged(nameof(HasNoItem));
     }
 
@@ -52,14 +52,14 @@ public class CommentsPageViewModel : ObservableObject
     /// </summary>
     public bool HasNoItem => View.Count is 0;
 
-    public AdvancedObservableCollection<CommentBlockViewModel> View { get; }
+    public AdvancedObservableCollection<CommentItemViewModel> View { get; }
 
     public void AddComment(Comment comment)
     {
-        View.Insert(0, new CommentBlockViewModel(comment, EntryType, EntryId));
+        View.Insert(0, new CommentItemViewModel(comment, EntryType, EntryId));
     }
 
-    public void DeleteComment(CommentBlockViewModel viewModel)
+    public void DeleteComment(CommentItemViewModel viewModel)
     {
         _ = View.Remove(viewModel);
     }

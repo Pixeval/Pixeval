@@ -62,29 +62,24 @@
                         VerticalAlignment="Stretch"
                         Tapped="IllustrationImageShowcaseFrame_OnTapped" />
 
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="150" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="150" />
-                        </Grid.ColumnDefinitions>
+                    <controls1:DockPanel LastChildFill="False">
                         <controls:PageButton
-                            Grid.Column="0"
                             Width="150"
+                            controls1:DockPanel.Dock="Left"
                             ButtonClick="PrevButton_OnClicked"
                             ButtonRightTapped="PrevButton_OnRightTapped"
                             ButtonVisibility="{x:Bind _viewModel.PrevButtonText, Converter={StaticResource NullableToVisibilityConverter}, Mode=OneWay}"
                             IsPrev="True"
                             ToolTip="{x:Bind _viewModel.PrevButtonText, Mode=OneWay}" />
                         <controls:PageButton
-                            Grid.Column="2"
                             Width="150"
+                            controls1:DockPanel.Dock="Right"
                             ButtonClick="NextButton_OnClicked"
                             ButtonRightTapped="NextButton_OnRightTapped"
                             ButtonVisibility="{x:Bind _viewModel.NextButtonText, Converter={StaticResource NullableToVisibilityConverter}, Mode=OneWay}"
                             IsPrev="False"
                             ToolTip="{x:Bind _viewModel.NextButtonText, Mode=OneWay}" />
-                    </Grid>
+                    </controls1:DockPanel>
 
                     <!--  工具栏的识别区  -->
                     <StackPanel
@@ -138,27 +133,20 @@
                                         <core:ChangePropertyAction PropertyName="Opacity" Value="0.7" />
                                     </core:EventTriggerBehavior>
                                 </interactivity:Interaction.Behaviors>
-                                <Grid>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="Auto" />
-                                    </Grid.RowDefinitions>
+                                <controls1:DockPanel>
                                     <PipsPager
                                         x:Name="PipsPager"
-                                        Grid.Row="0"
                                         Margin="5"
                                         HorizontalAlignment="Center"
                                         VerticalAlignment="Center"
+                                        controls1:DockPanel.Dock="Top"
                                         MaxVisiblePips="10"
                                         NextButtonVisibility="Visible"
                                         NumberOfPages="{x:Bind _viewModel.PageCount, Mode=OneWay}"
                                         PreviousButtonVisibility="Visible"
                                         SelectedPageIndex="{x:Bind _viewModel.CurrentPageIndex, Mode=TwoWay}"
                                         Visibility="{x:Bind _viewModel.CurrentIllustration.IsManga, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
-                                    <CommandBar
-                                        Grid.Row="1"
-                                        DefaultLabelPosition="Collapsed"
-                                        OverflowButtonVisibility="Collapsed">
+                                    <CommandBar DefaultLabelPosition="Collapsed" OverflowButtonVisibility="Collapsed">
                                         <AppBarButton
                                             Command="{x:Bind _viewModel.CurrentIllustration.BookmarkCommand, Mode=OneWay}"
                                             CommandParameter="{x:Bind _viewModel.CurrentImage.DownloadParameter, Mode=OneWay}"
@@ -171,7 +159,7 @@
                                             CommandParameter="{x:Bind _viewModel.CurrentImage.DownloadParameter, Mode=OneWay}"
                                             IsEnabled="{x:Bind _viewModel.CurrentImage.LoadSuccessfully, Mode=OneWay}" />
                                     </CommandBar>
-                                </Grid>
+                                </controls1:DockPanel>
                             </Border>
                         </Grid>
                         <Grid
@@ -333,14 +321,9 @@
                     </CommandBar>
                 </controls1:TitleBar.Content>
                 <controls1:TitleBar.Footer>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
+                    <controls1:DockPanel LastChildFill="False">
                         <TextBlock
-                            Grid.Column="0"
+                            controls1:DockPanel.Dock="Left"
                             Style="{StaticResource TextBlockStyle}"
                             Visibility="{x:Bind _viewModel.CurrentIllustration.IsManga, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
                             <Run Text="{x:Bind _viewModel.CurrentPageIndex, Converter={StaticResource DisplayIndexConverter}, Mode=OneWay}" />
@@ -349,10 +332,10 @@
                         </TextBlock>
                         <CommandBar
                             x:Name="IllustrationViewerSubCommandBar"
-                            Grid.Column="1"
                             Margin="0,-4"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Center"
+                            controls1:DockPanel.Dock="Left"
                             DefaultLabelPosition="Collapsed">
                             <AppBarButton Command="{x:Bind _viewModel.FullScreenCommand}" />
                             <AppBarButton Command="{x:Bind _viewModel.CurrentImage.RestoreResolutionCommand, Mode=OneWay}" />
@@ -360,13 +343,13 @@
                             <AppBarButton Command="{x:Bind _viewModel.CurrentImage.ZoomInCommand, Mode=OneWay}" />
                         </CommandBar>
                         <TextBlock
-                            Grid.Column="2"
                             Width="60"
                             Margin="-5,-3,0,0"
+                            controls1:DockPanel.Dock="Left"
                             Style="{StaticResource TextBlockStyle}"
                             Text="{x:Bind _viewModel.CurrentImage.Scale, Converter={StaticResource NumberToPercentageConverter}, ConverterParameter=2, Mode=OneWay}"
                             ToolTipService.ToolTip="{x:Bind _viewModel.CurrentImage.Scale, Converter={StaticResource NumberToPercentageConverter}, ConverterParameter=2, Mode=OneWay}" />
-                    </Grid>
+                    </controls1:DockPanel>
                 </controls1:TitleBar.Footer>
             </controls1:TitleBar>
         </Grid>

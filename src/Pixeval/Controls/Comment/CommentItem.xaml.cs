@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/CommentBlock.xaml.cs
+// Copyright (c) 2023 Pixeval/CommentItem.xaml.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -29,18 +29,18 @@ using WinUI3Utilities.Attributes;
 
 namespace Pixeval.Controls;
 
-[DependencyProperty<CommentBlockViewModel>("ViewModel", propertyChanged: nameof(OnViewModelChanged))]
-public sealed partial class CommentBlock
+[DependencyProperty<CommentItemViewModel>("ViewModel", propertyChanged: nameof(OnViewModelChanged))]
+public sealed partial class CommentItem
 {
-    public CommentBlock() => InitializeComponent();
+    public CommentItem() => InitializeComponent();
 
-    public event Action<CommentBlockViewModel>? RepliesHyperlinkButtonClick;
+    public event Action<CommentItemViewModel>? RepliesHyperlinkButtonClick;
 
-    public event Action<CommentBlockViewModel>? DeleteHyperlinkButtonClick;
+    public event Action<CommentItemViewModel>? DeleteHyperlinkButtonClick;
 
     private static async void OnViewModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        if (d is not CommentBlock { ViewModel: { } viewModel } block)
+        if (d is not CommentItem { ViewModel: { } viewModel } block)
             return;
         if (viewModel.HasReplies)
             _ = viewModel.LoadRepliesAsync();

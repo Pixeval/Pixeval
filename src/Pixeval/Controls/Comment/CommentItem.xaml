@@ -1,0 +1,84 @@
+<UserControl
+    x:Class="Pixeval.Controls.CommentItem"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:Pixeval.Controls"
+    xmlns:controls1="using:CommunityToolkit.WinUI.Controls"
+    xmlns:converters="using:CommunityToolkit.WinUI.Converters"
+    xmlns:converters1="using:Pixeval.Controls.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:fluent="using:FluentIcons.WinUI"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+        <converters1:CultureDateConverter x:Key="CultureDateConverter" />
+        <converters1:LabelNullableVisibilityConverter x:Key="LabelNullableVisibilityConverter" />
+    </UserControl.Resources>
+    <controls1:DockPanel HorizontalSpacing="10" VerticalSpacing="5">
+        <controls1:SwitchPresenter
+            Margin="57,0,0,0"
+            controls1:DockPanel.Dock="Bottom"
+            Value="{x:Bind ViewModel.IsStamp, Mode=OneWay}">
+            <controls1:Case>
+                <controls1:Case.Value>
+                    <x:Boolean>True</x:Boolean>
+                </controls1:Case.Value>
+                <controls:LazyImage
+                    x:Name="StickerImageContent"
+                    MaxHeight="100"
+                    HorizontalAlignment="Left"
+                    Stretch="Uniform" />
+            </controls1:Case>
+            <controls1:Case>
+                <controls1:Case.Value>
+                    <x:Boolean>False</x:Boolean>
+                </controls1:Case.Value>
+                <RichTextBlock
+                    x:Name="CommentContent"
+                    FontSize="{StaticResource CaptionTextBlockFontSize}"
+                    LineHeight="14.4"
+                    TextWrapping="Wrap" />
+            </controls1:Case>
+        </controls1:SwitchPresenter>
+        <CommandBar
+            controls1:DockPanel.Dock="Right"
+            DefaultLabelPosition="Right"
+            OverflowButtonVisibility="Collapsed">
+            <AppBarButton
+                Click="DeleteReplyHyperlinkButton_OnClicked"
+                Icon="{fluent:SymbolIcon Symbol=Delete}"
+                LabelPosition="Collapsed"
+                Visibility="{x:Bind ViewModel.IsMe, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
+            <AppBarButton
+                Click="OpenRepliesHyperlinkButton_OnClicked"
+                Icon="{fluent:SymbolIcon Symbol=Chat}"
+                Label="{x:Bind ViewModel.RepliesCount, Mode=OneWay}"
+                LabelPosition="{x:Bind ViewModel.RepliesCount, Converter={StaticResource LabelNullableVisibilityConverter}, Mode=OneWay}" />
+        </CommandBar>
+        <Button
+            HorizontalAlignment="Stretch"
+            HorizontalContentAlignment="Left"
+            Background="Transparent"
+            BorderThickness="0"
+            Click="PosterPersonPicture_OnClicked">
+            <controls1:DockPanel HorizontalSpacing="10" LastChildFill="False">
+                <PersonPicture
+                    Width="35"
+                    Height="35"
+                    controls1:DockPanel.Dock="Left"
+                    ProfilePicture="{x:Bind ViewModel.AvatarSource, Mode=OneWay}" />
+                <TextBlock
+                    controls1:DockPanel.Dock="Top"
+                    Style="{StaticResource CaptionTextBlockStyle}"
+                    Text="{x:Bind ViewModel.Poster, Mode=OneWay}" />
+                <!--  TipTextColor  -->
+                <TextBlock
+                    controls1:DockPanel.Dock="Bottom"
+                    Foreground="{ThemeResource PixevalTipTextForeground}"
+                    Style="{StaticResource CaptionTextBlockStyle}"
+                    Text="{x:Bind ViewModel.PostDate, Converter={StaticResource CultureDateConverter}, Mode=OneWay}" />
+            </controls1:DockPanel>
+        </Button>
+    </controls1:DockPanel>
+</UserControl>

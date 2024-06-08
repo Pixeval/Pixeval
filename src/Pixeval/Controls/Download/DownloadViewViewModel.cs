@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/DownloadListPageViewModel.cs
+// Copyright (c) 2023 Pixeval/DownloadPageViewModel.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -30,9 +30,9 @@ using Pixeval.Download.Models;
 using Pixeval.Utilities;
 using WinUI3Utilities;
 
-namespace Pixeval.Pages.Download;
+namespace Pixeval.Controls;
 
-public partial class DownloadListPageViewModel : ObservableObject, IDisposable
+public partial class DownloadViewViewModel : ObservableObject, IDisposable
 {
     public static readonly IEnumerable<DownloadListOption> AvailableDownloadListOptions = Enum.GetValues<DownloadListOption>();
 
@@ -40,7 +40,7 @@ public partial class DownloadListPageViewModel : ObservableObject, IDisposable
     private DownloadListOption _currentOption;
 
     [ObservableProperty]
-    private ObservableCollection<DownloadListEntryViewModel> _filteredTasks = [];
+    private ObservableCollection<DownloadItemViewModel> _filteredTasks = [];
 
     [ObservableProperty]
     private bool _isAnyEntrySelected;
@@ -48,17 +48,20 @@ public partial class DownloadListPageViewModel : ObservableObject, IDisposable
     [ObservableProperty]
     private string _selectionLabel;
 
-    private DownloadListEntryViewModel[] _selectedEntries = [];
+    private DownloadItemViewModel[] _selectedEntries = [];
 
-    public DownloadListPageViewModel(IEnumerable<DownloadTaskBase> source)
+    public DownloadViewViewModel(IEnumerable<DownloadTaskBase> source)
     {
-        DataProvider.To<DownloadListEntryDataProvider>().ResetEngine(source);
-        _selectionLabel = DownloadListPageResources.CancelSelectionButtonDefaultLabel;
+        DataProvider.To<DownloadItemDataProvider>().ResetEngine(source);
+        _selectionLabel = DownloadPageResources.CancelSelectionButtonDefaultLabel;
+        DataProvider.View.CollectionChanged += (_, _) => OnPropertyChanged(nameof(HasNoItem));
     }
 
-    public DownloadListEntryDataProvider DataProvider { get; } = new DownloadListEntryDataProvider();
+    public DownloadItemDataProvider DataProvider { get; } = new DownloadItemDataProvider();
 
-    public DownloadListEntryViewModel[] SelectedEntries
+    public bool HasNoItem => DataProvider.View.Count is 0;
+
+    public DownloadItemViewModel[] SelectedEntries
     {
         get => _selectedEntries;
         set
@@ -69,8 +72,8 @@ public partial class DownloadListPageViewModel : ObservableObject, IDisposable
             var count = value.Length;
             IsAnyEntrySelected = count > 0;
             SelectionLabel = IsAnyEntrySelected
-                ? DownloadListPageResources.CancelSelectionButtonFormatted.Format(count)
-                : DownloadListPageResources.CancelSelectionButtonDefaultLabel;
+                ? DownloadPageResources.CancelSelectionButtonFormatted.Format(count)
+                : DownloadPageResources.CancelSelectionButtonDefaultLabel;
             OnPropertyChanged();
         }
     }
@@ -116,13 +119,13 @@ public partial class DownloadListPageViewModel : ObservableObject, IDisposable
         FilteredTasks.ReplaceByUpdate(newTasks);
         return;
 
-        bool Query(DownloadListEntryViewModel viewModel) =>
+        bool Query(DownloadItemViewModel viewModel) =>
             viewModel.Title.Contains(key) ||
             (viewModel.DownloadTask is { } task ? task.ViewModel.Id : viewModel.DownloadTask.Id).ToString()
             .Contains(key);
     }
 
-    public void ResetFilter(IEnumerable<DownloadListEntryViewModel>? customSearchResultTask = null)
+    public void ResetFilter(IEnumerable<DownloadItemViewModel>? customSearchResultTask = null)
     {
         DataProvider.View.Filter = o => o switch
         {

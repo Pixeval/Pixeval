@@ -15,14 +15,6 @@
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="Pixeval.Pages.Download.DownloadListPageViewModel" Collapsed="true">
-    <Position X="22" Y="2.25" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAgASgCAAAAAAABCABBBAAAgAAAAAABAAIAAAg=</HashCode>
-      <FileName>Pages\Download\DownloadListPageViewModel.cs</FileName>
-    </TypeIdentifier>
-    <Lollipop Position="0.2" />
-  </Class>
   <Class Name="Pixeval.Controls.IllustrationViewViewModel" Collapsed="true">
     <Position X="12.25" Y="5" Width="4.25" />
     <TypeIdentifier>
@@ -59,6 +51,14 @@
       <HashCode>AAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Controls\Spotlight\SpotlightViewViewModel.cs</FileName>
     </TypeIdentifier>
+  </Class>
+  <Class Name="Pixeval.Controls.DownloadViewViewModel" Collapsed="true">
+    <Position X="22" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAgASgCAAAAAAABCABBBAAAgAAAAAABAAIAAAg=</HashCode>
+      <FileName>Controls\Download\DownloadViewViewModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
   </Class>
   <Font Name="Microsoft YaHei UI" Size="9" />
 </ClassDiagram>

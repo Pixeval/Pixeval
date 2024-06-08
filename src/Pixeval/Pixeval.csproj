@@ -132,6 +132,16 @@
         <ProjectCapability Include="Msix" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Remove="Controls\Download\DownloadView.xaml" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Page Update="Controls\Download\DownloadView.xaml">
+        <Generator>MSBuild:Compile</Generator>
+      </Page>
+    </ItemGroup>
+
     <PropertyGroup Condition="'$(DisableHasPackageAndPublishMenuAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
         <HasPackageAndPublishMenu>true</HasPackageAndPublishMenu>
     </PropertyGroup>

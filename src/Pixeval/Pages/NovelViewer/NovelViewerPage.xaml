@@ -106,29 +106,24 @@
                         </Grid>
 
                         <!--  滚动条的宽度  -->
-                        <Grid Margin="0,0,15,0">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="150" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="135" />
-                            </Grid.ColumnDefinitions>
+                        <controls1:DockPanel Margin="0,0,15,0" LastChildFill="False">
                             <controls:PageButton
-                                Grid.Column="0"
                                 Width="150"
+                                controls1:DockPanel.Dock="Left"
                                 ButtonClick="PrevButton_OnClicked"
                                 ButtonRightTapped="PrevButton_OnRightTapped"
                                 ButtonVisibility="{x:Bind _viewModel.PrevButtonText, Converter={StaticResource NullableToVisibilityConverter}, Mode=OneWay}"
                                 IsPrev="True"
                                 ToolTip="{x:Bind _viewModel.PrevButtonText, Mode=OneWay}" />
                             <controls:PageButton
-                                Grid.Column="2"
                                 Width="150"
+                                controls1:DockPanel.Dock="Right"
                                 ButtonClick="NextButton_OnClicked"
                                 ButtonRightTapped="NextButton_OnRightTapped"
                                 ButtonVisibility="{x:Bind _viewModel.NextButtonText, Converter={StaticResource NullableToVisibilityConverter}, Mode=OneWay}"
                                 IsPrev="False"
                                 ToolTip="{x:Bind _viewModel.NextButtonText, Mode=OneWay}" />
-                        </Grid>
+                        </controls1:DockPanel>
 
                         <!--  工具栏的识别区  -->
                         <StackPanel
@@ -182,17 +177,13 @@
                                             <core:ChangePropertyAction PropertyName="Opacity" Value="0.7" />
                                         </core:EventTriggerBehavior>
                                     </interactivity:Interaction.Behaviors>
-                                    <Grid>
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="Auto" />
-                                            <RowDefinition Height="Auto" />
-                                        </Grid.RowDefinitions>
+                                    <controls1:DockPanel>
                                         <PipsPager
                                             x:Name="PipsPager"
-                                            Grid.Row="0"
                                             Margin="5"
                                             HorizontalAlignment="Center"
                                             VerticalAlignment="Center"
+                                            controls1:DockPanel.Dock="Top"
                                             MaxVisiblePips="10"
                                             NextButtonVisibility="Visible"
                                             NumberOfPages="{x:Bind DocumentViewer.PageCount, Mode=OneWay}"
@@ -200,7 +191,6 @@
                                             SelectedPageIndex="{x:Bind DocumentViewer.CurrentPage, Mode=TwoWay}"
                                             Visibility="{x:Bind DocumentViewer.IsMultiPage, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
                                         <CommandBar
-                                            Grid.Row="1"
                                             HorizontalAlignment="Center"
                                             DefaultLabelPosition="Collapsed"
                                             OverflowButtonVisibility="Collapsed">
@@ -213,7 +203,7 @@
                                                 CommandParameter="{x:Bind DownloadParameter(DocumentViewer.ViewModel), Mode=OneWay}"
                                                 IsEnabled="{x:Bind DocumentViewer.LoadSuccessfully, Mode=OneWay}" />
                                         </CommandBar>
-                                    </Grid>
+                                    </controls1:DockPanel>
                                 </Border>
                             </Grid>
                             <Grid
@@ -370,14 +360,9 @@
                     </CommandBar>
                 </controls1:TitleBar.Content>
                 <controls1:TitleBar.Footer>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
+                    <controls1:DockPanel LastChildFill="False">
                         <TextBlock
-                            Grid.Column="0"
+                            controls1:DockPanel.Dock="Left"
                             Style="{StaticResource TextBlockStyle}"
                             Visibility="{x:Bind DocumentViewer.IsMultiPage, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
                             <Run Text="{x:Bind DocumentViewer.CurrentPage, Converter={StaticResource DisplayIndexConverter}, Mode=OneWay}" />
@@ -386,13 +371,13 @@
                         </TextBlock>
                         <CommandBar
                             x:Name="NovelViewerSubCommandBar"
-                            Grid.Column="1"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Center"
+                            controls1:DockPanel.Dock="Left"
                             DefaultLabelPosition="Collapsed">
                             <AppBarButton Command="{x:Bind _viewModel.FullScreenCommand}" />
                         </CommandBar>
-                    </Grid>
+                    </controls1:DockPanel>
                 </controls1:TitleBar.Footer>
             </controls1:TitleBar>
         </Grid>
