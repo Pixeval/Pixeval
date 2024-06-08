@@ -10,13 +10,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Unloaded="TagsPage_OnUnloaded"
     mc:Ignorable="d">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-        <StackPanel Grid.Row="0" Orientation="Horizontal">
+    <controls1:DockPanel>
+        <StackPanel controls1:DockPanel.Dock="Top" Orientation="Horizontal">
             <CommandBar DefaultLabelPosition="Collapsed" OverflowButtonVisibility="Collapsed">
                 <AppBarButton
                     Width="40"
@@ -27,14 +22,11 @@
         </StackPanel>
         <controls1:TokenizingTextBox
             x:Uid="/TagsPage/TagsFilterTokenizingTextBox"
-            Grid.Row="1"
             Margin="5,0,5,5"
+            controls1:DockPanel.Dock="Top"
             ItemsSource="{x:Bind _viewModel.SelectedTags}"
             TokenDelimiter="," />
-        <controls:AdvancedItemsView
-            Grid.Row="2"
-            ItemsSource="{x:Bind _viewModel.DataProvider.View, Mode=OneWay}"
-            LayoutType="VerticalStack">
+        <controls:AdvancedItemsView ItemsSource="{x:Bind _viewModel.DataProvider.View, Mode=OneWay}" LayoutType="VerticalStack">
             <controls:AdvancedItemsView.ItemTemplate>
                 <DataTemplate x:DataType="local:TagsEntryViewModel">
                     <ItemContainer>
@@ -46,6 +38,9 @@
                     </ItemContainer>
                 </DataTemplate>
             </controls:AdvancedItemsView.ItemTemplate>
+            <controls:AdvancedItemsView.ItemTransitionProvider>
+                <LinedFlowLayoutItemCollectionTransitionProvider />
+            </controls:AdvancedItemsView.ItemTransitionProvider>
         </controls:AdvancedItemsView>
-    </Grid>
+    </controls1:DockPanel>
 </controls:EnhancedWindowPage>

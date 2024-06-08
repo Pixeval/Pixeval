@@ -15,24 +15,16 @@
     Loaded="MainPage_OnLoaded"
     mc:Ignorable="d">
     <controls:EnhancedWindowPage.Resources>
-        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
         <converters1:NullableToVisibilityConverter x:Key="NullableToVisibilityConverter" />
         <DataTemplate x:Key="CommonSuggestionModelTemplate" x:DataType="pages:SuggestionModel">
-            <Grid Padding="0,10" ColumnSpacing="10">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition />
-                </Grid.ColumnDefinitions>
+            <controls2:DockPanel Padding="0,10" HorizontalSpacing="10">
                 <ContentPresenter
                     x:Name="IconContentPresenter"
-                    Grid.Column="0"
                     HorizontalAlignment="Left"
                     VerticalAlignment="Center"
+                    controls2:DockPanel.Dock="Left"
                     Content="{x:Bind FontIcon}" />
-                <StackPanel
-                    Grid.Column="1"
-                    VerticalAlignment="Center"
-                    Spacing="1">
+                <StackPanel VerticalAlignment="Center" Spacing="1">
                     <TextBlock
                         MaxHeight="35"
                         Style="{StaticResource BodyTextBlockStyle}"
@@ -48,9 +40,8 @@
                         TextWrapping="WrapWholeWords"
                         Visibility="{x:Bind TranslatedName, Converter={StaticResource NullableToVisibilityConverter}}" />
                 </StackPanel>
-            </Grid>
+            </controls2:DockPanel>
         </DataTemplate>
-
         <pages:SuggestionModelDataTemplateSelector
             x:Key="SuggestionModelDataTemplateSelector"
             AutoCompletionHeader="/MainPage/TagAutoCompletionSuggestionTextBlock"
@@ -59,25 +50,74 @@
             NovelHeader="/MainPage/NovelHeaderSuggestionTextBlock"
             SettingEntryHeader="/MainPage/SettingsEntryHeaderSuggestionTextBlock" />
     </controls:EnhancedWindowPage.Resources>
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
+    <controls2:DockPanel>
+        <controls2:TitleBar
+            Title="{x:Bind pixeval:AppInfo.AppIdentifier}"
+            VerticalAlignment="Top"
+            controls2:DockPanel.Dock="Top"
+            DisplayMode="Tall"
+            IsPaneButtonVisible="True"
+            PaneButtonClick="TitleBar_OnPaneButtonClicked"
+            Window="{x:Bind windowing:WindowFactory.GetForkedWindows(HWnd)}">
+            <controls2:TitleBar.Icon>
+                <ImageIcon Source="ms-appx:///Assets/Images/logo.svg" />
+            </controls2:TitleBar.Icon>
+            <controls2:TitleBar.Footer>
+                <PersonPicture
+                    Grid.Column="0"
+                    MaxHeight="35"
+                    ProfilePicture="{x:Bind _viewModel.AvatarSource, Mode=OneWay}"
+                    Tapped="SelfAvatar_OnTapped"
+                    ToolTipService.ToolTip="{x:Bind _viewModel.UserName}" />
+            </controls2:TitleBar.Footer>
+            <controls2:TitleBar.Content>
+                <controls2:DockPanel>
+                    <CommandBar
+                        Margin="0,-4"
+                        controls2:DockPanel.Dock="Right"
+                        DefaultLabelPosition="Collapsed"
+                        OverflowButtonVisibility="Collapsed">
+                        <AppBarButton
+                            x:Uid="/MainPage/ReverseSearchButton"
+                            Click="ReverseSearchButton_OnClicked"
+                            Content="{fluent:SymbolIcon Symbol=ImageSearch}" />
+                        <AppBarButton
+                            x:Uid="/MainPage/OpenSearchSettingButton"
+                            Click="OpenSearchSettingButton_OnClicked"
+                            Content="{fluent:SymbolIcon Symbol=Settings}" />
+                    </CommandBar>
+                    <AutoSuggestBox
+                        x:Uid="/MainPage/MainPageAutoSuggestionBox"
+                        VerticalAlignment="Center"
+                        AllowDrop="True"
+                        DragOver="KeywordAutoSuggestBox_OnDragOver"
+                        Drop="KeywordAutoSuggestBox_OnDrop"
+                        GotFocus="KeywordAutoSuggestBox_GotFocus"
+                        IsFocusEngaged="False"
+                        ItemTemplateSelector="{StaticResource SuggestionModelDataTemplateSelector}"
+                        ItemsSource="{x:Bind _viewModel.SuggestionProvider.Suggestions, Mode=OneWay}"
+                        KeyDown="KeywordAutoSuggestionBox_OnKeyDown"
+                        QueryIcon="{fluent:SymbolIcon Symbol=Search,
+                                                      FontSize={StaticResource SmallIconFontSize}}"
+                        QuerySubmitted="KeywordAutoSuggestBox_QuerySubmitted"
+                        SuggestionChosen="KeywordAutoSuggestBox_OnSuggestionChosen"
+                        TextChanged="KeywordAutoSuggestBox_OnTextChanged">
+                        <AutoSuggestBox.ItemContainerTransitions>
+                            <TransitionCollection>
+                                <AddDeleteThemeTransition />
+                            </TransitionCollection>
+                        </AutoSuggestBox.ItemContainerTransitions>
+                    </AutoSuggestBox>
+                </controls2:DockPanel>
+            </controls2:TitleBar.Content>
+        </controls2:TitleBar>
         <NavigationView
             x:Name="NavigationView"
-            Grid.Row="1"
             IsBackButtonVisible="Collapsed"
             IsPaneToggleButtonVisible="False"
             IsSettingsVisible="False"
             OpenPaneLength="{x:Bind _viewModel.MainPageRootNavigationViewOpenPanelLength}"
             SelectionChanged="NavigationView_OnSelectionChanged">
-            <NavigationView.PaneCustomContent>
-                <ContentPresenter
-                    x:Name="PaneCustomContentPresenter"
-                    Margin="{StaticResource ComboBoxLeftIndent}"
-                    Visibility="{x:Bind NavigationView.IsPaneOpen, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
-            </NavigationView.PaneCustomContent>
             <NavigationView.MenuItems>
                 <NavigationViewItem
                     x:Uid="/MainPage/RecommendationsTab"
@@ -152,70 +192,5 @@
             </NavigationView.FooterMenuItems>
             <Frame x:Name="MainPageRootFrame" Navigated="MainPageRootFrame_OnNavigated" />
         </NavigationView>
-        <controls2:TitleBar
-            Title="{x:Bind pixeval:AppInfo.AppIdentifier}"
-            Grid.Row="0"
-            VerticalAlignment="Top"
-            DisplayMode="Tall"
-            IsPaneButtonVisible="True"
-            PaneButtonClick="TitleBar_OnPaneButtonClicked"
-            Window="{x:Bind windowing:WindowFactory.GetForkedWindows(HWnd)}">
-            <controls2:TitleBar.Icon>
-                <ImageIcon Source="ms-appx:///Assets/Images/logo.svg" />
-            </controls2:TitleBar.Icon>
-            <controls2:TitleBar.Footer>
-                <PersonPicture
-                    Grid.Column="0"
-                    MaxHeight="35"
-                    ProfilePicture="{x:Bind _viewModel.AvatarSource, Mode=OneWay}"
-                    Tapped="SelfAvatar_OnTapped"
-                    ToolTipService.ToolTip="{x:Bind _viewModel.UserName}" />
-            </controls2:TitleBar.Footer>
-            <controls2:TitleBar.Content>
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-                    <AutoSuggestBox
-                        x:Uid="/MainPage/MainPageAutoSuggestionBox"
-                        Grid.Column="0"
-                        VerticalAlignment="Center"
-                        AllowDrop="True"
-                        DragOver="KeywordAutoSuggestBox_OnDragOver"
-                        Drop="KeywordAutoSuggestBox_OnDrop"
-                        GotFocus="KeywordAutoSuggestBox_GotFocus"
-                        IsFocusEngaged="False"
-                        ItemTemplateSelector="{StaticResource SuggestionModelDataTemplateSelector}"
-                        ItemsSource="{x:Bind _viewModel.SuggestionProvider.Suggestions, Mode=OneWay}"
-                        KeyDown="KeywordAutoSuggestionBox_OnKeyDown"
-                        QueryIcon="{fluent:SymbolIcon Symbol=Search,
-                                                      FontSize={StaticResource SmallIconFontSize}}"
-                        QuerySubmitted="KeywordAutoSuggestBox_QuerySubmitted"
-                        SuggestionChosen="KeywordAutoSuggestBox_OnSuggestionChosen"
-                        TextChanged="KeywordAutoSuggestBox_OnTextChanged">
-                        <AutoSuggestBox.ItemContainerTransitions>
-                            <TransitionCollection>
-                                <AddDeleteThemeTransition />
-                            </TransitionCollection>
-                        </AutoSuggestBox.ItemContainerTransitions>
-                    </AutoSuggestBox>
-                    <CommandBar
-                        Grid.Column="1"
-                        Margin="0,-4"
-                        DefaultLabelPosition="Collapsed"
-                        OverflowButtonVisibility="Collapsed">
-                        <AppBarButton
-                            x:Uid="/MainPage/ReverseSearchButton"
-                            Click="ReverseSearchButton_OnClicked"
-                            Content="{fluent:SymbolIcon Symbol=ImageSearch}" />
-                        <AppBarButton
-                            x:Uid="/MainPage/OpenSearchSettingButton"
-                            Click="OpenSearchSettingButton_OnClicked"
-                            Content="{fluent:SymbolIcon Symbol=Settings}" />
-                    </CommandBar>
-                </Grid>
-            </controls2:TitleBar.Content>
-        </controls2:TitleBar>
-    </Grid>
+    </controls2:DockPanel>
 </controls:EnhancedWindowPage>

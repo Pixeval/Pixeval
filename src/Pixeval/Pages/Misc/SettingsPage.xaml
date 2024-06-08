@@ -37,33 +37,23 @@
         <ScrollView x:Name="SettingsPageScrollView">
             <StackPanel Margin="20,0,20,20" Loaded="Panel_OnLoaded">
                 <!--  region Header  -->
-                <Grid ColumnSpacing="20" RowSpacing="10">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
+                <controls:DockPanel
+                    HorizontalSpacing="20"
+                    LastChildFill="False"
+                    VerticalSpacing="10">
                     <controls:ConstrainedBox
-                        Grid.Row="0"
-                        Grid.RowSpan="2"
-                        Grid.Column="0"
                         MaxHeight="160"
+                        controls:DockPanel.Dock="Left"
                         AspectRatio="1360:906"
                         CornerRadius="{ThemeResource ControlCornerRadius}">
                         <Image Source="../../Assets/Images/pixeval-mock.png" Stretch="UniformToFill" />
                     </controls:ConstrainedBox>
                     <TextBlock
                         x:Uid="/SettingsPage/AppDescriptionTextBlock"
-                        Grid.Row="0"
-                        Grid.Column="1"
+                        controls:DockPanel.Dock="Top"
                         TextWrapping="Wrap" />
                     <controls:WrapPanel
-                        Grid.Row="1"
-                        Grid.Column="1"
-                        VerticalAlignment="Bottom"
+                        controls:DockPanel.Dock="Bottom"
                         HorizontalSpacing="24"
                         IsTabStop="False"
                         Orientation="Horizontal">
@@ -74,7 +64,7 @@
                         <HyperlinkButton x:Uid="/SettingsPage/DonateDeveloperHyperlinkButton" NavigateUri="https://afdian.net/a/dylech30th" />
                         <HyperlinkButton x:Uid="/SettingsPage/JoinFeedbackGroupHyperlinkButton" NavigateUri="https://jq.qq.com/?_wv=1027&amp;k=trDeCrog" />
                     </controls:WrapPanel>
-                </Grid>
+                </controls:DockPanel>
                 <!--  endregion  -->
                 <!--  region Settings Entries  -->
                 <TextBlock
@@ -86,8 +76,8 @@
                     <controls:SettingsExpander.Header>
                         <HyperlinkButton
                             Padding="0"
-                            Content="{x:Bind appManagement:AppInfo.AppVersion.CurrentVersion}"
-                            Click="ReleaseNotesHyperlink_OnClicked" />
+                            Click="ReleaseNotesHyperlink_OnClicked"
+                            Content="{x:Bind appManagement:AppInfo.AppVersion.CurrentVersion}" />
                     </controls:SettingsExpander.Header>
                     <controls:SettingsExpander.Description>
                         <StackPanel Spacing="3">
@@ -110,30 +100,30 @@
                             Visibility="{x:Bind ViewModel.UpdateMessage, Converter={StaticResource NullableToVisibilityConverter}, Mode=OneWay}" />
                         <Button
                             x:Uid="/SettingsPage/CheckForUpdatesButton"
-                            IsEnabled="{x:Bind ViewModel.CheckingUpdate, Converter={StaticResource BoolNegationConverter}, Mode=OneWay}"
-                            Click="CheckForUpdateButton_OnClicked" />
+                            Click="CheckForUpdateButton_OnClicked"
+                            IsEnabled="{x:Bind ViewModel.CheckingUpdate, Converter={StaticResource BoolNegationConverter}, Mode=OneWay}" />
                     </StackPanel>
                     <controls:SettingsExpander.Items>
                         <controls:SettingsCard
                             x:Uid="/SettingsPage/OpenTempEntry"
                             ActionIcon="{fluent:SymbolIcon Symbol=Open}"
+                            Click="OpenFolder_OnClicked"
                             HeaderIcon="{fluent:SymbolIcon Symbol=FolderLightning}"
                             IsClickEnabled="True"
-                            Tag="Temp"
-                            Click="OpenFolder_OnClicked" />
+                            Tag="Temp" />
                         <controls:SettingsCard
                             x:Uid="/SettingsPage/MsStoreCheckForUpdatesEntry"
+                            Click="OpenLinkViaTag_OnClicked"
                             Description="ms-windows-store://pdp/?ProductId=9P1RZL9Z8454"
                             HeaderIcon="{fluent:SymbolIcon Symbol=StoreMicrosoft}"
                             IsClickEnabled="True"
-                            Tag="ms-windows-store://pdp/?ProductId=9P1RZL9Z8454"
-                            Click="OpenLinkViaTag_OnClicked" />
+                            Tag="ms-windows-store://pdp/?ProductId=9P1RZL9Z8454" />
                         <controls:SettingsCard
                             x:Uid="/SettingsPage/GitHubCheckForUpdatesEntry"
+                            Click="OpenLinkViaTag_OnClicked"
                             Description="https://github.com/Pixeval/Pixeval/releases"
                             IsClickEnabled="True"
-                            Tag="https://github.com/Pixeval/Pixeval/releases"
-                            Click="OpenLinkViaTag_OnClicked">
+                            Tag="https://github.com/Pixeval/Pixeval/releases">
                             <controls:SettingsCard.HeaderIcon>
                                 <PathIcon Data="{x:Bind pixeval:SvgResources.GitHub}" />
                             </controls:SettingsCard.HeaderIcon>
@@ -150,8 +140,8 @@
                     <InfoBar.ActionButton>
                         <HyperlinkButton
                             x:Uid="/SettingsPage/ReleaseNotesHyperlinkButton"
-                            Tag="Newest"
                             Click="ReleaseNotesHyperlink_OnClicked"
+                            Tag="Newest"
                             Visibility="{x:Bind ViewModel.NewestVersion, Converter={StaticResource NullableToVisibilityConverter}, Mode=OneWay}" />
                     </InfoBar.ActionButton>
                 </InfoBar>
@@ -169,21 +159,21 @@
                             <CommandBar OverflowButtonVisibility="Collapsed">
                                 <AppBarButton
                                     x:Uid="/SettingsPage/GitHubBugReportEntry"
-                                    Tag="https://github.com/Pixeval/Pixeval/issues/new/choose"
-                                    Click="OpenLinkViaTag_OnClicked">
+                                    Click="OpenLinkViaTag_OnClicked"
+                                    Tag="https://github.com/Pixeval/Pixeval/issues/new/choose">
                                     <AppBarButton.Icon>
                                         <PathIcon Data="{x:Bind pixeval:SvgResources.GitHub}" />
                                     </AppBarButton.Icon>
                                 </AppBarButton>
                                 <AppBarButton
                                     x:Uid="/SettingsPage/EMailBugReportEntry"
+                                    Click="OpenLinkViaTag_OnClicked"
                                     Icon="{fluent:SymbolIcon Symbol=Mail}"
-                                    Tag="mailto:decem0730@hotmail.com"
-                                    Click="OpenLinkViaTag_OnClicked" />
+                                    Tag="mailto:decem0730@hotmail.com" />
                                 <AppBarButton
                                     x:Uid="/SettingsPage/QQBugReportEntry"
-                                    Tag="https://jq.qq.com/?_wv=1027&amp;k=trDeCrog"
-                                    Click="OpenLinkViaTag_OnClicked">
+                                    Click="OpenLinkViaTag_OnClicked"
+                                    Tag="https://jq.qq.com/?_wv=1027&amp;k=trDeCrog">
                                     <AppBarButton.Icon>
                                         <PathIcon Data="{x:Bind pixeval:SvgResources.QQ}" />
                                     </AppBarButton.Icon>
@@ -193,41 +183,41 @@
                         <controls:SettingsCard
                             x:Uid="/SettingsPage/OpenLogEntry"
                             ActionIcon="{fluent:SymbolIcon Symbol=Open}"
+                            Click="OpenFolder_OnClicked"
                             HeaderIcon="{fluent:SymbolIcon Symbol=FolderList}"
                             IsClickEnabled="True"
-                            Tag="Log"
-                            Click="OpenFolder_OnClicked" />
+                            Tag="Log" />
                         <controls:SettingsCard
                             x:Uid="/SettingsPage/OpenTempEntry"
                             ActionIcon="{fluent:SymbolIcon Symbol=Open}"
+                            Click="OpenFolder_OnClicked"
                             HeaderIcon="{fluent:SymbolIcon Symbol=FolderLightning}"
                             IsClickEnabled="True"
-                            Tag="Temp"
-                            Click="OpenFolder_OnClicked" />
+                            Tag="Temp" />
                         <controls:SettingsCard
                             x:Uid="/SettingsPage/OpenLocalEntry"
                             ActionIcon="{fluent:SymbolIcon Symbol=Open}"
+                            Click="OpenFolder_OnClicked"
                             HeaderIcon="{fluent:SymbolIcon Symbol=FolderBriefcase}"
                             IsClickEnabled="True"
-                            Tag="Local"
-                            Click="OpenFolder_OnClicked" />
+                            Tag="Local" />
                         <controls:SettingsCard
                             x:Uid="/SettingsPage/OpenRoamingEntry"
                             ActionIcon="{fluent:SymbolIcon Symbol=Open}"
+                            Click="OpenFolder_OnClicked"
                             HeaderIcon="{fluent:SymbolIcon Symbol=FolderGlobe}"
                             IsClickEnabled="True"
-                            Tag="Roaming"
-                            Click="OpenFolder_OnClicked" />
+                            Tag="Roaming" />
                     </controls:SettingsExpander.Items>
                 </controls:SettingsExpander>
 
                 <controls:SettingsCard
                     x:Uid="/SettingsPage/RateEntry"
                     ActionIcon="{fluent:SymbolIcon Symbol=Open}"
+                    Click="OpenLinkViaTag_OnClicked"
                     HeaderIcon="{fluent:SymbolIcon Symbol=Star}"
                     IsClickEnabled="True"
-                    Tag="ms-windows-store://pdp/?ProductId=9P1RZL9Z8454"
-                    Click="OpenLinkViaTag_OnClicked" />
+                    Tag="ms-windows-store://pdp/?ProductId=9P1RZL9Z8454" />
 
                 <TextBlock
                     x:Uid="/SettingsPage/SessionSettingsGroup"
@@ -236,10 +226,10 @@
 
                 <controls:SettingsCard
                     x:Uid="/SettingsPage/SignOutEntry"
+                    Click="PerformSignOutButton_OnClicked"
                     HeaderIcon="{fluent:SymbolIcon Symbol=SignOut}"
                     IsClickEnabled="True"
-                    Tag="{x:Bind misc:SettingsEntryAttribute.SignOut}"
-                    Click="PerformSignOutButton_OnClicked" />
+                    Tag="{x:Bind misc:SettingsEntryAttribute.SignOut}" />
 
                 <controls:SettingsCard
                     x:Uid="/SettingsPage/ResetDefaultSettingsEntry"
@@ -256,24 +246,24 @@
                     <controls:SettingsExpander.Items>
                         <controls:SettingsCard
                             x:Uid="/SettingsPage/DeleteFileCacheEntry"
+                            Click="DeleteFileCacheEntryButton_OnClicked"
                             HeaderIcon="{fluent:SymbolIcon Symbol=HistoryDismiss}"
-                            IsClickEnabled="True"
-                            Click="DeleteFileCacheEntryButton_OnClicked" />
+                            IsClickEnabled="True" />
                         <controls:SettingsCard
                             x:Uid="/SettingsPage/DeleteSearchHistoriesEntry"
+                            Click="DeleteSearchHistoriesButton_OnClicked"
                             HeaderIcon="{fluent:SymbolIcon Symbol=HistoryDismiss}"
-                            IsClickEnabled="True"
-                            Click="DeleteSearchHistoriesButton_OnClicked" />
+                            IsClickEnabled="True" />
                         <controls:SettingsCard
                             x:Uid="/SettingsPage/DeleteBrowseHistoriesEntry"
+                            Click="DeleteBrowseHistoriesButton_OnClicked"
                             HeaderIcon="{fluent:SymbolIcon Symbol=HistoryDismiss}"
-                            IsClickEnabled="True"
-                            Click="DeleteBrowseHistoriesButton_OnClicked" />
+                            IsClickEnabled="True" />
                         <controls:SettingsCard
                             x:Uid="/SettingsPage/DeleteDownloadHistoriesEntry"
+                            Click="DeleteDownloadHistoriesButton_OnClicked"
                             HeaderIcon="{fluent:SymbolIcon Symbol=HistoryDismiss}"
-                            IsClickEnabled="True"
-                            Click="DeleteDownloadHistoriesButton_OnClicked" />
+                            IsClickEnabled="True" />
                     </controls:SettingsExpander.Items>
                 </controls:SettingsExpander>
                 <!--  设置项插入处  -->

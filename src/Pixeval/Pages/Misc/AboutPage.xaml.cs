@@ -24,7 +24,6 @@ using System.Text;
 using Windows.System;
 using CommunityToolkit.WinUI.Controls;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Input;
 using Pixeval.AppManagement;
 using Pixeval.Controls;
 using WinUI3Utilities;

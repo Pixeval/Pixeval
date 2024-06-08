@@ -157,29 +157,11 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <Grid Grid.Column="0" RowSpacing="5">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-                <controls:ConstrainedBox Grid.Row="0" AspectRatio="427:600">
-                    <local:LazyImage x:Name="PopupImage" Source="{x:Bind ViewModel.ThumbnailSource, Mode=OneWay}" />
-                </controls:ConstrainedBox>
-                <local:HeartButton
-                    x:Name="PopupHeartButton"
-                    Grid.Row="0"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Top"
-                    Command="{x:Bind ViewModel.BookmarkCommand, Mode=OneWay}"
-                    CommandParameter="{x:Bind HWnd}">
-                    <Grid.RenderTransform>
-                        <ScaleTransform ScaleX="1" ScaleY="1" />
-                    </Grid.RenderTransform>
-                </local:HeartButton>
+            <controls:DockPanel Grid.Column="0" VerticalSpacing="5">
                 <CommandBar
-                    Grid.Row="1"
                     Margin="-5"
                     HorizontalAlignment="Left"
+                    controls:DockPanel.Dock="Bottom"
                     DefaultLabelPosition="Collapsed"
                     OverflowButtonVisibility="Collapsed">
                     <AppBarButton Click="OpenNovel_OnClicked" Command="{x:Bind OpenNovelCommand}" />
@@ -187,7 +169,23 @@
                     <AppBarButton Command="{x:Bind ViewModel.SaveCommand, Mode=OneWay}" CommandParameter="{x:Bind HWnd}" />
                     <AppBarButton Command="{x:Bind ViewModel.OpenInWebBrowserCommand, Mode=OneWay}" />
                 </CommandBar>
-            </Grid>
+                <Grid>
+                    <controls:ConstrainedBox Grid.Row="0" AspectRatio="427:600">
+                        <local:LazyImage x:Name="PopupImage" Source="{x:Bind ViewModel.ThumbnailSource, Mode=OneWay}" />
+                    </controls:ConstrainedBox>
+                    <local:HeartButton
+                        x:Name="PopupHeartButton"
+                        Grid.Row="0"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top"
+                        Command="{x:Bind ViewModel.BookmarkCommand, Mode=OneWay}"
+                        CommandParameter="{x:Bind HWnd}">
+                        <Grid.RenderTransform>
+                            <ScaleTransform ScaleX="1" ScaleY="1" />
+                        </Grid.RenderTransform>
+                    </local:HeartButton>
+                </Grid>
+            </controls:DockPanel>
             <controls:DockPanel
                 Grid.Column="1"
                 HorizontalSpacing="10"

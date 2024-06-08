@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/DownloadListPage.xaml.cs
+// Copyright (c) 2023 Pixeval/DownloadPage.xaml.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -23,71 +23,67 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Input;
+using Pixeval.Controls;
 using Pixeval.Controls.DialogContent;
-using Pixeval.CoreApi.Model;
-using Pixeval.Pages.IllustrationViewer;
-using Pixeval.Pages.NovelViewer;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 
 namespace Pixeval.Pages.Download;
 
-public sealed partial class DownloadListPage
+public sealed partial class DownloadPage
 {
     private bool _queriedBySuggestion;
-    private readonly DownloadListPageViewModel _viewModel = new(App.AppViewModel.DownloadManager.QueuedTasks);
 
-    public DownloadListPage() => InitializeComponent();
+    public DownloadPage() => InitializeComponent();
 
     private void ModeFilterComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        _viewModel.ResetFilter();
+        DownloadView.ViewModel.ResetFilter();
     }
 
     private void PauseAllButton_OnClicked(object sender, RoutedEventArgs e)
     {
-        _viewModel.PauseSelectedItems();
+        DownloadView.ViewModel.PauseSelectedItems();
     }
 
     private void ResumeAllButton_OnClicked(object sender, RoutedEventArgs e)
     {
-        _viewModel.ResumeSelectedItems();
+        DownloadView.ViewModel.ResumeSelectedItems();
     }
 
     private void CancelAllButton_OnClicked(object sender, RoutedEventArgs e)
     {
-        _viewModel.CancelSelectedItems();
+        DownloadView.ViewModel.CancelSelectedItems();
     }
 
     private async void ClearDownloadListButton_OnClicked(object sender, RoutedEventArgs e)
     {
-        var dialogContent = new DownloadListPageDeleteTasksDialog();
+        var dialogContent = new DownloadPageDeleteTasksDialog();
         if (await this.CreateOkCancelAsync(
-                DownloadListPageResources.DeleteDownloadHistoryRecordsFormatted.Format(_viewModel.SelectedEntries.Length),
+                DownloadPageResources.DeleteDownloadHistoryRecordsFormatted.Format(DownloadView.ViewModel.SelectedEntries.Length),
                 dialogContent) is ContentDialogResult.Primary)
         {
             if (dialogContent.DeleteLocalFiles)
-                await Task.WhenAll(_viewModel.SelectedEntries
+                await Task.WhenAll(DownloadView.ViewModel.SelectedEntries
                     .Select(async t => await IoHelper.DeleteTaskAsync(t.DownloadTask))
                     .ToArray());
 
-            _viewModel.RemoveSelectedItems();
+            DownloadView.ViewModel.RemoveSelectedItems();
         }
     }
 
     private void FilterAutoSuggestBox_OnTextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
     {
-        _viewModel.FilterTask(sender.Text);
+        DownloadView.ViewModel.FilterTask(sender.Text);
     }
 
     private void FilterAutoSuggestBox_OnSuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
     {
-        var selectedItem = (DownloadListEntryViewModel)args.SelectedItem;
+        var selectedItem = (DownloadItemViewModel)args.SelectedItem;
         sender.Text = selectedItem.Title;
-        _viewModel.CurrentOption = DownloadListOption.CustomSearch;
-        _viewModel.ResetFilter([selectedItem]);
+        DownloadView.ViewModel.CurrentOption = DownloadListOption.CustomSearch;
+        DownloadView.ViewModel.ResetFilter([selectedItem]);
         _queriedBySuggestion = true;
     }
 
@@ -101,53 +97,23 @@ public sealed partial class DownloadListPage
 
         if (sender.Text.IsNullOrBlank())
         {
-            _viewModel.CurrentOption = DownloadListOption.AllQueued;
-            _viewModel.ResetFilter();
+            DownloadView.ViewModel.CurrentOption = DownloadListOption.AllQueued;
+            DownloadView.ViewModel.ResetFilter();
         }
         else
         {
-            _viewModel.CurrentOption = DownloadListOption.CustomSearch;
-            _viewModel.ResetFilter(_viewModel.FilteredTasks);
+            DownloadView.ViewModel.CurrentOption = DownloadListOption.CustomSearch;
+            DownloadView.ViewModel.ResetFilter(DownloadView.ViewModel.FilteredTasks);
         }
     }
 
     private void SelectAllButton_OnClicked(object sender, RoutedEventArgs e)
     {
-        AdvancedItemsView.SelectAll();
+        DownloadView.ItemsView.SelectAll();
     }
 
     private void CancelSelectButton_OnClicked(object sender, RoutedEventArgs e)
     {
-        AdvancedItemsView.DeselectAll();
-    }
-
-    private void ItemsView_OnSelectionChanged(ItemsView sender, ItemsViewSelectionChangedEventArgs args)
-    {
-        _viewModel.SelectedEntries = sender.SelectedItems.Cast<DownloadListEntryViewModel>().ToArray();
-    }
-
-    private async void DownloadListEntry_OnOpenIllustrationRequested(DownloadListEntry sender, DownloadListEntryViewModel viewModel)
-    {
-        switch (viewModel.Entry)
-        {
-            case Illustration illustration:
-                await IllustrationViewerHelper.CreateWindowWithPageAsync(illustration.Id);
-                break;
-            case Novel novel:
-                await NovelViewerHelper.CreateWindowWithPageAsync(novel.Id);
-                break;
-        }
-    }
-
-    private async void DownloadListEntry_OnViewModelChanged(DownloadListEntry sender, DownloadListEntryViewModel viewModel)
-    {
-        _ = await viewModel.TryLoadThumbnailAsync(_viewModel);
-    }
-
-    private void DownloadListPage_OnUnloaded(object sender, RoutedEventArgs e)
-    {
-        foreach (var viewModel in _viewModel.DataProvider.Source)
-            viewModel.UnloadThumbnail(_viewModel);
-        _viewModel.Dispose();
+        DownloadView.ItemsView.DeselectAll();
     }
 }

@@ -239,8 +239,8 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject
                           {{(UserName != "" && Password != "" ?
                     $$"""
                           else {
-                              await fill("input[autocomplete='username']", "{{UserName}}");
-                              await fill("input[autocomplete='current-password']", "{{Password}}");
+                              await fill("form>fieldset:nth-child(2)>label>input", "{{UserName}}");
+                              await fill("form>fieldset:nth-child(3)>label>input", "{{Password}}");
                               document.querySelectorAll("button[type='submit']")[4].click();
                           }
                       """

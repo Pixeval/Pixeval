@@ -144,7 +144,7 @@ public sealed partial class AdvancedItemsView : ItemsView
         switch (advancedItemsView.Layout)
         {
             case RiverFlowLayout linedFlowLayout:
-                linedFlowLayout.VerticalSpacing = minRowSpacing;
+                linedFlowLayout.LineSpacing = minRowSpacing;
                 break;
             case UniformGridLayout uniformGridLayout:
                 uniformGridLayout.MinRowSpacing = minRowSpacing;
@@ -165,7 +165,7 @@ public sealed partial class AdvancedItemsView : ItemsView
         switch (advancedItemsView.Layout)
         {
             case RiverFlowLayout linedFlowLayout:
-                linedFlowLayout.HorizontalSpacing = minColumnSpacing;
+                linedFlowLayout.MinItemSpacing = minColumnSpacing;
                 break;
             case UniformGridLayout uniformGridLayout:
                 uniformGridLayout.MinColumnSpacing = minColumnSpacing;
@@ -192,8 +192,8 @@ public sealed partial class AdvancedItemsView : ItemsView
             {
                 // ItemsStretch = LinedFlowLayoutItemsStretch.Fill,
                 LineHeight = minItemHeight,
-                VerticalSpacing = minRowSpacing,
-                HorizontalSpacing = minColumnSpacing
+                LineSpacing = minRowSpacing,
+                MinItemSpacing = minColumnSpacing
             },
             ItemsViewLayoutType.Grid => new UniformGridLayout
             {

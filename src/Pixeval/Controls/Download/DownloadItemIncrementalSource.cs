@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/DownloadListEntryIncrementalSource.cs
+// Copyright (c) 2023 Pixeval/DownloadItemIncrementalSource.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -26,12 +26,12 @@ using CommunityToolkit.WinUI.Collections;
 using Pixeval.Download.Models;
 using Pixeval.Utilities;
 
-namespace Pixeval.Pages.Download;
+namespace Pixeval.Controls;
 
-public class DownloadListEntryIncrementalSource(IEnumerable<DownloadTaskBase> source)
-    : IIncrementalSource<DownloadListEntryViewModel>
+public class DownloadItemIncrementalSource(IEnumerable<DownloadTaskBase> source)
+    : IIncrementalSource<DownloadItemViewModel>
 {
-    public async Task<IEnumerable<DownloadListEntryViewModel>> GetPagedItemsAsync(int pageIndex, int pageSize, CancellationToken cancellationToken = new CancellationToken())
+    public async Task<IEnumerable<DownloadItemViewModel>> GetPagedItemsAsync(int pageIndex, int pageSize, CancellationToken cancellationToken = new CancellationToken())
     {
         return await source
             .Skip(pageIndex * pageSize)
@@ -40,7 +40,7 @@ public class DownloadListEntryIncrementalSource(IEnumerable<DownloadTaskBase> so
             {
                 if (o is ILazyLoadDownloadTask lazy)
                     await lazy.LazyLoadAsync(o.DatabaseEntry.Entry);
-                return new DownloadListEntryViewModel(o);
+                return new DownloadItemViewModel(o);
             }).WhenAll();
     }
 }

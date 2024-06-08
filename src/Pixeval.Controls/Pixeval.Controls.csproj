@@ -10,7 +10,6 @@
         <LangVersion>preview</LangVersion>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <DefaultLanguage>zh-cn</DefaultLanguage>
-        <Configurations>Debug;Release</Configurations>
     </PropertyGroup>
 
     <ItemGroup>
@@ -27,8 +26,8 @@
         <PackageReference Include="CommunityToolkit.WinUI.Triggers" Version="8.0.240109" />
         <PackageReference Include="CommunityToolkit.WinUI.Collections" Version="8.0.240109" />
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
-        <PackageReference Include="CommunityToolkit.WinUI.Controls.Primitives" Version="8.1.240328-rc" />
-        <PackageReference Include="CommunityToolkit.WinUI.Extensions" Version="8.1.240328-rc" />
+        <PackageReference Include="CommunityToolkit.WinUI.Controls.Primitives" Version="8.1.240606-rc" />
+        <PackageReference Include="CommunityToolkit.WinUI.Extensions" Version="8.1.240606-rc" />
         <PackageReference Include="WinUI3Utilities" Version="1.1.7" />
 
         <ProjectReference Include="..\Pixeval.Utilities\Pixeval.Utilities.csproj" />
@@ -46,9 +45,5 @@
 
     <ItemGroup>
         <PRIResource Include="Strings\*\*.resjson" />
-        <None Remove="**\*.xaml" />
-        <Page Update="**\*.xaml">
-            <Generator>MSBuild:Compile</Generator>
-        </Page>
     </ItemGroup>
 </Project>

@@ -63,7 +63,7 @@ public partial class MainPageViewModel : ObservableObject
 
     public readonly NavigationViewTag<TagsPage> TagsTag = new();
 
-    public readonly NavigationViewTag<DownloadListPage> DownloadListTag = new();
+    public readonly NavigationViewTag<DownloadPage> DownloadListTag = new();
 
     public readonly NavigationViewTag<SettingsPage> SettingsTag = new();
 

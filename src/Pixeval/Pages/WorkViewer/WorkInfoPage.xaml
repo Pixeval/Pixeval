@@ -46,37 +46,21 @@
                 Margin="{StaticResource StackLayoutEntryPadding}"
                 Click="IllustratorPersonPicture_OnClicked"
                 Style="{StaticResource CardControlButton}">
-                <Grid ColumnSpacing="10" RowSpacing="5">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
+                <controls:DockPanel HorizontalSpacing="10" LastChildFill="False">
                     <PersonPicture
-                        Grid.Row="0"
-                        Grid.RowSpan="2"
-                        Grid.Column="0"
                         Width="50"
                         Height="50"
+                        controls:DockPanel.Dock="Left"
                         ProfilePicture="{x:Bind _viewModel.AvatarSource, Mode=OneWay}" />
-                    <TextBlock
-                        Grid.Row="0"
-                        Grid.Column="1"
-                        Style="{StaticResource CaptionTextBlockStyle}">
+                    <TextBlock controls:DockPanel.Dock="Top" Style="{StaticResource BodyTextBlockStyle}">
                         <Run x:Uid="/WorkInfoPage/IllustratorName" />
                         <Run Text="{x:Bind _viewModel.Illustrator.Name}" />
                     </TextBlock>
-                    <TextBlock
-                        Grid.Row="1"
-                        Grid.Column="1"
-                        Style="{StaticResource CaptionTextBlockStyle}">
+                    <TextBlock controls:DockPanel.Dock="Bottom" Style="{StaticResource BodyTextBlockStyle}">
                         <Run x:Uid="/WorkInfoPage/IllustratorId" />
                         <Run Text="{x:Bind _viewModel.Illustrator.Id}" />
                     </TextBlock>
-                </Grid>
+                </controls:DockPanel>
             </Button>
             <!--#endregion-->
             <!--#region Work Title-->

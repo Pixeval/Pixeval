@@ -23,6 +23,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Markup;
+using Pixeval.CoreApi.Global.Enum;
 using Pixeval.Util;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
@@ -73,4 +75,30 @@ public sealed partial class EnumComboBox : ComboBox
         else
             comboBox.SelectedItem = comboBox.ItemsSource.To<IEnumerable<StringRepresentableItem>>().FirstOrDefault(r => Equals(r.Item, comboBox.SelectedEnum));
     }
+}
+
+[MarkupExtensionReturnType(ReturnType = typeof(Array))]
+public sealed class EnumValuesExtension : MarkupExtension
+{
+    public EnumValuesEnum Type { get; set; }
+
+    protected override object ProvideValue()
+    {
+        return Enum.GetValues(Type switch
+        {
+            EnumValuesEnum.WorkType => typeof(WorkType),
+            EnumValuesEnum.SimpleWorkType => typeof(SimpleWorkType),
+            EnumValuesEnum.WorkSortOption => typeof(WorkSortOption),
+            EnumValuesEnum.PrivacyPolicy => typeof(PrivacyPolicy),
+            _ => throw new ArgumentOutOfRangeException()
+        });
+    }
+}
+
+public enum EnumValuesEnum
+{
+    WorkType,
+    SimpleWorkType,
+    WorkSortOption,
+    PrivacyPolicy
 }

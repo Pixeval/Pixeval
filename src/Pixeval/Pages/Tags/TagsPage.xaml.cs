@@ -1,6 +1,5 @@
 using System;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Input;
 using Pixeval.Util.UI;
 
 namespace Pixeval.Pages.Tags;

@@ -35,17 +35,10 @@
   <Class Name="Pixeval.Controls.NovelItemViewModel" Collapsed="true">
     <Position X="26.25" Y="4.75" Width="2" />
     <TypeIdentifier>
-      <HashCode>ABAABAAAAEAAACAgAAAAAAAAAoACAACAACAABAQAAAA=</HashCode>
+      <HashCode>ABAABAAAAgAAACAgAAAAAAAAAoACAACAACAABAQAAAA=</HashCode>
       <FileName>Controls\Novel\NovelItemViewModel.Commands.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
-  </Class>
-  <Class Name="Pixeval.Pages.Download.DownloadListEntryViewModel" Collapsed="true">
-    <Position X="20" Y="4.75" Width="2.5" />
-    <TypeIdentifier>
-      <HashCode>ABAAAAQAAAAAgAAgAAgAAAgAAIATAACABCAgAAQAAAA=</HashCode>
-      <FileName>Pages\Download\DownloadListEntryViewModel.cs</FileName>
-    </TypeIdentifier>
   </Class>
   <Class Name="Pixeval.Controls.ThumbnailEntryViewModel&lt;T&gt;" Collapsed="true">
     <Position X="19.75" Y="2" Width="2.25" />
@@ -77,6 +70,13 @@
       <FileName>Controls\Work\WorkEntryViewModel.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Pixeval.Controls.DownloadItemViewModel" Collapsed="true">
+    <Position X="20" Y="4.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAAAQAAAAIgAAgAAgAAAgAAIATAACABCAgAAQAAAA=</HashCode>
+      <FileName>Controls\Download\DownloadItemViewModel.cs</FileName>
+    </TypeIdentifier>
   </Class>
   <Font Name="Microsoft YaHei UI" Size="9" />
 </ClassDiagram>

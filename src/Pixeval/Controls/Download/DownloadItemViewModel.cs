@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/DownloadListEntryViewModel.cs
+// Copyright (c) 2023 Pixeval/DownloadItemViewModel.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -24,7 +24,6 @@ using System.IO;
 using System.Threading.Tasks;
 using FluentIcons.Common;
 using Microsoft.UI.Xaml.Input;
-using Pixeval.Controls;
 using Pixeval.Database;
 using Pixeval.Download;
 using Pixeval.Download.Models;
@@ -34,14 +33,14 @@ using WinUI3Utilities;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.CoreApi.Model;
 
-namespace Pixeval.Pages.Download;
+namespace Pixeval.Controls;
 
 /// <inheritdoc/>
-public sealed class DownloadListEntryViewModel : WorkEntryViewModel<IWorkEntry>
+public sealed class DownloadItemViewModel : WorkEntryViewModel<IWorkEntry>
 {
     public DownloadTaskBase DownloadTask { get; }
 
-    public DownloadListEntryViewModel(DownloadTaskBase downloadTask) : base(downloadTask.ViewModel.Entry)
+    public DownloadItemViewModel(DownloadTaskBase downloadTask) : base(downloadTask.ViewModel.Entry)
     {
         DownloadTask = downloadTask;
         DownloadTask.PropertyChanged += (_, e) =>
@@ -66,22 +65,22 @@ public sealed class DownloadListEntryViewModel : WorkEntryViewModel<IWorkEntry>
 
     public string ProgressMessage => DownloadTask.CurrentState switch
     {
-        DownloadState.Queued => DownloadListEntryResources.DownloadQueued,
-        DownloadState.Running => DownloadListEntryResources.DownloadRunningFormatted.Format((int)DownloadTask.ProgressPercentage),
-        DownloadState.Error => DownloadListEntryResources.DownloadErrorMessageFormatted.Format(DownloadTask.ErrorCause?.Message),
-        DownloadState.Completed => DownloadListEntryResources.DownloadCompleted,
-        DownloadState.Cancelled => DownloadListEntryResources.DownloadCancelled,
-        DownloadState.Paused => DownloadListEntryResources.DownloadPaused,
+        DownloadState.Queued => DownloadItemResources.DownloadQueued,
+        DownloadState.Running => DownloadItemResources.DownloadRunningFormatted.Format((int)DownloadTask.ProgressPercentage),
+        DownloadState.Error => DownloadItemResources.DownloadErrorMessageFormatted.Format(DownloadTask.ErrorCause?.Message),
+        DownloadState.Completed => DownloadItemResources.DownloadCompleted,
+        DownloadState.Cancelled => DownloadItemResources.DownloadCancelled,
+        DownloadState.Paused => DownloadItemResources.DownloadPaused,
         _ => ThrowHelper.ArgumentOutOfRange<DownloadState, string>(DownloadTask.CurrentState)
     };
 
     public string ActionButtonContent => DownloadTask.CurrentState switch
     {
-        DownloadState.Queued => DownloadListEntryResources.DownloadCancelledAction,
-        DownloadState.Running => DownloadListEntryResources.ActionButtonContentPause,
-        DownloadState.Cancelled or DownloadState.Error => DownloadListEntryResources.ActionButtonContentRetry,
-        DownloadState.Completed => DownloadListEntryResources.ActionButtonContentOpen,
-        DownloadState.Paused => DownloadListEntryResources.ActionButtonContentResume,
+        DownloadState.Queued => DownloadItemResources.DownloadCancelledAction,
+        DownloadState.Running => DownloadItemResources.ActionButtonContentPause,
+        DownloadState.Cancelled or DownloadState.Error => DownloadItemResources.ActionButtonContentRetry,
+        DownloadState.Completed => DownloadItemResources.ActionButtonContentOpen,
+        DownloadState.Paused => DownloadItemResources.ActionButtonContentResume,
         _ => ThrowHelper.ArgumentOutOfRange<DownloadState, string>(DownloadTask.CurrentState)
     };
 

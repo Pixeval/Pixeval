@@ -1,16 +1,15 @@
 <Grid
-    x:Class="Pixeval.Pages.Download.DownloadListEntry"
+    x:Class="Pixeval.Controls.DownloadItem"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:controls="using:Pixeval.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:fluent="using:FluentIcons.WinUI"
-    xmlns:local="using:Pixeval.Pages.Download"
+    xmlns:local="using:Pixeval.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     ColumnSpacing="20"
     mc:Ignorable="d">
     <!--<ToolTipService.ToolTip>
-        <ToolTip Content="{x:Bind ViewModel.Illustrate.Title, Mode=OneWay}" Placement="Mouse" />
+        <ToolTip Content="{x:Bind ViewModel.Entry.Title, Mode=OneWay}" Placement="Mouse" />
     </ToolTipService.ToolTip>-->
     <Grid.ColumnDefinitions>
         <ColumnDefinition Width="Auto" />
@@ -18,7 +17,7 @@
         <ColumnDefinition Width="3*" />
         <ColumnDefinition Width="Auto" />
     </Grid.ColumnDefinitions>
-    <controls:LazyImage
+    <local:LazyImage
         Grid.Column="0"
         Width="50"
         Height="50"
@@ -70,25 +69,25 @@
             </AppBarButton.Icon>
         </AppBarButton>
         <AppBarButton
-            x:Uid="/DownloadListEntry/RedownloadItem"
+            x:Uid="/DownloadItem/RedownloadItem"
             Click="RedownloadItem_OnClicked"
             Icon="{fluent:SymbolIcon Symbol=ArrowDownload}"
             IsEnabled="{x:Bind ViewModel.IsRedownloadItemEnabled, Mode=OneWay}" />
         <AppBarButton
-            x:Uid="/DownloadListEntry/CancelDownloadItem"
+            x:Uid="/DownloadItem/CancelDownloadItem"
             Click="CancelDownloadItem_OnClicked"
             Icon="{fluent:SymbolIcon Symbol=Dismiss}"
             IsEnabled="{x:Bind ViewModel.IsCancelItemEnabled, Mode=OneWay}" />
         <AppBarButton
-            x:Uid="/DownloadListEntry/OpenDownloadLocationItem"
+            x:Uid="/DownloadItem/OpenDownloadLocationItem"
             Click="OpenDownloadLocationItem_OnClicked"
             Icon="{fluent:SymbolIcon Symbol=FolderArrowRight}" />
         <AppBarButton
-            x:Uid="/DownloadListEntry/GoToPageItem"
+            x:Uid="/DownloadItem/GoToPageItem"
             Click="GoToPageItem_OnClicked"
             Icon="{fluent:SymbolIcon Symbol=OpenFolder}" />
         <AppBarButton
-            x:Uid="/DownloadListEntry/CheckErrorMessageInDetailItem"
+            x:Uid="/DownloadItem/CheckErrorMessageInDetailItem"
             Click="CheckErrorMessageInDetail_OnClicked"
             Icon="{fluent:SymbolIcon Symbol=DocumentError}"
             IsEnabled="{x:Bind ViewModel.IsError, Mode=OneWay}" />

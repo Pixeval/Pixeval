@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/DownloadListEntry.xaml.cs
+// Copyright (c) 2023 Pixeval/DownloadItem.xaml.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -23,30 +23,30 @@ using System.IO;
 using Windows.Foundation;
 using Windows.System;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Input;
 using Pixeval.Download;
+using Pixeval.Pages.Download;
 using Pixeval.Util.UI;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
 
-namespace Pixeval.Pages.Download;
+namespace Pixeval.Controls;
 
-[DependencyProperty<DownloadListEntryViewModel>("ViewModel", propertyChanged: nameof(OnViewModelChanged))]
-public sealed partial class DownloadListEntry
+[DependencyProperty<DownloadItemViewModel>("ViewModel", propertyChanged: nameof(OnViewModelChanged))]
+public sealed partial class DownloadItem
 {
-    public event Action<DownloadListEntry, DownloadListEntryViewModel>? ViewModelChanged;
+    public event Action<DownloadItem, DownloadItemViewModel>? ViewModelChanged;
     
-    public event TypedEventHandler<DownloadListEntry, DownloadListEntryViewModel>? OpenIllustrationRequested;
+    public event TypedEventHandler<DownloadItem, DownloadItemViewModel>? OpenIllustrationRequested;
 
     private static void OnViewModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        if (d as DownloadListEntry is { } entry)
+        if (d as DownloadItem is { } entry)
         {
             entry.ViewModelChanged?.Invoke(entry, entry.ViewModel);
         }
     }
 
-    public DownloadListEntry() => InitializeComponent();
+    public DownloadItem() => InitializeComponent();
 
     private async void ActionButton_OnClicked(object sender, RoutedEventArgs e)
     {
@@ -67,7 +67,7 @@ public sealed partial class DownloadListEntry
                 if (!await (ViewModel.DownloadTask.IsFolder
                         ? Launcher.LaunchFolderPathAsync(Path.GetDirectoryName(ViewModel.DownloadTask.Destination))
                         : Launcher.LaunchUriAsync(new Uri(ViewModel.DownloadTask.ActualDestination))))
-                    _ = await this.CreateAcknowledgementAsync(MiscResources.DownloadListEntryOpenFailed, MiscResources.DownloadListEntryMaybeDeleted);
+                    _ = await this.CreateAcknowledgementAsync(MiscResources.DownloadItemOpenFailed, MiscResources.DownloadItemMaybeDeleted);
                 break;
             case DownloadState.Paused:
                 ViewModel.DownloadTask.CancellationHandle.Resume();
@@ -98,6 +98,6 @@ public sealed partial class DownloadListEntry
 
     private async void CheckErrorMessageInDetail_OnClicked(object sender, RoutedEventArgs e)
     {
-        _ = await this.CreateAcknowledgementAsync(DownloadListEntryResources.ErrorMessageDialogTitle, ViewModel.DownloadTask.ErrorCause?.ToString());
+        _ = await this.CreateAcknowledgementAsync(DownloadItemResources.ErrorMessageDialogTitle, ViewModel.DownloadTask.ErrorCause?.ToString());
     }
 }

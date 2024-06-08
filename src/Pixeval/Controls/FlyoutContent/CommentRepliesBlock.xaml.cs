@@ -31,12 +31,12 @@ using WinUI3Utilities.Attributes;
 
 namespace Pixeval.Controls.FlyoutContent;
 
-[DependencyProperty<CommentBlockViewModel>("ViewModel")]
+[DependencyProperty<CommentItemViewModel>("ViewModel")]
 public sealed partial class CommentRepliesBlock
 {
     public CommentRepliesBlock() => InitializeComponent();
 
-    private void CommentList_OnRepliesHyperlinkButtonClick(CommentBlockViewModel viewModel)
+    private void CommentView_OnRepliesHyperlinkButtonClick(CommentItemViewModel viewModel)
     {
         _ = ReplyBar.FindDescendant<RichEditBox>()?.Focus(FocusState.Programmatic);
     }

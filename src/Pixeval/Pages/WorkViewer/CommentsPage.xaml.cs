@@ -49,7 +49,7 @@ public sealed partial class CommentsPage
         _viewModel = new CommentsPageViewModel(engine, type, id);
     }
 
-    private void CommentList_OnRepliesHyperlinkButtonClick(CommentBlockViewModel viewModel)
+    private void CommentView_OnRepliesHyperlinkButtonClick(CommentItemViewModel viewModel)
     {
         CommentRepliesBlock.ViewModel = viewModel;
         CommentRepliesTeachingTip.IsOpen = true;
@@ -87,7 +87,7 @@ public sealed partial class CommentsPage
         await AddComment(result);
     }
 
-    private async void CommentList_OnDeleteHyperlinkButtonClick(CommentBlockViewModel viewModel)
+    private async void CommentView_OnDeleteHyperlinkButtonClick(CommentItemViewModel viewModel)
     {
         using var result = _viewModel.EntryType switch
         {
@@ -105,7 +105,7 @@ public sealed partial class CommentsPage
             _viewModel.AddComment(comment);
     }
 
-    private void DeleteComment(HttpResponseMessage postCommentResponse, CommentBlockViewModel viewModel)
+    private void DeleteComment(HttpResponseMessage postCommentResponse, CommentItemViewModel viewModel)
     {
         if (postCommentResponse.IsSuccessStatusCode)
             _viewModel.DeleteComment(viewModel);

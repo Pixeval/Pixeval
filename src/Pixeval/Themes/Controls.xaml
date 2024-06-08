@@ -54,7 +54,7 @@
         x:Key="WorkTypeComboBoxStyle"
         BasedOn="{StaticResource DefaultComboBoxStyle}"
         TargetType="controls:EnumComboBox">
-        <Setter Property="EnumSource" Value="{winUi:EnumValues Type=enum:WorkType}" />
+        <Setter Property="EnumSource" Value="{controls:EnumValues Type=WorkType}" />
         <Setter Property="PlaceholderText" Value="{controls:ResourceString ResourceKey='WorkTypeComboBox/PlaceholderText', ResourceFile=Misc}" />
     </Style>
 
@@ -62,7 +62,7 @@
         x:Key="SimpleWorkTypeComboBoxStyle"
         BasedOn="{StaticResource DefaultComboBoxStyle}"
         TargetType="controls:EnumComboBox">
-        <Setter Property="EnumSource" Value="{winUi:EnumValues Type=enum:SimpleWorkType}" />
+        <Setter Property="EnumSource" Value="{controls:EnumValues Type=SimpleWorkType}" />
         <Setter Property="PlaceholderText" Value="{controls:ResourceString ResourceKey='WorkTypeComboBox/PlaceholderText', ResourceFile=Misc}" />
     </Style>
 
@@ -70,7 +70,7 @@
         x:Key="PrivacyPolicyComboBoxStyle"
         BasedOn="{StaticResource DefaultComboBoxStyle}"
         TargetType="controls:EnumComboBox">
-        <Setter Property="EnumSource" Value="{winUi:EnumValues Type=enum:PrivacyPolicy}" />
+        <Setter Property="EnumSource" Value="{controls:EnumValues Type=PrivacyPolicy}" />
         <Setter Property="PlaceholderText" Value="{controls:ResourceString ResourceKey='PrivacyPolicyComboBox/PlaceholderText', ResourceFile=Misc}" />
     </Style>
 
@@ -78,7 +78,7 @@
         x:Key="WorkSortOptionComboBoxStyle"
         BasedOn="{StaticResource DefaultComboBoxStyle}"
         TargetType="controls:EnumComboBox">
-        <Setter Property="EnumSource" Value="{winUi:EnumValues Type=enum:WorkSortOption}" />
+        <Setter Property="EnumSource" Value="{controls:EnumValues Type=WorkSortOption}" />
         <Setter Property="PlaceholderText" Value="{controls:ResourceString ResourceKey='SortOptionComboBox/PlaceholderText', ResourceFile=Misc}" />
     </Style>
 
