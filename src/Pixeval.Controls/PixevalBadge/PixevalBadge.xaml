@@ -15,8 +15,10 @@
         <x:Int32 x:Key="SmallFontSize">7</x:Int32>
         <Thickness x:Key="NormalFontMargin">3</Thickness>
         <Thickness x:Key="SmallFontMargin">2</Thickness>
+        <!--  ReSharper disable Xaml.UnexpectedTextToken  -->
         <text:FontWeight x:Key="NormalFontWeight">Bold</text:FontWeight>
         <text:FontWeight x:Key="SmallFontWeight">Normal</text:FontWeight>
+        <!--  ReSharper restore Xaml.UnexpectedTextToken  -->
     </UserControl.Resources>
     <Grid
         VerticalAlignment="Center"
