@@ -158,6 +158,10 @@
                                             Command="{x:Bind _viewModel.CurrentPage.SaveCommand, Mode=OneWay}"
                                             CommandParameter="{x:Bind _viewModel.CurrentImage.DownloadParameter, Mode=OneWay}"
                                             IsEnabled="{x:Bind _viewModel.CurrentImage.LoadSuccessfully, Mode=OneWay}" />
+                                        <AppBarButton
+                                            Command="{x:Bind _viewModel.CurrentIllustration.MangaSaveCommand, Mode=OneWay}"
+                                            CommandParameter="{x:Bind HWnd}"
+                                            Visibility="{x:Bind _viewModel.CurrentIllustration.IsManga, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
                                     </CommandBar>
                                 </controls1:DockPanel>
                             </Border>
@@ -295,6 +299,14 @@
                             Command="{x:Bind _viewModel.CurrentPage.SaveAsCommand, Mode=OneWay}"
                             CommandParameter="{x:Bind _viewModel.CurrentImage.DownloadParameter, Mode=OneWay}"
                             IsEnabled="{x:Bind _viewModel.CurrentImage.LoadSuccessfully, Mode=OneWay}" />
+                        <AppBarButton
+                            Command="{x:Bind _viewModel.CurrentIllustration.MangaSaveCommand, Mode=OneWay}"
+                            CommandParameter="{x:Bind HWnd}"
+                            Visibility="{x:Bind _viewModel.CurrentIllustration.IsManga, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
+                        <AppBarButton
+                            Command="{x:Bind _viewModel.CurrentIllustration.MangaSaveAsCommand, Mode=OneWay}"
+                            CommandParameter="{x:Bind HWnd}"
+                            Visibility="{x:Bind _viewModel.CurrentIllustration.IsManga, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
                         <AppBarSeparator />
                         <AppBarButton Command="{x:Bind _viewModel.CurrentImage.SetAsCommand, Mode=OneWay}">
                             <AppBarButton.Flyout>

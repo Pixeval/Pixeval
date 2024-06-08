@@ -30,11 +30,18 @@ using System.IO;
 using Pixeval.Download;
 using Microsoft.Extensions.DependencyInjection;
 using Pixeval.Download.Models;
+using Symbol = FluentIcons.Common.Symbol;
 
 namespace Pixeval.Controls;
 
 public partial class IllustrationItemViewModel
 {
+    /// <inheritdoc cref="WorkEntryViewModel{T}.SaveCommand"/>
+    public XamlUICommand MangaSaveCommand { get; } = EntryItemResources.MangaSave.GetCommand(Symbol.SaveImage);
+
+    /// <inheritdoc cref="WorkEntryViewModel{T}.SaveAsCommand"/>
+    public XamlUICommand MangaSaveAsCommand { get; } = EntryItemResources.MangaSaveAs.GetCommand(Symbol.SaveEdit);
+
     protected override Task<bool> SetBookmarkAsync(long id, bool isBookmarked, bool privately = false, IEnumerable<string>? tags = null) => MakoHelper.SetIllustrationBookmarkAsync(id, isBookmarked, privately, tags);
 
     protected override async void SaveCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
