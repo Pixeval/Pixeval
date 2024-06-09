@@ -146,7 +146,7 @@
     "SessionSettingsGroup/Text": "会话设置",
     "SignOutConfirmationDialogContent": "该操作将会无法撤销",
     "SignOutConfirmationDialogTitle": "你确定要登出吗？",
-    "SignOutEntry/Description": "退出登录将会清除你的缓存与包括跨设备同步在内的所有个人信息并关闭应用程序",
+    "SignOutEntry/Description": "退出登录并关闭应用程序",
     "SignOutEntry/Header": "退出登录",
     "SpotlightSearchPageLimitNumberBox/PlaceholderText": "特辑搜索页数限制[1, 100]",
     "TargetAPIPlatformEntry/Description": "指定发送请求时使用哪个平台对应的 API，如果不知道这是什么意思请保持默认",

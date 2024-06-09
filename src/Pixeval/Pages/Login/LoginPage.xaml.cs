@@ -144,11 +144,12 @@ public sealed partial class LoginPage
     {
         try
         {
-            await _viewModel.WebView2LoginAsync(this, useNewAccount, () => DispatcherQueue.TryEnqueue(SuccessNavigating));
+            await _viewModel.WebView2LoginAsync(HWnd, useNewAccount, () => DispatcherQueue.TryEnqueue(SuccessNavigating));
+            _viewModel.AdvancePhase(LoginPageViewModel.LoginPhaseEnum.WaitingForUserInput);
         }
         catch (Exception exception)
         {
-            _ = await this.CreateAcknowledgementAsync(LoginPageResources.ErrorWhileLoggingInTitle,
+            _ = await HWnd.CreateAcknowledgementAsync(LoginPageResources.ErrorWhileLoggingInTitle,
                 LoginPageResources.ErrorWhileLogginInContentFormatted.Format(exception + "\n" + exception.StackTrace));
             _viewModel.CloseWindow();
         }

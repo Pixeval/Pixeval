@@ -22,23 +22,23 @@ using System.Security.Cryptography.X509Certificates;
 
 namespace Pixeval.Pages.Login;
 
-public class CertificateManager(X509Certificate2 certificate)
+public static class CertificateManager
 {
-    public void Install(StoreName storeName, StoreLocation storeLocation)
+    public static void Install(this X509Certificate2 certificate, StoreName storeName, StoreLocation storeLocation)
     {
         using var store = new X509Store(storeName, storeLocation);
         store.Open(OpenFlags.ReadWrite);
         store.Add(certificate);
     }
 
-    public void Uninstall(StoreName storeName, StoreLocation storeLocation)
+    public static void Uninstall(this X509Certificate2 certificate, StoreName storeName, StoreLocation storeLocation)
     {
         using var store = new X509Store(storeName, storeLocation);
         store.Open(OpenFlags.ReadWrite);
         store.Remove(certificate);
     }
 
-    public bool Query(StoreName storeName, StoreLocation storeLocation)
+    public static bool Query(this X509Certificate2 certificate, StoreName storeName, StoreLocation storeLocation)
     {
         using var store = new X509Store(storeName, storeLocation);
         store.Open(OpenFlags.ReadOnly);
