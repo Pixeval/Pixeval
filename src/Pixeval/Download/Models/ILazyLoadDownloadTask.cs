@@ -21,10 +21,11 @@
 #endregion
 
 using System.Threading.Tasks;
+using Pixeval.CoreApi.Model;
 
 namespace Pixeval.Download.Models;
 
 public interface ILazyLoadDownloadTask
 {
-    Task LazyLoadAsync(long id);
+    Task LazyLoadAsync(IWorkEntry entry);
 }

@@ -30,44 +30,51 @@ using System.IO;
 using Pixeval.Download;
 using Microsoft.Extensions.DependencyInjection;
 using Pixeval.Download.Models;
+using Symbol = FluentIcons.Common.Symbol;
 
 namespace Pixeval.Controls;
 
 public partial class IllustrationItemViewModel
 {
+    /// <inheritdoc cref="WorkEntryViewModel{T}.SaveCommand"/>
+    public XamlUICommand MangaSaveCommand { get; } = EntryItemResources.MangaSave.GetCommand(Symbol.SaveImage);
+
+    /// <inheritdoc cref="WorkEntryViewModel{T}.SaveAsCommand"/>
+    public XamlUICommand MangaSaveAsCommand { get; } = EntryItemResources.MangaSaveAs.GetCommand(Symbol.SaveEdit);
+
     protected override Task<bool> SetBookmarkAsync(long id, bool isBookmarked, bool privately = false, IEnumerable<string>? tags = null) => MakoHelper.SetIllustrationBookmarkAsync(id, isBookmarked, privately, tags);
 
     protected override async void SaveCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
         var hWnd = null as ulong?;
-        var getOriginalImageSourceAsync = null as GetImageStream;
+        var getImageStreamAsync = null as GetImageStream;
         switch (args.Parameter)
         {
-            case ValueTuple<ulong, GetImageStream?> tuple:
-                hWnd = tuple.Item1;
-                getOriginalImageSourceAsync = tuple.Item2;
-                break;
-            case ValueTuple<ulong?, GetImageStream?> tuple:
-                hWnd = tuple.Item1;
-                getOriginalImageSourceAsync = tuple.Item2;
+            case (ulong h, GetImageStream f):
+                hWnd = h;
+                getImageStreamAsync = f;
                 break;
             case ulong h:
                 hWnd = h;
                 break;
+            case null:
+                break;
+            default:
+                return;
         }
 
-        await SaveUtilityAsync(hWnd, getOriginalImageSourceAsync, App.AppViewModel.AppSettings.DownloadPathMacro);
+        await SaveUtilityAsync(hWnd, getImageStreamAsync, App.AppViewModel.AppSettings.DownloadPathMacro);
     }
 
     protected override async void SaveAsCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
         ulong hWnd;
-        var getOriginalImageSourceAsync = null as GetImageStream;
+        var getImageStreamAsync = null as GetImageStream;
         switch (args.Parameter)
         {
-            case ValueTuple<ulong, GetImageStream?> tuple:
-                hWnd = tuple.Item1;
-                getOriginalImageSourceAsync = tuple.Item2;
+            case (ulong h, GetImageStream f):
+                hWnd = h;
+                getImageStreamAsync = f;
                 break;
             case ulong h:
                 hWnd = h;
@@ -86,17 +93,17 @@ public partial class IllustrationItemViewModel
 
         var name = Path.GetFileName(App.AppViewModel.AppSettings.DownloadPathMacro);
         var path = Path.Combine(folder.Path, name);
-        await SaveUtilityAsync(hWnd, getOriginalImageSourceAsync, path);
+        await SaveUtilityAsync(hWnd, getImageStreamAsync, path);
     }
 
     /// <summary>
     /// <see cref="IllustrationDownloadTaskFactory"/>
     /// </summary>
     /// <param name="hWnd">承载提示<see cref="TeachingTip"/>的控件，为<see langword="null"/>则不显示</param>
-    /// <param name="getOriginalImageSourceAsync">获取原图的<see cref="Stream"/>，支持进度显示，为<see langword="null"/>则创建新的下载任务</param>
+    /// <param name="getImageStreamAsync">获取原图的<see cref="Stream"/>，支持进度显示，为<see langword="null"/>则创建新的下载任务</param>
     /// <param name="path">文件路径</param>
     /// <returns></returns>
-    private async Task SaveUtilityAsync(ulong? hWnd, GetImageStream? getOriginalImageSourceAsync, string path)
+    private async Task SaveUtilityAsync(ulong? hWnd, GetImageStream? getImageStreamAsync, string path)
     {
         var ib = hWnd?.InfoGrowlReturn("");
         var progress = null as Progress<double>;
@@ -106,7 +113,7 @@ public partial class IllustrationItemViewModel
             else
                 ib.Title = EntryItemResources.ImageProcessing;
 
-        var source = getOriginalImageSourceAsync is null ? null : await getOriginalImageSourceAsync.Invoke(progress, true);
+        var source = getImageStreamAsync is null ? null : await getImageStreamAsync.Invoke(progress, true);
         var factory = App.AppViewModel.AppServiceProvider.GetRequiredService<IDownloadTaskFactory<IllustrationItemViewModel, IllustrationDownloadTask>>();
         if (source is null)
         {
@@ -125,19 +132,15 @@ public partial class IllustrationItemViewModel
     protected override async void CopyCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
         var hWnd = null as ulong?;
-        GetImageStream getOriginalImageSourceAsync;
+        GetImageStream getImageStreamAsync;
         switch (args.Parameter)
         {
-            case ValueTuple<ulong, GetImageStream> tuple:
-                hWnd = tuple.Item1;
-                getOriginalImageSourceAsync = tuple.Item2;
-                break;
-            case ValueTuple<ulong?, GetImageStream> tuple:
-                hWnd = tuple.Item1;
-                getOriginalImageSourceAsync = tuple.Item2;
+            case (ulong h, GetImageStream f):
+                hWnd = h;
+                getImageStreamAsync = f;
                 break;
             case GetImageStream f:
-                getOriginalImageSourceAsync = f;
+                getImageStreamAsync = f;
                 break;
             default:
                 return;
@@ -151,7 +154,7 @@ public partial class IllustrationItemViewModel
                 progress = new Progress<double>(d => ib.Title = EntryItemResources.UgoiraProcessing.Format(d));
             else
                 ib.Title = EntryItemResources.ImageProcessing;
-        if (await getOriginalImageSourceAsync(progress, false) is { } source)
+        if (await getImageStreamAsync(progress, false) is { } source)
         {
             await UiHelper.ClipboardSetBitmapAsync(source);
             hWnd?.RemoveSuccessGrowlAfterDelay(ib!, EntryItemResources.ImageSetToClipBoard);

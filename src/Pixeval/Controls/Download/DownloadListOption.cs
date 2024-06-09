@@ -20,25 +20,25 @@
 
 using Pixeval.Attributes;
 
-namespace Pixeval.Pages.Download;
+namespace Pixeval.Controls;
 
 public enum DownloadListOption
 {
-    [LocalizedResource(typeof(DownloadListPageResources), nameof(DownloadListPageResources.DownloadListOptionAllQueued))]
+    [LocalizedResource(typeof(DownloadPageResources), nameof(DownloadPageResources.DownloadListOptionAllQueued))]
     AllQueued,
 
-    [LocalizedResource(typeof(DownloadListPageResources), nameof(DownloadListPageResources.DownloadListOptionRunning))]
+    [LocalizedResource(typeof(DownloadPageResources), nameof(DownloadPageResources.DownloadListOptionRunning))]
     Running,
 
-    [LocalizedResource(typeof(DownloadListPageResources), nameof(DownloadListPageResources.DownloadListOptionCompleted))]
+    [LocalizedResource(typeof(DownloadPageResources), nameof(DownloadPageResources.DownloadListOptionCompleted))]
     Completed,
 
-    [LocalizedResource(typeof(DownloadListPageResources), nameof(DownloadListPageResources.DownloadListOptionCancelled))]
+    [LocalizedResource(typeof(DownloadPageResources), nameof(DownloadPageResources.DownloadListOptionCancelled))]
     Cancelled,
 
-    [LocalizedResource(typeof(DownloadListPageResources), nameof(DownloadListPageResources.DownloadListOptionError))]
+    [LocalizedResource(typeof(DownloadPageResources), nameof(DownloadPageResources.DownloadListOptionError))]
     Error,
 
-    [LocalizedResource(typeof(DownloadListPageResources), nameof(DownloadListPageResources.DownloadListOptionCustomSearch))]
+    [LocalizedResource(typeof(DownloadPageResources), nameof(DownloadPageResources.DownloadListOptionCustomSearch))]
     CustomSearch
 }

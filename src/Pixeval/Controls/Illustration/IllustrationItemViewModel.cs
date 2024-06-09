@@ -40,6 +40,11 @@ public partial class IllustrationItemViewModel : WorkEntryViewModel<Illustration
 
     public IllustrationItemViewModel(Illustration illustration) : base(illustration)
     {
+        MangaSaveCommand.ExecuteRequested += SaveCommandOnExecuteRequested;
+        MangaSaveAsCommand.ExecuteRequested += SaveAsCommandOnExecuteRequested;
+        var isManga = IsManga;
+        MangaSaveCommand.CanExecuteRequested += (_, e) => e.CanExecute = isManga;
+        MangaSaveAsCommand.CanExecuteRequested += (_, e) => e.CanExecute = isManga;
         var id = illustration.Id;
         UgoiraMetadata = new(() => App.AppViewModel.MakoClient.GetUgoiraMetadataAsync(id));
     }

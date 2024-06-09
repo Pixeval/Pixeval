@@ -30,8 +30,8 @@ using WinUI3Utilities.Attributes;
 
 namespace Pixeval.Controls;
 
-[DependencyProperty<double>("VerticalSpacing", "0d", nameof(LayoutPropertyChanged))]
-[DependencyProperty<double>("HorizontalSpacing", "0d", nameof(LayoutPropertyChanged))]
+[DependencyProperty<double>("LineSpacing", "0d", nameof(LayoutPropertyChanged))]
+[DependencyProperty<double>("MinItemSpacing", "0d", nameof(LayoutPropertyChanged))]
 [DependencyProperty<double>("LineHeight", "50d", nameof(LayoutPropertyChanged))]
 public sealed partial class RiverFlowLayout : VirtualizingLayout
 {
@@ -92,7 +92,7 @@ public sealed partial class RiverFlowLayout : VirtualizingLayout
     /// <inheritdoc />
     protected override Size MeasureOverride(VirtualizingLayoutContext context, Size parentMeasure)
     {
-        var spacingMeasure = new Size(HorizontalSpacing, VerticalSpacing);
+        var spacingMeasure = new Size(MinItemSpacing, LineSpacing);
 
         var state = (RiverFlowLayoutState)context.LayoutState;
 

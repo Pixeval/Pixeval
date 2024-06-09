@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/CommentBlockViewModel.cs
+// Copyright (c) 2023 Pixeval/CommentItemViewModel.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -41,7 +41,7 @@ using WinUI3Utilities;
 
 namespace Pixeval.Controls;
 
-public partial class CommentBlockViewModel(Comment comment, SimpleWorkType type, long entryId) : ObservableObject, IDisposable
+public partial class CommentItemViewModel(Comment comment, SimpleWorkType type, long entryId) : ObservableObject, IDisposable
 {
     public long EntryId { get; } = entryId;
 
@@ -73,7 +73,7 @@ public partial class CommentBlockViewModel(Comment comment, SimpleWorkType type,
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(RepliesIsNotNull), nameof(RepliesCount))]
-    private ObservableCollection<CommentBlockViewModel>? _replies;
+    private ObservableCollection<CommentItemViewModel>? _replies;
 
     public bool RepliesIsNotNull => Replies is not null;
 
@@ -87,7 +87,7 @@ public partial class CommentBlockViewModel(Comment comment, SimpleWorkType type,
                 SimpleWorkType.IllustAndManga => App.AppViewModel.MakoClient.IllustrationCommentReplies(CommentId),
                 SimpleWorkType.Novel => App.AppViewModel.MakoClient.NovelCommentReplies(CommentId),
                 _ => ThrowHelper.ArgumentOutOfRange<SimpleWorkType, IFetchEngine<Comment>>(EntryType)
-            }).Select(c => new CommentBlockViewModel(c, EntryType, EntryId))
+            }).Select(c => new CommentItemViewModel(c, EntryType, EntryId))
             .ToObservableCollectionAsync();
     }
 
@@ -103,7 +103,7 @@ public partial class CommentBlockViewModel(Comment comment, SimpleWorkType type,
     {
         Replies ??= [];
 
-        Replies.Insert(0, new CommentBlockViewModel(comment, EntryType, EntryId));
+        Replies.Insert(0, new CommentItemViewModel(comment, EntryType, EntryId));
     }
 
     public async Task<Paragraph> GetReplyContentParagraphAsync()

@@ -48,12 +48,12 @@
                 <ContentControl
                     VerticalAlignment="Center"
                     Content="{fluent:SymbolIcon Symbol=Guest,
-                                                FontSize=11}"
+                                                FontSize=12}"
                     Foreground="{StaticResource TextSecondaryAccentColor}" />
                 <TextBlock
                     VerticalAlignment="Center"
                     Foreground="{StaticResource TextSecondaryAccentColor}"
-                    Style="{StaticResource SubscriptTextBlockStyle}"
+                    Style="{StaticResource CaptionStrongTextBlockStyle}"
                     Text="{x:Bind ViewModel.UserId, Mode=OneWay}" />
                 <local:PixevalBadge
                     Mode="Following"
@@ -124,7 +124,7 @@
                     <MenuFlyoutSeparator />
                     <MenuFlyoutItem Command="{x:Bind ViewModel.OpenInWebBrowserCommand, Mode=OneWay}" />
                     <MenuFlyoutItem Command="{x:Bind ViewModel.GenerateWebLinkCommand, Mode=OneWay}" CommandParameter="{x:Bind HWnd}" />
-                    <MenuFlyoutItem Command="{x:Bind ViewModel.GenerateLinkCommand, Mode=OneWay}" CommandParameter="{x:Bind}" />
+                    <MenuFlyoutItem Command="{x:Bind ViewModel.GenerateLinkCommand, Mode=OneWay}" CommandParameter="{x:Bind HWnd}" />
                     <MenuFlyoutSeparator />
                     <MenuFlyoutItem Command="{x:Bind ViewModel.ShowQrCodeCommand, Mode=OneWay}" CommandParameter="{x:Bind QrCodeTeachingTip}" />
                     <MenuFlyoutItem Command="{x:Bind ViewModel.ShowPixEzQrCodeCommand, Mode=OneWay}" CommandParameter="{x:Bind QrCodeTeachingTip}" />

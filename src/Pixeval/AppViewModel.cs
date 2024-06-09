@@ -109,8 +109,9 @@ public class AppViewModel(App app) : IDisposable
 
     public void Dispose()
     {
-        AppServiceProvider.Dispose();
-        DownloadManager.Dispose();
-        MakoClient.Dispose();
+        AppServiceProvider?.Dispose();
+        DownloadManager?.Dispose();
+        MakoClient?.Dispose();
+        GC.SuppressFinalize(this);
     }
 }

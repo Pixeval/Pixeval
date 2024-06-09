@@ -21,39 +21,11 @@
     <x:Double x:Key="PixevalButtonIconSmallSize">10</x:Double>
     <x:Double x:Key="TeachingTipContentMaxHeight">450</x:Double>
     <x:Double x:Key="TeachingTipContentMaxHeightWithTarget">430</x:Double>
-    <Style x:Key="TitleTextBlockStyle" TargetType="TextBlock">
+    <Style
+        x:Key="CaptionStrongTextBlockStyle"
+        BasedOn="{StaticResource CaptionTextBlockStyle}"
+        TargetType="TextBlock">
         <Setter Property="FontWeight" Value="SemiBold" />
-        <Setter Property="FontSize" Value="{StaticResource PixevalTitleFontSize}" />
-    </Style>
-    <Style x:Key="SubtitleTextBlockStyle" TargetType="TextBlock">
-        <Setter Property="FontWeight" Value="SemiBold" />
-        <Setter Property="FontSize" Value="{StaticResource PixevalSubtitleFontSize}" />
-    </Style>
-    <Style x:Key="SubSubtitleTextBlockStyle" TargetType="TextBlock">
-        <Setter Property="FontWeight" Value="SemiBold" />
-        <Setter Property="FontSize" Value="{StaticResource PixevalSubSubtitleFontSize}" />
-    </Style>
-    <Style x:Key="ContentStrongTextBlockStyle" TargetType="TextBlock">
-        <Setter Property="FontWeight" Value="SemiBold" />
-        <Setter Property="FontSize" Value="{StaticResource PixevalContentFontSize}" />
-    </Style>
-    <Style x:Key="ContentTextBlockStyle" TargetType="TextBlock">
-        <Setter Property="FontSize" Value="{StaticResource PixevalContentFontSize}" />
-    </Style>
-    <Style x:Key="BaseTextBlockStyle" TargetType="TextBlock">
-        <Setter Property="FontSize" Value="{StaticResource PixevalBaseFontSize}" />
-    </Style>
-    <!--  以防和TitleBar冲突  -->
-    <Style x:Key="PixevalCaptionTextBlockStyle" TargetType="TextBlock">
-        <Setter Property="FontSize" Value="{StaticResource PixevalCaptionFontSize}" />
-    </Style>
-    <Style x:Key="SubscriptTextBlockStyle" TargetType="TextBlock">
-        <Setter Property="FontWeight" Value="SemiBold" />
-        <Setter Property="FontSize" Value="{StaticResource PixevalSubscriptFontSize}" />
-    </Style>
-    <Style x:Key="ContentBoldTextBlockStyle" TargetType="TextBlock">
-        <Setter Property="FontWeight" Value="Bold" />
-        <Setter Property="FontSize" Value="{StaticResource PixevalContentFontSize}" />
     </Style>
     <Style x:Key="PixevalNumberBoxStyle" TargetType="NumberBox">
         <Setter Property="IsWrapEnabled" Value="True" />
@@ -82,7 +54,7 @@
         x:Key="WorkTypeComboBoxStyle"
         BasedOn="{StaticResource DefaultComboBoxStyle}"
         TargetType="controls:EnumComboBox">
-        <Setter Property="EnumSource" Value="{winUi:EnumValues Type=enum:WorkType}" />
+        <Setter Property="EnumSource" Value="{controls:EnumValues Type=WorkType}" />
         <Setter Property="PlaceholderText" Value="{controls:ResourceString ResourceKey='WorkTypeComboBox/PlaceholderText', ResourceFile=Misc}" />
     </Style>
 
@@ -90,7 +62,7 @@
         x:Key="SimpleWorkTypeComboBoxStyle"
         BasedOn="{StaticResource DefaultComboBoxStyle}"
         TargetType="controls:EnumComboBox">
-        <Setter Property="EnumSource" Value="{winUi:EnumValues Type=enum:SimpleWorkType}" />
+        <Setter Property="EnumSource" Value="{controls:EnumValues Type=SimpleWorkType}" />
         <Setter Property="PlaceholderText" Value="{controls:ResourceString ResourceKey='WorkTypeComboBox/PlaceholderText', ResourceFile=Misc}" />
     </Style>
 
@@ -98,7 +70,7 @@
         x:Key="PrivacyPolicyComboBoxStyle"
         BasedOn="{StaticResource DefaultComboBoxStyle}"
         TargetType="controls:EnumComboBox">
-        <Setter Property="EnumSource" Value="{winUi:EnumValues Type=enum:PrivacyPolicy}" />
+        <Setter Property="EnumSource" Value="{controls:EnumValues Type=PrivacyPolicy}" />
         <Setter Property="PlaceholderText" Value="{controls:ResourceString ResourceKey='PrivacyPolicyComboBox/PlaceholderText', ResourceFile=Misc}" />
     </Style>
 
@@ -106,7 +78,7 @@
         x:Key="WorkSortOptionComboBoxStyle"
         BasedOn="{StaticResource DefaultComboBoxStyle}"
         TargetType="controls:EnumComboBox">
-        <Setter Property="EnumSource" Value="{winUi:EnumValues Type=enum:WorkSortOption}" />
+        <Setter Property="EnumSource" Value="{controls:EnumValues Type=WorkSortOption}" />
         <Setter Property="PlaceholderText" Value="{controls:ResourceString ResourceKey='SortOptionComboBox/PlaceholderText', ResourceFile=Misc}" />
     </Style>
 

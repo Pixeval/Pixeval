@@ -17,7 +17,7 @@ public partial class MakoClient
         {
             EnsureNotCancelled();
 
-            return await task(MakoServices.GetRequiredService<IAppApiEndPoint>());
+            return await task(Provider.GetRequiredService<IAppApiEndPoint>());
         }
         catch (Exception e)
         {
@@ -32,7 +32,7 @@ public partial class MakoClient
         {
             EnsureNotCancelled();
 
-            return await task(MakoServices.GetRequiredService<IAppApiEndPoint>());
+            return await task(Provider.GetRequiredService<IAppApiEndPoint>());
         }
         catch (Exception e)
         {
@@ -47,7 +47,7 @@ public partial class MakoClient
         {
             EnsureNotCancelled();
 
-            return await task(MakoServices.GetRequiredService<IAppApiEndPoint>());
+            return await task(Provider.GetRequiredService<IAppApiEndPoint>());
         }
         catch (Exception e)
         {
@@ -63,7 +63,7 @@ public partial class MakoClient
         {
             EnsureNotCancelled();
 
-            await task(MakoServices.GetRequiredService<IAppApiEndPoint>());
+            await task(Provider.GetRequiredService<IAppApiEndPoint>());
         }
         catch (Exception e)
         {
@@ -77,7 +77,7 @@ public partial class MakoClient
         {
             EnsureNotCancelled();
 
-            return await task(MakoServices.GetRequiredService<IAppApiEndPoint>());
+            return await task(Provider.GetRequiredService<IAppApiEndPoint>());
         }
         catch (Exception e)
         {

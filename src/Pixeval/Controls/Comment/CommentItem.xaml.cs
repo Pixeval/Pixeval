@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/CommentBlock.xaml.cs
+// Copyright (c) 2023 Pixeval/CommentItem.xaml.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -20,7 +20,6 @@
 
 using System;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.AppManagement;
 using Pixeval.Pages.IllustratorViewer;
@@ -30,18 +29,18 @@ using WinUI3Utilities.Attributes;
 
 namespace Pixeval.Controls;
 
-[DependencyProperty<CommentBlockViewModel>("ViewModel", propertyChanged: nameof(OnViewModelChanged))]
-public sealed partial class CommentBlock
+[DependencyProperty<CommentItemViewModel>("ViewModel", propertyChanged: nameof(OnViewModelChanged))]
+public sealed partial class CommentItem
 {
-    public CommentBlock() => InitializeComponent();
+    public CommentItem() => InitializeComponent();
 
-    public event Action<CommentBlockViewModel>? RepliesHyperlinkButtonTapped;
+    public event Action<CommentItemViewModel>? RepliesHyperlinkButtonClick;
 
-    public event Action<CommentBlockViewModel>? DeleteHyperlinkButtonTapped;
+    public event Action<CommentItemViewModel>? DeleteHyperlinkButtonClick;
 
     private static async void OnViewModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        if (d is not CommentBlock { ViewModel: { } viewModel } block)
+        if (d is not CommentItem { ViewModel: { } viewModel } block)
             return;
         if (viewModel.HasReplies)
             _ = viewModel.LoadRepliesAsync();
@@ -60,12 +59,12 @@ public sealed partial class CommentBlock
         }
     }
 
-    private async void PosterPersonPicture_OnTapped(object sender, TappedRoutedEventArgs e)
+    private async void PosterPersonPicture_OnClicked(object sender, RoutedEventArgs e)
     {
         await IllustratorViewerHelper.CreateWindowWithPageAsync(ViewModel.PosterId);
     }
 
-    private void OpenRepliesHyperlinkButton_OnTapped(object sender, TappedRoutedEventArgs e) => RepliesHyperlinkButtonTapped?.Invoke(ViewModel);
+    private void OpenRepliesHyperlinkButton_OnClicked(object sender, RoutedEventArgs e) => RepliesHyperlinkButtonClick?.Invoke(ViewModel);
 
-    private void DeleteReplyHyperlinkButton_OnTapped(object sender, TappedRoutedEventArgs e) => DeleteHyperlinkButtonTapped?.Invoke(ViewModel);
+    private void DeleteReplyHyperlinkButton_OnClicked(object sender, RoutedEventArgs e) => DeleteHyperlinkButtonClick?.Invoke(ViewModel);
 }

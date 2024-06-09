@@ -19,7 +19,7 @@
     "WorkSortOptionPublishDateAscending": "发布日期升序",
     "WorkSortOptionPublishDateDescending": "发布日期降序",
     "NoneBackdrop": "不使用",
-    "AcrylicBackdrop": "亚克力材质（该选项对低端电脑不友好）",
+    "AcrylicBackdrop": "亚克力材质（对低端电脑不友好）",
     "MicaBackdrop": "Mica（云母）材质",
     "MicaAltBackdrop": "Mica Alt（更鲜艳的云母）材质",
     "SearchDurationUndecided": "默认",
@@ -74,8 +74,8 @@
     "ProxyOptionSystem": "系统代理",
     "ProxyOptionNone": "无代理",
 
-    "DownloadListEntryOpenFailed": "打开文件（夹）失败",
-    "DownloadListEntryMaybeDeleted": "可能你已经删除了该作品",
+    "DownloadItemOpenFailed": "打开文件（夹）失败",
+    "DownloadItemMaybeDeleted": "可能你已经删除了该作品",
 
     "SortOptionComboBox/PlaceholderText": "排序选项",
     "PrivacyPolicyComboBox/PlaceholderText": "公开选项",

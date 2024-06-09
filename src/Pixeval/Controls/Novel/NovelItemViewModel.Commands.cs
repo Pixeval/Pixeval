@@ -43,17 +43,17 @@ public partial class NovelItemViewModel
         var documentViewerViewModel = null as DocumentViewerViewModel;
         switch (args.Parameter)
         {
-            case ValueTuple<ulong, DocumentViewerViewModel?> tuple:
-                hWnd = tuple.Item1;
-                documentViewerViewModel = tuple.Item2;
-                break;
-            case ValueTuple<ulong?, DocumentViewerViewModel?> tuple:
-                hWnd = tuple.Item1;
-                documentViewerViewModel = tuple.Item2;
+            case (ulong h, DocumentViewerViewModel vm):
+                hWnd = h;
+                documentViewerViewModel = vm;
                 break;
             case ulong h:
                 hWnd = h;
                 break;
+            case null:
+                break;
+            default:
+                return;
         }
 
         await SaveUtilityAsync(hWnd, documentViewerViewModel, App.AppViewModel.AppSettings.DownloadPathMacro);
@@ -65,15 +65,15 @@ public partial class NovelItemViewModel
         var documentViewerViewModel = null as DocumentViewerViewModel;
         switch (args.Parameter)
         {
-            case ValueTuple<ulong, DocumentViewerViewModel?> tuple:
-                hWnd = tuple.Item1;
-                documentViewerViewModel = tuple.Item2;
+            case (ulong h, DocumentViewerViewModel vm):
+                hWnd = h;
+                documentViewerViewModel = vm;
                 break;
             case ulong h:
                 hWnd = h;
                 break;
+            // 必须有Window来显示Picker
             default:
-                // 必须有Window来显示Picker
                 return;
         }
 
@@ -124,12 +124,12 @@ public partial class NovelItemViewModel
         NovelContent? novelContent;
         switch (args.Parameter)
         {
-            case ValueTuple<ulong?, NovelContent> tuple:
-                hWnd = tuple.Item1;
-                novelContent = tuple.Item2;
+            case (ulong h, NovelContent c):
+                hWnd = h;
+                novelContent = c;
                 break;
-            case NovelContent f:
-                novelContent = f;
+            case NovelContent c:
+                novelContent = c;
                 break;
             default:
                 return;

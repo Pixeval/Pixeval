@@ -1,25 +1,21 @@
-<Grid
+<controls:DockPanel
     x:Class="Pixeval.Controls.IconText"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:fluent="using:FluentIcons.WinUI"
     xmlns:local="using:Pixeval.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    ColumnSpacing="5"
+    HorizontalSpacing="5"
     mc:Ignorable="d">
-    <Grid.ColumnDefinitions>
-        <ColumnDefinition Width="Auto" />
-        <ColumnDefinition Width="*" />
-    </Grid.ColumnDefinitions>
     <fluent:SymbolIcon
-        Grid.Column="0"
         VerticalAlignment="Center"
-        FontSize="16"
+        controls:DockPanel.Dock="Left"
+        FontSize="{StaticResource SmallIconFontSize}"
         Symbol="{x:Bind Symbol, Mode=OneWay}" />
     <TextBlock
-        Grid.Column="1"
         VerticalAlignment="Center"
         Style="{StaticResource BaseTextBlockStyle}"
         Text="{x:Bind Text, Mode=OneWay}" />
-</Grid>
+</controls:DockPanel>

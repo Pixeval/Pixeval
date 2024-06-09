@@ -55,7 +55,7 @@ public class IllustrationDownloadTaskFactory : IDownloadTaskFactory<Illustration
                     DownloadState.Queued,
                     path,
                     DownloadItemType.Ugoira,
-                    context.Id);
+                    context.Entry);
                 return new UgoiraDownloadTask(downloadHistoryEntry, context, metadata);
             }
 
@@ -65,7 +65,7 @@ public class IllustrationDownloadTaskFactory : IDownloadTaskFactory<Illustration
                     DownloadState.Queued,
                     path,
                     DownloadItemType.Manga,
-                    context.Id);
+                    context.Entry);
                 return new MangaDownloadTask(downloadHistoryEntry, context);
             }
             else
@@ -74,7 +74,7 @@ public class IllustrationDownloadTaskFactory : IDownloadTaskFactory<Illustration
                     DownloadState.Queued,
                     path,
                     DownloadItemType.Illustration,
-                    context.Id);
+                    context.Entry);
                 return new IllustrationDownloadTask(downloadHistoryEntry, context);
             }
         });
@@ -98,19 +98,19 @@ public class IllustrationDownloadTaskFactory : IDownloadTaskFactory<Illustration
             case { IsUgoira: true }:
             {
                 var (stream, metadata) = ((Stream, UgoiraMetadataResponse))param;
-                var entry = new DownloadHistoryEntry(DownloadState.Queued, path, DownloadItemType.Ugoira, context.Id);
+                var entry = new DownloadHistoryEntry(DownloadState.Queued, path, DownloadItemType.Ugoira, context.Entry);
                 return new IntrinsicUgoiraDownloadTask(entry, context, metadata, stream);
             }
             case { IsManga: true, MangaIndex: -1 }: // 下载一篇漫画（未使用的分支）
             {
                 var stream = (Stream)param;
-                var entry = new DownloadHistoryEntry(DownloadState.Queued, path, DownloadItemType.Manga, context.Id);
+                var entry = new DownloadHistoryEntry(DownloadState.Queued, path, DownloadItemType.Manga, context.Entry);
                 return new IntrinsicMangaDownloadTask(entry, context, [stream]);
             }
             default:
             {
                 var stream = (Stream)param;
-                var entry = new DownloadHistoryEntry(DownloadState.Queued, path, DownloadItemType.Illustration, context.Id);
+                var entry = new DownloadHistoryEntry(DownloadState.Queued, path, DownloadItemType.Illustration, context.Entry);
                 return new IntrinsicIllustrationDownloadTask(entry, context, stream);
             }
         }

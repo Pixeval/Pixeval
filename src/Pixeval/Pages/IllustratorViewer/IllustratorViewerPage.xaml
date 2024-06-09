@@ -18,14 +18,8 @@
         <converters1:DoubleToBoolToVisibilityConverter x:Key="DoubleToBoolToVisibilityConverter" />
     </controls:EnhancedPage.Resources>
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="32" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
         <controls:StickyHeaderScrollView
             x:Name="StickyHeaderScrollView"
-            Grid.Row="0"
-            Grid.RowSpan="2"
             GetScrollableLength="StickyHeaderScrollView_OnGetScrollableLength"
             SetInnerScrollView="StickyHeaderScrollView_OnSetInnerScrollView">
             <controls:StickyHeaderScrollView.HeaderBackGround>
@@ -39,35 +33,28 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
-                    <Grid
+                    <controls1:DockPanel
                         x:Name="TextContainer"
                         Grid.Row="0"
                         Grid.RowSpan="2"
                         Margin="100,0"
+                        HorizontalAlignment="Left"
                         VerticalAlignment="Center"
-                        ColumnSpacing="50"
+                        HorizontalSpacing="50"
                         Opacity="{x:Bind StickyHeaderScrollView.ScrollRatio, Converter={StaticResource ComplementaryDoubleConverter}, Mode=OneWay}">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="*" MaxWidth="400" />
-                        </Grid.ColumnDefinitions>
                         <PersonPicture
                             x:Name="ProfileImage"
-                            Grid.Column="0"
                             Width="100"
                             Height="100"
+                            controls1:DockPanel.Dock="Left"
                             ProfilePicture="{x:Bind _viewModel.AvatarSource, Mode=OneWay}" />
-                        <Grid
-                            Grid.Column="1"
+                        <controls1:DockPanel
+                            MaxWidth="400"
                             HorizontalAlignment="Stretch"
-                            RowSpacing="10">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
+                            LastChildFill="False"
+                            VerticalSpacing="10">
                             <StackPanel
-                                Grid.Row="0"
+                                controls1:DockPanel.Dock="Top"
                                 Orientation="Horizontal"
                                 Spacing="10">
                                 <TextBlock
@@ -78,30 +65,26 @@
                             </StackPanel>
                             <TextBlock
                                 x:Name="SubtitleBlock"
-                                Grid.Row="1"
+                                controls1:DockPanel.Dock="Top"
                                 FontSize="14"
                                 IsTextSelectionEnabled="True"
                                 Text="{x:Bind _viewModel.Id}" />
                             <TextBlock
                                 x:Name="Blurb"
-                                Grid.Row="2"
-                                FontSize="16"
+                                controls1:DockPanel.Dock="Top"
+                                FontSize="{StaticResource SmallIconFontSize}"
                                 IsTextSelectionEnabled="True"
                                 MaxLines="3"
                                 Text="{x:Bind _viewModel.Comment}"
                                 TextTrimming="CharacterEllipsis"
                                 TextWrapping="Wrap"
                                 ToolTipService.ToolTip="{x:Bind _viewModel.Comment}" />
-                        </Grid>
-                    </Grid>
-                    <Grid Grid.Row="1" VerticalAlignment="Bottom">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
+                        </controls1:DockPanel>
+                    </controls1:DockPanel>
+                    <controls1:DockPanel Grid.Row="1" VerticalAlignment="Bottom">
                         <CommandBar
-                            Grid.Column="0"
                             VerticalAlignment="Center"
+                            controls1:DockPanel.Dock="Left"
                             Opacity="{x:Bind StickyHeaderScrollView.ScrollRatio, Mode=OneWay}"
                             OverflowButtonVisibility="Collapsed"
                             Visibility="{x:Bind StickyHeaderScrollView.ScrollRatio, Converter={StaticResource DoubleToBoolToVisibilityConverter}, Mode=OneWay}">
@@ -115,7 +98,7 @@
                                 <StackPanel Padding="5,0" Spacing="2">
                                     <TextBlock
                                         MaxWidth="80"
-                                        Style="{StaticResource ContentStrongTextBlockStyle}"
+                                        Style="{StaticResource CaptionStrongTextBlockStyle}"
                                         Text="{x:Bind _viewModel.Name}"
                                         TextTrimming="CharacterEllipsis"
                                         TextWrapping="NoWrap" />
@@ -151,7 +134,7 @@
                                 Number="{x:Bind _viewModel.Metrics.TotalNovelSeries, Mode=OneWay}"
                                 Symbol="BookOpen" />
                         </CommandBar>
-                        <CommandBar Grid.Column="1" DefaultLabelPosition="Right">
+                        <CommandBar DefaultLabelPosition="Right">
                             <AppBarButton Command="{x:Bind _viewModel.FollowCommand}" Visibility="{x:Bind _viewModel.IsFollowed, Converter={StaticResource BoolNegationToVisibilityConverter}, Mode=OneWay}" />
                             <AppBarButton Command="{x:Bind _viewModel.FollowPrivatelyCommand}" Visibility="{x:Bind _viewModel.IsFollowed, Converter={StaticResource BoolNegationToVisibilityConverter}, Mode=OneWay}" />
                             <AppBarButton Command="{x:Bind _viewModel.UnfollowCommand}" Visibility="{x:Bind _viewModel.IsFollowed, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
@@ -164,7 +147,7 @@
                                 Command="{x:Bind _viewModel.ShowQrCodeCommand}"
                                 CommandParameter="{x:Bind ShowQrCodeTeachingTip}" />
                         </CommandBar>
-                    </Grid>
+                    </controls1:DockPanel>
                     <controls1:Segmented
                         Grid.Row="2"
                         HorizontalAlignment="Stretch"
@@ -211,7 +194,6 @@
         </controls:StickyHeaderScrollView>
         <controls1:TitleBar
             Title="{x:Bind _viewModel.Name}"
-            Grid.Row="0"
             VerticalAlignment="Top"
             Window="{x:Bind windowing:WindowFactory.GetForkedWindows(HWnd)}">
             <controls1:TitleBar.Icon>

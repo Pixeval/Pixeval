@@ -66,7 +66,7 @@
             x:Name="TitleTextBlock"
             controls:DockPanel.Dock="Top"
             MaxLines="3"
-            Style="{StaticResource ContentStrongTextBlockStyle}"
+            Style="{StaticResource CaptionStrongTextBlockStyle}"
             Text="{x:Bind ViewModel.Title, Mode=OneWay}"
             TextTrimming="CharacterEllipsis"
             TextWrapping="WrapWholeWords" />
@@ -75,7 +75,7 @@
                 controls:DockPanel.Dock="Right"
                 Foreground="DarkGray"
                 MaxLines="1"
-                Style="{StaticResource ContentTextBlockStyle}"
+                Style="{StaticResource BodyTextBlockStyle}"
                 Text="{x:Bind ViewModel.PublishDate, Converter={StaticResource CultureDateConverter}, Mode=OneWay}"
                 TextTrimming="CharacterEllipsis"
                 TextWrapping="WrapWholeWords" />
@@ -83,7 +83,7 @@
                 x:Name="AuthorTextBlock"
                 Foreground="DarkGray"
                 MaxLines="1"
-                Style="{StaticResource ContentTextBlockStyle}"
+                Style="{StaticResource BodyTextBlockStyle}"
                 Text="{x:Bind ViewModel.User.Name, Mode=OneWay}"
                 TextTrimming="CharacterEllipsis"
                 TextWrapping="WrapWholeWords" />
@@ -133,7 +133,7 @@
                         Padding="2"
                         Background="#7F7F7F7F"
                         CornerRadius="{StaticResource ControlCornerRadius}">
-                        <TextBlock FontSize="{StaticResource PixevalSubscriptFontSize}" Text="{x:Bind Name}" />
+                        <TextBlock Style="{StaticResource CaptionTextBlockStyle}" Text="{x:Bind Name}" />
                     </Border>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
@@ -157,37 +157,35 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <Grid Grid.Column="0" RowSpacing="5">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-                <controls:ConstrainedBox Grid.Row="0" AspectRatio="427:600">
-                    <local:LazyImage x:Name="PopupImage" Source="{x:Bind ViewModel.ThumbnailSource, Mode=OneWay}" />
-                </controls:ConstrainedBox>
-                <local:HeartButton
-                    x:Name="PopupHeartButton"
-                    Grid.Row="0"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Top"
-                    Command="{x:Bind ViewModel.BookmarkCommand, Mode=OneWay}"
-                    CommandParameter="{x:Bind HWnd}">
-                    <Grid.RenderTransform>
-                        <ScaleTransform ScaleX="1" ScaleY="1" />
-                    </Grid.RenderTransform>
-                </local:HeartButton>
+            <controls:DockPanel Grid.Column="0" VerticalSpacing="5">
                 <CommandBar
-                    Grid.Row="1"
                     Margin="-5"
                     HorizontalAlignment="Left"
+                    controls:DockPanel.Dock="Bottom"
                     DefaultLabelPosition="Collapsed"
                     OverflowButtonVisibility="Collapsed">
-                    <AppBarButton Command="{x:Bind OpenNovelCommand}" Tapped="OpenNovel_OnTapped" />
-                    <AppBarButton Command="{x:Bind ViewModel.AddToBookmarkCommand, Mode=OneWay}" Tapped="AddToBookmark_OnTapped" />
+                    <AppBarButton Click="OpenNovel_OnClicked" Command="{x:Bind OpenNovelCommand}" />
+                    <AppBarButton Click="AddToBookmark_OnClicked" Command="{x:Bind ViewModel.AddToBookmarkCommand, Mode=OneWay}" />
                     <AppBarButton Command="{x:Bind ViewModel.SaveCommand, Mode=OneWay}" CommandParameter="{x:Bind HWnd}" />
                     <AppBarButton Command="{x:Bind ViewModel.OpenInWebBrowserCommand, Mode=OneWay}" />
                 </CommandBar>
-            </Grid>
+                <Grid>
+                    <controls:ConstrainedBox Grid.Row="0" AspectRatio="427:600">
+                        <local:LazyImage x:Name="PopupImage" Source="{x:Bind ViewModel.ThumbnailSource, Mode=OneWay}" />
+                    </controls:ConstrainedBox>
+                    <local:HeartButton
+                        x:Name="PopupHeartButton"
+                        Grid.Row="0"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top"
+                        Command="{x:Bind ViewModel.BookmarkCommand, Mode=OneWay}"
+                        CommandParameter="{x:Bind HWnd}">
+                        <Grid.RenderTransform>
+                            <ScaleTransform ScaleX="1" ScaleY="1" />
+                        </Grid.RenderTransform>
+                    </local:HeartButton>
+                </Grid>
+            </controls:DockPanel>
             <controls:DockPanel
                 Grid.Column="1"
                 HorizontalSpacing="10"
@@ -196,7 +194,7 @@
                     x:Name="PopupTitleTextBlock"
                     controls:DockPanel.Dock="Top"
                     MaxLines="1"
-                    Style="{StaticResource ContentStrongTextBlockStyle}"
+                    Style="{StaticResource CaptionStrongTextBlockStyle}"
                     Text="{x:Bind ViewModel.Title, Mode=OneWay}"
                     TextTrimming="CharacterEllipsis"
                     TextWrapping="WrapWholeWords" />
@@ -205,7 +203,7 @@
                     controls:DockPanel.Dock="Top"
                     Foreground="DarkGray"
                     MaxLines="1"
-                    Style="{StaticResource ContentTextBlockStyle}"
+                    Style="{StaticResource BodyTextBlockStyle}"
                     Text="{x:Bind ViewModel.User.Name, Mode=OneWay}"
                     TextTrimming="CharacterEllipsis"
                     TextWrapping="WrapWholeWords" />
@@ -225,9 +223,9 @@
                                     <Button
                                         Padding="2"
                                         Background="#7F7F7F7F"
-                                        CornerRadius="{StaticResource ControlCornerRadius}"
-                                        Tapped="TagButton_OnTapped">
-                                        <TextBlock FontSize="{StaticResource PixevalSubscriptFontSize}" Text="{x:Bind Name}" />
+                                        Click="TagButton_OnClicked"
+                                        CornerRadius="{StaticResource ControlCornerRadius}">
+                                        <TextBlock Style="{StaticResource CaptionTextBlockStyle}" Text="{x:Bind Name}" />
                                     </Button>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>

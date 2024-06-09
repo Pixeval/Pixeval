@@ -27,19 +27,5 @@ namespace Pixeval.CoreApi.Net.Response;
 internal partial record TrendingTagResponse
 {
     [JsonPropertyName("trend_tags")]
-    public required TrendTag[] TrendTags { get; set; } = [];
-
-}
-
-[Factory]
-internal partial record TrendTag
-{
-    [JsonPropertyName("tag")]
-    public required string TagStr { get; set; } = "";
-
-    [JsonPropertyName("translated_name")]
-    public required string TranslatedName { get; set; } = "";
-
-    [JsonPropertyName("illust")]
-    public required Illustration Illust { get; set; }
+    public required TrendingTag[] TrendTags { get; set; } = [];
 }

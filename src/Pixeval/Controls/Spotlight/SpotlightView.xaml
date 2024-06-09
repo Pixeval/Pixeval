@@ -24,6 +24,9 @@
                         </ItemContainer>
                     </DataTemplate>
                 </local:AdvancedItemsView.ItemTemplate>
+                <local:AdvancedItemsView.ItemTransitionProvider>
+                    <LinedFlowLayoutItemCollectionTransitionProvider />
+                </local:AdvancedItemsView.ItemTransitionProvider>
             </local:AdvancedItemsView>
         </local:EntryView.Content>
     </local:EntryView>

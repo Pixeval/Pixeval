@@ -21,26 +21,31 @@
 #endregion
 
 using System.Threading.Tasks;
+using Pixeval.CoreApi.Model;
 using Pixeval.Database;
+using WinUI3Utilities;
 
 namespace Pixeval.Download.Models;
 
 public class LazyInitializedNovelDownloadTask(DownloadHistoryEntry entry)
     : NovelDownloadTask(entry, null!, null!, null!), ILazyLoadDownloadTask
 {
-    private readonly long _novelId = entry.Id;
-
     public override async Task DownloadAsync(Downloader downloadStreamAsync)
     {
-        await LazyLoadAsync(_novelId);
+        await LazyLoadAsync(DatabaseEntry.Entry);
 
         await base.DownloadAsync(downloadStreamAsync);
     }
 
-    public async Task LazyLoadAsync(long id)
+    public async Task LazyLoadAsync(IWorkEntry workEntry)
     {
-        NovelItemViewModel ??= new(await App.AppViewModel.MakoClient.GetNovelFromIdAsync(id));
-        NovelContent ??= await App.AppViewModel.MakoClient.GetNovelContentAsync(id);
+        if (workEntry is not Novel novel)
+        {
+            ThrowHelper.Argument(workEntry);
+            return;
+        }
+        NovelItemViewModel ??= new(novel);
+        NovelContent ??= await App.AppViewModel.MakoClient.GetNovelContentAsync(novel.Id);
         DocumentViewModel ??= new(NovelContent);
     }
 }

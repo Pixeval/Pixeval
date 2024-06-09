@@ -91,10 +91,21 @@ public sealed partial class WorkView : IEntryView<ISortableEntryViewViewModel>
 
     private void WorkView_OnSelectionChanged(ItemsView sender, ItemsViewSelectionChangedEventArgs args)
     {
+        if (sender.SelectedItems is not { Count: > 0 })
+        {
+            ViewModel.SelectedEntries = ViewModel switch
+            {
+                NovelViewViewModel => (NovelItemViewModel[])[],
+                IllustrationViewViewModel => (IllustrationItemViewModel[])[],
+                _ => ViewModel.SelectedEntries
+            };
+            return;
+        }
+
         ViewModel.SelectedEntries = ViewModel switch
         {
-            NovelViewViewModel => sender.SelectedItems?.Cast<NovelItemViewModel>().ToArray() ?? [],
-            IllustrationViewViewModel => sender.SelectedItems?.Cast<IllustrationItemViewModel>().ToArray() ?? [],
+            NovelViewViewModel => sender.SelectedItems.Cast<NovelItemViewModel>().ToArray(),
+            IllustrationViewViewModel => sender.SelectedItems.Cast<IllustrationItemViewModel>().ToArray(),
             _ => ViewModel.SelectedEntries
         };
     }

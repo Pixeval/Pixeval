@@ -72,7 +72,7 @@ public sealed partial class IllustrationItem
         };
     }
 
-    private void AddToBookmark_OnTapped(object sender, RoutedEventArgs e)
+    private void AddToBookmark_OnClicked(object sender, RoutedEventArgs e)
     {
         RequestAddToBookmark?.Invoke(this, ViewModel);
     }

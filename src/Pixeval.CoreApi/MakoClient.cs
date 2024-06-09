@@ -52,7 +52,7 @@ public partial class MakoClient : ICancellable, IDisposable, IAsyncDisposable
     {
         Logger = logger;
         Session = session;
-        MakoServices = BuildServiceProvider(ServiceCollection);
+        Provider = BuildServiceProvider(Services);
         Configuration = configuration;
         IsCancelled = false;
     }
@@ -62,7 +62,7 @@ public partial class MakoClient : ICancellable, IDisposable, IAsyncDisposable
         var makoClient = new MakoClient(null!, configuration, logger);
         try
         {
-            makoClient.Session = (await makoClient.MakoServices.GetRequiredService<IAuthEndPoint>().RefreshAsync(new RefreshSessionRequest(refreshToken)).ConfigureAwait(false)).ToSession();
+            makoClient.Session = (await makoClient.Provider.GetRequiredService<IAuthEndPoint>().RefreshAsync(new RefreshSessionRequest(refreshToken)).ConfigureAwait(false)).ToSession();
             return makoClient;
         }
         catch
@@ -215,21 +215,21 @@ public partial class MakoClient : ICancellable, IDisposable, IAsyncDisposable
     /// <returns>The <see cref="HttpClient" /> corresponding to <paramref name="makoApiKind" /></returns>
     public HttpClient GetMakoHttpClient(MakoApiKind makoApiKind)
     {
-        return MakoServices.GetRequiredKeyedService<HttpClient>(makoApiKind);
+        return Provider.GetRequiredKeyedService<HttpClient>(makoApiKind);
     }
 
     public async ValueTask DisposeAsync()
     {
         GC.SuppressFinalize(this);
-        Dispose(ServiceCollection);
-        await MakoServices.DisposeAsync();
+        Dispose(Services);
+        await Provider.DisposeAsync();
     }
 
     public void Dispose()
     {
         GC.SuppressFinalize(this);
-        Dispose(ServiceCollection);
-        MakoServices.Dispose();
+        Dispose(Services);
+        Provider.Dispose();
     }
 
     private void Dispose(ServiceCollection collection)

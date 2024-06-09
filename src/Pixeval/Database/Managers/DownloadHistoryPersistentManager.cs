@@ -84,6 +84,11 @@ public class DownloadHistoryPersistentManager(ILiteDatabase collection, int maxi
         return Collection.FindAll().Select(ToObservableDownloadTask);
     }
 
+    public IEnumerable<DownloadTaskBase> Reverse()
+    {
+        return Collection.Find(LiteDB.Query.All(LiteDB.Query.Descending)).Select(ToObservableDownloadTask);
+    }
+
     public void Purge(int limit)
     {
         if (Collection.Count() > limit)

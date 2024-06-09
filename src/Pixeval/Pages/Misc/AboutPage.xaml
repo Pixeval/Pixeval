@@ -22,7 +22,7 @@
                     <TextBlock x:Uid="/AboutPage/SpecialThanksSubtitleTextBlock" Style="{StaticResource SubtitleTextBlockStyle}" />
                     <TextBlock
                         x:Uid="/AboutPage/SpecialThanksContentTextBlock"
-                        FontSize="{StaticResource PixevalContentFontSize}"
+                        Style="{StaticResource CaptionTextBlockStyle}"
                         TextWrapping="Wrap" />
                     <controls:UniformGrid
                         x:Name="UniformGrid"
@@ -54,7 +54,7 @@
                     <TextBlock
                         x:Uid="/AboutPage/DependenciesContentTextBlock"
                         Margin="0,10"
-                        FontSize="{StaticResource PixevalContentFontSize}"
+                        Style="{StaticResource CaptionTextBlockStyle}"
                         TextWrapping="Wrap" />
                     <ItemsRepeater ItemsSource="{x:Bind local:DependencyViewModel.DependencyViewModels}">
                         <ItemsRepeater.Layout>
@@ -65,9 +65,9 @@
                                 <controls:SettingsCard
                                     MinHeight="0"
                                     ActionIcon="{fluent:SymbolIcon Symbol=Open}"
+                                    Click="LaunchUri"
                                     IsClickEnabled="True"
-                                    Tag="{x:Bind Url}"
-                                    Tapped="LaunchUri">
+                                    Tag="{x:Bind Url}">
                                     <controls:SettingsCard.Header>
                                         <TextBlock>
                                             <Run FontWeight="Bold" Text="{x:Bind Name}" />
@@ -82,7 +82,7 @@
                 </StackPanel>
                 <StackPanel Spacing="10">
                     <TextBlock x:Uid="/AboutPage/SupportMeSubtitleTextBlock" Style="{StaticResource SubtitleTextBlockStyle}" />
-                    <TextBlock FontSize="{StaticResource PixevalContentFontSize}" TextWrapping="Wrap">
+                    <TextBlock Style="{StaticResource CaptionTextBlockStyle}" TextWrapping="Wrap">
                         <Run x:Uid="/AboutPage/SupportMeContentPartI" />
                         <Hyperlink NavigateUri="https://afdian.net/@dylech30th">
                             <Hyperlink.Inlines>
@@ -94,7 +94,7 @@
                 </StackPanel>
                 <StackPanel Spacing="10">
                     <TextBlock x:Uid="/AboutPage/OpenSourceLicenseSubtitleTextBlock" Style="{StaticResource SubtitleTextBlockStyle}" />
-                    <TextBlock FontSize="{StaticResource PixevalContentFontSize}" TextWrapping="Wrap">
+                    <TextBlock Style="{StaticResource CaptionTextBlockStyle}" TextWrapping="Wrap">
                         <Run x:Uid="/AboutPage/OpenSourceLicenseContentPartI" />
                         <Hyperlink NavigateUri="https://www.gnu.org/licenses/gpl-3.0.en.html">
                             <Hyperlink.Inlines>

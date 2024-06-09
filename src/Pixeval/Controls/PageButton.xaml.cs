@@ -12,11 +12,11 @@ public sealed partial class PageButton
 {
     public PageButton() => InitializeComponent();
 
-    public event TappedEventHandler? ButtonTapped;
+    public event RoutedEventHandler? ButtonClick;
 
     public event RightTappedEventHandler? ButtonRightTapped;
 
-    private void NextButton_OnTapped(object sender, TappedRoutedEventArgs e) => ButtonTapped?.Invoke(sender, e);
+    private void NextButton_OnClicked(object sender, RoutedEventArgs e) => ButtonClick?.Invoke(sender, e);
 
     private void NextButton_OnRightTapped(object sender, RightTappedRoutedEventArgs e) => ButtonRightTapped?.Invoke(sender, e);
 

@@ -30,11 +30,11 @@
                         ToolTipService.ToolTip="{x:Bind Tooltip, Mode=OneWay}">
                         <TextBlock Text="{x:Bind TokenContent}" />
                         <fluent:SymbolIcon
-                            FontSize="16"
+                            FontSize="{StaticResource SmallIconFontSize}"
                             Symbol="TextChangeCase"
                             Visibility="{x:Bind CaseSensitive, Converter={StaticResource BoolToVisibilityConverter}}" />
                         <fluent:SymbolIcon
-                            FontSize="16"
+                            FontSize="{StaticResource SmallIconFontSize}"
                             Symbol="Code"
                             Visibility="{x:Bind IsRegularExpression, Converter={StaticResource BoolToVisibilityConverter}}" />
                     </StackPanel>

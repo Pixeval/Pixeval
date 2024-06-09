@@ -22,7 +22,7 @@
         <HyperlinkButton
             Content="{x:Bind Entry.Description}"
             Tag="ms-settings:fonts"
-            Tapped="OpenLinkViaTag_OnTapped" />
+            Click="OpenLinkViaTag_OnClicked" />
     </controls:SettingsCard.Description>
     <ComboBox
         x:Uid="/SettingsPage/AppFontFamilyComboBox"

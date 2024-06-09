@@ -2,25 +2,21 @@
     x:Class="Pixeval.Controls.PixivReplyBar"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:fluent="using:FluentIcons.WinUI"
     xmlns:local="using:Pixeval.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Loaded="PixivReplyBar_OnLoaded"
     mc:Ignorable="d">
-    <Grid ColumnSpacing="5">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="40" />
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="Auto" />
-        </Grid.ColumnDefinitions>
+    <controls:DockPanel HorizontalSpacing="5">
         <Button
             x:Name="EmojiButton"
-            Grid.Column="0"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
+            controls:DockPanel.Dock="Left"
             Content="{fluent:SymbolIcon Symbol=Emoji,
-                                        Size=Small}"
+                                        FontSize={StaticResource SmallIconFontSize}}"
             Style="{StaticResource PixevalRoundedButtonStyle}">
             <Button.Flyout>
                 <Flyout>
@@ -48,22 +44,21 @@
                 </Flyout>
             </Button.Flyout>
         </Button>
+        <Button
+            x:Uid="/PixivReplyBar/SendButton"
+            Width="32"
+            Height="32"
+            Padding="0"
+            controls:DockPanel.Dock="Right"
+            Click="SendButton_OnClicked"
+            Content="{fluent:SymbolIcon Symbol=Send,
+                                        FontSize={StaticResource SmallIconFontSize}}" />
         <RichEditBox
             x:Name="ReplyContentRichEditBox"
             x:Uid="/PixivReplyBar/ReplyContentRichEditBox"
-            Grid.Column="1"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Center"
             x:FieldModifier="public"
             ContextMenuOpening="ReplyContentRichEditBox_OnContextMenuOpening" />
-        <Button
-            x:Uid="/PixivReplyBar/SendButton"
-            Grid.Column="2"
-            Width="32"
-            Height="32"
-            Padding="0"
-            Content="{fluent:SymbolIcon Symbol=Send,
-                                        Size=Small}"
-            Tapped="SendButton_OnTapped" />
-    </Grid>
+    </controls:DockPanel>
 </UserControl>

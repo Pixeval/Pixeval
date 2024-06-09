@@ -15,7 +15,7 @@
         <HyperlinkButton
             x:Uid="/SettingsPage/OpenLanguageSettingsHyperlinkButton"
             Tag="ms-settings:regionlanguage"
-            Tapped="OpenLinkViaTag_OnTapped" />
+            Click="OpenLinkViaTag_OnClicked" />
     </controls:SettingsCard.Description>
     <ComboBox
         x:Uid="/SettingsPage/AppLanguageEntryComboBox"

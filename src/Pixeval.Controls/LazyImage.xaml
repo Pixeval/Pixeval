@@ -11,8 +11,10 @@
         x:Name="ProgressRing"
         Width="{x:Bind _progressRingSize}"
         Height="{x:Bind _progressRingSize}"
+        x:Load="{x:Bind ShowProgressRing, Mode=OneWay}" />
+    <Image
         HorizontalAlignment="{x:Bind HorizontalImageAlignment, Mode=OneWay}"
         VerticalAlignment="{x:Bind VerticalImageAlignment, Mode=OneWay}"
-        x:Load="{x:Bind ShowProgressRing, Mode=OneWay}" />
-    <Image Source="{x:Bind Source, Mode=OneWay}" Stretch="{x:Bind Stretch, Mode=OneWay}" />
+        Source="{x:Bind Source, Mode=OneWay}"
+        Stretch="{x:Bind Stretch, Mode=OneWay}" />
 </Grid>

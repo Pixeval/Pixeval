@@ -26,7 +26,7 @@ public sealed partial class StickyHeaderScrollView
     private void FrameworkElement_OnSizeChanged(object sender, SizeChangedEventArgs e)
     {
         var height = GetScrollableLength?.Invoke() ?? 0;
-        ScrollGrid.Height = View.ActualHeight + height;
+        ScrollDockPanel.Height = View.ActualHeight + height;
     }
 
     private void ScrollView_OnViewChanged(ScrollView sender, object args)

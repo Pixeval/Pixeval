@@ -255,7 +255,7 @@ public sealed partial class MainPage
         NavigationView.SelectedItem = null;
     }
 
-    private async void OpenSearchSettingButton_OnTapped(object sender, TappedRoutedEventArgs e)
+    private async void OpenSearchSettingButton_OnClicked(object sender, RoutedEventArgs e)
     {
         await NavigateToSettingEntryAsync(ReverseSearchApiKeyAttribute.Value);
     }
@@ -301,7 +301,7 @@ public sealed partial class MainPage
         }
     }
 
-    private async void ReverseSearchButton_OnTapped(object sender, TappedRoutedEventArgs e)
+    private async void ReverseSearchButton_OnClicked(object sender, RoutedEventArgs e)
     {
         if (App.AppViewModel.AppSettings.ReverseSearchApiKey is { Length: > 0 })
         {
@@ -349,12 +349,12 @@ public sealed partial class MainPage
         }
     }
 
-    private async void SelfAvatar_OnTapped(object sender, TappedRoutedEventArgs e)
+    private async void SelfAvatar_OnTapped(object sender, RoutedEventArgs e)
     {
         await IllustratorViewerHelper.CreateWindowWithPageAsync(App.AppViewModel.PixivUid);
     }
 
-    private void TitleBar_OnPaneButtonClick(object? sender, RoutedEventArgs e)
+    private void TitleBar_OnPaneButtonClicked(object? sender, RoutedEventArgs e)
     {
         NavigationView.IsPaneOpen = !NavigationView.IsPaneOpen;
     }

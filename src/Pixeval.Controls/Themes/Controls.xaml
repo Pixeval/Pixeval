@@ -3,6 +3,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Pixeval.Controls">
 
+    <x:Double x:Key="SmallIconFontSize">16</x:Double>
     <Thickness x:Key="CardControlPadding">16</Thickness>
     <ResourceDictionary.ThemeDictionaries>
         <ResourceDictionary x:Key="Default">

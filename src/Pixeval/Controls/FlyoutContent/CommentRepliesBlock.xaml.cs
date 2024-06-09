@@ -31,17 +31,17 @@ using WinUI3Utilities.Attributes;
 
 namespace Pixeval.Controls.FlyoutContent;
 
-[DependencyProperty<CommentBlockViewModel>("ViewModel")]
+[DependencyProperty<CommentItemViewModel>("ViewModel")]
 public sealed partial class CommentRepliesBlock
 {
     public CommentRepliesBlock() => InitializeComponent();
 
-    private void CommentList_OnRepliesHyperlinkButtonTapped(CommentBlockViewModel viewModel)
+    private void CommentView_OnRepliesHyperlinkButtonClick(CommentItemViewModel viewModel)
     {
         _ = ReplyBar.FindDescendant<RichEditBox>()?.Focus(FocusState.Programmatic);
     }
 
-    private async void ReplyBar_OnSendButtonTapped(object? sender, SendButtonTappedEventArgs e)
+    private async void ReplyBar_OnSendButtonClick(object? sender, SendButtonClickEventArgs e)
     {
         using var result = ViewModel.EntryType switch
         {
@@ -59,7 +59,7 @@ public sealed partial class CommentRepliesBlock
         await AddComment(result);
     }
 
-    private async void ReplyBar_OnStickerTapped(object? sender, StickerTappedEventArgs e)
+    private async void ReplyBar_OnStickerClick(object? sender, StickerClickEventArgs e)
     {
         using var result = ViewModel.EntryType switch
         {
