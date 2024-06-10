@@ -7,6 +7,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:Pixeval.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    LastChildFill="False"
     mc:Ignorable="d">
     <controls:DockPanel.Resources>
         <converters:CultureDateConverter x:Key="CultureDateConverter" />
@@ -16,6 +17,7 @@
     </controls:ConstrainedBox>
     <controls:DockPanel
         Padding="20"
+        controls:DockPanel.Dock="Top"
         LastChildFill="False"
         VerticalSpacing="10">
         <TextBlock
@@ -25,6 +27,7 @@
             TextTrimming="WordEllipsis" />
         <ContentPresenter
             Padding="5,0"
+            controls:DockPanel.Dock="Left"
             Background="{x:Bind GetBackgroundBrush(ViewModel.Entry.Category), Mode=OneWay}"
             CornerRadius="{StaticResource ControlCornerRadius}">
             <TextBlock Text="{x:Bind ViewModel.Entry.SubcategoryLabel, Mode=OneWay}" />

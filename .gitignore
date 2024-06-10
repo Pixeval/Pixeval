@@ -217,7 +217,7 @@ rcf/
 # Windows Store app package directories and files
 AppPackages/
 BundleArtifacts/
-Package.StoreAssociation.xml
+# Package.StoreAssociation.xml
 _pkginfo.txt
 *.appx
 *.appxbundle
