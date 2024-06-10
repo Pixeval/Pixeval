@@ -21,7 +21,7 @@
         <PackageReference Include="CommunityToolkit.Labs.WinUI.Controls.MarkdownTextBlock" Version="0.1.240517-build.1678" />
         <PackageReference Include="CommunityToolkit.Labs.WinUI.Shimmer" Version="0.1.240517-build.1678" />
         <PackageReference Include="CommunityToolkit.Labs.WinUI.TitleBar" Version="0.0.1-build.1678" />
-        <PackageReference Include="CommunityToolkit.Labs.WinUI.TokenView" Version="0.1.230830" />
+        <PackageReference Include="CommunityToolkit.Labs.WinUI.TokenView" Version="0.1.240517-build.1678" />
         <PackageReference Include="CommunityToolkit.WinUI.Behaviors" Version="8.0.240109" />
         <PackageReference Include="CommunityToolkit.WinUI.Collections" Version="8.0.240109" />
         <PackageReference Include="CommunityToolkit.WinUI.Animations" Version="8.1.240606-rc" />
