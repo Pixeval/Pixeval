@@ -7,6 +7,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Pixeval.Controls;
 using Pixeval.Controls.DialogContent;
+using Pixeval.Controls.Windowing;
 using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Util.UI;
 using WinUI3Utilities;
@@ -25,9 +26,30 @@ public sealed partial class TagsEntry
 
     private void TagButton_OnClicked(object sender, ItemClickEventArgs e) => TagClick?.Invoke(this, e.ClickedItem.To<string>());
 
-    private void GoToPageItem_OnClicked(object sender, RoutedEventArgs e)
+    private async void GoToPageItem_OnClicked(object sender, RoutedEventArgs e)
     {
-        var vm = new IllustrationItemViewModel(ViewModel.Illustration!);
+        if (ViewModel.Illustration is null)
+        {
+            var hWnd = WindowFactory.GetWindowForElement(this).HWnd;
+            var growl = hWnd.InfoGrowlReturn(TagsEntryResources.FetchingWorkInfo);
+            try
+            {
+                var illustration = await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(ViewModel.Id);
+                ViewModel.Illustration = illustration;
+                if (growl is not null)
+                    Growl.RemoveGrowl(hWnd, growl);
+            }
+            catch (Exception exception)
+            {
+                if (growl is null)
+                    return;
+                growl.Severity = InfoBarSeverity.Error;
+                growl.Title = TagsEntryResources.FetchingWorkInfoFailed;
+                growl.Message = exception.Message;
+                return;
+            }
+        }
+        var vm = new IllustrationItemViewModel(ViewModel.Illustration);
         vm.CreateWindowWithPage([vm]);
     }
 
@@ -61,4 +83,6 @@ public sealed partial class TagsEntry
             }
         }
     }
+
+    private bool IsNotZero(long id) => id is not 0;
 }

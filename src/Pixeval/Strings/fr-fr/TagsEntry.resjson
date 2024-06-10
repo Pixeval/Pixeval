@@ -6,5 +6,7 @@
     "OpenLocationItem/Label": "Ouvrir l'image dans sa localisation",
     "EditTag": "Editer les tags de l'image, séparés par des virgules",
     "TagsIsUnloaded": "Le tag n'est pas encore chargé",
-    "EditTagFailed": "Édition de tag échoué"
+    "EditTagFailed": "Édition de tag échoué",
+    "FetchingWorkInfo": "Récupération des informations d'artwork en cours",
+    "FetchingWorkInfoFailed": "Récupération échouée"
 }

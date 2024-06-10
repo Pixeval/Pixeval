@@ -4,7 +4,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:controls1="using:Pixeval.Controls"
-    xmlns:converters="using:Pixeval.Controls.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:fluent="using:FluentIcons.WinUI"
     xmlns:labs="using:CommunityToolkit.Labs.WinUI"
@@ -12,9 +11,6 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     HorizontalSpacing="20"
     mc:Ignorable="d">
-    <controls:DockPanel.Resources>
-        <converters:NullableToBoolConverter x:Key="NullableToBoolConverter" />
-    </controls:DockPanel.Resources>
     <controls1:LazyImage
         Width="50"
         Height="50"
@@ -39,7 +35,7 @@
             x:Uid="/TagsEntry/GoToPageItem"
             Click="GoToPageItem_OnClicked"
             Icon="{fluent:SymbolIcon Symbol=OpenFolder}"
-            IsEnabled="{x:Bind ViewModel.Illustration, Converter={StaticResource NullableToBoolConverter}, Mode=OneWay}" />
+            IsEnabled="{x:Bind IsNotZero(ViewModel.Id), Mode=OneWay}" />
         <AppBarButton
             x:Uid="/TagsEntry/DeleteItem"
             Click="DeleteItem_OnClicked"
