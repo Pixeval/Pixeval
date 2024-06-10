@@ -3,9 +3,9 @@
     "ContentDialog/PrimaryButtonText": "关闭应用",
     "ContentDialog/CloseButtonText": "继续进入应用",
     "MainTextBlock/Text": "检测到上次软件以没有正常方式退出，你可以（清除设置后需要重启）：",
-    "ClearConfig/Content": "清空设置（软件设置）",
-    "ClearContext/Content": "清空登录状态",
-    "OpenLocalFolder/Content": "打开本地文件夹",
-    "OpenRoamingFolder/Content": "打开漫游文件夹",
-    "OpenLogFolder/Content": "打开日志文件夹"
+    "ClearConfig/Text": "清空设置（软件设置）",
+    "ClearContext/Text": "清空登录状态",
+    "OpenLocalFolder/Text": "打开本地文件夹",
+    "OpenRoamingFolder/Text": "打开漫游文件夹",
+    "OpenLogFolder/Text": "打开日志文件夹"
 }

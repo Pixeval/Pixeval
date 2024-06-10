@@ -3,9 +3,9 @@
   "ContentDialog/PrimaryButtonText": "Exit the application",
   "ContentDialog/CloseButtonText": "Continue entering the application",
   "MainTextBlock/Text": "Detected that the last time the software exited in a way that didn\u0027t work properly, you can (A restart of the app is required after clearing the settings):",
-  "ClearConfig/Content": "Clear application settings",
-  "ClearContext/Content": "Clear the session",
-  "OpenLocalFolder/Content": "Open local folder",
-  "OpenRoamingFolder/Content": "Open roaming folder",
-  "OpenLogFolder/Content": "Open log folder"
+  "ClearConfig/Text": "Clear application settings",
+  "ClearContext/Text": "Clear the session",
+  "OpenLocalFolder/Text": "Open local folder",
+  "OpenRoamingFolder/Text": "Open roaming folder",
+  "OpenLogFolder/Text": "Open log folder"
 }
