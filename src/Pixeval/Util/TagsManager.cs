@@ -22,18 +22,18 @@ public static class TagsManager
         profile.SetValue(ExifTag.UserComment, string.Join(';', tags));
     }
 
-    public static async Task<Illustration?> GetIllustrationAsync(this ImageInfo image)
+    public static long GetIllustrationId(this ImageInfo image)
     {
         if (image.Metadata.ExifProfile?.TryGetValue(ExifTag.ImageNumber, out var id) is true)
             try
             {
-                return await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(id.Value);
+                return id.Value;
             }
             catch
             {
                 // ignored
             }
-        return null;
+        return 0;
     }
 
     public static string[] GetTags(this ImageInfo image)

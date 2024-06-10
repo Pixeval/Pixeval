@@ -29,6 +29,8 @@ public partial class TagsEntryViewModel : ObservableObject, IEntry, IDisposable
 
     public string FullPath { get; }
 
+    public long Id { get; private set; }
+
     /// <remarks>
     /// Should be private set
     /// </remarks>
@@ -103,13 +105,14 @@ public partial class TagsEntryViewModel : ObservableObject, IEntry, IDisposable
     {
         var illustration = null as Illustration;
         var tags = null as FrozenSet<string>;
+        var id = 0L;
         await Task.Run(async () =>
         {
             try
             {
                 // 理论上只有此句可能throw
                 var info = await Image.IdentifyAsync(path);
-                illustration = await info.GetIllustrationAsync();
+                id = info.GetIllustrationId();
                 tags = info.GetTags().ToFrozenSet();
             }
             catch
@@ -117,7 +120,7 @@ public partial class TagsEntryViewModel : ObservableObject, IEntry, IDisposable
                 // ignored
             }
         });
-        entry.Illustration = illustration;
+        entry.Id = id;
         entry.TagsSet = tags;
     }
 
