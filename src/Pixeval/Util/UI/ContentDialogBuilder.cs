@@ -44,6 +44,7 @@ public static class ContentDialogBuilder
             content,
             okButtonContent ?? MessageContentDialogResources.OkButtonContent);
     }
+
     public static IAsyncOperation<ContentDialogResult> CreateOkCancelAsync(this ulong hWnd, object? title, object? content, string? okButtonContent = null, string? cancelButtonContent = null)
     {
         return WindowFactory.ForkedWindows[hWnd].Content.ShowContentDialogAsync(
@@ -64,5 +65,17 @@ public static class ContentDialogBuilder
     public static IAsyncOperation<ContentDialogResult> ShowContentDialogAsync(this ulong hWnd, object? title, object? content, string primaryButtonText = "", string secondaryButtonText = "", string closeButtonText = "")
     {
         return WindowFactory.ForkedWindows[hWnd].Content.ShowContentDialogAsync(title, content, primaryButtonText, secondaryButtonText, closeButtonText);
+    }
+
+    public static ContentDialog CreateContentDialog(this ulong hWnd, object? title, object? content, string primaryButtonText = "", string secondaryButtonText = "", string closeButtonText = "")
+    {
+        var cd = WindowFactory.ForkedWindows[hWnd].Content.CreateContentDialog();
+        cd.Title = title;
+        cd.Content = content;
+        cd.PrimaryButtonText = primaryButtonText;
+        cd.SecondaryButtonText = secondaryButtonText;
+        cd.CloseButtonText = closeButtonText;
+        cd.DefaultButton = ContentDialogButton.Primary;
+        return cd;
     }
 }

@@ -118,7 +118,7 @@ public static partial class Growl
 
     private static void Clear(Panel? panel) => panel?.Children.Clear();
 
-    private static void RemoveGrowl(ulong token, InfoBar growl)
+    public static void RemoveGrowl(ulong token, InfoBar growl)
     {
         if (token is 0 || !_panelDic.TryGetValue(token, out var panel))
             if (GrowlPanel is not null)

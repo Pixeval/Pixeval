@@ -38,6 +38,7 @@ using Microsoft.Win32;
 using Pixeval.AppManagement;
 using Pixeval.Attributes;
 using Pixeval.Bypass;
+using Pixeval.Controls.DialogContent;
 using Pixeval.Controls.Windowing;
 using Pixeval.CoreApi;
 using Pixeval.CoreApi.Preference;
@@ -136,16 +137,14 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject
     {
         AdvancePhase(LoginPhaseEnum.CheckingCertificateInstallation);
         using var cert = await AppInfo.GetFakeCaRootCertificateAsync();
-        var fakeCertMgr = new CertificateManager(cert);
-        return fakeCertMgr.Query(StoreName.Root, StoreLocation.CurrentUser);
+        return cert.Query(StoreName.Root, StoreLocation.CurrentUser);
     }
 
     public async Task InstallFakeRootCertificateAsync()
     {
         AdvancePhase(LoginPhaseEnum.InstallingCertificate);
         using var cert = await AppInfo.GetFakeCaRootCertificateAsync();
-        var fakeCertMgr = new CertificateManager(cert);
-        fakeCertMgr.Install(StoreName.Root, StoreLocation.CurrentUser);
+        cert.Install(StoreName.Root, StoreLocation.CurrentUser);
     }
 
     private static int NegotiatePort(int preferPort = 49152)
@@ -164,7 +163,7 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject
         return preferPort;
     }
 
-    public async Task WebView2LoginAsync(UserControl userControl, bool useNewAccount, Action navigated)
+    public async Task WebView2LoginAsync(ulong hWnd, bool useNewAccount, Action navigated)
     {
         var arguments = "";
         var port = NegotiatePort();
@@ -172,14 +171,13 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject
         var proxyServer = null as PixivAuthenticationProxyServer;
         if (EnableDomainFronting)
         {
-            if (!await EnsureCertificateIsInstalled(userControl))
+            if (await EnsureCertificateIsInstalled(hWnd) is not { } cert)
                 return;
-            proxyServer = PixivAuthenticationProxyServer.Create(IPAddress.Loopback, port,
-                await AppInfo.GetFakeServerCertificateAsync());
+            proxyServer = PixivAuthenticationProxyServer.Create(IPAddress.Loopback, port, cert);
             arguments += $" --ignore-certificate-errors --proxy-server=127.0.0.1:{port}";
         }
 
-        if (!await EnsureWebView2IsInstalled(userControl))
+        if (!await EnsureWebView2IsInstalled(hWnd))
             return;
         Environment.SetEnvironmentVariable("WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS", arguments);
         WebView = new();
@@ -257,30 +255,40 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject
         WebView.Source = new Uri(PixivAuth.GenerateWebPageUrl(verifier));
     }
 
-    private async Task<bool> EnsureCertificateIsInstalled(UIElement userControl)
+    private async Task<X509Certificate2?> EnsureCertificateIsInstalled(ulong hWnd)
     {
         if (!await CheckFakeRootCertificateInstallationAsync())
         {
-            var dialogResult = await userControl.CreateOkCancelAsync(LoginPageResources.RootCertificateInstallationRequiredTitle,
-                LoginPageResources.RootCertificateInstallationRequiredContent);
-            if (dialogResult is ContentDialogResult.Primary)
+            var content = new CertificateRequiredDialog();
+
+            var cd = hWnd.CreateContentDialog(
+                LoginPageResources.RootCertificateInstallationRequiredTitle,
+                content,
+                LoginPageResources.RootCertificateInstallationRequiredPrimaryButtonText,
+                LoginPageResources.RootCertificateInstallationRequiredSecondaryButtonText,
+                MessageContentDialogResources.CancelButtonContent);
+            cd.PrimaryButtonClick += (_, e) => e.Cancel = !content.CheckCertificate();
+            var dialogResult = await cd.ShowAsync();
+
+            switch (dialogResult)
             {
-                await InstallFakeRootCertificateAsync();
-            }
-            else
-            {
-                CloseWindow();
-                return false;
+                case ContentDialogResult.Primary:
+                    return content.X509Certificate2;
+                case ContentDialogResult.Secondary:
+                    await InstallFakeRootCertificateAsync();
+                    break;
+                default:
+                    return null;
             }
         }
-        return true;
+        return await AppInfo.GetFakeServerCertificateAsync();
     }
 
-    private async Task<bool> EnsureWebView2IsInstalled(UIElement userControl)
+    private async Task<bool> EnsureWebView2IsInstalled(ulong hWnd)
     {
         if (!CheckWebView2Installation())
         {
-            var dialogResult = await userControl.CreateOkCancelAsync(LoginPageResources.WebView2InstallationRequiredTitle,
+            var dialogResult = await hWnd.CreateOkCancelAsync(LoginPageResources.WebView2InstallationRequiredTitle,
                 LoginPageResources.WebView2InstallationRequiredContent);
             if (dialogResult is ContentDialogResult.Primary)
             {

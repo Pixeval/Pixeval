@@ -146,7 +146,7 @@
   "SessionSettingsGroup/Text": "Configurations de session",
   "SignOutConfirmationDialogContent": "Cette opération est irréversible",
   "SignOutConfirmationDialogTitle": "Etes-vous sûr de vous déconnecter?",
-  "SignOutEntry/Description": "Quitter l\u0027application. Vos caches et toutes les informations personnelles y compris synchronisation entre appareils seront supprimées",
+  "SignOutEntry/Description": "Me déconnecter et quitter l\u0027application",
   "SignOutEntry/Header": "Déconnecter",
   "SpotlightSearchPageLimitNumberBox/PlaceholderText": "Limitation de nombre de pages des spotlight parmi [1, 100]",
   "TargetAPIPlatformEntry/Description": "Spécifiez quelle plateforme d\u0027API utilisée pour envoyer les requêtes. Si vous n\u0027en connaissez pas, veuillez à la laisser vide",
@@ -185,7 +185,7 @@
   "NovelSettingsMaxWidthEntry/Header": "Largeur de page",
   "NovelSettingsMaxWidthEntry/Description": "Largeur maximale de page",
   "MacroCopiedToClipboard": "Le macro a été copié sur le clipboard",
-  "ExtMacroTooltip": "Extensions des fichiers, e.g. .jpg, .png, etc. A noter que ce macro contient déjà les points devant les suffixes \".\", ce macro doit uniquement être utilisé dans les noms de fichier",
+  "ExtMacroTooltip": "Extensions des fichiers, e.g. .jpg, .png, etc. A noter que ce macro contient déjà les points devant les suffixes \u0022.\u0022, ce macro doit uniquement être utilisé dans les noms de fichier",
   "IdMacroTooltip": "ID d\u0027art",
   "TitleMacroTooltip": "Titre d\u0027art",
   "ArtistIdMacroTooltip": "ID d\u0027auteur",
@@ -200,5 +200,5 @@
   "IfIllustMacroTooltip": "Ce marco sera remplacé par son argument s\u0027il s\u0027agit d\u0027une illustration",
   "IfNovelMacroTooltip": "Ce marco sera remplacé par son argument s\u0027il s\u0027agit d\u0027un roman",
   "IfGifMacroTooltip": "Ce marco sera remplacé par son argument s\u0027il s\u0027agit d\u0027une  image animée",
-  "MangaIndexMacroTooltip": "Ce macro sera remplacé par l'indice de l'illustration courante dans la collection (n-ième illust.). Il faut l'utiliser avec le macro '@{if_manga=} et sur les noms de fichier"
+  "MangaIndexMacroTooltip": "Ce macro sera remplacé par l\u0027indice de l\u0027illustration courante dans la collection (n-ième illust.). Il faut l\u0027utiliser avec le macro \u0027@{if_manga=} et sur les noms de fichier"
 }
