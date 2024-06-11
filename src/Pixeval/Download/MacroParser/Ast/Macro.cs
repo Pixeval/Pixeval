@@ -38,7 +38,7 @@ public record Macro<TContext>(PlainText<TContext> MacroName, OptionalMacroParame
             ITransducer<TContext> when OptionalParameters is not null => ThrowUtils.Throw<string>(new IllegalMacroException(MacroParserResources.NonParameterizedMacroBearingParameterFormatted.Format(MacroName))),
             ITransducer<TContext> transducer => transducer.Substitute(context),
             IPredicate<TContext> when OptionalParameters is null => ThrowUtils.Throw<string>(new IllegalMacroException(MacroParserResources.ParameterizedMacroMissingParameterFormatted.Format(MacroName))),
-            IPredicate<TContext> predicate => predicate.Match(context) ? OptionalParameters.Evaluate(env, context) : "",
+            IPredicate<TContext> predicate => predicate.Match(context) ^ predicate.IsNot ? OptionalParameters.Evaluate(env, context) : "",
             _ => ThrowHelper.ArgumentOutOfRange<IMacro, string>(result)
         };
     }
