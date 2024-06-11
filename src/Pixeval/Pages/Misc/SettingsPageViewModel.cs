@@ -103,7 +103,12 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
                 new BoolAppSettingsEntry(AppSettings,
                     t => t.UseFileCache),
                 new EnumAppSettingsEntry<MainPageTabItem>(AppSettings,
-                    t => t.DefaultSelectedTabItem)
+                    t => t.DefaultSelectedTabItem),
+                new StringAppSettingsEntry(AppSettings, 
+                    t => t.WebCookie)
+                {
+                    Placeholder = SettingsPageResources.WebCookieTextBoxPlaceholderText
+                }
             },
             new(SettingsEntryCategory.BrowsingExperience)
             {
