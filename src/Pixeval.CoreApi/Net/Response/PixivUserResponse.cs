@@ -24,7 +24,7 @@ using Pixeval.CoreApi.Model;
 namespace Pixeval.CoreApi.Net.Response;
 
 [Factory]
-internal partial record PixivUserResponse : PixivNextUrlResponse<User>
+public partial record PixivUserResponse : PixivNextUrlResponse<User>
 {
     [JsonPropertyName("user_previews")]
     public override required User[] Entities { get; set; } = [];

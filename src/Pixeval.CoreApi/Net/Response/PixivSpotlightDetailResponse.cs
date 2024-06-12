@@ -23,7 +23,7 @@ using System.Text.Json.Serialization;
 namespace Pixeval.CoreApi.Net.Response;
 
 [Factory]
-internal partial record PixivSpotlightDetailResponse
+public partial record PixivSpotlightDetailResponse
 {
     [JsonPropertyName("error")]
     public required bool Error { get; set; }
@@ -36,7 +36,7 @@ internal partial record PixivSpotlightDetailResponse
 }
 
 [Factory]
-internal partial record SpotlightBody
+public partial record SpotlightBody
 {
     [JsonPropertyName("id")]
     public required string Id { get; set; } = "";
@@ -88,7 +88,7 @@ internal partial record SpotlightBody
 }
 
 [Factory]
-internal partial record Entry
+public partial record Entry
 {
     [JsonPropertyName("id")]
     [JsonNumberHandling(JsonNumberHandling.AllowReadingFromString | JsonNumberHandling.WriteAsString)]
@@ -147,7 +147,7 @@ internal partial record Entry
 }
 
 [Factory]
-internal partial record PixivisionCategory
+public partial record PixivisionCategory
 {
     [JsonPropertyName("label")]
     public required string Label { get; set; } = "";
@@ -157,7 +157,7 @@ internal partial record PixivisionCategory
 }
 
 [Factory]
-internal partial record PixivisionSubcategory
+public partial record PixivisionSubcategory
 {
     [JsonPropertyName("label")]
     public required string Label { get; set; } = "";
@@ -179,7 +179,7 @@ internal partial record PixivisionSubcategory
 }
 
 [Factory]
-internal partial record PixivisionTag
+public partial record PixivisionTag
 {
     [JsonPropertyName("id")]
     public required string Id { get; set; } = "";
@@ -189,7 +189,7 @@ internal partial record PixivisionTag
 }
 
 [Factory]
-internal partial record Illust
+public partial record Illust
 {
     [JsonPropertyName("spotlight_article_id")]
     public required long SpotlightArticleId { get; set; }
@@ -268,7 +268,7 @@ internal partial record Illust
 }
 
 [Factory]
-internal partial record Url
+public partial record Url
 {
     [JsonPropertyName("1200x1200")]
     public required string The1200X1200 { get; set; } = "";
@@ -284,7 +284,7 @@ internal partial record Url
 }
 
 [Factory]
-internal partial record RelatedArticle
+public partial record RelatedArticle
 {
     [JsonPropertyName("id")]
     public required string Id { get; set; } = "";

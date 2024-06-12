@@ -27,7 +27,8 @@ namespace Pixeval.CoreApi.Model;
 /// <summary>
 /// 这个类型比较特殊，并非网络请求的响应类型，因此放到Model而非Response目录中
 /// </summary>
-public record TokenResponse
+[Factory]
+public partial record TokenResponse
 {
     [JsonPropertyName("access_token")]
     public required string AccessToken { get; set; }
@@ -67,7 +68,8 @@ public record TokenResponse
     }
 }
 
-public class TokenUser
+[Factory]
+public partial record TokenUser
 {
     [JsonPropertyName("profile_image_urls")]
     public required TokenProfileImageUrls ProfileImageUrls { get; set; }
@@ -98,7 +100,8 @@ public class TokenUser
     public required bool RequirePolicyAgreement { get; set; }
 }
 
-public class TokenProfileImageUrls
+[Factory]
+public partial record TokenProfileImageUrls
 {
     [JsonPropertyName("px_16x16")]
     public required string Px16X16 { get; set; }

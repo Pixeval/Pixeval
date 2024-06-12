@@ -26,7 +26,7 @@ using Pixeval.CoreApi.Model;
 namespace Pixeval.CoreApi.Net.Response;
 
 [Factory]
-internal partial record PixivBookmarkTagResponse : PixivNextUrlResponse<BookmarkTag>
+public partial record PixivBookmarkTagResponse : PixivNextUrlResponse<BookmarkTag>
 {
     [JsonPropertyName("bookmark_tags")]
     public override required BookmarkTag[] Entities { get; set; } = [];

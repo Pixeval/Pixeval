@@ -23,7 +23,8 @@ using System.Text.Json.Serialization;
 
 namespace Pixeval.CoreApi.Model;
 
-public class Comment : IIdEntry
+[Factory]
+public partial record Comment : IIdEntry
 {
     [JsonPropertyName("id")]
     public required long Id { get; set; }
@@ -44,7 +45,8 @@ public class Comment : IIdEntry
     public required Stamp? CommentStamp { get; set; }
 }
 
-public class Stamp
+[Factory]
+public partial record Stamp
 {
     [JsonPropertyName("stamp_id")]
     public required long StampId { get; set; }
@@ -53,7 +55,8 @@ public class Stamp
     public required string StampUrl { get; set; }
 }
 
-public class CommentUser
+[Factory]
+public partial record CommentUser
 {
     [JsonPropertyName("id")]
     public required long Id { get; set; }
