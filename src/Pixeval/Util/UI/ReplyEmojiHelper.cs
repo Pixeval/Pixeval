@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -57,9 +57,9 @@ public static partial class ReplyEmojiHelper
         return _stringToEmojiTable[content];
     }
 
-    public static IReadOnlyDictionary<int, (PixivReplyEmoji emoji, int contentLength)> BuildEmojiReplacementIndexTableOfReplyContent(string replyContent)
-    {
-        return Regex.Matches(replyContent, string.Join("|", _stringToEmojiTable.Keys.Select(Regex.Escape)))
-            .ToImmutableDictionary(m => m.Index, m => (_stringToEmojiTable[m.Value], m.Value.Length));
-    }
+    //public static IReadOnlyDictionary<int, (PixivReplyEmoji emoji, int contentLength)> BuildEmojiReplacementIndexTableOfReplyContent(string replyContent)
+    //{
+    //    return Regex.Matches(replyContent, string.Join("|", _stringToEmojiTable.Keys.Select(Regex.Escape)))
+    //        .ToImmutableDictionary(m => m.Index, m => (_stringToEmojiTable[m.Value], m.Value.Length));
+    //}
 }

@@ -70,12 +70,10 @@ public class FactoryGenerator : IIncrementalGenerator
             AttributeFullName,
             (_, _) => true,
             (syntaxContext, _) => syntaxContext
-        ).Combine(context.CompilationProvider);
+        );
 
-        context.RegisterSourceOutput(generatorAttributes, (spc, tuple) =>
+        context.RegisterSourceOutput(generatorAttributes, (spc, ga) =>
         {
-            var (ga, compilation) = tuple;
-
             if (ga.TargetSymbol is not INamedTypeSymbol symbol)
                 return;
 

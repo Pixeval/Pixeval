@@ -20,6 +20,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using FluentIcons.Common;
 using Pixeval.AppManagement;
@@ -69,7 +70,7 @@ public class SettingsEntryAttribute(Symbol symbol, string resourceKeyHeader, str
         return GetFromPropertyName<AppSettings>(propertyName);
     }
 
-    public static SettingsEntryAttribute GetFromPropertyName<T>(string propertyName)
+    public static SettingsEntryAttribute GetFromPropertyName<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] T>(string propertyName)
     {
         return typeof(T).GetProperty(propertyName, BindingFlags.Instance | BindingFlags.Public)
                    ?.GetCustomAttribute<SettingsEntryAttribute>() ??

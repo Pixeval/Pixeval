@@ -161,20 +161,20 @@ public static partial class IoHelper
         return result;
     }
 
-    public static async Task<MemoryStream> WriteZipAsync(IReadOnlyDictionary<string, Stream> streams, bool dispose)
+    public static async Task<MemoryStream> WriteZipAsync(IReadOnlyList<string> names, IReadOnlyList<Stream> streams, bool dispose)
     {
         var zipStream = _recyclableMemoryStreamManager.GetStream();
 
         var zipArchive = new ZipArchive(zipStream, ZipArchiveMode.Create, true);
 
-        foreach (var (key, value) in streams)
+        for (var i = 0; i < streams.Count; i++)
         {
             // ReSharper disable once AccessToDisposedClosure
-            var entry = zipArchive.CreateEntry(key);
+            var entry = zipArchive.CreateEntry(names[i]);
             await using var entryStream = entry.Open();
-            await value.CopyToAsync(entryStream);
+            await streams[i].CopyToAsync(entryStream);
             if (dispose)
-                await value.DisposeAsync();
+                await streams[i].DisposeAsync();
         }
 
         zipArchive.Dispose();

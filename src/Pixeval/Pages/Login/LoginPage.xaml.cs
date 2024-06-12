@@ -21,10 +21,12 @@
 using System;
 using System.Threading.Tasks;
 using Windows.Globalization;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
 using Pixeval.AppManagement;
+using Pixeval.Logging;
 using Pixeval.Settings.Models;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;

@@ -78,13 +78,13 @@ public sealed partial class EnumComboBox : ComboBox
 }
 
 [MarkupExtensionReturnType(ReturnType = typeof(Array))]
-public sealed class EnumValuesExtension : MarkupExtension
+public sealed partial class EnumValuesExtension : MarkupExtension
 {
     public EnumValuesEnum Type { get; set; }
 
     protected override object ProvideValue()
     {
-        return Enum.GetValues(Type switch
+        return Enum.GetValuesAsUnderlyingType(Type switch
         {
             EnumValuesEnum.WorkType => typeof(WorkType),
             EnumValuesEnum.SimpleWorkType => typeof(SimpleWorkType),

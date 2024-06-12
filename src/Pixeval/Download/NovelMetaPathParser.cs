@@ -32,7 +32,7 @@ public class NovelMetaPathParser : IMetaPathParser<NovelItemViewModel>
 {
     private readonly MacroParser<NovelItemViewModel> _parser = new();
 
-    public static IMacro[] MacroProviderStatic { get; } = MetaPathMacroAttributeHelper.GetAttachedTypeInstances<NovelItemViewModel>().ToArray();
+    public static IMacro[] MacroProviderStatic { get; } = MetaPathMacroAttributeHelper.GetIWorkViewModelInstances();
  
     public IMacro[] MacroProvider => MacroProviderStatic;
 

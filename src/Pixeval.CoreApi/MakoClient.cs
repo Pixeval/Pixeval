@@ -64,8 +64,9 @@ public partial class MakoClient : ICancellable, IDisposable, IAsyncDisposable
             makoClient.Session = (await makoClient.Provider.GetRequiredService<IAuthEndPoint>().RefreshAsync(new RefreshSessionRequest(refreshToken)).ConfigureAwait(false)).ToSession();
             return makoClient;
         }
-        catch
+        catch (Exception e)
         {
+            logger.LogError("Login error", e);
             await makoClient.DisposeAsync();
             return null;
         }

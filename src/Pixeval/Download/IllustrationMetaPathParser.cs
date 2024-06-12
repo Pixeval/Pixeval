@@ -30,7 +30,7 @@ public class IllustrationMetaPathParser : IMetaPathParser<IllustrationItemViewMo
 {
     private readonly MacroParser<IllustrationItemViewModel> _parser = new();
 
-    public static IMacro[] MacroProviderStatic { get; } = MetaPathMacroAttributeHelper.GetAttachedTypeInstances<IllustrationItemViewModel>().ToArray();
+    public static IMacro[] MacroProviderStatic { get; } = MetaPathMacroAttributeHelper.GetIWorkViewModelInstances();
  
     public IMacro[] MacroProvider => MacroProviderStatic;
 

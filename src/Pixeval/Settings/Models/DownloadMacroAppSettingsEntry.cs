@@ -34,7 +34,7 @@ public class DownloadMacroAppSettingsEntry(
         ["manga_index"] = SettingsPageResources.MangaIndexMacroTooltip
     };
 
-    public static ICollection<StringRepresentableItem> AvailableMacros { get; } = MetaPathMacroAttributeHelper.GetAttachedTypeInstances()
+    public static ICollection<StringRepresentableItem> AvailableMacros { get; } = MetaPathMacroAttributeHelper.GetIWorkViewModelInstances()
         .Select(m => new StringRepresentableItem(_macroTooltips[m.Name], $"@{{{(m is IPredicate ? $"{m.Name}=" : m.Name)}}}"))
         .ToList();
 }

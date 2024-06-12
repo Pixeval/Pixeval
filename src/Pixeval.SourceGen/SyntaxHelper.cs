@@ -163,21 +163,21 @@ public static class SyntaxHelper
     /// <summary>
     /// Generate the following code
     /// <code>
-    /// partial <paramref name="symbol" /> <paramref name="name" /><br/>
+    /// partial <paramref name="originalSymbol" /> <paramref name="name" /><br/>
     /// {<br/>
     ///     <paramref name="member" /><br/>
     /// }
     /// </code>
     /// </summary>
     /// <returns>TypeDeclaration</returns>
-    internal static TypeDeclarationSyntax GetDeclaration(string name, INamedTypeSymbol symbol, params MemberDeclarationSyntax[] member)
+    internal static TypeDeclarationSyntax GetDeclaration(string name, INamedTypeSymbol originalSymbol, params MemberDeclarationSyntax[] member)
     {
-        TypeDeclarationSyntax typeDeclarationTemp = symbol.TypeKind switch
+        TypeDeclarationSyntax typeDeclarationTemp = originalSymbol.TypeKind switch
         {
-            TypeKind.Class when !symbol.IsRecord => ClassDeclaration(name),
-            TypeKind.Struct when !symbol.IsRecord => StructDeclaration(name),
-            TypeKind.Class or TypeKind.Struct when symbol.IsRecord => RecordDeclaration(Token(SyntaxKind.RecordKeyword), name),
-            _ => throw new ArgumentOutOfRangeException(nameof(symbol.TypeKind))
+            TypeKind.Class when !originalSymbol.IsRecord => ClassDeclaration(name),
+            TypeKind.Struct when !originalSymbol.IsRecord => StructDeclaration(name),
+            TypeKind.Class or TypeKind.Struct when originalSymbol.IsRecord => RecordDeclaration(Token(SyntaxKind.RecordKeyword), name),
+            _ => throw new ArgumentOutOfRangeException(nameof(originalSymbol.TypeKind))
         };
         return typeDeclarationTemp.AddModifiers(Token(SyntaxKind.PartialKeyword))
             .WithOpenBraceToken(Token(SyntaxKind.OpenBraceToken))

@@ -25,7 +25,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
-using System.Reflection;
+// using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using System.Web;
@@ -37,8 +37,8 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.Win32;
 using Pixeval.AppManagement;
 using Pixeval.Attributes;
-using Pixeval.Bypass;
 using Pixeval.Controls.DialogContent;
+// using Pixeval.Bypass;
 using Pixeval.Controls.Windowing;
 using Pixeval.CoreApi;
 using Pixeval.CoreApi.Preference;
@@ -105,6 +105,7 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject
 
     public async Task<bool> RefreshAsync(string refreshToken)
     {
+
         AdvancePhase(LoginPhaseEnum.Refreshing);
         var logger = App.AppViewModel.AppServiceProvider.GetRequiredService<FileLogger>();
         var client = await MakoClient.TryGetMakoClientAsync(refreshToken, App.AppViewModel.AppSettings.ToMakoClientConfiguration(), logger);
@@ -361,11 +362,11 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject
         var process = Process.Start(startInfo);
         if (EnableDomainFronting)
         {
-            var pid = process!.Id;
-            var dllPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "runtimes",
-                "win-x64", "native", "bypass.dll");
-            var injection = Injector.Inject((uint)pid, dllPath);
-            Injector.InstallChromeHook(injection, true, dllPath);
+            //    var pid = process!.Id;
+            //    var dllPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "runtimes",
+            //        "win-x64", "native", "bypass.dll");
+            //    var injection = Injector.Inject((uint)pid, dllPath);
+            //    Injector.InstallChromeHook(injection, true, dllPath);
         }
     }
 
