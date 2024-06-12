@@ -30,7 +30,7 @@ public partial record Comment : IIdEntry
     public required long Id { get; set; }
 
     [JsonPropertyName("comment")]
-    public required string CommentContent { get; set; }
+    public required string CommentContent { get; set; } = "";
 
     [JsonPropertyName("date")]
     public required DateTimeOffset Date { get; set; }
@@ -52,7 +52,7 @@ public partial record Stamp
     public required long StampId { get; set; }
 
     [JsonPropertyName("stamp_url")]
-    public required string StampUrl { get; set; }
+    public required string StampUrl { get; set; } = DefaultImageUrls.ImageNotAvailable;
 }
 
 [Factory]
@@ -62,10 +62,10 @@ public partial record CommentUser
     public required long Id { get; set; }
 
     [JsonPropertyName("name")]
-    public required string Name { get; set; }
+    public required string Name { get; set; } = "";
 
     [JsonPropertyName("account")]
-    public required string Account { get; set; }
+    public required string Account { get; set; } = "";
 
     [JsonPropertyName("profile_image_urls")]
     public required ProfileImageUrls ProfileImageUrls { get; set; }

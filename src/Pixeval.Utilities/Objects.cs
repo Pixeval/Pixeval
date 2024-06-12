@@ -118,39 +118,6 @@ public static class Objects
         return bytes.Select(b => b.ToString("x2")).Aggregate(string.Concat);
     }
 
-    public static async Task<string?> ToJsonAsync<TEntity>(this TEntity? obj, Action<JsonSerializerOptions>? serializerOptionConfigure = null)
-    {
-        if (obj is null)
-        {
-            return null;
-        }
-
-        await using var memoryStream = new MemoryStream();
-        await JsonSerializer.SerializeAsync(memoryStream, obj, new JsonSerializerOptions().Apply(option => serializerOptionConfigure?.Invoke(option))).ConfigureAwait(false);
-        return memoryStream.ToArray().GetString();
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static string? ToJson(this object? obj, Action<JsonSerializerOptions>? serializerOptionConfigure = null)
-    {
-        return obj?.Let(o => JsonSerializer.Serialize(o, new JsonSerializerOptions().Apply(option => serializerOptionConfigure?.Invoke(option))));
-    }
-
-    public static async ValueTask<TEntity?> FromJsonAsync<TEntity>(this IMemoryOwner<byte> bytes, Action<JsonSerializerOptions>? serializerOptionConfigure = null)
-    {
-        using (bytes)
-        {
-            await using var stream = bytes.Memory.AsStream();
-            return await JsonSerializer.DeserializeAsync<TEntity>(stream, new JsonSerializerOptions().Apply(option => serializerOptionConfigure?.Invoke(option))).ConfigureAwait(false);
-        }
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static TEntity? FromJson<TEntity>(this string str, Action<JsonSerializerOptions>? serializerOptionConfigure = null)
-    {
-        return JsonSerializer.Deserialize<TEntity>(str, new JsonSerializerOptions().Apply(option => serializerOptionConfigure?.Invoke(option)));
-    }
-
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool EqualsIgnoreCase(this string str1, string str2)
     {

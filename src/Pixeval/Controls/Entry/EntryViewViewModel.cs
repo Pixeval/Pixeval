@@ -19,6 +19,7 @@
 #endregion
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Pixeval.Collections;
 using Pixeval.CoreApi.Engine;
@@ -26,7 +27,7 @@ using Pixeval.CoreApi.Model;
 
 namespace Pixeval.Controls;
 
-public abstract class EntryViewViewModel<T, TViewModel>
+public abstract class EntryViewViewModel<T, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] TViewModel>
     : ObservableObject, IDisposable
     where T : class, IIdEntry
     where TViewModel : EntryViewModel<T>, IViewModelFactory<T, TViewModel>

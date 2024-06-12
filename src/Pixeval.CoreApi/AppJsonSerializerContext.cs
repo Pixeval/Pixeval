@@ -25,6 +25,7 @@ using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Model;
 using Pixeval.CoreApi.Net.Request;
 using Pixeval.CoreApi.Net.Response;
+using Pixeval.CoreApi.Preference;
 
 namespace Pixeval.CoreApi;
 
@@ -32,7 +33,7 @@ namespace Pixeval.CoreApi;
 [JsonSerializable(typeof(PixivBookmarkTagResponse))]
 [JsonSerializable(typeof(PixivCommentResponse))]
 [JsonSerializable(typeof(PixivIllustrationResponse))]
-[JsonSerializable(typeof(PixivNextUrlResponse<>))]
+// [JsonSerializable(typeof(PixivNextUrlResponse<>))]
 [JsonSerializable(typeof(PixivNovelResponse))]
 [JsonSerializable(typeof(PixivRelatedUsersResponse))]
 [JsonSerializable(typeof(PixivSingleIllustResponse))]
@@ -138,4 +139,6 @@ namespace Pixeval.CoreApi;
 [JsonSerializable(typeof(WorkSortOption))]
 [JsonSerializable(typeof(WorkType))]
 [JsonSerializable(typeof(SimpleWorkType))]
-internal partial class AppJsonSerializerContext : JsonSerializerContext;
+
+[JsonSerializable(typeof(Session))]
+public partial class AppJsonSerializerContext : JsonSerializerContext;

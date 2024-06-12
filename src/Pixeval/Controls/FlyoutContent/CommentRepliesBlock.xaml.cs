@@ -24,6 +24,7 @@ using System.Threading.Tasks;
 using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Pixeval.CoreApi;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Net.Response;
 using WinUI3Utilities;
@@ -79,7 +80,7 @@ public sealed partial class CommentRepliesBlock
 
     private async Task AddComment(HttpResponseMessage postCommentResponse)
     {
-        if (postCommentResponse.IsSuccessStatusCode && await postCommentResponse.Content.ReadFromJsonAsync<PostCommentResponse>() is { Comment: { } comment })
+        if (postCommentResponse.IsSuccessStatusCode && await postCommentResponse.Content.ReadFromJsonAsync(typeof(PostCommentResponse), AppJsonSerializerContext.Default) is PostCommentResponse { Comment: { } comment })
             ViewModel.AddComment(comment);
     }
 }

@@ -20,6 +20,7 @@
 
 using System;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using CommunityToolkit.WinUI.Collections;
 using Pixeval.Collections;
 using Pixeval.CoreApi.Engine;
@@ -27,7 +28,7 @@ using Pixeval.CoreApi.Model;
 
 namespace Pixeval.Controls;
 
-public interface IDataProvider<T, TViewModel>
+public interface IDataProvider<T, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] TViewModel>
     : INotifyPropertyChanged, INotifyPropertyChanging, IDisposable
     where T : class, IIdEntry
     where TViewModel : class, IViewModelFactory<T, TViewModel>

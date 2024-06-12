@@ -19,6 +19,7 @@
 #endregion
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.WinUI.Collections;
 using Pixeval.Collections;
@@ -27,7 +28,7 @@ using Pixeval.CoreApi.Model;
 
 namespace Pixeval.Controls;
 
-public class SimpleViewDataProvider<T, TViewModel> : ObservableObject, IDataProvider<T, TViewModel> 
+public class SimpleViewDataProvider<T, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] TViewModel> : ObservableObject, IDataProvider<T, TViewModel>
     where T : class, IIdEntry
     where TViewModel : class, IViewModelFactory<T, TViewModel>, IDisposable
 {

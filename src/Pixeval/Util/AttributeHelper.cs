@@ -79,6 +79,7 @@ public static class LocalizedResourceAttributeHelper
 
     public static string? GetLocalizedResourceContent(Type resourceLoader, string key)
     {
+        // TODO
         return resourceLoader.GetMember(key, BindingFlags.Static | BindingFlags.Public) switch
         {
         [FieldInfo fi] => fi?.GetValue(null),
