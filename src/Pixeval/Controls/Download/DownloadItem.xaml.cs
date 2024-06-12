@@ -24,7 +24,6 @@ using Windows.Foundation;
 using Windows.System;
 using Microsoft.UI.Xaml;
 using Pixeval.Download;
-using Pixeval.Pages.Download;
 using Pixeval.Util.UI;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;

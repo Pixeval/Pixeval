@@ -4,7 +4,6 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.WinUI.Collections;
 using Pixeval.Collections;
 using Pixeval.Download.Models;
-using Pixeval.Pages.Download;
 
 namespace Pixeval.Controls;
 
