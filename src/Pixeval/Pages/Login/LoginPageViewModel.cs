@@ -105,7 +105,6 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject
 
     public async Task<bool> RefreshAsync(string refreshToken)
     {
-
         AdvancePhase(LoginPhaseEnum.Refreshing);
         var logger = App.AppViewModel.AppServiceProvider.GetRequiredService<FileLogger>();
         var client = await MakoClient.TryGetMakoClientAsync(refreshToken, App.AppViewModel.AppSettings.ToMakoClientConfiguration(), logger);
