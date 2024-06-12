@@ -108,7 +108,11 @@ public partial class MakoClient : ICancellable, IDisposable, IAsyncDisposable
                         Referrer = new Uri("https://www.pixiv.net"),
                         UserAgent = { new("PixivIOSApp", "5.8.7") }
                     }
-                });
+                })
+            .AddWebApiClient()
+            .UseSourceGeneratorHttpApiActivator()
+            .ConfigureHttpApi(t => t.PrependJsonSerializerContext(AppJsonSerializerContext.Default));
+        
         _ = serviceCollection.AddHttpApi<IAppApiEndPoint>()
             .ConfigurePrimaryHttpMessageHandler<PixivApiHttpMessageHandler>();
         _ = serviceCollection.AddHttpApi<IAuthEndPoint>()

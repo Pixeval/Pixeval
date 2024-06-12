@@ -35,35 +35,35 @@ public class Comment : IIdEntry
     public required DateTimeOffset Date { get; set; }
 
     [JsonPropertyName("user")]
-    public required User CommentPoster { get; set; }
+    public required CommentUser CommentPoster { get; set; }
 
     [JsonPropertyName("has_replies")]
     public required bool HasReplies { get; set; }
 
     [JsonPropertyName("stamp")]
     public required Stamp? CommentStamp { get; set; }
+}
 
-    public class Stamp
-    {
-        [JsonPropertyName("stamp_id")]
-        public required long StampId { get; set; }
+public class Stamp
+{
+    [JsonPropertyName("stamp_id")]
+    public required long StampId { get; set; }
 
-        [JsonPropertyName("stamp_url")]
-        public required string StampUrl { get; set; }
-    }
+    [JsonPropertyName("stamp_url")]
+    public required string StampUrl { get; set; }
+}
 
-    public class User
-    {
-        [JsonPropertyName("id")]
-        public required long Id { get; set; }
+public class CommentUser
+{
+    [JsonPropertyName("id")]
+    public required long Id { get; set; }
 
-        [JsonPropertyName("name")]
-        public required string Name { get; set; }
+    [JsonPropertyName("name")]
+    public required string Name { get; set; }
 
-        [JsonPropertyName("account")]
-        public required string Account { get; set; }
+    [JsonPropertyName("account")]
+    public required string Account { get; set; }
 
-        [JsonPropertyName("profile_image_urls")]
-        public required ProfileImageUrls ProfileImageUrls { get; set; }
-    }
+    [JsonPropertyName("profile_image_urls")]
+    public required ProfileImageUrls ProfileImageUrls { get; set; }
 }
