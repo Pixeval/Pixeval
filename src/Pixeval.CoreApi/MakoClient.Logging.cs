@@ -101,6 +101,22 @@ public partial class MakoClient
         }
     }
 
+    private async Task<HttpResponseMessage> RunWithLoggerAsync(Func<Task<HttpResponseMessage>> task) 
+    {
+        try
+        {
+            EnsureNotCancelled();
+
+            return await task();
+        }
+        catch (Exception e)
+        {
+            LogException(e);
+
+            return new HttpResponseMessage(HttpStatusCode.RequestTimeout);
+        }
+    }
+
     private async Task<T> RunWithLoggerAsync<T>(Func<Task<Result<T>>> task, Func<T> createDefault)
     {
         try

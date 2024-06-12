@@ -23,21 +23,21 @@ using System.Text.Json.Serialization;
 namespace Pixeval.CoreApi.Net.Response;
 
 [Factory]
-internal partial record WebApiBookmarksWithTagResponse
+public partial record WebApiBookmarksWithTagResponse
 {
     [JsonPropertyName("body")]
     public required WebApiBookmarksWithTagBody ResponseBody { get; set; }
 }
 
 [Factory]
-internal partial record WebApiBookmarksWithTagBody
+public partial record WebApiBookmarksWithTagBody
 {
     [JsonPropertyName("works")] 
     public required Work[] Works { get; set; } = [];
 }
 
 [Factory]
-internal partial record Work
+public partial record Work
 {
     [JsonPropertyName("id")]
     [JsonNumberHandling(JsonNumberHandling.AllowReadingFromString | JsonNumberHandling.WriteAsString)]

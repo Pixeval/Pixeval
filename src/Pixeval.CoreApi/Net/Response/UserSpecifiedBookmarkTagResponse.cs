@@ -23,7 +23,7 @@ using System.Text.Json.Serialization;
 namespace Pixeval.CoreApi.Net.Response;
 
 [Factory]
-internal partial record UserSpecifiedBookmarkTagResponse
+public partial record UserSpecifiedBookmarkTagResponse
 {
     [JsonPropertyName("error")]
     public required bool Error { get; set; }
@@ -36,7 +36,7 @@ internal partial record UserSpecifiedBookmarkTagResponse
 }
 
 [Factory]
-internal partial record UserSpecifiedBookmarkTagBody
+public partial record UserSpecifiedBookmarkTagBody
 {
     [JsonPropertyName("public")]
     public required UserSpecifiedBookmarkTag[] Public { get; set; } = [];
@@ -52,7 +52,7 @@ internal partial record UserSpecifiedBookmarkTagBody
 }
 
 [Factory]
-internal partial record UserSpecifiedBookmarkTag
+public partial record UserSpecifiedBookmarkTag
 {
     [JsonPropertyName("tag")]
     public required string Name { get; set; } = "";
