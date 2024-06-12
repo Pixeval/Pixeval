@@ -3,15 +3,12 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
-    xmlns:converters="using:Pixeval.Controls.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:Pixeval.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:pixeval="using:Pixeval.AppManagement"
     LastChildFill="False"
     mc:Ignorable="d">
-    <controls:DockPanel.Resources>
-        <converters:CultureDateConverter x:Key="CultureDateConverter" />
-    </controls:DockPanel.Resources>
     <controls:ConstrainedBox controls:DockPanel.Dock="Top" AspectRatio="40:21">
         <local:LazyImage CornerRadius="0" Source="{x:Bind ViewModel.ThumbnailSource, Mode=OneWay}" />
     </controls:ConstrainedBox>
@@ -35,6 +32,6 @@
         <TextBlock
             controls:DockPanel.Dock="Right"
             Foreground="DarkGray"
-            Text="{x:Bind ViewModel.Entry.PublishDate, Converter={StaticResource CultureDateConverter}, Mode=OneWay}" />
+            Text="{x:Bind local:C.CultureDateTimeOffsetDateFormatter(ViewModel.Entry.PublishDate, pixeval:AppSettings.CurrentCulture), Mode=OneWay}" />
     </controls:DockPanel>
 </controls:DockPanel>

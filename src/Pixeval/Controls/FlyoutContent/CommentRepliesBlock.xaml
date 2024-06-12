@@ -4,14 +4,10 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Pixeval.Controls"
     xmlns:controls1="using:CommunityToolkit.WinUI.Controls"
-    xmlns:converters="using:CommunityToolkit.WinUI.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:Pixeval.Controls.FlyoutContent"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
-    <controls1:DockPanel.Resources>
-        <converters:BoolNegationConverter x:Key="BoolNegationConverter" />
-    </controls1:DockPanel.Resources>
     <controls:PixivReplyBar
         x:Name="ReplyBar"
         Margin="10"
@@ -21,7 +17,7 @@
     <!--  ReSharper disable once UnusedMember.Local  -->
     <controls:CommentView
         x:Name="CommentView"
-        HasNoItem="{x:Bind ViewModel.RepliesIsNotNull, Converter={StaticResource BoolNegationConverter}, Mode=OneWay}"
+        HasNoItem="{x:Bind controls:C.Negation(ViewModel.RepliesIsNotNull), Mode=OneWay}"
         ItemsSource="{x:Bind ViewModel.Replies, Mode=OneWay}"
         RepliesHyperlinkButtonClick="CommentView_OnRepliesHyperlinkButtonClick" />
 </controls1:DockPanel>

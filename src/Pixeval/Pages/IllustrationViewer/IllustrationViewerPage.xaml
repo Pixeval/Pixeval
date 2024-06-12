@@ -4,8 +4,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Pixeval.Controls"
     xmlns:controls1="using:CommunityToolkit.WinUI.Controls"
-    xmlns:converters="using:CommunityToolkit.WinUI.Converters"
-    xmlns:converters1="using:Pixeval.Controls.Converters"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:flyoutContent="using:Pixeval.Controls.FlyoutContent"
@@ -20,11 +18,6 @@
     Unloaded="IllustrationViewerPage_OnUnloaded"
     mc:Ignorable="d">
     <controls:EnhancedWindowPage.Resources>
-        <converters:BoolNegationConverter x:Key="BoolNegationConverter" />
-        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
-        <converters1:NumberToPercentageConverter x:Key="NumberToPercentageConverter" />
-        <converters1:NullableToVisibilityConverter x:Key="NullableToVisibilityConverter" />
-        <converters1:DisplayIndexConverter x:Key="DisplayIndexConverter" />
         <Thickness x:Key="NormalMargin">0,48,0,0</Thickness>
         <AcrylicBrush
             x:Key="BottomCommandSectionBackground"
@@ -68,7 +61,7 @@
                             controls1:DockPanel.Dock="Left"
                             ButtonClick="PrevButton_OnClicked"
                             ButtonRightTapped="PrevButton_OnRightTapped"
-                            ButtonVisibility="{x:Bind _viewModel.PrevButtonText, Converter={StaticResource NullableToVisibilityConverter}, Mode=OneWay}"
+                            ButtonVisibility="{x:Bind controls:C.IsNotNullToVisibility(_viewModel.PrevButtonText), Mode=OneWay}"
                             IsPrev="True"
                             ToolTip="{x:Bind _viewModel.PrevButtonText, Mode=OneWay}" />
                         <controls:PageButton
@@ -76,7 +69,7 @@
                             controls1:DockPanel.Dock="Right"
                             ButtonClick="NextButton_OnClicked"
                             ButtonRightTapped="NextButton_OnRightTapped"
-                            ButtonVisibility="{x:Bind _viewModel.NextButtonText, Converter={StaticResource NullableToVisibilityConverter}, Mode=OneWay}"
+                            ButtonVisibility="{x:Bind controls:C.IsNotNullToVisibility(_viewModel.NextButtonText), Mode=OneWay}"
                             IsPrev="False"
                             ToolTip="{x:Bind _viewModel.NextButtonText, Mode=OneWay}" />
                     </controls1:DockPanel>
@@ -145,7 +138,7 @@
                                         NumberOfPages="{x:Bind _viewModel.PageCount, Mode=OneWay}"
                                         PreviousButtonVisibility="Visible"
                                         SelectedPageIndex="{x:Bind _viewModel.CurrentPageIndex, Mode=TwoWay}"
-                                        Visibility="{x:Bind _viewModel.CurrentIllustration.IsManga, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
+                                        Visibility="{x:Bind controls:C.ToVisibility(_viewModel.CurrentIllustration.IsManga), Mode=OneWay}" />
                                     <CommandBar DefaultLabelPosition="Collapsed" OverflowButtonVisibility="Collapsed">
                                         <AppBarButton
                                             Command="{x:Bind _viewModel.CurrentIllustration.BookmarkCommand, Mode=OneWay}"
@@ -161,7 +154,7 @@
                                         <AppBarButton
                                             Command="{x:Bind _viewModel.CurrentIllustration.MangaSaveCommand, Mode=OneWay}"
                                             CommandParameter="{x:Bind HWnd}"
-                                            Visibility="{x:Bind _viewModel.CurrentIllustration.IsManga, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
+                                            Visibility="{x:Bind controls:C.ToVisibility(_viewModel.CurrentIllustration.IsManga), Mode=OneWay}" />
                                     </CommandBar>
                                 </controls1:DockPanel>
                             </Border>
@@ -285,7 +278,7 @@
                             Command="{x:Bind _viewModel.InfoAndCommentsCommand}"
                             IsChecked="{x:Bind EntryViewerSplitView.IsPaneOpen, Mode=TwoWay}"
                             RightTapped="OpenPane_OnRightTapped" />
-                        <AppBarButton Command="{x:Bind _viewModel.CurrentImage.PlayGifCommand, Mode=OneWay}" Visibility="{x:Bind _viewModel.CurrentIllustration.IsUgoira, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
+                        <AppBarButton Command="{x:Bind _viewModel.CurrentImage.PlayGifCommand, Mode=OneWay}" Visibility="{x:Bind controls:C.ToVisibility(_viewModel.CurrentIllustration.IsUgoira), Mode=OneWay}" />
                         <AppBarSeparator />
                         <AppBarButton
                             Command="{x:Bind _viewModel.CurrentPage.CopyCommand, Mode=OneWay}"
@@ -302,11 +295,11 @@
                         <AppBarButton
                             Command="{x:Bind _viewModel.CurrentIllustration.MangaSaveCommand, Mode=OneWay}"
                             CommandParameter="{x:Bind HWnd}"
-                            Visibility="{x:Bind _viewModel.CurrentIllustration.IsManga, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
+                            Visibility="{x:Bind controls:C.ToVisibility(_viewModel.CurrentIllustration.IsManga), Mode=OneWay}" />
                         <AppBarButton
                             Command="{x:Bind _viewModel.CurrentIllustration.MangaSaveAsCommand, Mode=OneWay}"
                             CommandParameter="{x:Bind HWnd}"
-                            Visibility="{x:Bind _viewModel.CurrentIllustration.IsManga, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
+                            Visibility="{x:Bind controls:C.ToVisibility(_viewModel.CurrentIllustration.IsManga), Mode=OneWay}" />
                         <AppBarSeparator />
                         <AppBarButton Command="{x:Bind _viewModel.CurrentImage.SetAsCommand, Mode=OneWay}">
                             <AppBarButton.Flyout>
@@ -337,8 +330,8 @@
                         <TextBlock
                             controls1:DockPanel.Dock="Left"
                             Style="{StaticResource TextBlockStyle}"
-                            Visibility="{x:Bind _viewModel.CurrentIllustration.IsManga, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
-                            <Run Text="{x:Bind _viewModel.CurrentPageIndex, Converter={StaticResource DisplayIndexConverter}, Mode=OneWay}" />
+                            Visibility="{x:Bind controls:C.ToVisibility(_viewModel.CurrentIllustration.IsManga), Mode=OneWay}">
+                            <Run Text="{x:Bind controls:C.PlusOneToString(_viewModel.CurrentPageIndex), Mode=OneWay}" />
                             <Run Text="/" />
                             <Run Text="{x:Bind _viewModel.PageCount, Mode=OneWay}" />
                         </TextBlock>
@@ -359,8 +352,8 @@
                             Margin="-5,-3,0,0"
                             controls1:DockPanel.Dock="Left"
                             Style="{StaticResource TextBlockStyle}"
-                            Text="{x:Bind _viewModel.CurrentImage.Scale, Converter={StaticResource NumberToPercentageConverter}, ConverterParameter=2, Mode=OneWay}"
-                            ToolTipService.ToolTip="{x:Bind _viewModel.CurrentImage.Scale, Converter={StaticResource NumberToPercentageConverter}, ConverterParameter=2, Mode=OneWay}" />
+                            Text="{x:Bind controls:C.ToPercentageString(_viewModel.CurrentImage.Scale, 2), Mode=OneWay}"
+                            ToolTipService.ToolTip="{x:Bind controls:C.ToPercentageString(_viewModel.CurrentImage.Scale, 2), Mode=OneWay}" />
                     </controls1:DockPanel>
                 </controls1:TitleBar.Footer>
             </controls1:TitleBar>
@@ -391,7 +384,7 @@
             <VisualStateGroup>
                 <VisualState x:Name="Normal">
                     <VisualState.StateTriggers>
-                        <StateTrigger IsActive="{x:Bind _viewModel.IsFullScreen, Converter={StaticResource BoolNegationConverter}, Mode=OneWay}" />
+                        <StateTrigger IsActive="{x:Bind controls:C.Negation(_viewModel.IsFullScreen), Mode=OneWay}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="EntryViewerSplitView.Margin" Value="{StaticResource NormalMargin}" />

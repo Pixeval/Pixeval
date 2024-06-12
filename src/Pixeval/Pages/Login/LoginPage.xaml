@@ -5,7 +5,6 @@
     xmlns:app="using:Pixeval.AppManagement"
     xmlns:controls="using:Pixeval.Controls"
     xmlns:controls2="using:CommunityToolkit.WinUI.Controls"
-    xmlns:converters="using:Pixeval.Controls.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:fluent="using:FluentIcons.WinUI"
     xmlns:local="using:Pixeval.Pages.Login"
@@ -16,9 +15,6 @@
     Loaded="LoginPage_OnLoaded"
     Unloaded="LoginPage_OnUnloaded"
     mc:Ignorable="d">
-    <controls:EnhancedWindowPage.Resources>
-        <converters:BoolNegationToVisibilityConverter x:Key="BoolNegationToVisibilityConverter" />
-    </controls:EnhancedWindowPage.Resources>
     <controls2:DockPanel>
         <controls2:TitleBar
             Title="{x:Bind app:AppInfo.AppIdentifier}"
@@ -204,7 +200,7 @@
                     Grid.Column="0"
                     Child="{x:Bind _viewModel.WebView, Mode=OneWay}"
                     CornerRadius="{ThemeResource ControlCornerRadius}"
-                    Visibility="{x:Bind _viewModel.IsFinished, Converter={StaticResource BoolNegationToVisibilityConverter}, Mode=OneWay}" />
+                    Visibility="{x:Bind controls:C.ToVisibilityNegation(_viewModel.IsFinished), Mode=OneWay}" />
             </Grid>
         </controls2:DockPanel>
     </controls2:DockPanel>

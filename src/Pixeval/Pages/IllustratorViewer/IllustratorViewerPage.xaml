@@ -4,19 +4,11 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Pixeval.Controls"
     xmlns:controls1="using:CommunityToolkit.WinUI.Controls"
-    xmlns:converters="using:CommunityToolkit.WinUI.Converters"
-    xmlns:converters1="using:Pixeval.Controls.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:fluent="using:FluentIcons.WinUI"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:windowing="using:Pixeval.Controls.Windowing"
     mc:Ignorable="d">
-    <controls:EnhancedPage.Resources>
-        <converters1:BoolNegationToVisibilityConverter x:Key="BoolNegationToVisibilityConverter" />
-        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
-        <converters1:ComplementaryDoubleConverter x:Key="ComplementaryDoubleConverter" />
-        <converters1:DoubleToBoolToVisibilityConverter x:Key="DoubleToBoolToVisibilityConverter" />
-    </controls:EnhancedPage.Resources>
     <Grid>
         <controls:StickyHeaderScrollView
             x:Name="StickyHeaderScrollView"
@@ -41,7 +33,7 @@
                         HorizontalAlignment="Left"
                         VerticalAlignment="Center"
                         HorizontalSpacing="50"
-                        Opacity="{x:Bind StickyHeaderScrollView.ScrollRatio, Converter={StaticResource ComplementaryDoubleConverter}, Mode=OneWay}">
+                        Opacity="{x:Bind controls:C.DoubleComplementary(StickyHeaderScrollView.ScrollRatio), Mode=OneWay}">
                         <PersonPicture
                             x:Name="ProfileImage"
                             Width="100"
@@ -61,7 +53,7 @@
                                     IsTextSelectionEnabled="True"
                                     Style="{StaticResource TitleTextBlockStyle}"
                                     Text="{x:Bind _viewModel.Name}" />
-                                <controls:PixevalBadge Mode="Premium" Visibility="{x:Bind _viewModel.IsPremium, Converter={StaticResource BoolToVisibilityConverter}}" />
+                                <controls:PixevalBadge Mode="Premium" Visibility="{x:Bind controls:C.ToVisibility(_viewModel.IsPremium)}" />
                             </StackPanel>
                             <TextBlock
                                 x:Name="SubtitleBlock"
@@ -87,7 +79,7 @@
                             controls1:DockPanel.Dock="Left"
                             Opacity="{x:Bind StickyHeaderScrollView.ScrollRatio, Mode=OneWay}"
                             OverflowButtonVisibility="Collapsed"
-                            Visibility="{x:Bind StickyHeaderScrollView.ScrollRatio, Converter={StaticResource DoubleToBoolToVisibilityConverter}, Mode=OneWay}">
+                            Visibility="{x:Bind controls:C.IsNotZeroDToVisibility(StickyHeaderScrollView.ScrollRatio), Mode=OneWay}">
                             <AppBarElementContainer Padding="20,0" VerticalContentAlignment="Center">
                                 <PersonPicture
                                     Width="35"
@@ -106,7 +98,7 @@
                                         HorizontalAlignment="Left"
                                         Mode="Premium"
                                         UseSmall="True"
-                                        Visibility="{x:Bind _viewModel.IsPremium, Converter={StaticResource BoolToVisibilityConverter}}" />
+                                        Visibility="{x:Bind controls:C.ToVisibility(_viewModel.IsPremium)}" />
                                 </StackPanel>
                             </AppBarElementContainer>
                             <controls:AppButtonItem
@@ -135,9 +127,9 @@
                                 Symbol="BookOpen" />
                         </CommandBar>
                         <CommandBar DefaultLabelPosition="Right">
-                            <AppBarButton Command="{x:Bind _viewModel.FollowCommand}" Visibility="{x:Bind _viewModel.IsFollowed, Converter={StaticResource BoolNegationToVisibilityConverter}, Mode=OneWay}" />
-                            <AppBarButton Command="{x:Bind _viewModel.FollowPrivatelyCommand}" Visibility="{x:Bind _viewModel.IsFollowed, Converter={StaticResource BoolNegationToVisibilityConverter}, Mode=OneWay}" />
-                            <AppBarButton Command="{x:Bind _viewModel.UnfollowCommand}" Visibility="{x:Bind _viewModel.IsFollowed, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
+                            <AppBarButton Command="{x:Bind _viewModel.FollowCommand}" Visibility="{x:Bind controls:C.ToVisibilityNegation(_viewModel.IsFollowed), Mode=OneWay}" />
+                            <AppBarButton Command="{x:Bind _viewModel.FollowPrivatelyCommand}" Visibility="{x:Bind controls:C.ToVisibilityNegation(_viewModel.IsFollowed), Mode=OneWay}" />
+                            <AppBarButton Command="{x:Bind _viewModel.UnfollowCommand}" Visibility="{x:Bind controls:C.ToVisibility(_viewModel.IsFollowed), Mode=OneWay}" />
                             <AppBarSeparator />
                             <AppBarButton Command="{x:Bind _viewModel.GenerateLinkCommand}" CommandParameter="{x:Bind HWnd}" />
                             <AppBarButton Command="{x:Bind _viewModel.GenerateWebLinkCommand}" CommandParameter="{x:Bind HWnd}" />
@@ -193,6 +185,7 @@
             </controls:StickyHeaderScrollView.StickyContent>
         </controls:StickyHeaderScrollView>
         <controls1:TitleBar
+            x:Name="Bar"
             Title="{x:Bind _viewModel.Name}"
             VerticalAlignment="Top"
             Window="{x:Bind windowing:WindowFactory.GetForkedWindows(HWnd)}">

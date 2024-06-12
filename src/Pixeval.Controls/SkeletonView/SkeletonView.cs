@@ -19,7 +19,6 @@
 #endregion
 
 using System;
-using Windows.Foundation;
 using CommunityToolkit.Labs.WinUI;
 using CommunityToolkit.WinUI.Controls;
 using Microsoft.UI.Xaml;
