@@ -33,7 +33,6 @@ using Pixeval.CoreApi.Net.Request;
 using Pixeval.CoreApi.Preference;
 using Pixeval.Logging;
 using Pixeval.Utilities;
-using Refit;
 
 namespace Pixeval.CoreApi;
 
@@ -76,8 +75,9 @@ public partial class MakoClient : ICancellable, IDisposable, IAsyncDisposable
     /// Injects necessary dependencies
     /// </summary>
     /// <returns>The <see cref="ServiceProvider" /> contains all the required dependencies</returns>
-    private ServiceProvider BuildServiceProvider(IServiceCollection serviceCollection) =>
-        serviceCollection
+    private ServiceProvider BuildServiceProvider(IServiceCollection serviceCollection)
+    {
+        _ = serviceCollection
             .AddSingleton(this)
             .AddSingleton<PixivApiHttpMessageHandler>()
             .AddSingleton<PixivImageHttpMessageHandler>()
@@ -108,40 +108,15 @@ public partial class MakoClient : ICancellable, IDisposable, IAsyncDisposable
                         Referrer = new Uri("https://www.pixiv.net"),
                         UserAgent = { new("PixivIOSApp", "5.8.7") }
                     }
-                })
-            .AddSingleton(s => RestService.For<IAppApiEndPoint>(
-                s.GetRequiredKeyedService<HttpClient>(MakoApiKind.AppApi),
-                new RefitSettings
-                {
-                    ExceptionFactory = async message =>
-                        !message.IsSuccessStatusCode
-                            ? await MakoNetworkException
-                                .FromHttpResponseMessageAsync(message,
-                                    s.GetRequiredService<MakoClient>().Configuration.DomainFronting).ConfigureAwait(false)
-                            : null
-                }))
-            .AddSingleton(s => RestService.For<IAuthEndPoint>(
-                s.GetRequiredKeyedService<HttpClient>(MakoApiKind.AuthApi),
-                new RefitSettings
-                {
-                    ExceptionFactory = async message =>
-                        !message.IsSuccessStatusCode
-                            ? await MakoNetworkException
-                                .FromHttpResponseMessageAsync(message,
-                                    s.GetRequiredService<MakoClient>().Configuration.DomainFronting).ConfigureAwait(false)
-                            : null
-                }))
-            .AddSingleton(s => RestService.For<IReverseSearchApiEndPoint>("https://saucenao.com/",
-                new RefitSettings
-                {
-                    ExceptionFactory = async message =>
-                        !message.IsSuccessStatusCode
-                            ? await MakoNetworkException
-                                .FromHttpResponseMessageAsync(message,
-                                    s.GetRequiredService<MakoClient>().Configuration.DomainFronting).ConfigureAwait(false)
-                            : null
-                }))
-            .BuildServiceProvider();
+                });
+        _ = serviceCollection.AddHttpApi<IAppApiEndPoint>()
+            .ConfigurePrimaryHttpMessageHandler<PixivApiHttpMessageHandler>();
+        _ = serviceCollection.AddHttpApi<IAuthEndPoint>()
+            .ConfigurePrimaryHttpMessageHandler<PixivApiHttpMessageHandler>();
+        _ = serviceCollection.AddHttpApi<IReverseSearchApiEndPoint>();
+
+        return serviceCollection.BuildServiceProvider();
+    }
 
     /// <summary>
     /// Cancels this <see cref="MakoClient" />, including all the running instances, the

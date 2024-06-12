@@ -104,7 +104,7 @@ public partial class MainPageViewModel : ObservableObject
     {
         try
         {
-            var result = await App.AppViewModel.MakoClient.ReverseSearchAsync(stream, App.AppViewModel.AppSettings.ReverseSearchApiKey!);
+            var result = await App.AppViewModel.MakoClient.ReverseSearchAsync(stream, App.AppViewModel.AppSettings.ReverseSearchApiKey);
             if (result.Header.Status is 0)
             {
                 var viewModels = await Task.WhenAll(result.Results

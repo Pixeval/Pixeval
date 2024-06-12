@@ -23,34 +23,36 @@ using System.Threading.Tasks;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Net.Request;
 using Pixeval.CoreApi.Net.Response;
-using Refit;
+using WebApiClientCore;
+using WebApiClientCore.Attributes;
 
 namespace Pixeval.CoreApi.Net.EndPoints;
 
-internal interface IAppApiEndPoint
+[HttpHost(MakoHttpOptions.AppApiBaseUrl)]
+public interface IAppApiEndPoint
 {
-    [Post("/v2/illust/bookmark/add")]
-    Task<HttpResponseMessage> AddIllustBookmarkAsync([Body(BodySerializationMethod.UrlEncoded)] AddIllustBookmarkRequest request);
+    [HttpPost("/v2/illust/bookmark/add")]
+    Task<HttpResponseMessage> AddIllustBookmarkAsync([FormContent] AddIllustBookmarkRequest request);
 
-    [Post("/v1/illust/bookmark/delete")]
-    Task<HttpResponseMessage> RemoveIllustBookmarkAsync([Body(BodySerializationMethod.UrlEncoded)] RemoveIllustBookmarkRequest request);
+    [HttpPost("/v1/illust/bookmark/delete")]
+    Task<HttpResponseMessage> RemoveIllustBookmarkAsync([FormContent] RemoveIllustBookmarkRequest request);
 
-    [Post("/v2/novel/bookmark/add")]
-    Task<HttpResponseMessage> AddNovelBookmarkAsync([Body(BodySerializationMethod.UrlEncoded)] AddNovelBookmarkRequest request);
+    [HttpPost("/v2/novel/bookmark/add")]
+    Task<HttpResponseMessage> AddNovelBookmarkAsync([FormContent] AddNovelBookmarkRequest request);
 
-    [Post("/v1/novel/bookmark/delete")]
-    Task<HttpResponseMessage> RemoveNovelBookmarkAsync([Body(BodySerializationMethod.UrlEncoded)] RemoveNovelBookmarkRequest request);
+    [HttpPost("/v1/novel/bookmark/delete")]
+    Task<HttpResponseMessage> RemoveNovelBookmarkAsync([FormContent] RemoveNovelBookmarkRequest request);
 
-    [Get("/v1/illust/detail")]
+    [HttpGet("/v1/illust/detail")]
     Task<PixivSingleIllustResponse> GetSingleIllustAsync([AliasAs("illust_id")] long id);
 
-    [Get("/v1/user/detail")]
+    [HttpGet("/v1/user/detail")]
     Task<PixivSingleUserResponse> GetSingleUserAsync(SingleUserRequest request);
 
-    [Get("/v2/novel/detail")]
+    [HttpGet("/v2/novel/detail")]
     Task<PixivSingleNovelResponse> GetSingleNovelAsync([AliasAs("novel_id")] long id);
 
-    [Get("/webview/v2/novel")]
+    [HttpGet("/webview/v2/novel")]
     Task<string> GetNovelContentAsync([AliasAs("id")] long id, [AliasAs("raw")] bool raw = false);
     /*
     [AliasAs("viewer_version")] string viewerVersion = "20221031_ai",
@@ -65,42 +67,42 @@ internal interface IAppApiEndPoint
     [AliasAs("margin_bottom")] string x9 = "50px"
     */
 
-    [Get("/v1/user/related")]
+    [HttpGet("/v1/user/related")]
     Task<PixivRelatedUsersResponse> RelatedUserAsync([AliasAs("filter")] TargetFilter filter, [AliasAs("seed_user_id")] long userId);
 
-    [Post("/v1/user/follow/add")]
-    Task<HttpResponseMessage> FollowUserAsync([Body(BodySerializationMethod.UrlEncoded)] FollowUserRequest request);
+    [HttpPost("/v1/user/follow/add")]
+    Task<HttpResponseMessage> FollowUserAsync([FormContent] FollowUserRequest request);
 
-    [Post("/v1/user/follow/delete")]
-    Task<HttpResponseMessage> RemoveFollowUserAsync([Body(BodySerializationMethod.UrlEncoded)] RemoveFollowUserRequest request);
+    [HttpPost("/v1/user/follow/delete")]
+    Task<HttpResponseMessage> RemoveFollowUserAsync([FormContent] RemoveFollowUserRequest request);
 
-    [Get("/v1/trending-tags/illust")]
+    [HttpGet("/v1/trending-tags/illust")]
     Task<TrendingTagResponse> GetTrendingTagsAsync([AliasAs("filter")] TargetFilter filter);
 
-    [Get("/v1/trending-tags/novel")]
+    [HttpGet("/v1/trending-tags/novel")]
     Task<TrendingTagResponse> GetTrendingTagsForNovelAsync([AliasAs("filter")] TargetFilter filter);
 
-    [Get("/v1/ugoira/metadata")]
+    [HttpGet("/v1/ugoira/metadata")]
     Task<UgoiraMetadataResponse> GetUgoiraMetadataAsync([AliasAs("illust_id")] long id);
 
-    [Get("/v2/search/autocomplete")]
+    [HttpGet("/v2/search/autocomplete")]
     Task<AutoCompletionResponse> GetAutoCompletionAsync(AutoCompletionRequest autoCompletionRequest);
 
-    [Post("/v1/illust/comment/add")]
-    Task<HttpResponseMessage> AddIllustCommentAsync([Body(BodySerializationMethod.UrlEncoded)] AddNormalIllustCommentRequest request);
+    [HttpPost("/v1/illust/comment/add")]
+    Task<HttpResponseMessage> AddIllustCommentAsync([FormContent] AddNormalIllustCommentRequest request);
 
-    [Post("/v1/illust/comment/add")]
-    Task<HttpResponseMessage> AddIllustCommentAsync([Body(BodySerializationMethod.UrlEncoded)] AddStampIllustCommentRequest request);
+    [HttpPost("/v1/illust/comment/add")]
+    Task<HttpResponseMessage> AddIllustCommentAsync([FormContent] AddStampIllustCommentRequest request);
 
-    [Post("/v1/illust/comment/delete")]
-    Task<HttpResponseMessage> DeleteIllustCommentAsync([Body(BodySerializationMethod.UrlEncoded)] DeleteCommentRequest request);
+    [HttpPost("/v1/illust/comment/delete")]
+    Task<HttpResponseMessage> DeleteIllustCommentAsync([FormContent] DeleteCommentRequest request);
 
-    [Post("/v1/novel/comment/add")]
-    Task<HttpResponseMessage> AddNovelCommentAsync([Body(BodySerializationMethod.UrlEncoded)] AddNormalNovelCommentRequest request);
+    [HttpPost("/v1/novel/comment/add")]
+    Task<HttpResponseMessage> AddNovelCommentAsync([FormContent] AddNormalNovelCommentRequest request);
 
-    [Post("/v1/novel/comment/add")]
-    Task<HttpResponseMessage> AddNovelCommentAsync([Body(BodySerializationMethod.UrlEncoded)] AddStampNovelCommentRequest request);
+    [HttpPost("/v1/novel/comment/add")]
+    Task<HttpResponseMessage> AddNovelCommentAsync([FormContent] AddStampNovelCommentRequest request);
 
-    [Post("/v1/novel/comment/delete")]
-    Task<HttpResponseMessage> DeleteNovelCommentAsync([Body(BodySerializationMethod.UrlEncoded)] DeleteCommentRequest request);
+    [HttpPost("/v1/novel/comment/delete")]
+    Task<HttpResponseMessage> DeleteNovelCommentAsync([FormContent] DeleteCommentRequest request);
 }

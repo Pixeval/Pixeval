@@ -18,10 +18,10 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using Refit;
+using System.Text.Json.Serialization;
 
 namespace Pixeval.CoreApi.Net.Request;
 
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 // ReSharper disable MemberCanBePrivate.Global
-internal record RemoveFollowUserRequest([property: AliasAs("user_id")] long UserId);
+public record RemoveFollowUserRequest([property: JsonPropertyName("user_id")] long UserId);

@@ -20,12 +20,12 @@
 
 #endregion
 
+using System.Text.Json.Serialization;
 using Pixeval.CoreApi.Global.Enum;
-using Refit;
 
 namespace Pixeval.CoreApi.Net.Request;
 
-internal record AddNovelBookmarkRequest(
-    [property: AliasAs("restrict")] PrivacyPolicy Restrict,
-    [property: AliasAs("novel_id")] long Id,
-    [property: AliasAs("tags[]")] string? Tags);
+public record AddNovelBookmarkRequest(
+    [property: JsonPropertyName("restrict")] PrivacyPolicy Restrict,
+    [property: JsonPropertyName("novel_id")] long Id,
+    [property: JsonPropertyName("tags[]")] string? Tags);
