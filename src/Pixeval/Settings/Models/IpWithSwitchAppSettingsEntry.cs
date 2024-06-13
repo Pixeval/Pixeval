@@ -12,7 +12,7 @@ using Symbol = FluentIcons.Common.Symbol;
 
 namespace Pixeval.Settings.Models;
 
-public class IpWithSwitchAppSettingsEntry : BoolAppSettingsEntry
+public partial class IpWithSwitchAppSettingsEntry : BoolAppSettingsEntry
 {
     public IpWithSwitchAppSettingsEntry(AppSettings appSettings) : base(appSettings, t => t.EnableDomainFronting)
     {

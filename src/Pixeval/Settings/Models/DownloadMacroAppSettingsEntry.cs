@@ -8,7 +8,7 @@ using Pixeval.Download.Macros;
 
 namespace Pixeval.Settings.Models;
 
-public class DownloadMacroAppSettingsEntry(
+public partial class DownloadMacroAppSettingsEntry(
     AppSettings appSettings)
     : StringAppSettingsEntry(appSettings, t => t.DownloadPathMacro)
 {

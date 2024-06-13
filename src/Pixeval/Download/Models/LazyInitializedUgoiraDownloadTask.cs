@@ -25,7 +25,7 @@ using WinUI3Utilities;
 
 namespace Pixeval.Download.Models;
 
-public class LazyInitializedUgoiraDownloadTask(DownloadHistoryEntry databaseEntry) : UgoiraDownloadTask(databaseEntry, null!, null!), ILazyLoadDownloadTask
+public partial class LazyInitializedUgoiraDownloadTask(DownloadHistoryEntry databaseEntry) : UgoiraDownloadTask(databaseEntry, null!, null!), ILazyLoadDownloadTask
 {
     public override async Task DownloadAsync(Downloader downloadStreamAsync)
     {

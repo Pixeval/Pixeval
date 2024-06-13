@@ -33,7 +33,7 @@ using Pixeval.Utilities.Threading;
 
 namespace Pixeval.Download;
 
-public class DownloadManager<TDownloadTask> : IDisposable where TDownloadTask : DownloadTaskBase
+public partial class DownloadManager<TDownloadTask> : IDisposable where TDownloadTask : DownloadTaskBase
 {
     private readonly Channel<TDownloadTask> _downloadTaskChannel;
     private readonly HttpClient _httpClient;

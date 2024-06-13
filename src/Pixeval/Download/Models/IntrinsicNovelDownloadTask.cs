@@ -26,7 +26,7 @@ using Pixeval.Database;
 
 namespace Pixeval.Download.Models;
 
-public sealed class IntrinsicNovelDownloadTask : NovelDownloadTask
+public sealed partial class IntrinsicNovelDownloadTask : NovelDownloadTask
 {
     public IntrinsicNovelDownloadTask(DownloadHistoryEntry entry, NovelItemViewModel novel, DocumentViewerViewModel viewModel) :
         base(entry, novel, viewModel.NovelContent, viewModel) =>

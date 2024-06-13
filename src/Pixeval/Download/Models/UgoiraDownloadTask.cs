@@ -32,7 +32,7 @@ using SixLabors.ImageSharp;
 
 namespace Pixeval.Download.Models;
 
-public class UgoiraDownloadTask(
+public partial class UgoiraDownloadTask(
     DownloadHistoryEntry entry,
     IllustrationItemViewModel illustration,
     UgoiraMetadataResponse metadata)

@@ -25,7 +25,7 @@ using Pixeval.Database;
 
 namespace Pixeval.Download.Models;
 
-public sealed class IntrinsicIllustrationDownloadTask : IllustrationDownloadTask
+public sealed partial class IntrinsicIllustrationDownloadTask : IllustrationDownloadTask
 {
     /// <summary>
     /// The disposal of <paramref name="stream" /> is not handled

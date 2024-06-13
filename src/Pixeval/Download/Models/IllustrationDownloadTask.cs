@@ -32,7 +32,7 @@ using WinUI3Utilities;
 
 namespace Pixeval.Download.Models;
 
-public class IllustrationDownloadTask(DownloadHistoryEntry entry, IllustrationItemViewModel illustration)
+public partial class IllustrationDownloadTask(DownloadHistoryEntry entry, IllustrationItemViewModel illustration)
     : DownloadTaskBase(entry)
 {
     public override IWorkViewModel ViewModel => IllustrationViewModel;

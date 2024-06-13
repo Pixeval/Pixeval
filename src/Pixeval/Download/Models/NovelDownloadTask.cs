@@ -36,7 +36,7 @@ using WinUI3Utilities;
 
 namespace Pixeval.Download.Models;
 
-public class NovelDownloadTask : DownloadTaskBase
+public partial class NovelDownloadTask : DownloadTaskBase
 {
     public NovelDownloadTask(
         DownloadHistoryEntry entry,
