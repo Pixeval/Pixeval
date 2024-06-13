@@ -63,11 +63,11 @@ public class MetaPathMacroGenerator : IIncrementalGenerator
             .WithOpenBraceToken(Token(SyntaxKind.OpenBraceToken))
             .AddMembers(dictionary.Select(t =>
                     (MemberDeclarationSyntax)MethodDeclaration(
-                            ArrayType(ParseTypeName("global::Pixeval.Download.MacroParser.IMacro"), List([ArrayRankSpecifier()])),
+                            ParseTypeName("global::System.Collections.Generic.IReadOnlyList<global::Pixeval.Download.MacroParser.IMacro>"),
                             string.Format(getAttachedTypeInstances, t.Key.Name))
                         .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.StaticKeyword)))
                         .WithExpressionBody(ArrowExpressionClause(CollectionExpression(SeparatedList(t.Value.Select(v =>
-                            (CollectionElementSyntax)ExpressionElement(ObjectCreationExpression(v.GetTypeSyntax(false)).WithLeadingTrivia(EndOfLine("\r\n"))
+                            (CollectionElementSyntax)ExpressionElement(ObjectCreationExpression(v.GetTypeSyntax(false))
                                 .WithArgumentList(ArgumentList()))))
                         )))
                         .WithSemicolonToken(Token(SyntaxKind.SemicolonToken))).ToArray()
@@ -90,8 +90,9 @@ public class MetaPathMacroGenerator : IIncrementalGenerator
 
         context.RegisterSourceOutput(generatorAttributes, (spc, ga) =>
         {
-            if (TypeWithAttribute(ga, out var name) is { } source)
-                spc.AddSource(name, source);
+            if (ga.Length > 0)
+                if (TypeWithAttribute(ga, out var name) is { } source)
+                    spc.AddSource(name, source);
         });
     }
 }

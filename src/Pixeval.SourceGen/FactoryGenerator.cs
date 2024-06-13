@@ -32,8 +32,12 @@ public class FactoryGenerator : IIncrementalGenerator
                     IdentifierName(symbol.Name),
                     syntax.Initializer is { } init
                         ? init.Value
-                        : symbol.Type.NullableAnnotation is NullableAnnotation.NotAnnotated && symbol.Type.GetAttributes().Any(i => i.AttributeClass?.MetadataName == AttributeName)
-                            ? InvocationExpression(symbol.Type.GetStaticMemberAccessExpression(createDefault))
+                        : symbol.Type.NullableAnnotation is NullableAnnotation.NotAnnotated && symbol.Type
+                            .GetAttributes().Any(i => i.AttributeClass?.MetadataName == AttributeName)
+                            ? InvocationExpression(MemberAccessExpression(
+                                SyntaxKind.SimpleMemberAccessExpression,
+                                IdentifierName(symbol.Type.ToDisplayString()),
+                                IdentifierName(createDefault)))
                             : DefaultExpression(symbol.Type.GetTypeSyntax(false)));
             });
 

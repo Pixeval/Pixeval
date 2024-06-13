@@ -25,8 +25,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        configuration: [Debug]
-        platform: ['x64','x86','arm64']
+        configuration: [Release]
+        platform: ['x64','arm64']
 
     env:
       SOLUTION_NAME: 'Pixeval.sln'
@@ -70,8 +70,8 @@ jobs:
       shell: pwsh
       run: 'nuget restore $env:SOLUTION_NAME'
 
-    - name: Build Files (Debug)
-      id: build_app_with_debug
+    - name: Build Files (Release)
+      id: build_app_with_release
       shell: pwsh
       run: |
         msbuild $env:PACKAGE_PROJECT_NAME `

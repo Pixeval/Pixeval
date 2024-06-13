@@ -21,8 +21,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Linq;
-using System.Text.RegularExpressions;
 
 namespace Pixeval.Util.UI;
 

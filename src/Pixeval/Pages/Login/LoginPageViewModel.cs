@@ -52,27 +52,6 @@ namespace Pixeval.Pages.Login;
 [SettingsViewModel<LoginContext>(nameof(LoginContext))]
 public partial class LoginPageViewModel(UIElement owner) : ObservableObject
 {
-    public enum LoginPhaseEnum
-    {
-        [LocalizedResource(typeof(LoginPageResources), nameof(LoginPageResources.LoginPhaseRefreshing))]
-        Refreshing,
-
-        [LocalizedResource(typeof(LoginPageResources), nameof(LoginPageResources.LoginPhaseWaitingForUserInput))]
-        WaitingForUserInput,
-
-        [LocalizedResource(typeof(LoginPageResources), nameof(LoginPageResources.LoginPhaseCheckingCertificateInstallation))]
-        CheckingCertificateInstallation,
-
-        [LocalizedResource(typeof(LoginPageResources), nameof(LoginPageResources.LoginPhaseInstallingCertificate))]
-        InstallingCertificate,
-
-        [LocalizedResource(typeof(LoginPageResources), nameof(LoginPageResources.LoginPhaseCheckingWebView2Installation))]
-        CheckingWebView2Installation,
-
-        [LocalizedResource(typeof(LoginPageResources), nameof(LoginPageResources.LoginPhaseSuccessNavigating))]
-        SuccessNavigating
-    }
-
     /// <summary>
     /// 表示要不要展示<see cref="WebView"/>
     /// </summary>
@@ -370,4 +349,26 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject
     }
 
     #endregion
+}
+
+[LocalizationMetadata(typeof(LoginPageResources))]
+public enum LoginPhaseEnum
+{
+    [LocalizedResource(typeof(LoginPageResources), nameof(LoginPageResources.LoginPhaseRefreshing))]
+    Refreshing,
+
+    [LocalizedResource(typeof(LoginPageResources), nameof(LoginPageResources.LoginPhaseWaitingForUserInput))]
+    WaitingForUserInput,
+
+    [LocalizedResource(typeof(LoginPageResources), nameof(LoginPageResources.LoginPhaseCheckingCertificateInstallation))]
+    CheckingCertificateInstallation,
+
+    [LocalizedResource(typeof(LoginPageResources), nameof(LoginPageResources.LoginPhaseInstallingCertificate))]
+    InstallingCertificate,
+
+    [LocalizedResource(typeof(LoginPageResources), nameof(LoginPageResources.LoginPhaseCheckingWebView2Installation))]
+    CheckingWebView2Installation,
+
+    [LocalizedResource(typeof(LoginPageResources), nameof(LoginPageResources.LoginPhaseSuccessNavigating))]
+    SuccessNavigating
 }

@@ -44,19 +44,6 @@ public static class SyntaxHelper
     }
 
     /// <summary>
-    /// 缩进（伪tab）
-    /// </summary>
-    /// <param name="n">tab数量</param>
-    /// <returns>4n个space</returns>
-    internal static string Spacing(int n)
-    {
-        var temp = "";
-        for (var i = 0; i < n; ++i)
-            temp += "    ";
-        return temp;
-    }
-
-    /// <summary>
     /// Generate the following code
     /// <code>
     /// <paramref name="typeSymbol" />&lt;<paramref name="isNullable" />&gt;
@@ -69,13 +56,23 @@ public static class SyntaxHelper
         return isNullable ? NullableType(typeName) : typeName;
     }
 
-    internal static MemberAccessExpressionSyntax GetStaticMemberAccessExpression(this ITypeSymbol typeSymbol, string name)
-    {
-        return MemberAccessExpression(
-            SyntaxKind.SimpleMemberAccessExpression,
-            IdentifierName(typeSymbol.ToDisplayString()),
-            IdentifierName(name));
-    }
+    /// <summary>
+    /// Generate the following code
+    /// <code>
+    /// nameof(<paramref name="name" />)
+    /// </code>
+    /// </summary>
+    /// <returns>NameOfExpression</returns>
+    internal static InvocationExpressionSyntax NameOfExpression(string name) => NameOfExpression(IdentifierName(name));
+
+    /// <summary>
+    /// Generate the following code
+    /// <code>
+    /// nameof(<paramref name="expressionSyntax" />)
+    /// </code>
+    /// </summary>
+    /// <returns>NameOfExpression</returns>
+    internal static InvocationExpressionSyntax NameOfExpression(ExpressionSyntax expressionSyntax) => InvocationExpression(IdentifierName("nameof"), ArgumentList().AddArguments(Argument(expressionSyntax)));
 
     internal static IEnumerable<IPropertySymbol> GetProperties(this ITypeSymbol typeSymbol, INamedTypeSymbol attribute)
     {
@@ -112,31 +109,6 @@ public static class SyntaxHelper
                 }))
                 return true;
         return false;
-    }
-
-    /// <summary>
-    /// 获取某<paramref name="symbol"/>的namespace并加入<paramref name="namespaces"/>集合
-    /// </summary>
-    /// <param name="namespaces">namespaces集合</param>
-    /// <param name="usedTypes">已判断过的types</param>
-    /// <param name="contextType">上下文所在的类</param>
-    /// <param name="symbol">type的symbol</param>
-    internal static void UseNamespace(this HashSet<string> namespaces, HashSet<ITypeSymbol> usedTypes, INamedTypeSymbol contextType, ITypeSymbol symbol)
-    {
-        if (usedTypes.Contains(symbol))
-            return;
-
-        _ = usedTypes.Add(symbol);
-
-        if (symbol.ContainingNamespace is not { } ns)
-            return;
-
-        if (!SymbolEqualityComparer.Default.Equals(ns, contextType.ContainingNamespace))
-            _ = namespaces.Add(ns.ToDisplayString());
-
-        if (symbol is INamedTypeSymbol { IsGenericType: true } genericSymbol)
-            foreach (var a in genericSymbol.TypeArguments)
-                namespaces.UseNamespace(usedTypes, contextType, a);
     }
 
     /// <summary>

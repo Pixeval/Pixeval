@@ -24,7 +24,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using FluentIcons.Common;
 using Pixeval.AppManagement;
-using Pixeval.Util;
 using Pixeval.Utilities;
 using WinUI3Utilities;
 
@@ -53,17 +52,15 @@ public class SettingsEntryAttribute(Symbol symbol, string resourceKeyHeader, str
         typeof(AppSettings).GetProperties(BindingFlags.Instance | BindingFlags.Public)
             .SelectNotNull(f => f.GetCustomAttribute<SettingsEntryAttribute>()));
 
-    private static Type ResourceLoader => typeof(SettingsPageResources);
-
     public Symbol Symbol { get; } = symbol;
 
     public string LocalizedResourceHeader { get; } =
-        LocalizedResourceAttributeHelper.GetLocalizedResourceContent(ResourceLoader, resourceKeyHeader) ?? "";
+        SettingsPageResources.GetResource(resourceKeyHeader);
 
     public string LocalizedResourceDescription { get; } =
         resourceKeyDescription is null
             ? ""
-            : LocalizedResourceAttributeHelper.GetLocalizedResourceContent(ResourceLoader, resourceKeyDescription) ?? "";
+            : SettingsPageResources.GetResource(resourceKeyDescription);
 
     public static SettingsEntryAttribute GetFromPropertyName(string propertyName)
     {

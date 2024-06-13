@@ -102,7 +102,7 @@ public partial class MakoClient
         }
     }
 
-    private async Task<HttpResponseMessage> RunWithLoggerAsync(Func<Task<HttpResponseMessage>> task) 
+    private async Task<HttpResponseMessage> RunWithLoggerAsync(Func<Task<HttpResponseMessage>> task)
     {
         try
         {
@@ -157,7 +157,7 @@ public partial class MakoClient
         var method = type?.GetMethod("ConstructSystemProxy");
         var @delegate = method?.CreateDelegate<Func<IWebProxy>>();
 
-        _getCurrentSystemProxy = @delegate ?? ThrowUtils.Throw<MissingMethodException, Func<IWebProxy>>("Unable to find proxy functions");
+        _getCurrentSystemProxy = @delegate ?? ThrowUtils.Throw<MissingMethodException, Func<IWebProxy>>(new("Unable to find proxy functions"));
         HttpClient.DefaultProxy = _getCurrentSystemProxy();
     }
 

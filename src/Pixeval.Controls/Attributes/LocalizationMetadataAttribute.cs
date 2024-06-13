@@ -1,8 +1,8 @@
-#region Copyright (c) Pixeval/Pixeval
+#region Copyright
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/Sequence.cs
+// Copyright (c) 2024 Pixeval/EnumLocalizationMetadataAttribute.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,16 +18,21 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System.Collections.Generic;
-using System.Diagnostics;
+using System;
 
-namespace Pixeval.Download.MacroParser.Ast;
+namespace Pixeval.Attributes;
 
-[DebuggerDisplay("{First} {Remains}")]
-public record Sequence<TContext>(SingleNode<TContext> First, Sequence<TContext>? Remains) : IMetaPathNode<TContext>
+[AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Enum)]
+public class LocalizationMetadataAttribute(Type resourceType) : Attribute
 {
-    public string Evaluate(IReadOnlyList<IMacro> env, TContext context)
-    {
-        return First.Evaluate(env, context) + (Remains?.Evaluate(env, context) ?? string.Empty);
-    }
+    public Type ResourceType { get; } = resourceType;
+
+    public bool IsPartial { get; init; }
+}
+
+
+[AttributeUsage(AttributeTargets.Class)]
+public class AttachedLocalizationMetadataAttribute<T>(Type resourceType) : Attribute
+{
+    public Type ResourceType { get; } = resourceType;
 }

@@ -24,6 +24,7 @@ using Pixeval.Attributes;
 
 namespace Pixeval.Controls;
 
+[LocalizationMetadata(typeof(AdvancedItemsViewResources))]
 public enum ItemsViewLayoutType
 {
     [LocalizedResource(typeof(AdvancedItemsViewResources), nameof(AdvancedItemsViewResources.LinedFlow))]

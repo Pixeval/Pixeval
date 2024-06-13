@@ -22,6 +22,7 @@ using Pixeval.Attributes;
 
 namespace Pixeval.Options;
 
+[LocalizationMetadata(typeof(MiscResources))]
 public enum UgoiraDownloadFormat
 {
     [LocalizedResource(typeof(MiscResources), nameof(MiscResources.Tiff))]

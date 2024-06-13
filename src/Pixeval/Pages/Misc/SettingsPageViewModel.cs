@@ -27,7 +27,6 @@ using Microsoft.UI.Xaml.Controls;
 using Pixeval.AppManagement;
 using Pixeval.Controls;
 using Pixeval.Options;
-using Pixeval.Util;
 using Pixeval.Util.ComponentModels;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
@@ -79,10 +78,12 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
         [
             new(SettingsEntryCategory.Application)
             {
-                new EnumAppSettingsEntry<ElementTheme>(AppSettings,
-                    t => t.Theme) { ValueChanged = t => WindowFactory.SetTheme((ElementTheme)t) },
-                new EnumAppSettingsEntry<BackdropType>(AppSettings,
-                    t => t.Backdrop) { ValueChanged = t => WindowFactory.SetBackdrop((BackdropType)t) },
+                new EnumAppSettingsEntry(AppSettings,
+                    t => t.Theme,
+                    ElementThemeExtension.GetItems()) { ValueChanged = t => WindowFactory.SetTheme((ElementTheme)t) },
+                new EnumAppSettingsEntry(AppSettings,
+                    t => t.Backdrop,
+                    BackdropTypeExtension.GetItems()) { ValueChanged = t => WindowFactory.SetBackdrop((BackdropType)t) },
                 new FontAppSettingsEntry(AppSettings,
                     t => t.AppFontFamilyName),
                 new LanguageAppSettingsEntry(AppSettings),
@@ -102,17 +103,21 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
                 },
                 new BoolAppSettingsEntry(AppSettings,
                     t => t.UseFileCache),
-                new EnumAppSettingsEntry<MainPageTabItem>(AppSettings,
-                    t => t.DefaultSelectedTabItem)
+                new EnumAppSettingsEntry(AppSettings,
+                    t => t.DefaultSelectedTabItem,
+                    MainPageTabItemExtension.GetItems())
             },
             new(SettingsEntryCategory.BrowsingExperience)
             {
-                new EnumAppSettingsEntry<ThumbnailDirection>(AppSettings,
-                    t => t.ThumbnailDirection),
-                new EnumAppSettingsEntry<ItemsViewLayoutType>(AppSettings,
-                    t => t.ItemsViewLayoutType),
-                new EnumAppSettingsEntry<TargetFilter>(AppSettings,
-                    t => t.TargetFilter),
+                new EnumAppSettingsEntry(AppSettings,
+                    t => t.ThumbnailDirection,
+                    ThumbnailDirectionExtension.GetItems()),
+                new EnumAppSettingsEntry(AppSettings,
+                    t => t.ItemsViewLayoutType,
+                    ItemsViewLayoutTypeExtension.GetItems()),
+                new EnumAppSettingsEntry(AppSettings,
+                    t => t.TargetFilter,
+                    TargetFilterExtension.GetItems()),
                 new TokenizingAppSettingsEntry(AppSettings),
                 new BoolAppSettingsEntry(AppSettings,
                     t => t.BrowseOriginalImage),
@@ -148,37 +153,43 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
                     Max = 20,
                     Min = 0
                 },
-                new EnumAppSettingsEntry<WorkSortOption>(AppSettings,
-                    t => t.WorkSortOption),
-                new EnumAppSettingsEntry<SimpleWorkType>(AppSettings,
-                    t => t.SimpleWorkType),
+                new EnumAppSettingsEntry(AppSettings,
+                    t => t.WorkSortOption,
+                    WorkSortOptionExtension.GetItems()),
+                new EnumAppSettingsEntry(AppSettings,
+                    t => t.SimpleWorkType,
+                    SimpleWorkTypeExtension.GetItems()),
                 new MultiValuesAppSettingsEntry(AppSettings,
                     SettingsPageResources.RankOptionEntryHeader,
                     SettingsPageResources.RankOptionEntryDescription,
                     Symbol.ArrowTrending,
                     [
-                        new EnumAppSettingsEntry<RankOption>(AppSettings,
+                        new EnumAppSettingsEntry(AppSettings,
                             WorkTypeEnum.Illustration,
-                            t => t.IllustrationRankOption),
+                            t => t.IllustrationRankOption,
+                            RankOptionExtension.GetItems()),
                         new EnumAppSettingsEntry(AppSettings,
                             WorkTypeEnum.Novel,
                             t => t.NovelRankOption,
-                            RankOptionExtension.NovelRankOptions)
+                            NovelRankOptionExtension.GetItems())
                     ]),
                 new MultiValuesAppSettingsEntry(AppSettings,
                     SettingsPageResources.DefaultSearchTagMatchOptionEntryHeader,
                     SettingsPageResources.DefaultSearchTagMatchOptionEntryDescription,
                     Symbol.CheckmarkCircleSquare,
                     [
-                        new EnumAppSettingsEntry<SearchIllustrationTagMatchOption>(AppSettings,
+                        new EnumAppSettingsEntry(AppSettings,
                             WorkTypeEnum.Illustration,
-                            t => t.SearchIllustrationTagMatchOption),
-                        new EnumAppSettingsEntry<SearchNovelTagMatchOption>(AppSettings,
+                            t => t.SearchIllustrationTagMatchOption,
+                            SearchIllustrationTagMatchOptionExtension.GetItems()),
+                        new EnumAppSettingsEntry(AppSettings,
                             WorkTypeEnum.Novel,
-                            t => t.SearchNovelTagMatchOption)
+                            t => t.SearchNovelTagMatchOption,
+                            SearchNovelTagMatchOptionExtension.GetItems())
                     ]),
-                new EnumAppSettingsEntry<SearchDuration>(AppSettings,
-                    t => t.SearchDuration),
+                new EnumAppSettingsEntry(AppSettings,
+                    t => t.SearchDuration,
+                    SearchDurationExtension.GetItems()),
                 new DateRangeWithSwitchAppSettingsEntry(AppSettings)
             },
             new(SettingsEntryCategory.Download)
@@ -204,15 +215,18 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
                     SettingsPageResources.WorkDownloadFormatEntryDescription,
                     Symbol.TextPeriodAsterisk,
                     [
-                        new EnumAppSettingsEntry<IllustrationDownloadFormat>(AppSettings,
+                        new EnumAppSettingsEntry(AppSettings,
                             WorkTypeEnum.Illustration,
-                            t => t.IllustrationDownloadFormat),
-                        new EnumAppSettingsEntry<UgoiraDownloadFormat>(AppSettings,
+                            t => t.IllustrationDownloadFormat,
+                            IllustrationDownloadFormatExtension.GetItems()),
+                        new EnumAppSettingsEntry(AppSettings,
                             WorkTypeEnum.Ugoira,
-                            t => t.UgoiraDownloadFormat),
-                        new EnumAppSettingsEntry<NovelDownloadFormat>(AppSettings,
+                            t => t.UgoiraDownloadFormat,
+                            UgoiraDownloadFormatExtension.GetItems()),
+                        new EnumAppSettingsEntry(AppSettings,
                             WorkTypeEnum.Novel,
-                            t => t.NovelDownloadFormat)
+                            t => t.NovelDownloadFormat,
+                            NovelDownloadFormatExtension.GetItems())
                     ]),
                 new BoolAppSettingsEntry(AppSettings,
                     t => t.DownloadWhenBookmarked)
@@ -343,7 +357,7 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
 
     public void ShowClearData(ClearDataKind kind)
     {
-        HWnd.SuccessGrowl(kind.GetLocalizedResourceContent()!);
+        HWnd.SuccessGrowl(ClearDataKindExtension.GetResource(kind));
     }
 
     public void CancelToken()
@@ -354,6 +368,7 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
 
     public void Dispose()
     {
+        GC.SuppressFinalize(this);
         CancelToken();
     }
 }
