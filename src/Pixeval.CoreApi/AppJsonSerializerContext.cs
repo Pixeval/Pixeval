@@ -20,6 +20,8 @@
 
 #endregion
 
+using System.Text.Json;
+using System;
 using System.Text.Json.Serialization;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Model;
@@ -142,3 +144,5 @@ namespace Pixeval.CoreApi;
 
 [JsonSerializable(typeof(Session))]
 public partial class AppJsonSerializerContext : JsonSerializerContext;
+
+public class SnakeCaseLowerEnumConverter<T>() : JsonStringEnumConverter<T>(JsonNamingPolicy.SnakeCaseLower) where T : struct, Enum;
