@@ -22,12 +22,12 @@ using System;
 
 namespace Pixeval.CoreApi.Model;
 
-public record Feed : IEntry
+public record Feed : IIdEntry
 {
     /// <summary>
     /// May points to user, illustration or novel
     /// </summary>
-    public string? FeedId { get; set; }
+    public long Id { get; set; }
 
     /// <summary>
     /// The name of the target of this feed if it has one

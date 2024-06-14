@@ -1,9 +1,8 @@
-#region Copyright
-
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2024 Pixeval/IViewModelFactory.cs
+// Copyright (c) 2024 Pixeval/FeedItemViewModel.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -17,12 +16,22 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 #endregion
 
-namespace Pixeval.Controls;
+using CommunityToolkit.Mvvm.ComponentModel;
+using Pixeval.Controls;
+using Pixeval.Controls.Timeline;
+using Pixeval.CoreApi.Model;
 
-public interface IViewModelFactory<in T, out TSelf>
+namespace Pixeval.Pages.Capability;
+
+public partial class FeedItemViewModel : ObservableObject, IViewModelFactory<Feed, FeedItemViewModel>
 {
-    static abstract TSelf CreateInstance(T entry, int index);
+    [ObservableProperty]
+    private TimelineAxisPlacement? _placement;
+
+    public static FeedItemViewModel CreateInstance(Feed entry, int index)
+    {
+        return new FeedItemViewModel { Placement = index % 2 == 0 ? TimelineAxisPlacement.Right : TimelineAxisPlacement.Left };
+    }
 }

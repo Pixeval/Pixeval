@@ -231,9 +231,15 @@ internal partial class FeedEngine(MakoClient makoClient, EngineHandle? engineHan
                     ?.GetPropertyOrNull("url")
                     ?.GetPropertyOrNull("m")
                     ?.GetString();
+
+                if (!long.TryParse(feedTargetId, out var feedIdLong))
+                {
+                    return null;
+                }
+                
                 var feedObject = new Feed
                 {
-                    FeedId = feedTargetId,
+                    Id = feedIdLong,
                     FeedThumbnail = feedTargetThumbnail,
                     Type = feedType,
                     PostDate = postDate,

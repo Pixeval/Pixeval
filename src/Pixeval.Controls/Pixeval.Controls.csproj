@@ -46,4 +46,21 @@
     <ItemGroup>
         <PRIResource Include="Strings\*\*.resjson" />
     </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Timeline\TimelineControl.xaml" />
+      <None Remove="Timeline\TimelineUnit.xaml" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Page Update="Timeline\TimelineControl.xaml">
+        <Generator>MSBuild:Compile</Generator>
+      </Page>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Page Update="Timeline\TimelineUnit.xaml">
+        <Generator>MSBuild:Compile</Generator>
+      </Page>
+    </ItemGroup>
 </Project>

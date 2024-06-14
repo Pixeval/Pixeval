@@ -132,6 +132,16 @@
         <ProjectCapability Include="Msix" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Remove="Pages\Capability\FeedPage.xaml" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Page Update="Pages\Capability\FeedPage.xaml">
+        <Generator>MSBuild:Compile</Generator>
+      </Page>
+    </ItemGroup>
+
     <PropertyGroup Condition="'$(DisableHasPackageAndPublishMenuAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
         <HasPackageAndPublishMenu>true</HasPackageAndPublishMenu>
     </PropertyGroup>
