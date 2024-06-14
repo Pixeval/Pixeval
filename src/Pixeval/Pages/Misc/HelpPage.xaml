@@ -41,7 +41,11 @@
                 <controls:SettingsExpander x:Uid="/HelpPage/DownloadMacroHelpExpander" HeaderIcon="{fluent:SymbolIcon Symbol=Rename}">
                     <controls:SettingsExpander.Items>
                         <controls:SettingsCard HorizontalContentAlignment="Stretch" ContentAlignment="Left">
-                            <TextBlock x:Uid="/TextGenerated/DownloadMacroHelp" />
+                            <labs:MarkdownTextBlock x:Uid="/TextGenerated/DownloadMacroHelp" Text="">
+                                <labs:MarkdownTextBlock.Config>
+                                    <labs:MarkdownConfig />
+                                </labs:MarkdownTextBlock.Config>
+                            </labs:MarkdownTextBlock>
                         </controls:SettingsCard>
                     </controls:SettingsExpander.Items>
                 </controls:SettingsExpander>
