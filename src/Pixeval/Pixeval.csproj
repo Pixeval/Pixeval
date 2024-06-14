@@ -6,7 +6,6 @@
         <RootNamespace>Pixeval</RootNamespace>
         <Platforms>x86;x64;ARM64</Platforms>
         <RuntimeIdentifiers>win-x86;win-x64;win-arm64</RuntimeIdentifiers>
-        <PublishProfile>win-$(Platform).pubxml</PublishProfile>
         <ApplicationManifest>app.manifest</ApplicationManifest>
         <Nullable>enable</Nullable>
         <UseWinUI>true</UseWinUI>
@@ -16,8 +15,9 @@
         <LangVersion>preview</LangVersion>
         <Configurations>Debug;Release</Configurations>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-        <WindowsSdkPackageVersion>10.0.22621.35-preview</WindowsSdkPackageVersion>
-        <PublishAot>true</PublishAot>
+        <PublishAot Condition="'$(Configuration)'=='Release'">true</PublishAot>
+        <WindowsSdkPackageVersion Condition="'$(PublishAot)' == 'true'">10.0.22621.35-preview</WindowsSdkPackageVersion>
+        <PublishProfile Condition="'$(PublishAot)' == 'true'">win-$(Platform).pubxml</PublishProfile>
     </PropertyGroup>
 
     <ItemGroup>
@@ -46,9 +46,10 @@
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
         <PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="3.0.1" />
         <PackageReference Include="Microsoft.Toolkit.Uwp.Notifications" Version="7.1.3" />
-        <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.1.0-prerelease.240602.1" />
         <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.3233" />
-        <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.6.240531000-experimental1" />
+        <PackageReference Condition="'$(PublishAot)' == 'true'" Include="Microsoft.Windows.CsWinRT" Version="2.1.0-prerelease.240602.1" />
+        <PackageReference Condition="'$(PublishAot)' == 'true'" Include="Microsoft.WindowsAppSDK" Version="1.6.240531000-experimental1" />
+        <PackageReference Condition="'$(PublishAot)' == 'false'" Include="Microsoft.WindowsAppSDK" Version="1.5.240607001" />
         <PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.0.9" />
         <PackageReference Include="PininSharp" Version="1.2.0" />
         <!--<PackageReference Include="Pixeval.Bypass" Version="1.1.7" />-->
@@ -66,15 +67,15 @@
         <ProjectReference Include="..\Pixeval.SourceGen\Pixeval.SourceGen.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="False" />
         <Manifest Include="$(ApplicationManifest)" />
     </ItemGroup>
-    
+
     <!--Exposes PRI resources-->
     <Target Name="InjectAdditionalFiles" BeforeTargets="GenerateMSBuildEditorConfigFileShouldRun">
         <RemoveDir Directories="Generated" />
         <ItemGroup>
             <TextFiles Include="%(TextFile.OutputTarget)">
                 <Content>{
-@(TextFile-&gt;Metadata('Content'), ',
-')
+                    @(TextFile-&gt;Metadata('Content'), ',
+                    ')
 }</Content>
             </TextFiles>
         </ItemGroup>

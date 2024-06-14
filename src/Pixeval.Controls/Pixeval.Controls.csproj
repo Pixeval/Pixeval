@@ -12,7 +12,6 @@
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <DefaultLanguage>zh-cn</DefaultLanguage>
         <IsTrimmable>true</IsTrimmable>
-        <WindowsSdkPackageVersion>10.0.22621.35-preview</WindowsSdkPackageVersion>
     </PropertyGroup>
 
     <ItemGroup>
@@ -20,11 +19,11 @@
         <PackageReference Include="FluentIcons.WinUI" Version="1.1.242" />
         <PackageReference Include="Microsoft.Graphics.Win2D" Version="1.2.0" />
         <PackageReference Include="Microsoft.Windows.CsWin32" Version="0.3.106">
-          <PrivateAssets>all</PrivateAssets>
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.3233" />
-        <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.6.240531000-experimental1" />
+        <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.5.240607001" />
         <PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.0.9" />
         <PackageReference Include="CommunityToolkit.WinUI.Triggers" Version="8.1.240606-rc" />
         <PackageReference Include="CommunityToolkit.WinUI.Collections" Version="8.1.240606-rc" />
