@@ -156,12 +156,12 @@ public abstract class LocalizationMetadataGeneratorBase
                         ])))))
                     .WithSemicolonToken(Token(SyntaxKind.SemicolonToken)),
                 PropertyDeclaration(
-                        ParseTypeName($"global::System.Collections.Frozen.FrozenDictionary<{typeFullName}, string>"),
+                        ParseTypeName($"{FrozenDictionaryTypeName}<{typeFullName}, string>"),
                         valuesTable)
                     .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.StaticKeyword)))
                     .WithExpressionBody(ArrowExpressionClause(InvocationExpression(MemberAccessExpression(
                             SyntaxKind.SimpleMemberAccessExpression,
-                            IdentifierName("global::System.Collections.Frozen.FrozenDictionary"),
+                            IdentifierName(FrozenDictionaryTypeName),
                             IdentifierName("ToFrozenDictionary")),
                         ArgumentList(SeparatedList([
                             Argument(

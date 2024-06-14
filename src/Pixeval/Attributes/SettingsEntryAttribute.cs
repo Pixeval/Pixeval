@@ -30,8 +30,13 @@ using WinUI3Utilities;
 namespace Pixeval.Attributes;
 
 [AttributeUsage(AttributeTargets.Property)]
-public class SettingsEntryAttribute(Symbol symbol, string resourceKeyHeader, string? resourceKeyDescription) : Attribute
+public partial class SettingsEntryAttribute(Symbol symbol, string resourceKeyHeader, string? resourceKeyDescription) : Attribute
 {
+    public SettingsEntryAttribute(int symbol, string resourceKeyHeader, string? resourceKeyDescription)
+        : this((Symbol)symbol, resourceKeyHeader, resourceKeyDescription)
+    {
+    }
+
     public static readonly SettingsEntryAttribute AutoUpdate = new(Symbol.Communication,
         nameof(SettingsPageResources.DownloadUpdateAutomaticallyEntryHeader),
         nameof(SettingsPageResources.DownloadUpdateAutomaticallyEntryDescription));

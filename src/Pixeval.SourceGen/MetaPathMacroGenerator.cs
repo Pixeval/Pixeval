@@ -44,9 +44,8 @@ public class MetaPathMacroGenerator : IIncrementalGenerator
         var dictionary = new Dictionary<ITypeSymbol, List<INamedTypeSymbol>>(SymbolEqualityComparer.Default);
         foreach (var ga in gas)
         {
-            if (ga is not { TargetSymbol: INamedTypeSymbol symbol })
+            if (ga is not { TargetSymbol: INamedTypeSymbol symbol, Attributes: var attributeList })
                 continue;
-            var attributeList = ga.Attributes;
             foreach (var attributeData in attributeList)
                 if (attributeData.AttributeClass?.TypeArguments is [{ } type])
                     if (dictionary.TryGetValue(type, out var list))
@@ -73,7 +72,7 @@ public class MetaPathMacroGenerator : IIncrementalGenerator
                         .WithSemicolonToken(Token(SyntaxKind.SemicolonToken))).ToArray()
             )
             .WithCloseBraceToken(Token(SyntaxKind.CloseBraceToken));
-        var generatedNamespace = GetFileScopedNamespaceDeclaration("Pixeval.Download.Macros", generatedType, true);
+        var generatedNamespace = GetFileScopedNamespaceDeclaration(AttributeNamespace, generatedType, true);
         var compilationUnit = CompilationUnit()
             .AddMembers(generatedNamespace)
             .NormalizeWhitespace();
@@ -88,10 +87,10 @@ public class MetaPathMacroGenerator : IIncrementalGenerator
             (syntaxContext, _) => syntaxContext
         ).Collect();
 
-        context.RegisterSourceOutput(generatorAttributes, (spc, ga) =>
+        context.RegisterSourceOutput(generatorAttributes, (spc, gas) =>
         {
-            if (ga.Length > 0)
-                if (TypeWithAttribute(ga, out var name) is { } source)
+            if (gas.Length > 0)
+                if (TypeWithAttribute(gas, out var name) is { } source)
                     spc.AddSource(name, source);
         });
     }

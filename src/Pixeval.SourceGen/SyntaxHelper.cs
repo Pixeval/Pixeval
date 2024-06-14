@@ -32,6 +32,7 @@ public static class SyntaxHelper
 {
     internal const string AttributeNamespace = "WinUI3Utilities.Attributes.";
     internal const string DisableSourceGeneratorAttribute = AttributeNamespace + "DisableSourceGeneratorAttribute";
+    internal const string FrozenDictionaryTypeName = "global::System.Collections.Frozen.FrozenDictionary";
 
     public static bool HasAttribute(this ISymbol s, string attributeFqName)
     {

@@ -39,6 +39,12 @@ public sealed partial class EnumComboBox : ComboBox
     {
         Style = Application.Current.Resources["DefaultComboBoxStyle"] as Style;
         base.SelectionChanged += ComboBox_SelectionChanged;
+        var token = RegisterPropertyChangedCallback(ItemsSourceProperty, (sender, _) =>
+        {
+            if (sender is EnumComboBox { ItemsSource: IEnumerable<StringRepresentableItem> enumerable } box)
+                box.SelectedItem = enumerable.FirstOrDefault();
+        });
+        Unloaded += (sender, _) => sender.To<DependencyObject>().UnregisterPropertyChangedCallback(ItemsSourceProperty, token);
     }
 
     public bool RaiseEventAfterLoaded { get; set; } = true;
