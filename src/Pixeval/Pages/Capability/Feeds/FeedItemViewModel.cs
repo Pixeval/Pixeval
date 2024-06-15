@@ -34,6 +34,11 @@ using Pixeval.Util.IO;
 
 namespace Pixeval.Pages.Capability.Feeds;
 
+public class BookmarkIllustFeedItemViewModel(Feed entry) : FeedItemViewModel(entry)
+{
+
+}
+
 public partial class FeedItemViewModel(Feed entry) : EntryViewModel<Feed>(entry), IViewModelFactory<Feed, FeedItemViewModel>
 {
     [ObservableProperty] 
@@ -100,3 +105,4 @@ public partial class FeedItemViewModel(Feed entry) : EntryViewModel<Feed>(entry)
         _ => throw new ArgumentOutOfRangeException()
     };
 }
+

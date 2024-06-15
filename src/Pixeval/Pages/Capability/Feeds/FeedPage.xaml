@@ -15,9 +15,14 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Page.Resources>
-        <feeds:FeedItemDataTemplateSelector x:Key="FeedItemDataTemplateSelector" />
+        <feeds:FeedItemDataTemplateSelector x:Key="FeedItemDataTemplateSelector" 
+                                            BookmarkIllust="{StaticResource BookmarkIllustTemplate}"
+                                            BookmarkNovel="{StaticResource BookmarkNovelTemplate}"
+                                            FollowUser="{StaticResource FollowUserTemplate}"
+                                            PostIllust="{StaticResource PostIllustTemplate}" />
         <DataTemplate x:Key="BookmarkIllustTemplate" x:DataType="feeds:FeedItemViewModel">
             <StackPanel>
+                <TextBlock HorizontalAlignment="Left" Text="{x:Bind PostDateFormatted}" Style="{StaticResource CaptionStrongTextBlockStyle}" />
                 <StackPanel Orientation="Horizontal" Height="35" Margin="0,5,0,0">
                     <Grid HorizontalAlignment="Center" VerticalAlignment="Center" CornerRadius="25" Width="35" Height="35">
                         <ImageIcon Source="{x:Bind UserAvatar, Mode=OneWay}" Width="35" Height="35" HorizontalAlignment="Center" VerticalAlignment="Center"/>
@@ -27,13 +32,13 @@
                          <Run x:Uid="/Timeline/BookmarkIllustTemplateSegment1" />
                          <Run Text="{x:Bind Entry.FeedName}" FontFamily="Bahnschrift" FontWeight="Bold" />
                          <Run x:Uid="/Timeline/BookmarkIllustTemplateSegment2" />
-                         <Run Text="{x:Bind PostDateFormatted}" />
                     </TextBlock>
                 </StackPanel>
             </StackPanel>
         </DataTemplate>
         <DataTemplate x:Key="BookmarkNovelTemplate" x:DataType="feeds:FeedItemViewModel">
             <StackPanel>
+                <TextBlock HorizontalAlignment="Left" Text="{x:Bind PostDateFormatted}" Style="{StaticResource CaptionStrongTextBlockStyle}" />
                 <StackPanel Orientation="Horizontal" Height="35" Margin="0,5,0,0">
                     <Grid HorizontalAlignment="Center" VerticalAlignment="Center" CornerRadius="25" Width="35" Height="35">
                         <ImageIcon Source="{x:Bind UserAvatar, Mode=OneWay}" Width="35" Height="35" HorizontalAlignment="Center" VerticalAlignment="Center"/>
@@ -43,13 +48,13 @@
                         <Run x:Uid="/Timeline/BookmarkNovelTemplateSegment1" />
                         <Run Text="{x:Bind Entry.FeedName}" FontFamily="Bahnschrift" FontWeight="Bold" />
                         <Run x:Uid="/Timeline/BookmarkNovelTemplateSegment2" />
-                        <Run Text="{x:Bind PostDateFormatted}" />
                     </TextBlock>
                 </StackPanel>
             </StackPanel>
         </DataTemplate>
         <DataTemplate x:Key="FollowUserTemplate" x:DataType="feeds:FeedItemViewModel">
             <StackPanel>
+                <TextBlock HorizontalAlignment="Left" Text="{x:Bind PostDateFormatted}" Style="{StaticResource CaptionStrongTextBlockStyle}" />
                 <StackPanel Orientation="Horizontal" Height="35" Margin="0,5,0,0">
                     <Grid HorizontalAlignment="Center" VerticalAlignment="Center" CornerRadius="25" Width="35" Height="35">
                         <ImageIcon Source="{x:Bind UserAvatar, Mode=OneWay}" Width="35" Height="35" HorizontalAlignment="Center" VerticalAlignment="Center"/>
@@ -65,6 +70,7 @@
         </DataTemplate>
         <DataTemplate x:Key="PostIllustTemplate" x:DataType="feeds:FeedItemViewModel">
             <StackPanel>
+                <TextBlock HorizontalAlignment="Left" Text="{x:Bind PostDateFormatted}" Style="{StaticResource CaptionStrongTextBlockStyle}" />
                 <StackPanel Orientation="Horizontal" Height="35" Margin="0,5,0,0">
                     <Grid HorizontalAlignment="Center" VerticalAlignment="Center" CornerRadius="25" Width="35" Height="35">
                         <ImageIcon Source="{x:Bind UserAvatar, Mode=OneWay}" Width="35" Height="35" HorizontalAlignment="Center" VerticalAlignment="Center"/>
@@ -91,13 +97,11 @@
                             <timeline:TimelineUnit Margin="50,0" FoldThreshold="1000" FoldedDefaultPlacement="Left"
                                                    DataContext="{x:Bind}"
                                                    Loaded="TimelineUnit_OnLoaded"
+                                                   ContentTemplateSelector="{StaticResource FeedItemDataTemplateSelector}"
                                                    TimelineAxisPlacement="{x:Bind Placement, Mode=OneWay}">
                                 <timeline:TimelineUnit.TitleIcon>
                                     <winUi:SymbolIconSource Symbol="{x:Bind Icon, Mode=OneWay}" />
                                 </timeline:TimelineUnit.TitleIcon>
-                                <timeline:TimelineUnit.ContentTemplate>
-                                    
-                                </timeline:TimelineUnit.ContentTemplate>
                             </timeline:TimelineUnit>
                         </ItemContainer>
                     </DataTemplate>
