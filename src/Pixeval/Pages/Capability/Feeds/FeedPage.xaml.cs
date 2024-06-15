@@ -13,6 +13,8 @@ using Microsoft.UI.Xaml.Navigation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using CommunityToolkit.Mvvm.ComponentModel;
+using Pixeval.Controls.Timeline;
+using WinUI3Utilities;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -35,6 +37,12 @@ namespace Pixeval.Pages.Capability.Feeds
         private void FeedPage_OnLoaded(object sender, RoutedEventArgs e)
         {
             _viewModel.DataProvider.ResetEngine(App.AppViewModel.MakoClient.Feeds()!);
+        }
+
+        private async void TimelineUnit_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            var vm = (sender as TimelineUnit)!.GetDataContext<FeedItemViewModel>();
+            await vm.LoadAsync();
         }
     }
 }

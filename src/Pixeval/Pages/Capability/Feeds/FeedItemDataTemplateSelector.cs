@@ -21,6 +21,7 @@
 using System;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Pixeval.CoreApi.Model;
 
 namespace Pixeval.Pages.Capability.Feeds;
 
@@ -37,12 +38,12 @@ public sealed class FeedItemDataTemplateSelector : DataTemplateSelector
     protected override DataTemplate SelectTemplateCore(object item)
     {
         var feedViewModel = (FeedItemViewModel) item;
-        return feedViewModel switch
+        return feedViewModel.Entry.Type switch
         {
-            FollowedArtistFeedItemViewModel => FollowUser,
-            NewBookmarkFeedItemViewModel => BookmarkIllust,
-            NewNovelBookmarkFeedItemViewModel => BookmarkNovel,
-            NewPostFeedItemViewModel => PostIllust,
+            FeedType.AddFavorite => FollowUser,
+            FeedType.AddBookmark => BookmarkIllust,
+            FeedType.AddNovelBookmark => BookmarkNovel,
+            FeedType.AddIllust => PostIllust,
             _ => throw new ArgumentOutOfRangeException(nameof(feedViewModel))
         };
     }

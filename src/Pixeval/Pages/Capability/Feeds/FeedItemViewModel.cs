@@ -19,82 +19,84 @@
 #endregion
 
 using System;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using FluentIcons.Common;
+using Microsoft.UI.Xaml.Media;
+using Pixeval.AppManagement;
 using Pixeval.Controls;
 using Pixeval.Controls.Timeline;
 using Pixeval.CoreApi.Model;
 using Pixeval.Util;
+using Pixeval.Util.IO;
+
 #pragma warning disable CS9107 // Parameter is captured into the state of the enclosing type and its value is also passed to the base constructor. The value might be captured by the base class as well.
 
 namespace Pixeval.Pages.Capability.Feeds;
 
-public abstract partial class FeedItemViewModel(Feed entry) : EntryViewModel<Feed>(entry), IViewModelFactory<Feed, FeedItemViewModel>
+public partial class FeedItemViewModel(Feed entry) : EntryViewModel<Feed>(entry), IViewModelFactory<Feed, FeedItemViewModel>
 {
-    [ObservableProperty]
+    [ObservableProperty] 
     private TimelineAxisPlacement _placement;
-    
-    public abstract Symbol Icon { get; }
+
+    public string PostDateFormatted => Entry.PostDate.ToString("f");
+
+    public Symbol Icon => entry.Type switch
+    {
+        FeedType.AddBookmark => Symbol.Heart,
+        FeedType.AddFavorite => Symbol.People,
+        FeedType.AddIllust => Symbol.Fire,
+        FeedType.AddNovelBookmark => Symbol.BookAdd,
+        _ => throw new ArgumentOutOfRangeException()
+    };
+
+    [ObservableProperty]
+    private ImageSource _userAvatar = null!;
 
     public static FeedItemViewModel CreateInstance(Feed entry, int index)
     {
-        return entry.Type switch
-        {
-            FeedType.AddBookmark => new NewBookmarkFeedItemViewModel(entry),
-            FeedType.AddIllust => new NewPostFeedItemViewModel(entry),
-            FeedType.AddFavorite => new FollowedArtistFeedItemViewModel(entry),
-            FeedType.AddNovelBookmark => new NewNovelBookmarkFeedItemViewModel(entry),
-            _ => throw new ArgumentOutOfRangeException()
-        };
+        return new FeedItemViewModel(entry) { Placement = index % 2 == 0 ? TimelineAxisPlacement.Right : TimelineAxisPlacement.Left };
+    }
 
+    public async Task LoadAsync()
+    {
+        if (entry.PostUserThumbnail is { } url)
+        {
+            var image = (await App.AppViewModel.MakoClient.DownloadBitmapImageAsync(url, 35)).UnwrapOrThrow();
+            UserAvatar = image;
+        }
+        else
+        {
+            UserAvatar = AppInfo.ImageNotAvailable.Value;
+        }
     }
 
     public override void Dispose()
     {
         GC.SuppressFinalize(this);
     }
-}
 
-public class NewPostFeedItemViewModel(Feed entry) : FeedItemViewModel(entry)
-{
-    public override Symbol Icon => Symbol.Fire;
+    public override Uri AppUri => entry.Type switch
+    {
+        FeedType.AddBookmark or FeedType.AddIllust => MakoHelper.GenerateIllustrationAppUri(entry.Id),
+        FeedType.AddFavorite => MakoHelper.GenerateUserAppUri(entry.Id),
+        FeedType.AddNovelBookmark => MakoHelper.GenerateNovelAppUri(entry.Id),
+        _ => throw new ArgumentOutOfRangeException()
+    };
+    
+    public override Uri WebUri => entry.Type switch
+    {
+        FeedType.AddBookmark or FeedType.AddIllust => MakoHelper.GenerateIllustrationWebUri(entry.Id),
+        FeedType.AddFavorite => MakoHelper.GenerateUserWebUri(entry.Id),
+        FeedType.AddNovelBookmark => MakoHelper.GenerateNovelWebUri(entry.Id),
+        _ => throw new ArgumentOutOfRangeException()
+    };
 
-    public override Uri AppUri => MakoHelper.GenerateIllustrationAppUri(entry.Id);
-
-    public override Uri WebUri => MakoHelper.GenerateIllustrationWebUri(entry.Id);
-
-    public override Uri PixEzUri => MakoHelper.GenerateIllustrationPixEzUri(entry.Id);
-}
-
-public class NewBookmarkFeedItemViewModel(Feed entry) : FeedItemViewModel(entry)
-{
-    public override Symbol Icon => Symbol.Heart;
-
-    public override Uri AppUri => MakoHelper.GenerateIllustrationAppUri(entry.Id);
-
-    public override Uri WebUri => MakoHelper.GenerateIllustrationWebUri(entry.Id);
-
-    public override Uri PixEzUri => MakoHelper.GenerateIllustrationPixEzUri(entry.Id);
-}
-
-public class NewNovelBookmarkFeedItemViewModel(Feed entry) : FeedItemViewModel(entry)
-{
-    public override Symbol Icon => Symbol.BookAdd;
-
-    public override Uri AppUri => MakoHelper.GenerateNovelAppUri(entry.Id);
-
-    public override Uri WebUri => MakoHelper.GenerateNovelWebUri(entry.Id);
-
-    public override Uri PixEzUri => MakoHelper.GenerateNovelPixEzUri(entry.Id);
-}
-
-public class FollowedArtistFeedItemViewModel(Feed entry) : FeedItemViewModel(entry)
-{
-    public override Symbol Icon => Symbol.People;
-
-    public override Uri AppUri => MakoHelper.GenerateUserAppUri(entry.Id);
-
-    public override Uri WebUri => MakoHelper.GenerateUserWebUri(entry.Id);
-
-    public override Uri PixEzUri => MakoHelper.GenerateUserPixEzUri(entry.Id);
+    public override Uri PixEzUri => entry.Type switch
+    {
+        FeedType.AddBookmark or FeedType.AddIllust => MakoHelper.GenerateIllustrationPixEzUri(entry.Id),
+        FeedType.AddFavorite => MakoHelper.GenerateUserPixEzUri(entry.Id),
+        FeedType.AddNovelBookmark => MakoHelper.GenerateNovelPixEzUri(entry.Id),
+        _ => throw new ArgumentOutOfRangeException()
+    };
 }

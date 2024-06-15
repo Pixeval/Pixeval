@@ -134,6 +134,7 @@
 
     <ItemGroup>
       <None Remove="Pages\Capability\FeedPage.xaml" />
+      <None Remove="Strings\zh-cn\Timeline.resjson" />
     </ItemGroup>
 
     <ItemGroup>

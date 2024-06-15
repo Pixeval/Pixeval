@@ -9,9 +9,76 @@
     xmlns:controls="using:Pixeval.Controls"
     xmlns:timeline="using:Pixeval.Controls.Timeline"
     xmlns:feeds="using:Pixeval.Pages.Capability.Feeds"
+    xmlns:winUi="using:FluentIcons.WinUI"
     mc:Ignorable="d"
     Loaded="FeedPage_OnLoaded"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Page.Resources>
+        <feeds:FeedItemDataTemplateSelector x:Key="FeedItemDataTemplateSelector" />
+        <DataTemplate x:Key="BookmarkIllustTemplate" x:DataType="feeds:FeedItemViewModel">
+            <StackPanel>
+                <StackPanel Orientation="Horizontal" Height="35" Margin="0,5,0,0">
+                    <Grid HorizontalAlignment="Center" VerticalAlignment="Center" CornerRadius="25" Width="35" Height="35">
+                        <ImageIcon Source="{x:Bind UserAvatar, Mode=OneWay}" Width="35" Height="35" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Grid>
+                    <TextBlock VerticalAlignment="Top" Margin="10,2,10,0" FontSize="18" >
+                        <Run Text="{x:Bind Entry.PostUserName}" FontFamily="Bahnschrift" FontWeight="Bold" />
+                         <Run x:Uid="/Timeline/BookmarkIllustTemplateSegment1" />
+                         <Run Text="{x:Bind Entry.FeedName}" FontFamily="Bahnschrift" FontWeight="Bold" />
+                         <Run x:Uid="/Timeline/BookmarkIllustTemplateSegment2" />
+                         <Run Text="{x:Bind PostDateFormatted}" />
+                    </TextBlock>
+                </StackPanel>
+            </StackPanel>
+        </DataTemplate>
+        <DataTemplate x:Key="BookmarkNovelTemplate" x:DataType="feeds:FeedItemViewModel">
+            <StackPanel>
+                <StackPanel Orientation="Horizontal" Height="35" Margin="0,5,0,0">
+                    <Grid HorizontalAlignment="Center" VerticalAlignment="Center" CornerRadius="25" Width="35" Height="35">
+                        <ImageIcon Source="{x:Bind UserAvatar, Mode=OneWay}" Width="35" Height="35" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Grid>
+                    <TextBlock VerticalAlignment="Top" Margin="10,2,10,0" FontSize="18" >
+                        <Run Text="{x:Bind Entry.PostUserName}" FontFamily="Bahnschrift" FontWeight="Bold" />
+                        <Run x:Uid="/Timeline/BookmarkNovelTemplateSegment1" />
+                        <Run Text="{x:Bind Entry.FeedName}" FontFamily="Bahnschrift" FontWeight="Bold" />
+                        <Run x:Uid="/Timeline/BookmarkNovelTemplateSegment2" />
+                        <Run Text="{x:Bind PostDateFormatted}" />
+                    </TextBlock>
+                </StackPanel>
+            </StackPanel>
+        </DataTemplate>
+        <DataTemplate x:Key="FollowUserTemplate" x:DataType="feeds:FeedItemViewModel">
+            <StackPanel>
+                <StackPanel Orientation="Horizontal" Height="35" Margin="0,5,0,0">
+                    <Grid HorizontalAlignment="Center" VerticalAlignment="Center" CornerRadius="25" Width="35" Height="35">
+                        <ImageIcon Source="{x:Bind UserAvatar, Mode=OneWay}" Width="35" Height="35" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Grid>
+                    <TextBlock VerticalAlignment="Top" Margin="10,2,10,0" FontSize="18" >
+                        <Run Text="{x:Bind Entry.PostUserName}" FontFamily="Bahnschrift" FontWeight="Bold" />
+                         <Run x:Uid="/Timeline/FollowUserTemplateSegment" />
+                         <Run Text="{x:Bind Entry.FeedName}" FontFamily="Bahnschrift" FontWeight="Bold" />
+                         <Run Text="{x:Bind PostDateFormatted}" />
+                    </TextBlock>
+                </StackPanel>
+            </StackPanel>
+        </DataTemplate>
+        <DataTemplate x:Key="PostIllustTemplate" x:DataType="feeds:FeedItemViewModel">
+            <StackPanel>
+                <StackPanel Orientation="Horizontal" Height="35" Margin="0,5,0,0">
+                    <Grid HorizontalAlignment="Center" VerticalAlignment="Center" CornerRadius="25" Width="35" Height="35">
+                        <ImageIcon Source="{x:Bind UserAvatar, Mode=OneWay}" Width="35" Height="35" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Grid>
+                    <TextBlock VerticalAlignment="Top" Margin="10,2,10,0" FontSize="18" >
+                        <Run Text="{x:Bind Entry.PostUserName}" FontFamily="Bahnschrift" FontWeight="Bold" />
+                        <Run x:Uid="/Timeline/PostIllustTemplateSegment" />
+                        <Run Text="{x:Bind Entry.FeedName}" FontFamily="Bahnschrift" FontWeight="Bold" />
+                        <Run Text="{x:Bind PostDateFormatted}" />
+                    </TextBlock>
+                </StackPanel>
+            </StackPanel>
+        </DataTemplate>
+    </Page.Resources>
 
     <controls:EntryView HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
                         HasNoItem="{x:Bind _viewModel.HasNoItem, Mode=OneWay}"
@@ -21,10 +88,16 @@
                 <controls:AdvancedItemsView.ItemTemplate>
                     <DataTemplate x:DataType="feeds:FeedItemViewModel">
                         <ItemContainer>
-                            <timeline:TimelineUnit Margin="50,0" FoldThreshold="1000" FoldedDefaultPlacement="Left" TimelineAxisPlacement="{x:Bind Placement, Mode=OneWay}">
+                            <timeline:TimelineUnit Margin="50,0" FoldThreshold="1000" FoldedDefaultPlacement="Left"
+                                                   DataContext="{x:Bind}"
+                                                   Loaded="TimelineUnit_OnLoaded"
+                                                   TimelineAxisPlacement="{x:Bind Placement, Mode=OneWay}">
                                 <timeline:TimelineUnit.TitleIcon>
-                                    <SymbolIconSource Symbol="SaveLocal" />
+                                    <winUi:SymbolIconSource Symbol="{x:Bind Icon, Mode=OneWay}" />
                                 </timeline:TimelineUnit.TitleIcon>
+                                <timeline:TimelineUnit.ContentTemplate>
+                                    
+                                </timeline:TimelineUnit.ContentTemplate>
                             </timeline:TimelineUnit>
                         </ItemContainer>
                     </DataTemplate>
