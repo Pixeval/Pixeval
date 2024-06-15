@@ -1,11 +1,11 @@
 name: Pixeval Build Pipeline
 
 on:
-  push:
-    branches-ignore:
-    - 'dependabot**'
-    tags-ignore:
-    - '**'
+  # push:
+  #   branches-ignore:
+  #   - 'dependabot**'
+  #   tags-ignore:
+  #   - '**'
   pull_request:
     paths-ignore:
     - '**.md'
@@ -23,10 +23,10 @@ jobs:
     runs-on: windows-latest
 
     strategy:
-      fail-fast: false
+      fail-fast: true
       matrix:
         configuration: [Release]
-        platform: ['x64','arm64']
+        platform: ['x64','x86','arm64']
 
     env:
       SOLUTION_NAME: 'Pixeval.sln'
