@@ -29,6 +29,7 @@ using Pixeval.AppManagement;
 using Pixeval.Controls;
 using Pixeval.Controls.Windowing;
 using Pixeval.Pages.Capability;
+using Pixeval.Pages.Capability.Feeds;
 using Pixeval.Pages.Download;
 using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Pages.Misc;
@@ -56,6 +57,8 @@ public partial class MainPageViewModel : ObservableObject
     public readonly NavigationViewTag<RecentPostsPage> RecentPostsTag = new();
 
     public readonly NavigationViewTag<NewWorksPage> NewWorksTag = new();
+    
+    public readonly NavigationViewTag<FeedPage> FeedTag = new();
 
     public readonly NavigationViewTag<RecommendationPage> RecommendsTag = new();
 

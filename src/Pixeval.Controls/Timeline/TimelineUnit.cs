@@ -5,8 +5,8 @@ using WinUI3Utilities.Attributes;
 namespace Pixeval.Controls.Timeline;
 
 [DependencyProperty<TimelineAxisPlacement>("FoldedDefaultPlacement", "Pixeval.Controls.Timeline.TimelineAxisPlacement.Left")]
-[DependencyProperty<double>("FoldThreshold", "-1")]
-[DependencyProperty<TimelineAxisPlacement>("TimelineAxisPlacement", "Pixeval.Controls.Timeline.TimelineAxisPlacement.Left", "TimelineAxisPlacementPropertyChangedCallback")]
+[DependencyProperty<double>("FoldThreshold", "-1.0")]
+[DependencyProperty<TimelineAxisPlacement>("TimelineAxisPlacement", "Pixeval.Controls.Timeline.TimelineAxisPlacement.Left", nameof(TimelineAxisPlacementPropertyChangedCallback))]
 [DependencyProperty<IconSource>("TitleIcon")]
 public sealed partial class TimelineUnit : ContentControl
 {

@@ -19,11 +19,10 @@
 #endregion
 
 using System;
-using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Pixeval.Controls.Timeline;
 
-public enum TimelineAxisPlacement : ObservableObject
+public enum TimelineAxisPlacement
 {
     Left, Right
 }

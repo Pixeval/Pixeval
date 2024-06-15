@@ -151,6 +151,10 @@
                     x:Uid="/MainPage/NewWorksTab"
                     Icon="{fluent:SymbolIcon Symbol=Record}"
                     Tag="{x:Bind _viewModel.NewWorksTag}" />
+                <NavigationViewItem
+                    x:Uid="/MainPage/FeedTab"
+                    Icon="{fluent:SymbolIcon Symbol=Feed}"
+                    Tag="{x:Bind _viewModel.FeedTag}" />
                 <NavigationViewItemHeader x:Uid="/MainPage/DownloadAndHistoriesTab" />
                 <NavigationViewItem
                     x:Name="TagsTab"

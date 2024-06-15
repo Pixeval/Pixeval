@@ -18,26 +18,23 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.WinUI.Collections;
-using Pixeval.Collections;
 using Pixeval.Controls;
-using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Model;
 
-namespace Pixeval.Pages.Capability;
+namespace Pixeval.Pages.Capability.Feeds;
 
-public class FeedPageViewModel : ObservableObject
+public class FeedPageViewModel : EntryViewViewModel<Feed, FeedItemViewModel>
 {
-    public bool HasMoreItems { get; set; }
-    
-    public AdvancedObservableCollection<FeedItemViewModel>? Feeds { get; set; }
-
-    public void Load()
+    public FeedPageViewModel(SharableViewDataProvider<Feed, FeedItemViewModel> dataProvider)
     {
-        var fetchEngine = App.AppViewModel.MakoClient.Feeds();
-        var source = new IncrementalLoadingCollection<FetchEngineIncrementalSource<Feed, FeedItemViewModel>, FeedItemViewModel>(
-            FetchEngineIncrementalSource<Feed, FeedItemViewModel>.CreateInstance(fetchEngine!));
-        Feeds = new AdvancedObservableCollection<FeedItemViewModel> { Source = source };
+        DataProvider = dataProvider;
+        dataProvider.View.CollectionChanged += (_, _) => OnPropertyChanged(nameof(HasNoItem));
     }
+
+    public FeedPageViewModel() : this(new SharableViewDataProvider<Feed, FeedItemViewModel>())
+    {
+
+    }
+
+    public override IDataProvider<Feed, FeedItemViewModel> DataProvider { get; }
 }

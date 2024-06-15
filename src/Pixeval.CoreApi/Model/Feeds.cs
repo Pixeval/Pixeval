@@ -62,7 +62,7 @@ public record Feed : IIdEntry
     public string? PostUserThumbnail { get; set; }
 
     /// <summary>
-    /// Is this feed's target pointing to an user
+    /// Is this feed's target pointing to a user
     /// </summary>
     public bool IsTargetRefersToUser { get; set; }
 }

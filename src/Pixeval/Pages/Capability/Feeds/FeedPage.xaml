@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="Pixeval.Pages.Capability.Feeds.FeedPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Pixeval.Pages.Capability"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:Pixeval.Controls"
+    xmlns:timeline="using:Pixeval.Controls.Timeline"
+    xmlns:feeds="using:Pixeval.Pages.Capability.Feeds"
+    mc:Ignorable="d"
+    Loaded="FeedPage_OnLoaded"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <controls:EntryView HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
+                        HasNoItem="{x:Bind _viewModel.HasNoItem, Mode=OneWay}"
+                        IsLoadingMore="{x:Bind ItemsView.IsLoadingMore, Mode=OneWay}">
+        <controls:EntryView.Content>
+            <controls:AdvancedItemsView x:Name="ItemsView" IsItemInvokedEnabled="False" ItemsSource="{x:Bind _viewModel.DataProvider.View, Mode=OneWay}">
+                <controls:AdvancedItemsView.ItemTemplate>
+                    <DataTemplate x:DataType="feeds:FeedItemViewModel">
+                        <ItemContainer>
+                            <timeline:TimelineUnit Margin="50,0" FoldThreshold="1000" FoldedDefaultPlacement="Left" TimelineAxisPlacement="{x:Bind Placement, Mode=OneWay}">
+                                <timeline:TimelineUnit.TitleIcon>
+                                    <SymbolIconSource Symbol="SaveLocal" />
+                                </timeline:TimelineUnit.TitleIcon>
+                            </timeline:TimelineUnit>
+                        </ItemContainer>
+                    </DataTemplate>
+                </controls:AdvancedItemsView.ItemTemplate>
+                <controls:AdvancedItemsView.ItemTransitionProvider>
+                    <LinedFlowLayoutItemCollectionTransitionProvider />
+                </controls:AdvancedItemsView.ItemTransitionProvider>
+            </controls:AdvancedItemsView>
+        </controls:EntryView.Content>
+    </controls:EntryView>
+</Page>
