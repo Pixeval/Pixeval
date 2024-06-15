@@ -15,7 +15,7 @@
         <LangVersion>preview</LangVersion>
         <Configurations>Debug;Release</Configurations>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-        <PublishAot Condition="'$(Configuration)'=='Release'">true</PublishAot>
+        <PublishAot>false</PublishAot>
         <WindowsSdkPackageVersion Condition="'$(PublishAot)' == 'true'">10.0.22621.35-preview</WindowsSdkPackageVersion>
         <PublishProfile Condition="'$(PublishAot)' == 'true'">win-$(Platform).pubxml</PublishProfile>
     </PropertyGroup>
