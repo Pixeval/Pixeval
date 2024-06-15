@@ -20,6 +20,7 @@
 
 using System;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Pixeval.Utilities;
@@ -37,6 +38,8 @@ public class AsyncLazy<T>
     /// </summary>
     private T? _value;
 
+    private readonly SemaphoreSlim _slimLock = new(1, 1);
+
     public AsyncLazy(T value)
     {
         _value = value;
@@ -52,7 +55,18 @@ public class AsyncLazy<T>
     public ValueTask<T> ValueAsync => ValueAsyncInternal();
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private async ValueTask<T> ValueAsyncInternal() => IsValueCreated ? _value! : await CreateValueAsync();
+    private async ValueTask<T> ValueAsyncInternal()
+    {
+        await _slimLock.WaitAsync();
+        try
+        {
+            return IsValueCreated ? _value! : await CreateValueAsync();
+        }
+        finally
+        {
+            _ = _slimLock.Release();
+        }
+    }
 
     private async Task<T> CreateValueAsync()
     {

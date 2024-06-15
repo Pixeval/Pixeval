@@ -7,7 +7,7 @@ using Pixeval.Pages.Misc;
 
 namespace Pixeval.Settings.Models;
 
-public class LanguageAppSettingsEntry(
+public partial class LanguageAppSettingsEntry(
     AppSettings appSettings)
     : ObservableSettingsEntryBase<AppSettings>(appSettings, "", "", default)
 {

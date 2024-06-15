@@ -19,7 +19,7 @@
 #endregion
 
 using System.ComponentModel;
-using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 
 namespace Pixeval.CoreApi.Global.Enum;
 
@@ -27,13 +27,12 @@ namespace Pixeval.CoreApi.Global.Enum;
 /// The privacy policy of Pixiv, be aware that the <see cref="Private" /> option
 /// is only permitted when the ID is pointing to yourself
 /// </summary>
+[JsonConverter(typeof(SnakeCaseLowerEnumConverter<PrivacyPolicy>))]
 public enum PrivacyPolicy
 {
     [Description("public")]
-    [EnumMember(Value = "public")]
     Public,
 
     [Description("private")]
-    [EnumMember(Value = "private")]
     Private
 }

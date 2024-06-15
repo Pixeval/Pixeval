@@ -1,12 +1,11 @@
-using System;
 using System.Collections.Generic;
-using Pixeval.Util;
+using Pixeval.Pages.Misc;
 
 namespace Pixeval.Settings;
 
-public class SimpleSettingsGroup(Enum tag) : List<ISettingsEntry>, ISettingsGroup
+public partial class SimpleSettingsGroup(SettingsEntryCategory tag) : List<ISettingsEntry>, ISettingsGroup
 {
-    public string Header { get; } = tag.GetLocalizedResourceContent() ?? "";
+    public string Header { get; } = SettingsEntryCategoryExtension.GetResource(tag);
 
-    public Enum Tag { get; } = tag;
+    public SettingsEntryCategory Tag { get; } = tag;
 }

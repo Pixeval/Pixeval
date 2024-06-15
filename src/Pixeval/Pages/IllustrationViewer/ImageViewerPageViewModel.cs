@@ -47,24 +47,6 @@ namespace Pixeval.Pages.IllustrationViewer;
 
 public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
 {
-    public enum LoadingPhase
-    {
-        [LocalizedResource(typeof(ImageViewerPageResources), nameof(ImageViewerPageResources.CheckingCache))]
-        CheckingCache,
-
-        [LocalizedResource(typeof(ImageViewerPageResources), nameof(ImageViewerPageResources.LoadingFromCache))]
-        LoadingFromCache,
-
-        [LocalizedResource(typeof(ImageViewerPageResources), nameof(ImageViewerPageResources.MergingUgoiraFrames))]
-        MergingUgoiraFrames,
-
-        [LocalizedResource(typeof(ImageViewerPageResources), nameof(ImageViewerPageResources.DownloadingImageFormatted), DownloadingImage)]
-        DownloadingImage,
-
-        [LocalizedResource(typeof(ImageViewerPageResources), nameof(ImageViewerPageResources.LoadingImage))]
-        LoadingImage
-    }
-
     private bool _disposed;
 
     [ObservableProperty]
@@ -193,11 +175,11 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
 
     private void AdvancePhase(LoadingPhase phase, double progress = 0)
     {
-        LoadingText = phase.GetLocalizedResource() switch
-        {
-            { FormatKey: LoadingPhase } attr => attr.GetLocalizedResourceContent()?.Format((int)(LoadingProgress = progress)),
-            var attr => attr?.GetLocalizedResourceContent()
-        };
+        if (phase is LoadingPhase.DownloadingImage)
+            LoadingText = LoadingPhaseExtension.GetResource(LoadingPhase.DownloadingImage)
+                ?.Format((int)(LoadingProgress = progress));
+        else
+            LoadingText = LoadingPhaseExtension.GetResource(phase);
     }
 
     private async Task LoadImage()
@@ -449,4 +431,23 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
 
         LoadSuccessfully = false;
     }
+}
+
+[LocalizationMetadata(typeof(ImageViewerPageResources))]
+public enum LoadingPhase
+{
+    [LocalizedResource(typeof(ImageViewerPageResources), nameof(ImageViewerPageResources.CheckingCache))]
+    CheckingCache,
+
+    [LocalizedResource(typeof(ImageViewerPageResources), nameof(ImageViewerPageResources.LoadingFromCache))]
+    LoadingFromCache,
+
+    [LocalizedResource(typeof(ImageViewerPageResources), nameof(ImageViewerPageResources.MergingUgoiraFrames))]
+    MergingUgoiraFrames,
+
+    [LocalizedResource(typeof(ImageViewerPageResources), nameof(ImageViewerPageResources.DownloadingImageFormatted), DownloadingImage)]
+    DownloadingImage,
+
+    [LocalizedResource(typeof(ImageViewerPageResources), nameof(ImageViewerPageResources.LoadingImage))]
+    LoadingImage
 }

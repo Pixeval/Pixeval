@@ -62,7 +62,7 @@ public static class C
         return Color.FromArgb(c[3], c[2], c[1], c[0]);
     }
 
-    public static SolidColorBrush ToSolidColorBrush(uint value) => new(value.GetAlphaColor());
+    public static SolidColorBrush ToSolidColorBrush(uint value) => new(ToAlphaColor(value));
 
     public static unsafe uint ToAlphaUInt(Color color)
     {

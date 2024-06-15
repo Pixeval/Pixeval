@@ -1,9 +1,8 @@
 #region Copyright
-
 // GPL v3 License
 // 
-// Pixeval/Pixeval.Controls
-// Copyright (c) 2024 Pixeval.Controls/ColorHelper.cs
+// Pixeval/Pixeval
+// Copyright (c) 2024 Pixeval/EnumLocalizationMetadataAttribute.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -17,31 +16,23 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 #endregion
 
-using Windows.UI;
+using System;
 
-namespace Pixeval.Controls;
+namespace Pixeval.Attributes;
 
-public static class ColorHelper
+[AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Enum)]
+public class LocalizationMetadataAttribute(Type resourceType) : Attribute
 {
-    public static unsafe Color GetAlphaColor(this uint color)
-    {
-        var ptr = &color;
-        var c = (byte*)ptr;
-        return Color.FromArgb(c[3], c[2], c[1], c[0]);
-    }
+    public Type ResourceType { get; } = resourceType;
 
-    public static unsafe uint GetAlphaUInt(this Color color)
-    {
-        uint ret;
-        var ptr = &ret;
-        var c = (byte*)ptr;
-        c[0] = color.B;
-        c[1] = color.G;
-        c[2] = color.R;
-        c[3] = color.A;
-        return ret;
-    }
+    public bool IsPartial { get; init; }
+}
+
+
+[AttributeUsage(AttributeTargets.Class)]
+public class AttachedLocalizationMetadataAttribute<T>(Type resourceType) : Attribute
+{
+    public Type ResourceType { get; } = resourceType;
 }

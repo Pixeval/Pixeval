@@ -31,19 +31,19 @@ namespace Pixeval.CoreApi.Model;
 public partial record TokenResponse
 {
     [JsonPropertyName("access_token")]
-    public required string AccessToken { get; set; }
+    public required string AccessToken { get; set; } = "";
 
     [JsonPropertyName("expires_in")]
     public required long ExpiresIn { get; set; }
 
     [JsonPropertyName("token_type")]
-    public required string TokenType { get; set; }
+    public required string TokenType { get; set; } = "";
 
     [JsonPropertyName("scope")]
-    public required string Scope { get; set; }
+    public required string Scope { get; set; } = "";
 
     [JsonPropertyName("refresh_token")]
-    public required string RefreshToken { get; set; }
+    public required string RefreshToken { get; set; } = "";
 
     [JsonPropertyName("user")]
     public required TokenUser User { get; set; }
@@ -79,13 +79,13 @@ public partial record TokenUser
     public required long Id { get; set; }
 
     [JsonPropertyName("name")]
-    public required string Name { get; set; }
+    public required string Name { get; set; } = "";
 
     [JsonPropertyName("account")]
-    public required string Account { get; set; }
+    public required string Account { get; set; } = "";
 
     [JsonPropertyName("mail_address")]
-    public required string MailAddress { get; set; }
+    public required string MailAddress { get; set; } = "";
 
     [JsonPropertyName("is_premium")]
     public required bool IsPremium { get; set; }
@@ -104,11 +104,11 @@ public partial record TokenUser
 public partial record TokenProfileImageUrls
 {
     [JsonPropertyName("px_16x16")]
-    public required string Px16X16 { get; set; }
+    public required string Px16X16 { get; set; } = DefaultImageUrls.NoProfile;
 
     [JsonPropertyName("px_50x50")]
-    public required string Px50X50 { get; set; }
+    public required string Px50X50 { get; set; } = DefaultImageUrls.NoProfile;
 
     [JsonPropertyName("px_170x170")]
-    public required string Px170X170 { get; set; }
+    public required string Px170X170 { get; set; } = DefaultImageUrls.NoProfile;
 }

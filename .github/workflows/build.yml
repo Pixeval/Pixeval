@@ -1,11 +1,11 @@
 name: Pixeval Build Pipeline
 
 on:
-  push:
-    branches-ignore:
-    - 'dependabot**'
-    tags-ignore:
-    - '**'
+  # push:
+  #   branches-ignore:
+  #   - 'dependabot**'
+  #   tags-ignore:
+  #   - '**'
   pull_request:
     paths-ignore:
     - '**.md'
@@ -23,9 +23,9 @@ jobs:
     runs-on: windows-latest
 
     strategy:
-      fail-fast: false
+      fail-fast: true
       matrix:
-        configuration: [Debug]
+        configuration: [Release]
         platform: ['x64','x86','arm64']
 
     env:
@@ -70,8 +70,8 @@ jobs:
       shell: pwsh
       run: 'nuget restore $env:SOLUTION_NAME'
 
-    - name: Build Files (Debug)
-      id: build_app_with_debug
+    - name: Build Files (Release)
+      id: build_app_with_release
       shell: pwsh
       run: |
         msbuild $env:PACKAGE_PROJECT_NAME `

@@ -20,11 +20,14 @@
 
 #endregion
 
+using System.Text.Json;
+using System;
 using System.Text.Json.Serialization;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Model;
 using Pixeval.CoreApi.Net.Request;
 using Pixeval.CoreApi.Net.Response;
+using Pixeval.CoreApi.Preference;
 
 namespace Pixeval.CoreApi;
 
@@ -32,7 +35,7 @@ namespace Pixeval.CoreApi;
 [JsonSerializable(typeof(PixivBookmarkTagResponse))]
 [JsonSerializable(typeof(PixivCommentResponse))]
 [JsonSerializable(typeof(PixivIllustrationResponse))]
-[JsonSerializable(typeof(PixivNextUrlResponse<>))]
+// [JsonSerializable(typeof(PixivNextUrlResponse<>))]
 [JsonSerializable(typeof(PixivNovelResponse))]
 [JsonSerializable(typeof(PixivRelatedUsersResponse))]
 [JsonSerializable(typeof(PixivSingleIllustResponse))]
@@ -138,4 +141,32 @@ namespace Pixeval.CoreApi;
 [JsonSerializable(typeof(WorkSortOption))]
 [JsonSerializable(typeof(WorkType))]
 [JsonSerializable(typeof(SimpleWorkType))]
-internal partial class AppJsonSerializerContext : JsonSerializerContext;
+
+[JsonSerializable(typeof(string[]))]
+[JsonSerializable(typeof(Tag[]))]
+[JsonSerializable(typeof(MetaPage[]))]
+[JsonSerializable(typeof(NovelIllustInfo[]))]
+[JsonSerializable(typeof(NovelImage[]))]
+[JsonSerializable(typeof(NovelReplaceableGlossary[]))]
+[JsonSerializable(typeof(long[]))]
+[JsonSerializable(typeof(NovelTag[]))]
+[JsonSerializable(typeof(BookmarkTag[]))]
+[JsonSerializable(typeof(Comment[]))]
+[JsonSerializable(typeof(Illustration[]))]
+[JsonSerializable(typeof(Novel[]))]
+[JsonSerializable(typeof(User[]))]
+[JsonSerializable(typeof(SpotlightBody[]))]
+[JsonSerializable(typeof(PixivisionTag[]))]
+[JsonSerializable(typeof(Illust[]))]
+[JsonSerializable(typeof(RelatedArticle[]))]
+[JsonSerializable(typeof(Spotlight[]))]
+[JsonSerializable(typeof(Result[]))]
+[JsonSerializable(typeof(TrendingTag[]))]
+[JsonSerializable(typeof(Frame[]))]
+[JsonSerializable(typeof(UserSpecifiedBookmarkTag[]))]
+[JsonSerializable(typeof(Work[]))]
+
+[JsonSerializable(typeof(Session))]
+public partial class AppJsonSerializerContext : JsonSerializerContext;
+
+public class SnakeCaseLowerEnumConverter<T>() : JsonStringEnumConverter<T>(JsonNamingPolicy.SnakeCaseLower) where T : struct, Enum;

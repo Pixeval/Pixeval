@@ -53,7 +53,7 @@ public interface IAppApiEndPoint
     Task<PixivSingleNovelResponse> GetSingleNovelAsync([AliasAs("novel_id")] long id);
 
     [HttpGet("/webview/v2/novel")]
-    Task<string> GetNovelContentAsync([AliasAs("id")] long id, [AliasAs("raw")] bool raw = false);
+    Task<string> GetNovelContentAsync(long id, bool raw = false);
     /*
     [AliasAs("viewer_version")] string viewerVersion = "20221031_ai",
     [AliasAs("font")] string x1 = "mincho",
@@ -68,7 +68,7 @@ public interface IAppApiEndPoint
     */
 
     [HttpGet("/v1/user/related")]
-    Task<PixivRelatedUsersResponse> RelatedUserAsync([AliasAs("filter")] TargetFilter filter, [AliasAs("seed_user_id")] long userId);
+    Task<PixivRelatedUsersResponse> RelatedUserAsync(TargetFilter filter, [AliasAs("seed_user_id")] long userId);
 
     [HttpPost("/v1/user/follow/add")]
     Task<HttpResponseMessage> FollowUserAsync([FormContent] FollowUserRequest request);
@@ -77,10 +77,10 @@ public interface IAppApiEndPoint
     Task<HttpResponseMessage> RemoveFollowUserAsync([FormContent] RemoveFollowUserRequest request);
 
     [HttpGet("/v1/trending-tags/illust")]
-    Task<TrendingTagResponse> GetTrendingTagsAsync([AliasAs("filter")] TargetFilter filter);
+    Task<TrendingTagResponse> GetTrendingTagsAsync(TargetFilter filter);
 
     [HttpGet("/v1/trending-tags/novel")]
-    Task<TrendingTagResponse> GetTrendingTagsForNovelAsync([AliasAs("filter")] TargetFilter filter);
+    Task<TrendingTagResponse> GetTrendingTagsForNovelAsync(TargetFilter filter);
 
     [HttpGet("/v1/ugoira/metadata")]
     Task<UgoiraMetadataResponse> GetUgoiraMetadataAsync([AliasAs("illust_id")] long id);

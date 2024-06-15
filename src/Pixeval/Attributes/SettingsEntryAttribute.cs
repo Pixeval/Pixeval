@@ -20,18 +20,23 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using FluentIcons.Common;
 using Pixeval.AppManagement;
-using Pixeval.Util;
 using Pixeval.Utilities;
 using WinUI3Utilities;
 
 namespace Pixeval.Attributes;
 
 [AttributeUsage(AttributeTargets.Property)]
-public class SettingsEntryAttribute(Symbol symbol, string resourceKeyHeader, string? resourceKeyDescription) : Attribute
+public partial class SettingsEntryAttribute(Symbol symbol, string resourceKeyHeader, string? resourceKeyDescription) : Attribute
 {
+    public SettingsEntryAttribute(int symbol, string resourceKeyHeader, string? resourceKeyDescription)
+        : this((Symbol)symbol, resourceKeyHeader, resourceKeyDescription)
+    {
+    }
+
     public static readonly SettingsEntryAttribute AutoUpdate = new(Symbol.Communication,
         nameof(SettingsPageResources.DownloadUpdateAutomaticallyEntryHeader),
         nameof(SettingsPageResources.DownloadUpdateAutomaticallyEntryDescription));
@@ -52,24 +57,22 @@ public class SettingsEntryAttribute(Symbol symbol, string resourceKeyHeader, str
         typeof(AppSettings).GetProperties(BindingFlags.Instance | BindingFlags.Public)
             .SelectNotNull(f => f.GetCustomAttribute<SettingsEntryAttribute>()));
 
-    private static Type ResourceLoader => typeof(SettingsPageResources);
-
     public Symbol Symbol { get; } = symbol;
 
     public string LocalizedResourceHeader { get; } =
-        LocalizedResourceAttributeHelper.GetLocalizedResourceContent(ResourceLoader, resourceKeyHeader) ?? "";
+        SettingsPageResources.GetResource(resourceKeyHeader);
 
     public string LocalizedResourceDescription { get; } =
         resourceKeyDescription is null
             ? ""
-            : LocalizedResourceAttributeHelper.GetLocalizedResourceContent(ResourceLoader, resourceKeyDescription) ?? "";
+            : SettingsPageResources.GetResource(resourceKeyDescription);
 
     public static SettingsEntryAttribute GetFromPropertyName(string propertyName)
     {
         return GetFromPropertyName<AppSettings>(propertyName);
     }
 
-    public static SettingsEntryAttribute GetFromPropertyName<T>(string propertyName)
+    public static SettingsEntryAttribute GetFromPropertyName<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] T>(string propertyName)
     {
         return typeof(T).GetProperty(propertyName, BindingFlags.Instance | BindingFlags.Public)
                    ?.GetCustomAttribute<SettingsEntryAttribute>() ??

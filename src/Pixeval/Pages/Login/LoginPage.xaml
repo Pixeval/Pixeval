@@ -10,7 +10,6 @@
     xmlns:local="using:Pixeval.Pages.Login"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pixeval="using:Pixeval"
-    xmlns:util="using:Pixeval.Util"
     xmlns:windowing="using:Pixeval.Controls.Windowing"
     Loaded="LoginPage_OnLoaded"
     Unloaded="LoginPage_OnUnloaded"
@@ -194,7 +193,7 @@
                     <TextBlock
                         HorizontalAlignment="Center"
                         Style="{StaticResource CaptionTextBlockStyle}"
-                        Text="{x:Bind util:LocalizedResourceAttributeHelper.GetLocalizedResourceContent(_viewModel.LoginPhase), Mode=OneWay}" />
+                        Text="{x:Bind local:LoginPhaseEnumExtension.GetResource(_viewModel.LoginPhase), Mode=OneWay}" />
                 </StackPanel>
                 <Border
                     Grid.Column="0"

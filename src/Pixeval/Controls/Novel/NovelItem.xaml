@@ -16,6 +16,10 @@
     PointerExited="NovelItem_OnPointerExited"
     mc:Ignorable="d">
     <Grid.Resources>
+        <ExponentialEase
+            x:Key="EasingFunction"
+            EasingMode="EaseOut"
+            Exponent="12" />
         <!--  ReSharper disable once Xaml.RedundantResource  -->
         <Storyboard x:Key="ThumbnailStoryboard">
             <DoubleAnimation

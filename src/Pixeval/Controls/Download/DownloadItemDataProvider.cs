@@ -7,7 +7,7 @@ using Pixeval.Download.Models;
 
 namespace Pixeval.Controls;
 
-public class DownloadItemDataProvider : ObservableObject, IDisposable
+public partial class DownloadItemDataProvider : ObservableObject, IDisposable
 {
     public AdvancedObservableCollection<DownloadItemViewModel> View { get; } = [];
 

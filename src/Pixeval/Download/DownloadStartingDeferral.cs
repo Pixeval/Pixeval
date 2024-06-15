@@ -23,7 +23,7 @@ using Pixeval.Utilities.Threading;
 
 namespace Pixeval.Download;
 
-public class DownloadStartingDeferral : IDisposable
+public partial class DownloadStartingDeferral : IDisposable
 {
     /// <summary>
     /// Set its result to <see langword="true" /> if you want the download to proceed, otherwise, <see langword="false" />

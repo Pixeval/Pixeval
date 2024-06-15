@@ -52,7 +52,7 @@ public sealed partial class LoginPage
     {
         if (_viewModel.LogoutExit)
         {
-            _viewModel.AdvancePhase(LoginPageViewModel.LoginPhaseEnum.WaitingForUserInput);
+            _viewModel.AdvancePhase(LoginPhaseEnum.WaitingForUserInput);
             _viewModel.IsEnabled = true;
         }
         else
@@ -98,7 +98,7 @@ public sealed partial class LoginPage
             }
             else
             {
-                _viewModel.AdvancePhase(LoginPageViewModel.LoginPhaseEnum.WaitingForUserInput);
+                _viewModel.AdvancePhase(LoginPhaseEnum.WaitingForUserInput);
                 _viewModel.IsEnabled = true;
             }
         }
@@ -114,7 +114,7 @@ public sealed partial class LoginPage
     {
         if (Current is null || App.AppViewModel.MakoClient == null!)
             ThrowHelper.Exception();
-        Current._viewModel.AdvancePhase(LoginPageViewModel.LoginPhaseEnum.SuccessNavigating);
+        Current._viewModel.AdvancePhase(LoginPhaseEnum.SuccessNavigating);
         Current.NavigateParent<MainPage>(null, new DrillInNavigationTransitionInfo());
         Current._viewModel.LogoutExit = false;
         AppInfo.SaveContext();
@@ -145,7 +145,7 @@ public sealed partial class LoginPage
         try
         {
             await _viewModel.WebView2LoginAsync(HWnd, useNewAccount, () => DispatcherQueue.TryEnqueue(SuccessNavigating));
-            _viewModel.AdvancePhase(LoginPageViewModel.LoginPhaseEnum.WaitingForUserInput);
+            _viewModel.AdvancePhase(LoginPhaseEnum.WaitingForUserInput);
         }
         catch (Exception exception)
         {

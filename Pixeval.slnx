@@ -35,23 +35,19 @@
   <Project Path="src\Pixeval.Controls\Pixeval.Controls.csproj">
     <Configuration Solution="*|arm64" Project="*|arm64" />
     <Configuration Solution="*|x64" Project="*|x64" />
-    <Configuration Solution="*|x86" Project="*|x86" />
   </Project>
   <Project Path="src\Pixeval.CoreApi\Pixeval.CoreApi.csproj">
     <Configuration Solution="*|arm64" Project="*|arm64" />
     <Configuration Solution="*|x64" Project="*|x64" />
-    <Configuration Solution="*|x86" Project="*|x86" />
   </Project>
   <Project Path="src\Pixeval.SourceGen\Pixeval.SourceGen.csproj" />
   <Project Path="src\Pixeval.Utilities\Pixeval.Utilities.csproj">
     <Configuration Solution="*|arm64" Project="*|arm64" />
     <Configuration Solution="*|x64" Project="*|x64" />
-    <Configuration Solution="*|x86" Project="*|x86" />
   </Project>
   <Project Path="src\Pixeval\Pixeval.csproj">
     <Configuration Solution="*|*" Project="*|*|Deploy" />
     <Configuration Solution="*|arm64" Project="*|arm64|Deploy" />
     <Configuration Solution="*|x64" Project="*|x64|Deploy" />
-    <Configuration Solution="*|x86" Project="*|x86|Deploy" />
   </Project>
 </Solution>

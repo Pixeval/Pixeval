@@ -27,7 +27,7 @@ using WinUI3Utilities;
 
 namespace Pixeval.Download.Models;
 
-public class LazyInitializedMangaDownloadTask(DownloadHistoryEntry entry)
+public partial class LazyInitializedMangaDownloadTask(DownloadHistoryEntry entry)
     : MangaDownloadTask(entry, null!), ILazyLoadDownloadTask
 {
     public override async Task DownloadAsync(Downloader downloadStreamAsync)

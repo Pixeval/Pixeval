@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -101,7 +102,7 @@ public partial class MakoClient
         }
     }
 
-    private async Task<HttpResponseMessage> RunWithLoggerAsync(Func<Task<HttpResponseMessage>> task) 
+    private async Task<HttpResponseMessage> RunWithLoggerAsync(Func<Task<HttpResponseMessage>> task)
     {
         try
         {
@@ -149,13 +150,14 @@ public partial class MakoClient
 
     internal void LogException(Exception e) => Logger.LogError("MakoClient Exception", e);
 
+    [DynamicDependency("ConstructSystemProxy", "SystemProxyInfo", "System.Net.Http")]
     static MakoClient()
     {
         var type = typeof(HttpClient).Assembly.GetType("System.Net.Http.SystemProxyInfo");
         var method = type?.GetMethod("ConstructSystemProxy");
         var @delegate = method?.CreateDelegate<Func<IWebProxy>>();
 
-        _getCurrentSystemProxy = @delegate ?? ThrowUtils.Throw<MissingMethodException, Func<IWebProxy>>("Unable to find proxy functions");
+        _getCurrentSystemProxy = @delegate ?? ThrowUtils.Throw<MissingMethodException, Func<IWebProxy>>(new("Unable to find proxy functions"));
         HttpClient.DefaultProxy = _getCurrentSystemProxy();
     }
 
