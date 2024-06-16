@@ -25,7 +25,7 @@ using WinUI3Utilities;
 
 namespace Pixeval.Download.Models;
 
-public class LazyInitializedIllustrationDownloadTask(DownloadHistoryEntry entry)
+public partial class LazyInitializedIllustrationDownloadTask(DownloadHistoryEntry entry)
     : IllustrationDownloadTask(entry, null!), ILazyLoadDownloadTask
 {
     public override async Task DownloadAsync(Downloader downloadStreamAsync)

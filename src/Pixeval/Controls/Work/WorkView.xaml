@@ -2,7 +2,6 @@
     x:Class="Pixeval.Controls.WorkView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:converters="using:Pixeval.Controls.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:flyoutContent="using:Pixeval.Controls.FlyoutContent"
     xmlns:local="using:Pixeval.Controls"
@@ -10,7 +9,6 @@
     Unloaded="WorkView_OnUnloaded"
     mc:Ignorable="d">
     <UserControl.Resources>
-        <converters:BoolToSelectionModeConverter x:Key="BoolToSelectionModeConverter" />
         <DataTemplate x:Key="NovelItemDataTemplate" x:DataType="local:NovelItemViewModel">
             <ItemContainer>
                 <local:NovelItem
@@ -53,7 +51,7 @@
                 IsItemInvokedEnabled="True"
                 ItemInvoked="ItemsView_OnItemInvoked"
                 SelectionChanged="WorkView_OnSelectionChanged"
-                SelectionMode="{x:Bind ViewModel.IsSelecting, Converter={StaticResource BoolToSelectionModeConverter}, Mode=OneWay}">
+                SelectionMode="{x:Bind local:C.ToSelectionMode(ViewModel.IsSelecting), Mode=OneWay}">
                 <local:AdvancedItemsView.ItemTransitionProvider>
                     <LinedFlowLayoutItemCollectionTransitionProvider />
                 </local:AdvancedItemsView.ItemTransitionProvider>

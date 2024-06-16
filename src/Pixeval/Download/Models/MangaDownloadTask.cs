@@ -30,7 +30,7 @@ using Pixeval.Util.IO;
 
 namespace Pixeval.Download.Models;
 
-public class MangaDownloadTask(DownloadHistoryEntry entry, IllustrationItemViewModel illustration)
+public partial class MangaDownloadTask(DownloadHistoryEntry entry, IllustrationItemViewModel illustration)
     : IllustrationDownloadTask(entry, illustration)
 {
     protected int CurrentIndex { get; set; }

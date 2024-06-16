@@ -29,7 +29,7 @@ using SixLabors.ImageSharp;
 
 namespace Pixeval.Download.Models;
 
-public sealed class IntrinsicUgoiraDownloadTask : UgoiraDownloadTask
+public sealed partial class IntrinsicUgoiraDownloadTask : UgoiraDownloadTask
 {
     /// <summary>
     /// The disposal of <paramref name="stream" /> is not handled

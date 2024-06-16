@@ -30,13 +30,13 @@
         </HyperlinkButton>
         <HyperlinkButton Click="OpenRoamingFolder_OnClicked">
             <controls:DockPanel HorizontalSpacing="10">
-                <fluent:SymbolIcon controls:DockPanel.Dock="Left" Symbol="FolderList" />
+                <fluent:SymbolIcon controls:DockPanel.Dock="Left" Symbol="FolderGlobe" />
                 <TextBlock x:Uid="/CheckExitedContentDialog/OpenRoamingFolder" />
             </controls:DockPanel>
         </HyperlinkButton>
         <HyperlinkButton Click="OpenLogFolder_OnClicked">
             <controls:DockPanel HorizontalSpacing="10">
-                <fluent:SymbolIcon controls:DockPanel.Dock="Left" Symbol="FolderGlobe" />
+                <fluent:SymbolIcon controls:DockPanel.Dock="Left" Symbol="FolderList" />
                 <TextBlock x:Uid="/CheckExitedContentDialog/OpenLogFolder" />
             </controls:DockPanel>
         </HyperlinkButton>

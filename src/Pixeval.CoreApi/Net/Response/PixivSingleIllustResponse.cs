@@ -24,7 +24,7 @@ using Pixeval.CoreApi.Model;
 namespace Pixeval.CoreApi.Net.Response;
 
 [Factory]
-internal partial record PixivSingleIllustResponse
+public partial record PixivSingleIllustResponse
 {
     [JsonPropertyName("illust")]
     public required Illustration Illust { get; set; }

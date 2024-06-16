@@ -20,6 +20,7 @@
 
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Pixeval.Controls;
 using Pixeval.CoreApi.Net.Response;
@@ -31,7 +32,7 @@ using SixLabors.ImageSharp;
 
 namespace Pixeval.Download.Models;
 
-public class UgoiraDownloadTask(
+public partial class UgoiraDownloadTask(
     DownloadHistoryEntry entry,
     IllustrationItemViewModel illustration,
     UgoiraMetadataResponse metadata)
@@ -69,13 +70,8 @@ public class UgoiraDownloadTask(
     {
         if (App.AppViewModel.AppSettings.UgoiraDownloadFormat is UgoiraDownloadFormat.OriginalZip)
         {
-            var dict = new Dictionary<string, Stream>();
-            for (var i = 0; i < urls.Count; ++i)
-            {
-                var extension = Path.GetExtension(urls[i]);
-                dict.Add($"{i}{extension}", streams[i]);
-            }
-            var zipStream = await IoHelper.WriteZipAsync(dict, Dispose);
+            var names = urls.Select(Path.GetExtension).Select((extension, i) => $"{i}{extension}").ToArray();
+            var zipStream = await IoHelper.WriteZipAsync(names, streams, Dispose);
             await zipStream.StreamSaveToFileAsync(destination);
             Report(100);
         }

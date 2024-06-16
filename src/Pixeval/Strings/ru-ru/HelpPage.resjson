@@ -1,0 +1,9 @@
+{
+    "TitleTextBlock/Text": "Помощь с Pixeval",
+    "QueryFilterHelpExpander/Header": "Помощь по фильтрации запросов",
+    "QueryFilterSimpleHelpHeader/Text": "Краткое руководство",
+    "QueryFilterHelpHeader/Text": "Полное руководство",
+    "DownloadMacroHelpExpander/Header": "Помощь с загрузкой при помощи макросов",
+    "AppLinkHelpExpander/Header": "Помощь по использованию ссылок на приложения",
+    "AppLinkHelp/Text": "Поделитесь с друзьями или введите эту ссылку в браузере или в Windows, чтобы открыть текущую страницу в Pixeval"
+}

@@ -24,6 +24,7 @@ using Pixeval.Attributes;
 
 namespace Pixeval.Pages.Misc;
 
+[LocalizationMetadata(typeof(SettingsPageResources))]
 public enum SettingsEntryCategory
 {
     [LocalizedResource(typeof(SettingsPageResources), nameof(SettingsPageResources.VersionSettingsGroupText))]

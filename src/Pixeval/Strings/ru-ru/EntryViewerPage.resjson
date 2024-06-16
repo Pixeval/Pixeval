@@ -1,6 +1,5 @@
 {
     "QrCodeTeachingTip/Title": "QR-код работы",
-
     "Share": "Поделиться",
     "Background": "Обои",
     "CommentsTab/Content": "Комментарии",
@@ -22,7 +21,6 @@
     "ShareTitleFormatted": "Поделиться {0}",
     "ZoomIn": "Увеличить",
     "ZoomOut": "Уменьшить",
-
     "FollowingsNavigationViewItem/Content": "Подписки",
     "MyPixivUserNavigationViewItem/Content": "Друзья в Pixiv",
     "RelatedUserNavigationViewItem/Content": "Смежные художники",
@@ -39,5 +37,7 @@
     "NextNovel": "L/R: Следующая новелла",
     "LoadingNovelTextBlock/Text": "Загрузка новеллы",
     "NovelSettings": "Настройки новеллы",
-    "NovelSettingsHeaderTextBlock/Text": "Настройки новеллы"
+    "NovelSettingsHeaderTextBlock/Text": "Настройки новеллы",
+    "AddToBookmarkTeachingTip/CloseButtonContent": "Добавить в закладки",
+    "AddedToBookmark": "Добавлено в закладки"
 }

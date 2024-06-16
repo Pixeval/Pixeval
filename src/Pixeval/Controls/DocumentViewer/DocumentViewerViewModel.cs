@@ -42,7 +42,7 @@ using QuestPDF.Infrastructure;
 
 namespace Pixeval.Controls;
 
-public class DocumentViewerViewModel(NovelContent novelContent) : ObservableObject, IDisposable, INovelParserViewModel<SoftwareBitmapSource>, INovelParserViewModel<Stream>
+public partial class DocumentViewerViewModel(NovelContent novelContent) : ObservableObject, IDisposable, INovelParserViewModel<SoftwareBitmapSource>, INovelParserViewModel<Stream>
 {
     /// <summary>
     /// 需要从外部Invoke

@@ -18,7 +18,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -26,13 +25,12 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Windows.Foundation;
 using CommunityToolkit.WinUI;
-using Pixeval.Util;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
 
 namespace Pixeval.Controls;
 
-[DependencyProperty<Array>("ItemsSource", DependencyPropertyDefaultValue.Default, nameof(OnItemsSourceChanged))]
+[DependencyProperty<object>("ItemsSource", DependencyPropertyDefaultValue.Default, nameof(OnItemsSourceChanged))]
 [DependencyProperty<object>("SelectedItem", propertyChanged: nameof(OnSelectedItemChanged))]
 [DependencyProperty<object>("Header")]
 public sealed partial class SettingRadioButtons : UserControl
@@ -60,7 +58,7 @@ public sealed partial class SettingRadioButtons : UserControl
     {
         var buttons = sender.To<SettingRadioButtons>();
 
-        buttons.Buttons.ItemsSource = LocalizedResourceAttributeHelper.GetLocalizedResourceContents(buttons.ItemsSource);
+        buttons.Buttons.ItemsSource = buttons.ItemsSource;
     }
 
     private static void OnSelectedItemChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)

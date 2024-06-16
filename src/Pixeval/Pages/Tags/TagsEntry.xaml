@@ -35,7 +35,7 @@
             x:Uid="/TagsEntry/GoToPageItem"
             Click="GoToPageItem_OnClicked"
             Icon="{fluent:SymbolIcon Symbol=OpenFolder}"
-            IsEnabled="{x:Bind IsNotZero(ViewModel.Id), Mode=OneWay}" />
+            IsEnabled="{x:Bind controls1:C.IsNotZeroL(ViewModel.Id), Mode=OneWay}" />
         <AppBarButton
             x:Uid="/TagsEntry/DeleteItem"
             Click="DeleteItem_OnClicked"

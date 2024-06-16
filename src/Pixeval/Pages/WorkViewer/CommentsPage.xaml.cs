@@ -24,6 +24,7 @@ using System.Net.Http.Json;
 using System.Threading.Tasks;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Controls;
+using Pixeval.CoreApi;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Model;
 using Pixeval.CoreApi.Net.Response;
@@ -101,7 +102,7 @@ public sealed partial class CommentsPage
 
     private async Task AddComment(HttpResponseMessage postCommentResponse)
     {
-        if (postCommentResponse.IsSuccessStatusCode && await postCommentResponse.Content.ReadFromJsonAsync<PostCommentResponse>() is { Comment: { } comment })
+        if (postCommentResponse.IsSuccessStatusCode && await postCommentResponse.Content.ReadFromJsonAsync(typeof(PostCommentResponse), AppJsonSerializerContext.Default) is PostCommentResponse { Comment: { } comment })
             _viewModel.AddComment(comment);
     }
 

@@ -76,5 +76,15 @@
     "ExtraBlack": "Сверхчерный",
     "WorkTypeComboBox/PlaceholderText": "Тип произведения",
     "OpenNovelId": "Открыть страницу новеллы",
-    "AllCountedTagName": "Все теги"
+    "AllCountedTagName": "Все теги",
+    "Pdf": "PDF (включает все изображения)",
+    "Html": "HTML (папка с изображениями)",
+    "Md": "Markdown (папка с изображениями)",
+    "OriginalTxt": "Оригинальный TXT (теги Pixiv, папка с изображениями)",
+    "ProxyOptionSystem": "Системный прокси",
+    "ProxyOptionNone": "Без прокси",
+    "DownloadItemMaybeDeleted": "Возможно, вы уже удалили это произведение",
+    "SearchUser": "Поиск автора",
+    "BookmarkTagSelectorPrivateCheckBox/Content": "Приватно",
+    "GoToPageFormatted": "Перейти на страницу {0}"
 }

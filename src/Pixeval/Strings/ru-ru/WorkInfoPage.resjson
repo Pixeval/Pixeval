@@ -12,5 +12,6 @@
     "IllustratorId/Text": "ID автора: ",
     "IllustratorName/Text": "Имя автора: ",
     "IllustratorTextBlock/Text": "Информация об авторе",
-    "TitleTextBlock/Text": "Информация о работе"
+    "TitleTextBlock/Text": "Информация о работе",
+    "BlockTagMenuItem/Text": "Заблокировать тег"
 }

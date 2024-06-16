@@ -28,6 +28,7 @@ namespace Pixeval.Options;
 /// We require a strict matching between the value of the enum member and the order of the
 /// <see cref="NavigationViewItem" />in <see cref="MainPage" />
 /// </summary>
+[LocalizationMetadata(typeof(MainPageResources))]
 public enum MainPageTabItem
 {
     [LocalizedResource(typeof(MainPageResources), nameof(MainPageResources.RecommendationsTabContent))]

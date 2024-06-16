@@ -4,11 +4,10 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.WinUI.Collections;
 using Pixeval.Collections;
 using Pixeval.Download.Models;
-using Pixeval.Pages.Download;
 
 namespace Pixeval.Controls;
 
-public class DownloadItemDataProvider : ObservableObject, IDisposable
+public partial class DownloadItemDataProvider : ObservableObject, IDisposable
 {
     public AdvancedObservableCollection<DownloadItemViewModel> View { get; } = [];
 

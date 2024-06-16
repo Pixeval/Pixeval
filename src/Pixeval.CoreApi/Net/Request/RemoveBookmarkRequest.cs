@@ -18,8 +18,8 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using Refit;
+using System.Text.Json.Serialization;
 
 namespace Pixeval.CoreApi.Net.Request;
 
-internal record RemoveIllustBookmarkRequest([property: AliasAs("illust_id")] long IllustId);
+public record RemoveIllustBookmarkRequest([property: JsonPropertyName("illust_id")] long IllustId);

@@ -4,7 +4,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Pixeval.Controls"
     xmlns:controls1="using:CommunityToolkit.WinUI.Controls"
-    xmlns:converters="using:CommunityToolkit.WinUI.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:fluent="using:FluentIcons.WinUI"
     xmlns:flyoutContent="using:Pixeval.Controls.FlyoutContent"
@@ -13,7 +12,6 @@
     Loaded="WorkContainer_OnLoaded"
     mc:Ignorable="d">
     <UserControl.Resources>
-        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
         <TeachingTip
             x:Name="AddToBookmarkTeachingTip"
             x:Uid="/WorkContainer/AddToBookmarkTeachingTip"
@@ -61,7 +59,7 @@
             <CommandBar
                 x:Name="CommandBar"
                 DefaultLabelPosition="Right"
-                Visibility="{x:Bind WorkView.ViewModel.IsSelecting, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
+                Visibility="{x:Bind controls:C.ToVisibility(WorkView.ViewModel.IsSelecting), Mode=OneWay}">
                 <AppBarButton
                     Click="CancelSelectionButton_OnClicked"
                     Icon="{fluent:SymbolIcon Symbol=SelectAllOff}"

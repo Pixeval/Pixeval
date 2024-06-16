@@ -35,8 +35,8 @@ public record Supporter(string Nickname, string Name, ImageSource ProfilePicture
     private static readonly IEnumerable<(string Nickname, string Name)> _supporters =
         new (string Nickname, string Name)[]
         {
-            ("Sep", "Guro2"), 
-            ("无论时间", "wulunshijian"), 
+            ("Sep", "Guro2"),
+            ("无论时间", "wulunshijian"),
             ("CN", "ControlNet"),
             ("CY", "Cyl18"),
             ("对味", "duiweiya"),
@@ -64,7 +64,7 @@ public record Supporter(string Nickname, string Name, ImageSource ProfilePicture
             if (httpClient.DefaultRequestHeaders.UserAgent.Count is 0)
                 httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36 Edg/121.0.0.0");
             foreach (var (nickname, name) in _supporters)
-                if (await httpClient.GetFromJsonAsync<GitHubUser>("https://api.github.com/users/" + name) is { } user)
+                if (await httpClient.GetFromJsonAsync("https://api.github.com/users/" + name, typeof(GitHubUser), GitHubUserSerializeContext.Default) is GitHubUser user)
                 {
                     var supporter = new Supporter(nickname, '@' + name, new BitmapImage(user.AvatarUrl), user.HtmlUrl);
                     Supporters.Add(supporter);
@@ -81,7 +81,10 @@ public record Supporter(string Nickname, string Name, ImageSource ProfilePicture
     }
 }
 
-file class GitHubUser
+[JsonSerializable(typeof(GitHubUser))]
+public partial class GitHubUserSerializeContext : JsonSerializerContext;
+
+public class GitHubUser
 {
     [JsonPropertyName("avatar_url")]
     public required Uri AvatarUrl { get; init; }

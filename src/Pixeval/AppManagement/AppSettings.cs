@@ -22,6 +22,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Text.Json.Serialization;
 using Windows.Foundation;
 using Microsoft.UI.Composition.SystemBackdrops;
 using Microsoft.UI.Xaml;
@@ -304,3 +305,7 @@ public partial record AppSettings() : IWindowSettings
             : $"@{{if_illust={picPath}}}@{{if_novel={docPath}}}";
     }
 }
+
+[JsonSerializable(typeof(string[]))]
+[JsonSerializable(typeof(HashSet<string>))]
+public partial class SettingsSerializeContext : JsonSerializerContext;

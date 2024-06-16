@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval.CoreApi
+#region Copyright (c) Pixeval/Pixeval.CoreApi
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
@@ -18,21 +18,21 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using Refit;
+using System.Text.Json.Serialization;
 
 namespace Pixeval.CoreApi.Net.Request;
 
-internal class ReverseSearchRequest(string apiKey)
+public class ReverseSearchRequest(string apiKey)
 {
-    [AliasAs("api_key")]
+    [JsonPropertyName("api_key")]
     public string ApiKey { get; } = apiKey;
 
-    [AliasAs("dbmask")]
+    [JsonPropertyName("dbmask")]
     public string DbMask { get; } = "96";
 
-    [AliasAs("output_type")]
+    [JsonPropertyName("output_type")]
     public string OutputType { get; } = "2";
 
-    [AliasAs("numres")]
+    [JsonPropertyName("numres")]
     public string NumberResult { get; } = "1";
 }

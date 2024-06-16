@@ -3,9 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Pixeval.Controls"
-    xmlns:controls2="using:CommunityToolkit.WinUI.Controls"
-    xmlns:converters="using:CommunityToolkit.WinUI.Converters"
-    xmlns:converters1="using:Pixeval.Controls.Converters"
+    xmlns:controls1="using:CommunityToolkit.WinUI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:fluent="using:FluentIcons.WinUI"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -15,14 +13,13 @@
     Loaded="MainPage_OnLoaded"
     mc:Ignorable="d">
     <controls:EnhancedWindowPage.Resources>
-        <converters1:NullableToVisibilityConverter x:Key="NullableToVisibilityConverter" />
         <DataTemplate x:Key="CommonSuggestionModelTemplate" x:DataType="pages:SuggestionModel">
-            <controls2:DockPanel Padding="0,10" HorizontalSpacing="10">
+            <controls1:DockPanel Padding="0,10" HorizontalSpacing="10">
                 <ContentPresenter
                     x:Name="IconContentPresenter"
                     HorizontalAlignment="Left"
                     VerticalAlignment="Center"
-                    controls2:DockPanel.Dock="Left"
+                    controls1:DockPanel.Dock="Left"
                     Content="{x:Bind FontIcon}" />
                 <StackPanel VerticalAlignment="Center" Spacing="1">
                     <TextBlock
@@ -38,9 +35,9 @@
                         Text="{x:Bind TranslatedName}"
                         TextTrimming="CharacterEllipsis"
                         TextWrapping="WrapWholeWords"
-                        Visibility="{x:Bind TranslatedName, Converter={StaticResource NullableToVisibilityConverter}}" />
+                        Visibility="{x:Bind controls:C.IsNotNullToVisibility(TranslatedName)}" />
                 </StackPanel>
-            </controls2:DockPanel>
+            </controls1:DockPanel>
         </DataTemplate>
         <pages:SuggestionModelDataTemplateSelector
             x:Key="SuggestionModelDataTemplateSelector"
@@ -50,31 +47,31 @@
             NovelHeader="/MainPage/NovelHeaderSuggestionTextBlock"
             SettingEntryHeader="/MainPage/SettingsEntryHeaderSuggestionTextBlock" />
     </controls:EnhancedWindowPage.Resources>
-    <controls2:DockPanel>
-        <controls2:TitleBar
+    <controls1:DockPanel>
+        <controls1:TitleBar
             Title="{x:Bind pixeval:AppInfo.AppIdentifier}"
             VerticalAlignment="Top"
-            controls2:DockPanel.Dock="Top"
+            controls1:DockPanel.Dock="Top"
             DisplayMode="Tall"
             IsPaneButtonVisible="True"
             PaneButtonClick="TitleBar_OnPaneButtonClicked"
             Window="{x:Bind windowing:WindowFactory.GetForkedWindows(HWnd)}">
-            <controls2:TitleBar.Icon>
+            <controls1:TitleBar.Icon>
                 <ImageIcon Source="ms-appx:///Assets/Images/logo.svg" />
-            </controls2:TitleBar.Icon>
-            <controls2:TitleBar.Footer>
+            </controls1:TitleBar.Icon>
+            <controls1:TitleBar.Footer>
                 <PersonPicture
                     Grid.Column="0"
                     MaxHeight="35"
                     ProfilePicture="{x:Bind _viewModel.AvatarSource, Mode=OneWay}"
                     Tapped="SelfAvatar_OnTapped"
                     ToolTipService.ToolTip="{x:Bind _viewModel.UserName}" />
-            </controls2:TitleBar.Footer>
-            <controls2:TitleBar.Content>
-                <controls2:DockPanel>
+            </controls1:TitleBar.Footer>
+            <controls1:TitleBar.Content>
+                <controls1:DockPanel>
                     <CommandBar
                         Margin="0,-4"
-                        controls2:DockPanel.Dock="Right"
+                        controls1:DockPanel.Dock="Right"
                         DefaultLabelPosition="Collapsed"
                         OverflowButtonVisibility="Collapsed">
                         <AppBarButton
@@ -108,9 +105,9 @@
                             </TransitionCollection>
                         </AutoSuggestBox.ItemContainerTransitions>
                     </AutoSuggestBox>
-                </controls2:DockPanel>
-            </controls2:TitleBar.Content>
-        </controls2:TitleBar>
+                </controls1:DockPanel>
+            </controls1:TitleBar.Content>
+        </controls1:TitleBar>
         <NavigationView
             x:Name="NavigationView"
             IsBackButtonVisible="Collapsed"
@@ -196,5 +193,5 @@
             </NavigationView.FooterMenuItems>
             <Frame x:Name="MainPageRootFrame" Navigated="MainPageRootFrame_OnNavigated" />
         </NavigationView>
-    </controls2:DockPanel>
+    </controls1:DockPanel>
 </controls:EnhancedWindowPage>

@@ -3,7 +3,6 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
-    xmlns:converters="using:CommunityToolkit.WinUI.Converters"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:fluent="using:FluentIcons.WinUI"
@@ -13,9 +12,6 @@
     AspectRatio="15:8"
     Background="{StaticResource CardBackgroundFillColorDefaultBrush}"
     mc:Ignorable="d">
-    <controls:ConstrainedBox.Resources>
-        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
-    </controls:ConstrainedBox.Resources>
     <!--  图片长宽均为5，故为(3*5):(3+5)  -->
     <Grid>
         <Grid.RowDefinitions>
@@ -58,7 +54,7 @@
                 <local:PixevalBadge
                     Mode="Following"
                     UseSmall="True"
-                    Visibility="{x:Bind ViewModel.IsFollowed, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
+                    Visibility="{x:Bind local:C.ToVisibility(ViewModel.IsFollowed), Mode=OneWay}" />
             </StackPanel>
         </StackPanel>
         <Button
