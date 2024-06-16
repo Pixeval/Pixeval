@@ -19,25 +19,55 @@
 #endregion
 
 using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using FluentIcons.Common;
 using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.AppManagement;
 using Pixeval.Controls;
 using Pixeval.Controls.Timeline;
 using Pixeval.CoreApi.Model;
 using Pixeval.Util;
 using Pixeval.Util.IO;
+using Pixeval.Utilities;
 
 #pragma warning disable CS9107 // Parameter is captured into the state of the enclosing type and its value is also passed to the base constructor. The value might be captured by the base class as well.
 
 namespace Pixeval.Pages.Capability.Feeds;
 
-public class BookmarkIllustFeedItemViewModel(Feed entry) : FeedItemViewModel(entry)
+public partial class BookmarkIllustFeedItemViewModel(Feed entry) : FeedItemViewModel(entry)
+{
+    [ObservableProperty]
+    private ImageSource _thumbnail = null!;
+
+    public override async Task LoadAsync()
+    {
+        _ = base.LoadAsync();
+        if (entry.FeedThumbnail is { } url)
+        {
+            Thumbnail = (await App.AppViewModel.MakoClient.DownloadBitmapImageAsync(url, 800))
+                .UnwrapOrElse(await AppInfo.ImageNotAvailable.ValueAsync)!;
+        }
+    }
+}
+
+public partial class BookmarkNovelFeedItemViewModel(Feed entry) : FeedItemViewModel(entry)
 {
 
 }
+
+public partial class PostIllustFeedItemViewMode(Feed entry) : FeedItemViewModel(entry)
+{
+
+}
+
+public partial class FollowUserFeedItemViewModel(Feed entry) : FeedItemViewModel(entry)
+{
+
+}
+
 
 public partial class FeedItemViewModel(Feed entry) : EntryViewModel<Feed>(entry), IViewModelFactory<Feed, FeedItemViewModel>
 {
@@ -60,19 +90,31 @@ public partial class FeedItemViewModel(Feed entry) : EntryViewModel<Feed>(entry)
 
     public static FeedItemViewModel CreateInstance(Feed entry, int index)
     {
-        return new FeedItemViewModel(entry) { Placement = index % 2 == 0 ? TimelineAxisPlacement.Right : TimelineAxisPlacement.Left };
+        FeedItemViewModel vm = entry.Type switch
+        {
+            FeedType.AddBookmark => new BookmarkIllustFeedItemViewModel(entry),
+            FeedType.AddIllust => new PostIllustFeedItemViewMode(entry),
+            FeedType.AddFavorite => new FollowUserFeedItemViewModel(entry),
+            FeedType.AddNovelBookmark => new BookmarkNovelFeedItemViewModel(entry),
+            _ => throw new ArgumentOutOfRangeException()
+        };
+        vm.Placement = index % 2 == 0 ? TimelineAxisPlacement.Right : TimelineAxisPlacement.Left;
+        return vm;
     }
 
-    public async Task LoadAsync()
+    public virtual async Task LoadAsync()
     {
+        Debug.WriteLine("Pre");
         if (entry.PostUserThumbnail is { } url)
         {
-            var image = (await App.AppViewModel.MakoClient.DownloadBitmapImageAsync(url, 35)).UnwrapOrThrow();
+            var image = (await App.AppViewModel.MakoClient.DownloadBitmapImageAsync(url, 35)).UnwrapOrElse(await AppInfo.ImageNotAvailable.ValueAsync)!;
             UserAvatar = image;
+            Debug.WriteLine("Post");
         }
         else
         {
-            UserAvatar = AppInfo.ImageNotAvailable.Value;
+            UserAvatar = await AppInfo.ImageNotAvailable.ValueAsync;
+            Debug.WriteLine("Post");
         }
     }
 

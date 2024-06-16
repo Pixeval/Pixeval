@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFramework>net8.0-windows10.0.22621.0</TargetFramework>
         <TargetPlatformMinVersion>10.0.19041.0</TargetPlatformMinVersion>
@@ -48,8 +48,15 @@
     </ItemGroup>
 
     <ItemGroup>
+      <None Remove="CardControl\CardControl.xaml" />
       <None Remove="Timeline\TimelineControl.xaml" />
       <None Remove="Timeline\TimelineUnit.xaml" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Page Update="CardControl\CardControl.xaml">
+        <Generator>MSBuild:Compile</Generator>
+      </Page>
     </ItemGroup>
 
     <ItemGroup>

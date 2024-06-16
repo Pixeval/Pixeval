@@ -20,7 +20,7 @@
                                             BookmarkNovel="{StaticResource BookmarkNovelTemplate}"
                                             FollowUser="{StaticResource FollowUserTemplate}"
                                             PostIllust="{StaticResource PostIllustTemplate}" />
-        <DataTemplate x:Key="BookmarkIllustTemplate" x:DataType="feeds:FeedItemViewModel">
+        <DataTemplate x:Key="BookmarkIllustTemplate" x:DataType="feeds:BookmarkIllustFeedItemViewModel">
             <StackPanel>
                 <TextBlock HorizontalAlignment="Left" Text="{x:Bind PostDateFormatted}" Style="{StaticResource CaptionStrongTextBlockStyle}" />
                 <StackPanel Orientation="Horizontal" Height="35" Margin="0,5,0,0">
@@ -34,9 +34,12 @@
                          <Run x:Uid="/Timeline/BookmarkIllustTemplateSegment2" />
                     </TextBlock>
                 </StackPanel>
+                <controls:CardControl MinWidth="800" MaxHeight="500" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                    <Image Stretch="UniformToFill" />
+                </controls:CardControl>
             </StackPanel>
         </DataTemplate>
-        <DataTemplate x:Key="BookmarkNovelTemplate" x:DataType="feeds:FeedItemViewModel">
+        <DataTemplate x:Key="BookmarkNovelTemplate" x:DataType="feeds:BookmarkNovelFeedItemViewModel">
             <StackPanel>
                 <TextBlock HorizontalAlignment="Left" Text="{x:Bind PostDateFormatted}" Style="{StaticResource CaptionStrongTextBlockStyle}" />
                 <StackPanel Orientation="Horizontal" Height="35" Margin="0,5,0,0">
@@ -52,7 +55,7 @@
                 </StackPanel>
             </StackPanel>
         </DataTemplate>
-        <DataTemplate x:Key="FollowUserTemplate" x:DataType="feeds:FeedItemViewModel">
+        <DataTemplate x:Key="FollowUserTemplate" x:DataType="feeds:FollowUserFeedItemViewModel">
             <StackPanel>
                 <TextBlock HorizontalAlignment="Left" Text="{x:Bind PostDateFormatted}" Style="{StaticResource CaptionStrongTextBlockStyle}" />
                 <StackPanel Orientation="Horizontal" Height="35" Margin="0,5,0,0">
@@ -68,7 +71,7 @@
                 </StackPanel>
             </StackPanel>
         </DataTemplate>
-        <DataTemplate x:Key="PostIllustTemplate" x:DataType="feeds:FeedItemViewModel">
+        <DataTemplate x:Key="PostIllustTemplate" x:DataType="feeds:PostIllustFeedItemViewMode">
             <StackPanel>
                 <TextBlock HorizontalAlignment="Left" Text="{x:Bind PostDateFormatted}" Style="{StaticResource CaptionStrongTextBlockStyle}" />
                 <StackPanel Orientation="Horizontal" Height="35" Margin="0,5,0,0">
