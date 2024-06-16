@@ -18,8 +18,8 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using Refit;
+using System.Text.Json.Serialization;
 
 namespace Pixeval.CoreApi.Net.Request;
 
-internal record SingleUserRequest([property: AliasAs("user_id")] long Id, [property: AliasAs("filter")] string Filter);
+public record SingleUserRequest([property: JsonPropertyName("user_id")] long Id, [property: JsonPropertyName("filter")] string Filter);

@@ -23,6 +23,7 @@ using Pixeval.Attributes;
 
 namespace Pixeval.Options;
 
+[LocalizationMetadata(typeof(MiscResources))]
 public enum FontWeightsOption
 {
     /// <summary>

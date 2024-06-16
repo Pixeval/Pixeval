@@ -2,9 +2,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Pixeval.Controls"
-    xmlns:enum="using:Pixeval.CoreApi.Global.Enum"
-    xmlns:numberFormatting="using:Windows.Globalization.NumberFormatting"
-    xmlns:winUi="using:CommunityToolkit.WinUI">
+    xmlns:numberFormatting="using:Windows.Globalization.NumberFormatting">
     <Style x:Key="PixevalRoundedButtonStyle" TargetType="Button">
         <Style.Setters>
             <Setter Property="CornerRadius" Value="16" />
@@ -54,7 +52,7 @@
         x:Key="WorkTypeComboBoxStyle"
         BasedOn="{StaticResource DefaultComboBoxStyle}"
         TargetType="controls:EnumComboBox">
-        <Setter Property="EnumSource" Value="{controls:EnumValues Type=WorkType}" />
+        <Setter Property="ItemsSource" Value="{controls:EnumValues Type=WorkType}" />
         <Setter Property="PlaceholderText" Value="{controls:ResourceString ResourceKey='WorkTypeComboBox/PlaceholderText', ResourceFile=Misc}" />
     </Style>
 
@@ -62,7 +60,7 @@
         x:Key="SimpleWorkTypeComboBoxStyle"
         BasedOn="{StaticResource DefaultComboBoxStyle}"
         TargetType="controls:EnumComboBox">
-        <Setter Property="EnumSource" Value="{controls:EnumValues Type=SimpleWorkType}" />
+        <Setter Property="ItemsSource" Value="{controls:EnumValues Type=SimpleWorkType}" />
         <Setter Property="PlaceholderText" Value="{controls:ResourceString ResourceKey='WorkTypeComboBox/PlaceholderText', ResourceFile=Misc}" />
     </Style>
 
@@ -70,7 +68,7 @@
         x:Key="PrivacyPolicyComboBoxStyle"
         BasedOn="{StaticResource DefaultComboBoxStyle}"
         TargetType="controls:EnumComboBox">
-        <Setter Property="EnumSource" Value="{controls:EnumValues Type=PrivacyPolicy}" />
+        <Setter Property="ItemsSource" Value="{controls:EnumValues Type=PrivacyPolicy}" />
         <Setter Property="PlaceholderText" Value="{controls:ResourceString ResourceKey='PrivacyPolicyComboBox/PlaceholderText', ResourceFile=Misc}" />
     </Style>
 
@@ -78,7 +76,7 @@
         x:Key="WorkSortOptionComboBoxStyle"
         BasedOn="{StaticResource DefaultComboBoxStyle}"
         TargetType="controls:EnumComboBox">
-        <Setter Property="EnumSource" Value="{controls:EnumValues Type=WorkSortOption}" />
+        <Setter Property="ItemsSource" Value="{controls:EnumValues Type=WorkSortOption}" />
         <Setter Property="PlaceholderText" Value="{controls:ResourceString ResourceKey='SortOptionComboBox/PlaceholderText', ResourceFile=Misc}" />
     </Style>
 

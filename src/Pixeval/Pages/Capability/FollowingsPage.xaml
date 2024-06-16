@@ -4,13 +4,9 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Pixeval.Controls"
     xmlns:controls1="using:CommunityToolkit.WinUI.Controls"
-    xmlns:converters="using:CommunityToolkit.WinUI.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
-    <controls:EnhancedPage.Resources>
-        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
-    </controls:EnhancedPage.Resources>
     <controls1:DockPanel>
         <!--  由于现在内容只有一个，所以当内容隐藏的时候，StackPanel也隐藏  -->
         <StackPanel
@@ -18,13 +14,13 @@
             Margin="{StaticResource ComboBoxLeftIndent}"
             controls1:DockPanel.Dock="Top"
             Orientation="Horizontal"
-            Visibility="{x:Bind IsMe, Converter={StaticResource BoolToVisibilityConverter}}">
+            Visibility="{x:Bind controls:C.ToVisibility(IsMe)}">
             <controls:EnumComboBox
                 x:Name="PrivacyPolicyComboBox"
                 VerticalAlignment="Center"
                 SelectionChanged="PrivacyPolicyComboBox_OnSelectionChanged"
                 Style="{StaticResource PrivacyPolicyComboBoxStyle}"
-                Visibility="{x:Bind IsMe, Converter={StaticResource BoolToVisibilityConverter}}" />
+                Visibility="{x:Bind controls:C.ToVisibility(IsMe)}" />
         </StackPanel>
         <controls:IllustratorView x:Name="IllustratorView" />
     </controls1:DockPanel>

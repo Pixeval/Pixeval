@@ -22,6 +22,7 @@ using Pixeval.Attributes;
 
 namespace Pixeval.Pages.Misc;
 
+[LocalizationMetadata(typeof(SettingsPageResources))]
 public enum ClearDataKind
 {
     [LocalizedResource(typeof(SettingsPageResources), nameof(SettingsPageResources.FileCacheCleared))]

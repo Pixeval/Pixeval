@@ -22,6 +22,7 @@ using Pixeval.Attributes;
 
 namespace Pixeval.Controls;
 
+[LocalizationMetadata(typeof(DownloadPageResources))]
 public enum DownloadListOption
 {
     [LocalizedResource(typeof(DownloadPageResources), nameof(DownloadPageResources.DownloadListOptionAllQueued))]

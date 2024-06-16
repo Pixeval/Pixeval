@@ -20,6 +20,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.WinUI.Collections;
@@ -29,7 +30,7 @@ using Pixeval.Utilities;
 
 namespace Pixeval.Controls;
 
-public abstract partial class SortableEntryViewViewModel<T, TViewModel>
+public abstract partial class SortableEntryViewViewModel<T, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] TViewModel>
     : EntryViewViewModel<T, TViewModel>, ISortableEntryViewViewModel
     where T : class, IWorkEntry
     where TViewModel : EntryViewModel<T>, IViewModelFactory<T, TViewModel>, IWorkViewModel

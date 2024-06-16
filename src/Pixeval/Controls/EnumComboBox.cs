@@ -25,14 +25,12 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Markup;
 using Pixeval.CoreApi.Global.Enum;
-using Pixeval.Util;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
 
 namespace Pixeval.Controls;
 
 [DependencyProperty<object>("SelectedEnum", DependencyPropertyDefaultValue.Default, nameof(OnSelectedEnumChanged), IsNullable = true)]
-[DependencyProperty<Array>("EnumSource", DependencyPropertyDefaultValue.Default, nameof(OnEnumSourceChanged))]
 public sealed partial class EnumComboBox : ComboBox
 {
     public new event EventHandler<SelectionChangedEventArgs>? SelectionChanged;
@@ -41,6 +39,12 @@ public sealed partial class EnumComboBox : ComboBox
     {
         Style = Application.Current.Resources["DefaultComboBoxStyle"] as Style;
         base.SelectionChanged += ComboBox_SelectionChanged;
+        var token = RegisterPropertyChangedCallback(ItemsSourceProperty, (sender, _) =>
+        {
+            if (sender is EnumComboBox { ItemsSource: IEnumerable<StringRepresentableItem> enumerable } box)
+                box.SelectedItem = enumerable.FirstOrDefault();
+        });
+        Unloaded += (sender, _) => sender.To<DependencyObject>().UnregisterPropertyChangedCallback(ItemsSourceProperty, token);
     }
 
     public bool RaiseEventAfterLoaded { get; set; } = true;
@@ -65,33 +69,23 @@ public sealed partial class EnumComboBox : ComboBox
         var comboBox = sender.To<EnumComboBox>();
         comboBox.SelectedItem = comboBox.ItemsSource?.To<IEnumerable<StringRepresentableItem>>().FirstOrDefault(r => Equals(r.Item, comboBox.SelectedEnum));
     }
-
-    private static void OnEnumSourceChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
-    {
-        var comboBox = sender.To<EnumComboBox>();
-        comboBox.ItemsSource = LocalizedResourceAttributeHelper.GetLocalizedResourceContents(comboBox.EnumSource);
-        if (comboBox.SelectedEnum is null)
-            comboBox.SelectedEnum = comboBox.EnumSource.GetValue(0);
-        else
-            comboBox.SelectedItem = comboBox.ItemsSource.To<IEnumerable<StringRepresentableItem>>().FirstOrDefault(r => Equals(r.Item, comboBox.SelectedEnum));
-    }
 }
 
-[MarkupExtensionReturnType(ReturnType = typeof(Array))]
-public sealed class EnumValuesExtension : MarkupExtension
+[MarkupExtensionReturnType(ReturnType = typeof(IReadOnlyList<StringRepresentableItem>))]
+public sealed partial class EnumValuesExtension : MarkupExtension
 {
     public EnumValuesEnum Type { get; set; }
 
     protected override object ProvideValue()
     {
-        return Enum.GetValues(Type switch
+        return Type switch
         {
-            EnumValuesEnum.WorkType => typeof(WorkType),
-            EnumValuesEnum.SimpleWorkType => typeof(SimpleWorkType),
-            EnumValuesEnum.WorkSortOption => typeof(WorkSortOption),
-            EnumValuesEnum.PrivacyPolicy => typeof(PrivacyPolicy),
+            EnumValuesEnum.WorkType => WorkTypeExtension.GetItems(),
+            EnumValuesEnum.SimpleWorkType => SimpleWorkTypeExtension.GetItems(),
+            EnumValuesEnum.WorkSortOption => WorkSortOptionExtension.GetItems(),
+            EnumValuesEnum.PrivacyPolicy => PrivacyPolicyExtension.GetItems(),
             _ => throw new ArgumentOutOfRangeException()
-        });
+        };
     }
 }
 

@@ -283,7 +283,7 @@ public partial class NovelViewerPageViewModel : DetailedUiObservableObject, IDis
 
     public ColorAppSettingsEntry NovelFontColorEntry { get; } = new(AppSettings, t => t.NovelFontColor) { ValueChanged = ValueChanged };
 
-    public EnumAppSettingsEntry<FontWeightsOption> NovelFontWeightEntry { get; } = new(AppSettings, t => t.NovelFontWeight) { ValueChanged = ValueChanged };
+    public EnumAppSettingsEntry NovelFontWeightEntry { get; } = new(AppSettings, t => t.NovelFontWeight, FontWeightsOptionExtension.GetItems()) { ValueChanged = ValueChanged };
 
     public IntAppSettingsEntry NovelFontSizeEntry { get; } = new(AppSettings, t => t.NovelFontSize)
     {

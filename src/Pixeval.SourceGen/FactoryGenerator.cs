@@ -32,8 +32,12 @@ public class FactoryGenerator : IIncrementalGenerator
                     IdentifierName(symbol.Name),
                     syntax.Initializer is { } init
                         ? init.Value
-                        : symbol.Type.NullableAnnotation is NullableAnnotation.NotAnnotated && symbol.Type.GetAttributes().Any(i => i.AttributeClass?.MetadataName == AttributeName)
-                            ? InvocationExpression(symbol.Type.GetStaticMemberAccessExpression(createDefault))
+                        : symbol.Type.NullableAnnotation is NullableAnnotation.NotAnnotated && symbol.Type
+                            .GetAttributes().Any(i => i.AttributeClass?.MetadataName == AttributeName)
+                            ? InvocationExpression(MemberAccessExpression(
+                                SyntaxKind.SimpleMemberAccessExpression,
+                                IdentifierName(symbol.Type.ToDisplayString()),
+                                IdentifierName(createDefault)))
                             : DefaultExpression(symbol.Type.GetTypeSyntax(false)));
             });
 
@@ -70,12 +74,10 @@ public class FactoryGenerator : IIncrementalGenerator
             AttributeFullName,
             (_, _) => true,
             (syntaxContext, _) => syntaxContext
-        ).Combine(context.CompilationProvider);
+        );
 
-        context.RegisterSourceOutput(generatorAttributes, (spc, tuple) =>
+        context.RegisterSourceOutput(generatorAttributes, (spc, ga) =>
         {
-            var (ga, compilation) = tuple;
-
             if (ga.TargetSymbol is not INamedTypeSymbol symbol)
                 return;
 

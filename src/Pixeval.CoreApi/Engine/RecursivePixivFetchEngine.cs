@@ -29,9 +29,9 @@ namespace Pixeval.CoreApi.Engine;
 
 internal abstract class RecursivePixivAsyncEnumerator<TEntity, TRawEntity, TFetchEngine>(TFetchEngine pixivFetchEngine, MakoApiKind makoApiKind)
     : AbstractPixivAsyncEnumerator<TEntity, TRawEntity, TFetchEngine>(pixivFetchEngine, makoApiKind)
-    where TEntity : class, IEntry 
+    where TEntity : class, IEntry
     where TRawEntity : class
-    where TFetchEngine : class, IFetchEngine<TEntity> 
+    where TFetchEngine : class, IFetchEngine<TEntity>
 {
     private TRawEntity? RawEntity { get; set; }
 
@@ -112,9 +112,9 @@ internal static class RecursivePixivAsyncEnumerators
 {
     public abstract class BaseRecursivePixivAsyncEnumerator<TEntity, TRawEntity, TFetchEngine>(TFetchEngine pixivFetchEngine, MakoApiKind makoApiKind, string initialUrl)
         : RecursivePixivAsyncEnumerator<TEntity, TRawEntity, TFetchEngine>(pixivFetchEngine, makoApiKind)
-        where TEntity : class, IEntry 
-        where TRawEntity : PixivNextUrlResponse<TEntity>
-        where TFetchEngine : class, IFetchEngine<TEntity> 
+        where TEntity : class, IEntry
+        where TRawEntity : class, IPixivNextUrlResponse<TEntity>
+        where TFetchEngine : class, IFetchEngine<TEntity>
     {
         protected override string InitialUrl => initialUrl;
 

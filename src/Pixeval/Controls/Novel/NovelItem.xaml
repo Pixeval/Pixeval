@@ -3,8 +3,6 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
-    xmlns:converters="using:CommunityToolkit.WinUI.Converters"
-    xmlns:converters1="using:Pixeval.Controls.Converters"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
@@ -12,14 +10,16 @@
     xmlns:local="using:Pixeval.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:model="using:Pixeval.CoreApi.Model"
+    xmlns:pixeval="using:Pixeval.AppManagement"
     Background="{StaticResource CardBackgroundFillColorDefaultBrush}"
     PointerEntered="NovelItem_OnPointerEntered"
     PointerExited="NovelItem_OnPointerExited"
     mc:Ignorable="d">
     <Grid.Resources>
-        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
-        <converters1:CultureDateConverter x:Key="CultureDateConverter" />
-        <converters1:NumberEllipsisConverter x:Key="NumberEllipsisConverter" />
+        <ExponentialEase
+            x:Key="EasingFunction"
+            EasingMode="EaseOut"
+            Exponent="12" />
         <!--  ReSharper disable once Xaml.RedundantResource  -->
         <Storyboard x:Key="ThumbnailStoryboard">
             <DoubleAnimation
@@ -76,7 +76,7 @@
                 Foreground="DarkGray"
                 MaxLines="1"
                 Style="{StaticResource BodyTextBlockStyle}"
-                Text="{x:Bind ViewModel.PublishDate, Converter={StaticResource CultureDateConverter}, Mode=OneWay}"
+                Text="{x:Bind local:C.CultureDateTimeOffsetDateFormatter(ViewModel.PublishDate, pixeval:AppSettings.CurrentCulture), Mode=OneWay}"
                 TextTrimming="CharacterEllipsis"
                 TextWrapping="WrapWholeWords" />
             <TextBlock
@@ -95,15 +95,15 @@
             <local:IconText
                 controls:DockPanel.Dock="Right"
                 Symbol="TextAlignLeft"
-                Text="{x:Bind ViewModel.TextLength, Converter={StaticResource NumberEllipsisConverter}, Mode=OneWay}" />
+                Text="{x:Bind local:C.IntEllipsis(ViewModel.TextLength), Mode=OneWay}" />
             <local:IconText
                 controls:DockPanel.Dock="Right"
                 Symbol="Heart"
-                Text="{x:Bind ViewModel.TotalBookmarks, Converter={StaticResource NumberEllipsisConverter}, Mode=OneWay}" />
+                Text="{x:Bind local:C.IntEllipsis(ViewModel.TotalBookmarks), Mode=OneWay}" />
             <local:IconText
                 controls:DockPanel.Dock="Right"
                 Symbol="Eye"
-                Text="{x:Bind ViewModel.TotalView, Converter={StaticResource NumberEllipsisConverter}, Mode=OneWay}" />
+                Text="{x:Bind local:C.IntEllipsis(ViewModel.TotalView), Mode=OneWay}" />
         </controls:DockPanel>
         <controls:DockPanel
             controls:DockPanel.Dock="Bottom"
@@ -112,11 +112,11 @@
             <local:PixevalBadge
                 controls:DockPanel.Dock="Right"
                 Mode="Ai"
-                Visibility="{x:Bind ViewModel.IsAiGenerated, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
+                Visibility="{x:Bind local:C.ToVisibility(ViewModel.IsAiGenerated), Mode=OneWay}" />
             <local:PixevalBadge
                 controls:DockPanel.Dock="Right"
                 Mode="{x:Bind ViewModel.XRestrictionCaption, Mode=OneWay}"
-                Visibility="{x:Bind ViewModel.IsXRestricted, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
+                Visibility="{x:Bind local:C.ToVisibility(ViewModel.IsXRestricted), Mode=OneWay}" />
         </controls:DockPanel>
         <ItemsControl
             x:Name="TagsList"

@@ -33,12 +33,13 @@ using Windows.Foundation;
 using CommunityToolkit.WinUI.Collections;
 using CommunityToolkit.WinUI.Helpers;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 
 namespace Pixeval.Collections;
 
 [DebuggerDisplay("Count = {Count}")]
-public class AdvancedObservableCollection<T> : IList<T>, IList, IReadOnlyList<T>, INotifyCollectionChanged, INotifyPropertyChanged, ISupportIncrementalLoading, IComparer<T> where T : class
+public class AdvancedObservableCollection<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] T> : IList<T>, IList, IReadOnlyList<T>, INotifyCollectionChanged, INotifyPropertyChanged, ISupportIncrementalLoading, IComparer<T> where T : class
 {
     private readonly Dictionary<string, PropertyInfo> _sortProperties = [];
 

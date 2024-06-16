@@ -24,6 +24,7 @@ using Pixeval.Attributes;
 
 namespace Pixeval.Options;
 
+[LocalizationMetadata(typeof(MiscResources))]
 public enum IllustrationDownloadFormat
 {
     [LocalizedResource(typeof(MiscResources), nameof(MiscResources.Jpg))]

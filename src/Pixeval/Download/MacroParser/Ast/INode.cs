@@ -18,9 +18,11 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using System.Collections.Generic;
+
 namespace Pixeval.Download.MacroParser.Ast;
 
 public interface IMetaPathNode<in TContext>
 {
-    string Evaluate(IMacro[] env, TContext context);
+    string Evaluate(IReadOnlyList<IMacro> env, TContext context);
 }

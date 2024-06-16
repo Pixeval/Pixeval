@@ -29,7 +29,7 @@ using WinUI3Utilities;
 
 namespace Pixeval.Download.Models;
 
-public sealed class IntrinsicMangaDownloadTask : MangaDownloadTask
+public sealed partial class IntrinsicMangaDownloadTask : MangaDownloadTask
 {
     public IntrinsicMangaDownloadTask(DownloadHistoryEntry entry, IllustrationItemViewModel illustrationViewModel, IReadOnlyList<Stream> streams) : base(entry, illustrationViewModel)
     {

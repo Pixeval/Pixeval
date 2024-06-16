@@ -83,6 +83,4 @@ public sealed partial class TagsEntry
             }
         }
     }
-
-    private bool IsNotZero(long id) => id is not 0;
 }

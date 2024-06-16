@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval.CoreApi
+#region Copyright (c) Pixeval/Pixeval.CoreApi
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
@@ -18,15 +18,15 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using Refit;
+using System.Text.Json.Serialization;
 
 namespace Pixeval.CoreApi.Net.Request;
 
 public class AutoCompletionRequest(string word)
 {
-    [AliasAs("merge_plain_keyword_results=true")]
+    [JsonPropertyName("merge_plain_keyword_results")]
     public bool MergePlainKeywordResult { get; } = true;
 
-    [AliasAs("word")]
+    [JsonPropertyName("word")]
     public string Word { get; } = word;
 }

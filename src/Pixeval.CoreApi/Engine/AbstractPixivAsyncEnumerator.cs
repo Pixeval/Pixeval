@@ -21,6 +21,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Pixeval.CoreApi.Global.Exception;
 using Pixeval.CoreApi.Model;
@@ -43,7 +44,7 @@ namespace Pixeval.CoreApi.Engine;
 /// <typeparam name="TFetchEngine">The fetch engine</typeparam>
 public abstract class AbstractPixivAsyncEnumerator<TEntity, TRawEntity, TFetchEngine>(TFetchEngine pixivFetchEngine,
     MakoApiKind apiKind) : IAsyncEnumerator<TEntity>
-    where TFetchEngine : class, IFetchEngine<TEntity> 
+    where TFetchEngine : class, IFetchEngine<TEntity>
     where TEntity : class, IEntry
     where TRawEntity : class
 {
@@ -100,13 +101,12 @@ public abstract class AbstractPixivAsyncEnumerator<TEntity, TRawEntity, TFetchEn
                 return Result<TRawEntity>.AsFailure(await MakoNetworkException.FromHttpResponseMessageAsync(responseMessage, MakoClient.Configuration.DomainFronting).ConfigureAwait(false));
             }
 
-            var result = (await responseMessage.Content.ReadAsStringAsync().ConfigureAwait(false)).FromJson<TRawEntity>();
+            var str = await responseMessage.Content.ReadAsStringAsync().ConfigureAwait(false);
 
-            return result is null
-                ? Result<TRawEntity>.AsFailure()
-                : ValidateResponse(result)
-                    ? Result<TRawEntity>.AsSuccess(result)
-                    : Result<TRawEntity>.AsFailure();
+            if (JsonSerializer.Deserialize(str, typeof(TRawEntity), AppJsonSerializerContext.Default) is TRawEntity result)
+                if (ValidateResponse(result))
+                    return Result<TRawEntity>.AsSuccess(result);
+            return Result<TRawEntity>.AsFailure();
         }
         catch (Exception e)
         {

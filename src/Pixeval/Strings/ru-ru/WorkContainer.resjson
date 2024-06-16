@@ -15,5 +15,6 @@
     "SelectionButton/Label": "Множественный выбор",
     "CancelSelectionButtonDefaultLabel": "Отменить выбор",
     "FilterAutoSuggestBox/PlaceholderText": "Фильтрация работает (см. страницу помощи по использованию)",
-    "DownloadItemsQueuedFormatted": "{0} работ добавлено в список загрузок"
+    "DownloadItemsQueuedFormatted": "{0} работ добавлено в список загрузок",
+    "AddToBookmarkTeachingTip/CloseButtonContent": "Добавить в закладки"
 }

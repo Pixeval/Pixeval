@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -22,6 +22,7 @@ using Pixeval.Attributes;
 
 namespace Pixeval.Options;
 
+[LocalizationMetadata(typeof(MiscResources))]
 public enum ThumbnailDirection
 {
     [LocalizedResource(typeof(MiscResources), nameof(MiscResources.ThumbnailDirectionLandscape))]

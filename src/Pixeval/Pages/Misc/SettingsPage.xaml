@@ -5,8 +5,6 @@
     xmlns:appManagement="using:Pixeval.AppManagement"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:controls1="using:Pixeval.Controls"
-    xmlns:converters="using:CommunityToolkit.WinUI.Converters"
-    xmlns:converters1="using:Pixeval.Controls.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:fluent="using:FluentIcons.WinUI"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -24,9 +22,6 @@
                 <Setter Property="Margin" Value="1,28,0,4" />
             </Style.Setters>
         </Style>
-        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
-        <converters:BoolNegationConverter x:Key="BoolNegationConverter" />
-        <converters1:NullableToVisibilityConverter x:Key="NullableToVisibilityConverter" />
     </controls1:EnhancedWindowPage.Resources>
     <controls:DockPanel VerticalSpacing="10">
         <TextBlock
@@ -91,17 +86,17 @@
                             Width="35"
                             Height="35"
                             IsActive="True"
-                            IsIndeterminate="{x:Bind ViewModel.DownloadingUpdate, Converter={StaticResource BoolNegationConverter}, Mode=OneWay}"
-                            Visibility="{x:Bind ViewModel.CheckingUpdate, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"
+                            IsIndeterminate="{x:Bind controls1:C.Negation(ViewModel.DownloadingUpdate), Mode=OneWay}"
+                            Visibility="{x:Bind controls1:C.ToVisibility(ViewModel.CheckingUpdate), Mode=OneWay}"
                             Value="{x:Bind ViewModel.DownloadingUpdateProgress, Mode=OneWay}" />
                         <TextBlock
                             VerticalAlignment="Center"
                             Text="{x:Bind ViewModel.UpdateMessage, Mode=OneWay}"
-                            Visibility="{x:Bind ViewModel.UpdateMessage, Converter={StaticResource NullableToVisibilityConverter}, Mode=OneWay}" />
+                            Visibility="{x:Bind controls1:C.IsNotNullToVisibility(ViewModel.UpdateMessage), Mode=OneWay}" />
                         <Button
                             x:Uid="/SettingsPage/CheckForUpdatesButton"
                             Click="CheckForUpdateButton_OnClicked"
-                            IsEnabled="{x:Bind ViewModel.CheckingUpdate, Converter={StaticResource BoolNegationConverter}, Mode=OneWay}" />
+                            IsEnabled="{x:Bind controls1:C.Negation(ViewModel.CheckingUpdate), Mode=OneWay}" />
                     </StackPanel>
                     <controls:SettingsExpander.Items>
                         <controls:SettingsCard
@@ -142,7 +137,7 @@
                             x:Uid="/SettingsPage/ReleaseNotesHyperlinkButton"
                             Click="ReleaseNotesHyperlink_OnClicked"
                             Tag="Newest"
-                            Visibility="{x:Bind ViewModel.NewestVersion, Converter={StaticResource NullableToVisibilityConverter}, Mode=OneWay}" />
+                            Visibility="{x:Bind controls1:C.IsNotNullToVisibility(ViewModel.NewestVersion), Mode=OneWay}" />
                     </InfoBar.ActionButton>
                 </InfoBar>
 

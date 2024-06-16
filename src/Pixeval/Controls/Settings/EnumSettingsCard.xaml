@@ -16,7 +16,7 @@
         <fluent:SymbolIcon Symbol="{x:Bind Entry.HeaderIcon}" />
     </controls:SettingsCard.HeaderIcon>
     <controls1:EnumComboBox
-        EnumSource="{x:Bind Entry.EnumValues}"
+        ItemsSource="{x:Bind Entry.EnumItems}"
         SelectedEnum="{x:Bind Entry.Value, Mode=TwoWay}"
         SelectionChanged="EnumComboBox_OnSelectionChanged"
         Style="{StaticResource SettingsEnumComboBoxStyle}" />

@@ -19,33 +19,8 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using Pixeval.Download.MacroParser;
 
 namespace Pixeval.Download.Macros;
 
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
 public class MetaPathMacroAttribute<TContext> : Attribute;
-
-public static class MetaPathMacroAttributeHelper
-{
-    public static IEnumerable<IMacro> GetAttachedTypeInstances()
-    {
-        return Assembly.GetExecutingAssembly().GetTypes()
-            .Where(t => t.GetCustomAttribute(typeof(MetaPathMacroAttribute<>))?.GetType() is not null)
-            .Select(Activator.CreateInstance)
-            .OfType<IMacro>();
-    }
-
-    public static IEnumerable<IMacro> GetAttachedTypeInstances<TContext>()
-    {
-        return Assembly.GetExecutingAssembly().GetTypes()
-            .Where(t =>
-                t.GetCustomAttribute(typeof(MetaPathMacroAttribute<>))?.GetType()
-                    .GenericTypeArguments is [var type] && type.IsAssignableFrom(typeof(TContext)))
-            .Select(Activator.CreateInstance)
-            .OfType<IMacro>();
-    }
-}

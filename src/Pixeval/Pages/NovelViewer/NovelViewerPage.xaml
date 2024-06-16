@@ -4,8 +4,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Pixeval.Controls"
     xmlns:controls1="using:CommunityToolkit.WinUI.Controls"
-    xmlns:converters="using:CommunityToolkit.WinUI.Converters"
-    xmlns:converters1="using:Pixeval.Controls.Converters"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:flyoutContent="using:Pixeval.Controls.FlyoutContent"
@@ -20,13 +18,6 @@
     Unloaded="NovelViewerPage_OnUnloaded"
     mc:Ignorable="d">
     <controls:EnhancedWindowPage.Resources>
-        <converters:BoolNegationConverter x:Key="BoolNegationConverter" />
-        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
-        <converters1:NullableToVisibilityConverter x:Key="NullableToVisibilityConverter" />
-        <converters1:DisplayIndexConverter x:Key="DisplayIndexConverter" />
-        <converters1:UIntToBrushConverter x:Key="UIntToBrushConverter" />
-        <converters1:FontWeightConverter x:Key="FontWeightConverter" />
-        <converters1:StringToFontFamilyConverter x:Key="StringToFontFamilyConverter" />
         <Thickness x:Key="NormalMargin">0,48,0,0</Thickness>
         <AcrylicBrush
             x:Key="BottomCommandSectionBackground"
@@ -76,22 +67,22 @@
                             </ScrollView>
                         </controls1:DockPanel>
                     </SplitView.Pane>
-                    <Grid Background="{x:Bind _viewModel.NovelBackgroundEntry.Value, Converter={StaticResource UIntToBrushConverter}, Mode=OneWay}">
+                    <Grid Background="{x:Bind controls:C.ToSolidColorBrush(_viewModel.NovelBackgroundEntry.Value), Mode=OneWay}">
                         <controls:DocumentViewer
                             x:Name="DocumentViewer"
                             ActualThemeChanged="{x:Bind _viewModel.OnFrameworkElementOnActualThemeChanged}"
                             CurrentPage="{x:Bind _viewModel.CurrentPageIndex, Mode=TwoWay}"
-                            FontFamily="{x:Bind _viewModel.NovelFontFamilyEntry.Value, Converter={StaticResource StringToFontFamilyConverter}, Mode=OneWay}"
+                            FontFamily="{x:Bind controls:C.ToFontFamily(_viewModel.NovelFontFamilyEntry.Value), Mode=OneWay}"
                             FontSize="{x:Bind _viewModel.NovelFontSizeEntry.Value, Mode=OneWay}"
-                            FontWeight="{x:Bind _viewModel.NovelFontWeightEntry.Value, Converter={StaticResource FontWeightConverter}, Mode=OneWay}"
-                            Foreground="{x:Bind _viewModel.NovelFontColorEntry.Value, Converter={StaticResource UIntToBrushConverter}, Mode=OneWay}"
+                            FontWeight="{x:Bind controls:C.ToFontWeight(_viewModel.NovelFontWeightEntry.Value), Mode=OneWay}"
+                            Foreground="{x:Bind controls:C.ToSolidColorBrush(_viewModel.NovelFontColorEntry.Value), Mode=OneWay}"
                             LineHeight="{x:Bind _viewModel.NovelLineHeightEntry.Value, Mode=OneWay}"
                             NovelItem="{x:Bind _viewModel.CurrentNovel, Mode=OneWay}"
                             NovelMaxWidth="{x:Bind _viewModel.NovelMaxWidthEntry.Value, Mode=OneWay}"
                             PageCount="{x:Bind _viewModel.PageCount, Mode=TwoWay}"
                             Tapped="DocumentViewer_OnTapped" />
 
-                        <Grid Visibility="{x:Bind DocumentViewer.IsLoading, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
+                        <Grid Visibility="{x:Bind controls:C.ToVisibility(DocumentViewer.IsLoading), Mode=OneWay}">
                             <Rectangle Fill="{ThemeResource PixevalAppAcrylicBrush}" />
                             <StackPanel
                                 HorizontalAlignment="Center"
@@ -112,7 +103,7 @@
                                 controls1:DockPanel.Dock="Left"
                                 ButtonClick="PrevButton_OnClicked"
                                 ButtonRightTapped="PrevButton_OnRightTapped"
-                                ButtonVisibility="{x:Bind _viewModel.PrevButtonText, Converter={StaticResource NullableToVisibilityConverter}, Mode=OneWay}"
+                                ButtonVisibility="{x:Bind controls:C.IsNotNullToVisibility(_viewModel.PrevButtonText), Mode=OneWay}"
                                 IsPrev="True"
                                 ToolTip="{x:Bind _viewModel.PrevButtonText, Mode=OneWay}" />
                             <controls:PageButton
@@ -120,7 +111,7 @@
                                 controls1:DockPanel.Dock="Right"
                                 ButtonClick="NextButton_OnClicked"
                                 ButtonRightTapped="NextButton_OnRightTapped"
-                                ButtonVisibility="{x:Bind _viewModel.NextButtonText, Converter={StaticResource NullableToVisibilityConverter}, Mode=OneWay}"
+                                ButtonVisibility="{x:Bind controls:C.IsNotNullToVisibility(_viewModel.NextButtonText), Mode=OneWay}"
                                 IsPrev="False"
                                 ToolTip="{x:Bind _viewModel.NextButtonText, Mode=OneWay}" />
                         </controls1:DockPanel>
@@ -189,7 +180,7 @@
                                             NumberOfPages="{x:Bind DocumentViewer.PageCount, Mode=OneWay}"
                                             PreviousButtonVisibility="Visible"
                                             SelectedPageIndex="{x:Bind DocumentViewer.CurrentPage, Mode=TwoWay}"
-                                            Visibility="{x:Bind DocumentViewer.IsMultiPage, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
+                                            Visibility="{x:Bind controls:C.ToVisibility(DocumentViewer.IsMultiPage), Mode=OneWay}" />
                                         <CommandBar
                                             HorizontalAlignment="Center"
                                             DefaultLabelPosition="Collapsed"
@@ -364,8 +355,8 @@
                         <TextBlock
                             controls1:DockPanel.Dock="Left"
                             Style="{StaticResource TextBlockStyle}"
-                            Visibility="{x:Bind DocumentViewer.IsMultiPage, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
-                            <Run Text="{x:Bind DocumentViewer.CurrentPage, Converter={StaticResource DisplayIndexConverter}, Mode=OneWay}" />
+                            Visibility="{x:Bind controls:C.ToVisibility(DocumentViewer.IsMultiPage), Mode=OneWay}">
+                            <Run Text="{x:Bind controls:C.PlusOneToString(DocumentViewer.CurrentPage), Mode=OneWay}" />
                             <Run Text="/" />
                             <Run Text="{x:Bind DocumentViewer.PageCount, Mode=OneWay}" />
                         </TextBlock>
@@ -407,7 +398,7 @@
             <VisualStateGroup>
                 <VisualState x:Name="Normal">
                     <VisualState.StateTriggers>
-                        <StateTrigger IsActive="{x:Bind _viewModel.IsFullScreen, Converter={StaticResource BoolNegationConverter}, Mode=OneWay}" />
+                        <StateTrigger IsActive="{x:Bind controls:C.Negation(_viewModel.IsFullScreen), Mode=OneWay}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="EntryViewerSplitView.Margin" Value="{StaticResource NormalMargin}" />

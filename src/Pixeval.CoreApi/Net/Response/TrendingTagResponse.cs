@@ -24,7 +24,7 @@ using Pixeval.CoreApi.Model;
 namespace Pixeval.CoreApi.Net.Response;
 
 [Factory]
-internal partial record TrendingTagResponse
+public partial record TrendingTagResponse
 {
     [JsonPropertyName("trend_tags")]
     public required TrendingTag[] TrendTags { get; set; } = [];

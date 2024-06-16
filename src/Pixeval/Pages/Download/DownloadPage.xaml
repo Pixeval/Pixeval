@@ -8,7 +8,6 @@
     xmlns:fluent="using:FluentIcons.WinUI"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:system="using:System"
-    xmlns:util="using:Pixeval.Util"
     mc:Ignorable="d">
     <controls1:DockPanel>
         <controls1:DockPanel
@@ -24,7 +23,7 @@
                 SelectionChanged="ModeFilterComboBox_OnSelectionChanged">
                 <ComboBox.ItemTemplate>
                     <DataTemplate x:DataType="system:Enum">
-                        <TextBlock Text="{x:Bind util:LocalizedResourceAttributeHelper.GetLocalizedResourceContent((controls:DownloadListOption))}" />
+                        <TextBlock Text="{x:Bind controls:DownloadListOptionExtension.GetResource((controls:DownloadListOption))}" />
                     </DataTemplate>
                 </ComboBox.ItemTemplate>
             </ComboBox>

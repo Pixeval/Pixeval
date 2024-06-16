@@ -18,6 +18,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace Pixeval.Download.MacroParser.Ast;
@@ -25,7 +26,7 @@ namespace Pixeval.Download.MacroParser.Ast;
 [DebuggerDisplay("{Content}")]
 public record OptionalMacroParameter<TContext>(Sequence<TContext> Content) : IMetaPathNode<TContext>
 {
-    public string Evaluate(IMacro[] env, TContext context)
+    public string Evaluate(IReadOnlyList<IMacro> env, TContext context)
     {
         return Content.Evaluate(env, context);
     }

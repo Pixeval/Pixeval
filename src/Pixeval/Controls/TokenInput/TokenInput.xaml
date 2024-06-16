@@ -3,15 +3,11 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls1="using:Pixeval.Controls"
-    xmlns:converters="using:CommunityToolkit.WinUI.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:fluent="using:FluentIcons.WinUI"
     xmlns:labs="using:CommunityToolkit.Labs.WinUI"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
-    <UserControl.Resources>
-        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
-    </UserControl.Resources>
     <StackPanel
         HorizontalAlignment="Stretch"
         VerticalAlignment="Stretch"
@@ -32,11 +28,11 @@
                         <fluent:SymbolIcon
                             FontSize="{StaticResource SmallIconFontSize}"
                             Symbol="TextChangeCase"
-                            Visibility="{x:Bind CaseSensitive, Converter={StaticResource BoolToVisibilityConverter}}" />
+                            Visibility="{x:Bind controls1:C.ToVisibility(CaseSensitive)}" />
                         <fluent:SymbolIcon
                             FontSize="{StaticResource SmallIconFontSize}"
                             Symbol="Code"
-                            Visibility="{x:Bind IsRegularExpression, Converter={StaticResource BoolToVisibilityConverter}}" />
+                            Visibility="{x:Bind controls1:C.ToVisibility(IsRegularExpression)}" />
                     </StackPanel>
                 </DataTemplate>
             </labs:TokenView.ItemTemplate>

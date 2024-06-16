@@ -20,18 +20,18 @@
 
 #endregion
 
-using Refit;
+using System.Text.Json.Serialization;
 
 namespace Pixeval.CoreApi.Net.Request;
 
 public record AddNormalIllustCommentRequest(
-    [property: AliasAs("illust_id")] long Id,
-    [property: AliasAs("parent_comment_id")] long? ParentCommentId,
-    [property: AliasAs("comment")] string Content
+    [property: JsonPropertyName("illust_id")] long Id,
+    [property: JsonPropertyName("parent_comment_id")] long? ParentCommentId,
+    [property: JsonPropertyName("comment")] string Content
 );
 
 public record AddNormalNovelCommentRequest(
-    [property: AliasAs("novel_id")] long Id,
-    [property: AliasAs("parent_comment_id")] long? ParentCommentId,
-    [property: AliasAs("comment")] string Content
+    [property: JsonPropertyName("novel_id")] long Id,
+    [property: JsonPropertyName("parent_comment_id")] long? ParentCommentId,
+    [property: JsonPropertyName("comment")] string Content
 );
