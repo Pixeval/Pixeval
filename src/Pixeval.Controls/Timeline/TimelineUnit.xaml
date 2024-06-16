@@ -20,15 +20,17 @@
                             <Grid x:Name="LeftIndicatorAxis" Background="#E3E3E3" Width="4" />
                         </StackPanel>
 
-                        <ContentPresenter 
-                        x:Name="ContentPresenter"
-                        Padding="25,0" 
-                        Grid.Column="1" 
-                        HorizontalAlignment="Left" VerticalAlignment="Top"
-                        ContentTemplate="{TemplateBinding ContentTemplate}" 
-                        Content="{TemplateBinding Content}"
-                        HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
-                        VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+                        <ContentControl 
+                            x:Name="ContentPresenter"
+                            Padding="25,0" 
+                            Grid.Column="1" 
+                            HorizontalAlignment="Left" VerticalAlignment="Top"
+                            ContentTemplate="{TemplateBinding ContentTemplate}" 
+                            ContentTemplateSelector="{TemplateBinding ContentTemplateSelector}"
+                            Content="{TemplateBinding Content}"
+                            DataContext="{TemplateBinding DataContext}"
+                            HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
 
                         <StackPanel Grid.Column="2" VerticalAlignment="Stretch">
                             <Grid x:Name="RightIconContainer" Background="#F4F6F8" HorizontalAlignment="Center" VerticalAlignment="Center" CornerRadius="25" Width="45" Height="45">

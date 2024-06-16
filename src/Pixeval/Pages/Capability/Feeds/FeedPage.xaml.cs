@@ -41,7 +41,7 @@ namespace Pixeval.Pages.Capability.Feeds
 
         private async void TimelineUnit_OnLoaded(object sender, RoutedEventArgs e)
         {
-            var vm = (sender as TimelineUnit)!.GetDataContext<FeedItemViewModel>();
+            var vm = (FeedItemViewModel) (sender as TimelineUnit)!.Content;
             await vm.LoadAsync();
         }
     }

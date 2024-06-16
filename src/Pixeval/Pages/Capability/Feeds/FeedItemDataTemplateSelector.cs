@@ -19,6 +19,7 @@
 #endregion
 
 using System;
+using System.Diagnostics;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Pixeval.CoreApi.Model;
@@ -35,16 +36,22 @@ public sealed class FeedItemDataTemplateSelector : DataTemplateSelector
 
     public DataTemplate PostIllust { get; set; } = null!;
 
-    protected override DataTemplate SelectTemplateCore(object item)
+    protected override DataTemplate SelectTemplateCore(object item) => SelectTemplateCore(item, null!);
+
+    protected override DataTemplate SelectTemplateCore(object item, DependencyObject container)
     {
-        var feedViewModel = (FeedItemViewModel) item;
-        return feedViewModel.Entry.Type switch
+        if (container is ContentControl { Content: FeedItemViewModel fvm })
         {
-            FeedType.AddFavorite => FollowUser,
-            FeedType.AddBookmark => BookmarkIllust,
-            FeedType.AddNovelBookmark => BookmarkNovel,
-            FeedType.AddIllust => PostIllust,
-            _ => throw new ArgumentOutOfRangeException(nameof(feedViewModel))
-        };
+            return fvm.Entry.Type switch
+            {
+                FeedType.AddFavorite => FollowUser,
+                FeedType.AddBookmark => BookmarkIllust,
+                FeedType.AddNovelBookmark => BookmarkNovel,
+                FeedType.AddIllust => PostIllust,
+                _ => throw new ArgumentOutOfRangeException(nameof(FeedItemViewModel))
+            };
+        }
+
+        return base.SelectTemplateCore(item, container);
     }
 }

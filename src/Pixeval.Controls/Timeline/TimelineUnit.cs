@@ -21,7 +21,7 @@ public sealed partial class TimelineUnit : ContentControl
     private Grid _rightIndicatorAxis = null!;
     private Grid _leftIconContainer = null!;
     private Grid _rightIconContainer = null!;
-    private ContentPresenter _contentPresenter = null!;
+    private ContentControl _contentPresenter = null!;
     private double _containerHeightFixed;
     
 
@@ -52,7 +52,7 @@ public sealed partial class TimelineUnit : ContentControl
         _rightIndicatorAxis = (GetTemplateChild("RightIndicatorAxis") as Grid)!;
         _leftIconContainer = (GetTemplateChild("LeftIconContainer") as Grid)!;
         _rightIconContainer = (GetTemplateChild("RightIconContainer") as Grid)!;
-        _contentPresenter = (GetTemplateChild("ContentPresenter") as ContentPresenter)!;
+        _contentPresenter = (GetTemplateChild("ContentPresenter") as ContentControl)!;
 
         _contentPresenter.Loaded += ContentContainerOnLoaded;
 
