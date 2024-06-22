@@ -254,7 +254,7 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
                         return stream;
                 }
 
-                var downloadRes = await App.AppViewModel.MakoClient.DownloadStreamAsync(url, new Progress<double>(d => AdvancePhase(LoadingPhase.DownloadingImage, startProgress + ratio * d)), ImageLoadingCancellationHandle);
+                var downloadRes = await App.AppViewModel.MakoClient.DownloadMemoryStreamAsync(url, new Progress<double>(d => AdvancePhase(LoadingPhase.DownloadingImage, startProgress + ratio * d)), ImageLoadingCancellationHandle);
                 if (downloadRes is Result<Stream>.Success(var stream2))
                 {
                     if (App.AppViewModel.AppSettings.UseFileCache)

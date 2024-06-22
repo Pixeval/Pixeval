@@ -33,13 +33,14 @@ namespace Pixeval.Util.IO;
 
 public static partial class IoHelper
 {
-    public static async Task<Result<Stream>> DownloadStreamAsync(
+    public static Task<Result<Stream>> DownloadMemoryStreamAsync(
         this MakoClient client,
         string url,
         IProgress<double>? progress = null,
         CancellationHandle? cancellationHandle = null)
     {
-        return await client.GetMakoHttpClient(MakoApiKind.ImageApi).DownloadStreamAsync(url, progress, cancellationHandle);
+        return client.GetMakoHttpClient(MakoApiKind.ImageApi)
+            .DownloadMemoryStreamAsync(url, progress, cancellationHandle);
     }
 
     public static async Task<Result<IRandomAccessStream>> DownloadRandomAccessStreamAsync(
@@ -48,7 +49,7 @@ public static partial class IoHelper
         IProgress<double>? progress = null,
         CancellationHandle? cancellationHandle = null)
     {
-        return (await client.DownloadStreamAsync(url, progress, cancellationHandle)).Rewrap(stream => stream.AsRandomAccessStream());
+        return (await client.DownloadMemoryStreamAsync(url, progress, cancellationHandle)).Rewrap(stream => stream.AsRandomAccessStream());
     }
 
     public static async Task<Result<SoftwareBitmapSource>> DownloadSoftwareBitmapSourceAsync(
@@ -57,7 +58,7 @@ public static partial class IoHelper
         IProgress<double>? progress = null,
         CancellationHandle? cancellationHandle = null)
     {
-        return await (await client.DownloadStreamAsync(url, progress, cancellationHandle)).RewrapAsync(m => m.GetSoftwareBitmapSourceAsync(true));
+        return await (await client.DownloadMemoryStreamAsync(url, progress, cancellationHandle)).RewrapAsync(m => m.GetSoftwareBitmapSourceAsync(true));
     }
 
     public static async Task<Result<ImageSource>> DownloadBitmapImageAsync(
@@ -67,7 +68,7 @@ public static partial class IoHelper
         IProgress<double>? progress = null,
         CancellationHandle? cancellationHandle = null)
     {
-        return await (await client.DownloadStreamAsync(url, progress, cancellationHandle))
+        return await (await client.DownloadMemoryStreamAsync(url, progress, cancellationHandle))
             .RewrapAsync(async m => (ImageSource)await m.GetBitmapImageAsync(true, desiredWidth));
     }
 }

@@ -60,7 +60,7 @@ public sealed partial class DownloadItem
             case DownloadState.Error:
             case DownloadState.Cancelled:
                 await ViewModel.DownloadTask.ResetAsync();
-                _ = App.AppViewModel.DownloadManager.TryExecuteInline(ViewModel.DownloadTask);
+                _ = App.AppViewModel.DownloadManager.TryExecuteTaskGroupInline(ViewModel.DownloadTask);
                 break;
             case DownloadState.Completed:
                 if (!await (ViewModel.DownloadTask.IsFolder
@@ -80,7 +80,7 @@ public sealed partial class DownloadItem
     private async void RedownloadItem_OnClicked(object sender, RoutedEventArgs e)
     {
         await ViewModel.DownloadTask.ResetAsync();
-        _ = App.AppViewModel.DownloadManager.TryExecuteInline(ViewModel.DownloadTask);
+        _ = App.AppViewModel.DownloadManager.TryExecuteTaskGroupInline(ViewModel.DownloadTask);
     }
 
     private void CancelDownloadItem_OnClicked(object sender, RoutedEventArgs e)

@@ -70,7 +70,7 @@ public partial class NovelDownloadTask : DownloadTaskBase
         get
         {
             if (!IsFolder)
-                return [Destination.RemoveTokens()];
+                return [Destination];
 
             var destinations = new List<string>();
             var directory = Path.GetDirectoryName(Destination)!;
@@ -82,7 +82,7 @@ public partial class NovelDownloadTask : DownloadTaskBase
                 {
                     var url = DocumentViewModel.AllUrls[i];
                     var token = DocumentViewModel.AllTokens[i];
-                    destinations.Add(IoHelper.ReplaceTokenExtensionFromUrl(Path.Combine(directory, token), url).RemoveTokens());
+                    destinations.Add(IoHelper.ReplaceTokenExtensionFromUrl(Path.Combine(directory, token), url));
                 }
             }
             else
@@ -92,7 +92,7 @@ public partial class NovelDownloadTask : DownloadTaskBase
                 var imgExt = Destination[ext..];
                 DocumentViewModel.ImageExtension = imgExt;
                 destinations.Add(docPath);
-                destinations.AddRange(DocumentViewModel.AllTokens.Select(token => Path.Combine(directory, token + imgExt).RemoveTokens()));
+                destinations.AddRange(DocumentViewModel.AllTokens.Select(token => Path.Combine(directory, token + imgExt)));
             }
 
             return destinations;
@@ -177,7 +177,7 @@ public partial class NovelDownloadTask : DownloadTaskBase
             {
                 using var image = await Image.LoadAsync(stream);
                 if (DocumentViewModel.GetTags(i) is { } tags)
-                    image.SetTags(tags);
+                    image.SetIdTags(tags);
                 await image.IllustrationSaveToFileAsync(destination);
             }
         }

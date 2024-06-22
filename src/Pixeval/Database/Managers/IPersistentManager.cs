@@ -52,7 +52,9 @@ public interface IPersistentManager<TEntry, out TModel>
 
     IEnumerable<TModel> Query(Expression<Func<TEntry, bool>> predicate);
 
-    IEnumerable<TModel> Select(Expression<Func<TEntry, bool>>? predicate = null, int? count = null);
+    void Update(TEntry entry);
+
+    IEnumerable<TModel> Select(int count);
 
     int Delete(Expression<Func<TEntry, bool>> predicate);
 

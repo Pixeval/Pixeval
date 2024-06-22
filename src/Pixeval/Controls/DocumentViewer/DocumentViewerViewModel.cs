@@ -55,6 +55,9 @@ public partial class DocumentViewerViewModel(NovelContent novelContent) : Observ
 
     public string? ImageExtension { get; set; }
 
+    /// <summary>
+    /// 所有图片的URL
+    /// </summary>
     public string[] AllUrls { get; } = novelContent.Images.Select(x => x.ThumbnailUrl).Concat(novelContent.Illusts.Select(x => x.ThumbnailUrl)).ToArray();
 
     public string[] AllTokens { get; } = novelContent.Images.Select(x => x.NovelImageId.ToString()).Concat(novelContent.Illusts.Select(x => $"{x.Id}-{x.Page}")).ToArray();
@@ -183,12 +186,12 @@ public partial class DocumentViewerViewModel(NovelContent novelContent) : Observ
         }
     }
 
-    public IEnumerable<string>? GetTags(int index)
+    public (long Id, IEnumerable<string> Tags)? GetIdTags(int index)
     {
         if (index < NovelContent.Images.Length)
             return null;
         var illust = NovelContent.Illusts[index - NovelContent.Images.Length];
-        return illust.Illust.Tags.Select(t => t.Tag);
+        return (illust.Id, illust.Illust.Tags.Select(t => t.Tag));
     }
 
     public Stream GetStream(int index)
@@ -236,7 +239,7 @@ public partial class DocumentViewerViewModel(NovelContent novelContent) : Observ
     /// </summary>
     public async Task<Stream> GetThumbnailAsync(string url)
     {
-        return await App.AppViewModel.MakoClient.DownloadStreamAsync(url, cancellationHandle: LoadingCancellationHandle) is
+        return await App.AppViewModel.MakoClient.DownloadMemoryStreamAsync(url, cancellationHandle: LoadingCancellationHandle) is
             Result<Stream>.Success(var stream)
             ? stream
             : AppInfo.GetImageNotAvailableStream();

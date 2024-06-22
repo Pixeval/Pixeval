@@ -119,7 +119,7 @@ public partial class CommentItemViewModel(Comment comment, SimpleWorkType type, 
                         Text = content
                     });
                     break;
-                case ReplyContentToken.EmojiToken(var emoji) when await App.AppViewModel.MakoClient.DownloadStreamAsync(emoji.GetReplyEmojiDownloadUrl()) is Result<Stream>.Success(var emojiSource):
+                case ReplyContentToken.EmojiToken(var emoji) when await App.AppViewModel.MakoClient.DownloadMemoryStreamAsync(emoji.GetReplyEmojiDownloadUrl()) is Result<Stream>.Success(var emojiSource):
                     paragraph.Inlines.Add(new InlineUIContainer
                     {
                         Child = new Image

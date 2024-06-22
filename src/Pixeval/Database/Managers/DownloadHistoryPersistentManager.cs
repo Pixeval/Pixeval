@@ -39,18 +39,9 @@ public class DownloadHistoryPersistentManager(ILiteDatabase collection, int maxi
     public void Insert(DownloadHistoryEntry t)
     {
         if (Collection.Count() > MaximumRecords)
-        {
             Purge(MaximumRecords);
-        }
 
         _ = Collection.Insert(t);
-        t.PropertyChanged += (_, _) =>
-        {
-            if (Collection.Find(entry => entry.Destination == t.Destination).Any())
-            {
-                _ = Collection.Update(t);
-            }
-        };
     }
 
     public IEnumerable<DownloadTaskBase> Query(Expression<Func<DownloadHistoryEntry, bool>> predicate)
@@ -58,37 +49,48 @@ public class DownloadHistoryPersistentManager(ILiteDatabase collection, int maxi
         return Collection.Find(predicate).Select(ToObservableDownloadTask);
     }
 
-    public IEnumerable<DownloadTaskBase> Select(Expression<Func<DownloadHistoryEntry, bool>>? predicate = null, int? count = null)
+    public void Update(DownloadHistoryEntry entry)
     {
-        var query = Collection.FindAll();
-        if (count.HasValue)
-        {
-            query = query.TakeLast(count.Value);
-        }
-
-        if (predicate is not null)
-        {
-            query = query.Where(predicate.Compile());
-        }
-
-        return query.Select(ToObservableDownloadTask);
+        Collection.Update(entry);
     }
 
+    public IEnumerable<DownloadTaskBase> Select(int count)
+    {
+        return Collection.Find(_ => true, 0, count).Select(ToObservableDownloadTask);
+    }
+
+    /// <summary>
+    /// 删除
+    /// </summary>
+    /// <param name="predicate"></param>
+    /// <returns></returns>
     public int Delete(Expression<Func<DownloadHistoryEntry, bool>> predicate)
     {
         return Collection.DeleteMany(predicate);
     }
 
+    /// <summary>
+    /// 遍历
+    /// </summary>
+    /// <returns></returns>
     public IEnumerable<DownloadTaskBase> Enumerate()
     {
         return Collection.FindAll().Select(ToObservableDownloadTask);
     }
 
+    /// <summary>
+    /// 反转
+    /// </summary>
+    /// <returns></returns>
     public IEnumerable<DownloadTaskBase> Reverse()
     {
         return Collection.Find(LiteDB.Query.All(LiteDB.Query.Descending)).Select(ToObservableDownloadTask);
     }
 
+    /// <summary>
+    /// 清除多于<paramref name="limit"/>的记录
+    /// </summary>
+    /// <param name="limit"></param>
     public void Purge(int limit)
     {
         if (Collection.Count() > limit)
@@ -98,6 +100,9 @@ public class DownloadHistoryPersistentManager(ILiteDatabase collection, int maxi
         }
     }
 
+    /// <summary>
+    /// 清除所有记录
+    /// </summary>
     public void Clear()
     {
         _ = Collection.DeleteAll();

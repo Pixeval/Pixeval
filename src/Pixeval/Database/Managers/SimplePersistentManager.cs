@@ -54,20 +54,14 @@ public abstract class SimplePersistentManager<T>(ILiteDatabase db, int maximumRe
         return Collection.Find(predicate);
     }
 
-    public IEnumerable<T> Select(Expression<Func<T, bool>>? predicate = null, int? count = null)
+    public void Update(T entry)
     {
-        var query = Collection.FindAll();
-        if (count.HasValue)
-        {
-            query = query.TakeLast(count.Value);
-        }
+        Collection.Update(entry);
+    }
 
-        if (predicate != null)
-        {
-            query = query.Where(predicate.Compile());
-        }
-
-        return query.ToList();
+    public IEnumerable<T> Select(int count)
+    {
+        return Collection.Find(_ => true, 0, count);
     }
 
     public int Delete(Expression<Func<T, bool>> predicate)

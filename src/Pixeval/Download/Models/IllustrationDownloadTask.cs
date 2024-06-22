@@ -39,7 +39,7 @@ public partial class IllustrationDownloadTask(DownloadHistoryEntry entry, Illust
 
     public override IReadOnlyList<string> ActualDestinations =>
     [
-        IoHelper.ReplaceTokenExtensionFromUrl(Destination, IllustrationViewModel.IllustrationOriginalUrl).RemoveTokens()
+        IoHelper.ReplaceTokenExtensionFromUrl(Destination, IllustrationViewModel.IllustrationOriginalUrl)
     ];
 
     public override bool IsFolder => false;
@@ -88,7 +88,7 @@ public partial class IllustrationDownloadTask(DownloadHistoryEntry entry, Illust
         else
         {
             using var image = await Image.LoadAsync(stream);
-            image.SetTags(IllustrationViewModel.Entry);
+            image.SetIdTags(IllustrationViewModel.Entry);
             await image.IllustrationSaveToFileAsync(destination);
         }
     }

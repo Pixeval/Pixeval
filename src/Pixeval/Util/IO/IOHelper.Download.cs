@@ -21,7 +21,9 @@
 using System;
 using System.Buffers;
 using System.IO;
+using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.IO;
@@ -71,88 +73,111 @@ public static partial class IoHelper
         }
     }
 
+    /// <inheritdoc cref="DownloadStreamAsync"/>
+    public static async Task<Result<Stream>> DownloadMemoryStreamAsync(
+        this HttpClient httpClient,
+        string url,
+        CancellationToken cancellationToken,
+        IProgress<double>? progress = null,
+        long startPosition = 0,
+        int bufferSize = 4096)
+    {
+        var uri = new Uri(url);
+
+        if (uri.IsFile)
+        {
+            progress?.Report(100);
+            return Result<Stream>.AsSuccess(File.OpenRead(url));
+        }
+        if (uri.Scheme is "ms-appx")
+        {
+            progress?.Report(100);
+            return Result<Stream>.AsSuccess(File.OpenRead(AppInfo.ApplicationUriToPath(uri)));
+        }
+        var stream = _recyclableMemoryStreamManager.GetStream();
+        var result = await httpClient.DownloadStreamAsync(stream, uri, cancellationToken, progress, bufferSize, startPosition);
+        if (result is null)
+        {
+            stream.Position = 0;
+            return Result<Stream>.AsSuccess(stream);
+        }
+        await stream.DisposeAsync();
+        return Result<Stream>.AsFailure(result);
+    }
+
     /// <summary>
-    /// Attempts to download the content that are located by the <paramref name="url" /> to a
+    /// Attempts to download the content that are located by the <paramref name="uri" /> to a
     /// <see cref="Stream" /> with progress supported
     /// </summary>
     /// <remarks>
     /// A <see cref="CancellationHandle" /> is used instead of <see cref="CancellationToken" />, since this function will be called in
     /// such a frequent manner that the default behavior of <see cref="CancellationToken" /> will bring a huge impact on performance
     /// </remarks>
-    public static async Task<Result<Stream>> DownloadStreamAsync(
+    public static async Task<Exception?> DownloadStreamAsync(
         this HttpClient httpClient,
-        string url,
+        Stream destination,
+        Uri uri,
+        CancellationToken cancellationToken,
         IProgress<double>? progress = null,
-        CancellationHandle? cancellationHandle = null)
+        long startPosition = 0,
+        int bufferSize = 4096)
     {
         try
         {
-            var awaiter = new ReenterableAwaiter<bool>(!cancellationHandle?.IsPaused ?? true, true);
-            var uri = new Uri(url);
+            if (0 > startPosition)
+                return new ArgumentOutOfRangeException(nameof(startPosition), "Too small");
 
-            if (uri.IsFile)
+            var request = new HttpRequestMessage(HttpMethod.Get, uri);
+
+            if (startPosition is not 0)
+                request.Headers.Range = new(startPosition, null);
+
+            using var response = await httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
+
+            var responseLength = null as long?;
+            switch (response.StatusCode)
             {
-                progress?.Report(100);
-                return Result<Stream>.AsSuccess(File.OpenRead(url));
+                case HttpStatusCode.OK:
+                    destination.Position = 0;
+                    responseLength = response.Content.Headers.ContentLength;
+                    break;
+                case HttpStatusCode.PartialContent:
+                    destination.Position = response.Content.Headers.ContentRange?.From ?? startPosition;
+                    responseLength = response.Content.Headers.ContentRange?.Length ?? response.Content.Headers.ContentLength;
+                    break;
+                case HttpStatusCode.RequestedRangeNotSatisfiable:
+                    return new ArgumentOutOfRangeException(nameof(startPosition), "Too large");
             }
-            if (uri.Scheme is "ms-appx")
-            {
-                progress?.Report(100);
-                return Result<Stream>.AsSuccess(File.OpenRead(AppInfo.ApplicationUriToPath(uri)));
-            }
-
-            cancellationHandle?.RegisterPaused(awaiter.Reset);
-            cancellationHandle?.RegisterResumed(() => awaiter.SetResult(true));
-
-            using var response = await httpClient.GetResponseHeader(uri);
-            if (response.Content.Headers.ContentLength is not { } responseLength)
-                return (await httpClient.DownloadByteArrayAsync(url)).Rewrap(m =>
-                    (Stream)_recyclableMemoryStreamManager.GetStream(m.Span));
 
             _ = response.EnsureSuccessStatusCode();
-            if (cancellationHandle?.IsCancelled is true)
-                return Result<Stream>.AsFailure(_cancellationMark);
 
-            await using var contentStream = await response.Content.ReadAsStreamAsync();
-            // Most cancellation happens when users are panning the ScrollView, where the
-            // cancellation occurs while the `await response.Content.ReadAsStreamAsync()` is 
-            // running, so we check the state right after the completion of that statement
-            if (cancellationHandle?.IsCancelled is true)
-                return Result<Stream>.AsFailure(_cancellationMark);
+            await using var contentStream = await response.Content.ReadAsStreamAsync(cancellationToken);
 
-            var resultStream = _recyclableMemoryStreamManager.GetStream();
-            int bytesRead, totalRead = 0;
-            var buffer = ArrayPool<byte>.Shared.Rent(4096);
-            while ((bytesRead = await contentStream.ReadAsync(buffer)) is not 0 && await awaiter)
+            var buffer = ArrayPool<byte>.Shared.Rent(bufferSize);
+            try
             {
-                if (cancellationHandle?.IsCancelled is true)
+                int bytesRead, totalRead = 0;
+                while ((bytesRead = await contentStream.ReadAsync(new(buffer), cancellationToken).ConfigureAwait(false)) is not 0)
                 {
-                    await resultStream.DisposeAsync();
-                    return Result<Stream>.AsFailure(_cancellationMark);
-                }
+                    await destination.WriteAsync(new(buffer, 0, bytesRead), cancellationToken).ConfigureAwait(false);
+                    totalRead += bytesRead;
+                    // reduce the frequency of the invocation of the callback, otherwise it will draw a severe performance impact
 
-                await resultStream.WriteAsync(buffer, 0, bytesRead);
-                totalRead += bytesRead;
-                // reduce the frequency of the invocation of the callback, otherwise it will draws a severe performance impact
-                if (totalRead / (double)responseLength * 100 is var percentage)
-                {
-                    progress?.Report(percentage); // percentage, 100 as base
+                    if (responseLength is not null && totalRead / (double)responseLength * 100 is var percentage)
+                        progress?.Report(percentage); // percentage, 100 as base
                 }
             }
+            finally
+            {
+                ArrayPool<byte>.Shared.Return(buffer);
+            }
 
-            ArrayPool<byte>.Shared.Return(buffer, true);
-            _ = resultStream.Seek(0, SeekOrigin.Begin);
             progress?.Report(100);
-            return Result<Stream>.AsSuccess(resultStream);
+            return null;
         }
         catch (Exception e)
         {
-            return Result<Stream>.AsFailure(e);
+            return e;
         }
-    }
-
-    private static Task<HttpResponseMessage> GetResponseHeader(this HttpClient client, Uri uri)
-    {
-        return client.GetAsync(uri, HttpCompletionOption.ResponseHeadersRead);
     }
 }
