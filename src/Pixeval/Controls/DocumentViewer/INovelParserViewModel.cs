@@ -36,5 +36,11 @@ public interface INovelParserViewModel<TImage> : IDisposable
 
     Dictionary<long, TImage> UploadedImages { get; }
 
+    /// <summary>
+    /// 此处默认所有图片扩展名都相同
+    /// </summary>
+    /// <remarks>
+    /// 包含前缀点，例如".png"
+    /// </remarks>
     public string? ImageExtension { get; }
 }

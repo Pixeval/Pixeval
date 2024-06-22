@@ -86,7 +86,7 @@ public partial class UgoiraDownloadTask(
 
     protected async Task ManageImageAsync(Image image, string destination)
     {
-        image.SetTags(IllustrationViewModel.Entry);
+        image.SetIdTags(IllustrationViewModel.Entry);
         await image.UgoiraSaveToFileAsync(destination);
     }
 }

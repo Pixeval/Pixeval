@@ -122,7 +122,7 @@ public abstract class ThumbnailEntryViewModel<T>(T entry) : EntryViewModel<T>(en
     /// </summary>
     public async Task<Stream> GetThumbnailAsync()
     {
-        switch (await App.AppViewModel.MakoClient.DownloadStreamAsync(ThumbnailUrl, cancellationHandle: LoadingThumbnailCancellationHandle))
+        switch (await App.AppViewModel.MakoClient.DownloadMemoryStreamAsync(ThumbnailUrl, cancellationHandle: LoadingThumbnailCancellationHandle))
         {
             case Result<Stream>.Success(var stream):
                 return stream;

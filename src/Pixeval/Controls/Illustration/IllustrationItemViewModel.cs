@@ -70,33 +70,14 @@ public partial class IllustrationItemViewModel : WorkEntryViewModel<Illustration
 
     public string MangaSingleOriginalUrl => Entry.MetaPages[MangaIndex is -1 ? 0 : MangaIndex].ImageUrls.Original;
 
-    public IReadOnlyList<string> MangaOriginalUrls => Entry.MetaPages.Select(m => m.ImageUrls.Original).ToArray();
+    public IReadOnlyList<string> MangaOriginalUrls => Entry.MangaOriginalUrls;
 
-    public List<string> UgoiraOriginalUrls
-    {
-        get
-        {
-            Debug.Assert(Entry.IsUgoira);
-            var metadata = UgoiraMetadata.Value;
-            var list = new List<string>();
-            for (var i = 0; i < metadata.FrameCount; ++i)
-                list.Add(Entry.OriginalSingleUrl.Replace("ugoira0", $"ugoira{i}"));
-            return list;
-        }
-    }
+    public List<string> UgoiraOriginalUrls => Entry.GetUgoiraOriginalUrls(UgoiraMetadata.Value.FrameCount);
 
-    public async ValueTask<List<string>> UgoiraOriginalUrlsAsync()
-    {
-        Debug.Assert(Entry.IsUgoira);
-        var metadata = await UgoiraMetadata.ValueAsync;
-        var list = new List<string>();
-        for (var i = 0; i < metadata.FrameCount; ++i)
-            list.Add(Entry.OriginalSingleUrl.Replace("ugoira0", $"ugoira{i}"));
-        return list;
-    }
+    public async ValueTask<List<string>> UgoiraOriginalUrlsAsync() => Entry.GetUgoiraOriginalUrls((await UgoiraMetadata.ValueAsync).FrameCount);
 
     /// <summary>
-    /// 单图和单图漫画的连接
+    /// 单图和单图漫画的链接
     /// </summary>
     public string StaticUrl(bool original)
     {

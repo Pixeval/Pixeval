@@ -26,11 +26,11 @@ public enum DownloadState
 
     Running,
 
+    Paused,
+
     Cancelled,
 
     Error,
 
-    Completed,
-
-    Paused
+    Completed
 }

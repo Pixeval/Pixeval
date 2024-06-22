@@ -21,166 +21,182 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
+using Pixeval.CoreApi.Net;
 using Pixeval.Download.Models;
 using Pixeval.Util.IO;
 using Pixeval.Util.Threading;
 using Pixeval.Utilities.Threading;
+using WinUI3Utilities;
 
 namespace Pixeval.Download;
 
-public partial class DownloadManager<TDownloadTask> : IDisposable where TDownloadTask : DownloadTaskBase
+public partial class DownloadManager : IDisposable
 {
-    private readonly Channel<TDownloadTask> _downloadTaskChannel;
+    /// <summary>
+    /// 正在下载的任务队列，数量不超过<see cref="ConcurrencyDegree"/>
+    /// </summary>
+    private readonly Channel<ImageDownloadTask> _downloadTaskChannel = Channel.CreateUnbounded<ImageDownloadTask>();
+
+    /// <summary>
+    /// 使用<see cref="MakoApiKind.ImageApi"/>的<see cref="HttpClient"/>
+    /// </summary>
     private readonly HttpClient _httpClient;
-    private readonly ObservableCollection<TDownloadTask> _queuedTasks;
-    private readonly SemaphoreSlim _semaphoreSlim;
 
-    private readonly ISet<TDownloadTask> _taskQuerySet;
+    /// <summary>
+    /// 指示是否可以进行新的下载任务，要求<see cref="_workingTasks"/>小于<see cref="ConcurrencyDegree"/>
+    /// </summary>
+    /// <remarks>
+    /// the generic parameter is used to simplify the code, the expression can be embedded directly into the condition of the while loop
+    /// </remarks>
+    private readonly ReenterableAwaiter<bool> _throttle = new(true, true);
 
-    // the generic parameter is used to simplify the code, the expression can be embedded directly into the condition of the while loop
-    private readonly ReenterableAwaiter<bool> _throttle;
+    /// <summary>
+    /// <see cref="_downloadTaskChannel"/>中的数量
+    /// </summary>
     private int _workingTasks;
 
-    public DownloadManager(int concurrencyDegree, HttpClient? httpClient = null)
+    /// <summary>
+    /// 与<see cref="QueuedTasks"/>内容一样，但是用于快速查询
+    /// </summary>
+    private readonly HashSet<DownloadTaskGroup> _taskQuerySet = [];
+
+    /// <summary>
+    /// 所有的下载任务
+    /// </summary>
+    public ObservableCollection<DownloadTaskGroup> QueuedTasks { get; } = [];
+
+    /// <summary>
+    /// 同时下载的任务数量
+    /// </summary>
+    public int ConcurrencyDegree { get; set; }
+
+    public DownloadManager(HttpClient httpClient, int concurrencyDegree)
     {
-        _httpClient = httpClient ?? new HttpClient();
-        _queuedTasks = [];
-        _taskQuerySet = new HashSet<TDownloadTask>();
-        _throttle = new ReenterableAwaiter<bool>(true, true);
-        _downloadTaskChannel = Channel.CreateUnbounded<TDownloadTask>();
-        _semaphoreSlim = new SemaphoreSlim(1, 1);
+        _httpClient = httpClient;
         ConcurrencyDegree = concurrencyDegree;
 
         PollTask();
     }
 
-    public int ConcurrencyDegree { get; set; }
-
-    public IList<TDownloadTask> QueuedTasks => _queuedTasks;
-
     public void Dispose()
     {
-        _httpClient.Dispose();
-        _semaphoreSlim.Dispose();
+        GC.SuppressFinalize(this);
+        _downloadTaskChannel.Writer.Complete();
+        _throttle.Dispose();
     }
 
-    public void QueueTask(TDownloadTask task)
+    /// <summary>
+    /// 保证不重复的前提下，将任务加入下载队列前端
+    /// </summary>
+    /// <remarks>
+    /// intrinsic download task are not counted
+    /// </remarks>
+    public void QueueTask(DownloadTaskGroup task)
     {
-        // intrinsic download task are not counted
-        if (_taskQuerySet.Contains(task))
-        {
+        if (!_taskQuerySet.Add(task))
             return;
-        }
 
-        _ = _taskQuerySet.Add(task);
-        _queuedTasks.Insert(0, task);
+        QueuedTasks.Insert(0, task);
         if (task.CurrentState is DownloadState.Queued)
-        {
-            QueueDownloadTask(task);
-        }
+            QueueDownloadTaskGroup(task);
     }
 
+    /// <summary>
+    /// 当队列有排队且未到达最大同时下载数时，开始下载任务
+    /// </summary>
     private async void PollTask()
     {
         while (await _downloadTaskChannel.Reader.WaitToReadAsync())
-        {
             while (await _throttle && _downloadTaskChannel.Reader.TryRead(out var task))
-            {
-                _ = Download(task);
-            }
-        }
+                _ = DownloadAsync(task);
     }
 
-    public void RemoveTask(TDownloadTask task)
+    /// <summary>
+    /// 清除指定任务
+    /// </summary>
+    /// <param name="task"></param>
+    public void RemoveTask(DownloadTaskGroup task)
     {
         _ = _taskQuerySet.Remove(task);
-        _ = _queuedTasks.Remove(task);
+        _ = QueuedTasks.Remove(task);
     }
 
+    /// <summary>
+    /// 清除所有任务
+    /// </summary>
     public void ClearTasks()
     {
-        foreach (var task in _queuedTasks.Where(t => t.CurrentState is DownloadState.Running or DownloadState.Paused or DownloadState.Queued))
-        {
-            task.CancellationHandle.Cancel();
-        }
+        //    foreach (var task in QueuedTasks)
+        //        await task.CancelAsync();
 
-        _queuedTasks.Clear();
+        QueuedTasks.Clear();
         _taskQuerySet.Clear();
     }
 
     /// <summary>
     /// Tries to redownload a task only if its already queued and not running
     /// </summary>
-    public bool TryExecuteInline(TDownloadTask task)
+    /// <remarks>
+    /// Execute the task only if it's already queued
+    /// </remarks>
+    public bool TryExecuteTaskGroupInline(DownloadTaskGroup task)
     {
-        // Execute the task only if it's already queued
-        if (_queuedTasks.Contains(task) && task.CurrentState is DownloadState.Queued)
+        if (QueuedTasks.Contains(task) && task.CurrentState is DownloadState.Queued)
         {
-            QueueDownloadTask(task);
+            QueueDownloadTaskGroup(task);
             return true;
         }
 
         return false;
     }
 
-    private void QueueDownloadTask(TDownloadTask task)
+    private void QueueDownloadTaskGroup(DownloadTaskGroup taskGroup)
     {
-        _ = _downloadTaskChannel.Writer.WriteAsync(task);
+        foreach (var task in taskGroup)
+            _ = _downloadTaskChannel.Writer.TryWrite(task);
     }
 
-    private async Task Download(TDownloadTask task)
+    private async Task DownloadAsync(ImageDownloadTask task)
     {
-        IncrementCounter();
-
+        await IncrementCounterAsync();
         await DownloadInternalAsync(task);
-
         await DecrementCounterAsync();
     }
 
-    private void IncrementCounter()
+    private async Task IncrementCounterAsync()
     {
         if (Interlocked.Increment(ref _workingTasks) == ConcurrencyDegree)
-        {
-            _throttle.Reset();
-        }
+            await _throttle.ResetAsync();
     }
 
     private async Task DecrementCounterAsync()
     {
         _ = Interlocked.Decrement(ref _workingTasks);
-        await _semaphoreSlim.WaitAsync();
-        _throttle.SetResult(true);
-        _ = _semaphoreSlim.Release();
+        await _throttle.SetResultAsync(true);
     }
 
-    private async Task DownloadInternalAsync(TDownloadTask task)
+    private async Task DownloadInternalAsync(ImageDownloadTask task)
     {
-        SetState(task, DownloadState.Running);
-        task.CancellationHandle.Register(() => SetState(task, DownloadState.Cancelled));
-        task.CancellationHandle.RegisterPaused(() => SetState(task, DownloadState.Paused));
-        task.CancellationHandle.RegisterResumed(() => SetState(task, DownloadState.Running));
         try
         {
-            await task.DownloadAsync(_httpClient.DownloadStreamAsync);
+            task.DownloadTryResume += t => _downloadTaskChannel.Writer.TryWrite(t);
+            task.DownloadTryReset += t => _downloadTaskChannel.Writer.TryWrite(t);
+            // task.DownloadStoppedAsync += async _ => await DecrementCounterAsync();
+            await (task.CurrentState switch
+            {
+                DownloadState.Queued => task.StartAsync(_httpClient, suppressDownloadStartedAsync: true),
+                DownloadState.Paused => task.ResumeAsync(_httpClient),
+                _ => ThrowHelper.ArgumentOutOfRange<DownloadState, Task>(task.CurrentState)
+            });
+            await task.StartAsync(_httpClient);
         }
-        catch (Exception e)
+        catch
         {
-            if (task is IllustrationDownloadTask t)
-                await IoHelper.DeleteTaskAsync(t);
-            ThreadingHelper.DispatchTask(() => task.ErrorCause = e);
-            return;
+            // ignored
         }
-
-        SetState(task, DownloadState.Completed);
     }
-
-    private static void SetState(TDownloadTask task, DownloadState state)
-    {
-        ThreadingHelper.DispatchTask(() => task.CurrentState = state);
-    } 
 }

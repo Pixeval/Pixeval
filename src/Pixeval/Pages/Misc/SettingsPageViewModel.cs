@@ -296,7 +296,9 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
 
             DownloadingUpdate = true;
             UpdateMessage = SettingsPageResources.DownloadingUpdate;
-            var result = await client.DownloadStreamAsync(appReleaseModel.ReleaseUri.OriginalString,
+            var filePath = Path.Combine(AppKnownFolders.Temporary.Self.Path, appReleaseModel.ReleaseUri.Segments[^1]);
+            await using var fileStream = File.OpenWrite(filePath);
+            var exception = await client.DownloadStreamAsync(fileStream, appReleaseModel.ReleaseUri,
                 new Progress<double>(progress => DownloadingUpdateProgress = progress), _cancellationHandle);
             // ReSharper disable once DisposeOnUsingVariable
             client.Dispose();
@@ -304,12 +306,8 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
             DownloadingUpdate = false;
             DownloadingUpdateProgress = 0;
 
-            if (result is Result<Stream>.Success { Value: var value })
+            if (exception is null)
             {
-                var filePath = Path.Combine(AppKnownFolders.Temporary.Self.Path, appReleaseModel.ReleaseUri.Segments[^1]);
-                await using (var fileStream = File.OpenWrite(filePath))
-                    await value.CopyToAsync(fileStream);
-
                 downloaded = true;
                 if (_cancellationHandle is { IsCancelled: true })
                     return;

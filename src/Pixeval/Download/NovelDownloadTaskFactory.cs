@@ -53,7 +53,6 @@ public class NovelDownloadTaskFactory : IDownloadTaskFactory<NovelItemViewModel,
         {
             var novelContent = await context.GetNovelContentAsync();
             var downloadHistoryEntry = new DownloadHistoryEntry(
-                DownloadState.Queued,
                 path,
                 DownloadItemType.Novel,
                 context.Entry);
@@ -68,15 +67,18 @@ public class NovelDownloadTaskFactory : IDownloadTaskFactory<NovelItemViewModel,
     {
         var manager = App.AppViewModel.AppServiceProvider.GetRequiredService<DownloadHistoryPersistentManager>();
         var path = IoHelper.NormalizePath(PathParser.Reduce(rawPath, context));
-        if (App.AppViewModel.AppSettings.NovelDownloadFormat is not NovelDownloadFormat.Pdf)
-            path += IoHelper.GetIllustrationExtension();
+        // xxx.pdf\.png
+        // xxx.pdf\<ext>
+        // xxx\novel.txt\.png
+        // xxx\novel.md\<ext>
+        path += "\\" + IoHelper.GetIllustrationExtension();
         if (manager.Collection.Exists(entry => entry.Destination == path))
         {
             // delete the original entry
             _ = manager.Delete(entry => entry.Destination == path);
         }
         var viewModel = (DocumentViewerViewModel)param;
-        var entry = new DownloadHistoryEntry(DownloadState.Queued, path, DownloadItemType.Novel, context.Entry);
+        var entry = new DownloadHistoryEntry(path, DownloadItemType.Novel, context.Entry);
         return new IntrinsicNovelDownloadTask(entry, context, viewModel);
     }
 }

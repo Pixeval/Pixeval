@@ -145,6 +145,7 @@ public partial class DownloadViewViewModel : ObservableObject, IDisposable
 
     public void Dispose()
     {
+        GC.SuppressFinalize(this);
         DataProvider.Dispose();
     }
 }

@@ -47,7 +47,7 @@ public partial class AppViewModel(App app) : IDisposable
 
     public App App { get; } = app;
 
-    public DownloadManager<DownloadTaskBase> DownloadManager { get; private set; } = null!;
+    public DownloadManager DownloadManager { get; private set; } = null!;
 
     public MakoClient MakoClient { get; set; } = null!; // The null-state of MakoClient is transient
 
@@ -63,7 +63,7 @@ public partial class AppViewModel(App app) : IDisposable
 
     public void AppLoggedIn()
     {
-        DownloadManager = new DownloadManager<DownloadTaskBase>(AppSettings.MaxDownloadTaskConcurrencyLevel, MakoClient.GetMakoHttpClient(MakoApiKind.ImageApi));
+        DownloadManager = new DownloadManager(MakoClient.GetMakoHttpClient(MakoApiKind.ImageApi), AppSettings.MaxDownloadTaskConcurrencyLevel);
         AppInfo.RestoreHistories();
     }
 
