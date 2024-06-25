@@ -46,11 +46,15 @@ public class NovelDownloadTaskGroup : DownloadTaskGroup
     /// <summary>
     /// 小说正文的保存路径
     /// </summary>
-    private string DocPath { get; set; } = null!;
+    /// <remarks>
+    /// ..\[ID] NovelName.pdf
+    /// ..\[ID] NovelName\novel.txt
+    /// </remarks>
+    private string DocPath { get; }
 
-    private string PdfTempFolderPath => $"{TokenizedDestination}.tmp";
+    private string PdfTempFolderPath { get; }
 
-    [MemberNotNull(nameof(NovelContent), nameof(DocumentViewModel), nameof(DocPath))]
+    [MemberNotNull(nameof(NovelContent), nameof(DocumentViewModel))]
     private void SetNovelContent(
         NovelContent novelContent,
         DocumentViewerViewModel? documentViewModel = null)
@@ -58,9 +62,6 @@ public class NovelDownloadTaskGroup : DownloadTaskGroup
         NovelContent = novelContent;
         DocumentViewModel = documentViewModel ?? new DocumentViewerViewModel(novelContent);
         var backSlash = TokenizedDestination.LastIndexOf('\\');
-        // ..\[ID] NovelName.pdf
-        // ..\[ID] NovelName\novel.txt
-        DocPath = TokenizedDestination[..backSlash];
         // <ext> or .png or .etc 
         var imgExt = TokenizedDestination[(backSlash + 1)..];
         var directory = DocPath.EndsWith(".pdf") ? PdfTempFolderPath : Path.GetDirectoryName(DocPath)!;
@@ -78,7 +79,7 @@ public class NovelDownloadTaskGroup : DownloadTaskGroup
             var imageDownloadTask = new ImageDownloadTask(new(url), flag
                     ? IoHelper.ReplaceTokenExtensionFromUrl(name, url)
                     : name + imgExt)
-                { Stream = DocumentViewModel.GetStream(i) };
+            { Stream = DocumentViewModel.TryGetStream(i) };
             AddToTasksSet(imageDownloadTask);
         }
         SetNotCreateFromEntry();
@@ -88,6 +89,7 @@ public class NovelDownloadTaskGroup : DownloadTaskGroup
     {
         var backSlash = TokenizedDestination.LastIndexOf('\\');
         DocPath = TokenizedDestination[..backSlash];
+        PdfTempFolderPath = $"{DocPath}.tmp";
     }
 
     public NovelDownloadTaskGroup(
@@ -96,14 +98,20 @@ public class NovelDownloadTaskGroup : DownloadTaskGroup
     {
         var backSlash = TokenizedDestination.LastIndexOf('\\');
         DocPath = TokenizedDestination[..backSlash];
+        PdfTempFolderPath = $"{DocPath}.tmp";
     }
 
     public NovelDownloadTaskGroup(
         Novel entry,
         NovelContent novelContent,
         DocumentViewerViewModel documentViewModel,
-        string destination) : base(entry, destination, DownloadItemType.Novel) =>
+        string destination) : base(entry, destination, DownloadItemType.Novel)
+    {
+        var backSlash = TokenizedDestination.LastIndexOf('\\');
+        DocPath = TokenizedDestination[..backSlash];
+        PdfTempFolderPath = $"{DocPath}.tmp";
         SetNovelContent(novelContent, documentViewModel);
+    }
 
     public override async ValueTask InitializeTaskGroupAsync()
     {
@@ -113,20 +121,27 @@ public class NovelDownloadTaskGroup : DownloadTaskGroup
 
     protected override async Task AfterAllDownloadAsyncOverride(DownloadTaskGroup sender)
     {
-        for (var i = 0; i < DocumentViewModel.TotalCount; ++i)
-        {
-            // TODO: bug
-            var stream = DocumentViewModel.GetStream(i);
-            stream.Position = 0;
-        }
-
         string content;
         switch (App.AppViewModel.AppSettings.NovelDownloadFormat)
         {
             case NovelDownloadFormat.Pdf:
+                var i = 0;
+                foreach (var imageDownloadTask in TasksSet)
+                {
+                    DocumentViewModel.SetStream(i, File.OpenRead(imageDownloadTask.Destination));
+                    ++i;
+                }
                 var document = DocumentViewModel.LoadPdfContent();
                 document.GeneratePdf(DocPath);
-                Directory.Delete(PdfTempFolderPath);
+                i = 0;
+                foreach (var imageDownloadTask in TasksSet)
+                {
+                    if (DocumentViewModel.TryGetStream(i) is { } stream)
+                        await stream.DisposeAsync();
+                    imageDownloadTask.Delete();
+                    ++i;
+                }
+                IoHelper.DeleteEmptyFolder(PdfTempFolderPath);
                 return;
             case NovelDownloadFormat.OriginalTxt:
                 content = NovelContent.Text;

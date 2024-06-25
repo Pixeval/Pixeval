@@ -86,15 +86,16 @@ public class UgoiraDownloadTaskGroup : DownloadTaskGroup, IImageDownloadTaskGrou
             if (App.AppViewModel.AppSettings.UgoiraDownloadFormat is UgoiraDownloadFormat.OriginalZip)
             {
                 ZipFile.CreateFromDirectory(TempFolderPath, TokenizedDestination, CompressionLevel.Optimal, false);
-                Directory.Delete(TempFolderPath, true);
             }
             else
             {
                 using var image = await Destinations.UgoiraSaveToImageAsync(Metadata.Delays.ToArray());
                 image.SetIdTags(Entry);
                 await image.SaveAsync(TokenizedDestination, IoHelper.GetUgoiraEncoder());
-                Directory.Delete(TempFolderPath, true);
             }
+            foreach (var imageDownloadTask in TasksSet)
+                imageDownloadTask.Delete();
+            IoHelper.DeleteEmptyFolder(TempFolderPath);
         });
     }
 

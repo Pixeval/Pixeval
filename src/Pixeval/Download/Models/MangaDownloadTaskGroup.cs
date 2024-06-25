@@ -54,6 +54,8 @@ public class MangaDownloadTaskGroup : DownloadTaskGroup, IImageDownloadTaskGroup
 
     private void SetTasksSet(IReadOnlyList<Stream>? streams = null)
     {
+        if (TasksSet.Count > 0)
+            return;
         var mangaOriginalUrls = Entry.MangaOriginalUrls;
         for (var i = 0; i < mangaOriginalUrls.Count; ++i)
         {
