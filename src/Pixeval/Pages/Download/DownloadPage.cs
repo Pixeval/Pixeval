@@ -77,7 +77,7 @@ public sealed partial class DownloadPage
     private void FilterAutoSuggestBox_OnSuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
     {
         var selectedItem = (DownloadItemViewModel)args.SelectedItem;
-        sender.Text = selectedItem.Title;
+        sender.Text = selectedItem.Entry.Title;
         DownloadView.ViewModel.CurrentOption = DownloadListOption.CustomSearch;
         DownloadView.ViewModel.ResetFilter([selectedItem]);
         _queriedBySuggestion = true;

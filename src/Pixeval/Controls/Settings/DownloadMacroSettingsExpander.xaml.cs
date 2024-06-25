@@ -82,7 +82,7 @@ public sealed partial class DownloadMacroSettingsExpander
             var result = _testParser.Parse();
             if (result is not null)
             {
-                var legitimatedNames = App.AppViewModel.AppServiceProvider.GetRequiredService<IDownloadTaskFactory<IllustrationItemViewModel, IImageDownloadTaskGroup>>();
+                var legitimatedNames = App.AppViewModel.AppServiceProvider.GetRequiredService<IllustrationDownloadTaskFactory>();
                 if (ValidateMacro(result, legitimatedNames) is { } ex)
                 {
                     DownloadMacroInvalidInfoBar.Message = ex;

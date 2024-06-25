@@ -72,7 +72,7 @@ public partial class MakoClient
         }
     }
 
-    private async Task<T> RunWithLoggerAsync<T>(Func<IAppApiEndPoint, Task<T>> task) where T : IFactory<T>
+    private async Task<T> RunWithLoggerAsync<T>(Func<IAppApiEndPoint, Task<T>> task) where T : IDefaultFactory<T>
     {
         try
         {
@@ -87,7 +87,7 @@ public partial class MakoClient
         }
     }
 
-    private async Task<T> RunWithLoggerAsync<T>(Func<Task<T>> task) where T : IFactory<T>
+    private async Task<T> RunWithLoggerAsync<T>(Func<Task<T>> task) where T : IDefaultFactory<T>
     {
         try
         {
@@ -143,7 +143,7 @@ public partial class MakoClient
         }
     }
 
-    private Task<T> RunWithLoggerAsync<T>(Func<Task<Result<T>>> task) where T : IFactory<T>
+    private Task<T> RunWithLoggerAsync<T>(Func<Task<Result<T>>> task) where T : IDefaultFactory<T>
     {
         return RunWithLoggerAsync(task, T.CreateDefault);
     }

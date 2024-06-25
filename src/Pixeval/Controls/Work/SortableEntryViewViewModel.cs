@@ -33,7 +33,7 @@ namespace Pixeval.Controls;
 public abstract partial class SortableEntryViewViewModel<T, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] TViewModel>
     : EntryViewViewModel<T, TViewModel>, ISortableEntryViewViewModel
     where T : class, IWorkEntry
-    where TViewModel : EntryViewModel<T>, IViewModelFactory<T, TViewModel>, IWorkViewModel
+    where TViewModel : EntryViewModel<T>, IFactory<T, TViewModel>, IWorkViewModel
 {
     [ObservableProperty]
     private bool _isSelecting;

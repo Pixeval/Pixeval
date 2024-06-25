@@ -90,7 +90,7 @@ public class ReenterableAwaiter<TResult>(bool initialSignal, TResult resultIniti
     /// Signals the awaiter to complete unsuccessfully
     /// </summary>
     /// <param name="exception"></param>
-    public async Task SetExceptionAsync(Exception exception)
+    public void SetException(Exception exception)
     {
         try
         {

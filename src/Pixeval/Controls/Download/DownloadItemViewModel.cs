@@ -19,11 +19,10 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using FluentIcons.Common;
-using Microsoft.UI.Xaml.Input;
 using Pixeval.Database;
 using Pixeval.Download;
 using Pixeval.Download.Models;
@@ -32,11 +31,12 @@ using Pixeval.Utilities;
 using WinUI3Utilities;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.CoreApi.Model;
+using Pixeval.Util;
 
 namespace Pixeval.Controls;
 
 public sealed partial class DownloadItemViewModel(IDownloadTaskGroup downloadTask)
-    : WorkEntryViewModel<IWorkEntry>(downloadTask.DatabaseEntry.Entry), IViewModelFactory<IDownloadTaskGroup, DownloadItemViewModel>
+    : ThumbnailEntryViewModel<IWorkEntry>(downloadTask.DatabaseEntry.Entry), IFactory<IDownloadTaskGroup, DownloadItemViewModel>
 {
     public IDownloadTaskGroup DownloadTask { get; } = downloadTask;
 
@@ -52,8 +52,13 @@ public sealed partial class DownloadItemViewModel(IDownloadTaskGroup downloadTas
 
         if (DownloadTask.CurrentState is DownloadState.Completed || DownloadTask.DatabaseEntry.Type is DownloadItemType.Manga or DownloadItemType.Novel)
         {
-            var path = DownloadTask.OpenLocalDestination;
-            if (File.Exists(path) && !LoadingThumbnail)
+            var path = null as string;
+            if (File.Exists(DownloadTask.OpenLocalDestination))
+                path = DownloadTask.OpenLocalDestination;
+            var destination = DownloadTask.FirstOrDefault()?.Destination;
+            if (File.Exists(destination))
+                path = destination;
+            if (path is not null && !LoadingThumbnail)
             {
                 LoadingThumbnail = true;
                 var s = await IoHelper.GetFileThumbnailAsync(path);
@@ -68,18 +73,18 @@ public sealed partial class DownloadItemViewModel(IDownloadTaskGroup downloadTas
 
     public static DownloadItemViewModel CreateInstance(IDownloadTaskGroup entry) => new(entry);
 
-    public string ProgressMessage(DownloadState state, double progressPercentage) => state switch
+#pragma warning disable CA1822
+
+    public string ProgressMessage(DownloadState state, double progressPercentage, IDownloadTaskGroup downloadTask) => state switch
     {
         DownloadState.Queued => DownloadItemResources.DownloadQueued,
         DownloadState.Running => DownloadItemResources.DownloadRunningFormatted.Format((int)progressPercentage),
-        DownloadState.Error => DownloadItemResources.DownloadErrorMessageFormatted.Format(DownloadTask.ErrorCause?.Message),
+        DownloadState.Error => DownloadItemResources.DownloadErrorMessageFormatted.Format(downloadTask.ErrorCause?.Message),
         DownloadState.Completed => DownloadItemResources.DownloadCompleted,
         DownloadState.Cancelled => DownloadItemResources.DownloadCancelled,
         DownloadState.Paused => DownloadItemResources.DownloadPaused,
         _ => ThrowHelper.ArgumentOutOfRange<DownloadState, string>(state)
     };
-
-#pragma warning disable CA1822
 
     public string ActionButtonContent(DownloadState state) => state switch
     {
@@ -119,13 +124,7 @@ public sealed partial class DownloadItemViewModel(IDownloadTaskGroup downloadTas
 
     public override Uri PixEzUri => ThrowHelper.NotSupported<Uri>();
 
-    protected override Task<bool> SetBookmarkAsync(long id, bool isBookmarked, bool privately = false, IEnumerable<string>? tags = null) => ThrowHelper.NotSupported<Task<bool>>();
-
-    protected override void SaveCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args) => ThrowHelper.NotSupported();
-
-    protected override void SaveAsCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args) => ThrowHelper.NotSupported();
-
-    protected override void CopyCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args) => ThrowHelper.NotSupported();
+    protected override string ThumbnailUrl => Entry.GetThumbnailUrl();
 
     #endregion
 }

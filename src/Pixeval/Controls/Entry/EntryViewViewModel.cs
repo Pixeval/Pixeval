@@ -30,7 +30,7 @@ namespace Pixeval.Controls;
 public abstract class EntryViewViewModel<T, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] TViewModel>
     : ObservableObject, IDisposable
     where T : class, IIdEntry
-    where TViewModel : EntryViewModel<T>, IViewModelFactory<T, TViewModel>
+    where TViewModel : EntryViewModel<T>, IFactory<T, TViewModel>
 {
     /// <summary>
     /// Avoid calls to <see cref="IDataProvider{T,TViewModel}.ResetEngine"/>, calls to <see cref="ResetEngine"/> instead.

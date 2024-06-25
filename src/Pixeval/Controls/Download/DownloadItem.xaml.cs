@@ -39,10 +39,8 @@ public sealed partial class DownloadItem
 
     private static void OnViewModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        if (d as DownloadItem is { } entry)
-        {
+        if (d as DownloadItem is { } entry) 
             entry.ViewModelChanged?.Invoke(entry, entry.ViewModel);
-        }
     }
 
     public DownloadItem() => InitializeComponent();

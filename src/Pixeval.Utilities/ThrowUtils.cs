@@ -81,6 +81,12 @@ public static class ThrowUtils
     /// <exception cref="ArgumentOutOfRangeException"/>
     [DoesNotReturn]
     [MethodImpl(MethodImplOptions.NoInlining)]
+    public static void ArgumentOutOfRange<T>(T? actualValue, string? message = null, [CallerArgumentExpression(nameof(actualValue))] string? paraName = null)
+        => throw new ArgumentOutOfRangeException(paraName, actualValue, message);
+
+    /// <exception cref="ArgumentOutOfRangeException"/>
+    [DoesNotReturn]
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public static TReturn ArgumentOutOfRange<T, TReturn>(T? actualValue, string? message = null, [CallerArgumentExpression(nameof(actualValue))] string? paraName = null)
         => throw new ArgumentOutOfRangeException(paraName, actualValue, message);
 

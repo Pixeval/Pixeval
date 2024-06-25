@@ -70,7 +70,7 @@ public class AdvancedObservableCollection<[DynamicallyAccessedMembers(Dynamicall
     /// Initializes a new instance of the <see cref="AdvancedObservableCollection{T}"/> class.
     /// </summary>
     /// <param name="source">source IEnumerable</param>
-    /// <param name="isLiveShaping">Denotes whether this ACV should re-filter/re-sort if a PropertyChanged is raised for an observed property.</param>
+    /// <param name="isLiveShaping">Denotes whether this AOC should re-filter/re-sort if a PropertyChanged is raised for an observed property.</param>
     public AdvancedObservableCollection(ObservableCollection<T> source, bool isLiveShaping = false)
     {
         _liveShapingEnabled = isLiveShaping;

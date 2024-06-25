@@ -23,6 +23,7 @@ public class FactoryGenerator : IIncrementalGenerator
         var name = typeSymbol.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
         var typeSyntax = typeSymbol.GetTypeSyntax(false);
         const string createDefault = "CreateDefault";
+        var defaultFactory = $"{AttributeNamespace}.IDefaultFactory<{name}>";
         var list = typeSymbol.GetProperties(attributeList[0].AttributeClass!)
             .Where(symbol => !symbol.IsReadOnly && !symbol.IsStatic)
             .Select(symbol =>
@@ -42,6 +43,7 @@ public class FactoryGenerator : IIncrementalGenerator
             });
 
         var method = MethodDeclaration(typeSyntax, createDefault)
+            //.WithExplicitInterfaceSpecifier(ExplicitInterfaceSpecifier(IdentifierName(defaultFactory)))
             .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.StaticKeyword)))
             .WithExpressionBody(ArrowExpressionClause(
                 ObjectCreationExpression(typeSyntax, null, InitializerExpression(SyntaxKind.ObjectInitializerExpression, SeparatedList(list)))))
@@ -60,7 +62,7 @@ public class FactoryGenerator : IIncrementalGenerator
         }
 
         var generatedType = GetDeclaration(name, typeSymbol, method)
-            .WithBaseList(BaseList(SeparatedList([(BaseTypeSyntax)SimpleBaseType(ParseTypeName($"{AttributeNamespace}.IFactory<{name}>"))])));
+            .WithBaseList(BaseList(SeparatedList([(BaseTypeSyntax)SimpleBaseType(ParseTypeName(defaultFactory))])));
         var generatedNamespace = GetFileScopedNamespaceDeclaration(typeSymbol, generatedType, true);
         var compilationUnit = CompilationUnit()
             .AddMembers(generatedNamespace)

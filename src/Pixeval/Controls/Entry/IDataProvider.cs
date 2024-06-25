@@ -31,7 +31,7 @@ namespace Pixeval.Controls;
 public interface IDataProvider<T, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] TViewModel>
     : INotifyPropertyChanged, INotifyPropertyChanging, IDisposable
     where T : class, IIdEntry
-    where TViewModel : class, IViewModelFactory<T, TViewModel>
+    where TViewModel : class, IFactory<T, TViewModel>
 {
     AdvancedObservableCollection<TViewModel> View { get; }
 

@@ -29,13 +29,13 @@
         Spacing="1">
         <TextBlock
             Style="{StaticResource CaptionTextBlockStyle}"
-            Text="{x:Bind ViewModel.Title, Mode=OneWay}"
+            Text="{x:Bind ViewModel.Entry.Title, Mode=OneWay}"
             TextTrimming="CharacterEllipsis"
             TextWrapping="NoWrap" />
         <TextBlock
             Foreground="{ThemeResource PixevalTipTextForeground}"
             Style="{StaticResource CaptionTextBlockStyle}"
-            Text="{x:Bind ViewModel.User.Name, Mode=OneWay}"
+            Text="{x:Bind ViewModel.Entry.User.Name, Mode=OneWay}"
             TextTrimming="CharacterEllipsis"
             TextWrapping="NoWrap" />
     </StackPanel>
@@ -52,7 +52,7 @@
         <TextBlock
             Foreground="{ThemeResource PixevalTipTextForeground}"
             Style="{StaticResource CaptionTextBlockStyle}"
-            Text="{x:Bind ViewModel.ProgressMessage(ViewModel.DownloadTask.CurrentState, ViewModel.DownloadTask.ProgressPercentage), Mode=OneWay}"
+            Text="{x:Bind ViewModel.ProgressMessage(ViewModel.DownloadTask.CurrentState, ViewModel.DownloadTask.ProgressPercentage, ViewModel.DownloadTask), Mode=OneWay}"
             TextTrimming="CharacterEllipsis"
             TextWrapping="NoWrap" />
     </StackPanel>
