@@ -194,12 +194,12 @@ public partial class DocumentViewerViewModel(NovelContent novelContent) : Observ
         return (illust.Id, illust.Illust.Tags.Select(t => t.Tag));
     }
 
-    public Stream GetStream(int index)
+    public Stream? TryGetStream(int index)
     {
         if (index < NovelContent.Images.Length)
-            return UploadedStreams[NovelContent.Images[index].NovelImageId];
+            return UploadedStreams.GetValueOrDefault(NovelContent.Images[index].NovelImageId);
         var illust = NovelContent.Illusts[index - NovelContent.Images.Length];
-        return IllustrationStreams[(illust.Id, illust.Page)];
+        return IllustrationStreams.GetValueOrDefault((illust.Id, illust.Page));
     }
 
     public void SetStream(int index, Stream? stream)
