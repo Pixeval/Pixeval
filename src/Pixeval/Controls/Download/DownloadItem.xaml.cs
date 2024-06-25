@@ -34,7 +34,7 @@ namespace Pixeval.Controls;
 public sealed partial class DownloadItem
 {
     public event Action<DownloadItem, DownloadItemViewModel>? ViewModelChanged;
-    
+
     public event TypedEventHandler<DownloadItem, DownloadItemViewModel>? OpenIllustrationRequested;
 
     private static void OnViewModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -52,24 +52,21 @@ public sealed partial class DownloadItem
         switch (ViewModel.DownloadTask.CurrentState)
         {
             case DownloadState.Queued:
-                ViewModel.DownloadTask.CancellationHandle.Cancel();
+                ViewModel.DownloadTask.Cancel();
                 break;
             case DownloadState.Running:
-                ViewModel.DownloadTask.CancellationHandle.Pause();
+                ViewModel.DownloadTask.Pause();
                 break;
             case DownloadState.Error:
             case DownloadState.Cancelled:
-                await ViewModel.DownloadTask.ResetAsync();
-                _ = App.AppViewModel.DownloadManager.TryExecuteTaskGroupInline(ViewModel.DownloadTask);
+                ViewModel.DownloadTask.TryReset();
                 break;
             case DownloadState.Completed:
-                if (!await (ViewModel.DownloadTask.IsFolder
-                        ? Launcher.LaunchFolderPathAsync(Path.GetDirectoryName(ViewModel.DownloadTask.Destination))
-                        : Launcher.LaunchUriAsync(new Uri(ViewModel.DownloadTask.ActualDestination))))
+                if (!await Launcher.LaunchUriAsync(new Uri(ViewModel.DownloadTask.OpenLocalDestination)))
                     _ = await this.CreateAcknowledgementAsync(MiscResources.DownloadItemOpenFailed, MiscResources.DownloadItemMaybeDeleted);
                 break;
             case DownloadState.Paused:
-                ViewModel.DownloadTask.CancellationHandle.Resume();
+                ViewModel.DownloadTask.TryResume();
                 break;
             default:
                 ThrowHelper.ArgumentOutOfRange(ViewModel.DownloadTask.CurrentState);
@@ -77,15 +74,14 @@ public sealed partial class DownloadItem
         }
     }
 
-    private async void RedownloadItem_OnClicked(object sender, RoutedEventArgs e)
+    private void RedownloadItem_OnClicked(object sender, RoutedEventArgs e)
     {
-        await ViewModel.DownloadTask.ResetAsync();
-        _ = App.AppViewModel.DownloadManager.TryExecuteTaskGroupInline(ViewModel.DownloadTask);
+        ViewModel.DownloadTask.TryReset();
     }
 
     private void CancelDownloadItem_OnClicked(object sender, RoutedEventArgs e)
     {
-        ViewModel.DownloadTask.CancellationHandle.Cancel();
+        ViewModel.DownloadTask.Cancel();
     }
 
     private async void OpenDownloadLocationItem_OnClicked(object sender, RoutedEventArgs e)

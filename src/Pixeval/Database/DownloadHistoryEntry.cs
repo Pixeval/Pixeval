@@ -51,7 +51,7 @@ public partial class DownloadHistoryEntry
     /// 当是一个文件时必须是一个有效的地址（不能是token&lt;...&gt;）<br/>
     /// 当是多个文件时，文件名可以包含token&lt;...&gt;，但其文件夹路径不能包含token&lt;...&gt;
     /// </summary>
-    public string Destination { get; } = null!;
+    public string Destination { get; private set; } = null!;
 
     public DownloadItemType Type { get; set; }
 

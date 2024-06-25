@@ -23,11 +23,11 @@ using System.Buffers;
 using System.IO;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.IO;
 using Pixeval.AppManagement;
+using Pixeval.Controls.Windowing;
 using Pixeval.Utilities;
 using Pixeval.Utilities.Threading;
 
@@ -77,7 +77,7 @@ public static partial class IoHelper
     public static async Task<Result<Stream>> DownloadMemoryStreamAsync(
         this HttpClient httpClient,
         string url,
-        CancellationToken cancellationToken,
+        CancellationToken cancellationToken = default,
         IProgress<double>? progress = null,
         long startPosition = 0,
         int bufferSize = 4096)
@@ -95,7 +95,7 @@ public static partial class IoHelper
             return Result<Stream>.AsSuccess(File.OpenRead(AppInfo.ApplicationUriToPath(uri)));
         }
         var stream = _recyclableMemoryStreamManager.GetStream();
-        var result = await httpClient.DownloadStreamAsync(stream, uri, cancellationToken, progress, bufferSize, startPosition);
+        var result = await httpClient.DownloadStreamAsync(stream, uri, cancellationToken, progress, startPosition, bufferSize);
         if (result is null)
         {
             stream.Position = 0;
@@ -117,10 +117,10 @@ public static partial class IoHelper
         this HttpClient httpClient,
         Stream destination,
         Uri uri,
-        CancellationToken cancellationToken,
+        CancellationToken cancellationToken = default,
         IProgress<double>? progress = null,
         long startPosition = 0,
-        int bufferSize = 4096)
+        int bufferSize = 1 << 15)
     {
         try
         {
@@ -143,7 +143,7 @@ public static partial class IoHelper
                     break;
                 case HttpStatusCode.PartialContent:
                     destination.Position = response.Content.Headers.ContentRange?.From ?? startPosition;
-                    responseLength = response.Content.Headers.ContentRange?.Length ?? response.Content.Headers.ContentLength;
+                    responseLength = response.Content.Headers.ContentRange?.Length ?? response.Content.Headers.ContentLength + destination.Position;
                     break;
                 case HttpStatusCode.RequestedRangeNotSatisfiable:
                     return new ArgumentOutOfRangeException(nameof(startPosition), "Too large");
@@ -156,15 +156,20 @@ public static partial class IoHelper
             var buffer = ArrayPool<byte>.Shared.Rent(bufferSize);
             try
             {
-                int bytesRead, totalRead = 0;
+                var bytesRead = 0;
+                var totalRead = destination.Position;
                 while ((bytesRead = await contentStream.ReadAsync(new(buffer), cancellationToken).ConfigureAwait(false)) is not 0)
                 {
                     await destination.WriteAsync(new(buffer, 0, bytesRead), cancellationToken).ConfigureAwait(false);
                     totalRead += bytesRead;
                     // reduce the frequency of the invocation of the callback, otherwise it will draw a severe performance impact
 
-                    if (responseLength is not null && totalRead / (double)responseLength * 100 is var percentage)
-                        progress?.Report(percentage); // percentage, 100 as base
+                    if (progress is not null && responseLength is not null)
+                    {
+                        var percentage = totalRead / (double)responseLength * 100;
+                        _ = WindowFactory.RootWindow.DispatcherQueue.TryEnqueue(() =>
+                            progress.Report(percentage)); // percentage, 100 as base
+                    }
                 }
             }
             finally
@@ -172,7 +177,8 @@ public static partial class IoHelper
                 ArrayPool<byte>.Shared.Return(buffer);
             }
 
-            progress?.Report(100);
+            if (progress is not null)
+                _ = WindowFactory.RootWindow.DispatcherQueue.TryEnqueue(() => progress.Report(100));
             return null;
         }
         catch (Exception e)

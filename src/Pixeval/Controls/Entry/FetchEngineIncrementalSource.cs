@@ -43,7 +43,7 @@ public class FetchEngineIncrementalSource<T, TViewModel>(IAsyncEnumerable<T?> as
 
     private int _yieldedCounter;
 
-    public virtual async Task<IEnumerable<TViewModel>> GetPagedItemsAsync(int pageIndex, int pageSize, CancellationToken cancellationToken = new CancellationToken())
+    public virtual async Task<IEnumerable<TViewModel>> GetPagedItemsAsync(int pageIndex, int pageSize, CancellationToken cancellationToken = default)
     {
         var result = new List<TViewModel>();
         var i = 0;
@@ -73,7 +73,7 @@ public class FetchEngineIncrementalSource<T, TViewModel>(IAsyncEnumerable<T?> as
         return result;
     }
 
-    protected long Identifier(T entity) => entity.Id;
+    protected virtual long Identifier(T entity) => entity.Id;
 
-    protected TViewModel Select(T entity) => TViewModel.CreateInstance(entity);
+    protected virtual TViewModel Select(T entity) => TViewModel.CreateInstance(entity);
 }
