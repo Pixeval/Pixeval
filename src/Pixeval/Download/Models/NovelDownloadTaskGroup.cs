@@ -47,7 +47,7 @@ public class NovelDownloadTaskGroup : DownloadTaskGroup
     /// 小说正文的保存路径
     /// </summary>
     /// <remarks>
-    /// ..\[ID] NovelName.pdf
+    /// ..\[ID] NovelName.pdf<br/>
     /// ..\[ID] NovelName\novel.txt
     /// </remarks>
     private string DocPath { get; }
@@ -121,41 +121,35 @@ public class NovelDownloadTaskGroup : DownloadTaskGroup
 
     protected override async Task AfterAllDownloadAsyncOverride(DownloadTaskGroup sender)
     {
-        string content;
-        switch (App.AppViewModel.AppSettings.NovelDownloadFormat)
+        if (App.AppViewModel.AppSettings.NovelDownloadFormat is NovelDownloadFormat.Pdf)
         {
-            case NovelDownloadFormat.Pdf:
-                var i = 0;
-                foreach (var imageDownloadTask in TasksSet)
-                {
-                    DocumentViewModel.SetStream(i, File.OpenRead(imageDownloadTask.Destination));
-                    ++i;
-                }
-                var document = DocumentViewModel.LoadPdfContent();
-                document.GeneratePdf(DocPath);
-                i = 0;
-                foreach (var imageDownloadTask in TasksSet)
-                {
-                    if (DocumentViewModel.TryGetStream(i) is { } stream)
-                        await stream.DisposeAsync();
-                    imageDownloadTask.Delete();
-                    ++i;
-                }
-                IoHelper.DeleteEmptyFolder(PdfTempFolderPath);
-                return;
-            case NovelDownloadFormat.OriginalTxt:
-                content = NovelContent.Text;
-                break;
-            case NovelDownloadFormat.Html:
-                content = DocumentViewModel.LoadHtmlContent().ToString();
-                break;
-            case NovelDownloadFormat.Md:
-                content = DocumentViewModel.LoadMdContent().ToString();
-                break;
-            default:
-                ThrowHelper.ArgumentOutOfRange(App.AppViewModel.AppSettings.NovelDownloadFormat);
-                return;
+            var i = 0;
+            foreach (var imageDownloadTask in TasksSet)
+            {
+                DocumentViewModel.SetStream(i, File.OpenRead(imageDownloadTask.Destination));
+                ++i;
+            }
+            var document = DocumentViewModel.LoadPdfContent();
+            document.GeneratePdf(DocPath);
+            i = 0;
+            foreach (var imageDownloadTask in TasksSet)
+            {
+                if (DocumentViewModel.TryGetStream(i) is { } stream)
+                    await stream.DisposeAsync();
+                imageDownloadTask.Delete();
+                ++i;
+            }
+            IoHelper.DeleteEmptyFolder(PdfTempFolderPath);
+            return;
         }
+
+        var content = App.AppViewModel.AppSettings.NovelDownloadFormat switch
+        {
+            NovelDownloadFormat.OriginalTxt => NovelContent.Text,
+            NovelDownloadFormat.Html => DocumentViewModel.LoadHtmlContent().ToString(),
+            NovelDownloadFormat.Md => DocumentViewModel.LoadMdContent().ToString(),
+            _ => ThrowHelper.ArgumentOutOfRange<NovelDownloadFormat, string>(App.AppViewModel.AppSettings.NovelDownloadFormat)
+        };
 
         await File.WriteAllTextAsync(DocPath, content);
         if (App.AppViewModel.AppSettings.IllustrationDownloadFormat is IllustrationDownloadFormat.Original)
@@ -173,17 +167,8 @@ public class NovelDownloadTaskGroup : DownloadTaskGroup
     {
         foreach (var task in TasksSet)
             task.Delete();
-        if (DocPath.EndsWith(".pdf"))
-        {
-            IoHelper.DeleteEmptyFolder(PdfTempFolderPath);
-            if (File.Exists(DocPath))
-                File.Delete(DocPath);
-        }
-        else
-        {
-            if (File.Exists(DocPath))
-                File.Delete(DocPath);
-            IoHelper.DeleteEmptyFolder(Path.GetDirectoryName(DocPath));
-        }
+        if (File.Exists(DocPath))
+            File.Delete(DocPath);
+        IoHelper.DeleteEmptyFolder(DocPath.EndsWith(".pdf") ? PdfTempFolderPath : Path.GetDirectoryName(DocPath));
     }
 }

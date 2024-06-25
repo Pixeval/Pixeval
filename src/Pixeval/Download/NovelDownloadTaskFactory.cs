@@ -38,14 +38,8 @@ public class NovelDownloadTaskFactory : IDownloadTaskFactory<NovelItemViewModel,
         var manager = App.AppViewModel.AppServiceProvider.GetRequiredService<DownloadHistoryPersistentManager>();
         var path = IoHelper.NormalizePath(PathParser.Reduce(rawPath, context));
         path += "\\" + IoHelper.GetIllustrationExtension();
-        if (manager.Collection.Exists(entry => entry.Destination == path))
-        {
-            // delete the original entry
-            _ = manager.Delete(entry => entry.Destination == path);
-        }
-
+        _ = manager.TryDelete(entry => entry.Destination == path);
         var task = new NovelDownloadTaskGroup(context.Entry, path);
-
         manager.Insert(task.DatabaseEntry);
         return task;
     }
@@ -59,12 +53,10 @@ public class NovelDownloadTaskFactory : IDownloadTaskFactory<NovelItemViewModel,
         // xxx\novel.txt\.png
         // xxx\novel.md\<ext>
         path += "\\" + IoHelper.GetIllustrationExtension();
-        if (manager.Collection.Exists(entry => entry.Destination == path))
-        {
-            // delete the original entry
-            _ = manager.Delete(entry => entry.Destination == path);
-        }
+        _ = manager.TryDelete(entry => entry.Destination == path);
         var viewModel = (DocumentViewerViewModel)param;
-        return new NovelDownloadTaskGroup(context.Entry, viewModel.NovelContent, viewModel, path);
+        var task = new NovelDownloadTaskGroup(context.Entry, viewModel.NovelContent, viewModel, path);
+        manager.Insert(task.DatabaseEntry);
+        return task;
     }
 }

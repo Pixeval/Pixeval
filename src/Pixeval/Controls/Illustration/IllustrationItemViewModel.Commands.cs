@@ -99,7 +99,7 @@ public partial class IllustrationItemViewModel
     }
 
     /// <summary>
-    /// <see cref="IllustrationDownloadTaskFactory"/>
+    /// 
     /// </summary>
     /// <param name="hWnd">承载提示<see cref="TeachingTip"/>的控件，为<see langword="null"/>则不显示</param>
     /// <param name="getImageStream">获取原图的<see cref="Stream"/>，为<see langword="null"/>则创建新的下载任务</param>
@@ -112,7 +112,7 @@ public partial class IllustrationItemViewModel
             ib.Title = EntryItemResources.ImageProcessing;
 
         var source = getImageStream?.Invoke(true);
-        var factory = App.AppViewModel.AppServiceProvider.GetRequiredService<IDownloadTaskFactory<IllustrationItemViewModel, IImageDownloadTaskGroup>>();
+        var factory = App.AppViewModel.AppServiceProvider.GetRequiredService<IllustrationDownloadTaskFactory>();
         if (source is null)
         {
             var task = factory.Create(this, path);

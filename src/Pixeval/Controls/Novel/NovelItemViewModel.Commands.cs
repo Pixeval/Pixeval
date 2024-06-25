@@ -100,7 +100,7 @@ public partial class NovelItemViewModel
     {
         var ib = hWnd?.InfoGrowlReturn(EntryItemResources.NovelContentFetching);
 
-        var factory = App.AppViewModel.AppServiceProvider.GetRequiredService<IDownloadTaskFactory<NovelItemViewModel, NovelDownloadTaskGroup>>();
+        var factory = App.AppViewModel.AppServiceProvider.GetRequiredService<NovelDownloadTaskFactory>();
         if (source is null)
         {
             var task = factory.Create(this, path);

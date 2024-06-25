@@ -30,7 +30,7 @@ namespace Pixeval.Controls;
 public class FetchEngineIncrementalSource<T, TViewModel>(IAsyncEnumerable<T?> asyncEnumerator, int limit = -1)
     : IIncrementalSource<TViewModel>, IIncrementalSourceFactory<T, FetchEngineIncrementalSource<T, TViewModel>>
     where T : IIdEntry
-    where TViewModel : IViewModelFactory<T, TViewModel>
+    where TViewModel : IFactory<T, TViewModel>
 {
     public static FetchEngineIncrementalSource<T, TViewModel> CreateInstance(IFetchEngine<T> fetchEngine, int limit = -1) => new(fetchEngine, limit);
 

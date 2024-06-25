@@ -30,7 +30,7 @@ namespace Pixeval.Controls;
 
 public partial class SimpleViewDataProvider<T, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] TViewModel> : ObservableObject, IDataProvider<T, TViewModel>
     where T : class, IIdEntry
-    where TViewModel : class, IViewModelFactory<T, TViewModel>, IDisposable
+    where TViewModel : class, IFactory<T, TViewModel>, IDisposable
 {
     private IFetchEngine<T>? _fetchEngine;
 

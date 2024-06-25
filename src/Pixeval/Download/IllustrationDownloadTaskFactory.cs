@@ -38,11 +38,7 @@ public class IllustrationDownloadTaskFactory : IDownloadTaskFactory<Illustration
     {
         var manager = App.AppViewModel.AppServiceProvider.GetRequiredService<DownloadHistoryPersistentManager>();
         var path = IoHelper.NormalizePath(PathParser.Reduce(rawPath, context));
-        if (manager.Collection.Exists(entry => entry.Destination == path))
-        {
-            // delete the original entry
-            _ = manager.Delete(entry => entry.Destination == path);
-        }
+        _ = manager.TryDelete(entry => entry.Destination == path);
 
         var task = context switch
         {
@@ -59,29 +55,32 @@ public class IllustrationDownloadTaskFactory : IDownloadTaskFactory<Illustration
     {
         var manager = App.AppViewModel.AppServiceProvider.GetRequiredService<DownloadHistoryPersistentManager>();
         var path = IoHelper.NormalizePath(PathParser.Reduce(rawPath, context));
-        if (manager.Collection.Exists(entry => entry.Destination == path))
-        {
-            // delete the original entry
-            _ = manager.Delete(entry => entry.Destination == path);
-        }
+        _ = manager.TryDelete(entry => entry.Destination == path);
 
+        IImageDownloadTaskGroup task;
         switch (context)
         {
             case { IsUgoira: true }:
             {
                 var (streams, metadata) = ((IReadOnlyList<Stream>, UgoiraMetadataResponse))param;
-                return new UgoiraDownloadTaskGroup(context.Entry, metadata, path, streams);
+                task = new UgoiraDownloadTaskGroup(context.Entry, metadata, path, streams);
+                break;
             }
             case { IsManga: true, MangaIndex: -1 }: // 下载一篇漫画（未使用的分支）
             {
                 var streams = (IReadOnlyList<Stream>)param;
-                return new MangaDownloadTaskGroup(context.Entry, path, streams);
+                task = new MangaDownloadTaskGroup(context.Entry, path, streams);
+                break;
             }
             default:
             {
                 var stream = (IReadOnlyList<Stream>)param;
-                return new SingleImageDownloadTaskGroup(context.Entry, path, stream[0]);
+                task = new SingleImageDownloadTaskGroup(context.Entry, path, stream[0]);
+                break;
             }
         }
+
+        manager.Insert(task.DatabaseEntry);
+        return task;
     }
 }

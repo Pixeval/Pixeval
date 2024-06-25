@@ -71,8 +71,8 @@ public partial class AppViewModel(App app) : IDisposable
     {
         var fileLogger = new FileLogger(ApplicationData.Current.LocalFolder.Path + @"\Logs\");
         return new ServiceCollection()
-            .AddSingleton<IDownloadTaskFactory<IllustrationItemViewModel, IImageDownloadTaskGroup>, IllustrationDownloadTaskFactory>()
-            .AddSingleton<IDownloadTaskFactory<NovelItemViewModel, NovelDownloadTaskGroup>, NovelDownloadTaskFactory>()
+            .AddSingleton<IllustrationDownloadTaskFactory>()
+            .AddSingleton<NovelDownloadTaskFactory>()
             .AddSingleton(new LiteDatabase(AppInfo.DatabaseFilePath))
             .AddSingleton(provider => new DownloadHistoryPersistentManager(provider.GetRequiredService<LiteDatabase>(), App.AppViewModel.AppSettings.MaximumDownloadHistoryRecords))
             .AddSingleton(provider => new SearchHistoryPersistentManager(provider.GetRequiredService<LiteDatabase>(), App.AppViewModel.AppSettings.MaximumSearchHistoryRecords))

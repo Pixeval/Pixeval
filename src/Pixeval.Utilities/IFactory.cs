@@ -22,7 +22,7 @@
 
 namespace Pixeval.Controls;
 
-public interface IViewModelFactory<in T, out TSelf>
+public interface IFactory<in T, out TSelf>
 {
     static abstract TSelf CreateInstance(T entry);
 }
