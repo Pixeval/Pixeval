@@ -142,9 +142,9 @@ public static partial class AppInfo
                      entry.State == DownloadState.Queued ||
                      entry.State == DownloadState.Paused);
 
-        foreach (var observableDownloadTask in downloadHistoryManager.Enumerate())
+        foreach (var downloadTaskGroup in downloadHistoryManager.Enumerate())
         {
-            App.AppViewModel.DownloadManager.QueueTask(observableDownloadTask);
+            App.AppViewModel.DownloadManager.QueueTask(downloadTaskGroup);
         }
     }
 

@@ -27,8 +27,6 @@ using System.Threading.Channels;
 using System.Threading.Tasks;
 using Pixeval.CoreApi.Net;
 using Pixeval.Download.Models;
-using Pixeval.Util.IO;
-using Pixeval.Util.Threading;
 using Pixeval.Utilities.Threading;
 using WinUI3Utilities;
 
@@ -39,7 +37,7 @@ public partial class DownloadManager : IDisposable
     /// <summary>
     /// 正在下载的任务队列，数量不超过<see cref="ConcurrencyDegree"/>
     /// </summary>
-    private readonly Channel<ImageDownloadTask> _downloadTaskChannel = Channel.CreateUnbounded<ImageDownloadTask>();
+    private readonly Channel<IDownloadTaskBase> _downloadTaskChannel = Channel.CreateUnbounded<IDownloadTaskBase>();
 
     /// <summary>
     /// 使用<see cref="MakoApiKind.ImageApi"/>的<see cref="HttpClient"/>
@@ -62,12 +60,12 @@ public partial class DownloadManager : IDisposable
     /// <summary>
     /// 与<see cref="QueuedTasks"/>内容一样，但是用于快速查询
     /// </summary>
-    private readonly HashSet<DownloadTaskGroup> _taskQuerySet = [];
+    private readonly HashSet<IDownloadTaskGroup> _taskQuerySet = [];
 
     /// <summary>
     /// 所有的下载任务
     /// </summary>
-    public ObservableCollection<DownloadTaskGroup> QueuedTasks { get; } = [];
+    public ObservableCollection<IDownloadTaskGroup> QueuedTasks { get; } = [];
 
     /// <summary>
     /// 同时下载的任务数量
@@ -95,14 +93,13 @@ public partial class DownloadManager : IDisposable
     /// <remarks>
     /// intrinsic download task are not counted
     /// </remarks>
-    public void QueueTask(DownloadTaskGroup task)
+    public void QueueTask(IDownloadTaskGroup task)
     {
         if (!_taskQuerySet.Add(task))
             return;
 
         QueuedTasks.Insert(0, task);
-        if (task.CurrentState is DownloadState.Queued)
-            QueueDownloadTaskGroup(task);
+        _ = _downloadTaskChannel.Writer.TryWrite(task);
     }
 
     /// <summary>
@@ -111,15 +108,35 @@ public partial class DownloadManager : IDisposable
     private async void PollTask()
     {
         while (await _downloadTaskChannel.Reader.WaitToReadAsync())
-            while (await _throttle && _downloadTaskChannel.Reader.TryRead(out var task))
-                _ = DownloadAsync(task);
+            while (await _throttle && _downloadTaskChannel.Reader.TryRead(out var queuedTask))
+                switch (queuedTask)
+                {
+                    case ImageDownloadTask imageTask:
+                        imageTask.DownloadTryResume += t => _downloadTaskChannel.Writer.TryWrite(t);
+                        imageTask.DownloadTryReset += t => _downloadTaskChannel.Writer.TryWrite(t);
+                        _ = DownloadAsync(imageTask);
+                        break;
+                    case IDownloadTaskGroup taskGroup:
+                        await taskGroup.InitializeTaskGroupAsync();
+                        foreach (var subTask in taskGroup)
+                        {
+                            subTask.DownloadTryResume += t => _downloadTaskChannel.Writer.TryWrite(t);
+                            subTask.DownloadTryReset += t => _downloadTaskChannel.Writer.TryWrite(t);
+                            if (subTask.CurrentState is DownloadState.Queued)
+                            {
+                                _ = DownloadAsync(subTask);
+                                _ = await _throttle;
+                            }
+                        }
+                        break;
+                }
     }
 
     /// <summary>
     /// 清除指定任务
     /// </summary>
     /// <param name="task"></param>
-    public void RemoveTask(DownloadTaskGroup task)
+    public void RemoveTask(IDownloadTaskGroup task)
     {
         _ = _taskQuerySet.Remove(task);
         _ = QueuedTasks.Remove(task);
@@ -143,21 +160,15 @@ public partial class DownloadManager : IDisposable
     /// <remarks>
     /// Execute the task only if it's already queued
     /// </remarks>
-    public bool TryExecuteTaskGroupInline(DownloadTaskGroup task)
+    public bool TryExecuteTaskGroupInline(IDownloadTaskGroup task)
     {
         if (QueuedTasks.Contains(task) && task.CurrentState is DownloadState.Queued)
         {
-            QueueDownloadTaskGroup(task);
+            _ = _downloadTaskChannel.Writer.TryWrite(task);
             return true;
         }
 
         return false;
-    }
-
-    private void QueueDownloadTaskGroup(DownloadTaskGroup taskGroup)
-    {
-        foreach (var task in taskGroup)
-            _ = _downloadTaskChannel.Writer.TryWrite(task);
     }
 
     private async Task DownloadAsync(ImageDownloadTask task)
@@ -183,16 +194,12 @@ public partial class DownloadManager : IDisposable
     {
         try
         {
-            task.DownloadTryResume += t => _downloadTaskChannel.Writer.TryWrite(t);
-            task.DownloadTryReset += t => _downloadTaskChannel.Writer.TryWrite(t);
-            // task.DownloadStoppedAsync += async _ => await DecrementCounterAsync();
             await (task.CurrentState switch
             {
                 DownloadState.Queued => task.StartAsync(_httpClient, suppressDownloadStartedAsync: true),
                 DownloadState.Paused => task.ResumeAsync(_httpClient),
                 _ => ThrowHelper.ArgumentOutOfRange<DownloadState, Task>(task.CurrentState)
             });
-            await task.StartAsync(_httpClient);
         }
         catch
         {

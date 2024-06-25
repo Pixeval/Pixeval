@@ -18,25 +18,23 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using System.Collections.Generic;
 using System.IO;
-using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Pixeval.Controls;
 using Pixeval.CoreApi.Net.Response;
-using Pixeval.Database;
 using Pixeval.Database.Managers;
 using Pixeval.Download.MacroParser;
 using Pixeval.Download.Models;
 using Pixeval.Util.IO;
-using Pixeval.Utilities;
 
 namespace Pixeval.Download;
 
-public class IllustrationDownloadTaskFactory : IDownloadTaskFactory<IllustrationItemViewModel, IllustrationDownloadTask>
+public class IllustrationDownloadTaskFactory : IDownloadTaskFactory<IllustrationItemViewModel, IImageDownloadTaskGroup>
 {
     public IMetaPathParser<IllustrationItemViewModel> PathParser { get; } = new IllustrationMetaPathParser();
 
-    public async Task<IllustrationDownloadTask> CreateAsync(IllustrationItemViewModel context, string rawPath)
+    public IImageDownloadTaskGroup Create(IllustrationItemViewModel context, string rawPath)
     {
         var manager = App.AppViewModel.AppServiceProvider.GetRequiredService<DownloadHistoryPersistentManager>();
         var path = IoHelper.NormalizePath(PathParser.Reduce(rawPath, context));
@@ -46,41 +44,18 @@ public class IllustrationDownloadTaskFactory : IDownloadTaskFactory<Illustration
             _ = manager.Delete(entry => entry.Destination == path);
         }
 
-        var task = await Functions.Block(async () =>
+        var task = context switch
         {
-            if (context.IsUgoira)
-            {
-                var metadata = await context.UgoiraMetadata.ValueAsync;
-                var downloadHistoryEntry = new DownloadHistoryEntry(
-                    path,
-                    DownloadItemType.Ugoira,
-                    context.Entry);
-                return new UgoiraDownloadTask(downloadHistoryEntry, context, metadata);
-            }
-
-            if (context.MangaIndex is -1 && context.IsManga)
-            {
-                var downloadHistoryEntry = new DownloadHistoryEntry(
-                    path,
-                    DownloadItemType.Manga,
-                    context.Entry);
-                return new MangaDownloadTask(downloadHistoryEntry, context);
-            }
-            else
-            {
-                var downloadHistoryEntry = new DownloadHistoryEntry(
-                    path,
-                    DownloadItemType.Illustration,
-                    context.Entry);
-                return new IllustrationDownloadTask(downloadHistoryEntry, context);
-            }
-        });
+            { IsUgoira: true } => new UgoiraDownloadTaskGroup(context.Entry, path),
+            { IsManga: true, MangaIndex: -1 } => new MangaDownloadTaskGroup(context.Entry, path),
+            _ => (IImageDownloadTaskGroup)new SingleImageDownloadTaskGroup(context.Entry, path)
+        };
 
         manager.Insert(task.DatabaseEntry);
         return task;
     }
 
-    public IllustrationDownloadTask CreateIntrinsic(IllustrationItemViewModel context, object param, string rawPath)
+    public IImageDownloadTaskGroup CreateIntrinsic(IllustrationItemViewModel context, object param, string rawPath)
     {
         var manager = App.AppViewModel.AppServiceProvider.GetRequiredService<DownloadHistoryPersistentManager>();
         var path = IoHelper.NormalizePath(PathParser.Reduce(rawPath, context));
@@ -94,21 +69,18 @@ public class IllustrationDownloadTaskFactory : IDownloadTaskFactory<Illustration
         {
             case { IsUgoira: true }:
             {
-                var (stream, metadata) = ((Stream, UgoiraMetadataResponse))param;
-                var entry = new DownloadHistoryEntry(path, DownloadItemType.Ugoira, context.Entry);
-                return new IntrinsicUgoiraDownloadTask(entry, context, metadata, stream);
+                var (streams, metadata) = ((IReadOnlyList<Stream>, UgoiraMetadataResponse))param;
+                return new UgoiraDownloadTaskGroup(context.Entry, metadata, path, streams);
             }
             case { IsManga: true, MangaIndex: -1 }: // 下载一篇漫画（未使用的分支）
             {
-                var stream = (Stream)param;
-                var entry = new DownloadHistoryEntry(path, DownloadItemType.Manga, context.Entry);
-                return new IntrinsicMangaDownloadTask(entry, context, [stream]);
+                var streams = (IReadOnlyList<Stream>)param;
+                return new MangaDownloadTaskGroup(context.Entry, path, streams);
             }
             default:
             {
-                var stream = (Stream)param;
-                var entry = new DownloadHistoryEntry(path, DownloadItemType.Illustration, context.Entry);
-                return new IntrinsicIllustrationDownloadTask(entry, context, stream);
+                var stream = (IReadOnlyList<Stream>)param;
+                return new SingleImageDownloadTaskGroup(context.Entry, path, stream[0]);
             }
         }
     }

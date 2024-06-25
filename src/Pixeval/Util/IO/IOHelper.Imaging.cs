@@ -44,7 +44,6 @@ using SixLabors.ImageSharp.Formats.Webp;
 using SixLabors.ImageSharp.PixelFormats;
 using WinUI3Utilities;
 using QRCoder;
-using Pixeval.Controls;
 
 namespace Pixeval.Util.IO;
 

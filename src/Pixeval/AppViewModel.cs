@@ -71,8 +71,8 @@ public partial class AppViewModel(App app) : IDisposable
     {
         var fileLogger = new FileLogger(ApplicationData.Current.LocalFolder.Path + @"\Logs\");
         return new ServiceCollection()
-            .AddSingleton<IDownloadTaskFactory<IllustrationItemViewModel, IllustrationDownloadTask>, IllustrationDownloadTaskFactory>()
-            .AddSingleton<IDownloadTaskFactory<NovelItemViewModel, NovelDownloadTask>, NovelDownloadTaskFactory>()
+            .AddSingleton<IDownloadTaskFactory<IllustrationItemViewModel, IImageDownloadTaskGroup>, IllustrationDownloadTaskFactory>()
+            .AddSingleton<IDownloadTaskFactory<NovelItemViewModel, NovelDownloadTaskGroup>, NovelDownloadTaskFactory>()
             .AddSingleton(new LiteDatabase(AppInfo.DatabaseFilePath))
             .AddSingleton(provider => new DownloadHistoryPersistentManager(provider.GetRequiredService<LiteDatabase>(), App.AppViewModel.AppSettings.MaximumDownloadHistoryRecords))
             .AddSingleton(provider => new SearchHistoryPersistentManager(provider.GetRequiredService<LiteDatabase>(), App.AppViewModel.AppSettings.MaximumSearchHistoryRecords))
@@ -109,6 +109,7 @@ public partial class AppViewModel(App app) : IDisposable
 
     public void Dispose()
     {
+        AppServiceProvider?.GetRequiredService<LiteDatabase>().Dispose();
         AppServiceProvider?.Dispose();
         DownloadManager?.Dispose();
         MakoClient?.Dispose();

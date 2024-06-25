@@ -29,6 +29,7 @@ using Pixeval.Download;
 using Pixeval.Download.Models;
 using Pixeval.Utilities;
 using WinUI3Utilities;
+using DownloadItemDataProvider = Pixeval.Controls.SimpleViewDataProvider<Pixeval.Download.Models.IDownloadTaskGroup, Pixeval.Controls.DownloadItemViewModel>;
 
 namespace Pixeval.Controls;
 
@@ -50,9 +51,9 @@ public partial class DownloadViewViewModel : ObservableObject, IDisposable
 
     private DownloadItemViewModel[] _selectedEntries = [];
 
-    public DownloadViewViewModel(IEnumerable<DownloadTaskBase> source)
+    public DownloadViewViewModel(IEnumerable<IDownloadTaskGroup> source)
     {
-        DataProvider.To<DownloadItemDataProvider>().ResetEngine(source);
+        DataProvider.ResetEngine(App.AppViewModel.MakoClient.Computed(source.ToAsyncEnumerable()));
         _selectionLabel = DownloadPageResources.CancelSelectionButtonDefaultLabel;
         DataProvider.View.CollectionChanged += (_, _) => OnPropertyChanged(nameof(HasNoItem));
     }
@@ -80,20 +81,20 @@ public partial class DownloadViewViewModel : ObservableObject, IDisposable
 
     public void PauseSelectedItems()
     {
-        foreach (var downloadListEntryViewModel in SelectedEntries.Where(t => t.DownloadTask.CurrentState is DownloadState.Running))
-            downloadListEntryViewModel.DownloadTask.CancellationHandle.Pause();
+        foreach (var downloadListEntryViewModel in SelectedEntries)
+            downloadListEntryViewModel.DownloadTask.Pause();
     }
 
     public void ResumeSelectedItems()
     {
-        foreach (var downloadListEntryViewModel in SelectedEntries.Where(t => t.DownloadTask.CurrentState is DownloadState.Paused))
-            downloadListEntryViewModel.DownloadTask.CancellationHandle.Resume();
+        foreach (var downloadListEntryViewModel in SelectedEntries)
+            downloadListEntryViewModel.DownloadTask.TryResume();
     }
 
     public void CancelSelectedItems()
     {
-        foreach (var downloadListEntryViewModel in SelectedEntries.Where(t => t.DownloadTask.CurrentState is DownloadState.Queued or DownloadState.Running or DownloadState.Paused))
-            downloadListEntryViewModel.DownloadTask.CancellationHandle.Cancel();
+        foreach (var downloadListEntryViewModel in SelectedEntries)
+            downloadListEntryViewModel.DownloadTask.Cancel();
     }
 
     public void RemoveSelectedItems()
@@ -121,7 +122,7 @@ public partial class DownloadViewViewModel : ObservableObject, IDisposable
 
         bool Query(DownloadItemViewModel viewModel) =>
             viewModel.Title.Contains(key) ||
-            (viewModel.DownloadTask is { } task ? task.ViewModel.Id : viewModel.DownloadTask.Id).ToString()
+            (viewModel.DownloadTask is { } task ? task.Id : viewModel.DownloadTask.Id).ToString()
             .Contains(key);
     }
 

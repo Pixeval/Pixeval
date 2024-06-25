@@ -23,12 +23,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using LiteDB;
-using Pixeval.Download;
 using Pixeval.Download.Models;
 
 namespace Pixeval.Database.Managers;
 
-public class DownloadHistoryPersistentManager(ILiteDatabase collection, int maximumRecords) : IPersistentManager<DownloadHistoryEntry, DownloadTaskBase>
+public class DownloadHistoryPersistentManager(ILiteDatabase collection, int maximumRecords) : IPersistentManager<DownloadHistoryEntry, IDownloadTaskGroup>
 {
     public ILiteCollection<DownloadHistoryEntry> Collection { get; init; } = collection.GetCollection<DownloadHistoryEntry>(nameof(DownloadHistoryEntry));
 
@@ -44,9 +43,9 @@ public class DownloadHistoryPersistentManager(ILiteDatabase collection, int maxi
         _ = Collection.Insert(t);
     }
 
-    public IEnumerable<DownloadTaskBase> Query(Expression<Func<DownloadHistoryEntry, bool>> predicate)
+    public IEnumerable<IDownloadTaskGroup> Query(Expression<Func<DownloadHistoryEntry, bool>> predicate)
     {
-        return Collection.Find(predicate).Select(ToObservableDownloadTask);
+        return Collection.Find(predicate).Select(ToDownloadTaskGroup);
     }
 
     public void Update(DownloadHistoryEntry entry)
@@ -54,9 +53,9 @@ public class DownloadHistoryPersistentManager(ILiteDatabase collection, int maxi
         Collection.Update(entry);
     }
 
-    public IEnumerable<DownloadTaskBase> Select(int count)
+    public IEnumerable<IDownloadTaskGroup> Select(int count)
     {
-        return Collection.Find(_ => true, 0, count).Select(ToObservableDownloadTask);
+        return Collection.Find(_ => true, 0, count).Select(ToDownloadTaskGroup);
     }
 
     /// <summary>
@@ -73,18 +72,18 @@ public class DownloadHistoryPersistentManager(ILiteDatabase collection, int maxi
     /// 遍历
     /// </summary>
     /// <returns></returns>
-    public IEnumerable<DownloadTaskBase> Enumerate()
+    public IEnumerable<IDownloadTaskGroup> Enumerate()
     {
-        return Collection.FindAll().Select(ToObservableDownloadTask);
+        return Collection.FindAll().Select(ToDownloadTaskGroup);
     }
 
     /// <summary>
     /// 反转
     /// </summary>
     /// <returns></returns>
-    public IEnumerable<DownloadTaskBase> Reverse()
+    public IEnumerable<IDownloadTaskGroup> Reverse()
     {
-        return Collection.Find(LiteDB.Query.All(LiteDB.Query.Descending)).Select(ToObservableDownloadTask);
+        return Collection.Find(LiteDB.Query.All(LiteDB.Query.Descending)).Select(ToDownloadTaskGroup);
     }
 
     /// <summary>
@@ -109,14 +108,14 @@ public class DownloadHistoryPersistentManager(ILiteDatabase collection, int maxi
         App.AppViewModel.DownloadManager.ClearTasks();
     }
 
-    private static DownloadTaskBase ToObservableDownloadTask(DownloadHistoryEntry entry)
+    private static IDownloadTaskGroup ToDownloadTaskGroup(DownloadHistoryEntry entry)
     {
         return entry.Type switch
         {
-            DownloadItemType.Novel => new LazyInitializedNovelDownloadTask(entry) { CurrentState = DownloadState.Completed },
-            DownloadItemType.Ugoira => new LazyInitializedUgoiraDownloadTask(entry) { CurrentState = DownloadState.Completed },
-            DownloadItemType.Manga => new LazyInitializedMangaDownloadTask(entry) { CurrentState = DownloadState.Completed },
-            _ => new LazyInitializedIllustrationDownloadTask(entry) { CurrentState = DownloadState.Completed }
+            DownloadItemType.Novel => new NovelDownloadTaskGroup(entry),
+            DownloadItemType.Ugoira => new UgoiraDownloadTaskGroup(entry),
+            DownloadItemType.Manga => new MangaDownloadTaskGroup(entry),
+            _ => new SingleImageDownloadTaskGroup(entry)
         };
     }
 }
