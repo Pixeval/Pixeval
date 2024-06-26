@@ -273,7 +273,7 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
         {
             var metadata = null as UgoiraMetadataResponse;
             if (IllustrationViewModel.IsUgoira)
-                metadata = await IllustrationViewModel.UgoiraMetadata.ValueAsync;
+                metadata = await IllustrationViewModel.UgoiraMetadata;
 
             var streams = await GetStreamsAsync(metadata?.LargeUrl);
             if (streams is not null)

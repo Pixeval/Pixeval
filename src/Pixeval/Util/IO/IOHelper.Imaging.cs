@@ -69,7 +69,7 @@ public static partial class IoHelper
         }
         catch
         {
-            return await AppInfo.ImageNotAvailable.ValueAsync;
+            return await AppInfo.ImageNotAvailable;
         }
         finally
         {

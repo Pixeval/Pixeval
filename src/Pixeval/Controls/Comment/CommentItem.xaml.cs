@@ -50,7 +50,7 @@ public sealed partial class CommentItem
             var result = await App.AppViewModel.MakoClient.DownloadSoftwareBitmapSourceAsync(viewModel.StampSource);
             block.StickerImageContent.Source = result is Result<SoftwareBitmapSource>.Success { Value: var avatar }
                 ? avatar
-                : await AppInfo.ImageNotAvailable.ValueAsync;
+                : await AppInfo.ImageNotAvailable;
         }
         else
         {
