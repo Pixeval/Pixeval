@@ -20,6 +20,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -27,6 +28,7 @@ using CommunityToolkit.WinUI.Collections;
 using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Model;
 using Pixeval.Utilities;
+using WinUI3Utilities;
 
 namespace Pixeval.Controls;
 
@@ -97,6 +99,8 @@ public abstract partial class SortableEntryViewViewModel<T, [DynamicallyAccessed
     {
         DataProvider.ResetEngine((IFetchEngine<T>?)newEngine, itemsPerPage, itemLimit);
     }
+
+    public void ResetSource(ObservableCollection<IWorkEntry>? source) => ThrowHelper.NotSupported();
 
     protected bool DefaultFilter(IWorkViewModel entry)
     {

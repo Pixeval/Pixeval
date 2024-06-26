@@ -39,7 +39,7 @@ public class FetchEngineIncrementalSource<T, TViewModel>(IAsyncEnumerable<T?> as
     /// </summary>
     private readonly IAsyncEnumerator<T> _asyncEnumerator = asyncEnumerator?.GetAsyncEnumerator()!;
 
-    private readonly ISet<long> _yieldedItems = new HashSet<long>();
+    private readonly HashSet<long> _yieldedItems = [];
 
     private int _yieldedCounter;
 

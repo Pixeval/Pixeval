@@ -31,7 +31,7 @@ namespace Pixeval.Database.Managers;
 /// </summary>
 /// <typeparam name="T"></typeparam>
 public abstract class SimplePersistentManager<T>(ILiteDatabase db, int maximumRecords) : IPersistentManager<T, T>
-    where T : new()
+    where T : class, IHistoryEntry, new()
 {
     public ILiteCollection<T> Collection { get; init; } = db.GetCollection<T>(typeof(T).Name);
 
@@ -62,6 +62,17 @@ public abstract class SimplePersistentManager<T>(ILiteDatabase db, int maximumRe
     public IEnumerable<T> Select(int count)
     {
         return Collection.Find(_ => true, 0, count);
+    }
+
+    public T? TryDelete(Expression<Func<T, bool>> predicate)
+    {
+        if (Collection.FindOne(predicate) is { } e)
+        {
+            Collection.Delete(e.HistoryEntryId);
+            return e;
+        }
+
+        return null;
     }
 
     public int Delete(Expression<Func<T, bool>> predicate)

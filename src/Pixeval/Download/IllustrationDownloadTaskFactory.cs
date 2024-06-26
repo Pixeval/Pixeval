@@ -38,7 +38,7 @@ public class IllustrationDownloadTaskFactory : IDownloadTaskFactory<Illustration
     {
         var manager = App.AppViewModel.AppServiceProvider.GetRequiredService<DownloadHistoryPersistentManager>();
         var path = IoHelper.NormalizePath(PathParser.Reduce(rawPath, context));
-        _ = manager.TryDelete(entry => entry.Destination == path);
+        _ = manager.Delete(entry => entry.Destination == path);
 
         var task = context switch
         {
@@ -55,7 +55,7 @@ public class IllustrationDownloadTaskFactory : IDownloadTaskFactory<Illustration
     {
         var manager = App.AppViewModel.AppServiceProvider.GetRequiredService<DownloadHistoryPersistentManager>();
         var path = IoHelper.NormalizePath(PathParser.Reduce(rawPath, context));
-        _ = manager.TryDelete(entry => entry.Destination == path);
+        _ = manager.Delete(entry => entry.Destination == path);
 
         IImageDownloadTaskGroup task;
         switch (context)
