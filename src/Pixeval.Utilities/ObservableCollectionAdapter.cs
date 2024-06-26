@@ -18,11 +18,12 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using Pixeval.Controls;
+using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
+using Pixeval.Controls;
 
 namespace Pixeval.Utilities;
 
@@ -46,7 +47,14 @@ public class ObservableCollectionAdapter<TInput, TOutput> : ObservableCollection
     /// Initializes a ObservableCollectionAdapter with a collection implementing IObservable collection.
     /// </summary>
     /// <param name="sourceCollection"></param>
-    public ObservableCollectionAdapter(ObservableCollection<TInput> sourceCollection) => SourceCollection = sourceCollection;
+    /// <param name="filter"></param>
+    public ObservableCollectionAdapter(ObservableCollection<TInput> sourceCollection, Func<TInput, bool>? filter = null)
+    {
+        _filter = filter;
+        SourceCollection = sourceCollection;
+    }
+
+    private readonly Func<TInput, bool>? _filter;
 
     /// <summary>
     /// A collection that implements IObservableCollection that the Adapter can watch.
@@ -81,23 +89,36 @@ public class ObservableCollectionAdapter<TInput, TOutput> : ObservableCollection
                     return;
                 for (var i = 0; i < args.NewItems.Count; ++i)
                 {
-                    var item = TOutput.CreateInstance((TInput)args.NewItems[i]!);
-                    Insert(args.NewStartingIndex + i, item!);
+                    var input = (TInput)args.NewItems[i]!;
+                    if (_filter?.Invoke(input) is false)
+                        continue;
+                    var item = TOutput.CreateInstance(input);
+                    Insert(args.NewStartingIndex + i, item);
                 }
                 break;
             case NotifyCollectionChangedAction.Remove:
                 if (args.OldItems is null)
                     return;
                 for (var i = 0; i < args.OldItems.Count; ++i)
-                    RemoveAt(args.OldStartingIndex + i);
+                    RemoveAt(args.OldStartingIndex);
                 break;
             case NotifyCollectionChangedAction.Replace:
                 if (args.NewItems is null)
                     return;
+                var removedCount = 0;
                 for (var i = 0; i < args.NewItems.Count; ++i)
                 {
-                    var item = TOutput.CreateInstance((TInput)args.NewItems[i]!);
-                    this[args.OldStartingIndex + i] = item;
+                    var input = (TInput)args.NewItems[i]!;
+                    if (_filter?.Invoke(input) is false)
+                    {
+                        RemoveAt(args.OldStartingIndex + i - removedCount);
+                        ++removedCount;
+                    }
+                    else
+                    {
+                        var item = TOutput.CreateInstance(input);
+                        this[args.OldStartingIndex + i - removedCount] = item;
+                    }
                 }
                 break;
             case NotifyCollectionChangedAction.Move:
@@ -110,6 +131,8 @@ public class ObservableCollectionAdapter<TInput, TOutput> : ObservableCollection
                 Clear();
                 foreach (var element in SourceCollection)
                 {
+                    if (_filter?.Invoke(element) is false)
+                        continue;
                     var item = TOutput.CreateInstance(element);
                     Add(item);
                 }

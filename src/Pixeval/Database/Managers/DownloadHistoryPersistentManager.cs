@@ -73,9 +73,15 @@ public class DownloadHistoryPersistentManager(ILiteDatabase collection, int maxi
     /// </summary>
     /// <param name="predicate"></param>
     /// <returns></returns>
-    public bool TryDelete(Expression<Func<DownloadHistoryEntry, bool>> predicate)
+    public DownloadHistoryEntry? TryDelete(Expression<Func<DownloadHistoryEntry, bool>> predicate)
     {
-        return Collection.FindOne(predicate) is { } e && Collection.Delete(e.DownloadHistoryEntryId);
+        if (Collection.FindOne(predicate) is { } e)
+        {
+            Collection.Delete(e.HistoryEntryId);
+            return e;
+        }
+
+        return null;
     }
 
     /// <summary>

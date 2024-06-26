@@ -56,6 +56,7 @@ public partial class SimpleViewDataProvider<T, [DynamicallyAccessedMembers(Dynam
 
     public void Dispose()
     {
+        GC.SuppressFinalize(this);
         if (Source is { } source)
             foreach (var entry in source)
                 entry.Dispose();

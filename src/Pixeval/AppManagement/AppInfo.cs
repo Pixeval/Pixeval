@@ -20,6 +20,7 @@
 
 using System;
 using System.IO;
+using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Windows.Storage;
@@ -135,17 +136,14 @@ public static partial class AppInfo
 
     public static void RestoreHistories()
     {
-        var downloadHistoryManager = App.AppViewModel.AppServiceProvider.GetRequiredService<DownloadHistoryPersistentManager>();
-        // the HasFlag is not allow in expression tree
-        _ = downloadHistoryManager.Delete(
-            entry => entry.State == DownloadState.Running ||
-                     entry.State == DownloadState.Queued ||
-                     entry.State == DownloadState.Paused);
+        var downloadHistoryPersistentManager = App.AppViewModel.AppServiceProvider.GetRequiredService<DownloadHistoryPersistentManager>();
+        var browseHistoryPersistentManager = App.AppViewModel.AppServiceProvider.GetRequiredService<BrowseHistoryPersistentManager>();
 
-        foreach (var downloadTaskGroup in downloadHistoryManager.Enumerate())
-        {
+        foreach (var downloadTaskGroup in downloadHistoryPersistentManager.Enumerate())
             App.AppViewModel.DownloadManager.QueueTask(downloadTaskGroup);
-        }
+
+        foreach (var browseHistoryEntry in browseHistoryPersistentManager.Enumerate())
+            browseHistoryPersistentManager.ObservableEntries.Insert(0, browseHistoryEntry);
     }
 
     public static void ClearConfig()

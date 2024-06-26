@@ -24,7 +24,7 @@ using Pixeval.Download;
 
 namespace Pixeval.Database;
 
-public partial class DownloadHistoryEntry
+public partial class DownloadHistoryEntry : IHistoryEntry
 {
     public DownloadHistoryEntry(string destination, DownloadItemType type, IWorkEntry entry)
     {
@@ -39,7 +39,7 @@ public partial class DownloadHistoryEntry
     }
 
     [BsonId(true)]
-    public ObjectId? DownloadHistoryEntryId { get; set; }
+    public ObjectId? HistoryEntryId { get; set; }
 
     /// <summary>
     /// 此属性不会变为<see cref="DownloadState.Running"/>和<see cref="DownloadState.Paused"/>（而是由外部ViewModel使用）
