@@ -45,7 +45,7 @@ public partial class IllustrationItemViewModel : WorkEntryViewModel<Illustration
         MangaSaveCommand.CanExecuteRequested += (_, e) => e.CanExecute = isManga;
         MangaSaveAsCommand.CanExecuteRequested += (_, e) => e.CanExecute = isManga;
         var id = illustration.Id;
-        UgoiraMetadata = new(() => App.AppViewModel.MakoClient.GetUgoiraMetadataAsync(id));
+        UgoiraMetadata = App.AppViewModel.MakoClient.GetUgoiraMetadataAsync(id);
     }
 
     /// <summary>
@@ -57,13 +57,13 @@ public partial class IllustrationItemViewModel : WorkEntryViewModel<Illustration
 
     public bool IsUgoira => Entry.IsUgoira;
 
-    public AsyncLazy<UgoiraMetadataResponse> UgoiraMetadata { get; }
+    public Task<UgoiraMetadataResponse> UgoiraMetadata { get; }
 
     public string IllustrationLargeUrl => Entry.ThumbnailUrls.Large;
 
     public string MangaSingleLargeUrl => Entry.MetaPages[MangaIndex is -1 ? 0 : MangaIndex].ImageUrls.Large;
 
-    public async ValueTask<string> UgoiraMediumZipUrlAsync() => (await UgoiraMetadata.ValueAsync).MediumUrl;
+    public async ValueTask<string> UgoiraMediumZipUrlAsync() => (await UgoiraMetadata).MediumUrl;
 
     public string IllustrationOriginalUrl => Entry.OriginalSingleUrl!;
 
@@ -71,9 +71,9 @@ public partial class IllustrationItemViewModel : WorkEntryViewModel<Illustration
 
     public IReadOnlyList<string> MangaOriginalUrls => Entry.MangaOriginalUrls;
 
-    public List<string> UgoiraOriginalUrls => Entry.GetUgoiraOriginalUrls(UgoiraMetadata.Value.FrameCount);
+    public List<string> UgoiraOriginalUrls => Entry.GetUgoiraOriginalUrls(UgoiraMetadata.Result.FrameCount);
 
-    public async ValueTask<List<string>> UgoiraOriginalUrlsAsync() => Entry.GetUgoiraOriginalUrls((await UgoiraMetadata.ValueAsync).FrameCount);
+    public async ValueTask<List<string>> UgoiraOriginalUrlsAsync() => Entry.GetUgoiraOriginalUrls((await UgoiraMetadata).FrameCount);
 
     /// <summary>
     /// 单图和单图漫画的链接

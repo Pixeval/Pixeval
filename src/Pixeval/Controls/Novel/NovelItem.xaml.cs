@@ -27,9 +27,9 @@ public sealed partial class NovelItem
 
     public ulong HWnd => WindowFactory.GetWindowForElement(this).HWnd;
 
-#pragma warning disable CS0067 // Event is never used
+#pragma warning disable CS0067, CS0414 // Event is never used
     public event Func<TeachingTip> RequestTeachingTip = null!;
-#pragma warning restore CS0067 // Event is never used
+#pragma warning restore CS0067, CS0414 // Event is never used
 
     public NovelItem() => InitializeComponent();
 

@@ -154,7 +154,7 @@ public partial class IllustrationItemViewModel
                 ib.Title = EntryItemResources.ImageProcessing;
         if (getImageStream(false) is { } sources)
         {
-            var source = await sources.UgoiraSaveToStreamAsync((await UgoiraMetadata.ValueAsync).Delays.ToArray(), null, progress);
+            var source = await sources.UgoiraSaveToStreamAsync((await UgoiraMetadata).Delays.ToArray(), null, progress);
             await UiHelper.ClipboardSetBitmapAsync(source);
             hWnd?.RemoveSuccessGrowlAfterDelay(ib!, EntryItemResources.ImageSetToClipBoard);
         }
