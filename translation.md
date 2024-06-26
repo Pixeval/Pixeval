@@ -33,8 +33,6 @@ Welcome to the Pixeval project! We appreciate your help in translating the appli
 Here are some recommended tools for translating the `.resjson` files:
 
 - [Visual Studio Code](https://code.visualstudio.com/) - A powerful and customizable code editor.
-- [Sublime Text](https://www.sublimetext.com/) - A sophisticated text editor for code, markup, and prose.
-- [Notepad++](https://notepad-plus-plus.org/) - A free source code editor and Notepad replacement.
 - [Resource Cheker](https://github.com/Pixeval/ResourceChecker) - Our solution for verification and translation assistance
 
 ## Future Plans

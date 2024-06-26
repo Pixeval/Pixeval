@@ -46,16 +46,24 @@ function Compare-AndUpdateResJsons($folder1, $folder2) {
 # Main script
 $languageCode = Read-Host "Please enter your language code (e.g., 'ru-ru', 'zh-cn')"
 
-$basePaths = @('G:\My Projects\Pixeval\src\Pixeval\Strings', 'G:\My Projects\Pixeval\src\Pixeval.Controls\Strings')
+# Determine the current directory
+$baseDir = (Get-Location).Path
+
+# Formation of paths relative to the current directory
+$basePaths = @(
+    [System.IO.Path]::Combine($baseDir, 'src', 'Pixeval', 'Strings'),
+    [System.IO.Path]::Combine($baseDir, 'src', 'Pixeval.Controls', 'Strings')
+)
+
 $allUpdatedFolders = @()
 
-$firstFolderExists = Test-Path -Path (Join-Path -Path $basePaths[0] -ChildPath $languageCode)
+$firstFolderExists = Test-Path -Path ([System.IO.Path]::Combine($basePaths[0], $languageCode))
 
 if (!($firstFolderExists)) {
     $createFolder = Read-Host "The folder for the language code '$languageCode' does not exist. Do you want to create it? (yes/no)"
     if ($createFolder.ToLower() -eq "yes") {
         foreach ($basePath in $basePaths) {
-            $folder2 = Join-Path -Path $basePath -ChildPath $languageCode
+            $folder2 = [System.IO.Path]::Combine($basePath, $languageCode)
             New-Item -ItemType Directory -Path $folder2 -Force | Out-Null
             Write-Host "Folder '$folder2' created successfully."
         }
@@ -66,8 +74,8 @@ if (!($firstFolderExists)) {
 }
 
 foreach ($basePath in $basePaths) {
-    $folder1 = Join-Path -Path $basePath -ChildPath 'en-us'
-    $folder2 = Join-Path -Path $basePath -ChildPath $languageCode
+    $folder1 = [System.IO.Path]::Combine($basePath, 'en-us')
+    $folder2 = [System.IO.Path]::Combine($basePath, $languageCode)
 
     $updatedFolders = Compare-AndUpdateResJsons -folder1 $folder1 -folder2 $folder2
     $allUpdatedFolders += $updatedFolders
