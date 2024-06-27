@@ -157,10 +157,10 @@ public abstract class DownloadTaskGroup(DownloadHistoryEntry entry) : Observable
     protected void AddToTasksSet(ImageDownloadTask task)
     {
         _tasksSet.Add(task);
-        task.AfterDownloadAsync += AfterItemDownloadAsync;
-        task.DownloadStartedAsync += ItemDownloadStartedAsync;
-        task.DownloadStoppedAsync += ItemDownloadStoppedAsync;
-        task.DownloadErrorAsync += ItemDownloadErrorAsync;
+        task.AfterDownloadAsync += x => AfterItemDownloadAsync?.Invoke(x) ?? Task.CompletedTask;
+        task.DownloadStartedAsync += x => ItemDownloadStartedAsync?.Invoke(x) ?? Task.CompletedTask;
+        task.DownloadStoppedAsync += x => ItemDownloadStoppedAsync?.Invoke(x) ?? Task.CompletedTask;
+        task.DownloadErrorAsync += x => ItemDownloadErrorAsync?.Invoke(x) ?? Task.CompletedTask;
         task.PropertyChanged += (_, e) => OnPropertyChanged(e.PropertyName switch
         {
             nameof(ImageDownloadTask.CurrentState) => nameof(CurrentState),

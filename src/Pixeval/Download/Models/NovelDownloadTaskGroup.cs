@@ -52,6 +52,8 @@ public class NovelDownloadTaskGroup : DownloadTaskGroup
     /// </remarks>
     private string DocPath { get; }
 
+    private bool IsPdf => DocPath.EndsWith(".pdf");
+
     private string PdfTempFolderPath { get; }
 
     [MemberNotNull(nameof(NovelContent), nameof(DocumentViewModel))]
@@ -64,7 +66,7 @@ public class NovelDownloadTaskGroup : DownloadTaskGroup
         var backSlash = TokenizedDestination.LastIndexOf('\\');
         // <ext> or .png or .etc 
         var imgExt = TokenizedDestination[(backSlash + 1)..];
-        var directory = DocPath.EndsWith(".pdf") ? PdfTempFolderPath : Path.GetDirectoryName(DocPath)!;
+        var directory = IsPdf ? PdfTempFolderPath : Path.GetDirectoryName(DocPath)!;
 
         _ = Directory.CreateDirectory(directory);
         var flag = false;
@@ -121,7 +123,7 @@ public class NovelDownloadTaskGroup : DownloadTaskGroup
 
     protected override async Task AfterAllDownloadAsyncOverride(DownloadTaskGroup sender)
     {
-        if (App.AppViewModel.AppSettings.NovelDownloadFormat is NovelDownloadFormat.Pdf)
+        if (IsPdf)
         {
             var i = 0;
             foreach (var imageDownloadTask in TasksSet)
@@ -143,11 +145,12 @@ public class NovelDownloadTaskGroup : DownloadTaskGroup
             return;
         }
 
-        var content = App.AppViewModel.AppSettings.NovelDownloadFormat switch
+        // TODO: 更优雅的判断格式，如直接从外部传入NovelDownloadFormat
+        var content = Path.GetExtension(DocPath) switch
         {
-            NovelDownloadFormat.OriginalTxt => NovelContent.Text,
-            NovelDownloadFormat.Html => DocumentViewModel.LoadHtmlContent().ToString(),
-            NovelDownloadFormat.Md => DocumentViewModel.LoadMdContent().ToString(),
+            ".txt" => NovelContent.Text,
+            ".html" => DocumentViewModel.LoadHtmlContent().ToString(),
+            ".md" => DocumentViewModel.LoadMdContent().ToString(),
             _ => ThrowHelper.ArgumentOutOfRange<NovelDownloadFormat, string>(App.AppViewModel.AppSettings.NovelDownloadFormat)
         };
 
@@ -161,7 +164,7 @@ public class NovelDownloadTaskGroup : DownloadTaskGroup
                 await TagsManager.SetIdTagsAsync(destinations[i], id, tags);
     }
 
-    public override string OpenLocalDestination => DocPath.EndsWith(".pdf") ? DocPath : Path.GetDirectoryName(DocPath)!;
+    public override string OpenLocalDestination => DocPath;
 
     public override void Delete()
     {
@@ -169,6 +172,6 @@ public class NovelDownloadTaskGroup : DownloadTaskGroup
             task.Delete();
         if (File.Exists(DocPath))
             File.Delete(DocPath);
-        IoHelper.DeleteEmptyFolder(DocPath.EndsWith(".pdf") ? PdfTempFolderPath : Path.GetDirectoryName(DocPath));
+        IoHelper.DeleteEmptyFolder(IsPdf ? PdfTempFolderPath : Path.GetDirectoryName(DocPath));
     }
 }
