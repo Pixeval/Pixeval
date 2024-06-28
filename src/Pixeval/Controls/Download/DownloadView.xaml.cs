@@ -38,7 +38,7 @@ public sealed partial class DownloadView : UserControl
 
     private void DownloadView_OnUnloaded(object sender, RoutedEventArgs e)
     {
-        foreach (var viewModel in ViewModel.DataProvider.Source)
+        foreach (var viewModel in ViewModel.View.Source)
             viewModel.UnloadThumbnail(ViewModel);
         ViewModel.Dispose();
     }

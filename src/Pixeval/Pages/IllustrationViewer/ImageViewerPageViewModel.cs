@@ -22,6 +22,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Storage;
@@ -37,7 +38,6 @@ using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
-using Pixeval.Utilities.Threading;
 using Pixeval.AppManagement;
 using Pixeval.CoreApi.Net.Response;
 using Pixeval.Download;
@@ -116,10 +116,7 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
     /// <summary>
     /// 如果之前下载的图片就是原图，则可以直接返回下载的图片
     /// </summary>
-    /// <param name="progress">压缩动图为一张图片的时候用</param>
-    /// <param name="needOriginal"></param>
-    /// <returns></returns>
-    public async Task<Stream?> GetImageStreamAsync(IProgress<double>? progress, bool needOriginal)
+    public IReadOnlyList<Stream>? GetImageStreams(bool needOriginal)
     {
         if (needOriginal && !_isOriginal)
             return null;
@@ -127,11 +124,11 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
         if (OriginalImageSources is not [var stream, ..])
             return null;
 
-        if (IllustrationViewModel.IsUgoira)
-            return await OriginalImageSources.UgoiraSaveToStreamAsync(MsIntervals ?? [], null, progress);
+        var ret = IllustrationViewModel.IsUgoira ? OriginalImageSources : [stream];
 
-        stream.Position = 0;
-        return stream;
+        foreach (var s in ret)
+            s.Position = 0;
+        return ret;
     }
 
     public async Task GetOriginalImageSourceAsync(Stream destination, IProgress<double>? progress = null)
@@ -153,14 +150,14 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
     {
         var name = Path.GetFileName(App.AppViewModel.AppSettings.DownloadPathMacro);
         var path = IoHelper.NormalizePathSegment(new IllustrationMetaPathParser().Reduce(name, IllustrationViewModel));
-        path = IoHelper.ReplaceTokenExtensionFromUrl(path, IllustrationViewModel.IllustrationOriginalUrl).RemoveTokens();
+        path = IoHelper.ReplaceTokenExtensionFromUrl(path, IllustrationViewModel.IllustrationOriginalUrl);
         var file = await appKnownFolder.CreateFileAsync(path);
         await using var target = await file.OpenStreamForWriteAsync();
         await GetOriginalImageSourceAsync(target);
         return file;
     }
 
-    public CancellationHandle ImageLoadingCancellationHandle { get; } = new();
+    public CancellationTokenSource ImageLoadingCancellationTokenSource { get; } = new();
 
     public IllustrationItemViewModel IllustrationViewModel { get; }
 
@@ -168,6 +165,8 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
 
     public void Dispose()
     {
+        if (_disposed)
+            return;
         _disposed = true;
         DisposeInternal();
         GC.SuppressFinalize(this);
@@ -254,7 +253,7 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
                         return stream;
                 }
 
-                var downloadRes = await App.AppViewModel.MakoClient.DownloadStreamAsync(url, new Progress<double>(d => AdvancePhase(LoadingPhase.DownloadingImage, startProgress + ratio * d)), ImageLoadingCancellationHandle);
+                var downloadRes = await App.AppViewModel.MakoClient.DownloadMemoryStreamAsync(url, new Progress<double>(d => AdvancePhase(LoadingPhase.DownloadingImage, startProgress + ratio * d)), ImageLoadingCancellationTokenSource.Token);
                 if (downloadRes is Result<Stream>.Success(var stream2))
                 {
                     if (App.AppViewModel.AppSettings.UseFileCache)
@@ -274,7 +273,7 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
         {
             var metadata = null as UgoiraMetadataResponse;
             if (IllustrationViewModel.IsUgoira)
-                metadata = await IllustrationViewModel.UgoiraMetadata.ValueAsync;
+                metadata = await IllustrationViewModel.UgoiraMetadata;
 
             var streams = await GetStreamsAsync(metadata?.LargeUrl);
             if (streams is not null)
@@ -385,7 +384,7 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
 
     private void IsNotUgoiraAndLoadingCompletedCanExecuteRequested(XamlUICommand sender, CanExecuteRequestedEventArgs args) => args.CanExecute = !IllustrationViewModel.IsUgoira && LoadSuccessfully;
 
-    public (ulong, GetImageStream) DownloadParameter => (HWnd, GetImageStreamAsync);
+    public (ulong, GetImageStreams) DownloadParameter => (HWnd, GetImageStreams);
 
     public XamlUICommand PlayGifCommand { get; } = "".GetCommand(Symbol.Pause);
 
@@ -416,6 +415,8 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
 
     private void DisposeInternal()
     {
+        ImageLoadingCancellationTokenSource.Cancel();
+        ImageLoadingCancellationTokenSource.Dispose();
         IllustrationViewModel.UnloadThumbnail(this);
         // if the loading task is null or hasn't been completed yet, the 
         // OriginalImageSources would be the thumbnail source, its disposal may 

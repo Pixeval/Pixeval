@@ -38,13 +38,13 @@ public class SuggestionStateMachine
     private static readonly TreeSearcher<SettingsEntryAttribute> _settingEntriesTreeSearcher =
         new(SearcherLogic.Contain, PinIn.CreateDefault());
 
-    private readonly AsyncLazy<IEnumerable<SuggestionModel>> _illustrationTrendingTagCache =
-        new(async () => (await App.AppViewModel.MakoClient.GetTrendingTagsAsync(App.AppViewModel.AppSettings.TargetFilter))
+    private readonly Task<IEnumerable<SuggestionModel>> _illustrationTrendingTagCache =
+        Functions.Block(async () => (await App.AppViewModel.MakoClient.GetTrendingTagsAsync(App.AppViewModel.AppSettings.TargetFilter))
             .Select(t => new Tag { Name = t.Tag, TranslatedName = t.TranslatedName })
             .Select(SuggestionModel.FromNovelTag));
 
-    private readonly AsyncLazy<IEnumerable<SuggestionModel>> _novelTrendingTagCache =
-        new(async () => (await App.AppViewModel.MakoClient.GetTrendingTagsForNovelAsync(App.AppViewModel.AppSettings.TargetFilter))
+    private readonly Task<IEnumerable<SuggestionModel>> _novelTrendingTagCache =
+        Functions.Block(async () => (await App.AppViewModel.MakoClient.GetTrendingTagsForNovelAsync(App.AppViewModel.AppSettings.TargetFilter))
             .Select(t => new Tag { Name = t.Tag, TranslatedName = t.TranslatedName })
             .Select(SuggestionModel.FromNovelTag));
 
@@ -108,14 +108,14 @@ public class SuggestionStateMachine
         if (prior)
         {
             newItems.Add(SuggestionModel.IllustrationTrendingTagHeader);
-            newItems.AddRange(await _illustrationTrendingTagCache.ValueAsync);
+            newItems.AddRange(await _illustrationTrendingTagCache);
         }
         newItems.Add(SuggestionModel.NovelTrendingTagHeader);
-        newItems.AddRange(await _novelTrendingTagCache.ValueAsync);
+        newItems.AddRange(await _novelTrendingTagCache);
         if (!prior)
         {
             newItems.Add(SuggestionModel.IllustrationTrendingTagHeader);
-            newItems.AddRange(await _illustrationTrendingTagCache.ValueAsync);
+            newItems.AddRange(await _illustrationTrendingTagCache);
         }
         Suggestions.AddRange(newItems);
     }

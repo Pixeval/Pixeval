@@ -31,7 +31,6 @@ using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Streams;
-using Pixeval.Download.Models;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats;
 
@@ -186,27 +185,10 @@ public static partial class IoHelper
         return zipStream;
     }
 
-    public static async Task DeleteTaskAsync(DownloadTaskBase task)
+    public static void DeleteEmptyFolder(string? path)
     {
-        try
-        {
-            var actualDestinations = task.ActualDestinations;
-            foreach (var destination in actualDestinations)
-                await (await StorageFile.GetFileFromPathAsync(destination)).DeleteAsync(StorageDeleteOption.Default);
-
-            if (task.IsFolder)
-                await DeleteEmptyFolderAsync(task);
-
-            static async Task DeleteEmptyFolderAsync(DownloadTaskBase t)
-            {
-                var folder = await StorageFolder.GetFolderFromPathAsync(Path.GetDirectoryName(t.Destination));
-                if ((await folder.GetItemsAsync()).Count is 0)
-                    await folder.DeleteAsync(StorageDeleteOption.Default);
-            }
-        }
-        catch
-        {
-            // ignored
-        }
+        if (Directory.Exists(path))
+            if (!Directory.EnumerateFileSystemEntries(path).Any())
+                Directory.Delete(path);
     }
 }

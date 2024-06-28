@@ -38,7 +38,7 @@ namespace Pixeval.Controls;
 public partial class SharableViewDataProvider<T, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] TViewModel>
     : ObservableObject, IDataProvider<T, TViewModel>, IDisposable
     where T : class, IIdEntry
-    where TViewModel : EntryViewModel<T>, IViewModelFactory<T, TViewModel>, IDisposable
+    where TViewModel : EntryViewModel<T>, IFactory<T, TViewModel>, IDisposable
 {
     private SharedRef<IFetchEngine<T>?>? _fetchEngineRef;
 

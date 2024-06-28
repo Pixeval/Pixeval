@@ -39,7 +39,7 @@
                 TextChanged="FilterAutoSuggestBox_OnTextChanged">
                 <AutoSuggestBox.ItemTemplate>
                     <DataTemplate x:DataType="controls:DownloadItemViewModel">
-                        <TextBlock Text="{x:Bind Title}" />
+                        <TextBlock Text="{x:Bind Entry.Title}" />
                     </DataTemplate>
                 </AutoSuggestBox.ItemTemplate>
             </AutoSuggestBox>

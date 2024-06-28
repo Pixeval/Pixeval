@@ -1,15 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Class Name="Pixeval.Pages.Tags.TagsEntryViewModel" Collapsed="true">
-    <Position X="29.25" Y="0.5" Width="1.5" />
+    <Position X="19.75" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>CACAAAAAACAAAABAQAAAAAQAAAAAAEAEAAAAQIAAEAA=</HashCode>
+      <HashCode>CACCAAAAACAAAABAQAAAAAQAAAAAAEAEAAAAQIAAEAA=</HashCode>
       <FileName>Pages\Tags\TagsEntryViewModel.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="Pixeval.Controls.IllustratorItemViewModel" Collapsed="true">
-    <Position X="10.75" Y="2" Width="2.25" />
+    <Position X="1.25" Y="2" Width="2.25" />
     <TypeIdentifier>
       <HashCode>ABAAJAAAAKAQQAAoAQIAABgCAACCAAAAAAIAAAEAAAA=</HashCode>
       <FileName>Controls\Illustrator\IllustratorItemViewModel.Commands.cs</FileName>
@@ -17,7 +17,7 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="Pixeval.Controls.EntryViewModel&lt;T&gt;" Collapsed="true">
-    <Position X="18.5" Y="0.5" Width="1.75" />
+    <Position X="9" Y="0.5" Width="1.75" />
     <TypeIdentifier>
       <HashCode>ABAQIAAAAKAIAAAgAAAAEAGACAAGBCAAAAAAAAAgAAg=</HashCode>
       <FileName>Controls\Entry\EntryViewModel.cs</FileName>
@@ -25,30 +25,30 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="Pixeval.Controls.IllustrationItemViewModel" Collapsed="true">
-    <Position X="23.25" Y="4.75" Width="2.25" />
+    <Position X="13.75" Y="4.75" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>ABAABACAAAAAAAAyAAASEAAAAoCCEwCAACAAYAwAAAA=</HashCode>
+      <HashCode>BBAABACAAAAAAAEyAAASEAAAAoCCEwCAACAAYAwIAAA=</HashCode>
       <FileName>Controls\Illustration\IllustrationItemViewModel.Commands.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="Pixeval.Controls.NovelItemViewModel" Collapsed="true">
-    <Position X="26.25" Y="4.75" Width="2" />
+    <Position X="16.75" Y="4.75" Width="2" />
     <TypeIdentifier>
-      <HashCode>ABAABAAAAgAAACAgAAAAAAAAAoACAACAACAABAQAAAA=</HashCode>
+      <HashCode>BBAABAAAAgAAACAgAAAAAAAAAIACAACAACAABAQAAAA=</HashCode>
       <FileName>Controls\Novel\NovelItemViewModel.Commands.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="Pixeval.Controls.ThumbnailEntryViewModel&lt;T&gt;" Collapsed="true">
-    <Position X="19.75" Y="2" Width="2.25" />
+    <Position X="10.25" Y="2" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>AAACBAAAACAAAAAAgAAAAIAAAAAAAYAABAQAABJQEAA=</HashCode>
+      <HashCode>AAACBAQAACAAAAAAgAAAAIAAAAAAAIAABAQAABJQEAA=</HashCode>
       <FileName>Controls\Work\ThumbnailEntryViewModel.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Pixeval.Controls.SpotlightItemViewModel" Collapsed="true">
-    <Position X="13.75" Y="3.25" Width="2.5" />
+    <Position X="4.25" Y="3.25" Width="2.5" />
     <TypeIdentifier>
       <HashCode>ABAABAAAAAAAAAAgAAAAAAAAAAACAAAAAAAAAAAQAAA=</HashCode>
       <FileName>Controls\Spotlight\SpotlightItemViewModel.cs</FileName>
@@ -56,7 +56,7 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="Pixeval.Controls.WorkEntryViewModel&lt;T&gt;" Collapsed="true">
-    <Position X="17" Y="3.25" Width="2.25" />
+    <Position X="7.5" Y="3.25" Width="2.25" />
     <TypeIdentifier>
       <HashCode>AAABABAEAAAAAAAIAAAQAAAKAIAAAACAACAAAAQEAAA=</HashCode>
       <FileName>Controls\Work\WorkEntryViewModel.Commands.cs</FileName>
@@ -64,7 +64,7 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="Pixeval.Controls.WorkEntryViewModel&lt;T&gt;" Collapsed="true">
-    <Position X="23" Y="3.25" Width="2.25" />
+    <Position X="13.5" Y="3.25" Width="2.25" />
     <TypeIdentifier>
       <HashCode>AAABAAAARAAAAEEACAQAAgABAAAAAEAECQAAAAAUAAA=</HashCode>
       <FileName>Controls\Work\WorkEntryViewModel.cs</FileName>
@@ -72,11 +72,19 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="Pixeval.Controls.DownloadItemViewModel" Collapsed="true">
-    <Position X="20" Y="4.75" Width="2.5" />
+    <Position X="10.5" Y="4.75" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>ABAAAAQAAAAIgAAgAAgAAAgAAIATAACABCAgAAQAAAA=</HashCode>
+      <HashCode>ABAABAQAAAAIgAAgAAgAAAgAAIATAACABCAgAAQAAAA=</HashCode>
       <FileName>Controls\Download\DownloadItemViewModel.cs</FileName>
     </TypeIdentifier>
+    <Lollipop Position="0.2" />
   </Class>
+  <Interface Name="Pixeval.Controls.IWorkViewModel" Collapsed="true">
+    <Position X="19.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABATAAAABAAAAEAoCAQQAAAAABACAEAEDQAIAAAEEAA=</HashCode>
+      <FileName>Controls\Work\IWorkViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
   <Font Name="Microsoft YaHei UI" Size="9" />
 </ClassDiagram>

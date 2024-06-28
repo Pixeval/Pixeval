@@ -18,17 +18,16 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System.Threading.Tasks;
 using Pixeval.Download.MacroParser;
 using Pixeval.Download.Models;
 
 namespace Pixeval.Download;
 
-public interface IDownloadTaskFactory<in TContext, TDownloadTask> where TDownloadTask : DownloadTaskBase
+public interface IDownloadTaskFactory<in TContext, out TDownloadTask> where TDownloadTask : IDownloadTaskGroup
 {
     IMetaPathParser<TContext> PathParser { get; }
 
-    Task<TDownloadTask> CreateAsync(TContext context, string rawPath);
+    TDownloadTask Create(TContext context, string rawPath);
 
     TDownloadTask CreateIntrinsic(TContext context, object param, string rawPath);
 }

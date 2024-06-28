@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -23,10 +23,10 @@ using LiteDB;
 
 namespace Pixeval.Database;
 
-public class SearchHistoryEntry
+public class SearchHistoryEntry : IHistoryEntry
 {
     [BsonId(true)]
-    public ObjectId? Id { get; set; }
+    public ObjectId? HistoryEntryId { get; set; }
 
     /// <summary>
     /// Search value

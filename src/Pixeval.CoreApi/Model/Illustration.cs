@@ -19,9 +19,11 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Text.Json.Serialization;
 
 namespace Pixeval.CoreApi.Model;
@@ -113,6 +115,17 @@ public partial record Illustration : IWorkEntry
 
     [MemberNotNullWhen(false, nameof(OriginalSingleUrl))]
     public bool IsManga => PageCount > 1;
+
+    public IReadOnlyList<string> MangaOriginalUrls => MetaPages.Select(m => m.ImageUrls.Original).ToArray();
+
+    public List<string> GetUgoiraOriginalUrls(int frameCount)
+    {
+        Debug.Assert(IsUgoira);
+        var list = new List<string>();
+        for (var i = 0; i < frameCount; ++i)
+            list.Add(OriginalSingleUrl.Replace("ugoira0", $"ugoira{i}"));
+        return list;
+    }
 
     public override int GetHashCode()
     {

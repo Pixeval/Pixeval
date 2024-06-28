@@ -22,6 +22,7 @@
 
 using System;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.AppManagement;
@@ -29,7 +30,6 @@ using Pixeval.CoreApi.Model;
 using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Utilities;
-using Pixeval.Utilities.Threading;
 
 namespace Pixeval.Controls;
 
@@ -64,7 +64,7 @@ public abstract class ThumbnailEntryViewModel<T>(T entry) : EntryViewModel<T>(en
         }
     }
 
-    private CancellationHandle LoadingThumbnailCancellationHandle { get; } = new();
+    private CancellationTokenSource LoadingThumbnailCancellationTokenSource { get; set; } = new();
 
     /// <summary>
     /// 是否正在加载缩略图
@@ -122,12 +122,14 @@ public abstract class ThumbnailEntryViewModel<T>(T entry) : EntryViewModel<T>(en
     /// </summary>
     public async Task<Stream> GetThumbnailAsync()
     {
-        switch (await App.AppViewModel.MakoClient.DownloadStreamAsync(ThumbnailUrl, cancellationHandle: LoadingThumbnailCancellationHandle))
+        switch (await App.AppViewModel.MakoClient.DownloadMemoryStreamAsync(ThumbnailUrl, cancellationToken: LoadingThumbnailCancellationTokenSource.Token))
         {
             case Result<Stream>.Success(var stream):
                 return stream;
             case Result<Stream>.Failure(OperationCanceledException):
-                LoadingThumbnailCancellationHandle.Reset();
+                await LoadingThumbnailCancellationTokenSource.CancelAsync();
+                LoadingThumbnailCancellationTokenSource.Dispose();
+                LoadingThumbnailCancellationTokenSource = new();
                 break;
         }
 
@@ -141,7 +143,7 @@ public abstract class ThumbnailEntryViewModel<T>(T entry) : EntryViewModel<T>(en
     {
         if (LoadingThumbnail)
         {
-            LoadingThumbnailCancellationHandle.Cancel();
+            LoadingThumbnailCancellationTokenSource.Cancel();
             LoadingThumbnail = false;
             return;
         }
@@ -158,6 +160,8 @@ public abstract class ThumbnailEntryViewModel<T>(T entry) : EntryViewModel<T>(en
     /// </summary>
     public sealed override void Dispose()
     {
+        LoadingThumbnailCancellationTokenSource.Cancel();
+        LoadingThumbnailCancellationTokenSource.Dispose();
         ThumbnailSourceRef?.DisposeForce();
         ThumbnailStream?.Dispose();
         DisposeOverride();

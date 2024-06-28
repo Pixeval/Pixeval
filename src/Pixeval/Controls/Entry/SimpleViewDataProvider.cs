@@ -30,7 +30,7 @@ namespace Pixeval.Controls;
 
 public partial class SimpleViewDataProvider<T, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] TViewModel> : ObservableObject, IDataProvider<T, TViewModel>
     where T : class, IIdEntry
-    where TViewModel : class, IViewModelFactory<T, TViewModel>, IDisposable
+    where TViewModel : class, IFactory<T, TViewModel>, IDisposable
 {
     private IFetchEngine<T>? _fetchEngine;
 
@@ -56,6 +56,7 @@ public partial class SimpleViewDataProvider<T, [DynamicallyAccessedMembers(Dynam
 
     public void Dispose()
     {
+        GC.SuppressFinalize(this);
         if (Source is { } source)
             foreach (var entry in source)
                 entry.Dispose();

@@ -26,7 +26,7 @@ using WinUI3Utilities;
 
 namespace Pixeval.Database;
 
-public class BrowseHistoryEntry()
+public class BrowseHistoryEntry() : IHistoryEntry
 {
     public BrowseHistoryEntry(IWorkEntry entry) : this()
     {
@@ -50,7 +50,7 @@ public class BrowseHistoryEntry()
     }
 
     [BsonId(true)]
-    public ObjectId? BrowseHistoryEntryId { get; set; }
+    public ObjectId? HistoryEntryId { get; set; }
 
     public long Id { get; set; }
 

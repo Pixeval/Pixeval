@@ -82,7 +82,7 @@ public sealed partial class DownloadMacroSettingsExpander
             var result = _testParser.Parse();
             if (result is not null)
             {
-                var legitimatedNames = App.AppViewModel.AppServiceProvider.GetRequiredService<IDownloadTaskFactory<IllustrationItemViewModel, IllustrationDownloadTask>>();
+                var legitimatedNames = App.AppViewModel.AppServiceProvider.GetRequiredService<IllustrationDownloadTaskFactory>();
                 if (ValidateMacro(result, legitimatedNames) is { } ex)
                 {
                     DownloadMacroInvalidInfoBar.Message = ex;
@@ -137,7 +137,7 @@ public sealed partial class DownloadMacroSettingsExpander
     }
 
     private static string? ValidateMacro(
-        IMetaPathNode<string> tree, IDownloadTaskFactory<IllustrationItemViewModel, IllustrationDownloadTask> macroProvider)
+        IMetaPathNode<string> tree, IDownloadTaskFactory<IllustrationItemViewModel, IDownloadTaskGroup> macroProvider)
     {
         return ValidateMacro(tree, ImmutableDictionary<string, bool>.Empty, [], macroProvider);
     }
@@ -146,7 +146,7 @@ public sealed partial class DownloadMacroSettingsExpander
         IMetaPathNode<string> tree,
         ImmutableDictionary<string, bool> context,
         List<(string Name, ImmutableDictionary<string, bool> Context)> lastSegmentContexts,
-        IDownloadTaskFactory<IllustrationItemViewModel, IllustrationDownloadTask> macroProvider)
+        IDownloadTaskFactory<IllustrationItemViewModel, IDownloadTaskGroup> macroProvider)
     {
         return tree switch
         {

@@ -22,6 +22,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using CommunityToolkit.WinUI.Collections;
 using Pixeval.CoreApi.Engine;
@@ -54,4 +55,6 @@ public interface ISortableEntryViewViewModel : INotifyPropertyChanged, IDisposab
     Range ViewRange { get; set; }
 
     void ResetEngine(IFetchEngine<IWorkEntry>? newEngine, int itemsPerPage = 20, int itemLimit = -1);
+
+    void ResetSource(ObservableCollection<IWorkEntry>? source);
 }

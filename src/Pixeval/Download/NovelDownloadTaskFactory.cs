@@ -20,63 +20,43 @@
 
 #endregion
 
-using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Pixeval.Controls;
-using Pixeval.Database;
 using Pixeval.Database.Managers;
 using Pixeval.Download.MacroParser;
 using Pixeval.Download.Models;
-using Pixeval.Options;
 using Pixeval.Util.IO;
-using Pixeval.Utilities;
 
 namespace Pixeval.Download;
 
-public class NovelDownloadTaskFactory : IDownloadTaskFactory<NovelItemViewModel, NovelDownloadTask>
+public class NovelDownloadTaskFactory : IDownloadTaskFactory<NovelItemViewModel, NovelDownloadTaskGroup>
 {
     public IMetaPathParser<NovelItemViewModel> PathParser { get; } = new NovelMetaPathParser();
 
-    public async Task<NovelDownloadTask> CreateAsync(NovelItemViewModel context, string rawPath)
+    public NovelDownloadTaskGroup Create(NovelItemViewModel context, string rawPath)
     {
         var manager = App.AppViewModel.AppServiceProvider.GetRequiredService<DownloadHistoryPersistentManager>();
         var path = IoHelper.NormalizePath(PathParser.Reduce(rawPath, context));
-        if (App.AppViewModel.AppSettings.NovelDownloadFormat is not NovelDownloadFormat.Pdf)
-            path += IoHelper.GetIllustrationExtension();
-        if (manager.Collection.Exists(entry => entry.Destination == path))
-        {
-            // delete the original entry
-            _ = manager.Delete(entry => entry.Destination == path);
-        }
-
-        var task = await Functions.Block(async () =>
-        {
-            var novelContent = await context.GetNovelContentAsync();
-            var downloadHistoryEntry = new DownloadHistoryEntry(
-                DownloadState.Queued,
-                path,
-                DownloadItemType.Novel,
-                context.Entry);
-            return new NovelDownloadTask(downloadHistoryEntry, context, novelContent);
-        });
-
+        path += "\\" + IoHelper.GetIllustrationExtension();
+        _ = manager.Delete(entry => entry.Destination == path);
+        var task = new NovelDownloadTaskGroup(context.Entry, path);
         manager.Insert(task.DatabaseEntry);
         return task;
     }
 
-    public NovelDownloadTask CreateIntrinsic(NovelItemViewModel context, object param, string rawPath)
+    public NovelDownloadTaskGroup CreateIntrinsic(NovelItemViewModel context, object param, string rawPath)
     {
         var manager = App.AppViewModel.AppServiceProvider.GetRequiredService<DownloadHistoryPersistentManager>();
         var path = IoHelper.NormalizePath(PathParser.Reduce(rawPath, context));
-        if (App.AppViewModel.AppSettings.NovelDownloadFormat is not NovelDownloadFormat.Pdf)
-            path += IoHelper.GetIllustrationExtension();
-        if (manager.Collection.Exists(entry => entry.Destination == path))
-        {
-            // delete the original entry
-            _ = manager.Delete(entry => entry.Destination == path);
-        }
+        // xxx.pdf\.png
+        // xxx.pdf\<ext>
+        // xxx\novel.txt\.png
+        // xxx\novel.md\<ext>
+        path += "\\" + IoHelper.GetIllustrationExtension();
+        _ = manager.Delete(entry => entry.Destination == path);
         var viewModel = (DocumentViewerViewModel)param;
-        var entry = new DownloadHistoryEntry(DownloadState.Queued, path, DownloadItemType.Novel, context.Entry);
-        return new IntrinsicNovelDownloadTask(entry, context, viewModel);
+        var task = new NovelDownloadTaskGroup(context.Entry, viewModel.NovelContent, viewModel, path);
+        manager.Insert(task.DatabaseEntry);
+        return task;
     }
 }

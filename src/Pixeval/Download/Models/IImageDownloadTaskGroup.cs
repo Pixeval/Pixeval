@@ -3,7 +3,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/LazyInitializedMangaDownloadTask.cs
+// Copyright (c) 2024 Pixeval/IImageDownloadTaskGroup.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -20,28 +20,11 @@
 
 #endregion
 
-using System.Threading.Tasks;
 using Pixeval.CoreApi.Model;
-using Pixeval.Database;
-using WinUI3Utilities;
 
 namespace Pixeval.Download.Models;
 
-public partial class LazyInitializedMangaDownloadTask(DownloadHistoryEntry entry)
-    : MangaDownloadTask(entry, null!), ILazyLoadDownloadTask
+public interface IImageDownloadTaskGroup : IDownloadTaskGroup
 {
-    public override async Task DownloadAsync(Downloader downloadStreamAsync)
-    {
-        await LazyLoadAsync(DatabaseEntry.Entry);
-
-        await base.DownloadAsync(downloadStreamAsync);
-    }
-
-    public Task LazyLoadAsync(IWorkEntry workEntry)
-    {
-        if (workEntry is not Illustration illustration)
-            return ThrowHelper.Argument<IWorkEntry, Task>(workEntry);
-        IllustrationViewModel ??= new(illustration);
-        return Task.CompletedTask;
-    }
+    Illustration Entry { get; }
 }
