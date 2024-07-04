@@ -146,7 +146,11 @@ public static partial class IoHelper
                     responseLength = response.Content.Headers.ContentRange?.Length ?? response.Content.Headers.ContentLength + destination.Position;
                     break;
                 case HttpStatusCode.RequestedRangeNotSatisfiable:
-                    return new ArgumentOutOfRangeException(nameof(startPosition), "Too large");
+                    if (response.Content.Headers.ContentRange?.Length is { } length && length != startPosition)
+                        return new ArgumentOutOfRangeException(nameof(startPosition), "416: RequestedRangeNotSatisfiable");
+                    if (progress is not null)
+                        _ = WindowFactory.RootWindow.DispatcherQueue.TryEnqueue(() => progress.Report(100));
+                    return null;
             }
 
             _ = response.EnsureSuccessStatusCode();

@@ -151,6 +151,10 @@ public partial class ImageDownloadTask : ObservableObject, IDownloadTaskBase, IP
                 default: await SetErrorAsync(ex); break;
             }
         }
+        catch (TaskCanceledException)
+        {
+            // ignored
+        }
         catch (Exception ex)
         {
             await SetErrorAsync(ex);

@@ -67,7 +67,14 @@ public abstract partial class DownloadTaskGroup(DownloadHistoryEntry entry) : Ob
             if (IsAllCompleted && AfterAllDownloadAsync is not null)
             {
                 IsPending = true;
-                await AfterAllDownloadAsync.Invoke(this, CancellationTokenSource.Token);
+                try
+                {
+                    await AfterAllDownloadAsync.Invoke(this, CancellationTokenSource.Token);
+                }
+                catch (TaskCanceledException)
+                {
+                    // ignored
+                }
                 IsPending = false;
             }
         };
