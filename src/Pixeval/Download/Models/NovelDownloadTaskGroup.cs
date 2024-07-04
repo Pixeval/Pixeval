@@ -22,6 +22,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using Pixeval.Controls;
 using Pixeval.CoreApi.Model;
@@ -121,7 +122,7 @@ public class NovelDownloadTaskGroup : DownloadTaskGroup
             SetNovelContent(await App.AppViewModel.MakoClient.GetNovelContentAsync(Entry.Id));
     }
 
-    protected override async Task AfterAllDownloadAsyncOverride(DownloadTaskGroup sender)
+    protected override async Task AfterAllDownloadAsyncOverride(DownloadTaskGroup sender, CancellationToken token = default)
     {
         if (IsPdf)
         {
@@ -154,14 +155,14 @@ public class NovelDownloadTaskGroup : DownloadTaskGroup
             _ => ThrowHelper.ArgumentOutOfRange<NovelDownloadFormat, string>(App.AppViewModel.AppSettings.NovelDownloadFormat)
         };
 
-        await File.WriteAllTextAsync(DocPath, content);
+        await File.WriteAllTextAsync(DocPath, content, token);
         if (App.AppViewModel.AppSettings.IllustrationDownloadFormat is IllustrationDownloadFormat.Original)
             return;
 
         var destinations = Destinations;
         for (var i = 0; i < destinations.Count; ++i)
             if (DocumentViewModel.GetIdTags(i) is { Id: var id, Tags: var tags })
-                await TagsManager.SetIdTagsAsync(destinations[i], id, tags);
+                await TagsManager.SetIdTagsAsync(destinations[i], id, tags, token);
     }
 
     public override string OpenLocalDestination => DocPath;

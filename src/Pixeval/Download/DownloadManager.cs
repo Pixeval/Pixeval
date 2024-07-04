@@ -60,7 +60,7 @@ public partial class DownloadManager : IDisposable
     /// <summary>
     /// 与<see cref="QueuedTasks"/>内容一样，但是用于快速查询
     /// </summary>
-    private readonly HashSet<IDownloadTaskGroup> _taskQuerySet = [];
+    private readonly Dictionary<string, IDownloadTaskGroup> _taskQuerySet = [];
 
     /// <summary>
     /// 所有的下载任务
@@ -95,9 +95,12 @@ public partial class DownloadManager : IDisposable
     /// </remarks>
     public void QueueTask(IDownloadTaskGroup task)
     {
-        if (!_taskQuerySet.Add(task))
+        if (_taskQuerySet.TryGetValue(task.Destination, out var v) && v == task)
             return;
+        _taskQuerySet[task.Destination] = task;
 
+        if (v is not null)
+            _ = QueuedTasks.Remove(v);
         QueuedTasks.Insert(0, task);
         _ = _downloadTaskChannel.Writer.TryWrite(task);
     }
@@ -114,6 +117,7 @@ public partial class DownloadManager : IDisposable
                     case ImageDownloadTask imageTask:
                         imageTask.DownloadTryResume += t => _downloadTaskChannel.Writer.TryWrite(t);
                         imageTask.DownloadTryReset += t => _downloadTaskChannel.Writer.TryWrite(t);
+                        // 子任务入列时一定是处于Queued状态，需要直接运行的
                         _ = DownloadAsync(imageTask);
                         break;
                     case IDownloadTaskGroup taskGroup:
@@ -122,6 +126,7 @@ public partial class DownloadManager : IDisposable
                         {
                             subTask.DownloadTryResume += t => _downloadTaskChannel.Writer.TryWrite(t);
                             subTask.DownloadTryReset += t => _downloadTaskChannel.Writer.TryWrite(t);
+                            // 任务组中的任务需要判断是否处于Queued状态才能运行
                             if (subTask.CurrentState is DownloadState.Queued)
                             {
                                 _ = DownloadAsync(subTask);
@@ -138,7 +143,7 @@ public partial class DownloadManager : IDisposable
     /// <param name="task"></param>
     public void RemoveTask(IDownloadTaskGroup task)
     {
-        _ = _taskQuerySet.Remove(task);
+        _ = _taskQuerySet.Remove(task.Destination);
         _ = QueuedTasks.Remove(task);
     }
 
@@ -196,7 +201,7 @@ public partial class DownloadManager : IDisposable
         {
             await (task.CurrentState switch
             {
-                DownloadState.Queued => task.StartAsync(_httpClient, suppressDownloadStartedAsync: true),
+                DownloadState.Queued => task.StartAsync(_httpClient),
                 DownloadState.Paused => task.ResumeAsync(_httpClient),
                 _ => ThrowHelper.ArgumentOutOfRange<DownloadState, Task>(task.CurrentState)
             });

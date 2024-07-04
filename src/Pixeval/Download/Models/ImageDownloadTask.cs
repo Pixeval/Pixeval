@@ -78,7 +78,7 @@ public partial class ImageDownloadTask : ObservableObject, IDownloadTaskBase, IP
         if (value == _isRunning)
             return;
         _isRunning = value;
-        if (!_isRunning)
+        if (!value)
             await DownloadStoppedAsync.Invoke(this);
         else if (!suppressDownloadStartedAsync)
             await DownloadStartedAsync.Invoke(this);
@@ -104,9 +104,10 @@ public partial class ImageDownloadTask : ObservableObject, IDownloadTaskBase, IP
         return false;
     }
 
-    private async Task SetCompleteAsync()
+    private async Task PendingCompleteAsync()
     {
         ProgressPercentage = 100;
+        // CurrentState = DownloadState.Pending;
         CurrentState = DownloadState.Completed;
         await AfterDownloadAsync.Invoke(this);
     }
@@ -118,7 +119,7 @@ public partial class ImageDownloadTask : ObservableObject, IDownloadTaskBase, IP
         await DownloadErrorAsync.Invoke(this);
     }
 
-    public async Task StartAsync(HttpClient httpClient, bool resumeBreakpoint = false, bool suppressDownloadStartedAsync = false)
+    public async Task StartAsync(HttpClient httpClient, bool resumeBreakpoint = false)
     {
         if (CurrentState is not DownloadState.Queued)
             return;
@@ -130,13 +131,13 @@ public partial class ImageDownloadTask : ObservableObject, IDownloadTaskBase, IP
             if (Stream is not null)
             {
                 await using (var fs = OpenCreate(Destination))
-                    await Stream.CopyToAsync(fs);
-                await SetCompleteAsync();
+                    await Stream.CopyToAsync(fs, CancellationTokenSource.Token);
+                await PendingCompleteAsync();
                 return;
             }
             if (!resumeBreakpoint && await ValidateExistenceAsync())
             {
-                await SetCompleteAsync();
+                await PendingCompleteAsync();
                 return;
             }
 
@@ -145,7 +146,7 @@ public partial class ImageDownloadTask : ObservableObject, IDownloadTaskBase, IP
                 ex = await httpClient.DownloadStreamAsync(fileStream, Uri, CancellationTokenSource.Token, this, fileStream.Length);
             switch (ex)
             {
-                case null: await SetCompleteAsync(); break;
+                case null: await PendingCompleteAsync(); break;
                 case TaskCanceledException: break;
                 default: await SetErrorAsync(ex); break;
             }
@@ -156,7 +157,7 @@ public partial class ImageDownloadTask : ObservableObject, IDownloadTaskBase, IP
         }
         finally
         {
-            await SetRunningAsync(false, suppressDownloadStartedAsync);
+            await SetRunningAsync(false);
         }
 
         return;
@@ -178,9 +179,11 @@ public partial class ImageDownloadTask : ObservableObject, IDownloadTaskBase, IP
         ErrorCause = null;
         ProgressPercentage = 0;
         Delete();
-        CancellationTokenSource.Cancel();
-        CancellationTokenSource.Dispose();
-        CancellationTokenSource = new();
+        if (CancellationTokenSource.IsCancellationRequested)
+        {
+            CancellationTokenSource.Dispose();
+            CancellationTokenSource = new();
+        }
         CurrentState = DownloadState.Queued;
         DownloadTryReset?.Invoke(this);
     }
@@ -197,9 +200,11 @@ public partial class ImageDownloadTask : ObservableObject, IDownloadTaskBase, IP
     {
         if (CurrentState is not DownloadState.Paused)
             return;
-        CancellationTokenSource.Cancel();
-        CancellationTokenSource.Dispose();
-        CancellationTokenSource = new();
+        if (CancellationTokenSource.IsCancellationRequested)
+        {
+            CancellationTokenSource.Dispose();
+            CancellationTokenSource = new();
+        }
         CurrentState = DownloadState.Queued;
         DownloadTryResume?.Invoke(this);
     }
@@ -211,7 +216,7 @@ public partial class ImageDownloadTask : ObservableObject, IDownloadTaskBase, IP
 
     public void Cancel()
     {
-        if (CurrentState is not (DownloadState.Paused or DownloadState.Running or DownloadState.Queued))
+        if (CurrentState is not (DownloadState.Paused or DownloadState.Pending or DownloadState.Running or DownloadState.Queued))
             return;
         CancellationTokenSource.Cancel();
         CurrentState = DownloadState.Cancelled;

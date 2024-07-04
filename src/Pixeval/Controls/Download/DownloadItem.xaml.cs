@@ -50,6 +50,7 @@ public sealed partial class DownloadItem
         switch (ViewModel.DownloadTask.CurrentState)
         {
             case DownloadState.Queued:
+            case DownloadState.Pending:
                 ViewModel.DownloadTask.Cancel();
                 break;
             case DownloadState.Running:

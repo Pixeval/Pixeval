@@ -46,6 +46,7 @@
         Spacing="5">
         <ProgressBar
             HorizontalAlignment="Stretch"
+            IsIndeterminate="{x:Bind ViewModel.IsPending(ViewModel.DownloadTask.CurrentState), Mode=OneWay}"
             ShowError="{x:Bind ViewModel.IsError(ViewModel.DownloadTask.CurrentState), Mode=OneWay}"
             ShowPaused="{x:Bind ViewModel.IsPaused(ViewModel.DownloadTask.CurrentState), Mode=OneWay}"
             Value="{x:Bind ViewModel.DownloadTask.ProgressPercentage, Mode=OneWay}" />

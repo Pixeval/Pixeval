@@ -82,13 +82,14 @@ public sealed partial class DownloadItemViewModel(IDownloadTaskGroup downloadTas
         DownloadState.Error => DownloadItemResources.DownloadErrorMessageFormatted.Format(downloadTask.ErrorCause?.Message),
         DownloadState.Completed => DownloadItemResources.DownloadCompleted,
         DownloadState.Cancelled => DownloadItemResources.DownloadCancelled,
+        DownloadState.Pending => DownloadItemResources.DownloadPending,
         DownloadState.Paused => DownloadItemResources.DownloadPaused,
         _ => ThrowHelper.ArgumentOutOfRange<DownloadState, string>(state)
     };
 
     public string ActionButtonContent(DownloadState state) => state switch
     {
-        DownloadState.Queued => DownloadItemResources.DownloadCancelledAction,
+        DownloadState.Queued or DownloadState.Pending => DownloadItemResources.DownloadCancelledAction,
         DownloadState.Running => DownloadItemResources.ActionButtonContentPause,
         DownloadState.Cancelled or DownloadState.Error => DownloadItemResources.ActionButtonContentRetry,
         DownloadState.Completed => DownloadItemResources.ActionButtonContentOpen,
@@ -98,7 +99,7 @@ public sealed partial class DownloadItemViewModel(IDownloadTaskGroup downloadTas
 
     public Symbol ActionButtonSymbol(DownloadState state) => state switch
     {
-        DownloadState.Queued => Symbol.Dismiss,
+        DownloadState.Queued or DownloadState.Pending => Symbol.Dismiss,
         DownloadState.Running => Symbol.Pause,
         DownloadState.Cancelled or DownloadState.Error => Symbol.ArrowRepeatAll,
         DownloadState.Completed => Symbol.Open,
@@ -111,6 +112,8 @@ public sealed partial class DownloadItemViewModel(IDownloadTaskGroup downloadTas
     public bool IsCancelItemEnabled(DownloadState state) => state is DownloadState.Running or DownloadState.Queued or DownloadState.Paused;
 
     public bool IsError(DownloadState state) => state is DownloadState.Error;
+
+    public bool IsPending(DownloadState state) => state is DownloadState.Pending;
 
     public bool IsPaused(DownloadState state) => state is DownloadState.Paused;
 

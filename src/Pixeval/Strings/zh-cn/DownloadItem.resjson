@@ -11,6 +11,7 @@
   "DownloadCompleted": "下载完成",
   "DownloadErrorMessageFormatted": "下载失败: {0}",
   "DownloadPaused": "下载已暂停",
+  "DownloadPending": "正在等待处理下载文件完成",
   "DownloadQueued": "在队列中",
   "DownloadRunningFormatted": "下载进度: {0}%",
   "ErrorMessageDialogTitle": "错误信息",

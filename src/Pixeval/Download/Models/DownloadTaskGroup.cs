@@ -24,6 +24,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Extensions.DependencyInjection;
@@ -35,7 +36,7 @@ using WinUI3Utilities;
 
 namespace Pixeval.Download.Models;
 
-public abstract class DownloadTaskGroup(DownloadHistoryEntry entry) : ObservableObject, IDownloadTaskGroup
+public abstract partial class DownloadTaskGroup(DownloadHistoryEntry entry) : ObservableObject, IDownloadTaskGroup
 {
     public DownloadHistoryEntry DatabaseEntry { get; } = entry;
 
@@ -55,7 +56,7 @@ public abstract class DownloadTaskGroup(DownloadHistoryEntry entry) : Observable
             var g = sender.To<DownloadTaskGroup>();
             if (e.PropertyName is not nameof(CurrentState))
                 return;
-            if (g.CurrentState is DownloadState.Running or DownloadState.Paused)
+            if (g.CurrentState is DownloadState.Running or DownloadState.Paused or DownloadState.Pending)
                 return;
             g.DatabaseEntry.State = g.CurrentState;
             var manager = App.AppViewModel.AppServiceProvider.GetRequiredService<DownloadHistoryPersistentManager>();
@@ -63,15 +64,19 @@ public abstract class DownloadTaskGroup(DownloadHistoryEntry entry) : Observable
         };
         AfterItemDownloadAsync += async _ =>
         {
-            if (IsCompleted && AfterAllDownloadAsync is not null)
-                await AfterAllDownloadAsync.Invoke(this);
+            if (IsAllCompleted && AfterAllDownloadAsync is not null)
+            {
+                IsPending = true;
+                await AfterAllDownloadAsync.Invoke(this, CancellationTokenSource.Token);
+                IsPending = false;
+            }
         };
         AfterAllDownloadAsync += AfterAllDownloadAsyncOverride;
     }
 
     private bool IsCreateFromEntry { get; set; } = true;
 
-    protected abstract Task AfterAllDownloadAsyncOverride(DownloadTaskGroup sender);
+    protected abstract Task AfterAllDownloadAsyncOverride(DownloadTaskGroup sender, CancellationToken token = default);
 
     /// <inheritdoc cref="DownloadHistoryEntry.Destination"/>
     public string TokenizedDestination => DatabaseEntry.Destination;
@@ -88,15 +93,44 @@ public abstract class DownloadTaskGroup(DownloadHistoryEntry entry) : Observable
 
     public abstract string OpenLocalDestination { get; }
 
-    public void TryReset() => TasksSet.ForEach(t => t.TryReset());
+    public void TryReset()
+    {
+        if (CurrentState is not (DownloadState.Completed or DownloadState.Error or DownloadState.Cancelled))
+            return;
+        TasksSet.ForEach(t => t.TryReset());
+        if (CancellationTokenSource.IsCancellationRequested)
+        {
+            CancellationTokenSource.Dispose();
+            CancellationTokenSource = new();
+        }
+    }
 
     public void Pause() => TasksSet.ForEach(t => t.Pause());
 
     public void TryResume() => TasksSet.ForEach(t => t.TryResume());
 
-    public void Cancel() => TasksSet.ForEach(t => t.Cancel());
+    /// <summary>
+    /// 因为<see cref="DownloadState.Pending"/>只能变为<see cref="DownloadState.Cancelled"/>而不能变为<see cref="DownloadState.Paused"/>，所以只需要在此使用
+    /// </summary>
+    public void Cancel()
+    {
+        if (CurrentState is not (DownloadState.Paused or DownloadState.Pending or DownloadState.Running or DownloadState.Queued))
+            return;
+        TasksSet.ForEach(t => t.Cancel());
+        CancellationTokenSource.Cancel();
+    }
 
     public abstract void Delete();
+
+    /// <summary>
+    /// 用于<see cref="DownloadState.Pending"/>的取消令牌
+    /// </summary>
+    private CancellationTokenSource CancellationTokenSource { get; set; } = new();
+
+    /// <summary>
+    /// 本下载组是否处于<see cref="DownloadState.Pending"/>状态
+    /// </summary>
+    [ObservableProperty][NotifyPropertyChangedFor(nameof(CurrentState))] private bool _isPending;
 
     public DownloadState CurrentState
     {
@@ -109,6 +143,7 @@ public abstract class DownloadTaskGroup(DownloadHistoryEntry entry) : Observable
             var isPaused = false;
             var isCancelled = false;
             var isQueued = false;
+            var isPending = false;
             foreach (var task in TasksSet)
                 switch (task.CurrentState)
                 {
@@ -131,6 +166,9 @@ public abstract class DownloadTaskGroup(DownloadHistoryEntry entry) : Observable
                     case DownloadState.Error:
                         isError = true;
                         break;
+                    case DownloadState.Pending:
+                        isPending = true;
+                        break;
                     default:
                         break;
                 }
@@ -140,6 +178,7 @@ public abstract class DownloadTaskGroup(DownloadHistoryEntry entry) : Observable
                 isPaused ? DownloadState.Paused :
                 isRunning ? DownloadState.Running :
                 isQueued ? DownloadState.Queued :
+                isPending || IsPending ? DownloadState.Pending :
                 DownloadState.Completed;
         }
     }
@@ -152,7 +191,7 @@ public abstract class DownloadTaskGroup(DownloadHistoryEntry entry) : Observable
 
     public event Func<ImageDownloadTask, Task>? AfterItemDownloadAsync;
 
-    public event Func<DownloadTaskGroup, Task>? AfterAllDownloadAsync;
+    public event Func<DownloadTaskGroup, CancellationToken, Task>? AfterAllDownloadAsync;
 
     protected void AddToTasksSet(ImageDownloadTask task)
     {
@@ -172,9 +211,9 @@ public abstract class DownloadTaskGroup(DownloadHistoryEntry entry) : Observable
 
     public Exception? ErrorCause => TasksSet.FirstOrDefault(t => t.ErrorCause is not null)?.ErrorCause;
 
-    public bool IsCompleted => TasksSet.All(t => t.CurrentState is DownloadState.Completed);
+    public bool IsAllCompleted => TasksSet.All(t => t.CurrentState is DownloadState.Completed);
 
-    public bool IsError => TasksSet.Any(t => t.CurrentState is DownloadState.Error);
+    public bool IsAnyError => TasksSet.Any(t => t.CurrentState is DownloadState.Error);
 
     public double ProgressPercentage => TasksSet.Count is 0 ? 100 : TasksSet.Average(t => t.ProgressPercentage);
 

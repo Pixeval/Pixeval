@@ -25,6 +25,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Pixeval.CoreApi.Model;
 using Pixeval.CoreApi.Net.Response;
@@ -79,7 +80,7 @@ public class UgoiraDownloadTaskGroup : DownloadTaskGroup, IImageDownloadTaskGrou
             SetMetadata(await App.AppViewModel.MakoClient.GetUgoiraMetadataAsync(Entry.Id));
     }
 
-    protected override async Task AfterAllDownloadAsyncOverride(DownloadTaskGroup sender)
+    protected override async Task AfterAllDownloadAsyncOverride(DownloadTaskGroup sender, CancellationToken token = default)
     {
         await Task.Run(async () =>
         {
@@ -91,12 +92,12 @@ public class UgoiraDownloadTaskGroup : DownloadTaskGroup, IImageDownloadTaskGrou
             {
                 using var image = await Destinations.UgoiraSaveToImageAsync(Metadata.Delays.ToArray());
                 image.SetIdTags(Entry);
-                await image.SaveAsync(TokenizedDestination, IoHelper.GetUgoiraEncoder());
+                await image.SaveAsync(TokenizedDestination, IoHelper.GetUgoiraEncoder(), token);
             }
             foreach (var imageDownloadTask in TasksSet)
                 imageDownloadTask.Delete();
             IoHelper.DeleteEmptyFolder(TempFolderPath);
-        });
+        }, token);
     }
 
     public override string OpenLocalDestination => TokenizedDestination;

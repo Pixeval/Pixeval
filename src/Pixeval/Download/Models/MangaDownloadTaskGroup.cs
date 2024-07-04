@@ -22,6 +22,7 @@
 
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using Pixeval.CoreApi.Model;
 using Pixeval.Database;
@@ -68,12 +69,16 @@ public class MangaDownloadTaskGroup : DownloadTaskGroup, IImageDownloadTaskGroup
         SetNotCreateFromEntry();
     }
 
-    protected override async Task AfterAllDownloadAsyncOverride(DownloadTaskGroup sender)
+    protected override async Task AfterAllDownloadAsyncOverride(DownloadTaskGroup sender, CancellationToken token = default)
     {
         if (App.AppViewModel.AppSettings.IllustrationDownloadFormat is IllustrationDownloadFormat.Original)
             return;
         foreach (var destination in Destinations)
-            await TagsManager.SetTagsAsync(destination, Entry);
+        {
+            if (token.IsCancellationRequested)
+                return;
+            await TagsManager.SetTagsAsync(destination, Entry, token);
+        }
     }
 
     public override string OpenLocalDestination => Path.GetDirectoryName(TasksSet[0].Destination)!;
