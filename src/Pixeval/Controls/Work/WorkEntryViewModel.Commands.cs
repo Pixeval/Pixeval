@@ -91,6 +91,8 @@ public partial class WorkEntryViewModel<T>
     /// </summary>
     public XamlUICommand CopyCommand { get; } = EntryItemResources.Copy.GetCommand(Symbol.Copy, VirtualKeyModifiers.Control, VirtualKey.C);
 
+    public XamlUICommand OpenUserInfoPage { get; } = EntryItemResources.OpenUserInfoPage.GetCommand(Symbol.Person);
+
     private void InitializeCommands()
     {
         InitializeCommandsBase();
