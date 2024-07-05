@@ -88,22 +88,19 @@ public class UgoiraDownloadTaskGroup : DownloadTaskGroup, IImageDownloadTaskGrou
 
     protected override async Task AfterAllDownloadAsyncOverride(DownloadTaskGroup sender, CancellationToken token = default)
     {
-        await Task.Run(async () =>
+        if (UgoiraDownloadFormat is UgoiraDownloadFormat.OriginalZip)
         {
-            if (UgoiraDownloadFormat is UgoiraDownloadFormat.OriginalZip)
-            {
-                ZipFile.CreateFromDirectory(TempFolderPath, TokenizedDestination, CompressionLevel.Optimal, false);
-            }
-            else
-            {
-                using var image = await Destinations.UgoiraSaveToImageAsync(Metadata.Delays.ToArray());
-                image.SetIdTags(Entry);
-                await image.SaveAsync(TokenizedDestination, IoHelper.GetUgoiraEncoder(), token);
-            }
-            foreach (var imageDownloadTask in TasksSet)
-                imageDownloadTask.Delete();
-            IoHelper.DeleteEmptyFolder(TempFolderPath);
-        }, token);
+            ZipFile.CreateFromDirectory(TempFolderPath, TokenizedDestination, CompressionLevel.Optimal, false);
+        }
+        else
+        {
+            using var image = await Destinations.UgoiraSaveToImageAsync(Metadata.Delays.ToArray());
+            image.SetIdTags(Entry);
+            await image.SaveAsync(TokenizedDestination, IoHelper.GetUgoiraEncoder(), token);
+        }
+        foreach (var imageDownloadTask in TasksSet)
+            imageDownloadTask.Delete();
+        IoHelper.DeleteEmptyFolder(TempFolderPath);
     }
 
     private UgoiraDownloadFormat UgoiraDownloadFormat { get; }

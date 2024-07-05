@@ -28,9 +28,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Extensions.DependencyInjection;
+using Pixeval.Controls.Windowing;
 using Pixeval.CoreApi.Model;
 using Pixeval.Database;
 using Pixeval.Database.Managers;
+using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using WinUI3Utilities;
 
@@ -62,11 +64,12 @@ public abstract partial class DownloadTaskGroup(DownloadHistoryEntry entry) : Ob
             var manager = App.AppViewModel.AppServiceProvider.GetRequiredService<DownloadHistoryPersistentManager>();
             manager.Update(g.DatabaseEntry);
         };
-        AfterItemDownloadAsync += async _ =>
+        // 外部包裹了Task.Run
+        AfterItemDownloadAsync += async (_, _) =>
         {
             if (IsAllCompleted && AfterAllDownloadAsync is not null)
             {
-                IsPending = true;
+                _ = WindowFactory.RootWindow.DispatcherQueue.TryEnqueue(() => IsPending = true);
                 try
                 {
                     await AfterAllDownloadAsync.Invoke(this, CancellationTokenSource.Token);
@@ -75,7 +78,7 @@ public abstract partial class DownloadTaskGroup(DownloadHistoryEntry entry) : Ob
                 {
                     // ignored
                 }
-                IsPending = false;
+                _ = WindowFactory.RootWindow.DispatcherQueue.TryEnqueue(() => IsPending = false);
             }
         };
         AfterAllDownloadAsync += AfterAllDownloadAsyncOverride;
@@ -212,14 +215,14 @@ public abstract partial class DownloadTaskGroup(DownloadHistoryEntry entry) : Ob
 
     public event Func<ImageDownloadTask, Task>? ItemDownloadErrorAsync;
 
-    public event Func<ImageDownloadTask, Task>? AfterItemDownloadAsync;
+    public event Func<ImageDownloadTask, CancellationToken, Task>? AfterItemDownloadAsync;
 
     public event Func<DownloadTaskGroup, CancellationToken, Task>? AfterAllDownloadAsync;
 
     protected void AddToTasksSet(ImageDownloadTask task)
     {
         _tasksSet.Add(task);
-        task.AfterDownloadAsync += x => AfterItemDownloadAsync?.Invoke(x) ?? Task.CompletedTask;
+        task.AfterDownloadAsync += (x, t) => AfterItemDownloadAsync?.Invoke(x, t) ?? Task.CompletedTask;
         task.DownloadStartedAsync += x => ItemDownloadStartedAsync?.Invoke(x) ?? Task.CompletedTask;
         task.DownloadStoppedAsync += x => ItemDownloadStoppedAsync?.Invoke(x) ?? Task.CompletedTask;
         task.DownloadErrorAsync += x => ItemDownloadErrorAsync?.Invoke(x) ?? Task.CompletedTask;

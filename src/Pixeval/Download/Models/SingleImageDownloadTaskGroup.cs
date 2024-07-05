@@ -23,6 +23,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Pixeval.CoreApi.Model;
@@ -35,8 +36,7 @@ using WinUI3Utilities;
 
 namespace Pixeval.Download.Models;
 
-public class SingleImageDownloadTaskGroup : ImageDownloadTask,
-    IImageDownloadTaskGroup
+public class SingleImageDownloadTaskGroup : ImageDownloadTask, IImageDownloadTaskGroup
 {
     public DownloadHistoryEntry DatabaseEntry { get; }
 
@@ -85,11 +85,11 @@ public class SingleImageDownloadTaskGroup : ImageDownloadTask,
 
     private IllustrationDownloadFormat IllustrationDownloadFormat { get; }
 
-    protected override async Task AfterDownloadAsyncOverride(ImageDownloadTask sender)
+    protected override async Task AfterDownloadAsyncOverride(ImageDownloadTask sender, CancellationToken token = default)
     {
         if (IllustrationDownloadFormat is IllustrationDownloadFormat.Original)
             return;
-        await TagsManager.SetTagsAsync(Destination, Entry);
+        await TagsManager.SetTagsAsync(Destination, Entry, token);
     }
 
     public int Count => 1;

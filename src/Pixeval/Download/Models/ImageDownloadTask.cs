@@ -56,7 +56,7 @@ public partial class ImageDownloadTask : ObservableObject, IDownloadTaskBase, IP
         return Task.CompletedTask;
     }
 
-    protected virtual Task AfterDownloadAsyncOverride(ImageDownloadTask sender) => Task.CompletedTask;
+    protected virtual Task AfterDownloadAsyncOverride(ImageDownloadTask sender, CancellationToken token = default) => Task.CompletedTask;
 
     public Stream? Stream { get; init; }
 
@@ -112,7 +112,7 @@ public partial class ImageDownloadTask : ObservableObject, IDownloadTaskBase, IP
         ProgressPercentage = 100;
         // CurrentState = DownloadState.Pending;
         CurrentState = DownloadState.Completed;
-        await AfterDownloadAsync.Invoke(this);
+        await Task.Run(async () => await AfterDownloadAsync.Invoke(this, CancellationTokenSource.Token), CancellationTokenSource.Token);
     }
 
     private async Task SetErrorAsync(Exception ex)
@@ -255,7 +255,7 @@ public partial class ImageDownloadTask : ObservableObject, IDownloadTaskBase, IP
 
     public event Action<ImageDownloadTask>? DownloadTryReset;
 
-    public event Func<ImageDownloadTask, Task> AfterDownloadAsync;
+    public event Func<ImageDownloadTask, CancellationToken, Task> AfterDownloadAsync;
 
     void IProgress<double>.Report(double value) => ProgressPercentage = value;
 

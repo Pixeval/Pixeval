@@ -82,7 +82,8 @@ public class NovelDownloadTaskGroup : DownloadTaskGroup
                 IllustrationDownloadFormat is IllustrationDownloadFormat.Original
                     ? IoHelper.ReplaceTokenExtensionFromUrl(name, url)
                     : name + imgExt,
-                DatabaseEntry.State) { Stream = DocumentViewModel.TryGetStream(i) };
+                DatabaseEntry.State)
+            { Stream = DocumentViewModel.TryGetStream(i) };
             AddToTasksSet(imageDownloadTask);
         }
 
@@ -145,6 +146,7 @@ public class NovelDownloadTaskGroup : DownloadTaskGroup
                 DocumentViewModel.SetStream(i, File.OpenRead(imageDownloadTask.Destination));
                 ++i;
             }
+            
             var document = DocumentViewModel.LoadPdfContent();
             document.GeneratePdf(DocPath);
             i = 0;
@@ -155,6 +157,7 @@ public class NovelDownloadTaskGroup : DownloadTaskGroup
                 imageDownloadTask.Delete();
                 ++i;
             }
+
             IoHelper.DeleteEmptyFolder(PdfTempFolderPath);
             return;
         }

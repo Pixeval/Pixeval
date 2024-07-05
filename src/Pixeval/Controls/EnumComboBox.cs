@@ -84,6 +84,7 @@ public sealed partial class EnumValuesExtension : MarkupExtension
             EnumValuesEnum.SimpleWorkType => SimpleWorkTypeExtension.GetItems(),
             EnumValuesEnum.WorkSortOption => WorkSortOptionExtension.GetItems(),
             EnumValuesEnum.PrivacyPolicy => PrivacyPolicyExtension.GetItems(),
+            EnumValuesEnum.DownloadListOption => DownloadListOptionExtension.GetItems(),
             _ => throw new ArgumentOutOfRangeException()
         };
     }
@@ -94,5 +95,6 @@ public enum EnumValuesEnum
     WorkType,
     SimpleWorkType,
     WorkSortOption,
-    PrivacyPolicy
+    PrivacyPolicy,
+    DownloadListOption
 }

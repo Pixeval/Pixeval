@@ -35,8 +35,6 @@ namespace Pixeval.Controls;
 
 public partial class DownloadViewViewModel : ObservableObject, IDisposable
 {
-    public static readonly IEnumerable<DownloadListOption> AvailableDownloadListOptions = Enum.GetValues<DownloadListOption>();
-
     [ObservableProperty]
     private DownloadListOption _currentOption;
 
