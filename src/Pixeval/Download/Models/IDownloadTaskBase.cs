@@ -37,6 +37,8 @@ public interface IDownloadTaskBase
 
     string OpenLocalDestination { get; }
 
+    bool IsProcessing { get; }
+
     void TryReset();
 
     void Pause();

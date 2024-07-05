@@ -104,17 +104,29 @@ public abstract partial class DownloadTaskGroup(DownloadHistoryEntry entry) : Ob
     {
         if (CurrentState is not (DownloadState.Completed or DownloadState.Error or DownloadState.Cancelled))
             return;
+        IsProcessing = true;
         TasksSet.ForEach(t => t.TryReset());
         if (CancellationTokenSource.IsCancellationRequested)
         {
             CancellationTokenSource.Dispose();
             CancellationTokenSource = new();
         }
+        IsProcessing = false;
     }
 
-    public void Pause() => TasksSet.ForEach(t => t.Pause());
+    public void Pause()
+    {
+        IsProcessing = true;
+        TasksSet.ForEach(t => t.Pause());
+        IsProcessing = false;
+    }
 
-    public void TryResume() => TasksSet.ForEach(t => t.TryResume());
+    public void TryResume()
+    {
+        IsProcessing = true;
+        TasksSet.ForEach(t => t.TryResume());
+        IsProcessing = false;
+    }
 
     /// <summary>
     /// 因为<see cref="DownloadState.Pending"/>只能变为<see cref="DownloadState.Cancelled"/>而不能变为<see cref="DownloadState.Paused"/>，所以只需要在此使用
@@ -123,8 +135,10 @@ public abstract partial class DownloadTaskGroup(DownloadHistoryEntry entry) : Ob
     {
         if (CurrentState is not (DownloadState.Paused or DownloadState.Pending or DownloadState.Running or DownloadState.Queued))
             return;
+        IsProcessing = true;
         TasksSet.ForEach(t => t.Cancel());
         CancellationTokenSource.Cancel();
+        IsProcessing = false;
     }
 
     public abstract void Delete();
@@ -138,6 +152,8 @@ public abstract partial class DownloadTaskGroup(DownloadHistoryEntry entry) : Ob
     /// 本下载组是否处于<see cref="DownloadState.Pending"/>状态
     /// </summary>
     [ObservableProperty][NotifyPropertyChangedFor(nameof(CurrentState))] private bool _isPending;
+
+    [ObservableProperty] private bool _isProcessing;
 
     public DownloadState CurrentState
     {

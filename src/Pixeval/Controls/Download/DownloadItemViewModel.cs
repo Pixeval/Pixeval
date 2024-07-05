@@ -89,7 +89,7 @@ public sealed partial class DownloadItemViewModel(IDownloadTaskGroup downloadTas
 
     public string ActionButtonContent(DownloadState state) => state switch
     {
-        DownloadState.Queued or DownloadState.Pending => DownloadItemResources.DownloadCancelledAction,
+        DownloadState.Queued or DownloadState.Pending => DownloadItemResources.ActionDownloadCancelled,
         DownloadState.Running => DownloadItemResources.ActionButtonContentPause,
         DownloadState.Cancelled or DownloadState.Error => DownloadItemResources.ActionButtonContentRetry,
         DownloadState.Completed => DownloadItemResources.ActionButtonContentOpen,
@@ -107,9 +107,11 @@ public sealed partial class DownloadItemViewModel(IDownloadTaskGroup downloadTas
         _ => ThrowHelper.ArgumentOutOfRange<DownloadState, Symbol>(state)
     };
 
-    public bool IsRedownloadItemEnabled(DownloadState state) => state is DownloadState.Completed or DownloadState.Error;
+    public bool IsItemEnabled(bool isProcessing, DownloadState state) => !isProcessing || state is DownloadState.Completed;
 
-    public bool IsCancelItemEnabled(DownloadState state) => state is DownloadState.Running or DownloadState.Queued or DownloadState.Paused;
+    public bool IsRedownloadItemEnabled(bool isProcessing, DownloadState state) => !isProcessing && state is DownloadState.Completed or DownloadState.Error;
+
+    public bool IsCancelItemEnabled(bool isProcessing, DownloadState state) => !isProcessing && state is DownloadState.Running or DownloadState.Queued or DownloadState.Paused;
 
     public bool IsError(DownloadState state) => state is DownloadState.Error;
 

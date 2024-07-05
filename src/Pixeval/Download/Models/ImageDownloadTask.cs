@@ -70,6 +70,8 @@ public partial class ImageDownloadTask : ObservableObject, IDownloadTaskBase, IP
 
     [ObservableProperty] private Exception? _errorCause;
 
+    [ObservableProperty] private bool _isProcessing;
+
     private CancellationTokenSource CancellationTokenSource { get; set; } = new();
 
     private bool _isRunning;
@@ -181,6 +183,7 @@ public partial class ImageDownloadTask : ObservableObject, IDownloadTaskBase, IP
     {
         if (CurrentState is not (DownloadState.Completed or DownloadState.Error or DownloadState.Cancelled))
             return;
+        IsProcessing = true;
         ErrorCause = null;
         ProgressPercentage = 0;
         Delete();
@@ -191,20 +194,24 @@ public partial class ImageDownloadTask : ObservableObject, IDownloadTaskBase, IP
         }
         CurrentState = DownloadState.Queued;
         DownloadTryReset?.Invoke(this);
+        IsProcessing = false;
     }
 
     public void Pause()
     {
         if (CurrentState is not DownloadState.Running)
             return;
+        IsProcessing = true;
         CancellationTokenSource.Cancel();
         CurrentState = DownloadState.Paused;
+        IsProcessing = false;
     }
 
     public void TryResume()
     {
         if (CurrentState is not DownloadState.Paused)
             return;
+        IsProcessing = true;
         if (CancellationTokenSource.IsCancellationRequested)
         {
             CancellationTokenSource.Dispose();
@@ -212,6 +219,7 @@ public partial class ImageDownloadTask : ObservableObject, IDownloadTaskBase, IP
         }
         CurrentState = DownloadState.Queued;
         DownloadTryResume?.Invoke(this);
+        IsProcessing = false;
     }
 
     public async Task ResumeAsync(HttpClient httpClient)
@@ -223,8 +231,10 @@ public partial class ImageDownloadTask : ObservableObject, IDownloadTaskBase, IP
     {
         if (CurrentState is not (DownloadState.Paused or DownloadState.Pending or DownloadState.Running or DownloadState.Queued))
             return;
+        IsProcessing = true;
         CancellationTokenSource.Cancel();
         CurrentState = DownloadState.Cancelled;
+        IsProcessing = false;
     }
 
     public void Delete()

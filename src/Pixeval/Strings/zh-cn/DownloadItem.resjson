@@ -7,7 +7,7 @@
   "CancelDownloadItem/Label": "取消下载",
   "CheckErrorMessageInDetailItem/Label": "查看详细错误信息",
   "DownloadCancelled": "下载已取消",
-  "DownloadCancelledAction": "取消",
+  "ActionDownloadCancelled": "取消",
   "DownloadCompleted": "下载完成",
   "DownloadErrorMessageFormatted": "下载失败: {0}",
   "DownloadPaused": "下载已暂停",

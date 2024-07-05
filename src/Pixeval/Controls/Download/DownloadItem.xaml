@@ -64,7 +64,10 @@
         DefaultLabelPosition="Right"
         OverflowButtonVisibility="Visible">
         <!--  Width="125" 是试出来刚好只显示一个按钮的宽度  -->
-        <AppBarButton Click="ActionButton_OnClicked" Label="{x:Bind ViewModel.ActionButtonContent(ViewModel.DownloadTask.CurrentState), Mode=OneWay}">
+        <AppBarButton
+            Click="ActionButton_OnClicked"
+            IsEnabled="{x:Bind ViewModel.IsItemEnabled(ViewModel.DownloadTask.IsProcessing, ViewModel.DownloadTask.CurrentState), Mode=OneWay}"
+            Label="{x:Bind ViewModel.ActionButtonContent(ViewModel.DownloadTask.CurrentState), Mode=OneWay}">
             <AppBarButton.Icon>
                 <fluent:SymbolIcon Symbol="{x:Bind ViewModel.ActionButtonSymbol(ViewModel.DownloadTask.CurrentState), Mode=OneWay}" />
             </AppBarButton.Icon>
@@ -73,12 +76,12 @@
             x:Uid="/DownloadItem/RedownloadItem"
             Click="RedownloadItem_OnClicked"
             Icon="{fluent:SymbolIcon Symbol=ArrowDownload}"
-            IsEnabled="{x:Bind ViewModel.IsRedownloadItemEnabled(ViewModel.DownloadTask.CurrentState), Mode=OneWay}" />
+            IsEnabled="{x:Bind ViewModel.IsRedownloadItemEnabled(ViewModel.DownloadTask.IsProcessing, ViewModel.DownloadTask.CurrentState), Mode=OneWay}" />
         <AppBarButton
             x:Uid="/DownloadItem/CancelDownloadItem"
             Click="CancelDownloadItem_OnClicked"
             Icon="{fluent:SymbolIcon Symbol=Dismiss}"
-            IsEnabled="{x:Bind ViewModel.IsCancelItemEnabled(ViewModel.DownloadTask.CurrentState), Mode=OneWay}" />
+            IsEnabled="{x:Bind ViewModel.IsCancelItemEnabled(ViewModel.DownloadTask.IsProcessing, ViewModel.DownloadTask.CurrentState), Mode=OneWay}" />
         <AppBarButton
             x:Uid="/DownloadItem/OpenDownloadLocationItem"
             Click="OpenDownloadLocationItem_OnClicked"
