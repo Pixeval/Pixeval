@@ -27,9 +27,9 @@ namespace Pixeval.Download.Macros;
 [MetaPathMacro<IWorkViewModel>]
 public class FileExtensionMacro : ITransducer<IWorkViewModel>, ILastSegment
 {
-    public static string NameConst => "ext";
+    public const string NameConst = "ext";
 
-    public static string NameConstToken => $"<{NameConst}>";
+    public const string NameConstToken = $".<{NameConst}>";
 
     public string Name => NameConst;
 

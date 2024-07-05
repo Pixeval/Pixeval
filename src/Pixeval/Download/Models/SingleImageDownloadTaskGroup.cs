@@ -60,6 +60,7 @@ public class SingleImageDownloadTaskGroup : ImageDownloadTask,
     {
         DatabaseEntry = entry;
         CurrentState = entry.State;
+        IllustrationDownloadFormat = IoHelper.GetIllustrationFormat(Path.GetExtension(Destination));
     }
 
     private void SetNotCreateFromEntry()
@@ -82,9 +83,11 @@ public class SingleImageDownloadTaskGroup : ImageDownloadTask,
 
     private bool IsCreateFromEntry { get; set; } = true;
 
+    private IllustrationDownloadFormat IllustrationDownloadFormat { get; }
+
     protected override async Task AfterDownloadAsyncOverride(ImageDownloadTask sender)
     {
-        if (App.AppViewModel.AppSettings.IllustrationDownloadFormat is IllustrationDownloadFormat.Original)
+        if (IllustrationDownloadFormat is IllustrationDownloadFormat.Original)
             return;
         await TagsManager.SetTagsAsync(Destination, Entry);
     }

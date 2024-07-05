@@ -40,10 +40,12 @@ public class MangaDownloadTaskGroup : DownloadTaskGroup, IImageDownloadTaskGroup
 
     public MangaDownloadTaskGroup(DownloadHistoryEntry entry) : base(entry)
     {
+        IllustrationDownloadFormat = IoHelper.GetIllustrationFormat(Path.GetExtension(TokenizedDestination));
     }
 
     public MangaDownloadTaskGroup(Illustration entry, string destination, IReadOnlyList<Stream>? streams = null) : base(entry, destination, DownloadItemType.Manga)
     {
+        IllustrationDownloadFormat = IoHelper.GetIllustrationFormat(Path.GetExtension(TokenizedDestination));
         SetTasksSet(streams);
     }
 
@@ -71,7 +73,7 @@ public class MangaDownloadTaskGroup : DownloadTaskGroup, IImageDownloadTaskGroup
 
     protected override async Task AfterAllDownloadAsyncOverride(DownloadTaskGroup sender, CancellationToken token = default)
     {
-        if (App.AppViewModel.AppSettings.IllustrationDownloadFormat is IllustrationDownloadFormat.Original)
+        if (IllustrationDownloadFormat is IllustrationDownloadFormat.Original)
             return;
         foreach (var destination in Destinations)
         {
@@ -80,6 +82,8 @@ public class MangaDownloadTaskGroup : DownloadTaskGroup, IImageDownloadTaskGroup
             await TagsManager.SetTagsAsync(destination, Entry, token);
         }
     }
+
+    private IllustrationDownloadFormat IllustrationDownloadFormat { get; }
 
     public override string OpenLocalDestination => Path.GetDirectoryName(TasksSet[0].Destination)!;
 

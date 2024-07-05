@@ -267,6 +267,19 @@ public static partial class IoHelper
         };
     }
 
+    public static UgoiraDownloadFormat GetUgoiraFormat(string extension)
+    {
+        return extension switch
+        {
+            ".zip" => UgoiraDownloadFormat.OriginalZip,
+            ".tiff" => UgoiraDownloadFormat.Tiff,
+            ".apng" => UgoiraDownloadFormat.APng,
+            ".gif" => UgoiraDownloadFormat.Gif,
+            ".webp" => UgoiraDownloadFormat.WebPLossless,
+            _ => ThrowHelper.ArgumentOutOfRange<string, UgoiraDownloadFormat>(extension)
+        };
+    }
+
     public static string GetIllustrationExtension(IllustrationDownloadFormat? illustrationDownloadFormat = null)
     {
         illustrationDownloadFormat ??= App.AppViewModel.AppSettings.IllustrationDownloadFormat;
@@ -279,6 +292,19 @@ public static partial class IoHelper
         };
     }
 
+    public static IllustrationDownloadFormat GetIllustrationFormat(string extension)
+    {
+        return extension switch
+        {
+            ".jpg" => IllustrationDownloadFormat.Jpg,
+            ".png" => IllustrationDownloadFormat.Png,
+            ".bmp" => IllustrationDownloadFormat.Bmp,
+            ".webp" => IllustrationDownloadFormat.WebPLossless,
+            FileExtensionMacro.NameConstToken => IllustrationDownloadFormat.Original,
+            _ => ThrowHelper.ArgumentOutOfRange<string, IllustrationDownloadFormat>(extension)
+        };
+    }
+
     public static string GetNovelExtension(NovelDownloadFormat? novelDownloadFormat = null)
     {
         novelDownloadFormat ??= App.AppViewModel.AppSettings.NovelDownloadFormat;
@@ -288,6 +314,18 @@ public static partial class IoHelper
             NovelDownloadFormat.Pdf => "." + novelDownloadFormat.ToString()!.ToLower(),
             NovelDownloadFormat.Html or NovelDownloadFormat.Md => "\\novel." + novelDownloadFormat.ToString()!.ToLower(),
             _ => ThrowHelper.ArgumentOutOfRange<NovelDownloadFormat?, string>(novelDownloadFormat)
+        };
+    }
+
+    public static NovelDownloadFormat GetNovelFormat(string extension)
+    {
+        return extension switch
+        {
+            ".txt" => NovelDownloadFormat.OriginalTxt,
+            ".pdf" => NovelDownloadFormat.Pdf,
+            ".html" => NovelDownloadFormat.Html,
+            ".md" => NovelDownloadFormat.Md,
+            _ => ThrowHelper.ArgumentOutOfRange<string, NovelDownloadFormat>(extension)
         };
     }
 

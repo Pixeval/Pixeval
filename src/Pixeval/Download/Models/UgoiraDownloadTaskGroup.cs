@@ -65,13 +65,19 @@ public class UgoiraDownloadTaskGroup : DownloadTaskGroup, IImageDownloadTaskGrou
 
     public UgoiraDownloadTaskGroup(DownloadHistoryEntry entry) : base(entry)
     {
+        UgoiraDownloadFormat = IoHelper.GetUgoiraFormat(Path.GetExtension(TokenizedDestination));
     }
 
-    public UgoiraDownloadTaskGroup(Illustration entry, UgoiraMetadataResponse metadata, string destination, IReadOnlyList<Stream>? streams = null) : base(entry, destination, DownloadItemType.Ugoira) => SetMetadata(metadata, streams);
+    public UgoiraDownloadTaskGroup(Illustration entry, UgoiraMetadataResponse metadata, string destination, IReadOnlyList<Stream>? streams = null) : base(entry, destination, DownloadItemType.Ugoira)
+    {
+        UgoiraDownloadFormat = IoHelper.GetUgoiraFormat(Path.GetExtension(TokenizedDestination));
+        SetMetadata(metadata, streams);
+    }
 
     public UgoiraDownloadTaskGroup(Illustration entry, string destination) : base(entry, destination,
         DownloadItemType.Ugoira)
     {
+        UgoiraDownloadFormat = IoHelper.GetUgoiraFormat(Path.GetExtension(TokenizedDestination));
     }
 
     public override async ValueTask InitializeTaskGroupAsync()
@@ -84,7 +90,7 @@ public class UgoiraDownloadTaskGroup : DownloadTaskGroup, IImageDownloadTaskGrou
     {
         await Task.Run(async () =>
         {
-            if (App.AppViewModel.AppSettings.UgoiraDownloadFormat is UgoiraDownloadFormat.OriginalZip)
+            if (UgoiraDownloadFormat is UgoiraDownloadFormat.OriginalZip)
             {
                 ZipFile.CreateFromDirectory(TempFolderPath, TokenizedDestination, CompressionLevel.Optimal, false);
             }
@@ -99,6 +105,8 @@ public class UgoiraDownloadTaskGroup : DownloadTaskGroup, IImageDownloadTaskGrou
             IoHelper.DeleteEmptyFolder(TempFolderPath);
         }, token);
     }
+
+    private UgoiraDownloadFormat UgoiraDownloadFormat { get; }
 
     public override string OpenLocalDestination => TokenizedDestination;
 
