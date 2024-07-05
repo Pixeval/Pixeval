@@ -30,9 +30,9 @@ public class IllustrationMetaPathParser : IMetaPathParser<IllustrationItemViewMo
 {
     private readonly MacroParser<IllustrationItemViewModel> _parser = new();
 
-    public static IReadOnlyList<IMacro> MacroProviderStatic { get; } = MetaPathMacroAttributeHelper.GetIWorkViewModelInstances();
+    private static readonly IReadOnlyList<IMacro> _macroProviderStatic = MetaPathMacroAttributeHelper.GetIWorkViewModelInstances();
  
-    public IReadOnlyList<IMacro> MacroProvider => MacroProviderStatic;
+    public IReadOnlyList<IMacro> MacroProvider => _macroProviderStatic;
 
     public string Reduce(string raw, IllustrationItemViewModel context)
     {

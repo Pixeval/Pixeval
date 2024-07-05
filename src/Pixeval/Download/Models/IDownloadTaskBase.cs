@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/DownloadStartingEventArgs.cs
+// Copyright (c) 2023 Pixeval/ObservableDownloadTask.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,19 +18,34 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using Pixeval.Utilities.Threading;
+using System;
 
-namespace Pixeval.Download;
+namespace Pixeval.Download.Models;
 
-public class DownloadStartingEventArgs
+public interface IDownloadTaskBase
 {
-    private readonly DownloadStartingDeferral _deferral = new();
+    /// <summary>
+    /// 只有<see cref="CurrentState"/>是<see cref="DownloadState.Running"/>或<see cref="DownloadState.Paused"/>值有效
+    /// </summary>
+    double ProgressPercentage { get; }
 
-    public ReenterableAwaiter<bool> DeferralAwaiter => _deferral.Signal;
+    DownloadState CurrentState { get; }
 
-    public DownloadStartingDeferral GetDeferral()
-    {
-        _deferral.Set();
-        return _deferral;
-    }
+    string Destination { get; }
+
+    Exception? ErrorCause { get; }
+
+    string OpenLocalDestination { get; }
+
+    bool IsProcessing { get; }
+
+    void TryReset();
+
+    void Pause();
+
+    void TryResume();
+
+    void Cancel();
+
+    void Delete();
 }

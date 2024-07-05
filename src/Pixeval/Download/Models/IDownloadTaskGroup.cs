@@ -3,7 +3,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/ILazyLoadDownloadTask.cs
+// Copyright (c) 2024 Pixeval/IDownloadTaskGroup.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -20,12 +20,18 @@
 
 #endregion
 
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Threading.Tasks;
 using Pixeval.CoreApi.Model;
+using Pixeval.Database;
 
 namespace Pixeval.Download.Models;
 
-public interface ILazyLoadDownloadTask
+public interface IDownloadTaskGroup : IDownloadTaskBase, IIdEntry, INotifyPropertyChanged, INotifyPropertyChanging, IReadOnlyCollection<ImageDownloadTask>, IDisposable
 {
-    Task LazyLoadAsync(IWorkEntry entry);
+    DownloadHistoryEntry DatabaseEntry { get; }
+
+    ValueTask InitializeTaskGroupAsync();
 }

@@ -3,7 +3,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2024 Pixeval/IntrinsicNovelDownloadTask.cs
+// Copyright (c) 2024 Pixeval/IViewModelFactory.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -20,20 +20,9 @@
 
 #endregion
 
-using System.Threading.Tasks;
-using Pixeval.Controls;
-using Pixeval.Database;
+namespace Pixeval.Controls;
 
-namespace Pixeval.Download.Models;
-
-public sealed partial class IntrinsicNovelDownloadTask : NovelDownloadTask
+public interface IFactory<in T, out TSelf>
 {
-    public IntrinsicNovelDownloadTask(DownloadHistoryEntry entry, NovelItemViewModel novel, DocumentViewerViewModel viewModel) :
-        base(entry, novel, viewModel.NovelContent, viewModel) =>
-        Report(90);
-
-    public override async Task DownloadAsync(Downloader downloadStreamAsync)
-    {
-        await ManageResult();
-    }
+    static abstract TSelf CreateInstance(T entry);
 }

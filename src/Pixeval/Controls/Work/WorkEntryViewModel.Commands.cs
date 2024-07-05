@@ -50,7 +50,7 @@ public partial class WorkEntryViewModel<T>
     /// Parameter1: <see cref="ValueTuple{T1, T2}"/>
     /// <list type="bullet">
     /// <item><term>T1</term><description><see cref="ulong"/></description></item>
-    /// <item><term>T2</term><description><see cref="GetImageStream"/>?(<see cref="IllustrationItemViewModel"/>)</description></item>
+    /// <item><term>T2</term><description><see cref="GetImageStreams"/>?(<see cref="IllustrationItemViewModel"/>)</description></item>
     /// <item><term>T2</term><description><see cref="DocumentViewerViewModel"/>?(<see cref="NovelItemViewModel"/>)</description></item>
     /// </list>
     /// 
@@ -63,7 +63,7 @@ public partial class WorkEntryViewModel<T>
     /// Parameter1: <see cref="ValueTuple{T1, T2}"/>
     /// <list type="bullet">
     /// <item><term>T1</term><description><see cref="ulong"/></description></item>
-    /// <item><term>T2</term><description><see cref="GetImageStream"/>?(<see cref="IllustrationItemViewModel"/>)</description></item>
+    /// <item><term>T2</term><description><see cref="GetImageStreams"/>?(<see cref="IllustrationItemViewModel"/>)</description></item>
     /// <item><term>T2</term><description><see cref="DocumentViewerViewModel"/>?(<see cref="NovelItemViewModel"/>)</description></item>
     /// </list>
     /// 
@@ -76,10 +76,10 @@ public partial class WorkEntryViewModel<T>
     /// Parameter1: <see cref="ValueTuple{T1, T2}"/>
     /// <list type="bullet">
     /// <item><term>T1</term><description><see cref="ulong"/></description></item>
-    /// <item><term>T2</term><description><see cref="GetImageStream"/></description></item>
+    /// <item><term>T2</term><description><see cref="GetImageStreams"/></description></item>
     /// </list>
     /// 
-    /// Parameter2: <see cref="GetImageStream"/><br/>
+    /// Parameter2: <see cref="GetImageStreams"/><br/>
     /// <see cref="NovelItemViewModel"/>:<br/>
     /// Parameter1: <see cref="ValueTuple{T1, T2}"/>
     /// <list type="bullet">

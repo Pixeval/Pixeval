@@ -96,7 +96,7 @@ public partial class CommentItemViewModel(Comment comment, SimpleWorkType type, 
         var result = await App.AppViewModel.MakoClient.DownloadSoftwareBitmapSourceAsync(Comment.CommentPoster.ProfileImageUrls.Medium);
         AvatarSource = result is Result<SoftwareBitmapSource>.Success { Value: var avatar }
             ? avatar
-            : await AppInfo.PixivNoProfile.ValueAsync;
+            : await AppInfo.PixivNoProfile;
     }
 
     public void AddComment(Comment comment)
@@ -119,7 +119,7 @@ public partial class CommentItemViewModel(Comment comment, SimpleWorkType type, 
                         Text = content
                     });
                     break;
-                case ReplyContentToken.EmojiToken(var emoji) when await App.AppViewModel.MakoClient.DownloadStreamAsync(emoji.GetReplyEmojiDownloadUrl()) is Result<Stream>.Success(var emojiSource):
+                case ReplyContentToken.EmojiToken(var emoji) when await App.AppViewModel.MakoClient.DownloadMemoryStreamAsync(emoji.GetReplyEmojiDownloadUrl()) is Result<Stream>.Success(var emojiSource):
                     paragraph.Inlines.Add(new InlineUIContainer
                     {
                         Child = new Image

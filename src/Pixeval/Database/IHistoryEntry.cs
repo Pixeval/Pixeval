@@ -3,7 +3,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2024 Pixeval/IViewModelFactory.cs
+// Copyright (c) 2024 Pixeval/IHistoryEntry.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -20,9 +20,12 @@
 
 #endregion
 
-namespace Pixeval.Controls;
+using LiteDB;
 
-public interface IViewModelFactory<in T, out TSelf>
+namespace Pixeval.Database;
+
+public interface IHistoryEntry
 {
-    static abstract TSelf CreateInstance(T entry);
+    [BsonId(true)]
+    public ObjectId? HistoryEntryId { get; set; }
 }

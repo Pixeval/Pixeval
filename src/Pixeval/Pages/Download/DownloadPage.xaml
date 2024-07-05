@@ -7,26 +7,19 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:fluent="using:FluentIcons.WinUI"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:system="using:System"
     mc:Ignorable="d">
     <controls1:DockPanel>
         <controls1:DockPanel
             Margin="{StaticResource ComboBoxLeftIndent}"
             controls1:DockPanel.Dock="Top"
             HorizontalSpacing="10">
-            <ComboBox
+            <controls:EnumComboBox
                 x:Uid="/DownloadPage/ModeFilterComboBox"
                 VerticalAlignment="Center"
                 controls1:DockPanel.Dock="Left"
-                ItemsSource="{x:Bind controls:DownloadViewViewModel.AvailableDownloadListOptions}"
-                SelectedItem="{x:Bind DownloadView.ViewModel.CurrentOption, Mode=TwoWay}"
-                SelectionChanged="ModeFilterComboBox_OnSelectionChanged">
-                <ComboBox.ItemTemplate>
-                    <DataTemplate x:DataType="system:Enum">
-                        <TextBlock Text="{x:Bind controls:DownloadListOptionExtension.GetResource((controls:DownloadListOption))}" />
-                    </DataTemplate>
-                </ComboBox.ItemTemplate>
-            </ComboBox>
+                ItemsSource="{controls:EnumValues Type=DownloadListOption}"
+                SelectedEnum="{x:Bind DownloadView.ViewModel.CurrentOption, Mode=TwoWay}"
+                SelectionChanged="ModeFilterComboBox_OnSelectionChanged" />
             <AutoSuggestBox
                 x:Uid="/DownloadPage/FilterAutoSuggestBox"
                 VerticalAlignment="Center"
@@ -39,7 +32,7 @@
                 TextChanged="FilterAutoSuggestBox_OnTextChanged">
                 <AutoSuggestBox.ItemTemplate>
                     <DataTemplate x:DataType="controls:DownloadItemViewModel">
-                        <TextBlock Text="{x:Bind Title}" />
+                        <TextBlock Text="{x:Bind Entry.Title}" />
                     </DataTemplate>
                 </AutoSuggestBox.ItemTemplate>
             </AutoSuggestBox>

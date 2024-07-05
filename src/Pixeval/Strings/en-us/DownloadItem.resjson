@@ -7,7 +7,7 @@
   "CancelDownloadItem/Label": "Cancel",
   "CheckErrorMessageInDetailItem/Label": "Error detail",
   "DownloadCancelled": "Download cancelled",
-  "DownloadCancelledAction": "Cancel",
+  "ActionDownloadCancelled": "Cancel",
   "DownloadCompleted": "Download competed",
   "DownloadErrorMessageFormatted": "Download failed: {0}",
   "DownloadPaused": "Download paused",

@@ -45,9 +45,9 @@ public record MakoClientConfiguration(
         new("(Windows NT 10.0; Win64; x64)"),
         new("AppleWebKit", "537.36"),
         new("(KHTML, like Gecko)"),
-        new("Chrome", "121.0.0.0"),
+        new("Chrome", "126.0.0.0"),
         new("Safari", "537.36"),
-        new("Edg", "121.0.0.0")
+        new("Edg", "126.0.0.0")
     ];
 
     [JsonPropertyName("connectionTimeout")]

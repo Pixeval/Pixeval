@@ -242,7 +242,7 @@ public sealed partial class MainPage
     private void PerformSearch(string text, string? optTranslatedName = null)
     {
         var manager = App.AppViewModel.AppServiceProvider.GetRequiredService<SearchHistoryPersistentManager>();
-        if (manager.Count is 0 || manager.Select(count: 1).AsList() is [{ Value: var last }, ..] && last != text)
+        if (manager.Count is 0 || manager.Select(count: 1).FirstOrDefault() is { Value: var last } && last != text)
         {
             manager.Insert(new SearchHistoryEntry
             {
