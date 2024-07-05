@@ -198,15 +198,22 @@
                     Text="{x:Bind ViewModel.Title, Mode=OneWay}"
                     TextTrimming="CharacterEllipsis"
                     TextWrapping="WrapWholeWords" />
-                <TextBlock
-                    x:Name="PopupAuthorTextBlock"
+                <Button
+                    x:Name="PopupAuthorButton"
+                    Padding="2"
                     controls:DockPanel.Dock="Top"
-                    Foreground="DarkGray"
-                    MaxLines="1"
-                    Style="{StaticResource BodyTextBlockStyle}"
-                    Text="{x:Bind ViewModel.User.Name, Mode=OneWay}"
-                    TextTrimming="CharacterEllipsis"
-                    TextWrapping="WrapWholeWords" />
+                    Background="Transparent"
+                    BorderBrush="Transparent"
+                    Click="OpenUserInfoPage_OnClicked"
+                    CornerRadius="{StaticResource ControlCornerRadius}">
+                    <TextBlock
+                        Foreground="DarkGray"
+                        MaxLines="1"
+                        Style="{StaticResource BodyTextBlockStyle}"
+                        Text="{x:Bind ViewModel.User.Name, Mode=OneWay}"
+                        TextTrimming="CharacterEllipsis"
+                        TextWrapping="WrapWholeWords" />
+                </Button>
                 <ScrollView>
                     <StackPanel Spacing="10">
                         <ItemsControl

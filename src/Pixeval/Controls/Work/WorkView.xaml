@@ -14,6 +14,7 @@
                 <local:NovelItem
                     OpenNovelRequested="NovelItem_OnOpenNovelRequested"
                     RequestAddToBookmark="WorkItem_OnRequestAddToBookmark"
+                    RequestOpenUserInfoPage="WorkItem_OnRequestOpenUserInfoPage"
                     RequestTeachingTip="WorkItem_OnRequestTeachingTip"
                     ViewModel="{x:Bind}"
                     ViewModelChanged="WorkItem_OnViewModelChanged" />
@@ -23,6 +24,7 @@
             <ItemContainer>
                 <local:IllustrationItem
                     RequestAddToBookmark="WorkItem_OnRequestAddToBookmark"
+                    RequestOpenUserInfoPage="WorkItem_OnRequestOpenUserInfoPage"
                     RequestTeachingTip="WorkItem_OnRequestTeachingTip"
                     RequiredParam="IllustrationItem_OnRequiredParam"
                     ViewModel="{x:Bind}"

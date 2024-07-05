@@ -34,6 +34,8 @@ public sealed partial class IllustrationItem
 {
     public event TypedEventHandler<IllustrationItem, IllustrationItemViewModel>? ViewModelChanged;
 
+    public event TypedEventHandler<IllustrationItem, IllustrationItemViewModel>? RequestOpenUserInfoPage;
+
     public event TypedEventHandler<IllustrationItem, IllustrationItemViewModel>? RequestAddToBookmark;
 
     public event Func<(ThumbnailDirection ThumbnailDirection, double DesiredHeight)> RequiredParam = null!;
@@ -75,5 +77,10 @@ public sealed partial class IllustrationItem
     private void AddToBookmark_OnClicked(object sender, RoutedEventArgs e)
     {
         RequestAddToBookmark?.Invoke(this, ViewModel);
+    }
+
+    private void OpenUserInfoPage_OnClicked(object sender, RoutedEventArgs e)
+    {
+        RequestOpenUserInfoPage?.Invoke(this, ViewModel);
     }
 }
