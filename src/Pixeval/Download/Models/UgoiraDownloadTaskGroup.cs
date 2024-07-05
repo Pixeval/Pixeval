@@ -54,7 +54,7 @@ public class UgoiraDownloadTaskGroup : DownloadTaskGroup, IImageDownloadTaskGrou
         _ = Directory.CreateDirectory(TempFolderPath);
         for (var i = 0; i < ugoiraOriginalUrls.Count; ++i)
         {
-            var imageDownloadTask = new ImageDownloadTask(new(ugoiraOriginalUrls[i]), $"{TempFolderPath}\\{i}{Path.GetExtension(ugoiraOriginalUrls[i])}")
+            var imageDownloadTask = new ImageDownloadTask(new(ugoiraOriginalUrls[i]), $"{TempFolderPath}\\{i}{Path.GetExtension(ugoiraOriginalUrls[i])}", DatabaseEntry.State)
             {
                 Stream = streams?[i]
             };

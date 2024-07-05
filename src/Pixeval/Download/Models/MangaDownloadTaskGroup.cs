@@ -62,7 +62,7 @@ public class MangaDownloadTaskGroup : DownloadTaskGroup, IImageDownloadTaskGroup
         var mangaOriginalUrls = Entry.MangaOriginalUrls;
         for (var i = 0; i < mangaOriginalUrls.Count; ++i)
         {
-            var imageDownloadTask = new ImageDownloadTask(new(mangaOriginalUrls[i]), IoHelper.ReplaceTokenExtensionFromUrl(TokenizedDestination, mangaOriginalUrls[i]).Replace(MangaIndexMacro.NameConstToken, i.ToString()))
+            var imageDownloadTask = new ImageDownloadTask(new(mangaOriginalUrls[i]), IoHelper.ReplaceTokenExtensionFromUrl(TokenizedDestination, mangaOriginalUrls[i]).Replace(MangaIndexMacro.NameConstToken, i.ToString()), DatabaseEntry.State)
             {
                 Stream = streams?[i]
             };

@@ -34,10 +34,11 @@ namespace Pixeval.Download.Models;
 
 public partial class ImageDownloadTask : ObservableObject, IDownloadTaskBase, IProgress<double>, IDisposable
 {
-    public ImageDownloadTask(Uri uri, string destination)
+    public ImageDownloadTask(Uri uri, string destination, DownloadState initState = DownloadState.Queued)
     {
         Uri = uri;
         Destination = destination;
+        CurrentState = initState;
         DownloadStartedAsync += DownloadStartedAsyncOverride;
         DownloadStoppedAsync += DownloadStoppedAsyncOverride;
         DownloadErrorAsync += DownloadErrorAsyncOverride;

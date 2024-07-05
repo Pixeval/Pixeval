@@ -81,7 +81,8 @@ public class NovelDownloadTaskGroup : DownloadTaskGroup
             var imageDownloadTask = new ImageDownloadTask(new(url),
                 IllustrationDownloadFormat is IllustrationDownloadFormat.Original
                     ? IoHelper.ReplaceTokenExtensionFromUrl(name, url)
-                    : name + imgExt) { Stream = DocumentViewModel.TryGetStream(i) };
+                    : name + imgExt,
+                DatabaseEntry.State) { Stream = DocumentViewModel.TryGetStream(i) };
             AddToTasksSet(imageDownloadTask);
         }
 
