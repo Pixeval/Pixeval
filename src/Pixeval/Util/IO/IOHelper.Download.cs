@@ -162,14 +162,17 @@ public static partial class IoHelper
             {
                 var bytesRead = 0;
                 var totalRead = destination.Position;
+                var lastReported = DateTime.MinValue;
                 while ((bytesRead = await contentStream.ReadAsync(new(buffer), cancellationToken).ConfigureAwait(false)) is not 0)
                 {
                     await destination.WriteAsync(new(buffer, 0, bytesRead), cancellationToken).ConfigureAwait(false);
                     totalRead += bytesRead;
                     // reduce the frequency of the invocation of the callback, otherwise it will draw a severe performance impact
 
-                    if (progress is not null && responseLength is not null)
+                    var now = DateTime.Now;
+                    if (now - lastReported > TimeSpan.FromSeconds(0.5) && progress is not null && responseLength is not null)
                     {
+                        lastReported = now;
                         var percentage = totalRead / (double)responseLength * 100;
                         _ = WindowFactory.RootWindow.DispatcherQueue.TryEnqueue(() =>
                             progress.Report(percentage)); // percentage, 100 as base
