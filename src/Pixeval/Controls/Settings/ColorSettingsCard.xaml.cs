@@ -1,3 +1,4 @@
+using Windows.UI;
 using CommunityToolkit.WinUI.Controls;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -22,4 +23,6 @@ public sealed partial class ColorSettingsCard
     {
         Entry.ValueChanged?.Invoke(Entry.Value);
     }
+
+    private void ColorBindBack(Color color) => Entry.Value = C.ToAlphaUInt(color);
 }
