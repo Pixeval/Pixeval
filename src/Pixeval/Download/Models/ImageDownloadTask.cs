@@ -39,6 +39,8 @@ public partial class ImageDownloadTask : ObservableObject, IDownloadTaskBase, IP
         Uri = uri;
         Destination = destination;
         CurrentState = initState;
+        if (initState is DownloadState.Completed or DownloadState.Cancelled or DownloadState.Error)
+            ProgressPercentage = 100;
         DownloadStartedAsync += DownloadStartedAsyncOverride;
         DownloadStoppedAsync += DownloadStoppedAsyncOverride;
         DownloadErrorAsync += DownloadErrorAsyncOverride;

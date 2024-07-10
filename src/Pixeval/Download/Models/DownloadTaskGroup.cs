@@ -243,24 +243,13 @@ public abstract partial class DownloadTaskGroup(DownloadHistoryEntry entry) : Ob
         task.DownloadErrorAsync += x => ItemDownloadErrorAsync?.Invoke(x) ?? Task.CompletedTask;
         task.PropertyChanged += (_, e) =>
         {
-            switch (e.PropertyName)
+            OnPropertyChanged(e.PropertyName switch
             {
-                case nameof(ImageDownloadTask.ProgressPercentage):
-                {
-                    var time = DateTime.Now;
-                    if (time - _lastReportedTime < TimeSpan.FromMilliseconds(500))
-                        return;
-                    _lastReportedTime = time;
-                    OnPropertyChanged(nameof(ProgressPercentage));
-                    break;
-                }
-                case nameof(ImageDownloadTask.CurrentState):
-                    OnPropertyChanged(nameof(CurrentState));
-                    break;
-                case nameof(ImageDownloadTask.ErrorCause):
-                    OnPropertyChanged(nameof(ErrorCause));
-                    break;
-            }
+                nameof(ImageDownloadTask.ProgressPercentage) => nameof(ProgressPercentage),
+                nameof(ImageDownloadTask.CurrentState) => nameof(CurrentState),
+                nameof(ImageDownloadTask.ErrorCause) => nameof(ErrorCause),
+                _ => ""
+            });
         };
     }
 
@@ -272,11 +261,6 @@ public abstract partial class DownloadTaskGroup(DownloadHistoryEntry entry) : Ob
         return;
         void OnDownloadWrite(DownloadTaskGroup o) => writer.TryWrite(o.GetToken());
     }
-
-    /// <summary>
-    /// 降低汇报频率
-    /// </summary>
-    private DateTime _lastReportedTime = DateTime.MinValue;
 
     public Exception? ErrorCause => TasksSet.FirstOrDefault(t => t.ErrorCause is not null)?.ErrorCause;
 

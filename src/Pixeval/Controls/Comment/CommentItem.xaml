@@ -69,7 +69,7 @@
                 <!--  TipTextColor  -->
                 <TextBlock
                     controls:DockPanel.Dock="Bottom"
-                    Foreground="{ThemeResource PixevalTipTextForeground}"
+                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                     Style="{StaticResource CaptionTextBlockStyle}"
                     Text="{x:Bind local:C.CultureDateTimeOffsetDateFormatter(ViewModel.PostDate, pixeval:AppSettings.CurrentCulture), Mode=OneWay}" />
             </controls:DockPanel>

@@ -40,6 +40,12 @@ public interface IDownloadTaskGroup : IDownloadTaskBase, IIdEntry, INotifyProper
     void SubscribeProgress(ChannelWriter<DownloadToken> writer);
 
     DownloadToken GetToken();
+
+    int ActiveCount { get; }
+
+    int CompletedCount { get; }
+
+    int ErrorCount { get; }
 }
 
 public readonly record struct DownloadToken(IDownloadTaskGroup Task, CancellationToken Token);

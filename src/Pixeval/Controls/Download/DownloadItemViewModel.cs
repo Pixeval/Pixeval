@@ -23,6 +23,8 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using FluentIcons.Common;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Media;
 using Pixeval.Database;
 using Pixeval.Download;
 using Pixeval.Download.Models;
@@ -118,6 +120,15 @@ public sealed partial class DownloadItemViewModel(IDownloadTaskGroup downloadTas
     public bool IsPending(DownloadState state) => state is DownloadState.Pending;
 
     public bool IsPaused(DownloadState state) => state is DownloadState.Paused;
+
+    public Visibility IsGroup(IDownloadTaskGroup group) => C.ToVisibility(group is DownloadTaskGroup);
+
+    public Brush CurrentStateBrush(DownloadState state) => Application.Current.GetResource<Brush>(state switch
+    {
+        DownloadState.Paused => "SystemFillColorCautionBrush",
+        DownloadState.Cancelled => "SystemFillColorNeutralBrush",
+        _ => "SystemFillColorAttentionBrush"
+    });
 
 #pragma warning restore CA1822
 

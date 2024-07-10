@@ -50,8 +50,25 @@
             ShowError="{x:Bind ViewModel.IsError(ViewModel.DownloadTask.CurrentState), Mode=OneWay}"
             ShowPaused="{x:Bind ViewModel.IsPaused(ViewModel.DownloadTask.CurrentState), Mode=OneWay}"
             Value="{x:Bind ViewModel.DownloadTask.ProgressPercentage, Mode=OneWay}" />
+        <StackPanel
+            Orientation="Horizontal"
+            Spacing="5"
+            Visibility="{x:Bind ViewModel.IsGroup(ViewModel.DownloadTask), Mode=OneWay}">
+            <local:DigitalSignalItem
+                Fill="{x:Bind ViewModel.CurrentStateBrush(ViewModel.DownloadTask.CurrentState), Mode=OneWay}"
+                Text="{x:Bind ViewModel.DownloadTask.ActiveCount, Mode=OneWay}"
+                Visibility="{x:Bind local:C.IsNotZeroToVisibility(ViewModel.DownloadTask.ActiveCount), Mode=OneWay}" />
+            <local:DigitalSignalItem
+                Fill="{StaticResource SystemFillColorSuccessBrush}"
+                Text="{x:Bind ViewModel.DownloadTask.CompletedCount, Mode=OneWay}"
+                Visibility="{x:Bind local:C.IsNotZeroToVisibility(ViewModel.DownloadTask.CompletedCount), Mode=OneWay}" />
+            <local:DigitalSignalItem
+                Fill="{StaticResource SystemFillColorCriticalBrush}"
+                Text="{x:Bind ViewModel.DownloadTask.ErrorCount, Mode=OneWay}"
+                Visibility="{x:Bind local:C.IsNotZeroToVisibility(ViewModel.DownloadTask.ErrorCount), Mode=OneWay}" />
+        </StackPanel>
         <TextBlock
-            Foreground="{ThemeResource PixevalTipTextForeground}"
+            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
             Style="{StaticResource CaptionTextBlockStyle}"
             Text="{x:Bind ViewModel.ProgressMessage(ViewModel.DownloadTask.CurrentState, ViewModel.DownloadTask.ProgressPercentage, ViewModel.DownloadTask), Mode=OneWay}"
             TextTrimming="CharacterEllipsis"

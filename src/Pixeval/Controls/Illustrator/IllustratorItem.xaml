@@ -45,10 +45,10 @@
                     VerticalAlignment="Center"
                     Content="{fluent:SymbolIcon Symbol=Guest,
                                                 FontSize=12}"
-                    Foreground="{StaticResource TextSecondaryAccentColor}" />
+                    Foreground="{StaticResource TextFillColorSecondaryBrush}" />
                 <TextBlock
                     VerticalAlignment="Center"
-                    Foreground="{StaticResource TextSecondaryAccentColor}"
+                    Foreground="{StaticResource TextFillColorSecondaryBrush}"
                     Style="{StaticResource CaptionStrongTextBlockStyle}"
                     Text="{x:Bind ViewModel.UserId, Mode=OneWay}" />
                 <local:PixevalBadge

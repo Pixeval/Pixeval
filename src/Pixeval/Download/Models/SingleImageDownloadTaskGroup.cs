@@ -41,7 +41,11 @@ public class SingleImageDownloadTaskGroup : ImageDownloadTask, IImageDownloadTas
 {
     public DownloadHistoryEntry DatabaseEntry { get; }
 
-    public ValueTask InitializeTaskGroupAsync() => ValueTask.CompletedTask;
+    public ValueTask InitializeTaskGroupAsync()
+    {
+        SetNotCreateFromEntry();
+        return ValueTask.CompletedTask;
+    }
 
     public Illustration Entry => DatabaseEntry.Entry.To<Illustration>();
 
@@ -61,6 +65,8 @@ public class SingleImageDownloadTaskGroup : ImageDownloadTask, IImageDownloadTas
     {
         DatabaseEntry = entry;
         CurrentState = entry.State;
+        if (entry.State is DownloadState.Completed or DownloadState.Cancelled or DownloadState.Error)
+            ProgressPercentage = 100;
         IllustrationDownloadFormat = IoHelper.GetIllustrationFormat(Path.GetExtension(Destination));
     }
 
@@ -94,6 +100,12 @@ public class SingleImageDownloadTaskGroup : ImageDownloadTask, IImageDownloadTas
     }
 
     public DownloadToken GetToken() => new(this, CancellationTokenSource.Token);
+
+    public int ActiveCount => CurrentState is DownloadState.Queued or DownloadState.Running or DownloadState.Pending or DownloadState.Paused or DownloadState.Cancelled ? 1 : 0;
+
+    public int CompletedCount => CurrentState is DownloadState.Completed ? 1 : 0;
+
+    public int ErrorCount => CurrentState is DownloadState.Error ? 1 : 0;
 
     public void SubscribeProgress(ChannelWriter<DownloadToken> writer)
     {

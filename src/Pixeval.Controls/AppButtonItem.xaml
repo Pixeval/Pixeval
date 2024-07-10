@@ -16,14 +16,14 @@
             HorizontalAlignment="Left"
             controls:DockPanel.Dock="Top"
             FontWeight="SemiBold"
-            Foreground="{StaticResource TextSecondaryAccentColor}"
+            Foreground="{StaticResource TextFillColorSecondaryBrush}"
             Style="{StaticResource BaseTextBlockStyle}"
             Text="{x:Bind Title, Mode=OneWay}" />
         <fluent:SymbolIcon
             VerticalAlignment="Center"
             controls:DockPanel.Dock="Left"
             FontSize="{StaticResource SmallIconFontSize}"
-            Foreground="{StaticResource TextSecondaryAccentColor}"
+            Foreground="{StaticResource TextFillColorSecondaryBrush}"
             Symbol="{x:Bind Symbol, Mode=OneWay}" />
         <TextBlock
             HorizontalAlignment="Center"

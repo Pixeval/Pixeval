@@ -12,7 +12,7 @@
     <ItemGroup>
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
         <PackageReference Include="System.Linq.Async" Version="6.0.1" />
-        <PackageReference Include="WebApiClientCore" Version="2.1.2" PrivateAssets="True" />
+        <PackageReference Include="WebApiClientCore" Version="2.1.4" PrivateAssets="True" />
     </ItemGroup>
 
     <ItemGroup>

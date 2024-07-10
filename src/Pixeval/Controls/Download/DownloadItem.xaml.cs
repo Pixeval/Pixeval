@@ -22,12 +22,13 @@ using System;
 using System.IO;
 using Windows.Foundation;
 using Windows.System;
-using FluentIcons.Common;
 using Microsoft.UI.Xaml;
-using Pixeval.Download;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Documents;
 using Pixeval.Util.UI;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
+using Symbol = FluentIcons.Common.Symbol;
 
 namespace Pixeval.Controls;
 

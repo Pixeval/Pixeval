@@ -53,6 +53,8 @@ public static class C
 
     public static bool IsNotZeroL(long value) => value is not 0;
 
+    public static Visibility IsNotZeroToVisibility(int value) => value is not 0 ? Visibility.Visible : Visibility.Collapsed;
+
     public static Visibility IsNotZeroDToVisibility(double value) => value is not 0 ? Visibility.Visible : Visibility.Collapsed;
 
     public static unsafe Color ToAlphaColor(uint color)
