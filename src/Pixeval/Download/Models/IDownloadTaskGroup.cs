@@ -23,6 +23,8 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Threading;
+using System.Threading.Channels;
 using System.Threading.Tasks;
 using Pixeval.CoreApi.Model;
 using Pixeval.Database;
@@ -34,4 +36,10 @@ public interface IDownloadTaskGroup : IDownloadTaskBase, IIdEntry, INotifyProper
     DownloadHistoryEntry DatabaseEntry { get; }
 
     ValueTask InitializeTaskGroupAsync();
+
+    void SubscribeProgress(ChannelWriter<DownloadToken> writer);
+
+    DownloadToken GetToken();
 }
+
+public readonly record struct DownloadToken(IDownloadTaskGroup Task, CancellationToken Token);

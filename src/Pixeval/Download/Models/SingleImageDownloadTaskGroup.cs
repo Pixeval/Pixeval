@@ -24,6 +24,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
+using System.Threading.Channels;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Pixeval.CoreApi.Model;
@@ -90,6 +91,17 @@ public class SingleImageDownloadTaskGroup : ImageDownloadTask, IImageDownloadTas
         if (IllustrationDownloadFormat is IllustrationDownloadFormat.Original)
             return;
         await TagsManager.SetTagsAsync(Destination, Entry, token);
+    }
+
+    public DownloadToken GetToken() => new(this, CancellationTokenSource.Token);
+
+    public void SubscribeProgress(ChannelWriter<DownloadToken> writer)
+    {
+        DownloadTryResume += OnDownloadWrite;
+        DownloadTryReset += OnDownloadWrite;
+
+        return;
+        void OnDownloadWrite(ImageDownloadTask o) => writer.TryWrite(o.To<SingleImageDownloadTaskGroup>().GetToken());
     }
 
     public int Count => 1;

@@ -87,20 +87,20 @@ public sealed partial class DownloadItemViewModel(IDownloadTaskGroup downloadTas
         _ => ThrowHelper.ArgumentOutOfRange<DownloadState, string>(state)
     };
 
-    public string ActionButtonContent(DownloadState state) => state switch
+    public string ActionButtonContent(DownloadState state) => ActionButtonSymbol(state) switch
     {
-        DownloadState.Queued or DownloadState.Pending => DownloadItemResources.ActionDownloadCancelled,
-        DownloadState.Running => DownloadItemResources.ActionButtonContentPause,
-        DownloadState.Cancelled or DownloadState.Error => DownloadItemResources.ActionButtonContentRetry,
-        DownloadState.Completed => DownloadItemResources.ActionButtonContentOpen,
-        DownloadState.Paused => DownloadItemResources.ActionButtonContentResume,
+        Symbol.Dismiss => DownloadItemResources.ActionDownloadCancelled,
+        Symbol.Pause => DownloadItemResources.ActionButtonContentPause,
+        Symbol.ArrowRepeatAll => DownloadItemResources.ActionButtonContentRetry,
+        Symbol.Open => DownloadItemResources.ActionButtonContentOpen,
+        Symbol.Play => DownloadItemResources.ActionButtonContentResume,
         _ => ThrowHelper.ArgumentOutOfRange<DownloadState, string>(state)
     };
 
     public Symbol ActionButtonSymbol(DownloadState state) => state switch
     {
-        DownloadState.Queued or DownloadState.Pending => Symbol.Dismiss,
-        DownloadState.Running => Symbol.Pause,
+        DownloadState.Pending => Symbol.Dismiss,
+        DownloadState.Queued or DownloadState.Running => Symbol.Pause,
         DownloadState.Cancelled or DownloadState.Error => Symbol.ArrowRepeatAll,
         DownloadState.Completed => Symbol.Open,
         DownloadState.Paused => Symbol.Play,

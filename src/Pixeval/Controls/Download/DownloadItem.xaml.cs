@@ -22,6 +22,7 @@ using System;
 using System.IO;
 using Windows.Foundation;
 using Windows.System;
+using FluentIcons.Common;
 using Microsoft.UI.Xaml;
 using Pixeval.Download;
 using Pixeval.Util.UI;
@@ -47,24 +48,22 @@ public sealed partial class DownloadItem
 
     private async void ActionButton_OnClicked(object sender, RoutedEventArgs e)
     {
-        switch (ViewModel.DownloadTask.CurrentState)
+        switch (ViewModel.ActionButtonSymbol(ViewModel.DownloadTask.CurrentState))
         {
-            case DownloadState.Queued:
-            case DownloadState.Pending:
+            case Symbol.Dismiss:
                 ViewModel.DownloadTask.Cancel();
                 break;
-            case DownloadState.Running:
+            case Symbol.Pause:
                 ViewModel.DownloadTask.Pause();
                 break;
-            case DownloadState.Error:
-            case DownloadState.Cancelled:
+            case Symbol.ArrowRepeatAll:
                 ViewModel.DownloadTask.TryReset();
                 break;
-            case DownloadState.Completed:
+            case Symbol.Open:
                 if (!await Launcher.LaunchUriAsync(new Uri(ViewModel.DownloadTask.OpenLocalDestination)))
                     _ = await this.CreateAcknowledgementAsync(MiscResources.DownloadItemOpenFailed, MiscResources.DownloadItemMaybeDeleted);
                 break;
-            case DownloadState.Paused:
+            case Symbol.Play:
                 ViewModel.DownloadTask.TryResume();
                 break;
             default:
