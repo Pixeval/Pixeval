@@ -112,7 +112,10 @@ public abstract partial class DownloadTaskGroup(DownloadHistoryEntry entry) : Ob
         if (CurrentState is not (DownloadState.Completed or DownloadState.Error or DownloadState.Cancelled))
             return;
         IsProcessing = true;
-        TasksSet.ForEach(t => t.TryReset());
+        (CurrentState is DownloadState.Error
+            ? TasksSet.Where(t => t.CurrentState is DownloadState.Error)
+            : TasksSet)
+            .ForEach(t => t.TryReset());
         if (CancellationTokenSource.IsCancellationRequested)
         {
             CancellationTokenSource.Dispose();
