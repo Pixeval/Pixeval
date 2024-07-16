@@ -39,6 +39,8 @@ public partial class ImageDownloadTask : ObservableObject, IDownloadTaskBase, IP
         Uri = uri;
         Destination = destination;
         CurrentState = initState;
+        if (initState is DownloadState.Completed or DownloadState.Cancelled or DownloadState.Error)
+            ProgressPercentage = 100;
         DownloadStartedAsync += DownloadStartedAsyncOverride;
         DownloadStoppedAsync += DownloadStoppedAsyncOverride;
         DownloadErrorAsync += DownloadErrorAsyncOverride;
@@ -66,13 +68,13 @@ public partial class ImageDownloadTask : ObservableObject, IDownloadTaskBase, IP
 
     [ObservableProperty] private DownloadState _currentState;
 
-    [ObservableProperty] private double _progressPercentage = 100;
+    [ObservableProperty] private double _progressPercentage;
 
     [ObservableProperty] private Exception? _errorCause;
 
     [ObservableProperty] private bool _isProcessing;
 
-    private CancellationTokenSource CancellationTokenSource { get; set; } = new();
+    protected CancellationTokenSource CancellationTokenSource { get; private set; } = new();
 
     private bool _isRunning;
 
@@ -199,11 +201,12 @@ public partial class ImageDownloadTask : ObservableObject, IDownloadTaskBase, IP
 
     public void Pause()
     {
-        if (CurrentState is not DownloadState.Running)
+        if (CurrentState is not (DownloadState.Queued or DownloadState.Running))
             return;
         IsProcessing = true;
         CancellationTokenSource.Cancel();
         CurrentState = DownloadState.Paused;
+        DownloadPaused?.Invoke(this);
         IsProcessing = false;
     }
 
@@ -222,11 +225,6 @@ public partial class ImageDownloadTask : ObservableObject, IDownloadTaskBase, IP
         IsProcessing = false;
     }
 
-    public async Task ResumeAsync(HttpClient httpClient)
-    {
-        await StartAsync(httpClient, true);
-    }
-
     public void Cancel()
     {
         if (CurrentState is not (DownloadState.Paused or DownloadState.Pending or DownloadState.Running or DownloadState.Queued))
@@ -234,6 +232,7 @@ public partial class ImageDownloadTask : ObservableObject, IDownloadTaskBase, IP
         IsProcessing = true;
         CancellationTokenSource.Cancel();
         CurrentState = DownloadState.Cancelled;
+        DownloadCancelled?.Invoke(this);
         IsProcessing = false;
     }
 
@@ -254,6 +253,10 @@ public partial class ImageDownloadTask : ObservableObject, IDownloadTaskBase, IP
     public event Action<ImageDownloadTask>? DownloadTryResume;
 
     public event Action<ImageDownloadTask>? DownloadTryReset;
+
+    public event Action<ImageDownloadTask>? DownloadPaused;
+
+    public event Action<ImageDownloadTask>? DownloadCancelled;
 
     public event Func<ImageDownloadTask, CancellationToken, Task> AfterDownloadAsync;
 

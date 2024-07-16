@@ -25,6 +25,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Threading.Channels;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Extensions.DependencyInjection;
@@ -32,7 +33,6 @@ using Pixeval.Controls.Windowing;
 using Pixeval.CoreApi.Model;
 using Pixeval.Database;
 using Pixeval.Database.Managers;
-using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using WinUI3Utilities;
 
@@ -58,6 +58,10 @@ public abstract partial class DownloadTaskGroup(DownloadHistoryEntry entry) : Ob
             var g = sender.To<DownloadTaskGroup>();
             if (e.PropertyName is not nameof(CurrentState))
                 return;
+            // 子任务状态变化时，不一定需要任务组状态变化，也会进入此分支
+            OnPropertyChanged(nameof(ActiveCount));
+            OnPropertyChanged(nameof(CompletedCount));
+            OnPropertyChanged(nameof(ErrorCount));
             if (g.CurrentState is DownloadState.Running or DownloadState.Paused or DownloadState.Pending)
                 return;
             g.DatabaseEntry.State = g.CurrentState;
@@ -108,18 +112,23 @@ public abstract partial class DownloadTaskGroup(DownloadHistoryEntry entry) : Ob
         if (CurrentState is not (DownloadState.Completed or DownloadState.Error or DownloadState.Cancelled))
             return;
         IsProcessing = true;
-        TasksSet.ForEach(t => t.TryReset());
+        (CurrentState is DownloadState.Error
+            ? TasksSet.Where(t => t.CurrentState is DownloadState.Error)
+            : TasksSet)
+            .ForEach(t => t.TryReset());
         if (CancellationTokenSource.IsCancellationRequested)
         {
             CancellationTokenSource.Dispose();
             CancellationTokenSource = new();
         }
+        DownloadTryReset?.Invoke(this);
         IsProcessing = false;
     }
 
     public void Pause()
     {
         IsProcessing = true;
+        CancellationTokenSource.Cancel();
         TasksSet.ForEach(t => t.Pause());
         IsProcessing = false;
     }
@@ -127,7 +136,13 @@ public abstract partial class DownloadTaskGroup(DownloadHistoryEntry entry) : Ob
     public void TryResume()
     {
         IsProcessing = true;
+        if (CancellationTokenSource.IsCancellationRequested)
+        {
+            CancellationTokenSource.Dispose();
+            CancellationTokenSource = new();
+        }
         TasksSet.ForEach(t => t.TryResume());
+        DownloadTryResume?.Invoke(this);
         IsProcessing = false;
     }
 
@@ -146,9 +161,8 @@ public abstract partial class DownloadTaskGroup(DownloadHistoryEntry entry) : Ob
 
     public abstract void Delete();
 
-    /// <summary>
-    /// 用于<see cref="DownloadState.Pending"/>的取消令牌
-    /// </summary>
+    public DownloadToken GetToken() => new(this, CancellationTokenSource.Token);
+
     private CancellationTokenSource CancellationTokenSource { get; set; } = new();
 
     /// <summary>
@@ -219,6 +233,10 @@ public abstract partial class DownloadTaskGroup(DownloadHistoryEntry entry) : Ob
 
     public event Func<DownloadTaskGroup, CancellationToken, Task>? AfterAllDownloadAsync;
 
+    private event Action<DownloadTaskGroup>? DownloadTryResume;
+
+    private event Action<DownloadTaskGroup>? DownloadTryReset;
+
     protected void AddToTasksSet(ImageDownloadTask task)
     {
         _tasksSet.Add(task);
@@ -228,31 +246,24 @@ public abstract partial class DownloadTaskGroup(DownloadHistoryEntry entry) : Ob
         task.DownloadErrorAsync += x => ItemDownloadErrorAsync?.Invoke(x) ?? Task.CompletedTask;
         task.PropertyChanged += (_, e) =>
         {
-            switch (e.PropertyName)
+            OnPropertyChanged(e.PropertyName switch
             {
-                case nameof(ImageDownloadTask.ProgressPercentage):
-                {
-                    var time = DateTime.Now;
-                    if (time - _lastReportedTime < TimeSpan.FromMilliseconds(500))
-                        return;
-                    _lastReportedTime = time;
-                    OnPropertyChanged(nameof(ProgressPercentage));
-                    break;
-                }
-                case nameof(ImageDownloadTask.CurrentState):
-                    OnPropertyChanged(nameof(CurrentState));
-                    break;
-                case nameof(ImageDownloadTask.ErrorCause):
-                    OnPropertyChanged(nameof(ErrorCause));
-                    break;
-            }
+                nameof(ImageDownloadTask.ProgressPercentage) => nameof(ProgressPercentage),
+                nameof(ImageDownloadTask.CurrentState) => nameof(CurrentState),
+                nameof(ImageDownloadTask.ErrorCause) => nameof(ErrorCause),
+                _ => ""
+            });
         };
     }
 
-    /// <summary>
-    /// 降低汇报频率
-    /// </summary>
-    private DateTime _lastReportedTime = DateTime.MinValue;
+    public void SubscribeProgress(ChannelWriter<DownloadToken> writer)
+    {
+        DownloadTryResume += OnDownloadWrite;
+        DownloadTryReset += OnDownloadWrite;
+
+        return;
+        void OnDownloadWrite(DownloadTaskGroup o) => writer.TryWrite(o.GetToken());
+    }
 
     public Exception? ErrorCause => TasksSet.FirstOrDefault(t => t.ErrorCause is not null)?.ErrorCause;
 
@@ -260,7 +271,20 @@ public abstract partial class DownloadTaskGroup(DownloadHistoryEntry entry) : Ob
 
     public bool IsAnyError => TasksSet.Any(t => t.CurrentState is DownloadState.Error);
 
-    public double ProgressPercentage => TasksSet.Count is 0 ? 100 : TasksSet.Average(t => t.ProgressPercentage);
+    public int ActiveCount => TasksSet.Count(t => t.CurrentState is DownloadState.Queued or DownloadState.Running or DownloadState.Pending or DownloadState.Paused or DownloadState.Cancelled);
+
+    public int CompletedCount => TasksSet.Count(t => t.CurrentState is DownloadState.Completed);
+
+    public int ErrorCount => TasksSet.Count(t => t.CurrentState is DownloadState.Error);
+
+    public double ProgressPercentage =>
+        IsCreateFromEntry
+            ? DatabaseEntry.State is DownloadState.Queued
+                ? 0
+                : 100
+            : TasksSet.Count is 0
+                ? 100
+                : TasksSet.Average(t => t.ProgressPercentage);
 
     public IEnumerator<ImageDownloadTask> GetEnumerator() => TasksSet.GetEnumerator();
 

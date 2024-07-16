@@ -85,7 +85,15 @@ public class MangaDownloadTaskGroup : DownloadTaskGroup, IImageDownloadTaskGroup
 
     private IllustrationDownloadFormat IllustrationDownloadFormat { get; }
 
-    public override string OpenLocalDestination => Path.GetDirectoryName(TasksSet[0].Destination)!;
+    public override string OpenLocalDestination
+    {
+        get
+        {
+            if (TasksSet.Count is 0)
+                SetTasksSet();
+            return Path.GetDirectoryName(TasksSet[0].Destination)!;
+        }
+    }
 
     public override void Delete()
     {

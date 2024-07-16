@@ -30,7 +30,7 @@
                     Text="{x:Bind PersonNickname, Mode=OneWay}" />
                 <TextBlock
                     HorizontalAlignment="Center"
-                    Foreground="{ThemeResource PixevalTipTextForeground}"
+                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                     Style="{StaticResource CaptionTextBlockStyle}"
                     Text="{x:Bind PersonName, Mode=OneWay}" />
             </StackPanel>
