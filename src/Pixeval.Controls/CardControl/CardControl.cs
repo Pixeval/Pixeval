@@ -24,5 +24,8 @@ namespace Pixeval.Controls;
 
 public class CardControl : ContentControl
 {
-    
+    public CardControl()
+    {
+        DefaultStyleKey = typeof(CardControl);
+    }
 }

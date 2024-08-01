@@ -12,7 +12,7 @@
     xmlns:winUi="using:FluentIcons.WinUI"
     mc:Ignorable="d"
     Loaded="FeedPage_OnLoaded"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    Background="Transparent">
 
     <Page.Resources>
         <feeds:FeedItemDataTemplateSelector x:Key="FeedItemDataTemplateSelector" 
@@ -21,7 +21,7 @@
                                             FollowUser="{StaticResource FollowUserTemplate}"
                                             PostIllust="{StaticResource PostIllustTemplate}" />
         <DataTemplate x:Key="BookmarkIllustTemplate" x:DataType="feeds:BookmarkIllustFeedItemViewModel">
-            <StackPanel>
+            <StackPanel HorizontalAlignment="Stretch">
                 <TextBlock HorizontalAlignment="Left" Text="{x:Bind PostDateFormatted}" Style="{StaticResource CaptionStrongTextBlockStyle}" />
                 <StackPanel Orientation="Horizontal" Height="35" Margin="0,5,0,0">
                     <Grid HorizontalAlignment="Center" VerticalAlignment="Center" CornerRadius="25" Width="35" Height="35">
@@ -34,13 +34,16 @@
                          <Run x:Uid="/Timeline/BookmarkIllustTemplateSegment2" />
                     </TextBlock>
                 </StackPanel>
-                <controls:CardControl MinWidth="800" MaxHeight="500" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                    <Image Stretch="UniformToFill" />
+                <controls:CardControl Margin="20" Height="400" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                    <controls:CardControl.Background>
+                        <ImageBrush ImageSource="{x:Bind Thumbnail, Mode=OneWay}" Stretch="UniformToFill" />
+                    </controls:CardControl.Background>
                 </controls:CardControl>
+                <NavigationViewItemSeparator HorizontalAlignment="Stretch" />
             </StackPanel>
         </DataTemplate>
         <DataTemplate x:Key="BookmarkNovelTemplate" x:DataType="feeds:BookmarkNovelFeedItemViewModel">
-            <StackPanel>
+            <StackPanel HorizontalAlignment="Stretch">
                 <TextBlock HorizontalAlignment="Left" Text="{x:Bind PostDateFormatted}" Style="{StaticResource CaptionStrongTextBlockStyle}" />
                 <StackPanel Orientation="Horizontal" Height="35" Margin="0,5,0,0">
                     <Grid HorizontalAlignment="Center" VerticalAlignment="Center" CornerRadius="25" Width="35" Height="35">
@@ -56,7 +59,7 @@
             </StackPanel>
         </DataTemplate>
         <DataTemplate x:Key="FollowUserTemplate" x:DataType="feeds:FollowUserFeedItemViewModel">
-            <StackPanel>
+            <StackPanel HorizontalAlignment="Stretch">
                 <TextBlock HorizontalAlignment="Left" Text="{x:Bind PostDateFormatted}" Style="{StaticResource CaptionStrongTextBlockStyle}" />
                 <StackPanel Orientation="Horizontal" Height="35" Margin="0,5,0,0">
                     <Grid HorizontalAlignment="Center" VerticalAlignment="Center" CornerRadius="25" Width="35" Height="35">
@@ -72,7 +75,7 @@
             </StackPanel>
         </DataTemplate>
         <DataTemplate x:Key="PostIllustTemplate" x:DataType="feeds:PostIllustFeedItemViewMode">
-            <StackPanel>
+            <StackPanel HorizontalAlignment="Stretch">
                 <TextBlock HorizontalAlignment="Left" Text="{x:Bind PostDateFormatted}" Style="{StaticResource CaptionStrongTextBlockStyle}" />
                 <StackPanel Orientation="Horizontal" Height="35" Margin="0,5,0,0">
                     <Grid HorizontalAlignment="Center" VerticalAlignment="Center" CornerRadius="25" Width="35" Height="35">
@@ -90,17 +93,19 @@
     </Page.Resources>
 
     <controls:EntryView HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
+                        Background="Transparent"
                         HasNoItem="{x:Bind _viewModel.HasNoItem, Mode=OneWay}"
                         IsLoadingMore="{x:Bind ItemsView.IsLoadingMore, Mode=OneWay}">
         <controls:EntryView.Content>
-            <controls:AdvancedItemsView x:Name="ItemsView" IsItemInvokedEnabled="False" ItemsSource="{x:Bind _viewModel.DataProvider.View, Mode=OneWay}">
+            <controls:AdvancedItemsView x:Name="ItemsView" HorizontalAlignment="Stretch" IsItemInvokedEnabled="False" ItemsSource="{x:Bind _viewModel.DataProvider.View, Mode=OneWay}"
+                                        SelectionMode="None">
                 <controls:AdvancedItemsView.ItemTemplate>
                     <DataTemplate x:DataType="feeds:FeedItemViewModel">
                         <ItemContainer>
                             <timeline:TimelineUnit Margin="50,0" FoldThreshold="1000" FoldedDefaultPlacement="Left"
-                                                   Loaded="TimelineUnit_OnLoaded"
                                                    Content="{x:Bind Mode=OneWay}"
                                                    DataContext="{x:Bind Mode=OneWay}"
+                                                   Loaded="TimelineUnit_OnLoaded"
                                                    ContentTemplateSelector="{StaticResource FeedItemDataTemplateSelector}"
                                                    TimelineAxisPlacement="{x:Bind Placement, Mode=OneWay}">
                                 <timeline:TimelineUnit.TitleIcon>

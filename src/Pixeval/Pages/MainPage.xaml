@@ -118,70 +118,70 @@
             <NavigationView.MenuItems>
                 <NavigationViewItem
                     x:Uid="/MainPage/RecommendationsTab"
-                    Icon="{fluent:SymbolIcon Symbol=Calendar}"
+                    Icon="{x:Bind _viewModel.RecommendationIcon}"
                     Tag="{x:Bind _viewModel.RecommendsTag}" />
                 <NavigationViewItem
                     x:Uid="/MainPage/RankingsTab"
-                    Icon="{fluent:SymbolIcon Symbol=ArrowTrending}"
+                    Icon="{x:Bind _viewModel.RankingIcon}"
                     Tag="{x:Bind _viewModel.RankingsTag}" />
                 <NavigationViewItem
                     x:Uid="/MainPage/BookmarksTab"
-                    Icon="{fluent:SymbolIcon Symbol=Heart}"
+                    Icon="{x:Bind _viewModel.BookmarksIcon}"
                     Tag="{x:Bind _viewModel.BookmarksTag}" />
                 <NavigationViewItem
                     x:Uid="/MainPage/FollowingsTab"
-                    Icon="{fluent:SymbolIcon Symbol=People}"
+                    Icon="{x:Bind _viewModel.FollowingsIcon}"
                     Tag="{x:Bind _viewModel.FollowingsTag}" />
                 <NavigationViewItem
                     x:Uid="/MainPage/SpotlightsTab"
-                    Icon="{fluent:SymbolIcon Symbol=Library}"
+                    Icon="{x:Bind _viewModel.SpotlightIcon}"
                     Tag="{x:Bind _viewModel.SpotlightsTag}" />
                 <NavigationViewItem
                     x:Uid="/MainPage/RecommendUsersTab"
-                    Icon="{fluent:SymbolIcon Symbol=PeopleCommunity}"
+                    Icon="{x:Bind _viewModel.RecommendUserIcon}"
                     Tag="{x:Bind _viewModel.RecommendUsersTag}" />
                 <NavigationViewItem
                     x:Uid="/MainPage/RecentPostsTab"
-                    Icon="{fluent:SymbolIcon Symbol=Fire}"
+                    Icon="{x:Bind _viewModel.RecentPostsIcon}"
                     Tag="{x:Bind _viewModel.RecentPostsTag}" />
                 <NavigationViewItem
                     x:Uid="/MainPage/NewWorksTab"
-                    Icon="{fluent:SymbolIcon Symbol=Record}"
+                    Icon="{x:Bind _viewModel.NewWorksIcon}"
                     Tag="{x:Bind _viewModel.NewWorksTag}" />
                 <NavigationViewItem
                     x:Uid="/MainPage/FeedTab"
-                    Icon="{fluent:SymbolIcon Symbol=Feed}"
+                    Icon="{x:Bind _viewModel.FeedIcon}"
                     Tag="{x:Bind _viewModel.FeedTag}" />
                 <NavigationViewItemHeader x:Uid="/MainPage/DownloadAndHistoriesTab" />
                 <NavigationViewItem
                     x:Name="TagsTab"
                     x:Uid="/MainPage/TagsTab"
-                    Icon="{fluent:SymbolIcon Symbol=Tag}"
+                    Icon="{x:Bind _viewModel.TagIcon}"
                     Tag="{x:Bind _viewModel.TagsTag}" />
                 <NavigationViewItem
                     x:Uid="/MainPage/HistoriesTab"
-                    Icon="{fluent:SymbolIcon Symbol=History}"
+                    Icon="{x:Bind _viewModel.HistoryIcon}"
                     Tag="{x:Bind _viewModel.HistoriesTag}" />
                 <NavigationViewItem
                     x:Name="DownloadListTab"
                     x:Uid="/MainPage/DownloadListTab"
-                    Icon="{fluent:SymbolIcon Symbol=ArrowDownload}"
+                    Icon="{x:Bind _viewModel.DownloadListIcon}"
                     Tag="{x:Bind _viewModel.DownloadListTag}" />
             </NavigationView.MenuItems>
             <NavigationView.FooterMenuItems>
                 <NavigationViewItem
                     x:Uid="/MainPage/HelpTab"
-                    Icon="{fluent:SymbolIcon Symbol=Question}"
+                    Icon="{x:Bind _viewModel.HelpIcon}"
                     Tag="{x:Bind _viewModel.HelpTag}" />
                 <NavigationViewItem
                     x:Uid="/MainPage/AboutTab"
-                    Icon="{fluent:SymbolIcon Symbol=Info}"
+                    Icon="{x:Bind _viewModel.AboutIcon}"
                     Tag="{x:Bind _viewModel.AboutTag}" />
                 <NavigationViewItemSeparator />
                 <NavigationViewItem
                     x:Name="SettingsTab"
                     x:Uid="/MainPage/SettingsTab"
-                    Icon="{fluent:SymbolIcon Symbol=Settings}"
+                    Icon="{x:Bind _viewModel.SettingsIcon}"
                     Tag="{x:Bind _viewModel.SettingsTag}">
                     <NavigationViewItem.InfoBadge>
                         <InfoBadge

@@ -138,6 +138,36 @@
     </ItemGroup>
 
     <ItemGroup>
+      <None Remove="Assets\Images\Icons\bookmarks-128x128.png" />
+      <None Remove="Assets\Images\Icons\bookmarks-64x64.png" />
+      <None Remove="Assets\Images\Icons\bookmarks.png" />
+      <None Remove="Assets\Images\Icons\followings-128x128.png" />
+      <None Remove="Assets\Images\Icons\followings-64x64.png" />
+      <None Remove="Assets\Images\Icons\followings.png" />
+      <None Remove="Assets\Images\Icons\history-128x128.png" />
+      <None Remove="Assets\Images\Icons\history-64x64.png" />
+      <None Remove="Assets\Images\Icons\history.png" />
+      <None Remove="Assets\Images\Icons\new-works-128x128.png" />
+      <None Remove="Assets\Images\Icons\new-works-64x64.png" />
+      <None Remove="Assets\Images\Icons\new-works.png" />
+      <None Remove="Assets\Images\Icons\ranking-128x128.png" />
+      <None Remove="Assets\Images\Icons\ranking-64x64.png" />
+      <None Remove="Assets\Images\Icons\ranking.png" />
+      <None Remove="Assets\Images\Icons\recent-posts-128x128.png" />
+      <None Remove="Assets\Images\Icons\recent-posts-64x64.png" />
+      <None Remove="Assets\Images\Icons\recent-posts.png" />
+      <None Remove="Assets\Images\Icons\recommend-user-128x128.png" />
+      <None Remove="Assets\Images\Icons\recommend-user-64x64.png" />
+      <None Remove="Assets\Images\Icons\recommend-user.png" />
+      <None Remove="Assets\Images\Icons\recommendations-128x128.png" />
+      <None Remove="Assets\Images\Icons\recommendations-64x64.png" />
+      <None Remove="Assets\Images\Icons\recommendations.png" />
+      <None Remove="Assets\Images\Icons\spotlight-128x128.png" />
+      <None Remove="Assets\Images\Icons\spotlight-64x64.png" />
+      <None Remove="Assets\Images\Icons\spotlight.png" />
+      <None Remove="Assets\Images\Icons\tag-128x128.png" />
+      <None Remove="Assets\Images\Icons\tag-64x64.png" />
+      <None Remove="Assets\Images\Icons\tag.png" />
       <None Remove="Pages\Capability\FeedPage.xaml" />
       <None Remove="Strings\zh-cn\Timeline.resjson" />
     </ItemGroup>

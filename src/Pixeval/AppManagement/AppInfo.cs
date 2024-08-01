@@ -90,6 +90,9 @@ public static partial class AppInfo
 
     public static string IconAbsolutePath => ApplicationUriToPath(new Uri(IconApplicationUri));
 
+    public static Uri NavigationIconUri(string name) => new Uri($"ms-appx:///Assets/Images/Icons/{name}.png");
+
+
     public static string ApplicationUriToPath(Uri uri)
     {
         if (uri.Scheme is not "ms-appx")

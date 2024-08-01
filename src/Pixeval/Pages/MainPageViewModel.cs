@@ -24,6 +24,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.AppManagement;
 using Pixeval.Controls;
@@ -71,6 +72,39 @@ public partial class MainPageViewModel : ObservableObject
     public readonly NavigationViewTag<SettingsPage> SettingsTag = new();
 
     public readonly NavigationViewTag<SpotlightsPage> SpotlightsTag = new();
+
+    public readonly IconElement RecommendationIcon = new ImageIcon { Source = new BitmapImage(AppInfo.NavigationIconUri("recommendations-128x128"))};
+
+    public readonly IconElement RankingIcon = new ImageIcon { Source = new BitmapImage(AppInfo.NavigationIconUri("ranking-128x128")) };
+
+    // Due to the lack of knowledge in designing icons, their sizes must be adjusted per item basis, in order to achieve visual coherence, which is quite annoying, I believe this can be easily fixed,
+    // but I'm already exhausted for designing them.
+
+    public readonly IconElement BookmarksIcon = new ImageIcon { Source = new BitmapImage(AppInfo.NavigationIconUri("bookmarks-128x128"))};
+
+    public readonly IconElement FollowingsIcon = new ImageIcon { Source = new BitmapImage(AppInfo.NavigationIconUri("followings-128x128")) };
+
+    public readonly IconElement SpotlightIcon = new ImageIcon { Source = new BitmapImage(AppInfo.NavigationIconUri("spotlight-128x128")) };
+
+    public readonly IconElement RecommendUserIcon = new ImageIcon { Source = new BitmapImage(AppInfo.NavigationIconUri("recommend-user-128x128")) };
+
+    public readonly IconElement RecentPostsIcon = new ImageIcon { Source = new BitmapImage(AppInfo.NavigationIconUri("recent-posts-128x128")) };
+
+    public readonly IconElement NewWorksIcon = new ImageIcon { Source = new BitmapImage(AppInfo.NavigationIconUri("new-works-128x128")) };
+
+    public readonly IconElement FeedIcon = new ImageIcon { Source = new BitmapImage(AppInfo.NavigationIconUri("feed-128x128")) };
+
+    public readonly IconElement TagIcon = new ImageIcon { Source = new BitmapImage(AppInfo.NavigationIconUri("tag-128x128")) };
+
+    public readonly IconElement HistoryIcon = new ImageIcon { Source = new BitmapImage(AppInfo.NavigationIconUri("history-128x128")) };
+
+    public readonly IconElement DownloadListIcon = new ImageIcon { Source = new BitmapImage(AppInfo.NavigationIconUri("download-list-128x128")) };
+
+    public readonly IconElement HelpIcon = new ImageIcon { Source = new BitmapImage(AppInfo.NavigationIconUri("help-128x128")) };
+
+    public readonly IconElement AboutIcon = new ImageIcon { Source = new BitmapImage(AppInfo.NavigationIconUri("about-128x128")) };
+
+    public readonly IconElement SettingsIcon = new ImageIcon { Source = new BitmapImage(AppInfo.NavigationIconUri("settings-128x128")) };
 
     [ObservableProperty]
     private SoftwareBitmapSource? _avatarSource;

@@ -30,7 +30,7 @@ public sealed partial class TimelineUnit : ContentControl
         if (d is TimelineUnit { IsLoaded: true } unit && e.NewValue is TimelineAxisPlacement placement)
         {
             unit._folded = !unit._folded;
-            unit.AdjustAxisPlacement(placement, unit._folded);
+            unit.AdjustAxisPlacement(placement, true); // unit._folded;
         }
     }
 
@@ -59,9 +59,15 @@ public sealed partial class TimelineUnit : ContentControl
         SizeChanged += OnSizeChanged;
     }
 
+    private bool FoldCriteria()
+    {
+        return FoldThreshold is not -1 && ActualWidth < FoldThreshold;
+    }
+
+
     private void OnSizeChanged(object sender, SizeChangedEventArgs e)
     {
-        if (FoldThreshold is not -1 && ActualWidth < FoldThreshold)
+        if (FoldCriteria())
         {
             if (TimelineAxisPlacement == FoldedDefaultPlacement)
             {
@@ -80,7 +86,7 @@ public sealed partial class TimelineUnit : ContentControl
         {
             if (!_differentDefaultAxisPlacement)
             {
-                AdjustAxisPlacement(TimelineAxisPlacement, false);
+                AdjustAxisPlacement(TimelineAxisPlacement, true);
             }
             else
             {
@@ -150,7 +156,13 @@ public sealed partial class TimelineUnit : ContentControl
     private void ContentContainerOnLoaded(object sender, RoutedEventArgs e)
     {
         AdjustIndicatorAxisSize();
-        AdjustAxisPlacement(TimelineAxisPlacement, false);
+        AdjustAxisPlacement(TimelineAxisPlacement, true);
+    }
+
+    public void Reset()
+    {
+        AdjustIndicatorAxisSize();
+        AdjustAxisPlacement(TimelineAxisPlacement, true);
     }
 
     private void AdjustIndicatorAxisSize()

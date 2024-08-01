@@ -37,7 +37,7 @@ using Pixeval.Utilities;
 
 namespace Pixeval.Pages.Capability.Feeds;
 
-public partial class BookmarkIllustFeedItemViewModel(Feed entry) : FeedItemViewModel(entry)
+public partial class BookmarkIllustFeedItemViewModel(Feed entry, int index) : FeedItemViewModel(entry, index)
 {
     [ObservableProperty]
     private ImageSource _thumbnail = null!;
@@ -53,23 +53,23 @@ public partial class BookmarkIllustFeedItemViewModel(Feed entry) : FeedItemViewM
     }
 }
 
-public partial class BookmarkNovelFeedItemViewModel(Feed entry) : FeedItemViewModel(entry)
+public partial class BookmarkNovelFeedItemViewModel(Feed entry, int index) : FeedItemViewModel(entry, index)
 {
 
 }
 
-public partial class PostIllustFeedItemViewMode(Feed entry) : FeedItemViewModel(entry)
+public partial class PostIllustFeedItemViewMode(Feed entry, int index) : FeedItemViewModel(entry, index)
 {
 
 }
 
-public partial class FollowUserFeedItemViewModel(Feed entry) : FeedItemViewModel(entry)
+public partial class FollowUserFeedItemViewModel(Feed entry, int index) : FeedItemViewModel(entry, index)
 {
 
 }
 
 
-public partial class FeedItemViewModel(Feed entry) : EntryViewModel<Feed>(entry), IViewModelFactory<Feed, FeedItemViewModel>
+public partial class FeedItemViewModel(Feed entry, int index) : EntryViewModel<Feed>(entry), IViewModelFactory<Feed, FeedItemViewModel>
 {
     [ObservableProperty] 
     private TimelineAxisPlacement _placement;
@@ -92,29 +92,26 @@ public partial class FeedItemViewModel(Feed entry) : EntryViewModel<Feed>(entry)
     {
         FeedItemViewModel vm = entry.Type switch
         {
-            FeedType.AddBookmark => new BookmarkIllustFeedItemViewModel(entry),
-            FeedType.AddIllust => new PostIllustFeedItemViewMode(entry),
-            FeedType.AddFavorite => new FollowUserFeedItemViewModel(entry),
-            FeedType.AddNovelBookmark => new BookmarkNovelFeedItemViewModel(entry),
+            FeedType.AddBookmark => new BookmarkIllustFeedItemViewModel(entry, index),
+            FeedType.AddIllust => new PostIllustFeedItemViewMode(entry, index),
+            FeedType.AddFavorite => new FollowUserFeedItemViewModel(entry, index),
+            FeedType.AddNovelBookmark => new BookmarkNovelFeedItemViewModel(entry, index),
             _ => throw new ArgumentOutOfRangeException()
         };
-        vm.Placement = index % 2 == 0 ? TimelineAxisPlacement.Right : TimelineAxisPlacement.Left;
         return vm;
     }
 
     public virtual async Task LoadAsync()
     {
-        Debug.WriteLine("Pre");
+        Placement = TimelineAxisPlacement.Left; // index % 2 == 0 ? TimelineAxisPlacement.Left : TimelineAxisPlacement.Right;
         if (entry.PostUserThumbnail is { } url)
         {
             var image = (await App.AppViewModel.MakoClient.DownloadBitmapImageAsync(url, 35)).UnwrapOrElse(await AppInfo.ImageNotAvailable.ValueAsync)!;
             UserAvatar = image;
-            Debug.WriteLine("Post");
         }
         else
         {
             UserAvatar = await AppInfo.ImageNotAvailable.ValueAsync;
-            Debug.WriteLine("Post");
         }
     }
 

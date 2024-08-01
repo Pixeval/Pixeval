@@ -105,7 +105,7 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
                     t => t.UseFileCache),
                 new EnumAppSettingsEntry(AppSettings,
                     t => t.DefaultSelectedTabItem,
-                    MainPageTabItemExtension.GetItems())
+                    MainPageTabItemExtension.GetItems()),
                 new StringAppSettingsEntry(AppSettings, 
                     t => t.WebCookie)
                 {
