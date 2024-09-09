@@ -87,7 +87,7 @@ public sealed partial class IllustrationViewerPage
             var oldIndex = args.OldValue.To<int>();
             var newIndex = args.NewValue.To<int>(); // vm.CurrentIllustrationIndex
 
-            var info = null as NavigationTransitionInfo;
+            NavigationTransitionInfo? info = null;
             if (oldIndex < newIndex && oldIndex is not -1)
                 info = new SlideNavigationTransitionInfo { Effect = SlideNavigationTransitionEffect.FromRight };
             else if (oldIndex > newIndex)
