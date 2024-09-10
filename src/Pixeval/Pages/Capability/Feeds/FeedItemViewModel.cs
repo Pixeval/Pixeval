@@ -36,38 +36,6 @@ using Pixeval.Util.UI;
 
 namespace Pixeval.Pages.Capability.Feeds;
 
-public partial class BookmarkIllustFeedItemViewModel(Feed entry, int index) : FeedItemViewModel(entry, index)
-{
-    [ObservableProperty]
-    private ImageSource _thumbnail = null!;
-
-    public override async Task LoadAsync()
-    {
-        _ = base.LoadAsync();
-        if (entry.FeedThumbnail is { } url)
-        {
-            Thumbnail = (await App.AppViewModel.MakoClient.DownloadBitmapImageAsync(url, 800))
-                .UnwrapOrElse(await AppInfo.ImageNotAvailable.ValueAsync)!;
-        }
-    }
-}
-
-public class BookmarkNovelFeedItemViewModel(Feed entry, int index) : FeedItemViewModel(entry, index)
-{
-
-}
-
-public class PostIllustFeedItemViewMode(Feed entry, int index) : FeedItemViewModel(entry, index)
-{
-
-}
-
-public class FollowUserFeedItemViewModel(Feed entry, int index) : FeedItemViewModel(entry, index)
-{
-
-}
-
-
 public partial class FeedItemViewModel(Feed entry, int index) : EntryViewModel<Feed>(entry), IViewModelFactory<Feed, FeedItemViewModel>
 {
     [ObservableProperty] 
@@ -115,15 +83,7 @@ public partial class FeedItemViewModel(Feed entry, int index) : EntryViewModel<F
 
     public static FeedItemViewModel CreateInstance(Feed entry, int index)
     {
-        FeedItemViewModel vm = entry.Type switch
-        {
-            FeedType.AddBookmark => new BookmarkIllustFeedItemViewModel(entry, index),
-            FeedType.AddIllust => new PostIllustFeedItemViewMode(entry, index),
-            FeedType.AddFavorite => new FollowUserFeedItemViewModel(entry, index),
-            FeedType.AddNovelBookmark => new BookmarkNovelFeedItemViewModel(entry, index),
-            _ => throw new ArgumentOutOfRangeException()
-        };
-        return vm;
+        return new FeedItemViewModel(entry, index);
     }
 
     public virtual async Task LoadAsync()

@@ -1,8 +1,8 @@
 {
-    "BookmarkIllustTemplateSegment1/Text": "将",
-    "BookmarkIllustTemplateSegment2/Text": "添加到了收藏夹",
-    "BookmarkNovelTemplateSegment1/Text": "将",
-    "BookmarkNovelTemplateSegment2/Text": "添加到了收藏夹",
-    "FollowUserTemplateSegment/Text": "关注了",
-    "PostIllustTemplate/Text": "投稿了"
+  "BookmarkIllustTemplateSegment1/Text": "将",
+  "BookmarkIllustTemplateSegment2/Text": "添加到了收藏夹",
+  "BookmarkNovelTemplateSegment1/Text": "将",
+  "BookmarkNovelTemplateSegment2/Text": "添加到了收藏夹",
+  "FollowUserTemplateSegment/Text": "关注了",
+  "PostIllustTemplateSegment/Text": "投稿了"
 }
