@@ -7,11 +7,11 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="timeline:TimelineUnit">
-                    <Grid MinHeight="100" x:Name="TimelineSectionBackground" HorizontalAlignment="Stretch" VerticalAlignment="Center">
+                    <Grid x:Name="TimelineSectionBackground" HorizontalAlignment="Stretch" VerticalAlignment="Center" Background="{TemplateBinding Background}">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="50" />
+                            <ColumnDefinition x:Name="LeftColumn" Width="50" />
                             <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="50" />
+                            <ColumnDefinition x:Name="RightColumn" Width="50" />
                         </Grid.ColumnDefinitions>
                         <StackPanel Grid.Column="0" VerticalAlignment="Stretch">
                             <Grid x:Name="LeftIconContainer" Background="#F4F6F8" HorizontalAlignment="Center" VerticalAlignment="Center" CornerRadius="25" Width="45" Height="45">
@@ -22,8 +22,10 @@
 
                         <ContentControl 
                             x:Name="ContentPresenter"
-                            Padding="25,0" 
-                            Grid.Column="1" 
+                            Grid.Column="1"
+                            Padding="15,0" 
+                            Width="{TemplateBinding Width}"
+                            Height="{TemplateBinding Height}"
                             HorizontalAlignment="Left" VerticalAlignment="Top"
                             ContentTemplate="{TemplateBinding ContentTemplate}" 
                             ContentTemplateSelector="{TemplateBinding ContentTemplateSelector}"

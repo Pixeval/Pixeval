@@ -21,104 +21,173 @@
                                             FollowUser="{StaticResource FollowUserTemplate}"
                                             PostIllust="{StaticResource PostIllustTemplate}" />
         <DataTemplate x:Key="BookmarkIllustTemplate" x:DataType="feeds:BookmarkIllustFeedItemViewModel">
-            <StackPanel HorizontalAlignment="Stretch">
-                <TextBlock HorizontalAlignment="Left" Text="{x:Bind PostDateFormatted}" Style="{StaticResource CaptionStrongTextBlockStyle}" />
-                <StackPanel Orientation="Horizontal" Height="35" Margin="0,5,0,0">
-                    <Grid HorizontalAlignment="Center" VerticalAlignment="Center" CornerRadius="25" Width="35" Height="35">
-                        <ImageIcon Source="{x:Bind UserAvatar, Mode=OneWay}" Width="35" Height="35" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <Grid Width="350" Height="120">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid Grid.Column="0" CornerRadius="25" Width="80" Height="80"  HorizontalAlignment="Left" VerticalAlignment="Center">
+                    <Border CornerRadius="50" BorderBrush="{x:Bind IconSecondaryBrush}" BorderThickness="1">
+                        <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Width="75" Height="75"  />
+                    </Border>
+                    <Border CornerRadius="50" BorderBrush="Gray" Width="70" Height="70" BorderThickness="0.5">
+                        <Grid HorizontalAlignment="Center" VerticalAlignment="Center" CornerRadius="50" Width="70" Height="70">
+                            <Grid.Background>
+                                <ImageBrush Stretch="UniformToFill" ImageSource="{x:Bind UserAvatar, Mode=OneWay}" />
+                            </Grid.Background>
+                        </Grid>
+                    </Border>
+                </Grid>
+                <Grid Margin="80,0,0,0" Grid.Column="0" Grid.ColumnSpan="2" Height="1" Background="{x:Bind IconSecondaryBrush}" />
+                <Grid Grid.Column="0" 
+                      Grid.ColumnSpan="2"
+                      VerticalAlignment="Center" 
+                      HorizontalAlignment="Right"
+                      CornerRadius="3"
+                      Background="{x:Bind IconSecondaryBrush}"
+                      Width="5"
+                      Height="20" />
+                <Grid HorizontalAlignment="Stretch" Grid.Column="1" VerticalAlignment="Center">
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition Height="20"/>
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0" Margin="10,0,0,0" HorizontalAlignment="Stretch">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="190"/>
+                            <ColumnDefinition Width="65" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock HorizontalAlignment="Stretch" 
+                                   Grid.Column="0"
+                                   FontSize="18"
+                                   Margin="0,5,0,0"
+                                   TextTrimming="CharacterEllipsis" 
+                                   VerticalAlignment="Top"
+                                   Text="{x:Bind Entry.PostUserName}"
+                                   Foreground="{x:Bind IconBackground}" />
+                        <TextBlock Grid.Column="1" 
+                                   VerticalAlignment="Bottom" 
+                                   HorizontalAlignment="Right" 
+                                   Margin="0,0,5,0"
+                                   Text="{x:Bind PostDateFormatted}" 
+                                   Style="{StaticResource CaptionStrongTextBlockStyle}" />
                     </Grid>
-                    <TextBlock VerticalAlignment="Top" Margin="10,2,10,0" FontSize="18" >
-                        <Run Text="{x:Bind Entry.PostUserName}" FontFamily="Bahnschrift" FontWeight="Bold" />
-                         <Run x:Uid="/Timeline/BookmarkIllustTemplateSegment1" />
-                         <Run Text="{x:Bind Entry.FeedName}" FontFamily="Bahnschrift" FontWeight="Bold" />
-                         <Run x:Uid="/Timeline/BookmarkIllustTemplateSegment2" />
+                    <TextBlock Grid.Row="2"
+                               Margin="10,0,0,0" 
+                               FontSize="13" 
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Top" 
+                               Width="255"
+                               TextWrapping="WrapWholeWords"
+                               TextTrimming="CharacterEllipsis">
+                        <Run x:Uid="/Timeline/BookmarkIllustTemplateSegment1" />
+                        <Run Text="{x:Bind Entry.FeedName}" FontFamily="Bahnschrift" FontWeight="Bold"  Foreground="{x:Bind IconBackground}" />
+                        <Run x:Uid="/Timeline/BookmarkIllustTemplateSegment2" />
                     </TextBlock>
-                </StackPanel>
-                <controls:CardControl Margin="20" Height="400" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                    <controls:CardControl.Background>
-                        <ImageBrush ImageSource="{x:Bind Thumbnail, Mode=OneWay}" Stretch="UniformToFill" />
-                    </controls:CardControl.Background>
-                </controls:CardControl>
-                <NavigationViewItemSeparator HorizontalAlignment="Stretch" />
-            </StackPanel>
+                </Grid>
+                <NavigationViewItemSeparator Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Bottom"/>
+            </Grid>
         </DataTemplate>
         <DataTemplate x:Key="BookmarkNovelTemplate" x:DataType="feeds:BookmarkNovelFeedItemViewModel">
-            <StackPanel HorizontalAlignment="Stretch">
+            <StackPanel>
                 <TextBlock HorizontalAlignment="Left" Text="{x:Bind PostDateFormatted}" Style="{StaticResource CaptionStrongTextBlockStyle}" />
-                <StackPanel Orientation="Horizontal" Height="35" Margin="0,5,0,0">
-                    <Grid HorizontalAlignment="Center" VerticalAlignment="Center" CornerRadius="25" Width="35" Height="35">
+                <Grid Margin="0,5,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="50" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Grid Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" CornerRadius="25" Width="35" Height="35">
                         <ImageIcon Source="{x:Bind UserAvatar, Mode=OneWay}" Width="35" Height="35" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                     </Grid>
-                    <TextBlock VerticalAlignment="Top" Margin="10,2,10,0" FontSize="18" >
+                    <TextBlock Grid.Column="1" VerticalAlignment="Top" Margin="10,2,10,0" FontSize="15" TextWrapping="WrapWholeWords">
                         <Run Text="{x:Bind Entry.PostUserName}" FontFamily="Bahnschrift" FontWeight="Bold" />
                         <Run x:Uid="/Timeline/BookmarkNovelTemplateSegment1" />
                         <Run Text="{x:Bind Entry.FeedName}" FontFamily="Bahnschrift" FontWeight="Bold" />
                         <Run x:Uid="/Timeline/BookmarkNovelTemplateSegment2" />
                     </TextBlock>
-                </StackPanel>
+                </Grid>
             </StackPanel>
         </DataTemplate>
         <DataTemplate x:Key="FollowUserTemplate" x:DataType="feeds:FollowUserFeedItemViewModel">
-            <StackPanel HorizontalAlignment="Stretch">
+            <StackPanel>
                 <TextBlock HorizontalAlignment="Left" Text="{x:Bind PostDateFormatted}" Style="{StaticResource CaptionStrongTextBlockStyle}" />
-                <StackPanel Orientation="Horizontal" Height="35" Margin="0,5,0,0">
-                    <Grid HorizontalAlignment="Center" VerticalAlignment="Center" CornerRadius="25" Width="35" Height="35">
+                <Grid Margin="0,5,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="50" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Grid Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" CornerRadius="25" Width="35" Height="35">
                         <ImageIcon Source="{x:Bind UserAvatar, Mode=OneWay}" Width="35" Height="35" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                     </Grid>
-                    <TextBlock VerticalAlignment="Top" Margin="10,2,10,0" FontSize="18" >
+                    <TextBlock Grid.Column="1" VerticalAlignment="Top" Margin="10,2,10,0" FontSize="15" TextWrapping="WrapWholeWords">
                         <Run Text="{x:Bind Entry.PostUserName}" FontFamily="Bahnschrift" FontWeight="Bold" />
                          <Run x:Uid="/Timeline/FollowUserTemplateSegment" />
                          <Run Text="{x:Bind Entry.FeedName}" FontFamily="Bahnschrift" FontWeight="Bold" />
                          <Run Text="{x:Bind PostDateFormatted}" />
                     </TextBlock>
-                </StackPanel>
+                </Grid>
             </StackPanel>
         </DataTemplate>
         <DataTemplate x:Key="PostIllustTemplate" x:DataType="feeds:PostIllustFeedItemViewMode">
-            <StackPanel HorizontalAlignment="Stretch">
+            <StackPanel>
                 <TextBlock HorizontalAlignment="Left" Text="{x:Bind PostDateFormatted}" Style="{StaticResource CaptionStrongTextBlockStyle}" />
-                <StackPanel Orientation="Horizontal" Height="35" Margin="0,5,0,0">
-                    <Grid HorizontalAlignment="Center" VerticalAlignment="Center" CornerRadius="25" Width="35" Height="35">
+                <Grid Margin="0,5,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="50" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Grid Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" CornerRadius="25" Width="35" Height="35">
                         <ImageIcon Source="{x:Bind UserAvatar, Mode=OneWay}" Width="35" Height="35" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                     </Grid>
-                    <TextBlock VerticalAlignment="Top" Margin="10,2,10,0" FontSize="18" >
+                    <TextBlock Grid.Column="1" VerticalAlignment="Top" Margin="10,2,10,0" FontSize="15" TextWrapping="WrapWholeWords">
                         <Run Text="{x:Bind Entry.PostUserName}" FontFamily="Bahnschrift" FontWeight="Bold" />
                         <Run x:Uid="/Timeline/PostIllustTemplateSegment" />
                         <Run Text="{x:Bind Entry.FeedName}" FontFamily="Bahnschrift" FontWeight="Bold" />
                         <Run Text="{x:Bind PostDateFormatted}" />
                     </TextBlock>
-                </StackPanel>
+                </Grid>
             </StackPanel>
         </DataTemplate>
     </Page.Resources>
+    <SplitView HorizontalAlignment="Stretch" DisplayMode="Inline" VerticalAlignment="Stretch" PanePlacement="Left" PaneBackground="Transparent" IsPaneOpen="True" OpenPaneLength="450">
+        <SplitView.Pane>
+            <controls:EntryView VerticalAlignment="Stretch" 
+                                Padding="0,10,0,0"
+                                Background="Transparent"
+                                HasNoItem="{x:Bind _viewModel.HasNoItem, Mode=OneWay}"
+                                IsLoadingMore="{x:Bind ItemsView.IsLoadingMore, Mode=OneWay}">
+                <controls:EntryView.Content>
+                    <controls:AdvancedItemsView x:Name="ItemsView"
+                                                HorizontalAlignment="Stretch"
+                                                IsItemInvokedEnabled="False" 
+                                                ItemsSource="{x:Bind _viewModel.DataProvider.View, Mode=OneWay}"
+                                                SelectionMode="Single">
+                        <controls:AdvancedItemsView.ItemTemplate>
+                            <DataTemplate x:DataType="feeds:FeedItemViewModel">
+                                <ItemContainer>
+                                    <timeline:TimelineUnit FoldThreshold="1000" FoldedDefaultPlacement="Left"
+                                                           Content="{x:Bind Mode=OneWay}"
+                                                           DataContext="{x:Bind Mode=OneWay}"
+                                                           Loaded="TimelineUnit_OnLoaded"
+                                                           TitleIconBackground="{x:Bind IconBackground, Mode=OneWay}"
+                                                           ContentTemplateSelector="{StaticResource FeedItemDataTemplateSelector}"
+                                                           TimelineAxisPlacement="{x:Bind Placement, Mode=OneWay}">
+                                        <timeline:TimelineUnit.TitleIcon>
+                                            <winUi:SymbolIconSource Symbol="{x:Bind Icon, Mode=OneWay}" Foreground="{x:Bind IconForeground, Mode=OneWay}" />
+                                        </timeline:TimelineUnit.TitleIcon>
+                                    </timeline:TimelineUnit>
+                                </ItemContainer>
+                            </DataTemplate>
+                        </controls:AdvancedItemsView.ItemTemplate>
+                        <controls:AdvancedItemsView.ItemTransitionProvider>
+                            <LinedFlowLayoutItemCollectionTransitionProvider />
+                        </controls:AdvancedItemsView.ItemTransitionProvider>
+                    </controls:AdvancedItemsView>
+                </controls:EntryView.Content>
+            </controls:EntryView>
+        </SplitView.Pane>
+    </SplitView>
 
-    <controls:EntryView HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
-                        Background="Transparent"
-                        HasNoItem="{x:Bind _viewModel.HasNoItem, Mode=OneWay}"
-                        IsLoadingMore="{x:Bind ItemsView.IsLoadingMore, Mode=OneWay}">
-        <controls:EntryView.Content>
-            <controls:AdvancedItemsView x:Name="ItemsView" HorizontalAlignment="Stretch" IsItemInvokedEnabled="False" ItemsSource="{x:Bind _viewModel.DataProvider.View, Mode=OneWay}"
-                                        SelectionMode="None">
-                <controls:AdvancedItemsView.ItemTemplate>
-                    <DataTemplate x:DataType="feeds:FeedItemViewModel">
-                        <ItemContainer>
-                            <timeline:TimelineUnit Margin="50,0" FoldThreshold="1000" FoldedDefaultPlacement="Left"
-                                                   Content="{x:Bind Mode=OneWay}"
-                                                   DataContext="{x:Bind Mode=OneWay}"
-                                                   Loaded="TimelineUnit_OnLoaded"
-                                                   ContentTemplateSelector="{StaticResource FeedItemDataTemplateSelector}"
-                                                   TimelineAxisPlacement="{x:Bind Placement, Mode=OneWay}">
-                                <timeline:TimelineUnit.TitleIcon>
-                                    <winUi:SymbolIconSource Symbol="{x:Bind Icon, Mode=OneWay}" />
-                                </timeline:TimelineUnit.TitleIcon>
-                            </timeline:TimelineUnit>
-                        </ItemContainer>
-                    </DataTemplate>
-                </controls:AdvancedItemsView.ItemTemplate>
-                <controls:AdvancedItemsView.ItemTransitionProvider>
-                    <LinedFlowLayoutItemCollectionTransitionProvider />
-                </controls:AdvancedItemsView.ItemTransitionProvider>
-            </controls:AdvancedItemsView>
-        </controls:EntryView.Content>
-    </controls:EntryView>
+    
 </Page>

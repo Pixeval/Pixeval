@@ -1,4 +1,4 @@
-<controls:SupportCustomTitleBarDragRegionPage
+<controls:EnhancedWindowPage
     x:Class="Pixeval.Pages.IllustrationViewer.IllustrationViewerPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -406,4 +406,4 @@
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
     </Grid>
-</controls:SupportCustomTitleBarDragRegionPage>
+</controls:EnhancedWindowPage>

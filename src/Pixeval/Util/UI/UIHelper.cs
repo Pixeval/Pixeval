@@ -58,6 +58,17 @@ namespace Pixeval.Util.UI;
 public static partial class UiHelper
 {
     /// <summary>
+    /// Detects the perceived brightness of a color, returns <c>true</c> if the color is perceived as light
+    /// and returns <c>false</c> if the color is perceived as dark.
+    /// </summary>
+    /// <param name="color"></param>
+    /// <returns></returns>
+    public static bool PerceivedBright(Color color)
+    {
+        return 0.2126 * color.R + 0.7152 * color.G + 0.0722 * color.B >= 128;
+    }
+
+    /// <summary>
     /// With higher <paramref name="magnitude"/> you will get brighter color and vice-versa.
     /// </summary>
     /// <param name="color"></param>

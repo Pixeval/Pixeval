@@ -19,19 +19,18 @@
 #endregion
 
 using System;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using FluentIcons.Common;
+using Microsoft.UI;
 using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.AppManagement;
 using Pixeval.Controls;
 using Pixeval.Controls.Timeline;
 using Pixeval.CoreApi.Model;
 using Pixeval.Util;
 using Pixeval.Util.IO;
-using Pixeval.Utilities;
+using Pixeval.Util.UI;
 
 #pragma warning disable CS9107 // Parameter is captured into the state of the enclosing type and its value is also passed to the base constructor. The value might be captured by the base class as well.
 
@@ -53,17 +52,17 @@ public partial class BookmarkIllustFeedItemViewModel(Feed entry, int index) : Fe
     }
 }
 
-public partial class BookmarkNovelFeedItemViewModel(Feed entry, int index) : FeedItemViewModel(entry, index)
+public class BookmarkNovelFeedItemViewModel(Feed entry, int index) : FeedItemViewModel(entry, index)
 {
 
 }
 
-public partial class PostIllustFeedItemViewMode(Feed entry, int index) : FeedItemViewModel(entry, index)
+public class PostIllustFeedItemViewMode(Feed entry, int index) : FeedItemViewModel(entry, index)
 {
 
 }
 
-public partial class FollowUserFeedItemViewModel(Feed entry, int index) : FeedItemViewModel(entry, index)
+public class FollowUserFeedItemViewModel(Feed entry, int index) : FeedItemViewModel(entry, index)
 {
 
 }
@@ -74,7 +73,13 @@ public partial class FeedItemViewModel(Feed entry, int index) : EntryViewModel<F
     [ObservableProperty] 
     private TimelineAxisPlacement _placement;
 
-    public string PostDateFormatted => Entry.PostDate.ToString("f");
+    // If the post date is within one day, show the precise moment, otherwise shows the date
+    // we make an optimistic assumption that user rarely view feeds over one year ago, so
+    // we don't show the year here.
+    public string PostDateFormatted =>
+        (DateTime.Now - Entry.PostDate) < TimeSpan.FromDays(1)
+            ? Entry.PostDate.ToString("hh:mm tt")
+            : Entry.PostDate.ToString("M");
 
     public Symbol Icon => entry.Type switch
     {
@@ -84,6 +89,26 @@ public partial class FeedItemViewModel(Feed entry, int index) : EntryViewModel<F
         FeedType.AddNovelBookmark => Symbol.BookAdd,
         _ => throw new ArgumentOutOfRangeException()
     };
+
+    public SolidColorBrush IconSecondaryBrush => entry.Type switch
+    {
+        FeedType.AddBookmark => new SolidColorBrush(UiHelper.ParseHexColor("#FF5449")),
+        FeedType.AddFavorite => new SolidColorBrush(UiHelper.ParseHexColor("#85976E")),
+        FeedType.AddIllust => new SolidColorBrush(UiHelper.ParseHexColor("#8991A2")),
+        FeedType.AddNovelBookmark => new SolidColorBrush(UiHelper.ParseHexColor("#9B9168")),
+        _ => throw new ArgumentOutOfRangeException()
+    };
+
+    public SolidColorBrush IconBackground => entry.Type switch
+    {
+        FeedType.AddBookmark => new SolidColorBrush(UiHelper.ParseHexColor("#B33B15")),
+        FeedType.AddFavorite => new SolidColorBrush(UiHelper.ParseHexColor("#63A002")),
+        FeedType.AddIllust => new SolidColorBrush(UiHelper.ParseHexColor("#769CDF")),
+        FeedType.AddNovelBookmark => new SolidColorBrush(UiHelper.ParseHexColor("#FFDE3F")),
+        _ => throw new ArgumentOutOfRangeException()
+    };
+
+    public SolidColorBrush IconForeground => new(UiHelper.PerceivedBright(IconBackground.Color) ? Colors.Black : Colors.White);
 
     [ObservableProperty]
     private ImageSource _userAvatar = null!;

@@ -1,5 +1,8 @@
+using Windows.UI;
+using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
 using WinUI3Utilities.Attributes;
 
 namespace Pixeval.Controls.Timeline;
@@ -8,6 +11,7 @@ namespace Pixeval.Controls.Timeline;
 [DependencyProperty<double>("FoldThreshold", "-1.0")]
 [DependencyProperty<TimelineAxisPlacement>("TimelineAxisPlacement", "Pixeval.Controls.Timeline.TimelineAxisPlacement.Left", nameof(TimelineAxisPlacementPropertyChangedCallback))]
 [DependencyProperty<IconSource>("TitleIcon")]
+[DependencyProperty<SolidColorBrush>("TitleIconBackground", DependencyPropertyDefaultValue.Default)]
 public sealed partial class TimelineUnit : ContentControl
 {
     public TimelineUnit()
@@ -21,6 +25,8 @@ public sealed partial class TimelineUnit : ContentControl
     private Grid _rightIndicatorAxis = null!;
     private Grid _leftIconContainer = null!;
     private Grid _rightIconContainer = null!;
+    private ColumnDefinition _rightColumn = null!;
+    private ColumnDefinition _leftColumn = null!;
     private ContentControl _contentPresenter = null!;
     private double _containerHeightFixed;
     
@@ -53,6 +59,8 @@ public sealed partial class TimelineUnit : ContentControl
         _leftIconContainer = (GetTemplateChild("LeftIconContainer") as Grid)!;
         _rightIconContainer = (GetTemplateChild("RightIconContainer") as Grid)!;
         _contentPresenter = (GetTemplateChild("ContentPresenter") as ContentControl)!;
+        _leftColumn = (GetTemplateChild("LeftColumn") as ColumnDefinition)!;
+        _rightColumn = (GetTemplateChild("RightColumn") as ColumnDefinition)!;
 
         _contentPresenter.Loaded += ContentContainerOnLoaded;
 
@@ -100,6 +108,7 @@ public sealed partial class TimelineUnit : ContentControl
         switch (placement)
         {
             case TimelineAxisPlacement.Left:
+                _rightColumn.Width = new GridLength(0);
                 _leftIconContainer.Visibility = Visibility.Visible;
                 _rightIconContainer.Visibility = Visibility.Collapsed;
 
@@ -126,6 +135,7 @@ public sealed partial class TimelineUnit : ContentControl
                 AdjustIndicatorAxisSize();
                 break;
             case TimelineAxisPlacement.Right:
+                _leftColumn.Width = new GridLength(0);
                 _leftIconContainer.Visibility = Visibility.Collapsed;
                 _rightIconContainer.Visibility = Visibility.Visible;
                 _rightIndicatorAxis.Margin = isFolding
@@ -157,6 +167,9 @@ public sealed partial class TimelineUnit : ContentControl
     {
         AdjustIndicatorAxisSize();
         AdjustAxisPlacement(TimelineAxisPlacement, true);
+
+        _leftIconContainer.Background = TitleIconBackground;
+        _rightIconContainer.Background = TitleIconBackground;
     }
 
     public void Reset()

@@ -114,7 +114,7 @@ public partial class DownloadManager<TDownloadTask> : IDisposable where TDownloa
     }
 
     /// <summary>
-    /// Tries to redownload a task only if its already queued and not running
+    /// Attempts to re-download a task only if its already queued and not running
     /// </summary>
     public bool TryExecuteInline(TDownloadTask task)
     {

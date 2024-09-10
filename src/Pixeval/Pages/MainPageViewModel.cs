@@ -77,8 +77,8 @@ public partial class MainPageViewModel : ObservableObject
 
     public readonly IconElement RankingIcon = new ImageIcon { Source = new BitmapImage(AppInfo.NavigationIconUri("ranking-128x128")) };
 
-    // Due to the lack of knowledge in designing icons, their sizes must be adjusted per item basis, in order to achieve visual coherence, which is quite annoying, I believe this can be easily fixed,
-    // but I'm already exhausted for designing them.
+    // Due to my incompetence, the sizes of the icons must be adjusted per item basis in order to ensure the visual coherence, which is quite annoying.
+    // This was supposed to be an easy fix, but I'm already exhausted now. 
 
     public readonly IconElement BookmarksIcon = new ImageIcon { Source = new BitmapImage(AppInfo.NavigationIconUri("bookmarks-128x128"))};
 
