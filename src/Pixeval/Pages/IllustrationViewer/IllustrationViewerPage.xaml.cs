@@ -129,6 +129,7 @@ public sealed partial class IllustrationViewerPage
 
     private void IllustrationViewerPage_OnLoaded(object sender, RoutedEventArgs e)
     {
+        TitleBarArea.SetDragRegionForCustomTitleBar();
         var dataTransferManager = HWnd.GetDataTransferManager();
         dataTransferManager.DataRequested += OnDataTransferManagerOnDataRequested;
 
