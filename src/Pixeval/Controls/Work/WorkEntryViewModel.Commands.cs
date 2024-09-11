@@ -23,14 +23,18 @@ using Windows.System;
 using Microsoft.UI.Xaml.Input;
 using Pixeval.Util.UI;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using FluentIcons.Common;
 using Pixeval.CoreApi.Model;
+using Pixeval.Utilities;
 
 namespace Pixeval.Controls;
 
 public partial class WorkEntryViewModel<T>
 {
+
+
     /// <summary>
     /// Parameter: <see cref="ValueTuple{T1, T2, T3}"/>
     /// <list type="bullet">
@@ -97,7 +101,7 @@ public partial class WorkEntryViewModel<T>
 
         AddToBookmarkCommand.ExecuteRequested += AddToBookmarkCommandOnExecuteRequested;
 
-        BookmarkCommand.GetBookmarkCommand(IsBookmarked);
+        BookmarkCommand.RefreshBookmarkCommand(IsBookmarked);
         BookmarkCommand.ExecuteRequested += BookmarkCommandOnExecuteRequested;
 
         SaveCommand.ExecuteRequested += SaveCommandOnExecuteRequested;
@@ -109,21 +113,22 @@ public partial class WorkEntryViewModel<T>
 
     private async void BookmarkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
-        IsBookmarked = await SetBookmarkAsync(Id, !IsBookmarked);
-        BookmarkCommand.GetBookmarkCommand(IsBookmarked);
+        
+        IsBookmarked = !IsBookmarked; // pre-update
+        BookmarkCommand.RefreshBookmarkCommand(IsBookmarked); // pre-update
+        _ = _bookmarkDebounce.ExecuteAsync(IsBookmarked ? new BookmarkDebounceTask(this, false, null) : new RemoveBookmarkDebounceTask(this, false, null));
         if (App.AppViewModel.AppSettings.DownloadWhenBookmarked && IsBookmarked)
             SaveCommand.Execute(args.Parameter);
     }
 
     private async void AddToBookmarkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
+
         if (args.Parameter is not (IEnumerable<string> userTags, bool isPrivate, var parameter))
             return;
-        var success = await SetBookmarkAsync(Id, true, isPrivate, userTags);
-        if (!success)
-            return;
         IsBookmarked = true;
-        BookmarkCommand.GetBookmarkCommand(IsBookmarked);
+        BookmarkCommand.RefreshBookmarkCommand(IsBookmarked);
+        _ = _bookmarkDebounce.ExecuteAsync(IsBookmarked ? new BookmarkDebounceTask(this, isPrivate, userTags) : new RemoveBookmarkDebounceTask(this, isPrivate, userTags));
         if (App.AppViewModel.AppSettings.DownloadWhenBookmarked)
             SaveCommand.Execute(parameter);
     }

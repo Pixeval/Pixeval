@@ -109,8 +109,8 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
 
         InitializeCommands();
         // 此时IsPlaying为true，IsFit为true
-        PlayGifCommand.GetPlayCommand(true);
-        RestoreResolutionCommand.GetResolutionCommand(true);
+        PlayGifCommand.RefreshPlayCommand(true);
+        RestoreResolutionCommand.RefreshResolutionCommand(true);
     }
 
     /// <summary>
@@ -297,13 +297,13 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
     private void PlayGifCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
         IsPlaying = !IsPlaying;
-        PlayGifCommand.GetPlayCommand(IsPlaying);
+        PlayGifCommand.RefreshPlayCommand(IsPlaying);
     }
 
     public void RestoreResolutionCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
         ShowMode = IsFit ? ZoomableImageMode.Original : ZoomableImageMode.Fit;
-        RestoreResolutionCommand.GetResolutionCommand(IsFit);
+        RestoreResolutionCommand.RefreshResolutionCommand(IsFit);
     }
 
     private void SetAsBackgroundCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)

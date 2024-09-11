@@ -47,7 +47,7 @@ public partial class IllustrationItemViewModel
     protected override async void SaveCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
         var hWnd = null as ulong?;
-        var getImageStreamAsync = null as GetImageStream;
+        GetImageStream? getImageStreamAsync = null;
         switch (args.Parameter)
         {
             case (ulong h, GetImageStream f):
@@ -69,7 +69,7 @@ public partial class IllustrationItemViewModel
     protected override async void SaveAsCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
         ulong hWnd;
-        var getImageStreamAsync = null as GetImageStream;
+        GetImageStream? getImageStreamAsync = null;
         switch (args.Parameter)
         {
             case (ulong h, GetImageStream f):
@@ -106,7 +106,7 @@ public partial class IllustrationItemViewModel
     private async Task SaveUtilityAsync(ulong? hWnd, GetImageStream? getImageStreamAsync, string path)
     {
         var ib = hWnd?.InfoGrowlReturn("");
-        var progress = null as Progress<double>;
+        Progress<double>? progress = null;
         if (ib is not null)
             if (IsUgoira)
                 progress = new Progress<double>(d => ib.Title = EntryItemResources.UgoiraProcessing.Format((int)d));
@@ -148,7 +148,7 @@ public partial class IllustrationItemViewModel
 
         var ib = hWnd?.InfoGrowlReturn("");
 
-        var progress = null as Progress<double>;
+        Progress<double>? progress = null;
         if (ib is not null)
             if (IsUgoira)
                 progress = new Progress<double>(d => ib.Title = EntryItemResources.UgoiraProcessing.Format(d));

@@ -52,7 +52,7 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
         CurrentIllustrationIndex = currentIllustrationIndex;
 
         InitializeCommands();
-        FullScreenCommand.GetFullScreenCommand(false);
+        FullScreenCommand.RefreshFullScreenCommand(false);
     }
 
     /// <summary>
@@ -313,13 +313,13 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
     private void InitializeCommands()
     {
         FullScreenCommand.ExecuteRequested += FullScreenCommandOnExecuteRequested;
-        FullScreenCommand.GetFullScreenCommand(false);
+        FullScreenCommand.RefreshFullScreenCommand(false);
     }
 
     private void FullScreenCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
         IsFullScreen = !IsFullScreen;
-        FullScreenCommand.GetFullScreenCommand(IsFullScreen);
+        FullScreenCommand.RefreshFullScreenCommand(IsFullScreen);
     }
 
     public XamlUICommand InfoAndCommentsCommand { get; } =

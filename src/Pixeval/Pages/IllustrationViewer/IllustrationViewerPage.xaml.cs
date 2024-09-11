@@ -129,6 +129,7 @@ public sealed partial class IllustrationViewerPage
 
     private void IllustrationViewerPage_OnLoaded(object sender, RoutedEventArgs e)
     {
+        // Invokes the drag region calculation manually 9/11/2024
         TitleBarArea.SetDragRegionForCustomTitleBar();
         var dataTransferManager = HWnd.GetDataTransferManager();
         dataTransferManager.DataRequested += OnDataTransferManagerOnDataRequested;
