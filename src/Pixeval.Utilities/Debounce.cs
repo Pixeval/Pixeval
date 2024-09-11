@@ -47,7 +47,7 @@ public interface IDebouncedTask<T, TResult> where T : struct, IEquatable<T>
 /// the class debounces tasks in the following way:
 ///
 /// 1. If a task has a dependency, it will be executed only if the dependency has been executed, otherwise it will
-///    be debounced (disregarded)
+///    be debounced (disregarded) edit: check the todo 9/12/2024
 /// 2. If a task has already been executed, it will be debounced (disregarded)
 /// 3. If a task is a finalizer, then it finalizes the task group, the whole chain of dependency will be removed from
 ///    the executed tasks list, allows this group of task to be executed once again.
