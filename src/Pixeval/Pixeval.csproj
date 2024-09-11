@@ -3,7 +3,8 @@
         <OutputType>WinExe</OutputType>
         <TargetFramework>net8.0-windows10.0.22621.0</TargetFramework>
         <TargetPlatformMinVersion>10.0.19041.0</TargetPlatformMinVersion>
-        <RootNamespace>Pixeval</RootNamespace>
+		<WindowsSdkPackageVersion>10.0.22621.38</WindowsSdkPackageVersion>
+		<RootNamespace>Pixeval</RootNamespace>
         <Platforms>x86;x64;ARM64</Platforms>
         <RuntimeIdentifiers>win-x86;win-x64;win-arm64</RuntimeIdentifiers>
         <ApplicationManifest>app.manifest</ApplicationManifest>
@@ -49,7 +50,7 @@
         <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.3233" />
         <PackageReference Condition="'$(PublishAot)' == 'true'" Include="Microsoft.Windows.CsWinRT" Version="2.1.0-prerelease.240602.1" />
         <PackageReference Condition="'$(PublishAot)' == 'true'" Include="Microsoft.WindowsAppSDK" Version="1.6.240531000-experimental1" />
-        <PackageReference Condition="'$(PublishAot)' == 'false'" Include="Microsoft.WindowsAppSDK" Version="1.5.240607001" />
+        <PackageReference Condition="'$(PublishAot)' == 'false'" Include="Microsoft.WindowsAppSDK" Version="1.6.240829007" />
         <PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.0.9" />
         <PackageReference Include="PininSharp" Version="1.2.0" />
         <!--<PackageReference Include="Pixeval.Bypass" Version="1.1.7" />-->
