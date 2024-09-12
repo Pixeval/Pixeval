@@ -30,5 +30,7 @@
   "IllustrationHeaderSuggestionTextBlock/Text": "插画趋势",
   "NovelHeaderSuggestionTextBlock/Text": "小说趋势",
   "SettingsEntryHeaderSuggestionTextBlock/Text": "相关设置项",
-  "TagAutoCompletionSuggestionTextBlock/Text": "相关标签"
+  "TagAutoCompletionSuggestionTextBlock/Text": "相关标签",
+  "FeedTabCannotBeOpenedTitle": "无法使用用户动态功能",
+  "FeedTabCannotBeOpenedContent": "用户动态功能需要使用 Cookie，请先在设置页面中填写对应 Cookie 后再使用此功能"
 }

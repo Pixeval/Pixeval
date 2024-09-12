@@ -112,6 +112,7 @@
             x:Name="NavigationView"
             IsBackButtonVisible="Collapsed"
             IsPaneToggleButtonVisible="False"
+            ItemInvoked="NavigationView_OnItemInvoked"
             IsSettingsVisible="False"
             OpenPaneLength="{x:Bind _viewModel.MainPageRootNavigationViewOpenPanelLength}"
             SelectionChanged="NavigationView_OnSelectionChanged">
@@ -149,8 +150,10 @@
                     Icon="{x:Bind _viewModel.NewWorksIcon}"
                     Tag="{x:Bind _viewModel.NewWorksTag}" />
                 <NavigationViewItem
+                    x:Name="FeedTab"
                     x:Uid="/MainPage/FeedTab"
                     Icon="{x:Bind _viewModel.FeedIcon}"
+                    SelectsOnInvoked="False"
                     Tag="{x:Bind _viewModel.FeedTag}" />
                 <NavigationViewItemHeader x:Uid="/MainPage/DownloadAndHistoriesTab" />
                 <NavigationViewItem

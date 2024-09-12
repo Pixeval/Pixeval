@@ -63,4 +63,9 @@ public partial class WorkEntryViewModel<T>
 
         public bool IsFinalizer => true;
     }
+
+    protected override void DisposeOverride()
+    {
+        _bookmarkDebounce.Dispose();
+    }
 }

@@ -58,6 +58,7 @@ using Pixeval.Logging;
 using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Pages.IllustratorViewer;
 using Pixeval.Pages.NovelViewer;
+using Microsoft.UI.Xaml.Controls.Primitives;
 
 namespace Pixeval.Pages;
 
@@ -122,10 +123,27 @@ public sealed partial class MainPage
 
         // args.SelectedItem may be null here
         if (sender.SelectedItem is NavigationViewItem { Tag: NavigationViewTag tag } selectedItem)
+        {
             if (Equals(selectedItem, DownloadListTab) || Equals(selectedItem, SettingsTab) || Equals(selectedItem, TagsTab))
                 Navigate(MainPageRootFrame, tag);
             else
                 MainPageRootFrame.NavigateTag(tag, new SuppressNavigationTransitionInfo());
+        }
+    }
+
+    private void NavigationView_OnItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
+    {
+        // Intercept the navigation to the feed tab if cookie is blank
+        if (!Equals(args.InvokedItemContainer, FeedTab))
+            return;
+        if (App.AppViewModel.AppSettings.WebCookie.IsNullOrBlank())
+        {
+            _ = this.CreateAcknowledgementAsync(MainPageResources.FeedTabCannotBeOpenedTitle, MainPageResources.FeedTabCannotBeOpenedContent);
+        }
+        else
+        {
+            sender.SelectedItem = FeedTab;
+        }
     }
 
     private void MainPageRootFrame_OnNavigated(object sender, NavigationEventArgs e)
