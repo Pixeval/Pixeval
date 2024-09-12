@@ -20,6 +20,7 @@
 
 using System;
 using System.Threading.Tasks;
+using Windows.UI.ViewManagement;
 using CommunityToolkit.Mvvm.ComponentModel;
 using FluentIcons.Common;
 using Microsoft.UI;
@@ -36,8 +37,16 @@ using Pixeval.Util.UI;
 
 namespace Pixeval.Pages.Capability.Feeds;
 
-public partial class FeedItemViewModel(Feed entry, int index) : EntryViewModel<Feed>(entry), IViewModelFactory<Feed, FeedItemViewModel>
+public partial class FeedItemViewModel(Feed entry) : EntryViewModel<Feed>(entry), IViewModelFactory<Feed, FeedItemViewModel>
 {
+    [ObservableProperty]
+    private SolidColorBrush? _itemBackground = new(Colors.Transparent);
+
+    public void Select(bool value)
+    {
+        ItemBackground = value ? new SolidColorBrush(new UISettings().GetColorValue(UIColorType.AccentLight3)) : new SolidColorBrush(Colors.Transparent);
+    }
+
     [ObservableProperty] 
     private TimelineAxisPlacement _placement;
 
@@ -76,19 +85,24 @@ public partial class FeedItemViewModel(Feed entry, int index) : EntryViewModel<F
         _ => throw new ArgumentOutOfRangeException()
     };
 
-    public SolidColorBrush IconForeground => new(UiHelper.PerceivedBright(IconBackground.Color) ? Colors.Black : Colors.White);
-
     [ObservableProperty]
     private ImageSource _userAvatar = null!;
 
     public static FeedItemViewModel CreateInstance(Feed entry, int index)
     {
-        return new FeedItemViewModel(entry, index);
+        return new FeedItemViewModel(entry);
     }
 
     public virtual async Task LoadAsync()
     {
         Placement = TimelineAxisPlacement.Left; // index % 2 == 0 ? TimelineAxisPlacement.Left : TimelineAxisPlacement.Right;
+
+        // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
+#pragma warning disable MVVMTK0034
+        if (_userAvatar is not null)
+#pragma warning restore MVVMTK0034
+            return;
+
         if (entry.PostUserThumbnail is { } url)
         {
             var image = (await App.AppViewModel.MakoClient.DownloadBitmapImageAsync(url, 35)).UnwrapOrElse(await AppInfo.ImageNotAvailable.ValueAsync)!;
