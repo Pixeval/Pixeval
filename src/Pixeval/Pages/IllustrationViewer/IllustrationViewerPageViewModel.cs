@@ -40,6 +40,9 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
     [ObservableProperty]
     private bool _isFullScreen;
 
+    [ObservableProperty]
+    private bool _showPixevalIcon = true;
+
     /// <summary>
     /// 
     /// </summary>

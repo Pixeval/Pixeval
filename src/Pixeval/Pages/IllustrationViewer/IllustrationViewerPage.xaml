@@ -266,7 +266,7 @@
                 DisplayMode="Tall"
                 Window="{x:Bind windowing:WindowFactory.GetForkedWindows(HWnd)}">
                 <controls1:TitleBar.Icon>
-                    <ImageIcon Source="ms-appx:///Assets/Images/logo.svg" />
+                    <ImageIcon Source="ms-appx:///Assets/Images/logo.svg" Visibility="{x:Bind IsLogoVisible()}" />
                 </controls1:TitleBar.Icon>
                 <controls1:TitleBar.RenderTransform>
                     <TranslateTransform x:Name="TopCommandBarTranslation" />

@@ -111,7 +111,7 @@ public partial class WorkEntryViewModel<T>
         CopyCommand.ExecuteRequested += CopyCommandOnExecuteRequested;
     }
 
-    private async void BookmarkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
+    private void BookmarkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
         
         IsBookmarked = !IsBookmarked; // pre-update
@@ -121,7 +121,7 @@ public partial class WorkEntryViewModel<T>
             SaveCommand.Execute(args.Parameter);
     }
 
-    private async void AddToBookmarkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
+    private void AddToBookmarkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
 
         if (args.Parameter is not (IEnumerable<string> userTags, bool isPrivate, var parameter))

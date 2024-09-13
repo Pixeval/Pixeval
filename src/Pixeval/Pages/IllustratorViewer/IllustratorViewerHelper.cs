@@ -10,7 +10,7 @@ namespace Pixeval.Pages.IllustratorViewer;
 
 public static class IllustratorViewerHelper
 {
-    public static IllustratorViewerPageViewModel GetViewModel(this ulong hWnd, object? param)
+    public static IllustratorViewerPageViewModel GetIllustratorViewerPageViewModel(this ulong hWnd, object? param)
     {
         return param switch
         {

@@ -146,9 +146,25 @@
             HorizontalAlignment="Stretch"
             VerticalAlignment="Stretch"
             ui:Effects.Shadow="{StaticResource ContentPanelShadow}"
-            Background="White"
-            CornerRadius="8,0,0,8" />
+            CornerRadius="8,0,0,8">
+            <Frame
+                x:Name="FeedPageFrame"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch" />
+            <Grid
+                Width="100"
+                Height="80"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Background="{ThemeResource PixevalAppAcrylicBrush}"
+                CornerRadius="4"
+                Visibility="{x:Bind _viewModel.IsLoading, Mode=OneWay}">
+                <ProgressRing
+                    Width="30"
+                    Height="30"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center" />
+            </Grid>
+        </Grid>
     </SplitView>
-
-
 </Page>

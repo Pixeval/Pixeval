@@ -31,7 +31,7 @@ namespace Pixeval.Pages.Capability;
 
 public sealed partial class BookmarksPage : IScrollViewHost
 {
-    private BookmarkPageViewModel _viewModel = null!;
+    private BookmarksPageViewModel _viewModel = null!;
 
     public BookmarksPage() => InitializeComponent();
 
@@ -39,7 +39,7 @@ public sealed partial class BookmarksPage : IScrollViewHost
     {
         if (e.Parameter is not long uid)
             uid = App.AppViewModel.PixivUid;
-        _viewModel = new BookmarkPageViewModel(uid);
+        _viewModel = new BookmarksPageViewModel(uid);
         _viewModel.TagBookmarksIncrementallyLoaded += ViewModelOnTagBookmarksIncrementallyLoaded;
     }
 

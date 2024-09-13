@@ -91,7 +91,7 @@ public static class IllustrationViewerHelper
         CreateWindowWithPage(illustrationViewModel.Entry, (illustrationViewViewModel, index));
     }
 
-    public static IllustrationViewerPageViewModel GetViewModel(this ulong hWnd, object? param)
+    public static IllustrationViewerPageViewModel GetIllustrationViewerPageViewModelFromHandle(this ulong hWnd, object? param)
     {
         return param switch
         {

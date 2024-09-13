@@ -48,7 +48,7 @@ public sealed partial class NovelViewerPage
     public override void OnPageActivated(NavigationEventArgs e, object? parameter)
     {
         // 此处this.XamlRoot为null
-        _viewModel = HWnd.GetViewModel(parameter);
+        _viewModel = HWnd.GetNovelViewerPageViewModelFromHandle(parameter);
 
         _viewModel.DetailedPropertyChanged += (sender, args) =>
         {
@@ -190,4 +190,11 @@ public sealed partial class NovelViewerPage
     private void OpenPane_OnRightTapped(object sender, RightTappedRoutedEventArgs e) => EntryViewerSplitView.PinPane = true;
 
     public (ulong, DocumentViewerViewModel?) DownloadParameter(DocumentViewerViewModel? viewModel) => (HWnd, viewModel);
+
+    public Visibility IsLogoVisible()
+    {
+        return WindowFactory.GetWindowForElement(this).HWnd != WindowFactory.RootWindow.HWnd
+            ? Visibility.Visible
+            : Visibility.Collapsed;
+    }
 }

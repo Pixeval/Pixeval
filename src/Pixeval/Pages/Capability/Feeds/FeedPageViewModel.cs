@@ -18,13 +18,22 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using System;
+using System.Threading;
+using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.ComponentModel;
 using Pixeval.Controls;
 using Pixeval.CoreApi.Model;
 
 namespace Pixeval.Pages.Capability.Feeds;
 
-public class FeedPageViewModel : EntryViewViewModel<IFeedEntry, AbstractFeedItemViewModel>
+public partial class FeedPageViewModel : EntryViewViewModel<IFeedEntry, AbstractFeedItemViewModel>
 {
+    [ObservableProperty]
+    private bool _isLoading;
+
+    private CancellationTokenSource _loadingCancellation = new();
+
     public FeedPageViewModel(SharableViewDataProvider<IFeedEntry, AbstractFeedItemViewModel> dataProvider)
     {
         DataProvider = dataProvider;
@@ -37,4 +46,22 @@ public class FeedPageViewModel : EntryViewViewModel<IFeedEntry, AbstractFeedItem
     }
 
     public override IDataProvider<IFeedEntry, AbstractFeedItemViewModel> DataProvider { get; }
+
+    public void CancelLoad()
+    {
+        _loadingCancellation.Cancel(false);
+        _loadingCancellation = new CancellationTokenSource();
+    }
+
+    public async Task<T> PerformLoadAsync<T>(Func<Task<T>> func)
+    {
+        IsLoading = true;
+        var result = await func();
+
+        if (_loadingCancellation.IsCancellationRequested)
+            return await Task.FromCanceled<T>(_loadingCancellation.Token);
+
+        IsLoading = false;
+        return result;
+    }
 }
