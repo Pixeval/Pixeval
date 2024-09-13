@@ -32,7 +32,7 @@ using WinUI3Utilities;
 
 namespace Pixeval.Pages.Capability;
 
-public partial class BookmarkPageViewModel(long userId) : ObservableObject, IDisposable
+public class BookmarkPageViewModel(long userId) : ObservableObject, IDisposable
 {
     public long UserId { get; } = userId;
 

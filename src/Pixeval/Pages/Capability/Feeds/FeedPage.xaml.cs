@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -6,6 +7,7 @@ using Windows.UI.Text;
 using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml.Documents;
 using Pixeval.CoreApi.Model;
+using Pixeval.Utilities;
 using WinUI3Utilities;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -18,7 +20,7 @@ namespace Pixeval.Pages.Capability.Feeds
     /// </summary>
     public sealed partial class FeedPage
     {
-        private FeedItemViewModel? _lastSelected;
+        private AbstractFeedItemViewModel? _lastSelected;
 
         public FeedPage()
         {
@@ -30,7 +32,7 @@ namespace Pixeval.Pages.Capability.Feeds
 
         private void FeedPage_OnLoaded(object sender, RoutedEventArgs e)
         {
-            _viewModel.DataProvider.ResetEngine(App.AppViewModel.MakoClient.Feeds()!);
+            _viewModel.DataProvider.ResetEngine(new FeedProxyFetchEngine(App.AppViewModel.MakoClient.Feeds())!);
         }
 
         private async void TimelineUnit_OnLoaded(object sender, RoutedEventArgs e)
@@ -48,40 +50,49 @@ namespace Pixeval.Pages.Capability.Feeds
 
         private async Task LoadFeedItemViewModelAsync(FrameworkElement root)
         {
-            var vm = root.GetDataContext<FeedItemViewModel>();
             var contentTextBlock = root.FindDescendant("FeedContentTextBlock") as TextBlock;
+            var vm = root.GetDataContext<AbstractFeedItemViewModel>();
+            var isSparse = vm is FeedItemSparseViewModel;
 
-            contentTextBlock?.Inlines.Clear();
-            switch (vm.Entry.Type)
+            var entry = vm.GetMostSignificantEntry()!;
+            var feedNameString = vm is FeedItemCondensedViewModel { Entry: IFeedEntry.CondensedFeedEntry(var entries) } 
+                ? GetVmEmphasizedRun(string.Join(", ", entries.Take(2).Select(e => e?.FeedName)))
+                : GetVmEmphasizedRun(entry.FeedName ?? string.Empty);
+            var entriesLengthIfCondensed = vm is FeedItemCondensedViewModel { Entry: IFeedEntry.CondensedFeedEntry({ Count: var count }) }
+                ? count
+                : 0;
+
+            contentTextBlock ?.Inlines.Clear();
+            switch (entry.Type)
             {
-                case FeedType.AddBookmark:
-                    contentTextBlock?.Inlines.Add(new Run { Text = TimelineResources.BookmarkIllustTemplateSegment1Text });
-                    contentTextBlock?.Inlines.Add(GetVmEmphasizedRun(vm.Entry.FeedName ?? string.Empty));
-                    contentTextBlock?.Inlines.Add(new Run { Text = TimelineResources.BookmarkIllustTemplateSegment2Text });
+                case FeedType.AddBookmark or FeedType.AddNovelBookmark:
+                    contentTextBlock?.Inlines.Add(new Run { Text = isSparse ? FeedPageResources.SparseBookmarkPrefix : FeedPageResources.CondensedBookmarkPrefix });
+                    contentTextBlock?.Inlines.Add(feedNameString);
+                    contentTextBlock?.Inlines.Add(new Run { Text = isSparse ? FeedPageResources.SparseBookmarkSuffix : FeedPageResources.CondensedBookmarkFormattedSuffix.Format(entriesLengthIfCondensed) });
                     break;
-                case FeedType.AddIllust:
-                    contentTextBlock?.Inlines.Add(new Run { Text = TimelineResources.PostIllustTemplateSegmentText });
-                    contentTextBlock?.Inlines.Add(GetVmEmphasizedRun(vm.Entry.FeedName ?? string.Empty));
+                case FeedType.PostIllust:
+                    contentTextBlock?.Inlines.Add(new Run { Text = isSparse ? FeedPageResources.SparsePostIllustPrefix : FeedPageResources.CondensedPostIllustPrefix });
+                    contentTextBlock?.Inlines.Add(feedNameString);
+                    if (!isSparse)
+                        contentTextBlock?.Inlines.Add(new Run { Text = FeedPageResources.CondensedPostIllustFormattedSuffix.Format(entriesLengthIfCondensed) });
                     break;
                 case FeedType.AddFavorite:
-                    contentTextBlock?.Inlines.Add(new Run { Text = TimelineResources.FollowUserTemplateSegmentText });
-                    contentTextBlock?.Inlines.Add(GetVmEmphasizedRun(vm.Entry.FeedName ?? string.Empty));
-                    break;
-                case FeedType.AddNovelBookmark:
-                    contentTextBlock?.Inlines.Add(new Run { Text = TimelineResources.BookmarkNovelTemplateSegment1Text });
-                    contentTextBlock?.Inlines.Add(GetVmEmphasizedRun(vm.Entry.FeedName ?? string.Empty));
-                    contentTextBlock?.Inlines.Add(new Run { Text = TimelineResources.BookmarkNovelTemplateSegment2Text });
+                    contentTextBlock?.Inlines.Add(new Run { Text = FeedPageResources.SparseFollowUserPrefix });
+                    contentTextBlock?.Inlines.Add(feedNameString);
+                    if (!isSparse)
+                        contentTextBlock?.Inlines.Add(new Run { Text = FeedPageResources.CondensedFollowUserFormattedSuffix.Format(entriesLengthIfCondensed) });
                     break;
             }
 
             await vm.LoadAsync();
+
             return;
 
             Run GetVmEmphasizedRun(string text) => new()
             {
                 Text = text,
                 FontFamily = new FontFamily("Bahnschrift"),
-                Foreground = vm.IconSecondaryBrush,
+                Foreground = vm.FeedBrush,
                 FontWeight = new FontWeight(700)
             };
         }
@@ -89,7 +100,7 @@ namespace Pixeval.Pages.Capability.Feeds
         private void ItemsView_OnSelectionChanged(ItemsView sender, ItemsViewSelectionChangedEventArgs args)
         {
             _lastSelected?.Select(false);
-            var vm = sender.SelectedItem as FeedItemViewModel;
+            var vm = sender.SelectedItem as AbstractFeedItemViewModel;
             vm?.Select(true);
             _lastSelected = vm;
         }

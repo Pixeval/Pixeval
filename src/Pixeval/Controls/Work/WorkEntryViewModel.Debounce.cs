@@ -48,6 +48,8 @@ public partial class WorkEntryViewModel<T>
         }
 
         public bool IsFinalizer => false;
+
+        public bool IsHead => true;
     }
 
     private class RemoveBookmarkDebounceTask(WorkEntryViewModel<T> vm, bool isPrivate, IEnumerable<string>? userTags) : IDebouncedTask<BookmarkDebounceTag, bool>
@@ -62,6 +64,8 @@ public partial class WorkEntryViewModel<T>
         }
 
         public bool IsFinalizer => true;
+
+        public bool IsHead => false;
     }
 
     protected override void DisposeOverride()

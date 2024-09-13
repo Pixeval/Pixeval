@@ -33,6 +33,7 @@ using Symbol = FluentIcons.Common.Symbol;
 
 namespace Pixeval.Controls;
 
+
 [DebuggerDisplay("{Entry}")]
 public abstract class EntryViewModel<T>(T entry) : ObservableObject, IDisposable where T : IEntry
 {

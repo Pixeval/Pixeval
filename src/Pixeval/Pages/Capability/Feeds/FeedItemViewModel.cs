@@ -19,128 +19,87 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Windows.UI.ViewManagement;
-using CommunityToolkit.Mvvm.ComponentModel;
-using FluentIcons.Common;
 using Microsoft.UI;
 using Microsoft.UI.Xaml.Media;
-using Pixeval.AppManagement;
 using Pixeval.Controls;
-using Pixeval.Controls.Timeline;
 using Pixeval.CoreApi.Model;
-using Pixeval.Util;
-using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 
 #pragma warning disable CS9107 // Parameter is captured into the state of the enclosing type and its value is also passed to the base constructor. The value might be captured by the base class as well.
 
 namespace Pixeval.Pages.Capability.Feeds;
 
-public partial class FeedItemViewModel(Feed entry) : EntryViewModel<Feed>(entry), IViewModelFactory<Feed, FeedItemViewModel>
+static file class FeedItemColors
 {
-    [ObservableProperty]
-    private SolidColorBrush? _itemBackground = new(Colors.Transparent);
+    public static readonly SolidColorBrush AddBookmark = new(UiHelper.ParseHexColor("#FF5449"));
+    public static readonly SolidColorBrush AddFavorite = new(UiHelper.ParseHexColor("#85976E"));
+    public static readonly SolidColorBrush PostIllust = new(UiHelper.ParseHexColor("#769CDF"));
+    public static readonly SolidColorBrush AddNovelBookmark = new(UiHelper.ParseHexColor("#9B9168"));
+}
+
+public interface IFeedEntry : IIdEntry
+{
+    public record SparseFeedEntry(Feed Entry) : IFeedEntry
+    {
+        public long Id => Entry.Id;
+    }
+
+    public record CondensedFeedEntry(List<Feed?> Entries) : IFeedEntry
+    {
+        public long Id => Entries.First()?.Id ?? 0;
+    }
+}
+
+public abstract class AbstractFeedItemViewModel(IFeedEntry entry) : EntryViewModel<IFeedEntry>(entry), IViewModelFactory<IFeedEntry, AbstractFeedItemViewModel>
+{
+    public SolidColorBrush FeedBrush => GetMostSignificantEntry()!.Type switch
+    {
+        FeedType.AddBookmark => FeedItemColors.AddBookmark,
+        FeedType.AddFavorite => FeedItemColors.AddFavorite,
+        FeedType.PostIllust => FeedItemColors.PostIllust,
+        FeedType.AddNovelBookmark => FeedItemColors.AddNovelBookmark,
+        _ => throw new ArgumentOutOfRangeException()
+    };
+
+    public abstract ImageSource UserAvatar { get; protected set; }
+
+    public abstract SolidColorBrush ItemBackground { get; set; }
+
+    public abstract string PostUsername { get; }
+
+    public abstract string PostDateFormatted { get; }
+
+    public bool IsCondensed => Entry is IFeedEntry.CondensedFeedEntry;
+
+    public abstract Task LoadAsync();
 
     public void Select(bool value)
     {
         ItemBackground = value ? new SolidColorBrush(new UISettings().GetColorValue(UIColorType.AccentLight3)) : new SolidColorBrush(Colors.Transparent);
     }
 
-    [ObservableProperty] 
-    private TimelineAxisPlacement _placement;
-
-    // If the post date is within one day, show the precise moment, otherwise shows the date
-    // we make an optimistic assumption that user rarely view feeds over one year ago, so
-    // we don't show the year here.
-    public string PostDateFormatted =>
-        (DateTime.Now - Entry.PostDate) < TimeSpan.FromDays(1)
-            ? Entry.PostDate.ToString("hh:mm tt")
-            : Entry.PostDate.ToString("M");
-
-    public Symbol Icon => entry.Type switch
+    public static AbstractFeedItemViewModel CreateInstance(IFeedEntry entry, int index)
     {
-        FeedType.AddBookmark => Symbol.Heart,
-        FeedType.AddFavorite => Symbol.People,
-        FeedType.AddIllust => Symbol.Fire,
-        FeedType.AddNovelBookmark => Symbol.BookAdd,
-        _ => throw new ArgumentOutOfRangeException()
-    };
-
-    public SolidColorBrush IconSecondaryBrush => entry.Type switch
-    {
-        FeedType.AddBookmark => new SolidColorBrush(UiHelper.ParseHexColor("#FF5449")),
-        FeedType.AddFavorite => new SolidColorBrush(UiHelper.ParseHexColor("#85976E")),
-        FeedType.AddIllust => new SolidColorBrush(UiHelper.ParseHexColor("#8991A2")),
-        FeedType.AddNovelBookmark => new SolidColorBrush(UiHelper.ParseHexColor("#9B9168")),
-        _ => throw new ArgumentOutOfRangeException()
-    };
-
-    public SolidColorBrush IconBackground => entry.Type switch
-    {
-        FeedType.AddBookmark => new SolidColorBrush(UiHelper.ParseHexColor("#B33B15")),
-        FeedType.AddFavorite => new SolidColorBrush(UiHelper.ParseHexColor("#63A002")),
-        FeedType.AddIllust => new SolidColorBrush(UiHelper.ParseHexColor("#769CDF")),
-        FeedType.AddNovelBookmark => new SolidColorBrush(UiHelper.ParseHexColor("#FFDE3F")),
-        _ => throw new ArgumentOutOfRangeException()
-    };
-
-    [ObservableProperty]
-    private ImageSource _userAvatar = null!;
-
-    public static FeedItemViewModel CreateInstance(Feed entry, int index)
-    {
-        return new FeedItemViewModel(entry);
-    }
-
-    public virtual async Task LoadAsync()
-    {
-        Placement = TimelineAxisPlacement.Left; // index % 2 == 0 ? TimelineAxisPlacement.Left : TimelineAxisPlacement.Right;
-
-        // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
-#pragma warning disable MVVMTK0034
-        if (_userAvatar is not null)
-#pragma warning restore MVVMTK0034
-            return;
-
-        if (entry.PostUserThumbnail is { } url)
+        return entry switch
         {
-            var image = (await App.AppViewModel.MakoClient.DownloadBitmapImageAsync(url, 35)).UnwrapOrElse(await AppInfo.ImageNotAvailable.ValueAsync)!;
-            UserAvatar = image;
-        }
-        else
+            IFeedEntry.SparseFeedEntry(var feed) => new FeedItemSparseViewModel(feed),
+            IFeedEntry.CondensedFeedEntry condensed => new FeedItemCondensedViewModel(condensed.Entries),
+            _ => throw new ArgumentOutOfRangeException()
+        };
+    }
+
+    // Reify the entry from IFeedEntry.
+    public Feed? GetMostSignificantEntry()
+    {
+        return Entry switch
         {
-            UserAvatar = await AppInfo.ImageNotAvailable.ValueAsync;
-        }
+            IFeedEntry.SparseFeedEntry(var feed) => feed,
+            IFeedEntry.CondensedFeedEntry condensed => condensed.Entries.First(),
+            _ => throw new ArgumentOutOfRangeException()
+        };
     }
-
-    public override void Dispose()
-    {
-        GC.SuppressFinalize(this);
-    }
-
-    public override Uri AppUri => entry.Type switch
-    {
-        FeedType.AddBookmark or FeedType.AddIllust => MakoHelper.GenerateIllustrationAppUri(entry.Id),
-        FeedType.AddFavorite => MakoHelper.GenerateUserAppUri(entry.Id),
-        FeedType.AddNovelBookmark => MakoHelper.GenerateNovelAppUri(entry.Id),
-        _ => throw new ArgumentOutOfRangeException()
-    };
-    
-    public override Uri WebUri => entry.Type switch
-    {
-        FeedType.AddBookmark or FeedType.AddIllust => MakoHelper.GenerateIllustrationWebUri(entry.Id),
-        FeedType.AddFavorite => MakoHelper.GenerateUserWebUri(entry.Id),
-        FeedType.AddNovelBookmark => MakoHelper.GenerateNovelWebUri(entry.Id),
-        _ => throw new ArgumentOutOfRangeException()
-    };
-
-    public override Uri PixEzUri => entry.Type switch
-    {
-        FeedType.AddBookmark or FeedType.AddIllust => MakoHelper.GenerateIllustrationPixEzUri(entry.Id),
-        FeedType.AddFavorite => MakoHelper.GenerateUserPixEzUri(entry.Id),
-        FeedType.AddNovelBookmark => MakoHelper.GenerateNovelPixEzUri(entry.Id),
-        _ => throw new ArgumentOutOfRangeException()
-    };
 }
-

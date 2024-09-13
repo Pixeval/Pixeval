@@ -170,7 +170,7 @@
       <None Remove="Assets\Images\Icons\tag-64x64.png" />
       <None Remove="Assets\Images\Icons\tag.png" />
       <None Remove="Pages\Capability\FeedPage.xaml" />
-      <None Remove="Strings\zh-cn\Timeline.resjson" />
+      <None Remove="Strings\zh-cn\FeedPage.resjson" />
     </ItemGroup>
 
     <ItemGroup>

@@ -14,6 +14,17 @@
     mc:Ignorable="d">
     <Page.Resources>
         <media:AttachedCardShadow x:Key="ContentPanelShadow" Offset="4" />
+        <!--  See https://github.com/microsoft/microsoft-ui-xaml/blob/35c590bb28841eb9d466624bb828c78b939d4312/src/controls/dev/ItemContainer/ItemContainer_themeresources.xaml#L59  -->
+        <SolidColorBrush x:Key="ItemContainerSelectedInnerBorderBrush" Color="Transparent" />
+        <SolidColorBrush x:Key="ItemContainerBorderBrush" Color="Transparent" />
+        <SolidColorBrush x:Key="ItemContainerSelectedBackground" Color="Transparent" />
+        <SolidColorBrush x:Key="ItemContainerSelectedPointerOverBackground" Color="Transparent" />
+        <SolidColorBrush x:Key="ItemContainerPointerOverBackground" Color="Transparent" />
+        <SolidColorBrush x:Key="ItemContainerSelectedPressedBackground" Color="Transparent" />
+        <SolidColorBrush x:Key="ItemContainerSelectionVisualBackground" Color="Transparent" />
+        <SolidColorBrush x:Key="ItemContainerSelectionVisualPointerOverBackground" Color="Transparent" />
+        <SolidColorBrush x:Key="ItemContainerSelectionVisualPressedBackground" Color="Transparent" />
+        <media:AttachedCardShadow x:Key="TimelineBlockShadow" Offset="4" />
     </Page.Resources>
     <SplitView
         HorizontalAlignment="Stretch"
@@ -30,10 +41,10 @@
                     <RowDefinition />
                 </Grid.RowDefinitions>
                 <TextBlock
+                    x:Uid="/FeedPage/FeedListTextBlock"
                     Grid.Row="0"
                     Margin="40,30,20,10"
-                    Style="{StaticResource TitleTextBlockStyle}"
-                    Text="用户动态" />
+                    Style="{StaticResource TitleTextBlockStyle}" />
                 <Grid Grid.Row="1">
                     <controls:EntryView
                         Padding="0,10,0,0"
@@ -50,79 +61,72 @@
                                 SelectionChanged="ItemsView_OnSelectionChanged"
                                 SelectionMode="Single">
                                 <controls:AdvancedItemsView.ItemTemplate>
-                                    <DataTemplate x:DataType="feeds:FeedItemViewModel">
-                                        <ItemContainer x:Name="FeedItemContainer">
-                                            <ItemContainer.Resources>
-                                                <!--  See https://github.com/microsoft/microsoft-ui-xaml/blob/35c590bb28841eb9d466624bb828c78b939d4312/src/controls/dev/ItemContainer/ItemContainer_themeresources.xaml#L59  -->
-                                                <SolidColorBrush x:Key="ItemContainerSelectedInnerBorderBrush" Color="Transparent" />
-                                                <SolidColorBrush x:Key="ItemContainerBorderBrush" Color="Transparent" />
-                                                <SolidColorBrush x:Key="ItemContainerSelectedBackground" Color="Transparent" />
-                                                <SolidColorBrush x:Key="ItemContainerSelectedPointerOverBackground" Color="Transparent" />
-                                                <SolidColorBrush x:Key="ItemContainerPointerOverBackground" Color="Transparent" />
-                                                <SolidColorBrush x:Key="ItemContainerSelectedPressedBackground" Color="Transparent" />
-                                                <SolidColorBrush x:Key="ItemContainerSelectionVisualBackground" Color="Transparent" />
-                                                <SolidColorBrush x:Key="ItemContainerSelectionVisualPointerOverBackground" Color="Transparent" />
-                                                <SolidColorBrush x:Key="ItemContainerSelectionVisualPressedBackground" Color="Transparent" />
-                                                <media:AttachedCardShadow x:Key="TimelineBlockShadow" Offset="4" />
-                                            </ItemContainer.Resources>
-                                            <Grid
-                                                x:Name="TimelineBlock"
-                                                Width="320"
-                                                Height="80"
-                                                Padding="10,0"
-                                                ui:Effects.Shadow="{StaticResource TimelineBlockShadow}"
-                                                Background="{x:Bind ItemBackground, Mode=OneWay}"
-                                                CornerRadius="15"
-                                                DataContext="{x:Bind Mode=OneWay}"
-                                                EffectiveViewportChanged="TimelineBlock_OnEffectiveViewportChanged"
-                                                Loaded="TimelineUnit_OnLoaded">
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="60" />
-                                                    <ColumnDefinition />
-                                                </Grid.ColumnDefinitions>
+                                    <DataTemplate x:DataType="feeds:AbstractFeedItemViewModel">
+                                        <ItemContainer x:Name="FeedItemContainer" Width="320">
+                                            <Grid Width="320">
                                                 <Grid
-                                                    Grid.Column="0"
-                                                    Width="35"
-                                                    Height="35"
-                                                    HorizontalAlignment="Center"
-                                                    VerticalAlignment="Center"
-                                                    CornerRadius="50">
-                                                    <Grid.Background>
-                                                        <ImageBrush ImageSource="{x:Bind UserAvatar, Mode=OneWay}" Stretch="UniformToFill" />
-                                                    </Grid.Background>
-                                                </Grid>
-                                                <Grid
-                                                    Grid.Column="1"
-                                                    HorizontalAlignment="Stretch"
-                                                    VerticalAlignment="Stretch">
-                                                    <Grid.RowDefinitions>
-                                                        <RowDefinition Height="*" />
-                                                        <RowDefinition Height="5" />
-                                                        <RowDefinition Height="2*" />
-                                                    </Grid.RowDefinitions>
-                                                    <Grid Grid.Row="0">
-                                                        <TextBlock
-                                                            HorizontalAlignment="Left"
-                                                            VerticalAlignment="Bottom"
-                                                            FontSize="13"
-                                                            FontWeight="Bold"
-                                                            Text="{x:Bind Entry.PostUserName}"
-                                                            TextTrimming="CharacterEllipsis"
-                                                            TextWrapping="WrapWholeWords" />
-                                                        <TextBlock
-                                                            HorizontalAlignment="Right"
-                                                            VerticalAlignment="Bottom"
-                                                            FontSize="10"
-                                                            Text="{x:Bind PostDateFormatted}" />
+                                                    Width="320"
+                                                    Height="80"
+                                                    Padding="10,0"
+                                                    ui:Effects.Shadow="{StaticResource ContentPanelShadow}"
+                                                    Background="{x:Bind ItemBackground, Mode=OneWay}"
+                                                    CornerRadius="4"
+                                                    DataContext="{x:Bind Mode=OneWay}"
+                                                    EffectiveViewportChanged="TimelineBlock_OnEffectiveViewportChanged"
+                                                    Loaded="TimelineUnit_OnLoaded">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="60" />
+                                                        <ColumnDefinition />
+                                                    </Grid.ColumnDefinitions>
+                                                    <Grid
+                                                        Grid.Column="0"
+                                                        Width="35"
+                                                        Height="35"
+                                                        HorizontalAlignment="Center"
+                                                        VerticalAlignment="Center"
+                                                        CornerRadius="50">
+                                                        <Grid.Background>
+                                                            <ImageBrush ImageSource="{x:Bind UserAvatar, Mode=OneWay}" Stretch="UniformToFill" />
+                                                        </Grid.Background>
                                                     </Grid>
-                                                    <Grid Grid.Row="2">
-                                                        <TextBlock
-                                                            x:Name="FeedContentTextBlock"
-                                                            Margin="0,0,60,0"
-                                                            FontSize="12"
-                                                            LineHeight="20"
-                                                            TextTrimming="CharacterEllipsis"
-                                                            TextWrapping="WrapWholeWords" />
+                                                    <Grid
+                                                        Grid.Column="1"
+                                                        HorizontalAlignment="Stretch"
+                                                        VerticalAlignment="Stretch">
+                                                        <Grid.RowDefinitions>
+                                                            <RowDefinition Height="*" />
+                                                            <RowDefinition Height="5" />
+                                                            <RowDefinition Height="2*" />
+                                                        </Grid.RowDefinitions>
+                                                        <Grid Grid.Row="0">
+                                                            <TextBlock
+                                                                MaxWidth="155"
+                                                                HorizontalAlignment="Left"
+                                                                VerticalAlignment="Bottom"
+                                                                FontSize="13"
+                                                                FontWeight="Bold"
+                                                                Text="{x:Bind PostUsername}"
+                                                                TextTrimming="CharacterEllipsis"
+                                                                TextWrapping="WrapWholeWords" />
+                                                            <TextBlock
+                                                                HorizontalAlignment="Right"
+                                                                VerticalAlignment="Bottom"
+                                                                FontSize="10"
+                                                                Text="{x:Bind PostDateFormatted}" />
+                                                        </Grid>
+                                                        <Grid Grid.Row="2">
+                                                            <TextBlock
+                                                                x:Name="FeedContentTextBlock"
+                                                                Margin="0,0,60,0"
+                                                                FontSize="12"
+                                                                LineHeight="20"
+                                                                TextTrimming="CharacterEllipsis"
+                                                                TextWrapping="WrapWholeWords" />
+                                                            <SymbolIcon
+                                                                HorizontalAlignment="Right"
+                                                                Symbol="Pictures"
+                                                                Visibility="{x:Bind IsCondensed}" />
+                                                        </Grid>
                                                     </Grid>
                                                 </Grid>
                                             </Grid>
@@ -143,7 +147,7 @@
             VerticalAlignment="Stretch"
             ui:Effects.Shadow="{StaticResource ContentPanelShadow}"
             Background="White"
-            CornerRadius="10,0,0,10" />
+            CornerRadius="8,0,0,8" />
     </SplitView>
 
 

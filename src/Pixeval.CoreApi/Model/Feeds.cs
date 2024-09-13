@@ -45,7 +45,7 @@ public record Feed : IIdEntry
     /// </summary>
     public string? PostUserId { get; set; }
 
-    public string? PostUserName { get; set; }
+    public string? PostUsername { get; set; }
 
     /// <summary>
     /// The creator's name of the illustration/novel if possible
@@ -77,7 +77,7 @@ public enum FeedType
     /// <summary>
     /// User posted a new illust
     /// </summary>
-    AddIllust,
+    PostIllust,
 
     /// <summary>
     /// User followed an artist

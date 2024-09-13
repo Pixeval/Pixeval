@@ -23,18 +23,18 @@ using Pixeval.CoreApi.Model;
 
 namespace Pixeval.Pages.Capability.Feeds;
 
-public class FeedPageViewModel : EntryViewViewModel<Feed, FeedItemViewModel>
+public class FeedPageViewModel : EntryViewViewModel<IFeedEntry, AbstractFeedItemViewModel>
 {
-    public FeedPageViewModel(SharableViewDataProvider<Feed, FeedItemViewModel> dataProvider)
+    public FeedPageViewModel(SharableViewDataProvider<IFeedEntry, AbstractFeedItemViewModel> dataProvider)
     {
         DataProvider = dataProvider;
         dataProvider.View.CollectionChanged += (_, _) => OnPropertyChanged(nameof(HasNoItem));
     }
 
-    public FeedPageViewModel() : this(new SharableViewDataProvider<Feed, FeedItemViewModel>())
+    public FeedPageViewModel() : this(new SharableViewDataProvider<IFeedEntry, AbstractFeedItemViewModel>())
     {
 
     }
 
-    public override IDataProvider<Feed, FeedItemViewModel> DataProvider { get; }
+    public override IDataProvider<IFeedEntry, AbstractFeedItemViewModel> DataProvider { get; }
 }

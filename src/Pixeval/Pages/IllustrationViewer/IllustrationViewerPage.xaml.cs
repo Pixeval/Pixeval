@@ -22,8 +22,6 @@ using System;
 using System.Numerics;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
-using Windows.Foundation;
-using Windows.Graphics;
 using Windows.Storage;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
@@ -38,7 +36,6 @@ using Pixeval.Utilities;
 using WinRT;
 using WinUI3Utilities;
 using Windows.System;
-using Microsoft.UI.Input;
 using Pixeval.Controls.Windowing;
 
 namespace Pixeval.Pages.IllustrationViewer;

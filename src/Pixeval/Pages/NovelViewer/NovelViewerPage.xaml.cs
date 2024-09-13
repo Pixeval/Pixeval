@@ -82,6 +82,7 @@ public sealed partial class NovelViewerPage
 
     private void NovelViewerPage_OnLoaded(object sender, RoutedEventArgs e)
     {
+        TitleBarArea.SetDragRegionForCustomTitleBar();
         CommandBorderDropShadow.Receivers.Add(DocumentViewer);
         ThumbnailListDropShadow.Receivers.Add(DocumentViewer);
 

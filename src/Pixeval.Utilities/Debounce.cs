@@ -36,6 +36,8 @@ public interface IDebouncedTask<T, TResult> where T : struct, IEquatable<T>
     Task<TResult> ExecuteAsync();
 
     bool IsFinalizer { get; }
+
+    bool IsHead { get; }
 }
 
 /// <summary>
@@ -90,7 +92,7 @@ public class Debounce<T, TResult> : IDisposable where T : struct, IEquatable<T>
 
         if (task.IsFinalizer)
         {
-            // try debouncing the whole group
+            // debouncing a head-finalizer-head-finalizer pattern
             var dependencyChain = FindDependencyChainFrom(new LinkedList<DebounceTaskWrapper>(_auxQueue), wrapper);
             var truncated = new LinkedList<DebounceTaskWrapper>(_auxQueue[..^dependencyChain.Count]);
             var oldDependencyChain = FindDependencyChainOf(truncated, task.Id);
@@ -102,6 +104,21 @@ public class Debounce<T, TResult> : IDisposable where T : struct, IEquatable<T>
                 }
             }
         }
+
+        // debouncing a finalizer-head-finalizer pattern
+        if (_executedTasks.LastOrDefault()?.Task.IsFinalizer ?? false && task.IsFinalizer)
+        {
+            var dependencyChain = FindDependencyChainFrom(new LinkedList<DebounceTaskWrapper>(_auxQueue), wrapper);
+            if (dependencyChain.FirstOrDefault()?.Task?.IsHead ?? false)
+            {
+                foreach (var debounceTaskWrapper in dependencyChain)
+                {
+                    debounceTaskWrapper.Disregarded = true;
+                }
+            }
+        }
+
+        // TODO debouncing op2-finalizer-head-op2-finalizer pattern
 
         await _taskQueue.Writer.WriteAsync(wrapper);
         return await wrapper.Completion.Task;

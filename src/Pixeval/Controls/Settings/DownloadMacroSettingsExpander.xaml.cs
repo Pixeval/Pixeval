@@ -167,7 +167,7 @@ public sealed partial class DownloadMacroSettingsExpander
                     ITransducer when isNot => MacroParserResources.NegationNotAllowedFormatted.Format(name),
                     ITransducer when optionalParams is not null => MacroParserResources.NonParameterizedMacroBearingParameterFormatted.Format(name),
                     MangaIndexMacro m when !(context.TryGetValue(IsMangaMacro.NameConst, out var v) && v) => MacroParserResources.MacroShouldBeContainedFormatted.Format(m.Name, IsMangaMacro.NameConst),
-                    ILastSegment l => (null as string).LetChain(_ => lastSegmentContexts.Add((l.Name, context))),
+                    ILastSegment l => (null as string).Apply(_ => lastSegmentContexts.Add((l.Name, context))),
                     ITransducer => null,
                     // IPredicate
                     IPredicate when optionalParams is null => MacroParserResources.ParameterizedMacroMissingParameterFormatted.Format(name),
