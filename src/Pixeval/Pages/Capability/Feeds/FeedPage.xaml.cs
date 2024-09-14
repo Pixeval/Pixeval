@@ -1,5 +1,5 @@
-using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.UI.Xaml;
@@ -7,7 +7,6 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Windows.UI.Text;
 using CommunityToolkit.WinUI;
-using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml.Documents;
 using Microsoft.UI.Xaml.Media.Animation;
 using Pixeval.Controls;
@@ -18,7 +17,6 @@ using Pixeval.Pages.IllustratorViewer;
 using Pixeval.Pages.NovelViewer;
 using Pixeval.Utilities;
 using WinUI3Utilities;
-using WinRT.Interop;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -43,6 +41,13 @@ namespace Pixeval.Pages.Capability.Feeds
         private void FeedPage_OnLoaded(object sender, RoutedEventArgs e)
         {
             _viewModel.DataProvider.ResetEngine(new FeedProxyFetchEngine(App.AppViewModel.MakoClient.Feeds())!);
+            _viewModel.DataProvider.View.CollectionChanged += (o, args) =>
+            {
+                if (args.Action is NotifyCollectionChangedAction.Add)
+                {
+                    ItemsView.SelectedIndex = 0;
+                }
+            };
         }
 
         private async void TimelineUnit_OnLoaded(object sender, RoutedEventArgs e)
