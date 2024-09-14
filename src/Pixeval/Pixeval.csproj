@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <OutputType>WinExe</OutputType>
         <TargetFramework>net8.0-windows10.0.22621.0</TargetFramework>
@@ -170,7 +170,14 @@
       <None Remove="Assets\Images\Icons\tag-64x64.png" />
       <None Remove="Assets\Images\Icons\tag.png" />
       <None Remove="Pages\Capability\FeedPage.xaml" />
+      <None Remove="Pages\Capability\Feeds\CondensedFeedPage.xaml" />
       <None Remove="Strings\zh-cn\FeedPage.resjson" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Page Update="Pages\Capability\Feeds\CondensedFeedPage.xaml">
+        <Generator>MSBuild:Compile</Generator>
+      </Page>
     </ItemGroup>
 
     <ItemGroup>

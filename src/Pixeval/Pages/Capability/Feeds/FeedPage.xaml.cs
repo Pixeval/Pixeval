@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -115,23 +116,44 @@ namespace Pixeval.Pages.Capability.Feeds
 
             _viewModel.CancelLoad();
 
-            if (vm is FeedItemSparseViewModel { Entry: IFeedEntry.SparseFeedEntry svmEntry })
+            switch (vm)
             {
-                switch (svmEntry.Entry.Type)
-                {
-                    case FeedType.AddBookmark or FeedType.PostIllust:
-                        var illustration = await _viewModel.PerformLoadAsync(() => App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(svmEntry.Id));
-                        FeedPageFrame.NavigateTo<IllustrationViewerPage>(WindowFactory.RootWindow.HWnd, (new List<IllustrationItemViewModel> { new(illustration) }, 0), new CommonNavigationTransitionInfo());
-                        break;
-                    case FeedType.AddNovelBookmark:
-                        var novel = await _viewModel.PerformLoadAsync(() => App.AppViewModel.MakoClient.GetNovelFromIdAsync(svmEntry.Id));
-                        FeedPageFrame.NavigateTo<NovelViewerPage>(WindowFactory.RootWindow.HWnd, (new List<NovelItemViewModel> { new(novel) }, 0), new CommonNavigationTransitionInfo());
-                        break;
-                    case FeedType.AddFavorite:
-                        var user = await _viewModel.PerformLoadAsync(() => App.AppViewModel.MakoClient.GetUserFromIdAsync(svmEntry.Id, App.AppViewModel.AppSettings.TargetFilter));
-                        FeedPageFrame.NavigateTo<IllustratorViewerPage>(WindowFactory.RootWindow.HWnd, user, new CommonNavigationTransitionInfo());
-                        break;
-                }
+                case FeedItemSparseViewModel { Entry: IFeedEntry.SparseFeedEntry svmEntry }:
+                    switch (svmEntry.Entry.Type)
+                    {
+                        case FeedType.AddBookmark or FeedType.PostIllust:
+                            var illustration = await _viewModel.PerformLoadAsync(() => App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(svmEntry.Id));
+                            FeedPageFrame.NavigateTo<IllustrationViewerPage>(WindowFactory.RootWindow.HWnd, (new List<IllustrationItemViewModel> { new(illustration) }, 0), new CommonNavigationTransitionInfo());
+                            break;
+                        case FeedType.AddNovelBookmark:
+                            var novel = await _viewModel.PerformLoadAsync(() => App.AppViewModel.MakoClient.GetNovelFromIdAsync(svmEntry.Id));
+                            FeedPageFrame.NavigateTo<NovelViewerPage>(WindowFactory.RootWindow.HWnd, (new List<NovelItemViewModel> { new(novel) }, 0), new CommonNavigationTransitionInfo());
+                            break;
+                        case FeedType.AddFavorite:
+                            var user = await _viewModel.PerformLoadAsync(() => App.AppViewModel.MakoClient.GetUserFromIdAsync(svmEntry.Id, App.AppViewModel.AppSettings.TargetFilter));
+                            FeedPageFrame.NavigateTo<IllustratorViewerPage>(WindowFactory.RootWindow.HWnd, user, new CommonNavigationTransitionInfo());
+                            break;
+                    }
+
+                    break;
+                case FeedItemCondensedViewModel { Entry: IFeedEntry.CondensedFeedEntry(var entries) }:
+                    switch (vm.GetMostSignificantEntry()!.Type)
+                    {
+                        case FeedType.AddBookmark or FeedType.PostIllust:
+                            IEnumerable<IWorkEntry> illustrations = await _viewModel.PerformLoadAsync(() => 
+                                Task.WhenAll(entries.Select(entry => App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(entry!.Id))));
+                            FeedPageFrame.Navigate(typeof(CondensedFeedPage), illustrations, new CommonNavigationTransitionInfo());
+                            break;
+                        case FeedType.AddNovelBookmark:
+                            IEnumerable<Novel> novels = await _viewModel.PerformLoadAsync(() =>
+                                Task.WhenAll(entries.Select(entry => App.AppViewModel.MakoClient.GetNovelFromIdAsync(entry!.Id))));
+                            FeedPageFrame.Navigate(typeof(CondensedFeedPage), novels, new CommonNavigationTransitionInfo());
+                            break;
+                        case FeedType.AddFavorite:
+                            break;
+                    }
+
+                    break;
             }
         }
    }

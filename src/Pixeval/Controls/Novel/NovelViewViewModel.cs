@@ -27,7 +27,7 @@ using NovelViewDataProvider = Pixeval.Controls.SharableViewDataProvider<
 
 namespace Pixeval.Controls;
 
-public sealed partial class NovelViewViewModel : SortableEntryViewViewModel<Novel, NovelItemViewModel>
+public sealed class NovelViewViewModel : SortableEntryViewViewModel<Novel, NovelItemViewModel>
 {
     public NovelViewViewModel(NovelViewViewModel viewModel) : this(viewModel.DataProvider.CloneRef())
     {
