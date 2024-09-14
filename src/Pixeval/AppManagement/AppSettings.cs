@@ -35,8 +35,8 @@ using Pixeval.Options;
 using Pixeval.Util.UI;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
-using Windows.Globalization;
 using FluentIcons.Common;
+using Microsoft.Windows.Globalization;
 using Pixeval.Utilities;
 using static Pixeval.SettingsPageResources;
 

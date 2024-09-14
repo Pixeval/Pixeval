@@ -31,6 +31,7 @@ using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.Storage.Streams;
 using CommunityToolkit.WinUI;
+using FluentIcons.Common;
 using Microsoft.UI.Text;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -216,7 +217,7 @@ public static partial class UiHelper
     {
         var icon = new SymbolIconSource
         {
-            IsFilled = isFilled,
+            IconVariant = isFilled ? IconVariant.Filled : IconVariant.Regular,
             Symbol = symbol
         };
 

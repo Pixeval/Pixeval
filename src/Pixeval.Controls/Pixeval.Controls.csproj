@@ -2,7 +2,6 @@
     <PropertyGroup>
         <TargetFramework>net8.0-windows10.0.22621.0</TargetFramework>
         <TargetPlatformMinVersion>10.0.19041.0</TargetPlatformMinVersion>
-		<WindowsSdkPackageVersion>10.0.22621.38</WindowsSdkPackageVersion>
 		<RootNamespace>Pixeval.Controls</RootNamespace>
         <Platforms>x86;x64;arm64</Platforms>
         <RuntimeIdentifiers>win-x86;win-x64;win-arm64</RuntimeIdentifiers>
@@ -13,11 +12,12 @@
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <DefaultLanguage>zh-cn</DefaultLanguage>
         <IsTrimmable>true</IsTrimmable>
+        <WindowsSdkPackageVersion>10.0.22621.38</WindowsSdkPackageVersion>
     </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="CommunityToolkit.Labs.WinUI.Shimmer" Version="0.1.240517-build.1678" />
-        <PackageReference Include="FluentIcons.WinUI" Version="1.1.242" />
+        <PackageReference Include="FluentIcons.WinUI" Version="1.1.258" />
         <PackageReference Include="Microsoft.Graphics.Win2D" Version="1.2.0" />
         <PackageReference Include="Microsoft.Windows.CsWin32" Version="0.3.106">
             <PrivateAssets>all</PrivateAssets>
@@ -26,12 +26,12 @@
         <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.3233" />
         <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.6.240829007" />
         <PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.0.9" />
-        <PackageReference Include="CommunityToolkit.WinUI.Triggers" Version="8.1.240606-rc" />
-        <PackageReference Include="CommunityToolkit.WinUI.Collections" Version="8.1.240606-rc" />
+        <PackageReference Include="CommunityToolkit.WinUI.Triggers" Version="8.1.240821" />
+        <PackageReference Include="CommunityToolkit.WinUI.Collections" Version="8.1.240821" />
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
-        <PackageReference Include="CommunityToolkit.WinUI.Controls.Primitives" Version="8.1.240606-rc" />
-        <PackageReference Include="CommunityToolkit.WinUI.Extensions" Version="8.1.240606-rc" />
-        <PackageReference Include="WinUI3Utilities" Version="1.1.7.6" />
+        <PackageReference Include="CommunityToolkit.WinUI.Controls.Primitives" Version="8.1.240821" />
+        <PackageReference Include="CommunityToolkit.WinUI.Extensions" Version="8.1.240821" />
+        <PackageReference Include="WinUI3Utilities" Version="1.1.7.8" />
 
         <ProjectReference Include="..\Pixeval.Utilities\Pixeval.Utilities.csproj" />
         <ProjectReference Include="..\Pixeval.SourceGen\Pixeval.SourceGen.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="False" />
@@ -45,33 +45,6 @@
     </Target>
     <ItemGroup>
         <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="SourceItemGroup" />
-    </ItemGroup>
-
-    <ItemGroup>
         <PRIResource Include="Strings\*\*.resjson" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <None Remove="CardControl\CardControl.xaml" />
-      <None Remove="Timeline\TimelineControl.xaml" />
-      <None Remove="Timeline\TimelineUnit.xaml" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Page Update="CardControl\CardControl.xaml">
-        <Generator>MSBuild:Compile</Generator>
-      </Page>
-    </ItemGroup>
-
-    <ItemGroup>
-      <Page Update="Timeline\TimelineControl.xaml">
-        <Generator>MSBuild:Compile</Generator>
-      </Page>
-    </ItemGroup>
-
-    <ItemGroup>
-      <Page Update="Timeline\TimelineUnit.xaml">
-        <Generator>MSBuild:Compile</Generator>
-      </Page>
     </ItemGroup>
 </Project>

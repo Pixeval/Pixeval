@@ -53,7 +53,7 @@
     </Grid.RenderTransform>
     <fluent:SymbolIcon
         Foreground="{StaticResource LayerFillColorDefaultBrush}"
-        IsFilled="True"
+        IconVariant="Filled"
         Symbol="Heart" />
     <IconSourceElement IconSource="{x:Bind Command.IconSource, Mode=OneWay}" />
     <fluent:SymbolIcon Symbol="Heart" />
