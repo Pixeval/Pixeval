@@ -61,9 +61,9 @@ public class FeedItemCondensedViewModel(List<Feed?> entries) : AbstractFeedItemV
         set => SetProperty(ref _itemBackground, value);
     }
 
-    public override string PostUsername => entries.First()?.PostUsername ?? string.Empty;
+    public override string PostUsername => entries[0]?.PostUsername ?? string.Empty;
 
-    public override string PostDateFormatted => $"{FormatDate(entries.Last()?.PostDate ?? default)} ~ {FormatDate(entries.First()?.PostDate ?? default)}";
+    public override string PostDateFormatted => $"{FormatDate(entries[^1]?.PostDate ?? default)} ~ {FormatDate(entries[0]?.PostDate ?? default)}";
 
     private static string FormatDate(DateTimeOffset postDate)
     {
@@ -80,7 +80,7 @@ public class FeedItemCondensedViewModel(List<Feed?> entries) : AbstractFeedItemV
 #pragma warning restore MVVMTK0034
             return;
 
-        if (entries.First()?.PostUserThumbnail is { Length: > 0 } url)
+        if (entries[0]?.PostUserThumbnail is { Length: > 0 } url)
         {
             var image = (await App.AppViewModel.MakoClient.DownloadBitmapImageAsync(url, 35)).UnwrapOrElse(await AppInfo.ImageNotAvailable.ValueAsync)!;
             UserAvatar = image;

@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.UI.Xaml.Navigation;
-using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Model;
 
 namespace Pixeval.Pages.Capability.Feeds;
@@ -17,9 +16,14 @@ public sealed partial class CondensedFeedPage
 
     public override void OnPageActivated(NavigationEventArgs e)
     {
-        if (e.Parameter is IEnumerable<IWorkEntry> works)
+        switch (e.Parameter)
         {
-            WorkView.ResetEngine(App.AppViewModel.MakoClient.Computed(works.ToAsyncEnumerable()));
+            case IEnumerable<Illustration> works:
+                WorkView.ResetEngine(App.AppViewModel.MakoClient.Computed(works.ToAsyncEnumerable()));
+                break;
+            case IEnumerable<Novel> works2:
+                WorkView.ResetEngine(App.AppViewModel.MakoClient.Computed(works2.ToAsyncEnumerable()));
+                break;
         }
     }
 }
