@@ -75,7 +75,7 @@
   <Class Name="Pixeval.Settings.Models.IpWithSwitchAppSettingsEntry" Collapsed="true">
     <Position X="14.5" Y="9.75" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAIAQGAIAAkAAAAAAAAAgAAAACAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAIgYHAIAAkAAAAAAAACgAAAACAEAAAQAAA=</HashCode>
       <FileName>Settings\Models\IpWithSwitchAppSettingsEntry.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -121,24 +121,17 @@
       <FileName>Settings\Models\ColorAppSettingsEntry.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Pixeval.Settings.Models.EnumAppSettingsEntry&lt;TEnum&gt;" Collapsed="true">
-    <Position X="7" Y="9.75" Width="2.75" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Settings\Models\EnumAppSettingsEntry.cs</FileName>
-    </TypeIdentifier>
-  </Class>
   <Class Name="Pixeval.Settings.Models.EnumAppSettingsEntry" Collapsed="true">
     <Position X="7" Y="8.25" Width="3" />
     <TypeIdentifier>
-      <HashCode>AAAABAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>ACAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Settings\Models\EnumAppSettingsEntry.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Pixeval.Settings.Models.ProxyAppSettingsEntry" Collapsed="true">
-    <Position X="7.25" Y="11.25" Width="2.5" />
+    <Position X="7.5" Y="9.75" Width="2" />
     <TypeIdentifier>
-      <HashCode>ABAAAAAACAAAAAAAAAgAAAAAAAAAgAAAAAAAEAAAAAA=</HashCode>
+      <HashCode>ABAAAAAACAAgIBAAAAgAAAAAAAACgAAAAAAEEAAQAAA=</HashCode>
       <FileName>Settings\Models\ProxyAppSettingsEntry.cs</FileName>
     </TypeIdentifier>
   </Class>

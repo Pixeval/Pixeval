@@ -19,13 +19,10 @@
 #endregion
 
 using System;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Pixeval.Controls;
 using Pixeval.Controls.DialogContent;
-using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 
@@ -65,9 +62,8 @@ public sealed partial class DownloadPage
                 dialogContent) is ContentDialogResult.Primary)
         {
             if (dialogContent.DeleteLocalFiles)
-                await Task.WhenAll(DownloadView.ViewModel.SelectedEntries
-                    .Select(async t => await IoHelper.DeleteTaskAsync(t.DownloadTask))
-                    .ToArray());
+                foreach (var entry in DownloadView.ViewModel.SelectedEntries)
+                    entry.DownloadTask.Delete();
 
             DownloadView.ViewModel.RemoveSelectedItems();
         }
@@ -81,7 +77,7 @@ public sealed partial class DownloadPage
     private void FilterAutoSuggestBox_OnSuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
     {
         var selectedItem = (DownloadItemViewModel)args.SelectedItem;
-        sender.Text = selectedItem.Title;
+        sender.Text = selectedItem.Entry.Title;
         DownloadView.ViewModel.CurrentOption = DownloadListOption.CustomSearch;
         DownloadView.ViewModel.ResetFilter([selectedItem]);
         _queriedBySuggestion = true;

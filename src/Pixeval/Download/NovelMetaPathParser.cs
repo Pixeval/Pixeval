@@ -32,9 +32,9 @@ public class NovelMetaPathParser : IMetaPathParser<NovelItemViewModel>
 {
     private readonly MacroParser<NovelItemViewModel> _parser = new();
 
-    public static IReadOnlyList<IMacro> MacroProviderStatic { get; } = MetaPathMacroAttributeHelper.GetIWorkViewModelInstances();
- 
-    public IReadOnlyList<IMacro> MacroProvider => MacroProviderStatic;
+    private static readonly IReadOnlyList<IMacro> _macroProviderStatic = MetaPathMacroAttributeHelper.GetIWorkViewModelInstances();
+
+    public IReadOnlyList<IMacro> MacroProvider => _macroProviderStatic;
 
     public string Reduce(string raw, NovelItemViewModel context)
     {

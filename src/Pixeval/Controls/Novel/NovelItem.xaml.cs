@@ -23,13 +23,15 @@ public sealed partial class NovelItem
 
     public event TypedEventHandler<NovelItem, NovelItemViewModel>? OpenNovelRequested;
 
+    public event TypedEventHandler<NovelItem, NovelItemViewModel>? RequestOpenUserInfoPage;
+
     public event TypedEventHandler<NovelItem, NovelItemViewModel>? RequestAddToBookmark;
 
     public ulong HWnd => WindowFactory.GetWindowForElement(this).HWnd;
 
-#pragma warning disable CS0067 // Event is never used
+#pragma warning disable CS0067, CS0414 // Event is never used
     public event Func<TeachingTip> RequestTeachingTip = null!;
-#pragma warning restore CS0067 // Event is never used
+#pragma warning restore CS0067, CS0414 // Event is never used
 
     public NovelItem() => InitializeComponent();
 
@@ -58,7 +60,7 @@ public sealed partial class NovelItem
                 _ = anim2.TryStart(PopupImage);
                 _ = anim3.TryStart(PopupHeartButton);
                 _ = anim4.TryStart(PopupTitleTextBlock);
-                _ = anim5.TryStart(PopupAuthorTextBlock);
+                _ = anim5.TryStart(PopupAuthorButton);
                 _ = anim6.TryStart(PopupTagsList);
                 NovelItemPopup.Child.To<FrameworkElement>().Width = ActualWidth + 10;
                 NovelItemPopup.IsOpen = true;
@@ -69,7 +71,7 @@ public sealed partial class NovelItem
                 var anim2 = currentView.PrepareToAnimate("BackwardConnectedAnimation2", PopupImage);
                 var anim3 = currentView.PrepareToAnimate("BackwardConnectedAnimation3", PopupHeartButton);
                 var anim4 = currentView.PrepareToAnimate("BackwardConnectedAnimation4", PopupTitleTextBlock);
-                var anim5 = currentView.PrepareToAnimate("BackwardConnectedAnimation5", PopupAuthorTextBlock);
+                var anim5 = currentView.PrepareToAnimate("BackwardConnectedAnimation5", PopupAuthorButton);
                 var anim6 = currentView.PrepareToAnimate("BackwardConnectedAnimation6", PopupTagsList);
                 anim1.Configuration = anim2.Configuration = anim3.Configuration =
                     anim4.Configuration = anim5.Configuration = anim6.Configuration =
@@ -130,5 +132,10 @@ public sealed partial class NovelItem
     private void AddToBookmark_OnClicked(object sender, RoutedEventArgs e)
     {
         RequestAddToBookmark?.Invoke(this, ViewModel);
+    }
+
+    private void OpenUserInfoPage_OnClicked(object sender, RoutedEventArgs e)
+    {
+        RequestOpenUserInfoPage?.Invoke(this, ViewModel);
     }
 }

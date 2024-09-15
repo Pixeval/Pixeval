@@ -24,5 +24,5 @@
     <controls:ColorPickerButton
         ColorPickerStyle="{StaticResource ColorPickerStyle}"
         Loaded="ColorPicker_OnLoaded"
-        SelectedColor="{x:Bind controls1:C.ToAlphaColor(Entry.Value), BindBack=controls1:C.ToAlphaUInt, Mode=TwoWay}" />
+        SelectedColor="{x:Bind controls1:C.ToAlphaColor(Entry.Value), BindBack=ColorBindBack, Mode=TwoWay}" />
 </controls:SettingsCard>

@@ -86,21 +86,9 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
     {
         foreach (var illustrationViewModel in Illustrations)
             illustrationViewModel.UnloadThumbnail(this);
-        DisposePages();
         Pages = null!;
+        Images = null!;
         ViewModelSource?.Dispose();
-    }
-
-    private void DisposePages()
-    {
-        // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
-        if (Pages is not null)
-            foreach (var illustrationItemViewModel in Pages)
-                illustrationItemViewModel.Dispose();
-        // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
-        if (Images is not null)
-            foreach (var imageViewModel in Images)
-                imageViewModel.Dispose();
     }
 
     public NavigationViewTag[] Tags =>
@@ -154,7 +142,6 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
             var oldTag = Pages?[CurrentPageIndex].Id ?? 0;
 
             _currentIllustrationIndex = value;
-            DisposePages();
             // 这里可以触发总页数的更新
             Pages = CurrentIllustration.GetMangaIllustrationViewModels().ToArray();
             // 保证_pages里所有的IllustrationViewModel都是生成的，从而删除的时候一律DisposeForce

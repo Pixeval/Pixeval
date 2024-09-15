@@ -48,12 +48,11 @@ public static class ProxyTypeResources
 {
     public static string GetResource(string id) => id switch
     {
-        nameof(ProxyType.Http) => ProxyOptionHttp,
-
-        nameof(ProxyType.Socks4) => ProxyOptionSocks4,
-        nameof(ProxyType.Socks4A) => ProxyOptionSocks4A,
-        nameof(ProxyType.Socks5) => ProxyOptionSocks5,
-        nameof(ProxyType.System) => ProxyOptionSystem,
+        nameof(ProxyOptionHttp) => ProxyOptionHttp,
+        nameof(ProxyOptionSocks4) => ProxyOptionSocks4,
+        nameof(ProxyOptionSocks4A) => ProxyOptionSocks4A,
+        nameof(ProxyOptionSocks5) => ProxyOptionSocks5,
+        nameof(ProxyOptionSystem) => ProxyOptionSystem,
         _ => ProxyOptionNone
     };
 
@@ -61,6 +60,6 @@ public static class ProxyTypeResources
     public const string ProxyOptionSocks4 = "socks4";
     public const string ProxyOptionSocks4A = "socks4a";
     public const string ProxyOptionSocks5 = "socks5";
-    public static string ProxyOptionNone => MiscResources.ProxyOptionSystem;
-    public static string ProxyOptionSystem => MiscResources.ProxyOptionNone;
+    public static string ProxyOptionNone => MiscResources.ProxyOptionNone;
+    public static string ProxyOptionSystem => MiscResources.ProxyOptionSystem; 
 }

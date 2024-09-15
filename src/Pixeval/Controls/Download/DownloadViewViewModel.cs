@@ -24,6 +24,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Extensions.DependencyInjection;
+using Pixeval.Collections;
 using Pixeval.Database.Managers;
 using Pixeval.Download;
 using Pixeval.Download.Models;
@@ -34,8 +35,6 @@ namespace Pixeval.Controls;
 
 public partial class DownloadViewViewModel : ObservableObject, IDisposable
 {
-    public static readonly IEnumerable<DownloadListOption> AvailableDownloadListOptions = Enum.GetValues<DownloadListOption>();
-
     [ObservableProperty]
     private DownloadListOption _currentOption;
 
@@ -50,16 +49,16 @@ public partial class DownloadViewViewModel : ObservableObject, IDisposable
 
     private DownloadItemViewModel[] _selectedEntries = [];
 
-    public DownloadViewViewModel(IEnumerable<DownloadTaskBase> source)
+    public DownloadViewViewModel(ObservableCollection<IDownloadTaskGroup> source)
     {
-        DataProvider.To<DownloadItemDataProvider>().ResetEngine(source);
+        View = new(new ObservableCollectionAdapter<IDownloadTaskGroup, DownloadItemViewModel>(source), true);
         _selectionLabel = DownloadPageResources.CancelSelectionButtonDefaultLabel;
-        DataProvider.View.CollectionChanged += (_, _) => OnPropertyChanged(nameof(HasNoItem));
+        View.CollectionChanged += (_, _) => OnPropertyChanged(nameof(HasNoItem));
     }
 
-    public DownloadItemDataProvider DataProvider { get; } = new DownloadItemDataProvider();
+    public AdvancedObservableCollection<DownloadItemViewModel> View { get; }
 
-    public bool HasNoItem => DataProvider.View.Count is 0;
+    public bool HasNoItem => View.Count is 0;
 
     public DownloadItemViewModel[] SelectedEntries
     {
@@ -80,20 +79,20 @@ public partial class DownloadViewViewModel : ObservableObject, IDisposable
 
     public void PauseSelectedItems()
     {
-        foreach (var downloadListEntryViewModel in SelectedEntries.Where(t => t.DownloadTask.CurrentState is DownloadState.Running))
-            downloadListEntryViewModel.DownloadTask.CancellationHandle.Pause();
+        foreach (var downloadListEntryViewModel in SelectedEntries)
+            downloadListEntryViewModel.DownloadTask.Pause();
     }
 
     public void ResumeSelectedItems()
     {
-        foreach (var downloadListEntryViewModel in SelectedEntries.Where(t => t.DownloadTask.CurrentState is DownloadState.Paused))
-            downloadListEntryViewModel.DownloadTask.CancellationHandle.Resume();
+        foreach (var downloadListEntryViewModel in SelectedEntries)
+            downloadListEntryViewModel.DownloadTask.TryResume();
     }
 
     public void CancelSelectedItems()
     {
-        foreach (var downloadListEntryViewModel in SelectedEntries.Where(t => t.DownloadTask.CurrentState is DownloadState.Queued or DownloadState.Running or DownloadState.Paused))
-            downloadListEntryViewModel.DownloadTask.CancellationHandle.Cancel();
+        foreach (var downloadListEntryViewModel in SelectedEntries)
+            downloadListEntryViewModel.DownloadTask.Cancel();
     }
 
     public void RemoveSelectedItems()
@@ -102,7 +101,6 @@ public partial class DownloadViewViewModel : ObservableObject, IDisposable
         SelectedEntries.ForEach(task =>
         {
             App.AppViewModel.DownloadManager.RemoveTask(task.DownloadTask);
-            _ = DataProvider.View.Remove(task);
             _ = manager.Delete(m => m.Destination == task.DownloadTask.Destination);
         });
     }
@@ -115,19 +113,19 @@ public partial class DownloadViewViewModel : ObservableObject, IDisposable
             return;
         }
 
-        var newTasks = DataProvider.Source.Where(Query);
+        var newTasks = View.Source.Where(Query);
         FilteredTasks.ReplaceByUpdate(newTasks);
         return;
 
         bool Query(DownloadItemViewModel viewModel) =>
-            viewModel.Title.Contains(key) ||
-            (viewModel.DownloadTask is { } task ? task.ViewModel.Id : viewModel.DownloadTask.Id).ToString()
+            viewModel.Entry.Title.Contains(key) ||
+            (viewModel.DownloadTask is { } task ? task.Id : viewModel.DownloadTask.Id).ToString()
             .Contains(key);
     }
 
     public void ResetFilter(IEnumerable<DownloadItemViewModel>? customSearchResultTask = null)
     {
-        DataProvider.View.Filter = o => o switch
+        View.Filter = o => o switch
         {
             { DownloadTask: var task } => CurrentOption switch
             {
@@ -145,6 +143,9 @@ public partial class DownloadViewViewModel : ObservableObject, IDisposable
 
     public void Dispose()
     {
-        DataProvider.Dispose();
+        GC.SuppressFinalize(this);
+        if (View.Source is { } source)
+            foreach (var entry in source)
+                entry.Dispose();
     }
 }

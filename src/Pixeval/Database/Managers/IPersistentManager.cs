@@ -40,7 +40,7 @@ namespace Pixeval.Database.Managers;
 /// </remarks>
 /// <typeparam name="TEntry">Entry to be serialized in database</typeparam>
 /// <typeparam name="TModel">Data model in the program</typeparam>
-public interface IPersistentManager<TEntry, out TModel>
+public interface IPersistentManager<TEntry, out TModel> where TEntry : IHistoryEntry
 {
     ILiteCollection<TEntry> Collection { get; init; }
 
@@ -52,7 +52,11 @@ public interface IPersistentManager<TEntry, out TModel>
 
     IEnumerable<TModel> Query(Expression<Func<TEntry, bool>> predicate);
 
-    IEnumerable<TModel> Select(Expression<Func<TEntry, bool>>? predicate = null, int? count = null);
+    void Update(TEntry entry);
+
+    IEnumerable<TModel> Select(int count);
+
+    TEntry? TryDelete(Expression<Func<TEntry, bool>> predicate);
 
     int Delete(Expression<Func<TEntry, bool>> predicate);
 

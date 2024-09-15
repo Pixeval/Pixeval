@@ -30,7 +30,7 @@ public partial class IllustratorItemViewModel
 
     public async Task LoadAvatarAsync()
     {
-        var result = await App.AppViewModel.MakoClient.DownloadStreamAsync(AvatarUrl);
+        var result = await App.AppViewModel.MakoClient.DownloadMemoryStreamAsync(AvatarUrl);
         var stream = result is Result<Stream>.Success { Value: var avatar }
             ? avatar
             : AppInfo.GetPixivNoProfileStream();
@@ -70,7 +70,7 @@ public partial class IllustratorItemViewModel
             if (BannerSources.Count >= 3)
                 return false;
 
-            if (await App.AppViewModel.MakoClient.DownloadStreamAsync(viewModel.GetThumbnailUrl()) is not
+            if (await App.AppViewModel.MakoClient.DownloadMemoryStreamAsync(viewModel.GetThumbnailUrl()) is not
                 Result<Stream>.Success(var stream))
                 return true;
 
