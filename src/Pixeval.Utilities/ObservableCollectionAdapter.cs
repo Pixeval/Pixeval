@@ -72,9 +72,10 @@ public class ObservableCollectionAdapter<TInput, TOutput> : ObservableCollection
             SourceCollection.CollectionChanged += SourceCollectionChanged;
 
             Clear();
-            foreach (var element in _sourceCollection)
+            for (var index = 0; index < _sourceCollection.Count; index++)
             {
-                var item = TOutput.CreateInstance(element);
+                var element = _sourceCollection[index];
+                var item = TOutput.CreateInstance(element, index);
                 Add(item);
             }
         }
@@ -92,7 +93,7 @@ public class ObservableCollectionAdapter<TInput, TOutput> : ObservableCollection
                     var input = (TInput)args.NewItems[i]!;
                     if (_filter?.Invoke(input) is false)
                         continue;
-                    var item = TOutput.CreateInstance(input);
+                    var item = TOutput.CreateInstance(input, i);
                     Insert(args.NewStartingIndex + i, item);
                 }
                 break;
@@ -116,7 +117,7 @@ public class ObservableCollectionAdapter<TInput, TOutput> : ObservableCollection
                     }
                     else
                     {
-                        var item = TOutput.CreateInstance(input);
+                        var item = TOutput.CreateInstance(input, i);
                         this[args.OldStartingIndex + i - removedCount] = item;
                     }
                 }
@@ -129,13 +130,15 @@ public class ObservableCollectionAdapter<TInput, TOutput> : ObservableCollection
                 break;
             case NotifyCollectionChangedAction.Reset:
                 Clear();
-                foreach (var element in SourceCollection)
+                for (var index = 0; index < SourceCollection.Count; index++)
                 {
+                    var element = SourceCollection[index];
                     if (_filter?.Invoke(element) is false)
                         continue;
-                    var item = TOutput.CreateInstance(element);
+                    var item = TOutput.CreateInstance(element, index);
                     Add(item);
                 }
+
                 break;
             default:
                 ThrowUtils.ArgumentOutOfRange(args.Action);
