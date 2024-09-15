@@ -24,7 +24,6 @@ using Pixeval.Util.IO;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System;
-using System.Linq;
 using Microsoft.UI;
 using Pixeval.AppManagement;
 
@@ -82,12 +81,12 @@ public class FeedItemCondensedViewModel(List<Feed?> entries) : AbstractFeedItemV
 
         if (entries[0]?.PostUserThumbnail is { Length: > 0 } url)
         {
-            var image = (await App.AppViewModel.MakoClient.DownloadBitmapImageAsync(url, 35)).UnwrapOrElse(await AppInfo.ImageNotAvailable.ValueAsync)!;
+            var image = (await App.AppViewModel.MakoClient.DownloadBitmapImageAsync(url, 35)).UnwrapOrElse(await AppInfo.ImageNotAvailable)!;
             UserAvatar = image;
         }
         else
         {
-            UserAvatar = await AppInfo.ImageNotAvailable.ValueAsync;
+            UserAvatar = await AppInfo.ImageNotAvailable;
         }
     }
 }

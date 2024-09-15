@@ -73,7 +73,7 @@ public sealed partial class DownloadItemViewModel(IDownloadTaskGroup downloadTas
         return await base.TryLoadThumbnailAsync(key);
     }
 
-    public static DownloadItemViewModel CreateInstance(IDownloadTaskGroup entry) => new(entry);
+    public static DownloadItemViewModel CreateInstance(IDownloadTaskGroup entry, int index) => new(entry);
 
 #pragma warning disable CA1822
 

@@ -49,7 +49,7 @@ public partial class IllustrationItemViewModel
     protected override void SaveCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
         var hWnd = null as ulong?;
-        GetImageStream? getImageStreamAsync = null;
+        GetImageStreams? getImageStream = null;
         switch (args.Parameter)
         {
             case (ulong h, GetImageStreams f):
@@ -71,7 +71,7 @@ public partial class IllustrationItemViewModel
     protected override async void SaveAsCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
         ulong hWnd;
-        GetImageStream? getImageStreamAsync = null;
+        GetImageStreams? getImageStream = null;
         switch (args.Parameter)
         {
             case (ulong h, GetImageStreams f):
