@@ -34,7 +34,7 @@ namespace Pixeval.Pages.Capability.Feeds;
 
 
 
-public partial class FeedItemSparseViewModel(Feed entry) : AbstractFeedItemViewModel(new IFeedEntry.SparseFeedEntry(entry)), IViewModelFactory<Feed, FeedItemSparseViewModel>
+public partial class FeedItemSparseViewModel(Feed entry) : AbstractFeedItemViewModel(new IFeedEntry.SparseFeedEntry(entry)), IFactory<Feed, FeedItemSparseViewModel>
 {
     [ObservableProperty]
     private TimelineAxisPlacement _placement;
@@ -84,12 +84,12 @@ public partial class FeedItemSparseViewModel(Feed entry) : AbstractFeedItemViewM
 
         if (entry.PostUserThumbnail is { } url)
         {
-            var image = (await App.AppViewModel.MakoClient.DownloadBitmapImageAsync(url, 35)).UnwrapOrElse(await AppInfo.ImageNotAvailable.ValueAsync)!;
+            var image = (await App.AppViewModel.MakoClient.DownloadBitmapImageAsync(url, 35)).UnwrapOrElse(await AppInfo.ImageNotAvailable)!;
             UserAvatar = image;
         }
         else
         {
-            UserAvatar = await AppInfo.ImageNotAvailable.ValueAsync;
+            UserAvatar = await AppInfo.ImageNotAvailable;
         }
     }
 
