@@ -7,7 +7,7 @@
   "CancelDownloadItem/Label": "Annuler téléchargement",
   "CheckErrorMessageInDetailItem/Label": "Visualiser les détails d'erreur",
   "DownloadCancelled": "Le téléchargement a été annulé",
-  "DownloadCancelledAction": "Annuler",
+  "ActionDownloadCancelled": "Annuler",
   "DownloadCompleted": "Téléchargement finalisé",
   "DownloadErrorMessageFormatted": "Téléchargement échoué: {0}",
   "DownloadPaused": "Téléchargement mise en pause",

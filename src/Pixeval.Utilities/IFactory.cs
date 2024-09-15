@@ -3,7 +3,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/ILazyLoadDownloadTask.cs
+// Copyright (c) 2024 Pixeval/IViewModelFactory.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -20,12 +20,9 @@
 
 #endregion
 
-using System.Threading.Tasks;
-using Pixeval.CoreApi.Model;
+namespace Pixeval.Controls;
 
-namespace Pixeval.Download.Models;
-
-public interface ILazyLoadDownloadTask
+public interface IFactory<in T, out TSelf>
 {
-    Task LazyLoadAsync(IWorkEntry entry);
+    static abstract TSelf CreateInstance(T entry, int index);
 }

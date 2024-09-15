@@ -47,7 +47,7 @@ public partial class AppViewModel(App app) : IDisposable
 
     public App App { get; } = app;
 
-    public DownloadManager<DownloadTaskBase> DownloadManager { get; private set; } = null!;
+    public DownloadManager DownloadManager { get; private set; } = null!;
 
     public MakoClient MakoClient { get; set; } = null!; // The null-state of MakoClient is transient
 
@@ -63,7 +63,7 @@ public partial class AppViewModel(App app) : IDisposable
 
     public void AppLoggedIn()
     {
-        DownloadManager = new DownloadManager<DownloadTaskBase>(AppSettings.MaxDownloadTaskConcurrencyLevel, MakoClient.GetMakoHttpClient(MakoApiKind.ImageApi));
+        DownloadManager = new DownloadManager(MakoClient.GetMakoHttpClient(MakoApiKind.ImageApi), AppSettings.MaxDownloadTaskConcurrencyLevel);
         AppInfo.RestoreHistories();
     }
 
@@ -71,8 +71,8 @@ public partial class AppViewModel(App app) : IDisposable
     {
         var fileLogger = new FileLogger(ApplicationData.Current.LocalFolder.Path + @"\Logs\");
         return new ServiceCollection()
-            .AddSingleton<IDownloadTaskFactory<IllustrationItemViewModel, IllustrationDownloadTask>, IllustrationDownloadTaskFactory>()
-            .AddSingleton<IDownloadTaskFactory<NovelItemViewModel, NovelDownloadTask>, NovelDownloadTaskFactory>()
+            .AddSingleton<IllustrationDownloadTaskFactory>()
+            .AddSingleton<NovelDownloadTaskFactory>()
             .AddSingleton(new LiteDatabase(AppInfo.DatabaseFilePath))
             .AddSingleton(provider => new DownloadHistoryPersistentManager(provider.GetRequiredService<LiteDatabase>(), App.AppViewModel.AppSettings.MaximumDownloadHistoryRecords))
             .AddSingleton(provider => new SearchHistoryPersistentManager(provider.GetRequiredService<LiteDatabase>(), App.AppViewModel.AppSettings.MaximumSearchHistoryRecords))
@@ -109,6 +109,7 @@ public partial class AppViewModel(App app) : IDisposable
 
     public void Dispose()
     {
+        AppServiceProvider?.GetRequiredService<LiteDatabase>().Dispose();
         AppServiceProvider?.Dispose();
         DownloadManager?.Dispose();
         MakoClient?.Dispose();

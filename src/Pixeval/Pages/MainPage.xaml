@@ -30,7 +30,7 @@
                         TextWrapping="WrapWholeWords" />
                     <TextBlock
                         MaxHeight="15"
-                        Foreground="{ThemeResource PixevalTipTextForeground}"
+                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                         Style="{StaticResource CaptionTextBlockStyle}"
                         Text="{x:Bind TranslatedName}"
                         TextTrimming="CharacterEllipsis"

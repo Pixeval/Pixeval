@@ -49,7 +49,7 @@ public interface ITransducer<in TContext> : ITransducer
 
 public interface ILastSegment : ITransducer
 {
-    static abstract string NameConst { get; }
+    const string NameConst = "";
 
-    static abstract string NameConstToken { get; }
+    const string NameConstToken = $"<{NameConst}>";
 }

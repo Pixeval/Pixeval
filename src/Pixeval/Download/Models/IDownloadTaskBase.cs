@@ -1,9 +1,8 @@
-#region Copyright
-
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2024 Pixeval/IViewModelFactory.cs
+// Copyright (c) 2023 Pixeval/ObservableDownloadTask.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -17,12 +16,36 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 #endregion
 
-namespace Pixeval.Controls;
+using System;
 
-public interface IViewModelFactory<in T, out TSelf>
+namespace Pixeval.Download.Models;
+
+public interface IDownloadTaskBase
 {
-    static abstract TSelf CreateInstance(T entry, int index);
+    /// <summary>
+    /// 只有<see cref="CurrentState"/>是<see cref="DownloadState.Running"/>或<see cref="DownloadState.Paused"/>值有效
+    /// </summary>
+    double ProgressPercentage { get; }
+
+    DownloadState CurrentState { get; }
+
+    string Destination { get; }
+
+    Exception? ErrorCause { get; }
+
+    string OpenLocalDestination { get; }
+
+    bool IsProcessing { get; }
+
+    void TryReset();
+
+    void Pause();
+
+    void TryResume();
+
+    void Cancel();
+
+    void Delete();
 }

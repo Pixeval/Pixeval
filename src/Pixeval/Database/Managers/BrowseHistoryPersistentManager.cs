@@ -18,6 +18,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using System.Collections.ObjectModel;
 using LiteDB;
 using Microsoft.Extensions.DependencyInjection;
 using Pixeval.CoreApi.Global.Enum;
@@ -28,13 +29,18 @@ namespace Pixeval.Database.Managers;
 public class BrowseHistoryPersistentManager(ILiteDatabase db, int maximumRecords)
     : SimplePersistentManager<BrowseHistoryEntry>(db, maximumRecords)
 {
+    public ObservableCollection<BrowseHistoryEntry> ObservableEntries { get; } = [];
+
     public static void AddHistory(IWorkEntry entry)
     {
         if (entry.Id is 0)
             return;
         var type = entry is Illustration ? SimpleWorkType.IllustAndManga : SimpleWorkType.Novel;
         var manager = App.AppViewModel.AppServiceProvider.GetRequiredService<BrowseHistoryPersistentManager>();
-        _ = manager.Delete(x => x.Id == entry.Id && x.Type == type);
-        manager.Insert(new BrowseHistoryEntry(entry));
+        if (manager.TryDelete(x => x.Id == entry.Id && x.Type == type) is { } e)
+            manager.ObservableEntries.Remove(e);
+        var browseHistoryEntry = new BrowseHistoryEntry(entry);
+        manager.Insert(browseHistoryEntry);
+        manager.ObservableEntries.Insert(0, browseHistoryEntry);
     }
 }

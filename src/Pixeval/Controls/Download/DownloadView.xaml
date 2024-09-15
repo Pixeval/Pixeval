@@ -12,7 +12,7 @@
             <local:AdvancedItemsView
                 x:Name="ItemsView"
                 x:FieldModifier="public"
-                ItemsSource="{x:Bind ViewModel.DataProvider.View}"
+                ItemsSource="{x:Bind ViewModel.View}"
                 LayoutType="VerticalStack"
                 SelectionChanged="ItemsView_OnSelectionChanged"
                 SelectionMode="Multiple">

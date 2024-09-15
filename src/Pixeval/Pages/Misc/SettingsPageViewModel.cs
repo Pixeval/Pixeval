@@ -22,6 +22,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Net.Http;
+using System.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml.Controls;
 using Pixeval.AppManagement;
@@ -31,7 +32,6 @@ using Pixeval.Util.ComponentModels;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
-using Pixeval.Utilities.Threading;
 using Pixeval.Settings;
 using Windows.System;
 using Microsoft.UI.Xaml;
@@ -69,7 +69,7 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
 
     [ObservableProperty] private bool _expandExpander;
 
-    private CancellationHandle? _cancellationHandle;
+    private CancellationTokenSource? _cancellationTokenSource;
 
     /// <inheritdoc/>
     public SettingsPageViewModel(ulong hWnd) : base(hWnd)
@@ -277,7 +277,7 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
         var downloaded = false;
         try
         {
-            _cancellationHandle = new CancellationHandle();
+            _cancellationTokenSource = new CancellationTokenSource();
             CheckingUpdate = true;
             UpdateMessage = SettingsPageResources.CheckingForUpdate;
             using var client = new HttpClient();
@@ -301,22 +301,20 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
 
             DownloadingUpdate = true;
             UpdateMessage = SettingsPageResources.DownloadingUpdate;
-            var result = await client.DownloadStreamAsync(appReleaseModel.ReleaseUri.OriginalString,
-                new Progress<double>(progress => DownloadingUpdateProgress = progress), _cancellationHandle);
+            var filePath = Path.Combine(AppKnownFolders.Temporary.Self.Path, appReleaseModel.ReleaseUri.Segments[^1]);
+            await using var fileStream = File.OpenWrite(filePath);
+            var exception = await client.DownloadStreamAsync(fileStream, appReleaseModel.ReleaseUri, _cancellationTokenSource.Token,
+                new Progress<double>(progress => DownloadingUpdateProgress = progress));
             // ReSharper disable once DisposeOnUsingVariable
             client.Dispose();
 
             DownloadingUpdate = false;
             DownloadingUpdateProgress = 0;
 
-            if (result is Result<Stream>.Success { Value: var value })
+            if (exception is null)
             {
-                var filePath = Path.Combine(AppKnownFolders.Temporary.Self.Path, appReleaseModel.ReleaseUri.Segments[^1]);
-                await using (var fileStream = File.OpenWrite(filePath))
-                    await value.CopyToAsync(fileStream);
-
                 downloaded = true;
-                if (_cancellationHandle is { IsCancelled: true })
+                if (_cancellationTokenSource is { IsCancellationRequested: true })
                     return;
                 if (await HWnd.CreateOkCancelAsync(SettingsPageResources.UpdateApp,
                         SettingsPageResources.DownloadedAndWaitingToInstall.Format(appReleaseModel.Version)) is ContentDialogResult.Primary)
@@ -367,8 +365,10 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
 
     public void CancelToken()
     {
-        _cancellationHandle?.Cancel();
-        _cancellationHandle = null;
+        var cts = _cancellationTokenSource;
+        _cancellationTokenSource = null;
+        cts?.Cancel();
+        cts?.Dispose();
     }
 
     public void Dispose()

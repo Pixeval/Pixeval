@@ -88,7 +88,7 @@ public partial record AppSettings() : IWindowSettings
     /// The max download tasks that are allowed to run concurrently
     /// </summary>
     [SettingsEntry(Symbol.DeveloperBoardLightning, nameof(MaxDownloadConcurrencyLevelEntryHeader), nameof(MaxDownloadConcurrencyLevelEntryDescription))]
-    public int MaxDownloadTaskConcurrencyLevel { get; set; } = Environment.ProcessorCount / 2;
+    public int MaxDownloadTaskConcurrencyLevel { get; set; } = Environment.ProcessorCount / 4;
 
     [SettingsEntry(Symbol.SaveEdit, nameof(DownloadWhenBookmarkedEntryHeader), nameof(DownloadWhenBookmarkedEntryDescription))]
     public bool DownloadWhenBookmarked { get; set; }

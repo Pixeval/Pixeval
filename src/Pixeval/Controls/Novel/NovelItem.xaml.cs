@@ -23,13 +23,15 @@ public sealed partial class NovelItem
 
     public event TypedEventHandler<NovelItem, NovelItemViewModel>? OpenNovelRequested;
 
+    public event TypedEventHandler<NovelItem, NovelItemViewModel>? RequestOpenUserInfoPage;
+
     public event TypedEventHandler<NovelItem, NovelItemViewModel>? RequestAddToBookmark;
 
     public ulong HWnd => WindowFactory.GetWindowForElement(this).HWnd;
 
-#pragma warning disable CS0067 // Event is never used
+#pragma warning disable CS0067, CS0414 // Event is never used
     public event Func<TeachingTip> RequestTeachingTip = null!;
-#pragma warning restore CS0067 // Event is never used
+#pragma warning restore CS0067, CS0414 // Event is never used
 
     public NovelItem() => InitializeComponent();
 
@@ -135,5 +137,10 @@ public sealed partial class NovelItem
     private void AddToBookmark_OnClicked(object sender, RoutedEventArgs e)
     {
         RequestAddToBookmark?.Invoke(this, ViewModel);
+    }
+
+    private void OpenUserInfoPage_OnClicked(object sender, RoutedEventArgs e)
+    {
+        RequestOpenUserInfoPage?.Invoke(this, ViewModel);
     }
 }

@@ -19,7 +19,6 @@
 #endregion
 
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -34,7 +33,7 @@ namespace Pixeval.Controls;
 /// A view model that communicates between the model <see cref="Illustration" /> and the view <see cref="WorkView" />.
 /// It is responsible for being the elements of the <see cref="ItemsRepeater" /> to present the thumbnail of an illustration
 /// </summary>
-public partial class IllustrationItemViewModel : WorkEntryViewModel<Illustration>, IViewModelFactory<Illustration, IllustrationItemViewModel>
+public partial class IllustrationItemViewModel : WorkEntryViewModel<Illustration>, IFactory<Illustration, IllustrationItemViewModel>
 {
     public static IllustrationItemViewModel CreateInstance(Illustration entry, int _) => new(entry);
 
@@ -46,7 +45,7 @@ public partial class IllustrationItemViewModel : WorkEntryViewModel<Illustration
         MangaSaveCommand.CanExecuteRequested += (_, e) => e.CanExecute = isManga;
         MangaSaveAsCommand.CanExecuteRequested += (_, e) => e.CanExecute = isManga;
         var id = illustration.Id;
-        UgoiraMetadata = new(() => App.AppViewModel.MakoClient.GetUgoiraMetadataAsync(id));
+        UgoiraMetadata = App.AppViewModel.MakoClient.GetUgoiraMetadataAsync(id);
     }
 
     /// <summary>
@@ -58,45 +57,26 @@ public partial class IllustrationItemViewModel : WorkEntryViewModel<Illustration
 
     public bool IsUgoira => Entry.IsUgoira;
 
-    public AsyncLazy<UgoiraMetadataResponse> UgoiraMetadata { get; }
+    public Task<UgoiraMetadataResponse> UgoiraMetadata { get; }
 
     public string IllustrationLargeUrl => Entry.ThumbnailUrls.Large;
 
     public string MangaSingleLargeUrl => Entry.MetaPages[MangaIndex is -1 ? 0 : MangaIndex].ImageUrls.Large;
 
-    public async ValueTask<string> UgoiraMediumZipUrlAsync() => (await UgoiraMetadata.ValueAsync).MediumUrl;
+    public async ValueTask<string> UgoiraMediumZipUrlAsync() => (await UgoiraMetadata).MediumUrl;
 
     public string IllustrationOriginalUrl => Entry.OriginalSingleUrl!;
 
     public string MangaSingleOriginalUrl => Entry.MetaPages[MangaIndex is -1 ? 0 : MangaIndex].ImageUrls.Original;
 
-    public IReadOnlyList<string> MangaOriginalUrls => Entry.MetaPages.Select(m => m.ImageUrls.Original).ToArray();
+    public IReadOnlyList<string> MangaOriginalUrls => Entry.MangaOriginalUrls;
 
-    public List<string> UgoiraOriginalUrls
-    {
-        get
-        {
-            Debug.Assert(Entry.IsUgoira);
-            var metadata = UgoiraMetadata.Value;
-            var list = new List<string>();
-            for (var i = 0; i < metadata.FrameCount; ++i)
-                list.Add(Entry.OriginalSingleUrl.Replace("ugoira0", $"ugoira{i}"));
-            return list;
-        }
-    }
+    public List<string> UgoiraOriginalUrls => Entry.GetUgoiraOriginalUrls(UgoiraMetadata.Result.FrameCount);
 
-    public async ValueTask<List<string>> UgoiraOriginalUrlsAsync()
-    {
-        Debug.Assert(Entry.IsUgoira);
-        var metadata = await UgoiraMetadata.ValueAsync;
-        var list = new List<string>();
-        for (var i = 0; i < metadata.FrameCount; ++i)
-            list.Add(Entry.OriginalSingleUrl.Replace("ugoira0", $"ugoira{i}"));
-        return list;
-    }
+    public async ValueTask<List<string>> UgoiraOriginalUrlsAsync() => Entry.GetUgoiraOriginalUrls((await UgoiraMetadata).FrameCount);
 
     /// <summary>
-    /// 单图和单图漫画的连接
+    /// 单图和单图漫画的链接
     /// </summary>
     public string StaticUrl(bool original)
     {

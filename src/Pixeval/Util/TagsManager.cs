@@ -1,6 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Pixeval.CoreApi.Model;
+using Pixeval.Util.IO;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Metadata.Profiles.Exif;
 
@@ -8,16 +11,29 @@ namespace Pixeval.Util;
 
 public static class TagsManager
 {
-    public static void SetTags(this Image image, Illustration illustration)
+    public static async Task SetTagsAsync(string imagePath, Illustration illustration, CancellationToken token = default)
     {
-        var profile = image.Metadata.ExifProfile ??= new();
-        profile.SetValue(ExifTag.ImageNumber, (uint)illustration.Id);
-        profile.SetValue(ExifTag.UserComment, string.Join(';', illustration.Tags.Select(t => t.Name)));
+        using var image = await Image.LoadAsync(imagePath, token);
+        image.SetIdTags(illustration);
+        await image.SaveAsync(imagePath, IoHelper.GetIllustrationEncoder(), token);
     }
 
-    public static void SetTags(this Image image, IEnumerable<string> tags)
+    public static void SetIdTags(this Image image, Illustration illustration)
+    {
+        image.SetIdTags(illustration.Id, illustration.Tags.Select(t => t.Name));
+    }
+
+    public static async Task SetIdTagsAsync(string imagePath, long id, IEnumerable<string> tags, CancellationToken token = default)
+    {
+        using var image = await Image.LoadAsync(imagePath, token);
+        image.SetIdTags(id, tags);
+        await image.SaveAsync(imagePath, IoHelper.GetIllustrationEncoder(), token);
+    }
+
+    public static void SetIdTags(this Image image, long id, IEnumerable<string> tags)
     {
         var profile = image.Metadata.ExifProfile ??= new();
+        profile.SetValue(ExifTag.ImageNumber, (uint)id);
         profile.SetValue(ExifTag.UserComment, string.Join(';', tags));
     }
 

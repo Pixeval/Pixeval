@@ -37,7 +37,7 @@ public partial class NovelItemViewModel
 {
     protected override Task<bool> SetBookmarkAsync(long id, bool isBookmarked, bool privately = false, IEnumerable<string>? tags = null) => MakoHelper.SetNovelBookmarkAsync(id, isBookmarked, privately, tags);
 
-    protected override async void SaveCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
+    protected override void SaveCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
         var hWnd = null as ulong?;
         DocumentViewerViewModel? documentViewerViewModel = null;
@@ -56,7 +56,7 @@ public partial class NovelItemViewModel
                 return;
         }
 
-        await SaveUtilityAsync(hWnd, documentViewerViewModel, App.AppViewModel.AppSettings.DownloadPathMacro);
+        SaveUtility(hWnd, documentViewerViewModel, App.AppViewModel.AppSettings.DownloadPathMacro);
     }
 
     protected override async void SaveAsCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
@@ -86,7 +86,7 @@ public partial class NovelItemViewModel
 
         var name = Path.GetFileName(App.AppViewModel.AppSettings.DownloadPathMacro);
         var path = Path.Combine(folder.Path, name);
-        await SaveUtilityAsync(hWnd, documentViewerViewModel, path);
+        SaveUtility(hWnd, documentViewerViewModel, path);
     }
 
     /// <summary>
@@ -96,14 +96,14 @@ public partial class NovelItemViewModel
     /// <param name="source">为<see langword="null"/>则创建新的下载任务</param>
     /// <param name="path">文件路径</param>
     /// <returns></returns>
-    private async Task SaveUtilityAsync(ulong? hWnd, DocumentViewerViewModel? source, string path)
+    private void SaveUtility(ulong? hWnd, DocumentViewerViewModel? source, string path)
     {
         var ib = hWnd?.InfoGrowlReturn(EntryItemResources.NovelContentFetching);
 
-        var factory = App.AppViewModel.AppServiceProvider.GetRequiredService<IDownloadTaskFactory<NovelItemViewModel, NovelDownloadTask>>();
+        var factory = App.AppViewModel.AppServiceProvider.GetRequiredService<NovelDownloadTaskFactory>();
         if (source is null)
         {
-            var task = await factory.CreateAsync(this, path);
+            var task = factory.Create(this, path);
             App.AppViewModel.DownloadManager.QueueTask(task);
             hWnd?.RemoveSuccessGrowlAfterDelay(ib!, EntryItemResources.DownloadTaskCreated);
         }

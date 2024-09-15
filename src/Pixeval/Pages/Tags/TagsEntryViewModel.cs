@@ -73,7 +73,7 @@ public partial class TagsEntryViewModel : ObservableObject, IEntry, IDisposable
                 try
                 {
                     var image = await Image.LoadAsync(FullPath);
-                    image.SetTags(TagsSet);
+                    image.SetIdTags(Id, TagsSet);
                     await using var stream = File.OpenWrite(FullPath);
                     await image.SaveAsync(stream, image.Metadata.DecodedImageFormat!);
                     return null;

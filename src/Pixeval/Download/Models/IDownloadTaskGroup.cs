@@ -3,7 +3,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2024 Pixeval/LazyInitializedNovelDownloadTask.cs
+// Copyright (c) 2024 Pixeval/IDownloadTaskGroup.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -20,32 +20,32 @@
 
 #endregion
 
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Threading;
+using System.Threading.Channels;
 using System.Threading.Tasks;
 using Pixeval.CoreApi.Model;
 using Pixeval.Database;
-using WinUI3Utilities;
 
 namespace Pixeval.Download.Models;
 
-public partial class LazyInitializedNovelDownloadTask(DownloadHistoryEntry entry)
-    : NovelDownloadTask(entry, null!, null!, null!), ILazyLoadDownloadTask
+public interface IDownloadTaskGroup : IDownloadTaskBase, IIdEntry, INotifyPropertyChanged, INotifyPropertyChanging, IReadOnlyCollection<ImageDownloadTask>, IDisposable
 {
-    public override async Task DownloadAsync(Downloader downloadStreamAsync)
-    {
-        await LazyLoadAsync(DatabaseEntry.Entry);
+    DownloadHistoryEntry DatabaseEntry { get; }
 
-        await base.DownloadAsync(downloadStreamAsync);
-    }
+    ValueTask InitializeTaskGroupAsync();
 
-    public async Task LazyLoadAsync(IWorkEntry workEntry)
-    {
-        if (workEntry is not Novel novel)
-        {
-            ThrowHelper.Argument(workEntry);
-            return;
-        }
-        NovelItemViewModel ??= new(novel);
-        NovelContent ??= await App.AppViewModel.MakoClient.GetNovelContentAsync(novel.Id);
-        DocumentViewModel ??= new(NovelContent);
-    }
+    void SubscribeProgress(ChannelWriter<DownloadToken> writer);
+
+    DownloadToken GetToken();
+
+    int ActiveCount { get; }
+
+    int CompletedCount { get; }
+
+    int ErrorCount { get; }
 }
+
+public readonly record struct DownloadToken(IDownloadTaskGroup Task, CancellationToken Token);

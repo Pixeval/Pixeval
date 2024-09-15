@@ -1,8 +1,8 @@
 namespace Pixeval.CoreApi;
 
-public interface IFactory<out T> where T : IFactory<T>
+internal interface IDefaultFactory<out TSelf> where TSelf : IDefaultFactory<TSelf>
 {
-    static abstract T CreateDefault();
+    static abstract TSelf CreateDefault();
 }
 
 public static class DefaultImageUrls

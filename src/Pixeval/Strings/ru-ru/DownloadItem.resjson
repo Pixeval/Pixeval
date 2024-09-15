@@ -7,7 +7,7 @@
   "CancelDownloadItem/Label": "Отменить загрузку",
   "CheckErrorMessageInDetailItem/Label": "Проверить сообщение об ошибке",
   "DownloadCancelled": "Загрузка отменена",
-  "DownloadCancelledAction": "Отменено",
+  "ActionDownloadCancelled": "Отменено",
   "DownloadCompleted": "Загрузка завершена",
   "DownloadErrorMessageFormatted": "Ошибка загрузки: {0}",
   "DownloadPaused": "Загрузка приостановлена",
