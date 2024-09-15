@@ -55,7 +55,7 @@ public interface IFeedEntry : IIdEntry
     }
 }
 
-public abstract class AbstractFeedItemViewModel(IFeedEntry entry) : EntryViewModel<IFeedEntry>(entry), IViewModelFactory<IFeedEntry, AbstractFeedItemViewModel>
+public abstract class AbstractFeedItemViewModel(IFeedEntry entry) : EntryViewModel<IFeedEntry>(entry), IFactory<IFeedEntry, AbstractFeedItemViewModel>
 {
     public SolidColorBrush FeedBrush => GetMostSignificantEntry()!.Type switch
     {
