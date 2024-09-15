@@ -35,8 +35,8 @@ using Pixeval.Options;
 using Pixeval.Util.UI;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
-using Windows.Globalization;
 using FluentIcons.Common;
+using Microsoft.Windows.Globalization;
 using Pixeval.Utilities;
 using static Pixeval.SettingsPageResources;
 
@@ -128,6 +128,9 @@ public partial record AppSettings() : IWindowSettings
 
     [SettingsEntry(Symbol.Key, nameof(ReverseSearchApiKeyEntryHeader), nameof(ReverseSearchApiKeyEntryDescriptionHyperlinkButtonContent))]
     public string ReverseSearchApiKey { get; set; } = "";
+
+    [SettingsEntry(Symbol.Cookies, nameof(WebCookieEntryHeader), nameof(WebCookieEntryDescription))]
+    public string? WebCookie { get; set; }
 
     [SettingsEntry(Symbol.TargetArrow, nameof(ReverseSearchResultSimilarityThresholdEntryHeader), nameof(ReverseSearchResultSimilarityThresholdEntryDescription))]
     public int ReverseSearchResultSimilarityThreshold { get; set; } = 80;
@@ -288,7 +291,7 @@ public partial record AppSettings() : IWindowSettings
 
     public MakoClientConfiguration ToMakoClientConfiguration()
     {
-        return new MakoClientConfiguration(5000, EnableDomainFronting, Proxy, MirrorHost, CurrentCulture);
+        return new MakoClientConfiguration(5000, EnableDomainFronting, Proxy, WebCookie, MirrorHost, CurrentCulture);
     }
 
     private static string GetSpecialFolder()

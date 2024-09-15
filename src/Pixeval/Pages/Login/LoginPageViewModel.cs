@@ -314,16 +314,13 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject
                 }
             }
         }
-        browsers = browsers.Join(["ChromeHTML", "MSEdgeHTM"], outer => outer.Key, inner => inner, ((pair, s) => pair))
+        browsers = browsers.Join(["ChromeHTML", "MSEdgeHTM"], outer => outer.Key, inner => inner, ((pair, _) => pair))
             .ToDictionary();
         var userChoiceKey = Registry.CurrentUser.OpenSubKey(
             @"Software\Microsoft\Windows\Shell\Associations\UrlAssociations\https\UserChoice");
-        if (userChoiceKey?.GetValue("ProgId") is not string id || !browsers.TryGetValue(id, out var ret))
-        {
-            return browsers.Values.First();
-        }
-
-        return ret;
+        return userChoiceKey?.GetValue("ProgId") is not string id || !browsers.TryGetValue(id, out var ret) 
+            ? browsers.Values.First()
+            : ret;
     }
 
     public void BrowserLogin()

@@ -8,7 +8,6 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:flyoutContent="using:Pixeval.Controls.FlyoutContent"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
-    xmlns:local="using:Pixeval.Pages.NovelViewer"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:media="using:Microsoft.Xaml.Interactions.Media"
     xmlns:triggers="using:Pixeval.Util.Triggers"
@@ -306,7 +305,7 @@
                 DisplayMode="Tall"
                 Window="{x:Bind windowing:WindowFactory.GetForkedWindows(HWnd)}">
                 <controls1:TitleBar.Icon>
-                    <ImageIcon Source="ms-appx:///Assets/Images/logo.svg" />
+                    <ImageIcon Source="ms-appx:///Assets/Images/logo.svg" Visibility="{x:Bind IsLogoVisible()}" />
                 </controls1:TitleBar.Icon>
                 <controls1:TitleBar.RenderTransform>
                     <TranslateTransform x:Name="TopCommandBarTranslation" />

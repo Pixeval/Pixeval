@@ -26,6 +26,8 @@ namespace Pixeval.CoreApi.Engine;
 public class EngineHandle : ICancellable, INotifyCompletion, ICompletionCallback<EngineHandle>
 #pragma warning restore 660,661
 {
+    public static readonly EngineHandle Default = new(Guid.Empty);
+
     private readonly Action<EngineHandle>? _onCompletion;
 
     public bool Equals(EngineHandle other)

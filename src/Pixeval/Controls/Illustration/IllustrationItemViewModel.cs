@@ -35,7 +35,7 @@ namespace Pixeval.Controls;
 /// </summary>
 public partial class IllustrationItemViewModel : WorkEntryViewModel<Illustration>, IFactory<Illustration, IllustrationItemViewModel>
 {
-    public static IllustrationItemViewModel CreateInstance(Illustration entry) => new(entry);
+    public static IllustrationItemViewModel CreateInstance(Illustration entry, int _) => new(entry);
 
     public IllustrationItemViewModel(Illustration illustration) : base(illustration)
     {

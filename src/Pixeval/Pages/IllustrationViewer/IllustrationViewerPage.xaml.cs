@@ -75,7 +75,7 @@ public sealed partial class IllustrationViewerPage
     public override void OnPageActivated(NavigationEventArgs e, object? parameter)
     {
         // 此处this.XamlRoot为null
-        _viewModel = HWnd.GetViewModel(parameter);
+        _viewModel = HWnd.GetIllustrationViewerPageViewModelFromHandle(parameter);
 
         _viewModel.DetailedPropertyChanged += (sender, args) =>
         {
@@ -87,7 +87,7 @@ public sealed partial class IllustrationViewerPage
             var oldIndex = args.OldValue.To<int>();
             var newIndex = args.NewValue.To<int>(); // vm.CurrentIllustrationIndex
 
-            var info = null as NavigationTransitionInfo;
+            NavigationTransitionInfo? info = null;
             if (oldIndex < newIndex && oldIndex is not -1)
                 info = new SlideNavigationTransitionInfo { Effect = SlideNavigationTransitionEffect.FromRight };
             else if (oldIndex > newIndex)
@@ -126,6 +126,8 @@ public sealed partial class IllustrationViewerPage
 
     private void IllustrationViewerPage_OnLoaded(object sender, RoutedEventArgs e)
     {
+        // Invokes the drag region calculation manually 9/11/2024
+        TitleBarArea.SetDragRegionForCustomTitleBar();
         var dataTransferManager = HWnd.GetDataTransferManager();
         dataTransferManager.DataRequested += OnDataTransferManagerOnDataRequested;
 
@@ -244,4 +246,11 @@ public sealed partial class IllustrationViewerPage
     }
 
     private void OpenPane_OnRightTapped(object sender, RightTappedRoutedEventArgs e) => EntryViewerSplitView.PinPane = true;
+
+    public Visibility IsLogoVisible()
+    {
+        return WindowFactory.GetWindowForElement(this).HWnd != WindowFactory.RootWindow.HWnd
+            ? Visibility.Visible
+            : Visibility.Collapsed;
+    }
 }

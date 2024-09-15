@@ -26,7 +26,7 @@ namespace Pixeval.Controls;
 
 public sealed partial class IllustratorItemViewModel : EntryViewModel<User>, IFactory<User, IllustratorItemViewModel>
 {
-    public static IllustratorItemViewModel CreateInstance(User entry) => new(entry);
+    public static IllustratorItemViewModel CreateInstance(User entry, int _) => new(entry);
 
     [ObservableProperty]
     private bool _isFollowed;
@@ -36,7 +36,7 @@ public sealed partial class IllustratorItemViewModel : EntryViewModel<User>, IFa
         IsFollowed = Entry.UserInfo.IsFollowed;
 
         InitializeCommands();
-        FollowCommand.GetFollowCommand(IsFollowed);
+        FollowCommand.RefreshFollowCommand(IsFollowed);
     }
 
     public string Username => Entry.UserInfo.Name;

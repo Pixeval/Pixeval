@@ -96,7 +96,7 @@
             <Grid controls:DockPanel.Dock="Right">
                 <fluent:SymbolIcon
                     Foreground="{StaticResource LayerFillColorDefaultBrush}"
-                    IsFilled="True"
+                    IconVariant="Filled"
                     Symbol="SquareMultiple"
                     Visibility="{x:Bind local:C.ToVisibility(ViewModel.IsManga), Mode=OneWay}" />
                 <fluent:SymbolIcon Symbol="SquareMultiple" Visibility="{x:Bind local:C.ToVisibility(ViewModel.IsManga), Mode=OneWay}" />

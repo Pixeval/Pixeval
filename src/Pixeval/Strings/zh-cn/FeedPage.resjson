@@ -1,0 +1,13 @@
+{
+  "SparseBookmarkPrefix": "将",
+  "SparseBookmarkSuffix": "添加到了收藏夹",
+  "SparseFollowUserPrefix": "关注了",
+  "SparsePostIllustPrefix": "投稿了",
+  "CondensedBookmarkPrefix": "添加了",
+  "CondensedBookmarkFormattedSuffix": "等共{0}部作品到收藏夹",
+  "CondensedFollowUserPrefix": "关注了",
+  "CondensedFollowUserFormattedSuffix": "等共{0}位用户",
+  "CondensedPostIllustPrefix": "投稿了",
+  "CondensedPostIllustFormattedSuffix": "等共{0}部作品",
+  "FeedListTextBlock/Text": "用户动态"
+}

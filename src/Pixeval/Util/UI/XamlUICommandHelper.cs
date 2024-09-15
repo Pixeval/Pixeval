@@ -57,13 +57,13 @@ public static class XamlUiCommandHelper
             KeyboardAccelerators = { new KeyboardAccelerator { Modifiers = modifiers, Key = key } }
         };
 
-    public static void GetBookmarkCommand(this XamlUICommand command, bool isBookmarked)
+    public static void RefreshBookmarkCommand(this XamlUICommand command, bool isBookmarked)
     {
         command.Label = command.Description = isBookmarked ? MiscResources.RemoveBookmark : MiscResources.AddBookmark;
         command.IconSource = Symbol.Heart.GetSymbolIconSource(isBookmarked, isBookmarked ? new SolidColorBrush(Colors.Crimson) : null);
     }
 
-    public static void GetFollowCommand(this XamlUICommand command, bool isFollowed)
+    public static void RefreshFollowCommand(this XamlUICommand command, bool isFollowed)
     {
         command.Label = command.Description = isFollowed ? MiscResources.Unfollow : MiscResources.Follow;
         command.IconSource = Symbol.Person.GetSymbolIconSource(isFollowed, isFollowed ? new SolidColorBrush(Colors.Crimson) : null);
@@ -72,7 +72,7 @@ public static class XamlUiCommandHelper
     public static XamlUICommand GetNewFollowCommand(bool isFollowed)
     {
         var xamlUiCommand = new XamlUICommand();
-        xamlUiCommand.GetFollowCommand(isFollowed);
+        xamlUiCommand.RefreshFollowCommand(isFollowed);
         return xamlUiCommand;
     }
 
@@ -81,7 +81,7 @@ public static class XamlUiCommandHelper
         return MiscResources.FollowPrivately.GetCommand(Symbol.Star);
     }
 
-    public static void GetPlayCommand(this XamlUICommand command, bool isPlaying)
+    public static void RefreshPlayCommand(this XamlUICommand command, bool isPlaying)
     {
         command.Label = command.Description = isPlaying ? MiscResources.Pause : MiscResources.Play;
         command.IconSource = (isPlaying
@@ -89,7 +89,7 @@ public static class XamlUiCommandHelper
             : Symbol.Play).GetSymbolIconSource();
     }
 
-    public static void GetResolutionCommand(this XamlUICommand command, bool isFit)
+    public static void RefreshResolutionCommand(this XamlUICommand command, bool isFit)
     {
         command.Label = command.Description = isFit ? MiscResources.RestoreOriginalResolution : MiscResources.UniformToFillResolution;
         command.IconSource = (isFit
@@ -97,7 +97,7 @@ public static class XamlUiCommandHelper
             : Symbol.PageFit).GetSymbolIconSource();
     }
 
-    public static void GetFullScreenCommand(this XamlUICommand command, bool isFullScreen)
+    public static void RefreshFullScreenCommand(this XamlUICommand command, bool isFullScreen)
     {
         command.Label = command.Description = isFullScreen ? MiscResources.BackToWindow : MiscResources.FullScreen;
         command.IconSource = (isFullScreen

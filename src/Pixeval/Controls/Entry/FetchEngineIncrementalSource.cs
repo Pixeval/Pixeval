@@ -58,7 +58,7 @@ public class FetchEngineIncrementalSource<T, TViewModel>(IAsyncEnumerable<T?> as
             {
                 if (_asyncEnumerator.Current is { } obj && !_yieldedItems.Contains(Identifier(obj)))
                 {
-                    result.Add(Select(obj));
+                    result.Add(Select(obj, _yieldedCounter));
                     _ = _yieldedItems.Add(Identifier(obj));
                     ++i;
                     _yieldedCounter++;
@@ -75,5 +75,5 @@ public class FetchEngineIncrementalSource<T, TViewModel>(IAsyncEnumerable<T?> as
 
     protected virtual long Identifier(T entity) => entity.Id;
 
-    protected virtual TViewModel Select(T entity) => TViewModel.CreateInstance(entity);
+    protected TViewModel Select(T entity, int index) => TViewModel.CreateInstance(entity, index);
 }

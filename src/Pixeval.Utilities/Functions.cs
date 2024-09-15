@@ -46,13 +46,6 @@ public static class Functions
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static T LetChain<T>(this T obj, Action<T> block)
-    {
-        block(obj);
-        return obj;
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static T Apply<T>(this T obj, Action<T> block)
     {
         block(obj);

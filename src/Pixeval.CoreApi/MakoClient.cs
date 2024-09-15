@@ -51,8 +51,8 @@ public partial class MakoClient : ICancellable, IDisposable, IAsyncDisposable
     {
         Logger = logger;
         Session = session;
-        Provider = BuildServiceProvider(Services);
         Configuration = configuration;
+        Provider = BuildServiceProvider(Services);
         IsCancelled = false;
     }
 
@@ -91,11 +91,11 @@ public partial class MakoClient : ICancellable, IDisposable, IAsyncDisposable
                 {
                     BaseAddress = new Uri(MakoHttpOptions.AppApiBaseUrl)
                 })
-            .AddKeyedSingleton<HttpClient, MakoHttpClient>(MakoApiKind.WebApi,
-                (s, _) => new(s.GetRequiredKeyedService<HttpMessageHandler>(typeof(PixivApiHttpMessageHandler)))
-                {
-                    BaseAddress = new Uri(MakoHttpOptions.WebApiBaseUrl)
-                })
+            .AddKeyedSingleton<HttpClient, MakoHttpClient>(MakoApiKind.WebApi, 
+                (s, _) => new MakoHttpClient(s.GetRequiredKeyedService<HttpMessageHandler>(typeof(PixivApiHttpMessageHandler)))
+            {
+                BaseAddress = new Uri(MakoHttpOptions.WebApiBaseUrl),
+            })
             .AddKeyedSingleton<HttpClient, MakoHttpClient>(MakoApiKind.AuthApi,
                 (s, _) => new(s.GetRequiredKeyedService<HttpMessageHandler>(typeof(PixivApiHttpMessageHandler)))
                 {
