@@ -24,6 +24,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Windows.UI.ViewManagement;
 using Microsoft.UI;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
 using Pixeval.Controls;
 using Pixeval.CoreApi.Model;
@@ -79,7 +80,10 @@ public abstract class AbstractFeedItemViewModel(IFeedEntry entry) : EntryViewMod
 
     public void Select(bool value)
     {
-        ItemBackground = value ? new SolidColorBrush(new UISettings().GetColorValue(UIColorType.AccentLight3)) : new SolidColorBrush(Colors.Transparent);
+        var selectedBackground = App.AppViewModel.AppSettings.ActualTheme is ElementTheme.Dark
+            ? new UISettings().GetColorValue(UIColorType.AccentDark3)
+            : new UISettings().GetColorValue(UIColorType.AccentLight3);
+        ItemBackground = value ? new SolidColorBrush(selectedBackground) : new SolidColorBrush(Colors.Transparent);
     }
 
     public static AbstractFeedItemViewModel CreateInstance(IFeedEntry entry, int index)
