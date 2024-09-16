@@ -129,5 +129,9 @@ public partial class TagsEntryViewModel : ObservableObject, IEntry, IDisposable
         entry.Thumbnail = await (await IoHelper.GetFileThumbnailAsync(path)).GetSoftwareBitmapSourceAsync(true);
     }
 
-    public void Dispose() => Thumbnail?.Dispose();
+    public void Dispose()
+    {
+        GC.SuppressFinalize(this);
+        Thumbnail?.Dispose();
+    }
 }

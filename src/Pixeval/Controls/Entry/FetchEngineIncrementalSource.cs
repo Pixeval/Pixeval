@@ -75,5 +75,5 @@ public class FetchEngineIncrementalSource<T, TViewModel>(IAsyncEnumerable<T?> as
 
     protected virtual long Identifier(T entity) => entity.Id;
 
-    protected TViewModel Select(T entity, int index) => TViewModel.CreateInstance(entity, index);
+    protected TViewModel Select(T entity, int index) => TViewModel.CreateInstance(entity);
 }

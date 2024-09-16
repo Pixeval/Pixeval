@@ -1,5 +1,3 @@
-using Windows.UI;
-using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
@@ -71,7 +69,6 @@ public sealed partial class TimelineUnit : ContentControl
     {
         return FoldThreshold is not -1 && ActualWidth < FoldThreshold;
     }
-
 
     private void OnSizeChanged(object sender, SizeChangedEventArgs e)
     {

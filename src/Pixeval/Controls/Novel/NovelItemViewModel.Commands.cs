@@ -28,7 +28,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
 using Pixeval.CoreApi.Model;
 using Pixeval.Download;
-using Pixeval.Download.Models;
 using Pixeval.Util.UI;
 
 namespace Pixeval.Controls;
