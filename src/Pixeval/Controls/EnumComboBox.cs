@@ -85,7 +85,7 @@ public sealed partial class EnumValuesExtension : MarkupExtension
             EnumValuesEnum.WorkSortOption => WorkSortOptionExtension.GetItems(),
             EnumValuesEnum.PrivacyPolicy => PrivacyPolicyExtension.GetItems(),
             EnumValuesEnum.DownloadListOption => DownloadListOptionExtension.GetItems(),
-            _ => throw new ArgumentOutOfRangeException()
+            _ => ThrowHelper.ArgumentOutOfRange<EnumValuesEnum, object>(Type)
         };
     }
 }

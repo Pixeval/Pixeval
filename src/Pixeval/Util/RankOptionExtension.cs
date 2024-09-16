@@ -84,7 +84,6 @@ public static partial class NovelRankOptionExtension
     ];
 }
 
-
 [AttachedLocalizationMetadata<TargetFilter>(typeof(MiscResources))]
 [AttachedLocalizedResource(nameof(TargetFilter.ForAndroid), nameof(MiscResources.TargetFilterForAndroid))]
 [AttachedLocalizedResource(nameof(TargetFilter.ForIos), nameof(MiscResources.TargetFilterForIOS))]
