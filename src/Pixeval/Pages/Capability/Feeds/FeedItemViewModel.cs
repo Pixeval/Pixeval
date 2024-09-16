@@ -86,7 +86,7 @@ public abstract class AbstractFeedItemViewModel(IFeedEntry entry) : EntryViewMod
         ItemBackground = value ? new SolidColorBrush(selectedBackground) : new SolidColorBrush(Colors.Transparent);
     }
 
-    public static AbstractFeedItemViewModel CreateInstance(IFeedEntry entry, int index)
+    public static AbstractFeedItemViewModel CreateInstance(IFeedEntry entry)
     {
         return entry switch
         {

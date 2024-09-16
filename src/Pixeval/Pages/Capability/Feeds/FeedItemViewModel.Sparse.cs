@@ -67,7 +67,7 @@ public partial class FeedItemSparseViewModel(Feed entry) : AbstractFeedItemViewM
         set => SetProperty(ref _itemBackground, value);
     }
 
-    public static FeedItemSparseViewModel CreateInstance(Feed entry, int index)
+    public static FeedItemSparseViewModel CreateInstance(Feed entry)
     {
         return new FeedItemSparseViewModel(entry);
     }
