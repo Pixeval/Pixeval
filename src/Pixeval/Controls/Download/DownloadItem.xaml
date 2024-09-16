@@ -33,7 +33,7 @@
             TextTrimming="CharacterEllipsis"
             TextWrapping="NoWrap" />
         <TextBlock
-            Foreground="{ThemeResource PixevalTipTextForeground}"
+            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
             Style="{StaticResource CaptionTextBlockStyle}"
             Text="{x:Bind ViewModel.Entry.User.Name, Mode=OneWay}"
             TextTrimming="CharacterEllipsis"

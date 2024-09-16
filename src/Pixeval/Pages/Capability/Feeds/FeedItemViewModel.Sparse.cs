@@ -29,10 +29,9 @@ using System.Threading.Tasks;
 using System;
 using Microsoft.UI;
 using Pixeval.AppManagement;
+using WinUI3Utilities;
 
 namespace Pixeval.Pages.Capability.Feeds;
-
-
 
 public partial class FeedItemSparseViewModel(Feed entry) : AbstractFeedItemViewModel(new IFeedEntry.SparseFeedEntry(entry)), IFactory<Feed, FeedItemSparseViewModel>
 {
@@ -103,7 +102,7 @@ public partial class FeedItemSparseViewModel(Feed entry) : AbstractFeedItemViewM
         FeedType.AddBookmark or FeedType.PostIllust => MakoHelper.GenerateIllustrationAppUri(entry.Id),
         FeedType.AddFavorite => MakoHelper.GenerateUserAppUri(entry.Id),
         FeedType.AddNovelBookmark => MakoHelper.GenerateNovelAppUri(entry.Id),
-        _ => throw new ArgumentOutOfRangeException()
+        _ => ThrowHelper.ArgumentOutOfRange<FeedType?, Uri>(entry.Type)
     };
 
     public override Uri WebUri => entry.Type switch
@@ -111,7 +110,7 @@ public partial class FeedItemSparseViewModel(Feed entry) : AbstractFeedItemViewM
         FeedType.AddBookmark or FeedType.PostIllust => MakoHelper.GenerateIllustrationWebUri(entry.Id),
         FeedType.AddFavorite => MakoHelper.GenerateUserWebUri(entry.Id),
         FeedType.AddNovelBookmark => MakoHelper.GenerateNovelWebUri(entry.Id),
-        _ => throw new ArgumentOutOfRangeException()
+        _ => ThrowHelper.ArgumentOutOfRange<FeedType?, Uri>(entry.Type)
     };
 
     public override Uri PixEzUri => entry.Type switch
@@ -119,6 +118,6 @@ public partial class FeedItemSparseViewModel(Feed entry) : AbstractFeedItemViewM
         FeedType.AddBookmark or FeedType.PostIllust => MakoHelper.GenerateIllustrationPixEzUri(entry.Id),
         FeedType.AddFavorite => MakoHelper.GenerateUserPixEzUri(entry.Id),
         FeedType.AddNovelBookmark => MakoHelper.GenerateNovelPixEzUri(entry.Id),
-        _ => throw new ArgumentOutOfRangeException()
+        _ => ThrowHelper.ArgumentOutOfRange<FeedType?, Uri>(entry.Type)
     };
 }

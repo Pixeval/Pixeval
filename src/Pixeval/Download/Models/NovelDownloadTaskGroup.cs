@@ -27,7 +27,6 @@ using System.Threading.Tasks;
 using Pixeval.Controls;
 using Pixeval.CoreApi.Model;
 using Pixeval.Database;
-using Pixeval.Download.Macros;
 using Pixeval.Options;
 using Pixeval.Util;
 using Pixeval.Util.IO;

@@ -18,7 +18,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -29,6 +28,7 @@ using Microsoft.UI.Xaml.Media;
 using Pixeval.Controls;
 using Pixeval.CoreApi.Model;
 using Pixeval.Util.UI;
+using WinUI3Utilities;
 
 #pragma warning disable CS9107 // Parameter is captured into the state of the enclosing type and its value is also passed to the base constructor. The value might be captured by the base class as well.
 
@@ -51,7 +51,7 @@ public interface IFeedEntry : IIdEntry
 
     public record CondensedFeedEntry(List<Feed?> Entries) : IFeedEntry
     {
-        public long Id => Entries.First()?.Id ?? 0;
+        public long Id => Entries[0]?.Id ?? 0;
     }
 }
 
@@ -63,7 +63,7 @@ public abstract class AbstractFeedItemViewModel(IFeedEntry entry) : EntryViewMod
         FeedType.AddFavorite => FeedItemColors.AddFavorite,
         FeedType.PostIllust => FeedItemColors.PostIllust,
         FeedType.AddNovelBookmark => FeedItemColors.AddNovelBookmark,
-        _ => throw new ArgumentOutOfRangeException()
+        _ => ThrowHelper.ArgumentOutOfRange<FeedType, SolidColorBrush?>(default)
     };
 
     public abstract ImageSource UserAvatar { get; protected set; }
@@ -92,18 +92,21 @@ public abstract class AbstractFeedItemViewModel(IFeedEntry entry) : EntryViewMod
         {
             IFeedEntry.SparseFeedEntry(var feed) => new FeedItemSparseViewModel(feed),
             IFeedEntry.CondensedFeedEntry condensed => new FeedItemCondensedViewModel(condensed.Entries),
-            _ => throw new ArgumentOutOfRangeException()
+            _ => ThrowHelper.ArgumentOutOfRange<IFeedEntry, AbstractFeedItemViewModel?>(entry)
         };
     }
 
-    // Reify the entry from IFeedEntry.
+    /// <summary>
+    /// Reify the entry from IFeedEntry.
+    /// </summary>
+    /// <returns></returns>
     public Feed? GetMostSignificantEntry()
     {
         return Entry switch
         {
             IFeedEntry.SparseFeedEntry(var feed) => feed,
             IFeedEntry.CondensedFeedEntry condensed => condensed.Entries.First(),
-            _ => throw new ArgumentOutOfRangeException()
+            _ => ThrowHelper.ArgumentOutOfRange<IFeedEntry, Feed?>(Entry)
         };
     }
 }
