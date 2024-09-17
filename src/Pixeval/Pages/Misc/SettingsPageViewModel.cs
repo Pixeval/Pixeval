@@ -107,7 +107,7 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
                     t => t.DefaultSelectedTabItem,
                     MainPageTabItemExtension.GetItems()),
                 new StringAppSettingsEntry(AppSettings, 
-                    t => t.WebCookie)
+                    t => t.WebCookie ?? string.Empty)
                 {
                     Placeholder = SettingsPageResources.WebCookieTextBoxPlaceholderText
                 }

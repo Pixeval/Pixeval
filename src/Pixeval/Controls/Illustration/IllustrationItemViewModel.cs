@@ -45,7 +45,7 @@ public partial class IllustrationItemViewModel : WorkEntryViewModel<Illustration
         MangaSaveCommand.CanExecuteRequested += (_, e) => e.CanExecute = isManga;
         MangaSaveAsCommand.CanExecuteRequested += (_, e) => e.CanExecute = isManga;
         var id = illustration.Id;
-        UgoiraMetadata = App.AppViewModel.MakoClient.GetUgoiraMetadataAsync(id);
+        UgoiraMetadata = illustration.IsUgoira ? App.AppViewModel.MakoClient.GetUgoiraMetadataAsync(id) : Task.FromResult<UgoiraMetadataResponse>(null!);
     }
 
     /// <summary>

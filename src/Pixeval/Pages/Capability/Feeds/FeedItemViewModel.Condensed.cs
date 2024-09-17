@@ -81,7 +81,7 @@ public class FeedItemCondensedViewModel(List<Feed?> entries) : AbstractFeedItemV
 
         if (entries[0]?.PostUserThumbnail is { Length: > 0 } url)
         {
-            var image = (await App.AppViewModel.MakoClient.DownloadBitmapImageAsync(url, 35)).UnwrapOrElse(await AppInfo.ImageNotAvailable)!;
+            var image = (await App.AppViewModel.MakoClient.DownloadBitmapImageWithDesiredSizeAsync(url, 35)).UnwrapOrElse(await AppInfo.ImageNotAvailable)!;
             UserAvatar = image;
         }
         else

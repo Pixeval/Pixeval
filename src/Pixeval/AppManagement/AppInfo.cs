@@ -37,6 +37,7 @@ using Windows.ApplicationModel;
 using Microsoft.UI.Windowing;
 using Pixeval.CoreApi.Net;
 using Pixeval.Util.UI;
+using Microsoft.UI.Xaml.Media;
 
 namespace Pixeval.AppManagement;
 
@@ -60,15 +61,15 @@ public static partial class AppInfo
 
     public static bool CustomizeTitleBarSupported => AppWindowTitleBar.IsCustomizationSupported();
 
-    public static Task<SoftwareBitmapSource> ImageNotAvailable { get; } = GetImageNotAvailableStream().GetSoftwareBitmapSourceAsync(true);
+    public static Task<ImageSource> ImageNotAvailable { get; } = GetImageNotAvailableStream().GetBitmapImageAsync(true, url: "Images/image-not-available.png");
 
     public static Stream GetImageNotAvailableStream() => GetAssetStream("Images/image-not-available.png");
 
-    public static Task<SoftwareBitmapSource> PixivNoProfile { get; } = GetPixivNoProfileStream().GetSoftwareBitmapSourceAsync(true);
+    public static Task<ImageSource> PixivNoProfile { get; } = GetPixivNoProfileStream().GetBitmapImageAsync(true, url: "Images/pixiv_no_profile.png");
 
     public static Stream GetPixivNoProfileStream() => GetAssetStream("Images/pixiv_no_profile.png");
 
-    public static Task<SoftwareBitmapSource> Icon { get; } = GetAssetStream("Images/logo.ico").GetSoftwareBitmapSourceAsync(true);
+    public static Task<ImageSource> Icon { get; } = GetAssetStream("Images/logo.ico").GetBitmapImageAsync(true, url: "Images/logo.ico");
 
     static AppInfo()
     {

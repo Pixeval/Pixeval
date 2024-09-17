@@ -47,12 +47,35 @@
             Margin="{StaticResource NormalMargin}"
             MenuItemsSource="{x:Bind _viewModel.Tags}">
             <controls:WorkViewerSplitView.PaneContent>
-                <Grid>
-                    <Frame
-                        x:Name="IllustrationImageShowcaseFrame"
-                        HorizontalAlignment="Stretch"
-                        VerticalAlignment="Stretch"
-                        Tapped="IllustrationImageShowcaseFrame_OnTapped" />
+                <Grid Background="Transparent">
+                    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition Height="40" />
+                        </Grid.RowDefinitions>
+                        <Frame
+                            x:Name="IllustrationImageShowcaseFrame"
+                            Grid.Row="0"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch"
+                            Tapped="IllustrationImageShowcaseFrame_OnTapped" />
+                        <Grid
+                            Grid.Row="1"
+                            Height="40"
+                            VerticalAlignment="Bottom"
+                            Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="40" />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <AppBarToggleButton
+                                Grid.Column="0"
+                                Command="{x:Bind _viewModel.InfoAndCommentsCommand}"
+                                IsChecked="{x:Bind EntryViewerSplitView.IsPaneOpen, Mode=TwoWay}" />
+                        </Grid>
+                    </Grid>
+
+
 
                     <controls1:DockPanel LastChildFill="False">
                         <controls:PageButton

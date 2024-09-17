@@ -31,7 +31,6 @@ using Pixeval.Download.Models;
 using Pixeval.Util.IO;
 using Pixeval.Utilities;
 using WinUI3Utilities;
-using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.CoreApi.Model;
 using Pixeval.Util;
 
@@ -64,7 +63,7 @@ public sealed partial class DownloadItemViewModel(IDownloadTaskGroup downloadTas
             {
                 LoadingThumbnail = true;
                 var s = await IoHelper.GetFileThumbnailAsync(path);
-                ThumbnailSourceRef = new SharedRef<SoftwareBitmapSource>(await s.GetSoftwareBitmapSourceAsync(true), key);
+                ThumbnailSourceRef = new SharedRef<ImageSource>(await s.GetBitmapImageAsync(true, url: path), key);
                 LoadingThumbnail = false;
                 return true;
             }

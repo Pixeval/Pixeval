@@ -84,7 +84,7 @@ public partial class FeedItemSparseViewModel(Feed entry) : AbstractFeedItemViewM
 
         if (entry.PostUserThumbnail is { } url)
         {
-            var image = (await App.AppViewModel.MakoClient.DownloadBitmapImageAsync(url, 35)).UnwrapOrElse(await AppInfo.ImageNotAvailable)!;
+            var image = (await App.AppViewModel.MakoClient.DownloadBitmapImageWithDesiredSizeAsync(url, 35)).UnwrapOrElse(await AppInfo.ImageNotAvailable)!;
             UserAvatar = image;
         }
         else

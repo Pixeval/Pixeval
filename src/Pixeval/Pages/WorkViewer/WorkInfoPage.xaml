@@ -12,7 +12,6 @@
     xmlns:model="using:Pixeval.CoreApi.Model"
     xmlns:pixeval="using:Pixeval.AppManagement"
     Background="{ThemeResource PixevalPanelBackgroundThemeBrush}"
-    Unloaded="WorkInfoPage_OnUnloaded"
     mc:Ignorable="d">
     <controls2:EnhancedPage.Resources>
         <Style

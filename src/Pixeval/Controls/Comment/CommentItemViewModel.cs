@@ -28,6 +28,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Documents;
+using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.AppManagement;
 using Pixeval.CoreApi.Engine;
@@ -69,7 +70,7 @@ public partial class CommentItemViewModel(Comment comment, SimpleWorkType type, 
     public long CommentId => Comment.Id;
 
     [ObservableProperty]
-    private SoftwareBitmapSource _avatarSource = null!;
+    private ImageSource _avatarSource = null!;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(RepliesIsNotNull), nameof(RepliesCount))]
@@ -93,8 +94,8 @@ public partial class CommentItemViewModel(Comment comment, SimpleWorkType type, 
 
     public async Task LoadAvatarSource()
     {
-        var result = await App.AppViewModel.MakoClient.DownloadSoftwareBitmapSourceAsync(Comment.CommentPoster.ProfileImageUrls.Medium);
-        AvatarSource = result is Result<SoftwareBitmapSource>.Success { Value: var avatar }
+        var result = await App.AppViewModel.MakoClient.DownloadBitmapImageAsync(Comment.CommentPoster.ProfileImageUrls.Medium);
+        AvatarSource = result is Result<ImageSource>.Success { Value: var avatar }
             ? avatar
             : await AppInfo.PixivNoProfile;
     }
@@ -125,7 +126,7 @@ public partial class CommentItemViewModel(Comment comment, SimpleWorkType type, 
                         Child = new Image
                         {
                             VerticalAlignment = VerticalAlignment.Bottom,
-                            Source = await emojiSource.GetBitmapImageAsync(true, 14),
+                            Source = await emojiSource.GetBitmapImageAsync(true, 14, emoji.GetReplyEmojiDownloadUrl()),
                             Width = 14,
                             Height = 14
                         }
@@ -140,7 +141,6 @@ public partial class CommentItemViewModel(Comment comment, SimpleWorkType type, 
 
     public void Dispose()
     {
-        AvatarSource?.Dispose();
         Replies?.ForEach(r => r.Dispose());
     }
 }

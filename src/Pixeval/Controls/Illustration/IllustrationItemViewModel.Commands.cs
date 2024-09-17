@@ -108,7 +108,6 @@ public partial class IllustrationItemViewModel
     private void SaveUtility(ulong? hWnd, GetImageStreams? getImageStream, string path)
     {
         var ib = hWnd?.InfoGrowlReturn("");
-        Progress<double>? progress = null;
         if (ib is not null)
             ib.Title = EntryItemResources.ImageProcessing;
 

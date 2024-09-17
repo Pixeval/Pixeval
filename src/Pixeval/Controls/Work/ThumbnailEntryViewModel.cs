@@ -24,7 +24,7 @@ using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.UI.Xaml.Media.Imaging;
+using Microsoft.UI.Xaml.Media;
 using Pixeval.AppManagement;
 using Pixeval.CoreApi.Model;
 using Pixeval.Util;
@@ -43,16 +43,16 @@ public abstract class ThumbnailEntryViewModel<T>(T entry) : EntryViewModel<T>(en
     /// <summary>
     /// 缩略图图片
     /// </summary>
-    public SoftwareBitmapSource? ThumbnailSource => ThumbnailSourceRef?.Value;
+    public ImageSource? ThumbnailSource => ThumbnailSourceRef?.Value;
 
     /// <summary>
     /// 缩略图文件流
     /// </summary>
     public Stream? ThumbnailStream { get; set; }
 
-    private SharedRef<SoftwareBitmapSource>? _thumbnailSourceRef;
+    private SharedRef<ImageSource>? _thumbnailSourceRef;
 
-    public SharedRef<SoftwareBitmapSource>? ThumbnailSourceRef
+    public SharedRef<ImageSource>? ThumbnailSourceRef
     {
         get => _thumbnailSourceRef;
         set
@@ -98,7 +98,7 @@ public abstract class ThumbnailEntryViewModel<T>(T entry) : EntryViewModel<T>(en
         if (App.AppViewModel.AppSettings.UseFileCache && await App.AppViewModel.Cache.TryGetAsync<Stream>(cacheKey) is { } stream)
         {
             ThumbnailStream = stream;
-            ThumbnailSourceRef = new SharedRef<SoftwareBitmapSource>(await stream.GetSoftwareBitmapSourceAsync(false), key);
+            ThumbnailSourceRef = new SharedRef<ImageSource>(await stream.GetBitmapImageAsync(false, url: ThumbnailUrl), key);
 
             // 读取缓存并加载完成
             LoadingThumbnail = false;
@@ -110,7 +110,7 @@ public abstract class ThumbnailEntryViewModel<T>(T entry) : EntryViewModel<T>(en
         if (App.AppViewModel.AppSettings.UseFileCache)
             await App.AppViewModel.Cache.AddAsync(cacheKey, s, TimeSpan.FromDays(1));
         ThumbnailStream = s;
-        ThumbnailSourceRef = new SharedRef<SoftwareBitmapSource>(await s.GetSoftwareBitmapSourceAsync(false), key);
+        ThumbnailSourceRef = new SharedRef<ImageSource>(await s.GetBitmapImageAsync(false, url: ThumbnailUrl), key);
 
         // 获取并加载完成
         LoadingThumbnail = false;

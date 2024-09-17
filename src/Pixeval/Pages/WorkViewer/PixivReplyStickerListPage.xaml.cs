@@ -60,7 +60,7 @@ public sealed partial class PixivReplyStickerListPage
         if (Stickers.Count is 0)
         {
             var results = await Task.WhenAll(MakoHelper.StickerIds
-                .Select(async id => await App.AppViewModel.MakoClient.DownloadBitmapImageAsync(
+                .Select(async id => await App.AppViewModel.MakoClient.DownloadBitmapImageWithDesiredSizeAsync(
                     MakoHelper.GenerateStickerDownloadUrl(id), 83) is Result<ImageSource>.Success { Value: { } result } ? new PixivReplyStickerViewModel(id, result) : null));
             Stickers.AddRange(results.WhereNotNull());
         }

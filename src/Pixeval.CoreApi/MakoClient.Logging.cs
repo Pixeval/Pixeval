@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Pixeval.CoreApi.Net.EndPoints;
 using Pixeval.Utilities;
+using WebApiClientCore.Exceptions;
 
 namespace Pixeval.CoreApi;
 
