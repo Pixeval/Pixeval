@@ -125,7 +125,7 @@ public sealed partial class MainPage
         // args.SelectedItem may be null here
         if (sender.SelectedItem is NavigationViewItem { Tag: NavigationViewTag tag } selectedItem)
         {
-            if (Equals(selectedItem, FeedTab) && App.AppViewModel.AppSettings.WebCookie.IsNullOrBlank())
+            if (Equals(selectedItem, FeedTab) && App.AppViewModel.AppSettings.WebCookie is "")
             {
                 _ = this.CreateAcknowledgementAsync(MainPageResources.FeedTabCannotBeOpenedTitle, MainPageResources.FeedTabCannotBeOpenedContent);
                 sender.SelectedItem = _lastSelected;

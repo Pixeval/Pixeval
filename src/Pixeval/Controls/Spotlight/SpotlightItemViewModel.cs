@@ -26,7 +26,7 @@ namespace Pixeval.Controls;
 
 public partial class SpotlightItemViewModel : ThumbnailEntryViewModel<Spotlight>, IFactory<Spotlight, SpotlightItemViewModel>
 {
-    public static SpotlightItemViewModel CreateInstance(Spotlight entry, int _) => new(entry);
+    public static SpotlightItemViewModel CreateInstance(Spotlight entry) => new(entry);
 
     public SpotlightItemViewModel(Spotlight spotlight) : base(spotlight) => InitializeCommandsBase();
 

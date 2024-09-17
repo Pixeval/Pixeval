@@ -64,7 +64,6 @@ public sealed partial class NovelViewerPage
             ThumbnailItemsView.StartBringItemIntoView(vm.CurrentNovelIndex, new BringIntoViewOptions { AnimationDesired = true });
         };
 
-
         _viewModel.PropertyChanged += (sender, args) =>
         {
             var vm = sender.To<NovelViewerPageViewModel>();

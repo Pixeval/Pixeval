@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -35,7 +35,6 @@ public class DoubleValueAnimation(TimeSpan duration,
         double to,
         IEasingFunction<double>? easingFunction = null) : this(duration, TimeSpan.FromMilliseconds(10), from, to, easingFunction)
     {
-
     }
 
     public override TimeSpan Duration { get; } = duration;
