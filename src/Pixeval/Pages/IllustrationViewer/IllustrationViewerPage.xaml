@@ -45,7 +45,8 @@
         <controls:WorkViewerSplitView
             x:Name="EntryViewerSplitView"
             Margin="{StaticResource NormalMargin}"
-            MenuItemsSource="{x:Bind _viewModel.Tags}">
+            MenuItemsSource="{x:Bind _viewModel.Tags}"
+            PinPane="{x:Bind OpenPaneButton.IsChecked, Mode=OneWay}">
             <controls:WorkViewerSplitView.PaneContent>
                 <Grid Background="Transparent">
                     <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
@@ -74,8 +75,6 @@
                                 IsChecked="{x:Bind EntryViewerSplitView.IsPaneOpen, Mode=TwoWay}" />
                         </Grid>
                     </Grid>
-
-
 
                     <controls1:DockPanel LastChildFill="False">
                         <controls:PageButton
@@ -297,9 +296,9 @@
                 <controls1:TitleBar.Content>
                     <CommandBar Margin="0,-4" DefaultLabelPosition="Collapsed">
                         <AppBarToggleButton
+                            x:Name="OpenPaneButton"
                             Command="{x:Bind _viewModel.InfoAndCommentsCommand}"
-                            IsChecked="{x:Bind EntryViewerSplitView.IsPaneOpen, Mode=TwoWay}"
-                            RightTapped="OpenPane_OnRightTapped" />
+                            IsChecked="{x:Bind EntryViewerSplitView.IsPaneOpen, Mode=TwoWay}" />
                         <AppBarButton Command="{x:Bind _viewModel.CurrentImage.PlayGifCommand, Mode=OneWay}" Visibility="{x:Bind controls:C.ToVisibility(_viewModel.CurrentIllustration.IsUgoira), Mode=OneWay}" />
                         <AppBarSeparator />
                         <AppBarButton

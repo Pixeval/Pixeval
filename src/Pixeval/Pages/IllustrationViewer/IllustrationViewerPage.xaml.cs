@@ -245,8 +245,6 @@ public sealed partial class IllustrationViewerPage
         teachingTip.Target = appBarButton.IsInOverflow ? null : appBarButton;
     }
 
-    private void OpenPane_OnRightTapped(object sender, RightTappedRoutedEventArgs e) => EntryViewerSplitView.PinPane = true;
-
     public Visibility IsLogoVisible()
     {
         return WindowFactory.GetWindowForElement(this).HWnd != WindowFactory.RootWindow.HWnd

@@ -7,7 +7,6 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:flyouts="using:Pixeval.Controls.FlyoutContent"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Background="{ThemeResource PixevalPanelBackgroundThemeBrush}"
     mc:Ignorable="d">
     <controls:EnhancedPage.Resources>
         <TeachingTip
