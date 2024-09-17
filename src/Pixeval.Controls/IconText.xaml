@@ -13,9 +13,11 @@
         VerticalAlignment="Center"
         controls:DockPanel.Dock="Left"
         FontSize="{StaticResource SmallIconFontSize}"
+        Foreground="{x:Bind IconForeground, Mode=OneWay}"
         Symbol="{x:Bind Symbol, Mode=OneWay}" />
     <TextBlock
         VerticalAlignment="Center"
+        Foreground="{x:Bind TextForeground, Mode=OneWay}"
         Style="{StaticResource BaseTextBlockStyle}"
         Text="{x:Bind Text, Mode=OneWay}" />
 </controls:DockPanel>

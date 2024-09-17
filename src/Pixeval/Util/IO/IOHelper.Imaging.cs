@@ -22,17 +22,15 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
-using Windows.Graphics.Imaging;
 using Windows.Storage;
 using Windows.Storage.FileProperties;
-using Microsoft.UI.Xaml.Media.Imaging;
+using Microsoft.UI.Xaml.Media;
 using Pixeval.AppManagement;
 using Pixeval.CoreApi.Net.Response;
 using Pixeval.Download.Macros;
 using Pixeval.Options;
-using Pixeval.Utilities;
+using Pixeval.Util.IO.Pooling;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats;
 using SixLabors.ImageSharp.Formats.Bmp;
@@ -41,7 +39,6 @@ using SixLabors.ImageSharp.Formats.Jpeg;
 using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp.Formats.Tiff;
 using SixLabors.ImageSharp.Formats.Webp;
-using SixLabors.ImageSharp.PixelFormats;
 using WinUI3Utilities;
 using QRCoder;
 
@@ -49,48 +46,11 @@ namespace Pixeval.Util.IO;
 
 public static partial class IoHelper
 {
-    public static async Task<SoftwareBitmapSource> GetSoftwareBitmapSourceAsync(this Stream stream, bool disposeOfImageStream)
-    {
-        try
-        {
-            // 此处Position可能为负数
-            stream.Position = 0;
-            using var image = await Image.LoadAsync<Bgra32>(stream);
-            var softwareBitmap = new SoftwareBitmap(BitmapPixelFormat.Bgra8, image.Width, image.Height, BitmapAlphaMode.Premultiplied);
-            var buffer = new byte[4 * image.Width * image.Height];
-            image.CopyPixelDataTo(buffer);
-            softwareBitmap.CopyFromBuffer(buffer.AsBuffer());
-            var source = new SoftwareBitmapSource();
-            await source.SetBitmapAsync(softwareBitmap);
-            return source;
-            // BitmapDecoder Bug多
-            // var decoder = await BitmapDecoder.CreateAsync(imageStream);
-            // return await decoder.GetSoftwareBitmapAsync(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Premultiplied);
-        }
-        catch
-        {
-            return await AppInfo.ImageNotAvailable;
-        }
-        finally
-        {
-            if (disposeOfImageStream)
-                await Functions.IgnoreExceptionAsync(stream.DisposeAsync);
-        }
-    }
+    private static readonly ImagePool<IImagePoolKey> _imagePool = new(200);
 
-    public static async Task<BitmapImage> GetBitmapImageAsync(this Stream imageStream, bool disposeOfImageStream, int? desiredWidth = null)
+    public static Task<ImageSource> GetBitmapImageAsync(this Stream imageStream, bool disposeOfImageStream, int? desiredWidth = null, string? url = null)
     {
-        var bitmapImage = new BitmapImage
-        {
-            DecodePixelType = DecodePixelType.Logical
-        };
-        if (desiredWidth is { } width)
-            bitmapImage.DecodePixelWidth = width;
-        await bitmapImage.SetSourceAsync(imageStream.AsRandomAccessStream());
-        if (disposeOfImageStream)
-            await imageStream.DisposeAsync();
-
-        return bitmapImage;
+        return _imagePool.GetBitmapImageAsync(imageStream, disposeOfImageStream, desiredWidth, url);
     }
 
     public static async Task<Stream> GetFileThumbnailAsync(string path, uint size = 64)
@@ -180,7 +140,7 @@ public static partial class IoHelper
             using (img)
                 _ = image.Frames.AddFrame(img.Frames[0]);
             progressValue += average / 2;
-            progress?.Report((int)progressValue);
+            progress?.Report((int) progressValue);
         }
 
         return image;
@@ -200,7 +160,7 @@ public static partial class IoHelper
                 using var img = await Image.LoadAsync(file);
                 img.Frames[0].Metadata.GetFormatMetadata(WebpFormat.Instance).FrameDelay = delay;
                 img.Frames[0].Metadata.GetFormatMetadata(PngFormat.Instance).FrameDelay = new Rational(delay, 10);
-                img.Frames[0].Metadata.GetFormatMetadata(GifFormat.Instance).FrameDelay = (int)(delay / 10);
+                img.Frames[0].Metadata.GetFormatMetadata(GifFormat.Instance).FrameDelay = (int) (delay / 10);
                 _ = image.Frames.AddFrame(img.Frames[0]);
             }
 
@@ -335,23 +295,23 @@ public static partial class IoHelper
         return await entryStreams.UgoiraSaveToImageAsync(ugoiraMetadataResponse.Delays.ToArray());
     }
 
-    public static async Task<SoftwareBitmapSource> GenerateQrCodeForUrlAsync(string url)
+    public static async Task<ImageSource> GenerateQrCodeForUrlAsync(string url)
     {
         var qrCodeGen = new QRCodeGenerator();
         var urlPayload = new PayloadGenerator.Url(url);
         var qrCodeData = qrCodeGen.CreateQrCode(urlPayload, QRCodeGenerator.ECCLevel.Q);
         var qrCode = new BitmapByteQRCode(qrCodeData);
         var bytes = qrCode.GetGraphic(20);
-        return await _recyclableMemoryStreamManager.GetStream(bytes).GetSoftwareBitmapSourceAsync(true);
+        return await _recyclableMemoryStreamManager.GetStream(bytes).GetBitmapImageAsync(true, url: url);
     }
 
-    public static async Task<SoftwareBitmapSource> GenerateQrCodeAsync(string content)
+    public static async Task<ImageSource> GenerateQrCodeAsync(string content)
     {
         var qrCodeGen = new QRCodeGenerator();
         var qrCodeData = qrCodeGen.CreateQrCode(content, QRCodeGenerator.ECCLevel.Q);
         var qrCode = new BitmapByteQRCode(qrCodeData);
         var bytes = qrCode.GetGraphic(20);
-        return await _recyclableMemoryStreamManager.GetStream(bytes).GetSoftwareBitmapSourceAsync(true);
+        return await _recyclableMemoryStreamManager.GetStream(bytes).GetBitmapImageAsync(true);
     }
 
     public static string ChangeExtensionFromUrl(string path, string url)

@@ -43,6 +43,9 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
     [ObservableProperty]
     private bool _showPixevalIcon = true;
 
+    [ObservableProperty]
+    private string _additionalText = string.Empty;
+
     /// <summary>
     /// 
     /// </summary>
@@ -241,6 +244,11 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
     #endregion
 
     #region Helper Functions
+
+    public string GetCurrentIllustrationDimensionText(int index)
+    {
+        return CurrentIllustration.DimensionText;
+    }
 
     public string? NextButtonText => NextButtonAction switch
     {

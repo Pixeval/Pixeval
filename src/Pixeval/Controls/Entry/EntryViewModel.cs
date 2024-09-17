@@ -24,11 +24,11 @@ using Windows.System;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Media;
 using Pixeval.CoreApi.Model;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using WinUI3Utilities;
-using Microsoft.UI.Xaml.Media.Imaging;
 using Symbol = FluentIcons.Common.Symbol;
 
 namespace Pixeval.Controls;
@@ -105,17 +105,9 @@ public abstract class EntryViewModel<T>(T entry) : ObservableObject, IDisposable
         ShowQrCodeCommandExecuteRequested(showQrCodeTeachingTip, qrCodeSource);
     }
 
-    private static void ShowQrCodeCommandExecuteRequested(TeachingTip teachingTip, SoftwareBitmapSource source)
+    private static void ShowQrCodeCommandExecuteRequested(TeachingTip teachingTip, ImageSource source)
     {
         teachingTip.HeroContent.To<Image>().Source = source;
         teachingTip.IsOpen = true;
-        teachingTip.Closed += Closed;
-        return;
-
-        void Closed(TeachingTip s, TeachingTipClosedEventArgs ea)
-        {
-            source.Dispose();
-            s.Closed -= Closed;
-        }
     }
 }

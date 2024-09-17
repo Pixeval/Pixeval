@@ -62,7 +62,7 @@ public sealed partial class PixivReplyEmojiListPage
             var tasks = results.Where(r => r.Item2 is Result<Stream>.Success).Select(async r => new PixivReplyEmojiViewModel(r.emoji, ((Result<Stream>.Success)r.Item2).Value)
             {
                 // We don't dispose of the image here because it will be used when inserting emoji to the rich edit box.
-                ImageSource = await ((Result<Stream>.Success)r.Item2).Value.GetBitmapImageAsync(false, 35)
+                ImageSource = await ((Result<Stream>.Success) r.Item2).Value.GetBitmapImageAsync(false, 35, url: r.emoji.GetReplyEmojiDownloadUrl())
             });
             EmojiList.AddRange(await Task.WhenAll(tasks));
         }

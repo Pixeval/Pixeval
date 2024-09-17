@@ -28,7 +28,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml.Documents;
-using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.AppManagement;
 using Pixeval.CoreApi.Model;
 using Pixeval.Database.Managers;
@@ -39,10 +38,11 @@ using System.Text;
 using System.Threading;
 using QuestPDF.Fluent;
 using QuestPDF.Infrastructure;
+using Microsoft.UI.Xaml.Media;
 
 namespace Pixeval.Controls;
 
-public partial class DocumentViewerViewModel(NovelContent novelContent) : ObservableObject, INovelParserViewModel<SoftwareBitmapSource>, INovelParserViewModel<Stream>
+public partial class DocumentViewerViewModel(NovelContent novelContent) : ObservableObject, INovelParserViewModel<ImageSource>, INovelParserViewModel<Stream>
 {
     /// <summary>
     /// 需要从外部Invoke
@@ -68,9 +68,9 @@ public partial class DocumentViewerViewModel(NovelContent novelContent) : Observ
 
     Dictionary<long, Stream> INovelParserViewModel<Stream>.UploadedImages => UploadedStreams;
 
-    public Dictionary<(long, int), SoftwareBitmapSource> IllustrationImages { get; } = [];
+    public Dictionary<(long, int), ImageSource> IllustrationImages { get; } = [];
 
-    public Dictionary<long, SoftwareBitmapSource> UploadedImages { get; } = [];
+    public Dictionary<long, ImageSource> UploadedImages { get; } = [];
 
     public Dictionary<(long, int), Stream> IllustrationStreams { get; } = [];
 
@@ -172,7 +172,7 @@ public partial class DocumentViewerViewModel(NovelContent novelContent) : Observ
                 break;
             var key = (illust.Id, illust.Page);
             var temp = IllustrationStreams[key] = await GetThumbnailAsync(illust.ThumbnailUrl);
-            IllustrationImages[key] = await temp.GetSoftwareBitmapSourceAsync(false);
+            IllustrationImages[key] = await temp.GetBitmapImageAsync(false, url: illust.ThumbnailUrl);
             OnPropertyChanged(nameof(IllustrationImages) + key.GetHashCode());
         }
 
@@ -181,7 +181,7 @@ public partial class DocumentViewerViewModel(NovelContent novelContent) : Observ
             if (LoadingCancellationTokenSource.IsCancellationRequested)
                 break;
             var temp = UploadedStreams[image.NovelImageId] = await LoadThumbnailAsync(image.ThumbnailUrl);
-            UploadedImages[image.NovelImageId] = await temp.GetSoftwareBitmapSourceAsync(false);
+            UploadedImages[image.NovelImageId] = await temp.GetBitmapImageAsync(false, url: image.ThumbnailUrl);
             OnPropertyChanged(nameof(UploadedImages) + image.NovelImageId);
         }
     }
@@ -272,17 +272,13 @@ public partial class DocumentViewerViewModel(NovelContent novelContent) : Observ
     {
         LoadingCancellationTokenSource.Cancel();
         LoadingCancellationTokenSource.Dispose();
-        foreach (var (_, value) in IllustrationImages)
-            value?.Dispose();
         IllustrationImages.Clear();
-        foreach (var (_, value) in UploadedImages)
-            value?.Dispose();
         UploadedImages.Clear();
         foreach (var (_, value) in IllustrationStreams)
-            value?.Dispose();
+            value.Dispose();
         IllustrationStreams.Clear();
         foreach (var (_, value) in UploadedStreams)
-            value?.Dispose();
+            value.Dispose();
         UploadedStreams.Clear();
         IllustrationLookup.Clear();
         GC.SuppressFinalize(this);

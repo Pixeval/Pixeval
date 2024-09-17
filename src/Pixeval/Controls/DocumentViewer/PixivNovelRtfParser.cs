@@ -29,14 +29,13 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Documents;
 using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Utilities;
 using WinUI3Utilities;
 
 namespace Pixeval.Controls;
 
-public sealed class PixivNovelRtfParser : PixivNovelParser<List<Paragraph>, SoftwareBitmapSource, DocumentViewerViewModel>
+public sealed class PixivNovelRtfParser : PixivNovelParser<List<Paragraph>, ImageSource, DocumentViewerViewModel>
 {
     protected override List<Paragraph> Vector => [new()];
 
