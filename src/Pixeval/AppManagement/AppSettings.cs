@@ -130,7 +130,7 @@ public partial record AppSettings() : IWindowSettings
     public string ReverseSearchApiKey { get; set; } = "";
 
     [SettingsEntry(Symbol.Cookies, nameof(WebCookieEntryHeader), nameof(WebCookieEntryDescription))]
-    public string? WebCookie { get; set; }
+    public string WebCookie { get; set; } = "";
 
     [SettingsEntry(Symbol.TargetArrow, nameof(ReverseSearchResultSimilarityThresholdEntryHeader), nameof(ReverseSearchResultSimilarityThresholdEntryDescription))]
     public int ReverseSearchResultSimilarityThreshold { get; set; } = 80;
