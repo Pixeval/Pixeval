@@ -25,6 +25,7 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.AppManagement;
 using Pixeval.Controls;
@@ -107,7 +108,7 @@ public partial class MainPageViewModel : ObservableObject
     public readonly IconElement SettingsIcon = new ImageIcon { Source = new BitmapImage(AppInfo.NavigationIconUri("settings-128x128")) };
 
     [ObservableProperty]
-    private SoftwareBitmapSource? _avatarSource;
+    private ImageSource? _avatarSource;
 
     public string UserName => App.AppViewModel.MakoClient.Session.Name;
 
@@ -131,8 +132,8 @@ public partial class MainPageViewModel : ObservableObject
         var makoClient = App.AppViewModel.MakoClient;
         // get byte array of avatar
         // and set to the bitmap image
-        var result = await makoClient.DownloadSoftwareBitmapSourceAsync(makoClient.Session.AvatarUrl!);
-        AvatarSource = result is Result<SoftwareBitmapSource>.Success { Value: var avatar }
+        var result = await makoClient.DownloadBitmapImageAsync(makoClient.Session.AvatarUrl!);
+        AvatarSource = result is Result<ImageSource>.Success { Value: var avatar }
             ? avatar
             : await AppInfo.ImageNotAvailable;
     }

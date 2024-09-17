@@ -31,7 +31,7 @@
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
         <PackageReference Include="CommunityToolkit.WinUI.Controls.Primitives" Version="8.1.240821" />
         <PackageReference Include="CommunityToolkit.WinUI.Extensions" Version="8.1.240821" />
-        <PackageReference Include="WinUI3Utilities" Version="1.1.7.8" />
+        <PackageReference Include="WinUI3Utilities" Version="1.1.7.7" />
 
         <ProjectReference Include="..\Pixeval.Utilities\Pixeval.Utilities.csproj" />
         <ProjectReference Include="..\Pixeval.SourceGen\Pixeval.SourceGen.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="False" />
