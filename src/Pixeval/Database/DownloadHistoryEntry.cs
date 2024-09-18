@@ -24,7 +24,7 @@ using Pixeval.Download;
 
 namespace Pixeval.Database;
 
-public partial class DownloadHistoryEntry : IHistoryEntry
+public class DownloadHistoryEntry : IHistoryEntry
 {
     public DownloadHistoryEntry(string destination, DownloadItemType type, IWorkEntry entry)
     {

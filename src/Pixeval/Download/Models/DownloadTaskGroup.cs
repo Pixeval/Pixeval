@@ -185,6 +185,7 @@ public abstract partial class DownloadTaskGroup(DownloadHistoryEntry entry) : Ob
             var isQueued = false;
             var isPending = false;
             foreach (var task in TasksSet)
+            {
                 switch (task.CurrentState)
                 {
                     case DownloadState.Queued:
@@ -209,9 +210,8 @@ public abstract partial class DownloadTaskGroup(DownloadHistoryEntry entry) : Ob
                     case DownloadState.Pending:
                         isPending = true;
                         break;
-                    default:
-                        break;
                 }
+            }
 
             return isError ? DownloadState.Error :
                 isCancelled ? DownloadState.Cancelled :

@@ -289,12 +289,25 @@
 
                         <TextBlock
                             MaxHeight="45"
-                            Margin="310,0,275,0"
+                            Margin="310,0,375,0"
                             Style="{StaticResource TextBlockStyle}"
                             Text="{x:Bind _viewModel.AdditionalText, Mode=OneWay}"
-                            TextWrapping="WrapWholeWords" />
+                            TextWrapping="WrapWholeWords"
+                            Visibility="{x:Bind _viewModel.AdditionalTextBlockVisible, Mode=OneWay}" />
+
                         <StackPanel
-                            Width="275"
+                            Margin="320,10,375,0"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Center"
+                            Visibility="{x:Bind _viewModel.UpscalerProgressBarVisible, Mode=OneWay}">
+                            <ProgressBar Value="{x:Bind _viewModel.UpscalerProgress, Mode=OneWay}" />
+                            <TextBlock
+                                Margin="0,2,0,0"
+                                Style="{StaticResource CaptionTextBlockStyle}"
+                                Text="{x:Bind _viewModel.UpscalerProgressText}" />
+                        </StackPanel>
+                        <StackPanel
+                            Width="350"
                             Margin="0,0,10,0"
                             HorizontalAlignment="Right"
                             Orientation="Horizontal">
@@ -307,6 +320,22 @@
                                 <Run Text="{x:Bind _viewModel.PageCount, Mode=OneWay}" />
                             </TextBlock>
                             <AppBarSeparator Height="35" Margin="10,0,0,0" />
+                            <AppBarButton
+                                x:Name="UpscaleButton"
+                                Command="{x:Bind _viewModel.CurrentImage.UpscaleCommand, Mode=OneWay}"
+                                IsCompact="True"
+                                LabelPosition="Collapsed"
+                                Tapped="UpscaleButton_OnTapped" />
+                            <TeachingTip
+                                x:Name="UpscaleTeachingTip"
+                                x:Uid="/EntryViewerPage/UpscaleTeachingTip"
+                                IsLightDismissEnabled="True"
+                                Target="{x:Bind UpscaleButton}">
+                                <TeachingTip.IconSource>
+                                    <winUi:SymbolIconSource Symbol="CommentNote" />
+                                </TeachingTip.IconSource>
+                            </TeachingTip>
+                            <AppBarSeparator Height="35" />
                             <AppBarButton
                                 Command="{x:Bind _viewModel.FullScreenCommand}"
                                 IsCompact="True"
@@ -382,7 +411,7 @@
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Top"
                 CompactStateBreakpoint="1120"
-                DisplayMode="Tall"
+                DisplayMode="Tall                 "
                 Window="{x:Bind windowing:WindowFactory.GetForkedWindows(HWnd)}">
                 <controls1:TitleBar.Icon>
                     <ImageIcon Source="ms-appx:///Assets/Images/logo.svg" Visibility="{x:Bind IsLogoVisible()}" />

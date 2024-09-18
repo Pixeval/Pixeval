@@ -29,6 +29,8 @@ namespace Pixeval.AppManagement;
 
 public class AppKnownFolders(StorageFolder self)
 {
+    public static AppKnownFolders Installation = null!;
+
     public static AppKnownFolders Local = new(ApplicationData.Current.LocalFolder, _ => Task.CompletedTask);
 
     public static AppKnownFolders Log = null!;
@@ -58,6 +60,7 @@ public class AppKnownFolders(StorageFolder self)
         SavedWallPaper = await GetOrCreate(Local, "Wallpapers");
         Log = await GetOrCreate(Local, "Logs");
         Cache = await GetOrCreate(Local, "Cache");
+        Installation = new AppKnownFolders(await StorageFolder.GetFolderFromPathAsync(Windows.ApplicationModel.Package.Current.InstalledPath));
     }
 
     /// <summary>

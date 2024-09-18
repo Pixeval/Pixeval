@@ -31,7 +31,7 @@ using Pixeval.CoreApi.Model;
 
 namespace Pixeval.Pages;
 
-public partial class CommentsPageViewModel : ObservableObject
+public class CommentsPageViewModel : ObservableObject
 {
     public CommentsPageViewModel(IAsyncEnumerable<Comment?> engine, SimpleWorkType type, long entryId)
     {

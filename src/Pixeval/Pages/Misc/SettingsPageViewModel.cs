@@ -38,6 +38,7 @@ using Microsoft.UI.Xaml;
 using Pixeval.Controls.Windowing;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.Settings.Models;
+using Pixeval.Upscaling;
 using WinUI3Utilities;
 using Symbol = FluentIcons.Common.Symbol;
 
@@ -134,6 +135,23 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
                     Symbol.SubtractCircle,
                     () => _ = Launcher.LaunchUriAsync(new Uri("https://www.pixiv.net/settings/viewing")))
             },
+
+            new (SettingsEntryCategory.AiUpscaler)
+            {
+                new AiUpscalerModelSettingsEntry(AppSettings, 
+                    t => t.UpscalerModel,
+                    RealESRGANModelExtension.GetItems()),
+                new IntAppSettingsEntry(AppSettings,
+                    t => t.UpscalerScaleRatio)
+                {
+                    Max = 4,
+                    Min = 2
+                },
+                new EnumAppSettingsEntry(AppSettings,
+                    t => t.UpscalerOutputType,
+                UpscalerOutputTypeExtension.GetItems())
+            },
+
             new(SettingsEntryCategory.Search)
             {
                 new StringAppSettingsEntry(AppSettings,

@@ -5,7 +5,6 @@
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:fluent="using:FluentIcons.WinUI"
-    xmlns:local="using:Pixeval.Settings"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="using:Pixeval.Settings.Models"
     x:Uid="/SettingsPage/AppLanguageEntry"
@@ -14,8 +13,8 @@
     <controls:SettingsCard.Description>
         <HyperlinkButton
             x:Uid="/SettingsPage/OpenLanguageSettingsHyperlinkButton"
-            Tag="ms-settings:regionlanguage"
-            Click="OpenLinkViaTag_OnClicked" />
+            Click="OpenLinkViaTag_OnClicked"
+            Tag="ms-settings:regionlanguage" />
     </controls:SettingsCard.Description>
     <ComboBox
         x:Uid="/SettingsPage/AppLanguageEntryComboBox"

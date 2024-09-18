@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <OutputType>WinExe</OutputType>
         <TargetFramework>net8.0-windows10.0.22621.0</TargetFramework>
@@ -58,7 +58,6 @@
         <PackageReference Include="ReverseMarkdown" Version="4.6.0" />
         <PackageReference Include="SixLabors.ImageSharp" Version="3.1.5" />
         <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="2.1.4" />
-        <PackageReference Include="System.IO.Hashing" Version="8.0.0" />
         <PackageReference Include="System.Linq.Async" Version="6.0.1" />
         <PackageReference Include="WinUI3Utilities" Version="1.1.7.7" />
 
@@ -173,8 +172,58 @@
       <None Remove="Assets\Images\Icons\tag-128x128.png" />
       <None Remove="Assets\Images\Icons\tag-64x64.png" />
       <None Remove="Assets\Images\Icons\tag.png" />
+      <None Remove="Controls\Settings\AiUpscalerModelSettingsCard.xaml" />
       <None Remove="Pages\Capability\FeedPage.xaml" />
       <None Remove="Pages\Capability\Feeds\CondensedFeedPage.xaml" />
+      <None Remove="Strings\zh-cn\AiUpscaler.resjson" />
       <None Remove="Strings\zh-cn\FeedPage.resjson" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Update="Assets\Binary\RealESRGAN\models\realesr-animevideov3-x2.bin">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Update="Assets\Binary\RealESRGAN\models\realesr-animevideov3-x2.param">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Update="Assets\Binary\RealESRGAN\models\realesr-animevideov3-x3.bin">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Update="Assets\Binary\RealESRGAN\models\realesr-animevideov3-x3.param">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Update="Assets\Binary\RealESRGAN\models\realesr-animevideov3-x4.bin">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Update="Assets\Binary\RealESRGAN\models\realesr-animevideov3-x4.param">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Update="Assets\Binary\RealESRGAN\models\realesrgan-x4plus-anime.bin">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Update="Assets\Binary\RealESRGAN\models\realesrgan-x4plus-anime.param">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Update="Assets\Binary\RealESRGAN\models\realesrgan-x4plus.bin">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Update="Assets\Binary\RealESRGAN\models\realesrgan-x4plus.param">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Update="Assets\Binary\RealESRGAN\realesrgan-ncnn-vulkan.exe">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Update="Assets\Binary\RealESRGAN\vcomp140.dll">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Update="Assets\Binary\RealESRGAN\vcomp140d.dll">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Page Update="Controls\Settings\AiUpscalerModelSettingsCard.xaml">
+        <Generator>MSBuild:Compile</Generator>
+      </Page>
     </ItemGroup>
 </Project>

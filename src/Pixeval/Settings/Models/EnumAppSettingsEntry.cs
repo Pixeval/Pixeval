@@ -8,7 +8,7 @@ using Pixeval.Controls.Settings;
 
 namespace Pixeval.Settings.Models;
 
-public partial class EnumAppSettingsEntry(
+public class EnumAppSettingsEntry(
     AppSettings appSettings,
     Expression<Func<AppSettings, Enum>> property,
     IReadOnlyList<StringRepresentableItem> array)
