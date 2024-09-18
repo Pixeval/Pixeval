@@ -23,18 +23,14 @@ using Windows.System;
 using Microsoft.UI.Xaml.Input;
 using Pixeval.Util.UI;
 using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Tasks;
 using FluentIcons.Common;
 using Pixeval.CoreApi.Model;
-using Pixeval.Utilities;
 
 namespace Pixeval.Controls;
 
 public partial class WorkEntryViewModel<T>
 {
-
-
     /// <summary>
     /// Parameter: <see cref="ValueTuple{T1, T2, T3}"/>
     /// <list type="bullet">
@@ -125,7 +121,6 @@ public partial class WorkEntryViewModel<T>
 
     private void AddToBookmarkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
-
         if (args.Parameter is not (IEnumerable<string> userTags, bool isPrivate, var parameter))
             return;
         IsBookmarked = true;

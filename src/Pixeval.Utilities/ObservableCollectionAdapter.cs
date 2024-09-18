@@ -75,7 +75,7 @@ public class ObservableCollectionAdapter<TInput, TOutput> : ObservableCollection
             for (var index = 0; index < _sourceCollection.Count; index++)
             {
                 var element = _sourceCollection[index];
-                var item = TOutput.CreateInstance(element, index);
+                var item = TOutput.CreateInstance(element);
                 Add(item);
             }
         }
@@ -93,7 +93,7 @@ public class ObservableCollectionAdapter<TInput, TOutput> : ObservableCollection
                     var input = (TInput)args.NewItems[i]!;
                     if (_filter?.Invoke(input) is false)
                         continue;
-                    var item = TOutput.CreateInstance(input, i);
+                    var item = TOutput.CreateInstance(input);
                     Insert(args.NewStartingIndex + i, item);
                 }
                 break;
@@ -117,7 +117,7 @@ public class ObservableCollectionAdapter<TInput, TOutput> : ObservableCollection
                     }
                     else
                     {
-                        var item = TOutput.CreateInstance(input, i);
+                        var item = TOutput.CreateInstance(input);
                         this[args.OldStartingIndex + i - removedCount] = item;
                     }
                 }
@@ -135,7 +135,7 @@ public class ObservableCollectionAdapter<TInput, TOutput> : ObservableCollection
                     var element = SourceCollection[index];
                     if (_filter?.Invoke(element) is false)
                         continue;
-                    var item = TOutput.CreateInstance(element, index);
+                    var item = TOutput.CreateInstance(element);
                     Add(item);
                 }
 

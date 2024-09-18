@@ -23,7 +23,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Pixeval.Controls;
-using Pixeval.CoreApi.Model;
 
 namespace Pixeval.Pages.Capability.Feeds;
 
@@ -42,7 +41,6 @@ public partial class FeedPageViewModel : EntryViewViewModel<IFeedEntry, Abstract
 
     public FeedPageViewModel() : this(new SharableViewDataProvider<IFeedEntry, AbstractFeedItemViewModel>())
     {
-
     }
 
     public override IDataProvider<IFeedEntry, AbstractFeedItemViewModel> DataProvider { get; }

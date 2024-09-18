@@ -26,7 +26,7 @@ namespace Pixeval.Controls;
 
 public sealed partial class IllustratorItemViewModel : EntryViewModel<User>, IFactory<User, IllustratorItemViewModel>
 {
-    public static IllustratorItemViewModel CreateInstance(User entry, int _) => new(entry);
+    public static IllustratorItemViewModel CreateInstance(User entry) => new(entry);
 
     [ObservableProperty]
     private bool _isFollowed;

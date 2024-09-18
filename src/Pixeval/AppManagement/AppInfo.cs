@@ -20,7 +20,6 @@
 
 using System;
 using System.IO;
-using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Windows.Storage;
@@ -28,7 +27,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.Controls.Windowing;
 using Pixeval.Database.Managers;
-using Pixeval.Download;
 using Pixeval.Util.IO;
 using Pixeval.Utilities;
 using WinUI3Utilities;
@@ -93,7 +91,6 @@ public static partial class AppInfo
     public static string IconAbsolutePath => ApplicationUriToPath(new Uri(IconApplicationUri));
 
     public static Uri NavigationIconUri(string name) => new Uri($"ms-appx:///Assets/Images/Icons/{name}.png");
-
 
     public static string ApplicationUriToPath(Uri uri)
     {

@@ -30,7 +30,6 @@ using System.IO;
 using System.Linq;
 using Pixeval.Download;
 using Microsoft.Extensions.DependencyInjection;
-using Pixeval.Download.Models;
 using Pixeval.Util.IO;
 using Symbol = FluentIcons.Common.Symbol;
 

@@ -30,7 +30,6 @@ public class LocalizationMetadataAttribute(Type resourceType) : Attribute
     public bool IsPartial { get; init; }
 }
 
-
 [AttributeUsage(AttributeTargets.Class)]
 public class AttachedLocalizationMetadataAttribute<T>(Type resourceType) : Attribute
 {
