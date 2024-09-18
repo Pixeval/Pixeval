@@ -1,0 +1,8 @@
+{
+	"RealESRGANX4Plus": "realesrgan-x4plus",
+	"RealESRNETX4Plus": "realesrnet-x4plus",
+	"RealESRGANX4PlusAnime": "realesrgan-x4plus-anime",
+	"PngOutputType": "png",
+	"JpegOutputType": "jpeg",
+	"WebPOutputType": "webp"
+}

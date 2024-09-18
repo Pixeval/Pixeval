@@ -31,7 +31,7 @@ using Pixeval.Utilities.Threading;
 
 namespace Pixeval.Download;
 
-public partial class DownloadManager : IDisposable
+public class DownloadManager : IDisposable
 {
     /// <summary>
     /// 正在排队的任务队列
@@ -111,18 +111,18 @@ public partial class DownloadManager : IDisposable
     private async void PollTask()
     {
         while (await _downloadTaskChannel.Reader.WaitToReadAsync())
-            while (await _throttle
-                   && _downloadTaskChannel.Reader.TryRead(out var taskToken)
-                   && taskToken is { Token.IsCancellationRequested: false, Task: var taskGroup })
+            while (await _throttle && _downloadTaskChannel.Reader.TryRead(out var taskToken) && taskToken is { Token.IsCancellationRequested: false, Task: var taskGroup })
             {
                 await taskGroup.InitializeTaskGroupAsync();
                 foreach (var subTask in taskGroup)
+                {
                     // 需要判断是否处于Queued状态才能运行
                     if (subTask.CurrentState is DownloadState.Queued)
                     {
                         await DownloadAsync(subTask);
                         _ = await _throttle;
                     }
+                }
             }
     }
 

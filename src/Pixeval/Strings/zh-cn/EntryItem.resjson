@@ -28,5 +28,7 @@
 
     "UserMetricsFollowingsTextBlock/Text": "正在关注",
     "UserMetricsIllustrationCountTextBlock/Text": "作品数",
-    "UserMetricsMyPixivUsersTextBlock/Text": "好P友"
+    "UserMetricsMyPixivUsersTextBlock/Text": "好P友",
+
+    "AIUpscale": "AI超分辨率"
 }

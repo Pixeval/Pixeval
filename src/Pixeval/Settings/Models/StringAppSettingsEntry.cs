@@ -6,7 +6,7 @@ using Pixeval.Controls.Settings;
 
 namespace Pixeval.Settings.Models;
 
-public partial class StringAppSettingsEntry(
+public class StringAppSettingsEntry(
     AppSettings appSettings,
     Expression<Func<AppSettings, string>> property)
     : SingleValueSettingsEntry<AppSettings, string>(appSettings, property)

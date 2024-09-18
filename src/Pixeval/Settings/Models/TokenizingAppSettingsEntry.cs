@@ -4,7 +4,7 @@ using Pixeval.Controls.Settings;
 
 namespace Pixeval.Settings.Models;
 
-public partial class TokenizingAppSettingsEntry(
+public class TokenizingAppSettingsEntry(
     AppSettings appSettings)
     : ObservableSettingsEntryBase<AppSettings>(appSettings, "", "", default)
 {
