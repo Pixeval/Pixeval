@@ -107,7 +107,9 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
                     t => t.DefaultSelectedTabItem,
                     MainPageTabItemExtension.GetItems()),
                 new StringAppSettingsEntry(AppSettings, 
-                    t => t.WebCookie ?? string.Empty)
+#pragma warning disable CS8603 // Possible null reference return.
+                    t => t.WebCookie)
+#pragma warning restore CS8603 // Possible null reference return.
                 {
                     Placeholder = SettingsPageResources.WebCookieTextBoxPlaceholderText
                 }

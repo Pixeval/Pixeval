@@ -45,8 +45,7 @@
         <controls:WorkViewerSplitView
             x:Name="EntryViewerSplitView"
             Margin="{StaticResource NormalMargin}"
-            MenuItemsSource="{x:Bind _viewModel.Tags}"
-            PinPane="{x:Bind OpenPaneButton.IsChecked, Mode=OneWay}">
+            MenuItemsSource="{x:Bind _viewModel.Tags}">
             <controls:WorkViewerSplitView.PaneContent>
                 <Grid Background="Transparent">
                     <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
