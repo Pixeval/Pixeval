@@ -152,8 +152,14 @@ public partial class IllustrationItemViewModel
                 progress = new Progress<double>(d => ib.Title = EntryItemResources.UgoiraProcessing.Format(d));
             else
                 ib.Title = EntryItemResources.ImageProcessing;
-        if (getImageStream(false) is { } sources)
+        if (getImageStream(App.AppViewModel.AppSettings.BrowseOriginalImage) is { } sources)
         {
+            if (sources is [var src])
+            {
+                await UiHelper.ClipboardSetBitmapAsync(src);
+                hWnd?.RemoveSuccessGrowlAfterDelay(ib!, EntryItemResources.ImageSetToClipBoard);
+                return;
+            }
             var source = await sources.UgoiraSaveToStreamAsync((await UgoiraMetadata).Delays.ToArray(), null, progress);
             await UiHelper.ClipboardSetBitmapAsync(source);
             hWnd?.RemoveSuccessGrowlAfterDelay(ib!, EntryItemResources.ImageSetToClipBoard);

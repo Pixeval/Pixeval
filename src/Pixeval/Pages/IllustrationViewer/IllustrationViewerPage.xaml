@@ -11,28 +11,50 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:media="using:Microsoft.Xaml.Interactions.Media"
     xmlns:triggers="using:Pixeval.Util.Triggers"
+    xmlns:winUi="using:FluentIcons.WinUI"
     xmlns:windowing="using:Pixeval.Controls.Windowing"
     KeyboardAcceleratorPlacementMode="Hidden"
     Loaded="IllustrationViewerPage_OnLoaded"
     Unloaded="IllustrationViewerPage_OnUnloaded"
     mc:Ignorable="d">
     <controls:EnhancedWindowPage.Resources>
-        <Thickness x:Key="NormalMargin">0,48,0,0</Thickness>
-        <AcrylicBrush
-            x:Key="BottomCommandSectionBackground"
-            FallbackColor="{StaticResource SecondaryAccentColor}"
-            TintColor="{StaticResource SecondaryAccentColor}"
-            TintLuminosityOpacity="0.8"
-            TintOpacity="0.8" />
-        <Style
-            x:Key="TextBlockStyle"
-            BasedOn="{StaticResource CaptionStrongTextBlockStyle}"
-            TargetType="TextBlock">
-            <Setter Property="VerticalAlignment" Value="Center" />
-            <Setter Property="HorizontalTextAlignment" Value="Center" />
-            <Setter Property="TextAlignment" Value="Center" />
-            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
-        </Style>
+        <ResourceDictionary>
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Default">
+                    <SolidColorBrush x:Key="BottomBarInfoForeground">#9F9F9F</SolidColorBrush>
+                    <SolidColorBrush x:Key="BottomBarBackground">#FCF8F5</SolidColorBrush>
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="Light">
+                    <SolidColorBrush x:Key="BottomBarInfoForeground">#9F9F9F</SolidColorBrush>
+                    <SolidColorBrush x:Key="BottomBarBackground">#FCF8F5</SolidColorBrush>
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="Dark">
+                    <SolidColorBrush x:Key="BottomBarInfoForeground">#7F7F7F</SolidColorBrush>
+                    <SolidColorBrush x:Key="BottomBarBackground">#2A2725</SolidColorBrush>
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="HighContrast">
+                    <SolidColorBrush x:Key="BottomBarInfoForeground">#7F7F7F</SolidColorBrush>
+                    <SolidColorBrush x:Key="BottomBarBackground">#2A2725</SolidColorBrush>
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
+
+            <Thickness x:Key="NormalMargin">0,48,0,0</Thickness>
+            <AcrylicBrush
+                x:Key="BottomCommandSectionBackground"
+                FallbackColor="{StaticResource SecondaryAccentColor}"
+                TintColor="{StaticResource SecondaryAccentColor}"
+                TintLuminosityOpacity="0.8"
+                TintOpacity="0.8" />
+            <Style
+                x:Key="TextBlockStyle"
+                BasedOn="{StaticResource CaptionStrongTextBlockStyle}"
+                TargetType="TextBlock">
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+                <Setter Property="TextAlignment" Value="Center" />
+                <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+            </Style>
+        </ResourceDictionary>
     </controls:EnhancedWindowPage.Resources>
     <controls:EnhancedWindowPage.KeyboardAccelerators>
         <KeyboardAccelerator Key="Escape" Invoked="ExitFullScreenKeyboardAccelerator_OnInvoked" />
@@ -48,33 +70,12 @@
             MenuItemsSource="{x:Bind _viewModel.Tags}">
             <controls:WorkViewerSplitView.PaneContent>
                 <Grid Background="Transparent">
-                    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                        <Grid.RowDefinitions>
-                            <RowDefinition />
-                            <RowDefinition Height="40" />
-                        </Grid.RowDefinitions>
-                        <Frame
-                            x:Name="IllustrationImageShowcaseFrame"
-                            Grid.Row="0"
-                            HorizontalAlignment="Stretch"
-                            VerticalAlignment="Stretch"
-                            Tapped="IllustrationImageShowcaseFrame_OnTapped" />
-                        <Grid
-                            Grid.Row="1"
-                            Height="40"
-                            VerticalAlignment="Bottom"
-                            Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="40" />
-                                <ColumnDefinition />
-                            </Grid.ColumnDefinitions>
-                            <AppBarToggleButton
-                                Grid.Column="0"
-                                Command="{x:Bind _viewModel.InfoAndCommentsCommand}"
-                                IsChecked="{x:Bind EntryViewerSplitView.IsPaneOpen, Mode=TwoWay}" />
-                        </Grid>
-                    </Grid>
-
+                    <Frame
+                        x:Name="IllustrationImageShowcaseFrame"
+                        Grid.Row="0"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                        Tapped="IllustrationImageShowcaseFrame_OnTapped" />
                     <controls1:DockPanel LastChildFill="False">
                         <controls:PageButton
                             Width="150"
@@ -235,6 +236,103 @@
                             </controls:AdvancedItemsView>
                         </Grid>
                     </StackPanel>
+
+                    <Grid
+                        Height="45"
+                        VerticalAlignment="Bottom"
+                        Background="{ThemeResource BottomBarBackground}">
+                        <StackPanel
+                            MaxWidth="310"
+                            Margin="0,0,275,0"
+                            HorizontalAlignment="Left"
+                            Orientation="Horizontal">
+                            <AppBarToggleButton
+                                HorizontalAlignment="Center"
+                                Command="{x:Bind _viewModel.InfoAndCommentsCommand}"
+                                IsChecked="{x:Bind EntryViewerSplitView.IsPaneOpen, Mode=TwoWay}"
+                                IsCompact="True"
+                                LabelPosition="Collapsed" />
+                            <AppBarSeparator Height="35" />
+                            <winUi:SymbolIcon
+                                Margin="10,0,0,0"
+                                HorizontalAlignment="Center"
+                                FontSize="14"
+                                Foreground="{ThemeResource BottomBarInfoForeground}"
+                                Symbol="SlideGrid" />
+                            <TextBlock
+                                MaxWidth="80"
+                                Margin="8,0,0,2"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Foreground="{ThemeResource BottomBarInfoForeground}"
+                                Text="{x:Bind _viewModel.GetCurrentIllustrationDimensionText(_viewModel.CurrentPageIndex), Mode=OneWay}"
+                                TextTrimming="CharacterEllipsis"
+                                TextWrapping="NoWrap" />
+                            <AppBarSeparator Height="35" Margin="8,0,0,0" />
+                            <winUi:SymbolIcon
+                                Margin="10,0,0,0"
+                                HorizontalAlignment="Center"
+                                FontSize="14"
+                                Foreground="{ThemeResource BottomBarInfoForeground}"
+                                Symbol="AppTitle" />
+                            <TextBlock
+                                MaxWidth="100"
+                                Margin="8,0,0,2"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                Foreground="{ThemeResource BottomBarInfoForeground}"
+                                Text="{x:Bind _viewModel.CurrentIllustration.Title, Mode=OneWay}"
+                                TextTrimming="CharacterEllipsis"
+                                TextWrapping="NoWrap" />
+                            <AppBarSeparator Height="35" Margin="10,0,0,0" />
+                        </StackPanel>
+
+                        <TextBlock
+                            MaxHeight="45"
+                            Margin="310,0,275,0"
+                            Style="{StaticResource TextBlockStyle}"
+                            Text="{x:Bind _viewModel.AdditionalText, Mode=OneWay}"
+                            TextWrapping="WrapWholeWords" />
+                        <StackPanel
+                            Width="275"
+                            Margin="0,0,10,0"
+                            HorizontalAlignment="Right"
+                            Orientation="Horizontal">
+                            <TextBlock
+                                FontSize="15"
+                                Style="{StaticResource TextBlockStyle}"
+                                Visibility="{x:Bind controls:C.ToVisibility(_viewModel.CurrentIllustration.IsManga), Mode=OneWay}">
+                                <Run Text="{x:Bind controls:C.PlusOneToString(_viewModel.CurrentPageIndex), Mode=OneWay}" />
+                                <Run Text="/" />
+                                <Run Text="{x:Bind _viewModel.PageCount, Mode=OneWay}" />
+                            </TextBlock>
+                            <AppBarSeparator Height="35" Margin="10,0,0,0" />
+                            <AppBarButton
+                                Command="{x:Bind _viewModel.FullScreenCommand}"
+                                IsCompact="True"
+                                LabelPosition="Collapsed" />
+                            <AppBarButton
+                                Command="{x:Bind _viewModel.CurrentImage.RestoreResolutionCommand, Mode=OneWay}"
+                                IsCompact="True"
+                                LabelPosition="Collapsed" />
+                            <AppBarButton
+                                Command="{x:Bind _viewModel.CurrentImage.ZoomOutCommand, Mode=OneWay}"
+                                IsCompact="True"
+                                LabelPosition="Collapsed" />
+                            <AppBarButton
+                                Command="{x:Bind _viewModel.CurrentImage.ZoomInCommand, Mode=OneWay}"
+                                IsCompact="True"
+                                LabelPosition="Collapsed" />
+                            <AppBarSeparator Height="35" Margin="0,0,10,0" />
+                            <TextBlock
+                                Width="60"
+                                FontSize="15"
+                                Style="{StaticResource TextBlockStyle}"
+                                Text="{x:Bind controls:C.ToPercentageString(_viewModel.CurrentImage.Scale, 2), Mode=OneWay}"
+                                TextWrapping="NoWrap"
+                                ToolTipService.ToolTip="{x:Bind controls:C.ToPercentageString(_viewModel.CurrentImage.Scale, 2), Mode=OneWay}" />
+                        </StackPanel>
+                    </Grid>
                 </Grid>
             </controls:WorkViewerSplitView.PaneContent>
         </controls:WorkViewerSplitView>
@@ -294,10 +392,6 @@
                 </controls1:TitleBar.RenderTransform>
                 <controls1:TitleBar.Content>
                     <CommandBar Margin="0,-4" DefaultLabelPosition="Collapsed">
-                        <AppBarToggleButton
-                            x:Name="OpenPaneButton"
-                            Command="{x:Bind _viewModel.InfoAndCommentsCommand}"
-                            IsChecked="{x:Bind EntryViewerSplitView.IsPaneOpen, Mode=TwoWay}" />
                         <AppBarButton Command="{x:Bind _viewModel.CurrentImage.PlayGifCommand, Mode=OneWay}" Visibility="{x:Bind controls:C.ToVisibility(_viewModel.CurrentIllustration.IsUgoira), Mode=OneWay}" />
                         <AppBarSeparator />
                         <AppBarButton
@@ -345,37 +439,6 @@
                         <AppBarButton Command="{x:Bind _viewModel.CurrentImage.ShareCommand, Mode=OneWay}" />
                     </CommandBar>
                 </controls1:TitleBar.Content>
-                <controls1:TitleBar.Footer>
-                    <controls1:DockPanel LastChildFill="False">
-                        <TextBlock
-                            controls1:DockPanel.Dock="Left"
-                            Style="{StaticResource TextBlockStyle}"
-                            Visibility="{x:Bind controls:C.ToVisibility(_viewModel.CurrentIllustration.IsManga), Mode=OneWay}">
-                            <Run Text="{x:Bind controls:C.PlusOneToString(_viewModel.CurrentPageIndex), Mode=OneWay}" />
-                            <Run Text="/" />
-                            <Run Text="{x:Bind _viewModel.PageCount, Mode=OneWay}" />
-                        </TextBlock>
-                        <CommandBar
-                            x:Name="IllustrationViewerSubCommandBar"
-                            Margin="0,-4"
-                            HorizontalAlignment="Right"
-                            VerticalAlignment="Center"
-                            controls1:DockPanel.Dock="Left"
-                            DefaultLabelPosition="Collapsed">
-                            <AppBarButton Command="{x:Bind _viewModel.FullScreenCommand}" />
-                            <AppBarButton Command="{x:Bind _viewModel.CurrentImage.RestoreResolutionCommand, Mode=OneWay}" />
-                            <AppBarButton Command="{x:Bind _viewModel.CurrentImage.ZoomOutCommand, Mode=OneWay}" />
-                            <AppBarButton Command="{x:Bind _viewModel.CurrentImage.ZoomInCommand, Mode=OneWay}" />
-                        </CommandBar>
-                        <TextBlock
-                            Width="60"
-                            Margin="-5,-3,0,0"
-                            controls1:DockPanel.Dock="Left"
-                            Style="{StaticResource TextBlockStyle}"
-                            Text="{x:Bind controls:C.ToPercentageString(_viewModel.CurrentImage.Scale, 2), Mode=OneWay}"
-                            ToolTipService.ToolTip="{x:Bind controls:C.ToPercentageString(_viewModel.CurrentImage.Scale, 2), Mode=OneWay}" />
-                    </controls1:DockPanel>
-                </controls1:TitleBar.Footer>
             </controls1:TitleBar>
         </Grid>
         <TeachingTip

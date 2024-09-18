@@ -126,6 +126,11 @@ public sealed partial class IllustrationViewerPage
 
     private void IllustrationViewerPage_OnLoaded(object sender, RoutedEventArgs e)
     {
+        if (!App.AppViewModel.AppSettings.BrowseOriginalImage)
+        {
+            _viewModel.AdditionalText = EntryViewerPageResources.BrowsingCompressedImage;
+        }
+
         // Invokes the drag region calculation manually 9/11/2024
         TitleBarArea.SetDragRegionForCustomTitleBar();
         var dataTransferManager = HWnd.GetDataTransferManager();
@@ -250,5 +255,10 @@ public sealed partial class IllustrationViewerPage
         return WindowFactory.GetWindowForElement(this).HWnd != WindowFactory.RootWindow.HWnd
             ? Visibility.Visible
             : Visibility.Collapsed;
+    }
+
+    public Thickness GetAdditionalTextBlockMargin(double leftSectionWidth, double rightSectionWidth)
+    {
+        return new Thickness(leftSectionWidth, 0, rightSectionWidth, 0);
     }
 }
