@@ -177,4 +177,28 @@
       <None Remove="Pages\Capability\Feeds\CondensedFeedPage.xaml" />
       <None Remove="Strings\zh-cn\FeedPage.resjson" />
     </ItemGroup>
+
+    <ItemGroup>
+      <Content Update="Assets\Binary\RealESRGAN\models\realesrgan-x4plus-anime.bin">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Update="Assets\Binary\RealESRGAN\models\realesrgan-x4plus-anime.param">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Update="Assets\Binary\RealESRGAN\models\realesrgan-x4plus.bin">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Update="Assets\Binary\RealESRGAN\models\realesrgan-x4plus.param">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Update="Assets\Binary\RealESRGAN\realesrgan-ncnn-vulkan.exe">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Update="Assets\Binary\RealESRGAN\vcomp140.dll">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Update="Assets\Binary\RealESRGAN\vcomp140d.dll">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+    </ItemGroup>
 </Project>
