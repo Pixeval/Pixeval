@@ -57,8 +57,6 @@ public sealed partial class WorkInfoPage
         await IllustratorViewerHelper.CreateWindowWithPageAsync(_viewModel.Illustrator.Id);
     }
 
-    private void WorkInfoPage_OnUnloaded(object sender, RoutedEventArgs e) => _viewModel.Dispose();
-
     private async Task SetWorkCaptionTextAsync()
     {
         await Task.Yield();

@@ -75,7 +75,7 @@ public sealed partial class IllustratorItem
         }
     }
 
-    private Thickness GetIllustrationAt(List<SoftwareBitmapSource> sources)
+    private Thickness GetIllustrationAt(List<ImageSource> sources)
     {
         BannerContainer.Children.Clear();
         var i = 0;

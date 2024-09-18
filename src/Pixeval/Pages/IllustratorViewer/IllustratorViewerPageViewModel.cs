@@ -98,7 +98,7 @@ public partial class IllustratorViewerPageViewModel : UiObservableObject
 
     public async Task SetAvatarAndBackgroundAsync()
     {
-        var result = await App.AppViewModel.MakoClient.DownloadBitmapImageAsync(AvatarUrl, 100);
+        var result = await App.AppViewModel.MakoClient.DownloadBitmapImageWithDesiredSizeAsync(AvatarUrl, 100);
         AvatarSource = result is Result<ImageSource>.Success { Value: var avatar }
             ? avatar
             : await AppInfo.PixivNoProfile;
@@ -194,18 +194,10 @@ public partial class IllustratorViewerPageViewModel : UiObservableObject
         ShowQrCodeCommandExecuteRequested(showQrCodeTeachingTip, qrCodeSource);
     }
 
-    private static void ShowQrCodeCommandExecuteRequested(TeachingTip teachingTip, SoftwareBitmapSource source)
+    private static void ShowQrCodeCommandExecuteRequested(TeachingTip teachingTip, ImageSource source)
     {
         teachingTip.HeroContent.To<Image>().Source = source;
         teachingTip.IsOpen = true;
-        teachingTip.Closed += Closed;
-        return;
-
-        void Closed(TeachingTip s, TeachingTipClosedEventArgs ea)
-        {
-            source.Dispose();
-            s.Closed -= Closed;
-        }
     }
 
     #endregion
