@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
@@ -12,7 +13,7 @@ namespace Pixeval.AppManagement;
 
 public class Versioning
 {
-    public Version CurrentVersion { get; } = Version.Parse("4.1.1"/*TODO:GitVersionInformation.AssemblySemVer*/);
+    public Version CurrentVersion { get; } = Version.Parse(Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion ?? "0.0.0.0");
 
     public Version? NewestVersion => NewestAppReleaseModel?.Version;
 
