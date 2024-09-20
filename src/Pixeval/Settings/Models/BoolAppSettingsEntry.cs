@@ -6,7 +6,7 @@ using Pixeval.Controls.Settings;
 
 namespace Pixeval.Settings.Models;
 
-public partial class BoolAppSettingsEntry(
+public class BoolAppSettingsEntry(
     AppSettings appSettings,
     Expression<Func<AppSettings, bool>> property)
     : SingleValueSettingsEntry<AppSettings, bool>(appSettings, property)

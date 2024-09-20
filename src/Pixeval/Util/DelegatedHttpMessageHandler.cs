@@ -24,7 +24,7 @@ using System.Threading.Tasks;
 
 namespace Pixeval.Util;
 
-public partial class DelegatedHttpMessageHandler(HttpMessageInvoker @delegate) : HttpMessageHandler
+public class DelegatedHttpMessageHandler(HttpMessageInvoker @delegate) : HttpMessageHandler
 {
     protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {

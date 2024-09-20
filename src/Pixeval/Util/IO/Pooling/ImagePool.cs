@@ -49,8 +49,7 @@ public class ImagePool<TKey>(int maxSize) : IDisposable
             result = null!;
             return false;
         }
-
-        Debug.WriteLine("Cache hit!");
+         
         var entry = _pool.FirstOrDefault(x => x.Key.Key?.Equals(key) ?? false);
         _cachedItems.Remove(entry.Key.Key);
         _cachedItems.AddFirst(entry.Key.Key);

@@ -25,7 +25,7 @@ using WinUI3Utilities;
 
 namespace Pixeval.Pages;
 
-public partial class SuggestionModelDataTemplateSelector : DataTemplateSelector
+public class SuggestionModelDataTemplateSelector : DataTemplateSelector
 {
     public string? IllustrationHeader { get; set; }
 

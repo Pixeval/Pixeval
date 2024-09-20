@@ -25,7 +25,7 @@ using IllustratorViewDataProvider = Pixeval.Controls.SimpleViewDataProvider<
 
 namespace Pixeval.Controls;
 
-public sealed partial class IllustratorViewViewModel : EntryViewViewModel<User, IllustratorItemViewModel>
+public sealed class IllustratorViewViewModel : EntryViewViewModel<User, IllustratorItemViewModel>
 {
     public override IllustratorViewDataProvider DataProvider { get; } = new();
 

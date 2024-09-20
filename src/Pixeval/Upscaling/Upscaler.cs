@@ -18,18 +18,105 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using System;
+using System.Diagnostics;
+using System.IO;
+using System.Threading.Channels;
+using System.Threading.Tasks;
+using Windows.Storage;
 using Pixeval.AppManagement;
+using Pixeval.Utilities.Threading;
 
 namespace Pixeval.Upscaling;
 
-public class Upscaler(UpscaleTask task)
+public class Upscaler(UpscaleTask task) : IDisposable, IAsyncDisposable
 {
+    public const string ProcessCompletedMark = "Completed";
+
     private static string ExecutablePath => AppKnownFolders.Installation.Resolve(@"Assets\Binary\RealESRGAN\realesrgan-ncnn-vulkan.exe");
 
-    private static string ModelPath => AppKnownFolders.Installation.Resolve(@"Assets\Binary\RealESRGAN\models");
+    private Stream? _upscaleStream;
 
-    public void Upscale()
+    private readonly ReenterableAwaiter<bool> _runningSignal = new(false, true);
+
+    private bool _isDisposed;
+
+    public async Task<Stream> UpscaleAsync(ChannelWriter<string> messageChannel)
     {
+        if (_isDisposed)
+        {
+            throw new InvalidOperationException("This upscaler is already disposed");
+        }
 
+        await _runningSignal.ResetAsync();
+
+        var id = Guid.NewGuid().ToString();
+
+        var tempFilePath = await AppKnownFolders.Temporary.CreateFileAsync(id, CreationCollisionOption.GenerateUniqueName);
+        task.ImageStream.Seek(0, SeekOrigin.Begin);
+
+        // scoped-using is obligatory here, otherwise the file will be locked and the process will not be able to access it
+        await using (var tempStream = await tempFilePath.OpenStreamForWriteAsync())
+        {
+            await task.ImageStream.CopyToAsync(tempStream);
+        }
+        
+        task.ImageStream.Seek(0, SeekOrigin.Begin);
+
+        var modelParam = task.Model switch
+        {
+            RealESRGANModel.RealESRGANX4Plus => "realesrgan-x4plus",
+            RealESRGANModel.RealESRNETX4Plus => "realesrnet-x4plus",
+            RealESRGANModel.RealESRGANX4PlusAnime => "realesrgan-x4plus-anime",
+            _ => throw new ArgumentOutOfRangeException()
+        };
+
+        var outputType = task.OutputType switch
+        {
+            UpscalerOutputType.Png => "png",
+            UpscalerOutputType.Jpeg => "jpg",
+            UpscalerOutputType.WebP => "webp",
+            _ => throw new ArgumentOutOfRangeException()
+        };
+
+        var outputFilePath = AppKnownFolders.Temporary.Resolve($"{id}_out.{outputType}");
+
+        var process = new Process();
+        process.StartInfo.FileName = ExecutablePath;
+        process.StartInfo.Arguments = $"-i {tempFilePath.Path} -o {outputFilePath} -n {modelParam} -s {task.ScaleRatio}";
+        process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+        process.StartInfo.RedirectStandardError = true;
+        process.StartInfo.RedirectStandardOutput = true;
+
+        process.Start();
+
+        _ = Task.Run(async () =>
+        {
+            while (!process.StandardError.EndOfStream)
+            {
+                await messageChannel.WriteAsync(await process.StandardError.ReadLineAsync() ?? string.Empty);
+            }
+        });
+
+        await process.WaitForExitAsync();
+        await messageChannel.WriteAsync(ProcessCompletedMark);
+
+        _upscaleStream = await (await AppKnownFolders.Temporary.GetFileAsync($"{id}_out.{outputType}")).OpenStreamForReadAsync();
+        await _runningSignal.SetResultAsync(true);
+        return _upscaleStream;
+    }
+
+    public void Dispose()
+    { 
+        _ = DisposeAsync();
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        _isDisposed = true;
+        await _runningSignal;
+
+        if (_upscaleStream != null) 
+            await _upscaleStream.DisposeAsync();
     }
 }

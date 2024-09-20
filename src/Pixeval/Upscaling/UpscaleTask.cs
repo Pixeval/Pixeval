@@ -19,14 +19,38 @@
 #endregion
 
 using System.IO;
+using Pixeval.Attributes;
 
 namespace Pixeval.Upscaling;
 
+[LocalizationMetadata(typeof(AiUpscalerResources))]
 public enum RealESRGANModel
 {
+    [LocalizedResource(typeof(AiUpscalerResources), nameof(AiUpscalerResources.RealESRGANX4Plus))]
     RealESRGANX4Plus,
+
+    [LocalizedResource(typeof(AiUpscalerResources), nameof(AiUpscalerResources.RealESRNETX4Plus))]
     RealESRNETX4Plus,
+
+    [LocalizedResource(typeof(AiUpscalerResources), nameof(AiUpscalerResources.RealESRGANX4PlusAnime))]
     RealESRGANX4PlusAnime
 }
 
-public record UpscaleTask(Stream ImageStream, RealESRGANModel Model);
+[LocalizationMetadata(typeof(AiUpscalerResources))]
+public enum UpscalerOutputType
+{
+    [LocalizedResource(typeof(AiUpscalerResources), nameof(AiUpscalerResources.PngOutputType))]
+    Png,
+
+    [LocalizedResource(typeof(AiUpscalerResources), nameof(AiUpscalerResources.JpegOutputType))]
+    Jpeg,
+
+    [LocalizedResource(typeof(AiUpscalerResources), nameof(AiUpscalerResources.WebPOutputType))]
+    WebP
+}
+
+public record UpscaleTask(
+    Stream ImageStream, 
+    RealESRGANModel Model,
+    int ScaleRatio,
+    UpscalerOutputType OutputType);

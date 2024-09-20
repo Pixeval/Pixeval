@@ -1,8 +1,8 @@
-#region Copyright
+#region Copyright (c) Pixeval/Pixeval.Utilities
 // GPL v3 License
 // 
-// Pixeval/Pixeval
-// Copyright (c) 2024 Pixeval/SpotlightViewViewModel.cs
+// Pixeval/Pixeval.Utilities
+// Copyright (c) 2024 Pixeval.Utilities/Channels.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,16 +18,20 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using Pixeval.CoreApi.Model;
-using SpotlightViewDataProvider = Pixeval.Controls.SimpleViewDataProvider<
-    Pixeval.CoreApi.Model.Spotlight,
-    Pixeval.Controls.SpotlightItemViewModel>;
+using System.Threading.Channels;
+using System;
 
-namespace Pixeval.Controls;
+namespace Pixeval.Utilities;
 
-public sealed class SpotlightViewViewModel : EntryViewViewModel<Spotlight, SpotlightItemViewModel>
+public static class Channels
 {
-    public override SpotlightViewDataProvider DataProvider { get; } = new();
-
-    public SpotlightViewViewModel() => DataProvider.View.CollectionChanged += (_, _) => OnPropertyChanged(nameof(HasNoItem));
+    public static async void OnReceive<T>(this ChannelReader<T> reader, Func<ChannelReader<T>, bool> condition, Action<T> action)
+    {
+        await foreach (var item in reader.ReadAllAsync())
+        {
+            if (!condition(reader))
+                break;
+            action(item);
+        }
+    }
 }

@@ -22,7 +22,6 @@
 #define DISABLE_XAML_GENERATED_BINDING_DEBUG_OUTPUT
 
 using System;
-using System.IO;
 using System.Linq;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -35,7 +34,6 @@ using Pixeval.Controls.Windowing;
 using Pixeval.Pages.Login;
 using WinUI3Utilities;
 using System.Threading.Tasks;
-using Windows.Storage;
 using FluentIcons.WinUI;
 using Microsoft.Extensions.DependencyInjection;
 using Pixeval.Logging;

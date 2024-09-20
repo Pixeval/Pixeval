@@ -42,7 +42,7 @@ using Microsoft.UI.Xaml.Media;
 
 namespace Pixeval.Controls;
 
-public partial class DocumentViewerViewModel(NovelContent novelContent) : ObservableObject, INovelParserViewModel<ImageSource>, INovelParserViewModel<Stream>
+public class DocumentViewerViewModel(NovelContent novelContent) : ObservableObject, INovelParserViewModel<ImageSource>, INovelParserViewModel<Stream>
 {
     /// <summary>
     /// 需要从外部Invoke

@@ -23,7 +23,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Pixeval.Util.ComponentModels;
 
-public partial class DetailedObservableObject : ObservableObject, INotifyDetailedPropertyChanging, INotifyDetailedPropertyChanged
+public class DetailedObservableObject : ObservableObject, INotifyDetailedPropertyChanging, INotifyDetailedPropertyChanged
 {
     public event DetailedPropertyChangedEventHandler? DetailedPropertyChanged;
 
