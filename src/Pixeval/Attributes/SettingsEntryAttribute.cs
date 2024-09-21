@@ -30,7 +30,7 @@ using WinUI3Utilities;
 namespace Pixeval.Attributes;
 
 [AttributeUsage(AttributeTargets.Property)]
-public partial class SettingsEntryAttribute(Symbol symbol, string resourceKeyHeader, string? resourceKeyDescription) : Attribute
+public class SettingsEntryAttribute(Symbol symbol, string resourceKeyHeader, string? resourceKeyDescription) : Attribute
 {
     public SettingsEntryAttribute(int symbol, string resourceKeyHeader, string? resourceKeyDescription)
         : this((Symbol)symbol, resourceKeyHeader, resourceKeyDescription)

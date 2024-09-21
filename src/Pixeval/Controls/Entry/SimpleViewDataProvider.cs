@@ -28,7 +28,7 @@ using Pixeval.CoreApi.Model;
 
 namespace Pixeval.Controls;
 
-public partial class SimpleViewDataProvider<T, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] TViewModel> : ObservableObject, IDataProvider<T, TViewModel>
+public class SimpleViewDataProvider<T, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] TViewModel> : ObservableObject, IDataProvider<T, TViewModel>
     where T : class, IIdEntry
     where TViewModel : class, IFactory<T, TViewModel>, IDisposable
 {

@@ -8,7 +8,7 @@ using WinUI3Utilities;
 
 namespace Pixeval.Pages.Tags;
 
-public partial class TagsPageViewModel : ObservableObject, IDisposable
+public class TagsPageViewModel : ObservableObject, IDisposable
 {
     public string WorkingDirectory
     {

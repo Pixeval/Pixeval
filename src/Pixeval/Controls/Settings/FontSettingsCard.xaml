@@ -6,7 +6,6 @@
     xmlns:controls1="using:Pixeval.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:fluent="using:FluentIcons.WinUI"
-    xmlns:local="using:Pixeval.Settings"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="using:Pixeval.Settings.Models"
     Header="{x:Bind Entry.Header}"

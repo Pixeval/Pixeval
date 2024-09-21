@@ -40,8 +40,8 @@ public partial class FeedItemSparseViewModel(Feed entry) : AbstractFeedItemViewM
 
     public override string PostUsername => entry.PostUsername ?? string.Empty;
 
-    // If the post date is within one day, show the precise moment, otherwise shows the date
-    // we make an optimistic assumption that user rarely view feeds over one year ago, so
+    // If the post date is within one day, show the precise moment, otherwise show only the date
+    // we make an optimistic assumption that the users will rarely view those feeds over one year ago, so
     // we don't show the year here.
     public override string PostDateFormatted =>
         (DateTime.Now - entry.PostDate) < TimeSpan.FromDays(1)
@@ -50,7 +50,7 @@ public partial class FeedItemSparseViewModel(Feed entry) : AbstractFeedItemViewM
 
     private ImageSource? _userAvatar;
 
-    // It's impossible to use [ObservableProperty] here, for that generated properties lack the `override` modifier
+    // It's impossible to use [ObservableProperty] here, for that the generated properties lack the `override` modifier
     // same for the ItemBackground property
     public override ImageSource UserAvatar
     {

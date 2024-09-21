@@ -23,6 +23,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using System.Threading.Channels;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Storage;
@@ -41,6 +42,7 @@ using Pixeval.Utilities;
 using Pixeval.AppManagement;
 using Pixeval.CoreApi.Net.Response;
 using Pixeval.Download;
+using Pixeval.Upscaling;
 using Pixeval.Util.ComponentModels;
 
 namespace Pixeval.Pages.IllustrationViewer;
@@ -48,6 +50,8 @@ namespace Pixeval.Pages.IllustrationViewer;
 public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
 {
     private bool _disposed;
+
+    private bool _upscaled;
 
     [ObservableProperty]
     private bool _isMirrored;
@@ -74,8 +78,15 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
     private float _scale = 1;
 
     [ObservableProperty]
+    private bool _upscaling;
+
+    [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsFit))]
     private ZoomableImageMode _showMode;
+
+    private Upscaler? _upscaler;
+
+    public Channel<string> UpscalerMessageChannel { get; } = Channel.CreateUnbounded<string>();
 
     /// <summary>
     /// 由于多窗口，可能在加载图片后改变设置，所以此处缓存原图设置
@@ -174,11 +185,9 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
 
     private void AdvancePhase(LoadingPhase phase, double progress = 0)
     {
-        if (phase is LoadingPhase.DownloadingImage)
-            LoadingText = LoadingPhaseExtension.GetResource(LoadingPhase.DownloadingImage)
-                ?.Format((int)(LoadingProgress = progress));
-        else
-            LoadingText = LoadingPhaseExtension.GetResource(phase);
+        LoadingText = phase is LoadingPhase.DownloadingImage
+            ? LoadingPhaseExtension.GetResource(LoadingPhase.DownloadingImage).Format((int) (LoadingProgress = progress)) 
+            : LoadingPhaseExtension.GetResource(phase);
     }
 
     private async Task LoadImage()
@@ -334,6 +343,18 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
         HWnd.ShowShareUi();
     }
 
+    private async void UpscaleCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
+    {
+        _upscaled = true;
+        UpscaleCommand.NotifyCanExecuteChanged();
+        _upscaler ??= new Upscaler(new(OriginalImageSources!.Single(), 
+            App.AppViewModel.AppSettings.UpscalerModel,
+            App.AppViewModel.AppSettings.UpscalerScaleRatio,
+            App.AppViewModel.AppSettings.UpscalerOutputType));
+        var newStream = await _upscaler.UpscaleAsync(UpscalerMessageChannel);
+        OriginalImageSources = [newStream];
+    }
+
     private void InitializeCommands()
     {
         PlayGifCommand.CanExecuteRequested += (_, e) => e.CanExecute = IllustrationViewModel.IsUgoira && LoadSuccessfully;
@@ -366,6 +387,9 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
 
         SetAsBackgroundCommand.CanExecuteRequested += IsNotUgoiraAndLoadingCompletedCanExecuteRequested;
         SetAsBackgroundCommand.ExecuteRequested += SetAsBackgroundCommandOnExecuteRequested;
+
+        UpscaleCommand.CanExecuteRequested += IsUpscaleCommandCanExecutedRequested;
+        UpscaleCommand.ExecuteRequested += UpscaleCommandOnExecuteRequested;
     }
 
     private void UpdateCommandCanExecute()
@@ -378,7 +402,11 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
         RotateCounterclockwiseCommand.NotifyCanExecuteChanged();
         MirrorCommand.NotifyCanExecuteChanged();
         ShareCommand.NotifyCanExecuteChanged();
+        UpscaleCommand.NotifyCanExecuteChanged();
     }
+
+    private void IsUpscaleCommandCanExecutedRequested(XamlUICommand _, CanExecuteRequestedEventArgs args) => 
+        args.CanExecute = LoadSuccessfully && !IllustrationViewModel.IsUgoira && !_upscaled;
 
     private void LoadingCompletedCanExecuteRequested(XamlUICommand _, CanExecuteRequestedEventArgs args) => args.CanExecute = LoadSuccessfully;
 
@@ -413,6 +441,8 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
 
     public XamlUICommand SetAsBackgroundCommand { get; } = new() { Label = EntryViewerPageResources.Background };
 
+    public XamlUICommand UpscaleCommand { get; } = EntryItemResources.AIUpscale.GetCommand(Symbol.EyeTracking);
+
     private void DisposeInternal()
     {
         ImageLoadingCancellationTokenSource.Cancel();
@@ -425,10 +455,15 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
         OriginalImageSources = null;
 
         if (LoadSuccessfully && temp is not null)
+        {
             foreach (var originalImageSource in temp)
             {
-                originalImageSource?.Dispose();
+                originalImageSource.Dispose();
             }
+        }
+        
+        _upscaler?.DisposeAsync();
+        UpscalerMessageChannel.Writer.Complete();
 
         LoadSuccessfully = false;
     }
