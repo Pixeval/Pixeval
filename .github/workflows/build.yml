@@ -1,18 +1,16 @@
 name: Pixeval Build Pipeline
 
 on:
-  # push:
-  #   branches-ignore:
-  #   - 'dependabot**'
-  #   tags-ignore:
-  #   - '**'
+  push:
+    branches-ignore:
+    - 'dependabot**'
+    tags-ignore:
+    - '**'
   pull_request:
     paths-ignore:
     - '**.md'
     - '.builds/**'
     - '.specs/**'
-  schedule:
-    - cron: '0 0 * * *'
   
 defaults:
   run:
