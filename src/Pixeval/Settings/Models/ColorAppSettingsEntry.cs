@@ -27,7 +27,7 @@ using Pixeval.Controls.Settings;
 
 namespace Pixeval.Settings.Models;
 
-public partial class ColorAppSettingsEntry(
+public class ColorAppSettingsEntry(
     AppSettings appSettings,
     Expression<Func<AppSettings, uint>> property)
     : SingleValueSettingsEntry<AppSettings, uint>(appSettings, property)

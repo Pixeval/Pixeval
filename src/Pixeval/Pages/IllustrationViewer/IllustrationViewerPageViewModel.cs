@@ -46,6 +46,18 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
     [ObservableProperty]
     private string _additionalText = string.Empty;
 
+    [ObservableProperty]
+    private bool _additionalTextBlockVisible = true;
+
+    [ObservableProperty]
+    private bool _upscalerProgressBarVisible;
+
+    [ObservableProperty]
+    private int _upscalerProgress;
+
+    [ObservableProperty]
+    private string _upscalerProgressText;
+
     /// <summary>
     /// 
     /// </summary>

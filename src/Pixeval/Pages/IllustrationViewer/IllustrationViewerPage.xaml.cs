@@ -20,6 +20,7 @@
 
 using System;
 using System.Numerics;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
@@ -37,6 +38,7 @@ using WinRT;
 using WinUI3Utilities;
 using Windows.System;
 using Pixeval.Controls.Windowing;
+using Pixeval.Upscaling;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
@@ -77,6 +79,10 @@ public sealed partial class IllustrationViewerPage
         // 此处this.XamlRoot为null
         _viewModel = HWnd.GetIllustrationViewerPageViewModelFromHandle(parameter);
 
+        _viewModel.CurrentImage.UpscalerMessageChannel.Reader.OnReceive(
+            reader => reader == _viewModel.CurrentImage.UpscalerMessageChannel.Reader,
+            OnReceiveUpscalerMessage);
+
         _viewModel.DetailedPropertyChanged += (sender, args) =>
         {
             var vm = sender.To<IllustrationViewerPageViewModel>();
@@ -104,6 +110,10 @@ public sealed partial class IllustrationViewerPage
             }
 
             Navigate<ImageViewerPage>(IllustrationImageShowcaseFrame, vm.CurrentImage, info);
+
+            vm.CurrentImage.UpscalerMessageChannel.Reader.OnReceive(
+                reader => reader == vm.CurrentImage.UpscalerMessageChannel.Reader,
+                OnReceiveUpscalerMessage);
         };
 
         _viewModel.PropertyChanged += (sender, args) =>
@@ -122,6 +132,31 @@ public sealed partial class IllustrationViewerPage
 
         // 第一次_viewModel.CurrentIllustrationIndex变化时，还没有订阅事件，所以不会触发DetailedPropertyChanged，需要手动触发
         Navigate<ImageViewerPage>(IllustrationImageShowcaseFrame, _viewModel.CurrentImage);
+    }
+
+    [GeneratedRegex(@"\d+\.\d+%")]
+    private static partial Regex UpscalerMessagePercentageRegex();
+
+    private void OnReceiveUpscalerMessage(string message)
+    {
+        _viewModel.UpscalerProgressBarVisible = UpscalerMessagePercentageRegex().IsMatch(message);
+        _viewModel.AdditionalTextBlockVisible = !_viewModel.UpscalerProgressBarVisible;
+        if (message == Upscaler.ProcessCompletedMark)
+        {
+            _viewModel.UpscalerProgressText = string.Empty;
+            _viewModel.UpscalerProgress = 0;
+            _viewModel.AdditionalText = $"{EntryViewerPageResources.AiUpscaled}";
+            return;
+        }
+
+        if (UpscalerMessagePercentageRegex().IsMatch(message))
+        {
+            _viewModel.UpscalerProgressText = message;
+            _viewModel.UpscalerProgress = (int) double.Parse(message[..^1]);
+            return;
+        }
+
+        _viewModel.AdditionalText = message;
     }
 
     private void IllustrationViewerPage_OnLoaded(object sender, RoutedEventArgs e)
@@ -250,15 +285,21 @@ public sealed partial class IllustrationViewerPage
         teachingTip.Target = appBarButton.IsInOverflow ? null : appBarButton;
     }
 
+    private void UpscaleButton_OnTapped(object sender, TappedRoutedEventArgs e)
+    {
+        if (!App.AppViewModel.AppSettings.ShowUpscalerTeachingTip)
+            return;
+        UpscaleTeachingTip.IsOpen = true;
+        if (App.AppViewModel.AppSettings.ShowUpscalerTeachingTip)
+        {
+            App.AppViewModel.AppSettings.ShowUpscalerTeachingTip = false;
+        }
+    }
+
     public Visibility IsLogoVisible()
     {
         return WindowFactory.GetWindowForElement(this).HWnd != WindowFactory.RootWindow.HWnd
             ? Visibility.Visible
             : Visibility.Collapsed;
-    }
-
-    public Thickness GetAdditionalTextBlockMargin(double leftSectionWidth, double rightSectionWidth)
-    {
-        return new Thickness(leftSectionWidth, 0, rightSectionWidth, 0);
     }
 }

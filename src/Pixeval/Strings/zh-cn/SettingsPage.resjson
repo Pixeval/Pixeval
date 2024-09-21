@@ -203,5 +203,12 @@
   "IfIllustMacroTooltip": "如果是图片，该宏会被替换为其参数",
   "IfNovelMacroTooltip": "如果是小说，该宏会被替换为其参数",
   "IfGifMacroTooltip": "如果是动图，该宏会被替换为其参数",
-  "MangaIndexMacroTooltip": "如果是漫画，该宏会被替换为当前图片在多图中的索引（第几张）；必须与 @{if_manga=} 宏配合使用，必须在文件名上使用"
+  "MangaIndexMacroTooltip": "如果是漫画，该宏会被替换为当前图片在多图中的索引（第几张）；必须与 @{if_manga=} 宏配合使用，必须在文件名上使用",
+  "AiUpscalerSettingsGroup/Text": "AI超分辨率",
+  "UpscalerModelEntry/Header": " AI超分辨率模型",
+  "UpscalerModelEntry/Description": "选择AI超分辨率模型，详见此处",
+  "UpscalerScaleRatioEntry/Header": "AI超分辨率倍率",
+  "UpscalerScaleRatioEntry/Description": "默认为4，注意过大的倍率可能导致生成的图片体积过大影响性能",
+  "UpscalerOutputTypeEntry/Header": "AI超分辨率生成图片的格式",
+  "UpscalerOutputTypeEntry/Description": "默认为PNG"
 }

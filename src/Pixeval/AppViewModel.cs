@@ -35,7 +35,7 @@ using Windows.Storage;
 
 namespace Pixeval;
 
-public partial class AppViewModel(App app) : IDisposable
+public class AppViewModel(App app) : IDisposable
 {
     private bool _activatedByProtocol;
 
