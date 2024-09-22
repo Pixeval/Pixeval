@@ -22,7 +22,6 @@ using Microsoft.UI.Xaml.Controls;
 using Pixeval.CoreApi.Model;
 using Pixeval.Database;
 using Pixeval.Util.UI;
-using WinUI3Utilities.Controls;
 using Symbol = FluentIcons.Common.Symbol;
 
 namespace Pixeval.Pages;
@@ -45,11 +44,11 @@ public record SuggestionModel(string? Name, string? TranslatedName, SuggestionTy
 
     public FontIcon? FontIcon => SuggestionType switch
     {
-        SuggestionType.IllustId or SuggestionType.NovelId or SuggestionType.UserId => Symbol.Open.GetSymbolIcon(FontSizeType.Small),
-        SuggestionType.Tag or SuggestionType.IllustrationTag or SuggestionType.NovelTag => Symbol.Tag.GetSymbolIcon(FontSizeType.Small),
-        SuggestionType.UserSearch => Symbol.Person.GetSymbolIcon(FontSizeType.Small),
-        SuggestionType.Settings => SettingsSymbol.GetSymbolIcon(FontSizeType.Small),
-        SuggestionType.History => Symbol.History.GetSymbolIcon(FontSizeType.Small),
+        SuggestionType.IllustId or SuggestionType.NovelId or SuggestionType.UserId => Symbol.Open.GetSymbolIcon(true),
+        SuggestionType.Tag or SuggestionType.IllustrationTag or SuggestionType.NovelTag => Symbol.Tag.GetSymbolIcon(true),
+        SuggestionType.UserSearch => Symbol.Person.GetSymbolIcon(true),
+        SuggestionType.Settings => SettingsSymbol.GetSymbolIcon(true),
+        SuggestionType.History => Symbol.History.GetSymbolIcon(true),
         _ => null
     };
 

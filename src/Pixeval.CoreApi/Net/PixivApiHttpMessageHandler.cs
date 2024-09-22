@@ -47,7 +47,7 @@ internal class PixivApiHttpMessageHandler(MakoClient makoClient) : MakoClientSup
                 headers.Authorization = new AuthenticationHeaderValue("Bearer", MakoClient.Session.AccessToken);
                 break;
             case MakoHttpOptions.WebApiHost:
-                headers.TryAddWithoutValidation("Cookie", makoClient.Configuration.Cookie);
+                _ = headers.TryAddWithoutValidation("Cookie", MakoClient.Configuration.Cookie);
                 break;
         }
 
