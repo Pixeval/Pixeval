@@ -6,7 +6,8 @@
 		<WindowsSdkPackageVersion>10.0.22621.38</WindowsSdkPackageVersion>
 		<RootNamespace>Pixeval</RootNamespace>
         <Platforms>x86;x64;ARM64</Platforms>
-        <RuntimeIdentifiers>win-x86;win-x64;win-arm64</RuntimeIdentifiers>
+	    <RuntimeIdentifiers Condition="$([MSBuild]::GetTargetFrameworkVersion('$(TargetFramework)')) &gt;= 8">win-x86;win-x64;win-arm64</RuntimeIdentifiers>
+	    <RuntimeIdentifiers Condition="$([MSBuild]::GetTargetFrameworkVersion('$(TargetFramework)')) &lt; 8">win10-x86;win10-x64;win10-arm64</RuntimeIdentifiers>
         <ApplicationManifest>app.manifest</ApplicationManifest>
         <Nullable>enable</Nullable>
         <UseWinUI>true</UseWinUI>
@@ -19,6 +20,9 @@
         <PublishAot>false</PublishAot>
         <WindowsSdkPackageVersion>10.0.22621.38</WindowsSdkPackageVersion>
         <PublishProfile Condition="'$(PublishAot)' == 'true'">win-$(Platform).pubxml</PublishProfile>
+	    <MinVerSkip Condition="'$(Configuration)' == 'Debug'">true</MinVerSkip>
+	    <WindowsPackageType>MSIX</WindowsPackageType>
+        <NoWarn>NU1904;$(NoWarn)</NoWarn>
     </PropertyGroup>
 
     <ItemGroup>
@@ -26,22 +30,22 @@
         <PackageReference Include="CommunityToolkit.Labs.WinUI.Shimmer" Version="0.1.240517-build.1678" />
         <PackageReference Include="CommunityToolkit.Labs.WinUI.TitleBar" Version="0.0.1-build.1678" />
         <PackageReference Include="CommunityToolkit.Labs.WinUI.TokenView" Version="0.1.240517-build.1678" />
-        <PackageReference Include="CommunityToolkit.WinUI.Behaviors" Version="8.1.240821" />
-        <PackageReference Include="CommunityToolkit.WinUI.Collections" Version="8.1.240821" />
-        <PackageReference Include="CommunityToolkit.WinUI.Animations" Version="8.1.240821" />
-        <PackageReference Include="CommunityToolkit.WinUI.Controls.ColorPicker" Version="8.1.240821" />
-        <PackageReference Include="CommunityToolkit.WinUI.Controls.Primitives" Version="8.1.240821" />
-        <PackageReference Include="CommunityToolkit.WinUI.Controls.Segmented" Version="8.1.240821" />
-        <PackageReference Include="CommunityToolkit.WinUI.Controls.SettingsControls" Version="8.1.240821" />
-        <PackageReference Include="CommunityToolkit.WinUI.Controls.TokenizingTextBox" Version="8.1.240821" />
-        <PackageReference Include="CommunityToolkit.WinUI.Converters" Version="8.1.240821" />
-        <PackageReference Include="CommunityToolkit.WinUI.Media" Version="8.1.240821" />
-        <PackageReference Include="CommunityToolkit.Diagnostics" Version="8.3.1" />
-        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
+        <PackageReference Include="CommunityToolkit.WinUI.Behaviors" Version="8.1.240916" />
+        <PackageReference Include="CommunityToolkit.WinUI.Collections" Version="8.1.240916" />
+        <PackageReference Include="CommunityToolkit.WinUI.Animations" Version="8.1.240916" />
+        <PackageReference Include="CommunityToolkit.WinUI.Controls.ColorPicker" Version="8.1.240916" />
+        <PackageReference Include="CommunityToolkit.WinUI.Controls.Primitives" Version="8.1.240916" />
+        <PackageReference Include="CommunityToolkit.WinUI.Controls.Segmented" Version="8.1.240916" />
+        <PackageReference Include="CommunityToolkit.WinUI.Controls.SettingsControls" Version="8.1.240916" />
+        <PackageReference Include="CommunityToolkit.WinUI.Controls.TokenizingTextBox" Version="8.1.240916" />
+        <PackageReference Include="CommunityToolkit.WinUI.Converters" Version="8.1.240916" />
+        <PackageReference Include="CommunityToolkit.WinUI.Media" Version="8.1.240916" />
+        <PackageReference Include="CommunityToolkit.Diagnostics" Version="8.3.2" />
+        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.3.2" />
         <PackageReference Include="FluentIcons.WinUI" Version="1.1.258" />
-        <PackageReference Include="GitVersion.MsBuild" Version="6.0.2">
-            <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        <PackageReference Include="GitInfo" Version="3.3.5">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="LiteDB" Version="5.0.21" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
@@ -56,10 +60,11 @@
         <PackageReference Include="Pixeval.QRCoder" Version="1.4.5" />
         <PackageReference Include="QuestPDF" Version="2024.7.3" />
         <PackageReference Include="ReverseMarkdown" Version="4.6.0" />
+        <PackageReference Include="Semver" Version="2.3.0" />
         <PackageReference Include="SixLabors.ImageSharp" Version="3.1.5" />
         <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="2.1.4" />
         <PackageReference Include="System.Linq.Async" Version="6.0.1" />
-        <PackageReference Include="WinUI3Utilities" Version="1.1.7.7" />
+        <PackageReference Include="WinUI3Utilities" Version="1.1.7.9" />
 
         <ProjectReference Include="..\Pixeval.Controls\Pixeval.Controls.csproj" />
         <ProjectReference Include="..\Pixeval.CoreApi\Pixeval.CoreApi.csproj" />
@@ -102,9 +107,7 @@
 
     <!--PackageManifest-->
     <PropertyGroup>
-        <UpdateVersionProperties>true</UpdateVersionProperties>
         <IncludePackageReferencesDuringMarkupCompilation>true</IncludePackageReferencesDuringMarkupCompilation>
-        <GitVersionTargetsBefore>$(GitVersionTargetsBefore);_ValidateWindowsPackageType</GitVersionTargetsBefore>
         <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
         <AppxPackageSigningEnabled>False</AppxPackageSigningEnabled>
         <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
@@ -117,16 +120,6 @@
         <GenerateTemporaryStoreCertificate>True</GenerateTemporaryStoreCertificate>
         <AppxBundlePlatforms>x64</AppxBundlePlatforms>
     </PropertyGroup>
-
-    <Target Name="PrepareForGenerateGitVersionInformation" BeforeTargets="GenerateGitVersionInformation">
-        <MakeDir Directories="$(OutDir);$(IntermediateOutputPath);@(DocFileItem->'%(RelativeDir)');@(CreateDirectory)" ContinueOnError="True" />
-        <ItemGroup Condition="'@(AppxManifest)'==''">
-            <AppxManifest Include="Package.appxmanifest"></AppxManifest>
-        </ItemGroup>
-        <PropertyGroup>
-            <WindowsPackageType>MSIX</WindowsPackageType>
-        </PropertyGroup>
-    </Target>
 
     <ItemGroup>
         <PRIResource Include="Assets\Svg.resjson" />
