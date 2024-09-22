@@ -22,7 +22,6 @@ using Microsoft.UI.Xaml.Controls;
 using Pixeval.CoreApi.Model;
 using Pixeval.Database;
 using Pixeval.Util.UI;
-using WinUI3Utilities.Controls;
 using Symbol = FluentIcons.Common.Symbol;
 
 namespace Pixeval.Pages;

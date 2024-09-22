@@ -8,6 +8,6 @@
         <IsTrimmable>true</IsTrimmable>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="CommunityToolkit.HighPerformance" Version="8.3.1" />
+        <PackageReference Include="CommunityToolkit.HighPerformance" Version="8.3.2" />
     </ItemGroup>
 </Project>
