@@ -1,11 +1,11 @@
 name: Build
 
 on:
-  push:
-    branches-ignore:
-      - "dependabot**"
-    tags-ignore:
-      - "**"
+  # push:
+  #   branches-ignore:
+  #     - "dependabot**"
+  #   tags-ignore:
+  #     - "**"
   pull_request:
     paths-ignore:
       - "**.md"
