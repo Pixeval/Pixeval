@@ -134,5 +134,9 @@ public class ReenterableAwaiter<TResult>(bool initialSignal, TResult resultIniti
 
     public ReenterableAwaiter<TResult> GetAwaiter() => this;
 
-    public void Dispose() => _semaphoreSlim.Dispose();
+    public void Dispose()
+    {
+        GC.SuppressFinalize(this);
+        _semaphoreSlim.Dispose();
+    }
 }

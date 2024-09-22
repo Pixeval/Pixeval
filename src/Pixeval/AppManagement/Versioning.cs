@@ -3,35 +3,37 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using CommunityToolkit.HighPerformance;
+using Semver;
 
 namespace Pixeval.AppManagement;
 
 public class Versioning
 {
-    public Version CurrentVersion { get; } = Version.Parse("4.1.1"/*TODO:GitVersionInformation.AssemblySemVer*/);
+    public SemVersion CurrentVersion { get; } = SemVersion.Parse(ThisAssembly.Git.Tag, SemVersionStyles.Strict);
 
-    public Version? NewestVersion => NewestAppReleaseModel?.Version;
+    public SemVersion? NewestVersion => NewestAppReleaseModel?.Version;
 
     public AppReleaseModel? NewestAppReleaseModel => AppReleaseModels?[0];
 
     public AppReleaseModel? CurrentAppReleaseModel => AppReleaseModels?.FirstOrDefault(t => t.Version == CurrentVersion);
 
-    public UpdateState CompareUpdateState(Version currentVersion, Version? newVersion)
+    public UpdateState CompareUpdateState(SemVersion currentVersion, SemVersion? newVersion)
     {
         if (newVersion is null)
             return UpdateState.Unknown;
 
-        return currentVersion.CompareTo(newVersion) switch
+        return currentVersion.ComparePrecedenceTo(newVersion) switch
         {
             > 0 => UpdateState.Insider,
             0 => UpdateState.UpToDate,
             _ => newVersion.Major > currentVersion.Major ? UpdateState.MajorUpdate :
                 newVersion.Minor > currentVersion.Minor ? UpdateState.MinorUpdate :
-                newVersion.Build > currentVersion.Build ? UpdateState.BuildUpdate :
+                newVersion.Patch > currentVersion.Patch ? UpdateState.BuildUpdate :
                 UpdateState.SpecifierUpdate
         };
     }
@@ -57,7 +59,7 @@ public class Versioning
                     var tag = release.TagName;
                     for (var j = tag.Count('.'); j < 3; ++j)
                         tag += ".0";
-                    if (Version.TryParse(tag, out var appVersion))
+                    if (SemVersion.TryParse(tag, SemVersionStyles.Strict, out var appVersion))
                     {
                         App.AppViewModel.AppSettings.LastCheckedUpdate = DateTimeOffset.Now;
                         var str = release.Assets.FirstOrDefault(t =>
@@ -88,7 +90,7 @@ public class Versioning
 }
 
 public record AppReleaseModel(
-    Version Version,
+    SemVersion Version,
     string ReleaseNote,
     Uri? ReleaseUri) : IComparable<AppReleaseModel>
 {
@@ -98,7 +100,7 @@ public record AppReleaseModel(
             return 0;
         if (other is null)
             return 1;
-        return Version.CompareTo(other.Version);
+        return Version.ComparePrecedenceTo(other.Version);
     }
 }
 
