@@ -48,7 +48,6 @@ using Color = Windows.UI.Color;
 using Image = SixLabors.ImageSharp.Image;
 using Point = Windows.Foundation.Point;
 using Pixeval.Controls.Windowing;
-using WinUI3Utilities.Controls;
 using Size = Windows.Foundation.Size;
 using Symbol = FluentIcons.Common.Symbol;
 using SymbolIcon = FluentIcons.WinUI.SymbolIcon;
@@ -200,20 +199,20 @@ public static partial class UiHelper
         _ = frame.Navigate(tag.NavigateTo, tag.Parameter, transitionInfo);
     }
 
-    public static SymbolIcon GetSymbolIcon(this Symbol symbol, FontSizeType fontSize = FontSizeType.None)
+    public static SymbolIcon GetSymbolIcon(this Symbol symbol, bool useSmallFontSize = false)
     {
-        var icon = new SymbolIcon()
+        var icon = new SymbolIcon
         {
             Symbol = symbol
         };
 
-        if (fontSize is not FontSizeType.None)
-            icon.FontSize = (int)fontSize;
+        if (useSmallFontSize)
+            icon.FontSize = 16; // 20 is default
 
         return icon;
     }
 
-    public static SymbolIconSource GetSymbolIconSource(this Symbol symbol, bool isFilled = false, Brush? foregroundBrush = null, FontSizeType fontSize = FontSizeType.None)
+    public static SymbolIconSource GetSymbolIconSource(this Symbol symbol, bool isFilled = false, Brush? foregroundBrush = null, bool useSmallFontSize = false)
     {
         var icon = new SymbolIconSource
         {
@@ -221,8 +220,8 @@ public static partial class UiHelper
             Symbol = symbol
         };
 
-        if (fontSize is not FontSizeType.None)
-            icon.FontSize = (int)fontSize;
+        if (useSmallFontSize)
+            icon.FontSize = 16; // 20 is default
 
         if (foregroundBrush is not null)
             icon.Foreground = foregroundBrush;
