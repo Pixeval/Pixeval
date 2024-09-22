@@ -14,7 +14,7 @@ namespace Pixeval.AppManagement;
 
 public class Versioning
 {
-    public SemVersion CurrentVersion { get; } = SemVersion.Parse(ThisAssembly.Git.Tag, strict: true);
+    public SemVersion CurrentVersion { get; } = SemVersion.Parse(ThisAssembly.Git.Tag, SemVersionStyles.Strict);
 
     public SemVersion? NewestVersion => NewestAppReleaseModel?.Version;
 
@@ -27,7 +27,7 @@ public class Versioning
         if (newVersion is null)
             return UpdateState.Unknown;
 
-        return currentVersion.CompareTo(newVersion) switch
+        return currentVersion.ComparePrecedenceTo(newVersion) switch
         {
             > 0 => UpdateState.Insider,
             0 => UpdateState.UpToDate,
@@ -100,7 +100,7 @@ public record AppReleaseModel(
             return 0;
         if (other is null)
             return 1;
-        return Version.CompareTo(other.Version);
+        return Version.ComparePrecedenceTo(other.Version);
     }
 }
 
