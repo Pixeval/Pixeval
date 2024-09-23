@@ -51,7 +51,7 @@ public class DocumentViewerViewModel(NovelContent novelContent) : ObservableObje
 
     public NovelContent NovelContent { get; } = novelContent;
 
-    public int TotalCount { get; } = novelContent.Images.Length + novelContent.Illusts.Length;
+    public int TotalImagesCount { get; } = novelContent.Images.Length + novelContent.Illusts.Length;
 
     public string? ImageExtension { get; set; }
 
