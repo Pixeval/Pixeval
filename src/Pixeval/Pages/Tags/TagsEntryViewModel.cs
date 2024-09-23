@@ -5,7 +5,6 @@ using System.IO;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.Controls;
 using Pixeval.CoreApi.Model;
 using Pixeval.Util;
@@ -75,7 +74,7 @@ public partial class TagsEntryViewModel : ObservableObject, IEntry
                 {
                     var image = await Image.LoadAsync(FullPath);
                     image.SetIdTags(Id, TagsSet);
-                    await using var stream = File.OpenWrite(FullPath);
+                    await using var stream = IoHelper.OpenAsyncWrite(FullPath);
                     await image.SaveAsync(stream, image.Metadata.DecodedImageFormat!);
                     return null;
                 }

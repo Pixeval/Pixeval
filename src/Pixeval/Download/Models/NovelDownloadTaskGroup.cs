@@ -142,7 +142,7 @@ public class NovelDownloadTaskGroup : DownloadTaskGroup
             var i = 0;
             foreach (var imageDownloadTask in TasksSet)
             {
-                DocumentViewModel.SetStream(i, File.OpenRead(imageDownloadTask.Destination));
+                DocumentViewModel.SetStream(i, IoHelper.OpenAsyncRead(imageDownloadTask.Destination));
                 ++i;
             }
             

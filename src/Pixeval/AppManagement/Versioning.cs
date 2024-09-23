@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
-using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
@@ -14,7 +13,13 @@ namespace Pixeval.AppManagement;
 
 public class Versioning
 {
-    public SemVersion CurrentVersion { get; } = SemVersion.Parse(ThisAssembly.Git.Tag, SemVersionStyles.Strict);
+    public SemVersion CurrentVersion { get; } = SemVersion.Parse(ThisAssembly.Git.
+#if DEBUG
+            Tag
+#else
+            BaseTag
+#endif
+        , SemVersionStyles.Strict);
 
     public SemVersion? NewestVersion => NewestAppReleaseModel?.Version;
 
@@ -57,7 +62,7 @@ public class Versioning
                 foreach (var release in gitHubReleases)
                 {
                     var tag = release.TagName;
-                    for (var j = tag.Count('.'); j < 3; ++j)
+                    for (var j = tag.Count('.'); j < 2; ++j)
                         tag += ".0";
                     if (SemVersion.TryParse(tag, SemVersionStyles.Strict, out var appVersion))
                     {

@@ -191,4 +191,38 @@ public static partial class IoHelper
             if (!Directory.EnumerateFileSystemEntries(path).Any())
                 Directory.Delete(path);
     }
+
+    public static FileStream OpenAsyncRead(string path, int bufferSize = 4096)
+    {
+        return new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read, bufferSize, true);
+    }
+
+    public static FileStream OpenAsyncWrite(string path, int bufferSize = 4096)
+    {
+        return new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None, bufferSize, true);
+    }
+
+    public static FileStream OpenAsyncRead(this FileInfo info, int bufferSize = 4096)
+    {
+        return info.Open(new FileStreamOptions
+        {
+            Mode = FileMode.Open,
+            Access = FileAccess.Read,
+            Share = FileShare.Read,
+            BufferSize = bufferSize,
+            Options = FileOptions.Asynchronous
+        });
+    }
+
+    public static FileStream OpenAsyncWrite(this FileInfo info, int bufferSize = 4096)
+    {
+        return info.Open(new FileStreamOptions
+        {
+            Mode = FileMode.OpenOrCreate,
+            Access = FileAccess.Write,
+            Share = FileShare.None,
+            BufferSize = bufferSize,
+            Options = FileOptions.Asynchronous
+        });
+    }
 }

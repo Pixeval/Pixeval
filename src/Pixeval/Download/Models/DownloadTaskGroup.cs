@@ -48,6 +48,9 @@ public abstract partial class DownloadTaskGroup(DownloadHistoryEntry entry) : Ob
 
     protected DownloadTaskGroup(IWorkEntry entry, string destination, DownloadItemType type) : this(new(destination, type, entry)) => SetNotCreateFromEntry();
 
+    /// <summary>
+    /// 将<see cref="IsCreateFromEntry"/>设置为<see langword="false"/>以便启动下载
+    /// </summary>
     protected void SetNotCreateFromEntry()
     {
         if (!IsCreateFromEntry)
@@ -88,6 +91,9 @@ public abstract partial class DownloadTaskGroup(DownloadHistoryEntry entry) : Ob
         AfterAllDownloadAsync += AfterAllDownloadAsyncOverride;
     }
 
+    /// <summary>
+    /// 指示是否从<see cref="IWorkEntry"/>创建。从数据库加载的、并且没有启动过的任务组为<see langword="true"/>
+    /// </summary>
     private bool IsCreateFromEntry { get; set; } = true;
 
     protected abstract Task AfterAllDownloadAsyncOverride(DownloadTaskGroup sender, CancellationToken token = default);
