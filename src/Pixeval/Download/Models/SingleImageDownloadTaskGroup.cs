@@ -60,8 +60,7 @@ public class SingleImageDownloadTaskGroup : ImageDownloadTask, IImageDownloadTas
     }
 
     public SingleImageDownloadTaskGroup(DownloadHistoryEntry entry) : base(new(entry.Entry.To<Illustration>().OriginalSingleUrl!),
-        new(IoHelper.ReplaceTokenExtensionFromUrl(entry.Destination,
-            entry.Entry.To<Illustration>().OriginalSingleUrl!)))
+        IoHelper.ReplaceTokenExtensionFromUrl(entry.Destination, entry.Entry.To<Illustration>().OriginalSingleUrl!))
     {
         DatabaseEntry = entry;
         CurrentState = entry.State;

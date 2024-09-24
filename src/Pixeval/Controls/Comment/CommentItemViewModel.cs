@@ -29,7 +29,6 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Documents;
 using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.AppManagement;
 using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Global.Enum;

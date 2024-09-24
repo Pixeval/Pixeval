@@ -21,7 +21,6 @@
 using System;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.AppManagement;
 using Pixeval.Pages.IllustratorViewer;
 using Pixeval.Util.IO;

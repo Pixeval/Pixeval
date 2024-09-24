@@ -124,7 +124,7 @@ public partial class ImageDownloadTask : ObservableObject, IDownloadTaskBase, IP
         await DownloadErrorAsync.Invoke(this);
     }
 
-    public async Task StartAsync(HttpClient httpClient, bool resumeBreakpoint = false)
+    public virtual async Task StartAsync(HttpClient httpClient, bool resumeBreakpoint = false)
     {
         if (CurrentState is not DownloadState.Queued)
             return;
@@ -244,10 +244,19 @@ public partial class ImageDownloadTask : ObservableObject, IDownloadTaskBase, IP
 
     public string OpenLocalDestination => Destination;
 
+    /// <summary>
+    /// 任务开始时会触发一次
+    /// </summary>
     public event Func<ImageDownloadTask, Task> DownloadStartedAsync;
 
+    /// <summary>
+    /// 任务停止（包括完成时）会触发一次
+    /// </summary>
     public event Func<ImageDownloadTask, Task> DownloadStoppedAsync;
 
+    /// <summary>
+    /// 任务出现错误时会触发一次
+    /// </summary>
     public event Func<ImageDownloadTask, Task> DownloadErrorAsync;
 
     public event Action<ImageDownloadTask>? DownloadTryResume;

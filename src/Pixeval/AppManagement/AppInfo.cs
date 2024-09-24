@@ -24,7 +24,6 @@ using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.Controls.Windowing;
 using Pixeval.Database.Managers;
 using Pixeval.Util.IO;
@@ -117,7 +116,7 @@ public static partial class AppInfo
 
     public static Stream GetAssetStream(string relativeToAssetsFolder)
     {
-        return File.OpenRead(ApplicationUriToPath(new Uri($"ms-appx:///Assets/{relativeToAssetsFolder}")));
+        return IoHelper.OpenAsyncRead(ApplicationUriToPath(new Uri($"ms-appx:///Assets/{relativeToAssetsFolder}")));
     }
 
     public static async Task<byte[]> GetResourceBytesAsync(string path)
