@@ -322,19 +322,16 @@
                             <AppBarSeparator Height="35" Margin="10,0,0,0" />
                             <AppBarButton
                                 x:Name="UpscaleButton"
-                                Command="{x:Bind _viewModel.CurrentImage.UpscaleCommand, Mode=OneWay}"
+                                Icon="{winUi:SymbolIcon Symbol=EyeTracking}"
                                 IsCompact="True"
                                 LabelPosition="Collapsed"
                                 Tapped="UpscaleButton_OnTapped" />
                             <TeachingTip
                                 x:Name="UpscaleTeachingTip"
                                 x:Uid="/EntryViewerPage/UpscaleTeachingTip"
+                                IconSource="{winUi:SymbolIconSource Symbol=CommentNote}"
                                 IsLightDismissEnabled="True"
-                                Target="{x:Bind UpscaleButton}">
-                                <TeachingTip.IconSource>
-                                    <winUi:SymbolIconSource Symbol="CommentNote" />
-                                </TeachingTip.IconSource>
-                            </TeachingTip>
+                                Target="{x:Bind UpscaleButton}" />
                             <AppBarSeparator Height="35" />
                             <AppBarButton
                                 Command="{x:Bind _viewModel.FullScreenCommand}"
