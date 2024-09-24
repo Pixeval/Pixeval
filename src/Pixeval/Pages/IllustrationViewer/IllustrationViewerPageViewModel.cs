@@ -56,7 +56,7 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
     private int _upscalerProgress;
 
     [ObservableProperty]
-    private string _upscalerProgressText;
+    private string? _upscalerProgressText;
 
     /// <summary>
     /// 
