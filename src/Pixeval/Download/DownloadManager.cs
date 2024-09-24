@@ -114,6 +114,7 @@ public class DownloadManager : IDisposable
             while (await _throttle && _downloadTaskChannel.Reader.TryRead(out var taskToken) && taskToken is { Token.IsCancellationRequested: false, Task: var taskGroup })
             {
                 await taskGroup.InitializeTaskGroupAsync();
+
                 foreach (var subTask in taskGroup)
                 {
                     // 需要判断是否处于Queued状态才能运行

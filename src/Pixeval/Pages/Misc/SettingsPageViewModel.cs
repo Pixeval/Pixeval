@@ -322,7 +322,7 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
             DownloadingUpdate = true;
             UpdateMessage = SettingsPageResources.DownloadingUpdate;
             var filePath = Path.Combine(AppKnownFolders.Temporary.Self.Path, appReleaseModel.ReleaseUri.Segments[^1]);
-            await using var fileStream = File.OpenWrite(filePath);
+            await using var fileStream = IoHelper.OpenAsyncWrite(filePath);
             var exception = await client.DownloadStreamAsync(fileStream, appReleaseModel.ReleaseUri, _cancellationTokenSource.Token,
                 new Progress<double>(progress => DownloadingUpdateProgress = progress));
             // ReSharper disable once DisposeOnUsingVariable
