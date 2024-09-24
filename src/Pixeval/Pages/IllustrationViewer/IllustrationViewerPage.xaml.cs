@@ -285,11 +285,24 @@ public sealed partial class IllustrationViewerPage
         teachingTip.Target = appBarButton.IsInOverflow ? null : appBarButton;
     }
 
-    private void UpscaleButton_OnTapped(object sender, TappedRoutedEventArgs e)
+    private async void UpscaleButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
         if (!App.AppViewModel.AppSettings.ShowUpscalerTeachingTip)
+        {
+            _viewModel.CurrentImage.UpscaleCommand.Execute(null);
             return;
+        }
         UpscaleTeachingTip.IsOpen = true;
+        var dialog = await HWnd.CreateOkCancelAsync(EntryViewerPageResources.AiUpscalerWarningTitle,
+            EntryViewerPageResources.AiUpscalerWarningContent,
+            EntryViewerPageResources.AiUpscalerWarningOkButtonContent,
+            EntryViewerPageResources.AiUpscalerWarningCancelButtonContent);
+
+        if (dialog == ContentDialogResult.Primary)
+        {
+            _viewModel.CurrentImage.UpscaleCommand.Execute(null);
+        }
+
         if (App.AppViewModel.AppSettings.ShowUpscalerTeachingTip)
         {
             App.AppViewModel.AppSettings.ShowUpscalerTeachingTip = false;
