@@ -87,12 +87,12 @@ public static partial class IoHelper
         if (uri.IsFile)
         {
             progress?.Report(100);
-            return Result<Stream>.AsSuccess(File.OpenRead(url));
+            return Result<Stream>.AsSuccess(OpenAsyncRead(url));
         }
         if (uri.Scheme is "ms-appx")
         {
             progress?.Report(100);
-            return Result<Stream>.AsSuccess(File.OpenRead(AppInfo.ApplicationUriToPath(uri)));
+            return Result<Stream>.AsSuccess(OpenAsyncRead(AppInfo.ApplicationUriToPath(uri)));
         }
         var stream = _recyclableMemoryStreamManager.GetStream();
         var result = await httpClient.DownloadStreamAsync(stream, uri, cancellationToken, progress, startPosition, bufferSize);

@@ -72,7 +72,7 @@ public static partial class IoHelper
     public static async Task UgoiraSaveToFileAsync(this Image image, string path, UgoiraDownloadFormat? ugoiraDownloadFormat = null)
     {
         CreateParentDirectories(path);
-        await using var fileStream = File.OpenWrite(path);
+        await using var fileStream = OpenAsyncWrite(path);
         _ = await UgoiraSaveToStreamAsync(image, fileStream, ugoiraDownloadFormat);
     }
 
@@ -172,21 +172,21 @@ public static partial class IoHelper
     public static async Task IllustrationSaveToFileAsync(this Image image, string path, IllustrationDownloadFormat? illustrationDownloadFormat = null)
     {
         CreateParentDirectories(path);
-        await using var fileStream = File.OpenWrite(path);
+        await using var fileStream = OpenAsyncWrite(path);
         _ = await IllustrationSaveToStreamAsync(image, fileStream, illustrationDownloadFormat);
     }
 
     public static async Task StreamSaveToFileAsync(this Stream stream, string path)
     {
         CreateParentDirectories(path);
-        await using var fileStream = File.OpenWrite(path);
+        await using var fileStream = OpenAsyncWrite(path);
         await stream.CopyToAsync(fileStream);
     }
 
     public static async Task StreamsCompressSaveToFileAsync(this Stream stream, string path)
     {
         CreateParentDirectories(path);
-        await using var fileStream = File.OpenWrite(path);
+        await using var fileStream = OpenAsyncWrite(path);
         await stream.CopyToAsync(fileStream);
     }
 

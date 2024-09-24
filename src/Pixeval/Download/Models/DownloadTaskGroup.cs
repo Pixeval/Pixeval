@@ -48,6 +48,9 @@ public abstract partial class DownloadTaskGroup(DownloadHistoryEntry entry) : Ob
 
     protected DownloadTaskGroup(IWorkEntry entry, string destination, DownloadItemType type) : this(new(destination, type, entry)) => SetNotCreateFromEntry();
 
+    /// <summary>
+    /// 将<see cref="IsCreateFromEntry"/>设置为<see langword="false"/>以便启动
+    /// </summary>
     protected void SetNotCreateFromEntry()
     {
         if (!IsCreateFromEntry)
@@ -69,25 +72,30 @@ public abstract partial class DownloadTaskGroup(DownloadHistoryEntry entry) : Ob
             manager.Update(g.DatabaseEntry);
         };
         // 外部包裹了Task.Run
-        AfterItemDownloadAsync += async (_, _) =>
-        {
-            if (IsAllCompleted && AfterAllDownloadAsync is not null)
-            {
-                _ = WindowFactory.RootWindow.DispatcherQueue.TryEnqueue(() => IsPending = true);
-                try
-                {
-                    await AfterAllDownloadAsync.Invoke(this, CancellationTokenSource.Token);
-                }
-                catch (TaskCanceledException)
-                {
-                    // ignored
-                }
-                _ = WindowFactory.RootWindow.DispatcherQueue.TryEnqueue(() => IsPending = false);
-            }
-        };
+        AfterItemDownloadAsync += (_, _) => AllTasksDownloadedAsync();
         AfterAllDownloadAsync += AfterAllDownloadAsyncOverride;
     }
 
+    protected async Task AllTasksDownloadedAsync() 
+    {
+        if (IsAllCompleted && AfterAllDownloadAsync is not null)
+        {
+            _ = WindowFactory.RootWindow.DispatcherQueue.TryEnqueue(() => IsPending = true);
+            try
+            {
+                await AfterAllDownloadAsync.Invoke(this, CancellationTokenSource.Token);
+            }
+            catch (TaskCanceledException)
+            {
+                // ignored
+            }
+            _ = WindowFactory.RootWindow.DispatcherQueue.TryEnqueue(() => IsPending = false);
+        }
+    }
+
+    /// <summary>
+    /// 指示是否从<see cref="IWorkEntry"/>创建。从数据库加载的、并且没有启动过的任务组为<see langword="true"/>
+    /// </summary>
     private bool IsCreateFromEntry { get; set; } = true;
 
     protected abstract Task AfterAllDownloadAsyncOverride(DownloadTaskGroup sender, CancellationToken token = default);
@@ -267,7 +275,7 @@ public abstract partial class DownloadTaskGroup(DownloadHistoryEntry entry) : Ob
 
     public Exception? ErrorCause => TasksSet.FirstOrDefault(t => t.ErrorCause is not null)?.ErrorCause;
 
-    public bool IsAllCompleted => TasksSet.All(t => t.CurrentState is DownloadState.Completed);
+    public bool IsAllCompleted => !TasksSet.Any(t => t.CurrentState is not DownloadState.Completed);
 
     public bool IsAnyError => TasksSet.Any(t => t.CurrentState is DownloadState.Error);
 

@@ -20,7 +20,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using Microsoft.UI.Xaml.Media;
 
@@ -31,7 +30,7 @@ public class ImagePool<TKey>(int maxSize) : IDisposable
     private record ImagePoolEntry(TKey Key, int ReferenceTimes);
 
     private readonly Dictionary<ImagePoolEntry, ImageSource> _pool = new();
-    private readonly LinkedList<TKey> _cachedItems = new();
+    private readonly LinkedList<TKey> _cachedItems = [];
 
     public void Cache(TKey key, ImageSource source)
     {
