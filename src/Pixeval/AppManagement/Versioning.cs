@@ -57,8 +57,6 @@ public class Versioning
                 foreach (var release in gitHubReleases)
                 {
                     var tag = release.TagName;
-                    for (var j = tag.Count('.'); j < 3; ++j)
-                        tag += ".0";
                     if (SemVersion.TryParse(tag, SemVersionStyles.Strict, out var appVersion))
                     {
                         App.AppViewModel.AppSettings.LastCheckedUpdate = DateTimeOffset.Now;
