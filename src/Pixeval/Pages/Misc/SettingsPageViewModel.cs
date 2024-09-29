@@ -108,9 +108,7 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
                     t => t.DefaultSelectedTabItem,
                     MainPageTabItemExtension.GetItems()),
                 new StringAppSettingsEntry(AppSettings, 
-#pragma warning disable CS8603 // Possible null reference return.
                     t => t.WebCookie)
-#pragma warning restore CS8603 // Possible null reference return.
                 {
                     Placeholder = SettingsPageResources.WebCookieTextBoxPlaceholderText
                 }
@@ -138,9 +136,12 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
 
             new (SettingsEntryCategory.AiUpscaler)
             {
-                new AiUpscalerModelSettingsEntry(AppSettings, 
+                new EnumAppSettingsEntry(AppSettings, 
                     t => t.UpscalerModel,
-                    RealESRGANModelExtension.GetItems()),
+                    RealESRGANModelExtension.GetItems())
+                {
+                    DescriptionUri = new Uri("https://github.com/xinntao/Real-ESRGAN/blob/master/README_CN.md")
+                },
                 new IntAppSettingsEntry(AppSettings,
                     t => t.UpscalerScaleRatio)
                 {
