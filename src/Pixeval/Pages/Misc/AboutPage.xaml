@@ -62,14 +62,14 @@
                         </ItemsRepeater.Layout>
                         <ItemsRepeater.ItemTemplate>
                             <DataTemplate x:DataType="local:DependencyViewModel">
-                                <controls:SettingsExpander Tag="{x:Bind Url}">
+                                <controls:SettingsExpander>
                                     <controls:SettingsExpander.Content>
                                         <AppBarButton
+                                            Click="LaunchUri"
                                             Icon="{fluent:SymbolIcon Symbol=Open}"
                                             IsCompact="True"
                                             LabelPosition="Collapsed"
-                                            Tag="{x:Bind Url}"
-                                            Tapped="LaunchUri" />
+                                            Tag="{x:Bind Url}" />
                                     </controls:SettingsExpander.Content>
                                     <controls:SettingsExpander.Header>
                                         <TextBlock>
@@ -79,11 +79,13 @@
                                         </TextBlock>
                                     </controls:SettingsExpander.Header>
                                     <controls:SettingsExpander.Items>
-                                        <labs:MarkdownTextBlock Margin="5" Text="{x:Bind License}">
-                                            <labs:MarkdownTextBlock.Config>
-                                                <labs:MarkdownConfig />
-                                            </labs:MarkdownTextBlock.Config>
-                                        </labs:MarkdownTextBlock>
+                                        <controls:SettingsCard HorizontalContentAlignment="Left" ContentAlignment="Vertical">
+                                            <labs:MarkdownTextBlock Margin="5" Text="{x:Bind License}">
+                                                <labs:MarkdownTextBlock.Config>
+                                                    <labs:MarkdownConfig />
+                                                </labs:MarkdownTextBlock.Config>
+                                            </labs:MarkdownTextBlock>
+                                        </controls:SettingsCard>
                                     </controls:SettingsExpander.Items>
                                 </controls:SettingsExpander>
                             </DataTemplate>

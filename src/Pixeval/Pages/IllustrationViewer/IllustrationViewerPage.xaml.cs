@@ -285,7 +285,7 @@ public sealed partial class IllustrationViewerPage
         teachingTip.Target = appBarButton.IsInOverflow ? null : appBarButton;
     }
 
-    private async void UpscaleButton_OnTapped(object sender, TappedRoutedEventArgs e)
+    private async void UpscaleButton_OnTapped(object sender, RoutedEventArgs e)
     {
         if (!App.AppViewModel.AppSettings.ShowUpscalerTeachingTip)
         {
