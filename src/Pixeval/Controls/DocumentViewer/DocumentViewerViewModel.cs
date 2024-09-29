@@ -154,17 +154,26 @@ public class DocumentViewerViewModel(NovelContent novelContent) : ObservableObje
                 }));
     }
 
-    public async Task LoadImagesAsync()
+    public void InitImages()
     {
         foreach (var illust in NovelContent.Illusts)
         {
             var key = (illust.Id, illust.Page);
             IllustrationLookup[key] = illust;
             IllustrationImages[key] = null!;
+            IllustrationStreams[key] = null!;
         }
 
         foreach (var image in NovelContent.Images)
+        {
             UploadedImages[image.NovelImageId] = null!;
+            UploadedStreams[image.NovelImageId] = null!;
+        }
+    }
+
+    public async Task LoadImagesAsync()
+    {
+        InitImages();
 
         foreach (var illust in NovelContent.Illusts)
         {

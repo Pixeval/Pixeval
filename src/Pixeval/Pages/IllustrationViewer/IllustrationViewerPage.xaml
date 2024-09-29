@@ -322,10 +322,10 @@
                             <AppBarSeparator Height="35" Margin="10,0,0,0" />
                             <AppBarButton
                                 x:Name="UpscaleButton"
+                                Click="UpscaleButton_OnTapped"
                                 Icon="{winUi:SymbolIcon Symbol=EyeTracking}"
                                 IsCompact="True"
-                                LabelPosition="Collapsed"
-                                Tapped="UpscaleButton_OnTapped" />
+                                LabelPosition="Collapsed" />
                             <TeachingTip
                                 x:Name="UpscaleTeachingTip"
                                 x:Uid="/EntryViewerPage/UpscaleTeachingTip"

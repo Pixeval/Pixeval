@@ -165,11 +165,6 @@
       <None Remove="Assets\Images\Icons\tag-128x128.png" />
       <None Remove="Assets\Images\Icons\tag-64x64.png" />
       <None Remove="Assets\Images\Icons\tag.png" />
-      <None Remove="Controls\Settings\AiUpscalerModelSettingsCard.xaml" />
-      <None Remove="Pages\Capability\FeedPage.xaml" />
-      <None Remove="Pages\Capability\Feeds\CondensedFeedPage.xaml" />
-      <None Remove="Strings\zh-cn\AiUpscaler.resjson" />
-      <None Remove="Strings\zh-cn\FeedPage.resjson" />
     </ItemGroup>
 
     <ItemGroup>
@@ -212,11 +207,5 @@
       <Content Update="Assets\Binary\RealESRGAN\vcomp140d.dll">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </Content>
-    </ItemGroup>
-
-    <ItemGroup>
-      <Page Update="Controls\Settings\AiUpscalerModelSettingsCard.xaml">
-        <Generator>MSBuild:Compile</Generator>
-      </Page>
     </ItemGroup>
 </Project>

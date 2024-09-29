@@ -164,6 +164,8 @@ public class NovelDownloadTaskGroup : DownloadTaskGroup
             return;
         }
 
+        DocumentViewModel.InitImages();
+
         var content = NovelDownloadFormat switch
         {
             NovelDownloadFormat.OriginalTxt => NovelContent.Text,
