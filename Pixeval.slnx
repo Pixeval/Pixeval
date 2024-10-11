@@ -4,18 +4,6 @@
     <Platform Name="x64" />
     <Platform Name="x86" />
   </Configurations>
-  <Folder Name="/Solution Items/GitHub/workflows/">
-    <File Path=".github\workflows\build.yml" />
-    <File Path=".github\workflows\check-xaml-formatting.yml" />
-    <File Path=".github\workflows\release.yml" />
-  </Folder>
-  <Folder Name="/Solution Items/GitHub/ISSUE_TEMPLATE/">
-    <File Path=".github\ISSUE_TEMPLATE\bug_report.yaml" />
-    <File Path=".github\ISSUE_TEMPLATE\bug_report_zh.yaml" />
-    <File Path=".github\ISSUE_TEMPLATE\feature_request.yaml" />
-    <File Path=".github\ISSUE_TEMPLATE\feature_request_zh.yaml" />
-  </Folder>
-  <Folder Name="/Solution Items/GitHub/" />
   <Folder Name="/Solution Items/">
     <File Path=".editorconfig" />
     <File Path=".gitattributes" />
@@ -32,22 +20,41 @@
     <File Path="SECURITY.md" />
     <File Path="Settings.XamlStyler" />
   </Folder>
+  <Folder Name="/Solution Items/GitHub/" />
+  <Folder Name="/Solution Items/GitHub/ISSUE_TEMPLATE/">
+    <File Path=".github\ISSUE_TEMPLATE\bug_report.yaml" />
+    <File Path=".github\ISSUE_TEMPLATE\bug_report_zh.yaml" />
+    <File Path=".github\ISSUE_TEMPLATE\feature_request.yaml" />
+    <File Path=".github\ISSUE_TEMPLATE\feature_request_zh.yaml" />
+  </Folder>
+  <Folder Name="/Solution Items/GitHub/workflows/">
+    <File Path=".github\workflows\build.yml" />
+    <File Path=".github\workflows\check-xaml-formatting.yml" />
+    <File Path=".github\workflows\release.yml" />
+  </Folder>
   <Project Path="src\Pixeval.Controls\Pixeval.Controls.csproj">
-    <Configuration Solution="*|arm64" Project="*|arm64" />
-    <Configuration Solution="*|x64" Project="*|x64" />
+    <Platform Solution="*|arm64" Project="arm64" />
+    <Platform Solution="*|x64" Project="x64" />
+    <Platform Solution="*|x86" Project="x86" />
   </Project>
   <Project Path="src\Pixeval.CoreApi\Pixeval.CoreApi.csproj">
-    <Configuration Solution="*|arm64" Project="*|arm64" />
-    <Configuration Solution="*|x64" Project="*|x64" />
+    <Platform Solution="*|arm64" Project="arm64" />
+    <Platform Solution="*|x64" Project="x64" />
+    <Platform Solution="*|x86" Project="x86" />
   </Project>
   <Project Path="src\Pixeval.SourceGen\Pixeval.SourceGen.csproj" />
   <Project Path="src\Pixeval.Utilities\Pixeval.Utilities.csproj">
-    <Configuration Solution="*|arm64" Project="*|arm64" />
-    <Configuration Solution="*|x64" Project="*|x64" />
+    <Platform Solution="*|arm64" Project="arm64" />
+    <Platform Solution="*|x64" Project="x64" />
+    <Platform Solution="*|x86" Project="x86" />
   </Project>
   <Project Path="src\Pixeval\Pixeval.csproj">
-    <Configuration Solution="*|*" Project="*|*|Deploy" />
-    <Configuration Solution="*|arm64" Project="*|arm64|Deploy" />
-    <Configuration Solution="*|x64" Project="*|x64|Deploy" />
+    <Platform Solution="*|arm64" Project="arm64" />
+    <Platform Solution="*|x64" Project="x64" />
+    <Platform Solution="*|x86" Project="x86" />
+    <Deploy />
   </Project>
+  <Properties Name="Visual Studio">
+    <Property Name="OpenWith" Value="17" />
+  </Properties>
 </Solution>
