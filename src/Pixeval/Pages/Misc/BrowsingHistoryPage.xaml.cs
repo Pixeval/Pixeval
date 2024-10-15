@@ -20,42 +20,40 @@
 
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Navigation;
+using Pixeval.Controls;
 using Pixeval.CoreApi.Global.Enum;
+using Pixeval.CoreApi.Model;
 using Pixeval.Database.Managers;
-using Pixeval.Misc;
+using Pixeval.Utilities;
 
 namespace Pixeval.Pages.Misc;
 
 /// <summary>
 /// An empty page that can be used on its own or navigated to within a Frame.
 /// </summary>
-public sealed partial class BrowsingHistoryPage : IScrollViewProvider
+public sealed partial class BrowsingHistoryPage : IScrollViewHost
 {
     public BrowsingHistoryPage() => InitializeComponent();
 
-    public override void OnPageActivated(NavigationEventArgs navigationEventArgs) => ChangeSource();
+    private void BrowsingHistoryPage_OnLoaded(object sender, RoutedEventArgs e) => ChangeSource();
 
     private void ComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e) => ChangeSource();
 
     private void ChangeSource()
     {
-        using var scope = App.AppViewModel.AppServicesScope;
-        var manager = scope.ServiceProvider.GetRequiredService<BrowseHistoryPersistentManager>();
-        var source = manager.Enumerate().Where(t => t.Type == SimpleWorkTypeComboBox.GetSelectedItem<SimpleWorkType>())
-            .Reverse()
+        var manager = App.AppViewModel.AppServiceProvider.GetRequiredService<BrowseHistoryPersistentManager>();
+        var type = SimpleWorkTypeComboBox.GetSelectedItem<SimpleWorkType>();
+        var source = manager.ObservableEntries
+            .SelectNotNull(t => t.TryGetEntry(type))
             .ToAsyncEnumerable();
-        // 由于 ResetEngine 需要根据泛型参数判断类型，所以不能将元素转为 IWorkEntry，而是要保持原始类型
-        WorkContainer.WorkView.ResetEngine(
-            SimpleWorkTypeComboBox.GetSelectedItem<SimpleWorkType>() switch
-            {
-                SimpleWorkType.IllustAndManga => App.AppViewModel.MakoClient.Computed(source.SelectAwait(async t =>
-                    await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(t.Id))),
-                _ => App.AppViewModel.MakoClient.Computed(source.SelectAwait(async t =>
-                    await App.AppViewModel.MakoClient.GetNovelFromIdAsync(t.Id)))
-            });
 
+        WorkContainer.WorkView.ResetEngine(type switch
+        {
+            SimpleWorkType.IllustAndManga => App.AppViewModel.MakoClient.Computed(source.Cast<Illustration>()),
+            _ => App.AppViewModel.MakoClient.Computed(source.Cast<Novel>()),
+        });
     }
 
     public ScrollView ScrollView => WorkContainer.ScrollView;

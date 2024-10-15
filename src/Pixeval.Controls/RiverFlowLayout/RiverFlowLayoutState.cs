@@ -73,6 +73,7 @@ internal class RiverFlowLayoutState(VirtualizingLayoutContext context)
         foreach (var item in _items.Skip(index))
         {
             item.Measure = null;
+            item.Position = null;
         }
     }
 
@@ -81,6 +82,7 @@ internal class RiverFlowLayoutState(VirtualizingLayoutContext context)
         foreach (var item in _items)
         {
             item.Measure = null;
+            item.Position = null;
         }
     }
 

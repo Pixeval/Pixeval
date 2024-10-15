@@ -21,8 +21,11 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
+using Microsoft.Windows.Globalization;
 using Pixeval.AppManagement;
+using Pixeval.Settings.Models;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using WinUI3Utilities;
@@ -32,64 +35,122 @@ namespace Pixeval.Pages.Login;
 public sealed partial class LoginPage
 {
     private readonly LoginPageViewModel _viewModel;
+    public static LoginPage? Current { get; private set; }
+
+    private const string RefreshToken = nameof(RefreshToken);
+    private const string Browser = nameof(Browser);
+    private const string WebView = nameof(WebView);
 
     public LoginPage()
     {
+        Current = this;
         _viewModel = new(this);
         InitializeComponent();
     }
 
-    private async void Login_OnTapped(object sender, object e) => await LoginAsync(false);
-
-    private async void LoginWithNewAccount_OnTapped(object sender, RoutedEventArgs e) => await LoginAsync(true);
-
-    private async Task LoginAsync(bool useNewAccount)
+    private void LoginPage_OnLoaded(object sender, RoutedEventArgs e)
     {
-        try
+        if (_viewModel.LogoutExit)
         {
-            await _viewModel.WebView2LoginAsync(this, useNewAccount, Navigated);
+            _viewModel.AdvancePhase(LoginPhaseEnum.WaitingForUserInput);
+            _viewModel.IsEnabled = true;
         }
-        catch (Exception exception)
+        else
         {
-            _ = await this.CreateAcknowledgementAsync(LoginPageResources.ErrorWhileLoggingInTitle,
-                LoginPageResources.ErrorWhileLogginInContentFormatted.Format(exception + "\n" + exception.StackTrace));
-            _viewModel.CloseWindow();
+            Refresh(App.AppViewModel.LoginContext.RefreshToken);
+        }
+
+        // 首页语言
+        foreach (var (displayName, name) in LanguageAppSettingsEntry.AvailableLanguages)
+        {
+            var radioMenuFlyoutItem = new RadioMenuFlyoutItem
+            {
+                Text = displayName,
+                Tag = name
+            };
+            if (name == ApplicationLanguages.PrimaryLanguageOverride)
+                radioMenuFlyoutItem.IsChecked = true;
+            radioMenuFlyoutItem.Click += RadioMenuFlyoutItemClick;
+            MenuFlyout.Items.Add(radioMenuFlyoutItem);
         }
 
         return;
-        void Navigated()
-        {
-            if (App.AppViewModel.MakoClient == null!)
-                ThrowHelper.Exception();
 
-            _ = DispatcherQueue.TryEnqueue(() =>
-            {
-                _viewModel.AdvancePhase(LoginPageViewModel.LoginPhaseEnum.SuccessNavigating);
-                NavigateParent<MainPage>(null, new DrillInNavigationTransitionInfo());
-                AppInfo.SaveContext();
-            });
+        static void RadioMenuFlyoutItemClick(object sender2, RoutedEventArgs e2)
+        {
+            var item = sender2.To<RadioMenuFlyoutItem>();
+            ApplicationLanguages.PrimaryLanguageOverride = item.Tag.To<string>();
         }
     }
 
-    private async void LoginPage_OnLoaded(object sender, RoutedEventArgs e)
+    private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
+    {
+        MenuFlyout.ShowAt(sender.To<FrameworkElement>());
+    }
+
+    private async void Refresh(string refreshToken)
     {
         try
         {
-            if (_viewModel.CheckRefreshAvailable() is { } session
-                && await _viewModel.RefreshAsync(session))
+            if (refreshToken.IsNotNullOrEmpty() && await _viewModel.RefreshAsync(refreshToken))
             {
-                NavigateParent<MainPage>(null, new DrillInNavigationTransitionInfo());
+                SuccessNavigating();
             }
             else
             {
-                _viewModel.AdvancePhase(LoginPageViewModel.LoginPhaseEnum.WaitingForUserInput);
-                _viewModel.IsFinished = _viewModel.IsEnabled = true;
+                _viewModel.AdvancePhase(LoginPhaseEnum.WaitingForUserInput);
+                _viewModel.IsEnabled = true;
             }
         }
         catch (Exception exception)
         {
             _ = await this.CreateAcknowledgementAsync(LoginPageResources.ErrorWhileLoggingInTitle,
-                    LoginPageResources.ErrorWhileLogginInContentFormatted.Format(exception.StackTrace));
+                LoginPageResources.ErrorWhileLogginInContentFormatted.Format(exception.StackTrace));
+            _viewModel.CloseWindow();
+        }
+    }
+
+    public static void SuccessNavigating()
+    {
+        if (Current is null || App.AppViewModel.MakoClient == null!)
+            ThrowHelper.Exception();
+        Current._viewModel.AdvancePhase(LoginPhaseEnum.SuccessNavigating);
+        Current.NavigateParent<MainPage>(null, new DrillInNavigationTransitionInfo());
+        Current._viewModel.LogoutExit = false;
+        AppInfo.SaveContext();
+    }
+
+    private void SwitchPresenterButton_OnClicked(object sender, RoutedEventArgs e) => SwitchPresenter.Value = sender.To<FrameworkElement>().GetTag<string>();
+
+    #region Token
+
+    private void TokenLogin_OnClicked(object sender, object e) => Refresh(_viewModel.RefreshToken);
+
+    #endregion
+
+    #region Browser
+
+    private void BrowserLogin_OnClicked(object sender, RoutedEventArgs e) => _viewModel.BrowserLogin();
+
+    #endregion
+
+    #region WebView
+
+    private async void WebViewLogin_OnClicked(object sender, object e) => await WebView2LoginAsync(false);
+
+    private async void WebViewLoginNewAccount_OnClicked(object sender, RoutedEventArgs e) => await WebView2LoginAsync(true);
+
+    private async Task WebView2LoginAsync(bool useNewAccount)
+    {
+        try
+        {
+            await _viewModel.WebView2LoginAsync(HWnd, useNewAccount, () => DispatcherQueue.TryEnqueue(SuccessNavigating));
+            _viewModel.AdvancePhase(LoginPhaseEnum.WaitingForUserInput);
+        }
+        catch (Exception exception)
+        {
+            _ = await HWnd.CreateAcknowledgementAsync(LoginPageResources.ErrorWhileLoggingInTitle,
+                LoginPageResources.ErrorWhileLogginInContentFormatted.Format(exception + "\n" + exception.StackTrace));
             _viewModel.CloseWindow();
         }
     }
@@ -98,4 +159,6 @@ public sealed partial class LoginPage
     {
         _viewModel.Dispose();
     }
+
+    #endregion
 }

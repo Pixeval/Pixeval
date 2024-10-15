@@ -1,0 +1,33 @@
+<UserControl
+    x:Class="Pixeval.Controls.SpotlightView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:Pixeval.Controls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Unloaded="SpotlightViewOnUnloaded"
+    mc:Ignorable="d">
+    <local:EntryView HasNoItem="{x:Bind ViewModel.HasNoItem, Mode=OneWay}" IsLoadingMore="{x:Bind AdvancedItemsView.IsLoadingMore, Mode=OneWay}">
+        <local:EntryView.Content>
+            <local:AdvancedItemsView
+                x:Name="AdvancedItemsView"
+                IsItemInvokedEnabled="True"
+                ItemInvoked="IllustratorItemsView_OnItemInvoked"
+                ItemsSource="{x:Bind ViewModel.DataProvider.View}"
+                LayoutType="Grid"
+                MinItemWidth="300"
+                SelectionMode="None">
+                <local:AdvancedItemsView.ItemTemplate>
+                    <DataTemplate x:DataType="local:SpotlightItemViewModel">
+                        <ItemContainer>
+                            <local:SpotlightItem ViewModel="{x:Bind}" ViewModelChanged="SpotlightItem_OnViewModelChanged" />
+                        </ItemContainer>
+                    </DataTemplate>
+                </local:AdvancedItemsView.ItemTemplate>
+                <local:AdvancedItemsView.ItemTransitionProvider>
+                    <LinedFlowLayoutItemCollectionTransitionProvider />
+                </local:AdvancedItemsView.ItemTransitionProvider>
+            </local:AdvancedItemsView>
+        </local:EntryView.Content>
+    </local:EntryView>
+</UserControl>

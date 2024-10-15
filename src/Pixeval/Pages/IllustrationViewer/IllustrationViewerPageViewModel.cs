@@ -23,16 +23,15 @@ using System.Collections.Generic;
 using System.Linq;
 using Windows.System;
 using CommunityToolkit.Mvvm.ComponentModel;
-using Microsoft.UI.Xaml;
+using FluentIcons.Common;
 using Microsoft.UI.Xaml.Input;
 using Pixeval.Controls;
-using Pixeval.Controls.MarkupExtensions;
 using Pixeval.Controls.Windowing;
+using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Model;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using Pixeval.Util.ComponentModels;
-using Pixeval.Options;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
@@ -41,19 +40,37 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
     [ObservableProperty]
     private bool _isFullScreen;
 
+    [ObservableProperty]
+    private bool _showPixevalIcon = true;
+
+    [ObservableProperty]
+    private string _additionalText = string.Empty;
+
+    [ObservableProperty]
+    private bool _additionalTextBlockVisible = true;
+
+    [ObservableProperty]
+    private bool _upscalerProgressBarVisible;
+
+    [ObservableProperty]
+    private int _upscalerProgress;
+
+    [ObservableProperty]
+    private string? _upscalerProgressText;
+
     /// <summary>
     /// 
     /// </summary>
     /// <param name="illustrationViewModels"></param>
     /// <param name="currentIllustrationIndex"></param>
-    /// <param name="content"></param>
-    public IllustrationViewerPageViewModel(IEnumerable<IllustrationItemViewModel> illustrationViewModels, int currentIllustrationIndex, FrameworkElement content) : base(content)
+    /// <param name="hWnd"></param>
+    public IllustrationViewerPageViewModel(IEnumerable<IllustrationItemViewModel> illustrationViewModels, int currentIllustrationIndex, ulong hWnd) : base(hWnd)
     {
         IllustrationsSource = illustrationViewModels.ToArray();
         CurrentIllustrationIndex = currentIllustrationIndex;
 
         InitializeCommands();
-        FullScreenCommand.GetFullScreenCommand(false);
+        FullScreenCommand.RefreshFullScreenCommand(false);
     }
 
     /// <summary>
@@ -61,12 +78,12 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
     /// </summary>
     /// <param name="viewModel"></param>
     /// <param name="currentIllustrationIndex"></param>
-    /// <param name="content"></param>
+    /// <param name="hWnd"></param>
     /// <remarks>
     /// illustrations should contain only one item if the illustration is a single
     /// otherwise it contains the entire manga data
     /// </remarks>
-    public IllustrationViewerPageViewModel(IllustrationViewViewModel viewModel, int currentIllustrationIndex, FrameworkElement content) : base(content)
+    public IllustrationViewerPageViewModel(IllustrationViewViewModel viewModel, int currentIllustrationIndex, ulong hWnd) : base(hWnd)
     {
         ViewModelSource = new IllustrationViewViewModel(viewModel);
         ViewModelSource.DataProvider.View.FilterChanged += (_, _) => CurrentIllustrationIndex = Illustrations.IndexOf(CurrentIllustration);
@@ -87,21 +104,9 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
     {
         foreach (var illustrationViewModel in Illustrations)
             illustrationViewModel.UnloadThumbnail(this);
-        DisposePages();
         Pages = null!;
+        Images = null!;
         ViewModelSource?.Dispose();
-    }
-
-    private void DisposePages()
-    {
-        // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
-        if (Pages is not null)
-            foreach (var illustrationItemViewModel in Pages)
-                illustrationItemViewModel.Dispose();
-        // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
-        if (Images is not null)
-            foreach (var imageViewModel in Images)
-                imageViewModel.Dispose();
     }
 
     public NavigationViewTag[] Tags =>
@@ -114,7 +119,7 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
     public NavigationViewTag<WorkInfoPage, Illustration> IllustrationInfoTag { get; } =
         new(null!) { Content = EntryViewerPageResources.InfoTabContent };
 
-    public NavigationViewTag<CommentsPage, (CommentType, long Id)> CommentsTag { get; } =
+    public NavigationViewTag<CommentsPage, (SimpleWorkType, long Id)> CommentsTag { get; } =
         new(default) { Content = EntryViewerPageResources.CommentsTabContent };
 
     public NavigationViewTag<RelatedWorksPage, long> RelatedWorksTag { get; } =
@@ -155,14 +160,13 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
             var oldTag = Pages?[CurrentPageIndex].Id ?? 0;
 
             _currentIllustrationIndex = value;
-            DisposePages();
             // 这里可以触发总页数的更新
             Pages = CurrentIllustration.GetMangaIllustrationViewModels().ToArray();
             // 保证_pages里所有的IllustrationViewModel都是生成的，从而删除的时候一律DisposeForce
-            Images = Pages.Select(p => new ImageViewerPageViewModel(p, FrameworkElement)).ToArray();
+            Images = Pages.Select(p => new ImageViewerPageViewModel(p, CurrentIllustration, HWnd)).ToArray();
 
             IllustrationInfoTag.Parameter = CurrentIllustration.Entry;
-            CommentsTag.Parameter = (CommentType.Illustration, IllustrationId);
+            CommentsTag.Parameter = (SimpleWorkType.IllustAndManga, IllustrationId);
             RelatedWorksTag.Parameter = IllustrationId;
 
             // 此处不要触发CurrentPageIndex的OnDetailedPropertyChanged，否则会导航两次
@@ -170,6 +174,7 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
             OnButtonPropertiesChanged();
             // 用OnPropertyChanged不会触发导航，但可以让UI页码更新
             OnPropertyChanged(nameof(CurrentPageIndex));
+            OnPropertyChanged(nameof(CurrentPage));
             OnPropertyChanged(nameof(CurrentImage));
 
             OnDetailedPropertyChanged(oldValue, value, oldTag, CurrentPage.Id);
@@ -190,6 +195,7 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
             var oldValue = _currentPageIndex;
             _currentPageIndex = value;
             OnButtonPropertiesChanged();
+            OnPropertyChanged(nameof(CurrentPage));
             OnPropertyChanged(nameof(CurrentImage));
             OnDetailedPropertyChanged(oldValue, value);
         }
@@ -250,6 +256,11 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
     #endregion
 
     #region Helper Functions
+
+    public string GetCurrentIllustrationDimensionText(int index)
+    {
+        return CurrentIllustration.DimensionText;
+    }
 
     public string? NextButtonText => NextButtonAction switch
     {
@@ -312,20 +323,21 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
     private void InitializeCommands()
     {
         FullScreenCommand.ExecuteRequested += FullScreenCommandOnExecuteRequested;
+        FullScreenCommand.RefreshFullScreenCommand(false);
     }
 
     private void FullScreenCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
         IsFullScreen = !IsFullScreen;
-        FullScreenCommand.GetFullScreenCommand(IsFullScreen);
+        FullScreenCommand.RefreshFullScreenCommand(IsFullScreen);
     }
 
     public XamlUICommand InfoAndCommentsCommand { get; } =
-        EntryViewerPageResources.InfoAndComments.GetCommand(FontIconSymbol.InfoE946, VirtualKey.F12);
+        EntryViewerPageResources.InfoAndComments.GetCommand(Symbol.Info, VirtualKey.F12);
 
-    public XamlUICommand AddToBookmarkCommand { get; } = EntryItemResources.AddToBookmark.GetCommand(FontIconSymbol.BookmarksE8A4);
+    public XamlUICommand AddToBookmarkCommand { get; } = EntryItemResources.AddToBookmark.GetCommand(Symbol.Bookmark);
 
-    public XamlUICommand FullScreenCommand { get; } = "".GetCommand(FontIconSymbol.FullScreenE740);
+    public XamlUICommand FullScreenCommand { get; } = "".GetCommand(Symbol.ArrowMaximize);
 
     #endregion
 }

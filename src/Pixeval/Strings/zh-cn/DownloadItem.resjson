@@ -1,0 +1,21 @@
+{
+  "ActionButtonContentOpen": "打开",
+  "ActionButtonContentPause": "暂停",
+  "ActionButtonContentRedownload": "重新下载",
+  "ActionButtonContentResume": "恢复",
+  "ActionButtonContentRetry": "重试",
+  "CancelDownloadItem/Label": "取消下载",
+  "CheckErrorMessageInDetailItem/Label": "查看详细错误信息",
+  "DownloadCancelled": "下载已取消",
+  "ActionDownloadCancelled": "取消",
+  "DownloadCompleted": "下载完成",
+  "DownloadErrorMessageFormatted": "下载失败: {0}",
+  "DownloadPaused": "下载已暂停",
+  "DownloadPending": "正在等待处理下载文件完成",
+  "DownloadQueued": "在队列中",
+  "DownloadRunningFormatted": "下载进度: {0}%",
+  "ErrorMessageDialogTitle": "错误信息",
+  "GoToPageItem/Label": "查看页面",
+  "OpenDownloadLocationItem/Label": "打开下载位置",
+  "RedownloadItem/Label": "重新下载"
+}

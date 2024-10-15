@@ -25,7 +25,6 @@ using System.Collections.Generic;
 using System.Threading;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Model;
-using Pixeval.CoreApi.Net;
 using Pixeval.Utilities;
 
 namespace Pixeval.CoreApi.Engine.Implements;
@@ -38,15 +37,11 @@ internal class NovelRankingEngine(
     EngineHandle? engineHandle)
     : AbstractPixivFetchEngine<Novel>(makoClient, engineHandle)
 {
-    private readonly DateTime _dateTime = dateTime;
-    private readonly RankOption _rankOption = rankOption;
-    private readonly TargetFilter _targetFilter = targetFilter;
-
     public override IAsyncEnumerator<Novel> GetAsyncEnumerator(CancellationToken cancellationToken = new CancellationToken()) =>
-        RecursivePixivAsyncEnumerators.Novel<NovelRankingEngine>.WithInitialUrl(this,
-            MakoApiKind.AppApi,
-            engine => "/v1/novel/ranking"
-                      + $"?filter={engine._targetFilter.GetDescription()}"
-                      + $"&mode={engine._rankOption.GetDescription()}"
-                      + $"&date={engine._dateTime:yyyy-MM-dd}")!;
+        new RecursivePixivAsyncEnumerators.Novel<NovelRankingEngine>(
+            this,
+            "/v1/novel/ranking" +
+            $"?filter={targetFilter.GetDescription()}" +
+            $"&mode={rankOption.GetDescription()}" +
+            $"&date={dateTime:yyyy-MM-dd}");
 }

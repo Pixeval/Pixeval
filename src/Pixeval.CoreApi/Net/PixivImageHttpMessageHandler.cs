@@ -30,7 +30,7 @@ internal class PixivImageHttpMessageHandler(MakoClient makoClient) : MakoClientS
 {
     protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
-        if (MakoClient.Configuration.Bypass)
+        if (MakoClient.Configuration.DomainFronting)
         {
             MakoHttpOptions.UseHttpScheme(request);
         }
@@ -43,12 +43,12 @@ internal class PixivImageHttpMessageHandler(MakoClient makoClient) : MakoClientS
             request.RequestUri = mirror switch
             {
                 _ when Uri.CheckHostName(mirror) is not UriHostNameType.Unknown => new UriBuilder(requestUri) { Host = mirror }.Uri,
-                _ when Uri.IsWellFormedUriString(mirror, UriKind.Absolute) => new Uri(mirror).Let(mirrorUri => new UriBuilder(requestUri) { Host = mirrorUri.Host, Scheme = mirrorUri.Scheme })!.Uri,
+                _ when Uri.IsWellFormedUriString(mirror, UriKind.Absolute) => new Uri(mirror).Let(mirrorUri => new UriBuilder(requestUri) { Host = mirrorUri.Host, Scheme = mirrorUri.Scheme }).Uri,
                 _ => ThrowUtils.UriFormat<Uri>("Expecting a valid Host or URI")
             };
         }
         
-        return GetHttpMessageInvoker(MakoClient.Configuration.Bypass)
+        return GetHttpMessageInvoker(MakoClient.Configuration.DomainFronting)
             .SendAsync(request, cancellationToken);
     }
 }

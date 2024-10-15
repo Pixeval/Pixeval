@@ -23,7 +23,6 @@ using System.Collections.Generic;
 using System.Threading;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Model;
-using Pixeval.CoreApi.Net;
 using Pixeval.Utilities;
 
 namespace Pixeval.CoreApi.Engine.Implements;
@@ -36,15 +35,11 @@ internal class IllustrationRankingEngine(
     EngineHandle? engineHandle)
     : AbstractPixivFetchEngine<Illustration>(makoClient, engineHandle)
 {
-    private readonly DateTime _dateTime = dateTime;
-    private readonly RankOption _rankOption = rankOption;
-    private readonly TargetFilter _targetFilter = targetFilter;
-
     public override IAsyncEnumerator<Illustration> GetAsyncEnumerator(CancellationToken cancellationToken = new CancellationToken()) =>
-        RecursivePixivAsyncEnumerators.Illustration<IllustrationRankingEngine>.WithInitialUrl(this,
-            MakoApiKind.AppApi,
-            engine => "/v1/illust/ranking"
-                      + $"?filter={engine._targetFilter.GetDescription()}"
-                      + $"&mode={engine._rankOption.GetDescription()}"
-                      + $"&date={engine._dateTime:yyyy-MM-dd}")!;
+        new RecursivePixivAsyncEnumerators.Illustration<IllustrationRankingEngine>(
+            this,
+            $"/v1/illust/ranking" +
+            $"?filter={targetFilter.GetDescription()}" +
+            $"&mode={rankOption.GetDescription()}" +
+            $"&date={dateTime:yyyy-MM-dd}");
 }

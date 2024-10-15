@@ -8,30 +8,22 @@
     xmlns:local="using:Pixeval.Controls.DialogContent"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
-    <Grid RowSpacing="20">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
-        <StackPanel
-            Grid.Row="0"
-            Orientation="Horizontal"
-            Spacing="20">
-            <controls1:LazyImage
-                Width="50"
-                Height="50"
-                Source="{x:Bind _viewModel.Thumbnail, Mode=OneWay}" />
-            <TextBlock
-                VerticalAlignment="Center"
-                FontSize="{StaticResource PixevalBaseFontSize}"
-                Text="{x:Bind _viewModel.Name, Mode=OneWay}"
-                TextTrimming="CharacterEllipsis"
-                TextWrapping="NoWrap" />
-        </StackPanel>
+    <controls:DockPanel HorizontalSpacing="20" VerticalSpacing="20">
         <controls:TokenizingTextBox
-            Grid.Row="1"
+            controls:DockPanel.Dock="Bottom"
             ItemsSource="{x:Bind Tags}"
             TokenDelimiter=","
             TokenItemAdding="TokenizingTextBox_OnTokenItemAdding" />
-    </Grid>
+        <controls1:LazyImage
+            Width="50"
+            Height="50"
+            controls:DockPanel.Dock="Left"
+            Source="{x:Bind _viewModel.Thumbnail, Mode=OneWay}" />
+        <TextBlock
+            VerticalAlignment="Center"
+            Style="{StaticResource CaptionTextBlockStyle}"
+            Text="{x:Bind _viewModel.Name, Mode=OneWay}"
+            TextTrimming="CharacterEllipsis"
+            TextWrapping="NoWrap" />
+    </controls:DockPanel>
 </UserControl>

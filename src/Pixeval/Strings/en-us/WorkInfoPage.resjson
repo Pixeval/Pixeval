@@ -12,5 +12,6 @@
   "IllustratorId/Text": "Illustrator ID: ",
   "IllustratorName/Text": "Illustrator name: ",
   "IllustratorTextBlock/Text": "Illustrator info",
-  "TitleTextBlock/Text": "Work info"
+  "TitleTextBlock/Text": "Work info",
+  "BlockTagMenuItem/Text": "Block a tag"
 }

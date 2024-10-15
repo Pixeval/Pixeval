@@ -2,18 +2,19 @@
     x:Class="Pixeval.Controls.WorkView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:converters="using:Pixeval.Controls.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:flyoutContent="using:Pixeval.Controls.FlyoutContent"
     xmlns:local="using:Pixeval.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Unloaded="WorkView_OnUnloaded"
     mc:Ignorable="d">
     <UserControl.Resources>
-        <converters:BoolToSelectionModeConverter x:Key="BoolToSelectionModeConverter" />
         <DataTemplate x:Key="NovelItemDataTemplate" x:DataType="local:NovelItemViewModel">
             <ItemContainer>
                 <local:NovelItem
                     OpenNovelRequested="NovelItem_OnOpenNovelRequested"
+                    RequestAddToBookmark="WorkItem_OnRequestAddToBookmark"
+                    RequestOpenUserInfoPage="WorkItem_OnRequestOpenUserInfoPage"
                     RequestTeachingTip="WorkItem_OnRequestTeachingTip"
                     ViewModel="{x:Bind}"
                     ViewModelChanged="WorkItem_OnViewModelChanged" />
@@ -22,12 +23,24 @@
         <DataTemplate x:Key="IllustrationItemDataTemplate" x:DataType="local:IllustrationItemViewModel">
             <ItemContainer>
                 <local:IllustrationItem
+                    RequestAddToBookmark="WorkItem_OnRequestAddToBookmark"
+                    RequestOpenUserInfoPage="WorkItem_OnRequestOpenUserInfoPage"
                     RequestTeachingTip="WorkItem_OnRequestTeachingTip"
                     RequiredParam="IllustrationItem_OnRequiredParam"
                     ViewModel="{x:Bind}"
                     ViewModelChanged="WorkItem_OnViewModelChanged" />
             </ItemContainer>
         </DataTemplate>
+        <TeachingTip
+            x:Name="AddToBookmarkTeachingTip"
+            x:Uid="/EntryView/AddToBookmarkTeachingTip"
+            CloseButtonClick="AddToBookmarkTeachingTip_OnCloseButtonClick"
+            IsLightDismissEnabled="True">
+            <flyoutContent:BookmarkTagSelector
+                x:Name="BookmarkTagSelector"
+                MaxHeight="{StaticResource TeachingTipContentMaxHeight}"
+                Type="{x:Bind Type, Mode=OneWay}" />
+        </TeachingTip>
     </UserControl.Resources>
     <local:EntryView
         x:Name="EntryView"
@@ -40,7 +53,11 @@
                 IsItemInvokedEnabled="True"
                 ItemInvoked="ItemsView_OnItemInvoked"
                 SelectionChanged="WorkView_OnSelectionChanged"
-                SelectionMode="{x:Bind ViewModel.IsSelecting, Converter={StaticResource BoolToSelectionModeConverter}, Mode=OneWay}" />
+                SelectionMode="{x:Bind local:C.ToSelectionMode(ViewModel.IsSelecting), Mode=OneWay}">
+                <local:AdvancedItemsView.ItemTransitionProvider>
+                    <LinedFlowLayoutItemCollectionTransitionProvider />
+                </local:AdvancedItemsView.ItemTransitionProvider>
+            </local:AdvancedItemsView>
         </local:EntryView.Content>
     </local:EntryView>
 </UserControl>

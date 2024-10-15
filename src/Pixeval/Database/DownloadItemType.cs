@@ -35,5 +35,7 @@ public enum DownloadItemType
     /// <summary>
     /// 单页漫画或者单图
     /// </summary>
-    Illustration
+    Illustration,
+
+    Novel
 }

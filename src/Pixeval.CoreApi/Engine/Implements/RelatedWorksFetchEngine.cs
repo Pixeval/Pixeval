@@ -22,7 +22,6 @@ using System.Collections.Generic;
 using System.Threading;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Model;
-using Pixeval.CoreApi.Net;
 using Pixeval.Utilities;
 
 namespace Pixeval.CoreApi.Engine.Implements;
@@ -31,12 +30,8 @@ public class RelatedWorksFetchEngine(long illustId, MakoClient makoClient, Targe
     EngineHandle? engineHandle)
     : AbstractPixivFetchEngine<Illustration>(makoClient, engineHandle)
 {
-    private readonly TargetFilter _targetFilter = targetFilter;
-    private readonly long _illustId = illustId;
-
-    public override IAsyncEnumerator<Illustration> GetAsyncEnumerator(CancellationToken cancellationToken = new CancellationToken())
-    {
-        return RecursivePixivAsyncEnumerators.Illustration<RelatedWorksFetchEngine>.WithInitialUrl(this, MakoApiKind.AppApi,
-            engine => $"/v2/illust/related?filter={engine._targetFilter.GetDescription()}&illust_id={engine._illustId}")!;
-    }
+    public override IAsyncEnumerator<Illustration> GetAsyncEnumerator(CancellationToken cancellationToken = new CancellationToken()) =>
+        new RecursivePixivAsyncEnumerators.Illustration<RelatedWorksFetchEngine>(
+            this, 
+            $"/v2/illust/related?filter={targetFilter.GetDescription()}&illust_id={illustId}");
 }

@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval.CoreApi
+#region Copyright (c) Pixeval/Pixeval.CoreApi
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
@@ -22,16 +22,16 @@ using System;
 
 namespace Pixeval.CoreApi.Model;
 
-public record Feed
+public record Feed : IIdEntry
 {
     /// <summary>
     /// May points to user, illustration or novel
     /// </summary>
-    public string? FeedId { get; set; }
+    public long Id { get; set; }
 
     /// <summary>
     /// The name of the target of this feed if it has one
-    /// e.g. illust title or the user name
+    /// e.g. illust title or the username
     /// </summary>
     public string? FeedName { get; set; }
 
@@ -45,7 +45,7 @@ public record Feed
     /// </summary>
     public string? PostUserId { get; set; }
 
-    public string? PostUserName { get; set; }
+    public string? PostUsername { get; set; }
 
     /// <summary>
     /// The creator's name of the illustration/novel if possible
@@ -62,7 +62,7 @@ public record Feed
     public string? PostUserThumbnail { get; set; }
 
     /// <summary>
-    /// Is this feed's target pointing to an user
+    /// Is this feed's target pointing to a user
     /// </summary>
     public bool IsTargetRefersToUser { get; set; }
 }
@@ -77,7 +77,7 @@ public enum FeedType
     /// <summary>
     /// User posted a new illust
     /// </summary>
-    AddIllust,
+    PostIllust,
 
     /// <summary>
     /// User followed an artist

@@ -39,8 +39,8 @@ public static class ThrowUtils
 
     [DoesNotReturn]
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public static TResult Throw<TException, TResult>(params object[] parameters) where TException : Exception
-        => throw ((Exception)Activator.CreateInstance(typeof(TException), parameters)!);
+    public static TResult Throw<TException, TResult>(TException e) where TException : Exception
+        => throw e;
 
     /// <exception cref="InvalidOperationException"/>
     [DoesNotReturn]
@@ -81,8 +81,20 @@ public static class ThrowUtils
     /// <exception cref="ArgumentOutOfRangeException"/>
     [DoesNotReturn]
     [MethodImpl(MethodImplOptions.NoInlining)]
+    public static void ArgumentOutOfRange<T>(T? actualValue, string? message = null, [CallerArgumentExpression(nameof(actualValue))] string? paraName = null)
+        => throw new ArgumentOutOfRangeException(paraName, actualValue, message);
+
+    /// <exception cref="ArgumentOutOfRangeException"/>
+    [DoesNotReturn]
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public static TReturn ArgumentOutOfRange<T, TReturn>(T? actualValue, string? message = null, [CallerArgumentExpression(nameof(actualValue))] string? paraName = null)
         => throw new ArgumentOutOfRangeException(paraName, actualValue, message);
+
+    /// <exception cref="MacroParseException"/>
+    [DoesNotReturn]
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static void MacroParse(string? message = null)
+        => throw new MacroParseException(message);
 
     /// <exception cref="FormatException"/>
     [DoesNotReturn]

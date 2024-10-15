@@ -20,15 +20,21 @@
 
 using System.IO;
 using Microsoft.UI.Xaml.Media;
-using Pixeval.Misc;
+using Pixeval.Util.UI;
 
 namespace Pixeval.Pages;
 
-public class PixivReplyEmojiViewModel(PixivReplyEmoji emojiEnumValue, Stream imageStream)
+public class PixivReplyEmojiViewModel()
 {
-    public PixivReplyEmoji EmojiEnumValue { get; } = emojiEnumValue;
+    public PixivReplyEmojiViewModel(PixivReplyEmoji emojiEnumValue, Stream imageStream) : this()
+    {
+        EmojiEnumValue = emojiEnumValue;
+        ImageStream = imageStream;
+    }
 
-    public Stream ImageStream { get; } = imageStream;
+    public PixivReplyEmoji EmojiEnumValue { get; }
+
+    public Stream ImageStream { get; } = null!;
 
     public ImageSource? ImageSource { get; set; }
 }

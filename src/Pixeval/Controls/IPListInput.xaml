@@ -2,7 +2,9 @@
     x:Class="Pixeval.Controls.IPListInput"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:fluent="using:FluentIcons.WinUI"
     xmlns:local="using:Pixeval.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Orientation="Vertical"
@@ -10,7 +12,8 @@
     <TextBlock Margin="10" Text="{x:Bind Header}" />
     <AutoSuggestBox
         x:Uid="/IPListInput/AddItemAutoSuggestBox"
-        QueryIcon="Add"
+        QueryIcon="{fluent:SymbolIcon Symbol=Add,
+                                      FontSize={StaticResource SmallIconFontSize}}"
         QuerySubmitted="AddItem"
         TextChanged="TextChanged" />
     <InfoBar x:Name="ErrorInfoBar" IsClosable="True" />
@@ -21,18 +24,13 @@
         ItemsSource="{x:Bind ItemsSource, Mode=OneWay}">
         <ListView.ItemTemplate>
             <DataTemplate x:DataType="x:String">
-                <Grid Tag="{x:Bind}" Tapped="RemoveTapped">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-                    <SymbolIcon Grid.Column="1" Symbol="Cancel" />
+                <controls:DockPanel Tag="{x:Bind}" Tapped="RemoveTapped">
+                    <SymbolIcon controls:DockPanel.Dock="Right" Symbol="Cancel" />
                     <TextBlock
-                        Grid.Column="0"
                         VerticalAlignment="Center"
                         Text="{x:Bind}"
                         TextAlignment="Left" />
-                </Grid>
+                </controls:DockPanel>
             </DataTemplate>
         </ListView.ItemTemplate>
     </ListView>

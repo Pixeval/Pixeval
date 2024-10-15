@@ -27,6 +27,7 @@ using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
@@ -103,12 +104,12 @@ public class FileCache
                     break;
                 case Stream stream:
                 {
-                    await using var s = File.OpenWrite(filePath);
+                    await using var s = IoHelper.OpenAsyncWrite(filePath);
                     await stream.CopyToAsync(s);
                     break;
                 }
                 default:
-                    await File.WriteAllBytesAsync(filePath, JsonSerializer.SerializeToUtf8Bytes(data));
+                    ThrowHelper.NotSupported("AOT");
                     break;
             }
 
@@ -396,13 +397,10 @@ public class FileCache
                 ++HitCount;
                 return typeof(T) switch
                 {
-                    var type when type == typeof(Stream) || type.IsAssignableTo(typeof(Stream)) => (T)(object)await file.OpenRead().CopyToMemoryStreamAsync(true),
+                    var type when type == typeof(FileInfo) => (T)(object)file,
+                    var type when type == typeof(Stream) || type.IsAssignableTo(typeof(Stream)) => (T)(object)await file.OpenAsyncRead().CopyToMemoryStreamAsync(true),
                     var type when type == typeof(byte[]) => (T)(object)File.ReadAllBytesAsync(file.FullName),
-                    _ => await Functions.Block(async () =>
-                    {
-                        await using var stream = file.OpenRead();
-                        return (await JsonSerializer.DeserializeAsync<T>(stream))!;
-                    })
+                    _ => ThrowHelper.NotSupported<T>("AOT")
                 };
             }
         }
@@ -558,29 +556,29 @@ public class FileCache
 
     private async Task WriteIndexAsync()
     {
-        await File.WriteAllBytesAsync(_indexFile.FullName, JsonSerializer.SerializeToUtf8Bytes(_index));
+        await File.WriteAllBytesAsync(_indexFile.FullName, JsonSerializer.SerializeToUtf8Bytes(_expireIndex, typeof(Dictionary<Guid, string>), IndexContext.Default));
     }
 
     private async Task LoadIndexAsync()
     {
         if (_indexFile.Exists)
         {
-            await using var openRead = _indexFile.OpenRead();
-            _index = (await JsonSerializer.DeserializeAsync<Dictionary<Guid, string>>(openRead))!;
+            await using var openRead = _indexFile.OpenAsyncRead();
+            _index = (Dictionary<Guid, string>)(await JsonSerializer.DeserializeAsync(openRead, typeof(Dictionary<Guid, string>), IndexContext.Default))!;
         }
     }
 
     private async Task WriteExpireIndexAsync()
     {
-        await File.WriteAllBytesAsync(_expireIndexFile.FullName, JsonSerializer.SerializeToUtf8Bytes(_expireIndex));
+        await File.WriteAllBytesAsync(_expireIndexFile.FullName, JsonSerializer.SerializeToUtf8Bytes(_expireIndex, typeof(Dictionary<Guid, DateTimeOffset>), ExpireIndexContext.Default));
     }
 
     private async Task LoadExpireIndexAsync()
     {
         if (_expireIndexFile.Exists)
         {
-            await using var openRead = _expireIndexFile.OpenRead();
-            _expireIndex = (await JsonSerializer.DeserializeAsync<Dictionary<Guid, DateTimeOffset>>(openRead))!;
+            await using var openRead = _expireIndexFile.OpenAsyncRead();
+            _expireIndex = (Dictionary<Guid, DateTimeOffset>)(await JsonSerializer.DeserializeAsync(openRead, typeof(Dictionary<Guid, DateTimeOffset>), ExpireIndexContext.Default))!;
         }
     }
 
@@ -593,9 +591,15 @@ public class FileCache
         {
             string str => new Guid(HashAndTruncateTo128Bit(Encoding.UTF8.GetBytes(str))),
             byte[] bytes => new Guid(HashAndTruncateTo128Bit(bytes)),
-            var number and (int or uint or long or ulong) => Functions.Block(() =>
+            var number and (int or uint) => Functions.Block(() =>
             {
-                Span<byte> span = stackalloc byte[Marshal.SizeOf(number)];
+                Span<byte> span = stackalloc byte[sizeof(int)];
+                Unsafe.WriteUnaligned(ref MemoryMarshal.GetReference(span), number);
+                return new Guid(HashAndTruncateTo128Bit(span));
+            }),
+            var number and (long or ulong) => Functions.Block(() =>
+            {
+                Span<byte> span = stackalloc byte[sizeof(long)];
                 Unsafe.WriteUnaligned(ref MemoryMarshal.GetReference(span), number);
                 return new Guid(HashAndTruncateTo128Bit(span));
             }),
@@ -644,3 +648,9 @@ public enum CacheState
     /// </summary>
     Active = 2
 }
+
+[JsonSerializable(typeof(Dictionary<Guid, string>))]
+internal partial class IndexContext : JsonSerializerContext;
+
+[JsonSerializable(typeof(Dictionary<Guid, DateTimeOffset>))]
+internal partial class ExpireIndexContext : JsonSerializerContext;

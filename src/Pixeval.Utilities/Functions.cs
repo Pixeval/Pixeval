@@ -34,18 +34,15 @@ public static class Functions
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static ROut? Let<TIn, ROut>(this TIn obj, Func<TIn, ROut> block)
+    public static ROut Let<TIn, ROut>(this TIn obj, Func<TIn, ROut> block)
     {
-        return obj is not null ? block(obj) : default;
+        return block(obj);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void Let<T>(this T obj, Action<T> block)
     {
-        if (obj is not null)
-        {
-            block(obj);
-        }
+        block(obj);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -120,6 +117,18 @@ public static class Functions
     }
 
     public static async Task IgnoreExceptionAsync(Func<Task> action)
+    {
+        try
+        {
+            await action();
+        }
+        catch
+        {
+            // ignore
+        }
+    }
+
+    public static async Task IgnoreExceptionAsync(Func<ValueTask> action)
     {
         try
         {

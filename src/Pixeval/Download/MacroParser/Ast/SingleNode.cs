@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -18,9 +18,11 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using System.Collections.Generic;
+
 namespace Pixeval.Download.MacroParser.Ast;
 
 public abstract record SingleNode<TContext> : IMetaPathNode<TContext>
 {
-    public abstract string Evaluate(IMetaPathMacroProvider<TContext> env, TContext context);
+    public abstract string Evaluate(IReadOnlyList<IMacro> env, TContext context);
 }

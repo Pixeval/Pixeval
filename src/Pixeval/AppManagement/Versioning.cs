@@ -2,36 +2,43 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Json;
 using System.Runtime.InteropServices;
-using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using CommunityToolkit.HighPerformance;
+using Semver;
 
 namespace Pixeval.AppManagement;
 
 public class Versioning
 {
-    public Version CurrentVersion { get; } = Version.Parse(GitVersionInformation.AssemblySemVer);
+    public SemVersion CurrentVersion { get; } = SemVersion.Parse(ThisAssembly.Git.
+#if DEBUG
+            Tag
+#else
+            BaseTag
+#endif
+        , SemVersionStyles.Strict);
 
-    public Version? NewestVersion => NewestAppReleaseModel?.Version;
+    public SemVersion? NewestVersion => NewestAppReleaseModel?.Version;
 
     public AppReleaseModel? NewestAppReleaseModel => AppReleaseModels?[0];
 
     public AppReleaseModel? CurrentAppReleaseModel => AppReleaseModels?.FirstOrDefault(t => t.Version == CurrentVersion);
 
-    public UpdateState CompareUpdateState(Version currentVersion, Version? newVersion)
+    public UpdateState CompareUpdateState(SemVersion currentVersion, SemVersion? newVersion)
     {
         if (newVersion is null)
             return UpdateState.Unknown;
 
-        return currentVersion.CompareTo(newVersion) switch
+        return currentVersion.ComparePrecedenceTo(newVersion) switch
         {
             > 0 => UpdateState.Insider,
             0 => UpdateState.UpToDate,
             _ => newVersion.Major > currentVersion.Major ? UpdateState.MajorUpdate :
                 newVersion.Minor > currentVersion.Minor ? UpdateState.MinorUpdate :
-                newVersion.Build > currentVersion.Build ? UpdateState.BuildUpdate :
+                newVersion.Patch > currentVersion.Patch ? UpdateState.BuildUpdate :
                 UpdateState.SpecifierUpdate
         };
     }
@@ -49,16 +56,15 @@ public class Versioning
             AppReleaseModels = null;
             if (client.DefaultRequestHeaders.UserAgent.Count is 0)
                 client.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36 Edg/121.0.0.0");
-            var stringAsync = await client.GetStringAsync("https://api.github.com/repos/Pixeval/Pixeval/releases");
-            if (JsonSerializer.Deserialize<GitHubRelease[]>(stringAsync) is { Length: > 0 } gitHubReleases)
+            if (await client.GetFromJsonAsync("https://api.github.com/repos/Pixeval/Pixeval/releases", typeof(GitHubRelease[]), GitHubReleaseSerializeContext.Default) is GitHubRelease[] { Length: > 0 } gitHubReleases)
             {
                 var appReleaseModels = new List<AppReleaseModel>(gitHubReleases.Length);
                 foreach (var release in gitHubReleases)
                 {
                     var tag = release.TagName;
-                    for (var j = tag.Count('.'); j < 3; ++j)
+                    for (var j = tag.Count('.'); j < 2; ++j)
                         tag += ".0";
-                    if (Version.TryParse(tag, out var appVersion))
+                    if (SemVersion.TryParse(tag, SemVersionStyles.Strict, out var appVersion))
                     {
                         App.AppViewModel.AppSettings.LastCheckedUpdate = DateTimeOffset.Now;
                         var str = release.Assets.FirstOrDefault(t =>
@@ -89,7 +95,7 @@ public class Versioning
 }
 
 public record AppReleaseModel(
-    Version Version,
+    SemVersion Version,
     string ReleaseNote,
     Uri? ReleaseUri) : IComparable<AppReleaseModel>
 {
@@ -99,11 +105,15 @@ public record AppReleaseModel(
             return 0;
         if (other is null)
             return 1;
-        return Version.CompareTo(other.Version);
+        return Version.ComparePrecedenceTo(other.Version);
     }
 }
 
-file class GitHubRelease
+[JsonSerializable(typeof(GitHubRelease[]))]
+[JsonSerializable(typeof(Assets[]))]
+public partial class GitHubReleaseSerializeContext : JsonSerializerContext;
+
+public class GitHubRelease
 {
     [JsonPropertyName("tag_name")]
     public required string TagName { get; init; }
@@ -115,7 +125,7 @@ file class GitHubRelease
     public required string Notes { get; init; }
 }
 
-file class Assets
+public class Assets
 {
     [JsonPropertyName("browser_download_url")]
     public required string BrowserDownloadUrl { get; init; }

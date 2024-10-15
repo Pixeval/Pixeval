@@ -1,7 +1,7 @@
 {
-    "CancelSelectionButtonFormatted": "取消选择 ({0})",
+    "CancelSelectionButtonFormatted": "取消选择（{0}）",
     "AddAllToBookmarkButton/Label": "添加到收藏夹",
-    "AddAllToBookmarkContentFormatted": "收藏了{0}张图片",
+    "AddedAllToBookmarkContentFormatted": "收藏了{0}张图片",
     "AddAllToBookmarkTitle": "成功添加到收藏",
     "OpenAllInBrowserButton/Label": "在浏览器中打开",
     "OpenConditionDialogButton/Label": "过滤",
@@ -15,8 +15,6 @@
     "SelectionButton/Label": "多选",
     "CancelSelectionButtonDefaultLabel": "取消选择",
     "DownloadItemsQueuedFormatted": "已将{0}个作品添加至下载列表",
-    "FastFilterAutoSuggestBox/PlaceholderText": "输入ID/标签/作品名进行快速过滤",
-    "FilterTeachingTip/ActionButtonContent": "清空过滤器",
-    "FilterTeachingTip/CloseButtonContent": "应用",
+    "FilterAutoSuggestBox/PlaceholderText": "过滤作品（用法见帮助页）",
     "AddToBookmarkTeachingTip/CloseButtonContent": "添加收藏"
 }

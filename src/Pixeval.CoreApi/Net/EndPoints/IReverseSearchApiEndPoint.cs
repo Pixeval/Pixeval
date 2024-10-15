@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval.CoreApi
+#region Copyright (c) Pixeval/Pixeval.CoreApi
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
@@ -21,13 +21,14 @@
 using System.Threading.Tasks;
 using Pixeval.CoreApi.Net.Request;
 using Pixeval.CoreApi.Net.Response;
-using Refit;
+using WebApiClientCore.Attributes;
+using WebApiClientCore.Parameters;
 
 namespace Pixeval.CoreApi.Net.EndPoints;
 
-internal interface IReverseSearchApiEndPoint
+[HttpHost("https://saucenao.com/")]
+public interface IReverseSearchApiEndPoint
 {
-    [Multipart]
-    [Post("/search.php")]
-    Task<ReverseSearchResponse> GetSauceAsync([Query] ReverseSearchRequest request, [AliasAs("file")] StreamPart file);
+    [HttpPost("/search.php")]
+    Task<ReverseSearchResponse> GetSauceAsync([FormDataContent] FormDataFile file, [PathQuery] ReverseSearchRequest request);
 }

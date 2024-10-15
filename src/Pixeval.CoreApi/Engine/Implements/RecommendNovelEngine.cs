@@ -24,7 +24,6 @@ using System.Collections.Generic;
 using System.Threading;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Model;
-using Pixeval.CoreApi.Net;
 using Pixeval.Utilities;
 
 namespace Pixeval.CoreApi.Engine.Implements;
@@ -36,19 +35,9 @@ internal class RecommendNovelEngine(
     EngineHandle? engineHandle)
     : AbstractPixivFetchEngine<Novel>(makoClient, engineHandle)
 {
-    private readonly TargetFilter _filter = filter;
-    private readonly uint? _maxBookmarkIdForRecommend = maxBookmarkIdForRecommend;
-
-    public override IAsyncEnumerator<Novel> GetAsyncEnumerator(
-        CancellationToken cancellationToken = new CancellationToken()) =>
-        RecursivePixivAsyncEnumerators.Novel<RecommendNovelEngine>.WithInitialUrl(this,
-            MakoApiKind.AppApi,
-            engine =>
-            {
-                var maxBookmarkIdForRecommend =
-                    engine._maxBookmarkIdForRecommend?.Let(static s => $"&max_bookmark_id_for_recommend={s}");
-                return "/v1/novel/recommended"
-                       + $"?filter={engine._filter.GetDescription()}"
-                       + maxBookmarkIdForRecommend;
-            })!;
+    public override IAsyncEnumerator<Novel> GetAsyncEnumerator(CancellationToken cancellationToken = new CancellationToken()) =>
+        new RecursivePixivAsyncEnumerators.Novel<RecommendNovelEngine>(this,
+            "/v1/novel/recommended"
+            + $"?filter={filter.GetDescription()}"
+            + maxBookmarkIdForRecommend?.Let(static s => $"&max_bookmark_id_for_recommend={s}"));
 }

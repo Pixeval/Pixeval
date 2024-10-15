@@ -24,10 +24,13 @@ namespace Pixeval.CoreApi.Model;
 
 public interface IEntry;
 
-public interface IWorkEntry : IEntry
+public interface IIdEntry : IEntry
 {
     long Id { get; }
+}
 
+public interface IWorkEntry : IIdEntry
+{
     int TotalView { get; }
 
     int TotalBookmarks { get; }

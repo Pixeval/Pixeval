@@ -19,11 +19,9 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
@@ -33,13 +31,12 @@ using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.Storage.Streams;
 using CommunityToolkit.WinUI;
+using FluentIcons.Common;
 using Microsoft.UI.Text;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
-using Pixeval.AppManagement;
-using Pixeval.Controls.MarkupExtensions;
 using Pixeval.Util.Threading;
 using Pixeval.Utilities;
 using SixLabors.ImageSharp.PixelFormats;
@@ -48,16 +45,29 @@ using SixLabors.ImageSharp.Processing.Processors.Quantization;
 using WinUI3Utilities;
 using Brush = Microsoft.UI.Xaml.Media.Brush;
 using Color = Windows.UI.Color;
-using FontFamily = Microsoft.UI.Xaml.Media.FontFamily;
 using Image = SixLabors.ImageSharp.Image;
 using Point = Windows.Foundation.Point;
 using Pixeval.Controls.Windowing;
 using Size = Windows.Foundation.Size;
+using Symbol = FluentIcons.Common.Symbol;
+using SymbolIcon = FluentIcons.WinUI.SymbolIcon;
+using SymbolIconSource = FluentIcons.WinUI.SymbolIconSource;
 
 namespace Pixeval.Util.UI;
 
 public static partial class UiHelper
 {
+    /// <summary>
+    /// Detects the perceived brightness of a color, returns <c>true</c> if the color is perceived as light
+    /// and returns <c>false</c> if the color is perceived as dark.
+    /// </summary>
+    /// <param name="color"></param>
+    /// <returns></returns>
+    public static bool PerceivedBright(Color color)
+    {
+        return 0.2126 * color.R + 0.7152 * color.G + 0.0722 * color.B >= 128;
+    }
+
     /// <summary>
     /// With higher <paramref name="magnitude"/> you will get brighter color and vice-versa.
     /// </summary>
@@ -189,49 +199,32 @@ public static partial class UiHelper
         _ = frame.Navigate(tag.NavigateTo, tag.Parameter, transitionInfo);
     }
 
-    public static Visibility Inverse(this Visibility visibility)
+    public static SymbolIcon GetSymbolIcon(this Symbol symbol, bool useSmallFontSize = false)
     {
-        return visibility == Visibility.Collapsed ? Visibility.Visible : Visibility.Collapsed;
-    }
-
-    public static Visibility ToVisibility(this bool value)
-    {
-        return value ? Visibility.Visible : Visibility.Collapsed;
-    }
-
-    public static FontIcon GetFontIcon(this FontIconSymbol symbol, double? fontSize = null)
-    {
-        var systemThemeFontFamily = new FontFamily(AppInfo.AppIconFontFamilyName);
-        var icon = new FontIcon
+        var icon = new SymbolIcon
         {
-            Glyph = ((char)symbol).ToString(),
-            FontFamily = systemThemeFontFamily
+            Symbol = symbol
         };
-        if (fontSize is not null)
-        {
-            icon.FontSize = fontSize.Value;
-        }
+
+        if (useSmallFontSize)
+            icon.FontSize = 16; // 20 is default
 
         return icon;
     }
 
-    public static FontIconSource GetFontIconSource(this FontIconSymbol symbol, double? fontSize = null, Brush? foregroundBrush = null)
+    public static SymbolIconSource GetSymbolIconSource(this Symbol symbol, bool isFilled = false, Brush? foregroundBrush = null, bool useSmallFontSize = false)
     {
-        var systemThemeFontFamily = new FontFamily(AppInfo.AppIconFontFamilyName);
-        var icon = new FontIconSource
+        var icon = new SymbolIconSource
         {
-            Glyph = ((char)symbol).ToString(),
-            FontFamily = systemThemeFontFamily
+            IconVariant = isFilled ? IconVariant.Filled : IconVariant.Regular,
+            Symbol = symbol
         };
-        if (fontSize is not null)
-        {
-            icon.FontSize = fontSize.Value;
-        }
+
+        if (useSmallFontSize)
+            icon.FontSize = 16; // 20 is default
 
         if (foregroundBrush is not null)
-        {
             icon.Foreground = foregroundBrush;
-        }
 
         return icon;
     }
@@ -244,11 +237,6 @@ public static partial class UiHelper
         return ownerRectangle.IntersectsWith(childRectangle);
     }
 
-    public static IEnumerable<T> FindChildren<T>(this FrameworkElement startNode) where T : DependencyObject
-    {
-        return startNode.FindChildren().OfType<T>();
-    }
-
     public static void ClearContent(this RichEditBox box)
     {
         box.Document.SetText(TextSetOptions.None, "");
@@ -257,6 +245,10 @@ public static partial class UiHelper
     public static IAsyncOperation<StorageFolder?> OpenFolderPickerAsync(this Window window) => window.PickSingleFolderAsync(PickerLocationId.PicturesLibrary);
 
     public static IAsyncOperation<StorageFile?> OpenFileOpenPickerAsync(this Window window) => window.PickSingleFileAsync(PickerLocationId.PicturesLibrary);
+
+    public static IAsyncOperation<StorageFolder?> OpenFolderPickerAsync(this ulong hWnd) => WindowFactory.ForkedWindows[hWnd].PickSingleFolderAsync(PickerLocationId.PicturesLibrary);
+
+    public static IAsyncOperation<StorageFile?> OpenFileOpenPickerAsync(this ulong hWnd) => WindowFactory.ForkedWindows[hWnd].PickSingleFileAsync(PickerLocationId.PicturesLibrary);
 
     public static async Task<T> AwaitPageTransitionAsync<T>(this Frame root) where T : Page
     {

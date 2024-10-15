@@ -3,15 +3,12 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Pixeval.Controls"
-    xmlns:converters="using:CommunityToolkit.WinUI.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="using:Pixeval.Pages.Capability"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:model="using:Pixeval.CoreApi.Model"
+    xmlns:pixeval="using:Pixeval"
+    Loaded="BookmarksPage_OnLoaded"
     mc:Ignorable="d">
-    <controls:EnhancedPage.Resources>
-        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
-    </controls:EnhancedPage.Resources>
     <controls:WorkContainer x:Name="WorkContainer">
         <controls:WorkContainer.CommandBarElements>
             <controls:NotifyOnLoadedComboBox
@@ -28,9 +25,10 @@
                 x:Name="PrivacyPolicyComboBox"
                 SelectionChanged="ComboBox_OnSelectionChanged"
                 Style="{StaticResource PrivacyPolicyComboBoxStyle}"
-                Visibility="{x:Bind _viewModel.IsMe, Converter={StaticResource BoolToVisibilityConverter}}" />
+                Visibility="{x:Bind controls:C.ToVisibility(_viewModel.IsMe)}" />
             <controls:EnumComboBox
                 x:Name="SimpleWorkTypeComboBox"
+                SelectedEnum="{x:Bind pixeval:App.AppViewModel.AppSettings.SimpleWorkType}"
                 SelectionChanged="ComboBox_OnSelectionChanged"
                 Style="{StaticResource SimpleWorkTypeComboBoxStyle}" />
         </controls:WorkContainer.CommandBarElements>

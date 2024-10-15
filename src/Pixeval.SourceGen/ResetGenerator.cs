@@ -20,24 +20,30 @@ public class ResetGenerator : IIncrementalGenerator
     internal string TypeWithAttribute(INamedTypeSymbol typeSymbol, ImmutableArray<AttributeData> attributeList)
     {
         var name = typeSymbol.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
-        const string createDefault = "ResetDefault";
+        const string resetDefault = "ResetDefault";
+        const string variable = "variable";
         var list = typeSymbol.GetProperties(attributeList[0].AttributeClass!)
             .Where(symbol => !symbol.IsReadOnly)
-            .Select(symbol =>
-            {
-                var syntax = (PropertyDeclarationSyntax)symbol.DeclaringSyntaxReferences[0].GetSyntax();
-                return (StatementSyntax)ExpressionStatement(AssignmentExpression(SyntaxKind.SimpleAssignmentExpression,
-                    IdentifierName(symbol.Name),
-                    syntax.Initializer is { } init
-                        ? init.Value
-                        : symbol.Type.NullableAnnotation is NullableAnnotation.NotAnnotated && symbol.Type.GetAttributes().Any(i => i.AttributeClass?.MetadataName == AttributeName)
-                            ? InvocationExpression(symbol.Type.GetStaticMemberAccessExpression(createDefault))
-                            : DefaultExpression(symbol.Type.GetTypeSyntax(false))));
-            });
+            .Select(symbol => (StatementSyntax)ExpressionStatement(AssignmentExpression(SyntaxKind.SimpleAssignmentExpression,
+                IdentifierName(symbol.Name),
+                MemberAccessExpression(
+                    SyntaxKind.SimpleMemberAccessExpression,
+                    IdentifierName(variable),
+                    IdentifierName(symbol.Name)))));
 
-        var method = MethodDeclaration(ParseTypeName("void"), createDefault)
+        var method = MethodDeclaration(ParseTypeName("void"), resetDefault)
             .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword)))
-            .WithBody(Block(SeparatedList(list)));
+            .WithBody(Block(SeparatedList(
+            [
+                LocalDeclarationStatement(
+                    VariableDeclaration(IdentifierName("var"))
+                        .WithVariables(
+                            SingletonSeparatedList(
+                                VariableDeclarator(Identifier(variable))
+                                    .WithInitializer(
+                                        EqualsValueClause(ObjectCreationExpression(typeSymbol.GetTypeSyntax(false), ArgumentList(), null)))))),
+                ..list
+            ])));
 
         var generatedType = SyntaxHelper.GetDeclaration(name, typeSymbol, method);
         var generatedNamespace = SyntaxHelper.GetFileScopedNamespaceDeclaration(typeSymbol, generatedType, true);

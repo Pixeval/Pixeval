@@ -31,7 +31,6 @@ using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Streams;
-using Pixeval.Download.Models;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats;
 
@@ -47,14 +46,18 @@ public static partial class IoHelper
         return result.Select(b => b.ToString("X2")).Aggregate((acc, str) => acc + str);
     }
 
+    public static string GetInvalidPathChars { get; } = @"*?""|" + new string(Path.GetInvalidPathChars());
+
+    public static string GetInvalidNameChars { get; } = @"\/*:?""|" + new string(Path.GetInvalidPathChars());
+
     public static string NormalizePath(string path)
     {
-        return Path.GetFullPath(Path.GetInvalidPathChars().Aggregate(path, (s, c) => s.Replace(c.ToString(), string.Empty)));
+        return Path.GetFullPath(GetInvalidPathChars.Aggregate(path, (s, c) => s.Replace(c.ToString(), ""))).TrimEnd('.');
     }
 
     public static string NormalizePathSegment(string path)
     {
-        return Path.GetInvalidFileNameChars().Aggregate(path, (s, c) => s.Replace(c.ToString(), string.Empty));
+        return GetInvalidNameChars.Aggregate(path, (s, c) => s.Replace(c.ToString(), "")).TrimEnd('.');
     }
 
     public static void CreateParentDirectories(string fullPath)
@@ -124,7 +127,7 @@ public static partial class IoHelper
         return s;
     }
 
-    public static async Task<MemoryStream[]> ReadZipArchiveEntriesAsync(Stream zipStream, bool dispose)
+    public static async Task<MemoryStream[]> ReadZipAsync(Stream zipStream, bool dispose)
     {
         Stream s;
         if (zipStream is FileStream fs)
@@ -157,18 +160,69 @@ public static partial class IoHelper
         return result;
     }
 
-    public static async Task DeleteIllustrationTaskAsync(IllustrationDownloadTaskBase task)
+    public static async Task<MemoryStream> WriteZipAsync(IReadOnlyList<string> names, IReadOnlyList<Stream> streams, bool dispose)
     {
-        try
+        var zipStream = _recyclableMemoryStreamManager.GetStream();
+
+        var zipArchive = new ZipArchive(zipStream, ZipArchiveMode.Create, true);
+
+        for (var i = 0; i < streams.Count; i++)
         {
-            if (task is MangaDownloadTask)
-                await (await StorageFolder.GetFolderFromPathAsync(Path.GetDirectoryName(task.Destination))).DeleteAsync(StorageDeleteOption.Default);
-            else
-                await (await StorageFile.GetFileFromPathAsync(task.Destination)).DeleteAsync(StorageDeleteOption.Default);
+            // ReSharper disable once AccessToDisposedClosure
+            var entry = zipArchive.CreateEntry(names[i]);
+            await using var entryStream = entry.Open();
+            await streams[i].CopyToAsync(entryStream);
+            if (dispose)
+                await streams[i].DisposeAsync();
         }
-        catch
+
+        zipArchive.Dispose();
+        // see-also https://stackoverflow.com/questions/47707862/ziparchive-gives-unexpected-end-of-data-corrupted-error/47707973
+        // 在flush前释放ZipArchive
+        zipStream.Position = 0;
+        await zipStream.FlushAsync();
+
+        return zipStream;
+    }
+
+    public static void DeleteEmptyFolder(string? path)
+    {
+        if (Directory.Exists(path))
+            if (!Directory.EnumerateFileSystemEntries(path).Any())
+                Directory.Delete(path);
+    }
+
+    public static FileStream OpenAsyncRead(string path, int bufferSize = 4096)
+    {
+        return new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read, bufferSize, true);
+    }
+
+    public static FileStream OpenAsyncWrite(string path, int bufferSize = 4096)
+    {
+        return new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None, bufferSize, true);
+    }
+
+    public static FileStream OpenAsyncRead(this FileInfo info, int bufferSize = 4096)
+    {
+        return info.Open(new FileStreamOptions
         {
-            // ignored
-        }
+            Mode = FileMode.Open,
+            Access = FileAccess.Read,
+            Share = FileShare.Read,
+            BufferSize = bufferSize,
+            Options = FileOptions.Asynchronous
+        });
+    }
+
+    public static FileStream OpenAsyncWrite(this FileInfo info, int bufferSize = 4096)
+    {
+        return info.Open(new FileStreamOptions
+        {
+            Mode = FileMode.OpenOrCreate,
+            Access = FileAccess.Write,
+            Share = FileShare.None,
+            BufferSize = bufferSize,
+            Options = FileOptions.Asynchronous
+        });
     }
 }

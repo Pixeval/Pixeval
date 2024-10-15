@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:timeline="using:Pixeval.Controls.Timeline">
+    <Style TargetType="timeline:TimelineUnit" >
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="timeline:TimelineUnit">
+                    <Grid x:Name="TimelineSectionBackground" HorizontalAlignment="Stretch" VerticalAlignment="Center" Background="{TemplateBinding Background}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition x:Name="LeftColumn" Width="50" />
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition x:Name="RightColumn" Width="50" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Stretch">
+                            <Grid x:Name="LeftIconContainer" Background="#F4F6F8" HorizontalAlignment="Center" VerticalAlignment="Center" CornerRadius="25" Width="45" Height="45">
+                                <IconSourceElement IconSource="{TemplateBinding TitleIcon}" Width="45" Height="45" HorizontalAlignment="Center" />
+                            </Grid>
+                            <Grid x:Name="LeftIndicatorAxis" Background="#E3E3E3" Width="4" />
+                        </StackPanel>
+
+                        <ContentControl 
+                            x:Name="ContentPresenter"
+                            Grid.Column="1"
+                            Padding="15,0" 
+                            Width="{TemplateBinding Width}"
+                            Height="{TemplateBinding Height}"
+                            HorizontalAlignment="Left" VerticalAlignment="Top"
+                            ContentTemplate="{TemplateBinding ContentTemplate}" 
+                            ContentTemplateSelector="{TemplateBinding ContentTemplateSelector}"
+                            Content="{TemplateBinding Content}"
+                            DataContext="{TemplateBinding DataContext}"
+                            HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+
+                        <StackPanel Grid.Column="2" VerticalAlignment="Stretch">
+                            <Grid x:Name="RightIconContainer" Background="#F4F6F8" HorizontalAlignment="Center" VerticalAlignment="Center" CornerRadius="25" Width="45" Height="45">
+                                <IconSourceElement IconSource="{TemplateBinding TitleIcon}" Width="45" Height="45" HorizontalAlignment="Center" />
+                            </Grid>
+                            <Grid x:Name="RightIndicatorAxis" Background="#E3E3E3" Width="4" />
+                        </StackPanel>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

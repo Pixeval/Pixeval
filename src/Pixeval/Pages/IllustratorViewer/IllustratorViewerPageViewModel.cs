@@ -21,13 +21,9 @@
 using System;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.AppManagement;
-using Pixeval.Controls.MarkupExtensions;
 using Pixeval.Controls.Windowing;
 using Pixeval.Util;
 using Pixeval.Util.ComponentModels;
@@ -35,9 +31,12 @@ using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using Windows.System;
+using Microsoft.UI.Xaml.Controls;
+using Pixeval.Controls;
 using Pixeval.CoreApi.Net.Response;
 using Pixeval.Pages.Capability;
 using WinUI3Utilities;
+using Symbol = FluentIcons.Common.Symbol;
 
 namespace Pixeval.Pages.IllustratorViewer;
 
@@ -58,11 +57,11 @@ public partial class IllustratorViewerPageViewModel : UiObservableObject
 
     public NavigationViewTag<FollowingsPage, long> FollowingsTag { get; }
 
-    public NavigationViewTag MyPixivUserTag { get; }
+    public NavigationViewTag<MyPixivUsersPage, long> MyPixivUserTag { get; }
 
-    public NavigationViewTag<RecommendUsersPage, long> RecommendUserTag { get; }
+    public NavigationViewTag<RelatedUsersPage, long> RelatedUserTag { get; }
 
-    public IllustratorViewerPageViewModel(PixivSingleUserResponse userDetail, FrameworkElement content) : base(content)
+    public IllustratorViewerPageViewModel(PixivSingleUserResponse userDetail, ulong hWnd) : base(hWnd)
     {
         UserDetail = userDetail;
         IsFollowed = userDetail.UserEntity.IsFollowed;
@@ -71,8 +70,8 @@ public partial class IllustratorViewerPageViewModel : UiObservableObject
         WorkTag = new(Id);
         BookmarksTag = new(Id);
         FollowingsTag = new(Id);
-        MyPixivUserTag = null!;
-        RecommendUserTag = new(Id);
+        MyPixivUserTag = new(Id);
+        RelatedUserTag = new(Id);
 
         InitializeCommands();
         _ = SetAvatarAndBackgroundAsync();
@@ -98,16 +97,16 @@ public partial class IllustratorViewerPageViewModel : UiObservableObject
 
     public async Task SetAvatarAndBackgroundAsync()
     {
-        var result = await App.AppViewModel.MakoClient.DownloadBitmapImageAsync(AvatarUrl, 100);
+        var result = await App.AppViewModel.MakoClient.DownloadBitmapImageWithDesiredSizeAsync(AvatarUrl, 100);
         AvatarSource = result is Result<ImageSource>.Success { Value: var avatar }
             ? avatar
-            : await AppInfo.GetPixivNoProfileImageAsync();
+            : await AppInfo.PixivNoProfile;
         if (BackgroundUrl is not null)
         {
             var result2 = await App.AppViewModel.MakoClient.DownloadBitmapImageAsync(BackgroundUrl);
             BackgroundSource = result2 is Result<ImageSource>.Success { Value: var background }
                 ? background
-                : await AppInfo.GetNotAvailableImageAsync();
+                : await AppInfo.ImageNotAvailable;
         }
         else
         {
@@ -123,18 +122,18 @@ public partial class IllustratorViewerPageViewModel : UiObservableObject
 
     public XamlUICommand FollowPrivatelyCommand { get; } = XamlUiCommandHelper.GetNewFollowPrivatelyCommand();
 
-    public XamlUICommand GenerateLinkCommand { get; } = EntryItemResources.GenerateLink.GetCommand(FontIconSymbol.LinkE71B);
+    public XamlUICommand GenerateLinkCommand { get; } = EntryItemResources.GenerateLink.GetCommand(Symbol.Link);
 
-    public XamlUICommand GenerateWebLinkCommand { get; } = EntryItemResources.GenerateWebLink.GetCommand(FontIconSymbol.PreviewLinkE8A1);
+    public XamlUICommand GenerateWebLinkCommand { get; } = EntryItemResources.GenerateWebLink.GetCommand(Symbol.LinkMultiple);
 
-    public XamlUICommand OpenInWebBrowserCommand { get; } = EntryItemResources.OpenInWebBrowser.GetCommand(FontIconSymbol.WebSearchF6FA);
+    public XamlUICommand OpenInWebBrowserCommand { get; } = EntryItemResources.OpenInWebBrowser.GetCommand(Symbol.GlobeArrowUp);
 
-    public XamlUICommand ShowQrCodeCommand { get; } = EntryItemResources.ShowQRCode.GetCommand(FontIconSymbol.QRCodeED14);
+    public XamlUICommand ShowQrCodeCommand { get; } = EntryItemResources.ShowQRCode.GetCommand(Symbol.QrCode);
 
     /// <summary>
     /// 还没用到
     /// </summary>
-    public XamlUICommand ShowPixEzQrCodeCommand { get; } = EntryItemResources.ShowPixEzQrCode.GetCommand(FontIconSymbol.Photo2EB9F);
+    public XamlUICommand ShowPixEzQrCodeCommand { get; } = EntryItemResources.ShowPixEzQrCode.GetCommand(Symbol.Image);
 
     private void InitializeCommands()
     {
@@ -162,22 +161,13 @@ public partial class IllustratorViewerPageViewModel : UiObservableObject
     {
         UiHelper.ClipboardSetText(MakoHelper.GenerateUserAppUri(Id).OriginalString);
 
-        if (args.Parameter is TeachingTip teachingTip)
-        {
-            if (App.AppViewModel.AppSettings.DisplayTeachingTipWhenGeneratingAppLink)
-                teachingTip.IsOpen = true;
-            else
-                teachingTip?.ShowTeachingTipAndHide(EntryItemResources.LinkCopiedToClipboard);
-        }
-        // 只提示
-        else
-            (args.Parameter as FrameworkElement)?.ShowTeachingTipAndHide(EntryItemResources.LinkCopiedToClipboard);
+        HWnd.SuccessGrowl(EntryItemResources.LinkCopiedToClipboard);
     }
 
     private void GenerateWebLinkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
-        UiHelper.ClipboardSetText(MakoHelper.GenerateUserWebUri(Id).OriginalString);
-        (args.Parameter as FrameworkElement)?.ShowTeachingTipAndHide(EntryItemResources.LinkCopiedToClipboard);
+        UiHelper.ClipboardSetText( MakoHelper.GenerateUserWebUri(Id).OriginalString);
+        (args.Parameter as ulong?)?.SuccessGrowl(EntryItemResources.LinkCopiedToClipboard);
     }
 
     private async void OpenInWebBrowserCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
@@ -203,18 +193,10 @@ public partial class IllustratorViewerPageViewModel : UiObservableObject
         ShowQrCodeCommandExecuteRequested(showQrCodeTeachingTip, qrCodeSource);
     }
 
-    private static void ShowQrCodeCommandExecuteRequested(TeachingTip teachingTip, SoftwareBitmapSource source)
+    private static void ShowQrCodeCommandExecuteRequested(TeachingTip teachingTip, ImageSource source)
     {
         teachingTip.HeroContent.To<Image>().Source = source;
         teachingTip.IsOpen = true;
-        teachingTip.Closed += Closed;
-        return;
-
-        void Closed(TeachingTip s, TeachingTipClosedEventArgs ea)
-        {
-            source.Dispose();
-            s.Closed -= Closed;
-        }
     }
 
     #endregion

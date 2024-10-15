@@ -1,10 +1,8 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Threading.Tasks;
-using Windows.Foundation;
 using CommunityToolkit.WinUI.Controls;
 using CommunityToolkit.WinUI.Helpers;
 using Microsoft.UI.Xaml;
@@ -69,7 +67,7 @@ public sealed partial class AdvancedItemsView : ItemsView
                     var after = GetItemsCount();
                     // 这里可以设为一行的元素数，这样在加载过少数量的时候，也可以持续加载
                     // 一般一次会加载20个元素，而一行元素数一般少于10，所以这里设为10
-                    if (before + 10 < after)
+                    if (before + 10 <= after)
                         loadMore = false;
                 }
                 else
@@ -98,8 +96,13 @@ public sealed partial class AdvancedItemsView : ItemsView
 
             return false;
         };
-        _ = RegisterPropertyChangedCallback(ScrollViewProperty, ScrollViewOnPropertyChanged);
-        _ = RegisterPropertyChangedCallback(ItemsSourceProperty, ItemsSourceOnPropertyChanged);
+        _scrollViewOnPropertyChangedToken = RegisterPropertyChangedCallback(ScrollViewProperty, ScrollViewOnPropertyChanged);
+        var itemsSourceOnPropertyChangedToken = RegisterPropertyChangedCallback(ItemsSourceProperty, ItemsSourceOnPropertyChanged);
+        Unloaded += (_, _) =>
+        {
+            UnregisterPropertyChangedCallback(ScrollViewProperty, _scrollViewOnPropertyChangedToken);
+            UnregisterPropertyChangedCallback(ItemsSourceProperty, itemsSourceOnPropertyChangedToken);
+        };
     }
 
     #region PropertyChanged
@@ -141,7 +144,7 @@ public sealed partial class AdvancedItemsView : ItemsView
         switch (advancedItemsView.Layout)
         {
             case RiverFlowLayout linedFlowLayout:
-                linedFlowLayout.VerticalSpacing = minRowSpacing;
+                linedFlowLayout.LineSpacing = minRowSpacing;
                 break;
             case UniformGridLayout uniformGridLayout:
                 uniformGridLayout.MinRowSpacing = minRowSpacing;
@@ -162,7 +165,7 @@ public sealed partial class AdvancedItemsView : ItemsView
         switch (advancedItemsView.Layout)
         {
             case RiverFlowLayout linedFlowLayout:
-                linedFlowLayout.HorizontalSpacing = minColumnSpacing;
+                linedFlowLayout.MinItemSpacing = minColumnSpacing;
                 break;
             case UniformGridLayout uniformGridLayout:
                 uniformGridLayout.MinColumnSpacing = minColumnSpacing;
@@ -189,8 +192,8 @@ public sealed partial class AdvancedItemsView : ItemsView
             {
                 // ItemsStretch = LinedFlowLayoutItemsStretch.Fill,
                 LineHeight = minItemHeight,
-                VerticalSpacing = minRowSpacing,
-                HorizontalSpacing = minColumnSpacing
+                LineSpacing = minRowSpacing,
+                MinItemSpacing = minColumnSpacing
             },
             ItemsViewLayoutType.Grid => new UniformGridLayout
             {
@@ -252,11 +255,14 @@ public sealed partial class AdvancedItemsView : ItemsView
 
     #region EventHandlers
 
+    private readonly long _scrollViewOnPropertyChangedToken;
+
     /// <summary>
     /// 本方法之后会触发<see cref="AdvancedItemsViewOnSizeChanged"/>
     /// </summary>
     private void ScrollViewOnPropertyChanged(DependencyObject sender, DependencyProperty dp)
     {
+        UnregisterPropertyChangedCallback(ScrollViewProperty, _scrollViewOnPropertyChangedToken);
         ScrollView.ViewChanged += ScrollView_ViewChanged;
         ScrollView.PointerWheelChanged += ScrollView_PointerWheelChanged;
         _itemsRepeater = ScrollView.Content.To<ItemsRepeater>();
@@ -354,4 +360,3 @@ public sealed partial class AdvancedItemsView : ItemsView
 
     #endregion
 }
-

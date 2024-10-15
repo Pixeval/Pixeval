@@ -9,14 +9,15 @@
     mc:Ignorable="d">
     <SplitView
         x:Name="SplitView"
-        DisplayMode="Overlay"
+        DisplayMode="Inline"
         IsPaneOpen="{x:Bind IsPaneOpen, Mode=TwoWay}"
         OpenPaneLength="{x:Bind local:WorkViewerSplitView.OpenPaneLength}"
-        PaneBackground="Transparent"
-        PaneClosed="SplitView_OnPaneOpenedOrClosed"
-        PaneOpened="SplitView_OnPaneOpenedOrClosed">
+        PaneBackground="Transparent">
         <SplitView.Pane>
-            <Grid Background="{StaticResource SystemControlBackgroundChromeMediumLowBrush}" Translation="0,0,40">
+            <Grid
+                BorderBrush="{StaticResource ApplicationPageBackgroundThemeBrush}"
+                CornerRadius="4"
+                Translation="0,0,40">
                 <NavigationView
                     x:Name="NavigationView"
                     IsBackButtonVisible="Collapsed"

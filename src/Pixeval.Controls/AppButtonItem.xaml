@@ -2,42 +2,32 @@
     x:Class="Pixeval.Controls.AppButtonItem"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:fluent="using:FluentIcons.WinUI"
     xmlns:local="using:Pixeval.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Padding="5,0"
     HorizontalContentAlignment="Center"
     VerticalContentAlignment="Center"
     mc:Ignorable="d">
-    <Grid ColumnSpacing="5">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="Auto" />
-        </Grid.ColumnDefinitions>
+    <controls:DockPanel HorizontalSpacing="5">
         <TextBlock
-            Grid.Row="0"
-            Grid.Column="0"
-            Grid.ColumnSpan="2"
             HorizontalAlignment="Left"
+            controls:DockPanel.Dock="Top"
             FontWeight="SemiBold"
-            Foreground="{StaticResource TextSecondaryAccentColor}"
+            Foreground="{StaticResource TextFillColorSecondaryBrush}"
             Style="{StaticResource BaseTextBlockStyle}"
             Text="{x:Bind Title, Mode=OneWay}" />
-        <local:FontSymbolIcon
-            Grid.Row="1"
-            Grid.Column="0"
+        <fluent:SymbolIcon
             VerticalAlignment="Center"
-            Foreground="{StaticResource TextSecondaryAccentColor}"
-            Size="Small"
+            controls:DockPanel.Dock="Left"
+            FontSize="{StaticResource SmallIconFontSize}"
+            Foreground="{StaticResource TextFillColorSecondaryBrush}"
             Symbol="{x:Bind Symbol, Mode=OneWay}" />
         <TextBlock
-            Grid.Row="1"
-            Grid.Column="1"
+            HorizontalAlignment="Center"
             Style="{StaticResource SubtitleTextBlockStyle}"
             Text="{x:Bind Number, Mode=OneWay}" />
-    </Grid>
+    </controls:DockPanel>
 </AppBarElementContainer>

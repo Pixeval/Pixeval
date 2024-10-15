@@ -42,11 +42,3 @@ public class AdaptedAsyncEnumerator<T>(IEnumerator<T> outerEnumerator, Cancellat
 
     public T Current => outerEnumerator.Current;
 }
-
-public class AdaptedAsyncEnumerable<T>(IEnumerable<T> sync) : IAsyncEnumerable<T>
-{
-    public IAsyncEnumerator<T> GetAsyncEnumerator(CancellationToken cancellationToken = new CancellationToken())
-    {
-        return new AdaptedAsyncEnumerator<T>(sync.GetEnumerator());
-    }
-}

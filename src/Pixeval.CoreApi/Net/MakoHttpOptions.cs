@@ -67,7 +67,7 @@ public static partial class MakoHttpOptions
         NameResolvers[host] = nameResolvers.Select(IPAddress.Parse).ToArray();
     }
 
-    public static readonly Regex BypassRequiredHost = MyRegex();
+    public static readonly Regex DomainFrontingRequiredHost = MyRegex();
 
     [GeneratedRegex(@"^app-api\.pixiv\.net$|^www\.pixiv\.net$")]
     private static partial Regex MyRegex();
@@ -87,23 +87,28 @@ public static partial class MakoHttpOptions
     {
         return new HttpMessageInvoker(new SocketsHttpHandler
         {
-            ConnectCallback = BypassedConnectCallback
+            ConnectCallback = DomainFrontingConnectCallback
         });
     }
 
-    public static HttpMessageInvoker CreateDirectHttpMessageInvoker()
+    public static HttpMessageInvoker CreateDirectHttpMessageInvoker(MakoClient makoClient)
     {
-        return new HttpMessageInvoker(new SocketsHttpHandler());
+        var useProxy = makoClient.CurrentSystemProxy is not null;
+        return new HttpMessageInvoker(new SocketsHttpHandler
+        {
+            UseProxy = useProxy,
+            Proxy = makoClient.CurrentSystemProxy
+        });
     }
 
     public static async Task<IPAddress[]> GetAddressesAsync(string host, CancellationToken token)
     {
-        if (!NameResolvers.TryGetValue(host, out var ips)) 
+        if (!NameResolvers.TryGetValue(host, out var ips))
             ips = await Dns.GetHostAddressesAsync(host, token);
         return ips;
     }
 
-    private static async ValueTask<Stream> BypassedConnectCallback(SocketsHttpConnectionContext context, CancellationToken token)
+    private static async ValueTask<Stream> DomainFrontingConnectCallback(SocketsHttpConnectionContext context, CancellationToken token)
     {
         var sockets = new Socket(SocketType.Stream, ProtocolType.Tcp); // disposed by networkStream
         var host = context.InitialRequestMessage.RequestUri!.Host;

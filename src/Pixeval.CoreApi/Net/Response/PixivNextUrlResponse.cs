@@ -25,10 +25,10 @@ using Pixeval.CoreApi.Model;
 
 namespace Pixeval.CoreApi.Net.Response;
 
-public abstract record PixivNextUrlResponse<TEntity> where TEntity : class, IEntry
+public interface IPixivNextUrlResponse<TEntity> where TEntity : class, IEntry
 {
     [JsonPropertyName("next_url")]
-    public required string? NextUrl { get; set; } = null;
+    string? NextUrl { get; set; }
 
-    public abstract TEntity[] Entities { get; set; }
+    TEntity[] Entities { get; set; }
 }

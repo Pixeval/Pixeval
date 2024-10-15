@@ -33,12 +33,13 @@ using Windows.Foundation;
 using CommunityToolkit.WinUI.Collections;
 using CommunityToolkit.WinUI.Helpers;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 
 namespace Pixeval.Collections;
 
 [DebuggerDisplay("Count = {Count}")]
-public class AdvancedObservableCollection<T> : IList<T>, IList, IReadOnlyList<T>, INotifyCollectionChanged, INotifyPropertyChanged, ISupportIncrementalLoading, IComparer<T> where T : class
+public class AdvancedObservableCollection<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] T> : IList<T>, IList, IReadOnlyList<T>, INotifyCollectionChanged, INotifyPropertyChanged, ISupportIncrementalLoading, IComparer<T> where T : class
 {
     private readonly Dictionary<string, PropertyInfo> _sortProperties = [];
 
@@ -50,9 +51,11 @@ public class AdvancedObservableCollection<T> : IList<T>, IList, IReadOnlyList<T>
 
     private readonly List<T> _view = [];
 
-    private IList ListView => _view;
+    private IList ListView => RangedView;
 
     private Func<T, bool>? _filter;
+
+    private Range _range = Range.All;
 
     private WeakEventListener<AdvancedObservableCollection<T>, object?, NotifyCollectionChangedEventArgs> _sourceWeakEventListener = null!;
 
@@ -67,7 +70,7 @@ public class AdvancedObservableCollection<T> : IList<T>, IList, IReadOnlyList<T>
     /// Initializes a new instance of the <see cref="AdvancedObservableCollection{T}"/> class.
     /// </summary>
     /// <param name="source">source IEnumerable</param>
-    /// <param name="isLiveShaping">Denotes whether this ACV should re-filter/re-sort if a PropertyChanged is raised for an observed property.</param>
+    /// <param name="isLiveShaping">Denotes whether this AOC should re-filter/re-sort if a PropertyChanged is raised for an observed property.</param>
     public AdvancedObservableCollection(ObservableCollection<T> source, bool isLiveShaping = false)
     {
         _liveShapingEnabled = isLiveShaping;
@@ -111,11 +114,30 @@ public class AdvancedObservableCollection<T> : IList<T>, IList, IReadOnlyList<T>
 
     #region IList<T>
 
-    /// <inheritdoc />
-    public IEnumerator<T> GetEnumerator() => _view.GetEnumerator();
+    private List<T> RangedView
+    {
+        get
+        {
+            var viewCount = _view.Count;
+            var start = Range.Start.GetOffset(viewCount);
+            if (start > viewCount)
+                return [];
+            var end = Range.End.GetOffset(viewCount);
+            if (end < 0)
+                return [];
+            if (start > end)
+                return [];
+            start = Math.Max(0, start);
+            end = Math.Min(viewCount, end);
+            return _view[start..end];
+        }
+    }
 
     /// <inheritdoc />
-    IEnumerator IEnumerable.GetEnumerator() => _view.GetEnumerator();
+    public IEnumerator<T> GetEnumerator() => RangedView.GetEnumerator();
+
+    /// <inheritdoc />
+    IEnumerator IEnumerable.GetEnumerator() => RangedView.GetEnumerator();
 
     /// <inheritdoc />
     public void Add(T item) => _source.Add(item);
@@ -124,34 +146,34 @@ public class AdvancedObservableCollection<T> : IList<T>, IList, IReadOnlyList<T>
     public void Clear() => _source.Clear();
 
     /// <inheritdoc />
-    public bool Contains(T item) => _view.Contains(item);
+    public bool Contains(T item) => RangedView.Contains(item);
 
     /// <inheritdoc />
-    public void CopyTo(T[] array, int arrayIndex) => _view.CopyTo(array, arrayIndex);
+    public void CopyTo(T[] array, int arrayIndex) => RangedView.CopyTo(array, arrayIndex);
 
     /// <inheritdoc />
     public bool Remove(T item) => _source.Remove(item);
 
     /// <inheritdoc cref="ICollection{T}.Count"/> />
-    public int Count => _view.Count;
+    public int Count => RangedView.Count;
 
     /// <inheritdoc />
     public bool IsReadOnly => false;
 
     /// <inheritdoc />
-    public int IndexOf(T item) => _view.IndexOf(item);
+    public int IndexOf(T item) => RangedView.IndexOf(item);
 
     /// <inheritdoc />
     public void Insert(int index, T item) => _source.Insert(index, item);
 
     /// <inheritdoc cref="IList{T}.RemoveAt"/> />
-    public void RemoveAt(int index) => _source.Remove(_view[index]);
+    public void RemoveAt(int index) => _source.Remove(RangedView[index]);
 
     /// <inheritdoc cref="List{T}.this[int]"/>
     public T this[int index]
     {
-        get => _view[index];
-        set => _view[index] = value;
+        get => RangedView[index];
+        set => RangedView[index] = value;
     }
 
     #endregion
@@ -174,8 +196,20 @@ public class AdvancedObservableCollection<T> : IList<T>, IList, IReadOnlyList<T>
                 return;
 
             _filter = value;
-            HandleFilterChanged();
-            FilterChanged?.Invoke(this, _filter);
+            RaiseFilterChanged();
+        }
+    }
+
+    public Range Range
+    {
+        get => _range;
+        set
+        {
+            if (_range.Equals(value))
+                return;
+
+            _range = value;
+            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
         }
     }
 
@@ -354,7 +388,7 @@ public class AdvancedObservableCollection<T> : IList<T>, IList, IReadOnlyList<T>
         OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
     }
 
-    private void HandleFilterChanged()
+    public void RaiseFilterChanged()
     {
         if (_filter is not null)
         {
@@ -383,6 +417,8 @@ public class AdvancedObservableCollection<T> : IList<T>, IList, IReadOnlyList<T>
             if (HandleItemAdded(index, item, viewIndex))
                 ++viewIndex;
         }
+
+        FilterChanged?.Invoke(this, _filter);
     }
 
     private void HandleSourceChanged()

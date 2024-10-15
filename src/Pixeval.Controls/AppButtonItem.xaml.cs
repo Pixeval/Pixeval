@@ -1,11 +1,11 @@
-using Pixeval.Controls.MarkupExtensions;
+using FluentIcons.Common;
 using WinUI3Utilities.Attributes;
 
 namespace Pixeval.Controls;
 
 [DependencyProperty<string>("Title")]
 [DependencyProperty<int>("Number")]
-[DependencyProperty<FontIconSymbol>("Symbol")]
+[DependencyProperty<Symbol>("Symbol")]
 public sealed partial class AppButtonItem
 {
     public AppButtonItem() => InitializeComponent();

@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -19,32 +19,8 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 
 namespace Pixeval.Download.Macros;
 
-public class MetaPathMacroAttribute(object key) : Attribute
-{
-    public object Key = key;
-}
-
-public static class MetaPathMacroAttributeHelper
-{
-    public static IEnumerable<T> GetAttachedTypeInstances<T>()
-    {
-        return Assembly.GetExecutingAssembly().GetTypes()
-            .Where(it => it.GetCustomAttribute<MetaPathMacroAttribute>() is not null)
-            .Select(Activator.CreateInstance)
-            .OfType<T>();
-    }
-
-    public static IEnumerable<T> GetAttachedTypeInstances<T>(object key)
-    {
-        return Assembly.GetExecutingAssembly().GetTypes()
-            .Where(it => it.GetCustomAttribute<MetaPathMacroAttribute>() is { Key: var attrKey } && attrKey.Equals(key))
-            .Select(Activator.CreateInstance)
-            .OfType<T>();
-    }
-}
+[AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
+public class MetaPathMacroAttribute<TContext> : Attribute;

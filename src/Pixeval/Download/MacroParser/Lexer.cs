@@ -40,6 +40,10 @@ public class Lexer(string rawString)
                 var at = new TokenInfo(TokenKind.At, "@", _rawString.Forward..(_rawString.Forward + 1));
                 _rawString.Advance();
                 return at;
+            case '!':
+                var exclamation = new TokenInfo(TokenKind.Exclamation, "!", _rawString.Forward..(_rawString.Forward + 1));
+                _rawString.Advance();
+                return exclamation;
             case '{':
                 var lBrace = new TokenInfo(TokenKind.LBrace, "{", _rawString.Forward..(_rawString.Forward + 1));
                 _rawString.Advance();

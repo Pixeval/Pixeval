@@ -20,15 +20,22 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.WinUI.Collections;
 using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Model;
 using Pixeval.Utilities;
+using WinUI3Utilities;
 
 namespace Pixeval.Controls;
 
-public abstract partial class SortableEntryViewViewModel<T, TViewModel> : EntryViewViewModel<T, TViewModel>, ISortableEntryViewViewModel where T : class, IWorkEntry where TViewModel : EntryViewModel<T>, IWorkViewModel
+public abstract partial class SortableEntryViewViewModel<T, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] TViewModel>
+    : EntryViewViewModel<T, TViewModel>, ISortableEntryViewViewModel
+    where T : class, IWorkEntry
+    where TViewModel : EntryViewModel<T>, IFactory<T, TViewModel>, IWorkViewModel
 {
     [ObservableProperty]
     private bool _isSelecting;
@@ -37,6 +44,8 @@ public abstract partial class SortableEntryViewViewModel<T, TViewModel> : EntryV
     [NotifyPropertyChangedFor(nameof(IsAnyEntrySelected))]
     [NotifyPropertyChangedFor(nameof(SelectionLabel))]
     private TViewModel[] _selectedEntries = [];
+
+    private Func<IWorkViewModel, bool>? _filter;
 
     IReadOnlyCollection<IWorkViewModel> ISortableEntryViewViewModel.SelectedEntries
     {
@@ -65,16 +74,41 @@ public abstract partial class SortableEntryViewViewModel<T, TViewModel> : EntryV
 
     public Func<IWorkViewModel, bool>? Filter
     {
-        get => (Func<IWorkViewModel, bool>?)DataProvider.View.Filter;
-        set => DataProvider.View.Filter = value;
+        get => _filter;
+        set
+        {
+            if (Equals(value, _filter))
+                return;
+            _filter = value;
+            OnFilterChanged();
+            OnPropertyChanged();
+        }
     }
 
     public IReadOnlyCollection<IWorkViewModel> View => DataProvider.View;
 
     public IReadOnlyCollection<IWorkViewModel> Source => DataProvider.Source;
 
-    public void ResetEngine(IFetchEngine<IWorkEntry>? newEngine, int itemLimit = -1)
+    public Range ViewRange
     {
-        DataProvider.ResetEngine((IFetchEngine<T>?)newEngine, itemLimit);
+        get => DataProvider.View.Range;
+        set => DataProvider.View.Range = value;
     }
+
+    public void ResetEngine(IFetchEngine<IWorkEntry>? newEngine, int itemsPerPage = 20, int itemLimit = -1)
+    {
+        DataProvider.ResetEngine((IFetchEngine<T>?)newEngine, itemsPerPage, itemLimit);
+    }
+
+    public void ResetSource(ObservableCollection<IWorkEntry>? source) => ThrowHelper.NotSupported();
+
+    protected bool DefaultFilter(IWorkViewModel entry)
+    {
+        if (entry.Tags.Any(tag => App.AppViewModel.AppSettings.BlockedTags.Contains(tag.Name)))
+            return false;
+
+        return Filter?.Invoke(entry) is not false;
+    }
+
+    protected abstract void OnFilterChanged();
 }

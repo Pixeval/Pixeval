@@ -1,0 +1,32 @@
+<controls:SettingsExpander
+    x:Class="Pixeval.Controls.Settings.DateRangeWithSwitchSettingsExpander"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:fluent="using:FluentIcons.WinUI"
+    xmlns:local="using:Pixeval.Settings"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Description="{x:Bind Entry.DescriptionControl}"
+    Header="{x:Bind Entry.Header}"
+    Tag="{x:Bind Entry.Attribute}"
+    mc:Ignorable="d">
+    <controls:SettingsExpander.HeaderIcon>
+        <fluent:SymbolIcon Symbol="{x:Bind Entry.HeaderIcon}" />
+    </controls:SettingsExpander.HeaderIcon>
+    <ToggleSwitch IsOn="{x:Bind Entry.Value, Mode=TwoWay}" Toggled="ToggleSwitch_OnToggled" />
+    <controls:SettingsExpander.Items>
+        <controls:SettingsCard
+            x:Uid="/SettingsPage/SearchStartDateEntry"
+            HeaderIcon="{fluent:SymbolIcon Symbol=ArrowCircleLeft}"
+            IsEnabled="{x:Bind Entry.Value, Mode=OneWay}">
+            <CalendarDatePicker x:Uid="/SettingsPage/SearchStartCalendarDatePicker" Date="{x:Bind Entry.SearchStartDate, Mode=TwoWay}" />
+        </controls:SettingsCard>
+        <controls:SettingsCard
+            x:Uid="/SettingsPage/SearchEndDateEntry"
+            HeaderIcon="{fluent:SymbolIcon Symbol=ArrowCircleRight}"
+            IsEnabled="{x:Bind Entry.Value, Mode=OneWay}">
+            <CalendarDatePicker x:Uid="/SettingsPage/SearchEndCalendarDatePicker" Date="{x:Bind Entry.SearchEndDate, Mode=TwoWay}" />
+        </controls:SettingsCard>
+    </controls:SettingsExpander.Items>
+</controls:SettingsExpander>

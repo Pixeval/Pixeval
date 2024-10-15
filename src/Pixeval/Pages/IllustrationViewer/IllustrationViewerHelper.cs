@@ -24,7 +24,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.Graphics;
-using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
 using Pixeval.Controls;
@@ -92,14 +91,14 @@ public static class IllustrationViewerHelper
         CreateWindowWithPage(illustrationViewModel.Entry, (illustrationViewViewModel, index));
     }
 
-    public static IllustrationViewerPageViewModel GetViewModel(this FrameworkElement element, object? param)
+    public static IllustrationViewerPageViewModel GetIllustrationViewerPageViewModelFromHandle(this ulong hWnd, object? param)
     {
         return param switch
         {
             (IllustrationViewViewModel illustrationViewViewModel, int index) => new IllustrationViewerPageViewModel(
-                illustrationViewViewModel, index, element),
+                illustrationViewViewModel, index, hWnd),
             (IEnumerable illustrationViewModels, int index) => new IllustrationViewerPageViewModel(
-                illustrationViewModels.Cast<IllustrationItemViewModel>(), index, element),
+                illustrationViewModels.Cast<IllustrationItemViewModel>(), index, hWnd),
             _ => ThrowHelper.Argument<object, IllustrationViewerPageViewModel>(param, "Invalid parameter type.")
         };
     }
@@ -108,12 +107,12 @@ public static class IllustrationViewerHelper
     {
         var (width, height) = DetermineWindowSize(illustration.Width, illustration.Width / (double)illustration.Height);
 
-        WindowFactory.RootWindow.Fork(out var w)
-            .WithLoaded((o, _) => o.To<Frame>().NavigateTo<IllustrationViewerPage>(w,
+        WindowFactory.RootWindow.Fork(out var h)
+            .WithLoaded((o, _) => o.To<Frame>().NavigateTo<IllustrationViewerPage>(h,
                 param,
                 new SuppressNavigationTransitionInfo()))
             .WithSizeLimit(640, 360)
-            .Init(illustration.Title, new SizeInt32(width, height))
+            .Init(illustration.Title, new SizeInt32(width, height), WindowFactory.RootWindow.IsMaximize)
             .Activate();
         return;
 
@@ -137,7 +136,13 @@ public static class IllustrationViewerHelper
 
             var determinedWidth = illustWidth switch
             {
-                not 1500 => 1500 + Random.Shared.Next(0, 200),
+                not 1500 => 1500 +
+#if DISPLAY
+                100
+#else
+                Random.Shared.Next(0, 200)
+#endif
+                ,
                 _ => 1500
             };
             var windowWidth = determinedWidth > monitorWidth ? monitorWidth - 100 : determinedWidth;

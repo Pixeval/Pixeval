@@ -25,18 +25,19 @@ using System.Collections.Generic;
 using System.Linq;
 using Windows.System;
 using CommunityToolkit.Mvvm.ComponentModel;
+using FluentIcons.Common;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
 using Pixeval.Controls;
-using Pixeval.Controls.MarkupExtensions;
 using Pixeval.Controls.Windowing;
 using Pixeval.CoreApi.Model;
 using Pixeval.Options;
-using Pixeval.Pages.Misc;
 using Pixeval.Util.ComponentModels;
 using Pixeval.Util.UI;
 using Pixeval.AppManagement;
-using System.Runtime.CompilerServices;
+using Pixeval.CoreApi.Global.Enum;
+using Pixeval.Settings;
+using Pixeval.Settings.Models;
 
 namespace Pixeval.Pages.NovelViewer;
 
@@ -50,19 +51,20 @@ public partial class NovelViewerPageViewModel : DetailedUiObservableObject, IDis
     /// </summary>
     /// <param name="novelViewModels"></param>
     /// <param name="currentNovelIndex"></param>
-    /// <param name="content"></param>
-    public NovelViewerPageViewModel(IEnumerable<NovelItemViewModel> novelViewModels, int currentNovelIndex, FrameworkElement content) : base(content)
+    /// <param name="hWnd"></param>
+    public NovelViewerPageViewModel(IEnumerable<NovelItemViewModel> novelViewModels, int currentNovelIndex, ulong hWnd) : base(hWnd)
     {
-        content.ActualThemeChanged += (_, _) =>
-        {
-            OnPropertyChanged(nameof(NovelBackground));
-            OnPropertyChanged(nameof(NovelFontColor));
-        };
         NovelsSource = novelViewModels.ToArray();
         CurrentNovelIndex = currentNovelIndex;
 
         InitializeCommands();
-        FullScreenCommand.GetFullScreenCommand(false);
+        FullScreenCommand.RefreshFullScreenCommand(false);
+    }
+
+    public void OnFrameworkElementOnActualThemeChanged(FrameworkElement frameworkElement, object o)
+    {
+        NovelBackgroundEntry.ValueReset();
+        NovelFontColorEntry.ValueReset();
     }
 
     /// <summary>
@@ -70,12 +72,8 @@ public partial class NovelViewerPageViewModel : DetailedUiObservableObject, IDis
     /// </summary>
     /// <param name="viewModel"></param>
     /// <param name="currentNovelIndex"></param>
-    /// <param name="content"></param>
-    /// <remarks>
-    /// novels should contain only one item if the novel is a single
-    /// otherwise it contains the entire manga data
-    /// </remarks>
-    public NovelViewerPageViewModel(NovelViewViewModel viewModel, int currentNovelIndex, FrameworkElement content) : base(content)
+    /// <param name="hWnd"></param>
+    public NovelViewerPageViewModel(NovelViewViewModel viewModel, int currentNovelIndex, ulong hWnd) : base(hWnd)
     {
         ViewModelSource = new NovelViewViewModel(viewModel);
         ViewModelSource.DataProvider.View.FilterChanged += (_, _) => CurrentNovelIndex = Novels.IndexOf(CurrentNovel);
@@ -108,7 +106,7 @@ public partial class NovelViewerPageViewModel : DetailedUiObservableObject, IDis
     public NavigationViewTag<WorkInfoPage, Novel> NovelInfoTag { get; } =
         new(null!) { Content = EntryViewerPageResources.InfoTabContent };
 
-    public NavigationViewTag<CommentsPage, (CommentType, long Id)> CommentsTag { get; } =
+    public NavigationViewTag<CommentsPage, (SimpleWorkType, long Id)> CommentsTag { get; } =
         new(default) { Content = EntryViewerPageResources.CommentsTabContent };
 
     #region Current相关
@@ -173,7 +171,7 @@ public partial class NovelViewerPageViewModel : DetailedUiObservableObject, IDis
             CurrentPageIndex = 0;
 
             NovelInfoTag.Parameter = CurrentNovel.Entry;
-            CommentsTag.Parameter = (CommentType.Novel, NovelId);
+            CommentsTag.Parameter = (SimpleWorkType.Novel, NovelId);
 
             OnDetailedPropertyChanged(oldValue, value);
             OnPropertyChanged(nameof(CurrentNovel));
@@ -260,90 +258,68 @@ public partial class NovelViewerPageViewModel : DetailedUiObservableObject, IDis
     private void FullScreenCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
         IsFullScreen = !IsFullScreen;
-        FullScreenCommand.GetFullScreenCommand(IsFullScreen);
+        FullScreenCommand.RefreshFullScreenCommand(IsFullScreen);
     }
 
     public XamlUICommand NovelSettingsCommand { get; } =
-        EntryViewerPageResources.NovelSettings.GetCommand(FontIconSymbol.SettingsE713);
+        EntryViewerPageResources.NovelSettings.GetCommand(Symbol.Settings);
 
     public XamlUICommand InfoAndCommentsCommand { get; } =
-        EntryViewerPageResources.InfoAndComments.GetCommand(FontIconSymbol.InfoE946, VirtualKey.F12);
+        EntryViewerPageResources.InfoAndComments.GetCommand(Symbol.Info, VirtualKey.F12);
 
-    public XamlUICommand AddToBookmarkCommand { get; } = EntryItemResources.AddToBookmark.GetCommand(FontIconSymbol.BookmarksE8A4);
+    public XamlUICommand AddToBookmarkCommand { get; } = EntryItemResources.AddToBookmark.GetCommand(Symbol.Bookmark);
 
-    public XamlUICommand FullScreenCommand { get; } = "".GetCommand(FontIconSymbol.FullScreenE740);
+    public XamlUICommand FullScreenCommand { get; } = "".GetCommand(Symbol.ArrowMaximize);
 
     #endregion
 
     #region Settings
 
-    public static IEnumerable<string> AvailableFonts => SettingsPageViewModel.AvailableFonts;
+    public static AppSettings AppSettings => App.AppViewModel.AppSettings;
 
-    public uint NovelBackground
+    public FontAppSettingsEntry NovelFontFamilyEntry { get; } = new(AppSettings, t => t.NovelFontFamily) { ValueChanged = ValueChanged };
+
+    public ColorAppSettingsEntry NovelBackgroundEntry { get; } = new(AppSettings, t => t.NovelBackground) { ValueChanged = ValueChanged };
+
+    public ColorAppSettingsEntry NovelFontColorEntry { get; } = new(AppSettings, t => t.NovelFontColor) { ValueChanged = ValueChanged };
+
+    public EnumAppSettingsEntry NovelFontWeightEntry { get; } = new(AppSettings, t => t.NovelFontWeight, FontWeightsOptionExtension.GetItems()) { ValueChanged = ValueChanged };
+
+    public IntAppSettingsEntry NovelFontSizeEntry { get; } = new(AppSettings, t => t.NovelFontSize)
     {
-        get => FrameworkElement.ActualTheme is ElementTheme.Light ? App.AppViewModel.AppSettings.NovelBackgroundInLightMode : App.AppViewModel.AppSettings.NovelBackgroundInDarkMode;
-        set => _ = FrameworkElement.ActualTheme is ElementTheme.Light
-            ? SetSettings(App.AppViewModel.AppSettings.NovelBackgroundInLightMode, value, App.AppViewModel.AppSettings, (setting, value) => setting.NovelBackgroundInLightMode = value)
-            : SetSettings(App.AppViewModel.AppSettings.NovelBackgroundInDarkMode, value, App.AppViewModel.AppSettings, (setting, value) => setting.NovelBackgroundInDarkMode = value);
-    }
+        ValueChanged = ValueChanged,
+        Max = 100,
+        Min = 5
+    };
 
-    public uint NovelFontColor
+    public IntAppSettingsEntry NovelLineHeightEntry { get; } = new(AppSettings, t => t.NovelLineHeight)
     {
-        get => FrameworkElement.ActualTheme is ElementTheme.Light ? App.AppViewModel.AppSettings.NovelFontColorInLightMode : App.AppViewModel.AppSettings.NovelFontColorInDarkMode;
-        set => _ = FrameworkElement.ActualTheme is ElementTheme.Light
-            ? SetSettings(App.AppViewModel.AppSettings.NovelFontColorInLightMode, value, App.AppViewModel.AppSettings, (setting, value) => setting.NovelFontColorInLightMode = value)
-            : SetSettings(App.AppViewModel.AppSettings.NovelFontColorInDarkMode, value, App.AppViewModel.AppSettings, (setting, value) => setting.NovelFontColorInDarkMode = value);
-    }
+        ValueChanged = ValueChanged,
+        Max = 150,
+        Min = 0
+    };
 
-    public FontWeightsOption NovelFontWeight
+    public IntAppSettingsEntry NovelMaxWidthEntry { get; } = new(AppSettings, t => t.NovelMaxWidth)
     {
-        get => App.AppViewModel.AppSettings.NovelFontWeight;
-        set => SetSettings(App.AppViewModel.AppSettings.NovelFontWeight, value, App.AppViewModel.AppSettings, (setting, value) => setting.NovelFontWeight = value);
-    }
+        ValueChanged = ValueChanged,
+        LargeChange = 100,
+        SmallChange = 50,
+        Max = 10000,
+        Min = 50
+    };
 
-    public double NovelFontSize
-    {
-        get => App.AppViewModel.AppSettings.NovelFontSize;
-        set => SetSettings(App.AppViewModel.AppSettings.NovelFontSize, value, App.AppViewModel.AppSettings, (setting, value) => setting.NovelFontSize = value);
-    }
+    public ISettingsEntry[] Entries =>
+    [
+        NovelFontFamilyEntry,
+        NovelBackgroundEntry,
+        NovelFontColorEntry,
+        NovelFontWeightEntry,
+        NovelFontSizeEntry,
+        NovelLineHeightEntry,
+        NovelMaxWidthEntry
+    ];
 
-    public double NovelLineHeight
-    {
-        get => App.AppViewModel.AppSettings.NovelLineHeight;
-        set => SetSettings(App.AppViewModel.AppSettings.NovelLineHeight, value, App.AppViewModel.AppSettings, (setting, value) => setting.NovelLineHeight = value);
-    }
-
-    public double NovelMaxWidth
-    {
-        get => App.AppViewModel.AppSettings.NovelMaxWidth;
-        set => SetSettings(App.AppViewModel.AppSettings.NovelMaxWidth, value, App.AppViewModel.AppSettings, (setting, value) => setting.NovelMaxWidth = value);
-    }
-
-    public string NovelFontFamily
-    {
-        get => App.AppViewModel.AppSettings.NovelFontFamily;
-        set => SetSettings(App.AppViewModel.AppSettings.NovelFontFamily, value, App.AppViewModel.AppSettings, (setting, value) => setting.NovelFontFamily = value);
-    }
-
-    protected bool SetSettings<TModel, T>(T oldValue, T newValue, TModel model, Action<TModel, T> callback, [CallerMemberName] string? propertyName = null)
-        where TModel : class
-    {
-        ArgumentNullException.ThrowIfNull(model);
-        ArgumentNullException.ThrowIfNull(callback);
-
-        if (EqualityComparer<T>.Default.Equals(oldValue, newValue))
-            return false;
-
-        OnPropertyChanging(propertyName);
-
-        callback(model, newValue);
-
-        OnPropertyChanged(propertyName);
-
-        AppInfo.SaveConfig(App.AppViewModel.AppSettings);
-
-        return true;
-    }
+    private static void ValueChanged<T>(T value) => AppInfo.SaveConfig(App.AppViewModel.AppSettings);
 
     #endregion
 }

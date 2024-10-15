@@ -51,13 +51,19 @@ public partial record NovelContent
     [JsonPropertyName("marker")]
     public string? Marker { get; set; }
 
+    /// <summary>
+    /// 可以在主站找到原图的插图
+    /// </summary>
     [JsonPropertyName("illusts")]
     [JsonConverter(typeof(SpecialDictionaryConverter<NovelIllustInfo>))]
     public required NovelIllustInfo[] Illusts { get; set; } = [];
 
     /// <summary>
-    /// key: <see cref="NovelImage.NovelImageId"/>
+    /// 临时上传的，没有ID的小说插图
     /// </summary>
+    /// <remarks>
+    /// key: <see cref="NovelImage.NovelImageId"/>
+    /// </remarks>
     [JsonPropertyName("images")]
     [JsonConverter(typeof(SpecialDictionaryConverter<NovelImage>))]
     public required NovelImage[] Images { get; set; } = [];
@@ -137,6 +143,8 @@ public partial record NovelImage
 
     [JsonPropertyName("urls")]
     public required NovelImageUrls Urls { get; set; }
+
+    public string ThumbnailUrl => Urls.X1200;
 }
 
 [Factory]
@@ -165,7 +173,7 @@ public partial record NovelImageUrls
 }
 
 [Factory]
-public partial record NovelIllustInfo
+public partial record NovelIllustInfo : IIdEntry
 {
     [JsonPropertyName("visible")]
     public required bool Visible { get; set; }
@@ -177,9 +185,11 @@ public partial record NovelIllustInfo
     public required NovelIllust Illust { get; set; }
 
     [JsonPropertyName("user")]
-
     public required NovelUser User { get; set; }
 
+    /// <summary>
+    /// 相当于<see cref="Illustration.Id"/>
+    /// </summary>
     [JsonPropertyName("id")]
     [JsonNumberHandling(JsonNumberHandling.AllowReadingFromString | JsonNumberHandling.WriteAsString)]
     public required long Id { get; set; }
@@ -189,6 +199,8 @@ public partial record NovelIllustInfo
     /// </summary>
     [JsonPropertyName("page")]
     public required int Page { get; set; } = 1;
+
+    public string ThumbnailUrl => Illust.Images.Medium;
 }
 
 [Factory]
@@ -297,8 +309,8 @@ internal class SpecialDictionaryConverter<T> : JsonConverter<T[]>
                     return ThrowUtils.Json<T[]>();
                 case JsonTokenType.PropertyName:
                 {
-                    var jsonConverter = (JsonConverter<T>)options.GetConverter(typeof(T));
-                    list.Add(jsonConverter.Read(ref reader, typeof(T), options)!);
+                    var propertyValue = (T)JsonSerializer.Deserialize(ref reader, typeof(T), AppJsonSerializerContext.Default)!;
+                    list.Add(propertyValue);
                     break;
                 }
                 case JsonTokenType.EndObject:

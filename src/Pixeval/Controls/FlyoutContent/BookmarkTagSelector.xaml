@@ -13,7 +13,7 @@
         <StackPanel Spacing="5">
             <CheckBox
                 x:Name="CheckBox"
-                Content="私人"
+                x:Uid="/Misc/BookmarkTagSelectorPrivateCheckBox"
                 IsChecked="{x:Bind IsPrivate, Mode=TwoWay}" />
             <labs:TokenView
                 x:Name="TokenView"

@@ -20,64 +20,54 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Controls;
 using Pixeval.CoreApi.Global.Enum;
-using Pixeval.Misc;
-using Pixeval.Util;
 using WinRT;
 using WinUI3Utilities;
 
 namespace Pixeval.Pages.Capability;
 
-public sealed partial class RankingsPage : IScrollViewProvider
+public sealed partial class RankingsPage : IScrollViewHost
 {
-    private static readonly List<StringRepresentableItem> _illustrationRankOption = LocalizedResourceAttributeHelper.GetLocalizedResourceContents<RankOption>();
+    private static readonly IReadOnlyList<StringRepresentableItem> _illustrationRankOption =  RankOptionExtension.GetItems();
 
-    private static readonly List<StringRepresentableItem> _novelRankOption =
-        LocalizedResourceAttributeHelper.GetLocalizedResourceContents(
-        [
-            RankOption.Day,
-            RankOption.Week,
-            // RankOption.Month,
-            RankOption.DayMale,
-            RankOption.DayFemale,
-            // RankOption.DayManga,
-            // RankOption.WeekManga,
-            // RankOption.MonthManga,
-            RankOption.WeekOriginal,
-            RankOption.WeekRookie,
-            RankOption.DayR18,
-            RankOption.DayMaleR18,
-            RankOption.DayFemaleR18,
-            RankOption.WeekR18,
-            RankOption.WeekR18G,
-            RankOption.DayAi,
-            RankOption.DayR18Ai
-        ]);
+    private static readonly IReadOnlyList<StringRepresentableItem> _novelRankOption = NovelRankOptionExtension.GetItems();
 
     public RankingsPage()
     {
         InitializeComponent();
-        RankOptionComboBox.ItemsSource = _illustrationRankOption;
-        RankOptionComboBox.SelectedItem = _illustrationRankOption[0];
         RankDateTimeCalendarDatePicker.Date = MaxDate;
     }
 
     public DateTime MaxDate => DateTime.Now.AddDays(-2);
 
-    public override void OnPageActivated(NavigationEventArgs navigationEventArgs)
+    private void RankingsPage_OnLoaded(object sender, RoutedEventArgs e)
     {
+        ChangeEnumSource();
         ChangeSource();
     }
 
     private void ComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        RankOptionComboBox.ItemsSource = SimpleWorkTypeComboBox.GetSelectedItem<SimpleWorkType>() is SimpleWorkType.IllustAndManga
-            ? _illustrationRankOption : _novelRankOption;
-        RankOptionComboBox.SelectedItem = _illustrationRankOption[0];
+        ChangeEnumSource();
         ChangeSource();
+    }
+
+    private void ChangeEnumSource()
+    {
+        if (SimpleWorkTypeComboBox.GetSelectedItem<SimpleWorkType>() is SimpleWorkType.IllustAndManga)
+        {
+            RankOptionComboBox.ItemsSource = _illustrationRankOption;
+            RankOptionComboBox.SelectedItem = _illustrationRankOption.First(r => Equals(r.Item, App.AppViewModel.AppSettings.IllustrationRankOption));
+        }
+        else
+        {
+            RankOptionComboBox.ItemsSource = _novelRankOption;
+            RankOptionComboBox.SelectedItem = _novelRankOption.First(r => Equals(r.Item, App.AppViewModel.AppSettings.NovelRankOption));
+        }
     }
 
     private void OnSelectionChanged(object sender, IWinRTObject e) => ChangeSource();

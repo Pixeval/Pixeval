@@ -45,6 +45,7 @@ public partial class MakoClient
     /// </summary>
     /// <param name="uid">User id</param>
     /// <param name="privacyPolicy">The <see cref="PrivacyPolicy" /> options targeting private or public</param>
+    /// <param name="tag"></param>
     /// <param name="targetFilter">The <see cref="TargetFilter" /> options targeting android or ios</param>
     /// <returns>
     /// The <see cref="IllustrationBookmarkEngine" />> iterator containing bookmarked illustrations for the user.
@@ -53,8 +54,7 @@ public partial class MakoClient
     public IFetchEngine<Illustration> IllustrationBookmarks(long uid, PrivacyPolicy privacyPolicy, string? tag, TargetFilter targetFilter = TargetFilter.ForAndroid)
     {
         EnsureNotCancelled();
-        if (!CheckPrivacyPolicy(uid, privacyPolicy))
-            ThrowUtils.Throw(new IllegalPrivatePolicyException(uid));
+        CheckPrivacyPolicy(uid, privacyPolicy);
 
         return new IllustrationBookmarkEngine(this, uid, tag, privacyPolicy, targetFilter, new EngineHandle(CancelInstance));
     }
@@ -72,8 +72,7 @@ public partial class MakoClient
     public IFetchEngine<Novel> NovelBookmarks(long uid, PrivacyPolicy privacyPolicy, string? tag, TargetFilter targetFilter = TargetFilter.ForAndroid)
     {
         EnsureNotCancelled();
-        if (!CheckPrivacyPolicy(uid, privacyPolicy))
-            ThrowUtils.Throw(new IllegalPrivatePolicyException(uid));
+        CheckPrivacyPolicy(uid, privacyPolicy);
 
         return new NovelBookmarkEngine(this, uid, tag, privacyPolicy, targetFilter, new EngineHandle(CancelInstance));
     }
@@ -82,8 +81,6 @@ public partial class MakoClient
     /// Search in Pixiv.
     /// </summary>
     /// <param name="tag">Texts for searching</param>
-    /// <param name="start">Start page</param>
-    /// <param name="pages">Number of pages</param>
     /// <param name="matchOption">
     /// The <see cref="SearchIllustrationTagMatchOption.TitleAndCaption" /> option for the method of search
     /// matching
@@ -95,14 +92,12 @@ public partial class MakoClient
     /// <param name="endDate">The ending date filtering the searching results</param>
     /// <param name="aiType"></param>
     /// <returns>
-    /// The <see cref="SearchIllustrationEngine" /> iterator containing the searching results.
+    /// The <see cref="IllustrationSearchEngine" /> iterator containing the searching results.
     /// </returns>
     public IFetchEngine<Illustration> SearchIllustrations(
         string tag,
-        int start = 0,
-        int pages = 100,
         SearchIllustrationTagMatchOption matchOption = SearchIllustrationTagMatchOption.TitleAndCaption,
-        WorkSortOption? sortOption = null,
+        WorkSortOption sortOption = WorkSortOption.DoNotSort,
         SearchDuration searchDuration = SearchDuration.Undecided,
         TargetFilter targetFilter = TargetFilter.ForAndroid,
         DateTimeOffset? startDate = null,
@@ -110,20 +105,16 @@ public partial class MakoClient
         bool? aiType = null)
     {
         EnsureNotCancelled();
-        if (sortOption == WorkSortOption.PopularityDescending && !Session.IsPremium)
-        {
+        if (sortOption is WorkSortOption.PopularityDescending && !Session.IsPremium)
             sortOption = WorkSortOption.DoNotSort;
-        }
 
-        return new SearchIllustrationEngine(this, new EngineHandle(CancelInstance), matchOption, tag, start, pages, sortOption, searchDuration, targetFilter, startDate, endDate, aiType);
+        return new IllustrationSearchEngine(this, new EngineHandle(CancelInstance), matchOption, tag, sortOption, searchDuration, targetFilter, startDate, endDate, aiType);
     }
 
     public IFetchEngine<Novel> SearchNovels(
         string tag,
-        int start = 0,
-        int pages = 100,
         SearchNovelTagMatchOption matchOption = SearchNovelTagMatchOption.Text,
-        WorkSortOption? sortOption = null,
+        WorkSortOption sortOption = WorkSortOption.DoNotSort,
         SearchDuration searchDuration = SearchDuration.Undecided,
         TargetFilter targetFilter = TargetFilter.ForAndroid,
         DateTimeOffset? startDate = null,
@@ -133,12 +124,26 @@ public partial class MakoClient
         bool? aiType = null)
     {
         EnsureNotCancelled();
-        if (sortOption == WorkSortOption.PopularityDescending && !Session.IsPremium)
-        {
+        if (sortOption is WorkSortOption.PopularityDescending && !Session.IsPremium)
             sortOption = WorkSortOption.DoNotSort;
-        }
 
-        return new SearchNovelEngine(this, new EngineHandle(CancelInstance), matchOption, tag, start, pages, sortOption, searchDuration, targetFilter, startDate, endDate, mergePlainKeywordResults, includeTranslatedTagResults, aiType);
+        return new NovelSearchEngine(this, new EngineHandle(CancelInstance), matchOption, tag, sortOption, searchDuration, targetFilter, startDate, endDate, mergePlainKeywordResults, includeTranslatedTagResults, aiType);
+    }
+
+    /// <summary>
+    /// Search user in Pixiv.
+    /// </summary>
+    /// <param name="keyword">The text in searching</param>
+    /// <param name="targetFilter">The <see cref="TargetFilter" /> option targeting android or ios</param>
+    /// <returns>
+    /// The <see cref="UserSearchEngine" /> containing the search results for users.
+    /// </returns>
+    public IFetchEngine<User> SearchUser(
+        string keyword,
+        TargetFilter targetFilter = TargetFilter.ForAndroid)
+    {
+        EnsureNotCancelled();
+        return new UserSearchEngine(this, targetFilter, keyword, new EngineHandle(CancelInstance));
     }
 
     /// <summary>
@@ -186,13 +191,20 @@ public partial class MakoClient
     /// The <see cref="RecommendIllustrationEngine" /> containing recommended illustrations.
     /// </returns>
     public IFetchEngine<Illustration> RecommendationIllustrations(
-        WorkType recommendContentType = WorkType.Illust,
         TargetFilter targetFilter = TargetFilter.ForAndroid,
+        WorkType? recommendContentType = null,
         uint? maxBookmarkIdForRecommend = null,
         uint? minBookmarkIdForRecentIllust = null)
     {
         EnsureNotCancelled();
         return new RecommendIllustrationEngine(this, recommendContentType, targetFilter, maxBookmarkIdForRecommend, minBookmarkIdForRecentIllust, new EngineHandle(CancelInstance));
+    }
+
+    public IFetchEngine<Illustration> RecommendationMangas(
+        TargetFilter targetFilter = TargetFilter.ForAndroid)
+    {
+        EnsureNotCancelled();
+        return new RecommendMangaEngine(this, targetFilter, new EngineHandle(CancelInstance));
     }
 
     public IFetchEngine<Novel> RecommendationNovels(
@@ -204,15 +216,15 @@ public partial class MakoClient
     }
 
     public IFetchEngine<IWorkEntry> RecommendationWorks(
-        WorkType recommendContentType = WorkType.Illust,
-        TargetFilter targetFilter = TargetFilter.ForAndroid,
-        uint? maxBookmarkIdForRecommend = null,
-        uint? minBookmarkIdForRecentIllust = null)
+        WorkType recommendContentType,
+        TargetFilter targetFilter = TargetFilter.ForAndroid)
     {
-        return recommendContentType is WorkType.Novel
-            ? RecommendationNovels(targetFilter, maxBookmarkIdForRecommend)
-            : RecommendationIllustrations(recommendContentType, targetFilter, maxBookmarkIdForRecommend,
-                minBookmarkIdForRecentIllust);
+        return recommendContentType switch
+        {
+            WorkType.Novel => RecommendationNovels(targetFilter),
+            WorkType.Manga => RecommendationMangas(targetFilter),
+            _ => RecommendationIllustrations(targetFilter)
+        };
     }
 
     /// <summary>
@@ -228,16 +240,44 @@ public partial class MakoClient
         return new RecommendIllustratorEngine(this, targetFilter, new EngineHandle(CancelInstance));
     }
 
+    public IFetchEngine<Illustration> NewIllustrations(WorkType workType, TargetFilter targetFilter = TargetFilter.ForAndroid, uint? maxIllustId = null)
+    {
+        EnsureNotCancelled();
+        return new IllustrationNewEngine(this, workType, targetFilter, maxIllustId, new EngineHandle(CancelInstance));
+    }
+
+    public IFetchEngine<Novel> NewNovels(TargetFilter targetFilter = TargetFilter.ForAndroid, uint? maxNovelId = null)
+    {
+        EnsureNotCancelled();
+        return new NovelNewEngine(this, targetFilter, maxNovelId, new EngineHandle(CancelInstance));
+    }
+
+    public IFetchEngine<IWorkEntry> NewWorks(WorkType type,
+        TargetFilter targetFilter = TargetFilter.ForAndroid,
+        uint ? maxId = null)
+    {
+        return type switch
+        {
+            WorkType.Novel => NewNovels(targetFilter, maxId),
+            _ => NewIllustrations(type, targetFilter, maxId)
+        };
+    }
+    public IFetchEngine<User> MyPixivUsers(long userId)
+    {
+        EnsureNotCancelled();
+        return new MyPixivUserEngine(this, userId, new EngineHandle(CancelInstance));
+    }
+
     /// <summary>
     /// Request the spotlights in Pixiv.
     /// </summary>
     /// <returns>
-    /// The <see cref="SpotlightArticleEngine" /> containing the spotlight articles.
+    /// The <see cref="SpotlightEngine" /> containing the spotlight articles.
     /// </returns>
-    public IFetchEngine<SpotlightArticle> Spotlights()
+    public IFetchEngine<Spotlight> Spotlights()
     {
         EnsureNotCancelled();
-        return new SpotlightArticleEngine(this, new EngineHandle(CancelInstance));
+        return new SpotlightEngine(this, new EngineHandle(CancelInstance));
     }
 
     /// <summary>
@@ -246,7 +286,7 @@ public partial class MakoClient
     /// <returns>
     /// The <see cref="FeedEngine" /> containing the feeds.
     /// </returns>
-    public IFetchEngine<Feed> Feeds()
+    public IFetchEngine<Feed?> Feeds()
     {
         EnsureNotCancelled();
         return new FeedEngine(this, new EngineHandle(CancelInstance));
@@ -264,10 +304,7 @@ public partial class MakoClient
     public IFetchEngine<User> Following(long uid, PrivacyPolicy privacyPolicy)
     {
         EnsureNotCancelled();
-        if (!CheckPrivacyPolicy(uid, privacyPolicy))
-        {
-            ThrowUtils.Throw(new IllegalPrivatePolicyException(uid));
-        }
+        CheckPrivacyPolicy(uid, privacyPolicy);
 
         return new FollowingEngine(this, uid, privacyPolicy, new EngineHandle(CancelInstance));
     }
@@ -275,10 +312,7 @@ public partial class MakoClient
     public IFetchEngine<BookmarkTag> IllustrationBookmarkTag(long uid, PrivacyPolicy privacyPolicy)
     {
         EnsureNotCancelled();
-        if (!CheckPrivacyPolicy(uid, privacyPolicy))
-        {
-            ThrowUtils.Throw(new IllegalPrivatePolicyException(uid));
-        }
+        CheckPrivacyPolicy(uid, privacyPolicy);
 
         return new IllustrationBookmarkTagEngine(this, uid, privacyPolicy, new EngineHandle(CancelInstance));
     }
@@ -308,30 +342,9 @@ public partial class MakoClient
     public IFetchEngine<BookmarkTag> NovelBookmarkTag(long uid, PrivacyPolicy privacyPolicy)
     {
         EnsureNotCancelled();
-        if (!CheckPrivacyPolicy(uid, privacyPolicy))
-        {
-            ThrowUtils.Throw(new IllegalPrivatePolicyException(uid));
-        }
+        CheckPrivacyPolicy(uid, privacyPolicy);
 
         return new NovelBookmarkTagEngine(this, uid, privacyPolicy, new EngineHandle(CancelInstance));
-    }
-
-    /// <summary>
-    /// Search user in Pixiv.
-    /// </summary>
-    /// <param name="keyword">The text in searching</param>
-    /// <param name="userSortOption">The <see cref="UserSortOption" /> enum as date ascending or descending.</param>
-    /// <param name="targetFilter">The <see cref="TargetFilter" /> option targeting android or ios</param>
-    /// <returns>
-    /// The <see cref="UserSearchEngine" /> containing the search results for users.
-    /// </returns>
-    public IFetchEngine<User> SearchUser(
-        string keyword,
-        UserSortOption userSortOption = UserSortOption.DateDescending,
-        TargetFilter targetFilter = TargetFilter.ForAndroid)
-    {
-        EnsureNotCancelled();
-        return new UserSearchEngine(this, targetFilter, userSortOption, keyword, new EngineHandle(CancelInstance));
     }
 
     /// <summary>

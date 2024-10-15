@@ -1,0 +1,15 @@
+{
+    "DependenciesContentTextBlock/Text": "Pixeval dépend de nombreux projets open source, je les remercie pour leurs contributions et esprits de partage.",
+    "DependenciesSubtitleTextBlock/Text": "Dépendences du projet",
+    "OpenSourceLicenseContentPartI/Text": "Pixeval est licencié sous GPL-v3 avec texte ci-dessous. Si vous utilisez des morceaux de code de Pixeval ou si vous développez à partir de Pixeval, assurez-vous que vous attribuerez votre logiciel sous la même licence. Vous pouvez consulter des informations",
+    "OpenSourceLicenseContentPartII/Text": "pour en savoir plus de GNU General Public License v3",
+    "OpenSourceLicenseHyperlinkContent/Text": "ici",
+    "OpenSourceLicenseSubtitleTextBlock/Text": "Licence",
+    "SpecialThanksContentTextBlock/Text": "Mes amis ont beaucoup supporté mon projet, c'est pourquoi j'ai gardé la même passion sur ce projet",
+    "SpecialThanksSubtitleTextBlock/Text": "Remerciement (non ordonné)",
+    "SupportMeContentPartI/Text": "A part de son parcours académique, l'auteur passe beaucoup de temps sur la maintenance du projet Pixeval. Si vous appréciez ce projet, n'hésitez pas à jeter un oeil sur",
+    "SupportMeContentPartII/Text": "pour me sponsoriser, votre support deviendra une puissance de ma maintenance",
+    "SupportMeHyperlinkContent/Text": "ici",
+    "SupportMeSubtitleTextBlock/Text": "Sponsoriser l'auteur",
+    "TitleTextBlock/Text": "A propos de Pixeval"
+}

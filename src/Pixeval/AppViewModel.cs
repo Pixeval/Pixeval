@@ -23,13 +23,11 @@ using System.Threading.Tasks;
 using LiteDB;
 using Microsoft.Extensions.DependencyInjection;
 using Pixeval.AppManagement;
-using Pixeval.Controls;
 using Pixeval.Controls.Windowing;
 using Pixeval.CoreApi;
 using Pixeval.CoreApi.Net;
 using Pixeval.Database.Managers;
 using Pixeval.Download;
-using Pixeval.Download.Models;
 using Pixeval.Logging;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
@@ -37,31 +35,23 @@ using Windows.Storage;
 
 namespace Pixeval;
 
-public class AppViewModel(App app)
+public class AppViewModel(App app) : IDisposable
 {
     private bool _activatedByProtocol;
-    private AppSettings _appSettings = AppInfo.LoadConfig() ?? new AppSettings();
 
     public ServiceProvider AppServiceProvider { get; private set; } = null!;
 
     public IServiceScope AppServicesScope => AppServiceProvider.CreateScope();
 
-    /// <summary>
-    /// Indicates whether the exit is caused by a logout action
-    /// </summary>
-    public bool SignOutExit { get; set; }
-
     public App App { get; } = app;
 
-    public DownloadManager<IllustrationDownloadTask> DownloadManager { get; private set; } = null!;
+    public DownloadManager DownloadManager { get; private set; } = null!;
 
     public MakoClient MakoClient { get; set; } = null!; // The null-state of MakoClient is transient
 
-    public AppSettings AppSettings
-    {
-        get => _appSettings;
-        set => WindowFactory.WindowSettings = _appSettings = value;
-    }
+    public AppSettings AppSettings { get; } = AppInfo.LoadConfig() ?? new AppSettings();
+
+    public LoginContext LoginContext { get; set; } = AppInfo.LoadLoginContext() ?? new LoginContext();
 
     public AppDebugTrace AppDebugTrace { get; set; } = AppInfo.LoadDebugTrace() ?? new AppDebugTrace();
 
@@ -71,7 +61,7 @@ public class AppViewModel(App app)
 
     public void AppLoggedIn()
     {
-        DownloadManager = new DownloadManager<IllustrationDownloadTask>(AppSettings.MaxDownloadTaskConcurrencyLevel, MakoClient.GetMakoHttpClient(MakoApiKind.ImageApi));
+        DownloadManager = new DownloadManager(MakoClient.GetMakoHttpClient(MakoApiKind.ImageApi), AppSettings.MaxDownloadTaskConcurrencyLevel);
         AppInfo.RestoreHistories();
     }
 
@@ -79,7 +69,8 @@ public class AppViewModel(App app)
     {
         var fileLogger = new FileLogger(ApplicationData.Current.LocalFolder.Path + @"\Logs\");
         return new ServiceCollection()
-            .AddSingleton<IDownloadTaskFactory<IllustrationItemViewModel, IllustrationDownloadTask>, IllustrationDownloadTaskFactory>()
+            .AddSingleton<IllustrationDownloadTaskFactory>()
+            .AddSingleton<NovelDownloadTaskFactory>()
             .AddSingleton(new LiteDatabase(AppInfo.DatabaseFilePath))
             .AddSingleton(provider => new DownloadHistoryPersistentManager(provider.GetRequiredService<LiteDatabase>(), App.AppViewModel.AppSettings.MaximumDownloadHistoryRecords))
             .AddSingleton(provider => new SearchHistoryPersistentManager(provider.GetRequiredService<LiteDatabase>(), App.AppViewModel.AppSettings.MaximumSearchHistoryRecords))
@@ -112,5 +103,14 @@ public class AppViewModel(App app)
         var original = _activatedByProtocol;
         _activatedByProtocol = false;
         return original;
+    }
+
+    public void Dispose()
+    {
+        AppServiceProvider?.GetRequiredService<LiteDatabase>().Dispose();
+        AppServiceProvider?.Dispose();
+        DownloadManager?.Dispose();
+        MakoClient?.Dispose();
+        GC.SuppressFinalize(this);
     }
 }

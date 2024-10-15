@@ -20,7 +20,6 @@
 
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -31,7 +30,7 @@ using Pixeval.CoreApi.Net.EndPoints;
 using Pixeval.CoreApi.Net.Request;
 using Pixeval.CoreApi.Net.Response;
 using Pixeval.Utilities;
-using Refit;
+using WebApiClientCore.Parameters;
 
 namespace Pixeval.CoreApi;
 
@@ -96,7 +95,7 @@ public partial class MakoClient
 
             var span = contentHtml[startIndex..endIndex];
 
-            return JsonSerializer.Deserialize<NovelContent>(span)!;
+            return (NovelContent)JsonSerializer.Deserialize(span, typeof(NovelContent), AppJsonSerializerContext.Default)!;
         });
 
     /// <summary>
@@ -139,10 +138,11 @@ public partial class MakoClient
             .RemoveNovelBookmarkAsync(new RemoveNovelBookmarkRequest(id))
             .ConfigureAwait(false));
 
-    public Task<PixivRelatedUsersResponse> RelatedUserAsync(long id, TargetFilter filter = TargetFilter.ForAndroid)
-        => RunWithLoggerAsync(async t => await t
-            .RelatedUserAsync(filter, id)
-            .ConfigureAwait(false));
+    public Task<User[]> RelatedUserAsync(long id, TargetFilter filter = TargetFilter.ForAndroid)
+        => RunWithLoggerAsync(async t => (await t
+                .RelatedUserAsync(filter, id)
+                .ConfigureAwait(false))
+            .Users);
 
     public Task<HttpResponseMessage> PostFollowUserAsync(long id, PrivacyPolicy privacyPolicy)
         => RunWithLoggerAsync(async t => await t
@@ -154,19 +154,17 @@ public partial class MakoClient
             .RemoveFollowUserAsync(new RemoveFollowUserRequest(id))
             .ConfigureAwait(false));
 
-    public Task<IEnumerable<TrendingTag>> GetTrendingTagsAsync(TargetFilter targetFilter)
+    public Task<TrendingTag[]> GetTrendingTagsAsync(TargetFilter targetFilter)
         => RunWithLoggerAsync(async t => (await t
-            .GetTrendingTagsAsync(targetFilter)
-            .ConfigureAwait(false))
-            .TrendTags
-            .Select(tag => new TrendingTag(tag.TagStr, tag.TranslatedName, tag.Illust)));
+                .GetTrendingTagsAsync(targetFilter)
+                .ConfigureAwait(false))
+            .TrendTags);
 
-    public Task<IEnumerable<TrendingTag>> GetTrendingTagsForNovelAsync(TargetFilter targetFilter)
+    public Task<TrendingTag[]> GetTrendingTagsForNovelAsync(TargetFilter targetFilter)
         => RunWithLoggerAsync(async t => (await t
-            .GetTrendingTagsForNovelAsync(targetFilter)
-            .ConfigureAwait(false))
-            .TrendTags
-            .Select(tag => new TrendingTag(tag.TagStr, tag.TranslatedName, tag.Illust)));
+                .GetTrendingTagsForNovelAsync(targetFilter)
+                .ConfigureAwait(false))
+            .TrendTags);
 
     public Task<UgoiraMetadataResponse> GetUgoiraMetadataAsync(long id)
         => RunWithLoggerAsync(async t => await t
@@ -214,6 +212,6 @@ public partial class MakoClient
             .AddNovelCommentAsync(new AddStampNovelCommentRequest(novelId, parentCommentId, stampId)));
 
     public Task<ReverseSearchResponse> ReverseSearchAsync(Stream imgStream, string apiKey)
-        => RunWithLoggerAsync(async () => await MakoServices.GetRequiredService<IReverseSearchApiEndPoint>()
-            .GetSauceAsync(new ReverseSearchRequest(apiKey), new StreamPart(imgStream, "img")));
+        => RunWithLoggerAsync(async () => await Provider.GetRequiredService<IReverseSearchApiEndPoint>()
+            .GetSauceAsync(new FormDataFile(imgStream, "img"), new ReverseSearchRequest(apiKey)));
 }

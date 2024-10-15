@@ -1,6 +1,5 @@
 using System;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Input;
 using Pixeval.Util.UI;
 
 namespace Pixeval.Pages.Tags;
@@ -11,7 +10,7 @@ public sealed partial class TagsPage
 
     public TagsPage() => InitializeComponent();
 
-    private void TagsEntry_OnTagTapped(TagsEntry sender, string tag)
+    private void TagsEntry_OnTagClick(TagsEntry sender, string tag)
     {
         if (!_viewModel.SelectedTags.Contains(tag))
             _viewModel.SelectedTags.Add(tag);
@@ -22,9 +21,9 @@ public sealed partial class TagsPage
         _ = _viewModel.DataProvider.View.Remove(viewModel);
     }
 
-    private async void ChangeWorkingPath_OnTapped(object sender, TappedRoutedEventArgs e)
+    private async void ChangeWorkingPath_OnClicked(object sender, RoutedEventArgs e)
     {
-        if (await Window.OpenFolderPickerAsync() is { } folder) 
+        if (await HWnd.OpenFolderPickerAsync() is { } folder) 
             _viewModel.WorkingDirectory = folder.Path;
     }
 

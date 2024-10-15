@@ -18,8 +18,10 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using System.Collections.Generic;
 using Pixeval.Controls;
 using Pixeval.Download.MacroParser;
+using Pixeval.Download.Macros;
 using Pixeval.Utilities;
 
 namespace Pixeval.Download;
@@ -28,7 +30,9 @@ public class IllustrationMetaPathParser : IMetaPathParser<IllustrationItemViewMo
 {
     private readonly MacroParser<IllustrationItemViewModel> _parser = new();
 
-    public IMetaPathMacroProvider<IllustrationItemViewModel> MacroProvider { get; } = new IllustrationMetaPathMacroProvider();
+    private static readonly IReadOnlyList<IMacro> _macroProviderStatic = MetaPathMacroAttributeHelper.GetIWorkViewModelInstances();
+ 
+    public IReadOnlyList<IMacro> MacroProvider => _macroProviderStatic;
 
     public string Reduce(string raw, IllustrationItemViewModel context)
     {

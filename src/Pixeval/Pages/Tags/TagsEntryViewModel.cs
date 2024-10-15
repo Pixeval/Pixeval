@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
-using Microsoft.UI.Xaml.Media.Imaging;
+using Microsoft.UI.Xaml.Media;
 using Pixeval.Controls;
 using Pixeval.CoreApi.Model;
 using Pixeval.Util;
@@ -16,7 +16,7 @@ namespace Pixeval.Pages.Tags;
 /// <summary>
 /// 由于<see cref="Illustration"/>不一定存在，所以这个类不直接继承 <see cref="IllustrationItemViewModel"/>
 /// </summary>
-public partial class TagsEntryViewModel : ObservableObject, IEntry, IDisposable
+public partial class TagsEntryViewModel : ObservableObject, IEntry
 {
     private TagsEntryViewModel(string path)
     {
@@ -29,10 +29,12 @@ public partial class TagsEntryViewModel : ObservableObject, IEntry, IDisposable
 
     public string FullPath { get; }
 
+    public long Id { get; private set; }
+
     /// <remarks>
     /// Should be private set
     /// </remarks>
-    [ObservableProperty] private SoftwareBitmapSource _thumbnail = null!;
+    [ObservableProperty] private ImageSource? _thumbnail;
 
     private FrozenSet<string>? _tagsSet;
 
@@ -71,15 +73,14 @@ public partial class TagsEntryViewModel : ObservableObject, IEntry, IDisposable
                 try
                 {
                     var image = await Image.LoadAsync(FullPath);
-                    image.SetTags(TagsSet);
-                    await using var stream = File.OpenWrite(FullPath);
+                    image.SetIdTags(Id, TagsSet);
+                    await using var stream = IoHelper.OpenAsyncWrite(FullPath);
                     await image.SaveAsync(stream, image.Metadata.DecodedImageFormat!);
                     return null;
                 }
                 catch (Exception e)
                 {
                     return e.Message;
-                    // ignored
                 }
             });
     }
@@ -104,13 +105,14 @@ public partial class TagsEntryViewModel : ObservableObject, IEntry, IDisposable
     {
         var illustration = null as Illustration;
         var tags = null as FrozenSet<string>;
+        var id = 0L;
         await Task.Run(async () =>
         {
             try
             {
                 // 理论上只有此句可能throw
                 var info = await Image.IdentifyAsync(path);
-                illustration = await info.GetIllustrationAsync();
+                id = info.GetIllustrationId();
                 tags = info.GetTags().ToFrozenSet();
             }
             catch
@@ -118,14 +120,12 @@ public partial class TagsEntryViewModel : ObservableObject, IEntry, IDisposable
                 // ignored
             }
         });
-        entry.Illustration = illustration;
+        entry.Id = id;
         entry.TagsSet = tags;
     }
 
     private static async void LoadThumbnail(TagsEntryViewModel entry, string path)
     {
-        entry.Thumbnail = await (await IoHelper.GetFileThumbnailAsync(path)).GetSoftwareBitmapSourceAsync(true);
+        entry.Thumbnail = await (await IoHelper.GetFileThumbnailAsync(path)).GetBitmapImageAsync(true, url: path);
     }
-
-    public void Dispose() => Thumbnail.Dispose();
 }

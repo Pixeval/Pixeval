@@ -23,15 +23,19 @@ using Pixeval.Download.MacroParser;
 
 namespace Pixeval.Download.Macros;
 
-[MetaPathMacro(typeof(IllustrationItemViewModel))]
-public class MangaIndexMacro : IMacro<IllustrationItemViewModel>.ITransducer
+[MetaPathMacro<IWorkViewModel>]
+public class MangaIndexMacro : ITransducer<IWorkViewModel>, ILastSegment
 {
-    public string Name => "manga_index";
+    public const string NameConst = "manga_index";
 
-    public string Substitute(IllustrationItemViewModel context)
+    public const string NameConstToken = $"<{NameConst}>";
+
+    public string Name => NameConst;
+
+    public string Substitute(IWorkViewModel context)
     {
         // 下载单张漫画的时候，MangaIndex 不为 -1
         // 下载多张漫画或者单张插画的时候，为 -1
-        return context.MangaIndex is -1 ? $"<{Name}>" : context.MangaIndex.ToString();
+        return context is IllustrationItemViewModel { IsManga: true, MangaIndex: not -1 } i ? i.MangaIndex.ToString() : $"<{Name}>";
     }
 }

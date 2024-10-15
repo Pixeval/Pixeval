@@ -18,6 +18,8 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json.Serialization;
 
 namespace Pixeval.CoreApi.Net.Response;
@@ -27,6 +29,14 @@ public partial record UgoiraMetadataResponse
 {
     [JsonPropertyName("ugoira_metadata")]
     public required UgoiraMetadata UgoiraMetadataInfo { get; set; }
+
+    public int FrameCount => UgoiraMetadataInfo.Frames.Length;
+
+    public IEnumerable<int> Delays => UgoiraMetadataInfo.Frames.Select(t => (int)t.Delay);
+
+    public string MediumUrl => UgoiraMetadataInfo.ZipUrls.Medium;
+
+    public string LargeUrl => UgoiraMetadataInfo.ZipUrls.Large;
 }
 
 [Factory]

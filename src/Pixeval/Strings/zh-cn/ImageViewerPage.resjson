@@ -1,6 +1,5 @@
 {
     "CheckingCache": "正在检查缓存...",
-    "DownloadingUgoiraZipFormatted": "正在下载包含动图的压缩包：{0}%",
     "DownloadingImageFormatted": "正在下载图片：{0}%",
     "LoadingFromCache": "正在从缓存中加载...",
     "LoadingImage": "正在解码图片...",

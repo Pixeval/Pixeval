@@ -20,12 +20,12 @@
 
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
+using Pixeval.Controls;
 using Pixeval.CoreApi.Global.Enum;
-using Pixeval.Misc;
 
 namespace Pixeval.Pages.Capability;
 
-public sealed partial class FollowingsPage : IScrollViewProvider
+public sealed partial class FollowingsPage : IScrollViewHost
 {
     public FollowingsPage() => InitializeComponent();
 

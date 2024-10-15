@@ -5,8 +5,9 @@
         <Platforms>x86;x64;arm64</Platforms>
         <Nullable>enable</Nullable>
         <LangVersion>preview</LangVersion>
+        <IsTrimmable>true</IsTrimmable>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="CommunityToolkit.HighPerformance" Version="8.2.2" />
+        <PackageReference Include="CommunityToolkit.HighPerformance" Version="8.3.2" />
     </ItemGroup>
 </Project>

@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -18,11 +18,15 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using System.Collections.Generic;
+using System.Diagnostics;
+
 namespace Pixeval.Download.MacroParser.Ast;
 
+[DebuggerDisplay("{First} {Remains}")]
 public record Sequence<TContext>(SingleNode<TContext> First, Sequence<TContext>? Remains) : IMetaPathNode<TContext>
 {
-    public string Evaluate(IMetaPathMacroProvider<TContext> env, TContext context)
+    public string Evaluate(IReadOnlyList<IMacro> env, TContext context)
     {
         return First.Evaluate(env, context) + (Remains?.Evaluate(env, context) ?? string.Empty);
     }

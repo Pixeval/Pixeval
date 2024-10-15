@@ -21,11 +21,10 @@
 #endregion
 
 using Microsoft.UI.Xaml;
-using Pixeval.Misc;
 
 namespace Pixeval.Controls;
 
-public interface IEntryView<out TSortableEntryViewViewModel> : IScrollViewProvider where TSortableEntryViewViewModel : ISortableEntryViewViewModel
+public interface IEntryView<out TSortableEntryViewViewModel> : IScrollViewHost where TSortableEntryViewViewModel : ISortableEntryViewViewModel
 {
     TSortableEntryViewViewModel ViewModel { get; }
 

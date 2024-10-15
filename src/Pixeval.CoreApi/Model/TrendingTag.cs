@@ -18,6 +18,19 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using System.Text.Json.Serialization;
+
 namespace Pixeval.CoreApi.Model;
 
-public record TrendingTag(string Tag, string Translation, Illustration Illustration);
+[Factory]
+public partial record TrendingTag
+{
+    [JsonPropertyName("tag")]
+    public required string Tag { get; set; } = "";
+
+    [JsonPropertyName("translated_name")]
+    public required string TranslatedName { get; set; } = "";
+
+    [JsonPropertyName("illust")]
+    public required Illustration Illustration { get; set; }
+}

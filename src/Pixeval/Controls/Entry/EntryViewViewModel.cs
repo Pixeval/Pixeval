@@ -19,13 +19,18 @@
 #endregion
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using CommunityToolkit.Mvvm.ComponentModel;
+using Pixeval.Collections;
 using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Model;
 
 namespace Pixeval.Controls;
 
-public abstract class EntryViewViewModel<T, TViewModel> : ObservableObject, IDisposable where T : class, IEntry where TViewModel : EntryViewModel<T>
+public abstract class EntryViewViewModel<T, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] TViewModel>
+    : ObservableObject, IDisposable
+    where T : class, IIdEntry
+    where TViewModel : EntryViewModel<T>, IFactory<T, TViewModel>
 {
     /// <summary>
     /// Avoid calls to <see cref="IDataProvider{T,TViewModel}.ResetEngine"/>, calls to <see cref="ResetEngine"/> instead.
@@ -34,7 +39,10 @@ public abstract class EntryViewViewModel<T, TViewModel> : ObservableObject, IDis
 
     public void Dispose() => DataProvider.Dispose();
 
-    public void ResetEngine(IFetchEngine<T>? newEngine, int itemLimit = -1) => DataProvider.ResetEngine(newEngine, itemLimit);
+    public void ResetEngine(IFetchEngine<T>? newEngine, int itemsPerPage = 20, int itemLimit = -1) => DataProvider.ResetEngine(newEngine, itemsPerPage, itemLimit);
 
+    /// <summary>
+    /// 不用!<see cref="AdvancedObservableCollection{T}.HasMoreItems"/>，此处只是为了表示集合有没有元素
+    /// </summary>
     public bool HasNoItem => DataProvider.View.Count is 0;
 }

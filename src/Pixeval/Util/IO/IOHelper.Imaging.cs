@@ -22,14 +22,15 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
-using Windows.Graphics.Imaging;
 using Windows.Storage;
 using Windows.Storage.FileProperties;
-using Microsoft.UI.Xaml.Media.Imaging;
+using Microsoft.UI.Xaml.Media;
+using Pixeval.AppManagement;
 using Pixeval.CoreApi.Net.Response;
+using Pixeval.Download.Macros;
 using Pixeval.Options;
+using Pixeval.Util.IO.Pooling;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats;
 using SixLabors.ImageSharp.Formats.Bmp;
@@ -38,7 +39,6 @@ using SixLabors.ImageSharp.Formats.Jpeg;
 using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp.Formats.Tiff;
 using SixLabors.ImageSharp.Formats.Webp;
-using SixLabors.ImageSharp.PixelFormats;
 using WinUI3Utilities;
 using QRCoder;
 
@@ -46,61 +46,33 @@ namespace Pixeval.Util.IO;
 
 public static partial class IoHelper
 {
-    public static async Task<SoftwareBitmapSource> GetSoftwareBitmapSourceAsync(this Stream stream, bool disposeOfImageStream)
+    private static readonly ImagePool<IImagePoolKey> _imagePool = new(200);
+
+    public static Task<ImageSource> GetBitmapImageAsync(this Stream imageStream, bool disposeOfImageStream, int? desiredWidth = null, string? url = null)
     {
-        // 此处Position可能为负数
-        stream.Position = 0;
-
-        var bitmap = await GetSoftwareBitmapFromStreamAsync(stream);
-        if (disposeOfImageStream)
-            await stream.DisposeAsync();
-        var source = new SoftwareBitmapSource();
-        await source.SetBitmapAsync(bitmap);
-        return source;
-    }
-
-    public static async Task<BitmapImage> GetBitmapImageAsync(this Stream imageStream, bool disposeOfImageStream, int? desiredWidth = null)
-    {
-        var bitmapImage = new BitmapImage
-        {
-            DecodePixelType = DecodePixelType.Logical
-        };
-        if (desiredWidth is { } width)
-            bitmapImage.DecodePixelWidth = width;
-        await bitmapImage.SetSourceAsync(imageStream.AsRandomAccessStream());
-        if (disposeOfImageStream)
-            await imageStream.DisposeAsync();
-
-        return bitmapImage;
-    }
-
-    /// <summary>
-    /// Decodes the <paramref name="stream" /> to a <see cref="SoftwareBitmap" />
-    /// </summary>
-    public static async Task<SoftwareBitmap> GetSoftwareBitmapFromStreamAsync(Stream stream)
-    {
-        using var image = await Image.LoadAsync<Bgra32>(stream);
-        var softwareBitmap = new SoftwareBitmap(BitmapPixelFormat.Bgra8, image.Width, image.Height, BitmapAlphaMode.Premultiplied);
-        var buffer = new byte[4 * image.Width * image.Height];
-        image.CopyPixelDataTo(buffer);
-        softwareBitmap.CopyFromBuffer(buffer.AsBuffer());
-        return softwareBitmap;
-        // BitmapDecoder Bug多
-        // var decoder = await BitmapDecoder.CreateAsync(imageStream);
-        // return await decoder.GetSoftwareBitmapAsync(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Premultiplied);
+        return _imagePool.GetBitmapImageAsync(imageStream, disposeOfImageStream, desiredWidth, url);
     }
 
     public static async Task<Stream> GetFileThumbnailAsync(string path, uint size = 64)
     {
         var file = await StorageFile.GetFileFromPathAsync(path);
-        var thumbnail = await file.GetThumbnailAsync(ThumbnailMode.SingleItem, size);
-        return thumbnail.AsStreamForRead();
+        Stream stream;
+        try
+        {
+            var thumbnail = await file.GetThumbnailAsync(ThumbnailMode.SingleItem, size);
+            stream = thumbnail.AsStreamForRead();
+        }
+        catch
+        {
+            stream = AppInfo.GetImageNotAvailableStream();
+        }
+        return stream;
     }
 
     public static async Task UgoiraSaveToFileAsync(this Image image, string path, UgoiraDownloadFormat? ugoiraDownloadFormat = null)
     {
         CreateParentDirectories(path);
-        await using var fileStream = File.OpenWrite(path);
+        await using var fileStream = OpenAsyncWrite(path);
         _ = await UgoiraSaveToStreamAsync(image, fileStream, ugoiraDownloadFormat);
     }
 
@@ -108,7 +80,7 @@ public static partial class IoHelper
     /// Writes the frames that are contained in <paramref name="streams" /> into <see cref="Stream"/>
     /// and encodes to <paramref name="ugoiraDownloadFormat"/> format
     /// </summary>
-    public static async Task<Stream> UgoiraSaveToStreamAsync(this IEnumerable<Stream> streams, IEnumerable<int> delays, Stream? target = null, IProgress<int>? progress = null, UgoiraDownloadFormat? ugoiraDownloadFormat = null)
+    public static async Task<Stream> UgoiraSaveToStreamAsync(this IReadOnlyList<Stream> streams, IReadOnlyList<int> delays, Stream? target = null, IProgress<double>? progress = null, UgoiraDownloadFormat? ugoiraDownloadFormat = null)
     {
         using var image = await streams.UgoiraSaveToImageAsync(delays, progress);
         var s = await image.UgoiraSaveToStreamAsync(target ?? _recyclableMemoryStreamManager.GetStream());
@@ -116,89 +88,127 @@ public static partial class IoHelper
         return s;
     }
 
+    public static IImageEncoder GetUgoiraEncoder(UgoiraDownloadFormat? ugoiraDownloadFormat = null)
+    {
+        ugoiraDownloadFormat ??= App.AppViewModel.AppSettings.UgoiraDownloadFormat;
+        return ugoiraDownloadFormat switch
+        {
+            UgoiraDownloadFormat.Tiff => new TiffEncoder(),
+            UgoiraDownloadFormat.APng => new PngEncoder(),
+            UgoiraDownloadFormat.Gif => new GifEncoder(),
+            UgoiraDownloadFormat.WebPLossless => new WebpEncoder { FileFormat = WebpFileFormatType.Lossless },
+            UgoiraDownloadFormat.WebPLossy => new WebpEncoder { FileFormat = WebpFileFormatType.Lossy },
+            _ => ThrowHelper.ArgumentOutOfRange<UgoiraDownloadFormat?, IImageEncoder>(ugoiraDownloadFormat)
+        };
+    }
+
     public static async Task<T> UgoiraSaveToStreamAsync<T>(this Image image, T destination, UgoiraDownloadFormat? ugoiraDownloadFormat = null) where T : Stream
     {
         return await Task.Run(async () =>
         {
-            ugoiraDownloadFormat ??= App.AppViewModel.AppSettings.UgoiraDownloadFormat;
-            await image.SaveAsync(destination,
-                ugoiraDownloadFormat switch
-                {
-                    UgoiraDownloadFormat.Tiff => new TiffEncoder(),
-                    UgoiraDownloadFormat.APng => new PngEncoder(),
-                    UgoiraDownloadFormat.Gif => new GifEncoder(),
-                    UgoiraDownloadFormat.WebPLossless => new WebpEncoder { FileFormat = WebpFileFormatType.Lossless },
-                    UgoiraDownloadFormat.WebPLossy => new WebpEncoder { FileFormat = WebpFileFormatType.Lossy },
-                    _ => ThrowHelper.ArgumentOutOfRange<UgoiraDownloadFormat?, IImageEncoder>(ugoiraDownloadFormat)
-                });
+            await image.SaveAsync(destination, GetUgoiraEncoder(ugoiraDownloadFormat));
             image.Dispose();
             destination.Position = 0;
             return destination;
         });
     }
 
-    public static async Task<Image> UgoiraSaveToImageAsync(this IEnumerable<Stream> streams, IEnumerable<int> delays, IProgress<int>? progress = null)
+    public static async Task<Image> UgoiraSaveToImageAsync(this IReadOnlyList<Stream> streams, IReadOnlyList<int> delays, IProgress<double>? progress = null, bool dispose = false)
     {
-        return await Task.Run(async () =>
+        var average = 50d / streams.Count;
+        var progressValue = 0d;
+
+        var images = new Image[streams.Count];
+        var options = new ParallelOptions();
+        if (progress is not null)
+            options.TaskScheduler = TaskScheduler.FromCurrentSynchronizationContext();
+        await Parallel.ForAsync(0, streams.Count, options, async (i, token) =>
         {
-            var s = streams as IList<Stream> ?? streams.ToArray();
-            var average = 50d / s.Count;
-            var d = delays as IList<int> ?? delays.ToArray();
-            var progressValue = 0d;
+            var delay = delays.Count > i ? (uint)delays[i] : 10u;
+            streams[i].Position = 0;
+            images[i] = await Image.LoadAsync(streams[i], token);
+            if (dispose)
+                await streams[i].DisposeAsync();
+            images[i].Frames[0].Metadata.GetFormatMetadata(WebpFormat.Instance).FrameDelay = delay;
+            progressValue += average;
+            progress?.Report((int)progressValue);
+        });
 
-            var images = new Image[s.Count];
-            await Parallel.ForAsync(0, s.Count, async (i, token) =>
-            {
-                var delay = d.Count > i ? (uint)d[i] : 10u;
-                s[i].Position = 0;
-                images[i] = await Image.LoadAsync(s[i], token);
-                images[i].Frames[0].Metadata.GetFormatMetadata(WebpFormat.Instance).FrameDelay = delay;
-                progressValue += average;
-                progress?.Report((int)progressValue);
-            });
+        var image = images[0];
+        foreach (var img in images.Skip(1))
+        {
+            using (img)
+                _ = image.Frames.AddFrame(img.Frames[0]);
+            progressValue += average / 2;
+            progress?.Report((int) progressValue);
+        }
 
-            var image = images[0];
-            foreach (var img in images.Skip(1))
+        return image;
+    }
+
+    public static async Task<Image> UgoiraSaveToImageAsync(this IEnumerable<string> files, IReadOnlyList<int> delays)
+    {
+        var image = null as Image;
+        var i = 0;
+        foreach (var file in files)
+        {
+            var delay = delays.Count > i ? (uint)delays[i] : 10u;
+            if (image is null)
+                image = await Image.LoadAsync(file);
+            else
             {
-                using (img)
-                    _ = image.Frames.AddFrame(img.Frames[0]);
-                progressValue += average / 2;
-                progress?.Report((int)progressValue);
+                using var img = await Image.LoadAsync(file);
+                img.Frames[0].Metadata.GetFormatMetadata(WebpFormat.Instance).FrameDelay = delay;
+                img.Frames[0].Metadata.GetFormatMetadata(PngFormat.Instance).FrameDelay = new Rational(delay, 10);
+                img.Frames[0].Metadata.GetFormatMetadata(GifFormat.Instance).FrameDelay = (int) (delay / 10);
+                _ = image.Frames.AddFrame(img.Frames[0]);
             }
 
-            return image;
-        });
+            ++i;
+        }
+        return image!;
     }
 
     public static async Task IllustrationSaveToFileAsync(this Image image, string path, IllustrationDownloadFormat? illustrationDownloadFormat = null)
     {
         CreateParentDirectories(path);
-        await using var fileStream = File.OpenWrite(path);
+        await using var fileStream = OpenAsyncWrite(path);
         _ = await IllustrationSaveToStreamAsync(image, fileStream, illustrationDownloadFormat);
     }
 
     public static async Task StreamSaveToFileAsync(this Stream stream, string path)
     {
         CreateParentDirectories(path);
-        await using var fileStream = File.OpenWrite(path);
+        await using var fileStream = OpenAsyncWrite(path);
         await stream.CopyToAsync(fileStream);
+    }
+
+    public static async Task StreamsCompressSaveToFileAsync(this Stream stream, string path)
+    {
+        CreateParentDirectories(path);
+        await using var fileStream = OpenAsyncWrite(path);
+        await stream.CopyToAsync(fileStream);
+    }
+
+    public static IImageEncoder GetIllustrationEncoder(IllustrationDownloadFormat? illustrationDownloadFormat = null)
+    {
+        illustrationDownloadFormat ??= App.AppViewModel.AppSettings.IllustrationDownloadFormat;
+        return illustrationDownloadFormat switch
+        {
+            IllustrationDownloadFormat.Jpg => new JpegEncoder(),
+            IllustrationDownloadFormat.Png => new PngEncoder(),
+            IllustrationDownloadFormat.Bmp => new BmpEncoder(),
+            IllustrationDownloadFormat.WebPLossless => new WebpEncoder { FileFormat = WebpFileFormatType.Lossless },
+            IllustrationDownloadFormat.WebPLossy => new WebpEncoder { FileFormat = WebpFileFormatType.Lossy },
+            _ => ThrowHelper.ArgumentOutOfRange<IllustrationDownloadFormat?, IImageEncoder>(illustrationDownloadFormat)
+        };
     }
 
     public static async Task<T> IllustrationSaveToStreamAsync<T>(this Image image, T destination, IllustrationDownloadFormat? illustrationDownloadFormat = null) where T : Stream
     {
         return await Task.Run(async () =>
         {
-            illustrationDownloadFormat ??= App.AppViewModel.AppSettings.IllustrationDownloadFormat;
-            await image.SaveAsync(destination,
-                illustrationDownloadFormat switch
-                {
-                    IllustrationDownloadFormat.Jpg => new JpegEncoder(),
-                    IllustrationDownloadFormat.Png => new PngEncoder(),
-                    IllustrationDownloadFormat.Bmp => new BmpEncoder(),
-                    IllustrationDownloadFormat.WebPLossless => new WebpEncoder { FileFormat = WebpFileFormatType.Lossless },
-                    IllustrationDownloadFormat.WebPLossy => new WebpEncoder { FileFormat = WebpFileFormatType.Lossy },
-                    _ => ThrowHelper.ArgumentOutOfRange<IllustrationDownloadFormat?, IImageEncoder>(illustrationDownloadFormat)
-                });
+            await image.SaveAsync(destination, GetIllustrationEncoder(illustrationDownloadFormat));
             image.Dispose();
             destination.Position = 0;
             return destination;
@@ -217,46 +227,102 @@ public static partial class IoHelper
         };
     }
 
-    public static string GetIllustrationExtension(string macroName, IllustrationDownloadFormat? illustrationDownloadFormat = null)
+    public static UgoiraDownloadFormat GetUgoiraFormat(string extension)
+    {
+        return extension switch
+        {
+            ".zip" => UgoiraDownloadFormat.OriginalZip,
+            ".tiff" => UgoiraDownloadFormat.Tiff,
+            ".apng" => UgoiraDownloadFormat.APng,
+            ".gif" => UgoiraDownloadFormat.Gif,
+            ".webp" => UgoiraDownloadFormat.WebPLossless,
+            _ => ThrowHelper.ArgumentOutOfRange<string, UgoiraDownloadFormat>(extension)
+        };
+    }
+
+    public static string GetIllustrationExtension(IllustrationDownloadFormat? illustrationDownloadFormat = null)
     {
         illustrationDownloadFormat ??= App.AppViewModel.AppSettings.IllustrationDownloadFormat;
         return illustrationDownloadFormat switch
         {
-            IllustrationDownloadFormat.Original => $"<{macroName}>",
+            IllustrationDownloadFormat.Original => FileExtensionMacro.NameConstToken,
             IllustrationDownloadFormat.Jpg or IllustrationDownloadFormat.Png or IllustrationDownloadFormat.Bmp => "." + illustrationDownloadFormat.ToString()!.ToLower(),
             IllustrationDownloadFormat.WebPLossless or IllustrationDownloadFormat.WebPLossy => ".webp",
             _ => ThrowHelper.ArgumentOutOfRange<IllustrationDownloadFormat?, string>(illustrationDownloadFormat)
         };
     }
 
-    public static async Task<Image> GetImageFromZipStreamAsync(Stream zipStream, UgoiraMetadataResponse ugoiraMetadataResponse)
+    public static IllustrationDownloadFormat GetIllustrationFormat(string extension)
     {
-        var entryStreams = await ReadZipArchiveEntriesAsync(zipStream, true);
-        return await entryStreams.UgoiraSaveToImageAsync(ugoiraMetadataResponse.UgoiraMetadataInfo.Frames.Select(t => (int)t.Delay));
+        return extension switch
+        {
+            ".jpg" => IllustrationDownloadFormat.Jpg,
+            ".png" => IllustrationDownloadFormat.Png,
+            ".bmp" => IllustrationDownloadFormat.Bmp,
+            ".webp" => IllustrationDownloadFormat.WebPLossless,
+            FileExtensionMacro.NameConstToken => IllustrationDownloadFormat.Original,
+            _ => ThrowHelper.ArgumentOutOfRange<string, IllustrationDownloadFormat>(extension)
+        };
     }
 
-    public static async Task<SoftwareBitmapSource> GenerateQrCodeForUrlAsync(string url)
+    public static string GetNovelExtension(NovelDownloadFormat? novelDownloadFormat = null)
+    {
+        novelDownloadFormat ??= App.AppViewModel.AppSettings.NovelDownloadFormat;
+        return novelDownloadFormat switch
+        {
+            NovelDownloadFormat.OriginalTxt => "novel.txt",
+            NovelDownloadFormat.Pdf => "." + novelDownloadFormat.ToString()!.ToLower(),
+            NovelDownloadFormat.Html or NovelDownloadFormat.Md => "\\novel." + novelDownloadFormat.ToString()!.ToLower(),
+            _ => ThrowHelper.ArgumentOutOfRange<NovelDownloadFormat?, string>(novelDownloadFormat)
+        };
+    }
+
+    public static NovelDownloadFormat GetNovelFormat(string extension)
+    {
+        return extension switch
+        {
+            ".txt" => NovelDownloadFormat.OriginalTxt,
+            ".pdf" => NovelDownloadFormat.Pdf,
+            ".html" => NovelDownloadFormat.Html,
+            ".md" => NovelDownloadFormat.Md,
+            _ => ThrowHelper.ArgumentOutOfRange<string, NovelDownloadFormat>(extension)
+        };
+    }
+
+    public static async Task<Image> GetImageFromZipStreamAsync(Stream zipStream, UgoiraMetadataResponse ugoiraMetadataResponse)
+    {
+        var entryStreams = await ReadZipAsync(zipStream, true);
+        return await entryStreams.UgoiraSaveToImageAsync(ugoiraMetadataResponse.Delays.ToArray());
+    }
+
+    public static async Task<ImageSource> GenerateQrCodeForUrlAsync(string url)
     {
         var qrCodeGen = new QRCodeGenerator();
         var urlPayload = new PayloadGenerator.Url(url);
         var qrCodeData = qrCodeGen.CreateQrCode(urlPayload, QRCodeGenerator.ECCLevel.Q);
         var qrCode = new BitmapByteQRCode(qrCodeData);
         var bytes = qrCode.GetGraphic(20);
-        return await _recyclableMemoryStreamManager.GetStream(bytes).GetSoftwareBitmapSourceAsync(true);
+        return await _recyclableMemoryStreamManager.GetStream(bytes).GetBitmapImageAsync(true, url: url);
     }
 
-    public static async Task<SoftwareBitmapSource> GenerateQrCodeAsync(string content)
+    public static async Task<ImageSource> GenerateQrCodeAsync(string content)
     {
         var qrCodeGen = new QRCodeGenerator();
         var qrCodeData = qrCodeGen.CreateQrCode(content, QRCodeGenerator.ECCLevel.Q);
         var qrCode = new BitmapByteQRCode(qrCodeData);
         var bytes = qrCode.GetGraphic(20);
-        return await _recyclableMemoryStreamManager.GetStream(bytes).GetSoftwareBitmapSourceAsync(true);
+        return await _recyclableMemoryStreamManager.GetStream(bytes).GetBitmapImageAsync(true);
     }
 
-    public static string GetPathFromUrlFormat(string path, string url)
+    public static string ChangeExtensionFromUrl(string path, string url)
     {
         var index = url.LastIndexOf('.');
-        return path.Replace("<illust_ext>", url[index..]);
+        return Path.ChangeExtension(path, url[index..]);
+    }
+
+    public static string ReplaceTokenExtensionFromUrl(string path, string url)
+    {
+        var index = url.LastIndexOf('.');
+        return path.Replace(FileExtensionMacro.NameConstToken, url[index..]);
     }
 }

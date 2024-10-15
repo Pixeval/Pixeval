@@ -18,8 +18,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using Windows.Graphics;
-using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
@@ -27,8 +25,8 @@ using WinUI3Utilities;
 using CommunityToolkit.WinUI.Controls;
 using Pixeval.Controls.Windowing;
 using Microsoft.UI.Xaml.Media.Animation;
+using Pixeval.Controls;
 using Pixeval.Util.UI;
-using Pixeval.Misc;
 
 namespace Pixeval.Pages.IllustratorViewer;
 
@@ -41,13 +39,7 @@ public sealed partial class IllustratorViewerPage
 
     public override void OnPageActivated(NavigationEventArgs e, object? parameter)
     {
-        _viewModel = Window.Content.To<FrameworkElement>().GetViewModel(parameter);
-    }
-
-    protected override void SetTitleBarDragRegion(InputNonClientPointerSource sender, SizeInt32 windowSize, double scaleFactor, out int titleBarHeight)
-    {
-        sender.SetRegionRects(NonClientRegionKind.Icon, [GetScaledRect(TitleBar.Icon)]);
-        titleBarHeight = 32;
+        _viewModel = HWnd.GetIllustratorViewerPageViewModel(parameter);
     }
 
     private async void IllustratorViewerSegmented_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -73,7 +65,7 @@ public sealed partial class IllustratorViewerPage
 
     private ScrollView? StickyHeaderScrollView_OnSetInnerScrollView()
     {
-        return IllustratorViewerFrame.Content is IScrollViewProvider { ScrollView: { } scrollView } ? scrollView : null;
+        return IllustratorViewerFrame.Content is IScrollViewHost { ScrollView: { } scrollView } ? scrollView : null;
     }
 
 #if false // TODO 这是什么
@@ -184,4 +176,10 @@ public sealed partial class IllustratorViewerPage
         }
     }
 #endif
+    public Visibility IsLogoVisible()
+    {
+        return WindowFactory.GetWindowForElement(this).HWnd != WindowFactory.RootWindow.HWnd
+            ? Visibility.Visible
+            : Visibility.Collapsed;
+    }
 }

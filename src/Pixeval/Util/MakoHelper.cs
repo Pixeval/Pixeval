@@ -27,7 +27,6 @@ using Pixeval.AppManagement;
 using Pixeval.Controls;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Model;
-using Pixeval.Misc;
 using Pixeval.Options;
 using WinUI3Utilities;
 
@@ -113,14 +112,34 @@ public static class MakoHelper
 
     public static Uri GenerateNovelAppUri(long id) => new($"{AppInfo.AppProtocol}://novel/{id}");
 
-    public static string GetCacheKeyForThumbnailAsync(string url)
-    {
-        return $"thumbnail-{url}";
-    }
+    public static Uri GenerateSpotlightWebUri(long id) => new($"https://www.pixivision.net/a/{id}");
 
-    public static async Task<string> GetIllustrationOriginalImageCacheKeyAsync(this IllustrationItemViewModel illustration)
+    public static Uri GenerateSpotlightPixEzUri(long id) => new($"pixez://www.pixivision.net/a/{id}");
+
+    public static Uri GenerateSpotlightAppUri(long id) => new($"{AppInfo.AppProtocol}://spotlight/{id}");
+
+    public static string GetThumbnailCacheKey(string url) => $"thumbnail-{url}";
+
+    public static string GetOriginalCacheKey(string url) => $"original-{url}";
+
+    public static async ValueTask<string> GetIllustrationCacheKeyAsync(this IllustrationItemViewModel illustration, bool isOriginal)
     {
-        return $"original-{await illustration.GetOriginalSourceUrlAsync()}";
+        if (illustration.IsManga)
+        {
+            var staticUrl = illustration.StaticUrl(isOriginal);
+            return isOriginal ? GetOriginalCacheKey(staticUrl) : GetThumbnailCacheKey(staticUrl);
+        }
+
+        if (illustration.IsUgoira)
+        {
+            if (isOriginal)
+                ThrowHelper.Argument(isOriginal);
+            else
+                return GetThumbnailCacheKey(await illustration.UgoiraMediumZipUrlAsync());
+        }
+
+        var staticUrl2 = illustration.StaticUrl(isOriginal);
+        return isOriginal ? GetOriginalCacheKey(staticUrl2) : GetThumbnailCacheKey(staticUrl2);
     }
 
     public static SortDescription? GetSortDescriptionForIllustration(WorkSortOption sortOption)

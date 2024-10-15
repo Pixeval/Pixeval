@@ -1,6 +1,5 @@
 {
     "CheckingCache": "Checking cache...",
-    "DownloadingUgoiraZipFormatted": "Downloading zip file containing the ugoira：{0}%",
     "DownloadingImageFormatted": "Downloading image: {0}%",
     "LoadingFromCache": "Loading from cache...",
     "LoadingImage": "Decoding...",

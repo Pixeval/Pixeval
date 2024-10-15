@@ -33,29 +33,25 @@ internal class PixivApiHttpMessageHandler(MakoClient makoClient) : MakoClientSup
         var headers = request.Headers;
         var host = request.RequestUri!.Host; // the 'RequestUri' is guaranteed to be nonnull here, because the 'HttpClient' will set it to 'BaseAddress' if it's null
 
-        var bypass = (MakoHttpOptions.BypassRequiredHost.IsMatch(host) || host is MakoHttpOptions.OAuthHost) && MakoClient.Configuration.Bypass;
+        var domainFronting = (MakoHttpOptions.DomainFrontingRequiredHost.IsMatch(host) || host is MakoHttpOptions.OAuthHost) && MakoClient.Configuration.DomainFronting;
 
-        if (bypass)
-        {
+        if (domainFronting)
             MakoHttpOptions.UseHttpScheme(request);
-        }
 
         headers.UserAgent.AddRange(MakoClient.Configuration.UserAgent);
         headers.AcceptLanguage.Add(new StringWithQualityHeaderValue(MakoClient.Configuration.CultureInfo.Name));
 
-        var session = MakoClient.Session;
-
         switch (host)
         {
-            case MakoHttpOptions.WebApiHost:
-                _ = headers.TryAddWithoutValidation("Cookie", session.Cookie);
-                break;
             case MakoHttpOptions.AppApiHost:
-                headers.Authorization = new AuthenticationHeaderValue("Bearer", session.AccessToken);
+                headers.Authorization = new AuthenticationHeaderValue("Bearer", MakoClient.Session.AccessToken);
+                break;
+            case MakoHttpOptions.WebApiHost:
+                _ = headers.TryAddWithoutValidation("Cookie", MakoClient.Configuration.Cookie);
                 break;
         }
 
-        return GetHttpMessageInvoker(bypass)
+        return GetHttpMessageInvoker(domainFronting)
             .SendAsync(request, cancellationToken);
     }
 }

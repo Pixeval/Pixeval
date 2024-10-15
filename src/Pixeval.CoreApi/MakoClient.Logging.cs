@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -17,7 +18,7 @@ public partial class MakoClient
         {
             EnsureNotCancelled();
 
-            return await task(MakoServices.GetRequiredService<IAppApiEndPoint>());
+            return await task(Provider.GetRequiredService<IAppApiEndPoint>());
         }
         catch (Exception e)
         {
@@ -32,7 +33,7 @@ public partial class MakoClient
         {
             EnsureNotCancelled();
 
-            return await task(MakoServices.GetRequiredService<IAppApiEndPoint>());
+            return await task(Provider.GetRequiredService<IAppApiEndPoint>());
         }
         catch (Exception e)
         {
@@ -47,7 +48,7 @@ public partial class MakoClient
         {
             EnsureNotCancelled();
 
-            return await task(MakoServices.GetRequiredService<IAppApiEndPoint>());
+            return await task(Provider.GetRequiredService<IAppApiEndPoint>());
         }
         catch (Exception e)
         {
@@ -63,7 +64,7 @@ public partial class MakoClient
         {
             EnsureNotCancelled();
 
-            await task(MakoServices.GetRequiredService<IAppApiEndPoint>());
+            await task(Provider.GetRequiredService<IAppApiEndPoint>());
         }
         catch (Exception e)
         {
@@ -71,13 +72,13 @@ public partial class MakoClient
         }
     }
 
-    private async Task<T> RunWithLoggerAsync<T>(Func<IAppApiEndPoint, Task<T>> task) where T : IFactory<T>
+    private async Task<T> RunWithLoggerAsync<T>(Func<IAppApiEndPoint, Task<T>> task) where T : IDefaultFactory<T>
     {
         try
         {
             EnsureNotCancelled();
 
-            return await task(MakoServices.GetRequiredService<IAppApiEndPoint>());
+            return await task(Provider.GetRequiredService<IAppApiEndPoint>());
         }
         catch (Exception e)
         {
@@ -86,7 +87,7 @@ public partial class MakoClient
         }
     }
 
-    private async Task<T> RunWithLoggerAsync<T>(Func<Task<T>> task) where T : IFactory<T>
+    private async Task<T> RunWithLoggerAsync<T>(Func<Task<T>> task) where T : IDefaultFactory<T>
     {
         try
         {
@@ -98,6 +99,22 @@ public partial class MakoClient
         {
             LogException(e);
             return T.CreateDefault();
+        }
+    }
+
+    private async Task<HttpResponseMessage> RunWithLoggerAsync(Func<Task<HttpResponseMessage>> task)
+    {
+        try
+        {
+            EnsureNotCancelled();
+
+            return await task();
+        }
+        catch (Exception e)
+        {
+            LogException(e);
+
+            return new HttpResponseMessage(HttpStatusCode.RequestTimeout);
         }
     }
 
@@ -126,37 +143,47 @@ public partial class MakoClient
         }
     }
 
-    private Task<T> RunWithLoggerAsync<T>(Func<Task<Result<T>>> task) where T : IFactory<T>
+    private Task<T> RunWithLoggerAsync<T>(Func<Task<Result<T>>> task) where T : IDefaultFactory<T>
     {
         return RunWithLoggerAsync(task, T.CreateDefault);
     }
 
-    internal void LogException(Exception e)
-    {
-        Logger.LogError("MakoClient Exception", e);
-        var now = DateTime.Now;
-        if (now < CoolDown)
-            return;
-        CoolDown = now.AddSeconds(5);
-        HttpClient.DefaultProxy = GetCurrentSystemProxy();
-        var oldCollection = ServiceCollection;
-        var old = MakoServices;
-        ServiceCollection = [];
-        MakoServices = BuildServiceProvider(ServiceCollection);
-        Dispose(oldCollection);
-        old.Dispose();
-    }
+    internal void LogException(Exception e) => Logger.LogError("MakoClient Exception", e);
 
-    private DateTime CoolDown { get; set; } = DateTime.Now.AddSeconds(5);
-
+    [DynamicDependency("ConstructSystemProxy", "SystemProxyInfo", "System.Net.Http")]
     static MakoClient()
     {
         var type = typeof(HttpClient).Assembly.GetType("System.Net.Http.SystemProxyInfo");
         var method = type?.GetMethod("ConstructSystemProxy");
         var @delegate = method?.CreateDelegate<Func<IWebProxy>>();
 
-        GetCurrentSystemProxy = @delegate ?? ThrowUtils.Throw<MissingMethodException, Func<IWebProxy>>("Unable to find proxy functions");
+        _getCurrentSystemProxy = @delegate ?? ThrowUtils.Throw<MissingMethodException, Func<IWebProxy>>(new("Unable to find proxy functions"));
+        HttpClient.DefaultProxy = _getCurrentSystemProxy();
     }
 
-    private static Func<IWebProxy> GetCurrentSystemProxy { get; }
+    private static readonly Func<IWebProxy> _getCurrentSystemProxy;
+
+    public IWebProxy? CurrentSystemProxy
+    {
+        get
+        {
+            switch (Configuration.Proxy)
+            {
+                case null:
+                    return null;
+                case "":
+                {
+                    var now = DateTime.Now;
+                    if (now < CoolDown)
+                        return HttpClient.DefaultProxy;
+                    CoolDown = now.AddSeconds(2);
+                    return HttpClient.DefaultProxy = _getCurrentSystemProxy();
+                }
+                default:
+                    return new WebProxy(Configuration.Proxy);
+            }
+        }
+    }
+
+    private static DateTime CoolDown { get; set; } = DateTime.Now.AddSeconds(2);
 }

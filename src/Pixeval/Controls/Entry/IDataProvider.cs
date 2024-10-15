@@ -20,13 +20,18 @@
 
 using System;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using CommunityToolkit.WinUI.Collections;
 using Pixeval.Collections;
 using Pixeval.CoreApi.Engine;
+using Pixeval.CoreApi.Model;
 
 namespace Pixeval.Controls;
 
-public interface IDataProvider<T, TViewModel> : INotifyPropertyChanged, INotifyPropertyChanging, IDisposable where T : class where TViewModel : class
+public interface IDataProvider<T, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] TViewModel>
+    : INotifyPropertyChanged, INotifyPropertyChanging, IDisposable
+    where T : class, IIdEntry
+    where TViewModel : class, IFactory<T, TViewModel>
 {
     AdvancedObservableCollection<TViewModel> View { get; }
 
@@ -34,5 +39,5 @@ public interface IDataProvider<T, TViewModel> : INotifyPropertyChanged, INotifyP
 
     IFetchEngine<T>? FetchEngine { get; }
 
-    void ResetEngine(IFetchEngine<T>? fetchEngine, int limit = -1);
+    void ResetEngine(IFetchEngine<T>? fetchEngine, int itemsPerPage = 20, int limit = -1);
 }

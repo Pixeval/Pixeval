@@ -21,6 +21,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
@@ -60,6 +61,37 @@ public static class Enumerates
     public static IList<T> AsList<T>(this IEnumerable<T> enumerable)
     {
         return enumerable as IList<T> ?? enumerable.ToList();
+    }
+
+    private class KeyedEqualityComparer<T, TKey>(Func<T, TKey> selector) : IEqualityComparer<T> where TKey : IEquatable<TKey>
+    {
+        public bool Equals(T? x, T? y)
+        {
+            if (x is null && y is null)
+                return true;
+            if (x is null || y is null)
+                return false;
+            return selector(x).Equals(selector(y));
+        }
+
+        public int GetHashCode([DisallowNull] T obj)
+        {
+            return selector(obj).GetHashCode();
+        }
+    }
+
+    public static bool SequenceEquals<T, TKey>(this IEnumerable<T> @this,
+        IEnumerable<T> another,
+        Func<T, TKey> keySelector,
+        SequenceComparison comparison = SequenceComparison.Sequential) 
+    where TKey : IEquatable<TKey>
+    {
+        return comparison switch
+        {
+            SequenceComparison.Sequential => @this.SequenceEqual(another, new KeyedEqualityComparer<T,TKey>(keySelector)),
+            SequenceComparison.Unordered => @this.Order().SequenceEqual(another.Order(), new KeyedEqualityComparer<T, TKey>(keySelector)), // not the fastest way, but still enough
+            _ => ThrowUtils.ArgumentOutOfRange<SequenceComparison, bool>(comparison)
+        };
     }
 
     public static bool SequenceEquals<T>(this IEnumerable<T> @this,
@@ -126,7 +158,13 @@ public static class Enumerates
         return enumerable is not null && enumerable.Any();
     }
 
-    // https://stackoverflow.com/a/15407252/10439146 FirstOrDefault on value types
+    /// <summary>
+    /// https://stackoverflow.com/a/15407252/10439146 FirstOrDefault on value types
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="enumerable"></param>
+    /// <param name="predicate"></param>
+    /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static T? FirstOrNull<T>(this IEnumerable<T> enumerable, Func<T, bool> predicate) where T : struct
     {
@@ -139,11 +177,6 @@ public static class Enumerates
     {
         var matches = enumerable.Take(1).ToArray();
         return matches.Length is 0 ? null : matches[0];
-    }
-
-    public static IAsyncEnumerable<T> ToAsyncEnumerable<T>(this IEnumerable<T> source)
-    {
-        return new AdaptedAsyncEnumerable<T>(source);
     }
 
     public static async Task<ObservableCollection<T>> ToObservableCollectionAsync<T>(this IAsyncEnumerable<T> that)

@@ -3,6 +3,7 @@
     "WorkCaptionTextBlock/Text": "作品介绍",
     "IllustrationDimensionTextBlock/Text": "作品分辨率",
     "IllustrationDimensionUnknown": "未知",
+    "BlockTagMenuItem/Text": "屏蔽标签",
     "WorkIdTextBlock/Text": "作品ID",
     "WorkTagListTextBlock/Text": "作品标签",
     "WorkTitleTextBlock/Text": "作品名",

@@ -20,11 +20,10 @@
 
 using System;
 using System.Numerics;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
-using Windows.Graphics;
 using Windows.Storage;
-using Microsoft.UI.Input;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -38,10 +37,12 @@ using Pixeval.Utilities;
 using WinRT;
 using WinUI3Utilities;
 using Windows.System;
+using Pixeval.Controls.Windowing;
+using Pixeval.Upscaling;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
-public sealed partial class IllustrationViewerPage : SupportCustomTitleBarDragRegionPage
+public sealed partial class IllustrationViewerPage
 {
     private bool _pointerNotInArea = true;
 
@@ -73,25 +74,14 @@ public sealed partial class IllustrationViewerPage : SupportCustomTitleBarDragRe
         }
     }
 
-    protected override void SetTitleBarDragRegion(InputNonClientPointerSource sender, SizeInt32 windowSize, double scaleFactor, out int titleBarHeight)
-    {
-        if (_viewModel.IsFullScreen)
-        {
-            titleBarHeight = 0;
-            return;
-        }
-        var leftIndent = new RectInt32(0, 0, EntryViewerSplitView.IsPaneOpen ? (int)WorkViewerSplitView.OpenPaneLength : 0, (int)TitleBarArea.ActualHeight);
-
-        if (TitleBar.Visibility is Visibility.Visible)
-            sender.SetRegionRects(NonClientRegionKind.Icon, [GetScaledRect(TitleBar.Icon)]);
-        sender.SetRegionRects(NonClientRegionKind.Passthrough, [GetScaledRect(leftIndent), GetScaledRect(IllustrationViewerCommandBar), GetScaledRect(IllustrationViewerSubCommandBar)]);
-        titleBarHeight = 48;
-    }
-
     public override void OnPageActivated(NavigationEventArgs e, object? parameter)
     {
         // 此处this.XamlRoot为null
-        _viewModel = Window.Content.To<FrameworkElement>().GetViewModel(parameter);
+        _viewModel = HWnd.GetIllustrationViewerPageViewModelFromHandle(parameter);
+
+        _viewModel.CurrentImage.UpscalerMessageChannel.Reader.OnReceive(
+            reader => reader == _viewModel.CurrentImage.UpscalerMessageChannel.Reader,
+            OnReceiveUpscalerMessage);
 
         _viewModel.DetailedPropertyChanged += (sender, args) =>
         {
@@ -103,7 +93,7 @@ public sealed partial class IllustrationViewerPage : SupportCustomTitleBarDragRe
             var oldIndex = args.OldValue.To<int>();
             var newIndex = args.NewValue.To<int>(); // vm.CurrentIllustrationIndex
 
-            var info = null as NavigationTransitionInfo;
+            NavigationTransitionInfo? info = null;
             if (oldIndex < newIndex && oldIndex is not -1)
                 info = new SlideNavigationTransitionInfo { Effect = SlideNavigationTransitionEffect.FromRight };
             else if (oldIndex > newIndex)
@@ -120,6 +110,10 @@ public sealed partial class IllustrationViewerPage : SupportCustomTitleBarDragRe
             }
 
             Navigate<ImageViewerPage>(IllustrationImageShowcaseFrame, vm.CurrentImage, info);
+
+            vm.CurrentImage.UpscalerMessageChannel.Reader.OnReceive(
+                reader => reader == vm.CurrentImage.UpscalerMessageChannel.Reader,
+                OnReceiveUpscalerMessage);
         };
 
         _viewModel.PropertyChanged += (sender, args) =>
@@ -129,9 +123,8 @@ public sealed partial class IllustrationViewerPage : SupportCustomTitleBarDragRe
             {
                 case nameof(IllustrationViewerPageViewModel.IsFullScreen):
                 {
-                    Window.AppWindow.SetPresenter(vm.IsFullScreen ? AppWindowPresenterKind.FullScreen : AppWindowPresenterKind.Default);
-                    // 加载完之后设置标题栏
-                    _ = Task.Delay(500).ContinueWith(_ => RaiseSetTitleBarDragRegion(), TaskScheduler.FromCurrentSynchronizationContext());
+                    var window = WindowFactory.ForkedWindows[HWnd];
+                    window.AppWindow.SetPresenter(vm.IsFullScreen ? AppWindowPresenterKind.FullScreen : AppWindowPresenterKind.Default);
                     break;
                 }
             }
@@ -141,14 +134,47 @@ public sealed partial class IllustrationViewerPage : SupportCustomTitleBarDragRe
         Navigate<ImageViewerPage>(IllustrationImageShowcaseFrame, _viewModel.CurrentImage);
     }
 
+    [GeneratedRegex(@"\d+\.\d+%")]
+    private static partial Regex UpscalerMessagePercentageRegex();
+
+    private void OnReceiveUpscalerMessage(string message)
+    {
+        _viewModel.UpscalerProgressBarVisible = UpscalerMessagePercentageRegex().IsMatch(message);
+        _viewModel.AdditionalTextBlockVisible = !_viewModel.UpscalerProgressBarVisible;
+        if (message == Upscaler.ProcessCompletedMark)
+        {
+            _viewModel.UpscalerProgressText = string.Empty;
+            _viewModel.UpscalerProgress = 0;
+            _viewModel.AdditionalText = $"{EntryViewerPageResources.AiUpscaled}";
+            return;
+        }
+
+        if (UpscalerMessagePercentageRegex().IsMatch(message))
+        {
+            _viewModel.UpscalerProgressText = message;
+            _viewModel.UpscalerProgress = (int) double.Parse(message[..^1]);
+            return;
+        }
+
+        _viewModel.AdditionalText = message;
+    }
+
     private void IllustrationViewerPage_OnLoaded(object sender, RoutedEventArgs e)
     {
-        var dataTransferManager = Window.GetDataTransferManager();
+        if (!App.AppViewModel.AppSettings.BrowseOriginalImage)
+        {
+            _viewModel.AdditionalText = EntryViewerPageResources.BrowsingCompressedImage;
+        }
+
+        // Invokes the drag region calculation manually 9/11/2024
+        TitleBarArea.SetDragRegionForCustomTitleBar();
+        var dataTransferManager = HWnd.GetDataTransferManager();
         dataTransferManager.DataRequested += OnDataTransferManagerOnDataRequested;
 
         CommandBorderDropShadow.Receivers.Add(IllustrationImageShowcaseFrame);
         ThumbnailListDropShadow.Receivers.Add(IllustrationImageShowcaseFrame);
 
+        ThumbnailItemsView.StartBringItemIntoView(_viewModel.CurrentIllustrationIndex, new BringIntoViewOptions { AnimationDesired = true });
         IllustrationImageShowcaseFrame_OnTapped(null!, null!);
     }
 
@@ -192,11 +218,13 @@ public sealed partial class IllustrationViewerPage : SupportCustomTitleBarDragRe
     private void AddToBookmarkTeachingTip_OnCloseButtonClick(TeachingTip sender, object args)
     {
         _viewModel.CurrentIllustration.AddToBookmarkCommand.Execute((BookmarkTagSelector.SelectedTags, BookmarkTagSelector.IsPrivate, _viewModel.CurrentImage.DownloadParameter));
+
+        HWnd.SuccessGrowl(EntryViewerPageResources.AddedToBookmark);
     }
 
-    private void AddToBookmarkButton_OnTapped(object sender, TappedRoutedEventArgs e) => AddToBookmarkTeachingTip.IsOpen = true;
+    private void AddToBookmarkButton_OnClicked(object sender, RoutedEventArgs e) => AddToBookmarkTeachingTip.IsOpen = true;
 
-    private void NextButton_OnTapped(object sender, IWinRTObject e)
+    private void NextButton_OnClicked(object sender, IWinRTObject e)
     {
         switch (_viewModel.NextButtonAction)
         {
@@ -213,7 +241,7 @@ public sealed partial class IllustrationViewerPage : SupportCustomTitleBarDragRe
         ++ThumbnailItemsView.SelectedIndex;
     }
 
-    private void PrevButton_OnTapped(object sender, IWinRTObject e)
+    private void PrevButton_OnClicked(object sender, IWinRTObject e)
     {
         switch (_viewModel.PrevButtonAction)
         {
@@ -235,22 +263,12 @@ public sealed partial class IllustrationViewerPage : SupportCustomTitleBarDragRe
         e.Handled = true;
         switch (e.Key)
         {
-            case VirtualKey.Left:
-                PrevButton_OnTapped(null!, null!);
-                break;
-            case VirtualKey.Right:
-                NextButton_OnTapped(null!, null!);
-                break;
-            case VirtualKey.Up:
-                PrevButton_OnRightTapped(null!, null!);
-                break;
-            case VirtualKey.Down:
-                NextButton_OnRightTapped(null!, null!);
-                break;
+            case VirtualKey.Left: PrevButton_OnClicked(null!, null!); break;
+            case VirtualKey.Right: NextButton_OnClicked(null!, null!); break;
+            case VirtualKey.Up: PrevButton_OnRightTapped(null!, null!); break;
+            case VirtualKey.Down: NextButton_OnRightTapped(null!, null!); break;
         }
     }
-
-    private void Placeholder_OnSizeChanged(object sender, object e) => RaiseSetTitleBarDragRegion();
 
     private async void IllustrationImageShowcaseFrame_OnTapped(object sender, TappedRoutedEventArgs e)
     {
@@ -267,5 +285,34 @@ public sealed partial class IllustrationViewerPage : SupportCustomTitleBarDragRe
         teachingTip.Target = appBarButton.IsInOverflow ? null : appBarButton;
     }
 
-    private void OpenPane_OnRightTapped(object sender, RightTappedRoutedEventArgs rightTappedRoutedEventArgs) => EntryViewerSplitView.PinPane = true;
+    private async void UpscaleButton_OnTapped(object sender, RoutedEventArgs e)
+    {
+        if (!App.AppViewModel.AppSettings.ShowUpscalerTeachingTip)
+        {
+            _viewModel.CurrentImage.UpscaleCommand.Execute(null);
+            return;
+        }
+        UpscaleTeachingTip.IsOpen = true;
+        var dialog = await HWnd.CreateOkCancelAsync(EntryViewerPageResources.AiUpscalerWarningTitle,
+            EntryViewerPageResources.AiUpscalerWarningContent,
+            EntryViewerPageResources.AiUpscalerWarningOkButtonContent,
+            EntryViewerPageResources.AiUpscalerWarningCancelButtonContent);
+
+        if (dialog == ContentDialogResult.Primary)
+        {
+            _viewModel.CurrentImage.UpscaleCommand.Execute(null);
+        }
+
+        if (App.AppViewModel.AppSettings.ShowUpscalerTeachingTip)
+        {
+            App.AppViewModel.AppSettings.ShowUpscalerTeachingTip = false;
+        }
+    }
+
+    public Visibility IsLogoVisible()
+    {
+        return WindowFactory.GetWindowForElement(this).HWnd != WindowFactory.RootWindow.HWnd
+            ? Visibility.Visible
+            : Visibility.Collapsed;
+    }
 }

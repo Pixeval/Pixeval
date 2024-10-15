@@ -1,78 +1,72 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
-  <Class Name="Pixeval.Download.Models.LazyInitializedUgoiraDownloadTask" Collapsed="true">
-    <Position X="15.25" Y="6" Width="2.75" />
+  <Class Name="Pixeval.Download.Models.SingleImageDownloadTaskGroup" Collapsed="true">
+    <Position X="5.25" Y="5.25" Width="2.75" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAIAAAAAAAAAAABAQAAAAAAAAAAAA=</HashCode>
-      <FileName>Download\Models\LazyInitializedUgoiraDownloadTask.cs</FileName>
+      <HashCode>AAASAAAAAAAAAJAAAAAAAAwCAAACCAAEAAAAAAAAAAA=</HashCode>
+      <FileName>Download\Models\SingleImageDownloadTaskGroup.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="Pixeval.Download.Models.LazyInitializedIllustrationDownloadTask" Collapsed="true">
-    <Position X="8.25" Y="4.5" Width="3" />
+  <Class Name="Pixeval.Download.Models.ImageDownloadTask" Collapsed="true">
+    <Position X="5.75" Y="3.75" Width="1.75" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAIAAAAAAAAAAABAQAAAAAAAAAAAA=</HashCode>
-      <FileName>Download\Models\LazyInitializedIllustrationDownloadTask.cs</FileName>
+      <HashCode>EAAgARCAQCAIqAAgAKAAUAACAAFMCAQECQAAIAAAgpA=</HashCode>
+      <FileName>Download\Models\ImageDownloadTask.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="Pixeval.Download.Models.MangaDownloadTask" Collapsed="true">
-    <Position X="20.75" Y="4.5" Width="2" />
+  <Class Name="Pixeval.Download.Models.UgoiraDownloadTaskGroup" Collapsed="true">
+    <Position X="4.5" Y="2.25" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAIAAAgAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Download\Models\MangaDownloadTask.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="Pixeval.Download.Models.IllustrationDownloadTaskBase" Collapsed="true">
-    <Position X="13.75" Y="1.75" Width="2.25" />
-    <TypeIdentifier>
-      <HashCode>IAACAACAAAAAAMAAIAAAACACAAAAAAQEAAAAAAIEBAA=</HashCode>
-      <FileName>Download\Models\IllustrationDownloadTaskBase.cs</FileName>
+      <HashCode>AAAQAAIAAAAAAAQAAAAAAAgAAAEAAAAAAAAAAAAkAIA=</HashCode>
+      <FileName>Download\Models\UgoiraDownloadTaskGroup.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="Pixeval.Download.Models.IllustrationDownloadTask" Collapsed="true">
-    <Position X="13.75" Y="3.25" Width="2.25" />
+  <Class Name="Pixeval.Download.Models.DownloadTaskGroup" Collapsed="true">
+    <Position X="4.75" Y="0.75" Width="1.75" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAgAAAIAAAAIAAAAAAAAAAAAAEACAAAAAAAAAA=</HashCode>
-      <FileName>Download\Models\IllustrationDownloadTask.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="Pixeval.Download.Models.UgoiraDownloadTask" Collapsed="true">
-    <Position X="14" Y="4.5" Width="2" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAA=</HashCode>
-      <FileName>Download\Models\UgoiraDownloadTask.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="Pixeval.Download.Models.LazyInitializedMangaDownloadTask" Collapsed="true">
-    <Position X="22" Y="6" Width="2.75" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAIAAAAAAAAAAABAQAAAAAAAAAAAA=</HashCode>
-      <FileName>Download\Models\LazyInitializedMangaDownloadTask.cs</FileName>
+      <HashCode>MAAiAAIAQDAAAJAAAAAAACwAIAEDCBQsEEAAAANAApA=</HashCode>
+      <FileName>Download\Models\DownloadTaskGroup.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="Pixeval.Download.Models.IntrinsicMangaDownloadTask" Collapsed="true">
-    <Position X="18.75" Y="6" Width="2.5" />
+  <Class Name="Pixeval.Download.Models.MangaDownloadTaskGroup" Collapsed="true">
+    <Position X="1.5" Y="2.25" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>AAABAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Download\Models\IntrinsicMangaDownloadTask.cs</FileName>
+      <HashCode>AABQAAIAAAAAAAAAAAAAAAgAAAEAAAAAAAAAAAAAAIA=</HashCode>
+      <FileName>Download\Models\MangaDownloadTaskGroup.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Pixeval.Download.Models.NovelDownloadTaskGroup" Collapsed="true">
+    <Position X="7.5" Y="2.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAQAAIAAkAAAAAAAAAAAAgAAAEAAAEUAAAAAAAAAIA=</HashCode>
+      <FileName>Download\Models\NovelDownloadTaskGroup.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Pixeval.Download.Models.IntrinsicIllustrationDownloadTask" Collapsed="true">
-    <Position X="4.75" Y="4.5" Width="2.75" />
+  <Interface Name="Pixeval.Download.Models.IDownloadTaskBase" Collapsed="true">
+    <Position X="1.75" Y="3.75" Width="1.75" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAIAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Download\Models\IntrinsicIllustrationDownloadTask.cs</FileName>
+      <HashCode>MAAgAAAAQAAAAAAAAAAAACAAAAEAAAAEAAAAAAIAAoA=</HashCode>
+      <FileName>Download\Models\IDownloadTaskBase.cs</FileName>
     </TypeIdentifier>
-  </Class>
-  <Class Name="Pixeval.Download.Models.IntrinsicUgoiraDownloadTask" Collapsed="true">
-    <Position X="12" Y="6" Width="2.5" />
+  </Interface>
+  <Interface Name="Pixeval.Download.Models.IDownloadTaskGroup" Collapsed="true">
+    <Position X="1.25" Y="5" Width="2.75" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAIAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Download\Models\IntrinsicUgoiraDownloadTask.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAIAAAAAAAAgAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Download\Models\IDownloadTaskGroup.cs</FileName>
     </TypeIdentifier>
-  </Class>
+  </Interface>
+  <Interface Name="Pixeval.Download.Models.IImageDownloadTaskGroup" Collapsed="true">
+    <Position X="1.5" Y="7" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Download\Models\IImageDownloadTaskGroup.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
   <Font Name="Microsoft YaHei UI" Size="9" />
 </ClassDiagram>

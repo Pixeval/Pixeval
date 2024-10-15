@@ -25,12 +25,13 @@ using System.Threading.Tasks;
 
 namespace Pixeval.Utilities.Threading;
 
-public class ReenterableAwaiter<TResult>(bool initialSignal, TResult resultInitialSignalIsTrue) : INotifyCompletion
+public class ReenterableAwaiter<TResult>(bool initialSignal, TResult resultInitialSignalIsTrue) : INotifyCompletion, IDisposable
 {
     private Action? _continuation;
     private bool _continueOnCapturedContext = true; // whether the continuation should be posted to the captured SynchronizationContext
     private Exception? _exception;
     private TResult? _result = resultInitialSignalIsTrue;
+    private readonly SemaphoreSlim _semaphoreSlim = new(1, 1);
 
     public bool IsCompleted { get; set; } = initialSignal;
 
@@ -43,11 +44,19 @@ public class ReenterableAwaiter<TResult>(bool initialSignal, TResult resultIniti
         _continuation = continuation;
     }
 
-    public void Reset()
+    public async Task ResetAsync()
     {
-        IsCompleted = false; // Set the awaiter to non-completed
-        _continuation = null;
-        _exception = null;
+        try
+        {
+            await _semaphoreSlim.WaitAsync();
+            IsCompleted = false; // Set the awaiter to non-completed
+            _continuation = null;
+            _exception = null;
+        }
+        finally
+        {
+            _semaphoreSlim.Release();
+        }
     }
 
     public TResult GetResult()
@@ -55,36 +64,57 @@ public class ReenterableAwaiter<TResult>(bool initialSignal, TResult resultIniti
         return _exception is null ? _result! : ThrowUtils.Throw<TResult>(_exception);
     }
 
-    // Signals the awaiter to complete successfully
-    public void SetResult(TResult result)
+    /// <summary>
+    /// Signals the awaiter to complete successfully
+    /// </summary>
+    /// <param name="result"></param>
+    public async Task SetResultAsync(TResult result)
     {
-        if (!IsCompleted)
+        try
         {
-            IsCompleted = true;
-            _result = result;
-            _continuation?.Invoke();
+            await _semaphoreSlim.WaitAsync();
+            if (!IsCompleted)
+            {
+                IsCompleted = true;
+                _result = result;
+                _continuation?.Invoke();
+            }
+        }
+        finally
+        {
+            _semaphoreSlim.Release();
         }
     }
 
-    // Signals the awaiter to complete unsuccessfully
+    /// <summary>
+    /// Signals the awaiter to complete unsuccessfully
+    /// </summary>
+    /// <param name="exception"></param>
     public void SetException(Exception exception)
     {
-        if (!IsCompleted)
+        try
         {
-            IsCompleted = true;
-            _exception = exception;
-            CompleteInternal();
+            if (!IsCompleted)
+            {
+                IsCompleted = true;
+                _exception = exception;
+                CompleteInternal();
+            }
+        }
+        finally
+        {
+            _semaphoreSlim.Release();
         }
     }
 
-    // Queue the continuation to SynchronizationContext.Current if _continueOnCapturedContext is true,
-    // otherwise schedule it on the default TaskScheduler
+    /// <summary>
+    /// Queue the continuation to <see cref="SynchronizationContext.Current"/> if <see cref="_continueOnCapturedContext"/> is <see langword="true"/>,
+    /// otherwise schedule it on <see cref="TaskScheduler.Default"/>
+    /// </summary>
     private void CompleteInternal()
     {
         if (_continuation is null)
-        {
             return;
-        }
 
         if (_continueOnCapturedContext && SynchronizationContext.Current is { } context)
         {
@@ -102,8 +132,11 @@ public class ReenterableAwaiter<TResult>(bool initialSignal, TResult resultIniti
         return this;
     }
 
-    public ReenterableAwaiter<TResult> GetAwaiter()
+    public ReenterableAwaiter<TResult> GetAwaiter() => this;
+
+    public void Dispose()
     {
-        return this;
+        GC.SuppressFinalize(this);
+        _semaphoreSlim.Dispose();
     }
 }

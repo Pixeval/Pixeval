@@ -19,19 +19,19 @@
 #endregion
 
 using System;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Controls;
 using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Model;
-using Pixeval.Misc;
 
 namespace Pixeval.Pages.Capability;
 
-public sealed partial class BookmarksPage : IScrollViewProvider
+public sealed partial class BookmarksPage : IScrollViewHost
 {
-    private BookmarkPageViewModel _viewModel = null!;
+    private BookmarksPageViewModel _viewModel = null!;
 
     public BookmarksPage() => InitializeComponent();
 
@@ -39,15 +39,13 @@ public sealed partial class BookmarksPage : IScrollViewProvider
     {
         if (e.Parameter is not long uid)
             uid = App.AppViewModel.PixivUid;
-        _viewModel = new BookmarkPageViewModel(uid);
-        ChangeSource();
+        _viewModel = new BookmarksPageViewModel(uid);
         _viewModel.TagBookmarksIncrementallyLoaded += ViewModelOnTagBookmarksIncrementallyLoaded;
     }
 
-    private void ComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
-    {
-        ChangeSource();
-    }
+    private void BookmarksPage_OnLoaded(object sender, RoutedEventArgs e) => ChangeSource();
+
+    private void ComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e) => ChangeSource();
 
     private void ViewModelOnTagBookmarksIncrementallyLoaded(object? sender, string e)
     {

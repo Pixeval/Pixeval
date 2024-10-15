@@ -22,28 +22,34 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.WinUI.Collections;
+using Pixeval.CoreApi.Engine;
+using Pixeval.CoreApi.Model;
 
 namespace Pixeval.Controls;
 
-public abstract class FetchEngineIncrementalSource<T, TModel>(IAsyncEnumerable<T?> asyncEnumerator, int limit = -1)
-    : IIncrementalSource<TModel>
+public class FetchEngineIncrementalSource<T, TViewModel>(IAsyncEnumerable<T?> asyncEnumerator, int limit = -1)
+    : IIncrementalSource<TViewModel>, IIncrementalSourceFactory<T, FetchEngineIncrementalSource<T, TViewModel>>
+    where T : IIdEntry
+    where TViewModel : IFactory<T, TViewModel>
 {
+    public static FetchEngineIncrementalSource<T, TViewModel> CreateInstance(IFetchEngine<T> fetchEngine, int limit = -1) => new(fetchEngine, limit);
+
     /// <summary>
     /// 当为null时暂时不报错
     /// </summary>
     private readonly IAsyncEnumerator<T> _asyncEnumerator = asyncEnumerator?.GetAsyncEnumerator()!;
 
-    private readonly ISet<long> _yieldedItems = new HashSet<long>();
+    private readonly HashSet<long> _yieldedItems = [];
 
     private int _yieldedCounter;
 
-    public virtual async Task<IEnumerable<TModel>> GetPagedItemsAsync(int pageIndex, int pageSize, CancellationToken cancellationToken = new CancellationToken())
+    public virtual async Task<IEnumerable<TViewModel>> GetPagedItemsAsync(int pageIndex, int pageSize, CancellationToken cancellationToken = default)
     {
-        var result = new List<TModel>();
+        var result = new List<TViewModel>();
         var i = 0;
         while (i < pageSize)
         {
-            if (limit is not -1 && _yieldedCounter > limit)
+            if (limit is not -1 && _yieldedCounter >= limit)
             {
                 return result;
             }
@@ -52,7 +58,7 @@ public abstract class FetchEngineIncrementalSource<T, TModel>(IAsyncEnumerable<T
             {
                 if (_asyncEnumerator.Current is { } obj && !_yieldedItems.Contains(Identifier(obj)))
                 {
-                    result.Add(Select(obj));
+                    result.Add(Select(obj, _yieldedCounter));
                     _ = _yieldedItems.Add(Identifier(obj));
                     ++i;
                     _yieldedCounter++;
@@ -67,7 +73,7 @@ public abstract class FetchEngineIncrementalSource<T, TModel>(IAsyncEnumerable<T
         return result;
     }
 
-    protected abstract long Identifier(T entity);
+    protected virtual long Identifier(T entity) => entity.Id;
 
-    protected abstract TModel Select(T entity);
+    protected TViewModel Select(T entity, int index) => TViewModel.CreateInstance(entity);
 }

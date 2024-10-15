@@ -19,10 +19,14 @@
 #endregion
 
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Windows.Foundation;
 using Windows.Graphics;
+using Windows.Win32;
+using Windows.Win32.Foundation;
+using Windows.Win32.Graphics.Gdi;
 using WinUI3Utilities;
 
 namespace Pixeval.Controls.Windowing;
@@ -33,11 +37,13 @@ public static class WindowFactory
 
     public static IWindowSettings WindowSettings { get; set; } = null!;
 
-    public static EnhancedWindow RootWindow => _forkedWindowsInternal[0];
+    public static EnhancedWindow RootWindow { get; private set; } = null!;
 
-    private static readonly List<EnhancedWindow> _forkedWindowsInternal = [];
+    private static readonly Dictionary<ulong, EnhancedWindow> _forkedWindowsInternal = [];
 
-    public static IReadOnlyList<EnhancedWindow> ForkedWindows => _forkedWindowsInternal;
+    public static IReadOnlyDictionary<ulong, EnhancedWindow> ForkedWindows => _forkedWindowsInternal;
+
+    public static EnhancedWindow GetForkedWindows(ulong key) => _forkedWindowsInternal[key];
 
     public static void Initialize(IWindowSettings windowSettings, string iconAbsolutePath)
     {
@@ -52,28 +58,34 @@ public static class WindowFactory
         IconAbsolutePath = iconAbsolutePath;
     }
 
+    public static FrameworkElement GetContentFromHWnd(ulong hWnd)
+    {
+        return _forkedWindowsInternal[hWnd].Content.To<FrameworkElement>();
+    }
+
     public static EnhancedWindow GetWindowForElement(UIElement element)
     {
         if (element.XamlRoot is null)
             ThrowHelper.ArgumentNull(element.XamlRoot, $"{nameof(element.XamlRoot)} should not be null.");
 
-        return _forkedWindowsInternal.Find(window => element.XamlRoot == window.Content.XamlRoot)
+        return _forkedWindowsInternal.Values.FirstOrDefault(window => element.XamlRoot == window.Content.XamlRoot)
                ?? ThrowHelper.ArgumentOutOfRange<UIElement, EnhancedWindow>(element, $"Specified {nameof(element)} is not existed in any of {nameof(ForkedWindows)}.");
     }
 
     public static EnhancedWindow Create(out EnhancedWindow window)
     {
-        window = new EnhancedWindow();
-        window.Closed += (sender, _) => _forkedWindowsInternal.Remove(sender.To<EnhancedWindow>());
-        _forkedWindowsInternal.Add(window);
+        RootWindow = window = new EnhancedWindow();
+        window.Closed += (sender, _) => _forkedWindowsInternal.Remove(sender.To<EnhancedWindow>().HWnd);
+        _forkedWindowsInternal[window.HWnd] = window;
         return window;
     }
 
-    public static EnhancedWindow Fork(this EnhancedWindow owner, out EnhancedWindow window)
+    public static EnhancedWindow Fork(this EnhancedWindow owner, out ulong hWnd)
     {
-        window = new EnhancedWindow(owner);
-        window.Closed += (sender, _) => _forkedWindowsInternal.Remove(sender.To<EnhancedWindow>());
-        _forkedWindowsInternal.Add(window);
+        var window = new EnhancedWindow(owner);
+        hWnd = window.HWnd;
+        window.Closed += (sender, _) => _forkedWindowsInternal.Remove(sender.To<EnhancedWindow>().HWnd);
+        _forkedWindowsInternal[window.HWnd] = window;
         return window;
     }
 
@@ -114,21 +126,42 @@ public static class WindowFactory
             IsMaximized = isMaximized,
             Theme = WindowSettings.Theme
         });
-        if (isMaximized)
-            window.AppWindow.Presenter.To<OverlappedPresenter>().Maximize();
+        if (!isMaximized)
+            window.AppWindow.FullDisplayOnScreen();
         window.FrameLoaded += (_, _) => window.SetTheme(WindowSettings.Theme);
         return window;
     }
 
     public static void SetBackdrop(BackdropType backdropType)
     {
-        foreach (var window in _forkedWindowsInternal) 
+        foreach (var window in _forkedWindowsInternal.Values)
             window.SetBackdrop(backdropType);
     }
 
     public static void SetTheme(ElementTheme theme)
     {
-        foreach (var window in _forkedWindowsInternal) 
+        foreach (var window in _forkedWindowsInternal.Values)
             window.SetTheme(theme);
+    }
+
+    private static void FullDisplayOnScreen(this AppWindow appWindow)
+    {
+        var hWnd = (nint)appWindow.Id.Value;
+        var hWndDesktop = PInvoke.MonitorFromWindow(new HWND(hWnd), MONITOR_FROM_FLAGS.MONITOR_DEFAULTTONEAREST);
+        var info = new MONITORINFO { cbSize = 40 };
+        _ = PInvoke.GetMonitorInfo(hWndDesktop, ref info);
+        var position = appWindow.Position;
+#if DISPLAY
+        position.X = info.rcMonitor.Width / 2 + info.rcMonitor.X - appWindow.Size.Width / 2;
+        position.Y = info.rcMonitor.Height / 2 + info.rcMonitor.Y - appWindow.Size.Height / 2;
+#else
+        var left = info.rcMonitor.Width - appWindow.Size.Width;
+        if (position.X > left)
+            position.X = left;
+        var top = info.rcMonitor.Height - appWindow.Size.Height;
+        if (position.Y > top)
+            position.Y = top;
+#endif
+        appWindow.Move(position);
     }
 }

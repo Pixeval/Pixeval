@@ -30,19 +30,38 @@ namespace Pixeval.Controls.Windowing;
 [WindowSizeHelper]
 public sealed partial class EnhancedWindow : Window
 {
+    public ulong HWnd => AppWindow.Id.Value;
+
     private readonly Frame _frame;
 
     private readonly EnhancedWindow? _owner;
+
+    public bool IsMaximize => AppWindow.Presenter is OverlappedPresenter { State: OverlappedPresenterState.Maximized };
 
     /// <summary>
     /// IT IS FORBIDDEN TO USE THIS CONSTRUCTOR DIRECTLY, USE <see cref="WindowFactory.Fork"/> INSTEAD
     /// </summary>
     internal EnhancedWindow()
     {
-        Content = _frame = new Frame
+        _frame = new Frame
         {
             HorizontalAlignment = HorizontalAlignment.Stretch,
             VerticalAlignment = VerticalAlignment.Stretch
+        };
+        var stackPanel = new StackPanel
+        {
+            HorizontalAlignment = HorizontalAlignment.Right,
+            VerticalAlignment = VerticalAlignment.Bottom
+        };
+        Growl.SetGrowlParent(stackPanel, true);
+        Growl.SetToken(stackPanel, HWnd);
+        Content = new Grid
+        {
+            Children =
+            {
+                _frame,
+                stackPanel
+            }
         };
         Closed += OnClosed;
     }

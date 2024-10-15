@@ -23,8 +23,8 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
+using Pixeval.AppManagement;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Model;
 using Pixeval.Messages;
@@ -47,17 +47,15 @@ public sealed partial class WorkInfoPage
         await _viewModel.LoadAvatarAsync();
     }
 
-    private void WorkTagButton_OnTapped(object sender, TappedRoutedEventArgs e)
+    private void WorkTagButton_OnClicked(object sender, RoutedEventArgs e)
     {
         _ = WeakReferenceMessenger.Default.Send(new WorkTagClickedMessage(_viewModel.Entry is Illustration ? SimpleWorkType.IllustAndManga : SimpleWorkType.Novel, (string)((Button)sender).Content));
     }
 
-    private async void IllustratorPersonPicture_OnTapped(object sender, TappedRoutedEventArgs e)
+    private async void IllustratorPersonPicture_OnClicked(object sender, RoutedEventArgs e)
     {
         await IllustratorViewerHelper.CreateWindowWithPageAsync(_viewModel.Illustrator.Id);
     }
-
-    private void WorkInfoPage_OnUnloaded(object sender, RoutedEventArgs e) => _viewModel.Dispose();
 
     private async Task SetWorkCaptionTextAsync()
     {
@@ -76,5 +74,15 @@ public sealed partial class WorkInfoPage
             md = markdownConverter.Convert(caption);
         }
         WorkCaptionMarkdownTextBlock.Text = md.ReplaceLineEndings(Environment.NewLine + Environment.NewLine);
+    }
+
+    private void MenuFlyoutItem_OnClick(object sender, RoutedEventArgs e)
+    {
+        var tag = sender.To<FrameworkElement>().GetTag<Tag>();
+        if (!App.AppViewModel.AppSettings.BlockedTags.Contains(tag.Name))
+        {
+            _ = App.AppViewModel.AppSettings.BlockedTags.Add(tag.Name);
+            AppInfo.SaveConfig(App.AppViewModel.AppSettings);
+        }
     }
 }

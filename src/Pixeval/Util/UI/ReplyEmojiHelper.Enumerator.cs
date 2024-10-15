@@ -19,9 +19,10 @@
 #endregion
 
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
-using Pixeval.Misc;
+using System.Text.RegularExpressions;
 
 namespace Pixeval.Util.UI;
 
@@ -29,7 +30,9 @@ public static partial class ReplyEmojiHelper
 {
     public static IEnumerable<ReplyContentToken> EnumerateTokens(string content)
     {
-        var table = BuildEmojiReplacementIndexTableOfReplyContent(content);
+        var table = Regex.Matches(content, string.Join("|", _stringToEmojiTable.Keys.Select(Regex.Escape)))
+            .ToImmutableDictionary(m => m.Index, m => (_stringToEmojiTable[m.Value], m.Value.Length));
+        // var table = BuildEmojiReplacementIndexTableOfReplyContent(content);
         if (table.Count is 0)
         {
             yield return new ReplyContentToken.TextToken(content);

@@ -40,16 +40,14 @@ public partial class MakoClient
 
     public MakoClientConfiguration Configuration { get; set; }
 
-    internal ISessionUpdate SessionUpdater { get; }
-
     public FileLogger Logger { get; }
 
     /// <summary>
     /// The IoC container
     /// </summary>
-    internal ServiceCollection ServiceCollection { get; private set; } = [];
+    internal ServiceCollection Services { get; } = [];
 
-    internal ServiceProvider MakoServices { get; private set; }
+    internal ServiceProvider Provider { get; }
 
     public bool IsCancelled { get; set; }
 }

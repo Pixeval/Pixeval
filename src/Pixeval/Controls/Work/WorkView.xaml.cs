@@ -14,6 +14,8 @@ using Pixeval.Options;
 using Microsoft.UI.Xaml.Media.Animation;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.Util.UI;
+using Pixeval.Controls.Windowing;
+using Pixeval.Pages.IllustratorViewer;
 
 namespace Pixeval.Controls;
 
@@ -22,6 +24,8 @@ public sealed partial class WorkView : IEntryView<ISortableEntryViewViewModel>
 {
     public const double LandscapeHeight = 180;
     public const double PortraitHeight = 250;
+
+    public ulong HWnd => WindowFactory.GetWindowForElement(this).HWnd;
 
     public double DesiredHeight => ThumbnailDirection switch
     {
@@ -43,25 +47,24 @@ public sealed partial class WorkView : IEntryView<ISortableEntryViewViewModel>
 
     public WorkView() => InitializeComponent();
 
-    /// <summary>
-    /// 在调用<see cref="ResetEngine"/>前为<see langword="null"/>
-    /// </summary>
-    public ISortableEntryViewViewModel ViewModel { get; private set; } = null!;
-
     public event TypedEventHandler<WorkView, ISortableEntryViewViewModel>? ViewModelChanged;
 
     public AdvancedItemsView AdvancedItemsView => ItemsView;
 
     public ScrollView ScrollView => ItemsView.ScrollView;
 
-    public SimpleWorkType Type { get; private set; }
+    /// <summary>
+    /// 在调用<see cref="ResetEngine"/>前为<see langword="null"/>
+    /// </summary>
+    [ObservableProperty] private ISortableEntryViewViewModel _viewModel = null!;
+
+    [ObservableProperty] private SimpleWorkType _type;
 
     private async void WorkItem_OnViewModelChanged(FrameworkElement sender, IWorkViewModel viewModel)
     {
         ArgumentNullException.ThrowIfNull(ViewModel);
         if (await viewModel.TryLoadThumbnailAsync(ViewModel))
-            // TODO 不知道为什么NovelItem的Resource会有问题
-            if (sender is IllustrationItem && sender.IsFullyOrPartiallyVisible(this))
+            if (sender.IsFullyOrPartiallyVisible(this))
                 sender.GetResource<Storyboard>("ThumbnailStoryboard").Begin();
             else
                 sender.Opacity = 1;
@@ -88,6 +91,17 @@ public sealed partial class WorkView : IEntryView<ISortableEntryViewViewModel>
 
     private void WorkView_OnSelectionChanged(ItemsView sender, ItemsViewSelectionChangedEventArgs args)
     {
+        if (sender.SelectedItems is not { Count: > 0 })
+        {
+            ViewModel.SelectedEntries = ViewModel switch
+            {
+                NovelViewViewModel => (NovelItemViewModel[])[],
+                IllustrationViewViewModel => (IllustrationItemViewModel[])[],
+                _ => ViewModel.SelectedEntries
+            };
+            return;
+        }
+
         ViewModel.SelectedEntries = ViewModel switch
         {
             NovelViewViewModel => sender.SelectedItems.Cast<NovelItemViewModel>().ToArray(),
@@ -97,16 +111,16 @@ public sealed partial class WorkView : IEntryView<ISortableEntryViewViewModel>
     }
 
     [MemberNotNull(nameof(ViewModel))]
-    public void ResetEngine(IFetchEngine<IWorkEntry> newEngine, int itemLimit = -1)
+    public void ResetEngine(IFetchEngine<IWorkEntry> newEngine, int itemsPerPage = 20, int itemLimit = -1)
     {
         var type = newEngine.GetType().GetInterfaces()[0].GenericTypeArguments.FirstOrDefault();
         switch (ViewModel)
         {
             case NovelViewViewModel when type == typeof(Novel):
-                ViewModel.ResetEngine(newEngine, itemLimit);
+                ViewModel.ResetEngine(newEngine, itemsPerPage, itemLimit);
                 break;
             case IllustrationViewViewModel when type == typeof(Illustration):
-                ViewModel.ResetEngine(newEngine, itemLimit);
+                ViewModel.ResetEngine(newEngine, itemsPerPage, itemLimit);
                 break;
             default:
                 if (type == typeof(Illustration))
@@ -120,7 +134,7 @@ public sealed partial class WorkView : IEntryView<ISortableEntryViewViewModel>
                     ItemsView.ItemTemplate = this.GetResource<DataTemplate>("IllustrationItemDataTemplate");
                     ViewModel = new IllustrationViewViewModel();
                     OnPropertyChanged(nameof(ViewModel));
-                    ViewModel.ResetEngine(newEngine, itemLimit);
+                    ViewModel.ResetEngine(newEngine, itemsPerPage, itemLimit);
                     ViewModelChanged?.Invoke(this, ViewModel);
                     ItemsView.ItemsSource = ViewModel.View;
                 }
@@ -135,7 +149,7 @@ public sealed partial class WorkView : IEntryView<ISortableEntryViewViewModel>
                     ItemsView.ItemTemplate = this.GetResource<DataTemplate>("NovelItemDataTemplate");
                     ViewModel = new NovelViewViewModel();
                     OnPropertyChanged(nameof(ViewModel));
-                    ViewModel.ResetEngine(newEngine, itemLimit);
+                    ViewModel.ResetEngine(newEngine, itemsPerPage, itemLimit);
                     ViewModelChanged?.Invoke(this, ViewModel);
                     ItemsView.ItemsSource = ViewModel.View;
                 }
@@ -153,9 +167,28 @@ public sealed partial class WorkView : IEntryView<ISortableEntryViewViewModel>
     {
         if (ViewModel == null!)
             return;
-        foreach (var viewModel in ViewModel.Source)
-            viewModel.UnloadThumbnail(ViewModel);
-        ViewModel.Dispose();
+        var viewModel = ViewModel;
         ViewModel = null!;
+        foreach (var vm in viewModel.Source)
+            vm.UnloadThumbnail(viewModel);
+        viewModel.Dispose();
+    }
+
+    private void AddToBookmarkTeachingTip_OnCloseButtonClick(TeachingTip sender, object e)
+    {
+        sender.GetTag<IWorkViewModel>().AddToBookmarkCommand.Execute((BookmarkTagSelector.SelectedTags, BookmarkTagSelector.IsPrivate, null as object));
+
+        HWnd.SuccessGrowl(EntryViewResources.AddedToBookmark);
+    }
+
+    private void WorkItem_OnRequestAddToBookmark(FrameworkElement sender, IWorkViewModel e)
+    {
+        AddToBookmarkTeachingTip.Tag = e;
+        AddToBookmarkTeachingTip.IsOpen = true;
+    }
+
+    public async void WorkItem_OnRequestOpenUserInfoPage(FrameworkElement sender, IWorkViewModel e)
+    {
+        await IllustratorViewerHelper.CreateWindowWithPageAsync(e.User.Id);
     }
 }

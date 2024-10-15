@@ -19,14 +19,13 @@
 #endregion
 
 using System;
+using System.Net.Http;
 using System.Text;
 using Windows.System;
 using CommunityToolkit.WinUI.Controls;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Input;
 using Pixeval.AppManagement;
 using Pixeval.Controls;
-using Pixeval.Misc;
 using WinUI3Utilities;
 
 namespace Pixeval.Pages.Misc;
@@ -42,7 +41,14 @@ public sealed partial class AboutPage
     public AboutPage()
     {
         InitializeComponent();
-        foreach (var supporter in Supporter.Supporters)
+        UniformGrid.SizeChanged += (sender, args) => sender.To<UniformGrid>().Columns = (int)(args.NewSize.Width / 140);
+    }
+
+    private async void AboutPage_OnLoaded(object sender, RoutedEventArgs e)
+    {
+        LicenseTextBlock.Text = Encoding.UTF8.GetString(await AppInfo.GetAssetBytesAsync("GPLv3.md"));
+
+        await foreach (var supporter in Supporter.GetSupportersAsync(new HttpClient()))
         {
             UniformGrid.Children.Add(new PersonView
             {
@@ -53,15 +59,9 @@ public sealed partial class AboutPage
                 Height = 160
             });
         }
-        UniformGrid.SizeChanged += (sender, args) => sender.To<UniformGrid>().Columns = (int)(args.NewSize.Width / 140);
     }
 
-    private async void AboutPage_OnLoaded(object sender, RoutedEventArgs e)
-    {
-        LicenseTextBlock.Text = Encoding.UTF8.GetString(await AppInfo.GetAssetBytesAsync("GPLv3.md"));
-    }
-
-    private async void LaunchUri(object sender, TappedRoutedEventArgs e)
+    private async void LaunchUri(object sender, RoutedEventArgs e)
     {
         _ = await Launcher.LaunchUriAsync(new Uri(sender.To<FrameworkElement>().GetTag<string>()));
     }

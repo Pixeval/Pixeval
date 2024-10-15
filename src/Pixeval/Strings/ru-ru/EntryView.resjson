@@ -4,10 +4,11 @@
     "CopyWebLinkContextItem/Text": "Копировать веб-ссылку",
     "OpenInBrowserContextItem/Text": "Открыть в браузере",
     "ResultIsEmptyTextBlock/Text": "Здесь пусто",
-    "IsLoadingMoreTextBlock/Text": "Загружается",
     "SaveContextItem/Text": "Сохранить",
     "ShowPixEzQrCodeContextItem/Text": "QR-код PixEz",
     "ShowQrCodeContextItem/Text": "QR-код работы",
     "IllustrationQrCodeTeachingTip/TeachingTipTitle": "QR-код работы",
-    "IllustratorQrCodeTeachingTip/TeachingTipTitle": "QR-код иллюстратора"
+    "IllustratorQrCodeTeachingTip/TeachingTipTitle": "QR-код иллюстратора",
+    "AddToBookmarkTeachingTip/CloseButtonContent": "Добавить в закладки",
+    "AddedToBookmark": "Добавлено в закладки"
 }

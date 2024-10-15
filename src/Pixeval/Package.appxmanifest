@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
     xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
     xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
     xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" IgnorableNamespaces="uap rescap mp">
-    <Identity Name="PokerKo.4454907E5DDB5" Publisher="CN=D5BE94D7-0E23-4B10-BC6A-5550D9783A2A" Version="4.1.1.0"/>
+    <Identity Name="PokerKo.4454907E5DDB5" Publisher="CN=D5BE94D7-0E23-4B10-BC6A-5550D9783A2A" Version="4.2.2.0"/>
     <Properties>
         <DisplayName>Pixeval</DisplayName>
         <PublisherDisplayName>PokerKo</PublisherDisplayName>
@@ -37,6 +37,11 @@
                 <uap:Extension Category="windows.protocol">
                     <uap:Protocol Name="pixeval">
                         <uap:DisplayName>Pixeval App Protocol</uap:DisplayName>
+                    </uap:Protocol>
+                </uap:Extension>
+                <uap:Extension Category="windows.protocol">
+                    <uap:Protocol Name="pixiv">
+                        <uap:DisplayName>pixiv</uap:DisplayName>
                     </uap:Protocol>
                 </uap:Extension>
             </Extensions>

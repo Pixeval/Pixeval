@@ -2,8 +2,8 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
-    xmlns:local="using:Pixeval.Controls"
-    xmlns:markup="using:Pixeval.Controls.MarkupExtensions">
+    xmlns:fluent="using:FluentIcons.WinUI"
+    xmlns:local="using:Pixeval.Controls">
     <Style TargetType="local:TokenInputTextBox">
         <Setter Property="HorizontalAlignment" Value="Stretch" />
         <Setter Property="VerticalAlignment" Value="Center" />
@@ -24,8 +24,8 @@
                             Height="32"
                             Padding="0"
                             controls:DockPanel.Dock="Right"
-                            Content="{markup:FontSymbolIcon Glyph=ReturnKeyE751,
-                                                            FontSize={StaticResource PixevalButtonIconSize}}"
+                            Content="{fluent:SymbolIcon Symbol=ArrowTurnDownLeft,
+                                                        FontSize={StaticResource SmallIconFontSize}}"
                             Visibility="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=SubmitEnable, Mode=OneWay}" />
                         <ToggleButton
                             x:Uid="/TokenInputTextBox/IsRegularExpressionCheckBox"
@@ -33,8 +33,8 @@
                             Height="32"
                             Padding="0"
                             controls:DockPanel.Dock="Right"
-                            Content="{markup:FontSymbolIcon Glyph=CodeE943,
-                                                            FontSize={StaticResource PixevalButtonIconSize}}"
+                            Content="{fluent:SymbolIcon Symbol=Code,
+                                                        FontSize={StaticResource SmallIconFontSize}}"
                             IsChecked="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Token.IsRegularExpression, Mode=TwoWay}" />
                         <ToggleButton
                             x:Uid="/TokenInputTextBox/CaseSensitiveCheckBox"
@@ -42,8 +42,8 @@
                             Height="32"
                             Padding="0"
                             controls:DockPanel.Dock="Right"
-                            Content="{markup:FontSymbolIcon Glyph=UpArrowShiftKeyE752,
-                                                            FontSize={StaticResource PixevalButtonIconSize}}"
+                            Content="{fluent:SymbolIcon Symbol=TextChangeCase,
+                                                        FontSize={StaticResource SmallIconFontSize}}"
                             IsChecked="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Token.CaseSensitive, Mode=TwoWay}" />
                         <!--  ReSharper disable once UnusedMember.Local  -->
                         <TextBox

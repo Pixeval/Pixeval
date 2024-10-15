@@ -2,21 +2,25 @@
     "GenerateLink": "复制应用链接",
     "GenerateWebLink": "复制网页链接",
     "OpenInWebBrowser": "打开网页",
-    "LinkCopiedToClipboard": "链接已复制到剪切板",
+    "LinkCopiedToClipboard": "链接已复制到剪切板（在帮助页查看用法）",
     "ShowPixEzQrCode": "生成PixEz二维码",
     "ShowQRCode": "生成二维码",
 
     "AddToBookmark": "添加到收藏夹",
-    "Share": "分享",
     "Save": "保存",
     "SaveAs": "另存为",
+    "OpenUserInfoPage": "作者信息",
+    "MangaSave": "保存漫画",
+    "MangaSaveAs": "另存漫画为",
     "Copy": "复制图片到剪切板",
     "SaveAsCancelled": "已取消另存为操作",
     "Saved": "已保存",
     "DownloadTaskCreated": "已创建下载任务",
     "UgoiraProcessing": "正在处理动图：{0}%",
     "ImageProcessing": "正在处理图片",
+    "NovelContentFetching": "正在获取小说内容",
     "ImageSetToClipBoard": "图片已复制到剪切板",
+    "NovelSetToClipBoard": "小说已复制到剪切板",
     "TheIllustrationIsAMangaFormatted": "这是一副图集，内含{0}张图片",
     "TheIllustrationIsAnUgoira": "这是一张动图",
 
@@ -24,5 +28,7 @@
 
     "UserMetricsFollowingsTextBlock/Text": "正在关注",
     "UserMetricsIllustrationCountTextBlock/Text": "作品数",
-    "UserMetricsMyPixivUsersTextBlock/Text": "好P友"
+    "UserMetricsMyPixivUsersTextBlock/Text": "好P友",
+
+    "AIUpscale": "AI超分辨率"
 }

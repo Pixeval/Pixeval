@@ -21,10 +21,6 @@ public class TagsEntryDataProvider : ObservableObject, IDisposable
 
     public void Dispose()
     {
-        if (Source is { } source)
-            foreach (var entry in source)
-                entry.Dispose();
-
         View.Clear();
     }
 

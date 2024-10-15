@@ -2,17 +2,43 @@
     x:Class="Pixeval.Controls.DialogContent.CheckExitedDialog"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:fluent="using:FluentIcons.WinUI"
     xmlns:local="using:Pixeval.Controls.DialogContent"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
-
     <StackPanel Spacing="10">
         <TextBlock x:Uid="/CheckExitedContentDialog/MainTextBlock" TextWrapping="WrapWholeWords" />
-        <HyperlinkButton x:Uid="/CheckExitedContentDialog/ClearConfig" Tapped="ClearConfig_OnTapped" />
-        <HyperlinkButton x:Uid="/CheckExitedContentDialog/ClearSession" Tapped="ClearSession_OnTapped" />
-        <HyperlinkButton x:Uid="/CheckExitedContentDialog/OpenLocalFolder" Tapped="OpenLocalFolder_OnTapped" />
-        <HyperlinkButton x:Uid="/CheckExitedContentDialog/OpenRoamingFolder" Tapped="OpenRoamingFolder_OnTapped" />
-        <HyperlinkButton x:Uid="/CheckExitedContentDialog/OpenLogFolder" Tapped="OpenLogFolder_OnTapped" />
+        <HyperlinkButton Click="ClearConfig_OnClicked">
+            <controls:DockPanel HorizontalSpacing="10">
+                <fluent:SymbolIcon controls:DockPanel.Dock="Left" Symbol="Apps" />
+                <TextBlock x:Uid="/CheckExitedContentDialog/ClearConfig" />
+            </controls:DockPanel>
+        </HyperlinkButton>
+        <HyperlinkButton Click="ClearContext_OnClicked">
+            <controls:DockPanel HorizontalSpacing="10">
+                <fluent:SymbolIcon controls:DockPanel.Dock="Left" Symbol="SignOut" />
+                <TextBlock x:Uid="/CheckExitedContentDialog/ClearContext" />
+            </controls:DockPanel>
+        </HyperlinkButton>
+        <HyperlinkButton Click="OpenLocalFolder_OnClicked">
+            <controls:DockPanel HorizontalSpacing="10">
+                <fluent:SymbolIcon controls:DockPanel.Dock="Left" Symbol="FolderBriefcase" />
+                <TextBlock x:Uid="/CheckExitedContentDialog/OpenLocalFolder" VerticalAlignment="Center" />
+            </controls:DockPanel>
+        </HyperlinkButton>
+        <HyperlinkButton Click="OpenRoamingFolder_OnClicked">
+            <controls:DockPanel HorizontalSpacing="10">
+                <fluent:SymbolIcon controls:DockPanel.Dock="Left" Symbol="FolderGlobe" />
+                <TextBlock x:Uid="/CheckExitedContentDialog/OpenRoamingFolder" />
+            </controls:DockPanel>
+        </HyperlinkButton>
+        <HyperlinkButton Click="OpenLogFolder_OnClicked">
+            <controls:DockPanel HorizontalSpacing="10">
+                <fluent:SymbolIcon controls:DockPanel.Dock="Left" Symbol="FolderList" />
+                <TextBlock x:Uid="/CheckExitedContentDialog/OpenLogFolder" />
+            </controls:DockPanel>
+        </HyperlinkButton>
     </StackPanel>
 </UserControl>

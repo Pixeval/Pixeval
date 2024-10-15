@@ -7,27 +7,5 @@
     xmlns:local="using:Pixeval.Pages.Capability"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
-    <controls:EntryView x:Name="IllustrateView" x:Uid="/EntryView/IllustratorQrCodeTeachingTip">
-        <controls:EntryView.Content>
-            <controls:AdvancedItemsView
-                x:Name="AdvancedItemsView"
-                CanLoadMore="False"
-                IsItemInvokedEnabled="True"
-                ItemInvoked="IllustratorItemsView_OnItemInvoked"
-                LayoutType="Grid"
-                MinItemWidth="300"
-                SelectionMode="None">
-                <controls:AdvancedItemsView.ItemTemplate>
-                    <DataTemplate x:DataType="controls:IllustratorItemViewModel">
-                        <ItemContainer>
-                            <controls:IllustratorItem
-                                RequestTeachingTip="RecommendIllustratorItemOnRequestTeachingTip"
-                                ViewModel="{x:Bind}"
-                                ViewModelChanged="IllustratorItem_OnViewModelChanged" />
-                        </ItemContainer>
-                    </DataTemplate>
-                </controls:AdvancedItemsView.ItemTemplate>
-            </controls:AdvancedItemsView>
-        </controls:EntryView.Content>
-    </controls:EntryView>
+    <controls:IllustratorView x:Name="IllustratorView" />
 </controls:EnhancedPage>

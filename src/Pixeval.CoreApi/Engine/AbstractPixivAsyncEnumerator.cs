@@ -21,8 +21,10 @@
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Pixeval.CoreApi.Global.Exception;
+using Pixeval.CoreApi.Model;
 using Pixeval.CoreApi.Net;
 using Pixeval.Utilities;
 
@@ -41,8 +43,10 @@ namespace Pixeval.CoreApi.Engine;
 /// <typeparam name="TRawEntity">The entity class corresponding to the result entry</typeparam>
 /// <typeparam name="TFetchEngine">The fetch engine</typeparam>
 public abstract class AbstractPixivAsyncEnumerator<TEntity, TRawEntity, TFetchEngine>(TFetchEngine pixivFetchEngine,
-    MakoApiKind apiKind) : IAsyncEnumerator<TEntity?>
+    MakoApiKind apiKind) : IAsyncEnumerator<TEntity>
     where TFetchEngine : class, IFetchEngine<TEntity>
+    where TEntity : class, IEntry
+    where TRawEntity : class
 {
     protected readonly MakoClient MakoClient = pixivFetchEngine.MakoClient;
     protected readonly TFetchEngine PixivFetchEngine = pixivFetchEngine;
@@ -65,7 +69,7 @@ public abstract class AbstractPixivAsyncEnumerator<TEntity, TRawEntity, TFetchEn
     /// <summary>
     /// The current result entry of <see cref="CurrentEntityEnumerator" />
     /// </summary>
-    public TEntity? Current => CurrentEntityEnumerator is null ? default : CurrentEntityEnumerator.Current;
+    public TEntity Current => CurrentEntityEnumerator?.Current!;
 
     /// <summary>
     /// Moves the <see cref="MoveNextAsync" /> one step ahead, if fails, it will try to
@@ -94,22 +98,19 @@ public abstract class AbstractPixivAsyncEnumerator<TEntity, TRawEntity, TFetchEn
             var responseMessage = await MakoClient.GetMakoHttpClient(ApiKind).GetAsync(url).ConfigureAwait(false);
             if (!responseMessage.IsSuccessStatusCode)
             {
-                return Result<TRawEntity>.AsFailure(await MakoNetworkException.FromHttpResponseMessageAsync(responseMessage, MakoClient.Configuration.Bypass).ConfigureAwait(false));
+                return Result<TRawEntity>.AsFailure(await MakoNetworkException.FromHttpResponseMessageAsync(responseMessage, MakoClient.Configuration.DomainFronting).ConfigureAwait(false));
             }
 
-            var result = (await responseMessage.Content.ReadAsStringAsync().ConfigureAwait(false)).FromJson<TRawEntity>();
-            if (result is null)
-            {
-                return Result<TRawEntity>.AsFailure();
-            }
+            var str = await responseMessage.Content.ReadAsStringAsync().ConfigureAwait(false);
 
-            return ValidateResponse(result)
-                ? Result<TRawEntity>.AsSuccess(result)
-                : Result<TRawEntity>.AsFailure();
+            if (JsonSerializer.Deserialize(str, typeof(TRawEntity), AppJsonSerializerContext.Default) is TRawEntity result)
+                if (ValidateResponse(result))
+                    return Result<TRawEntity>.AsSuccess(result);
+            return Result<TRawEntity>.AsFailure();
         }
         catch (Exception e)
         {
-            return Result<TRawEntity>.AsFailure(new MakoNetworkException(url, MakoClient.Configuration.Bypass, e.Message, (int?)(e as HttpRequestException)?.StatusCode ?? -1));
+            return Result<TRawEntity>.AsFailure(new MakoNetworkException(url, MakoClient.Configuration.DomainFronting, e.Message, (int?)(e as HttpRequestException)?.StatusCode ?? -1));
         }
     }
 }
