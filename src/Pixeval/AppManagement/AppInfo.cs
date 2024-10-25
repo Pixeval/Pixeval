@@ -22,7 +22,7 @@ using System;
 using System.IO;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
-using Windows.Storage;
+using Microsoft.Windows.Storage;
 using Microsoft.Extensions.DependencyInjection;
 using Pixeval.Controls.Windowing;
 using Pixeval.Database.Managers;
@@ -35,6 +35,7 @@ using Microsoft.UI.Windowing;
 using Pixeval.CoreApi.Net;
 using Pixeval.Util.UI;
 using Microsoft.UI.Xaml.Media;
+using Microsoft.Windows.AppNotifications;
 
 namespace Pixeval.AppManagement;
 
@@ -51,6 +52,8 @@ public static partial class AppInfo
     public const string AppProtocol = "pixeval";
 
     public const string IconApplicationUri = "ms-appx:///Assets/Images/logo.ico";
+
+    public static ApplicationData AppData { get; } = ApplicationData.GetDefault();
 
     public static readonly string DatabaseFilePath = AppKnownFolders.Local.Resolve("PixevalData4.2.2.litedb");
 
@@ -70,8 +73,6 @@ public static partial class AppInfo
 
     static AppInfo()
     {
-        // Keys in the RoamingSettings will be synced through the devices of the same user
-        // For more detailed information see https://docs.microsoft.com/en-us/windows/apps/design/app-settings/store-and-retrieve-app-data
         InitializeConfig();
         InitializeLoginContext();
         InitializeDebugTrace();
@@ -148,12 +149,12 @@ public static partial class AppInfo
 
     public static void ClearConfig()
     {
-        Functions.IgnoreException(() => ApplicationData.Current.RoamingSettings.DeleteContainer(ConfigContainerKey));
+        Functions.IgnoreException(() => AppData.LocalSettings.DeleteContainer(ConfigContainerKey));
     }
 
     public static void ClearLoginContext()
     {
-        Functions.IgnoreException(() => ApplicationData.Current.LocalSettings.DeleteContainer(LoginContextContainerKey));
+        Functions.IgnoreException(() => AppData.LocalSettings.DeleteContainer(LoginContextContainerKey));
     }
 
     public static void SaveContext()

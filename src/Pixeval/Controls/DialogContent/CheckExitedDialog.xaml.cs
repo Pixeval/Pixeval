@@ -16,7 +16,5 @@ public sealed partial class CheckExitedDialog : UserControl
 
     private async void OpenLocalFolder_OnClicked(object sender, RoutedEventArgs e) => await Launcher.LaunchFolderAsync(AppKnownFolders.Local.Self);
 
-    private async void OpenRoamingFolder_OnClicked(object sender, RoutedEventArgs e) => await Launcher.LaunchFolderAsync(AppKnownFolders.Roaming.Self);
-
     private async void OpenLogFolder_OnClicked(object sender, RoutedEventArgs e) => await Launcher.LaunchFolderAsync(AppKnownFolders.Log.Self);
 }

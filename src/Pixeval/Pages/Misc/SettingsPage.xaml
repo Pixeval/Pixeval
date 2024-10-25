@@ -196,13 +196,6 @@
                             HeaderIcon="{fluent:SymbolIcon Symbol=FolderBriefcase}"
                             IsClickEnabled="True"
                             Tag="Local" />
-                        <controls:SettingsCard
-                            x:Uid="/SettingsPage/OpenRoamingEntry"
-                            ActionIcon="{fluent:SymbolIcon Symbol=Open}"
-                            Click="OpenFolder_OnClicked"
-                            HeaderIcon="{fluent:SymbolIcon Symbol=FolderGlobe}"
-                            IsClickEnabled="True"
-                            Tag="Roaming" />
                     </controls:SettingsExpander.Items>
                 </controls:SettingsExpander>
 

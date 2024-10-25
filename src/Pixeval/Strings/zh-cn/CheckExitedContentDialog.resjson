@@ -6,6 +6,5 @@
     "ClearConfig/Text": "清空设置（软件设置）",
     "ClearContext/Text": "清空登录状态",
     "OpenLocalFolder/Text": "打开本地文件夹",
-    "OpenRoamingFolder/Text": "打开漫游文件夹",
     "OpenLogFolder/Text": "打开日志文件夹"
 }
