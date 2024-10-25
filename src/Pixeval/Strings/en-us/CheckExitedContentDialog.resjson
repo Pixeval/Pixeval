@@ -6,6 +6,5 @@
   "ClearConfig/Text": "Clear application settings",
   "ClearContext/Text": "Clear the session",
   "OpenLocalFolder/Text": "Open local folder",
-  "OpenRoamingFolder/Text": "Open roaming folder",
   "OpenLogFolder/Text": "Open log folder"
 }

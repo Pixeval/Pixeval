@@ -67,7 +67,7 @@ public class AppViewModel(App app) : IDisposable
 
     private static ServiceProvider CreateServiceProvider()
     {
-        var fileLogger = new FileLogger(ApplicationData.Current.LocalFolder.Path + @"\Logs\");
+        var fileLogger = new FileLogger(AppInfo.AppData.LocalFolder.Path + @"\Logs\");
         return new ServiceCollection()
             .AddSingleton<IllustrationDownloadTaskFactory>()
             .AddSingleton<NovelDownloadTaskFactory>()

@@ -6,6 +6,5 @@
     "ClearConfig/Text": "Remise à zéro de configuration de l'application",
     "ClearContext/Text": "Remise à zéro de session",
     "OpenLocalFolder/Text": "Ouvrir le répertoire local",
-    "OpenRoamingFolder/Text": "Ouvrir le répertoire synchronisé",
     "OpenLogFolder/Text": "Ouvrir le répertoire des logs"
 }
