@@ -121,8 +121,6 @@
   "OpenTempEntry/Description": "Ce répertoire contient les fichiers temporaires qui sont effacés à chaque démarrage d\u0027application",
   "OpenLocalEntry/Header": "Ouvrir le répertoire local",
   "OpenLocalEntry/Description": "Ce répertoire contient les fichiers importants de configuration, merci de ne pas les modifier",
-  "OpenRoamingEntry/Header": "Ouvrir le répertoire roaming",
-  "OpenRoamingEntry/Description": "Ce répertoire contient les fichiers importants de configuration, merci de ne pas les modifier",
   "ResetDefaultSettingsButton/Content": "Remettre à zéro les configurations",
   "ResetDefaultSettingsEntry/Description": "Cliquer ce bouton pour une remise à zéro de toutes les configurations, cette opération est irréversible",
   "ResetDefaultSettingsEntry/Header": "Remettre à zéro des configurations",

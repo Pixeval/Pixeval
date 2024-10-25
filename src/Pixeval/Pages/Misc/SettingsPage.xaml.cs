@@ -137,7 +137,6 @@ public sealed partial class SettingsPage : IScrollViewHost, IDisposable
             "Log" => AppKnownFolders.Log.Self,
             "Temp" => AppKnownFolders.Temporary.Self,
             "Local" => AppKnownFolders.Local.Self,
-            "Roaming" => AppKnownFolders.Roaming.Self,
             _ => null
         };
         if (folder is not null)
