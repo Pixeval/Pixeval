@@ -29,7 +29,7 @@ using Pixeval.Utilities.Threading;
 
 namespace Pixeval.Upscaling;
 
-public class Upscaler(UpscaleTask task) : IDisposable, IAsyncDisposable
+public partial class Upscaler(UpscaleTask task) : IDisposable, IAsyncDisposable
 {
     public const string ProcessCompletedMark = "Completed";
 
@@ -53,15 +53,15 @@ public class Upscaler(UpscaleTask task) : IDisposable, IAsyncDisposable
         var id = Guid.NewGuid().ToString();
 
         var tempFilePath = await AppKnownFolders.Temporary.CreateFileAsync(id, CreationCollisionOption.GenerateUniqueName);
-        task.ImageStream.Seek(0, SeekOrigin.Begin);
+        _ = task.ImageStream.Seek(0, SeekOrigin.Begin);
 
         // scoped-using is obligatory here, otherwise the file will be locked and the process will not be able to access it
         await using (var tempStream = await tempFilePath.OpenStreamForWriteAsync())
         {
             await task.ImageStream.CopyToAsync(tempStream);
         }
-        
-        task.ImageStream.Seek(0, SeekOrigin.Begin);
+
+        _ = task.ImageStream.Seek(0, SeekOrigin.Begin);
 
         var modelParam = task.Model switch
         {
@@ -88,7 +88,7 @@ public class Upscaler(UpscaleTask task) : IDisposable, IAsyncDisposable
         process.StartInfo.RedirectStandardError = true;
         process.StartInfo.RedirectStandardOutput = true;
 
-        process.Start();
+        _ = process.Start();
 
         _ = Task.Run(async () =>
         {
@@ -106,16 +106,22 @@ public class Upscaler(UpscaleTask task) : IDisposable, IAsyncDisposable
         return _upscaleStream;
     }
 
-    public void Dispose()
-    { 
-        _ = DisposeAsync();
+    public async void Dispose()
+    {
+        _isDisposed = true;
+        _ = await _runningSignal;
+
+        GC.SuppressFinalize(this);
+        if (_upscaleStream != null)
+            await _upscaleStream.DisposeAsync();
     }
 
     public async ValueTask DisposeAsync()
     {
         _isDisposed = true;
-        await _runningSignal;
+        _ = await _runningSignal;
 
+        GC.SuppressFinalize(this);
         if (_upscaleStream != null) 
             await _upscaleStream.DisposeAsync();
     }
