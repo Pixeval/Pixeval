@@ -291,7 +291,7 @@ public class Parser
 
         return new Range(new Index(TryNarrow(range.Item1)), range.Item2 is { } l ? new Index(TryNarrow(l)) : new Index(0, true));
 
-        (long, long) ParseIntervalForm()
+        (double, double) ParseIntervalForm()
         {
             var leftInclusive = false;
 
@@ -306,10 +306,10 @@ public class Parser
                     break;
             }
 
-            var oa = Eat<IQueryToken.Numeric>().Value;
+            var oa = ParseNumber();
             var a = oa - 1;
             _ = Eat<IQueryToken.Comma>();
-            var ob = Eat<IQueryToken.Numeric>().Value;
+            var ob = ParseNumber();
             var b = ob - 1;
 
             var rightInclusive = false;
@@ -323,7 +323,7 @@ public class Parser
                     _ = Eat<IQueryToken.RightParen>();
                     break;
                 default:
-                    return ThrowUtils.MacroParse<(long, long)>(MacroParserResources.ExpectedRightBracketOrParenInRangeFormatted.Format(Peek));
+                    return ThrowUtils.MacroParse<(double, double)>(MacroParserResources.ExpectedRightBracketOrParenInRangeFormatted.Format(Peek));
             }
 
             if (!leftInclusive)
@@ -338,14 +338,14 @@ public class Parser
             return (a, b);
         }
 
-        (long, long?) ParseDashForm()
+        (double, double?) ParseDashForm()
         {
             switch (Peek)
             {
                 case IQueryToken.Dash:
                 {
                     _ = Eat<IQueryToken.Dash>();
-                    var b = Eat<IQueryToken.Numeric>().Value;
+                    var b = ParseNumber();
                     return (0, b);
                 }
                 case IQueryToken.Numeric:
@@ -353,14 +353,14 @@ public class Parser
                     // 为了符合从1开始的习惯，这里减一，即：
                     // 1-：第一张及以后
                     // 1-2：第一张及第二张图
-                    var oa = Eat<IQueryToken.Numeric>().Value;
+                    var oa = ParseNumber();
                     var a = oa - 1;
                     if (a < 0)
                         ThrowUtils.MacroParse(MacroParserResources.NumericTooSmallInRangeFormatted.Format(oa));
                     _ = Eat<IQueryToken.Dash>();
                     if (Peek is IQueryToken.Numeric)
                     {
-                        var b = Eat<IQueryToken.Numeric>().Value;
+                        var b = ParseNumber();
                         if (a > b)
                             ThrowUtils.MacroParse(MacroParserResources.MinimumShouldBeSmallerThanMaximiumFormatted.Format(oa, b));
                         return (a, b);
@@ -371,6 +371,30 @@ public class Parser
                 default:
                     return (0, null);
             }
+        }
+    }
+
+    /// <summary>
+    /// 读取符合要求的「单一数字」，可以为一个整数、一个小数或者是分数形式，例如：12，24.5，1/3。
+    /// <br/>
+    /// 为了方便处理，所有形式的数字都会被转化为double类型返回出去。
+    /// <br/>
+    /// 这个产生式相当于在之前的Eat函数上抽出一层出来。
+    /// </summary>
+    /// <returns></returns>
+    private double ParseNumber()
+    {
+        var num = Eat<IQueryToken.Numeric>().Value;
+        switch (Peek)
+        {
+            case IQueryToken.Slash:
+            {
+                _ = Eat<IQueryToken.Slash>();
+                var otherNum = Eat<IQueryToken.Numeric>().Value;
+                return num / otherNum;
+            }
+            default:
+                return num;
         }
     }
 

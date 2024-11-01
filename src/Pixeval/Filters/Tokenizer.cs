@@ -18,6 +18,7 @@ public static class Tokenizer
         ['-', .. var rem] => Tokenize(rem).Prepend(new IQueryToken.Dash()),
         ['.', .. var rem] => Tokenize(rem).Prepend(new IQueryToken.Dot()),
         ['@', .. var rem] => Tokenize(rem).Prepend(new IQueryToken.At()),
+        ['/', .. var rem] => Tokenize(rem).Prepend(new IQueryToken.Slash()),
         [':', .. var rem] => Tokenize(rem).Prepend(new IQueryToken.Colon()),
         [',', .. var rem] => Tokenize(rem).Prepend(new IQueryToken.Comma()),
         ['(', .. var rem] => Tokenize(rem).Prepend(new IQueryToken.LeftParen()),
@@ -32,6 +33,7 @@ public static class Tokenizer
         ['e', ':', .. var rem] => Tokenize(rem).Prepend(new IQueryToken.Colon()).Prepend(new IQueryToken.EndDate()),
         ['a', 'n', 'd', .. var rem] => Tokenize(rem).Prepend(new IQueryToken.And()),
         ['o', 'r', .. var rem] => Tokenize(rem).Prepend(new IQueryToken.Or()),
+        ['r', .. var rem] => Tokenize(rem).Prepend(new IQueryToken.Colon()).Prepend(new IQueryToken.Ratio()),
         ['"', .. var rem] => TokenizeAndPrepend(rem, t => t.IndexOf('"'), 1),
         [var x, ..] when char.IsWhiteSpace(x) => TokenizeAndSkip(src, char.IsWhiteSpace),
         [var x, ..] when char.IsDigit(x) => TokenizeNumeric(src),
@@ -45,21 +47,24 @@ public static class Tokenizer
 
     public static IList<IQueryToken> TokenizeNumeric(string src)
     {
+        var dotCount = 0;
         var isData = false;
         for (var i = 0; i < src.Length; ++i)
         {
             var c = src[i];
-            if (c is '-' or '.' or ',' or ']' or ')' || char.IsWhiteSpace(c))
+            if (c is '-' or ',' or ']' or ')' || char.IsWhiteSpace(c))
                 return Tokenize(src[i..]).Prepend(isData
                     ? new IQueryToken.Data(src[..i])
-                    : new IQueryToken.Numeric(long.Parse(src[..i])));
-            if (!char.IsDigit(c))
+                    : new IQueryToken.Numeric(double.Parse(src[..i])));
+            if (c == '.')
+                dotCount++;
+            if (!char.IsDigit(c) || dotCount > 1)
                 isData = true;
         }
 
         return Tokenize("").Prepend(isData
             ? new IQueryToken.Data(src)
-            : new IQueryToken.Numeric(long.Parse(src)));
+            : new IQueryToken.Numeric(double.Parse(src)));
     }
 
     private static IList<IQueryToken> TokenizeAndPrepend(string src, Func<string, int> indexOf, int offset = 0)

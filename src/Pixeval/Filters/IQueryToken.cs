@@ -30,6 +30,13 @@ public interface IQueryToken
         public static string Name => "i";
     }
 
+    public readonly record struct Ratio : IQueryToken
+    {
+        public override string ToString() => Name;
+
+        public static string Name => "r";
+    }
+
     public readonly record struct StartDate : IQueryToken
     {
         public override string ToString() => Name;
@@ -59,7 +66,7 @@ public interface IQueryToken
     }
 
     [DebuggerDisplay("{Value}")]
-    public readonly record struct Numeric(long Value) : INullableToken
+    public readonly record struct Numeric(double Value) : INullableToken
     {
         public bool IsNotEmpty() => Value >= 0;
 
@@ -94,6 +101,13 @@ public interface IQueryToken
         public override string ToString() => Name;
 
         public static string Name => "@";
+    }
+    
+    public readonly record struct Slash : IQueryToken
+    {
+        public override string ToString() => Name;
+
+        public static string Name => "/";
     }
 
     public readonly record struct Not : IQueryToken
