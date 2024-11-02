@@ -341,7 +341,7 @@ public class Parser
                     _ = Eat<IQueryToken.RightParen>();
                     break;
                 default:
-                    return ThrowUtils.MacroParse<(double, double)>(MacroParserResources.ExpectedRightBracketOrParenInRangeFormatted.Format(Peek));
+                    return ThrowUtils.MacroParse<(long, long)>(MacroParserResources.ExpectedRightBracketOrParenInRangeFormatted.Format(Peek));
             }
 
             if (!leftInclusive)
@@ -394,7 +394,7 @@ public class Parser
     
     private Range ParseDecimalRangeDesc()
     {
-        Range range;
+        (double, double?) range;
         switch (Peek)
         {
             case IQueryToken.Dash:
@@ -402,6 +402,7 @@ public class Parser
                 _ = Eat<IQueryToken.Dash>();
                 var b = ParseDecimalNumber();
                 range = (0, b);
+                break;
             }
             case IQueryToken.Numeric:
             {
@@ -413,12 +414,15 @@ public class Parser
                     if (a > b)
                         ThrowUtils.MacroParse(MacroParserResources.MinimumShouldBeSmallerThanMaximiumFormatted.Format(a, b));
                     range = (a, b);
+                    break;
                 }
 
                 range = (a, null);
+                break;
             }
             default:
                 range = (0, null);
+                break;
         }
         
         return new Range(new Index(TryNarrow(range.Item1)), range.Item2 is { } l ? new Index(TryNarrow(l)) : new Index(0, true));
@@ -498,6 +502,13 @@ public class Parser
     private static int TryNarrow(long value)
     {
         if (value > int.MaxValue)
+            ThrowUtils.MacroParse(MacroParserResources.NumericTooLargeFormatted.Format(value));
+        return (int)value;
+    }
+
+    private static float TryNarrow(double value)
+    {
+        if (value > float.MaxValue)
             ThrowUtils.MacroParse(MacroParserResources.NumericTooLargeFormatted.Format(value));
         return (int)value;
     }
