@@ -43,7 +43,7 @@ public enum StringType
 
 public enum RangeType
 {
-    Bookmark, Index
+    Bookmark, Index, Ratio
 }
 
 public enum RangeEdge

@@ -66,7 +66,7 @@ public interface IQueryToken
     }
 
     [DebuggerDisplay("{Value}")]
-    public readonly record struct Numeric(double Value) : INullableToken
+    public readonly record struct Numeric(long Value) : INullableToken
     {
         public bool IsNotEmpty() => Value >= 0;
 

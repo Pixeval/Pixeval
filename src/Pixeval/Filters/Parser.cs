@@ -72,11 +72,14 @@ public class Parser
      *      sequence_range     ::= I COLON range_desc
      *      starting_date      ::= S COLON date_desc
      *      ending_date        ::= E COLON date_desc
+     *      ratio              ::= R COLON decimal_range_desc
      *
      *      range_desc         ::= interval_form | dash_form
      *          interval_form  ::= (LB | LP) NUM COMMA NUM (RB | RP)
      *          dash_form      ::= (DASH NUM) | (NUM DASH NUM) | (NUM DASH)
      *      date_desc          ::= [Num (DASH | DOT)] Num (DASH | DOT) Num
+     *
+     *      decimal_range_desc ::= (DASH DECIMAL) | (DECIMAL DASH DECIMAL) | (DECIMAL DASH)
      */
 
     /*
@@ -207,6 +210,12 @@ public class Parser
                 EatDate(RangeEdge.Ending);
                 return true;
             }
+            case IQueryToken.Ratio:
+            {
+                _ = Eat<IQueryToken.Ratio>();
+                _ = EatDecimalRange(RangeType.Ratio);
+                return true;
+            }
         }
 
         return false;
@@ -245,6 +254,15 @@ public class Parser
         {
             _ = Eat<IQueryToken.Colon>();
             var range = ParseRangeDesc();
+            var rangeToken = new NumericRangeLeaf(type, range, isNot);
+            _currentTopLevel.Insert(rangeToken);
+            return rangeToken;
+        }
+        
+        NumericRangeLeaf EatDecimalRange(RangeType type)
+        {
+            _ = Eat<IQueryToken.Colon>();
+            var range = ParseDecimalRangeDesc();
             var rangeToken = new NumericRangeLeaf(type, range, isNot);
             _currentTopLevel.Insert(rangeToken);
             return rangeToken;
@@ -291,7 +309,7 @@ public class Parser
 
         return new Range(new Index(TryNarrow(range.Item1)), range.Item2 is { } l ? new Index(TryNarrow(l)) : new Index(0, true));
 
-        (double, double) ParseIntervalForm()
+        (long, long) ParseIntervalForm()
         {
             var leftInclusive = false;
 
@@ -306,10 +324,10 @@ public class Parser
                     break;
             }
 
-            var oa = ParseNumber();
+            var oa = ParseIntegerNumber();
             var a = oa - 1;
             _ = Eat<IQueryToken.Comma>();
-            var ob = ParseNumber();
+            var ob = ParseIntegerNumber();
             var b = ob - 1;
 
             var rightInclusive = false;
@@ -338,14 +356,14 @@ public class Parser
             return (a, b);
         }
 
-        (double, double?) ParseDashForm()
+        (long, long?) ParseDashForm()
         {
             switch (Peek)
             {
                 case IQueryToken.Dash:
                 {
                     _ = Eat<IQueryToken.Dash>();
-                    var b = ParseNumber();
+                    var b = ParseIntegerNumber();
                     return (0, b);
                 }
                 case IQueryToken.Numeric:
@@ -353,14 +371,14 @@ public class Parser
                     // 为了符合从1开始的习惯，这里减一，即：
                     // 1-：第一张及以后
                     // 1-2：第一张及第二张图
-                    var oa = ParseNumber();
+                    var oa = ParseIntegerNumber();
                     var a = oa - 1;
                     if (a < 0)
                         ThrowUtils.MacroParse(MacroParserResources.NumericTooSmallInRangeFormatted.Format(oa));
                     _ = Eat<IQueryToken.Dash>();
                     if (Peek is IQueryToken.Numeric)
                     {
-                        var b = ParseNumber();
+                        var b = ParseIntegerNumber();
                         if (a > b)
                             ThrowUtils.MacroParse(MacroParserResources.MinimumShouldBeSmallerThanMaximiumFormatted.Format(oa, b));
                         return (a, b);
@@ -373,28 +391,68 @@ public class Parser
             }
         }
     }
-
-    /// <summary>
-    /// 读取符合要求的「单一数字」，可以为一个整数、一个小数或者是分数形式，例如：12，24.5，1/3。
-    /// <br/>
-    /// 为了方便处理，所有形式的数字都会被转化为double类型返回出去。
-    /// <br/>
-    /// 这个产生式相当于在之前的Eat函数上抽出一层出来。
-    /// </summary>
-    /// <returns></returns>
-    private double ParseNumber()
+    
+    private Range ParseDecimalRangeDesc()
     {
-        var num = Eat<IQueryToken.Numeric>().Value;
+        Range range;
+        switch (Peek)
+        {
+            case IQueryToken.Dash:
+            {
+                _ = Eat<IQueryToken.Dash>();
+                var b = ParseDecimalNumber();
+                range = (0, b);
+            }
+            case IQueryToken.Numeric:
+            {
+                var a = ParseDecimalNumber();
+                _ = Eat<IQueryToken.Dash>();
+                if (Peek is IQueryToken.Numeric)
+                {
+                    var b = ParseDecimalNumber();
+                    if (a > b)
+                        ThrowUtils.MacroParse(MacroParserResources.MinimumShouldBeSmallerThanMaximiumFormatted.Format(a, b));
+                    range = (a, b);
+                }
+
+                range = (a, null);
+            }
+            default:
+                range = (0, null);
+        }
+        
+        return new Range(new Index(TryNarrow(range.Item1)), range.Item2 is { } l ? new Index(TryNarrow(l)) : new Index(0, true));
+    }
+
+    private long ParseIntegerNumber()
+        => Eat<IQueryToken.Numeric>().Value;
+    
+    /// <summary>
+    /// 读取一个小数，可以是分号形式，例如1/3，或者小数点形式，例如1.23。
+    /// <br/>
+    /// 如果既没有小数点也没有分号，会返回一个小数形式的整数。
+    /// <br/>
+    /// 否则会读取3个token并且拼接字符串来还原小数。
+    /// </summary>
+    /// <returns>返回一个小数</returns>
+    private double ParseDecimalNumber()
+    {
+        var num = Eat<IQueryToken.Numeric>();
         switch (Peek)
         {
             case IQueryToken.Slash:
             {
                 _ = Eat<IQueryToken.Slash>();
                 var otherNum = Eat<IQueryToken.Numeric>().Value;
-                return num / otherNum;
+                return (double) num.Value / otherNum;
             }
+            case IQueryToken.Dot:
+                _ = Eat<IQueryToken.Dot>();
+                var whole = num.ToString();
+                var frac = Eat<IQueryToken.Numeric>().ToString();
+                return double.Parse($"{whole}.{frac}");
             default:
-                return num;
+                return (double) num.Value;
         }
     }
 

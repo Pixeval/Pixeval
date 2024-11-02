@@ -47,24 +47,21 @@ public static class Tokenizer
 
     public static IList<IQueryToken> TokenizeNumeric(string src)
     {
-        var dotCount = 0;
         var isData = false;
         for (var i = 0; i < src.Length; ++i)
         {
             var c = src[i];
-            if (c is '-' or ',' or ']' or ')' || char.IsWhiteSpace(c))
+            if (c is '-' or '.' or ',' or ']' or ')' || char.IsWhiteSpace(c))
                 return Tokenize(src[i..]).Prepend(isData
                     ? new IQueryToken.Data(src[..i])
-                    : new IQueryToken.Numeric(double.Parse(src[..i])));
-            if (c == '.')
-                dotCount++;
-            if (!char.IsDigit(c) || dotCount > 1)
+                    : new IQueryToken.Numeric(long.Parse(src[..i])));
+            if (!char.IsDigit(c))
                 isData = true;
         }
 
         return Tokenize("").Prepend(isData
             ? new IQueryToken.Data(src)
-            : new IQueryToken.Numeric(double.Parse(src)));
+            : new IQueryToken.Numeric(long.Parse(src)));
     }
 
     private static IList<IQueryToken> TokenizeAndPrepend(string src, Func<string, int> indexOf, int offset = 0)
