@@ -1,3 +1,5 @@
+Simplified tutorial gives several examples for most common query cases.
+
 ## Simple queries
 
 | Syntax             | Meaning                                                                         |
@@ -11,6 +13,7 @@
 | l:100-200          | Lookup artworks that have numbers of likes between 100 and 200 (both inclusive) |
 | s:MM-dd            | Lookup artworks that are published after day dd of month MM of this year        |
 | e:yyyy-MM-dd       | Lookup artworks that are published after day dd of month MM of year yyyy        |
+| r:1.2-3/2          | Lookup illustrations of ratio between 1.2 and 3/2 inclusive, and ignores novels |
 
 ## Combinations
 

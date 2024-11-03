@@ -1,16 +1,20 @@
+Ce manuel complet s'agit principalement des descriptifs des syntaxes, en donnant quelques exemples pour illustrer
+tous les types de recherches.
+
 ## Syntaxe des recherches
 
-| Syntaxe       | Signification                                     |
-| ------------- | ------------------------------------------------- |
-| [str]         | Titre                                             |
-| #[str]        | Tag                                               |
-| @[str \| num] | Auteur                                            |
-| +[const]      | Contraints positifs                               |
-| -[const]      | Contraints négatifs                               |
-| i:[range]     | Filtrer les artworks par leurs indices            |
-| l:[range]     | Filtrer les artworks par leurs nombres de favoris |
-| s:[date]      | Date de publication à partir de                   |
-| e:[date]      | Date de publication jusqu'à                       |
+| Syntaxe         | Signification                                                     |
+|-----------------|-------------------------------------------------------------------|
+| [str]           | Titre                                                             |
+| #[str]          | Tag                                                               |
+| @[str \| num]   | Auteur                                                            |
+| +[const]        | Contraints positifs                                               |
+| -[const]        | Contraints négatifs                                               |
+| i:[range]       | Filtrer les artworks par leurs indices                            |
+| l:[range]       | Filtrer les artworks par leurs nombres de favoris                 |
+| r:[frac-range]  | Filtrer les artworks selon leurs ratios, invalide pour les novels |
+| s:[date]        | Date de publication à partir de                                   |
+| e:[date]        | Date de publication jusqu'à                                       |
 
 ## Syntaxe des valeurs
 
@@ -29,7 +33,7 @@
 | ------- | --------------- |
 | 12345   | Nombres normaux |
 
-### [const] 约束
+### [const] Contraints
 
 | Syntaxe | Signification                 |
 | ------- | ----------------------------- |
@@ -38,7 +42,7 @@
 | gif     | Animation GIF                 |
 | ai      | Contenu généré par l'IA       |
 
-### [range] Intervalles
+### [int-range] Intervalles des intègres
 
 | Syntaxe | Signification                                   |
 | ------- | ----------------------------------------------- |
@@ -49,6 +53,16 @@
 | \[2,3)  | Format intervalle, entre 2 (inclu) et 3 (exclu) |
 
 > Les intervalles demi ouvertes comme '2-' ou '-3' ne sont pas supportées par le format d'intervalle.
+
+### [frac-range] Intervalles des décimaux positifs
+
+| Syntaxe | Signification             |
+|---------|---------------------------|
+| 2-      | Plus grand ou égale à 2   |
+| -1.5    | Plus petit ou égale à 1,5 |
+| -1/2    | Moins de 1/2 ou égale     |
+| 1/2-3   | Entre 1/2 et 3, compris   |
+| 0.3-1/2 | Entre 0,3 et 1/2          |
 
 ### [date] Date
 
