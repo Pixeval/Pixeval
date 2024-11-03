@@ -187,7 +187,7 @@ public class Parser
             case IQueryToken.Like:
             {
                 _ = Eat<IQueryToken.Like>();
-                _ = EatRange(RangeType.Bookmark);
+                _ = EatRange(NumericRangeType.Bookmark);
                 return true;
             }
             case IQueryToken.Index:
@@ -195,25 +195,25 @@ public class Parser
                 if (_index is not null)
                     ThrowUtils.MacroParse(MacroParserResources.IndexRangeUsedMoreThanOnce);
                 _ = Eat<IQueryToken.Index>();
-                _index = EatRange(RangeType.Index);
+                _index = EatRange(NumericRangeType.Index);
                 return true;
             }
             case IQueryToken.StartDate:
             {
                 _ = Eat<IQueryToken.StartDate>();
-                EatDate(RangeEdge.Starting);
+                EatDate(DateRangeEdge.Starting);
                 return true;
             }
             case IQueryToken.EndDate:
             {
                 _ = Eat<IQueryToken.EndDate>();
-                EatDate(RangeEdge.Ending);
+                EatDate(DateRangeEdge.Ending);
                 return true;
             }
             case IQueryToken.Ratio:
             {
                 _ = Eat<IQueryToken.Ratio>();
-                _ = EatDecimalRange(RangeType.Ratio);
+                _ = EatFloatRange(FloatRangeType.Ratio);
                 return true;
             }
         }
@@ -250,7 +250,7 @@ public class Parser
             _currentTopLevel.Insert(authorTagToken);
         }
 
-        NumericRangeLeaf EatRange(RangeType type)
+        NumericRangeLeaf EatRange(NumericRangeType type)
         {
             _ = Eat<IQueryToken.Colon>();
             var range = ParseRangeDesc();
@@ -259,16 +259,16 @@ public class Parser
             return rangeToken;
         }
         
-        NumericRangeLeaf EatDecimalRange(RangeType type)
+        FloatRangeLeaf EatFloatRange(FloatRangeType type)
         {
             _ = Eat<IQueryToken.Colon>();
-            var range = ParseDecimalRangeDesc();
-            var rangeToken = new NumericRangeLeaf(type, range, isNot);
+            var range = ParseFloatRangeDesc();
+            var rangeToken = new FloatRangeLeaf(type, range, isNot);
             _currentTopLevel.Insert(rangeToken);
             return rangeToken;
         }
 
-        void EatDate(RangeEdge type)
+        void EatDate(DateRangeEdge type)
         {
             _ = Eat<IQueryToken.Colon>();
             var (year, month, day) = ParseDateDesc();
@@ -298,7 +298,7 @@ public class Parser
         }
     }
 
-    private Range ParseRangeDesc()
+    private Range<long> ParseRangeDesc()
     {
         var range = Peek switch
         {
@@ -307,7 +307,7 @@ public class Parser
             _ => (0, null)
         };
 
-        return new Range(new Index(TryNarrow(range.Item1)), range.Item2 is { } l ? new Index(TryNarrow(l)) : new Index(0, true));
+        return new Range<long>(range.Item1, range.Item2 ?? 0, range.Item2 is null);
 
         (long, long) ParseIntervalForm()
         {
@@ -392,7 +392,7 @@ public class Parser
         }
     }
     
-    private Range ParseDecimalRangeDesc()
+    private Range<double> ParseFloatRangeDesc()
     {
         (double, double?) range;
         switch (Peek)
@@ -424,8 +424,8 @@ public class Parser
                 range = (0, null);
                 break;
         }
-        
-        return new Range(new Index(TryNarrow(range.Item1)), range.Item2 is { } l ? new Index(TryNarrow(l)) : new Index(0, true));
+
+        return new Range<double>(range.Item1, range.Item2 ?? 0, range.Item2 is null);
     }
 
     private long ParseIntegerNumber()
@@ -452,11 +452,10 @@ public class Parser
             }
             case IQueryToken.Dot:
                 _ = Eat<IQueryToken.Dot>();
-                var whole = num.ToString();
-                var frac = Eat<IQueryToken.Numeric>().ToString();
-                return double.Parse($"{whole}.{frac}");
+                var frac = Eat<IQueryToken.Numeric>();
+                return double.Parse($"{num}.{frac}");
             default:
-                return (double) num.Value;
+                return num.Value;
         }
     }
 
@@ -499,16 +498,9 @@ public class Parser
         }
     }
 
-    private static int TryNarrow(long value)
+    public static int TryNarrow(long value)
     {
         if (value > int.MaxValue)
-            ThrowUtils.MacroParse(MacroParserResources.NumericTooLargeFormatted.Format(value));
-        return (int)value;
-    }
-
-    private static float TryNarrow(double value)
-    {
-        if (value > float.MaxValue)
             ThrowUtils.MacroParse(MacroParserResources.NumericTooLargeFormatted.Format(value));
         return (int)value;
     }

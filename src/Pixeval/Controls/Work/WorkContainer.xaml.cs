@@ -190,7 +190,7 @@ public partial class WorkContainer : IScrollViewHost
             var sequence = Parser.Parse(text, out var index);
 
             ViewModel.Filter = o => o.Filter(sequence);
-            ViewModel.ViewRange = index?.Range ?? Range.All;
+            ViewModel.ViewRange = index?.NarrowRange ?? Range.All;
         }
         catch (Exception e)
         {
