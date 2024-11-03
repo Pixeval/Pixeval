@@ -6,6 +6,5 @@
     "ClearConfig/Text": "Сбросить настройки (настройки приложения)",
     "ClearContext/Text": "Сбросить состояние входа",
     "OpenLocalFolder/Text": "Открыть папку local",
-    "OpenRoamingFolder/Text": "Открыть папку roaming",
     "OpenLogFolder/Text": "Открыть папку с логами"
 }
