@@ -10,8 +10,8 @@ tous les types de recherches.
 | @[str \| num]   | Auteur                                                            |
 | +[const]        | Contraints positifs                                               |
 | -[const]        | Contraints négatifs                                               |
-| i:[range]       | Filtrer les artworks par leurs indices                            |
-| l:[range]       | Filtrer les artworks par leurs nombres de favoris                 |
+| i:[int-range]   | Filtrer les artworks par leurs indices                            |
+| l:[int-range]   | Filtrer les artworks par leurs nombres de favoris                 |
 | r:[frac-range]  | Filtrer les artworks selon leurs ratios, invalide pour les novels |
 | s:[date]        | Date de publication à partir de                                   |
 | e:[date]        | Date de publication jusqu'à                                       |

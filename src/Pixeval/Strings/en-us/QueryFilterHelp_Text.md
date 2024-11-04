@@ -10,8 +10,8 @@ all kinds of queries.
 | @[str \| num]  | Author                                                |
 | +[const]       | Positive constraint                                   |
 | -[const]       | Negative constraint                                   |
-| i:[range]      | Filter artworks by their indices                      |
-| l:[range]      | Filter artworks by their numbers of likes             |
+| i:[int-range]  | Filter artworks by their indices                      |
+| l:[int-range]  | Filter artworks by their numbers of likes             |
 | r:[frac-range] | Filter illustrations by ratio, novels will be ignored |
 | s:[date]       | Dates of publication from                             |
 | e:[date]       | Dates fo publication to                               |
