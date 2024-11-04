@@ -13,13 +13,13 @@ namespace Pixeval.AppManagement;
 
 public class Versioning
 {
-    public SemVersion CurrentVersion { get; } = SemVersion.Parse(ThisAssembly.Git.
+    public SemVersion CurrentVersion { get; } = SemVersion.TryParse(ThisAssembly.Git.
 #if DEBUG
             Tag
 #else
             BaseTag
 #endif
-        , SemVersionStyles.Strict);
+        , SemVersionStyles.Strict, out var semver) ? semver : SemVersion.Parse("1.0.0");
 
     public SemVersion? NewestVersion => NewestAppReleaseModel?.Version;
 

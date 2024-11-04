@@ -35,7 +35,6 @@ using Microsoft.UI.Windowing;
 using Pixeval.CoreApi.Net;
 using Pixeval.Util.UI;
 using Microsoft.UI.Xaml.Media;
-using Microsoft.Windows.AppNotifications;
 
 namespace Pixeval.AppManagement;
 
