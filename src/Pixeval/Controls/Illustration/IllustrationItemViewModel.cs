@@ -57,6 +57,12 @@ public partial class IllustrationItemViewModel : WorkEntryViewModel<Illustration
 
     public bool IsUgoira => Entry.IsUgoira;
 
+    public int Width => Entry.Width;
+
+    public int Height => Entry.Height;
+
+    public double AspectRatio => (double)Width / Height;
+
     public Task<UgoiraMetadataResponse> UgoiraMetadata { get; }
 
     public string IllustrationLargeUrl => Entry.ThumbnailUrls.Large;
