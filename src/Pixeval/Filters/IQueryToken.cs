@@ -30,6 +30,13 @@ public interface IQueryToken
         public static string Name => "i";
     }
 
+    public readonly record struct Ratio : IQueryToken
+    {
+        public override string ToString() => Name;
+
+        public static string Name => "r";
+    }
+
     public readonly record struct StartDate : IQueryToken
     {
         public override string ToString() => Name;
@@ -94,6 +101,13 @@ public interface IQueryToken
         public override string ToString() => Name;
 
         public static string Name => "@";
+    }
+    
+    public readonly record struct Slash : IQueryToken
+    {
+        public override string ToString() => Name;
+
+        public static string Name => "/";
     }
 
     public readonly record struct Not : IQueryToken

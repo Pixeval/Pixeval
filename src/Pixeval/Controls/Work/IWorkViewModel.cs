@@ -125,15 +125,20 @@ public interface IWorkViewModel
             NumericLeaf numericLeaf => User.Id == numericLeaf.Value,
             NumericRangeLeaf numericRangeLeaf => numericRangeLeaf.Type switch
             {
-                RangeType.Bookmark => numericRangeLeaf.IsInRange(TotalBookmarks),
-                RangeType.Index => true,
-                _ => ThrowHelper.ArgumentOutOfRange<RangeType, bool>(numericRangeLeaf.Type),
+                NumericRangeType.Bookmark => numericRangeLeaf.IsInRange(TotalBookmarks),
+                NumericRangeType.Index => true,
+                _ => ThrowHelper.ArgumentOutOfRange<NumericRangeType, bool>(numericRangeLeaf.Type),
+            },
+            FloatRangeLeaf floatRangeLeaf => floatRangeLeaf.Type switch
+            {
+                FloatRangeType.Ratio => this is not IllustrationItemViewModel illustration || floatRangeLeaf.IsInRange(illustration.AspectRatio),
+                _ => ThrowHelper.ArgumentOutOfRange<FloatRangeType, bool>(floatRangeLeaf.Type),
             },
             DateLeaf dateLeaf => dateLeaf.Edge switch
             {
-                RangeEdge.Starting => PublishDate >= dateLeaf.Date,
-                RangeEdge.Ending => PublishDate < dateLeaf.Date,
-                _ => ThrowHelper.ArgumentOutOfRange<RangeEdge, bool>(dateLeaf.Edge),
+                DateRangeEdge.Starting => PublishDate >= dateLeaf.Date,
+                DateRangeEdge.Ending => PublishDate < dateLeaf.Date,
+                _ => ThrowHelper.ArgumentOutOfRange<DateRangeEdge, bool>(dateLeaf.Edge),
             },
             _ => ThrowHelper.ArgumentOutOfRange<QueryLeaf, bool>(queryToken),
         };

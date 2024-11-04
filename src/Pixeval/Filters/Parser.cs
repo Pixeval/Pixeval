@@ -72,11 +72,14 @@ public class Parser
      *      sequence_range     ::= I COLON range_desc
      *      starting_date      ::= S COLON date_desc
      *      ending_date        ::= E COLON date_desc
+     *      ratio              ::= R COLON decimal_range_desc
      *
      *      range_desc         ::= interval_form | dash_form
      *          interval_form  ::= (LB | LP) NUM COMMA NUM (RB | RP)
      *          dash_form      ::= (DASH NUM) | (NUM DASH NUM) | (NUM DASH)
      *      date_desc          ::= [Num (DASH | DOT)] Num (DASH | DOT) Num
+     *
+     *      decimal_range_desc ::= (DASH DECIMAL) | (DECIMAL DASH DECIMAL) | (DECIMAL DASH)
      */
 
     /*
@@ -184,7 +187,7 @@ public class Parser
             case IQueryToken.Like:
             {
                 _ = Eat<IQueryToken.Like>();
-                _ = EatRange(RangeType.Bookmark);
+                _ = EatRange(NumericRangeType.Bookmark);
                 return true;
             }
             case IQueryToken.Index:
@@ -192,19 +195,25 @@ public class Parser
                 if (_index is not null)
                     ThrowUtils.MacroParse(MacroParserResources.IndexRangeUsedMoreThanOnce);
                 _ = Eat<IQueryToken.Index>();
-                _index = EatRange(RangeType.Index);
+                _index = EatRange(NumericRangeType.Index);
                 return true;
             }
             case IQueryToken.StartDate:
             {
                 _ = Eat<IQueryToken.StartDate>();
-                EatDate(RangeEdge.Starting);
+                EatDate(DateRangeEdge.Starting);
                 return true;
             }
             case IQueryToken.EndDate:
             {
                 _ = Eat<IQueryToken.EndDate>();
-                EatDate(RangeEdge.Ending);
+                EatDate(DateRangeEdge.Ending);
+                return true;
+            }
+            case IQueryToken.Ratio:
+            {
+                _ = Eat<IQueryToken.Ratio>();
+                _ = EatFloatRange(FloatRangeType.Ratio);
                 return true;
             }
         }
@@ -241,7 +250,7 @@ public class Parser
             _currentTopLevel.Insert(authorTagToken);
         }
 
-        NumericRangeLeaf EatRange(RangeType type)
+        NumericRangeLeaf EatRange(NumericRangeType type)
         {
             _ = Eat<IQueryToken.Colon>();
             var range = ParseRangeDesc();
@@ -249,8 +258,17 @@ public class Parser
             _currentTopLevel.Insert(rangeToken);
             return rangeToken;
         }
+        
+        FloatRangeLeaf EatFloatRange(FloatRangeType type)
+        {
+            _ = Eat<IQueryToken.Colon>();
+            var range = ParseFloatRangeDesc();
+            var rangeToken = new FloatRangeLeaf(type, range, isNot);
+            _currentTopLevel.Insert(rangeToken);
+            return rangeToken;
+        }
 
-        void EatDate(RangeEdge type)
+        void EatDate(DateRangeEdge type)
         {
             _ = Eat<IQueryToken.Colon>();
             var (year, month, day) = ParseDateDesc();
@@ -280,7 +298,7 @@ public class Parser
         }
     }
 
-    private Range ParseRangeDesc()
+    private Range<long> ParseRangeDesc()
     {
         var range = Peek switch
         {
@@ -289,7 +307,7 @@ public class Parser
             _ => (0, null)
         };
 
-        return new Range(new Index(TryNarrow(range.Item1)), range.Item2 is { } l ? new Index(TryNarrow(l)) : new Index(0, true));
+        return new Range<long>(range.Item1, range.Item2 ?? 0, range.Item2 is null);
 
         (long, long) ParseIntervalForm()
         {
@@ -306,10 +324,10 @@ public class Parser
                     break;
             }
 
-            var oa = Eat<IQueryToken.Numeric>().Value;
+            var oa = ParseIntegerNumber();
             var a = oa - 1;
             _ = Eat<IQueryToken.Comma>();
-            var ob = Eat<IQueryToken.Numeric>().Value;
+            var ob = ParseIntegerNumber();
             var b = ob - 1;
 
             var rightInclusive = false;
@@ -345,7 +363,7 @@ public class Parser
                 case IQueryToken.Dash:
                 {
                     _ = Eat<IQueryToken.Dash>();
-                    var b = Eat<IQueryToken.Numeric>().Value;
+                    var b = ParseIntegerNumber();
                     return (0, b);
                 }
                 case IQueryToken.Numeric:
@@ -353,14 +371,14 @@ public class Parser
                     // 为了符合从1开始的习惯，这里减一，即：
                     // 1-：第一张及以后
                     // 1-2：第一张及第二张图
-                    var oa = Eat<IQueryToken.Numeric>().Value;
+                    var oa = ParseIntegerNumber();
                     var a = oa - 1;
                     if (a < 0)
                         ThrowUtils.MacroParse(MacroParserResources.NumericTooSmallInRangeFormatted.Format(oa));
                     _ = Eat<IQueryToken.Dash>();
                     if (Peek is IQueryToken.Numeric)
                     {
-                        var b = Eat<IQueryToken.Numeric>().Value;
+                        var b = ParseIntegerNumber();
                         if (a > b)
                             ThrowUtils.MacroParse(MacroParserResources.MinimumShouldBeSmallerThanMaximiumFormatted.Format(oa, b));
                         return (a, b);
@@ -371,6 +389,73 @@ public class Parser
                 default:
                     return (0, null);
             }
+        }
+    }
+    
+    private Range<double> ParseFloatRangeDesc()
+    {
+        (double, double?) range;
+        switch (Peek)
+        {
+            case IQueryToken.Dash:
+            {
+                _ = Eat<IQueryToken.Dash>();
+                var b = ParseDecimalNumber();
+                range = (0, b);
+                break;
+            }
+            case IQueryToken.Numeric:
+            {
+                var a = ParseDecimalNumber();
+                _ = Eat<IQueryToken.Dash>();
+                if (Peek is IQueryToken.Numeric)
+                {
+                    var b = ParseDecimalNumber();
+                    if (a > b)
+                        ThrowUtils.MacroParse(MacroParserResources.MinimumShouldBeSmallerThanMaximiumFormatted.Format(a, b));
+                    range = (a, b);
+                    break;
+                }
+
+                range = (a, null);
+                break;
+            }
+            default:
+                range = (0, null);
+                break;
+        }
+
+        return new Range<double>(range.Item1, range.Item2 ?? 0, range.Item2 is null);
+    }
+
+    private long ParseIntegerNumber()
+        => Eat<IQueryToken.Numeric>().Value;
+    
+    /// <summary>
+    /// 读取一个小数，可以是分号形式，例如1/3，或者小数点形式，例如1.23。
+    /// <br/>
+    /// 如果既没有小数点也没有分号，会返回一个小数形式的整数。
+    /// <br/>
+    /// 否则会读取3个token并且拼接字符串来还原小数。
+    /// </summary>
+    /// <returns>返回一个小数</returns>
+    private double ParseDecimalNumber()
+    {
+        var num = Eat<IQueryToken.Numeric>();
+        switch (Peek)
+        {
+            case IQueryToken.Slash:
+            {
+                _ = Eat<IQueryToken.Slash>();
+                var otherNum = Eat<IQueryToken.Numeric>().Value;
+                return (double) num.Value / otherNum;
+            }
+            case IQueryToken.Dot:
+                _ = Eat<IQueryToken.Dot>();
+                var frac = Eat<IQueryToken.Numeric>();
+                return double.Parse($"{num}.{frac}");
+            default:
+                return num.Value;
         }
     }
 
@@ -413,7 +498,7 @@ public class Parser
         }
     }
 
-    private static int TryNarrow(long value)
+    public static int TryNarrow(long value)
     {
         if (value > int.MaxValue)
             ThrowUtils.MacroParse(MacroParserResources.NumericTooLargeFormatted.Format(value));
