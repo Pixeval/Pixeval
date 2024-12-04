@@ -194,31 +194,31 @@ public partial record AppSettings() : IWindowSettings
     [SettingsEntry(Symbol.Box, nameof(PixivNameResolverHeaderText), nameof(PixivNameResolverDescriptionText))]
     public string[] PixivAppApiNameResolver { get; set; } =
     [
-        "210.140.131.199",
-        "210.140.131.219",
-        "210.140.131.223",
-        "210.140.131.226"
+        "210.140.139.155",
+        "210.140.139.156",
+        "210.140.139.157",
+        "210.140.139.158"
     ];
 
     public string[] PixivWebApiNameResolver { get; set; } =
     [
-        "210.140.131.219",
-        "210.140.131.223",
-        "210.140.131.226"
+        "210.140.139.155",
+        "210.140.139.156",
+        "210.140.139.157"
     ];
 
     public string[] PixivAccountNameResolver { get; set; } =
     [
-        "210.140.131.219",
-        "210.140.131.223",
-        "210.140.131.226"
+        "210.140.139.155",
+        "210.140.139.156",
+        "210.140.139.157"
     ];
 
     public string[] PixivOAuthNameResolver { get; set; } =
     [
-        "210.140.131.219",
-        "210.140.131.223",
-        "210.140.131.226"
+        "210.140.139.155",
+        "210.140.139.156",
+        "210.140.139.157"
     ];
 
     public string[] PixivImageNameResolver { get; set; } =
