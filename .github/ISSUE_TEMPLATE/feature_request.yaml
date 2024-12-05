@@ -1,34 +1,53 @@
-name: feature request
-description: Propose new features or optimizations that you want Pixeval to implement
-title: A brief description of the feature
+name: 功能建议 / Feature Request
+description: 提出你希望软件实现的新功能或优化 / Propose new features or optimizations that you want Pixeval to implement
 labels: [feature ✨]
 body:
+  - type: markdown
+    attributes: 
+      value: |
+        ## 在开始之前 / Before you begin
+        
+        🚨 **请勿略过说明 / Please do not skip instructions** 🚨
+
+        1. 请确保在打开一个新议题之前，查找并确认不要与已有议题重复。
+        2. WPF版本已不再维护，除非重大BUG其他情况下都会直接关闭议题。
+        3. 只支持Win10，而Win11不支持的功能建议，大概率不会被接受。
+
+        1. Please make sure to look for existing issues about the same problem before opening a new one.
+        2. The WPF version is no longer maintained and issues are simply closed unless there is a major bug.
+        3. Feature requests that only support Win10 and not Win11 will most likely not be accepted.
   - type: dropdown
     validations:
       required: true
     attributes:
-      label: The type of your suggestion
+      label: 建议类型
       options:
-        - New feature
-        - Feature optimization
+        - 新功能
+        - 功能优化
   - type: dropdown
     validations:
       required: true
     attributes:
-      label: Pixeval's version
+      label: Pixeval的版本
       options:
-        - WinUI3
+        - WinUI 3
   - type: textarea
     validations:
       required: true
     attributes:
-      label: Description
-      description: Please describe your suggestion concisely and completely
+      label: 描述 / Description
+      description: |
+        请简练、完整地描述你的建议
+        Please describe your suggestion concisely and completely
   - type: textarea
     attributes:
-      label: Pictures
-      description: If possible, please illustrate your suggestion
+      label: 图片 / Pictures
+      description: |
+        如果可以，请图文并茂地叙述你的建议
+        If possible, please illustrate your suggestion
   - type: textarea
     attributes:
-      label: Additional Information
-      description: Any additional information you would like to provide
+      label: 其他信息 / Additional Information
+      description: |
+        任何你想提供的其他信息
+        Any additional information you would like to provide

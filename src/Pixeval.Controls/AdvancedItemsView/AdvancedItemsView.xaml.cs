@@ -88,9 +88,9 @@ public sealed partial class AdvancedItemsView : ItemsView
         SelectionChanged += AdvancedItemsViewOnSelectionChanged;
         LoadMoreRequested += async (sender, args) =>
         {
-            if (sender.To<AdvancedItemsView>() is { ItemsSource: ISupportIncrementalLoading sil } aiv)
+            if (sender is { ItemsSource: ISupportIncrementalLoading sil })
             {
-                _ = await sil.LoadMoreItemsAsync((uint)aiv.LoadCount);
+                _ = await sil.LoadMoreItemsAsync((uint)sender.LoadCount);
                 return sil.HasMoreItems;
             }
 
