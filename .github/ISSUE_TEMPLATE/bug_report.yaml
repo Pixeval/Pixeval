@@ -1,60 +1,62 @@
-name: Bug report
-description: Report a bug
-title: A brief description of the bug
+name: 漏洞反馈 / Bug Report
+description: 报告一个漏洞 / Report a bug
 labels: [bug 🐛]
 body:
+  - type: markdown
+    attributes: 
+      value: |
+        ## 在开始之前 / Before you begin
+        
+        🚨 **请勿略过说明 / Please do not skip instructions** 🚨
+
+        1. 请确保在打开一个新议题之前，查找并确认不要与已有议题重复。
+        2. WPF版本已不再维护，除非重大BUG其他情况下都会直接关闭议题。
+        3. 请尽可能多地提供信息，如果软件崩溃请一并提供崩溃日志。
+
+        1. Please make sure to look for existing issues about the same problem before opening a new one.
+        2. The WPF version is no longer maintained and issues are simply closed unless there is a major bug.
+        3. Please provide as much information as possible, and if the software crashes, please provide crash logs as well.
   - type: dropdown
     validations:
       required: true
     attributes:
-      label: Pixeval's version
+      label: Pixeval的版本 / Pixeval's version
       options:
-        - WinUI3
+        - WinUI 3
         - WPF
   - type: textarea
     validations:
       required: true
     attributes:
-      label: Description of the problem
-      description: Please describe the bug concisely and completely. You can attach the code that went wrong if you know
+      label: 问题描述 / Description of the problem
+      description: |
+        请简练、完整地描述这个漏洞，如果了解也可以附上出错部分代码
+        Please describe the bug concisely and completely. You can attach the code that went wrong if you know
   - type: textarea
     attributes:
-      label: Screenshot
-      description: If possible, attach a screenshot when the error occurred
+      label: 屏幕截图 / Screenshot
+      description: |
+        如果可以，请附上发生错误时的屏幕截图
+        If possible, attach a screenshot when the error occurred
   - type: textarea
     attributes:
-      label: Error code
-      description: If possible, attach the full error code and exception stack trace
+      label: 错误代码 / Error code
+      description: |
+        如果可以，请附上软件显示的完整错误代码和异常堆栈信息
+        If possible, attach the full error code and exception stack trace
   - type: dropdown
     validations:
       required: true
     attributes:
-      label: Windows major version
-      description: Major version of Windows
+      label: Windows主要版本 / Windows major version
       multiple: true
       options:
         - Windows 11
         - Windows 10
-        - Earlier than Windows 10 (not supported in WinUI3)
-  - type: dropdown
-    attributes:
-      label: Specific Windows version
-      description: If you know about this, please provide a more specific version
-      multiple: true
-      options:
-        - Insider Build
-        - Windows 11 22H2 (22621)
-        - Windows 11 21H2 (22000)
-        - November 2021 Update/21H2 (19044)
-        - May 2021 Update/21H1 (19043)
-        - October 2020 Update/20H2 (19042)
-        - October 2018 Update/RS5 (17763)
-        - Windows 8.1
-        - Windows 8
-        - Windows 7
-        - Windows Vista
-        - Windows XP and earlier
+        - 比 Windows 10 更早的版本（WinUI3 版不支持此项） / Earlier than Windows 10 (not supported in WinUI3)
   - type: textarea
     attributes:
-      label: Additional Information
-      description: Any additional information you would like to provide
+      label: 其他信息 / Additional Information
+      description: |
+        任何你想提供的其他信息
+        Any additional information you would like to provide
