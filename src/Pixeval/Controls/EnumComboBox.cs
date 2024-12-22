@@ -72,7 +72,7 @@ public sealed partial class EnumComboBox : ComboBox
 }
 
 [MarkupExtensionReturnType(ReturnType = typeof(IReadOnlyList<StringRepresentableItem>))]
-public sealed class EnumValuesExtension : MarkupExtension
+public sealed partial class EnumValuesExtension : MarkupExtension
 {
     public EnumValuesEnum Type { get; set; }
 

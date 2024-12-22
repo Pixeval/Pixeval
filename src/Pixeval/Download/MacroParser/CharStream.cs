@@ -107,7 +107,7 @@ public class CharStream : ISeekable<char>
     {
         _stream = newStream;
         Forward = 0;
-        if (_markers.Any())
+        if (_markers.Count > 0)
         {
             _markers.Clear();
         }

@@ -25,11 +25,11 @@ using Microsoft.UI.Xaml.Media;
 
 namespace Pixeval.Util.IO.Pooling;
 
-public class ImagePool<TKey>(int maxSize) : IDisposable
+public partial class ImagePool<TKey>(int maxSize) : IDisposable
 {
     private record ImagePoolEntry(TKey Key, int ReferenceTimes);
 
-    private readonly Dictionary<ImagePoolEntry, ImageSource> _pool = new();
+    private readonly Dictionary<ImagePoolEntry, ImageSource> _pool = [];
     private readonly LinkedList<TKey> _cachedItems = [];
 
     public void Cache(TKey key, ImageSource source)
@@ -72,6 +72,7 @@ public class ImagePool<TKey>(int maxSize) : IDisposable
 
     public void Dispose()
     {
+        GC.SuppressFinalize(this);
         foreach (var (_, value) in _pool)
             if (value is IDisposable disposable)
                 disposable.Dispose();

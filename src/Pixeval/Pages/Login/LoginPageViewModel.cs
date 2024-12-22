@@ -50,21 +50,23 @@ using WinUI3Utilities.Attributes;
 namespace Pixeval.Pages.Login;
 
 [SettingsViewModel<LoginContext>(nameof(LoginContext))]
-public partial class LoginPageViewModel(UIElement owner) : ObservableObject
+public partial class LoginPageViewModel(FrameworkElement owner) : ObservableObject
 {
     /// <summary>
     /// 表示要不要展示<see cref="WebView"/>
     /// </summary>
-    [ObservableProperty] private bool _isFinished = true;
+    [ObservableProperty]
+    public partial bool IsFinished { get; set; } = true;
 
     /// <summary>
     /// 表示右侧按钮是否可用
     /// </summary>
-    [ObservableProperty] private bool _isEnabled;
+    [ObservableProperty]
+    public partial bool IsEnabled { get; set; }
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(ProcessingRingVisible))]
-    private LoginPhaseEnum _loginPhase;
+    public partial LoginPhaseEnum LoginPhase { get; set; }
 
     public LoginContext LoginContext => App.AppViewModel.LoginContext;
 
@@ -103,7 +105,8 @@ public partial class LoginPageViewModel(UIElement owner) : ObservableObject
 
     #region WebView
 
-    [ObservableProperty] private WebView2? _webView;
+    [ObservableProperty]
+    public partial WebView2? WebView { get; set; }
 
     public bool CheckWebView2Installation()
     {

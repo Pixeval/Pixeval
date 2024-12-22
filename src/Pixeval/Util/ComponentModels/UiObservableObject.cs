@@ -4,7 +4,7 @@ using Pixeval.Controls.Windowing;
 
 namespace Pixeval.Util.ComponentModels;
 
-public class UiObservableObject(ulong hWnd) : ObservableObject
+public partial class UiObservableObject(ulong hWnd) : ObservableObject
 {
     public ulong HWnd { get; } = hWnd;
 

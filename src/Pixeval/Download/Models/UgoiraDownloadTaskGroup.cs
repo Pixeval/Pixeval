@@ -38,7 +38,7 @@ using WinUI3Utilities;
 
 namespace Pixeval.Download.Models;
 
-public class UgoiraDownloadTaskGroup : DownloadTaskGroup, IImageDownloadTaskGroup
+public partial class UgoiraDownloadTaskGroup : DownloadTaskGroup, IImageDownloadTaskGroup
 {
     public Illustration Entry => DatabaseEntry.Entry.To<Illustration>();
 

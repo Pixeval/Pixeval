@@ -20,7 +20,7 @@ namespace Pixeval.Controls;
 public sealed partial class DocumentViewer
 {
     [ObservableProperty]
-    private DocumentViewerViewModel? _viewModel;
+    public partial DocumentViewerViewModel? ViewModel { get; set; }
 
     public DocumentViewer() => InitializeComponent();
 

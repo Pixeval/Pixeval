@@ -35,24 +35,22 @@ namespace Pixeval.Controls;
 
 public partial class DownloadViewViewModel : ObservableObject, IDisposable
 {
-    [ObservableProperty]
-    private DownloadListOption _currentOption;
+    [ObservableProperty] 
+    public partial DownloadListOption CurrentOption { get; set; }
 
     [ObservableProperty]
-    private ObservableCollection<DownloadItemViewModel> _filteredTasks = [];
+    public partial ObservableCollection<DownloadItemViewModel> FilteredTasks { get; set; } = [];
 
     [ObservableProperty]
-    private bool _isAnyEntrySelected;
+    public partial bool IsAnyEntrySelected { get; set; }
 
     [ObservableProperty]
-    private string _selectionLabel;
-
-    private DownloadItemViewModel[] _selectedEntries = [];
+    public partial string SelectionLabel { get; set; }
 
     public DownloadViewViewModel(ObservableCollection<IDownloadTaskGroup> source)
     {
         View = new(new ObservableCollectionAdapter<IDownloadTaskGroup, DownloadItemViewModel>(source), true);
-        _selectionLabel = DownloadPageResources.CancelSelectionButtonDefaultLabel;
+        SelectionLabel = DownloadPageResources.CancelSelectionButtonDefaultLabel;
         View.CollectionChanged += (_, _) => OnPropertyChanged(nameof(HasNoItem));
     }
 
@@ -62,12 +60,12 @@ public partial class DownloadViewViewModel : ObservableObject, IDisposable
 
     public DownloadItemViewModel[] SelectedEntries
     {
-        get => _selectedEntries;
+        get;
         set
         {
-            if (Equals(value, _selectedEntries))
+            if (Equals(value, field))
                 return;
-            _selectedEntries = value;
+            field = value;
             var count = value.Length;
             IsAnyEntrySelected = count > 0;
             SelectionLabel = IsAnyEntrySelected
@@ -75,7 +73,7 @@ public partial class DownloadViewViewModel : ObservableObject, IDisposable
                 : DownloadPageResources.CancelSelectionButtonDefaultLabel;
             OnPropertyChanged();
         }
-    }
+    } = [];
 
     public void PauseSelectedItems()
     {

@@ -23,7 +23,7 @@ using Microsoft.UI.Xaml.Controls;
 
 namespace Pixeval.Controls;
 
-public class NotifyOnLoadedComboBox : ComboBox
+public partial class NotifyOnLoadedComboBox : ComboBox
 {
     public NotifyOnLoadedComboBox()
     {

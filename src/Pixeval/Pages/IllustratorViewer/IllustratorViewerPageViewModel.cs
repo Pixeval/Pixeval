@@ -43,13 +43,13 @@ namespace Pixeval.Pages.IllustratorViewer;
 public partial class IllustratorViewerPageViewModel : UiObservableObject
 {
     [ObservableProperty]
-    private ImageSource? _avatarSource;
+    public partial ImageSource? AvatarSource { get; set; }
 
     [ObservableProperty]
-    private ImageSource? _backgroundSource;
+    public partial ImageSource? BackgroundSource { get; set; }
 
     [ObservableProperty]
-    private bool _isFollowed;
+    public partial bool IsFollowed { get; set; }
 
     public NavigationViewTag<IllustratorWorkPage, long> WorkTag { get; }
 

@@ -28,7 +28,7 @@ public static partial class ReplyEmojiHelper
 {
     private static readonly IReadOnlyDictionary<string, PixivReplyEmoji> _stringToEmojiTable = BuildQueryTable();
 
-    private static IReadOnlyDictionary<string, PixivReplyEmoji> BuildQueryTable()
+    private static ImmutableDictionary<string, PixivReplyEmoji> BuildQueryTable()
     {
         return Enum.GetValues<PixivReplyEmoji>().ToImmutableDictionary(emoji => $"({emoji.ToString().ToLowerInvariant()})");
     }

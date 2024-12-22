@@ -36,7 +36,7 @@ using Pixeval.Util;
 
 namespace Pixeval.Controls;
 
-public sealed class DownloadItemViewModel(IDownloadTaskGroup downloadTask)
+public sealed partial class DownloadItemViewModel(IDownloadTaskGroup downloadTask)
     : ThumbnailEntryViewModel<IWorkEntry>(downloadTask.DatabaseEntry.Entry), IFactory<IDownloadTaskGroup, DownloadItemViewModel>
 {
     public IDownloadTaskGroup DownloadTask { get; } = downloadTask;

@@ -30,5 +30,5 @@ public partial class BookmarkTagSelectorViewModel : ObservableObject
 {
     public ObservableCollection<string> SelectedTags { get; } = [];
 
-    [ObservableProperty] private ObservableCollection<BookmarkTag> _tokenViewSource = null!;
+    [ObservableProperty] public partial ObservableCollection<BookmarkTag> TokenViewSource { get; set; } = null!;
 }

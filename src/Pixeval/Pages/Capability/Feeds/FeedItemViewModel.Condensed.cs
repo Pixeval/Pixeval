@@ -27,10 +27,11 @@ using System;
 using Microsoft.UI;
 using Pixeval.AppManagement;
 using WinUI3Utilities;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Pixeval.Pages.Capability.Feeds;
 
-public class FeedItemCondensedViewModel(List<Feed?> entries) : AbstractFeedItemViewModel(new IFeedEntry.CondensedFeedEntry(entries))
+public partial class FeedItemCondensedViewModel(List<Feed?> entries) : AbstractFeedItemViewModel(new IFeedEntry.CondensedFeedEntry(entries))
 {
     public override void Dispose()
     {
@@ -43,23 +44,11 @@ public class FeedItemCondensedViewModel(List<Feed?> entries) : AbstractFeedItemV
 
     public override Uri PixEzUri => ThrowHelper.NotSupported<Uri>("PixEzUri is not supported for condensed feeds");
 
-    private ImageSource? _userAvatar;
+    [ObservableProperty]
+    public override partial ImageSource? UserAvatar { get; protected set; }
 
-    // It's impossible to use [ObservableProperty] here, for that generated properties lack the `override` modifier
-    // same for the ItemBackground property
-    public override ImageSource UserAvatar
-    {
-        get => _userAvatar!;
-        protected set => SetProperty(ref _userAvatar, value);
-    }
-
-    private SolidColorBrush _itemBackground = new(Colors.Transparent);
-
-    public override SolidColorBrush ItemBackground
-    {
-        get => _itemBackground;
-        set => SetProperty(ref _itemBackground, value);
-    }
+    [ObservableProperty]
+    public override partial SolidColorBrush ItemBackground { get; set; } = new(Colors.Transparent);
 
     public override string PostUsername => entries[0]?.PostUsername ?? string.Empty;
 
@@ -74,10 +63,7 @@ public class FeedItemCondensedViewModel(List<Feed?> entries) : AbstractFeedItemV
 
     public override async Task LoadAsync()
     {
-        // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
-#pragma warning disable MVVMTK0034
-        if (_userAvatar is not null)
-#pragma warning restore MVVMTK0034
+        if (UserAvatar is not null)
             return;
 
         if (entries[0]?.PostUserThumbnail is { Length: > 0 } url)

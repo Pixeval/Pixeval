@@ -42,7 +42,7 @@ public static partial class ReplyEmojiHelper
         var stringBuilder = new StringBuilder();
         for (var i = 0; i < content.Length;)
         {
-            while (!table.Keys.Contains(i) && i < content.Length)
+            while (!table.ContainsKey(i) && i < content.Length)
             {
                 _ = stringBuilder.Append(content[i++]);
             }

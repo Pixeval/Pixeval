@@ -47,15 +47,9 @@ public class AdvancedObservableCollection<[DynamicallyAccessedMembers(Dynamicall
 
     private readonly HashSet<string> _observedFilterProperties = [];
 
-    private ObservableCollection<T> _source = null!;
-
     private readonly List<T> _view = [];
 
     private IList ListView => RangedView;
-
-    private Func<T, bool>? _filter;
-
-    private Range _range = Range.All;
 
     private WeakEventListener<AdvancedObservableCollection<T>, object?, NotifyCollectionChangedEventArgs> _sourceWeakEventListener = null!;
 
@@ -86,31 +80,31 @@ public class AdvancedObservableCollection<[DynamicallyAccessedMembers(Dynamicall
     /// </summary>
     public ObservableCollection<T> Source
     {
-        get => _source;
+        get;
         set
         {
             ArgumentNullException.ThrowIfNull(value, "Null is not allowed");
 
-            if (_source == value)
+            if (field == value)
                 return;
 
-            DetachPropertyChangedHandler(_source);
-            _source = value;
-            AttachPropertyChangedHandler(_source);
+            DetachPropertyChangedHandler(field);
+            field = value;
+            AttachPropertyChangedHandler(field);
 
             _sourceWeakEventListener?.Detach();
 
             _sourceWeakEventListener = new WeakEventListener<AdvancedObservableCollection<T>, object?, NotifyCollectionChangedEventArgs>(this)
             {
                 OnEventAction = (source, changed, arg) => SourceNcc_CollectionChanged(source, arg),
-                OnDetachAction = listener => _source.CollectionChanged -= listener.OnEvent
+                OnDetachAction = listener => field.CollectionChanged -= listener.OnEvent
             };
-            _source.CollectionChanged += _sourceWeakEventListener.OnEvent;
+            field.CollectionChanged += _sourceWeakEventListener.OnEvent;
 
             HandleSourceChanged();
             OnPropertyChanged();
         }
-    }
+    } = null!;
 
     #region IList<T>
 
@@ -140,10 +134,10 @@ public class AdvancedObservableCollection<[DynamicallyAccessedMembers(Dynamicall
     IEnumerator IEnumerable.GetEnumerator() => RangedView.GetEnumerator();
 
     /// <inheritdoc />
-    public void Add(T item) => _source.Add(item);
+    public void Add(T item) => Source.Add(item);
 
     /// <inheritdoc cref="ICollection{T}.Clear"/> />
-    public void Clear() => _source.Clear();
+    public void Clear() => Source.Clear();
 
     /// <inheritdoc />
     public bool Contains(T item) => RangedView.Contains(item);
@@ -152,7 +146,7 @@ public class AdvancedObservableCollection<[DynamicallyAccessedMembers(Dynamicall
     public void CopyTo(T[] array, int arrayIndex) => RangedView.CopyTo(array, arrayIndex);
 
     /// <inheritdoc />
-    public bool Remove(T item) => _source.Remove(item);
+    public bool Remove(T item) => Source.Remove(item);
 
     /// <inheritdoc cref="ICollection{T}.Count"/> />
     public int Count => RangedView.Count;
@@ -164,10 +158,10 @@ public class AdvancedObservableCollection<[DynamicallyAccessedMembers(Dynamicall
     public int IndexOf(T item) => RangedView.IndexOf(item);
 
     /// <inheritdoc />
-    public void Insert(int index, T item) => _source.Insert(index, item);
+    public void Insert(int index, T item) => Source.Insert(index, item);
 
     /// <inheritdoc cref="IList{T}.RemoveAt"/> />
-    public void RemoveAt(int index) => _source.Remove(RangedView[index]);
+    public void RemoveAt(int index) => Source.Remove(RangedView[index]);
 
     /// <inheritdoc cref="List{T}.this[int]"/>
     public T this[int index]
@@ -179,39 +173,39 @@ public class AdvancedObservableCollection<[DynamicallyAccessedMembers(Dynamicall
     #endregion
 
     /// <inheritdoc cref="ISupportIncrementalLoading.LoadMoreItemsAsync"/>
-    public IAsyncOperation<LoadMoreItemsResult> LoadMoreItemsAsync(uint count) => (_source as ISupportIncrementalLoading)?.LoadMoreItemsAsync(count) ?? Task.FromResult(new LoadMoreItemsResult()).AsAsyncOperation();
+    public IAsyncOperation<LoadMoreItemsResult> LoadMoreItemsAsync(uint count) => (Source as ISupportIncrementalLoading)?.LoadMoreItemsAsync(count) ?? Task.FromResult(new LoadMoreItemsResult()).AsAsyncOperation();
 
     /// <inheritdoc cref="ISupportIncrementalLoading.HasMoreItems"/>
-    public bool HasMoreItems => (_source as ISupportIncrementalLoading)?.HasMoreItems ?? false;
+    public bool HasMoreItems => (Source as ISupportIncrementalLoading)?.HasMoreItems ?? false;
 
     /// <summary>
     /// Gets or sets the predicate used to filter the visible items
     /// </summary>
     public Func<T, bool>? Filter
     {
-        get => _filter;
+        get;
         set
         {
-            if (_filter == value)
+            if (field == value)
                 return;
 
-            _filter = value;
+            field = value;
             RaiseFilterChanged();
         }
     }
 
     public Range Range
     {
-        get => _range;
+        get;
         set
         {
-            if (_range.Equals(value))
+            if (field.Equals(value))
                 return;
 
-            _range = value;
+            field = value;
             OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
         }
-    }
+    } = Range.All;
 
     /// <summary>
     /// Gets SortDescriptions to sort the visible items
@@ -305,7 +299,7 @@ public class AdvancedObservableCollection<[DynamicallyAccessedMembers(Dynamicall
         if (!_liveShapingEnabled || i is not T item)
             return;
 
-        var filterResult = _filter?.Invoke(item);
+        var filterResult = Filter?.Invoke(item);
 
         if (filterResult.HasValue && _observedFilterProperties.Contains(e.PropertyName!))
         {
@@ -314,7 +308,7 @@ public class AdvancedObservableCollection<[DynamicallyAccessedMembers(Dynamicall
                 RemoveFromView(viewIndex, item);
             else if (viewIndex is -1 && filterResult.Value)
             {
-                var index = _source.IndexOf(item);
+                var index = Source.IndexOf(item);
                 _ = HandleItemAdded(index, item);
             }
         }
@@ -371,7 +365,7 @@ public class AdvancedObservableCollection<[DynamicallyAccessedMembers(Dynamicall
         else
         {
             var newIndex = 0;
-            foreach (var item in _source)
+            foreach (var item in Source)
             {
                 if (_view.IndexOf(item) is var index and not -1)
                     // 元素重复时可能出现index < newIndex
@@ -390,12 +384,12 @@ public class AdvancedObservableCollection<[DynamicallyAccessedMembers(Dynamicall
 
     public void RaiseFilterChanged()
     {
-        if (_filter is not null)
+        if (Filter is not null)
         {
             for (var index = 0; index < _view.Count; ++index)
             {
                 var item = _view[index];
-                if (_filter(item))
+                if (Filter(item))
                     continue;
 
                 RemoveFromView(index, item);
@@ -405,9 +399,9 @@ public class AdvancedObservableCollection<[DynamicallyAccessedMembers(Dynamicall
 
         var viewHash = this.ToFrozenSet();
         var viewIndex = 0;
-        for (var index = 0; index < _source.Count; ++index)
+        for (var index = 0; index < Source.Count; ++index)
         {
-            var item = _source[index];
+            var item = Source[index];
             if (viewHash.Contains(item))
             {
                 ++viewIndex;
@@ -418,7 +412,7 @@ public class AdvancedObservableCollection<[DynamicallyAccessedMembers(Dynamicall
                 ++viewIndex;
         }
 
-        FilterChanged?.Invoke(this, _filter);
+        FilterChanged?.Invoke(this, Filter);
     }
 
     private void HandleSourceChanged()
@@ -427,7 +421,7 @@ public class AdvancedObservableCollection<[DynamicallyAccessedMembers(Dynamicall
         _view.Clear();
         foreach (var item in Source)
         {
-            if (_filter is not null && !_filter(item))
+            if (Filter is not null && !Filter(item))
                 continue;
 
             if (SortDescriptions.Count is not 0)
@@ -484,7 +478,7 @@ public class AdvancedObservableCollection<[DynamicallyAccessedMembers(Dynamicall
 
     private bool HandleItemAdded(int sourceIndex, T newItem, int? viewIndex = null)
     {
-        if (_filter is not null && !_filter(newItem))
+        if (Filter is not null && !Filter(newItem))
             return false;
 
         var newViewIndex = _view.Count;
@@ -500,11 +494,11 @@ public class AdvancedObservableCollection<[DynamicallyAccessedMembers(Dynamicall
             newViewIndex = 0;
         else if (viewIndex.HasValue)
             newViewIndex = viewIndex.Value;
-        else if (_view.Count == _source.Count - 1)
+        else if (_view.Count == Source.Count - 1)
             newViewIndex = _view.Count;
         else
         {
-            for (int i = 0, j = 0; i < _source.Count; ++i)
+            for (int i = 0, j = 0; i < Source.Count; ++i)
             {
                 if (i == sourceIndex || j >= _view.Count)
                 {
@@ -512,7 +506,7 @@ public class AdvancedObservableCollection<[DynamicallyAccessedMembers(Dynamicall
                     break;
                 }
 
-                if (_view[j] == _source[i])
+                if (_view[j] == Source[i])
                     j++;
             }
         }
@@ -526,7 +520,7 @@ public class AdvancedObservableCollection<[DynamicallyAccessedMembers(Dynamicall
 
     private void HandleItemRemoved(int oldStartingIndex, T oldItem)
     {
-        if (_filter is not null && !_filter(oldItem))
+        if (Filter is not null && !Filter(oldItem))
             return;
 
         if (oldStartingIndex < 0 || oldStartingIndex >= _view.Count || !Equals(_view[oldStartingIndex], oldItem))

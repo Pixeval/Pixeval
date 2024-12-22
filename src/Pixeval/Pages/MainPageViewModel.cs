@@ -108,13 +108,13 @@ public partial class MainPageViewModel : ObservableObject
     public readonly IconElement SettingsIcon = new ImageIcon { Source = new BitmapImage(AppInfo.NavigationIconUri("settings-128x128")) };
 
     [ObservableProperty]
-    private ImageSource? _avatarSource;
+    public partial ImageSource? AvatarSource { get; set; }
 
     public string UserName => App.AppViewModel.MakoClient.Session.Name;
 
-    private readonly UIElement _owner;
+    private readonly FrameworkElement _owner;
 
-    public MainPageViewModel(UIElement owner)
+    public MainPageViewModel(FrameworkElement owner)
     {
         _owner = owner;
         DownloadAndSetAvatar();
