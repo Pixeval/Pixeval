@@ -38,7 +38,7 @@ public static class EnhancedWindowPageExtension
 
 file record NavigateParameter(object? Parameter, ulong HWnd);
 
-public class EnhancedWindowPage : EnhancedPage
+public partial class EnhancedWindowPage : EnhancedPage
 {
     protected ulong HWnd { get; private set; }
 

@@ -34,24 +34,24 @@ public partial class TagsEntryViewModel : ObservableObject, IEntry
     /// <remarks>
     /// Should be private set
     /// </remarks>
-    [ObservableProperty] private ImageSource? _thumbnail;
-
-    private FrozenSet<string>? _tagsSet;
+    [ObservableProperty]
+    public partial ImageSource? Thumbnail { get; set; }
 
     public FrozenSet<string>? TagsSet
     {
-        get => _tagsSet;
+        get;
         set
         {
-            if (value == _tagsSet)
+            if (value == field)
                 return;
-            _tagsSet = value;
+            field = value;
             Tags.Clear();
             if (value is not null)
             {
                 foreach (var tag in value)
                     Tags.Add(tag);
             }
+
             // 用来提醒AdvancedObservableCollection的Filter更新
             OnPropertyChanged(nameof(Tags));
         }
@@ -62,7 +62,8 @@ public partial class TagsEntryViewModel : ObservableObject, IEntry
     /// <remarks>
     /// Should be private set
     /// </remarks>
-    [ObservableProperty] private Illustration? _illustration;
+    [ObservableProperty]
+    public partial Illustration? Illustration { get; set; }
 
     public async Task<string?> SaveTagsAsync()
     {

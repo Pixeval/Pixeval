@@ -66,13 +66,17 @@ public partial class ImageDownloadTask : ObservableObject, IDownloadTaskBase, IP
 
     public string Destination { get; }
 
-    [ObservableProperty] private DownloadState _currentState;
+    [ObservableProperty] 
+    public partial DownloadState CurrentState { get; set; }
 
-    [ObservableProperty] private double _progressPercentage;
+    [ObservableProperty]
+    public partial double ProgressPercentage { get; set; }
 
-    [ObservableProperty] private Exception? _errorCause;
+    [ObservableProperty]
+    public partial Exception? ErrorCause { get; set; }
 
-    [ObservableProperty] private bool _isProcessing;
+    [ObservableProperty]
+    public partial bool IsProcessing { get; set; }
 
     protected CancellationTokenSource CancellationTokenSource { get; private set; } = new();
 

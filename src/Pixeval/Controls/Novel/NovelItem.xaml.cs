@@ -35,15 +35,13 @@ public sealed partial class NovelItem
 
     public NovelItem() => InitializeComponent();
 
-    private int _isPointerOver;
-
     public int IsPointerOver
     {
-        get => _isPointerOver;
+        get;
         private set
         {
-            var old = _isPointerOver;
-            _isPointerOver = value;
+            var old = field;
+            field = value;
             var currentView = ConnectedAnimationService.GetForCurrentView();
             if (IsPointerOver > 0 && old <= 0)
             {
@@ -87,7 +85,8 @@ public sealed partial class NovelItem
                 _ = anim4.TryStart(TitleTextBlock);
                 _ = anim5.TryStart(AuthorTextBlock);
                 _ = anim6.TryStart(TagsList);
-                _ = Task.Delay(100).ContinueWith(_ => NovelItemPopup.Visibility = Visibility.Collapsed, TaskScheduler.FromCurrentSynchronizationContext());
+                _ = Task.Delay(100).ContinueWith(_ => NovelItemPopup.Visibility = Visibility.Collapsed,
+                    TaskScheduler.FromCurrentSynchronizationContext());
             }
         }
     }

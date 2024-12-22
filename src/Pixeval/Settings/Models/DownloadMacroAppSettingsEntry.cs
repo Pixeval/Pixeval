@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using Pixeval.AppManagement;
 using Pixeval.Controls;
@@ -8,13 +9,13 @@ using Pixeval.Download.Macros;
 
 namespace Pixeval.Settings.Models;
 
-public class DownloadMacroAppSettingsEntry(
+public partial class DownloadMacroAppSettingsEntry(
     AppSettings appSettings)
     : StringAppSettingsEntry(appSettings, t => t.DownloadPathMacro)
 {
     public override DownloadMacroSettingsExpander Element => new() { Entry = this };
 
-    private static readonly IReadOnlyDictionary<string, string> _macroTooltips = new Dictionary<string, string>
+    private static readonly ImmutableDictionary<string, string> _macroTooltips = new Dictionary<string, string>
     {
         ["ext"] = SettingsPageResources.ExtMacroTooltip,
         ["id"] = SettingsPageResources.IdMacroTooltip,
@@ -32,7 +33,7 @@ public class DownloadMacroAppSettingsEntry(
         ["if_manga"] = SettingsPageResources.IfMangaMacroTooltip,
         ["if_gif"] = SettingsPageResources.IfGifMacroTooltip,
         ["manga_index"] = SettingsPageResources.MangaIndexMacroTooltip
-    };
+    }.ToImmutableDictionary();
 
     public static ICollection<StringRepresentableItem> AvailableMacros { get; } = MetaPathMacroAttributeHelper.GetIWorkViewModelInstances()
         .Select(m => new StringRepresentableItem(_macroTooltips[m.Name], $"@{{{(m is IPredicate ? $"{m.Name}=" : m.Name)}}}"))

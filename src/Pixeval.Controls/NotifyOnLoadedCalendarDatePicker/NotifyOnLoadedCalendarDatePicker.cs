@@ -25,7 +25,7 @@ using WinUI3Utilities;
 
 namespace Pixeval.Controls;
 
-public class NotifyOnLoadedCalendarDatePicker : CalendarDatePicker
+public partial class NotifyOnLoadedCalendarDatePicker : CalendarDatePicker
 {
     public NotifyOnLoadedCalendarDatePicker()
     {

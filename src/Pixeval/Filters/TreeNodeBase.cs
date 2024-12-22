@@ -17,7 +17,7 @@ public enum SequenceType
 }
 
 [DebuggerDisplay("({Type} ...)")]
-public record LeafSequence(SequenceType Type, IList<TreeNodeBase> Children, bool IsNot) : TreeNodeBase(IsNot), IEnumerable<TreeNodeBase>
+public partial record LeafSequence(SequenceType Type, IList<TreeNodeBase> Children, bool IsNot) : TreeNodeBase(IsNot), IEnumerable<TreeNodeBase>
 {
     public void Insert(TreeNodeBase subElem)
     {

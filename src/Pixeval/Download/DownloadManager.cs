@@ -31,7 +31,7 @@ using Pixeval.Utilities.Threading;
 
 namespace Pixeval.Download;
 
-public class DownloadManager : IDisposable
+public partial class DownloadManager : IDisposable
 {
     /// <summary>
     /// 正在排队的任务队列

@@ -37,7 +37,11 @@ public abstract class EntryViewViewModel<T, [DynamicallyAccessedMembers(Dynamica
     /// </summary>
     public abstract IDataProvider<T, TViewModel> DataProvider { get; }
 
-    public void Dispose() => DataProvider.Dispose();
+    public void Dispose()
+    {
+        GC.SuppressFinalize(this);
+        DataProvider.Dispose();
+    }
 
     public void ResetEngine(IFetchEngine<T>? newEngine, int itemsPerPage = 20, int itemLimit = -1) => DataProvider.ResetEngine(newEngine, itemsPerPage, itemLimit);
 

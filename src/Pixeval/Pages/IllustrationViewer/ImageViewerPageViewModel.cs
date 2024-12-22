@@ -54,35 +54,35 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
     private bool _upscaled;
 
     [ObservableProperty]
-    private bool _isMirrored;
+    public partial bool IsMirrored { get; set; }
 
     [ObservableProperty]
-    private bool _isPlaying = true;
+    public partial bool IsPlaying { get; set; } = true;
 
     [ObservableProperty]
-    private double _loadingProgress;
+    public partial double LoadingProgress { get; set; }
 
     [ObservableProperty]
-    private string? _loadingText;
+    public partial string? LoadingText { get; set; }
 
     [ObservableProperty]
-    private IReadOnlyList<int>? _msIntervals;
+    public partial IReadOnlyList<int>? MsIntervals { get; set; }
 
     [ObservableProperty]
-    private IReadOnlyList<Stream>? _originalImageSources;
+    public partial IReadOnlyList<Stream>? OriginalImageSources { get; set; }
 
     [ObservableProperty]
-    private int _rotationDegree;
+    public partial int RotationDegree { get; set; }
 
     [ObservableProperty]
-    private float _scale = 1;
+    public partial float Scale { get; set; } = 1;
 
     [ObservableProperty]
-    private bool _upscaling;
+    public partial bool Upscaling { get; set; }
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsFit))]
-    private ZoomableImageMode _showMode;
+    public partial ZoomableImageMode ShowMode { get; set; }
 
     private Upscaler? _upscaler;
 
@@ -98,16 +98,14 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
     /// </summary>
     public bool IsFit => ShowMode is ZoomableImageMode.Fit;
 
-    private bool _loadSuccessfully;
-
     public bool LoadSuccessfully
     {
-        get => _loadSuccessfully;
+        get;
         private set
         {
-            if (value == _loadSuccessfully)
+            if (value == field)
                 return;
-            _loadSuccessfully = value;
+            field = value;
             OnPropertyChanged();
         }
     }
