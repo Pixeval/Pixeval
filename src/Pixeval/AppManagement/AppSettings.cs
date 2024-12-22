@@ -223,17 +223,17 @@ public partial record AppSettings() : IWindowSettings
 
     public string[] PixivImageNameResolver { get; set; } =
     [
-        "210.140.92.144",
-        "210.140.92.141",
-        "210.140.92.142",
-        "210.140.92.143"
+        "210.140.139.134",
+        "210.140.139.135",
+        "210.140.139.136",
+        "210.140.139.137"
     ];
 
     public string[] PixivImageNameResolver2 { get; set; } =
     [
-        "210.140.92.143",
-        "210.140.92.141",
-        "210.140.92.142"
+        "210.140.139.135",
+        "210.140.139.136",
+        "210.140.139.137"
     ];
 
     public string TagsManagerWorkingPath { get; set; } = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures, Environment.SpecialFolderOption.Create);
