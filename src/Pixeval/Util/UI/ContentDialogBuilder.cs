@@ -28,7 +28,7 @@ namespace Pixeval.Util.UI;
 
 public static class ContentDialogBuilder
 {
-    public static IAsyncOperation<ContentDialogResult> CreateOkCancelAsync(this UIElement owner, object? title, object? content, string? okButtonContent = null, string? cancelButtonContent = null)
+    public static IAsyncOperation<ContentDialogResult> CreateOkCancelAsync(this FrameworkElement owner, object? title, object? content, string? okButtonContent = null, string? cancelButtonContent = null)
     {
         return owner.ShowContentDialogAsync(
             title,
@@ -37,7 +37,7 @@ public static class ContentDialogBuilder
             cancelButtonContent ?? MessageContentDialogResources.CancelButtonContent);
     }
 
-    public static IAsyncOperation<ContentDialogResult> CreateAcknowledgementAsync(this UIElement owner, object? title, object? content, string? okButtonContent = null)
+    public static IAsyncOperation<ContentDialogResult> CreateAcknowledgementAsync(this FrameworkElement owner, object? title, object? content, string? okButtonContent = null)
     {
         return owner.ShowContentDialogAsync(
             title,
@@ -47,7 +47,7 @@ public static class ContentDialogBuilder
 
     public static IAsyncOperation<ContentDialogResult> CreateOkCancelAsync(this ulong hWnd, object? title, object? content, string? okButtonContent = null, string? cancelButtonContent = null)
     {
-        return WindowFactory.ForkedWindows[hWnd].Content.ShowContentDialogAsync(
+        return WindowFactory.ForkedWindows[hWnd].Content.To<FrameworkElement>().ShowContentDialogAsync(
             title,
             content,
             okButtonContent ?? MessageContentDialogResources.OkButtonContent,
@@ -56,7 +56,7 @@ public static class ContentDialogBuilder
 
     public static IAsyncOperation<ContentDialogResult> CreateAcknowledgementAsync(this ulong hWnd, object? title, object? content, string? okButtonContent = null)
     {
-        return WindowFactory.ForkedWindows[hWnd].Content.ShowContentDialogAsync(
+        return WindowFactory.ForkedWindows[hWnd].Content.To<FrameworkElement>().ShowContentDialogAsync(
             title,
             content,
             okButtonContent ?? MessageContentDialogResources.OkButtonContent);
@@ -64,12 +64,17 @@ public static class ContentDialogBuilder
 
     public static IAsyncOperation<ContentDialogResult> ShowContentDialogAsync(this ulong hWnd, object? title, object? content, string primaryButtonText = "", string secondaryButtonText = "", string closeButtonText = "")
     {
-        return WindowFactory.ForkedWindows[hWnd].Content.ShowContentDialogAsync(title, content, primaryButtonText, secondaryButtonText, closeButtonText);
+        return WindowFactory.ForkedWindows[hWnd].Content.To<FrameworkElement>().ShowContentDialogAsync(
+            title,
+            content,
+            primaryButtonText,
+            secondaryButtonText,
+            closeButtonText);
     }
 
     public static ContentDialog CreateContentDialog(this ulong hWnd, object? title, object? content, string primaryButtonText = "", string secondaryButtonText = "", string closeButtonText = "")
     {
-        var cd = WindowFactory.ForkedWindows[hWnd].Content.CreateContentDialog();
+        var cd = WindowFactory.ForkedWindows[hWnd].Content.To<FrameworkElement>().CreateContentDialog();
         cd.Title = title;
         cd.Content = content;
         cd.PrimaryButtonText = primaryButtonText;

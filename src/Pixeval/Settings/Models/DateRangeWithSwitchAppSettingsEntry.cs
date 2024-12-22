@@ -4,7 +4,7 @@ using Pixeval.Controls.Settings;
 
 namespace Pixeval.Settings.Models;
 
-public class DateRangeWithSwitchAppSettingsEntry(
+public partial class DateRangeWithSwitchAppSettingsEntry(
     AppSettings appSettings)
     : BoolAppSettingsEntry(appSettings, t => t.UsePreciseRangeForSearch)
 {

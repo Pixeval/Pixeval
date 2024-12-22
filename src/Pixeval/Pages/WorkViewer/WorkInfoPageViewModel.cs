@@ -39,7 +39,7 @@ public partial class WorkInfoPageViewModel<T>(T entry) : ObservableObject where 
     public string? IllustrationDimensionText => Entry is Illustration illustration ? $"{illustration.Width} x {illustration.Height}" : null;
 
     [ObservableProperty]
-    private ImageSource? _avatarSource;
+    public partial ImageSource? AvatarSource { get; set; }
 
     public async Task LoadAvatarAsync()
     {

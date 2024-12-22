@@ -60,10 +60,7 @@ public class ObservableHashSet<T>
     /// comparing values in the set, or null to use the default <see cref="IEqualityComparer{T}" />
     /// implementation for the set type.
     /// </param>
-    public ObservableHashSet(IEqualityComparer<T> comparer)
-    {
-        _set = new HashSet<T>(comparer);
-    }
+    public ObservableHashSet(IEqualityComparer<T> comparer) => _set = new HashSet<T>(comparer);
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ObservableHashSet{T}" /> class
@@ -89,10 +86,7 @@ public class ObservableHashSet<T>
     /// comparing values in the set, or null to use the default <see cref="IEqualityComparer{T}" />
     /// implementation for the set type.
     /// </param>
-    public ObservableHashSet(IEnumerable<T> collection, IEqualityComparer<T> comparer)
-    {
-        _set = new HashSet<T>(collection, comparer);
-    }
+    public ObservableHashSet(IEnumerable<T> collection, IEqualityComparer<T> comparer) => _set = new HashSet<T>(collection, comparer);
 
     /// <summary>
     /// Gets the <see cref="IEqualityComparer{T}" /> object that is used to determine equality for the values in the set.

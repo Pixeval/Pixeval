@@ -10,22 +10,18 @@ public partial class ZoomableImage
 {
     private Point _lastPoint;
     private DateTime _lastTime;
-    private double _centerX;
-    private double _centerY;
-    private double _originalImageWidth;
-    private double _originalImageHeight;
 
     /// <summary>
     /// 图片中心点在<see cref="CanvasControl"/>的X坐标
     /// </summary>
     private double ImageCenterX
     {
-        get => _centerX;
+        get;
         set
         {
-            if (_centerX == value)
+            if (field == value)
                 return;
-            _centerX = value;
+            field = value;
             var actualWidth = CanvasControl.ActualWidth;
             var bigger = actualWidth < ImageActualWidth;
             if (ImagePositionLeft < 0 && ImagePositionRight < actualWidth)
@@ -51,12 +47,12 @@ public partial class ZoomableImage
     /// </summary>
     private double ImageCenterY
     {
-        get => _centerY;
+        get;
         set
         {
-            if (_centerY == value)
+            if (field == value)
                 return;
-            _centerY = value;
+            field = value;
             var actualHeight = CanvasControl.ActualHeight;
             var bigger = actualHeight < ImageActualHeight;
             if (ImagePositionTop < 0 && ImagePositionBottom < actualHeight)
@@ -143,10 +139,10 @@ public partial class ZoomableImage
     /// </summary>
     private double OriginalImageWidth
     {
-        get => _originalImageWidth;
+        get;
         set
         {
-            _originalImageWidth = value;
+            field = value;
             OnPropertyChanged(nameof(ImageWidth));
             OnPropertyChanged(nameof(ImagePositionLeft));
             OnPropertyChanged(nameof(ImagePositionTop));
@@ -160,10 +156,10 @@ public partial class ZoomableImage
     /// </summary>
     private double OriginalImageHeight
     {
-        get => _originalImageHeight;
+        get;
         set
         {
-            _originalImageHeight = value;
+            field = value;
             OnPropertyChanged(nameof(ImageHeight));
             OnPropertyChanged(nameof(ImagePositionLeft));
             OnPropertyChanged(nameof(ImagePositionTop));

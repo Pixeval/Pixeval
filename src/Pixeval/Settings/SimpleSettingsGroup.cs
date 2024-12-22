@@ -3,7 +3,7 @@ using Pixeval.Pages.Misc;
 
 namespace Pixeval.Settings;
 
-public class SimpleSettingsGroup(SettingsEntryCategory tag) : List<ISettingsEntry>, ISettingsGroup
+public partial class SimpleSettingsGroup(SettingsEntryCategory tag) : List<ISettingsEntry>, ISettingsGroup
 {
     public string Header { get; } = SettingsEntryCategoryExtension.GetResource(tag);
 

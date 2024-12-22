@@ -7,7 +7,7 @@ using Pixeval.Collections;
 
 namespace Pixeval.Pages.Tags;
 
-public class TagsEntryDataProvider : ObservableObject, IDisposable
+public partial class TagsEntryDataProvider : ObservableObject, IDisposable
 {
     public TagsEntryDataProvider() => View.ObserveFilterProperty(nameof(TagsEntryViewModel.Tags));
 
@@ -21,6 +21,7 @@ public class TagsEntryDataProvider : ObservableObject, IDisposable
 
     public void Dispose()
     {
+        GC.SuppressFinalize(this);
         View.Clear();
     }
 

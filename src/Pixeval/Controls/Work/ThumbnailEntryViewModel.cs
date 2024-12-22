@@ -50,16 +50,14 @@ public abstract class ThumbnailEntryViewModel<T>(T entry) : EntryViewModel<T>(en
     /// </summary>
     public Stream? ThumbnailStream { get; set; }
 
-    private SharedRef<ImageSource>? _thumbnailSourceRef;
-
     public SharedRef<ImageSource>? ThumbnailSourceRef
     {
-        get => _thumbnailSourceRef;
+        get;
         set
         {
-            if (Equals(_thumbnailSourceRef, value))
+            if (Equals(field, value))
                 return;
-            _thumbnailSourceRef = value;
+            field = value;
             OnPropertyChanged(nameof(ThumbnailSource));
         }
     }

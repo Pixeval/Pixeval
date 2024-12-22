@@ -36,7 +36,7 @@ namespace Pixeval.Pages.Capability.Feeds;
 public partial class FeedItemSparseViewModel(Feed entry) : AbstractFeedItemViewModel(new IFeedEntry.SparseFeedEntry(entry)), IFactory<Feed, FeedItemSparseViewModel>
 {
     [ObservableProperty]
-    private TimelineAxisPlacement _placement;
+    public partial TimelineAxisPlacement Placement { get; set; }
 
     public override string PostUsername => entry.PostUsername ?? string.Empty;
 
@@ -48,23 +48,11 @@ public partial class FeedItemSparseViewModel(Feed entry) : AbstractFeedItemViewM
             ? entry.PostDate.ToString("hh:mm tt")
             : entry.PostDate.ToString("M");
 
-    private ImageSource? _userAvatar;
+    [ObservableProperty]
+    public override partial ImageSource? UserAvatar { get; protected set; }
 
-    // It's impossible to use [ObservableProperty] here, for that the generated properties lack the `override` modifier
-    // same for the ItemBackground property
-    public override ImageSource UserAvatar
-    {
-        get => _userAvatar!;
-        protected set => SetProperty(ref _userAvatar, value);
-    }
-
-    private SolidColorBrush _itemBackground = new(Colors.Transparent);
-
-    public override SolidColorBrush ItemBackground
-    {
-        get => _itemBackground;
-        set => SetProperty(ref _itemBackground, value);
-    }
+    [ObservableProperty]
+    public override partial SolidColorBrush ItemBackground { get; set; } = new(Colors.Transparent);
 
     public static FeedItemSparseViewModel CreateInstance(Feed entry)
     {
@@ -75,10 +63,7 @@ public partial class FeedItemSparseViewModel(Feed entry) : AbstractFeedItemViewM
     {
         Placement = TimelineAxisPlacement.Left; // index % 2 == 0 ? TimelineAxisPlacement.Left : TimelineAxisPlacement.Right;
 
-        // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
-#pragma warning disable MVVMTK0034
-        if (_userAvatar is not null)
-#pragma warning restore MVVMTK0034
+        if (UserAvatar is not null)
             return;
 
         if (entry.PostUserThumbnail is { } url)

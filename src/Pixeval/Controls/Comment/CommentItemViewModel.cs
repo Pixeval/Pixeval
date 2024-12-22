@@ -69,11 +69,11 @@ public partial class CommentItemViewModel(Comment comment, SimpleWorkType type, 
     public long CommentId => Comment.Id;
 
     [ObservableProperty]
-    private ImageSource _avatarSource = null!;
+    public partial ImageSource AvatarSource { get; set; } = null!;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(RepliesIsNotNull), nameof(RepliesCount))]
-    private ObservableCollection<CommentItemViewModel>? _replies;
+    public partial ObservableCollection<CommentItemViewModel>? Replies { get; set; }
 
     public bool RepliesIsNotNull => Replies is not null;
 
@@ -140,6 +140,7 @@ public partial class CommentItemViewModel(Comment comment, SimpleWorkType type, 
 
     public void Dispose()
     {
+        GC.SuppressFinalize(this);
         Replies?.ForEach(r => r.Dispose());
     }
 }

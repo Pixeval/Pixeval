@@ -34,7 +34,7 @@ using WinUI3Utilities;
 
 namespace Pixeval.Download.Models;
 
-public class MangaDownloadTaskGroup : DownloadTaskGroup, IImageDownloadTaskGroup
+public partial class MangaDownloadTaskGroup : DownloadTaskGroup, IImageDownloadTaskGroup
 {
     public Illustration Entry => DatabaseEntry.Entry.To<Illustration>();
 

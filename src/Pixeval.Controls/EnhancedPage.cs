@@ -24,7 +24,7 @@ using Microsoft.UI.Xaml.Navigation;
 
 namespace Pixeval.Controls;
 
-public class EnhancedPage : Page
+public partial class EnhancedPage : Page
 {
     public int ActivationCount { get; private set; }
 

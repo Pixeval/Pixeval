@@ -30,8 +30,6 @@ using Pixeval.CoreApi.Model;
 using Pixeval.Util.UI;
 using WinUI3Utilities;
 
-#pragma warning disable CS9107 // Parameter is captured into the state of the enclosing type and its value is also passed to the base constructor. The value might be captured by the base class as well.
-
 namespace Pixeval.Pages.Capability.Feeds;
 
 static file class FeedItemColors
@@ -66,7 +64,7 @@ public abstract class AbstractFeedItemViewModel(IFeedEntry entry) : EntryViewMod
         _ => ThrowHelper.ArgumentOutOfRange<FeedType, SolidColorBrush?>(default)
     };
 
-    public abstract ImageSource UserAvatar { get; protected set; }
+    public abstract ImageSource? UserAvatar { get; protected set; }
 
     public abstract SolidColorBrush ItemBackground { get; set; }
 

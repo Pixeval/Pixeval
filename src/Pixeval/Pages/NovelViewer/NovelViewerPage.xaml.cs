@@ -15,32 +15,28 @@ namespace Pixeval.Pages.NovelViewer;
 
 public sealed partial class NovelViewerPage
 {
-    private bool _pointerNotInArea = true;
-
-    private bool _timeUp;
-
     private NovelViewerPageViewModel _viewModel = null!;
 
     public NovelViewerPage() => InitializeComponent();
 
     public bool PointerNotInArea
     {
-        get => _pointerNotInArea;
+        get;
         set
         {
-            _pointerNotInArea = value;
-            if (IsLoaded && _pointerNotInArea && TimeUp)
+            field = value;
+            if (IsLoaded && field && TimeUp)
                 BottomCommandSection.Translation = new Vector3(0, 120, 0);
         }
-    }
+    } = true;
 
     public bool TimeUp
     {
-        get => _timeUp;
+        get;
         set
         {
-            _timeUp = value;
-            if (IsLoaded && _timeUp && PointerNotInArea)
+            field = value;
+            if (IsLoaded && field && PointerNotInArea)
                 BottomCommandSection.Translation = new Vector3(0, 120, 0);
         }
     }

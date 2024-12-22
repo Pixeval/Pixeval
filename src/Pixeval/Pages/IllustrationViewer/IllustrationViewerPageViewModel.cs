@@ -38,25 +38,25 @@ namespace Pixeval.Pages.IllustrationViewer;
 public partial class IllustrationViewerPageViewModel : DetailedUiObservableObject, IDisposable
 {
     [ObservableProperty]
-    private bool _isFullScreen;
+    public partial bool IsFullScreen { get; set; }
 
     [ObservableProperty]
-    private bool _showPixevalIcon = true;
+    public partial bool ShowPixevalIcon { get; set; } = true;
 
     [ObservableProperty]
-    private string _additionalText = string.Empty;
+    public partial string AdditionalText { get; set; } = "";
 
     [ObservableProperty]
-    private bool _additionalTextBlockVisible = true;
+    public partial bool AdditionalTextBlockVisible { get; set; } = true;
 
     [ObservableProperty]
-    private bool _upscalerProgressBarVisible;
+    public partial bool UpscalerProgressBarVisible { get; set; }
 
     [ObservableProperty]
-    private int _upscalerProgress;
+    public partial int UpscalerProgress { get; set; }
 
     [ObservableProperty]
-    private string? _upscalerProgressText;
+    public partial string? UpscalerProgressText { get; set; }
 
     /// <summary>
     /// 
@@ -102,6 +102,7 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
 
     public void Dispose()
     {
+        GC.SuppressFinalize(this);
         foreach (var illustrationViewModel in Illustrations)
             illustrationViewModel.UnloadThumbnail(this);
         Pages = null!;
@@ -123,7 +124,7 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
         new(default) { Content = EntryViewerPageResources.CommentsTabContent };
 
     public NavigationViewTag<RelatedWorksPage, long> RelatedWorksTag { get; } =
-        new(default) { Content = EntryViewerPageResources.RelatedWorksTabContent };
+        new(0) { Content = EntryViewerPageResources.RelatedWorksTabContent };
 
     #region Current相关
 
@@ -147,19 +148,19 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
     /// </summary>
     public int CurrentIllustrationIndex
     {
-        get => _currentIllustrationIndex;
+        get;
         set
         {
             if (value is -1)
                 return;
-            if (value == _currentIllustrationIndex)
+            if (value == field)
                 return;
 
-            var oldValue = _currentIllustrationIndex;
+            var oldValue = field;
             // ReSharper disable once ConditionalAccessQualifierIsNonNullableAccordingToAPIContract
             var oldTag = Pages?[CurrentPageIndex].Id ?? 0;
 
-            _currentIllustrationIndex = value;
+            field = value;
             // 这里可以触发总页数的更新
             Pages = CurrentIllustration.GetMangaIllustrationViewModels().ToArray();
             // 保证_pages里所有的IllustrationViewModel都是生成的，从而删除的时候一律DisposeForce
@@ -180,7 +181,7 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
             OnDetailedPropertyChanged(oldValue, value, oldTag, CurrentPage.Id);
             OnPropertyChanged(nameof(CurrentIllustration));
         }
-    }
+    } = -1;
 
     /// <summary>
     /// 当前插画的页面索引
@@ -209,9 +210,6 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
 
     public int PageCount => Pages.Length;
 
-    /// <inheritdoc cref="CurrentIllustrationIndex"/>
-    private int _currentIllustrationIndex = -1;
-
     /// <inheritdoc cref="CurrentPageIndex"/>
     private int _currentPageIndex = -1;
 
@@ -225,33 +223,29 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
     /// </summary>
     public IllustrationItemViewModel[] Pages
     {
-        get => _pages;
+        get;
         set
         {
-            if (_pages == value)
+            if (field == value)
                 return;
-            _pages?.ForEach(i => i.Dispose());
-            _pages = value;
-            if (_pages != null!)
+            field?.ForEach(i => i.Dispose());
+            field = value;
+            if (field != null!)
                 OnPropertyChanged(nameof(PageCount));
         }
-    }
+    } = null!;
 
     public ImageViewerPageViewModel[] Images
     {
-        get => _images;
+        get;
         set
         {
-            if (_images == value)
+            if (field == value)
                 return;
-            _images?.ForEach(i => i.Dispose());
-            _images = value;
+            field?.ForEach(i => i.Dispose());
+            field = value;
         }
-    }
-
-    private IllustrationItemViewModel[] _pages = null!;
-
-    private ImageViewerPageViewModel[] _images = null!;
+    } = null!;
 
     #endregion
 

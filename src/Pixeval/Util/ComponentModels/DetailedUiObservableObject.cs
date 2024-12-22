@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 
 namespace Pixeval.Util.ComponentModels;
 
-public class DetailedUiObservableObject(ulong hWnd) : UiObservableObject(hWnd), INotifyDetailedPropertyChanging, INotifyDetailedPropertyChanged
+public partial class DetailedUiObservableObject(ulong hWnd) : UiObservableObject(hWnd), INotifyDetailedPropertyChanging, INotifyDetailedPropertyChanged
 {
     public event DetailedPropertyChangedEventHandler? DetailedPropertyChanged;
 
