@@ -32,7 +32,6 @@ using Pixeval.AppManagement;
 using Pixeval.Controls;
 using Pixeval.Controls.Windowing;
 using Pixeval.Pages.Login;
-using WinUI3Utilities;
 using System.Threading.Tasks;
 using FluentIcons.WinUI;
 using Microsoft.Extensions.DependencyInjection;
@@ -41,6 +40,7 @@ using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using Pixeval.Controls.DialogContent;
 using Pixeval.CoreApi.Model;
+using WinUI3Utilities;
 
 #if DEBUG
 using System.Diagnostics;
@@ -101,7 +101,7 @@ public partial class App
         async void OnLoaded(object s, RoutedEventArgs _)
         {
             if (!AppViewModel.AppDebugTrace.ExitedSuccessfully
-                && await w.Content.ShowContentDialogAsync(CheckExitedContentDialogResources.ContentDialogTitle,
+                && await w.Content.To<FrameworkElement>().ShowContentDialogAsync(CheckExitedContentDialogResources.ContentDialogTitle,
                     new CheckExitedDialog(),
                     CheckExitedContentDialogResources.ContentDialogPrimaryButtonText,
                     "",

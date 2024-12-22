@@ -120,7 +120,7 @@ public class SuggestionStateMachine
         Suggestions.AddRange(newItems);
     }
 
-    private static IReadOnlySet<SettingsEntryAttribute> MatchSettings(string keyword)
+    private static HashSet<SettingsEntryAttribute> MatchSettings(string keyword)
     {
         var pinInResult = _settingEntriesTreeSearcher.Search(keyword).ToHashSet();
         var nonPinInResult = SettingsEntryAttribute.LazyValues.Value.Where(it => it.LocalizedResourceHeader.Contains(keyword));

@@ -45,8 +45,6 @@ public abstract partial class SortableEntryViewViewModel<T, [DynamicallyAccessed
     [NotifyPropertyChangedFor(nameof(SelectionLabel))]
     private TViewModel[] _selectedEntries = [];
 
-    private Func<IWorkViewModel, bool>? _filter;
-
     IReadOnlyCollection<IWorkViewModel> ISortableEntryViewViewModel.SelectedEntries
     {
         get => SelectedEntries;
@@ -74,12 +72,12 @@ public abstract partial class SortableEntryViewViewModel<T, [DynamicallyAccessed
 
     public Func<IWorkViewModel, bool>? Filter
     {
-        get => _filter;
+        get;
         set
         {
-            if (Equals(value, _filter))
+            if (Equals(value, field))
                 return;
-            _filter = value;
+            field = value;
             OnFilterChanged();
             OnPropertyChanged();
         }

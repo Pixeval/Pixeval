@@ -32,7 +32,7 @@ using WinUI3Utilities;
 
 namespace Pixeval.Pages.Capability;
 
-public class BookmarksPageViewModel(long userId) : ObservableObject, IDisposable
+public partial class BookmarksPageViewModel(long userId) : ObservableObject, IDisposable
 {
     public long UserId { get; } = userId;
 
@@ -68,6 +68,7 @@ public class BookmarksPageViewModel(long userId) : ObservableObject, IDisposable
 
     public void Dispose()
     {
+        GC.SuppressFinalize(this);
         _bookmarksIdLoadingCancellationTokenSource.Cancel();
     }
 

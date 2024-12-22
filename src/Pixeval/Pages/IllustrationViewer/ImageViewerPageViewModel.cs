@@ -98,16 +98,14 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
     /// </summary>
     public bool IsFit => ShowMode is ZoomableImageMode.Fit;
 
-    private bool _loadSuccessfully;
-
     public bool LoadSuccessfully
     {
-        get => _loadSuccessfully;
+        get;
         private set
         {
-            if (value == _loadSuccessfully)
+            if (value == field)
                 return;
-            _loadSuccessfully = value;
+            field = value;
             OnPropertyChanged();
         }
     }

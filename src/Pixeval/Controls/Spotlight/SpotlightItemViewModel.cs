@@ -24,7 +24,7 @@ using Pixeval.Util;
 
 namespace Pixeval.Controls;
 
-public class SpotlightItemViewModel : ThumbnailEntryViewModel<Spotlight>, IFactory<Spotlight, SpotlightItemViewModel>
+public partial class SpotlightItemViewModel : ThumbnailEntryViewModel<Spotlight>, IFactory<Spotlight, SpotlightItemViewModel>
 {
     public static SpotlightItemViewModel CreateInstance(Spotlight entry) => new(entry);
 

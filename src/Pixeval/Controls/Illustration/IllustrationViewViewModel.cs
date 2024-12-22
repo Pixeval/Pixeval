@@ -25,7 +25,7 @@ using IllustrationViewDataProvider = Pixeval.Controls.SharableViewDataProvider<
 
 namespace Pixeval.Controls;
 
-public sealed class IllustrationViewViewModel : SortableEntryViewViewModel<Illustration, IllustrationItemViewModel>
+public sealed partial class IllustrationViewViewModel : SortableEntryViewViewModel<Illustration, IllustrationItemViewModel>
 {
     public IllustrationViewViewModel(IllustrationViewViewModel viewModel) : this(viewModel.DataProvider.CloneRef())
     {

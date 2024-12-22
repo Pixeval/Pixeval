@@ -47,8 +47,6 @@ public partial class DownloadViewViewModel : ObservableObject, IDisposable
     [ObservableProperty]
     private string _selectionLabel;
 
-    private DownloadItemViewModel[] _selectedEntries = [];
-
     public DownloadViewViewModel(ObservableCollection<IDownloadTaskGroup> source)
     {
         View = new(new ObservableCollectionAdapter<IDownloadTaskGroup, DownloadItemViewModel>(source), true);
@@ -62,12 +60,12 @@ public partial class DownloadViewViewModel : ObservableObject, IDisposable
 
     public DownloadItemViewModel[] SelectedEntries
     {
-        get => _selectedEntries;
+        get;
         set
         {
-            if (Equals(value, _selectedEntries))
+            if (Equals(value, field))
                 return;
-            _selectedEntries = value;
+            field = value;
             var count = value.Length;
             IsAnyEntrySelected = count > 0;
             SelectionLabel = IsAnyEntrySelected
@@ -75,7 +73,7 @@ public partial class DownloadViewViewModel : ObservableObject, IDisposable
                 : DownloadPageResources.CancelSelectionButtonDefaultLabel;
             OnPropertyChanged();
         }
-    }
+    } = [];
 
     public void PauseSelectedItems()
     {

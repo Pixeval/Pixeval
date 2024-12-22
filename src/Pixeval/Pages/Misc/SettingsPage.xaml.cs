@@ -35,6 +35,9 @@ using WinUI3Utilities;
 
 namespace Pixeval.Pages.Misc;
 
+/// <summary>
+/// todo
+/// </summary>
 [INotifyPropertyChanged]
 public sealed partial class SettingsPage : IScrollViewHost, IDisposable
 {

@@ -58,13 +58,11 @@ public partial class FeedItemSparseViewModel(Feed entry) : AbstractFeedItemViewM
         protected set => SetProperty(ref _userAvatar, value);
     }
 
-    private SolidColorBrush _itemBackground = new(Colors.Transparent);
-
     public override SolidColorBrush ItemBackground
     {
-        get => _itemBackground;
-        set => SetProperty(ref _itemBackground, value);
-    }
+        get;
+        set => SetProperty(ref field, value);
+    } = new(Colors.Transparent);
 
     public static FeedItemSparseViewModel CreateInstance(Feed entry)
     {

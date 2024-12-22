@@ -60,15 +60,20 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
 
     public AppSettings AppSettings => App.AppViewModel.AppSettings;
 
-    [ObservableProperty] private bool _checkingUpdate;
+    [ObservableProperty]
+    public partial bool CheckingUpdate { get; set; }
 
-    [ObservableProperty] private bool _downloadingUpdate;
+    [ObservableProperty]
+    public partial bool DownloadingUpdate { get; set; }
 
-    [ObservableProperty] private double _downloadingUpdateProgress;
+    [ObservableProperty]
+    public partial double DownloadingUpdateProgress { get; set; }
 
-    [ObservableProperty] private string? _updateMessage;
+    [ObservableProperty]
+    public partial string? UpdateMessage { get; set; }
 
-    [ObservableProperty] private bool _expandExpander;
+    [ObservableProperty]
+    public partial bool ExpandExpander { get; set; }
 
     private CancellationTokenSource? _cancellationTokenSource;
 

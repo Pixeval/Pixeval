@@ -30,7 +30,7 @@ using Symbol = FluentIcons.Common.Symbol;
 
 namespace Pixeval.Settings.Models;
 
-public class ProxyAppSettingsEntry : EnumAppSettingsEntry
+public partial class ProxyAppSettingsEntry : EnumAppSettingsEntry
 {
     public ProxyAppSettingsEntry(AppSettings appSettings) : base(appSettings, t => t.ProxyType, ProxyTypeExtension.GetItems())
     {

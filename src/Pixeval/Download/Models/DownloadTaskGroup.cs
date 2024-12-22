@@ -176,9 +176,12 @@ public abstract partial class DownloadTaskGroup(DownloadHistoryEntry entry) : Ob
     /// <summary>
     /// 本下载组是否处于<see cref="DownloadState.Pending"/>状态
     /// </summary>
-    [ObservableProperty][NotifyPropertyChangedFor(nameof(CurrentState))] private bool _isPending;
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(CurrentState))]
+    public partial bool IsPending { get; set; }
 
-    [ObservableProperty] private bool _isProcessing;
+    [ObservableProperty] 
+    public partial bool IsProcessing { get; set; }
 
     public DownloadState CurrentState
     {
