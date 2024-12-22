@@ -19,6 +19,9 @@ using Pixeval.Pages.IllustratorViewer;
 
 namespace Pixeval.Controls;
 
+/// <summary>
+/// todo
+/// </summary>
 [ObservableObject]
 public sealed partial class WorkView : IEntryView<ISortableEntryViewViewModel>
 {
@@ -51,14 +54,16 @@ public sealed partial class WorkView : IEntryView<ISortableEntryViewViewModel>
 
     public AdvancedItemsView AdvancedItemsView => ItemsView;
 
-    public ScrollView ScrollView => ItemsView.ScrollView;
+    public ScrollView ScrollView => AdvancedItemsView.ScrollView;
 
     /// <summary>
     /// 在调用<see cref="ResetEngine"/>前为<see langword="null"/>
     /// </summary>
-    [ObservableProperty] private ISortableEntryViewViewModel _viewModel = null!;
+    [ObservableProperty]
+    public partial ISortableEntryViewViewModel ViewModel { get; set; } = null!;
 
-    [ObservableProperty] private SimpleWorkType _type;
+    [ObservableProperty]
+    public partial SimpleWorkType Type { get; set; }
 
     private async void WorkItem_OnViewModelChanged(FrameworkElement sender, IWorkViewModel viewModel)
     {
@@ -128,30 +133,30 @@ public sealed partial class WorkView : IEntryView<ISortableEntryViewViewModel>
                     Type = SimpleWorkType.IllustAndManga;
                     ViewModel?.Dispose();
                     ViewModel = null!;
-                    ItemsView.MinItemWidth = DesiredWidth;
-                    ItemsView.MinItemHeight = DesiredHeight;
-                    ItemsView.LayoutType = LayoutType;
-                    ItemsView.ItemTemplate = this.GetResource<DataTemplate>("IllustrationItemDataTemplate");
+                    AdvancedItemsView.MinItemWidth = DesiredWidth;
+                    AdvancedItemsView.MinItemHeight = DesiredHeight;
+                    AdvancedItemsView.LayoutType = LayoutType;
+                    AdvancedItemsView.ItemTemplate = this.GetResource<DataTemplate>("IllustrationItemDataTemplate");
                     ViewModel = new IllustrationViewViewModel();
                     OnPropertyChanged(nameof(ViewModel));
                     ViewModel.ResetEngine(newEngine, itemsPerPage, itemLimit);
                     ViewModelChanged?.Invoke(this, ViewModel);
-                    ItemsView.ItemsSource = ViewModel.View;
+                    AdvancedItemsView.ItemsSource = ViewModel.View;
                 }
                 else if (type == typeof(Novel))
                 {
                     Type = SimpleWorkType.Novel;
                     ViewModel?.Dispose();
                     ViewModel = null!;
-                    ItemsView.MinItemWidth = 350;
-                    ItemsView.MinItemHeight = 200;
-                    ItemsView.LayoutType = ItemsViewLayoutType.Grid;
-                    ItemsView.ItemTemplate = this.GetResource<DataTemplate>("NovelItemDataTemplate");
+                    AdvancedItemsView.MinItemWidth = 350;
+                    AdvancedItemsView.MinItemHeight = 200;
+                    AdvancedItemsView.LayoutType = ItemsViewLayoutType.Grid;
+                    AdvancedItemsView.ItemTemplate = this.GetResource<DataTemplate>("NovelItemDataTemplate");
                     ViewModel = new NovelViewViewModel();
                     OnPropertyChanged(nameof(ViewModel));
                     ViewModel.ResetEngine(newEngine, itemsPerPage, itemLimit);
                     ViewModelChanged?.Invoke(this, ViewModel);
-                    ItemsView.ItemsSource = ViewModel.View;
+                    AdvancedItemsView.ItemsSource = ViewModel.View;
                 }
                 else
                     ThrowHelper.ArgumentOutOfRange(ViewModel);

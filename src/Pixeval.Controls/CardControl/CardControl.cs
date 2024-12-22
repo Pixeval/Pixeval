@@ -22,7 +22,7 @@ using Microsoft.UI.Xaml.Controls;
 
 namespace Pixeval.Controls;
 
-public class CardControl : ContentControl
+public partial class CardControl : ContentControl
 {
     public CardControl()
     {

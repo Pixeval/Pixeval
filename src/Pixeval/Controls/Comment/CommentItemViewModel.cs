@@ -140,6 +140,7 @@ public partial class CommentItemViewModel(Comment comment, SimpleWorkType type, 
 
     public void Dispose()
     {
+        GC.SuppressFinalize(this);
         Replies?.ForEach(r => r.Dispose());
     }
 }

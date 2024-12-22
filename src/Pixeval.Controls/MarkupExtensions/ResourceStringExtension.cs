@@ -24,7 +24,7 @@ using Microsoft.Windows.ApplicationModel.Resources;
 namespace Pixeval.Controls;
 
 [MarkupExtensionReturnType(ReturnType = typeof(string))]
-public class ResourceStringExtension : MarkupExtension
+public partial class ResourceStringExtension : MarkupExtension
 {
     public string ResourceFile { get; set; } = "";
 

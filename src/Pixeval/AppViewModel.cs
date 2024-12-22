@@ -22,6 +22,7 @@ using System;
 using System.Threading.Tasks;
 using LiteDB;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.UI.Xaml;
 using Pixeval.AppManagement;
 using Pixeval.Controls.Windowing;
 using Pixeval.CoreApi;
@@ -31,10 +32,11 @@ using Pixeval.Download;
 using Pixeval.Logging;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
+using WinUI3Utilities;
 
 namespace Pixeval;
 
-public class AppViewModel(App app) : IDisposable
+public partial class AppViewModel(App app) : IDisposable
 {
     private bool _activatedByProtocol;
 
@@ -80,7 +82,7 @@ public class AppViewModel(App app) : IDisposable
 
     public async Task ShowExceptionDialogAsync(Exception e)
     {
-        _ = await WindowFactory.RootWindow.Content.CreateAcknowledgementAsync(MiscResources.ExceptionEncountered, e.ToString());
+        _ = await WindowFactory.RootWindow.Content.To<FrameworkElement>().CreateAcknowledgementAsync(MiscResources.ExceptionEncountered, e.ToString());
     }
 
     public async Task InitializeAsync(bool activatedByProtocol)

@@ -30,7 +30,7 @@ using WinUI3Utilities;
 
 namespace Pixeval.Pages.Capability.Feeds;
 
-public class FeedItemCondensedViewModel(List<Feed?> entries) : AbstractFeedItemViewModel(new IFeedEntry.CondensedFeedEntry(entries))
+public partial class FeedItemCondensedViewModel(List<Feed?> entries) : AbstractFeedItemViewModel(new IFeedEntry.CondensedFeedEntry(entries))
 {
     public override void Dispose()
     {
@@ -53,13 +53,11 @@ public class FeedItemCondensedViewModel(List<Feed?> entries) : AbstractFeedItemV
         protected set => SetProperty(ref _userAvatar, value);
     }
 
-    private SolidColorBrush _itemBackground = new(Colors.Transparent);
-
     public override SolidColorBrush ItemBackground
     {
-        get => _itemBackground;
-        set => SetProperty(ref _itemBackground, value);
-    }
+        get;
+        set => SetProperty(ref field, value);
+    } = new(Colors.Transparent);
 
     public override string PostUsername => entries[0]?.PostUsername ?? string.Empty;
 

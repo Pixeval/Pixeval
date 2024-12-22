@@ -48,6 +48,7 @@ public partial class PixivAuthenticationProxyServer : IDisposable
 
     public void Dispose()
     {
+        GC.SuppressFinalize(this);
         _certificate?.Dispose();
         _tcpListener?.Stop();
     }

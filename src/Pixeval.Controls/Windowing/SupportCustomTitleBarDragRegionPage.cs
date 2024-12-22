@@ -26,7 +26,7 @@ using WinUI3Utilities;
 
 namespace Pixeval.Controls;
 
-public class SupportCustomTitleBarDragRegionPage : EnhancedWindowPage
+public partial class SupportCustomTitleBarDragRegionPage : EnhancedWindowPage
 {
     /// <summary>
     /// Informs the bearer to refresh the drag region.

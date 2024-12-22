@@ -35,7 +35,7 @@ using WinUI3Utilities;
 
 namespace Pixeval.Download.Models;
 
-public class NovelDownloadTaskGroup : DownloadTaskGroup
+public partial class NovelDownloadTaskGroup : DownloadTaskGroup
 {
     public Novel Entry => DatabaseEntry.Entry.To<Novel>();
 

@@ -92,6 +92,7 @@ public partial class NovelViewerPageViewModel : DetailedUiObservableObject, IDis
 
     public void Dispose()
     {
+        GC.SuppressFinalize(this);
         foreach (var novelViewModel in Novels)
             novelViewModel.UnloadThumbnail(this);
         ViewModelSource?.Dispose();
@@ -111,19 +112,15 @@ public partial class NovelViewerPageViewModel : DetailedUiObservableObject, IDis
 
     #region Current相关
 
-    private int _pageCount;
-
-    private int _currentPageIndex = -1;
-
     /// <summary>
     /// setter只用于绑定反向更新
     /// </summary>
     public int PageCount
     {
-        get => _pageCount;
+        get;
         set
         {
-            _pageCount = value;
+            field = value;
             OnButtonPropertiesChanged();
         }
     }
@@ -133,13 +130,13 @@ public partial class NovelViewerPageViewModel : DetailedUiObservableObject, IDis
     /// </summary>
     public int CurrentPageIndex
     {
-        get => _currentPageIndex;
+        get;
         set
         {
-            _currentPageIndex = value;
+            field = value;
             OnButtonPropertiesChanged();
         }
-    }
+    } = -1;
 
     /// <summary>
     /// 插画列表
@@ -156,18 +153,18 @@ public partial class NovelViewerPageViewModel : DetailedUiObservableObject, IDis
     /// </summary>
     public int CurrentNovelIndex
     {
-        get => _currentNovelIndex;
+        get;
         set
         {
             if (value is -1)
                 return;
-            if (value == _currentNovelIndex)
+            if (value == field)
                 return;
 
-            var oldValue = _currentNovelIndex;
+            var oldValue = field;
             // ReSharper disable once ConditionalAccessQualifierIsNonNullableAccordingToAPIContract
 
-            _currentNovelIndex = value;
+            field = value;
             CurrentPageIndex = 0;
 
             NovelInfoTag.Parameter = CurrentNovel.Entry;
@@ -177,10 +174,7 @@ public partial class NovelViewerPageViewModel : DetailedUiObservableObject, IDis
             OnPropertyChanged(nameof(CurrentNovel));
             OnPropertyChanged(nameof(NovelId));
         }
-    }
-
-    /// <inheritdoc cref="CurrentNovelIndex"/>
-    private int _currentNovelIndex = -1;
+    } = -1;
 
     private void OnButtonPropertiesChanged()
     {

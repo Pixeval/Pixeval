@@ -28,12 +28,10 @@ using Pixeval.CoreApi.Model;
 
 namespace Pixeval.Controls;
 
-public class SimpleViewDataProvider<T, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] TViewModel> : ObservableObject, IDataProvider<T, TViewModel>
+public partial class SimpleViewDataProvider<T, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] TViewModel> : ObservableObject, IDataProvider<T, TViewModel>
     where T : class, IIdEntry
     where TViewModel : class, IFactory<T, TViewModel>, IDisposable
 {
-    private IFetchEngine<T>? _fetchEngine;
-
     public AdvancedObservableCollection<TViewModel> View { get; } = [];
 
     public IncrementalLoadingCollection<FetchEngineIncrementalSource<T, TViewModel>, TViewModel> Source
@@ -44,13 +42,13 @@ public class SimpleViewDataProvider<T, [DynamicallyAccessedMembers(DynamicallyAc
 
     public IFetchEngine<T>? FetchEngine
     {
-        get => _fetchEngine;
+        get;
         protected set
         {
-            if (value == _fetchEngine)
+            if (value == field)
                 return;
-            _fetchEngine?.EngineHandle.Cancel();
-            _fetchEngine = value;
+            field?.EngineHandle.Cancel();
+            field = value;
         }
     }
 

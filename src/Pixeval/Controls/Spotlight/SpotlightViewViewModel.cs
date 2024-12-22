@@ -25,7 +25,7 @@ using SpotlightViewDataProvider = Pixeval.Controls.SimpleViewDataProvider<
 
 namespace Pixeval.Controls;
 
-public sealed class SpotlightViewViewModel : EntryViewViewModel<Spotlight, SpotlightItemViewModel>
+public sealed partial class SpotlightViewViewModel : EntryViewViewModel<Spotlight, SpotlightItemViewModel>
 {
     public override SpotlightViewDataProvider DataProvider { get; } = new();
 

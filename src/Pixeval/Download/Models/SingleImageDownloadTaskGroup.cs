@@ -37,7 +37,7 @@ using WinUI3Utilities;
 
 namespace Pixeval.Download.Models;
 
-public class SingleImageDownloadTaskGroup : ImageDownloadTask, IImageDownloadTaskGroup
+public partial class SingleImageDownloadTaskGroup : ImageDownloadTask, IImageDownloadTaskGroup
 {
     public DownloadHistoryEntry DatabaseEntry { get; }
 

@@ -112,9 +112,9 @@ public partial class MainPageViewModel : ObservableObject
 
     public string UserName => App.AppViewModel.MakoClient.Session.Name;
 
-    private readonly UIElement _owner;
+    private readonly FrameworkElement _owner;
 
-    public MainPageViewModel(UIElement owner)
+    public MainPageViewModel(FrameworkElement owner)
     {
         _owner = owner;
         DownloadAndSetAvatar();

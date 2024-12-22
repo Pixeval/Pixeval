@@ -15,14 +15,12 @@ namespace Pixeval.Controls.FlyoutContent;
 [DependencyProperty<SimpleWorkType>("Type", DependencyPropertyDefaultValue.Default, nameof(OnTypeChanged))]
 public sealed partial class BookmarkTagSelector : UserControl
 {
-    private bool _isPrivate;
-
     public bool IsPrivate
     {
-        get => _isPrivate;
+        get;
         set
         {
-            _isPrivate = value;
+            field = value;
             ResetSource();
         }
     }

@@ -30,28 +30,32 @@ public sealed partial class Token : ObservableObject, IEquatable<Token>, IDeepCl
 {
     public static readonly Token Empty = new("", false, false);
 
-    [ObservableProperty] private bool _caseSensitive;
+    [ObservableProperty]
+    public partial bool CaseSensitive { get; set; }
 
-    [ObservableProperty] private bool _isRegularExpression;
+    [ObservableProperty]
+    public partial bool IsRegularExpression { get; set; }
 
-    [ObservableProperty] private string _tokenContent;
+    [ObservableProperty]
+    public partial string TokenContent { get; set; }
 
-    [ObservableProperty] private string _tooltip;
+    [ObservableProperty]
+    public partial string Tooltip { get; set; }
 
     public Token(string tokenContent, bool caseSensitive, bool isRegularExpression, string tooltip = "")
     {
-        _tokenContent = tokenContent;
-        _caseSensitive = caseSensitive;
-        _isRegularExpression = isRegularExpression;
-        _tooltip = tooltip;
+        TokenContent = tokenContent;
+        CaseSensitive = caseSensitive;
+        IsRegularExpression = isRegularExpression;
+        Tooltip = tooltip;
         if (IsRegularExpression && !tokenContent.IsValidRegexPattern())
             ThrowHelper.Argument(tokenContent);
     }
 
     public Token()
     {
-        _tokenContent = "";
-        _tooltip = "";
+        TokenContent = "";
+        Tooltip = "";
     }
 
     /// <summary>
