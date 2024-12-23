@@ -393,8 +393,7 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
     {
         var cts = _cancellationTokenSource;
         _cancellationTokenSource = null;
-        cts?.Cancel();
-        cts?.Dispose();
+        cts?.TryCancelDispose();
     }
 
     public void Dispose()

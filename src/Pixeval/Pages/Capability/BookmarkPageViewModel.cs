@@ -28,6 +28,7 @@ using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Model;
 using Pixeval.Util;
+using Pixeval.Utilities;
 using WinUI3Utilities;
 
 namespace Pixeval.Pages.Capability;
@@ -69,7 +70,7 @@ public partial class BookmarksPageViewModel(long userId) : ObservableObject, IDi
     public void Dispose()
     {
         GC.SuppressFinalize(this);
-        _bookmarksIdLoadingCancellationTokenSource.Cancel();
+        _bookmarksIdLoadingCancellationTokenSource.TryCancelDispose();
     }
 
     public event EventHandler<string>? TagBookmarksIncrementallyLoaded;

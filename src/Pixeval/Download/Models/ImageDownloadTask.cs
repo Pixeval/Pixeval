@@ -29,6 +29,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using Pixeval.AppManagement;
 using Pixeval.Util;
 using Pixeval.Util.IO;
+using Pixeval.Utilities;
 
 namespace Pixeval.Download.Models;
 
@@ -208,7 +209,7 @@ public partial class ImageDownloadTask : ObservableObject, IDownloadTaskBase, IP
         if (CurrentState is not (DownloadState.Queued or DownloadState.Running))
             return;
         IsProcessing = true;
-        CancellationTokenSource.Cancel();
+        CancellationTokenSource.TryCancel();
         CurrentState = DownloadState.Paused;
         DownloadPaused?.Invoke(this);
         IsProcessing = false;
@@ -234,7 +235,7 @@ public partial class ImageDownloadTask : ObservableObject, IDownloadTaskBase, IP
         if (CurrentState is not (DownloadState.Paused or DownloadState.Pending or DownloadState.Running or DownloadState.Queued))
             return;
         IsProcessing = true;
-        CancellationTokenSource.Cancel();
+        CancellationTokenSource.TryCancel();
         CurrentState = DownloadState.Cancelled;
         DownloadCancelled?.Invoke(this);
         IsProcessing = false;

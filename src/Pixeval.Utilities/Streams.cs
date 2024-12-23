@@ -22,7 +22,6 @@ using System;
 using System.Collections.Generic;
 using System.IO.Compression;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.IO;
 
@@ -73,21 +72,15 @@ public static class Streams
         try
         {
             using var archive = new ZipArchive(ms, ZipArchiveMode.Read);
-            // return the result of Select directly will cause the enumeration to be delayed
-            // which will lead the program into ObjectDisposedException since the archive object
-            // will be disposed after the execution of ReadZipArchiveEntries
-            // So we must consume the archive.Entries.Select right here, prevent it from escaping
-            // to the outside of the stackframe
-            // TODO: 顺序是否会乱？
-            var result = await Task.WhenAll(
-                archive.Entries.Select(async entry =>
-                {
-                    await using var stream = entry.Open();
-                    var rms = _recyclableMemoryStreamManager.GetStream();
-                    await stream.CopyToAsync(rms);
-                    ms.Position = 0;
-                    return ms;
-                }));
+            var result = (MemoryStream[])[];
+            await Parallel.ForAsync(0, archive.Entries.Count, new ParallelOptions(), async (i, token) =>
+            {
+                await using var stream = archive.Entries[i].Open();
+                var rms = _recyclableMemoryStreamManager.GetStream();
+                await stream.CopyToAsync(rms, token);
+                rms.Position = 0;
+                result[i] = rms;
+            });
             if (dispose)
                 await ms.DisposeAsync();
             return result;
@@ -105,7 +98,7 @@ public static class Streams
 
         var zipArchive = new ZipArchive(zipStream, ZipArchiveMode.Create, true);
 
-        for (var i = 0; i < streams.Count; i++)
+        for (var i = 0; i < streams.Count; ++i)
         {
             // ReSharper disable once AccessToDisposedClosure
             var entry = zipArchive.CreateEntry(names[i]);

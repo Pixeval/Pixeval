@@ -84,16 +84,16 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
     [ObservableProperty]
     public partial float Scale { get; set; } = 1;
 
-    [ObservableProperty]
-    public partial bool Upscaling { get; set; }
+    //[ObservableProperty]
+    //public partial bool Upscaling { get; set; }
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsFit))]
     public partial ZoomableImageMode ShowMode { get; set; }
 
-    private Upscaler? _upscaler;
+    //private Upscaler? _upscaler;
 
-    public Channel<string> UpscalerMessageChannel { get; } = Channel.CreateUnbounded<string>();
+    //public Channel<string> UpscalerMessageChannel { get; } = Channel.CreateUnbounded<string>();
 
     /// <summary>
     /// 由于多窗口，可能在加载图片后改变设置，所以此处缓存原图设置
@@ -232,7 +232,7 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
             _isOriginal = App.AppViewModel.AppSettings.BrowseOriginalImage;
 
             var ugoiraUrl = metadata?.LargeUrl;
-            object? source;
+            object? source = null;
             if (ugoiraUrl is not null && _isOriginal)
             {
                 var urls = await IllustrationViewModel.UgoiraOriginalUrlsAsync();
@@ -241,8 +241,14 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
                 var startProgress = 0d;
                 foreach (var url in urls)
                 {
-                    var stream = await DownloadUrlAsync(url, startProgress, ratio);
-                    list.Add(stream);
+                    if (await DownloadUrlAsync(url, startProgress, ratio) is { } stream)
+                        list.Add(stream);
+                    else
+                    {
+                        list = null;
+                        break;
+                    }
+
                     startProgress += 100 * ratio;
                 }
 
@@ -253,7 +259,8 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
                 if (ugoiraUrl is null)
                 {
                     ugoiraUrl = IllustrationViewModel.StaticUrl(_isOriginal);
-                    source = (IReadOnlyList<Stream>)[await DownloadUrlAsync(ugoiraUrl)];
+                    if (await DownloadUrlAsync(ugoiraUrl) is { } s)
+                        source = (IReadOnlyList<Stream>) [s];
                 }
                 else
                 {
@@ -262,8 +269,11 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
 
             }
 
-            MsIntervals = metadata?.Delays.ToArray();
-            OriginalStreamsSource = source;
+            if (source is not null)
+            {
+                MsIntervals = metadata?.Delays.ToArray();
+                OriginalStreamsSource = source;
+            }
 
             LoadSuccessfully = true;
 
@@ -272,9 +282,11 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
 
             return;
 
-            async Task<Stream> DownloadUrlAsync(string url, double startProgress = 0, double ratio = 1)
+            async Task<Stream?> DownloadUrlAsync(string url, double startProgress = 0, double ratio = 1)
             {
                 AdvancePhase(LoadingPhase.CheckingCache);
+                if (ImageLoadingCancellationTokenSource.IsCancellationRequested)
+                    return null;
                 return await App.AppViewModel.AppServiceProvider.GetRequiredService<MemoryCache>()
                     .GetStreamFromMemoryCacheAsync(
                         url,
@@ -327,8 +339,8 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
 
     private async void UpscaleCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
-        _upscaled = true;
-        UpscaleCommand.NotifyCanExecuteChanged();
+        //_upscaled = true;
+        //UpscaleCommand.NotifyCanExecuteChanged();
         //_upscaler ??= new Upscaler(new(OriginalStream!.Single(), 
         //    App.AppViewModel.AppSettings.UpscalerModel,
         //    App.AppViewModel.AppSettings.UpscalerScaleRatio,
@@ -370,8 +382,8 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
         SetAsBackgroundCommand.CanExecuteRequested += IsNotUgoiraAndLoadingCompletedCanExecuteRequested;
         SetAsBackgroundCommand.ExecuteRequested += SetAsBackgroundCommandOnExecuteRequested;
 
-        UpscaleCommand.CanExecuteRequested += IsUpscaleCommandCanExecutedRequested;
-        UpscaleCommand.ExecuteRequested += UpscaleCommandOnExecuteRequested;
+        //UpscaleCommand.CanExecuteRequested += IsUpscaleCommandCanExecutedRequested;
+        //UpscaleCommand.ExecuteRequested += UpscaleCommandOnExecuteRequested;
     }
 
     private void UpdateCommandCanExecute()
@@ -384,7 +396,7 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
         RotateCounterclockwiseCommand.NotifyCanExecuteChanged();
         MirrorCommand.NotifyCanExecuteChanged();
         ShareCommand.NotifyCanExecuteChanged();
-        UpscaleCommand.NotifyCanExecuteChanged();
+        //UpscaleCommand.NotifyCanExecuteChanged();
     }
 
     private void IsUpscaleCommandCanExecutedRequested(XamlUICommand _, CanExecuteRequestedEventArgs args) => 
@@ -427,14 +439,13 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
 
     private void DisposeInternal()
     {
-        ImageLoadingCancellationTokenSource.Cancel();
-        ImageLoadingCancellationTokenSource.Dispose();
+        ImageLoadingCancellationTokenSource.TryCancelDispose();
         IllustrationViewModel.UnloadThumbnail();
 
         OriginalStreamsSource = null;
         
-        _upscaler?.DisposeAsync();
-        UpscalerMessageChannel.Writer.Complete();
+        //_upscaler?.DisposeAsync();
+        //UpscalerMessageChannel.Writer.Complete();
 
         LoadSuccessfully = false;
     }

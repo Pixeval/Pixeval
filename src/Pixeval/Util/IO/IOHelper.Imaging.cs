@@ -165,6 +165,7 @@ public static partial class IoHelper
 
         var images = new Image[streams.Count];
         var options = new ParallelOptions();
+        // TODO: 能否用DispatcherQueue实现提示进度？
         if (progress is not null)
             options.TaskScheduler = TaskScheduler.FromCurrentSynchronizationContext();
         await Parallel.ForAsync(0, streams.Count, options, async (i, token) =>

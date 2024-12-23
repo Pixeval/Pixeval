@@ -57,7 +57,7 @@ public static class Functions
         using var cancellationToken = new CancellationTokenSource();
         if (await Task.WhenAny(task, Task.Delay(timeoutMills, cancellationToken.Token)).ConfigureAwait(false) == task)
         {
-            await cancellationToken.CancelAsync();
+            await cancellationToken.TryCancelAsync();
             return Result<TResult>.AsSuccess(task.Result);
         }
 

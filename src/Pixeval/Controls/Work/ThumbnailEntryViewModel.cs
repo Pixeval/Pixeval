@@ -29,6 +29,7 @@ using Microsoft.UI.Xaml.Media;
 using Pixeval.CoreApi.Model;
 using Pixeval.Util.IO;
 using Pixeval.Util.IO.Caching;
+using Pixeval.Utilities;
 
 namespace Pixeval.Controls;
 
@@ -84,7 +85,7 @@ public abstract partial class ThumbnailEntryViewModel<T>(T entry) : EntryViewMod
             return;
         if (LoadingThumbnail)
         {
-            LoadingThumbnailCancellationTokenSource.Cancel();
+            LoadingThumbnailCancellationTokenSource.TryCancel();
             LoadingThumbnail = false;
         }
 
@@ -96,8 +97,7 @@ public abstract partial class ThumbnailEntryViewModel<T>(T entry) : EntryViewMod
     /// </summary>
     public sealed override void Dispose()
     {
-        LoadingThumbnailCancellationTokenSource.Cancel();
-        LoadingThumbnailCancellationTokenSource.Dispose();
+        LoadingThumbnailCancellationTokenSource.TryCancelDispose();
         ThumbnailSource = null;
         DisposeOverride();
         GC.SuppressFinalize(this);

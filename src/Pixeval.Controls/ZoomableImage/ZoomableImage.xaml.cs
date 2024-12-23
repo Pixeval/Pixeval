@@ -25,6 +25,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Pixeval.Utilities;
 using WinUI3Utilities.Attributes;
 
 namespace Pixeval.Controls;
@@ -57,7 +58,7 @@ public sealed partial class ZoomableImage : UserControl
     {
         InitializeComponent();
 
-        _ = Task.Run(ZoomableImageMain, _token.Token);
+        _ = Task.Run(ZoomableImageMain);
         ProtectedCursor = InputSystemCursor.Create(InputSystemCursorShape.SizeAll);
     }
 
@@ -76,7 +77,7 @@ public sealed partial class ZoomableImage : UserControl
             // 刚开始时图片可能为空，等待图片加载
             if (_frames.Count is 0)
             {
-                await Task.Delay(20, _token.Token);
+                await Task.Delay(20);
                 // 尝试触发加载资源
                 CanvasControl.Invalidate();
             }
@@ -103,11 +104,11 @@ public sealed partial class ZoomableImage : UserControl
                             if (delay < 5)
                                 continue;
                         }
-                        await Task.Delay(10, _token.Token);
+                        await Task.Delay(10);
                     }
                     else
                     {
-                        await Task.Delay(10, _token.Token);
+                        await Task.Delay(10);
                         var end = DateTime.Now;
                         startTime += end - start;
                     }
@@ -123,10 +124,9 @@ public sealed partial class ZoomableImage : UserControl
         IsDisposed = true;
         CanvasControl.Draw -= CanvasControlOnDraw;
         CanvasControl.Unloaded -= CanvasControlOnUnloaded;
-        _token.Cancel();
+        _token.TryCancelDispose();
         foreach (var frame in _frames)
             frame.Dispose();
         _frames.Clear();
-        _token.Dispose();
     }
 }

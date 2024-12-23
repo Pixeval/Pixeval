@@ -39,6 +39,7 @@ using QuestPDF.Infrastructure;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.Extensions.DependencyInjection;
 using Pixeval.Util.IO.Caching;
+using Pixeval.Utilities;
 
 namespace Pixeval.Controls;
 
@@ -254,8 +255,7 @@ public partial class DocumentViewerViewModel(NovelContent novelContent) : Observ
 
     public void Dispose()
     {
-        LoadingCancellationTokenSource.Cancel();
-        LoadingCancellationTokenSource.Dispose();
+        LoadingCancellationTokenSource.TryCancelDispose();
         IllustrationImages.Clear();
         UploadedImages.Clear();
         foreach (var (_, value) in IllustrationStreams)

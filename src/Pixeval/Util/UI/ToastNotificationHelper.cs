@@ -33,9 +33,9 @@ public static class ToastNotificationHelper
     public static ToastContentBuilder AddInlineImage(
         this ToastContentBuilder builder,
         string uri,
-        string? alternateText = default,
-        bool? addImageQuery = default,
-        AdaptiveImageCrop? hintCrop = default)
+        string? alternateText = null,
+        bool? addImageQuery = null,
+        AdaptiveImageCrop? hintCrop = null)
     {
         var inlineImage = new AdaptiveImage
         {
@@ -47,12 +47,12 @@ public static class ToastNotificationHelper
             inlineImage.HintCrop = hintCrop.Value;
         }
 
-        if (alternateText != default)
+        if (alternateText != null)
         {
             inlineImage.AlternateText = alternateText;
         }
 
-        if (addImageQuery != default)
+        if (addImageQuery != null)
         {
             inlineImage.AddImageQuery = addImageQuery;
         }
@@ -63,9 +63,9 @@ public static class ToastNotificationHelper
     public static ToastContentBuilder AddAppLogoOverride(
         this ToastContentBuilder builder,
         string uri,
-        ToastGenericAppLogoCrop? hintCrop = default,
-        string? alternateText = default,
-        bool? addImageQuery = default)
+        ToastGenericAppLogoCrop? hintCrop = null,
+        string? alternateText = null,
+        bool? addImageQuery = null)
     {
         var appLogoOverrideUri = new ToastGenericAppLogo
         {

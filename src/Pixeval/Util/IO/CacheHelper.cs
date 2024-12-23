@@ -92,6 +92,7 @@ public static class CacheHelper
         }
         catch (TaskCanceledException)
         {
+            // ignored
         }
         catch (Exception e)
         {
@@ -118,13 +119,20 @@ public static class CacheHelper
         int? desiredWidth = null,
         CancellationToken cancellationToken = default)
     {
-        if (memoryCache.TryGet(key, out ImageSource? result))
+        if (memoryCache.TryGet(key, out var result))
             return result;
 
+        Task<ImageSource?>? imageSourcesTask;
         await _mutex.WaitAsync(cancellationToken);
-        if (!_tasks.TryGetValue(key, out var imageSourcesTask))
-            imageSourcesTask = _tasks[key] = MemoryCacheTask();
-        _mutex.Release();
+        try
+        {
+            if (!_tasks.TryGetValue(key, out imageSourcesTask))
+                imageSourcesTask = _tasks[key] = MemoryCacheTask();
+        }
+        finally
+        {
+            _mutex.Release();
+        }
 
         // TODO: 能否让Task和CancellationToken任一完成就返回？
         var bitmapImages = await imageSourcesTask.To<Task<ImageSource?>>();
@@ -132,8 +140,14 @@ public static class CacheHelper
         if (bitmapImages is not null)
         {
             await _mutex.WaitAsync(cancellationToken);
-            memoryCache.CacheOrIncrease(key, bitmapImages);
-            _mutex.Release();
+            try
+            {
+                memoryCache.CacheOrIncrease(key, bitmapImages);
+            }
+            finally
+            {
+                _mutex.Release();
+            }
         }
 
         return bitmapImages;
@@ -168,7 +182,10 @@ public static class CacheHelper
             Result<Stream>.Success(var s))
         {
             if (useFileCache)
+            {
                 await fileCache.AddAsync(key, s, TimeSpan.FromDays(1));
+                s.Position = 0;
+            }
             return s;
         }
 
