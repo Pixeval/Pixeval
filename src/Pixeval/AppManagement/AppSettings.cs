@@ -71,7 +71,7 @@ public partial record AppSettings() : IWindowSettings
     public MainPageTabItem DefaultSelectedTabItem { get; set; }
 
     [SettingsEntry(Symbol.Rename, nameof(DownloadPathMacroEntryHeader), nameof(DownloadPathMacroEntryDescription))]
-    public string DownloadPathMacro { get; set; } = GetSpecialFolder() + @"\@{if_manga=[@{artist_name}] @{title}}\[@{artist_name}] @{id}@{if_manga=p@{manga_index}}@{ext}";
+    public string DownloadPathMacro { get; set; } = GetSpecialFolder() + @"\@{if_pic_set=[@{artist_name}] @{title}}\[@{artist_name}] @{id}@{if_pic_set=p@{pic_set_index}}@{ext}";
 
     public UgoiraDownloadFormat UgoiraDownloadFormat { get; set; } = UgoiraDownloadFormat.WebPLossless;
 

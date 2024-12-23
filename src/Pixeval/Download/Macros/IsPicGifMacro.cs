@@ -1,9 +1,8 @@
-#region Copyright
-
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2024 Pixeval/IsIllustrationMacro.cs
+// Copyright (c) 2023 Pixeval/IsUgoiraMacro.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -17,7 +16,6 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 #endregion
 
 using Pixeval.Controls;
@@ -26,11 +24,14 @@ using Pixeval.Download.MacroParser;
 namespace Pixeval.Download.Macros;
 
 [MetaPathMacro<IWorkViewModel>]
-public class IsIllustrationMacro : IPredicate<IWorkViewModel>
+public class IsPicGifMacro : IPredicate<IWorkViewModel>
 {
     public bool IsNot { get; set; }
 
-    public string Name => "if_illust";
+    public string Name => "if_pic_gif";
 
-    public bool Match(IWorkViewModel context) => context is IllustrationItemViewModel;
+    public bool Match(IWorkViewModel context)
+    {
+        return context is IllustrationItemViewModel { IsUgoira: true };
+    }
 }
