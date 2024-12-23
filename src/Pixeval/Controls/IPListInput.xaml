@@ -7,11 +7,11 @@
     xmlns:fluent="using:FluentIcons.WinUI"
     xmlns:local="using:Pixeval.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    MinWidth="200"
     Orientation="Vertical"
     mc:Ignorable="d">
     <TextBlock Margin="10" Text="{x:Bind Header}" />
     <AutoSuggestBox
-        x:Uid="/IPListInput/AddItemAutoSuggestBox"
         QueryIcon="{fluent:SymbolIcon Symbol=Add,
                                       FontSize={StaticResource SmallIconFontSize}}"
         QuerySubmitted="AddItem"

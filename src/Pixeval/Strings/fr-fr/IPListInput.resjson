@@ -1,5 +1,4 @@
 {
     "InvalidIPFormat": "IP format invalid",
-    "DuplicatesWithExistingIP": "IP addresse existante",
-    "AddItemAutoSuggestBox/PlaceholderText": "Entrer une addresse IP et cliquer '+' pour ajouter"
+    "DuplicatesWithExistingIP": "IP addresse existante"
 }
