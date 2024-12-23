@@ -191,12 +191,9 @@
   "PublishYearMacroTooltip": "L\u0027année de publication",
   "PublishMonthMacroTooltip": "Le mois de publication",
   "PublishDayMacroTooltip": "Le jour de publication",
-  "IfMangaMacroTooltip": "Ce marco sera remplacé par son argument s\u0027il s\u0027agit d\u0027un manga",
   "IfR18MacroTooltip": "Ce marco sera remplacé par son argument s\u0027il s\u0027agit d\u0027un art restreint (R18 ou R18G)",
   "IfR18GMacroTooltip": "Ce marco sera remplacé par son argument s\u0027il s\u0027agit d\u0027un art R18G",
   "IfAiMacroTooltip": "Ce marco sera remplacé par son argument s\u0027il s\u0027agit d\u0027un art généré par l\u0027IA",
-  "IfIllustMacroTooltip": "Ce marco sera remplacé par son argument s\u0027il s\u0027agit d\u0027une illustration",
   "IfNovelMacroTooltip": "Ce marco sera remplacé par son argument s\u0027il s\u0027agit d\u0027un roman",
-  "IfGifMacroTooltip": "Ce marco sera remplacé par son argument s\u0027il s\u0027agit d\u0027une  image animée",
-  "MangaIndexMacroTooltip": "Ce macro sera remplacé par l\u0027indice de l\u0027illustration courante dans la collection (n-ième illust.). Il faut l\u0027utiliser avec le macro \u0027@{if_manga=} et sur les noms de fichier"
+  "PicSetIndexMacroTooltip": "Ce macro sera remplacé par l\u0027indice de l\u0027illustration courante dans la collection (n-ième illust.). Il faut l\u0027utiliser avec le macro \u0027@{if_pic_set=} et sur les noms de fichier"
 }

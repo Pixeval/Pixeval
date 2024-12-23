@@ -28,11 +28,12 @@ public partial class DownloadMacroAppSettingsEntry(
         ["if_r18"] = SettingsPageResources.IfR18MacroTooltip,
         ["if_r18g"] = SettingsPageResources.IfR18GMacroTooltip,
         ["if_ai"] = SettingsPageResources.IfAiMacroTooltip,
-        ["if_illust"] = SettingsPageResources.IfIllustMacroTooltip,
         ["if_novel"] = SettingsPageResources.IfNovelMacroTooltip,
-        ["if_manga"] = SettingsPageResources.IfMangaMacroTooltip,
-        ["if_gif"] = SettingsPageResources.IfGifMacroTooltip,
-        ["manga_index"] = SettingsPageResources.MangaIndexMacroTooltip
+        ["if_pic_one"] = SettingsPageResources.IfPicOneMacroTooltip,
+        ["if_pic_set"] = SettingsPageResources.IfPicSetMacroTooltip,
+        ["if_pic_gif"] = SettingsPageResources.IfPicGifMacroTooltip,
+        ["if_pic_all"] = SettingsPageResources.IfPicAllMacroTooltip,
+        ["pic_set_index"] = SettingsPageResources.PicSetIndexMacroTooltip
     }.ToImmutableDictionary();
 
     public static ICollection<StringRepresentableItem> AvailableMacros { get; } = MetaPathMacroAttributeHelper.GetIWorkViewModelInstances()
