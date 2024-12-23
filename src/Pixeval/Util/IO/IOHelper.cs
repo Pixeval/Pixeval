@@ -22,7 +22,6 @@ using System;
 using System.Buffers;
 using System.Collections.Generic;
 using System.IO;
-using System.IO.Compression;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -115,74 +114,6 @@ public static partial class IoHelper
             }
         };
         return httpClient.SendAsync(httpRequestMessage);
-    }
-
-    public static async Task<MemoryStream> CopyToMemoryStreamAsync(this FileStream source, bool dispose)
-    {
-        var s = _recyclableMemoryStreamManager.GetStream();
-        await source.CopyToAsync(s);
-        s.Position = 0;
-        if (dispose)
-            await source.DisposeAsync();
-        return s;
-    }
-
-    public static async Task<MemoryStream[]> ReadZipAsync(Stream zipStream, bool dispose)
-    {
-        Stream s;
-        if (zipStream is FileStream fs)
-        {
-            s = await fs.CopyToMemoryStreamAsync(dispose);
-            dispose = true;
-        }
-        else
-        {
-            s = zipStream;
-        }
-
-        using var archive = new ZipArchive(s, ZipArchiveMode.Read);
-        // return the result of Select directly will cause the enumeration to be delayed
-        // which will lead the program into ObjectDisposedException since the archive object
-        // will be disposed after the execution of ReadZipArchiveEntries
-        // So we must consume the archive.Entries.Select right here, prevent it from escaping
-        // to the outside of the stackframe
-        MemoryStream[] result = await Task.WhenAll(
-            archive.Entries.Select(async entry =>
-            {
-                await using var stream = entry.Open();
-                var ms = _recyclableMemoryStreamManager.GetStream();
-                await stream.CopyToAsync(ms);
-                ms.Position = 0;
-                return ms;
-            }));
-        if (dispose)
-            await s.DisposeAsync();
-        return result;
-    }
-
-    public static async Task<MemoryStream> WriteZipAsync(IReadOnlyList<string> names, IReadOnlyList<Stream> streams, bool dispose)
-    {
-        var zipStream = _recyclableMemoryStreamManager.GetStream();
-
-        var zipArchive = new ZipArchive(zipStream, ZipArchiveMode.Create, true);
-
-        for (var i = 0; i < streams.Count; i++)
-        {
-            // ReSharper disable once AccessToDisposedClosure
-            var entry = zipArchive.CreateEntry(names[i]);
-            await using var entryStream = entry.Open();
-            await streams[i].CopyToAsync(entryStream);
-            if (dispose)
-                await streams[i].DisposeAsync();
-        }
-
-        zipArchive.Dispose();
-        // see-also https://stackoverflow.com/questions/47707862/ziparchive-gives-unexpected-end-of-data-corrupted-error/47707973
-        // 在flush前释放ZipArchive
-        zipStream.Position = 0;
-        await zipStream.FlushAsync();
-
-        return zipStream;
     }
 
     public static void DeleteEmptyFolder(string? path)

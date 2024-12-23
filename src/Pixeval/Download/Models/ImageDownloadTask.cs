@@ -152,7 +152,7 @@ public partial class ImageDownloadTask : ObservableObject, IDownloadTaskBase, IP
 
             Exception? ex;
             await using (var fileStream = OpenCreate(Destination))
-                ex = await httpClient.DownloadStreamAsync(fileStream, Uri, CancellationTokenSource.Token, this, fileStream.Length);
+                ex = await httpClient.DownloadStreamAsync(fileStream, Uri, this, fileStream.Length, cancellationToken: CancellationTokenSource.Token);
             switch (ex)
             {
                 case null: await PendingCompleteAsync(); break;

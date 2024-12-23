@@ -127,6 +127,6 @@ public partial class TagsEntryViewModel : ObservableObject, IEntry
 
     private static async void LoadThumbnail(TagsEntryViewModel entry, string path)
     {
-        entry.Thumbnail = await (await IoHelper.GetFileThumbnailAsync(path)).GetBitmapImageAsync(true, url: path);
+        entry.Thumbnail = await IoHelper.GetFileThumbnailAsync(path);
     }
 }

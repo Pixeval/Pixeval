@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
 using System.Threading;
+using Pixeval.Utilities;
 
 namespace Pixeval.Controls;
 
@@ -30,7 +31,7 @@ public partial class ZoomableImage
         zoomableImage.ClonedMsIntervals = [.. zoomableImage.MsIntervals];
     }
 
-    private static void OnSourcesChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    private static void OnSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         if (EnsureNotDisposed(d) is not { } zoomableImage)
             return;
@@ -38,27 +39,34 @@ public partial class ZoomableImage
         zoomableImage._timerRunning = false;
         // 使CanvasControl具有大小，否则不会触发CanvasControlOnDraw
         zoomableImage.OriginalImageWidth = zoomableImage.OriginalImageHeight = 10;
-        zoomableImage._initSource = true;
+        zoomableImage._needInitSource = true;
     }
 
-    private bool _initSource;
+    private bool _needInitSource;
 
-    private async void InitSource()
+    public async void InitSource()
     {
         _frames.Clear();
         try
         {
-            if (Sources is null)
+            var sources = Source switch
+            {
+                Stream stream => await Streams.ReadZipAsync(stream, false),
+                IEnumerable<Stream> list => list,
+                _ => null
+            };
+
+            if (sources is null)
                 return;
-            foreach (var source in Sources)
-                if (source is { CanRead: true })
-                {
-                    var randomAccessStream = source.AsRandomAccessStream();
-                    randomAccessStream.Seek(0);
-                    var frame = await CanvasBitmap.LoadAsync(CanvasControl, randomAccessStream);
-                    source.Position = 0;
-                    _frames.Add(frame);
-                }
+
+            foreach (var source in sources)
+            {
+                var randomAccessStream = source.AsRandomAccessStream();
+                randomAccessStream.Seek(0);
+                var frame = await CanvasBitmap.LoadAsync(CanvasControl, randomAccessStream);
+                source.Position = 0;
+                _frames.Add(frame);
+            }
         }
         catch (Exception)
         {
@@ -84,9 +92,9 @@ public partial class ZoomableImage
 
     private void CanvasControlOnDraw(CanvasControl sender, CanvasDrawEventArgs e)
     {
-        if (_initSource)
+        if (_needInitSource)
         {
-            _initSource = false;
+            _needInitSource = false;
             InitSource();
             return;
         }

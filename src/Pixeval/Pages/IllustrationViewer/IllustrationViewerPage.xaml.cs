@@ -182,7 +182,7 @@ public sealed partial class IllustrationViewerPage
     private async void FrameworkElement_OnDataContextChanged(FrameworkElement sender, DataContextChangedEventArgs e)
     {
         var viewModel = sender.GetDataContext<IllustrationItemViewModel>();
-        _ = await viewModel.TryLoadThumbnailAsync(_viewModel);
+        _ = await viewModel.TryLoadThumbnailAsync();
     }
 
     private void ExitFullScreenKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => _viewModel.IsFullScreen = false;

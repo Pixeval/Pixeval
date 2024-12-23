@@ -23,6 +23,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
@@ -37,8 +38,8 @@ using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Pages.Misc;
 using Pixeval.Pages.Tags;
 using Pixeval.Util.IO;
+using Pixeval.Util.IO.Caching;
 using Pixeval.Util.UI;
-using Pixeval.Utilities;
 
 namespace Pixeval.Pages;
 
@@ -132,10 +133,7 @@ public partial class MainPageViewModel : ObservableObject
         var makoClient = App.AppViewModel.MakoClient;
         // get byte array of avatar
         // and set to the bitmap image
-        var result = await makoClient.DownloadBitmapImageAsync(makoClient.Session.AvatarUrl!);
-        AvatarSource = result is Result<ImageSource>.Success { Value: var avatar }
-            ? avatar
-            : await AppInfo.ImageNotAvailable;
+        AvatarSource = await App.AppViewModel.AppServiceProvider.GetRequiredService<MemoryCache>().GetSourceFromMemoryCacheAsync(makoClient.Session.AvatarUrl);
     }
 
     public async Task ReverseSearchAsync(Stream stream)

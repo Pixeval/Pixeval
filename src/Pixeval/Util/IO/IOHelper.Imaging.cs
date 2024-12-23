@@ -26,11 +26,9 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.FileProperties;
 using Microsoft.UI.Xaml.Media;
-using Pixeval.AppManagement;
 using Pixeval.CoreApi.Net.Response;
 using Pixeval.Download.Macros;
 using Pixeval.Options;
-using Pixeval.Util.IO.Pooling;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats;
 using SixLabors.ImageSharp.Formats.Bmp;
@@ -41,32 +39,39 @@ using SixLabors.ImageSharp.Formats.Tiff;
 using SixLabors.ImageSharp.Formats.Webp;
 using WinUI3Utilities;
 using QRCoder;
+using Microsoft.UI.Xaml.Media.Imaging;
+using Pixeval.Utilities;
+using Microsoft.Extensions.DependencyInjection;
+using Pixeval.Util.IO.Caching;
 
 namespace Pixeval.Util.IO;
 
 public static partial class IoHelper
 {
-    private static readonly ImagePool<IImagePoolKey> _imagePool = new(200);
-
-    public static Task<ImageSource> GetBitmapImageAsync(this Stream imageStream, bool disposeOfImageStream, int? desiredWidth = null, string? url = null)
+    public static async Task<ImageSource> DecodeBitmapImageAsync(this Stream imageStream, bool disposeOfImageStream, int? desiredWidth = null)
     {
-        return _imagePool.GetBitmapImageAsync(imageStream, disposeOfImageStream, desiredWidth, url);
+        var bitmapImage = new BitmapImage { DecodePixelType = DecodePixelType.Logical };
+        if (desiredWidth is { } width)
+            bitmapImage.DecodePixelWidth = width;
+        await bitmapImage.SetSourceAsync(imageStream.AsRandomAccessStream());
+        if (disposeOfImageStream)
+            await imageStream.DisposeAsync();
+
+        return bitmapImage;
     }
 
-    public static async Task<Stream> GetFileThumbnailAsync(string path, uint size = 64)
+    public static async Task<ImageSource> GetFileThumbnailAsync(string path, uint size = 64)
     {
-        var file = await StorageFile.GetFileFromPathAsync(path);
-        Stream stream;
         try
         {
+            var file = await StorageFile.GetFileFromPathAsync(path);
             var thumbnail = await file.GetThumbnailAsync(ThumbnailMode.SingleItem, size);
-            stream = thumbnail.AsStreamForRead();
+            return await thumbnail.AsStreamForRead().DecodeBitmapImageAsync(true);
         }
         catch
         {
-            stream = AppInfo.GetImageNotAvailableStream();
+            return App.AppViewModel.AppServiceProvider.GetRequiredService<MemoryCache>().ImageNotAvailable;
         }
-        return stream;
     }
 
     public static async Task UgoiraSaveToFileAsync(this Image image, string path, UgoiraDownloadFormat? ugoiraDownloadFormat = null)
@@ -77,13 +82,20 @@ public static partial class IoHelper
     }
 
     /// <summary>
-    /// Writes the frames that are contained in <paramref name="streams" /> into <see cref="Stream"/>
-    /// and encodes to <paramref name="ugoiraDownloadFormat"/> format
+    /// Writes the frames that are contained in <paramref name="streams" /> into <see cref="Stream"/> and encodes
     /// </summary>
-    public static async Task<Stream> UgoiraSaveToStreamAsync(this IReadOnlyList<Stream> streams, IReadOnlyList<int> delays, Stream? target = null, IProgress<double>? progress = null, UgoiraDownloadFormat? ugoiraDownloadFormat = null)
+    public static async Task<Stream> UgoiraSaveToStreamAsync(this IReadOnlyList<Stream> streams, IReadOnlyList<int> delays, Stream? target = null, IProgress<double>? progress = null)
     {
         using var image = await streams.UgoiraSaveToImageAsync(delays, progress);
-        var s = await image.UgoiraSaveToStreamAsync(target ?? _recyclableMemoryStreamManager.GetStream());
+        var s = await image.UgoiraSaveToStreamAsync(target ?? Streams.RentStream());
+        progress?.Report(100);
+        return s;
+    }
+    
+    public static async Task<Stream> UgoiraSaveToStreamAsync(this Stream stream, IReadOnlyList<int> delays, Stream? target = null, IProgress<double>? progress = null)
+    {
+        using var image = await stream.UgoiraSaveToImageAsync(delays, progress);
+        var s = await image.UgoiraSaveToStreamAsync(target ?? Streams.RentStream());
         progress?.Report(100);
         return s;
     }
@@ -111,6 +123,39 @@ public static partial class IoHelper
             destination.Position = 0;
             return destination;
         });
+    }
+
+    public static async Task<Image> UgoiraSaveToImageAsync(this Stream stream, IReadOnlyList<int> delays, IProgress<double>? progress = null, bool dispose = false)
+    {
+        var streams = await Streams.ReadZipAsync(stream, dispose);
+        var average = 50d / streams.Length;
+        var progressValue = 0d;
+
+        var images = new Image[streams.Length];
+        var options = new ParallelOptions();
+        if (progress is not null)
+            options.TaskScheduler = TaskScheduler.FromCurrentSynchronizationContext();
+        await Parallel.ForAsync(0, streams.Length, options, async (i, token) =>
+        {
+            var delay = delays.Count > i ? (uint)delays[i] : 10u;
+            streams[i].Position = 0;
+            images[i] = await Image.LoadAsync(streams[i], token);
+            await streams[i].DisposeAsync();
+            images[i].Frames[0].Metadata.GetFormatMetadata(WebpFormat.Instance).FrameDelay = delay;
+            progressValue += average;
+            progress?.Report((int)progressValue);
+        });
+
+        var image = images[0];
+        foreach (var img in images.Skip(1))
+        {
+            using (img)
+                _ = image.Frames.AddFrame(img.Frames[0]);
+            progressValue += average / 2;
+            progress?.Report((int) progressValue);
+        }
+
+        return image;
     }
 
     public static async Task<Image> UgoiraSaveToImageAsync(this IReadOnlyList<Stream> streams, IReadOnlyList<int> delays, IProgress<double>? progress = null, bool dispose = false)
@@ -291,7 +336,7 @@ public static partial class IoHelper
 
     public static async Task<Image> GetImageFromZipStreamAsync(Stream zipStream, UgoiraMetadataResponse ugoiraMetadataResponse)
     {
-        var entryStreams = await ReadZipAsync(zipStream, true);
+        var entryStreams = await Streams.ReadZipAsync(zipStream, true);
         return await entryStreams.UgoiraSaveToImageAsync(ugoiraMetadataResponse.Delays.ToArray());
     }
 
@@ -302,7 +347,7 @@ public static partial class IoHelper
         var qrCodeData = qrCodeGen.CreateQrCode(urlPayload, QRCodeGenerator.ECCLevel.Q);
         var qrCode = new BitmapByteQRCode(qrCodeData);
         var bytes = qrCode.GetGraphic(20);
-        return await _recyclableMemoryStreamManager.GetStream(bytes).GetBitmapImageAsync(true, url: url);
+        return await Streams.RentStream(bytes).DecodeBitmapImageAsync(true);
     }
 
     public static async Task<ImageSource> GenerateQrCodeAsync(string content)
@@ -311,7 +356,7 @@ public static partial class IoHelper
         var qrCodeData = qrCodeGen.CreateQrCode(content, QRCodeGenerator.ECCLevel.Q);
         var qrCode = new BitmapByteQRCode(qrCodeData);
         var bytes = qrCode.GetGraphic(20);
-        return await _recyclableMemoryStreamManager.GetStream(bytes).GetBitmapImageAsync(true);
+        return await Streams.RentStream(bytes).DecodeBitmapImageAsync(true);
     }
 
     public static string ChangeExtensionFromUrl(string path, string url)

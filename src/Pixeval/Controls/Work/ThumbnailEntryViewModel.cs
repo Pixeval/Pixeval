@@ -21,48 +21,33 @@
 #endregion
 
 using System;
-using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.ComponentModel;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Media;
-using Pixeval.AppManagement;
 using Pixeval.CoreApi.Model;
-using Pixeval.Util;
 using Pixeval.Util.IO;
-using Pixeval.Utilities;
+using Pixeval.Util.IO.Caching;
 
 namespace Pixeval.Controls;
 
-public abstract class ThumbnailEntryViewModel<T>(T entry) : EntryViewModel<T>(entry)
+public abstract partial class ThumbnailEntryViewModel<T>(T entry) : EntryViewModel<T>(entry)
     where T : class, IIdEntry
 {
     public long Id => Entry.Id;
+
+    private int ReferenceCount { get; set; }
 
     protected abstract string ThumbnailUrl { get; }
 
     /// <summary>
     /// 缩略图图片
     /// </summary>
-    public ImageSource? ThumbnailSource => ThumbnailSourceRef?.Value;
+    [ObservableProperty]
+    public partial ImageSource? ThumbnailSource { get; set; }
 
-    /// <summary>
-    /// 缩略图文件流
-    /// </summary>
-    public Stream? ThumbnailStream { get; set; }
-
-    public SharedRef<ImageSource>? ThumbnailSourceRef
-    {
-        get;
-        set
-        {
-            if (Equals(field, value))
-                return;
-            field = value;
-            OnPropertyChanged(nameof(ThumbnailSource));
-        }
-    }
-
-    private CancellationTokenSource LoadingThumbnailCancellationTokenSource { get; set; } = new();
+    private CancellationTokenSource LoadingThumbnailCancellationTokenSource { get; } = new();
 
     /// <summary>
     /// 是否正在加载缩略图
@@ -72,85 +57,38 @@ public abstract class ThumbnailEntryViewModel<T>(T entry) : EntryViewModel<T>(en
     /// <summary>
     /// 当控件需要显示图片时，调用此方法加载缩略图
     /// </summary>
-    /// <param name="key">使用<see cref="IDisposable"/>对象，防止复用本对象的时候，本对象持有对<paramref name="key"/>的引用，导致<paramref name="key"/>无法释放</param>
     /// <returns>缩略图首次加载完成则返回<see langword="true"/>，之前已加载、正在加载或加载失败则返回<see langword="false"/></returns>
-    public virtual async ValueTask<bool> TryLoadThumbnailAsync(IDisposable key)
+    public virtual async ValueTask<bool> TryLoadThumbnailAsync()
     {
-        if (ThumbnailSourceRef is not null)
+        ++ReferenceCount;
+        if (ThumbnailSource is null)
         {
-            _ = ThumbnailSourceRef.MakeShared(key);
-
-            // 之前已加载
-            return false;
-        }
-
-        if (LoadingThumbnail)
-        {
-            // 已有别的线程正在加载缩略图
-            return false;
-        }
-
-        var cacheKey = MakoHelper.GetThumbnailCacheKey(ThumbnailUrl);
-
-        LoadingThumbnail = true;
-        if (App.AppViewModel.AppSettings.UseFileCache && await App.AppViewModel.Cache.TryGetAsync<Stream>(cacheKey) is { } stream)
-        {
-            ThumbnailStream = stream;
-            ThumbnailSourceRef = new SharedRef<ImageSource>(await stream.GetBitmapImageAsync(false, url: ThumbnailUrl), key);
-
-            // 读取缓存并加载完成
+            LoadingThumbnail = true;
+            ThumbnailSource = await App.AppViewModel.AppServiceProvider.GetRequiredService<MemoryCache>()
+                .GetSourceFromMemoryCacheAsync(
+                    ThumbnailUrl,
+                    cancellationToken: LoadingThumbnailCancellationTokenSource.Token);
             LoadingThumbnail = false;
-            OnPropertyChanged(nameof(ThumbnailSource));
-            return true;
         }
 
-        var s = await GetThumbnailAsync();
-        if (App.AppViewModel.AppSettings.UseFileCache)
-            await App.AppViewModel.Cache.AddAsync(cacheKey, s, TimeSpan.FromDays(1));
-        ThumbnailStream = s;
-        ThumbnailSourceRef = new SharedRef<ImageSource>(await s.GetBitmapImageAsync(false, url: ThumbnailUrl), key);
-
-        // 获取并加载完成
-        LoadingThumbnail = false;
         return true;
-    }
-
-    /// <summary>
-    /// 直接获取对应缩略图
-    /// </summary>
-    public async Task<Stream> GetThumbnailAsync()
-    {
-        switch (await App.AppViewModel.MakoClient.DownloadMemoryStreamAsync(ThumbnailUrl, cancellationToken: LoadingThumbnailCancellationTokenSource.Token))
-        {
-            case Result<Stream>.Success(var stream):
-                return stream;
-            case Result<Stream>.Failure(OperationCanceledException):
-                await LoadingThumbnailCancellationTokenSource.CancelAsync();
-                LoadingThumbnailCancellationTokenSource.Dispose();
-                LoadingThumbnailCancellationTokenSource = new();
-                break;
-        }
-
-        return AppInfo.GetImageNotAvailableStream();
     }
 
     /// <summary>
     /// 当控件不显示，或者Unload时，调用此方法以尝试释放内存
     /// </summary>
-    public void UnloadThumbnail(IDisposable key)
+    public void UnloadThumbnail()
     {
+        --ReferenceCount;
+        if (ReferenceCount is not 0)
+            return;
         if (LoadingThumbnail)
         {
             LoadingThumbnailCancellationTokenSource.Cancel();
             LoadingThumbnail = false;
-            return;
         }
 
-        if (!ThumbnailSourceRef?.TryDispose(key) ?? true)
-            return;
-
-        ThumbnailSourceRef = null;
-        ThumbnailStream?.Dispose();
+        ThumbnailSource = null;
     }
 
     /// <summary>
@@ -160,8 +98,7 @@ public abstract class ThumbnailEntryViewModel<T>(T entry) : EntryViewModel<T>(en
     {
         LoadingThumbnailCancellationTokenSource.Cancel();
         LoadingThumbnailCancellationTokenSource.Dispose();
-        ThumbnailSourceRef?.DisposeForce();
-        ThumbnailStream?.Dispose();
+        ThumbnailSource = null;
         DisposeOverride();
         GC.SuppressFinalize(this);
     }

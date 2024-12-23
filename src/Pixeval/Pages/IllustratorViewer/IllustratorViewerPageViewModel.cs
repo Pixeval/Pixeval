@@ -23,13 +23,11 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
-using Pixeval.AppManagement;
 using Pixeval.Controls.Windowing;
 using Pixeval.Util;
 using Pixeval.Util.ComponentModels;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
-using Pixeval.Utilities;
 using Windows.System;
 using Microsoft.UI.Xaml.Controls;
 using Pixeval.Controls;
@@ -37,6 +35,8 @@ using Pixeval.CoreApi.Net.Response;
 using Pixeval.Pages.Capability;
 using WinUI3Utilities;
 using Symbol = FluentIcons.Common.Symbol;
+using Microsoft.Extensions.DependencyInjection;
+using Pixeval.Util.IO.Caching;
 
 namespace Pixeval.Pages.IllustratorViewer;
 
@@ -97,21 +97,11 @@ public partial class IllustratorViewerPageViewModel : UiObservableObject
 
     public async Task SetAvatarAndBackgroundAsync()
     {
-        var result = await App.AppViewModel.MakoClient.DownloadBitmapImageWithDesiredSizeAsync(AvatarUrl, 100);
-        AvatarSource = result is Result<ImageSource>.Success { Value: var avatar }
-            ? avatar
-            : await AppInfo.PixivNoProfile;
-        if (BackgroundUrl is not null)
-        {
-            var result2 = await App.AppViewModel.MakoClient.DownloadBitmapImageAsync(BackgroundUrl);
-            BackgroundSource = result2 is Result<ImageSource>.Success { Value: var background }
-                ? background
-                : await AppInfo.ImageNotAvailable;
-        }
-        else
-        {
-            BackgroundSource = AvatarSource;
-        }
+        var memoryCache = App.AppViewModel.AppServiceProvider.GetRequiredService<MemoryCache>();
+        AvatarSource = await memoryCache.GetSourceFromMemoryCacheAsync(AvatarUrl, desiredWidth: 100);
+        BackgroundSource = BackgroundUrl is not null
+            ? await memoryCache.GetSourceFromMemoryCacheAsync(BackgroundUrl)
+            : AvatarSource;
     }
 
     #region Commands
