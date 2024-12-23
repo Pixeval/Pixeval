@@ -24,11 +24,11 @@ using Pixeval.Download.MacroParser;
 namespace Pixeval.Download.Macros;
 
 [MetaPathMacro<IWorkViewModel>]
-public class IsMangaMacro : IPredicate<IWorkViewModel>
+public class IsPicSetMacro : IPredicate<IWorkViewModel>
 {
     public bool IsNot { get; set; }
 
-    public const string NameConst = "if_manga";
+    public const string NameConst = "if_pic_set";
 
     public string Name => NameConst;
 

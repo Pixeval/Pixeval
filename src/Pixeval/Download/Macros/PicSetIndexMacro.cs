@@ -24,9 +24,9 @@ using Pixeval.Download.MacroParser;
 namespace Pixeval.Download.Macros;
 
 [MetaPathMacro<IWorkViewModel>]
-public class MangaIndexMacro : ITransducer<IWorkViewModel>, ILastSegment
+public class PicSetIndexMacro : ITransducer<IWorkViewModel>, ILastSegment
 {
-    public const string NameConst = "manga_index";
+    public const string NameConst = "pic_set_index";
 
     public const string NameConstToken = $"<{NameConst}>";
 
