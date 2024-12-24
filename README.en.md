@@ -25,7 +25,7 @@ Powerful, fast and beautiful Pixiv third-party desktop program based on .NET 8 a
 **The Pixeval that based on WinUI 3 is now WIP, the older version, 
 which is the WPF version has been deprecated and expecting no more supports from developers.**
 
-> The WinUI 3 codebase for Pixeval supports only Windows 10 (1809, Build Number 17763) and higher.
+> The WinUI 3 codebase for Pixeval supports only Windows 10 (2004, Build Number 19041) and higher.
 > You can check this at Settings | System | About | Windows specifications
 
 For more information, see [main page](https://sora.ink/pixeval/)
