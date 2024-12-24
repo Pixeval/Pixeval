@@ -25,7 +25,7 @@ Un client desktop tierce de Pixiv, puissant, rapid et vivide, basé sur .NET 8 e
 **Pixeval est actuellement basé sur WinUI 3 avec développement en cours. 
 L'ancienne version du WPF a été dépréciée et ne recevra plus de supports depuis les développeurs.**
 
-> La base de code de Pixeval prend seulement en compte Windows 10 (1809, Build Number 17763) ou versions ultérieures.
+> La base de code de Pixeval prend seulement en compte Windows 10 (2004, Build Number 19041) ou versions ultérieures.
 > Vous pouvez vérifier votre version de Windows sur Paramètres > Système > A propos de > Spécifications de l'appareil
 
 Pour plus d'information, consultez [site du projet](https://sora.ink/pixeval/)
