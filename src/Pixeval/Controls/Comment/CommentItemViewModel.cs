@@ -21,20 +21,20 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Documents;
 using Microsoft.UI.Xaml.Media;
-using Pixeval.AppManagement;
 using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Model;
 using Pixeval.Util;
 using Pixeval.Util.IO;
+using Pixeval.Util.IO.Caching;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using WinUI3Utilities;
@@ -93,10 +93,7 @@ public partial class CommentItemViewModel(Comment comment, SimpleWorkType type, 
 
     public async Task LoadAvatarSource()
     {
-        var result = await App.AppViewModel.MakoClient.DownloadBitmapImageAsync(Comment.CommentPoster.ProfileImageUrls.Medium);
-        AvatarSource = result is Result<ImageSource>.Success { Value: var avatar }
-            ? avatar
-            : await AppInfo.PixivNoProfile;
+        AvatarSource = await App.AppViewModel.AppServiceProvider.GetRequiredService<MemoryCache>().GetSourceFromMemoryCacheAsync(Comment.CommentPoster.ProfileImageUrls.Medium);
     }
 
     public void AddComment(Comment comment)
@@ -119,13 +116,13 @@ public partial class CommentItemViewModel(Comment comment, SimpleWorkType type, 
                         Text = content
                     });
                     break;
-                case ReplyContentToken.EmojiToken(var emoji) when await App.AppViewModel.MakoClient.DownloadMemoryStreamAsync(emoji.GetReplyEmojiDownloadUrl()) is Result<Stream>.Success(var emojiSource):
+                case ReplyContentToken.EmojiToken(var emoji):
                     paragraph.Inlines.Add(new InlineUIContainer
                     {
                         Child = new Image
                         {
                             VerticalAlignment = VerticalAlignment.Bottom,
-                            Source = await emojiSource.GetBitmapImageAsync(true, 14, emoji.GetReplyEmojiDownloadUrl()),
+                            Source = await App.AppViewModel.AppServiceProvider.GetRequiredService<MemoryCache>().GetSourceFromMemoryCacheAsync(emoji.GetReplyEmojiDownloadUrl(), desiredWidth: 14),
                             Width = 14,
                             Height = 14
                         }

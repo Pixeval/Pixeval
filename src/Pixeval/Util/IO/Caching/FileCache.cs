@@ -35,7 +35,7 @@ using Pixeval.AppManagement;
 using Pixeval.Utilities;
 using ThrowHelper = WinUI3Utilities.ThrowHelper;
 
-namespace Pixeval.Util.IO;
+namespace Pixeval.Util.IO.Caching;
 
 public class FileCache
 {

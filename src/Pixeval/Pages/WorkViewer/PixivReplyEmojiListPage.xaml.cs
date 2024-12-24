@@ -24,12 +24,14 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Text;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Controls;
 using Pixeval.Util.IO;
+using Pixeval.Util.IO.Caching;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using WinUI3Utilities;
@@ -38,7 +40,7 @@ namespace Pixeval.Pages;
 
 public sealed partial class PixivReplyEmojiListPage
 {
-    public static ObservableCollection<PixivReplyEmojiViewModel> EmojiList = [];
+    public static readonly ObservableCollection<PixivReplyEmojiViewModel> EmojiList = [];
 
     private PixivReplyBar? _replyBar;
 
@@ -55,16 +57,15 @@ public sealed partial class PixivReplyEmojiListPage
     {
         using var semaphoreSlim = new SemaphoreSlim(1, 1);
         await semaphoreSlim.WaitAsync();
-        if (!EmojiList.Any())
+        if (EmojiList.Count is 0)
         {
-            var results = await Task.WhenAll(Enum.GetValues<PixivReplyEmoji>()
-                .Select(async emoji => (emoji, await App.AppViewModel.MakoClient.DownloadMemoryStreamAsync(emoji.GetReplyEmojiDownloadUrl()))));
-            var tasks = results.Where(r => r.Item2 is Result<Stream>.Success).Select(async r => new PixivReplyEmojiViewModel(r.emoji, ((Result<Stream>.Success)r.Item2).Value)
-            {
-                // We don't dispose of the image here because it will be used when inserting emoji to the rich edit box.
-                ImageSource = await ((Result<Stream>.Success) r.Item2).Value.GetBitmapImageAsync(false, 35, url: r.emoji.GetReplyEmojiDownloadUrl())
-            });
-            EmojiList.AddRange(await Task.WhenAll(tasks));
+            var memoryCache = App.AppViewModel.AppServiceProvider.GetRequiredService<MemoryCache>();
+            var tasks = await Task.WhenAll(Enum.GetValues<PixivReplyEmoji>()
+                .Select(async emoji => new PixivReplyEmojiViewModel(
+                    emoji, 
+                    await memoryCache.GetStreamFromMemoryCacheAsync(emoji.GetReplyEmojiDownloadUrl()), 
+                    await memoryCache.GetSourceFromMemoryCacheAsync(emoji.GetReplyEmojiDownloadUrl()))));
+            EmojiList.AddRange(tasks);
         }
     }
 

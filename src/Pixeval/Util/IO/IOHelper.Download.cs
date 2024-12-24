@@ -25,7 +25,6 @@ using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.IO;
 using Pixeval.AppManagement;
 using Pixeval.Controls.Windowing;
 using Pixeval.Utilities;
@@ -35,28 +34,6 @@ namespace Pixeval.Util.IO;
 
 public static partial class IoHelper
 {
-    private const int BlockSizeInBytes = 1024; // 1KB
-
-    private const int LargeBufferMultipleInBytes = 1024 * BlockSizeInBytes; // 1MB
-
-    private const int MaxBufferSizeInBytes = 16 * 1024 * BlockSizeInBytes; // 16MB
-
-    private const int MaximumLargeBufferPoolSizeInBytes = 24 * 1024 * BlockSizeInBytes; // 24MB
-
-    private const int MaximumSmallBufferPoolSizeInBytes = 24 * 1024 * BlockSizeInBytes; // 24MB
-
-    private static readonly RecyclableMemoryStreamManager _recyclableMemoryStreamManager =
-        new(new RecyclableMemoryStreamManager.Options(
-            BlockSizeInBytes,
-            LargeBufferMultipleInBytes,
-            MaxBufferSizeInBytes,
-            MaximumSmallBufferPoolSizeInBytes,
-            MaximumLargeBufferPoolSizeInBytes));
-
-    // To avoid collecting stack trace, which is quite a time-consuming task
-    // and this exception is intended to be used at a massive magnitude
-    private static readonly OperationCanceledException _cancellationMark = new();
-
     /// <summary>
     /// Attempts to download the content that are located by the <paramref name="url" /> argument
     /// to a <see cref="Memory{T}" /> asynchronously
@@ -77,10 +54,10 @@ public static partial class IoHelper
     public static async Task<Result<Stream>> DownloadMemoryStreamAsync(
         this HttpClient httpClient,
         string url,
-        CancellationToken cancellationToken = default,
         IProgress<double>? progress = null,
         long startPosition = 0,
-        int bufferSize = 4096)
+        int bufferSize = 4096,
+        CancellationToken cancellationToken = default)
     {
         var uri = new Uri(url);
 
@@ -94,8 +71,8 @@ public static partial class IoHelper
             progress?.Report(100);
             return Result<Stream>.AsSuccess(OpenAsyncRead(AppInfo.ApplicationUriToPath(uri)));
         }
-        var stream = _recyclableMemoryStreamManager.GetStream();
-        var result = await httpClient.DownloadStreamAsync(stream, uri, cancellationToken, progress, startPosition, bufferSize);
+        var stream = Streams.RentStream();
+        var result = await httpClient.DownloadStreamAsync(stream, uri, progress, startPosition, bufferSize, cancellationToken);
         if (result is null)
         {
             stream.Position = 0;
@@ -117,10 +94,10 @@ public static partial class IoHelper
         this HttpClient httpClient,
         Stream destination,
         Uri uri,
-        CancellationToken cancellationToken = default,
         IProgress<double>? progress = null,
         long startPosition = 0,
-        int bufferSize = 1 << 15)
+        int bufferSize = 1 << 15,
+        CancellationToken cancellationToken = default)
     {
         try
         {

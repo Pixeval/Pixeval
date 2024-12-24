@@ -22,11 +22,11 @@
 
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Media;
-using Pixeval.AppManagement;
 using Pixeval.CoreApi.Model;
 using Pixeval.Util.IO;
-using Pixeval.Utilities;
+using Pixeval.Util.IO.Caching;
 
 namespace Pixeval.Pages;
 
@@ -44,11 +44,7 @@ public partial class WorkInfoPageViewModel<T>(T entry) : ObservableObject where 
     public async Task LoadAvatarAsync()
     {
         if (Illustrator is { ProfileImageUrls.Medium: { } profileImage })
-        {
-            var result = await App.AppViewModel.MakoClient.DownloadBitmapImageAsync(profileImage);
-            AvatarSource = result is Result<ImageSource>.Success { Value: var avatar }
-                ? avatar
-                : await AppInfo.PixivNoProfile;
-        }
+            AvatarSource = await App.AppViewModel.AppServiceProvider.GetRequiredService<MemoryCache>()
+                .GetSourceFromMemoryCacheAsync(profileImage);
     }
 }

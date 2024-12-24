@@ -79,7 +79,7 @@ public partial class IllustrationItemViewModel : WorkEntryViewModel<Illustration
 
     public List<string> UgoiraOriginalUrls => Entry.GetUgoiraOriginalUrls(UgoiraMetadata.Result.FrameCount);
 
-    public string DimensionText => $"{Entry.Width} x {Entry.Height}";
+    public string SizeText => $"{Entry.Width} x {Entry.Height}";
 
     public async ValueTask<List<string>> UgoiraOriginalUrlsAsync() => Entry.GetUgoiraOriginalUrls((await UgoiraMetadata).FrameCount);
 

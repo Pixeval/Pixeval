@@ -329,8 +329,8 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
             UpdateMessage = SettingsPageResources.DownloadingUpdate;
             var filePath = Path.Combine(AppKnownFolders.Temporary.Self.Path, appReleaseModel.ReleaseUri.Segments[^1]);
             await using var fileStream = IoHelper.OpenAsyncWrite(filePath);
-            var exception = await client.DownloadStreamAsync(fileStream, appReleaseModel.ReleaseUri, _cancellationTokenSource.Token,
-                new Progress<double>(progress => DownloadingUpdateProgress = progress));
+            var exception = await client.DownloadStreamAsync(fileStream, appReleaseModel.ReleaseUri,
+                new Progress<double>(progress => DownloadingUpdateProgress = progress), cancellationToken: _cancellationTokenSource.Token);
             // ReSharper disable once DisposeOnUsingVariable
             client.Dispose();
 
@@ -393,8 +393,7 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
     {
         var cts = _cancellationTokenSource;
         _cancellationTokenSource = null;
-        cts?.Cancel();
-        cts?.Dispose();
+        cts?.TryCancelDispose();
     }
 
     public void Dispose()

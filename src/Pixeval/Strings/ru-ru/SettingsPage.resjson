@@ -134,7 +134,7 @@
     "IllustrationOptionEntry/Header": "Иллюстрации",
     "NovelOptionEntry/Header": "Романы",
     "PixivNameResolverHeader/Text": "Резолвер имен",
-    "PixivNameResolverDescription/Text": "После прямого подключения к домену, доменное имя будет разрешено к следующим IP-адресам",
+    "PixivNameResolverDescription/Text": "После прямого подключения к домену, доменное имя будет разрешено к следующим IP-адресам\nВведите IP и нажмите '+' для добавления",
     "DeleteFileCacheEntry/Description": "Эта кнопка очищает все файловые кэши",
     "DeleteFileCacheEntry/Header": "Очистить файловый кэш",
     "FileCacheCleared": "Все файловые кэши были удалены",

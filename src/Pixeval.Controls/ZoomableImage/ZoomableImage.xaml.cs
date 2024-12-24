@@ -20,12 +20,12 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Pixeval.Utilities;
 using WinUI3Utilities.Attributes;
 
 namespace Pixeval.Controls;
@@ -35,7 +35,7 @@ namespace Pixeval.Controls;
 /// 渲染：<see cref="CanvasControlOnDraw"/>，图片渲染逻辑<br/>
 /// 对外API：<see cref="Zoom(float)"/>、<see cref="SetPosition"/>
 /// </summary>
-[DependencyProperty<IReadOnlyList<Stream>>("Sources", DependencyPropertyDefaultValue.Default, nameof(OnSourcesChanged), IsNullable = true)]
+[DependencyProperty<object>("Source", DependencyPropertyDefaultValue.Default, nameof(OnSourceChanged), IsNullable = true)]
 [DependencyProperty<IReadOnlyList<int>>("MsIntervals", DependencyPropertyDefaultValue.Default, nameof(OnMsIntervalsChanged))]
 [DependencyProperty<bool>("IsPlaying", "true", nameof(OnIsPlayingChanged))]
 [DependencyProperty<int>("ImageRotationDegree", "0", nameof(OnImageRotationDegreeChanged))]
@@ -58,7 +58,7 @@ public sealed partial class ZoomableImage : UserControl
     {
         InitializeComponent();
 
-        _ = Task.Run(ZoomableImageMain, _token.Token);
+        _ = Task.Run(ZoomableImageMain);
         ProtectedCursor = InputSystemCursor.Create(InputSystemCursorShape.SizeAll);
     }
 
@@ -77,7 +77,7 @@ public sealed partial class ZoomableImage : UserControl
             // 刚开始时图片可能为空，等待图片加载
             if (_frames.Count is 0)
             {
-                await Task.Delay(20, _token.Token);
+                await Task.Delay(20);
                 // 尝试触发加载资源
                 CanvasControl.Invalidate();
             }
@@ -104,11 +104,11 @@ public sealed partial class ZoomableImage : UserControl
                             if (delay < 5)
                                 continue;
                         }
-                        await Task.Delay(10, _token.Token);
+                        await Task.Delay(10);
                     }
                     else
                     {
-                        await Task.Delay(10, _token.Token);
+                        await Task.Delay(10);
                         var end = DateTime.Now;
                         startTime += end - start;
                     }
@@ -124,10 +124,9 @@ public sealed partial class ZoomableImage : UserControl
         IsDisposed = true;
         CanvasControl.Draw -= CanvasControlOnDraw;
         CanvasControl.Unloaded -= CanvasControlOnUnloaded;
-        _token.Cancel();
+        _token.TryCancelDispose();
         foreach (var frame in _frames)
             frame.Dispose();
         _frames.Clear();
-        _token.Dispose();
     }
 }

@@ -24,17 +24,4 @@ using Pixeval.Util.UI;
 
 namespace Pixeval.Pages;
 
-public class PixivReplyEmojiViewModel()
-{
-    public PixivReplyEmojiViewModel(PixivReplyEmoji emojiEnumValue, Stream imageStream) : this()
-    {
-        EmojiEnumValue = emojiEnumValue;
-        ImageStream = imageStream;
-    }
-
-    public PixivReplyEmoji EmojiEnumValue { get; }
-
-    public Stream ImageStream { get; } = null!;
-
-    public ImageSource? ImageSource { get; set; }
-}
+public record PixivReplyEmojiViewModel(PixivReplyEmoji EmojiEnumValue, Stream ImageStream, ImageSource ImageSource);

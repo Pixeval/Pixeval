@@ -28,6 +28,7 @@ using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.HighPerformance.Buffers;
 
@@ -225,6 +226,32 @@ public static class Objects
         }
 
         return true;
+    }
+
+    public static void TryCancel(this CancellationTokenSource cancellationTokenSource)
+    {
+        if (!cancellationTokenSource.IsCancellationRequested)
+            cancellationTokenSource.Cancel();
+    }
+
+    public static void TryCancelDispose(this CancellationTokenSource cancellationTokenSource)
+    {
+        if (!cancellationTokenSource.IsCancellationRequested)
+            cancellationTokenSource.Cancel();
+        cancellationTokenSource.Dispose();
+    }
+
+    public static async Task TryCancelAsync(this CancellationTokenSource cancellationTokenSource)
+    {
+        if (!cancellationTokenSource.IsCancellationRequested)
+            await cancellationTokenSource.CancelAsync();
+    }
+
+    public static async Task TryCancelDisposeAsync(this CancellationTokenSource cancellationTokenSource)
+    {
+        if (!cancellationTokenSource.IsCancellationRequested)
+            await cancellationTokenSource.CancelAsync();
+        cancellationTokenSource.Dispose();
     }
 
     private class CaseIgnoredStringComparer : IEqualityComparer<string>

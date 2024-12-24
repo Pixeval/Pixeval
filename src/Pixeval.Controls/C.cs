@@ -49,6 +49,8 @@ public static class C
 
     public static Visibility IsNotNullToVisibility(object? value) => value is null ? Visibility.Collapsed : Visibility.Visible;
 
+    public static bool IsZeroD(double value) => value < double.Epsilon;
+
     public static bool IsNotZero(int value) => value is not 0;
 
     public static bool IsNotZeroL(long value) => value is not 0;

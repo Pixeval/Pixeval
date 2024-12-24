@@ -38,12 +38,12 @@ public abstract partial class SortableEntryViewViewModel<T, [DynamicallyAccessed
     where TViewModel : EntryViewModel<T>, IFactory<T, TViewModel>, IWorkViewModel
 {
     [ObservableProperty]
-    private bool _isSelecting;
+    public partial bool IsSelecting { get; set; }
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsAnyEntrySelected))]
     [NotifyPropertyChangedFor(nameof(SelectionLabel))]
-    private TViewModel[] _selectedEntries = [];
+    public partial TViewModel[] SelectedEntries { get; set; } = [];
 
     IReadOnlyCollection<IWorkViewModel> ISortableEntryViewViewModel.SelectedEntries
     {

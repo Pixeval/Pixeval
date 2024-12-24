@@ -136,7 +136,7 @@ public abstract partial class DownloadTaskGroup(DownloadHistoryEntry entry) : Ob
     public void Pause()
     {
         IsProcessing = true;
-        CancellationTokenSource.Cancel();
+        CancellationTokenSource.TryCancel();
         TasksSet.ForEach(t => t.Pause());
         IsProcessing = false;
     }
@@ -163,7 +163,7 @@ public abstract partial class DownloadTaskGroup(DownloadHistoryEntry entry) : Ob
             return;
         IsProcessing = true;
         TasksSet.ForEach(t => t.Cancel());
-        CancellationTokenSource.Cancel();
+        CancellationTokenSource.TryCancel();
         IsProcessing = false;
     }
 

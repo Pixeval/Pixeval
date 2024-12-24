@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1" GroupingSetting="Alphabetical">
   <Class Name="Pixeval.CoreApi.Engine.Implements.AdaptedComputedFetchEngine&lt;T&gt;" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="121.25" Y="2.5" Width="1.5" />
+    <Position X="121.25" Y="2.5" Width="2.75" />
     <TypeIdentifier>
       <HashCode>AAQAAgAAAAAIAAAAACAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
       <FileName>Engine\Implements\AdaptedComputedFetchEngine.cs</FileName>
@@ -108,7 +108,7 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="Pixeval.CoreApi.Engine.ComputedFetchEngine&lt;T&gt;" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="123" Y="2.5" Width="1.5" />
+    <Position X="124.75" Y="2.5" Width="2.25" />
     <TypeIdentifier>
       <HashCode>AAQAAAAAAAAIAAAAACAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
       <FileName>Engine\ComputedFetchEngine.cs</FileName>
@@ -220,8 +220,8 @@
       <FileName>Engine\Implements\RecommendNovelEngine.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Pixeval.CoreApi.Engine.RecursivePixivAsyncEnumerators">
-    <Position X="121.25" Y="3.5" Width="6.25" />
+  <Class Name="Pixeval.CoreApi.Engine.RecursivePixivAsyncEnumerators" Collapsed="true">
+    <Position X="121.25" Y="3.5" Width="2.75" />
     <Compartments>
       <Compartment Name="Nested Types" Collapsed="false" />
     </Compartments>

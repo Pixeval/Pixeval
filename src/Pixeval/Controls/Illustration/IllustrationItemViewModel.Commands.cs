@@ -45,7 +45,7 @@ public partial class IllustrationItemViewModel
 
     protected override Task<bool> SetBookmarkAsync(long id, bool isBookmarked, bool privately = false, IEnumerable<string>? tags = null) => MakoHelper.SetIllustrationBookmarkAsync(id, isBookmarked, privately, tags);
 
-    protected override void SaveCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
+    protected override async void SaveCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
         var hWnd = null as ulong?;
         GetImageStreams? getImageStream = null;
@@ -64,7 +64,7 @@ public partial class IllustrationItemViewModel
                 return;
         }
 
-        SaveUtility(hWnd, getImageStream, App.AppViewModel.AppSettings.DownloadPathMacro);
+        await SaveUtilityAsync(hWnd, getImageStream, App.AppViewModel.AppSettings.DownloadPathMacro);
     }
 
     protected override async void SaveAsCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
@@ -94,7 +94,7 @@ public partial class IllustrationItemViewModel
 
         var name = Path.GetFileName(App.AppViewModel.AppSettings.DownloadPathMacro);
         var path = Path.Combine(folder.Path, name);
-        SaveUtility(hWnd, getImageStream, path);
+        await SaveUtilityAsync(hWnd, getImageStream, path);
     }
 
     /// <summary>
@@ -104,13 +104,18 @@ public partial class IllustrationItemViewModel
     /// <param name="getImageStream">获取原图的<see cref="Stream"/>，为<see langword="null"/>则创建新的下载任务</param>
     /// <param name="path">文件路径</param>
     /// <returns></returns>
-    private void SaveUtility(ulong? hWnd, GetImageStreams? getImageStream, string path)
+    private async Task SaveUtilityAsync(ulong? hWnd, GetImageStreams? getImageStream, string path)
     {
         var ib = hWnd?.InfoGrowlReturn("");
         if (ib is not null)
             ib.Title = EntryItemResources.ImageProcessing;
 
-        var source = getImageStream?.Invoke(true);
+        IReadOnlyList<Stream>? source;
+        if (getImageStream is null)
+            source = null;
+        else
+            source = await getImageStream(true);
+
         var factory = App.AppViewModel.AppServiceProvider.GetRequiredService<IllustrationDownloadTaskFactory>();
         if (source is null)
         {
@@ -151,7 +156,7 @@ public partial class IllustrationItemViewModel
                 progress = new Progress<double>(d => ib.Title = EntryItemResources.UgoiraProcessing.Format(d));
             else
                 ib.Title = EntryItemResources.ImageProcessing;
-        if (getImageStream(App.AppViewModel.AppSettings.BrowseOriginalImage) is { } sources)
+        if (await getImageStream(App.AppViewModel.AppSettings.BrowseOriginalImage) is { } sources)
         {
             if (sources is [var src])
             {
@@ -172,4 +177,4 @@ public partial class IllustrationItemViewModel
     public override Uri PixEzUri => MakoHelper.GenerateIllustrationPixEzUri(Id);
 }
 
-public delegate IReadOnlyList<Stream>? GetImageStreams(bool needOriginal);
+public delegate ValueTask<IReadOnlyList<Stream>?> GetImageStreams(bool needOriginal);

@@ -24,7 +24,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.WinUI.Collections;
 using Pixeval.AppManagement;
-using Pixeval.Controls;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Model;
 using Pixeval.Options;
@@ -34,7 +33,7 @@ namespace Pixeval.Util;
 
 public static class MakoHelper
 {
-    public static IReadOnlyList<int> StickerIds =
+    public static readonly IReadOnlyList<int> StickerIds =
     [
         .. Enumerable.Range(301, 10),
         .. Enumerable.Range(401, 10),
@@ -121,26 +120,6 @@ public static class MakoHelper
     public static string GetThumbnailCacheKey(string url) => $"thumbnail-{url}";
 
     public static string GetOriginalCacheKey(string url) => $"original-{url}";
-
-    public static async ValueTask<string> GetIllustrationCacheKeyAsync(this IllustrationItemViewModel illustration, bool isOriginal)
-    {
-        if (illustration.IsManga)
-        {
-            var staticUrl = illustration.StaticUrl(isOriginal);
-            return isOriginal ? GetOriginalCacheKey(staticUrl) : GetThumbnailCacheKey(staticUrl);
-        }
-
-        if (illustration.IsUgoira)
-        {
-            if (isOriginal)
-                ThrowHelper.Argument(isOriginal);
-            else
-                return GetThumbnailCacheKey(await illustration.UgoiraMediumZipUrlAsync());
-        }
-
-        var staticUrl2 = illustration.StaticUrl(isOriginal);
-        return isOriginal ? GetOriginalCacheKey(staticUrl2) : GetThumbnailCacheKey(staticUrl2);
-    }
 
     public static SortDescription? GetSortDescriptionForIllustration(WorkSortOption sortOption)
     {
