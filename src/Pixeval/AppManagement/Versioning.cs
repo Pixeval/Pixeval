@@ -6,46 +6,50 @@ using System.Net.Http.Json;
 using System.Runtime.InteropServices;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-using CommunityToolkit.HighPerformance;
-using Semver;
+using Windows.ApplicationModel;
 
 namespace Pixeval.AppManagement;
 
 public class Versioning
 {
-    public SemVersion CurrentVersion { get; } = SemVersion.TryParse(ThisAssembly.Git.
-#if DEBUG
-            Tag
-#else
-            BaseTag
-#endif
-        , SemVersionStyles.Strict, out var semver) ? semver : SemVersion.Parse("1.0.0");
+    public PackageVersion CurrentVersion { get; } = Package.Current.Id.Version;
 
-    public SemVersion? NewestVersion => NewestAppReleaseModel?.Version;
+    public PackageVersion? NewestVersion => NewestAppReleaseModel?.Version;
 
     public AppReleaseModel? NewestAppReleaseModel => AppReleaseModels?[0];
 
     public AppReleaseModel? CurrentAppReleaseModel => AppReleaseModels?.FirstOrDefault(t => t.Version == CurrentVersion);
 
-    public UpdateState CompareUpdateState(SemVersion currentVersion, SemVersion? newVersion)
+    public UpdateState CompareUpdateState(PackageVersion currentVersion, PackageVersion? newVersion)
     {
-        if (newVersion is null)
+        if (newVersion is not { } version)
             return UpdateState.Unknown;
 
-        return currentVersion.ComparePrecedenceTo(newVersion) switch
+        var currentLong = ((ulong)currentVersion.Major << 0x30) +
+                          ((ulong)currentVersion.Minor << 0x20) + 
+                          ((ulong)currentVersion.Build << 0x10) + 
+                          currentVersion.Revision;
+        var newLong = ((ulong)version.Major << 0x30) + 
+                      ((ulong)version.Minor << 0x20) + 
+                      ((ulong)version.Build << 0x10) + 
+                      version.Revision;
+
+        if (currentLong > newLong)
+            return UpdateState.Insider;
+
+        return (newLong - currentLong) switch
         {
-            > 0 => UpdateState.Insider,
             0 => UpdateState.UpToDate,
-            _ => newVersion.Major > currentVersion.Major ? UpdateState.MajorUpdate :
-                newVersion.Minor > currentVersion.Minor ? UpdateState.MinorUpdate :
-                newVersion.Patch > currentVersion.Patch ? UpdateState.BuildUpdate :
-                UpdateState.SpecifierUpdate
+            > 0x30 => UpdateState.MajorUpdate,
+            > 0x20 => UpdateState.MinorUpdate,
+            > 0x10 => UpdateState.BuildUpdate,
+            _ => UpdateState.RevisionUpdate
         };
     }
 
     public UpdateState UpdateState { get; private set; }
 
-    public bool UpdateAvailable { get; private set; }
+    public bool UpdateAvailable => UpdateState is not UpdateState.UpToDate and not UpdateState.Insider and not UpdateState.Unknown;
 
     public AppReleaseModel[]? AppReleaseModels { get; private set; }
 
@@ -53,7 +57,6 @@ public class Versioning
     {
         try
         {
-            AppReleaseModels = null;
             if (client.DefaultRequestHeaders.UserAgent.Count is 0)
                 client.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36 Edg/121.0.0.0");
             if (await client.GetFromJsonAsync("https://api.github.com/repos/Pixeval/Pixeval/releases", typeof(GitHubRelease[]), GitHubReleaseSerializeContext.Default) is GitHubRelease[] { Length: > 0 } gitHubReleases)
@@ -61,23 +64,22 @@ public class Versioning
                 var appReleaseModels = new List<AppReleaseModel>(gitHubReleases.Length);
                 foreach (var release in gitHubReleases)
                 {
-                    var tag = release.TagName;
-                    for (var j = tag.Count('.'); j < 2; ++j)
-                        tag += ".0";
-                    if (SemVersion.TryParse(tag, SemVersionStyles.Strict, out var appVersion))
-                    {
-                        App.AppViewModel.AppSettings.LastCheckedUpdate = DateTimeOffset.Now;
-                        var str = release.Assets.FirstOrDefault(t =>
-                            t.BrowserDownloadUrl.EndsWith(RuntimeInformation.ProcessArchitecture + ".exe",
-                                StringComparison.OrdinalIgnoreCase))?.BrowserDownloadUrl;
-                        var uri = str is null ? null : new Uri(str);
+                    var tags = release.TagName.Split('.')
+                        .Select(t => ushort.TryParse(t, out var result) ? result : (ushort)0u)
+                        .Concat(Enumerable.Repeat((ushort)0u, 4)).ToArray();
+                    var version = new PackageVersion(tags[0], tags[1], tags[2], tags[3]);
+                    var str = release.Assets.FirstOrDefault(t =>
+                        t.BrowserDownloadUrl.EndsWith(RuntimeInformation.ProcessArchitecture + ".exe",
+                            StringComparison.OrdinalIgnoreCase))?.BrowserDownloadUrl;
+                    var uri = str is null ? null : new Uri(str);
 
-                        appReleaseModels.Add(new AppReleaseModel(
-                            appVersion,
-                            release.Notes,
-                            uri));
-                    }
+                    appReleaseModels.Add(new AppReleaseModel(
+                        version,
+                        release.Notes,
+                        uri));
                 }
+
+                App.AppViewModel.AppSettings.LastCheckedUpdate = DateTimeOffset.Now;
 
                 appReleaseModels.Sort();
                 appReleaseModels.Reverse();
@@ -90,12 +92,11 @@ public class Versioning
             // ignored
         }
         UpdateState = AppReleaseModels is null ? UpdateState.Unknown : CompareUpdateState(CurrentVersion, NewestVersion);
-        UpdateAvailable = UpdateState is not UpdateState.UpToDate and not UpdateState.Insider and not UpdateState.Unknown;
     }
 }
 
 public record AppReleaseModel(
-    SemVersion Version,
+    PackageVersion Version,
     string ReleaseNote,
     Uri? ReleaseUri) : IComparable<AppReleaseModel>
 {
@@ -105,14 +106,25 @@ public record AppReleaseModel(
             return 0;
         if (other is null)
             return 1;
-        return Version.ComparePrecedenceTo(other.Version);
+        var currentLong = ((ulong)Version.Major << 0x30) + 
+                          ((ulong)Version.Minor << 0x20) +
+                          ((ulong)Version.Build << 0x10) + 
+                          Version.Revision;
+        var newLong = ((ulong)other.Version.Major << 0x30) + 
+                      ((ulong)other.Version.Minor << 0x20) +
+                      ((ulong)other.Version.Build << 0x10) + 
+                      other.Version.Revision;
+        if (currentLong > newLong)
+            return 1;
+        if (currentLong < newLong)
+            return -1;
+        return 0;
     }
 }
 
 [JsonSerializable(typeof(GitHubRelease[]))]
 [JsonSerializable(typeof(Assets[]))]
 public partial class GitHubReleaseSerializeContext : JsonSerializerContext;
-
 public class GitHubRelease
 {
     [JsonPropertyName("tag_name")]

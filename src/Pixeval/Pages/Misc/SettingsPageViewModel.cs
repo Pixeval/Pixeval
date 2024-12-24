@@ -281,7 +281,7 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
     {
         UpdateState.MajorUpdate => SettingsPageResources.MajorUpdateAvailable,
         UpdateState.MinorUpdate => SettingsPageResources.MinorUpdateAvailable,
-        UpdateState.BuildUpdate or UpdateState.SpecifierUpdate => SettingsPageResources.BuildUpdateAvailable,
+        UpdateState.BuildUpdate or UpdateState.RevisionUpdate => SettingsPageResources.BuildUpdateAvailable,
         UpdateState.Insider => SettingsPageResources.IsInsider,
         UpdateState.UpToDate => SettingsPageResources.IsUpToDate,
         _ => SettingsPageResources.UnknownUpdateState
