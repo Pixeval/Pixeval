@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="NonParameterizedMacroBearingParameterFormatted" xml:space="preserve">
+    <value>Le macro {0} ne peut contient aucun paramètre</value>
+  </data>
+  <data name="MacroShouldBeInLastSegmentFormatted" xml:space="preserve">
+    <value>Le macro {0} doit être utilisé dans un nom de fichier</value>
+  </data>
+  <data name="MacroShouldBeContainedFormatted" xml:space="preserve">
+    <value>Le macro {0} doit être contenu dans un macro de condition {1}</value>
+  </data>
+  <data name="NegationNotAllowedFormatted" xml:space="preserve">
+    <value>Les négations ne peuvent être utilisées dans le macro {0}</value>
+  </data>
+  <data name="ParameterizedMacroMissingParameterFormatted" xml:space="preserve">
+    <value>Le macro conditionnnel {0} manque un paramètre</value>
+  </data>
+  <data name="ResultIsEmpty" xml:space="preserve">
+    <value>Erreur de parsing: le résultat est vide</value>
+  </data>
+  <data name="UnexpectedTokenFormatted" xml:space="preserve">
+    <value>Entrée illégale: symbole non voulu dans l'offset {0} des caractères</value>
+  </data>
+  <data name="UnknownArtist" xml:space="preserve">
+    <value>Auteur inconnu</value>
+  </data>
+  <data name="UnknownIllustrationTitle" xml:space="preserve">
+    <value>Titre d'illustration inconnu</value>
+  </data>
+  <data name="UnknownMacroNameFormatted" xml:space="preserve">
+    <value>Nom de macro inconnu: {0}</value>
+  </data>
+  <data name="FilterQueryError" xml:space="preserve">
+    <value>Erreur de query du filtrage</value>
+  </data>
+  <data name="FilterTokenFinishedFormatted" xml:space="preserve">
+    <value>Symbol {0} voulu, mais le query est terminé</value>
+  </data>
+  <data name="UnexpactedTokenFormatted" xml:space="preserve">
+    <value>Symbol {0} voulu, mais {1} rencontré</value>
+  </data>
+  <data name="UnbalancedParFormatted" xml:space="preserve">
+    <value>Des parenthèses ne s'accordent, la première position d'impaire: {0}</value>
+  </data>
+  <data name="ParserOutOfRange" xml:space="preserve">
+    <value>Le parseur est en dehors de la portée</value>
+  </data>
+  <data name="ExpectedAndOrAfterLeftParFormatted" xml:space="preserve">
+    <value>Un "(" doit être suivi par un "and" ou "or", actuel: {0}</value>
+  </data>
+  <data name="ExpectedTokenAfterAtMarkFormatted" xml:space="preserve">
+    <value>Un "@" doit être suivi par un nom d'auteur ou son ID, actuel: {0}</value>
+  </data>
+  <data name="IndexRangeUsedMoreThanOnce" xml:space="preserve">
+    <value>Au plus un range est valide</value>
+  </data>
+  <data name="InvalidConstraintFormatted" xml:space="preserve">
+    <value>Contraint illégal, valeur valide: {0}, actuel: {1}</value>
+  </data>
+  <data name="NumericTooLargeFormatted" xml:space="preserve">
+    <value>La valeur d'entier est trop large, actuel: {0}</value>
+  </data>
+  <data name="ExpectedAtLeastTwoNumericInDateFormatted" xml:space="preserve">
+    <value>Au moins deux chiffres (MM-dd) sont nécessaire pour représenter une date, actuel: {0}</value>
+  </data>
+  <data name="ExpectedRightBracketOrParenInRangeFormatted" xml:space="preserve">
+    <value>Un segment de type portée (range) doit se termine avec soit ')' ou ']', valeur actuelle: {0}</value>
+  </data>
+  <data name="NumericTooSmallInRangeFormatted" xml:space="preserve">
+    <value>Le nombre entier dans la portée est trop petit, actuellement: {0}</value>
+  </data>
+  <data name="MinimumShouldBeSmallerThanMaximiumFormatted" xml:space="preserve">
+    <value>La valeur minimale ({0}) dans la portée doit être strictement inférieure à la valeur maximale ({1})</value>
+  </data>
+</root>

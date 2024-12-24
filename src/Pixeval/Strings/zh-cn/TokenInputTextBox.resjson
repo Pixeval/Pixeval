@@ -1,5 +1,0 @@
-{
-    "CaseSensitiveCheckBox/ToolTipService/ToolTip": "大小写敏感",
-    "IsRegularExpressionCheckBox/ToolTipService/ToolTip": "使用正则表达式",
-    "SubmitButton/ToolTipService/ToolTip": "提交"
-}

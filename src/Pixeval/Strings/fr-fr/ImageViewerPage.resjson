@@ -1,7 +1,0 @@
-{
-    "CheckingCache": "Vérification de cache en cours...",
-    "DownloadingImageFormatted": "Téléchargement d'image en cours: {0}%",
-    "LoadingFromCache": "Chargement depuis cache...",
-    "LoadingImage": "Décodage d'image...",
-    "MergingUgoiraFrames": "Merge des frames d'ugoira..."
-}

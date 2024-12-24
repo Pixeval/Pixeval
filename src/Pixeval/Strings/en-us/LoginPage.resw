@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ErrorWhileLoggingInTitle" xml:space="preserve">
+    <value>Login process aborted: error occured.</value>
+  </data>
+  <data name="ErrorWhileLogginInContentFormatted" xml:space="preserve">
+    <value>The app is about to exit, error message：
+{0}</value>
+  </data>
+  <data name="LoginPhaseCheckingCertificateInstallation" xml:space="preserve">
+    <value>Checking certificate installation...</value>
+  </data>
+  <data name="LoginPhaseCheckingWebView2Installation" xml:space="preserve">
+    <value>Ensuring WebView2 installed...</value>
+  </data>
+  <data name="LoginPhaseInstallingCertificate" xml:space="preserve">
+    <value>Installing certificate, please confirm in the dialog...</value>
+  </data>
+  <data name="LoginPhaseRefreshing" xml:space="preserve">
+    <value>Refreshing session...</value>
+  </data>
+  <data name="LoginPhaseSuccessNavigating" xml:space="preserve">
+    <value>Login success, navigating to the welcome page</value>
+  </data>
+  <data name="LoginPhaseWaitingForUserInput" xml:space="preserve">
+    <value>Waiting for user input</value>
+  </data>
+  <data name="SubmitButton.Content" xml:space="preserve">
+    <value>Login</value>
+  </data>
+  <data name="RefreshTokenBox.PlaceholderText" xml:space="preserve">
+    <value>Refresh token</value>
+  </data>
+  <data name="UserNameBox.PlaceholderText" xml:space="preserve">
+    <value>Email or pixiv ID</value>
+  </data>
+  <data name="PasswordBox.PlaceholderText" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="DisableDomainFrontingToggleSwitch.OnContent" xml:space="preserve">
+    <value>Enable</value>
+  </data>
+  <data name="RefreshingSessionFailedTitle" xml:space="preserve">
+    <value>Failed to refresh session</value>
+  </data>
+  <data name="FetchingSessionFailedContent" xml:space="preserve">
+    <value>Please restart the app
+If this problem persists, contact the developer for further help.</value>
+  </data>
+  <data name="FetchingSessionFailedTitle" xml:space="preserve">
+    <value>Failed to fetch session</value>
+  </data>
+  <data name="CertificateRequiredDialogContent.Text" xml:space="preserve">
+    <value>The certificate must be installed in order to login, the private key of this certificate is guaranteed not to be distributed, click "Use Pixeval's certificate" to the installation
+You can also choose to provide your own valid certificate by entering your certificate path and password in the text box below and selecting "Use your own certificate". If you are still unable to connect to Pixiv after this, you have provided the invalid certificate</value>
+  </data>
+  <data name="RootCertificateInstallationRequiredTitle" xml:space="preserve">
+    <value>You need to install the certificate to login</value>
+  </data>
+  <data name="WebView2InstallationRequiredContent" xml:space="preserve">
+    <value>WebView2 is required to log in using this method. By clicking OK the browser will be opened to download the WebView2 Runtime automatically, please restart the app after the installation.</value>
+  </data>
+  <data name="WebView2InstallationRequiredTitle" xml:space="preserve">
+    <value>WebView2 is required to log in using this method</value>
+  </data>
+  <data name="WebViewHelp.ToolTipService.ToolTip" xml:space="preserve">
+    <value>WebView2 is required to log in using this method.
+After you input the account and password, the app will keep it in the local storage
+
+Click on the "Login" button will open WebView2 to login automatically，However, if the error occurred while executing the script, or a captcha popped up, you will need to complete the login process manually
+
+If you don't trust the app, you can leave the text box empty, click login, and manually fill your credentials in the WebView
+
+Domain Fronting：Disabling this will force the app to use the system proxy. If you cannot access Pixiv properly, then it is better not to disable this option.</value>
+  </data>
+  <data name="SubmitWithNewAccountButton.Text" xml:space="preserve">
+    <value>Login with another account</value>
+  </data>
+  <data name="RefreshTokenButton.Content" xml:space="preserve">
+    <value>Login with refresh token</value>
+  </data>
+  <data name="BrowserButton.Content" xml:space="preserve">
+    <value>Login via Chrome/Edge (beta 🧪)</value>
+  </data>
+  <data name="WebViewButton.Content" xml:space="preserve">
+    <value>Login via Webview</value>
+  </data>
+  <data name="DisableDomainFrontingToggleSwitch.Header" xml:space="preserve">
+    <value>Domain fronting</value>
+  </data>
+  <data name="DisableDomainFrontingToggleSwitch.OffContent" xml:space="preserve">
+    <value>Disable</value>
+  </data>
+  <data name="RefreshingSessionFailedContent" xml:space="preserve">
+    <value>Please login again
+If this issue recurs, please contact the developer for a solution</value>
+  </data>
+  <data name="WebViewLoginTip.Title" xml:space="preserve">
+    <value>Attention</value>
+  </data>
+  <data name="WebViewLoginTip.Message" xml:space="preserve">
+    <value>WebView2 is required to use this method</value>
+  </data>
+  <data name="BrowserLoginTip.Title" xml:space="preserve">
+    <value>Attention</value>
+  </data>
+  <data name="BrowserLoginTip.Message" xml:space="preserve">
+    <value>reCAPTCHA may be invisible when using this method</value>
+  </data>
+  <data name="BrowserHelp.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Clicking Login will log you in using an external Chromium kernel browser such as Chrome or Edge. If this method fails, you can use other methods to try to login.
+
+Domain fronting: Disabling this will use the current local IE proxy. If you do not have direct access to pixiv at this time, you should not disable this option!</value>
+  </data>
+  <data name="RootCertificateInstallationRequiredSecondaryButtonText" xml:space="preserve">
+    <value>Use Pixeval's certificate</value>
+  </data>
+  <data name="RootCertificateInstallationRequiredPrimaryButtonText" xml:space="preserve">
+    <value>Use your own certificate</value>
+  </data>
+  <data name="CertificateRequiredDialogPath.PlaceholderText" xml:space="preserve">
+    <value>Certificate path</value>
+  </data>
+  <data name="CertificateRequiredDialogPassword.PlaceholderText" xml:space="preserve">
+    <value>Certificate password</value>
+  </data>
+  <data name="CertificateRequiredDialogInvalidInfoBar.Title" xml:space="preserve">
+    <value>Incorrect certificate path or password</value>
+  </data>
+</root>

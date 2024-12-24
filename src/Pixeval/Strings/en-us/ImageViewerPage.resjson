@@ -1,7 +1,0 @@
-{
-    "CheckingCache": "Checking cache...",
-    "DownloadingImageFormatted": "Downloading image: {0}%",
-    "LoadingFromCache": "Loading from cache...",
-    "LoadingImage": "Decoding...",
-    "MergingUgoiraFrames": "Composing ugoira..."
-}
