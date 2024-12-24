@@ -31,14 +31,15 @@ using Microsoft.UI.Xaml.Documents;
 using Pixeval.AppManagement;
 using Pixeval.CoreApi.Model;
 using Pixeval.Database.Managers;
-using Pixeval.Util;
 using Pixeval.Util.IO;
-using Pixeval.Utilities;
 using System.Text;
 using System.Threading;
 using QuestPDF.Fluent;
 using QuestPDF.Infrastructure;
 using Microsoft.UI.Xaml.Media;
+using Microsoft.Extensions.DependencyInjection;
+using Pixeval.Util.IO.Caching;
+using Pixeval.Utilities;
 
 namespace Pixeval.Controls;
 
@@ -175,13 +176,14 @@ public partial class DocumentViewerViewModel(NovelContent novelContent) : Observ
     {
         InitImages();
 
+        var memoryCache = App.AppViewModel.AppServiceProvider.GetRequiredService<MemoryCache>();
         foreach (var illust in NovelContent.Illusts)
         {
             if (LoadingCancellationTokenSource.IsCancellationRequested)
                 break;
             var key = (illust.Id, illust.Page);
-            var temp = IllustrationStreams[key] = await GetThumbnailAsync(illust.ThumbnailUrl);
-            IllustrationImages[key] = await temp.GetBitmapImageAsync(false, url: illust.ThumbnailUrl);
+            IllustrationStreams[key] = await memoryCache.GetStreamFromMemoryCacheAsync(illust.ThumbnailUrl, cancellationToken: LoadingCancellationTokenSource.Token);
+            IllustrationImages[key] = await memoryCache.GetSourceFromMemoryCacheAsync(illust.ThumbnailUrl, cancellationToken: LoadingCancellationTokenSource.Token);
             OnPropertyChanged(nameof(IllustrationImages) + key.GetHashCode());
         }
 
@@ -189,8 +191,8 @@ public partial class DocumentViewerViewModel(NovelContent novelContent) : Observ
         {
             if (LoadingCancellationTokenSource.IsCancellationRequested)
                 break;
-            var temp = UploadedStreams[image.NovelImageId] = await LoadThumbnailAsync(image.ThumbnailUrl);
-            UploadedImages[image.NovelImageId] = await temp.GetBitmapImageAsync(false, url: image.ThumbnailUrl);
+            UploadedStreams[image.NovelImageId] = await memoryCache.GetStreamFromMemoryCacheAsync(image.ThumbnailUrl, cancellationToken: LoadingCancellationTokenSource.Token);
+            UploadedImages[image.NovelImageId] = await memoryCache.GetSourceFromMemoryCacheAsync(image.ThumbnailUrl, cancellationToken: LoadingCancellationTokenSource.Token);
             OnPropertyChanged(nameof(UploadedImages) + image.NovelImageId);
         }
     }
@@ -226,33 +228,7 @@ public partial class DocumentViewerViewModel(NovelContent novelContent) : Observ
 
     public Stream TryGetNotAvailableImageStream(Stream? result) => result ?? AppInfo.GetImageNotAvailableStream();
 
-    private async Task<Stream> LoadThumbnailAsync(string url)
-    {
-        var cacheKey = MakoHelper.GetThumbnailCacheKey(url);
-
-        if (App.AppViewModel.AppSettings.UseFileCache && await App.AppViewModel.Cache.TryGetAsync<Stream>(cacheKey) is { } stream)
-        {
-            return stream;
-        }
-
-        var s = await GetThumbnailAsync(url);
-        if (App.AppViewModel.AppSettings.UseFileCache)
-            await App.AppViewModel.Cache.AddAsync(cacheKey, s, TimeSpan.FromDays(1));
-        return s;
-    }
-
     private CancellationTokenSource LoadingCancellationTokenSource { get; } = new();
-
-    /// <summary>
-    /// 直接获取对应缩略图
-    /// </summary>
-    public async Task<Stream> GetThumbnailAsync(string url)
-    {
-        return await App.AppViewModel.MakoClient.DownloadMemoryStreamAsync(url, cancellationToken: LoadingCancellationTokenSource.Token) is
-            Result<Stream>.Success(var stream)
-            ? stream
-            : AppInfo.GetImageNotAvailableStream();
-    }
 
     public static async Task<DocumentViewerViewModel> CreateAsync(NovelItemViewModel novelItem, Action<Task> callback)
     {
@@ -279,8 +255,7 @@ public partial class DocumentViewerViewModel(NovelContent novelContent) : Observ
 
     public void Dispose()
     {
-        LoadingCancellationTokenSource.Cancel();
-        LoadingCancellationTokenSource.Dispose();
+        LoadingCancellationTokenSource.TryCancelDispose();
         IllustrationImages.Clear();
         UploadedImages.Clear();
         foreach (var (_, value) in IllustrationStreams)

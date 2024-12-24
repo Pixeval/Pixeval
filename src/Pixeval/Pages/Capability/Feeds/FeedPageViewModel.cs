@@ -29,7 +29,7 @@ namespace Pixeval.Pages.Capability.Feeds;
 public partial class FeedPageViewModel : EntryViewViewModel<IFeedEntry, AbstractFeedItemViewModel>
 {
     [ObservableProperty]
-    private bool _isLoading;
+    public partial bool IsLoading { get; set; }
 
     private CancellationTokenSource _loadingCancellation = new();
 

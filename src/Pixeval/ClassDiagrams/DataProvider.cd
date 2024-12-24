@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Class Name="Pixeval.Pages.Tags.TagsEntryIncrementalSource" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="49.75" Y="1.75" Width="1.5" />
+    <Position X="11.75" Y="1.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Pages\Tags\TagsEntryIncrementalSource.cs</FileName>
@@ -9,7 +9,7 @@
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="Pixeval.Pages.Tags.TagsEntryDataProvider" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="15" Y="2" Width="2" />
+    <Position X="8.75" Y="1.75" Width="2" />
     <TypeIdentifier>
       <HashCode>AAAAAAEAAiAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Pages\Tags\TagsEntryDataProvider.cs</FileName>
@@ -17,7 +17,7 @@
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="Pixeval.Controls.FetchEngineIncrementalSource&lt;T, TViewModel&gt;" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="51.5" Y="0.75" Width="1.5" />
+    <Position X="13.5" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAABAIAAAAAQAAAAAgQAAAAAAAAAAAAAAAAQAAAAAA=</HashCode>
       <FileName>Controls\Entry\FetchEngineIncrementalSource.cs</FileName>
@@ -25,125 +25,47 @@
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="Pixeval.Controls.SharableViewDataProvider&lt;T, TViewModel&gt;" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="6.75" Y="2" Width="3.5" />
+    <Position X="0.5" Y="1.75" Width="3.5" />
     <TypeIdentifier>
-      <HashCode>EAAEAAEAAjAAAACAAAAAAAIAAAABggAAAAAAAAAAAAA=</HashCode>
+      <HashCode>EAAEAAEAAiAAAACAAAAAAAIAAAABgAAAAAAAAAAAAAA=</HashCode>
       <FileName>Controls\Entry\SharableViewDataProvider.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="Pixeval.Controls.SimpleViewDataProvider&lt;T, TViewModel&gt;" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="11" Y="2" Width="3.25" />
+    <Position X="4.75" Y="1.75" Width="3.25" />
     <TypeIdentifier>
-      <HashCode>AAAEAAEAAiAEAAAAAAAAAAAAAAABAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAEAAEAAiAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Controls\Entry\SimpleViewDataProvider.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="CommunityToolkit.Mvvm.ComponentModel.ObservableObject" Collapsed="true">
-    <Position X="27" Y="0.75" Width="1.5" />
+    <Position X="5" Y="0.5" Width="1.5" />
     <TypeIdentifier />
   </Class>
-  <Class Name="Pixeval.Controls.CommentItemViewModel" Collapsed="true">
-    <Position X="17.75" Y="2" Width="2.25" />
+  <Class Name="Pixeval.Pages.CommentsIncrementalSource" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="11.75" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>ABEAAEAMADAAQBAAAAAAAAACAEAgEgAgAggiCAAAAQA=</HashCode>
-      <FileName>Controls\Comment\CommentItemViewModel.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Pages\WorkViewer\CommentsIncrementalSource.cs</FileName>
     </TypeIdentifier>
-    <Lollipop Position="0.2" />
+    <Lollipop Position="0.2" Collapsed="true" />
   </Class>
-  <Class Name="Pixeval.Controls.DocumentViewerViewModel" Collapsed="true">
-    <Position X="20.75" Y="2" Width="2.25" />
-    <TypeIdentifier>
-      <HashCode>EAEAIkAQAGAABhAgUAsAIACAAAQAAAABAAgBAKIQABA=</HashCode>
-      <FileName>Controls\DocumentViewer\DocumentViewerViewModel.cs</FileName>
-    </TypeIdentifier>
-    <Lollipop Position="0.2" />
-  </Class>
-  <Class Name="Pixeval.Controls.FlyoutContent.BookmarkTagSelectorViewModel" Collapsed="true">
-    <Position X="23.75" Y="2" Width="2.75" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAACAAA=</HashCode>
-      <FileName>Controls\FlyoutContent\BookmarkTagSelectorViewModel.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="Pixeval.Controls.Token" Collapsed="true">
-    <Position X="27.25" Y="2" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAggAAAAAAAAAAgAIAgAAAAIAAAYAAAAAAAAAABCA=</HashCode>
-      <FileName>Controls\TokenInput\Token.cs</FileName>
-    </TypeIdentifier>
-    <Lollipop Position="0.2" />
-  </Class>
-  <Class Name="Pixeval.Database.DownloadHistoryEntry" Collapsed="true">
-    <Position X="49.75" Y="0.75" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAQAAAAAAAAAAAAAAAAAAAAAIAAAAAEAQAABAAAAAA=</HashCode>
-      <FileName>Database\DownloadHistoryEntry.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="Pixeval.Pages.Capability.BookmarkPageViewModel" Collapsed="true">
-    <Position X="29.5" Y="2" Width="2.25" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAGIAAABAAAEAAAgCAAAAAAELAAAIAAAAAAI=</HashCode>
-      <FileName>Pages\Capability\BookmarkPageViewModel.cs</FileName>
-    </TypeIdentifier>
-    <Lollipop Position="0.2" />
-  </Class>
-  <Class Name="Pixeval.Pages.Login.LoginPageViewModel" Collapsed="true">
-    <Position X="32.5" Y="2" Width="2" />
-    <TypeIdentifier>
-      <HashCode>EAIAAJIAALgCAECAACQAAAAAAAAIAAAAAAAQABAAAAQ=</HashCode>
-      <FileName>Pages\Login\LoginPageViewModel.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="Pixeval.Pages.CommentsPageViewModel" Collapsed="true">
-    <Position X="35.25" Y="2" Width="2.25" />
-    <TypeIdentifier>
-      <HashCode>ABAAAAAIACAAAAAAAAAAAAAAAAABAAAAAAAgAAAAAQA=</HashCode>
-      <FileName>Pages\WorkViewer\CommentsPageViewModel.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="Pixeval.Pages.WorkInfoPageViewModel&lt;T&gt;" Collapsed="true">
-    <Position X="38.25" Y="2" Width="2.5" />
-    <TypeIdentifier>
-      <HashCode>AAAQAAAAACAAQAAAAAAAAIAAAAAAAAAAAIIAAAAAAAA=</HashCode>
-      <FileName>Pages\WorkViewer\WorkInfoPageViewModel.cs</FileName>
-    </TypeIdentifier>
-    <Lollipop Position="0.2" />
-  </Class>
-  <Class Name="Pixeval.Pages.MainPageViewModel" Collapsed="true">
-    <Position X="41.5" Y="2" Width="1.75" />
-    <TypeIdentifier>
-      <HashCode>AABggAAIAAAAQABAAAAIEAARACCICIgAAQAAAAEAAgg=</HashCode>
-      <FileName>Pages\MainPageViewModel.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="Pixeval.Util.ComponentModels.DetailedObservableObject" Collapsed="true">
-    <Position X="44" Y="2" Width="2.25" />
-    <TypeIdentifier>
-      <HashCode>BAAAAAAAAAAAAAAAABAAQAAAAAIAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Util\ComponentModels\DetailedObservableObject.cs</FileName>
-    </TypeIdentifier>
-    <Lollipop Position="0.2" />
-  </Class>
-  <Class Name="Pixeval.Util.ComponentModels.UiObservableObject" Collapsed="true">
-    <Position X="47" Y="2" Width="1.75" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAACAAAEAAAAAAAAAAAAA=</HashCode>
-      <FileName>Util\ComponentModels\UiObservableObject.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Interface Name="Pixeval.CoreApi.Engine.IFetchEngine&lt;TE&gt;" Collapsed="true">
-    <Position X="51.5" Y="3" Width="1.5" />
+  <Interface Name="Pixeval.CoreApi.Engine.IFetchEngine&lt;TResult&gt;" Collapsed="true">
+    <Position X="13.5" Y="2.75" Width="1.5" />
     <TypeIdentifier />
   </Interface>
   <Interface Name="Pixeval.Controls.IDataProvider&lt;T, TViewModel&gt;" Collapsed="true">
-    <Position X="49.75" Y="3" Width="1.5" />
+    <Position X="11.75" Y="2.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAEAAEAAgAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Controls\Entry\IDataProvider.cs</FileName>
     </TypeIdentifier>
+  </Interface>
+  <Interface Name="CommunityToolkit.Common.Collections.IIncrementalSource&lt;TSource&gt;" Collapsed="true">
+    <Position X="11.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier />
   </Interface>
   <Font Name="Microsoft YaHei UI" Size="9" />
 </ClassDiagram>

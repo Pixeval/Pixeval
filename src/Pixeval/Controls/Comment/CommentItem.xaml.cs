@@ -19,12 +19,11 @@
 #endregion
 
 using System;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Media;
-using Pixeval.AppManagement;
 using Pixeval.Pages.IllustratorViewer;
 using Pixeval.Util.IO;
-using Pixeval.Utilities;
+using Pixeval.Util.IO.Caching;
 using WinUI3Utilities.Attributes;
 
 namespace Pixeval.Controls;
@@ -47,10 +46,7 @@ public sealed partial class CommentItem
         _ = viewModel.LoadAvatarSource();
         if (viewModel.IsStamp)
         {
-            var result = await App.AppViewModel.MakoClient.DownloadBitmapImageAsync(viewModel.StampSource);
-            block.StickerImageContent.Source = result is Result<ImageSource>.Success { Value: var avatar }
-                ? avatar
-                : await AppInfo.ImageNotAvailable;
+            block.StickerImageContent.Source = await App.AppViewModel.AppServiceProvider.GetRequiredService<MemoryCache>().GetSourceFromMemoryCacheAsync(viewModel.StampSource);
         }
         else
         {

@@ -1,5 +1,4 @@
 {
     "InvalidIPFormat": "Недопустимый формат IP",
-    "DuplicatesWithExistingIP": "Совпадает с существующим IP",
-    "AddItemAutoSuggestBox/PlaceholderText": "Введите IP и нажмите '+' для добавления"
+    "DuplicatesWithExistingIP": "Совпадает с существующим IP"
 }

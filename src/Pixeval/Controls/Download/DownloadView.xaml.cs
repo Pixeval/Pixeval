@@ -33,13 +33,13 @@ public sealed partial class DownloadView : UserControl
 
     private async void DownloadItem_OnViewModelChanged(DownloadItem sender, DownloadItemViewModel viewModel)
     {
-        _ = await viewModel.TryLoadThumbnailAsync(ViewModel);
+        _ = await viewModel.TryLoadThumbnailAsync();
     }
 
     private void DownloadView_OnUnloaded(object sender, RoutedEventArgs e)
     {
         foreach (var viewModel in ViewModel.View.Source)
-            viewModel.UnloadThumbnail(ViewModel);
+            viewModel.UnloadThumbnail();
         ViewModel.Dispose();
     }
 }

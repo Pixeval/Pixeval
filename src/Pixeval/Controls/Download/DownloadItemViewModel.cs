@@ -41,16 +41,8 @@ public sealed partial class DownloadItemViewModel(IDownloadTaskGroup downloadTas
 {
     public IDownloadTaskGroup DownloadTask { get; } = downloadTask;
 
-    public override async ValueTask<bool> TryLoadThumbnailAsync(IDisposable key)
+    public override async ValueTask<bool> TryLoadThumbnailAsync()
     {
-        if (ThumbnailSourceRef is not null)
-        {
-            _ = ThumbnailSourceRef.MakeShared(key);
-
-            // 之前已加载
-            return false;
-        }
-
         if (DownloadTask.CurrentState is DownloadState.Completed || DownloadTask.DatabaseEntry.Type is DownloadItemType.Manga or DownloadItemType.Novel)
         {
             var path = null as string;
@@ -62,14 +54,13 @@ public sealed partial class DownloadItemViewModel(IDownloadTaskGroup downloadTas
             if (path is not null && !LoadingThumbnail)
             {
                 LoadingThumbnail = true;
-                var s = await IoHelper.GetFileThumbnailAsync(path);
-                ThumbnailSourceRef = new SharedRef<ImageSource>(await s.GetBitmapImageAsync(true, url: path), key);
+                ThumbnailSource = await IoHelper.GetFileThumbnailAsync(path);
                 LoadingThumbnail = false;
                 return true;
             }
         }
 
-        return await base.TryLoadThumbnailAsync(key);
+        return await base.TryLoadThumbnailAsync();
     }
 
     public static DownloadItemViewModel CreateInstance(IDownloadTaskGroup entry) => new(entry);

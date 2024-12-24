@@ -25,9 +25,10 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System;
 using Microsoft.UI;
-using Pixeval.AppManagement;
 using WinUI3Utilities;
 using CommunityToolkit.Mvvm.ComponentModel;
+using Microsoft.Extensions.DependencyInjection;
+using Pixeval.Util.IO.Caching;
 
 namespace Pixeval.Pages.Capability.Feeds;
 
@@ -66,14 +67,10 @@ public partial class FeedItemCondensedViewModel(List<Feed?> entries) : AbstractF
         if (UserAvatar is not null)
             return;
 
+        var memoryCache = App.AppViewModel.AppServiceProvider.GetRequiredService<MemoryCache>();
         if (entries[0]?.PostUserThumbnail is { Length: > 0 } url)
-        {
-            var image = (await App.AppViewModel.MakoClient.DownloadBitmapImageWithDesiredSizeAsync(url, 35)).UnwrapOrElse(await AppInfo.ImageNotAvailable)!;
-            UserAvatar = image;
-        }
+            UserAvatar = await memoryCache.GetSourceFromMemoryCacheAsync(url, desiredWidth: 35);
         else
-        {
-            UserAvatar = await AppInfo.ImageNotAvailable;
-        }
+            UserAvatar = memoryCache.ImageNotAvailable;
     }
 }

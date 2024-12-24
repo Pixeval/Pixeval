@@ -23,13 +23,14 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Controls;
 using Pixeval.Util;
 using Pixeval.Util.IO;
+using Pixeval.Util.IO.Caching;
 using Pixeval.Utilities;
 using WinUI3Utilities;
 
@@ -60,8 +61,9 @@ public sealed partial class PixivReplyStickerListPage
         if (Stickers.Count is 0)
         {
             var results = await Task.WhenAll(MakoHelper.StickerIds
-                .Select(async id => await App.AppViewModel.MakoClient.DownloadBitmapImageWithDesiredSizeAsync(
-                    MakoHelper.GenerateStickerDownloadUrl(id), 83) is Result<ImageSource>.Success { Value: { } result } ? new PixivReplyStickerViewModel(id, result) : null));
+                .Select(async id => new PixivReplyStickerViewModel(id,
+                    await App.AppViewModel.AppServiceProvider.GetRequiredService<MemoryCache>()
+                        .GetSourceFromMemoryCacheAsync(MakoHelper.GenerateStickerDownloadUrl(id), desiredWidth: 83))));
             Stickers.AddRange(results.WhereNotNull());
         }
     }

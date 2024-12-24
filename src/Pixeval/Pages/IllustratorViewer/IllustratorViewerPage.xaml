@@ -101,27 +101,27 @@
                                         Visibility="{x:Bind controls:C.ToVisibility(_viewModel.IsPremium)}" />
                                 </StackPanel>
                             </AppBarElementContainer>
-                            <controls:AppButtonItem
+                            <controls:AppBarNumberItem
                                 x:Uid="/EntryViewerPage/FollowingUserItem"
                                 Number="{x:Bind _viewModel.Metrics.TotalFollowUsers, Mode=OneWay}"
                                 Symbol="PersonAdd" />
                             <AppBarSeparator />
-                            <controls:AppButtonItem
+                            <controls:AppBarNumberItem
                                 x:Uid="/EntryViewerPage/MyPixivUserItem"
                                 Number="{x:Bind _viewModel.Metrics.TotalMyPixivUsers, Mode=OneWay}"
                                 Symbol="People" />
                             <AppBarSeparator />
-                            <controls:AppButtonItem
+                            <controls:AppBarNumberItem
                                 x:Uid="/EntryViewerPage/IllustrationCountItem"
                                 Number="{x:Bind _viewModel.Metrics.TotalIllusts, Mode=OneWay}"
                                 Symbol="Image" />
                             <AppBarSeparator />
-                            <controls:AppButtonItem
+                            <controls:AppBarNumberItem
                                 x:Uid="/EntryViewerPage/MangaCountItem"
                                 Number="{x:Bind _viewModel.Metrics.TotalManga, Mode=OneWay}"
                                 Symbol="ImageMultiple" />
                             <AppBarSeparator />
-                            <controls:AppButtonItem
+                            <controls:AppBarNumberItem
                                 x:Uid="/EntryViewerPage/NovelCountItem"
                                 Number="{x:Bind _viewModel.Metrics.TotalNovelSeries, Mode=OneWay}"
                                 Symbol="BookOpen" />

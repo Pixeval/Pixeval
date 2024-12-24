@@ -113,7 +113,7 @@ public partial class ZoomableImage
     private void OnImageScaleChanged(float oldScale)
     {
         // 初始化时抑制动画
-        if (_isInitMode || Sources is not { Count: > 0 })
+        if (_isInitMode || Source is null)
             _isInitMode = false;
         else
             StartZoomAnimation(oldScale);

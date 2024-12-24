@@ -94,7 +94,7 @@ public partial class NovelViewerPageViewModel : DetailedUiObservableObject, IDis
     {
         GC.SuppressFinalize(this);
         foreach (var novelViewModel in Novels)
-            novelViewModel.UnloadThumbnail(this);
+            novelViewModel.UnloadThumbnail();
         ViewModelSource?.Dispose();
     }
 

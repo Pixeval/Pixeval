@@ -60,15 +60,11 @@ public static partial class AppInfo
 
     public static bool CustomizeTitleBarSupported => AppWindowTitleBar.IsCustomizationSupported();
 
-    public static Task<ImageSource> ImageNotAvailable { get; } = GetImageNotAvailableStream().GetBitmapImageAsync(true, url: "Images/image-not-available.png");
-
     public static Stream GetImageNotAvailableStream() => GetAssetStream("Images/image-not-available.png");
-
-    public static Task<ImageSource> PixivNoProfile { get; } = GetPixivNoProfileStream().GetBitmapImageAsync(true, url: "Images/pixiv_no_profile.png");
 
     public static Stream GetPixivNoProfileStream() => GetAssetStream("Images/pixiv_no_profile.png");
 
-    public static Task<ImageSource> Icon { get; } = GetAssetStream("Images/logo.ico").GetBitmapImageAsync(true, url: "Images/logo.ico");
+    public static Task<ImageSource> Icon { get; } = GetAssetStream("Images/logo.ico").DecodeBitmapImageAsync(true);
 
     static AppInfo()
     {

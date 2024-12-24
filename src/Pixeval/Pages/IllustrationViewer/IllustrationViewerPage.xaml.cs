@@ -19,8 +19,8 @@
 #endregion
 
 using System;
+using System.Diagnostics;
 using System.Numerics;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
@@ -38,7 +38,6 @@ using WinRT;
 using WinUI3Utilities;
 using Windows.System;
 using Pixeval.Controls.Windowing;
-using Pixeval.Upscaling;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
@@ -75,9 +74,9 @@ public sealed partial class IllustrationViewerPage
         // 此处this.XamlRoot为null
         _viewModel = HWnd.GetIllustrationViewerPageViewModelFromHandle(parameter);
 
-        _viewModel.CurrentImage.UpscalerMessageChannel.Reader.OnReceive(
-            reader => reader == _viewModel.CurrentImage.UpscalerMessageChannel.Reader,
-            OnReceiveUpscalerMessage);
+        //_viewModel.CurrentImage.UpscalerMessageChannel.Reader.OnReceive(
+        //    reader => reader == _viewModel.CurrentImage.UpscalerMessageChannel.Reader,
+        //    OnReceiveUpscalerMessage);
 
         _viewModel.DetailedPropertyChanged += (sender, args) =>
         {
@@ -101,15 +100,16 @@ public sealed partial class IllustrationViewerPage
                 var newTag = args.NewTag.To<long>(); // vm.CurrentPage.Id
                 if (oldTag == newTag)
                     return;
-                ThumbnailItemsView.StartBringItemIntoView(vm.CurrentIllustrationIndex, new BringIntoViewOptions { AnimationDesired = true });
+                // TODO: https://github.com/microsoft/microsoft-ui-xaml/issues/9952
+                // ThumbnailItemsView.StartBringItemIntoView(vm.CurrentIllustrationIndex, new BringIntoViewOptions { AnimationDesired = true });
                 EntryViewerSplitView.NavigationViewSelect(vm.Tags[0]);
             }
 
             Navigate<ImageViewerPage>(IllustrationImageShowcaseFrame, vm.CurrentImage, info);
 
-            vm.CurrentImage.UpscalerMessageChannel.Reader.OnReceive(
-                reader => reader == vm.CurrentImage.UpscalerMessageChannel.Reader,
-                OnReceiveUpscalerMessage);
+            //vm.CurrentImage.UpscalerMessageChannel.Reader.OnReceive(
+            //    reader => reader == vm.CurrentImage.UpscalerMessageChannel.Reader,
+            //    OnReceiveUpscalerMessage);
         };
 
         _viewModel.PropertyChanged += (sender, args) =>
@@ -130,30 +130,30 @@ public sealed partial class IllustrationViewerPage
         Navigate<ImageViewerPage>(IllustrationImageShowcaseFrame, _viewModel.CurrentImage);
     }
 
-    [GeneratedRegex(@"\d+\.\d+%")]
-    private static partial Regex UpscalerMessagePercentageRegex();
+    //[GeneratedRegex(@"\d+\.\d+%")]
+    //private static partial Regex UpscalerMessagePercentageRegex();
 
-    private void OnReceiveUpscalerMessage(string message)
-    {
-        _viewModel.UpscalerProgressBarVisible = UpscalerMessagePercentageRegex().IsMatch(message);
-        _viewModel.AdditionalTextBlockVisible = !_viewModel.UpscalerProgressBarVisible;
-        if (message == Upscaler.ProcessCompletedMark)
-        {
-            _viewModel.UpscalerProgressText = string.Empty;
-            _viewModel.UpscalerProgress = 0;
-            _viewModel.AdditionalText = $"{EntryViewerPageResources.AiUpscaled}";
-            return;
-        }
+    //private void OnReceiveUpscalerMessage(string message)
+    //{
+        //_viewModel.UpscalerProgressBarVisible = UpscalerMessagePercentageRegex().IsMatch(message);
+        //_viewModel.AdditionalTextBlockVisible = !_viewModel.UpscalerProgressBarVisible;
+        //if (message == Upscaler.ProcessCompletedMark)
+        //{
+        //    _viewModel.UpscalerProgressText = string.Empty;
+        //    _viewModel.UpscalerProgress = 0;
+        //    _viewModel.AdditionalText = $"{EntryViewerPageResources.AiUpscaled}";
+        //    return;
+        //}
 
-        if (UpscalerMessagePercentageRegex().IsMatch(message))
-        {
-            _viewModel.UpscalerProgressText = message;
-            _viewModel.UpscalerProgress = (int) double.Parse(message[..^1]);
-            return;
-        }
+        //if (UpscalerMessagePercentageRegex().IsMatch(message))
+        //{
+        //    _viewModel.UpscalerProgressText = message;
+        //    _viewModel.UpscalerProgress = (int) double.Parse(message[..^1]);
+        //    return;
+        //}
 
-        _viewModel.AdditionalText = message;
-    }
+        //_viewModel.AdditionalText = message;
+    //}
 
     private void IllustrationViewerPage_OnLoaded(object sender, RoutedEventArgs e)
     {
@@ -170,19 +170,22 @@ public sealed partial class IllustrationViewerPage
         CommandBorderDropShadow.Receivers.Add(IllustrationImageShowcaseFrame);
         ThumbnailListDropShadow.Receivers.Add(IllustrationImageShowcaseFrame);
 
-        ThumbnailItemsView.StartBringItemIntoView(_viewModel.CurrentIllustrationIndex, new BringIntoViewOptions { AnimationDesired = true });
+        // TODO: https://github.com/microsoft/microsoft-ui-xaml/issues/9952
+        // ThumbnailItemsView.StartBringItemIntoView(_viewModel.CurrentIllustrationIndex, new BringIntoViewOptions { AnimationDesired = true });
         IllustrationImageShowcaseFrame_OnTapped(null!, null!);
     }
 
     private void IllustrationViewerPage_OnUnloaded(object sender, RoutedEventArgs e)
     {
+        Debug.WriteLine(GetHashCode() + "start");
         _viewModel.Dispose();
+        Debug.WriteLine(GetHashCode() + "end");
     }
 
     private async void FrameworkElement_OnDataContextChanged(FrameworkElement sender, DataContextChangedEventArgs e)
     {
         var viewModel = sender.GetDataContext<IllustrationItemViewModel>();
-        _ = await viewModel.TryLoadThumbnailAsync(_viewModel);
+        _ = await viewModel.TryLoadThumbnailAsync();
     }
 
     private void ExitFullScreenKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => _viewModel.IsFullScreen = false;
@@ -283,26 +286,26 @@ public sealed partial class IllustrationViewerPage
 
     private async void UpscaleButton_OnTapped(object sender, RoutedEventArgs e)
     {
-        if (!App.AppViewModel.AppSettings.ShowUpscalerTeachingTip)
-        {
-            _viewModel.CurrentImage.UpscaleCommand.Execute(null);
-            return;
-        }
-        UpscaleTeachingTip.IsOpen = true;
-        var dialog = await HWnd.CreateOkCancelAsync(EntryViewerPageResources.AiUpscalerWarningTitle,
-            EntryViewerPageResources.AiUpscalerWarningContent,
-            EntryViewerPageResources.AiUpscalerWarningOkButtonContent,
-            EntryViewerPageResources.AiUpscalerWarningCancelButtonContent);
+        //if (!App.AppViewModel.AppSettings.ShowUpscalerTeachingTip)
+        //{
+        //    _viewModel.CurrentImage.UpscaleCommand.Execute(null);
+        //    return;
+        //}
+        //UpscaleTeachingTip.IsOpen = true;
+        //var dialog = await HWnd.CreateOkCancelAsync(EntryViewerPageResources.AiUpscalerWarningTitle,
+        //    EntryViewerPageResources.AiUpscalerWarningContent,
+        //    EntryViewerPageResources.AiUpscalerWarningOkButtonContent,
+        //    EntryViewerPageResources.AiUpscalerWarningCancelButtonContent);
 
-        if (dialog == ContentDialogResult.Primary)
-        {
-            _viewModel.CurrentImage.UpscaleCommand.Execute(null);
-        }
+        //if (dialog == ContentDialogResult.Primary)
+        //{
+        //    _viewModel.CurrentImage.UpscaleCommand.Execute(null);
+        //}
 
-        if (App.AppViewModel.AppSettings.ShowUpscalerTeachingTip)
-        {
-            App.AppViewModel.AppSettings.ShowUpscalerTeachingTip = false;
-        }
+        //if (App.AppViewModel.AppSettings.ShowUpscalerTeachingTip)
+        //{
+        //    App.AppViewModel.AppSettings.ShowUpscalerTeachingTip = false;
+        //}
     }
 
     public Visibility IsLogoVisible()

@@ -104,7 +104,7 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
     {
         GC.SuppressFinalize(this);
         foreach (var illustrationViewModel in Illustrations)
-            illustrationViewModel.UnloadThumbnail(this);
+            illustrationViewModel.UnloadThumbnail();
         Pages = null!;
         Images = null!;
         ViewModelSource?.Dispose();
@@ -250,11 +250,6 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
     #endregion
 
     #region Helper Functions
-
-    public string GetCurrentIllustrationDimensionText(int index)
-    {
-        return CurrentIllustration.DimensionText;
-    }
 
     public string? NextButtonText => NextButtonAction switch
     {

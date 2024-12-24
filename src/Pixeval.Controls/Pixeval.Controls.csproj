@@ -46,16 +46,12 @@
         <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="SourceItemGroup" />
         <PRIResource Include="Strings\*\*.resjson" />
     </ItemGroup>
-
     <ItemGroup>
-      <CustomAdditionalCompileInputs Remove="DigitalSignalItem.xaml" />
+      <None Remove="AppBarTextItem.xaml" />
     </ItemGroup>
-
     <ItemGroup>
-      <None Remove="DigitalSignalItem.xaml" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Resource Remove="DigitalSignalItem.xaml" />
+      <Page Update="AppBarTextItem.xaml">
+        <Generator>MSBuild:Compile</Generator>
+      </Page>
     </ItemGroup>
 </Project>

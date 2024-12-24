@@ -1,5 +1,5 @@
 <AppBarElementContainer
-    x:Class="Pixeval.Controls.AppButtonItem"
+    x:Class="Pixeval.Controls.AppBarTextItem"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
@@ -10,24 +10,20 @@
     Padding="5,0"
     HorizontalContentAlignment="Center"
     VerticalContentAlignment="Center"
+    Foreground="{StaticResource TextFillColorSecondaryBrush}"
     mc:Ignorable="d">
     <controls:DockPanel HorizontalSpacing="5">
-        <TextBlock
-            HorizontalAlignment="Left"
-            controls:DockPanel.Dock="Top"
-            FontWeight="SemiBold"
-            Foreground="{StaticResource TextFillColorSecondaryBrush}"
-            Style="{StaticResource BaseTextBlockStyle}"
-            Text="{x:Bind Title, Mode=OneWay}" />
         <fluent:SymbolIcon
             VerticalAlignment="Center"
             controls:DockPanel.Dock="Left"
             FontSize="{StaticResource SmallIconFontSize}"
-            Foreground="{StaticResource TextFillColorSecondaryBrush}"
             Symbol="{x:Bind Symbol, Mode=OneWay}" />
         <TextBlock
-            HorizontalAlignment="Center"
-            Style="{StaticResource SubtitleTextBlockStyle}"
-            Text="{x:Bind Number, Mode=OneWay}" />
+            HorizontalAlignment="Left"
+            FontWeight="SemiBold"
+            Style="{StaticResource BaseTextBlockStyle}"
+            Text="{x:Bind Text, Mode=OneWay}"
+            TextTrimming="CharacterEllipsis"
+            TextWrapping="NoWrap" />
     </controls:DockPanel>
 </AppBarElementContainer>

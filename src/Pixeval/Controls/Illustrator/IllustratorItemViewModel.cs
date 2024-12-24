@@ -29,7 +29,7 @@ public sealed partial class IllustratorItemViewModel : EntryViewModel<User>, IFa
     public static IllustratorItemViewModel CreateInstance(User entry) => new(entry);
 
     [ObservableProperty]
-    private bool _isFollowed;
+    public partial bool IsFollowed { get; set; }
 
     public IllustratorItemViewModel(User user) : base(user)
     {
