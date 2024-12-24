@@ -100,7 +100,8 @@ public sealed partial class IllustrationViewerPage
                 var newTag = args.NewTag.To<long>(); // vm.CurrentPage.Id
                 if (oldTag == newTag)
                     return;
-               // ThumbnailItemsView.StartBringItemIntoView(vm.CurrentIllustrationIndex, new BringIntoViewOptions { });
+                // TODO: https://github.com/microsoft/microsoft-ui-xaml/issues/9952
+                // ThumbnailItemsView.StartBringItemIntoView(vm.CurrentIllustrationIndex, new BringIntoViewOptions { AnimationDesired = true });
                 EntryViewerSplitView.NavigationViewSelect(vm.Tags[0]);
             }
 
@@ -169,7 +170,8 @@ public sealed partial class IllustrationViewerPage
         CommandBorderDropShadow.Receivers.Add(IllustrationImageShowcaseFrame);
         ThumbnailListDropShadow.Receivers.Add(IllustrationImageShowcaseFrame);
 
-        ThumbnailItemsView.StartBringItemIntoView(_viewModel.CurrentIllustrationIndex, new BringIntoViewOptions { AnimationDesired = true });
+        // TODO: https://github.com/microsoft/microsoft-ui-xaml/issues/9952
+        // ThumbnailItemsView.StartBringItemIntoView(_viewModel.CurrentIllustrationIndex, new BringIntoViewOptions { AnimationDesired = true });
         IllustrationImageShowcaseFrame_OnTapped(null!, null!);
     }
 

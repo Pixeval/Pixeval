@@ -6,7 +6,7 @@ namespace Pixeval.Controls;
 [DependencyProperty<string>("Title")]
 [DependencyProperty<int>("Number")]
 [DependencyProperty<Symbol>("Symbol")]
-public sealed partial class AppButtonItem
+public sealed partial class AppBarNumberItem
 {
-    public AppButtonItem() => InitializeComponent();
+    public AppBarNumberItem() => InitializeComponent();
 }

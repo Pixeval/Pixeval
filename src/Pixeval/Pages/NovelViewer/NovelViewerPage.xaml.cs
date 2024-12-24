@@ -57,7 +57,8 @@ public sealed partial class NovelViewerPage
             var newIndex = args.NewValue.To<int>(); // vm.CurrentNovelIndex
 
             EntryViewerSplitView.NavigationViewSelect(vm.Tags[0]);
-            ThumbnailItemsView.StartBringItemIntoView(vm.CurrentNovelIndex, new BringIntoViewOptions { AnimationDesired = true });
+            // TODO: https://github.com/microsoft/microsoft-ui-xaml/issues/9952
+            // ThumbnailItemsView.StartBringItemIntoView(vm.CurrentNovelIndex, new BringIntoViewOptions { AnimationDesired = true });
         };
 
         _viewModel.PropertyChanged += (sender, args) =>
@@ -81,7 +82,8 @@ public sealed partial class NovelViewerPage
         CommandBorderDropShadow.Receivers.Add(DocumentViewer);
         ThumbnailListDropShadow.Receivers.Add(DocumentViewer);
 
-        ThumbnailItemsView.StartBringItemIntoView(_viewModel.CurrentNovelIndex, new BringIntoViewOptions { AnimationDesired = true });
+        // TODO: https://github.com/microsoft/microsoft-ui-xaml/issues/9952
+        // ThumbnailItemsView.StartBringItemIntoView(_viewModel.CurrentNovelIndex, new BringIntoViewOptions { AnimationDesired = true });
         DocumentViewer_OnTapped(null!, null!);
     }
 

@@ -251,11 +251,6 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
 
     #region Helper Functions
 
-    public string GetCurrentIllustrationDimensionText(int index)
-    {
-        return CurrentIllustration.DimensionText;
-    }
-
     public string? NextButtonText => NextButtonAction switch
     {
         true => EntryViewerPageResources.NextPageOrIllustration,
