@@ -31,6 +31,7 @@ using Pixeval.Controls;
 using Pixeval.Controls.Windowing;
 using Pixeval.Database.Managers;
 using Pixeval.Util.UI;
+using Pixeval.Utilities;
 using WinUI3Utilities;
 
 namespace Pixeval.Pages.Misc;
@@ -41,6 +42,9 @@ namespace Pixeval.Pages.Misc;
 [INotifyPropertyChanged]
 public sealed partial class SettingsPage : IScrollViewHost, IDisposable
 {
+    private string CurrentVersion =>
+        AppInfo.AppVersion.CurrentVersion.Let(t => $"{t.Major}.{t.Minor}.{t.Build}.{t.Revision}");
+
     private SettingsPageViewModel ViewModel { get; set; } = null!;
 
     private bool _disposed;

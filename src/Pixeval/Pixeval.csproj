@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <OutputType>WinExe</OutputType>
         <TargetFramework>net8.0-windows10.0.22621.0</TargetFramework>
@@ -19,7 +19,6 @@
         <PublishAot>false</PublishAot>
         <WindowsSdkPackageVersion>10.0.22621.38</WindowsSdkPackageVersion>
         <PublishProfile Condition="'$(PublishAot)' == 'true'">win-$(Platform).pubxml</PublishProfile>
-	    <MinVerSkip Condition="'$(Configuration)' == 'Debug'">true</MinVerSkip>
 	    <WindowsPackageType>MSIX</WindowsPackageType>
         <NoWarn>NU1904;$(NoWarn)</NoWarn>
     </PropertyGroup>
@@ -58,11 +57,10 @@
         <PackageReference Include="Pixeval.QRCoder" Version="1.4.5" />
         <PackageReference Include="QuestPDF" Version="2024.12.1" />
         <PackageReference Include="ReverseMarkdown" Version="4.6.0" />
-        <PackageReference Include="Semver" Version="3.0.0" />
         <PackageReference Include="SixLabors.ImageSharp" Version="3.1.6" />
         <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="2.1.4" />
         <PackageReference Include="System.Linq.Async" Version="6.0.1" />
-        <PackageReference Include="WinUI3Utilities" Version="1.1.7.11" />
+        <PackageReference Include="WinUI3Utilities" Version="1.1.7.14" />
 
         <ProjectReference Include="..\Pixeval.Controls\Pixeval.Controls.csproj" />
         <ProjectReference Include="..\Pixeval.CoreApi\Pixeval.CoreApi.csproj" />
@@ -116,7 +114,7 @@
         <AppInstallerUri>%UserProfile%\Desktop</AppInstallerUri>
         <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
         <GenerateTemporaryStoreCertificate>True</GenerateTemporaryStoreCertificate>
-        <AppxBundlePlatforms>x64</AppxBundlePlatforms>
+        <AppxBundlePlatforms>x86|x64|arm64</AppxBundlePlatforms>
     </PropertyGroup>
 
     <ItemGroup>
@@ -165,6 +163,7 @@
       <None Remove="Assets\Images\Icons\tag.png" />
     </ItemGroup>
 
+    <!--
     <ItemGroup>
       <Content Update="Assets\Binary\RealESRGAN\models\realesr-animevideov3-x2.bin">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -205,5 +204,5 @@
       <Content Update="Assets\Binary\RealESRGAN\vcomp140d.dll">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </Content>
-    </ItemGroup>
+    </ItemGroup>-->
 </Project>
