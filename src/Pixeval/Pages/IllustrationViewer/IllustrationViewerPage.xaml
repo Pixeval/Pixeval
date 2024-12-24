@@ -405,7 +405,6 @@
                 <controls1:TitleBar.Content>
                     <CommandBar Margin="0,-4" DefaultLabelPosition="Collapsed">
                         <AppBarButton Command="{x:Bind _viewModel.CurrentImage.PlayGifCommand, Mode=OneWay}" Visibility="{x:Bind controls:C.ToVisibility(_viewModel.CurrentIllustration.IsUgoira), Mode=OneWay}" />
-                        <AppBarSeparator />
                         <AppBarButton
                             Command="{x:Bind _viewModel.CurrentPage.CopyCommand, Mode=OneWay}"
                             CommandParameter="{x:Bind _viewModel.CurrentImage.DownloadParameter, Mode=OneWay}"

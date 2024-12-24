@@ -45,13 +45,6 @@
     <ItemGroup>
         <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="SourceItemGroup" />
         <PRIResource Include="Strings\*\*.resjson" />
-    </ItemGroup>
-    <ItemGroup>
-      <None Remove="AppBarTextItem.xaml" />
-    </ItemGroup>
-    <ItemGroup>
-      <Page Update="AppBarTextItem.xaml">
-        <Generator>MSBuild:Compile</Generator>
-      </Page>
+        <PRIResource Include="Strings\*\*.resw" />
     </ItemGroup>
 </Project>
