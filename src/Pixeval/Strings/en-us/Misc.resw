@@ -1,0 +1,384 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AddBookmark" xml:space="preserve">
+    <value>Bookmark</value>
+  </data>
+  <data name="RemoveBookmark" xml:space="preserve">
+    <value>Remove bookmark</value>
+  </data>
+  <data name="Follow" xml:space="preserve">
+    <value>Follow</value>
+  </data>
+  <data name="FollowPrivately" xml:space="preserve">
+    <value>Follow privately</value>
+  </data>
+  <data name="Unfollow" xml:space="preserve">
+    <value>Followed</value>
+  </data>
+  <data name="Pause" xml:space="preserve">
+    <value>Pause</value>
+  </data>
+  <data name="Play" xml:space="preserve">
+    <value>Play</value>
+  </data>
+  <data name="RestoreOriginalResolution" xml:space="preserve">
+    <value>Zoom to actual size</value>
+  </data>
+  <data name="UniformToFillResolution" xml:space="preserve">
+    <value>Zoom to fit the window</value>
+  </data>
+  <data name="FullScreen" xml:space="preserve">
+    <value>Fullscreen</value>
+  </data>
+  <data name="BackToWindow" xml:space="preserve">
+    <value>Restore</value>
+  </data>
+  <data name="AppThemeLight" xml:space="preserve">
+    <value>Light theme</value>
+  </data>
+  <data name="AppThemeDark" xml:space="preserve">
+    <value>Dark theme</value>
+  </data>
+  <data name="AppThemeSystemDefault" xml:space="preserve">
+    <value>Follow system</value>
+  </data>
+  <data name="ExceptionEncountered" xml:space="preserve">
+    <value>Error encountered</value>
+  </data>
+  <data name="WorkSortOptionDoNotSort" xml:space="preserve">
+    <value>Do not perform any sort</value>
+  </data>
+  <data name="WorkSortOptionPopularityDescending" xml:space="preserve">
+    <value>Popularity descending</value>
+  </data>
+  <data name="WorkSortOptionPublishDateAscending" xml:space="preserve">
+    <value>Publish date ascending</value>
+  </data>
+  <data name="WorkSortOptionPublishDateDescending" xml:space="preserve">
+    <value>Publish date descending</value>
+  </data>
+  <data name="NoneBackdrop" xml:space="preserve">
+    <value>None</value>
+  </data>
+  <data name="AcrylicBackdrop" xml:space="preserve">
+    <value>Acrylic Material (May perform poorly on low-end PCs)</value>
+  </data>
+  <data name="MicaBackdrop" xml:space="preserve">
+    <value>Mica Material</value>
+  </data>
+  <data name="MicaAltBackdrop" xml:space="preserve">
+    <value>Mica Alt Material</value>
+  </data>
+  <data name="SearchDurationUndecided" xml:space="preserve">
+    <value>Default</value>
+  </data>
+  <data name="SearchDurationWithinLastDay" xml:space="preserve">
+    <value>1 Day</value>
+  </data>
+  <data name="SearchDurationWithinLastMonth" xml:space="preserve">
+    <value>1 Month</value>
+  </data>
+  <data name="SearchDurationWithinLastWeek" xml:space="preserve">
+    <value>1 Week</value>
+  </data>
+  <data name="PrivacyPolicyPublic" xml:space="preserve">
+    <value>Public</value>
+  </data>
+  <data name="PrivacyPolicyPrivate" xml:space="preserve">
+    <value>Private</value>
+  </data>
+  <data name="SearchIllustrationTagMatchOptionExactMatchForTags" xml:space="preserve">
+    <value>Exact match</value>
+  </data>
+  <data name="SearchIllustrationTagMatchOptionPartialMatchForTags" xml:space="preserve">
+    <value>Partiao match</value>
+  </data>
+  <data name="SearchIllustrationTagMatchOptionTitleAndCaption" xml:space="preserve">
+    <value>Title and caption</value>
+  </data>
+  <data name="TargetFilterForAndroid" xml:space="preserve">
+    <value>Android</value>
+  </data>
+  <data name="TargetFilterForIOS" xml:space="preserve">
+    <value>IOS</value>
+  </data>
+  <data name="ThumbnailDirectionLandscape" xml:space="preserve">
+    <value>Landscape</value>
+  </data>
+  <data name="ThumbnailDirectionPortrait" xml:space="preserve">
+    <value>Portrait</value>
+  </data>
+  <data name="Bmp" xml:space="preserve">
+    <value>BMP（loss，large，general）</value>
+  </data>
+  <data name="Jpg" xml:space="preserve">
+    <value>JPG（loss，small，general）</value>
+  </data>
+  <data name="Gif" xml:space="preserve">
+    <value>GIF（lossless，only 255 colors，small，general）</value>
+  </data>
+  <data name="Tiff" xml:space="preserve">
+    <value>TIFF（loss，cannot autoplay，large）</value>
+  </data>
+  <data name="Png" xml:space="preserve">
+    <value>PNG/APNG（lossless，small）</value>
+  </data>
+  <data name="WebPLossless" xml:space="preserve">
+    <value>Lossless WebP（lossless，small，general）</value>
+  </data>
+  <data name="WebPLossy" xml:space="preserve">
+    <value>Loss WebP（loss，small，general）</value>
+  </data>
+  <data name="DownloadItemOpenFailed" xml:space="preserve">
+    <value>Failed to open file (or folder)</value>
+  </data>
+  <data name="DownloadItemMaybeDeleted" xml:space="preserve">
+    <value>It seems that you have deleted the work</value>
+  </data>
+  <data name="SortOptionComboBox.PlaceholderText" xml:space="preserve">
+    <value>Sort option</value>
+  </data>
+  <data name="PrivacyPolicyComboBox.PlaceholderText" xml:space="preserve">
+    <value>Privacy policy</value>
+  </data>
+  <data name="OpenUserId" xml:space="preserve">
+    <value>Open user homepage</value>
+  </data>
+  <data name="OpenIllustId" xml:space="preserve">
+    <value>Open image page</value>
+  </data>
+  <data name="CannotFindLoginProxyServerExecutable" xml:space="preserve">
+    <value>Cannot find the executable to login, please contact the developer for further help</value>
+  </data>
+  <data name="UnexpectedBehavior" xml:space="preserve">
+    <value>Undefined behavior occured, if you see this message, please contact the developer for further help</value>
+  </data>
+  <data name="ReplyContentTooLong" xml:space="preserve">
+    <value>The reply content is too long</value>
+  </data>
+  <data name="AllCountedTagName" xml:space="preserve">
+    <value>All tags</value>
+  </data>
+  <data name="SearchDurationWithinLastHalfYear" xml:space="preserve">
+    <value>Within six months</value>
+  </data>
+  <data name="SearchDurationWithinLastYear" xml:space="preserve">
+    <value>Within a year</value>
+  </data>
+  <data name="SearchNovelTagMatchOptionExactMatchForTags" xml:space="preserve">
+    <value>Exact match for the tag</value>
+  </data>
+  <data name="SearchNovelTagMatchOptionPartialMatchForTags" xml:space="preserve">
+    <value>Partial match for the tag</value>
+  </data>
+  <data name="SearchNovelTagMatchOptionText" xml:space="preserve">
+    <value>Match for body text</value>
+  </data>
+  <data name="SearchNovelTagMatchOptionCaption" xml:space="preserve">
+    <value>Match for caption</value>
+  </data>
+  <data name="WorkTypeIllust" xml:space="preserve">
+    <value>Illustration</value>
+  </data>
+  <data name="WorkTypeManga" xml:space="preserve">
+    <value>Manga</value>
+  </data>
+  <data name="WorkTypeNovel" xml:space="preserve">
+    <value>Novel</value>
+  </data>
+  <data name="SimpleWorkTypeIllustAndManga" xml:space="preserve">
+    <value>Illustration and Manga</value>
+  </data>
+  <data name="SimpleWorkTypeNovel" xml:space="preserve">
+    <value>Novel</value>
+  </data>
+  <data name="Original" xml:space="preserve">
+    <value>Image original format (JPG/PNG, cannot add tags automatically)</value>
+  </data>
+  <data name="OriginalZip" xml:space="preserve">
+    <value>Motion picture original format (ZIP, can't add tags)</value>
+  </data>
+  <data name="Pdf" xml:space="preserve">
+    <value>PDF (With all images embedded)</value>
+  </data>
+  <data name="Html" xml:space="preserve">
+    <value>HTML (With all images contained in folder)</value>
+  </data>
+  <data name="Md" xml:space="preserve">
+    <value>MarkDown (With all images contained in folder)</value>
+  </data>
+  <data name="OriginalTxt" xml:space="preserve">
+    <value>Original TXT (Pixiv tags, with all images contained in folder)</value>
+  </data>
+  <data name="Thin" xml:space="preserve">
+    <value>Thin</value>
+  </data>
+  <data name="ExtraLight" xml:space="preserve">
+    <value>Extra light</value>
+  </data>
+  <data name="Light" xml:space="preserve">
+    <value>Light</value>
+  </data>
+  <data name="SemiLight" xml:space="preserve">
+    <value>Semi-light</value>
+  </data>
+  <data name="Normal" xml:space="preserve">
+    <value>Normal</value>
+  </data>
+  <data name="Medium" xml:space="preserve">
+    <value>Medium</value>
+  </data>
+  <data name="SemiBold" xml:space="preserve">
+    <value>Semi-bold</value>
+  </data>
+  <data name="Bold" xml:space="preserve">
+    <value>Bold</value>
+  </data>
+  <data name="ExtraBold" xml:space="preserve">
+    <value>Extra bold</value>
+  </data>
+  <data name="Black" xml:space="preserve">
+    <value>Black</value>
+  </data>
+  <data name="ExtraBlack" xml:space="preserve">
+    <value>Extra black</value>
+  </data>
+  <data name="ProxyOptionSystem" xml:space="preserve">
+    <value>System default proxy</value>
+  </data>
+  <data name="ProxyOptionNone" xml:space="preserve">
+    <value>No proxy</value>
+  </data>
+  <data name="WorkTypeComboBox.PlaceholderText" xml:space="preserve">
+    <value>Work type</value>
+  </data>
+  <data name="OpenNovelId" xml:space="preserve">
+    <value>Open the novel page</value>
+  </data>
+  <data name="SearchUser" xml:space="preserve">
+    <value>Search for authors</value>
+  </data>
+  <data name="BookmarkTagSelectorPrivateCheckBox.Content" xml:space="preserve">
+    <value>Private</value>
+  </data>
+  <data name="GoToPageFormatted" xml:space="preserve">
+    <value>Go to page {0}</value>
+  </data>
+</root>

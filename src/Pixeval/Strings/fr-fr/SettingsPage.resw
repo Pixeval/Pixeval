@@ -1,0 +1,714 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AppDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Pixeval est un client tierce de Pixiv, développé sous Windows UI 3. Cette application fournit de nombreuses fonctionnalités extras (Collection de favoris local, pas besoin de proxies en chine continentale, ...) en garantissant de supporter la plupart des features de Pixiv. 
+
+Vous pouvez trouvez plus d'informations sur le lien ci-dessous.</value>
+  </data>
+  <data name="AppFontFamilyComboBox.PlaceholderText" xml:space="preserve">
+    <value>Choisir une police</value>
+  </data>
+  <data name="AppFontFamilyEntry.Header" xml:space="preserve">
+    <value>Configuration de police (effective après redémarrage)</value>
+  </data>
+  <data name="AppLanguageEntry.Header" xml:space="preserve">
+    <value>Paramètres de langue (effective après redémarrage)</value>
+  </data>
+  <data name="OpenLanguageSettingsHyperlinkButton.Content" xml:space="preserve">
+    <value>Ouvrir les paramètres de langue du système Windows</value>
+  </data>
+  <data name="AppLanguageEntryComboBox.PlaceholderText" xml:space="preserve">
+    <value>Sélectionner une langue</value>
+  </data>
+  <data name="ApplicationSettingsGroup.Text" xml:space="preserve">
+    <value>Configurations de l'application</value>
+  </data>
+  <data name="BackdropEntry.Header" xml:space="preserve">
+    <value>Backdrop de l'application</value>
+  </data>
+  <data name="BrowsingExperienceSettingsGroup.Text" xml:space="preserve">
+    <value>Configurations d'expérience de navigation</value>
+  </data>
+  <data name="CheckingForUpdate" xml:space="preserve">
+    <value>Recherche de mises à jour en cours</value>
+  </data>
+  <data name="DownloadingUpdate" xml:space="preserve">
+    <value>Téléchargement de mise à jour en cours</value>
+  </data>
+  <data name="Unzipping" xml:space="preserve">
+    <value>Décompression en cours</value>
+  </data>
+  <data name="IsUpToDate" xml:space="preserve">
+    <value>Vous utilisez actuellement la dernière version</value>
+  </data>
+  <data name="IsInsider" xml:space="preserve">
+    <value>Vous utilisez actuellement une version insider</value>
+  </data>
+  <data name="MajorUpdateAvailable" xml:space="preserve">
+    <value>Une mise à jour majeure est disponible</value>
+  </data>
+  <data name="MinorUpdateAvailable" xml:space="preserve">
+    <value>Une mise à jour mineure est disponible</value>
+  </data>
+  <data name="BuildUpdateAvailable" xml:space="preserve">
+    <value>Une mise à jour de build est disponible</value>
+  </data>
+  <data name="UnknownUpdateState" xml:space="preserve">
+    <value>Etat de mise à jour inconnu</value>
+  </data>
+  <data name="UpdateApp" xml:space="preserve">
+    <value>Mises à jour</value>
+  </data>
+  <data name="LanguageSystemDefault" xml:space="preserve">
+    <value>Défaut de système</value>
+  </data>
+  <data name="DownloadedAndWaitingToInstall" xml:space="preserve">
+    <value>Téléchargement de version {0} finalisé, voulez-vous effectuer une installation? Vous pouvez toutefois l'installer manuellement plus tard.</value>
+  </data>
+  <data name="InstallCanceled" xml:space="preserve">
+    <value>Installation annulée</value>
+  </data>
+  <data name="UpdateFailed" xml:space="preserve">
+    <value>Installation échouée</value>
+  </data>
+  <data name="UpdateFailedInTempFolder" xml:space="preserve">
+    <value>Mise à jour échouée, vous pouvez consulter le paquet d'installation dans le répertoire temporaire</value>
+  </data>
+  <data name="DownloadPathMacroEntry.Header" xml:space="preserve">
+    <value>Endroit de téléchargement par défaut</value>
+  </data>
+  <data name="DownloadPathMacroEntry.Description" xml:space="preserve">
+    <value>Voir le mode d'emploi des Download Macros dans la page d'aide</value>
+  </data>
+  <data name="DownloadPathMacroTextBox.PlaceholderText" xml:space="preserve">
+    <value>Path Macro</value>
+  </data>
+  <data name="RankOptionEntry.Description" xml:space="preserve">
+    <value>Paramètres des classements</value>
+  </data>
+  <data name="RankOptionEntry.Header" xml:space="preserve">
+    <value>Type de classement</value>
+  </data>
+  <data name="DefaultSearchSortOptionEntry.Description" xml:space="preserve">
+    <value>Type de triage par défaut</value>
+  </data>
+  <data name="DefaultSearchSortOptionEntry.Header" xml:space="preserve">
+    <value>Triage par défaut</value>
+  </data>
+  <data name="SimpleWorkTypeEntry.Description" xml:space="preserve">
+    <value>Type d'art à présenter par défaut</value>
+  </data>
+  <data name="SimpleWorkTypeEntry.Header" xml:space="preserve">
+    <value>Type d'art par défaut</value>
+  </data>
+  <data name="DefaultSearchTagMatchOptionEntry.Description" xml:space="preserve">
+    <value>Stratégie avec laquelle on effectue le matching lors de la recherche des illustrations</value>
+  </data>
+  <data name="DefaultSearchTagMatchOptionEntry.Header" xml:space="preserve">
+    <value>Matching des mots clés</value>
+  </data>
+  <data name="IllustrationOptionEntry.Header" xml:space="preserve">
+    <value>Illustration</value>
+  </data>
+  <data name="MangaOptionEntry.Header" xml:space="preserve">
+    <value>Manga</value>
+  </data>
+  <data name="UgoiraOptionEntry.Header" xml:space="preserve">
+    <value>Ugoira</value>
+  </data>
+  <data name="NovelOptionEntry.Header" xml:space="preserve">
+    <value>Roman</value>
+  </data>
+  <data name="PixivNameResolverHeader.Text" xml:space="preserve">
+    <value>Résolution du nom</value>
+  </data>
+  <data name="PixivNameResolverDescription.Text" xml:space="preserve">
+    <value>Après l'activation de domain fronting, le nom sera résolu à cette addresse IP
+Entrer une addresse IP et cliquer '+' pour ajouter</value>
+  </data>
+  <data name="DefaultSelectedTabEntry.Description" xml:space="preserve">
+    <value>Ce tab sera affiché par défault lors des démarrages d'application</value>
+  </data>
+  <data name="DefaultSelectedTabEntry.Header" xml:space="preserve">
+    <value>Tab par défaut</value>
+  </data>
+  <data name="DeleteBrowseHistoriesButton.Content" xml:space="preserve">
+    <value>Supprimer</value>
+  </data>
+  <data name="DeleteBrowseHistoriesEntry.Description" xml:space="preserve">
+    <value>Supprimer toutes les historiques de navigation</value>
+  </data>
+  <data name="DeleteBrowseHistoriesEntry.Header" xml:space="preserve">
+    <value>Supprimer les historiques ce navigation</value>
+  </data>
+  <data name="DeleteDownloadHistoriesButton.Content" xml:space="preserve">
+    <value>Supprimer</value>
+  </data>
+  <data name="DeleteDownloadHistoriesEntry.Description" xml:space="preserve">
+    <value>Supprimer toute la trace des téléchargements</value>
+  </data>
+  <data name="DeleteDownloadHistoriesEntry.Header" xml:space="preserve">
+    <value>Supprimer la trace des téléchargements</value>
+  </data>
+  <data name="DeleteSearchHistoriesButton.Content" xml:space="preserve">
+    <value>Supprimer</value>
+  </data>
+  <data name="DeleteFileCacheEntry.Description" xml:space="preserve">
+    <value>Supprimer toutes les caches</value>
+  </data>
+  <data name="DeleteFileCacheEntry.Header" xml:space="preserve">
+    <value>Supprimer les caches</value>
+  </data>
+  <data name="DeleteHistoriesEntry.Header" xml:space="preserve">
+    <value>Supprimer les historiques</value>
+  </data>
+  <data name="DeleteSearchHistoriesEntry.Description" xml:space="preserve">
+    <value>Supprimer toutes les historiques de recherche</value>
+  </data>
+  <data name="DeleteSearchHistoriesEntry.Header" xml:space="preserve">
+    <value>Supprimer les historiques de recherche</value>
+  </data>
+  <data name="EnableDomainFrontingEntry.Description" xml:space="preserve">
+    <value>Vous ne pourriez plus utiliser Pixeval dans les pays où Pixiv est bloqué quand vous activez cette option</value>
+  </data>
+  <data name="EnableDomainFrontingEntry.Header" xml:space="preserve">
+    <value>Activer le domain fronting</value>
+  </data>
+  <data name="DonateDeveloperHyperlinkButton.Content" xml:space="preserve">
+    <value>Sponsoriser l'auteur</value>
+  </data>
+  <data name="FileCacheCleared" xml:space="preserve">
+    <value>Caches nettoyés</value>
+  </data>
+  <data name="DownloadHistoriesCleared" xml:space="preserve">
+    <value>Historiques de téléchargement supprimés</value>
+  </data>
+  <data name="SearchHistoriesCleared" xml:space="preserve">
+    <value>Historiques de recherche supprimés</value>
+  </data>
+  <data name="BrowseHistoriesCleared" xml:space="preserve">
+    <value>Historiques de navigation supprimés</value>
+  </data>
+  <data name="DownloadMacroInvalidInfoBar.Title" xml:space="preserve">
+    <value>Marco de téléchargement invalid</value>
+  </data>
+  <data name="DownloadMacroInvalidInfoBarInputCannotBeBlank" xml:space="preserve">
+    <value>L'entrée ne peut pas être vide</value>
+  </data>
+  <data name="DownloadMacroInvalidInfoBarMacroInvalidFormatted" xml:space="preserve">
+    <value>{0}, veuillez réessayer en respectant le format</value>
+  </data>
+  <data name="DownloadSettingsGroup.Text" xml:space="preserve">
+    <value>Configurations de téléchargement</value>
+  </data>
+  <data name="DownloadUpdateAutomaticallyEntry.Description" xml:space="preserve">
+    <value>A part des réseaux payants</value>
+  </data>
+  <data name="DownloadUpdateAutomaticallyEntry.Header" xml:space="preserve">
+    <value>Téléchargement des mises à jour automatique</value>
+  </data>
+  <data name="FeedbackByEmailHyperlinkButton.Content" xml:space="preserve">
+    <value>Contacter l'auteur par courriel</value>
+  </data>
+  <data name="ViewingRestrictionEntry.Description" xml:space="preserve">
+    <value>Configurer votre compte Pixiv pour bloquer ou afficher des contenus de type R-18/R-18G/Générés par IA</value>
+  </data>
+  <data name="ViewingRestrictionEntry.Header" xml:space="preserve">
+    <value>Restriction de navigation</value>
+  </data>
+  <data name="GitHubRepositoryHyperlinkButton.Content" xml:space="preserve">
+    <value>Dépôt GitHub</value>
+  </data>
+  <data name="ItemsViewLayoutTypeEntry.Description" xml:space="preserve">
+    <value>Toutes les images auront la même taille en mode de maille. En mode de flux, seulement les deux extrémités de la première ligne seront alignées</value>
+  </data>
+  <data name="ItemsViewLayoutTypeEntry.Header" xml:space="preserve">
+    <value>Règle d'alignement des thumbnails</value>
+  </data>
+  <data name="BlockedTagsTokenizingTextBox.PlaceholderText" xml:space="preserve">
+    <value>Tags bloqués</value>
+  </data>
+  <data name="BlockedTagsEntry.Description" xml:space="preserve">
+    <value>Les tags bloqués ne seront pas affichés dans Pixeval (Utilisez le virgule pour les séparer)</value>
+  </data>
+  <data name="BlockedTagsEntry.Header" xml:space="preserve">
+    <value>Les tags bloqués global</value>
+  </data>
+  <data name="ImageMirrorServerEntry.Description" xml:space="preserve">
+    <value>Hôte de miroir pour télécharger les images. Veuillez à laisser vide si vous n'en connaissez pas</value>
+  </data>
+  <data name="ImageMirrorServerEntry.Header" xml:space="preserve">
+    <value>Nom d'hôte de service de miroir</value>
+  </data>
+  <data name="ImageMirrorServerTextBox.PlaceholderText" xml:space="preserve">
+    <value>Nom d'hôte</value>
+  </data>
+  <data name="JoinFeedbackGroupHyperlinkButton.Content" xml:space="preserve">
+    <value>Nous joindre dans le group</value>
+  </data>
+  <data name="LastCheckedPrefix" xml:space="preserve">
+    <value>Dernière vérification:</value>
+  </data>
+  <data name="MaxDownloadConcurrencyLevelEntry.Description" xml:space="preserve">
+    <value>Nombre max. de tâches que vous pouvez effectuer simultanément. Valeur max est le nombre de core de votre CPU. Configurez avec précaution car trop de nombre pourra causer des lags de votre système</value>
+  </data>
+  <data name="MaxDownloadConcurrencyLevelEntry.Header" xml:space="preserve">
+    <value>Nombre maximal des tâches en parallèl</value>
+  </data>
+  <data name="MaximumBrowseHistoryRecordsEntry.Description" xml:space="preserve">
+    <value>S'il y a plus de historiques de navigation que ce nombre, les historiques les plus anciennes seront supprimées</value>
+  </data>
+  <data name="MaximumBrowseHistoryRecordsEntry.Header" xml:space="preserve">
+    <value>Nombre de limite des historiques de navigation</value>
+  </data>
+  <data name="MaximumBrowseHistoryRecordsNumerBox.PlaceholderText" xml:space="preserve">
+    <value>Entrez un nombre entre [10, 200]</value>
+  </data>
+  <data name="MaximumDownloadHistoryRecordsEntry.Description" xml:space="preserve">
+    <value>S'il y a plus de historiques de téléchargement que ce nombre, les historiques les plus anciennes seront supprimées</value>
+  </data>
+  <data name="MaximumDownloadHistoryRecordsEntry.Header" xml:space="preserve">
+    <value>Nombre de limite des historiques de téléchargement</value>
+  </data>
+  <data name="MaximumDownloadHistoryRecordsNumberBox.PlaceholderText" xml:space="preserve">
+    <value>Entrez un nombre entre [10, 200]</value>
+  </data>
+  <data name="RateEntry.Description" xml:space="preserve">
+    <value>Vous aimez Pixeval? Donner un 5-⭐️ dans Microsoft Store~</value>
+  </data>
+  <data name="RateEntry.Header" xml:space="preserve">
+    <value>Donner un avis pour Pixeval</value>
+  </data>
+  <data name="MaximumSearchHistoryRecordsEntry.Description" xml:space="preserve">
+    <value>S'il y a plus de historiques de recherche que ce nombre, les historiques les plus anciennes seront supprimées</value>
+  </data>
+  <data name="MaximumSearchHistoryRecordsEntry.Header" xml:space="preserve">
+    <value>Nombre de limite des recherches d'historique</value>
+  </data>
+  <data name="MaximumSearchHistoryRecordsNumberBox.PlaceholderText" xml:space="preserve">
+    <value>Entrez un nombre entre [10, 50]</value>
+  </data>
+  <data name="MaximumSuggestionBoxSearchHistoryEntry.Description" xml:space="preserve">
+    <value>S'il y a plus de historiques de recherche que ce nombre, la barre de recherche affichera uniquement des entrées correspondantes à ce nombre (tri par dates descendantes)</value>
+  </data>
+  <data name="MaximumSuggestionBoxSearchHistoryEntry.Header" xml:space="preserve">
+    <value>Nombre de limite des suggestions de recherche</value>
+  </data>
+  <data name="MiscSettingsGroup.Text" xml:space="preserve">
+    <value>Configurations auxiliaires</value>
+  </data>
+  <data name="OpenFontSettingsHyperlinkButton.Content" xml:space="preserve">
+    <value>Ouvrir les paramètres de police de Windows</value>
+  </data>
+  <data name="OverwriteDownloadedFileEntry.Description" xml:space="preserve">
+    <value>Les nouveaux téléchargements peuvent réécrire sur des fichiers existants si vous activez cette option</value>
+  </data>
+  <data name="OverwriteDownloadedFileEntry.Header" xml:space="preserve">
+    <value>Réécriture des fichiers déjà téléchargés</value>
+  </data>
+  <data name="PerformSignOutButton.Content" xml:space="preserve">
+    <value>Effectuer une déconnexion</value>
+  </data>
+  <data name="DownloadWhenBookmarkedEntry.Description" xml:space="preserve">
+    <value>Votre art de favoris sera automatiquement téléchargé dès que vous le mettez en favoris</value>
+  </data>
+  <data name="DownloadWhenBookmarkedEntry.Header" xml:space="preserve">
+    <value>Téléchargement automatique lors d'ajout aux favoris</value>
+  </data>
+  <data name="ReleaseNotesHyperlinkButton.Content" xml:space="preserve">
+    <value>Journal des mises à jour</value>
+  </data>
+  <data name="ReportBugHyperlinkButton.Content" xml:space="preserve">
+    <value>Soumettre un issue sur GitHub</value>
+  </data>
+  <data name="CheckForUpdatesButton.Content" xml:space="preserve">
+    <value>Recherche de mise à jour</value>
+  </data>
+  <data name="GitHubCheckForUpdatesEntry.Header" xml:space="preserve">
+    <value>Recherche de mise à jour depuis GitHub</value>
+  </data>
+  <data name="MsStoreCheckForUpdatesEntry.Header" xml:space="preserve">
+    <value>Recherche de mise à jour depuis Microsoft Store</value>
+  </data>
+  <data name="BugReportEntry.Header" xml:space="preserve">
+    <value>Soumettre un issue</value>
+  </data>
+  <data name="BugReportEntry.Description" xml:space="preserve">
+    <value>A propos des bugs d'application ou propositions de nouvelles fonctionnalités (journal de bug nécessaire)</value>
+  </data>
+  <data name="BugReportChannelsEntry.Header" xml:space="preserve">
+    <value>Canaux de soumission des issues</value>
+  </data>
+  <data name="BugReportChannelsEntry.Description" xml:space="preserve">
+    <value>Vous pouvez soumettre un issue par des canaux ci-dessous</value>
+  </data>
+  <data name="GitHubBugReportEntry.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Soumettre un issue sur GitHub</value>
+  </data>
+  <data name="EMailBugReportEntry.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Soumettre un issue avec courriel</value>
+  </data>
+  <data name="QQBugReportEntry.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Soumettre un issue dans le groupe QQ</value>
+  </data>
+  <data name="OpenLogEntry.Header" xml:space="preserve">
+    <value>Ouvrir le répertoire des journaux</value>
+  </data>
+  <data name="OpenLogEntry.Description" xml:space="preserve">
+    <value>Veuillez joindre le journal concerné de ce répertoire lors de votre soumission de bug</value>
+  </data>
+  <data name="OpenTempEntry.Header" xml:space="preserve">
+    <value>Ouvrir le répertoire temporaire</value>
+  </data>
+  <data name="OpenTempEntry.Description" xml:space="preserve">
+    <value>Ce répertoire contient les fichiers temporaires qui sont effacés à chaque démarrage d'application</value>
+  </data>
+  <data name="OpenLocalEntry.Header" xml:space="preserve">
+    <value>Ouvrir le répertoire local</value>
+  </data>
+  <data name="OpenLocalEntry.Description" xml:space="preserve">
+    <value>Ce répertoire contient les fichiers importants de configuration, merci de ne pas les modifier</value>
+  </data>
+  <data name="ResetDefaultSettingsButton.Content" xml:space="preserve">
+    <value>Remettre à zéro les configurations</value>
+  </data>
+  <data name="ResetDefaultSettingsEntry.Description" xml:space="preserve">
+    <value>Cliquer ce bouton pour une remise à zéro de toutes les configurations, cette opération est irréversible</value>
+  </data>
+  <data name="ResetDefaultSettingsEntry.Header" xml:space="preserve">
+    <value>Remettre à zéro des configurations</value>
+  </data>
+  <data name="ResetSettingConfirmationDialogContent" xml:space="preserve">
+    <value>Cette opération est irréversible</value>
+  </data>
+  <data name="ResetSettingConfirmationDialogTitle" xml:space="preserve">
+    <value>Etes-vous sûr de remettre à zéro toutes les configurations?</value>
+  </data>
+  <data name="ReverseSearchApiKeyEntry.Header" xml:space="preserve">
+    <value>SauceNAO的API Key</value>
+  </data>
+  <data name="ReverseSearchApiKeyEntryDescriptionHyperlinkButton.Content" xml:space="preserve">
+    <value>Récupérer votre API Key de SauceNAO ici (Authentification/Inscription requise)</value>
+  </data>
+  <data name="ReverseSearchApiKeyTextBox.PlaceholderText" xml:space="preserve">
+    <value>Entrez une API Key</value>
+  </data>
+  <data name="ReverseSearchResultSimilarityThresholdEntry.Description" xml:space="preserve">
+    <value>Seuil de confiance de la recherche inversée, les résultats avec une plus faible confiance seront ignorés. Cette indication décide à quel niveau un résultat ressemble à votre image originale</value>
+  </data>
+  <data name="ReverseSearchResultSimilarityThresholdEntry.Header" xml:space="preserve">
+    <value>Seuil de recherche inversée</value>
+  </data>
+  <data name="SearchDurationEntry.Description" xml:space="preserve">
+    <value>Les résultats seront limités entre le début et la fin de cette durée. Si vous activez l'option 'Utiliser un seuil plus limité', cette option sera ignorée</value>
+  </data>
+  <data name="SearchDurationEntry.Header" xml:space="preserve">
+    <value>Limiter la recherche dans une durée</value>
+  </data>
+  <data name="SearchEndDateEntry.Description" xml:space="preserve">
+    <value>Uniquement les illustrations publiées avant cette date seront inclues. Cette option doit être au moins un (1) jour plus tard que la date de début</value>
+  </data>
+  <data name="SearchEndDateEntry.Header" xml:space="preserve">
+    <value>Date de fin pour la recherche</value>
+  </data>
+  <data name="BrowseOriginalImageEntry.Description" xml:space="preserve">
+    <value>Cette option nécessite plus de débit et de temps de chargement, mais vous aurez une meilleure expérience et une meilleure vitesse de téléchargement</value>
+  </data>
+  <data name="BrowseOriginalImageEntry.Header" xml:space="preserve">
+    <value>Visualiser les images en original</value>
+  </data>
+  <data name="SearchSettingsGroup.Text" xml:space="preserve">
+    <value>Configurations de recherche</value>
+  </data>
+  <data name="SearchStartCalendarDatePicker.PlaceholderText" xml:space="preserve">
+    <value>Date de début</value>
+  </data>
+  <data name="SearchStartDateEntry.Description" xml:space="preserve">
+    <value>Seulement les résultats avec une date ultérieure de cette date de début seront affichés</value>
+  </data>
+  <data name="SearchStartDateEntry.Header" xml:space="preserve">
+    <value>Configurer la date de début</value>
+  </data>
+  <data name="SessionSettingsGroup.Text" xml:space="preserve">
+    <value>Configurations de session</value>
+  </data>
+  <data name="SignOutConfirmationDialogContent" xml:space="preserve">
+    <value>Cette opération est irréversible</value>
+  </data>
+  <data name="SignOutConfirmationDialogTitle" xml:space="preserve">
+    <value>Etes-vous sûr de vous déconnecter?</value>
+  </data>
+  <data name="SignOutEntry.Description" xml:space="preserve">
+    <value>Me déconnecter et quitter l'application</value>
+  </data>
+  <data name="SignOutEntry.Header" xml:space="preserve">
+    <value>Déconnecter</value>
+  </data>
+  <data name="SpotlightSearchPageLimitNumberBox.PlaceholderText" xml:space="preserve">
+    <value>Limitation de nombre de pages des spotlight parmi [1, 100]</value>
+  </data>
+  <data name="TargetAPIPlatformEntry.Description" xml:space="preserve">
+    <value>Spécifiez quelle plateforme d'API utilisée pour envoyer les requêtes. Si vous n'en connaissez pas, veuillez à la laisser vide</value>
+  </data>
+  <data name="TargetAPIPlatformEntry.Header" xml:space="preserve">
+    <value>Plateforme API utilisée</value>
+  </data>
+  <data name="ProxyTypeEntry.Description" xml:space="preserve">
+    <value>Lors que le domain fronting est désactivé, ce proxy sera utilisé par Pixeval</value>
+  </data>
+  <data name="ProxyTypeEntry.Header" xml:space="preserve">
+    <value>Type de proxy</value>
+  </data>
+  <data name="ProxyTextBoxEntry.Description" xml:space="preserve">
+    <value>Les préfixes de protocole seront ignorés</value>
+  </data>
+  <data name="ProxyTextBoxEntry.Header" xml:space="preserve">
+    <value>Serveur de proxy</value>
+  </data>
+  <data name="ProxyTextBoxErrorUri" xml:space="preserve">
+    <value>L'URI du serveur proxy est incorrect, veuillez la corriger</value>
+  </data>
+  <data name="ThemeEntry.Header" xml:space="preserve">
+    <value>Thème d'application</value>
+  </data>
+  <data name="ThemeEntryDescriptionHyperlinkButton.Content" xml:space="preserve">
+    <value>Ouvrir les paramètres du thème Windows</value>
+  </data>
+  <data name="ThumbnailDirectionEntry.Description" xml:space="preserve">
+    <value>Orientation de page lors de visualisation des illustrations</value>
+  </data>
+  <data name="ThumbnailDirectionEntry.Header" xml:space="preserve">
+    <value>Orientation des vignettes</value>
+  </data>
+  <data name="TitleTextBlock.Text" xml:space="preserve">
+    <value>Configurations de Pixeval</value>
+  </data>
+  <data name="UseFileCacheEntry.Description" xml:space="preserve">
+    <value>Cette option permettra de réduire la consommation du réseau et augmenter votre expérience, mais les calculs CPU et les opérations I/O augmenteront</value>
+  </data>
+  <data name="UseFileCacheEntry.Header" xml:space="preserve">
+    <value>Utiliser les caches de fichier</value>
+  </data>
+  <data name="UsePreciseRangeForSearchEntry.Description" xml:space="preserve">
+    <value>Utiliser un seuil plus limité (basé sur les dates exactes) pour limiter la recherche. En cas d'activation de cette option, l'option 'Limiter la recherche dans une durée' sera ignorée</value>
+  </data>
+  <data name="UsePreciseRangeForSearchEntry.Header" xml:space="preserve">
+    <value>Utiliser un seuil plus limité</value>
+  </data>
+  <data name="VersionSettingsGroup.Text" xml:space="preserve">
+    <value>Version</value>
+  </data>
+  <data name="ViewPixevalWebsiteHyperlinkButton.Content" xml:space="preserve">
+    <value>Page d'introduction</value>
+  </data>
+  <data name="WorkDownloadFormatEntry.Description" xml:space="preserve">
+    <value>Format d'art à télécharger</value>
+  </data>
+  <data name="WorkDownloadFormatEntry.Header" xml:space="preserve">
+    <value>Format de téléchargement</value>
+  </data>
+  <data name="NovelFontFamilyComboBox.PlaceholderText" xml:space="preserve">
+    <value>Choisir une police</value>
+  </data>
+  <data name="NovelFontWeightComboBox.PlaceholderText" xml:space="preserve">
+    <value>Choisir le poid de police</value>
+  </data>
+  <data name="NovelSettingsFontFamilyEntry.Header" xml:space="preserve">
+    <value>Typographie</value>
+  </data>
+  <data name="NovelSettingsFontColorEntry.Header" xml:space="preserve">
+    <value>Couleur de texte</value>
+  </data>
+  <data name="NovelSettingsFontColorEntry.Description" xml:space="preserve">
+    <value>Couleur de texte</value>
+  </data>
+  <data name="NovelSettingsBackgroundEntry.Header" xml:space="preserve">
+    <value>Couleur de fond</value>
+  </data>
+  <data name="NovelSettingsBackgroundEntry.Description" xml:space="preserve">
+    <value>Couleur de fond de page</value>
+  </data>
+  <data name="NovelSettingsFontWeightEntry.Header" xml:space="preserve">
+    <value>Poid de police</value>
+  </data>
+  <data name="NovelSettingsFontWeightEntry.Description" xml:space="preserve">
+    <value>Poid de police de texte</value>
+  </data>
+  <data name="NovelSettingsFontSizeEntry.Header" xml:space="preserve">
+    <value>Taille des caractères</value>
+  </data>
+  <data name="NovelSettingsFontSizeEntry.Description" xml:space="preserve">
+    <value>Taille des caractères de texte</value>
+  </data>
+  <data name="NovelSettingsLineHeightEntry.Header" xml:space="preserve">
+    <value>Hauteur de ligne</value>
+  </data>
+  <data name="NovelSettingsLineHeightEntry.Description" xml:space="preserve">
+    <value>Hauteur de ligne de texte</value>
+  </data>
+  <data name="NovelSettingsMaxWidthEntry.Header" xml:space="preserve">
+    <value>Largeur de page</value>
+  </data>
+  <data name="NovelSettingsMaxWidthEntry.Description" xml:space="preserve">
+    <value>Largeur maximale de page</value>
+  </data>
+  <data name="MacroCopiedToClipboard" xml:space="preserve">
+    <value>Le macro a été copié sur le clipboard</value>
+  </data>
+  <data name="ExtMacroTooltip" xml:space="preserve">
+    <value>Extensions des fichiers, e.g. .jpg, .png, etc. A noter que ce macro contient déjà les points devant les suffixes ".", ce macro doit uniquement être utilisé dans les noms de fichier</value>
+  </data>
+  <data name="IdMacroTooltip" xml:space="preserve">
+    <value>ID d'art</value>
+  </data>
+  <data name="TitleMacroTooltip" xml:space="preserve">
+    <value>Titre d'art</value>
+  </data>
+  <data name="ArtistIdMacroTooltip" xml:space="preserve">
+    <value>ID d'auteur</value>
+  </data>
+  <data name="ArtistNameMacroTooltip" xml:space="preserve">
+    <value>Nom d'auteur</value>
+  </data>
+  <data name="PublishYearMacroTooltip" xml:space="preserve">
+    <value>L'année de publication</value>
+  </data>
+  <data name="PublishMonthMacroTooltip" xml:space="preserve">
+    <value>Le mois de publication</value>
+  </data>
+  <data name="PublishDayMacroTooltip" xml:space="preserve">
+    <value>Le jour de publication</value>
+  </data>
+  <data name="IfR18MacroTooltip" xml:space="preserve">
+    <value>Ce marco sera remplacé par son argument s'il s'agit d'un art restreint (R18 ou R18G)</value>
+  </data>
+  <data name="IfR18GMacroTooltip" xml:space="preserve">
+    <value>Ce marco sera remplacé par son argument s'il s'agit d'un art R18G</value>
+  </data>
+  <data name="IfAiMacroTooltip" xml:space="preserve">
+    <value>Ce marco sera remplacé par son argument s'il s'agit d'un art généré par l'IA</value>
+  </data>
+  <data name="IfNovelMacroTooltip" xml:space="preserve">
+    <value>Ce marco sera remplacé par son argument s'il s'agit d'un roman</value>
+  </data>
+  <data name="PicSetIndexMacroTooltip" xml:space="preserve">
+    <value>Ce macro sera remplacé par l'indice de l'illustration courante dans la collection (n-ième illust.). Il faut l'utiliser avec le macro '@{if_pic_set=} et sur les noms de fichier</value>
+  </data>
+</root>

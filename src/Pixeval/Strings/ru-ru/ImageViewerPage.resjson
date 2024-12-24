@@ -1,7 +1,0 @@
-{
-    "CheckingCache": "Проверка кэша...",
-    "DownloadingImageFormatted": "Загрузка изображения: {0}%",
-    "LoadingFromCache": "Загрузка из кэша...",
-    "LoadingImage": "Декодирование изображения...",
-    "MergingUgoiraFrames": "Создание анимации..."
-}

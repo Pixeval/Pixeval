@@ -1,6 +1,0 @@
-{
-    "CommentIsTooShortOrTooLongToastContentFormatted": "Пожалуйста, отправьте комментарий длиной от 0 до 140 символов, текущая длина комментария: {0}",
-    "CommentIsTooShortOrTooLongToastTitle": "Недопустимая длина комментария",
-    "ReplyContentRichEditBox/PlaceholderText": "Введите комментарий",
-    "SendButton/ToolTipService/ToolTip": "Отправить"
-}

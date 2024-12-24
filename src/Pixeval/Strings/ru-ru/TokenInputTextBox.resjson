@@ -1,5 +1,0 @@
-{
-    "CaseSensitiveCheckBox/ToolTipService/ToolTip": "Учитывать регистр",
-    "IsRegularExpressionCheckBox/ToolTipService/ToolTip": "Использовать регулярные выражения",
-    "SubmitButton/ToolTipService/ToolTip": "Применить"
-}

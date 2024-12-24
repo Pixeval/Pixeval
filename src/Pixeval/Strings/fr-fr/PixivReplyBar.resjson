@@ -1,6 +1,0 @@
-{
-    "CommentIsTooShortOrTooLongToastContentFormatted": "Entrez un commentaire de taille entre 0 et 140, actuellement: {0}",
-    "CommentIsTooShortOrTooLongToastTitle": "Taille de commentaire non conforme",
-    "ReplyContentRichEditBox/PlaceholderText": "Entrer votre commentaire",
-    "SendButton/ToolTipService/ToolTip": "Envoyer"
-}
