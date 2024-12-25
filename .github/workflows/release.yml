@@ -51,7 +51,7 @@ jobs:
               with:
                 fetch-depth: 0
                 
-            - uses: actions/setup-dotnet@v2
+            - uses: actions/setup-dotnet@v4
               with:
                 global-json-file: global.json
                 include-prerelease: true
