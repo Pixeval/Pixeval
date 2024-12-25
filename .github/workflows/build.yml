@@ -46,7 +46,7 @@ jobs:
 
       - name: Setup NuGet
         id: setup-nuget
-        uses: NuGet/setup-nuget@v1.2.0
+        uses: NuGet/setup-nuget@v2.0.1
 
       - name: Setup .NET 8
         uses: actions/setup-dotnet@v3
