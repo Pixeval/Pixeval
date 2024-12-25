@@ -313,8 +313,8 @@ public partial record AppSettings() : IWindowSettings
         var picDirectory = Path.GetDirectoryName(picPath);
         return picDirectory == Path.GetDirectoryName(docPath)
             ? picDirectory +
-              @$"\@{{if_illust={Path.GetFileName(picPath)}}}@{{if_novel={Path.GetFileName(docPath)}}}"
-            : $"@{{if_illust={picPath}}}@{{if_novel={docPath}}}";
+              @$"\@{{if_pic_all={Path.GetFileName(picPath)}}}@{{if_novel={Path.GetFileName(docPath)}}}"
+            : $"@{{if_pic_all={picPath}}}@{{if_novel={docPath}}}";
     }
 }
 
