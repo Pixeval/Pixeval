@@ -57,7 +57,7 @@ jobs:
                 include-prerelease: true
             
             - name: Add msbuild to PATH
-              uses: microsoft/setup-msbuild@v1.1
+              uses: microsoft/setup-msbuild@v1.3
               with:
                 vs-prerelease: true
 
