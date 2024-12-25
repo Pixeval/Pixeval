@@ -67,7 +67,7 @@ jobs:
                 Import-PfxCertificate -FilePath $PWD/temp.pfx -CertStoreLocation Cert:\CurrentUser\My -Password (ConvertTo-SecureString -AsPlainText "$env:private_key_password")
                 Remove-Item -Path "$PWD/temp.pfx"
             
-            - uses: actions/cache@v3
+            - uses: actions/cache@v4
               with:
                 path: ~/.nuget/packages
                 key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
