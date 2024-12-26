@@ -190,6 +190,14 @@ dotnet_naming_rule.const_field_should_be_pascal_case.severity = suggestion
 dotnet_naming_rule.const_field_should_be_pascal_case.symbols = const_field
 dotnet_naming_rule.const_field_should_be_pascal_case.style = pascal_case
 
+dotnet_naming_rule.private_static_field_should_be_pascal_begin_with__.severity = suggestion
+dotnet_naming_rule.private_static_field_should_be_pascal_begin_with__.symbols = private_static_field
+dotnet_naming_rule.private_static_field_should_be_pascal_begin_with__.style = pascal_begin_with__
+
+dotnet_naming_rule.private_static_readonly_field_should_be_pascal_begin_with__.severity = suggestion
+dotnet_naming_rule.private_static_readonly_field_should_be_pascal_begin_with__.symbols = private_static_readonly_field
+dotnet_naming_rule.private_static_readonly_field_should_be_pascal_begin_with__.style = pascal_begin_with__
+
 dotnet_naming_rule.private_field_should_be_camel_begin_with__.severity = suggestion
 dotnet_naming_rule.private_field_should_be_camel_begin_with__.symbols = private_field
 dotnet_naming_rule.private_field_should_be_camel_begin_with__.style = camel_begin_with__
@@ -198,12 +206,15 @@ dotnet_naming_rule.private_field_should_be_camel_begin_with__.style = camel_begi
 
 dotnet_naming_symbols.interface.applicable_kinds = interface
 dotnet_naming_symbols.interface.applicable_accessibilities = public, internal, private, protected, protected_internal, private_protected
+dotnet_naming_symbols.interface.required_modifiers = 
 
 dotnet_naming_symbols.types.applicable_kinds = class, struct, interface, enum
 dotnet_naming_symbols.types.applicable_accessibilities = public, internal, private, protected, protected_internal, private_protected
+dotnet_naming_symbols.types.required_modifiers = 
 
 dotnet_naming_symbols.non_field_members.applicable_kinds = property, event, method
 dotnet_naming_symbols.non_field_members.applicable_accessibilities = public, internal, private, protected, protected_internal, private_protected
+dotnet_naming_symbols.non_field_members.required_modifiers = 
 
 dotnet_naming_symbols.const_field.applicable_kinds = field
 dotnet_naming_symbols.const_field.applicable_accessibilities = public, internal, private, protected, protected_internal, private_protected
@@ -211,20 +222,41 @@ dotnet_naming_symbols.const_field.required_modifiers = const
 
 dotnet_naming_symbols.visible_field.applicable_kinds = field
 dotnet_naming_symbols.visible_field.applicable_accessibilities = public, internal, protected_internal
+dotnet_naming_symbols.visible_field.required_modifiers = 
 
 dotnet_naming_symbols.private_field.applicable_kinds = field
 dotnet_naming_symbols.private_field.applicable_accessibilities = private
+dotnet_naming_symbols.private_field.required_modifiers = 
+
+dotnet_naming_symbols.private_static_field.applicable_kinds = field
+dotnet_naming_symbols.private_static_field.applicable_accessibilities = private
+dotnet_naming_symbols.private_static_field.required_modifiers = static
+
+dotnet_naming_symbols.private_static_readonly_field.applicable_kinds = field
+dotnet_naming_symbols.private_static_readonly_field.applicable_accessibilities = private
+dotnet_naming_symbols.private_static_readonly_field.required_modifiers = readonly, static
 
 # 命名样式
 
+dotnet_naming_style.pascal_case.required_prefix = 
+dotnet_naming_style.pascal_case.required_suffix = 
+dotnet_naming_style.pascal_case.word_separator = 
 dotnet_naming_style.pascal_case.capitalization = pascal_case
 
 dotnet_naming_style.begins_with_i.required_prefix = I
+dotnet_naming_style.begins_with_i.required_suffix = 
+dotnet_naming_style.begins_with_i.word_separator = 
 dotnet_naming_style.begins_with_i.capitalization = pascal_case
 
 dotnet_naming_style.camel_begin_with__.required_prefix = _
+dotnet_naming_style.camel_begin_with__.required_suffix = 
+dotnet_naming_style.camel_begin_with__.word_separator = 
 dotnet_naming_style.camel_begin_with__.capitalization = camel_case
 
+dotnet_naming_style.pascal_begin_with__.required_prefix = _
+dotnet_naming_style.pascal_begin_with__.required_suffix = 
+dotnet_naming_style.pascal_begin_with__.word_separator = 
+dotnet_naming_style.pascal_begin_with__.capitalization = pascal_case
 
 # ReSharper properties
 resharper_max_initializer_elements_on_line = 1

@@ -3,10 +3,9 @@
         <OutputType>WinExe</OutputType>
         <TargetFramework>net8.0-windows10.0.22621.0</TargetFramework>
         <TargetPlatformMinVersion>10.0.19041.0</TargetPlatformMinVersion>
-		<RootNamespace>Pixeval</RootNamespace>
+        <RootNamespace>Pixeval</RootNamespace>
         <Platforms>x86;x64;ARM64</Platforms>
-	    <RuntimeIdentifiers Condition="$([MSBuild]::GetTargetFrameworkVersion('$(TargetFramework)')) &gt;= 8">win-x86;win-x64;win-arm64</RuntimeIdentifiers>
-	    <RuntimeIdentifiers Condition="$([MSBuild]::GetTargetFrameworkVersion('$(TargetFramework)')) &lt; 8">win10-x86;win10-x64;win10-arm64</RuntimeIdentifiers>
+        <RuntimeIdentifiers>win-x86;win-x64;win-arm64</RuntimeIdentifiers>
         <ApplicationManifest>app.manifest</ApplicationManifest>
         <Nullable>enable</Nullable>
         <UseWinUI>true</UseWinUI>
@@ -17,9 +16,8 @@
         <Configurations>Debug;Release</Configurations>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <PublishAot>false</PublishAot>
-        <WindowsSdkPackageVersion>10.0.22621.38</WindowsSdkPackageVersion>
         <PublishProfile Condition="'$(PublishAot)' == 'true'">win-$(Platform).pubxml</PublishProfile>
-	    <WindowsPackageType>MSIX</WindowsPackageType>
+        <WindowsPackageType>MSIX</WindowsPackageType>
         <NoWarn>NU1904;$(NoWarn)</NoWarn>
     </PropertyGroup>
 
@@ -95,6 +93,10 @@
             <Content>    "$([System.String]::Concat(%(Filename), '"').Replace('_', '/')) : "$([System.IO.File]::ReadAllText(%(FullPath)).Replace('\', '\\').Replace('
 ', '\n').Replace('"', '\"'))"</Content>
         </TextFile>
+
+        <PRIResource Include="Assets\Svg.resw" />
+        <PRIResource Include="Strings\*\*.resjson" />
+        <PRIResource Include="Strings\*\*.resw" />
     </ItemGroup>
 
     <!--PackageManifest-->
@@ -113,12 +115,6 @@
         <AppxBundlePlatforms>x86|x64|arm64</AppxBundlePlatforms>
     </PropertyGroup>
 
-    <ItemGroup>
-        <PRIResource Include="Assets\Svg.resw" />
-        <PRIResource Include="Strings\*\*.resjson" />
-        <PRIResource Include="Strings\*\*.resw" />
-    </ItemGroup>
-
     <ItemGroup Condition="'$(DisableMsixProjectCapabilityAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
         <ProjectCapability Include="Msix" />
     </ItemGroup>
@@ -126,80 +122,4 @@
     <PropertyGroup Condition="'$(DisableHasPackageAndPublishMenuAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
         <HasPackageAndPublishMenu>true</HasPackageAndPublishMenu>
     </PropertyGroup>
-
-    <ItemGroup>
-      <None Remove="Assets\Images\Icons\bookmarks-128x128.png" />
-      <None Remove="Assets\Images\Icons\bookmarks-64x64.png" />
-      <None Remove="Assets\Images\Icons\bookmarks.png" />
-      <None Remove="Assets\Images\Icons\followings-128x128.png" />
-      <None Remove="Assets\Images\Icons\followings-64x64.png" />
-      <None Remove="Assets\Images\Icons\followings.png" />
-      <None Remove="Assets\Images\Icons\history-128x128.png" />
-      <None Remove="Assets\Images\Icons\history-64x64.png" />
-      <None Remove="Assets\Images\Icons\history.png" />
-      <None Remove="Assets\Images\Icons\new-works-128x128.png" />
-      <None Remove="Assets\Images\Icons\new-works-64x64.png" />
-      <None Remove="Assets\Images\Icons\new-works.png" />
-      <None Remove="Assets\Images\Icons\ranking-128x128.png" />
-      <None Remove="Assets\Images\Icons\ranking-64x64.png" />
-      <None Remove="Assets\Images\Icons\ranking.png" />
-      <None Remove="Assets\Images\Icons\recent-posts-128x128.png" />
-      <None Remove="Assets\Images\Icons\recent-posts-64x64.png" />
-      <None Remove="Assets\Images\Icons\recent-posts.png" />
-      <None Remove="Assets\Images\Icons\recommend-user-128x128.png" />
-      <None Remove="Assets\Images\Icons\recommend-user-64x64.png" />
-      <None Remove="Assets\Images\Icons\recommend-user.png" />
-      <None Remove="Assets\Images\Icons\recommendations-128x128.png" />
-      <None Remove="Assets\Images\Icons\recommendations-64x64.png" />
-      <None Remove="Assets\Images\Icons\recommendations.png" />
-      <None Remove="Assets\Images\Icons\spotlight-128x128.png" />
-      <None Remove="Assets\Images\Icons\spotlight-64x64.png" />
-      <None Remove="Assets\Images\Icons\spotlight.png" />
-      <None Remove="Assets\Images\Icons\tag-128x128.png" />
-      <None Remove="Assets\Images\Icons\tag-64x64.png" />
-      <None Remove="Assets\Images\Icons\tag.png" />
-    </ItemGroup>
-
-    <!--
-    <ItemGroup>
-      <Content Update="Assets\Binary\RealESRGAN\models\realesr-animevideov3-x2.bin">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </Content>
-      <Content Update="Assets\Binary\RealESRGAN\models\realesr-animevideov3-x2.param">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </Content>
-      <Content Update="Assets\Binary\RealESRGAN\models\realesr-animevideov3-x3.bin">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </Content>
-      <Content Update="Assets\Binary\RealESRGAN\models\realesr-animevideov3-x3.param">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </Content>
-      <Content Update="Assets\Binary\RealESRGAN\models\realesr-animevideov3-x4.bin">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </Content>
-      <Content Update="Assets\Binary\RealESRGAN\models\realesr-animevideov3-x4.param">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </Content>
-      <Content Update="Assets\Binary\RealESRGAN\models\realesrgan-x4plus-anime.bin">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </Content>
-      <Content Update="Assets\Binary\RealESRGAN\models\realesrgan-x4plus-anime.param">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </Content>
-      <Content Update="Assets\Binary\RealESRGAN\models\realesrgan-x4plus.bin">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </Content>
-      <Content Update="Assets\Binary\RealESRGAN\models\realesrgan-x4plus.param">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </Content>
-      <Content Update="Assets\Binary\RealESRGAN\realesrgan-ncnn-vulkan.exe">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </Content>
-      <Content Update="Assets\Binary\RealESRGAN\vcomp140.dll">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </Content>
-      <Content Update="Assets\Binary\RealESRGAN\vcomp140d.dll">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </Content>
-    </ItemGroup>-->
 </Project>

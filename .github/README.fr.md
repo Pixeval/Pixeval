@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="./src/Pixeval/Assets/Images/logo.svg" alt="logo" width="200">
+<img src="..s/src/Pixeval/Assets/Images/logo.svg" alt="logo" width="200">
 
 # Pixeval
 

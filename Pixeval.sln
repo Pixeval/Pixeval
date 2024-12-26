@@ -25,9 +25,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ISSUE_TEMPLATE", "ISSUE_TEMPLATE", "{CF6471C8-02F1-4B25-9207-43312C206A45}"
 	ProjectSection(SolutionItems) = preProject
 		.github\ISSUE_TEMPLATE\bug_report.yaml = .github\ISSUE_TEMPLATE\bug_report.yaml
-		.github\ISSUE_TEMPLATE\bug_report_zh.yaml = .github\ISSUE_TEMPLATE\bug_report_zh.yaml
 		.github\ISSUE_TEMPLATE\feature_request.yaml = .github\ISSUE_TEMPLATE\feature_request.yaml
-		.github\ISSUE_TEMPLATE\feature_request_zh.yaml = .github\ISSUE_TEMPLATE\feature_request_zh.yaml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{F041EE9B-A618-438D-A16D-1265421E22FC}"

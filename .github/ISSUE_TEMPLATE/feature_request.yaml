@@ -10,25 +10,29 @@ body:
         🚨 **请勿略过说明 / Please do not skip instructions** 🚨
 
         1. 请确保在打开一个新议题之前，查找并确认不要与已有议题重复。
-        2. WPF版本已不再维护，除非重大BUG其他情况下都会直接关闭议题。
+
+           Please make sure to look for existing issues about the same problem before opening a new one.
+
+        2. WPF版本已不再维护，除非重大漏洞，其他情况下都会直接关闭议题。
+
+           The WPF version is no longer maintained and issues are simply closed unless there is a serious bug.
+
         3. 只支持Win10，而Win11不支持的功能建议，大概率不会被接受。
 
-        1. Please make sure to look for existing issues about the same problem before opening a new one.
-        2. The WPF version is no longer maintained and issues are simply closed unless there is a major bug.
-        3. Feature requests that only support Win10 and not Win11 will most likely not be accepted.
+           Feature requests that only support Win10 and not Win11 will most likely not be accepted.
   - type: dropdown
     validations:
       required: true
     attributes:
-      label: 建议类型
+      label: 建议类型 / Type of request
       options:
-        - 新功能
-        - 功能优化
+        - 新功能 / New feature
+        - 功能优化 / Optimization of feature
   - type: dropdown
     validations:
       required: true
     attributes:
-      label: Pixeval的版本
+      label: Pixeval的版本 / Pixeval's version
       options:
         - WinUI 3
   - type: textarea
