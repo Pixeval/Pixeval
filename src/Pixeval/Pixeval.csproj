@@ -11,7 +11,7 @@
         <UseWinUI>true</UseWinUI>
         <EnableMsixTooling>true</EnableMsixTooling>
         <EnableDefaultPriItems>false</EnableDefaultPriItems>
-        <DefaultLanguage>zh-cn</DefaultLanguage>
+        <DefaultLanguage>zh-CN</DefaultLanguage>
         <LangVersion>preview</LangVersion>
         <Configurations>Debug;Release</Configurations>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
