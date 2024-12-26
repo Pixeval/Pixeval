@@ -1,0 +1,384 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string"/>
+              <xsd:attribute name="type" type="xsd:string"/>
+              <xsd:attribute name="mimetype" type="xsd:string"/>
+              <xsd:attribute ref="xml:space"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string"/>
+              <xsd:attribute name="name" type="xsd:string"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
+              <xsd:attribute ref="xml:space"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required"/>
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AddBookmark" xml:space="preserve">
+    <value>收藏</value>
+  </data>
+  <data name="RemoveBookmark" xml:space="preserve">
+    <value>取消收藏</value>
+  </data>
+  <data name="Follow" xml:space="preserve">
+    <value>关注</value>
+  </data>
+  <data name="FollowPrivately" xml:space="preserve">
+    <value>悄悄关注</value>
+  </data>
+  <data name="Unfollow" xml:space="preserve">
+    <value>取消关注</value>
+  </data>
+  <data name="Pause" xml:space="preserve">
+    <value>暂停</value>
+  </data>
+  <data name="Play" xml:space="preserve">
+    <value>播放</value>
+  </data>
+  <data name="RestoreOriginalResolution" xml:space="preserve">
+    <value>缩放到图片实际大小</value>
+  </data>
+  <data name="UniformToFillResolution" xml:space="preserve">
+    <value>缩放到适应窗口大小</value>
+  </data>
+  <data name="FullScreen" xml:space="preserve">
+    <value>全屏</value>
+  </data>
+  <data name="BackToWindow" xml:space="preserve">
+    <value>恢复窗口化</value>
+  </data>
+  <data name="AppThemeLight" xml:space="preserve">
+    <value>亮色</value>
+  </data>
+  <data name="AppThemeDark" xml:space="preserve">
+    <value>暗色</value>
+  </data>
+  <data name="AppThemeSystemDefault" xml:space="preserve">
+    <value>跟随系统主题</value>
+  </data>
+  <data name="ExceptionEncountered" xml:space="preserve">
+    <value>应用程序遇到了异常</value>
+  </data>
+  <data name="WorkSortOptionDoNotSort" xml:space="preserve">
+    <value>不进行任何排序</value>
+  </data>
+  <data name="WorkSortOptionPopularityDescending" xml:space="preserve">
+    <value>收藏数降序</value>
+  </data>
+  <data name="WorkSortOptionPublishDateAscending" xml:space="preserve">
+    <value>发布日期升序</value>
+  </data>
+  <data name="WorkSortOptionPublishDateDescending" xml:space="preserve">
+    <value>发布日期降序</value>
+  </data>
+  <data name="NoneBackdrop" xml:space="preserve">
+    <value>不使用</value>
+  </data>
+  <data name="AcrylicBackdrop" xml:space="preserve">
+    <value>亚克力材质（对低端电脑不友好）</value>
+  </data>
+  <data name="MicaBackdrop" xml:space="preserve">
+    <value>Mica（云母）材质</value>
+  </data>
+  <data name="MicaAltBackdrop" xml:space="preserve">
+    <value>Mica Alt（更鲜艳的云母）材质</value>
+  </data>
+  <data name="SearchDurationUndecided" xml:space="preserve">
+    <value>默认</value>
+  </data>
+  <data name="SearchDurationWithinLastDay" xml:space="preserve">
+    <value>一天内</value>
+  </data>
+  <data name="SearchDurationWithinLastWeek" xml:space="preserve">
+    <value>一周内</value>
+  </data>
+  <data name="SearchDurationWithinLastMonth" xml:space="preserve">
+    <value>一月内</value>
+  </data>
+  <data name="SearchDurationWithinLastHalfYear" xml:space="preserve">
+    <value>半年内</value>
+  </data>
+  <data name="SearchDurationWithinLastYear" xml:space="preserve">
+    <value>一年内</value>
+  </data>
+  <data name="PrivacyPolicyPublic" xml:space="preserve">
+    <value>公开</value>
+  </data>
+  <data name="PrivacyPolicyPrivate" xml:space="preserve">
+    <value>私有</value>
+  </data>
+  <data name="SearchIllustrationTagMatchOptionExactMatchForTags" xml:space="preserve">
+    <value>与关键字完全一致</value>
+  </data>
+  <data name="SearchIllustrationTagMatchOptionPartialMatchForTags" xml:space="preserve">
+    <value>与关键字部分一致</value>
+  </data>
+  <data name="SearchIllustrationTagMatchOptionTitleAndCaption" xml:space="preserve">
+    <value>匹配标题与说明文</value>
+  </data>
+  <data name="SearchNovelTagMatchOptionExactMatchForTags" xml:space="preserve">
+    <value>与关键字完全一致</value>
+  </data>
+  <data name="SearchNovelTagMatchOptionPartialMatchForTags" xml:space="preserve">
+    <value>与关键字部分一致</value>
+  </data>
+  <data name="SearchNovelTagMatchOptionText" xml:space="preserve">
+    <value>匹配正文</value>
+  </data>
+  <data name="SearchNovelTagMatchOptionCaption" xml:space="preserve">
+    <value>匹配说明文</value>
+  </data>
+  <data name="TargetFilterForAndroid" xml:space="preserve">
+    <value>Android</value>
+  </data>
+  <data name="TargetFilterForIOS" xml:space="preserve">
+    <value>IOS</value>
+  </data>
+  <data name="ThumbnailDirectionLandscape" xml:space="preserve">
+    <value>横向</value>
+  </data>
+  <data name="ThumbnailDirectionPortrait" xml:space="preserve">
+    <value>纵向</value>
+  </data>
+  <data name="WorkTypeIllust" xml:space="preserve">
+    <value>插画</value>
+  </data>
+  <data name="WorkTypeManga" xml:space="preserve">
+    <value>漫画</value>
+  </data>
+  <data name="WorkTypeNovel" xml:space="preserve">
+    <value>小说</value>
+  </data>
+  <data name="SimpleWorkTypeIllustAndManga" xml:space="preserve">
+    <value>插画和漫画</value>
+  </data>
+  <data name="SimpleWorkTypeNovel" xml:space="preserve">
+    <value>小说</value>
+  </data>
+  <data name="Bmp" xml:space="preserve">
+    <value>BMP（无损，文件大，支持广泛）</value>
+  </data>
+  <data name="Jpg" xml:space="preserve">
+    <value>JPG（有损，文件小，支持广泛）</value>
+  </data>
+  <data name="Gif" xml:space="preserve">
+    <value>GIF（无损，只支持256色，文件小，支持广泛）</value>
+  </data>
+  <data name="Tiff" xml:space="preserve">
+    <value>TIFF（无损，无法自动播放，文件大）</value>
+  </data>
+  <data name="Png" xml:space="preserve">
+    <value>PNG/APNG（无损，文件小）</value>
+  </data>
+  <data name="Original" xml:space="preserve">
+    <value>图片原始格式（JPG/PNG，无法自动添加标签）</value>
+  </data>
+  <data name="OriginalZip" xml:space="preserve">
+    <value>动图原始格式（ZIP，无法添加标签）</value>
+  </data>
+  <data name="WebPLossless" xml:space="preserve">
+    <value>无损WebP（无损，文件小，支持广泛）</value>
+  </data>
+  <data name="WebPLossy" xml:space="preserve">
+    <value>有损WebP（有损，文件小，支持广泛）</value>
+  </data>
+  <data name="Pdf" xml:space="preserve">
+    <value>PDF（内嵌所有图片）</value>
+  </data>
+  <data name="Html" xml:space="preserve">
+    <value>HTML（文件夹包含所有图片）</value>
+  </data>
+  <data name="Md" xml:space="preserve">
+    <value>MarkDown（文件夹包含所有图片）</value>
+  </data>
+  <data name="OriginalTxt" xml:space="preserve">
+    <value>原始TXT（Pixiv原生标签，文件夹包含所有图片）</value>
+  </data>
+  <data name="Thin" xml:space="preserve">
+    <value>极细</value>
+  </data>
+  <data name="ExtraLight" xml:space="preserve">
+    <value>特细</value>
+  </data>
+  <data name="Light" xml:space="preserve">
+    <value>细</value>
+  </data>
+  <data name="SemiLight" xml:space="preserve">
+    <value>半细</value>
+  </data>
+  <data name="Normal" xml:space="preserve">
+    <value>常规</value>
+  </data>
+  <data name="Medium" xml:space="preserve">
+    <value>中等</value>
+  </data>
+  <data name="SemiBold" xml:space="preserve">
+    <value>半粗</value>
+  </data>
+  <data name="Bold" xml:space="preserve">
+    <value>粗</value>
+  </data>
+  <data name="ExtraBold" xml:space="preserve">
+    <value>特粗</value>
+  </data>
+  <data name="Black" xml:space="preserve">
+    <value>黑</value>
+  </data>
+  <data name="ExtraBlack" xml:space="preserve">
+    <value>特黑</value>
+  </data>
+  <data name="AllCountedTagName" xml:space="preserve">
+    <value>所有标签</value>
+  </data>
+  <data name="ProxyOptionSystem" xml:space="preserve">
+    <value>系统代理</value>
+  </data>
+  <data name="ProxyOptionNone" xml:space="preserve">
+    <value>无代理</value>
+  </data>
+  <data name="DownloadItemOpenFailed" xml:space="preserve">
+    <value>打开文件（夹）失败</value>
+  </data>
+  <data name="DownloadItemMaybeDeleted" xml:space="preserve">
+    <value>可能你已经删除了该作品</value>
+  </data>
+  <data name="SortOptionComboBox.PlaceholderText" xml:space="preserve">
+    <value>排序选项</value>
+  </data>
+  <data name="PrivacyPolicyComboBox.PlaceholderText" xml:space="preserve">
+    <value>公开选项</value>
+  </data>
+  <data name="WorkTypeComboBox.PlaceholderText" xml:space="preserve">
+    <value>作品类型</value>
+  </data>
+  <data name="OpenUserId" xml:space="preserve">
+    <value>打开用户主页</value>
+  </data>
+  <data name="OpenNovelId" xml:space="preserve">
+    <value>打开小说页面</value>
+  </data>
+  <data name="OpenIllustId" xml:space="preserve">
+    <value>打开图片页面</value>
+  </data>
+  <data name="SearchUser" xml:space="preserve">
+    <value>搜索作者</value>
+  </data>
+  <data name="CannotFindLoginProxyServerExecutable" xml:space="preserve">
+    <value>找不到用于登录的可执行文件，请重新打开应用或者联系开发者</value>
+  </data>
+  <data name="UnexpectedBehavior" xml:space="preserve">
+    <value>发生了未定义的行为，如果你看到了该信息，请联系开发者寻求帮助</value>
+  </data>
+  <data name="ReplyContentTooLong" xml:space="preserve">
+    <value>回复内容超过140字，请重新编辑</value>
+  </data>
+  <data name="BookmarkTagSelectorPrivateCheckBox.Content" xml:space="preserve">
+    <value>私人</value>
+  </data>
+  <data name="GoToPageFormatted" xml:space="preserve">
+    <value>去{0}页</value>
+  </data>
+</root>
