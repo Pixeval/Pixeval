@@ -18,7 +18,7 @@ jobs:
         runs-on: windows-latest
         steps:
           - name: Checkout
-            uses: actions/checkout@v3
+            uses: actions/checkout@v4
 
           - name: Create release
             id: create_release
@@ -47,17 +47,17 @@ jobs:
             private_key_password: ${{ secrets.PRIVATE_KEY_PASSWORD }}
         steps:
             - name: Checkout
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
               with:
                 fetch-depth: 0
                 
-            - uses: actions/setup-dotnet@v2
+            - uses: actions/setup-dotnet@v4
               with:
                 global-json-file: global.json
                 include-prerelease: true
             
             - name: Add msbuild to PATH
-              uses: microsoft/setup-msbuild@v1.1
+              uses: microsoft/setup-msbuild@v1.3
               with:
                 vs-prerelease: true
 
@@ -67,7 +67,7 @@ jobs:
                 Import-PfxCertificate -FilePath $PWD/temp.pfx -CertStoreLocation Cert:\CurrentUser\My -Password (ConvertTo-SecureString -AsPlainText "$env:private_key_password")
                 Remove-Item -Path "$PWD/temp.pfx"
             
-            - uses: actions/cache@v3
+            - uses: actions/cache@v4
               with:
                 path: ~/.nuget/packages
                 key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
