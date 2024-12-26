@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="DependenciesContentTextBlock.Text" xml:space="preserve">
-    <value>Pixeval依赖了许多开源项目，我在此感谢这些开源项目作者的付出以及无私奉献的精神</value>
+    <value>Pixeval relies heavily on plenty of open source objects, I thus hereby express my deep gratitude to all these contributors.</value>
   </data>
   <data name="DependenciesSubtitleTextBlock.Text" xml:space="preserve">
     <value>项目依赖</value>
