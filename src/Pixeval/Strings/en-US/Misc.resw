@@ -59,46 +59,46 @@
             : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
-  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
           <xsd:element name="metadata">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
               </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string" />
-              <xsd:attribute name="type" type="xsd:string" />
-              <xsd:attribute name="mimetype" type="xsd:string" />
-              <xsd:attribute ref="xml:space" />
+              <xsd:attribute name="name" use="required" type="xsd:string"/>
+              <xsd:attribute name="type" type="xsd:string"/>
+              <xsd:attribute name="mimetype" type="xsd:string"/>
+              <xsd:attribute ref="xml:space"/>
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
             <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string" />
-              <xsd:attribute name="name" type="xsd:string" />
+              <xsd:attribute name="alias" type="xsd:string"/>
+              <xsd:attribute name="name" type="xsd:string"/>
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
-              <xsd:attribute ref="xml:space" />
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
+              <xsd:attribute ref="xml:space"/>
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" />
+              <xsd:attribute name="name" type="xsd:string" use="required"/>
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -192,11 +192,17 @@
   <data name="SearchDurationWithinLastDay" xml:space="preserve">
     <value>1 Day</value>
   </data>
+  <data name="SearchDurationWithinLastWeek" xml:space="preserve">
+    <value>1 Week</value>
+  </data>
   <data name="SearchDurationWithinLastMonth" xml:space="preserve">
     <value>1 Month</value>
   </data>
-  <data name="SearchDurationWithinLastWeek" xml:space="preserve">
-    <value>1 Week</value>
+  <data name="SearchDurationWithinLastHalfYear" xml:space="preserve">
+    <value>Within six months</value>
+  </data>
+  <data name="SearchDurationWithinLastYear" xml:space="preserve">
+    <value>Within a year</value>
   </data>
   <data name="PrivacyPolicyPublic" xml:space="preserve">
     <value>Public</value>
@@ -213,6 +219,18 @@
   <data name="SearchIllustrationTagMatchOptionTitleAndCaption" xml:space="preserve">
     <value>Title and caption</value>
   </data>
+  <data name="SearchNovelTagMatchOptionExactMatchForTags" xml:space="preserve">
+    <value>Exact match</value>
+  </data>
+  <data name="SearchNovelTagMatchOptionPartialMatchForTags" xml:space="preserve">
+    <value>Partiao match</value>
+  </data>
+  <data name="SearchNovelTagMatchOptionText" xml:space="preserve">
+    <value>Match for body text</value>
+  </data>
+  <data name="SearchNovelTagMatchOptionCaption" xml:space="preserve">
+    <value>Match for caption</value>
+  </data>
   <data name="TargetFilterForAndroid" xml:space="preserve">
     <value>Android</value>
   </data>
@@ -224,75 +242,6 @@
   </data>
   <data name="ThumbnailDirectionPortrait" xml:space="preserve">
     <value>Portrait</value>
-  </data>
-  <data name="Bmp" xml:space="preserve">
-    <value>BMP（loss，large，general）</value>
-  </data>
-  <data name="Jpg" xml:space="preserve">
-    <value>JPG（loss，small，general）</value>
-  </data>
-  <data name="Gif" xml:space="preserve">
-    <value>GIF（lossless，only 255 colors，small，general）</value>
-  </data>
-  <data name="Tiff" xml:space="preserve">
-    <value>TIFF（loss，cannot autoplay，large）</value>
-  </data>
-  <data name="Png" xml:space="preserve">
-    <value>PNG/APNG（lossless，small）</value>
-  </data>
-  <data name="WebPLossless" xml:space="preserve">
-    <value>Lossless WebP（lossless，small，general）</value>
-  </data>
-  <data name="WebPLossy" xml:space="preserve">
-    <value>Loss WebP（loss，small，general）</value>
-  </data>
-  <data name="DownloadItemOpenFailed" xml:space="preserve">
-    <value>Failed to open file (or folder)</value>
-  </data>
-  <data name="DownloadItemMaybeDeleted" xml:space="preserve">
-    <value>It seems that you have deleted the work</value>
-  </data>
-  <data name="SortOptionComboBox.PlaceholderText" xml:space="preserve">
-    <value>Sort option</value>
-  </data>
-  <data name="PrivacyPolicyComboBox.PlaceholderText" xml:space="preserve">
-    <value>Privacy policy</value>
-  </data>
-  <data name="OpenUserId" xml:space="preserve">
-    <value>Open user homepage</value>
-  </data>
-  <data name="OpenIllustId" xml:space="preserve">
-    <value>Open image page</value>
-  </data>
-  <data name="CannotFindLoginProxyServerExecutable" xml:space="preserve">
-    <value>Cannot find the executable to login, please contact the developer for further help</value>
-  </data>
-  <data name="UnexpectedBehavior" xml:space="preserve">
-    <value>Undefined behavior occured, if you see this message, please contact the developer for further help</value>
-  </data>
-  <data name="ReplyContentTooLong" xml:space="preserve">
-    <value>The reply content is too long</value>
-  </data>
-  <data name="AllCountedTagName" xml:space="preserve">
-    <value>All tags</value>
-  </data>
-  <data name="SearchDurationWithinLastHalfYear" xml:space="preserve">
-    <value>Within six months</value>
-  </data>
-  <data name="SearchDurationWithinLastYear" xml:space="preserve">
-    <value>Within a year</value>
-  </data>
-  <data name="SearchNovelTagMatchOptionExactMatchForTags" xml:space="preserve">
-    <value>Exact match for the tag</value>
-  </data>
-  <data name="SearchNovelTagMatchOptionPartialMatchForTags" xml:space="preserve">
-    <value>Partial match for the tag</value>
-  </data>
-  <data name="SearchNovelTagMatchOptionText" xml:space="preserve">
-    <value>Match for body text</value>
-  </data>
-  <data name="SearchNovelTagMatchOptionCaption" xml:space="preserve">
-    <value>Match for caption</value>
   </data>
   <data name="WorkTypeIllust" xml:space="preserve">
     <value>Illustration</value>
@@ -309,11 +258,32 @@
   <data name="SimpleWorkTypeNovel" xml:space="preserve">
     <value>Novel</value>
   </data>
+  <data name="Bmp" xml:space="preserve">
+    <value>BMP（loss，large，general）</value>
+  </data>
+  <data name="Jpg" xml:space="preserve">
+    <value>JPG（loss，small，general）</value>
+  </data>
+  <data name="Gif" xml:space="preserve">
+    <value>GIF（lossless，only 255 colors，small，general）</value>
+  </data>
+  <data name="Tiff" xml:space="preserve">
+    <value>TIFF（loss，cannot autoplay，large）</value>
+  </data>
+  <data name="Png" xml:space="preserve">
+    <value>PNG/APNG（lossless，small）</value>
+  </data>
   <data name="Original" xml:space="preserve">
     <value>Image original format (JPG/PNG, cannot add tags automatically)</value>
   </data>
   <data name="OriginalZip" xml:space="preserve">
     <value>Motion picture original format (ZIP, can't add tags)</value>
+  </data>
+  <data name="WebPLossless" xml:space="preserve">
+    <value>Lossless WebP（lossless，small，general）</value>
+  </data>
+  <data name="WebPLossy" xml:space="preserve">
+    <value>Loss WebP（loss，small，general）</value>
   </data>
   <data name="Pdf" xml:space="preserve">
     <value>PDF (With all images embedded)</value>
@@ -360,20 +330,50 @@
   <data name="ExtraBlack" xml:space="preserve">
     <value>Extra black</value>
   </data>
+  <data name="AllCountedTagName" xml:space="preserve">
+    <value>All tags</value>
+  </data>
   <data name="ProxyOptionSystem" xml:space="preserve">
     <value>System default proxy</value>
   </data>
   <data name="ProxyOptionNone" xml:space="preserve">
     <value>No proxy</value>
   </data>
+  <data name="DownloadItemOpenFailed" xml:space="preserve">
+    <value>Failed to open file (or folder)</value>
+  </data>
+  <data name="DownloadItemMaybeDeleted" xml:space="preserve">
+    <value>It seems that you have deleted the work</value>
+  </data>
+  <data name="SortOptionComboBox.PlaceholderText" xml:space="preserve">
+    <value>Sort option</value>
+  </data>
+  <data name="PrivacyPolicyComboBox.PlaceholderText" xml:space="preserve">
+    <value>Privacy policy</value>
+  </data>
   <data name="WorkTypeComboBox.PlaceholderText" xml:space="preserve">
     <value>Work type</value>
+  </data>
+  <data name="OpenUserId" xml:space="preserve">
+    <value>Open user homepage</value>
   </data>
   <data name="OpenNovelId" xml:space="preserve">
     <value>Open the novel page</value>
   </data>
+  <data name="OpenIllustId" xml:space="preserve">
+    <value>Open image page</value>
+  </data>
   <data name="SearchUser" xml:space="preserve">
     <value>Search for authors</value>
+  </data>
+  <data name="CannotFindLoginProxyServerExecutable" xml:space="preserve">
+    <value>Cannot find the executable to login, please contact the developer for further help</value>
+  </data>
+  <data name="UnexpectedBehavior" xml:space="preserve">
+    <value>Undefined behavior occured, if you see this message, please contact the developer for further help</value>
+  </data>
+  <data name="ReplyContentTooLong" xml:space="preserve">
+    <value>The reply content is too long</value>
   </data>
   <data name="BookmarkTagSelectorPrivateCheckBox.Content" xml:space="preserve">
     <value>Private</value>
