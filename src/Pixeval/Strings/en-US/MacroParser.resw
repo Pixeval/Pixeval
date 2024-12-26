@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string"/>
+              <xsd:attribute name="type" type="xsd:string"/>
+              <xsd:attribute name="mimetype" type="xsd:string"/>
+              <xsd:attribute ref="xml:space"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string"/>
+              <xsd:attribute name="name" type="xsd:string"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
+              <xsd:attribute ref="xml:space"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required"/>
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="NonParameterizedMacroBearingParameterFormatted" xml:space="preserve">
+    <value>宏{0}不能包含任何参数</value>
+  </data>
+  <data name="MacroShouldBeInLastSegmentFormatted" xml:space="preserve">
+    <value>宏{0}必须在文件名上</value>
+  </data>
+  <data name="MacroShouldBeContainedFormatted" xml:space="preserve">
+    <value>宏{0}应该被包含在条件宏{1}内</value>
+  </data>
+  <data name="NegationNotAllowedFormatted" xml:space="preserve">
+    <value>宏{0}不能使用反模式</value>
+  </data>
+  <data name="ParameterizedMacroMissingParameterFormatted" xml:space="preserve">
+    <value>条件宏{0}参数缺失</value>
+  </data>
+  <data name="ResultIsEmpty" xml:space="preserve">
+    <value>解析失败：解析结果为空</value>
+  </data>
+  <data name="UnexpectedTokenFormatted" xml:space="preserve">
+    <value>输入非法：在第{0}个字符处遇到了非法符号</value>
+  </data>
+  <data name="UnknownArtist" xml:space="preserve">
+    <value>未知作者</value>
+  </data>
+  <data name="UnknownIllustrationTitle" xml:space="preserve">
+    <value>未知作品</value>
+  </data>
+  <data name="UnknownMacroNameFormatted" xml:space="preserve">
+    <value>未知的宏名称：{0}</value>
+  </data>
+  <data name="FilterQueryError" xml:space="preserve">
+    <value>过滤查询语句错误</value>
+  </data>
+  <data name="FilterTokenFinishedFormatted" xml:space="preserve">
+    <value>期望获取的符号：{0}，实际访问到语句末尾</value>
+  </data>
+  <data name="UnexpactedTokenFormatted" xml:space="preserve">
+    <value>期望获取的符号：{0}，实际获取到的符号：{1}</value>
+  </data>
+  <data name="UnbalancedParFormatted" xml:space="preserve">
+    <value>括号不匹配，首个不匹配括号：{0}</value>
+  </data>
+  <data name="ParserOutOfRange" xml:space="preserve">
+    <value>解析器超出范围</value>
+  </data>
+  <data name="ExpectedAndOrAfterLeftParFormatted" xml:space="preserve">
+    <value>在"("后应该跟随"and"或者"or"，实际值：{0}</value>
+  </data>
+  <data name="ExpectedTokenAfterAtMarkFormatted" xml:space="preserve">
+    <value>在"@"后应该跟随作者名称或者作者ID，实际值：{0}</value>
+  </data>
+  <data name="IndexRangeUsedMoreThanOnce" xml:space="preserve">
+    <value>索引范围最多指定一次</value>
+  </data>
+  <data name="InvalidConstraintFormatted" xml:space="preserve">
+    <value>无效的约束，有效值：{0}，实际值：{1}</value>
+  </data>
+  <data name="NumericTooLargeFormatted" xml:space="preserve">
+    <value>整数值太大，实际值：{0}</value>
+  </data>
+  <data name="ExpectedAtLeastTwoNumericInDateFormatted" xml:space="preserve">
+    <value>表示日期至少需要两个数字（月、日），实际值：{0}</value>
+  </data>
+  <data name="ExpectedRightBracketOrParenInRangeFormatted" xml:space="preserve">
+    <value>在范围中应以")"或者"]"结尾，实际值：{0}</value>
+  </data>
+  <data name="NumericTooSmallInRangeFormatted" xml:space="preserve">
+    <value>范围中整数值太小，实际值：{0}</value>
+  </data>
+  <data name="MinimumShouldBeSmallerThanMaximiumFormatted" xml:space="preserve">
+    <value>范围中最小值（{0}）应小于最大值（{1}）</value>
+  </data>
+</root>
