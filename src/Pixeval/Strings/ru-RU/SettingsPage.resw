@@ -59,46 +59,46 @@
             : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
-  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
           <xsd:element name="metadata">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
               </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string" />
-              <xsd:attribute name="type" type="xsd:string" />
-              <xsd:attribute name="mimetype" type="xsd:string" />
-              <xsd:attribute ref="xml:space" />
+              <xsd:attribute name="name" use="required" type="xsd:string"/>
+              <xsd:attribute name="type" type="xsd:string"/>
+              <xsd:attribute name="mimetype" type="xsd:string"/>
+              <xsd:attribute ref="xml:space"/>
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
             <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string" />
-              <xsd:attribute name="name" type="xsd:string" />
+              <xsd:attribute name="alias" type="xsd:string"/>
+              <xsd:attribute name="name" type="xsd:string"/>
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
-              <xsd:attribute ref="xml:space" />
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
+              <xsd:attribute ref="xml:space"/>
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" />
+              <xsd:attribute name="name" type="xsd:string" use="required"/>
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -142,9 +142,6 @@
   </data>
   <data name="BackdropEntry.Header" xml:space="preserve">
     <value>Фоновая текстура приложения</value>
-  </data>
-  <data name="BrowseHistoriesCleared" xml:space="preserve">
-    <value>История просмотров очищена</value>
   </data>
   <data name="BrowsingExperienceSettingsGroup.Text" xml:space="preserve">
     <value>Настройки просмотра</value>
@@ -197,20 +194,69 @@
   <data name="DownloadPathMacroEntry.Header" xml:space="preserve">
     <value>Путь загрузки по умолчанию</value>
   </data>
+  <data name="DownloadPathMacroEntry.Description" xml:space="preserve">
+    <value>Смотрите использование макросов пути на странице помощи</value>
+  </data>
   <data name="DownloadPathMacroTextBox.PlaceholderText" xml:space="preserve">
     <value>Макрос пути загрузки</value>
+  </data>
+  <data name="RankOptionEntry.Description" xml:space="preserve">
+    <value>Опции по умолчанию для ежедневного рейтинга</value>
+  </data>
+  <data name="RankOptionEntry.Header" xml:space="preserve">
+    <value>Тип рейтинга по умолчанию</value>
+  </data>
+  <data name="DefaultSearchSortOptionEntry.Description" xml:space="preserve">
+    <value>Стандартная стратегия сортировки при поиске произведений</value>
   </data>
   <data name="DefaultSearchSortOptionEntry.Header" xml:space="preserve">
     <value>Стандартная сортировка</value>
   </data>
+  <data name="SimpleWorkTypeEntry.Description" xml:space="preserve">
+    <value>Тип произведений, выбранный по умолчанию при просмотре</value>
+  </data>
+  <data name="SimpleWorkTypeEntry.Header" xml:space="preserve">
+    <value>Тип произведений по умолчанию</value>
+  </data>
+  <data name="DefaultSearchTagMatchOptionEntry.Description" xml:space="preserve">
+    <value>Как осуществляется поиск иллюстраций по ключевым словам</value>
+  </data>
   <data name="DefaultSearchTagMatchOptionEntry.Header" xml:space="preserve">
     <value>Стандартное совпадение по ключевым словам</value>
+  </data>
+  <data name="IllustrationOptionEntry.Header" xml:space="preserve">
+    <value>Иллюстрации</value>
+  </data>
+  <data name="MangaOptionEntry.Header" xml:space="preserve">
+    <value>Манга</value>
+  </data>
+  <data name="UgoiraOptionEntry.Header" xml:space="preserve">
+    <value>Анимация</value>
+  </data>
+  <data name="NovelOptionEntry.Header" xml:space="preserve">
+    <value>Новеллы</value>
+  </data>
+  <data name="PixivNameResolverHeader.Text" xml:space="preserve">
+    <value>Резолвер имен</value>
+  </data>
+  <data name="PixivNameResolverDescription.Text" xml:space="preserve">
+    <value>После прямого подключения к домену, доменное имя будет разрешено к следующим IP-адресам
+Введите IP и нажмите '+' для добавления</value>
   </data>
   <data name="DefaultSelectedTabEntry.Description" xml:space="preserve">
     <value>При запуске приложения будет выбрана вкладка по умолчанию в боковом меню главной страницы</value>
   </data>
   <data name="DefaultSelectedTabEntry.Header" xml:space="preserve">
     <value>Вкладка по умолчанию</value>
+  </data>
+  <data name="WebCookieTextBox.PlaceholderText" xml:space="preserve">
+    <value>Pixiv 网页端 Cookie</value>
+  </data>
+  <data name="WebCookieEntry.Description" xml:space="preserve">
+    <value>诸如用户动态等功能需要该 Cookie 才能够正常使用</value>
+  </data>
+  <data name="WebCookieEntry.Header" xml:space="preserve">
+    <value>Cookie</value>
   </data>
   <data name="DeleteBrowseHistoriesButton.Content" xml:space="preserve">
     <value>Очистить историю</value>
@@ -233,17 +279,41 @@
   <data name="DeleteSearchHistoriesButton.Content" xml:space="preserve">
     <value>Очистить историю</value>
   </data>
+  <data name="DeleteFileCacheEntry.Description" xml:space="preserve">
+    <value>Эта кнопка очищает все файловые кэши</value>
+  </data>
+  <data name="DeleteFileCacheEntry.Header" xml:space="preserve">
+    <value>Очистить файловый кэш</value>
+  </data>
+  <data name="DeleteHistoriesEntry.Header" xml:space="preserve">
+    <value>Очистить историю</value>
+  </data>
   <data name="DeleteSearchHistoriesEntry.Description" xml:space="preserve">
     <value>Эта кнопка очистит всю историю поиска</value>
   </data>
   <data name="DeleteSearchHistoriesEntry.Header" xml:space="preserve">
     <value>Очистить историю поиска</value>
   </data>
+  <data name="EnableDomainFrontingEntry.Description" xml:space="preserve">
+    <value>Отключение этого параметра приведет к невозможности использования Pixiv в странах или регионах, где доступ заблокирован</value>
+  </data>
+  <data name="EnableDomainFrontingEntry.Header" xml:space="preserve">
+    <value>Включить доменное фронтирование</value>
+  </data>
   <data name="DonateDeveloperHyperlinkButton.Content" xml:space="preserve">
-    <value>Поддержать разработчика</value>
+    <value>Поддержка автора</value>
+  </data>
+  <data name="FileCacheCleared" xml:space="preserve">
+    <value>Все файловые кэши были удалены</value>
   </data>
   <data name="DownloadHistoriesCleared" xml:space="preserve">
     <value>История загрузок очищена</value>
+  </data>
+  <data name="SearchHistoriesCleared" xml:space="preserve">
+    <value>История поиска очищена</value>
+  </data>
+  <data name="BrowseHistoriesCleared" xml:space="preserve">
+    <value>История просмотров очищена</value>
   </data>
   <data name="DownloadMacroInvalidInfoBar.Title" xml:space="preserve">
     <value>Ошибка разрешения макроса</value>
@@ -266,11 +336,29 @@
   <data name="FeedbackByEmailHyperlinkButton.Content" xml:space="preserve">
     <value>Обратная связь с разработчиком по электронной почте</value>
   </data>
+  <data name="ViewingRestrictionEntry.Description" xml:space="preserve">
+    <value>Настройте отображение контента R-18/R-18G/AI на официальном аккаунте Pixiv</value>
+  </data>
+  <data name="ViewingRestrictionEntry.Header" xml:space="preserve">
+    <value>Ограничение просмотра</value>
+  </data>
+  <data name="GitHubRepositoryHyperlinkButton.Content" xml:space="preserve">
+    <value>GitHub репозиторий</value>
+  </data>
   <data name="ItemsViewLayoutTypeEntry.Description" xml:space="preserve">
     <value>Выбор между сеткой, где все изображения одинакового размера, и потоковым макетом, где выравниваются только края строк</value>
   </data>
   <data name="ItemsViewLayoutTypeEntry.Header" xml:space="preserve">
     <value>Правила выравнивания миниатюр</value>
+  </data>
+  <data name="BlockedTagsTokenizingTextBox.PlaceholderText" xml:space="preserve">
+    <value>Заблокированные теги</value>
+  </data>
+  <data name="BlockedTagsEntry.Description" xml:space="preserve">
+    <value>Произведения с заблокированными тегами не будут отображаться в приложении (разделяйте запятыми)</value>
+  </data>
+  <data name="BlockedTagsEntry.Header" xml:space="preserve">
+    <value>Глобальные заблокированные теги</value>
   </data>
   <data name="ImageMirrorServerEntry.Description" xml:space="preserve">
     <value>Имя хоста зеркала для загрузки изображений, оставьте пустым, если не уверены в его назначении</value>
@@ -311,6 +399,12 @@
   <data name="MaximumDownloadHistoryRecordsNumberBox.PlaceholderText" xml:space="preserve">
     <value>Ограничение количества записей [10, 200]</value>
   </data>
+  <data name="RateEntry.Description" xml:space="preserve">
+    <value>Нравится Pixeval? Поставьте Pixeval 5 звезд в Microsoft Store~</value>
+  </data>
+  <data name="RateEntry.Header" xml:space="preserve">
+    <value>Оценить Pixeval</value>
+  </data>
   <data name="MaximumSearchHistoryRecordsEntry.Description" xml:space="preserve">
     <value>Если количество записей истории поиска превысит этот предел, старые записи будут удалены</value>
   </data>
@@ -341,6 +435,12 @@
   <data name="PerformSignOutButton.Content" xml:space="preserve">
     <value>Выход из системы</value>
   </data>
+  <data name="DownloadWhenBookmarkedEntry.Description" xml:space="preserve">
+    <value>После добавления произведения в избранное, оно будет автоматически загружено</value>
+  </data>
+  <data name="DownloadWhenBookmarkedEntry.Header" xml:space="preserve">
+    <value>Загрузка при добавлении в избранное</value>
+  </data>
   <data name="ReleaseNotesHyperlinkButton.Content" xml:space="preserve">
     <value>Примечания к выпуску</value>
   </data>
@@ -352,6 +452,9 @@
   </data>
   <data name="GitHubCheckForUpdatesEntry.Header" xml:space="preserve">
     <value>Проверка обновлений на GitHub</value>
+  </data>
+  <data name="MsStoreCheckForUpdatesEntry.Header" xml:space="preserve">
+    <value>Проверить обновления в Microsoft Store</value>
   </data>
   <data name="BugReportEntry.Header" xml:space="preserve">
     <value>Сообщение о проблеме с программой</value>
@@ -375,7 +478,7 @@
     <value>Сообщить о проблеме в группе QQ</value>
   </data>
   <data name="OpenLogEntry.Header" xml:space="preserve">
-    <value>Открыть папку с журналами</value>
+    <value>Открыть папку с логами</value>
   </data>
   <data name="OpenLogEntry.Description" xml:space="preserve">
     <value>При сообщении о проблеме с программой прилагайте соответствующие файлы журналов из этой папки</value>
@@ -387,7 +490,7 @@
     <value>Здесь хранятся временные файлы, которые удаляются при каждом запуске программы</value>
   </data>
   <data name="OpenLocalEntry.Header" xml:space="preserve">
-    <value>Открыть локальную папку</value>
+    <value>Открыть папку local</value>
   </data>
   <data name="OpenLocalEntry.Description" xml:space="preserve">
     <value>Здесь хранятся важные конфигурационные файлы, пожалуйста, не изменяйте файлы в этой папке</value>
@@ -434,8 +537,11 @@
   <data name="SearchEndDateEntry.Header" xml:space="preserve">
     <value>Установить конечную дату поиска</value>
   </data>
-  <data name="SearchHistoriesCleared" xml:space="preserve">
-    <value>История поиска очищена</value>
+  <data name="BrowseOriginalImageEntry.Description" xml:space="preserve">
+    <value>Просмотр оригинальных изображений требует больше трафика и времени на загрузку, но обеспечивает лучшее качество и скорость загрузки</value>
+  </data>
+  <data name="BrowseOriginalImageEntry.Header" xml:space="preserve">
+    <value>Просмотр оригинальных изображений</value>
   </data>
   <data name="SearchSettingsGroup.Text" xml:space="preserve">
     <value>Настройки поиска</value>
@@ -458,6 +564,9 @@
   <data name="SignOutConfirmationDialogTitle" xml:space="preserve">
     <value>Вы уверены, что хотите выйти?</value>
   </data>
+  <data name="SignOutEntry.Description" xml:space="preserve">
+    <value>Выйти и закрыть приложение</value>
+  </data>
   <data name="SignOutEntry.Header" xml:space="preserve">
     <value>Выход из системы</value>
   </data>
@@ -469,6 +578,21 @@
   </data>
   <data name="TargetAPIPlatformEntry.Header" xml:space="preserve">
     <value>Целевая API платформа</value>
+  </data>
+  <data name="ProxyTypeEntry.Description" xml:space="preserve">
+    <value>Pixeval будет использовать указанный здесь прокси, если не используется доменное фронтирование</value>
+  </data>
+  <data name="ProxyTypeEntry.Header" xml:space="preserve">
+    <value>Тип прокси</value>
+  </data>
+  <data name="ProxyTextBoxEntry.Description" xml:space="preserve">
+    <value>Протоколы будут игнорироваться</value>
+  </data>
+  <data name="ProxyTextBoxEntry.Header" xml:space="preserve">
+    <value>Прокси-сервер</value>
+  </data>
+  <data name="ProxyTextBoxErrorUri" xml:space="preserve">
+    <value>Неверный адрес прокси-сервера, пожалуйста, введите снова</value>
   </data>
   <data name="ThemeEntry.Header" xml:space="preserve">
     <value>Тема приложения</value>
@@ -503,51 +627,14 @@
   <data name="ViewPixevalWebsiteHyperlinkButton.Content" xml:space="preserve">
     <value>Веб-сайт</value>
   </data>
-  <data name="ArtistIdMacroTooltip" xml:space="preserve">
-    <value>ID автора</value>
+  <data name="WorkDownloadFormatEntry.Description" xml:space="preserve">
+    <value>Укажите формат для загрузки произведений</value>
   </data>
-  <data name="ArtistNameMacroTooltip" xml:space="preserve">
-    <value>Имя автора</value>
-  </data>
-  <data name="DefaultSearchSortOptionEntry.Description" xml:space="preserve">
-    <value>Стандартная стратегия сортировки при поиске произведений</value>
-  </data>
-  <data name="DefaultSearchTagMatchOptionEntry.Description" xml:space="preserve">
-    <value>Как осуществляется поиск иллюстраций по ключевым словам</value>
-  </data>
-  <data name="IllustrationOptionEntry.Header" xml:space="preserve">
-    <value>Иллюстрации</value>
-  </data>
-  <data name="NovelOptionEntry.Header" xml:space="preserve">
-    <value>Романы</value>
-  </data>
-  <data name="PixivNameResolverHeader.Text" xml:space="preserve">
-    <value>Резолвер имен</value>
-  </data>
-  <data name="PixivNameResolverDescription.Text" xml:space="preserve">
-    <value>После прямого подключения к домену, доменное имя будет разрешено к следующим IP-адресам
-Введите IP и нажмите '+' для добавления</value>
-  </data>
-  <data name="DeleteFileCacheEntry.Description" xml:space="preserve">
-    <value>Эта кнопка очищает все файловые кэши</value>
-  </data>
-  <data name="DeleteFileCacheEntry.Header" xml:space="preserve">
-    <value>Очистить файловый кэш</value>
-  </data>
-  <data name="FileCacheCleared" xml:space="preserve">
-    <value>Все файловые кэши были удалены</value>
-  </data>
-  <data name="DownloadWhenBookmarkedEntry.Description" xml:space="preserve">
-    <value>После добавления произведения в избранное, оно будет автоматически загружено</value>
-  </data>
-  <data name="DownloadWhenBookmarkedEntry.Header" xml:space="preserve">
-    <value>Загрузка при добавлении в избранное</value>
-  </data>
-  <data name="MacroCopiedToClipboard" xml:space="preserve">
-    <value>Макрос скопирован в буфер обмена</value>
+  <data name="WorkDownloadFormatEntry.Header" xml:space="preserve">
+    <value>Формат загрузки произведений</value>
   </data>
   <data name="NovelFontFamilyComboBox.PlaceholderText" xml:space="preserve">
-    <value>Выберите шрифт</value>
+    <value>Выбор шрифта</value>
   </data>
   <data name="NovelFontWeightComboBox.PlaceholderText" xml:space="preserve">
     <value>Выберите толщину шрифта</value>
@@ -591,92 +678,8 @@
   <data name="NovelSettingsMaxWidthEntry.Description" xml:space="preserve">
     <value>Максимальная ширина страницы</value>
   </data>
-  <data name="DownloadPathMacroEntry.Description" xml:space="preserve">
-    <value>Смотрите использование макросов пути на странице помощи</value>
-  </data>
-  <data name="RankOptionEntry.Description" xml:space="preserve">
-    <value>Опции по умолчанию для ежедневного рейтинга</value>
-  </data>
-  <data name="RankOptionEntry.Header" xml:space="preserve">
-    <value>Тип рейтинга по умолчанию</value>
-  </data>
-  <data name="SimpleWorkTypeEntry.Description" xml:space="preserve">
-    <value>Тип произведений, выбранный по умолчанию при просмотре</value>
-  </data>
-  <data name="SimpleWorkTypeEntry.Header" xml:space="preserve">
-    <value>Тип произведений по умолчанию</value>
-  </data>
-  <data name="MangaOptionEntry.Header" xml:space="preserve">
-    <value>Манга</value>
-  </data>
-  <data name="UgoiraOptionEntry.Header" xml:space="preserve">
-    <value>Анимация</value>
-  </data>
-  <data name="DeleteHistoriesEntry.Header" xml:space="preserve">
-    <value>Очистить историю</value>
-  </data>
-  <data name="EnableDomainFrontingEntry.Description" xml:space="preserve">
-    <value>Отключение этого параметра приведет к невозможности использования Pixiv в странах или регионах, где доступ заблокирован</value>
-  </data>
-  <data name="EnableDomainFrontingEntry.Header" xml:space="preserve">
-    <value>Включить доменное фронтирование</value>
-  </data>
-  <data name="ViewingRestrictionEntry.Description" xml:space="preserve">
-    <value>Настройте отображение контента R-18/R-18G/AI на официальном аккаунте Pixiv</value>
-  </data>
-  <data name="ViewingRestrictionEntry.Header" xml:space="preserve">
-    <value>Ограничение просмотра</value>
-  </data>
-  <data name="GitHubRepositoryHyperlinkButton.Content" xml:space="preserve">
-    <value>GitHub репозиторий</value>
-  </data>
-  <data name="BlockedTagsTokenizingTextBox.PlaceholderText" xml:space="preserve">
-    <value>Заблокированные теги</value>
-  </data>
-  <data name="BlockedTagsEntry.Description" xml:space="preserve">
-    <value>Произведения с заблокированными тегами не будут отображаться в приложении (разделяйте запятыми)</value>
-  </data>
-  <data name="BlockedTagsEntry.Header" xml:space="preserve">
-    <value>Глобальные заблокированные теги</value>
-  </data>
-  <data name="RateEntry.Description" xml:space="preserve">
-    <value>Нравится Pixeval? Поставьте Pixeval 5 звезд в Microsoft Store~</value>
-  </data>
-  <data name="RateEntry.Header" xml:space="preserve">
-    <value>Оценить Pixeval</value>
-  </data>
-  <data name="MsStoreCheckForUpdatesEntry.Header" xml:space="preserve">
-    <value>Проверить обновления в Microsoft Store</value>
-  </data>
-  <data name="BrowseOriginalImageEntry.Description" xml:space="preserve">
-    <value>Просмотр оригинальных изображений требует больше трафика и времени на загрузку, но обеспечивает лучшее качество и скорость загрузки</value>
-  </data>
-  <data name="BrowseOriginalImageEntry.Header" xml:space="preserve">
-    <value>Просмотр оригинальных изображений</value>
-  </data>
-  <data name="SignOutEntry.Description" xml:space="preserve">
-    <value>Выйти и закрыть приложение</value>
-  </data>
-  <data name="ProxyTypeEntry.Description" xml:space="preserve">
-    <value>Pixeval будет использовать указанный здесь прокси, если не используется доменное фронтирование</value>
-  </data>
-  <data name="ProxyTypeEntry.Header" xml:space="preserve">
-    <value>Тип прокси</value>
-  </data>
-  <data name="ProxyTextBoxEntry.Description" xml:space="preserve">
-    <value>Протоколы будут игнорироваться</value>
-  </data>
-  <data name="ProxyTextBoxEntry.Header" xml:space="preserve">
-    <value>Прокси-сервер</value>
-  </data>
-  <data name="ProxyTextBoxErrorUri" xml:space="preserve">
-    <value>Неверный адрес прокси-сервера, пожалуйста, введите снова</value>
-  </data>
-  <data name="WorkDownloadFormatEntry.Description" xml:space="preserve">
-    <value>Укажите формат для загрузки произведений</value>
-  </data>
-  <data name="WorkDownloadFormatEntry.Header" xml:space="preserve">
-    <value>Формат загрузки произведений</value>
+  <data name="MacroCopiedToClipboard" xml:space="preserve">
+    <value>Макрос скопирован в буфер обмена</value>
   </data>
   <data name="ExtMacroTooltip" xml:space="preserve">
     <value>Расширение файла, например, .jpg, .png и т.д. Обратите внимание, что этот макрос включает точку "." перед расширением и должен быть использован в имени файла</value>
@@ -687,6 +690,12 @@
   <data name="TitleMacroTooltip" xml:space="preserve">
     <value>Название произведения</value>
   </data>
+  <data name="ArtistIdMacroTooltip" xml:space="preserve">
+    <value>ID автора</value>
+  </data>
+  <data name="ArtistNameMacroTooltip" xml:space="preserve">
+    <value>Имя автора</value>
+  </data>
   <data name="PublishYearMacroTooltip" xml:space="preserve">
     <value>Год публикации произведения</value>
   </data>
@@ -695,6 +704,12 @@
   </data>
   <data name="PublishDayMacroTooltip" xml:space="preserve">
     <value>День публикации произведения</value>
+  </data>
+  <data name="IfPicSetMacroTooltip" xml:space="preserve">
+    <value>如果是多图，该宏会被替换为其参数</value>
+  </data>
+  <data name="IfPicAllMacroTooltip" xml:space="preserve">
+    <value>如果是图片（包括静态单图、多图、动图），该宏会被替换为其参数</value>
   </data>
   <data name="IfR18MacroTooltip" xml:space="preserve">
     <value>Если это произведение с рейтингом R18, макрос будет заменен на его параметры</value>
@@ -705,10 +720,37 @@
   <data name="IfAiMacroTooltip" xml:space="preserve">
     <value>Если это произведение сгенерировано AI, макрос будет заменен на его параметры</value>
   </data>
+  <data name="IfPicOneMacroTooltip" xml:space="preserve">
+    <value>如果是静态单图，该宏会被替换为其参数</value>
+  </data>
   <data name="IfNovelMacroTooltip" xml:space="preserve">
     <value>Если это новелла, макрос будет заменен на его параметры</value>
   </data>
+  <data name="IfPicGifMacroTooltip" xml:space="preserve">
+    <value>如果是动图，该宏会被替换为其参数</value>
+  </data>
   <data name="PicSetIndexMacroTooltip" xml:space="preserve">
     <value>Если это манга, этот макрос будет заменен на индекс текущего изображения в серии; должен использоваться с макросом @{if_pic_set=}, и должен быть в имени файла</value>
+  </data>
+  <data name="AiUpscalerSettingsGroup.Text" xml:space="preserve">
+    <value>AI超分辨率</value>
+  </data>
+  <data name="UpscalerModelEntry.Header" xml:space="preserve">
+    <value> AI超分辨率模型</value>
+  </data>
+  <data name="UpscalerModelEntry.Description" xml:space="preserve">
+    <value>选择AI超分辨率模型，详见此处</value>
+  </data>
+  <data name="UpscalerScaleRatioEntry.Header" xml:space="preserve">
+    <value>AI超分辨率倍率</value>
+  </data>
+  <data name="UpscalerScaleRatioEntry.Description" xml:space="preserve">
+    <value>默认为4，注意过大的倍率可能导致生成的图片体积过大影响性能</value>
+  </data>
+  <data name="UpscalerOutputTypeEntry.Header" xml:space="preserve">
+    <value>AI超分辨率生成图片的格式</value>
+  </data>
+  <data name="UpscalerOutputTypeEntry.Description" xml:space="preserve">
+    <value>默认为PNG</value>
   </data>
 </root>
