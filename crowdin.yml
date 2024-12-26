@@ -2,5 +2,5 @@ bundles:
   - 4
   - 6
 files:
-  - source: /src/Pixeval/Strings/zh-cn/*
+  - source: /src/Pixeval/Strings/zh-CN/*
     translation: /src/Pixeval/Strings/%locale%/%original_file_name%
