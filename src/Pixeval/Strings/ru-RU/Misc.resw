@@ -59,46 +59,46 @@
             : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
-  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
           <xsd:element name="metadata">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
               </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string" />
-              <xsd:attribute name="type" type="xsd:string" />
-              <xsd:attribute name="mimetype" type="xsd:string" />
-              <xsd:attribute ref="xml:space" />
+              <xsd:attribute name="name" use="required" type="xsd:string"/>
+              <xsd:attribute name="type" type="xsd:string"/>
+              <xsd:attribute name="mimetype" type="xsd:string"/>
+              <xsd:attribute ref="xml:space"/>
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
             <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string" />
-              <xsd:attribute name="name" type="xsd:string" />
+              <xsd:attribute name="alias" type="xsd:string"/>
+              <xsd:attribute name="name" type="xsd:string"/>
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
-              <xsd:attribute ref="xml:space" />
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
+              <xsd:attribute ref="xml:space"/>
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" />
+              <xsd:attribute name="name" type="xsd:string" use="required"/>
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -198,6 +198,12 @@
   <data name="SearchDurationWithinLastMonth" xml:space="preserve">
     <value>За последний месяц</value>
   </data>
+  <data name="SearchDurationWithinLastHalfYear" xml:space="preserve">
+    <value>За последние полгода</value>
+  </data>
+  <data name="SearchDurationWithinLastYear" xml:space="preserve">
+    <value>За последний год</value>
+  </data>
   <data name="PrivacyPolicyPublic" xml:space="preserve">
     <value>Публично</value>
   </data>
@@ -212,6 +218,18 @@
   </data>
   <data name="SearchIllustrationTagMatchOptionTitleAndCaption" xml:space="preserve">
     <value>Поиск по заголовку и описанию</value>
+  </data>
+  <data name="SearchNovelTagMatchOptionExactMatchForTags" xml:space="preserve">
+    <value>Точное совпадение</value>
+  </data>
+  <data name="SearchNovelTagMatchOptionPartialMatchForTags" xml:space="preserve">
+    <value>Частичное совпадение</value>
+  </data>
+  <data name="SearchNovelTagMatchOptionText" xml:space="preserve">
+    <value>Соответствие тексту</value>
+  </data>
+  <data name="SearchNovelTagMatchOptionCaption" xml:space="preserve">
+    <value>Соответствие описанию</value>
   </data>
   <data name="TargetFilterForAndroid" xml:space="preserve">
     <value>Для Android</value>
@@ -231,6 +249,15 @@
   <data name="WorkTypeManga" xml:space="preserve">
     <value>Манга</value>
   </data>
+  <data name="WorkTypeNovel" xml:space="preserve">
+    <value>Новеллы</value>
+  </data>
+  <data name="SimpleWorkTypeIllustAndManga" xml:space="preserve">
+    <value>Иллюстрации и манга</value>
+  </data>
+  <data name="SimpleWorkTypeNovel" xml:space="preserve">
+    <value>Новеллы</value>
+  </data>
   <data name="Bmp" xml:space="preserve">
     <value>BMP (без потерь, большой размер, широкая поддержка)</value>
   </data>
@@ -246,68 +273,29 @@
   <data name="Png" xml:space="preserve">
     <value>PNG/APNG (без потерь, маленький размер)</value>
   </data>
+  <data name="Original" xml:space="preserve">
+    <value>Оригинальный формат изображения (JPG/PNG, автоматические теги невозможны)</value>
+  </data>
+  <data name="OriginalZip" xml:space="preserve">
+    <value>Оригинальный формат динамического изображения (ZIP, теги невозможны)</value>
+  </data>
   <data name="WebPLossless" xml:space="preserve">
     <value>Без потерь WebP (без потерь, маленький размер, широкая поддержка)</value>
   </data>
   <data name="WebPLossy" xml:space="preserve">
     <value>С потерями WebP (с потерями, маленький размер, широкая поддержка)</value>
   </data>
-  <data name="DownloadItemOpenFailed" xml:space="preserve">
-    <value>Не удалось открыть файл (папку)</value>
+  <data name="Pdf" xml:space="preserve">
+    <value>PDF (включает все изображения)</value>
   </data>
-  <data name="SortOptionComboBox.PlaceholderText" xml:space="preserve">
-    <value>Опции сортировки</value>
+  <data name="Html" xml:space="preserve">
+    <value>HTML (папка с изображениями)</value>
   </data>
-  <data name="PrivacyPolicyComboBox.PlaceholderText" xml:space="preserve">
-    <value>Опции конфиденциальности</value>
+  <data name="Md" xml:space="preserve">
+    <value>Markdown (папка с изображениями)</value>
   </data>
-  <data name="OpenUserId" xml:space="preserve">
-    <value>Открыть страницу пользователя</value>
-  </data>
-  <data name="OpenIllustId" xml:space="preserve">
-    <value>Открыть страницу изображением</value>
-  </data>
-  <data name="CannotFindLoginProxyServerExecutable" xml:space="preserve">
-    <value>Не удалось найти исполняемый файл для входа, попробуйте перезапустить приложение или свяжитесь с разработчиком</value>
-  </data>
-  <data name="UnexpectedBehavior" xml:space="preserve">
-    <value>Произошло неожиданное поведение, если вы видите это сообщение, обратитесь за помощью к разработчику</value>
-  </data>
-  <data name="ReplyContentTooLong" xml:space="preserve">
-    <value>Слишком длинный ответ, пожалуйста, отредактируйте его</value>
-  </data>
-  <data name="SearchDurationWithinLastHalfYear" xml:space="preserve">
-    <value>За последние полгода</value>
-  </data>
-  <data name="SearchDurationWithinLastYear" xml:space="preserve">
-    <value>За последний год</value>
-  </data>
-  <data name="SearchNovelTagMatchOptionExactMatchForTags" xml:space="preserve">
-    <value>Точное соответствие ключевым словам</value>
-  </data>
-  <data name="SearchNovelTagMatchOptionPartialMatchForTags" xml:space="preserve">
-    <value>Частичное соответствие ключевым словам</value>
-  </data>
-  <data name="SearchNovelTagMatchOptionText" xml:space="preserve">
-    <value>Соответствие тексту</value>
-  </data>
-  <data name="SearchNovelTagMatchOptionCaption" xml:space="preserve">
-    <value>Соответствие описанию</value>
-  </data>
-  <data name="WorkTypeNovel" xml:space="preserve">
-    <value>Новеллы</value>
-  </data>
-  <data name="SimpleWorkTypeIllustAndManga" xml:space="preserve">
-    <value>Иллюстрации и манга</value>
-  </data>
-  <data name="SimpleWorkTypeNovel" xml:space="preserve">
-    <value>Новеллы</value>
-  </data>
-  <data name="Original" xml:space="preserve">
-    <value>Оригинальный формат изображения (JPG/PNG, автоматические теги невозможны)</value>
-  </data>
-  <data name="OriginalZip" xml:space="preserve">
-    <value>Оригинальный формат динамического изображения (ZIP, теги невозможны)</value>
+  <data name="OriginalTxt" xml:space="preserve">
+    <value>Оригинальный TXT (теги Pixiv, папка с изображениями)</value>
   </data>
   <data name="Thin" xml:space="preserve">
     <value>Очень тонкий</value>
@@ -342,26 +330,8 @@
   <data name="ExtraBlack" xml:space="preserve">
     <value>Сверхчерный</value>
   </data>
-  <data name="WorkTypeComboBox.PlaceholderText" xml:space="preserve">
-    <value>Тип произведения</value>
-  </data>
-  <data name="OpenNovelId" xml:space="preserve">
-    <value>Открыть страницу новеллы</value>
-  </data>
   <data name="AllCountedTagName" xml:space="preserve">
     <value>Все теги</value>
-  </data>
-  <data name="Pdf" xml:space="preserve">
-    <value>PDF (включает все изображения)</value>
-  </data>
-  <data name="Html" xml:space="preserve">
-    <value>HTML (папка с изображениями)</value>
-  </data>
-  <data name="Md" xml:space="preserve">
-    <value>Markdown (папка с изображениями)</value>
-  </data>
-  <data name="OriginalTxt" xml:space="preserve">
-    <value>Оригинальный TXT (теги Pixiv, папка с изображениями)</value>
   </data>
   <data name="ProxyOptionSystem" xml:space="preserve">
     <value>Системный прокси</value>
@@ -369,11 +339,41 @@
   <data name="ProxyOptionNone" xml:space="preserve">
     <value>Без прокси</value>
   </data>
+  <data name="DownloadItemOpenFailed" xml:space="preserve">
+    <value>Не удалось открыть файл (папку)</value>
+  </data>
   <data name="DownloadItemMaybeDeleted" xml:space="preserve">
     <value>Возможно, вы уже удалили это произведение</value>
   </data>
+  <data name="SortOptionComboBox.PlaceholderText" xml:space="preserve">
+    <value>Опции сортировки</value>
+  </data>
+  <data name="PrivacyPolicyComboBox.PlaceholderText" xml:space="preserve">
+    <value>Опции конфиденциальности</value>
+  </data>
+  <data name="WorkTypeComboBox.PlaceholderText" xml:space="preserve">
+    <value>Тип произведения</value>
+  </data>
+  <data name="OpenUserId" xml:space="preserve">
+    <value>Открыть страницу пользователя</value>
+  </data>
+  <data name="OpenNovelId" xml:space="preserve">
+    <value>Открыть страницу новеллы</value>
+  </data>
+  <data name="OpenIllustId" xml:space="preserve">
+    <value>Открыть страницу изображением</value>
+  </data>
   <data name="SearchUser" xml:space="preserve">
     <value>Поиск автора</value>
+  </data>
+  <data name="CannotFindLoginProxyServerExecutable" xml:space="preserve">
+    <value>Не удалось найти исполняемый файл для входа, попробуйте перезапустить приложение или свяжитесь с разработчиком</value>
+  </data>
+  <data name="UnexpectedBehavior" xml:space="preserve">
+    <value>Произошло неожиданное поведение, если вы видите это сообщение, обратитесь за помощью к разработчику</value>
+  </data>
+  <data name="ReplyContentTooLong" xml:space="preserve">
+    <value>Слишком длинный ответ, пожалуйста, отредактируйте его</value>
   </data>
   <data name="BookmarkTagSelectorPrivateCheckBox.Content" xml:space="preserve">
     <value>Приватно</value>
