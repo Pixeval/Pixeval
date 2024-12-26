@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string"/>
+              <xsd:attribute name="type" type="xsd:string"/>
+              <xsd:attribute name="mimetype" type="xsd:string"/>
+              <xsd:attribute ref="xml:space"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string"/>
+              <xsd:attribute name="name" type="xsd:string"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
+              <xsd:attribute ref="xml:space"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required"/>
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ErrorWhileLoggingInTitle" xml:space="preserve">
+    <value>登录过程出现异常</value>
+  </data>
+  <data name="ErrorWhileLogginInContentFormatted" xml:space="preserve">
+    <value>应用程序即将退出，以下是异常信息：
+{0}</value>
+  </data>
+  <data name="LoginPhaseCheckingCertificateInstallation" xml:space="preserve">
+    <value>正在检查证书安装情况...</value>
+  </data>
+  <data name="LoginPhaseCheckingWebView2Installation" xml:space="preserve">
+    <value>正在检查WebView2安装情况...</value>
+  </data>
+  <data name="LoginPhaseInstallingCertificate" xml:space="preserve">
+    <value>正在安装证书，请在打开的对话框中点击确认...</value>
+  </data>
+  <data name="LoginPhaseRefreshing" xml:space="preserve">
+    <value>正在刷新现有会话...</value>
+  </data>
+  <data name="LoginPhaseSuccessNavigating" xml:space="preserve">
+    <value>登录成功，正在导航到主页</value>
+  </data>
+  <data name="LoginPhaseWaitingForUserInput" xml:space="preserve">
+    <value>等待用户输入</value>
+  </data>
+  <data name="SubmitWithNewAccountButton.Text" xml:space="preserve">
+    <value>登录并且不使用当前账号</value>
+  </data>
+  <data name="SubmitButton.Content" xml:space="preserve">
+    <value>登录</value>
+  </data>
+  <data name="RefreshTokenButton.Content" xml:space="preserve">
+    <value>使用刷新令牌登录</value>
+  </data>
+  <data name="BrowserButton.Content" xml:space="preserve">
+    <value>通过用Chrome/Edge浏览器登录（测试🧪）</value>
+  </data>
+  <data name="WebViewButton.Content" xml:space="preserve">
+    <value>通过WebView登录</value>
+  </data>
+  <data name="RefreshTokenBox.PlaceholderText" xml:space="preserve">
+    <value>刷新令牌</value>
+  </data>
+  <data name="UserNameBox.PlaceholderText" xml:space="preserve">
+    <value>邮箱地址或pixiv ID</value>
+  </data>
+  <data name="PasswordBox.PlaceholderText" xml:space="preserve">
+    <value>密码</value>
+  </data>
+  <data name="DisableDomainFrontingToggleSwitch.Header" xml:space="preserve">
+    <value>域前置</value>
+  </data>
+  <data name="DisableDomainFrontingToggleSwitch.OnContent" xml:space="preserve">
+    <value>启用</value>
+  </data>
+  <data name="DisableDomainFrontingToggleSwitch.OffContent" xml:space="preserve">
+    <value>禁用</value>
+  </data>
+  <data name="RefreshingSessionFailedContent" xml:space="preserve">
+    <value>请重新登录
+如果该问题反复出现，请联系开发者寻求解决</value>
+  </data>
+  <data name="RefreshingSessionFailedTitle" xml:space="preserve">
+    <value>刷新对话失败</value>
+  </data>
+  <data name="FetchingSessionFailedContent" xml:space="preserve">
+    <value>请重新启动应用程序
+如果该问题反复出现，请联系开发者寻求解决</value>
+  </data>
+  <data name="FetchingSessionFailedTitle" xml:space="preserve">
+    <value>获取对话失败</value>
+  </data>
+  <data name="RootCertificateInstallationRequiredSecondaryButtonText" xml:space="preserve">
+    <value>使用Pixeval的证书</value>
+  </data>
+  <data name="RootCertificateInstallationRequiredPrimaryButtonText" xml:space="preserve">
+    <value>使用自己的证书</value>
+  </data>
+  <data name="CertificateRequiredDialogContent.Text" xml:space="preserve">
+    <value>如不安装证书则无法正常登录，本证书的私钥不会被分发，选择“使用Pixeval的证书”即代表您将会安装该证书
+你也可以选择自己提供有效的证书，请在下方文本框输入证书路径和密码并选择“使用自己的证书”。如果之后仍无法连接到Pixiv，则说明提供的证书有误</value>
+  </data>
+  <data name="CertificateRequiredDialogPath.PlaceholderText" xml:space="preserve">
+    <value>证书路径</value>
+  </data>
+  <data name="CertificateRequiredDialogPassword.PlaceholderText" xml:space="preserve">
+    <value>证书密码</value>
+  </data>
+  <data name="CertificateRequiredDialogInvalidInfoBar.Title" xml:space="preserve">
+    <value>证书路径错误或密码不正确</value>
+  </data>
+  <data name="RootCertificateInstallationRequiredTitle" xml:space="preserve">
+    <value>检测到本用户尚未安装证书</value>
+  </data>
+  <data name="WebView2InstallationRequiredContent" xml:space="preserve">
+    <value>使用本方式登录需要安装WebView2，选择确认将会自动打开浏览器为您下载WebView2 Runtime，请您双击exe文件安装后重启应用</value>
+  </data>
+  <data name="WebViewLoginTip.Title" xml:space="preserve">
+    <value>注意</value>
+  </data>
+  <data name="WebViewLoginTip.Message" xml:space="preserve">
+    <value>本方式需要安装WebView2</value>
+  </data>
+  <data name="BrowserLoginTip.Title" xml:space="preserve">
+    <value>注意</value>
+  </data>
+  <data name="BrowserLoginTip.Message" xml:space="preserve">
+    <value>本方式可能不会显示谷歌reCAPTCHA验证码</value>
+  </data>
+  <data name="WebView2InstallationRequiredTitle" xml:space="preserve">
+    <value>检测到本机尚未安装WebView2 Runtime</value>
+  </data>
+  <data name="WebViewHelp.ToolTipService.ToolTip" xml:space="preserve">
+    <value>使用本方式登录需要安装WebView2。
+填写账号、密码后，软件会一直保存它们
+
+点击“登录”按钮后，会打开WebView进行快速自动登录，全程不需要用户操作，但如果遇到脚本没有执行完毕就停止、或者需要输入验证码的情况，也需要你手动完成
+
+如果你不信任软件帮你保存、填写，也可以直接留空并点击“登录”，然后手动在WebView中输入
+
+域前置：禁用后将使用当前本机的IE代理。如果你此时不能直接访问pixiv，则应该不要禁止此选项</value>
+  </data>
+  <data name="BrowserHelp.ToolTipService.ToolTip" xml:space="preserve">
+    <value>点击登录将使用外部的Chrome或Edge等Chromium内核的浏览器登录。如果此种方法登录失败可以使用其他方法尝试登录
+
+域前置：禁用后将使用当前本机的IE代理。如果你此时不能直接访问pixiv，则应该不要禁止此选项</value>
+  </data>
+</root>
