@@ -59,46 +59,46 @@
             : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
-  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
           <xsd:element name="metadata">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
               </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string" />
-              <xsd:attribute name="type" type="xsd:string" />
-              <xsd:attribute name="mimetype" type="xsd:string" />
-              <xsd:attribute ref="xml:space" />
+              <xsd:attribute name="name" use="required" type="xsd:string"/>
+              <xsd:attribute name="type" type="xsd:string"/>
+              <xsd:attribute name="mimetype" type="xsd:string"/>
+              <xsd:attribute ref="xml:space"/>
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
             <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string" />
-              <xsd:attribute name="name" type="xsd:string" />
+              <xsd:attribute name="alias" type="xsd:string"/>
+              <xsd:attribute name="name" type="xsd:string"/>
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
-              <xsd:attribute ref="xml:space" />
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
+              <xsd:attribute ref="xml:space"/>
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" />
+              <xsd:attribute name="name" type="xsd:string" use="required"/>
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -142,8 +142,20 @@
   <data name="LoginPhaseWaitingForUserInput" xml:space="preserve">
     <value>Waiting for user input</value>
   </data>
+  <data name="SubmitWithNewAccountButton.Text" xml:space="preserve">
+    <value>Login with another account</value>
+  </data>
   <data name="SubmitButton.Content" xml:space="preserve">
     <value>Login</value>
+  </data>
+  <data name="RefreshTokenButton.Content" xml:space="preserve">
+    <value>Login with refresh token</value>
+  </data>
+  <data name="BrowserButton.Content" xml:space="preserve">
+    <value>Login via Chrome/Edge (beta 🧪)</value>
+  </data>
+  <data name="WebViewButton.Content" xml:space="preserve">
+    <value>Login via Webview</value>
   </data>
   <data name="RefreshTokenBox.PlaceholderText" xml:space="preserve">
     <value>Refresh token</value>
@@ -154,8 +166,18 @@
   <data name="PasswordBox.PlaceholderText" xml:space="preserve">
     <value>Password</value>
   </data>
+  <data name="DisableDomainFrontingToggleSwitch.Header" xml:space="preserve">
+    <value>Domain fronting</value>
+  </data>
   <data name="DisableDomainFrontingToggleSwitch.OnContent" xml:space="preserve">
     <value>Enable</value>
+  </data>
+  <data name="DisableDomainFrontingToggleSwitch.OffContent" xml:space="preserve">
+    <value>Disable</value>
+  </data>
+  <data name="RefreshingSessionFailedContent" xml:space="preserve">
+    <value>Please login again
+If this issue recurs, please contact the developer for a solution</value>
   </data>
   <data name="RefreshingSessionFailedTitle" xml:space="preserve">
     <value>Failed to refresh session</value>
@@ -167,15 +189,42 @@ If this problem persists, contact the developer for further help.</value>
   <data name="FetchingSessionFailedTitle" xml:space="preserve">
     <value>Failed to fetch session</value>
   </data>
+  <data name="RootCertificateInstallationRequiredSecondaryButtonText" xml:space="preserve">
+    <value>Use Pixeval's certificate</value>
+  </data>
+  <data name="RootCertificateInstallationRequiredPrimaryButtonText" xml:space="preserve">
+    <value>Use your own certificate</value>
+  </data>
   <data name="CertificateRequiredDialogContent.Text" xml:space="preserve">
     <value>The certificate must be installed in order to login, the private key of this certificate is guaranteed not to be distributed, click "Use Pixeval's certificate" to the installation
 You can also choose to provide your own valid certificate by entering your certificate path and password in the text box below and selecting "Use your own certificate". If you are still unable to connect to Pixiv after this, you have provided the invalid certificate</value>
+  </data>
+  <data name="CertificateRequiredDialogPath.PlaceholderText" xml:space="preserve">
+    <value>Certificate path</value>
+  </data>
+  <data name="CertificateRequiredDialogPassword.PlaceholderText" xml:space="preserve">
+    <value>Certificate password</value>
+  </data>
+  <data name="CertificateRequiredDialogInvalidInfoBar.Title" xml:space="preserve">
+    <value>Incorrect certificate path or password</value>
   </data>
   <data name="RootCertificateInstallationRequiredTitle" xml:space="preserve">
     <value>You need to install the certificate to login</value>
   </data>
   <data name="WebView2InstallationRequiredContent" xml:space="preserve">
     <value>WebView2 is required to log in using this method. By clicking OK the browser will be opened to download the WebView2 Runtime automatically, please restart the app after the installation.</value>
+  </data>
+  <data name="WebViewLoginTip.Title" xml:space="preserve">
+    <value>Attention</value>
+  </data>
+  <data name="WebViewLoginTip.Message" xml:space="preserve">
+    <value>WebView2 is required to use this method</value>
+  </data>
+  <data name="BrowserLoginTip.Title" xml:space="preserve">
+    <value>Attention</value>
+  </data>
+  <data name="BrowserLoginTip.Message" xml:space="preserve">
+    <value>reCAPTCHA may be invisible when using this method</value>
   </data>
   <data name="WebView2InstallationRequiredTitle" xml:space="preserve">
     <value>WebView2 is required to log in using this method</value>
@@ -190,58 +239,9 @@ If you don't trust the app, you can leave the text box empty, click login, and m
 
 Domain Fronting：Disabling this will force the app to use the system proxy. If you cannot access Pixiv properly, then it is better not to disable this option.</value>
   </data>
-  <data name="SubmitWithNewAccountButton.Text" xml:space="preserve">
-    <value>Login with another account</value>
-  </data>
-  <data name="RefreshTokenButton.Content" xml:space="preserve">
-    <value>Login with refresh token</value>
-  </data>
-  <data name="BrowserButton.Content" xml:space="preserve">
-    <value>Login via Chrome/Edge (beta 🧪)</value>
-  </data>
-  <data name="WebViewButton.Content" xml:space="preserve">
-    <value>Login via Webview</value>
-  </data>
-  <data name="DisableDomainFrontingToggleSwitch.Header" xml:space="preserve">
-    <value>Domain fronting</value>
-  </data>
-  <data name="DisableDomainFrontingToggleSwitch.OffContent" xml:space="preserve">
-    <value>Disable</value>
-  </data>
-  <data name="RefreshingSessionFailedContent" xml:space="preserve">
-    <value>Please login again
-If this issue recurs, please contact the developer for a solution</value>
-  </data>
-  <data name="WebViewLoginTip.Title" xml:space="preserve">
-    <value>Attention</value>
-  </data>
-  <data name="WebViewLoginTip.Message" xml:space="preserve">
-    <value>WebView2 is required to use this method</value>
-  </data>
-  <data name="BrowserLoginTip.Title" xml:space="preserve">
-    <value>Attention</value>
-  </data>
-  <data name="BrowserLoginTip.Message" xml:space="preserve">
-    <value>reCAPTCHA may be invisible when using this method</value>
-  </data>
   <data name="BrowserHelp.ToolTipService.ToolTip" xml:space="preserve">
     <value>Clicking Login will log you in using an external Chromium kernel browser such as Chrome or Edge. If this method fails, you can use other methods to try to login.
 
 Domain fronting: Disabling this will use the current local IE proxy. If you do not have direct access to pixiv at this time, you should not disable this option!</value>
-  </data>
-  <data name="RootCertificateInstallationRequiredSecondaryButtonText" xml:space="preserve">
-    <value>Use Pixeval's certificate</value>
-  </data>
-  <data name="RootCertificateInstallationRequiredPrimaryButtonText" xml:space="preserve">
-    <value>Use your own certificate</value>
-  </data>
-  <data name="CertificateRequiredDialogPath.PlaceholderText" xml:space="preserve">
-    <value>Certificate path</value>
-  </data>
-  <data name="CertificateRequiredDialogPassword.PlaceholderText" xml:space="preserve">
-    <value>Certificate password</value>
-  </data>
-  <data name="CertificateRequiredDialogInvalidInfoBar.Title" xml:space="preserve">
-    <value>Incorrect certificate path or password</value>
   </data>
 </root>
