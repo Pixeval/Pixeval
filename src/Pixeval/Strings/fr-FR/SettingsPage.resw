@@ -59,46 +59,46 @@
             : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
-  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
           <xsd:element name="metadata">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
               </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string" />
-              <xsd:attribute name="type" type="xsd:string" />
-              <xsd:attribute name="mimetype" type="xsd:string" />
-              <xsd:attribute ref="xml:space" />
+              <xsd:attribute name="name" use="required" type="xsd:string"/>
+              <xsd:attribute name="type" type="xsd:string"/>
+              <xsd:attribute name="mimetype" type="xsd:string"/>
+              <xsd:attribute ref="xml:space"/>
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
             <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string" />
-              <xsd:attribute name="name" type="xsd:string" />
+              <xsd:attribute name="alias" type="xsd:string"/>
+              <xsd:attribute name="name" type="xsd:string"/>
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
-              <xsd:attribute ref="xml:space" />
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
+              <xsd:attribute ref="xml:space"/>
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" />
+              <xsd:attribute name="name" type="xsd:string" use="required"/>
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -225,13 +225,13 @@ Vous pouvez trouvez plus d'informations sur le lien ci-dessous.</value>
     <value>Matching des mots clés</value>
   </data>
   <data name="IllustrationOptionEntry.Header" xml:space="preserve">
-    <value>Illustration</value>
+    <value>Illust.</value>
   </data>
   <data name="MangaOptionEntry.Header" xml:space="preserve">
     <value>Manga</value>
   </data>
   <data name="UgoiraOptionEntry.Header" xml:space="preserve">
-    <value>Ugoira</value>
+    <value>Animation GIF</value>
   </data>
   <data name="NovelOptionEntry.Header" xml:space="preserve">
     <value>Roman</value>
@@ -248,6 +248,15 @@ Entrer une addresse IP et cliquer '+' pour ajouter</value>
   </data>
   <data name="DefaultSelectedTabEntry.Header" xml:space="preserve">
     <value>Tab par défaut</value>
+  </data>
+  <data name="WebCookieTextBox.PlaceholderText" xml:space="preserve">
+    <value>Pixiv 网页端 Cookie</value>
+  </data>
+  <data name="WebCookieEntry.Description" xml:space="preserve">
+    <value>诸如用户动态等功能需要该 Cookie 才能够正常使用</value>
+  </data>
+  <data name="WebCookieEntry.Header" xml:space="preserve">
+    <value>Cookie</value>
   </data>
   <data name="DeleteBrowseHistoriesButton.Content" xml:space="preserve">
     <value>Supprimer</value>
@@ -469,7 +478,7 @@ Entrer une addresse IP et cliquer '+' pour ajouter</value>
     <value>Soumettre un issue dans le groupe QQ</value>
   </data>
   <data name="OpenLogEntry.Header" xml:space="preserve">
-    <value>Ouvrir le répertoire des journaux</value>
+    <value>Ouvrir le répertoire des logs</value>
   </data>
   <data name="OpenLogEntry.Description" xml:space="preserve">
     <value>Veuillez joindre le journal concerné de ce répertoire lors de votre soumission de bug</value>
@@ -535,7 +544,7 @@ Entrer une addresse IP et cliquer '+' pour ajouter</value>
     <value>Visualiser les images en original</value>
   </data>
   <data name="SearchSettingsGroup.Text" xml:space="preserve">
-    <value>Configurations de recherche</value>
+    <value>Configurations de la recherche</value>
   </data>
   <data name="SearchStartCalendarDatePicker.PlaceholderText" xml:space="preserve">
     <value>Date de début</value>
@@ -696,6 +705,12 @@ Entrer une addresse IP et cliquer '+' pour ajouter</value>
   <data name="PublishDayMacroTooltip" xml:space="preserve">
     <value>Le jour de publication</value>
   </data>
+  <data name="IfPicSetMacroTooltip" xml:space="preserve">
+    <value>如果是多图，该宏会被替换为其参数</value>
+  </data>
+  <data name="IfPicAllMacroTooltip" xml:space="preserve">
+    <value>如果是图片（包括静态单图、多图、动图），该宏会被替换为其参数</value>
+  </data>
   <data name="IfR18MacroTooltip" xml:space="preserve">
     <value>Ce marco sera remplacé par son argument s'il s'agit d'un art restreint (R18 ou R18G)</value>
   </data>
@@ -705,10 +720,37 @@ Entrer une addresse IP et cliquer '+' pour ajouter</value>
   <data name="IfAiMacroTooltip" xml:space="preserve">
     <value>Ce marco sera remplacé par son argument s'il s'agit d'un art généré par l'IA</value>
   </data>
+  <data name="IfPicOneMacroTooltip" xml:space="preserve">
+    <value>如果是静态单图，该宏会被替换为其参数</value>
+  </data>
   <data name="IfNovelMacroTooltip" xml:space="preserve">
     <value>Ce marco sera remplacé par son argument s'il s'agit d'un roman</value>
   </data>
+  <data name="IfPicGifMacroTooltip" xml:space="preserve">
+    <value>如果是动图，该宏会被替换为其参数</value>
+  </data>
   <data name="PicSetIndexMacroTooltip" xml:space="preserve">
     <value>Ce macro sera remplacé par l'indice de l'illustration courante dans la collection (n-ième illust.). Il faut l'utiliser avec le macro '@{if_pic_set=} et sur les noms de fichier</value>
+  </data>
+  <data name="AiUpscalerSettingsGroup.Text" xml:space="preserve">
+    <value>AI超分辨率</value>
+  </data>
+  <data name="UpscalerModelEntry.Header" xml:space="preserve">
+    <value> AI超分辨率模型</value>
+  </data>
+  <data name="UpscalerModelEntry.Description" xml:space="preserve">
+    <value>选择AI超分辨率模型，详见此处</value>
+  </data>
+  <data name="UpscalerScaleRatioEntry.Header" xml:space="preserve">
+    <value>AI超分辨率倍率</value>
+  </data>
+  <data name="UpscalerScaleRatioEntry.Description" xml:space="preserve">
+    <value>默认为4，注意过大的倍率可能导致生成的图片体积过大影响性能</value>
+  </data>
+  <data name="UpscalerOutputTypeEntry.Header" xml:space="preserve">
+    <value>AI超分辨率生成图片的格式</value>
+  </data>
+  <data name="UpscalerOutputTypeEntry.Description" xml:space="preserve">
+    <value>默认为PNG</value>
   </data>
 </root>
