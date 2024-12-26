@@ -33,7 +33,7 @@ Welcome to the Pixeval project! We appreciate your help in translating the appli
 Here are some recommended tools for translating the `.resjson` files:
 
 - [Visual Studio Code](https://code.visualstudio.com/) - A powerful and customizable code editor.
-- [Resource Cheker](https://github.com/Pixeval/ResourceChecker) - Our solution for verification and translation assistance
+- [Resource Checker](https://github.com/Pixeval/ResourceChecker) - Our solution for verification and translation assistance
 
 ## Future Plans
 
