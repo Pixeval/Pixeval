@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Documents;
 using Pixeval.Utilities;
@@ -16,12 +15,9 @@ namespace Pixeval.Controls;
 [DependencyProperty<bool>("IsMultiPage", "false")]
 [DependencyProperty<bool>("LoadSuccessfully", "true")]
 [DependencyProperty<bool>("IsLoading", "false")]
-[INotifyPropertyChanged]
+[DependencyProperty<DocumentViewerViewModel>("ViewModel", IsNullable = true)]
 public sealed partial class DocumentViewer
 {
-    [ObservableProperty]
-    public partial DocumentViewerViewModel? ViewModel { get; set; }
-
     public DocumentViewer() => InitializeComponent();
 
     public static async void OnNovelItemChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)

@@ -19,9 +19,10 @@
 #endregion
 
 using System;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using Windows.System;
 using CommunityToolkit.Labs.WinUI.MarkdownTextBlock;
-using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -37,10 +38,9 @@ using WinUI3Utilities;
 namespace Pixeval.Pages.Misc;
 
 /// <summary>
-/// todo
+/// todo INotifyPropertyChanged
 /// </summary>
-[INotifyPropertyChanged]
-public sealed partial class SettingsPage : IScrollViewHost, IDisposable
+public sealed partial class SettingsPage : IScrollViewHost, IDisposable, INotifyPropertyChanged
 {
     private string CurrentVersion =>
         AppInfo.AppVersion.CurrentVersion.Let(t => $"{t.Major}.{t.Minor}.{t.Build}.{t.Revision}");
@@ -188,4 +188,11 @@ public sealed partial class SettingsPage : IScrollViewHost, IDisposable
     }
 
     public ScrollView ScrollView => SettingsPageScrollView;
+
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
 }
