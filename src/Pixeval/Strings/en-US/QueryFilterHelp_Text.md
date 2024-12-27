@@ -1,5 +1,4 @@
-The complete tutorial mainly focuses on grammar illustration with several examples, aims to provide
-all kinds of queries.
+The complete tutorial mainly focuses on grammar illustration with several examples, aims to provide all kinds of queries.
 
 ## Syntax of query
 
