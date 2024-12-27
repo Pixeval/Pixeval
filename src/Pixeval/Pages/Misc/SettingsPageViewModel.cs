@@ -287,7 +287,9 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
         _ => SettingsPageResources.UnknownUpdateState
     };
 
-    public string? NewestVersion => AppInfo.AppVersion.UpdateAvailable ? AppInfo.AppVersion.NewestVersion?.ToString() : null;
+    public string? NewestVersion => AppInfo.AppVersion.UpdateAvailable 
+        ? AppInfo.AppVersion.NewestVersion?.Let(t => $"{t.Major}.{t.Minor}.{t.Build}.{t.Revision}") 
+        : null;
 
     public InfoBarSeverity UpdateInfoSeverity => AppInfo.AppVersion.UpdateState switch
     {

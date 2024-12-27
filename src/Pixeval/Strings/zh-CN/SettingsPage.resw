@@ -168,7 +168,7 @@
     <value>有可用的次要更新</value>
   </data>
   <data name="BuildUpdateAvailable" xml:space="preserve">
-    <value>有可用的生成更新</value>
+    <value>有可用的构建更新</value>
   </data>
   <data name="UnknownUpdateState" xml:space="preserve">
     <value>未知更新状态</value>
