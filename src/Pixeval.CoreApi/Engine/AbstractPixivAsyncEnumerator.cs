@@ -113,4 +113,14 @@ public abstract class AbstractPixivAsyncEnumerator<TEntity, TRawEntity, TFetchEn
             return Result<TRawEntity>.AsFailure(new MakoNetworkException(url, MakoClient.Configuration.DomainFronting, e.Message, (int?)(e as HttpRequestException)?.StatusCode ?? -1));
         }
     }
-}
+
+    protected async Task<List<Result<TRawEntity>>> GetJsonResponsesAsync(List<string> urls)
+    {
+        var tasks = new List<Task<Result<TRawEntity>>>();
+        foreach (var url in urls)
+        {
+            tasks.Add(GetJsonResponseAsync(url));
+        }
+        return new List<Result<TRawEntity>>(await Task.WhenAll(tasks).ConfigureAwait(false));
+    }
+    }
