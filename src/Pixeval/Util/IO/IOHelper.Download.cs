@@ -106,53 +106,49 @@ public static partial class IoHelper
 
             var request = new HttpRequestMessage(HttpMethod.Get, uri);
 
-            if (startPosition is not 0)
+            if (startPosition != 0)
                 request.Headers.Range = new(startPosition, null);
 
-            using var response = await httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
+            using var response = await httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
 
-            var responseLength = null as long?;
+            long? responseLength = response.Content.Headers.ContentLength;
             switch (response.StatusCode)
             {
                 case HttpStatusCode.OK:
                     destination.Position = 0;
-                    responseLength = response.Content.Headers.ContentLength;
                     break;
                 case HttpStatusCode.PartialContent:
                     destination.Position = response.Content.Headers.ContentRange?.From ?? startPosition;
                     responseLength = response.Content.Headers.ContentRange?.Length ?? response.Content.Headers.ContentLength + destination.Position;
                     break;
                 case HttpStatusCode.RequestedRangeNotSatisfiable:
-                    if (response.Content.Headers.ContentRange?.Length is { } length && length != startPosition)
+                    if (response.Content.Headers.ContentRange?.Length != startPosition)
                         return new ArgumentOutOfRangeException(nameof(startPosition), "416: RequestedRangeNotSatisfiable");
-                    if (progress is not null)
-                        _ = WindowFactory.RootWindow.DispatcherQueue.TryEnqueue(() => progress.Report(100));
+                    progress?.Report(100);
                     return null;
             }
 
-            _ = response.EnsureSuccessStatusCode();
+            response.EnsureSuccessStatusCode();
 
-            await using var contentStream = await response.Content.ReadAsStreamAsync(cancellationToken);
+            await using var contentStream = await response.Content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
 
             var buffer = ArrayPool<byte>.Shared.Rent(bufferSize);
             try
             {
-                var bytesRead = 0;
-                var totalRead = destination.Position;
-                var lastReported = DateTime.MinValue;
-                while ((bytesRead = await contentStream.ReadAsync(new(buffer), cancellationToken).ConfigureAwait(false)) is not 0)
+                int bytesRead;
+                long totalRead = destination.Position;
+                DateTime lastReported = DateTime.MinValue;
+                while ((bytesRead = await contentStream.ReadAsync(buffer, cancellationToken).ConfigureAwait(false)) != 0)
                 {
-                    await destination.WriteAsync(new(buffer, 0, bytesRead), cancellationToken).ConfigureAwait(false);
+                    await destination.WriteAsync(new ReadOnlyMemory<byte>(buffer, 0, bytesRead), cancellationToken).ConfigureAwait(false);
                     totalRead += bytesRead;
-                    // reduce the frequency of the invocation of the callback, otherwise it will draw a severe performance impact
 
                     var now = DateTime.Now;
-                    if (now - lastReported > TimeSpan.FromSeconds(0.5) && progress is not null && responseLength is not null)
+                    if (now - lastReported > TimeSpan.FromSeconds(1) && responseLength.HasValue)
                     {
                         lastReported = now;
-                        var percentage = totalRead / (double)responseLength * 100;
-                        _ = WindowFactory.RootWindow.DispatcherQueue.TryEnqueue(() =>
-                            progress.Report(percentage)); // percentage, 100 as base
+                        double percentage = totalRead / (double)responseLength.Value * 100;
+                        progress?.Report(percentage);
                     }
                 }
             }
@@ -161,8 +157,7 @@ public static partial class IoHelper
                 ArrayPool<byte>.Shared.Return(buffer);
             }
 
-            if (progress is not null)
-                _ = WindowFactory.RootWindow.DispatcherQueue.TryEnqueue(() => progress.Report(100));
+            progress?.Report(100);
             return null;
         }
         catch (Exception e)
