@@ -250,10 +250,10 @@
     <value>Вкладка по умолчанию</value>
   </data>
   <data name="WebCookieTextBox.PlaceholderText" xml:space="preserve">
-    <value>Pixiv 网页端 Cookie</value>
+    <value>Cookie веб-версии Pixiv</value>
   </data>
   <data name="WebCookieEntry.Description" xml:space="preserve">
-    <value>诸如用户动态等功能需要该 Cookie 才能够正常使用</value>
+    <value>Такие функции, как лента активности пользователя, требуют наличия этого cookie для корректной работы.</value>
   </data>
   <data name="WebCookieEntry.Header" xml:space="preserve">
     <value>Cookie</value>
@@ -706,10 +706,10 @@
     <value>День публикации произведения</value>
   </data>
   <data name="IfPicSetMacroTooltip" xml:space="preserve">
-    <value>如果是多图，该宏会被替换为其参数</value>
+    <value>Если это многостраничное изображение, этот макрос будет заменен его параметрами.</value>
   </data>
   <data name="IfPicAllMacroTooltip" xml:space="preserve">
-    <value>如果是图片（包括静态单图、多图、动图），该宏会被替换为其参数</value>
+    <value>Если это изображение (включая статичные одиночные изображения, многостраничные изображения, анимированные изображения), этот макрос будет заменен его параметрами.</value>
   </data>
   <data name="IfR18MacroTooltip" xml:space="preserve">
     <value>Если это произведение с рейтингом R18, макрос будет заменен на его параметры</value>
@@ -721,36 +721,36 @@
     <value>Если это произведение сгенерировано AI, макрос будет заменен на его параметры</value>
   </data>
   <data name="IfPicOneMacroTooltip" xml:space="preserve">
-    <value>如果是静态单图，该宏会被替换为其参数</value>
+    <value>Если это статичное одиночное изображение, этот макрос будет заменен его параметрами.</value>
   </data>
   <data name="IfNovelMacroTooltip" xml:space="preserve">
     <value>Если это новелла, макрос будет заменен на его параметры</value>
   </data>
   <data name="IfPicGifMacroTooltip" xml:space="preserve">
-    <value>如果是动图，该宏会被替换为其参数</value>
+    <value>Если это анимированное изображение, этот макрос будет заменен его параметрами.</value>
   </data>
   <data name="PicSetIndexMacroTooltip" xml:space="preserve">
     <value>Если это манга, этот макрос будет заменен на индекс текущего изображения в серии; должен использоваться с макросом @{if_pic_set=}, и должен быть в имени файла</value>
   </data>
   <data name="AiUpscalerSettingsGroup.Text" xml:space="preserve">
-    <value>AI超分辨率</value>
+    <value>Апскейл</value>
   </data>
   <data name="UpscalerModelEntry.Header" xml:space="preserve">
-    <value> AI超分辨率模型</value>
+    <value> Модель апскейлера</value>
   </data>
   <data name="UpscalerModelEntry.Description" xml:space="preserve">
-    <value>选择AI超分辨率模型，详见此处</value>
+    <value>Выберите модель апскейлера разрешения, подробности смотрите здесь.</value>
   </data>
   <data name="UpscalerScaleRatioEntry.Header" xml:space="preserve">
-    <value>AI超分辨率倍率</value>
+    <value>Степень улучшения разрешения</value>
   </data>
   <data name="UpscalerScaleRatioEntry.Description" xml:space="preserve">
-    <value>默认为4，注意过大的倍率可能导致生成的图片体积过大影响性能</value>
+    <value>По умолчанию 4, обратите внимание, что слишком большое увеличение может привести к чрезмерно большому размеру конечного изображения и повлиять на производительность.</value>
   </data>
   <data name="UpscalerOutputTypeEntry.Header" xml:space="preserve">
-    <value>AI超分辨率生成图片的格式</value>
+    <value>Формат изображений, после апскейла разрешения.</value>
   </data>
   <data name="UpscalerOutputTypeEntry.Description" xml:space="preserve">
-    <value>默认为PNG</value>
+    <value>По умолчанию PNG</value>
   </data>
 </root>
