@@ -118,36 +118,36 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="SparseBookmarkPrefix" xml:space="preserve">
-    <value>将</value>
+    <value>Добавил(а)</value>
   </data>
   <data name="SparseBookmarkSuffix" xml:space="preserve">
-    <value>添加到了收藏夹</value>
+    <value>в избранное</value>
   </data>
   <data name="SparseFollowUserPrefix" xml:space="preserve">
-    <value>关注了</value>
+    <value>Подписался(лась) на</value>
   </data>
   <data name="SparsePostIllustPrefix" xml:space="preserve">
-    <value>投稿了</value>
+    <value>Опубликовал(а)</value>
   </data>
   <data name="CondensedBookmarkPrefix" xml:space="preserve">
-    <value>添加了</value>
+    <value>Добавил(а)</value>
   </data>
   <data name="CondensedBookmarkFormattedSuffix" xml:space="preserve">
-    <value>等共{0}部作品到收藏夹</value>
+    <value>...и еще {0} работ в избранное</value>
   </data>
   <data name="CondensedFollowUserPrefix" xml:space="preserve">
-    <value>关注了</value>
+    <value>Подписался(лась) на</value>
   </data>
   <data name="CondensedFollowUserFormattedSuffix" xml:space="preserve">
-    <value>等共{0}位用户</value>
+    <value>...и еще {0} пользователей</value>
   </data>
   <data name="CondensedPostIllustPrefix" xml:space="preserve">
-    <value>投稿了</value>
+    <value>Опубликовал(а)</value>
   </data>
   <data name="CondensedPostIllustFormattedSuffix" xml:space="preserve">
-    <value>等共{0}部作品</value>
+    <value>...и еще {0} работ</value>
   </data>
   <data name="FeedListTextBlock.Text" xml:space="preserve">
-    <value>用户动态</value>
+    <value>Лента подписок пользователя</value>
   </data>
 </root>
