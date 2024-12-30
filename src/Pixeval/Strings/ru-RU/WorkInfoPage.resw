@@ -157,7 +157,7 @@
     <value>Имя автора: </value>
   </data>
   <data name="IllustratorTextBlock.Text" xml:space="preserve">
-    <value>作者信息</value>
+    <value>Информация об авторе</value>
   </data>
   <data name="TitleTextBlock.Text" xml:space="preserve">
     <value>Информация о работе</value>
