@@ -145,7 +145,7 @@
     <value>Рейтинги</value>
   </data>
   <data name="FeedTab.Content" xml:space="preserve">
-    <value>关注动态</value>
+    <value>Подписки</value>
   </data>
   <data name="RecommendationsTab.Content" xml:space="preserve">
     <value>Рекомендации дня</value>
@@ -214,9 +214,11 @@
     <value>Соответствующие теги</value>
   </data>
   <data name="FeedTabCannotBeOpenedTitle" xml:space="preserve">
-    <value>无法使用用户动态功能</value>
+    <value>Невозможно получить подписки пользователя
+
+</value>
   </data>
   <data name="FeedTabCannotBeOpenedContent" xml:space="preserve">
-    <value>用户动态功能需要使用 Cookie，请先在设置页面中填写对应 Cookie 后再使用此功能</value>
+    <value>Для использования ленты подписок пользователя необходимы Cookie. Пожалуйста, сначала введите соответствующие Cookie на странице настроек, прежде чем использовать эту функцию.</value>
   </data>
 </root>
