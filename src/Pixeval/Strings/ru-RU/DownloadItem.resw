@@ -154,7 +154,7 @@
     <value>Загрузка приостановлена</value>
   </data>
   <data name="DownloadPending" xml:space="preserve">
-    <value>正在等待处理下载文件完成</value>
+    <value>Ожидание загрузки...</value>
   </data>
   <data name="DownloadQueued" xml:space="preserve">
     <value>В очереди</value>
