@@ -124,7 +124,7 @@
     <value>Пауза</value>
   </data>
   <data name="ActionButtonContentRedownload" xml:space="preserve">
-    <value>Перезагрузить</value>
+    <value>Загрузить заново</value>
   </data>
   <data name="ActionButtonContentResume" xml:space="preserve">
     <value>Возобновить</value>
@@ -172,6 +172,6 @@
     <value>Открыть расположение загрузки</value>
   </data>
   <data name="RedownloadItem.Label" xml:space="preserve">
-    <value>Перезагрузить</value>
+    <value>Загрузить заново</value>
   </data>
 </root>
