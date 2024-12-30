@@ -145,7 +145,7 @@
     <value>Сохранить как</value>
   </data>
   <data name="OpenUserInfoPage" xml:space="preserve">
-    <value>作者信息</value>
+    <value>Информация об авторе</value>
   </data>
   <data name="MangaSave" xml:space="preserve">
     <value>Сохранить мангу</value>
@@ -199,6 +199,6 @@
     <value>Друзья в Pixiv</value>
   </data>
   <data name="AIUpscale" xml:space="preserve">
-    <value>AI超分辨率</value>
+    <value>Апскейл</value>
   </data>
 </root>
