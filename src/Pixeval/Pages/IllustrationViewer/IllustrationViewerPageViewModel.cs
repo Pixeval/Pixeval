@@ -104,7 +104,7 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
     {
         GC.SuppressFinalize(this);
         foreach (var illustrationViewModel in Illustrations)
-            illustrationViewModel.UnloadThumbnail();
+            illustrationViewModel.UnloadThumbnail(this);
         Pages = null!;
         Images = null!;
         ViewModelSource?.Dispose();

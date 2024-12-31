@@ -217,7 +217,7 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
 
         async Task LoadThumbnailAsync()
         {
-            _ = await IllustrationViewModel.TryLoadThumbnailAsync();
+            _ = await IllustrationViewModel.TryLoadThumbnailAsync(this);
             OnPropertyChanged(nameof(ThumbnailSource));
         }
 
@@ -438,7 +438,7 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
     private void DisposeInternal()
     {
         ImageLoadingCancellationTokenSource.TryCancelDispose();
-        IllustrationViewModel.UnloadThumbnail();
+        IllustrationViewModel.UnloadThumbnail(this);
 
         OriginalStreamsSource = null;
         

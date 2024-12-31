@@ -21,6 +21,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -38,7 +39,7 @@ public abstract partial class ThumbnailEntryViewModel<T>(T entry) : EntryViewMod
 {
     public long Id => Entry.Id;
 
-    private int ReferenceCount { get; set; }
+    private HashSet<int> References { get; } = [];
 
     protected abstract string ThumbnailUrl { get; }
 
@@ -59,9 +60,9 @@ public abstract partial class ThumbnailEntryViewModel<T>(T entry) : EntryViewMod
     /// 当控件需要显示图片时，调用此方法加载缩略图
     /// </summary>
     /// <returns>缩略图首次加载完成则返回<see langword="true"/>，之前已加载、正在加载或加载失败则返回<see langword="false"/></returns>
-    public virtual async ValueTask<bool> TryLoadThumbnailAsync()
+    public virtual async ValueTask<bool> TryLoadThumbnailAsync(object key)
     {
-        ++ReferenceCount;
+        _ = References.Add(key.GetHashCode());
         if (ThumbnailSource is null)
         {
             LoadingThumbnail = true;
@@ -78,10 +79,10 @@ public abstract partial class ThumbnailEntryViewModel<T>(T entry) : EntryViewMod
     /// <summary>
     /// 当控件不显示，或者Unload时，调用此方法以尝试释放内存
     /// </summary>
-    public void UnloadThumbnail()
+    public void UnloadThumbnail(object key)
     {
-        --ReferenceCount;
-        if (ReferenceCount is not 0)
+        _ = References.Remove(key.GetHashCode());
+        if (References.Count is not 0)
             return;
         if (LoadingThumbnail)
         {

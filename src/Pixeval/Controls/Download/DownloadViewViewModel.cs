@@ -142,8 +142,10 @@ public partial class DownloadViewViewModel : ObservableObject, IDisposable
     public void Dispose()
     {
         GC.SuppressFinalize(this);
-        if (View.Source is { } source)
-            foreach (var entry in source)
-                entry.Dispose();
+        foreach (var entry in View.Source)
+        {
+            entry.UnloadThumbnail(this);
+            entry.Dispose();
+        }
     }
 }
