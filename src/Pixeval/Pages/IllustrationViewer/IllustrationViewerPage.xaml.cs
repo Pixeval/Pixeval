@@ -19,7 +19,6 @@
 #endregion
 
 using System;
-using System.Diagnostics;
 using System.Numerics;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;

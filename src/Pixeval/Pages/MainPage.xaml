@@ -84,6 +84,7 @@
                             Content="{fluent:SymbolIcon Symbol=Settings}" />
                     </CommandBar>
                     <AutoSuggestBox
+                        x:Name="MainPageAutoSuggestionBox"
                         x:Uid="/MainPage/MainPageAutoSuggestionBox"
                         VerticalAlignment="Center"
                         AllowDrop="True"

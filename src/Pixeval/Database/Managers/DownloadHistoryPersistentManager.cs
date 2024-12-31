@@ -58,6 +58,11 @@ public class DownloadHistoryPersistentManager(ILiteDatabase collection, int maxi
         return Collection.Find(_ => true, 0, count).Select(ToDownloadTaskGroup);
     }
 
+    public IEnumerable<IDownloadTaskGroup> SelectLast(int count)
+    {
+        return Collection.Find(_ => true, Collection.Count() - count, count).Select(ToDownloadTaskGroup);
+    }
+
     /// <summary>
     /// 删除
     /// </summary>

@@ -84,7 +84,7 @@ public record SuggestionModel(string? Name, string? TranslatedName, SuggestionTy
 
     public static SuggestionModel FromHistory(SearchHistoryEntry history)
     {
-        return new SuggestionModel(history.Value, null, SuggestionType.History);
+        return new SuggestionModel(history.Value, history.TranslatedName, SuggestionType.History);
     }
 
     /// <summary>
