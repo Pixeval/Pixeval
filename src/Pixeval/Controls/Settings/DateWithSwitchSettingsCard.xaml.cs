@@ -5,11 +5,11 @@ using WinUI3Utilities;
 
 namespace Pixeval.Controls.Settings;
 
-public sealed partial class DateRangeWithSwitchSettingsExpander
+public sealed partial class DateWithSwitchSettingsCard
 {
-    public DateRangeWithSwitchAppSettingsEntry Entry { get; set; } = null!;
+    public DateWithSwitchAppSettingsEntry Entry { get; set; } = null!;
 
-    public DateRangeWithSwitchSettingsExpander() => InitializeComponent();
+    public DateWithSwitchSettingsCard() => InitializeComponent();
 
     private void ToggleSwitch_OnToggled(object sender, RoutedEventArgs e)
     {

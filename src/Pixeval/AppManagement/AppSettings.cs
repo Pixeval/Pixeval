@@ -121,12 +121,6 @@ public partial record AppSettings() : IWindowSettings
     [SettingsEntry(Symbol.History, nameof(MaximumSearchHistoryRecordsEntryHeader), nameof(MaximumSearchHistoryRecordsEntryDescription))]
     public int MaximumSearchHistoryRecords { get; set; } = 50;
 
-    [SettingsEntry(Symbol.Clock, nameof(SearchDurationEntryHeader), nameof(SearchDurationEntryDescription))]
-    public SearchDuration SearchDuration { get; set; } = SearchDuration.Undecided;
-
-    [SettingsEntry(Symbol.Timer, nameof(UsePreciseRangeForSearchEntryHeader), nameof(UsePreciseRangeForSearchEntryDescription))]
-    public bool UsePreciseRangeForSearch { get; set; }
-
     [SettingsEntry(Symbol.Key, nameof(ReverseSearchApiKeyEntryHeader), nameof(ReverseSearchApiKeyEntryDescriptionHyperlinkButtonContent))]
     public string ReverseSearchApiKey { get; set; } = "";
 
@@ -170,7 +164,13 @@ public partial record AppSettings() : IWindowSettings
     [SettingsEntry(Symbol.History, nameof(MaximumBrowseHistoryRecordsEntryHeader), nameof(MaximumBrowseHistoryRecordsEntryDescription))]
     public int MaximumBrowseHistoryRecords { get; set; } = 100;
 
+    [SettingsEntry(Symbol.ArrowCircleLeft, nameof(UseSearchStartDateEntryHeader), nameof(UseSearchStartDateEntryDescription))]
+    public bool UseSearchStartDate { get; set; }
+
     public DateTimeOffset SearchStartDate { get; set; } = DateTimeOffset.Now - TimeSpan.FromDays(1);
+
+    [SettingsEntry(Symbol.ArrowCircleRight, nameof(UseSearchEndDateEntryHeader), nameof(UseSearchEndDateEntryDescription))]
+    public bool UseSearchEndDate { get; set; }
 
     public DateTimeOffset SearchEndDate { get; set; } = DateTimeOffset.Now;
 

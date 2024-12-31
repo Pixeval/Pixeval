@@ -112,7 +112,7 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
                 new EnumAppSettingsEntry(AppSettings,
                     t => t.DefaultSelectedTabItem,
                     MainPageTabItemExtension.GetItems()),
-                new StringAppSettingsEntry(AppSettings, 
+                new StringAppSettingsEntry(AppSettings,
                     t => t.WebCookie)
                 {
                     Placeholder = SettingsPageResources.WebCookieTextBoxPlaceholderText
@@ -141,7 +141,7 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
 
             new (SettingsEntryCategory.AiUpscaler)
             {
-                new EnumAppSettingsEntry(AppSettings, 
+                new EnumAppSettingsEntry(AppSettings,
                     t => t.UpscalerModel,
                     RealESRGANModelExtension.GetItems())
                 {
@@ -218,10 +218,12 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
                             t => t.SearchNovelTagMatchOption,
                             SearchNovelTagMatchOptionExtension.GetItems())
                     ]),
-                new EnumAppSettingsEntry(AppSettings,
-                    t => t.SearchDuration,
-                    SearchDurationExtension.GetItems()),
-                new DateRangeWithSwitchAppSettingsEntry(AppSettings)
+                new DateWithSwitchAppSettingsEntry(AppSettings,
+                    t => t.UseSearchStartDate,
+                    t => t.SearchStartDate),
+                new DateWithSwitchAppSettingsEntry(AppSettings,
+                    t => t.UseSearchEndDate,
+                    t => t.SearchEndDate)
             },
             new(SettingsEntryCategory.Download)
             {
@@ -287,8 +289,8 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
         _ => SettingsPageResources.UnknownUpdateState
     };
 
-    public string? NewestVersion => AppInfo.AppVersion.UpdateAvailable 
-        ? AppInfo.AppVersion.NewestVersion?.Let(t => $"{t.Major}.{t.Minor}.{t.Build}.{t.Revision}") 
+    public string? NewestVersion => AppInfo.AppVersion.UpdateAvailable
+        ? AppInfo.AppVersion.NewestVersion?.Let(t => $"{t.Major}.{t.Minor}.{t.Build}.{t.Revision}")
         : null;
 
     public InfoBarSeverity UpdateInfoSeverity => AppInfo.AppVersion.UpdateState switch

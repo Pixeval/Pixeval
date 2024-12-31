@@ -34,41 +34,7 @@ public abstract class SingleValueSettingsEntry<TSettings, TValue> : SingleValueS
     protected SingleValueSettingsEntry(TSettings settings,
         Expression<Func<TSettings, TValue>> property) : base(settings)
     {
-        if (property is not { Parameters: [{ } parameter] })
-        {
-            ThrowHelper.Argument(property);
-            return;
-        }
-
-        var propertyValue = Expression.Parameter(typeof(TValue));
-        BinaryExpression setPropertyValue;
-        Expression getPropertyValue;
-        MemberExpression member;
-        switch (property.Body)
-        {
-            case UnaryExpression
-            {
-                Operand: MemberExpression member1
-            } body:
-            {
-                getPropertyValue = body;
-                setPropertyValue = Expression.Assign(member1, Expression.Convert(propertyValue, member1.Type));
-                member = member1;
-                break;
-            }
-            case MemberExpression member2:
-            {
-                getPropertyValue = member = member2;
-                setPropertyValue = Expression.Assign(member2, propertyValue);
-                break;
-            }
-            default:
-                ThrowHelper.Argument(property);
-                return;
-        }
-
-        _getter = Expression.Lambda<Func<TSettings, TValue>>(getPropertyValue, parameter).Compile();
-        _setter = Expression.Lambda<Action<TSettings, TValue>>(setPropertyValue, parameter, propertyValue).Compile();
+        (_getter, _setter, var member) = GetSettingsEntryInfo(property);
         Attribute = member.Member.GetCustomAttribute<SettingsEntryAttribute>();
 
         if (Attribute is { } attribute)
@@ -104,4 +70,50 @@ public abstract class SingleValueSettingsEntry<TSettings, TValue> : SingleValueS
     private readonly Func<TSettings, TValue> _getter;
 
     private readonly Action<TSettings, TValue> _setter;
+
+    protected SettingsEntryInfo<TSettings1, TValue1> GetSettingsEntryInfo<TSettings1, TValue1>(
+        Expression<Func<TSettings1, TValue1>> property)
+    {
+        if (property is not { Parameters: [{ } parameter] })
+        {
+            return ThrowHelper
+                .Argument<Expression<Func<TSettings1, TValue1>>, SettingsEntryInfo<TSettings1, TValue1>>(property);
+        }
+
+        var propertyValue = Expression.Parameter(typeof(TValue1));
+        BinaryExpression setPropertyValue;
+        Expression getPropertyValue;
+        MemberExpression member;
+        switch (property.Body)
+        {
+            case UnaryExpression
+            {
+                Operand: MemberExpression member1
+            } body:
+            {
+                getPropertyValue = body;
+                setPropertyValue = Expression.Assign(member1, Expression.Convert(propertyValue, member1.Type));
+                member = member1;
+                break;
+            }
+            case MemberExpression member2:
+            {
+                getPropertyValue = member = member2;
+                setPropertyValue = Expression.Assign(member2, propertyValue);
+                break;
+            }
+            default:
+                return ThrowHelper
+                    .Argument<Expression<Func<TSettings1, TValue1>>, SettingsEntryInfo<TSettings1, TValue1>>(property);
+        }
+
+        var getter = Expression.Lambda<Func<TSettings1, TValue1>>(getPropertyValue, parameter).Compile();
+        var setter = Expression.Lambda<Action<TSettings1, TValue1>>(setPropertyValue, parameter, propertyValue).Compile();
+        return new (getter, setter, member);
+    }
+
+    public record SettingsEntryInfo<TSettings1, TValue1>(
+        Func<TSettings1, TValue1> Getter,
+        Action<TSettings1, TValue1> Setter,
+        MemberExpression Member);
 }

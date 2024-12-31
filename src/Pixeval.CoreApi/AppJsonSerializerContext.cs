@@ -134,7 +134,6 @@ namespace Pixeval.CoreApi;
 
 [JsonSerializable(typeof(PrivacyPolicy))]
 [JsonSerializable(typeof(RankOption))]
-[JsonSerializable(typeof(SearchDuration))]
 [JsonSerializable(typeof(SearchIllustrationTagMatchOption))]
 [JsonSerializable(typeof(SearchNovelTagMatchOption))]
 [JsonSerializable(typeof(TargetFilter))]

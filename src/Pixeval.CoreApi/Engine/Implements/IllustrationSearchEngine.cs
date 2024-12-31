@@ -35,7 +35,6 @@ namespace Pixeval.CoreApi.Engine.Implements;
 /// <param name="matchOption"></param>
 /// <param name="tag"></param>
 /// <param name="sortOption"></param>
-/// <param name="searchDuration"></param>
 /// <param name="targetFilter"></param>
 /// <param name="startDate"></param>
 /// <param name="endDate"></param>
@@ -46,7 +45,6 @@ internal class IllustrationSearchEngine(
     SearchIllustrationTagMatchOption matchOption,
     string tag,
     WorkSortOption sortOption,
-    SearchDuration searchDuration,
     TargetFilter targetFilter,
     DateTimeOffset? startDate,
     DateTimeOffset? endDate,
@@ -65,10 +63,7 @@ internal class IllustrationSearchEngine(
                 ? null
                 : $"&sort={sortOption.GetDescription()}")
             + startDate?.Let(dn => $"&start_date={dn:yyyy-MM-dd}")
-            + endDate?.Let(dn => $"&start_date={dn:yyyy-MM-dd}")
-            + (searchDuration is SearchDuration.Undecided
-                ? null
-                : $"&duration={searchDuration.GetDescription()}")
+            + endDate?.Let(dn => $"&end_date={dn:yyyy-MM-dd}")
             + aiType?.Let(t => $"&search_ai_type={(t ? 1 : 0)}"));
     }
 }

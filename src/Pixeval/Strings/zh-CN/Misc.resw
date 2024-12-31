@@ -186,24 +186,6 @@
   <data name="MicaAltBackdrop" xml:space="preserve">
     <value>Mica Alt（更鲜艳的云母）材质</value>
   </data>
-  <data name="SearchDurationUndecided" xml:space="preserve">
-    <value>默认</value>
-  </data>
-  <data name="SearchDurationWithinLastDay" xml:space="preserve">
-    <value>一天内</value>
-  </data>
-  <data name="SearchDurationWithinLastWeek" xml:space="preserve">
-    <value>一周内</value>
-  </data>
-  <data name="SearchDurationWithinLastMonth" xml:space="preserve">
-    <value>一月内</value>
-  </data>
-  <data name="SearchDurationWithinLastHalfYear" xml:space="preserve">
-    <value>半年内</value>
-  </data>
-  <data name="SearchDurationWithinLastYear" xml:space="preserve">
-    <value>一年内</value>
-  </data>
   <data name="PrivacyPolicyPublic" xml:space="preserve">
     <value>公开</value>
   </data>
