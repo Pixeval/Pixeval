@@ -11,6 +11,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:model="using:Pixeval.CoreApi.Model"
     xmlns:pixeval="using:Pixeval.AppManagement"
+    xmlns:ui="using:CommunityToolkit.WinUI"
     mc:Ignorable="d">
     <controls2:EnhancedPage.Resources>
         <Style
@@ -34,77 +35,94 @@
         HorizontalScrollBarVisibility="Disabled"
         HorizontalScrollMode="Disabled"
         VerticalScrollBarVisibility="Auto">
-        <StackPanel Margin="20,15">
-            <TextBlock x:Uid="/WorkInfoPage/TitleTextBlock" Style="{StaticResource SubtitleTextBlockStyle}" />
-            <!--#region Illustrator Info-->
-            <TextBlock x:Uid="/WorkInfoPage/IllustratorTextBlock" Style="{StaticResource InfoPageSectionHeaderTextBlockStyle}" />
-            <Button
-                Margin="{StaticResource StackLayoutEntryPadding}"
-                Click="IllustratorPersonPicture_OnClicked"
-                Style="{StaticResource CardControlButton}">
-                <controls:DockPanel HorizontalSpacing="10" LastChildFill="False">
-                    <PersonPicture
-                        Width="50"
-                        Height="50"
-                        controls:DockPanel.Dock="Left"
-                        ProfilePicture="{x:Bind _viewModel.AvatarSource, Mode=OneWay}" />
-                    <TextBlock controls:DockPanel.Dock="Top" Style="{StaticResource BodyTextBlockStyle}">
-                        <Run x:Uid="/WorkInfoPage/IllustratorName" />
-                        <Run Text="{x:Bind _viewModel.Illustrator.Name}" />
-                    </TextBlock>
-                    <TextBlock controls:DockPanel.Dock="Bottom" Style="{StaticResource BodyTextBlockStyle}">
-                        <Run x:Uid="/WorkInfoPage/IllustratorId" />
-                        <Run Text="{x:Bind _viewModel.Illustrator.Id}" />
-                    </TextBlock>
-                </controls:DockPanel>
-            </Button>
-            <!--#endregion-->
-            <!--#region Work Title-->
-            <TextBlock x:Uid="/WorkInfoPage/WorkTitleTextBlock" Style="{StaticResource InfoPageSectionHeaderTextBlockStyle}" />
-            <TextBlock Style="{StaticResource InfoPageSectionContentTextBlockStyle}" Text="{x:Bind _viewModel.Entry.Title}" />
-            <!--#endregion-->
-            <!--#region Work Id-->
-            <TextBlock x:Uid="/WorkInfoPage/WorkIdTextBlock" Style="{StaticResource InfoPageSectionHeaderTextBlockStyle}" />
-            <TextBlock Style="{StaticResource InfoPageSectionContentTextBlockStyle}" Text="{x:Bind _viewModel.Entry.Id}" />
-            <!--#endregion-->
-            <!--#region Work Caption-->
-            <TextBlock x:Uid="/WorkInfoPage/WorkCaptionTextBlock" Style="{StaticResource InfoPageSectionHeaderTextBlockStyle}" />
+        <StackPanel Margin="20,15" Spacing="4">
+            <TextBlock Style="{StaticResource TitleTextBlockStyle}" Text="{x:Bind _viewModel.Entry.Title}" />
             <labs:MarkdownTextBlock
                 x:Name="WorkCaptionMarkdownTextBlock"
                 Margin="{StaticResource StackLayoutEntryPadding}"
-                FontSize="{StaticResource CaptionTextBlockFontSize}"
                 Text="">
                 <labs:MarkdownTextBlock.Config>
                     <labs:MarkdownConfig />
                 </labs:MarkdownTextBlock.Config>
             </labs:MarkdownTextBlock>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock VerticalAlignment="Center" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}">
+                    <Run Text="PID" />
+                    <Run Text="{x:Bind _viewModel.Entry.Id}" />
+                </TextBlock>
+                <Button
+                    Padding="4"
+                    VerticalAlignment="Center"
+                    Background="Transparent"
+                    BorderBrush="Transparent"
+                    Content="{ui:FontIcon FontSize=12,
+                                          Glyph=&#xE8C8;}" />
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" Spacing="4">
+                <FontIcon FontSize="14" Glyph="&#xE890;" />
+                <TextBlock Text="{x:Bind _viewModel.Entry.TotalView}" />
+                <FontIcon
+                    Margin="12,0,0,0"
+                    FontSize="14"
+                    Glyph="&#xE006;" />
+                <TextBlock Text="{x:Bind _viewModel.Entry.TotalBookmarks}" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Spacing="4">
+                <FontIcon FontSize="14" Glyph="&#xE917;" />
+                <TextBlock Text="{x:Bind controls2:C.CultureDateTimeOffsetFormatter(_viewModel.Entry.CreateDate, pixeval:AppSettings.CurrentCulture)}" />
+            </StackPanel>
+            <!--#region Illustrator Info-->
+            <Button
+                Margin="0,12,0,0"
+                Click="IllustratorPersonPicture_OnClicked"
+                Style="{StaticResource CardControlButton}">
+                <controls:DockPanel HorizontalSpacing="12" LastChildFill="False">
+                    <PersonPicture
+                        Width="50"
+                        Height="50"
+                        controls:DockPanel.Dock="Left"
+                        ProfilePicture="{x:Bind _viewModel.AvatarSource, Mode=OneWay}" />
+                    <TextBlock
+                        controls:DockPanel.Dock="Top"
+                        Style="{StaticResource SubtitleTextBlockStyle}"
+                        TextWrapping="Wrap">
+                        <Run Text="{x:Bind _viewModel.Illustrator.Name}" />
+                    </TextBlock>
+                    <StackPanel controls:DockPanel.Dock="Bottom" Orientation="Horizontal">
+                        <TextBlock
+                            VerticalAlignment="Center"
+                            Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"
+                            Text="{x:Bind _viewModel.Illustrator.Id}" />
+                        <Button
+                            Padding="4"
+                            VerticalAlignment="Center"
+                            Background="Transparent"
+                            BorderBrush="Transparent"
+                            Content="{ui:FontIcon FontSize=12,
+                                                  Glyph=&#xE8C8;}" />
+                    </StackPanel>
+
+                </controls:DockPanel>
+            </Button>
             <!--#endregion-->
-            <TextBlock x:Uid="/WorkInfoPage/WorkTotalBookmarksTextBlock" Style="{StaticResource InfoPageSectionHeaderTextBlockStyle}" />
-            <TextBlock Style="{StaticResource InfoPageSectionContentTextBlockStyle}" Text="{x:Bind _viewModel.Entry.TotalBookmarks}" />
-            <TextBlock x:Uid="/WorkInfoPage/WorkTotalViewsTextBlock" Style="{StaticResource InfoPageSectionHeaderTextBlockStyle}" />
-            <TextBlock Style="{StaticResource InfoPageSectionContentTextBlockStyle}" Text="{x:Bind _viewModel.Entry.TotalView}" />
-            <TextBlock
-                x:Uid="/WorkInfoPage/IllustrationDimensionTextBlock"
-                Style="{StaticResource InfoPageSectionHeaderTextBlockStyle}"
-                Visibility="{x:Bind controls2:C.IsNotNullToVisibility(_viewModel.IllustrationDimensionText)}" />
-            <TextBlock
-                Style="{StaticResource InfoPageSectionContentTextBlockStyle}"
-                Text="{x:Bind _viewModel.IllustrationDimensionText}"
-                Visibility="{x:Bind controls2:C.IsNotNullToVisibility(_viewModel.IllustrationDimensionText)}" />
-            <TextBlock x:Uid="/WorkInfoPage/WorkUploadDateTextBlock" Style="{StaticResource InfoPageSectionHeaderTextBlockStyle}" />
-            <TextBlock Style="{StaticResource InfoPageSectionContentTextBlockStyle}" Text="{x:Bind controls2:C.CultureDateTimeOffsetFormatter(_viewModel.Entry.CreateDate, pixeval:AppSettings.CurrentCulture)}" />
-            <TextBlock x:Uid="/WorkInfoPage/WorkTagListTextBlock" Style="{StaticResource InfoPageSectionHeaderTextBlockStyle}" />
-            <ItemsRepeater Margin="{StaticResource StackLayoutEntryPadding}" ItemsSource="{x:Bind _viewModel.Entry.Tags}">
+            <!--#region Work Id-->
+            <!--#endregion-->
+            <!--#region Work Caption-->
+            <!--#endregion-->
+            <ItemsRepeater Margin="0,12,0,0" ItemsSource="{x:Bind _viewModel.Entry.Tags}">
                 <ItemsRepeater.Layout>
-                    <controls:WrapLayout HorizontalSpacing="5" VerticalSpacing="5" />
+                    <controls:WrapLayout HorizontalSpacing="8" VerticalSpacing="8" />
                 </ItemsRepeater.Layout>
                 <ItemsRepeater.ItemTemplate>
                     <DataTemplate x:DataType="model:Tag">
-                        <Button
-                            Click="WorkTagButton_OnClicked"
-                            Content="{x:Bind Name}"
-                            FontSize="{StaticResource CaptionTextBlockFontSize}"
-                            ToolTipService.ToolTip="{x:Bind ToolTip}">
+                        <Button Click="WorkTagButton_OnClicked" ToolTipService.ToolTip="{x:Bind ToolTip}">
+                            <Button.Content>
+                                <TextBlock TextWrapping="Wrap">
+                                    <Run Text="{x:Bind Name}" />
+                                    <Run Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}" Text="{x:Bind TranslatedName}" />
+                                </TextBlock>
+                            </Button.Content>
                             <Button.ContextFlyout>
                                 <MenuFlyout>
                                     <MenuFlyoutItem
