@@ -41,7 +41,7 @@ public sealed partial class DownloadItemViewModel(IDownloadTaskGroup downloadTas
 {
     public IDownloadTaskGroup DownloadTask { get; } = downloadTask;
 
-    public override async ValueTask<bool> TryLoadThumbnailAsync()
+    public override async ValueTask<bool> TryLoadThumbnailAsync(object key)
     {
         if (DownloadTask.CurrentState is DownloadState.Completed || DownloadTask.DatabaseEntry.Type is DownloadItemType.Manga or DownloadItemType.Novel)
         {
@@ -60,7 +60,7 @@ public sealed partial class DownloadItemViewModel(IDownloadTaskGroup downloadTas
             }
         }
 
-        return await base.TryLoadThumbnailAsync();
+        return await base.TryLoadThumbnailAsync(key);
     }
 
     public static DownloadItemViewModel CreateInstance(IDownloadTaskGroup entry) => new(entry);

@@ -103,7 +103,7 @@ public sealed partial class NovelViewerPage
     private async void FrameworkElement_OnDataContextChanged(FrameworkElement sender, DataContextChangedEventArgs args)
     {
         var viewModel = sender.GetDataContext<NovelItemViewModel>();
-        _ = await viewModel.TryLoadThumbnailAsync();
+        _ = await viewModel.TryLoadThumbnailAsync(_viewModel);
     }
 
     private void ExitFullScreenKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => _viewModel.IsFullScreen = false;

@@ -68,7 +68,7 @@ public sealed partial class WorkView : IEntryView<ISortableEntryViewViewModel>
     private async void WorkItem_OnViewModelChanged(FrameworkElement sender, IWorkViewModel viewModel)
     {
         ArgumentNullException.ThrowIfNull(ViewModel);
-        if (await viewModel.TryLoadThumbnailAsync())
+        if (await viewModel.TryLoadThumbnailAsync(ViewModel))
             if (sender.IsFullyOrPartiallyVisible(this))
                 sender.GetResource<Storyboard>("ThumbnailStoryboard").Begin();
             else
@@ -173,7 +173,7 @@ public sealed partial class WorkView : IEntryView<ISortableEntryViewViewModel>
         var viewModel = ViewModel;
         ViewModel = null!;
         foreach (var vm in viewModel.Source)
-            vm.UnloadThumbnail();
+            vm.UnloadThumbnail(viewModel);
         viewModel.Dispose();
     }
 

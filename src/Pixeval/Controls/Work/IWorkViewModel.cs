@@ -75,10 +75,10 @@ public interface IWorkViewModel
     XamlUICommand SaveCommand { get; }
 
     /// <inheritdoc cref="WorkEntryViewModel{T}.TryLoadThumbnailAsync"/>
-    ValueTask<bool> TryLoadThumbnailAsync();
+    ValueTask<bool> TryLoadThumbnailAsync(object key);
 
     /// <inheritdoc cref="WorkEntryViewModel{T}.UnloadThumbnail"/>
-    void UnloadThumbnail();
+    void UnloadThumbnail(object key);
 
     public bool Filter(TreeNodeBase node) => node switch
     {

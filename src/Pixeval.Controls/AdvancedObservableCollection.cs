@@ -104,7 +104,7 @@ public class AdvancedObservableCollection<[DynamicallyAccessedMembers(Dynamicall
             HandleSourceChanged();
             OnPropertyChanged();
         }
-    } = null!;
+    }
 
     #region IList<T>
 

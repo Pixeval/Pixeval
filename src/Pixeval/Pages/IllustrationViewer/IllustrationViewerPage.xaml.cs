@@ -177,15 +177,13 @@ public sealed partial class IllustrationViewerPage
 
     private void IllustrationViewerPage_OnUnloaded(object sender, RoutedEventArgs e)
     {
-        Debug.WriteLine(GetHashCode() + "start");
         _viewModel.Dispose();
-        Debug.WriteLine(GetHashCode() + "end");
     }
 
     private async void FrameworkElement_OnDataContextChanged(FrameworkElement sender, DataContextChangedEventArgs e)
     {
         var viewModel = sender.GetDataContext<IllustrationItemViewModel>();
-        _ = await viewModel.TryLoadThumbnailAsync();
+        _ = await viewModel.TryLoadThumbnailAsync(_viewModel);
     }
 
     private void ExitFullScreenKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => _viewModel.IsFullScreen = false;

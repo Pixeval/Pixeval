@@ -17,7 +17,7 @@ public sealed partial class SpotlightView : IScrollViewHost
 
     private async void SpotlightItem_OnViewModelChanged(SpotlightItem item, SpotlightItemViewModel viewModel)
     {
-        await viewModel.TryLoadThumbnailAsync();
+        await viewModel.TryLoadThumbnailAsync(ViewModel);
     }
 
     private async void IllustratorItemsView_OnItemInvoked(ItemsView sender, ItemsViewItemInvokedEventArgs e)
@@ -28,7 +28,7 @@ public sealed partial class SpotlightView : IScrollViewHost
     private void SpotlightViewOnUnloaded(object sender, RoutedEventArgs e)
     {
         foreach (var viewModel in ViewModel.DataProvider.Source)
-            viewModel.UnloadThumbnail();
+            viewModel.UnloadThumbnail(ViewModel);
         ViewModel.Dispose();
     }
 
