@@ -24,7 +24,6 @@ using System.IO.Compression;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.IO;
-using System.Linq;
 
 namespace Pixeval.Utilities;
 

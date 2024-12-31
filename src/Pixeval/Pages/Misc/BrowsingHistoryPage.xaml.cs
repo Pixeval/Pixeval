@@ -45,7 +45,7 @@ public sealed partial class BrowsingHistoryPage : IScrollViewHost
     {
         var manager = App.AppViewModel.AppServiceProvider.GetRequiredService<BrowseHistoryPersistentManager>();
         var type = SimpleWorkTypeComboBox.GetSelectedItem<SimpleWorkType>();
-        var source = manager.ObservableEntries
+        var source = manager.Enumerate()
             .SelectNotNull(t => t.TryGetEntry(type))
             .ToAsyncEnumerable();
 
