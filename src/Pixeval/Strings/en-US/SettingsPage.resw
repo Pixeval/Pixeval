@@ -525,18 +525,6 @@ Type and click on "+" to add an IP</value>
   <data name="ReverseSearchResultSimilarityThresholdEntry.Header" xml:space="preserve">
     <value>Reverse search threshold</value>
   </data>
-  <data name="SearchDurationEntry.Description" xml:space="preserve">
-    <value>The search results will be limited into a specific date range, this setting will be isgnored if "Use precise search range" is enabled</value>
-  </data>
-  <data name="SearchDurationEntry.Header" xml:space="preserve">
-    <value>Search range limit</value>
-  </data>
-  <data name="SearchEndDateEntry.Description" xml:space="preserve">
-    <value>The search result will contain only the works published before this setting, the value is at least 1 day after the start date</value>
-  </data>
-  <data name="SearchEndDateEntry.Header" xml:space="preserve">
-    <value>End date</value>
-  </data>
   <data name="BrowseOriginalImageEntry.Description" xml:space="preserve">
     <value>This option requires more bandwidth and loading time, but you'll get a better experience and faster download speed</value>
   </data>
@@ -545,15 +533,6 @@ Type and click on "+" to add an IP</value>
   </data>
   <data name="SearchSettingsGroup.Text" xml:space="preserve">
     <value>Search for settings</value>
-  </data>
-  <data name="SearchStartCalendarDatePicker.PlaceholderText" xml:space="preserve">
-    <value>Start date</value>
-  </data>
-  <data name="SearchStartDateEntry.Description" xml:space="preserve">
-    <value>The search result will contain only the works published after this setting</value>
-  </data>
-  <data name="SearchStartDateEntry.Header" xml:space="preserve">
-    <value>Start date</value>
   </data>
   <data name="SessionSettingsGroup.Text" xml:space="preserve">
     <value>Session</value>
@@ -614,12 +593,6 @@ Type and click on "+" to add an IP</value>
   </data>
   <data name="UseFileCacheEntry.Header" xml:space="preserve">
     <value>Use file cache</value>
-  </data>
-  <data name="UsePreciseRangeForSearchEntry.Description" xml:space="preserve">
-    <value>Use a precise date range while searching, the search result will be confined within the given date range, by enabling this the app will ignore "Search range limit" setting</value>
-  </data>
-  <data name="UsePreciseRangeForSearchEntry.Header" xml:space="preserve">
-    <value>Use precise search range</value>
   </data>
   <data name="VersionSettingsGroup.Text" xml:space="preserve">
     <value>Version</value>
@@ -752,5 +725,17 @@ Type and click on "+" to add an IP</value>
   </data>
   <data name="UpscalerOutputTypeEntry.Description" xml:space="preserve">
     <value>默认为PNG</value>
+  </data>
+  <data name="UseSearchEndDateEntry.Header" xml:space="preserve">
+    <value>启用搜索结束日期</value>
+  </data>
+  <data name="UseSearchStartDateEntry.Header" xml:space="preserve">
+    <value>启用搜索开始日期</value>
+  </data>
+  <data name="UseSearchStartDateEntry.Description" xml:space="preserve">
+    <value>启用后搜索作品的投稿日期将从此日期开始</value>
+  </data>
+  <data name="UseSearchEndDateEntry.Description" xml:space="preserve">
+    <value>启用后搜索作品的投稿日期将到此日期结束</value>
   </data>
 </root>
