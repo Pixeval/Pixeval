@@ -122,15 +122,6 @@ public static partial class ElementThemeExtension;
 [AttachedLocalizedResource(nameof(WorkSortOption.DoNotSort), nameof(MiscResources.WorkSortOptionDoNotSort))]
 public static partial class WorkSortOptionExtension;
 
-[AttachedLocalizationMetadata<SearchDuration>(typeof(MiscResources))]
-[AttachedLocalizedResource(nameof(SearchDuration.Undecided), nameof(MiscResources.SearchDurationUndecided))]
-[AttachedLocalizedResource(nameof(SearchDuration.WithinLastDay), nameof(MiscResources.SearchDurationWithinLastDay))]
-[AttachedLocalizedResource(nameof(SearchDuration.WithinLastWeek), nameof(MiscResources.SearchDurationWithinLastWeek))]
-[AttachedLocalizedResource(nameof(SearchDuration.WithinLastMonth), nameof(MiscResources.SearchDurationWithinLastMonth))]
-[AttachedLocalizedResource(nameof(SearchDuration.WithinLastHalfYear), nameof(MiscResources.SearchDurationWithinLastHalfYear))]
-[AttachedLocalizedResource(nameof(SearchDuration.WithinLastYear), nameof(MiscResources.SearchDurationWithinLastYear))]
-public static partial class SearchDurationExtension;
-
 [AttachedLocalizationMetadata<PrivacyPolicy>(typeof(MiscResources))]
 [AttachedLocalizedResource(nameof(PrivacyPolicy.Public), nameof(MiscResources.PrivacyPolicyPublic))]
 [AttachedLocalizedResource(nameof(PrivacyPolicy.Private), nameof(MiscResources.PrivacyPolicyPrivate))]

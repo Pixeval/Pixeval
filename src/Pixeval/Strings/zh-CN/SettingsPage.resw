@@ -525,18 +525,6 @@
   <data name="ReverseSearchResultSimilarityThresholdEntry.Header" xml:space="preserve">
     <value>逆向搜索阈值</value>
   </data>
-  <data name="SearchDurationEntry.Description" xml:space="preserve">
-    <value>搜索结果将会被限制在指定的时间区间内，如果”使用更精确的搜索范围限制“启用则此项被忽略</value>
-  </data>
-  <data name="SearchDurationEntry.Header" xml:space="preserve">
-    <value>搜索范围限制</value>
-  </data>
-  <data name="SearchEndDateEntry.Description" xml:space="preserve">
-    <value>搜索结果只会包含该日期以前提交的作品，该设置项的值必须比起始日期的值大至少1</value>
-  </data>
-  <data name="SearchEndDateEntry.Header" xml:space="preserve">
-    <value>设置搜索的结束日期</value>
-  </data>
   <data name="BrowseOriginalImageEntry.Description" xml:space="preserve">
     <value>浏览原图需要更多流量和时间加载，但也可以获得更好的浏览体验和更快的下载速度</value>
   </data>
@@ -545,15 +533,6 @@
   </data>
   <data name="SearchSettingsGroup.Text" xml:space="preserve">
     <value>搜索设置</value>
-  </data>
-  <data name="SearchStartCalendarDatePicker.PlaceholderText" xml:space="preserve">
-    <value>起始日期</value>
-  </data>
-  <data name="SearchStartDateEntry.Description" xml:space="preserve">
-    <value>搜索结果只会包含该日期以后提交的作品</value>
-  </data>
-  <data name="SearchStartDateEntry.Header" xml:space="preserve">
-    <value>设置搜索的起始日期</value>
   </data>
   <data name="SessionSettingsGroup.Text" xml:space="preserve">
     <value>会话设置</value>
@@ -614,12 +593,6 @@
   </data>
   <data name="UseFileCacheEntry.Header" xml:space="preserve">
     <value>使用文件缓存</value>
-  </data>
-  <data name="UsePreciseRangeForSearchEntry.Description" xml:space="preserve">
-    <value>使用更精确的（基于准确日期）的搜索范围限制，搜索结果将会被限制在指定的时间区间内，如果该项被启用则“搜索范围限制”一栏将会被忽略</value>
-  </data>
-  <data name="UsePreciseRangeForSearchEntry.Header" xml:space="preserve">
-    <value>使用更精确的搜索范围限制</value>
   </data>
   <data name="VersionSettingsGroup.Text" xml:space="preserve">
     <value>版本</value>
@@ -752,5 +725,17 @@
   </data>
   <data name="UpscalerOutputTypeEntry.Description" xml:space="preserve">
     <value>默认为PNG</value>
+  </data>
+  <data name="UseSearchEndDateEntry.Header" xml:space="preserve">
+    <value>启用搜索结束日期</value>
+  </data>
+  <data name="UseSearchStartDateEntry.Header" xml:space="preserve">
+    <value>启用搜索开始日期</value>
+  </data>
+  <data name="UseSearchStartDateEntry.Description" xml:space="preserve">
+    <value>启用后搜索作品的投稿日期将从此日期开始</value>
+  </data>
+  <data name="UseSearchEndDateEntry.Description" xml:space="preserve">
+    <value>启用后搜索作品的投稿日期将到此日期结束</value>
   </data>
 </root>

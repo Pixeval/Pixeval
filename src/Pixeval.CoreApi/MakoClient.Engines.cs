@@ -86,7 +86,6 @@ public partial class MakoClient
     /// matching
     /// </param>
     /// <param name="sortOption">The <see cref="WorkSortOption" /> option for sorting method</param>
-    /// <param name="searchDuration">The <see cref="SearchDuration" /> option for the duration of this search</param>
     /// <param name="targetFilter">The <see cref="TargetFilter" /> option targeting android or ios</param>
     /// <param name="startDate">The starting date filtering the search results</param>
     /// <param name="endDate">The ending date filtering the searching results</param>
@@ -98,7 +97,6 @@ public partial class MakoClient
         string tag,
         SearchIllustrationTagMatchOption matchOption = SearchIllustrationTagMatchOption.TitleAndCaption,
         WorkSortOption sortOption = WorkSortOption.DoNotSort,
-        SearchDuration searchDuration = SearchDuration.Undecided,
         TargetFilter targetFilter = TargetFilter.ForAndroid,
         DateTimeOffset? startDate = null,
         DateTimeOffset? endDate = null,
@@ -108,14 +106,13 @@ public partial class MakoClient
         if (sortOption is WorkSortOption.PopularityDescending && !Session.IsPremium)
             sortOption = WorkSortOption.DoNotSort;
 
-        return new IllustrationSearchEngine(this, new EngineHandle(CancelInstance), matchOption, tag, sortOption, searchDuration, targetFilter, startDate, endDate, aiType);
+        return new IllustrationSearchEngine(this, new EngineHandle(CancelInstance), matchOption, tag, sortOption, targetFilter, startDate, endDate, aiType);
     }
 
     public IFetchEngine<Novel> SearchNovels(
         string tag,
         SearchNovelTagMatchOption matchOption = SearchNovelTagMatchOption.Text,
         WorkSortOption sortOption = WorkSortOption.DoNotSort,
-        SearchDuration searchDuration = SearchDuration.Undecided,
         TargetFilter targetFilter = TargetFilter.ForAndroid,
         DateTimeOffset? startDate = null,
         DateTimeOffset? endDate = null,
@@ -127,7 +124,7 @@ public partial class MakoClient
         if (sortOption is WorkSortOption.PopularityDescending && !Session.IsPremium)
             sortOption = WorkSortOption.DoNotSort;
 
-        return new NovelSearchEngine(this, new EngineHandle(CancelInstance), matchOption, tag, sortOption, searchDuration, targetFilter, startDate, endDate, mergePlainKeywordResults, includeTranslatedTagResults, aiType);
+        return new NovelSearchEngine(this, new EngineHandle(CancelInstance), matchOption, tag, sortOption, targetFilter, startDate, endDate, mergePlainKeywordResults, includeTranslatedTagResults, aiType);
     }
 
     /// <summary>

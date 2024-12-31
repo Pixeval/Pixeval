@@ -51,18 +51,16 @@ public sealed partial class SearchWorksPage : IScrollViewHost
                     _searchText,
                     settings.SearchIllustrationTagMatchOption,
                     settings.WorkSortOption,
-                    settings.SearchDuration,
                     settings.TargetFilter,
-                    settings.UsePreciseRangeForSearch ? settings.SearchStartDate : null,
-                    settings.UsePreciseRangeForSearch ? settings.SearchEndDate : null)
+                    settings.UseSearchStartDate ? settings.SearchStartDate : null,
+                    settings.UseSearchEndDate ? settings.SearchEndDate : null)
                 : App.AppViewModel.MakoClient.SearchNovels(
                     _searchText,
                     settings.SearchNovelTagMatchOption,
                     settings.WorkSortOption,
-                    settings.SearchDuration,
                     settings.TargetFilter,
-                    settings.UsePreciseRangeForSearch ? settings.SearchStartDate : null,
-                    settings.UsePreciseRangeForSearch ? settings.SearchEndDate : null));
+                    settings.UseSearchStartDate ? settings.SearchStartDate : null,
+                    settings.UseSearchEndDate ? settings.SearchEndDate : null));
     }
 
     public ScrollView ScrollView => WorkContainer.ScrollView;
