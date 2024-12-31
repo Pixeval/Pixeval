@@ -18,6 +18,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using System.Collections.Generic;
 using Pixeval.CoreApi.Model;
 using IllustrationViewDataProvider = Pixeval.Controls.SharableViewDataProvider<
     Pixeval.CoreApi.Model.Illustration,
@@ -27,17 +28,18 @@ namespace Pixeval.Controls;
 
 public sealed partial class IllustrationViewViewModel : SortableEntryViewViewModel<Illustration, IllustrationItemViewModel>
 {
-    public IllustrationViewViewModel(IllustrationViewViewModel viewModel) : this(viewModel.DataProvider.CloneRef())
+    public IllustrationViewViewModel(IllustrationViewViewModel viewModel) : this(viewModel.DataProvider.CloneRef(), viewModel.BlockedTags)
     {
         Filter = viewModel.Filter;
         DataProvider.View.Range = viewModel.DataProvider.View.Range;
     }
 
-    public IllustrationViewViewModel() : this(new IllustrationViewDataProvider())
+    public IllustrationViewViewModel() : this(new IllustrationViewDataProvider(), App.AppViewModel.AppSettings.BlockedTags)
     {
+
     }
 
-    private IllustrationViewViewModel(IllustrationViewDataProvider dataProvider)
+    private IllustrationViewViewModel(IllustrationViewDataProvider dataProvider, HashSet<string> blockedTags) : base(blockedTags)
     {
         DataProvider = dataProvider;
         dataProvider.View.Filter = DefaultFilter;

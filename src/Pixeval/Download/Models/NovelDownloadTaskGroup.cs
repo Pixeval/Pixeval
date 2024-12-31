@@ -171,7 +171,7 @@ public partial class NovelDownloadTaskGroup : DownloadTaskGroup
             NovelDownloadFormat.OriginalTxt => NovelContent.Text,
             NovelDownloadFormat.Html => DocumentViewModel.LoadHtmlContent().ToString(),
             NovelDownloadFormat.Md => DocumentViewModel.LoadMdContent().ToString(),
-            _ => ThrowHelper.ArgumentOutOfRange<NovelDownloadFormat, string>(App.AppViewModel.AppSettings.NovelDownloadFormat)
+            _ => ThrowHelper.ArgumentOutOfRange<NovelDownloadFormat, string>(NovelDownloadFormat)
         };
 
         await File.WriteAllTextAsync(DocPath, content, token);
