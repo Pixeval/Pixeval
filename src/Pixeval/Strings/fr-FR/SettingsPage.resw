@@ -525,18 +525,6 @@ Entrer une addresse IP et cliquer '+' pour ajouter</value>
   <data name="ReverseSearchResultSimilarityThresholdEntry.Header" xml:space="preserve">
     <value>Seuil de recherche inversée</value>
   </data>
-  <data name="SearchDurationEntry.Description" xml:space="preserve">
-    <value>Les résultats seront limités entre le début et la fin de cette durée. Si vous activez l'option 'Utiliser un seuil plus limité', cette option sera ignorée</value>
-  </data>
-  <data name="SearchDurationEntry.Header" xml:space="preserve">
-    <value>Limiter la recherche dans une durée</value>
-  </data>
-  <data name="SearchEndDateEntry.Description" xml:space="preserve">
-    <value>Uniquement les illustrations publiées avant cette date seront inclues. Cette option doit être au moins un (1) jour plus tard que la date de début</value>
-  </data>
-  <data name="SearchEndDateEntry.Header" xml:space="preserve">
-    <value>Date de fin pour la recherche</value>
-  </data>
   <data name="BrowseOriginalImageEntry.Description" xml:space="preserve">
     <value>Cette option nécessite plus de débit et de temps de chargement, mais vous aurez une meilleure expérience et une meilleure vitesse de téléchargement</value>
   </data>
@@ -545,15 +533,6 @@ Entrer une addresse IP et cliquer '+' pour ajouter</value>
   </data>
   <data name="SearchSettingsGroup.Text" xml:space="preserve">
     <value>Configurations de la recherche</value>
-  </data>
-  <data name="SearchStartCalendarDatePicker.PlaceholderText" xml:space="preserve">
-    <value>Date de début</value>
-  </data>
-  <data name="SearchStartDateEntry.Description" xml:space="preserve">
-    <value>Seulement les résultats avec une date ultérieure de cette date de début seront affichés</value>
-  </data>
-  <data name="SearchStartDateEntry.Header" xml:space="preserve">
-    <value>Configurer la date de début</value>
   </data>
   <data name="SessionSettingsGroup.Text" xml:space="preserve">
     <value>Configurations de session</value>
@@ -614,12 +593,6 @@ Entrer une addresse IP et cliquer '+' pour ajouter</value>
   </data>
   <data name="UseFileCacheEntry.Header" xml:space="preserve">
     <value>Utiliser les caches de fichier</value>
-  </data>
-  <data name="UsePreciseRangeForSearchEntry.Description" xml:space="preserve">
-    <value>Utiliser un seuil plus limité (basé sur les dates exactes) pour limiter la recherche. En cas d'activation de cette option, l'option 'Limiter la recherche dans une durée' sera ignorée</value>
-  </data>
-  <data name="UsePreciseRangeForSearchEntry.Header" xml:space="preserve">
-    <value>Utiliser un seuil plus limité</value>
   </data>
   <data name="VersionSettingsGroup.Text" xml:space="preserve">
     <value>Version</value>
@@ -752,5 +725,17 @@ Entrer une addresse IP et cliquer '+' pour ajouter</value>
   </data>
   <data name="UpscalerOutputTypeEntry.Description" xml:space="preserve">
     <value>默认为PNG</value>
+  </data>
+  <data name="UseSearchEndDateEntry.Header" xml:space="preserve">
+    <value>启用搜索结束日期</value>
+  </data>
+  <data name="UseSearchStartDateEntry.Header" xml:space="preserve">
+    <value>启用搜索开始日期</value>
+  </data>
+  <data name="UseSearchStartDateEntry.Description" xml:space="preserve">
+    <value>启用后搜索作品的投稿日期将从此日期开始</value>
+  </data>
+  <data name="UseSearchEndDateEntry.Description" xml:space="preserve">
+    <value>启用后搜索作品的投稿日期将到此日期结束</value>
   </data>
 </root>
