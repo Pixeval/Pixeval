@@ -51,7 +51,8 @@ public record Supporter(string Nickname, string Name, ImageSource ProfilePicture
             ("cnbluefire", "cnbluefire"),
             ("岛风", "frg2089"),
             ("Ёж, просто ёж", "bropines"),
-            ("irony", "kokoro-aya")
+            ("irony", "kokoro-aya"),
+            ("Betta_Fish", "zxbmmmmmmmmm")
         }.OrderBy(_ => Random.Shared.Next());
     // ReSharper restore StringLiteralTypo
 
