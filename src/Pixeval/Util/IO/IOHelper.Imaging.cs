@@ -128,14 +128,14 @@ public static partial class IoHelper
     public static async Task<Image> UgoiraSaveToImageAsync(this Stream stream, IReadOnlyList<int> delays, IProgress<double>? progress = null, bool dispose = false)
     {
         var streams = await Streams.ReadZipAsync(stream, dispose);
-        var average = 50d / streams.Length;
+        var average = 50d / streams.Count;
         var progressValue = 0d;
 
-        var images = new Image[streams.Length];
+        var images = new Image[streams.Count];
         var options = new ParallelOptions();
         if (progress is not null)
             options.TaskScheduler = TaskScheduler.FromCurrentSynchronizationContext();
-        await Parallel.ForAsync(0, streams.Length, options, async (i, token) =>
+        await Parallel.ForAsync(0, streams.Count, options, async (i, token) =>
         {
             var delay = delays.Count > i ? (uint)delays[i] : 10u;
             streams[i].Position = 0;

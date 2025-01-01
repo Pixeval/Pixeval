@@ -41,7 +41,6 @@ using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
 using Microsoft.Windows.AppLifecycle;
 using Pixeval.Activation;
-using Pixeval.Database;
 using Pixeval.Database.Managers;
 using Pixeval.Messages;
 using Pixeval.Pages.Capability;
@@ -97,6 +96,7 @@ public sealed partial class MainPage
         _ = WeakReferenceMessenger.Default.TryRegister<MainPage, WorkTagClickedMessage>(this, (_, message) =>
         {
             var window = WindowFactory.ForkedWindows[HWnd];
+            MainPageAutoSuggestionBox.Text = message.Tag;
             window.AppWindow.MoveInZOrderAtTop();
             PerformSearchWork(message.Type, message.Tag);
         });
@@ -242,30 +242,16 @@ public sealed partial class MainPage
 
     private void PerformSearchWork(SimpleWorkType type, string text, string? optTranslatedName = null)
     {
-        PerformSearch(text, optTranslatedName);
+        SearchHistoryPersistentManager.AddHistory(text, optTranslatedName);
+        NavigationView.SelectedItem = null;
         _ = MainPageRootFrame.Navigate(typeof(SearchWorksPage), (type, text));
     }
 
     private void PerformSearchUser(string text)
     {
-        PerformSearch(text);
-        _ = MainPageRootFrame.Navigate(typeof(SearchUsersPage), text);
-    }
-
-    private void PerformSearch(string text, string? optTranslatedName = null)
-    {
-        var manager = App.AppViewModel.AppServiceProvider.GetRequiredService<SearchHistoryPersistentManager>();
-        if (manager.Count is 0 || manager.Select(count: 1).FirstOrDefault() is { Value: var last } && last != text)
-        {
-            manager.Insert(new SearchHistoryEntry
-            {
-                Value = text,
-                TranslatedName = optTranslatedName,
-                Time = DateTime.Now
-            });
-        }
-
+        SearchHistoryPersistentManager.AddHistory(text);
         NavigationView.SelectedItem = null;
+        _ = MainPageRootFrame.Navigate(typeof(SearchUsersPage), text);
     }
 
     private async void OpenSearchSettingButton_OnClicked(object sender, RoutedEventArgs e)

@@ -26,7 +26,7 @@ using System.Text.Json.Serialization;
 namespace Pixeval.CoreApi.Model;
 
 [Factory]
-public partial record BookmarkTag : IEntry, IEquatable<BookmarkTag>, IEquatable<string>
+public partial record BookmarkTag : IEntry, IEquatable<string>
 {
     [JsonPropertyName("name")]
     public required string Name { get; set; } = "";

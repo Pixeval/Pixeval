@@ -64,6 +64,11 @@ public abstract class SimplePersistentManager<T>(ILiteDatabase db, int maximumRe
         return Collection.Find(_ => true, 0, count);
     }
 
+    public IEnumerable<T> SelectLast(int count)
+    {
+        return Collection.Find(_ => true, Collection.Count() - count, count);
+    }
+
     public T? TryDelete(Expression<Func<T, bool>> predicate)
     {
         if (Collection.FindOne(predicate) is { } e)
@@ -95,7 +100,7 @@ public abstract class SimplePersistentManager<T>(ILiteDatabase db, int maximumRe
         if (Collection.Count() > limit)
         {
             var last = Collection.FindAll().Take(^limit..).ToHashSet();
-            _ = Delete(e => !last.Contains(e!));
+            _ = Delete(e => !last.Contains(e));
         }
     }
 

@@ -61,7 +61,7 @@ public static class Streams
         return s;
     }
 
-    public static async Task<MemoryStream[]> ReadZipAsync(Stream zipStream, bool dispose)
+    public static async Task<IReadOnlyList<MemoryStream>> ReadZipAsync(Stream zipStream, bool dispose)
     {
         if (zipStream is not MemoryStream ms)
         {
@@ -71,19 +71,21 @@ public static class Streams
 
         try
         {
-            using var archive = new ZipArchive(ms, ZipArchiveMode.Read);
-            var result = (MemoryStream[])[];
-            await Parallel.ForAsync(0, archive.Entries.Count, new ParallelOptions(), async (i, token) =>
+            var list = new List<MemoryStream>();
+            // Dispose ZipArchive会导致ms也被Dispose
+            var archive = new ZipArchive(ms, ZipArchiveMode.Read);
+            // ZipArchive不支持多线程
+            foreach (var entry in archive.Entries)
             {
-                await using var stream = archive.Entries[i].Open();
-                var rms = _recyclableMemoryStreamManager.GetStream();
-                await stream.CopyToAsync(rms, token);
-                rms.Position = 0;
-                result[i] = rms;
-            });
+                await using var stream = entry.Open();
+                var s = _recyclableMemoryStreamManager.GetStream();
+                await stream.CopyToAsync(s);
+                s.Position = 0;
+                list.Add(s);
+            }
             if (dispose)
                 await ms.DisposeAsync();
-            return result;
+            return list;
         }
         catch (InvalidDataException)
         {

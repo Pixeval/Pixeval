@@ -20,6 +20,7 @@
 
 #endregion
 
+using System.Collections.Generic;
 using Pixeval.CoreApi.Model;
 using NovelViewDataProvider = Pixeval.Controls.SharableViewDataProvider<
     Pixeval.CoreApi.Model.Novel,
@@ -29,17 +30,17 @@ namespace Pixeval.Controls;
 
 public sealed partial class NovelViewViewModel : SortableEntryViewViewModel<Novel, NovelItemViewModel>
 {
-    public NovelViewViewModel(NovelViewViewModel viewModel) : this(viewModel.DataProvider.CloneRef())
+    public NovelViewViewModel(NovelViewViewModel viewModel) : this(viewModel.DataProvider.CloneRef(), viewModel.BlockedTags)
     {
         Filter = viewModel.Filter;
         DataProvider.View.Range = viewModel.DataProvider.View.Range;
     }
 
-    public NovelViewViewModel() : this(new NovelViewDataProvider())
+    public NovelViewViewModel() : this(new NovelViewDataProvider(), App.AppViewModel.AppSettings.BlockedTags)
     {
     }
 
-    private NovelViewViewModel(NovelViewDataProvider dataProvider)
+    private NovelViewViewModel(NovelViewDataProvider dataProvider, HashSet<string> blockedTags) : base(blockedTags)
     {
         DataProvider = dataProvider;
         dataProvider.View.Filter = DefaultFilter;

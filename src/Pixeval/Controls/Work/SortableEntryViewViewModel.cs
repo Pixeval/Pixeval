@@ -32,11 +32,13 @@ using WinUI3Utilities;
 
 namespace Pixeval.Controls;
 
-public abstract partial class SortableEntryViewViewModel<T, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] TViewModel>
+public abstract partial class SortableEntryViewViewModel<T, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] TViewModel>(HashSet<string> blockedTags)
     : EntryViewViewModel<T, TViewModel>, ISortableEntryViewViewModel
     where T : class, IWorkEntry
     where TViewModel : EntryViewModel<T>, IFactory<T, TViewModel>, IWorkViewModel
 {
+    protected readonly HashSet<string> BlockedTags = [.. blockedTags];
+
     [ObservableProperty]
     public partial bool IsSelecting { get; set; }
 
@@ -102,7 +104,7 @@ public abstract partial class SortableEntryViewViewModel<T, [DynamicallyAccessed
 
     protected bool DefaultFilter(IWorkViewModel entry)
     {
-        if (entry.Tags.Any(tag => App.AppViewModel.AppSettings.BlockedTags.Contains(tag.Name)))
+        if (entry.Tags.Any(tag => BlockedTags.Contains(tag.Name)))
             return false;
 
         return Filter?.Invoke(entry) is not false;

@@ -56,6 +56,8 @@ public interface IPersistentManager<TEntry, out TModel> where TEntry : IHistoryE
 
     IEnumerable<TModel> Select(int count);
 
+    IEnumerable<TModel> SelectLast(int count);
+
     TEntry? TryDelete(Expression<Func<TEntry, bool>> predicate);
 
     int Delete(Expression<Func<TEntry, bool>> predicate);

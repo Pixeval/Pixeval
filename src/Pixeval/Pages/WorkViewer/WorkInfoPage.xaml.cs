@@ -79,9 +79,10 @@ public sealed partial class WorkInfoPage
     private void MenuFlyoutItem_OnClick(object sender, RoutedEventArgs e)
     {
         var tag = sender.To<FrameworkElement>().GetTag<Tag>();
-        if (!App.AppViewModel.AppSettings.BlockedTags.Contains(tag.Name))
+        var blockedTags = App.AppViewModel.AppSettings.BlockedTags;
+        if (!blockedTags.Contains(tag.Name))
         {
-            _ = App.AppViewModel.AppSettings.BlockedTags.Add(tag.Name);
+            _ = blockedTags.Add(tag.Name);
             AppInfo.SaveConfig(App.AppViewModel.AppSettings);
         }
     }
