@@ -12,7 +12,6 @@
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <DefaultLanguage>zh-CN</DefaultLanguage>
         <IsTrimmable>true</IsTrimmable>
-        <EnableDefaultPriItems>false</EnableDefaultPriItems>
     </PropertyGroup>
 
     <ItemGroup>
@@ -45,7 +44,5 @@
     </Target>
     <ItemGroup>
         <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="SourceItemGroup" />
-        <PRIResource Include="Strings\*\*.resjson" />
-        <PRIResource Include="Strings\*\*.resw" />
     </ItemGroup>
 </Project>
