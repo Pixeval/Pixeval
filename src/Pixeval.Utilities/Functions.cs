@@ -64,7 +64,7 @@ public static class Functions
         return Result<TResult>.AsFailure();
     }
 
-    public static async Task<Result<TResult>> RetryAsync<TResult>(Func<Task<TResult>> body, int attempts = 3, int timeoutMills = 0)
+    public static async Task<Result<TResult>> RetryAsync<TResult>(Func<Task<TResult>> body, int attempts = 3, int timeoutMs = 0)
     {
         var counter = 0;
         Exception? cause = null;
@@ -73,7 +73,7 @@ public static class Functions
             var task = body();
             try
             {
-                if (await WithTimeoutAsync(task, timeoutMills).ConfigureAwait(false) is Result<TResult>.Success result)
+                if (await WithTimeoutAsync(task, timeoutMs).ConfigureAwait(false) is Result<TResult>.Success result)
                 {
                     return result;
                 }
