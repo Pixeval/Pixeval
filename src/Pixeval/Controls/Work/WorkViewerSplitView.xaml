@@ -15,7 +15,7 @@
         PaneBackground="Transparent">
         <SplitView.Pane>
             <Grid
-                BorderBrush="{StaticResource ApplicationPageBackgroundThemeBrush}"
+                BorderBrush="{ThemeResource ApplicationPageBackgroundThemeBrush}"
                 CornerRadius="4"
                 Translation="0,0,40">
                 <NavigationView

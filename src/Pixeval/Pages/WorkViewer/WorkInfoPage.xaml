@@ -39,26 +39,18 @@
                     VerticalAlignment="Center"
                     Background="Transparent"
                     BorderBrush="Transparent"
-                    Content="{ui:FontIcon FontSize=12,
-                                          Glyph=&#xE8C8;}">
+                    Content="{ui:SymbolIcon FontSize=12,
+                                            Symbol=Copy}">
                     <i:Interaction.Behaviors>
                         <behaviors:ButtonCopyBehavior TargetText="{x:Bind _viewModel.Entry.Id}" />
                     </i:Interaction.Behaviors>
                 </Button>
             </StackPanel>
-            <StackPanel Orientation="Horizontal" Spacing="4">
-                <FontIcon FontSize="14" Glyph="&#xE890;" />
-                <TextBlock Text="{x:Bind _viewModel.Entry.TotalView}" />
-                <FontIcon
-                    Margin="12,0,0,0"
-                    FontSize="14"
-                    Glyph="&#xE006;" />
-                <TextBlock Text="{x:Bind _viewModel.Entry.TotalBookmarks}" />
+            <StackPanel Orientation="Horizontal" Spacing="20">
+                <controls2:IconText Symbol="Eye" Text="{x:Bind _viewModel.Entry.TotalView}" />
+                <controls2:IconText Symbol="Heart" Text="{x:Bind _viewModel.Entry.TotalBookmarks}" />
             </StackPanel>
-            <StackPanel Orientation="Horizontal" Spacing="4">
-                <FontIcon FontSize="14" Glyph="&#xE917;" />
-                <TextBlock Text="{x:Bind controls2:C.CultureDateTimeOffsetFormatter(_viewModel.Entry.CreateDate, pixeval:AppSettings.CurrentCulture)}" />
-            </StackPanel>
+            <controls2:IconText Symbol="Clock" Text="{x:Bind controls2:C.CultureDateTimeOffsetFormatter(_viewModel.Entry.CreateDate, pixeval:AppSettings.CurrentCulture)}" />
             <!--#region Illustrator Info-->
             <Button
                 Margin="0,12,0,0"
@@ -86,8 +78,8 @@
                             VerticalAlignment="Center"
                             Background="Transparent"
                             BorderBrush="Transparent"
-                            Content="{ui:FontIcon FontSize=12,
-                                                  Glyph=&#xE8C8;}">
+                            Content="{ui:SymbolIcon FontSize=12,
+                                                    Symbol=Copy}">
                             <i:Interaction.Behaviors>
                                 <behaviors:ButtonCopyBehavior TargetText="{x:Bind _viewModel.Illustrator.Id}" />
                             </i:Interaction.Behaviors>

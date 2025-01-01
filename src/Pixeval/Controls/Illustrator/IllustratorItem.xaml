@@ -10,7 +10,7 @@
     xmlns:local="using:Pixeval.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     AspectRatio="15:8"
-    Background="{StaticResource CardBackgroundFillColorDefaultBrush}"
+    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
     mc:Ignorable="d">
     <!--  图片长宽均为5，故为(3*5):(3+5)  -->
     <Grid>
@@ -45,10 +45,10 @@
                     VerticalAlignment="Center"
                     Content="{fluent:SymbolIcon Symbol=Guest,
                                                 FontSize=12}"
-                    Foreground="{StaticResource TextFillColorSecondaryBrush}" />
+                    Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
                 <TextBlock
                     VerticalAlignment="Center"
-                    Foreground="{StaticResource TextFillColorSecondaryBrush}"
+                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                     Style="{StaticResource CaptionStrongTextBlockStyle}"
                     Text="{x:Bind ViewModel.UserId, Mode=OneWay}" />
                 <local:PixevalBadge
