@@ -1,8 +1,7 @@
-using System;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Xaml.Interactivity;
-using Windows.ApplicationModel.DataTransfer;
+using Pixeval.Util.UI;
 using WinUI3Utilities.Attributes;
 
 namespace Pixeval.Behaviors;
@@ -23,12 +22,8 @@ public partial class ButtonCopyBehavior : Behavior<Button>
     }
     private void OnClick(object sender, RoutedEventArgs e)
     {
-        if(string.IsNullOrEmpty(TargetText))
-        {
+        if (string.IsNullOrEmpty(TargetText))
             return;
-        }
-        var package = new DataPackage();
-        package.SetText(TargetText);
-        Clipboard.SetContent(package);
+        UiHelper.ClipboardSetText(TargetText);
     }
 }

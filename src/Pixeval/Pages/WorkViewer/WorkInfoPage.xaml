@@ -104,7 +104,10 @@
                 </ItemsRepeater.Layout>
                 <ItemsRepeater.ItemTemplate>
                     <DataTemplate x:DataType="model:Tag">
-                        <Button Tag="{x:Bind Name}" Click="WorkTagButton_OnClicked" ToolTipService.ToolTip="{x:Bind ToolTip}">
+                        <Button
+                            Click="WorkTagButton_OnClicked"
+                            Tag="{x:Bind Name}"
+                            ToolTipService.ToolTip="{x:Bind ToolTip}">
                             <Button.Content>
                                 <TextBlock TextWrapping="Wrap">
                                     <Run Text="{x:Bind Name}" />
