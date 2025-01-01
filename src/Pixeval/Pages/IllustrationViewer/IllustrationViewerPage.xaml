@@ -18,45 +18,24 @@
     Unloaded="IllustrationViewerPage_OnUnloaded"
     mc:Ignorable="d">
     <controls:EnhancedWindowPage.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.ThemeDictionaries>
-                <ResourceDictionary x:Key="Default">
-                    <SolidColorBrush x:Key="BottomBarInfoForeground">#9F9F9F</SolidColorBrush>
-                    <SolidColorBrush x:Key="BottomBarBackground">#FCF8F5</SolidColorBrush>
-                </ResourceDictionary>
-                <ResourceDictionary x:Key="Light">
-                    <SolidColorBrush x:Key="BottomBarInfoForeground">#9F9F9F</SolidColorBrush>
-                    <SolidColorBrush x:Key="BottomBarBackground">#FCF8F5</SolidColorBrush>
-                </ResourceDictionary>
-                <ResourceDictionary x:Key="Dark">
-                    <SolidColorBrush x:Key="BottomBarInfoForeground">#7F7F7F</SolidColorBrush>
-                    <SolidColorBrush x:Key="BottomBarBackground">#2A2725</SolidColorBrush>
-                </ResourceDictionary>
-                <ResourceDictionary x:Key="HighContrast">
-                    <SolidColorBrush x:Key="BottomBarInfoForeground">#7F7F7F</SolidColorBrush>
-                    <SolidColorBrush x:Key="BottomBarBackground">#2A2725</SolidColorBrush>
-                </ResourceDictionary>
-            </ResourceDictionary.ThemeDictionaries>
-
-            <Thickness x:Key="NormalMargin">0,48,0,0</Thickness>
-            <AcrylicBrush
-                x:Key="BottomCommandSectionBackground"
-                FallbackColor="{StaticResource SecondaryAccentColor}"
-                TintColor="{StaticResource SecondaryAccentColor}"
-                TintLuminosityOpacity="0.8"
-                TintOpacity="0.8" />
-            <Style
-                x:Key="TextBlockStyle"
-                BasedOn="{StaticResource CaptionStrongTextBlockStyle}"
-                TargetType="TextBlock">
-                <Setter Property="FontSize" Value="15" />
-                <Setter Property="Margin" Value="10,0" />
-                <Setter Property="VerticalAlignment" Value="Center" />
-                <Setter Property="HorizontalTextAlignment" Value="Center" />
-                <Setter Property="TextAlignment" Value="Center" />
-                <Setter Property="TextTrimming" Value="CharacterEllipsis" />
-            </Style>
-        </ResourceDictionary>
+        <Thickness x:Key="NormalMargin">0,48,0,0</Thickness>
+        <AcrylicBrush
+            x:Key="BottomCommandSectionBackground"
+            FallbackColor="{StaticResource SecondaryAccentColor}"
+            TintColor="{StaticResource SecondaryAccentColor}"
+            TintLuminosityOpacity="0.8"
+            TintOpacity="0.8" />
+        <Style
+            x:Key="TextBlockStyle"
+            BasedOn="{StaticResource CaptionStrongTextBlockStyle}"
+            TargetType="TextBlock">
+            <Setter Property="FontSize" Value="15" />
+            <Setter Property="Margin" Value="10,0" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="HorizontalTextAlignment" Value="Center" />
+            <Setter Property="TextAlignment" Value="Center" />
+            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+        </Style>
     </controls:EnhancedWindowPage.Resources>
     <controls:EnhancedWindowPage.KeyboardAccelerators>
         <KeyboardAccelerator Key="Escape" Invoked="ExitFullScreenKeyboardAccelerator_OnInvoked" />
@@ -136,7 +115,7 @@
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Bottom"
                                     Background="{StaticResource BottomCommandSectionBackground}"
-                                    BorderBrush="{StaticResource SecondaryAccentBorderBrush}"
+                                    BorderBrush="{ThemeResource SecondaryAccentBorderBrush}"
                                     BorderThickness="0.5"
                                     CornerRadius="{ThemeResource ControlCornerRadius}"
                                     Opacity="0.7"
@@ -192,7 +171,7 @@
                                 Margin="150,0"
                                 HorizontalAlignment="Center"
                                 Background="{StaticResource BottomCommandSectionBackground}"
-                                BorderBrush="{StaticResource SecondaryAccentBorderBrush}"
+                                BorderBrush="{ThemeResource SecondaryAccentBorderBrush}"
                                 BorderThickness="0.5"
                                 CornerRadius="{ThemeResource ControlCornerRadius}"
                                 Translation="0,0,30">
@@ -251,7 +230,7 @@
                 Grid.Row="1"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch"
-                Background="{ThemeResource BottomBarBackground}">
+                Background="{ThemeResource SolidBackgroundFillColorTertiaryBrush}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" MaxWidth="310" />
                     <ColumnDefinition Width="*" />
@@ -267,13 +246,13 @@
                     <AppBarSeparator />
                     <controls:AppBarTextItem
                         Padding="15,0"
-                        Foreground="{ThemeResource BottomBarInfoForeground}"
+                        Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"
                         Symbol="SlideGrid"
                         Text="{x:Bind _viewModel.CurrentIllustration.SizeText, Mode=OneWay}" />
                     <AppBarSeparator />
                     <controls:AppBarTextItem
                         Padding="15,0"
-                        Foreground="{ThemeResource BottomBarInfoForeground}"
+                        Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"
                         Symbol="AppTitle"
                         Text="{x:Bind _viewModel.CurrentIllustration.Title, Mode=OneWay}" />
                 </CommandBar>
@@ -494,7 +473,7 @@
                     <VisualState.Setters>
                         <Setter Target="WorkViewerSplitViewGrid.Margin" Value="0" />
                         <Setter Target="TopCommandBarTranslation.Y" Value="{StaticResource NegativeTitleBarHeight}" />
-                        <Setter Target="TitleBarArea.Background" Value="{StaticResource PixevalAppAcrylicBrush}" />
+                        <Setter Target="TitleBarArea.Background" Value="{ThemeResource PixevalAppAcrylicBrush}" />
                         <Setter Target="TitleBarBorder.Background" Value="Transparent" />
                     </VisualState.Setters>
                 </VisualState>

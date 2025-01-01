@@ -22,7 +22,6 @@ using System;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.AppManagement;
 using Pixeval.CoreApi.Global.Enum;
@@ -49,7 +48,7 @@ public sealed partial class WorkInfoPage
 
     private void WorkTagButton_OnClicked(object sender, RoutedEventArgs e)
     {
-        _ = WeakReferenceMessenger.Default.Send(new WorkTagClickedMessage(_viewModel.Entry is Illustration ? SimpleWorkType.IllustAndManga : SimpleWorkType.Novel, (string)((Button)sender).Content));
+        _ = WeakReferenceMessenger.Default.Send(new WorkTagClickedMessage(_viewModel.Entry is Illustration ? SimpleWorkType.IllustAndManga : SimpleWorkType.Novel, (string)((FrameworkElement)sender).Tag));
     }
 
     private async void IllustratorPersonPicture_OnClicked(object sender, RoutedEventArgs e)

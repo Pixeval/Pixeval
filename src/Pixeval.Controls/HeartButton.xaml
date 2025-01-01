@@ -52,7 +52,7 @@
         <ScaleTransform CenterX="10" CenterY="10" ScaleX="0" ScaleY="0" />
     </Grid.RenderTransform>
     <fluent:SymbolIcon
-        Foreground="{StaticResource LayerFillColorDefaultBrush}"
+        Foreground="{ThemeResource LayerFillColorDefaultBrush}"
         IconVariant="Filled"
         Symbol="Heart" />
     <IconSourceElement IconSource="{x:Bind Command.IconSource, Mode=OneWay}" />

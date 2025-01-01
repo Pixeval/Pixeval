@@ -148,7 +148,7 @@
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Bottom"
                                     Background="{StaticResource BottomCommandSectionBackground}"
-                                    BorderBrush="{StaticResource SecondaryAccentBorderBrush}"
+                                    BorderBrush="{ThemeResource SecondaryAccentBorderBrush}"
                                     BorderThickness="0.5"
                                     CornerRadius="{ThemeResource ControlCornerRadius}"
                                     Opacity="0.7"
@@ -200,7 +200,7 @@
                                 Margin="150,0"
                                 HorizontalAlignment="Center"
                                 Background="{StaticResource BottomCommandSectionBackground}"
-                                BorderBrush="{StaticResource SecondaryAccentBorderBrush}"
+                                BorderBrush="{ThemeResource SecondaryAccentBorderBrush}"
                                 BorderThickness="0.5"
                                 CornerRadius="{ThemeResource ControlCornerRadius}"
                                 Translation="0,0,30">
@@ -413,7 +413,7 @@
                     <VisualState.Setters>
                         <Setter Target="EntryViewerSplitView.Margin" Value="0" />
                         <Setter Target="TopCommandBarTranslation.Y" Value="{StaticResource NegativeTitleBarHeight}" />
-                        <Setter Target="TitleBarArea.Background" Value="{StaticResource PixevalAppAcrylicBrush}" />
+                        <Setter Target="TitleBarArea.Background" Value="{ThemeResource PixevalAppAcrylicBrush}" />
                         <Setter Target="TitleBarBorder.Background" Value="Transparent" />
                     </VisualState.Setters>
                 </VisualState>

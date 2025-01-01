@@ -19,7 +19,7 @@
             </controls:StickyHeaderScrollView.HeaderBackGround>
             <controls:StickyHeaderScrollView.Header>
                 <!--  220 + 32  -->
-                <Grid Height="252" Background="{StaticResource PixevalTranslucentBackgroundBrush}">
+                <Grid Height="252" Background="{ThemeResource PixevalTranslucentBackgroundBrush}">
                     <Grid.RowDefinitions>
                         <RowDefinition x:Name="ScrollableLength" Height="*" />
                         <RowDefinition Height="Auto" />
