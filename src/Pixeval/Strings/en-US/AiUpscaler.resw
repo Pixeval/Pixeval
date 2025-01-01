@@ -117,16 +117,22 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="CommentIsTooShortOrTooLongToastContentFormatted" xml:space="preserve">
-    <value>Please send comment less than 140 characters，current: {0}</value>
+  <data name="RealESRGANX4Plus" xml:space="preserve">
+    <value>realesrgan-x4plus</value>
   </data>
-  <data name="CommentIsTooShortOrTooLongToastTitle" xml:space="preserve">
-    <value>Comment format is illegal</value>
+  <data name="RealESRNETX4Plus" xml:space="preserve">
+    <value>realesrnet-x4plus</value>
   </data>
-  <data name="ReplyContentRichEditBox.PlaceholderText" xml:space="preserve">
-    <value>Type your comment...</value>
+  <data name="RealESRGANX4PlusAnime" xml:space="preserve">
+    <value>realesrgan-x4plus-anime</value>
   </data>
-  <data name="SendButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Submit</value>
+  <data name="PngOutputType" xml:space="preserve">
+    <value>PNG</value>
+  </data>
+  <data name="JpegOutputType" xml:space="preserve">
+    <value>JPG</value>
+  </data>
+  <data name="WebPOutputType" xml:space="preserve">
+    <value>WebP</value>
   </data>
 </root>

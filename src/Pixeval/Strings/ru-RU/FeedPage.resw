@@ -117,16 +117,37 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="CommentIsTooShortOrTooLongToastContentFormatted" xml:space="preserve">
-    <value>Please send comment less than 140 characters，current: {0}</value>
+  <data name="SparseBookmarkPrefix" xml:space="preserve">
+    <value>Добавил(а)</value>
   </data>
-  <data name="CommentIsTooShortOrTooLongToastTitle" xml:space="preserve">
-    <value>Comment format is illegal</value>
+  <data name="SparseBookmarkSuffix" xml:space="preserve">
+    <value>в избранное</value>
   </data>
-  <data name="ReplyContentRichEditBox.PlaceholderText" xml:space="preserve">
-    <value>Type your comment...</value>
+  <data name="SparseFollowUserPrefix" xml:space="preserve">
+    <value>Подписался(лась) на</value>
   </data>
-  <data name="SendButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Submit</value>
+  <data name="SparsePostIllustPrefix" xml:space="preserve">
+    <value>Опубликовал(а)</value>
+  </data>
+  <data name="CondensedBookmarkPrefix" xml:space="preserve">
+    <value>Добавил(а)</value>
+  </data>
+  <data name="CondensedBookmarkFormattedSuffix" xml:space="preserve">
+    <value>...и еще {0} работ в избранное</value>
+  </data>
+  <data name="CondensedFollowUserPrefix" xml:space="preserve">
+    <value>Подписался(лась) на</value>
+  </data>
+  <data name="CondensedFollowUserFormattedSuffix" xml:space="preserve">
+    <value>...и еще {0} пользователей</value>
+  </data>
+  <data name="CondensedPostIllustPrefix" xml:space="preserve">
+    <value>Опубликовал(а)</value>
+  </data>
+  <data name="CondensedPostIllustFormattedSuffix" xml:space="preserve">
+    <value>...и еще {0} работ</value>
+  </data>
+  <data name="FeedListTextBlock.Text" xml:space="preserve">
+    <value>Лента подписок пользователя</value>
   </data>
 </root>
