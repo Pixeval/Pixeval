@@ -75,7 +75,7 @@ public sealed partial class MainPage
 
     private static async void CustomizeTitleBar()
     {
-        if (AppInfo.CustomizeTitleBarSupported)
+        if (Microsoft.UI.Windowing.AppWindowTitleBar.IsCustomizationSupported())
             return;
 
         await Task.Yield();

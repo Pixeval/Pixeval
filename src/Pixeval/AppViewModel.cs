@@ -92,7 +92,7 @@ public partial class AppViewModel(App app) : IDisposable
     {
         _activatedByProtocol = activatedByProtocol;
 
-        await AppKnownFolders.Temporary.ClearAsync();
+        AppKnownFolders.Temp.Clear();
 
         AppServiceProvider = await CreateServiceProvider();
     }

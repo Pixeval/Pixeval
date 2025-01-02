@@ -112,7 +112,7 @@ public sealed partial class SettingsPage : IScrollViewHost, IDisposable, INotify
 
     private void DeleteFileCacheEntryButton_OnClicked(object sender, RoutedEventArgs e)
     {
-        _ = AppKnownFolders.Cache.ClearAsync();
+        AppKnownFolders.Cache.Clear();
         ViewModel.ShowClearData(ClearDataKind.FileCache);
     }
 
@@ -137,17 +137,17 @@ public sealed partial class SettingsPage : IScrollViewHost, IDisposable, INotify
         ViewModel.ShowClearData(ClearDataKind.DownloadHistory);
     }
 
-    private void OpenFolder_OnClicked(object sender, RoutedEventArgs e)
+    private async void OpenFolder_OnClicked(object sender, RoutedEventArgs e)
     {
         var folder = sender.To<FrameworkElement>().GetTag<string>() switch
         {
-            "Log" => AppKnownFolders.Log.Self,
-            "Temp" => AppKnownFolders.Temporary.Self,
-            "Local" => AppKnownFolders.Local.Self,
+            nameof(AppKnownFolders.Logs) => AppKnownFolders.Logs.FullPath,
+            nameof(AppKnownFolders.Temp) => AppKnownFolders.Temp.FullPath,
+            nameof(AppKnownFolders.Local) => AppKnownFolders.Local.FullPath,
             _ => null
         };
         if (folder is not null)
-            _ = Launcher.LaunchFolderAsync(folder);
+            _ = await Launcher.LaunchFolderPathAsync(folder);
     }
 
     public void Dispose()

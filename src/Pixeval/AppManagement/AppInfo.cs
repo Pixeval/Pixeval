@@ -34,7 +34,6 @@ using Windows.ApplicationModel;
 using Microsoft.UI.Windowing;
 using Pixeval.CoreApi.Net;
 using Pixeval.Util.UI;
-using Microsoft.UI.Xaml.Media;
 
 namespace Pixeval.AppManagement;
 
@@ -54,17 +53,13 @@ public static partial class AppInfo
 
     public static ApplicationData AppData { get; } = ApplicationData.GetDefault();
 
-    public static readonly string DatabaseFilePath = AppKnownFolders.Local.Resolve("PixevalData4.2.2.litedb");
+    public static readonly string DatabaseFilePath = AppKnownFolders.Local.CombinePath("PixevalData4.2.2.litedb");
 
     public static Versioning AppVersion { get; } = new();
-
-    public static bool CustomizeTitleBarSupported => AppWindowTitleBar.IsCustomizationSupported();
 
     public static Stream GetImageNotAvailableStream() => GetAssetStream("Images/image-not-available.png");
 
     public static Stream GetPixivNoProfileStream() => GetAssetStream("Images/pixiv_no_profile.png");
-
-    public static Task<ImageSource> Icon { get; } = GetAssetStream("Images/logo.ico").DecodeBitmapImageAsync(true);
 
     static AppInfo()
     {

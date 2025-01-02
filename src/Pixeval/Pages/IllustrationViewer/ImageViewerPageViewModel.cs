@@ -175,12 +175,11 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
     public async Task<StorageFile> SaveToFolderAsync(AppKnownFolders appKnownFolder)
     {
         var name = Path.GetFileName(App.AppViewModel.AppSettings.DownloadPathMacro);
-        var path = IoHelper.NormalizePathSegment(new IllustrationMetaPathParser().Reduce(name, IllustrationViewModel));
-        path = IoHelper.ReplaceTokenExtensionFromUrl(path, IllustrationViewModel.IllustrationOriginalUrl);
-        var file = await appKnownFolder.CreateFileAsync(path);
-        await using var target = await file.OpenStreamForWriteAsync();
-        await GetOriginalStreamsSourceAsync(target);
-        return file;
+        var normalizedName = IoHelper.NormalizePathSegment(new IllustrationMetaPathParser().Reduce(name, IllustrationViewModel));
+        normalizedName = IoHelper.ReplaceTokenExtensionFromUrl(normalizedName, IllustrationViewModel.IllustrationOriginalUrl);
+        await using var stream = appKnownFolder.OpenAsyncWrite(normalizedName);
+        await GetOriginalStreamsSourceAsync(stream);
+        return await StorageFile.GetFileFromPathAsync(appKnownFolder.CombinePath(normalizedName));
     }
 
     public CancellationTokenSource ImageLoadingCancellationTokenSource { get; } = new();
@@ -432,8 +431,6 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
     public XamlUICommand SetAsLockScreenCommand { get; } = new() { Label = EntryViewerPageResources.LockScreen };
 
     public XamlUICommand SetAsBackgroundCommand { get; } = new() { Label = EntryViewerPageResources.Background };
-
-    public XamlUICommand UpscaleCommand { get; } = EntryItemResources.AIUpscale.GetCommand(Symbol.EyeTracking);
 
     private void DisposeInternal()
     {

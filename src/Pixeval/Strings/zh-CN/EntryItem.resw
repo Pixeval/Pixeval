@@ -198,7 +198,4 @@
   <data name="UserMetricsMyPixivUsersTextBlock.Text" xml:space="preserve">
     <value>好P友</value>
   </data>
-  <data name="AIUpscale" xml:space="preserve">
-    <value>AI超分辨率</value>
-  </data>
 </root>

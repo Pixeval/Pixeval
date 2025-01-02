@@ -705,27 +705,6 @@
   <data name="PicSetIndexMacroTooltip" xml:space="preserve">
     <value>如果是多图，该宏会被替换为当前图片在多图中的索引（第几张）；必须与 @{if_pic_one=} 宏配合使用，必须在文件名上使用</value>
   </data>
-  <data name="AiUpscalerSettingsGroup.Text" xml:space="preserve">
-    <value>AI超分辨率</value>
-  </data>
-  <data name="UpscalerModelEntry.Header" xml:space="preserve">
-    <value> AI超分辨率模型</value>
-  </data>
-  <data name="UpscalerModelEntry.Description" xml:space="preserve">
-    <value>选择AI超分辨率模型，详见此处</value>
-  </data>
-  <data name="UpscalerScaleRatioEntry.Header" xml:space="preserve">
-    <value>AI超分辨率倍率</value>
-  </data>
-  <data name="UpscalerScaleRatioEntry.Description" xml:space="preserve">
-    <value>默认为4，注意过大的倍率可能导致生成的图片体积过大影响性能</value>
-  </data>
-  <data name="UpscalerOutputTypeEntry.Header" xml:space="preserve">
-    <value>AI超分辨率生成图片的格式</value>
-  </data>
-  <data name="UpscalerOutputTypeEntry.Description" xml:space="preserve">
-    <value>默认为PNG</value>
-  </data>
   <data name="UseSearchEndDateEntry.Header" xml:space="preserve">
     <value>启用搜索结束日期</value>
   </data>

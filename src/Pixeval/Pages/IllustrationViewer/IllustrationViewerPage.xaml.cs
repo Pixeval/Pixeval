@@ -201,7 +201,7 @@ public sealed partial class IllustrationViewerPage
         props.Title = EntryViewerPageResources.ShareTitleFormatted.Format(vm.Id);
         props.Description = vm.Title;
 
-        var file = await _viewModel.CurrentImage.SaveToFolderAsync(AppKnownFolders.Temporary);
+        var file = await _viewModel.CurrentImage.SaveToFolderAsync(AppKnownFolders.Temp);
         request.Data.SetStorageItems([file]);
         request.Data.ShareCanceled += FileDispose;
         request.Data.ShareCompleted += FileDispose;
