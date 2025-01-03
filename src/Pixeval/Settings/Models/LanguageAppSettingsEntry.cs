@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.Windows.Globalization;
+using Windows.Globalization;
 using Pixeval.Controls.Settings;
 using Pixeval.Pages.Misc;
 
