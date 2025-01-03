@@ -125,7 +125,7 @@ public static class C
 
     public static double DoubleComplementary(double value) => 1 - value;
 
-    public static FontWeight ToFontWeight(Enum value) => value.GetHashCode() switch
+    public static FontWeight ToFontWeight(object value) => (value as Enum)?.GetHashCode() switch
     {
         0 => FontWeights.Thin,
         1 => FontWeights.ExtraLight,
@@ -138,6 +138,6 @@ public static class C
         8 => FontWeights.ExtraBold,
         9 => FontWeights.Black,
         10 => FontWeights.ExtraBlack,
-        _ => ThrowHelper.ArgumentOutOfRange<Enum, FontWeight>(value)
+        _ => ThrowHelper.ArgumentOutOfRange<object, FontWeight>(value)
     };
 }

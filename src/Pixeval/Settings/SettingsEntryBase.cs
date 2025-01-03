@@ -2,12 +2,12 @@ using System;
 using Windows.System;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using WinUI3Utilities;
 using Symbol = FluentIcons.Common.Symbol;
 
 namespace Pixeval.Settings;
 
-public abstract class SettingsEntryBase<TSettings>(
-    TSettings settings,
+public abstract class SettingsEntryBase(
     string header,
     string description,
     Symbol headerIcon) : ISettingsEntry
@@ -43,11 +43,27 @@ public abstract class SettingsEntryBase<TSettings>(
 
     public Uri? DescriptionUri { get; set; }
 
-    public TSettings Settings { get; } = settings;
-
     public abstract void ValueReset();
 
     public virtual void ValueSaving()
     {
     }
+
+    public static string SubHeader(WorkTypeEnum workType) => workType switch
+    {
+        WorkTypeEnum.Illustration => SettingsPageResources.IllustrationOptionEntryHeader,
+        WorkTypeEnum.Manga => SettingsPageResources.MangaOptionEntryHeader,
+        WorkTypeEnum.Ugoira => SettingsPageResources.UgoiraOptionEntryHeader,
+        WorkTypeEnum.Novel => SettingsPageResources.NovelOptionEntryHeader,
+        _ => ThrowHelper.ArgumentOutOfRange<WorkTypeEnum, string>(workType)
+    };
+
+    public static Symbol SubHeaderIcon(WorkTypeEnum workType) => workType switch
+    {
+        WorkTypeEnum.Illustration => Symbol.Image,
+        WorkTypeEnum.Manga => Symbol.ImageMultiple,
+        WorkTypeEnum.Ugoira => Symbol.Gif,
+        WorkTypeEnum.Novel => Symbol.BookOpen,
+        _ => ThrowHelper.ArgumentOutOfRange<WorkTypeEnum, Symbol>(workType)
+    };
 }

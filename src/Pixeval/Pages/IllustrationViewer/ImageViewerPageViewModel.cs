@@ -321,7 +321,7 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
         if (OriginalStreamsSource is null)
             return;
 
-        var file = await SaveToFolderAsync(AppKnownFolders.SavedWallPaper);
+        var file = await SaveToFolderAsync(AppKnownFolders.Wallpapers);
         _ = await operation(file);
 
         ToastNotificationHelper.ShowTextToastNotification(
@@ -439,9 +439,6 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
 
         OriginalStreamsSource = null;
         
-        //_upscaler?.DisposeAsync();
-        //UpscalerMessageChannel.Writer.Complete();
-
         LoadSuccessfully = false;
     }
 }

@@ -29,6 +29,7 @@ using Pixeval.CoreApi;
 using Pixeval.CoreApi.Net;
 using Pixeval.Database.Managers;
 using Pixeval.Download;
+using Pixeval.Extensions;
 using Pixeval.Logging;
 using Pixeval.Util.IO.Caching;
 using Pixeval.Util.UI;
@@ -70,12 +71,15 @@ public partial class AppViewModel(App app) : IDisposable
     {
         var fileCache = await FileCache.CreateDefaultAsync();
         var memoryCache = await MemoryCache.CreateDefaultAsync(200);
+        var extensionService = new ExtensionService();
+        extensionService.LoadAllExtensions();
         return new ServiceCollection()
             .AddSingleton<IllustrationDownloadTaskFactory>()
             .AddSingleton<NovelDownloadTaskFactory>()
+            .AddSingleton<ExtensionService>(extensionService)
             .AddSingleton<MemoryCache>(memoryCache)
             .AddSingleton<FileCache>(fileCache)
-            .AddSingleton<FileLogger>(_ => new(AppInfo.AppData.LocalFolder.Path + @"\Logs\"))
+            .AddSingleton<FileLogger>(_ => new(AppKnownFolders.Logs.FullPath))
             .AddSingleton<LiteDatabase>(new LiteDatabase(AppInfo.DatabaseFilePath))
             .AddSingleton<DownloadHistoryPersistentManager>(provider => new(provider.GetRequiredService<LiteDatabase>(), App.AppViewModel.AppSettings.MaximumDownloadHistoryRecords))
             .AddSingleton<SearchHistoryPersistentManager>(provider => new(provider.GetRequiredService<LiteDatabase>(), App.AppViewModel.AppSettings.MaximumSearchHistoryRecords))

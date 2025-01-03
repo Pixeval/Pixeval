@@ -1,13 +1,13 @@
 using Microsoft.UI.Xaml.Controls;
-using Pixeval.Settings.Models;
+using Pixeval.Settings;
 
 namespace Pixeval.Controls.Settings;
 
-public sealed partial class IntSettingsCard 
+public sealed partial class DoubleSettingsCard 
 {
-    public IntAppSettingsEntry Entry { get; set; } = null!;
+    public IDoubleSettingsEntry Entry { get; set; } = null!;
 
-    public IntSettingsCard() => InitializeComponent();
+    public DoubleSettingsCard() => InitializeComponent();
 
     private void NumberBox_OnValueChanged(NumberBox sender, NumberBoxValueChangedEventArgs e)
     {

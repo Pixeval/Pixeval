@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using FluentIcons.Common;
-using Pixeval.AppManagement;
 
 namespace Pixeval.Settings;
 
@@ -9,9 +8,11 @@ public abstract class MultiValuesSettingsEntryBase<TSettings>(
     string header,
     string description,
     Symbol headerIcon,
-    IReadOnlyList<SingleValueSettingsEntryBase<AppSettings>> entries) : SettingsEntryBase<TSettings>(settings, header, description, headerIcon)
+    IReadOnlyList<SingleValueSettingsEntryBase<TSettings>> entries) : SettingsEntryBase(header, description, headerIcon)
 {
-    public IReadOnlyList<SingleValueSettingsEntryBase<AppSettings>> Entries { get; } = entries;
+    public TSettings Settings { get; } = settings;
+
+    public IReadOnlyList<SingleValueSettingsEntryBase<TSettings>> Entries { get; } = entries;
 
     public override void ValueReset()
     {

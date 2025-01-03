@@ -2,15 +2,15 @@ using Windows.UI;
 using CommunityToolkit.WinUI.Controls;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Pixeval.Settings.Models;
 using WinUI3Utilities;
 using ColorPicker = Microsoft.UI.Xaml.Controls.ColorPicker;
+using Pixeval.Settings;
 
 namespace Pixeval.Controls.Settings;
 
 public sealed partial class ColorSettingsCard
 {
-    public ColorAppSettingsEntry Entry { get; set; } = null!;
+    public ISingleValueSettingsEntry<uint> Entry { get; set; } = null!;
 
     public ColorSettingsCard() => InitializeComponent();
 

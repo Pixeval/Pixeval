@@ -29,7 +29,7 @@ using WinUI3Utilities;
 
 namespace Pixeval.Settings;
 
-public abstract class SingleValueSettingsEntry<TSettings, TValue> : SingleValueSettingsEntryBase<TSettings>
+public abstract class SingleValueSettingsEntry<TSettings, TValue> : SingleValueSettingsEntryBase<TSettings>, ISingleValueSettingsEntry<TValue>
 {
     protected SingleValueSettingsEntry(TSettings settings,
         Expression<Func<TSettings, TValue>> property) : base(settings)

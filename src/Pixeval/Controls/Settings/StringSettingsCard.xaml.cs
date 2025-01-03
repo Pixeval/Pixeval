@@ -1,11 +1,11 @@
 using Microsoft.UI.Xaml;
-using Pixeval.Settings.Models;
+using Pixeval.Settings;
 
 namespace Pixeval.Controls.Settings;
 
 public sealed partial class StringSettingsCard
 {
-    public StringAppSettingsEntry Entry { get; set; } = null!;
+    public IStringSettingsEntry Entry { get; set; } = null!;
 
     public StringSettingsCard() => InitializeComponent();
 

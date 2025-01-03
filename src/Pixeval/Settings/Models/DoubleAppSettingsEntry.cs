@@ -1,3 +1,6 @@
+// Copyright (c) Pixeval.
+// Licensed under the GPL v3 License.
+
 using System;
 using System.Linq.Expressions;
 using Pixeval.AppManagement;
@@ -5,14 +8,9 @@ using Pixeval.Controls.Settings;
 
 namespace Pixeval.Settings.Models;
 
-public partial class IntAppSettingsEntry : SingleValueSettingsEntry<AppSettings, int>, IDoubleSettingsEntry
+public partial class DoubleAppSettingsEntry(AppSettings appSettings, Expression<Func<AppSettings, double>> property)
+    : SingleValueSettingsEntry<AppSettings, double>(appSettings, property), IDoubleSettingsEntry
 {
-    public IntAppSettingsEntry(AppSettings appSettings, Expression<Func<AppSettings, int>> property)
-        : base(appSettings, property)
-    {
-       ((IDoubleSettingsEntry)this).ValueChanged = value => ValueChanged?.Invoke((int)value);
-    }
-
     public override DoubleSettingsCard Element => new() { Entry = this };
 
     public string? Placeholder { get; set; }
@@ -25,17 +23,13 @@ public partial class IntAppSettingsEntry : SingleValueSettingsEntry<AppSettings,
 
     public double SmallChange { get; set; } = 1;
 
-    public IntAppSettingsEntry(
+    public DoubleAppSettingsEntry(
         AppSettings appSettings,
         WorkTypeEnum workType,
-        Expression<Func<AppSettings, int>> property)
+        Expression<Func<AppSettings, double>> property)
         : this(appSettings, property)
     {
         Header = SubHeader(workType);
         HeaderIcon = SubHeaderIcon(workType);
     }
-
-    Action<double>? ISingleValueSettingsEntry<double>.ValueChanged { get; set; }
-
-    double ISingleValueSettingsEntry<double>.Value { get => Value; set => Value = (int)value; }
 }

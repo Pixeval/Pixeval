@@ -22,7 +22,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using StorageFolder = Windows.Storage.StorageFolder;
+using Windows.Storage;
 using Pixeval.Util.IO;
 
 namespace Pixeval.AppManagement;
@@ -84,5 +84,6 @@ public class AppKnownFolders(string fullPath)
         if (!DirectoryInfo.Exists)
             return;
         DirectoryInfo.Delete(true);
+        DirectoryInfo.Create();
     }
 }

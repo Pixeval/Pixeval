@@ -10,9 +10,9 @@ namespace Pixeval.Settings.Models;
 
 public partial class EnumAppSettingsEntry(
     AppSettings appSettings,
-    Expression<Func<AppSettings, Enum>> property,
+    Expression<Func<AppSettings, object>> property,
     IReadOnlyList<StringRepresentableItem> array)
-    : SingleValueSettingsEntry<AppSettings, Enum>(appSettings, property)
+    : SingleValueSettingsEntry<AppSettings, object>(appSettings, property), IEnumSettingsEntry
 {
     public override FrameworkElement Element => new EnumSettingsCard { Entry = this };
 
@@ -21,7 +21,7 @@ public partial class EnumAppSettingsEntry(
     public EnumAppSettingsEntry(
         AppSettings appSettings,
         WorkTypeEnum workType,
-        Expression<Func<AppSettings, Enum>> property,
+        Expression<Func<AppSettings, object>> property,
         IReadOnlyList<StringRepresentableItem> array)
         : this(appSettings, property, array)
     {

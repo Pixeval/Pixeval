@@ -124,6 +124,16 @@
         <ProjectCapability Include="Msix" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Remove="Controls\Settings\DateSettingsCard.xaml" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Page Update="Controls\Settings\DateSettingsCard.xaml">
+        <Generator>MSBuild:Compile</Generator>
+      </Page>
+    </ItemGroup>
+
     <PropertyGroup Condition="'$(DisableHasPackageAndPublishMenuAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
         <HasPackageAndPublishMenu>true</HasPackageAndPublishMenu>
     </PropertyGroup>

@@ -63,6 +63,7 @@ public static partial class AppInfo
 
     static AppInfo()
     {
+        var applicationDataContainer = AppData.LocalSettings.CreateContainer("A.B /C", ApplicationDataCreateDisposition.Always);
         InitializeConfig();
         InitializeLoginContext();
         InitializeDebugTrace();

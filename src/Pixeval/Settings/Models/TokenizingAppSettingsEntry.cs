@@ -6,9 +6,11 @@ namespace Pixeval.Settings.Models;
 
 public partial class TokenizingAppSettingsEntry(
     AppSettings appSettings)
-    : ObservableSettingsEntryBase<AppSettings>(appSettings, "", "", default)
+    : ObservableSettingsEntryBase("", "", default)
 {
     public override TokenizingSettingsExpander Element => new() { Entry = this };
+
+    public AppSettings Settings { get; } = appSettings;
 
     public override void ValueReset()
     {

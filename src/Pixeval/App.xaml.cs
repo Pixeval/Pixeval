@@ -84,7 +84,6 @@ public partial class App
 
         if (AppViewModel.AppSettings.AppFontFamilyName.IsNotNullOrEmpty())
             Current.Resources[ApplicationWideFontKey] = new FontFamily(AppViewModel.AppSettings.AppFontFamilyName);
-        await AppKnownFolders.InitializeAsync();
 
         await AppViewModel.InitializeAsync(isProtocolActivated);
 

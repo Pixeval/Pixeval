@@ -9,7 +9,7 @@ namespace Pixeval.Settings.Models;
 public partial class StringAppSettingsEntry(
     AppSettings appSettings,
     Expression<Func<AppSettings, string>> property)
-    : SingleValueSettingsEntry<AppSettings, string>(appSettings, property)
+    : SingleValueSettingsEntry<AppSettings, string>(appSettings, property), IStringSettingsEntry
 {
     public override FrameworkElement Element => new StringSettingsCard { Entry = this };
 

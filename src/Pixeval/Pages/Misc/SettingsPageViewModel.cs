@@ -39,6 +39,9 @@ using Pixeval.CoreApi.Global.Enum;
 using Pixeval.Settings.Models;
 using WinUI3Utilities;
 using Symbol = FluentIcons.Common.Symbol;
+using System.Collections.Generic;
+using Microsoft.Extensions.DependencyInjection;
+using Pixeval.Extensions;
 
 namespace Pixeval.Pages.Misc;
 
@@ -80,7 +83,7 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
     {
         Groups =
         [
-            new(SettingsEntryCategory.Application)
+            new SimpleSettingsGroup(SettingsEntryCategory.Application)
             {
                 new EnumAppSettingsEntry(AppSettings,
                     t => t.Theme,
@@ -90,7 +93,7 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
                     BackdropTypeExtension.GetItems()) { ValueChanged = t => WindowFactory.SetBackdrop((BackdropType)t) },
                 new FontAppSettingsEntry(AppSettings,
                     t => t.AppFontFamilyName),
-                new LanguageAppSettingsEntry(AppSettings),
+                new LanguageAppSettingsEntry(),
                 new IpWithSwitchAppSettingsEntry(AppSettings)
                 {
                     ValueChanged = t => App.AppViewModel.MakoClient.Configuration.DomainFronting = t
@@ -116,7 +119,7 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
                     Placeholder = SettingsPageResources.WebCookieTextBoxPlaceholderText
                 }
             },
-            new(SettingsEntryCategory.BrowsingExperience)
+            new SimpleSettingsGroup(SettingsEntryCategory.BrowsingExperience)
             {
                 new EnumAppSettingsEntry(AppSettings,
                     t => t.ThumbnailDirection,
@@ -130,14 +133,14 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
                 new TokenizingAppSettingsEntry(AppSettings),
                 new BoolAppSettingsEntry(AppSettings,
                     t => t.BrowseOriginalImage),
-                new ClickableAppSettingsEntry(AppSettings,
+                new ClickableAppSettingsEntry(
                     SettingsPageResources.ViewingRestrictionEntryHeader,
                     SettingsPageResources.ViewingRestrictionEntryDescription,
                     Symbol.SubtractCircle,
                     () => _ = Launcher.LaunchUriAsync(new Uri("https://www.pixiv.net/settings/viewing")))
             },
 
-            new(SettingsEntryCategory.Search)
+            new SimpleSettingsGroup(SettingsEntryCategory.Search)
             {
                 new StringAppSettingsEntry(AppSettings,
                     t => t.ReverseSearchApiKey)
@@ -204,7 +207,7 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
                     t => t.UseSearchEndDate,
                     t => t.SearchEndDate)
             },
-            new(SettingsEntryCategory.Download)
+            new SimpleSettingsGroup(SettingsEntryCategory.Download)
             {
                 new IntAppSettingsEntry(AppSettings,
                     t => t.MaximumDownloadHistoryRecords)
@@ -243,7 +246,7 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
                 new BoolAppSettingsEntry(AppSettings,
                     t => t.DownloadWhenBookmarked)
             },
-            new(SettingsEntryCategory.Misc)
+            new SimpleSettingsGroup(SettingsEntryCategory.Misc)
             {
                 new IntAppSettingsEntry(AppSettings,
                     t => t.MaximumBrowseHistoryRecords)
@@ -252,11 +255,12 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
                     Max = ushort.MaxValue,
                     Min = 10
                 }
-            }
+            },
+            ..App.AppViewModel.AppServiceProvider.GetRequiredService<ExtensionService>().SettingsGroups
         ];
     }
 
-    public SimpleSettingsGroup[] Groups { get; }
+    public ISettingsGroup[] Groups { get; }
 
     public string UpdateInfo => AppInfo.AppVersion.UpdateState switch
     {
