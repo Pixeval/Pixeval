@@ -39,9 +39,4 @@ public sealed partial class ProxySettingsExpander
 
         Entry.ProxyChanged?.Invoke(Entry.MakoProxy);
     }
-
-    private void EnumComboBox_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
-    {
-        Entry.ValueChanged?.Invoke(Entry.Value);
-    }
 }

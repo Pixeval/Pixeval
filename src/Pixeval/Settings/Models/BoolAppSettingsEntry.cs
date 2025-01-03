@@ -23,10 +23,3 @@ public partial class BoolAppSettingsEntry(
         HeaderIcon = SubHeaderIcon(workType);
     }
 }
-
-public interface IBoolAppSettingsEntry : ISettingsEntry
-{
-
-
-    public Action<bool> ValueChanged { get; set; }
-}

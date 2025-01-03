@@ -24,8 +24,7 @@
         x:Uid="/SettingsPage/AppFontFamilyComboBox"
         Width="200"
         ItemsSource="{x:Bind models:FontAppSettingsEntry.AvailableFonts}"
-        SelectedItem="{x:Bind Entry.Value, Mode=TwoWay}"
-        SelectionChanged="Selector_OnSelectionChanged">
+        SelectedItem="{x:Bind Entry.Value, Mode=TwoWay}">
         <ComboBox.ItemTemplate>
             <DataTemplate x:DataType="x:String">
                 <TextBlock FontFamily="{x:Bind controls1:C.ToFontFamily((x:String))}" Text="{x:Bind}" />

@@ -15,7 +15,7 @@ public partial class DownloadMacroAppSettingsEntry(
 {
     public override DownloadMacroSettingsExpander Element => new() { Entry = this };
 
-    private static readonly ImmutableDictionary<string, string> _macroTooltips = new Dictionary<string, string>
+    private static readonly ImmutableDictionary<string, string> _MacroTooltips = new Dictionary<string, string>
     {
         ["ext"] = SettingsPageResources.ExtMacroTooltip,
         ["id"] = SettingsPageResources.IdMacroTooltip,
@@ -37,6 +37,6 @@ public partial class DownloadMacroAppSettingsEntry(
     }.ToImmutableDictionary();
 
     public static ICollection<StringRepresentableItem> AvailableMacros { get; } = MetaPathMacroAttributeHelper.GetIWorkViewModelInstances()
-        .Select(m => new StringRepresentableItem(_macroTooltips[m.Name], $"@{{{(m is IPredicate ? $"{m.Name}=" : m.Name)}}}"))
+        .Select(m => new StringRepresentableItem(_MacroTooltips[m.Name], $"@{{{(m is IPredicate ? $"{m.Name}=" : m.Name)}}}"))
         .ToList();
 }

@@ -12,6 +12,8 @@ public abstract class SettingsEntryBase(
     string description,
     Symbol headerIcon) : ISettingsEntry
 {
+    public static SettingsValueConverter SettingsValueConverter { get; } = new();
+
     public abstract FrameworkElement Element { get; }
 
     public Symbol HeaderIcon { get; set; } = headerIcon;

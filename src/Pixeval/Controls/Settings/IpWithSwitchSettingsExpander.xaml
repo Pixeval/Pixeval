@@ -16,7 +16,7 @@
     <controls:SettingsExpander.HeaderIcon>
         <fluent:SymbolIcon Symbol="{x:Bind Entry.HeaderIcon}" />
     </controls:SettingsExpander.HeaderIcon>
-    <ToggleSwitch IsOn="{x:Bind Entry.Settings.EnableDomainFronting, Mode=TwoWay}" Toggled="ToggleSwitch_OnToggled" />
+    <ToggleSwitch IsOn="{x:Bind Entry.Value, Mode=TwoWay}" />
     <controls:SettingsExpander.Items>
         <controls:SettingsCard
             HorizontalContentAlignment="Left"

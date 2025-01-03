@@ -12,8 +12,6 @@ public interface ISingleValueSettingsEntry<TValue> : ISettingsEntry
 {
     SettingsEntryAttribute? Attribute { get; }
 
-    Action<TValue>? ValueChanged { get; set; }
-
     TValue Value { get; set; }
 }
 

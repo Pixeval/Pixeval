@@ -21,6 +21,5 @@
         PlaceholderText="{x:Bind Entry.Placeholder}"
         SmallChange="{x:Bind Entry.SmallChange}"
         Style="{StaticResource SettingsNumberBoxStyle}"
-        ValueChanged="NumberBox_OnValueChanged"
         Value="{x:Bind Entry.Value, Mode=TwoWay}" />
 </controls:SettingsCard>

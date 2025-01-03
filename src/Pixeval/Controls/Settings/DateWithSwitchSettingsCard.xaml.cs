@@ -10,9 +10,4 @@ public sealed partial class DateWithSwitchSettingsCard
     public DateWithSwitchAppSettingsEntry Entry { get; set; } = null!;
 
     public DateWithSwitchSettingsCard() => InitializeComponent();
-
-    private void ToggleSwitch_OnToggled(object sender, RoutedEventArgs e)
-    {
-        Entry.ValueChanged?.Invoke(sender.To<ToggleSwitch>().IsOn);
-    }
 }

@@ -58,6 +58,7 @@ public abstract class SingleValueSettingsEntry<TSettings, TValue> : SingleValueS
                 return;
             _setter(Settings, value);
             OnPropertyChanged();
+            ValueChanged?.Invoke(Value);
         }
     }
 

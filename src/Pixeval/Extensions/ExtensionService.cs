@@ -10,12 +10,8 @@ using Pixeval.AppManagement;
 using Pixeval.Extensions.Common.Settings;
 using Pixeval.Extensions.Common;
 using System.Linq;
-using Windows.Foundation.Collections;
 using Windows.Win32;
-using Microsoft.UI.Xaml;
-using Pixeval.Attributes;
-using Pixeval.Controls;
-using Pixeval.Controls.Settings;
+using Pixeval.Extensions.Models;
 using Pixeval.Settings;
 using WinUI3Utilities;
 
@@ -130,17 +126,18 @@ public class ExtensionService
                 }
                 case IStringsArraySettingsExtension i:
                 {
-                    if (values.TryGetValue(token, out var value) && value is string v)
+                    string[] v;
+                    if (values.TryGetValue(token, out var value) && value is string s)
                     {
-                        var strings = converter.ConvertBack<string[]>(v, false)!;
-                        i.OnValueChanged(strings);
+                        v = converter.ConvertBack<string[]>(s, false)!;
+                        i.OnValueChanged(v);
                     }
-                    else 
+                    else
                     {
-                        var str = (string)converter.Convert(i.GetDefaultValue())!;
-                        values[token] = v = str;
+                        v = i.GetDefaultValue();
+                        values[token] = converter.Convert(v);
                     }
-                    // extensionSettingsGroup.Add(new ExtensionStringsArraySettingsEntry(i));
+                    extensionSettingsGroup.Add(new ExtensionStringsArraySettingsEntry(i, v, values));
                     break;
                 }
                 case IDateTimeOffsetSettingsExtension i:
@@ -176,157 +173,3 @@ public class ExtensionService
         }
     }
 }
-
-public partial class ExtensionSettingsGroup(ExtensionsHostModel model) : List<ISettingsEntry>, ISettingsGroup
-{
-    public string Header { get; } = model.Name;
-}
-
-public abstract class ExtensionSettingsEntry<TValue>(ISettingsExtension extension, TValue value, IPropertySet values)
-    : ObservableSettingsEntryBase(extension.GetLabel(), extension.GetDescription(), extension.GetIcon()), ISingleValueSettingsEntry<TValue>
-{
-    public SettingsEntryAttribute? Attribute => null;
-
-    public Action<TValue>? ValueChanged { get; set; }
-
-    public TValue Value
-    {
-        get;
-        set
-        {
-            if (EqualityComparer<TValue>.Default.Equals(field, value))
-                return;
-            field = value;
-            OnPropertyChanged();
-        }
-    } = value;
-
-    public override void ValueReset()
-    {
-    }
-
-    public override void ValueSaving()
-    {
-        values[extension.GetToken()] = Value;
-    }
-}
-
-public class ExtensionBoolSettingsEntry(IBoolSettingsExtension extension, bool value, IPropertySet values) : ExtensionSettingsEntry<bool>(extension, value, values)
-{
-    public override FrameworkElement Element => new BoolSettingsCard { Entry = this };
-
-    public override void ValueSaving()
-    {
-        extension.OnValueChanged(Value);
-        base.ValueSaving();
-    }
-}
-
-public class ExtensionStringSettingsEntry(IStringSettingsExtension extension, string value, IPropertySet values) : ExtensionSettingsEntry<string>(extension, value, values), IStringSettingsEntry
-{
-    public override FrameworkElement Element => new StringSettingsCard { Entry = this };
-
-    public string? Placeholder => extension.GetPlaceholder();
-
-    public override void ValueSaving()
-    {
-        extension.OnValueChanged(Value);
-        base.ValueSaving();
-    }
-}
-
-public class ExtensionIntSettingsEntry : ExtensionSettingsEntry<int>, IDoubleSettingsEntry
-{
-    private readonly IIntSettingsExtension _extension;
-
-    public ExtensionIntSettingsEntry(IIntSettingsExtension extension, int value, IPropertySet values) : base(extension, value, values)
-    {
-        _extension = extension;
-        ((IDoubleSettingsEntry)this).ValueChanged = v => ValueChanged?.Invoke((int)v);
-    }
-
-    public override FrameworkElement Element => new DoubleSettingsCard { Entry = this };
-
-    Action<double>? ISingleValueSettingsEntry<double>.ValueChanged { get; set; }
-
-    double ISingleValueSettingsEntry<double>.Value { get => Value; set => Value = (int)value; }
-
-    public override void ValueSaving()
-    {
-        _extension.OnValueChanged(Value);
-        base.ValueSaving();
-    }
-
-    public string? Placeholder => _extension.GetPlaceholder();
-
-    public double Max => _extension.GetMaxValue();
-
-    public double Min => _extension.GetMinValue();
-
-    public double LargeChange => _extension.GetLargeChange();
-
-    public double SmallChange => _extension.GetSmallChange();
-}
-
-public class ExtensionDoubleSettingsEntry(IDoubleSettingsExtension extension, double value, IPropertySet values) : ExtensionSettingsEntry<double>(extension, value, values), IDoubleSettingsEntry
-{
-    public override FrameworkElement Element => new DoubleSettingsCard { Entry = this };
-
-    public override void ValueSaving()
-    {
-        extension.OnValueChanged(Value);
-        base.ValueSaving();
-    }
-
-    public string? Placeholder => extension.GetPlaceholder();
-
-    public double Max => extension.GetMaxValue();
-
-    public double Min => extension.GetMinValue();
-
-    public double LargeChange => extension.GetLargeChange();
-
-    public double SmallChange => extension.GetSmallChange();
-}
-
-public class ExtensionEnumSettingsEntry(IEnumSettingsExtension extension, int value, IPropertySet values) : ExtensionSettingsEntry<object>(extension, value, values), IEnumSettingsEntry
-{
-    public override FrameworkElement Element => new EnumSettingsCard { Entry = this };
-
-    public override void ValueSaving()
-    {
-        extension.OnValueChanged((int)Value);
-        base.ValueSaving();
-    }
-
-    public IReadOnlyList<StringRepresentableItem> EnumItems => extension.GetEnumKeyValues()
-        .Select(t => new StringRepresentableItem(t.Value, t.Key)).ToArray();
-}
-
-public class ExtensionColorSettingsEntry(IColorSettingsExtension extension, uint value, IPropertySet values) : ExtensionSettingsEntry<uint>(extension, value, values)
-{
-    public override FrameworkElement Element => new ColorSettingsCard { Entry = this };
-
-    public override void ValueSaving()
-    {
-        extension.OnValueChanged(Value);
-        base.ValueSaving();
-    }
-}
-
-public class ExtensionDateSettingsEntry(IDateTimeOffsetSettingsExtension extension, DateTimeOffset value, IPropertySet values) : ExtensionSettingsEntry<DateTimeOffset>(extension, value, values)
-{
-    public override FrameworkElement Element => new DateSettingsCard { Entry = this };
-
-    public override void ValueSaving()
-    {
-        extension.OnValueChanged(Value);
-        base.ValueSaving();
-    }
-}
-
-//public class ExtensionStringsArraySettingsEntry(IStringsArraySettingsExtension extension) : ExtensionSettingsEntry<string[]>(extension)
-//{
-//    public override FrameworkElement Element => new StringSettingsCard { Entry = this };
-//    public override string[] Value { get; set; }
-//}

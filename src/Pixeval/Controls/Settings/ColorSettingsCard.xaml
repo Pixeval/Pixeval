@@ -21,8 +21,5 @@
             <Setter Property="IsAlphaEnabled" Value="True" />
         </Style>
     </controls:SettingsCard.Resources>
-    <controls:ColorPickerButton
-        ColorPickerStyle="{StaticResource ColorPickerStyle}"
-        Loaded="ColorPicker_OnLoaded"
-        SelectedColor="{x:Bind controls1:C.ToAlphaColor(Entry.Value), BindBack=ColorBindBack, Mode=TwoWay}" />
+    <controls:ColorPickerButton ColorPickerStyle="{StaticResource ColorPickerStyle}" SelectedColor="{x:Bind controls1:C.ToAlphaColor(Entry.Value), BindBack=ColorBindBack, Mode=TwoWay}" />
 </controls:SettingsCard>

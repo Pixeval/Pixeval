@@ -16,7 +16,6 @@
     </controls:SettingsCard.HeaderIcon>
     <TextBox
         Width="200"
-        LostFocus="TextBox_OnLostFocus"
         PlaceholderText="{x:Bind Entry.Placeholder}"
         Text="{x:Bind Entry.Value, Mode=TwoWay}" />
 </controls:SettingsCard>
