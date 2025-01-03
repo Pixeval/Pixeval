@@ -186,24 +186,6 @@
   <data name="MicaAltBackdrop" xml:space="preserve">
     <value>Backdrop Mica Alt</value>
   </data>
-  <data name="SearchDurationUndecided" xml:space="preserve">
-    <value>Par défaut</value>
-  </data>
-  <data name="SearchDurationWithinLastDay" xml:space="preserve">
-    <value>Dernière journée</value>
-  </data>
-  <data name="SearchDurationWithinLastWeek" xml:space="preserve">
-    <value>Dernière semaine</value>
-  </data>
-  <data name="SearchDurationWithinLastMonth" xml:space="preserve">
-    <value>Dernier mois</value>
-  </data>
-  <data name="SearchDurationWithinLastHalfYear" xml:space="preserve">
-    <value>Dernier 6 mois</value>
-  </data>
-  <data name="SearchDurationWithinLastYear" xml:space="preserve">
-    <value>Dernière année</value>
-  </data>
   <data name="PrivacyPolicyPublic" xml:space="preserve">
     <value>Publique</value>
   </data>

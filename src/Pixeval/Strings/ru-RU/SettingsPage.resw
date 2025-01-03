@@ -422,32 +422,11 @@
   <data name="ReverseSearchResultSimilarityThresholdEntry.Header" xml:space="preserve">
     <value>Порог сходства обратного поиска</value>
   </data>
-  <data name="SearchDurationEntry.Description" xml:space="preserve">
-    <value>Результаты поиска будут ограничены указанным временным диапазоном. Если включена опция «Использовать более точные ограничения диапазона поиска», этот параметр будет игнорироваться</value>
-  </data>
-  <data name="SearchDurationEntry.Header" xml:space="preserve">
-    <value>Ограничения временного диапазона поиска</value>
-  </data>
-  <data name="SearchEndDateEntry.Description" xml:space="preserve">
-    <value>Результаты поиска будут включать только произведения, опубликованные до этой даты. Значение этого параметра должно быть на один день больше, чем значение даты начала</value>
-  </data>
-  <data name="SearchEndDateEntry.Header" xml:space="preserve">
-    <value>Установить конечную дату поиска</value>
-  </data>
   <data name="SearchHistoriesCleared" xml:space="preserve">
     <value>История поиска очищена</value>
   </data>
   <data name="SearchSettingsGroup.Text" xml:space="preserve">
     <value>Настройки поиска</value>
-  </data>
-  <data name="SearchStartCalendarDatePicker.PlaceholderText" xml:space="preserve">
-    <value>Начальная дата</value>
-  </data>
-  <data name="SearchStartDateEntry.Description" xml:space="preserve">
-    <value>Результаты поиска будут включать только произведения, опубликованные после этой даты</value>
-  </data>
-  <data name="SearchStartDateEntry.Header" xml:space="preserve">
-    <value>Установить начальную дату поиска</value>
   </data>
   <data name="SessionSettingsGroup.Text" xml:space="preserve">
     <value>Настройки сессии</value>
@@ -490,12 +469,6 @@
   </data>
   <data name="UseFileCacheEntry.Header" xml:space="preserve">
     <value>Использовать файловый кэш</value>
-  </data>
-  <data name="UsePreciseRangeForSearchEntry.Description" xml:space="preserve">
-    <value>Использовать более точные ограничения для диапазона поиска на основе конкретных дат. Если этот параметр включен, опция «Ограничения временного диапазона поиска» будет игнорироваться</value>
-  </data>
-  <data name="UsePreciseRangeForSearchEntry.Header" xml:space="preserve">
-    <value>Использовать более точные ограничения для диапазона поиска</value>
   </data>
   <data name="VersionSettingsGroup.Text" xml:space="preserve">
     <value>Версия</value>
