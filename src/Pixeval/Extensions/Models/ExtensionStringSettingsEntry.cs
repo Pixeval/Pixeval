@@ -15,6 +15,8 @@ public partial class ExtensionStringSettingsEntry(IStringSettingsExtension exten
 
     public string? Placeholder => extension.GetPlaceholder();
 
+    public override void ValueReset() => Value = extension.GetDefaultValue();
+
     public override void ValueSaving()
     {
         extension.OnValueChanged(Value);

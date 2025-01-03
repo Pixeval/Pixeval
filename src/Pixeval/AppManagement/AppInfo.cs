@@ -34,6 +34,7 @@ using Windows.ApplicationModel;
 using Microsoft.UI.Windowing;
 using Pixeval.CoreApi.Net;
 using Pixeval.Util.UI;
+using Windows.Foundation.Collections;
 
 namespace Pixeval.AppManagement;
 
@@ -53,6 +54,8 @@ public static partial class AppInfo
 
     public static ApplicationData AppData { get; } = ApplicationData.GetDefault();
 
+    public static IPropertySet LocalConfig => _containerConfig.Values;
+
     public static readonly string DatabaseFilePath = AppKnownFolders.Local.CombinePath("PixevalData4.2.2.litedb");
 
     public static Versioning AppVersion { get; } = new();
@@ -63,7 +66,6 @@ public static partial class AppInfo
 
     static AppInfo()
     {
-        var applicationDataContainer = AppData.LocalSettings.CreateContainer("A.B /C", ApplicationDataCreateDisposition.Always);
         InitializeConfig();
         InitializeLoginContext();
         InitializeDebugTrace();

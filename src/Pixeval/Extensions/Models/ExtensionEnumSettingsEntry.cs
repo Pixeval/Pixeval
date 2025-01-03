@@ -16,6 +16,8 @@ public partial class ExtensionEnumSettingsEntry(IEnumSettingsExtension extension
 {
     public override FrameworkElement Element => new EnumSettingsCard { Entry = this };
 
+    public override void ValueReset() => Value = extension.GetDefaultValue();
+
     public override void ValueSaving()
     {
         extension.OnValueChanged((int)Value);

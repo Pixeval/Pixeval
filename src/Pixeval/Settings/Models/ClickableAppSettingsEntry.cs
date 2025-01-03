@@ -18,4 +18,5 @@ public class ClickableAppSettingsEntry(
     public Symbol ActionIcon { get; set; } = Symbol.Open;
 
     public override void ValueReset() { }
+    public override void ValueSaving() { }
 }

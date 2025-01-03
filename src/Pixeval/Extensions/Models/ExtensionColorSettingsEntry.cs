@@ -12,6 +12,8 @@ public partial class ExtensionColorSettingsEntry(IColorSettingsExtension extensi
 {
     public override FrameworkElement Element => new ColorSettingsCard { Entry = this };
 
+    public override void ValueReset() => Value = extension.GetDefaultValue();
+
     public override void ValueSaving()
     {
         extension.OnValueChanged(Value);

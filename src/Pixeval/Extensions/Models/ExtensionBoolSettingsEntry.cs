@@ -12,6 +12,8 @@ public partial class ExtensionBoolSettingsEntry(IBoolSettingsExtension extension
 {
     public override FrameworkElement Element => new BoolSettingsCard { Entry = this };
 
+    public override void ValueReset() => Value = extension.GetDefaultValue();
+
     public override void ValueSaving()
     {
         extension.OnValueChanged(Value);

@@ -12,8 +12,6 @@ public abstract class SettingsEntryBase(
     string description,
     Symbol headerIcon) : ISettingsEntry
 {
-    public static SettingsValueConverter SettingsValueConverter { get; } = new();
-
     public abstract FrameworkElement Element { get; }
 
     public Symbol HeaderIcon { get; set; } = headerIcon;
@@ -43,13 +41,11 @@ public abstract class SettingsEntryBase(
 
     public string Description { get; set; } = description;
 
-    public Uri? DescriptionUri { get; set; }
+    public virtual Uri? DescriptionUri { get; set; }
 
     public abstract void ValueReset();
 
-    public virtual void ValueSaving()
-    {
-    }
+    public abstract void ValueSaving();
 
     public static string SubHeader(WorkTypeEnum workType) => workType switch
     {

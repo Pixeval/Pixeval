@@ -32,7 +32,7 @@ namespace Pixeval.Settings.Models;
 
 public partial class ProxyAppSettingsEntry : EnumAppSettingsEntry
 {
-    public ProxyAppSettingsEntry(AppSettings appSettings) : base(appSettings, t => t.ProxyType, ProxyTypeExtension.GetItems())
+    public ProxyAppSettingsEntry(SettingsPair<AppSettings> settingsPair) : base(settingsPair, t => t.ProxyType, ProxyTypeExtension.GetItems())
     {
         var member = typeof(AppSettings).GetProperty(nameof(AppSettings.Proxy));
         Attribute2 = member?.GetCustomAttribute<SettingsEntryAttribute>();

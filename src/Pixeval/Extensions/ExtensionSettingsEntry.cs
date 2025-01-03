@@ -7,17 +7,26 @@ using Windows.Foundation.Collections;
 using Pixeval.Attributes;
 using Pixeval.Extensions.Common.Settings;
 using Pixeval.Settings;
+using WinUI3Utilities;
 
 namespace Pixeval.Extensions;
 
 public abstract class ExtensionSettingsEntry<TValue>(ISettingsExtension extension, TValue value, IPropertySet values)
-    : ObservableSettingsEntryBase(extension.GetLabel(), extension.GetDescription(), extension.GetIcon()), ISingleValueSettingsEntry<TValue>
+    : SingleValueSettingsEntryBase<TValue>(extension.GetLabel(), extension.GetDescription(), extension.GetIcon(), values), ISingleValueSettingsEntry<TValue>
 {
     public SettingsEntryAttribute? Attribute => null;
 
+    public override string Token => extension.GetToken();
+
     public Action<TValue>? ValueChanged { get; set; }
 
-    public TValue Value
+    public override Uri? DescriptionUri
+    {
+        get => extension.GetDescriptionUri() is { } uri ? new Uri(uri) : null;
+        set => ThrowHelper.NotSupported<Uri?>();
+    }
+
+    public override TValue Value
     {
         get;
         set
@@ -29,13 +38,4 @@ public abstract class ExtensionSettingsEntry<TValue>(ISettingsExtension extensio
             ValueChanged?.Invoke(Value);
         }
     } = value;
-
-    public override void ValueReset()
-    {
-    }
-
-    public override void ValueSaving()
-    {
-        values[extension.GetToken()] = Value;
-    }
 }

@@ -15,13 +15,15 @@ public partial class ExtensionIntSettingsEntry(IIntSettingsExtension extension, 
     public override FrameworkElement Element => new DoubleSettingsCard { Entry = this };
 
     /// <remarks>
-    /// ËüºÍ<see cref="SingleValueSettingsEntry{T1, T2}.Value"/>Ãû³ÆÏàÍ¬£¬ËùÒÔ<see cref="ObservableSettingsEntryBase.OnPropertyChanged"/>Ö»ĞèÒª´¥·¢ÆäÖĞÒ»¸ö¾ÍĞĞ
+    /// å®ƒå’Œ<see cref="SingleValueSettingsEntry{T1, T2}.Value"/>åç§°ç›¸åŒï¼Œæ‰€ä»¥<see cref="ObservableSettingsEntryBase.OnPropertyChanged"/>åªéœ€è¦è§¦å‘å…¶ä¸­ä¸€ä¸ªå°±è¡Œ
     /// </remarks>
     double ISingleValueSettingsEntry<double>.Value
     {
         get => Value;
         set => Value = (int)value;
     }
+
+    public override void ValueReset() => Value = extension.GetDefaultValue();
 
     public override void ValueSaving()
     {

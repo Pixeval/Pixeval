@@ -159,7 +159,6 @@ public sealed partial class SettingsPage : IScrollViewHost, IDisposable, INotify
         foreach (var simpleSettingsGroup in ViewModel.Groups)
             foreach (var settingsEntry in simpleSettingsGroup)
                 settingsEntry.ValueSaving();
-        AppInfo.SaveConfig(ViewModel.AppSettings);
         ViewModel.Dispose();
         ViewModel = null!;
     }

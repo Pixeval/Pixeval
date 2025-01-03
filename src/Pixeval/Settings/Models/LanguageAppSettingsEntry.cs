@@ -24,4 +24,8 @@ public partial class LanguageAppSettingsEntry()
         AppLanguage = LanguageModel.DefaultLanguage;
         OnPropertyChanged(nameof(AppLanguage));
     }
+
+    public override void ValueSaving()
+    {
+    }
 }

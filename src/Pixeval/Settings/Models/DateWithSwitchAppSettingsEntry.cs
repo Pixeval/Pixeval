@@ -1,5 +1,6 @@
 using System;
 using System.Linq.Expressions;
+using Windows.Foundation.Collections;
 using Pixeval.AppManagement;
 using Pixeval.Controls.Settings;
 
@@ -7,11 +8,13 @@ namespace Pixeval.Settings.Models;
 
 public partial class DateWithSwitchAppSettingsEntry : BoolAppSettingsEntry
 {
-    public DateWithSwitchAppSettingsEntry(AppSettings appSettings,
+    public DateWithSwitchAppSettingsEntry(SettingsPair<AppSettings> settingsPair,
         Expression<Func<AppSettings, bool>> switchProperty,
-        Expression<Func<AppSettings, DateTimeOffset>> dateProperty) : base(appSettings, switchProperty)
+        Expression<Func<AppSettings, DateTimeOffset>> dateProperty) : base(settingsPair, switchProperty)
     {
-        (_getter, _setter, _) = GetSettingsEntryInfo(dateProperty);
+        _values = settingsPair.Values;
+        (_getter, _setter, var member) = GetSettingsEntryInfo(dateProperty);
+        _token = member.Member.Name;
     }
 
     public override DateWithSwitchSettingsCard Element => new() { Entry = this };
@@ -19,6 +22,10 @@ public partial class DateWithSwitchAppSettingsEntry : BoolAppSettingsEntry
     private readonly Func<AppSettings, DateTimeOffset> _getter;
 
     private readonly Action<AppSettings, DateTimeOffset> _setter;
+
+    private readonly string _token;
+
+    private readonly IPropertySet _values;
 
     public Action<DateTimeOffset>? DateChanged { get; set; }
 
@@ -40,5 +47,11 @@ public partial class DateWithSwitchAppSettingsEntry : BoolAppSettingsEntry
         OnPropertyChanged(nameof(Date));
         base.ValueReset();
         DateChanged?.Invoke(Date);
+    }
+
+    public override void ValueSaving()
+    {
+        base.ValueSaving();
+        _values[_token] = Converter.Convert(Date);
     }
 }

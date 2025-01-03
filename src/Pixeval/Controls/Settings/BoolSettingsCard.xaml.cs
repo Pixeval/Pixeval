@@ -1,7 +1,4 @@
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
 using Pixeval.Settings;
-using WinUI3Utilities;
 
 namespace Pixeval.Controls.Settings;
 

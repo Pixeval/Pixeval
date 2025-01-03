@@ -13,6 +13,8 @@ public partial class ExtensionDateSettingsEntry(IDateTimeOffsetSettingsExtension
 {
     public override FrameworkElement Element => new DateSettingsCard { Entry = this };
 
+    public override void ValueReset() => Value = extension.GetDefaultValue();
+
     public override void ValueSaving()
     {
         extension.OnValueChanged(Value);

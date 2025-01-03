@@ -9,9 +9,12 @@ using Pixeval.Settings;
 
 namespace Pixeval.Extensions.Models;
 
-public partial class ExtensionDoubleSettingsEntry(IDoubleSettingsExtension extension, double value, IPropertySet values) : ExtensionSettingsEntry<double>(extension, value, values), IDoubleSettingsEntry
+public partial class ExtensionDoubleSettingsEntry(IDoubleSettingsExtension extension, double value, IPropertySet values) 
+    : ExtensionSettingsEntry<double>(extension, value, values), IDoubleSettingsEntry
 {
     public override FrameworkElement Element => new DoubleSettingsCard { Entry = this };
+
+    public override void ValueReset() => Value = extension.GetDefaultValue();
 
     public override void ValueSaving()
     {

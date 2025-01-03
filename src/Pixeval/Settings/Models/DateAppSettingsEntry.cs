@@ -6,9 +6,9 @@ using Pixeval.Controls.Settings;
 namespace Pixeval.Settings.Models;
 
 public partial class DateAppSettingsEntry(
-    AppSettings appSettings,
+    SettingsPair<AppSettings> settingsPair,
     Expression<Func<AppSettings, DateTimeOffset>> property)
-    : SingleValueSettingsEntry<AppSettings, DateTimeOffset>(appSettings, property)
+    : SingleValueSettingsEntry<AppSettings, DateTimeOffset>(settingsPair, property)
 {
     public override DateSettingsCard Element => new() { Entry = this };
 }

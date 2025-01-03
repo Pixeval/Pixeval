@@ -31,27 +31,36 @@ using Pixeval.Database.Managers;
 using Pixeval.Download;
 using Pixeval.Extensions;
 using Pixeval.Logging;
+using Pixeval.Settings;
 using Pixeval.Util.IO.Caching;
 using Pixeval.Util.UI;
 using WinUI3Utilities;
 
 namespace Pixeval;
 
-public partial class AppViewModel(App app) : IDisposable
+public partial class AppViewModel : IDisposable
 {
     private bool _activatedByProtocol;
+
+    public AppViewModel(App app)
+    {
+        App = app;
+        SettingsPair = new(AppSettings, AppInfo.LocalConfig);
+    }
 
     public ServiceProvider AppServiceProvider { get; private set; } = null!;
 
     public IServiceScope AppServicesScope => AppServiceProvider.CreateScope();
 
-    public App App { get; } = app;
+    public App App { get; }
 
     public DownloadManager DownloadManager { get; private set; } = null!;
 
     public MakoClient MakoClient { get; set; } = null!; // The null-state of MakoClient is transient
 
     public AppSettings AppSettings { get; } = AppInfo.LoadConfig() ?? new AppSettings();
+
+    public SettingsPair<AppSettings> SettingsPair { get; }
 
     public LoginContext LoginContext { get; set; } = AppInfo.LoadLoginContext() ?? new LoginContext();
 

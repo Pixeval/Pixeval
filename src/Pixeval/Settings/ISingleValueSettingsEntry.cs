@@ -1,14 +1,15 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL v3 License.
 
-using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using Pixeval.Attributes;
 using Pixeval.Controls;
 
 namespace Pixeval.Settings;
 
-public interface ISingleValueSettingsEntry<TValue> : ISettingsEntry
+public interface ISingleValueSettingsEntry<TValue> : ISettingsEntry, INotifyPropertyChanged
 {
     SettingsEntryAttribute? Attribute { get; }
 
@@ -30,10 +31,15 @@ public interface IDoubleSettingsEntry : ISingleValueSettingsEntry<double>
 
     double LargeChange { get; }
 
-    double SmallChange { get;  }
+    double SmallChange { get; }
 }
 
 public interface IEnumSettingsEntry : ISingleValueSettingsEntry<object>
 {
-    public IReadOnlyList<StringRepresentableItem> EnumItems { get; }
+    IReadOnlyList<StringRepresentableItem> EnumItems { get; }
+}
+
+public interface IMultiStringsAppSettingsEntry : ISingleValueSettingsEntry<ObservableCollection<string>>
+{
+    string? Placeholder { get; }
 }

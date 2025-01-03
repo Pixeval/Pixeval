@@ -39,7 +39,7 @@ public class ExtensionService
         {
             if (LoadExtension(dll) is not { } host)
                 continue;
-            host.Initialize("", AppKnownFolders.Temp.FullPath);
+            host.Initialize(AppSettings.CurrentCulture.Name, AppKnownFolders.Temp.FullPath);
             var model = new ExtensionsHostModel(host);
             _extensionHosts.Add(model);
             LoadSettingsForExtension(model);

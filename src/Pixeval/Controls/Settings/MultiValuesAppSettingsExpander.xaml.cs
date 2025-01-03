@@ -1,11 +1,11 @@
 using Microsoft.UI.Xaml;
-using Pixeval.Settings.Models;
+using Pixeval.Settings;
 
 namespace Pixeval.Controls.Settings;
 
 public sealed partial class MultiValuesAppSettingsExpander
 {
-    public MultiValuesAppSettingsEntry Entry { get; set; } = null!;
+    public MultiValuesEntry Entry { get; set; } = null!;
 
     public MultiValuesAppSettingsExpander() => InitializeComponent();
 
