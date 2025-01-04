@@ -72,7 +72,7 @@ public partial class AppViewModel(App app) : IDisposable
         var fileCache = await FileCache.CreateDefaultAsync();
         var memoryCache = await MemoryCache.CreateDefaultAsync(200);
         var extensionService = new ExtensionService();
-        extensionService.LoadAllExtensions();
+        extensionService.LoadAllHosts();
         return new ServiceCollection()
             .AddSingleton<IllustrationDownloadTaskFactory>()
             .AddSingleton<NovelDownloadTaskFactory>()
@@ -115,6 +115,7 @@ public partial class AppViewModel(App app) : IDisposable
     public void Dispose()
     {
         AppServiceProvider?.GetRequiredService<LiteDatabase>().Dispose();
+        AppServiceProvider?.GetRequiredService<ExtensionService>().Dispose();
         AppServiceProvider?.Dispose();
         DownloadManager?.Dispose();
         MakoClient?.Dispose();

@@ -173,6 +173,7 @@
             </NavigationView.MenuItems>
             <NavigationView.FooterMenuItems>
                 <NavigationViewItem
+                    x:Name="ExtensionsTab"
                     x:Uid="/MainPage/ExtensionsTab"
                     Icon="{controls:BitmapImageIcon Uri=ms-appx:///Assets/Images/Icons/extensions.png}"
                     Tag="{x:Bind _viewModel.ExtensionsTag}" />

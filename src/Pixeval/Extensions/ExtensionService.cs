@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Runtime.InteropServices.Marshalling;
 using System.Runtime.InteropServices;
 using Pixeval.AppManagement;
@@ -17,7 +18,7 @@ using WinUI3Utilities;
 
 namespace Pixeval.Extensions;
 
-public class ExtensionService
+public class ExtensionService : IDisposable
 {
     public IReadOnlyList<ExtensionsHostModel> ExtensionHosts => _extensionHosts;
 
@@ -25,29 +26,43 @@ public class ExtensionService
 
     public IEnumerable<KeyValuePair<ExtensionsHostModel, IReadOnlyList<IExtension>>> ActivePairs => ExtensionsLookup.Where(t => t.Key.IsActive);
 
+    public IReadOnlyList<ExtensionSettingsGroup> SettingsGroups => _settingsGroups;
+
+    public IReadOnlyList<IExtension> Extensions => ExtensionsLookup
+        .Aggregate(new List<IExtension>(), (o, t) => o.Apply(p => p.AddRange(t.Value)));
+
     public IReadOnlyList<IExtension> ActiveExtensions => ActivePairs
         .Aggregate(new List<IExtension>(), (o, t) => o.Apply(p => p.AddRange(t.Value)));
 
-    public IReadOnlyList<ExtensionSettingsGroup> SettingsGroups => _settingsGroups;
+    public IEnumerable<IImageTransformerExtension> ActiveImageTransformers => ActiveExtensions.OfType<IImageTransformerExtension>();
 
-    public IEnumerable<IImageTransformerExtension> ImageTransformers => ActiveExtensions.OfType<IImageTransformerExtension>();
-
-    private readonly List<ExtensionsHostModel> _extensionHosts = [];
+    private readonly ObservableCollection<ExtensionsHostModel> _extensionHosts = [];
 
     private readonly Dictionary<ExtensionsHostModel, IReadOnlyList<IExtension>> _extensionsLookup = [];
 
     private readonly List<ExtensionSettingsGroup> _settingsGroups = [];
 
-    public void LoadAllExtensions()
+    public void LoadAllHosts()
     {
-        foreach (var dll in AppKnownFolders.Extensions.GetFiles("*.dll"))
+        foreach (var dll in AppKnownFolders.Extensions.GetFiles("*.dll")) 
+            _ = TryLoadHost(dll);
+    }
+
+    public bool TryLoadHost(string path)
+    {
+        try
         {
-            if (LoadExtension(dll) is not { } host)
-                continue;
+            if (LoadExtension(path) is not { } host)
+                return false;
             host.Initialize(AppSettings.CurrentCulture.Name, AppKnownFolders.Temp.FullPath);
             var model = new ExtensionsHostModel(host);
             _extensionHosts.Add(model);
             LoadExtensions(model);
+            return true;
+        }
+        catch
+        {
+            return false;
         }
     }
 
@@ -190,5 +205,12 @@ public class ExtensionService
         var imageTransformers = extensions.OfType<IImageTransformerExtension>();
         foreach (var imageTransformer in imageTransformers)
             imageTransformer.OnExtensionLoaded();
+    }
+
+    public void Dispose()
+    {
+        foreach (var extension in Extensions) 
+            extension.OnExtensionUnloaded();
+        GC.SuppressFinalize(this);
     }
 }

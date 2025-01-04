@@ -49,15 +49,6 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
     [ObservableProperty]
     public partial bool AdditionalTextBlockVisible { get; set; } = true;
 
-    [ObservableProperty]
-    public partial bool UpscalerProgressBarVisible { get; set; }
-
-    [ObservableProperty]
-    public partial int UpscalerProgress { get; set; }
-
-    [ObservableProperty]
-    public partial string? UpscalerProgressText { get; set; }
-
     /// <summary>
     /// 
     /// </summary>

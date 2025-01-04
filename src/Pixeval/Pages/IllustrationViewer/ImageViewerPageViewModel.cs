@@ -43,15 +43,16 @@ using Pixeval.CoreApi.Net.Response;
 using Pixeval.Download;
 using Pixeval.Util.ComponentModels;
 using Microsoft.Extensions.DependencyInjection;
+using Pixeval.Extensions;
+using Pixeval.Extensions.Common;
 using Pixeval.Util.IO.Caching;
+using Pixeval.Extensions.Common.Transformers;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
 public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
 {
     private bool _disposed;
-
-    private bool _upscaled;
 
     [ObservableProperty]
     public partial bool IsMirrored { get; set; }
@@ -82,16 +83,9 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
     [ObservableProperty]
     public partial float Scale { get; set; } = 1;
 
-    //[ObservableProperty]
-    //public partial bool Upscaling { get; set; }
-
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsFit))]
     public partial ZoomableImageMode ShowMode { get; set; }
-
-    //private Upscaler? _upscaler;
-
-    //public Channel<string> UpscalerMessageChannel { get; } = Channel.CreateUnbounded<string>();
 
     /// <summary>
     /// 由于多窗口，可能在加载图片后改变设置，所以此处缓存原图设置
@@ -199,9 +193,12 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
 
     private void AdvancePhase(LoadingPhase phase, double progress = 0)
     {
-        LoadingText = phase is LoadingPhase.DownloadingImage
-            ? LoadingPhaseExtension.GetResource(LoadingPhase.DownloadingImage).Format((int) (LoadingProgress = progress)) 
-            : LoadingPhaseExtension.GetResource(phase);
+        LoadingProgress = progress;
+        LoadingText = phase switch
+        {
+            LoadingPhase.DownloadingImage => LoadingPhaseExtension.GetResource(LoadingPhase.DownloadingImage).Format((int)progress),
+            _ => LoadingPhaseExtension.GetResource(phase)
+        };
     }
 
     private async Task LoadImage()
@@ -230,6 +227,7 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
 
             var ugoiraUrl = metadata?.LargeUrl;
             object? source = null;
+            // 原图动图（一张一张下）
             if (ugoiraUrl is not null && _isOriginal)
             {
                 var urls = await IllustrationViewModel.UgoiraOriginalUrlsAsync();
@@ -253,12 +251,19 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
             }
             else
             {
+                // 静图
                 if (ugoiraUrl is null)
                 {
                     ugoiraUrl = IllustrationViewModel.StaticUrl(_isOriginal);
                     if (await DownloadUrlAsync(ugoiraUrl) is { } s)
+                    {
+                        var newStream = await s.CopyToMemoryStreamAsync(false);
+                        s.Position = 0;
                         source = (IReadOnlyList<Stream>) [s];
+                        ApplyImageTransformers(newStream);
+                    }
                 }
+                // 非原图动图（压缩包）
                 else
                 {
                     source = await DownloadUrlAsync(ugoiraUrl);
@@ -289,6 +294,43 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
                         url,
                         new Progress<double>(d => AdvancePhase(LoadingPhase.DownloadingImage, startProgress + ratio * d)),
                         cancellationToken: ImageLoadingCancellationTokenSource.Token);
+            }
+
+            // 传入的s一定是新建的流，所以最后都会销毁s
+            async void ApplyImageTransformers(Stream s)
+            {
+                var extensionService = App.AppViewModel.AppServiceProvider.GetRequiredService<ExtensionService>();
+                var iStream = s.ToIStream();
+                var isIllustrationOrFirstPageManga = IllustrationViewModel.MangaIndex is -1 or 0;
+                var index = 1;
+                var token = ImageLoadingCancellationTokenSource.Token;
+                foreach (var transformer in extensionService.ActiveImageTransformers)
+                {
+                    if (token.IsCancellationRequested)
+                        break;
+                    if (isIllustrationOrFirstPageManga)
+                        HWnd.InfoGrowl(ImageViewerPageResources.ApplyingTransformerExtensionsFormatted.Format(index));
+                    // 运行扩展
+                    iStream.Seek(0, SeekOrigin.Begin, out _);
+                    var next = await transformer.TransformAsync(iStream);
+                    if (next is null)
+                        continue;
+                    // 最初的s会在最后一行销毁，从别的扩展拿到的iStream无法销毁，所以此处直接覆盖之前的流的行为没有问题
+                    iStream = next;
+                    // 下一次循环准备
+                    var newStream = iStream.ToStream();
+                    var memoryStream = await newStream.CopyToMemoryStreamAsync(false);
+                    iStream.Seek(0, SeekOrigin.Begin, out _);
+                    // 显示图片
+                    var last = OriginalStreamsSource;
+                    OriginalStreamsSource = (IReadOnlyList<Stream>)[memoryStream];
+                    if (last is IReadOnlyList<Stream> and [IDisposable disposable])
+                        disposable.Dispose();
+                    ++index;
+                }
+                if (!token.IsCancellationRequested && isIllustrationOrFirstPageManga)
+                    HWnd.SuccessGrowl(ImageViewerPageResources.AllTransformerExtensionsFinished);
+                await s.DisposeAsync();
             }
         }
     }
@@ -334,18 +376,6 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
         HWnd.ShowShareUi();
     }
 
-    private async void UpscaleCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
-    {
-        //_upscaled = true;
-        //UpscaleCommand.NotifyCanExecuteChanged();
-        //_upscaler ??= new Upscaler(new(OriginalStream!.Single(), 
-        //    App.AppViewModel.AppSettings.UpscalerModel,
-        //    App.AppViewModel.AppSettings.UpscalerScaleRatio,
-        //    App.AppViewModel.AppSettings.UpscalerOutputType));
-        //var newStream = await _upscaler.UpscaleAsync(UpscalerMessageChannel);
-        //OriginalStream = [newStream];
-    }
-
     private void InitializeCommands()
     {
         PlayGifCommand.CanExecuteRequested += (_, e) => e.CanExecute = IllustrationViewModel.IsUgoira && LoadSuccessfully;
@@ -378,9 +408,6 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
 
         SetAsBackgroundCommand.CanExecuteRequested += IsNotUgoiraAndLoadingCompletedCanExecuteRequested;
         SetAsBackgroundCommand.ExecuteRequested += SetAsBackgroundCommandOnExecuteRequested;
-
-        //UpscaleCommand.CanExecuteRequested += IsUpscaleCommandCanExecutedRequested;
-        //UpscaleCommand.ExecuteRequested += UpscaleCommandOnExecuteRequested;
     }
 
     private void UpdateCommandCanExecute()
@@ -393,11 +420,7 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
         RotateCounterclockwiseCommand.NotifyCanExecuteChanged();
         MirrorCommand.NotifyCanExecuteChanged();
         ShareCommand.NotifyCanExecuteChanged();
-        //UpscaleCommand.NotifyCanExecuteChanged();
     }
-
-    private void IsUpscaleCommandCanExecutedRequested(XamlUICommand _, CanExecuteRequestedEventArgs args) => 
-        args.CanExecute = LoadSuccessfully && !IllustrationViewModel.IsUgoira && !_upscaled;
 
     private void LoadingCompletedCanExecuteRequested(XamlUICommand _, CanExecuteRequestedEventArgs args) => args.CanExecute = LoadSuccessfully;
 
@@ -459,5 +482,5 @@ public enum LoadingPhase
     DownloadingImage,
 
     [LocalizedResource(typeof(ImageViewerPageResources), nameof(ImageViewerPageResources.LoadingImage))]
-    LoadingImage
+    LoadingImage,
 }

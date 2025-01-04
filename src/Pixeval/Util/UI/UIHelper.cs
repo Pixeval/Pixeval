@@ -19,6 +19,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Drawing;
 using System.IO;
@@ -52,6 +53,7 @@ using Size = Windows.Foundation.Size;
 using Symbol = FluentIcons.Common.Symbol;
 using SymbolIcon = FluentIcons.WinUI.SymbolIcon;
 using SymbolIconSource = FluentIcons.WinUI.SymbolIconSource;
+using WinRT.Interop;
 
 namespace Pixeval.Util.UI;
 
@@ -242,13 +244,18 @@ public static partial class UiHelper
         box.Document.SetText(TextSetOptions.None, "");
     }
 
-    public static IAsyncOperation<StorageFolder?> OpenFolderPickerAsync(this Window window) => window.PickSingleFolderAsync(PickerLocationId.PicturesLibrary);
-
-    public static IAsyncOperation<StorageFile?> OpenFileOpenPickerAsync(this Window window) => window.PickSingleFileAsync(PickerLocationId.PicturesLibrary);
-
     public static IAsyncOperation<StorageFolder?> OpenFolderPickerAsync(this ulong hWnd) => WindowFactory.ForkedWindows[hWnd].PickSingleFolderAsync(PickerLocationId.PicturesLibrary);
 
     public static IAsyncOperation<StorageFile?> OpenFileOpenPickerAsync(this ulong hWnd) => WindowFactory.ForkedWindows[hWnd].PickSingleFileAsync(PickerLocationId.PicturesLibrary);
+
+    public static IAsyncOperation<IReadOnlyList<StorageFile>> OpenMultipleDllsOpenPickerAsync(this ulong hWnd)
+    {
+        var fileOpenPicker = new FileOpenPicker();
+        fileOpenPicker.FileTypeFilter.Add(".dll");
+        fileOpenPicker.SuggestedStartLocation = PickerLocationId.Desktop;
+        InitializeWithWindow.Initialize(fileOpenPicker, (nint)hWnd);
+        return fileOpenPicker.PickMultipleFilesAsync();
+    }
 
     public static async Task<T> AwaitPageTransitionAsync<T>(this Frame root) where T : Page
     {

@@ -179,8 +179,6 @@ public partial record AppSettings() : IWindowSettings
     [AttributeIgnore(typeof(ResetAttribute))]
     public DateTimeOffset LastCheckedUpdate { get; set; } = DateTimeOffset.MinValue;
 
-    public bool ShowUpscalerTeachingTip { get; set; } = true;
-
     [SettingsEntry(Symbol.Box, nameof(PixivNameResolverHeaderText), nameof(PixivNameResolverDescriptionText))]
     public string[] PixivAppApiNameResolver { get; set; } =
     [
