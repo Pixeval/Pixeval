@@ -149,6 +149,7 @@ public sealed partial class SettingsPage : IScrollViewHost, IDisposable, INotify
             nameof(AppKnownFolders.Logs) => AppKnownFolders.Logs.FullPath,
             nameof(AppKnownFolders.Temp) => AppKnownFolders.Temp.FullPath,
             nameof(AppKnownFolders.Local) => AppKnownFolders.Local.FullPath,
+            nameof(AppKnownFolders.Extensions) => AppKnownFolders.Extensions.FullPath,
             _ => null
         };
         if (folder is not null)

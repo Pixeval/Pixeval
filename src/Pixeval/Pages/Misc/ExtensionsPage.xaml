@@ -1,0 +1,49 @@
+<Page
+    x:Class="Pixeval.Pages.Misc.ExtensionsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:extensions="using:Pixeval.Extensions"
+    xmlns:fluent="using:FluentIcons.WinUI"
+    xmlns:local="using:Pixeval.Pages.Misc"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+    <controls:DockPanel VerticalSpacing="10">
+        <TextBlock
+            x:Uid="/ExtensionsPage/TitleTextBlock"
+            Margin="20,40,20,20"
+            controls:DockPanel.Dock="Top"
+            Style="{StaticResource TitleTextBlockStyle}" />
+        <ScrollView>
+            <ItemsRepeater Margin="20,0,20,20" ItemsSource="{x:Bind Models}">
+                <ItemsRepeater.Layout>
+                    <StackLayout Orientation="Vertical" />
+                </ItemsRepeater.Layout>
+                <ItemsRepeater.ItemTemplate>
+                    <DataTemplate x:DataType="extensions:ExtensionsHostModel">
+                        <controls:SettingsCard Description="{x:Bind Description}" HeaderIcon="{fluent:SymbolIcon Symbol=PuzzlePiece}">
+                            <controls:SettingsCard.Header>
+                                <TextBlock>
+                                    <Run FontWeight="Bold" Text="{x:Bind Name}" />
+                                    <Run
+                                        FontFamily="Times New Roman"
+                                        FontStyle="Italic"
+                                        Text="    by " />
+                                    <Run
+                                        FontFamily="Times New Roman"
+                                        FontStyle="Italic"
+                                        FontWeight="Bold"
+                                        Text="{x:Bind Author}" />
+                                </TextBlock>
+                            </controls:SettingsCard.Header>
+                            <controls:SettingsCard.Content>
+                                <ToggleSwitch IsOn="{x:Bind IsActive, Mode=TwoWay}" />
+                            </controls:SettingsCard.Content>
+                        </controls:SettingsCard>
+                    </DataTemplate>
+                </ItemsRepeater.ItemTemplate>
+            </ItemsRepeater>
+        </ScrollView>
+    </controls:DockPanel>
+</Page>

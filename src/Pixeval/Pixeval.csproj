@@ -126,6 +126,13 @@
 
     <ItemGroup>
       <None Remove="Controls\Settings\DateSettingsCard.xaml" />
+      <None Remove="Pages\Misc\ExtensionsPage.xaml" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Page Update="Pages\Misc\ExtensionsPage.xaml">
+        <Generator>MSBuild:Compile</Generator>
+      </Page>
     </ItemGroup>
 
     <ItemGroup>

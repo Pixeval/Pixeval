@@ -10,6 +10,19 @@ namespace Pixeval.Extensions;
 
 public record ExtensionsHostModel(IExtensionsHost Host)
 {
+    public bool IsActive
+    {
+        get
+        {
+            if (Values.TryGetValue(nameof(IsActive), out var value) && value is bool v)
+                return v;
+
+            Values[nameof(IsActive)] = true;
+            return true;
+        }
+        set => Values[nameof(IsActive)] = value;
+    }
+
     public string Name { get; } = Host.GetExtensionName();
 
     public string Description { get; } = Host.GetDescription();

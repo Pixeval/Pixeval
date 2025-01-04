@@ -9,6 +9,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pages="using:Pixeval.Pages"
     xmlns:pixeval="using:Pixeval.AppManagement"
+    xmlns:toolkit="using:CommunityToolkit.WinUI"
     xmlns:windowing="using:Pixeval.Controls.Windowing"
     Loaded="MainPage_OnLoaded"
     mc:Ignorable="d">
@@ -119,71 +120,75 @@
             <NavigationView.MenuItems>
                 <NavigationViewItem
                     x:Uid="/MainPage/RecommendationsTab"
-                    Icon="{x:Bind _viewModel.RecommendationIcon}"
-                    Tag="{x:Bind _viewModel.RecommendsTag}" />
+                    Icon="{controls:BitmapImageIcon Uri=ms-appx:///Assets/Images/Icons/recommendations.png}"
+                    Tag="{x:Bind _viewModel.RecommendationsTag}" />
                 <NavigationViewItem
                     x:Uid="/MainPage/RankingsTab"
-                    Icon="{x:Bind _viewModel.RankingIcon}"
+                    Icon="{controls:BitmapImageIcon Uri=ms-appx:///Assets/Images/Icons/ranking.png}"
                     Tag="{x:Bind _viewModel.RankingsTag}" />
                 <NavigationViewItem
                     x:Uid="/MainPage/BookmarksTab"
-                    Icon="{x:Bind _viewModel.BookmarksIcon}"
+                    Icon="{controls:BitmapImageIcon Uri=ms-appx:///Assets/Images/Icons/bookmarks.png}"
                     Tag="{x:Bind _viewModel.BookmarksTag}" />
                 <NavigationViewItem
                     x:Uid="/MainPage/FollowingsTab"
-                    Icon="{x:Bind _viewModel.FollowingsIcon}"
+                    Icon="{controls:BitmapImageIcon Uri=ms-appx:///Assets/Images/Icons/followings.png}"
                     Tag="{x:Bind _viewModel.FollowingsTag}" />
                 <NavigationViewItem
                     x:Uid="/MainPage/SpotlightsTab"
-                    Icon="{x:Bind _viewModel.SpotlightIcon}"
+                    Icon="{controls:BitmapImageIcon Uri=ms-appx:///Assets/Images/Icons/spotlight.png}"
                     Tag="{x:Bind _viewModel.SpotlightsTag}" />
                 <NavigationViewItem
                     x:Uid="/MainPage/RecommendUsersTab"
-                    Icon="{x:Bind _viewModel.RecommendUserIcon}"
+                    Icon="{controls:BitmapImageIcon Uri=ms-appx:///Assets/Images/Icons/recommend-user.png}"
                     Tag="{x:Bind _viewModel.RecommendUsersTag}" />
                 <NavigationViewItem
                     x:Uid="/MainPage/RecentPostsTab"
-                    Icon="{x:Bind _viewModel.RecentPostsIcon}"
+                    Icon="{controls:BitmapImageIcon Uri=ms-appx:///Assets/Images/Icons/recent-posts.png}"
                     Tag="{x:Bind _viewModel.RecentPostsTag}" />
                 <NavigationViewItem
                     x:Uid="/MainPage/NewWorksTab"
-                    Icon="{x:Bind _viewModel.NewWorksIcon}"
+                    Icon="{controls:BitmapImageIcon Uri=ms-appx:///Assets/Images/Icons/new-works.png}"
                     Tag="{x:Bind _viewModel.NewWorksTag}" />
                 <NavigationViewItem
                     x:Name="FeedTab"
                     x:Uid="/MainPage/FeedTab"
-                    Icon="{x:Bind _viewModel.FeedIcon}"
+                    Icon="{controls:BitmapImageIcon Uri=ms-appx:///Assets/Images/Icons/feed.png}"
                     Tag="{x:Bind _viewModel.FeedTag}" />
                 <NavigationViewItemHeader x:Uid="/MainPage/DownloadAndHistoriesTab" />
                 <NavigationViewItem
                     x:Name="TagsTab"
                     x:Uid="/MainPage/TagsTab"
-                    Icon="{x:Bind _viewModel.TagIcon}"
+                    Icon="{controls:BitmapImageIcon Uri=ms-appx:///Assets/Images/Icons/tag.png}"
                     Tag="{x:Bind _viewModel.TagsTag}" />
                 <NavigationViewItem
                     x:Uid="/MainPage/HistoriesTab"
-                    Icon="{x:Bind _viewModel.HistoryIcon}"
+                    Icon="{controls:BitmapImageIcon Uri=ms-appx:///Assets/Images/Icons/history.png}"
                     Tag="{x:Bind _viewModel.HistoriesTag}" />
                 <NavigationViewItem
                     x:Name="DownloadListTab"
                     x:Uid="/MainPage/DownloadListTab"
-                    Icon="{x:Bind _viewModel.DownloadListIcon}"
+                    Icon="{controls:BitmapImageIcon Uri=ms-appx:///Assets/Images/Icons/download-list.png}"
                     Tag="{x:Bind _viewModel.DownloadListTag}" />
             </NavigationView.MenuItems>
             <NavigationView.FooterMenuItems>
                 <NavigationViewItem
+                    x:Uid="/MainPage/ExtensionsTab"
+                    Icon="{controls:BitmapImageIcon Uri=ms-appx:///Assets/Images/Icons/extensions.png}"
+                    Tag="{x:Bind _viewModel.ExtensionsTag}" />
+                <NavigationViewItem
                     x:Uid="/MainPage/HelpTab"
-                    Icon="{x:Bind _viewModel.HelpIcon}"
+                    Icon="{controls:BitmapImageIcon Uri=ms-appx:///Assets/Images/Icons/help.png}"
                     Tag="{x:Bind _viewModel.HelpTag}" />
                 <NavigationViewItem
                     x:Uid="/MainPage/AboutTab"
-                    Icon="{x:Bind _viewModel.AboutIcon}"
+                    Icon="{controls:BitmapImageIcon Uri=ms-appx:///Assets/Images/Icons/about.png}"
                     Tag="{x:Bind _viewModel.AboutTag}" />
                 <NavigationViewItemSeparator />
                 <NavigationViewItem
                     x:Name="SettingsTab"
                     x:Uid="/MainPage/SettingsTab"
-                    Icon="{x:Bind _viewModel.SettingsIcon}"
+                    Icon="{controls:BitmapImageIcon Uri=ms-appx:///Assets/Images/Icons/settings.png}"
                     Tag="{x:Bind _viewModel.SettingsTag}">
                     <NavigationViewItem.InfoBadge>
                         <InfoBadge

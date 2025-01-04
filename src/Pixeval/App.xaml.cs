@@ -59,7 +59,7 @@ public partial class App
         AppViewModel = new AppViewModel(this);
         BookmarkTag.AllCountedTagString = MiscResources.AllCountedTagName;
         AppInfo.SetNameResolvers(AppViewModel.AppSettings);
-        WindowFactory.Initialize(AppViewModel.AppSettings, AppInfo.IconAbsolutePath);
+        WindowFactory.Initialize(AppViewModel.AppSettings, AppInfo.IconApplicationUri);
         AppInstance.GetCurrent().Activated += (_, arguments) => ActivationRegistrar.Dispatch(arguments);
         InitializeComponent();
     }

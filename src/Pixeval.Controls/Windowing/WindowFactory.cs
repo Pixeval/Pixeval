@@ -28,24 +28,25 @@ using Windows.Win32;
 using Windows.Win32.Foundation;
 using Windows.Win32.Graphics.Gdi;
 using WinUI3Utilities;
+using WinUIEx;
 
 namespace Pixeval.Controls.Windowing;
 
 public static class WindowFactory
 {
-    public static string IconAbsolutePath { get; set; } = "";
+    public static string IconPath { get; set; } = "";
 
     public static IWindowSettings WindowSettings { get; set; } = null!;
 
     public static EnhancedWindow RootWindow { get; private set; } = null!;
 
-    private static readonly Dictionary<ulong, EnhancedWindow> _forkedWindowsInternal = [];
+    private static readonly Dictionary<ulong, EnhancedWindow> _ForkedWindowsInternal = [];
 
-    public static IReadOnlyDictionary<ulong, EnhancedWindow> ForkedWindows => _forkedWindowsInternal;
+    public static IReadOnlyDictionary<ulong, EnhancedWindow> ForkedWindows => _ForkedWindowsInternal;
 
-    public static EnhancedWindow GetForkedWindows(ulong key) => _forkedWindowsInternal[key];
+    public static EnhancedWindow GetForkedWindows(ulong key) => _ForkedWindowsInternal[key];
 
-    public static void Initialize(IWindowSettings windowSettings, string iconAbsolutePath)
+    public static void Initialize(IWindowSettings windowSettings, string iconPath)
     {
         AppHelper.InitializeIsDarkMode();
         WindowSettings = windowSettings;
@@ -55,12 +56,12 @@ public static class WindowFactory
             ElementTheme.Dark => ApplicationTheme.Dark,
             _ => Application.Current.RequestedTheme
         };
-        IconAbsolutePath = iconAbsolutePath;
+        IconPath = iconPath;
     }
 
     public static FrameworkElement GetContentFromHWnd(ulong hWnd)
     {
-        return _forkedWindowsInternal[hWnd].Content.To<FrameworkElement>();
+        return _ForkedWindowsInternal[hWnd].Content.To<FrameworkElement>();
     }
 
     public static EnhancedWindow GetWindowForElement(UIElement element)
@@ -68,15 +69,15 @@ public static class WindowFactory
         if (element.XamlRoot is null)
             ThrowHelper.ArgumentNull(element.XamlRoot, $"{nameof(element.XamlRoot)} should not be null.");
 
-        return _forkedWindowsInternal.Values.FirstOrDefault(window => element.XamlRoot == window.Content.XamlRoot)
+        return _ForkedWindowsInternal.Values.FirstOrDefault(window => element.XamlRoot == window.Content.XamlRoot)
                ?? ThrowHelper.ArgumentOutOfRange<UIElement, EnhancedWindow>(element, $"Specified {nameof(element)} is not existed in any of {nameof(ForkedWindows)}.");
     }
 
     public static EnhancedWindow Create(out EnhancedWindow window)
     {
         RootWindow = window = new EnhancedWindow();
-        window.Closed += (sender, _) => _forkedWindowsInternal.Remove(sender.To<EnhancedWindow>().HWnd);
-        _forkedWindowsInternal[window.HWnd] = window;
+        window.Closed += (sender, _) => _ForkedWindowsInternal.Remove(sender.To<EnhancedWindow>().HWnd);
+        _ForkedWindowsInternal[window.HWnd] = window;
         return window;
     }
 
@@ -84,8 +85,8 @@ public static class WindowFactory
     {
         var window = new EnhancedWindow(owner);
         hWnd = window.HWnd;
-        window.Closed += (sender, _) => _forkedWindowsInternal.Remove(sender.To<EnhancedWindow>().HWnd);
-        _forkedWindowsInternal[window.HWnd] = window;
+        window.Closed += (sender, _) => _ForkedWindowsInternal.Remove(sender.To<EnhancedWindow>().HWnd);
+        _ForkedWindowsInternal[window.HWnd] = window;
         return window;
     }
 
@@ -121,7 +122,7 @@ public static class WindowFactory
             BackdropType = WindowSettings.Backdrop,
             ExtendTitleBar = true,
             Size = size,
-            IconPath = IconAbsolutePath,
+            IconPath = IconPath,
             Title = title,
             IsMaximized = isMaximized,
             Theme = WindowSettings.Theme
@@ -134,13 +135,13 @@ public static class WindowFactory
 
     public static void SetBackdrop(BackdropType backdropType)
     {
-        foreach (var window in _forkedWindowsInternal.Values)
+        foreach (var window in _ForkedWindowsInternal.Values)
             window.SetBackdrop(backdropType);
     }
 
     public static void SetTheme(ElementTheme theme)
     {
-        foreach (var window in _forkedWindowsInternal.Values)
+        foreach (var window in _ForkedWindowsInternal.Values)
             window.SetTheme(theme);
     }
 

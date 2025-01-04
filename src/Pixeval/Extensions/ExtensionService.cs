@@ -10,7 +10,9 @@ using Pixeval.Extensions.Common.Settings;
 using Pixeval.Extensions.Common;
 using System.Linq;
 using Windows.Win32;
+using Pixeval.Extensions.Common.Transformers;
 using Pixeval.Extensions.Models;
+using Pixeval.Utilities;
 using WinUI3Utilities;
 
 namespace Pixeval.Extensions;
@@ -19,14 +21,20 @@ public class ExtensionService
 {
     public IReadOnlyList<ExtensionsHostModel> ExtensionHosts => _extensionHosts;
 
-    public IReadOnlyDictionary<ExtensionsHostModel, IReadOnlyList<ISettingsExtension>> SettingsExtensions => _settingsExtensions;
+    public IReadOnlyDictionary<ExtensionsHostModel, IReadOnlyList<IExtension>> ExtensionsLookup => _extensionsLookup;
+
+    public IEnumerable<KeyValuePair<ExtensionsHostModel, IReadOnlyList<IExtension>>> ActivePairs => ExtensionsLookup.Where(t => t.Key.IsActive);
+
+    public IReadOnlyList<IExtension> ActiveExtensions => ActivePairs
+        .Aggregate(new List<IExtension>(), (o, t) => o.Apply(p => p.AddRange(t.Value)));
 
     public IReadOnlyList<ExtensionSettingsGroup> SettingsGroups => _settingsGroups;
 
+    public IEnumerable<IImageTransformerExtension> ImageTransformers => ActiveExtensions.OfType<IImageTransformerExtension>();
+
     private readonly List<ExtensionsHostModel> _extensionHosts = [];
 
-    private readonly Dictionary<ExtensionsHostModel, IReadOnlyList<ISettingsExtension>> _settingsExtensions = [];
-
+    private readonly Dictionary<ExtensionsHostModel, IReadOnlyList<IExtension>> _extensionsLookup = [];
 
     private readonly List<ExtensionSettingsGroup> _settingsGroups = [];
 
@@ -39,7 +47,7 @@ public class ExtensionService
             host.Initialize(AppSettings.CurrentCulture.Name, AppKnownFolders.Temp.FullPath);
             var model = new ExtensionsHostModel(host);
             _extensionHosts.Add(model);
-            LoadSettingsForExtension(model);
+            LoadExtensions(model);
         }
     }
 
@@ -70,14 +78,23 @@ public class ExtensionService
         }
     }
 
-    private void LoadSettingsForExtension(ExtensionsHostModel model)
+    private void LoadExtensions(ExtensionsHostModel model)
     {
-        var settingsExtensions = model.Extensions.OfType<ISettingsExtension>().ToArray();
-        _settingsExtensions[model] = settingsExtensions;
+        var extensions = model.Extensions.ToArray();
+        _extensionsLookup[model] = extensions;
+        foreach (var extension in extensions)
+            extension.OnExtensionLoaded();
+        LoadSettingsExtension(model, extensions);
+        LoadImageTransformerExtensions(model, extensions);
+    }
+
+    private void LoadSettingsExtension(ExtensionsHostModel model, IEnumerable<IExtension> extensions)
+    {
         var converter = new SettingsValueConverter();
         var extensionSettingsGroup = new ExtensionSettingsGroup(model);
         _settingsGroups.Add(extensionSettingsGroup);
         var values = model.Values;
+        var settingsExtensions = extensions.OfType<ISettingsExtension>();
         foreach (var settingsExtension in settingsExtensions)
         {
             settingsExtension.OnExtensionLoaded();
@@ -166,5 +183,12 @@ public class ExtensionService
                     break;
             }
         }
+    }
+
+    private void LoadImageTransformerExtensions(ExtensionsHostModel model, IEnumerable<IExtension> extensions)
+    {
+        var imageTransformers = extensions.OfType<IImageTransformerExtension>();
+        foreach (var imageTransformer in imageTransformers)
+            imageTransformer.OnExtensionLoaded();
     }
 }

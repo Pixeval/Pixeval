@@ -717,4 +717,10 @@
   <data name="UseSearchEndDateEntry.Description" xml:space="preserve">
     <value>启用后搜索作品的投稿日期将到此日期结束</value>
   </data>
+  <data name="OpenExtensionsEntry.Header" xml:space="preserve">
+    <value>打开扩展文件夹</value>
+  </data>
+  <data name="OpenExtensionsEntry.Description" xml:space="preserve">
+    <value>此处存储了软件会加载的扩展dll文件</value>
+  </data>
 </root>

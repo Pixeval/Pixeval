@@ -50,7 +50,7 @@ public static partial class AppInfo
 
     public const string AppProtocol = "pixeval";
 
-    public const string IconApplicationUri = "ms-appx:///Assets/Images/logo.ico";
+    public const string IconApplicationUri = "Assets/Images/logo.ico";
 
     public static ApplicationData AppData { get; } = ApplicationData.GetDefault();
 
@@ -80,8 +80,6 @@ public static partial class AppInfo
         MakoHttpOptions.SetNameResolver(MakoHttpOptions.AccountHost, appSetting.PixivAccountNameResolver);
         MakoHttpOptions.SetNameResolver(MakoHttpOptions.WebApiHost, appSetting.PixivWebApiNameResolver);
     }
-
-    public static string IconAbsolutePath => ApplicationUriToPath(new Uri(IconApplicationUri));
 
     public static Uri NavigationIconUri(string name) => new Uri($"ms-appx:///Assets/Images/Icons/{name}.png");
 
