@@ -8,15 +8,16 @@ using Pixeval.Extensions.Common.Settings;
 
 namespace Pixeval.Extensions.Models;
 
-public partial class ExtensionBoolSettingsEntry(IBoolSettingsExtension extension, bool value, IPropertySet values) : ExtensionSettingsEntry<bool>(extension, value, values)
+public partial class ExtensionBoolSettingsEntry(IBoolSettingsExtension extension, bool value) 
+    : ExtensionSettingsEntry<bool>(extension, value)
 {
     public override FrameworkElement Element => new BoolSettingsCard { Entry = this };
 
     public override void ValueReset() => Value = extension.GetDefaultValue();
 
-    public override void ValueSaving()
+    public override void ValueSaving(IPropertySet values)
     {
         extension.OnValueChanged(Value);
-        base.ValueSaving();
+        base.ValueSaving(values);
     }
 }

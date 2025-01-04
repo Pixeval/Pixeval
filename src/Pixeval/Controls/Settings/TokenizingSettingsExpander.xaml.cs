@@ -1,4 +1,3 @@
-using System.Linq;
 using CommunityToolkit.WinUI.Controls;
 using Pixeval.Settings;
 

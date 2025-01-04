@@ -1,3 +1,4 @@
+using Windows.Foundation.Collections;
 using FluentIcons.Common;
 using Microsoft.UI.Xaml;
 
@@ -13,7 +14,5 @@ public interface ISettingsEntry
 
     object DescriptionControl { get; }
 
-    void ValueReset();
-
-    void ValueSaving();
+    void ValueSaving(IPropertySet values);
 }

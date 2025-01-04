@@ -9,8 +9,8 @@ using Pixeval.Settings;
 
 namespace Pixeval.Extensions.Models;
 
-public partial class ExtensionIntSettingsEntry(IIntSettingsExtension extension, int value, IPropertySet values)
-    : ExtensionSettingsEntry<int>(extension, value, values), IDoubleSettingsEntry
+public partial class ExtensionIntSettingsEntry(IIntSettingsExtension extension, int value)
+    : ExtensionSettingsEntry<int>(extension, value), IDoubleSettingsEntry
 {
     public override FrameworkElement Element => new DoubleSettingsCard { Entry = this };
 
@@ -25,10 +25,10 @@ public partial class ExtensionIntSettingsEntry(IIntSettingsExtension extension, 
 
     public override void ValueReset() => Value = extension.GetDefaultValue();
 
-    public override void ValueSaving()
+    public override void ValueSaving(IPropertySet values)
     {
         extension.OnValueChanged(Value);
-        base.ValueSaving();
+        base.ValueSaving(values);
     }
 
     public string? Placeholder => extension.GetPlaceholder();

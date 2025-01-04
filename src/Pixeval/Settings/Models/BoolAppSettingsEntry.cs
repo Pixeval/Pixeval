@@ -7,17 +7,17 @@ using Pixeval.Controls.Settings;
 namespace Pixeval.Settings.Models;
 
 public partial class BoolAppSettingsEntry(
-    SettingsPair<AppSettings> settingsPair,
+    AppSettings settings,
     Expression<Func<AppSettings, bool>> property)
-    : SingleValueSettingsEntry<AppSettings, bool>(settingsPair, property)
+    : SingleValueSettingsEntry<AppSettings, bool>(settings, property)
 {
     public override FrameworkElement Element => new BoolSettingsCard { Entry = this };
 
     public BoolAppSettingsEntry(
-        SettingsPair<AppSettings> settingsPair,
+        AppSettings settings,
         WorkTypeEnum workType,
         Expression<Func<AppSettings, bool>> property)
-        : this(settingsPair, property)
+        : this(settings, property)
     {
         Header = SubHeader(workType);
         HeaderIcon = SubHeaderIcon(workType);

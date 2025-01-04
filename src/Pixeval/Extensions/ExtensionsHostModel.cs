@@ -2,6 +2,8 @@
 // Licensed under the GPL v3 License.
 
 using System.Collections.Generic;
+using Windows.Foundation.Collections;
+using Microsoft.Windows.Storage;
 using Pixeval.Extensions.Common;
 
 namespace Pixeval.Extensions;
@@ -20,5 +22,16 @@ public record ExtensionsHostModel(IExtensionsHost Host)
 
     public string HelpLink { get; } = Host.GetHelpLink();
 
+    public IPropertySet Values { get; } = GetValues(Host);
+
     public IReadOnlyList<IExtension> Extensions { get; } = Host.GetExtensions();
+
+    private static IPropertySet GetValues(IExtensionsHost host)
+    {
+        var localSettings = ApplicationData.GetDefault().LocalSettings;
+        var extensionName = host.GetExtensionName();
+        if (!localSettings.Containers.TryGetValue(extensionName, out var container))
+            container = localSettings.CreateContainer(extensionName, ApplicationDataCreateDisposition.Always);
+        return container.Values;
+    }
 }

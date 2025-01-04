@@ -43,3 +43,8 @@ public interface IMultiStringsAppSettingsEntry : ISingleValueSettingsEntry<Obser
 {
     string? Placeholder { get; }
 }
+
+public interface IAppSettingEntry<in TSetting> : ISettingsEntry
+{
+    void ValueReset(TSetting defaultSetting);
+}

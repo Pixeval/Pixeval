@@ -36,7 +36,5 @@ public sealed partial class ProxySettingsExpander
         }
 
         Entry.Proxy = proxy;
-
-        Entry.ProxyChanged?.Invoke(Entry.MakoProxy);
     }
 }

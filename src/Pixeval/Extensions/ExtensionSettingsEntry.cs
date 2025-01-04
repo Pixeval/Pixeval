@@ -3,16 +3,16 @@
 
 using System;
 using System.Collections.Generic;
-using Windows.Foundation.Collections;
 using Pixeval.Attributes;
 using Pixeval.Extensions.Common.Settings;
+using Pixeval.Extensions.Models;
 using Pixeval.Settings;
 using WinUI3Utilities;
 
 namespace Pixeval.Extensions;
 
-public abstract class ExtensionSettingsEntry<TValue>(ISettingsExtension extension, TValue value, IPropertySet values)
-    : SingleValueSettingsEntryBase<TValue>(extension.GetLabel(), extension.GetDescription(), extension.GetIcon(), values), ISingleValueSettingsEntry<TValue>
+public abstract class ExtensionSettingsEntry<TValue>(ISettingsExtension extension, TValue value)
+    : SingleValueSettingsEntryBase<TValue>(extension.GetLabel(), extension.GetDescription(), extension.GetIcon()), ISingleValueSettingsEntry<TValue>, IExtensionSettingEntry
 {
     public SettingsEntryAttribute? Attribute => null;
 
@@ -38,4 +38,6 @@ public abstract class ExtensionSettingsEntry<TValue>(ISettingsExtension extensio
             ValueChanged?.Invoke(Value);
         }
     } = value;
+
+    public abstract void ValueReset();
 }

@@ -15,18 +15,14 @@ namespace Pixeval.Settings.Models;
 
 public partial class IpWithSwitchAppSettingsEntry : BoolAppSettingsEntry
 {
-    private readonly IPropertySet _values;
-
-    public IpWithSwitchAppSettingsEntry(SettingsPair<AppSettings> settingsPair) : base(settingsPair, t => t.EnableDomainFronting)
+    public IpWithSwitchAppSettingsEntry(AppSettings settings) : base(settings, t => t.EnableDomainFronting)
     {
-        var appSettings = settingsPair.Settings;
-        _values = settingsPair.Values;
-        PixivAppApiNameResolver = [.. appSettings.PixivAppApiNameResolver];
-        PixivImageNameResolver = [.. appSettings.PixivImageNameResolver];
-        PixivImageNameResolver2 = [.. appSettings.PixivImageNameResolver2];
-        PixivOAuthNameResolver = [.. appSettings.PixivOAuthNameResolver];
-        PixivAccountNameResolver = [.. appSettings.PixivAccountNameResolver];
-        PixivWebApiNameResolver = [.. appSettings.PixivWebApiNameResolver];
+        PixivAppApiNameResolver = [.. settings.PixivAppApiNameResolver];
+        PixivImageNameResolver = [.. settings.PixivImageNameResolver];
+        PixivImageNameResolver2 = [.. settings.PixivImageNameResolver2];
+        PixivOAuthNameResolver = [.. settings.PixivOAuthNameResolver];
+        PixivAccountNameResolver = [.. settings.PixivAccountNameResolver];
+        PixivWebApiNameResolver = [.. settings.PixivWebApiNameResolver];
 
         var member = typeof(AppSettings).GetProperty(nameof(AppSettings.PixivAppApiNameResolver));
         Attribute2 = member?.GetCustomAttribute<SettingsEntryAttribute>();
@@ -76,16 +72,16 @@ public partial class IpWithSwitchAppSettingsEntry : BoolAppSettingsEntry
 
     public override IpWithSwitchSettingsExpander Element => new() { Entry = this };
 
-    public override void ValueReset()
+    public override void ValueReset(AppSettings defaultSettings)
     {
-        base.ValueReset();
+        base.ValueReset(defaultSettings);
 
-        PixivAppApiNameResolver = [.. Settings.PixivAppApiNameResolver];
-        PixivImageNameResolver = [.. Settings.PixivImageNameResolver];
-        PixivImageNameResolver2 = [.. Settings.PixivImageNameResolver2];
-        PixivOAuthNameResolver = [.. Settings.PixivOAuthNameResolver];
-        PixivAccountNameResolver = [.. Settings.PixivAccountNameResolver];
-        PixivWebApiNameResolver = [.. Settings.PixivWebApiNameResolver];
+        PixivAppApiNameResolver = [.. defaultSettings.PixivAppApiNameResolver];
+        PixivImageNameResolver = [.. defaultSettings.PixivImageNameResolver];
+        PixivImageNameResolver2 = [.. defaultSettings.PixivImageNameResolver2];
+        PixivOAuthNameResolver = [.. defaultSettings.PixivOAuthNameResolver];
+        PixivAccountNameResolver = [.. defaultSettings.PixivAccountNameResolver];
+        PixivWebApiNameResolver = [.. defaultSettings.PixivWebApiNameResolver];
 
         OnPropertyChanged(nameof(PixivAppApiNameResolver));
         OnPropertyChanged(nameof(PixivImageNameResolver));
@@ -95,9 +91,9 @@ public partial class IpWithSwitchAppSettingsEntry : BoolAppSettingsEntry
         OnPropertyChanged(nameof(PixivWebApiNameResolver));
     }
 
-    public override void ValueSaving()
+    public override void ValueSaving(IPropertySet values)
     {
-        base.ValueSaving();
+        base.ValueSaving(values);
 
         var appApiNameSame = Settings.PixivAppApiNameResolver.SequenceEquals(PixivAppApiNameResolver);
         var imageNameSame = Settings.PixivImageNameResolver.SequenceEqual(PixivImageNameResolver);
@@ -113,12 +109,12 @@ public partial class IpWithSwitchAppSettingsEntry : BoolAppSettingsEntry
         var accountName = Settings.PixivAccountNameResolver = [.. PixivAccountNameResolver];
         var webApiName = Settings.PixivWebApiNameResolver = [.. PixivWebApiNameResolver];
 
-        _values[nameof(AppSettings.PixivAppApiNameResolver)] = Converter.Convert(appApi);
-        _values[nameof(AppSettings.PixivImageNameResolver)] = Converter.Convert(imageName);
-        _values[nameof(AppSettings.PixivImageNameResolver2)] = Converter.Convert(imageName2);
-        _values[nameof(AppSettings.PixivOAuthNameResolver)] = Converter.Convert(oAuthName);
-        _values[nameof(AppSettings.PixivAccountNameResolver)] = Converter.Convert(accountName);
-        _values[nameof(AppSettings.PixivWebApiNameResolver)] = Converter.Convert(webApiName);
+        values[nameof(AppSettings.PixivAppApiNameResolver)] = Converter.Convert(appApi);
+        values[nameof(AppSettings.PixivImageNameResolver)] = Converter.Convert(imageName);
+        values[nameof(AppSettings.PixivImageNameResolver2)] = Converter.Convert(imageName2);
+        values[nameof(AppSettings.PixivOAuthNameResolver)] = Converter.Convert(oAuthName);
+        values[nameof(AppSettings.PixivAccountNameResolver)] = Converter.Convert(accountName);
+        values[nameof(AppSettings.PixivWebApiNameResolver)] = Converter.Convert(webApiName);
 
         if (appApiNameSame || imageNameSame || imageName2Same || oAuthNameSame || accountNameSame || webApiNameSame)
             AppInfo.SetNameResolvers(Settings);

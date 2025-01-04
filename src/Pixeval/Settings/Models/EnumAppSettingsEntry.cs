@@ -9,21 +9,21 @@ using Pixeval.Controls.Settings;
 namespace Pixeval.Settings.Models;
 
 public partial class EnumAppSettingsEntry(
-    SettingsPair<AppSettings> settingsPair,
+    AppSettings settings,
     Expression<Func<AppSettings, object>> property,
     IReadOnlyList<StringRepresentableItem> array)
-    : SingleValueSettingsEntry<AppSettings, object>(settingsPair, property), IEnumSettingsEntry
+    : SingleValueSettingsEntry<AppSettings, object>(settings, property), IEnumSettingsEntry
 {
     public override FrameworkElement Element => new EnumSettingsCard { Entry = this };
 
     public IReadOnlyList<StringRepresentableItem> EnumItems { get; set; } = array;
 
     public EnumAppSettingsEntry(
-        SettingsPair<AppSettings> settingsPair,
+        AppSettings settings,
         WorkTypeEnum workType,
         Expression<Func<AppSettings, object>> property,
         IReadOnlyList<StringRepresentableItem> array)
-        : this(settingsPair, property, array)
+        : this(settings, property, array)
     {
         Header = SubHeader(workType);
         HeaderIcon = SubHeaderIcon(workType);

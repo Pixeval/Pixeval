@@ -12,16 +12,17 @@ using Pixeval.Settings;
 
 namespace Pixeval.Extensions.Models;
 
-public partial class ExtensionEnumSettingsEntry(IEnumSettingsExtension extension, int value, IPropertySet values) : ExtensionSettingsEntry<object>(extension, value, values), IEnumSettingsEntry
+public partial class ExtensionEnumSettingsEntry(IEnumSettingsExtension extension, int value)
+    : ExtensionSettingsEntry<object>(extension, value), IEnumSettingsEntry
 {
     public override FrameworkElement Element => new EnumSettingsCard { Entry = this };
 
     public override void ValueReset() => Value = extension.GetDefaultValue();
 
-    public override void ValueSaving()
+    public override void ValueSaving(IPropertySet values)
     {
         extension.OnValueChanged((int)Value);
-        base.ValueSaving();
+        base.ValueSaving(values);
     }
 
     public IReadOnlyList<StringRepresentableItem> EnumItems => extension.GetEnumKeyValues()

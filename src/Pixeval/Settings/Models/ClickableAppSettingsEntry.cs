@@ -1,5 +1,7 @@
 using System;
+using Windows.Foundation.Collections;
 using FluentIcons.Common;
+using Pixeval.AppManagement;
 using Pixeval.Controls.Settings;
 
 namespace Pixeval.Settings.Models;
@@ -9,7 +11,7 @@ public class ClickableAppSettingsEntry(
     string description,
     Symbol headerIcon,
     Action clicked)
-    : SettingsEntryBase(header, description, headerIcon)
+    : SettingsEntryBase(header, description, headerIcon), IAppSettingEntry<AppSettings>
 {
     public override ClickableSettingsCard Element => new() { Entry = this };
 
@@ -17,6 +19,11 @@ public class ClickableAppSettingsEntry(
 
     public Symbol ActionIcon { get; set; } = Symbol.Open;
 
-    public override void ValueReset() { }
-    public override void ValueSaving() { }
+    public void ValueReset(AppSettings defaultSetting)
+    {
+    }
+
+    public override void ValueSaving(IPropertySet values)
+    {
+    }
 }

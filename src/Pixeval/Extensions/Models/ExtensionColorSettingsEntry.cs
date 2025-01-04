@@ -8,15 +8,16 @@ using Pixeval.Extensions.Common.Settings;
 
 namespace Pixeval.Extensions.Models;
 
-public partial class ExtensionColorSettingsEntry(IColorSettingsExtension extension, uint value, IPropertySet values) : ExtensionSettingsEntry<uint>(extension, value, values)
+public partial class ExtensionColorSettingsEntry(IColorSettingsExtension extension, uint value)
+    : ExtensionSettingsEntry<uint>(extension, value)
 {
     public override FrameworkElement Element => new ColorSettingsCard { Entry = this };
 
     public override void ValueReset() => Value = extension.GetDefaultValue();
 
-    public override void ValueSaving()
+    public override void ValueSaving(IPropertySet values)
     {
         extension.OnValueChanged(Value);
-        base.ValueSaving();
+        base.ValueSaving(values);
     }
 }

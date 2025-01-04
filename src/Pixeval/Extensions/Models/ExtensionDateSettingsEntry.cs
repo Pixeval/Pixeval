@@ -9,15 +9,16 @@ using Pixeval.Extensions.Common.Settings;
 
 namespace Pixeval.Extensions.Models;
 
-public partial class ExtensionDateSettingsEntry(IDateTimeOffsetSettingsExtension extension, DateTimeOffset value, IPropertySet values) : ExtensionSettingsEntry<DateTimeOffset>(extension, value, values)
+public partial class ExtensionDateSettingsEntry(IDateTimeOffsetSettingsExtension extension, DateTimeOffset value)
+    : ExtensionSettingsEntry<DateTimeOffset>(extension, value)
 {
     public override FrameworkElement Element => new DateSettingsCard { Entry = this };
 
     public override void ValueReset() => Value = extension.GetDefaultValue();
 
-    public override void ValueSaving()
+    public override void ValueSaving(IPropertySet values)
     {
         extension.OnValueChanged(Value);
-        base.ValueSaving();
+        base.ValueSaving(values);
     }
 }

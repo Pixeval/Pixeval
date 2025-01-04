@@ -9,7 +9,8 @@ using Pixeval.Settings;
 
 namespace Pixeval.Extensions.Models;
 
-public partial class ExtensionStringSettingsEntry(IStringSettingsExtension extension, string value, IPropertySet values) : ExtensionSettingsEntry<string>(extension, value, values), IStringSettingsEntry
+public partial class ExtensionStringSettingsEntry(IStringSettingsExtension extension, string value) 
+    : ExtensionSettingsEntry<string>(extension, value), IStringSettingsEntry
 {
     public override FrameworkElement Element => new StringSettingsCard { Entry = this };
 
@@ -17,9 +18,9 @@ public partial class ExtensionStringSettingsEntry(IStringSettingsExtension exten
 
     public override void ValueReset() => Value = extension.GetDefaultValue();
 
-    public override void ValueSaving()
+    public override void ValueSaving(IPropertySet values)
     {
         extension.OnValueChanged(Value);
-        base.ValueSaving();
+        base.ValueSaving(values);
     }
 }

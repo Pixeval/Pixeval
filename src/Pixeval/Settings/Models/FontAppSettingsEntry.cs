@@ -9,9 +9,9 @@ using Pixeval.Utilities;
 namespace Pixeval.Settings.Models;
 
 public partial class FontAppSettingsEntry(
-    SettingsPair<AppSettings> settingsPair,
+    AppSettings settings,
     Expression<Func<AppSettings, string>> property)
-    : StringAppSettingsEntry(settingsPair, property)
+    : StringAppSettingsEntry(settings, property)
 {
     public override FontSettingsCard Element => new() { Entry = this };
 

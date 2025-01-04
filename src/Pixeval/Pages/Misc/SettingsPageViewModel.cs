@@ -19,8 +19,8 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -49,21 +49,25 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
 {
     public DateTimeOffset LastCheckedUpdate
     {
-        // todo 保存
         get => AppSettings.LastCheckedUpdate;
-        set => SetProperty(AppSettings.LastCheckedUpdate, value, AppSettings, (@setting, @value) => @setting.LastCheckedUpdate = @value);
+        set => SetProperty(AppSettings.LastCheckedUpdate, value, AppSettings, (setting, v) =>
+        {
+            setting.LastCheckedUpdate = v;
+            AppInfo.LocalConfig[nameof(AppSettings.LastCheckedUpdate)] = v;
+        });
     }
 
     public bool DownloadUpdateAutomatically
     {
-        // todo 保存
         get => AppSettings.DownloadUpdateAutomatically;
-        set => SetProperty(AppSettings.DownloadUpdateAutomatically, value, AppSettings, (@setting, @value) => @setting.DownloadUpdateAutomatically = @value);
+        set => SetProperty(AppSettings.DownloadUpdateAutomatically, value, AppSettings, (setting, v) =>
+        {
+            setting.DownloadUpdateAutomatically = v;
+            AppInfo.LocalConfig[nameof(AppSettings.DownloadUpdateAutomatically)] = v;
+        });
     }
 
     public AppSettings AppSettings => App.AppViewModel.AppSettings;
-
-    public static SettingsPair<AppSettings> SettingsPair => App.AppViewModel.SettingsPair;
 
     [ObservableProperty]
     public partial bool CheckingUpdate { get; set; }
@@ -85,112 +89,112 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
     /// <inheritdoc/>
     public SettingsPageViewModel(ulong hWnd) : base(hWnd)
     {
-        Groups =
+        LocalGroups =
         [
-            new SimpleSettingsGroup(SettingsEntryCategory.Application)
+            new(SettingsEntryCategory.Application)
             {
-                new EnumAppSettingsEntry(SettingsPair,
+                new EnumAppSettingsEntry(AppSettings,
                     t => t.Theme,
                     ElementThemeExtension.GetItems()) { ValueChanged = t => WindowFactory.SetTheme((ElementTheme)t) },
-                new EnumAppSettingsEntry(SettingsPair,
+                new EnumAppSettingsEntry(AppSettings,
                     t => t.Backdrop,
                     BackdropTypeExtension.GetItems())
                 {
                     ValueChanged = t => WindowFactory.SetBackdrop((BackdropType)t)
                 },
-                new FontAppSettingsEntry(SettingsPair,
+                new FontAppSettingsEntry(AppSettings,
                     t => t.AppFontFamilyName),
                 new LanguageAppSettingsEntry(),
-                new IpWithSwitchAppSettingsEntry(SettingsPair)
+                new IpWithSwitchAppSettingsEntry(AppSettings)
                 {
                     ValueChanged = t => App.AppViewModel.MakoClient.Configuration.DomainFronting = t
                 },
-                new ProxyAppSettingsEntry(SettingsPair)
+                new ProxyAppSettingsEntry(AppSettings)
                 {
                     ProxyChanged = t => App.AppViewModel.MakoClient.Configuration.Proxy = t
                 },
-                new StringAppSettingsEntry(SettingsPair,
+                new StringAppSettingsEntry(AppSettings,
                     t => t.MirrorHost)
                 {
                     Placeholder = SettingsPageResources.ImageMirrorServerTextBoxPlaceholderText,
                     ValueChanged = t => App.AppViewModel.MakoClient.Configuration.MirrorHost = t
                 },
-                new BoolAppSettingsEntry(SettingsPair,
+                new BoolAppSettingsEntry(AppSettings,
                     t => t.UseFileCache),
-                new EnumAppSettingsEntry(SettingsPair,
+                new EnumAppSettingsEntry(AppSettings,
                     t => t.DefaultSelectedTabItem,
                     MainPageTabItemExtension.GetItems()),
-                new StringAppSettingsEntry(SettingsPair,
+                new StringAppSettingsEntry(AppSettings,
                     t => t.WebCookie) { Placeholder = SettingsPageResources.WebCookieTextBoxPlaceholderText }
             },
-            new SimpleSettingsGroup(SettingsEntryCategory.BrowsingExperience)
+            new(SettingsEntryCategory.BrowsingExperience)
             {
-                new EnumAppSettingsEntry(SettingsPair,
+                new EnumAppSettingsEntry(AppSettings,
                     t => t.ThumbnailDirection,
                     ThumbnailDirectionExtension.GetItems()),
-                new EnumAppSettingsEntry(SettingsPair,
+                new EnumAppSettingsEntry(AppSettings,
                     t => t.ItemsViewLayoutType,
                     ItemsViewLayoutTypeExtension.GetItems()),
-                new EnumAppSettingsEntry(SettingsPair,
+                new EnumAppSettingsEntry(AppSettings,
                     t => t.TargetFilter,
                     TargetFilterExtension.GetItems()),
-                new MultiStringsAppSettingsEntry(SettingsPair,
+                new MultiStringsAppSettingsEntry(AppSettings,
                     t => t.BlockedTags,
                     v => [..v.BlockedTags],
                     (v, o) => v.BlockedTags = [.. o])
                 {
                     Placeholder = SettingsPageResources.BlockedTagsTokenizingTextBoxPlaceholderText
                 },
-                new BoolAppSettingsEntry(SettingsPair,
+                new BoolAppSettingsEntry(AppSettings,
                     t => t.BrowseOriginalImage),
                 new ClickableAppSettingsEntry(
                     SettingsPageResources.ViewingRestrictionEntryHeader,
                     SettingsPageResources.ViewingRestrictionEntryDescription,
                     Symbol.SubtractCircle,
-                    () => _ = Launcher.LaunchUriAsync(new Uri("https://www.pixiv.net/settings/viewing")))
+                    () => _ = Launcher.LaunchUriAsync(new("https://www.pixiv.net/settings/viewing")))
             },
 
-            new SimpleSettingsGroup(SettingsEntryCategory.Search)
+            new(SettingsEntryCategory.Search)
             {
-                new StringAppSettingsEntry(SettingsPair,
+                new StringAppSettingsEntry(AppSettings,
                     t => t.ReverseSearchApiKey)
                 {
-                    DescriptionUri = new Uri("https://saucenao.com/user.php?page=search-api"),
+                    DescriptionUri = new("https://saucenao.com/user.php?page=search-api"),
                     Placeholder = SettingsPageResources.ReverseSearchApiKeyTextBoxPlaceholderText
                 },
-                new IntAppSettingsEntry(SettingsPair,
+                new IntAppSettingsEntry(AppSettings,
                     t => t.ReverseSearchResultSimilarityThreshold)
                 {
                     Max = 100,
                     Min = 1
                 },
-                new IntAppSettingsEntry(SettingsPair,
+                new IntAppSettingsEntry(AppSettings,
                     t => t.MaximumSearchHistoryRecords)
                 {
                     Max = 200,
                     Min = 10
                 },
-                new IntAppSettingsEntry(SettingsPair,
+                new IntAppSettingsEntry(AppSettings,
                     t => t.MaximumSuggestionBoxSearchHistory)
                 {
                     Max = 20,
                     Min = 0
                 },
-                new EnumAppSettingsEntry(SettingsPair,
+                new EnumAppSettingsEntry(AppSettings,
                     t => t.WorkSortOption,
                     WorkSortOptionExtension.GetItems()),
-                new EnumAppSettingsEntry(SettingsPair,
+                new EnumAppSettingsEntry(AppSettings,
                     t => t.SimpleWorkType,
                     SimpleWorkTypeExtension.GetItems()),
                 new MultiValuesEntry(SettingsPageResources.RankOptionEntryHeader,
                     SettingsPageResources.RankOptionEntryDescription,
                     Symbol.ArrowTrending,
                     [
-                        new EnumAppSettingsEntry(SettingsPair,
+                        new EnumAppSettingsEntry(AppSettings,
                             WorkTypeEnum.Illustration,
                             t => t.IllustrationRankOption,
                             RankOptionExtension.GetItems()),
-                        new EnumAppSettingsEntry(SettingsPair,
+                        new EnumAppSettingsEntry(AppSettings,
                             WorkTypeEnum.Novel,
                             t => t.NovelRankOption,
                             NovelRankOptionExtension.GetItems())
@@ -199,75 +203,77 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
                     SettingsPageResources.DefaultSearchTagMatchOptionEntryDescription,
                     Symbol.CheckmarkCircleSquare,
                     [
-                        new EnumAppSettingsEntry(SettingsPair,
+                        new EnumAppSettingsEntry(AppSettings,
                             WorkTypeEnum.Illustration,
                             t => t.SearchIllustrationTagMatchOption,
                             SearchIllustrationTagMatchOptionExtension.GetItems()),
-                        new EnumAppSettingsEntry(SettingsPair,
+                        new EnumAppSettingsEntry(AppSettings,
                             WorkTypeEnum.Novel,
                             t => t.SearchNovelTagMatchOption,
                             SearchNovelTagMatchOptionExtension.GetItems())
                     ]),
-                new DateWithSwitchAppSettingsEntry(SettingsPair,
+                new DateWithSwitchAppSettingsEntry(AppSettings,
                     t => t.UseSearchStartDate,
                     t => t.SearchStartDate),
-                new DateWithSwitchAppSettingsEntry(SettingsPair,
+                new DateWithSwitchAppSettingsEntry(AppSettings,
                     t => t.UseSearchEndDate,
                     t => t.SearchEndDate)
             },
-            new SimpleSettingsGroup(SettingsEntryCategory.Download)
+            new(SettingsEntryCategory.Download)
             {
-                new IntAppSettingsEntry(SettingsPair,
+                new IntAppSettingsEntry(AppSettings,
                     t => t.MaximumDownloadHistoryRecords)
                 {
                     Max = ushort.MaxValue,
                     Min = 10
                 },
-                new BoolAppSettingsEntry(SettingsPair,
+                new BoolAppSettingsEntry(AppSettings,
                     t => t.OverwriteDownloadedFile),
-                new IntAppSettingsEntry(SettingsPair,
+                new IntAppSettingsEntry(AppSettings,
                     t => t.MaxDownloadTaskConcurrencyLevel)
                 {
                     Max = Environment.ProcessorCount,
                     Min = 1,
                     ValueChanged = t => App.AppViewModel.DownloadManager.ConcurrencyDegree = t
                 },
-                new DownloadMacroAppSettingsEntry(SettingsPair),
+                new DownloadMacroAppSettingsEntry(AppSettings),
                 new MultiValuesEntry(SettingsPageResources.WorkDownloadFormatEntryHeader,
                     SettingsPageResources.WorkDownloadFormatEntryDescription,
                     Symbol.TextPeriodAsterisk,
                     [
-                        new EnumAppSettingsEntry(SettingsPair,
+                        new EnumAppSettingsEntry(AppSettings,
                             WorkTypeEnum.Illustration,
                             t => t.IllustrationDownloadFormat,
                             IllustrationDownloadFormatExtension.GetItems()),
-                        new EnumAppSettingsEntry(SettingsPair,
+                        new EnumAppSettingsEntry(AppSettings,
                             WorkTypeEnum.Ugoira,
                             t => t.UgoiraDownloadFormat,
                             UgoiraDownloadFormatExtension.GetItems()),
-                        new EnumAppSettingsEntry(SettingsPair,
+                        new EnumAppSettingsEntry(AppSettings,
                             WorkTypeEnum.Novel,
                             t => t.NovelDownloadFormat,
                             NovelDownloadFormatExtension.GetItems())
                     ]),
-                new BoolAppSettingsEntry(SettingsPair,
+                new BoolAppSettingsEntry(AppSettings,
                     t => t.DownloadWhenBookmarked)
             },
-            new SimpleSettingsGroup(SettingsEntryCategory.Misc)
+            new(SettingsEntryCategory.Misc)
             {
-                new IntAppSettingsEntry(SettingsPair,
+                new IntAppSettingsEntry(AppSettings,
                     t => t.MaximumBrowseHistoryRecords)
                 {
                     Placeholder = SettingsPageResources.MaximumBrowseHistoryRecordsNumerBoxPlaceholderText,
                     Max = ushort.MaxValue,
                     Min = 10
                 }
-            },
-            ..App.AppViewModel.AppServiceProvider.GetRequiredService<ExtensionService>().SettingsGroups
+            }
         ];
     }
 
-    public ISettingsGroup[] Groups { get; }
+    public SimpleSettingsGroup[] LocalGroups { get; }
+
+    public IReadOnlyList<ExtensionSettingsGroup> ExtensionGroups { get; } =
+        App.AppViewModel.AppServiceProvider.GetRequiredService<ExtensionService>().SettingsGroups;
 
     public string UpdateInfo => AppInfo.AppVersion.UpdateState switch
     {

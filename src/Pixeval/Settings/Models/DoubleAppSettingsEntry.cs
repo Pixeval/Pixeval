@@ -8,8 +8,8 @@ using Pixeval.Controls.Settings;
 
 namespace Pixeval.Settings.Models;
 
-public partial class DoubleAppSettingsEntry(SettingsPair<AppSettings> settingsPair, Expression<Func<AppSettings, double>> property)
-    : SingleValueSettingsEntry<AppSettings, double>(settingsPair, property), IDoubleSettingsEntry
+public partial class DoubleAppSettingsEntry(AppSettings settings, Expression<Func<AppSettings, double>> property)
+    : SingleValueSettingsEntry<AppSettings, double>(settings, property), IDoubleSettingsEntry
 {
     public override DoubleSettingsCard Element => new() { Entry = this };
 
@@ -24,10 +24,10 @@ public partial class DoubleAppSettingsEntry(SettingsPair<AppSettings> settingsPa
     public double SmallChange { get; set; } = 1;
 
     public DoubleAppSettingsEntry(
-        SettingsPair<AppSettings> settingsPair,
+        AppSettings settings,
         WorkTypeEnum workType,
         Expression<Func<AppSettings, double>> property)
-        : this(settingsPair, property)
+        : this(settings, property)
     {
         Header = SubHeader(workType);
         HeaderIcon = SubHeaderIcon(workType);

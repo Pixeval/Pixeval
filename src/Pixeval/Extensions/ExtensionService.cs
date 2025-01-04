@@ -5,14 +5,12 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices.Marshalling;
 using System.Runtime.InteropServices;
-using Microsoft.Windows.Storage;
 using Pixeval.AppManagement;
 using Pixeval.Extensions.Common.Settings;
 using Pixeval.Extensions.Common;
 using System.Linq;
 using Windows.Win32;
 using Pixeval.Extensions.Models;
-using Pixeval.Settings;
 using WinUI3Utilities;
 
 namespace Pixeval.Extensions;
@@ -23,15 +21,14 @@ public class ExtensionService
 
     public IReadOnlyDictionary<ExtensionsHostModel, IReadOnlyList<ISettingsExtension>> SettingsExtensions => _settingsExtensions;
 
-    public IReadOnlyList<ISettingsGroup> SettingsGroups => _settingsGroups;
+    public IReadOnlyList<ExtensionSettingsGroup> SettingsGroups => _settingsGroups;
 
     private readonly List<ExtensionsHostModel> _extensionHosts = [];
 
     private readonly Dictionary<ExtensionsHostModel, IReadOnlyList<ISettingsExtension>> _settingsExtensions = [];
 
-    private static ApplicationDataContainer LocalSettings => ApplicationData.GetDefault().LocalSettings;
 
-    private readonly List<ISettingsGroup> _settingsGroups = [];
+    private readonly List<ExtensionSettingsGroup> _settingsGroups = [];
 
     public void LoadAllExtensions()
     {
@@ -78,11 +75,9 @@ public class ExtensionService
         var settingsExtensions = model.Extensions.OfType<ISettingsExtension>().ToArray();
         _settingsExtensions[model] = settingsExtensions;
         var converter = new SettingsValueConverter();
-        if (!LocalSettings.Containers.TryGetValue(model.Name, out var container))
-            container = LocalSettings.CreateContainer(model.Name, ApplicationDataCreateDisposition.Always);
         var extensionSettingsGroup = new ExtensionSettingsGroup(model);
         _settingsGroups.Add(extensionSettingsGroup);
-        var values = container.Values;
+        var values = model.Values;
         foreach (var settingsExtension in settingsExtensions)
         {
             settingsExtension.OnExtensionLoaded();
@@ -95,7 +90,7 @@ public class ExtensionService
                         i.OnValueChanged(v);
                     else
                        values[token] = v = i.GetDefaultValue();
-                    extensionSettingsGroup.Add(new ExtensionStringSettingsEntry(i, v, values));
+                    extensionSettingsGroup.Add(new ExtensionStringSettingsEntry(i, v));
                     break;
                 }
                 case IIntOrEnumSettingsExtension i:
@@ -107,10 +102,10 @@ public class ExtensionService
                     switch (i)
                     {
                         case IIntSettingsExtension a:
-                            extensionSettingsGroup.Add(new ExtensionIntSettingsEntry(a, v, values));
+                            extensionSettingsGroup.Add(new ExtensionIntSettingsEntry(a, v));
                             break;
                         case IEnumSettingsExtension b:
-                            extensionSettingsGroup.Add(new ExtensionEnumSettingsEntry(b, v, values));
+                            extensionSettingsGroup.Add(new ExtensionEnumSettingsEntry(b, v));
                             break;
                     }
                     break;
@@ -121,7 +116,7 @@ public class ExtensionService
                         i.OnValueChanged(v);
                     else 
                         values[token] = v = i.GetDefaultValue();
-                    extensionSettingsGroup.Add(new ExtensionColorSettingsEntry(i, v, values));
+                    extensionSettingsGroup.Add(new ExtensionColorSettingsEntry(i, v));
                     break;
                 }
                 case IStringsArraySettingsExtension i:
@@ -137,7 +132,7 @@ public class ExtensionService
                         v = i.GetDefaultValue();
                         values[token] = converter.Convert(v);
                     }
-                    extensionSettingsGroup.Add(new ExtensionStringsArraySettingsEntry(i, v, values));
+                    extensionSettingsGroup.Add(new ExtensionStringsArraySettingsEntry(i, v));
                     break;
                 }
                 case IDateTimeOffsetSettingsExtension i:
@@ -146,7 +141,7 @@ public class ExtensionService
                         i.OnValueChanged(v);
                     else
                         values[token] = v = i.GetDefaultValue();
-                    extensionSettingsGroup.Add(new ExtensionDateSettingsEntry(i, v, values));
+                    extensionSettingsGroup.Add(new ExtensionDateSettingsEntry(i, v));
                     break;
                 }
                 case IBoolSettingsExtension i:
@@ -155,7 +150,7 @@ public class ExtensionService
                         i.OnValueChanged(v);
                     else
                         values[token] = v = i.GetDefaultValue();
-                    extensionSettingsGroup.Add(new ExtensionBoolSettingsEntry(i, v, values));
+                    extensionSettingsGroup.Add(new ExtensionBoolSettingsEntry(i, v));
                     break;
                 }
                 case IDoubleSettingsExtension i:
@@ -164,7 +159,7 @@ public class ExtensionService
                         i.OnValueChanged(v);
                     else 
                         values[token] = v = i.GetDefaultValue();
-                    extensionSettingsGroup.Add(new ExtensionDoubleSettingsEntry(i, v, values));
+                    extensionSettingsGroup.Add(new ExtensionDoubleSettingsEntry(i, v));
                     break;
                 }
                 default:

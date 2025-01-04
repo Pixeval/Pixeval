@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using Windows.Foundation.Collections;
 using FluentIcons.Common;
+using Pixeval.AppManagement;
 using Pixeval.Controls.Settings;
 
 namespace Pixeval.Settings;
@@ -8,21 +10,22 @@ public class MultiValuesEntry(
     string header,
     string description,
     Symbol headerIcon,
-    IReadOnlyList<ISettingsEntry> entries) : SettingsEntryBase(header, description, headerIcon)
+    IReadOnlyList<IAppSettingEntry<AppSettings>> entries) 
+    : SettingsEntryBase(header, description, headerIcon), IAppSettingEntry<AppSettings>
 {
     public override MultiValuesAppSettingsExpander Element => new() { Entry = this };
 
-    public IReadOnlyList<ISettingsEntry> Entries { get; } = entries;
+    public IReadOnlyList<IAppSettingEntry<AppSettings>> Entries { get; } = entries;
 
-    public override void ValueReset()
+    public void ValueReset(AppSettings defaultSettings)
     {
         foreach (var entry in Entries)
-            entry.ValueReset();
+            entry.ValueReset(defaultSettings);
     }
 
-    public override void ValueSaving()
+    public override void ValueSaving(IPropertySet values)
     {
         foreach (var entry in Entries)
-            entry.ValueSaving();
+            entry.ValueSaving(values);
     }
 }

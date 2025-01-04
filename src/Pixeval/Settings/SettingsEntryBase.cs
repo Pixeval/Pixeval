@@ -4,6 +4,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using WinUI3Utilities;
 using Symbol = FluentIcons.Common.Symbol;
+using Windows.Foundation.Collections;
 
 namespace Pixeval.Settings;
 
@@ -43,9 +44,7 @@ public abstract class SettingsEntryBase(
 
     public virtual Uri? DescriptionUri { get; set; }
 
-    public abstract void ValueReset();
-
-    public abstract void ValueSaving();
+    public abstract void ValueSaving(IPropertySet values);
 
     public static string SubHeader(WorkTypeEnum workType) => workType switch
     {

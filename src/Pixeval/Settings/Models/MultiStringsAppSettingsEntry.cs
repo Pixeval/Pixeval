@@ -1,56 +1,38 @@
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
-using System.Reflection;
 using Windows.Foundation.Collections;
 using Microsoft.UI.Xaml;
 using Pixeval.AppManagement;
-using Pixeval.Attributes;
 using Pixeval.Controls.Settings;
-using WinUI3Utilities;
 
 namespace Pixeval.Settings.Models;
 
-public partial class MultiStringsAppSettingsEntry : SingleValueSettingsEntryBase<ObservableCollection<string>>, IMultiStringsAppSettingsEntry
+public partial class MultiStringsAppSettingsEntry 
+    : SingleValueSettingsEntry<AppSettings,ObservableCollection<string>>, IMultiStringsAppSettingsEntry
 {
+    private readonly Func<AppSettings, ObservableCollection<string>> _getter;
     private readonly Action<AppSettings, ObservableCollection<string>> _setter;
-    private readonly IPropertySet _values;
-    private readonly Expression<Func<AppSettings, object>> _property;
+    private readonly Func<AppSettings, object> _propertyGetter;
 
-    public MultiStringsAppSettingsEntry(SettingsPair<AppSettings> settingsPair,
+    public MultiStringsAppSettingsEntry(AppSettings settings,
         Expression<Func<AppSettings, object>> property,
         Func<AppSettings, ObservableCollection<string>> getter,
-        Action<AppSettings, ObservableCollection<string>> setter) : base("", "", default, settingsPair.Values)
+        Action<AppSettings, ObservableCollection<string>> setter) : base(settings, property, getter, setter)
     {
-        Settings = settingsPair.Settings;
+        _getter = getter;
         _setter = setter;
-        _property = property;
-        _values = settingsPair.Values;
+        _propertyGetter = property.Compile();
         Value = getter(Settings);
-        // t => (T)t.A
-        if (property.Body is not MemberExpression member)
-        {
-            ThrowHelper.Argument(property);
-            return;
-        }
-
-        Token = member.Member.Name;
-        Attribute = member.Member.GetCustomAttribute<SettingsEntryAttribute>();
-
-        if (Attribute is { } attribute)
-        {
-            Header = attribute.LocalizedResourceHeader;
-            Description = attribute.LocalizedResourceDescription;
-            HeaderIcon = attribute.Symbol;
-        }
     }
 
     public override FrameworkElement Element => new TokenizingSettingsExpander { Entry = this };
 
     public string? Placeholder { get; set; } = null;
 
+    /// <summary>
+    /// 由于<see cref="Value"/>和<see cref="Settings"/>中的值不是同一个引用，所以这里用field缓存
+    /// </summary>
     public sealed override ObservableCollection<string> Value
     {
         get;
@@ -64,23 +46,9 @@ public partial class MultiStringsAppSettingsEntry : SingleValueSettingsEntryBase
         }
     }
 
-    public override string Token { get; }
-
-    public SettingsEntryAttribute? Attribute { get; }
-
-    public Action<ObservableCollection<string>>? ValueChanged { get; set; }
-
-    public AppSettings Settings { get; }
-
-    public override void ValueReset()
+    public override void ValueSaving(IPropertySet values)
     {
-        OnPropertyChanged(nameof(Value));
-        ValueChanged?.Invoke(Value);
-    }
-
-    public override void ValueSaving()
-    {
-        _setter(Settings, Value);
-        _values[Token] = Converter.Convert(_property.Compile()(Settings));
+        // 不用Value而用Settings中本身的值，更符合逻辑
+        values[Token] = Converter.Convert(_propertyGetter(Settings));
     }
 }

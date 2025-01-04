@@ -20,6 +20,7 @@
 
 using System;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using Windows.System;
 using CommunityToolkit.Labs.WinUI.MarkdownTextBlock;
@@ -31,6 +32,7 @@ using Pixeval.AppManagement;
 using Pixeval.Controls;
 using Pixeval.Controls.Windowing;
 using Pixeval.Database.Managers;
+using Pixeval.Settings;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using WinUI3Utilities;
@@ -102,9 +104,12 @@ public sealed partial class SettingsPage : IScrollViewHost, IDisposable, INotify
         if (await this.CreateOkCancelAsync(SettingsPageResources.ResetSettingConfirmationDialogTitle,
                 SettingsPageResources.ResetSettingConfirmationDialogContent) is ContentDialogResult.Primary)
         {
-            ViewModel.AppSettings.ResetDefault();
-            foreach (var simpleSettingsGroup in ViewModel.Groups)
-                foreach (var settingsEntry in simpleSettingsGroup)
+            var settings = new AppSettings();
+            foreach (var localGroup in ViewModel.LocalGroups)
+                foreach (var settingsEntry in localGroup)
+                    settingsEntry.ValueReset(settings);
+            foreach (var extensionGroup in ViewModel.ExtensionGroups)
+                foreach (var settingsEntry in extensionGroup)
                     settingsEntry.ValueReset();
             OnPropertyChanged(nameof(ViewModel));
         }
@@ -156,9 +161,12 @@ public sealed partial class SettingsPage : IScrollViewHost, IDisposable, INotify
             return;
         _disposed = true;
         Bindings.StopTracking();
-        foreach (var simpleSettingsGroup in ViewModel.Groups)
-            foreach (var settingsEntry in simpleSettingsGroup)
-                settingsEntry.ValueSaving();
+        foreach (var localGroup in ViewModel.LocalGroups)
+            foreach (var settingsEntry in localGroup)
+                settingsEntry.ValueSaving(AppInfo.LocalConfig);
+        foreach (var extensionGroup in ViewModel.ExtensionGroups)
+            foreach (var settingsEntry in extensionGroup)
+                settingsEntry.ValueSaving(extensionGroup.Model.Values);
         ViewModel.Dispose();
         ViewModel = null!;
     }
@@ -174,7 +182,7 @@ public sealed partial class SettingsPage : IScrollViewHost, IDisposable, INotify
         var panel = sender.To<StackPanel>();
         var style = Resources["SettingHeaderStyle"] as Style;
 
-        foreach (var group in ViewModel.Groups)
+        foreach (var group in ViewModel.LocalGroups.Concat<ISettingsGroup>(ViewModel.ExtensionGroups))
         {
             panel.Children.Add(new TextBlock
             {

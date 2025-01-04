@@ -29,12 +29,38 @@ using WinUI3Utilities;
 
 namespace Pixeval.Settings;
 
-public abstract class SingleValueSettingsEntry<TSettings, TValue> : SingleValueSettingsEntryBase<TValue>, ISingleValueSettingsEntry<TValue>
+public abstract class SingleValueSettingsEntry<TSettings, TValue> 
+    : SingleValueSettingsEntryBase<TValue>, ISingleValueSettingsEntry<TValue>, IAppSettingEntry<TSettings>
 {
-    protected SingleValueSettingsEntry(SettingsPair<TSettings> settingsPair,
-        Expression<Func<TSettings, TValue>> property) : base("", "", default, settingsPair.Values)
+    protected SingleValueSettingsEntry(TSettings settings,
+        Expression<Func<TSettings, object>> property,
+        Func<TSettings, TValue> getter,
+        Action<TSettings, TValue> setter) : base("", "", default)
     {
-        Settings = settingsPair.Settings;
+        Settings = settings;
+        _getter = getter;
+        _setter = setter;
+        // t => (T)t.A
+        if (property.Body is not MemberExpression member)
+        {
+            ThrowHelper.Argument(property);
+            return;
+        }
+        Token = member.Member.Name;
+        Attribute = member.Member.GetCustomAttribute<SettingsEntryAttribute>();
+
+        if (Attribute is { } attribute)
+        {
+            Header = attribute.LocalizedResourceHeader;
+            Description = attribute.LocalizedResourceDescription;
+            HeaderIcon = attribute.Symbol;
+        }
+    }
+
+    protected SingleValueSettingsEntry(TSettings settings,
+        Expression<Func<TSettings, TValue>> property) : base("", "", default)
+    {
+        Settings = settings;
         (_getter, _setter, var member) = GetSettingsEntryInfo(property);
         Token = member.Member.Name;
         Attribute = member.Member.GetCustomAttribute<SettingsEntryAttribute>();
@@ -68,11 +94,7 @@ public abstract class SingleValueSettingsEntry<TSettings, TValue> : SingleValueS
         }
     }
 
-    public override void ValueReset()
-    {
-        OnPropertyChanged(nameof(Value));
-        ValueChanged?.Invoke(Value);
-    }
+    public virtual void ValueReset(TSettings defaultSettings) => Value = _getter(defaultSettings);
 
     private readonly Func<TSettings, TValue> _getter;
 

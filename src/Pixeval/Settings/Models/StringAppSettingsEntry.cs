@@ -7,19 +7,19 @@ using Pixeval.Controls.Settings;
 namespace Pixeval.Settings.Models;
 
 public partial class StringAppSettingsEntry(
-    SettingsPair<AppSettings> settingsPair,
+    AppSettings settings,
     Expression<Func<AppSettings, string>> property)
-    : SingleValueSettingsEntry<AppSettings, string>(settingsPair, property), IStringSettingsEntry
+    : SingleValueSettingsEntry<AppSettings, string>(settings, property), IStringSettingsEntry
 {
     public override FrameworkElement Element => new StringSettingsCard { Entry = this };
 
     public string? Placeholder { get; set; }
 
     public StringAppSettingsEntry(
-        SettingsPair<AppSettings> settingsPair,
+        AppSettings settings,
         WorkTypeEnum workType,
         Expression<Func<AppSettings, string>> property)
-        : this(settingsPair, property)
+        : this(settings, property)
     {
         Header = SubHeader(workType);
         HeaderIcon = SubHeaderIcon(workType);

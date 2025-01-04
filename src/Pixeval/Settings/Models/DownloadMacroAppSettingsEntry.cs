@@ -10,8 +10,8 @@ using Pixeval.Download.Macros;
 namespace Pixeval.Settings.Models;
 
 public partial class DownloadMacroAppSettingsEntry(
-    SettingsPair<AppSettings> settingsPair)
-    : StringAppSettingsEntry(settingsPair, t => t.DownloadPathMacro)
+    AppSettings settings)
+    : StringAppSettingsEntry(settings, t => t.DownloadPathMacro)
 {
     public override DownloadMacroSettingsExpander Element => new() { Entry = this };
 
