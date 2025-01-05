@@ -705,27 +705,6 @@ Type and click on "+" to add an IP</value>
   <data name="PicSetIndexMacroTooltip" xml:space="preserve">
     <value>This marco will be replaced by the index of the current image in the manga. This macro MUST be used with the @{if_pic_set=} macro, and MUST be used on the file name</value>
   </data>
-  <data name="AiUpscalerSettingsGroup.Text" xml:space="preserve">
-    <value>AI超分辨率</value>
-  </data>
-  <data name="UpscalerModelEntry.Header" xml:space="preserve">
-    <value> AI超分辨率模型</value>
-  </data>
-  <data name="UpscalerModelEntry.Description" xml:space="preserve">
-    <value>选择AI超分辨率模型，详见此处</value>
-  </data>
-  <data name="UpscalerScaleRatioEntry.Header" xml:space="preserve">
-    <value>AI超分辨率倍率</value>
-  </data>
-  <data name="UpscalerScaleRatioEntry.Description" xml:space="preserve">
-    <value>默认为4，注意过大的倍率可能导致生成的图片体积过大影响性能</value>
-  </data>
-  <data name="UpscalerOutputTypeEntry.Header" xml:space="preserve">
-    <value>AI超分辨率生成图片的格式</value>
-  </data>
-  <data name="UpscalerOutputTypeEntry.Description" xml:space="preserve">
-    <value>默认为PNG</value>
-  </data>
   <data name="UseSearchEndDateEntry.Header" xml:space="preserve">
     <value>启用搜索结束日期</value>
   </data>
@@ -737,5 +716,11 @@ Type and click on "+" to add an IP</value>
   </data>
   <data name="UseSearchEndDateEntry.Description" xml:space="preserve">
     <value>启用后搜索作品的投稿日期将到此日期结束</value>
+  </data>
+  <data name="OpenExtensionsEntry.Header" xml:space="preserve">
+    <value>打开扩展文件夹</value>
+  </data>
+  <data name="OpenExtensionsEntry.Description" xml:space="preserve">
+    <value>此处存储了软件会加载的扩展dll文件</value>
   </data>
 </root>
