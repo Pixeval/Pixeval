@@ -245,25 +245,4 @@ R: Следующая иллюстрация</value>
   <data name="BrowsingCompressedImage" xml:space="preserve">
     <value>Поскольку в настройках не включена опция "Просматривать оригинал при просмотре", на этой странице будут отображаться сжатые изображения. Если вы хотите просмотреть оригинальное изображение, пожалуйста, включите соответствующую опцию в настройках.</value>
   </data>
-  <data name="AiUpscaled" xml:space="preserve">
-    <value>Апскейл разрешения завершено.</value>
-  </data>
-  <data name="UpscaleTeachingTip.Title" xml:space="preserve">
-    <value>У этой функции есть несколько настраиваемых параметров!</value>
-  </data>
-  <data name="UpscaleTeachingTip.Subtitle" xml:space="preserve">
-    <value>Вы можете настроить параметры апскейла разрешения в настройках для достижения наилучшего результата.</value>
-  </data>
-  <data name="AiUpscalerWarningTitle" xml:space="preserve">
-    <value>Предупреждение об использовании функции апскейла разрешения.</value>
-  </data>
-  <data name="AiUpscalerWarningContent" xml:space="preserve">
-    <value> Функция апскейла разрешения требует большого количества ресурсов (потребление памяти достигает 1-2 ГБ) и может вызвать замедление работы устройства.</value>
-  </data>
-  <data name="AiUpscalerWarningOkButtonContent" xml:space="preserve">
-    <value>Продолжить</value>
-  </data>
-  <data name="AiUpscalerWarningCancelButtonContent" xml:space="preserve">
-    <value>Отменить</value>
-  </data>
 </root>
