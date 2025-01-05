@@ -34,7 +34,7 @@ using Windows.ApplicationModel;
 using Microsoft.UI.Windowing;
 using Pixeval.CoreApi.Net;
 using Pixeval.Util.UI;
-using Microsoft.UI.Xaml.Media;
+using Windows.Foundation.Collections;
 
 namespace Pixeval.AppManagement;
 
@@ -50,21 +50,19 @@ public static partial class AppInfo
 
     public const string AppProtocol = "pixeval";
 
-    public const string IconApplicationUri = "ms-appx:///Assets/Images/logo.ico";
+    public const string IconApplicationUri = "Assets/Images/logo.ico";
 
     public static ApplicationData AppData { get; } = ApplicationData.GetDefault();
 
-    public static readonly string DatabaseFilePath = AppKnownFolders.Local.Resolve("PixevalData4.2.2.litedb");
+    public static IPropertySet LocalConfig => _containerConfig.Values;
+
+    public static readonly string DatabaseFilePath = AppKnownFolders.Local.CombinePath("PixevalData4.2.2.litedb");
 
     public static Versioning AppVersion { get; } = new();
-
-    public static bool CustomizeTitleBarSupported => AppWindowTitleBar.IsCustomizationSupported();
 
     public static Stream GetImageNotAvailableStream() => GetAssetStream("Images/image-not-available.png");
 
     public static Stream GetPixivNoProfileStream() => GetAssetStream("Images/pixiv_no_profile.png");
-
-    public static Task<ImageSource> Icon { get; } = GetAssetStream("Images/logo.ico").DecodeBitmapImageAsync(true);
 
     static AppInfo()
     {
@@ -82,8 +80,6 @@ public static partial class AppInfo
         MakoHttpOptions.SetNameResolver(MakoHttpOptions.AccountHost, appSetting.PixivAccountNameResolver);
         MakoHttpOptions.SetNameResolver(MakoHttpOptions.WebApiHost, appSetting.PixivWebApiNameResolver);
     }
-
-    public static string IconAbsolutePath => ApplicationUriToPath(new Uri(IconApplicationUri));
 
     public static Uri NavigationIconUri(string name) => new Uri($"ms-appx:///Assets/Images/Icons/{name}.png");
 

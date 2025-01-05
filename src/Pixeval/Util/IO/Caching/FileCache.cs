@@ -42,31 +42,18 @@ public class FileCache
     private const string IndexFileName = "index.json";
     private const string CacheFolderName = "cache";
     private const string ExpireIndexFileName = "eindex.json";
-    private readonly SemaphoreSlim _expireIndexLocker;
+    private readonly SemaphoreSlim _expireIndexLocker = new SemaphoreSlim(1, 1);
 
-    private readonly SemaphoreSlim _indexLocker;
-    private readonly Type[] _supportedKeyTypes;
+    private readonly SemaphoreSlim _indexLocker = new SemaphoreSlim(1, 1);
+    private readonly Type[] _supportedKeyTypes = [typeof(int), typeof(uint), typeof(ulong), typeof(long)];
 
-    private readonly DirectoryInfo _baseDirectory = Directory.CreateDirectory(Path.Combine(AppKnownFolders.Cache.Self.Path, CacheFolderName));
+    private readonly DirectoryInfo _baseDirectory = Directory.CreateDirectory(AppKnownFolders.Cache.CombinePath(CacheFolderName));
 
     // The expiration time
-    private Dictionary<Guid, DateTimeOffset> _expireIndex;
-    private readonly FileInfo _expireIndexFile;
-    private Dictionary<Guid, string> _index;
-    private readonly FileInfo _indexFile;
-
-    private FileCache()
-    {
-        _supportedKeyTypes = [typeof(int), typeof(uint), typeof(ulong), typeof(long)];
-
-        _index = [];
-        _expireIndex = [];
-        _indexFile = new(Path.Combine(_baseDirectory.FullName, IndexFileName));
-        _expireIndexFile = new(Path.Combine(_baseDirectory.FullName, ExpireIndexFileName));
-
-        _indexLocker = new SemaphoreSlim(1, 1);
-        _expireIndexLocker = new SemaphoreSlim(1, 1);
-    }
+    private Dictionary<Guid, DateTimeOffset> _expireIndex = [];
+    private readonly FileInfo _expireIndexFile = new(AppKnownFolders.Cache.CombinePath(CacheFolderName, ExpireIndexFileName));
+    private Dictionary<Guid, string> _index = [];
+    private readonly FileInfo _indexFile = new(AppKnownFolders.Cache.CombinePath(CacheFolderName, IndexFileName));
 
     public int HitCount { get; private set; }
 

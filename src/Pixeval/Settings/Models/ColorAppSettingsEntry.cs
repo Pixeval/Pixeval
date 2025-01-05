@@ -28,9 +28,9 @@ using Pixeval.Controls.Settings;
 namespace Pixeval.Settings.Models;
 
 public partial class ColorAppSettingsEntry(
-    AppSettings appSettings,
+    AppSettings settings,
     Expression<Func<AppSettings, uint>> property)
-    : SingleValueSettingsEntry<AppSettings, uint>(appSettings, property)
+    : SingleValueSettingsEntry<AppSettings, uint>(settings, property)
 {
     public override ColorSettingsCard Element => new() { Entry = this };
 }

@@ -59,7 +59,7 @@ public partial class App
         AppViewModel = new AppViewModel(this);
         BookmarkTag.AllCountedTagString = MiscResources.AllCountedTagName;
         AppInfo.SetNameResolvers(AppViewModel.AppSettings);
-        WindowFactory.Initialize(AppViewModel.AppSettings, AppInfo.IconAbsolutePath);
+        WindowFactory.Initialize(AppViewModel.AppSettings, AppInfo.IconApplicationUri);
         AppInstance.GetCurrent().Activated += (_, arguments) => ActivationRegistrar.Dispatch(arguments);
         InitializeComponent();
     }
@@ -84,7 +84,6 @@ public partial class App
 
         if (AppViewModel.AppSettings.AppFontFamilyName.IsNotNullOrEmpty())
             Current.Resources[ApplicationWideFontKey] = new FontFamily(AppViewModel.AppSettings.AppFontFamilyName);
-        await AppKnownFolders.InitializeAsync();
 
         await AppViewModel.InitializeAsync(isProtocolActivated);
 

@@ -7,14 +7,18 @@
     xmlns:fluent="using:FluentIcons.WinUI"
     xmlns:local="using:Pixeval.Settings"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    x:Uid="/SettingsPage/BlockedTagsEntry"
-    HeaderIcon="{fluent:SymbolIcon Symbol=TagDismiss}"
+    Description="{x:Bind Entry.DescriptionControl}"
+    Header="{x:Bind Entry.Header}"
+    Tag="{x:Bind Entry.Attribute}"
     mc:Ignorable="d">
+    <controls:SettingsExpander.HeaderIcon>
+        <fluent:SymbolIcon Symbol="{x:Bind Entry.HeaderIcon}" />
+    </controls:SettingsExpander.HeaderIcon>
     <controls:SettingsExpander.Items>
         <controls:SettingsCard HorizontalContentAlignment="Stretch" ContentAlignment="Left">
             <controls:TokenizingTextBox
-                x:Uid="/SettingsPage/BlockedTagsTokenizingTextBox"
-                ItemsSource="{x:Bind Entry.BlockedTags, Mode=OneWay}"
+                ItemsSource="{x:Bind Entry.Value, Mode=OneWay}"
+                PlaceholderText="{x:Bind Entry.Placeholder}"
                 TokenDelimiter=","
                 TokenItemAdding="TokenizingTextBox_OnTokenItemAdding" />
         </controls:SettingsCard>

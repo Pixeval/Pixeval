@@ -19,12 +19,10 @@
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
-        <ToggleSwitch
-            Grid.Column="0"
-            IsOn="{x:Bind Entry.Value, Mode=TwoWay}"
-            Toggled="ToggleSwitch_OnToggled" />
+        <ToggleSwitch Grid.Column="0" IsOn="{x:Bind Entry.Value, Mode=TwoWay}" />
         <CalendarDatePicker
             Grid.Column="1"
+            MinWidth="150"
             Date="{x:Bind Entry.Date, Mode=TwoWay}"
             IsEnabled="{x:Bind Entry.Value, Mode=OneWay}" />
     </Grid>

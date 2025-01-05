@@ -31,8 +31,8 @@ public sealed partial class DownloadMacroSettingsExpander
     /// <summary>
     /// This TestParser is used to test whether the user input meta path is legal
     /// </summary>
-    private static readonly MacroParser<string> _testParser = new();
-    private static readonly MacroParser<string> _pathParser = new();
+    private static readonly MacroParser<string> _TestParser = new();
+    private static readonly MacroParser<string> _PathParser = new();
 
     /// <summary>
     /// The previous meta path after user changes the path field, if the path is illegal
@@ -78,8 +78,8 @@ public sealed partial class DownloadMacroSettingsExpander
 
         try
         {
-            _testParser.SetupParsingEnvironment(new Lexer(Entry.Value));
-            var result = _testParser.Parse();
+            _TestParser.SetupParsingEnvironment(new Lexer(Entry.Value));
+            var result = _TestParser.Parse();
             if (result is not null)
             {
                 var legitimatedNames = App.AppViewModel.AppServiceProvider.GetRequiredService<IllustrationDownloadTaskFactory>();
@@ -123,8 +123,8 @@ public sealed partial class DownloadMacroSettingsExpander
     {
         DownloadPathMacroTextBox.Document.BeginUndoGroup();
         DownloadPathMacroTextBox.Document.SetText(TextSetOptions.None, "");
-        _pathParser.SetupParsingEnvironment(new Lexer(path));
-        if (_pathParser.Parse() is { } result)
+        _PathParser.SetupParsingEnvironment(new Lexer(path));
+        if (_PathParser.Parse() is { } result)
         {
             var manipulators = RenderPathRichText(result, DownloadPathMacroTextBox.Document);
             foreach (var ((start, endExclusive), action) in manipulators)

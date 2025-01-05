@@ -25,10 +25,7 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Media.Imaging;
-using Pixeval.AppManagement;
 using Pixeval.Controls;
 using Pixeval.Controls.Windowing;
 using Pixeval.Pages.Capability;
@@ -45,17 +42,17 @@ namespace Pixeval.Pages;
 
 public partial class MainPageViewModel : ObservableObject
 {
-    public readonly NavigationViewTag<HelpPage> HelpTag = new();
+    public readonly NavigationViewTag<RecommendationPage> RecommendationsTag = new();
 
-    public readonly NavigationViewTag<AboutPage> AboutTag = new();
+    public readonly NavigationViewTag<RankingsPage> RankingsTag = new();
 
     public readonly NavigationViewTag<BookmarksPage> BookmarksTag = new();
 
     public readonly NavigationViewTag<FollowingsPage> FollowingsTag = new();
 
-    public readonly NavigationViewTag<BrowsingHistoryPage> HistoriesTag = new();
+    public readonly NavigationViewTag<SpotlightsPage> SpotlightsTag = new();
 
-    public readonly NavigationViewTag<RankingsPage> RankingsTag = new();
+    public readonly NavigationViewTag<RecommendUsersPage> RecommendUsersTag = new();
 
     public readonly NavigationViewTag<RecentPostsPage> RecentPostsTag = new();
 
@@ -63,50 +60,19 @@ public partial class MainPageViewModel : ObservableObject
     
     public readonly NavigationViewTag<FeedPage> FeedTag = new();
 
-    public readonly NavigationViewTag<RecommendationPage> RecommendsTag = new();
-
-    public readonly NavigationViewTag<RecommendUsersPage> RecommendUsersTag = new();
-
     public readonly NavigationViewTag<TagsPage> TagsTag = new();
+
+    public readonly NavigationViewTag<BrowsingHistoryPage> HistoriesTag = new();
 
     public readonly NavigationViewTag<DownloadPage> DownloadListTag = new();
 
+    public readonly NavigationViewTag<ExtensionsPage> ExtensionsTag = new();
+
+    public readonly NavigationViewTag<HelpPage> HelpTag = new();
+
+    public readonly NavigationViewTag<AboutPage> AboutTag = new();
+
     public readonly NavigationViewTag<SettingsPage> SettingsTag = new();
-
-    public readonly NavigationViewTag<SpotlightsPage> SpotlightsTag = new();
-
-    public readonly IconElement RecommendationIcon = new ImageIcon { Source = new BitmapImage(AppInfo.NavigationIconUri("recommendations-128x128"))};
-
-    public readonly IconElement RankingIcon = new ImageIcon { Source = new BitmapImage(AppInfo.NavigationIconUri("ranking-128x128")) };
-
-    // Due to my incompetence, the sizes of the icons must be adjusted per item basis in order to ensure the visual coherence, which is quite annoying.
-    // This was supposed to be an easy fix, but I'm already exhausted now. 
-
-    public readonly IconElement BookmarksIcon = new ImageIcon { Source = new BitmapImage(AppInfo.NavigationIconUri("bookmarks-128x128"))};
-
-    public readonly IconElement FollowingsIcon = new ImageIcon { Source = new BitmapImage(AppInfo.NavigationIconUri("followings-128x128")) };
-
-    public readonly IconElement SpotlightIcon = new ImageIcon { Source = new BitmapImage(AppInfo.NavigationIconUri("spotlight-128x128")) };
-
-    public readonly IconElement RecommendUserIcon = new ImageIcon { Source = new BitmapImage(AppInfo.NavigationIconUri("recommend-user-128x128")) };
-
-    public readonly IconElement RecentPostsIcon = new ImageIcon { Source = new BitmapImage(AppInfo.NavigationIconUri("recent-posts-128x128")) };
-
-    public readonly IconElement NewWorksIcon = new ImageIcon { Source = new BitmapImage(AppInfo.NavigationIconUri("new-works-128x128")) };
-
-    public readonly IconElement FeedIcon = new ImageIcon { Source = new BitmapImage(AppInfo.NavigationIconUri("feed-128x128")) };
-
-    public readonly IconElement TagIcon = new ImageIcon { Source = new BitmapImage(AppInfo.NavigationIconUri("tag-128x128")) };
-
-    public readonly IconElement HistoryIcon = new ImageIcon { Source = new BitmapImage(AppInfo.NavigationIconUri("history-128x128")) };
-
-    public readonly IconElement DownloadListIcon = new ImageIcon { Source = new BitmapImage(AppInfo.NavigationIconUri("download-list-128x128")) };
-
-    public readonly IconElement HelpIcon = new ImageIcon { Source = new BitmapImage(AppInfo.NavigationIconUri("help-128x128")) };
-
-    public readonly IconElement AboutIcon = new ImageIcon { Source = new BitmapImage(AppInfo.NavigationIconUri("about-128x128")) };
-
-    public readonly IconElement SettingsIcon = new ImageIcon { Source = new BitmapImage(AppInfo.NavigationIconUri("settings-128x128")) };
 
     [ObservableProperty]
     public partial ImageSource? AvatarSource { get; set; }

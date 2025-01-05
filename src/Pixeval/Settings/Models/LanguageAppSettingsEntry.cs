@@ -1,15 +1,15 @@
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.Windows.Globalization;
-using Pixeval.AppManagement;
+using Windows.Globalization;
 using Pixeval.Controls.Settings;
 using Pixeval.Pages.Misc;
+using Windows.Foundation.Collections;
+using Pixeval.AppManagement;
 
 namespace Pixeval.Settings.Models;
 
-public partial class LanguageAppSettingsEntry(
-    AppSettings appSettings)
-    : ObservableSettingsEntryBase<AppSettings>(appSettings, "", "", default)
+public partial class LanguageAppSettingsEntry()
+    : ObservableSettingsEntryBase("", "", default), IAppSettingEntry<AppSettings>
 {
     public override LanguageSettingsCard Element => new() { Entry = this };
 
@@ -21,9 +21,13 @@ public partial class LanguageAppSettingsEntry(
         set => ApplicationLanguages.PrimaryLanguageOverride = value.Name;
     }
 
-    public override void ValueReset()
+    public void ValueReset(AppSettings defaultSetting)
     {
         AppLanguage = LanguageModel.DefaultLanguage;
         OnPropertyChanged(nameof(AppLanguage));
+    }
+
+    public override void ValueSaving(IPropertySet values)
+    {
     }
 }

@@ -14,7 +14,7 @@ public sealed partial class CheckExitedDialog : UserControl
 
     private void ClearContext_OnClicked(object sender, RoutedEventArgs e) => AppInfo.ClearLoginContext();
 
-    private async void OpenLocalFolder_OnClicked(object sender, RoutedEventArgs e) => await Launcher.LaunchFolderAsync(AppKnownFolders.Local.Self);
+    private async void OpenLocalFolder_OnClicked(object sender, RoutedEventArgs e) => await Launcher.LaunchFolderPathAsync(AppKnownFolders.Local.FullPath);
 
-    private async void OpenLogFolder_OnClicked(object sender, RoutedEventArgs e) => await Launcher.LaunchFolderAsync(AppKnownFolders.Log.Self);
+    private async void OpenLogFolder_OnClicked(object sender, RoutedEventArgs e) => await Launcher.LaunchFolderPathAsync(AppKnownFolders.Logs.FullPath);
 }

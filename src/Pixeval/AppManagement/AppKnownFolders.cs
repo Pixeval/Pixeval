@@ -19,119 +19,71 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using Windows.Foundation;
 using Windows.Storage;
-using StorageFolder = Windows.Storage.StorageFolder;
-using StorageFile = Windows.Storage.StorageFile;
 using Pixeval.Util.IO;
-using ApplicationDataLocality = Microsoft.Windows.Storage.ApplicationDataLocality;
 
 namespace Pixeval.AppManagement;
 
-public class AppKnownFolders(StorageFolder self)
+public class AppKnownFolders(string fullPath)
 {
-    public static AppKnownFolders Installation = null!;
+    public static AppKnownFolders Temp { get; } = new(AppInfo.AppData.TemporaryFolder.Path);
 
-    public static AppKnownFolders Local = new(AppInfo.AppData.LocalFolder, _ => Task.CompletedTask);
+    public static AppKnownFolders Local { get; } = new(AppInfo.AppData.LocalFolder.Path);
 
-    public static AppKnownFolders Log = null!;
+    public static AppKnownFolders Cache { get; } = new(AppInfo.AppData.LocalCacheFolder.Path);
 
-    public static AppKnownFolders Cache = null!;
+    public static AppKnownFolders Logs { get; } = new(Local.FullPath, nameof(Logs));
 
-    public static AppKnownFolders SavedWallPaper = null!;
+    public static AppKnownFolders Wallpapers { get; } = new(Local.FullPath, nameof(Wallpapers));
 
-    public static AppKnownFolders Temporary = new(AppInfo.AppData.TemporaryFolder,
-        _ => AppInfo.AppData.ClearAsync(ApplicationDataLocality.Temporary).AsTask());
+    public static AppKnownFolders Extensions { get; } = new(Local.FullPath, nameof(Extensions));
 
-    private readonly Func<StorageFolder, Task>? _deleter;
-
-    private AppKnownFolders(StorageFolder self, Func<StorageFolder, Task> deleter) : this(self) => _deleter = deleter;
-
-    public StorageFolder Self { get; } = self;
-
-    private static async Task<AppKnownFolders> GetOrCreate(AppKnownFolders folder, string subfolderName)
+    private AppKnownFolders(string path, string name) : this(Path.Combine(path, name))
     {
-        return new AppKnownFolders(await folder.GetOrCreateFolderAsync(subfolderName));
     }
 
-    public static async Task InitializeAsync()
+    public void EnsureExisted()
     {
-        SavedWallPaper = await GetOrCreate(Local, "Wallpapers");
-        Log = await GetOrCreate(Local, "Logs");
-        Cache = await GetOrCreate(Local, "Cache");
-        Installation = new AppKnownFolders(await StorageFolder.GetFolderFromPathAsync(Windows.ApplicationModel.Package.Current.InstalledPath));
+        if (!DirectoryInfo.Exists)
+            DirectoryInfo.Create();
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="extension">Including the leading dot.</param>
-    /// <returns></returns>
-    public static IAsyncOperation<StorageFile> CreateTemporaryFileWithRandomNameAsync(string? extension = null)
+    public async Task<StorageFolder> StorageFolderAsync()
     {
-        return Temporary.CreateFileAsync(Guid.NewGuid() + (extension ?? ".temp"));
-        // return File.Create(Path.Combine(Temporary.Self.Path, Guid.NewGuid() + (extension ?? ".temp")));
+        EnsureExisted();
+        return await StorageFolder.GetFolderFromPathAsync(FullPath);
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="name"></param>
-    /// <returns></returns>
-    public static IAsyncOperation<StorageFile> CreateTemporaryFileWithNameAsync(string name)
+    public string FullPath { get; } = fullPath;
+
+    public Uri FullUri { get; } = new(fullPath);
+    
+    public DirectoryInfo DirectoryInfo { get; } = Directory.CreateDirectory(new(fullPath));
+
+    public FileStream OpenAsyncWrite(string name)
     {
-        return Temporary.CreateFileAsync(name);
+        EnsureExisted();
+        return IoHelper.OpenAsyncWrite(CombinePath(name));
     }
 
-    public IAsyncOperation<StorageFile> GetFileAsync(string name)
-    {
-        return Self.GetFileAsync(name);
-    }
+    public string[] GetFiles(string searchPattern = "*") => Directory.GetFiles(FullPath, searchPattern);
 
-    public IAsyncOperation<StorageFolder> GetFolderAsync(string name)
-    {
-        return Self.GetFolderAsync(name);
-    }
+    public string CombinePath(string path) => Path.Combine(FullPath, path);
 
-    public async Task<StorageFolder?> TryGetFolderRelativeToSelfAsync(string pathWithoutSlash)
-    {
-        return await Self.TryGetItemAsync(pathWithoutSlash) as StorageFolder;
-    }
+    public string CombinePath(string path1, string path2) => Path.Combine(FullPath, path1, path2);
 
-    public async Task<StorageFile?> TryGetFileRelativeToSelfAsync(string pathWithoutSlash)
-    {
-        return await Self.TryGetItemAsync(pathWithoutSlash) as StorageFile;
-    }
+    public string CombinePath(params IEnumerable<string> paths) => Path.Combine([FullPath, ..paths]);
 
-    public IAsyncOperation<StorageFile> CreateFileAsync(string name, CreationCollisionOption collisionOption = CreationCollisionOption.ReplaceExisting)
+    public void Clear()
     {
-        return Self.CreateFileAsync(name, collisionOption);
-    }
-
-    public IAsyncOperation<StorageFolder> CreateFolderAsync(string name, CreationCollisionOption collisionOption = CreationCollisionOption.ReplaceExisting)
-    {
-        return Self.CreateFolderAsync(name, collisionOption);
-    }
-
-    public async Task<StorageFile> GetOrCreateFileAsync(string name)
-    {
-        return await Self.TryGetItemAsync(name) as StorageFile ?? await Self.CreateFileAsync(name, CreationCollisionOption.ReplaceExisting);
-    }
-
-    private async Task<StorageFolder> GetOrCreateFolderAsync(string folderName)
-    {
-        return await Self.TryGetItemAsync(folderName) as StorageFolder ?? await Self.CreateFolderAsync(folderName, CreationCollisionOption.ReplaceExisting);
-    }
-
-    public Task ClearAsync()
-    {
-        return _deleter is null ? Self.ClearDirectoryAsync() : _deleter(Self);
-    }
-
-    public string Resolve(string path)
-    {
-        return Path.Combine(Self.Path, path);
+        if (FullPath == Local.FullPath)
+            return;
+        if (!DirectoryInfo.Exists)
+            return;
+        DirectoryInfo.Delete(true);
+        DirectoryInfo.Create();
     }
 }

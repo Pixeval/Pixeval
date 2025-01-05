@@ -17,6 +17,5 @@
     <controls1:EnumComboBox
         ItemsSource="{x:Bind Entry.EnumItems}"
         SelectedEnum="{x:Bind Entry.Value, Mode=TwoWay}"
-        SelectionChanged="EnumComboBox_OnSelectionChanged"
         Style="{StaticResource SettingsEnumComboBoxStyle}" />
 </controls:SettingsCard>

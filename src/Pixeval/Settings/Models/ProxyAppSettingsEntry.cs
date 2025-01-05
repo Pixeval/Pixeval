@@ -32,7 +32,7 @@ namespace Pixeval.Settings.Models;
 
 public partial class ProxyAppSettingsEntry : EnumAppSettingsEntry
 {
-    public ProxyAppSettingsEntry(AppSettings appSettings) : base(appSettings, t => t.ProxyType, ProxyTypeExtension.GetItems())
+    public ProxyAppSettingsEntry(AppSettings settings) : base(settings, t => t.ProxyType, ProxyTypeExtension.GetItems())
     {
         var member = typeof(AppSettings).GetProperty(nameof(AppSettings.Proxy));
         Attribute2 = member?.GetCustomAttribute<SettingsEntryAttribute>();
@@ -93,10 +93,11 @@ public partial class ProxyAppSettingsEntry : EnumAppSettingsEntry
                 return;
             Settings.Proxy = value ?? "";
             OnPropertyChanged();
+            ProxyChanged?.Invoke(MakoProxy);
         }
     }
 
-    public string? MakoProxy
+    private string? MakoProxy
     {
         get
         {
@@ -128,10 +129,9 @@ public partial class ProxyAppSettingsEntry : EnumAppSettingsEntry
         }
     }
 
-    public override void ValueReset()
+    public override void ValueReset(AppSettings defaultSettings)
     {
-        base.ValueReset();
-        OnPropertyChanged(nameof(Proxy));
-        ProxyChanged?.Invoke(MakoProxy);
+        base.ValueReset(defaultSettings);
+        Proxy = defaultSettings.Proxy;
     }
 }

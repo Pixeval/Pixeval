@@ -138,4 +138,10 @@
   <data name="AppLinkHelp.Text" xml:space="preserve">
     <value>分享给你的朋友，或者在浏览器或 Windows 运行中输入该链接，可以直接在 Pixeval 打开当前页面</value>
   </data>
+  <data name="ExtensionsHelpExpander.Header" xml:space="preserve">
+    <value>扩展系统帮助</value>
+  </data>
+  <data name="ExtensionsHelp.Text" xml:space="preserve">
+    <value>扩展版本和Pixeval的版本具有强关联性，请确保两者版本相匹配</value>
+  </data>
 </root>

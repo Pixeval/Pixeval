@@ -180,7 +180,7 @@
                             Click="OpenFolder_OnClicked"
                             HeaderIcon="{fluent:SymbolIcon Symbol=FolderList}"
                             IsClickEnabled="True"
-                            Tag="Log" />
+                            Tag="Logs" />
                         <controls:SettingsCard
                             x:Uid="/SettingsPage/OpenTempEntry"
                             ActionIcon="{fluent:SymbolIcon Symbol=Open}"
@@ -195,6 +195,13 @@
                             HeaderIcon="{fluent:SymbolIcon Symbol=FolderBriefcase}"
                             IsClickEnabled="True"
                             Tag="Local" />
+                        <controls:SettingsCard
+                            x:Uid="/SettingsPage/OpenExtensionsEntry"
+                            ActionIcon="{fluent:SymbolIcon Symbol=Open}"
+                            Click="OpenFolder_OnClicked"
+                            HeaderIcon="{fluent:SymbolIcon Symbol=FolderAdd}"
+                            IsClickEnabled="True"
+                            Tag="Extensions" />
                     </controls:SettingsExpander.Items>
                 </controls:SettingsExpander>
 

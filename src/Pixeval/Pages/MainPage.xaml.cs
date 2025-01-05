@@ -75,7 +75,7 @@ public sealed partial class MainPage
 
     private static async void CustomizeTitleBar()
     {
-        if (AppInfo.CustomizeTitleBarSupported)
+        if (Microsoft.UI.Windowing.AppWindowTitleBar.IsCustomizationSupported())
             return;
 
         await Task.Yield();
@@ -132,7 +132,7 @@ public sealed partial class MainPage
                 return;
             }
 
-            if (Equals(selectedItem, DownloadListTab) || Equals(selectedItem, SettingsTab) || Equals(selectedItem, TagsTab))
+            if (Equals(selectedItem, DownloadListTab) || Equals(selectedItem, SettingsTab) || Equals(selectedItem, TagsTab)|| Equals(selectedItem, ExtensionsTab))
                 Navigate(MainPageRootFrame, tag);
             else
                 MainPageRootFrame.NavigateTag(tag, new SuppressNavigationTransitionInfo());

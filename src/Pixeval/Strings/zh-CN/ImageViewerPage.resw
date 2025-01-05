@@ -117,6 +117,12 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="ApplyingTransformerExtensionsFormatted" xml:space="preserve">
+    <value>正在应用图片转换扩展：第 {0} 个</value>
+  </data>
+  <data name="AllTransformerExtensionsFinished" xml:space="preserve">
+    <value>所有图片转换扩展应用完成</value>
+  </data>
   <data name="CheckingCache" xml:space="preserve">
     <value>正在检查缓存...</value>
   </data>

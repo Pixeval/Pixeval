@@ -11,7 +11,6 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:media="using:Microsoft.Xaml.Interactions.Media"
     xmlns:triggers="using:Pixeval.Util.Triggers"
-    xmlns:winUi="using:FluentIcons.WinUI"
     xmlns:windowing="using:Pixeval.Controls.Windowing"
     KeyboardAcceleratorPlacementMode="Hidden"
     Loaded="IllustrationViewerPage_OnLoaded"
@@ -256,27 +255,6 @@
                         Symbol="AppTitle"
                         Text="{x:Bind _viewModel.CurrentIllustration.Title, Mode=OneWay}" />
                 </CommandBar>
-
-                <!--<TextBlock
-                    Grid.Column="1"
-                    MaxHeight="45"
-                    Margin="310,0,375,0"
-                    Style="{StaticResource TextBlockStyle}"
-                    Text="{x:Bind _viewModel.AdditionalText, Mode=OneWay}"
-                    TextWrapping="WrapWholeWords"
-                    Visibility="{x:Bind _viewModel.AdditionalTextBlockVisible, Mode=OneWay}" />
-
-                <StackPanel
-                    Margin="320,10,375,0"
-                    HorizontalAlignment="Stretch"
-                    VerticalAlignment="Center"
-                    Visibility="{x:Bind _viewModel.UpscalerProgressBarVisible, Mode=OneWay}">
-                    <ProgressBar Value="{x:Bind _viewModel.UpscalerProgress, Mode=OneWay}" />
-                    <TextBlock
-                        Margin="0,2,0,0"
-                        Style="{StaticResource CaptionTextBlockStyle}"
-                        Text="{x:Bind _viewModel.UpscalerProgressText}" />
-                </StackPanel>-->
                 <CommandBar Grid.Column="2" HorizontalAlignment="Stretch">
                     <AppBarElementContainer VerticalContentAlignment="Center">
                         <TextBlock Style="{StaticResource TextBlockStyle}" Visibility="{x:Bind controls:C.ToVisibility(_viewModel.CurrentIllustration.IsManga), Mode=OneWay}">
@@ -286,20 +264,6 @@
                         </TextBlock>
                     </AppBarElementContainer>
                     <AppBarSeparator />
-                    <AppBarButton
-                        x:Name="UpscaleButton"
-                        Click="UpscaleButton_OnTapped"
-                        Icon="{winUi:SymbolIcon Symbol=EyeTracking}"
-                        IsCompact="True"
-                        IsEnabled="False"
-                        LabelPosition="Collapsed" />
-                    <!--<TeachingTip
-                        x:Name="UpscaleTeachingTip"
-                        x:Uid="/EntryViewerPage/UpscaleTeachingTip"
-                        IconSource="{winUi:SymbolIconSource Symbol=CommentNote}"
-                        IsEnabled="False"
-                        IsLightDismissEnabled="True"
-                        Target="{x:Bind UpscaleButton}" />-->
                     <AppBarSeparator Height="35" />
                     <AppBarButton
                         Command="{x:Bind _viewModel.FullScreenCommand}"

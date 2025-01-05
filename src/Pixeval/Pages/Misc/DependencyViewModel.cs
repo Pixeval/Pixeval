@@ -27,6 +27,6 @@ public record DependencyViewModel(string Name, string Author, string Url, string
         _Dependencies.Select(t =>
         {
             var segments = t.Item1.Split('/');
-            return new DependencyViewModel(segments[^1], "by " + segments[0], "https://github.com/" + t.Item1, t.Item2);
+            return new DependencyViewModel(segments[^1], segments[0], "https://github.com/" + t.Item1, t.Item2);
         });
 }

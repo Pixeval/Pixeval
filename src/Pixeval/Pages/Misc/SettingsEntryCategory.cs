@@ -39,9 +39,6 @@ public enum SettingsEntryCategory
     [LocalizedResource(typeof(SettingsPageResources), nameof(SettingsPageResources.BrowsingExperienceSettingsGroupText))]
     BrowsingExperience,
 
-    [LocalizedResource(typeof(SettingsPageResources), nameof(SettingsPageResources.AiUpscalerSettingsGroupText))]
-    AiUpscaler,
-
     [LocalizedResource(typeof(SettingsPageResources), nameof(SettingsPageResources.SearchSettingsGroupText))]
     Search,
 

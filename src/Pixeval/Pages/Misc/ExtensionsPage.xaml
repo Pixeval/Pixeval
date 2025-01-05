@@ -1,0 +1,79 @@
+<controls:EnhancedWindowPage
+    x:Class="Pixeval.Pages.Misc.ExtensionsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:Pixeval.Controls"
+    xmlns:controls1="using:CommunityToolkit.WinUI.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:extensions="using:Pixeval.Extensions"
+    xmlns:fluent="using:FluentIcons.WinUI"
+    xmlns:local="using:Pixeval.Pages.Misc"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+    <controls1:DockPanel VerticalSpacing="10">
+        <TextBlock
+            x:Uid="/ExtensionsPage/TitleTextBlock"
+            Margin="20,40,20,20"
+            controls1:DockPanel.Dock="Top"
+            Style="{StaticResource TitleTextBlockStyle}" />
+        <CommandBar controls1:DockPanel.Dock="Top" DefaultLabelPosition="Right">
+            <AppBarButton
+                x:Uid="/ExtensionsPage/AddExtensionsButton"
+                Click="AddExtensionsOnClick"
+                Icon="{fluent:SymbolIcon Symbol=PlugConnectedAdd}" />
+            <AppBarButton
+                x:Uid="/ExtensionsPage/OpenExtensionsButton"
+                Click="OpenExtensionsOnClick"
+                Icon="{fluent:SymbolIcon Symbol=FolderAdd}" />
+        </CommandBar>
+        <ScrollView>
+            <ItemsRepeater Margin="20,0,20,20" ItemsSource="{x:Bind Models}">
+                <ItemsRepeater.Layout>
+                    <StackLayout Orientation="Vertical" />
+                </ItemsRepeater.Layout>
+                <ItemsRepeater.ItemTemplate>
+                    <DataTemplate x:DataType="extensions:ExtensionsHostModel">
+                        <controls1:SettingsCard Description="{x:Bind Description}" HeaderIcon="{x:Bind Icon}">
+                            <controls1:SettingsCard.Header>
+                                <StackPanel Orientation="Horizontal" Spacing="50">
+                                    <HyperlinkButton
+                                        Padding="0"
+                                        Content="{x:Bind Name}"
+                                        FontWeight="Bold"
+                                        NavigateUri="{x:Bind Link}" />
+                                    <TextBlock
+                                        FontStyle="Italic"
+                                        Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"
+                                        Text="{x:Bind Author}" />
+                                </StackPanel>
+                            </controls1:SettingsCard.Header>
+                            <controls1:SettingsCard.Content>
+                                <CommandBar>
+                                    <AppBarElementContainer
+                                        Padding="10,5"
+                                        HorizontalContentAlignment="Center"
+                                        VerticalContentAlignment="Center">
+                                        <ToggleSwitch IsOn="{x:Bind IsActive, Mode=TwoWay}" />
+                                    </AppBarElementContainer>
+                                    <CommandBar.SecondaryCommands>
+                                        <AppBarButton
+                                            x:Uid="/ExtensionsPage/ExtensionsHelpButton"
+                                            Click="ExtensionsHelpOnClick"
+                                            Icon="{fluent:SymbolIcon Symbol=BookQuestionMark}"
+                                            Tag="{x:Bind HelpLink}"
+                                            Visibility="{x:Bind controls:C.IsNotNullToVisibility(HelpLink)}" />
+                                        <AppBarButton
+                                            x:Uid="/ExtensionsPage/UnloadExtensionsButton"
+                                            Click="UnloadHostOnClick"
+                                            Icon="{fluent:SymbolIcon Symbol=PlugDisconnected}"
+                                            Tag="{x:Bind}" />
+                                    </CommandBar.SecondaryCommands>
+                                </CommandBar>
+                            </controls1:SettingsCard.Content>
+                        </controls1:SettingsCard>
+                    </DataTemplate>
+                </ItemsRepeater.ItemTemplate>
+            </ItemsRepeater>
+        </ScrollView>
+    </controls1:DockPanel>
+</controls:EnhancedWindowPage>

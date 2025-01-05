@@ -29,12 +29,24 @@ using WinUI3Utilities;
 
 namespace Pixeval.Settings;
 
-public abstract class SingleValueSettingsEntry<TSettings, TValue> : SingleValueSettingsEntryBase<TSettings>
+public abstract class SingleValueSettingsEntry<TSettings, TValue> 
+    : SingleValueSettingsEntryBase<TValue>, ISingleValueSettingsEntry<TValue>, IAppSettingEntry<TSettings>
 {
     protected SingleValueSettingsEntry(TSettings settings,
-        Expression<Func<TSettings, TValue>> property) : base(settings)
+        Expression<Func<TSettings, object>> property,
+        Func<TSettings, TValue> getter,
+        Action<TSettings, TValue> setter) : base("", "", default)
     {
-        (_getter, _setter, var member) = GetSettingsEntryInfo(property);
+        Settings = settings;
+        _getter = getter;
+        _setter = setter;
+        // t => (T)t.A
+        if (property.Body is not MemberExpression member)
+        {
+            ThrowHelper.Argument(property);
+            return;
+        }
+        Token = member.Member.Name;
         Attribute = member.Member.GetCustomAttribute<SettingsEntryAttribute>();
 
         if (Attribute is { } attribute)
@@ -45,11 +57,31 @@ public abstract class SingleValueSettingsEntry<TSettings, TValue> : SingleValueS
         }
     }
 
+    protected SingleValueSettingsEntry(TSettings settings,
+        Expression<Func<TSettings, TValue>> property) : base("", "", default)
+    {
+        Settings = settings;
+        (_getter, _setter, var member) = GetSettingsEntryInfo(property);
+        Token = member.Member.Name;
+        Attribute = member.Member.GetCustomAttribute<SettingsEntryAttribute>();
+
+        if (Attribute is { } attribute)
+        {
+            Header = attribute.LocalizedResourceHeader;
+            Description = attribute.LocalizedResourceDescription;
+            HeaderIcon = attribute.Symbol;
+        }
+    }
+
+    public override string Token { get; }
+
     public SettingsEntryAttribute? Attribute { get; }
 
     public Action<TValue>? ValueChanged { get; set; }
 
-    public TValue Value
+    public TSettings Settings { get; }
+
+    public override TValue Value
     {
         get => _getter(Settings);
         set
@@ -58,14 +90,11 @@ public abstract class SingleValueSettingsEntry<TSettings, TValue> : SingleValueS
                 return;
             _setter(Settings, value);
             OnPropertyChanged();
+            ValueChanged?.Invoke(Value);
         }
     }
 
-    public override void ValueReset()
-    {
-        OnPropertyChanged(nameof(Value));
-        ValueChanged?.Invoke(Value);
-    }
+    public virtual void ValueReset(TSettings defaultSettings) => Value = _getter(defaultSettings);
 
     private readonly Func<TSettings, TValue> _getter;
 
@@ -86,19 +115,26 @@ public abstract class SingleValueSettingsEntry<TSettings, TValue> : SingleValueS
         MemberExpression member;
         switch (property.Body)
         {
+            // t => (T)t.A
             case UnaryExpression
             {
                 Operand: MemberExpression member1
             } body:
             {
+                // t => (T)t.A
                 getPropertyValue = body;
+                // (t, v) => t.A = (T)v
                 setPropertyValue = Expression.Assign(member1, Expression.Convert(propertyValue, member1.Type));
+                // t => t.A
                 member = member1;
                 break;
             }
+            // t => t.A
             case MemberExpression member2:
             {
+                // t => t.A
                 getPropertyValue = member = member2;
+                // (t, v) => t.A = v
                 setPropertyValue = Expression.Assign(member2, propertyValue);
                 break;
             }
@@ -109,7 +145,7 @@ public abstract class SingleValueSettingsEntry<TSettings, TValue> : SingleValueS
 
         var getter = Expression.Lambda<Func<TSettings1, TValue1>>(getPropertyValue, parameter).Compile();
         var setter = Expression.Lambda<Action<TSettings1, TValue1>>(setPropertyValue, parameter, propertyValue).Compile();
-        return new (getter, setter, member);
+        return new(getter, setter, member);
     }
 
     public record SettingsEntryInfo<TSettings1, TValue1>(

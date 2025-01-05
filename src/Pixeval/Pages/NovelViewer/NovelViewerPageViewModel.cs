@@ -63,8 +63,8 @@ public partial class NovelViewerPageViewModel : DetailedUiObservableObject, IDis
 
     public void OnFrameworkElementOnActualThemeChanged(FrameworkElement frameworkElement, object o)
     {
-        NovelBackgroundEntry.ValueReset();
-        NovelFontColorEntry.ValueReset();
+        NovelBackgroundEntry.ValueReset(Settings);
+        NovelFontColorEntry.ValueReset(Settings);
     }
 
     /// <summary>
@@ -269,40 +269,29 @@ public partial class NovelViewerPageViewModel : DetailedUiObservableObject, IDis
 
     #region Settings
 
-    public static AppSettings AppSettings => App.AppViewModel.AppSettings;
+    public static AppSettings Settings => App.AppViewModel.AppSettings;
 
-    public FontAppSettingsEntry NovelFontFamilyEntry { get; } = new(AppSettings, t => t.NovelFontFamily) { ValueChanged = ValueChanged };
+    public FontAppSettingsEntry NovelFontFamilyEntry { get; } = new(Settings, t => t.NovelFontFamily);
 
-    public ColorAppSettingsEntry NovelBackgroundEntry { get; } = new(AppSettings, t => t.NovelBackground) { ValueChanged = ValueChanged };
+    public ColorAppSettingsEntry NovelBackgroundEntry { get; } = new(Settings, t => t.NovelBackground);
 
-    public ColorAppSettingsEntry NovelFontColorEntry { get; } = new(AppSettings, t => t.NovelFontColor) { ValueChanged = ValueChanged };
+    public ColorAppSettingsEntry NovelFontColorEntry { get; } = new(Settings, t => t.NovelFontColor);
 
-    public EnumAppSettingsEntry NovelFontWeightEntry { get; } = new(AppSettings, t => t.NovelFontWeight, FontWeightsOptionExtension.GetItems()) { ValueChanged = ValueChanged };
+    public EnumAppSettingsEntry NovelFontWeightEntry { get; } = new(Settings, t => t.NovelFontWeight, FontWeightsOptionExtension.GetItems());
 
-    public IntAppSettingsEntry NovelFontSizeEntry { get; } = new(AppSettings, t => t.NovelFontSize)
+    public IntAppSettingsEntry NovelFontSizeEntry { get; } = new(Settings, t => t.NovelFontSize) { Max = 100, Min = 5 };
+
+    public IntAppSettingsEntry NovelLineHeightEntry { get; } = new(Settings, t => t.NovelLineHeight) { Max = 150, Min = 0 };
+
+    public IntAppSettingsEntry NovelMaxWidthEntry { get; } = new(Settings, t => t.NovelMaxWidth)
     {
-        ValueChanged = ValueChanged,
-        Max = 100,
-        Min = 5
-    };
-
-    public IntAppSettingsEntry NovelLineHeightEntry { get; } = new(AppSettings, t => t.NovelLineHeight)
-    {
-        ValueChanged = ValueChanged,
-        Max = 150,
-        Min = 0
-    };
-
-    public IntAppSettingsEntry NovelMaxWidthEntry { get; } = new(AppSettings, t => t.NovelMaxWidth)
-    {
-        ValueChanged = ValueChanged,
         LargeChange = 100,
         SmallChange = 50,
         Max = 10000,
         Min = 50
     };
 
-    public ISettingsEntry[] Entries =>
+    public IAppSettingEntry<AppSettings>[] Entries =>
     [
         NovelFontFamilyEntry,
         NovelBackgroundEntry,
@@ -312,8 +301,6 @@ public partial class NovelViewerPageViewModel : DetailedUiObservableObject, IDis
         NovelLineHeightEntry,
         NovelMaxWidthEntry
     ];
-
-    private static void ValueChanged<T>(T value) => AppInfo.SaveConfig(App.AppViewModel.AppSettings);
 
     #endregion
 }
