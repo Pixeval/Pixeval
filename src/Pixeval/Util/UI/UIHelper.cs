@@ -252,6 +252,7 @@ public static partial class UiHelper
     {
         var fileOpenPicker = new FileOpenPicker();
         fileOpenPicker.FileTypeFilter.Add(".dll");
+        fileOpenPicker.FileTypeFilter.Add(".zip");
         fileOpenPicker.SuggestedStartLocation = PickerLocationId.Desktop;
         InitializeWithWindow.Initialize(fileOpenPicker, (nint)hWnd);
         return fileOpenPicker.PickMultipleFilesAsync();

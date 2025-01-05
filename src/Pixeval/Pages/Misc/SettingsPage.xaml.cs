@@ -146,14 +146,14 @@ public sealed partial class SettingsPage : IScrollViewHost, IDisposable, INotify
     {
         var folder = sender.To<FrameworkElement>().GetTag<string>() switch
         {
-            nameof(AppKnownFolders.Logs) => AppKnownFolders.Logs.FullPath,
-            nameof(AppKnownFolders.Temp) => AppKnownFolders.Temp.FullPath,
-            nameof(AppKnownFolders.Local) => AppKnownFolders.Local.FullPath,
-            nameof(AppKnownFolders.Extensions) => AppKnownFolders.Extensions.FullPath,
+            nameof(AppKnownFolders.Logs) => AppKnownFolders.Logs,
+            nameof(AppKnownFolders.Temp) => AppKnownFolders.Temp,
+            nameof(AppKnownFolders.Local) => AppKnownFolders.Local,
+            nameof(AppKnownFolders.Extensions) => AppKnownFolders.Extensions,
             _ => null
         };
         if (folder is not null)
-            _ = await Launcher.LaunchFolderPathAsync(folder);
+            _ = await Launcher.LaunchFolderPathAsync(folder.FullPath);
     }
 
     public void Dispose()

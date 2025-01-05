@@ -120,16 +120,28 @@
   <data name="AddExtensionsButton.Label" xml:space="preserve">
     <value>添加扩展</value>
   </data>
-  <data name="DllFileExistedErrorFormatted" xml:space="preserve">
-    <value>名称为“{0}”的文件已在扩展文件夹中，将跳过该文件</value>
+  <data name="UnzipFailed" xml:space="preserve">
+    <value>解压压缩文件时出错</value>
   </data>
-  <data name="DllLoadedSuccessfullyFormatted" xml:space="preserve">
-    <value>已加载DLL：“{0}”</value>
+  <data name="DllFileExistedError" xml:space="preserve">
+    <value>文件已在扩展文件夹中，将跳过该文件</value>
   </data>
-  <data name="DllLoadFailedFormatted" xml:space="preserve">
-    <value>加载DLL“{0}”失败</value>
+  <data name="DllLoadedSuccessfully" xml:space="preserve">
+    <value>已加载DLL</value>
+  </data>
+  <data name="DllLoadFailed" xml:space="preserve">
+    <value>加载DLL失败</value>
+  </data>
+  <data name="OpenExtensionsButton.Label" xml:space="preserve">
+    <value>打开扩展文件夹</value>
   </data>
   <data name="TitleTextBlock.Text" xml:space="preserve">
     <value>Pixeval 扩展管理器</value>
+  </data>
+  <data name="UnloadExtensionsButton.Label" xml:space="preserve">
+    <value>卸载扩展</value>
+  </data>
+  <data name="ZipContainsNoDll" xml:space="preserve">
+    <value>压缩文件不包含可用的DLL</value>
   </data>
 </root>

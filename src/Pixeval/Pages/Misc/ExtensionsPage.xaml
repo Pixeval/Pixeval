@@ -21,6 +21,10 @@
                 x:Uid="/ExtensionsPage/AddExtensionsButton"
                 Click="AddExtensionsOnClick"
                 Icon="{fluent:SymbolIcon Symbol=PlugConnectedAdd}" />
+            <AppBarButton
+                x:Uid="/ExtensionsPage/OpenExtensionsButton"
+                Click="OpenExtensionsOnClick"
+                Icon="{fluent:SymbolIcon Symbol=FolderAdd}" />
         </CommandBar>
         <ScrollView>
             <ItemsRepeater Margin="20,0,20,20" ItemsSource="{x:Bind Models}">
@@ -29,7 +33,7 @@
                 </ItemsRepeater.Layout>
                 <ItemsRepeater.ItemTemplate>
                     <DataTemplate x:DataType="extensions:ExtensionsHostModel">
-                        <controls1:SettingsCard Description="{x:Bind Description}" HeaderIcon="{fluent:SymbolIcon Symbol=PuzzlePiece}">
+                        <controls1:SettingsCard Description="{x:Bind Description}" HeaderIcon="{x:Bind Icon}">
                             <controls1:SettingsCard.Header>
                                 <TextBlock>
                                     <Run FontWeight="Bold" Text="{x:Bind Name}" />
@@ -45,7 +49,21 @@
                                 </TextBlock>
                             </controls1:SettingsCard.Header>
                             <controls1:SettingsCard.Content>
-                                <ToggleSwitch IsOn="{x:Bind IsActive, Mode=TwoWay}" />
+                                <CommandBar>
+                                    <AppBarElementContainer
+                                        Padding="10,5"
+                                        HorizontalContentAlignment="Center"
+                                        VerticalContentAlignment="Center">
+                                        <ToggleSwitch IsOn="{x:Bind IsActive, Mode=TwoWay}" />
+                                    </AppBarElementContainer>
+                                    <CommandBar.SecondaryCommands>
+                                        <AppBarButton
+                                            x:Uid="/ExtensionsPage/UnloadExtensionsButton"
+                                            Click="UnloadHostOnClick"
+                                            Icon="{fluent:SymbolIcon Symbol=PlugDisconnected}"
+                                            Tag="{x:Bind}" />
+                                    </CommandBar.SecondaryCommands>
+                                </CommandBar>
                             </controls1:SettingsCard.Content>
                         </controls1:SettingsCard>
                     </DataTemplate>

@@ -18,9 +18,9 @@ using WinUI3Utilities;
 
 namespace Pixeval.Extensions;
 
-public class ExtensionService : IDisposable
+public partial class ExtensionService : IDisposable
 {
-    public IReadOnlyList<ExtensionsHostModel> ExtensionHosts => _extensionHosts;
+    public IReadOnlyList<ExtensionsHostModel> HostModels => _hostModels;
 
     public IReadOnlyDictionary<ExtensionsHostModel, IReadOnlyList<IExtension>> ExtensionsLookup => _extensionsLookup;
 
@@ -36,7 +36,7 @@ public class ExtensionService : IDisposable
 
     public IEnumerable<IImageTransformerExtension> ActiveImageTransformers => ActiveExtensions.OfType<IImageTransformerExtension>();
 
-    private readonly ObservableCollection<ExtensionsHostModel> _extensionHosts = [];
+    private readonly ObservableCollection<ExtensionsHostModel> _hostModels = [];
 
     private readonly Dictionary<ExtensionsHostModel, IReadOnlyList<IExtension>> _extensionsLookup = [];
 
@@ -52,11 +52,10 @@ public class ExtensionService : IDisposable
     {
         try
         {
-            if (LoadExtension(path) is not { } host)
+            if (LoadHost(path) is not { } model)
                 return false;
-            host.Initialize(AppSettings.CurrentCulture.Name, AppKnownFolders.Temp.FullPath);
-            var model = new ExtensionsHostModel(host);
-            _extensionHosts.Add(model);
+            model.Host.Initialize(AppSettings.CurrentCulture.Name, AppKnownFolders.Temp.FullPath, AppKnownFolders.Extensions.FullPath);
+            _hostModels.Add(model);
             LoadExtensions(model);
             return true;
         }
@@ -66,28 +65,46 @@ public class ExtensionService : IDisposable
         }
     }
 
-    private static IExtensionsHost? LoadExtension(string path)
+    public void UnloadHost(ExtensionsHostModel model)
+    {
+        _ = _hostModels.Remove(model);
+        _ = _extensionsLookup.Remove(model);
+        if (_settingsGroups.FirstOrDefault(t => t.Model == model) is { } group)
+            _ = _settingsGroups.Remove(group);
+        foreach (var extension in model.Extensions)
+            extension.OnExtensionUnloaded();
+        model.Dispose();
+    }
+
+    private static ExtensionsHostModel? LoadHost(string path)
     {
         try
         {
             var dllHandle = PInvoke.LoadLibrary(path);
             if (dllHandle is null)
                 return null;
-            var dllGetExtensionsHostPtr =
-                PInvoke.GetProcAddress(dllHandle, nameof(IExtensionsHost.DllGetExtensionsHost));
-            if ((nint)dllGetExtensionsHostPtr is 0)
+            try
+            {
+                var dllGetExtensionsHostPtr =
+                    PInvoke.GetProcAddress(dllHandle, nameof(IExtensionsHost.DllGetExtensionsHost));
+                if ((nint)dllGetExtensionsHostPtr is 0)
+                    return null;
+                var dllGetExtensionsHost = Marshal.GetDelegateForFunctionPointer<IExtensionsHost.DllGetExtensionsHost>(dllGetExtensionsHostPtr);
+                var result = dllGetExtensionsHost(out var ppv);
+                if (result is not 0)
+                    return null;
+                var wrappers = new StrategyBasedComWrappers();
+                var rcw = (IExtensionsHost)wrappers.GetOrCreateObjectForComInstance(ppv, CreateObjectFlags.UniqueInstance);
+                Marshal.Release(ppv);
+                return new(rcw) { Handle = dllHandle };
+            }
+            catch
+            {
+                dllHandle.Dispose();
                 return null;
-            var dllGetExtensionsHost =
-                Marshal.GetDelegateForFunctionPointer<IExtensionsHost.DllGetExtensionsHost>(dllGetExtensionsHostPtr);
-            var result = dllGetExtensionsHost(out var ppv);
-            if (result is not 0)
-                return null;
-            var wrappers = new StrategyBasedComWrappers();
-            var rcw = (IExtensionsHost)wrappers.GetOrCreateObjectForComInstance(ppv, CreateObjectFlags.UniqueInstance);
-            Marshal.Release(ppv);
-            return rcw;
+            }
         }
-        catch (Exception)
+        catch
         {
             return null;
         }
@@ -209,8 +226,8 @@ public class ExtensionService : IDisposable
 
     public void Dispose()
     {
-        foreach (var extension in Extensions) 
-            extension.OnExtensionUnloaded();
+        while (HostModels is [{ } model, ..])
+            UnloadHost(model);
         GC.SuppressFinalize(this);
     }
 }

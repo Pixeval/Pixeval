@@ -1,14 +1,23 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL v3 License.
 
+using System;
 using System.Collections.Generic;
+using System.IO;
 using Windows.Foundation.Collections;
+using Windows.Storage.Streams;
+using Windows.Win32;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.Windows.Storage;
 using Pixeval.Extensions.Common;
+using Symbol = FluentIcons.Common.Symbol;
+using SymbolIcon = FluentIcons.WinUI.SymbolIcon;
 
 namespace Pixeval.Extensions;
 
-public record ExtensionsHostModel(IExtensionsHost Host)
+public partial record ExtensionsHostModel(IExtensionsHost Host) : IDisposable
 {
     public bool IsActive
     {
@@ -23,6 +32,8 @@ public record ExtensionsHostModel(IExtensionsHost Host)
         set => Values[nameof(IsActive)] = value;
     }
 
+    internal FreeLibrarySafeHandle? Handle { get; init; }
+
     public string Name { get; } = Host.GetExtensionName();
 
     public string Description { get; } = Host.GetDescription();
@@ -35,6 +46,12 @@ public record ExtensionsHostModel(IExtensionsHost Host)
 
     public string HelpLink { get; } = Host.GetHelpLink();
 
+    private BitmapImage? IconImageSource { get; } = GetIconSource(Host.GetIcon());
+
+    public IconElement Icon => IconImageSource is null
+        ? new SymbolIcon { Symbol = Symbol.PuzzlePiece }
+        : new ImageIcon { Source = IconImageSource };
+
     public IPropertySet Values { get; } = GetValues(Host);
 
     public IReadOnlyList<IExtension> Extensions { get; } = Host.GetExtensions();
@@ -46,5 +63,30 @@ public record ExtensionsHostModel(IExtensionsHost Host)
         if (!localSettings.Containers.TryGetValue(extensionName, out var container))
             container = localSettings.CreateContainer(extensionName, ApplicationDataCreateDisposition.Always);
         return container.Values;
+    }
+
+    private static BitmapImage? GetIconSource(byte[]? iconBytes)
+    {
+        if (iconBytes is null)
+            return null;
+        var image = new BitmapImage();
+        using var stream = new InMemoryRandomAccessStream();
+        var s = stream.AsStreamForWrite();
+        s.Write(iconBytes);
+        s.Flush();
+        stream.Seek(0);
+        image.SetSource(stream);
+        return image;
+    }
+
+    private static IconElement GetIcon(BitmapImage? imageSource)
+    {
+            return imageSource is null ?  new SymbolIcon { Symbol = Symbol.PuzzlePiece } : new ImageIcon { Source = imageSource };
+    }
+
+    public void Dispose()
+    {
+        Handle?.Dispose();
+        GC.SuppressFinalize(this);
     }
 }
