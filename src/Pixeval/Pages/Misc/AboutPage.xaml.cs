@@ -19,14 +19,15 @@
 #endregion
 
 using System;
-using System.Net.Http;
 using System.Text;
 using Windows.System;
 using CommunityToolkit.WinUI.Controls;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.AppManagement;
 using Pixeval.Controls;
 using WinUI3Utilities;
+using System.IO;
 
 namespace Pixeval.Pages.Misc;
 
@@ -48,13 +49,16 @@ public sealed partial class AboutPage
     {
         LicenseTextBlock.Text = Encoding.UTF8.GetString(await AppInfo.GetAssetBytesAsync("GPLv3.md"));
 
-        await foreach (var supporter in Supporter.GetSupportersAsync(new HttpClient()))
+        var basePath = AppKnownFolders.Cache.CombinePath("GitHubSupporters");
+        _ = Directory.CreateDirectory(basePath);
+
+        await foreach (var supporter in Supporter.GetSupportersAsync(basePath))
         {
             UniformGrid.Children.Add(new PersonView
             {
-                PersonName = supporter.Name,
+                PersonName = '@' + supporter.Name,
                 PersonNickname = supporter.Nickname,
-                PersonPicture = supporter.ProfilePicture,
+                PersonPicture = new BitmapImage(new Uri(Path.Combine(basePath, supporter.Name + ".png"))),
                 PersonProfileNavigateUri = supporter.ProfileUri,
                 Height = 160
             });
