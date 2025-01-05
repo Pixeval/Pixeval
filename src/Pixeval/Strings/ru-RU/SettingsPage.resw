@@ -705,27 +705,6 @@
   <data name="PicSetIndexMacroTooltip" xml:space="preserve">
     <value>Если это манга, этот макрос будет заменен на индекс текущего изображения в серии; должен использоваться с макросом @{if_pic_set=}, и должен быть в имени файла</value>
   </data>
-  <data name="AiUpscalerSettingsGroup.Text" xml:space="preserve">
-    <value>Апскейл</value>
-  </data>
-  <data name="UpscalerModelEntry.Header" xml:space="preserve">
-    <value> Модель апскейлера</value>
-  </data>
-  <data name="UpscalerModelEntry.Description" xml:space="preserve">
-    <value>Выберите модель апскейлера разрешения, подробности смотрите здесь.</value>
-  </data>
-  <data name="UpscalerScaleRatioEntry.Header" xml:space="preserve">
-    <value>Степень улучшения разрешения</value>
-  </data>
-  <data name="UpscalerScaleRatioEntry.Description" xml:space="preserve">
-    <value>По умолчанию 4, обратите внимание, что слишком большое увеличение может привести к чрезмерно большому размеру конечного изображения и повлиять на производительность.</value>
-  </data>
-  <data name="UpscalerOutputTypeEntry.Header" xml:space="preserve">
-    <value>Формат изображений, после апскейла разрешения.</value>
-  </data>
-  <data name="UpscalerOutputTypeEntry.Description" xml:space="preserve">
-    <value>По умолчанию PNG</value>
-  </data>
   <data name="UseSearchEndDateEntry.Header" xml:space="preserve">
     <value>启用搜索结束日期</value>
   </data>
@@ -737,5 +716,11 @@
   </data>
   <data name="UseSearchEndDateEntry.Description" xml:space="preserve">
     <value>启用后搜索作品的投稿日期将到此日期结束</value>
+  </data>
+  <data name="OpenExtensionsEntry.Header" xml:space="preserve">
+    <value>打开扩展文件夹</value>
+  </data>
+  <data name="OpenExtensionsEntry.Description" xml:space="preserve">
+    <value>此处存储了软件会加载的扩展dll文件</value>
   </data>
 </root>
