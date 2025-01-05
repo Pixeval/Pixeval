@@ -721,6 +721,6 @@ Entrer une addresse IP et cliquer '+' pour ajouter</value>
     <value>打开扩展文件夹</value>
   </data>
   <data name="OpenExtensionsEntry.Description" xml:space="preserve">
-    <value>此处存储了软件会加载的扩展dll文件</value>
+    <value>此处存储了软件会加载的扩展DLL文件</value>
   </data>
 </root>
