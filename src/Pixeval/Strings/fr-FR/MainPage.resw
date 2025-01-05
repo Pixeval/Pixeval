@@ -219,4 +219,7 @@
   <data name="FeedTabCannotBeOpenedContent" xml:space="preserve">
     <value>用户动态功能需要使用 Cookie，请先在设置页面中填写对应 Cookie 后再使用此功能</value>
   </data>
+  <data name="ExtensionsTab.Content" xml:space="preserve">
+    <value>扩展</value>
+  </data>
 </root>
