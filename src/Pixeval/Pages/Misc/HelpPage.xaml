@@ -72,6 +72,13 @@
                         </controls:SettingsCard>
                     </controls:SettingsExpander.Items>
                 </controls:SettingsExpander>
+                <controls:SettingsExpander x:Uid="/HelpPage/ExtensionsHelpExpander" HeaderIcon="{fluent:SymbolIcon Symbol=PuzzlePiece}">
+                    <controls:SettingsExpander.Items>
+                        <controls:SettingsCard HorizontalContentAlignment="Stretch" ContentAlignment="Left">
+                            <TextBlock x:Uid="/HelpPage/ExtensionsHelp" />
+                        </controls:SettingsCard>
+                    </controls:SettingsExpander.Items>
+                </controls:SettingsExpander>
             </StackPanel>
         </ScrollView>
     </controls:DockPanel>
