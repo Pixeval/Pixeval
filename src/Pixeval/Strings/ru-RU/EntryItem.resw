@@ -198,7 +198,4 @@
   <data name="UserMetricsMyPixivUsersTextBlock.Text" xml:space="preserve">
     <value>Друзья в Pixiv</value>
   </data>
-  <data name="AIUpscale" xml:space="preserve">
-    <value>Апскейл</value>
-  </data>
 </root>
