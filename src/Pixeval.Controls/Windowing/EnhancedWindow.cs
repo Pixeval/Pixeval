@@ -24,12 +24,11 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
 using WinUI3Utilities.Attributes;
-using WinUIEx;
 
 namespace Pixeval.Controls.Windowing;
 
 [WindowSizeHelper]
-public sealed partial class EnhancedWindow : WindowEx
+public sealed partial class EnhancedWindow : Window
 {
     public ulong HWnd => AppWindow.Id.Value;
 

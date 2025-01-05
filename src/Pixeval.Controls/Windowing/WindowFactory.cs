@@ -28,7 +28,6 @@ using Windows.Win32;
 using Windows.Win32.Foundation;
 using Windows.Win32.Graphics.Gdi;
 using WinUI3Utilities;
-using WinUIEx;
 
 namespace Pixeval.Controls.Windowing;
 
