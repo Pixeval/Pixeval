@@ -8,7 +8,6 @@ using Windows.Foundation.Collections;
 using Windows.Storage.Streams;
 using Windows.Win32;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.Windows.Storage;
 using Pixeval.Extensions.Common;
@@ -42,9 +41,9 @@ public partial record ExtensionsHostModel(IExtensionsHost Host) : IDisposable
 
     public string Version { get; } = Host.GetVersion();
 
-    public string Link { get; } = Host.GetExtensionLink();
+    public Uri Link { get; } = new Uri(Host.GetExtensionLink());
 
-    public string HelpLink { get; } = Host.GetHelpLink();
+    public Uri? HelpLink { get; } = Host.GetHelpLink() is { } helpLink ? new Uri(helpLink) : null;
 
     private BitmapImage? IconImageSource { get; } = GetIconSource(Host.GetIcon());
 

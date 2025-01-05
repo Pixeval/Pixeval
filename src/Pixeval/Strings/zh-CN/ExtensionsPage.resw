@@ -144,4 +144,7 @@
   <data name="ZipContainsNoDll" xml:space="preserve">
     <value>压缩文件不包含可用的DLL</value>
   </data>
+  <data name="ExtensionsHelpButton.Label" xml:space="preserve">
+    <value>帮助文档</value>
+  </data>
 </root>

@@ -1,19 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Windows.Foundation;
 using Windows.System;
-using CommunityToolkit.WinUI.Controls;
-using CommunityToolkit.WinUI;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
 using Pixeval.AppManagement;
 using Pixeval.Controls;
 using Pixeval.Extensions;
-using Pixeval.Util.IO;
 using Pixeval.Util.UI;
-using Pixeval.Utilities;
 using WinUI3Utilities;
 using System.IO.Compression;
 using System.Linq;
@@ -24,7 +18,7 @@ public sealed partial class ExtensionsPage
 {
     private ExtensionService ExtensionService { get; } =
         App.AppViewModel.AppServiceProvider.GetRequiredService<ExtensionService>();
-    
+
     private IReadOnlyList<ExtensionsHostModel> Models => ExtensionService.HostModels;
 
     public ExtensionsPage() => InitializeComponent();
@@ -112,4 +106,6 @@ public sealed partial class ExtensionsPage
     }
 
     private void OpenExtensionsOnClick(object sender, RoutedEventArgs e) => Launcher.LaunchFolderPathAsync(AppKnownFolders.Extensions.FullPath);
+
+    private void ExtensionsHelpOnClick(object sender, RoutedEventArgs e) => Launcher.LaunchUriAsync(sender.To<FrameworkElement>().GetTag<Uri>());
 }

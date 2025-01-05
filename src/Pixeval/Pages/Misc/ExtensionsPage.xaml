@@ -35,18 +35,17 @@
                     <DataTemplate x:DataType="extensions:ExtensionsHostModel">
                         <controls1:SettingsCard Description="{x:Bind Description}" HeaderIcon="{x:Bind Icon}">
                             <controls1:SettingsCard.Header>
-                                <TextBlock>
-                                    <Run FontWeight="Bold" Text="{x:Bind Name}" />
-                                    <Run
-                                        FontFamily="Times New Roman"
-                                        FontStyle="Italic"
-                                        Text="    by " />
-                                    <Run
-                                        FontFamily="Times New Roman"
-                                        FontStyle="Italic"
+                                <StackPanel Orientation="Horizontal" Spacing="50">
+                                    <HyperlinkButton
+                                        Padding="0"
+                                        Content="{x:Bind Name}"
                                         FontWeight="Bold"
+                                        NavigateUri="{x:Bind Link}" />
+                                    <TextBlock
+                                        FontStyle="Italic"
+                                        Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"
                                         Text="{x:Bind Author}" />
-                                </TextBlock>
+                                </StackPanel>
                             </controls1:SettingsCard.Header>
                             <controls1:SettingsCard.Content>
                                 <CommandBar>
@@ -57,6 +56,12 @@
                                         <ToggleSwitch IsOn="{x:Bind IsActive, Mode=TwoWay}" />
                                     </AppBarElementContainer>
                                     <CommandBar.SecondaryCommands>
+                                        <AppBarButton
+                                            x:Uid="/ExtensionsPage/ExtensionsHelpButton"
+                                            Click="ExtensionsHelpOnClick"
+                                            Icon="{fluent:SymbolIcon Symbol=BookQuestionMark}"
+                                            Tag="{x:Bind HelpLink}"
+                                            Visibility="{x:Bind controls:C.IsNotNullToVisibility(HelpLink)}" />
                                         <AppBarButton
                                             x:Uid="/ExtensionsPage/UnloadExtensionsButton"
                                             Click="UnloadHostOnClick"
