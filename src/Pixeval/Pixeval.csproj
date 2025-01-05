@@ -51,10 +51,10 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="PininSharp" Version="1.2.0" />
-        <PackageReference Include="Pixeval.Extensions.Common" Version="1.0.0" />
+        <PackageReference Include="Pixeval.Extensions.Common" Version="4.3.3" />
         <!--<PackageReference Include="Pixeval.Bypass" Version="1.1.7" />-->
         <PackageReference Include="Pixeval.QRCoder" Version="1.4.5" />
-        <PackageReference Include="QuestPDF" Version="2024.12.1" />
+        <PackageReference Include="QuestPDF" Version="2024.12.2" />
         <PackageReference Include="ReverseMarkdown" Version="4.6.0" />
         <PackageReference Include="SixLabors.ImageSharp" Version="3.1.6" />
         <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="2.1.4" />
