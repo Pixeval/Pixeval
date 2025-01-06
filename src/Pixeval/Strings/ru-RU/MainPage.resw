@@ -222,6 +222,6 @@
     <value>Для использования ленты подписок пользователя необходимы Cookie. Пожалуйста, сначала введите соответствующие Cookie на странице настроек, прежде чем использовать эту функцию.</value>
   </data>
   <data name="ExtensionsTab.Content" xml:space="preserve">
-    <value>扩展</value>
+    <value>Расширения</value>
   </data>
 </root>
