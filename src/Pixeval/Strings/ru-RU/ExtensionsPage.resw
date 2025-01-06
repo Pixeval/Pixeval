@@ -118,33 +118,33 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AddExtensionsButton.Label" xml:space="preserve">
-    <value>添加扩展</value>
+    <value>Добавить расширение</value>
   </data>
   <data name="UnzipFailed" xml:space="preserve">
-    <value>解压压缩文件时出错</value>
+    <value>Ошибка при распаковке архива</value>
   </data>
   <data name="DllFileExistedError" xml:space="preserve">
-    <value>文件已在扩展文件夹中，将跳过该文件</value>
+    <value>Файл уже находится в папке расширений, он будет пропущен</value>
   </data>
   <data name="DllLoadedSuccessfully" xml:space="preserve">
-    <value>已加载DLL</value>
+    <value>DLL загружена успешно</value>
   </data>
   <data name="DllLoadFailed" xml:space="preserve">
-    <value>加载DLL失败</value>
+    <value>Не удалось загрузить DLL</value>
   </data>
   <data name="OpenExtensionsButton.Label" xml:space="preserve">
-    <value>打开扩展文件夹</value>
+    <value>Открыть папку расширений</value>
   </data>
   <data name="TitleTextBlock.Text" xml:space="preserve">
-    <value>Pixeval 扩展管理器</value>
+    <value>Менеджер расширений Pixeval</value>
   </data>
   <data name="UnloadExtensionsButton.Label" xml:space="preserve">
-    <value>卸载扩展</value>
+    <value>Выгрузить расширение</value>
   </data>
   <data name="ZipContainsNoDll" xml:space="preserve">
-    <value>压缩文件不包含可用的DLL</value>
+    <value>Архив не содержит DLL</value>
   </data>
   <data name="ExtensionsHelpButton.Label" xml:space="preserve">
-    <value>帮助文档</value>
+    <value>Помощь</value>
   </data>
 </root>
