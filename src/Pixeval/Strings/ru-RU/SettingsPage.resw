@@ -718,7 +718,7 @@
     <value>После включения, поиск работ будет вестись до этой даты</value>
   </data>
   <data name="OpenExtensionsEntry.Header" xml:space="preserve">
-    <value>打开扩展文件夹</value>
+    <value>Открыть папку расширений</value>
   </data>
   <data name="OpenExtensionsEntry.Description" xml:space="preserve">
     <value>Здесь хранятся DLL файлы расширений, которые будут загружаться программой</value>
