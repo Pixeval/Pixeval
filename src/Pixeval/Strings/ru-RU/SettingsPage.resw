@@ -706,21 +706,21 @@
     <value>Если это манга, этот макрос будет заменен на индекс текущего изображения в серии; должен использоваться с макросом @{if_pic_set=}, и должен быть в имени файла</value>
   </data>
   <data name="UseSearchEndDateEntry.Header" xml:space="preserve">
-    <value>启用搜索结束日期</value>
+    <value>Установить конечную дату для результатов поиска</value>
   </data>
   <data name="UseSearchStartDateEntry.Header" xml:space="preserve">
-    <value>启用搜索开始日期</value>
+    <value>Установить начальную дату для результатов поиска</value>
   </data>
   <data name="UseSearchStartDateEntry.Description" xml:space="preserve">
-    <value>启用后搜索作品的投稿日期将从此日期开始</value>
+    <value>После включения, поиск работ будет вестись с этой даты</value>
   </data>
   <data name="UseSearchEndDateEntry.Description" xml:space="preserve">
-    <value>启用后搜索作品的投稿日期将到此日期结束</value>
+    <value>После включения, поиск работ будет вестись до этой даты</value>
   </data>
   <data name="OpenExtensionsEntry.Header" xml:space="preserve">
     <value>打开扩展文件夹</value>
   </data>
   <data name="OpenExtensionsEntry.Description" xml:space="preserve">
-    <value>此处存储了软件会加载的扩展DLL文件</value>
+    <value>Здесь хранятся DLL файлы расширений, которые будут загружаться программой</value>
   </data>
 </root>
