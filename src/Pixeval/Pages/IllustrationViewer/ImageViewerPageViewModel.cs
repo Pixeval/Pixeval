@@ -300,6 +300,8 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
             async void ApplyImageTransformers(Stream s)
             {
                 var extensionService = App.AppViewModel.AppServiceProvider.GetRequiredService<ExtensionService>();
+                if (!extensionService.ActiveImageTransformers.Any())
+                    return;
                 var iStream = s.ToIStream();
                 var isIllustrationOrFirstPageManga = IllustrationViewModel.MangaIndex is -1 or 0;
                 var index = 1;
