@@ -27,7 +27,6 @@ using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Model;
 using Pixeval.CoreApi.Net.Request;
 using Pixeval.CoreApi.Net.Response;
-using Pixeval.CoreApi.Preference;
 
 namespace Pixeval.CoreApi;
 
@@ -164,8 +163,6 @@ namespace Pixeval.CoreApi;
 [JsonSerializable(typeof(Frame[]))]
 [JsonSerializable(typeof(UserSpecifiedBookmarkTag[]))]
 [JsonSerializable(typeof(Work[]))]
-
-[JsonSerializable(typeof(Session))]
 public partial class AppJsonSerializerContext : JsonSerializerContext;
 
 public class SnakeCaseLowerEnumConverter<T>() : JsonStringEnumConverter<T>(JsonNamingPolicy.SnakeCaseLower) where T : struct, Enum;

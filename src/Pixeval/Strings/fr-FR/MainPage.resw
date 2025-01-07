@@ -210,4 +210,11 @@
   <data name="TagAutoCompletionSuggestionTextBlock.Text" xml:space="preserve">
     <value>Tags connexes</value>
   </data>
+  <data name="RefreshingSessionFailedContent" xml:space="preserve">
+    <value>Veuillez re-authentifier
+Veuillez contacter les développeurs en cas de problème récurrent</value>
+  </data>
+  <data name="RefreshingSessionFailedTitle" xml:space="preserve">
+    <value>Rafraichissement de session échoué</value>
+  </data>
 </root>

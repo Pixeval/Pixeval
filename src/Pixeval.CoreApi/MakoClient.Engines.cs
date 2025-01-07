@@ -103,7 +103,7 @@ public partial class MakoClient
         bool? aiType = null)
     {
         EnsureNotCancelled();
-        if (sortOption is WorkSortOption.PopularityDescending && !Session.IsPremium)
+        if (sortOption is WorkSortOption.PopularityDescending && !Me.IsPremium)
             sortOption = WorkSortOption.DoNotSort;
 
         return new IllustrationSearchEngine(this, new EngineHandle(CancelInstance), matchOption, tag, sortOption, targetFilter, startDate, endDate, aiType);
@@ -121,7 +121,7 @@ public partial class MakoClient
         bool? aiType = null)
     {
         EnsureNotCancelled();
-        if (sortOption is WorkSortOption.PopularityDescending && !Session.IsPremium)
+        if (sortOption is WorkSortOption.PopularityDescending && !Me.IsPremium)
             sortOption = WorkSortOption.DoNotSort;
 
         return new NovelSearchEngine(this, new EngineHandle(CancelInstance), matchOption, tag, sortOption, targetFilter, startDate, endDate, mergePlainKeywordResults, includeTranslatedTagResults, aiType);

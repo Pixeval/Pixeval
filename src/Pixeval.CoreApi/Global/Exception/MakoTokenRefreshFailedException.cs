@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
-// Copyright (c) 2023 Pixeval.CoreApi/MangaPagesNotFoundException.cs
+// Copyright (c) 2025 Pixeval.CoreApi/MakoTokenRefreshFailedException.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,26 +18,19 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using Pixeval.CoreApi.Model;
-
 namespace Pixeval.CoreApi.Global.Exception;
 
-public class MangaPagesNotFoundException : MakoException
+public class MakoTokenRefreshFailedException : MakoException
 {
-    public MangaPagesNotFoundException(Illustration illustration)
+    public MakoTokenRefreshFailedException()
     {
-        Illustration = illustration;
     }
 
-    public MangaPagesNotFoundException(string? message, Illustration illustration) : base(message)
+    public MakoTokenRefreshFailedException(string? message) : base(message)
     {
-        Illustration = illustration;
     }
 
-    public MangaPagesNotFoundException(string? message, System.Exception? innerException, Illustration illustration) : base(message, innerException)
+    public MakoTokenRefreshFailedException(string? message, System.Exception? innerException) : base(message, innerException)
     {
-        Illustration = illustration;
     }
-
-    public Illustration Illustration { get; }
 }

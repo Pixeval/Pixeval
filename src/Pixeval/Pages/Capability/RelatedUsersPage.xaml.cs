@@ -14,7 +14,7 @@ public sealed partial class RelatedUsersPage : IScrollViewHost
         if (e.Parameter is not long userId)
             userId = App.AppViewModel.PixivUid;
 
-        var engine = App.AppViewModel.MakoClient.Computed((await App.AppViewModel.MakoClient.RelatedUserAsync(userId))
+        var engine = App.AppViewModel.MakoClient.Computed((await App.AppViewModel.MakoClient.RelatedUserAsync(userId, App.AppViewModel.AppSettings.TargetFilter))
             .ToAsyncEnumerable());
         IllustratorView.ViewModel.ResetEngine(engine);
     }

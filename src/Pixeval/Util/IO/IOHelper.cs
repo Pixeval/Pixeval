@@ -101,6 +101,7 @@ public static partial class IoHelper
         return $"data:image/{format?.Name.ToLower()},{base64Str}";
     }
 
+    // todo 简化为PostJsonAsync
     public static Task<HttpResponseMessage> PostFormAsync(this HttpClient httpClient, string url, params (string? Key, string? Value)[] parameters)
     {
         var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, url)

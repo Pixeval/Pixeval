@@ -22,6 +22,8 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.DependencyInjection;
 using Pixeval.CoreApi.Engine;
+using Pixeval.CoreApi.Model;
+using Pixeval.CoreApi.Net;
 using Pixeval.CoreApi.Preference;
 using Pixeval.Logging;
 
@@ -36,7 +38,7 @@ public partial class MakoClient
     /// </summary>
     public Guid Id { get; } = Guid.NewGuid();
 
-    public Session Session { get; private set; }
+    public TokenUser Me => Provider.GetRequiredService<PixivTokenProvider>().Me;
 
     public MakoClientConfiguration Configuration { get; set; }
 

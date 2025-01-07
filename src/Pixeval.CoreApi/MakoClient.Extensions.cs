@@ -138,7 +138,7 @@ public partial class MakoClient
             .RemoveNovelBookmarkAsync(new RemoveNovelBookmarkRequest(id))
             .ConfigureAwait(false));
 
-    public Task<User[]> RelatedUserAsync(long id, TargetFilter filter = TargetFilter.ForAndroid)
+    public Task<User[]> RelatedUserAsync(long id, TargetFilter filter)
         => RunWithLoggerAsync(async t => (await t
                 .RelatedUserAsync(filter, id)
                 .ConfigureAwait(false))

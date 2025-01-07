@@ -23,11 +23,14 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.WinUI.Helpers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
 using Pixeval.Controls;
 using Pixeval.Controls.Windowing;
+using Pixeval.CoreApi;
+using Pixeval.CoreApi.Model;
 using Pixeval.Pages.Capability;
 using Pixeval.Pages.Capability.Feeds;
 using Pixeval.Pages.Download;
@@ -77,29 +80,52 @@ public partial class MainPageViewModel : ObservableObject
     [ObservableProperty]
     public partial ImageSource? AvatarSource { get; set; }
 
-    public string UserName => App.AppViewModel.MakoClient.Session.Name;
+    [ObservableProperty]
+    public partial string UserName { get; set; } = App.AppViewModel.MakoClient.Me.Name;
 
     private readonly FrameworkElement _owner;
 
     public MainPageViewModel(FrameworkElement owner)
     {
         _owner = owner;
-        DownloadAndSetAvatar();
+        SubscribeTokenRefresh();
     }
 
     public double MainPageRootNavigationViewOpenPanelLength => 280;
 
     public SuggestionStateMachine SuggestionProvider { get; } = new();
 
-    /// <summary>
-    /// Download user's avatar and set to the Avatar property.
-    /// </summary>
-    public async void DownloadAndSetAvatar()
+
+    private WeakEventListener<MakoClient, object?, TokenUser> _tokenRefreshedListener = null!;
+
+
+    private WeakEventListener<MakoClient, object?, Exception> _tokenRefreshFailedListener = null!;
+
+    public async void SubscribeTokenRefresh()
     {
         var makoClient = App.AppViewModel.MakoClient;
-        // get byte array of avatar
-        // and set to the bitmap image
-        AvatarSource = await App.AppViewModel.AppServiceProvider.GetRequiredService<MemoryCache>().GetSourceFromMemoryCacheAsync(makoClient.Session.AvatarUrl);
+        _tokenRefreshedListener?.Detach();
+        _tokenRefreshedListener = new(App.AppViewModel.MakoClient)
+        {
+            OnEventAction = (m, changed, arg) => _owner.DispatcherQueue.TryEnqueue(async () =>
+            {
+                AvatarSource = await App.AppViewModel.AppServiceProvider.GetRequiredService<MemoryCache>().GetSourceFromMemoryCacheAsync(arg.ProfileImageUrls.Px50X50);
+                UserName = arg.Name;
+            }),
+            OnDetachAction = listener => makoClient.TokenRefreshed -= listener.OnEvent
+        };
+        makoClient.TokenRefreshed += _tokenRefreshedListener.OnEvent;
+
+        _tokenRefreshFailedListener?.Detach();
+        _tokenRefreshFailedListener = new(App.AppViewModel.MakoClient)
+        {
+            OnEventAction = (m, changed, arg) => _owner.DispatcherQueue.TryEnqueue(() =>
+                _owner.CreateAcknowledgementAsync(
+                    MainPageResources.RefreshingSessionFailedTitle,
+                    MainPageResources.RefreshingSessionFailedContent)),
+            OnDetachAction = listener => makoClient.TokenRefreshedFailed -= listener.OnEvent
+        };
+        makoClient.TokenRefreshedFailed += _tokenRefreshFailedListener.OnEvent;
     }
 
     public async Task ReverseSearchAsync(Stream stream)

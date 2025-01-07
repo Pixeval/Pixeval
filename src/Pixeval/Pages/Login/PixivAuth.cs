@@ -25,7 +25,6 @@ using System.Text;
 using System.Text.Json;
 using Pixeval.CoreApi.Model;
 using Pixeval.CoreApi.Net;
-using Pixeval.CoreApi.Preference;
 using Pixeval.Util;
 using System.Threading.Tasks;
 using Pixeval.CoreApi;
@@ -58,7 +57,7 @@ public static class PixivAuth
         return SHA256.HashData(Encoding.ASCII.GetBytes(code)).ToUrlSafeBase64String();
     }
 
-    public static async Task<Session> AuthCodeToSessionAsync(string code, string verifier)
+    public static async Task<TokenResponse> AuthCodeToTokenResponseAsync(string code, string verifier)
     {
         // HttpClient is designed to be used through whole application lifetime, create and
         // dispose it in a function is a commonly misused anti-pattern, but this function
@@ -84,8 +83,8 @@ public static class PixivAuth
         httpClient.Dispose();
         _ = result.EnsureSuccessStatusCode();
         var str = await result.Content.ReadAsStringAsync();
-        var session = ((TokenResponse)JsonSerializer.Deserialize(str, typeof(TokenResponse), AppJsonSerializerContext.Default)!).ToSession();
-        App.AppViewModel.LoginContext.RefreshToken = session.RefreshToken;
-        return session;
+        var tokenResponse = (TokenResponse)JsonSerializer.Deserialize(str, typeof(TokenResponse), AppJsonSerializerContext.Default)!;
+        App.AppViewModel.LoginContext.RefreshToken = tokenResponse.RefreshToken;
+        return tokenResponse;
     }
 }

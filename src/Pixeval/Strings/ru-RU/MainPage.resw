@@ -210,4 +210,10 @@
   <data name="TagAutoCompletionSuggestionTextBlock.Text" xml:space="preserve">
     <value>Соответствующие теги</value>
   </data>
+  <data name="RefreshingSessionFailedContent" xml:space="preserve">
+    <value>Пожалуйста, войдите снова</value>
+  </data>
+  <data name="RefreshingSessionFailedTitle" xml:space="preserve">
+    <value>Не удалось обновить сессию</value>
+  </data>
 </root>

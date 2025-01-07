@@ -18,9 +18,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System;
 using System.Text.Json.Serialization;
-using Pixeval.CoreApi.Preference;
 
 namespace Pixeval.CoreApi.Model;
 
@@ -51,20 +49,11 @@ public partial record TokenResponse
     [JsonPropertyName("response")]
     public TokenResponse? Response { get; set; }
 
-    public Session ToSession()
+    public static TokenResponse CreateFromRefreshToken(string refreshToken)
     {
-        return new Session
-        (
-            User.Name,
-            DateTime.Now + TimeSpan.FromSeconds(ExpiresIn) -
-            TimeSpan.FromMinutes(5), // 减去5分钟是考虑到网络延迟会导致精确时间不可能恰好是一小时(TokenResponse的ExpireIn是60分钟)
-            AccessToken,
-            RefreshToken,
-            User.ProfileImageUrls.Px170X170,
-            User.Id,
-            User.Account,
-            User.IsPremium
-        );
+        var tokenResponse = CreateDefault();
+        tokenResponse.RefreshToken = refreshToken;
+        return tokenResponse;
     }
 }
 

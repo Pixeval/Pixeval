@@ -59,7 +59,7 @@ public partial class AppViewModel(App app) : IDisposable
 
     public FileCache Cache { get; private set; } = null!;
 
-    public long PixivUid => MakoClient.Session.Id;
+    public long PixivUid => MakoClient.Me.Id;
 
     public void AppLoggedIn()
     {

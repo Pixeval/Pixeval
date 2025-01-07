@@ -46,6 +46,7 @@ using Pixeval.Logging;
 using Pixeval.Util;
 using Pixeval.Util.UI;
 using WinUI3Utilities.Attributes;
+using Pixeval.CoreApi.Model;
 
 namespace Pixeval.Pages.Login;
 
@@ -81,27 +82,6 @@ public partial class LoginPageViewModel(FrameworkElement owner) : ObservableObje
     public void AdvancePhase(LoginPhaseEnum newPhase) => LoginPhase = newPhase;
 
     public void CloseWindow() => WindowFactory.GetWindowForElement(owner).Close();
-
-    #region Token (Common use)
-
-    public async Task<bool> RefreshAsync(string refreshToken)
-    {
-        AdvancePhase(LoginPhaseEnum.Refreshing);
-        var logger = App.AppViewModel.AppServiceProvider.GetRequiredService<FileLogger>();
-        var client = await MakoClient.TryGetMakoClientAsync(refreshToken, App.AppViewModel.AppSettings.ToMakoClientConfiguration(), logger);
-        if (client is not null)
-        {
-            App.AppViewModel.MakoClient = client;
-            RefreshToken = client.Session.RefreshToken;
-            return true;
-        }
-
-        _ = await owner.CreateAcknowledgementAsync(LoginPageResources.RefreshingSessionFailedTitle,
-            LoginPageResources.RefreshingSessionFailedContent);
-        return false;
-    }
-
-    #endregion
 
     #region WebView
 
@@ -172,10 +152,10 @@ public partial class LoginPageViewModel(FrameworkElement owner) : ObservableObje
             {
                 IsFinished = true;
                 var code = HttpUtility.ParseQueryString(new Uri(e.Uri).Query)["code"]!;
-                Session session;
+                TokenResponse tokenResponse;
                 try
                 {
-                    session = await PixivAuth.AuthCodeToSessionAsync(code, verifier);
+                    tokenResponse = await PixivAuth.AuthCodeToTokenResponseAsync(code, verifier);
                     proxyServer?.Dispose();
                 }
                 catch
@@ -186,7 +166,7 @@ public partial class LoginPageViewModel(FrameworkElement owner) : ObservableObje
                     return;
                 }
                 var logger = App.AppViewModel.AppServiceProvider.GetRequiredService<FileLogger>();
-                App.AppViewModel.MakoClient = new MakoClient(session, App.AppViewModel.AppSettings.ToMakoClientConfiguration(), logger);
+                App.AppViewModel.MakoClient = new MakoClient(tokenResponse, App.AppViewModel.AppSettings.ToMakoClientConfiguration(), logger);
                 navigated();
             }
             else if (e.Uri.Contains("accounts.pixiv.net"))

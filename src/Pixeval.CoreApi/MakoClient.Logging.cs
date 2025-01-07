@@ -12,50 +12,19 @@ namespace Pixeval.CoreApi;
 
 public partial class MakoClient
 {
-    private async Task<T[]> RunWithLoggerAsync<T>(Func<IAppApiEndPoint, Task<T[]>> task)
+    private Task<T[]> RunWithLoggerAsync<T>(Func<IAppApiEndPoint, Task<T[]>> task)
     {
-        try
-        {
-            EnsureNotCancelled();
-
-            return await task(Provider.GetRequiredService<IAppApiEndPoint>());
-        }
-        catch (Exception e)
-        {
-            LogException(e);
-            return [];
-        }
+        return RunWithLoggerAsync(() => task(Provider.GetRequiredService<IAppApiEndPoint>()), () => []);
     }
 
-    private async Task<IEnumerable<T>> RunWithLoggerAsync<T>(Func<IAppApiEndPoint, Task<IEnumerable<T>>> task)
+    private Task<IEnumerable<T>> RunWithLoggerAsync<T>(Func<IAppApiEndPoint, Task<IEnumerable<T>>> task)
     {
-        try
-        {
-            EnsureNotCancelled();
-
-            return await task(Provider.GetRequiredService<IAppApiEndPoint>());
-        }
-        catch (Exception e)
-        {
-            LogException(e);
-            return [];
-        }
+        return RunWithLoggerAsync(() => task(Provider.GetRequiredService<IAppApiEndPoint>()), () => []);
     }
 
-    private async Task<HttpResponseMessage> RunWithLoggerAsync(Func<IAppApiEndPoint, Task<HttpResponseMessage>> task)
+    private Task<HttpResponseMessage> RunWithLoggerAsync(Func<IAppApiEndPoint, Task<HttpResponseMessage>> task)
     {
-        try
-        {
-            EnsureNotCancelled();
-
-            return await task(Provider.GetRequiredService<IAppApiEndPoint>());
-        }
-        catch (Exception e)
-        {
-            LogException(e);
-
-            return new HttpResponseMessage(HttpStatusCode.RequestTimeout);
-        }
+        return RunWithLoggerAsync(() => task(Provider.GetRequiredService<IAppApiEndPoint>()), () => new(HttpStatusCode.RequestTimeout));
     }
 
     private async Task RunWithLoggerAsync(Func<IAppApiEndPoint, Task> task)
@@ -63,7 +32,6 @@ public partial class MakoClient
         try
         {
             EnsureNotCancelled();
-
             await task(Provider.GetRequiredService<IAppApiEndPoint>());
         }
         catch (Exception e)
@@ -72,58 +40,25 @@ public partial class MakoClient
         }
     }
 
-    private async Task<T> RunWithLoggerAsync<T>(Func<IAppApiEndPoint, Task<T>> task) where T : IDefaultFactory<T>
+    private Task<T> RunWithLoggerAsync<T>(Func<IAppApiEndPoint, Task<T>> task) where T : IDefaultFactory<T>
     {
-        try
-        {
-            EnsureNotCancelled();
-
-            return await task(Provider.GetRequiredService<IAppApiEndPoint>());
-        }
-        catch (Exception e)
-        {
-            LogException(e);
-            return T.CreateDefault();
-        }
+        return RunWithLoggerAsync(() => task(Provider.GetRequiredService<IAppApiEndPoint>()), T.CreateDefault);
     }
 
-    private async Task<T> RunWithLoggerAsync<T>(Func<Task<T>> task) where T : IDefaultFactory<T>
+    private Task<T> RunWithLoggerAsync<T>(Func<Task<T>> task) where T : IDefaultFactory<T>
     {
-        try
-        {
-            EnsureNotCancelled();
-
-            return await task();
-        }
-        catch (Exception e)
-        {
-            LogException(e);
-            return T.CreateDefault();
-        }
+        return RunWithLoggerAsync(task, T.CreateDefault);
     }
 
-    private async Task<HttpResponseMessage> RunWithLoggerAsync(Func<Task<HttpResponseMessage>> task)
+    private Task<HttpResponseMessage> RunWithLoggerAsync(Func<Task<HttpResponseMessage>> task)
     {
-        try
-        {
-            EnsureNotCancelled();
-
-            return await task();
-        }
-        catch (Exception e)
-        {
-            LogException(e);
-
-            return new HttpResponseMessage(HttpStatusCode.RequestTimeout);
-        }
+        return RunWithLoggerAsync(task, () => new(HttpStatusCode.RequestTimeout));
     }
 
-    private async Task<T> RunWithLoggerAsync<T>(Func<Task<Result<T>>> task, Func<T> createDefault)
+    private Task<T> RunWithLoggerAsync<T>(Func<Task<Result<T>>> task, Func<T> createDefault)
     {
-        try
+        return RunWithLoggerAsync(async () =>
         {
-            EnsureNotCancelled();
-
             var result = await task();
             switch (result)
             {
@@ -135,6 +70,16 @@ public partial class MakoClient
                 default:
                     return ThrowUtils.ArgumentOutOfRange<Result<T>, T>(result);
             }
+        }, createDefault);
+    }
+
+    private async Task<T> RunWithLoggerAsync<T>(Func<Task<T>> task, Func<T> createDefault)
+    {
+        try
+        {
+            EnsureNotCancelled();
+
+            return await task();
         }
         catch (Exception e)
         {
@@ -157,11 +102,11 @@ public partial class MakoClient
         var method = type?.GetMethod("ConstructSystemProxy");
         var @delegate = method?.CreateDelegate<Func<IWebProxy>>();
 
-        _getCurrentSystemProxy = @delegate ?? ThrowUtils.Throw<MissingMethodException, Func<IWebProxy>>(new("Unable to find proxy functions"));
-        HttpClient.DefaultProxy = _getCurrentSystemProxy();
+        _GetCurrentSystemProxy = @delegate ?? ThrowUtils.Throw<MissingMethodException, Func<IWebProxy>>(new("Unable to find proxy functions"));
+        HttpClient.DefaultProxy = _GetCurrentSystemProxy();
     }
 
-    private static readonly Func<IWebProxy> _getCurrentSystemProxy;
+    private static readonly Func<IWebProxy> _GetCurrentSystemProxy;
 
     public IWebProxy? CurrentSystemProxy
     {
@@ -177,7 +122,7 @@ public partial class MakoClient
                     if (now < CoolDown)
                         return HttpClient.DefaultProxy;
                     CoolDown = now.AddSeconds(2);
-                    return HttpClient.DefaultProxy = _getCurrentSystemProxy();
+                    return HttpClient.DefaultProxy = _GetCurrentSystemProxy();
                 }
                 default:
                     return new WebProxy(Configuration.Proxy);

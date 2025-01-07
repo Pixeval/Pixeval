@@ -268,7 +268,6 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
                 {
                     source = await DownloadUrlAsync(ugoiraUrl);
                 }
-
             }
 
             if (source is not null)

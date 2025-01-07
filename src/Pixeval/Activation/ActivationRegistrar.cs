@@ -62,9 +62,9 @@ public static class ActivationRegistrar
                     if (LoginPage.Current is null || App.AppViewModel.MakoClient != null!)
                         return;
                     var code = HttpUtility.ParseQueryString(activationUri.Query)["code"]!;
-                    var session = await PixivAuth.AuthCodeToSessionAsync(code, PixivAuth.GetCodeVerify());
+                    var tokenResponse = await PixivAuth.AuthCodeToTokenResponseAsync(code, PixivAuth.GetCodeVerify());
                     var logger = App.AppViewModel.AppServiceProvider.GetRequiredService<FileLogger>();
-                    App.AppViewModel.MakoClient = new MakoClient(session, App.AppViewModel.AppSettings.ToMakoClientConfiguration(), logger);
+                    App.AppViewModel.MakoClient = new MakoClient(tokenResponse, App.AppViewModel.AppSettings.ToMakoClientConfiguration(), logger);
                     LoginPage.SuccessNavigating();
                     break;
                 }

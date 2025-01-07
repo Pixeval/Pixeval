@@ -151,9 +151,6 @@
   <data name="PasswordBox.PlaceholderText" xml:space="preserve">
     <value>Пароль</value>
   </data>
-  <data name="RefreshingSessionFailedTitle" xml:space="preserve">
-    <value>Не удалось обновить сессию</value>
-  </data>
   <data name="FetchingSessionFailedContent" xml:space="preserve">
     <value>Перезапустите приложение
 Если проблема повторяется, обратитесь к разработчику</value>
@@ -166,9 +163,6 @@
   </data>
   <data name="SubmitWithNewAccountButton.Text" xml:space="preserve">
     <value>Войти без аккаунта</value>
-  </data>
-  <data name="RefreshingSessionFailedContent" xml:space="preserve">
-    <value>Пожалуйста, войдите снова</value>
   </data>
   <data name="RefreshTokenButton.Content" xml:space="preserve">
     <value>Войти с обновлением токена</value>
