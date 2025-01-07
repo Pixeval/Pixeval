@@ -1,3 +1,6 @@
+// Copyright (c) Pixeval.Controls.
+// Licensed under the GPL v3 License.
+
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;

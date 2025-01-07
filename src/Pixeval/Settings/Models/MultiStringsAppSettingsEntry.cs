@@ -1,3 +1,6 @@
+// Copyright (c) Pixeval.
+// Licensed under the GPL v3 License.
+
 using System;
 using System.Collections.ObjectModel;
 using System.Linq.Expressions;

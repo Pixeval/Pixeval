@@ -1,3 +1,6 @@
+// Copyright (c) Pixeval.Controls.
+// Licensed under the GPL v3 License.
+
 using System;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;

@@ -1,3 +1,6 @@
+// Copyright (c) Pixeval.
+// Licensed under the GPL v3 License.
+
 using CommunityToolkit.WinUI.Controls;
 using Pixeval.Settings;
 

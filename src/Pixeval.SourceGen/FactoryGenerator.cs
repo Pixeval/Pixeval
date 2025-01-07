@@ -1,3 +1,6 @@
+// Copyright (c) Pixeval.SourceGen.
+// Licensed under the GPL v3 License.
+
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;

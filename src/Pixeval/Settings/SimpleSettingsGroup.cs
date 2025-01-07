@@ -1,3 +1,6 @@
+// Copyright (c) Pixeval.
+// Licensed under the GPL v3 License.
+
 using System.Collections.Generic;
 using Pixeval.AppManagement;
 using Pixeval.Pages.Misc;
