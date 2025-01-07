@@ -140,7 +140,7 @@ public partial class MakoClient
 
     public Task<User[]> RelatedUserAsync(long id, TargetFilter filter)
         => RunWithLoggerAsync(async t => (await t
-                .RelatedUserAsync(filter, id)
+                .RelatedUserAsync(id, filter.GetDescription())
                 .ConfigureAwait(false))
             .Users);
 
@@ -156,13 +156,13 @@ public partial class MakoClient
 
     public Task<TrendingTag[]> GetTrendingTagsAsync(TargetFilter targetFilter)
         => RunWithLoggerAsync(async t => (await t
-                .GetTrendingTagsAsync(targetFilter)
+                .GetTrendingTagsAsync(targetFilter.GetDescription())
                 .ConfigureAwait(false))
             .TrendTags);
 
     public Task<TrendingTag[]> GetTrendingTagsForNovelAsync(TargetFilter targetFilter)
         => RunWithLoggerAsync(async t => (await t
-                .GetTrendingTagsForNovelAsync(targetFilter)
+                .GetTrendingTagsForNovelAsync(targetFilter.GetDescription())
                 .ConfigureAwait(false))
             .TrendTags);
 

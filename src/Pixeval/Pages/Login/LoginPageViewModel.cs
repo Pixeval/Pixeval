@@ -41,7 +41,6 @@ using Pixeval.Controls.DialogContent;
 // using Pixeval.Bypass;
 using Pixeval.Controls.Windowing;
 using Pixeval.CoreApi;
-using Pixeval.CoreApi.Preference;
 using Pixeval.Logging;
 using Pixeval.Util;
 using Pixeval.Util.UI;

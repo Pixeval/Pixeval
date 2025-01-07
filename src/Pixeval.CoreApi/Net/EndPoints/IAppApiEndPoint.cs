@@ -20,7 +20,6 @@
 
 using System.Net.Http;
 using System.Threading.Tasks;
-using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Net.Request;
 using Pixeval.CoreApi.Net.Response;
 using WebApiClientCore;
@@ -68,8 +67,9 @@ public interface IAppApiEndPoint
     */
 
     [HttpGet("/v1/user/related")]
-    Task<PixivRelatedUsersResponse> RelatedUserAsync(TargetFilter filter, [AliasAs("seed_user_id")] long userId);
+    Task<PixivRelatedUsersResponse> RelatedUserAsync([AliasAs("seed_user_id")] long userId, string filter);
 
+    [LoggingFilter]
     [HttpPost("/v1/user/follow/add")]
     Task<HttpResponseMessage> FollowUserAsync([FormContent] FollowUserRequest request);
 
@@ -77,10 +77,10 @@ public interface IAppApiEndPoint
     Task<HttpResponseMessage> RemoveFollowUserAsync([FormContent] RemoveFollowUserRequest request);
 
     [HttpGet("/v1/trending-tags/illust")]
-    Task<TrendingTagResponse> GetTrendingTagsAsync(TargetFilter filter);
+    Task<TrendingTagResponse> GetTrendingTagsAsync(string filter);
 
     [HttpGet("/v1/trending-tags/novel")]
-    Task<TrendingTagResponse> GetTrendingTagsForNovelAsync(TargetFilter filter);
+    Task<TrendingTagResponse> GetTrendingTagsForNovelAsync(string filter);
 
     [HttpGet("/v1/ugoira/metadata")]
     Task<UgoiraMetadataResponse> GetUgoiraMetadataAsync([AliasAs("illust_id")] long id);
