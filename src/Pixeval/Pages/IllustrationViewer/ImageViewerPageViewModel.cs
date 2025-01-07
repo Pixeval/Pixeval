@@ -368,7 +368,7 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
         var file = await SaveToFolderAsync(AppKnownFolders.Wallpapers);
         _ = await operation(file);
 
-        ToastNotificationHelper.ShowTextToastNotification(
+        AppNotificationHelper.ShowTextAppNotification(
             EntryViewerPageResources.SetAsSucceededTitle,
             EntryViewerPageResources.SetAsBackgroundSucceededTitle);
     }

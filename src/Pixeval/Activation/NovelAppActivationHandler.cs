@@ -46,7 +46,7 @@ public class NovelAppActivationHandler : IAppActivationHandler
             }
             catch (Exception e)
             {
-                ToastNotificationHelper.ShowTextToastNotification(
+                AppNotificationHelper.ShowTextAppNotification(
                     ActivationsResources.ActivationFailedTitle,
                     ActivationsResources.ActivationFailedContentFormatted.Format(e.Message));
             }
