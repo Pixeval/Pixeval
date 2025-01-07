@@ -30,8 +30,8 @@ public static partial class ReplyEmojiHelper
 {
     public static IEnumerable<ReplyContentToken> EnumerateTokens(string content)
     {
-        var table = Regex.Matches(content, string.Join("|", _stringToEmojiTable.Keys.Select(Regex.Escape)))
-            .ToImmutableDictionary(m => m.Index, m => (_stringToEmojiTable[m.Value], m.Value.Length));
+        var table = Regex.Matches(content, string.Join("|", _StringToEmojiTable.Keys.Select(Regex.Escape)))
+            .ToImmutableDictionary(m => m.Index, m => (_StringToEmojiTable[m.Value], m.Value.Length));
         // var table = BuildEmojiReplacementIndexTableOfReplyContent(content);
         if (table.Count is 0)
         {

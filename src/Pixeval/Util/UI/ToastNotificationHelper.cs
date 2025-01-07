@@ -28,7 +28,7 @@ namespace Pixeval.Util.UI;
 
 public static class ToastNotificationHelper
 {
-    private static readonly PropertyInfo _appLogoOverrideUriProperty = typeof(ToastContentBuilder).GetProperty("AppLogoOverrideUri", BindingFlags.NonPublic | BindingFlags.Instance)!;
+    private static readonly PropertyInfo _AppLogoOverrideUriProperty = typeof(ToastContentBuilder).GetProperty("AppLogoOverrideUri", BindingFlags.NonPublic | BindingFlags.Instance)!;
 
     public static ToastContentBuilder AddInlineImage(
         this ToastContentBuilder builder,
@@ -87,7 +87,7 @@ public static class ToastNotificationHelper
             appLogoOverrideUri.AddImageQuery = query;
         }
 
-        _appLogoOverrideUriProperty.SetValue(builder, appLogoOverrideUri);
+        _AppLogoOverrideUriProperty.SetValue(builder, appLogoOverrideUri);
 
         return builder;
     }

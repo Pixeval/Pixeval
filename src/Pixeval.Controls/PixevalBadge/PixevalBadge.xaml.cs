@@ -38,7 +38,7 @@ public sealed partial class PixevalBadge : UserControl
     internal const string SmallState = "Small";
     internal const string NormalState = "Normal";
 
-    private static readonly Dictionary<BadgeMode, (string Text, Color Background)> _propertySet = new()
+    private static readonly Dictionary<BadgeMode, (string Text, Color Background)> _PropertySet = new()
     {
         [BadgeMode.Premium] = ("Premium", Colors.Orange),
         [BadgeMode.Following] = (PixevalBadgeResources.Following, Colors.Crimson),
@@ -57,7 +57,7 @@ public sealed partial class PixevalBadge : UserControl
 
     public static void OnBadgeModePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        var properties = _propertySet[e.NewValue.To<BadgeMode>()];
+        var properties = _PropertySet[e.NewValue.To<BadgeMode>()];
         var badge = d.To<PixevalBadge>();
         badge.Text = properties.Text;
         badge.BadgeColor = new SolidColorBrush(properties.Background);

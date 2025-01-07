@@ -48,10 +48,10 @@ public sealed partial class IllustratorItem
     private const float RotatedRotation = 10f;
     private const float CommonRotation = 0f;
 
-    private static readonly Vector3 _zoomedScale = new(1.2f, 1.2f, 1.2f);
-    private static readonly Vector3 _commonScale = new(1, 1, 1);
-    private static readonly Vector3 _elevatedTranslation = new(0, 0, 60);
-    private static readonly Vector3 _commonTranslation = new(0, 0, 30);
+    private static readonly Vector3 _ZoomedScale = new(1.2f, 1.2f, 1.2f);
+    private static readonly Vector3 _CommonScale = new(1, 1, 1);
+    private static readonly Vector3 _ElevatedTranslation = new(0, 0, 60);
+    private static readonly Vector3 _CommonTranslation = new(0, 0, 30);
 
     private TeachingTip QrCodeTeachingTip => RequestTeachingTip();
 
@@ -66,8 +66,8 @@ public sealed partial class IllustratorItem
     {
         if (!AvatarButton.Flyout.IsOpen)
         {
-            AvatarButton.Scale = _commonScale;
-            AvatarButton.Translation = _commonTranslation;
+            AvatarButton.Scale = _CommonScale;
+            AvatarButton.Translation = _CommonTranslation;
             AvatarButton.Rotation = CommonRotation;
         }
     }

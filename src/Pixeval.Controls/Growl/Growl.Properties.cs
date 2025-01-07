@@ -50,7 +50,7 @@ public static partial class Growl
                 if (GetToken(panel) is var token and not 0)
                 {
                     // If Token is set, use the dictionary
-                    _panelDic[token] = panel;
+                    _PanelDic[token] = panel;
                 }
                 else
                 {

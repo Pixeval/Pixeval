@@ -112,11 +112,11 @@
                     <core:ChangePropertyAction
                         PropertyName="Scale"
                         TargetObject="{x:Bind AvatarButton}"
-                        Value="{x:Bind local:IllustratorItem._zoomedScale}" />
+                        Value="{x:Bind local:IllustratorItem._ZoomedScale}" />
                     <core:ChangePropertyAction
                         PropertyName="Translation"
                         TargetObject="{x:Bind AvatarButton}"
-                        Value="{x:Bind local:IllustratorItem._elevatedTranslation}" />
+                        Value="{x:Bind local:IllustratorItem._ElevatedTranslation}" />
                     <core:ChangePropertyAction
                         PropertyName="Rotation"
                         TargetObject="{x:Bind AvatarButton}"

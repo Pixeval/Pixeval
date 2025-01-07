@@ -38,8 +38,8 @@ namespace Pixeval.Util.IO;
 
 public static class CacheHelper
 {
-    private static readonly Dictionary<string, Task<ImageSource?>> _tasks = [];
-    private static readonly SemaphoreSlim _mutex = new(1, 1);
+    private static readonly Dictionary<string, Task<ImageSource?>> _Tasks = [];
+    private static readonly SemaphoreSlim _Mutex = new(1, 1);
 
     /// <summary>
     /// 
@@ -123,15 +123,15 @@ public static class CacheHelper
             return result;
 
         Task<ImageSource?>? imageSourcesTask;
-        await _mutex.WaitAsync(cancellationToken);
+        await _Mutex.WaitAsync(cancellationToken);
         try
         {
-            if (!_tasks.TryGetValue(key, out imageSourcesTask))
-                imageSourcesTask = _tasks[key] = MemoryCacheTask();
+            if (!_Tasks.TryGetValue(key, out imageSourcesTask))
+                imageSourcesTask = _Tasks[key] = MemoryCacheTask();
         }
         finally
         {
-            _mutex.Release();
+            _Mutex.Release();
         }
 
         // TODO: 能否让Task和CancellationToken任一完成就返回？
@@ -139,14 +139,14 @@ public static class CacheHelper
 
         if (bitmapImages is not null)
         {
-            await _mutex.WaitAsync(cancellationToken);
+            await _Mutex.WaitAsync(cancellationToken);
             try
             {
                 memoryCache.CacheOrIncrease(key, bitmapImages);
             }
             finally
             {
-                _mutex.Release();
+                _Mutex.Release();
             }
         }
 

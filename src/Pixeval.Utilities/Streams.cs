@@ -39,7 +39,7 @@ public static class Streams
 
     private const int MaximumSmallBufferPoolSizeInBytes = 24 * 1024 * BlockSizeInBytes; // 24MB
 
-    private static readonly RecyclableMemoryStreamManager _recyclableMemoryStreamManager =
+    private static readonly RecyclableMemoryStreamManager _RecyclableMemoryStreamManager =
         new(new RecyclableMemoryStreamManager.Options(
             BlockSizeInBytes,
             LargeBufferMultipleInBytes,
@@ -47,13 +47,13 @@ public static class Streams
             MaximumSmallBufferPoolSizeInBytes,
             MaximumLargeBufferPoolSizeInBytes));
 
-    public static MemoryStream RentStream() => _recyclableMemoryStreamManager.GetStream();
+    public static MemoryStream RentStream() => _RecyclableMemoryStreamManager.GetStream();
 
-    public static MemoryStream RentStream(ReadOnlySpan<byte> span) => _recyclableMemoryStreamManager.GetStream(span);
+    public static MemoryStream RentStream(ReadOnlySpan<byte> span) => _RecyclableMemoryStreamManager.GetStream(span);
 
     public static async Task<MemoryStream> CopyToMemoryStreamAsync(this Stream source, bool dispose)
     {
-        var s = _recyclableMemoryStreamManager.GetStream();
+        var s = _RecyclableMemoryStreamManager.GetStream();
         await source.CopyToAsync(s);
         s.Position = 0;
         if (dispose)
@@ -78,7 +78,7 @@ public static class Streams
             foreach (var entry in archive.Entries)
             {
                 await using var stream = entry.Open();
-                var s = _recyclableMemoryStreamManager.GetStream();
+                var s = _RecyclableMemoryStreamManager.GetStream();
                 await stream.CopyToAsync(s);
                 s.Position = 0;
                 list.Add(s);
@@ -96,7 +96,7 @@ public static class Streams
 
     public static async Task<MemoryStream> WriteZipAsync(IReadOnlyList<string> names, IReadOnlyList<Stream> streams, bool dispose)
     {
-        var zipStream = _recyclableMemoryStreamManager.GetStream();
+        var zipStream = _RecyclableMemoryStreamManager.GetStream();
 
         var zipArchive = new ZipArchive(zipStream, ZipArchiveMode.Create, true);
 

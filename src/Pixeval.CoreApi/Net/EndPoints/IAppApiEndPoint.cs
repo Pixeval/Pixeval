@@ -27,6 +27,9 @@ using WebApiClientCore.Attributes;
 
 namespace Pixeval.CoreApi.Net.EndPoints;
 
+/// <summary>
+/// 方法上 [LoggingFilter] 输出日志
+/// </summary>
 [HttpHost(MakoHttpOptions.AppApiBaseUrl)]
 public interface IAppApiEndPoint
 {
@@ -42,15 +45,19 @@ public interface IAppApiEndPoint
     [HttpPost("/v1/novel/bookmark/delete")]
     Task<HttpResponseMessage> RemoveNovelBookmarkAsync([FormContent] RemoveNovelBookmarkRequest request);
 
+    [Cache(60 * 1000)]
     [HttpGet("/v1/illust/detail")]
     Task<PixivSingleIllustResponse> GetSingleIllustAsync([AliasAs("illust_id")] long id);
 
+    [Cache(60 * 1000)]
     [HttpGet("/v1/user/detail")]
     Task<PixivSingleUserResponse> GetSingleUserAsync(SingleUserRequest request);
 
+    [Cache(60 * 1000)]
     [HttpGet("/v2/novel/detail")]
     Task<PixivSingleNovelResponse> GetSingleNovelAsync([AliasAs("novel_id")] long id);
 
+    [Cache(60 * 1000)]
     [HttpGet("/webview/v2/novel")]
     Task<string> GetNovelContentAsync(long id, bool raw = false);
     /*
@@ -69,7 +76,6 @@ public interface IAppApiEndPoint
     [HttpGet("/v1/user/related")]
     Task<PixivRelatedUsersResponse> RelatedUserAsync([AliasAs("seed_user_id")] long userId, string filter);
 
-    [LoggingFilter]
     [HttpPost("/v1/user/follow/add")]
     Task<HttpResponseMessage> FollowUserAsync([FormContent] FollowUserRequest request);
 
@@ -82,6 +88,7 @@ public interface IAppApiEndPoint
     [HttpGet("/v1/trending-tags/novel")]
     Task<TrendingTagResponse> GetTrendingTagsForNovelAsync(string filter);
 
+    [Cache(60 * 1000)]
     [HttpGet("/v1/ugoira/metadata")]
     Task<UgoiraMetadataResponse> GetUgoiraMetadataAsync([AliasAs("illust_id")] long id);
 

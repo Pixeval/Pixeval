@@ -28,10 +28,10 @@ namespace Pixeval.Util.UI;
 public static partial class UiHelper
 {
     // ReSharper disable once SuspiciousTypeConversion.Global
-    private static readonly ITaskBarList3 _taskBarList3Instance = (ITaskBarList3)new TaskBarInstance();
+    private static readonly ITaskBarList3 _TaskBarList3Instance = (ITaskBarList3)new TaskBarInstance();
 
     // see https://github.com/microsoft/Windows-classic-samples/blob/main/Samples/ShareSource/wpf/DataTransferManagerHelper.cs
-    private static readonly Guid _riId = new(0xa5caee9b, 0x8708, 0x49d1, 0x8d, 0x36, 0x67, 0xd2, 0x5a, 0x8d, 0xa0, 0x0c);
+    private static readonly Guid _RiId = new(0xa5caee9b, 0x8708, 0x49d1, 0x8d, 0x36, 0x67, 0xd2, 0x5a, 0x8d, 0xa0, 0x0c);
 
     public static bool TaskBarCustomizationSupported => Environment.OSVersion.Version >= new Version(6, 1);
 
@@ -41,7 +41,7 @@ public static partial class UiHelper
     {
         if (TaskBarCustomizationSupported)
         {
-            _taskBarList3Instance.SetProgressState((nint)window.HWnd, state);
+            _TaskBarList3Instance.SetProgressState((nint)window.HWnd, state);
         }
     }
 
@@ -49,7 +49,7 @@ public static partial class UiHelper
     {
         if (TaskBarCustomizationSupported)
         {
-            _taskBarList3Instance.SetProgressValue((nint)window.HWnd, progressValue, max);
+            _TaskBarList3Instance.SetProgressValue((nint)window.HWnd, progressValue, max);
         }
     }
 
@@ -58,7 +58,7 @@ public static partial class UiHelper
     {
         var interop = DataTransferManager.As<IDataTransferManagerInterop>();
         var manager = nint.Zero;
-        fixed (Guid* id = &_riId)
+        fixed (Guid* id = &_RiId)
         {
             interop.GetForWindow((nint)hWnd, id, (void**)&manager);
             return DataTransferManager.FromAbi(manager);

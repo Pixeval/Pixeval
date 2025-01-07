@@ -35,7 +35,7 @@ namespace Pixeval.Pages;
 
 public class SuggestionStateMachine
 {
-    private static readonly TreeSearcher<SettingsEntryAttribute> _settingEntriesTreeSearcher =
+    private static readonly TreeSearcher<SettingsEntryAttribute> _SettingEntriesTreeSearcher =
         new(SearcherLogic.Contain, PinIn.CreateDefault());
 
     private readonly Task<IEnumerable<SuggestionModel>> _illustrationTrendingTagCache =
@@ -52,7 +52,7 @@ public class SuggestionStateMachine
     {
         foreach (var settingsEntry in SettingsEntryAttribute.LazyValues.Value)
         {
-            _settingEntriesTreeSearcher.Put(settingsEntry.LocalizedResourceHeader, settingsEntry);
+            _SettingEntriesTreeSearcher.Put(settingsEntry.LocalizedResourceHeader, settingsEntry);
         }
     }
 
@@ -122,7 +122,7 @@ public class SuggestionStateMachine
 
     private static HashSet<SettingsEntryAttribute> MatchSettings(string keyword)
     {
-        var pinInResult = _settingEntriesTreeSearcher.Search(keyword).ToHashSet();
+        var pinInResult = _SettingEntriesTreeSearcher.Search(keyword).ToHashSet();
         var nonPinInResult = SettingsEntryAttribute.LazyValues.Value.Where(it => it.LocalizedResourceHeader.Contains(keyword));
         pinInResult.AddRange(nonPinInResult);
         return pinInResult;

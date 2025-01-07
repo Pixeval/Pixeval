@@ -26,7 +26,7 @@ namespace Pixeval.Util.UI;
 
 public static partial class ReplyEmojiHelper
 {
-    private static readonly IReadOnlyDictionary<string, PixivReplyEmoji> _stringToEmojiTable = BuildQueryTable();
+    private static readonly IReadOnlyDictionary<string, PixivReplyEmoji> _StringToEmojiTable = BuildQueryTable();
 
     private static ImmutableDictionary<string, PixivReplyEmoji> BuildQueryTable()
     {
@@ -52,7 +52,7 @@ public static partial class ReplyEmojiHelper
 
     public static PixivReplyEmoji GetReplyEmojiFromPlaceholderKey(string content)
     {
-        return _stringToEmojiTable[content];
+        return _StringToEmojiTable[content];
     }
 
     //public static IReadOnlyDictionary<int, (PixivReplyEmoji emoji, int contentLength)> BuildEmojiReplacementIndexTableOfReplyContent(string replyContent)
