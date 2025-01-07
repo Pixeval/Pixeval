@@ -19,15 +19,24 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <controls:ConstrainedBox Grid.Row="0" AspectRatio="3:1">
-            <Grid
-                x:Name="BannerContainer"
-                Margin="{x:Bind GetIllustrationAt(ViewModel.BannerSources), Mode=OneWay}"
-                CornerRadius="{StaticResource ControlTopCornerRadius}">
+            <Grid CornerRadius="{StaticResource ControlTopCornerRadius}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
+                <Image
+                    Grid.Column="0"
+                    Source="{x:Bind ViewModel.BannerSource0, Mode=OneWay}"
+                    Stretch="UniformToFill" />
+                <Image
+                    Grid.Column="1"
+                    Source="{x:Bind ViewModel.BannerSource1, Mode=OneWay}"
+                    Stretch="UniformToFill" />
+                <Image
+                    Grid.Column="2"
+                    Source="{x:Bind ViewModel.BannerSource2, Mode=OneWay}"
+                    Stretch="UniformToFill" />
             </Grid>
         </controls:ConstrainedBox>
         <StackPanel

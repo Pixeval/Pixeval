@@ -47,7 +47,7 @@ public abstract partial class ThumbnailEntryViewModel<T>(T entry) : EntryViewMod
     /// 缩略图图片
     /// </summary>
     [ObservableProperty]
-    public partial ImageSource? ThumbnailSource { get; set; }
+    public partial ImageSource? ThumbnailSource { get; protected set; }
 
     private CancellationTokenSource LoadingThumbnailCancellationTokenSource { get; } = new();
 

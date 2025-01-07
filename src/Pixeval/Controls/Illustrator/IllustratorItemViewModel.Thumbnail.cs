@@ -15,17 +15,24 @@ namespace Pixeval.Controls;
 public partial class IllustratorItemViewModel
 {
     [ObservableProperty]
-    public partial ImageSource? AvatarSource { get; set; }
+    public partial ImageSource? AvatarSource { get; private set; }
 
     [ObservableProperty]
-    public partial SolidColorBrush AvatarBorderBrush { get; set; } = _defaultAvatarBorderColorBrush;
+    public partial SolidColorBrush AvatarBorderBrush { get; set; } = _DefaultAvatarBorderColorBrush;
 
-    public List<ImageSource> BannerSources { get; } = new(3);
+    [ObservableProperty]
+    public partial ImageSource? BannerSource0 { get; private set; }
+
+    [ObservableProperty]
+    public partial ImageSource? BannerSource1 { get; private set; }
+
+    [ObservableProperty]
+    public partial ImageSource? BannerSource2 { get; private set; }
 
     /// <summary>
     /// Dominant color of the "No Image" image
     /// </summary>
-    private static readonly SolidColorBrush _defaultAvatarBorderColorBrush = new(UiHelper.ParseHexColor("#D6DEE5"));
+    private static readonly SolidColorBrush _DefaultAvatarBorderColorBrush = new(UiHelper.ParseHexColor("#D6DEE5"));
 
     public async Task LoadAvatarAsync()
     {
@@ -42,20 +49,20 @@ public partial class IllustratorItemViewModel
     public override void Dispose()
     {
         AvatarSource = null;
-        BannerSources.Clear();
     }
 
     private async Task LoadBannerSourceAsync()
     {
-        foreach (var entry in Entry.Illustrations.Concat<IWorkEntry>(Entry.Novels).Take(3))
-            await AddBannerSource(entry);
-
-        OnPropertyChanged(nameof(BannerSources));
-
-        return;
-        async Task AddBannerSource(IWorkEntry viewModel)
+        var getSourceFromMemoryCacheAsync = App.AppViewModel.AppServiceProvider.GetRequiredService<MemoryCache>().GetSourceFromMemoryCacheAsync;
+        if (Entry.Illustrations.Concat<IWorkEntry>(Entry.Novels).ElementAtOrDefault(0) is { } t0)
         {
-            BannerSources.Add(await App.AppViewModel.AppServiceProvider.GetRequiredService<MemoryCache>().GetSourceFromMemoryCacheAsync(viewModel.GetThumbnailUrl()));
+            BannerSource0 = await getSourceFromMemoryCacheAsync(t0.GetThumbnailUrl());
+            if (Entry.Illustrations.Concat<IWorkEntry>(Entry.Novels).ElementAtOrDefault(1) is { } t1)
+            {
+                BannerSource1 = await getSourceFromMemoryCacheAsync(t1.GetThumbnailUrl());
+                if (Entry.Illustrations.Concat<IWorkEntry>(Entry.Novels).ElementAtOrDefault(0) is { } t2)
+                    BannerSource2 = await getSourceFromMemoryCacheAsync(t2.GetThumbnailUrl());
+            }
         }
     }
 }

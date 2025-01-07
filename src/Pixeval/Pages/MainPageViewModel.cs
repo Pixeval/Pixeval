@@ -101,7 +101,7 @@ public partial class MainPageViewModel : ObservableObject
 
     private WeakEventListener<MakoClient, object?, Exception> _tokenRefreshFailedListener = null!;
 
-    public async void SubscribeTokenRefresh()
+    public void SubscribeTokenRefresh()
     {
         var makoClient = App.AppViewModel.MakoClient;
         _tokenRefreshedListener?.Detach();
@@ -120,7 +120,7 @@ public partial class MainPageViewModel : ObservableObject
         _tokenRefreshFailedListener = new(App.AppViewModel.MakoClient)
         {
             OnEventAction = (m, changed, arg) => _owner.DispatcherQueue.TryEnqueue(() =>
-                _owner.CreateAcknowledgementAsync(
+                _ = _owner.CreateAcknowledgementAsync(
                     MainPageResources.RefreshingSessionFailedTitle,
                     MainPageResources.RefreshingSessionFailedContent)),
             OnDetachAction = listener => makoClient.TokenRefreshedFailed -= listener.OnEvent
