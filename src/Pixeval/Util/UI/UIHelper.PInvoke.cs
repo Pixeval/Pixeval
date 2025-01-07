@@ -27,15 +27,12 @@ namespace Pixeval.Util.UI;
 
 public static partial class UiHelper
 {
-    // ReSharper disable once SuspiciousTypeConversion.Global
-    private static readonly ITaskBarList3 _TaskBarList3Instance = (ITaskBarList3)new TaskBarInstance();
-
-    // see https://github.com/microsoft/Windows-classic-samples/blob/main/Samples/ShareSource/wpf/DataTransferManagerHelper.cs
-    private static readonly Guid _RiId = new(0xa5caee9b, 0x8708, 0x49d1, 0x8d, 0x36, 0x67, 0xd2, 0x5a, 0x8d, 0xa0, 0x0c);
+    /// <summary>
+    /// ReSharper disable once SuspiciousTypeConversion.Global
+    /// </summary>
+    private static readonly ITaskBarList3 _TaskBarList3Instance = null;// (ITaskBarList3)new TaskBarInstance();
 
     public static bool TaskBarCustomizationSupported => Environment.OSVersion.Version >= new Version(6, 1);
-
-    public static IDataTransferManagerInterop DataTransferManagerInterop => DataTransferManager.As<IDataTransferManagerInterop>();
 
     public static void SetTaskBarIconProgressState(this EnhancedWindow window, TaskBarState state)
     {
@@ -51,22 +48,5 @@ public static partial class UiHelper
         {
             _TaskBarList3Instance.SetProgressValue((nint)window.HWnd, progressValue, max);
         }
-    }
-
-    // see https://github.com/microsoft/microsoft-ui-xaml/issues/4886
-    public static unsafe DataTransferManager GetDataTransferManager(this ulong hWnd)
-    {
-        var interop = DataTransferManager.As<IDataTransferManagerInterop>();
-        var manager = nint.Zero;
-        fixed (Guid* id = &_RiId)
-        {
-            interop.GetForWindow((nint)hWnd, id, (void**)&manager);
-            return DataTransferManager.FromAbi(manager);
-        }
-    }
-
-    public static void ShowShareUi(this ulong hWnd)
-    {
-        DataTransferManagerInterop.ShowShareUIForWindow((nint)hWnd);
     }
 }

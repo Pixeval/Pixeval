@@ -47,6 +47,7 @@ using Pixeval.Extensions;
 using Pixeval.Extensions.Common;
 using Pixeval.Util.IO.Caching;
 using Pixeval.Extensions.Common.Transformers;
+using Windows.ApplicationModel.DataTransfer;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
@@ -374,7 +375,7 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
 
     private void ShareCommandExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
-        HWnd.ShowShareUi();
+        DataTransferManagerInterop.ShowShareUIForWindow((nint)HWnd);
     }
 
     private void InitializeCommands()

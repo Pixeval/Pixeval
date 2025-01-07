@@ -130,7 +130,7 @@ public sealed partial class IllustrationViewerPage
 
         // Invokes the drag region calculation manually 9/11/2024
         TitleBarArea.SetDragRegionForCustomTitleBar();
-        var dataTransferManager = HWnd.GetDataTransferManager();
+        var dataTransferManager = DataTransferManagerInterop.GetForWindow((nint)HWnd);
         dataTransferManager.DataRequested += OnDataTransferManagerOnDataRequested;
 
         CommandBorderDropShadow.Receivers.Add(IllustrationImageShowcaseFrame);
