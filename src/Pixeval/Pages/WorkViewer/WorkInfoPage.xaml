@@ -37,10 +37,9 @@
                 <Button
                     Padding="4"
                     VerticalAlignment="Center"
-                    Background="Transparent"
-                    BorderBrush="Transparent"
                     Content="{ui:SymbolIcon FontSize=12,
-                                            Symbol=Copy}">
+                                            Symbol=Copy}"
+                    Style="{StaticResource PixevalTransparentButtonStyle}">
                     <i:Interaction.Behaviors>
                         <behaviors:ButtonCopyBehavior TargetText="{x:Bind _viewModel.Entry.Id}" />
                     </i:Interaction.Behaviors>
@@ -76,10 +75,9 @@
                         <Button
                             Padding="4"
                             VerticalAlignment="Center"
-                            Background="Transparent"
-                            BorderBrush="Transparent"
                             Content="{ui:SymbolIcon FontSize=12,
-                                                    Symbol=Copy}">
+                                                    Symbol=Copy}"
+                            Style="{StaticResource PixevalTransparentButtonStyle}">
                             <i:Interaction.Behaviors>
                                 <behaviors:ButtonCopyBehavior TargetText="{x:Bind _viewModel.Illustrator.Id}" />
                             </i:Interaction.Behaviors>

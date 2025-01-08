@@ -6,22 +6,26 @@
     xmlns:controls1="using:CommunityToolkit.WinUI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:fluent="using:FluentIcons.WinUI"
+    xmlns:local="using:Pixeval.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:pages="using:Pixeval.Pages"
     xmlns:pixeval="using:Pixeval.AppManagement"
-    xmlns:toolkit="using:CommunityToolkit.WinUI"
     xmlns:windowing="using:Pixeval.Controls.Windowing"
     Loaded="MainPage_OnLoaded"
     mc:Ignorable="d">
     <controls:EnhancedWindowPage.Resources>
-        <DataTemplate x:Key="CommonSuggestionModelTemplate" x:DataType="pages:SuggestionModel">
+        <DataTemplate x:Key="CommonSuggestionModelTemplate" x:DataType="local:SuggestionModel">
             <controls1:DockPanel Padding="0,10" HorizontalSpacing="10">
                 <ContentPresenter
-                    x:Name="IconContentPresenter"
                     HorizontalAlignment="Left"
                     VerticalAlignment="Center"
                     controls1:DockPanel.Dock="Left"
                     Content="{x:Bind FontIcon}" />
+                <Button
+                    controls1:DockPanel.Dock="Right"
+                    Content="{fluent:SymbolIcon Symbol=Dismiss}"
+                    Style="{StaticResource PixevalTransparentButtonStyle}"
+                    Tag="{x:Bind}"
+                    Visibility="{x:Bind controls:C.IsEqualToVisibility(SuggestionType, local:SuggestionType.History)}" />
                 <StackPanel VerticalAlignment="Center" Spacing="1">
                     <TextBlock
                         MaxHeight="35"
@@ -40,7 +44,7 @@
                 </StackPanel>
             </controls1:DockPanel>
         </DataTemplate>
-        <pages:SuggestionModelDataTemplateSelector
+        <local:SuggestionModelDataTemplateSelector
             x:Key="SuggestionModelDataTemplateSelector"
             AutoCompletionHeader="/MainPage/TagAutoCompletionSuggestionTextBlock"
             CommonSuggestion="{StaticResource CommonSuggestionModelTemplate}"

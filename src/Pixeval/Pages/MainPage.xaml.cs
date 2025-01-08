@@ -223,9 +223,9 @@ public sealed partial class MainPage
         await _viewModel.SuggestionProvider.UpdateAsync(sender.Text);
     }
 
-    private void PerformSearchWork(SimpleWorkType type, string text, string? optTranslatedName = null)
+    private void PerformSearchWork(SimpleWorkType type, string text, string? translatedName = null)
     {
-        SearchHistoryPersistentManager.AddHistory(text, optTranslatedName);
+        SearchHistoryPersistentManager.AddHistory(text, translatedName);
         NavigationView.SelectedItem = null;
         _ = MainPageRootFrame.Navigate(typeof(SearchWorksPage), (type, text));
     }
