@@ -20,12 +20,6 @@
                     VerticalAlignment="Center"
                     controls1:DockPanel.Dock="Left"
                     Content="{x:Bind FontIcon}" />
-                <Button
-                    controls1:DockPanel.Dock="Right"
-                    Content="{fluent:SymbolIcon Symbol=Dismiss}"
-                    Style="{StaticResource PixevalTransparentButtonStyle}"
-                    Tag="{x:Bind}"
-                    Visibility="{x:Bind controls:C.IsEqualToVisibility(SuggestionType, local:SuggestionType.History)}" />
                 <StackPanel VerticalAlignment="Center" Spacing="1">
                     <TextBlock
                         MaxHeight="35"
