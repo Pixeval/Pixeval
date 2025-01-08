@@ -1,3 +1,6 @@
+// Copyright (c) Pixeval.Controls.
+// Licensed under the GPL v3 License.
+
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,7 +11,7 @@ namespace Pixeval.Controls;
 
 public static partial class Growl
 {
-    private static readonly Dictionary<ulong, Panel> _panelDic = [];
+    private static readonly Dictionary<ulong, Panel> _PanelDic = [];
 
     public static int MaxGrowlCount { get; set; } = 2;
 
@@ -18,17 +21,17 @@ public static partial class Growl
     {
         if (token is 0 || panel is null)
             return;
-        _panelDic[token] = panel;
+        _PanelDic[token] = panel;
     }
 
     public static void Unregister(Panel? panel)
     {
         if (panel is null)
             return;
-        var first = _panelDic.FirstOrDefault(item => ReferenceEquals(panel, item.Value));
+        var first = _PanelDic.FirstOrDefault(item => ReferenceEquals(panel, item.Value));
         if (first.Key is not 0)
         {
-            _ = _panelDic.Remove(first.Key);
+            _ = _PanelDic.Remove(first.Key);
         }
     }
 
@@ -98,7 +101,7 @@ public static partial class Growl
 
         ib.CloseButtonClick += growlInfo.CloseButtonClicked;
 
-        if (growlInfo.Token is 0 || !_panelDic.TryGetValue(growlInfo.Token, out var panel))
+        if (growlInfo.Token is 0 || !_PanelDic.TryGetValue(growlInfo.Token, out var panel))
             if (GrowlPanel is not null)
                 panel = GrowlPanel;
             else
@@ -120,7 +123,7 @@ public static partial class Growl
 
     public static void RemoveGrowl(ulong token, InfoBar growl)
     {
-        if (token is 0 || !_panelDic.TryGetValue(token, out var panel))
+        if (token is 0 || !_PanelDic.TryGetValue(token, out var panel))
             if (GrowlPanel is not null)
                 panel = GrowlPanel;
             else
@@ -133,7 +136,7 @@ public static partial class Growl
     {
         if (token is 0)
             Clear(GrowlPanel);
-        else if (_panelDic.TryGetValue(token, out var panel))
+        else if (_PanelDic.TryGetValue(token, out var panel))
             Clear(panel);
     }
 }

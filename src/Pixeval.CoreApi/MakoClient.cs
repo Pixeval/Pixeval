@@ -1,22 +1,5 @@
-#region Copyright (c) Pixeval/Pixeval.CoreApi
-// GPL v3 License
-// 
-// Pixeval/Pixeval.CoreApi
-// Copyright (c) 2023 Pixeval.CoreApi/MakoClient.cs
-// 
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-// 
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-// 
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#endregion
+// Copyright (c) Pixeval.CoreApi.
+// Licensed under the GPL v3 License.
 
 using System;
 using System.Linq;
@@ -24,12 +7,13 @@ using System.Net.Http;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Global.Exception;
+using Pixeval.CoreApi.Model;
 using Pixeval.CoreApi.Net;
 using Pixeval.CoreApi.Net.EndPoints;
-using Pixeval.CoreApi.Net.Request;
 using Pixeval.CoreApi.Preference;
 using Pixeval.Logging;
 using Pixeval.Utilities;
@@ -39,44 +23,29 @@ namespace Pixeval.CoreApi;
 public partial class MakoClient : ICancellable, IDisposable, IAsyncDisposable
 {
     /// <summary>
-    /// Create a new <see cref="MakoClient" /> based on given <see cref="Configuration" />, <see cref="Session" />
+    /// Create a new <see cref="MakoClient" /> based on given <see cref="Configuration" />, <see cref="TokenResponse" />
     /// </summary>
-    /// <remarks>
-    /// The <see cref="MakoClient" /> is not responsible for the <see cref="Session" />'s refreshment.
-    /// </remarks>
-    /// <param name="session">The <see cref="Preference.Session" /></param>
+    /// <param name="tokenResponse">The <see cref="TokenResponse" /></param>
     /// <param name="configuration">The <see cref="Configuration" /></param>
     /// <param name="logger"></param>
-    public MakoClient(Session session, MakoClientConfiguration configuration, FileLogger logger)
+    public MakoClient(TokenResponse tokenResponse, MakoClientConfiguration configuration, FileLogger logger)
     {
         Logger = logger;
-        Session = session;
         Configuration = configuration;
-        Provider = BuildServiceProvider(Services);
+        Provider = BuildServiceProvider(Services, tokenResponse);
         IsCancelled = false;
     }
 
-    public static async Task<MakoClient?> TryGetMakoClientAsync(string refreshToken, MakoClientConfiguration configuration, FileLogger logger)
+    public MakoClient(string refreshToken, MakoClientConfiguration configuration, FileLogger logger)
+        : this(TokenResponse.CreateFromRefreshToken(refreshToken), configuration, logger)
     {
-        var makoClient = new MakoClient(null!, configuration, logger);
-        try
-        {
-            makoClient.Session = (await makoClient.Provider.GetRequiredService<IAuthEndPoint>().RefreshAsync(new RefreshSessionRequest(refreshToken)).ConfigureAwait(false)).ToSession();
-            return makoClient;
-        }
-        catch (Exception e)
-        {
-            logger.LogError("Login error", e);
-            await makoClient.DisposeAsync();
-            return null;
-        }
     }
 
     /// <summary>
     /// Injects necessary dependencies
     /// </summary>
     /// <returns>The <see cref="ServiceProvider" /> contains all the required dependencies</returns>
-    private ServiceProvider BuildServiceProvider(IServiceCollection serviceCollection)
+    private ServiceProvider BuildServiceProvider(IServiceCollection serviceCollection, TokenResponse firstTokenResponse)
     {
         _ = serviceCollection
             .AddSingleton(this)
@@ -87,7 +56,7 @@ public partial class MakoClient : ICancellable, IDisposable, IAsyncDisposable
                 {
                     BaseAddress = new Uri(MakoHttpOptions.AppApiBaseUrl)
                 })
-            .AddKeyedSingleton<HttpClient, MakoHttpClient>(MakoApiKind.WebApi, 
+            .AddKeyedSingleton<HttpClient, MakoHttpClient>(MakoApiKind.WebApi,
                 (s, _) => new(s.GetRequiredService<PixivApiHttpMessageHandler>())
                 {
                     BaseAddress = new Uri(MakoHttpOptions.WebApiBaseUrl),
@@ -106,6 +75,8 @@ public partial class MakoClient : ICancellable, IDisposable, IAsyncDisposable
                         UserAgent = { new("PixivIOSApp", "5.8.7") }
                     }
                 })
+            .AddSingleton<PixivTokenProvider>(t => new(t, firstTokenResponse))
+            .AddLogging(t => t.AddDebug())
             .AddWebApiClient()
             .UseSourceGeneratorHttpApiActivator()
             .ConfigureHttpApi(t => t.PrependJsonSerializerContext(AppJsonSerializerContext.Default));
@@ -124,12 +95,10 @@ public partial class MakoClient : ICancellable, IDisposable, IAsyncDisposable
 
     /// <summary>
     /// Cancels this <see cref="MakoClient" />, including all the running instances, the
-    /// <see cref="Session" /> will be reset to its default value, the <see cref="MakoClient" />
-    /// will unable to be used again after calling this method
+    /// <see cref="MakoClient" /> will unable to be used again after calling this method
     /// </summary>
     public void Cancel()
     {
-        Session = null!;
         _runningInstances.ForEach(instance => instance.EngineHandle.Cancel());
     }
 
@@ -172,7 +141,7 @@ public partial class MakoClient : ICancellable, IDisposable, IAsyncDisposable
     /// <returns></returns>
     private void CheckPrivacyPolicy(long uid, PrivacyPolicy privacyPolicy)
     {
-        if (privacyPolicy is PrivacyPolicy.Private && Session.Id != uid)
+        if (privacyPolicy is PrivacyPolicy.Private && Me.Id != uid)
             ThrowUtils.Throw(new IllegalPrivatePolicyException(uid));
     }
 

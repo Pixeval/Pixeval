@@ -1,22 +1,5 @@
-#region Copyright (c) Pixeval/Pixeval
-// GPL v3 License
-// 
-// Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/IllustrationViewerPage.xaml.cs
-// 
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-// 
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-// 
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#endregion
+// Copyright (c) Pixeval.
+// Licensed under the GPL v3 License.
 
 using System;
 using System.Numerics;
@@ -31,7 +14,6 @@ using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.AppManagement;
 using Pixeval.Controls;
-using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using WinRT;
 using WinUI3Utilities;
@@ -111,7 +93,9 @@ public sealed partial class IllustrationViewerPage
                 case nameof(IllustrationViewerPageViewModel.IsFullScreen):
                 {
                     var window = WindowFactory.ForkedWindows[HWnd];
-                    window.AppWindow.SetPresenter(vm.IsFullScreen ? AppWindowPresenterKind.FullScreen : AppWindowPresenterKind.Default);
+                    window.AppWindow.SetPresenter(vm.IsFullScreen
+                        ? AppWindowPresenterKind.FullScreen
+                        : AppWindowPresenterKind.Default);
                     break;
                 }
             }
@@ -130,7 +114,7 @@ public sealed partial class IllustrationViewerPage
 
         // Invokes the drag region calculation manually 9/11/2024
         TitleBarArea.SetDragRegionForCustomTitleBar();
-        var dataTransferManager = HWnd.GetDataTransferManager();
+        var dataTransferManager = DataTransferManagerInterop.GetForWindow((nint)HWnd);
         dataTransferManager.DataRequested += OnDataTransferManagerOnDataRequested;
 
         CommandBorderDropShadow.Receivers.Add(IllustrationImageShowcaseFrame);
@@ -152,7 +136,8 @@ public sealed partial class IllustrationViewerPage
         _ = await viewModel.TryLoadThumbnailAsync(_viewModel);
     }
 
-    private void ExitFullScreenKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => _viewModel.IsFullScreen = false;
+    private void ExitFullScreenKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender,
+        KeyboardAcceleratorInvokedEventArgs args) => _viewModel.IsFullScreen = false;
 
     private async void OnDataTransferManagerOnDataRequested(DataTransferManager sender, DataRequestedEventArgs args)
     {
@@ -175,17 +160,20 @@ public sealed partial class IllustrationViewerPage
         deferral.Complete();
         return;
 
-        async void FileDispose(DataPackage dataPackage, object o) => await file?.DeleteAsync(StorageDeleteOption.PermanentDelete);
+        async void FileDispose(DataPackage dataPackage, object o) =>
+            await file?.DeleteAsync(StorageDeleteOption.PermanentDelete);
     }
 
     private void AddToBookmarkTeachingTip_OnCloseButtonClick(TeachingTip sender, object args)
     {
-        _viewModel.CurrentIllustration.AddToBookmarkCommand.Execute((BookmarkTagSelector.SelectedTags, BookmarkTagSelector.IsPrivate, _viewModel.CurrentImage.DownloadParameter));
+        _viewModel.CurrentIllustration.AddToBookmarkCommand.Execute((BookmarkTagSelector.SelectedTags,
+            BookmarkTagSelector.IsPrivate, _viewModel.CurrentImage.DownloadParameter));
 
         HWnd.SuccessGrowl(EntryViewerPageResources.AddedToBookmark);
     }
 
-    private void AddToBookmarkButton_OnClicked(object sender, RoutedEventArgs e) => AddToBookmarkTeachingTip.IsOpen = true;
+    private void AddToBookmarkButton_OnClicked(object sender, RoutedEventArgs e) =>
+        AddToBookmarkTeachingTip.IsOpen = true;
 
     private void NextButton_OnClicked(object sender, IWinRTObject e)
     {

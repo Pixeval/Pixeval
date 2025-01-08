@@ -175,13 +175,6 @@
   <data name="DisableDomainFrontingToggleSwitch.OffContent" xml:space="preserve">
     <value>禁用</value>
   </data>
-  <data name="RefreshingSessionFailedContent" xml:space="preserve">
-    <value>请重新登录
-如果该问题反复出现，请联系开发者寻求解决</value>
-  </data>
-  <data name="RefreshingSessionFailedTitle" xml:space="preserve">
-    <value>刷新对话失败</value>
-  </data>
   <data name="FetchingSessionFailedContent" xml:space="preserve">
     <value>请重新启动应用程序
 如果该问题反复出现，请联系开发者寻求解决</value>

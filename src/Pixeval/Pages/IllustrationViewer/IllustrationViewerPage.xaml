@@ -263,8 +263,7 @@
                             <Run Text="{x:Bind _viewModel.PageCount, Mode=OneWay}" />
                         </TextBlock>
                     </AppBarElementContainer>
-                    <AppBarSeparator />
-                    <AppBarSeparator Height="35" />
+                    <AppBarSeparator Visibility="{x:Bind controls:C.ToVisibility(_viewModel.CurrentIllustration.IsManga), Mode=OneWay}" />
                     <AppBarButton
                         Command="{x:Bind _viewModel.FullScreenCommand}"
                         IsCompact="True"

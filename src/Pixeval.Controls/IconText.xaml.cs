@@ -1,3 +1,6 @@
+// Copyright (c) Pixeval.Controls.
+// Licensed under the GPL v3 License.
+
 using FluentIcons.Common;
 using WinUI3Utilities.Attributes;
 

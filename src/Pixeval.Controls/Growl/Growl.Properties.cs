@@ -1,3 +1,6 @@
+// Copyright (c) Pixeval.Controls.
+// Licensed under the GPL v3 License.
+
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
@@ -50,7 +53,7 @@ public static partial class Growl
                 if (GetToken(panel) is var token and not 0)
                 {
                     // If Token is set, use the dictionary
-                    _panelDic[token] = panel;
+                    _PanelDic[token] = panel;
                 }
                 else
                 {

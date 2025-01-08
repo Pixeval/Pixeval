@@ -1,3 +1,6 @@
+// Copyright (c) Pixeval.
+// Licensed under the GPL v3 License.
+
 using Pixeval.Settings.Models;
 
 namespace Pixeval.Controls.Settings;

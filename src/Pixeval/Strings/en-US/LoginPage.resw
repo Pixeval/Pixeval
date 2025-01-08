@@ -157,9 +157,6 @@
   <data name="DisableDomainFrontingToggleSwitch.OnContent" xml:space="preserve">
     <value>Enable</value>
   </data>
-  <data name="RefreshingSessionFailedTitle" xml:space="preserve">
-    <value>Failed to refresh session</value>
-  </data>
   <data name="FetchingSessionFailedContent" xml:space="preserve">
     <value>Please restart the app
 If this problem persists, contact the developer for further help.</value>
@@ -207,10 +204,6 @@ Domain Fronting：Disabling this will force the app to use the system proxy. If 
   </data>
   <data name="DisableDomainFrontingToggleSwitch.OffContent" xml:space="preserve">
     <value>Disable</value>
-  </data>
-  <data name="RefreshingSessionFailedContent" xml:space="preserve">
-    <value>Please login again
-If this issue recurs, please contact the developer for a solution</value>
   </data>
   <data name="WebViewLoginTip.Title" xml:space="preserve">
     <value>Attention</value>

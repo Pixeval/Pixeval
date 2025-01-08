@@ -1,3 +1,6 @@
+// Copyright (c) Pixeval.
+// Licensed under the GPL v3 License.
+
 using System.Linq;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
@@ -14,7 +17,7 @@ public sealed partial class RelatedUsersPage : IScrollViewHost
         if (e.Parameter is not long userId)
             userId = App.AppViewModel.PixivUid;
 
-        var engine = App.AppViewModel.MakoClient.Computed((await App.AppViewModel.MakoClient.RelatedUserAsync(userId))
+        var engine = App.AppViewModel.MakoClient.Computed((await App.AppViewModel.MakoClient.RelatedUserAsync(userId, App.AppViewModel.AppSettings.TargetFilter))
             .ToAsyncEnumerable());
         IllustratorView.ViewModel.ResetEngine(engine);
     }

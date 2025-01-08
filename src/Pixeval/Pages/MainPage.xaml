@@ -66,7 +66,7 @@
                     MaxHeight="35"
                     ProfilePicture="{x:Bind _viewModel.AvatarSource, Mode=OneWay}"
                     Tapped="SelfAvatar_OnTapped"
-                    ToolTipService.ToolTip="{x:Bind _viewModel.UserName}" />
+                    ToolTipService.ToolTip="{x:Bind _viewModel.UserName, Mode=OneWay}" />
             </controls1:TitleBar.Footer>
             <controls1:TitleBar.Content>
                 <controls1:DockPanel>

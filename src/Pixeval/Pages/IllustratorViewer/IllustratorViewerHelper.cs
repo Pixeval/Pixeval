@@ -1,3 +1,6 @@
+// Copyright (c) Pixeval.
+// Licensed under the GPL v3 License.
+
 using System.Threading.Tasks;
 using Windows.Graphics;
 using Microsoft.UI.Xaml.Media.Animation;

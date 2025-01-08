@@ -1,33 +1,19 @@
-#region Copyright (c) Pixeval/Pixeval
-// GPL v3 License
-// 
-// Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/MainPageViewModel.cs
-// 
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-// 
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-// 
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#endregion
+// Copyright (c) Pixeval.
+// Licensed under the GPL v3 License.
 
 using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.WinUI.Helpers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
 using Pixeval.Controls;
 using Pixeval.Controls.Windowing;
+using Pixeval.CoreApi;
+using Pixeval.CoreApi.Model;
 using Pixeval.Pages.Capability;
 using Pixeval.Pages.Capability.Feeds;
 using Pixeval.Pages.Download;
@@ -77,29 +63,52 @@ public partial class MainPageViewModel : ObservableObject
     [ObservableProperty]
     public partial ImageSource? AvatarSource { get; set; }
 
-    public string UserName => App.AppViewModel.MakoClient.Session.Name;
+    [ObservableProperty]
+    public partial string UserName { get; set; } = App.AppViewModel.MakoClient.Me.Name;
 
     private readonly FrameworkElement _owner;
 
     public MainPageViewModel(FrameworkElement owner)
     {
         _owner = owner;
-        DownloadAndSetAvatar();
+        SubscribeTokenRefresh();
     }
 
     public double MainPageRootNavigationViewOpenPanelLength => 280;
 
     public SuggestionStateMachine SuggestionProvider { get; } = new();
 
-    /// <summary>
-    /// Download user's avatar and set to the Avatar property.
-    /// </summary>
-    public async void DownloadAndSetAvatar()
+
+    private WeakEventListener<MakoClient, object?, TokenUser> _tokenRefreshedListener = null!;
+
+
+    private WeakEventListener<MakoClient, object?, Exception> _tokenRefreshFailedListener = null!;
+
+    public void SubscribeTokenRefresh()
     {
         var makoClient = App.AppViewModel.MakoClient;
-        // get byte array of avatar
-        // and set to the bitmap image
-        AvatarSource = await App.AppViewModel.AppServiceProvider.GetRequiredService<MemoryCache>().GetSourceFromMemoryCacheAsync(makoClient.Session.AvatarUrl);
+        _tokenRefreshedListener?.Detach();
+        _tokenRefreshedListener = new(App.AppViewModel.MakoClient)
+        {
+            OnEventAction = (m, changed, arg) => _owner.DispatcherQueue.TryEnqueue(async () =>
+            {
+                AvatarSource = await App.AppViewModel.AppServiceProvider.GetRequiredService<MemoryCache>().GetSourceFromMemoryCacheAsync(arg.ProfileImageUrls.Px50X50);
+                UserName = arg.Name;
+            }),
+            OnDetachAction = listener => makoClient.TokenRefreshed -= listener.OnEvent
+        };
+        makoClient.TokenRefreshed += _tokenRefreshedListener.OnEvent;
+
+        _tokenRefreshFailedListener?.Detach();
+        _tokenRefreshFailedListener = new(App.AppViewModel.MakoClient)
+        {
+            OnEventAction = (m, changed, arg) => _owner.DispatcherQueue.TryEnqueue(() =>
+                _ = _owner.CreateAcknowledgementAsync(
+                    MainPageResources.RefreshingSessionFailedTitle,
+                    MainPageResources.RefreshingSessionFailedContent)),
+            OnDetachAction = listener => makoClient.TokenRefreshedFailed -= listener.OnEvent
+        };
+        makoClient.TokenRefreshedFailed += _tokenRefreshFailedListener.OnEvent;
     }
 
     public async Task ReverseSearchAsync(Stream stream)

@@ -1,72 +1,50 @@
-#region Copyright (c) Pixeval/Pixeval
-// GPL v3 License
-// 
-// Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/UIHelper.PInvoke.cs
-// 
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-// 
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-// 
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#endregion
+// Copyright (c) Pixeval.
+// Licensed under the GPL v3 License.
 
 using System;
-using Windows.ApplicationModel.DataTransfer;
-using Pixeval.Controls.Windowing;
 using Pixeval.Interop;
+using Microsoft.UI.Xaml;
+using System.Runtime.InteropServices.Marshalling;
+using System.Runtime.InteropServices;
 
 namespace Pixeval.Util.UI;
 
 public static partial class UiHelper
 {
-    // ReSharper disable once SuspiciousTypeConversion.Global
-    private static readonly ITaskBarList3 _taskBarList3Instance = (ITaskBarList3)new TaskBarInstance();
+    private const int CLSCTX_INPROC_SERVER = 0x1;
 
-    // see https://github.com/microsoft/Windows-classic-samples/blob/main/Samples/ShareSource/wpf/DataTransferManagerHelper.cs
-    private static readonly Guid _riId = new(0xa5caee9b, 0x8708, 0x49d1, 0x8d, 0x36, 0x67, 0xd2, 0x5a, 0x8d, 0xa0, 0x0c);
+    private static readonly Guid _CTaskBarListId = new Guid("56fdf344-fd6d-11d0-958a-006097c9a090");
 
-    public static bool TaskBarCustomizationSupported => Environment.OSVersion.Version >= new Version(6, 1);
+    private static readonly ITaskBarList3 _TaskBarList3Instance = GetTaskBarList3();
 
-    public static IDataTransferManagerInterop DataTransferManagerInterop => DataTransferManager.As<IDataTransferManagerInterop>();
-
-    public static void SetTaskBarIconProgressState(this EnhancedWindow window, TaskBarState state)
+    private static unsafe ITaskBarList3 GetTaskBarList3()
     {
-        if (TaskBarCustomizationSupported)
+        fixed (Guid* cls = &_CTaskBarListId)
         {
-            _taskBarList3Instance.SetProgressState((nint)window.HWnd, state);
+            var i = typeof(ITaskBarList3).GUID;
+            CoCreateInstance((nint)cls, 0, CLSCTX_INPROC_SERVER, (nint)(&i), out var taskBarList);
+            var wrappers = new StrategyBasedComWrappers();
+            var instance = wrappers.GetOrCreateObjectForComInstance(taskBarList, CreateObjectFlags.UniqueInstance);
+            return (ITaskBarList3)instance;
         }
     }
 
-    public static void SetTaskBarIconProgressValue(this EnhancedWindow window, ulong progressValue, ulong max)
+    [LibraryImport("ole32.dll")]
+    private static partial int CoCreateInstance(
+        nint rclsid,
+        nint pUnkOuter,
+        uint dwClsContext,
+        nint riid,
+        out nint ppv);
+
+    public static void SetTaskBarIconProgressState(this Window window, TaskBarState state)
     {
-        if (TaskBarCustomizationSupported)
-        {
-            _taskBarList3Instance.SetProgressValue((nint)window.HWnd, progressValue, max);
-        }
+        _TaskBarList3Instance.SetProgressState((nint)window.AppWindow.Id.Value, state);
+
     }
 
-    // see https://github.com/microsoft/microsoft-ui-xaml/issues/4886
-    public static unsafe DataTransferManager GetDataTransferManager(this ulong hWnd)
+    public static void SetTaskBarIconProgressValue(this Window window, ulong progressValue, ulong max)
     {
-        var interop = DataTransferManager.As<IDataTransferManagerInterop>();
-        var manager = nint.Zero;
-        fixed (Guid* id = &_riId)
-        {
-            interop.GetForWindow((nint)hWnd, id, (void**)&manager);
-            return DataTransferManager.FromAbi(manager);
-        }
-    }
-
-    public static void ShowShareUi(this ulong hWnd)
-    {
-        DataTransferManagerInterop.ShowShareUIForWindow((nint)hWnd);
+        _TaskBarList3Instance.SetProgressValue((nint)window.AppWindow.Id.Value, progressValue, max);
     }
 }

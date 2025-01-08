@@ -19,15 +19,24 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <controls:ConstrainedBox Grid.Row="0" AspectRatio="3:1">
-            <Grid
-                x:Name="BannerContainer"
-                Margin="{x:Bind GetIllustrationAt(ViewModel.BannerSources), Mode=OneWay}"
-                CornerRadius="{StaticResource ControlTopCornerRadius}">
+            <Grid CornerRadius="{StaticResource ControlTopCornerRadius}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
+                <Image
+                    Grid.Column="0"
+                    Source="{x:Bind ViewModel.BannerSource0, Mode=OneWay}"
+                    Stretch="UniformToFill" />
+                <Image
+                    Grid.Column="1"
+                    Source="{x:Bind ViewModel.BannerSource1, Mode=OneWay}"
+                    Stretch="UniformToFill" />
+                <Image
+                    Grid.Column="2"
+                    Source="{x:Bind ViewModel.BannerSource2, Mode=OneWay}"
+                    Stretch="UniformToFill" />
             </Grid>
         </controls:ConstrainedBox>
         <StackPanel
@@ -103,11 +112,11 @@
                     <core:ChangePropertyAction
                         PropertyName="Scale"
                         TargetObject="{x:Bind AvatarButton}"
-                        Value="{x:Bind local:IllustratorItem._zoomedScale}" />
+                        Value="{x:Bind local:IllustratorItem._ZoomedScale}" />
                     <core:ChangePropertyAction
                         PropertyName="Translation"
                         TargetObject="{x:Bind AvatarButton}"
-                        Value="{x:Bind local:IllustratorItem._elevatedTranslation}" />
+                        Value="{x:Bind local:IllustratorItem._ElevatedTranslation}" />
                     <core:ChangePropertyAction
                         PropertyName="Rotation"
                         TargetObject="{x:Bind AvatarButton}"

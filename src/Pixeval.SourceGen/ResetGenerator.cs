@@ -1,3 +1,6 @@
+// Copyright (c) Pixeval.SourceGen.
+// Licensed under the GPL v3 License.
+
 using System.Collections.Immutable;
 using System.Linq;
 using System.Text;

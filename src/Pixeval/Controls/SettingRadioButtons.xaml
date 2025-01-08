@@ -11,9 +11,9 @@
         <RadioButtons.ItemTemplate>
             <DataTemplate x:DataType="local:StringRepresentableItem">
                 <RadioButton
+                    Click="RadioButton_OnClicked"
                     Content="{x:Bind StringRepresentation}"
-                    Tag="{x:Bind}"
-                    Click="RadioButton_OnClicked" />
+                    Tag="{x:Bind}" />
             </DataTemplate>
         </RadioButtons.ItemTemplate>
     </RadioButtons>
