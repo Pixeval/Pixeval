@@ -11,7 +11,7 @@ using Pixeval.Extensions.Common.Settings;
 using Pixeval.Extensions.Common;
 using System.Linq;
 using Windows.Win32;
-using Pixeval.Extensions.Common.Transformers;
+using Pixeval.Extensions.Common.Commands.Transformers;
 using Pixeval.Extensions.Models;
 using Pixeval.Utilities;
 using WinUI3Utilities;
@@ -34,7 +34,7 @@ public partial class ExtensionService : IDisposable
     public IReadOnlyList<IExtension> ActiveExtensions => ActivePairs
         .Aggregate(new List<IExtension>(), (o, t) => o.Apply(p => p.AddRange(t.Value)));
 
-    public IEnumerable<IImageTransformerExtension> ActiveImageTransformers => ActiveExtensions.OfType<IImageTransformerExtension>();
+    public IEnumerable<IImageTransformerCommandExtension> ActiveImageTransformerCommands => ActiveExtensions.OfType<IImageTransformerCommandExtension>();
 
     private readonly ObservableCollection<ExtensionsHostModel> _hostModels = [];
 
@@ -219,7 +219,7 @@ public partial class ExtensionService : IDisposable
 
     private void LoadImageTransformerExtensions(ExtensionsHostModel model, IEnumerable<IExtension> extensions)
     {
-        var imageTransformers = extensions.OfType<IImageTransformerExtension>();
+        var imageTransformers = extensions.OfType<IImageTransformerCommandExtension>();
         foreach (var imageTransformer in imageTransformers)
             imageTransformer.OnExtensionLoaded();
     }

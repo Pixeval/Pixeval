@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using Windows.Foundation;
 using Windows.Storage;
 using Windows.System;
@@ -29,8 +30,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Pixeval.Extensions;
 using Pixeval.Extensions.Common;
 using Pixeval.Util.IO.Caching;
-using Pixeval.Extensions.Common.Transformers;
 using Windows.ApplicationModel.DataTransfer;
+using Pixeval.Extensions.Common.Commands.Transformers;
+using ReverseMarkdown.Converters;
+using WinUI3Utilities;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
@@ -54,10 +57,24 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
     public partial IReadOnlyList<int>? MsIntervals { get; set; }
 
     /// <summary>
-    /// 只有动态zip时才会是<see cref="Stream"/>，其他情况都是<see cref="IReadOnlyList{T}"/>
+    /// 原图流
     /// </summary>
+    /// <remarks>
+    /// 只有动图zip时才会是<see cref="Stream"/>，其他情况都是<see cref="IReadOnlyList{T}"/>
+    /// </remarks>
     [ObservableProperty]
     public partial object? OriginalStreamsSource { get; private set; }
+
+    partial void OnOriginalStreamsSourceChanged(object? value) => DisplayStreamsSource = value;
+
+    /// <summary>
+    /// 显示图流
+    /// </summary>
+    /// <remarks>
+    /// 只有动图zip时才会是<see cref="Stream"/>，其他情况都是<see cref="IReadOnlyList{T}"/>
+    /// </remarks>
+    [ObservableProperty]
+    public partial object? DisplayStreamsSource { get; private set; }
 
     public ImageSource? ThumbnailSource => IllustrationViewModel.ThumbnailSource;
 
@@ -83,6 +100,21 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
 
     [ObservableProperty]
     public partial bool LoadSuccessfully { get; private set; }
+
+    /// <summary>
+    /// <see langword="true"/>能用，<see langword="false"/>不能用
+    /// </summary>
+    private bool ExtensionStreamLock
+    {
+        get;
+        set
+        {
+            if (field == value)
+                return;
+            field = value;
+            UpdateExtensionCommandCanExecute();
+        }
+    } = true;
 
     public ImageViewerPageViewModel(IllustrationItemViewModel illustrationViewModel, IllustrationItemViewModel originalIllustrationViewModel, ulong hWnd) : base(hWnd)
     {
@@ -158,6 +190,55 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
         await using var stream = appKnownFolder.OpenAsyncWrite(normalizedName);
         await GetOriginalStreamsSourceAsync(stream);
         return await StorageFile.GetFileFromPathAsync(appKnownFolder.CombinePath(normalizedName));
+    }
+
+    public ICommand GetTransformExtensionCommand(IImageTransformerCommandExtension extension)
+    {
+        var command = new XamlUICommand();
+        command.CanExecuteRequested += IsNotUgoiraAndLoadingCompletedCanExecuteRequested;
+        command.ExecuteRequested += OnCommandOnExecuteRequested;
+        ExtensionCommands.Add(command);
+        return command;
+
+        async void OnCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
+        {
+            if (OriginalStreamsSource is not (IReadOnlyList<Stream> and [{ } stream]))
+                return;
+            ExtensionStreamLock = false;
+            try
+            {
+                var transformer = args.Parameter.To<IImageTransformerCommandExtension>();
+                var iStream = stream.ToIStream();
+                var token = ImageLoadingCancellationTokenSource.Token;
+                if (token.IsCancellationRequested)
+                    return;
+                HWnd.InfoGrowl(ImageViewerPageResources.ApplyingTransformerExtensions);
+                // 运行扩展
+                stream.Position = 0;
+                var result = await transformer.TransformAsync(iStream);
+                if (result is null)
+                {
+                    HWnd.ErrorGrowl(ImageViewerPageResources.TransformerExtensionFailed);
+                    return;
+                }
+                result.Seek(0, SeekOrigin.Begin);
+                var memoryStream = Streams.RentStream();
+                await result.CopyToAsync(memoryStream.ToIStream());
+                await result.DisposeAsync();
+                iStream.Seek(0, SeekOrigin.Begin);
+                // 显示图片
+                var last = DisplayStreamsSource;
+                DisplayStreamsSource = (IReadOnlyList<Stream>) [memoryStream];
+                if (last is IReadOnlyList<Stream> and [IDisposable disposable])
+                    disposable.Dispose();
+                if (!token.IsCancellationRequested)
+                    HWnd.SuccessGrowl(ImageViewerPageResources.TransformerExtensionFinishedSuccessfully);
+            }
+            finally
+            {
+                ExtensionStreamLock = true;
+            }
+        }
     }
 
     public CancellationTokenSource ImageLoadingCancellationTokenSource { get; } = new();
@@ -239,13 +320,8 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
                 if (ugoiraUrl is null)
                 {
                     ugoiraUrl = IllustrationViewModel.StaticUrl(_isOriginal);
-                    if (await DownloadUrlAsync(ugoiraUrl) is { } s)
-                    {
-                        var newStream = await s.CopyToMemoryStreamAsync(false);
-                        s.Position = 0;
+                    if (await DownloadUrlAsync(ugoiraUrl) is { } s) 
                         source = (IReadOnlyList<Stream>) [s];
-                        ApplyImageTransformers(newStream);
-                    }
                 }
                 // 非原图动图（压缩包）
                 else
@@ -277,45 +353,6 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
                         url,
                         new Progress<double>(d => AdvancePhase(LoadingPhase.DownloadingImage, startProgress + ratio * d)),
                         cancellationToken: ImageLoadingCancellationTokenSource.Token);
-            }
-
-            // 传入的s一定是新建的流，所以最后都会销毁s
-            async void ApplyImageTransformers(Stream s)
-            {
-                var extensionService = App.AppViewModel.AppServiceProvider.GetRequiredService<ExtensionService>();
-                if (!extensionService.ActiveImageTransformers.Any())
-                    return;
-                var iStream = s.ToIStream();
-                var isIllustrationOrFirstPageManga = IllustrationViewModel.MangaIndex is -1 or 0;
-                var index = 1;
-                var token = ImageLoadingCancellationTokenSource.Token;
-                foreach (var transformer in extensionService.ActiveImageTransformers)
-                {
-                    if (token.IsCancellationRequested)
-                        break;
-                    if (isIllustrationOrFirstPageManga)
-                        HWnd.InfoGrowl(ImageViewerPageResources.ApplyingTransformerExtensionsFormatted.Format(index));
-                    // 运行扩展
-                    iStream.Seek(0, SeekOrigin.Begin, out _);
-                    var next = await transformer.TransformAsync(iStream);
-                    if (next is null)
-                        continue;
-                    // 最初的s会在最后一行销毁，从别的扩展拿到的iStream无法销毁，所以此处直接覆盖之前的流的行为没有问题
-                    iStream = next;
-                    // 下一次循环准备
-                    var newStream = iStream.ToStream();
-                    var memoryStream = await newStream.CopyToMemoryStreamAsync(false);
-                    iStream.Seek(0, SeekOrigin.Begin, out _);
-                    // 显示图片
-                    var last = OriginalStreamsSource;
-                    OriginalStreamsSource = (IReadOnlyList<Stream>)[memoryStream];
-                    if (last is IReadOnlyList<Stream> and [IDisposable disposable])
-                        disposable.Dispose();
-                    ++index;
-                }
-                if (!token.IsCancellationRequested && isIllustrationOrFirstPageManga)
-                    HWnd.SuccessGrowl(ImageViewerPageResources.AllTransformerExtensionsFinished);
-                await s.DisposeAsync();
             }
         }
     }
@@ -405,11 +442,21 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
         RotateCounterclockwiseCommand.NotifyCanExecuteChanged();
         MirrorCommand.NotifyCanExecuteChanged();
         ShareCommand.NotifyCanExecuteChanged();
+        foreach (var command in ExtensionCommands)
+            command.NotifyCanExecuteChanged();
+    }
+
+    private void UpdateExtensionCommandCanExecute()
+    {
+        foreach (var command in ExtensionCommands)
+            command.NotifyCanExecuteChanged();
     }
 
     private void LoadingCompletedCanExecuteRequested(XamlUICommand _, CanExecuteRequestedEventArgs args) => args.CanExecute = LoadSuccessfully;
 
     private void IsNotUgoiraAndLoadingCompletedCanExecuteRequested(XamlUICommand sender, CanExecuteRequestedEventArgs args) => args.CanExecute = !IllustrationViewModel.IsUgoira && LoadSuccessfully;
+    
+    private void ExtensionCanExecuteRequested(XamlUICommand sender, CanExecuteRequestedEventArgs args) => args.CanExecute = !IllustrationViewModel.IsUgoira && LoadSuccessfully && ExtensionStreamLock;
 
     public (ulong, GetImageStreams) DownloadParameter => (HWnd, GetImageStreamsAsync);
 
@@ -439,6 +486,8 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
     public XamlUICommand SetAsLockScreenCommand { get; } = new() { Label = EntryViewerPageResources.LockScreen };
 
     public XamlUICommand SetAsBackgroundCommand { get; } = new() { Label = EntryViewerPageResources.Background };
+
+    public List<XamlUICommand> ExtensionCommands { get; } = [];
 
     private void DisposeInternal()
     {

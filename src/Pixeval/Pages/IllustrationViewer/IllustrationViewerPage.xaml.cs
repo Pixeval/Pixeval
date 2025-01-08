@@ -2,6 +2,7 @@
 // Licensed under the GPL v3 License.
 
 using System;
+using System.Linq;
 using System.Numerics;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
@@ -18,7 +19,12 @@ using Pixeval.Utilities;
 using WinRT;
 using WinUI3Utilities;
 using Windows.System;
+using Microsoft.Extensions.DependencyInjection;
 using Pixeval.Controls.Windowing;
+using Pixeval.Extensions;
+using Pixeval.Extensions.Common.Commands.Transformers;
+using SymbolIcon = FluentIcons.WinUI.SymbolIcon;
+using SymbolIconSource = FluentIcons.WinUI.SymbolIconSource;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
@@ -98,6 +104,15 @@ public sealed partial class IllustrationViewerPage
                         : AppWindowPresenterKind.Default);
                     break;
                 }
+                case nameof(IllustrationViewerPageViewModel.CurrentImage):
+                {
+                    foreach (var appBarButton in ExtensionsCommandBar.PrimaryCommands.OfType<AppBarButton>())
+                    {
+                        var extension = appBarButton.GetTag<IImageTransformerCommandExtension>();
+                        appBarButton.Command = _viewModel.CurrentImage.GetTransformExtensionCommand(extension);
+                    }
+                    break;
+                }
             }
         };
 
@@ -123,6 +138,26 @@ public sealed partial class IllustrationViewerPage
         // TODO: https://github.com/microsoft/microsoft-ui-xaml/issues/9952
         // ThumbnailItemsView.StartBringItemIntoView(_viewModel.CurrentIllustrationIndex, new BringIntoViewOptions { AnimationDesired = true });
         IllustrationImageShowcaseFrame_OnTapped(null!, null!);
+
+        var extensionService = App.AppViewModel.AppServiceProvider.GetRequiredService<ExtensionService>();
+        if (!extensionService.ActiveImageTransformerCommands.Any())
+            return;
+        foreach (var extension in extensionService.ActiveImageTransformerCommands)
+        {
+            var appBarButton = new AppBarButton
+            {
+                Tag = extension,
+                Label = extension.GetLabel(),
+                Icon = new SymbolIcon { Symbol = extension.GetIcon() },
+                CommandParameter = extension,
+                // 第一次_viewModel.CurrentIllustrationIndex变化时，还没有订阅事件，所以需要手动触发
+                Command = _viewModel.CurrentImage.GetTransformExtensionCommand(extension)
+            };
+            ToolTipService.SetToolTip(appBarButton, extension.GetDescription());
+            ExtensionsCommandBar.PrimaryCommands.Add(appBarButton);
+        }
+
+        ExtensionsCommandBar.PrimaryCommands.Add(new AppBarSeparator());
     }
 
     private void IllustrationViewerPage_OnUnloaded(object sender, RoutedEventArgs e)
