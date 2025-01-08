@@ -52,7 +52,8 @@
             controls:DockPanel.Dock="Right"
             Click="SendButton_OnClicked"
             Content="{fluent:SymbolIcon Symbol=Send,
-                                        FontSize={StaticResource SmallIconFontSize}}" />
+                                        FontSize={StaticResource SmallIconFontSize}}"
+            Style="{StaticResource PixevalTransparentButtonStyle}" />
         <RichEditBox
             x:Name="ReplyContentRichEditBox"
             x:Uid="/PixivReplyBar/ReplyContentRichEditBox"

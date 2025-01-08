@@ -4,15 +4,15 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Pixeval.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:Pixeval.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:pages="using:Pixeval.Pages"
     mc:Ignorable="d">
     <GridView
         IsItemClickEnabled="True"
-        ItemsSource="{x:Bind pages:PixivReplyEmojiListPage.EmojiList}"
+        ItemsSource="{x:Bind local:PixivReplyEmojiListPage.EmojiList}"
         SelectionMode="None">
         <GridView.ItemTemplate>
-            <DataTemplate x:DataType="pages:PixivReplyEmojiViewModel">
+            <DataTemplate x:DataType="local:PixivReplyEmojiViewModel">
                 <Image
                     Width="35"
                     Height="35"

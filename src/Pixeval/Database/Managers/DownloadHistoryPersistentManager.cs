@@ -36,14 +36,19 @@ public class DownloadHistoryPersistentManager(ILiteDatabase collection, int maxi
         Collection.Update(entry);
     }
 
-    public IEnumerable<IDownloadTaskGroup> Select(int count)
+    public IEnumerable<IDownloadTaskGroup> Take(int count)
     {
         return Collection.Find(_ => true, 0, count).Select(ToDownloadTaskGroup);
     }
 
-    public IEnumerable<IDownloadTaskGroup> SelectLast(int count)
+    public IEnumerable<IDownloadTaskGroup> TakeLast(int count)
     {
         return Collection.Find(_ => true, Collection.Count() - count, count).Select(ToDownloadTaskGroup);
+    }
+
+    public IEnumerable<IDownloadTaskGroup> Select(Expression<Func<DownloadHistoryEntry, bool>> predicate)
+    {
+        return Collection.Find(predicate).Select(ToDownloadTaskGroup);
     }
 
     /// <summary>

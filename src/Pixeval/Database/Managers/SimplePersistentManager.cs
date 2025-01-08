@@ -25,9 +25,7 @@ public abstract class SimplePersistentManager<T>(ILiteDatabase db, int maximumRe
     public void Insert(T t)
     {
         if (Collection.Count() > MaximumRecords)
-        {
             Purge(MaximumRecords);
-        }
 
         _ = Collection.Insert(t);
     }
@@ -42,14 +40,19 @@ public abstract class SimplePersistentManager<T>(ILiteDatabase db, int maximumRe
         Collection.Update(entry);
     }
 
-    public IEnumerable<T> Select(int count)
+    public IEnumerable<T> Take(int count)
     {
         return Collection.Find(_ => true, 0, count);
     }
 
-    public IEnumerable<T> SelectLast(int count)
+    public IEnumerable<T> TakeLast(int count)
     {
         return Collection.Find(_ => true, Collection.Count() - count, count);
+    }
+
+    public IEnumerable<T> Select(Expression<Func<T, bool>> predicate)
+    {
+        return Collection.Find(predicate);
     }
 
     public T? TryDelete(Expression<Func<T, bool>> predicate)
