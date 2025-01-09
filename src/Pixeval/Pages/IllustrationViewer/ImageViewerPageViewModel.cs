@@ -27,12 +27,10 @@ using Pixeval.CoreApi.Net.Response;
 using Pixeval.Download;
 using Pixeval.Util.ComponentModels;
 using Microsoft.Extensions.DependencyInjection;
-using Pixeval.Extensions;
 using Pixeval.Extensions.Common;
 using Pixeval.Util.IO.Caching;
 using Windows.ApplicationModel.DataTransfer;
 using Pixeval.Extensions.Common.Commands.Transformers;
-using ReverseMarkdown.Converters;
 using WinUI3Utilities;
 
 namespace Pixeval.Pages.IllustrationViewer;
@@ -195,7 +193,7 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
     public ICommand GetTransformExtensionCommand(IImageTransformerCommandExtension extension)
     {
         var command = new XamlUICommand();
-        command.CanExecuteRequested += IsNotUgoiraAndLoadingCompletedCanExecuteRequested;
+        command.CanExecuteRequested += ExtensionCanExecuteRequested;
         command.ExecuteRequested += OnCommandOnExecuteRequested;
         ExtensionCommands.Add(command);
         return command;
@@ -208,14 +206,13 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
             try
             {
                 var transformer = args.Parameter.To<IImageTransformerCommandExtension>();
-                var iStream = stream.ToIStream();
                 var token = ImageLoadingCancellationTokenSource.Token;
                 if (token.IsCancellationRequested)
                     return;
                 HWnd.InfoGrowl(ImageViewerPageResources.ApplyingTransformerExtensions);
                 // 运行扩展
                 stream.Position = 0;
-                var result = await transformer.TransformAsync(iStream);
+                var result = await transformer.TransformAsync(stream.ToIStream());
                 if (result is null)
                 {
                     HWnd.ErrorGrowl(ImageViewerPageResources.TransformerExtensionFailed);
@@ -225,11 +222,11 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
                 var memoryStream = Streams.RentStream();
                 await result.CopyToAsync(memoryStream.ToIStream());
                 await result.DisposeAsync();
-                iStream.Seek(0, SeekOrigin.Begin);
+                stream.Position = 0;
                 // 显示图片
                 var last = DisplayStreamsSource;
                 DisplayStreamsSource = (IReadOnlyList<Stream>) [memoryStream];
-                if (last is IReadOnlyList<Stream> and [IDisposable disposable])
+                if (last is IReadOnlyList<Stream> and [IDisposable disposable]&& !ReferenceEquals(disposable, stream))
                     disposable.Dispose();
                 if (!token.IsCancellationRequested)
                     HWnd.SuccessGrowl(ImageViewerPageResources.TransformerExtensionFinishedSuccessfully);

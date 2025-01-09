@@ -73,8 +73,8 @@
         <ItemGroup>
             <TextFiles Include="%(TextFile.OutputTarget)">
                 <Content>{
-                    @(TextFile-&gt;Metadata('Content'), ',
-                    ')
+    @(TextFile-&gt;Metadata('Content'), ',
+    ')
 }</Content>
             </TextFiles>
         </ItemGroup>
@@ -89,12 +89,12 @@
 
         <TextFile Include="Strings\*\*.md">
             <OutputTarget>Generated\%(RecursiveDir)\TextGenerated.resjson</OutputTarget>
-            <Content>    "$([System.String]::Concat(%(Filename), '"').Replace('_', '/')) : "$([System.IO.File]::ReadAllText(%(FullPath)).Replace('\', '\\').Replace('
+            <Content>"$([System.String]::Concat(%(Filename), '"').Replace('_', '/')) : "$([System.IO.File]::ReadAllText(%(FullPath)).Replace('\', '\\').Replace('
 ', '\n').Replace('"', '\"'))"</Content>
         </TextFile>
         <TextFile Include="Strings\*\*.txt">
             <OutputTarget>Generated\%(RecursiveDir)\TextGenerated.resjson</OutputTarget>
-            <Content>    "$([System.String]::Concat(%(Filename), '"').Replace('_', '/')) : "$([System.IO.File]::ReadAllText(%(FullPath)).Replace('\', '\\').Replace('
+            <Content>"$([System.String]::Concat(%(Filename), '"').Replace('_', '/')) : "$([System.IO.File]::ReadAllText(%(FullPath)).Replace('\', '\\').Replace('
 ', '\n').Replace('"', '\"'))"</Content>
         </TextFile>
 

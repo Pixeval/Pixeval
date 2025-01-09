@@ -24,7 +24,6 @@ using Pixeval.Controls.Windowing;
 using Pixeval.Extensions;
 using Pixeval.Extensions.Common.Commands.Transformers;
 using SymbolIcon = FluentIcons.WinUI.SymbolIcon;
-using SymbolIconSource = FluentIcons.WinUI.SymbolIconSource;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
