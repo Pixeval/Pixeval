@@ -103,14 +103,13 @@ public static class WindowFactory
         {
             BackdropType = WindowSettings.Backdrop,
             ExtendTitleBar = true,
-            Size = size,
             IconPath = IconPath,
             Title = title,
             IsMaximized = isMaximized,
             Theme = WindowSettings.Theme
         });
         if (!isMaximized)
-            window.AppWindow.FullDisplayOnScreen();
+            window.AppWindow.FullDisplayOnScreen(size);
         window.FrameLoaded += (_, _) => window.SetTheme(WindowSettings.Theme);
         return window;
     }
@@ -127,24 +126,30 @@ public static class WindowFactory
             window.SetTheme(theme);
     }
 
-    private static void FullDisplayOnScreen(this AppWindow appWindow)
+    private static void FullDisplayOnScreen(this AppWindow appWindow, SizeInt32 desiredSize)
     {
         var hWnd = (nint)appWindow.Id.Value;
         var hWndDesktop = PInvoke.MonitorFromWindow(new HWND(hWnd), MONITOR_FROM_FLAGS.MONITOR_DEFAULTTONEAREST);
         var info = new MONITORINFO { cbSize = 40 };
         _ = PInvoke.GetMonitorInfo(hWndDesktop, ref info);
         var position = appWindow.Position;
-#if DISPLAY
-        position.X = info.rcMonitor.Width / 2 + info.rcMonitor.X - appWindow.Size.Width / 2;
-        position.Y = info.rcMonitor.Height / 2 + info.rcMonitor.Y - appWindow.Size.Height / 2;
-#else
-        var left = info.rcMonitor.Width - appWindow.Size.Width;
+        var size = desiredSize == default ? appWindow.Size : desiredSize;
+        var left = info.rcWork.Width - size.Width;
+        if (left < 0)
+        {
+            left = 0;
+            desiredSize.Width = info.rcWork.Width;
+        }
         if (position.X > left)
             position.X = left;
-        var top = info.rcMonitor.Height - appWindow.Size.Height;
+        var top = info.rcWork.Height - appWindow.Size.Height;
+        if (top < 0)
+        {
+            top = 0;
+            desiredSize.Height = info.rcWork.Height;
+        }
         if (position.Y > top)
             position.Y = top;
-#endif
-        appWindow.Move(position);
+        appWindow.MoveAndResize(new RectInt32(position.X, position.Y, desiredSize.Width, desiredSize.Height));
     }
 }
