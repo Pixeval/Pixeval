@@ -234,14 +234,13 @@
                     <ColumnDefinition Width="Auto" MaxWidth="310" />
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <CommandBar Grid.Column="0" HorizontalAlignment="Stretch">
-                    <AppBarToggleButton
-                        HorizontalAlignment="Center"
-                        Command="{x:Bind _viewModel.InfoAndCommentsCommand}"
-                        IsChecked="{x:Bind EntryViewerSplitView.IsPaneOpen, Mode=TwoWay}"
-                        IsCompact="True"
-                        LabelPosition="Collapsed" />
+                <CommandBar
+                    Grid.Column="0"
+                    HorizontalAlignment="Stretch"
+                    DefaultLabelPosition="Collapsed">
+                    <AppBarToggleButton Command="{x:Bind _viewModel.InfoAndCommentsCommand}" IsChecked="{x:Bind EntryViewerSplitView.IsPaneOpen, Mode=TwoWay}" />
                     <AppBarSeparator />
                     <controls:AppBarTextItem
                         Padding="15,0"
@@ -255,7 +254,16 @@
                         Symbol="AppTitle"
                         Text="{x:Bind _viewModel.CurrentIllustration.Title, Mode=OneWay}" />
                 </CommandBar>
-                <CommandBar Grid.Column="2" HorizontalAlignment="Stretch">
+                <CommandBar
+                    x:Name="ExtensionsCommandBar"
+                    Grid.Column="2"
+                    HorizontalAlignment="Stretch"
+                    DefaultLabelPosition="Collapsed"
+                    Visibility="{x:Bind controls:C.ToVisibilityNegation(_viewModel.CurrentIllustration.IsUgoira), Mode=OneWay}" />
+                <CommandBar
+                    Grid.Column="3"
+                    HorizontalAlignment="Stretch"
+                    DefaultLabelPosition="Collapsed">
                     <AppBarElementContainer VerticalContentAlignment="Center">
                         <TextBlock Style="{StaticResource TextBlockStyle}" Visibility="{x:Bind controls:C.ToVisibility(_viewModel.CurrentIllustration.IsManga), Mode=OneWay}">
                             <Run Text="{x:Bind controls:C.PlusOneToString(_viewModel.CurrentPageIndex), Mode=OneWay}" />
@@ -264,22 +272,10 @@
                         </TextBlock>
                     </AppBarElementContainer>
                     <AppBarSeparator Visibility="{x:Bind controls:C.ToVisibility(_viewModel.CurrentIllustration.IsManga), Mode=OneWay}" />
-                    <AppBarButton
-                        Command="{x:Bind _viewModel.FullScreenCommand}"
-                        IsCompact="True"
-                        LabelPosition="Collapsed" />
-                    <AppBarButton
-                        Command="{x:Bind _viewModel.CurrentImage.RestoreResolutionCommand, Mode=OneWay}"
-                        IsCompact="True"
-                        LabelPosition="Collapsed" />
-                    <AppBarButton
-                        Command="{x:Bind _viewModel.CurrentImage.ZoomOutCommand, Mode=OneWay}"
-                        IsCompact="True"
-                        LabelPosition="Collapsed" />
-                    <AppBarButton
-                        Command="{x:Bind _viewModel.CurrentImage.ZoomInCommand, Mode=OneWay}"
-                        IsCompact="True"
-                        LabelPosition="Collapsed" />
+                    <AppBarButton Command="{x:Bind _viewModel.FullScreenCommand}" IsCompact="True" />
+                    <AppBarButton Command="{x:Bind _viewModel.CurrentImage.RestoreResolutionCommand, Mode=OneWay}" IsCompact="True" />
+                    <AppBarButton Command="{x:Bind _viewModel.CurrentImage.ZoomOutCommand, Mode=OneWay}" IsCompact="True" />
+                    <AppBarButton Command="{x:Bind _viewModel.CurrentImage.ZoomInCommand, Mode=OneWay}" IsCompact="True" />
                     <AppBarSeparator />
                     <AppBarElementContainer VerticalContentAlignment="Center">
                         <TextBlock
