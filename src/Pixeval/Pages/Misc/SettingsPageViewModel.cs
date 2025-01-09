@@ -108,7 +108,11 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
                     t => t.DefaultSelectedTabItem,
                     MainPageTabItemExtension.GetItems()),
                 new StringAppSettingsEntry(AppSettings,
-                    t => t.WebCookie) { Placeholder = SettingsPageResources.WebCookieTextBoxPlaceholderText }
+                    t => t.WebCookie)
+                {
+                    Placeholder = SettingsPageResources.WebCookieTextBoxPlaceholderText,
+                    ValueChanged = t => App.AppViewModel.MakoClient.Configuration.Cookie = t
+                }
             },
             new(SettingsEntryCategory.BrowsingExperience)
             {
