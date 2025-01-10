@@ -115,8 +115,14 @@ public sealed partial class MainPage
                 return;
             }
 
-            if (Equals(selectedItem, DownloadListTab) || Equals(selectedItem, SettingsTab) || Equals(selectedItem, TagsTab)|| Equals(selectedItem, ExtensionsTab))
+            // EnhancedWindowPage
+            if (Equals(selectedItem, DownloadListTab) ||
+                Equals(selectedItem, FeedTab) ||
+                Equals(selectedItem, SettingsTab) ||
+                Equals(selectedItem, TagsTab) ||
+                Equals(selectedItem, ExtensionsTab))
                 Navigate(MainPageRootFrame, tag);
+            // EnhancedPage
             else
                 MainPageRootFrame.NavigateTag(tag, new SuppressNavigationTransitionInfo());
         }
