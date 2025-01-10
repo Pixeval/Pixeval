@@ -8,7 +8,6 @@
     xmlns:fluent="using:FluentIcons.WinUI"
     xmlns:local="using:Pixeval.Pages.Tags"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Unloaded="TagsPage_OnUnloaded"
     mc:Ignorable="d">
     <controls1:DockPanel>
         <StackPanel controls1:DockPanel.Dock="Top" Orientation="Horizontal">

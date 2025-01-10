@@ -143,29 +143,17 @@
                     <controls1:Segmented
                         Grid.Row="2"
                         HorizontalAlignment="Stretch"
-                        SelectedItem="{x:Bind IllustrationTab}"
+                        ItemsSource="{x:Bind _viewModel.Tags}"
+                        SelectedItem="{x:Bind _viewModel.WorkTag}"
                         SelectionChanged="IllustratorViewerSegmented_OnSelectionChanged">
-                        <controls1:SegmentedItem
-                            x:Name="IllustrationTab"
-                            x:Uid="/EntryViewerPage/WorkNavigationViewItem"
-                            Icon="{fluent:SymbolIcon Symbol=Image}"
-                            Tag="{x:Bind _viewModel.WorkTag}" />
-                        <controls1:SegmentedItem
-                            x:Uid="/EntryViewerPage/BookmarksNavigationViewItem"
-                            Icon="{fluent:SymbolIcon Symbol=Library}"
-                            Tag="{x:Bind _viewModel.BookmarksTag}" />
-                        <controls1:SegmentedItem
-                            x:Uid="/EntryViewerPage/FollowingsNavigationViewItem"
-                            Icon="{fluent:SymbolIcon Symbol=PersonAdd}"
-                            Tag="{x:Bind _viewModel.FollowingsTag}" />
-                        <controls1:SegmentedItem
-                            x:Uid="/EntryViewerPage/MyPixivUserNavigationViewItem"
-                            Icon="{fluent:SymbolIcon Symbol=People}"
-                            Tag="{x:Bind _viewModel.MyPixivUserTag}" />
-                        <controls1:SegmentedItem
-                            x:Uid="/EntryViewerPage/RelatedUserNavigationViewItem"
-                            Icon="{fluent:SymbolIcon Symbol=PeopleCommunity}"
-                            Tag="{x:Bind _viewModel.RelatedUserTag}" />
+                        <controls1:Segmented.ItemTemplate>
+                            <DataTemplate x:DataType="windowing:NavigationViewTag">
+                                <controls1:SegmentedItem
+                                    Content="{x:Bind}"
+                                    Icon="{x:Bind Icon}"
+                                    Tag="{x:Bind}" />
+                            </DataTemplate>
+                        </controls1:Segmented.ItemTemplate>
                     </controls1:Segmented>
                 </Grid>
             </controls:StickyHeaderScrollView.Header>

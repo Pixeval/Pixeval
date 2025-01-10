@@ -2,6 +2,7 @@
 // Licensed under the GPL v3 License.
 
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml.Input;
@@ -34,27 +35,36 @@ public partial class IllustratorViewerPageViewModel : UiObservableObject
     [ObservableProperty]
     public partial bool IsFollowed { get; set; }
 
-    public NavigationViewTag<IllustratorWorkPage, long> WorkTag { get; }
+    public NavigationViewTag<IllustratorWorkPage> WorkTag { get; } =
+        new(EntryViewerPageResources.WorkNavigationViewItemContent) { Symbol = Symbol.Image };
 
-    public NavigationViewTag<BookmarksPage, long> BookmarksTag { get; }
+    public NavigationViewTag<BookmarksPage> BookmarksTag { get; } =
+        new(EntryViewerPageResources.BookmarksNavigationViewItemContent) { Symbol = Symbol.Library };
 
-    public NavigationViewTag<FollowingsPage, long> FollowingsTag { get; }
+    public NavigationViewTag<FollowingsPage> FollowingsTag { get; } =
+        new(EntryViewerPageResources.FollowingsNavigationViewItemContent) { Symbol = Symbol.PersonAdd };
 
-    public NavigationViewTag<MyPixivUsersPage, long> MyPixivUserTag { get; }
+    public NavigationViewTag<MyPixivUsersPage> MyPixivUserTag { get; } =
+        new(EntryViewerPageResources.MyPixivUserNavigationViewItemContent) { Symbol = Symbol.People };
 
-    public NavigationViewTag<RelatedUsersPage, long> RelatedUserTag { get; }
+    public NavigationViewTag<RelatedUsersPage> RelatedUserTag { get; } =
+        new(EntryViewerPageResources.RelatedUserNavigationViewItemContent) { Symbol = Symbol.PeopleCommunity };
+
+    public IReadOnlyList<NavigationViewTag> Tags =>
+    [
+        WorkTag,
+        BookmarksTag,
+        FollowingsTag,
+        MyPixivUserTag,
+        RelatedUserTag
+    ];
 
     public IllustratorViewerPageViewModel(PixivSingleUserResponse userDetail, ulong hWnd) : base(hWnd)
     {
         UserDetail = userDetail;
         IsFollowed = userDetail.UserEntity.IsFollowed;
         Metrics = userDetail.UserProfile;
-
-        WorkTag = new(Id);
-        BookmarksTag = new(Id);
-        FollowingsTag = new(Id);
-        MyPixivUserTag = new(Id);
-        RelatedUserTag = new(Id);
+        WorkTag.Parameter = BookmarksTag.Parameter = FollowingsTag.Parameter = MyPixivUserTag.Parameter = RelatedUserTag.Parameter = Id;
 
         InitializeCommands();
         _ = SetAvatarAndBackgroundAsync();

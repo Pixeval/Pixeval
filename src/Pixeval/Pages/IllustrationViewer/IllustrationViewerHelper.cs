@@ -91,7 +91,7 @@ public static class IllustrationViewerHelper
         var (width, height) = DetermineWindowSize(illustration.Width, illustration.Width / (double)illustration.Height);
 
         WindowFactory.RootWindow.Fork(out var h)
-            .WithLoaded((o, _) => o.To<Frame>().NavigateTo<IllustrationViewerPage>(h,
+            .WithInitialized((o, _) => o.To<Frame>().NavigateTo<IllustrationViewerPage>(h,
                 param,
                 new SuppressNavigationTransitionInfo()))
             .WithSizeLimit(640, 360)

@@ -24,9 +24,8 @@ public sealed partial class BookmarksPage : IScrollViewHost
             uid = App.AppViewModel.PixivUid;
         _viewModel = new BookmarksPageViewModel(uid);
         _viewModel.TagBookmarksIncrementallyLoaded += ViewModelOnTagBookmarksIncrementallyLoaded;
+        ChangeSource();
     }
-
-    private void BookmarksPage_OnLoaded(object sender, RoutedEventArgs e) => ChangeSource();
 
     private void ComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e) => ChangeSource();
 

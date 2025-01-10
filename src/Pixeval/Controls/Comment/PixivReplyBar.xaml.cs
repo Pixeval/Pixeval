@@ -19,17 +19,13 @@ public sealed partial class PixivReplyBar
     {
         InitializeComponent();
         StickerClick += (_, _) => EmojiButton.Flyout.Hide();
+        EmojiButtonFlyoutEmojiSectionNavigationViewItem.Tag = new NavigationViewTag<PixivReplyEmojiListPage>("", this);
+        EmojiButtonFlyoutStickersSectionNavigationViewItem.Tag = new NavigationViewTag<PixivReplyStickerListPage>("", (Guid.NewGuid(), StickerClick) /* just to support the serialization, see https://docs.microsoft.com/en-us/windows/winui/api/microsoft.ui.xaml.controls.frame.navigate?view=winui-3.0#Microsoft_UI_Xaml_Controls_Frame_Navigate_Windows_UI_Xaml_Interop_TypeName_System_Object_Microsoft_UI_Xaml_Media_Animation_NavigationTransitionInfo_ */);
     }
 
     public event EventHandler<SendButtonClickEventArgs>? SendButtonClick;
 
     public event EventHandler<StickerClickEventArgs>? StickerClick;
-
-    private void PixivReplyBar_OnLoaded(object sender, RoutedEventArgs e)
-    {
-        EmojiButtonFlyoutEmojiSectionNavigationViewItem.Tag = new NavigationViewTag(typeof(PixivReplyEmojiListPage), this);
-        EmojiButtonFlyoutStickersSectionNavigationViewItem.Tag = new NavigationViewTag(typeof(PixivReplyStickerListPage), (Guid.NewGuid(), StickerClick) /* just to support the serialization, see https://docs.microsoft.com/en-us/windows/winui/api/microsoft.ui.xaml.controls.frame.navigate?view=winui-3.0#Microsoft_UI_Xaml_Controls_Frame_Navigate_Windows_UI_Xaml_Interop_TypeName_System_Object_Microsoft_UI_Xaml_Media_Animation_NavigationTransitionInfo_ */);
-    }
 
     private void EmojiButtonFlyoutNavigationView_OnSelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
     {

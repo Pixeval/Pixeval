@@ -72,7 +72,7 @@ public partial class App
         await AppViewModel.InitializeAsync(isProtocolActivated);
 
         WindowFactory.Create(out var w)
-            .WithLoaded(onLoaded: OnLoaded)
+            .WithInitialized(onLoaded: OnLoaded)
             .WithClosing((_, _) => AppInfo.SaveContextWhenExit()) // TODO: 从运行打开应用的时候不会ExitApp，就算是调用App.Current.Exit();
             .WithSizeLimit(800, 360)
             .Init(AppInfo.AppIdentifier, AppViewModel.AppSettings.WindowSize.ToSizeInt32(), AppViewModel.AppSettings.IsMaximized)

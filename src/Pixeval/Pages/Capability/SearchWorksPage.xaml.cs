@@ -19,9 +19,8 @@ public sealed partial class SearchWorksPage : IScrollViewHost
     public override void OnPageActivated(NavigationEventArgs e)
     {
         (SimpleWorkTypeComboBox.SelectedEnum, _searchText) = e.Parameter.To<(SimpleWorkType, string)>();
+        ChangeSource();
     }
-
-    private void SearchWorksPage_OnLoaded(object sender, RoutedEventArgs e) => ChangeSource();
 
     private void ComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e) => ChangeSource();
 

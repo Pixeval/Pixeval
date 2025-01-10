@@ -31,7 +31,7 @@ public static class IllustratorViewerHelper
     public static void CreateWindowWithPage(PixivSingleUserResponse userDetail)
     {
         WindowFactory.RootWindow.Fork(out var h)
-            .WithLoaded((o, _) => o.To<Microsoft.UI.Xaml.Controls.Frame>().NavigateTo<IllustratorViewerPage>(h,
+            .WithInitialized((o, _) => o.To<Microsoft.UI.Xaml.Controls.Frame>().NavigateTo<IllustratorViewerPage>(h,
                 userDetail,
                 new SuppressNavigationTransitionInfo()))
             .WithSizeLimit(640, 360)

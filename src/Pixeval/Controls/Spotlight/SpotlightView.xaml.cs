@@ -28,7 +28,7 @@ public sealed partial class SpotlightView : IScrollViewHost
         await Launcher.LaunchUriAsync(new Uri(e.InvokedItem.To<SpotlightItemViewModel>().Entry.ArticleUrl));
     }
 
-    private void SpotlightViewOnUnloaded(object sender, RoutedEventArgs e)
+    ~SpotlightView()
     {
         foreach (var viewModel in ViewModel.DataProvider.Source)
             viewModel.UnloadThumbnail(ViewModel);

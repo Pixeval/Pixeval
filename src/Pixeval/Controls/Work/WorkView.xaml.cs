@@ -70,7 +70,8 @@ public sealed partial class WorkView : IEntryView<ISortableEntryViewViewModel>
 
     private async void WorkItem_OnViewModelChanged(FrameworkElement sender, IWorkViewModel viewModel)
     {
-        ArgumentNullException.ThrowIfNull(ViewModel);
+        if (ViewModel == null!)
+            return;
         if (await viewModel.TryLoadThumbnailAsync(ViewModel))
             if (sender.IsFullyOrPartiallyVisible(this))
                 sender.GetResource<Storyboard>("ThumbnailStoryboard").Begin();
@@ -99,6 +100,8 @@ public sealed partial class WorkView : IEntryView<ISortableEntryViewViewModel>
 
     private void WorkView_OnSelectionChanged(ItemsView sender, ItemsViewSelectionChangedEventArgs args)
     {
+        if (ViewModel == null!)
+            return;
         if (sender.SelectedItems is not { Count: > 0 })
         {
             ViewModel.SelectedEntries = ViewModel switch
@@ -169,7 +172,7 @@ public sealed partial class WorkView : IEntryView<ISortableEntryViewViewModel>
 
     private (ThumbnailDirection ThumbnailDirection, double DesiredHeight) IllustrationItem_OnRequiredParam() => (ThumbnailDirection, DesiredHeight);
 
-    private void WorkView_OnUnloaded(object sender, RoutedEventArgs e)
+    ~WorkView()
     {
         if (ViewModel == null!)
             return;

@@ -4,6 +4,7 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Markup;
+using Pixeval.Controls.Windowing;
 using WinUI3Utilities;
 
 namespace Pixeval.Pages;
@@ -40,5 +41,22 @@ public partial class SuggestionModelDataTemplateSelector : DataTemplateSelector
         }
 
         return CommonSuggestion;
+    }
+}
+
+public partial class NavigationViewItemDataTemplateSelector : DataTemplateSelector
+{
+    public DataTemplate? NavigationViewTagDataTemplate { get; set; }
+
+    public DataTemplate? NavigationViewSeparatorDataTemplate { get; set; }
+
+    protected override DataTemplate? SelectTemplateCore(object item)
+    {
+        return item switch
+        {
+            NavigationViewTag _ => NavigationViewTagDataTemplate,
+            NavigationViewSeparator _ => NavigationViewSeparatorDataTemplate,
+            _ => null
+        };
     }
 }

@@ -2,6 +2,7 @@
 // Licensed under the GPL v3 License.
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -9,7 +10,9 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.WinUI.Helpers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.Controls;
 using Pixeval.Controls.Windowing;
 using Pixeval.CoreApi;
@@ -20,45 +23,94 @@ using Pixeval.Pages.Download;
 using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Pages.Misc;
 using Pixeval.Pages.Tags;
+using Pixeval.Util.ComponentModels;
 using Pixeval.Util.IO;
 using Pixeval.Util.IO.Caching;
 using Pixeval.Util.UI;
 
 namespace Pixeval.Pages;
 
-public partial class MainPageViewModel : ObservableObject
+public partial class MainPageViewModel : UiObservableObject
 {
-    public readonly NavigationViewTag<RecommendationPage> RecommendationsTag = new();
+    public readonly NavigationViewTag<RecommendationPage> RecommendationsTag =
+        new(MainPageResources.RecommendationsTabContent) { ImageUri = GetIconUri("recommendations") };
 
-    public readonly NavigationViewTag<RankingsPage> RankingsTag = new();
+    public readonly NavigationViewTag<RankingsPage> RankingsTag =
+        new(MainPageResources.RankingsTabContent) { ImageUri = GetIconUri("ranking") };
 
-    public readonly NavigationViewTag<BookmarksPage> BookmarksTag = new();
+    public readonly NavigationViewTag<BookmarksPage> BookmarksTag =
+        new(MainPageResources.BookmarksTabContent) { ImageUri = GetIconUri("bookmarks") };
 
-    public readonly NavigationViewTag<FollowingsPage> FollowingsTag = new();
+    public readonly NavigationViewTag<FollowingsPage> FollowingsTag =
+        new(MainPageResources.FollowingsTabContent) { ImageUri = GetIconUri("followings") };
 
-    public readonly NavigationViewTag<SpotlightsPage> SpotlightsTag = new();
+    public readonly NavigationViewTag<SpotlightsPage> SpotlightsTag =
+        new(MainPageResources.SpotlightsTabContent) { ImageUri = GetIconUri("spotlight") };
 
-    public readonly NavigationViewTag<RecommendUsersPage> RecommendUsersTag = new();
+    public readonly NavigationViewTag<RecommendUsersPage> RecommendUsersTag =
+        new(MainPageResources.RecommendUsersTabContent) { ImageUri = GetIconUri("recommend-user") };
 
-    public readonly NavigationViewTag<RecentPostsPage> RecentPostsTag = new();
+    public readonly NavigationViewTag<RecentPostsPage> RecentPostsTag =
+        new(MainPageResources.RecentPostsTabContent) { ImageUri = GetIconUri("recent-posts") };
 
-    public readonly NavigationViewTag<NewWorksPage> NewWorksTag = new();
-    
-    public readonly NavigationViewTag<FeedPage> FeedTag = new();
+    public readonly NavigationViewTag<NewWorksPage> NewWorksTag =
+        new(MainPageResources.NewWorksTabContent) { ImageUri = GetIconUri("new-works") };
 
-    public readonly NavigationViewTag<TagsPage> TagsTag = new();
+    public readonly NavigationViewTag<FeedPage> FeedTag =
+        new(MainPageResources.FeedTabContent) { ImageUri = GetIconUri("feed") };
 
-    public readonly NavigationViewTag<BrowsingHistoryPage> HistoriesTag = new();
+    public readonly NavigationViewTag<TagsPage> TagsTag =
+        new(MainPageResources.TagsTabContent) { ImageUri = GetIconUri("tag") };
 
-    public readonly NavigationViewTag<DownloadPage> DownloadListTag = new();
+    public readonly NavigationViewTag<BrowsingHistoryPage> HistoriesTag =
+        new(MainPageResources.HistoriesTabContent) { ImageUri = GetIconUri("history") };
 
-    public readonly NavigationViewTag<ExtensionsPage> ExtensionsTag = new();
+    public readonly NavigationViewTag<DownloadPage> DownloadListTag =
+        new(MainPageResources.DownloadListTabContent) { ImageUri = GetIconUri("download-list") };
 
-    public readonly NavigationViewTag<HelpPage> HelpTag = new();
+    public readonly NavigationViewTag<ExtensionsPage> ExtensionsTag =
+        new(MainPageResources.ExtensionsTabContent) { ImageUri = GetIconUri("extensions") };
 
-    public readonly NavigationViewTag<AboutPage> AboutTag = new();
+    public readonly NavigationViewTag<HelpPage> HelpTag =
+        new(MainPageResources.HelpTabContent) { ImageUri = GetIconUri("help") };
 
-    public readonly NavigationViewTag<SettingsPage> SettingsTag = new();
+    public readonly NavigationViewTag<AboutPage> AboutTag =
+        new(MainPageResources.AboutTabContent) { ImageUri = GetIconUri("about") };
+
+    public readonly NavigationViewTag<SettingsPage> SettingsTag;
+
+    public NavigationViewTag<SettingsPage> GetSettingsTag(object? parameter = null) => 
+        new(MainPageResources.SettingsTabContent, new NavigateParameter(parameter, HWnd)) { ImageUri = GetIconUri("settings") };
+
+    public readonly NavigationViewTag<SearchUsersPage> SearchUsersTag = new(MainPageResources.SearchUsersResult);
+
+    public readonly NavigationViewTag<SearchWorksPage> SearchWorksTag = new(MainPageResources.SearchWorksResult);
+
+    public IReadOnlyList<INavigationViewItem> MenuItems =>
+    [
+        RecommendationsTag,
+        RankingsTag,
+        BookmarksTag,
+        FollowingsTag,
+        SpotlightsTag,
+        RecommendUsersTag,
+        RecentPostsTag,
+        NewWorksTag,
+        FeedTag,
+        new NavigationViewSeparator(),
+        TagsTag,
+        HistoriesTag,
+        DownloadListTag
+    ];
+
+    public IReadOnlyList<INavigationViewItem> FooterMenuItems =>
+    [
+        ExtensionsTag,
+        HelpTag,
+        AboutTag,
+        new NavigationViewSeparator(),
+        SettingsTag
+    ];
 
     [ObservableProperty]
     public partial ImageSource? AvatarSource { get; set; }
@@ -68,9 +120,12 @@ public partial class MainPageViewModel : ObservableObject
 
     private readonly FrameworkElement _owner;
 
-    public MainPageViewModel(FrameworkElement owner)
+    public MainPageViewModel(ulong hWnd, FrameworkElement owner) : base(hWnd)
     {
         _owner = owner;
+        SettingsTag = GetSettingsTag();
+        DownloadListTag.Parameter = FeedTag.Parameter = TagsTag.Parameter = ExtensionsTag.Parameter =
+            new NavigateParameter(null, hWnd);
         SubscribeTokenRefresh();
     }
 
@@ -78,9 +133,7 @@ public partial class MainPageViewModel : ObservableObject
 
     public SuggestionStateMachine SuggestionProvider { get; } = new();
 
-
     private WeakEventListener<MakoClient, object?, TokenUser> _tokenRefreshedListener = null!;
-
 
     private WeakEventListener<MakoClient, object?, Exception> _tokenRefreshFailedListener = null!;
 
@@ -143,5 +196,10 @@ public partial class MainPageViewModel : ObservableObject
         {
             _ = await _owner.CreateAcknowledgementAsync(MiscResources.ExceptionEncountered, e.ToString());
         }
+    }
+
+    private static Uri GetIconUri(string iconName)
+    {
+        return new($"ms-appx:///Assets/Images/Icons/{iconName}.png");
     }
 }

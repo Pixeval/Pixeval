@@ -30,5 +30,5 @@ public sealed partial class TagsPage
             _viewModel.WorkingDirectory = folder.Path;
     }
 
-    private void TagsPage_OnUnloaded(object sender, RoutedEventArgs e) => _viewModel.Dispose();
+    ~TagsPage() => _viewModel.Dispose();
 }

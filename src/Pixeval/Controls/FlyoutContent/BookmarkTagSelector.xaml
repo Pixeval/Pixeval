@@ -7,7 +7,6 @@
     xmlns:labs="using:CommunityToolkit.Labs.WinUI"
     xmlns:local="using:Pixeval.Controls.FlyoutContent"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Loaded="BookmarkTagSelector_OnLoaded"
     mc:Ignorable="d">
     <ScrollView>
         <StackPanel Spacing="5">

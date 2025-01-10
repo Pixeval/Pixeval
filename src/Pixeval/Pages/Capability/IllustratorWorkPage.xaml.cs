@@ -22,9 +22,8 @@ public sealed partial class IllustratorWorkPage : IScrollViewHost
         if (e.Parameter is not long id)
             return;
         _uid = id;
+        ChangeSource();
     }
-
-    private void IllustratorWorkPage_OnLoaded(object sender, RoutedEventArgs e) => ChangeSource();
 
     private void WorkTypeComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e) => ChangeSource();
 

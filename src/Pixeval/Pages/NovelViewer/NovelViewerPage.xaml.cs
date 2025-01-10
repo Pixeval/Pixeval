@@ -76,11 +76,11 @@ public sealed partial class NovelViewerPage
                     break;
                 }
             }
-        }; 
-    }
+        };
 
-    private void NovelViewerPage_OnLoaded(object sender, RoutedEventArgs e)
-    {
+        foreach (var entry in _viewModel.Entries)
+            SettingsPanel.Children.Add(entry.Element);
+
         TitleBarArea.SetDragRegionForCustomTitleBar();
         CommandBorderDropShadow.Receivers.Add(DocumentViewer);
         ThumbnailListDropShadow.Receivers.Add(DocumentViewer);
@@ -90,18 +90,7 @@ public sealed partial class NovelViewerPage
         DocumentViewer_OnTapped(null!, null!);
     }
 
-    private void Panel_OnLoaded(object sender, RoutedEventArgs e)
-    {
-        var panel = sender.To<StackPanel>();
-
-        foreach (var entry in _viewModel.Entries)
-            panel.Children.Add(entry.Element);
-    }
-
-    private void NovelViewerPage_OnUnloaded(object sender, RoutedEventArgs e)
-    {
-        _viewModel.Dispose();
-    }
+    ~NovelViewerPage() => _viewModel.Dispose();
 
     private async void FrameworkElement_OnDataContextChanged(FrameworkElement sender, DataContextChangedEventArgs args)
     {

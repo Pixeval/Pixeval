@@ -19,7 +19,7 @@ public static class EnhancedWindowPageExtension
     }
 }
 
-file record NavigateParameter(object? Parameter, ulong HWnd);
+public record NavigateParameter(object? Parameter, ulong HWnd);
 
 public partial class EnhancedWindowPage : EnhancedPage
 {

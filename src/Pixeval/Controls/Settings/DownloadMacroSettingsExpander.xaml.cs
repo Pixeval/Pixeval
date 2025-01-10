@@ -27,7 +27,28 @@ namespace Pixeval.Controls.Settings;
 
 public sealed partial class DownloadMacroSettingsExpander
 {
-    public DownloadMacroAppSettingsEntry Entry { get; set; } = null!;
+    public DownloadMacroAppSettingsEntry Entry
+    {
+        get;
+        set
+        {
+            field = value;
+            Entry.PropertyChanged += (_, _) => EntryOnPropertyChanged();
+            EntryOnPropertyChanged();
+
+            return;
+            void EntryOnPropertyChanged()
+            {
+                DownloadPathMacroTextBox.Document.GetText(TextGetOptions.None, out var text);
+                var t = text.ReplaceLineEndings("");
+                if (t == Entry.Value)
+                    return;
+                // The first time viewmodel get the value of DownloadPathMacro from AppSettings won't trigger the property changed event
+                _previousPath = Entry.Value;
+                SetPathMacroRichEditBoxDocument(Entry.Value);
+            }
+        }
+    } = null!;
 
     public DownloadMacroSettingsExpander() => InitializeComponent();
 
@@ -42,24 +63,6 @@ public sealed partial class DownloadMacroSettingsExpander
     /// its value will be reverted to this field.
     /// </summary>
     private string _previousPath = "";
-
-    private void DownloadMacroSettingsExpander_OnLoaded(object sender, RoutedEventArgs e)
-    {
-        Entry.PropertyChanged += (_, _) => EntryOnPropertyChanged();
-        EntryOnPropertyChanged();
-
-        return;
-        void EntryOnPropertyChanged()
-        {
-            DownloadPathMacroTextBox.Document.GetText(TextGetOptions.None, out var text);
-            var t = text.ReplaceLineEndings("");
-            if (t == Entry.Value)
-                return;
-            // The first time viewmodel get the value of DownloadPathMacro from AppSettings won't trigger the property changed event
-            _previousPath = Entry.Value;
-            SetPathMacroRichEditBoxDocument(Entry.Value);
-        }
-    }
 
     private void DownloadPathMacroTextBox_OnGotFocus(object sender, RoutedEventArgs e)
     {

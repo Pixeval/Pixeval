@@ -9,7 +9,6 @@
     xmlns:media="using:CommunityToolkit.WinUI.Media"
     xmlns:ui="using:CommunityToolkit.WinUI"
     Background="Transparent"
-    Loaded="FeedPage_OnLoaded"
     mc:Ignorable="d">
     <Page.Resources>
         <media:AttachedCardShadow x:Key="ContentPanelShadow" Offset="4" />

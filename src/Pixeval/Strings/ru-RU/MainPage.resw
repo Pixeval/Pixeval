@@ -147,9 +147,6 @@
   <data name="RecommendationsTab.Content" xml:space="preserve">
     <value>Рекомендации дня</value>
   </data>
-  <data name="DownloadAndHistoriesTab.Content" xml:space="preserve">
-    <value>Загрузки и история</value>
-  </data>
   <data name="DownloadListTab.Content" xml:space="preserve">
     <value>Список загрузок</value>
   </data>

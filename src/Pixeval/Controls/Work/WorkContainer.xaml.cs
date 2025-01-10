@@ -52,6 +52,7 @@ public partial class WorkContainer : IScrollViewHost
         // 而写在XAML中的属性会在Load之后才会被设置，所以我们不在XAML中设置而是手动
         WorkView.LayoutType = App.AppViewModel.AppSettings.ItemsViewLayoutType;
         WorkView.ThumbnailDirection = App.AppViewModel.AppSettings.ThumbnailDirection;
+        _ = WorkView.Focus(FocusState.Programmatic);
         return;
 
         static void AddCommandCallback(NotifyCollectionChangedEventArgs e, ICollection<ICommandBarElement> commands)
@@ -67,8 +68,6 @@ public partial class WorkContainer : IScrollViewHost
     public SimpleWorkType Type => WorkView.Type;
 
     public ISortableEntryViewViewModel ViewModel => WorkView.ViewModel;
-
-    private void WorkContainer_OnLoaded(object sender, RoutedEventArgs e) => _ = WorkView.Focus(FocusState.Programmatic);
 
     private void SelectAllToggleButton_OnClicked(object sender, RoutedEventArgs e)
     {

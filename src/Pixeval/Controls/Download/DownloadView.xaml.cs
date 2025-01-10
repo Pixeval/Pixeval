@@ -39,8 +39,5 @@ public sealed partial class DownloadView : UserControl
         _ = await viewModel.TryLoadThumbnailAsync(ViewModel);
     }
 
-    private void DownloadView_OnUnloaded(object sender, RoutedEventArgs e)
-    {
-        ViewModel.Dispose();
-    }
+    ~DownloadView() => ViewModel.Dispose();
 }

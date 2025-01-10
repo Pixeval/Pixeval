@@ -117,10 +117,7 @@ public sealed partial class IllustrationViewerPage
 
         // 第一次_viewModel.CurrentIllustrationIndex变化时，还没有订阅事件，所以不会触发DetailedPropertyChanged，需要手动触发
         Navigate<ImageViewerPage>(IllustrationImageShowcaseFrame, _viewModel.CurrentImage);
-    }
 
-    private void IllustrationViewerPage_OnLoaded(object sender, RoutedEventArgs e)
-    {
         if (!App.AppViewModel.AppSettings.BrowseOriginalImage)
         {
             _viewModel.AdditionalText = EntryViewerPageResources.BrowsingCompressedImage;
@@ -157,11 +154,6 @@ public sealed partial class IllustrationViewerPage
         }
 
         ExtensionsCommandBar.PrimaryCommands.Add(new AppBarSeparator());
-    }
-
-    private void IllustrationViewerPage_OnUnloaded(object sender, RoutedEventArgs e)
-    {
-        _viewModel.Dispose();
     }
 
     private async void FrameworkElement_OnDataContextChanged(FrameworkElement sender, DataContextChangedEventArgs e)
@@ -276,4 +268,6 @@ public sealed partial class IllustrationViewerPage
             ? Visibility.Visible
             : Visibility.Collapsed;
     }
+
+    ~IllustrationViewerPage() => _viewModel.Dispose();
 }

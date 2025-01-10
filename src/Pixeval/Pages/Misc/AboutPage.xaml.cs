@@ -24,11 +24,12 @@ public sealed partial class AboutPage
     {
         InitializeComponent();
         UniformGrid.SizeChanged += (sender, args) => sender.To<UniformGrid>().Columns = (int)(args.NewSize.Width / 140);
+        LoadData();
     }
 
     // private readonly ObservableCollection<Supporter> _supporters = [];
 
-    private async void AboutPage_OnLoaded(object sender, RoutedEventArgs e)
+    private async void LoadData()
     {
         LicenseTextBlock.Text = Encoding.UTF8.GetString(await AppInfo.GetAssetBytesAsync("GPLv3.md"));
         await foreach (var supporter in Supporter.GetSupportersAsync())

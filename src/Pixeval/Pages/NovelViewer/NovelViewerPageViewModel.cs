@@ -79,17 +79,17 @@ public partial class NovelViewerPageViewModel : DetailedUiObservableObject, IDis
         ViewModelSource?.Dispose();
     }
 
-    public NavigationViewTag[] Tags =>
+    public NavigationViewTag<WorkInfoPage, Novel> NovelInfoTag { get; } =
+        new(EntryViewerPageResources.InfoTabContent, null!);
+
+    public NavigationViewTag<CommentsPage, (SimpleWorkType, long Id)> CommentsTag { get; } =
+        new(EntryViewerPageResources.CommentsTabContent, default);
+
+    public IReadOnlyList<NavigationViewTag> Tags =>
     [
         NovelInfoTag,
         CommentsTag
     ];
-
-    public NavigationViewTag<WorkInfoPage, Novel> NovelInfoTag { get; } =
-        new(null!) { Content = EntryViewerPageResources.InfoTabContent };
-
-    public NavigationViewTag<CommentsPage, (SimpleWorkType, long Id)> CommentsTag { get; } =
-        new(default) { Content = EntryViewerPageResources.CommentsTabContent };
 
     #region Current相关
 

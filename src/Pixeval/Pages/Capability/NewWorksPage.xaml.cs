@@ -3,6 +3,7 @@
 
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Controls;
 using Pixeval.CoreApi.Global.Enum;
 
@@ -12,7 +13,7 @@ public sealed partial class NewWorksPage : IScrollViewHost
 {
     public NewWorksPage() => InitializeComponent();
 
-    private void NewWorksPage_OnLoaded(object sender, RoutedEventArgs e) => ChangeSource();
+    public override void OnPageActivated(NavigationEventArgs e) => ChangeSource();
 
     private void WorkTypeComboBox_OnSelectionChanged(object? sender, SelectionChangedEventArgs e) => ChangeSource();
 

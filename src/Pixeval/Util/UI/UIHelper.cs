@@ -243,13 +243,13 @@ public static partial class UiHelper
 
     public static async Task<T> AwaitPageTransitionAsync<T>(this Frame root) where T : Page
     {
-        await ThreadingHelper.SpinWaitAsync(() => root.Content is not T { IsLoaded: true });
+        await root.DispatcherQueue.SpinWaitAsync(() => root.Content is not T { IsLoaded: true });
         return (T)root.Content;
     }
 
     public static async Task<Page> AwaitPageTransitionAsync(this Frame root, Type pageType)
     {
-        await ThreadingHelper.SpinWaitAsync(() => root.Content is not Page { IsLoaded: true } || root.Content?.GetType() != pageType);
+        await root.DispatcherQueue.SpinWaitAsync(() => root.Content is not Page { IsLoaded: true } || root.Content?.GetType() != pageType);
         return (Page)root.Content;
     }
 

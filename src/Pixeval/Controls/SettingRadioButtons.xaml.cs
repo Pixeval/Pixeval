@@ -20,7 +20,11 @@ public sealed partial class SettingRadioButtons : UserControl
 {
     private RadioButtons Buttons => Content.To<RadioButtons>();
 
-    public SettingRadioButtons() => InitializeComponent();
+    public SettingRadioButtons()
+    {
+        InitializeComponent();
+        SelectedItemChanged(this, SelectedItem);
+    }
 
     private void RadioButton_OnClicked(object sender, RoutedEventArgs e)
     {
@@ -30,11 +34,6 @@ public sealed partial class SettingRadioButtons : UserControl
             SelectedItem = select.Item;
             SelectionChanged?.Invoke(this, new SelectionChangedEventArgs([], [select]));
         }
-    }
-
-    private void SettingRadioButtons_OnLoaded(object sender, RoutedEventArgs e)
-    {
-        SelectedItemChanged(this, SelectedItem);
     }
 
     private static void OnItemsSourceChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)

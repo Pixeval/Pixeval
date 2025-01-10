@@ -59,7 +59,7 @@ public sealed partial class EnhancedWindow : Window
         _owner.AppWindow.Closing += OnOwnerOnClosing;
     }
 
-    public event RoutedEventHandler FrameLoaded
+    public event RoutedEventHandler Initialized
     {
         add => _frame.Loaded += value;
         remove => _frame.Loaded -= value;

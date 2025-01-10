@@ -150,9 +150,6 @@
   <data name="RecommendationsTab.Content" xml:space="preserve">
     <value>每日推荐</value>
   </data>
-  <data name="DownloadAndHistoriesTab.Content" xml:space="preserve">
-    <value>下载与历史</value>
-  </data>
   <data name="DownloadListTab.Content" xml:space="preserve">
     <value>下载列表</value>
   </data>
@@ -228,5 +225,11 @@
   <data name="RefreshingSessionFailedContent" xml:space="preserve">
     <value>请重新登录
 如果该问题反复出现，请联系开发者寻求解决</value>
+  </data>
+  <data name="SearchWorksResult" xml:space="preserve">
+    <value>搜索作品结果</value>
+  </data>
+  <data name="SearchUsersResult" xml:space="preserve">
+    <value>搜索用户结果</value>
   </data>
 </root>

@@ -11,6 +11,7 @@ using Microsoft.UI.Xaml.Media;
 using WinUI3Utilities;
 using Windows.UI.Text;
 using Microsoft.UI.Text;
+using Microsoft.UI.Xaml.Media.Imaging;
 
 namespace Pixeval.Controls;
 

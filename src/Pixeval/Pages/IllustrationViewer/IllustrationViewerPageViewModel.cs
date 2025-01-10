@@ -84,21 +84,21 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
         ViewModelSource?.Dispose();
     }
 
-    public NavigationViewTag[] Tags =>
+    public NavigationViewTag<WorkInfoPage, Illustration> IllustrationInfoTag { get; } =
+        new(EntryViewerPageResources.InfoTabContent, null!);
+
+    public NavigationViewTag<CommentsPage, (SimpleWorkType, long Id)> CommentsTag { get; } =
+        new(EntryViewerPageResources.CommentsTabContent, default);
+
+    public NavigationViewTag<RelatedWorksPage, long> RelatedWorksTag { get; } =
+        new(EntryViewerPageResources.RelatedWorksTabContent, 0);
+
+    public IReadOnlyList<NavigationViewTag> Tags =>
     [
         IllustrationInfoTag,
         CommentsTag,
         RelatedWorksTag
     ];
-
-    public NavigationViewTag<WorkInfoPage, Illustration> IllustrationInfoTag { get; } =
-        new(null!) { Content = EntryViewerPageResources.InfoTabContent };
-
-    public NavigationViewTag<CommentsPage, (SimpleWorkType, long Id)> CommentsTag { get; } =
-        new(default) { Content = EntryViewerPageResources.CommentsTabContent };
-
-    public NavigationViewTag<RelatedWorksPage, long> RelatedWorksTag { get; } =
-        new(0) { Content = EntryViewerPageResources.RelatedWorksTabContent };
 
     #region Current相关
 

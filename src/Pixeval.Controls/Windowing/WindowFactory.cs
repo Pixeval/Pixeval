@@ -85,9 +85,9 @@ public static class WindowFactory
         return window;
     }
 
-    public static EnhancedWindow WithLoaded(this EnhancedWindow window, RoutedEventHandler onLoaded)
+    public static EnhancedWindow WithInitialized(this EnhancedWindow window, RoutedEventHandler onLoaded)
     {
-        window.FrameLoaded += onLoaded;
+        window.Initialized += onLoaded;
         return window;
     }
 
@@ -110,7 +110,7 @@ public static class WindowFactory
         });
         if (!isMaximized)
             window.AppWindow.FullDisplayOnScreen(size);
-        window.FrameLoaded += (_, _) => window.SetTheme(WindowSettings.Theme);
+        window.Initialized += (_, _) => window.SetTheme(WindowSettings.Theme);
         return window;
     }
 

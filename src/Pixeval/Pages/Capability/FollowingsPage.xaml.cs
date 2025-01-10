@@ -24,10 +24,7 @@ public sealed partial class FollowingsPage : IScrollViewHost
         ChangeSource();
     }
 
-    private void PrivacyPolicyComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
-    {
-        ChangeSource();
-    }
+    private void PrivacyPolicyComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e) => ChangeSource();
 
     private void ChangeSource()
     {

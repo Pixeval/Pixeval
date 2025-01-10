@@ -13,8 +13,6 @@
     xmlns:triggers="using:Pixeval.Util.Triggers"
     xmlns:windowing="using:Pixeval.Controls.Windowing"
     KeyboardAcceleratorPlacementMode="Hidden"
-    Loaded="NovelViewerPage_OnLoaded"
-    Unloaded="NovelViewerPage_OnUnloaded"
     mc:Ignorable="d">
     <controls:EnhancedWindowPage.Resources>
         <Thickness x:Key="NormalMargin">0,48,0,0</Thickness>
@@ -62,7 +60,7 @@
                                     Style="{StaticResource SubtitleTextBlockStyle}" />
                             </ContentPresenter>
                             <ScrollView>
-                                <StackPanel Loaded="Panel_OnLoaded" />
+                                <StackPanel x:Name="SettingsPanel" />
                             </ScrollView>
                         </controls1:DockPanel>
                     </SplitView.Pane>

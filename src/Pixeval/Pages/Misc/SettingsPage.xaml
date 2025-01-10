@@ -10,7 +10,6 @@
     xmlns:misc="using:Pixeval.Attributes"
     xmlns:misc1="using:Pixeval.Pages.Misc"
     xmlns:pixeval="using:Pixeval"
-    Unloaded="SettingsPage_OnUnloaded"
     mc:Ignorable="d">
     <controls1:EnhancedWindowPage.Resources>
         <Style
@@ -29,7 +28,7 @@
             controls:DockPanel.Dock="Top"
             Style="{StaticResource TitleTextBlockStyle}" />
         <ScrollView x:Name="SettingsPageScrollView">
-            <StackPanel Margin="20,0,20,20" Loaded="Panel_OnLoaded">
+            <StackPanel x:Name="SettingsPanel" Margin="20,0,20,20">
                 <!--  region Header  -->
                 <controls:DockPanel
                     HorizontalSpacing="20"

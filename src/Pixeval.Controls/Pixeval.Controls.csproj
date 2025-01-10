@@ -13,6 +13,9 @@
         <DefaultLanguage>zh-CN</DefaultLanguage>
         <IsTrimmable>true</IsTrimmable>
     </PropertyGroup>
+    <ItemGroup>
+      <None Remove="Windowing\TabPage.xaml" />
+    </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="CommunityToolkit.Labs.WinUI.Shimmer" Version="0.1.240517-build.1678" />
@@ -44,5 +47,10 @@
     </Target>
     <ItemGroup>
         <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="SourceItemGroup" />
+    </ItemGroup>
+    <ItemGroup>
+      <Page Update="Windowing\TabPage.xaml">
+        <Generator>MSBuild:Compile</Generator>
+      </Page>
     </ItemGroup>
 </Project>

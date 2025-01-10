@@ -65,7 +65,7 @@ public static class NovelViewerHelper
     public static void CreateWindowWithPage(Novel novel, object param)
     {
         WindowFactory.RootWindow.Fork(out var h)
-            .WithLoaded((o, _) => o.To<Frame>().NavigateTo<NovelViewerPage>(h,
+            .WithInitialized((o, _) => o.To<Frame>().NavigateTo<NovelViewerPage>(h,
                 param,
                 new SuppressNavigationTransitionInfo()))
             .WithSizeLimit(640, 360)

@@ -20,7 +20,11 @@ public sealed partial class WorkViewerSplitView
 {
     public const double OpenPaneLength = 330;
 
-    public WorkViewerSplitView() => InitializeComponent();
+    public WorkViewerSplitView()
+    {
+        InitializeComponent();
+        NavigationView.SelectedItem = (NavigationView.MenuItemsSource as IEnumerable<NavigationViewTag>)?.FirstOrDefault();
+    }
 
     private void NavigationViewOnSelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs e)
     {
@@ -50,11 +54,5 @@ public sealed partial class WorkViewerSplitView
             }
             else
                 splitView.SplitView.DisplayMode = SplitViewDisplayMode.Overlay;
-    }
-
-    private void NavigationView_OnLoaded(object sender, RoutedEventArgs e)
-    {
-        var navigationView = sender.To<NavigationView>();
-        navigationView.SelectedItem = (navigationView.MenuItemsSource as IEnumerable<NavigationViewTag>)?.FirstOrDefault();
     }
 }

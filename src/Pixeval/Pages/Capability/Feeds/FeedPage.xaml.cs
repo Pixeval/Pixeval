@@ -32,23 +32,17 @@ public sealed partial class FeedPage
 {
     private AbstractFeedItemViewModel? _lastSelected;
 
+    private readonly FeedPageViewModel _viewModel;
+
     public FeedPage()
     {
         InitializeComponent();
         _viewModel = new FeedPageViewModel();
-    }
-
-    private readonly FeedPageViewModel _viewModel;
-
-    private void FeedPage_OnLoaded(object sender, RoutedEventArgs e)
-    {
         _viewModel.DataProvider.ResetEngine(new FeedProxyFetchEngine(App.AppViewModel.MakoClient.Feeds())!);
         _viewModel.DataProvider.View.CollectionChanged += (o, args) =>
         {
-            if (args.Action is NotifyCollectionChangedAction.Add)
-            {
+            if (args.Action is NotifyCollectionChangedAction.Add) 
                 ItemsView.SelectedIndex = 0;
-            }
         };
     }
 

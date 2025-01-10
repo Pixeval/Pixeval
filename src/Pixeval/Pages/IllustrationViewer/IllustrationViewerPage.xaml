@@ -13,8 +13,6 @@
     xmlns:triggers="using:Pixeval.Util.Triggers"
     xmlns:windowing="using:Pixeval.Controls.Windowing"
     KeyboardAcceleratorPlacementMode="Hidden"
-    Loaded="IllustrationViewerPage_OnLoaded"
-    Unloaded="IllustrationViewerPage_OnUnloaded"
     mc:Ignorable="d">
     <controls:EnhancedWindowPage.Resources>
         <Thickness x:Key="NormalMargin">0,48,0,0</Thickness>
