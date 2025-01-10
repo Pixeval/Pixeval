@@ -10,12 +10,20 @@ using System.Net.Http.Json;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using Microsoft.UI.Xaml.Media.Imaging;
+using Pixeval.AppManagement;
 using Pixeval.Util.IO;
 
 namespace Pixeval.Pages.Misc;
 
 public record Supporter(string Nickname, string Name, Uri ProfilePicture, Uri ProfileUri)
 {
+    public static string BasePath { get; } = AppKnownFolders.Cache.CombinePath("GitHubSupporters");
+
+    public string AtName => "@" + Name;
+
+    public BitmapImage ProfileImage => new BitmapImage(new Uri(Path.Combine(BasePath, Name + ".png")));
+
     // ReSharper disable StringLiteralTypo
     private static readonly IEnumerable<(string Nickname, string Name)> _Supporters =
         new (string Nickname, string Name)[]
@@ -44,26 +52,28 @@ public record Supporter(string Nickname, string Name, Uri ProfilePicture, Uri Pr
 
     public static List<Supporter>? Supporters { get; private set; }
 
-    public static async IAsyncEnumerable<Supporter> GetSupportersAsync(string basePath)
+    public static async IAsyncEnumerable<Supporter> GetSupportersAsync()
     {
+        _ = Directory.CreateDirectory(BasePath);
+
         if (Supporters is null)
         {
             using var httpClient = new HttpClient();
             httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(
                 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36 Edg/121.0.0.0");
 
-            var path = Path.Combine(basePath, "github-supporters.json");
+            var path = Path.Combine(BasePath, "github-supporters.json");
             if (File.Exists(path))
             {
                 await using var fileStream = IoHelper.OpenAsyncRead(path);
 
-                if (await JsonSerializer.DeserializeAsync(fileStream, typeof(List<Supporter>), SupporterSerializeContext.Default) is List<Supporter> supporters
-                    && supporters.Count == _Supporters.Count())
+                if (await JsonSerializer.DeserializeAsync(fileStream, typeof(Supporter[]), SupporterSerializeContext.Default) is Supporter[] supporters
+                    && supporters.Length == _Supporters.Count())
                 {
-                    Supporters = supporters;
+                    Supporters = supporters.OrderBy(_ => Random.Shared.Next()).ToList();
                     foreach (var supporter in Supporters)
                     {
-                        await LoadAvatarAsync(supporter, basePath, httpClient);
+                        await LoadAvatarAsync(supporter, BasePath, httpClient);
                         yield return supporter;
                     }
                     yield break;
@@ -77,7 +87,7 @@ public record Supporter(string Nickname, string Name, Uri ProfilePicture, Uri Pr
                 {
                     var supporter = new Supporter(nickname, name, user.AvatarUrl, user.HtmlUrl);
                     Supporters.Add(supporter);
-                    await LoadAvatarAsync(supporter, basePath, httpClient);
+                    await LoadAvatarAsync(supporter, BasePath, httpClient);
                     yield return supporter;
                 }
             await using var fs = IoHelper.OpenAsyncWrite(path);
@@ -107,7 +117,7 @@ public record Supporter(string Nickname, string Name, Uri ProfilePicture, Uri Pr
 [JsonSerializable(typeof(GitHubUser))]
 public partial class GitHubUserSerializeContext : JsonSerializerContext;
 
-[JsonSerializable(typeof(List<Supporter>))]
+[JsonSerializable(typeof(Supporter[]))]
 public partial class SupporterSerializeContext : JsonSerializerContext;
 
 public class GitHubUser
