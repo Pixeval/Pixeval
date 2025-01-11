@@ -31,7 +31,7 @@
         <TabView.TabStripFooter>
             <Grid x:Name="CustomDragRegion" Background="Transparent">
                 <Button
-                    x:Uid="/TabPage/RevokeAllTabsButton"
+                    x:Name="RevokeAllTabsButton"
                     Width="30"
                     Height="30"
                     Margin="0,0,145,0"

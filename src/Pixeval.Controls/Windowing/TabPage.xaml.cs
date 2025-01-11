@@ -20,7 +20,12 @@ public sealed partial class TabPage
 
     private bool _ownsWindow;
 
-    public TabPage() => InitializeComponent();
+    public TabPage()
+    {
+        InitializeComponent();
+        // 在子程序集暂时不能使用x:Uid
+        ToolTipService.SetToolTip(RevokeAllTabsButton, TabPageResources.RevokeAllTabsButtonToolTipServiceToolTip);
+    }
 
     /// <inheritdoc />
     public override void OnPageActivated(NavigationEventArgs e, object? parameter)
