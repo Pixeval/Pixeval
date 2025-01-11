@@ -14,7 +14,7 @@ public sealed partial class SearchUsersPage : IScrollViewHost
 
     private string _searchText = "";
 
-    public override void OnPageActivated(NavigationEventArgs e)
+    public override void OnPageActivated(NavigationEventArgs e, object? parameter)
     {
         _searchText = e.Parameter.To<string>();
         ChangeSource();

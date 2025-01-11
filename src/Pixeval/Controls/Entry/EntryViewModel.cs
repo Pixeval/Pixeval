@@ -13,6 +13,7 @@ using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using WinUI3Utilities;
 using Symbol = FluentIcons.Common.Symbol;
+using Microsoft.UI.Xaml;
 
 namespace Pixeval.Controls;
 
@@ -56,13 +57,13 @@ public abstract class EntryViewModel<T>(T entry) : ObservableObject, IDisposable
     {
         UiHelper.ClipboardSetText(AppUri.OriginalString);
 
-        (args.Parameter as ulong?)?.SuccessGrowl(EntryItemResources.LinkCopiedToClipboard);
+        (args.Parameter as FrameworkElement)?.SuccessGrowl(EntryItemResources.LinkCopiedToClipboard);
     }
 
     private void GenerateWebLinkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
         UiHelper.ClipboardSetText(WebUri.OriginalString);
-        (args.Parameter as ulong?)?.SuccessGrowl(EntryItemResources.LinkCopiedToClipboard);
+        (args.Parameter as FrameworkElement)?.SuccessGrowl(EntryItemResources.LinkCopiedToClipboard);
     }
 
     private async void OpenInWebBrowserCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)

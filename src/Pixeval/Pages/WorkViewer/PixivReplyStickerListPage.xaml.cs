@@ -29,7 +29,7 @@ public sealed partial class PixivReplyStickerListPage
 
     public PixivReplyStickerListPage() => InitializeComponent();
 
-    public override void OnPageActivated(NavigationEventArgs e)
+    public override void OnPageActivated(NavigationEventArgs e, object? parameter)
     {
         _replyBarStickerClickEventHandler = (((Guid, EventHandler<StickerClickEventArgs>))e.Parameter).Item2;
     }

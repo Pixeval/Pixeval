@@ -3,10 +3,11 @@
 
 using CommunityToolkit.Mvvm.ComponentModel;
 using System.Runtime.CompilerServices;
+using Microsoft.UI.Xaml;
 
 namespace Pixeval.Util.ComponentModels;
 
-public partial class DetailedUiObservableObject(ulong hWnd) : UiObservableObject(hWnd), INotifyDetailedPropertyChanging, INotifyDetailedPropertyChanged
+public partial class DetailedUiObservableObject(FrameworkElement frameworkElement) : UiObservableObject(frameworkElement), INotifyDetailedPropertyChanging, INotifyDetailedPropertyChanged
 {
     public event DetailedPropertyChangedEventHandler? DetailedPropertyChanged;
 

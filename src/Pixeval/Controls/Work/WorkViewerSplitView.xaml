@@ -24,6 +24,7 @@
                     IsSettingsVisible="False"
                     MenuItemsSource="{x:Bind MenuItemsSource}"
                     PaneDisplayMode="Top"
+                    SelectedItem="{x:Bind local:C.FirstOrDefault(MenuItemsSource)}"
                     SelectionChanged="NavigationViewOnSelectionChanged">
                     <NavigationView.MenuItemTemplate>
                         <DataTemplate x:DataType="windowing:NavigationViewTag">

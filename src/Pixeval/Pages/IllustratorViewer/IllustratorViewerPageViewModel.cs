@@ -20,6 +20,7 @@ using Pixeval.Pages.Capability;
 using WinUI3Utilities;
 using Symbol = FluentIcons.Common.Symbol;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.UI.Xaml;
 using Pixeval.Util.IO.Caching;
 
 namespace Pixeval.Pages.IllustratorViewer;
@@ -59,7 +60,7 @@ public partial class IllustratorViewerPageViewModel : UiObservableObject
         RelatedUserTag
     ];
 
-    public IllustratorViewerPageViewModel(PixivSingleUserResponse userDetail, ulong hWnd) : base(hWnd)
+    public IllustratorViewerPageViewModel(PixivSingleUserResponse userDetail, FrameworkElement frameworkElement) : base(frameworkElement)
     {
         UserDetail = userDetail;
         IsFollowed = userDetail.UserEntity.IsFollowed;
@@ -144,13 +145,13 @@ public partial class IllustratorViewerPageViewModel : UiObservableObject
     {
         UiHelper.ClipboardSetText(MakoHelper.GenerateUserAppUri(Id).OriginalString);
 
-        HWnd.SuccessGrowl(EntryItemResources.LinkCopiedToClipboard);
+        FrameworkElement.SuccessGrowl(EntryItemResources.LinkCopiedToClipboard);
     }
 
     private void GenerateWebLinkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
         UiHelper.ClipboardSetText( MakoHelper.GenerateUserWebUri(Id).OriginalString);
-        (args.Parameter as ulong?)?.SuccessGrowl(EntryItemResources.LinkCopiedToClipboard);
+        (args.Parameter as FrameworkElement)?.SuccessGrowl(EntryItemResources.LinkCopiedToClipboard);
     }
 
     private async void OpenInWebBrowserCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)

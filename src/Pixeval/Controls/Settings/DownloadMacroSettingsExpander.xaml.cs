@@ -12,7 +12,6 @@ using Microsoft.UI.Text;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
-using Pixeval.Controls.Windowing;
 using Pixeval.Download;
 using Pixeval.Download.MacroParser;
 using Pixeval.Download.MacroParser.Ast;
@@ -122,7 +121,7 @@ public sealed partial class DownloadMacroSettingsExpander
     private void PathMacroTokenInputBox_OnTokenClick(object sender, ItemClickEventArgs e)
     {
         UiHelper.ClipboardSetText(e.ClickedItem.To<StringRepresentableItem>().StringRepresentation);
-        WindowFactory.GetWindowForElement(this).HWnd.SuccessGrowl(SettingsPageResources.MacroCopiedToClipboard);
+        this.SuccessGrowl(SettingsPageResources.MacroCopiedToClipboard);
     }
 
     private void SetPathMacroRichEditBoxDocument(string path)

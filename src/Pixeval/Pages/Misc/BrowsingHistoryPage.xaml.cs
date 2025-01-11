@@ -3,7 +3,6 @@
 
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Controls;
@@ -21,7 +20,7 @@ public sealed partial class BrowsingHistoryPage : IScrollViewHost
 {
     public BrowsingHistoryPage() => InitializeComponent();
 
-    public override void OnPageActivated(NavigationEventArgs e) => ChangeSource();
+    public override void OnPageActivated(NavigationEventArgs e, object? parameter) => ChangeSource();
 
     private void ComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e) => ChangeSource();
 

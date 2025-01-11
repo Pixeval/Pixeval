@@ -12,7 +12,7 @@ public sealed partial class RelatedUsersPage : IScrollViewHost
 {
     public RelatedUsersPage() => InitializeComponent();
 
-    public override async void OnPageActivated(NavigationEventArgs e)
+    public override async void OnPageActivated(NavigationEventArgs e, object? parameter)
     {
         if (e.Parameter is not long userId)
             userId = App.AppViewModel.PixivUid;

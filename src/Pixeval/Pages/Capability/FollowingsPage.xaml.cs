@@ -16,7 +16,7 @@ public sealed partial class FollowingsPage : IScrollViewHost
 
     private bool IsMe => _uid == App.AppViewModel.PixivUid;
 
-    public override void OnPageActivated(NavigationEventArgs e)
+    public override void OnPageActivated(NavigationEventArgs e, object? parameter)
     {
         if (e.Parameter is not long uid)
             uid = App.AppViewModel.PixivUid;

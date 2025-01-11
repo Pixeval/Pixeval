@@ -3,6 +3,7 @@
 
 using System;
 using System.Threading.Tasks;
+using Pixeval.Pages;
 using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Util.Threading;
 using Pixeval.Util.UI;
@@ -25,7 +26,7 @@ public class IllustrationAppActivationHandler : IAppActivationHandler
         {
             try
             {
-                await IllustrationViewerHelper.CreateWindowWithPageAsync(id);
+                await MainPage.Current.TabViewParameter.CreateIllustrationPageAsync(id);
             }
             catch (Exception e)
             {

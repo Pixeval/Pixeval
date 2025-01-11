@@ -5,10 +5,10 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Media.Animation;
 using Windows.Globalization;
 using Microsoft.Extensions.DependencyInjection;
 using Pixeval.AppManagement;
+using Pixeval.Controls.Windowing;
 using Pixeval.CoreApi;
 using Pixeval.Logging;
 using Pixeval.Settings.Models;
@@ -105,7 +105,7 @@ public sealed partial class LoginPage
         if (Current is null || App.AppViewModel.MakoClient == null!)
             ThrowHelper.Exception();
         Current._viewModel.AdvancePhase(LoginPhaseEnum.SuccessNavigating);
-        Current.NavigateParent<MainPage>(null, new DrillInNavigationTransitionInfo());
+        WindowFactory.GetWindowForElement(Current).PageContent = new MainPage();
         Current._viewModel.LogoutExit = false;
         AppInfo.SaveContext();
     }
@@ -134,12 +134,12 @@ public sealed partial class LoginPage
     {
         try
         {
-            await _viewModel.WebView2LoginAsync(HWnd, useNewAccount, () => DispatcherQueue.TryEnqueue(SuccessNavigating));
+            await _viewModel.WebView2LoginAsync(Window, useNewAccount, () => DispatcherQueue.TryEnqueue(SuccessNavigating));
             _viewModel.AdvancePhase(LoginPhaseEnum.WaitingForUserInput);
         }
         catch (Exception exception)
         {
-            _ = await HWnd.CreateAcknowledgementAsync(LoginPageResources.ErrorWhileLoggingInTitle,
+            _ = await this.CreateAcknowledgementAsync(LoginPageResources.ErrorWhileLoggingInTitle,
                 LoginPageResources.ErrorWhileLogginInContentFormatted.Format(exception + "\n" + exception.StackTrace));
             _viewModel.CloseWindow();
         }

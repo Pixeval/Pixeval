@@ -19,6 +19,7 @@ using QuestPDF.Fluent;
 using QuestPDF.Infrastructure;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.UI.Xaml;
 using Pixeval.Util.IO.Caching;
 using Pixeval.Utilities;
 
@@ -60,11 +61,11 @@ public partial class DocumentViewerViewModel(NovelContent novelContent) : Observ
 
     public ObservableCollection<List<Paragraph>> Pages { get; } = [];
 
-    public async Task LoadRtfContentAsync()
+    public async Task LoadRtfContentAsync(FrameworkElement frameworkElement)
     {
         var index = 0;
         var length = NovelContent.Text.Length;
-        var parser = new PixivNovelRtfParser();
+        var parser = new PixivNovelRtfParser(frameworkElement);
         Pages.Add(parser.Parse(NovelContent.Text, ref index, this));
         await Task.Yield();
         while (index < length)
@@ -211,12 +212,12 @@ public partial class DocumentViewerViewModel(NovelContent novelContent) : Observ
 
     private CancellationTokenSource LoadingCancellationTokenSource { get; } = new();
 
-    public static async Task<DocumentViewerViewModel> CreateAsync(NovelItemViewModel novelItem, Action<Task> callback)
+    public static async Task<DocumentViewerViewModel> CreateAsync(FrameworkElement frameworkElement, NovelItemViewModel novelItem, Action<Task> callback)
     {
         var novelContent = await novelItem.GetNovelContentAsync();
         var vm = new DocumentViewerViewModel(novelContent);
         var task1 = vm.LoadImagesAsync();
-        var task2 = vm.LoadRtfContentAsync();
+        var task2 = vm.LoadRtfContentAsync(frameworkElement);
         _ = Task.WhenAll(task1, task2).ContinueWith(callback, TaskScheduler.FromCurrentSynchronizationContext());
         BrowseHistoryPersistentManager.AddHistory(novelItem.Entry);
         return vm;

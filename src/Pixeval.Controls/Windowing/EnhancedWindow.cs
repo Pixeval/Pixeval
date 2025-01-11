@@ -5,7 +5,7 @@ using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Media.Animation;
+using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
 
 namespace Pixeval.Controls.Windowing;
@@ -15,45 +15,39 @@ public sealed partial class EnhancedWindow : Window
 {
     public ulong HWnd => AppWindow.Id.Value;
 
-    private readonly Frame _frame;
-
     private readonly EnhancedWindow? _owner;
+
+    public EnhancedPage PageContent
+    {
+        get => Content.To<Grid>().Children[0].To<EnhancedPage>();
+        set => Content.To<Grid>().Children[0] = value;
+    }
 
     public bool IsMaximize => AppWindow.Presenter is OverlappedPresenter { State: OverlappedPresenterState.Maximized };
 
-    /// <summary>
-    /// IT IS FORBIDDEN TO USE THIS CONSTRUCTOR DIRECTLY, USE <see cref="WindowFactory.Fork"/> INSTEAD
-    /// </summary>
-    internal EnhancedWindow()
+    internal EnhancedWindow(EnhancedPage content)
     {
-        _frame = new Frame
-        {
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Stretch
-        };
+        content.HorizontalAlignment = HorizontalAlignment.Stretch;
+        content.VerticalAlignment = VerticalAlignment.Stretch;
         var stackPanel = new StackPanel
         {
             HorizontalAlignment = HorizontalAlignment.Right,
             VerticalAlignment = VerticalAlignment.Bottom
         };
         Growl.SetGrowlParent(stackPanel, true);
-        Growl.SetToken(stackPanel, HWnd);
+        Growl.SetToken(stackPanel, this.HWnd);
         Content = new Grid
         {
             Children =
             {
-                _frame,
+                content,
                 stackPanel
             }
         };
         Closed += OnClosed;
     }
 
-    /// <summary>
-    /// IT IS FORBIDDEN TO USE THIS CONSTRUCTOR DIRECTLY, USE <see cref="WindowFactory.Fork"/> INSTEAD
-    /// </summary>
-    /// <param name="owner"></param>
-    internal EnhancedWindow(EnhancedWindow owner) : this()
+    internal EnhancedWindow(EnhancedWindow owner, EnhancedPage content) : this(content)
     {
         _owner = owner;
         _owner.AppWindow.Closing += OnOwnerOnClosing;
@@ -61,8 +55,8 @@ public sealed partial class EnhancedWindow : Window
 
     public event RoutedEventHandler Initialized
     {
-        add => _frame.Loaded += value;
-        remove => _frame.Loaded -= value;
+        add => PageContent.Loaded += value;
+        remove => PageContent.Loaded -= value;
     }
 
     private void OnClosed(object sender, WindowEventArgs e)
@@ -72,13 +66,5 @@ public sealed partial class EnhancedWindow : Window
         WeakReferenceMessenger.Default.UnregisterAll(this);
     }
 
-    private void OnOwnerOnClosing(AppWindow sender, AppWindowClosingEventArgs e)
-    {
-        Close();
-    }
-
-    public void Navigate<T>(object parameter, NavigationTransitionInfo infoOverride) where T : Page
-    {
-        _ = _frame.Navigate(typeof(T), parameter, infoOverride);
-    }
+    private void OnOwnerOnClosing(AppWindow sender, AppWindowClosingEventArgs e) => Close();
 }

@@ -14,7 +14,7 @@ namespace Pixeval.Pages.Capability.Feeds;
 
 public class FeedProxyFetchEngine(IFetchEngine<Feed?> feedFetchEngine) : IFetchEngine<IFeedEntry?>
 {
-    public IAsyncEnumerator<IFeedEntry?> GetAsyncEnumerator(CancellationToken cancellationToken = new())
+    public IAsyncEnumerator<IFeedEntry?> GetAsyncEnumerator(CancellationToken cancellationToken = default)
     {
         return new FeedProxyFetchEngineEnumerator(feedFetchEngine.GetAsyncEnumerator(cancellationToken));
     }
@@ -36,10 +36,7 @@ public class FeedProxyFetchEngine(IFetchEngine<Feed?> feedFetchEngine) : IFetchE
 
         public IFeedEntry? Current { get; private set; }
 
-        public ValueTask DisposeAsync()
-        {
-            return feedEnumerator.DisposeAsync();
-        }
+        public ValueTask DisposeAsync() => feedEnumerator.DisposeAsync();
 
         public async ValueTask<bool> MoveNextAsync()
         {
@@ -62,9 +59,7 @@ public class FeedProxyFetchEngine(IFetchEngine<Feed?> feedFetchEngine) : IFetchE
             _currentPostUser = feedEnumerator.Current?.PostUserId;
 
             if (list.Count is 0)
-            {
                 return false;
-            }
 
             Current = list.Count == 1
                 ? list.Single()?.Let(f => new IFeedEntry.SparseFeedEntry(f))

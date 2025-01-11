@@ -13,7 +13,6 @@ using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using WinUI3Utilities;
 using Pixeval.CoreApi.Global.Enum;
-using Pixeval.Controls.Windowing;
 using Pixeval.Filters;
 
 namespace Pixeval.Controls;
@@ -31,8 +30,6 @@ public partial class WorkContainer : IScrollViewHost
     public ObservableCollection<ICommandBarElement> PrimaryCommandsSupplements { get; } = [];
 
     public ObservableCollection<ICommandBarElement> SecondaryCommandsSupplements { get; } = [];
-
-    public ulong HWnd => WindowFactory.GetWindowForElement(this).HWnd;
 
     public WorkContainer()
     {
@@ -113,7 +110,7 @@ public partial class WorkContainer : IScrollViewHost
         foreach (var i in ViewModel.SelectedEntries)
             i.SaveCommand.Execute(null);
 
-        HWnd.InfoGrowl(WorkContainerResources.DownloadItemsQueuedFormatted.Format(ViewModel.SelectedEntries.Count));
+        this.InfoGrowl(WorkContainerResources.DownloadItemsQueuedFormatted.Format(ViewModel.SelectedEntries.Count));
     }
 
     private async void OpenAllInBrowserButton_OnClicked(object sender, RoutedEventArgs e)
@@ -139,7 +136,7 @@ public partial class WorkContainer : IScrollViewHost
             i.AddToBookmarkCommand.Execute((BookmarkTagSelector.SelectedTags, BookmarkTagSelector.IsPrivate, null as object));
 
         if (ViewModel.SelectedEntries.Count is var c and > 0)
-            HWnd.SuccessGrowl(WorkContainerResources.AddedAllToBookmarkContentFormatted.Format(c));
+            this.SuccessGrowl(WorkContainerResources.AddedAllToBookmarkContentFormatted.Format(c));
     }
 
     private void CancelSelectionButton_OnClicked(object sender, RoutedEventArgs e)
@@ -176,7 +173,7 @@ public partial class WorkContainer : IScrollViewHost
         }
         catch (Exception e)
         {
-            HWnd.ErrorGrowl(MacroParserResources.FilterQueryError, e.Message);
+            this.ErrorGrowl(MacroParserResources.FilterQueryError, e.Message);
         }
     }
 

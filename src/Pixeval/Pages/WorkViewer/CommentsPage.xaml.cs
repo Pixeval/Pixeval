@@ -21,7 +21,7 @@ public sealed partial class CommentsPage
 
     public CommentsPage() => InitializeComponent();
 
-    public override void OnPageActivated(NavigationEventArgs e)
+    public override void OnPageActivated(NavigationEventArgs e, object? parameter)
     {
         var (type, id) = ((SimpleWorkType, long))e.Parameter;
         var engine = type switch

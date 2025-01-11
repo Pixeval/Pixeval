@@ -31,7 +31,7 @@ public sealed partial class PixivReplyEmojiListPage
 
     public PixivReplyEmojiListPage() => InitializeComponent();
 
-    public override void OnPageActivated(NavigationEventArgs e)
+    public override void OnPageActivated(NavigationEventArgs e, object? parameter)
     {
         _replyBar = (PixivReplyBar)e.Parameter;
     }

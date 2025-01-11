@@ -1,4 +1,4 @@
-<controls:EnhancedWindowPage
+<controls:EnhancedPage
     x:Class="Pixeval.Pages.IllustrationViewer.ImageViewerPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -48,7 +48,7 @@
                         </AppBarButton>
                         <AppBarSeparator />
                         <!--<AppBarButton Command="{x:Bind _viewModel.IllustrationViewModel.GenerateLinkCommand}" />-->
-                        <AppBarButton Command="{x:Bind _viewModel.IllustrationViewModel.GenerateWebLinkCommand}" CommandParameter="{x:Bind HWnd}" />
+                        <AppBarButton Command="{x:Bind _viewModel.IllustrationViewModel.GenerateWebLinkCommand}" CommandParameter="{x:Bind}" />
                         <AppBarButton Command="{x:Bind _viewModel.IllustrationViewModel.OpenInWebBrowserCommand}" />
                         <!--<AppBarButton
                                 Command="{x:Bind _viewModel.ShowQrCodeCommand}"
@@ -79,4 +79,4 @@
             </StackPanel>
         </Grid>
     </Grid>
-</controls:EnhancedWindowPage>
+</controls:EnhancedPage>

@@ -22,7 +22,7 @@ public sealed partial class WorkInfoPage
 
     public WorkInfoPage() => InitializeComponent();
 
-    public override async void OnPageActivated(NavigationEventArgs e)
+    public override async void OnPageActivated(NavigationEventArgs e, object? parameter)
     {
         _viewModel = new(e.Parameter.To<IWorkEntry>());
         await SetWorkCaptionTextAsync();
@@ -36,7 +36,7 @@ public sealed partial class WorkInfoPage
 
     private async void IllustratorPersonPicture_OnClicked(object sender, RoutedEventArgs e)
     {
-        await IllustratorViewerHelper.CreateWindowWithPageAsync(_viewModel.Illustrator.Id);
+        await this.CreateIllustratorPageAsync(_viewModel.Illustrator.Id);
     }
 
     private async Task SetWorkCaptionTextAsync()

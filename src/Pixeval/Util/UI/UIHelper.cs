@@ -227,17 +227,17 @@ public static partial class UiHelper
         box.Document.SetText(TextSetOptions.None, "");
     }
 
-    public static IAsyncOperation<StorageFolder?> OpenFolderPickerAsync(this ulong hWnd) => WindowFactory.ForkedWindows[hWnd].PickSingleFolderAsync(PickerLocationId.PicturesLibrary);
+    public static IAsyncOperation<StorageFolder?> OpenFolderPickerAsync(this FrameworkElement frameworkElement) => WindowFactory.GetWindowForElement(frameworkElement).PickSingleFolderAsync(PickerLocationId.PicturesLibrary);
 
-    public static IAsyncOperation<StorageFile?> OpenFileOpenPickerAsync(this ulong hWnd) => WindowFactory.ForkedWindows[hWnd].PickSingleFileAsync(PickerLocationId.PicturesLibrary);
+    public static IAsyncOperation<StorageFile?> OpenFileOpenPickerAsync(this FrameworkElement frameworkElement) => WindowFactory.GetWindowForElement(frameworkElement).PickSingleFileAsync(PickerLocationId.PicturesLibrary);
 
-    public static IAsyncOperation<IReadOnlyList<StorageFile>> OpenMultipleDllsOpenPickerAsync(this ulong hWnd)
+    public static IAsyncOperation<IReadOnlyList<StorageFile>> OpenMultipleDllsOpenPickerAsync(this FrameworkElement frameworkElement)
     {
         var fileOpenPicker = new FileOpenPicker();
         fileOpenPicker.FileTypeFilter.Add(".dll");
         fileOpenPicker.FileTypeFilter.Add(".zip");
         fileOpenPicker.SuggestedStartLocation = PickerLocationId.Desktop;
-        InitializeWithWindow.Initialize(fileOpenPicker, (nint)hWnd);
+        InitializeWithWindow.Initialize(fileOpenPicker, (nint)WindowFactory.GetWindowForElement(frameworkElement).HWnd);
         return fileOpenPicker.PickMultipleFilesAsync();
     }
 

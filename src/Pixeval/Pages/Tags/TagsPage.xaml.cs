@@ -26,7 +26,7 @@ public sealed partial class TagsPage
 
     private async void ChangeWorkingPath_OnClicked(object sender, RoutedEventArgs e)
     {
-        if (await HWnd.OpenFolderPickerAsync() is { } folder) 
+        if (await this.OpenFolderPickerAsync() is { } folder) 
             _viewModel.WorkingDirectory = folder.Path;
     }
 

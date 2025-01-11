@@ -1,4 +1,4 @@
-<controls:EnhancedWindowPage
+<controls:EnhancedPage
     x:Class="Pixeval.Pages.Capability.Feeds.FeedPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -164,4 +164,4 @@
             </Grid>
         </Grid>
     </SplitView>
-</controls:EnhancedWindowPage>
+</controls:EnhancedPage>

@@ -2,8 +2,9 @@
 // Licensed under the GPL v3 License.
 
 using System;
-using System.Collections.Generic;
+using System.Collections;
 using System.Globalization;
+using System.Linq;
 using Windows.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -11,7 +12,6 @@ using Microsoft.UI.Xaml.Media;
 using WinUI3Utilities;
 using Windows.UI.Text;
 using Microsoft.UI.Text;
-using Microsoft.UI.Xaml.Media.Imaging;
 
 namespace Pixeval.Controls;
 
@@ -82,6 +82,8 @@ public static class C
         value.ToString(culture.DateTimeFormat.FullDateTimePattern);
 
     public static FontFamily ToFontFamily(string value) => new(value);
+
+    public static object? FirstOrDefault(object value) => value is IEnumerable e ? e.OfType<object>().FirstOrDefault() : null;
 
     public static string ToPercentageString(object value, int precision)
     {

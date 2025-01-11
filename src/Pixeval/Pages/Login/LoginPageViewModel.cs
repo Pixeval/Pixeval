@@ -29,11 +29,12 @@ using Pixeval.Util;
 using Pixeval.Util.UI;
 using WinUI3Utilities.Attributes;
 using Pixeval.CoreApi.Model;
+using Pixeval.Util.ComponentModels;
 
 namespace Pixeval.Pages.Login;
 
 [SettingsViewModel<LoginContext>(nameof(LoginContext))]
-public partial class LoginPageViewModel(FrameworkElement owner) : ObservableObject
+public partial class LoginPageViewModel(FrameworkElement frameworkElement) : UiObservableObject(frameworkElement)
 {
     /// <summary>
     /// 表示要不要展示<see cref="WebView"/>
@@ -63,7 +64,7 @@ public partial class LoginPageViewModel(FrameworkElement owner) : ObservableObje
 
     public void AdvancePhase(LoginPhaseEnum newPhase) => LoginPhase = newPhase;
 
-    public void CloseWindow() => WindowFactory.GetWindowForElement(owner).Close();
+    public void CloseWindow() => Window.Close();
 
     #region WebView
 
@@ -107,7 +108,7 @@ public partial class LoginPageViewModel(FrameworkElement owner) : ObservableObje
         return preferPort;
     }
 
-    public async Task WebView2LoginAsync(ulong hWnd, bool useNewAccount, Action navigated)
+    public async Task WebView2LoginAsync(EnhancedWindow window, bool useNewAccount, Action navigated)
     {
         var arguments = "";
         var port = NegotiatePort();
@@ -115,13 +116,13 @@ public partial class LoginPageViewModel(FrameworkElement owner) : ObservableObje
         var proxyServer = null as PixivAuthenticationProxyServer;
         if (EnableDomainFronting)
         {
-            if (await EnsureCertificateIsInstalled(hWnd) is not { } cert)
+            if (await EnsureCertificateIsInstalled() is not { } cert)
                 return;
             proxyServer = PixivAuthenticationProxyServer.Create(IPAddress.Loopback, port, cert);
             arguments += $" --ignore-certificate-errors --proxy-server=127.0.0.1:{port}";
         }
 
-        if (!await EnsureWebView2IsInstalled(hWnd))
+        if (!await EnsureWebView2IsInstalled())
             return;
         Environment.SetEnvironmentVariable("WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS", arguments);
         WebView = new();
@@ -142,7 +143,7 @@ public partial class LoginPageViewModel(FrameworkElement owner) : ObservableObje
                 }
                 catch
                 {
-                    _ = await owner.CreateAcknowledgementAsync(LoginPageResources.FetchingSessionFailedTitle,
+                    _ = await FrameworkElement.CreateAcknowledgementAsync(LoginPageResources.FetchingSessionFailedTitle,
                         LoginPageResources.FetchingSessionFailedContent);
                     CloseWindow();
                     return;
@@ -199,13 +200,13 @@ public partial class LoginPageViewModel(FrameworkElement owner) : ObservableObje
         WebView.Source = new Uri(PixivAuth.GenerateWebPageUrl(verifier));
     }
 
-    private async Task<X509Certificate2?> EnsureCertificateIsInstalled(ulong hWnd)
+    private async Task<X509Certificate2?> EnsureCertificateIsInstalled()
     {
         if (!await CheckFakeRootCertificateInstallationAsync())
         {
             var content = new CertificateRequiredDialog();
 
-            var cd = hWnd.CreateContentDialog(
+            var cd = FrameworkElement.CreateDialog(
                 LoginPageResources.RootCertificateInstallationRequiredTitle,
                 content,
                 LoginPageResources.RootCertificateInstallationRequiredPrimaryButtonText,
@@ -228,11 +229,11 @@ public partial class LoginPageViewModel(FrameworkElement owner) : ObservableObje
         return await AppInfo.GetFakeServerCertificateAsync();
     }
 
-    private async Task<bool> EnsureWebView2IsInstalled(ulong hWnd)
+    private async Task<bool> EnsureWebView2IsInstalled()
     {
         if (!CheckWebView2Installation())
         {
-            var dialogResult = await hWnd.CreateOkCancelAsync(LoginPageResources.WebView2InstallationRequiredTitle,
+            var dialogResult = await FrameworkElement.CreateOkCancelAsync(LoginPageResources.WebView2InstallationRequiredTitle,
                 LoginPageResources.WebView2InstallationRequiredContent);
             if (dialogResult is ContentDialogResult.Primary)
             {

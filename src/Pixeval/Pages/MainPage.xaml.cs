@@ -5,7 +5,6 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
-using System.Runtime;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
@@ -17,7 +16,6 @@ using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Navigation;
 using Microsoft.Windows.AppLifecycle;
 using Pixeval.Activation;
 using Pixeval.Database.Managers;
@@ -38,27 +36,35 @@ namespace Pixeval.Pages;
 
 public sealed partial class MainPage
 {
+    public static MainPage Current { get; private set; } = null!;
+
     private readonly MainPageViewModel _viewModel;
+
+    public FrameworkElement TabViewParameter => MainPageRootTab.TabView;
 
     public MainPage()
     {
-        _viewModel = new MainPageViewModel(HWnd, this);
+        Current = this;
+        _viewModel = new MainPageViewModel(this);
         InitializeComponent();
-        CustomizeTitleBar();
     }
 
-    private static async void CustomizeTitleBar()
+    private async void CustomizeTitleBar()
     {
         if (Microsoft.UI.Windowing.AppWindowTitleBar.IsCustomizationSupported())
+        {
+            Window.SetTitleBar(TitleBar);
             return;
+        }
 
         await Task.Yield();
         var logger = App.AppViewModel.AppServiceProvider.GetRequiredService<FileLogger>();
         logger.LogInformation("Customize title bar is not supported", null);
     }
 
-    public override async void OnPageActivated(NavigationEventArgs e, object? parameter)
+    public async void MainPage_OnLoaded(object sender, RoutedEventArgs e)
     {
+        CustomizeTitleBar();
         App.AppViewModel.AppLoggedIn();
 
         // The application is invoked by a protocol, call the corresponding protocol handler.
@@ -69,9 +75,8 @@ public sealed partial class MainPage
 
         _ = WeakReferenceMessenger.Default.TryRegister<MainPage, WorkTagClickedMessage>(this, (_, message) =>
         {
-            var window = WindowFactory.ForkedWindows[HWnd];
             MainPageAutoSuggestionBox.Text = message.Tag;
-            window.AppWindow.MoveInZOrderAtTop();
+            Window.AppWindow.MoveInZOrderAtTop();
             PerformSearchWork(message.Type, message.Tag);
         });
         using var client = new HttpClient();
@@ -86,6 +91,7 @@ public sealed partial class MainPage
     private async void NavigationView_OnItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs e)
     {
         await Task.Yield();
+        sender.SelectedItem = null;
 
         // The App.AppViewModel.IllustrationDownloadManager will be initialized after that of MainPage object
         // so, we cannot put a navigation tag inside MainPage and treat it as a field, since it will be initialized immediately after
@@ -100,12 +106,6 @@ public sealed partial class MainPage
             else
                 MainPageRootTab.AddPage(tag);
         }
-    }
-
-    private void MainPageRootTab_OnTabClosed(TabPage sender, TabClosedEventArgs e)
-    {
-        GCSettings.LargeObjectHeapCompactionMode = GCLargeObjectHeapCompactionMode.CompactOnce;
-        GC.Collect();
     }
 
     private async void KeywordAutoSuggestBox_GotFocus(object sender, RoutedEventArgs e)
@@ -171,15 +171,15 @@ public sealed partial class MainPage
             {
                 case SuggestionType.IllustId:
                     if (long.TryParse(sender.Text, out var illustId))
-                        await IllustrationViewerHelper.CreateWindowWithPageAsync(illustId);
+                        await TabViewParameter.CreateIllustrationPageAsync(illustId);
                     break;
                 case SuggestionType.NovelId:
                     if (long.TryParse(sender.Text, out var novelId))
-                        await NovelViewerHelper.CreateWindowWithPageAsync(novelId);
+                        await TabViewParameter.CreateNovelPageAsync(novelId);
                     break;
                 case SuggestionType.UserId:
                     if (long.TryParse(sender.Text, out var userId))
-                        await IllustratorViewerHelper.CreateWindowWithPageAsync(userId);
+                        await TabViewParameter.CreateIllustratorPageAsync(userId);
                     break;
                 case SuggestionType.UserSearch:
                     PerformSearchUser(sender.Text);
@@ -219,7 +219,7 @@ public sealed partial class MainPage
         NavigateToSettingEntry(ReverseSearchApiKeyAttribute.Value);
     }
 
-    private void NavigateToSettingEntry(SettingsEntryAttribute entry) => MainPageRootTab.AddPage(_viewModel.GetSettingsTag(entry));
+    private void NavigateToSettingEntry(SettingsEntryAttribute entry) => MainPageRootTab.AddPage(MainPageViewModel.GetSettingsTag(entry));
 
     /// <summary>
     /// The AutoSuggestBox does not have a 'Paste' event, so we check the keyboard event accordingly
@@ -246,7 +246,7 @@ public sealed partial class MainPage
     {
         if (App.AppViewModel.AppSettings.ReverseSearchApiKey is { Length: > 0 })
         {
-            if (await HWnd.OpenFileOpenPickerAsync() is { } file)
+            if (await this.OpenFileOpenPickerAsync() is { } file)
             {
                 await using var stream = await file.OpenStreamForReadAsync();
                 await _viewModel.ReverseSearchAsync(stream);
@@ -290,7 +290,7 @@ public sealed partial class MainPage
 
     private async void SelfAvatar_OnTapped(object sender, RoutedEventArgs e)
     {
-        await IllustratorViewerHelper.CreateWindowWithPageAsync(App.AppViewModel.PixivUid);
+        await TabViewParameter.CreateIllustratorPageAsync(App.AppViewModel.PixivUid);
     }
 
     private void TitleBar_OnPaneButtonClicked(object? sender, RoutedEventArgs e)

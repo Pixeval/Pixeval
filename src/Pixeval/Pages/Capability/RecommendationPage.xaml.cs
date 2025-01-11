@@ -11,7 +11,7 @@ public sealed partial class RecommendationPage
 {
     public RecommendationPage() => InitializeComponent();
 
-    public override void OnPageActivated(NavigationEventArgs e) => ChangeSource();
+    public override void OnPageActivated(NavigationEventArgs e, object? parameter) => ChangeSource();
 
     private void WorkTypeComboBox_OnSelectionChanged(object? sender, SelectionChangedEventArgs e) => ChangeSource();
 

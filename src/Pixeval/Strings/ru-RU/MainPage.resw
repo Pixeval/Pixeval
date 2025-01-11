@@ -133,7 +133,7 @@
     <value>История просмотров</value>
   </data>
   <data name="TagsTab.Content" xml:space="preserve">
-    <value>Управление тегами</value>
+    <value />
   </data>
   <data name="RecentPostsTab.Content" xml:space="preserve">
     <value>Новинки от подписок</value>

@@ -13,7 +13,6 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.Windows.AppLifecycle;
 using Pixeval.Activation;
 using Pixeval.AppManagement;
-using Pixeval.Controls;
 using Pixeval.Controls.Windowing;
 using Pixeval.Pages.Login;
 using System.Threading.Tasks;
@@ -43,7 +42,7 @@ public partial class App
         AppViewModel = new AppViewModel(this);
         BookmarkTag.AllCountedTagString = MiscResources.AllCountedTagName;
         AppInfo.SetNameResolvers(AppViewModel.AppSettings);
-        WindowFactory.Initialize(AppViewModel.AppSettings, AppInfo.IconApplicationUri);
+        WindowFactory.Initialize(AppViewModel.AppSettings, AppInfo.IconApplicationUri, AppInfo.SvgIconApplicationUri);
         AppInstance.GetCurrent().Activated += (_, arguments) => ActivationRegistrar.Dispatch(arguments);
         InitializeComponent();
     }
@@ -71,7 +70,7 @@ public partial class App
 
         await AppViewModel.InitializeAsync(isProtocolActivated);
 
-        WindowFactory.Create(out var w)
+        WindowFactory.Create(new LoginPage(), out var w)
             .WithInitialized(onLoaded: OnLoaded)
             .WithClosing((_, _) => AppInfo.SaveContextWhenExit()) // TODO: 从运行打开应用的时候不会ExitApp，就算是调用App.Current.Exit();
             .WithSizeLimit(800, 360)
@@ -84,7 +83,7 @@ public partial class App
         async void OnLoaded(object s, RoutedEventArgs _)
         {
             if (!AppViewModel.AppDebugTrace.ExitedSuccessfully
-                && await w.Content.To<FrameworkElement>().ShowContentDialogAsync(CheckExitedContentDialogResources.ContentDialogTitle,
+                && await w.PageContent.ShowDialogAsync(CheckExitedContentDialogResources.ContentDialogTitle,
                     new CheckExitedDialog(),
                     CheckExitedContentDialogResources.ContentDialogPrimaryButtonText,
                     "",
@@ -97,8 +96,6 @@ public partial class App
 
             AppViewModel.AppDebugTrace.ExitedSuccessfully = false;
             AppInfo.SaveDebugTrace(AppViewModel.AppDebugTrace);
-
-            s.To<Frame>().NavigateTo<LoginPage>(w.HWnd);
         }
     }
 

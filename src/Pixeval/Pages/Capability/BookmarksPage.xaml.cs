@@ -2,7 +2,6 @@
 // Licensed under the GPL v3 License.
 
 using System;
-using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Controls;
@@ -18,7 +17,7 @@ public sealed partial class BookmarksPage : IScrollViewHost
 
     public BookmarksPage() => InitializeComponent();
 
-    public override void OnPageActivated(NavigationEventArgs e)
+    public override void OnPageActivated(NavigationEventArgs e, object? parameter)
     {
         if (e.Parameter is not long uid)
             uid = App.AppViewModel.PixivUid;

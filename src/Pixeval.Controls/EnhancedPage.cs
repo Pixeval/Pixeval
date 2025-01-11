@@ -1,14 +1,19 @@
 // Copyright (c) Pixeval.Controls.
 // Licensed under the GPL v3 License.
 
+using System;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
+using Pixeval.Controls.Windowing;
 
 namespace Pixeval.Controls;
 
 public partial class EnhancedPage : Page
 {
+    public EnhancedWindow Window => WindowFactory.GetWindowForElement(this);
+
     public int ActivationCount { get; private set; }
 
     public bool ClearCacheAfterNavigation { get; set; } = true;
@@ -17,7 +22,7 @@ public partial class EnhancedPage : Page
     {
         base.OnNavigatedTo(e);
         ++ActivationCount;
-        OnPageActivated(e);
+        OnPageActivated(e, e.Parameter);
     }
 
     protected sealed override void OnNavigatingFrom(NavigatingCancelEventArgs e)
@@ -51,7 +56,32 @@ public partial class EnhancedPage : Page
     /// <see cref="OnNavigatingFrom"/>-><br/>
     /// <see cref="FrameworkElement.Unloaded"/>
     /// </summary>
-    public virtual void OnPageActivated(NavigationEventArgs e)
+    public virtual void OnPageActivated(NavigationEventArgs e, object? parameter)
     {
+    }
+
+    protected void Navigate(Type type, Frame frame, object? parameter, NavigationTransitionInfo? info = null)
+    {
+        _ = frame.Navigate(type, parameter, info);
+    }
+
+    protected void Navigate<TPage>(Frame frame, object? parameter, NavigationTransitionInfo? info = null) where TPage : EnhancedPage
+    {
+        Navigate(typeof(TPage), frame, parameter, info);
+    }
+
+    protected void NavigateParent<TPage>(object? parameter, NavigationTransitionInfo? info = null) where TPage : EnhancedPage
+    {
+        Navigate(typeof(TPage), Frame, parameter, info);
+    }
+
+    protected void NavigateSelf(object? parameter, NavigationTransitionInfo? info = null)
+    {
+        Navigate(GetType(), Frame, parameter, info);
+    }
+
+    protected void Navigate(Frame frame, NavigationViewTag tag, NavigationTransitionInfo? info = null)
+    {
+        Navigate(tag.NavigateTo, frame, tag.Parameter, info);
     }
 }

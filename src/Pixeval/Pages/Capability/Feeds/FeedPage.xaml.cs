@@ -2,7 +2,6 @@
 // Licensed under the GPL v3 License.
 
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.UI.Xaml;
@@ -20,14 +19,8 @@ using Pixeval.Pages.NovelViewer;
 using Pixeval.Utilities;
 using WinUI3Utilities;
 
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
-
 namespace Pixeval.Pages.Capability.Feeds;
 
-/// <summary>
-/// An empty page that can be used on its own or navigated to within a Frame.
-/// </summary>
 public sealed partial class FeedPage
 {
     private AbstractFeedItemViewModel? _lastSelected;
@@ -39,11 +32,6 @@ public sealed partial class FeedPage
         InitializeComponent();
         _viewModel = new FeedPageViewModel();
         _viewModel.DataProvider.ResetEngine(new FeedProxyFetchEngine(App.AppViewModel.MakoClient.Feeds())!);
-        _viewModel.DataProvider.View.CollectionChanged += (o, args) =>
-        {
-            if (args.Action is NotifyCollectionChangedAction.Add) 
-                ItemsView.SelectedIndex = 0;
-        };
     }
 
     private async void TimelineUnit_OnLoaded(object sender, RoutedEventArgs e)
@@ -124,15 +112,21 @@ public sealed partial class FeedPage
                 {
                     case FeedType.AddBookmark or FeedType.PostIllust:
                         var illustration = await _viewModel.PerformLoadAsync(() => App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(svmEntry.Id));
-                        FeedPageFrame.NavigateTo<IllustrationViewerPage>(HWnd, (new List<IllustrationItemViewModel> { new(illustration) }, 0), new CommonNavigationTransitionInfo());
+                        var illustrationViewer = new IllustrationViewerPage();
+                        illustrationViewer.SetViewModel((new List<IllustrationItemViewModel> { new(illustration) }, 0));
+                        FeedPageFrame.Content = illustrationViewer;
                         break;
                     case FeedType.AddNovelBookmark:
                         var novel = await _viewModel.PerformLoadAsync(() => App.AppViewModel.MakoClient.GetNovelFromIdAsync(svmEntry.Id));
-                        FeedPageFrame.NavigateTo<NovelViewerPage>(HWnd, (new List<NovelItemViewModel> { new(novel) }, 0), new CommonNavigationTransitionInfo());
+                        var novelItemView = new NovelViewerPage();
+                        novelItemView.SetViewModel((new List<NovelItemViewModel> { new(novel) }, 0));
+                        FeedPageFrame.Content = novelItemView;
                         break;
                     case FeedType.AddFavorite:
                         var user = await _viewModel.PerformLoadAsync(() => App.AppViewModel.MakoClient.GetUserFromIdAsync(svmEntry.Id, App.AppViewModel.AppSettings.TargetFilter));
-                        FeedPageFrame.NavigateTo<IllustratorViewerPage>(HWnd, user, new CommonNavigationTransitionInfo());
+                        var illustratorViewer = new IllustratorViewerPage();
+                        illustratorViewer.SetViewModel(user);
+                        FeedPageFrame.Content = illustratorViewer;
                         break;
                 }
 

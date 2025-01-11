@@ -2,7 +2,6 @@
 // Licensed under the GPL v3 License.
 
 using Windows.System;
-using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using WinUI3Utilities;
 using System;

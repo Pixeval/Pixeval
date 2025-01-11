@@ -10,9 +10,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.WinUI.Helpers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.Controls;
 using Pixeval.Controls.Windowing;
 using Pixeval.CoreApi;
@@ -59,14 +57,14 @@ public partial class MainPageViewModel : UiObservableObject
     public readonly NavigationViewTag<FeedPage> FeedTag =
         new(MainPageResources.FeedTabContent) { ImageUri = GetIconUri("feed") };
 
-    public readonly NavigationViewTag<TagsPage> TagsTag =
-        new(MainPageResources.TagsTabContent) { ImageUri = GetIconUri("tag") };
-
     public readonly NavigationViewTag<BrowsingHistoryPage> HistoriesTag =
         new(MainPageResources.HistoriesTabContent) { ImageUri = GetIconUri("history") };
 
     public readonly NavigationViewTag<DownloadPage> DownloadListTag =
         new(MainPageResources.DownloadListTabContent) { ImageUri = GetIconUri("download-list") };
+
+    public readonly NavigationViewTag<TagsPage> TagsTag =
+        new(MainPageResources.TagsTabContent) { ImageUri = GetIconUri("tag") };
 
     public readonly NavigationViewTag<ExtensionsPage> ExtensionsTag =
         new(MainPageResources.ExtensionsTabContent) { ImageUri = GetIconUri("extensions") };
@@ -79,8 +77,8 @@ public partial class MainPageViewModel : UiObservableObject
 
     public readonly NavigationViewTag<SettingsPage> SettingsTag;
 
-    public NavigationViewTag<SettingsPage> GetSettingsTag(object? parameter = null) => 
-        new(MainPageResources.SettingsTabContent, new NavigateParameter(parameter, HWnd)) { ImageUri = GetIconUri("settings") };
+    public static NavigationViewTag<SettingsPage> GetSettingsTag(object? parameter = null) => 
+        new(MainPageResources.SettingsTabContent, parameter) { ImageUri = GetIconUri("settings") };
 
     public readonly NavigationViewTag<SearchUsersPage> SearchUsersTag = new(MainPageResources.SearchUsersResult);
 
@@ -98,13 +96,13 @@ public partial class MainPageViewModel : UiObservableObject
         NewWorksTag,
         FeedTag,
         new NavigationViewSeparator(),
-        TagsTag,
         HistoriesTag,
         DownloadListTag
     ];
 
     public IReadOnlyList<INavigationViewItem> FooterMenuItems =>
     [
+        TagsTag,
         ExtensionsTag,
         HelpTag,
         AboutTag,
@@ -118,14 +116,9 @@ public partial class MainPageViewModel : UiObservableObject
     [ObservableProperty]
     public partial string UserName { get; set; } = App.AppViewModel.MakoClient.Me.Name;
 
-    private readonly FrameworkElement _owner;
-
-    public MainPageViewModel(ulong hWnd, FrameworkElement owner) : base(hWnd)
+    public MainPageViewModel(FrameworkElement owner) : base(owner)
     {
-        _owner = owner;
         SettingsTag = GetSettingsTag();
-        DownloadListTag.Parameter = FeedTag.Parameter = TagsTag.Parameter = ExtensionsTag.Parameter =
-            new NavigateParameter(null, hWnd);
         SubscribeTokenRefresh();
     }
 
@@ -143,7 +136,7 @@ public partial class MainPageViewModel : UiObservableObject
         _tokenRefreshedListener?.Detach();
         _tokenRefreshedListener = new(App.AppViewModel.MakoClient)
         {
-            OnEventAction = (m, changed, arg) => _owner.DispatcherQueue.TryEnqueue(async () =>
+            OnEventAction = (m, changed, arg) => FrameworkElement.DispatcherQueue.TryEnqueue(async () =>
             {
                 AvatarSource = await App.AppViewModel.AppServiceProvider.GetRequiredService<MemoryCache>().GetSourceFromMemoryCacheAsync(arg.ProfileImageUrls.Px50X50);
                 UserName = arg.Name;
@@ -155,8 +148,8 @@ public partial class MainPageViewModel : UiObservableObject
         _tokenRefreshFailedListener?.Detach();
         _tokenRefreshFailedListener = new(App.AppViewModel.MakoClient)
         {
-            OnEventAction = (m, changed, arg) => _owner.DispatcherQueue.TryEnqueue(() =>
-                _ = _owner.CreateAcknowledgementAsync(
+            OnEventAction = (m, changed, arg) => FrameworkElement.DispatcherQueue.TryEnqueue(() =>
+                _ = FrameworkElement.CreateAcknowledgementAsync(
                     MainPageResources.RefreshingSessionFailedTitle,
                     MainPageResources.RefreshingSessionFailedContent)),
             OnDetachAction = listener => makoClient.TokenRefreshedFailed -= listener.OnEvent
@@ -179,14 +172,14 @@ public partial class MainPageViewModel : UiObservableObject
                             await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(r.Data.PixivId))));
 
                 if (viewModels.Length is 0)
-                    _ = _owner.CreateAcknowledgementAsync(MainPageResources.ReverseSearchNotFoundTitle,
+                    _ = FrameworkElement.CreateAcknowledgementAsync(MainPageResources.ReverseSearchNotFoundTitle,
                             MainPageResources.ReverseSearchNotFoundContent);
                 else
-                    viewModels[0].CreateWindowWithPage(viewModels);
+                    FrameworkElement.CreateIllustrationPage(viewModels[0], viewModels);
             }
             else
             {
-                _ = await _owner.CreateAcknowledgementAsync(MainPageResources.ReverseSearchErrorTitle,
+                _ = await FrameworkElement.CreateAcknowledgementAsync(MainPageResources.ReverseSearchErrorTitle,
                     result.Header.Status > 0
                         ? MainPageResources.ReverseSearchServerSideErrorContent
                         : MainPageResources.ReverseSearchClientSideErrorContent);
@@ -194,7 +187,7 @@ public partial class MainPageViewModel : UiObservableObject
         }
         catch (Exception e)
         {
-            _ = await _owner.CreateAcknowledgementAsync(MiscResources.ExceptionEncountered, e.ToString());
+            _ = await FrameworkElement.CreateAcknowledgementAsync(MiscResources.ExceptionEncountered, e.ToString());
         }
     }
 

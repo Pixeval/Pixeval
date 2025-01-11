@@ -1,7 +1,6 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL v3 License.
 
-using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Controls;
@@ -13,7 +12,7 @@ public sealed partial class NewWorksPage : IScrollViewHost
 {
     public NewWorksPage() => InitializeComponent();
 
-    public override void OnPageActivated(NavigationEventArgs e) => ChangeSource();
+    public override void OnPageActivated(NavigationEventArgs e, object? parameter) => ChangeSource();
 
     private void WorkTypeComboBox_OnSelectionChanged(object? sender, SelectionChangedEventArgs e) => ChangeSource();
 

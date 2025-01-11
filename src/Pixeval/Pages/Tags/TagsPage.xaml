@@ -1,4 +1,4 @@
-<controls:EnhancedWindowPage
+<controls:EnhancedPage
     x:Class="Pixeval.Pages.Tags.TagsPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -42,4 +42,4 @@
             </controls:AdvancedItemsView.ItemTransitionProvider>
         </controls:AdvancedItemsView>
     </controls1:DockPanel>
-</controls:EnhancedWindowPage>
+</controls:EnhancedPage>

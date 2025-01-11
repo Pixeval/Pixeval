@@ -16,8 +16,10 @@ using WinUI3Utilities;
 
 namespace Pixeval.Controls;
 
-public sealed class PixivNovelRtfParser : PixivNovelParser<List<Paragraph>, ImageSource, DocumentViewerViewModel>
+public sealed class PixivNovelRtfParser(FrameworkElement frameworkElement) : PixivNovelParser<List<Paragraph>, ImageSource, DocumentViewerViewModel>
 {
+    private FrameworkElement FrameworkElement { get; } = frameworkElement;
+
     protected override List<Paragraph> Vector => [new()];
 
     protected override void AddLastSpan(List<Paragraph> result, string lastSpan)
@@ -94,7 +96,7 @@ public sealed class PixivNovelRtfParser : PixivNovelParser<List<Paragraph>, Imag
 
         var image = new LazyImage { Stretch = Stretch.Uniform };
         var button = new Button { Content = image, Padding = new(5) };
-        button.Click += async (_, _) => await IllustrationViewerHelper.CreateWindowWithPageAsync(imageId, viewModel.IllustrationLookup.Keys.Select(t => t.Item1).ToArray());
+        button.Click += async (_, _) => await FrameworkElement.CreateIllustrationPageAsync(imageId, viewModel.IllustrationLookup.Keys.Select(t => t.Item1).ToArray());
         var info = viewModel.IllustrationLookup[key];
         ToolTipService.SetToolTip(button, $"{info.Id}: {info.Illust.Title}");
         result.Add(new()

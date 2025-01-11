@@ -36,7 +36,7 @@ public sealed partial class DocumentViewer
         {
             viewer.LoadSuccessfully = false;
             viewer.IsLoading = true;
-            viewer.ViewModel = await DocumentViewerViewModel.CreateAsync(viewer.NovelItem, _ => viewer.LoadSuccessfully = true);
+            viewer.ViewModel = await DocumentViewerViewModel.CreateAsync(viewer, viewer.NovelItem, _ => viewer.LoadSuccessfully = true);
             viewer.ViewModel.JumpToPageRequested += newPage => viewer.CurrentPage = newPage;
             viewer.ViewModel.Pages.CollectionChanged += (_, _) => viewer.PageCount = viewer.ViewModel.Pages.Count;
             viewer.PageCount = viewer.ViewModel.Pages.Count;

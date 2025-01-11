@@ -133,7 +133,7 @@
     <value>History</value>
   </data>
   <data name="TagsTab.Content" xml:space="preserve">
-    <value>My Tags</value>
+    <value />
   </data>
   <data name="RecentPostsTab.Content" xml:space="preserve">
     <value>Updates</value>

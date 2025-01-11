@@ -15,7 +15,7 @@ public sealed partial class RelatedWorksPage
 
     public ThumbnailDirection ThumbnailDirection => App.AppViewModel.AppSettings.ThumbnailDirection;
 
-    public override void OnPageActivated(NavigationEventArgs e)
+    public override void OnPageActivated(NavigationEventArgs e, object? parameter)
     {
         _illustrationId = e.Parameter.To<long>();
         RelatedWorksIllustrationGrid.ResetEngine(App.AppViewModel.MakoClient.RelatedWorks(_illustrationId));

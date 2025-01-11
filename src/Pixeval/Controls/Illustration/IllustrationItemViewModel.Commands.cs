@@ -13,6 +13,7 @@ using System.IO;
 using System.Linq;
 using Pixeval.Download;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.UI.Xaml;
 using Pixeval.Util.IO;
 using Symbol = FluentIcons.Common.Symbol;
 
@@ -30,15 +31,15 @@ public partial class IllustrationItemViewModel
 
     protected override async void SaveCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
-        var hWnd = null as ulong?;
+        var hWnd = null as FrameworkElement;
         GetImageStreams? getImageStream = null;
         switch (args.Parameter)
         {
-            case (ulong h, GetImageStreams f):
+            case (FrameworkElement h, GetImageStreams f):
                 hWnd = h;
                 getImageStream = f;
                 break;
-            case ulong h:
+            case FrameworkElement h:
                 hWnd = h;
                 break;
             case null:
@@ -52,44 +53,44 @@ public partial class IllustrationItemViewModel
 
     protected override async void SaveAsCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
-        ulong hWnd;
+        FrameworkElement frameworkElement;
         GetImageStreams? getImageStream = null;
         switch (args.Parameter)
         {
-            case (ulong h, GetImageStreams f):
-                hWnd = h;
+            case (FrameworkElement h, GetImageStreams f):
+                frameworkElement = h;
                 getImageStream = f;
                 break;
-            case ulong h:
-                hWnd = h;
+            case FrameworkElement h:
+                frameworkElement = h;
                 break;
             default:
                 // 必须有Window来显示Picker
                 return;
         }
 
-        var folder = await hWnd.OpenFolderPickerAsync();
+        var folder = await frameworkElement.OpenFolderPickerAsync();
         if (folder is null)
         {
-            hWnd.InfoGrowl(EntryItemResources.SaveAsCancelled);
+            frameworkElement.InfoGrowl(EntryItemResources.SaveAsCancelled);
             return;
         }
 
         var name = Path.GetFileName(App.AppViewModel.AppSettings.DownloadPathMacro);
         var path = Path.Combine(folder.Path, name);
-        await SaveUtilityAsync(hWnd, getImageStream, path);
+        await SaveUtilityAsync(frameworkElement, getImageStream, path);
     }
 
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="hWnd">承载提示<see cref="TeachingTip"/>的控件，为<see langword="null"/>则不显示</param>
+    /// <param name="frameworkElement">承载提示<see cref="TeachingTip"/>的控件，为<see langword="null"/>则不显示</param>
     /// <param name="getImageStream">获取原图的<see cref="Stream"/>，为<see langword="null"/>则创建新的下载任务</param>
     /// <param name="path">文件路径</param>
     /// <returns></returns>
-    private async Task SaveUtilityAsync(ulong? hWnd, GetImageStreams? getImageStream, string path)
+    private async Task SaveUtilityAsync(FrameworkElement? frameworkElement, GetImageStreams? getImageStream, string path)
     {
-        var ib = hWnd?.InfoGrowlReturn("");
+        var ib = frameworkElement?.InfoGrowlReturn("");
         if (ib is not null)
             ib.Title = EntryItemResources.ImageProcessing;
 
@@ -104,23 +105,23 @@ public partial class IllustrationItemViewModel
         {
             var task = factory.Create(this, path);
             App.AppViewModel.DownloadManager.QueueTask(task);
-            hWnd?.RemoveSuccessGrowlAfterDelay(ib!, EntryItemResources.DownloadTaskCreated);
+            frameworkElement?.RemoveSuccessGrowlAfterDelay(ib!, EntryItemResources.DownloadTaskCreated);
         }
         else
         {
             var task = factory.CreateIntrinsic(this, IsUgoira ? (source, UgoiraMetadata) : source, path);
             App.AppViewModel.DownloadManager.QueueTask(task);
-            hWnd?.RemoveSuccessGrowlAfterDelay(ib!, EntryItemResources.Saved);
+            frameworkElement?.RemoveSuccessGrowlAfterDelay(ib!, EntryItemResources.Saved);
         }
     }
 
     protected override async void CopyCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
-        var hWnd = null as ulong?;
+        var hWnd = null as FrameworkElement;
         GetImageStreams getImageStream;
         switch (args.Parameter)
         {
-            case (ulong h, GetImageStreams f):
+            case (FrameworkElement h, GetImageStreams f):
                 hWnd = h;
                 getImageStream = f;
                 break;

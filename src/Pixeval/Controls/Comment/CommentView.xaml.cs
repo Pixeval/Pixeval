@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using Microsoft.UI.Xaml;
 using WinUI3Utilities.Attributes;
 
 namespace Pixeval.Controls;

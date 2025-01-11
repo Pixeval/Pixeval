@@ -10,12 +10,15 @@ using Windows.Graphics;
 using Windows.Win32;
 using Windows.Win32.Foundation;
 using Windows.Win32.Graphics.Gdi;
+using Microsoft.UI.Xaml.Media.Imaging;
 using WinUI3Utilities;
 
 namespace Pixeval.Controls.Windowing;
 
 public static class WindowFactory
 {
+    public static BitmapImage IconImageSource { get; private set; } = null!;
+
     public static string IconPath { get; set; } = "";
 
     public static IWindowSettings WindowSettings { get; set; } = null!;
@@ -28,7 +31,7 @@ public static class WindowFactory
 
     public static EnhancedWindow GetForkedWindows(ulong key) => _ForkedWindowsInternal[key];
 
-    public static void Initialize(IWindowSettings windowSettings, string iconPath)
+    public static void Initialize(IWindowSettings windowSettings, string iconPath, string svgIconPath)
     {
         AppHelper.InitializeIsDarkMode();
         WindowSettings = windowSettings;
@@ -39,6 +42,7 @@ public static class WindowFactory
             _ => Application.Current.RequestedTheme
         };
         IconPath = iconPath;
+        IconImageSource = new(new($"ms-appx:///{svgIconPath}"));
     }
 
     public static FrameworkElement GetContentFromHWnd(ulong hWnd)
@@ -55,17 +59,17 @@ public static class WindowFactory
                ?? ThrowHelper.ArgumentOutOfRange<UIElement, EnhancedWindow>(element, $"Specified {nameof(element)} is not existed in any of {nameof(ForkedWindows)}.");
     }
 
-    public static EnhancedWindow Create(out EnhancedWindow window)
+    public static EnhancedWindow Create(EnhancedPage content, out EnhancedWindow window)
     {
-        RootWindow = window = new EnhancedWindow();
+        RootWindow = window = new EnhancedWindow(content);
         window.Closed += (sender, _) => _ForkedWindowsInternal.Remove(sender.To<EnhancedWindow>().HWnd);
         _ForkedWindowsInternal[window.HWnd] = window;
         return window;
     }
 
-    public static EnhancedWindow Fork(this EnhancedWindow owner, out ulong hWnd)
+    public static EnhancedWindow Fork(this EnhancedWindow owner, EnhancedPage content, out ulong hWnd)
     {
-        var window = new EnhancedWindow(owner);
+        var window = new EnhancedWindow(owner, content);
         hWnd = window.HWnd;
         window.Closed += (sender, _) => _ForkedWindowsInternal.Remove(sender.To<EnhancedWindow>().HWnd);
         _ForkedWindowsInternal[window.HWnd] = window;

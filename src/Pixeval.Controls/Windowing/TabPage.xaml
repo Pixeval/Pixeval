@@ -1,27 +1,50 @@
-<controls:EnhancedWindowPage
+<controls:EnhancedPage
     x:Class="Pixeval.Controls.Windowing.TabPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Pixeval.Controls"
+    xmlns:controls1="using:CommunityToolkit.WinUI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:fluent="using:FluentIcons.WinUI"
     xmlns:local="using:Pixeval.Controls.Windowing"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Loaded="TabPage_OnLoaded"
     mc:Ignorable="d">
     <TabView
+        x:Name="TabViewControl"
         HorizontalAlignment="Stretch"
         VerticalAlignment="Stretch"
-        SelectedItem="{x:Bind SelectedItem, Mode=TwoWay}"
+        AllowDropTabs="True"
+        CanDragTabs="True"
+        CanReorderTabs="True"
+        IsAddTabButtonVisible="False"
         TabCloseRequested="TabView_OnTabCloseRequested"
-        TabItemsSource="{x:Bind ViewModels}">
-        <TabView.TabItemTemplate>
-            <DataTemplate x:DataType="local:NavigationViewTag">
-                <TabViewItem
-                    Header="{x:Bind Header}"
-                    IconSource="{x:Bind IconSource}"
-                    IsClosable="True">
-                    <Frame Loaded="Frame_OnLoaded" Tag="{x:Bind}" />
-                </TabViewItem>
-            </DataTemplate>
-        </TabView.TabItemTemplate>
+        TabDroppedOutside="TabView_OnTabDroppedOutside">
+        <TabView.TabStripHeader>
+            <Image
+                MaxWidth="16"
+                MaxHeight="16"
+                Margin="15,8,10,0"
+                Source="{x:Bind local:WindowFactory.IconImageSource}"
+                Visibility="{x:Bind controls:C.ToVisibility(_ownsWindow)}" />
+        </TabView.TabStripHeader>
+        <TabView.TabStripFooter>
+            <Grid x:Name="CustomDragRegion" Background="Transparent">
+                <Button
+                    x:Uid="/TabPage/RevokeAllTabsButton"
+                    Width="30"
+                    Height="30"
+                    Margin="0,0,145,0"
+                    Padding="0"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Stretch"
+                    controls1:DockPanel.Dock="Right"
+                    Click="RevokeButton_OnClick"
+                    Content="{fluent:SymbolIcon Symbol=ArrowStepBack,
+                                                FontSize=16}"
+                    Style="{StaticResource PixevalTransparentButtonStyle}"
+                    Visibility="{x:Bind controls:C.ToVisibility(_ownsWindow)}" />
+            </Grid>
+        </TabView.TabStripFooter>
     </TabView>
-</controls:EnhancedWindowPage>
+</controls:EnhancedPage>

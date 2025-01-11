@@ -23,7 +23,6 @@ using CommunityToolkit.WinUI.Controls;
 using CommunityToolkit.WinUI;
 using System.Threading.Tasks;
 using Windows.Foundation;
-using Windows.UI.ApplicationSettings;
 
 namespace Pixeval.Pages.Misc;
 
@@ -45,7 +44,7 @@ public sealed partial class SettingsPage : IDisposable, INotifyPropertyChanged
 
     public override async void OnPageActivated(NavigationEventArgs e, object? parameter)
     {
-        ViewModel = new SettingsPageViewModel(HWnd);
+        ViewModel = new SettingsPageViewModel(this);
         _scrollToAttribute = parameter as SettingsEntryAttribute;
 
         // ItemsControl会有缓动动画，ItemsRepeater会延迟加载，使用只好手动一次全部加载，以方便根据Tag导航

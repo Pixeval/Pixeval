@@ -40,7 +40,7 @@ public sealed partial class CommentItem
 
     private async void PosterPersonPicture_OnClicked(object sender, RoutedEventArgs e)
     {
-        await IllustratorViewerHelper.CreateWindowWithPageAsync(ViewModel.PosterId);
+        await this.CreateIllustratorPageAsync(ViewModel.PosterId);
     }
 
     private void OpenRepliesHyperlinkButton_OnClicked(object sender, RoutedEventArgs e) => RepliesHyperlinkButtonClick?.Invoke(ViewModel);

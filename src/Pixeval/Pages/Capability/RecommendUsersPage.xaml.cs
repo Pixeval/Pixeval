@@ -11,7 +11,7 @@ public sealed partial class RecommendUsersPage : IScrollViewHost
 {
     public RecommendUsersPage() => InitializeComponent();
 
-    public override void OnPageActivated(NavigationEventArgs e)
+    public override void OnPageActivated(NavigationEventArgs e, object? parameter)
     {
         IllustratorView.ViewModel.ResetEngine(App.AppViewModel.MakoClient.RecommendIllustrators());
     }
