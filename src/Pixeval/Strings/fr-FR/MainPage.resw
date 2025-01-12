@@ -130,7 +130,7 @@
     <value>Mon historique</value>
   </data>
   <data name="TagsTab.Content" xml:space="preserve">
-    <value>Gestion des tags</value>
+    <value>Tag</value>
   </data>
   <data name="RecentPostsTab.Content" xml:space="preserve">
     <value>Posts récents</value>
@@ -149,9 +149,6 @@
   </data>
   <data name="RecommendationsTab.Content" xml:space="preserve">
     <value>Coup de coeur</value>
-  </data>
-  <data name="DownloadAndHistoriesTab.Content" xml:space="preserve">
-    <value>Téléchargements et historiques</value>
   </data>
   <data name="DownloadListTab.Content" xml:space="preserve">
     <value>Liste des téléchargements</value>
@@ -221,5 +218,18 @@
   </data>
   <data name="ExtensionsTab.Content" xml:space="preserve">
     <value>扩展</value>
+  </data>
+  <data name="RefreshingSessionFailedTitle" xml:space="preserve">
+    <value>Rafraichissement de session échoué</value>
+  </data>
+  <data name="RefreshingSessionFailedContent" xml:space="preserve">
+    <value>Veuillez re-authentifier
+Veuillez contacter les développeurs en cas de problème récurrent</value>
+  </data>
+  <data name="SearchWorksResult" xml:space="preserve">
+    <value>搜索作品结果</value>
+  </data>
+  <data name="SearchUsersResult" xml:space="preserve">
+    <value>搜索用户结果</value>
   </data>
 </root>
