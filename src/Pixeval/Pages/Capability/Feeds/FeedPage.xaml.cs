@@ -65,21 +65,19 @@ public sealed partial class FeedPage
         switch (entry.Type)
         {
             case FeedType.AddBookmark or FeedType.AddNovelBookmark:
-                contentTextBlock?.Inlines.Add(new Run { Text = isSparse ? FeedPageResources.SparseBookmarkPrefix : FeedPageResources.CondensedBookmarkPrefix });
+                contentTextBlock?.Inlines.Add(new Run { Text = isSparse ? _SparseBookmarkPrefix : _CondensedBookmarkPrefix });
                 contentTextBlock?.Inlines.Add(feedNameString);
-                contentTextBlock?.Inlines.Add(new Run { Text = isSparse ? FeedPageResources.SparseBookmarkSuffix : FeedPageResources.CondensedBookmarkFormattedSuffix.Format(entriesLengthIfCondensed) });
+                contentTextBlock?.Inlines.Add(new Run { Text = isSparse ? _SparseBookmarkSuffix : _CondensedBookmarkFormattedSuffix.Format(entriesLengthIfCondensed) });
                 break;
             case FeedType.PostIllust:
-                contentTextBlock?.Inlines.Add(new Run { Text = isSparse ? FeedPageResources.SparsePostIllustPrefix : FeedPageResources.CondensedPostIllustPrefix });
+                contentTextBlock?.Inlines.Add(new Run { Text = isSparse ? _SparsePostIllustPrefix : _CondensedPostIllustPrefix });
                 contentTextBlock?.Inlines.Add(feedNameString);
-                if (!isSparse)
-                    contentTextBlock?.Inlines.Add(new Run { Text = FeedPageResources.CondensedPostIllustFormattedSuffix.Format(entriesLengthIfCondensed) });
+                contentTextBlock?.Inlines.Add(new Run { Text = isSparse ? _SparsePostIllustSuffix : _CondensedPostIllustFormattedSuffix.Format(entriesLengthIfCondensed) });
                 break;
             case FeedType.AddFavorite:
-                contentTextBlock?.Inlines.Add(new Run { Text = FeedPageResources.SparseFollowUserPrefix });
+                contentTextBlock?.Inlines.Add(new Run { Text = isSparse ? _SparseFollowUserPrefix : _CondensedFollowUserIllustPrefix });
                 contentTextBlock?.Inlines.Add(feedNameString);
-                if (!isSparse)
-                    contentTextBlock?.Inlines.Add(new Run { Text = FeedPageResources.CondensedFollowUserFormattedSuffix.Format(entriesLengthIfCondensed) });
+                contentTextBlock?.Inlines.Add(new Run { Text = isSparse ? _SparseFollowUserSuffix : _CondensedFollowUserFormattedSuffix.Format(entriesLengthIfCondensed) });
                 break;
         }
 
@@ -150,5 +148,40 @@ public sealed partial class FeedPage
 
                 break;
         }
+    }
+
+    private static readonly string _SparseBookmarkPrefix;
+    private static readonly string _SparseBookmarkSuffix;
+    private static readonly string _SparsePostIllustPrefix;
+    private static readonly string _SparsePostIllustSuffix;
+    private static readonly string _SparseFollowUserPrefix;
+    private static readonly string _SparseFollowUserSuffix;
+    private static readonly string _CondensedBookmarkPrefix;
+    private static readonly string _CondensedBookmarkFormattedSuffix;
+    private static readonly string _CondensedPostIllustPrefix;
+    private static readonly string _CondensedPostIllustFormattedSuffix;
+    private static readonly string _CondensedFollowUserIllustPrefix;
+    private static readonly string _CondensedFollowUserFormattedSuffix;
+
+    static FeedPage()
+    {
+        var sparseBookmark = FeedPageResources.SparseBookmarkFormatted.Split("{0}");
+        _SparseBookmarkPrefix = sparseBookmark[0];
+        _SparseBookmarkSuffix = sparseBookmark[1];
+        var sparsePostIllust = FeedPageResources.SparsePostIllustFormatted.Split("{0}");
+        _SparsePostIllustPrefix = sparsePostIllust[0];
+        _SparsePostIllustSuffix = sparsePostIllust[1];
+        var sparseFollowUser = FeedPageResources.SparseFollowUserFormatted.Split("{0}");
+        _SparseFollowUserPrefix = sparseFollowUser[0];
+        _SparseFollowUserSuffix = sparseFollowUser[1];
+        var condensedBookmark = FeedPageResources.CondensedBookmarkFormatted.Split("{0}");
+        _CondensedBookmarkPrefix = condensedBookmark[0];
+        _CondensedBookmarkFormattedSuffix = condensedBookmark[1];
+        var condensedPostIllust = FeedPageResources.CondensedPostIllustFormatted.Split("{0}");
+        _CondensedPostIllustPrefix = condensedPostIllust[0];
+        _CondensedPostIllustFormattedSuffix = condensedPostIllust[1];
+        var condensedFollowUser = FeedPageResources.CondensedFollowUserFormatted.Split("{0}");
+        _CondensedFollowUserIllustPrefix = condensedFollowUser[0];
+        _CondensedFollowUserFormattedSuffix = condensedFollowUser[1];
     }
 }
