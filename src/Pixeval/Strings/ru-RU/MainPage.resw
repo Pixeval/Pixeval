@@ -130,7 +130,7 @@
     <value>История просмотров</value>
   </data>
   <data name="TagsTab.Content" xml:space="preserve">
-    <value>Управление тегами</value>
+    <value>Тег</value>
   </data>
   <data name="RecentPostsTab.Content" xml:space="preserve">
     <value>Новинки от подписок</value>
@@ -149,9 +149,6 @@
   </data>
   <data name="RecommendationsTab.Content" xml:space="preserve">
     <value>Рекомендации дня</value>
-  </data>
-  <data name="DownloadAndHistoriesTab.Content" xml:space="preserve">
-    <value>Загрузки и история</value>
   </data>
   <data name="DownloadListTab.Content" xml:space="preserve">
     <value>Список загрузок</value>
@@ -223,5 +220,17 @@
   </data>
   <data name="ExtensionsTab.Content" xml:space="preserve">
     <value>Расширения</value>
+  </data>
+  <data name="RefreshingSessionFailedTitle" xml:space="preserve">
+    <value>Не удалось обновить сессию</value>
+  </data>
+  <data name="RefreshingSessionFailedContent" xml:space="preserve">
+    <value>Пожалуйста, войдите снова</value>
+  </data>
+  <data name="SearchWorksResult" xml:space="preserve">
+    <value>搜索作品结果</value>
+  </data>
+  <data name="SearchUsersResult" xml:space="preserve">
+    <value>搜索用户结果</value>
   </data>
 </root>
