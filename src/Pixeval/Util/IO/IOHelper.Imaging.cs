@@ -8,6 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.FileProperties;
+using Windows.Storage.Streams;
 using Microsoft.UI.Xaml.Media;
 using Pixeval.CoreApi.Net.Response;
 using Pixeval.Download.Macros;
@@ -33,12 +34,21 @@ public static partial class IoHelper
 {
     public static async Task<ImageSource> DecodeBitmapImageAsync(this Stream imageStream, bool disposeOfImageStream, int? desiredWidth = null)
     {
+        var bitmapImage = await imageStream.AsRandomAccessStream().DecodeBitmapImageAsync(false, desiredWidth);
+        if (disposeOfImageStream)
+            await imageStream.DisposeAsync();
+
+        return bitmapImage;
+    }
+
+    public static async Task<ImageSource> DecodeBitmapImageAsync(this IRandomAccessStream imageStream, bool disposeOfImageStream, int? desiredWidth = null)
+    {
         var bitmapImage = new BitmapImage { DecodePixelType = DecodePixelType.Logical };
         if (desiredWidth is { } width)
             bitmapImage.DecodePixelWidth = width;
-        await bitmapImage.SetSourceAsync(imageStream.AsRandomAccessStream());
+        await bitmapImage.SetSourceAsync(imageStream);
         if (disposeOfImageStream)
-            await imageStream.DisposeAsync();
+            imageStream.Dispose();
 
         return bitmapImage;
     }
@@ -49,7 +59,7 @@ public static partial class IoHelper
         {
             var file = await StorageFile.GetFileFromPathAsync(path);
             var thumbnail = await file.GetThumbnailAsync(ThumbnailMode.SingleItem, size);
-            return await thumbnail.AsStreamForRead().DecodeBitmapImageAsync(true);
+            return await thumbnail.DecodeBitmapImageAsync(true);
         }
         catch
         {

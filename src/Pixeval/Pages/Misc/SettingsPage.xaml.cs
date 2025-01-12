@@ -21,7 +21,6 @@ using Pixeval.Utilities;
 using WinUI3Utilities;
 using CommunityToolkit.WinUI.Controls;
 using CommunityToolkit.WinUI;
-using System.Threading.Tasks;
 using Windows.Foundation;
 
 namespace Pixeval.Pages.Misc;
@@ -42,7 +41,7 @@ public sealed partial class SettingsPage : IDisposable, INotifyPropertyChanged
 
     public SettingsPage() => InitializeComponent();
 
-    public override async void OnPageActivated(NavigationEventArgs e, object? parameter)
+    public override void OnPageActivated(NavigationEventArgs e, object? parameter)
     {
         ViewModel = new SettingsPageViewModel(this);
         _scrollToAttribute = parameter as SettingsEntryAttribute;
@@ -65,11 +64,10 @@ public sealed partial class SettingsPage : IDisposable, INotifyPropertyChanged
 
         if (frameworkElement is not null)
         {
-            // ScrollView第一次导航的时候会有一个偏移，等待大小确定后滚动
-            await Task.Delay(20);
             var position = frameworkElement
                 .TransformToVisual(SettingsPanel)
-                .TransformPoint(new Point(0, 0));
+                // 神秘的偏移量
+                .TransformPoint(new Point(0, -160));
 
             _ = SettingsPageScrollView.ScrollTo(position.X, position.Y);
         }

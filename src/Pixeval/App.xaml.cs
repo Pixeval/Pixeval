@@ -8,7 +8,6 @@
 using System;
 using System.Linq;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.Windows.AppLifecycle;
 using Pixeval.Activation;
@@ -21,7 +20,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Pixeval.Logging;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
-using Pixeval.Controls.DialogContent;
 using Pixeval.CoreApi.Model;
 using WinUI3Utilities;
 
@@ -80,19 +78,19 @@ public partial class App
         RegisterUnhandledExceptionHandler();
         return;
 
-        async void OnLoaded(object s, RoutedEventArgs _)
+        void OnLoaded(object s, RoutedEventArgs _)
         {
-            if (!AppViewModel.AppDebugTrace.ExitedSuccessfully
-                && await w.PageContent.ShowDialogAsync(CheckExitedContentDialogResources.ContentDialogTitle,
-                    new CheckExitedDialog(),
-                    CheckExitedContentDialogResources.ContentDialogPrimaryButtonText,
-                    "",
-                    CheckExitedContentDialogResources.ContentDialogCloseButtonText) is ContentDialogResult.Primary)
-            {
-                AppInfo.SaveContextWhenExit();
-                w.Close();
-                return;
-            }
+            //if (!AppViewModel.AppDebugTrace.ExitedSuccessfully
+            //    && await w.PageContent.ShowDialogAsync(CheckExitedContentDialogResources.ContentDialogTitle,
+            //        new CheckExitedDialog(),
+            //        CheckExitedContentDialogResources.ContentDialogPrimaryButtonText,
+            //        "",
+            //        CheckExitedContentDialogResources.ContentDialogCloseButtonText) is ContentDialogResult.Primary)
+            //{
+            //    AppInfo.SaveContextWhenExit();
+            //    w.Close();
+            //    return;
+            //}
 
             AppViewModel.AppDebugTrace.ExitedSuccessfully = false;
             AppInfo.SaveDebugTrace(AppViewModel.AppDebugTrace);
