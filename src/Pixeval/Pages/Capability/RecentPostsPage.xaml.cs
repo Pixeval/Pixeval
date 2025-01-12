@@ -1,8 +1,8 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL v3 License.
 
-using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Controls;
 using Pixeval.CoreApi.Global.Enum;
 
@@ -12,7 +12,7 @@ public sealed partial class RecentPostsPage : IScrollViewHost
 {
     public RecentPostsPage() => InitializeComponent();
 
-    private void RecentPostsPage_OnLoaded(object sender, RoutedEventArgs e) => ChangeSource();
+    public override void OnPageActivated(NavigationEventArgs e, object? parameter) => ChangeSource();
 
     private void ComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e) => ChangeSource();
 

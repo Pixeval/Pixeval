@@ -1,4 +1,4 @@
-<controls:EnhancedWindowPage
+<controls:EnhancedPage
     x:Class="Pixeval.Pages.MainPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -12,7 +12,7 @@
     xmlns:windowing="using:Pixeval.Controls.Windowing"
     Loaded="MainPage_OnLoaded"
     mc:Ignorable="d">
-    <controls:EnhancedWindowPage.Resources>
+    <controls:EnhancedPage.Resources>
         <DataTemplate x:Key="CommonSuggestionModelTemplate" x:DataType="local:SuggestionModel">
             <controls1:DockPanel Padding="0,10" HorizontalSpacing="10">
                 <ContentPresenter
@@ -45,16 +45,34 @@
             IllustrationHeader="/MainPage/IllustrationHeaderSuggestionTextBlock"
             NovelHeader="/MainPage/NovelHeaderSuggestionTextBlock"
             SettingEntryHeader="/MainPage/SettingsEntryHeaderSuggestionTextBlock" />
-    </controls:EnhancedWindowPage.Resources>
+        <DataTemplate x:Key="NavigationViewTagDataTemplate" x:DataType="windowing:NavigationViewTag">
+            <NavigationViewItem
+                Content="{x:Bind}"
+                Icon="{x:Bind Icon}"
+                Tag="{x:Bind}">
+                <NavigationViewItem.InfoBadge>
+                    <InfoBadge Style="{StaticResource AttentionIconInfoBadgeStyle}" Visibility="{x:Bind controls:C.ToVisibility(ShowIconBadge), Mode=OneWay}" />
+                </NavigationViewItem.InfoBadge>
+            </NavigationViewItem>
+        </DataTemplate>
+        <DataTemplate x:Key="NavigationViewSeparatorDataTemplate" x:DataType="windowing:NavigationViewSeparator">
+            <NavigationViewItemSeparator />
+        </DataTemplate>
+        <local:NavigationViewItemDataTemplateSelector
+            x:Key="NavigationViewItemDataTemplateSelector"
+            NavigationViewSeparatorDataTemplate="{StaticResource NavigationViewSeparatorDataTemplate}"
+            NavigationViewTagDataTemplate="{StaticResource NavigationViewTagDataTemplate}" />
+    </controls:EnhancedPage.Resources>
     <controls1:DockPanel>
         <controls1:TitleBar
+            x:Name="TitleBar"
             Title="{x:Bind pixeval:AppInfo.AppIdentifier}"
             VerticalAlignment="Top"
             controls1:DockPanel.Dock="Top"
             DisplayMode="Tall"
             IsPaneButtonVisible="True"
             PaneButtonClick="TitleBar_OnPaneButtonClicked"
-            Window="{x:Bind windowing:WindowFactory.GetForkedWindows(HWnd)}">
+            Window="{x:Bind Window}">
             <controls1:TitleBar.Icon>
                 <ImageIcon Source="ms-appx:///Assets/Images/logo.svg" />
             </controls1:TitleBar.Icon>
@@ -110,94 +128,15 @@
         </controls1:TitleBar>
         <NavigationView
             x:Name="NavigationView"
+            FooterMenuItemsSource="{x:Bind _viewModel.FooterMenuItems}"
             IsBackButtonVisible="Collapsed"
             IsPaneToggleButtonVisible="False"
             IsSettingsVisible="False"
-            OpenPaneLength="{x:Bind _viewModel.MainPageRootNavigationViewOpenPanelLength}"
-            SelectionChanged="NavigationView_OnSelectionChanged">
-            <NavigationView.MenuItems>
-                <NavigationViewItem
-                    x:Uid="/MainPage/RecommendationsTab"
-                    Icon="{controls:BitmapImageIcon Uri=ms-appx:///Assets/Images/Icons/recommendations.png}"
-                    Tag="{x:Bind _viewModel.RecommendationsTag}" />
-                <NavigationViewItem
-                    x:Uid="/MainPage/RankingsTab"
-                    Icon="{controls:BitmapImageIcon Uri=ms-appx:///Assets/Images/Icons/ranking.png}"
-                    Tag="{x:Bind _viewModel.RankingsTag}" />
-                <NavigationViewItem
-                    x:Uid="/MainPage/BookmarksTab"
-                    Icon="{controls:BitmapImageIcon Uri=ms-appx:///Assets/Images/Icons/bookmarks.png}"
-                    Tag="{x:Bind _viewModel.BookmarksTag}" />
-                <NavigationViewItem
-                    x:Uid="/MainPage/FollowingsTab"
-                    Icon="{controls:BitmapImageIcon Uri=ms-appx:///Assets/Images/Icons/followings.png}"
-                    Tag="{x:Bind _viewModel.FollowingsTag}" />
-                <NavigationViewItem
-                    x:Uid="/MainPage/SpotlightsTab"
-                    Icon="{controls:BitmapImageIcon Uri=ms-appx:///Assets/Images/Icons/spotlight.png}"
-                    Tag="{x:Bind _viewModel.SpotlightsTag}" />
-                <NavigationViewItem
-                    x:Uid="/MainPage/RecommendUsersTab"
-                    Icon="{controls:BitmapImageIcon Uri=ms-appx:///Assets/Images/Icons/recommend-user.png}"
-                    Tag="{x:Bind _viewModel.RecommendUsersTag}" />
-                <NavigationViewItem
-                    x:Uid="/MainPage/RecentPostsTab"
-                    Icon="{controls:BitmapImageIcon Uri=ms-appx:///Assets/Images/Icons/recent-posts.png}"
-                    Tag="{x:Bind _viewModel.RecentPostsTag}" />
-                <NavigationViewItem
-                    x:Uid="/MainPage/NewWorksTab"
-                    Icon="{controls:BitmapImageIcon Uri=ms-appx:///Assets/Images/Icons/new-works.png}"
-                    Tag="{x:Bind _viewModel.NewWorksTag}" />
-                <NavigationViewItem
-                    x:Name="FeedTab"
-                    x:Uid="/MainPage/FeedTab"
-                    Icon="{controls:BitmapImageIcon Uri=ms-appx:///Assets/Images/Icons/feed.png}"
-                    Tag="{x:Bind _viewModel.FeedTag}" />
-                <NavigationViewItemHeader x:Uid="/MainPage/DownloadAndHistoriesTab" />
-                <NavigationViewItem
-                    x:Name="TagsTab"
-                    x:Uid="/MainPage/TagsTab"
-                    Icon="{controls:BitmapImageIcon Uri=ms-appx:///Assets/Images/Icons/tag.png}"
-                    Tag="{x:Bind _viewModel.TagsTag}" />
-                <NavigationViewItem
-                    x:Uid="/MainPage/HistoriesTab"
-                    Icon="{controls:BitmapImageIcon Uri=ms-appx:///Assets/Images/Icons/history.png}"
-                    Tag="{x:Bind _viewModel.HistoriesTag}" />
-                <NavigationViewItem
-                    x:Name="DownloadListTab"
-                    x:Uid="/MainPage/DownloadListTab"
-                    Icon="{controls:BitmapImageIcon Uri=ms-appx:///Assets/Images/Icons/download-list.png}"
-                    Tag="{x:Bind _viewModel.DownloadListTag}" />
-            </NavigationView.MenuItems>
-            <NavigationView.FooterMenuItems>
-                <NavigationViewItem
-                    x:Name="ExtensionsTab"
-                    x:Uid="/MainPage/ExtensionsTab"
-                    Icon="{controls:BitmapImageIcon Uri=ms-appx:///Assets/Images/Icons/extensions.png}"
-                    Tag="{x:Bind _viewModel.ExtensionsTag}" />
-                <NavigationViewItem
-                    x:Uid="/MainPage/HelpTab"
-                    Icon="{controls:BitmapImageIcon Uri=ms-appx:///Assets/Images/Icons/help.png}"
-                    Tag="{x:Bind _viewModel.HelpTag}" />
-                <NavigationViewItem
-                    x:Uid="/MainPage/AboutTab"
-                    Icon="{controls:BitmapImageIcon Uri=ms-appx:///Assets/Images/Icons/about.png}"
-                    Tag="{x:Bind _viewModel.AboutTag}" />
-                <NavigationViewItemSeparator />
-                <NavigationViewItem
-                    x:Name="SettingsTab"
-                    x:Uid="/MainPage/SettingsTab"
-                    Icon="{controls:BitmapImageIcon Uri=ms-appx:///Assets/Images/Icons/settings.png}"
-                    Tag="{x:Bind _viewModel.SettingsTag}">
-                    <NavigationViewItem.InfoBadge>
-                        <InfoBadge
-                            x:Name="InfoBadge"
-                            Style="{StaticResource AttentionIconInfoBadgeStyle}"
-                            Visibility="Collapsed" />
-                    </NavigationViewItem.InfoBadge>
-                </NavigationViewItem>
-            </NavigationView.FooterMenuItems>
-            <Frame x:Name="MainPageRootFrame" Navigated="MainPageRootFrame_OnNavigated" />
+            ItemInvoked="NavigationView_OnItemInvoked"
+            MenuItemTemplateSelector="{StaticResource NavigationViewItemDataTemplateSelector}"
+            MenuItemsSource="{x:Bind _viewModel.MenuItems}"
+            OpenPaneLength="{x:Bind _viewModel.MainPageRootNavigationViewOpenPanelLength}">
+            <windowing:TabPage x:Name="MainPageRootTab" />
         </NavigationView>
     </controls1:DockPanel>
-</controls:EnhancedWindowPage>
+</controls:EnhancedPage>

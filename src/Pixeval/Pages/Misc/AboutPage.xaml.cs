@@ -6,11 +6,9 @@ using System.Text;
 using Windows.System;
 using CommunityToolkit.WinUI.Controls;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.AppManagement;
 using Pixeval.Controls;
 using WinUI3Utilities;
-using System.IO;
 
 namespace Pixeval.Pages.Misc;
 
@@ -26,26 +24,26 @@ public sealed partial class AboutPage
     {
         InitializeComponent();
         UniformGrid.SizeChanged += (sender, args) => sender.To<UniformGrid>().Columns = (int)(args.NewSize.Width / 140);
+        LoadData();
     }
 
-    private async void AboutPage_OnLoaded(object sender, RoutedEventArgs e)
+    // private readonly ObservableCollection<Supporter> _supporters = [];
+
+    private async void LoadData()
     {
         LicenseTextBlock.Text = Encoding.UTF8.GetString(await AppInfo.GetAssetBytesAsync("GPLv3.md"));
-
-        var basePath = AppKnownFolders.Cache.CombinePath("GitHubSupporters");
-        _ = Directory.CreateDirectory(basePath);
-
-        await foreach (var supporter in Supporter.GetSupportersAsync(basePath))
+        await foreach (var supporter in Supporter.GetSupportersAsync())
         {
             UniformGrid.Children.Add(new PersonView
             {
-                PersonName = '@' + supporter.Name,
+                PersonName = supporter.AtName,
                 PersonNickname = supporter.Nickname,
-                PersonPicture = new BitmapImage(new Uri(Path.Combine(basePath, supporter.Name + ".png"))),
+                PersonPicture = supporter.ProfileImage,
                 PersonProfileNavigateUri = supporter.ProfileUri,
                 Height = 160
             });
         }
+        //     _supporters.Add(supporter);
     }
 
     private async void LaunchUri(object sender, RoutedEventArgs e)

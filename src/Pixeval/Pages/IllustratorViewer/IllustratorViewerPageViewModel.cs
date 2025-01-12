@@ -2,6 +2,7 @@
 // Licensed under the GPL v3 License.
 
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml.Input;
@@ -19,6 +20,7 @@ using Pixeval.Pages.Capability;
 using WinUI3Utilities;
 using Symbol = FluentIcons.Common.Symbol;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.UI.Xaml;
 using Pixeval.Util.IO.Caching;
 
 namespace Pixeval.Pages.IllustratorViewer;
@@ -34,27 +36,36 @@ public partial class IllustratorViewerPageViewModel : UiObservableObject
     [ObservableProperty]
     public partial bool IsFollowed { get; set; }
 
-    public NavigationViewTag<IllustratorWorkPage, long> WorkTag { get; }
+    public NavigationViewTag<IllustratorWorkPage> WorkTag { get; } =
+        new(EntryViewerPageResources.WorkNavigationViewItemContent) { Symbol = Symbol.Image };
 
-    public NavigationViewTag<BookmarksPage, long> BookmarksTag { get; }
+    public NavigationViewTag<BookmarksPage> BookmarksTag { get; } =
+        new(EntryViewerPageResources.BookmarksNavigationViewItemContent) { Symbol = Symbol.Library };
 
-    public NavigationViewTag<FollowingsPage, long> FollowingsTag { get; }
+    public NavigationViewTag<FollowingsPage> FollowingsTag { get; } =
+        new(EntryViewerPageResources.FollowingsNavigationViewItemContent) { Symbol = Symbol.PersonAdd };
 
-    public NavigationViewTag<MyPixivUsersPage, long> MyPixivUserTag { get; }
+    public NavigationViewTag<MyPixivUsersPage> MyPixivUserTag { get; } =
+        new(EntryViewerPageResources.MyPixivUserNavigationViewItemContent) { Symbol = Symbol.People };
 
-    public NavigationViewTag<RelatedUsersPage, long> RelatedUserTag { get; }
+    public NavigationViewTag<RelatedUsersPage> RelatedUserTag { get; } =
+        new(EntryViewerPageResources.RelatedUserNavigationViewItemContent) { Symbol = Symbol.PeopleCommunity };
 
-    public IllustratorViewerPageViewModel(PixivSingleUserResponse userDetail, ulong hWnd) : base(hWnd)
+    public IReadOnlyList<NavigationViewTag> Tags =>
+    [
+        WorkTag,
+        BookmarksTag,
+        FollowingsTag,
+        MyPixivUserTag,
+        RelatedUserTag
+    ];
+
+    public IllustratorViewerPageViewModel(PixivSingleUserResponse userDetail, FrameworkElement frameworkElement) : base(frameworkElement)
     {
         UserDetail = userDetail;
         IsFollowed = userDetail.UserEntity.IsFollowed;
         Metrics = userDetail.UserProfile;
-
-        WorkTag = new(Id);
-        BookmarksTag = new(Id);
-        FollowingsTag = new(Id);
-        MyPixivUserTag = new(Id);
-        RelatedUserTag = new(Id);
+        WorkTag.Parameter = BookmarksTag.Parameter = FollowingsTag.Parameter = MyPixivUserTag.Parameter = RelatedUserTag.Parameter = Id;
 
         InitializeCommands();
         _ = SetAvatarAndBackgroundAsync();
@@ -134,13 +145,13 @@ public partial class IllustratorViewerPageViewModel : UiObservableObject
     {
         UiHelper.ClipboardSetText(MakoHelper.GenerateUserAppUri(Id).OriginalString);
 
-        HWnd.SuccessGrowl(EntryItemResources.LinkCopiedToClipboard);
+        FrameworkElement.SuccessGrowl(EntryItemResources.LinkCopiedToClipboard);
     }
 
     private void GenerateWebLinkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
         UiHelper.ClipboardSetText( MakoHelper.GenerateUserWebUri(Id).OriginalString);
-        (args.Parameter as ulong?)?.SuccessGrowl(EntryItemResources.LinkCopiedToClipboard);
+        (args.Parameter as FrameworkElement)?.SuccessGrowl(EntryItemResources.LinkCopiedToClipboard);
     }
 
     private async void OpenInWebBrowserCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)

@@ -5,7 +5,6 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:Pixeval.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Loaded="SettingRadioButtons_OnLoaded"
     mc:Ignorable="d">
     <RadioButtons Header="{x:Bind Header, Mode=OneWay}">
         <RadioButtons.ItemTemplate>

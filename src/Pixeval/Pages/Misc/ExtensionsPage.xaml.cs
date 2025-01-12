@@ -28,7 +28,7 @@ public sealed partial class ExtensionsPage
 
     private async void AddExtensionsOnClick(object sender, RoutedEventArgs e)
     {
-        var files = await HWnd.OpenMultipleDllsOpenPickerAsync();
+        var files = await this.OpenMultipleDllsOpenPickerAsync();
         foreach (var file in files)
         {
             var fileInfo = new FileInfo(file.Path);
@@ -40,7 +40,7 @@ public sealed partial class ExtensionsPage
                     var newDllPath = AppKnownFolders.Extensions.CombinePath(fileName);
                     if (File.Exists(newDllPath))
                     {
-                        HWnd.ErrorGrowl(ExtensionsPageResources.DllFileExistedError, fileName);
+                        this.ErrorGrowl(ExtensionsPageResources.DllFileExistedError, fileName);
                         continue;
                     }
 
@@ -49,15 +49,15 @@ public sealed partial class ExtensionsPage
                         fileInfo.CopyTo(newDllPath);
                         if (ExtensionService.TryLoadHost(newDllPath))
                         {
-                            HWnd.SuccessGrowl(ExtensionsPageResources.DllLoadedSuccessfully, fileName);
+                            this.SuccessGrowl(ExtensionsPageResources.DllLoadedSuccessfully, fileName);
                             continue;
                         }
 
-                        HWnd.ErrorGrowl(ExtensionsPageResources.DllLoadFailed, fileName);
+                        this.ErrorGrowl(ExtensionsPageResources.DllLoadFailed, fileName);
                     }
                     catch (Exception ex)
                     {
-                        HWnd.ErrorGrowl(ExtensionsPageResources.DllLoadFailed, $"{fileName}: {ex.Message}");
+                        this.ErrorGrowl(ExtensionsPageResources.DllLoadFailed, $"{fileName}: {ex.Message}");
                     }
 
                     break;
@@ -78,24 +78,24 @@ public sealed partial class ExtensionsPage
                                     var newDllPath = AppKnownFolders.Extensions.CombinePath(dllName);
                                     if (ExtensionService.TryLoadHost(newDllPath))
                                     {
-                                        HWnd.SuccessGrowl(ExtensionsPageResources.DllLoadedSuccessfully, fileName);
+                                        this.SuccessGrowl(ExtensionsPageResources.DllLoadedSuccessfully, fileName);
                                         continue;
                                     }
 
-                                    HWnd.ErrorGrowl(ExtensionsPageResources.DllLoadFailed, fileName);
+                                    this.ErrorGrowl(ExtensionsPageResources.DllLoadFailed, fileName);
                                 }
                                 catch (Exception ex)
                                 {
-                                    HWnd.ErrorGrowl(ExtensionsPageResources.DllLoadFailed, $"{fileName}: {ex.Message}");
+                                    this.ErrorGrowl(ExtensionsPageResources.DllLoadFailed, $"{fileName}: {ex.Message}");
                                 }
                             }
                         }
                         else
-                            HWnd.WarningGrowl(ExtensionsPageResources.ZipContainsNoDll, fileName);
+                            this.WarningGrowl(ExtensionsPageResources.ZipContainsNoDll, fileName);
                     }
                     catch (Exception ex)
                     {
-                        HWnd.ErrorGrowl(ExtensionsPageResources.UnzipFailed, $"{fileName}: {ex.Message}");
+                        this.ErrorGrowl(ExtensionsPageResources.UnzipFailed, $"{fileName}: {ex.Message}");
                     }
 
                     break;
@@ -108,7 +108,7 @@ public sealed partial class ExtensionsPage
         ExtensionService.UnloadHost(sender.To<FrameworkElement>().GetTag<ExtensionsHostModel>());
     }
 
-    private void OpenExtensionsOnClick(object sender, RoutedEventArgs e) => Launcher.LaunchFolderPathAsync(AppKnownFolders.Extensions.FullPath);
+    private void OpenExtensionsOnClick(object sender, RoutedEventArgs e) => _ = Launcher.LaunchFolderPathAsync(AppKnownFolders.Extensions.FullPath);
 
-    private void ExtensionsHelpOnClick(object sender, RoutedEventArgs e) => Launcher.LaunchUriAsync(sender.To<FrameworkElement>().GetTag<Uri>());
+    private void ExtensionsHelpOnClick(object sender, RoutedEventArgs e) => _ = Launcher.LaunchUriAsync(sender.To<FrameworkElement>().GetTag<Uri>());
 }

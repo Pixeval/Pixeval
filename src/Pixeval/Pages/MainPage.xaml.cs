@@ -5,33 +5,24 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
-using System.Runtime;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
-using Windows.Foundation;
 using Windows.Storage;
 using Windows.System;
 using Windows.UI.Core;
 using CommunityToolkit.Mvvm.Messaging;
-using CommunityToolkit.WinUI;
-using CommunityToolkit.WinUI.Controls;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media.Animation;
-using Microsoft.UI.Xaml.Navigation;
 using Microsoft.Windows.AppLifecycle;
 using Pixeval.Activation;
 using Pixeval.Database.Managers;
 using Pixeval.Messages;
-using Pixeval.Pages.Capability;
-using Pixeval.Pages.Misc;
 using Pixeval.Util;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
-using WinUI3Utilities;
 using Pixeval.AppManagement;
 using Pixeval.Attributes;
 using Pixeval.Controls.Windowing;
@@ -45,29 +36,35 @@ namespace Pixeval.Pages;
 
 public sealed partial class MainPage
 {
+    public static MainPage Current { get; private set; } = null!;
+
     private readonly MainPageViewModel _viewModel;
 
-    private NavigationViewItem? _lastSelected;
+    public FrameworkElement TabViewParameter => MainPageRootTab.TabView;
 
     public MainPage()
     {
+        Current = this;
         _viewModel = new MainPageViewModel(this);
         InitializeComponent();
-        CustomizeTitleBar();
     }
 
-    private static async void CustomizeTitleBar()
+    private async void CustomizeTitleBar()
     {
         if (Microsoft.UI.Windowing.AppWindowTitleBar.IsCustomizationSupported())
+        {
+            Window.SetTitleBar(TitleBar);
             return;
+        }
 
         await Task.Yield();
         var logger = App.AppViewModel.AppServiceProvider.GetRequiredService<FileLogger>();
         logger.LogInformation("Customize title bar is not supported", null);
     }
 
-    public override async void OnPageActivated(NavigationEventArgs e, object? parameter)
+    public async void MainPage_OnLoaded(object sender, RoutedEventArgs e)
     {
+        CustomizeTitleBar();
         App.AppViewModel.AppLoggedIn();
 
         // The application is invoked by a protocol, call the corresponding protocol handler.
@@ -78,27 +75,23 @@ public sealed partial class MainPage
 
         _ = WeakReferenceMessenger.Default.TryRegister<MainPage, WorkTagClickedMessage>(this, (_, message) =>
         {
-            var window = WindowFactory.ForkedWindows[HWnd];
             MainPageAutoSuggestionBox.Text = message.Tag;
-            window.AppWindow.MoveInZOrderAtTop();
+            Window.AppWindow.MoveInZOrderAtTop();
             PerformSearchWork(message.Type, message.Tag);
         });
         using var client = new HttpClient();
         await AppInfo.AppVersion.GitHubCheckForUpdateAsync(client);
         if (AppInfo.AppVersion.UpdateAvailable)
-            InfoBadge.Visibility = Visibility.Visible;
+            _viewModel.SettingsTag.ShowIconBadge = true;
+
+        if (_viewModel.MenuItems[(int)App.AppViewModel.AppSettings.DefaultSelectedTabItem] is NavigationViewTag tag)
+            MainPageRootTab.AddPage(tag);
     }
 
-    private void MainPage_OnLoaded(object sender, RoutedEventArgs e)
-    {
-        // dirty trick, the order of the menu items is the same as the order of the fields in MainPageTabItem
-        // since enums are basically integers, we just need a cast to transform it to the correct offset.
-        NavigationView.SelectedItem = NavigationView.MenuItems[(int)App.AppViewModel.AppSettings.DefaultSelectedTabItem];
-    }
-
-    private async void NavigationView_OnSelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
+    private async void NavigationView_OnItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs e)
     {
         await Task.Yield();
+        sender.SelectedItem = null;
 
         // The App.AppViewModel.IllustrationDownloadManager will be initialized after that of MainPage object
         // so, we cannot put a navigation tag inside MainPage and treat it as a field, since it will be initialized immediately after
@@ -106,29 +99,13 @@ public sealed partial class MainPage
         // will lead the program into NullReferenceException on the access of QueuedTasks.
 
         // args.SelectedItem may be null here
-        if (sender.SelectedItem is NavigationViewItem { Tag: NavigationViewTag tag } selectedItem)
+        if (e.InvokedItem is NavigationViewTag tag)
         {
-            if (Equals(selectedItem, FeedTab) && App.AppViewModel.AppSettings.WebCookie is "")
-            {
+            if (Equals(tag, _viewModel.FeedTag) && App.AppViewModel.AppSettings.WebCookie is "")
                 _ = this.CreateAcknowledgementAsync(MainPageResources.FeedTabCannotBeOpenedTitle, MainPageResources.FeedTabCannotBeOpenedContent);
-                sender.SelectedItem = _lastSelected;
-                return;
-            }
-
-            if (Equals(selectedItem, DownloadListTab) || Equals(selectedItem, SettingsTab) || Equals(selectedItem, TagsTab)|| Equals(selectedItem, ExtensionsTab))
-                Navigate(MainPageRootFrame, tag);
             else
-                MainPageRootFrame.NavigateTag(tag, new SuppressNavigationTransitionInfo());
+                MainPageRootTab.AddPage(tag);
         }
-
-        _lastSelected = sender.SelectedItem as NavigationViewItem;
-    }
-
-    private void MainPageRootFrame_OnNavigated(object sender, NavigationEventArgs e)
-    {
-        GCSettings.LargeObjectHeapCompactionMode = GCLargeObjectHeapCompactionMode.CompactOnce;
-        GC.Collect();
-        // sender.To<Frame>().BackStack.Clear();
     }
 
     private async void KeywordAutoSuggestBox_GotFocus(object sender, RoutedEventArgs e)
@@ -194,22 +171,22 @@ public sealed partial class MainPage
             {
                 case SuggestionType.IllustId:
                     if (long.TryParse(sender.Text, out var illustId))
-                        await IllustrationViewerHelper.CreateWindowWithPageAsync(illustId);
+                        await TabViewParameter.CreateIllustrationPageAsync(illustId);
                     break;
                 case SuggestionType.NovelId:
                     if (long.TryParse(sender.Text, out var novelId))
-                        await NovelViewerHelper.CreateWindowWithPageAsync(novelId);
+                        await TabViewParameter.CreateNovelPageAsync(novelId);
                     break;
                 case SuggestionType.UserId:
                     if (long.TryParse(sender.Text, out var userId))
-                        await IllustratorViewerHelper.CreateWindowWithPageAsync(userId);
+                        await TabViewParameter.CreateIllustratorPageAsync(userId);
                     break;
                 case SuggestionType.UserSearch:
                     PerformSearchUser(sender.Text);
                     break;
                 case SuggestionType.Settings:
                     if (SettingsEntryAttribute.LazyValues.Value.FirstOrDefault(se => se.LocalizedResourceHeader == name) is { } entry)
-                        await NavigateToSettingEntryAsync(entry);
+                        NavigateToSettingEntry(entry);
                     break;
                 default:
                     sender.Text = name;
@@ -226,41 +203,23 @@ public sealed partial class MainPage
     private void PerformSearchWork(SimpleWorkType type, string text, string? translatedName = null)
     {
         SearchHistoryPersistentManager.AddHistory(text, translatedName);
-        NavigationView.SelectedItem = null;
-        _ = MainPageRootFrame.Navigate(typeof(SearchWorksPage), (type, text));
+        _viewModel.SearchWorksTag.Parameter = (type, text);
+        MainPageRootTab.AddPage(_viewModel.SearchWorksTag);
     }
 
     private void PerformSearchUser(string text)
     {
         SearchHistoryPersistentManager.AddHistory(text);
-        NavigationView.SelectedItem = null;
-        _ = MainPageRootFrame.Navigate(typeof(SearchUsersPage), text);
+        _viewModel.SearchUsersTag.Parameter = text;
+        MainPageRootTab.AddPage(_viewModel.SearchUsersTag);
     }
 
-    private async void OpenSearchSettingButton_OnClicked(object sender, RoutedEventArgs e)
+    private void OpenSearchSettingButton_OnClicked(object sender, RoutedEventArgs e)
     {
-        await NavigateToSettingEntryAsync(ReverseSearchApiKeyAttribute.Value);
+        NavigateToSettingEntry(ReverseSearchApiKeyAttribute.Value);
     }
 
-    private async Task NavigateToSettingEntryAsync(SettingsEntryAttribute entry)
-    {
-        NavigationView.SelectedItem = SettingsTab;
-        var settingsPage = await MainPageRootFrame.AwaitPageTransitionAsync<SettingsPage>();
-        var panel = settingsPage.ScrollView.ScrollPresenter.Content.To<FrameworkElement>();
-        var frameworkElement = panel.FindChild<SettingsCard>(element => element.Tag is SettingsEntryAttribute e && Equals(e, entry));
-
-        if (frameworkElement is not null)
-        {
-            // ScrollView第一次导航的时候会有一个偏移，等待大小确定后滚动
-            await Task.Delay(20);
-
-            var position = frameworkElement
-                .TransformToVisual(panel)
-                .TransformPoint(new Point(0, 0));
-
-            _ = settingsPage.ScrollView.ScrollTo(position.X, position.Y);
-        }
-    }
+    private void NavigateToSettingEntry(SettingsEntryAttribute entry) => MainPageRootTab.AddPage(MainPageViewModel.GetSettingsTag(entry));
 
     /// <summary>
     /// The AutoSuggestBox does not have a 'Paste' event, so we check the keyboard event accordingly
@@ -287,7 +246,7 @@ public sealed partial class MainPage
     {
         if (App.AppViewModel.AppSettings.ReverseSearchApiKey is { Length: > 0 })
         {
-            if (await HWnd.OpenFileOpenPickerAsync() is { } file)
+            if (await this.OpenFileOpenPickerAsync() is { } file)
             {
                 await using var stream = await file.OpenStreamForReadAsync();
                 await _viewModel.ReverseSearchAsync(stream);
@@ -305,10 +264,8 @@ public sealed partial class MainPage
     private async Task ShowReverseSearchApiKeyNotPresentDialog()
     {
         var result = await this.CreateOkCancelAsync(MainPageResources.ReverseSearchApiKeyNotPresentTitle, ReverseSearchApiKeyNotPresentDialogResources.MessageTextBlockText, ReverseSearchApiKeyNotPresentDialogResources.SetApiKeyHyperlinkButtonContent);
-        if (result is ContentDialogResult.Primary)
-        {
-            await NavigateToSettingEntryAsync(ReverseSearchApiKeyAttribute.Value);
-        }
+        if (result is ContentDialogResult.Primary) 
+            NavigateToSettingEntry(ReverseSearchApiKeyAttribute.Value);
     }
 
     private void KeywordAutoSuggestBox_OnDragOver(object sender, DragEventArgs e)
@@ -333,7 +290,7 @@ public sealed partial class MainPage
 
     private async void SelfAvatar_OnTapped(object sender, RoutedEventArgs e)
     {
-        await IllustratorViewerHelper.CreateWindowWithPageAsync(App.AppViewModel.PixivUid);
+        await TabViewParameter.CreateIllustratorPageAsync(App.AppViewModel.PixivUid);
     }
 
     private void TitleBar_OnPaneButtonClicked(object? sender, RoutedEventArgs e)

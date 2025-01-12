@@ -8,7 +8,6 @@
     xmlns:labs="using:CommunityToolkit.Labs.WinUI.MarkdownTextBlock"
     xmlns:local="using:Pixeval.Pages.Misc"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Loaded="AboutPage_OnLoaded"
     mc:Ignorable="d">
     <controls:DockPanel VerticalSpacing="10">
         <TextBlock
@@ -29,7 +28,7 @@
                         ColumnSpacing="10"
                         RowSpacing="10" />
                     <!-- 由于UniformGridLayout有崩溃Bug，暂时使用 UniformGrid 代替
-                    <ItemsRepeater ItemsSource="{x:Bind misc:Supporter.Supporters}">
+                    <ItemsRepeater ItemsSource="{x:Bind _supporters}">
                         <ItemsRepeater.Layout>
                             <UniformGridLayout
                                 ItemsStretch="Fill"
@@ -39,11 +38,11 @@
                                 MinRowSpacing="10" />
                         </ItemsRepeater.Layout>
                         <ItemsRepeater.ItemTemplate>
-                            <DataTemplate x:DataType="misc:Supporter">
+                            <DataTemplate x:DataType="local:Supporter">
                                 <controls1:PersonView
-                                    PersonName="{x:Bind Name}"
+                                    PersonName="{x:Bind AtName}"
                                     PersonNickname="{x:Bind Nickname}"
-                                    PersonPicture="{x:Bind ProfilePicture}"
+                                    PersonPicture="{x:Bind ProfileImage}"
                                     PersonProfileNavigateUri="{x:Bind ProfileUri}" />
                             </DataTemplate>
                         </ItemsRepeater.ItemTemplate>

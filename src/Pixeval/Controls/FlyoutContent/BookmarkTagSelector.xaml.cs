@@ -36,9 +36,8 @@ public sealed partial class BookmarkTagSelector : UserControl
     {
         InitializeComponent();
         ViewModel.SelectedTags.CollectionChanged += SelectedTags_CollectionChanged;
+        ResetSource();
     }
-
-    private void BookmarkTagSelector_OnLoaded(object sender, RoutedEventArgs e) => ResetSource();
 
     private static void OnTypeChanged(DependencyObject o, DependencyPropertyChangedEventArgs e) => o.To<BookmarkTagSelector>().ResetSource();
 

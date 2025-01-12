@@ -11,7 +11,7 @@ public sealed partial class SpotlightsPage : IScrollViewHost
 {
     public SpotlightsPage() => InitializeComponent();
 
-    public override void OnPageActivated(NavigationEventArgs e)
+    public override void OnPageActivated(NavigationEventArgs e, object? parameter)
     {
         ChangeSource();
     }

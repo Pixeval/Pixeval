@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Pixeval.Pages.NovelViewer;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
+using Pixeval.Pages;
 
 namespace Pixeval.Activation;
 
@@ -25,7 +26,7 @@ public class NovelAppActivationHandler : IAppActivationHandler
         {
             try
             {
-                await NovelViewerHelper.CreateWindowWithPageAsync(id);
+                await MainPage.Current.TabViewParameter.CreateNovelPageAsync(id);
             }
             catch (Exception e)
             {

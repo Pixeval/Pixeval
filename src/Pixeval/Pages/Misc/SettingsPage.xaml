@@ -1,4 +1,4 @@
-<controls1:EnhancedWindowPage
+<controls1:EnhancedPage
     x:Class="Pixeval.Pages.Misc.SettingsPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -10,9 +10,8 @@
     xmlns:misc="using:Pixeval.Attributes"
     xmlns:misc1="using:Pixeval.Pages.Misc"
     xmlns:pixeval="using:Pixeval"
-    Unloaded="SettingsPage_OnUnloaded"
     mc:Ignorable="d">
-    <controls1:EnhancedWindowPage.Resources>
+    <controls1:EnhancedPage.Resources>
         <Style
             x:Key="SettingHeaderStyle"
             BasedOn="{StaticResource BodyStrongTextBlockStyle}"
@@ -21,7 +20,7 @@
                 <Setter Property="Margin" Value="1,28,0,4" />
             </Style.Setters>
         </Style>
-    </controls1:EnhancedWindowPage.Resources>
+    </controls1:EnhancedPage.Resources>
     <controls:DockPanel VerticalSpacing="10">
         <TextBlock
             x:Uid="/SettingsPage/TitleTextBlock"
@@ -29,7 +28,7 @@
             controls:DockPanel.Dock="Top"
             Style="{StaticResource TitleTextBlockStyle}" />
         <ScrollView x:Name="SettingsPageScrollView">
-            <StackPanel Margin="20,0,20,20" Loaded="Panel_OnLoaded">
+            <StackPanel x:Name="SettingsPanel" Margin="20,0,20,20">
                 <!--  region Header  -->
                 <controls:DockPanel
                     HorizontalSpacing="20"
@@ -264,4 +263,4 @@
             </StackPanel>
         </ScrollView>
     </controls:DockPanel>
-</controls1:EnhancedWindowPage>
+</controls1:EnhancedPage>

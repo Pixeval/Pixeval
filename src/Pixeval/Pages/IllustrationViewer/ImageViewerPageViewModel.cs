@@ -30,6 +30,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Pixeval.Extensions.Common;
 using Pixeval.Util.IO.Caching;
 using Windows.ApplicationModel.DataTransfer;
+using Microsoft.UI.Xaml;
 using Pixeval.Extensions.Common.Commands.Transformers;
 using WinUI3Utilities;
 
@@ -114,7 +115,7 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
         }
     } = true;
 
-    public ImageViewerPageViewModel(IllustrationItemViewModel illustrationViewModel, IllustrationItemViewModel originalIllustrationViewModel, ulong hWnd) : base(hWnd)
+    public ImageViewerPageViewModel(IllustrationItemViewModel illustrationViewModel, IllustrationItemViewModel originalIllustrationViewModel, FrameworkElement frameworkElement) : base(frameworkElement)
     {
         IllustrationViewModel = illustrationViewModel;
         OriginalIllustrationViewModel = originalIllustrationViewModel;
@@ -209,13 +210,13 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
                 var token = ImageLoadingCancellationTokenSource.Token;
                 if (token.IsCancellationRequested)
                     return;
-                HWnd.InfoGrowl(ImageViewerPageResources.ApplyingTransformerExtensions);
+                FrameworkElement.InfoGrowl(ImageViewerPageResources.ApplyingTransformerExtensions);
                 // 运行扩展
                 stream.Position = 0;
                 var result = await transformer.TransformAsync(stream.ToIStream());
                 if (result is null)
                 {
-                    HWnd.ErrorGrowl(ImageViewerPageResources.TransformerExtensionFailed);
+                    FrameworkElement.ErrorGrowl(ImageViewerPageResources.TransformerExtensionFailed);
                     return;
                 }
                 result.Seek(0, SeekOrigin.Begin);
@@ -229,7 +230,7 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
                 if (last is IReadOnlyList<Stream> and [IDisposable disposable]&& !ReferenceEquals(disposable, stream))
                     disposable.Dispose();
                 if (!token.IsCancellationRequested)
-                    HWnd.SuccessGrowl(ImageViewerPageResources.TransformerExtensionFinishedSuccessfully);
+                    FrameworkElement.SuccessGrowl(ImageViewerPageResources.TransformerExtensionFinishedSuccessfully);
             }
             finally
             {
@@ -392,7 +393,7 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
 
     private void ShareCommandExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
-        DataTransferManagerInterop.ShowShareUIForWindow((nint)HWnd);
+        DataTransferManagerInterop.ShowShareUIForWindow((nint)Window.HWnd);
     }
 
     private void InitializeCommands()
@@ -455,7 +456,7 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
     
     private void ExtensionCanExecuteRequested(XamlUICommand sender, CanExecuteRequestedEventArgs args) => args.CanExecute = !IllustrationViewModel.IsUgoira && LoadSuccessfully && ExtensionStreamLock;
 
-    public (ulong, GetImageStreams) DownloadParameter => (HWnd, GetImageStreamsAsync);
+    public (FrameworkElement, GetImageStreams) DownloadParameter => (FrameworkElement, GetImageStreamsAsync);
 
     public XamlUICommand PlayGifCommand { get; } = "".GetCommand(Symbol.Pause);
 

@@ -1,4 +1,4 @@
-<controls:EnhancedWindowPage
+<controls:EnhancedPage
     x:Class="Pixeval.Pages.NovelViewer.NovelViewerPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -9,14 +9,9 @@
     xmlns:flyoutContent="using:Pixeval.Controls.FlyoutContent"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:media="using:Microsoft.Xaml.Interactions.Media"
-    xmlns:triggers="using:Pixeval.Util.Triggers"
-    xmlns:windowing="using:Pixeval.Controls.Windowing"
     KeyboardAcceleratorPlacementMode="Hidden"
-    Loaded="NovelViewerPage_OnLoaded"
-    Unloaded="NovelViewerPage_OnUnloaded"
     mc:Ignorable="d">
-    <controls:EnhancedWindowPage.Resources>
+    <controls:EnhancedPage.Resources>
         <Thickness x:Key="NormalMargin">0,48,0,0</Thickness>
         <AcrylicBrush
             x:Key="BottomCommandSectionBackground"
@@ -34,18 +29,21 @@
             <Setter Property="TextAlignment" Value="Center" />
             <Setter Property="TextTrimming" Value="CharacterEllipsis" />
         </Style>
-    </controls:EnhancedWindowPage.Resources>
-    <controls:EnhancedWindowPage.KeyboardAccelerators>
-        <KeyboardAccelerator Key="Escape" Invoked="ExitFullScreenKeyboardAccelerator_OnInvoked" />
+    </controls:EnhancedPage.Resources>
+    <controls:EnhancedPage.KeyboardAccelerators>
         <KeyboardAccelerator Key="Left" Invoked="PrevButton_OnClicked" />
         <KeyboardAccelerator Key="Right" Invoked="NextButton_OnClicked" />
         <KeyboardAccelerator Key="Up" Invoked="PrevButton_OnRightTapped" />
         <KeyboardAccelerator Key="Down" Invoked="NextButton_OnRightTapped" />
-    </controls:EnhancedWindowPage.KeyboardAccelerators>
+    </controls:EnhancedPage.KeyboardAccelerators>
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="48" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
         <controls:WorkViewerSplitView
             x:Name="EntryViewerSplitView"
-            Margin="{StaticResource NormalMargin}"
+            Grid.Row="1"
             MenuItemsSource="{x:Bind _viewModel.Tags}">
             <controls:WorkViewerSplitView.PaneContent>
                 <SplitView
@@ -62,7 +60,7 @@
                                     Style="{StaticResource SubtitleTextBlockStyle}" />
                             </ContentPresenter>
                             <ScrollView>
-                                <StackPanel Loaded="Panel_OnLoaded" />
+                                <StackPanel x:Name="SettingsPanel" />
                             </ScrollView>
                         </controls1:DockPanel>
                     </SplitView.Pane>
@@ -256,124 +254,50 @@
                 </SplitView>
             </controls:WorkViewerSplitView.PaneContent>
         </controls:WorkViewerSplitView>
-        <!--  ReSharper disable once UnusedMember.Local  -->
-        <Grid
-            x:Name="TitleBarBorder"
-            Height="100"
-            VerticalAlignment="Top">
-            <interactivity:Interaction.Behaviors>
-                <triggers:EventWithConditionTriggerBehavior EventName="PointerEntered" IsActive="{x:Bind _viewModel.IsFullScreen, Mode=OneWay}">
-                    <media:ControlStoryboardAction>
-                        <media:ControlStoryboardAction.Storyboard>
-                            <Storyboard>
-                                <DoubleAnimation
-                                    Storyboard.TargetName="TopCommandBarTranslation"
-                                    Storyboard.TargetProperty="Y"
-                                    To="0">
-                                    <DoubleAnimation.EasingFunction>
-                                        <ExponentialEase EasingMode="EaseOut" Exponent="7" />
-                                    </DoubleAnimation.EasingFunction>
-                                </DoubleAnimation>
-                            </Storyboard>
-                        </media:ControlStoryboardAction.Storyboard>
-                    </media:ControlStoryboardAction>
-                </triggers:EventWithConditionTriggerBehavior>
-                <triggers:EventWithConditionTriggerBehavior EventName="PointerExited" IsActive="{x:Bind _viewModel.IsFullScreen, Mode=OneWay}">
-                    <media:ControlStoryboardAction>
-                        <media:ControlStoryboardAction.Storyboard>
-                            <Storyboard>
-                                <DoubleAnimation
-                                    Storyboard.TargetName="TopCommandBarTranslation"
-                                    Storyboard.TargetProperty="Y"
-                                    To="{StaticResource NegativeTitleBarHeight}">
-                                    <DoubleAnimation.EasingFunction>
-                                        <ExponentialEase EasingMode="EaseOut" Exponent="7" />
-                                    </DoubleAnimation.EasingFunction>
-                                </DoubleAnimation>
-                            </Storyboard>
-                        </media:ControlStoryboardAction.Storyboard>
-                    </media:ControlStoryboardAction>
-                </triggers:EventWithConditionTriggerBehavior>
-            </interactivity:Interaction.Behaviors>
-            <!--  ReSharper disable once UnusedMember.Local  -->
-            <controls1:TitleBar
-                x:Name="TitleBarArea"
-                Title="{x:Bind _viewModel.CurrentNovel.Title, Mode=OneWay}"
-                HorizontalAlignment="Stretch"
-                VerticalAlignment="Top"
-                CompactStateBreakpoint="1120"
-                DisplayMode="Tall"
-                Window="{x:Bind windowing:WindowFactory.GetForkedWindows(HWnd)}">
-                <controls1:TitleBar.Icon>
-                    <ImageIcon Source="ms-appx:///Assets/Images/logo.svg" Visibility="{x:Bind IsLogoVisible()}" />
-                </controls1:TitleBar.Icon>
-                <controls1:TitleBar.RenderTransform>
-                    <TranslateTransform x:Name="TopCommandBarTranslation" />
-                </controls1:TitleBar.RenderTransform>
-                <controls1:TitleBar.Content>
-                    <CommandBar
-                        x:Name="NovelViewerCommandBar"
-                        Grid.Column="1"
-                        Margin="0,-4"
-                        HorizontalAlignment="Center"
-                        DefaultLabelPosition="Collapsed">
-                        <AppBarToggleButton
-                            Command="{x:Bind _viewModel.InfoAndCommentsCommand}"
-                            IsChecked="{x:Bind EntryViewerSplitView.IsPaneOpen, Mode=TwoWay}"
-                            RightTapped="OpenPane_OnRightTapped" />
-                        <AppBarSeparator />
-                        <AppBarButton
-                            Command="{x:Bind _viewModel.CurrentNovel.CopyCommand, Mode=OneWay}"
-                            CommandParameter="{x:Bind DownloadParameter(DocumentViewer.ViewModel), Mode=OneWay}"
-                            IsEnabled="{x:Bind DocumentViewer.LoadSuccessfully, Mode=OneWay}" />
-                        <AppBarButton
-                            Command="{x:Bind _viewModel.CurrentNovel.SaveCommand, Mode=OneWay}"
-                            CommandParameter="{x:Bind DownloadParameter(DocumentViewer.ViewModel), Mode=OneWay}"
-                            IsEnabled="{x:Bind DocumentViewer.LoadSuccessfully, Mode=OneWay}" />
-                        <AppBarButton
-                            Command="{x:Bind _viewModel.CurrentNovel.SaveAsCommand, Mode=OneWay}"
-                            CommandParameter="{x:Bind DownloadParameter(DocumentViewer.ViewModel), Mode=OneWay}"
-                            IsEnabled="{x:Bind DocumentViewer.LoadSuccessfully, Mode=OneWay}" />
-                        <AppBarSeparator />
-                        <AppBarButton
-                            x:Name="AddToBookmarkButton"
-                            Click="AddToBookmarkButton_OnClicked"
-                            Command="{x:Bind _viewModel.AddToBookmarkCommand}" />
-                        <AppBarButton Command="{x:Bind _viewModel.CurrentNovel.GenerateLinkCommand, Mode=OneWay}" CommandParameter="{x:Bind HWnd}" />
-                        <AppBarButton Command="{x:Bind _viewModel.CurrentNovel.GenerateWebLinkCommand, Mode=OneWay}" CommandParameter="{x:Bind HWnd}" />
-                        <AppBarButton Command="{x:Bind _viewModel.CurrentNovel.OpenInWebBrowserCommand, Mode=OneWay}" />
-                        <AppBarButton
-                            x:Name="ShowQrCodeButton"
-                            Command="{x:Bind _viewModel.CurrentNovel.ShowQrCodeCommand, Mode=OneWay}"
-                            CommandParameter="{x:Bind ShowQrCodeTeachingTip}" />
-                        <AppBarToggleButton Command="{x:Bind _viewModel.NovelSettingsCommand}" IsChecked="{x:Bind NovelSettingsPane.IsPaneOpen, Mode=TwoWay}" />
-                    </CommandBar>
-                </controls1:TitleBar.Content>
-                <controls1:TitleBar.Footer>
-                    <controls1:DockPanel LastChildFill="False">
-                        <TextBlock
-                            controls1:DockPanel.Dock="Left"
-                            Style="{StaticResource TextBlockStyle}"
-                            Visibility="{x:Bind controls:C.ToVisibility(DocumentViewer.IsMultiPage), Mode=OneWay}">
-                            <Run Text="{x:Bind controls:C.PlusOneToString(DocumentViewer.CurrentPage), Mode=OneWay}" />
-                            <Run Text="/" />
-                            <Run Text="{x:Bind DocumentViewer.PageCount, Mode=OneWay}" />
-                        </TextBlock>
-                        <CommandBar
-                            x:Name="NovelViewerSubCommandBar"
-                            HorizontalAlignment="Right"
-                            VerticalAlignment="Center"
-                            controls1:DockPanel.Dock="Left"
-                            DefaultLabelPosition="Collapsed">
-                            <AppBarButton Command="{x:Bind _viewModel.FullScreenCommand}" />
-                        </CommandBar>
-                    </controls1:DockPanel>
-                </controls1:TitleBar.Footer>
-            </controls1:TitleBar>
+        <Grid Grid.Row="0" VerticalAlignment="Top">
+            <CommandBar HorizontalAlignment="Center" DefaultLabelPosition="Collapsed">
+                <AppBarToggleButton Command="{x:Bind _viewModel.InfoAndCommentsCommand}" IsChecked="{x:Bind EntryViewerSplitView.IsPaneOpen, Mode=TwoWay}" />
+                <AppBarSeparator />
+                <AppBarButton
+                    Command="{x:Bind _viewModel.CurrentNovel.CopyCommand, Mode=OneWay}"
+                    CommandParameter="{x:Bind DownloadParameter(DocumentViewer.ViewModel), Mode=OneWay}"
+                    IsEnabled="{x:Bind DocumentViewer.LoadSuccessfully, Mode=OneWay}" />
+                <AppBarButton
+                    Command="{x:Bind _viewModel.CurrentNovel.SaveCommand, Mode=OneWay}"
+                    CommandParameter="{x:Bind DownloadParameter(DocumentViewer.ViewModel), Mode=OneWay}"
+                    IsEnabled="{x:Bind DocumentViewer.LoadSuccessfully, Mode=OneWay}" />
+                <AppBarButton
+                    Command="{x:Bind _viewModel.CurrentNovel.SaveAsCommand, Mode=OneWay}"
+                    CommandParameter="{x:Bind DownloadParameter(DocumentViewer.ViewModel), Mode=OneWay}"
+                    IsEnabled="{x:Bind DocumentViewer.LoadSuccessfully, Mode=OneWay}" />
+                <AppBarSeparator />
+                <AppBarButton
+                    x:Name="AddToBookmarkButton"
+                    Click="AddToBookmarkButton_OnClicked"
+                    Command="{x:Bind _viewModel.AddToBookmarkCommand}" />
+                <AppBarButton Command="{x:Bind _viewModel.CurrentNovel.GenerateLinkCommand, Mode=OneWay}" CommandParameter="{x:Bind}" />
+                <AppBarButton Command="{x:Bind _viewModel.CurrentNovel.GenerateWebLinkCommand, Mode=OneWay}" CommandParameter="{x:Bind}" />
+                <AppBarButton Command="{x:Bind _viewModel.CurrentNovel.OpenInWebBrowserCommand, Mode=OneWay}" />
+                <AppBarButton
+                    x:Name="ShowQrCodeButton"
+                    Command="{x:Bind _viewModel.CurrentNovel.ShowQrCodeCommand, Mode=OneWay}"
+                    CommandParameter="{x:Bind ShowQrCodeTeachingTip}" />
+                <AppBarToggleButton Command="{x:Bind _viewModel.NovelSettingsCommand}" IsChecked="{x:Bind NovelSettingsPane.IsPaneOpen, Mode=TwoWay}" />
+            </CommandBar>
+            <TextBlock
+                Margin="20,0"
+                HorizontalAlignment="Right"
+                Style="{StaticResource TextBlockStyle}"
+                Visibility="{x:Bind controls:C.ToVisibility(DocumentViewer.IsMultiPage), Mode=OneWay}">
+                <Run Text="{x:Bind controls:C.PlusOneToString(DocumentViewer.CurrentPage), Mode=OneWay}" />
+                <Run Text="/" />
+                <Run Text="{x:Bind DocumentViewer.PageCount, Mode=OneWay}" />
+            </TextBlock>
         </Grid>
         <TeachingTip
             x:Name="ShowQrCodeTeachingTip"
             x:Uid="/EntryViewerPage/QrCodeTeachingTip"
+            Grid.Row="0"
             IsLightDismissEnabled="True"
             Tag="{x:Bind ShowQrCodeButton}">
             <TeachingTip.HeroContent>
@@ -383,6 +307,7 @@
         <TeachingTip
             x:Name="AddToBookmarkTeachingTip"
             x:Uid="/EntryViewerPage/AddToBookmarkTeachingTip"
+            Grid.Row="0"
             CloseButtonClick="AddToBookmarkTeachingTip_OnCloseButtonClick"
             IsLightDismissEnabled="True"
             Tag="{x:Bind AddToBookmarkButton}">
@@ -393,31 +318,5 @@
                 Tag="{x:Bind AddToBookmarkTeachingTip}"
                 Type="Novel" />
         </TeachingTip>
-        <VisualStateManager.VisualStateGroups>
-            <VisualStateGroup>
-                <VisualState x:Name="Normal">
-                    <VisualState.StateTriggers>
-                        <StateTrigger IsActive="{x:Bind controls:C.Negation(_viewModel.IsFullScreen), Mode=OneWay}" />
-                    </VisualState.StateTriggers>
-                    <VisualState.Setters>
-                        <Setter Target="EntryViewerSplitView.Margin" Value="{StaticResource NormalMargin}" />
-                        <Setter Target="TopCommandBarTranslation.Y" Value="0" />
-                        <Setter Target="TitleBarArea.Background" Value="{x:Null}" />
-                        <Setter Target="TitleBarBorder.Background" Value="{x:Null}" />
-                    </VisualState.Setters>
-                </VisualState>
-                <VisualState x:Name="FullScreen">
-                    <VisualState.StateTriggers>
-                        <StateTrigger IsActive="{x:Bind _viewModel.IsFullScreen, Mode=OneWay}" />
-                    </VisualState.StateTriggers>
-                    <VisualState.Setters>
-                        <Setter Target="EntryViewerSplitView.Margin" Value="0" />
-                        <Setter Target="TopCommandBarTranslation.Y" Value="{StaticResource NegativeTitleBarHeight}" />
-                        <Setter Target="TitleBarArea.Background" Value="{ThemeResource PixevalAppAcrylicBrush}" />
-                        <Setter Target="TitleBarBorder.Background" Value="Transparent" />
-                    </VisualState.Setters>
-                </VisualState>
-            </VisualStateGroup>
-        </VisualStateManager.VisualStateGroups>
     </Grid>
-</controls:EnhancedWindowPage>
+</controls:EnhancedPage>

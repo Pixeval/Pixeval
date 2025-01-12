@@ -5,7 +5,6 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:Pixeval.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Unloaded="IllustratorViewOnUnloaded"
     mc:Ignorable="d">
     <local:EntryView
         x:Name="IllustrateView"

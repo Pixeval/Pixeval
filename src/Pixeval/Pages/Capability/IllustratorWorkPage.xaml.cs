@@ -1,7 +1,6 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL v3 License.
 
-using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Controls;
@@ -17,14 +16,13 @@ public sealed partial class IllustratorWorkPage : IScrollViewHost
 
     private long _uid;
 
-    public override void OnPageActivated(NavigationEventArgs e)
+    public override void OnPageActivated(NavigationEventArgs e, object? parameter)
     {
         if (e.Parameter is not long id)
             return;
         _uid = id;
+        ChangeSource();
     }
-
-    private void IllustratorWorkPage_OnLoaded(object sender, RoutedEventArgs e) => ChangeSource();
 
     private void WorkTypeComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e) => ChangeSource();
 

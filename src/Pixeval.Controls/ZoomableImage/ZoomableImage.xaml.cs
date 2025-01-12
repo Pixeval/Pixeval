@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Input;
-using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Pixeval.Utilities;
 using WinUI3Utilities.Attributes;
@@ -102,11 +101,10 @@ public sealed partial class ZoomableImage : UserControl
         }
     }
 
-    private void CanvasControlOnUnloaded(object sender, RoutedEventArgs e)
+    ~ZoomableImage()
     {
         IsDisposed = true;
         CanvasControl.Draw -= CanvasControlOnDraw;
-        CanvasControl.Unloaded -= CanvasControlOnUnloaded;
         _token.TryCancelDispose();
         foreach (var frame in _frames)
             frame.Dispose();

@@ -35,6 +35,8 @@ public static partial class AppInfo
 
     public const string IconApplicationUri = "Assets/Images/logo.ico";
 
+    public const string SvgIconApplicationUri = "Assets/Images/logo.svg";
+
     public static ApplicationData AppData { get; } = ApplicationData.GetDefault();
 
     public static IPropertySet LocalConfig => _containerConfig.Values;

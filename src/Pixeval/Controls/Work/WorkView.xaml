@@ -6,7 +6,6 @@
     xmlns:flyoutContent="using:Pixeval.Controls.FlyoutContent"
     xmlns:local="using:Pixeval.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Unloaded="WorkView_OnUnloaded"
     mc:Ignorable="d">
     <UserControl.Resources>
         <DataTemplate x:Key="NovelItemDataTemplate" x:DataType="local:NovelItemViewModel">

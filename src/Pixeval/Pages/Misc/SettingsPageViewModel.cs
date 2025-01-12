@@ -70,7 +70,7 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
     private CancellationTokenSource? _cancellationTokenSource;
 
     /// <inheritdoc/>
-    public SettingsPageViewModel(ulong hWnd) : base(hWnd)
+    public SettingsPageViewModel(FrameworkElement frameworkElement) : base(frameworkElement)
     {
         LocalGroups =
         [
@@ -108,7 +108,11 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
                     t => t.DefaultSelectedTabItem,
                     MainPageTabItemExtension.GetItems()),
                 new StringAppSettingsEntry(AppSettings,
-                    t => t.WebCookie) { Placeholder = SettingsPageResources.WebCookieTextBoxPlaceholderText }
+                    t => t.WebCookie)
+                {
+                    Placeholder = SettingsPageResources.WebCookieTextBoxPlaceholderText,
+                    ValueChanged = t => App.AppViewModel.MakoClient.Configuration.Cookie = t
+                }
             },
             new(SettingsEntryCategory.BrowsingExperience)
             {
@@ -325,7 +329,7 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
                 downloaded = true;
                 if (_cancellationTokenSource is { IsCancellationRequested: true })
                     return;
-                if (await HWnd.CreateOkCancelAsync(SettingsPageResources.UpdateApp,
+                if (await FrameworkElement.CreateOkCancelAsync(SettingsPageResources.UpdateApp,
                         SettingsPageResources.DownloadedAndWaitingToInstall.Format(appReleaseModel.Version)) is ContentDialogResult.Primary)
                 {
                     var process = new Process
@@ -369,7 +373,7 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
 
     public void ShowClearData(ClearDataKind kind)
     {
-        HWnd.SuccessGrowl(ClearDataKindExtension.GetResource(kind));
+        FrameworkElement.SuccessGrowl(ClearDataKindExtension.GetResource(kind));
     }
 
     public void CancelToken()

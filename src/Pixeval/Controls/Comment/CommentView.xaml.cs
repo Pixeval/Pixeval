@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using Microsoft.UI.Xaml;
 using WinUI3Utilities.Attributes;
 
 namespace Pixeval.Controls;
@@ -29,7 +28,7 @@ public sealed partial class CommentView
         DeleteHyperlinkButtonClick?.Invoke(viewModel);
     }
 
-    private void CommentView_OnUnloaded(object sender, RoutedEventArgs e)
+    ~CommentView()
     {
         if (CommentsList.ItemsSource is IEnumerable<CommentItemViewModel> list)
             foreach (var commentBlockViewModel in list)

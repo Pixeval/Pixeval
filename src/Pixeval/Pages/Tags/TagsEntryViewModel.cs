@@ -34,11 +34,8 @@ public partial class TagsEntryViewModel : ObservableObject, IEntry
 
     public long Id { get; private set; }
 
-    /// <remarks>
-    /// Should be private set
-    /// </remarks>
     [ObservableProperty]
-    public partial ImageSource? Thumbnail { get; set; }
+    public partial ImageSource? Thumbnail { get; private set; }
 
     public FrozenSet<string>? TagsSet
     {
@@ -62,9 +59,6 @@ public partial class TagsEntryViewModel : ObservableObject, IEntry
 
     public ObservableCollection<string> Tags { get; } = [];
 
-    /// <remarks>
-    /// Should be private set
-    /// </remarks>
     [ObservableProperty]
     public partial Illustration? Illustration { get; set; }
 
@@ -107,7 +101,6 @@ public partial class TagsEntryViewModel : ObservableObject, IEntry
 
     private static async void LoadInfo(TagsEntryViewModel entry, string path)
     {
-        var illustration = null as Illustration;
         var tags = null as FrozenSet<string>;
         var id = 0L;
         await Task.Run(async () =>

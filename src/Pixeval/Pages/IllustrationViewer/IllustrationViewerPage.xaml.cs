@@ -7,7 +7,6 @@ using System.Numerics;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
-using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
@@ -20,7 +19,6 @@ using WinRT;
 using WinUI3Utilities;
 using Windows.System;
 using Microsoft.Extensions.DependencyInjection;
-using Pixeval.Controls.Windowing;
 using Pixeval.Extensions;
 using Pixeval.Extensions.Common.Commands.Transformers;
 using SymbolIcon = FluentIcons.WinUI.SymbolIcon;
@@ -55,10 +53,12 @@ public sealed partial class IllustrationViewerPage
         }
     }
 
-    public override void OnPageActivated(NavigationEventArgs e, object? parameter)
+    public override void OnPageActivated(NavigationEventArgs e, object? parameter) => SetViewModel(parameter);
+
+    public void SetViewModel(object? parameter)
     {
         // 此处this.XamlRoot为null
-        _viewModel = HWnd.GetIllustrationViewerPageViewModelFromHandle(parameter);
+        _viewModel = this.GetIllustrationViewerPageViewModelFromHandle(parameter);
 
         _viewModel.DetailedPropertyChanged += (sender, args) =>
         {
@@ -95,14 +95,6 @@ public sealed partial class IllustrationViewerPage
             var vm = sender.To<IllustrationViewerPageViewModel>();
             switch (args.PropertyName)
             {
-                case nameof(IllustrationViewerPageViewModel.IsFullScreen):
-                {
-                    var window = WindowFactory.ForkedWindows[HWnd];
-                    window.AppWindow.SetPresenter(vm.IsFullScreen
-                        ? AppWindowPresenterKind.FullScreen
-                        : AppWindowPresenterKind.Default);
-                    break;
-                }
                 case nameof(IllustrationViewerPageViewModel.CurrentImage):
                 {
                     foreach (var appBarButton in ExtensionsCommandBar.PrimaryCommands.OfType<AppBarButton>())
@@ -117,19 +109,11 @@ public sealed partial class IllustrationViewerPage
 
         // 第一次_viewModel.CurrentIllustrationIndex变化时，还没有订阅事件，所以不会触发DetailedPropertyChanged，需要手动触发
         Navigate<ImageViewerPage>(IllustrationImageShowcaseFrame, _viewModel.CurrentImage);
-    }
 
-    private void IllustrationViewerPage_OnLoaded(object sender, RoutedEventArgs e)
-    {
         if (!App.AppViewModel.AppSettings.BrowseOriginalImage)
         {
             _viewModel.AdditionalText = EntryViewerPageResources.BrowsingCompressedImage;
         }
-
-        // Invokes the drag region calculation manually 9/11/2024
-        TitleBarArea.SetDragRegionForCustomTitleBar();
-        var dataTransferManager = DataTransferManagerInterop.GetForWindow((nint)HWnd);
-        dataTransferManager.DataRequested += OnDataTransferManagerOnDataRequested;
 
         CommandBorderDropShadow.Receivers.Add(IllustrationImageShowcaseFrame);
         ThumbnailListDropShadow.Receivers.Add(IllustrationImageShowcaseFrame);
@@ -159,43 +143,10 @@ public sealed partial class IllustrationViewerPage
         ExtensionsCommandBar.PrimaryCommands.Add(new AppBarSeparator());
     }
 
-    private void IllustrationViewerPage_OnUnloaded(object sender, RoutedEventArgs e)
-    {
-        _viewModel.Dispose();
-    }
-
     private async void FrameworkElement_OnDataContextChanged(FrameworkElement sender, DataContextChangedEventArgs e)
     {
         var viewModel = sender.GetDataContext<IllustrationItemViewModel>();
         _ = await viewModel.TryLoadThumbnailAsync(_viewModel);
-    }
-
-    private void ExitFullScreenKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender,
-        KeyboardAcceleratorInvokedEventArgs args) => _viewModel.IsFullScreen = false;
-
-    private async void OnDataTransferManagerOnDataRequested(DataTransferManager sender, DataRequestedEventArgs args)
-    {
-        var vm = _viewModel.CurrentIllustration;
-        if (!_viewModel.CurrentImage.LoadSuccessfully)
-            return;
-
-        var request = args.Request;
-        var deferral = request.GetDeferral();
-
-        var props = request.Data.Properties;
-
-        props.Title = EntryViewerPageResources.ShareTitleFormatted.Format(vm.Id);
-        props.Description = vm.Title;
-
-        var file = await _viewModel.CurrentImage.SaveToFolderAsync(AppKnownFolders.Temp);
-        request.Data.SetStorageItems([file]);
-        request.Data.ShareCanceled += FileDispose;
-        request.Data.ShareCompleted += FileDispose;
-        deferral.Complete();
-        return;
-
-        async void FileDispose(DataPackage dataPackage, object o) =>
-            await file?.DeleteAsync(StorageDeleteOption.PermanentDelete);
     }
 
     private void AddToBookmarkTeachingTip_OnCloseButtonClick(TeachingTip sender, object args)
@@ -203,7 +154,7 @@ public sealed partial class IllustrationViewerPage
         _viewModel.CurrentIllustration.AddToBookmarkCommand.Execute((BookmarkTagSelector.SelectedTags,
             BookmarkTagSelector.IsPrivate, _viewModel.CurrentImage.DownloadParameter));
 
-        HWnd.SuccessGrowl(EntryViewerPageResources.AddedToBookmark);
+        this.SuccessGrowl(EntryViewerPageResources.AddedToBookmark);
     }
 
     private void AddToBookmarkButton_OnClicked(object sender, RoutedEventArgs e) =>
@@ -270,10 +221,35 @@ public sealed partial class IllustrationViewerPage
         teachingTip.Target = appBarButton.IsInOverflow ? null : appBarButton;
     }
 
-    public Visibility IsLogoVisible()
+    ~IllustrationViewerPage() => _viewModel.Dispose();
+
+    private void IllustrationViewerPage_OnLoaded(object sender, RoutedEventArgs e)
     {
-        return WindowFactory.GetWindowForElement(this).HWnd != WindowFactory.RootWindow.HWnd
-            ? Visibility.Visible
-            : Visibility.Collapsed;
+        var dataTransferManager = DataTransferManagerInterop.GetForWindow((nint)Window.HWnd);
+        dataTransferManager.DataRequested += OnDataTransferManagerOnDataRequested;
+        return;
+        async void OnDataTransferManagerOnDataRequested(DataTransferManager s, DataRequestedEventArgs args)
+        {
+            var vm = _viewModel.CurrentIllustration;
+            if (!_viewModel.CurrentImage.LoadSuccessfully)
+                return;
+
+            var request = args.Request;
+            var deferral = request.GetDeferral();
+
+            var props = request.Data.Properties;
+
+            props.Title = EntryViewerPageResources.ShareTitleFormatted.Format(vm.Id);
+            props.Description = vm.Title;
+
+            var file = await _viewModel.CurrentImage.SaveToFolderAsync(AppKnownFolders.Temp);
+            request.Data.SetStorageItems([file]);
+            request.Data.ShareCanceled += FileDispose;
+            request.Data.ShareCompleted += FileDispose;
+            deferral.Complete();
+            return;
+
+            async void FileDispose(DataPackage dataPackage, object o) => await file?.DeleteAsync(StorageDeleteOption.PermanentDelete);
+        }
     }
 }

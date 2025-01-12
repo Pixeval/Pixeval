@@ -11,7 +11,7 @@ public sealed partial class MyPixivUsersPage : IScrollViewHost
 {
     public MyPixivUsersPage() => InitializeComponent();
 
-    public override void OnPageActivated(NavigationEventArgs e)
+    public override void OnPageActivated(NavigationEventArgs e, object? parameter)
     {
         if (e.Parameter is not long userId)
             userId = App.AppViewModel.PixivUid;

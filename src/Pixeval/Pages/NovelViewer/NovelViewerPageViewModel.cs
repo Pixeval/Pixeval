@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Windows.System;
-using CommunityToolkit.Mvvm.ComponentModel;
 using FluentIcons.Common;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
@@ -24,22 +23,16 @@ namespace Pixeval.Pages.NovelViewer;
 
 public partial class NovelViewerPageViewModel : DetailedUiObservableObject, IDisposable
 {
-    [ObservableProperty]
-    public partial bool IsFullScreen { get; set; }
-
     /// <summary>
     /// 
     /// </summary>
     /// <param name="novelViewModels"></param>
     /// <param name="currentNovelIndex"></param>
-    /// <param name="hWnd"></param>
-    public NovelViewerPageViewModel(IEnumerable<NovelItemViewModel> novelViewModels, int currentNovelIndex, ulong hWnd) : base(hWnd)
+    /// <param name="page"></param>
+    public NovelViewerPageViewModel(IEnumerable<NovelItemViewModel> novelViewModels, int currentNovelIndex, NovelViewerPage page) : base(page)
     {
         NovelsSource = novelViewModels.ToArray();
         CurrentNovelIndex = currentNovelIndex;
-
-        InitializeCommands();
-        FullScreenCommand.RefreshFullScreenCommand(false);
     }
 
     public void OnFrameworkElementOnActualThemeChanged(FrameworkElement frameworkElement, object o)
@@ -53,14 +46,12 @@ public partial class NovelViewerPageViewModel : DetailedUiObservableObject, IDis
     /// </summary>
     /// <param name="viewModel"></param>
     /// <param name="currentNovelIndex"></param>
-    /// <param name="hWnd"></param>
-    public NovelViewerPageViewModel(NovelViewViewModel viewModel, int currentNovelIndex, ulong hWnd) : base(hWnd)
+    /// <param name="page"></param>
+    public NovelViewerPageViewModel(NovelViewViewModel viewModel, int currentNovelIndex, NovelViewerPage page) : base(page)
     {
         ViewModelSource = new NovelViewViewModel(viewModel);
         ViewModelSource.DataProvider.View.FilterChanged += (_, _) => CurrentNovelIndex = Novels.IndexOf(CurrentNovel);
         CurrentNovelIndex = currentNovelIndex;
-
-        InitializeCommands();
     }
 
     private NovelViewViewModel? ViewModelSource { get; }
@@ -79,17 +70,17 @@ public partial class NovelViewerPageViewModel : DetailedUiObservableObject, IDis
         ViewModelSource?.Dispose();
     }
 
-    public NavigationViewTag[] Tags =>
+    public NavigationViewTag<WorkInfoPage, Novel> NovelInfoTag { get; } =
+        new(EntryViewerPageResources.InfoTabContent, null!);
+
+    public NavigationViewTag<CommentsPage, (SimpleWorkType, long Id)> CommentsTag { get; } =
+        new(EntryViewerPageResources.CommentsTabContent, default);
+
+    public IReadOnlyList<NavigationViewTag> Tags =>
     [
         NovelInfoTag,
         CommentsTag
     ];
-
-    public NavigationViewTag<WorkInfoPage, Novel> NovelInfoTag { get; } =
-        new(null!) { Content = EntryViewerPageResources.InfoTabContent };
-
-    public NavigationViewTag<CommentsPage, (SimpleWorkType, long Id)> CommentsTag { get; } =
-        new(default) { Content = EntryViewerPageResources.CommentsTabContent };
 
     #region Current相关
 
@@ -225,17 +216,6 @@ public partial class NovelViewerPageViewModel : DetailedUiObservableObject, IDis
 
     #region Commands
 
-    private void InitializeCommands()
-    {
-        FullScreenCommand.ExecuteRequested += FullScreenCommandOnExecuteRequested;
-    }
-
-    private void FullScreenCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
-    {
-        IsFullScreen = !IsFullScreen;
-        FullScreenCommand.RefreshFullScreenCommand(IsFullScreen);
-    }
-
     public XamlUICommand NovelSettingsCommand { get; } =
         EntryViewerPageResources.NovelSettings.GetCommand(Symbol.Settings);
 
@@ -243,8 +223,6 @@ public partial class NovelViewerPageViewModel : DetailedUiObservableObject, IDis
         EntryViewerPageResources.InfoAndComments.GetCommand(Symbol.Info, VirtualKey.F12);
 
     public XamlUICommand AddToBookmarkCommand { get; } = EntryItemResources.AddToBookmark.GetCommand(Symbol.Bookmark);
-
-    public XamlUICommand FullScreenCommand { get; } = "".GetCommand(Symbol.ArrowMaximize);
 
     #endregion
 

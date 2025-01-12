@@ -1,4 +1,4 @@
-<Page
+<controls:EnhancedPage
     x:Class="Pixeval.Pages.Capability.Feeds.FeedPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -9,7 +9,6 @@
     xmlns:media="using:CommunityToolkit.WinUI.Media"
     xmlns:ui="using:CommunityToolkit.WinUI"
     Background="Transparent"
-    Loaded="FeedPage_OnLoaded"
     mc:Ignorable="d">
     <Page.Resources>
         <media:AttachedCardShadow x:Key="ContentPanelShadow" Offset="4" />
@@ -165,4 +164,4 @@
             </Grid>
         </Grid>
     </SplitView>
-</Page>
+</controls:EnhancedPage>

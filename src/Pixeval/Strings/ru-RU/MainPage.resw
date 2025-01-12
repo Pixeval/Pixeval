@@ -133,7 +133,7 @@
     <value>История просмотров</value>
   </data>
   <data name="TagsTab.Content" xml:space="preserve">
-    <value>Управление тегами</value>
+    <value />
   </data>
   <data name="RecentPostsTab.Content" xml:space="preserve">
     <value>Новинки от подписок</value>
@@ -146,9 +146,6 @@
   </data>
   <data name="RecommendationsTab.Content" xml:space="preserve">
     <value>Рекомендации дня</value>
-  </data>
-  <data name="DownloadAndHistoriesTab.Content" xml:space="preserve">
-    <value>Загрузки и история</value>
   </data>
   <data name="DownloadListTab.Content" xml:space="preserve">
     <value>Список загрузок</value>

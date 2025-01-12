@@ -1,4 +1,4 @@
-<controls:EnhancedWindowPage
+<controls:EnhancedPage
     x:Class="Pixeval.Pages.Login.LoginPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -20,7 +20,7 @@
             VerticalAlignment="Top"
             controls2:DockPanel.Dock="Top"
             DisplayMode="Tall"
-            Window="{x:Bind windowing:WindowFactory.GetForkedWindows(HWnd)}">
+            Window="{x:Bind Window}">
             <controls2:TitleBar.Icon>
                 <ImageIcon Source="ms-appx:///Assets/Images/logo.svg" />
             </controls2:TitleBar.Icon>
@@ -203,4 +203,4 @@
             </Grid>
         </controls2:DockPanel>
     </controls2:DockPanel>
-</controls:EnhancedWindowPage>
+</controls:EnhancedPage>

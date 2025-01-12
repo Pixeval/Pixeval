@@ -14,15 +14,6 @@
             <Setter Property="Padding" Value="0" />
         </Style.Setters>
     </Style>
-    <Style
-        x:Key="PixevalTransparentButtonStyle"
-        BasedOn="{StaticResource DefaultButtonStyle}"
-        TargetType="Button">
-        <Style.Setters>
-            <Setter Property="BorderBrush" Value="Transparent" />
-            <Setter Property="Background" Value="Transparent" />
-        </Style.Setters>
-    </Style>
     <x:Double x:Key="PixevalButtonIconSize">16</x:Double>
     <CornerRadius x:Key="ControlTopCornerRadius">4,4,0,0</CornerRadius>
     <CornerRadius x:Key="ControlBottomCornerRadius">0,0,4,4</CornerRadius>

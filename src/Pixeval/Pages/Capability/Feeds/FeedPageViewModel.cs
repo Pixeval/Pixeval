@@ -16,13 +16,13 @@ public partial class FeedPageViewModel : EntryViewViewModel<IFeedEntry, Abstract
 
     private CancellationTokenSource _loadingCancellation = new();
 
-    public FeedPageViewModel(SharableViewDataProvider<IFeedEntry, AbstractFeedItemViewModel> dataProvider)
+    public FeedPageViewModel(SimpleViewDataProvider<IFeedEntry, AbstractFeedItemViewModel> dataProvider)
     {
         DataProvider = dataProvider;
         dataProvider.View.CollectionChanged += (_, _) => OnPropertyChanged(nameof(HasNoItem));
     }
 
-    public FeedPageViewModel() : this(new SharableViewDataProvider<IFeedEntry, AbstractFeedItemViewModel>())
+    public FeedPageViewModel() : this(new())
     {
     }
 

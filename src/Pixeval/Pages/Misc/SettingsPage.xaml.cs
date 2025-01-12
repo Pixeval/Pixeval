@@ -12,25 +12,30 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.AppManagement;
-using Pixeval.Controls;
+using Pixeval.Attributes;
 using Pixeval.Controls.Windowing;
 using Pixeval.Database.Managers;
 using Pixeval.Settings;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using WinUI3Utilities;
+using CommunityToolkit.WinUI.Controls;
+using CommunityToolkit.WinUI;
+using Windows.Foundation;
 
 namespace Pixeval.Pages.Misc;
 
 /// <summary>
 /// todo INotifyPropertyChanged
 /// </summary>
-public sealed partial class SettingsPage : IScrollViewHost, IDisposable, INotifyPropertyChanged
+public sealed partial class SettingsPage : IDisposable, INotifyPropertyChanged
 {
     private string CurrentVersion =>
         AppInfo.AppVersion.CurrentVersion.Let(t => $"{t.Major}.{t.Minor}.{t.Build}.{t.Revision}");
 
     private SettingsPageViewModel ViewModel { get; set; } = null!;
+
+    private SettingsEntryAttribute? _scrollToAttribute;
 
     private bool _disposed;
 
@@ -38,12 +43,39 @@ public sealed partial class SettingsPage : IScrollViewHost, IDisposable, INotify
 
     public override void OnPageActivated(NavigationEventArgs e, object? parameter)
     {
-        ViewModel = new SettingsPageViewModel(HWnd);
+        ViewModel = new SettingsPageViewModel(this);
+        _scrollToAttribute = parameter as SettingsEntryAttribute;
+
+        // ItemsControl会有缓动动画，ItemsRepeater会延迟加载，使用只好手动一次全部加载，以方便根据Tag导航
+        var style = Resources["SettingHeaderStyle"] as Style;
+
+        foreach (var group in ViewModel.LocalGroups.Concat<ISettingsGroup>(ViewModel.ExtensionGroups))
+        {
+            SettingsPanel.Children.Add(new TextBlock
+            {
+                Style = style,
+                Text = group.Header
+            });
+            foreach (var entry in group)
+                SettingsPanel.Children.Add(entry.Element);
+        }
+
+        var frameworkElement = SettingsPanel.FindChild<SettingsCard>(element => element.Tag is SettingsEntryAttribute a && Equals(a, _scrollToAttribute));
+
+        if (frameworkElement is not null)
+        {
+            var position = frameworkElement
+                .TransformToVisual(SettingsPanel)
+                // 神秘的偏移量
+                .TransformPoint(new Point(0, -160));
+
+            _ = SettingsPageScrollView.ScrollTo(position.X, position.Y);
+        }
     }
 
     public override void OnPageDeactivated(NavigatingCancelEventArgs e) => Dispose();
 
-    private void SettingsPage_OnUnloaded(object sender, RoutedEventArgs e) => Dispose();
+    ~SettingsPage() => Dispose();
 
     private void CheckForUpdateButton_OnClicked(object sender, RoutedEventArgs e)
     {
@@ -154,31 +186,6 @@ public sealed partial class SettingsPage : IScrollViewHost, IDisposable, INotify
         ViewModel.Dispose();
         ViewModel = null!;
     }
-
-    /// <summary>
-    /// <see cref="ItemsControl"/>会有缓动动画，<see cref="ItemsRepeater"/>会延迟加载，
-    /// 使用只好手动一次全部加载，以方便根据Tag导航
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    private void Panel_OnLoaded(object sender, RoutedEventArgs e)
-    {
-        var panel = sender.To<StackPanel>();
-        var style = Resources["SettingHeaderStyle"] as Style;
-
-        foreach (var group in ViewModel.LocalGroups.Concat<ISettingsGroup>(ViewModel.ExtensionGroups))
-        {
-            panel.Children.Add(new TextBlock
-            {
-                Style = style,
-                Text = group.Header
-            });
-            foreach (var entry in group)
-                panel.Children.Add(entry.Element);
-        }
-    }
-
-    public ScrollView ScrollView => SettingsPageScrollView;
 
     public event PropertyChangedEventHandler? PropertyChanged;
 

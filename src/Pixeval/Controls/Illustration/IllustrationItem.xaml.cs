@@ -4,7 +4,6 @@
 using System;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Pixeval.Controls.Windowing;
 using Pixeval.Options;
 using Windows.Foundation;
 using WinUI3Utilities;
@@ -24,8 +23,6 @@ public sealed partial class IllustrationItem
     public event Func<(ThumbnailDirection ThumbnailDirection, double DesiredHeight)> RequiredParam = null!;
 
     public event Func<TeachingTip> RequestTeachingTip = null!;
-
-    public ulong HWnd => WindowFactory.GetWindowForElement(this).HWnd;
 
     private static void OnViewModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {

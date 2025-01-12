@@ -17,7 +17,7 @@ public sealed partial class CondensedFeedPage
         WorkView.ThumbnailDirection = App.AppViewModel.AppSettings.ThumbnailDirection;
     }
 
-    public override void OnPageActivated(NavigationEventArgs e)
+    public override void OnPageActivated(NavigationEventArgs e, object? parameter)
     {
         switch (e.Parameter)
         {

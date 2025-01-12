@@ -8,6 +8,7 @@ using Pixeval.Util.UI;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using FluentIcons.Common;
+using Microsoft.UI.Xaml;
 using Pixeval.CoreApi.Model;
 
 namespace Pixeval.Controls;
@@ -32,12 +33,12 @@ public partial class WorkEntryViewModel<T>
     /// <summary>
     /// Parameter1: <see cref="ValueTuple{T1, T2}"/>
     /// <list type="bullet">
-    /// <item><term>T1</term><description><see cref="ulong"/></description></item>
+    /// <item><term>T1</term><description><see cref="FrameworkElement"/></description></item>
     /// <item><term>T2</term><description><see cref="GetImageStreams"/>?(<see cref="IllustrationItemViewModel"/>)</description></item>
     /// <item><term>T2</term><description><see cref="DocumentViewerViewModel"/>?(<see cref="NovelItemViewModel"/>)</description></item>
     /// </list>
     /// 
-    /// Parameter2: <see cref="ulong"/><br/>
+    /// Parameter2: <see cref="FrameworkElement"/><br/>
     /// Parameter3: <see langword="null"/>
     /// </summary>
     public XamlUICommand SaveCommand { get; } = EntryItemResources.Save.GetCommand(Symbol.Save, VirtualKeyModifiers.Control, VirtualKey.S);
@@ -45,12 +46,12 @@ public partial class WorkEntryViewModel<T>
     /// <summary>
     /// Parameter1: <see cref="ValueTuple{T1, T2}"/>
     /// <list type="bullet">
-    /// <item><term>T1</term><description><see cref="ulong"/></description></item>
+    /// <item><term>T1</term><description><see cref="FrameworkElement"/></description></item>
     /// <item><term>T2</term><description><see cref="GetImageStreams"/>?(<see cref="IllustrationItemViewModel"/>)</description></item>
     /// <item><term>T2</term><description><see cref="DocumentViewerViewModel"/>?(<see cref="NovelItemViewModel"/>)</description></item>
     /// </list>
     /// 
-    /// Parameter2: <see cref="ulong"/>
+    /// Parameter2: <see cref="FrameworkElement"/>
     /// </summary>
     public XamlUICommand SaveAsCommand { get; } = EntryItemResources.SaveAs.GetCommand(Symbol.SaveEdit, VirtualKeyModifiers.Control | VirtualKeyModifiers.Shift, VirtualKey.S);
 
@@ -58,7 +59,7 @@ public partial class WorkEntryViewModel<T>
     /// <see cref="IllustrationItemViewModel"/>:<br/>
     /// Parameter1: <see cref="ValueTuple{T1, T2}"/>
     /// <list type="bullet">
-    /// <item><term>T1</term><description><see cref="ulong"/></description></item>
+    /// <item><term>T1</term><description><see cref="FrameworkElement"/></description></item>
     /// <item><term>T2</term><description><see cref="GetImageStreams"/></description></item>
     /// </list>
     /// 
@@ -66,7 +67,7 @@ public partial class WorkEntryViewModel<T>
     /// <see cref="NovelItemViewModel"/>:<br/>
     /// Parameter1: <see cref="ValueTuple{T1, T2}"/>
     /// <list type="bullet">
-    /// <item><term>T1</term><description><see cref="ulong"/></description></item>
+    /// <item><term>T1</term><description><see cref="FrameworkElement"/></description></item>
     /// <item><term>T2</term><description><see cref="NovelContent"/></description></item>
     /// </list>
     /// 

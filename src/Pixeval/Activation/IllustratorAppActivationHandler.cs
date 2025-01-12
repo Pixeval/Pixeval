@@ -3,6 +3,7 @@
 
 using System;
 using System.Threading.Tasks;
+using Pixeval.Pages;
 using Pixeval.Pages.IllustratorViewer;
 using Pixeval.Util.Threading;
 using Pixeval.Util.UI;
@@ -25,7 +26,7 @@ public class IllustratorAppActivationHandler : IAppActivationHandler
         {
             try
             {
-                await IllustratorViewerHelper.CreateWindowWithPageAsync(id);
+                await MainPage.Current.TabViewParameter.CreateIllustratorPageAsync(id);
             }
             catch (Exception e)
             {

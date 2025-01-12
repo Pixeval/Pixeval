@@ -7,7 +7,6 @@
     xmlns:fluent="using:FluentIcons.WinUI"
     xmlns:local="using:Pixeval.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Loaded="PixivReplyBar_OnLoaded"
     mc:Ignorable="d">
     <controls:DockPanel HorizontalSpacing="5">
         <Button

@@ -4,8 +4,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Controls;
 using Pixeval.CoreApi.Global.Enum;
 using WinRT;
@@ -27,7 +27,7 @@ public sealed partial class RankingsPage : IScrollViewHost
 
     public DateTime MaxDate => DateTime.Now.AddDays(-2);
 
-    private void RankingsPage_OnLoaded(object sender, RoutedEventArgs e)
+    public override void OnPageActivated(NavigationEventArgs e, object? parameter)
     {
         ChangeEnumSource();
         ChangeSource();

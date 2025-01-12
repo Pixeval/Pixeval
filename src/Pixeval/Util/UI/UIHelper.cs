@@ -227,29 +227,29 @@ public static partial class UiHelper
         box.Document.SetText(TextSetOptions.None, "");
     }
 
-    public static IAsyncOperation<StorageFolder?> OpenFolderPickerAsync(this ulong hWnd) => WindowFactory.ForkedWindows[hWnd].PickSingleFolderAsync(PickerLocationId.PicturesLibrary);
+    public static IAsyncOperation<StorageFolder?> OpenFolderPickerAsync(this FrameworkElement frameworkElement) => WindowFactory.GetWindowForElement(frameworkElement).PickSingleFolderAsync(PickerLocationId.PicturesLibrary);
 
-    public static IAsyncOperation<StorageFile?> OpenFileOpenPickerAsync(this ulong hWnd) => WindowFactory.ForkedWindows[hWnd].PickSingleFileAsync(PickerLocationId.PicturesLibrary);
+    public static IAsyncOperation<StorageFile?> OpenFileOpenPickerAsync(this FrameworkElement frameworkElement) => WindowFactory.GetWindowForElement(frameworkElement).PickSingleFileAsync(PickerLocationId.PicturesLibrary);
 
-    public static IAsyncOperation<IReadOnlyList<StorageFile>> OpenMultipleDllsOpenPickerAsync(this ulong hWnd)
+    public static IAsyncOperation<IReadOnlyList<StorageFile>> OpenMultipleDllsOpenPickerAsync(this FrameworkElement frameworkElement)
     {
         var fileOpenPicker = new FileOpenPicker();
         fileOpenPicker.FileTypeFilter.Add(".dll");
         fileOpenPicker.FileTypeFilter.Add(".zip");
         fileOpenPicker.SuggestedStartLocation = PickerLocationId.Desktop;
-        InitializeWithWindow.Initialize(fileOpenPicker, (nint)hWnd);
+        InitializeWithWindow.Initialize(fileOpenPicker, (nint)WindowFactory.GetWindowForElement(frameworkElement).HWnd);
         return fileOpenPicker.PickMultipleFilesAsync();
     }
 
     public static async Task<T> AwaitPageTransitionAsync<T>(this Frame root) where T : Page
     {
-        await ThreadingHelper.SpinWaitAsync(() => root.Content is not T { IsLoaded: true });
+        await root.DispatcherQueue.SpinWaitAsync(() => root.Content is not T { IsLoaded: true });
         return (T)root.Content;
     }
 
     public static async Task<Page> AwaitPageTransitionAsync(this Frame root, Type pageType)
     {
-        await ThreadingHelper.SpinWaitAsync(() => root.Content is not Page { IsLoaded: true } || root.Content?.GetType() != pageType);
+        await root.DispatcherQueue.SpinWaitAsync(() => root.Content is not Page { IsLoaded: true } || root.Content?.GetType() != pageType);
         return (Page)root.Content;
     }
 
