@@ -285,7 +285,7 @@
     <value>Присоединиться к группе обратной связи</value>
   </data>
   <data name="LastCheckedPrefix" xml:space="preserve">
-    <value>Последняя проверка: </value>
+    <value>Последняя проверка:</value>
   </data>
   <data name="MaxDownloadConcurrencyLevelEntry.Description" xml:space="preserve">
     <value>Этот параметр ограничивает количество одновременных задач на загрузку. Максимум — количество ядер вашего процессора. Пожалуйста, настройте с умом, так как избыточное количество может привести к зависанию системы</value>
