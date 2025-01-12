@@ -129,9 +129,6 @@
   <data name="HistoriesTab.Content" xml:space="preserve">
     <value>Mon historique</value>
   </data>
-  <data name="TagsTab.Content" xml:space="preserve">
-    <value>Gestion des tags</value>
-  </data>
   <data name="RecentPostsTab.Content" xml:space="preserve">
     <value>Posts récents</value>
   </data>

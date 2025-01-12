@@ -117,37 +117,25 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="SparseBookmarkPrefix" xml:space="preserve">
-    <value>将</value>
+  <data name="SparseBookmarkFormatted" xml:space="preserve">
+    <value>将{0}添加到了收藏夹</value>
   </data>
-  <data name="SparseBookmarkSuffix" xml:space="preserve">
-    <value>添加到了收藏夹</value>
+  <data name="SparseFollowUserFormatted" xml:space="preserve">
+    <value>关注了{0}</value>
   </data>
-  <data name="SparseFollowUserPrefix" xml:space="preserve">
-    <value>关注了</value>
+  <data name="CondensedBookmarkFormatted" xml:space="preserve">
+    <value>添加了{0}等共{1}部作品到收藏夹</value>
   </data>
-  <data name="SparsePostIllustPrefix" xml:space="preserve">
-    <value>投稿了</value>
+  <data name="CondensedFollowUserFormatted" xml:space="preserve">
+    <value>关注了{0}等共{1}位用户</value>
   </data>
-  <data name="CondensedBookmarkPrefix" xml:space="preserve">
-    <value>添加了</value>
-  </data>
-  <data name="CondensedBookmarkFormattedSuffix" xml:space="preserve">
-    <value>等共{0}部作品到收藏夹</value>
-  </data>
-  <data name="CondensedFollowUserPrefix" xml:space="preserve">
-    <value>关注了</value>
-  </data>
-  <data name="CondensedFollowUserFormattedSuffix" xml:space="preserve">
-    <value>等共{0}位用户</value>
-  </data>
-  <data name="CondensedPostIllustPrefix" xml:space="preserve">
-    <value>投稿了</value>
-  </data>
-  <data name="CondensedPostIllustFormattedSuffix" xml:space="preserve">
-    <value>等共{0}部作品</value>
+  <data name="CondensedPostIllustFormatted" xml:space="preserve">
+    <value>投稿了{0}等共{1}部作品</value>
   </data>
   <data name="FeedListTextBlock.Text" xml:space="preserve">
     <value>用户动态</value>
+  </data>
+  <data name="SparsePostIllustFormatted" xml:space="preserve">
+    <value>投稿了{0}</value>
   </data>
 </root>
