@@ -135,12 +135,12 @@ public sealed partial class FeedPage
                     case FeedType.AddBookmark or FeedType.PostIllust:
                         IEnumerable<IWorkEntry> illustrations = await _viewModel.PerformLoadAsync(() => 
                             Task.WhenAll(entries.Select(entry => App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(entry!.Id))));
-                        FeedPageFrame.Navigate(typeof(CondensedFeedPage), illustrations, new CommonNavigationTransitionInfo());
+                        _ = FeedPageFrame.Navigate(typeof(CondensedFeedPage), illustrations, new CommonNavigationTransitionInfo());
                         break;
                     case FeedType.AddNovelBookmark:
                         IEnumerable<Novel> novels = await _viewModel.PerformLoadAsync(() =>
                             Task.WhenAll(entries.Select(entry => App.AppViewModel.MakoClient.GetNovelFromIdAsync(entry!.Id))));
-                        FeedPageFrame.Navigate(typeof(CondensedFeedPage), novels, new CommonNavigationTransitionInfo());
+                        _ = FeedPageFrame.Navigate(typeof(CondensedFeedPage), novels, new CommonNavigationTransitionInfo());
                         break;
                     case FeedType.AddFavorite:
                         break;
