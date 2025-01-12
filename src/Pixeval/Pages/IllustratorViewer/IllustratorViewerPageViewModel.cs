@@ -1,24 +1,8 @@
-#region Copyright (c) Pixeval/Pixeval
-// GPL v3 License
-// 
-// Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/IllustratorPageViewModel.cs
-// 
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-// 
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-// 
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#endregion
+// Copyright (c) Pixeval.
+// Licensed under the GPL v3 License.
 
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml.Input;
@@ -36,6 +20,7 @@ using Pixeval.Pages.Capability;
 using WinUI3Utilities;
 using Symbol = FluentIcons.Common.Symbol;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.UI.Xaml;
 using Pixeval.Util.IO.Caching;
 
 namespace Pixeval.Pages.IllustratorViewer;
@@ -51,27 +36,36 @@ public partial class IllustratorViewerPageViewModel : UiObservableObject
     [ObservableProperty]
     public partial bool IsFollowed { get; set; }
 
-    public NavigationViewTag<IllustratorWorkPage, long> WorkTag { get; }
+    public NavigationViewTag<IllustratorWorkPage> WorkTag { get; } =
+        new(EntryViewerPageResources.WorkNavigationViewItemContent) { Symbol = Symbol.Image };
 
-    public NavigationViewTag<BookmarksPage, long> BookmarksTag { get; }
+    public NavigationViewTag<BookmarksPage> BookmarksTag { get; } =
+        new(EntryViewerPageResources.BookmarksNavigationViewItemContent) { Symbol = Symbol.Library };
 
-    public NavigationViewTag<FollowingsPage, long> FollowingsTag { get; }
+    public NavigationViewTag<FollowingsPage> FollowingsTag { get; } =
+        new(EntryViewerPageResources.FollowingsNavigationViewItemContent) { Symbol = Symbol.PersonAdd };
 
-    public NavigationViewTag<MyPixivUsersPage, long> MyPixivUserTag { get; }
+    public NavigationViewTag<MyPixivUsersPage> MyPixivUserTag { get; } =
+        new(EntryViewerPageResources.MyPixivUserNavigationViewItemContent) { Symbol = Symbol.People };
 
-    public NavigationViewTag<RelatedUsersPage, long> RelatedUserTag { get; }
+    public NavigationViewTag<RelatedUsersPage> RelatedUserTag { get; } =
+        new(EntryViewerPageResources.RelatedUserNavigationViewItemContent) { Symbol = Symbol.PeopleCommunity };
 
-    public IllustratorViewerPageViewModel(PixivSingleUserResponse userDetail, ulong hWnd) : base(hWnd)
+    public IReadOnlyList<NavigationViewTag> Tags =>
+    [
+        WorkTag,
+        BookmarksTag,
+        FollowingsTag,
+        MyPixivUserTag,
+        RelatedUserTag
+    ];
+
+    public IllustratorViewerPageViewModel(PixivSingleUserResponse userDetail, FrameworkElement frameworkElement) : base(frameworkElement)
     {
         UserDetail = userDetail;
         IsFollowed = userDetail.UserEntity.IsFollowed;
         Metrics = userDetail.UserProfile;
-
-        WorkTag = new(Id);
-        BookmarksTag = new(Id);
-        FollowingsTag = new(Id);
-        MyPixivUserTag = new(Id);
-        RelatedUserTag = new(Id);
+        WorkTag.Parameter = BookmarksTag.Parameter = FollowingsTag.Parameter = MyPixivUserTag.Parameter = RelatedUserTag.Parameter = Id;
 
         InitializeCommands();
         _ = SetAvatarAndBackgroundAsync();
@@ -151,13 +145,13 @@ public partial class IllustratorViewerPageViewModel : UiObservableObject
     {
         UiHelper.ClipboardSetText(MakoHelper.GenerateUserAppUri(Id).OriginalString);
 
-        HWnd.SuccessGrowl(EntryItemResources.LinkCopiedToClipboard);
+        FrameworkElement.SuccessGrowl(EntryItemResources.LinkCopiedToClipboard);
     }
 
     private void GenerateWebLinkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
         UiHelper.ClipboardSetText( MakoHelper.GenerateUserWebUri(Id).OriginalString);
-        (args.Parameter as ulong?)?.SuccessGrowl(EntryItemResources.LinkCopiedToClipboard);
+        (args.Parameter as FrameworkElement)?.SuccessGrowl(EntryItemResources.LinkCopiedToClipboard);
     }
 
     private async void OpenInWebBrowserCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)

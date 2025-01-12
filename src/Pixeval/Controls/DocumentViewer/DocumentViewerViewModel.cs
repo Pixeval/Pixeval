@@ -1,24 +1,5 @@
-#region Copyright
-
-// GPL v3 License
-// 
-// Pixeval/Pixeval
-// Copyright (c) 2024 Pixeval/DocumentViewerViewModel.cs
-// 
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-// 
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-// 
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-#endregion
+// Copyright (c) Pixeval.
+// Licensed under the GPL v3 License.
 
 using System;
 using System.Collections.Generic;
@@ -38,6 +19,7 @@ using QuestPDF.Fluent;
 using QuestPDF.Infrastructure;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.UI.Xaml;
 using Pixeval.Util.IO.Caching;
 using Pixeval.Utilities;
 
@@ -79,11 +61,11 @@ public partial class DocumentViewerViewModel(NovelContent novelContent) : Observ
 
     public ObservableCollection<List<Paragraph>> Pages { get; } = [];
 
-    public async Task LoadRtfContentAsync()
+    public async Task LoadRtfContentAsync(FrameworkElement frameworkElement)
     {
         var index = 0;
         var length = NovelContent.Text.Length;
-        var parser = new PixivNovelRtfParser();
+        var parser = new PixivNovelRtfParser(frameworkElement);
         Pages.Add(parser.Parse(NovelContent.Text, ref index, this));
         await Task.Yield();
         while (index < length)
@@ -230,12 +212,12 @@ public partial class DocumentViewerViewModel(NovelContent novelContent) : Observ
 
     private CancellationTokenSource LoadingCancellationTokenSource { get; } = new();
 
-    public static async Task<DocumentViewerViewModel> CreateAsync(NovelItemViewModel novelItem, Action<Task> callback)
+    public static async Task<DocumentViewerViewModel> CreateAsync(FrameworkElement frameworkElement, NovelItemViewModel novelItem, Action<Task> callback)
     {
         var novelContent = await novelItem.GetNovelContentAsync();
         var vm = new DocumentViewerViewModel(novelContent);
         var task1 = vm.LoadImagesAsync();
-        var task2 = vm.LoadRtfContentAsync();
+        var task2 = vm.LoadRtfContentAsync(frameworkElement);
         _ = Task.WhenAll(task1, task2).ContinueWith(callback, TaskScheduler.FromCurrentSynchronizationContext());
         BrowseHistoryPersistentManager.AddHistory(novelItem.Entry);
         return vm;

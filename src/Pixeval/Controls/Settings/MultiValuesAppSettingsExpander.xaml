@@ -9,7 +9,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Description="{x:Bind Entry.DescriptionControl}"
     Header="{x:Bind Entry.Header}"
-    Loaded="MultiValuesAppSettingsExpander_OnLoaded"
+    ItemsSource="{x:Bind Entry.Entries}"
     mc:Ignorable="d">
     <controls:SettingsExpander.HeaderIcon>
         <fluent:SymbolIcon Symbol="{x:Bind Entry.HeaderIcon}" />

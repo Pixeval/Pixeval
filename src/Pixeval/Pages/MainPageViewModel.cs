@@ -1,139 +1,160 @@
-#region Copyright (c) Pixeval/Pixeval
-// GPL v3 License
-// 
-// Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/MainPageViewModel.cs
-// 
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-// 
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-// 
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#endregion
+// Copyright (c) Pixeval.
+// Licensed under the GPL v3 License.
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.WinUI.Helpers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Media.Imaging;
-using Pixeval.AppManagement;
 using Pixeval.Controls;
 using Pixeval.Controls.Windowing;
+using Pixeval.CoreApi;
+using Pixeval.CoreApi.Model;
 using Pixeval.Pages.Capability;
 using Pixeval.Pages.Capability.Feeds;
 using Pixeval.Pages.Download;
 using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Pages.Misc;
 using Pixeval.Pages.Tags;
+using Pixeval.Util.ComponentModels;
 using Pixeval.Util.IO;
 using Pixeval.Util.IO.Caching;
 using Pixeval.Util.UI;
 
 namespace Pixeval.Pages;
 
-public partial class MainPageViewModel : ObservableObject
+public partial class MainPageViewModel : UiObservableObject
 {
-    public readonly NavigationViewTag<HelpPage> HelpTag = new();
+    public readonly NavigationViewTag<RecommendationPage> RecommendationsTag =
+        new(MainPageResources.RecommendationsTabContent) { ImageUri = GetIconUri("recommendations") };
 
-    public readonly NavigationViewTag<AboutPage> AboutTag = new();
+    public readonly NavigationViewTag<RankingsPage> RankingsTag =
+        new(MainPageResources.RankingsTabContent) { ImageUri = GetIconUri("ranking") };
 
-    public readonly NavigationViewTag<BookmarksPage> BookmarksTag = new();
+    public readonly NavigationViewTag<BookmarksPage> BookmarksTag =
+        new(MainPageResources.BookmarksTabContent) { ImageUri = GetIconUri("bookmarks") };
 
-    public readonly NavigationViewTag<FollowingsPage> FollowingsTag = new();
+    public readonly NavigationViewTag<FollowingsPage> FollowingsTag =
+        new(MainPageResources.FollowingsTabContent) { ImageUri = GetIconUri("followings") };
 
-    public readonly NavigationViewTag<BrowsingHistoryPage> HistoriesTag = new();
+    public readonly NavigationViewTag<SpotlightsPage> SpotlightsTag =
+        new(MainPageResources.SpotlightsTabContent) { ImageUri = GetIconUri("spotlight") };
 
-    public readonly NavigationViewTag<RankingsPage> RankingsTag = new();
+    public readonly NavigationViewTag<RecommendUsersPage> RecommendUsersTag =
+        new(MainPageResources.RecommendUsersTabContent) { ImageUri = GetIconUri("recommend-user") };
 
-    public readonly NavigationViewTag<RecentPostsPage> RecentPostsTag = new();
+    public readonly NavigationViewTag<RecentPostsPage> RecentPostsTag =
+        new(MainPageResources.RecentPostsTabContent) { ImageUri = GetIconUri("recent-posts") };
 
-    public readonly NavigationViewTag<NewWorksPage> NewWorksTag = new();
-    
-    public readonly NavigationViewTag<FeedPage> FeedTag = new();
+    public readonly NavigationViewTag<NewWorksPage> NewWorksTag =
+        new(MainPageResources.NewWorksTabContent) { ImageUri = GetIconUri("new-works") };
 
-    public readonly NavigationViewTag<RecommendationPage> RecommendsTag = new();
+    public readonly NavigationViewTag<FeedPage> FeedTag =
+        new(MainPageResources.FeedTabContent) { ImageUri = GetIconUri("feed") };
 
-    public readonly NavigationViewTag<RecommendUsersPage> RecommendUsersTag = new();
+    public readonly NavigationViewTag<BrowsingHistoryPage> HistoriesTag =
+        new(MainPageResources.HistoriesTabContent) { ImageUri = GetIconUri("history") };
 
-    public readonly NavigationViewTag<TagsPage> TagsTag = new();
+    public readonly NavigationViewTag<DownloadPage> DownloadListTag =
+        new(MainPageResources.DownloadListTabContent) { ImageUri = GetIconUri("download-list") };
 
-    public readonly NavigationViewTag<DownloadPage> DownloadListTag = new();
+    public readonly NavigationViewTag<TagsPage> TagsTag =
+        new(MainPageResources.TagsTabContent) { ImageUri = GetIconUri("tag") };
 
-    public readonly NavigationViewTag<SettingsPage> SettingsTag = new();
+    public readonly NavigationViewTag<ExtensionsPage> ExtensionsTag =
+        new(MainPageResources.ExtensionsTabContent) { ImageUri = GetIconUri("extensions") };
 
-    public readonly NavigationViewTag<SpotlightsPage> SpotlightsTag = new();
+    public readonly NavigationViewTag<HelpPage> HelpTag =
+        new(MainPageResources.HelpTabContent) { ImageUri = GetIconUri("help") };
 
-    public readonly IconElement RecommendationIcon = new ImageIcon { Source = new BitmapImage(AppInfo.NavigationIconUri("recommendations-128x128"))};
+    public readonly NavigationViewTag<AboutPage> AboutTag =
+        new(MainPageResources.AboutTabContent) { ImageUri = GetIconUri("about") };
 
-    public readonly IconElement RankingIcon = new ImageIcon { Source = new BitmapImage(AppInfo.NavigationIconUri("ranking-128x128")) };
+    public readonly NavigationViewTag<SettingsPage> SettingsTag;
 
-    // Due to my incompetence, the sizes of the icons must be adjusted per item basis in order to ensure the visual coherence, which is quite annoying.
-    // This was supposed to be an easy fix, but I'm already exhausted now. 
+    public static NavigationViewTag<SettingsPage> GetSettingsTag(object? parameter = null) => 
+        new(MainPageResources.SettingsTabContent, parameter) { ImageUri = GetIconUri("settings") };
 
-    public readonly IconElement BookmarksIcon = new ImageIcon { Source = new BitmapImage(AppInfo.NavigationIconUri("bookmarks-128x128"))};
+    public readonly NavigationViewTag<SearchUsersPage> SearchUsersTag = new(MainPageResources.SearchUsersResult);
 
-    public readonly IconElement FollowingsIcon = new ImageIcon { Source = new BitmapImage(AppInfo.NavigationIconUri("followings-128x128")) };
+    public readonly NavigationViewTag<SearchWorksPage> SearchWorksTag = new(MainPageResources.SearchWorksResult);
 
-    public readonly IconElement SpotlightIcon = new ImageIcon { Source = new BitmapImage(AppInfo.NavigationIconUri("spotlight-128x128")) };
+    public IReadOnlyList<INavigationViewItem> MenuItems =>
+    [
+        RecommendationsTag,
+        RankingsTag,
+        BookmarksTag,
+        FollowingsTag,
+        SpotlightsTag,
+        RecommendUsersTag,
+        RecentPostsTag,
+        NewWorksTag,
+        FeedTag,
+        new NavigationViewSeparator(),
+        HistoriesTag,
+        DownloadListTag
+    ];
 
-    public readonly IconElement RecommendUserIcon = new ImageIcon { Source = new BitmapImage(AppInfo.NavigationIconUri("recommend-user-128x128")) };
-
-    public readonly IconElement RecentPostsIcon = new ImageIcon { Source = new BitmapImage(AppInfo.NavigationIconUri("recent-posts-128x128")) };
-
-    public readonly IconElement NewWorksIcon = new ImageIcon { Source = new BitmapImage(AppInfo.NavigationIconUri("new-works-128x128")) };
-
-    public readonly IconElement FeedIcon = new ImageIcon { Source = new BitmapImage(AppInfo.NavigationIconUri("feed-128x128")) };
-
-    public readonly IconElement TagIcon = new ImageIcon { Source = new BitmapImage(AppInfo.NavigationIconUri("tag-128x128")) };
-
-    public readonly IconElement HistoryIcon = new ImageIcon { Source = new BitmapImage(AppInfo.NavigationIconUri("history-128x128")) };
-
-    public readonly IconElement DownloadListIcon = new ImageIcon { Source = new BitmapImage(AppInfo.NavigationIconUri("download-list-128x128")) };
-
-    public readonly IconElement HelpIcon = new ImageIcon { Source = new BitmapImage(AppInfo.NavigationIconUri("help-128x128")) };
-
-    public readonly IconElement AboutIcon = new ImageIcon { Source = new BitmapImage(AppInfo.NavigationIconUri("about-128x128")) };
-
-    public readonly IconElement SettingsIcon = new ImageIcon { Source = new BitmapImage(AppInfo.NavigationIconUri("settings-128x128")) };
+    public IReadOnlyList<INavigationViewItem> FooterMenuItems =>
+    [
+        TagsTag,
+        ExtensionsTag,
+        HelpTag,
+        AboutTag,
+        new NavigationViewSeparator(),
+        SettingsTag
+    ];
 
     [ObservableProperty]
     public partial ImageSource? AvatarSource { get; set; }
 
-    public string UserName => App.AppViewModel.MakoClient.Session.Name;
+    [ObservableProperty]
+    public partial string UserName { get; set; } = App.AppViewModel.MakoClient.Me.Name;
 
-    private readonly FrameworkElement _owner;
-
-    public MainPageViewModel(FrameworkElement owner)
+    public MainPageViewModel(FrameworkElement owner) : base(owner)
     {
-        _owner = owner;
-        DownloadAndSetAvatar();
+        SettingsTag = GetSettingsTag();
+        SubscribeTokenRefresh();
     }
 
     public double MainPageRootNavigationViewOpenPanelLength => 280;
 
     public SuggestionStateMachine SuggestionProvider { get; } = new();
 
-    /// <summary>
-    /// Download user's avatar and set to the Avatar property.
-    /// </summary>
-    public async void DownloadAndSetAvatar()
+    private WeakEventListener<MakoClient, object?, TokenUser> _tokenRefreshedListener = null!;
+
+    private WeakEventListener<MakoClient, object?, Exception> _tokenRefreshFailedListener = null!;
+
+    public void SubscribeTokenRefresh()
     {
         var makoClient = App.AppViewModel.MakoClient;
-        // get byte array of avatar
-        // and set to the bitmap image
-        AvatarSource = await App.AppViewModel.AppServiceProvider.GetRequiredService<MemoryCache>().GetSourceFromMemoryCacheAsync(makoClient.Session.AvatarUrl);
+        _tokenRefreshedListener?.Detach();
+        _tokenRefreshedListener = new(App.AppViewModel.MakoClient)
+        {
+            OnEventAction = (m, changed, arg) => FrameworkElement.DispatcherQueue.TryEnqueue(async () =>
+            {
+                AvatarSource = await App.AppViewModel.AppServiceProvider.GetRequiredService<MemoryCache>().GetSourceFromMemoryCacheAsync(arg.ProfileImageUrls.Px50X50);
+                UserName = arg.Name;
+            }),
+            OnDetachAction = listener => makoClient.TokenRefreshed -= listener.OnEvent
+        };
+        makoClient.TokenRefreshed += _tokenRefreshedListener.OnEvent;
+
+        _tokenRefreshFailedListener?.Detach();
+        _tokenRefreshFailedListener = new(App.AppViewModel.MakoClient)
+        {
+            OnEventAction = (m, changed, arg) => FrameworkElement.DispatcherQueue.TryEnqueue(() =>
+                _ = FrameworkElement.CreateAcknowledgementAsync(
+                    MainPageResources.RefreshingSessionFailedTitle,
+                    MainPageResources.RefreshingSessionFailedContent)),
+            OnDetachAction = listener => makoClient.TokenRefreshedFailed -= listener.OnEvent
+        };
+        makoClient.TokenRefreshedFailed += _tokenRefreshFailedListener.OnEvent;
     }
 
     public async Task ReverseSearchAsync(Stream stream)
@@ -151,14 +172,14 @@ public partial class MainPageViewModel : ObservableObject
                             await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(r.Data.PixivId))));
 
                 if (viewModels.Length is 0)
-                    _ = _owner.CreateAcknowledgementAsync(MainPageResources.ReverseSearchNotFoundTitle,
+                    _ = FrameworkElement.CreateAcknowledgementAsync(MainPageResources.ReverseSearchNotFoundTitle,
                             MainPageResources.ReverseSearchNotFoundContent);
                 else
-                    viewModels[0].CreateWindowWithPage(viewModels);
+                    FrameworkElement.CreateIllustrationPage(viewModels[0], viewModels);
             }
             else
             {
-                _ = await _owner.CreateAcknowledgementAsync(MainPageResources.ReverseSearchErrorTitle,
+                _ = await FrameworkElement.CreateAcknowledgementAsync(MainPageResources.ReverseSearchErrorTitle,
                     result.Header.Status > 0
                         ? MainPageResources.ReverseSearchServerSideErrorContent
                         : MainPageResources.ReverseSearchClientSideErrorContent);
@@ -166,7 +187,12 @@ public partial class MainPageViewModel : ObservableObject
         }
         catch (Exception e)
         {
-            _ = await _owner.CreateAcknowledgementAsync(MiscResources.ExceptionEncountered, e.ToString());
+            _ = await FrameworkElement.CreateAcknowledgementAsync(MiscResources.ExceptionEncountered, e.ToString());
         }
+    }
+
+    private static Uri GetIconUri(string iconName)
+    {
+        return new($"ms-appx:///Assets/Images/Icons/{iconName}.png");
     }
 }

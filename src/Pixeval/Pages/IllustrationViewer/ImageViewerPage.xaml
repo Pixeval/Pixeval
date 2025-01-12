@@ -1,4 +1,4 @@
-<controls:EnhancedWindowPage
+<controls:EnhancedPage
     x:Class="Pixeval.Pages.IllustrationViewer.ImageViewerPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -16,7 +16,7 @@
             IsPlaying="{x:Bind _viewModel.IsPlaying, Mode=OneWay}"
             Mode="{x:Bind _viewModel.ShowMode, Mode=TwoWay}"
             MsIntervals="{x:Bind _viewModel.MsIntervals, Mode=OneWay}"
-            Source="{x:Bind _viewModel.OriginalStreamsSource, Mode=OneWay}">
+            Source="{x:Bind _viewModel.DisplayStreamsSource, Mode=OneWay}">
             <controls:ZoomableImage.ContextFlyout>
                 <!--  PrimaryCommands 点击后不会自动隐藏Flyout  -->
                 <CommandBarFlyout>
@@ -48,7 +48,7 @@
                         </AppBarButton>
                         <AppBarSeparator />
                         <!--<AppBarButton Command="{x:Bind _viewModel.IllustrationViewModel.GenerateLinkCommand}" />-->
-                        <AppBarButton Command="{x:Bind _viewModel.IllustrationViewModel.GenerateWebLinkCommand}" CommandParameter="{x:Bind HWnd}" />
+                        <AppBarButton Command="{x:Bind _viewModel.IllustrationViewModel.GenerateWebLinkCommand}" CommandParameter="{x:Bind}" />
                         <AppBarButton Command="{x:Bind _viewModel.IllustrationViewModel.OpenInWebBrowserCommand}" />
                         <!--<AppBarButton
                                 Command="{x:Bind _viewModel.ShowQrCodeCommand}"
@@ -79,4 +79,4 @@
             </StackPanel>
         </Grid>
     </Grid>
-</controls:EnhancedWindowPage>
+</controls:EnhancedPage>

@@ -39,15 +39,15 @@
     </Grid.RenderTransform>
     <Grid.ContextFlyout>
         <MenuFlyout>
-            <MenuFlyoutItem Command="{x:Bind ViewModel.BookmarkCommand, Mode=OneWay}" CommandParameter="{x:Bind HWnd}" />
+            <MenuFlyoutItem Command="{x:Bind ViewModel.BookmarkCommand, Mode=OneWay}" CommandParameter="{x:Bind}" />
             <MenuFlyoutItem Click="AddToBookmark_OnClicked" Command="{x:Bind ViewModel.AddToBookmarkCommand, Mode=OneWay}" />
             <MenuFlyoutItem Click="OpenUserInfoPage_OnClicked" Command="{x:Bind ViewModel.OpenUserInfoPage, Mode=OneWay}" />
             <MenuFlyoutSeparator />
-            <MenuFlyoutItem Command="{x:Bind ViewModel.SaveCommand, Mode=OneWay}" CommandParameter="{x:Bind HWnd}" />
+            <MenuFlyoutItem Command="{x:Bind ViewModel.SaveCommand, Mode=OneWay}" CommandParameter="{x:Bind}" />
             <MenuFlyoutSeparator />
             <MenuFlyoutItem Command="{x:Bind ViewModel.OpenInWebBrowserCommand, Mode=OneWay}" />
-            <MenuFlyoutItem Command="{x:Bind ViewModel.GenerateWebLinkCommand, Mode=OneWay}" CommandParameter="{x:Bind HWnd}" />
-            <MenuFlyoutItem Command="{x:Bind ViewModel.GenerateLinkCommand, Mode=OneWay}" CommandParameter="{x:Bind HWnd}" />
+            <MenuFlyoutItem Command="{x:Bind ViewModel.GenerateWebLinkCommand, Mode=OneWay}" CommandParameter="{x:Bind}" />
+            <MenuFlyoutItem Command="{x:Bind ViewModel.GenerateLinkCommand, Mode=OneWay}" CommandParameter="{x:Bind}" />
             <MenuFlyoutSeparator />
             <MenuFlyoutItem Command="{x:Bind ViewModel.ShowQrCodeCommand, Mode=OneWay}" CommandParameter="{x:Bind QrCodeTeachingTip}" />
             <MenuFlyoutItem Command="{x:Bind ViewModel.ShowPixEzQrCodeCommand, Mode=OneWay}" CommandParameter="{x:Bind QrCodeTeachingTip}" />
@@ -75,7 +75,7 @@
             HorizontalAlignment="Left"
             VerticalAlignment="Top"
             Command="{x:Bind ViewModel.BookmarkCommand, Mode=OneWay}"
-            CommandParameter="{x:Bind HWnd}" />
+            CommandParameter="{x:Bind}" />
         <controls:DockPanel
             Margin="10"
             VerticalAlignment="Bottom"
@@ -95,7 +95,7 @@
                 Visibility="{x:Bind local:C.ToVisibility(ViewModel.IsUgoira), Mode=OneWay}" />
             <Grid controls:DockPanel.Dock="Right">
                 <fluent:SymbolIcon
-                    Foreground="{StaticResource LayerFillColorDefaultBrush}"
+                    Foreground="{ThemeResource LayerFillColorDefaultBrush}"
                     IconVariant="Filled"
                     Symbol="SquareMultiple"
                     Visibility="{x:Bind local:C.ToVisibility(ViewModel.IsManga), Mode=OneWay}" />

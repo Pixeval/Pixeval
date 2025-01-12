@@ -247,25 +247,4 @@ R：下一篇小说</value>
   <data name="BrowsingCompressedImage" xml:space="preserve">
     <value>由于您未在设置中打开"浏览时查看原图"选项，因此该页面会显示压缩后的图片，若想要浏览原图，请在设置中打开对应选项</value>
   </data>
-  <data name="AiUpscaled" xml:space="preserve">
-    <value>AI超分辨率缩放已完成</value>
-  </data>
-  <data name="UpscaleTeachingTip.Title" xml:space="preserve">
-    <value>该功能有多个可调节选项！</value>
-  </data>
-  <data name="UpscaleTeachingTip.Subtitle" xml:space="preserve">
-    <value>您可以在设置中调节AI超分辨率缩放的选项，以获得最佳效果</value>
-  </data>
-  <data name="AiUpscalerWarningTitle" xml:space="preserve">
-    <value>AI超分辨率功能使用提示</value>
-  </data>
-  <data name="AiUpscalerWarningContent" xml:space="preserve">
-    <value>AI超分辨率缩放功能需要消耗大量资源（内存消耗达到1-2G)，可能会导致设备卡顿，建议在拥有较高性能CPU/GPU以及较高内存的设备上使用</value>
-  </data>
-  <data name="AiUpscalerWarningOkButtonContent" xml:space="preserve">
-    <value>继续使用</value>
-  </data>
-  <data name="AiUpscalerWarningCancelButtonContent" xml:space="preserve">
-    <value>取消使用</value>
-  </data>
 </root>

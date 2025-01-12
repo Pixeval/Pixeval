@@ -1,4 +1,4 @@
-<controls:EnhancedWindowPage
+<controls:EnhancedPage
     x:Class="Pixeval.Pages.IllustrationViewer.IllustrationViewerPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -9,72 +9,45 @@
     xmlns:flyoutContent="using:Pixeval.Controls.FlyoutContent"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:media="using:Microsoft.Xaml.Interactions.Media"
-    xmlns:triggers="using:Pixeval.Util.Triggers"
-    xmlns:winUi="using:FluentIcons.WinUI"
-    xmlns:windowing="using:Pixeval.Controls.Windowing"
     KeyboardAcceleratorPlacementMode="Hidden"
     Loaded="IllustrationViewerPage_OnLoaded"
-    Unloaded="IllustrationViewerPage_OnUnloaded"
     mc:Ignorable="d">
-    <controls:EnhancedWindowPage.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.ThemeDictionaries>
-                <ResourceDictionary x:Key="Default">
-                    <SolidColorBrush x:Key="BottomBarInfoForeground">#9F9F9F</SolidColorBrush>
-                    <SolidColorBrush x:Key="BottomBarBackground">#FCF8F5</SolidColorBrush>
-                </ResourceDictionary>
-                <ResourceDictionary x:Key="Light">
-                    <SolidColorBrush x:Key="BottomBarInfoForeground">#9F9F9F</SolidColorBrush>
-                    <SolidColorBrush x:Key="BottomBarBackground">#FCF8F5</SolidColorBrush>
-                </ResourceDictionary>
-                <ResourceDictionary x:Key="Dark">
-                    <SolidColorBrush x:Key="BottomBarInfoForeground">#7F7F7F</SolidColorBrush>
-                    <SolidColorBrush x:Key="BottomBarBackground">#2A2725</SolidColorBrush>
-                </ResourceDictionary>
-                <ResourceDictionary x:Key="HighContrast">
-                    <SolidColorBrush x:Key="BottomBarInfoForeground">#7F7F7F</SolidColorBrush>
-                    <SolidColorBrush x:Key="BottomBarBackground">#2A2725</SolidColorBrush>
-                </ResourceDictionary>
-            </ResourceDictionary.ThemeDictionaries>
-
-            <Thickness x:Key="NormalMargin">0,48,0,0</Thickness>
-            <AcrylicBrush
-                x:Key="BottomCommandSectionBackground"
-                FallbackColor="{StaticResource SecondaryAccentColor}"
-                TintColor="{StaticResource SecondaryAccentColor}"
-                TintLuminosityOpacity="0.8"
-                TintOpacity="0.8" />
-            <Style
-                x:Key="TextBlockStyle"
-                BasedOn="{StaticResource CaptionStrongTextBlockStyle}"
-                TargetType="TextBlock">
-                <Setter Property="FontSize" Value="15" />
-                <Setter Property="Margin" Value="10,0" />
-                <Setter Property="VerticalAlignment" Value="Center" />
-                <Setter Property="HorizontalTextAlignment" Value="Center" />
-                <Setter Property="TextAlignment" Value="Center" />
-                <Setter Property="TextTrimming" Value="CharacterEllipsis" />
-            </Style>
-        </ResourceDictionary>
-    </controls:EnhancedWindowPage.Resources>
-    <controls:EnhancedWindowPage.KeyboardAccelerators>
-        <KeyboardAccelerator Key="Escape" Invoked="ExitFullScreenKeyboardAccelerator_OnInvoked" />
+    <controls:EnhancedPage.Resources>
+        <Thickness x:Key="NormalMargin">0,48,0,0</Thickness>
+        <AcrylicBrush
+            x:Key="BottomCommandSectionBackground"
+            FallbackColor="{StaticResource SecondaryAccentColor}"
+            TintColor="{StaticResource SecondaryAccentColor}"
+            TintLuminosityOpacity="0.8"
+            TintOpacity="0.8" />
+        <Style
+            x:Key="TextBlockStyle"
+            BasedOn="{StaticResource CaptionStrongTextBlockStyle}"
+            TargetType="TextBlock">
+            <Setter Property="FontSize" Value="15" />
+            <Setter Property="Margin" Value="10,0" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="HorizontalTextAlignment" Value="Center" />
+            <Setter Property="TextAlignment" Value="Center" />
+            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+        </Style>
+    </controls:EnhancedPage.Resources>
+    <controls:EnhancedPage.KeyboardAccelerators>
         <KeyboardAccelerator Key="Left" Invoked="PrevButton_OnClicked" />
         <KeyboardAccelerator Key="Right" Invoked="NextButton_OnClicked" />
         <KeyboardAccelerator Key="Up" Invoked="PrevButton_OnRightTapped" />
         <KeyboardAccelerator Key="Down" Invoked="NextButton_OnRightTapped" />
-    </controls:EnhancedWindowPage.KeyboardAccelerators>
+    </controls:EnhancedPage.KeyboardAccelerators>
     <Grid>
-        <!--  ReSharper disable once UnusedMember.Local  -->
-        <Grid x:Name="WorkViewerSplitViewGrid" Margin="{StaticResource NormalMargin}">
+        <Grid>
             <Grid.RowDefinitions>
+                <RowDefinition Height="48" />
                 <RowDefinition Height="*" />
                 <RowDefinition Height="48" />
             </Grid.RowDefinitions>
             <controls:WorkViewerSplitView
                 x:Name="EntryViewerSplitView"
-                Grid.Row="0"
+                Grid.Row="1"
                 MenuItemsSource="{x:Bind _viewModel.Tags}">
                 <controls:WorkViewerSplitView.PaneContent>
                     <Grid Background="Transparent">
@@ -136,7 +109,7 @@
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Bottom"
                                     Background="{StaticResource BottomCommandSectionBackground}"
-                                    BorderBrush="{StaticResource SecondaryAccentBorderBrush}"
+                                    BorderBrush="{ThemeResource SecondaryAccentBorderBrush}"
                                     BorderThickness="0.5"
                                     CornerRadius="{ThemeResource ControlCornerRadius}"
                                     Opacity="0.7"
@@ -182,7 +155,7 @@
                                                 IsEnabled="{x:Bind _viewModel.CurrentImage.LoadSuccessfully, Mode=OneWay}" />
                                             <AppBarButton
                                                 Command="{x:Bind _viewModel.CurrentIllustration.MangaSaveCommand, Mode=OneWay}"
-                                                CommandParameter="{x:Bind HWnd}"
+                                                CommandParameter="{x:Bind}"
                                                 Visibility="{x:Bind controls:C.ToVisibility(_viewModel.CurrentIllustration.IsManga), Mode=OneWay}" />
                                         </CommandBar>
                                     </controls1:DockPanel>
@@ -192,7 +165,7 @@
                                 Margin="150,0"
                                 HorizontalAlignment="Center"
                                 Background="{StaticResource BottomCommandSectionBackground}"
-                                BorderBrush="{StaticResource SecondaryAccentBorderBrush}"
+                                BorderBrush="{ThemeResource SecondaryAccentBorderBrush}"
                                 BorderThickness="0.5"
                                 CornerRadius="{ThemeResource ControlCornerRadius}"
                                 Translation="0,0,30">
@@ -247,58 +220,93 @@
                     </Grid>
                 </controls:WorkViewerSplitView.PaneContent>
             </controls:WorkViewerSplitView>
+            <Grid Grid.Row="0" VerticalAlignment="Top">
+                <CommandBar HorizontalAlignment="Center" DefaultLabelPosition="Collapsed">
+                    <AppBarButton Command="{x:Bind _viewModel.CurrentImage.PlayGifCommand, Mode=OneWay}" Visibility="{x:Bind controls:C.ToVisibility(_viewModel.CurrentIllustration.IsUgoira), Mode=OneWay}" />
+                    <AppBarButton
+                        Command="{x:Bind _viewModel.CurrentPage.CopyCommand, Mode=OneWay}"
+                        CommandParameter="{x:Bind _viewModel.CurrentImage.DownloadParameter, Mode=OneWay}"
+                        IsEnabled="{x:Bind _viewModel.CurrentImage.LoadSuccessfully, Mode=OneWay}" />
+                    <AppBarButton
+                        Command="{x:Bind _viewModel.CurrentPage.SaveCommand, Mode=OneWay}"
+                        CommandParameter="{x:Bind _viewModel.CurrentImage.DownloadParameter, Mode=OneWay}"
+                        IsEnabled="{x:Bind _viewModel.CurrentImage.LoadSuccessfully, Mode=OneWay}" />
+                    <AppBarButton
+                        Command="{x:Bind _viewModel.CurrentPage.SaveAsCommand, Mode=OneWay}"
+                        CommandParameter="{x:Bind _viewModel.CurrentImage.DownloadParameter, Mode=OneWay}"
+                        IsEnabled="{x:Bind _viewModel.CurrentImage.LoadSuccessfully, Mode=OneWay}" />
+                    <AppBarButton
+                        Command="{x:Bind _viewModel.CurrentIllustration.MangaSaveCommand, Mode=OneWay}"
+                        CommandParameter="{x:Bind}"
+                        Visibility="{x:Bind controls:C.ToVisibility(_viewModel.CurrentIllustration.IsManga), Mode=OneWay}" />
+                    <AppBarButton
+                        Command="{x:Bind _viewModel.CurrentIllustration.MangaSaveAsCommand, Mode=OneWay}"
+                        CommandParameter="{x:Bind}"
+                        Visibility="{x:Bind controls:C.ToVisibility(_viewModel.CurrentIllustration.IsManga), Mode=OneWay}" />
+                    <AppBarSeparator />
+                    <AppBarButton Command="{x:Bind _viewModel.CurrentImage.SetAsCommand, Mode=OneWay}">
+                        <AppBarButton.Flyout>
+                            <MenuFlyout>
+                                <MenuFlyoutItem Command="{x:Bind _viewModel.CurrentImage.SetAsBackgroundCommand, Mode=OneWay}" />
+                                <MenuFlyoutItem Command="{x:Bind _viewModel.CurrentImage.SetAsLockScreenCommand, Mode=OneWay}" />
+                            </MenuFlyout>
+                        </AppBarButton.Flyout>
+                    </AppBarButton>
+                    <AppBarSeparator />
+                    <AppBarButton
+                        x:Name="AddToBookmarkButton"
+                        Click="AddToBookmarkButton_OnClicked"
+                        Command="{x:Bind _viewModel.AddToBookmarkCommand}"
+                        CommandParameter="{x:Bind _viewModel.CurrentImage.DownloadParameter, Mode=OneWay}" />
+                    <AppBarButton Command="{x:Bind _viewModel.CurrentIllustration.GenerateLinkCommand, Mode=OneWay}" CommandParameter="{x:Bind}" />
+                    <AppBarButton Command="{x:Bind _viewModel.CurrentIllustration.GenerateWebLinkCommand, Mode=OneWay}" CommandParameter="{x:Bind}" />
+                    <AppBarButton Command="{x:Bind _viewModel.CurrentIllustration.OpenInWebBrowserCommand, Mode=OneWay}" />
+                    <AppBarButton
+                        x:Name="ShowQrCodeButton"
+                        Command="{x:Bind _viewModel.CurrentIllustration.ShowQrCodeCommand, Mode=OneWay}"
+                        CommandParameter="{x:Bind ShowQrCodeTeachingTip}" />
+                    <AppBarButton Command="{x:Bind _viewModel.CurrentImage.ShareCommand, Mode=OneWay}" />
+                </CommandBar>
+            </Grid>
             <Grid
-                Grid.Row="1"
+                Grid.Row="2"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch"
-                Background="{ThemeResource BottomBarBackground}">
+                Background="{ThemeResource SolidBackgroundFillColorTertiaryBrush}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" MaxWidth="310" />
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <CommandBar Grid.Column="0" HorizontalAlignment="Stretch">
-                    <AppBarToggleButton
-                        HorizontalAlignment="Center"
-                        Command="{x:Bind _viewModel.InfoAndCommentsCommand}"
-                        IsChecked="{x:Bind EntryViewerSplitView.IsPaneOpen, Mode=TwoWay}"
-                        IsCompact="True"
-                        LabelPosition="Collapsed" />
+                <CommandBar
+                    Grid.Column="0"
+                    HorizontalAlignment="Stretch"
+                    DefaultLabelPosition="Collapsed">
+                    <AppBarToggleButton Command="{x:Bind _viewModel.InfoAndCommentsCommand}" IsChecked="{x:Bind EntryViewerSplitView.IsPaneOpen, Mode=TwoWay}" />
                     <AppBarSeparator />
                     <controls:AppBarTextItem
                         Padding="15,0"
-                        Foreground="{ThemeResource BottomBarInfoForeground}"
+                        Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"
                         Symbol="SlideGrid"
                         Text="{x:Bind _viewModel.CurrentIllustration.SizeText, Mode=OneWay}" />
                     <AppBarSeparator />
                     <controls:AppBarTextItem
                         Padding="15,0"
-                        Foreground="{ThemeResource BottomBarInfoForeground}"
+                        Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"
                         Symbol="AppTitle"
                         Text="{x:Bind _viewModel.CurrentIllustration.Title, Mode=OneWay}" />
                 </CommandBar>
-
-                <!--<TextBlock
-                    Grid.Column="1"
-                    MaxHeight="45"
-                    Margin="310,0,375,0"
-                    Style="{StaticResource TextBlockStyle}"
-                    Text="{x:Bind _viewModel.AdditionalText, Mode=OneWay}"
-                    TextWrapping="WrapWholeWords"
-                    Visibility="{x:Bind _viewModel.AdditionalTextBlockVisible, Mode=OneWay}" />
-
-                <StackPanel
-                    Margin="320,10,375,0"
+                <CommandBar
+                    x:Name="ExtensionsCommandBar"
+                    Grid.Column="2"
                     HorizontalAlignment="Stretch"
-                    VerticalAlignment="Center"
-                    Visibility="{x:Bind _viewModel.UpscalerProgressBarVisible, Mode=OneWay}">
-                    <ProgressBar Value="{x:Bind _viewModel.UpscalerProgress, Mode=OneWay}" />
-                    <TextBlock
-                        Margin="0,2,0,0"
-                        Style="{StaticResource CaptionTextBlockStyle}"
-                        Text="{x:Bind _viewModel.UpscalerProgressText}" />
-                </StackPanel>-->
-                <CommandBar Grid.Column="2" HorizontalAlignment="Stretch">
+                    DefaultLabelPosition="Collapsed"
+                    Visibility="{x:Bind controls:C.ToVisibilityNegation(_viewModel.CurrentIllustration.IsUgoira), Mode=OneWay}" />
+                <CommandBar
+                    Grid.Column="3"
+                    HorizontalAlignment="Stretch"
+                    DefaultLabelPosition="Collapsed">
                     <AppBarElementContainer VerticalContentAlignment="Center">
                         <TextBlock Style="{StaticResource TextBlockStyle}" Visibility="{x:Bind controls:C.ToVisibility(_viewModel.CurrentIllustration.IsManga), Mode=OneWay}">
                             <Run Text="{x:Bind controls:C.PlusOneToString(_viewModel.CurrentPageIndex), Mode=OneWay}" />
@@ -306,38 +314,10 @@
                             <Run Text="{x:Bind _viewModel.PageCount, Mode=OneWay}" />
                         </TextBlock>
                     </AppBarElementContainer>
-                    <AppBarSeparator />
-                    <AppBarButton
-                        x:Name="UpscaleButton"
-                        Click="UpscaleButton_OnTapped"
-                        Icon="{winUi:SymbolIcon Symbol=EyeTracking}"
-                        IsCompact="True"
-                        IsEnabled="False"
-                        LabelPosition="Collapsed" />
-                    <!--<TeachingTip
-                        x:Name="UpscaleTeachingTip"
-                        x:Uid="/EntryViewerPage/UpscaleTeachingTip"
-                        IconSource="{winUi:SymbolIconSource Symbol=CommentNote}"
-                        IsEnabled="False"
-                        IsLightDismissEnabled="True"
-                        Target="{x:Bind UpscaleButton}" />-->
-                    <AppBarSeparator Height="35" />
-                    <AppBarButton
-                        Command="{x:Bind _viewModel.FullScreenCommand}"
-                        IsCompact="True"
-                        LabelPosition="Collapsed" />
-                    <AppBarButton
-                        Command="{x:Bind _viewModel.CurrentImage.RestoreResolutionCommand, Mode=OneWay}"
-                        IsCompact="True"
-                        LabelPosition="Collapsed" />
-                    <AppBarButton
-                        Command="{x:Bind _viewModel.CurrentImage.ZoomOutCommand, Mode=OneWay}"
-                        IsCompact="True"
-                        LabelPosition="Collapsed" />
-                    <AppBarButton
-                        Command="{x:Bind _viewModel.CurrentImage.ZoomInCommand, Mode=OneWay}"
-                        IsCompact="True"
-                        LabelPosition="Collapsed" />
+                    <AppBarSeparator Visibility="{x:Bind controls:C.ToVisibility(_viewModel.CurrentIllustration.IsManga), Mode=OneWay}" />
+                    <AppBarButton Command="{x:Bind _viewModel.CurrentImage.RestoreResolutionCommand, Mode=OneWay}" IsCompact="True" />
+                    <AppBarButton Command="{x:Bind _viewModel.CurrentImage.ZoomOutCommand, Mode=OneWay}" IsCompact="True" />
+                    <AppBarButton Command="{x:Bind _viewModel.CurrentImage.ZoomInCommand, Mode=OneWay}" IsCompact="True" />
                     <AppBarSeparator />
                     <AppBarElementContainer VerticalContentAlignment="Center">
                         <TextBlock
@@ -347,110 +327,6 @@
                     </AppBarElementContainer>
                 </CommandBar>
             </Grid>
-        </Grid>
-        <!--  ReSharper disable once UnusedMember.Local  -->
-        <Grid
-            x:Name="TitleBarBorder"
-            Height="100"
-            VerticalAlignment="Top">
-            <interactivity:Interaction.Behaviors>
-                <triggers:EventWithConditionTriggerBehavior EventName="PointerEntered" IsActive="{x:Bind _viewModel.IsFullScreen, Mode=OneWay}">
-                    <media:ControlStoryboardAction>
-                        <media:ControlStoryboardAction.Storyboard>
-                            <Storyboard>
-                                <DoubleAnimation
-                                    Storyboard.TargetName="TopCommandBarTranslation"
-                                    Storyboard.TargetProperty="Y"
-                                    To="0">
-                                    <DoubleAnimation.EasingFunction>
-                                        <ExponentialEase EasingMode="EaseOut" Exponent="7" />
-                                    </DoubleAnimation.EasingFunction>
-                                </DoubleAnimation>
-                            </Storyboard>
-                        </media:ControlStoryboardAction.Storyboard>
-                    </media:ControlStoryboardAction>
-                </triggers:EventWithConditionTriggerBehavior>
-                <triggers:EventWithConditionTriggerBehavior EventName="PointerExited" IsActive="{x:Bind _viewModel.IsFullScreen, Mode=OneWay}">
-                    <media:ControlStoryboardAction>
-                        <media:ControlStoryboardAction.Storyboard>
-                            <Storyboard>
-                                <DoubleAnimation
-                                    Storyboard.TargetName="TopCommandBarTranslation"
-                                    Storyboard.TargetProperty="Y"
-                                    To="{StaticResource NegativeTitleBarHeight}">
-                                    <DoubleAnimation.EasingFunction>
-                                        <ExponentialEase EasingMode="EaseOut" Exponent="7" />
-                                    </DoubleAnimation.EasingFunction>
-                                </DoubleAnimation>
-                            </Storyboard>
-                        </media:ControlStoryboardAction.Storyboard>
-                    </media:ControlStoryboardAction>
-                </triggers:EventWithConditionTriggerBehavior>
-            </interactivity:Interaction.Behaviors>
-            <!--  ReSharper disable once UnusedMember.Local  -->
-            <controls1:TitleBar
-                x:Name="TitleBarArea"
-                Title="{x:Bind _viewModel.CurrentIllustration.Title, Mode=OneWay}"
-                HorizontalAlignment="Stretch"
-                VerticalAlignment="Top"
-                CompactStateBreakpoint="1120"
-                DisplayMode="Tall                 "
-                Window="{x:Bind windowing:WindowFactory.GetForkedWindows(HWnd)}">
-                <controls1:TitleBar.Icon>
-                    <ImageIcon Source="ms-appx:///Assets/Images/logo.svg" Visibility="{x:Bind IsLogoVisible()}" />
-                </controls1:TitleBar.Icon>
-                <controls1:TitleBar.RenderTransform>
-                    <TranslateTransform x:Name="TopCommandBarTranslation" />
-                </controls1:TitleBar.RenderTransform>
-                <controls1:TitleBar.Content>
-                    <CommandBar Margin="0,-4" DefaultLabelPosition="Collapsed">
-                        <AppBarButton Command="{x:Bind _viewModel.CurrentImage.PlayGifCommand, Mode=OneWay}" Visibility="{x:Bind controls:C.ToVisibility(_viewModel.CurrentIllustration.IsUgoira), Mode=OneWay}" />
-                        <AppBarButton
-                            Command="{x:Bind _viewModel.CurrentPage.CopyCommand, Mode=OneWay}"
-                            CommandParameter="{x:Bind _viewModel.CurrentImage.DownloadParameter, Mode=OneWay}"
-                            IsEnabled="{x:Bind _viewModel.CurrentImage.LoadSuccessfully, Mode=OneWay}" />
-                        <AppBarButton
-                            Command="{x:Bind _viewModel.CurrentPage.SaveCommand, Mode=OneWay}"
-                            CommandParameter="{x:Bind _viewModel.CurrentImage.DownloadParameter, Mode=OneWay}"
-                            IsEnabled="{x:Bind _viewModel.CurrentImage.LoadSuccessfully, Mode=OneWay}" />
-                        <AppBarButton
-                            Command="{x:Bind _viewModel.CurrentPage.SaveAsCommand, Mode=OneWay}"
-                            CommandParameter="{x:Bind _viewModel.CurrentImage.DownloadParameter, Mode=OneWay}"
-                            IsEnabled="{x:Bind _viewModel.CurrentImage.LoadSuccessfully, Mode=OneWay}" />
-                        <AppBarButton
-                            Command="{x:Bind _viewModel.CurrentIllustration.MangaSaveCommand, Mode=OneWay}"
-                            CommandParameter="{x:Bind HWnd}"
-                            Visibility="{x:Bind controls:C.ToVisibility(_viewModel.CurrentIllustration.IsManga), Mode=OneWay}" />
-                        <AppBarButton
-                            Command="{x:Bind _viewModel.CurrentIllustration.MangaSaveAsCommand, Mode=OneWay}"
-                            CommandParameter="{x:Bind HWnd}"
-                            Visibility="{x:Bind controls:C.ToVisibility(_viewModel.CurrentIllustration.IsManga), Mode=OneWay}" />
-                        <AppBarSeparator />
-                        <AppBarButton Command="{x:Bind _viewModel.CurrentImage.SetAsCommand, Mode=OneWay}">
-                            <AppBarButton.Flyout>
-                                <MenuFlyout>
-                                    <MenuFlyoutItem Command="{x:Bind _viewModel.CurrentImage.SetAsBackgroundCommand, Mode=OneWay}" />
-                                    <MenuFlyoutItem Command="{x:Bind _viewModel.CurrentImage.SetAsLockScreenCommand, Mode=OneWay}" />
-                                </MenuFlyout>
-                            </AppBarButton.Flyout>
-                        </AppBarButton>
-                        <AppBarSeparator />
-                        <AppBarButton
-                            x:Name="AddToBookmarkButton"
-                            Click="AddToBookmarkButton_OnClicked"
-                            Command="{x:Bind _viewModel.AddToBookmarkCommand}"
-                            CommandParameter="{x:Bind _viewModel.CurrentImage.DownloadParameter, Mode=OneWay}" />
-                        <AppBarButton Command="{x:Bind _viewModel.CurrentIllustration.GenerateLinkCommand, Mode=OneWay}" CommandParameter="{x:Bind HWnd}" />
-                        <AppBarButton Command="{x:Bind _viewModel.CurrentIllustration.GenerateWebLinkCommand, Mode=OneWay}" CommandParameter="{x:Bind HWnd}" />
-                        <AppBarButton Command="{x:Bind _viewModel.CurrentIllustration.OpenInWebBrowserCommand, Mode=OneWay}" />
-                        <AppBarButton
-                            x:Name="ShowQrCodeButton"
-                            Command="{x:Bind _viewModel.CurrentIllustration.ShowQrCodeCommand, Mode=OneWay}"
-                            CommandParameter="{x:Bind ShowQrCodeTeachingTip}" />
-                        <AppBarButton Command="{x:Bind _viewModel.CurrentImage.ShareCommand, Mode=OneWay}" />
-                    </CommandBar>
-                </controls1:TitleBar.Content>
-            </controls1:TitleBar>
         </Grid>
         <TeachingTip
             x:Name="ShowQrCodeTeachingTip"
@@ -474,31 +350,5 @@
                 Tag="{x:Bind AddToBookmarkTeachingTip}"
                 Type="IllustAndManga" />
         </TeachingTip>
-        <VisualStateManager.VisualStateGroups>
-            <VisualStateGroup>
-                <VisualState x:Name="Normal">
-                    <VisualState.StateTriggers>
-                        <StateTrigger IsActive="{x:Bind controls:C.Negation(_viewModel.IsFullScreen), Mode=OneWay}" />
-                    </VisualState.StateTriggers>
-                    <VisualState.Setters>
-                        <Setter Target="WorkViewerSplitViewGrid.Margin" Value="{StaticResource NormalMargin}" />
-                        <Setter Target="TopCommandBarTranslation.Y" Value="0" />
-                        <Setter Target="TitleBarArea.Background" Value="{x:Null}" />
-                        <Setter Target="TitleBarBorder.Background" Value="{x:Null}" />
-                    </VisualState.Setters>
-                </VisualState>
-                <VisualState x:Name="FullScreen">
-                    <VisualState.StateTriggers>
-                        <StateTrigger IsActive="{x:Bind _viewModel.IsFullScreen, Mode=OneWay}" />
-                    </VisualState.StateTriggers>
-                    <VisualState.Setters>
-                        <Setter Target="WorkViewerSplitViewGrid.Margin" Value="0" />
-                        <Setter Target="TopCommandBarTranslation.Y" Value="{StaticResource NegativeTitleBarHeight}" />
-                        <Setter Target="TitleBarArea.Background" Value="{StaticResource PixevalAppAcrylicBrush}" />
-                        <Setter Target="TitleBarBorder.Background" Value="Transparent" />
-                    </VisualState.Setters>
-                </VisualState>
-            </VisualStateGroup>
-        </VisualStateManager.VisualStateGroups>
     </Grid>
-</controls:EnhancedWindowPage>
+</controls:EnhancedPage>

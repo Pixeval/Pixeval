@@ -1,22 +1,5 @@
-#region Copyright (c) Pixeval/Pixeval
-// GPL v3 License
-// 
-// Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/AppViewModel.cs
-// 
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-// 
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-// 
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#endregion
+// Copyright (c) Pixeval.
+// Licensed under the GPL v3 License.
 
 using System;
 using System.Threading.Tasks;
@@ -29,6 +12,7 @@ using Pixeval.CoreApi;
 using Pixeval.CoreApi.Net;
 using Pixeval.Database.Managers;
 using Pixeval.Download;
+using Pixeval.Extensions;
 using Pixeval.Logging;
 using Pixeval.Util.IO.Caching;
 using Pixeval.Util.UI;
@@ -58,7 +42,7 @@ public partial class AppViewModel(App app) : IDisposable
 
     public FileCache Cache { get; private set; } = null!;
 
-    public long PixivUid => MakoClient.Session.Id;
+    public long PixivUid => MakoClient.Me.Id;
 
     public void AppLoggedIn()
     {
@@ -70,12 +54,15 @@ public partial class AppViewModel(App app) : IDisposable
     {
         var fileCache = await FileCache.CreateDefaultAsync();
         var memoryCache = await MemoryCache.CreateDefaultAsync(200);
+        var extensionService = new ExtensionService();
+        extensionService.LoadAllHosts();
         return new ServiceCollection()
             .AddSingleton<IllustrationDownloadTaskFactory>()
             .AddSingleton<NovelDownloadTaskFactory>()
+            .AddSingleton<ExtensionService>(extensionService)
             .AddSingleton<MemoryCache>(memoryCache)
             .AddSingleton<FileCache>(fileCache)
-            .AddSingleton<FileLogger>(_ => new(AppInfo.AppData.LocalFolder.Path + @"\Logs\"))
+            .AddSingleton<FileLogger>(_ => new(AppKnownFolders.Logs.FullPath))
             .AddSingleton<LiteDatabase>(new LiteDatabase(AppInfo.DatabaseFilePath))
             .AddSingleton<DownloadHistoryPersistentManager>(provider => new(provider.GetRequiredService<LiteDatabase>(), App.AppViewModel.AppSettings.MaximumDownloadHistoryRecords))
             .AddSingleton<SearchHistoryPersistentManager>(provider => new(provider.GetRequiredService<LiteDatabase>(), App.AppViewModel.AppSettings.MaximumSearchHistoryRecords))
@@ -92,7 +79,7 @@ public partial class AppViewModel(App app) : IDisposable
     {
         _activatedByProtocol = activatedByProtocol;
 
-        await AppKnownFolders.Temporary.ClearAsync();
+        AppKnownFolders.Temp.Clear();
 
         AppServiceProvider = await CreateServiceProvider();
     }
@@ -111,6 +98,7 @@ public partial class AppViewModel(App app) : IDisposable
     public void Dispose()
     {
         AppServiceProvider?.GetRequiredService<LiteDatabase>().Dispose();
+        AppServiceProvider?.GetRequiredService<ExtensionService>().Dispose();
         AppServiceProvider?.Dispose();
         DownloadManager?.Dispose();
         MakoClient?.Dispose();

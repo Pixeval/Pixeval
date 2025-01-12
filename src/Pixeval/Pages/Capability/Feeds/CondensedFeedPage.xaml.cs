@@ -1,3 +1,6 @@
+// Copyright (c) Pixeval.
+// Licensed under the GPL v3 License.
+
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.UI.Xaml.Navigation;
@@ -14,7 +17,7 @@ public sealed partial class CondensedFeedPage
         WorkView.ThumbnailDirection = App.AppViewModel.AppSettings.ThumbnailDirection;
     }
 
-    public override void OnPageActivated(NavigationEventArgs e)
+    public override void OnPageActivated(NavigationEventArgs e, object? parameter)
     {
         switch (e.Parameter)
         {

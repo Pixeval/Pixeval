@@ -1,15 +1,16 @@
+// Copyright (c) Pixeval.
+// Licensed under the GPL v3 License.
+
 using System.Numerics;
 using System.Threading.Tasks;
 using Windows.System;
 using WinUI3Utilities;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Controls;
 using WinRT;
-using Pixeval.Controls.Windowing;
 
 namespace Pixeval.Pages.NovelViewer;
 
@@ -41,10 +42,12 @@ public sealed partial class NovelViewerPage
         }
     }
 
-    public override void OnPageActivated(NavigationEventArgs e, object? parameter)
+    public override void OnPageActivated(NavigationEventArgs e, object? parameter) => SetViewModel(parameter);
+
+    public void SetViewModel(object? parameter)
     {
         // 此处this.XamlRoot为null
-        _viewModel = HWnd.GetNovelViewerPageViewModelFromHandle(parameter);
+        _viewModel = this.GetNovelViewerPageViewModelFromHandle(parameter);
 
         _viewModel.DetailedPropertyChanged += (sender, args) =>
         {
@@ -61,24 +64,9 @@ public sealed partial class NovelViewerPage
             // ThumbnailItemsView.StartBringItemIntoView(vm.CurrentNovelIndex, new BringIntoViewOptions { AnimationDesired = true });
         };
 
-        _viewModel.PropertyChanged += (sender, args) =>
-        {
-            var vm = sender.To<NovelViewerPageViewModel>();
-            switch (args.PropertyName)
-            {
-                case nameof(NovelViewerPageViewModel.IsFullScreen):
-                {
-                    var window = WindowFactory.ForkedWindows[HWnd];
-                    window.AppWindow.SetPresenter(vm.IsFullScreen ? AppWindowPresenterKind.FullScreen : AppWindowPresenterKind.Default);
-                    break;
-                }
-            }
-        }; 
-    }
+        foreach (var entry in _viewModel.Entries)
+            SettingsPanel.Children.Add(entry.Element);
 
-    private void NovelViewerPage_OnLoaded(object sender, RoutedEventArgs e)
-    {
-        TitleBarArea.SetDragRegionForCustomTitleBar();
         CommandBorderDropShadow.Receivers.Add(DocumentViewer);
         ThumbnailListDropShadow.Receivers.Add(DocumentViewer);
 
@@ -87,26 +75,13 @@ public sealed partial class NovelViewerPage
         DocumentViewer_OnTapped(null!, null!);
     }
 
-    private void Panel_OnLoaded(object sender, RoutedEventArgs e)
-    {
-        var panel = sender.To<StackPanel>();
-
-        foreach (var entry in _viewModel.Entries)
-            panel.Children.Add(entry.Element);
-    }
-
-    private void NovelViewerPage_OnUnloaded(object sender, RoutedEventArgs e)
-    {
-        _viewModel.Dispose();
-    }
+    ~NovelViewerPage() => _viewModel.Dispose();
 
     private async void FrameworkElement_OnDataContextChanged(FrameworkElement sender, DataContextChangedEventArgs args)
     {
         var viewModel = sender.GetDataContext<NovelItemViewModel>();
-        _ = await viewModel.TryLoadThumbnailAsync();
+        _ = await viewModel.TryLoadThumbnailAsync(_viewModel);
     }
-
-    private void ExitFullScreenKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => _viewModel.IsFullScreen = false;
 
     private void AddToBookmarkTeachingTip_OnCloseButtonClick(TeachingTip sender, object args)
     {
@@ -184,14 +159,5 @@ public sealed partial class NovelViewerPage
         teachingTip.Target = appBarButton.IsInOverflow ? null : appBarButton;
     }
 
-    private void OpenPane_OnRightTapped(object sender, RightTappedRoutedEventArgs e) => EntryViewerSplitView.PinPane = true;
-
-    public (ulong, DocumentViewerViewModel?) DownloadParameter(DocumentViewerViewModel? viewModel) => (HWnd, viewModel);
-
-    public Visibility IsLogoVisible()
-    {
-        return WindowFactory.GetWindowForElement(this).HWnd != WindowFactory.RootWindow.HWnd
-            ? Visibility.Visible
-            : Visibility.Collapsed;
-    }
+    public (FrameworkElement, DocumentViewerViewModel?) DownloadParameter(DocumentViewerViewModel? viewModel) => (this, viewModel);
 }

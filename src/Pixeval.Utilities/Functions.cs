@@ -1,22 +1,5 @@
-#region Copyright (c) Pixeval/Pixeval.Utilities
-// GPL v3 License
-// 
-// Pixeval/Pixeval.Utilities
-// Copyright (c) 2023 Pixeval.Utilities/Functions.cs
-// 
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-// 
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-// 
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#endregion
+// Copyright (c) Pixeval.Utilities.
+// Licensed under the GPL v3 License.
 
 using System;
 using System.Runtime.CompilerServices;
@@ -64,7 +47,7 @@ public static class Functions
         return Result<TResult>.AsFailure();
     }
 
-    public static async Task<Result<TResult>> RetryAsync<TResult>(Func<Task<TResult>> body, int attempts = 3, int timeoutMills = 0)
+    public static async Task<Result<TResult>> RetryAsync<TResult>(Func<Task<TResult>> body, int attempts = 3, int timeoutMs = 0)
     {
         var counter = 0;
         Exception? cause = null;
@@ -73,7 +56,7 @@ public static class Functions
             var task = body();
             try
             {
-                if (await WithTimeoutAsync(task, timeoutMills).ConfigureAwait(false) is Result<TResult>.Success result)
+                if (await WithTimeoutAsync(task, timeoutMs).ConfigureAwait(false) is Result<TResult>.Success result)
                 {
                     return result;
                 }

@@ -1,22 +1,5 @@
-#region Copyright (c) Pixeval/Pixeval
-// GPL v3 License
-// 
-// Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/AppSetting.cs
-// 
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-// 
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-// 
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#endregion
+// Copyright (c) Pixeval.
+// Licensed under the GPL v3 License.
 
 using System;
 using System.Collections.Generic;
@@ -36,8 +19,7 @@ using Pixeval.Util.UI;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
 using FluentIcons.Common;
-using Microsoft.Windows.Globalization;
-using Pixeval.Upscaling;
+using Windows.Globalization;
 using Pixeval.Utilities;
 using static Pixeval.SettingsPageResources;
 
@@ -121,12 +103,6 @@ public partial record AppSettings() : IWindowSettings
     [SettingsEntry(Symbol.History, nameof(MaximumSearchHistoryRecordsEntryHeader), nameof(MaximumSearchHistoryRecordsEntryDescription))]
     public int MaximumSearchHistoryRecords { get; set; } = 50;
 
-    [SettingsEntry(Symbol.Clock, nameof(SearchDurationEntryHeader), nameof(SearchDurationEntryDescription))]
-    public SearchDuration SearchDuration { get; set; } = SearchDuration.Undecided;
-
-    [SettingsEntry(Symbol.Timer, nameof(UsePreciseRangeForSearchEntryHeader), nameof(UsePreciseRangeForSearchEntryDescription))]
-    public bool UsePreciseRangeForSearch { get; set; }
-
     [SettingsEntry(Symbol.Key, nameof(ReverseSearchApiKeyEntryHeader), nameof(ReverseSearchApiKeyEntryDescriptionHyperlinkButtonContent))]
     public string ReverseSearchApiKey { get; set; } = "";
 
@@ -170,7 +146,13 @@ public partial record AppSettings() : IWindowSettings
     [SettingsEntry(Symbol.History, nameof(MaximumBrowseHistoryRecordsEntryHeader), nameof(MaximumBrowseHistoryRecordsEntryDescription))]
     public int MaximumBrowseHistoryRecords { get; set; } = 100;
 
+    [SettingsEntry(Symbol.ArrowCircleLeft, nameof(UseSearchStartDateEntryHeader), nameof(UseSearchStartDateEntryDescription))]
+    public bool UseSearchStartDate { get; set; }
+
     public DateTimeOffset SearchStartDate { get; set; } = DateTimeOffset.Now - TimeSpan.FromDays(1);
+
+    [SettingsEntry(Symbol.ArrowCircleRight, nameof(UseSearchEndDateEntryHeader), nameof(UseSearchEndDateEntryDescription))]
+    public bool UseSearchEndDate { get; set; }
 
     public DateTimeOffset SearchEndDate { get; set; } = DateTimeOffset.Now;
 
@@ -179,17 +161,6 @@ public partial record AppSettings() : IWindowSettings
 
     [AttributeIgnore(typeof(ResetAttribute))]
     public DateTimeOffset LastCheckedUpdate { get; set; } = DateTimeOffset.MinValue;
-
-    [SettingsEntry(Symbol.EyeTracking, nameof(UpscalerModelEntryHeader), nameof(UpscalerModelEntryDescription))]
-    public RealESRGANModel UpscalerModel { get; set; } = RealESRGANModel.RealESRGANX4Plus;
-
-    [SettingsEntry(Symbol.RatioOneToOne, nameof(UpscalerScaleRatioEntryHeader), nameof(UpscalerScaleRatioEntryDescription))]
-    public int UpscalerScaleRatio { get; set; } = 4;
-
-    [SettingsEntry(Symbol.ImageGlobe, nameof(UpscalerOutputTypeEntryHeader), nameof(UpscalerOutputTypeEntryDescription))]
-    public UpscalerOutputType UpscalerOutputType { get; set; } = UpscalerOutputType.Png;
-
-    public bool ShowUpscalerTeachingTip { get; set; } = true;
 
     [SettingsEntry(Symbol.Box, nameof(PixivNameResolverHeaderText), nameof(PixivNameResolverDescriptionText))]
     public string[] PixivAppApiNameResolver { get; set; } =

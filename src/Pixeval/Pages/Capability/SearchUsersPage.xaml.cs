@@ -1,3 +1,6 @@
+// Copyright (c) Pixeval.
+// Licensed under the GPL v3 License.
+
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Controls;
@@ -11,7 +14,7 @@ public sealed partial class SearchUsersPage : IScrollViewHost
 
     private string _searchText = "";
 
-    public override void OnPageActivated(NavigationEventArgs e)
+    public override void OnPageActivated(NavigationEventArgs e, object? parameter)
     {
         _searchText = e.Parameter.To<string>();
         ChangeSource();

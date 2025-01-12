@@ -1,3 +1,6 @@
+// Copyright (c) Pixeval.Controls.
+// Licensed under the GPL v3 License.
+
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media.Animation;
 using WinUI3Utilities;

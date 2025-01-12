@@ -1,7 +1,14 @@
-<ResourceDictionary
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
+    <Style
+        x:Key="PixevalTransparentButtonStyle"
+        BasedOn="{StaticResource DefaultButtonStyle}"
+        TargetType="Button">
+        <Style.Setters>
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="Background" Value="Transparent" />
+        </Style.Setters>
+    </Style>
     <CornerRadius x:Key="CardCornerRadius">5</CornerRadius>
     <Thickness x:Key="CardBorderThickness">1</Thickness>
     <x:Double x:Key="SmallIconFontSize">16</x:Double>

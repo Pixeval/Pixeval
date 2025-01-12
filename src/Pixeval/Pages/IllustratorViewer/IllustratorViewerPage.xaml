@@ -1,197 +1,171 @@
-<controls:EnhancedWindowPage
+<controls:EnhancedPage
     x:Class="Pixeval.Pages.IllustratorViewer.IllustratorViewerPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Pixeval.Controls"
     xmlns:controls1="using:CommunityToolkit.WinUI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:fluent="using:FluentIcons.WinUI"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:windowing="using:Pixeval.Controls.Windowing"
     mc:Ignorable="d">
-    <Grid>
-        <controls:StickyHeaderScrollView
-            x:Name="StickyHeaderScrollView"
-            GetScrollableLength="StickyHeaderScrollView_OnGetScrollableLength"
-            SetInnerScrollView="StickyHeaderScrollView_OnSetInnerScrollView">
-            <controls:StickyHeaderScrollView.HeaderBackGround>
-                <ImageBrush ImageSource="{x:Bind _viewModel.BackgroundSource, Mode=OneWay}" Stretch="UniformToFill" />
-            </controls:StickyHeaderScrollView.HeaderBackGround>
-            <controls:StickyHeaderScrollView.Header>
-                <!--  220 + 32  -->
-                <Grid Height="252" Background="{StaticResource PixevalTranslucentBackgroundBrush}">
-                    <Grid.RowDefinitions>
-                        <RowDefinition x:Name="ScrollableLength" Height="*" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
+    <controls:StickyHeaderScrollView
+        x:Name="StickyHeaderScrollView"
+        GetScrollableLength="StickyHeaderScrollView_OnGetScrollableLength"
+        SetInnerScrollView="StickyHeaderScrollView_OnSetInnerScrollView">
+        <controls:StickyHeaderScrollView.HeaderBackGround>
+            <ImageBrush ImageSource="{x:Bind _viewModel.BackgroundSource, Mode=OneWay}" Stretch="UniformToFill" />
+        </controls:StickyHeaderScrollView.HeaderBackGround>
+        <controls:StickyHeaderScrollView.Header>
+            <Grid Height="220" Background="{ThemeResource PixevalTranslucentBackgroundBrush}">
+                <Grid.RowDefinitions>
+                    <RowDefinition x:Name="ScrollableLength" Height="*" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <controls1:DockPanel
+                    Grid.Row="0"
+                    Grid.RowSpan="2"
+                    Margin="100,0"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center"
+                    HorizontalSpacing="50"
+                    Opacity="{x:Bind controls:C.DoubleComplementary(StickyHeaderScrollView.ScrollRatio), Mode=OneWay}">
+                    <PersonPicture
+                        Width="100"
+                        Height="100"
+                        controls1:DockPanel.Dock="Left"
+                        ProfilePicture="{x:Bind _viewModel.AvatarSource, Mode=OneWay}" />
                     <controls1:DockPanel
-                        x:Name="TextContainer"
-                        Grid.Row="0"
-                        Grid.RowSpan="2"
-                        Margin="100,0"
-                        HorizontalAlignment="Left"
-                        VerticalAlignment="Center"
-                        HorizontalSpacing="50"
-                        Opacity="{x:Bind controls:C.DoubleComplementary(StickyHeaderScrollView.ScrollRatio), Mode=OneWay}">
-                        <PersonPicture
-                            x:Name="ProfileImage"
-                            Width="100"
-                            Height="100"
-                            controls1:DockPanel.Dock="Left"
-                            ProfilePicture="{x:Bind _viewModel.AvatarSource, Mode=OneWay}" />
-                        <controls1:DockPanel
-                            MaxWidth="400"
-                            HorizontalAlignment="Stretch"
-                            LastChildFill="False"
-                            VerticalSpacing="10">
-                            <StackPanel
-                                controls1:DockPanel.Dock="Top"
-                                Orientation="Horizontal"
-                                Spacing="10">
-                                <TextBlock
-                                    IsTextSelectionEnabled="True"
-                                    Style="{StaticResource TitleTextBlockStyle}"
-                                    Text="{x:Bind _viewModel.Name}" />
-                                <controls:PixevalBadge Mode="Premium" Visibility="{x:Bind controls:C.ToVisibility(_viewModel.IsPremium)}" />
-                            </StackPanel>
-                            <TextBlock
-                                x:Name="SubtitleBlock"
-                                controls1:DockPanel.Dock="Top"
-                                FontSize="14"
-                                IsTextSelectionEnabled="True"
-                                Text="{x:Bind _viewModel.Id}" />
-                            <TextBlock
-                                x:Name="Blurb"
-                                controls1:DockPanel.Dock="Top"
-                                FontSize="{StaticResource SmallIconFontSize}"
-                                IsTextSelectionEnabled="True"
-                                MaxLines="3"
-                                Text="{x:Bind _viewModel.Comment}"
-                                TextTrimming="CharacterEllipsis"
-                                TextWrapping="Wrap"
-                                ToolTipService.ToolTip="{x:Bind _viewModel.Comment}" />
-                        </controls1:DockPanel>
-                    </controls1:DockPanel>
-                    <controls1:DockPanel Grid.Row="1" VerticalAlignment="Bottom">
-                        <CommandBar
-                            VerticalAlignment="Center"
-                            controls1:DockPanel.Dock="Left"
-                            Opacity="{x:Bind StickyHeaderScrollView.ScrollRatio, Mode=OneWay}"
-                            OverflowButtonVisibility="Collapsed"
-                            Visibility="{x:Bind controls:C.IsNotZeroDToVisibility(StickyHeaderScrollView.ScrollRatio), Mode=OneWay}">
-                            <AppBarElementContainer Padding="20,0" VerticalContentAlignment="Center">
-                                <PersonPicture
-                                    Width="35"
-                                    Height="35"
-                                    ProfilePicture="{x:Bind _viewModel.AvatarSource, Mode=OneWay}" />
-                            </AppBarElementContainer>
-                            <AppBarElementContainer VerticalContentAlignment="Center">
-                                <StackPanel Padding="5,0" Spacing="2">
-                                    <TextBlock
-                                        MaxWidth="80"
-                                        Style="{StaticResource CaptionStrongTextBlockStyle}"
-                                        Text="{x:Bind _viewModel.Name}"
-                                        TextTrimming="CharacterEllipsis"
-                                        TextWrapping="NoWrap" />
-                                    <controls:PixevalBadge
-                                        HorizontalAlignment="Left"
-                                        Mode="Premium"
-                                        UseSmall="True"
-                                        Visibility="{x:Bind controls:C.ToVisibility(_viewModel.IsPremium)}" />
-                                </StackPanel>
-                            </AppBarElementContainer>
-                            <controls:AppBarNumberItem
-                                x:Uid="/EntryViewerPage/FollowingUserItem"
-                                Number="{x:Bind _viewModel.Metrics.TotalFollowUsers, Mode=OneWay}"
-                                Symbol="PersonAdd" />
-                            <AppBarSeparator />
-                            <controls:AppBarNumberItem
-                                x:Uid="/EntryViewerPage/MyPixivUserItem"
-                                Number="{x:Bind _viewModel.Metrics.TotalMyPixivUsers, Mode=OneWay}"
-                                Symbol="People" />
-                            <AppBarSeparator />
-                            <controls:AppBarNumberItem
-                                x:Uid="/EntryViewerPage/IllustrationCountItem"
-                                Number="{x:Bind _viewModel.Metrics.TotalIllusts, Mode=OneWay}"
-                                Symbol="Image" />
-                            <AppBarSeparator />
-                            <controls:AppBarNumberItem
-                                x:Uid="/EntryViewerPage/MangaCountItem"
-                                Number="{x:Bind _viewModel.Metrics.TotalManga, Mode=OneWay}"
-                                Symbol="ImageMultiple" />
-                            <AppBarSeparator />
-                            <controls:AppBarNumberItem
-                                x:Uid="/EntryViewerPage/NovelCountItem"
-                                Number="{x:Bind _viewModel.Metrics.TotalNovelSeries, Mode=OneWay}"
-                                Symbol="BookOpen" />
-                        </CommandBar>
-                        <CommandBar DefaultLabelPosition="Right">
-                            <AppBarButton Command="{x:Bind _viewModel.FollowCommand}" Visibility="{x:Bind controls:C.ToVisibilityNegation(_viewModel.IsFollowed), Mode=OneWay}" />
-                            <AppBarButton Command="{x:Bind _viewModel.FollowPrivatelyCommand}" Visibility="{x:Bind controls:C.ToVisibilityNegation(_viewModel.IsFollowed), Mode=OneWay}" />
-                            <AppBarButton Command="{x:Bind _viewModel.UnfollowCommand}" Visibility="{x:Bind controls:C.ToVisibility(_viewModel.IsFollowed), Mode=OneWay}" />
-                            <AppBarSeparator />
-                            <AppBarButton Command="{x:Bind _viewModel.GenerateLinkCommand}" CommandParameter="{x:Bind HWnd}" />
-                            <AppBarButton Command="{x:Bind _viewModel.GenerateWebLinkCommand}" CommandParameter="{x:Bind HWnd}" />
-                            <AppBarButton Command="{x:Bind _viewModel.OpenInWebBrowserCommand}" />
-                            <AppBarButton
-                                x:Name="ShowQrCodeButton"
-                                Command="{x:Bind _viewModel.ShowQrCodeCommand}"
-                                CommandParameter="{x:Bind ShowQrCodeTeachingTip}" />
-                        </CommandBar>
-                    </controls1:DockPanel>
-                    <controls1:Segmented
-                        Grid.Row="2"
+                        MaxWidth="400"
                         HorizontalAlignment="Stretch"
-                        SelectedItem="{x:Bind IllustrationTab}"
-                        SelectionChanged="IllustratorViewerSegmented_OnSelectionChanged">
-                        <controls1:SegmentedItem
-                            x:Name="IllustrationTab"
-                            x:Uid="/EntryViewerPage/WorkNavigationViewItem"
-                            Icon="{fluent:SymbolIcon Symbol=Image}"
-                            Tag="{x:Bind _viewModel.WorkTag}" />
-                        <controls1:SegmentedItem
-                            x:Uid="/EntryViewerPage/BookmarksNavigationViewItem"
-                            Icon="{fluent:SymbolIcon Symbol=Library}"
-                            Tag="{x:Bind _viewModel.BookmarksTag}" />
-                        <controls1:SegmentedItem
-                            x:Uid="/EntryViewerPage/FollowingsNavigationViewItem"
-                            Icon="{fluent:SymbolIcon Symbol=PersonAdd}"
-                            Tag="{x:Bind _viewModel.FollowingsTag}" />
-                        <controls1:SegmentedItem
-                            x:Uid="/EntryViewerPage/MyPixivUserNavigationViewItem"
-                            Icon="{fluent:SymbolIcon Symbol=People}"
-                            Tag="{x:Bind _viewModel.MyPixivUserTag}" />
-                        <controls1:SegmentedItem
-                            x:Uid="/EntryViewerPage/RelatedUserNavigationViewItem"
-                            Icon="{fluent:SymbolIcon Symbol=PeopleCommunity}"
-                            Tag="{x:Bind _viewModel.RelatedUserTag}" />
-                    </controls1:Segmented>
-                </Grid>
-            </controls:StickyHeaderScrollView.Header>
-            <controls:StickyHeaderScrollView.StickyContent>
-                <Grid>
-                    <Frame x:Name="IllustratorViewerFrame" />
-                    <TeachingTip
-                        x:Name="ShowQrCodeTeachingTip"
-                        x:Uid="/EntryViewerPage/QrCodeTeachingTip"
-                        IsLightDismissEnabled="True"
-                        Target="{x:Bind ShowQrCodeButton}">
-                        <TeachingTip.HeroContent>
-                            <Image />
-                        </TeachingTip.HeroContent>
-                    </TeachingTip>
-                </Grid>
-            </controls:StickyHeaderScrollView.StickyContent>
-        </controls:StickyHeaderScrollView>
-        <controls1:TitleBar
-            x:Name="Bar"
-            Title="{x:Bind _viewModel.Name}"
-            VerticalAlignment="Top"
-            Window="{x:Bind windowing:WindowFactory.GetForkedWindows(HWnd)}">
-            <controls1:TitleBar.Icon>
-                <ImageIcon Source="ms-appx:///Assets/Images/logo.svg" Visibility="{x:Bind IsLogoVisible()}" />
-            </controls1:TitleBar.Icon>
-        </controls1:TitleBar>
-    </Grid>
-</controls:EnhancedWindowPage>
+                        LastChildFill="False"
+                        VerticalSpacing="10">
+                        <StackPanel
+                            controls1:DockPanel.Dock="Top"
+                            Orientation="Horizontal"
+                            Spacing="10">
+                            <TextBlock
+                                IsTextSelectionEnabled="True"
+                                Style="{StaticResource TitleTextBlockStyle}"
+                                Text="{x:Bind _viewModel.Name}" />
+                            <controls:PixevalBadge Mode="Premium" Visibility="{x:Bind controls:C.ToVisibility(_viewModel.IsPremium)}" />
+                        </StackPanel>
+                        <TextBlock
+                            controls1:DockPanel.Dock="Top"
+                            FontSize="14"
+                            IsTextSelectionEnabled="True"
+                            Text="{x:Bind _viewModel.Id}" />
+                        <TextBlock
+                            controls1:DockPanel.Dock="Top"
+                            FontSize="{StaticResource SmallIconFontSize}"
+                            IsTextSelectionEnabled="True"
+                            MaxLines="3"
+                            Text="{x:Bind _viewModel.Comment}"
+                            TextTrimming="CharacterEllipsis"
+                            TextWrapping="Wrap"
+                            ToolTipService.ToolTip="{x:Bind _viewModel.Comment}" />
+                    </controls1:DockPanel>
+                </controls1:DockPanel>
+                <controls1:DockPanel Grid.Row="1" VerticalAlignment="Bottom">
+                    <CommandBar
+                        VerticalAlignment="Center"
+                        controls1:DockPanel.Dock="Left"
+                        Opacity="{x:Bind StickyHeaderScrollView.ScrollRatio, Mode=OneWay}"
+                        OverflowButtonVisibility="Collapsed"
+                        Visibility="{x:Bind controls:C.IsNotZeroDToVisibility(StickyHeaderScrollView.ScrollRatio), Mode=OneWay}">
+                        <AppBarElementContainer Padding="20,0" VerticalContentAlignment="Center">
+                            <PersonPicture
+                                Width="35"
+                                Height="35"
+                                ProfilePicture="{x:Bind _viewModel.AvatarSource, Mode=OneWay}" />
+                        </AppBarElementContainer>
+                        <AppBarElementContainer VerticalContentAlignment="Center">
+                            <StackPanel Padding="5,0" Spacing="2">
+                                <TextBlock
+                                    MaxWidth="80"
+                                    Style="{StaticResource CaptionStrongTextBlockStyle}"
+                                    Text="{x:Bind _viewModel.Name}"
+                                    TextTrimming="CharacterEllipsis"
+                                    TextWrapping="NoWrap" />
+                                <controls:PixevalBadge
+                                    HorizontalAlignment="Left"
+                                    Mode="Premium"
+                                    UseSmall="True"
+                                    Visibility="{x:Bind controls:C.ToVisibility(_viewModel.IsPremium)}" />
+                            </StackPanel>
+                        </AppBarElementContainer>
+                        <controls:AppBarNumberItem
+                            x:Uid="/EntryViewerPage/FollowingUserItem"
+                            Number="{x:Bind _viewModel.Metrics.TotalFollowUsers, Mode=OneWay}"
+                            Symbol="PersonAdd" />
+                        <AppBarSeparator />
+                        <controls:AppBarNumberItem
+                            x:Uid="/EntryViewerPage/MyPixivUserItem"
+                            Number="{x:Bind _viewModel.Metrics.TotalMyPixivUsers, Mode=OneWay}"
+                            Symbol="People" />
+                        <AppBarSeparator />
+                        <controls:AppBarNumberItem
+                            x:Uid="/EntryViewerPage/IllustrationCountItem"
+                            Number="{x:Bind _viewModel.Metrics.TotalIllusts, Mode=OneWay}"
+                            Symbol="Image" />
+                        <AppBarSeparator />
+                        <controls:AppBarNumberItem
+                            x:Uid="/EntryViewerPage/MangaCountItem"
+                            Number="{x:Bind _viewModel.Metrics.TotalManga, Mode=OneWay}"
+                            Symbol="ImageMultiple" />
+                        <AppBarSeparator />
+                        <controls:AppBarNumberItem
+                            x:Uid="/EntryViewerPage/NovelCountItem"
+                            Number="{x:Bind _viewModel.Metrics.TotalNovelSeries, Mode=OneWay}"
+                            Symbol="BookOpen" />
+                    </CommandBar>
+                    <CommandBar DefaultLabelPosition="Right">
+                        <AppBarButton Command="{x:Bind _viewModel.FollowCommand}" Visibility="{x:Bind controls:C.ToVisibilityNegation(_viewModel.IsFollowed), Mode=OneWay}" />
+                        <AppBarButton Command="{x:Bind _viewModel.FollowPrivatelyCommand}" Visibility="{x:Bind controls:C.ToVisibilityNegation(_viewModel.IsFollowed), Mode=OneWay}" />
+                        <AppBarButton Command="{x:Bind _viewModel.UnfollowCommand}" Visibility="{x:Bind controls:C.ToVisibility(_viewModel.IsFollowed), Mode=OneWay}" />
+                        <AppBarSeparator />
+                        <AppBarButton Command="{x:Bind _viewModel.GenerateLinkCommand}" CommandParameter="{x:Bind}" />
+                        <AppBarButton Command="{x:Bind _viewModel.GenerateWebLinkCommand}" CommandParameter="{x:Bind}" />
+                        <AppBarButton Command="{x:Bind _viewModel.OpenInWebBrowserCommand}" />
+                        <AppBarButton
+                            x:Name="ShowQrCodeButton"
+                            Command="{x:Bind _viewModel.ShowQrCodeCommand}"
+                            CommandParameter="{x:Bind ShowQrCodeTeachingTip}" />
+                    </CommandBar>
+                </controls1:DockPanel>
+                <NavigationView
+                    Grid.Row="2"
+                    HorizontalAlignment="Stretch"
+                    IsBackButtonVisible="Collapsed"
+                    IsSettingsVisible="False"
+                    MenuItemsSource="{x:Bind _viewModel.Tags}"
+                    PaneDisplayMode="Top"
+                    SelectedItem="{x:Bind _viewModel.WorkTag}"
+                    SelectionChanged="IllustratorViewerNavigationView_OnSelectionChanged">
+                    <NavigationView.MenuItemTemplate>
+                        <DataTemplate x:DataType="windowing:NavigationViewTag">
+                            <NavigationViewItem
+                                Content="{x:Bind}"
+                                Icon="{x:Bind Icon}"
+                                Tag="{x:Bind}" />
+                        </DataTemplate>
+                    </NavigationView.MenuItemTemplate>
+                </NavigationView>
+            </Grid>
+        </controls:StickyHeaderScrollView.Header>
+        <controls:StickyHeaderScrollView.StickyContent>
+            <Grid>
+                <Frame x:Name="IllustratorViewerFrame" />
+                <TeachingTip
+                    x:Name="ShowQrCodeTeachingTip"
+                    x:Uid="/EntryViewerPage/QrCodeTeachingTip"
+                    IsLightDismissEnabled="True"
+                    Target="{x:Bind ShowQrCodeButton}">
+                    <TeachingTip.HeroContent>
+                        <Image />
+                    </TeachingTip.HeroContent>
+                </TeachingTip>
+            </Grid>
+        </controls:StickyHeaderScrollView.StickyContent>
+    </controls:StickyHeaderScrollView>
+</controls:EnhancedPage>

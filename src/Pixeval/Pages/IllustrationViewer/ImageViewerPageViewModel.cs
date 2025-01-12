@@ -1,22 +1,5 @@
-#region Copyright (c) Pixeval/Pixeval
-// GPL v3 License
-// 
-// Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/ImageViewerPageViewModel.cs
-// 
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-// 
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-// 
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#endregion
+// Copyright (c) Pixeval.
+// Licensed under the GPL v3 License.
 
 using System;
 using System.Collections.Generic;
@@ -24,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using Windows.Foundation;
 using Windows.Storage;
 using Windows.System;
@@ -43,15 +27,18 @@ using Pixeval.CoreApi.Net.Response;
 using Pixeval.Download;
 using Pixeval.Util.ComponentModels;
 using Microsoft.Extensions.DependencyInjection;
+using Pixeval.Extensions.Common;
 using Pixeval.Util.IO.Caching;
+using Windows.ApplicationModel.DataTransfer;
+using Microsoft.UI.Xaml;
+using Pixeval.Extensions.Common.Commands.Transformers;
+using WinUI3Utilities;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
 public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
 {
     private bool _disposed;
-
-    private bool _upscaled;
 
     [ObservableProperty]
     public partial bool IsMirrored { get; set; }
@@ -69,10 +56,24 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
     public partial IReadOnlyList<int>? MsIntervals { get; set; }
 
     /// <summary>
-    /// 只有动态zip时才会是<see cref="Stream"/>，其他情况都是<see cref="IReadOnlyList{T}"/>
+    /// 原图流
     /// </summary>
+    /// <remarks>
+    /// 只有动图zip时才会是<see cref="Stream"/>，其他情况都是<see cref="IReadOnlyList{T}"/>
+    /// </remarks>
     [ObservableProperty]
     public partial object? OriginalStreamsSource { get; private set; }
+
+    partial void OnOriginalStreamsSourceChanged(object? value) => DisplayStreamsSource = value;
+
+    /// <summary>
+    /// 显示图流
+    /// </summary>
+    /// <remarks>
+    /// 只有动图zip时才会是<see cref="Stream"/>，其他情况都是<see cref="IReadOnlyList{T}"/>
+    /// </remarks>
+    [ObservableProperty]
+    public partial object? DisplayStreamsSource { get; private set; }
 
     public ImageSource? ThumbnailSource => IllustrationViewModel.ThumbnailSource;
 
@@ -82,16 +83,9 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
     [ObservableProperty]
     public partial float Scale { get; set; } = 1;
 
-    //[ObservableProperty]
-    //public partial bool Upscaling { get; set; }
-
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsFit))]
     public partial ZoomableImageMode ShowMode { get; set; }
-
-    //private Upscaler? _upscaler;
-
-    //public Channel<string> UpscalerMessageChannel { get; } = Channel.CreateUnbounded<string>();
 
     /// <summary>
     /// 由于多窗口，可能在加载图片后改变设置，所以此处缓存原图设置
@@ -106,7 +100,22 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
     [ObservableProperty]
     public partial bool LoadSuccessfully { get; private set; }
 
-    public ImageViewerPageViewModel(IllustrationItemViewModel illustrationViewModel, IllustrationItemViewModel originalIllustrationViewModel, ulong hWnd) : base(hWnd)
+    /// <summary>
+    /// <see langword="true"/>能用，<see langword="false"/>不能用
+    /// </summary>
+    private bool ExtensionStreamLock
+    {
+        get;
+        set
+        {
+            if (field == value)
+                return;
+            field = value;
+            UpdateExtensionCommandCanExecute();
+        }
+    } = true;
+
+    public ImageViewerPageViewModel(IllustrationItemViewModel illustrationViewModel, IllustrationItemViewModel originalIllustrationViewModel, FrameworkElement frameworkElement) : base(frameworkElement)
     {
         IllustrationViewModel = illustrationViewModel;
         OriginalIllustrationViewModel = originalIllustrationViewModel;
@@ -175,12 +184,59 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
     public async Task<StorageFile> SaveToFolderAsync(AppKnownFolders appKnownFolder)
     {
         var name = Path.GetFileName(App.AppViewModel.AppSettings.DownloadPathMacro);
-        var path = IoHelper.NormalizePathSegment(new IllustrationMetaPathParser().Reduce(name, IllustrationViewModel));
-        path = IoHelper.ReplaceTokenExtensionFromUrl(path, IllustrationViewModel.IllustrationOriginalUrl);
-        var file = await appKnownFolder.CreateFileAsync(path);
-        await using var target = await file.OpenStreamForWriteAsync();
-        await GetOriginalStreamsSourceAsync(target);
-        return file;
+        var normalizedName = IoHelper.NormalizePathSegment(new IllustrationMetaPathParser().Reduce(name, IllustrationViewModel));
+        normalizedName = IoHelper.ReplaceTokenExtensionFromUrl(normalizedName, IllustrationViewModel.IllustrationOriginalUrl);
+        await using var stream = appKnownFolder.OpenAsyncWrite(normalizedName);
+        await GetOriginalStreamsSourceAsync(stream);
+        return await StorageFile.GetFileFromPathAsync(appKnownFolder.CombinePath(normalizedName));
+    }
+
+    public ICommand GetTransformExtensionCommand(IImageTransformerCommandExtension extension)
+    {
+        var command = new XamlUICommand();
+        command.CanExecuteRequested += ExtensionCanExecuteRequested;
+        command.ExecuteRequested += OnCommandOnExecuteRequested;
+        ExtensionCommands.Add(command);
+        return command;
+
+        async void OnCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
+        {
+            if (OriginalStreamsSource is not (IReadOnlyList<Stream> and [{ } stream]))
+                return;
+            ExtensionStreamLock = false;
+            try
+            {
+                var transformer = args.Parameter.To<IImageTransformerCommandExtension>();
+                var token = ImageLoadingCancellationTokenSource.Token;
+                if (token.IsCancellationRequested)
+                    return;
+                FrameworkElement.InfoGrowl(ImageViewerPageResources.ApplyingTransformerExtensions);
+                // 运行扩展
+                stream.Position = 0;
+                var result = await transformer.TransformAsync(stream.ToIStream());
+                if (result is null)
+                {
+                    FrameworkElement.ErrorGrowl(ImageViewerPageResources.TransformerExtensionFailed);
+                    return;
+                }
+                result.Seek(0, SeekOrigin.Begin);
+                var memoryStream = Streams.RentStream();
+                await result.CopyToAsync(memoryStream.ToIStream());
+                await result.DisposeAsync();
+                stream.Position = 0;
+                // 显示图片
+                var last = DisplayStreamsSource;
+                DisplayStreamsSource = (IReadOnlyList<Stream>) [memoryStream];
+                if (last is IReadOnlyList<Stream> and [IDisposable disposable]&& !ReferenceEquals(disposable, stream))
+                    disposable.Dispose();
+                if (!token.IsCancellationRequested)
+                    FrameworkElement.SuccessGrowl(ImageViewerPageResources.TransformerExtensionFinishedSuccessfully);
+            }
+            finally
+            {
+                ExtensionStreamLock = true;
+            }
+        }
     }
 
     public CancellationTokenSource ImageLoadingCancellationTokenSource { get; } = new();
@@ -200,9 +256,12 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
 
     private void AdvancePhase(LoadingPhase phase, double progress = 0)
     {
-        LoadingText = phase is LoadingPhase.DownloadingImage
-            ? LoadingPhaseExtension.GetResource(LoadingPhase.DownloadingImage).Format((int) (LoadingProgress = progress)) 
-            : LoadingPhaseExtension.GetResource(phase);
+        LoadingProgress = progress;
+        LoadingText = phase switch
+        {
+            LoadingPhase.DownloadingImage => LoadingPhaseExtension.GetResource(LoadingPhase.DownloadingImage).Format((int)progress),
+            _ => LoadingPhaseExtension.GetResource(phase)
+        };
     }
 
     private async Task LoadImage()
@@ -217,7 +276,7 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
 
         async Task LoadThumbnailAsync()
         {
-            _ = await IllustrationViewModel.TryLoadThumbnailAsync();
+            _ = await IllustrationViewModel.TryLoadThumbnailAsync(this);
             OnPropertyChanged(nameof(ThumbnailSource));
         }
 
@@ -231,6 +290,7 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
 
             var ugoiraUrl = metadata?.LargeUrl;
             object? source = null;
+            // 原图动图（一张一张下）
             if (ugoiraUrl is not null && _isOriginal)
             {
                 var urls = await IllustrationViewModel.UgoiraOriginalUrlsAsync();
@@ -254,17 +314,18 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
             }
             else
             {
+                // 静图
                 if (ugoiraUrl is null)
                 {
                     ugoiraUrl = IllustrationViewModel.StaticUrl(_isOriginal);
-                    if (await DownloadUrlAsync(ugoiraUrl) is { } s)
+                    if (await DownloadUrlAsync(ugoiraUrl) is { } s) 
                         source = (IReadOnlyList<Stream>) [s];
                 }
+                // 非原图动图（压缩包）
                 else
                 {
                     source = await DownloadUrlAsync(ugoiraUrl);
                 }
-
             }
 
             if (source is not null)
@@ -322,29 +383,17 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
         if (OriginalStreamsSource is null)
             return;
 
-        var file = await SaveToFolderAsync(AppKnownFolders.SavedWallPaper);
+        var file = await SaveToFolderAsync(AppKnownFolders.Wallpapers);
         _ = await operation(file);
 
-        ToastNotificationHelper.ShowTextToastNotification(
+        AppNotificationHelper.ShowTextAppNotification(
             EntryViewerPageResources.SetAsSucceededTitle,
             EntryViewerPageResources.SetAsBackgroundSucceededTitle);
     }
 
     private void ShareCommandExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
-        HWnd.ShowShareUi();
-    }
-
-    private async void UpscaleCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
-    {
-        //_upscaled = true;
-        //UpscaleCommand.NotifyCanExecuteChanged();
-        //_upscaler ??= new Upscaler(new(OriginalStream!.Single(), 
-        //    App.AppViewModel.AppSettings.UpscalerModel,
-        //    App.AppViewModel.AppSettings.UpscalerScaleRatio,
-        //    App.AppViewModel.AppSettings.UpscalerOutputType));
-        //var newStream = await _upscaler.UpscaleAsync(UpscalerMessageChannel);
-        //OriginalStream = [newStream];
+        DataTransferManagerInterop.ShowShareUIForWindow((nint)Window.HWnd);
     }
 
     private void InitializeCommands()
@@ -379,9 +428,6 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
 
         SetAsBackgroundCommand.CanExecuteRequested += IsNotUgoiraAndLoadingCompletedCanExecuteRequested;
         SetAsBackgroundCommand.ExecuteRequested += SetAsBackgroundCommandOnExecuteRequested;
-
-        //UpscaleCommand.CanExecuteRequested += IsUpscaleCommandCanExecutedRequested;
-        //UpscaleCommand.ExecuteRequested += UpscaleCommandOnExecuteRequested;
     }
 
     private void UpdateCommandCanExecute()
@@ -394,17 +440,23 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
         RotateCounterclockwiseCommand.NotifyCanExecuteChanged();
         MirrorCommand.NotifyCanExecuteChanged();
         ShareCommand.NotifyCanExecuteChanged();
-        //UpscaleCommand.NotifyCanExecuteChanged();
+        foreach (var command in ExtensionCommands)
+            command.NotifyCanExecuteChanged();
     }
 
-    private void IsUpscaleCommandCanExecutedRequested(XamlUICommand _, CanExecuteRequestedEventArgs args) => 
-        args.CanExecute = LoadSuccessfully && !IllustrationViewModel.IsUgoira && !_upscaled;
+    private void UpdateExtensionCommandCanExecute()
+    {
+        foreach (var command in ExtensionCommands)
+            command.NotifyCanExecuteChanged();
+    }
 
     private void LoadingCompletedCanExecuteRequested(XamlUICommand _, CanExecuteRequestedEventArgs args) => args.CanExecute = LoadSuccessfully;
 
     private void IsNotUgoiraAndLoadingCompletedCanExecuteRequested(XamlUICommand sender, CanExecuteRequestedEventArgs args) => args.CanExecute = !IllustrationViewModel.IsUgoira && LoadSuccessfully;
+    
+    private void ExtensionCanExecuteRequested(XamlUICommand sender, CanExecuteRequestedEventArgs args) => args.CanExecute = !IllustrationViewModel.IsUgoira && LoadSuccessfully && ExtensionStreamLock;
 
-    public (ulong, GetImageStreams) DownloadParameter => (HWnd, GetImageStreamsAsync);
+    public (FrameworkElement, GetImageStreams) DownloadParameter => (FrameworkElement, GetImageStreamsAsync);
 
     public XamlUICommand PlayGifCommand { get; } = "".GetCommand(Symbol.Pause);
 
@@ -433,18 +485,15 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
 
     public XamlUICommand SetAsBackgroundCommand { get; } = new() { Label = EntryViewerPageResources.Background };
 
-    public XamlUICommand UpscaleCommand { get; } = EntryItemResources.AIUpscale.GetCommand(Symbol.EyeTracking);
+    public List<XamlUICommand> ExtensionCommands { get; } = [];
 
     private void DisposeInternal()
     {
         ImageLoadingCancellationTokenSource.TryCancelDispose();
-        IllustrationViewModel.UnloadThumbnail();
+        IllustrationViewModel.UnloadThumbnail(this);
 
         OriginalStreamsSource = null;
         
-        //_upscaler?.DisposeAsync();
-        //UpscalerMessageChannel.Writer.Complete();
-
         LoadSuccessfully = false;
     }
 }
@@ -465,5 +514,5 @@ public enum LoadingPhase
     DownloadingImage,
 
     [LocalizedResource(typeof(ImageViewerPageResources), nameof(ImageViewerPageResources.LoadingImage))]
-    LoadingImage
+    LoadingImage,
 }

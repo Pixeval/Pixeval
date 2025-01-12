@@ -9,7 +9,6 @@
     xmlns:flyoutContent="using:Pixeval.Controls.FlyoutContent"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pixeval="using:Pixeval"
-    Loaded="WorkContainer_OnLoaded"
     mc:Ignorable="d">
     <UserControl.Resources>
         <TeachingTip

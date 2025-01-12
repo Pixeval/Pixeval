@@ -239,9 +239,54 @@ If you don't trust the app, you can leave the text box empty, click login, and m
 
 Domain Fronting：Disabling this will force the app to use the system proxy. If you cannot access Pixiv properly, then it is better not to disable this option.</value>
   </data>
+  <data name="SubmitWithNewAccountButton.Text" xml:space="preserve">
+    <value>Login with another account</value>
+  </data>
+  <data name="RefreshTokenButton.Content" xml:space="preserve">
+    <value>Login with refresh token</value>
+  </data>
+  <data name="BrowserButton.Content" xml:space="preserve">
+    <value>Login via Chrome/Edge (beta 🧪)</value>
+  </data>
+  <data name="WebViewButton.Content" xml:space="preserve">
+    <value>Login via Webview</value>
+  </data>
+  <data name="DisableDomainFrontingToggleSwitch.Header" xml:space="preserve">
+    <value>Domain fronting</value>
+  </data>
+  <data name="DisableDomainFrontingToggleSwitch.OffContent" xml:space="preserve">
+    <value>Disable</value>
+  </data>
+  <data name="WebViewLoginTip.Title" xml:space="preserve">
+    <value>Attention</value>
+  </data>
+  <data name="WebViewLoginTip.Message" xml:space="preserve">
+    <value>WebView2 is required to use this method</value>
+  </data>
+  <data name="BrowserLoginTip.Title" xml:space="preserve">
+    <value>Attention</value>
+  </data>
+  <data name="BrowserLoginTip.Message" xml:space="preserve">
+    <value>reCAPTCHA may be invisible when using this method</value>
+  </data>
   <data name="BrowserHelp.ToolTipService.ToolTip" xml:space="preserve">
     <value>Clicking Login will log you in using an external Chromium kernel browser such as Chrome or Edge. If this method fails, you can use other methods to try to login.
 
 Domain fronting: Disabling this will use the current local IE proxy. If you do not have direct access to pixiv at this time, you should not disable this option!</value>
+  </data>
+  <data name="RootCertificateInstallationRequiredSecondaryButtonText" xml:space="preserve">
+    <value>Use Pixeval's certificate</value>
+  </data>
+  <data name="RootCertificateInstallationRequiredPrimaryButtonText" xml:space="preserve">
+    <value>Use your own certificate</value>
+  </data>
+  <data name="CertificateRequiredDialogPath.PlaceholderText" xml:space="preserve">
+    <value>Certificate path</value>
+  </data>
+  <data name="CertificateRequiredDialogPassword.PlaceholderText" xml:space="preserve">
+    <value>Certificate password</value>
+  </data>
+  <data name="CertificateRequiredDialogInvalidInfoBar.Title" xml:space="preserve">
+    <value>Incorrect certificate path or password</value>
   </data>
 </root>

@@ -1,22 +1,5 @@
-#region Copyright
-// GPL v3 License
-// 
-// Pixeval/Pixeval
-// Copyright (c) 2024 Pixeval/ProxyAppSettingsEntry.cs
-// 
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-// 
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-// 
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#endregion
+// Copyright (c) Pixeval.
+// Licensed under the GPL v3 License.
 
 using System;
 using System.Reflection;
@@ -32,7 +15,7 @@ namespace Pixeval.Settings.Models;
 
 public partial class ProxyAppSettingsEntry : EnumAppSettingsEntry
 {
-    public ProxyAppSettingsEntry(AppSettings appSettings) : base(appSettings, t => t.ProxyType, ProxyTypeExtension.GetItems())
+    public ProxyAppSettingsEntry(AppSettings settings) : base(settings, t => t.ProxyType, ProxyTypeExtension.GetItems())
     {
         var member = typeof(AppSettings).GetProperty(nameof(AppSettings.Proxy));
         Attribute2 = member?.GetCustomAttribute<SettingsEntryAttribute>();
@@ -93,10 +76,11 @@ public partial class ProxyAppSettingsEntry : EnumAppSettingsEntry
                 return;
             Settings.Proxy = value ?? "";
             OnPropertyChanged();
+            ProxyChanged?.Invoke(MakoProxy);
         }
     }
 
-    public string? MakoProxy
+    private string? MakoProxy
     {
         get
         {
@@ -128,10 +112,9 @@ public partial class ProxyAppSettingsEntry : EnumAppSettingsEntry
         }
     }
 
-    public override void ValueReset()
+    public override void ValueReset(AppSettings defaultSettings)
     {
-        base.ValueReset();
-        OnPropertyChanged(nameof(Proxy));
-        ProxyChanged?.Invoke(MakoProxy);
+        base.ValueReset(defaultSettings);
+        Proxy = defaultSettings.Proxy;
     }
 }

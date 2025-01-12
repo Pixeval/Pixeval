@@ -11,7 +11,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:model="using:Pixeval.CoreApi.Model"
     xmlns:pixeval="using:Pixeval.AppManagement"
-    Background="{StaticResource CardBackgroundFillColorDefaultBrush}"
+    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
     PointerEntered="NovelItem_OnPointerEntered"
     PointerExited="NovelItem_OnPointerExited"
     mc:Ignorable="d">
@@ -55,7 +55,7 @@
         HorizontalAlignment="Left"
         VerticalAlignment="Top"
         Command="{x:Bind ViewModel.BookmarkCommand, Mode=OneWay}"
-        CommandParameter="{x:Bind HWnd}"
+        CommandParameter="{x:Bind}"
         IsTapEnabled="False" />
     <controls:DockPanel
         Grid.Column="1"
@@ -148,7 +148,7 @@
         <Grid
             Height="310"
             Padding="10"
-            Background="{StaticResource ApplicationPageBackgroundThemeBrush}"
+            Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
             ColumnSpacing="10"
             CornerRadius="{StaticResource ControlCornerRadius}"
             PointerEntered="NovelItemPopup_OnPointerEntered"
@@ -166,7 +166,7 @@
                     OverflowButtonVisibility="Collapsed">
                     <AppBarButton Click="OpenNovel_OnClicked" Command="{x:Bind OpenNovelCommand}" />
                     <AppBarButton Click="AddToBookmark_OnClicked" Command="{x:Bind ViewModel.AddToBookmarkCommand, Mode=OneWay}" />
-                    <AppBarButton Command="{x:Bind ViewModel.SaveCommand, Mode=OneWay}" CommandParameter="{x:Bind HWnd}" />
+                    <AppBarButton Command="{x:Bind ViewModel.SaveCommand, Mode=OneWay}" CommandParameter="{x:Bind}" />
                     <AppBarButton Command="{x:Bind ViewModel.OpenInWebBrowserCommand, Mode=OneWay}" />
                 </CommandBar>
                 <Grid>
@@ -179,7 +179,7 @@
                         HorizontalAlignment="Left"
                         VerticalAlignment="Top"
                         Command="{x:Bind ViewModel.BookmarkCommand, Mode=OneWay}"
-                        CommandParameter="{x:Bind HWnd}">
+                        CommandParameter="{x:Bind}">
                         <Grid.RenderTransform>
                             <ScaleTransform ScaleX="1" ScaleY="1" />
                         </Grid.RenderTransform>

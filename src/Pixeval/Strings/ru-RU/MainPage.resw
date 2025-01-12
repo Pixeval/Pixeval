@@ -211,9 +211,7 @@
     <value>Соответствующие теги</value>
   </data>
   <data name="FeedTabCannotBeOpenedTitle" xml:space="preserve">
-    <value>Невозможно получить подписки пользователя
-
-</value>
+    <value>Невозможно получить подписки пользователя</value>
   </data>
   <data name="FeedTabCannotBeOpenedContent" xml:space="preserve">
     <value>Для использования ленты подписок пользователя необходимы Cookie. Пожалуйста, сначала введите соответствующие Cookie на странице настроек, прежде чем использовать эту функцию.</value>
@@ -221,16 +219,16 @@
   <data name="ExtensionsTab.Content" xml:space="preserve">
     <value>Расширения</value>
   </data>
-  <data name="RefreshingSessionFailedTitle" xml:space="preserve">
-    <value>Не удалось обновить сессию</value>
-  </data>
-  <data name="RefreshingSessionFailedContent" xml:space="preserve">
-    <value>Пожалуйста, войдите снова</value>
-  </data>
   <data name="SearchWorksResult" xml:space="preserve">
     <value>搜索作品结果</value>
   </data>
   <data name="SearchUsersResult" xml:space="preserve">
     <value>搜索用户结果</value>
+  </data>
+  <data name="RefreshingSessionFailedContent" xml:space="preserve">
+    <value>Пожалуйста, войдите снова</value>
+  </data>
+  <data name="RefreshingSessionFailedTitle" xml:space="preserve">
+    <value>Не удалось обновить сессию</value>
   </data>
 </root>

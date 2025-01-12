@@ -7,7 +7,6 @@
     xmlns:fluent="using:FluentIcons.WinUI"
     xmlns:local="using:Pixeval.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Loaded="PixivReplyBar_OnLoaded"
     mc:Ignorable="d">
     <controls:DockPanel HorizontalSpacing="5">
         <Button
@@ -52,7 +51,8 @@
             controls:DockPanel.Dock="Right"
             Click="SendButton_OnClicked"
             Content="{fluent:SymbolIcon Symbol=Send,
-                                        FontSize={StaticResource SmallIconFontSize}}" />
+                                        FontSize={StaticResource SmallIconFontSize}}"
+            Style="{StaticResource PixevalTransparentButtonStyle}" />
         <RichEditBox
             x:Name="ReplyContentRichEditBox"
             x:Uid="/PixivReplyBar/ReplyContentRichEditBox"

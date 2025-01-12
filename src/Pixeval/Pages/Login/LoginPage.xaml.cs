@@ -1,30 +1,16 @@
-#region Copyright (c) Pixeval/Pixeval
-// GPL v3 License
-// 
-// Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/LoginPage.xaml.cs
-// 
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-// 
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-// 
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#endregion
+// Copyright (c) Pixeval.
+// Licensed under the GPL v3 License.
 
 using System;
 using System.Threading.Tasks;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Media.Animation;
-using Microsoft.Windows.Globalization;
+using Windows.Globalization;
+using Microsoft.Extensions.DependencyInjection;
 using Pixeval.AppManagement;
+using Pixeval.Controls.Windowing;
+using Pixeval.CoreApi;
+using Pixeval.Logging;
 using Pixeval.Settings.Models;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
@@ -92,8 +78,12 @@ public sealed partial class LoginPage
     {
         try
         {
-            if (refreshToken.IsNotNullOrEmpty() && await _viewModel.RefreshAsync(refreshToken))
+            if (refreshToken.IsNotNullOrEmpty())
             {
+                _viewModel.AdvancePhase(LoginPhaseEnum.Refreshing);
+                var logger = App.AppViewModel.AppServiceProvider.GetRequiredService<FileLogger>();
+                App.AppViewModel.MakoClient = new MakoClient(refreshToken, App.AppViewModel.AppSettings.ToMakoClientConfiguration(), logger);
+
                 SuccessNavigating();
             }
             else
@@ -115,7 +105,7 @@ public sealed partial class LoginPage
         if (Current is null || App.AppViewModel.MakoClient == null!)
             ThrowHelper.Exception();
         Current._viewModel.AdvancePhase(LoginPhaseEnum.SuccessNavigating);
-        Current.NavigateParent<MainPage>(null, new DrillInNavigationTransitionInfo());
+        WindowFactory.GetWindowForElement(Current).PageContent = new MainPage();
         Current._viewModel.LogoutExit = false;
         AppInfo.SaveContext();
     }
@@ -144,12 +134,12 @@ public sealed partial class LoginPage
     {
         try
         {
-            await _viewModel.WebView2LoginAsync(HWnd, useNewAccount, () => DispatcherQueue.TryEnqueue(SuccessNavigating));
+            await _viewModel.WebView2LoginAsync(Window, useNewAccount, () => DispatcherQueue.TryEnqueue(SuccessNavigating));
             _viewModel.AdvancePhase(LoginPhaseEnum.WaitingForUserInput);
         }
         catch (Exception exception)
         {
-            _ = await HWnd.CreateAcknowledgementAsync(LoginPageResources.ErrorWhileLoggingInTitle,
+            _ = await this.CreateAcknowledgementAsync(LoginPageResources.ErrorWhileLoggingInTitle,
                 LoginPageResources.ErrorWhileLogginInContentFormatted.Format(exception + "\n" + exception.StackTrace));
             _viewModel.CloseWindow();
         }

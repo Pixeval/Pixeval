@@ -1,25 +1,10 @@
-#region Copyright
-// GPL v3 License
-// 
-// Pixeval/Pixeval
-// Copyright (c) 2024 Pixeval/C.cs
-// 
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-// 
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-// 
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#endregion
+// Copyright (c) Pixeval.Controls.
+// Licensed under the GPL v3 License.
 
 using System;
+using System.Collections;
 using System.Globalization;
+using System.Linq;
 using Windows.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -48,6 +33,10 @@ public static class C
     public static Visibility IsNullToVisibility(object? value) => value is null ? Visibility.Visible : Visibility.Collapsed;
 
     public static Visibility IsNotNullToVisibility(object? value) => value is null ? Visibility.Collapsed : Visibility.Visible;
+
+    public static Visibility IsEqualToVisibility(object? x, object? y) => Equals(x, y) ? Visibility.Visible : Visibility.Collapsed;
+    
+    public static Visibility IsNotEqualToVisibility(object? x, object? y) => Equals(x, y) ? Visibility.Collapsed : Visibility.Visible;
 
     public static bool IsZeroD(double value) => value < double.Epsilon;
 
@@ -94,6 +83,8 @@ public static class C
 
     public static FontFamily ToFontFamily(string value) => new(value);
 
+    public static object? FirstOrDefault(object value) => value is IEnumerable e ? e.OfType<object>().FirstOrDefault() : null;
+
     public static string ToPercentageString(object value, int precision)
     {
         var p = "F" + precision;
@@ -125,7 +116,7 @@ public static class C
 
     public static double DoubleComplementary(double value) => 1 - value;
 
-    public static FontWeight ToFontWeight(Enum value) => value.GetHashCode() switch
+    public static FontWeight ToFontWeight(object value) => (value as Enum)?.GetHashCode() switch
     {
         0 => FontWeights.Thin,
         1 => FontWeights.ExtraLight,
@@ -138,6 +129,6 @@ public static class C
         8 => FontWeights.ExtraBold,
         9 => FontWeights.Black,
         10 => FontWeights.ExtraBlack,
-        _ => ThrowHelper.ArgumentOutOfRange<Enum, FontWeight>(value)
+        _ => ThrowHelper.ArgumentOutOfRange<object, FontWeight>(value)
     };
 }

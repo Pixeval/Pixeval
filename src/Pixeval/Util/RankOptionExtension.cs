@@ -1,24 +1,5 @@
-#region Copyright
-
-// GPL v3 License
-// 
-// Pixeval/Pixeval
-// Copyright (c) 2024 Pixeval/RankOptionExtension.cs
-// 
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-// 
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-// 
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-#endregion
+// Copyright (c) Pixeval.
+// Licensed under the GPL v3 License.
 
 using Microsoft.UI.Xaml;
 using Pixeval.Attributes;
@@ -121,15 +102,6 @@ public static partial class ElementThemeExtension;
 [AttachedLocalizedResource(nameof(WorkSortOption.PublishDateDescending), nameof(MiscResources.WorkSortOptionPublishDateDescending))]
 [AttachedLocalizedResource(nameof(WorkSortOption.DoNotSort), nameof(MiscResources.WorkSortOptionDoNotSort))]
 public static partial class WorkSortOptionExtension;
-
-[AttachedLocalizationMetadata<SearchDuration>(typeof(MiscResources))]
-[AttachedLocalizedResource(nameof(SearchDuration.Undecided), nameof(MiscResources.SearchDurationUndecided))]
-[AttachedLocalizedResource(nameof(SearchDuration.WithinLastDay), nameof(MiscResources.SearchDurationWithinLastDay))]
-[AttachedLocalizedResource(nameof(SearchDuration.WithinLastWeek), nameof(MiscResources.SearchDurationWithinLastWeek))]
-[AttachedLocalizedResource(nameof(SearchDuration.WithinLastMonth), nameof(MiscResources.SearchDurationWithinLastMonth))]
-[AttachedLocalizedResource(nameof(SearchDuration.WithinLastHalfYear), nameof(MiscResources.SearchDurationWithinLastHalfYear))]
-[AttachedLocalizedResource(nameof(SearchDuration.WithinLastYear), nameof(MiscResources.SearchDurationWithinLastYear))]
-public static partial class SearchDurationExtension;
 
 [AttachedLocalizationMetadata<PrivacyPolicy>(typeof(MiscResources))]
 [AttachedLocalizedResource(nameof(PrivacyPolicy.Public), nameof(MiscResources.PrivacyPolicyPublic))]

@@ -1,3 +1,6 @@
+// Copyright (c) Pixeval.
+// Licensed under the GPL v3 License.
+
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
@@ -33,9 +36,8 @@ public sealed partial class BookmarkTagSelector : UserControl
     {
         InitializeComponent();
         ViewModel.SelectedTags.CollectionChanged += SelectedTags_CollectionChanged;
+        ResetSource();
     }
-
-    private void BookmarkTagSelector_OnLoaded(object sender, RoutedEventArgs e) => ResetSource();
 
     private static void OnTypeChanged(DependencyObject o, DependencyPropertyChangedEventArgs e) => o.To<BookmarkTagSelector>().ResetSource();
 

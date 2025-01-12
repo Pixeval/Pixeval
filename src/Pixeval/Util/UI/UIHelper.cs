@@ -1,24 +1,8 @@
-#region Copyright (c) Pixeval/Pixeval
-// GPL v3 License
-// 
-// Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/UIHelper.cs
-// 
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-// 
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-// 
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#endregion
+// Copyright (c) Pixeval.
+// Licensed under the GPL v3 License.
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Drawing;
 using System.IO;
@@ -52,6 +36,7 @@ using Size = Windows.Foundation.Size;
 using Symbol = FluentIcons.Common.Symbol;
 using SymbolIcon = FluentIcons.WinUI.SymbolIcon;
 using SymbolIconSource = FluentIcons.WinUI.SymbolIconSource;
+using WinRT.Interop;
 
 namespace Pixeval.Util.UI;
 
@@ -242,23 +227,29 @@ public static partial class UiHelper
         box.Document.SetText(TextSetOptions.None, "");
     }
 
-    public static IAsyncOperation<StorageFolder?> OpenFolderPickerAsync(this Window window) => window.PickSingleFolderAsync(PickerLocationId.PicturesLibrary);
+    public static IAsyncOperation<StorageFolder?> OpenFolderPickerAsync(this FrameworkElement frameworkElement) => WindowFactory.GetWindowForElement(frameworkElement).PickSingleFolderAsync(PickerLocationId.PicturesLibrary);
 
-    public static IAsyncOperation<StorageFile?> OpenFileOpenPickerAsync(this Window window) => window.PickSingleFileAsync(PickerLocationId.PicturesLibrary);
+    public static IAsyncOperation<StorageFile?> OpenFileOpenPickerAsync(this FrameworkElement frameworkElement) => WindowFactory.GetWindowForElement(frameworkElement).PickSingleFileAsync(PickerLocationId.PicturesLibrary);
 
-    public static IAsyncOperation<StorageFolder?> OpenFolderPickerAsync(this ulong hWnd) => WindowFactory.ForkedWindows[hWnd].PickSingleFolderAsync(PickerLocationId.PicturesLibrary);
-
-    public static IAsyncOperation<StorageFile?> OpenFileOpenPickerAsync(this ulong hWnd) => WindowFactory.ForkedWindows[hWnd].PickSingleFileAsync(PickerLocationId.PicturesLibrary);
+    public static IAsyncOperation<IReadOnlyList<StorageFile>> OpenMultipleDllsOpenPickerAsync(this FrameworkElement frameworkElement)
+    {
+        var fileOpenPicker = new FileOpenPicker();
+        fileOpenPicker.FileTypeFilter.Add(".dll");
+        fileOpenPicker.FileTypeFilter.Add(".zip");
+        fileOpenPicker.SuggestedStartLocation = PickerLocationId.Desktop;
+        InitializeWithWindow.Initialize(fileOpenPicker, (nint)WindowFactory.GetWindowForElement(frameworkElement).HWnd);
+        return fileOpenPicker.PickMultipleFilesAsync();
+    }
 
     public static async Task<T> AwaitPageTransitionAsync<T>(this Frame root) where T : Page
     {
-        await ThreadingHelper.SpinWaitAsync(() => root.Content is not T { IsLoaded: true });
+        await root.DispatcherQueue.SpinWaitAsync(() => root.Content is not T { IsLoaded: true });
         return (T)root.Content;
     }
 
     public static async Task<Page> AwaitPageTransitionAsync(this Frame root, Type pageType)
     {
-        await ThreadingHelper.SpinWaitAsync(() => root.Content is not Page { IsLoaded: true } || root.Content?.GetType() != pageType);
+        await root.DispatcherQueue.SpinWaitAsync(() => root.Content is not Page { IsLoaded: true } || root.Content?.GetType() != pageType);
         return (Page)root.Content;
     }
 

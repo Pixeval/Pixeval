@@ -11,6 +11,9 @@
 
     <ItemGroup>
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Http.Resilience" Version="9.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.0" />
         <PackageReference Include="System.Linq.Async" Version="6.0.1" />
         <PackageReference Include="WebApiClientCore" Version="2.1.5" PrivateAssets="True" />
     </ItemGroup>
@@ -21,16 +24,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Compile Update="MakoClient.Engines.cs">
-            <DependentUpon>MakoClient.cs</DependentUpon>
-        </Compile>
-        <Compile Update="MakoClient.Extensions.cs">
-            <DependentUpon>MakoClient.cs</DependentUpon>
-        </Compile>
-        <Compile Update="MakoClient.Properties.cs">
-            <DependentUpon>MakoClient.cs</DependentUpon>
-        </Compile>
-        <Compile Update="MakoClient.Logging.cs">
+        <Compile Update="MakoClient.*.cs">
             <DependentUpon>MakoClient.cs</DependentUpon>
         </Compile>
     </ItemGroup>

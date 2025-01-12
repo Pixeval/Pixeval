@@ -225,6 +225,69 @@
   <data name="ThumbnailDirectionPortrait" xml:space="preserve">
     <value>Portrait</value>
   </data>
+  <data name="Bmp" xml:space="preserve">
+    <value>BMP（loss，large，general）</value>
+  </data>
+  <data name="Jpg" xml:space="preserve">
+    <value>JPG（loss，small，general）</value>
+  </data>
+  <data name="Gif" xml:space="preserve">
+    <value>GIF（lossless，only 255 colors，small，general）</value>
+  </data>
+  <data name="Tiff" xml:space="preserve">
+    <value>TIFF（loss，cannot autoplay，large）</value>
+  </data>
+  <data name="Png" xml:space="preserve">
+    <value>PNG/APNG（lossless，small）</value>
+  </data>
+  <data name="WebPLossless" xml:space="preserve">
+    <value>Lossless WebP（lossless，small，general）</value>
+  </data>
+  <data name="WebPLossy" xml:space="preserve">
+    <value>Loss WebP（loss，small，general）</value>
+  </data>
+  <data name="DownloadItemOpenFailed" xml:space="preserve">
+    <value>Failed to open file (or folder)</value>
+  </data>
+  <data name="DownloadItemMaybeDeleted" xml:space="preserve">
+    <value>It seems that you have deleted the work</value>
+  </data>
+  <data name="SortOptionComboBox.PlaceholderText" xml:space="preserve">
+    <value>Sort option</value>
+  </data>
+  <data name="PrivacyPolicyComboBox.PlaceholderText" xml:space="preserve">
+    <value>Privacy policy</value>
+  </data>
+  <data name="OpenUserId" xml:space="preserve">
+    <value>Open user homepage</value>
+  </data>
+  <data name="OpenIllustId" xml:space="preserve">
+    <value>Open image page</value>
+  </data>
+  <data name="CannotFindLoginProxyServerExecutable" xml:space="preserve">
+    <value>Cannot find the executable to login, please contact the developer for further help</value>
+  </data>
+  <data name="UnexpectedBehavior" xml:space="preserve">
+    <value>Undefined behavior occured, if you see this message, please contact the developer for further help</value>
+  </data>
+  <data name="ReplyContentTooLong" xml:space="preserve">
+    <value>The reply content is too long</value>
+  </data>
+  <data name="AllCountedTagName" xml:space="preserve">
+    <value>All tags</value>
+  </data>
+  <data name="SearchNovelTagMatchOptionExactMatchForTags" xml:space="preserve">
+    <value>Exact match for the tag</value>
+  </data>
+  <data name="SearchNovelTagMatchOptionPartialMatchForTags" xml:space="preserve">
+    <value>Partial match for the tag</value>
+  </data>
+  <data name="SearchNovelTagMatchOptionText" xml:space="preserve">
+    <value>Match for body text</value>
+  </data>
+  <data name="SearchNovelTagMatchOptionCaption" xml:space="preserve">
+    <value>Match for caption</value>
+  </data>
   <data name="WorkTypeIllust" xml:space="preserve">
     <value>Illustration</value>
   </data>

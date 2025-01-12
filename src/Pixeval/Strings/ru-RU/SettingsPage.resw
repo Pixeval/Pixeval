@@ -531,6 +531,9 @@
   <data name="BrowseOriginalImageEntry.Header" xml:space="preserve">
     <value>Просмотр оригинальных изображений</value>
   </data>
+  <data name="SearchHistoriesCleared" xml:space="preserve">
+    <value>История поиска очищена</value>
+  </data>
   <data name="SearchSettingsGroup.Text" xml:space="preserve">
     <value>Настройки поиска</value>
   </data>

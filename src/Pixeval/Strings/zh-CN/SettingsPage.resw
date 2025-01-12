@@ -168,7 +168,7 @@
     <value>有可用的次要更新</value>
   </data>
   <data name="BuildUpdateAvailable" xml:space="preserve">
-    <value>有可用的生成更新</value>
+    <value>有可用的构建更新</value>
   </data>
   <data name="UnknownUpdateState" xml:space="preserve">
     <value>未知更新状态</value>
@@ -525,18 +525,6 @@
   <data name="ReverseSearchResultSimilarityThresholdEntry.Header" xml:space="preserve">
     <value>逆向搜索阈值</value>
   </data>
-  <data name="SearchDurationEntry.Description" xml:space="preserve">
-    <value>搜索结果将会被限制在指定的时间区间内，如果”使用更精确的搜索范围限制“启用则此项被忽略</value>
-  </data>
-  <data name="SearchDurationEntry.Header" xml:space="preserve">
-    <value>搜索范围限制</value>
-  </data>
-  <data name="SearchEndDateEntry.Description" xml:space="preserve">
-    <value>搜索结果只会包含该日期以前提交的作品，该设置项的值必须比起始日期的值大至少1</value>
-  </data>
-  <data name="SearchEndDateEntry.Header" xml:space="preserve">
-    <value>设置搜索的结束日期</value>
-  </data>
   <data name="BrowseOriginalImageEntry.Description" xml:space="preserve">
     <value>浏览原图需要更多流量和时间加载，但也可以获得更好的浏览体验和更快的下载速度</value>
   </data>
@@ -545,15 +533,6 @@
   </data>
   <data name="SearchSettingsGroup.Text" xml:space="preserve">
     <value>搜索设置</value>
-  </data>
-  <data name="SearchStartCalendarDatePicker.PlaceholderText" xml:space="preserve">
-    <value>起始日期</value>
-  </data>
-  <data name="SearchStartDateEntry.Description" xml:space="preserve">
-    <value>搜索结果只会包含该日期以后提交的作品</value>
-  </data>
-  <data name="SearchStartDateEntry.Header" xml:space="preserve">
-    <value>设置搜索的起始日期</value>
   </data>
   <data name="SessionSettingsGroup.Text" xml:space="preserve">
     <value>会话设置</value>
@@ -614,12 +593,6 @@
   </data>
   <data name="UseFileCacheEntry.Header" xml:space="preserve">
     <value>使用文件缓存</value>
-  </data>
-  <data name="UsePreciseRangeForSearchEntry.Description" xml:space="preserve">
-    <value>使用更精确的（基于准确日期）的搜索范围限制，搜索结果将会被限制在指定的时间区间内，如果该项被启用则“搜索范围限制”一栏将会被忽略</value>
-  </data>
-  <data name="UsePreciseRangeForSearchEntry.Header" xml:space="preserve">
-    <value>使用更精确的搜索范围限制</value>
   </data>
   <data name="VersionSettingsGroup.Text" xml:space="preserve">
     <value>版本</value>
@@ -732,25 +705,22 @@
   <data name="PicSetIndexMacroTooltip" xml:space="preserve">
     <value>如果是多图，该宏会被替换为当前图片在多图中的索引（第几张）；必须与 @{if_pic_one=} 宏配合使用，必须在文件名上使用</value>
   </data>
-  <data name="AiUpscalerSettingsGroup.Text" xml:space="preserve">
-    <value>AI超分辨率</value>
+  <data name="UseSearchEndDateEntry.Header" xml:space="preserve">
+    <value>启用搜索结束日期</value>
   </data>
-  <data name="UpscalerModelEntry.Header" xml:space="preserve">
-    <value> AI超分辨率模型</value>
+  <data name="UseSearchStartDateEntry.Header" xml:space="preserve">
+    <value>启用搜索开始日期</value>
   </data>
-  <data name="UpscalerModelEntry.Description" xml:space="preserve">
-    <value>选择AI超分辨率模型，详见此处</value>
+  <data name="UseSearchStartDateEntry.Description" xml:space="preserve">
+    <value>启用后搜索作品的投稿日期将从此日期开始</value>
   </data>
-  <data name="UpscalerScaleRatioEntry.Header" xml:space="preserve">
-    <value>AI超分辨率倍率</value>
+  <data name="UseSearchEndDateEntry.Description" xml:space="preserve">
+    <value>启用后搜索作品的投稿日期将到此日期结束</value>
   </data>
-  <data name="UpscalerScaleRatioEntry.Description" xml:space="preserve">
-    <value>默认为4，注意过大的倍率可能导致生成的图片体积过大影响性能</value>
+  <data name="OpenExtensionsEntry.Header" xml:space="preserve">
+    <value>打开扩展文件夹</value>
   </data>
-  <data name="UpscalerOutputTypeEntry.Header" xml:space="preserve">
-    <value>AI超分辨率生成图片的格式</value>
-  </data>
-  <data name="UpscalerOutputTypeEntry.Description" xml:space="preserve">
-    <value>默认为PNG</value>
+  <data name="OpenExtensionsEntry.Description" xml:space="preserve">
+    <value>此处存储了软件会加载的扩展DLL文件</value>
   </data>
 </root>

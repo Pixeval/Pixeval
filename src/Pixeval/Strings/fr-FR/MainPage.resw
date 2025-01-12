@@ -219,9 +219,6 @@
   <data name="ExtensionsTab.Content" xml:space="preserve">
     <value>扩展</value>
   </data>
-  <data name="RefreshingSessionFailedTitle" xml:space="preserve">
-    <value>Rafraichissement de session échoué</value>
-  </data>
   <data name="RefreshingSessionFailedContent" xml:space="preserve">
     <value>Veuillez re-authentifier
 Veuillez contacter les développeurs en cas de problème récurrent</value>
@@ -231,5 +228,9 @@ Veuillez contacter les développeurs en cas de problème récurrent</value>
   </data>
   <data name="SearchUsersResult" xml:space="preserve">
     <value>搜索用户结果</value>
+  </data>
+</root>
+  <data name="RefreshingSessionFailedTitle" xml:space="preserve">
+    <value>Rafraichissement de session échoué</value>
   </data>
 </root>

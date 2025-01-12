@@ -1,3 +1,6 @@
+// Copyright (c) Pixeval.
+// Licensed under the GPL v3 License.
+
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -9,7 +12,6 @@ using Microsoft.UI.Text;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
-using Pixeval.Controls.Windowing;
 using Pixeval.Download;
 using Pixeval.Download.MacroParser;
 using Pixeval.Download.MacroParser.Ast;
@@ -24,39 +26,42 @@ namespace Pixeval.Controls.Settings;
 
 public sealed partial class DownloadMacroSettingsExpander
 {
-    public DownloadMacroAppSettingsEntry Entry { get; set; } = null!;
+    public DownloadMacroAppSettingsEntry Entry
+    {
+        get;
+        set
+        {
+            field = value;
+            Entry.PropertyChanged += (_, _) => EntryOnPropertyChanged();
+            EntryOnPropertyChanged();
+
+            return;
+            void EntryOnPropertyChanged()
+            {
+                DownloadPathMacroTextBox.Document.GetText(TextGetOptions.None, out var text);
+                var t = text.ReplaceLineEndings("");
+                if (t == Entry.Value)
+                    return;
+                // The first time viewmodel get the value of DownloadPathMacro from AppSettings won't trigger the property changed event
+                _previousPath = Entry.Value;
+                SetPathMacroRichEditBoxDocument(Entry.Value);
+            }
+        }
+    } = null!;
 
     public DownloadMacroSettingsExpander() => InitializeComponent();
 
     /// <summary>
     /// This TestParser is used to test whether the user input meta path is legal
     /// </summary>
-    private static readonly MacroParser<string> _testParser = new();
-    private static readonly MacroParser<string> _pathParser = new();
+    private static readonly MacroParser<string> _TestParser = new();
+    private static readonly MacroParser<string> _PathParser = new();
 
     /// <summary>
     /// The previous meta path after user changes the path field, if the path is illegal
     /// its value will be reverted to this field.
     /// </summary>
     private string _previousPath = "";
-
-    private void DownloadMacroSettingsExpander_OnLoaded(object sender, RoutedEventArgs e)
-    {
-        Entry.PropertyChanged += (_, _) => EntryOnPropertyChanged();
-        EntryOnPropertyChanged();
-
-        return;
-        void EntryOnPropertyChanged()
-        {
-            DownloadPathMacroTextBox.Document.GetText(TextGetOptions.None, out var text);
-            var t = text.ReplaceLineEndings("");
-            if (t == Entry.Value)
-                return;
-            // The first time viewmodel get the value of DownloadPathMacro from AppSettings won't trigger the property changed event
-            _previousPath = Entry.Value;
-            SetPathMacroRichEditBoxDocument(Entry.Value);
-        }
-    }
 
     private void DownloadPathMacroTextBox_OnGotFocus(object sender, RoutedEventArgs e)
     {
@@ -78,8 +83,8 @@ public sealed partial class DownloadMacroSettingsExpander
 
         try
         {
-            _testParser.SetupParsingEnvironment(new Lexer(Entry.Value));
-            var result = _testParser.Parse();
+            _TestParser.SetupParsingEnvironment(new Lexer(Entry.Value));
+            var result = _TestParser.Parse();
             if (result is not null)
             {
                 var legitimatedNames = App.AppViewModel.AppServiceProvider.GetRequiredService<IllustrationDownloadTaskFactory>();
@@ -116,15 +121,15 @@ public sealed partial class DownloadMacroSettingsExpander
     private void PathMacroTokenInputBox_OnTokenClick(object sender, ItemClickEventArgs e)
     {
         UiHelper.ClipboardSetText(e.ClickedItem.To<StringRepresentableItem>().StringRepresentation);
-        WindowFactory.GetWindowForElement(this).HWnd.SuccessGrowl(SettingsPageResources.MacroCopiedToClipboard);
+        this.SuccessGrowl(SettingsPageResources.MacroCopiedToClipboard);
     }
 
     private void SetPathMacroRichEditBoxDocument(string path)
     {
         DownloadPathMacroTextBox.Document.BeginUndoGroup();
         DownloadPathMacroTextBox.Document.SetText(TextSetOptions.None, "");
-        _pathParser.SetupParsingEnvironment(new Lexer(path));
-        if (_pathParser.Parse() is { } result)
+        _PathParser.SetupParsingEnvironment(new Lexer(path));
+        if (_PathParser.Parse() is { } result)
         {
             var manipulators = RenderPathRichText(result, DownloadPathMacroTextBox.Document);
             foreach (var ((start, endExclusive), action) in manipulators)

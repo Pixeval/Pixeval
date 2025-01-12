@@ -1,24 +1,5 @@
-#region Copyright
-
-// GPL v3 License
-// 
-// Pixeval/Pixeval.CoreApi
-// Copyright (c) 2024 Pixeval.CoreApi/AppJsonSerializerContext.cs
-// 
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-// 
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-// 
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-#endregion
+// Copyright (c) Pixeval.CoreApi.
+// Licensed under the GPL v3 License.
 
 using System.Text.Json;
 using System;
@@ -27,7 +8,6 @@ using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Model;
 using Pixeval.CoreApi.Net.Request;
 using Pixeval.CoreApi.Net.Response;
-using Pixeval.CoreApi.Preference;
 
 namespace Pixeval.CoreApi;
 
@@ -134,7 +114,6 @@ namespace Pixeval.CoreApi;
 
 [JsonSerializable(typeof(PrivacyPolicy))]
 [JsonSerializable(typeof(RankOption))]
-[JsonSerializable(typeof(SearchDuration))]
 [JsonSerializable(typeof(SearchIllustrationTagMatchOption))]
 [JsonSerializable(typeof(SearchNovelTagMatchOption))]
 [JsonSerializable(typeof(TargetFilter))]
@@ -165,8 +144,6 @@ namespace Pixeval.CoreApi;
 [JsonSerializable(typeof(Frame[]))]
 [JsonSerializable(typeof(UserSpecifiedBookmarkTag[]))]
 [JsonSerializable(typeof(Work[]))]
-
-[JsonSerializable(typeof(Session))]
 public partial class AppJsonSerializerContext : JsonSerializerContext;
 
 public class SnakeCaseLowerEnumConverter<T>() : JsonStringEnumConverter<T>(JsonNamingPolicy.SnakeCaseLower) where T : struct, Enum;

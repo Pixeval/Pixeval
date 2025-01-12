@@ -1,3 +1,6 @@
+// Copyright (c) Pixeval.Utilities.
+// Licensed under the GPL v3 License.
+
 namespace Pixeval.Logging;
 
 /// <summary>

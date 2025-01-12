@@ -1,22 +1,5 @@
-#region Copyright (c) Pixeval/Pixeval
-// GPL v3 License
-// 
-// Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/SortableIllustrateViewViewModel.cs
-// 
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-// 
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-// 
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#endregion
+// Copyright (c) Pixeval.
+// Licensed under the GPL v3 License.
 
 using System;
 using System.Collections.Generic;
@@ -32,11 +15,13 @@ using WinUI3Utilities;
 
 namespace Pixeval.Controls;
 
-public abstract partial class SortableEntryViewViewModel<T, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] TViewModel>
+public abstract partial class SortableEntryViewViewModel<T, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] TViewModel>(HashSet<string> blockedTags)
     : EntryViewViewModel<T, TViewModel>, ISortableEntryViewViewModel
     where T : class, IWorkEntry
     where TViewModel : EntryViewModel<T>, IFactory<T, TViewModel>, IWorkViewModel
 {
+    protected readonly HashSet<string> BlockedTags = [.. blockedTags];
+
     [ObservableProperty]
     public partial bool IsSelecting { get; set; }
 
@@ -102,7 +87,7 @@ public abstract partial class SortableEntryViewViewModel<T, [DynamicallyAccessed
 
     protected bool DefaultFilter(IWorkViewModel entry)
     {
-        if (entry.Tags.Any(tag => App.AppViewModel.AppSettings.BlockedTags.Contains(tag.Name)))
+        if (entry.Tags.Any(tag => BlockedTags.Contains(tag.Name)))
             return false;
 
         return Filter?.Invoke(entry) is not false;

@@ -59,11 +59,11 @@
                 Text="{x:Bind ViewModel.DownloadTask.ActiveCount, Mode=OneWay}"
                 Visibility="{x:Bind local:C.IsNotZeroToVisibility(ViewModel.DownloadTask.ActiveCount), Mode=OneWay}" />
             <local:DigitalSignalItem
-                Fill="{StaticResource SystemFillColorSuccessBrush}"
+                Fill="{ThemeResource SystemFillColorSuccessBrush}"
                 Text="{x:Bind ViewModel.DownloadTask.CompletedCount, Mode=OneWay}"
                 Visibility="{x:Bind local:C.IsNotZeroToVisibility(ViewModel.DownloadTask.CompletedCount), Mode=OneWay}" />
             <local:DigitalSignalItem
-                Fill="{StaticResource SystemFillColorCriticalBrush}"
+                Fill="{ThemeResource SystemFillColorCriticalBrush}"
                 Text="{x:Bind ViewModel.DownloadTask.ErrorCount, Mode=OneWay}"
                 Visibility="{x:Bind local:C.IsNotZeroToVisibility(ViewModel.DownloadTask.ErrorCount), Mode=OneWay}" />
         </StackPanel>

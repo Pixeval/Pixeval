@@ -142,11 +142,27 @@
   <data name="LoginPhaseWaitingForUserInput" xml:space="preserve">
     <value>Ожидание ввода пользователя</value>
   </data>
-  <data name="SubmitWithNewAccountButton.Text" xml:space="preserve">
-    <value>Войти без аккаунта</value>
-  </data>
   <data name="SubmitButton.Content" xml:space="preserve">
     <value>Войти</value>
+  </data>
+  <data name="UserNameBox.PlaceholderText" xml:space="preserve">
+    <value>Email или pixiv ID</value>
+  </data>
+  <data name="PasswordBox.PlaceholderText" xml:space="preserve">
+    <value>Пароль</value>
+  </data>
+  <data name="FetchingSessionFailedContent" xml:space="preserve">
+    <value>Перезапустите приложение
+Если проблема повторяется, обратитесь к разработчику</value>
+  </data>
+  <data name="FetchingSessionFailedTitle" xml:space="preserve">
+    <value>Не удалось получить сессию</value>
+  </data>
+  <data name="RootCertificateInstallationRequiredTitle" xml:space="preserve">
+    <value>Требуется установка корневого сертификата</value>
+  </data>
+  <data name="SubmitWithNewAccountButton.Text" xml:space="preserve">
+    <value>Войти без аккаунта</value>
   </data>
   <data name="RefreshTokenButton.Content" xml:space="preserve">
     <value>Войти с обновлением токена</value>

@@ -1,22 +1,5 @@
-#region Copyright (c) Pixeval/Pixeval
-// GPL v3 License
-// 
-// Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/LoginPageViewModel.cs
-// 
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-// 
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-// 
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#endregion
+// Copyright (c) Pixeval.
+// Licensed under the GPL v3 License.
 
 using System;
 using System.Collections.Generic;
@@ -41,16 +24,17 @@ using Pixeval.Controls.DialogContent;
 // using Pixeval.Bypass;
 using Pixeval.Controls.Windowing;
 using Pixeval.CoreApi;
-using Pixeval.CoreApi.Preference;
 using Pixeval.Logging;
 using Pixeval.Util;
 using Pixeval.Util.UI;
 using WinUI3Utilities.Attributes;
+using Pixeval.CoreApi.Model;
+using Pixeval.Util.ComponentModels;
 
 namespace Pixeval.Pages.Login;
 
 [SettingsViewModel<LoginContext>(nameof(LoginContext))]
-public partial class LoginPageViewModel(FrameworkElement owner) : ObservableObject
+public partial class LoginPageViewModel(FrameworkElement frameworkElement) : UiObservableObject(frameworkElement)
 {
     /// <summary>
     /// 表示要不要展示<see cref="WebView"/>
@@ -80,28 +64,7 @@ public partial class LoginPageViewModel(FrameworkElement owner) : ObservableObje
 
     public void AdvancePhase(LoginPhaseEnum newPhase) => LoginPhase = newPhase;
 
-    public void CloseWindow() => WindowFactory.GetWindowForElement(owner).Close();
-
-    #region Token (Common use)
-
-    public async Task<bool> RefreshAsync(string refreshToken)
-    {
-        AdvancePhase(LoginPhaseEnum.Refreshing);
-        var logger = App.AppViewModel.AppServiceProvider.GetRequiredService<FileLogger>();
-        var client = await MakoClient.TryGetMakoClientAsync(refreshToken, App.AppViewModel.AppSettings.ToMakoClientConfiguration(), logger);
-        if (client is not null)
-        {
-            App.AppViewModel.MakoClient = client;
-            RefreshToken = client.Session.RefreshToken;
-            return true;
-        }
-
-        _ = await owner.CreateAcknowledgementAsync(LoginPageResources.RefreshingSessionFailedTitle,
-            LoginPageResources.RefreshingSessionFailedContent);
-        return false;
-    }
-
-    #endregion
+    public void CloseWindow() => Window.Close();
 
     #region WebView
 
@@ -145,7 +108,7 @@ public partial class LoginPageViewModel(FrameworkElement owner) : ObservableObje
         return preferPort;
     }
 
-    public async Task WebView2LoginAsync(ulong hWnd, bool useNewAccount, Action navigated)
+    public async Task WebView2LoginAsync(EnhancedWindow window, bool useNewAccount, Action navigated)
     {
         var arguments = "";
         var port = NegotiatePort();
@@ -153,13 +116,13 @@ public partial class LoginPageViewModel(FrameworkElement owner) : ObservableObje
         var proxyServer = null as PixivAuthenticationProxyServer;
         if (EnableDomainFronting)
         {
-            if (await EnsureCertificateIsInstalled(hWnd) is not { } cert)
+            if (await EnsureCertificateIsInstalled() is not { } cert)
                 return;
             proxyServer = PixivAuthenticationProxyServer.Create(IPAddress.Loopback, port, cert);
             arguments += $" --ignore-certificate-errors --proxy-server=127.0.0.1:{port}";
         }
 
-        if (!await EnsureWebView2IsInstalled(hWnd))
+        if (!await EnsureWebView2IsInstalled())
             return;
         Environment.SetEnvironmentVariable("WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS", arguments);
         WebView = new();
@@ -172,21 +135,21 @@ public partial class LoginPageViewModel(FrameworkElement owner) : ObservableObje
             {
                 IsFinished = true;
                 var code = HttpUtility.ParseQueryString(new Uri(e.Uri).Query)["code"]!;
-                Session session;
+                TokenResponse tokenResponse;
                 try
                 {
-                    session = await PixivAuth.AuthCodeToSessionAsync(code, verifier);
+                    tokenResponse = await PixivAuth.AuthCodeToTokenResponseAsync(code, verifier);
                     proxyServer?.Dispose();
                 }
                 catch
                 {
-                    _ = await owner.CreateAcknowledgementAsync(LoginPageResources.FetchingSessionFailedTitle,
+                    _ = await FrameworkElement.CreateAcknowledgementAsync(LoginPageResources.FetchingSessionFailedTitle,
                         LoginPageResources.FetchingSessionFailedContent);
                     CloseWindow();
                     return;
                 }
                 var logger = App.AppViewModel.AppServiceProvider.GetRequiredService<FileLogger>();
-                App.AppViewModel.MakoClient = new MakoClient(session, App.AppViewModel.AppSettings.ToMakoClientConfiguration(), logger);
+                App.AppViewModel.MakoClient = new MakoClient(tokenResponse, App.AppViewModel.AppSettings.ToMakoClientConfiguration(), logger);
                 navigated();
             }
             else if (e.Uri.Contains("accounts.pixiv.net"))
@@ -237,13 +200,13 @@ public partial class LoginPageViewModel(FrameworkElement owner) : ObservableObje
         WebView.Source = new Uri(PixivAuth.GenerateWebPageUrl(verifier));
     }
 
-    private async Task<X509Certificate2?> EnsureCertificateIsInstalled(ulong hWnd)
+    private async Task<X509Certificate2?> EnsureCertificateIsInstalled()
     {
         if (!await CheckFakeRootCertificateInstallationAsync())
         {
             var content = new CertificateRequiredDialog();
 
-            var cd = hWnd.CreateContentDialog(
+            var cd = FrameworkElement.CreateDialog(
                 LoginPageResources.RootCertificateInstallationRequiredTitle,
                 content,
                 LoginPageResources.RootCertificateInstallationRequiredPrimaryButtonText,
@@ -266,11 +229,11 @@ public partial class LoginPageViewModel(FrameworkElement owner) : ObservableObje
         return await AppInfo.GetFakeServerCertificateAsync();
     }
 
-    private async Task<bool> EnsureWebView2IsInstalled(ulong hWnd)
+    private async Task<bool> EnsureWebView2IsInstalled()
     {
         if (!CheckWebView2Installation())
         {
-            var dialogResult = await hWnd.CreateOkCancelAsync(LoginPageResources.WebView2InstallationRequiredTitle,
+            var dialogResult = await FrameworkElement.CreateOkCancelAsync(LoginPageResources.WebView2InstallationRequiredTitle,
                 LoginPageResources.WebView2InstallationRequiredContent);
             if (dialogResult is ContentDialogResult.Primary)
             {

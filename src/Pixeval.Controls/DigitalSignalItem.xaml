@@ -13,7 +13,7 @@
         Height="7"
         Fill="{x:Bind Fill, Mode=OneWay}" />
     <TextBlock
-        Foreground="{StaticResource TextFillColorSecondaryBrush}"
+        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
         Style="{StaticResource CaptionTextBlockStyle}"
         Text="{x:Bind Text, Mode=OneWay}" />
 </controls:DockPanel>

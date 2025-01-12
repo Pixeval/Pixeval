@@ -1,26 +1,8 @@
-#region Copyright
-
-// GPL v3 License
-// 
-// Pixeval/Pixeval
-// Copyright (c) 2024 Pixeval/ThumbnailEntryViewModel.cs
-// 
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-// 
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-// 
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-#endregion
+// Copyright (c) Pixeval.
+// Licensed under the GPL v3 License.
 
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -38,7 +20,7 @@ public abstract partial class ThumbnailEntryViewModel<T>(T entry) : EntryViewMod
 {
     public long Id => Entry.Id;
 
-    private int ReferenceCount { get; set; }
+    private HashSet<int> References { get; } = [];
 
     protected abstract string ThumbnailUrl { get; }
 
@@ -46,7 +28,7 @@ public abstract partial class ThumbnailEntryViewModel<T>(T entry) : EntryViewMod
     /// 缩略图图片
     /// </summary>
     [ObservableProperty]
-    public partial ImageSource? ThumbnailSource { get; set; }
+    public partial ImageSource? ThumbnailSource { get; protected set; }
 
     private CancellationTokenSource LoadingThumbnailCancellationTokenSource { get; } = new();
 
@@ -59,9 +41,9 @@ public abstract partial class ThumbnailEntryViewModel<T>(T entry) : EntryViewMod
     /// 当控件需要显示图片时，调用此方法加载缩略图
     /// </summary>
     /// <returns>缩略图首次加载完成则返回<see langword="true"/>，之前已加载、正在加载或加载失败则返回<see langword="false"/></returns>
-    public virtual async ValueTask<bool> TryLoadThumbnailAsync()
+    public virtual async ValueTask<bool> TryLoadThumbnailAsync(object key)
     {
-        ++ReferenceCount;
+        _ = References.Add(key.GetHashCode());
         if (ThumbnailSource is null)
         {
             LoadingThumbnail = true;
@@ -78,10 +60,10 @@ public abstract partial class ThumbnailEntryViewModel<T>(T entry) : EntryViewMod
     /// <summary>
     /// 当控件不显示，或者Unload时，调用此方法以尝试释放内存
     /// </summary>
-    public void UnloadThumbnail()
+    public void UnloadThumbnail(object key)
     {
-        --ReferenceCount;
-        if (ReferenceCount is not 0)
+        _ = References.Remove(key.GetHashCode());
+        if (References.Count is not 0)
             return;
         if (LoadingThumbnail)
         {

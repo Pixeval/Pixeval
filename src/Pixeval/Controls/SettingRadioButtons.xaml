@@ -5,15 +5,14 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:Pixeval.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Loaded="SettingRadioButtons_OnLoaded"
     mc:Ignorable="d">
     <RadioButtons Header="{x:Bind Header, Mode=OneWay}">
         <RadioButtons.ItemTemplate>
             <DataTemplate x:DataType="local:StringRepresentableItem">
                 <RadioButton
+                    Click="RadioButton_OnClicked"
                     Content="{x:Bind StringRepresentation}"
-                    Tag="{x:Bind}"
-                    Click="RadioButton_OnClicked" />
+                    Tag="{x:Bind}" />
             </DataTemplate>
         </RadioButtons.ItemTemplate>
     </RadioButtons>

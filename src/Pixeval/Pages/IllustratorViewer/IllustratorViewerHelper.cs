@@ -1,38 +1,36 @@
+// Copyright (c) Pixeval.
+// Licensed under the GPL v3 License.
+
 using System.Threading.Tasks;
-using Windows.Graphics;
-using Microsoft.UI.Xaml.Media.Animation;
-using Pixeval.Controls;
 using Pixeval.Controls.Windowing;
 using WinUI3Utilities;
 using Pixeval.CoreApi.Net.Response;
+using Microsoft.UI.Xaml;
+using CommunityToolkit.WinUI;
 
 namespace Pixeval.Pages.IllustratorViewer;
 
 public static class IllustratorViewerHelper
 {
-    public static IllustratorViewerPageViewModel GetIllustratorViewerPageViewModel(this ulong hWnd, object? param)
+    public static IllustratorViewerPageViewModel GetIllustratorViewerPageViewModel(this FrameworkElement frameworkElement, object? param)
     {
         return param switch
         {
-            PixivSingleUserResponse userDetail => new IllustratorViewerPageViewModel(userDetail, hWnd),
+            PixivSingleUserResponse userDetail => new IllustratorViewerPageViewModel(userDetail, frameworkElement),
             _ => ThrowHelper.Argument<object, IllustratorViewerPageViewModel>(param, "Invalid parameter type.")
         };
     }
 
-    public static async Task CreateWindowWithPageAsync(long userId)
+    public static async Task CreateIllustratorPageAsync(this FrameworkElement frameworkElement, long userId)
     {
         var userDetail = await App.AppViewModel.MakoClient.GetUserFromIdAsync(userId, App.AppViewModel.AppSettings.TargetFilter);
-        CreateWindowWithPage(userDetail);
+        frameworkElement.CreateIllustratorPage(userDetail);
     }
 
-    public static void CreateWindowWithPage(PixivSingleUserResponse userDetail)
+    public static void CreateIllustratorPage(this FrameworkElement frameworkElement, PixivSingleUserResponse userDetail)
     {
-        WindowFactory.RootWindow.Fork(out var h)
-            .WithLoaded((o, _) => o.To<Microsoft.UI.Xaml.Controls.Frame>().NavigateTo<IllustratorViewerPage>(h,
-                userDetail,
-                new SuppressNavigationTransitionInfo()))
-            .WithSizeLimit(640, 360)
-            .Init(userDetail.UserEntity.Name, new SizeInt32(1280, 720), WindowFactory.RootWindow.IsMaximize)
-            .Activate();
+        if (frameworkElement.FindAscendantOrSelf<TabPage>() is not { } tabPage)
+            return;
+        tabPage.AddPage(new NavigationViewTag<IllustratorViewerPage>(userDetail.UserEntity.Name, userDetail));
     }
 }

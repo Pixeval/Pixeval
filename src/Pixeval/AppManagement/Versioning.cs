@@ -1,3 +1,6 @@
+// Copyright (c) Pixeval.
+// Licensed under the GPL v3 License.
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,9 +43,9 @@ public class Versioning
         return (newLong - currentLong) switch
         {
             0 => UpdateState.UpToDate,
-            > 0x30 => UpdateState.MajorUpdate,
-            > 0x20 => UpdateState.MinorUpdate,
-            > 0x10 => UpdateState.BuildUpdate,
+            >= 1ul << 0x30 => UpdateState.MajorUpdate,
+            >= 1ul << 0x20 => UpdateState.MinorUpdate,
+            >= 1ul << 0x10 => UpdateState.BuildUpdate,
             _ => UpdateState.RevisionUpdate
         };
     }

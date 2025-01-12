@@ -1,4 +1,6 @@
-using System;
+// Copyright (c) Pixeval.
+// Licensed under the GPL v3 License.
+
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Windows.Foundation;
@@ -14,7 +16,6 @@ using Pixeval.Options;
 using Microsoft.UI.Xaml.Media.Animation;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.Util.UI;
-using Pixeval.Controls.Windowing;
 using Pixeval.Pages.IllustratorViewer;
 
 namespace Pixeval.Controls;
@@ -27,8 +28,6 @@ public sealed partial class WorkView : IEntryView<ISortableEntryViewViewModel>
 {
     public const double LandscapeHeight = 180;
     public const double PortraitHeight = 250;
-
-    public ulong HWnd => WindowFactory.GetWindowForElement(this).HWnd;
 
     public double DesiredHeight => ThumbnailDirection switch
     {
@@ -67,8 +66,9 @@ public sealed partial class WorkView : IEntryView<ISortableEntryViewViewModel>
 
     private async void WorkItem_OnViewModelChanged(FrameworkElement sender, IWorkViewModel viewModel)
     {
-        ArgumentNullException.ThrowIfNull(ViewModel);
-        if (await viewModel.TryLoadThumbnailAsync())
+        if (ViewModel == null!)
+            return;
+        if (await viewModel.TryLoadThumbnailAsync(ViewModel))
             if (sender.IsFullyOrPartiallyVisible(this))
                 sender.GetResource<Storyboard>("ThumbnailStoryboard").Begin();
             else
@@ -80,10 +80,10 @@ public sealed partial class WorkView : IEntryView<ISortableEntryViewViewModel>
         switch (e.InvokedItem, ViewModel)
         {
             case (NovelItemViewModel viewModel, NovelViewViewModel viewViewModel):
-                viewModel.CreateWindowWithPage(viewViewModel);
+                this.CreateNovelPage(viewModel, viewViewModel);
                 break;
             case (IllustrationItemViewModel viewModel, IllustrationViewViewModel viewViewModel):
-                viewModel.CreateWindowWithPage(viewViewModel);
+                this.CreateIllustrationPage(viewModel, viewViewModel);
                 break;
         }
     }
@@ -91,11 +91,13 @@ public sealed partial class WorkView : IEntryView<ISortableEntryViewViewModel>
     private void NovelItem_OnOpenNovelRequested(NovelItem sender, NovelItemViewModel viewModel)
     {
         if (ViewModel is NovelViewViewModel viewViewModel)
-            viewModel.CreateWindowWithPage(viewViewModel);
+            this.CreateNovelPage(viewModel, viewViewModel);
     }
 
     private void WorkView_OnSelectionChanged(ItemsView sender, ItemsViewSelectionChangedEventArgs args)
     {
+        if (ViewModel == null!)
+            return;
         if (sender.SelectedItems is not { Count: > 0 })
         {
             ViewModel.SelectedEntries = ViewModel switch
@@ -122,8 +124,6 @@ public sealed partial class WorkView : IEntryView<ISortableEntryViewViewModel>
         switch (ViewModel)
         {
             case NovelViewViewModel when type == typeof(Novel):
-                ViewModel.ResetEngine(newEngine, itemsPerPage, itemLimit);
-                break;
             case IllustrationViewViewModel when type == typeof(Illustration):
                 ViewModel.ResetEngine(newEngine, itemsPerPage, itemLimit);
                 break;
@@ -168,14 +168,14 @@ public sealed partial class WorkView : IEntryView<ISortableEntryViewViewModel>
 
     private (ThumbnailDirection ThumbnailDirection, double DesiredHeight) IllustrationItem_OnRequiredParam() => (ThumbnailDirection, DesiredHeight);
 
-    private void WorkView_OnUnloaded(object sender, RoutedEventArgs e)
+    ~WorkView()
     {
         if (ViewModel == null!)
             return;
         var viewModel = ViewModel;
         ViewModel = null!;
         foreach (var vm in viewModel.Source)
-            vm.UnloadThumbnail();
+            vm.UnloadThumbnail(viewModel);
         viewModel.Dispose();
     }
 
@@ -183,7 +183,7 @@ public sealed partial class WorkView : IEntryView<ISortableEntryViewViewModel>
     {
         sender.GetTag<IWorkViewModel>().AddToBookmarkCommand.Execute((BookmarkTagSelector.SelectedTags, BookmarkTagSelector.IsPrivate, null as object));
 
-        HWnd.SuccessGrowl(EntryViewResources.AddedToBookmark);
+        this.SuccessGrowl(EntryViewResources.AddedToBookmark);
     }
 
     private void WorkItem_OnRequestAddToBookmark(FrameworkElement sender, IWorkViewModel e)
@@ -194,6 +194,6 @@ public sealed partial class WorkView : IEntryView<ISortableEntryViewViewModel>
 
     public async void WorkItem_OnRequestOpenUserInfoPage(FrameworkElement sender, IWorkViewModel e)
     {
-        await IllustratorViewerHelper.CreateWindowWithPageAsync(e.User.Id);
+        await this.CreateIllustratorPageAsync(e.User.Id);
     }
 }

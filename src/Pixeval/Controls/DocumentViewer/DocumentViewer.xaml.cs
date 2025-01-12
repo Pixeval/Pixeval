@@ -1,5 +1,7 @@
+// Copyright (c) Pixeval.
+// Licensed under the GPL v3 License.
+
 using System.Collections.Generic;
-using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Documents;
 using Pixeval.Utilities;
@@ -16,12 +18,9 @@ namespace Pixeval.Controls;
 [DependencyProperty<bool>("IsMultiPage", "false")]
 [DependencyProperty<bool>("LoadSuccessfully", "true")]
 [DependencyProperty<bool>("IsLoading", "false")]
-[INotifyPropertyChanged]
+[DependencyProperty<DocumentViewerViewModel>("ViewModel", IsNullable = true)]
 public sealed partial class DocumentViewer
 {
-    [ObservableProperty]
-    public partial DocumentViewerViewModel? ViewModel { get; set; }
-
     public DocumentViewer() => InitializeComponent();
 
     public static async void OnNovelItemChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -37,7 +36,7 @@ public sealed partial class DocumentViewer
         {
             viewer.LoadSuccessfully = false;
             viewer.IsLoading = true;
-            viewer.ViewModel = await DocumentViewerViewModel.CreateAsync(viewer.NovelItem, _ => viewer.LoadSuccessfully = true);
+            viewer.ViewModel = await DocumentViewerViewModel.CreateAsync(viewer, viewer.NovelItem, _ => viewer.LoadSuccessfully = true);
             viewer.ViewModel.JumpToPageRequested += newPage => viewer.CurrentPage = newPage;
             viewer.ViewModel.Pages.CollectionChanged += (_, _) => viewer.PageCount = viewer.ViewModel.Pages.Count;
             viewer.PageCount = viewer.ViewModel.Pages.Count;

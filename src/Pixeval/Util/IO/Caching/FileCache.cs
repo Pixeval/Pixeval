@@ -1,22 +1,5 @@
-#region Copyright (c) Pixeval/Pixeval
-// GPL v3 License
-// 
-// Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/FileCache.cs
-// 
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-// 
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-// 
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#endregion
+// Copyright (c) Pixeval.
+// Licensed under the GPL v3 License.
 
 using System;
 using System.Collections.Generic;
@@ -42,31 +25,18 @@ public class FileCache
     private const string IndexFileName = "index.json";
     private const string CacheFolderName = "cache";
     private const string ExpireIndexFileName = "eindex.json";
-    private readonly SemaphoreSlim _expireIndexLocker;
+    private readonly SemaphoreSlim _expireIndexLocker = new SemaphoreSlim(1, 1);
 
-    private readonly SemaphoreSlim _indexLocker;
-    private readonly Type[] _supportedKeyTypes;
+    private readonly SemaphoreSlim _indexLocker = new SemaphoreSlim(1, 1);
+    private readonly Type[] _supportedKeyTypes = [typeof(int), typeof(uint), typeof(ulong), typeof(long)];
 
-    private readonly DirectoryInfo _baseDirectory = Directory.CreateDirectory(Path.Combine(AppKnownFolders.Cache.Self.Path, CacheFolderName));
+    private readonly DirectoryInfo _baseDirectory = Directory.CreateDirectory(AppKnownFolders.Cache.CombinePath(CacheFolderName));
 
     // The expiration time
-    private Dictionary<Guid, DateTimeOffset> _expireIndex;
-    private readonly FileInfo _expireIndexFile;
-    private Dictionary<Guid, string> _index;
-    private readonly FileInfo _indexFile;
-
-    private FileCache()
-    {
-        _supportedKeyTypes = [typeof(int), typeof(uint), typeof(ulong), typeof(long)];
-
-        _index = [];
-        _expireIndex = [];
-        _indexFile = new(Path.Combine(_baseDirectory.FullName, IndexFileName));
-        _expireIndexFile = new(Path.Combine(_baseDirectory.FullName, ExpireIndexFileName));
-
-        _indexLocker = new SemaphoreSlim(1, 1);
-        _expireIndexLocker = new SemaphoreSlim(1, 1);
-    }
+    private Dictionary<Guid, DateTimeOffset> _expireIndex = [];
+    private readonly FileInfo _expireIndexFile = new(AppKnownFolders.Cache.CombinePath(CacheFolderName, ExpireIndexFileName));
+    private Dictionary<Guid, string> _index = [];
+    private readonly FileInfo _indexFile = new(AppKnownFolders.Cache.CombinePath(CacheFolderName, IndexFileName));
 
     public int HitCount { get; private set; }
 

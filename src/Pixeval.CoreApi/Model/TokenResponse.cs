@@ -1,26 +1,7 @@
-#region Copyright (c) Pixeval/Pixeval.CoreApi
-// GPL v3 License
-// 
-// Pixeval/Pixeval.CoreApi
-// Copyright (c) 2023 Pixeval.CoreApi/TokenResponse.cs
-// 
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-// 
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-// 
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#endregion
+// Copyright (c) Pixeval.CoreApi.
+// Licensed under the GPL v3 License.
 
-using System;
 using System.Text.Json.Serialization;
-using Pixeval.CoreApi.Preference;
 
 namespace Pixeval.CoreApi.Model;
 
@@ -51,20 +32,11 @@ public partial record TokenResponse
     [JsonPropertyName("response")]
     public TokenResponse? Response { get; set; }
 
-    public Session ToSession()
+    public static TokenResponse CreateFromRefreshToken(string refreshToken)
     {
-        return new Session
-        (
-            User.Name,
-            DateTime.Now + TimeSpan.FromSeconds(ExpiresIn) -
-            TimeSpan.FromMinutes(5), // 减去5分钟是考虑到网络延迟会导致精确时间不可能恰好是一小时(TokenResponse的ExpireIn是60分钟)
-            AccessToken,
-            RefreshToken,
-            User.ProfileImageUrls.Px170X170,
-            User.Id,
-            User.Account,
-            User.IsPremium
-        );
+        var tokenResponse = CreateDefault();
+        tokenResponse.RefreshToken = refreshToken;
+        return tokenResponse;
     }
 }
 

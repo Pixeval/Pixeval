@@ -1,26 +1,8 @@
-#region Copyright (c) Pixeval/Pixeval.CoreApi
-// GPL v3 License
-// 
-// Pixeval/Pixeval.CoreApi
-// Copyright (c) 2023 Pixeval.CoreApi/IAppApiEndPoint.cs
-// 
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-// 
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-// 
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#endregion
+// Copyright (c) Pixeval.CoreApi.
+// Licensed under the GPL v3 License.
 
 using System.Net.Http;
 using System.Threading.Tasks;
-using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Net.Request;
 using Pixeval.CoreApi.Net.Response;
 using WebApiClientCore;
@@ -28,6 +10,9 @@ using WebApiClientCore.Attributes;
 
 namespace Pixeval.CoreApi.Net.EndPoints;
 
+/// <summary>
+/// 方法上 [LoggingFilter] 输出日志
+/// </summary>
 [HttpHost(MakoHttpOptions.AppApiBaseUrl)]
 public interface IAppApiEndPoint
 {
@@ -43,15 +28,19 @@ public interface IAppApiEndPoint
     [HttpPost("/v1/novel/bookmark/delete")]
     Task<HttpResponseMessage> RemoveNovelBookmarkAsync([FormContent] RemoveNovelBookmarkRequest request);
 
+    [Cache(60 * 1000)]
     [HttpGet("/v1/illust/detail")]
     Task<PixivSingleIllustResponse> GetSingleIllustAsync([AliasAs("illust_id")] long id);
 
+    [Cache(60 * 1000)]
     [HttpGet("/v1/user/detail")]
     Task<PixivSingleUserResponse> GetSingleUserAsync(SingleUserRequest request);
 
+    [Cache(60 * 1000)]
     [HttpGet("/v2/novel/detail")]
     Task<PixivSingleNovelResponse> GetSingleNovelAsync([AliasAs("novel_id")] long id);
 
+    [Cache(60 * 1000)]
     [HttpGet("/webview/v2/novel")]
     Task<string> GetNovelContentAsync(long id, bool raw = false);
     /*
@@ -68,7 +57,7 @@ public interface IAppApiEndPoint
     */
 
     [HttpGet("/v1/user/related")]
-    Task<PixivRelatedUsersResponse> RelatedUserAsync(TargetFilter filter, [AliasAs("seed_user_id")] long userId);
+    Task<PixivRelatedUsersResponse> RelatedUserAsync([AliasAs("seed_user_id")] long userId, string filter);
 
     [HttpPost("/v1/user/follow/add")]
     Task<HttpResponseMessage> FollowUserAsync([FormContent] FollowUserRequest request);
@@ -77,11 +66,12 @@ public interface IAppApiEndPoint
     Task<HttpResponseMessage> RemoveFollowUserAsync([FormContent] RemoveFollowUserRequest request);
 
     [HttpGet("/v1/trending-tags/illust")]
-    Task<TrendingTagResponse> GetTrendingTagsAsync(TargetFilter filter);
+    Task<TrendingTagResponse> GetTrendingTagsAsync(string filter);
 
     [HttpGet("/v1/trending-tags/novel")]
-    Task<TrendingTagResponse> GetTrendingTagsForNovelAsync(TargetFilter filter);
+    Task<TrendingTagResponse> GetTrendingTagsForNovelAsync(string filter);
 
+    [Cache(60 * 1000)]
     [HttpGet("/v1/ugoira/metadata")]
     Task<UgoiraMetadataResponse> GetUgoiraMetadataAsync([AliasAs("illust_id")] long id);
 

@@ -1,22 +1,5 @@
-#region Copyright
-// GPL v3 License
-// 
-// Pixeval/Pixeval.Utilities
-// Copyright (c) 2024 Pixeval.Utilities/Streams.cs
-// 
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-// 
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-// 
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#endregion
+// Copyright (c) Pixeval.Utilities.
+// Licensed under the GPL v3 License.
 
 using System;
 using System.Collections.Generic;
@@ -39,7 +22,7 @@ public static class Streams
 
     private const int MaximumSmallBufferPoolSizeInBytes = 24 * 1024 * BlockSizeInBytes; // 24MB
 
-    private static readonly RecyclableMemoryStreamManager _recyclableMemoryStreamManager =
+    private static readonly RecyclableMemoryStreamManager _RecyclableMemoryStreamManager =
         new(new RecyclableMemoryStreamManager.Options(
             BlockSizeInBytes,
             LargeBufferMultipleInBytes,
@@ -47,13 +30,13 @@ public static class Streams
             MaximumSmallBufferPoolSizeInBytes,
             MaximumLargeBufferPoolSizeInBytes));
 
-    public static MemoryStream RentStream() => _recyclableMemoryStreamManager.GetStream();
+    public static MemoryStream RentStream() => _RecyclableMemoryStreamManager.GetStream();
 
-    public static MemoryStream RentStream(ReadOnlySpan<byte> span) => _recyclableMemoryStreamManager.GetStream(span);
+    public static MemoryStream RentStream(ReadOnlySpan<byte> span) => _RecyclableMemoryStreamManager.GetStream(span);
 
     public static async Task<MemoryStream> CopyToMemoryStreamAsync(this Stream source, bool dispose)
     {
-        var s = _recyclableMemoryStreamManager.GetStream();
+        var s = _RecyclableMemoryStreamManager.GetStream();
         await source.CopyToAsync(s);
         s.Position = 0;
         if (dispose)
@@ -61,7 +44,7 @@ public static class Streams
         return s;
     }
 
-    public static async Task<MemoryStream[]> ReadZipAsync(Stream zipStream, bool dispose)
+    public static async Task<IReadOnlyList<MemoryStream>> ReadZipAsync(Stream zipStream, bool dispose)
     {
         if (zipStream is not MemoryStream ms)
         {
@@ -71,19 +54,21 @@ public static class Streams
 
         try
         {
-            using var archive = new ZipArchive(ms, ZipArchiveMode.Read);
-            var result = (MemoryStream[])[];
-            await Parallel.ForAsync(0, archive.Entries.Count, new ParallelOptions(), async (i, token) =>
+            var list = new List<MemoryStream>();
+            // Dispose ZipArchive会导致ms也被Dispose
+            var archive = new ZipArchive(ms, ZipArchiveMode.Read);
+            // ZipArchive不支持多线程
+            foreach (var entry in archive.Entries)
             {
-                await using var stream = archive.Entries[i].Open();
-                var rms = _recyclableMemoryStreamManager.GetStream();
-                await stream.CopyToAsync(rms, token);
-                rms.Position = 0;
-                result[i] = rms;
-            });
+                await using var stream = entry.Open();
+                var s = _RecyclableMemoryStreamManager.GetStream();
+                await stream.CopyToAsync(s);
+                s.Position = 0;
+                list.Add(s);
+            }
             if (dispose)
                 await ms.DisposeAsync();
-            return result;
+            return list;
         }
         catch (InvalidDataException)
         {
@@ -94,7 +79,7 @@ public static class Streams
 
     public static async Task<MemoryStream> WriteZipAsync(IReadOnlyList<string> names, IReadOnlyList<Stream> streams, bool dispose)
     {
-        var zipStream = _recyclableMemoryStreamManager.GetStream();
+        var zipStream = _RecyclableMemoryStreamManager.GetStream();
 
         var zipArchive = new ZipArchive(zipStream, ZipArchiveMode.Create, true);
 

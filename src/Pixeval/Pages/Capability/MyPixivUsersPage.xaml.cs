@@ -1,3 +1,6 @@
+// Copyright (c) Pixeval.
+// Licensed under the GPL v3 License.
+
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Controls;
@@ -8,7 +11,7 @@ public sealed partial class MyPixivUsersPage : IScrollViewHost
 {
     public MyPixivUsersPage() => InitializeComponent();
 
-    public override void OnPageActivated(NavigationEventArgs e)
+    public override void OnPageActivated(NavigationEventArgs e, object? parameter)
     {
         if (e.Parameter is not long userId)
             userId = App.AppViewModel.PixivUid;

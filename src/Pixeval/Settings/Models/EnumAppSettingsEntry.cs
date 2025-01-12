@@ -1,3 +1,6 @@
+// Copyright (c) Pixeval.
+// Licensed under the GPL v3 License.
+
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
@@ -9,21 +12,21 @@ using Pixeval.Controls.Settings;
 namespace Pixeval.Settings.Models;
 
 public partial class EnumAppSettingsEntry(
-    AppSettings appSettings,
-    Expression<Func<AppSettings, Enum>> property,
+    AppSettings settings,
+    Expression<Func<AppSettings, object>> property,
     IReadOnlyList<StringRepresentableItem> array)
-    : SingleValueSettingsEntry<AppSettings, Enum>(appSettings, property)
+    : SingleValueSettingsEntry<AppSettings, object>(settings, property), IEnumSettingsEntry
 {
     public override FrameworkElement Element => new EnumSettingsCard { Entry = this };
 
     public IReadOnlyList<StringRepresentableItem> EnumItems { get; set; } = array;
 
     public EnumAppSettingsEntry(
-        AppSettings appSettings,
+        AppSettings settings,
         WorkTypeEnum workType,
-        Expression<Func<AppSettings, Enum>> property,
+        Expression<Func<AppSettings, object>> property,
         IReadOnlyList<StringRepresentableItem> array)
-        : this(appSettings, property, array)
+        : this(settings, property, array)
     {
         Header = SubHeader(workType);
         HeaderIcon = SubHeaderIcon(workType);

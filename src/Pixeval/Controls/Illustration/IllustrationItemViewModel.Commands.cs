@@ -1,22 +1,5 @@
-#region Copyright
-// GPL v3 License
-// 
-// Pixeval/Pixeval
-// Copyright (c) 2024 Pixeval/IllustrationItemViewModel.Commands.cs
-// 
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-// 
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-// 
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#endregion
+// Copyright (c) Pixeval.
+// Licensed under the GPL v3 License.
 
 using System;
 using System.Collections.Generic;
@@ -30,6 +13,7 @@ using System.IO;
 using System.Linq;
 using Pixeval.Download;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.UI.Xaml;
 using Pixeval.Util.IO;
 using Symbol = FluentIcons.Common.Symbol;
 
@@ -47,15 +31,15 @@ public partial class IllustrationItemViewModel
 
     protected override async void SaveCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
-        var hWnd = null as ulong?;
+        var hWnd = null as FrameworkElement;
         GetImageStreams? getImageStream = null;
         switch (args.Parameter)
         {
-            case (ulong h, GetImageStreams f):
+            case (FrameworkElement h, GetImageStreams f):
                 hWnd = h;
                 getImageStream = f;
                 break;
-            case ulong h:
+            case FrameworkElement h:
                 hWnd = h;
                 break;
             case null:
@@ -69,44 +53,44 @@ public partial class IllustrationItemViewModel
 
     protected override async void SaveAsCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
-        ulong hWnd;
+        FrameworkElement frameworkElement;
         GetImageStreams? getImageStream = null;
         switch (args.Parameter)
         {
-            case (ulong h, GetImageStreams f):
-                hWnd = h;
+            case (FrameworkElement h, GetImageStreams f):
+                frameworkElement = h;
                 getImageStream = f;
                 break;
-            case ulong h:
-                hWnd = h;
+            case FrameworkElement h:
+                frameworkElement = h;
                 break;
             default:
                 // 必须有Window来显示Picker
                 return;
         }
 
-        var folder = await hWnd.OpenFolderPickerAsync();
+        var folder = await frameworkElement.OpenFolderPickerAsync();
         if (folder is null)
         {
-            hWnd.InfoGrowl(EntryItemResources.SaveAsCancelled);
+            frameworkElement.InfoGrowl(EntryItemResources.SaveAsCancelled);
             return;
         }
 
         var name = Path.GetFileName(App.AppViewModel.AppSettings.DownloadPathMacro);
         var path = Path.Combine(folder.Path, name);
-        await SaveUtilityAsync(hWnd, getImageStream, path);
+        await SaveUtilityAsync(frameworkElement, getImageStream, path);
     }
 
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="hWnd">承载提示<see cref="TeachingTip"/>的控件，为<see langword="null"/>则不显示</param>
+    /// <param name="frameworkElement">承载提示<see cref="TeachingTip"/>的控件，为<see langword="null"/>则不显示</param>
     /// <param name="getImageStream">获取原图的<see cref="Stream"/>，为<see langword="null"/>则创建新的下载任务</param>
     /// <param name="path">文件路径</param>
     /// <returns></returns>
-    private async Task SaveUtilityAsync(ulong? hWnd, GetImageStreams? getImageStream, string path)
+    private async Task SaveUtilityAsync(FrameworkElement? frameworkElement, GetImageStreams? getImageStream, string path)
     {
-        var ib = hWnd?.InfoGrowlReturn("");
+        var ib = frameworkElement?.InfoGrowlReturn("");
         if (ib is not null)
             ib.Title = EntryItemResources.ImageProcessing;
 
@@ -121,23 +105,23 @@ public partial class IllustrationItemViewModel
         {
             var task = factory.Create(this, path);
             App.AppViewModel.DownloadManager.QueueTask(task);
-            hWnd?.RemoveSuccessGrowlAfterDelay(ib!, EntryItemResources.DownloadTaskCreated);
+            frameworkElement?.RemoveSuccessGrowlAfterDelay(ib!, EntryItemResources.DownloadTaskCreated);
         }
         else
         {
             var task = factory.CreateIntrinsic(this, IsUgoira ? (source, UgoiraMetadata) : source, path);
             App.AppViewModel.DownloadManager.QueueTask(task);
-            hWnd?.RemoveSuccessGrowlAfterDelay(ib!, EntryItemResources.Saved);
+            frameworkElement?.RemoveSuccessGrowlAfterDelay(ib!, EntryItemResources.Saved);
         }
     }
 
     protected override async void CopyCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
-        var hWnd = null as ulong?;
+        var hWnd = null as FrameworkElement;
         GetImageStreams getImageStream;
         switch (args.Parameter)
         {
-            case (ulong h, GetImageStreams f):
+            case (FrameworkElement h, GetImageStreams f):
                 hWnd = h;
                 getImageStream = f;
                 break;

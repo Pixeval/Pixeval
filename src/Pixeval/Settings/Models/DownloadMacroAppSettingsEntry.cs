@@ -1,3 +1,6 @@
+// Copyright (c) Pixeval.
+// Licensed under the GPL v3 License.
+
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
@@ -10,12 +13,12 @@ using Pixeval.Download.Macros;
 namespace Pixeval.Settings.Models;
 
 public partial class DownloadMacroAppSettingsEntry(
-    AppSettings appSettings)
-    : StringAppSettingsEntry(appSettings, t => t.DownloadPathMacro)
+    AppSettings settings)
+    : StringAppSettingsEntry(settings, t => t.DownloadPathMacro)
 {
     public override DownloadMacroSettingsExpander Element => new() { Entry = this };
 
-    private static readonly ImmutableDictionary<string, string> _macroTooltips = new Dictionary<string, string>
+    private static readonly ImmutableDictionary<string, string> _MacroTooltips = new Dictionary<string, string>
     {
         ["ext"] = SettingsPageResources.ExtMacroTooltip,
         ["id"] = SettingsPageResources.IdMacroTooltip,
@@ -37,6 +40,6 @@ public partial class DownloadMacroAppSettingsEntry(
     }.ToImmutableDictionary();
 
     public static ICollection<StringRepresentableItem> AvailableMacros { get; } = MetaPathMacroAttributeHelper.GetIWorkViewModelInstances()
-        .Select(m => new StringRepresentableItem(_macroTooltips[m.Name], $"@{{{(m is IPredicate ? $"{m.Name}=" : m.Name)}}}"))
+        .Select(m => new StringRepresentableItem(_MacroTooltips[m.Name], $"@{{{(m is IPredicate ? $"{m.Name}=" : m.Name)}}}"))
         .ToList();
 }

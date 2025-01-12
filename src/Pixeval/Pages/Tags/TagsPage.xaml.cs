@@ -1,3 +1,6 @@
+// Copyright (c) Pixeval.
+// Licensed under the GPL v3 License.
+
 using System;
 using Microsoft.UI.Xaml;
 using Pixeval.Util.UI;
@@ -23,9 +26,9 @@ public sealed partial class TagsPage
 
     private async void ChangeWorkingPath_OnClicked(object sender, RoutedEventArgs e)
     {
-        if (await HWnd.OpenFolderPickerAsync() is { } folder) 
+        if (await this.OpenFolderPickerAsync() is { } folder) 
             _viewModel.WorkingDirectory = folder.Path;
     }
 
-    private void TagsPage_OnUnloaded(object sender, RoutedEventArgs e) => _viewModel.Dispose();
+    ~TagsPage() => _viewModel.Dispose();
 }

@@ -10,7 +10,7 @@
     xmlns:local="using:Pixeval.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     AspectRatio="15:8"
-    Background="{StaticResource CardBackgroundFillColorDefaultBrush}"
+    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
     mc:Ignorable="d">
     <!--  图片长宽均为5，故为(3*5):(3+5)  -->
     <Grid>
@@ -19,15 +19,24 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <controls:ConstrainedBox Grid.Row="0" AspectRatio="3:1">
-            <Grid
-                x:Name="BannerContainer"
-                Margin="{x:Bind GetIllustrationAt(ViewModel.BannerSources), Mode=OneWay}"
-                CornerRadius="{StaticResource ControlTopCornerRadius}">
+            <Grid CornerRadius="{StaticResource ControlTopCornerRadius}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
+                <Image
+                    Grid.Column="0"
+                    Source="{x:Bind ViewModel.BannerSource0, Mode=OneWay}"
+                    Stretch="UniformToFill" />
+                <Image
+                    Grid.Column="1"
+                    Source="{x:Bind ViewModel.BannerSource1, Mode=OneWay}"
+                    Stretch="UniformToFill" />
+                <Image
+                    Grid.Column="2"
+                    Source="{x:Bind ViewModel.BannerSource2, Mode=OneWay}"
+                    Stretch="UniformToFill" />
             </Grid>
         </controls:ConstrainedBox>
         <StackPanel
@@ -45,10 +54,10 @@
                     VerticalAlignment="Center"
                     Content="{fluent:SymbolIcon Symbol=Guest,
                                                 FontSize=12}"
-                    Foreground="{StaticResource TextFillColorSecondaryBrush}" />
+                    Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
                 <TextBlock
                     VerticalAlignment="Center"
-                    Foreground="{StaticResource TextFillColorSecondaryBrush}"
+                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                     Style="{StaticResource CaptionStrongTextBlockStyle}"
                     Text="{x:Bind ViewModel.UserId, Mode=OneWay}" />
                 <local:PixevalBadge
@@ -103,11 +112,11 @@
                     <core:ChangePropertyAction
                         PropertyName="Scale"
                         TargetObject="{x:Bind AvatarButton}"
-                        Value="{x:Bind local:IllustratorItem._zoomedScale}" />
+                        Value="{x:Bind local:IllustratorItem._ZoomedScale}" />
                     <core:ChangePropertyAction
                         PropertyName="Translation"
                         TargetObject="{x:Bind AvatarButton}"
-                        Value="{x:Bind local:IllustratorItem._elevatedTranslation}" />
+                        Value="{x:Bind local:IllustratorItem._ElevatedTranslation}" />
                     <core:ChangePropertyAction
                         PropertyName="Rotation"
                         TargetObject="{x:Bind AvatarButton}"
@@ -119,8 +128,8 @@
                     <MenuFlyoutItem Command="{x:Bind ViewModel.FollowCommand, Mode=OneWay}" />
                     <MenuFlyoutSeparator />
                     <MenuFlyoutItem Command="{x:Bind ViewModel.OpenInWebBrowserCommand, Mode=OneWay}" />
-                    <MenuFlyoutItem Command="{x:Bind ViewModel.GenerateWebLinkCommand, Mode=OneWay}" CommandParameter="{x:Bind HWnd}" />
-                    <MenuFlyoutItem Command="{x:Bind ViewModel.GenerateLinkCommand, Mode=OneWay}" CommandParameter="{x:Bind HWnd}" />
+                    <MenuFlyoutItem Command="{x:Bind ViewModel.GenerateWebLinkCommand, Mode=OneWay}" CommandParameter="{x:Bind}" />
+                    <MenuFlyoutItem Command="{x:Bind ViewModel.GenerateLinkCommand, Mode=OneWay}" CommandParameter="{x:Bind}" />
                     <MenuFlyoutSeparator />
                     <MenuFlyoutItem Command="{x:Bind ViewModel.ShowQrCodeCommand, Mode=OneWay}" CommandParameter="{x:Bind QrCodeTeachingTip}" />
                     <MenuFlyoutItem Command="{x:Bind ViewModel.ShowPixEzQrCodeCommand, Mode=OneWay}" CommandParameter="{x:Bind QrCodeTeachingTip}" />

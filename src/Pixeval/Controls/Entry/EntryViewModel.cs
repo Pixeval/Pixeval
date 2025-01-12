@@ -1,22 +1,5 @@
-#region Copyright (c) Pixeval/Pixeval
-// GPL v3 License
-// 
-// Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/IIllustrateViewModel.cs
-// 
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-// 
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-// 
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#endregion
+// Copyright (c) Pixeval.
+// Licensed under the GPL v3 License.
 
 using System;
 using System.Diagnostics;
@@ -30,6 +13,7 @@ using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using WinUI3Utilities;
 using Symbol = FluentIcons.Common.Symbol;
+using Microsoft.UI.Xaml;
 
 namespace Pixeval.Controls;
 
@@ -73,13 +57,13 @@ public abstract class EntryViewModel<T>(T entry) : ObservableObject, IDisposable
     {
         UiHelper.ClipboardSetText(AppUri.OriginalString);
 
-        (args.Parameter as ulong?)?.SuccessGrowl(EntryItemResources.LinkCopiedToClipboard);
+        (args.Parameter as FrameworkElement)?.SuccessGrowl(EntryItemResources.LinkCopiedToClipboard);
     }
 
     private void GenerateWebLinkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
         UiHelper.ClipboardSetText(WebUri.OriginalString);
-        (args.Parameter as ulong?)?.SuccessGrowl(EntryItemResources.LinkCopiedToClipboard);
+        (args.Parameter as FrameworkElement)?.SuccessGrowl(EntryItemResources.LinkCopiedToClipboard);
     }
 
     private async void OpenInWebBrowserCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)

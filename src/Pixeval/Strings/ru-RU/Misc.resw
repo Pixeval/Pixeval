@@ -269,6 +269,47 @@
   </data>
   <data name="Pdf" xml:space="preserve">
     <value>PDF (включает все изображения)</value>
+  <data name="DownloadItemOpenFailed" xml:space="preserve">
+    <value>Не удалось открыть файл (папку)</value>
+  </data>
+  <data name="SortOptionComboBox.PlaceholderText" xml:space="preserve">
+    <value>Опции сортировки</value>
+  </data>
+  <data name="PrivacyPolicyComboBox.PlaceholderText" xml:space="preserve">
+    <value>Опции конфиденциальности</value>
+  </data>
+  <data name="OpenUserId" xml:space="preserve">
+    <value>Открыть страницу пользователя</value>
+  </data>
+  <data name="OpenIllustId" xml:space="preserve">
+    <value>Открыть страницу изображением</value>
+  </data>
+  <data name="CannotFindLoginProxyServerExecutable" xml:space="preserve">
+    <value>Не удалось найти исполняемый файл для входа, попробуйте перезапустить приложение или свяжитесь с разработчиком</value>
+  </data>
+  <data name="UnexpectedBehavior" xml:space="preserve">
+    <value>Произошло неожиданное поведение, если вы видите это сообщение, обратитесь за помощью к разработчику</value>
+  </data>
+  <data name="ReplyContentTooLong" xml:space="preserve">
+    <value>Слишком длинный ответ, пожалуйста, отредактируйте его</value>
+  </data>
+  <data name="SearchNovelTagMatchOptionExactMatchForTags" xml:space="preserve">
+    <value>Точное соответствие ключевым словам</value>
+  </data>
+  <data name="SearchNovelTagMatchOptionPartialMatchForTags" xml:space="preserve">
+    <value>Частичное соответствие ключевым словам</value>
+  </data>
+  <data name="SearchNovelTagMatchOptionText" xml:space="preserve">
+    <value>Соответствие тексту</value>
+  </data>
+  <data name="SearchNovelTagMatchOptionCaption" xml:space="preserve">
+    <value>Соответствие описанию</value>
+  </data>
+  <data name="WorkTypeNovel" xml:space="preserve">
+    <value>Новеллы</value>
+  </data>
+  <data name="SimpleWorkTypeIllustAndManga" xml:space="preserve">
+    <value>Иллюстрации и манга</value>
   </data>
   <data name="Html" xml:space="preserve">
     <value>HTML (папка с изображениями)</value>

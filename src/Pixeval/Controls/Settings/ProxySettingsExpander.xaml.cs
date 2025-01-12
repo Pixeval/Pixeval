@@ -1,7 +1,9 @@
+// Copyright (c) Pixeval.
+// Licensed under the GPL v3 License.
+
 using System;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Pixeval.Controls.Windowing;
 using Pixeval.Settings.Models;
 using WinUI3Utilities;
 
@@ -30,18 +32,11 @@ public sealed partial class ProxySettingsExpander
 
         if (!Uri.IsWellFormedUriString(proxy, UriKind.Absolute))
         {
-            WindowFactory.GetWindowForElement(this).HWnd.ErrorGrowl(SettingsPageResources.ProxyTextBoxErrorUri, proxy);
+            this.ErrorGrowl(SettingsPageResources.ProxyTextBoxErrorUri, proxy);
             Entry.Proxy = null;
             return;
         }
 
         Entry.Proxy = proxy;
-
-        Entry.ProxyChanged?.Invoke(Entry.MakoProxy);
-    }
-
-    private void EnumComboBox_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
-    {
-        Entry.ValueChanged?.Invoke(Entry.Value);
     }
 }

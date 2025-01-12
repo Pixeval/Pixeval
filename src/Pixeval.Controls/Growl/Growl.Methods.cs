@@ -1,4 +1,8 @@
+// Copyright (c) Pixeval.Controls.
+// Licensed under the GPL v3 License.
+
 using System.Threading.Tasks;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
 namespace Pixeval.Controls;
@@ -11,18 +15,18 @@ public static partial class Growl
         Severity = InfoBarSeverity.Informational
     });
 
-    public static void InfoGrowl(this ulong token, string title) => InitGrowl(new GrowlInfo
+    public static void InfoGrowl(this FrameworkElement token, string title) => InitGrowl(new GrowlInfo
     {
         Title = title,
         Severity = InfoBarSeverity.Informational,
-        Token = token
+        Token = GetToken(token)
     });
 
-    public static InfoBar? InfoGrowlReturn(this ulong token, string title) => InitGrowl(new GrowlInfo
+    public static InfoBar? InfoGrowlReturn(this FrameworkElement token, string title) => InitGrowl(new GrowlInfo
     {
         Title = title,
         Severity = InfoBarSeverity.Informational,
-        Token = token,
+        Token = GetToken(token),
         StaysOpen = true
     });
 
@@ -33,12 +37,12 @@ public static partial class Growl
         Severity = InfoBarSeverity.Informational
     });
 
-    public static void InfoGrowl(this ulong token, string title, string message) => InitGrowl(new GrowlInfo
+    public static void InfoGrowl(this FrameworkElement token, string title, string message) => InitGrowl(new GrowlInfo
     {
         Title = title,
         Message = message,
         Severity = InfoBarSeverity.Informational,
-        Token = token
+        Token = GetToken(token)
     });
 
     public static void Success(string title) => InitGrowl(new GrowlInfo
@@ -47,11 +51,11 @@ public static partial class Growl
         Severity = InfoBarSeverity.Success
     });
 
-    public static void SuccessGrowl(this ulong token, string title) => InitGrowl(new GrowlInfo
+    public static void SuccessGrowl(this FrameworkElement token, string title) => InitGrowl(new GrowlInfo
     {
         Title = title,
         Severity = InfoBarSeverity.Success,
-        Token = token
+        Token = GetToken(token)
     });
 
     public static void Success(string title, string message) => InitGrowl(new GrowlInfo
@@ -61,12 +65,12 @@ public static partial class Growl
         Severity = InfoBarSeverity.Success
     });
 
-    public static void SuccessGrowl(this ulong token, string title, string message) => InitGrowl(new GrowlInfo
+    public static void SuccessGrowl(this FrameworkElement token, string title, string message) => InitGrowl(new GrowlInfo
     {
         Title = title,
         Message = message,
         Severity = InfoBarSeverity.Success,
-        Token = token
+        Token = GetToken(token)
     });
 
     public static void Warning(string title) => InitGrowl(new GrowlInfo
@@ -76,11 +80,11 @@ public static partial class Growl
         StaysOpen = true
     });
 
-    public static void WarningGrowl(this ulong token, string title) => InitGrowl(new GrowlInfo
+    public static void WarningGrowl(this FrameworkElement token, string title) => InitGrowl(new GrowlInfo
     {
         Title = title,
         Severity = InfoBarSeverity.Warning,
-        Token = token,
+        Token = GetToken(token),
         StaysOpen = true
     });
 
@@ -92,12 +96,12 @@ public static partial class Growl
         StaysOpen = true
     });
 
-    public static void WarningGrowl(this ulong token, string title, string message) => InitGrowl(new GrowlInfo
+    public static void WarningGrowl(this FrameworkElement token, string title, string message) => InitGrowl(new GrowlInfo
     {
         Title = title,
         Message = message,
         Severity = InfoBarSeverity.Warning,
-        Token = token,
+        Token = GetToken(token),
         StaysOpen = true
     });
 
@@ -108,11 +112,11 @@ public static partial class Growl
         StaysOpen = true
     });
 
-    public static void ErrorGrowl(this ulong token, string title) => InitGrowl(new GrowlInfo
+    public static void ErrorGrowl(this FrameworkElement token, string title) => InitGrowl(new GrowlInfo
     {
         Title = title,
         Severity = InfoBarSeverity.Error,
-        Token = token,
+        Token = GetToken(token),
         StaysOpen = true
     });
 
@@ -124,18 +128,18 @@ public static partial class Growl
         StaysOpen = true
     });
 
-    public static void ErrorGrowl(this ulong token, string title, string message) => InitGrowl(new GrowlInfo
+    public static void ErrorGrowl(this FrameworkElement token, string title, string message) => InitGrowl(new GrowlInfo
     {
         Title = title,
         Message = message,
         Severity = InfoBarSeverity.Error,
-        Token = token,
+        Token = GetToken(token),
         StaysOpen = true
     });
 
     public static void Show(GrowlInfo growlInfo) => InitGrowl(growlInfo);
 
-    public static async void RemoveSuccessGrowlAfterDelay(this ulong token, InfoBar growl, string? title = null, string? message = null)
+    public static async void RemoveSuccessGrowlAfterDelay(this FrameworkElement token, InfoBar growl, string? title = null, string? message = null)
     {
         growl.Severity = InfoBarSeverity.Success;
         if (title is not null)

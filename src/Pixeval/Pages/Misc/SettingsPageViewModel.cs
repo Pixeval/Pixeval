@@ -1,26 +1,9 @@
-#region Copyright (c) Pixeval/Pixeval
-// GPL v3 License
-// 
-// Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/SettingsPageViewModel.cs
-// 
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-// 
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-// 
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#endregion
+// Copyright (c) Pixeval.
+// Licensed under the GPL v3 License.
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Net.Http;
 using System.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -38,9 +21,10 @@ using Microsoft.UI.Xaml;
 using Pixeval.Controls.Windowing;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.Settings.Models;
-using Pixeval.Upscaling;
 using WinUI3Utilities;
 using Symbol = FluentIcons.Common.Symbol;
+using Microsoft.Extensions.DependencyInjection;
+using Pixeval.Extensions;
 
 namespace Pixeval.Pages.Misc;
 
@@ -49,13 +33,21 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
     public DateTimeOffset LastCheckedUpdate
     {
         get => AppSettings.LastCheckedUpdate;
-        set => SetProperty(AppSettings.LastCheckedUpdate, value, AppSettings, (@setting, @value) => @setting.LastCheckedUpdate = @value);
+        set => SetProperty(AppSettings.LastCheckedUpdate, value, AppSettings, (setting, v) =>
+        {
+            setting.LastCheckedUpdate = v;
+            AppInfo.LocalConfig[nameof(AppSettings.LastCheckedUpdate)] = v;
+        });
     }
 
     public bool DownloadUpdateAutomatically
     {
         get => AppSettings.DownloadUpdateAutomatically;
-        set => SetProperty(AppSettings.DownloadUpdateAutomatically, value, AppSettings, (@setting, @value) => @setting.DownloadUpdateAutomatically = @value);
+        set => SetProperty(AppSettings.DownloadUpdateAutomatically, value, AppSettings, (setting, v) =>
+        {
+            setting.DownloadUpdateAutomatically = v;
+            AppInfo.LocalConfig[nameof(AppSettings.DownloadUpdateAutomatically)] = v;
+        });
     }
 
     public AppSettings AppSettings => App.AppViewModel.AppSettings;
@@ -78,9 +70,9 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
     private CancellationTokenSource? _cancellationTokenSource;
 
     /// <inheritdoc/>
-    public SettingsPageViewModel(ulong hWnd) : base(hWnd)
+    public SettingsPageViewModel(FrameworkElement frameworkElement) : base(frameworkElement)
     {
-        Groups =
+        LocalGroups =
         [
             new(SettingsEntryCategory.Application)
             {
@@ -89,10 +81,13 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
                     ElementThemeExtension.GetItems()) { ValueChanged = t => WindowFactory.SetTheme((ElementTheme)t) },
                 new EnumAppSettingsEntry(AppSettings,
                     t => t.Backdrop,
-                    BackdropTypeExtension.GetItems()) { ValueChanged = t => WindowFactory.SetBackdrop((BackdropType)t) },
+                    BackdropTypeExtension.GetItems())
+                {
+                    ValueChanged = t => WindowFactory.SetBackdrop((BackdropType)t)
+                },
                 new FontAppSettingsEntry(AppSettings,
                     t => t.AppFontFamilyName),
-                new LanguageAppSettingsEntry(AppSettings),
+                new LanguageAppSettingsEntry(),
                 new IpWithSwitchAppSettingsEntry(AppSettings)
                 {
                     ValueChanged = t => App.AppViewModel.MakoClient.Configuration.DomainFronting = t
@@ -112,10 +107,11 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
                 new EnumAppSettingsEntry(AppSettings,
                     t => t.DefaultSelectedTabItem,
                     MainPageTabItemExtension.GetItems()),
-                new StringAppSettingsEntry(AppSettings, 
+                new StringAppSettingsEntry(AppSettings,
                     t => t.WebCookie)
                 {
-                    Placeholder = SettingsPageResources.WebCookieTextBoxPlaceholderText
+                    Placeholder = SettingsPageResources.WebCookieTextBoxPlaceholderText,
+                    ValueChanged = t => App.AppViewModel.MakoClient.Configuration.Cookie = t
                 }
             },
             new(SettingsEntryCategory.BrowsingExperience)
@@ -129,33 +125,20 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
                 new EnumAppSettingsEntry(AppSettings,
                     t => t.TargetFilter,
                     TargetFilterExtension.GetItems()),
-                new TokenizingAppSettingsEntry(AppSettings),
+                new MultiStringsAppSettingsEntry(AppSettings,
+                    t => t.BlockedTags,
+                    v => [..v.BlockedTags],
+                    (v, o) => v.BlockedTags = [.. o])
+                {
+                    Placeholder = SettingsPageResources.BlockedTagsTokenizingTextBoxPlaceholderText
+                },
                 new BoolAppSettingsEntry(AppSettings,
                     t => t.BrowseOriginalImage),
-                new ClickableAppSettingsEntry(AppSettings,
+                new ClickableAppSettingsEntry(
                     SettingsPageResources.ViewingRestrictionEntryHeader,
                     SettingsPageResources.ViewingRestrictionEntryDescription,
                     Symbol.SubtractCircle,
-                    () => _ = Launcher.LaunchUriAsync(new Uri("https://www.pixiv.net/settings/viewing")))
-            },
-
-            new (SettingsEntryCategory.AiUpscaler)
-            {
-                new EnumAppSettingsEntry(AppSettings, 
-                    t => t.UpscalerModel,
-                    RealESRGANModelExtension.GetItems())
-                {
-                    DescriptionUri = new Uri("https://github.com/xinntao/Real-ESRGAN/blob/master/README_CN.md")
-                },
-                new IntAppSettingsEntry(AppSettings,
-                    t => t.UpscalerScaleRatio)
-                {
-                    Max = 4,
-                    Min = 2
-                },
-                new EnumAppSettingsEntry(AppSettings,
-                    t => t.UpscalerOutputType,
-                UpscalerOutputTypeExtension.GetItems())
+                    () => _ = Launcher.LaunchUriAsync(new("https://www.pixiv.net/settings/viewing")))
             },
 
             new(SettingsEntryCategory.Search)
@@ -163,7 +146,7 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
                 new StringAppSettingsEntry(AppSettings,
                     t => t.ReverseSearchApiKey)
                 {
-                    DescriptionUri = new Uri("https://saucenao.com/user.php?page=search-api"),
+                    DescriptionUri = new("https://saucenao.com/user.php?page=search-api"),
                     Placeholder = SettingsPageResources.ReverseSearchApiKeyTextBoxPlaceholderText
                 },
                 new IntAppSettingsEntry(AppSettings,
@@ -190,8 +173,7 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
                 new EnumAppSettingsEntry(AppSettings,
                     t => t.SimpleWorkType,
                     SimpleWorkTypeExtension.GetItems()),
-                new MultiValuesAppSettingsEntry(AppSettings,
-                    SettingsPageResources.RankOptionEntryHeader,
+                new MultiValuesEntry(SettingsPageResources.RankOptionEntryHeader,
                     SettingsPageResources.RankOptionEntryDescription,
                     Symbol.ArrowTrending,
                     [
@@ -204,8 +186,7 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
                             t => t.NovelRankOption,
                             NovelRankOptionExtension.GetItems())
                     ]),
-                new MultiValuesAppSettingsEntry(AppSettings,
-                    SettingsPageResources.DefaultSearchTagMatchOptionEntryHeader,
+                new MultiValuesEntry(SettingsPageResources.DefaultSearchTagMatchOptionEntryHeader,
                     SettingsPageResources.DefaultSearchTagMatchOptionEntryDescription,
                     Symbol.CheckmarkCircleSquare,
                     [
@@ -218,10 +199,12 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
                             t => t.SearchNovelTagMatchOption,
                             SearchNovelTagMatchOptionExtension.GetItems())
                     ]),
-                new EnumAppSettingsEntry(AppSettings,
-                    t => t.SearchDuration,
-                    SearchDurationExtension.GetItems()),
-                new DateRangeWithSwitchAppSettingsEntry(AppSettings)
+                new DateWithSwitchAppSettingsEntry(AppSettings,
+                    t => t.UseSearchStartDate,
+                    t => t.SearchStartDate),
+                new DateWithSwitchAppSettingsEntry(AppSettings,
+                    t => t.UseSearchEndDate,
+                    t => t.SearchEndDate)
             },
             new(SettingsEntryCategory.Download)
             {
@@ -241,8 +224,7 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
                     ValueChanged = t => App.AppViewModel.DownloadManager.ConcurrencyDegree = t
                 },
                 new DownloadMacroAppSettingsEntry(AppSettings),
-                new MultiValuesAppSettingsEntry(AppSettings,
-                    SettingsPageResources.WorkDownloadFormatEntryHeader,
+                new MultiValuesEntry(SettingsPageResources.WorkDownloadFormatEntryHeader,
                     SettingsPageResources.WorkDownloadFormatEntryDescription,
                     Symbol.TextPeriodAsterisk,
                     [
@@ -275,7 +257,10 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
         ];
     }
 
-    public SimpleSettingsGroup[] Groups { get; }
+    public SimpleSettingsGroup[] LocalGroups { get; }
+
+    public IReadOnlyList<ExtensionSettingsGroup> ExtensionGroups { get; } =
+        App.AppViewModel.AppServiceProvider.GetRequiredService<ExtensionService>().SettingsGroups;
 
     public string UpdateInfo => AppInfo.AppVersion.UpdateState switch
     {
@@ -287,7 +272,9 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
         _ => SettingsPageResources.UnknownUpdateState
     };
 
-    public string? NewestVersion => AppInfo.AppVersion.UpdateAvailable ? AppInfo.AppVersion.NewestVersion?.ToString() : null;
+    public string? NewestVersion => AppInfo.AppVersion.UpdateAvailable
+        ? AppInfo.AppVersion.NewestVersion?.Let(t => $"{t.Major}.{t.Minor}.{t.Build}.{t.Revision}")
+        : null;
 
     public InfoBarSeverity UpdateInfoSeverity => AppInfo.AppVersion.UpdateState switch
     {
@@ -327,7 +314,7 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
 
             DownloadingUpdate = true;
             UpdateMessage = SettingsPageResources.DownloadingUpdate;
-            var filePath = Path.Combine(AppKnownFolders.Temporary.Self.Path, appReleaseModel.ReleaseUri.Segments[^1]);
+            var filePath = AppKnownFolders.Temp.CombinePath(appReleaseModel.ReleaseUri.Segments[^1]);
             await using var fileStream = IoHelper.OpenAsyncWrite(filePath);
             var exception = await client.DownloadStreamAsync(fileStream, appReleaseModel.ReleaseUri,
                 new Progress<double>(progress => DownloadingUpdateProgress = progress), cancellationToken: _cancellationTokenSource.Token);
@@ -342,7 +329,7 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
                 downloaded = true;
                 if (_cancellationTokenSource is { IsCancellationRequested: true })
                     return;
-                if (await HWnd.CreateOkCancelAsync(SettingsPageResources.UpdateApp,
+                if (await FrameworkElement.CreateOkCancelAsync(SettingsPageResources.UpdateApp,
                         SettingsPageResources.DownloadedAndWaitingToInstall.Format(appReleaseModel.Version)) is ContentDialogResult.Primary)
                 {
                     var process = new Process
@@ -386,7 +373,7 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
 
     public void ShowClearData(ClearDataKind kind)
     {
-        HWnd.SuccessGrowl(ClearDataKindExtension.GetResource(kind));
+        FrameworkElement.SuccessGrowl(ClearDataKindExtension.GetResource(kind));
     }
 
     public void CancelToken()

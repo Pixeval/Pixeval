@@ -1,3 +1,6 @@
+// Copyright (c) Pixeval.CoreApi.
+// Licensed under the GPL v3 License.
+
 namespace Pixeval.CoreApi;
 
 internal interface IDefaultFactory<out TSelf> where TSelf : IDefaultFactory<TSelf>

@@ -10,7 +10,7 @@
     Padding="5,0"
     HorizontalContentAlignment="Center"
     VerticalContentAlignment="Center"
-    Foreground="{StaticResource TextFillColorSecondaryBrush}"
+    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
     mc:Ignorable="d">
     <controls:DockPanel HorizontalSpacing="5">
         <fluent:SymbolIcon

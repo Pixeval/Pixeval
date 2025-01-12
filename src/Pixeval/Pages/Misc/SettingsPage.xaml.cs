@@ -1,51 +1,41 @@
-#region Copyright (c) Pixeval/Pixeval
-// GPL v3 License
-// 
-// Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/SettingsPage.xaml.cs
-// 
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-// 
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-// 
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#endregion
+// Copyright (c) Pixeval.
+// Licensed under the GPL v3 License.
 
 using System;
+using System.ComponentModel;
+using System.Linq;
+using System.Runtime.CompilerServices;
 using Windows.System;
 using CommunityToolkit.Labs.WinUI.MarkdownTextBlock;
-using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.AppManagement;
-using Pixeval.Controls;
+using Pixeval.Attributes;
 using Pixeval.Controls.Windowing;
 using Pixeval.Database.Managers;
+using Pixeval.Settings;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using WinUI3Utilities;
+using CommunityToolkit.WinUI.Controls;
+using CommunityToolkit.WinUI;
+using Windows.Foundation;
 
 namespace Pixeval.Pages.Misc;
 
 /// <summary>
-/// todo
+/// todo INotifyPropertyChanged
 /// </summary>
-[INotifyPropertyChanged]
-public sealed partial class SettingsPage : IScrollViewHost, IDisposable
+public sealed partial class SettingsPage : IDisposable, INotifyPropertyChanged
 {
     private string CurrentVersion =>
         AppInfo.AppVersion.CurrentVersion.Let(t => $"{t.Major}.{t.Minor}.{t.Build}.{t.Revision}");
 
     private SettingsPageViewModel ViewModel { get; set; } = null!;
+
+    private SettingsEntryAttribute? _scrollToAttribute;
 
     private bool _disposed;
 
@@ -53,12 +43,39 @@ public sealed partial class SettingsPage : IScrollViewHost, IDisposable
 
     public override void OnPageActivated(NavigationEventArgs e, object? parameter)
     {
-        ViewModel = new SettingsPageViewModel(HWnd);
+        ViewModel = new SettingsPageViewModel(this);
+        _scrollToAttribute = parameter as SettingsEntryAttribute;
+
+        // ItemsControl会有缓动动画，ItemsRepeater会延迟加载，使用只好手动一次全部加载，以方便根据Tag导航
+        var style = Resources["SettingHeaderStyle"] as Style;
+
+        foreach (var group in ViewModel.LocalGroups.Concat<ISettingsGroup>(ViewModel.ExtensionGroups))
+        {
+            SettingsPanel.Children.Add(new TextBlock
+            {
+                Style = style,
+                Text = group.Header
+            });
+            foreach (var entry in group)
+                SettingsPanel.Children.Add(entry.Element);
+        }
+
+        var frameworkElement = SettingsPanel.FindChild<SettingsCard>(element => element.Tag is SettingsEntryAttribute a && Equals(a, _scrollToAttribute));
+
+        if (frameworkElement is not null)
+        {
+            var position = frameworkElement
+                .TransformToVisual(SettingsPanel)
+                // 神秘的偏移量
+                .TransformPoint(new Point(0, -160));
+
+            _ = SettingsPageScrollView.ScrollTo(position.X, position.Y);
+        }
     }
 
     public override void OnPageDeactivated(NavigatingCancelEventArgs e) => Dispose();
 
-    private void SettingsPage_OnUnloaded(object sender, RoutedEventArgs e) => Dispose();
+    ~SettingsPage() => Dispose();
 
     private void CheckForUpdateButton_OnClicked(object sender, RoutedEventArgs e)
     {
@@ -102,9 +119,12 @@ public sealed partial class SettingsPage : IScrollViewHost, IDisposable
         if (await this.CreateOkCancelAsync(SettingsPageResources.ResetSettingConfirmationDialogTitle,
                 SettingsPageResources.ResetSettingConfirmationDialogContent) is ContentDialogResult.Primary)
         {
-            ViewModel.AppSettings.ResetDefault();
-            foreach (var simpleSettingsGroup in ViewModel.Groups)
-                foreach (var settingsEntry in simpleSettingsGroup)
+            var settings = new AppSettings();
+            foreach (var localGroup in ViewModel.LocalGroups)
+                foreach (var settingsEntry in localGroup)
+                    settingsEntry.ValueReset(settings);
+            foreach (var extensionGroup in ViewModel.ExtensionGroups)
+                foreach (var settingsEntry in extensionGroup)
                     settingsEntry.ValueReset();
             OnPropertyChanged(nameof(ViewModel));
         }
@@ -112,7 +132,7 @@ public sealed partial class SettingsPage : IScrollViewHost, IDisposable
 
     private void DeleteFileCacheEntryButton_OnClicked(object sender, RoutedEventArgs e)
     {
-        _ = AppKnownFolders.Cache.ClearAsync();
+        AppKnownFolders.Cache.Clear();
         ViewModel.ShowClearData(ClearDataKind.FileCache);
     }
 
@@ -137,17 +157,18 @@ public sealed partial class SettingsPage : IScrollViewHost, IDisposable
         ViewModel.ShowClearData(ClearDataKind.DownloadHistory);
     }
 
-    private void OpenFolder_OnClicked(object sender, RoutedEventArgs e)
+    private async void OpenFolder_OnClicked(object sender, RoutedEventArgs e)
     {
         var folder = sender.To<FrameworkElement>().GetTag<string>() switch
         {
-            "Log" => AppKnownFolders.Log.Self,
-            "Temp" => AppKnownFolders.Temporary.Self,
-            "Local" => AppKnownFolders.Local.Self,
+            nameof(AppKnownFolders.Logs) => AppKnownFolders.Logs,
+            nameof(AppKnownFolders.Temp) => AppKnownFolders.Temp,
+            nameof(AppKnownFolders.Local) => AppKnownFolders.Local,
+            nameof(AppKnownFolders.Extensions) => AppKnownFolders.Extensions,
             _ => null
         };
         if (folder is not null)
-            _ = Launcher.LaunchFolderAsync(folder);
+            _ = await Launcher.LaunchFolderPathAsync(folder.FullPath);
     }
 
     public void Dispose()
@@ -156,36 +177,20 @@ public sealed partial class SettingsPage : IScrollViewHost, IDisposable
             return;
         _disposed = true;
         Bindings.StopTracking();
-        foreach (var simpleSettingsGroup in ViewModel.Groups)
-            foreach (var settingsEntry in simpleSettingsGroup)
-                settingsEntry.ValueSaving();
-        AppInfo.SaveConfig(ViewModel.AppSettings);
+        foreach (var localGroup in ViewModel.LocalGroups)
+            foreach (var settingsEntry in localGroup)
+                settingsEntry.ValueSaving(AppInfo.LocalConfig);
+        foreach (var extensionGroup in ViewModel.ExtensionGroups)
+            foreach (var settingsEntry in extensionGroup)
+                settingsEntry.ValueSaving(extensionGroup.Model.Values);
         ViewModel.Dispose();
         ViewModel = null!;
     }
 
-    /// <summary>
-    /// <see cref="ItemsControl"/>会有缓动动画，<see cref="ItemsRepeater"/>会延迟加载，
-    /// 使用只好手动一次全部加载，以方便根据Tag导航
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    private void Panel_OnLoaded(object sender, RoutedEventArgs e)
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
-        var panel = sender.To<StackPanel>();
-        var style = Resources["SettingHeaderStyle"] as Style;
-
-        foreach (var group in ViewModel.Groups)
-        {
-            panel.Children.Add(new TextBlock
-            {
-                Style = style,
-                Text = group.Header
-            });
-            foreach (var entry in group)
-                panel.Children.Add(entry.Element);
-        }
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
-
-    public ScrollView ScrollView => SettingsPageScrollView;
 }

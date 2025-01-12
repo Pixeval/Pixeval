@@ -1,3 +1,6 @@
+// Copyright (c) Pixeval.
+// Licensed under the GPL v3 License.
+
 using System;
 using System.Collections.Frozen;
 using System.IO;
@@ -7,7 +10,6 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Pixeval.Controls;
 using Pixeval.Controls.DialogContent;
-using Pixeval.Controls.Windowing;
 using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Util.UI;
 using WinUI3Utilities;
@@ -30,14 +32,13 @@ public sealed partial class TagsEntry
     {
         if (ViewModel.Illustration is null)
         {
-            var hWnd = WindowFactory.GetWindowForElement(this).HWnd;
-            var growl = hWnd.InfoGrowlReturn(TagsEntryResources.FetchingWorkInfo);
+            var growl = this.InfoGrowlReturn(TagsEntryResources.FetchingWorkInfo);
             try
             {
                 var illustration = await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(ViewModel.Id);
                 ViewModel.Illustration = illustration;
                 if (growl is not null)
-                    Growl.RemoveGrowl(hWnd, growl);
+                    Growl.RemoveGrowl(this, growl);
             }
             catch (Exception exception)
             {
@@ -50,7 +51,7 @@ public sealed partial class TagsEntry
             }
         }
         var vm = new IllustrationItemViewModel(ViewModel.Illustration);
-        vm.CreateWindowWithPage([vm]);
+        this.CreateIllustrationPage(vm, [vm]);
     }
 
     private async void DeleteItem_OnClicked(object sender, RoutedEventArgs e)

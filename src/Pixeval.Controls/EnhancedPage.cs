@@ -1,31 +1,19 @@
-#region Copyright (c) Pixeval/Pixeval.Controls
-// GPL v3 License
-// 
-// Pixeval/Pixeval.Controls
-// Copyright (c) 2023 Pixeval.Controls/EnhancedPage.cs
-// 
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-// 
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-// 
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#endregion
+// Copyright (c) Pixeval.Controls.
+// Licensed under the GPL v3 License.
 
+using System;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
+using Pixeval.Controls.Windowing;
 
 namespace Pixeval.Controls;
 
 public partial class EnhancedPage : Page
 {
+    public EnhancedWindow Window => WindowFactory.GetWindowForElement(this);
+
     public int ActivationCount { get; private set; }
 
     public bool ClearCacheAfterNavigation { get; set; } = true;
@@ -34,7 +22,7 @@ public partial class EnhancedPage : Page
     {
         base.OnNavigatedTo(e);
         ++ActivationCount;
-        OnPageActivated(e);
+        OnPageActivated(e, e.Parameter);
     }
 
     protected sealed override void OnNavigatingFrom(NavigatingCancelEventArgs e)
@@ -68,7 +56,32 @@ public partial class EnhancedPage : Page
     /// <see cref="OnNavigatingFrom"/>-><br/>
     /// <see cref="FrameworkElement.Unloaded"/>
     /// </summary>
-    public virtual void OnPageActivated(NavigationEventArgs e)
+    public virtual void OnPageActivated(NavigationEventArgs e, object? parameter)
     {
+    }
+
+    protected void Navigate(Type type, Frame frame, object? parameter, NavigationTransitionInfo? info = null)
+    {
+        _ = frame.Navigate(type, parameter, info);
+    }
+
+    protected void Navigate<TPage>(Frame frame, object? parameter, NavigationTransitionInfo? info = null) where TPage : EnhancedPage
+    {
+        Navigate(typeof(TPage), frame, parameter, info);
+    }
+
+    protected void NavigateParent<TPage>(object? parameter, NavigationTransitionInfo? info = null) where TPage : EnhancedPage
+    {
+        Navigate(typeof(TPage), Frame, parameter, info);
+    }
+
+    protected void NavigateSelf(object? parameter, NavigationTransitionInfo? info = null)
+    {
+        Navigate(GetType(), Frame, parameter, info);
+    }
+
+    protected void Navigate(Frame frame, NavigationViewTag tag, NavigationTransitionInfo? info = null)
+    {
+        Navigate(tag.NavigateTo, frame, tag.Parameter, info);
     }
 }

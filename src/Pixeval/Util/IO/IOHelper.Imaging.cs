@@ -1,22 +1,5 @@
-#region Copyright (c) Pixeval/Pixeval
-// GPL v3 License
-// 
-// Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/IOHelper.Imaging.cs
-// 
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-// 
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-// 
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#endregion
+// Copyright (c) Pixeval.
+// Licensed under the GPL v3 License.
 
 using System;
 using System.Collections.Generic;
@@ -25,6 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.FileProperties;
+using Windows.Storage.Streams;
 using Microsoft.UI.Xaml.Media;
 using Pixeval.CoreApi.Net.Response;
 using Pixeval.Download.Macros;
@@ -50,12 +34,21 @@ public static partial class IoHelper
 {
     public static async Task<ImageSource> DecodeBitmapImageAsync(this Stream imageStream, bool disposeOfImageStream, int? desiredWidth = null)
     {
+        var bitmapImage = await imageStream.AsRandomAccessStream().DecodeBitmapImageAsync(false, desiredWidth);
+        if (disposeOfImageStream)
+            await imageStream.DisposeAsync();
+
+        return bitmapImage;
+    }
+
+    public static async Task<ImageSource> DecodeBitmapImageAsync(this IRandomAccessStream imageStream, bool disposeOfImageStream, int? desiredWidth = null)
+    {
         var bitmapImage = new BitmapImage { DecodePixelType = DecodePixelType.Logical };
         if (desiredWidth is { } width)
             bitmapImage.DecodePixelWidth = width;
-        await bitmapImage.SetSourceAsync(imageStream.AsRandomAccessStream());
+        await bitmapImage.SetSourceAsync(imageStream);
         if (disposeOfImageStream)
-            await imageStream.DisposeAsync();
+            imageStream.Dispose();
 
         return bitmapImage;
     }
@@ -66,7 +59,7 @@ public static partial class IoHelper
         {
             var file = await StorageFile.GetFileFromPathAsync(path);
             var thumbnail = await file.GetThumbnailAsync(ThumbnailMode.SingleItem, size);
-            return await thumbnail.AsStreamForRead().DecodeBitmapImageAsync(true);
+            return await thumbnail.DecodeBitmapImageAsync(true);
         }
         catch
         {
@@ -128,14 +121,14 @@ public static partial class IoHelper
     public static async Task<Image> UgoiraSaveToImageAsync(this Stream stream, IReadOnlyList<int> delays, IProgress<double>? progress = null, bool dispose = false)
     {
         var streams = await Streams.ReadZipAsync(stream, dispose);
-        var average = 50d / streams.Length;
+        var average = 50d / streams.Count;
         var progressValue = 0d;
 
-        var images = new Image[streams.Length];
+        var images = new Image[streams.Count];
         var options = new ParallelOptions();
         if (progress is not null)
             options.TaskScheduler = TaskScheduler.FromCurrentSynchronizationContext();
-        await Parallel.ForAsync(0, streams.Length, options, async (i, token) =>
+        await Parallel.ForAsync(0, streams.Count, options, async (i, token) =>
         {
             var delay = delays.Count > i ? (uint)delays[i] : 10u;
             streams[i].Position = 0;

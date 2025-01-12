@@ -1,22 +1,5 @@
-#region Copyright (c) Pixeval/Pixeval
-// GPL v3 License
-// 
-// Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/IllustrationContainer.xaml.cs
-// 
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-// 
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-// 
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#endregion
+// Copyright (c) Pixeval.
+// Licensed under the GPL v3 License.
 
 using System;
 using System.Collections.Generic;
@@ -30,7 +13,6 @@ using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using WinUI3Utilities;
 using Pixeval.CoreApi.Global.Enum;
-using Pixeval.Controls.Windowing;
 using Pixeval.Filters;
 
 namespace Pixeval.Controls;
@@ -48,8 +30,6 @@ public partial class WorkContainer : IScrollViewHost
     public ObservableCollection<ICommandBarElement> PrimaryCommandsSupplements { get; } = [];
 
     public ObservableCollection<ICommandBarElement> SecondaryCommandsSupplements { get; } = [];
-
-    public ulong HWnd => WindowFactory.GetWindowForElement(this).HWnd;
 
     public WorkContainer()
     {
@@ -69,6 +49,7 @@ public partial class WorkContainer : IScrollViewHost
         // 而写在XAML中的属性会在Load之后才会被设置，所以我们不在XAML中设置而是手动
         WorkView.LayoutType = App.AppViewModel.AppSettings.ItemsViewLayoutType;
         WorkView.ThumbnailDirection = App.AppViewModel.AppSettings.ThumbnailDirection;
+        _ = WorkView.Focus(FocusState.Programmatic);
         return;
 
         static void AddCommandCallback(NotifyCollectionChangedEventArgs e, ICollection<ICommandBarElement> commands)
@@ -84,8 +65,6 @@ public partial class WorkContainer : IScrollViewHost
     public SimpleWorkType Type => WorkView.Type;
 
     public ISortableEntryViewViewModel ViewModel => WorkView.ViewModel;
-
-    private void WorkContainer_OnLoaded(object sender, RoutedEventArgs e) => _ = WorkView.Focus(FocusState.Programmatic);
 
     private void SelectAllToggleButton_OnClicked(object sender, RoutedEventArgs e)
     {
@@ -131,7 +110,7 @@ public partial class WorkContainer : IScrollViewHost
         foreach (var i in ViewModel.SelectedEntries)
             i.SaveCommand.Execute(null);
 
-        HWnd.InfoGrowl(WorkContainerResources.DownloadItemsQueuedFormatted.Format(ViewModel.SelectedEntries.Count));
+        this.InfoGrowl(WorkContainerResources.DownloadItemsQueuedFormatted.Format(ViewModel.SelectedEntries.Count));
     }
 
     private async void OpenAllInBrowserButton_OnClicked(object sender, RoutedEventArgs e)
@@ -157,7 +136,7 @@ public partial class WorkContainer : IScrollViewHost
             i.AddToBookmarkCommand.Execute((BookmarkTagSelector.SelectedTags, BookmarkTagSelector.IsPrivate, null as object));
 
         if (ViewModel.SelectedEntries.Count is var c and > 0)
-            HWnd.SuccessGrowl(WorkContainerResources.AddedAllToBookmarkContentFormatted.Format(c));
+            this.SuccessGrowl(WorkContainerResources.AddedAllToBookmarkContentFormatted.Format(c));
     }
 
     private void CancelSelectionButton_OnClicked(object sender, RoutedEventArgs e)
@@ -194,7 +173,7 @@ public partial class WorkContainer : IScrollViewHost
         }
         catch (Exception e)
         {
-            HWnd.ErrorGrowl(MacroParserResources.FilterQueryError, e.Message);
+            this.ErrorGrowl(MacroParserResources.FilterQueryError, e.Message);
         }
     }
 

@@ -533,6 +533,9 @@ Type and click on "+" to add an IP</value>
   </data>
   <data name="SearchSettingsGroup.Text" xml:space="preserve">
     <value>Search for settings</value>
+  <data name="SearchHistoriesCleared" xml:space="preserve">
+    <value>Search history cleared</value>
+  </data>
   </data>
   <data name="SessionSettingsGroup.Text" xml:space="preserve">
     <value>Session</value>

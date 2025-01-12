@@ -5,7 +5,6 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:Pixeval.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Unloaded="CommentView_OnUnloaded"
     mc:Ignorable="d">
     <local:EntryView HasNoItem="{x:Bind HasNoItem, Mode=OneWay}" IsLoadingMore="{x:Bind CommentsList.IsLoadingMore, Mode=OneWay}">
         <local:EntryView.Content>

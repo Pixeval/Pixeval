@@ -1,3 +1,6 @@
+// Copyright (c) Pixeval.
+// Licensed under the GPL v3 License.
+
 using System.Collections.ObjectModel;
 using CommunityToolkit.WinUI.Controls;
 using Microsoft.UI.Xaml.Controls;

@@ -1,22 +1,5 @@
-#region Copyright (c) Pixeval/Pixeval
-// GPL v3 License
-// 
-// Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/PixivAuth.cs
-// 
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-// 
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-// 
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#endregion
+// Copyright (c) Pixeval.
+// Licensed under the GPL v3 License.
 
 using System;
 using System.Net.Http;
@@ -25,7 +8,6 @@ using System.Text;
 using System.Text.Json;
 using Pixeval.CoreApi.Model;
 using Pixeval.CoreApi.Net;
-using Pixeval.CoreApi.Preference;
 using Pixeval.Util;
 using System.Threading.Tasks;
 using Pixeval.CoreApi;
@@ -58,7 +40,7 @@ public static class PixivAuth
         return SHA256.HashData(Encoding.ASCII.GetBytes(code)).ToUrlSafeBase64String();
     }
 
-    public static async Task<Session> AuthCodeToSessionAsync(string code, string verifier)
+    public static async Task<TokenResponse> AuthCodeToTokenResponseAsync(string code, string verifier)
     {
         // HttpClient is designed to be used through whole application lifetime, create and
         // dispose it in a function is a commonly misused anti-pattern, but this function
@@ -84,8 +66,8 @@ public static class PixivAuth
         httpClient.Dispose();
         _ = result.EnsureSuccessStatusCode();
         var str = await result.Content.ReadAsStringAsync();
-        var session = ((TokenResponse)JsonSerializer.Deserialize(str, typeof(TokenResponse), AppJsonSerializerContext.Default)!).ToSession();
-        App.AppViewModel.LoginContext.RefreshToken = session.RefreshToken;
-        return session;
+        var tokenResponse = (TokenResponse)JsonSerializer.Deserialize(str, typeof(TokenResponse), AppJsonSerializerContext.Default)!;
+        App.AppViewModel.LoginContext.RefreshToken = tokenResponse.RefreshToken;
+        return tokenResponse;
     }
 }

@@ -219,9 +219,6 @@
   <data name="ExtensionsTab.Content" xml:space="preserve">
     <value>扩展</value>
   </data>
-  <data name="RefreshingSessionFailedTitle" xml:space="preserve">
-    <value>Failed to refresh session</value>
-  </data>
   <data name="RefreshingSessionFailedContent" xml:space="preserve">
     <value>Please login again
 If this issue recurs, please contact the developer for a solution</value>
@@ -231,5 +228,9 @@ If this issue recurs, please contact the developer for a solution</value>
   </data>
   <data name="SearchUsersResult" xml:space="preserve">
     <value>搜索用户结果</value>
+  </data>
+</root>
+  <data name="RefreshingSessionFailedTitle" xml:space="preserve">
+    <value>Failed to refresh session</value>
   </data>
 </root>

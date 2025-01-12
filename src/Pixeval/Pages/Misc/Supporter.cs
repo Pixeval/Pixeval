@@ -1,38 +1,31 @@
-#region Copyright (c) Pixeval/Pixeval
-// GPL v3 License
-// 
-// Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/Supporter.cs
-// 
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-// 
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-// 
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#endregion
+// Copyright (c) Pixeval.
+// Licensed under the GPL v3 License.
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Text.Json;
 using System.Text.Json.Serialization;
-using Microsoft.UI.Xaml.Media;
+using System.Threading.Tasks;
 using Microsoft.UI.Xaml.Media.Imaging;
+using Pixeval.AppManagement;
+using Pixeval.Util.IO;
 
 namespace Pixeval.Pages.Misc;
 
-public record Supporter(string Nickname, string Name, ImageSource ProfilePicture, Uri ProfileUri)
+public record Supporter(string Nickname, string Name, Uri ProfilePicture, Uri ProfileUri)
 {
+    public static string BasePath { get; } = AppKnownFolders.Cache.CombinePath("GitHubSupporters");
+
+    public string AtName => "@" + Name;
+
+    public BitmapImage ProfileImage => new BitmapImage(new Uri(Path.Combine(BasePath, Name + ".png")));
+
     // ReSharper disable StringLiteralTypo
-    private static readonly IEnumerable<(string Nickname, string Name)> _supporters =
+    private static readonly IEnumerable<(string Nickname, string Name)> _Supporters =
         new (string Nickname, string Name)[]
         {
             ("Sep", "Guro2"),
@@ -51,38 +44,81 @@ public record Supporter(string Nickname, string Name, ImageSource ProfilePicture
             ("cnbluefire", "cnbluefire"),
             ("岛风", "frg2089"),
             ("Ёж, просто ёж", "bropines"),
-            ("irony", "kokoro-aya")
+            ("irony", "kokoro-aya"),
+            ("Betta_Fish", "zxbmmmmmmmmm"),
+            ("Dylech30th", "dylech30th")
         }.OrderBy(_ => Random.Shared.Next());
     // ReSharper restore StringLiteralTypo
 
-    public static List<Supporter> Supporters { get; } = [];
+    public static List<Supporter>? Supporters { get; private set; }
 
-    public static async IAsyncEnumerable<Supporter> GetSupportersAsync(HttpClient httpClient, bool dispose = true)
+    public static async IAsyncEnumerable<Supporter> GetSupportersAsync()
     {
-        if (Supporters is [])
+        _ = Directory.CreateDirectory(BasePath);
+
+        if (Supporters is null)
         {
-            if (httpClient.DefaultRequestHeaders.UserAgent.Count is 0)
-                httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36 Edg/121.0.0.0");
-            foreach (var (nickname, name) in _supporters)
-                if (await httpClient.GetFromJsonAsync("https://api.github.com/users/" + name, typeof(GitHubUser), GitHubUserSerializeContext.Default) is GitHubUser user)
+            using var httpClient = new HttpClient();
+            httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36 Edg/121.0.0.0");
+
+            var path = Path.Combine(BasePath, "github-supporters.json");
+            if (File.Exists(path))
+            {
+                await using var fileStream = IoHelper.OpenAsyncRead(path);
+
+                if (await JsonSerializer.DeserializeAsync(fileStream, typeof(Supporter[]), SupporterSerializeContext.Default) is Supporter[] supporters
+                    && supporters.Length == _Supporters.Count())
                 {
-                    var supporter = new Supporter(nickname, '@' + name, new BitmapImage(user.AvatarUrl), user.HtmlUrl);
+                    Supporters = supporters.OrderBy(_ => Random.Shared.Next()).ToList();
+                    foreach (var supporter in Supporters)
+                    {
+                        await LoadAvatarAsync(supporter, BasePath, httpClient);
+                        yield return supporter;
+                    }
+                    yield break;
+                }
+            }
+
+            Supporters = [];
+            foreach (var (nickname, name) in _Supporters)
+                if (await httpClient.GetFromJsonAsync("https://api.github.com/users/" + name, typeof(GitHubUser),
+                        GitHubUserSerializeContext.Default) is GitHubUser user)
+                {
+                    var supporter = new Supporter(nickname, name, user.AvatarUrl, user.HtmlUrl);
                     Supporters.Add(supporter);
+                    await LoadAvatarAsync(supporter, BasePath, httpClient);
                     yield return supporter;
                 }
+            await using var fs = IoHelper.OpenAsyncWrite(path);
+            await JsonSerializer.SerializeAsync(fs, Supporters, typeof(List<Supporter>), SupporterSerializeContext.Default);
         }
         else
-        {
             foreach (var supporter in Supporters)
                 yield return supporter;
+    }
+
+    private static async ValueTask LoadAvatarAsync(Supporter supporter, string basePath, HttpClient client)
+    {
+        var path = Path.Combine(basePath, supporter.Name + ".png");
+        if (File.Exists(path))
+            return;
+        var file = IoHelper.OpenAsyncWrite(path);
+        if (await client.DownloadStreamAsync(file, supporter.ProfilePicture) is not null)
+        {
+            await file.DisposeAsync();
+            File.Delete(path);
         }
-        if (dispose)
-            httpClient.Dispose();
+        else
+            await file.DisposeAsync();
     }
 }
 
 [JsonSerializable(typeof(GitHubUser))]
 public partial class GitHubUserSerializeContext : JsonSerializerContext;
+
+[JsonSerializable(typeof(Supporter[]))]
+public partial class SupporterSerializeContext : JsonSerializerContext;
 
 public class GitHubUser
 {

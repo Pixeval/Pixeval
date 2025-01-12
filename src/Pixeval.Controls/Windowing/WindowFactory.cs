@@ -1,22 +1,5 @@
-#region Copyright (c) Pixeval/Pixeval.Controls
-// GPL v3 License
-// 
-// Pixeval/Pixeval.Controls
-// Copyright (c) 2023 Pixeval.Controls/WindowFactory.cs
-// 
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-// 
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-// 
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#endregion
+// Copyright (c) Pixeval.Controls.
+// Licensed under the GPL v3 License.
 
 using System.Collections.Generic;
 using System.Linq;
@@ -27,25 +10,28 @@ using Windows.Graphics;
 using Windows.Win32;
 using Windows.Win32.Foundation;
 using Windows.Win32.Graphics.Gdi;
+using Microsoft.UI.Xaml.Media.Imaging;
 using WinUI3Utilities;
 
 namespace Pixeval.Controls.Windowing;
 
 public static class WindowFactory
 {
-    public static string IconAbsolutePath { get; set; } = "";
+    public static BitmapImage IconImageSource { get; private set; } = null!;
+
+    public static string IconPath { get; set; } = "";
 
     public static IWindowSettings WindowSettings { get; set; } = null!;
 
     public static EnhancedWindow RootWindow { get; private set; } = null!;
 
-    private static readonly Dictionary<ulong, EnhancedWindow> _forkedWindowsInternal = [];
+    private static readonly Dictionary<ulong, EnhancedWindow> _ForkedWindowsInternal = [];
 
-    public static IReadOnlyDictionary<ulong, EnhancedWindow> ForkedWindows => _forkedWindowsInternal;
+    public static IReadOnlyDictionary<ulong, EnhancedWindow> ForkedWindows => _ForkedWindowsInternal;
 
-    public static EnhancedWindow GetForkedWindows(ulong key) => _forkedWindowsInternal[key];
+    public static EnhancedWindow GetForkedWindows(ulong key) => _ForkedWindowsInternal[key];
 
-    public static void Initialize(IWindowSettings windowSettings, string iconAbsolutePath)
+    public static void Initialize(IWindowSettings windowSettings, string iconPath, string svgIconPath)
     {
         AppHelper.InitializeIsDarkMode();
         WindowSettings = windowSettings;
@@ -55,12 +41,13 @@ public static class WindowFactory
             ElementTheme.Dark => ApplicationTheme.Dark,
             _ => Application.Current.RequestedTheme
         };
-        IconAbsolutePath = iconAbsolutePath;
+        IconPath = iconPath;
+        IconImageSource = new(new($"ms-appx:///{svgIconPath}"));
     }
 
     public static FrameworkElement GetContentFromHWnd(ulong hWnd)
     {
-        return _forkedWindowsInternal[hWnd].Content.To<FrameworkElement>();
+        return _ForkedWindowsInternal[hWnd].Content.To<FrameworkElement>();
     }
 
     public static EnhancedWindow GetWindowForElement(UIElement element)
@@ -68,24 +55,24 @@ public static class WindowFactory
         if (element.XamlRoot is null)
             ThrowHelper.ArgumentNull(element.XamlRoot, $"{nameof(element.XamlRoot)} should not be null.");
 
-        return _forkedWindowsInternal.Values.FirstOrDefault(window => element.XamlRoot == window.Content.XamlRoot)
+        return _ForkedWindowsInternal.Values.FirstOrDefault(window => element.XamlRoot == window.Content.XamlRoot)
                ?? ThrowHelper.ArgumentOutOfRange<UIElement, EnhancedWindow>(element, $"Specified {nameof(element)} is not existed in any of {nameof(ForkedWindows)}.");
     }
 
-    public static EnhancedWindow Create(out EnhancedWindow window)
+    public static EnhancedWindow Create(EnhancedPage content, out EnhancedWindow window)
     {
-        RootWindow = window = new EnhancedWindow();
-        window.Closed += (sender, _) => _forkedWindowsInternal.Remove(sender.To<EnhancedWindow>().HWnd);
-        _forkedWindowsInternal[window.HWnd] = window;
+        RootWindow = window = new EnhancedWindow(content);
+        window.Closed += (sender, _) => _ForkedWindowsInternal.Remove(sender.To<EnhancedWindow>().HWnd);
+        _ForkedWindowsInternal[window.HWnd] = window;
         return window;
     }
 
-    public static EnhancedWindow Fork(this EnhancedWindow owner, out ulong hWnd)
+    public static EnhancedWindow Fork(this EnhancedWindow owner, EnhancedPage content, out ulong hWnd)
     {
-        var window = new EnhancedWindow(owner);
+        var window = new EnhancedWindow(owner, content);
         hWnd = window.HWnd;
-        window.Closed += (sender, _) => _forkedWindowsInternal.Remove(sender.To<EnhancedWindow>().HWnd);
-        _forkedWindowsInternal[window.HWnd] = window;
+        window.Closed += (sender, _) => _ForkedWindowsInternal.Remove(sender.To<EnhancedWindow>().HWnd);
+        _ForkedWindowsInternal[window.HWnd] = window;
         return window;
     }
 
@@ -102,9 +89,9 @@ public static class WindowFactory
         return window;
     }
 
-    public static EnhancedWindow WithLoaded(this EnhancedWindow window, RoutedEventHandler onLoaded)
+    public static EnhancedWindow WithInitialized(this EnhancedWindow window, RoutedEventHandler onLoaded)
     {
-        window.FrameLoaded += onLoaded;
+        window.Initialized += onLoaded;
         return window;
     }
 
@@ -120,48 +107,53 @@ public static class WindowFactory
         {
             BackdropType = WindowSettings.Backdrop,
             ExtendTitleBar = true,
-            Size = size,
-            IconPath = IconAbsolutePath,
+            IconPath = IconPath,
             Title = title,
             IsMaximized = isMaximized,
             Theme = WindowSettings.Theme
         });
         if (!isMaximized)
-            window.AppWindow.FullDisplayOnScreen();
-        window.FrameLoaded += (_, _) => window.SetTheme(WindowSettings.Theme);
+            window.AppWindow.FullDisplayOnScreen(size);
+        window.Initialized += (_, _) => window.SetTheme(WindowSettings.Theme);
         return window;
     }
 
     public static void SetBackdrop(BackdropType backdropType)
     {
-        foreach (var window in _forkedWindowsInternal.Values)
+        foreach (var window in _ForkedWindowsInternal.Values)
             window.SetBackdrop(backdropType);
     }
 
     public static void SetTheme(ElementTheme theme)
     {
-        foreach (var window in _forkedWindowsInternal.Values)
+        foreach (var window in _ForkedWindowsInternal.Values)
             window.SetTheme(theme);
     }
 
-    private static void FullDisplayOnScreen(this AppWindow appWindow)
+    private static void FullDisplayOnScreen(this AppWindow appWindow, SizeInt32 desiredSize)
     {
         var hWnd = (nint)appWindow.Id.Value;
         var hWndDesktop = PInvoke.MonitorFromWindow(new HWND(hWnd), MONITOR_FROM_FLAGS.MONITOR_DEFAULTTONEAREST);
         var info = new MONITORINFO { cbSize = 40 };
         _ = PInvoke.GetMonitorInfo(hWndDesktop, ref info);
         var position = appWindow.Position;
-#if DISPLAY
-        position.X = info.rcMonitor.Width / 2 + info.rcMonitor.X - appWindow.Size.Width / 2;
-        position.Y = info.rcMonitor.Height / 2 + info.rcMonitor.Y - appWindow.Size.Height / 2;
-#else
-        var left = info.rcMonitor.Width - appWindow.Size.Width;
+        var size = desiredSize == default ? appWindow.Size : desiredSize;
+        var left = info.rcWork.Width - size.Width;
+        if (left < 0)
+        {
+            left = 0;
+            desiredSize.Width = info.rcWork.Width;
+        }
         if (position.X > left)
             position.X = left;
-        var top = info.rcMonitor.Height - appWindow.Size.Height;
+        var top = info.rcWork.Height - appWindow.Size.Height;
+        if (top < 0)
+        {
+            top = 0;
+            desiredSize.Height = info.rcWork.Height;
+        }
         if (position.Y > top)
             position.Y = top;
-#endif
-        appWindow.Move(position);
+        appWindow.MoveAndResize(new RectInt32(position.X, position.Y, desiredSize.Width, desiredSize.Height));
     }
 }

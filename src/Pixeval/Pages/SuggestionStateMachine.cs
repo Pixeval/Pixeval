@@ -1,22 +1,5 @@
-#region Copyright (c) Pixeval/Pixeval
-// GPL v3 License
-// 
-// Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/SuggestionStateMachine.cs
-// 
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-// 
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-// 
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#endregion
+// Copyright (c) Pixeval.
+// Licensed under the GPL v3 License.
 
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -35,7 +18,7 @@ namespace Pixeval.Pages;
 
 public class SuggestionStateMachine
 {
-    private static readonly TreeSearcher<SettingsEntryAttribute> _settingEntriesTreeSearcher =
+    private static readonly TreeSearcher<SettingsEntryAttribute> _SettingEntriesTreeSearcher =
         new(SearcherLogic.Contain, PinIn.CreateDefault());
 
     private readonly Task<IEnumerable<SuggestionModel>> _illustrationTrendingTagCache =
@@ -52,7 +35,7 @@ public class SuggestionStateMachine
     {
         foreach (var settingsEntry in SettingsEntryAttribute.LazyValues.Value)
         {
-            _settingEntriesTreeSearcher.Put(settingsEntry.LocalizedResourceHeader, settingsEntry);
+            _SettingEntriesTreeSearcher.Put(settingsEntry.LocalizedResourceHeader, settingsEntry);
         }
     }
 
@@ -102,7 +85,7 @@ public class SuggestionStateMachine
     {
         var newItems = new List<SuggestionModel>();
         var manager = App.AppViewModel.AppServiceProvider.GetRequiredService<SearchHistoryPersistentManager>();
-        var histories = manager.Select(count: App.AppViewModel.AppSettings.MaximumSuggestionBoxSearchHistory).OrderByDescending(e => e.Time).SelectNotNull(SuggestionModel.FromHistory);
+        var histories = manager.TakeLast(count: App.AppViewModel.AppSettings.MaximumSuggestionBoxSearchHistory).Reverse().SelectNotNull(SuggestionModel.FromHistory);
         newItems.AddRange(histories);
         var prior = App.AppViewModel.AppSettings.SimpleWorkType is SimpleWorkType.IllustAndManga;
         if (prior)
@@ -122,7 +105,7 @@ public class SuggestionStateMachine
 
     private static HashSet<SettingsEntryAttribute> MatchSettings(string keyword)
     {
-        var pinInResult = _settingEntriesTreeSearcher.Search(keyword).ToHashSet();
+        var pinInResult = _SettingEntriesTreeSearcher.Search(keyword).ToHashSet();
         var nonPinInResult = SettingsEntryAttribute.LazyValues.Value.Where(it => it.LocalizedResourceHeader.Contains(keyword));
         pinInResult.AddRange(nonPinInResult);
         return pinInResult;

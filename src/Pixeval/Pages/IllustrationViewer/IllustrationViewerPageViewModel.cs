@@ -1,22 +1,5 @@
-#region Copyright (c) Pixeval/Pixeval
-// GPL v3 License
-// 
-// Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/IllustrationViewerPageViewModel.cs
-// 
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-// 
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-// 
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#endregion
+// Copyright (c) Pixeval.
+// Licensed under the GPL v3 License.
 
 using System;
 using System.Collections.Generic;
@@ -38,9 +21,6 @@ namespace Pixeval.Pages.IllustrationViewer;
 public partial class IllustrationViewerPageViewModel : DetailedUiObservableObject, IDisposable
 {
     [ObservableProperty]
-    public partial bool IsFullScreen { get; set; }
-
-    [ObservableProperty]
     public partial bool ShowPixevalIcon { get; set; } = true;
 
     [ObservableProperty]
@@ -49,28 +29,16 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
     [ObservableProperty]
     public partial bool AdditionalTextBlockVisible { get; set; } = true;
 
-    [ObservableProperty]
-    public partial bool UpscalerProgressBarVisible { get; set; }
-
-    [ObservableProperty]
-    public partial int UpscalerProgress { get; set; }
-
-    [ObservableProperty]
-    public partial string? UpscalerProgressText { get; set; }
-
     /// <summary>
     /// 
     /// </summary>
     /// <param name="illustrationViewModels"></param>
     /// <param name="currentIllustrationIndex"></param>
-    /// <param name="hWnd"></param>
-    public IllustrationViewerPageViewModel(IEnumerable<IllustrationItemViewModel> illustrationViewModels, int currentIllustrationIndex, ulong hWnd) : base(hWnd)
+    /// <param name="page"></param>
+    public IllustrationViewerPageViewModel(IEnumerable<IllustrationItemViewModel> illustrationViewModels, int currentIllustrationIndex, IllustrationViewerPage page) : base(page)
     {
         IllustrationsSource = illustrationViewModels.ToArray();
         CurrentIllustrationIndex = currentIllustrationIndex;
-
-        InitializeCommands();
-        FullScreenCommand.RefreshFullScreenCommand(false);
     }
 
     /// <summary>
@@ -78,18 +46,16 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
     /// </summary>
     /// <param name="viewModel"></param>
     /// <param name="currentIllustrationIndex"></param>
-    /// <param name="hWnd"></param>
+    /// <param name="page"></param>
     /// <remarks>
     /// illustrations should contain only one item if the illustration is a single
     /// otherwise it contains the entire manga data
     /// </remarks>
-    public IllustrationViewerPageViewModel(IllustrationViewViewModel viewModel, int currentIllustrationIndex, ulong hWnd) : base(hWnd)
+    public IllustrationViewerPageViewModel(IllustrationViewViewModel viewModel, int currentIllustrationIndex, IllustrationViewerPage page) : base(page)
     {
         ViewModelSource = new IllustrationViewViewModel(viewModel);
         ViewModelSource.DataProvider.View.FilterChanged += (_, _) => CurrentIllustrationIndex = Illustrations.IndexOf(CurrentIllustration);
         CurrentIllustrationIndex = currentIllustrationIndex;
-
-        InitializeCommands();
     }
 
     private IllustrationViewViewModel? ViewModelSource { get; }
@@ -104,27 +70,27 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
     {
         GC.SuppressFinalize(this);
         foreach (var illustrationViewModel in Illustrations)
-            illustrationViewModel.UnloadThumbnail();
+            illustrationViewModel.UnloadThumbnail(this);
         Pages = null!;
         Images = null!;
         ViewModelSource?.Dispose();
     }
 
-    public NavigationViewTag[] Tags =>
+    public NavigationViewTag<WorkInfoPage, Illustration> IllustrationInfoTag { get; } =
+        new(EntryViewerPageResources.InfoTabContent, null!);
+
+    public NavigationViewTag<CommentsPage, (SimpleWorkType, long Id)> CommentsTag { get; } =
+        new(EntryViewerPageResources.CommentsTabContent, default);
+
+    public NavigationViewTag<RelatedWorksPage, long> RelatedWorksTag { get; } =
+        new(EntryViewerPageResources.RelatedWorksTabContent, 0);
+
+    public IReadOnlyList<NavigationViewTag> Tags =>
     [
         IllustrationInfoTag,
         CommentsTag,
         RelatedWorksTag
     ];
-
-    public NavigationViewTag<WorkInfoPage, Illustration> IllustrationInfoTag { get; } =
-        new(null!) { Content = EntryViewerPageResources.InfoTabContent };
-
-    public NavigationViewTag<CommentsPage, (SimpleWorkType, long Id)> CommentsTag { get; } =
-        new(default) { Content = EntryViewerPageResources.CommentsTabContent };
-
-    public NavigationViewTag<RelatedWorksPage, long> RelatedWorksTag { get; } =
-        new(0) { Content = EntryViewerPageResources.RelatedWorksTabContent };
 
     #region Current相关
 
@@ -164,7 +130,7 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
             // 这里可以触发总页数的更新
             Pages = CurrentIllustration.GetMangaIllustrationViewModels().ToArray();
             // 保证_pages里所有的IllustrationViewModel都是生成的，从而删除的时候一律DisposeForce
-            Images = Pages.Select(p => new ImageViewerPageViewModel(p, CurrentIllustration, HWnd)).ToArray();
+            Images = Pages.Select(p => new ImageViewerPageViewModel(p, CurrentIllustration, FrameworkElement)).ToArray();
 
             IllustrationInfoTag.Parameter = CurrentIllustration.Entry;
             CommentsTag.Parameter = (SimpleWorkType.IllustAndManga, IllustrationId);
@@ -309,24 +275,10 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
 
     #region Commands
 
-    private void InitializeCommands()
-    {
-        FullScreenCommand.ExecuteRequested += FullScreenCommandOnExecuteRequested;
-        FullScreenCommand.RefreshFullScreenCommand(false);
-    }
-
-    private void FullScreenCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
-    {
-        IsFullScreen = !IsFullScreen;
-        FullScreenCommand.RefreshFullScreenCommand(IsFullScreen);
-    }
-
     public XamlUICommand InfoAndCommentsCommand { get; } =
         EntryViewerPageResources.InfoAndComments.GetCommand(Symbol.Info, VirtualKey.F12);
 
     public XamlUICommand AddToBookmarkCommand { get; } = EntryItemResources.AddToBookmark.GetCommand(Symbol.Bookmark);
-
-    public XamlUICommand FullScreenCommand { get; } = "".GetCommand(Symbol.ArrowMaximize);
 
     #endregion
 }

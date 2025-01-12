@@ -1,18 +1,13 @@
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using Pixeval.Settings.Models;
-using WinUI3Utilities;
+// Copyright (c) Pixeval.
+// Licensed under the GPL v3 License.
+
+using Pixeval.Settings;
 
 namespace Pixeval.Controls.Settings;
 
 public sealed partial class BoolSettingsCard
 {
-    public BoolAppSettingsEntry Entry { get; set; } = null!;
+    public ISingleValueSettingsEntry<bool> Entry { get; set; } = null!;
 
     public BoolSettingsCard() => InitializeComponent();
-
-    private void ToggleSwitch_OnToggled(object sender, RoutedEventArgs e)
-    {
-        Entry.ValueChanged?.Invoke(sender.To<ToggleSwitch>().IsOn);
-    }
 }

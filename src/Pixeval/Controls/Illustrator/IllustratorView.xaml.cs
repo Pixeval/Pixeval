@@ -1,4 +1,6 @@
-using Microsoft.UI.Xaml;
+// Copyright (c) Pixeval.
+// Licensed under the GPL v3 License.
+
 using Microsoft.UI.Xaml.Controls;
 using Pixeval.Pages.IllustratorViewer;
 using WinUI3Utilities;
@@ -20,10 +22,10 @@ public sealed partial class IllustratorView : IScrollViewHost
 
     private async void IllustratorItemsView_OnItemInvoked(ItemsView sender, ItemsViewItemInvokedEventArgs e)
     {
-        await IllustratorViewerHelper.CreateWindowWithPageAsync(e.InvokedItem.To<IllustratorItemViewModel>().UserId);
+        await this.CreateIllustratorPageAsync(e.InvokedItem.To<IllustratorItemViewModel>().UserId);
     }
 
-    private void IllustratorViewOnUnloaded(object sender, RoutedEventArgs e) => ViewModel.Dispose();
+    ~IllustratorView() => ViewModel.Dispose();
 
     public ScrollView ScrollView => AdvancedItemsView.ScrollView;
 }

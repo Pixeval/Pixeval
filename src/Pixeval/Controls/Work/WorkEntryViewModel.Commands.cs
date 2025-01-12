@@ -1,22 +1,5 @@
-#region Copyright
-// GPL v3 License
-// 
-// Pixeval/Pixeval
-// Copyright (c) 2024 Pixeval/ThumbnailEntryViewModel.Commands.cs
-// 
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-// 
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-// 
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#endregion
+// Copyright (c) Pixeval.
+// Licensed under the GPL v3 License.
 
 using System;
 using Windows.System;
@@ -25,6 +8,7 @@ using Pixeval.Util.UI;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using FluentIcons.Common;
+using Microsoft.UI.Xaml;
 using Pixeval.CoreApi.Model;
 
 namespace Pixeval.Controls;
@@ -49,12 +33,12 @@ public partial class WorkEntryViewModel<T>
     /// <summary>
     /// Parameter1: <see cref="ValueTuple{T1, T2}"/>
     /// <list type="bullet">
-    /// <item><term>T1</term><description><see cref="ulong"/></description></item>
+    /// <item><term>T1</term><description><see cref="FrameworkElement"/></description></item>
     /// <item><term>T2</term><description><see cref="GetImageStreams"/>?(<see cref="IllustrationItemViewModel"/>)</description></item>
     /// <item><term>T2</term><description><see cref="DocumentViewerViewModel"/>?(<see cref="NovelItemViewModel"/>)</description></item>
     /// </list>
     /// 
-    /// Parameter2: <see cref="ulong"/><br/>
+    /// Parameter2: <see cref="FrameworkElement"/><br/>
     /// Parameter3: <see langword="null"/>
     /// </summary>
     public XamlUICommand SaveCommand { get; } = EntryItemResources.Save.GetCommand(Symbol.Save, VirtualKeyModifiers.Control, VirtualKey.S);
@@ -62,12 +46,12 @@ public partial class WorkEntryViewModel<T>
     /// <summary>
     /// Parameter1: <see cref="ValueTuple{T1, T2}"/>
     /// <list type="bullet">
-    /// <item><term>T1</term><description><see cref="ulong"/></description></item>
+    /// <item><term>T1</term><description><see cref="FrameworkElement"/></description></item>
     /// <item><term>T2</term><description><see cref="GetImageStreams"/>?(<see cref="IllustrationItemViewModel"/>)</description></item>
     /// <item><term>T2</term><description><see cref="DocumentViewerViewModel"/>?(<see cref="NovelItemViewModel"/>)</description></item>
     /// </list>
     /// 
-    /// Parameter2: <see cref="ulong"/>
+    /// Parameter2: <see cref="FrameworkElement"/>
     /// </summary>
     public XamlUICommand SaveAsCommand { get; } = EntryItemResources.SaveAs.GetCommand(Symbol.SaveEdit, VirtualKeyModifiers.Control | VirtualKeyModifiers.Shift, VirtualKey.S);
 
@@ -75,7 +59,7 @@ public partial class WorkEntryViewModel<T>
     /// <see cref="IllustrationItemViewModel"/>:<br/>
     /// Parameter1: <see cref="ValueTuple{T1, T2}"/>
     /// <list type="bullet">
-    /// <item><term>T1</term><description><see cref="ulong"/></description></item>
+    /// <item><term>T1</term><description><see cref="FrameworkElement"/></description></item>
     /// <item><term>T2</term><description><see cref="GetImageStreams"/></description></item>
     /// </list>
     /// 
@@ -83,7 +67,7 @@ public partial class WorkEntryViewModel<T>
     /// <see cref="NovelItemViewModel"/>:<br/>
     /// Parameter1: <see cref="ValueTuple{T1, T2}"/>
     /// <list type="bullet">
-    /// <item><term>T1</term><description><see cref="ulong"/></description></item>
+    /// <item><term>T1</term><description><see cref="FrameworkElement"/></description></item>
     /// <item><term>T2</term><description><see cref="NovelContent"/></description></item>
     /// </list>
     /// 

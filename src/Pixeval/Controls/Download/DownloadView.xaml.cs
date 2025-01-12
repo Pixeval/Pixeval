@@ -1,5 +1,7 @@
+// Copyright (c) Pixeval.
+// Licensed under the GPL v3 License.
+
 using System.Linq;
-using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Pixeval.CoreApi.Model;
 using Pixeval.Pages.IllustrationViewer;
@@ -23,23 +25,18 @@ public sealed partial class DownloadView : UserControl
         switch (viewModel.Entry)
         {
             case Illustration illustration:
-                await IllustrationViewerHelper.CreateWindowWithPageAsync(illustration.Id);
+                await this.CreateIllustrationPageAsync(illustration.Id);
                 break;
             case Novel novel:
-                await NovelViewerHelper.CreateWindowWithPageAsync(novel.Id);
+                await this.CreateNovelPageAsync(novel.Id);
                 break;
         }
     }
 
     private async void DownloadItem_OnViewModelChanged(DownloadItem sender, DownloadItemViewModel viewModel)
     {
-        _ = await viewModel.TryLoadThumbnailAsync();
+        _ = await viewModel.TryLoadThumbnailAsync(ViewModel);
     }
 
-    private void DownloadView_OnUnloaded(object sender, RoutedEventArgs e)
-    {
-        foreach (var viewModel in ViewModel.View.Source)
-            viewModel.UnloadThumbnail();
-        ViewModel.Dispose();
-    }
+    ~DownloadView() => ViewModel.Dispose();
 }

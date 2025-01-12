@@ -15,20 +15,23 @@
         PaneBackground="Transparent">
         <SplitView.Pane>
             <Grid
-                BorderBrush="{StaticResource ApplicationPageBackgroundThemeBrush}"
+                BorderBrush="{ThemeResource ApplicationPageBackgroundThemeBrush}"
                 CornerRadius="4"
                 Translation="0,0,40">
                 <NavigationView
                     x:Name="NavigationView"
                     IsBackButtonVisible="Collapsed"
                     IsSettingsVisible="False"
-                    Loaded="NavigationView_OnLoaded"
                     MenuItemsSource="{x:Bind MenuItemsSource}"
                     PaneDisplayMode="Top"
+                    SelectedItem="{x:Bind local:C.FirstOrDefault(MenuItemsSource)}"
                     SelectionChanged="NavigationViewOnSelectionChanged">
                     <NavigationView.MenuItemTemplate>
                         <DataTemplate x:DataType="windowing:NavigationViewTag">
-                            <NavigationViewItem Content="{x:Bind Content}" Tag="{x:Bind}" />
+                            <NavigationViewItem
+                                Content="{x:Bind}"
+                                Icon="{x:Bind Icon}"
+                                Tag="{x:Bind}" />
                         </DataTemplate>
                     </NavigationView.MenuItemTemplate>
                     <Frame x:Name="PaneFrame" x:FieldModifier="public" />

@@ -1,22 +1,5 @@
-#region Copyright (c) Pixeval/Pixeval.CoreApi
-// GPL v3 License
-// 
-// Pixeval/Pixeval.CoreApi
-// Copyright (c) 2023 Pixeval.CoreApi/MakoClient.Engines.cs
-// 
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-// 
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-// 
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#endregion
+// Copyright (c) Pixeval.CoreApi.
+// Licensed under the GPL v3 License.
 
 using System;
 using System.Collections.Generic;
@@ -86,7 +69,6 @@ public partial class MakoClient
     /// matching
     /// </param>
     /// <param name="sortOption">The <see cref="WorkSortOption" /> option for sorting method</param>
-    /// <param name="searchDuration">The <see cref="SearchDuration" /> option for the duration of this search</param>
     /// <param name="targetFilter">The <see cref="TargetFilter" /> option targeting android or ios</param>
     /// <param name="startDate">The starting date filtering the search results</param>
     /// <param name="endDate">The ending date filtering the searching results</param>
@@ -98,24 +80,22 @@ public partial class MakoClient
         string tag,
         SearchIllustrationTagMatchOption matchOption = SearchIllustrationTagMatchOption.TitleAndCaption,
         WorkSortOption sortOption = WorkSortOption.DoNotSort,
-        SearchDuration searchDuration = SearchDuration.Undecided,
         TargetFilter targetFilter = TargetFilter.ForAndroid,
         DateTimeOffset? startDate = null,
         DateTimeOffset? endDate = null,
         bool? aiType = null)
     {
         EnsureNotCancelled();
-        if (sortOption is WorkSortOption.PopularityDescending && !Session.IsPremium)
+        if (sortOption is WorkSortOption.PopularityDescending && !Me.IsPremium)
             sortOption = WorkSortOption.DoNotSort;
 
-        return new IllustrationSearchEngine(this, new EngineHandle(CancelInstance), matchOption, tag, sortOption, searchDuration, targetFilter, startDate, endDate, aiType);
+        return new IllustrationSearchEngine(this, new EngineHandle(CancelInstance), matchOption, tag, sortOption, targetFilter, startDate, endDate, aiType);
     }
 
     public IFetchEngine<Novel> SearchNovels(
         string tag,
         SearchNovelTagMatchOption matchOption = SearchNovelTagMatchOption.Text,
         WorkSortOption sortOption = WorkSortOption.DoNotSort,
-        SearchDuration searchDuration = SearchDuration.Undecided,
         TargetFilter targetFilter = TargetFilter.ForAndroid,
         DateTimeOffset? startDate = null,
         DateTimeOffset? endDate = null,
@@ -124,10 +104,10 @@ public partial class MakoClient
         bool? aiType = null)
     {
         EnsureNotCancelled();
-        if (sortOption is WorkSortOption.PopularityDescending && !Session.IsPremium)
+        if (sortOption is WorkSortOption.PopularityDescending && !Me.IsPremium)
             sortOption = WorkSortOption.DoNotSort;
 
-        return new NovelSearchEngine(this, new EngineHandle(CancelInstance), matchOption, tag, sortOption, searchDuration, targetFilter, startDate, endDate, mergePlainKeywordResults, includeTranslatedTagResults, aiType);
+        return new NovelSearchEngine(this, new EngineHandle(CancelInstance), matchOption, tag, sortOption, targetFilter, startDate, endDate, mergePlainKeywordResults, includeTranslatedTagResults, aiType);
     }
 
     /// <summary>

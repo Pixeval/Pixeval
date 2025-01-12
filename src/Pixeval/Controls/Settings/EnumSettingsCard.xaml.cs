@@ -1,16 +1,13 @@
-using Microsoft.UI.Xaml.Controls;
-using Pixeval.Settings.Models;
+// Copyright (c) Pixeval.
+// Licensed under the GPL v3 License.
+
+using Pixeval.Settings;
 
 namespace Pixeval.Controls.Settings;
 
 public sealed partial class EnumSettingsCard
 {
-    public EnumAppSettingsEntry Entry { get; set; } = null!;
+    public IEnumSettingsEntry Entry { get; set; } = null!;
 
     public EnumSettingsCard() => InitializeComponent();
-
-    private void EnumComboBox_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
-    {
-        Entry.ValueChanged?.Invoke(Entry.Value);
-    }
 }
