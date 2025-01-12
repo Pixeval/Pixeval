@@ -51,7 +51,6 @@ public partial class MultiStringsAppSettingsEntry
 
     public override void ValueSaving(IPropertySet values)
     {
-        // 不用Value而用Settings中本身的值，更符合逻辑
-        values[Token] = Converter.Convert(_propertyGetter(Settings));
+        values[Token] = Converter.Convert(Value);
     }
 }

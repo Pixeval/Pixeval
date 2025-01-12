@@ -73,8 +73,6 @@ public sealed partial class SettingsPage : IDisposable, INotifyPropertyChanged
         }
     }
 
-    public override void OnPageDeactivated(NavigatingCancelEventArgs e) => Dispose();
-
     ~SettingsPage() => Dispose();
 
     private void CheckForUpdateButton_OnClicked(object sender, RoutedEventArgs e)
@@ -171,20 +169,28 @@ public sealed partial class SettingsPage : IDisposable, INotifyPropertyChanged
             _ = await Launcher.LaunchFolderPathAsync(folder.FullPath);
     }
 
+    /// <summary>
+    /// 每次离开页面都进行保存
+    /// </summary>
+    private void SettingsPage_OnUnloaded(object sender, RoutedEventArgs e)
+    {
+        foreach (var localGroup in ViewModel.LocalGroups)
+        foreach (var settingsEntry in localGroup)
+            settingsEntry.ValueSaving(AppInfo.LocalConfig);
+        foreach (var extensionGroup in ViewModel.ExtensionGroups)
+        foreach (var settingsEntry in extensionGroup)
+            settingsEntry.ValueSaving(extensionGroup.Model.Values);
+    }
+
     public void Dispose()
     {
         if (_disposed)
             return;
         _disposed = true;
         Bindings.StopTracking();
-        foreach (var localGroup in ViewModel.LocalGroups)
-            foreach (var settingsEntry in localGroup)
-                settingsEntry.ValueSaving(AppInfo.LocalConfig);
-        foreach (var extensionGroup in ViewModel.ExtensionGroups)
-            foreach (var settingsEntry in extensionGroup)
-                settingsEntry.ValueSaving(extensionGroup.Model.Values);
         ViewModel.Dispose();
         ViewModel = null!;
+        GC.SuppressFinalize(this);
     }
 
     public event PropertyChangedEventHandler? PropertyChanged;

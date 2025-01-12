@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
 using System.Text.Json.Serialization;
@@ -290,5 +291,6 @@ public partial record AppSettings() : IWindowSettings
 }
 
 [JsonSerializable(typeof(string[]))]
-[JsonSerializable(typeof(HashSet<string>))]
+// MultiStringsAppSettingsEntry 使用 ObservableCollection<string>
+[JsonSerializable(typeof(ObservableCollection<string>))]
 public partial class SettingsSerializeContext : JsonSerializerContext;
