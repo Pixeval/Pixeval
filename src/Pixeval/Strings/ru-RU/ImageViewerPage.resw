@@ -132,4 +132,13 @@
   <data name="MergingUgoiraFrames" xml:space="preserve">
     <value>Создание анимации...</value>
   </data>
+  <data name="TransformerExtensionFailed" xml:space="preserve">
+    <value>Не удалось применить расширение преобразования изображения</value>
+  </data>
+  <data name="TransformerExtensionFinishedSuccessfully" xml:space="preserve">
+    <value>Расширение преобразования изображения успешно применено</value>
+  </data>
+  <data name="ApplyingTransformerExtensions" xml:space="preserve">
+    <value>Применение расширений преобразования изображений</value>
+  </data>
 </root>

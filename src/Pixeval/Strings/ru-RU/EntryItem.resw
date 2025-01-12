@@ -195,4 +195,7 @@
   <data name="NovelSetToClipBoard" xml:space="preserve">
     <value>Новелла скопирована в буфер обмена</value>
   </data>
+  <data name="OpenUserInfoPage" xml:space="preserve">
+    <value>Информация об авторе</value>
+  </data>
 </root>
