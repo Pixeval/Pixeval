@@ -131,6 +131,8 @@ Global
 		{BE94830A-603A-4C95-9FAC-1B69CE8ABA47} = {1663D266-BE8A-4035-BE44-AB6D2BAFE62A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
+		RESX_ConfirmAddLanguageFile = True
+		RESX_NeutralResourcesLanguage = zh-CN
 		SolutionGuid = {C5C0040E-8F07-4F3A-A4D8-AE760A819615}
 	EndGlobalSection
 EndGlobal
