@@ -130,7 +130,7 @@
     <value>History</value>
   </data>
   <data name="TagsTab.Content" xml:space="preserve">
-    <value>My Tags</value>
+    <value>Tag</value>
   </data>
   <data name="RecentPostsTab.Content" xml:space="preserve">
     <value>Updates</value>
@@ -149,9 +149,6 @@
   </data>
   <data name="RecommendationsTab.Content" xml:space="preserve">
     <value>Recommendation</value>
-  </data>
-  <data name="DownloadAndHistoriesTab.Content" xml:space="preserve">
-    <value>Download and History</value>
   </data>
   <data name="DownloadListTab.Content" xml:space="preserve">
     <value>Download List</value>
@@ -221,5 +218,18 @@
   </data>
   <data name="ExtensionsTab.Content" xml:space="preserve">
     <value>扩展</value>
+  </data>
+  <data name="RefreshingSessionFailedTitle" xml:space="preserve">
+    <value>Failed to refresh session</value>
+  </data>
+  <data name="RefreshingSessionFailedContent" xml:space="preserve">
+    <value>Please login again
+If this issue recurs, please contact the developer for a solution</value>
+  </data>
+  <data name="SearchWorksResult" xml:space="preserve">
+    <value>搜索作品结果</value>
+  </data>
+  <data name="SearchUsersResult" xml:space="preserve">
+    <value>搜索用户结果</value>
   </data>
 </root>
