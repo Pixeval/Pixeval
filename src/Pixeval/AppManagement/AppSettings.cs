@@ -291,6 +291,7 @@ public partial record AppSettings() : IWindowSettings
 }
 
 [JsonSerializable(typeof(string[]))]
+[JsonSerializable(typeof(HashSet<string>))]
 // MultiStringsAppSettingsEntry 使用 ObservableCollection<string>
 [JsonSerializable(typeof(ObservableCollection<string>))]
 public partial class SettingsSerializeContext : JsonSerializerContext;
