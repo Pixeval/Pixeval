@@ -80,7 +80,14 @@ public sealed partial class TabPage
         _ = frame.Navigate(viewModel.NavigateTo, viewModel.Parameter, viewModel.TransitionInfo);
     }
 
-    private void TabView_OnTabCloseRequested(TabView sender, TabViewTabCloseRequestedEventArgs e) => RemoveTab(e.Tab);
+    private void TabView_OnTabCloseRequested(TabView sender, TabViewTabCloseRequestedEventArgs e)
+    {
+        if (e.Tab.Content is Frame { Content: IPageDisposalCompleter completer })
+        {
+            completer.CompleteDisposal();
+        }
+        RemoveTab(e.Tab);
+    }
 
     private void TabView_OnTabDroppedOutside(TabView sender, TabViewTabDroppedOutsideEventArgs e)
     {
@@ -153,4 +160,11 @@ public sealed partial class TabPage
         }
     }
     */
+    private void TabPage_OnUnloaded(object sender, RoutedEventArgs e)
+    {
+        if (TabView.SelectedItem is TabViewItem { Content: Frame { Content: IPageDisposalCompleter completer } })
+        {
+            completer.CompleteDisposal();
+        }
+    }
 }
