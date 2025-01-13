@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Controls;
@@ -13,7 +14,7 @@ using WinUI3Utilities;
 
 namespace Pixeval.Pages.Capability;
 
-public sealed partial class RankingsPage : IScrollViewHost
+public sealed partial class RankingsPage : IScrollViewHost, IStructuralDisposalCompleter
 {
     private static readonly IReadOnlyList<StringRepresentableItem> _IllustrationRankOption =  RankOptionExtension.GetItems();
 
@@ -65,4 +66,12 @@ public sealed partial class RankingsPage : IScrollViewHost
     }
 
     public ScrollView ScrollView => WorkContainer.ScrollView;
+
+    public void CompleteDisposal()
+    {
+        Bindings.StopTracking();
+        Content = null;
+        GCSettings.LargeObjectHeapCompactionMode = GCLargeObjectHeapCompactionMode.CompactOnce;
+        GC.Collect();
+    }
 }

@@ -27,7 +27,7 @@ namespace Pixeval.Controls;
 [DependencyProperty<ZoomableImageMode>("InitMode", "ZoomableImageMode.Fit")]
 [DependencyProperty<ZoomableImagePosition>("InitPosition", "ZoomableImagePosition.AbsoluteCenter")]
 [ObservableObject]
-public sealed partial class ZoomableImage : UserControl
+public sealed partial class ZoomableImage : UserControl, IStructuralDisposalCompleter
 {
     public bool IsDisposed { get; private set; }
 
@@ -101,7 +101,20 @@ public sealed partial class ZoomableImage : UserControl
         }
     }
 
+    // TODO Delete this after test passed
     ~ZoomableImage()
+    {
+        IsDisposed = true;
+        CanvasControl.Draw -= CanvasControlOnDraw;
+        _token.TryCancelDispose();
+        foreach (var frame in _frames)
+            frame.Dispose();
+        _frames.Clear();
+    }
+
+    public List<Action> ChildrenCompletes { get; } = [];
+
+    public void CompleteDisposal()
     {
         IsDisposed = true;
         CanvasControl.Draw -= CanvasControlOnDraw;

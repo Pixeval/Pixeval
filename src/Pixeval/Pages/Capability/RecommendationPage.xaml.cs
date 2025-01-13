@@ -25,6 +25,7 @@ public sealed partial class RecommendationPage : IStructuralDisposalCompleter
 
     public void CompleteDisposal()
     {
+        Bindings.StopTracking();
         Content = null;
         GCSettings.LargeObjectHeapCompactionMode = GCLargeObjectHeapCompactionMode.CompactOnce;
         GC.Collect();

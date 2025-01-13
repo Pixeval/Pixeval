@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using Microsoft.UI.Xaml;
 using WinUI3Utilities.Attributes;
 
 namespace Pixeval.Controls;
@@ -10,7 +11,7 @@ namespace Pixeval.Controls;
 [DependencyProperty<object>("ItemsSource")]
 [DependencyProperty<bool>("HasNoItem", "true")]
 [DependencyProperty<bool>("IsLoadingMore", "false")]
-public sealed partial class CommentView
+public sealed partial class CommentView : IStructuralDisposalCompleter
 {
     public CommentView() => InitializeComponent();
 
@@ -28,10 +29,17 @@ public sealed partial class CommentView
         DeleteHyperlinkButtonClick?.Invoke(viewModel);
     }
 
-    ~CommentView()
+    public void CompleteDisposal()
     {
-        if (CommentsList.ItemsSource is IEnumerable<CommentItemViewModel> list)
+       if (CommentsList.ItemsSource is IEnumerable<CommentItemViewModel> list)
             foreach (var commentBlockViewModel in list)
                 commentBlockViewModel.Dispose();
+    }
+
+    public List<Action> ChildrenCompletes { get; } = [];
+
+    private void CommentView_OnLoaded(object sender, RoutedEventArgs e)
+    {
+        ((IStructuralDisposalCompleter) this).Hook();
     }
 }

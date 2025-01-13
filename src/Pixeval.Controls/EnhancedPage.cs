@@ -13,8 +13,6 @@ namespace Pixeval.Controls;
 
 public partial class EnhancedPage : Page
 {
-    public bool Initialized { get; private set; }
-
     public List<Action> ChildrenCompletes { get; } = [];
 
     public EnhancedWindow Window => WindowFactory.GetWindowForElement(this);
@@ -28,15 +26,10 @@ public partial class EnhancedPage : Page
         base.OnNavigatedTo(e);
         ++ActivationCount;
         OnPageActivated(e, e.Parameter);
-    }
-
-    protected override void OnApplyTemplate()
-    {
         Loaded += (_, _) =>
         {
-            if (!Initialized)
+            if (ActivationCount == 1)
             {
-                Initialized = true;
                 OnPageInitialized();
             }
         };
@@ -46,8 +39,9 @@ public partial class EnhancedPage : Page
     {
         if (this is IStructuralDisposalCompleter completer)
         {
+
             // Hook the disposal event of current page to its parent
-            completer.ParentCompleter?.ChildrenCompletes.Add(completer.CompleteDisposal);
+            completer.Hook();
         }
     }
 

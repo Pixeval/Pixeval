@@ -20,6 +20,7 @@
 
 using System;
 using System.Collections.Generic;
+using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 
 namespace Pixeval.Controls;
@@ -30,7 +31,7 @@ public interface IStructuralDisposalCompleter : IPageDisposalCompleter
 
     List<Action> ChildrenCompletes { get; }
 
-    void IPageDisposalCompleter.CompleteDisposal()
+    void CompleteDisposalRecursively()
     {
         CompleteDisposal();
         foreach (var childrenComplete in ChildrenCompletes)
@@ -39,16 +40,16 @@ public interface IStructuralDisposalCompleter : IPageDisposalCompleter
         }
     }
 
-    new void CompleteDisposal();
-
-    private static IStructuralDisposalCompleter? FindParentCompleterRecursively(FrameworkElement? uiElement)
+    /// <summary>
+    /// Call this after the UI is loaded
+    /// </summary>
+    public void Hook()
     {
-        if (uiElement is null) return null;
-        return uiElement.Parent switch
-        {
-            IStructuralDisposalCompleter completer => completer,
-            FrameworkElement element => FindParentCompleterRecursively(element),
-            _ => null
-        };
+        ParentCompleter?.ChildrenCompletes.Add(CompleteDisposalRecursively);
+    }
+
+    private static IStructuralDisposalCompleter? FindParentCompleterRecursively(DependencyObject? uiElement)
+    {
+        return uiElement?.FindAscendant<FrameworkElement>(x => x is IStructuralDisposalCompleter) as IStructuralDisposalCompleter;
     }
 }

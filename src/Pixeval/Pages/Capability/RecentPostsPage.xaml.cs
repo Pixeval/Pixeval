@@ -1,6 +1,8 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL v3 License.
 
+using System;
+using System.Runtime;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Controls;
@@ -8,7 +10,7 @@ using Pixeval.CoreApi.Global.Enum;
 
 namespace Pixeval.Pages.Capability;
 
-public sealed partial class RecentPostsPage : IScrollViewHost
+public sealed partial class RecentPostsPage : IScrollViewHost, IStructuralDisposalCompleter
 {
     public RecentPostsPage() => InitializeComponent();
 
@@ -25,4 +27,12 @@ public sealed partial class RecentPostsPage : IScrollViewHost
     }
 
     public ScrollView ScrollView => WorkContainer.ScrollView;
+
+    public void CompleteDisposal()
+    {
+        Bindings.StopTracking();
+        Content = null;
+        GCSettings.LargeObjectHeapCompactionMode = GCLargeObjectHeapCompactionMode.CompactOnce;
+        GC.Collect();
+    }
 }
