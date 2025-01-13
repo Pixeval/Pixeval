@@ -117,31 +117,34 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="DllLoadFailed" xml:space="preserve">
+    <value>Не удалось загрузить DLL</value>
+  </data>
+  <data name="DllLoadedSuccessfully" xml:space="preserve">
+    <value>DLL загружен</value>
+  </data>
+  <data name="DllFileExistedError" xml:space="preserve">
+    <value>Файл уже существует в папке расширений, он будет пропущен</value>
+  </data>
+  <data name="UnzipFailed" xml:space="preserve">
+    <value>Ошибка при распаковке архива расширения</value>
+  </data>
+  <data name="AddExtensionsButton.Label" xml:space="preserve">
+    <value>Добавить расширения</value>
+  </data>
+  <data name="ExtensionsHelpButton.Label" xml:space="preserve">
+    <value>Справочная документация</value>
+  </data>
+  <data name="ZipContainsNoDll" xml:space="preserve">
+    <value>ZIP-файл не содержит доступных DLL</value>
+  </data>
+  <data name="UnloadExtensionsButton.Label" xml:space="preserve">
+    <value>Выгрузить расширения</value>
+  </data>
   <data name="TitleTextBlock.Text" xml:space="preserve">
-    <value>Помощь с Pixeval</value>
+    <value>Менеджер расширений Pixeval</value>
   </data>
-  <data name="QueryFilterHelpExpander.Header" xml:space="preserve">
-    <value>Помощь по фильтрации запросов</value>
-  </data>
-  <data name="QueryFilterSimpleHelpHeader.Text" xml:space="preserve">
-    <value>Краткое руководство</value>
-  </data>
-  <data name="QueryFilterHelpHeader.Text" xml:space="preserve">
-    <value>Полное руководство</value>
-  </data>
-  <data name="DownloadMacroHelpExpander.Header" xml:space="preserve">
-    <value>Помощь с загрузкой при помощи макросов</value>
-  </data>
-  <data name="AppLinkHelpExpander.Header" xml:space="preserve">
-    <value>Помощь по использованию ссылок на приложения</value>
-  </data>
-  <data name="AppLinkHelp.Text" xml:space="preserve">
-    <value>Поделитесь с друзьями или введите эту ссылку в браузере или в Windows, чтобы открыть текущую страницу в Pixeval</value>
-  </data>
-  <data name="ExtensionsHelp.Text" xml:space="preserve">
-    <value>Версия расширения и версия Pixeval тесно связаны, пожалуйста, убедитесь, что обе версии совпадают</value>
-  </data>
-  <data name="ExtensionsHelpExpander.Header" xml:space="preserve">
-    <value>Помощь по системе расширений</value>
+  <data name="OpenExtensionsButton.Label" xml:space="preserve">
+    <value>Открыть папку расширений</value>
   </data>
 </root>

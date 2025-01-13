@@ -130,7 +130,7 @@
     <value>Вы можете найти более подробную информацию о GNU General Public License v3</value>
   </data>
   <data name="OpenSourceLicenseHyperlinkContent.Text" xml:space="preserve">
-    <value>лицензией.</value>
+    <value>лицензией</value>
   </data>
   <data name="OpenSourceLicenseSubtitleTextBlock.Text" xml:space="preserve">
     <value>Открытая лицензия</value>

@@ -133,7 +133,7 @@
     <value>История просмотров</value>
   </data>
   <data name="TagsTab.Content" xml:space="preserve">
-    <value />
+    <value>Теги</value>
   </data>
   <data name="RecentPostsTab.Content" xml:space="preserve">
     <value>Новинки от подписок</value>
@@ -212,5 +212,23 @@
   </data>
   <data name="RefreshingSessionFailedTitle" xml:space="preserve">
     <value>Не удалось обновить сессию</value>
+  </data>
+  <data name="SearchUsersResult" xml:space="preserve">
+    <value>Результаты поиска среди пользователей</value>
+  </data>
+  <data name="SearchWorksResult" xml:space="preserve">
+    <value>Результаты поиска работ</value>
+  </data>
+  <data name="ExtensionsTab.Content" xml:space="preserve">
+    <value>Расширения</value>
+  </data>
+  <data name="FeedTabCannotBeOpenedContent" xml:space="preserve">
+    <value>Для функции ленты пользователя требуется Cookie, пожалуйста, заполните соответствующий Cookie на странице настроек перед использованием этой функции</value>
+  </data>
+  <data name="FeedTabCannotBeOpenedTitle" xml:space="preserve">
+    <value>Невозможно использовать функцию ленты пользователя</value>
+  </data>
+  <data name="FeedTab.Content" xml:space="preserve">
+    <value>Лента</value>
   </data>
 </root>

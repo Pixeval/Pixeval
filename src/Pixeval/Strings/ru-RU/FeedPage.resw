@@ -117,31 +117,25 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="TitleTextBlock.Text" xml:space="preserve">
-    <value>Помощь с Pixeval</value>
+  <data name="CondensedPostIllustFormatted" xml:space="preserve">
+    <value>Опубликовано {0} и еще {1} работ</value>
   </data>
-  <data name="QueryFilterHelpExpander.Header" xml:space="preserve">
-    <value>Помощь по фильтрации запросов</value>
+  <data name="CondensedFollowUserFormatted" xml:space="preserve">
+    <value>Подписка на {0} и еще {1} пользователей</value>
   </data>
-  <data name="QueryFilterSimpleHelpHeader.Text" xml:space="preserve">
-    <value>Краткое руководство</value>
+  <data name="CondensedBookmarkFormatted" xml:space="preserve">
+    <value>Добавлено {0} и еще {1} работ в закладки</value>
   </data>
-  <data name="QueryFilterHelpHeader.Text" xml:space="preserve">
-    <value>Полное руководство</value>
+  <data name="SparseFollowUserFormatted" xml:space="preserve">
+    <value>Подписка на {0}</value>
   </data>
-  <data name="DownloadMacroHelpExpander.Header" xml:space="preserve">
-    <value>Помощь с загрузкой при помощи макросов</value>
+  <data name="SparseBookmarkFormatted" xml:space="preserve">
+    <value>Добавлено {0} в закладки</value>
   </data>
-  <data name="AppLinkHelpExpander.Header" xml:space="preserve">
-    <value>Помощь по использованию ссылок на приложения</value>
+  <data name="SparsePostIllustFormatted" xml:space="preserve">
+    <value>Опубликовано {0}</value>
   </data>
-  <data name="AppLinkHelp.Text" xml:space="preserve">
-    <value>Поделитесь с друзьями или введите эту ссылку в браузере или в Windows, чтобы открыть текущую страницу в Pixeval</value>
-  </data>
-  <data name="ExtensionsHelp.Text" xml:space="preserve">
-    <value>Версия расширения и версия Pixeval тесно связаны, пожалуйста, убедитесь, что обе версии совпадают</value>
-  </data>
-  <data name="ExtensionsHelpExpander.Header" xml:space="preserve">
-    <value>Помощь по системе расширений</value>
+  <data name="FeedListTextBlock.Text" xml:space="preserve">
+    <value>Лента пользователя</value>
   </data>
 </root>

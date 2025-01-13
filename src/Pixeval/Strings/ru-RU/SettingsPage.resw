@@ -285,7 +285,7 @@
     <value>Присоединиться к группе обратной связи</value>
   </data>
   <data name="LastCheckedPrefix" xml:space="preserve">
-    <value>Последняя проверка: </value>
+    <value>Последняя проверка:</value>
   </data>
   <data name="MaxDownloadConcurrencyLevelEntry.Description" xml:space="preserve">
     <value>Этот параметр ограничивает количество одновременных задач на загрузку. Максимум — количество ядер вашего процессора. Пожалуйста, настройте с умом, так как избыточное количество может привести к зависанию системы</value>
@@ -670,18 +670,57 @@
     <value>День публикации произведения</value>
   </data>
   <data name="IfR18MacroTooltip" xml:space="preserve">
-    <value>Если это произведение с рейтингом R18, макрос будет заменен на его параметры</value>
+    <value>Если это произведение с рейтингом R18, макрос будет заменён на его параметры</value>
   </data>
   <data name="IfR18GMacroTooltip" xml:space="preserve">
-    <value>Если это произведение с рейтингом R18G, макрос будет заменен на его параметры</value>
+    <value>Если это произведение с рейтингом R18G, макрос будет заменён на его параметры</value>
   </data>
   <data name="IfAiMacroTooltip" xml:space="preserve">
-    <value>Если это произведение сгенерировано AI, макрос будет заменен на его параметры</value>
+    <value>Если это произведение сгенерировано AI, макрос будет заменён на его параметры</value>
   </data>
   <data name="IfNovelMacroTooltip" xml:space="preserve">
-    <value>Если это новелла, макрос будет заменен на его параметры</value>
+    <value>Если это новелла, макрос будет заменён на его параметры</value>
   </data>
   <data name="PicSetIndexMacroTooltip" xml:space="preserve">
-    <value>Если это манга, этот макрос будет заменен на индекс текущего изображения в серии; должен использоваться с макросом @{if_pic_set=}, и должен быть в имени файла</value>
+    <value>Если это манга, этот макрос будет заменён на индекс текущего изображения в серии; должен использоваться с макросом @{if_pic_set=}, и должен быть в имени файла</value>
+  </data>
+  <data name="UseSearchEndDateEntry.Header" xml:space="preserve">
+    <value>Поиск по дате до:</value>
+  </data>
+  <data name="IfPicGifMacroTooltip" xml:space="preserve">
+    <value>Если это GIF, макрос будет заменён его параметром</value>
+  </data>
+  <data name="IfPicOneMacroTooltip" xml:space="preserve">
+    <value>Если это статическое одиночное изображение, макрос будет заменён его параметром</value>
+  </data>
+  <data name="IfPicAllMacroTooltip" xml:space="preserve">
+    <value>Если это изображение (включая статичное одиночное изображение, несколько изображений, анимированное изображение), этот макрос будет заменён его параметром</value>
+  </data>
+  <data name="IfPicSetMacroTooltip" xml:space="preserve">
+    <value>Если это несколько изображений, этот макрос будет заменён его параметром</value>
+  </data>
+  <data name="WebCookieEntry.Header" xml:space="preserve">
+    <value>Cookie</value>
+  </data>
+  <data name="WebCookieEntry.Description" xml:space="preserve">
+    <value>Для таких функций, как лента пользователя, требуются cookie, в виде строки заголовка</value>
+  </data>
+  <data name="WebCookieTextBox.PlaceholderText" xml:space="preserve">
+    <value>Cookie сайта Pixiv</value>
+  </data>
+  <data name="UseSearchStartDateEntry.Header" xml:space="preserve">
+    <value>Поиск по дате от:</value>
+  </data>
+  <data name="UseSearchStartDateEntry.Description" xml:space="preserve">
+    <value>После включения дата публикации работ в поиске будет начинаться с этой даты</value>
+  </data>
+  <data name="OpenExtensionsEntry.Header" xml:space="preserve">
+    <value>Открыть папку расширений</value>
+  </data>
+  <data name="UseSearchEndDateEntry.Description" xml:space="preserve">
+    <value>После включения дата публикации работ в поиске будет заканчиваться этой датой</value>
+  </data>
+  <data name="OpenExtensionsEntry.Description" xml:space="preserve">
+    <value>Здесь хранятся файлы DLL расширений, которые будет загружать программа</value>
   </data>
 </root>

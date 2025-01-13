@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="MessageTextBlock.Text" xml:space="preserve">
-    <value>Для использования реверсивного поиска необходимо правильно ввести API ключ SauceNAO. В настоящее время ключ не указан или введен неверно. Пожалуйста, проверьте его перед использованием функции.</value>
+    <value>Для использования реверсивного поиска необходимо правильно ввести API ключ SauceNAO. В настоящее время ключ не указан или введен неверно. Пожалуйста, проверьте его перед использованием функции</value>
   </data>
   <data name="SetApiKeyHyperlinkButton.Content" xml:space="preserve">
     <value>Изменить API ключ</value>

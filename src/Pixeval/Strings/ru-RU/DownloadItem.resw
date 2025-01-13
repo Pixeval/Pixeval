@@ -171,4 +171,7 @@
   <data name="RedownloadItem.Label" xml:space="preserve">
     <value>Загрузить заново</value>
   </data>
+  <data name="DownloadPending" xml:space="preserve">
+    <value>Ожидание завершения загрузки файла</value>
+  </data>
 </root>
