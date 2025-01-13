@@ -162,9 +162,12 @@ public sealed partial class TabPage
     */
     private void TabPage_OnUnloaded(object sender, RoutedEventArgs e)
     {
-        if (TabView.SelectedItem is TabViewItem { Content: Frame { Content: IPageDisposalCompleter completer } })
+        foreach (var tabViewTabItem in TabView.TabItems)
         {
-            completer.CompleteDisposal();
+            if (tabViewTabItem is TabViewItem { Content: Frame { Content: IPageDisposalCompleter completer } })
+            {
+                completer.CompleteDisposal();
+            }
         }
     }
 }
