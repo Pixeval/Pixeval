@@ -2,6 +2,7 @@
 // Licensed under the GPL v3 License.
 
 using System;
+using System.Collections.Generic;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
@@ -12,6 +13,10 @@ namespace Pixeval.Controls;
 
 public partial class EnhancedPage : Page
 {
+    public bool Initialized { get; private set; }
+
+    public List<Action> ChildrenCompletes { get; } = [];
+
     public EnhancedWindow Window => WindowFactory.GetWindowForElement(this);
 
     public int ActivationCount { get; private set; }
@@ -23,6 +28,27 @@ public partial class EnhancedPage : Page
         base.OnNavigatedTo(e);
         ++ActivationCount;
         OnPageActivated(e, e.Parameter);
+    }
+
+    protected override void OnApplyTemplate()
+    {
+        Loaded += (_, _) =>
+        {
+            if (!Initialized)
+            {
+                Initialized = true;
+                OnPageInitialized();
+            }
+        };
+    }
+
+    public virtual void OnPageInitialized()
+    {
+        if (this is IStructuralDisposalCompleter completer)
+        {
+            // Hook the disposal event of current page to its parent
+            completer.ParentCompleter?.ChildrenCompletes.Add(completer.CompleteDisposal);
+        }
     }
 
     protected sealed override void OnNavigatingFrom(NavigatingCancelEventArgs e)

@@ -2,7 +2,7 @@
 // Licensed under the GPL v3 License.
 
 using System;
-using Microsoft.UI.Xaml;
+using System.Runtime;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Controls;
@@ -10,7 +10,7 @@ using Pixeval.CoreApi.Global.Enum;
 
 namespace Pixeval.Pages.Capability;
 
-public sealed partial class RecommendationPage
+public sealed partial class RecommendationPage : IStructuralDisposalCompleter
 {
     public RecommendationPage() => InitializeComponent();
 
@@ -21,5 +21,12 @@ public sealed partial class RecommendationPage
     private void ChangeSource()
     {
         WorkContainer.WorkView.ResetEngine(App.AppViewModel.MakoClient.RecommendationWorks(WorkTypeComboBox.GetSelectedItem<WorkType>(), App.AppViewModel.AppSettings.TargetFilter));
+    }
+
+    public void CompleteDisposal()
+    {
+        Content = null;
+        GCSettings.LargeObjectHeapCompactionMode = GCLargeObjectHeapCompactionMode.CompactOnce;
+        GC.Collect();
     }
 }
