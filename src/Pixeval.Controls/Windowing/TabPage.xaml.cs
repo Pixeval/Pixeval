@@ -37,6 +37,7 @@ public sealed partial class TabPage : IStructuralDisposalCompleter
     {
         if (_ownsWindow)
         {
+            ((IStructuralDisposalCompleter) this).Hook();
             Window.SetTitleBar(CustomDragRegion);
             CustomDragRegion.MinWidth = 188;
         }

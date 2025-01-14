@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
+  <Metadata>
+    <Identity Id="Pixeval.Analyzer.4cdf3e41-a0f3-4358-9e19-ee93691fb9e3" Version="1.1" Language="en-US" Publisher="26532"/>
+    <DisplayName>Pixeval.Analyzer</DisplayName>
+    <Description xml:space="preserve">An analyzer specifically for Pixeval proj.</Description>
+  </Metadata>
+  <Installation>
+    <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[15.0,)">
+	    <ProductArchitecture>amd64</ProductArchitecture>
+	</InstallationTarget>
+	<InstallationTarget Id="Microsoft.VisualStudio.Professional" Version="[15.0,)">
+		<ProductArchitecture>amd64</ProductArchitecture>
+	</InstallationTarget>
+	<InstallationTarget Id="Microsoft.VisualStudio.Enterprise" Version="[15.0,)">
+		<ProductArchitecture>amd64</ProductArchitecture>
+	</InstallationTarget>
+  </Installation>
+  <Dependencies>
+    <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="[4.5,)" />
+  </Dependencies>
+  <Assets>
+    <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="Pixeval.Analyzer" Path="|Pixeval.Analyzer|"/>
+    <Asset Type="Microsoft.VisualStudio.Analyzer" d:Source="Project" d:ProjectName="Pixeval.Analyzer" Path="|Pixeval.Analyzer|"/>
+  </Assets>
+  <Prerequisites>
+    <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[15.0,)" DisplayName="Visual Studio core editor" />
+    <Prerequisite Id="Microsoft.VisualStudio.Component.Roslyn.LanguageServices" Version="[15.0,)" DisplayName="Roslyn Language Services" />
+  </Prerequisites>
+</PackageManifest>

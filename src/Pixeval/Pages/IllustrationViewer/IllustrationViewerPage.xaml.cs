@@ -252,7 +252,7 @@ public sealed partial class IllustrationViewerPage : IStructuralDisposalComplete
             deferral.Complete();
             return;
 
-            async void FileDispose(DataPackage dataPackage, object o) => await file?.DeleteAsync(StorageDeleteOption.PermanentDelete);
+            async void FileDispose(DataPackage dataPackage, object o) => await file.DeleteAsync(StorageDeleteOption.PermanentDelete);
         }
     }
 }
