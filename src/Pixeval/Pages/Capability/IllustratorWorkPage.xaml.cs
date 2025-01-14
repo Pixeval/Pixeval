@@ -1,8 +1,6 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL v3 License.
 
-using System;
-using System.Runtime;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Controls;
@@ -10,7 +8,7 @@ using Pixeval.CoreApi.Global.Enum;
 
 namespace Pixeval.Pages.Capability;
 
-public sealed partial class IllustratorWorkPage : IScrollViewHost, IStructuralDisposalCompleter
+public sealed partial class IllustratorWorkPage : IScrollViewHost
 {
     public IllustratorWorkPage() => InitializeComponent();
 
@@ -31,13 +29,5 @@ public sealed partial class IllustratorWorkPage : IScrollViewHost, IStructuralDi
     private void ChangeSource()
     {
         WorkContainer.WorkView.ResetEngine(App.AppViewModel.MakoClient.WorkPosts(_uid, WorkTypeComboBox.GetSelectedItem<WorkType>(), App.AppViewModel.AppSettings.TargetFilter));
-    }
-
-    public void CompleteDisposal()
-    {
-        Bindings.StopTracking();
-        Content = null;
-        GCSettings.LargeObjectHeapCompactionMode = GCLargeObjectHeapCompactionMode.CompactOnce;
-        GC.Collect();
     }
 }

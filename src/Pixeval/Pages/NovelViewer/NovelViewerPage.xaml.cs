@@ -75,8 +75,6 @@ public sealed partial class NovelViewerPage
         DocumentViewer_OnTapped(null!, null!);
     }
 
-    ~NovelViewerPage() => _viewModel.Dispose();
-
     private async void FrameworkElement_OnDataContextChanged(FrameworkElement sender, DataContextChangedEventArgs args)
     {
         var viewModel = sender.GetDataContext<NovelItemViewModel>();
@@ -160,4 +158,10 @@ public sealed partial class NovelViewerPage
     }
 
     public (FrameworkElement, DocumentViewerViewModel?) DownloadParameter(DocumentViewerViewModel? viewModel) => (this, viewModel);
+
+    public override void CompleteDisposal()
+    {
+        base.CompleteDisposal();
+        _viewModel.Dispose();
+    }
 }

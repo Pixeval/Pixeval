@@ -1,5 +1,5 @@
-# 如果要从更高级别的目录继承 .editorconfig 设置，请删除以下行
 root = true
+# 如果要从更高级别的目录继承 .editorconfig 设置，请删除以下行
 
 [*]
 charset = utf-8
@@ -7,8 +7,11 @@ end_of_line = crlf
 insert_final_newline = true
 
 # CA2208: Instantiate argument exceptions correctly
-dotnet_diagnostic.CA2208.severity = none
-dotnet_diagnostic.CS8305.severity = none
+dotnet_diagnostic.ca2208.severity = none
+dotnet_diagnostic.cs8305.severity = none
+
+# Microsoft .NET properties
+csharp_space_after_cast = true
 
 [*.cs]
 
@@ -24,7 +27,7 @@ tab_width = 4
 # 组织 Using
 dotnet_separate_import_directive_groups = false
 dotnet_sort_system_directives_first = true
-file_header_template = unset
+file_header_template = 
 
 # this. 和 Me. 首选项
 dotnet_style_qualification_for_event = false:suggestion

@@ -12,7 +12,7 @@ using Pixeval.CoreApi.Model;
 
 namespace Pixeval.Pages.Capability;
 
-public sealed partial class BookmarksPage : IScrollViewHost, IStructuralDisposalCompleter
+public sealed partial class BookmarksPage : IScrollViewHost
 {
     private BookmarksPageViewModel _viewModel = null!;
 
@@ -89,12 +89,4 @@ public sealed partial class BookmarksPage : IScrollViewHost, IStructuralDisposal
     }
 
     public ScrollView ScrollView => WorkContainer.ScrollView;
-
-    public void CompleteDisposal()
-    {
-        Bindings.StopTracking();
-        Content = null;
-        GCSettings.LargeObjectHeapCompactionMode = GCLargeObjectHeapCompactionMode.CompactOnce;
-        GC.Collect();
-    }
 }

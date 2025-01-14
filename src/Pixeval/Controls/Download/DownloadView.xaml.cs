@@ -1,7 +1,10 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL v3 License.
 
+using System;
+using System.Collections.Generic;
 using System.Linq;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Pixeval.CoreApi.Model;
 using Pixeval.Pages.IllustrationViewer;
@@ -9,7 +12,7 @@ using Pixeval.Pages.NovelViewer;
 
 namespace Pixeval.Controls;
 
-public sealed partial class DownloadView : UserControl
+public sealed partial class DownloadView : UserControl, IStructuralDisposalCompleter
 {
     public DownloadViewViewModel ViewModel { get; } = new(App.AppViewModel.DownloadManager.QueuedTasks);
 
@@ -38,5 +41,19 @@ public sealed partial class DownloadView : UserControl
         _ = await viewModel.TryLoadThumbnailAsync(ViewModel);
     }
 
-    ~DownloadView() => ViewModel.Dispose();
+    public void CompleteDisposal()
+    {
+        ViewModel.Dispose();
+    }
+
+    public List<Action> ChildrenCompletes { get; } = [];
+
+    public bool CompleterRegistered { get; set; }
+
+    public bool CompleterDisposed { get; set; }
+
+    private void DownloadView_OnLoaded(object sender, RoutedEventArgs e)
+    {
+        ((IStructuralDisposalCompleter) this).Hook();
+    }
 }

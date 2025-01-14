@@ -14,7 +14,7 @@ using Pixeval.Utilities;
 
 namespace Pixeval.Controls.Windowing;
 
-public sealed partial class TabPage : IStructuralDisposalCompleter
+public sealed partial class TabPage
 {
     public TabView TabView => TabViewControl;
 
@@ -35,9 +35,9 @@ public sealed partial class TabPage : IStructuralDisposalCompleter
 
     private void TabPage_OnLoaded(object sender, RoutedEventArgs e)
     {
+
         if (_ownsWindow)
         {
-            ((IStructuralDisposalCompleter) this).Hook();
             Window.SetTitleBar(CustomDragRegion);
             CustomDragRegion.MinWidth = 188;
         }
@@ -164,13 +164,5 @@ public sealed partial class TabPage : IStructuralDisposalCompleter
     private void TabPage_OnUnloaded(object sender, RoutedEventArgs e)
     {
         ((IStructuralDisposalCompleter) this).CompleteDisposalRecursively();
-    }
-
-    public void CompleteDisposal()
-    {
-        Bindings.StopTracking();
-        Content = null;
-        GCSettings.LargeObjectHeapCompactionMode = GCLargeObjectHeapCompactionMode.CompactOnce;
-        GC.Collect();
     }
 }

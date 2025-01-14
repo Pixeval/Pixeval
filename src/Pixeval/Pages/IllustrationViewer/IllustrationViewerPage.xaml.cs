@@ -25,7 +25,7 @@ using SymbolIcon = FluentIcons.WinUI.SymbolIcon;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
-public sealed partial class IllustrationViewerPage : IStructuralDisposalCompleter
+public sealed partial class IllustrationViewerPage
 {
     private IllustrationViewerPageViewModel _viewModel = null!;
 
@@ -221,8 +221,9 @@ public sealed partial class IllustrationViewerPage : IStructuralDisposalComplete
         teachingTip.Target = appBarButton.IsInOverflow ? null : appBarButton;
     }
 
-    public void CompleteDisposal()
+    public override void CompleteDisposal()
     {
+        base.CompleteDisposal();
         _viewModel.Dispose();
     }
 

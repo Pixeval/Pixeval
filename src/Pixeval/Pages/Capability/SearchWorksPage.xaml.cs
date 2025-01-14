@@ -4,7 +4,6 @@
 using System.Runtime;
 using System;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Controls;
 using Pixeval.CoreApi.Global.Enum;
@@ -12,7 +11,7 @@ using WinUI3Utilities;
 
 namespace Pixeval.Pages.Capability;
 
-public sealed partial class SearchWorksPage : IScrollViewHost, IStructuralDisposalCompleter
+public sealed partial class SearchWorksPage : IScrollViewHost
 {
     public SearchWorksPage() => InitializeComponent();
 
@@ -48,11 +47,4 @@ public sealed partial class SearchWorksPage : IScrollViewHost, IStructuralDispos
     }
 
     public ScrollView ScrollView => WorkContainer.ScrollView;
-
-    public void CompleteDisposal()
-    {
-        Content = null;
-        GCSettings.LargeObjectHeapCompactionMode = GCLargeObjectHeapCompactionMode.CompactOnce;
-        GC.Collect();
-    }
 }

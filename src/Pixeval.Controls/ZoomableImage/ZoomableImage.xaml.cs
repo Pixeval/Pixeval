@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Input;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Pixeval.Utilities;
 using WinUI3Utilities.Attributes;
@@ -101,18 +102,11 @@ public sealed partial class ZoomableImage : UserControl, IStructuralDisposalComp
         }
     }
 
-    // TODO Delete this after test passed
-    ~ZoomableImage()
-    {
-        IsDisposed = true;
-        CanvasControl.Draw -= CanvasControlOnDraw;
-        _token.TryCancelDispose();
-        foreach (var frame in _frames)
-            frame.Dispose();
-        _frames.Clear();
-    }
-
     public List<Action> ChildrenCompletes { get; } = [];
+
+    public bool CompleterRegistered { get; set; }
+
+    public bool CompleterDisposed { get; set; }
 
     public void CompleteDisposal()
     {
@@ -122,5 +116,10 @@ public sealed partial class ZoomableImage : UserControl, IStructuralDisposalComp
         foreach (var frame in _frames)
             frame.Dispose();
         _frames.Clear();
+    }
+
+    private void ZoomableImage_OnLoaded(object sender, RoutedEventArgs e)
+    {
+        ((IStructuralDisposalCompleter) this).Hook();
     }
 }

@@ -1,16 +1,13 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL v3 License.
 
-using System.Runtime;
-using System;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Controls;
 
 namespace Pixeval.Pages;
 
-public sealed partial class MyPixivUsersPage : IScrollViewHost, IStructuralDisposalCompleter
+public sealed partial class MyPixivUsersPage : IScrollViewHost
 {
     public MyPixivUsersPage() => InitializeComponent();
 
@@ -23,11 +20,4 @@ public sealed partial class MyPixivUsersPage : IScrollViewHost, IStructuralDispo
     }
 
     public ScrollView ScrollView => IllustratorView.ScrollView;
-
-    public void CompleteDisposal()
-    {
-        Content = null;
-        GCSettings.LargeObjectHeapCompactionMode = GCLargeObjectHeapCompactionMode.CompactOnce;
-        GC.Collect();
-    }
 }

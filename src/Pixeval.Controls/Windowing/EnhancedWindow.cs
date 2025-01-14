@@ -2,6 +2,7 @@
 // Licensed under the GPL v3 License.
 
 using CommunityToolkit.Mvvm.Messaging;
+using CommunityToolkit.WinUI;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -35,7 +36,7 @@ public sealed partial class EnhancedWindow : Window
             VerticalAlignment = VerticalAlignment.Bottom
         };
         Growl.SetGrowlParent(stackPanel, true);
-        Growl.SetToken(stackPanel, this.HWnd);
+        Growl.SetToken(stackPanel, HWnd);
         Content = new Grid
         {
             Children =
@@ -64,6 +65,8 @@ public sealed partial class EnhancedWindow : Window
         if (_owner is not null)
             _owner.AppWindow.Closing -= OnOwnerOnClosing;
         WeakReferenceMessenger.Default.UnregisterAll(this);
+        var completer = Content.FindDescendant<FrameworkElement>(element => element is IStructuralDisposalCompleter) as IStructuralDisposalCompleter;
+        completer?.CompleteDisposalRecursively();
     }
 
     private void OnOwnerOnClosing(AppWindow sender, AppWindowClosingEventArgs e) => Close();

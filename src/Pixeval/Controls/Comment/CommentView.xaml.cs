@@ -38,6 +38,10 @@ public sealed partial class CommentView : IStructuralDisposalCompleter
 
     public List<Action> ChildrenCompletes { get; } = [];
 
+    public bool CompleterRegistered { get; set; }
+
+    public bool CompleterDisposed { get; set; }
+
     private void CommentView_OnLoaded(object sender, RoutedEventArgs e)
     {
         ((IStructuralDisposalCompleter) this).Hook();

@@ -31,8 +31,14 @@ public interface IStructuralDisposalCompleter : IPageDisposalCompleter
 
     List<Action> ChildrenCompletes { get; }
 
+    bool CompleterRegistered { get; set; }
+
+    bool CompleterDisposed { get; set; }
+
     void CompleteDisposalRecursively()
     {
+        if (CompleterDisposed) return;
+        CompleterDisposed = true;
         CompleteDisposal();
         foreach (var childrenComplete in ChildrenCompletes)
         {
@@ -45,6 +51,8 @@ public interface IStructuralDisposalCompleter : IPageDisposalCompleter
     /// </summary>
     public void Hook()
     {
+        if (CompleterRegistered) return;
+        CompleterRegistered = true;
         ParentCompleter?.ChildrenCompletes.Add(CompleteDisposalRecursively);
     }
 

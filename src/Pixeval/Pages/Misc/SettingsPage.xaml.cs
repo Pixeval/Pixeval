@@ -73,8 +73,6 @@ public sealed partial class SettingsPage : IDisposable, INotifyPropertyChanged
         }
     }
 
-    ~SettingsPage() => Dispose();
-
     private void CheckForUpdateButton_OnClicked(object sender, RoutedEventArgs e)
     {
         ViewModel.CheckForUpdate();
@@ -190,7 +188,12 @@ public sealed partial class SettingsPage : IDisposable, INotifyPropertyChanged
         Bindings.StopTracking();
         ViewModel.Dispose();
         ViewModel = null!;
-        GC.SuppressFinalize(this);
+    }
+
+    public override void CompleteDisposal()
+    {
+        base.CompleteDisposal();
+        Dispose();
     }
 
     public event PropertyChangedEventHandler? PropertyChanged;

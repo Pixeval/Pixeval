@@ -10,7 +10,7 @@ using Pixeval.Controls;
 
 namespace Pixeval.Pages.Capability;
 
-public sealed partial class RelatedUsersPage : IScrollViewHost, IStructuralDisposalCompleter
+public sealed partial class RelatedUsersPage : IScrollViewHost
 {
     public RelatedUsersPage() => InitializeComponent();
 
@@ -25,11 +25,4 @@ public sealed partial class RelatedUsersPage : IScrollViewHost, IStructuralDispo
     }
 
     public ScrollView ScrollView => IllustratorView.ScrollView;
-
-    public void CompleteDisposal()
-    {
-        Content = null;
-        GCSettings.LargeObjectHeapCompactionMode = GCLargeObjectHeapCompactionMode.CompactOnce;
-        GC.Collect();
-    }
 }

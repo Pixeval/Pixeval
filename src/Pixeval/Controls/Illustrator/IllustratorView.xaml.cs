@@ -1,13 +1,16 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL v3 License.
 
+using System;
+using System.Collections.Generic;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Pixeval.Pages.IllustratorViewer;
 using WinUI3Utilities;
 
 namespace Pixeval.Controls;
 
-public sealed partial class IllustratorView : IScrollViewHost
+public sealed partial class IllustratorView : IScrollViewHost, IStructuralDisposalCompleter
 {
     public IllustratorViewViewModel ViewModel { get; } = new();
 
@@ -25,7 +28,21 @@ public sealed partial class IllustratorView : IScrollViewHost
         await this.CreateIllustratorPageAsync(e.InvokedItem.To<IllustratorItemViewModel>().UserId);
     }
 
-    ~IllustratorView() => ViewModel.Dispose();
-
     public ScrollView ScrollView => AdvancedItemsView.ScrollView;
+
+    public void CompleteDisposal()
+    {
+        ViewModel.Dispose();
+    }
+
+    public List<Action> ChildrenCompletes { get; } = [];
+
+    public bool CompleterRegistered { get; set; }
+
+    public bool CompleterDisposed { get; set; }
+
+    private void IllustratorView_OnLoaded(object sender, RoutedEventArgs e)
+    {
+        ((IStructuralDisposalCompleter) this).Hook();
+    }
 }
