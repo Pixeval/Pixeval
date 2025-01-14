@@ -27,7 +27,7 @@ public class IllustrationDownloadTaskFactory : IDownloadTaskFactory<Illustration
         {
             { IsUgoira: true } => new UgoiraDownloadTaskGroup(context.Entry, path),
             { IsManga: true, MangaIndex: -1 } => new MangaDownloadTaskGroup(context.Entry, path),
-            _ => (IImageDownloadTaskGroup)new SingleImageDownloadTaskGroup(context.Entry, path)
+            _ => (IImageDownloadTaskGroup) new SingleImageDownloadTaskGroup(context.Entry, path)
         };
 
         manager.Insert(task.DatabaseEntry);
