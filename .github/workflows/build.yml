@@ -2,6 +2,8 @@ name: Build
 
 on:
   push:
+    branches:
+      - "**"
     paths-ignore:
       - "**.md"
     tags-ignore:
