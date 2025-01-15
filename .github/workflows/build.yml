@@ -1,16 +1,14 @@
 name: Build
 
 on:
-  # push:
-  #   branches-ignore:
-  #     - "dependabot**"
-  #   tags-ignore:
-  #     - "**"
+  push:
+    paths-ignore:
+      - "**.md"
+    tags-ignore:
+      - "**"
   pull_request:
     paths-ignore:
       - "**.md"
-      - ".builds/**"
-      - ".specs/**"
 
 defaults:
   run:
@@ -41,11 +39,9 @@ jobs:
           fetch-depth: 0
 
       - name: Setup MSBuild
-        id: setup_msbuild
         uses: microsoft/setup-msbuild@v2
 
       - name: Setup NuGet
-        id: setup-nuget
         uses: NuGet/setup-nuget@v2.0.1
 
       - name: Setup .NET 8
@@ -54,22 +50,14 @@ jobs:
           dotnet-version: "8.0.x"
 
       - name: Restore Files
-        id: restore_project
         shell: pwsh
         run: |
           msbuild $env:SOLUTION_NAME `
           -t:Restore `
           -p:Platform=$env:PROJECT_RESTORE_PLATFORM `
-          -p:Configuration=$env:CONFIGURATION `
-          -p:PublishReadyToRun=true `
+          -p:Configuration=$env:CONFIGURATION
 
-      - name: Restore NuGet
-        id: restore_nuget
-        shell: pwsh
-        run: "nuget restore $env:SOLUTION_NAME"
-
-      - name: Build Files (Release)
-        id: build_app_with_release
+      - name: Build Files
         shell: pwsh
         run: |
           msbuild $env:PACKAGE_PROJECT_NAME `
