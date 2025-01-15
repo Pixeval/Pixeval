@@ -152,9 +152,14 @@ public class CacheTable<TKey, THeader, TProtocol>(
     {
         if (TryReadCache(key, out Span<byte> span))
         {
-            var newStream = new NativeDirectReadonlyStream(span.AsMemory());
-            readonlyStream = newStream;
-            return true;
+            unsafe
+            {
+                var pointer =(byte*) Unsafe.AsPointer(ref MemoryMarshal.GetReference(span));
+                var newStream = new UnmanagedMemoryStream(pointer, span.Length);
+                newStream.Seek(0, SeekOrigin.Begin);
+                readonlyStream = newStream;
+                return true;
+            }
         }
 
         readonlyStream = null!;
