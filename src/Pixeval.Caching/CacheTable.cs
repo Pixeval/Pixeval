@@ -19,7 +19,6 @@
 #endregion
 
 using System.Collections.Concurrent;
-using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Pixeval.Utilities.Memory;
@@ -192,7 +191,6 @@ public class CacheTable<TKey, THeader, TProtocol>(
                 _lruCacheIndex.Enqueue(key, oldPriority + 1);
             }
 
-            Debug.WriteLine("Cache hit!");
             return true;
         }
 
