@@ -43,18 +43,18 @@ jobs:
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v2
 
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+
       - uses: actions/cache@v4
         with:
           path: ~/.nuget/packages
           key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
           restore-keys: |
             ${{ runner.os }}-nuget-
-
-      - name: Setup .NET 8
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: "8.0.x"
-
+      
       - name: Restore Files
         shell: pwsh
         run: |
@@ -62,6 +62,13 @@ jobs:
           -t:Restore `
           -p:Platform=$env:PROJECT_RESTORE_PLATFORM `
           -p:Configuration=$env:CONFIGURATION
+
+      - uses: actions/cache@v4
+        with:
+          path: ./**/obj/${{ runner.arch }}
+          key: ${{ runner.arch }}-obj-${{ hashFiles('**/project.assets.json') }}
+          restore-keys: |
+            ${{ runner.arch }}-obj-
 
       - name: Build Files
         shell: pwsh
