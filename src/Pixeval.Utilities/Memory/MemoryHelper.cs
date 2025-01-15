@@ -19,6 +19,7 @@
 #endregion
 
 using System;
+using System.IO;
 using System.Numerics;
 
 namespace Pixeval.Utilities.Memory;
@@ -46,5 +47,23 @@ public static class MemoryHelper
         }
 
         return bytes;
+    }
+
+    public static Memory<T> AsMemory<T>(this Span<T> span) where T : unmanaged
+    {
+        return new UnmanagedMemoryManager<T>(span).Memory;
+    }
+
+    public static Span<byte> ReadEnd(this Stream stream)
+    {
+        if (stream is MemoryStream s)
+        {
+            return s.ToArray();
+        }
+
+        using var ms = new MemoryStream();
+        stream.CopyTo(ms);
+        ms.Seek(0, SeekOrigin.Begin);
+        return ms.ToArray();
     }
 }

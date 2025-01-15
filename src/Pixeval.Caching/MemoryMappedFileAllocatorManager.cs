@@ -33,6 +33,7 @@ public class MemoryMappedFileMemoryManager : IDisposable
     public MemoryMappedFileMemoryManager(CacheToken token)
     {
         Token = token;
+        Directory.CreateDirectory(token.CacheDirectory);
         DelegatedCombinedBumpPointerAllocator = new DelegatedMultipleAllocator(this, BumpPointerAllocators.Values);
     }
 

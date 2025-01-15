@@ -5,9 +5,12 @@ using System;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Pixeval.Pages.IllustratorViewer;
-using Pixeval.Util.IO;
 using Pixeval.Util.IO.Caching;
 using WinUI3Utilities.Attributes;
+using IllustrationCacheTable = Pixeval.Caching.CacheTable<
+    Pixeval.Util.IO.Caching.PixevalIllustrationCacheKey,
+    Pixeval.Util.IO.Caching.PixevalIllustrationCacheHeader,
+    Pixeval.Util.IO.Caching.PixevalIllustrationCacheProtocol>;
 
 namespace Pixeval.Controls;
 
@@ -29,7 +32,7 @@ public sealed partial class CommentItem
         _ = viewModel.LoadAvatarSource();
         if (viewModel.IsStamp)
         {
-            block.StickerImageContent.Source = await App.AppViewModel.AppServiceProvider.GetRequiredService<MemoryCache>().GetSourceFromMemoryCacheAsync(viewModel.StampSource);
+            block.StickerImageContent.Source = await App.AppViewModel.AppServiceProvider.GetRequiredService<IllustrationCacheTable>().GetSourceFromCacheAsync(viewModel.StampSource);
         }
         else
         {

@@ -19,8 +19,10 @@
 #endregion
 
 using System.Collections.Concurrent;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using Pixeval.Utilities.Memory;
 
 namespace Pixeval.Caching;
 
@@ -34,6 +36,8 @@ public class CacheTable<TKey, THeader, TProtocol>(
     public MemoryMappedFileMemoryManager MemoryManager { get; } = new(token);
 
     private readonly ConcurrentDictionary<TKey, Lock> _locks = new();
+
+    private readonly Lock _purgeLock = new();
 
     private Dictionary<TKey, (nint ptr, int allocatedLength)> _cacheTable = [];
 
@@ -50,7 +54,7 @@ public class CacheTable<TKey, THeader, TProtocol>(
     private unsafe void PurgeCompact()
     {
         // when purging, all operations must be halt
-        lock (this)
+        lock (_purgeLock)
         {
             var retain = _lruCacheIndex.Count / CacheLRUFactor;
             var newPriorityQueue = new PriorityQueue<TKey, int>();
@@ -96,14 +100,22 @@ public class CacheTable<TKey, THeader, TProtocol>(
         }
     }
 
+    public AllocatorState TryCache(TKey key, Stream stream)
+    {
+        return TryCache(key, stream.ReadEnd());
+    }
+
     public AllocatorState TryCache(TKey key, Span<byte> span)
     {
-        if (_locks.TryGetValue(key, out var lk))
+        lock (_purgeLock)
         {
-            lock (lk) return TryCache0(key, span, false);
-        }
+            if (_locks.TryGetValue(key, out var lk))
+            {
+                lock (lk) return TryCache0(key, span, false);
+            }
 
-        return TryCache0(key, span, false);
+            return TryCache0(key, span, false);
+        }
     }
 
     private unsafe AllocatorState TryCache0(TKey key, Span<byte> span, bool collected)
@@ -137,14 +149,30 @@ public class CacheTable<TKey, THeader, TProtocol>(
         }
     }
 
-    public bool TryReadCache(TKey key, out Span<byte> span)
+    public bool TryReadCache(TKey key, out Stream readonlyStream)
     {
-        if (_locks.TryGetValue(key, out var lk))
+        if (TryReadCache(key, out Span<byte> span))
         {
-            lock (lk) return TryReadCache0(key, out span, false);
+            var newStream = new NativeDirectReadonlyStream(span.AsMemory());
+            readonlyStream = newStream;
+            return true;
         }
 
-        return TryReadCache0(key, out span, false);
+        readonlyStream = null!;
+        return false;
+    }
+
+    public bool TryReadCache(TKey key, out Span<byte> span)
+    {
+        lock (_purgeLock)
+        {
+            if (_locks.TryGetValue(key, out var lk))
+            {
+                lock (lk) return TryReadCache0(key, out span, false);
+            }
+
+            return TryReadCache0(key, out span, false);
+        }
     }
 
     private unsafe bool TryReadCache0(TKey key, out Span<byte> span, bool transparent)
@@ -164,6 +192,7 @@ public class CacheTable<TKey, THeader, TProtocol>(
                 _lruCacheIndex.Enqueue(key, oldPriority + 1);
             }
 
+            Debug.WriteLine("Cache hit!");
             return true;
         }
 

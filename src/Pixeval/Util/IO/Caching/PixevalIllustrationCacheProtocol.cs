@@ -24,7 +24,7 @@ using System.Runtime.InteropServices;
 using Pixeval.Caching;
 using Pixeval.Utilities.Memory;
 
-namespace Pixeval.Util.IO.Caching.Experimental;
+namespace Pixeval.Util.IO.Caching;
 
 [StructLayout(LayoutKind.Sequential)]
 public record struct PixevalIllustrationCacheHeader(int BinarySize);

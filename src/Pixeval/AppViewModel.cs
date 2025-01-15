@@ -16,7 +16,6 @@ using Pixeval.Download;
 using Pixeval.Extensions;
 using Pixeval.Logging;
 using Pixeval.Util.IO.Caching;
-using Pixeval.Util.IO.Caching.Experimental;
 using Pixeval.Util.UI;
 using WinUI3Utilities;
 
@@ -54,11 +53,11 @@ public partial class AppViewModel(App app) : IDisposable
 
     private static async Task<ServiceProvider> CreateServiceProvider()
     {
-        var fileCache = await FileCache.CreateDefaultAsync();
-        var memoryCache = await MemoryCache.CreateDefaultAsync(200);
+        const int defaultCacheSizeInByte = 200 * 1024 * 1024;
+
         var cacheTable = new CacheTable<PixevalIllustrationCacheKey, PixevalIllustrationCacheHeader, PixevalIllustrationCacheProtocol>(
             new PixevalIllustrationCacheProtocol(),
-            new CacheToken(1, 100 * 1024 * 1024, "D:\\mmaptest", 8));
+            new CacheToken(1, defaultCacheSizeInByte, AppKnownFolders.Cache.CombinePath(CacheHelper.CacheFolderName), 8));
         var extensionService = new ExtensionService();
         extensionService.LoadAllHosts();
         return new ServiceCollection()
@@ -66,8 +65,6 @@ public partial class AppViewModel(App app) : IDisposable
             .AddSingleton<NovelDownloadTaskFactory>()
             .AddSingleton(extensionService)
             .AddSingleton(cacheTable)
-            .AddSingleton(memoryCache)
-            .AddSingleton(fileCache)
             .AddSingleton(_ => new FileLogger(AppKnownFolders.Logs.FullPath))
             .AddSingleton(new LiteDatabase(AppInfo.DatabaseFilePath))
             .AddSingleton(provider => new DownloadHistoryPersistentManager(provider.GetRequiredService<LiteDatabase>(), App.AppViewModel.AppSettings.MaximumDownloadHistoryRecords))

@@ -21,6 +21,7 @@ using Pixeval.Logging;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using Pixeval.CoreApi.Model;
+using Pixeval.Util.IO.Caching;
 using WinUI3Utilities;
 
 #if DEBUG
@@ -70,7 +71,11 @@ public partial class App
 
         WindowFactory.Create(new LoginPage())
             .WithInitialized(onLoaded: OnLoaded)
-            .WithClosing((_, _) => AppInfo.SaveContextWhenExit()) // TODO: 从运行打开应用的时候不会ExitApp，就算是调用App.Current.Exit();
+            .WithClosing((_, _) =>
+            {
+                CacheHelper.PurgeCache();
+                AppInfo.SaveContextWhenExit();
+            }) // TODO: 从运行打开应用的时候不会ExitApp，就算是调用App.Current.Exit();
             .WithSizeLimit(800, 360)
             .Init(AppInfo.AppIdentifier, AppViewModel.AppSettings.WindowSize.ToSizeInt32(), AppViewModel.AppSettings.IsMaximized)
             .Activate();

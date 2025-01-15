@@ -112,7 +112,7 @@ public class HeapAllocator : IDisposable
             case AllocatorState.AllocationSuccess:
                 fixed (byte* elem = &MemoryMarshal.GetReference(span))
                 {
-                    var region = new HeapBlock(new UnmanagedMemoryManager<byte>(span).Memory, new IntPtr(elem));
+                    var region = new HeapBlock(span.AsMemory(), new nint(elem));
                     _commitedRegions.AddLast(region);
                     Size += _lastGrowthSize;
                     _callbackOnExpansion?.Invoke(region);
