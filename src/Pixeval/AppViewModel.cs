@@ -59,14 +59,14 @@ public partial class AppViewModel(App app) : IDisposable
         return new ServiceCollection()
             .AddSingleton<IllustrationDownloadTaskFactory>()
             .AddSingleton<NovelDownloadTaskFactory>()
-            .AddSingleton<ExtensionService>(extensionService)
-            .AddSingleton<MemoryCache>(memoryCache)
-            .AddSingleton<FileCache>(fileCache)
-            .AddSingleton<FileLogger>(_ => new(AppKnownFolders.Logs.FullPath))
-            .AddSingleton<LiteDatabase>(new LiteDatabase(AppInfo.DatabaseFilePath))
-            .AddSingleton<DownloadHistoryPersistentManager>(provider => new(provider.GetRequiredService<LiteDatabase>(), App.AppViewModel.AppSettings.MaximumDownloadHistoryRecords))
-            .AddSingleton<SearchHistoryPersistentManager>(provider => new(provider.GetRequiredService<LiteDatabase>(), App.AppViewModel.AppSettings.MaximumSearchHistoryRecords))
-            .AddSingleton<BrowseHistoryPersistentManager>(provider => new(provider.GetRequiredService<LiteDatabase>(), App.AppViewModel.AppSettings.MaximumBrowseHistoryRecords))
+            .AddSingleton(extensionService)
+            .AddSingleton(memoryCache)
+            .AddSingleton(fileCache)
+            .AddSingleton(_ => new FileLogger(AppKnownFolders.Logs.FullPath))
+            .AddSingleton(new LiteDatabase(AppInfo.DatabaseFilePath))
+            .AddSingleton(provider => new DownloadHistoryPersistentManager(provider.GetRequiredService<LiteDatabase>(), App.AppViewModel.AppSettings.MaximumDownloadHistoryRecords))
+            .AddSingleton(provider => new SearchHistoryPersistentManager(provider.GetRequiredService<LiteDatabase>(), App.AppViewModel.AppSettings.MaximumSearchHistoryRecords))
+            .AddSingleton(provider => new BrowseHistoryPersistentManager(provider.GetRequiredService<LiteDatabase>(), App.AppViewModel.AppSettings.MaximumBrowseHistoryRecords))
             .BuildServiceProvider();
     }
 
