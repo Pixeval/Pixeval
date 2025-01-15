@@ -61,14 +61,15 @@ jobs:
           msbuild $env:SOLUTION_NAME `
           -t:Restore `
           -p:Platform=$env:PROJECT_RESTORE_PLATFORM `
-          -p:Configuration=$env:CONFIGURATION
+          -p:Configuration=$env:CONFIGURATION `
+          -p:RestoreLockedMode=true
 
       - uses: actions/cache@v4
         with:
-          path: ./**/obj/${{ runner.arch }}
-          key: ${{ runner.arch }}-obj-${{ hashFiles('**/project.assets.json') }}
+          path: ./**/obj/${{ matrix.platform }}
+          key: ${{ matrix.platform }}-obj-${{ hashFiles('**/project.assets.json') }}
           restore-keys: |
-            ${{ runner.arch }}-obj-
+            ${{ matrix.platform }}-obj-
 
       - name: Build Files
         shell: pwsh
