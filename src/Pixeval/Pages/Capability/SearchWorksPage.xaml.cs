@@ -1,6 +1,8 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL v3 License.
 
+using System.Runtime;
+using System;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Controls;

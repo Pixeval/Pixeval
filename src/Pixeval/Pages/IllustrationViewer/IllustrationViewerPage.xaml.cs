@@ -221,7 +221,11 @@ public sealed partial class IllustrationViewerPage
         teachingTip.Target = appBarButton.IsInOverflow ? null : appBarButton;
     }
 
-    ~IllustrationViewerPage() => _viewModel.Dispose();
+    public override void CompleteDisposal()
+    {
+        base.CompleteDisposal();
+        _viewModel.Dispose();
+    }
 
     private void IllustrationViewerPage_OnLoaded(object sender, RoutedEventArgs e)
     {
@@ -249,7 +253,7 @@ public sealed partial class IllustrationViewerPage
             deferral.Complete();
             return;
 
-            async void FileDispose(DataPackage dataPackage, object o) => await file?.DeleteAsync(StorageDeleteOption.PermanentDelete);
+            async void FileDispose(DataPackage dataPackage, object o) => await file.DeleteAsync(StorageDeleteOption.PermanentDelete);
         }
     }
 }

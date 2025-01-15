@@ -1,11 +1,8 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL v3 License.
 
-using System;
-using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
-using Pixeval.Controls;
 using Pixeval.CoreApi.Global.Enum;
 
 namespace Pixeval.Pages.Capability;

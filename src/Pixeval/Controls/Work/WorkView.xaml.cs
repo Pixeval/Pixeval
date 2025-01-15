@@ -1,6 +1,8 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL v3 License.
 
+using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Windows.Foundation;
@@ -24,7 +26,7 @@ namespace Pixeval.Controls;
 /// todo
 /// </summary>
 [ObservableObject]
-public sealed partial class WorkView : IEntryView<ISortableEntryViewViewModel>
+public sealed partial class WorkView : IEntryView<ISortableEntryViewViewModel>, IStructuralDisposalCompleter
 {
     public const double LandscapeHeight = 180;
     public const double PortraitHeight = 250;
@@ -168,17 +170,6 @@ public sealed partial class WorkView : IEntryView<ISortableEntryViewViewModel>
 
     private (ThumbnailDirection ThumbnailDirection, double DesiredHeight) IllustrationItem_OnRequiredParam() => (ThumbnailDirection, DesiredHeight);
 
-    ~WorkView()
-    {
-        if (ViewModel == null!)
-            return;
-        var viewModel = ViewModel;
-        ViewModel = null!;
-        foreach (var vm in viewModel.Source)
-            vm.UnloadThumbnail(viewModel);
-        viewModel.Dispose();
-    }
-
     private void AddToBookmarkTeachingTip_OnCloseButtonClick(TeachingTip sender, object e)
     {
         sender.GetTag<IWorkViewModel>().AddToBookmarkCommand.Execute((BookmarkTagSelector.SelectedTags, BookmarkTagSelector.IsPrivate, null as object));
@@ -196,4 +187,21 @@ public sealed partial class WorkView : IEntryView<ISortableEntryViewViewModel>
     {
         await this.CreateIllustratorPageAsync(e.User.Id);
     }
+
+    public void CompleteDisposal()
+    {
+        if (ViewModel == null!)
+            return;
+        var viewModel = ViewModel;
+        ViewModel = null!;
+        foreach (var vm in viewModel.Source)
+            vm.UnloadThumbnail(viewModel);
+        viewModel.Dispose();
+    }
+
+    public List<Action> ChildrenCompletes { get; } = [];
+
+    public bool CompleterRegistered { get; set; }
+
+    public bool CompleterDisposed { get; set; }
 }

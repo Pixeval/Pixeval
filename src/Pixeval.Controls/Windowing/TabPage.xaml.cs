@@ -35,6 +35,7 @@ public sealed partial class TabPage
 
     private void TabPage_OnLoaded(object sender, RoutedEventArgs e)
     {
+
         if (_ownsWindow)
         {
             Window.SetTitleBar(CustomDragRegion);
@@ -82,9 +83,9 @@ public sealed partial class TabPage
 
     private void TabView_OnTabCloseRequested(TabView sender, TabViewTabCloseRequestedEventArgs e)
     {
-        if (e.Tab.Content is Frame { Content: IPageDisposalCompleter completer })
+        if (e.Tab.Content is FrameworkElement element && element.FindDescendant<FrameworkElement>(ele => ele is IStructuralDisposalCompleter) is IStructuralDisposalCompleter completer)
         {
-            completer.CompleteDisposal();
+            completer.CompleteDisposalRecursively();
         }
         RemoveTab(e.Tab);
     }
@@ -162,12 +163,6 @@ public sealed partial class TabPage
     */
     private void TabPage_OnUnloaded(object sender, RoutedEventArgs e)
     {
-        foreach (var tabViewTabItem in TabView.TabItems)
-        {
-            if (tabViewTabItem is TabViewItem { Content: Frame { Content: IPageDisposalCompleter completer } })
-            {
-                completer.CompleteDisposal();
-            }
-        }
+        ((IStructuralDisposalCompleter) this).CompleteDisposalRecursively();
     }
 }

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Input;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Pixeval.Utilities;
 using WinUI3Utilities.Attributes;
@@ -27,7 +28,7 @@ namespace Pixeval.Controls;
 [DependencyProperty<ZoomableImageMode>("InitMode", "ZoomableImageMode.Fit")]
 [DependencyProperty<ZoomableImagePosition>("InitPosition", "ZoomableImagePosition.AbsoluteCenter")]
 [ObservableObject]
-public sealed partial class ZoomableImage : UserControl
+public sealed partial class ZoomableImage : UserControl, IStructuralDisposalCompleter
 {
     public bool IsDisposed { get; private set; }
 
@@ -101,7 +102,13 @@ public sealed partial class ZoomableImage : UserControl
         }
     }
 
-    ~ZoomableImage()
+    public List<Action> ChildrenCompletes { get; } = [];
+
+    public bool CompleterRegistered { get; set; }
+
+    public bool CompleterDisposed { get; set; }
+
+    public void CompleteDisposal()
     {
         IsDisposed = true;
         CanvasControl.Draw -= CanvasControlOnDraw;
@@ -109,5 +116,10 @@ public sealed partial class ZoomableImage : UserControl
         foreach (var frame in _frames)
             frame.Dispose();
         _frames.Clear();
+    }
+
+    private void ZoomableImage_OnLoaded(object sender, RoutedEventArgs e)
+    {
+        ((IStructuralDisposalCompleter) this).Hook();
     }
 }

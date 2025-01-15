@@ -5,6 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:win2d="using:Microsoft.Graphics.Canvas.UI.Xaml"
+    Loaded="ZoomableImage_OnLoaded"
     mc:Ignorable="d">
     <win2d:CanvasControl
         x:Name="CanvasControl"

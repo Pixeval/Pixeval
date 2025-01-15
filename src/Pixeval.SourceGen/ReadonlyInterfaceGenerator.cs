@@ -30,7 +30,7 @@ public class ReadonlyInterfaceGenerator : IIncrementalGenerator
 
         var list = typeSymbol.GetProperties(attributeList[0].AttributeClass!)
             // .Where(symbol => !symbol.IsReadOnly)
-            .Select(symbol => (MemberDeclarationSyntax)PropertyDeclaration(symbol.Type.GetTypeSyntax(false), symbol.Name)
+            .Select(MemberDeclarationSyntax (symbol) => PropertyDeclaration(symbol.Type.GetTypeSyntax(false), symbol.Name)
                 .AddAccessorListAccessors(getter));
 
         var member = InterfaceDeclaration("I" + typeSymbol.Name)

@@ -30,5 +30,9 @@ public sealed partial class TagsPage
             _viewModel.WorkingDirectory = folder.Path;
     }
 
-    ~TagsPage() => _viewModel.Dispose();
+    public override void CompleteDisposal()
+    {
+        base.CompleteDisposal();
+        _viewModel.Dispose();
+    }
 }

@@ -26,12 +26,12 @@ public class SettingsEntryGenerator : IIncrementalGenerator
     {
         var list = new List<(IPropertySymbol Property, (int, string, string) Attribute)>();
         foreach (var ga in gas)
-            if (ga is
-                {
-                    TargetSymbol: IPropertySymbol symbol,
-                    Attributes: [{ ConstructorArguments: [{ Value: int a }, { Value: string b }, { Value: string c }] }]
-                })
+        {
+            if (ga is { TargetSymbol: IPropertySymbol symbol, Attributes: [{ ConstructorArguments: [{ Value: int a }, { Value: string b }, { Value: string c }] }] })
+            {
                 list.Add((symbol, (a, b, c)));
+            }
+        }
 
         const string metadataTable = "MetadataTable";
 
@@ -55,8 +55,8 @@ public class SettingsEntryGenerator : IIncrementalGenerator
                                         $"global::System.Collections.Generic.Dictionary<string, global::{AttributeFullName}>"),
                                     null,
                                     InitializerExpression(SyntaxKind.ObjectInitializerExpression,
-                                        SeparatedList(list.Select(elem =>
-                                            (ExpressionSyntax)AssignmentExpression(
+                                        SeparatedList(list.Select(ExpressionSyntax (elem) =>
+                                            AssignmentExpression(
                                                 SyntaxKind.SimpleAssignmentExpression,
                                                 ImplicitElementAccess(BracketedArgumentList(SeparatedList(
                                                     [

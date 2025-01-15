@@ -59,12 +59,12 @@ public static class WindowFactory
                ?? ThrowHelper.ArgumentOutOfRange<UIElement, EnhancedWindow>(element, $"Specified {nameof(element)} is not existed in any of {nameof(ForkedWindows)}.");
     }
 
-    public static EnhancedWindow Create(EnhancedPage content, out EnhancedWindow window)
+    public static EnhancedWindow Create(EnhancedPage content)
     {
-        RootWindow = window = new EnhancedWindow(content);
-        window.Closed += (sender, _) => _ForkedWindowsInternal.Remove(sender.To<EnhancedWindow>().HWnd);
-        _ForkedWindowsInternal[window.HWnd] = window;
-        return window;
+        RootWindow =  new EnhancedWindow(content);
+        RootWindow.Closed += (sender, _) => _ForkedWindowsInternal.Remove(sender.To<EnhancedWindow>().HWnd);
+        _ForkedWindowsInternal[RootWindow.HWnd] = RootWindow;
+        return RootWindow;
     }
 
     public static EnhancedWindow Fork(this EnhancedWindow owner, EnhancedPage content, out ulong hWnd)
