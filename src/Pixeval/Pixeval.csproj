@@ -59,6 +59,7 @@
         <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="2.1.4" />
         <PackageReference Include="System.Linq.Async" Version="6.0.1" />
         <PackageReference Include="WinUI3Utilities" Version="1.1.7.14" />
+        <ProjectReference Include="..\Pixeval.Caching\Pixeval.Caching.csproj" />
 
         <ProjectReference Include="..\Pixeval.Controls\Pixeval.Controls.csproj" />
         <ProjectReference Include="..\Pixeval.CoreApi\Pixeval.CoreApi.csproj" />
@@ -121,10 +122,6 @@
 
     <ItemGroup Condition="'$(DisableMsixProjectCapabilityAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
         <ProjectCapability Include="Msix" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Util\IO\Caching\Experimental\" />
     </ItemGroup>
 
     <PropertyGroup Condition="'$(DisableHasPackageAndPublishMenuAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">

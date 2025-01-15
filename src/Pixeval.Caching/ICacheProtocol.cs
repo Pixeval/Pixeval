@@ -28,7 +28,5 @@ public interface ICacheProtocol<in TKey, THeader> where THeader : unmanaged
 
     THeader DeserializeHeader(Span<byte> span);
 
-    static abstract int GetHeaderLength();
-
     int GetDataLength(THeader header);
 }

@@ -7,6 +7,7 @@ using LiteDB;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Pixeval.AppManagement;
+using Pixeval.Caching;
 using Pixeval.Controls.Windowing;
 using Pixeval.CoreApi;
 using Pixeval.CoreApi.Net;
@@ -15,6 +16,7 @@ using Pixeval.Download;
 using Pixeval.Extensions;
 using Pixeval.Logging;
 using Pixeval.Util.IO.Caching;
+using Pixeval.Util.IO.Caching.Experimental;
 using Pixeval.Util.UI;
 using WinUI3Utilities;
 
@@ -54,12 +56,16 @@ public partial class AppViewModel(App app) : IDisposable
     {
         var fileCache = await FileCache.CreateDefaultAsync();
         var memoryCache = await MemoryCache.CreateDefaultAsync(200);
+        var cacheTable = new CacheTable<PixevalIllustrationCacheKey, PixevalIllustrationCacheHeader, PixevalIllustrationCacheProtocol>(
+            new PixevalIllustrationCacheProtocol(),
+            new CacheToken(1, 100 * 1024 * 1024, "D:\\mmaptest", 8));
         var extensionService = new ExtensionService();
         extensionService.LoadAllHosts();
         return new ServiceCollection()
             .AddSingleton<IllustrationDownloadTaskFactory>()
             .AddSingleton<NovelDownloadTaskFactory>()
             .AddSingleton(extensionService)
+            .AddSingleton(cacheTable)
             .AddSingleton(memoryCache)
             .AddSingleton(fileCache)
             .AddSingleton(_ => new FileLogger(AppKnownFolders.Logs.FullPath))

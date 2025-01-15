@@ -18,6 +18,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using System;
 using System.Numerics;
 
 namespace Pixeval.Utilities.Memory;
@@ -32,5 +33,18 @@ public static class MemoryHelper
         ISubtractionOperators<T, T, T>
     {
         return number + (~number + T.One & align - T.One);
+    }
+
+    public static unsafe Span<byte> ConvertToBytes<T>(T value) where T : unmanaged
+    {
+        var pointer = (byte*) &value;
+
+        Span<byte> bytes = new byte[sizeof(T)];
+        for (var i = 0; i < sizeof(T); i++)
+        {
+            bytes[i] = pointer[i];
+        }
+
+        return bytes;
     }
 }

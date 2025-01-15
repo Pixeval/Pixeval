@@ -50,6 +50,8 @@ public static class CacheHelper
         return AppInfo.GetImageNotAvailableStream();
     }
 
+
+
     /// <summary>
     /// 
     /// </summary>

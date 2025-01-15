@@ -175,7 +175,7 @@ public class HeapAllocator : IDisposable
             tuple => GetBlock((byte*) tuple.Key),
             tuple => tuple);
         var resultDictionary = new Dictionary<nint, nint>();
-        foreach (var group in grouped.Where(grp => grp.Key != default))
+        foreach (var group in grouped.Where(grp => grp.Key != null))
         {
             var heapBlock = group.Key;
             var span = heapBlock!.Memory.Span;

@@ -3,14 +3,19 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Media;
+using Pixeval.Caching;
 using Pixeval.CoreApi.Model;
+using Pixeval.CoreApi.Net;
 using Pixeval.Util.IO;
 using Pixeval.Util.IO.Caching;
+using Pixeval.Util.IO.Caching.Experimental;
 using Pixeval.Utilities;
 
 namespace Pixeval.Controls;
@@ -47,10 +52,35 @@ public abstract partial class ThumbnailEntryViewModel<T>(T entry) : EntryViewMod
         if (ThumbnailSource is null)
         {
             LoadingThumbnail = true;
-            ThumbnailSource = await App.AppViewModel.AppServiceProvider.GetRequiredService<MemoryCache>()
-                .GetSourceFromMemoryCacheAsync(
-                    ThumbnailUrl,
-                    cancellationToken: LoadingThumbnailCancellationTokenSource.Token);
+            // ThumbnailSource = await App.AppViewModel.AppServiceProvider.GetRequiredService<MemoryCache>()
+            //     .GetSourceFromMemoryCacheAsync(
+            //         ThumbnailUrl,
+            //         cancellationToken: LoadingThumbnailCancellationTokenSource.Token);
+
+            var cacheTable = App.AppViewModel.AppServiceProvider.GetRequiredService<CacheTable<PixevalIllustrationCacheKey, PixevalIllustrationCacheHeader, PixevalIllustrationCacheProtocol>>();
+
+            if (cacheTable.TryReadCache(new PixevalIllustrationCacheKey(ThumbnailUrl), out var span))
+            {
+                var memoryStream = new MemoryStream(span.ToArray());
+                var imageSource = await memoryStream.DecodeBitmapImageAsync(true);
+                ThumbnailSource = imageSource;
+            }
+            else
+            {
+                var res = await App.AppViewModel.MakoClient.GetMakoHttpClient(MakoApiKind.ImageApi)
+                    .DownloadMemoryStreamAsync(ThumbnailUrl);
+                if (res is
+                    Result<Stream>.Success(var s))
+                {
+                    using var ms = new MemoryStream();
+                    await s.CopyToAsync(ms);
+                    ms.Seek(0, SeekOrigin.Begin);
+
+                    cacheTable.TryCache(new PixevalIllustrationCacheKey(ThumbnailUrl, (int) ms.Length), ms.ToArray());
+                    ThumbnailSource = await ms.DecodeBitmapImageAsync(true);
+                }
+            }
+
             LoadingThumbnail = false;
         }
 
