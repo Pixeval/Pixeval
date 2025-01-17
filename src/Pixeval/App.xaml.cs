@@ -66,8 +66,8 @@ public partial class App
 
         if (AppViewModel.AppSettings.AppFontFamilyName.IsNotNullOrEmpty())
             Current.Resources[ApplicationWideFontKey] = new FontFamily(AppViewModel.AppSettings.AppFontFamilyName);
-
-        await AppViewModel.InitializeAsync(isProtocolActivated);
+        
+        AppViewModel.Initialize(isProtocolActivated);
 
         WindowFactory.Create(new LoginPage())
             .WithInitialized(onLoaded: OnLoaded)

@@ -122,7 +122,14 @@ public partial class MainPageViewModel : UiObservableObject
     public MainPageViewModel(FrameworkElement owner) : base(owner)
     {
         SettingsTag = GetSettingsTag();
+        SetAvatarSource();
         SubscribeTokenRefresh();
+    }
+
+    private async void SetAvatarSource()
+    {
+        AvatarSource = await App.AppViewModel.AppServiceProvider.GetRequiredService<IllustrationCacheTable>()
+            .GetSourceFromCacheAsync(App.AppViewModel.MakoClient.Me.ProfileImageUrls.Px50X50);
     }
 
     public double MainPageRootNavigationViewOpenPanelLength => 280;

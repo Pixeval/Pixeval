@@ -300,6 +300,7 @@ public partial class LoginPageViewModel(FrameworkElement frameworkElement) : UiO
         {
             Arguments = EnableDomainFronting ? $"--no-proxy-server --dns-prefetch-disable {commonArgs}" : $"{commonArgs}"
         };
+        // FIXME
         var process = Process.Start(startInfo);
         if (EnableDomainFronting)
         {
