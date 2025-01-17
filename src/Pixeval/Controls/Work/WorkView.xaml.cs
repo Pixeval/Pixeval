@@ -204,4 +204,9 @@ public sealed partial class WorkView : IEntryView<ISortableEntryViewViewModel>, 
     public bool CompleterRegistered { get; set; }
 
     public bool CompleterDisposed { get; set; }
+
+    private void WorkView_OnLoaded(object sender, RoutedEventArgs e)
+    {
+        ((IStructuralDisposalCompleter) this).Hook();
+    }
 }

@@ -8,9 +8,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Media;
 using Pixeval.CoreApi.Model;
 using Pixeval.Util;
-using Pixeval.Util.IO;
 using Pixeval.Util.IO.Caching;
 using Pixeval.Util.UI;
+using IllustrationCacheTable = Pixeval.Caching.CacheTable<
+    Pixeval.Util.IO.Caching.PixevalIllustrationCacheKey,
+    Pixeval.Util.IO.Caching.PixevalIllustrationCacheHeader,
+    Pixeval.Util.IO.Caching.PixevalIllustrationCacheProtocol>;
 
 namespace Pixeval.Controls;
 
@@ -38,12 +41,12 @@ public partial class IllustratorItemViewModel
 
     public async Task LoadAvatarAsync()
     {
-        var memoryCache = App.AppViewModel.AppServiceProvider.GetRequiredService<MemoryCache>();
-        var stream = await memoryCache.GetStreamFromMemoryCacheAsync(AvatarUrl);
+        var memoryCache = App.AppViewModel.AppServiceProvider.GetRequiredService<IllustrationCacheTable>();
+        var stream = await memoryCache.GetStreamFromCacheAsync(AvatarUrl);
         var dominantColor = await UiHelper.GetDominantColorAsync(stream, false);
         AvatarBorderBrush = new SolidColorBrush(dominantColor);
         stream.Position = 0;
-        AvatarSource = await memoryCache.GetSourceFromMemoryCacheAsync(AvatarUrl, desiredWidth: 100);
+        AvatarSource = await memoryCache.GetSourceFromCacheAsync(AvatarUrl, desiredWidth: 100);
 
         await LoadBannerSourceAsync();
     }
@@ -55,7 +58,7 @@ public partial class IllustratorItemViewModel
 
     private async Task LoadBannerSourceAsync()
     {
-        var getSourceFromMemoryCacheAsync = App.AppViewModel.AppServiceProvider.GetRequiredService<MemoryCache>().GetSourceFromMemoryCacheAsync;
+        var getSourceFromMemoryCacheAsync = App.AppViewModel.AppServiceProvider.GetRequiredService<IllustrationCacheTable>().GetSourceFromCacheAsync;
         if (Entry.Illustrations.Concat<IWorkEntry>(Entry.Novels).ElementAtOrDefault(0) is { } t0)
         {
             BannerSource0 = await getSourceFromMemoryCacheAsync(t0.GetThumbnailUrl());
