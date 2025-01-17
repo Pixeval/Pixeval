@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Pixeval.AppManagement;
 using Pixeval.Controls.Windowing;
 using Pixeval.CoreApi;
+using Pixeval.CoreApi.Global.Enum;
 using Pixeval.Logging;
 using Pixeval.Settings.Models;
 using Pixeval.Util.UI;
@@ -105,6 +106,7 @@ public sealed partial class LoginPage
         if (Current is null || App.AppViewModel.MakoClient == null!)
             ThrowHelper.Exception();
         Current._viewModel.AdvancePhase(LoginPhaseEnum.SuccessNavigating);
+
         WindowFactory.GetWindowForElement(Current).PageContent = new MainPage();
         Current._viewModel.LogoutExit = false;
         AppInfo.SaveContext();

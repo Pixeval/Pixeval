@@ -51,7 +51,7 @@ public partial class AppViewModel(App app) : IDisposable
         AppInfo.RestoreHistories();
     }
 
-    private static async Task<ServiceProvider> CreateServiceProvider()
+    private static ServiceProvider CreateServiceProvider()
     {
         const int defaultCacheSizeInByte = 200 * 1024 * 1024;
 
@@ -78,13 +78,11 @@ public partial class AppViewModel(App app) : IDisposable
         _ = await WindowFactory.RootWindow.Content.To<FrameworkElement>().CreateAcknowledgementAsync(MiscResources.ExceptionEncountered, e.ToString());
     }
 
-    public async Task InitializeAsync(bool activatedByProtocol)
+    public void Initialize(bool activatedByProtocol)
     {
         _activatedByProtocol = activatedByProtocol;
-
         AppKnownFolders.Temp.Clear();
-
-        AppServiceProvider = await CreateServiceProvider();
+        AppServiceProvider = CreateServiceProvider();
     }
 
     /// <summary>
