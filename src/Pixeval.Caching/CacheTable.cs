@@ -38,9 +38,9 @@ public class CacheTable<TKey, THeader, TProtocol>(
 
     private readonly Lock _purgeLock = new();
 
-    private Dictionary<TKey, (nint ptr, int allocatedLength)> _cacheTable = [];
+    private Dictionary<TKey, (LinkedListNode<TKey> node, nint ptr, int allocatedLength)> _cacheTable = [];
 
-    private PriorityQueue<TKey, int> _lruCacheIndex = new(Comparer<int>.Create((x, y) => y.CompareTo(x)));
+    private readonly LinkedList<TKey> _lruCacheIndex = [];
 
     // ReSharper disable once InconsistentNaming
     public int CacheLRUFactor { get; set; } = 2;
@@ -56,16 +56,10 @@ public class CacheTable<TKey, THeader, TProtocol>(
         lock (_purgeLock)
         {
             var retain = _lruCacheIndex.Count / CacheLRUFactor;
-            var newPriorityQueue = new PriorityQueue<TKey, int>();
-            for (var i = 0; i < retain; i++)
-            {
-                _lruCacheIndex.TryDequeue(out var element, out var priority);
-                newPriorityQueue.Enqueue(element!, priority);
-            }
 
             var garbage = new Dictionary<nint, (TKey, int)>();
 
-            foreach (var key in _lruCacheIndex.UnorderedItems.Select(x => x.Element))
+            foreach (var key in _lruCacheIndex.Skip(retain))
             {
                 if (TryReadCache0(key, out var span, true))
                 {
@@ -74,17 +68,17 @@ public class CacheTable<TKey, THeader, TProtocol>(
                 }
             }
 
-            var grouped = _cacheTable.Values.ToDictionary().GroupBy(
-                tuple => MemoryManager.BumpPointerAllocators.First(pair => pair.Value.GetBlock((byte*) tuple.Key) != null).Value,
+            var grouped = _cacheTable.Values.GroupBy(
+                tuple => MemoryManager.BumpPointerAllocators.First(pair => pair.Value.GetBlock((byte*) tuple.ptr) != null).Value,
                 tuple => tuple);
             foreach (var group in grouped)
             {
-                var replacement = group.Key.Compact(group.ToDictionary(tuple => tuple.Key, tuple => tuple.Value), garbage.Keys.ToHashSet());
+                var replacement = group.Key.Compact(group.ToDictionary(tuple => tuple.ptr, tuple => tuple.allocatedLength), garbage.Keys.ToHashSet());
                 // forward reference
                 _cacheTable = _cacheTable.SelectMany(pair =>
                 {
                     return replacement.TryGetValue(pair.Value.ptr, out var newPointer)
-                        ? new[] { KeyValuePair.Create(pair.Key, (newPointer, pair.Value.allocatedLength)) }
+                        ? new[] { KeyValuePair.Create(pair.Key, (pair.Value.node, newPointer, pair.Value.allocatedLength)) }
                         : new[] { pair };
                 }).ToDictionary();
             }
@@ -95,7 +89,7 @@ public class CacheTable<TKey, THeader, TProtocol>(
                 _cacheTable.Remove(key);
             }
 
-            _lruCacheIndex = newPriorityQueue;
+            _lruCacheIndex.Skip(retain).ToList().ForEach(g => _lruCacheIndex.Remove(g));
         }
     }
 
@@ -132,9 +126,9 @@ public class CacheTable<TKey, THeader, TProtocol>(
             case AllocatorState.AllocationSuccess:
                 header.CopyTo(cacheArea);
                 span.CopyTo(cacheArea[header.Length..]);
-                _cacheTable[key] = ((nint) Unsafe.AsPointer(ref cacheArea.GetPinnableReference()), cacheArea.Length);
 
-                _lruCacheIndex.Enqueue(key, 0);
+                _lruCacheIndex.AddFirst(key);
+                _cacheTable[key] = (_lruCacheIndex.First!, (nint) Unsafe.AsPointer(ref cacheArea.GetPinnableReference()), cacheArea.Length);
 
                 _locks[key] = new Lock();
                 return AllocatorState.AllocationSuccess;
@@ -192,8 +186,8 @@ public class CacheTable<TKey, THeader, TProtocol>(
 
             if (!transparent)
             {
-                _lruCacheIndex.Remove(key, out _, out var oldPriority);
-                _lruCacheIndex.Enqueue(key, oldPriority + 1);
+                _lruCacheIndex.Remove(tuple.node);
+                _lruCacheIndex.AddFirst(tuple.node);
             }
 
             return true;
