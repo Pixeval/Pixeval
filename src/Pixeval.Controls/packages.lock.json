@@ -1,7 +1,7 @@
 {
   "version": 1,
   "dependencies": {
-    "net8.0-windows10.0.22621": {
+    "net9.0-windows10.0.22621": {
       "CommunityToolkit.Labs.WinUI.Shimmer": {
         "type": "Direct",
         "requested": "[0.1.240517-build.1678, )",
@@ -86,9 +86,9 @@
       },
       "Microsoft.NET.ILLink.Tasks": {
         "type": "Direct",
-        "requested": "[8.0.11, )",
-        "resolved": "8.0.11",
-        "contentHash": "zk5lnZrYJgtuJG8L4v17Ej8rZ3PUcR2iweNV08BaO5LbYHIi2wNaVNcJoLxvqgQdnjLlKnCCfVGLDr6QHeAarQ=="
+        "requested": "[9.0.0, )",
+        "resolved": "9.0.0",
+        "contentHash": "zAwp213evC3UkimtVXRb+Dlgc/40QG145nmZDtp2LO9zJJMfrp+i/87BnXN7tRXEA4liyzdFkjqG1HE8/RPb4A=="
       },
       "Microsoft.Windows.CsWin32": {
         "type": "Direct",
@@ -277,7 +277,7 @@
         }
       }
     },
-    "net8.0-windows10.0.22621/win-arm64": {
+    "net9.0-windows10.0.22621/win-arm64": {
       "Microsoft.Graphics.Win2D": {
         "type": "Direct",
         "requested": "[1.3.1, )",
@@ -303,7 +303,7 @@
         "contentHash": "f5sc/vcAoTCTEW7Nqzp4galAuTRguZViw8ksn+Nx2uskEBPm0/ubzy6gVjvXS/P96jLS89C8T9I0hPc417xpNg=="
       }
     },
-    "net8.0-windows10.0.22621/win-x64": {
+    "net9.0-windows10.0.22621/win-x64": {
       "Microsoft.Graphics.Win2D": {
         "type": "Direct",
         "requested": "[1.3.1, )",
@@ -329,7 +329,7 @@
         "contentHash": "f5sc/vcAoTCTEW7Nqzp4galAuTRguZViw8ksn+Nx2uskEBPm0/ubzy6gVjvXS/P96jLS89C8T9I0hPc417xpNg=="
       }
     },
-    "net8.0-windows10.0.22621/win-x86": {
+    "net9.0-windows10.0.22621/win-x86": {
       "Microsoft.Graphics.Win2D": {
         "type": "Direct",
         "requested": "[1.3.1, )",
