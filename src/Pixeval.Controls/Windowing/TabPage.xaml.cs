@@ -9,6 +9,7 @@ using WinUI3Utilities;
 using Windows.Graphics;
 using CommunityToolkit.WinUI;
 using Pixeval.Utilities;
+using Microsoft.UI.Xaml.Media;
 
 namespace Pixeval.Controls.Windowing;
 
@@ -45,7 +46,8 @@ public sealed partial class TabPage
     {
         var frame = new Frame
         {
-            Tag = viewModel
+            Tag = viewModel,
+            Background = Application.Current.Resources["LayerFillColorDefaultBrush"].To<Brush>()
         };
         frame.Loaded += Frame_OnLoaded;
         var tabViewItem = new TabViewItem
