@@ -136,6 +136,9 @@
             MenuItemTemplateSelector="{StaticResource NavigationViewItemDataTemplateSelector}"
             MenuItemsSource="{x:Bind _viewModel.MenuItems}"
             OpenPaneLength="{x:Bind _viewModel.MainPageRootNavigationViewOpenPanelLength}">
+            <NavigationView.Resources>
+                <StaticResource x:Key="NavigationViewContentBackground" ResourceKey="SystemControlTransparentBrush" />
+            </NavigationView.Resources>
             <windowing:TabPage x:Name="MainPageRootTab" />
         </NavigationView>
     </controls1:DockPanel>
