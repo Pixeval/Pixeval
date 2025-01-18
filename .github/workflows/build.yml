@@ -44,10 +44,10 @@ jobs:
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v2
 
-      - name: Setup .NET 8
+      - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: "8.0.x"
+          dotnet-version: "9.0.x"
 
       - uses: actions/cache@v4
         with:
