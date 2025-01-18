@@ -66,8 +66,9 @@ public static class PixivAuth
         httpClient.Dispose();
         _ = result.EnsureSuccessStatusCode();
         var str = await result.Content.ReadAsStringAsync();
-        var tokenResponse = (TokenResponse)JsonSerializer.Deserialize(str, typeof(TokenResponse), AppJsonSerializerContext.Default)!;
+        var tokenResponse = (TokenResponse) JsonSerializer.Deserialize(str, typeof(TokenResponse), AppJsonSerializerContext.Default)!;
         App.AppViewModel.LoginContext.RefreshToken = tokenResponse.RefreshToken;
+        App.AppViewModel.LoginContext.IsPremium = tokenResponse.Response?.User.IsPremium ?? false;
         return tokenResponse;
     }
 }

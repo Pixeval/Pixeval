@@ -22,9 +22,12 @@ using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Pages.Misc;
 using Pixeval.Pages.Tags;
 using Pixeval.Util.ComponentModels;
-using Pixeval.Util.IO;
 using Pixeval.Util.IO.Caching;
 using Pixeval.Util.UI;
+using IllustrationCacheTable = Pixeval.Caching.CacheTable<
+    Pixeval.Util.IO.Caching.PixevalIllustrationCacheKey,
+    Pixeval.Util.IO.Caching.PixevalIllustrationCacheHeader,
+    Pixeval.Util.IO.Caching.PixevalIllustrationCacheProtocol>;
 
 namespace Pixeval.Pages;
 
@@ -119,7 +122,14 @@ public partial class MainPageViewModel : UiObservableObject
     public MainPageViewModel(FrameworkElement owner) : base(owner)
     {
         SettingsTag = GetSettingsTag();
+        SetAvatarSource();
         SubscribeTokenRefresh();
+    }
+
+    private async void SetAvatarSource()
+    {
+        AvatarSource = await App.AppViewModel.AppServiceProvider.GetRequiredService<IllustrationCacheTable>()
+            .GetSourceFromCacheAsync(App.AppViewModel.MakoClient.Me.ProfileImageUrls.Px50X50);
     }
 
     public double MainPageRootNavigationViewOpenPanelLength => 280;
@@ -138,7 +148,7 @@ public partial class MainPageViewModel : UiObservableObject
         {
             OnEventAction = (m, changed, arg) => FrameworkElement.DispatcherQueue.TryEnqueue(async () =>
             {
-                AvatarSource = await App.AppViewModel.AppServiceProvider.GetRequiredService<MemoryCache>().GetSourceFromMemoryCacheAsync(arg.ProfileImageUrls.Px50X50);
+                AvatarSource = await App.AppViewModel.AppServiceProvider.GetRequiredService<IllustrationCacheTable>().GetSourceFromCacheAsync(arg.ProfileImageUrls.Px50X50);
                 UserName = arg.Name;
             }),
             OnDetachAction = listener => makoClient.TokenRefreshed -= listener.OnEvent

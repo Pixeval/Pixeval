@@ -12,10 +12,13 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Controls;
 using Pixeval.Util;
-using Pixeval.Util.IO;
 using Pixeval.Util.IO.Caching;
 using Pixeval.Utilities;
 using WinUI3Utilities;
+using IllustrationCacheTable = Pixeval.Caching.CacheTable<
+    Pixeval.Util.IO.Caching.PixevalIllustrationCacheKey,
+    Pixeval.Util.IO.Caching.PixevalIllustrationCacheHeader,
+    Pixeval.Util.IO.Caching.PixevalIllustrationCacheProtocol>;
 
 namespace Pixeval.Pages;
 
@@ -45,8 +48,8 @@ public sealed partial class PixivReplyStickerListPage
         {
             var results = await Task.WhenAll(MakoHelper.StickerIds
                 .Select(async id => new PixivReplyStickerViewModel(id,
-                    await App.AppViewModel.AppServiceProvider.GetRequiredService<MemoryCache>()
-                        .GetSourceFromMemoryCacheAsync(MakoHelper.GenerateStickerDownloadUrl(id), desiredWidth: 83))));
+                    await App.AppViewModel.AppServiceProvider.GetRequiredService<IllustrationCacheTable>()
+                        .GetSourceFromCacheAsync(MakoHelper.GenerateStickerDownloadUrl(id), desiredWidth: 83))));
             Stickers.AddRange(results.WhereNotNull());
         }
     }

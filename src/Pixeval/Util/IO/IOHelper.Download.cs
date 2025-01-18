@@ -133,7 +133,7 @@ public static partial class IoHelper
                     if (now - lastReported > TimeSpan.FromSeconds(0.5) && progress is not null && responseLength is not null)
                     {
                         lastReported = now;
-                        var percentage = totalRead / (double)responseLength * 100;
+                        var percentage = totalRead / (double) responseLength * 100;
                         _ = WindowFactory.RootWindow.DispatcherQueue.TryEnqueue(() =>
                             progress.Report(percentage)); // percentage, 100 as base
                     }

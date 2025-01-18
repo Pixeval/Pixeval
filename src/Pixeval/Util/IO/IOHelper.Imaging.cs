@@ -63,7 +63,7 @@ public static partial class IoHelper
         }
         catch
         {
-            return App.AppViewModel.AppServiceProvider.GetRequiredService<MemoryCache>().ImageNotAvailable;
+            return await CacheHelper.ImageNotAvailableTask.Value;
         }
     }
 

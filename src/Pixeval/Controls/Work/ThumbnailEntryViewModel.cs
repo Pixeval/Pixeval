@@ -9,9 +9,12 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Media;
 using Pixeval.CoreApi.Model;
-using Pixeval.Util.IO;
 using Pixeval.Util.IO.Caching;
 using Pixeval.Utilities;
+using IllustrationCacheTable = Pixeval.Caching.CacheTable<
+    Pixeval.Util.IO.Caching.PixevalIllustrationCacheKey,
+    Pixeval.Util.IO.Caching.PixevalIllustrationCacheHeader,
+    Pixeval.Util.IO.Caching.PixevalIllustrationCacheProtocol>;
 
 namespace Pixeval.Controls;
 
@@ -47,10 +50,11 @@ public abstract partial class ThumbnailEntryViewModel<T>(T entry) : EntryViewMod
         if (ThumbnailSource is null)
         {
             LoadingThumbnail = true;
-            ThumbnailSource = await App.AppViewModel.AppServiceProvider.GetRequiredService<MemoryCache>()
-                .GetSourceFromMemoryCacheAsync(
+            ThumbnailSource = await App.AppViewModel.AppServiceProvider.GetRequiredService<IllustrationCacheTable>()
+                .GetSourceFromCacheAsync(
                     ThumbnailUrl,
                     cancellationToken: LoadingThumbnailCancellationTokenSource.Token);
+
             LoadingThumbnail = false;
         }
 

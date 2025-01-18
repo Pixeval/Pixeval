@@ -70,3 +70,11 @@ public record Result<T>
 
     public record Failure(Exception? Cause) : Result<T>;
 }
+
+public static class ResultExtension
+{
+    public static Result<R> ViewAs<T, R>(this Result<T>.Failure err)
+    {
+        return Result<R>.AsFailure(err.Cause);
+    }
+}

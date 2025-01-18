@@ -7,8 +7,9 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:fluent="using:FluentIcons.WinUI"
     xmlns:local="using:Pixeval.Pages"
+    xmlns:management="using:Pixeval.AppManagement"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:pixeval="using:Pixeval.AppManagement"
+    xmlns:pixeval="using:Pixeval"
     xmlns:windowing="using:Pixeval.Controls.Windowing"
     Loaded="MainPage_OnLoaded"
     mc:Ignorable="d">
@@ -66,7 +67,7 @@
     <controls1:DockPanel>
         <controls1:TitleBar
             x:Name="TitleBar"
-            Title="{x:Bind pixeval:AppInfo.AppIdentifier}"
+            Title="{x:Bind management:AppInfo.AppIdentifier}"
             VerticalAlignment="Top"
             controls1:DockPanel.Dock="Top"
             DisplayMode="Tall"
@@ -77,12 +78,20 @@
                 <ImageIcon Source="ms-appx:///Assets/Images/logo.svg" />
             </controls1:TitleBar.Icon>
             <controls1:TitleBar.Footer>
-                <PersonPicture
+                <StackPanel
                     Grid.Column="0"
-                    MaxHeight="35"
-                    ProfilePicture="{x:Bind _viewModel.AvatarSource, Mode=OneWay}"
-                    Tapped="SelfAvatar_OnTapped"
-                    ToolTipService.ToolTip="{x:Bind _viewModel.UserName, Mode=OneWay}" />
+                    Orientation="Horizontal"
+                    Spacing="10">
+                    <PersonPicture
+                        MaxHeight="35"
+                        ProfilePicture="{x:Bind _viewModel.AvatarSource, Mode=OneWay}"
+                        Tapped="SelfAvatar_OnTapped"
+                        ToolTipService.ToolTip="{x:Bind _viewModel.UserName, Mode=OneWay}" />
+                    <controls:PixevalBadge
+                        Mode="Premium"
+                        UseSmall="False"
+                        Visibility="{x:Bind pixeval:App.AppViewModel.LoginContext.IsPremium}" />
+                </StackPanel>
             </controls1:TitleBar.Footer>
             <controls1:TitleBar.Content>
                 <controls1:DockPanel>
@@ -136,6 +145,9 @@
             MenuItemTemplateSelector="{StaticResource NavigationViewItemDataTemplateSelector}"
             MenuItemsSource="{x:Bind _viewModel.MenuItems}"
             OpenPaneLength="{x:Bind _viewModel.MainPageRootNavigationViewOpenPanelLength}">
+            <NavigationView.Resources>
+                <StaticResource x:Key="NavigationViewContentBackground" ResourceKey="SystemControlTransparentBrush" />
+            </NavigationView.Resources>
             <windowing:TabPage x:Name="MainPageRootTab" />
         </NavigationView>
     </controls1:DockPanel>

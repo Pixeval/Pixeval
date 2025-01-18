@@ -1,16 +1,15 @@
 // Copyright (c) Pixeval.Controls.
 // Licensed under the GPL v3 License.
 
-using System;
 using Microsoft.UI.Xaml.Controls;
 using System.Linq;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Navigation;
 using WinUI3Utilities;
-using System.Runtime;
 using Windows.Graphics;
 using CommunityToolkit.WinUI;
 using Pixeval.Utilities;
+using Microsoft.UI.Xaml.Media;
 
 namespace Pixeval.Controls.Windowing;
 
@@ -47,7 +46,8 @@ public sealed partial class TabPage
     {
         var frame = new Frame
         {
-            Tag = viewModel
+            Tag = viewModel,
+            Background = Application.Current.Resources["LayerFillColorDefaultBrush"].To<Brush>()
         };
         frame.Loaded += Frame_OnLoaded;
         var tabViewItem = new TabViewItem
@@ -67,9 +67,6 @@ public sealed partial class TabPage
 
         if (TabView.TabItems.Count is 0 && _ownsWindow)
             Window.Close();
-
-        GCSettings.LargeObjectHeapCompactionMode = GCLargeObjectHeapCompactionMode.CompactOnce;
-        GC.Collect();
     }
 
     private void Frame_OnLoaded(object sender, RoutedEventArgs e)
@@ -83,11 +80,11 @@ public sealed partial class TabPage
 
     private void TabView_OnTabCloseRequested(TabView sender, TabViewTabCloseRequestedEventArgs e)
     {
+        RemoveTab(e.Tab);
         if (e.Tab.Content is FrameworkElement element && element.FindDescendant<FrameworkElement>(ele => ele is IStructuralDisposalCompleter) is IStructuralDisposalCompleter completer)
         {
             completer.CompleteDisposalRecursively();
         }
-        RemoveTab(e.Tab);
     }
 
     private void TabView_OnTabDroppedOutside(TabView sender, TabViewTabDroppedOutsideEventArgs e)

@@ -131,6 +131,8 @@ public static partial class AppInfo
 
     public static void SaveContext()
     {
+        App.AppViewModel.MakoClient.Me.IsPremium = App.AppViewModel.LoginContext.IsPremium;
+
         // Save the current resolution
         if (WindowFactory.RootWindow.AppWindow.Presenter is OverlappedPresenter { State: OverlappedPresenterState.Maximized })
             App.AppViewModel.AppSettings.IsMaximized = true;

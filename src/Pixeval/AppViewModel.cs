@@ -7,6 +7,7 @@ using LiteDB;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Pixeval.AppManagement;
+using Pixeval.Caching;
 using Pixeval.Controls.Windowing;
 using Pixeval.CoreApi;
 using Pixeval.CoreApi.Net;
@@ -50,23 +51,25 @@ public partial class AppViewModel(App app) : IDisposable
         AppInfo.RestoreHistories();
     }
 
-    private static async Task<ServiceProvider> CreateServiceProvider()
+    private static ServiceProvider CreateServiceProvider()
     {
-        var fileCache = await FileCache.CreateDefaultAsync();
-        var memoryCache = await MemoryCache.CreateDefaultAsync(200);
+        const int defaultCacheSizeInByte = 200 * 1024 * 1024;
+
+        var cacheTable = new CacheTable<PixevalIllustrationCacheKey, PixevalIllustrationCacheHeader, PixevalIllustrationCacheProtocol>(
+            new PixevalIllustrationCacheProtocol(),
+            new CacheToken(1, defaultCacheSizeInByte, AppKnownFolders.Cache.CombinePath(CacheHelper.CacheFolderName), 8));
         var extensionService = new ExtensionService();
         extensionService.LoadAllHosts();
         return new ServiceCollection()
             .AddSingleton<IllustrationDownloadTaskFactory>()
             .AddSingleton<NovelDownloadTaskFactory>()
-            .AddSingleton<ExtensionService>(extensionService)
-            .AddSingleton<MemoryCache>(memoryCache)
-            .AddSingleton<FileCache>(fileCache)
-            .AddSingleton<FileLogger>(_ => new(AppKnownFolders.Logs.FullPath))
-            .AddSingleton<LiteDatabase>(new LiteDatabase(AppInfo.DatabaseFilePath))
-            .AddSingleton<DownloadHistoryPersistentManager>(provider => new(provider.GetRequiredService<LiteDatabase>(), App.AppViewModel.AppSettings.MaximumDownloadHistoryRecords))
-            .AddSingleton<SearchHistoryPersistentManager>(provider => new(provider.GetRequiredService<LiteDatabase>(), App.AppViewModel.AppSettings.MaximumSearchHistoryRecords))
-            .AddSingleton<BrowseHistoryPersistentManager>(provider => new(provider.GetRequiredService<LiteDatabase>(), App.AppViewModel.AppSettings.MaximumBrowseHistoryRecords))
+            .AddSingleton(extensionService)
+            .AddSingleton(cacheTable)
+            .AddSingleton(_ => new FileLogger(AppKnownFolders.Logs.FullPath))
+            .AddSingleton(new LiteDatabase(AppInfo.DatabaseFilePath))
+            .AddSingleton(provider => new DownloadHistoryPersistentManager(provider.GetRequiredService<LiteDatabase>(), App.AppViewModel.AppSettings.MaximumDownloadHistoryRecords))
+            .AddSingleton(provider => new SearchHistoryPersistentManager(provider.GetRequiredService<LiteDatabase>(), App.AppViewModel.AppSettings.MaximumSearchHistoryRecords))
+            .AddSingleton(provider => new BrowseHistoryPersistentManager(provider.GetRequiredService<LiteDatabase>(), App.AppViewModel.AppSettings.MaximumBrowseHistoryRecords))
             .BuildServiceProvider();
     }
 
@@ -75,13 +78,11 @@ public partial class AppViewModel(App app) : IDisposable
         _ = await WindowFactory.RootWindow.Content.To<FrameworkElement>().CreateAcknowledgementAsync(MiscResources.ExceptionEncountered, e.ToString());
     }
 
-    public async Task InitializeAsync(bool activatedByProtocol)
+    public void Initialize(bool activatedByProtocol)
     {
         _activatedByProtocol = activatedByProtocol;
-
         AppKnownFolders.Temp.Clear();
-
-        AppServiceProvider = await CreateServiceProvider();
+        AppServiceProvider = CreateServiceProvider();
     }
 
     /// <summary>

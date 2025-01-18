@@ -28,11 +28,15 @@ using Pixeval.Download;
 using Pixeval.Util.ComponentModels;
 using Microsoft.Extensions.DependencyInjection;
 using Pixeval.Extensions.Common;
-using Pixeval.Util.IO.Caching;
 using Windows.ApplicationModel.DataTransfer;
 using Microsoft.UI.Xaml;
 using Pixeval.Extensions.Common.Commands.Transformers;
 using WinUI3Utilities;
+using IllustrationCacheTable = Pixeval.Caching.CacheTable<
+    Pixeval.Util.IO.Caching.PixevalIllustrationCacheKey,
+    Pixeval.Util.IO.Caching.PixevalIllustrationCacheHeader,
+    Pixeval.Util.IO.Caching.PixevalIllustrationCacheProtocol>;
+using Pixeval.Util.IO.Caching;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
@@ -346,8 +350,8 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
                 AdvancePhase(LoadingPhase.CheckingCache);
                 if (ImageLoadingCancellationTokenSource.IsCancellationRequested)
                     return null;
-                return await App.AppViewModel.AppServiceProvider.GetRequiredService<MemoryCache>()
-                    .GetStreamFromMemoryCacheAsync(
+                return await App.AppViewModel.AppServiceProvider.GetRequiredService<IllustrationCacheTable>()
+                    .GetStreamFromCacheAsync(
                         url,
                         new Progress<double>(d => AdvancePhase(LoadingPhase.DownloadingImage, startProgress + ratio * d)),
                         cancellationToken: ImageLoadingCancellationTokenSource.Token);
