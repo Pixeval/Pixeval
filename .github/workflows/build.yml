@@ -47,7 +47,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: "9.0.x"
+          global-json-file: global.json
 
       - uses: actions/cache@v4
         with:
@@ -59,8 +59,7 @@ jobs:
       - name: Restore Files
         shell: pwsh
         run: |
-          msbuild $env:SOLUTION_NAME `
-          -t:Restore `
+          dotnet restore $env:SOLUTION_NAME `
           -p:Platform=$env:PROJECT_RESTORE_PLATFORM `
           -p:Configuration=$env:CONFIGURATION `
           -p:RestoreLockedMode=true
