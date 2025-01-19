@@ -1,7 +1,7 @@
 name: Build
 
 on:
-  workflow_dispatch: 
+  workflow_dispatch:
   push:
     branches:
       - "**"
@@ -55,7 +55,7 @@ jobs:
         with:
           path: ~/.nuget/packages
           key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
-      
+
       - name: Restore Files
         shell: pwsh
         run: |
@@ -69,14 +69,19 @@ jobs:
           path: ./**/obj/${{ matrix.platform }}
           key: ${{ matrix.platform }}-obj-${{ hashFiles('**/project.assets.json') }}
 
-      - name: Build Files
+      - name: Publish
+        id: publish
         shell: pwsh
         run: |
-          msbuild $env:PACKAGE_PROJECT_NAME `
+          $pulish_dir = msbuild $env:PACKAGE_PROJECT_NAME `
           -t:Publish `
           -p:Platform=$env:PLATFORM `
           -p:Configuration=$env:CONFIGURATION `
-          -p:AppxBundle=Never `
           -p:WindowsPackageType=None `
-          -p:WindowsAppSDKSelfContained=true `
-          -getproperty:PublishDir
+          -getProperty:PublishDir
+          Add-Content -Path $env:GITHUB_OUTPUT -Value "publish_dir=$pulish_dir"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Pixeval ${{ matrix.platform }}
+          path: ${{ steps.publish.outputs.publish_dir }}/*
