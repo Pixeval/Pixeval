@@ -1,16 +1,17 @@
 name: Build
 
 on:
-  # push:
-  #   branches-ignore:
-  #     - "dependabot**"
-  #   tags-ignore:
-  #     - "**"
+  workflow_dispatch:
+  push:
+    branches:
+      - "**"
+    paths-ignore:
+      - "**.md"
+    tags-ignore:
+      - "**"
   pull_request:
     paths-ignore:
       - "**.md"
-      - ".builds/**"
-      - ".specs/**"
 
 defaults:
   run:
@@ -34,46 +35,55 @@ jobs:
       PLATFORM: ${{ matrix.platform }}
       DEFAULT_DIR: ${{ github.workspace }} # Default: D:\a\Pixeval\Pixeval\
       APPX_PACKAGE_DIR: ${{ github.workspace }}\AppxPackages
+      MINVERBUILDMETADATA: build.${{ github.run_id }}.${{ github.run_attempt}}
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          filter: tree:0
 
       - name: Setup MSBuild
-        id: setup_msbuild
         uses: microsoft/setup-msbuild@v2
 
-      - name: Setup NuGet
-        id: setup-nuget
-        uses: NuGet/setup-nuget@v2.0.1
-
-      - name: Setup .NET 8
+      - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: "8.0.x"
+          global-json-file: global.json
+
+      - uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
 
       - name: Restore Files
-        id: restore_project
         shell: pwsh
         run: |
-          msbuild $env:SOLUTION_NAME `
-          -t:Restore `
+          dotnet restore $env:SOLUTION_NAME `
           -p:Platform=$env:PROJECT_RESTORE_PLATFORM `
           -p:Configuration=$env:CONFIGURATION `
-          -p:PublishReadyToRun=true `
+          -p:RestoreLockedMode=true
 
-      - name: Restore NuGet
-        id: restore_nuget
-        shell: pwsh
-        run: "nuget restore $env:SOLUTION_NAME"
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ./**/obj\${{ matrix.platform }}
+            ./**/bin\${{ matrix.platform }}
+          key: ${{ matrix.platform }}-obj-${{ hashFiles('**/project.assets.json') }}
 
-      - name: Build Files (Release)
-        id: build_app_with_release
+      - name: Publish
+        id: publish
         shell: pwsh
         run: |
-          msbuild $env:PACKAGE_PROJECT_NAME `
-          -t:Build `
+          $publish_dir = msbuild $env:PACKAGE_PROJECT_NAME `
+          -t:Publish `
           -p:Platform=$env:PLATFORM `
           -p:Configuration=$env:CONFIGURATION `
-          -p:AppxBundle=Never `
+          -p:WindowsPackageType=None `
+          -getProperty:PublishDir
+          Add-Content -Path $env:GITHUB_OUTPUT -Value "publish_dir=$publish_dir"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Pixeval ${{ matrix.platform }}
+          path: ${{ github.workspace }}\src\Pixeval\${{ steps.publish.outputs.publish_dir }}*
