@@ -252,6 +252,12 @@
           "Microsoft.WindowsAppSDK": "1.0.0"
         }
       },
+      "MinVer": {
+        "type": "Direct",
+        "requested": "[6.0.0, )",
+        "resolved": "6.0.0",
+        "contentHash": "+/SsmiySsXJlvQLCGBqaZKNVt3s/Y/HbAdwtop7Km2CnuZbaScoqkWJEBQ5Cy9ebkn6kCYKrHsXgwrFdTgcb3g=="
+      },
       "PininSharp": {
         "type": "Direct",
         "requested": "[1.2.0, )",

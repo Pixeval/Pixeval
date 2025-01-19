@@ -35,11 +35,13 @@ jobs:
       PLATFORM: ${{ matrix.platform }}
       DEFAULT_DIR: ${{ github.workspace }} # Default: D:\a\Pixeval\Pixeval\
       APPX_PACKAGE_DIR: ${{ github.workspace }}\AppxPackages
+      MINVERBUILDMETADATA: build.${{ github.run_id }}.${{ github.run_attempt}}
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          filter: tree:0
 
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v2
@@ -53,8 +55,6 @@ jobs:
         with:
           path: ~/.nuget/packages
           key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-nuget-
       
       - name: Restore Files
         shell: pwsh
@@ -68,8 +68,6 @@ jobs:
         with:
           path: ./**/obj/${{ matrix.platform }}
           key: ${{ matrix.platform }}-obj-${{ hashFiles('**/project.assets.json') }}
-          restore-keys: |
-            ${{ matrix.platform }}-obj-
 
       - name: Build Files
         shell: pwsh

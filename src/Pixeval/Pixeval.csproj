@@ -19,6 +19,7 @@
         <PublishProfile Condition="'$(PublishAot)' == 'true'">win-$(Platform).pubxml</PublishProfile>
         <WindowsPackageType>MSIX</WindowsPackageType>
         <NoWarn>NU1904;$(NoWarn)</NoWarn>
+        <MinVerTagPrefix>v</MinVerTagPrefix>
     </PropertyGroup>
 
     <ItemGroup>
@@ -48,6 +49,10 @@
         <PackageReference Include="Microsoft.Windows.CsWin32" Version="0.3.162">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="MinVer" Version="6.0.0">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="PininSharp" Version="1.2.0" />
         <PackageReference Include="Pixeval.Extensions.Common" Version="4.3.3.2" />
