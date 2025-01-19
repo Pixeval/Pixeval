@@ -66,22 +66,24 @@ jobs:
 
       - uses: actions/cache@v4
         with:
-          path: ./**/obj/${{ matrix.platform }}
+          path: |
+            ./**/obj\${{ matrix.platform }}
+            ./**/bin\${{ matrix.platform }}
           key: ${{ matrix.platform }}-obj-${{ hashFiles('**/project.assets.json') }}
 
       - name: Publish
         id: publish
         shell: pwsh
         run: |
-          $pulish_dir = msbuild $env:PACKAGE_PROJECT_NAME `
+          $publish_dir = msbuild $env:PACKAGE_PROJECT_NAME `
           -t:Publish `
           -p:Platform=$env:PLATFORM `
           -p:Configuration=$env:CONFIGURATION `
           -p:WindowsPackageType=None `
           -getProperty:PublishDir
-          Add-Content -Path $env:GITHUB_OUTPUT -Value "publish_dir=$pulish_dir"
+          Add-Content -Path $env:GITHUB_OUTPUT -Value "publish_dir=$publish_dir"
 
       - uses: actions/upload-artifact@v4
         with:
           name: Pixeval ${{ matrix.platform }}
-          path: ${{ steps.publish.outputs.publish_dir }}/*
+          path: ${{ github.workspace }}\src\Pixeval\${{ steps.publish.outputs.publish_dir }}*
