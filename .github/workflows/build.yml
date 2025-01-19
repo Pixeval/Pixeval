@@ -77,6 +77,6 @@ jobs:
           -p:Platform=$env:PLATFORM `
           -p:Configuration=$env:CONFIGURATION `
           -p:AppxBundle=Never `
-          -p:WindowsPackageType=none `
+          -p:WindowsPackageType=None `
           -p:WindowsAppSDKSelfContained=true `
           -getproperty:PublishDir
