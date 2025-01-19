@@ -73,7 +73,10 @@ jobs:
         shell: pwsh
         run: |
           msbuild $env:PACKAGE_PROJECT_NAME `
-          -t:Build `
+          -t:Publish `
           -p:Platform=$env:PLATFORM `
           -p:Configuration=$env:CONFIGURATION `
           -p:AppxBundle=Never `
+          -p:WindowsPackageType=none `
+          -p:WindowsAppSDKSelfContained=true `
+          -getproperty:PublishDir
