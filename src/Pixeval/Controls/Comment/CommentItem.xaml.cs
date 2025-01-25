@@ -36,8 +36,8 @@ public sealed partial class CommentItem
         }
         else
         {
-            block.CommentContent.Blocks.Clear();
-            block.CommentContent.Blocks.Add(await viewModel.GetReplyContentParagraphAsync());
+            block.CommentContent.RawText.Blocks.Clear();
+            block.CommentContent.RawText.Blocks.Add(await viewModel.GetReplyContentParagraphAsync());
         }
     }
 

@@ -266,9 +266,9 @@
       },
       "Pixeval.Extensions.Common": {
         "type": "Direct",
-        "requested": "[4.3.3.2, )",
-        "resolved": "4.3.4",
-        "contentHash": "LrOURbnz6tyiG5Cks4xRNZE/VUOcjvIqVrAz/jsWb9mK4r+opEgAPJD/q10e/PJe5qyxI3dVWrCGVeYtDm87YQ==",
+        "requested": "[4.3.4.1, )",
+        "resolved": "4.3.4.1",
+        "contentHash": "RUdSP+AC6fNd6RJV39WRaRFuARYuS5wt9NJ/aKaDFoSuIJRwqIch99tvxywkw3fTdZ4PhD4mQoJHf+wDnFFd2A==",
         "dependencies": {
           "FluentIcons.Common": "1.1.271"
         }
