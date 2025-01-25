@@ -44,8 +44,6 @@ public sealed partial class TranslatableTextBlock : UserControl
     private async void GetTranslation()
     {
         var extensionService = App.AppViewModel.AppServiceProvider.GetRequiredService<ExtensionService>();
-        if (!extensionService.ActiveImageTransformerCommands.Any())
-            return;
         var translator = extensionService.ActiveExtensions.FirstOrDefault(p => p is ITextTransformerCommandExtension) as ITextTransformerCommandExtension;
         if (translator is null) return;
         var text = "";
