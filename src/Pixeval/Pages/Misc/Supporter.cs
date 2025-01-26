@@ -118,6 +118,7 @@ public record Supporter(string Nickname, string Name, Uri ProfilePicture, Uri Pr
 public partial class GitHubUserSerializeContext : JsonSerializerContext;
 
 [JsonSerializable(typeof(Supporter[]))]
+[JsonSerializable(typeof(List<Supporter>))]
 public partial class SupporterSerializeContext : JsonSerializerContext;
 
 public class GitHubUser

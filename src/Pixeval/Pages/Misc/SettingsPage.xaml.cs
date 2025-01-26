@@ -170,15 +170,7 @@ public sealed partial class SettingsPage : IDisposable, INotifyPropertyChanged
     /// <summary>
     /// 每次离开页面都进行保存
     /// </summary>
-    private void SettingsPage_OnUnloaded(object sender, RoutedEventArgs e)
-    {
-        foreach (var localGroup in ViewModel.LocalGroups)
-        foreach (var settingsEntry in localGroup)
-            settingsEntry.ValueSaving(AppInfo.LocalConfig);
-        foreach (var extensionGroup in ViewModel.ExtensionGroups)
-        foreach (var settingsEntry in extensionGroup)
-            settingsEntry.ValueSaving(extensionGroup.Model.Values);
-    }
+    private void SettingsPage_OnUnloaded(object sender, RoutedEventArgs e) => ValueSaving();
 
     public void Dispose()
     {
@@ -186,6 +178,7 @@ public sealed partial class SettingsPage : IDisposable, INotifyPropertyChanged
             return;
         _disposed = true;
         Bindings.StopTracking();
+        ValueSaving();
         ViewModel.Dispose();
         ViewModel = null!;
     }
@@ -194,6 +187,18 @@ public sealed partial class SettingsPage : IDisposable, INotifyPropertyChanged
     {
         base.CompleteDisposal();
         Dispose();
+    }
+
+    private void ValueSaving()
+    {
+        if (ViewModel == null!)
+            return;
+        foreach (var localGroup in ViewModel.LocalGroups)
+        foreach (var settingsEntry in localGroup)
+            settingsEntry.ValueSaving(AppInfo.LocalConfig);
+        foreach (var extensionGroup in ViewModel.ExtensionGroups)
+        foreach (var settingsEntry in extensionGroup)
+            settingsEntry.ValueSaving(extensionGroup.Model.Values);
     }
 
     public event PropertyChangedEventHandler? PropertyChanged;
