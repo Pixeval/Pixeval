@@ -47,7 +47,8 @@ public partial class SingleImageDownloadTaskGroup : ImageDownloadTask, IImageDow
         CurrentState = entry.State;
         if (entry.State is DownloadState.Completed or DownloadState.Cancelled or DownloadState.Error)
             ProgressPercentage = 100;
-        IllustrationDownloadFormat = IoHelper.GetIllustrationFormat(Path.GetExtension(Destination));
+        // DatabaseEntry.Destination可以包含未被替换的token，从此可以拿到IllustrationDownloadFormat.Original
+        IllustrationDownloadFormat = IoHelper.GetIllustrationFormat(Path.GetExtension(DatabaseEntry.Destination));
     }
 
     private void SetNotCreateFromEntry()
