@@ -24,6 +24,8 @@ using Pixeval.Extensions.Common;
 using Pixeval.Extensions.Common.Commands.Transformers;
 using WinUI3Utilities.Attributes;
 using Microsoft.UI.Xaml.Documents;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 
 namespace Pixeval.Controls;
 
@@ -33,15 +35,10 @@ public sealed partial class TranslatableTextBlock : UserControl
     public TranslatableTextBlock()
     {
         this.InitializeComponent();
-        var listener = new WeakEventListener<HyperlinkButton, object, RoutedEventArgs>(TranslateButton)
-        {
-            OnEventAction = (instance, source, eventArgs) => { GetTranslation(); },
-            OnDetachAction = (weakEventListener) => TranslateButton.Click -= weakEventListener.OnEvent
-        };
-        TranslateButton.Click += listener.OnEvent;
     }
 
-    private async void GetTranslation()
+    [RelayCommand]
+    private async Task GetTranslation()
     {
         var extensionService = App.AppViewModel.AppServiceProvider.GetRequiredService<ExtensionService>();
         var translator = extensionService.ActiveExtensions.FirstOrDefault(p => p is ITextTransformerCommandExtension) as ITextTransformerCommandExtension;
@@ -60,6 +57,7 @@ public sealed partial class TranslatableTextBlock : UserControl
                 }
             }
         }
+        if (text == "") return;
         var result = await translator.TransformAsync(text, TransformerType);
         TranslatedText.Text = result;
     }
