@@ -25,7 +25,6 @@ using WinUI3Utilities;
 using QRCoder;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.Utilities;
-using Microsoft.Extensions.DependencyInjection;
 using Pixeval.Util.IO.Caching;
 
 namespace Pixeval.Util.IO;

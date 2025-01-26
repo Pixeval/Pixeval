@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <OutputType>WinExe</OutputType>
         <TargetFramework>net9.0-windows10.0.22621.0</TargetFramework>
@@ -58,12 +58,12 @@
         <PackageReference Include="Pixeval.Extensions.Common" Version="4.3.4.1" />
         <!--<PackageReference Include="Pixeval.Bypass" Version="1.1.7" />-->
         <PackageReference Include="Pixeval.QRCoder" Version="1.4.5" />
-        <PackageReference Include="QuestPDF" Version="2024.12.2" />
+        <PackageReference Include="QuestPDF" Version="2024.12.3" />
         <PackageReference Include="ReverseMarkdown" Version="4.6.0" />
         <PackageReference Include="SixLabors.ImageSharp" Version="3.1.6" />
         <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="2.1.5" />
         <PackageReference Include="System.Linq.Async" Version="6.0.1" />
-        <PackageReference Include="WinUI3Utilities" Version="1.1.7.15" />
+        <PackageReference Include="WinUI3Utilities" Version="1.1.7.16" />
         <ProjectReference Include="..\Pixeval.Caching\Pixeval.Caching.csproj" />
 
         <ProjectReference Include="..\Pixeval.Controls\Pixeval.Controls.csproj" />

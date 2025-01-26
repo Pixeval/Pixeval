@@ -10,7 +10,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Pixeval.AppManagement;
 using Pixeval.Controls.Windowing;
 using Pixeval.CoreApi;
-using Pixeval.CoreApi.Global.Enum;
 using Pixeval.Logging;
 using Pixeval.Settings.Models;
 using Pixeval.Util.UI;
