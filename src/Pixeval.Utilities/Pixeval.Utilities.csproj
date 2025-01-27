@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFramework>net9.0</TargetFramework>
+        <TargetFramework>.net8.0</TargetFramework>
         <Configurations>Debug;Release</Configurations>
         <Platforms>x86;x64;arm64</Platforms>
         <Nullable>enable</Nullable>

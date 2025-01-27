@@ -154,8 +154,8 @@ public class HeapAllocator : IDisposable
 
     public int BlockIndex(HeapBlock block)
     {
-        var result = _commitedRegions.Index().FirstOrDefault(b => Unsafe.AreSame(ref block.StartPtr, ref b.Item.StartPtr));
-        return result == default ? -1 : result.Index;
+        var result = _commitedRegions.Indexed().FirstOrDefault(b => Unsafe.AreSame(ref block.StartPtr, ref b.Item2.StartPtr));
+        return result == default ? -1 : result.Item1;
     }
 
     public unsafe HeapBlock? GetBlock(byte* ptr)

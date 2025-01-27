@@ -20,7 +20,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.ru.md = README.ru.md
 		SECURITY.md = SECURITY.md
 		Settings.XamlStyler = Settings.XamlStyler
-		StructuralDisposal.md = StructuralDisposal.md
+		.github\StructuralDisposal.md = .github\StructuralDisposal.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ISSUE_TEMPLATE", "ISSUE_TEMPLATE", "{CF6471C8-02F1-4B25-9207-43312C206A45}"
@@ -233,8 +233,8 @@ Global
 		{D76B0877-D163-46BE-88B1-D2FF02745DDC} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {C5C0040E-8F07-4F3A-A4D8-AE760A819615}
-		RESX_NeutralResourcesLanguage = zh-CN
 		RESX_ConfirmAddLanguageFile = True
+		RESX_NeutralResourcesLanguage = zh-CN
+		SolutionGuid = {C5C0040E-8F07-4F3A-A4D8-AE760A819615}
 	EndGlobalSection
 EndGlobal
