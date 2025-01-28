@@ -28,11 +28,12 @@
                 <controls:Case.Value>
                     <x:Boolean>False</x:Boolean>
                 </controls:Case.Value>
-                <RichTextBlock
-                    x:Name="CommentContent"
-                    FontSize="{StaticResource CaptionTextBlockFontSize}"
-                    LineHeight="14.4"
-                    TextWrapping="Wrap" />
+                <StackPanel>
+                    <local:TranslatableTextBlock
+                        TransformerType="Comment"
+                        x:Name="CommentContent"/>
+                </StackPanel>
+
             </controls:Case>
         </controls:SwitchPresenter>
         <CommandBar

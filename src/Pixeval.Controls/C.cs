@@ -12,6 +12,7 @@ using Microsoft.UI.Xaml.Media;
 using WinUI3Utilities;
 using Windows.UI.Text;
 using Microsoft.UI.Text;
+using Pixeval.Utilities;
 
 namespace Pixeval.Controls;
 
@@ -47,6 +48,7 @@ public static class C
     public static Visibility IsNotZeroToVisibility(int value) => value is not 0 ? Visibility.Visible : Visibility.Collapsed;
 
     public static Visibility IsNotZeroDToVisibility(double value) => value is not 0 ? Visibility.Visible : Visibility.Collapsed;
+    public static Visibility IsNullOrEmptyToVisibility(string? value) => value.IsNullOrEmpty() ? Visibility.Collapsed : Visibility.Visible;
 
     public static unsafe Color ToAlphaColor(uint color)
     {
