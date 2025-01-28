@@ -54,15 +54,14 @@ jobs:
       - uses: actions/cache@v4
         with:
           path: ~/.nuget/packages
-          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/Directory.Packages.props') }}
 
       - name: Restore Files
         shell: pwsh
         run: |
           dotnet restore $env:SOLUTION_NAME `
           -p:Platform=$env:PROJECT_RESTORE_PLATFORM `
-          -p:Configuration=$env:CONFIGURATION `
-          -p:RestoreLockedMode=true
+          -p:Configuration=$env:CONFIGURATION
 
       - uses: actions/cache@v4
         with:
