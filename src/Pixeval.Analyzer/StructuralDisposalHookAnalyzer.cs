@@ -26,21 +26,20 @@ namespace Pixeval.Analyzer
 
         public override void Initialize(AnalysisContext context)
         {
-            // Debugger.Launch();
             context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
             context.EnableConcurrentExecution();
-
+            
             context.RegisterSemanticModelAction(AnalyzeDocument);
         }
 
         private static void AnalyzeDocument(SemanticModelAnalysisContext context)
         {
-            var descendantTypes = context.SemanticModel.SyntaxTree.GetRoot().DescendantNodes().Where(node => node.IsKind(SyntaxKind.ClassDeclaration)
+            var descendantTypes = context.FilterTree.GetRoot().DescendantNodes().Where(node => node.IsKind(SyntaxKind.ClassDeclaration)
                                                                                                              || node.IsKind(SyntaxKind.RecordDeclaration)
                                                                                                              || node.IsKind(SyntaxKind.StructDeclaration)
                                                                                                              || node.IsKind(SyntaxKind.RecordStructDeclaration))
                 .Where(typeDecl => context.SemanticModel.GetDeclaredSymbol(typeDecl) is INamedTypeSymbol symbol &&
-                                   symbol.Interfaces.Any(sym => sym.GetFullMetadataName() == InterfaceFqName))
+                                   symbol.Interfaces.Any(sym => sym.ToString() == InterfaceFqName))
                 .Cast<TypeDeclarationSyntax>();
 
             foreach (var typeDecl in descendantTypes)

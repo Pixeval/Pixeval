@@ -3,7 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
-    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:fluent="using:FluentIcons.WinUI"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
@@ -108,20 +108,20 @@
                     ProfilePicture="{x:Bind ViewModel.AvatarSource, Mode=OneWay}" />
             </Border>
             <interactivity:Interaction.Behaviors>
-                <core:EventTriggerBehavior EventName="PointerEntered">
-                    <core:ChangePropertyAction
+                <interactivity:EventTriggerBehavior EventName="PointerEntered">
+                    <interactivity:ChangePropertyAction
                         PropertyName="Scale"
                         TargetObject="{x:Bind AvatarButton}"
                         Value="{x:Bind local:IllustratorItem._ZoomedScale}" />
-                    <core:ChangePropertyAction
+                    <interactivity:ChangePropertyAction
                         PropertyName="Translation"
                         TargetObject="{x:Bind AvatarButton}"
                         Value="{x:Bind local:IllustratorItem._ElevatedTranslation}" />
-                    <core:ChangePropertyAction
+                    <interactivity:ChangePropertyAction
                         PropertyName="Rotation"
                         TargetObject="{x:Bind AvatarButton}"
                         Value="{x:Bind local:IllustratorItem.RotatedRotation}" />
-                </core:EventTriggerBehavior>
+                </interactivity:EventTriggerBehavior>
             </interactivity:Interaction.Behaviors>
             <Button.Flyout>
                 <MenuFlyout Closed="RestoreAvatarButton">

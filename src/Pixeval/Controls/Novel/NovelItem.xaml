@@ -3,7 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
-    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:labs="using:CommunityToolkit.Labs.WinUI.MarkdownTextBlock"
@@ -32,12 +32,12 @@
         </Storyboard>
     </Grid.Resources>
     <interactivity:Interaction.Behaviors>
-        <core:EventTriggerBehavior EventName="PointerEntered">
-            <core:CallMethodAction MethodName="ScaleIn" TargetObject="{x:Bind HeartButton}" />
-        </core:EventTriggerBehavior>
-        <core:EventTriggerBehavior EventName="PointerExited">
-            <core:CallMethodAction MethodName="ScaleOut" TargetObject="{x:Bind HeartButton}" />
-        </core:EventTriggerBehavior>
+        <interactivity:EventTriggerBehavior EventName="PointerEntered">
+            <interactivity:CallMethodAction MethodName="ScaleIn" TargetObject="{x:Bind HeartButton}" />
+        </interactivity:EventTriggerBehavior>
+        <interactivity:EventTriggerBehavior EventName="PointerExited">
+            <interactivity:CallMethodAction MethodName="ScaleOut" TargetObject="{x:Bind HeartButton}" />
+        </interactivity:EventTriggerBehavior>
     </interactivity:Interaction.Behaviors>
     <Grid.ColumnDefinitions>
         <ColumnDefinition Width="Auto" />

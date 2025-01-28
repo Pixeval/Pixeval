@@ -37,7 +37,7 @@ public static class SymbolHelper
 
         s = s.ContainingSymbol;
 
-        while (!IsRootNamespace(s))
+        while (s is not null && !IsRootNamespace(s))
         {
             if (s is ITypeSymbol && last is ITypeSymbol)
             {

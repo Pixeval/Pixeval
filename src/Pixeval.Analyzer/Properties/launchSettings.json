@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "Pixeval.SourceGen": {
+    "Pixeval.Analyzer": {
       "commandName": "DebugRoslynComponent",
       "targetProject": "..\\Pixeval\\Pixeval.csproj"
     }

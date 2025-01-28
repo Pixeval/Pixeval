@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <OutputType>WinExe</OutputType>
-        <TargetFramework>.net8.0-windows10.0.22621.0</TargetFramework>
+        <TargetFramework>net8.0-windows10.0.22621.0</TargetFramework>
         <TargetPlatformMinVersion>10.0.19041.0</TargetPlatformMinVersion>
         <RootNamespace>Pixeval</RootNamespace>
         <Platforms>x86;x64;ARM64</Platforms>
@@ -22,114 +22,112 @@
         <MinVerTagPrefix>v</MinVerTagPrefix>
     </PropertyGroup>
 
-    <ItemGroup>
-        <PackageReference Include="CommunityToolkit.Labs.WinUI.Controls.MarkdownTextBlock" Version="0.1.240517-build.1678" />
-        <PackageReference Include="CommunityToolkit.Labs.WinUI.Shimmer" Version="0.1.240517-build.1678" />
-        <PackageReference Include="CommunityToolkit.Labs.WinUI.TitleBar" Version="0.0.1-build.1924" />
-        <PackageReference Include="CommunityToolkit.Labs.WinUI.TokenView" Version="0.1.240517-build.1678" />
-        <PackageReference Include="CommunityToolkit.WinUI.Behaviors" Version="8.1.240916" />
-        <PackageReference Include="CommunityToolkit.WinUI.Collections" Version="8.1.240916" />
-        <PackageReference Include="CommunityToolkit.WinUI.Animations" Version="8.1.240916" />
-        <PackageReference Include="CommunityToolkit.WinUI.Controls.ColorPicker" Version="8.1.240916" />
-        <PackageReference Include="CommunityToolkit.WinUI.Controls.Primitives" Version="8.1.240916" />
-        <PackageReference Include="CommunityToolkit.WinUI.Controls.Segmented" Version="8.1.240916" />
-        <PackageReference Include="CommunityToolkit.WinUI.Controls.SettingsControls" Version="8.1.240916" />
-        <PackageReference Include="CommunityToolkit.WinUI.Controls.TokenizingTextBox" Version="8.1.240916" />
-        <PackageReference Include="CommunityToolkit.WinUI.Converters" Version="8.1.240916" />
-        <PackageReference Include="CommunityToolkit.WinUI.Media" Version="8.1.240916" />
-        <PackageReference Include="CommunityToolkit.Diagnostics" Version="8.4.0" />
-        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
-        <PackageReference Include="FluentIcons.WinUI" Version="1.1.271" />
-        <PackageReference Include="LiteDB" Version="5.0.21" />
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.1" />
-        <PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="3.0.1" />
-        <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.1742" />
-        <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.6.250108002" />
-        <PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.0.9" />
-        <PackageReference Include="Microsoft.Windows.CsWin32" Version="0.3.162">
-            <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
-        <PackageReference Include="MinVer" Version="6.0.0">
-          <PrivateAssets>all</PrivateAssets>
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
-        <PackageReference Include="PininSharp" Version="1.2.0" />
-        <PackageReference Include="Pixeval.Extensions.Common" Version="4.3.4" />
-        <!--<PackageReference Include="Pixeval.Bypass" Version="1.1.7" />-->
-        <PackageReference Include="Pixeval.QRCoder" Version="1.4.5" />
-        <PackageReference Include="QuestPDF" Version="2024.12.3" />
-        <PackageReference Include="ReverseMarkdown" Version="4.6.0" />
-        <PackageReference Include="SixLabors.ImageSharp" Version="3.1.6" />
-        <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="2.1.5" />
-        <PackageReference Include="System.Linq.Async" Version="6.0.1" />
-        <PackageReference Include="WinUI3Utilities" Version="1.1.7.16" />
-        <ProjectReference Include="..\Pixeval.Caching\Pixeval.Caching.csproj" />
+	<ItemGroup>
+		<PackageReference Include="CommunityToolkit.Labs.WinUI.Controls.MarkdownTextBlock" Version="0.1.240517-build.1678" />
+		<PackageReference Include="CommunityToolkit.Labs.WinUI.Shimmer" Version="0.1.240517-build.1678" />
+		<PackageReference Include="CommunityToolkit.Labs.WinUI.TitleBar" Version="0.0.1-build.1924" />
+		<PackageReference Include="CommunityToolkit.Labs.WinUI.TokenView" Version="0.1.240517-build.1678" />
+		<PackageReference Include="CommunityToolkit.WinUI.Behaviors" Version="8.1.240916" />
+		<PackageReference Include="CommunityToolkit.WinUI.Collections" Version="8.1.240916" />
+		<PackageReference Include="CommunityToolkit.WinUI.Animations" Version="8.1.240916" />
+		<PackageReference Include="CommunityToolkit.WinUI.Controls.ColorPicker" Version="8.1.240916" />
+		<PackageReference Include="CommunityToolkit.WinUI.Controls.Primitives" Version="8.1.240916" />
+		<PackageReference Include="CommunityToolkit.WinUI.Controls.Segmented" Version="8.1.240916" />
+		<PackageReference Include="CommunityToolkit.WinUI.Controls.SettingsControls" Version="8.1.240916" />
+		<PackageReference Include="CommunityToolkit.WinUI.Controls.TokenizingTextBox" Version="8.1.240916" />
+		<PackageReference Include="CommunityToolkit.WinUI.Converters" Version="8.1.240916" />
+		<PackageReference Include="CommunityToolkit.WinUI.Media" Version="8.1.240916" />
+		<PackageReference Include="CommunityToolkit.Diagnostics" Version="8.4.0" />
+		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+		<PackageReference Include="FluentIcons.WinUI" Version="1.1.271" />
+		<PackageReference Include="JsonPoke" Version="1.2.0" />
+		<PackageReference Include="LiteDB" Version="5.0.21" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.1" />
+		<PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="3.0.1" />
+		<PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.1742" />
+		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.6.250108002" />
+		<PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="3.0.0" />
+		<PackageReference Include="Microsoft.Windows.CsWin32" Version="0.3.162">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="MinVer" Version="6.0.0">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="PininSharp" Version="1.2.0" />
+		<PackageReference Include="Pixeval.Extensions.Common" Version="4.3.3.2" />
+		<!--<PackageReference Include="Pixeval.Bypass" Version="1.1.7" />-->
+		<PackageReference Include="Pixeval.QRCoder" Version="1.4.5" />
+		<PackageReference Include="QuestPDF" Version="2024.12.3" />
+		<PackageReference Include="ReverseMarkdown" Version="4.6.0" />
+		<PackageReference Include="SixLabors.ImageSharp" Version="3.1.6" />
+		<PackageReference Include="SixLabors.ImageSharp.Drawing" Version="2.1.5" />
+		<PackageReference Include="System.Linq.Async" Version="6.0.1" />
+		<PackageReference Include="WinUI3Utilities" Version="1.1.7.16" />
+		<ProjectReference Include="..\Pixeval.Caching\Pixeval.Caching.csproj" />
+		<ProjectReference Include="..\Pixeval.Controls\Pixeval.Controls.csproj" />
+		<ProjectReference Include="..\Pixeval.CoreApi\Pixeval.CoreApi.csproj" />
+		<ProjectReference Include="..\Pixeval.Utilities\Pixeval.Utilities.csproj" />
+		<ProjectReference Include="..\Pixeval.Analyzer\Pixeval.Analyzer.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="False" />
+		<ProjectReference Include="..\Pixeval.SourceGen\Pixeval.SourceGen.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="False" />
+		<Manifest Include="$(ApplicationManifest)" />
+	</ItemGroup>
 
-        <ProjectReference Include="..\Pixeval.Controls\Pixeval.Controls.csproj" />
-        <ProjectReference Include="..\Pixeval.CoreApi\Pixeval.CoreApi.csproj" />
-        <ProjectReference Include="..\Pixeval.Utilities\Pixeval.Utilities.csproj" />
-        <ProjectReference Include="..\Pixeval.SourceGen\Pixeval.SourceGen.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="False" />
-        <Manifest Include="$(ApplicationManifest)" />
-    </ItemGroup>
+	<!--Exposes PRI resources-->
+	<Target Name="InjectAdditionalFiles" BeforeTargets="GenerateMSBuildEditorConfigFileShouldRun">
+		<RemoveDir Directories="Generated" />
+		<ItemGroup>
+			<TextFiles Include="%(TextFile.OutputTarget)">
+				<Key>$([System.String]::Copy('%(TextFile.Key)').Replace('_', '/'))</Key>
+				<Content>$([System.IO.File]::ReadAllText(%(FullPath)))</Content>
+			</TextFiles>
+		</ItemGroup>
+		<WriteLinesToFile Condition="%(TextFiles.Identity) != ''" File="%(TextFiles.Identity)" Overwrite="true" Lines="{}" />
+		<JsonPoke Condition="%(TextFiles.Identity) != ''" ContentPath="%(TextFiles.Identity)" Query="$['%(TextFiles.Key)']" Value="%(TextFiles.Content)"></JsonPoke>
+		<ItemGroup>
+			<PRIResource Include="@(TextFiles)" />
+			<AdditionalFiles Include="@(PRIResource)" SourceItemGroup="PRIResource" />
+		</ItemGroup>
+	</Target>
+	<ItemGroup>
+		<CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="SourceItemGroup" />
 
-    <!--Exposes PRI resources-->
-    <Target Name="InjectAdditionalFiles" BeforeTargets="GenerateMSBuildEditorConfigFileShouldRun">
-        <RemoveDir Directories="Generated" />
-        <ItemGroup>
-            <TextFiles Include="%(TextFile.OutputTarget)">
-                <Content>{
-    @(TextFile-&gt;Metadata('Content'), ',
-    ')
-}</Content>
-            </TextFiles>
-        </ItemGroup>
-        <WriteLinesToFile Condition="%(TextFiles.Identity) != ''" File="%(TextFiles.Identity)" Overwrite="true" Lines="@(TextFiles->'%(Content)')" />
-        <ItemGroup>
-            <PRIResource Include="@(TextFiles)" />
-            <AdditionalFiles Include="@(PRIResource)" SourceItemGroup="PRIResource" />
-        </ItemGroup>
-    </Target>
-    <ItemGroup>
-        <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="SourceItemGroup" />
+		<TextFile Include="Strings\*\*.md">
+			<OutputTarget>Generated\%(RecursiveDir)TextGenerated.resjson</OutputTarget>
+			<Key>%(Filename)</Key>
+		</TextFile>
+		<TextFile Include="Strings\*\*.txt">
+			<OutputTarget>Generated\%(RecursiveDir)TextGenerated.resjson</OutputTarget>
+			<Key>%(Filename)</Key>
+		</TextFile>
 
-        <TextFile Include="Strings\*\*.md">
-            <OutputTarget>Generated\%(RecursiveDir)\TextGenerated.resjson</OutputTarget>
-            <Content>"$([System.String]::Concat(%(Filename), '"').Replace('_', '/')) : "$([System.IO.File]::ReadAllText(%(FullPath)).Replace('\', '\\').Replace('
-', '\n').Replace('"', '\"'))"</Content>
-        </TextFile>
-        <TextFile Include="Strings\*\*.txt">
-            <OutputTarget>Generated\%(RecursiveDir)\TextGenerated.resjson</OutputTarget>
-            <Content>"$([System.String]::Concat(%(Filename), '"').Replace('_', '/')) : "$([System.IO.File]::ReadAllText(%(FullPath)).Replace('\', '\\').Replace('
-', '\n').Replace('"', '\"'))"</Content>
-        </TextFile>
+		<PRIResource Include="Assets\Svg.resw" />
+		<PRIResource Include="Strings\*\*.resjson" />
+		<PRIResource Include="Strings\*\*.resw" />
+	</ItemGroup>
 
-        <PRIResource Include="Assets\Svg.resw" />
-        <PRIResource Include="Strings\*\*.resjson" />
-        <PRIResource Include="Strings\*\*.resw" />
-    </ItemGroup>
+	<!--PackageManifest-->
+	<PropertyGroup>
+		<IncludePackageReferencesDuringMarkupCompilation>true</IncludePackageReferencesDuringMarkupCompilation>
+		<GenerateAppInstallerFile>False</GenerateAppInstallerFile>
+		<AppxPackageSigningEnabled>False</AppxPackageSigningEnabled>
+		<AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
+		<AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
+		<AppxSymbolPackageEnabled>True</AppxSymbolPackageEnabled>
+		<GenerateTestArtifacts>True</GenerateTestArtifacts>
+		<AppxBundle>Always</AppxBundle>
+		<AppInstallerUri>%UserProfile%\Desktop</AppInstallerUri>
+		<HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
+		<GenerateTemporaryStoreCertificate>True</GenerateTemporaryStoreCertificate>
+		<AppxBundlePlatforms>x86|x64|arm64</AppxBundlePlatforms>
+	</PropertyGroup>
 
-    <!--PackageManifest-->
-    <PropertyGroup>
-        <IncludePackageReferencesDuringMarkupCompilation>true</IncludePackageReferencesDuringMarkupCompilation>
-        <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
-        <AppxPackageSigningEnabled>False</AppxPackageSigningEnabled>
-        <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
-        <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
-        <AppxSymbolPackageEnabled>True</AppxSymbolPackageEnabled>
-        <GenerateTestArtifacts>True</GenerateTestArtifacts>
-        <AppxBundle>Always</AppxBundle>
-        <AppInstallerUri>%UserProfile%\Desktop</AppInstallerUri>
-        <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
-        <GenerateTemporaryStoreCertificate>True</GenerateTemporaryStoreCertificate>
-        <AppxBundlePlatforms>x86|x64|arm64</AppxBundlePlatforms>
-    </PropertyGroup>
+	<ItemGroup Condition="'$(DisableMsixProjectCapabilityAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
+		<ProjectCapability Include="Msix" />
+	</ItemGroup>
 
-    <ItemGroup Condition="'$(DisableMsixProjectCapabilityAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
-        <ProjectCapability Include="Msix" />
-    </ItemGroup>
-
-    <PropertyGroup Condition="'$(DisableHasPackageAndPublishMenuAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
-        <HasPackageAndPublishMenu>true</HasPackageAndPublishMenu>
-    </PropertyGroup>
+	<PropertyGroup Condition="'$(DisableHasPackageAndPublishMenuAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
+		<HasPackageAndPublishMenu>true</HasPackageAndPublishMenu>
+	</PropertyGroup>
 </Project>
