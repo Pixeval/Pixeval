@@ -3,8 +3,6 @@
         <TargetFramework>netstandard2.0</TargetFramework>
         <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
         <Nullable>enable</Nullable>
-        <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
-        <CompilerGeneratedFilesOutputPath>Generated</CompilerGeneratedFilesOutputPath>
         <IsRoslynComponent>true</IsRoslynComponent>
         <Configurations>Debug;Release</Configurations>
         <PlatformTarget>AnyCPU</PlatformTarget>

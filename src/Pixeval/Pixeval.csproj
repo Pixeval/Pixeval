@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <OutputType>WinExe</OutputType>
         <TargetFramework>net8.0-windows10.0.22621.0</TargetFramework>
@@ -69,7 +69,6 @@
 		<ProjectReference Include="..\Pixeval.Controls\Pixeval.Controls.csproj" />
 		<ProjectReference Include="..\Pixeval.CoreApi\Pixeval.CoreApi.csproj" />
 		<ProjectReference Include="..\Pixeval.Utilities\Pixeval.Utilities.csproj" />
-		<ProjectReference Include="..\Pixeval.Analyzer\Pixeval.Analyzer.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="False" />
 		<ProjectReference Include="..\Pixeval.SourceGen\Pixeval.SourceGen.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="False" />
 		<Manifest Include="$(ApplicationManifest)" />
 	</ItemGroup>

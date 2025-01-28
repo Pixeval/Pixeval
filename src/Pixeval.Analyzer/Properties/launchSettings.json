@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "Pixeval.Analyzer": {
-      "commandName": "DebugRoslynComponent",
-      "targetProject": "..\\Pixeval\\Pixeval.csproj"
-    }
-  }
-}
