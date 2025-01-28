@@ -19,47 +19,81 @@ namespace Pixeval.SourceGen
 
         private const string Category = "Design";
 
-        private const string Title = "Implementation of IStructuralDisposalCompleter does not call Hook() function";
-        private const string Description = "The implementor of IStructuralDisposalCompleter must call its Hook() function in order for the structural control of disposal to be chained";
+        private const string Title = "{0} does not call Hook() function";
+        private const string Message = "The class {0} should call its Hook() function in order for the structural control of disposal to be chained";
 
         public void Initialize(IncrementalGeneratorInitializationContext context)
         {
             var compilation = context.CompilationProvider;
 
-            var types = context.SyntaxProvider.CreateSyntaxProvider(
+            var typeDeclarations = context.SyntaxProvider.CreateSyntaxProvider(
                 predicate: static (node, _) => node is ClassDeclarationSyntax or StructDeclarationSyntax,
                 transform: static (syntaxContext, _) => (TypeDeclarationSyntax) syntaxContext.Node);
 
+            var typeSymbols = context.CompilationProvider.SelectMany(((compilation1, token) =>
+            {
+                return GetNamedTypeSymbols(compilation1);
+                static IEnumerable<INamedTypeSymbol> GetNamedTypeSymbols(Compilation compilation)
+                {
+                    var stack = new Stack<INamespaceSymbol>();
+                    stack.Push(compilation.GlobalNamespace);
 
+                    while (stack.Count > 0)
+                    {
+                        var @namespace = stack.Pop();
 
-            var targetInterface = compilation.Select(((compilation1, token) =>
+                        foreach (var member in @namespace.GetMembers())
+                        {
+                            if (member is INamespaceSymbol memberAsNamespace)
+                            {
+                                stack.Push(memberAsNamespace);
+                            }
+                            else if (member is INamedTypeSymbol memberAsNamedTypeSymbol)
+                            {
+                                yield return memberAsNamedTypeSymbol;
+                            }
+                        }
+                    }
+                }
+            }));
+
+            var targetInterface = compilation.Select(((compilation1, _) =>
                 compilation1.GetTypeByMetadataName(TargetInterfaceName)!));
 
-            var typesImplementTargetInterface = types.Combine(compilation.Combine(targetInterface)).Where(tuple =>
+            var typeSymbolsImplementTargetInterface = typeSymbols.Combine(targetInterface)
+                .Where(tuple => tuple.Left.AllInterfaces.Contains(tuple.Right, SymbolEqualityComparer.Default)).Select((tuple, _) => tuple.Left);
+
+            var typesImplementTargetInterface = typeDeclarations.Combine(compilation.Combine(targetInterface)).Select(
+                (tuple, _) =>
+                {
+                    var typeDeclarationSyntax = tuple.Left;
+                    var semanticModel = tuple.Right.Left.GetSemanticModel(typeDeclarationSyntax.SyntaxTree);
+                    var targetInterface1 = tuple.Right.Right;
+                    var typeSymbol = semanticModel.GetDeclaredSymbol(typeDeclarationSyntax);
+                    return (typeDeclarationSyntax, typeSymbol, targetInterface1);
+                }).Where(tuple =>
             {
-                var typeDeclarationSyntax = tuple.Left;
-                var semanticModel = tuple.Right.Left.GetSemanticModel(typeDeclarationSyntax.SyntaxTree);
-                var targetInterface1 = tuple.Right.Right;
-                var typeSymbol = semanticModel.GetDeclaredSymbol(typeDeclarationSyntax);
-                if (typeSymbol is null)
+
+                if (tuple.typeSymbol is null)
                 {
                     return false;
                 }
 
-                if (typeSymbol.AllInterfaces.Contains(targetInterface1, SymbolEqualityComparer.Default))
+                if (tuple.typeSymbol.AllInterfaces.Contains(tuple.targetInterface1, SymbolEqualityComparer.Default))
                 {
                     return true;
                 }
 
                 return false;
-            }).Select((tuple, _) => tuple.Left);
+            }).Select((tuple, _) => (tuple.typeDeclarationSyntax, tuple.typeSymbol));
 
             var invocations = context.SyntaxProvider
                 .CreateSyntaxProvider(
                     predicate: static (node, _) => node is InvocationExpressionSyntax,
                     transform: static (syntaxContext, _) => (InvocationExpressionSyntax) syntaxContext.Node);
 
-            var targetMethod = targetInterface.Select((interface1, _) => interface1.GetMembers(TargetMethodName).Single());
+            var targetMethod =
+                targetInterface.Select((interface1, _) => interface1.GetMembers(TargetMethodName).Single());
 
             var invocationsWithTargetMethod = invocations.Combine(compilation.Combine(targetMethod)).Where(tuple =>
             {
@@ -75,28 +109,38 @@ namespace Pixeval.SourceGen
                 return false;
             }).Select((tuple, _) => tuple.Left);
 
-            var typesWithTargetMethodInvocation = typesImplementTargetInterface.Combine(invocationsWithTargetMethod.Collect()).Where(tuple =>
-            {
-                var typeDeclarationSyntax = tuple.Left;
-                var invocations1 = tuple.Right;
-                return invocations1.IsEmpty || !invocations1.Any(invocation =>
-                    invocation.FirstAncestorOrSelf<TypeDeclarationSyntax>(node => node == typeDeclarationSyntax) is not null);
-            }).Select((tuple, _) => tuple.Left).Combine(compilation);
+            var typesWithTargetMethodInvocation = typeSymbolsImplementTargetInterface
+                .Combine((typesImplementTargetInterface.Collect().Combine(invocationsWithTargetMethod.Collect())))
+                .Where(tuple =>
+                {
+                    var typeSymbol = tuple.Left;
+                    var types = tuple.Right.Left;
+                    var invocations1 = tuple.Right.Right;
+                    if (invocations1.IsEmpty)
+                    {
+                        return true;
+                    }
 
-            // 生成诊断信息
+                    var typeDeclarations1 =
+                        types.Where(tuple1 => SymbolEqualityComparer.Default.Equals(tuple1.typeSymbol, typeSymbol))
+                            .Select(tuple1 => tuple1.typeDeclarationSyntax).ToImmutableArray();
+                    return !typeDeclarations1.Any(typeDeclaration => invocations1.Any(invocation =>
+                        invocation.FirstAncestorOrSelf<TypeDeclarationSyntax>(node => node == typeDeclaration) is not
+                            null));
+                }).Select((tuple, _) => tuple.Left).Combine(compilation);
+
             context.RegisterSourceOutput(typesWithTargetMethodInvocation, (spc, tuple) =>
             {
-                var typeDeclarationSyntax = tuple.Left;
-                var semanticModel = tuple.Right.GetSemanticModel(typeDeclarationSyntax.SyntaxTree);
+                var typeSymbol = tuple.Left;
                 var diagnostic = Diagnostic.Create(
                     new DiagnosticDescriptor(
                         id: DiagnosticId,
                         title: Title,
-                        messageFormat: Description,
+                        messageFormat: Message,
                         category: Category,
                         defaultSeverity: DiagnosticSeverity.Error,
                         isEnabledByDefault: true),
-                    typeDeclarationSyntax.GetLocation(), DiagnosticSeverity.Error);
+                    Location.None, typeSymbol.Name);
 
                 spc.ReportDiagnostic(diagnostic);
             });

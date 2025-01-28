@@ -1,8 +1,12 @@
 {
   "profiles": {
-    "Pixeval.SourceGen": {
+    "Pixeval": {
       "commandName": "DebugRoslynComponent",
       "targetProject": "..\\Pixeval\\Pixeval.csproj"
+    },
+    "Pixeval.Controls": {
+      "commandName": "DebugRoslynComponent",
+      "targetProject": "..\\Pixeval.Controls\\Pixeval.Controls.csproj"
     }
   }
 }
