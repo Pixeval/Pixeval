@@ -7,6 +7,10 @@
     "Pixeval.Controls": {
       "commandName": "DebugRoslynComponent",
       "targetProject": "..\\Pixeval.Controls\\Pixeval.Controls.csproj"
+    },
+    "Pixeval.CoreApi": {
+      "commandName": "DebugRoslynComponent",
+      "targetProject": "..\\Pixeval.CoreApi\\Pixeval.CoreApi.csproj"
     }
   }
 }
