@@ -1,8 +1,16 @@
 {
   "profiles": {
-    "Profile 1": {
+    "Pixeval": {
       "commandName": "DebugRoslynComponent",
       "targetProject": "..\\Pixeval\\Pixeval.csproj"
+    },
+    "Pixeval.Controls": {
+      "commandName": "DebugRoslynComponent",
+      "targetProject": "..\\Pixeval.Controls\\Pixeval.Controls.csproj"
+    },
+    "Pixeval.CoreApi": {
+      "commandName": "DebugRoslynComponent",
+      "targetProject": "..\\Pixeval.CoreApi\\Pixeval.CoreApi.csproj"
     }
   }
 }

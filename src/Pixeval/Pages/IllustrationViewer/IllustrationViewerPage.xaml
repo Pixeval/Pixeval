@@ -4,7 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Pixeval.Controls"
     xmlns:controls1="using:CommunityToolkit.WinUI.Controls"
-    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:flyoutContent="using:Pixeval.Controls.FlyoutContent"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
@@ -96,12 +96,12 @@
                                     <ScalarTransition />
                                 </Grid.OpacityTransition>
                                 <interactivity:Interaction.Behaviors>
-                                    <core:EventTriggerBehavior EventName="PointerEntered">
-                                        <core:ChangePropertyAction PropertyName="Opacity" Value="1" />
-                                    </core:EventTriggerBehavior>
-                                    <core:EventTriggerBehavior EventName="PointerExited">
-                                        <core:ChangePropertyAction PropertyName="Opacity" Value="0" />
-                                    </core:EventTriggerBehavior>
+                                    <interactivity:EventTriggerBehavior EventName="PointerEntered">
+                                        <interactivity:ChangePropertyAction PropertyName="Opacity" Value="1" />
+                                    </interactivity:EventTriggerBehavior>
+                                    <interactivity:EventTriggerBehavior EventName="PointerExited">
+                                        <interactivity:ChangePropertyAction PropertyName="Opacity" Value="0" />
+                                    </interactivity:EventTriggerBehavior>
                                 </interactivity:Interaction.Behaviors>
                                 <!--  ReSharper disable once UnusedMember.Local  -->
                                 <Border
@@ -121,12 +121,12 @@
                                         <ScalarTransition />
                                     </Border.OpacityTransition>
                                     <interactivity:Interaction.Behaviors>
-                                        <core:EventTriggerBehavior EventName="PointerEntered">
-                                            <core:ChangePropertyAction PropertyName="Opacity" Value="1" />
-                                        </core:EventTriggerBehavior>
-                                        <core:EventTriggerBehavior EventName="PointerExited">
-                                            <core:ChangePropertyAction PropertyName="Opacity" Value="0.7" />
-                                        </core:EventTriggerBehavior>
+                                        <interactivity:EventTriggerBehavior EventName="PointerEntered">
+                                            <interactivity:ChangePropertyAction PropertyName="Opacity" Value="1" />
+                                        </interactivity:EventTriggerBehavior>
+                                        <interactivity:EventTriggerBehavior EventName="PointerExited">
+                                            <interactivity:ChangePropertyAction PropertyName="Opacity" Value="0.7" />
+                                        </interactivity:EventTriggerBehavior>
                                     </interactivity:Interaction.Behaviors>
                                     <controls1:DockPanel>
                                         <PipsPager
@@ -173,18 +173,18 @@
                                     <ThemeShadow x:Name="ThumbnailListDropShadow" />
                                 </Grid.Shadow>
                                 <interactivity:Interaction.Behaviors>
-                                    <core:EventTriggerBehavior EventName="PointerEntered">
-                                        <core:ChangePropertyAction
+                                    <interactivity:EventTriggerBehavior EventName="PointerEntered">
+                                        <interactivity:ChangePropertyAction
                                             PropertyName="PointerNotInArea"
                                             TargetObject="{x:Bind}"
                                             Value="false" />
-                                    </core:EventTriggerBehavior>
-                                    <core:EventTriggerBehavior EventName="PointerExited">
-                                        <core:ChangePropertyAction
+                                    </interactivity:EventTriggerBehavior>
+                                    <interactivity:EventTriggerBehavior EventName="PointerExited">
+                                        <interactivity:ChangePropertyAction
                                             PropertyName="PointerNotInArea"
                                             TargetObject="{x:Bind}"
                                             Value="true" />
-                                    </core:EventTriggerBehavior>
+                                    </interactivity:EventTriggerBehavior>
                                 </interactivity:Interaction.Behaviors>
                                 <controls:AdvancedItemsView
                                     x:Name="ThumbnailItemsView"
