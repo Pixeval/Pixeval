@@ -61,10 +61,10 @@ namespace Pixeval.SourceGen
             }));
 
             var targetInterface = compilation.Select(((compilation1, _) =>
-                compilation1.GetTypeByMetadataName(TargetInterfaceName)!));
+                compilation1.GetTypeByMetadataName(TargetInterfaceName)));
 
             var typeSymbolsImplementTargetInterface = typeSymbols.Combine(targetInterface)
-                .Where(tuple => tuple.Left.AllInterfaces.Contains(tuple.Right, SymbolEqualityComparer.Default)).Select((tuple, _) => tuple.Left);
+                .Where(tuple => tuple.Right is not null && tuple.Left.AllInterfaces.Contains(tuple.Right, SymbolEqualityComparer.Default)).Select((tuple, _) => tuple.Left);
 
             var typesImplementTargetInterface = typeDeclarations.Combine(targetInterface).Select(
                 (tuple, _) =>
@@ -76,7 +76,7 @@ namespace Pixeval.SourceGen
                 }).Where(tuple =>
             {
 
-                if (tuple.typeSymbol is null)
+                if (tuple.typeSymbol is null || tuple.targetInterface1 is null)
                 {
                     return false;
                 }
@@ -95,7 +95,7 @@ namespace Pixeval.SourceGen
                     transform: static (syntaxContext, _) => syntaxContext);
 
             var targetMethod =
-                targetInterface.Select((interface1, _) => interface1.GetMembers(TargetMethodName).SingleOrDefault());
+                targetInterface.Select((interface1, _) => interface1?.GetMembers(TargetMethodName).SingleOrDefault());
 
             var invocationsWithTargetMethod = invocations.Combine(targetMethod).Where(tuple =>
             {
