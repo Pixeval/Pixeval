@@ -40,6 +40,7 @@ public sealed partial class TabPage
             Window.SetTitleBar(CustomDragRegion);
             CustomDragRegion.MinWidth = 188;
         }
+        ((IStructuralDisposalCompleter) this).Hook();
     }
 
     public void AddPage(NavigationViewTag viewModel)
@@ -96,8 +97,8 @@ public sealed partial class TabPage
         var size = new SizeInt32();
         if (sender.SelectedItem is TabViewItem { Content: FrameworkElement { ActualSize: { X: var x, Y: var y } } })
         {
-            size.Width = (int)x;
-            size.Height = (int)y;
+            size.Width = (int) x;
+            size.Height = (int) y;
         }
         tabPage.TabView.TabItems.Add(e.Tab);
         RemoveTab(e.Tab);

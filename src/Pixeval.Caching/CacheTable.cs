@@ -18,7 +18,11 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Pixeval.Utilities.Memory;
@@ -34,9 +38,9 @@ public class CacheTable<TKey, THeader, TProtocol>(
 {
     public MemoryMappedFileMemoryManager MemoryManager { get; } = new(token);
 
-    private readonly ConcurrentDictionary<TKey, Lock> _locks = new();
+    private readonly ConcurrentDictionary<TKey, object> _locks = new();
 
-    private readonly Lock _purgeLock = new();
+    private readonly object _purgeLock = new();
 
     private Dictionary<TKey, (LinkedListNode<TKey> node, nint ptr, int allocatedLength)> _cacheTable = [];
 
@@ -130,7 +134,7 @@ public class CacheTable<TKey, THeader, TProtocol>(
                 _lruCacheIndex.AddFirst(key);
                 _cacheTable[key] = (_lruCacheIndex.First!, (nint) Unsafe.AsPointer(ref cacheArea.GetPinnableReference()), cacheArea.Length);
 
-                _locks[key] = new Lock();
+                _locks[key] = new object();
                 return AllocatorState.AllocationSuccess;
             case AllocatorState.OutOfMemory when collected:
                 return result;
