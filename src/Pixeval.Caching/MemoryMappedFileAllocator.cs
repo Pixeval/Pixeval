@@ -18,7 +18,10 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using System;
+using System.IO;
 using System.IO.MemoryMappedFiles;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using Pixeval.Utilities;
 using Void = Pixeval.Utilities.Void;
@@ -57,7 +60,7 @@ public unsafe class MemoryMappedFileAllocator(MemoryMappedFileMemoryManager mana
             return AllocatorState.MMapFailedWithNullPointer;
         }
 
-        manager.Handles.Add(new MemoryMappedFileCacheHandle(fileName, new IntPtr(ptr), handle));
+        manager.Handles.Add(new MemoryMappedFileCacheHandle(fileName, (nint) ptr, handle));
         manager.BumpPointerAllocators[fileName] = HeapAllocator.Create(new BumpPointerNativeAllocator(ref Unsafe.AsRef<byte>(ptr), manager.Token.MemoryMappedFileInitialSize));
 
         var result = manager.DelegatedCombinedBumpPointerAllocator.TryAllocate(size, out var s2);

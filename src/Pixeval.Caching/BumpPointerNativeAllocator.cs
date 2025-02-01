@@ -18,13 +18,14 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using System;
 using System.Runtime.CompilerServices;
 
 namespace Pixeval.Caching;
 
 public unsafe class BumpPointerNativeAllocator(ref byte ptrStart, nint heapSize) : INativeAllocator
 {
-    public nint BumpingPointer { get; private set; } = new(Unsafe.AsPointer(ref ptrStart));
+    public nint BumpingPointer { get; private set; } = (nint) Unsafe.AsPointer(ref ptrStart);
 
     private readonly byte* _endPointer = (byte*) Unsafe.AsPointer(ref ptrStart) + heapSize;
 
@@ -38,7 +39,7 @@ public unsafe class BumpPointerNativeAllocator(ref byte ptrStart, nint heapSize)
             return AllocatorState.OutOfMemory;
         }
 
-        BumpingPointer = new IntPtr(newAddress);
+        BumpingPointer = (nint)newAddress;
         span = new Span<byte>(Unsafe.AsPointer(ref ptr), (int) size);
         return AllocatorState.AllocationSuccess;
     }

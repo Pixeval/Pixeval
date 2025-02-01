@@ -18,6 +18,8 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using System;
+
 namespace Pixeval.Caching;
 
 public interface ICacheProtocol<in TKey, THeader> where THeader : unmanaged
