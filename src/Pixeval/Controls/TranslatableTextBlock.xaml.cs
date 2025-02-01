@@ -1,65 +1,35 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
 // Copyright (c) Pixeval.
 // Licensed under the GPL v3 License.
-
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using CommunityToolkit.WinUI.Helpers;
-using System.Threading.Tasks;
+using System.Linq;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using Microsoft.Extensions.DependencyInjection;
 using Pixeval.Extensions;
-using Pixeval.Extensions.Common;
 using Pixeval.Extensions.Common.Commands.Transformers;
 using WinUI3Utilities.Attributes;
 using Microsoft.UI.Xaml.Documents;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
 
 namespace Pixeval.Controls;
 
-[DependencyProperty<TextTransformerType>("TransformerType",defaultValueType:DependencyPropertyDefaultValue.New)]
+[DependencyProperty<TextTransformerType>("TransformerType", defaultValueType: DependencyPropertyDefaultValue.New)]
 public sealed partial class TranslatableTextBlock : UserControl
 {
-    public TranslatableTextBlock()
-    {
-        this.InitializeComponent();
-    }
+    public TranslatableTextBlock() => InitializeComponent();
 
-    [RelayCommand]
-    private async Task GetTranslation()
+    private async void GetTranslationClicked(object sender, RoutedEventArgs e)
     {
         var extensionService = App.AppViewModel.AppServiceProvider.GetRequiredService<ExtensionService>();
-        var translator = extensionService.ActiveExtensions.FirstOrDefault(p => p is ITextTransformerCommandExtension) as ITextTransformerCommandExtension;
-        if (translator is null) return;
+        if (extensionService.ActiveExtensions.FirstOrDefault(p => p is ITextTransformerCommandExtension) is not ITextTransformerCommandExtension translator)
+            return;
         var text = "";
         foreach (var block in RawText.Blocks)
-        {
-            if(block is Paragraph p)
-            {
-                foreach(var i in p.Inlines)
-                {
+            if (block is Paragraph p)
+                foreach (var i in p.Inlines)
                     if (i is Run r)
-                    {
                         text += r.Text;
-                    }
-                }
-            }
-        }
-        if (text == "") return;
+        if (text == "")
+            return;
         var result = await translator.TransformAsync(text, TransformerType);
         TranslatedText.Text = result;
     }
-        
 }

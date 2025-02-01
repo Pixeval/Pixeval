@@ -22,7 +22,7 @@
             x:Name="TranslateButton"
             Background="Transparent"
             BorderBrush="Transparent"
-            Command="{x:Bind GetTranslationCommand}"
+            Click="GetTranslationClicked"
             Content="翻译" />
     </StackPanel>
 </UserControl>
