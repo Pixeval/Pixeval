@@ -43,7 +43,7 @@
         <PackageVersion Include="LiteDB" Version="5.0.21" />
         <PackageVersion Include="MinVer" Version="6.0.0" />
         <PackageVersion Include="PininSharp" Version="1.2.0" />
-        <PackageVersion Include="Pixeval.Extensions.Common" Version="4.3.4" />
+        <PackageVersion Include="Pixeval.Extensions.Common" Version="4.3.4.1" />
         <PackageVersion Include="Pixeval.QRCoder" Version="1.4.5" />
         <PackageVersion Include="QuestPDF" Version="2024.12.3" />
         <PackageVersion Include="ReverseMarkdown" Version="4.6.0" />
