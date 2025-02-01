@@ -18,6 +18,9 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Pixeval.Utilities;
@@ -112,8 +115,8 @@ public class HeapAllocator : IDisposable
             case AllocatorState.AllocationSuccess:
                 fixed (byte* elem = &MemoryMarshal.GetReference(span))
                 {
-                    var region = new HeapBlock(span.AsMemory(), new nint(elem));
-                    _commitedRegions.AddLast(region);
+                    var region = new HeapBlock(span.AsMemory(), (nint) elem);
+                    _ = _commitedRegions.AddLast(region);
                     Size += _lastGrowthSize;
                     _callbackOnExpansion?.Invoke(region);
                 }
