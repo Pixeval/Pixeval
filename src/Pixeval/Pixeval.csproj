@@ -74,7 +74,7 @@
 	</ItemGroup>
 
 	<!--Exposes PRI resources-->
-	<Target Name="InjectAdditionalFiles" BeforeTargets="GenerateMSBuildEditorConfigFileShouldRun">
+	<Target Name="InjectAdditionalFiles" BeforeTargets="GenerateMSBuildEditorConfigFileShouldRun" Condition="'$(DesignTimeBuild)' != 'true'">
 		<RemoveDir Directories="Generated" />
 		<ItemGroup>
 			<TextFiles Include="%(TextFile.OutputTarget)">
