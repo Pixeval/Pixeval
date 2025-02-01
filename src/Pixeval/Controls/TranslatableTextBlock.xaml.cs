@@ -1,19 +1,21 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL v3 License.
 using System.Linq;
+using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Extensions.DependencyInjection;
 using Pixeval.Extensions;
 using Pixeval.Extensions.Common.Commands.Transformers;
-using WinUI3Utilities.Attributes;
 using Microsoft.UI.Xaml.Documents;
 
 namespace Pixeval.Controls;
 
-[DependencyProperty<TextTransformerType>("TransformerType", defaultValueType: DependencyPropertyDefaultValue.New)]
 public sealed partial class TranslatableTextBlock : UserControl
 {
+    [GeneratedDependencyProperty]
+    public partial TextTransformerType TransformerType { get; set; }
+
     public TranslatableTextBlock() => InitializeComponent();
 
     private async void GetTranslationClicked(object sender, RoutedEventArgs e)

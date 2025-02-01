@@ -3,16 +3,22 @@
 
 using System;
 using System.Collections.Generic;
+using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
-using WinUI3Utilities.Attributes;
 
 namespace Pixeval.Controls;
 
-[DependencyProperty<object>("ItemsSource")]
-[DependencyProperty<bool>("HasNoItem", "true")]
-[DependencyProperty<bool>("IsLoadingMore", "false")]
 public sealed partial class CommentView : IStructuralDisposalCompleter
 {
+    [GeneratedDependencyProperty]
+    public partial object? ItemsSource { get; set; }
+
+    [GeneratedDependencyProperty(DefaultValue = true)]
+    public partial bool HasNoItem { get; set; }
+
+    [GeneratedDependencyProperty(DefaultValue = false)]
+    public partial bool IsLoadingMore { get; set; }
+
     public CommentView() => InitializeComponent();
 
     public event Action<CommentItemViewModel>? RepliesHyperlinkButtonClick;

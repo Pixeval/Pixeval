@@ -6,6 +6,5 @@
     xmlns:local="using:Pixeval.Controls.Timeline"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
-
     <ListView />
 </UserControl>

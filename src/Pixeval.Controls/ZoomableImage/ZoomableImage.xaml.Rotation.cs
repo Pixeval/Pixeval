@@ -8,37 +8,37 @@ namespace Pixeval.Controls;
 
 public partial class ZoomableImage
 {
-    private static void OnImageRotationDegreeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    partial void OnImageRotationDegreePropertyChanged(DependencyPropertyChangedEventArgs e)
     {
-        if (EnsureNotDisposed(d) is not { } zoomableImage)
+        if (IsDisposed)
             return;
 
-        if (zoomableImage.ImageRotationDegree % 90 is not 0)
+        if (ImageRotationDegree % 90 is not 0)
         {
-            ThrowHelper.Argument(zoomableImage.ImageRotationDegree, $"{nameof(ImageRotationDegree)} must be a multiple of 90");
+            ThrowHelper.Argument(ImageRotationDegree, $"{nameof(ImageRotationDegree)} must be a multiple of 90");
         }
 
-        switch (zoomableImage.ImageRotationDegree)
+        switch (ImageRotationDegree)
         {
             case >= 360:
-                zoomableImage.ImageRotationDegree %= 360;
+                ImageRotationDegree %= 360;
                 return;
             case <= -360:
-                zoomableImage.ImageRotationDegree = zoomableImage.ImageRotationDegree % 360 + 360;
+                ImageRotationDegree = ImageRotationDegree % 360 + 360;
                 return;
             case < 0:
-                zoomableImage.ImageRotationDegree += 360;
+                ImageRotationDegree += 360;
                 return;
         }
 
         // 更新图片大小
-        zoomableImage.OnPropertyChanged(nameof(ImageWidth));
-        zoomableImage.OnPropertyChanged(nameof(ImageHeight));
+        OnPropertyChanged(nameof(ImageWidth));
+        OnPropertyChanged(nameof(ImageHeight));
 
         // 更新图片位置
-        zoomableImage.OnPropertyChanged(nameof(ImagePositionLeft));
-        zoomableImage.OnPropertyChanged(nameof(ImagePositionTop));
-        zoomableImage.OnPropertyChanged(nameof(ImagePositionRight));
-        zoomableImage.OnPropertyChanged(nameof(ImagePositionBottom));
+        OnPropertyChanged(nameof(ImagePositionLeft));
+        OnPropertyChanged(nameof(ImagePositionTop));
+        OnPropertyChanged(nameof(ImagePositionRight));
+        OnPropertyChanged(nameof(ImagePositionBottom));
     }
 }

@@ -14,7 +14,6 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Pixeval.Collections;
 using WinUI3Utilities;
-using WinUI3Utilities.Attributes;
 
 namespace Pixeval.Controls;
 
@@ -22,16 +21,6 @@ namespace Pixeval.Controls;
 /// <see cref="ItemsView.ItemsSource"/>属性推荐使用<see cref="AdvancedObservableCollection{T}"/>类型
 /// </summary>
 /// <remarks><see cref="ItemsView.ItemTemplate"/>中必须使用<see cref="ItemContainer"/>作为根元素</remarks>
-[DependencyProperty<ItemsViewLayoutType>("LayoutType", DependencyPropertyDefaultValue.Default, nameof(OnLayoutTypeChanged))]
-[DependencyProperty<double>("MinItemHeight", "0d", nameof(OnItemHeightChanged))]
-[DependencyProperty<double>("MinItemWidth", "0d", nameof(OnItemWidthChanged))]
-[DependencyProperty<double>("MinRowSpacing", "5d", nameof(OnMinRowSpacingChanged))]
-[DependencyProperty<double>("MinColumnSpacing", "5d", nameof(OnMinColumnSpacingChanged))]
-[DependencyProperty<double>("LoadingOffset", "100d")]
-[DependencyProperty<int>("SelectedIndex", "-1", nameof(OnSelectedIndexChanged))]
-[DependencyProperty<bool>("CanLoadMore", "true")]
-[DependencyProperty<bool>("IsLoadingMore", "false")]
-[DependencyProperty<int>("LoadCount", "20")]
 public sealed partial class AdvancedItemsView : ItemsView
 {
     public event Func<AdvancedItemsView, EventArgs, Task<bool>> LoadMoreRequested;
@@ -110,148 +99,134 @@ public sealed partial class AdvancedItemsView : ItemsView
 
     #region PropertyChanged
 
-    private static void OnItemHeightChanged(DependencyObject o, DependencyPropertyChangedEventArgs e)
+    partial void OnMinItemHeightPropertyChanged(DependencyPropertyChangedEventArgs e)
     {
-        var advancedItemsView = o.To<AdvancedItemsView>();
-        var minItemHeight = advancedItemsView.MinItemHeight;
-        switch (advancedItemsView.Layout)
+        switch (Layout)
         {
             case RiverFlowLayout linedFlowLayout:
-                linedFlowLayout.LineHeight = minItemHeight;
+                linedFlowLayout.LineHeight = MinItemHeight;
                 break;
             case UniformGridLayout uniformGridLayout:
-                uniformGridLayout.MinItemHeight = minItemHeight;
+                uniformGridLayout.MinItemHeight = MinItemHeight;
                 break;
         }
     }
 
-    private static void OnItemWidthChanged(DependencyObject o, DependencyPropertyChangedEventArgs e)
+    partial void OnMinItemWidthPropertyChanged(DependencyPropertyChangedEventArgs e)
     {
-        var advancedItemsView = o.To<AdvancedItemsView>();
-        var minItemWidth = advancedItemsView.MinItemWidth;
-        switch (advancedItemsView.Layout)
+        switch (Layout)
         {
             case StaggeredLayout staggeredLayout:
-                staggeredLayout.DesiredColumnWidth = minItemWidth;
+                staggeredLayout.DesiredColumnWidth = MinItemWidth;
                 break;
             case UniformGridLayout uniformGridLayout:
-                uniformGridLayout.MinItemWidth = minItemWidth;
+                uniformGridLayout.MinItemWidth = MinItemWidth;
                 break;
         }
     }
 
-    private static void OnMinRowSpacingChanged(DependencyObject o, DependencyPropertyChangedEventArgs e)
+    partial void OnMinRowSpacingPropertyChanged(DependencyPropertyChangedEventArgs e)
     {
-        var advancedItemsView = o.To<AdvancedItemsView>();
-        var minRowSpacing = advancedItemsView.MinRowSpacing;
-        switch (advancedItemsView.Layout)
+        switch (Layout)
         {
             case RiverFlowLayout linedFlowLayout:
-                linedFlowLayout.LineSpacing = minRowSpacing;
+                linedFlowLayout.LineSpacing = MinRowSpacing;
                 break;
             case UniformGridLayout uniformGridLayout:
-                uniformGridLayout.MinRowSpacing = minRowSpacing;
+                uniformGridLayout.MinRowSpacing = MinRowSpacing;
                 break;
             case StaggeredLayout staggeredLayout:
-                staggeredLayout.RowSpacing = minRowSpacing;
+                staggeredLayout.RowSpacing = MinRowSpacing;
                 break;
-            case StackLayout stackLayout when advancedItemsView.LayoutType is ItemsViewLayoutType.VerticalStack:
-                stackLayout.Spacing = minRowSpacing;
+            case StackLayout stackLayout when LayoutType is ItemsViewLayoutType.VerticalStack:
+                stackLayout.Spacing = MinRowSpacing;
                 break;
         }
     }
 
-    private static void OnMinColumnSpacingChanged(DependencyObject o, DependencyPropertyChangedEventArgs e)
+    partial void OnMinColumnSpacingPropertyChanged(DependencyPropertyChangedEventArgs e)
     {
-        var advancedItemsView = o.To<AdvancedItemsView>();
-        var minColumnSpacing = advancedItemsView.MinColumnSpacing;
-        switch (advancedItemsView.Layout)
+        switch (Layout)
         {
             case RiverFlowLayout linedFlowLayout:
-                linedFlowLayout.MinItemSpacing = minColumnSpacing;
+                linedFlowLayout.MinItemSpacing = MinColumnSpacing;
                 break;
             case UniformGridLayout uniformGridLayout:
-                uniformGridLayout.MinColumnSpacing = minColumnSpacing;
+                uniformGridLayout.MinColumnSpacing = MinColumnSpacing;
                 break;
             case StaggeredLayout staggeredLayout:
-                staggeredLayout.ColumnSpacing = minColumnSpacing;
+                staggeredLayout.ColumnSpacing = MinColumnSpacing;
                 break;
-            case StackLayout stackLayout when advancedItemsView.LayoutType is ItemsViewLayoutType.HorizontalStack:
-                stackLayout.Spacing = minColumnSpacing;
+            case StackLayout stackLayout when LayoutType is ItemsViewLayoutType.HorizontalStack:
+                stackLayout.Spacing = MinColumnSpacing;
                 break;
         }
     }
 
-    private static void OnLayoutTypeChanged(DependencyObject o, DependencyPropertyChangedEventArgs e)
+    partial void OnLayoutTypePropertyChanged(DependencyPropertyChangedEventArgs e)
     {
-        var advancedItemsView = o.To<AdvancedItemsView>();
-        var minItemHeight = advancedItemsView.MinItemHeight;
-        var minItemWidth = advancedItemsView.MinItemWidth;
-        var minRowSpacing = advancedItemsView.MinRowSpacing;
-        var minColumnSpacing = advancedItemsView.MinColumnSpacing;
-        advancedItemsView.Layout = advancedItemsView.LayoutType switch
+        Layout = LayoutType switch
         {
             ItemsViewLayoutType.LinedFlow => new RiverFlowLayout
             {
                 // ItemsStretch = LinedFlowLayoutItemsStretch.Fill,
-                LineHeight = minItemHeight,
-                LineSpacing = minRowSpacing,
-                MinItemSpacing = minColumnSpacing
+                LineHeight = MinItemHeight,
+                LineSpacing = MinRowSpacing,
+                MinItemSpacing = MinColumnSpacing
             },
             ItemsViewLayoutType.Grid => new UniformGridLayout
             {
                 ItemsStretch = UniformGridLayoutItemsStretch.Fill,
-                MinItemHeight = minItemHeight,
-                MinItemWidth = minItemWidth,
-                MinColumnSpacing = minColumnSpacing,
-                MinRowSpacing = minRowSpacing
+                MinItemHeight = MinItemHeight,
+                MinItemWidth = MinItemWidth,
+                MinColumnSpacing = MinColumnSpacing,
+                MinRowSpacing = MinRowSpacing
             },
             ItemsViewLayoutType.VerticalUniformStack => new UniformGridLayout
             {
                 ItemsStretch = UniformGridLayoutItemsStretch.Fill,
                 MaximumRowsOrColumns = 1,
-                MinItemHeight = minItemHeight,
-                MinItemWidth = minItemWidth,
-                MinColumnSpacing = minColumnSpacing,
-                MinRowSpacing = minRowSpacing,
+                MinItemHeight = MinItemHeight,
+                MinItemWidth = MinItemWidth,
+                MinColumnSpacing = MinColumnSpacing,
+                MinRowSpacing = MinRowSpacing,
                 Orientation = Orientation.Horizontal
             },
             ItemsViewLayoutType.HorizontalUniformStack => new UniformGridLayout
             {
                 ItemsStretch = UniformGridLayoutItemsStretch.Fill,
                 MaximumRowsOrColumns = 1,
-                MinItemHeight = minItemHeight,
-                MinItemWidth = minItemWidth,
-                MinColumnSpacing = minColumnSpacing,
-                MinRowSpacing = minRowSpacing,
+                MinItemHeight = MinItemHeight,
+                MinItemWidth = MinItemWidth,
+                MinColumnSpacing = MinColumnSpacing,
+                MinRowSpacing = MinRowSpacing,
                 Orientation = Orientation.Vertical
             },
             ItemsViewLayoutType.VerticalStack => new StackLayout
             {
-                Spacing = minRowSpacing,
+                Spacing = MinRowSpacing,
                 Orientation = Orientation.Vertical
             },
             ItemsViewLayoutType.HorizontalStack => new StackLayout
             {
-                Spacing = minColumnSpacing,
+                Spacing = MinColumnSpacing,
                 Orientation = Orientation.Horizontal
             },
             ItemsViewLayoutType.Staggered => new StaggeredLayout
             {
-                ColumnSpacing = minColumnSpacing,
-                RowSpacing = minRowSpacing,
-                DesiredColumnWidth = minItemWidth
+                ColumnSpacing = MinColumnSpacing,
+                RowSpacing = MinRowSpacing,
+                DesiredColumnWidth = MinItemWidth
             },
-            _ => ThrowHelper.ArgumentOutOfRange<ItemsViewLayoutType, VirtualizingLayout>(advancedItemsView.LayoutType)
+            _ => ThrowHelper.ArgumentOutOfRange<ItemsViewLayoutType, VirtualizingLayout>(LayoutType)
         };
     }
 
-    private static void OnSelectedIndexChanged(DependencyObject o, DependencyPropertyChangedEventArgs e)
+    partial void OnSelectedIndexPropertyChanged(DependencyPropertyChangedEventArgs e)
     {
-        var advancedItemsView = o.To<AdvancedItemsView>();
-        var selectedIndex = advancedItemsView.GetSelectedIndex();
-        if (advancedItemsView.SelectedIndex != selectedIndex)
-            advancedItemsView.Select(advancedItemsView.SelectedIndex);
+        var selectedIndex = GetSelectedIndex();
+        if (SelectedIndex != selectedIndex)
+            Select(SelectedIndex);
     }
 
     #endregion

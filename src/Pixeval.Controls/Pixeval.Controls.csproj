@@ -13,11 +13,9 @@
         <DefaultLanguage>zh-CN</DefaultLanguage>
         <IsTrimmable>true</IsTrimmable>
     </PropertyGroup>
-    <ItemGroup>
-      <None Remove="Windowing\TabPage.xaml" />
-    </ItemGroup>
 
     <ItemGroup>
+        <PackageReference Include="CommunityToolkit.Labs.WinUI.DependencyPropertyGenerator" />
         <PackageReference Include="CommunityToolkit.Labs.WinUI.Shimmer" />
         <PackageReference Include="FluentIcons.WinUI" />
         <PackageReference Include="Microsoft.Graphics.Win2D" />
@@ -47,10 +45,5 @@
     </Target>
     <ItemGroup>
         <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="SourceItemGroup" />
-    </ItemGroup>
-    <ItemGroup>
-      <Page Update="Windowing\TabPage.xaml">
-        <Generator>MSBuild:Compile</Generator>
-      </Page>
     </ItemGroup>
 </Project>

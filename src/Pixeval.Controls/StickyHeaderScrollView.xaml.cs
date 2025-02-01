@@ -2,19 +2,27 @@
 // Licensed under the GPL v3 License.
 
 using System;
+using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
-using WinUI3Utilities.Attributes;
 
 namespace Pixeval.Controls;
 
-[DependencyProperty<FrameworkElement>("Header")]
-[DependencyProperty<Brush>("HeaderBackGround")]
-[DependencyProperty<FrameworkElement>("StickyContent")]
-[DependencyProperty<double>("ScrollRatio")]
 public sealed partial class StickyHeaderScrollView
 {
+    [GeneratedDependencyProperty]
+    public partial FrameworkElement? Header { get; set; }
+    
+    [GeneratedDependencyProperty]
+    public partial Brush? HeaderBackGround { get; set; }
+    
+    [GeneratedDependencyProperty]
+    public partial FrameworkElement? StickyContent { get; set; }
+    
+    [GeneratedDependencyProperty]
+    public partial double ScrollRatio { get; set; }
+
     public StickyHeaderScrollView() => InitializeComponent();
 
     /// <summary>

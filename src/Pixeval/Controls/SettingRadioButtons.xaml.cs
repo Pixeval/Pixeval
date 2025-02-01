@@ -9,15 +9,20 @@ using Microsoft.UI.Xaml.Controls;
 using Windows.Foundation;
 using CommunityToolkit.WinUI;
 using WinUI3Utilities;
-using WinUI3Utilities.Attributes;
 
 namespace Pixeval.Controls;
 
-[DependencyProperty<object>("ItemsSource", DependencyPropertyDefaultValue.Default, nameof(OnItemsSourceChanged))]
-[DependencyProperty<object>("SelectedItem", propertyChanged: nameof(OnSelectedItemChanged))]
-[DependencyProperty<object>("Header")]
 public sealed partial class SettingRadioButtons : UserControl
 {
+    [GeneratedDependencyProperty]
+    public partial object? ItemsSource { get; set; }
+
+    [GeneratedDependencyProperty]
+    public partial object SelectedItem { get; set; }
+
+    [GeneratedDependencyProperty]
+    public partial object? Header { get; set; }
+
     private RadioButtons Buttons => Content.To<RadioButtons>();
 
     public SettingRadioButtons()
@@ -36,16 +41,14 @@ public sealed partial class SettingRadioButtons : UserControl
         }
     }
 
-    private static void OnItemsSourceChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
+    partial void OnItemsSourcePropertyChanged(DependencyPropertyChangedEventArgs e)
     {
-        var buttons = sender.To<SettingRadioButtons>();
-
-        buttons.Buttons.ItemsSource = buttons.ItemsSource;
+        Buttons.ItemsSource = ItemsSource;
     }
 
-    private static void OnSelectedItemChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
+    partial void OnSelectedItemPropertyChanged(DependencyPropertyChangedEventArgs e)
     {
-        SelectedItemChanged(sender, e.NewValue);
+        SelectedItemChanged(this, e.NewValue);
     }
 
     public event TypedEventHandler<SettingRadioButtons, SelectionChangedEventArgs>? SelectionChanged;

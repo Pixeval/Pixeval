@@ -3,13 +3,13 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Pixeval.Utilities;
-using WinUI3Utilities.Attributes;
 
 namespace Pixeval.Controls;
 
@@ -18,24 +18,9 @@ namespace Pixeval.Controls;
 /// 渲染：<see cref="CanvasControlOnDraw"/>，图片渲染逻辑<br/>
 /// 对外API：<see cref="Zoom(float)"/>、<see cref="SetPosition"/>
 /// </summary>
-[DependencyProperty<object>("Source", DependencyPropertyDefaultValue.Default, nameof(OnSourceChanged), IsNullable = true)]
-[DependencyProperty<IReadOnlyList<int>>("MsIntervals", DependencyPropertyDefaultValue.Default, nameof(OnMsIntervalsChanged))]
-[DependencyProperty<bool>("IsPlaying", "true", nameof(OnIsPlayingChanged))]
-[DependencyProperty<int>("ImageRotationDegree", "0", nameof(OnImageRotationDegreeChanged))]
-[DependencyProperty<bool>("ImageIsMirrored", "false")]
-[DependencyProperty<float>("ImageScale", "1f", nameof(OnImageScaleChanged))]
-[DependencyProperty<ZoomableImageMode>("Mode", DependencyPropertyDefaultValue.Default, nameof(OnModeChanged))]
-[DependencyProperty<ZoomableImageMode>("InitMode", "ZoomableImageMode.Fit")]
-[DependencyProperty<ZoomableImagePosition>("InitPosition", "ZoomableImagePosition.AbsoluteCenter")]
-[ObservableObject]
-public sealed partial class ZoomableImage : UserControl, IStructuralDisposalCompleter
+public sealed partial class ZoomableImage : UserControl, IStructuralDisposalCompleter, INotifyPropertyChanged
 {
     public bool IsDisposed { get; private set; }
-
-    public static ZoomableImage? EnsureNotDisposed(object? o)
-    {
-        return o is ZoomableImage { IsDisposed: false } image ? image : null;
-    }
 
     public ZoomableImage()
     {
@@ -121,5 +106,12 @@ public sealed partial class ZoomableImage : UserControl, IStructuralDisposalComp
     private void ZoomableImage_OnLoaded(object sender, RoutedEventArgs e)
     {
         ((IStructuralDisposalCompleter) this).Hook();
+    }
+
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }

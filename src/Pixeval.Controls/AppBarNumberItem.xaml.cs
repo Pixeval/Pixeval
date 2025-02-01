@@ -1,15 +1,21 @@
 // Copyright (c) Pixeval.Controls.
 // Licensed under the GPL v3 License.
 
+using CommunityToolkit.WinUI;
 using FluentIcons.Common;
-using WinUI3Utilities.Attributes;
 
 namespace Pixeval.Controls;
 
-[DependencyProperty<string>("Title")]
-[DependencyProperty<int>("Number")]
-[DependencyProperty<Symbol>("Symbol")]
 public sealed partial class AppBarNumberItem
 {
+    [GeneratedDependencyProperty]
+    public partial string? Title { get; set; }
+
+    [GeneratedDependencyProperty]
+    public partial int Number { get; set; }
+
+    [GeneratedDependencyProperty]
+    public partial Symbol Symbol { get; set; }
+
     public AppBarNumberItem() => InitializeComponent();
 }

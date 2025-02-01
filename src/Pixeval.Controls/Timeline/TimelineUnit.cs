@@ -1,24 +1,30 @@
 // Copyright (c) Pixeval.Controls.
 // Licensed under the GPL v3 License.
 
+using CommunityToolkit.WinUI;
+using System;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
-using WinUI3Utilities.Attributes;
 
 namespace Pixeval.Controls.Timeline;
 
-[DependencyProperty<TimelineAxisPlacement>("FoldedDefaultPlacement", "Pixeval.Controls.Timeline.TimelineAxisPlacement.Left")]
-[DependencyProperty<double>("FoldThreshold", "-1.0")]
-[DependencyProperty<TimelineAxisPlacement>("TimelineAxisPlacement", "Pixeval.Controls.Timeline.TimelineAxisPlacement.Left", nameof(TimelineAxisPlacementPropertyChangedCallback))]
-[DependencyProperty<IconSource>("TitleIcon")]
-[DependencyProperty<SolidColorBrush>("TitleIconBackground", DependencyPropertyDefaultValue.Default)]
 public sealed partial class TimelineUnit : ContentControl
 {
-    public TimelineUnit()
-    {
-        DefaultStyleKey = typeof(TimelineUnit);
-    }
+    [GeneratedDependencyProperty(DefaultValue = TimelineAxisPlacement.Left)]
+    public partial TimelineAxisPlacement FoldedDefaultPlacement { get; set; }
+
+    [GeneratedDependencyProperty(DefaultValue = -1.0d)]
+    public partial double FoldThreshold { get; set; }
+
+    [GeneratedDependencyProperty(DefaultValue = TimelineAxisPlacement.Left)]
+    public partial TimelineAxisPlacement TimelineAxisPlacement { get; set; }
+
+    [GeneratedDependencyProperty]
+    public partial IconSource? TitleIcon { get; set; }
+
+    [GeneratedDependencyProperty]
+    public partial SolidColorBrush? TitleIconBackground { get; set; }
 
     private bool _folded;
     private bool _differentDefaultAxisPlacement;
@@ -30,26 +36,24 @@ public sealed partial class TimelineUnit : ContentControl
     private ColumnDefinition _leftColumn = null!;
     private ContentControl _contentPresenter = null!;
     private double _containerHeightFixed;
-    
 
-    private static void TimelineAxisPlacementPropertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    public TimelineUnit() => DefaultStyleKey = typeof(TimelineUnit);
+
+    partial void OnTimelineAxisPlacementPropertyChanged(DependencyPropertyChangedEventArgs e)
     {
-        if (d is TimelineUnit { IsLoaded: true } unit && e.NewValue is TimelineAxisPlacement placement)
+        if (IsLoaded && e.NewValue is TimelineAxisPlacement placement)
         {
-            unit._folded = !unit._folded;
-            unit.AdjustAxisPlacement(placement, true); // unit._folded;
+            _folded = !_folded;
+            AdjustAxisPlacement(placement, true);
         }
     }
 
     private double GetTimelineAxisHeight(bool isAuxAxis)
     {
-        if (ActualHeight is not 0 && _containerHeightFixed is 0)
-        {
+        if (ActualHeight is not 0 && _containerHeightFixed is 0) 
             _containerHeightFixed = ActualHeight;
-            return isAuxAxis ? _containerHeightFixed : _containerHeightFixed - 45 is >= 0 and var value ? value : 0;
-        }
-        else
-            return isAuxAxis ? _containerHeightFixed : _containerHeightFixed - 45 is >= 0 and var value ? value : 0;
+
+        return isAuxAxis ? _containerHeightFixed : Math.Max(_containerHeightFixed - 45, 0);
     }
 
     protected override void OnApplyTemplate()

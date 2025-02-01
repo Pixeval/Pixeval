@@ -3,14 +3,18 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using WinUI3Utilities.Attributes;
+using CommunityToolkit.WinUI;
 
 namespace Pixeval.Controls;
 
-[DependencyProperty<string>("PlaceholderText")]
-[DependencyProperty<ICollection<Token>>("TokenSource")]
 public sealed partial class TokenInput
 {
+    [GeneratedDependencyProperty]
+    public partial string? PlaceholderText { get; set; }
+
+    [GeneratedDependencyProperty]
+    public partial ICollection<Token> TokenSource { get; set; }
+
     public TokenInput() => InitializeComponent();
 
     public Token Token { get; } = new();

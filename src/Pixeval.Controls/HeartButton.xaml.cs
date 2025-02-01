@@ -1,17 +1,21 @@
 // Copyright (c) Pixeval.Controls.
 // Licensed under the GPL v3 License.
 
+using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media.Animation;
 using WinUI3Utilities;
-using WinUI3Utilities.Attributes;
 
 namespace Pixeval.Controls;
 
-[DependencyProperty<XamlUICommand>("Command")]
-[DependencyProperty<object>("CommandParameter", IsNullable = true)]
 public sealed partial class HeartButton
 {
+    [GeneratedDependencyProperty]
+    public partial XamlUICommand Command { get; set; }
+
+    [GeneratedDependencyProperty]
+    public partial object? CommandParameter { get; set; }
+
     public HeartButton() => InitializeComponent();
 
     private void ToggleBookmarkButtonOnTapped(object sender, TappedRoutedEventArgs e)

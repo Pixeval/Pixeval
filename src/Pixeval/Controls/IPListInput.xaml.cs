@@ -3,20 +3,24 @@
 
 using System.Collections.Generic;
 using System.Net;
+using CommunityToolkit.WinUI;
 using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using WinUI3Utilities;
-using WinUI3Utilities.Attributes;
 
 namespace Pixeval.Controls;
 
-[DependencyProperty<string>("Header")]
-[DependencyProperty<ICollection<string>>("ItemsSource")]
 public sealed partial class IPListInput : StackPanel
 {
+    [GeneratedDependencyProperty]
+    public partial string? Header { get; set; }
+
+    [GeneratedDependencyProperty]
+    public partial ICollection<string> ItemsSource { get; set; }
+
     public IPListInput() => InitializeComponent();
 
     private void AddItem(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs e)

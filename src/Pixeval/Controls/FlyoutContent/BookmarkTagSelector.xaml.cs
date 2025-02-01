@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
+using CommunityToolkit.WinUI;
 using CommunityToolkit.WinUI.Controls;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -11,13 +12,14 @@ using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Model;
 using Pixeval.Util;
 using WinUI3Utilities;
-using WinUI3Utilities.Attributes;
 
 namespace Pixeval.Controls.FlyoutContent;
 
-[DependencyProperty<SimpleWorkType>("Type", DependencyPropertyDefaultValue.Default, nameof(OnTypeChanged))]
 public sealed partial class BookmarkTagSelector : UserControl
 {
+    [GeneratedDependencyProperty(DefaultValue = SimpleWorkType.IllustAndManga)]
+    public partial SimpleWorkType Type { get; set; }
+
     public bool IsPrivate
     {
         get;
@@ -39,7 +41,7 @@ public sealed partial class BookmarkTagSelector : UserControl
         ResetSource();
     }
 
-    private static void OnTypeChanged(DependencyObject o, DependencyPropertyChangedEventArgs e) => o.To<BookmarkTagSelector>().ResetSource();
+    partial void OnTypePropertyChanged(DependencyPropertyChangedEventArgs e) => ResetSource();
 
     private void SelectedTags_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {

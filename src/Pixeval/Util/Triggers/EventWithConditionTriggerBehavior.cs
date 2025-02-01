@@ -3,21 +3,27 @@
 
 using System;
 using System.Reflection;
+using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.Xaml.Interactivity;
-using WinUI3Utilities.Attributes;
 
 namespace Pixeval.Util.Triggers;
 
 /// <summary>
 /// <seealso href="https://github.com/microsoft/XamlBehaviors/blob/master/src/BehaviorsSDKManaged/Microsoft.Xaml.Interactions.Shared/Core/EventTriggerBehavior.cs"/>
 /// </summary>
-[DependencyProperty<string>("EventName", "\"Loaded\"", nameof(OnEventNameChanged))]
-[DependencyProperty<object>("SourceObject", DependencyPropertyDefaultValue.Default, nameof(OnSourceObjectChanged))]
-[DependencyProperty<bool>("IsActive", "true")]
 public partial class EventWithConditionTriggerBehavior : Trigger
 {
+    [GeneratedDependencyProperty(DefaultValue = "Loaded")]
+    public partial string EventName { get; set; }
+
+    [GeneratedDependencyProperty]
+    public partial object? SourceObject { get; set; }
+
+    [GeneratedDependencyProperty(DefaultValue = true)]
+    public partial bool IsActive { get; set; }
+
     private Delegate? _eventHandler;
     private bool _isLoadedEventRegistered;
     private object? _resolvedSource;
@@ -67,7 +73,7 @@ public partial class EventWithConditionTriggerBehavior : Trigger
         }
     }
 
-    private object ComputeResolvedSource()
+    private object? ComputeResolvedSource()
     {
         // If the SourceObject property is set at all, we want to use it. It is possible that it is data
         // bound and bindings haven't been evaluated yet. Plus, this makes the API more predictable.
@@ -134,25 +140,23 @@ public partial class EventWithConditionTriggerBehavior : Trigger
             _ = Interaction.ExecuteActions(_resolvedSource, Actions, eventArgs);
     }
 
-    private static void OnSourceObjectChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e)
+    partial void OnSourceObjectPropertyChanged(DependencyPropertyChangedEventArgs e)
     {
-        var behavior = (EventWithConditionTriggerBehavior)dependencyObject;
-        behavior.SetResolvedSource(behavior.ComputeResolvedSource());
+        SetResolvedSource(ComputeResolvedSource());
     }
 
-    private static void OnEventNameChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args)
+    partial void OnEventNamePropertyChanged(DependencyPropertyChangedEventArgs e)
     {
-        var behavior = (EventWithConditionTriggerBehavior)dependencyObject;
-        if (behavior.AssociatedObject is null || behavior._resolvedSource is null)
+        if (AssociatedObject is null || _resolvedSource is null)
         {
             return;
         }
 
-        var oldEventName = (string)args.OldValue;
-        var newEventName = (string)args.NewValue;
+        var oldEventName = (string)e.OldValue;
+        var newEventName = (string)e.NewValue;
 
-        behavior.UnregisterEvent(oldEventName);
-        behavior.RegisterEvent(newEventName);
+        UnregisterEvent(oldEventName);
+        RegisterEvent(newEventName);
     }
 
     internal static bool IsElementLoaded(FrameworkElement? element)

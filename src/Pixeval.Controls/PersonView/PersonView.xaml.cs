@@ -4,20 +4,28 @@
 using System;
 using Microsoft.UI.Xaml.Media;
 using Windows.System;
+using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
-using WinUI3Utilities.Attributes;
 
 namespace Pixeval.Controls;
 
 /// <summary>
 /// Used to display contributors, not illustrators
 /// </summary>
-[DependencyProperty<string>("PersonNickname")]
-[DependencyProperty<string>("PersonName")]
-[DependencyProperty<Uri>("PersonProfileNavigateUri")]
-[DependencyProperty<ImageSource>("PersonPicture")]
 public partial class PersonView
 {
+    [GeneratedDependencyProperty]
+    public partial string? PersonNickname { get; set; }
+
+    [GeneratedDependencyProperty]
+    public partial string? PersonName { get; set; }
+
+    [GeneratedDependencyProperty]
+    public partial Uri? PersonProfileNavigateUri { get; set; }
+
+    [GeneratedDependencyProperty]
+    public partial ImageSource? PersonPicture { get; set; }
+
     public PersonView() => InitializeComponent();
 
     private async void ContentContainerOnClicked(object sender, RoutedEventArgs e) => await Launcher.LaunchUriAsync(PersonProfileNavigateUri);

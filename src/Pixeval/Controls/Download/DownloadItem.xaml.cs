@@ -5,25 +5,26 @@ using System;
 using System.IO;
 using Windows.Foundation;
 using Windows.System;
+using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 using Pixeval.Util.UI;
 using WinUI3Utilities;
-using WinUI3Utilities.Attributes;
 using Symbol = FluentIcons.Common.Symbol;
 
 namespace Pixeval.Controls;
 
-[DependencyProperty<DownloadItemViewModel>("ViewModel", propertyChanged: nameof(OnViewModelChanged))]
 public sealed partial class DownloadItem
 {
+    [GeneratedDependencyProperty]
+    public partial DownloadItemViewModel ViewModel { get; set; }
+
     public event Action<DownloadItem, DownloadItemViewModel>? ViewModelChanged;
 
     public event TypedEventHandler<DownloadItem, DownloadItemViewModel>? OpenIllustrationRequested;
 
-    private static void OnViewModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    partial void OnViewModelPropertyChanged(DependencyPropertyChangedEventArgs e)
     {
-        if (d as DownloadItem is { } entry) 
-            entry.ViewModelChanged?.Invoke(entry, entry.ViewModel);
+        ViewModelChanged?.Invoke(this, ViewModel);
     }
 
     public DownloadItem() => InitializeComponent();

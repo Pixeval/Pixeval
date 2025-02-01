@@ -3,20 +3,21 @@
 
 using System;
 using CommunityToolkit.Labs.WinUI;
+using CommunityToolkit.WinUI;
 using CommunityToolkit.WinUI.Controls;
-using Microsoft.UI.Xaml;
-using WinUI3Utilities.Attributes;
 
 namespace Pixeval.Controls;
 
-[DependencyProperty<ItemsViewLayoutType>("LayoutType", DependencyPropertyDefaultValue.Default, nameof(OnLayoutTypeChanged))]
-[DependencyProperty<double>("MinItemHeight", "250d")]
-[DependencyProperty<double>("MinItemWidth", "350d")]
 public partial class SkeletonView : UniformGrid
 {
-    private static void OnLayoutTypeChanged(DependencyObject o, DependencyPropertyChangedEventArgs e)
-    {
-    }
+    [GeneratedDependencyProperty]
+    public partial ItemsViewLayoutType LayoutType { get; set; }
+
+    [GeneratedDependencyProperty(DefaultValue = 250d)]
+    public partial double MinItemHeight { get; set; }
+
+    [GeneratedDependencyProperty(DefaultValue = 350d)]
+    public partial double MinItemWidth { get; set; }
 
     public SkeletonView()
     {
@@ -24,10 +25,12 @@ public partial class SkeletonView : UniformGrid
         ColumnSpacing = 5;
         SizeChanged += (_, _) =>
         {
-            Columns = ActualWidth is double.PositiveInfinity or double.NegativeInfinity or double.NaN
-                ? 1 : (int)Math.Ceiling(ActualWidth / MinItemWidth);
-            Rows = ActualHeight is double.PositiveInfinity or double.NegativeInfinity or double.NaN
-                ? 1 : (int)Math.Ceiling(ActualHeight / MinItemHeight);
+            Columns = double.IsInfinity(ActualWidth) || double.IsNaN(ActualWidth)
+                ? 1
+                : (int)Math.Ceiling(ActualWidth / MinItemWidth);
+            Rows = double.IsInfinity(ActualHeight) || double.IsNaN(ActualHeight)
+                ? 1
+                : (int)Math.Ceiling(ActualHeight / MinItemHeight);
             var count = Rows * Columns;
             while (count != Children.Count)
             {

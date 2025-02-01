@@ -1,29 +1,27 @@
 // Copyright (c) Pixeval.Controls.
 // Licensed under the GPL v3 License.
 
-using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
-using WinUI3Utilities;
-using WinUI3Utilities.Attributes;
 
 namespace Pixeval.Controls;
 
-[DependencyProperty<ImageSource>("Source", DependencyPropertyDefaultValue.UnsetValue, nameof(OnSourceChanged), IsNullable = true)]
-[DependencyProperty<Stretch>("Stretch", "Microsoft.UI.Xaml.Media.Stretch.UniformToFill")]
-[DependencyProperty<HorizontalAlignment>("HorizontalImageAlignment", "Microsoft.UI.Xaml.HorizontalAlignment.Center")]
-[DependencyProperty<VerticalAlignment>("VerticalImageAlignment", "Microsoft.UI.Xaml.VerticalAlignment.Center")]
-[INotifyPropertyChanged]
 public sealed partial class LazyImage
 {
+    [GeneratedDependencyProperty]
+    public partial ImageSource? Source { get; set; }
+
+    [GeneratedDependencyProperty(DefaultValue = Stretch.UniformToFill)]
+    public partial Stretch Stretch { get; set; }
+
+    [GeneratedDependencyProperty(DefaultValue = HorizontalAlignment.Center)]
+    public partial HorizontalAlignment HorizontalImageAlignment { get; set; }
+
+    [GeneratedDependencyProperty(DefaultValue = VerticalAlignment.Center)]
+    public partial VerticalAlignment VerticalImageAlignment { get; set; }
+
     public LazyImage() => InitializeComponent();
-
-    private static void OnSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-    {
-        d.To<LazyImage>().OnPropertyChanged(nameof(ShowProgressRing));
-    }
-
-    private bool ShowProgressRing => Source is null;
 
     /// <summary>
     /// ReSharper disable once ConvertToConstant.Local

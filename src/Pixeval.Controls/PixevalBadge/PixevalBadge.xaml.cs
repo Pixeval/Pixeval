@@ -3,21 +3,23 @@
 
 using System.Collections.Generic;
 using Windows.UI;
+using CommunityToolkit.WinUI;
 using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using WinUI3Utilities;
-using WinUI3Utilities.Attributes;
 
 namespace Pixeval.Controls;
 
-[DependencyProperty<bool>("UseSmall", "false", nameof(OnUseSmallPropertyChanged))]
-[DependencyProperty<string>("Text")]
-[DependencyProperty<Brush>("BadgeColor")]
-[DependencyProperty<BadgeMode>("Mode", propertyChanged: nameof(OnBadgeModePropertyChanged))]
 public sealed partial class PixevalBadge : UserControl
 {
+    [GeneratedDependencyProperty]
+    public partial bool UseSmall { get; set; }
+
+    [GeneratedDependencyProperty]
+    public partial BadgeMode Mode { get; set; }
+
     internal const string SmallState = "Small";
     internal const string NormalState = "Normal";
 
@@ -33,21 +35,13 @@ public sealed partial class PixevalBadge : UserControl
 
     public PixevalBadge() => InitializeComponent();
 
-    public static void OnUseSmallPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-    {
-        d.To<PixevalBadge>().GoToState(e.NewValue.To<bool>());
-    }
+    partial void OnUseSmallPropertyChanged(DependencyPropertyChangedEventArgs e) => GoToState(e.NewValue.To<bool>());
 
-    public static void OnBadgeModePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-    {
-        var properties = _PropertySet[e.NewValue.To<BadgeMode>()];
-        var badge = d.To<PixevalBadge>();
-        badge.Text = properties.Text;
-        badge.BadgeColor = new SolidColorBrush(properties.Background);
-    }
+    private void GoToState(bool useSmall) => _ = VisualStateManager.GoToState(this, useSmall ? SmallState : NormalState, true);
 
-    private void GoToState(bool useSmall)
-    {
-        _ = VisualStateManager.GoToState(this, useSmall ? SmallState : NormalState, true);
-    }
+#pragma warning disable CA1822
+    private string GetText(BadgeMode mode) => _PropertySet[mode].Text;
+
+    private SolidColorBrush GetBrush(BadgeMode mode) => new SolidColorBrush(_PropertySet[mode].Background);
+#pragma warning restore CA1822
 }

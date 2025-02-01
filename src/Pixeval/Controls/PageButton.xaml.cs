@@ -1,18 +1,24 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL v3 License.
 
+using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
-using WinUI3Utilities.Attributes;
 
 namespace Pixeval.Controls;
 
-[DependencyProperty<string>("ToolTip")]
-[DependencyProperty<Visibility>("ButtonVisibility")]
-[DependencyProperty<bool>("IsPrev", "true", propertyChanged: nameof(OnIsPrevChanged))]
 public sealed partial class PageButton
 {
+    [GeneratedDependencyProperty]
+    public partial string? ToolTip { get; set; }
+
+    [GeneratedDependencyProperty]
+    public partial Visibility ButtonVisibility { get; set; }
+
+    [GeneratedDependencyProperty(DefaultValue = true)]
+    public partial bool IsPrev { get; set; }
+
     public PageButton() => InitializeComponent();
 
     public event RoutedEventHandler? ButtonClick;
@@ -23,10 +29,9 @@ public sealed partial class PageButton
 
     private void NextButton_OnRightTapped(object sender, RightTappedRoutedEventArgs e) => ButtonRightTapped?.Invoke(sender, e);
 
-    private static void OnIsPrevChanged(DependencyObject o, DependencyPropertyChangedEventArgs e)
+    partial void OnIsPrevPropertyChanged(DependencyPropertyChangedEventArgs e)
     {
-        var button = (PageButton)o;
-        if (!button.IsPrev)
-            button.Image.RenderTransform = new ScaleTransform { ScaleX = -1 };
+        if (!IsPrev)
+            Image.RenderTransform = new ScaleTransform { ScaleX = -1 };
     }
 }

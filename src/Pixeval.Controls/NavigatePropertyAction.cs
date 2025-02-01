@@ -4,20 +4,25 @@
 using Microsoft.UI.Xaml;
 using System.Reflection;
 using System;
+using System.Diagnostics;
+using CommunityToolkit.WinUI;
 using Microsoft.Xaml.Interactivity;
 using Pixeval.Utilities;
 using WinUI3Utilities;
-using WinUI3Utilities.Attributes;
 
 namespace Pixeval.Actions;
 
 /// <summary>
 /// An action that will change a specified property to a specified value when invoked.
 /// </summary>
-[DependencyProperty<PropertyPath>("PropertyName", DependencyPropertyDefaultValue.Default)]
-[DependencyProperty<object>("TargetObject", DependencyPropertyDefaultValue.Default)]
 public sealed partial class NavigatePropertyAction : DependencyObject, IAction
 {
+    [GeneratedDependencyProperty]
+    public partial PropertyPath? PropertyName { get; set; }
+
+    [GeneratedDependencyProperty]
+    public partial object? TargetObject { get; set; }
+
     /// <summary>
     /// Executes the action.
     /// </summary>
@@ -39,6 +44,7 @@ public sealed partial class NavigatePropertyAction : DependencyObject, IAction
 
     private void UpdatePropertyValue(object targetObject)
     {
+        Debug.Assert(PropertyName is not null);
         var targetType = targetObject.GetType();
         var propertyInfo = targetType.GetRuntimeProperty(PropertyName.Path)!;
         ValidateProperty(targetType.Name, propertyInfo);
