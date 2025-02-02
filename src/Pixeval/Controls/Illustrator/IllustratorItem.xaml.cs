@@ -3,26 +3,25 @@
 
 using System;
 using System.Numerics;
+using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
-using WinUI3Utilities.Attributes;
 
 namespace Pixeval.Controls;
 
-[DependencyProperty<IllustratorItemViewModel>("ViewModel", propertyChanged: nameof(OnViewModelChanged))]
 public sealed partial class IllustratorItem
 {
+    [GeneratedDependencyProperty]
+    public partial IllustratorItemViewModel ViewModel { get; set; }
+
     public event Action<IllustratorItem, IllustratorItemViewModel>? ViewModelChanged;
 
     public event Func<TeachingTip> RequestTeachingTip = null!;
 
-    private static void OnViewModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    partial void OnViewModelPropertyChanged(DependencyPropertyChangedEventArgs e)
     {
-        if (d as IllustratorItem is { } item)
-        {
-            item.ViewModelChanged?.Invoke(item, item.ViewModel);
-        }
+        ViewModelChanged?.Invoke(this, ViewModel);
     }
 
     private const float RotatedRotation = 10f;

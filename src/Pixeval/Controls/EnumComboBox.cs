@@ -4,18 +4,20 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Markup;
 using Pixeval.CoreApi.Global.Enum;
 using WinUI3Utilities;
-using WinUI3Utilities.Attributes;
 
 namespace Pixeval.Controls;
 
-[DependencyProperty<object>("SelectedEnum", DependencyPropertyDefaultValue.Default, nameof(OnSelectedEnumChanged), IsNullable = true)]
 public sealed partial class EnumComboBox : ComboBox
 {
+    [GeneratedDependencyProperty]
+    public partial object? SelectedEnum { get; set; }
+
     public new event EventHandler<SelectionChangedEventArgs>? SelectionChanged;
 
     public EnumComboBox()
@@ -47,10 +49,9 @@ public sealed partial class EnumComboBox : ComboBox
 
     public T GetSelectedItem<T>() where T : Enum => SelectedEnum is T t ? t : ThrowHelper.InvalidCast<T>();
 
-    private static void OnSelectedEnumChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
+    partial void OnSelectedEnumPropertyChanged(DependencyPropertyChangedEventArgs e)
     {
-        var comboBox = sender.To<EnumComboBox>();
-        comboBox.SelectedItem = comboBox.ItemsSource?.To<IEnumerable<StringRepresentableItem>>().FirstOrDefault(r => Equals(r.Item, comboBox.SelectedEnum));
+        SelectedItem = ItemsSource?.To<IEnumerable<StringRepresentableItem>>().FirstOrDefault(r => Equals(r.Item, SelectedEnum));
     }
 }
 

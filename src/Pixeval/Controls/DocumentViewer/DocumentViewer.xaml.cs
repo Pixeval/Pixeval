@@ -5,65 +5,51 @@ using System.Collections.Generic;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Documents;
 using Pixeval.Utilities;
-using WinUI3Utilities;
-using WinUI3Utilities.Attributes;
 
 namespace Pixeval.Controls;
 
-[DependencyProperty<NovelItemViewModel>("NovelItem", DependencyPropertyDefaultValue.UnsetValue, nameof(OnNovelItemChanged), IsNullable = true)]
-[DependencyProperty<double>("NovelMaxWidth", "1000d")]
-[DependencyProperty<double>("LineHeight", "28d")]
-[DependencyProperty<int>("CurrentPage", "0", nameof(OnCurrentPageChanged))]
-[DependencyProperty<int>("PageCount", "0", nameof(OnPageCountChanged))]
-[DependencyProperty<bool>("IsMultiPage", "false")]
-[DependencyProperty<bool>("LoadSuccessfully", "true")]
-[DependencyProperty<bool>("IsLoading", "false")]
-[DependencyProperty<DocumentViewerViewModel>("ViewModel", IsNullable = true)]
 public sealed partial class DocumentViewer
 {
     public DocumentViewer() => InitializeComponent();
 
-    public static async void OnNovelItemChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    async partial void OnNovelItemPropertyChanged(DependencyPropertyChangedEventArgs e)
     {
-        var viewer = d.To<DocumentViewer>();
-        if (viewer.NovelItem is null)
+        if (NovelItem is null)
         {
-            viewer.ViewModel = null;
+            ViewModel = null;
             return;
         }
 
         try
         {
-            viewer.LoadSuccessfully = false;
-            viewer.IsLoading = true;
-            viewer.ViewModel = await DocumentViewerViewModel.CreateAsync(viewer, viewer.NovelItem, _ => viewer.LoadSuccessfully = true);
-            viewer.ViewModel.JumpToPageRequested += newPage => viewer.CurrentPage = newPage;
-            viewer.ViewModel.Pages.CollectionChanged += (_, _) => viewer.PageCount = viewer.ViewModel.Pages.Count;
-            viewer.PageCount = viewer.ViewModel.Pages.Count;
-            if (viewer.CurrentPage is 0)
-                viewer.UpdateContent();
+            LoadSuccessfully = false;
+            IsLoading = true;
+            ViewModel = await DocumentViewerViewModel.CreateAsync(this, NovelItem, _ => LoadSuccessfully = true);
+            ViewModel.JumpToPageRequested += newPage => CurrentPage = newPage;
+            ViewModel.Pages.CollectionChanged += (_, _) => PageCount = ViewModel.Pages.Count;
+            PageCount = ViewModel.Pages.Count;
+            if (CurrentPage is 0)
+                UpdateContent();
             else
-                viewer.CurrentPage = 0;
+                CurrentPage = 0;
         }
         finally
         {
-            viewer.IsLoading = false;
+            IsLoading = false;
         }
     }
 
-    public static void OnCurrentPageChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    partial void OnCurrentPagePropertyChanged(DependencyPropertyChangedEventArgs e)
     {
-        var viewer = d.To<DocumentViewer>();
-        if (viewer.NovelItem is null)
+        if (NovelItem is null)
             return;
 
-        viewer.UpdateContent();
+        UpdateContent();
     }
 
-    public static void OnPageCountChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    partial void OnPageCountPropertyChanged(DependencyPropertyChangedEventArgs e)
     {
-        var viewer = d.To<DocumentViewer>();
-        viewer.IsMultiPage = viewer.PageCount > 1;
+        IsMultiPage = PageCount > 1;
     }
 
     private void UpdateContent()

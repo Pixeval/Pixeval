@@ -11,13 +11,14 @@ using Pixeval.CoreApi;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Net.Response;
 using WinUI3Utilities;
-using WinUI3Utilities.Attributes;
 
 namespace Pixeval.Controls.FlyoutContent;
 
-[DependencyProperty<CommentItemViewModel>("ViewModel")]
 public sealed partial class CommentRepliesBlock
 {
+    [GeneratedDependencyProperty]
+    public partial CommentItemViewModel ViewModel { get; set; }
+
     public CommentRepliesBlock() => InitializeComponent();
 
     private void CommentView_OnRepliesHyperlinkButtonClick(CommentItemViewModel viewModel)

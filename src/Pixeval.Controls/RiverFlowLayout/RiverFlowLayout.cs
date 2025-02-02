@@ -5,24 +5,31 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using Windows.Foundation;
+using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using WinUI3Utilities.Attributes;
 
 namespace Pixeval.Controls;
 
-[DependencyProperty<double>("LineSpacing", "0d", nameof(LayoutPropertyChanged))]
-[DependencyProperty<double>("MinItemSpacing", "0d", nameof(LayoutPropertyChanged))]
-[DependencyProperty<double>("LineHeight", "50d", nameof(LayoutPropertyChanged))]
 public sealed partial class RiverFlowLayout : VirtualizingLayout
 {
-    private static void LayoutPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    [GeneratedDependencyProperty(DefaultValue = 0d)]
+    public partial double LineSpacing { get; set; }
+
+    [GeneratedDependencyProperty(DefaultValue = 0d)]
+    public partial double MinItemSpacing { get; set; }
+
+    [GeneratedDependencyProperty(DefaultValue = 50d)]
+    public partial double LineHeight { get; set; }
+
+    partial void OnLineSpacingPropertyChanged(DependencyPropertyChangedEventArgs e) => OnLineHeightPropertyChanged(e);
+
+    partial void OnMinItemSpacingPropertyChanged(DependencyPropertyChangedEventArgs e) => OnLineHeightPropertyChanged(e);
+
+    partial void OnLineHeightPropertyChanged(DependencyPropertyChangedEventArgs e)
     {
-        if (d is RiverFlowLayout jp)
-        {
-            jp.InvalidateMeasure();
-            jp.InvalidateArrange();
-        }
+        InvalidateMeasure();
+        InvalidateArrange();
     }
 
     /// <inheritdoc />

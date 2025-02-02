@@ -24,6 +24,7 @@
 
     <ItemGroup>
         <PackageReference Include="CommunityToolkit.Labs.WinUI.Controls.MarkdownTextBlock" />
+        <PackageReference Include="CommunityToolkit.Labs.WinUI.DependencyPropertyGenerator" />
         <PackageReference Include="CommunityToolkit.Labs.WinUI.Shimmer" />
         <PackageReference Include="CommunityToolkit.Labs.WinUI.TitleBar" />
         <PackageReference Include="CommunityToolkit.Labs.WinUI.TokenView" />
@@ -75,7 +76,7 @@
 
     <!--Exposes PRI resources-->
     <Target Name="InjectAdditionalFiles" BeforeTargets="GenerateMSBuildEditorConfigFileShouldRun" Condition="'$(DesignTimeBuild)' != 'true'">
-        <RemoveDir Directories="Generated" />
+        <RemoveDir Directories="Strings\.generated" />
         <ItemGroup>
             <TextFiles Include="%(TextFile.OutputTarget)">
                 <Key>$([System.String]::Copy('%(TextFile.Key)').Replace('_', '/'))</Key>
@@ -93,11 +94,11 @@
         <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="SourceItemGroup" />
 
         <TextFile Include="Strings\*\*.md">
-            <OutputTarget>Generated\%(RecursiveDir)TextGenerated.resjson</OutputTarget>
+            <OutputTarget>Strings\.generated\%(RecursiveDir)TextGenerated.resjson</OutputTarget>
             <Key>%(Filename)</Key>
         </TextFile>
         <TextFile Include="Strings\*\*.txt">
-            <OutputTarget>Generated\%(RecursiveDir)TextGenerated.resjson</OutputTarget>
+            <OutputTarget>Strings\.generated\%(RecursiveDir)TextGenerated.resjson</OutputTarget>
             <Key>%(Filename)</Key>
         </TextFile>
 

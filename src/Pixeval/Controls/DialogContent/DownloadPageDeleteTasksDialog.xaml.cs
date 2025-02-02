@@ -1,12 +1,14 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL v3 License.
 
-using WinUI3Utilities.Attributes;
+using CommunityToolkit.WinUI;
 
 namespace Pixeval.Controls.DialogContent;
 
-[DependencyProperty<bool>("DeleteLocalFiles", "false")]
 public sealed partial class DownloadPageDeleteTasksDialog
 {
+    [GeneratedDependencyProperty(DefaultValue = false)]
+    public partial bool DeleteLocalFiles { get; set; }
+
     public DownloadPageDeleteTasksDialog() => InitializeComponent();
 }

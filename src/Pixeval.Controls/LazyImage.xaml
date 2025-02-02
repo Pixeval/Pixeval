@@ -2,6 +2,7 @@
     x:Class="Pixeval.Controls.LazyImage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:Pixeval.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     CornerRadius="{ThemeResource ControlCornerRadius}"
@@ -11,7 +12,7 @@
         x:Name="ProgressRing"
         Width="{x:Bind _progressRingSize}"
         Height="{x:Bind _progressRingSize}"
-        x:Load="{x:Bind ShowProgressRing, Mode=OneWay}" />
+        IsActive="{x:Bind controls:C.IsNull(Source), Mode=OneWay}" />
     <Image
         HorizontalAlignment="{x:Bind HorizontalImageAlignment, Mode=OneWay}"
         VerticalAlignment="{x:Bind VerticalImageAlignment, Mode=OneWay}"

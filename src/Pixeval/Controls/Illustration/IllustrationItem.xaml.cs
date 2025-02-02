@@ -6,14 +6,16 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Pixeval.Options;
 using Windows.Foundation;
+using CommunityToolkit.WinUI;
 using WinUI3Utilities;
-using WinUI3Utilities.Attributes;
 
 namespace Pixeval.Controls;
 
-[DependencyProperty<IllustrationItemViewModel>("ViewModel", propertyChanged: nameof(OnViewModelChanged))]
 public sealed partial class IllustrationItem
 {
+    [GeneratedDependencyProperty]
+    public partial IllustrationItemViewModel ViewModel { get; set; }
+
     public event TypedEventHandler<IllustrationItem, IllustrationItemViewModel>? ViewModelChanged;
 
     public event TypedEventHandler<IllustrationItem, IllustrationItemViewModel>? RequestOpenUserInfoPage;
@@ -24,12 +26,9 @@ public sealed partial class IllustrationItem
 
     public event Func<TeachingTip> RequestTeachingTip = null!;
 
-    private static void OnViewModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    partial void OnViewModelPropertyChanged(DependencyPropertyChangedEventArgs e)
     {
-        if (d is IllustrationItem illustrationItem)
-        {
-            illustrationItem.ViewModelChanged?.Invoke(illustrationItem, illustrationItem.ViewModel);
-        }
+        ViewModelChanged?.Invoke(this, ViewModel);
     }
 
     public IllustrationItem() => InitializeComponent();

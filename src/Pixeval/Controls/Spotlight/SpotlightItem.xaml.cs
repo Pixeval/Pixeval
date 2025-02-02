@@ -3,27 +3,26 @@
 
 using System;
 using Windows.UI;
+using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
 using Pixeval.CoreApi.Model;
-using WinUI3Utilities.Attributes;
 
 namespace Pixeval.Controls;
 
-[DependencyProperty<SpotlightItemViewModel>("ViewModel", propertyChanged: nameof(OnViewModelChanged))]
 public sealed partial class SpotlightItem
 {
+    [GeneratedDependencyProperty]
+    public partial SpotlightItemViewModel ViewModel { get; set; }
+
     public event Action<SpotlightItem, SpotlightItemViewModel>? ViewModelChanged;
 
-    public SpotlightItem() => InitializeComponent();
-
-    private static void OnViewModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    partial void OnViewModelPropertyChanged(DependencyPropertyChangedEventArgs e)
     {
-        if (d as SpotlightItem is { } item)
-        {
-            item.ViewModelChanged?.Invoke(item, item.ViewModel);
-        }
+        ViewModelChanged?.Invoke(this, ViewModel);
     }
+
+    public SpotlightItem() => InitializeComponent();
 
     private SolidColorBrush GetBackgroundBrush(SpotlightCategory category)
     {

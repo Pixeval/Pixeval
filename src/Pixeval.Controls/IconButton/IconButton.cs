@@ -4,14 +4,17 @@
 using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using WinUI3Utilities.Attributes;
 
 namespace Pixeval.Controls;
 
-[DependencyProperty<string>("Text", propertyChanged: nameof(OnTextChanged))]
-[DependencyProperty<IconElement>("Icon", propertyChanged: nameof(OnIconChanged))]
 public partial class IconButton : Button
 {
+    [GeneratedDependencyProperty]
+    public partial string? Text { get; set; }
+
+    [GeneratedDependencyProperty]
+    public partial IconElement? Icon { get; set; }
+
     public IconButton()
     {
         DefaultStyleKey = typeof(IconButton);
@@ -33,9 +36,9 @@ public partial class IconButton : Button
         };
     }
 
-    private static void OnTextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    partial void OnTextPropertyChanged(DependencyPropertyChangedEventArgs e)
     {
-        var textBlock = ((StackPanel)((Button)d).Content).FindDescendant<TextBlock>();
+        var textBlock = ((StackPanel)Content).FindDescendant<TextBlock>();
         if (e.NewValue is null)
         {
             textBlock!.Visibility = Visibility.Collapsed;
@@ -45,8 +48,8 @@ public partial class IconButton : Button
         textBlock!.Text = (string)e.NewValue;
     }
 
-    private static void OnIconChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    partial void OnIconPropertyChanged(DependencyPropertyChangedEventArgs e)
     {
-        ((StackPanel)((Button)d).Content).FindDescendant<ContentPresenter>()!.Content = e.NewValue;
+        ((StackPanel)Content).FindDescendant<ContentPresenter>()!.Content = e.NewValue;
     }
 }

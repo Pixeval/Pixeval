@@ -6,6 +6,7 @@ using System.Collections.Frozen;
 using System.IO;
 using Windows.Storage;
 using Windows.System;
+using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Pixeval.Controls;
@@ -13,13 +14,14 @@ using Pixeval.Controls.DialogContent;
 using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Util.UI;
 using WinUI3Utilities;
-using WinUI3Utilities.Attributes;
 
 namespace Pixeval.Pages.Tags;
 
-[DependencyProperty<TagsEntryViewModel>("ViewModel")]
 public sealed partial class TagsEntry
 {
+    [GeneratedDependencyProperty]
+    public partial TagsEntryViewModel ViewModel { get; set; }
+
     public event Action<TagsEntry, string>? TagClick;
 
     public event Action<TagsEntry, TagsEntryViewModel>? FileDeleted;

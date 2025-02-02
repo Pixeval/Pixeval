@@ -1,19 +1,25 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL v3 License.
 
+using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
 using Pixeval.Controls.Windowing;
 using WinUI3Utilities;
-using WinUI3Utilities.Attributes;
 
 namespace Pixeval.Controls;
 
-[DependencyProperty<object>("MenuItemsSource")]
-[DependencyProperty<object>("PaneContent")]
-[DependencyProperty<bool>("IsPaneOpen", "false")]
 public sealed partial class WorkViewerSplitView
 {
+    [GeneratedDependencyProperty]
+    public partial object? MenuItemsSource { get; set; }
+
+    [GeneratedDependencyProperty]
+    public partial object? PaneContent { get; set; }
+
+    [GeneratedDependencyProperty(DefaultValue = false)]
+    public partial bool IsPaneOpen { get; set; }
+
     public const double OpenPaneLength = 330;
 
     public WorkViewerSplitView() => InitializeComponent();

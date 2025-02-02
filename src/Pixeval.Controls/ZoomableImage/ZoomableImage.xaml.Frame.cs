@@ -27,22 +27,22 @@ public partial class ZoomableImage
 
     private int[]? ClonedMsIntervals { get; set; }
 
-    private static void OnMsIntervalsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    partial void OnMsIntervalsPropertyChanged(DependencyPropertyChangedEventArgs e)
     {
-        if (EnsureNotDisposed(d) is not { } zoomableImage)
+        if (IsDisposed)
             return;
-        zoomableImage.ClonedMsIntervals = [.. zoomableImage.MsIntervals];
+        ClonedMsIntervals = [.. MsIntervals ?? []];
     }
 
-    private static void OnSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    partial void OnSourcePropertyChanged(DependencyPropertyChangedEventArgs e)
     {
-        if (EnsureNotDisposed(d) is not { } zoomableImage)
+        if (IsDisposed)
             return;
-        zoomableImage.IsPlaying = true;
-        zoomableImage._timerRunning = false;
+        IsPlaying = true;
+        _timerRunning = false;
         // 使CanvasControl具有大小，否则不会触发CanvasControlOnDraw
-        zoomableImage.OriginalImageWidth = zoomableImage.OriginalImageHeight = 10;
-        zoomableImage._needInitSource = true;
+        OriginalImageWidth = OriginalImageHeight = 10;
+        _needInitSource = true;
     }
 
     private bool _needInitSource;
@@ -85,12 +85,12 @@ public partial class ZoomableImage
         _timerRunning = true;
     }
 
-    private static void OnIsPlayingChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    partial void OnIsPlayingPropertyChanged(DependencyPropertyChangedEventArgs e)
     {
-        if (EnsureNotDisposed(d) is not { } zoomableImage)
+        if (IsDisposed)
             return;
 
-        zoomableImage._isPlayingInternal = zoomableImage.IsPlaying;
+        _isPlayingInternal = IsPlaying;
     }
 
     private void CanvasControlOnDraw(CanvasControl sender, CanvasDrawEventArgs e)

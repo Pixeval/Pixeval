@@ -5,6 +5,7 @@ using System;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using CommunityToolkit.Mvvm.Messaging;
+using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
@@ -13,14 +14,15 @@ using Pixeval.CoreApi.Global.Enum;
 using Pixeval.Messages;
 using Pixeval.Util.UI;
 using WinUI3Utilities;
-using WinUI3Utilities.Attributes;
 using Symbol = FluentIcons.Common.Symbol;
 
 namespace Pixeval.Controls;
 
-[DependencyProperty<NovelItemViewModel>("ViewModel", propertyChanged: nameof(OnViewModelChanged))]
 public sealed partial class NovelItem
 {
+    [GeneratedDependencyProperty]
+    public partial NovelItemViewModel ViewModel { get; set; }
+
     public event TypedEventHandler<NovelItem, NovelItemViewModel>? ViewModelChanged;
 
     public event TypedEventHandler<NovelItem, NovelItemViewModel>? OpenNovelRequested;
@@ -98,12 +100,9 @@ public sealed partial class NovelItem
         }
     }
 
-    private static void OnViewModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    partial void OnViewModelPropertyChanged(DependencyPropertyChangedEventArgs e)
     {
-        if (d is NovelItem item)
-        {
-            item.ViewModelChanged?.Invoke(item, item.ViewModel);
-        }
+        ViewModelChanged?.Invoke(this, ViewModel);
     }
 
     private void TagButton_OnClicked(object sender, RoutedEventArgs e)

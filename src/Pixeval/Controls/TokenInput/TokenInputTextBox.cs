@@ -3,10 +3,10 @@
 
 using System;
 using Windows.System;
+using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
-using WinUI3Utilities.Attributes;
 
 namespace Pixeval.Controls;
 
@@ -14,12 +14,19 @@ namespace Pixeval.Controls;
 /// The <see cref="TokenInputTextBox"/> is intended to be used together with <see cref="TokenInput"/>, it contains a <see cref="TextBox"/>
 /// and a <see cref="TokenSubmitted"/> event to help user hook logic when a token is submitted, a token can be marked as case-sensitive
 /// or regex
-/// </summary>
-[DependencyProperty<string>("PlaceholderText")]
-[DependencyProperty<bool>("SubmitEnable")]
-[DependencyProperty<Token>("Token")]
-public partial class TokenInputTextBox : Control
+/// </summary>public partial class TokenInputTextBox : Control
 {
+    [GeneratedDependencyProperty]
+    public partial string? PlaceholderText { get; set; }
+
+    [GeneratedDependencyProperty]
+    public partial bool SubmitEnable { get; set; }
+
+    [GeneratedDependencyProperty]
+    public partial Token Token { get; set; }
+
+    public event EventHandler<Token>? TokenSubmitted;
+
     private const string PartTokenTextBox = "TokenTextBox";
     private const string PartSubmitButton = "SubmitButton";
 
@@ -28,8 +35,6 @@ public partial class TokenInputTextBox : Control
     private TextBox? _tokenTextBox;
 
     public TokenInputTextBox() => DefaultStyleKey = typeof(TokenInputTextBox);
-
-    public event EventHandler<Token>? TokenSubmitted;
 
     protected override void OnApplyTemplate()
     {

@@ -21,14 +21,14 @@
     </UserControl.Resources>
     <Grid
         VerticalAlignment="Center"
-        Background="{x:Bind BadgeColor, Mode=OneWay}"
+        Background="{x:Bind GetBrush(Mode), Mode=OneWay}"
         CornerRadius="{ThemeResource ControlCornerRadius}">
         <!--  ReSharper disable once UnusedMember.Local  -->
         <TextBlock
             x:Name="BadgeTextBlock"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
-            Text="{x:Bind Text, Mode=OneWay}" />
+            Text="{x:Bind GetText(Mode), Mode=OneWay}" />
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="CommonStates">
                 <VisualState x:Name="Normal">

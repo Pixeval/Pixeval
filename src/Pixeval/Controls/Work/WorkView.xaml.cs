@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Windows.Foundation;
-using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Pixeval.Pages.NovelViewer;
@@ -22,10 +22,6 @@ using Pixeval.Pages.IllustratorViewer;
 
 namespace Pixeval.Controls;
 
-/// <summary>
-/// todo
-/// </summary>
-[ObservableObject]
 public sealed partial class WorkView : IEntryView<ISortableEntryViewViewModel>, IStructuralDisposalCompleter
 {
     public const double LandscapeHeight = 180;
@@ -60,10 +56,10 @@ public sealed partial class WorkView : IEntryView<ISortableEntryViewViewModel>, 
     /// <summary>
     /// 在调用<see cref="ResetEngine"/>前为<see langword="null"/>
     /// </summary>
-    [ObservableProperty]
-    public partial ISortableEntryViewViewModel ViewModel { get; set; } = null!;
+    [GeneratedDependencyProperty]
+    public partial ISortableEntryViewViewModel ViewModel { get; set; }
 
-    [ObservableProperty]
+    [GeneratedDependencyProperty]
     public partial SimpleWorkType Type { get; set; }
 
     private async void WorkItem_OnViewModelChanged(FrameworkElement sender, IWorkViewModel viewModel)
@@ -140,7 +136,6 @@ public sealed partial class WorkView : IEntryView<ISortableEntryViewViewModel>, 
                     AdvancedItemsView.LayoutType = LayoutType;
                     AdvancedItemsView.ItemTemplate = this.GetResource<DataTemplate>("IllustrationItemDataTemplate");
                     ViewModel = new IllustrationViewViewModel();
-                    OnPropertyChanged(nameof(ViewModel));
                     ViewModel.ResetEngine(newEngine, itemsPerPage, itemLimit);
                     ViewModelChanged?.Invoke(this, ViewModel);
                     AdvancedItemsView.ItemsSource = ViewModel.View;
@@ -155,7 +150,6 @@ public sealed partial class WorkView : IEntryView<ISortableEntryViewViewModel>, 
                     AdvancedItemsView.LayoutType = ItemsViewLayoutType.Grid;
                     AdvancedItemsView.ItemTemplate = this.GetResource<DataTemplate>("NovelItemDataTemplate");
                     ViewModel = new NovelViewViewModel();
-                    OnPropertyChanged(nameof(ViewModel));
                     ViewModel.ResetEngine(newEngine, itemsPerPage, itemLimit);
                     ViewModelChanged?.Invoke(this, ViewModel);
                     AdvancedItemsView.ItemsSource = ViewModel.View;

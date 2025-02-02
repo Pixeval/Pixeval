@@ -25,9 +25,6 @@ using Windows.Foundation;
 
 namespace Pixeval.Pages.Misc;
 
-/// <summary>
-/// todo INotifyPropertyChanged
-/// </summary>
 public sealed partial class SettingsPage : IDisposable, INotifyPropertyChanged
 {
     private string CurrentVersion =>

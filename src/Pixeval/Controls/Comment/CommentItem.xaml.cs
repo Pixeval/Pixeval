@@ -2,11 +2,11 @@
 // Licensed under the GPL v3 License.
 
 using System;
+using CommunityToolkit.WinUI;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Pixeval.Pages.IllustratorViewer;
 using Pixeval.Util.IO.Caching;
-using WinUI3Utilities.Attributes;
 using IllustrationCacheTable = Pixeval.Caching.CacheTable<
     Pixeval.Util.IO.Caching.PixevalIllustrationCacheKey,
     Pixeval.Util.IO.Caching.PixevalIllustrationCacheHeader,
@@ -14,30 +14,32 @@ using IllustrationCacheTable = Pixeval.Caching.CacheTable<
 
 namespace Pixeval.Controls;
 
-[DependencyProperty<CommentItemViewModel>("ViewModel", propertyChanged: nameof(OnViewModelChanged))]
 public sealed partial class CommentItem
 {
+    [GeneratedDependencyProperty(DefaultValue = null!)]
+    public partial CommentItemViewModel ViewModel { get; set; }
+
     public CommentItem() => InitializeComponent();
 
     public event Action<CommentItemViewModel>? RepliesHyperlinkButtonClick;
 
     public event Action<CommentItemViewModel>? DeleteHyperlinkButtonClick;
 
-    private static async void OnViewModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    async partial void OnViewModelPropertyChanged(DependencyPropertyChangedEventArgs e)
     {
-        if (d is not CommentItem { ViewModel: { } viewModel } block)
+        if (ViewModel is not { } viewModel)
             return;
         if (viewModel.HasReplies)
             _ = viewModel.LoadRepliesAsync();
         _ = viewModel.LoadAvatarSource();
         if (viewModel.IsStamp)
         {
-            block.StickerImageContent.Source = await App.AppViewModel.AppServiceProvider.GetRequiredService<IllustrationCacheTable>().GetSourceFromCacheAsync(viewModel.StampSource);
+            StickerImageContent.Source = await App.AppViewModel.AppServiceProvider.GetRequiredService<IllustrationCacheTable>().GetSourceFromCacheAsync(viewModel.StampSource);
         }
         else
         {
-            block.CommentContent.RawText.Blocks.Clear();
-            block.CommentContent.RawText.Blocks.Add(await viewModel.GetReplyContentParagraphAsync());
+            CommentContent.RawText.Blocks.Clear();
+            CommentContent.RawText.Blocks.Add(await viewModel.GetReplyContentParagraphAsync());
         }
     }
 

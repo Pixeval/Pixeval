@@ -77,33 +77,33 @@ public partial class ZoomableImage
     {
         // 是NotFit则自动调整
         if (ImageScale is 1 or float.NaN || Math.Abs(GetScaledFactor(e.PreviousSize) - ImageScale) > 0.01)
-            OnImageScaleChanged(ImageScale);
+            OnImageScaleChangedInternal(ImageScale);
         else
 #pragma warning disable CA2245
             Mode = Mode;
 #pragma warning restore CA2245
     }
 
-    private static void OnImageScaleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    partial void OnImageScalePropertyChanged(DependencyPropertyChangedEventArgs e)
     {
-        if (EnsureNotDisposed(d) is not { } zoomableImage)
+        if (IsDisposed)
             return;
-        zoomableImage.OnImageScaleChanged(e.OldValue.To<float>());
+        OnImageScaleChangedInternal(e.OldValue.To<float>());
     }
 
-    private static void OnModeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    partial void OnModePropertyChanged(DependencyPropertyChangedEventArgs e)
     {
-        if (EnsureNotDisposed(d) is not { } zoomableImage)
+        if (IsDisposed)
             return;
-        switch (zoomableImage.Mode)
+        switch (Mode)
         {
             case ZoomableImageMode.Original:
-                zoomableImage.ImageScale = 1;
-                zoomableImage.SetPosition(zoomableImage.InitPosition);
+                ImageScale = 1;
+                SetPosition(InitPosition);
                 break;
             case ZoomableImageMode.Fit:
-                zoomableImage.ImageScale = (float)zoomableImage.ScaledFactor;
-                zoomableImage.SetPosition(zoomableImage.InitPosition);
+                ImageScale = (float)ScaledFactor;
+                SetPosition(InitPosition);
                 break;
             case ZoomableImageMode.NotFit:
                 break;
@@ -113,7 +113,7 @@ public partial class ZoomableImage
         }
     }
 
-    private void OnImageScaleChanged(float oldScale)
+    private void OnImageScaleChangedInternal(float oldScale)
     {
         // 初始化时抑制动画
         if (_isInitMode || Source is null)
