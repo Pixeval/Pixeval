@@ -159,7 +159,7 @@ public partial class MainPageViewModel : UiObservableObject
         _tokenRefreshFailedListener = new(App.AppViewModel.MakoClient)
         {
             OnEventAction = (m, changed, arg) => FrameworkElement.DispatcherQueue.TryEnqueue(() =>
-                _ = FrameworkElement.CreateAcknowledgementAsync(
+                FrameworkElement.ErrorGrowl(
                     MainPageResources.RefreshingSessionFailedTitle,
                     MainPageResources.RefreshingSessionFailedContent)),
             OnDetachAction = listener => makoClient.TokenRefreshedFailed -= listener.OnEvent
@@ -175,7 +175,7 @@ public partial class MainPageViewModel : UiObservableObject
             if (result.Header.Status is 0)
             {
                 var viewModels = await Task.WhenAll(result.Results
-                    .Where(r => r.Header.IndexId is 5 or 6 && r.Header.Similarity >
+                    .Where(r => r.Header.IndexId is 5 /*pixiv*/ or 6 /*pixivhistorical*/ && r.Header.Similarity >
                         App.AppViewModel.AppSettings.ReverseSearchResultSimilarityThreshold)
                     .Select(async r =>
                         new IllustrationItemViewModel(
