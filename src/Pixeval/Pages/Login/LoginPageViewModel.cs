@@ -2,13 +2,9 @@
 // Licensed under the GPL v3 License.
 
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
-// using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using System.Web;
@@ -21,7 +17,6 @@ using Microsoft.Win32;
 using Pixeval.AppManagement;
 using Pixeval.Attributes;
 using Pixeval.Controls.DialogContent;
-// using Pixeval.Bypass;
 using Pixeval.Controls.Windowing;
 using Pixeval.CoreApi;
 using Pixeval.Logging;
@@ -96,7 +91,7 @@ public partial class LoginPageViewModel(FrameworkElement frameworkElement) : UiO
     {
         var unavailable = IPGlobalProperties.GetIPGlobalProperties().GetActiveTcpConnections().Select(t => t.LocalEndPoint.Port).ToHashSet();
         if (unavailable.Contains(preferPort))
-            for (var i = 49152; i <= ushort.MaxValue; i++)
+            for (var i = 49152; i <= ushort.MaxValue; ++i)
             {
                 if (!unavailable.Contains(i))
                 {
@@ -260,56 +255,11 @@ public partial class LoginPageViewModel(FrameworkElement frameworkElement) : UiO
 
     #region Browser
 
-    private static string ChooseBrowser()
-    {
-        using var startMenuInternetKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Clients\StartMenuInternet");
-        var browsers = new Dictionary<string, string>();
-        if (startMenuInternetKey != null)
-        {
-            var subKeyNames = startMenuInternetKey.GetSubKeyNames();
-            foreach (var subKeyName in subKeyNames)
-            {
-                using var subKey =
-                    startMenuInternetKey.OpenSubKey($@"{subKeyName}\Capabilities\URLAssociations");
-                var httpsValue = subKey?.GetValue("https");
-                var shellKey = startMenuInternetKey.OpenSubKey($@"{subKeyName}\shell\open\command");
-                var location = shellKey?.GetValue(null);
-                if (httpsValue is string httpValueString)
-                {
-                    browsers[httpValueString] = (string)location!;
-                }
-            }
-        }
-        browsers = browsers.Join(["ChromeHTML", "MSEdgeHTM"], outer => outer.Key, inner => inner, ((pair, _) => pair))
-            .ToDictionary();
-        var userChoiceKey = Registry.CurrentUser.OpenSubKey(
-            @"Software\Microsoft\Windows\Shell\Associations\UrlAssociations\https\UserChoice");
-        return userChoiceKey?.GetValue("ProgId") is not string id || !browsers.TryGetValue(id, out var ret) 
-            ? browsers.Values.First()
-            : ret;
-    }
-
     public void BrowserLogin()
     {
         var verifier = PixivAuth.GetCodeVerify();
         var url = PixivAuth.GenerateWebPageUrl(verifier);
-        var browserPath = ChooseBrowser();
-        var userDataDir = Path.Combine(Path.GetTempPath(), "Pixeval", "browser-user-data");
-        var commonArgs = $"--disable-sync --no-default-browser-check --no-first-run --user-data-dir={userDataDir} {url}";
-        var startInfo = new ProcessStartInfo(browserPath)
-        {
-            Arguments = EnableDomainFronting ? $"--no-proxy-server --dns-prefetch-disable {commonArgs}" : $"{commonArgs}"
-        };
-        // FIXME
-        var process = Process.Start(startInfo);
-        if (EnableDomainFronting)
-        {
-            //    var pid = process!.Id;
-            //    var dllPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "runtimes",
-            //        "win-x64", "native", "bypass.dll");
-            //    var injection = Injector.Inject((uint)pid, dllPath);
-            //    Injector.InstallChromeHook(injection, true, dllPath);
-        }
+        Launcher.LaunchUriAsync(new Uri(url));
     }
 
     #endregion

@@ -58,7 +58,6 @@
         </PackageReference>
         <PackageReference Include="PininSharp" />
         <PackageReference Include="Pixeval.Extensions.Common" />
-        <!--<PackageReference Include="Pixeval.Bypass" />-->
         <PackageReference Include="Pixeval.QRCoder" />
         <PackageReference Include="QuestPDF" />
         <PackageReference Include="ReverseMarkdown" />

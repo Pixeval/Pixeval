@@ -10,7 +10,6 @@
     xmlns:local="using:Pixeval.Pages.Login"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pixeval="using:Pixeval"
-    xmlns:windowing="using:Pixeval.Controls.Windowing"
     Loaded="LoginPage_OnLoaded"
     Unloaded="LoginPage_OnUnloaded"
     mc:Ignorable="d">
@@ -84,7 +83,10 @@
                                     IsClosable="False"
                                     IsOpen="True"
                                     Severity="Informational" />
-                                <controls2:DockPanel controls2:DockPanel.Dock="Top" HorizontalSpacing="10">
+                                <controls2:DockPanel
+                                    controls2:DockPanel.Dock="Top"
+                                    HorizontalSpacing="10"
+                                    LastChildFill="False">
                                     <Button
                                         x:Uid="/LoginPage/BrowserHelp"
                                         controls2:DockPanel.Dock="Right"
@@ -95,7 +97,7 @@
                                         Height="33"
                                         controls2:DockPanel.Dock="Right"
                                         Click="BrowserLogin_OnClicked" />
-                                    <ToggleSwitch x:Uid="/LoginPage/DisableDomainFrontingToggleSwitch" IsOn="{x:Bind _viewModel.EnableDomainFronting, Mode=TwoWay}" />
+                                    <!--<ToggleSwitch x:Uid="/LoginPage/DisableDomainFrontingToggleSwitch" IsOn="{x:Bind _viewModel.EnableDomainFronting, Mode=TwoWay}" />-->
                                 </controls2:DockPanel>
                                 <HyperlinkButton
                                     x:Uid="/LoginPage/RefreshTokenButton"
