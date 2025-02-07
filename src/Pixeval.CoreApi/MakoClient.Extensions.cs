@@ -31,13 +31,13 @@ public partial class MakoClient
 
     public Task<Tag[]> GetAutoCompletionForKeyword(string word)
         => RunWithLoggerAsync(async t => (await t
-            .GetAutoCompletionAsync(new AutoCompletionRequest(word))
+            .GetAutoCompletionAsync(word)
             .ConfigureAwait(false))
             .Tags);
 
     public Task<PixivSingleUserResponse> GetUserFromIdAsync(long id, TargetFilter targetFilter)
         => RunWithLoggerAsync(async t => await t
-            .GetSingleUserAsync(new SingleUserRequest(id, targetFilter.GetDescription()))
+            .GetSingleUserAsync(id, targetFilter.GetDescription())
             .ConfigureAwait(false));
 
     public Task<Novel> GetNovelFromIdAsync(long id)

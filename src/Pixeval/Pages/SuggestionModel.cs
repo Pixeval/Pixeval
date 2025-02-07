@@ -2,6 +2,7 @@
 // Licensed under the GPL v3 License.
 
 using Microsoft.UI.Xaml.Controls;
+using Pixeval.Attributes;
 using Pixeval.CoreApi.Model;
 using Pixeval.Database;
 using Pixeval.Util.UI;
@@ -53,6 +54,14 @@ public record SuggestionModel(string? Name, string? TranslatedName, SuggestionTy
     public static SuggestionModel FromTag(Tag tag)
     {
         return new SuggestionModel(tag.Name, tag.TranslatedName, SuggestionType.Tag);
+    }
+
+    public static SuggestionModel FromSettings(SettingsEntryAttribute attribute)
+    {
+        return new SuggestionModel(attribute.LocalizedResourceHeader, attribute.LocalizedResourceHeader, SuggestionType.Settings)
+        {
+            SettingsSymbol = attribute.Symbol
+        };
     }
 
     public static SuggestionModel FromIllustrationTag(Tag tag)

@@ -102,7 +102,6 @@ namespace Pixeval.CoreApi;
 [JsonSerializable(typeof(AddNovelBookmarkRequest))]
 [JsonSerializable(typeof(AddStampIllustCommentRequest))]
 [JsonSerializable(typeof(AddStampNovelCommentRequest))]
-[JsonSerializable(typeof(AutoCompletionRequest))]
 [JsonSerializable(typeof(DeleteCommentRequest))]
 [JsonSerializable(typeof(FollowUserRequest))]
 [JsonSerializable(typeof(RefreshSessionRequest))]
@@ -110,7 +109,6 @@ namespace Pixeval.CoreApi;
 [JsonSerializable(typeof(RemoveFollowUserRequest))]
 [JsonSerializable(typeof(RemoveNovelBookmarkRequest))]
 [JsonSerializable(typeof(ReverseSearchRequest))]
-[JsonSerializable(typeof(SingleUserRequest))]
 
 [JsonSerializable(typeof(PrivacyPolicy))]
 [JsonSerializable(typeof(RankOption))]

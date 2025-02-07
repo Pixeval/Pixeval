@@ -24,7 +24,7 @@ public class SuggestionStateMachine
     private readonly Task<IEnumerable<SuggestionModel>> _illustrationTrendingTagCache =
         Functions.Block(async () => (await App.AppViewModel.MakoClient.GetTrendingTagsAsync(App.AppViewModel.AppSettings.TargetFilter))
             .Select(t => new Tag { Name = t.Tag, TranslatedName = t.TranslatedName })
-            .Select(SuggestionModel.FromNovelTag));
+            .Select(SuggestionModel.FromIllustrationTag));
 
     private readonly Task<IEnumerable<SuggestionModel>> _novelTrendingTagCache =
         Functions.Block(async () => (await App.AppViewModel.MakoClient.GetTrendingTagsForNovelAsync(App.AppViewModel.AppSettings.TargetFilter))
@@ -53,8 +53,8 @@ public class SuggestionStateMachine
 
     private async Task FillSuggestions(string keyword)
     {
-        var tagSuggestions = (await App.AppViewModel.MakoClient.GetAutoCompletionForKeyword(keyword)).Select(SuggestionModel.FromTag).ToList();
-        var settingSuggestions = MatchSettings(keyword);
+        var tagSuggestions = (await App.AppViewModel.MakoClient.GetAutoCompletionForKeyword(keyword)).Select(SuggestionModel.FromTag).ToArray();
+        var settingSuggestions = MatchSettings(keyword).Select(SuggestionModel.FromSettings).ToArray();
         var suggestions = new List<SuggestionModel>();
 
         if (long.TryParse(keyword, out _))
@@ -64,16 +64,13 @@ public class SuggestionStateMachine
 
         suggestions.Add(SuggestionModel.FromUserSearch());
 
-        if (settingSuggestions.IsNotNullOrEmpty())
+        if (settingSuggestions.Length is not 0)
         {
             suggestions.Add(SuggestionModel.SettingEntryHeader);
-            suggestions.AddRange(settingSuggestions.Select(settingSuggestion => new SuggestionModel(settingSuggestion.LocalizedResourceHeader, settingSuggestion.LocalizedResourceHeader, SuggestionType.Settings)
-            {
-                SettingsSymbol = settingSuggestion.Symbol
-            }));
+            suggestions.AddRange(settingSuggestions);
         }
 
-        if (settingSuggestions.IsNotNullOrEmpty() && tagSuggestions.IsNotNullOrEmpty())
+        if (tagSuggestions.Length is not 0)
         {
             suggestions.Add(SuggestionModel.IllustrationAutoCompleteTagHeader);
             suggestions.AddRange(tagSuggestions);
