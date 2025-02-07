@@ -20,6 +20,11 @@ public partial class MakoClient
         return RunWithLoggerAsync(() => task(Provider.GetRequiredService<IAppApiEndPoint>()), () => []);
     }
 
+    private Task<bool> RunWithLoggerAsync(Func<IAppApiEndPoint, Task<bool>> task)
+    {
+        return RunWithLoggerAsync(() => task(Provider.GetRequiredService<IAppApiEndPoint>()), () => false);
+    }
+
     private Task<IEnumerable<T>> RunWithLoggerAsync<T>(Func<IAppApiEndPoint, Task<IEnumerable<T>>> task)
     {
         return RunWithLoggerAsync(() => task(Provider.GetRequiredService<IAppApiEndPoint>()), () => []);

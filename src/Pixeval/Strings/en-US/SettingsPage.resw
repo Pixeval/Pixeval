@@ -285,9 +285,6 @@ Type and click on "+" to add an IP</value>
   <data name="FeedbackByEmailHyperlinkButton.Content" xml:space="preserve">
     <value>Contact the developers</value>
   </data>
-  <data name="ViewingRestrictionEntry.Header" xml:space="preserve">
-    <value>Viewing restriction</value>
-  </data>
   <data name="GitHubRepositoryHyperlinkButton.Content" xml:space="preserve">
     <value>GitHub repository</value>
   </data>
@@ -548,9 +545,6 @@ Type and click on "+" to add an IP</value>
   </data>
   <data name="FileCacheCleared" xml:space="preserve">
     <value>Caches cleared</value>
-  </data>
-  <data name="ViewingRestrictionEntry.Description" xml:space="preserve">
-    <value>Configure your Pixiv account to block or display R-18/R-18G/AI-generated content</value>
   </data>
   <data name="BlockedTagsTokenizingTextBox.PlaceholderText" xml:space="preserve">
     <value>Blocked tags</value>

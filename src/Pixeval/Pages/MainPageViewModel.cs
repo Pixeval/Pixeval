@@ -21,6 +21,7 @@ using Pixeval.Pages.Download;
 using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Pages.Misc;
 using Pixeval.Pages.Tags;
+using Pixeval.Util;
 using Pixeval.Util.ComponentModels;
 using Pixeval.Util.IO.Caching;
 using Pixeval.Util.UI;
@@ -33,6 +34,12 @@ namespace Pixeval.Pages;
 
 public partial class MainPageViewModel : UiObservableObject
 {
+    [ObservableProperty]
+    public partial bool RestrictedModeProcessing { get; set; }
+
+    [ObservableProperty]
+    public partial bool AiShowProcessing { get; set; }
+
     public readonly NavigationViewTag<RecommendationPage> RecommendationsTag =
         new(MainPageResources.RecommendationsTabContent) { ImageUri = GetIconUri("recommendations") };
 
@@ -114,10 +121,19 @@ public partial class MainPageViewModel : UiObservableObject
     ];
 
     [ObservableProperty]
-    public partial ImageSource? AvatarSource { get; set; }
+    public partial ImageSource? AvatarSource { get; private set; }
 
     [ObservableProperty]
-    public partial string UserName { get; set; } = App.AppViewModel.MakoClient.Me.Name;
+    public partial string UserName { get; private set; } = App.AppViewModel.MakoClient.Me.Name;
+
+    [ObservableProperty]
+    public partial bool IsPremium { get; private set; } = App.AppViewModel.MakoClient.Me.IsPremium;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(Url))]
+    public partial long Id { get; private set; } = App.AppViewModel.MakoClient.Me.Id;
+
+    public Uri Url => MakoHelper.GenerateUserWebUri(Id);
 
     public MainPageViewModel(FrameworkElement owner) : base(owner)
     {
@@ -150,6 +166,8 @@ public partial class MainPageViewModel : UiObservableObject
             {
                 AvatarSource = await App.AppViewModel.AppServiceProvider.GetRequiredService<IllustrationCacheTable>().GetSourceFromCacheAsync(arg.ProfileImageUrls.Px50X50);
                 UserName = arg.Name;
+                IsPremium = arg.IsPremium;
+                Id = arg.Id;
             }),
             OnDetachAction = listener => makoClient.TokenRefreshed -= listener.OnEvent
         };

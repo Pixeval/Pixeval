@@ -327,12 +327,6 @@ Entrer une addresse IP et cliquer '+' pour ajouter</value>
   <data name="FeedbackByEmailHyperlinkButton.Content" xml:space="preserve">
     <value>Contacter l'auteur par courriel</value>
   </data>
-  <data name="ViewingRestrictionEntry.Description" xml:space="preserve">
-    <value>Configurer votre compte Pixiv pour bloquer ou afficher des contenus de type R-18/R-18G/Générés par IA</value>
-  </data>
-  <data name="ViewingRestrictionEntry.Header" xml:space="preserve">
-    <value>Restriction de navigation</value>
-  </data>
   <data name="GitHubRepositoryHyperlinkButton.Content" xml:space="preserve">
     <value>Dépôt GitHub</value>
   </data>

@@ -232,4 +232,22 @@
   <data name="SearchUsersResult" xml:space="preserve">
     <value>搜索用户结果</value>
   </data>
+  <data name="OpenMyPageItem.Text" xml:space="preserve">
+    <value>打开个人页面</value>
+  </data>
+  <data name="OpenMyPageInBrowserItem.Text" xml:space="preserve">
+    <value>打开网页</value>
+  </data>
+  <data name="RestrictedModeItem.Text" xml:space="preserve">
+    <value>受限模式</value>
+  </data>
+  <data name="AiShowItem.Text" xml:space="preserve">
+    <value>显示AI作品</value>
+  </data>
+  <data name="MoreViewingSettingsItem.Text" xml:space="preserve">
+    <value>更多浏览设置</value>
+  </data>
+  <data name="LogoutItem.Text" xml:space="preserve">
+    <value>登出账号</value>
+  </data>
 </root>

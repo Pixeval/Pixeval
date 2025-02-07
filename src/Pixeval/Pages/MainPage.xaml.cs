@@ -31,6 +31,7 @@ using Pixeval.Logging;
 using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Pages.IllustratorViewer;
 using Pixeval.Pages.NovelViewer;
+using WinUI3Utilities;
 
 namespace Pixeval.Pages;
 
@@ -83,10 +84,40 @@ public sealed partial class MainPage
         if (_viewModel.MenuItems[(int)App.AppViewModel.AppSettings.DefaultSelectedTabItem] is NavigationViewTag tag)
             MainPageRootTab.AddPage(tag);
 
+        LoadRestrictedModeSettings();
+        LoadAiShowSettings();
+
         using var client = new HttpClient();
         await AppInfo.AppVersion.GitHubCheckForUpdateAsync(client);
         if (AppInfo.AppVersion.UpdateAvailable)
             _viewModel.SettingsTag.ShowIconBadge = true;
+        return;
+
+        async void LoadRestrictedModeSettings()
+        {
+            _viewModel.RestrictedModeProcessing = true;
+            try
+            {
+                RestrictedModeItem.IsChecked = _restrictedCache = await App.AppViewModel.MakoClient.GetRestrictedModeSettingsAsync();
+            }
+            finally
+            {
+                _viewModel.RestrictedModeProcessing = false;
+            }
+        }
+
+        async void LoadAiShowSettings()
+        {
+            _viewModel.AiShowProcessing = true;
+            try
+            {
+                AiShowItem.IsChecked = _aiShowCache = await App.AppViewModel.MakoClient.GetAiShowSettingsAsync();
+            }
+            finally
+            {
+                _viewModel.AiShowProcessing = false;
+            }
+        }
     }
 
     private async void NavigationView_OnItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs e)
@@ -289,13 +320,70 @@ public sealed partial class MainPage
         }
     }
 
-    private async void SelfAvatar_OnTapped(object sender, RoutedEventArgs e)
-    {
-        await TabViewParameter.CreateIllustratorPageAsync(App.AppViewModel.PixivUid);
-    }
-
     private void TitleBar_OnPaneButtonClicked(object? sender, RoutedEventArgs e)
     {
         NavigationView.IsPaneOpen = !NavigationView.IsPaneOpen;
+    }
+
+    private bool _restrictedCache;
+
+    private bool _aiShowCache;
+
+    private async void RestrictedModeItem_OnClick(object sender, RoutedEventArgs e)
+    {
+        if (_viewModel.RestrictedModeProcessing)
+            return;
+        var toggleItem = sender.To<ToggleMenuFlyoutItem>();
+        _viewModel.RestrictedModeProcessing = true;
+        try
+        {
+            toggleItem.IsChecked = _restrictedCache;
+            _ = await App.AppViewModel.MakoClient.PostRestrictedModeSettingsAsync(!_restrictedCache);
+            toggleItem.IsChecked = _restrictedCache = await App.AppViewModel.MakoClient.GetRestrictedModeSettingsAsync();
+        }
+        finally
+        {
+            _viewModel.RestrictedModeProcessing = false;
+        }
+    }
+
+    private async void AiShowButtonItem_OnClick(object sender, RoutedEventArgs e)
+    {
+        if (_viewModel.AiShowProcessing)
+            return;
+        var toggleItem = sender.To<ToggleMenuFlyoutItem>();
+        _viewModel.AiShowProcessing = true;
+        try
+        {
+            toggleItem.IsChecked = _aiShowCache;
+            _ = await App.AppViewModel.MakoClient.PostAiShowSettingsAsync(!_aiShowCache);
+            toggleItem.IsChecked = _aiShowCache = await App.AppViewModel.MakoClient.GetAiShowSettingsAsync();
+        }
+        finally
+        {
+            _viewModel.AiShowProcessing = false;
+        }
+    }
+
+    private async void OpenLinkViaTag_OnClicked(object sender, RoutedEventArgs e)
+    {
+        _ = await Launcher.LaunchUriAsync(new Uri(sender.To<FrameworkElement>().GetTag<string>()));
+    }
+
+    private async void OpenMyPage_OnClick(object sender, RoutedEventArgs e)
+    {
+        await TabViewParameter.CreateIllustratorPageAsync(_viewModel.Id);
+    }
+
+    private async void Logout_OnClicked(object sender, RoutedEventArgs e)
+    {
+        if (await this.CreateOkCancelAsync(SettingsPageResources.SignOutConfirmationDialogTitle,
+                SettingsPageResources.SignOutConfirmationDialogContent) is ContentDialogResult.Primary)
+        {
+            App.AppViewModel.LoginContext.LogoutExit = true;
+            // Close 不触发 Closing 事件
+            AppInfo.SaveContextWhenExit();
+            WindowFactory.RootWindow.Close();
+        }
     }
 }

@@ -95,4 +95,16 @@ public interface IAppApiEndPoint
 
     [HttpPost("/v1/novel/comment/delete")]
     Task<HttpResponseMessage> DeleteNovelCommentAsync([FormContent] DeleteCommentRequest request);
+
+    [HttpGet("/v1/user/ai-show-settings")]
+    Task<ShowAiSettingsResponse> GetAiShowSettingsAsync();
+
+    [HttpPost("/v1/user/ai-show-settings/edit")]
+    Task<HttpResponseMessage> PostAiShowSettingsAsync([FormContent] ShowAiSettingsRequest request);
+
+    [HttpGet("/v1/user/restricted-mode-settings")]
+    Task<RestrictedModeSettingsResponse> GetRestrictedModeSettingsAsync();
+
+    [HttpPost("/v1/user/restricted-mode-settings")]
+    Task<HttpResponseMessage> PostRestrictedModeSettingsAsync([FormContent] RestrictedModeSettingsRequest request);
 }

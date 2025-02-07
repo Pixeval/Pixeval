@@ -16,7 +16,6 @@ using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using Pixeval.Settings;
-using Windows.System;
 using Microsoft.UI.Xaml;
 using Pixeval.Controls.Windowing;
 using Pixeval.CoreApi.Global.Enum;
@@ -33,21 +32,13 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
     public DateTimeOffset LastCheckedUpdate
     {
         get => AppSettings.LastCheckedUpdate;
-        set => SetProperty(AppSettings.LastCheckedUpdate, value, AppSettings, (setting, v) =>
-        {
-            setting.LastCheckedUpdate = v;
-            AppInfo.LocalConfig[nameof(AppSettings.LastCheckedUpdate)] = v;
-        });
+        set => SetProperty(AppSettings.LastCheckedUpdate, value, AppSettings, (setting, v) => AppInfo.LocalConfig[nameof(AppSettings.LastCheckedUpdate)] = setting.LastCheckedUpdate = v);
     }
 
     public bool DownloadUpdateAutomatically
     {
         get => AppSettings.DownloadUpdateAutomatically;
-        set => SetProperty(AppSettings.DownloadUpdateAutomatically, value, AppSettings, (setting, v) =>
-        {
-            setting.DownloadUpdateAutomatically = v;
-            AppInfo.LocalConfig[nameof(AppSettings.DownloadUpdateAutomatically)] = v;
-        });
+        set => SetProperty(AppSettings.DownloadUpdateAutomatically, value, AppSettings, (setting, v) => AppInfo.LocalConfig[nameof(AppSettings.DownloadUpdateAutomatically)] = setting.DownloadUpdateAutomatically = v);
     }
 
     public AppSettings AppSettings => App.AppViewModel.AppSettings;
@@ -133,12 +124,7 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
                     Placeholder = SettingsPageResources.BlockedTagsTokenizingTextBoxPlaceholderText
                 },
                 new BoolAppSettingsEntry(AppSettings,
-                    t => t.BrowseOriginalImage),
-                new ClickableAppSettingsEntry(
-                    SettingsPageResources.ViewingRestrictionEntryHeader,
-                    SettingsPageResources.ViewingRestrictionEntryDescription,
-                    Symbol.SubtractCircle,
-                    () => _ = Launcher.LaunchUriAsync(new("https://www.pixiv.net/settings/viewing")))
+                    t => t.BrowseOriginalImage)
             },
 
             new(SettingsEntryCategory.Search)

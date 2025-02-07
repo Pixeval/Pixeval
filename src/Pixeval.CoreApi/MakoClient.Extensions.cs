@@ -194,6 +194,18 @@ public partial class MakoClient
         => RunWithLoggerAsync(async t => await t
             .AddNovelCommentAsync(new AddStampNovelCommentRequest(novelId, parentCommentId, stampId)));
 
+    public Task<bool> GetAiShowSettingsAsync()
+        => RunWithLoggerAsync(async t => (await t.GetAiShowSettingsAsync()).ShowAi);
+
+    public Task<HttpResponseMessage> PostAiShowSettingsAsync(bool showAi)
+        => RunWithLoggerAsync(async t => await t.PostAiShowSettingsAsync(new ShowAiSettingsRequest(showAi)));
+
+    public Task<bool> GetRestrictedModeSettingsAsync()
+        => RunWithLoggerAsync(async t => (await t.GetRestrictedModeSettingsAsync()).IsRestrictedModeEnabled);
+
+    public Task<HttpResponseMessage> PostRestrictedModeSettingsAsync(bool isRestrictedModeEnabled)
+        => RunWithLoggerAsync(async t => await t.PostRestrictedModeSettingsAsync(new RestrictedModeSettingsRequest(isRestrictedModeEnabled)));
+
     public Task<ReverseSearchResponse> ReverseSearchAsync(Stream imgStream, string apiKey)
         => RunWithLoggerAsync(async () => await Provider.GetRequiredService<IReverseSearchApiEndPoint>()
             .GetSauceAsync(new FormDataFile(imgStream, "img"), new ReverseSearchRequest(apiKey)));

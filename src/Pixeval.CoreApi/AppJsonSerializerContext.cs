@@ -53,6 +53,8 @@ namespace Pixeval.CoreApi;
 [JsonSerializable(typeof(WebApiBookmarksWithTagResponse))]
 [JsonSerializable(typeof(WebApiBookmarksWithTagBody))]
 [JsonSerializable(typeof(Work))]
+[JsonSerializable(typeof(ShowAiSettingsResponse))]
+[JsonSerializable(typeof(RestrictedModeSettingsResponse))]
 
 [JsonSerializable(typeof(BookmarkTag))]
 [JsonSerializable(typeof(Feed))]
@@ -108,6 +110,8 @@ namespace Pixeval.CoreApi;
 [JsonSerializable(typeof(RemoveIllustBookmarkRequest))]
 [JsonSerializable(typeof(RemoveFollowUserRequest))]
 [JsonSerializable(typeof(RemoveNovelBookmarkRequest))]
+[JsonSerializable(typeof(ShowAiSettingsRequest))]
+[JsonSerializable(typeof(RestrictedModeSettingsRequest))]
 [JsonSerializable(typeof(ReverseSearchRequest))]
 
 [JsonSerializable(typeof(PrivacyPolicy))]

@@ -143,6 +143,7 @@
                 <controls:SettingsCard
                     x:Uid="/SettingsPage/DownloadUpdateAutomaticallyEntry"
                     HeaderIcon="{fluent:SymbolIcon Symbol=Communication}"
+                    IsEnabled="False"
                     Tag="{x:Bind misc:SettingsEntryAttribute.AutoUpdate}">
                     <ToggleSwitch IsOn="{x:Bind ViewModel.DownloadUpdateAutomatically, Mode=TwoWay}" />
                 </controls:SettingsCard>
@@ -216,7 +217,7 @@
                 <TextBlock
                     x:Uid="/SettingsPage/SessionSettingsGroup"
                     Style="{StaticResource SettingHeaderStyle}"
-                    Tag="{x:Bind misc1:SettingsEntryCategory.Version}" />
+                    Tag="{x:Bind misc1:SettingsEntryCategory.Session}" />
 
                 <controls:SettingsCard
                     x:Uid="/SettingsPage/SignOutEntry"
