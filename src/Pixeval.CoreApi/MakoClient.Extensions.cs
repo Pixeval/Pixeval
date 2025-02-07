@@ -31,13 +31,13 @@ public partial class MakoClient
 
     public Task<Tag[]> GetAutoCompletionForKeyword(string word)
         => RunWithLoggerAsync(async t => (await t
-            .GetAutoCompletionAsync(new AutoCompletionRequest(word))
+            .GetAutoCompletionAsync(word)
             .ConfigureAwait(false))
             .Tags);
 
     public Task<PixivSingleUserResponse> GetUserFromIdAsync(long id, TargetFilter targetFilter)
         => RunWithLoggerAsync(async t => await t
-            .GetSingleUserAsync(new SingleUserRequest(id, targetFilter.GetDescription()))
+            .GetSingleUserAsync(id, targetFilter.GetDescription())
             .ConfigureAwait(false));
 
     public Task<Novel> GetNovelFromIdAsync(long id)
@@ -193,6 +193,18 @@ public partial class MakoClient
     public Task<HttpResponseMessage> AddNovelCommentAsync(long novelId, long parentCommentId, int stampId)
         => RunWithLoggerAsync(async t => await t
             .AddNovelCommentAsync(new AddStampNovelCommentRequest(novelId, parentCommentId, stampId)));
+
+    public Task<bool> GetAiShowSettingsAsync()
+        => RunWithLoggerAsync(async t => (await t.GetAiShowSettingsAsync()).ShowAi);
+
+    public Task<HttpResponseMessage> PostAiShowSettingsAsync(bool showAi)
+        => RunWithLoggerAsync(async t => await t.PostAiShowSettingsAsync(new ShowAiSettingsRequest(showAi)));
+
+    public Task<bool> GetRestrictedModeSettingsAsync()
+        => RunWithLoggerAsync(async t => (await t.GetRestrictedModeSettingsAsync()).IsRestrictedModeEnabled);
+
+    public Task<HttpResponseMessage> PostRestrictedModeSettingsAsync(bool isRestrictedModeEnabled)
+        => RunWithLoggerAsync(async t => await t.PostRestrictedModeSettingsAsync(new RestrictedModeSettingsRequest(isRestrictedModeEnabled)));
 
     public Task<ReverseSearchResponse> ReverseSearchAsync(Stream imgStream, string apiKey)
         => RunWithLoggerAsync(async () => await Provider.GetRequiredService<IReverseSearchApiEndPoint>()

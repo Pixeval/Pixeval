@@ -34,7 +34,7 @@ public interface IAppApiEndPoint
 
     [Cache(60 * 1000)]
     [HttpGet("/v1/user/detail")]
-    Task<PixivSingleUserResponse> GetSingleUserAsync(SingleUserRequest request);
+    Task<PixivSingleUserResponse> GetSingleUserAsync([AliasAs("user_id")] long id, string filter);
 
     [Cache(60 * 1000)]
     [HttpGet("/v2/novel/detail")]
@@ -76,7 +76,7 @@ public interface IAppApiEndPoint
     Task<UgoiraMetadataResponse> GetUgoiraMetadataAsync([AliasAs("illust_id")] long id);
 
     [HttpGet("/v2/search/autocomplete")]
-    Task<AutoCompletionResponse> GetAutoCompletionAsync(AutoCompletionRequest autoCompletionRequest);
+    Task<AutoCompletionResponse> GetAutoCompletionAsync(string word, [AliasAs("merge_plain_keyword_results")] bool mergePlainKeywordResult = true);
 
     [HttpPost("/v1/illust/comment/add")]
     Task<HttpResponseMessage> AddIllustCommentAsync([FormContent] AddNormalIllustCommentRequest request);
@@ -95,4 +95,16 @@ public interface IAppApiEndPoint
 
     [HttpPost("/v1/novel/comment/delete")]
     Task<HttpResponseMessage> DeleteNovelCommentAsync([FormContent] DeleteCommentRequest request);
+
+    [HttpGet("/v1/user/ai-show-settings")]
+    Task<ShowAiSettingsResponse> GetAiShowSettingsAsync();
+
+    [HttpPost("/v1/user/ai-show-settings/edit")]
+    Task<HttpResponseMessage> PostAiShowSettingsAsync([FormContent] ShowAiSettingsRequest request);
+
+    [HttpGet("/v1/user/restricted-mode-settings")]
+    Task<RestrictedModeSettingsResponse> GetRestrictedModeSettingsAsync();
+
+    [HttpPost("/v1/user/restricted-mode-settings")]
+    Task<HttpResponseMessage> PostRestrictedModeSettingsAsync([FormContent] RestrictedModeSettingsRequest request);
 }

@@ -53,7 +53,8 @@ public sealed partial class TabPage
         frame.Loaded += Frame_OnLoaded;
         var tabViewItem = new TabViewItem
         {
-            Header = viewModel.Header,
+            // see https://github.com/microsoft/microsoft-ui-xaml/issues/3329
+            Header = string.IsNullOrEmpty(viewModel.Header) ? " " : viewModel.Header,
             IconSource = viewModel.IconSource ?? new ImageIconSource { ImageSource = WindowFactory.IconImageSource },
             IsClosable = true,
             Content = frame

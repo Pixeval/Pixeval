@@ -9,7 +9,6 @@
     xmlns:local="using:Pixeval.Pages"
     xmlns:management="using:Pixeval.AppManagement"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:pixeval="using:Pixeval"
     xmlns:windowing="using:Pixeval.Controls.Windowing"
     Loaded="MainPage_OnLoaded"
     mc:Ignorable="d">
@@ -78,20 +77,52 @@
                 <ImageIcon Source="ms-appx:///Assets/Images/logo.svg" />
             </controls1:TitleBar.Icon>
             <controls1:TitleBar.Footer>
-                <StackPanel
-                    Grid.Column="0"
-                    Orientation="Horizontal"
-                    Spacing="10">
+                <Button
+                    Padding="1"
+                    Background="{x:Bind controls:C.IsPremiumBorderBrush(_viewModel.IsPremium), Mode=OneWay}"
+                    CornerRadius="18">
+                    <Button.Flyout>
+                        <MenuFlyout Placement="Bottom">
+                            <MenuFlyoutItem
+                                x:Uid="/MainPage/OpenMyPageItem"
+                                Click="OpenMyPage_OnClick"
+                                Icon="{fluent:SymbolIcon Symbol=Open}" />
+                            <MenuFlyoutItem
+                                x:Uid="/MainPage/OpenMyPageInBrowserItem"
+                                Click="OpenLinkViaTag_OnClicked"
+                                Icon="{fluent:SymbolIcon Symbol=GlobeArrowUp}"
+                                Tag="{x:Bind _viewModel.Url, Mode=OneWay}" />
+                            <MenuFlyoutSeparator />
+                            <ToggleMenuFlyoutItem
+                                x:Name="RestrictedModeItem"
+                                x:Uid="/MainPage/RestrictedModeItem"
+                                Click="RestrictedModeItem_OnClick"
+                                Icon="{fluent:SymbolIcon Symbol=PersonProhibited}"
+                                IsEnabled="{x:Bind controls:C.Negation(_viewModel.RestrictedModeProcessing), Mode=OneWay}"
+                                Visibility="Collapsed" />
+                            <ToggleMenuFlyoutItem
+                                x:Name="AiShowItem"
+                                x:Uid="/MainPage/AiShowItem"
+                                Click="AiShowButtonItem_OnClick"
+                                Icon="{fluent:SymbolIcon Symbol=Bot}"
+                                IsEnabled="{x:Bind controls:C.Negation(_viewModel.AiShowProcessing), Mode=OneWay}" />
+                            <MenuFlyoutItem
+                                x:Uid="/MainPage/MoreViewingSettingsItem"
+                                Click="OpenLinkViaTag_OnClicked"
+                                Icon="{fluent:SymbolIcon Symbol=MoreHorizontal}"
+                                Tag="https://www.pixiv.net/settings/viewing" />
+                            <MenuFlyoutSeparator />
+                            <MenuFlyoutItem
+                                x:Uid="/MainPage/LogoutItem"
+                                Click="Logout_OnClicked"
+                                Icon="{fluent:SymbolIcon Symbol=SignOut}" />
+                        </MenuFlyout>
+                    </Button.Flyout>
                     <PersonPicture
-                        MaxHeight="35"
+                        MaxHeight="33"
                         ProfilePicture="{x:Bind _viewModel.AvatarSource, Mode=OneWay}"
-                        Tapped="SelfAvatar_OnTapped"
                         ToolTipService.ToolTip="{x:Bind _viewModel.UserName, Mode=OneWay}" />
-                    <controls:PixevalBadge
-                        Mode="Premium"
-                        UseSmall="False"
-                        Visibility="{x:Bind pixeval:App.AppViewModel.LoginContext.IsPremium}" />
-                </StackPanel>
+                </Button>
             </controls1:TitleBar.Footer>
             <controls1:TitleBar.Content>
                 <controls1:DockPanel>

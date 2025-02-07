@@ -336,12 +336,6 @@
   <data name="FeedbackByEmailHyperlinkButton.Content" xml:space="preserve">
     <value>邮件联系作者</value>
   </data>
-  <data name="ViewingRestrictionEntry.Description" xml:space="preserve">
-    <value>在 Pixiv 官方账号设置是否显示 R-18/R-18G/AI生成 的内容</value>
-  </data>
-  <data name="ViewingRestrictionEntry.Header" xml:space="preserve">
-    <value>浏览限制</value>
-  </data>
   <data name="GitHubRepositoryHyperlinkButton.Content" xml:space="preserve">
     <value>GitHub 仓库</value>
   </data>

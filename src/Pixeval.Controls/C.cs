@@ -13,6 +13,7 @@ using WinUI3Utilities;
 using Windows.UI.Text;
 using Microsoft.UI.Text;
 using Pixeval.Utilities;
+using Microsoft.UI;
 
 namespace Pixeval.Controls;
 
@@ -117,6 +118,8 @@ public static class C
         value < 1000 ? value.ToString() : $"{value / 1000d:0.#}k";
 
     public static double DoubleComplementary(double value) => 1 - value;
+
+    public static SolidColorBrush? IsPremiumBorderBrush(bool isPremium) => isPremium ? new SolidColorBrush(Colors.Orange) : null;
 
     public static FontWeight ToFontWeight(object value) => (value as Enum)?.GetHashCode() switch
     {

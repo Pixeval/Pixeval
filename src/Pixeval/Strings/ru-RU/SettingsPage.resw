@@ -594,12 +594,6 @@
   <data name="EnableDomainFrontingEntry.Header" xml:space="preserve">
     <value>Включить доменное фронтирование</value>
   </data>
-  <data name="ViewingRestrictionEntry.Description" xml:space="preserve">
-    <value>Настройте отображение контента R-18/R-18G/AI на официальном аккаунте Pixiv</value>
-  </data>
-  <data name="ViewingRestrictionEntry.Header" xml:space="preserve">
-    <value>Ограничение просмотра</value>
-  </data>
   <data name="GitHubRepositoryHyperlinkButton.Content" xml:space="preserve">
     <value>GitHub репозиторий</value>
   </data>
