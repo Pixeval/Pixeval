@@ -10,6 +10,8 @@ using Windows.Graphics;
 using CommunityToolkit.WinUI;
 using Pixeval.Utilities;
 using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Windowing;
+using Windows.Foundation;
 
 namespace Pixeval.Controls.Windowing;
 
@@ -18,6 +20,8 @@ public sealed partial class TabPage
     public TabView TabView => TabViewControl;
 
     private bool _ownsWindow;
+
+    public static event TypedEventHandler<AppWindow, AppWindowClosingEventArgs>? CreatedWindowClosing;
 
     public TabPage()
     {
@@ -106,6 +110,7 @@ public sealed partial class TabPage
         WindowFactory.RootWindow.Fork(tabPage, out _)
             .WithSizeLimit(640, 360)
             .Init(nameof(Pixeval), size)
+            .WithClosing(CreatedWindowClosing)
             .Activate();
     }
 

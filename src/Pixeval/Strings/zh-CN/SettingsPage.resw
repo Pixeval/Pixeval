@@ -525,17 +525,17 @@
   <data name="BrowseOriginalImageEntry.Header" xml:space="preserve">
     <value>浏览时查看原图</value>
   </data>
+  <data name="ReconfirmationOfClosingWindowEntry.Description" xml:space="preserve">
+    <value>在关闭窗口前，会弹出对话框要求你再次确认</value>
+  </data>
+  <data name="ReconfirmationOfClosingWindowEntry.Header" xml:space="preserve">
+    <value>关闭窗口再次确认</value>
+  </data>
   <data name="SearchSettingsGroup.Text" xml:space="preserve">
     <value>搜索设置</value>
   </data>
   <data name="SessionSettingsGroup.Text" xml:space="preserve">
     <value>会话设置</value>
-  </data>
-  <data name="SignOutConfirmationDialogContent" xml:space="preserve">
-    <value>该操作将会无法撤销</value>
-  </data>
-  <data name="SignOutConfirmationDialogTitle" xml:space="preserve">
-    <value>你确定要登出吗？</value>
   </data>
   <data name="SignOutEntry.Description" xml:space="preserve">
     <value>退出登录并关闭应用程序</value>

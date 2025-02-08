@@ -17,11 +17,12 @@ using Pixeval.Pages.Login;
 using System.Threading.Tasks;
 using FluentIcons.WinUI;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.UI.Windowing;
+using Microsoft.UI.Xaml.Controls;
 using Pixeval.Logging;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using Pixeval.CoreApi.Model;
-using Pixeval.Util.IO.Caching;
 using WinUI3Utilities;
 
 #if DEBUG
@@ -53,37 +54,41 @@ public partial class App
         Resources["DefaultAppBarButtonStyle"].To<Style>().Setters[7] = new Setter(FrameworkElement.WidthProperty, 45);
         Resources["DefaultAppBarToggleButtonStyle"].To<Style>().Setters[8] = new Setter(FrameworkElement.WidthProperty, 45);
 
-        if (AppInstance.GetCurrent().GetActivatedEventArgs().Kind is ExtendedActivationKind.ToastNotification)
-            return;
-
-        var isProtocolActivated = AppInstance.GetCurrent().GetActivatedEventArgs() is { Kind: ExtendedActivationKind.Protocol };
-        if (isProtocolActivated && AppInstance.GetInstances().Count > 1)
-        {
-            var notCurrent = AppInstance.GetInstances().First(ins => !ins.IsCurrent);
-            await notCurrent.RedirectActivationToAsync(AppInstance.GetCurrent().GetActivatedEventArgs());
-            return;
-        }
-
         if (AppViewModel.AppSettings.AppFontFamilyName.IsNotNullOrEmpty())
             Current.Resources[ApplicationWideFontKey] = new FontFamily(AppViewModel.AppSettings.AppFontFamilyName);
-        
-        AppViewModel.Initialize(isProtocolActivated);
 
-        WindowFactory.Create(new LoginPage())
-            .WithInitialized(onLoaded: OnLoaded)
-            .WithClosing((_, _) =>
+        var current = AppInstance.GetCurrent();
+        var kind = current.GetActivatedEventArgs().Kind;
+        switch (kind)
+        {
+            case ExtendedActivationKind.ToastNotification or ExtendedActivationKind.AppNotification:
+                return;
+            case ExtendedActivationKind.Protocol when AppInstance.GetInstances().Count > 1:
             {
-                CacheHelper.PurgeCache();
-                AppInfo.SaveContextWhenExit();
-            }) // TODO: 从运行打开应用的时候不会ExitApp，就算是调用App.Current.Exit();
+                var notCurrent = AppInstance.GetInstances().First(ins => !ins.IsCurrent);
+                await notCurrent.RedirectActivationToAsync(current.GetActivatedEventArgs());
+                // 一定要退出这个实例，否则主实例关闭后，整个应用不会退出
+                Current.Exit();
+                return;
+            }
+        }
+
+        AppViewModel.Initialize(kind is ExtendedActivationKind.Protocol);
+
+        TabPage.CreatedWindowClosing += OnClosing;
+        WindowFactory.Create(new LoginPage())
+            .WithInitialized(OnLoaded)
+            .WithClosing(OnClosing)
+            .WithDestroying((_, _) => AppInfo.SaveContextWhenExit())
             .WithSizeLimit(800, 360)
-            .Init(AppInfo.AppIdentifier, AppViewModel.AppSettings.WindowSize.ToSizeInt32(), AppViewModel.AppSettings.IsMaximized)
+            .Init(AppInfo.AppIdentifier, AppViewModel.AppSettings.WindowSize.ToSizeInt32(),
+                AppViewModel.AppSettings.IsMaximized)
             .Activate();
 
         RegisterUnhandledExceptionHandler();
         return;
 
-        void OnLoaded(object s, RoutedEventArgs _)
+        static void OnLoaded(object s, RoutedEventArgs _)
         {
             //if (!AppViewModel.AppDebugTrace.ExitedSuccessfully
             //    && await w.PageContent.ShowDialogAsync(CheckExitedContentDialogResources.ContentDialogTitle,
@@ -99,6 +104,27 @@ public partial class App
 
             AppViewModel.AppDebugTrace.ExitedSuccessfully = false;
             AppInfo.SaveDebugTrace(AppViewModel.AppDebugTrace);
+        }
+
+        static async void OnClosing(AppWindow w, AppWindowClosingEventArgs e)
+        {
+            if (AppViewModel.AppSettings.ReconfirmationOfClosingWindow)
+            {
+                e.Cancel = true;
+                var checkBox = new CheckBox
+                {
+                    Content = ExitDialogResources.ReconfirmationOfClosingWindowCheckBoxContent
+                };
+                var window = WindowFactory.GetForkedWindows(w.Id.Value);
+                if (await window.Content.To<FrameworkElement>().CreateOkCancelAsync(
+                        ExitDialogResources.ReconfirmationOfClosingWindowTitle,
+                        checkBox) is ContentDialogResult.Primary)
+                {
+                    AppViewModel.AppSettings.ReconfirmationOfClosingWindow = checkBox.IsChecked is false;
+                    AppInfo.SaveConfig(AppViewModel.AppSettings);
+                    window.Close();
+                }
+            }
         }
     }
 

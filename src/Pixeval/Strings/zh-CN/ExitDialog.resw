@@ -118,27 +118,39 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="ContentDialog.Title" xml:space="preserve">
-    <value>Уведомление</value>
+    <value>提示</value>
   </data>
   <data name="ContentDialog.PrimaryButtonText" xml:space="preserve">
-    <value>Закрыть приложение</value>
+    <value>关闭应用</value>
   </data>
   <data name="ContentDialog.CloseButtonText" xml:space="preserve">
-    <value>Продолжить использование</value>
+    <value>继续进入应用</value>
   </data>
   <data name="MainTextBlock.Text" xml:space="preserve">
-    <value>Обнаружено некорректное завершение работы приложения в прошлый раз. Вы можете (перезапуск потребуется после очистки настроек):</value>
+    <value>检测到上次软件以没有正常方式退出，你可以（清除设置后需要重启）：</value>
   </data>
   <data name="ClearConfig.Text" xml:space="preserve">
-    <value>Сбросить настройки (настройки приложения)</value>
+    <value>清空设置（软件设置）</value>
   </data>
   <data name="ClearContext.Text" xml:space="preserve">
-    <value>Сбросить состояние входа</value>
+    <value>清空登录状态</value>
   </data>
   <data name="OpenLocalFolder.Text" xml:space="preserve">
-    <value>Открыть папку local</value>
+    <value>打开本地文件夹</value>
   </data>
   <data name="OpenLogFolder.Text" xml:space="preserve">
-    <value>Открыть папку с логами</value>
+    <value>打开日志文件夹</value>
+  </data>
+  <data name="ReconfirmationOfClosingWindowCheckBox.Content" xml:space="preserve">
+    <value>下次不再提示直接关闭窗口</value>
+  </data>
+  <data name="ReconfirmationOfClosingWindow.Title" xml:space="preserve">
+    <value>关闭窗口</value>
+  </data>
+  <data name="SignOutConfirmationDialogContent" xml:space="preserve">
+    <value>该操作将会无法撤销</value>
+  </data>
+  <data name="SignOutConfirmationDialogTitle" xml:space="preserve">
+    <value>你确定要登出吗？</value>
   </data>
 </root>

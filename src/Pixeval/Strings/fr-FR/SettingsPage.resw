@@ -522,12 +522,6 @@ Entrer une addresse IP et cliquer '+' pour ajouter</value>
   <data name="SessionSettingsGroup.Text" xml:space="preserve">
     <value>Configurations de session</value>
   </data>
-  <data name="SignOutConfirmationDialogContent" xml:space="preserve">
-    <value>Cette opération est irréversible</value>
-  </data>
-  <data name="SignOutConfirmationDialogTitle" xml:space="preserve">
-    <value>Etes-vous sûr de vous déconnecter?</value>
-  </data>
   <data name="SignOutEntry.Description" xml:space="preserve">
     <value>Me déconnecter et quitter l'application</value>
   </data>

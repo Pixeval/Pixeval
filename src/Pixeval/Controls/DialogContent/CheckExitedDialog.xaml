@@ -9,29 +9,29 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
     <StackPanel Spacing="10">
-        <TextBlock x:Uid="/CheckExitedContentDialog/MainTextBlock" TextWrapping="WrapWholeWords" />
+        <TextBlock x:Uid="/ExitDialog/MainTextBlock" TextWrapping="WrapWholeWords" />
         <HyperlinkButton Click="ClearConfig_OnClicked">
             <controls:DockPanel HorizontalSpacing="10">
                 <fluent:SymbolIcon controls:DockPanel.Dock="Left" Symbol="Apps" />
-                <TextBlock x:Uid="/CheckExitedContentDialog/ClearConfig" />
+                <TextBlock x:Uid="/ExitDialog/ClearConfig" />
             </controls:DockPanel>
         </HyperlinkButton>
         <HyperlinkButton Click="ClearContext_OnClicked">
             <controls:DockPanel HorizontalSpacing="10">
                 <fluent:SymbolIcon controls:DockPanel.Dock="Left" Symbol="SignOut" />
-                <TextBlock x:Uid="/CheckExitedContentDialog/ClearContext" />
+                <TextBlock x:Uid="/ExitDialog/ClearContext" />
             </controls:DockPanel>
         </HyperlinkButton>
         <HyperlinkButton Click="OpenLocalFolder_OnClicked">
             <controls:DockPanel HorizontalSpacing="10">
                 <fluent:SymbolIcon controls:DockPanel.Dock="Left" Symbol="FolderBriefcase" />
-                <TextBlock x:Uid="/CheckExitedContentDialog/OpenLocalFolder" VerticalAlignment="Center" />
+                <TextBlock x:Uid="/ExitDialog/OpenLocalFolder" VerticalAlignment="Center" />
             </controls:DockPanel>
         </HyperlinkButton>
         <HyperlinkButton Click="OpenLogFolder_OnClicked">
             <controls:DockPanel HorizontalSpacing="10">
                 <fluent:SymbolIcon controls:DockPanel.Dock="Left" Symbol="FolderList" />
-                <TextBlock x:Uid="/CheckExitedContentDialog/OpenLogFolder" />
+                <TextBlock x:Uid="/ExitDialog/OpenLogFolder" />
             </controls:DockPanel>
         </HyperlinkButton>
     </StackPanel>

@@ -3,6 +3,7 @@
 
 using Microsoft.UI.Xaml.Controls;
 using Pixeval.Attributes;
+using Pixeval.Pages;
 
 namespace Pixeval.Options;
 

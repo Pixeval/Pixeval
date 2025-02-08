@@ -27,6 +27,9 @@ public static class WindowFactory
 
     private static readonly Dictionary<ulong, EnhancedWindow> _ForkedWindowsInternal = [];
 
+    /// <summary>
+    /// 所有窗口，包括主窗口
+    /// </summary>
     public static IReadOnlyDictionary<ulong, EnhancedWindow> ForkedWindows => _ForkedWindowsInternal;
 
     public static EnhancedWindow GetForkedWindows(ulong key) => _ForkedWindowsInternal[key];
@@ -95,9 +98,28 @@ public static class WindowFactory
         return window;
     }
 
-    public static EnhancedWindow WithClosing(this EnhancedWindow window, TypedEventHandler<AppWindow, AppWindowClosingEventArgs> onClosed)
+    /// <summary>
+    /// 用户手动关闭时响应，代码关闭不触发<see cref="AppWindow.Closing"/>事件
+    /// </summary>
+    /// <param name="window"></param>
+    /// <param name="onClosed"></param>
+    /// <returns></returns>
+    public static EnhancedWindow WithClosing(this EnhancedWindow window, TypedEventHandler<AppWindow, AppWindowClosingEventArgs>? onClosed)
     {
-        window.AppWindow.Closing += onClosed;
+        if (onClosed is not null)
+            window.AppWindow.Closing += onClosed;
+        return window;
+    }
+
+    /// <summary>
+    /// 窗口关闭时一定触发
+    /// </summary>
+    /// <param name="window"></param>
+    /// <param name="onDestroying"></param>
+    /// <returns></returns>
+    public static EnhancedWindow WithDestroying(this EnhancedWindow window, TypedEventHandler<AppWindow, object> onDestroying)
+    {
+        window.AppWindow.Destroying += onDestroying;
         return window;
     }
 

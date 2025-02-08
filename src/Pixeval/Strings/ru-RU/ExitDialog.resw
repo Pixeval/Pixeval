@@ -118,27 +118,33 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="ContentDialog.Title" xml:space="preserve">
-    <value>提示</value>
+    <value>Уведомление</value>
   </data>
   <data name="ContentDialog.PrimaryButtonText" xml:space="preserve">
-    <value>关闭应用</value>
+    <value>Закрыть приложение</value>
   </data>
   <data name="ContentDialog.CloseButtonText" xml:space="preserve">
-    <value>继续进入应用</value>
+    <value>Продолжить использование</value>
   </data>
   <data name="MainTextBlock.Text" xml:space="preserve">
-    <value>检测到上次软件以没有正常方式退出，你可以（清除设置后需要重启）：</value>
+    <value>Обнаружено некорректное завершение работы приложения в прошлый раз. Вы можете (перезапуск потребуется после очистки настроек):</value>
   </data>
   <data name="ClearConfig.Text" xml:space="preserve">
-    <value>清空设置（软件设置）</value>
+    <value>Сбросить настройки (настройки приложения)</value>
   </data>
   <data name="ClearContext.Text" xml:space="preserve">
-    <value>清空登录状态</value>
+    <value>Сбросить состояние входа</value>
   </data>
   <data name="OpenLocalFolder.Text" xml:space="preserve">
-    <value>打开本地文件夹</value>
+    <value>Открыть папку local</value>
   </data>
   <data name="OpenLogFolder.Text" xml:space="preserve">
-    <value>打开日志文件夹</value>
+    <value>Открыть папку с логами</value>
+  </data>
+  <data name="SignOutConfirmationDialogTitle" xml:space="preserve">
+    <value>Вы уверены, что хотите выйти?</value>
+  </data>
+  <data name="SignOutConfirmationDialogContent" xml:space="preserve">
+    <value>Это действие необратимо</value>
   </data>
 </root>
