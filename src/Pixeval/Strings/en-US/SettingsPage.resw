@@ -453,12 +453,6 @@ Type and click on "+" to add an IP</value>
   <data name="SessionSettingsGroup.Text" xml:space="preserve">
     <value>Session</value>
   </data>
-  <data name="SignOutConfirmationDialogContent" xml:space="preserve">
-    <value>This operation is irreversible</value>
-  </data>
-  <data name="SignOutConfirmationDialogTitle" xml:space="preserve">
-    <value>Are you sure you want to sign out</value>
-  </data>
   <data name="SignOutEntry.Description" xml:space="preserve">
     <value>Sign out and exit app</value>
   </data>

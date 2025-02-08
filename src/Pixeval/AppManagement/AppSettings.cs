@@ -163,6 +163,9 @@ public partial record AppSettings() : IWindowSettings
     [AttributeIgnore(typeof(CopyToAttribute))]
     public DateTimeOffset LastCheckedUpdate { get; set; } = DateTimeOffset.MinValue;
 
+    [SettingsEntry(Symbol.DismissSquareMultiple, nameof(ReconfirmationOfClosingWindowEntryHeader), nameof(ReconfirmationOfClosingWindowEntryDescription))]
+    public bool ReconfirmationOfClosingWindow { get; set; } = true;
+
     [SettingsEntry(Symbol.Box, nameof(PixivNameResolverHeaderText), nameof(PixivNameResolverDescriptionText))]
     public string[] PixivAppApiNameResolver { get; set; } =
     [

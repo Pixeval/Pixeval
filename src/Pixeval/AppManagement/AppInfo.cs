@@ -18,6 +18,7 @@ using Microsoft.UI.Windowing;
 using Pixeval.CoreApi.Net;
 using Pixeval.Util.UI;
 using Windows.Foundation.Collections;
+using Pixeval.Util.IO.Caching;
 
 namespace Pixeval.AppManagement;
 
@@ -147,6 +148,7 @@ public static partial class AppInfo
 
     public static void SaveContextWhenExit()
     {
+        CacheHelper.PurgeCache();
         SaveDebugTrace();
         SaveContext();
         App.AppViewModel.Dispose();

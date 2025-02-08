@@ -118,27 +118,33 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="ContentDialog.Title" xml:space="preserve">
-    <value>Information</value>
+    <value>Notification</value>
   </data>
   <data name="ContentDialog.PrimaryButtonText" xml:space="preserve">
-    <value>Exit the application</value>
+    <value>Quitter l'application</value>
   </data>
   <data name="ContentDialog.CloseButtonText" xml:space="preserve">
-    <value>Continue entering the application</value>
+    <value>Continuer à utiliser</value>
   </data>
   <data name="MainTextBlock.Text" xml:space="preserve">
-    <value>Detected that the last time the software exited in a way that didn't work properly, you can (A restart of the app is required after clearing the settings):</value>
+    <value>Il est détecté que l'application n'ait pas été terminé correctement, vous pouvez essayer de (redémarrage nécessaire):</value>
   </data>
   <data name="ClearConfig.Text" xml:space="preserve">
-    <value>Clear application settings</value>
+    <value>Remise à zéro de configuration de l'application</value>
   </data>
   <data name="ClearContext.Text" xml:space="preserve">
-    <value>Clear the session</value>
+    <value>Remise à zéro de session</value>
   </data>
   <data name="OpenLocalFolder.Text" xml:space="preserve">
-    <value>Open local folder</value>
+    <value>Ouvrir le répertoire local</value>
   </data>
   <data name="OpenLogFolder.Text" xml:space="preserve">
-    <value>Open log folder</value>
+    <value>Ouvrir le répertoire des logs</value>
+  </data>
+  <data name="SignOutConfirmationDialogTitle" xml:space="preserve">
+    <value>Etes-vous sûr de vous déconnecter?</value>
+  </data>
+  <data name="SignOutConfirmationDialogContent" xml:space="preserve">
+    <value>Cette opération est irréversible</value>
   </data>
 </root>

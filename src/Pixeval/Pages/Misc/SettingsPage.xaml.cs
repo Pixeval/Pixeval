@@ -99,12 +99,10 @@ public sealed partial class SettingsPage : IDisposable
 
     private async void PerformSignOutButton_OnClicked(object sender, RoutedEventArgs e)
     {
-        if (await this.CreateOkCancelAsync(SettingsPageResources.SignOutConfirmationDialogTitle,
-                SettingsPageResources.SignOutConfirmationDialogContent) is ContentDialogResult.Primary)
+        if (await this.CreateOkCancelAsync(ExitDialogResources.SignOutConfirmationDialogTitle,
+                ExitDialogResources.SignOutConfirmationDialogContent) is ContentDialogResult.Primary)
         {
             App.AppViewModel.LoginContext.LogoutExit = true;
-            // Close 不触发 Closing 事件
-            AppInfo.SaveContextWhenExit();
             WindowFactory.RootWindow.Close();
         }
     }

@@ -431,12 +431,6 @@
   <data name="SessionSettingsGroup.Text" xml:space="preserve">
     <value>Настройки сессии</value>
   </data>
-  <data name="SignOutConfirmationDialogContent" xml:space="preserve">
-    <value>Это действие необратимо</value>
-  </data>
-  <data name="SignOutConfirmationDialogTitle" xml:space="preserve">
-    <value>Вы уверены, что хотите выйти?</value>
-  </data>
   <data name="SignOutEntry.Header" xml:space="preserve">
     <value>Выход из системы</value>
   </data>

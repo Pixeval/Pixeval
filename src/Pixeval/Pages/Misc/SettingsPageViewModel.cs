@@ -103,7 +103,9 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
                 {
                     Placeholder = SettingsPageResources.WebCookieTextBoxPlaceholderText,
                     ValueChanged = t => App.AppViewModel.MakoClient.Configuration.Cookie = t
-                }
+                },
+                new BoolAppSettingsEntry(AppSettings,
+                    t => t.ReconfirmationOfClosingWindow)
             },
             new(SettingsEntryCategory.BrowsingExperience)
             {
