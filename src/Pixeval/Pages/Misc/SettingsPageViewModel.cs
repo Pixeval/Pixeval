@@ -126,7 +126,6 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
                 new BoolAppSettingsEntry(AppSettings,
                     t => t.BrowseOriginalImage)
             },
-
             new(SettingsEntryCategory.Search)
             {
                 new StringAppSettingsEntry(AppSettings,

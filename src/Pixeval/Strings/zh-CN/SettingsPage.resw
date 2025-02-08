@@ -717,4 +717,37 @@
   <data name="OpenExtensionsEntry.Description" xml:space="preserve">
     <value>此处存储了软件会加载的扩展DLL文件</value>
   </data>
+  <data name="BackupSettingsEntry.Header" xml:space="preserve">
+    <value>备份设置</value>
+  </data>
+  <data name="BackupSettingsEntry.Description" xml:space="preserve">
+    <value>选择导出或导入设置（导出后请注意防止敏感信息泄漏）</value>
+  </data>
+  <data name="OpenSettingsEntry.Header" xml:space="preserve">
+    <value>打开设置文件夹</value>
+  </data>
+  <data name="OpenSettingsEntry.Description" xml:space="preserve">
+    <value>此处存储了软件的设置文件（包含账号信息）</value>
+  </data>
+  <data name="ExportSettingsSuccess" xml:space="preserve">
+    <value>导出设置成功</value>
+  </data>
+  <data name="ImportSessionSuccess" xml:space="preserve">
+    <value>导入会话成功</value>
+  </data>
+  <data name="ImportSettingsSuccess" xml:space="preserve">
+    <value>导入设置成功</value>
+  </data>
+  <data name="ExportSettingsPlaintextEntry.Header" xml:space="preserve">
+    <value>导出明文设置</value>
+  </data>
+  <data name="ExportSettingsPlaintextEntry.Description" xml:space="preserve">
+    <value>以JSON格式导出设置</value>
+  </data>
+  <data name="ImportSettingsPlaintextEntry.Description" xml:space="preserve">
+    <value>导入JSON格式的明文设置</value>
+  </data>
+  <data name="ImportSettingsPlaintextEntry.Header" xml:space="preserve">
+    <value>导入明文设置</value>
+  </data>
 </root>

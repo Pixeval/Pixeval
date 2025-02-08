@@ -1,17 +1,14 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL v3 License.
 
+using Pixeval.Attributes;
 using WinUI3Utilities.Attributes;
 
 namespace Pixeval.AppManagement;
 
-[GenerateConstructor]
-public partial record LoginContext
+[GenerateConstructor(CallParameterlessConstructor = true), CopyTo]
+public partial record LoginContext()
 {
-    public LoginContext()
-    {
-    }
-
     public string RefreshToken { get; set; } = "";
 
     public bool IsPremium { get; set; }

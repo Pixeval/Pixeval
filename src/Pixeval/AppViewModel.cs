@@ -37,9 +37,9 @@ public partial class AppViewModel(App app) : IDisposable
 
     public AppSettings AppSettings { get; } = AppInfo.LoadConfig() ?? new AppSettings();
 
-    public LoginContext LoginContext { get; set; } = AppInfo.LoadLoginContext() ?? new LoginContext();
+    public LoginContext LoginContext { get; } = AppInfo.LoadLoginContext() ?? new LoginContext();
 
-    public AppDebugTrace AppDebugTrace { get; set; } = AppInfo.LoadDebugTrace() ?? new AppDebugTrace();
+    public AppDebugTrace AppDebugTrace { get; } = AppInfo.LoadDebugTrace() ?? new AppDebugTrace();
 
     public FileCache Cache { get; private set; } = null!;
 

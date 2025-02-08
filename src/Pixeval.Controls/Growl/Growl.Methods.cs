@@ -9,20 +9,20 @@ namespace Pixeval.Controls;
 
 public static partial class Growl
 {
-    public static void Info(string title) => InitGrowl(new GrowlInfo
+    public static void Info(string? title) => InitGrowl(new GrowlInfo
     {
         Title = title,
         Severity = InfoBarSeverity.Informational
     });
 
-    public static void InfoGrowl(this FrameworkElement token, string title) => InitGrowl(new GrowlInfo
+    public static void InfoGrowl(this FrameworkElement token, string? title) => InitGrowl(new GrowlInfo
     {
         Title = title,
         Severity = InfoBarSeverity.Informational,
         Token = GetToken(token)
     });
 
-    public static InfoBar? InfoGrowlReturn(this FrameworkElement token, string title) => InitGrowl(new GrowlInfo
+    public static InfoBar? InfoGrowlReturn(this FrameworkElement token, string? title) => InitGrowl(new GrowlInfo
     {
         Title = title,
         Severity = InfoBarSeverity.Informational,
@@ -30,14 +30,14 @@ public static partial class Growl
         StaysOpen = true
     });
 
-    public static void Info(string title, string message) => InitGrowl(new GrowlInfo
+    public static void Info(string? title, string? message) => InitGrowl(new GrowlInfo
     {
         Title = title,
         Message = message,
         Severity = InfoBarSeverity.Informational
     });
 
-    public static void InfoGrowl(this FrameworkElement token, string title, string message) => InitGrowl(new GrowlInfo
+    public static void InfoGrowl(this FrameworkElement token, string? title, string? message) => InitGrowl(new GrowlInfo
     {
         Title = title,
         Message = message,
@@ -45,27 +45,27 @@ public static partial class Growl
         Token = GetToken(token)
     });
 
-    public static void Success(string title) => InitGrowl(new GrowlInfo
+    public static void Success(string? title) => InitGrowl(new GrowlInfo
     {
         Title = title,
         Severity = InfoBarSeverity.Success
     });
 
-    public static void SuccessGrowl(this FrameworkElement token, string title) => InitGrowl(new GrowlInfo
+    public static void SuccessGrowl(this FrameworkElement token, string? title) => InitGrowl(new GrowlInfo
     {
         Title = title,
         Severity = InfoBarSeverity.Success,
         Token = GetToken(token)
     });
 
-    public static void Success(string title, string message) => InitGrowl(new GrowlInfo
+    public static void Success(string? title, string? message) => InitGrowl(new GrowlInfo
     {
         Title = title,
         Message = message,
         Severity = InfoBarSeverity.Success
     });
 
-    public static void SuccessGrowl(this FrameworkElement token, string title, string message) => InitGrowl(new GrowlInfo
+    public static void SuccessGrowl(this FrameworkElement token, string? title, string? message) => InitGrowl(new GrowlInfo
     {
         Title = title,
         Message = message,
@@ -73,14 +73,14 @@ public static partial class Growl
         Token = GetToken(token)
     });
 
-    public static void Warning(string title) => InitGrowl(new GrowlInfo
+    public static void Warning(string? title) => InitGrowl(new GrowlInfo
     {
         Title = title,
         Severity = InfoBarSeverity.Warning,
         StaysOpen = true
     });
 
-    public static void WarningGrowl(this FrameworkElement token, string title) => InitGrowl(new GrowlInfo
+    public static void WarningGrowl(this FrameworkElement token, string? title) => InitGrowl(new GrowlInfo
     {
         Title = title,
         Severity = InfoBarSeverity.Warning,
@@ -88,7 +88,7 @@ public static partial class Growl
         StaysOpen = true
     });
 
-    public static void Warning(string title, string message) => InitGrowl(new GrowlInfo
+    public static void Warning(string? title, string? message) => InitGrowl(new GrowlInfo
     {
         Title = title,
         Message = message,
@@ -96,7 +96,7 @@ public static partial class Growl
         StaysOpen = true
     });
 
-    public static void WarningGrowl(this FrameworkElement token, string title, string message) => InitGrowl(new GrowlInfo
+    public static void WarningGrowl(this FrameworkElement token, string? title, string? message) => InitGrowl(new GrowlInfo
     {
         Title = title,
         Message = message,
@@ -105,14 +105,14 @@ public static partial class Growl
         StaysOpen = true
     });
 
-    public static void Error(string title) => InitGrowl(new GrowlInfo
+    public static void Error(string? title) => InitGrowl(new GrowlInfo
     {
         Title = title,
         Severity = InfoBarSeverity.Error,
         StaysOpen = true
     });
 
-    public static void ErrorGrowl(this FrameworkElement token, string title) => InitGrowl(new GrowlInfo
+    public static void ErrorGrowl(this FrameworkElement token, string? title) => InitGrowl(new GrowlInfo
     {
         Title = title,
         Severity = InfoBarSeverity.Error,
@@ -120,7 +120,7 @@ public static partial class Growl
         StaysOpen = true
     });
 
-    public static void Error(string title, string message) => InitGrowl(new GrowlInfo
+    public static void Error(string? title, string? message) => InitGrowl(new GrowlInfo
     {
         Title = title,
         Message = message,
@@ -128,7 +128,7 @@ public static partial class Growl
         StaysOpen = true
     });
 
-    public static void ErrorGrowl(this FrameworkElement token, string title, string message) => InitGrowl(new GrowlInfo
+    public static void ErrorGrowl(this FrameworkElement token, string? title, string? message) => InitGrowl(new GrowlInfo
     {
         Title = title,
         Message = message,
