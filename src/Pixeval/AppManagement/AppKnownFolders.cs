@@ -20,9 +20,15 @@ public class AppKnownFolders(string fullPath)
 
     public static AppKnownFolders Logs { get; } = new(Local.FullPath, nameof(Logs));
 
+    public static AppKnownFolders Settings { get; } = new(Local.DirectoryInfo.Parent?.FullName ?? "", nameof(Settings));
+
     public static AppKnownFolders Wallpapers { get; } = new(Local.FullPath, nameof(Wallpapers));
 
     public static AppKnownFolders Extensions { get; } = new(Local.FullPath, nameof(Extensions));
+
+    public static FileInfo SettingsDat { get; } = new FileInfo(Path.Combine(Settings.FullPath, SettingsDatName));
+
+    public const string SettingsDatName = "settings.dat";
 
     private AppKnownFolders(string path, string name) : this(Path.Combine(path, name))
     {

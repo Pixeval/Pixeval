@@ -12,9 +12,9 @@ using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 namespace Pixeval.SourceGen;
 
 [Generator]
-public class ResetGenerator : IIncrementalGenerator
+public class CopyToGenerator : IIncrementalGenerator
 {
-    private const string AttributeName = "ResetAttribute";
+    private const string AttributeName = "CopyToAttribute";
 
     private const string AttributeNamespace = nameof(Pixeval) + ".Attributes";
 
@@ -23,30 +23,25 @@ public class ResetGenerator : IIncrementalGenerator
     internal string TypeWithAttribute(INamedTypeSymbol typeSymbol, ImmutableArray<AttributeData> attributeList)
     {
         var name = typeSymbol.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
-        const string resetDefault = "ResetDefault";
+        const string copyTo = "CopyTo";
         const string variable = "variable";
         var list = typeSymbol.GetProperties(attributeList[0].AttributeClass!)
             .Where(symbol => !symbol.IsReadOnly)
-            .Select(symbol => (StatementSyntax)ExpressionStatement(AssignmentExpression(SyntaxKind.SimpleAssignmentExpression,
-                IdentifierName(symbol.Name),
+            .Select(symbol => (StatementSyntax) ExpressionStatement(AssignmentExpression(
+                SyntaxKind.SimpleAssignmentExpression,
                 MemberAccessExpression(
                     SyntaxKind.SimpleMemberAccessExpression,
                     IdentifierName(variable),
-                    IdentifierName(symbol.Name)))));
+                    IdentifierName(symbol.Name)),
+                IdentifierName(symbol.Name))));
 
-        var method = MethodDeclaration(ParseTypeName("void"), resetDefault)
+        var method = MethodDeclaration(ParseTypeName("void"), copyTo)
             .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword)))
-            .WithBody(Block(SeparatedList(
-            [
-                LocalDeclarationStatement(
-                    VariableDeclaration(IdentifierName("var"))
-                        .WithVariables(
-                            SingletonSeparatedList(
-                                VariableDeclarator(Identifier(variable))
-                                    .WithInitializer(
-                                        EqualsValueClause(ObjectCreationExpression(typeSymbol.GetTypeSyntax(false), ArgumentList(), null)))))),
-                ..list
-            ])));
+            .WithParameterList(ParameterList(SeparatedList([
+                Parameter(Identifier(variable))
+                    .WithType(ParseTypeName(name))
+                ])))
+            .WithBody(Block(SeparatedList(list)));
 
         var generatedType = SyntaxHelper.GetDeclaration(name, typeSymbol, method);
         var generatedNamespace = SyntaxHelper.GetFileScopedNamespaceDeclaration(typeSymbol, generatedType, true);

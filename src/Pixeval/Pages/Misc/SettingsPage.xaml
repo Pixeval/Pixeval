@@ -66,7 +66,7 @@
                     Style="{StaticResource SettingHeaderStyle}"
                     Tag="{x:Bind misc1:SettingsEntryCategory.Version}" />
 
-                <controls:SettingsExpander HeaderIcon="{fluent:SymbolIcon Symbol=ArrowSync}" IsExpanded="{x:Bind ViewModel.ExpandExpander, Mode=OneWay}">
+                <controls:SettingsExpander HeaderIcon="{fluent:SymbolIcon Symbol=ArrowSync}" IsExpanded="{x:Bind _viewModel.ExpandExpander, Mode=OneWay}">
                     <controls:SettingsExpander.Header>
                         <HyperlinkButton
                             Padding="0"
@@ -76,7 +76,7 @@
                     <controls:SettingsExpander.Description>
                         <StackPanel Spacing="3">
                             <TextBlock>
-                                <Run Text="{x:Bind ViewModel.GetLastUpdateCheckDisplayString(ViewModel.LastCheckedUpdate), Mode=OneWay}" />
+                                <Run Text="{x:Bind _viewModel.GetLastUpdateCheckDisplayString(_viewModel.LastCheckedUpdate), Mode=OneWay}" />
                             </TextBlock>
                         </StackPanel>
                     </controls:SettingsExpander.Description>
@@ -85,17 +85,17 @@
                             Width="35"
                             Height="35"
                             IsActive="True"
-                            IsIndeterminate="{x:Bind controls1:C.Negation(ViewModel.DownloadingUpdate), Mode=OneWay}"
-                            Visibility="{x:Bind controls1:C.ToVisibility(ViewModel.CheckingUpdate), Mode=OneWay}"
-                            Value="{x:Bind ViewModel.DownloadingUpdateProgress, Mode=OneWay}" />
+                            IsIndeterminate="{x:Bind controls1:C.Negation(_viewModel.DownloadingUpdate), Mode=OneWay}"
+                            Visibility="{x:Bind controls1:C.ToVisibility(_viewModel.CheckingUpdate), Mode=OneWay}"
+                            Value="{x:Bind _viewModel.DownloadingUpdateProgress, Mode=OneWay}" />
                         <TextBlock
                             VerticalAlignment="Center"
-                            Text="{x:Bind ViewModel.UpdateMessage, Mode=OneWay}"
-                            Visibility="{x:Bind controls1:C.IsNotNullToVisibility(ViewModel.UpdateMessage), Mode=OneWay}" />
+                            Text="{x:Bind _viewModel.UpdateMessage, Mode=OneWay}"
+                            Visibility="{x:Bind controls1:C.IsNotNullToVisibility(_viewModel.UpdateMessage), Mode=OneWay}" />
                         <Button
                             x:Uid="/SettingsPage/CheckForUpdatesButton"
                             Click="CheckForUpdateButton_OnClicked"
-                            IsEnabled="{x:Bind controls1:C.Negation(ViewModel.CheckingUpdate), Mode=OneWay}" />
+                            IsEnabled="{x:Bind controls1:C.Negation(_viewModel.CheckingUpdate), Mode=OneWay}" />
                     </StackPanel>
                     <controls:SettingsExpander.Items>
                         <controls:SettingsCard
@@ -126,17 +126,17 @@
                 </controls:SettingsExpander>
 
                 <InfoBar
-                    Title="{x:Bind ViewModel.UpdateInfo, Mode=OneWay}"
+                    Title="{x:Bind _viewModel.UpdateInfo, Mode=OneWay}"
                     IsClosable="False"
                     IsOpen="True"
-                    Message="{x:Bind ViewModel.NewestVersion, Mode=OneWay}"
-                    Severity="{x:Bind ViewModel.UpdateInfoSeverity, Mode=OneWay}">
+                    Message="{x:Bind _viewModel.NewestVersion, Mode=OneWay}"
+                    Severity="{x:Bind _viewModel.UpdateInfoSeverity, Mode=OneWay}">
                     <InfoBar.ActionButton>
                         <HyperlinkButton
                             x:Uid="/SettingsPage/ReleaseNotesHyperlinkButton"
                             Click="ReleaseNotesHyperlink_OnClicked"
                             Tag="Newest"
-                            Visibility="{x:Bind controls1:C.IsNotNullToVisibility(ViewModel.NewestVersion), Mode=OneWay}" />
+                            Visibility="{x:Bind controls1:C.IsNotNullToVisibility(_viewModel.NewestVersion), Mode=OneWay}" />
                     </InfoBar.ActionButton>
                 </InfoBar>
 
@@ -145,7 +145,7 @@
                     HeaderIcon="{fluent:SymbolIcon Symbol=Communication}"
                     IsEnabled="False"
                     Tag="{x:Bind misc:SettingsEntryAttribute.AutoUpdate}">
-                    <ToggleSwitch IsOn="{x:Bind ViewModel.DownloadUpdateAutomatically, Mode=TwoWay}" />
+                    <ToggleSwitch IsOn="{x:Bind _viewModel.DownloadUpdateAutomatically, Mode=TwoWay}" />
                 </controls:SettingsCard>
 
                 <controls:SettingsExpander x:Uid="/SettingsPage/BugReportEntry" HeaderIcon="{fluent:SymbolIcon Symbol=Bug}">
@@ -203,6 +203,13 @@
                             HeaderIcon="{fluent:SymbolIcon Symbol=FolderAdd}"
                             IsClickEnabled="True"
                             Tag="Extensions" />
+                        <controls:SettingsCard
+                            x:Uid="/SettingsPage/OpenSettingsEntry"
+                            ActionIcon="{fluent:SymbolIcon Symbol=Open}"
+                            Click="OpenFolder_OnClicked"
+                            HeaderIcon="{fluent:SymbolIcon Symbol=FolderPerson}"
+                            IsClickEnabled="True"
+                            Tag="Settings" />
                     </controls:SettingsExpander.Items>
                 </controls:SettingsExpander>
 
@@ -233,6 +240,33 @@
                     HeaderIcon="{fluent:SymbolIcon Symbol=Apps}"
                     IsClickEnabled="True"
                     Tag="{x:Bind misc:SettingsEntryAttribute.ResetSettings}" />
+
+                <controls:SettingsExpander
+                    x:Uid="/SettingsPage/BackupSettingsEntry"
+                    HeaderIcon="{fluent:SymbolIcon Symbol=ClipboardSettings}"
+                    Tag="{x:Bind misc:SettingsEntryAttribute.ResetSettings}">
+                    <controls:SettingsExpander.Items>
+                        <controls:SettingsCard
+                            x:Uid="/SettingsPage/OpenSettingsEntry"
+                            ActionIcon="{fluent:SymbolIcon Symbol=Open}"
+                            Click="OpenFolder_OnClicked"
+                            HeaderIcon="{fluent:SymbolIcon Symbol=FolderPerson}"
+                            IsClickEnabled="True"
+                            Tag="Settings" />
+                        <controls:SettingsCard
+                            x:Uid="/SettingsPage/ExportSettingsPlaintextEntry"
+                            ActionIcon="{fluent:SymbolIcon Symbol=Open}"
+                            Click="ExportSettingsPlainText_OnClicked"
+                            HeaderIcon="{fluent:SymbolIcon Symbol=ArrowExport}"
+                            IsClickEnabled="True" />
+                        <controls:SettingsCard
+                            x:Uid="/SettingsPage/ImportSettingsPlaintextEntry"
+                            ActionIcon="{fluent:SymbolIcon Symbol=Open}"
+                            Click="ImportSettingsPlaintext_OnClicked"
+                            HeaderIcon="{fluent:SymbolIcon Symbol=ArrowImport}"
+                            IsClickEnabled="True" />
+                    </controls:SettingsExpander.Items>
+                </controls:SettingsExpander>
 
                 <controls:SettingsExpander
                     x:Uid="/SettingsPage/DeleteHistoriesEntry"

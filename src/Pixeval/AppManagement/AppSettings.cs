@@ -26,7 +26,7 @@ using static Pixeval.SettingsPageResources;
 
 namespace Pixeval.AppManagement;
 
-[GenerateConstructor(CallParameterlessConstructor = true), Reset]
+[GenerateConstructor(CallParameterlessConstructor = true), CopyTo]
 public partial record AppSettings() : IWindowSettings
 {
     [SettingsEntry(Symbol.Communication, nameof(DownloadUpdateAutomaticallyEntryHeader), nameof(DownloadUpdateAutomaticallyEntryDescription))]
@@ -160,7 +160,7 @@ public partial record AppSettings() : IWindowSettings
     [SettingsEntry(Symbol.ImageSparkle, nameof(BrowseOriginalImageEntryHeader), nameof(BrowseOriginalImageEntryDescription))]
     public bool BrowseOriginalImage { get; set; }
 
-    [AttributeIgnore(typeof(ResetAttribute))]
+    [AttributeIgnore(typeof(CopyToAttribute))]
     public DateTimeOffset LastCheckedUpdate { get; set; } = DateTimeOffset.MinValue;
 
     [SettingsEntry(Symbol.Box, nameof(PixivNameResolverHeaderText), nameof(PixivNameResolverDescriptionText))]
@@ -290,6 +290,8 @@ public partial record AppSettings() : IWindowSettings
     }
 }
 
+[JsonSerializable(typeof(AppSettings))]
+[JsonSerializable(typeof(LoginContext))]
 [JsonSerializable(typeof(string[]))]
 [JsonSerializable(typeof(HashSet<string>))]
 // MultiStringsAppSettingsEntry 使用 ObservableCollection<string>

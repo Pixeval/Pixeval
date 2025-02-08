@@ -227,16 +227,29 @@ public static partial class UiHelper
         box.Document.SetText(TextSetOptions.None, "");
     }
 
-    public static IAsyncOperation<StorageFolder?> OpenFolderPickerAsync(this FrameworkElement frameworkElement) => WindowFactory.GetWindowForElement(frameworkElement).PickSingleFolderAsync(PickerLocationId.PicturesLibrary);
+    public static IAsyncOperation<StorageFolder?> OpenFolderPickerAsync(this FrameworkElement frameworkElement, PickerLocationId location = PickerLocationId.PicturesLibrary) => WindowFactory.GetWindowForElement(frameworkElement).PickSingleFolderAsync(location);
 
-    public static IAsyncOperation<StorageFile?> OpenFileOpenPickerAsync(this FrameworkElement frameworkElement) => WindowFactory.GetWindowForElement(frameworkElement).PickSingleFileAsync(PickerLocationId.PicturesLibrary);
+    public static IAsyncOperation<StorageFile?> OpenFileOpenPickerAsync(this FrameworkElement frameworkElement, PickerLocationId location = PickerLocationId.PicturesLibrary) => WindowFactory.GetWindowForElement(frameworkElement).PickSingleFileAsync(location);
+
+    public static IAsyncOperation<IReadOnlyList<StorageFile>> OpenMultipleJsonsOpenPickerAsync(this FrameworkElement frameworkElement)
+    {
+        var fileOpenPicker = new FileOpenPicker
+        {
+            SuggestedStartLocation = PickerLocationId.Desktop, 
+            FileTypeFilter = { ".json" }
+        };
+        fileOpenPicker.FileTypeFilter.Add(".json");
+        InitializeWithWindow.Initialize(fileOpenPicker, (nint)WindowFactory.GetWindowForElement(frameworkElement).HWnd);
+        return fileOpenPicker.PickMultipleFilesAsync();
+    }
 
     public static IAsyncOperation<IReadOnlyList<StorageFile>> OpenMultipleDllsOpenPickerAsync(this FrameworkElement frameworkElement)
     {
-        var fileOpenPicker = new FileOpenPicker();
-        fileOpenPicker.FileTypeFilter.Add(".dll");
-        fileOpenPicker.FileTypeFilter.Add(".zip");
-        fileOpenPicker.SuggestedStartLocation = PickerLocationId.Desktop;
+        var fileOpenPicker = new FileOpenPicker
+        {
+            SuggestedStartLocation = PickerLocationId.Desktop,
+            FileTypeFilter = { ".dll", ".zip" }
+        };
         InitializeWithWindow.Initialize(fileOpenPicker, (nint)WindowFactory.GetWindowForElement(frameworkElement).HWnd);
         return fileOpenPicker.PickMultipleFilesAsync();
     }

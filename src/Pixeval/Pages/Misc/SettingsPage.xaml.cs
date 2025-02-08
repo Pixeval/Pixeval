@@ -2,9 +2,7 @@
 // Licensed under the GPL v3 License.
 
 using System;
-using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using Windows.System;
 using CommunityToolkit.Labs.WinUI.MarkdownTextBlock;
 using Microsoft.Extensions.DependencyInjection;
@@ -22,15 +20,19 @@ using WinUI3Utilities;
 using CommunityToolkit.WinUI.Controls;
 using CommunityToolkit.WinUI;
 using Windows.Foundation;
+using System.IO;
+using Pixeval.Controls;
+using System.Text.Json;
+using Pixeval.Util.IO;
 
 namespace Pixeval.Pages.Misc;
 
-public sealed partial class SettingsPage : IDisposable, INotifyPropertyChanged
+public sealed partial class SettingsPage : IDisposable
 {
     private string CurrentVersion =>
         AppInfo.AppVersion.CurrentVersion.Let(t => $"{t.Major}.{t.Minor}.{t.Build}.{t.Revision}");
 
-    private SettingsPageViewModel ViewModel { get; set; } = null!;
+    private SettingsPageViewModel _viewModel = null!;
 
     private SettingsEntryAttribute? _scrollToAttribute;
 
@@ -40,13 +42,13 @@ public sealed partial class SettingsPage : IDisposable, INotifyPropertyChanged
 
     public override void OnPageActivated(NavigationEventArgs e, object? parameter)
     {
-        ViewModel = new SettingsPageViewModel(this);
+        _viewModel = new SettingsPageViewModel(this);
         _scrollToAttribute = parameter as SettingsEntryAttribute;
 
         // ItemsControl会有缓动动画，ItemsRepeater会延迟加载，使用只好手动一次全部加载，以方便根据Tag导航
         var style = Resources["SettingHeaderStyle"] as Style;
 
-        foreach (var group in ViewModel.LocalGroups.Concat<ISettingsGroup>(ViewModel.ExtensionGroups))
+        foreach (var group in _viewModel.LocalGroups.Concat<ISettingsGroup>(_viewModel.ExtensionGroups))
         {
             SettingsPanel.Children.Add(new TextBlock
             {
@@ -72,7 +74,7 @@ public sealed partial class SettingsPage : IDisposable, INotifyPropertyChanged
 
     private void CheckForUpdateButton_OnClicked(object sender, RoutedEventArgs e)
     {
-        ViewModel.CheckForUpdate();
+        _viewModel.CheckForUpdate();
     }
 
     private async void OpenLinkViaTag_OnClicked(object sender, RoutedEventArgs e)
@@ -113,41 +115,40 @@ public sealed partial class SettingsPage : IDisposable, INotifyPropertyChanged
                 SettingsPageResources.ResetSettingConfirmationDialogContent) is ContentDialogResult.Primary)
         {
             var settings = new AppSettings();
-            foreach (var localGroup in ViewModel.LocalGroups)
+            foreach (var localGroup in _viewModel.LocalGroups)
                 foreach (var settingsEntry in localGroup)
                     settingsEntry.ValueReset(settings);
-            foreach (var extensionGroup in ViewModel.ExtensionGroups)
+            foreach (var extensionGroup in _viewModel.ExtensionGroups)
                 foreach (var settingsEntry in extensionGroup)
                     settingsEntry.ValueReset();
-            OnPropertyChanged(nameof(ViewModel));
         }
     }
 
     private void DeleteFileCacheEntryButton_OnClicked(object sender, RoutedEventArgs e)
     {
         AppKnownFolders.Cache.Clear();
-        ViewModel.ShowClearData(ClearDataKind.FileCache);
+        _viewModel.ShowClearData(ClearDataKind.FileCache);
     }
 
     private void DeleteSearchHistoriesButton_OnClicked(object sender, RoutedEventArgs e)
     {
         var manager = App.AppViewModel.AppServiceProvider.GetRequiredService<SearchHistoryPersistentManager>();
         manager.Clear();
-        ViewModel.ShowClearData(ClearDataKind.SearchHistory);
+        _viewModel.ShowClearData(ClearDataKind.SearchHistory);
     }
 
     private void DeleteBrowseHistoriesButton_OnClicked(object sender, RoutedEventArgs e)
     {
         var manager = App.AppViewModel.AppServiceProvider.GetRequiredService<BrowseHistoryPersistentManager>();
         manager.Clear();
-        ViewModel.ShowClearData(ClearDataKind.BrowseHistory);
+        _viewModel.ShowClearData(ClearDataKind.BrowseHistory);
     }
 
     private void DeleteDownloadHistoriesButton_OnClicked(object sender, RoutedEventArgs e)
     {
         var manager = App.AppViewModel.AppServiceProvider.GetRequiredService<DownloadHistoryPersistentManager>();
         manager.Clear();
-        ViewModel.ShowClearData(ClearDataKind.DownloadHistory);
+        _viewModel.ShowClearData(ClearDataKind.DownloadHistory);
     }
 
     private async void OpenFolder_OnClicked(object sender, RoutedEventArgs e)
@@ -158,6 +159,7 @@ public sealed partial class SettingsPage : IDisposable, INotifyPropertyChanged
             nameof(AppKnownFolders.Temp) => AppKnownFolders.Temp,
             nameof(AppKnownFolders.Local) => AppKnownFolders.Local,
             nameof(AppKnownFolders.Extensions) => AppKnownFolders.Extensions,
+            nameof(AppKnownFolders.Settings) => AppKnownFolders.Settings,
             _ => null
         };
         if (folder is not null)
@@ -176,8 +178,8 @@ public sealed partial class SettingsPage : IDisposable, INotifyPropertyChanged
         _disposed = true;
         Bindings.StopTracking();
         ValueSaving();
-        ViewModel.Dispose();
-        ViewModel = null!;
+        _viewModel.Dispose();
+        _viewModel = null!;
     }
 
     public override void CompleteDisposal()
@@ -186,22 +188,80 @@ public sealed partial class SettingsPage : IDisposable, INotifyPropertyChanged
         Dispose();
     }
 
+    /// <summary>
+    /// 保存设置
+    /// </summary>
     private void ValueSaving()
     {
-        if (ViewModel == null!)
+        if (_viewModel == null!)
             return;
-        foreach (var localGroup in ViewModel.LocalGroups)
+        foreach (var localGroup in _viewModel.LocalGroups)
         foreach (var settingsEntry in localGroup)
             settingsEntry.ValueSaving(AppInfo.LocalConfig);
-        foreach (var extensionGroup in ViewModel.ExtensionGroups)
+        foreach (var extensionGroup in _viewModel.ExtensionGroups)
         foreach (var settingsEntry in extensionGroup)
             settingsEntry.ValueSaving(extensionGroup.Model.Values);
     }
 
-    public event PropertyChangedEventHandler? PropertyChanged;
-
-    private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+    private async void ExportSettingsPlainText_OnClicked(object sender, RoutedEventArgs e)
     {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        if (await this.OpenFolderPickerAsync() is not { } folder)
+            return;
+        try
+        {
+            var jsonSettingsPath = Path.Combine(folder.Path, Path.ChangeExtension(AppKnownFolders.SettingsDatName, "json"));
+            var jsonSessionPath = Path.Combine(folder.Path, "session.json");
+            await using var jsonSettingsStream = IoHelper.OpenAsyncWrite(jsonSettingsPath);
+            await using var jsonSessionStream = IoHelper.OpenAsyncWrite(jsonSessionPath);
+            await JsonSerializer.SerializeAsync(jsonSettingsStream, _viewModel.AppSettings, typeof(AppSettings), SettingsSerializeContext.Default);
+            await JsonSerializer.SerializeAsync(jsonSessionStream, App.AppViewModel.LoginContext, typeof(LoginContext), SettingsSerializeContext.Default);
+            
+            this.SuccessGrowl(SettingsPageResources.ExportSettingsSuccess);
+        }
+        catch (Exception exception)
+        {
+            this.ErrorGrowl(exception.Message, exception.StackTrace);
+        }
+    }
+
+    private async void ImportSettingsPlaintext_OnClicked(object sender, RoutedEventArgs e)
+    {
+        if (await this.OpenMultipleJsonsOpenPickerAsync() is not { } files)
+            return;
+        try
+        {
+            foreach (var file in files)
+            {
+                var path = file.Path;
+                await using var stream = IoHelper.OpenAsyncRead(path);
+                switch (file.Name)
+                {
+                    case "session.json":
+                    {
+                        if (await JsonSerializer.DeserializeAsync(stream, typeof(LoginContext), SettingsSerializeContext.Default) is LoginContext loginContext)
+                        {
+                            loginContext.CopyTo(App.AppViewModel.LoginContext);
+                            this.SuccessGrowl(SettingsPageResources.ImportSessionSuccess, file.Name);
+                        }
+                        break;
+                    }
+                    case "settings.json":
+                    {
+                        if (await JsonSerializer.DeserializeAsync(stream, typeof(AppSettings), SettingsSerializeContext.Default) is AppSettings appSettings)
+                        {
+                            foreach (var localGroup in _viewModel.LocalGroups)
+                            foreach (var settingsEntry in localGroup)
+                                settingsEntry.ValueReset(appSettings);
+                            this.SuccessGrowl(SettingsPageResources.ImportSettingsSuccess, file.Name);
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+        catch (Exception exception)
+        {
+            this.ErrorGrowl(exception.Message, exception.StackTrace);
+        }
     }
 }
