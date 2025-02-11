@@ -3,14 +3,9 @@
 
 using System;
 using CommunityToolkit.WinUI;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Pixeval.Pages.IllustratorViewer;
 using Pixeval.Util.IO.Caching;
-using IllustrationCacheTable = Pixeval.Caching.CacheTable<
-    Pixeval.Util.IO.Caching.PixevalIllustrationCacheKey,
-    Pixeval.Util.IO.Caching.PixevalIllustrationCacheHeader,
-    Pixeval.Util.IO.Caching.PixevalIllustrationCacheProtocol>;
 
 namespace Pixeval.Controls;
 
@@ -34,7 +29,7 @@ public sealed partial class CommentItem
         _ = viewModel.LoadAvatarSource();
         if (viewModel.IsStamp)
         {
-            StickerImageContent.Source = await App.AppViewModel.AppServiceProvider.GetRequiredService<IllustrationCacheTable>().GetSourceFromCacheAsync(viewModel.StampSource);
+            StickerImageContent.Source = await CacheHelper.GetSourceFromCacheAsync(viewModel.StampSource);
         }
         else
         {

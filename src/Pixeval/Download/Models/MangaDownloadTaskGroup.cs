@@ -24,7 +24,7 @@ public partial class MangaDownloadTaskGroup : DownloadTaskGroup, IImageDownloadT
         IllustrationDownloadFormat = IoHelper.GetIllustrationFormat(Path.GetExtension(TokenizedDestination));
     }
 
-    public MangaDownloadTaskGroup(Illustration entry, string destination, IReadOnlyList<Stream>? streams = null) : base(entry, destination, DownloadItemType.Manga)
+    public MangaDownloadTaskGroup(Illustration entry, string destination, IReadOnlyList<Stream?>? streams = null) : base(entry, destination, DownloadItemType.Manga)
     {
         IllustrationDownloadFormat = IoHelper.GetIllustrationFormat(Path.GetExtension(TokenizedDestination));
         SetTasksSet(streams);
@@ -36,7 +36,7 @@ public partial class MangaDownloadTaskGroup : DownloadTaskGroup, IImageDownloadT
         return ValueTask.CompletedTask;
     }
 
-    private void SetTasksSet(IReadOnlyList<Stream>? streams = null)
+    private void SetTasksSet(IReadOnlyList<Stream?>? streams = null)
     {
         if (TasksSet.Count > 0)
             return;

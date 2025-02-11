@@ -19,12 +19,7 @@ using Pixeval.CoreApi.Net.Response;
 using Pixeval.Pages.Capability;
 using WinUI3Utilities;
 using Symbol = FluentIcons.Common.Symbol;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
-using IllustrationCacheTable = Pixeval.Caching.CacheTable<
-    Pixeval.Util.IO.Caching.PixevalIllustrationCacheKey,
-    Pixeval.Util.IO.Caching.PixevalIllustrationCacheHeader,
-    Pixeval.Util.IO.Caching.PixevalIllustrationCacheProtocol>;
 using Pixeval.Util.IO.Caching;
 
 namespace Pixeval.Pages.IllustratorViewer;
@@ -95,10 +90,9 @@ public partial class IllustratorViewerPageViewModel : UiObservableObject
 
     public async Task SetAvatarAndBackgroundAsync()
     {
-        var memoryCache = App.AppViewModel.AppServiceProvider.GetRequiredService<IllustrationCacheTable>();
-        AvatarSource = await memoryCache.GetSourceFromCacheAsync(AvatarUrl, desiredWidth: 100);
+        AvatarSource = await CacheHelper.GetSourceFromCacheAsync(AvatarUrl, desiredWidth: 100);
         BackgroundSource = BackgroundUrl is not null
-            ? await memoryCache.GetSourceFromCacheAsync(BackgroundUrl)
+            ? await CacheHelper.GetSourceFromCacheAsync(BackgroundUrl)
             : AvatarSource;
     }
 

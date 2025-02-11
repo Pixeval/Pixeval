@@ -22,6 +22,9 @@ public static class CacheHelper
 {
     public static readonly Lazy<Task<ImageSource>> ImageNotAvailableTask = new(() => AppInfo.GetImageNotAvailableStream().DecodeBitmapImageAsync(true));
 
+    private static IllustrationCacheTable CacheTable { get; } =
+        App.AppViewModel.AppServiceProvider.GetRequiredService<IllustrationCacheTable>();
+
     public const string CacheFolderName = "cache";
 
     public static void PurgeCache()
@@ -30,22 +33,20 @@ public static class CacheHelper
     }
 
     /// <summary>
-    /// 
+    /// 保证<see cref="Stream.Position"/>为0
     /// </summary>
-    /// <param name="cache"></param>
     /// <param name="key"></param>
     /// <param name="progress"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     public static async ValueTask<Stream> GetStreamFromCacheAsync(
-        this IllustrationCacheTable cache,
         string key,
         IProgress<double>? progress = null,
         CancellationToken cancellationToken = default)
     {
         try
         {
-            return await cache.GetFromFileCacheAsync(key, progress, cancellationToken) ??
+            return await GetFromFileCacheAsync(key, progress, cancellationToken) ??
                    AppInfo.GetImageNotAvailableStream();
         }
         catch (Exception e)
@@ -60,14 +61,12 @@ public static class CacheHelper
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="cache"></param>
     /// <param name="key"></param>
     /// <param name="progress"></param>
     /// <param name="desiredWidth"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     public static async ValueTask<ImageSource> GetSourceFromCacheAsync(
-        this IllustrationCacheTable cache,
         string key,
         IProgress<double>? progress = null,
         int? desiredWidth = null,
@@ -75,7 +74,7 @@ public static class CacheHelper
     {
         try
         {
-            return await cache.GetSourceFromCacheInnerAsync(key, progress, desiredWidth, cancellationToken) ??
+            return await GetSourceFromCacheInnerAsync(key, progress, desiredWidth, cancellationToken) ??
                    await ImageNotAvailableTask.Value;
         }
         catch (TaskCanceledException)
@@ -93,13 +92,12 @@ public static class CacheHelper
 
     /// <returns></returns>
     private static async ValueTask<ImageSource?> GetSourceFromCacheInnerAsync(
-        this IllustrationCacheTable cache,
         string key,
         IProgress<double>? progress = null,
         int? desiredWidth = null,
         CancellationToken cancellationToken = default)
     {
-        var stream = await cache.GetFromFileCacheAsync(key, progress, cancellationToken);
+        var stream = await GetFromFileCacheAsync(key, progress, cancellationToken);
         return stream is null
             ? null
             : await stream.DecodeBitmapImageAsync(true, desiredWidth);
@@ -110,13 +108,12 @@ public static class CacheHelper
     /// </summary>
     /// <returns><see langword="null"/>表示下载失败</returns>
     private static async ValueTask<Stream?> GetFromFileCacheAsync(
-        this IllustrationCacheTable cacheTable,
         string key,
         IProgress<double>? progress = null,
         CancellationToken cancellationToken = default)
     {
         var useFileCache = App.AppViewModel.AppSettings.UseFileCache;
-        if (useFileCache && cacheTable.TryReadCache(new PixevalIllustrationCacheKey(key), out Stream stream))
+        if (useFileCache && CacheTable.TryReadCache(new PixevalIllustrationCacheKey(key), out Stream stream))
             return stream;
 
         if (await App.AppViewModel.MakoClient.GetMakoHttpClient(MakoApiKind.ImageApi)
@@ -124,12 +121,32 @@ public static class CacheHelper
         {
             if (useFileCache)
             {
-                cacheTable.TryCache(new PixevalIllustrationCacheKey(key, (int) s.Length), s);
+                CacheTable.TryCache(new PixevalIllustrationCacheKey(key, (int) s.Length), s);
                 s.Seek(0, SeekOrigin.Begin);
             }
             return s;
         }
 
+        return null;
+    }
+
+    /// <summary>
+    /// 保证<see cref="Stream.Position"/>为0
+    /// </summary>
+    /// <param name="key"></param>
+    /// <returns></returns>
+    public static Stream? TryGetStreamFromCache(string key)
+    {
+        try
+        {
+            if (App.AppViewModel.AppSettings.UseFileCache && CacheTable.TryReadCache(new PixevalIllustrationCacheKey(key), out Stream stream))
+                return stream;
+        }
+        catch (Exception e)
+        {
+            App.AppViewModel.AppServiceProvider.GetRequiredService<FileLogger>()
+                .LogError(nameof(IllustrationCacheTable.TryReadCache), e);
+        }
         return null;
     }
 }

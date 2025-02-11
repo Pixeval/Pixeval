@@ -28,7 +28,7 @@ public partial class UgoiraDownloadTaskGroup : DownloadTaskGroup, IImageDownload
     private string TempFolderPath => $"{TokenizedDestination}.tmp";
 
     [MemberNotNull(nameof(Metadata))]
-    private void SetMetadata(UgoiraMetadataResponse metadata, IReadOnlyList<Stream>? streams = null)
+    private void SetMetadata(UgoiraMetadataResponse metadata, IReadOnlyList<Stream?>? streams = null)
     {
         Metadata = metadata;
         var ugoiraOriginalUrls = Entry.GetUgoiraOriginalUrls(Metadata.FrameCount);
@@ -49,7 +49,7 @@ public partial class UgoiraDownloadTaskGroup : DownloadTaskGroup, IImageDownload
         UgoiraDownloadFormat = IoHelper.GetUgoiraFormat(Path.GetExtension(TokenizedDestination));
     }
 
-    public UgoiraDownloadTaskGroup(Illustration entry, UgoiraMetadataResponse metadata, string destination, IReadOnlyList<Stream>? streams = null) : base(entry, destination, DownloadItemType.Ugoira)
+    public UgoiraDownloadTaskGroup(Illustration entry, UgoiraMetadataResponse metadata, string destination, IReadOnlyList<Stream?>? streams = null) : base(entry, destination, DownloadItemType.Ugoira)
     {
         UgoiraDownloadFormat = IoHelper.GetUgoiraFormat(Path.GetExtension(TokenizedDestination));
         SetMetadata(metadata, streams);

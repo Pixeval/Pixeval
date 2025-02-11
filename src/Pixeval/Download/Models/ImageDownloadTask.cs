@@ -8,7 +8,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Pixeval.AppManagement;
-using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Utilities;
 
@@ -75,11 +74,9 @@ public partial class ImageDownloadTask : ObservableObject, IDownloadTaskBase, IP
             await DownloadStartedAsync.Invoke(this);
     }
 
-    private async Task<bool> ValidateExistenceAsync()
+    private bool ValidateExistence()
     {
         var path = null as string;
-        if (App.AppViewModel.AppSettings.UseFileCache && await App.AppViewModel.Cache.TryGetAsync<FileInfo>(MakoHelper.GetOriginalCacheKey(Uri.OriginalString)) is { } fileInfo)
-            path = fileInfo.FullName;
         if (Uri.IsFile)
             path = Uri.OriginalString;
         else if (Uri.Scheme is "ms-appx")
@@ -91,7 +88,6 @@ public partial class ImageDownloadTask : ObservableObject, IDownloadTaskBase, IP
             File.Copy(path, Destination);
             return true;
         }
-
         return false;
     }
 
@@ -126,7 +122,7 @@ public partial class ImageDownloadTask : ObservableObject, IDownloadTaskBase, IP
                 await PendingCompleteAsync();
                 return;
             }
-            if (!resumeBreakpoint && await ValidateExistenceAsync())
+            if (!resumeBreakpoint && ValidateExistence())
             {
                 await PendingCompleteAsync();
                 return;

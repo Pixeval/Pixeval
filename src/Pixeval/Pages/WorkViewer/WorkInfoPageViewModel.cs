@@ -3,14 +3,9 @@
 
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Media;
 using Pixeval.CoreApi.Model;
 using Pixeval.Util.IO.Caching;
-using IllustrationCacheTable = Pixeval.Caching.CacheTable<
-    Pixeval.Util.IO.Caching.PixevalIllustrationCacheKey,
-    Pixeval.Util.IO.Caching.PixevalIllustrationCacheHeader,
-    Pixeval.Util.IO.Caching.PixevalIllustrationCacheProtocol>;
 
 namespace Pixeval.Pages;
 
@@ -28,7 +23,6 @@ public partial class WorkInfoPageViewModel<T>(T entry) : ObservableObject where 
     public async Task LoadAvatarAsync()
     {
         if (Illustrator is { ProfileImageUrls.Medium: { } profileImage })
-            AvatarSource = await App.AppViewModel.AppServiceProvider.GetRequiredService<IllustrationCacheTable>()
-                .GetSourceFromCacheAsync(profileImage);
+            AvatarSource = await CacheHelper.GetSourceFromCacheAsync(profileImage);
     }
 }

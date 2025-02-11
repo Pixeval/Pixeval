@@ -4,16 +4,11 @@
 using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Media;
 using Pixeval.CoreApi.Model;
 using Pixeval.Util;
 using Pixeval.Util.IO.Caching;
 using Pixeval.Util.UI;
-using IllustrationCacheTable = Pixeval.Caching.CacheTable<
-    Pixeval.Util.IO.Caching.PixevalIllustrationCacheKey,
-    Pixeval.Util.IO.Caching.PixevalIllustrationCacheHeader,
-    Pixeval.Util.IO.Caching.PixevalIllustrationCacheProtocol>;
 
 namespace Pixeval.Controls;
 
@@ -41,12 +36,11 @@ public partial class IllustratorItemViewModel
 
     public async Task LoadAvatarAsync()
     {
-        var memoryCache = App.AppViewModel.AppServiceProvider.GetRequiredService<IllustrationCacheTable>();
-        var stream = await memoryCache.GetStreamFromCacheAsync(AvatarUrl);
+        var stream = await CacheHelper.GetStreamFromCacheAsync(AvatarUrl);
         var dominantColor = await UiHelper.GetDominantColorAsync(stream, false);
         AvatarBorderBrush = new SolidColorBrush(dominantColor);
         stream.Position = 0;
-        AvatarSource = await memoryCache.GetSourceFromCacheAsync(AvatarUrl, desiredWidth: 100);
+        AvatarSource = await CacheHelper.GetSourceFromCacheAsync(AvatarUrl, desiredWidth: 100);
 
         await LoadBannerSourceAsync();
     }
@@ -58,15 +52,14 @@ public partial class IllustratorItemViewModel
 
     private async Task LoadBannerSourceAsync()
     {
-        var getSourceFromMemoryCacheAsync = App.AppViewModel.AppServiceProvider.GetRequiredService<IllustrationCacheTable>().GetSourceFromCacheAsync;
         if (Entry.Illustrations.Concat<IWorkEntry>(Entry.Novels).ElementAtOrDefault(0) is { } t0)
         {
-            BannerSource0 = await getSourceFromMemoryCacheAsync(t0.GetThumbnailUrl());
+            BannerSource0 = await CacheHelper.GetSourceFromCacheAsync(t0.GetThumbnailUrl());
             if (Entry.Illustrations.Concat<IWorkEntry>(Entry.Novels).ElementAtOrDefault(1) is { } t1)
             {
-                BannerSource1 = await getSourceFromMemoryCacheAsync(t1.GetThumbnailUrl());
-                if (Entry.Illustrations.Concat<IWorkEntry>(Entry.Novels).ElementAtOrDefault(0) is { } t2)
-                    BannerSource2 = await getSourceFromMemoryCacheAsync(t2.GetThumbnailUrl());
+                BannerSource1 = await CacheHelper.GetSourceFromCacheAsync(t1.GetThumbnailUrl());
+                if (Entry.Illustrations.Concat<IWorkEntry>(Entry.Novels).ElementAtOrDefault(2) is { } t2)
+                    BannerSource2 = await CacheHelper.GetSourceFromCacheAsync(t2.GetThumbnailUrl());
             }
         }
     }

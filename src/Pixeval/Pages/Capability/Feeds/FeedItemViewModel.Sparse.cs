@@ -11,11 +11,6 @@ using System.Threading.Tasks;
 using System;
 using Microsoft.UI;
 using WinUI3Utilities;
-using Microsoft.Extensions.DependencyInjection;
-using IllustrationCacheTable = Pixeval.Caching.CacheTable<
-    Pixeval.Util.IO.Caching.PixevalIllustrationCacheKey,
-    Pixeval.Util.IO.Caching.PixevalIllustrationCacheHeader,
-    Pixeval.Util.IO.Caching.PixevalIllustrationCacheProtocol>;
 using Pixeval.Util.IO.Caching;
 
 namespace Pixeval.Pages.Capability.Feeds;
@@ -53,9 +48,8 @@ public partial class FeedItemSparseViewModel(Feed entry) : AbstractFeedItemViewM
         if (UserAvatar is not null)
             return;
 
-        var memoryCache = App.AppViewModel.AppServiceProvider.GetRequiredService<IllustrationCacheTable>();
         if (entry.PostUserThumbnail is { } url)
-            UserAvatar = await memoryCache.GetSourceFromCacheAsync(url, desiredWidth: 35);
+            UserAvatar = await CacheHelper.GetSourceFromCacheAsync(url, desiredWidth: 35);
         else
             UserAvatar = await CacheHelper.ImageNotAvailableTask.Value;
     }

@@ -45,7 +45,7 @@ public partial record AppSettings() : IWindowSettings
     public bool EnableDomainFronting { get; set; } = true;
 
     [SettingsEntry(Symbol.Database, nameof(UseFileCacheEntryHeader), nameof(UseFileCacheEntryDescription))]
-    public bool UseFileCache { get; set; }
+    public bool UseFileCache { get; set; } = true;
 
     [SettingsEntry(Symbol.TextFont, nameof(AppFontFamilyEntryHeader), nameof(OpenFontSettingsHyperlinkButtonContent))]
     public string AppFontFamilyName { get; set; } = AppSettingsResources.AppDefaultFontFamilyName;
