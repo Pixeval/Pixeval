@@ -7,7 +7,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Documents;
@@ -20,10 +19,6 @@ using Pixeval.Util.IO.Caching;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using WinUI3Utilities;
-using IllustrationCacheTable = Pixeval.Caching.CacheTable<
-    Pixeval.Util.IO.Caching.PixevalIllustrationCacheKey,
-    Pixeval.Util.IO.Caching.PixevalIllustrationCacheHeader,
-    Pixeval.Util.IO.Caching.PixevalIllustrationCacheProtocol>;
 
 namespace Pixeval.Controls;
 
@@ -79,7 +74,7 @@ public partial class CommentItemViewModel(Comment comment, SimpleWorkType type, 
 
     public async Task LoadAvatarSource()
     {
-        AvatarSource = await App.AppViewModel.AppServiceProvider.GetRequiredService<IllustrationCacheTable>().GetSourceFromCacheAsync(Comment.CommentPoster.ProfileImageUrls.Medium);
+        AvatarSource = await CacheHelper.GetSourceFromCacheAsync(Comment.CommentPoster.ProfileImageUrls.Medium);
     }
 
     public void AddComment(Comment comment)
@@ -108,8 +103,7 @@ public partial class CommentItemViewModel(Comment comment, SimpleWorkType type, 
                         Child = new Image
                         {
                             VerticalAlignment = VerticalAlignment.Bottom,
-                            Source = await App.AppViewModel.AppServiceProvider.GetRequiredService<IllustrationCacheTable>()
-                                .GetSourceFromCacheAsync(emoji.GetReplyEmojiDownloadUrl(), desiredWidth: 14),
+                            Source = await CacheHelper.GetSourceFromCacheAsync(emoji.GetReplyEmojiDownloadUrl(), desiredWidth: 14),
                             Width = 14,
                             Height = 14
                         }

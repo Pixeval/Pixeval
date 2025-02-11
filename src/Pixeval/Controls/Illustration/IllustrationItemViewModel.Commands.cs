@@ -109,7 +109,7 @@ public partial class IllustrationItemViewModel
         }
         else
         {
-            var task = factory.CreateIntrinsic(this, IsUgoira ? (source, UgoiraMetadata) : source, path);
+            var task = factory.CreateIntrinsic(this, path, IsUgoira ? (source, UgoiraMetadata) : source);
             App.AppViewModel.DownloadManager.QueueTask(task);
             frameworkElement?.RemoveSuccessGrowlAfterDelay(ib!, EntryItemResources.Saved);
         }

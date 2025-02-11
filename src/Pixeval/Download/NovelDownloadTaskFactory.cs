@@ -25,7 +25,7 @@ public class NovelDownloadTaskFactory : IDownloadTaskFactory<NovelItemViewModel,
         return task;
     }
 
-    public NovelDownloadTaskGroup CreateIntrinsic(NovelItemViewModel context, object param, string rawPath)
+    public NovelDownloadTaskGroup CreateIntrinsic(NovelItemViewModel context, string rawPath, object param)
     {
         var manager = App.AppViewModel.AppServiceProvider.GetRequiredService<DownloadHistoryPersistentManager>();
         var path = IoHelper.NormalizePath(PathParser.Reduce(rawPath, context));

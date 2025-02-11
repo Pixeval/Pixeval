@@ -92,7 +92,7 @@ public partial class NovelItemViewModel
         }
         else
         {
-            var task = factory.CreateIntrinsic(this, source, path);
+            var task = factory.CreateIntrinsic(this, path, source);
             App.AppViewModel.DownloadManager.QueueTask(task);
             frameworkElement?.RemoveSuccessGrowlAfterDelay(ib!, EntryItemResources.Saved);
         }

@@ -17,13 +17,8 @@ using System.Threading;
 using QuestPDF.Fluent;
 using QuestPDF.Infrastructure;
 using Microsoft.UI.Xaml.Media;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Pixeval.Utilities;
-using IllustrationCacheTable = Pixeval.Caching.CacheTable<
-    Pixeval.Util.IO.Caching.PixevalIllustrationCacheKey,
-    Pixeval.Util.IO.Caching.PixevalIllustrationCacheHeader,
-    Pixeval.Util.IO.Caching.PixevalIllustrationCacheProtocol>;
 using Pixeval.Util.IO.Caching;
 
 namespace Pixeval.Controls;
@@ -161,14 +156,13 @@ public partial class DocumentViewerViewModel(NovelContent novelContent) : Observ
     {
         InitImages();
 
-        var memoryCache = App.AppViewModel.AppServiceProvider.GetRequiredService<IllustrationCacheTable>();
         foreach (var illust in NovelContent.Illusts)
         {
             if (LoadingCancellationTokenSource.IsCancellationRequested)
                 break;
             var key = (illust.Id, illust.Page);
-            IllustrationStreams[key] = await memoryCache.GetStreamFromCacheAsync(illust.ThumbnailUrl, cancellationToken: LoadingCancellationTokenSource.Token);
-            IllustrationImages[key] = await memoryCache.GetSourceFromCacheAsync(illust.ThumbnailUrl, cancellationToken: LoadingCancellationTokenSource.Token);
+            IllustrationStreams[key] = await CacheHelper.GetStreamFromCacheAsync(illust.ThumbnailUrl, cancellationToken: LoadingCancellationTokenSource.Token);
+            IllustrationImages[key] = await CacheHelper.GetSourceFromCacheAsync(illust.ThumbnailUrl, cancellationToken: LoadingCancellationTokenSource.Token);
             OnPropertyChanged(nameof(IllustrationImages) + key.GetHashCode());
         }
 
@@ -176,8 +170,8 @@ public partial class DocumentViewerViewModel(NovelContent novelContent) : Observ
         {
             if (LoadingCancellationTokenSource.IsCancellationRequested)
                 break;
-            UploadedStreams[image.NovelImageId] = await memoryCache.GetStreamFromCacheAsync(image.ThumbnailUrl, cancellationToken: LoadingCancellationTokenSource.Token);
-            UploadedImages[image.NovelImageId] = await memoryCache.GetSourceFromCacheAsync(image.ThumbnailUrl, cancellationToken: LoadingCancellationTokenSource.Token);
+            UploadedStreams[image.NovelImageId] = await CacheHelper.GetStreamFromCacheAsync(image.ThumbnailUrl, cancellationToken: LoadingCancellationTokenSource.Token);
+            UploadedImages[image.NovelImageId] = await CacheHelper.GetSourceFromCacheAsync(image.ThumbnailUrl, cancellationToken: LoadingCancellationTokenSource.Token);
             OnPropertyChanged(nameof(UploadedImages) + image.NovelImageId);
         }
     }

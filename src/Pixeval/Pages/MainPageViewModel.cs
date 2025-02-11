@@ -8,7 +8,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.WinUI.Helpers;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
 using Pixeval.Controls;
@@ -25,10 +24,6 @@ using Pixeval.Util;
 using Pixeval.Util.ComponentModels;
 using Pixeval.Util.IO.Caching;
 using Pixeval.Util.UI;
-using IllustrationCacheTable = Pixeval.Caching.CacheTable<
-    Pixeval.Util.IO.Caching.PixevalIllustrationCacheKey,
-    Pixeval.Util.IO.Caching.PixevalIllustrationCacheHeader,
-    Pixeval.Util.IO.Caching.PixevalIllustrationCacheProtocol>;
 
 namespace Pixeval.Pages;
 
@@ -144,8 +139,7 @@ public partial class MainPageViewModel : UiObservableObject
 
     private async void SetAvatarSource()
     {
-        AvatarSource = await App.AppViewModel.AppServiceProvider.GetRequiredService<IllustrationCacheTable>()
-            .GetSourceFromCacheAsync(App.AppViewModel.MakoClient.Me.ProfileImageUrls.Px50X50);
+        AvatarSource = await CacheHelper.GetSourceFromCacheAsync(App.AppViewModel.MakoClient.Me.ProfileImageUrls.Px50X50);
     }
 
     public double MainPageRootNavigationViewOpenPanelLength => 280;
@@ -164,7 +158,7 @@ public partial class MainPageViewModel : UiObservableObject
         {
             OnEventAction = (m, changed, arg) => FrameworkElement.DispatcherQueue.TryEnqueue(async () =>
             {
-                AvatarSource = await App.AppViewModel.AppServiceProvider.GetRequiredService<IllustrationCacheTable>().GetSourceFromCacheAsync(arg.ProfileImageUrls.Px50X50);
+                AvatarSource = await CacheHelper.GetSourceFromCacheAsync(arg.ProfileImageUrls.Px50X50);
                 UserName = arg.Name;
                 IsPremium = arg.IsPremium;
                 Id = arg.Id;

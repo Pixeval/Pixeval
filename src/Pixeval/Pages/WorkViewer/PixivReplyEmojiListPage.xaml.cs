@@ -7,7 +7,6 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Text;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
@@ -17,10 +16,6 @@ using Pixeval.Util.IO.Caching;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using WinUI3Utilities;
-using IllustrationCacheTable = Pixeval.Caching.CacheTable<
-    Pixeval.Util.IO.Caching.PixevalIllustrationCacheKey,
-    Pixeval.Util.IO.Caching.PixevalIllustrationCacheHeader,
-    Pixeval.Util.IO.Caching.PixevalIllustrationCacheProtocol>;
 
 namespace Pixeval.Pages;
 
@@ -45,12 +40,11 @@ public sealed partial class PixivReplyEmojiListPage
         await semaphoreSlim.WaitAsync();
         if (EmojiList.Count is 0)
         {
-            var memoryCache = App.AppViewModel.AppServiceProvider.GetRequiredService<IllustrationCacheTable>();
             var tasks = await Task.WhenAll(Enum.GetValues<PixivReplyEmoji>()
                 .Select(async emoji => new PixivReplyEmojiViewModel(
                     emoji, 
-                    await memoryCache.GetStreamFromCacheAsync(emoji.GetReplyEmojiDownloadUrl()), 
-                    await memoryCache.GetSourceFromCacheAsync(emoji.GetReplyEmojiDownloadUrl()))));
+                    await CacheHelper.GetStreamFromCacheAsync(emoji.GetReplyEmojiDownloadUrl()), 
+                    await CacheHelper.GetSourceFromCacheAsync(emoji.GetReplyEmojiDownloadUrl()))));
             EmojiList.AddRange(tasks);
         }
     }

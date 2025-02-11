@@ -64,8 +64,6 @@ public partial class IllustrationItemViewModel : WorkEntryViewModel<Illustration
 
     public string SizeText => $"{Entry.Width} x {Entry.Height}";
 
-    public async ValueTask<List<string>> UgoiraOriginalUrlsAsync() => Entry.GetUgoiraOriginalUrls((await UgoiraMetadata).FrameCount);
-
     /// <summary>
     /// 单图和单图漫画的链接
     /// </summary>

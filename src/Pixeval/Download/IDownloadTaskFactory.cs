@@ -12,5 +12,5 @@ public interface IDownloadTaskFactory<in TContext, out TDownloadTask> where TDow
 
     TDownloadTask Create(TContext context, string rawPath);
 
-    TDownloadTask CreateIntrinsic(TContext context, object param, string rawPath);
+    TDownloadTask CreateIntrinsic(TContext context, string rawPath, object param);
 }

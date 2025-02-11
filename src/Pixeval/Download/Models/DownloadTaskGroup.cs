@@ -10,6 +10,7 @@ using System.Threading.Channels;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Extensions.DependencyInjection;
+using Pixeval.Controls;
 using Pixeval.Controls.Windowing;
 using Pixeval.CoreApi.Model;
 using Pixeval.Database;
@@ -30,7 +31,8 @@ public abstract partial class DownloadTaskGroup(DownloadHistoryEntry entry) : Ob
     protected DownloadTaskGroup(IWorkEntry entry, string destination, DownloadItemType type) : this(new(destination, type, entry)) => SetNotCreateFromEntry();
 
     /// <summary>
-    /// 将<see cref="IsCreateFromEntry"/>设置为<see langword="false"/>以便启动
+    /// 将<see cref="IsCreateFromEntry"/>设置为<see langword="false"/>以便启动。<br/>
+    /// 具体逻辑查看<see cref="IsCreateFromEntry"/>文档。
     /// </summary>
     protected void SetNotCreateFromEntry()
     {
@@ -75,7 +77,11 @@ public abstract partial class DownloadTaskGroup(DownloadHistoryEntry entry) : Ob
     }
 
     /// <summary>
-    /// 指示是否从<see cref="IWorkEntry"/>创建。从数据库加载的、并且没有启动过的任务组为<see langword="true"/>
+    /// 指示是否从<see cref="IWorkEntry"/>，而不是<see cref="EntryViewModel{T}"/>创建。<br/>
+    /// 即从数据库加载的、并且没有启动过的任务组为<see langword="true"/>。<br/>
+    /// 一旦启动过，此值将被设置为<see langword="false"/>。<br/>
+    /// <br/>
+    /// 此值相当于IsInitialized的作用，指示启动本下载任务的必要字段、事件订阅等是否已经被初始化。
     /// </summary>
     private bool IsCreateFromEntry { get; set; } = true;
 

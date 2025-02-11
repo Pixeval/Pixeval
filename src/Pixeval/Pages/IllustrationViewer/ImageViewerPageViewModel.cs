@@ -26,16 +26,11 @@ using Pixeval.AppManagement;
 using Pixeval.CoreApi.Net.Response;
 using Pixeval.Download;
 using Pixeval.Util.ComponentModels;
-using Microsoft.Extensions.DependencyInjection;
 using Pixeval.Extensions.Common;
 using Windows.ApplicationModel.DataTransfer;
 using Microsoft.UI.Xaml;
 using Pixeval.Extensions.Common.Commands.Transformers;
 using WinUI3Utilities;
-using IllustrationCacheTable = Pixeval.Caching.CacheTable<
-    Pixeval.Util.IO.Caching.PixevalIllustrationCacheKey,
-    Pixeval.Util.IO.Caching.PixevalIllustrationCacheHeader,
-    Pixeval.Util.IO.Caching.PixevalIllustrationCacheProtocol>;
 using Pixeval.Util.IO.Caching;
 
 namespace Pixeval.Pages.IllustrationViewer;
@@ -297,7 +292,7 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
             // 原图动图（一张一张下）
             if (ugoiraUrl is not null && _isOriginal)
             {
-                var urls = await IllustrationViewModel.UgoiraOriginalUrlsAsync();
+                var urls = IllustrationViewModel.UgoiraOriginalUrls;
                 var list = new List<Stream>();
                 var ratio = 1d / urls.Count;
                 var startProgress = 0d;
@@ -350,8 +345,7 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
                 AdvancePhase(LoadingPhase.CheckingCache);
                 if (ImageLoadingCancellationTokenSource.IsCancellationRequested)
                     return null;
-                return await App.AppViewModel.AppServiceProvider.GetRequiredService<IllustrationCacheTable>()
-                    .GetStreamFromCacheAsync(
+                return await CacheHelper.GetStreamFromCacheAsync(
                         url,
                         new Progress<double>(d => AdvancePhase(LoadingPhase.DownloadingImage, startProgress + ratio * d)),
                         cancellationToken: ImageLoadingCancellationTokenSource.Token);
