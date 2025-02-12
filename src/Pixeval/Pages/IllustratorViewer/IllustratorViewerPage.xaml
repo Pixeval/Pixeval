@@ -8,6 +8,9 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:windowing="using:Pixeval.Controls.Windowing"
     mc:Ignorable="d">
+    <controls:EnhancedPage.Resources>
+        <x:Double x:Key="HeaderHeight">300</x:Double>
+    </controls:EnhancedPage.Resources>
     <controls:StickyHeaderScrollView
         x:Name="StickyHeaderScrollView"
         GetScrollableLength="StickyHeaderScrollView_OnGetScrollableLength"
@@ -16,7 +19,7 @@
             <ImageBrush ImageSource="{x:Bind _viewModel.BackgroundSource, Mode=OneWay}" Stretch="UniformToFill" />
         </controls:StickyHeaderScrollView.HeaderBackGround>
         <controls:StickyHeaderScrollView.Header>
-            <Grid Height="220" Background="{ThemeResource PixevalTranslucentBackgroundBrush}">
+            <Grid Height="{StaticResource HeaderHeight}" Background="{ThemeResource PixevalTranslucentBackgroundBrush}">
                 <Grid.RowDefinitions>
                     <RowDefinition x:Name="ScrollableLength" Height="*" />
                     <RowDefinition Height="Auto" />
@@ -55,15 +58,15 @@
                             FontSize="14"
                             IsTextSelectionEnabled="True"
                             Text="{x:Bind _viewModel.Id}" />
-                        <TextBlock
-                            controls1:DockPanel.Dock="Top"
-                            FontSize="{StaticResource SmallIconFontSize}"
-                            IsTextSelectionEnabled="True"
-                            MaxLines="3"
-                            Text="{x:Bind _viewModel.Comment}"
-                            TextTrimming="CharacterEllipsis"
-                            TextWrapping="Wrap"
-                            ToolTipService.ToolTip="{x:Bind _viewModel.Comment}" />
+                        <ScrollView Height="70" Padding="0,0,15,0">
+                            <controls:TranslatableTextBlock
+                                controls1:DockPanel.Dock="Top"
+                                IsCompact="True"
+                                IsHorizontal="True"
+                                Text="{x:Bind _viewModel.Comment}"
+                                TextType="UserComment"
+                                VerticalButtonAlignment="Top" />
+                        </ScrollView>
                     </controls1:DockPanel>
                 </controls1:DockPanel>
                 <controls1:DockPanel Grid.Row="1" VerticalAlignment="Bottom">

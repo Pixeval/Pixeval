@@ -49,7 +49,10 @@ public static class C
     public static Visibility IsNotZeroToVisibility(int value) => value is not 0 ? Visibility.Visible : Visibility.Collapsed;
 
     public static Visibility IsNotZeroDToVisibility(double value) => value is not 0 ? Visibility.Visible : Visibility.Collapsed;
-    public static Visibility IsNullOrEmptyToVisibility(string? value) => value.IsNullOrEmpty() ? Visibility.Collapsed : Visibility.Visible;
+
+    public static Visibility IsNullOrEmptyToVisibility(string? value) => string.IsNullOrEmpty(value) ? Visibility.Collapsed : Visibility.Visible;
+
+    public static Visibility IsNullOrEmptyToVisibilityNegation(string? value) => string.IsNullOrEmpty(value) ? Visibility.Visible : Visibility.Collapsed;
 
     public static unsafe Color ToAlphaColor(uint color)
     {

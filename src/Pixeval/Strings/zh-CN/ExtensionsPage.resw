@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -146,5 +146,11 @@
   </data>
   <data name="ExtensionsHelpButton.Label" xml:space="preserve">
     <value>帮助文档</value>
+  </data>
+  <data name="ExtensionOutdated" xml:space="preserve">
+    <value>DLL加载成功，但扩展版本已过时，请从获取扩展处下载最新的版本</value>
+  </data>
+  <data name="SomeExtensionsOutdatedFormatted" xml:space="preserve">
+    <value>有 {0} 个扩展版本已过时，请从获取扩展处下载最新的版本  </value>
   </data>
 </root>

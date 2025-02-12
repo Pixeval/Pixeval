@@ -75,7 +75,11 @@
                 <controls:SettingsExpander x:Uid="/HelpPage/ExtensionsHelpExpander" HeaderIcon="{fluent:SymbolIcon Symbol=PuzzlePiece}">
                     <controls:SettingsExpander.Items>
                         <controls:SettingsCard HorizontalContentAlignment="Stretch" ContentAlignment="Left">
-                            <TextBlock x:Uid="/HelpPage/ExtensionsHelp" />
+                            <labs:MarkdownTextBlock x:Uid="/TextGenerated/ExtensionsHelp" Text="">
+                                <labs:MarkdownTextBlock.Config>
+                                    <labs:MarkdownConfig />
+                                </labs:MarkdownTextBlock.Config>
+                            </labs:MarkdownTextBlock>
                         </controls:SettingsCard>
                     </controls:SettingsExpander.Items>
                 </controls:SettingsExpander>

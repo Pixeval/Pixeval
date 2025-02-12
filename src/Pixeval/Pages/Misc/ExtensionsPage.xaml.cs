@@ -2,7 +2,7 @@
 // Licensed under the GPL v3 License.
 
 using System;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using Windows.System;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,6 +14,8 @@ using Pixeval.Util.UI;
 using WinUI3Utilities;
 using System.IO.Compression;
 using System.Linq;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Navigation;
 
 namespace Pixeval.Pages.Misc;
 
@@ -22,9 +24,15 @@ public sealed partial class ExtensionsPage
     private ExtensionService ExtensionService { get; } =
         App.AppViewModel.AppServiceProvider.GetRequiredService<ExtensionService>();
 
-    private IReadOnlyList<ExtensionsHostModel> Models => ExtensionService.HostModels;
+    private ObservableCollection<ExtensionsHostModel> Models => ExtensionService.HostModels;
 
     public ExtensionsPage() => InitializeComponent();
+
+    public override void OnPageActivated(NavigationEventArgs e, object? parameter)
+    {
+        if (ExtensionService.OutDateExtensionHostsCount is var count and not 0) 
+            this.WarningGrowl(ExtensionsPageResources.SomeExtensionsOutdatedFormatted, count.ToString());
+    }
 
     private async void AddExtensionsOnClick(object sender, RoutedEventArgs e)
     {
@@ -47,13 +55,16 @@ public sealed partial class ExtensionsPage
                     try
                     {
                         _ = fileInfo.CopyTo(newDllPath);
-                        if (ExtensionService.TryLoadHost(newDllPath))
+                        if (ExtensionService.TryLoadHost(newDllPath, out var isOutdated))
                         {
                             this.SuccessGrowl(ExtensionsPageResources.DllLoadedSuccessfully, fileName);
                             continue;
                         }
 
-                        this.ErrorGrowl(ExtensionsPageResources.DllLoadFailed, fileName);
+                        this.ErrorGrowl(
+                            isOutdated
+                                ? ExtensionsPageResources.ExtensionOutdated
+                                : ExtensionsPageResources.DllLoadFailed, fileName);
                     }
                     catch (Exception ex)
                     {
@@ -76,13 +87,16 @@ public sealed partial class ExtensionsPage
                                 try
                                 {
                                     var newDllPath = AppKnownFolders.Extensions.CombinePath(dllName);
-                                    if (ExtensionService.TryLoadHost(newDllPath))
+                                    if (ExtensionService.TryLoadHost(newDllPath, out var isOutdated))
                                     {
                                         this.SuccessGrowl(ExtensionsPageResources.DllLoadedSuccessfully, fileName);
                                         continue;
                                     }
 
-                                    this.ErrorGrowl(ExtensionsPageResources.DllLoadFailed, fileName);
+                                    this.ErrorGrowl(
+                                        isOutdated
+                                            ? ExtensionsPageResources.ExtensionOutdated
+                                            : ExtensionsPageResources.DllLoadFailed, fileName);
                                 }
                                 catch (Exception ex)
                                 {
@@ -111,4 +125,10 @@ public sealed partial class ExtensionsPage
     private void OpenExtensionsOnClick(object sender, RoutedEventArgs e) => _ = Launcher.LaunchFolderPathAsync(AppKnownFolders.Extensions.FullPath);
 
     private void ExtensionsHelpOnClick(object sender, RoutedEventArgs e) => _ = Launcher.LaunchUriAsync(sender.To<FrameworkElement>().GetTag<Uri>());
+
+    private void ListViewBase_OnDragItemsCompleted(ListViewBase sender, DragItemsCompletedEventArgs e)
+    {
+        for (var i = 0; i < Models.Count; ++i) 
+            Models[i].Priority = i;
+    }
 }

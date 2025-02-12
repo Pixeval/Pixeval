@@ -28,12 +28,7 @@
                 <controls:Case.Value>
                     <x:Boolean>False</x:Boolean>
                 </controls:Case.Value>
-                <StackPanel>
-                    <local:TranslatableTextBlock
-                        TransformerType="Comment"
-                        x:Name="CommentContent"/>
-                </StackPanel>
-
+                <local:TranslatableTextBlock x:Name="CommentContent" TextType="Comment" />
             </controls:Case>
         </controls:SwitchPresenter>
         <CommandBar

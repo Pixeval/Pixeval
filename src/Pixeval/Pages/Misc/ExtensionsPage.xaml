@@ -26,54 +26,69 @@
                 Click="OpenExtensionsOnClick"
                 Icon="{fluent:SymbolIcon Symbol=FolderAdd}" />
         </CommandBar>
-        <ScrollView>
-            <ItemsRepeater Margin="20,0,20,20" ItemsSource="{x:Bind Models}">
-                <ItemsRepeater.Layout>
-                    <StackLayout Orientation="Vertical" />
-                </ItemsRepeater.Layout>
-                <ItemsRepeater.ItemTemplate>
-                    <DataTemplate x:DataType="extensions:ExtensionsHostModel">
-                        <controls1:SettingsCard Description="{x:Bind Description}" HeaderIcon="{x:Bind Icon}">
-                            <controls1:SettingsCard.Header>
-                                <StackPanel Orientation="Horizontal" Spacing="50">
-                                    <HyperlinkButton
-                                        Padding="0"
-                                        Content="{x:Bind Name}"
-                                        FontWeight="Bold"
-                                        NavigateUri="{x:Bind Link}" />
-                                    <TextBlock
-                                        FontStyle="Italic"
-                                        Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"
-                                        Text="{x:Bind Author}" />
-                                </StackPanel>
-                            </controls1:SettingsCard.Header>
-                            <controls1:SettingsCard.Content>
-                                <CommandBar>
-                                    <AppBarElementContainer
-                                        Padding="10,5"
-                                        HorizontalContentAlignment="Center"
-                                        VerticalContentAlignment="Center">
-                                        <ToggleSwitch IsOn="{x:Bind IsActive, Mode=TwoWay}" />
-                                    </AppBarElementContainer>
-                                    <CommandBar.SecondaryCommands>
-                                        <AppBarButton
-                                            x:Uid="/ExtensionsPage/ExtensionsHelpButton"
-                                            Click="ExtensionsHelpOnClick"
-                                            Icon="{fluent:SymbolIcon Symbol=BookQuestionMark}"
-                                            Tag="{x:Bind HelpLink}"
-                                            Visibility="{x:Bind controls:C.IsNotNullToVisibility(HelpLink)}" />
-                                        <AppBarButton
-                                            x:Uid="/ExtensionsPage/UnloadExtensionsButton"
-                                            Click="UnloadHostOnClick"
-                                            Icon="{fluent:SymbolIcon Symbol=PlugDisconnected}"
-                                            Tag="{x:Bind}" />
-                                    </CommandBar.SecondaryCommands>
-                                </CommandBar>
-                            </controls1:SettingsCard.Content>
-                        </controls1:SettingsCard>
-                    </DataTemplate>
-                </ItemsRepeater.ItemTemplate>
-            </ItemsRepeater>
-        </ScrollView>
+        <ListView
+            Margin="20,0,20,20"
+            AllowDrop="True"
+            CanDragItems="True"
+            CanReorderItems="True"
+            DragItemsCompleted="ListViewBase_OnDragItemsCompleted"
+            ItemsSource="{x:Bind Models}"
+            SelectionMode="None">
+            <ListView.ItemContainerStyle>
+                <Style BasedOn="{StaticResource DefaultListViewItemStyle}" TargetType="ListViewItem">
+                    <Setter Property="Padding" Value="0" />
+                    <Setter Property="Background" Value="Transparent" />
+                </Style>
+            </ListView.ItemContainerStyle>
+            <ListView.ItemTemplate>
+                <DataTemplate x:DataType="extensions:ExtensionsHostModel">
+                    <controls1:SettingsCard Description="{x:Bind Description}" HeaderIcon="{x:Bind Icon}">
+                        <controls1:SettingsCard.Header>
+                            <Grid ColumnSpacing="10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="200" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <HyperlinkButton
+                                    Grid.Column="0"
+                                    Padding="0"
+                                    HorizontalContentAlignment="Left"
+                                    Content="{x:Bind Name}"
+                                    FontWeight="Bold"
+                                    NavigateUri="{x:Bind Link}" />
+                                <TextBlock
+                                    Grid.Column="1"
+                                    FontStyle="Italic"
+                                    Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"
+                                    Text="{x:Bind Author}" />
+                            </Grid>
+                        </controls1:SettingsCard.Header>
+                        <controls1:SettingsCard.Content>
+                            <CommandBar>
+                                <AppBarElementContainer
+                                    Padding="10,5"
+                                    HorizontalContentAlignment="Center"
+                                    VerticalContentAlignment="Center">
+                                    <ToggleSwitch IsOn="{x:Bind IsActive, Mode=TwoWay}" />
+                                </AppBarElementContainer>
+                                <CommandBar.SecondaryCommands>
+                                    <AppBarButton
+                                        x:Uid="/ExtensionsPage/ExtensionsHelpButton"
+                                        Click="ExtensionsHelpOnClick"
+                                        Icon="{fluent:SymbolIcon Symbol=BookQuestionMark}"
+                                        Tag="{x:Bind HelpLink}"
+                                        Visibility="{x:Bind controls:C.IsNotNullToVisibility(HelpLink)}" />
+                                    <AppBarButton
+                                        x:Uid="/ExtensionsPage/UnloadExtensionsButton"
+                                        Click="UnloadHostOnClick"
+                                        Icon="{fluent:SymbolIcon Symbol=PlugDisconnected}"
+                                        Tag="{x:Bind}" />
+                                </CommandBar.SecondaryCommands>
+                            </CommandBar>
+                        </controls1:SettingsCard.Content>
+                    </controls1:SettingsCard>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
     </controls1:DockPanel>
 </controls:EnhancedPage>

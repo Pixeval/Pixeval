@@ -20,42 +20,45 @@ namespace Pixeval.Extensions;
 
 public partial class ExtensionService : IDisposable
 {
-    public IReadOnlyList<ExtensionsHostModel> HostModels => _hostModels;
+    public ObservableCollection<ExtensionsHostModel> HostModels { get; } = [];
 
-    public IReadOnlyDictionary<ExtensionsHostModel, IReadOnlyList<IExtension>> ExtensionsLookup => _extensionsLookup;
-
-    public IEnumerable<KeyValuePair<ExtensionsHostModel, IReadOnlyList<IExtension>>> ActivePairs => ExtensionsLookup.Where(t => t.Key.IsActive);
+    public IEnumerable<ExtensionsHostModel> ActiveModels => HostModels.Where(t => t.IsActive);
 
     public IReadOnlyList<ExtensionSettingsGroup> SettingsGroups => _settingsGroups;
 
-    public IReadOnlyList<IExtension> Extensions => ExtensionsLookup
-        .Aggregate(new List<IExtension>(), (o, t) => o.Apply(p => p.AddRange(t.Value)));
+    public IReadOnlyList<IExtension> Extensions => HostModels
+        .Aggregate(new List<IExtension>(), (o, t) => o.Apply(p => p.AddRange(t.Extensions)));
 
-    public IReadOnlyList<IExtension> ActiveExtensions => ActivePairs
-        .Aggregate(new List<IExtension>(), (o, t) => o.Apply(p => p.AddRange(t.Value)));
+    public IReadOnlyList<IExtension> ActiveExtensions => ActiveModels
+        .Aggregate(new List<IExtension>(), (o, t) => o.Apply(p => p.AddRange(t.Extensions)));
 
     public IEnumerable<IImageTransformerCommandExtension> ActiveImageTransformerCommands => ActiveExtensions.OfType<IImageTransformerCommandExtension>();
 
-    private readonly ObservableCollection<ExtensionsHostModel> _hostModels = [];
-
-    private readonly Dictionary<ExtensionsHostModel, IReadOnlyList<IExtension>> _extensionsLookup = [];
+    public IEnumerable<ITextTransformerCommandExtension> ActiveTextTransformerCommands => ActiveExtensions.OfType<ITextTransformerCommandExtension>();
 
     private readonly List<ExtensionSettingsGroup> _settingsGroups = [];
 
+    public int OutDateExtensionHostsCount { get; private set; }
+
     public void LoadAllHosts()
     {
-        foreach (var dll in AppKnownFolders.Extensions.GetFiles("*.dll")) 
-            _ = TryLoadHost(dll);
+        foreach (var dll in AppKnownFolders.Extensions.GetFiles("*.dll"))
+        {
+            _ = TryLoadHost(dll,out var isOutDate);
+            if (isOutDate)
+                ++OutDateExtensionHostsCount;
+        }
     }
 
-    public bool TryLoadHost(string path)
+    public bool TryLoadHost(string path, out bool isOutdated)
     {
+        isOutdated = false;
         try
         {
-            if (LoadHost(path) is not { } model)
+            if (LoadHost(path, out isOutdated) is not { } model)
                 return false;
             model.Host.Initialize(AppSettings.CurrentCulture.Name, AppKnownFolders.Temp.FullPath, AppKnownFolders.Extensions.FullPath);
-            _hostModels.Add(model);
+            HostModels.Add(model);
             LoadExtensions(model);
             return true;
         }
@@ -67,8 +70,7 @@ public partial class ExtensionService : IDisposable
 
     public void UnloadHost(ExtensionsHostModel model)
     {
-        _ = _hostModels.Remove(model);
-        _ = _extensionsLookup.Remove(model);
+        _ = HostModels.Remove(model);
         if (_settingsGroups.FirstOrDefault(t => t.Model == model) is { } group)
             _ = _settingsGroups.Remove(group);
         foreach (var extension in model.Extensions)
@@ -76,8 +78,9 @@ public partial class ExtensionService : IDisposable
         model.Dispose();
     }
 
-    private static ExtensionsHostModel? LoadHost(string path)
+    private static ExtensionsHostModel? LoadHost(string path, out bool isOutdated)
     {
+        isOutdated = false;
         try
         {
             var dllHandle = PInvoke.LoadLibrary(path);
@@ -96,6 +99,13 @@ public partial class ExtensionService : IDisposable
                 var wrappers = new StrategyBasedComWrappers();
                 var rcw = (IExtensionsHost)wrappers.GetOrCreateObjectForComInstance(ppv, CreateObjectFlags.UniqueInstance);
                 _ = Marshal.Release(ppv);
+                
+                if (rcw.GetSdkVersion() != IExtensionsHost.SdkVersion.ToString())
+                {
+                    dllHandle.Dispose();
+                    isOutdated = true;
+                    return null;
+                }
                 return new(rcw) { Handle = dllHandle };
             }
             catch
@@ -112,8 +122,7 @@ public partial class ExtensionService : IDisposable
 
     private void LoadExtensions(ExtensionsHostModel model)
     {
-        var extensions = model.Extensions.ToArray();
-        _extensionsLookup[model] = extensions;
+        var extensions = model.Extensions;
         foreach (var extension in extensions)
             extension.OnExtensionLoaded();
         LoadSettingsExtension(model, extensions);
