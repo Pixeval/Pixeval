@@ -43,7 +43,7 @@ public class FeedProxyFetchEngine(IFetchEngine<Feed?> feedFetchEngine) : IFetchE
             if (_started is false)
             {
                 // feedEnumerator is always one ahead.
-                await feedEnumerator.MoveNextAsync();
+                _ = await feedEnumerator.MoveNextAsync();
                 _currentPostUser = feedEnumerator.Current?.PostUserId;
                 _started = true;
             }
@@ -52,7 +52,7 @@ public class FeedProxyFetchEngine(IFetchEngine<Feed?> feedFetchEngine) : IFetchE
             while (feedEnumerator.Current?.PostUserId == _currentPostUser)
             {
                 list.Add(feedEnumerator.Current);
-                await feedEnumerator.MoveNextAsync();
+                _ = await feedEnumerator.MoveNextAsync();
             }
 
             // update

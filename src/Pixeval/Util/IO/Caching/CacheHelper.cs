@@ -121,8 +121,8 @@ public static class CacheHelper
         {
             if (useFileCache)
             {
-                CacheTable.TryCache(new PixevalIllustrationCacheKey(key, (int) s.Length), s);
-                s.Seek(0, SeekOrigin.Begin);
+                _ = CacheTable.TryCache(new PixevalIllustrationCacheKey(key, (int) s.Length), s);
+                _ = s.Seek(0, SeekOrigin.Begin);
             }
             return s;
         }

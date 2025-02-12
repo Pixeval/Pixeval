@@ -22,7 +22,7 @@ public static partial class UiHelper
         fixed (Guid* cls = &_CTaskBarListId)
         {
             var i = typeof(ITaskBarList3).GUID;
-            CoCreateInstance((nint)cls, 0, CLSCTX_INPROC_SERVER, (nint)(&i), out var taskBarList);
+            _ = CoCreateInstance((nint) cls, 0, CLSCTX_INPROC_SERVER, (nint) (&i), out var taskBarList);
             var wrappers = new StrategyBasedComWrappers();
             var instance = wrappers.GetOrCreateObjectForComInstance(taskBarList, CreateObjectFlags.UniqueInstance);
             return (ITaskBarList3)instance;

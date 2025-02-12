@@ -38,7 +38,7 @@ public class ReenterableAwaiter<TResult>(bool initialSignal, TResult resultIniti
         }
         finally
         {
-            _semaphoreSlim.Release();
+            _ = _semaphoreSlim.Release();
         }
     }
 
@@ -65,7 +65,7 @@ public class ReenterableAwaiter<TResult>(bool initialSignal, TResult resultIniti
         }
         finally
         {
-            _semaphoreSlim.Release();
+            _ = _semaphoreSlim.Release();
         }
     }
 
@@ -86,7 +86,7 @@ public class ReenterableAwaiter<TResult>(bool initialSignal, TResult resultIniti
         }
         finally
         {
-            _semaphoreSlim.Release();
+            _ = _semaphoreSlim.Release();
         }
     }
 

@@ -63,7 +63,7 @@ public static class MemoryHelper
 
         using var ms = new MemoryStream();
         stream.CopyTo(ms);
-        ms.Seek(0, SeekOrigin.Begin);
+        _ = ms.Seek(0, SeekOrigin.Begin);
         return ms.ToArray();
     }
 }

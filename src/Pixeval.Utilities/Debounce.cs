@@ -136,7 +136,7 @@ public class Debounce<T, TResult> : IDisposable where T : struct, IEquatable<T>
             }
 
             // it's important to add task to list before executing it
-            _executedTasks.AddLast(wrapper);
+            _ = _executedTasks.AddLast(wrapper);
             var result = await task.ExecuteAsync();
             _auxQueue.RemoveAt(0);
 
@@ -145,7 +145,7 @@ public class Debounce<T, TResult> : IDisposable where T : struct, IEquatable<T>
                 var dependencyChain = FindDependencyChainFrom(_executedTasks, wrapper);
                 foreach (var t in dependencyChain)
                 {
-                    _executedTasks.Remove(t);
+                    _ = _executedTasks.Remove(t);
                 }
             }
 

@@ -99,8 +99,8 @@ public unsafe class MemoryMappedFileAllocator(MemoryMappedFileMemoryManager mana
         memoryMappedFileCacheHandle.ViewHandle.Dispose();
         File.Delete(memoryMappedFileCacheHandle.Filename.ToString());
 
-        manager.Handles.Remove(memoryMappedFileCacheHandle);
-        manager.BumpPointerAllocators.Remove(memoryMappedFileCacheHandle.Filename);
+        _ = manager.Handles.Remove(memoryMappedFileCacheHandle);
+        _ = manager.BumpPointerAllocators.Remove(memoryMappedFileCacheHandle.Filename);
 
         return Result<Void>.AsSuccess(Void.Value);
     }

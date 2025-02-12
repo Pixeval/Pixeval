@@ -41,8 +41,6 @@ public partial class AppViewModel(App app) : IDisposable
 
     public AppDebugTrace AppDebugTrace { get; } = AppInfo.LoadDebugTrace() ?? new AppDebugTrace();
 
-    public FileCache Cache { get; private set; } = null!;
-
     public long PixivUid => MakoClient.Me.Id;
 
     public void AppLoggedIn()

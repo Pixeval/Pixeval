@@ -3,6 +3,7 @@
 
 using Microsoft.UI.Xaml.Controls;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Navigation;
 using WinUI3Utilities;
@@ -84,13 +85,12 @@ public sealed partial class TabPage
         _ = frame.Navigate(viewModel.NavigateTo, viewModel.Parameter, viewModel.TransitionInfo);
     }
 
-    private void TabView_OnTabCloseRequested(TabView sender, TabViewTabCloseRequestedEventArgs e)
+    private async void TabView_OnTabCloseRequested(TabView sender, TabViewTabCloseRequestedEventArgs e)
     {
+        await Task.Yield();
         RemoveTab(e.Tab);
         if (e.Tab.Content is FrameworkElement element && element.FindDescendant<FrameworkElement>(ele => ele is IStructuralDisposalCompleter) is IStructuralDisposalCompleter completer)
-        {
             completer.CompleteDisposalRecursively();
-        }
     }
 
     private void TabView_OnTabDroppedOutside(TabView sender, TabViewTabDroppedOutsideEventArgs e)
