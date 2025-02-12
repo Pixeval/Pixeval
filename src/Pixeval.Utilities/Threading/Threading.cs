@@ -38,7 +38,7 @@ public static class Threading
         var rwh = ThreadPool.RegisterWaitForSingleObject(waitHandle,
             (_, _) => tcs.TrySetResult(true), null, -1, true);
         var t = tcs.Task;
-        t.ContinueWith(_ => rwh.Unregister(null));
+        _ = t.ContinueWith(_ => rwh.Unregister(null));
         return t;
     }
 

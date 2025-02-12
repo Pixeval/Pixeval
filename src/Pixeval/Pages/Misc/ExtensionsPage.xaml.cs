@@ -46,7 +46,7 @@ public sealed partial class ExtensionsPage
 
                     try
                     {
-                        fileInfo.CopyTo(newDllPath);
+                        _ = fileInfo.CopyTo(newDllPath);
                         if (ExtensionService.TryLoadHost(newDllPath))
                         {
                             this.SuccessGrowl(ExtensionsPageResources.DllLoadedSuccessfully, fileName);

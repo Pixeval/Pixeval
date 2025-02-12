@@ -95,7 +95,7 @@ public partial class ExtensionService : IDisposable
                     return null;
                 var wrappers = new StrategyBasedComWrappers();
                 var rcw = (IExtensionsHost)wrappers.GetOrCreateObjectForComInstance(ppv, CreateObjectFlags.UniqueInstance);
-                Marshal.Release(ppv);
+                _ = Marshal.Release(ppv);
                 return new(rcw) { Handle = dllHandle };
             }
             catch

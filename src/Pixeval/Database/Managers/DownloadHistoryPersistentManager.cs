@@ -33,7 +33,7 @@ public class DownloadHistoryPersistentManager(ILiteDatabase collection, int maxi
 
     public void Update(DownloadHistoryEntry entry)
     {
-        Collection.Update(entry);
+        _ = Collection.Update(entry);
     }
 
     public IEnumerable<IDownloadTaskGroup> Take(int count)
@@ -70,7 +70,7 @@ public class DownloadHistoryPersistentManager(ILiteDatabase collection, int maxi
     {
         if (Collection.FindOne(predicate) is { } e)
         {
-            Collection.Delete(e.HistoryEntryId);
+            _ = Collection.Delete(e.HistoryEntryId);
             return e;
         }
 

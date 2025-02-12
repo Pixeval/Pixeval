@@ -37,7 +37,7 @@ public abstract class SimplePersistentManager<T>(ILiteDatabase db, int maximumRe
 
     public void Update(T entry)
     {
-        Collection.Update(entry);
+        _ = Collection.Update(entry);
     }
 
     public IEnumerable<T> Take(int count)
@@ -59,7 +59,7 @@ public abstract class SimplePersistentManager<T>(ILiteDatabase db, int maximumRe
     {
         if (Collection.FindOne(predicate) is { } e)
         {
-            Collection.Delete(e.HistoryEntryId);
+            _ = Collection.Delete(e.HistoryEntryId);
             return e;
         }
 

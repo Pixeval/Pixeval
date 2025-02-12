@@ -259,7 +259,7 @@ public partial class LoginPageViewModel(FrameworkElement frameworkElement) : UiO
     {
         var verifier = PixivAuth.GetCodeVerify();
         var url = PixivAuth.GenerateWebPageUrl(verifier);
-        Launcher.LaunchUriAsync(new Uri(url));
+        _ = Launcher.LaunchUriAsync(new Uri(url));
     }
 
     #endregion

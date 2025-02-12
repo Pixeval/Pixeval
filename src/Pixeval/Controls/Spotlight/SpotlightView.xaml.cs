@@ -21,12 +21,12 @@ public sealed partial class SpotlightView : IScrollViewHost, IStructuralDisposal
 
     private async void SpotlightItem_OnViewModelChanged(SpotlightItem item, SpotlightItemViewModel viewModel)
     {
-        await viewModel.TryLoadThumbnailAsync(ViewModel);
+        _ = await viewModel.TryLoadThumbnailAsync(ViewModel);
     }
 
     private async void IllustratorItemsView_OnItemInvoked(ItemsView sender, ItemsViewItemInvokedEventArgs e)
     {
-        await Launcher.LaunchUriAsync(new Uri(e.InvokedItem.To<SpotlightItemViewModel>().Entry.ArticleUrl));
+        _ = await Launcher.LaunchUriAsync(new Uri(e.InvokedItem.To<SpotlightItemViewModel>().Entry.ArticleUrl));
     }
 
     public ScrollView ScrollView => AdvancedItemsView.ScrollView;

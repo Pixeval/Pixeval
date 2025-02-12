@@ -218,7 +218,7 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
                     FrameworkElement.ErrorGrowl(ImageViewerPageResources.TransformerExtensionFailed);
                     return;
                 }
-                result.Seek(0, SeekOrigin.Begin);
+                _ = result.Seek(0, SeekOrigin.Begin);
                 var memoryStream = Streams.RentStream();
                 await result.CopyToAsync(memoryStream.ToIStream());
                 await result.DisposeAsync();

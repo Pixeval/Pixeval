@@ -89,8 +89,8 @@ public class CacheTable<TKey, THeader, TProtocol>(
 
             foreach (var (key, _) in garbage.Values)
             {
-                _locks.Remove(key, out _);
-                _cacheTable.Remove(key);
+                _ = _locks.Remove(key, out _);
+                _ = _cacheTable.Remove(key);
             }
 
             _lruCacheIndex.Skip(retain).ToList().ForEach(g => _lruCacheIndex.Remove(g));
@@ -131,7 +131,7 @@ public class CacheTable<TKey, THeader, TProtocol>(
                 header.CopyTo(cacheArea);
                 span.CopyTo(cacheArea[header.Length..]);
 
-                _lruCacheIndex.AddFirst(key);
+                _ = _lruCacheIndex.AddFirst(key);
                 _cacheTable[key] = (_lruCacheIndex.First!, (nint) Unsafe.AsPointer(ref cacheArea.GetPinnableReference()), cacheArea.Length);
 
                 _locks[key] = new object();
@@ -154,7 +154,7 @@ public class CacheTable<TKey, THeader, TProtocol>(
             {
                 var pointer =(byte*) Unsafe.AsPointer(ref MemoryMarshal.GetReference(span));
                 var newStream = new UnmanagedMemoryStream(pointer, span.Length);
-                newStream.Seek(0, SeekOrigin.Begin);
+                _ = newStream.Seek(0, SeekOrigin.Begin);
                 readonlyStream = newStream;
                 return true;
             }
