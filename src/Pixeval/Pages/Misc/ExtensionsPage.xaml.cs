@@ -14,8 +14,9 @@ using Pixeval.Util.UI;
 using WinUI3Utilities;
 using System.IO.Compression;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Navigation;
+using Pixeval.Utilities;
 
 namespace Pixeval.Pages.Misc;
 
@@ -24,14 +25,19 @@ public sealed partial class ExtensionsPage
     private ExtensionService ExtensionService { get; } =
         App.AppViewModel.AppServiceProvider.GetRequiredService<ExtensionService>();
 
+    private bool _firstTime = true;
+
     private ObservableCollection<ExtensionsHostModel> Models => ExtensionService.HostModels;
 
     public ExtensionsPage() => InitializeComponent();
 
-    public override void OnPageActivated(NavigationEventArgs e, object? parameter)
+    private void ExtensionsPage_OnLoaded(object sender, RoutedEventArgs e)
     {
-        if (ExtensionService.OutDateExtensionHostsCount is var count and not 0) 
-            this.WarningGrowl(ExtensionsPageResources.SomeExtensionsOutdatedFormatted, count.ToString());
+        if (_firstTime && ExtensionService.OutDateExtensionHostsCount is var count and not 0)
+        {
+            _firstTime = false;
+            this.WarningGrowl(ExtensionsPageResources.SomeExtensionsOutdatedFormatted.Format(count));
+        }
     }
 
     private async void AddExtensionsOnClick(object sender, RoutedEventArgs e)
@@ -76,12 +82,18 @@ public sealed partial class ExtensionsPage
                 case ".zip":
                     try
                     {
-                        using var zipArchive = ZipFile.OpenRead(fileInfo.FullName);
-                        var dllNames = zipArchive.Entries.Select(t => t.FullName)
-                            .Where(t => !t.Contains('\\') && !t.Contains('/') && t.EndsWith(".dll")).ToArray();
+                        var dllNames = await Task.Run(() =>
+                        {
+                            using var zipArchive = ZipFile.OpenRead(fileInfo.FullName);
+                            return zipArchive.Entries.Select(t => t.FullName)
+                                .Where(t => !t.Contains('\\') && !t.Contains('/') && t.EndsWith(".dll")).ToArray();
+                        });
+
                         if (dllNames.Length is not 0)
                         {
-                            ZipFile.ExtractToDirectory(fileInfo.FullName, AppKnownFolders.Extensions.FullPath);
+                            await Task.Run(() =>
+                                ZipFile.ExtractToDirectory(fileInfo.FullName, AppKnownFolders.Extensions.FullPath));
+                           
                             foreach (var dllName in dllNames)
                             {
                                 try

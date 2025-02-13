@@ -4,6 +4,8 @@
         <Configurations>Debug;Release</Configurations>
         <Platforms>x86;x64;arm64</Platforms>
         <Nullable>enable</Nullable>
+        <LangVersion>preview</LangVersion>
+        <IsTrimmable>true</IsTrimmable>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
 

@@ -9,6 +9,7 @@
     xmlns:fluent="using:FluentIcons.WinUI"
     xmlns:local="using:Pixeval.Pages.Misc"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Loaded="ExtensionsPage_OnLoaded"
     mc:Ignorable="d">
     <controls1:DockPanel VerticalSpacing="10">
         <TextBlock
@@ -58,7 +59,6 @@
                                     NavigateUri="{x:Bind Link}" />
                                 <TextBlock
                                     Grid.Column="1"
-                                    FontStyle="Italic"
                                     Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"
                                     Text="{x:Bind Author}" />
                             </Grid>
