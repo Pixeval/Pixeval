@@ -20,7 +20,13 @@
         HorizontalScrollMode="Disabled"
         VerticalScrollBarVisibility="Auto">
         <StackPanel Margin="20,15" Spacing="4">
-            <TextBlock Style="{StaticResource TitleTextBlockStyle}" Text="{x:Bind _viewModel.Entry.Title}" />
+            <controls2:TranslatableTextBlock
+                HorizontalAlignment="Left"
+                IsCompact="True"
+                IsHorizontal="True"
+                Text="{x:Bind _viewModel.Entry.Title}"
+                TextBlockStyle="{StaticResource TitleTextBlockStyle}"
+                TextType="WorkTitle" />
             <labs:MarkdownTextBlock
                 x:Name="WorkCaptionMarkdownTextBlock"
                 Margin="{StaticResource StackLayoutEntryPadding}"
@@ -99,10 +105,27 @@
                             Tag="{x:Bind Name}"
                             ToolTipService.ToolTip="{x:Bind ToolTip}">
                             <Button.Content>
-                                <TextBlock TextWrapping="Wrap">
-                                    <Run Text="{x:Bind Name}" />
-                                    <Run Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}" Text="{x:Bind TranslatedName}" />
-                                </TextBlock>
+                                <controls:SwitchPresenter Value="{x:Bind controls2:C.IsNull(TranslatedName)}">
+                                    <controls:Case>
+                                        <controls:Case.Value>
+                                            <x:Boolean>True</x:Boolean>
+                                        </controls:Case.Value>
+                                        <controls2:TranslatableTextBlock
+                                            IsCompact="True"
+                                            IsHorizontal="True"
+                                            Text="{x:Bind Name}"
+                                            TextType="WorkTag" />
+                                    </controls:Case>
+                                    <controls:Case>
+                                        <controls:Case.Value>
+                                            <x:Boolean>False</x:Boolean>
+                                        </controls:Case.Value>
+                                        <TextBlock TextWrapping="Wrap">
+                                            <Run Text="{x:Bind Name}" />
+                                            <Run Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}" Text="{x:Bind TranslatedName}" />
+                                        </TextBlock>
+                                    </controls:Case>
+                                </controls:SwitchPresenter>
                             </Button.Content>
                             <Button.ContextFlyout>
                                 <MenuFlyout>

@@ -6,6 +6,7 @@ using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 using Pixeval.Pages.IllustratorViewer;
 using Pixeval.Util.IO.Caching;
+using Pixeval.Util.UI;
 
 namespace Pixeval.Controls;
 
@@ -33,8 +34,7 @@ public sealed partial class CommentItem
         }
         else
         {
-            CommentContent.RawText.Blocks.Clear();
-            CommentContent.RawText.Blocks.Add(await viewModel.GetReplyContentParagraphAsync());
+            CommentContent.Text = ReplyEmojiHelper.GetContents(viewModel.CommentContent);
         }
     }
 

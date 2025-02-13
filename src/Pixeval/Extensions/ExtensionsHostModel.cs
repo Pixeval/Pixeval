@@ -31,6 +31,19 @@ public partial record ExtensionsHostModel(IExtensionsHost Host) : IDisposable
         set => Values[nameof(IsActive)] = value;
     }
 
+    public int Priority
+    {
+        get
+        {
+            if (Values.TryGetValue(nameof(Priority), out var value) && value is int v)
+                return v;
+
+            Values[nameof(Priority)] = true;
+            return 0;
+        }
+        set => Values[nameof(Priority)] = value;
+    }
+
     internal FreeLibrarySafeHandle? Handle { get; init; }
 
     public string Name { get; } = Host.GetExtensionName();
@@ -80,7 +93,9 @@ public partial record ExtensionsHostModel(IExtensionsHost Host) : IDisposable
 
     private static IconElement GetIcon(BitmapImage? imageSource)
     {
-            return imageSource is null ?  new SymbolIcon { Symbol = Symbol.PuzzlePiece } : new ImageIcon { Source = imageSource };
+        return imageSource is null
+            ? new SymbolIcon { Symbol = Symbol.PuzzlePiece }
+            : new ImageIcon { Source = imageSource };
     }
 
     public void Dispose()

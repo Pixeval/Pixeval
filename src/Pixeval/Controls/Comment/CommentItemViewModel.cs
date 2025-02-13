@@ -7,16 +7,11 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Documents;
 using Microsoft.UI.Xaml.Media;
 using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Model;
-using Pixeval.Util;
 using Pixeval.Util.IO.Caching;
-using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using WinUI3Utilities;
 
@@ -82,38 +77,6 @@ public partial class CommentItemViewModel(Comment comment, SimpleWorkType type, 
         Replies ??= [];
 
         Replies.Insert(0, new CommentItemViewModel(comment, EntryType, EntryId));
-    }
-
-    public async Task<Paragraph> GetReplyContentParagraphAsync()
-    {
-        var paragraph = new Paragraph();
-        foreach (var replyContentToken in ReplyEmojiHelper.EnumerateTokens(CommentContent))
-        {
-            switch (replyContentToken)
-            {
-                case ReplyContentToken.TextToken(var content):
-                    paragraph.Inlines.Add(new Run
-                    {
-                        Text = content
-                    });
-                    break;
-                case ReplyContentToken.EmojiToken(var emoji):
-                    paragraph.Inlines.Add(new InlineUIContainer
-                    {
-                        Child = new Image
-                        {
-                            VerticalAlignment = VerticalAlignment.Bottom,
-                            Source = await CacheHelper.GetSourceFromCacheAsync(emoji.GetReplyEmojiDownloadUrl(), desiredWidth: 14),
-                            Width = 14,
-                            Height = 14
-                        }
-                    });
-
-                    break;
-            }
-        }
-
-        return paragraph;
     }
 
     public void Dispose()

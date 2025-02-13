@@ -1,28 +1,63 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<UserControl
+<Grid
     x:Class="Pixeval.Controls.TranslatableTextBlock"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:fluent="using:FluentIcons.WinUI"
     xmlns:local="using:Pixeval.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    ColumnSpacing="5"
+    RowSpacing="5"
     mc:Ignorable="d">
-
-    <StackPanel Spacing="4">
-        <RichTextBlock
-            x:Name="RawText"
-            x:FieldModifier="public"
-            TextWrapping="Wrap" />
-        <TextBlock
-            x:Name="TranslatedText"
-            IsTextSelectionEnabled="True"
-            TextWrapping="Wrap"
-            Visibility="{x:Bind local:C.IsNullOrEmptyToVisibility(TranslatedText.Text), Mode=OneWay}" />
-        <HyperlinkButton
-            x:Name="TranslateButton"
-            Background="Transparent"
-            BorderBrush="Transparent"
-            Click="GetTranslationClicked"
-            Content="翻译" />
-    </StackPanel>
-</UserControl>
+    <ContentPresenter
+        x:Name="OriginalTextPresenter"
+        Grid.Row="0"
+        Grid.Column="0"
+        Visibility="{x:Bind CanDisplay(TranslatedText, IsCompact), Mode=OneWay}" />
+    <!--  ReSharper disable once UnusedMember.Local  -->
+    <Button
+        x:Name="TranslateButton"
+        Grid.Row="0"
+        Grid.Column="0"
+        Padding="2"
+        HorizontalAlignment="{x:Bind HorizontalButtonAlignment, Mode=OneWay}"
+        VerticalAlignment="{x:Bind VerticalButtonAlignment, Mode=OneWay}"
+        Background="Transparent"
+        BorderBrush="Transparent"
+        Click="GetTranslationClicked"
+        IsEnabled="{x:Bind local:C.Negation(IsTranslating), Mode=OneWay}"
+        Visibility="{x:Bind local:C.ToVisibility(CanTranslate), Mode=OneWay}">
+        <Button.Content>
+            <controls:SwitchPresenter Value="{x:Bind IsTranslating, Mode=OneWay}">
+                <controls:Case>
+                    <controls:Case.Value>
+                        <x:Boolean>True</x:Boolean>
+                    </controls:Case.Value>
+                    <ProgressRing
+                        Width="16"
+                        Height="16"
+                        IsActive="True"
+                        IsIndeterminate="True" />
+                </controls:Case>
+                <controls:Case Content="{fluent:SymbolIcon Symbol=TranslateAuto, FontSize=16}">
+                    <controls:Case.Value>
+                        <x:Boolean>False</x:Boolean>
+                    </controls:Case.Value>
+                </controls:Case>
+            </controls:SwitchPresenter>
+        </Button.Content>
+    </Button>
+    <!--  ReSharper disable once UnusedMember.Local  -->
+    <TextBlock
+        x:Name="TranslationBox"
+        Grid.Row="0"
+        Grid.Column="0"
+        IsTextSelectionEnabled="True"
+        MaxLines="{x:Bind MaxLines, Mode=OneWay}"
+        Style="{x:Bind TextBlockStyle, Mode=OneWay}"
+        Text="{x:Bind TranslatedText, Mode=OneWay}"
+        TextWrapping="Wrap"
+        ToolTipService.ToolTip="{x:Bind NeedToolTip(MaxLines, TranslatedText), Mode=OneWay}"
+        Visibility="{x:Bind local:C.IsNullOrEmptyToVisibility(TranslatedText), Mode=OneWay}" />
+</Grid>
