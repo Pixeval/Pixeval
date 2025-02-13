@@ -137,8 +137,8 @@ Global
 		{CFC4EEF0-3B83-4728-9B4A-1D6E0C08CD4D}.Release|arm64.Build.0 = Release|arm64
 		{CFC4EEF0-3B83-4728-9B4A-1D6E0C08CD4D}.Release|x64.ActiveCfg = Release|x64
 		{CFC4EEF0-3B83-4728-9B4A-1D6E0C08CD4D}.Release|x64.Build.0 = Release|x64
-		{CFC4EEF0-3B83-4728-9B4A-1D6E0C08CD4D}.Release|x86.ActiveCfg = Release|Any CPU
-		{CFC4EEF0-3B83-4728-9B4A-1D6E0C08CD4D}.Release|x86.Build.0 = Release|Any CPU
+		{CFC4EEF0-3B83-4728-9B4A-1D6E0C08CD4D}.Release|x86.ActiveCfg = Release|x86
+		{CFC4EEF0-3B83-4728-9B4A-1D6E0C08CD4D}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -149,8 +149,8 @@ Global
 		{BE94830A-603A-4C95-9FAC-1B69CE8ABA47} = {1663D266-BE8A-4035-BE44-AB6D2BAFE62A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {C5C0040E-8F07-4F3A-A4D8-AE760A819615}
-		RESX_NeutralResourcesLanguage = zh-CN
 		RESX_ConfirmAddLanguageFile = True
+		RESX_NeutralResourcesLanguage = zh-CN
+		SolutionGuid = {C5C0040E-8F07-4F3A-A4D8-AE760A819615}
 	EndGlobalSection
 EndGlobal
