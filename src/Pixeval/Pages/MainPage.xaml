@@ -89,7 +89,7 @@
                                 Icon="{fluent:SymbolIcon Symbol=Open}" />
                             <MenuFlyoutItem
                                 x:Uid="/MainPage/OpenMyPageInBrowserItem"
-                                Click="OpenLinkViaTag_OnClicked"
+                                Click="OpenLinkViaTagUri_OnClicked"
                                 Icon="{fluent:SymbolIcon Symbol=GlobeArrowUp}"
                                 Tag="{x:Bind _viewModel.Url, Mode=OneWay}" />
                             <MenuFlyoutSeparator />
