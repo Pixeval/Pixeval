@@ -365,6 +365,11 @@ public sealed partial class MainPage
         }
     }
 
+    private async void OpenLinkViaTagUri_OnClicked(object sender, RoutedEventArgs e)
+    {
+        _ = await Launcher.LaunchUriAsync(sender.To<FrameworkElement>().GetTag<Uri>());
+    }
+
     private async void OpenLinkViaTag_OnClicked(object sender, RoutedEventArgs e)
     {
         _ = await Launcher.LaunchUriAsync(new Uri(sender.To<FrameworkElement>().GetTag<string>()));
