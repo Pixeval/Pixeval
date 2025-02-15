@@ -69,11 +69,13 @@
         <ProjectReference Include="..\Pixeval.Controls\Pixeval.Controls.csproj" />
         <ProjectReference Include="..\Pixeval.CoreApi\Pixeval.CoreApi.csproj" />
         <ProjectReference Include="..\Pixeval.Utilities\Pixeval.Utilities.csproj" />
-        <ProjectReference Include="..\Pixeval.SourceGen\Pixeval.SourceGen.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="False" />
+        <ProjectReference Include="..\Pixeval.SourceGen\Pixeval.SourceGen.csproj"
+            OutputItemType="Analyzer" ReferenceOutputAssembly="False" />
         <Manifest Include="$(ApplicationManifest)" />
     </ItemGroup>
 
-    <!--Exposes PRI resources-->
+    <!--Exposes
+    PRI resources-->
     <Target Name="InjectAdditionalFiles" BeforeTargets="GenerateMSBuildEditorConfigFileShouldRun">
         <RemoveDir Directories="Strings\.generated" />
         <ItemGroup>
@@ -82,8 +84,11 @@
                 <Content>$([System.IO.File]::ReadAllText(%(FullPath)))</Content>
             </TextFiles>
         </ItemGroup>
-        <WriteLinesToFile Condition="%(TextFiles.Identity) != ''" File="%(TextFiles.Identity)" Overwrite="true" Lines="{}" />
-        <JsonPoke Condition="%(TextFiles.Identity) != ''" ContentPath="%(TextFiles.Identity)" Query="$['%(TextFiles.Key)']" Value="%(TextFiles.Content)"></JsonPoke>
+        <WriteLinesToFile Condition="%(TextFiles.Identity) != ''" File="%(TextFiles.Identity)"
+            Overwrite="true" Lines="{}" />
+        <JsonPoke Condition="%(TextFiles.Identity) != '' AND '$(DesignTimeBuild)' != 'true'"
+            ContentPath="%(TextFiles.Identity)"
+            Query="$['%(TextFiles.Key)']" Value="%(TextFiles.Content)"></JsonPoke>
         <ItemGroup>
             <PRIResource Include="@(TextFiles)" />
             <AdditionalFiles Include="@(PRIResource)" SourceItemGroup="PRIResource" />
@@ -122,11 +127,13 @@
         <AppxBundlePlatforms>x86|x64|arm64</AppxBundlePlatforms>
     </PropertyGroup>
 
-    <ItemGroup Condition="'$(DisableMsixProjectCapabilityAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
+    <ItemGroup
+        Condition="'$(DisableMsixProjectCapabilityAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
         <ProjectCapability Include="Msix" />
     </ItemGroup>
 
-    <PropertyGroup Condition="'$(DisableHasPackageAndPublishMenuAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
+    <PropertyGroup
+        Condition="'$(DisableHasPackageAndPublishMenuAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
         <HasPackageAndPublishMenu>true</HasPackageAndPublishMenu>
     </PropertyGroup>
 </Project>
