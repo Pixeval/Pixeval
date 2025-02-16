@@ -18,7 +18,7 @@ public partial class IllustratorItemViewModel
     public partial ImageSource? AvatarSource { get; private set; }
 
     [ObservableProperty]
-    public partial SolidColorBrush AvatarBorderBrush { get; set; } = _DefaultAvatarBorderColorBrush;
+    public partial SolidColorBrush AvatarBorderBrush { get; private set; } = _DefaultAvatarBorderColorBrush;
 
     [ObservableProperty]
     public partial ImageSource? BannerSource0 { get; private set; }
@@ -29,6 +29,8 @@ public partial class IllustratorItemViewModel
     [ObservableProperty]
     public partial ImageSource? BannerSource2 { get; private set; }
 
+    private bool _loaded;
+
     /// <summary>
     /// Dominant color of the "No Image" image
     /// </summary>
@@ -36,6 +38,9 @@ public partial class IllustratorItemViewModel
 
     public async Task LoadAvatarAsync()
     {
+        if (_loaded)
+            return;
+        _loaded = true;
         var stream = await CacheHelper.GetStreamFromCacheAsync(AvatarUrl);
         var dominantColor = await UiHelper.GetDominantColorAsync(stream, false);
         AvatarBorderBrush = new SolidColorBrush(dominantColor);
@@ -48,17 +53,21 @@ public partial class IllustratorItemViewModel
     public override void Dispose()
     {
         AvatarSource = null;
+        BannerSource0 = null;
+        BannerSource1 = null;
+        BannerSource2 = null;
     }
 
     private async Task LoadBannerSourceAsync()
     {
-        if (Entry.Illustrations.Concat<IWorkEntry>(Entry.Novels).ElementAtOrDefault(0) is { } t0)
+        var workEntries = Entry.Illustrations.Concat<IWorkEntry>(Entry.Novels).ToArray();
+        if (workEntries.ElementAtOrDefault(0) is { } t0)
         {
             BannerSource0 = await CacheHelper.GetSourceFromCacheAsync(t0.GetThumbnailUrl());
-            if (Entry.Illustrations.Concat<IWorkEntry>(Entry.Novels).ElementAtOrDefault(1) is { } t1)
+            if (workEntries.ElementAtOrDefault(1) is { } t1)
             {
                 BannerSource1 = await CacheHelper.GetSourceFromCacheAsync(t1.GetThumbnailUrl());
-                if (Entry.Illustrations.Concat<IWorkEntry>(Entry.Novels).ElementAtOrDefault(2) is { } t2)
+                if (workEntries.ElementAtOrDefault(2) is { } t2)
                     BannerSource2 = await CacheHelper.GetSourceFromCacheAsync(t2.GetThumbnailUrl());
             }
         }
