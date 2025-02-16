@@ -28,7 +28,10 @@
                 <controls:Case.Value>
                     <x:Boolean>False</x:Boolean>
                 </controls:Case.Value>
-                <local:TranslatableTextBlock x:Name="CommentContent" TextType="Comment" />
+                <local:TranslatableTextBlock
+                    x:Name="CommentContent"
+                    HorizontalButtonAlignment="Left"
+                    TextType="Comment" />
             </controls:Case>
         </controls:SwitchPresenter>
         <CommandBar

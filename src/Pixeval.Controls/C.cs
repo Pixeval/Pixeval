@@ -12,8 +12,9 @@ using Microsoft.UI.Xaml.Media;
 using WinUI3Utilities;
 using Windows.UI.Text;
 using Microsoft.UI.Text;
-using Pixeval.Utilities;
 using Microsoft.UI;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 namespace Pixeval.Controls;
 
@@ -54,24 +55,22 @@ public static class C
 
     public static Visibility IsNullOrEmptyToVisibilityNegation(string? value) => string.IsNullOrEmpty(value) ? Visibility.Visible : Visibility.Collapsed;
 
-    public static unsafe Color ToAlphaColor(uint color)
+    public static Color ToAlphaColor(uint color)
     {
-        var ptr = &color;
-        var c = (byte*)ptr;
-        return Color.FromArgb(c[3], c[2], c[1], c[0]);
+        var span = MemoryMarshal.CreateSpan(ref Unsafe.As<uint, byte>(ref color), 4);
+        return Color.FromArgb(span[3], span[2], span[1], span[0]);
     }
 
     public static SolidColorBrush ToSolidColorBrush(uint value) => new(ToAlphaColor(value));
 
-    public static unsafe uint ToAlphaUInt(Color color)
+    public static uint ToAlphaUInt(Color color)
     {
-        uint ret;
-        var ptr = &ret;
-        var c = (byte*)ptr;
-        c[0] = color.B;
-        c[1] = color.G;
-        c[2] = color.R;
-        c[3] = color.A;
+        uint ret = 0;
+        var span = MemoryMarshal.CreateSpan(ref Unsafe.As<uint, byte>(ref ret), 4);
+        span[0] = color.B;
+        span[1] = color.G;
+        span[2] = color.R;
+        span[3] = color.A;
         return ret;
     }
 

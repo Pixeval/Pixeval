@@ -84,7 +84,7 @@ public partial record AppSettings() : IWindowSettings
     [SettingsEntry(Symbol.ArrowSort, nameof(DefaultSearchSortOptionEntryHeader), nameof(DefaultSearchSortOptionEntryDescription))]
     public WorkSortOption WorkSortOption { get; set; }
 
-    [SettingsEntry(Symbol.Grid, nameof(DefaultSearchTagMatchOptionEntryHeader), nameof(DefaultSearchTagMatchOptionEntryDescription))]
+    [SettingsEntry(Symbol.Grid, nameof(SimpleWorkTypeEntryHeader), nameof(SimpleWorkTypeEntryDescription))]
     public SimpleWorkType SimpleWorkType { get; set; }
 
     public RankOption IllustrationRankOption { get; set; }
