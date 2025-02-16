@@ -7,9 +7,12 @@
     xmlns:fluent="using:FluentIcons.WinUI"
     xmlns:local="using:Pixeval.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    MinWidth="5"
+    MinHeight="5"
     ColumnSpacing="5"
     RowSpacing="5"
     mc:Ignorable="d">
+    <!--  MinHeight/MinWidth防止元素为空导致ScrollView可能的崩溃  -->
     <ContentPresenter
         x:Name="OriginalTextPresenter"
         Grid.Row="0"

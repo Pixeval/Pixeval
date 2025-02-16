@@ -130,6 +130,8 @@ public partial class App
 
     private void RegisterUnhandledExceptionHandler()
     {
+        DebugSettings.LayoutCycleTracingLevel = LayoutCycleTracingLevel.High;
+        DebugSettings.LayoutCycleDebugBreakLevel = LayoutCycleDebugBreakLevel.High;
         DebugSettings.BindingFailed += (o, e) =>
         {
             var logger = AppViewModel.AppServiceProvider.GetRequiredService<FileLogger>();
