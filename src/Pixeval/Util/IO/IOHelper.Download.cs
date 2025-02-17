@@ -85,7 +85,7 @@ public static partial class IoHelper
         try
         {
             if (0 > startPosition)
-                return new ArgumentOutOfRangeException(nameof(startPosition), "Too small");
+                return new ArgumentOutOfRangeException(nameof(startPosition), @"Too small");
 
             var request = new HttpRequestMessage(HttpMethod.Get, uri);
 
@@ -107,7 +107,7 @@ public static partial class IoHelper
                     break;
                 case HttpStatusCode.RequestedRangeNotSatisfiable:
                     if (response.Content.Headers.ContentRange?.Length is { } length && length != startPosition)
-                        return new ArgumentOutOfRangeException(nameof(startPosition), "416: RequestedRangeNotSatisfiable");
+                        return new ArgumentOutOfRangeException(nameof(startPosition), @"416: RequestedRangeNotSatisfiable");
                     if (progress is not null)
                         _ = WindowFactory.RootWindow.DispatcherQueue.TryEnqueue(() => progress.Report(100));
                     return null;

@@ -56,15 +56,15 @@ public partial record AppSettings() : IWindowSettings
     [SettingsEntry(Symbol.Rename, nameof(DownloadPathMacroEntryHeader), nameof(DownloadPathMacroEntryDescription))]
     public string DownloadPathMacro { get; set; } = GetSpecialFolder() + @"\@{if_pic_set=[@{artist_name}] @{title}}\[@{artist_name}] @{id}@{if_pic_set=p@{pic_set_index}}@{ext}";
 
-    public UgoiraDownloadFormat UgoiraDownloadFormat { get; set; } = UgoiraDownloadFormat.WebPLossless;
-
+    [SettingsEntry(Symbol.TextPeriodAsterisk, nameof(WorkDownloadFormatEntryHeader), nameof(WorkDownloadFormatEntryDescription))]
     public IllustrationDownloadFormat IllustrationDownloadFormat { get; set; } = IllustrationDownloadFormat.Png;
+
+    public UgoiraDownloadFormat UgoiraDownloadFormat { get; set; } = UgoiraDownloadFormat.WebPLossless;
 
     public NovelDownloadFormat NovelDownloadFormat { get; set; }
 
-    // 目前使用断点续传并且没有记录下载进度，所以这个选项暂时不需要
-    // [SettingsEntry(Symbol.ImageSplit, nameof(OverwriteDownloadedFileEntryHeader), nameof(OverwriteDownloadedFileEntryDescription))]
-    // public bool OverwriteDownloadedFile { get; set; }
+    [SettingsEntry(Symbol.ImageSplit, nameof(OverwriteDownloadedFileEntryHeader), nameof(OverwriteDownloadedFileEntryDescription))]
+    public bool OverwriteDownloadedFile { get; set; }
 
     [SettingsEntry(Symbol.History, nameof(MaximumDownloadHistoryRecordsEntryHeader), nameof(MaximumDownloadHistoryRecordsEntryDescription))]
     public int MaximumDownloadHistoryRecords { get; set; } = 100;
@@ -88,6 +88,7 @@ public partial record AppSettings() : IWindowSettings
     [SettingsEntry(Symbol.Grid, nameof(SimpleWorkTypeEntryHeader), nameof(SimpleWorkTypeEntryDescription))]
     public SimpleWorkType SimpleWorkType { get; set; }
 
+    [SettingsEntry(Symbol.ArrowTrending, nameof(RankOptionEntryHeader), nameof(RankOptionEntryDescription))]
     public RankOption IllustrationRankOption { get; set; }
 
     public RankOption NovelRankOption { get; set; }
@@ -95,6 +96,7 @@ public partial record AppSettings() : IWindowSettings
     /// <summary>
     /// The illustration tag match option for keyword search
     /// </summary>
+    [SettingsEntry(Symbol.CheckmarkCircleSquare, nameof(DefaultSearchTagMatchOptionEntryHeader), nameof(DefaultSearchTagMatchOptionEntryDescription))]
     public SearchIllustrationTagMatchOption SearchIllustrationTagMatchOption { get; set; } = SearchIllustrationTagMatchOption.PartialMatchForTags;
 
     /// <summary>

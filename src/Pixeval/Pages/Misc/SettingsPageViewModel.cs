@@ -160,9 +160,7 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
                 new EnumAppSettingsEntry(AppSettings,
                     t => t.SimpleWorkType,
                     SimpleWorkTypeExtension.GetItems()),
-                new MultiValuesEntry(SettingsPageResources.RankOptionEntryHeader,
-                    SettingsPageResources.RankOptionEntryDescription,
-                    Symbol.ArrowTrending,
+                new MultiValuesEntry(t => t.IllustrationRankOption,
                     [
                         new EnumAppSettingsEntry(AppSettings,
                             WorkTypeEnum.Illustration,
@@ -173,9 +171,7 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
                             t => t.NovelRankOption,
                             NovelRankOptionExtension.GetItems())
                     ]),
-                new MultiValuesEntry(SettingsPageResources.DefaultSearchTagMatchOptionEntryHeader,
-                    SettingsPageResources.DefaultSearchTagMatchOptionEntryDescription,
-                    Symbol.CheckmarkCircleSquare,
+                new MultiValuesEntry(t => t.SearchIllustrationTagMatchOption,
                     [
                         new EnumAppSettingsEntry(AppSettings,
                             WorkTypeEnum.Illustration,
@@ -201,6 +197,8 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
                     Max = ushort.MaxValue,
                     Min = 10
                 },
+                new BoolAppSettingsEntry(AppSettings,
+                    t => t.OverwriteDownloadedFile),
                 new IntAppSettingsEntry(AppSettings,
                     t => t.MaxDownloadTaskConcurrencyLevel)
                 {
@@ -209,9 +207,7 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
                     ValueChanged = t => App.AppViewModel.DownloadManager.ConcurrencyDegree = t
                 },
                 new DownloadMacroAppSettingsEntry(AppSettings),
-                new MultiValuesEntry(SettingsPageResources.WorkDownloadFormatEntryHeader,
-                    SettingsPageResources.WorkDownloadFormatEntryDescription,
-                    Symbol.TextPeriodAsterisk,
+                new MultiValuesEntry(t => t.IllustrationDownloadFormat,
                     [
                         new EnumAppSettingsEntry(AppSettings,
                             WorkTypeEnum.Illustration,

@@ -60,7 +60,7 @@ public partial class MangaDownloadTaskGroup : DownloadTaskGroup, IImageDownloadT
         {
             if (token.IsCancellationRequested)
                 return;
-            await TagsManager.SetTagsAsync(destination, Entry, token);
+            await ExifManager.SetTagsAsync(destination, Entry, IllustrationDownloadFormat, token);
         }
     }
 

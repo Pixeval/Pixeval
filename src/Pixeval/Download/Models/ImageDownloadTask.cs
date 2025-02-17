@@ -13,6 +13,9 @@ using Pixeval.Utilities;
 
 namespace Pixeval.Download.Models;
 
+/// <summary>
+/// 下载图片的任务，所有复杂的图片下载任务都会从这个类衍生
+/// </summary>
 public partial class ImageDownloadTask : ObservableObject, IDownloadTaskBase, IProgress<double>, IDisposable
 {
     public ImageDownloadTask(Uri uri, string destination, DownloadState initState = DownloadState.Queued)
@@ -47,6 +50,8 @@ public partial class ImageDownloadTask : ObservableObject, IDownloadTaskBase, IP
 
     public string Destination { get; }
 
+    private string DownloadTempDestination => Destination + ".pixevaldownloading";
+
     [ObservableProperty] 
     public partial DownloadState CurrentState { get; set; }
 
@@ -74,8 +79,18 @@ public partial class ImageDownloadTask : ObservableObject, IDownloadTaskBase, IP
             await DownloadStartedAsync.Invoke(this);
     }
 
+    /// <summary>
+    /// 检查文件是否存在，如果存在则根据设置决定是否覆盖
+    /// </summary>
+    /// <returns><see langword="true"/>表示已存在不需要下载，<see langword="false"/>表示需要下载图片</returns>
     private bool ValidateExistence()
     {
+        if (File.Exists(Destination))
+            if (App.AppViewModel.AppSettings.OverwriteDownloadedFile)
+                File.Delete(Destination);
+            else
+                return true;
+
         var path = null as string;
         if (Uri.IsFile)
             path = Uri.OriginalString;
@@ -83,8 +98,6 @@ public partial class ImageDownloadTask : ObservableObject, IDownloadTaskBase, IP
             path = AppInfo.ApplicationUriToPath(Uri);
         if (path is not null)
         {
-            if (File.Exists(Destination))
-                File.Delete(Destination);
             File.Copy(path, Destination);
             return true;
         }
@@ -117,8 +130,9 @@ public partial class ImageDownloadTask : ObservableObject, IDownloadTaskBase, IP
             IoHelper.CreateParentDirectories(Destination);
             if (Stream is not null)
             {
-                await using (var fs = OpenCreate(Destination))
+                await using (var fs = OpenCreate(DownloadTempDestination))
                     await Stream.CopyToAsync(fs, CancellationTokenSource.Token);
+                File.Move(DownloadTempDestination, Destination);
                 await PendingCompleteAsync();
                 return;
             }
@@ -129,11 +143,14 @@ public partial class ImageDownloadTask : ObservableObject, IDownloadTaskBase, IP
             }
 
             Exception? ex;
-            await using (var fileStream = OpenCreate(Destination))
+            await using (var fileStream = OpenCreate(DownloadTempDestination))
                 ex = await httpClient.DownloadStreamAsync(fileStream, Uri, this, fileStream.Length, cancellationToken: CancellationTokenSource.Token);
             switch (ex)
             {
-                case null: await PendingCompleteAsync(); break;
+                case null:
+                    File.Move(DownloadTempDestination, Destination);
+                    await PendingCompleteAsync();
+                    break;
                 case TaskCanceledException: break;
                 default: await SetErrorAsync(ex); break;
             }
@@ -222,6 +239,9 @@ public partial class ImageDownloadTask : ObservableObject, IDownloadTaskBase, IP
     {
         if (File.Exists(Destination))
             File.Delete(Destination);
+
+        if (File.Exists(DownloadTempDestination))
+            File.Delete(DownloadTempDestination);
     }
 
     public string OpenLocalDestination => Destination;

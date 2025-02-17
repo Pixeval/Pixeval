@@ -77,7 +77,7 @@ public partial class UgoiraDownloadTaskGroup : DownloadTaskGroup, IImageDownload
         {
             using var image = await Destinations.UgoiraSaveToImageAsync(Metadata.Delays.ToArray());
             image.SetIdTags(Entry);
-            await image.SaveAsync(TokenizedDestination, IoHelper.GetUgoiraEncoder(), token);
+            await image.SaveAsync(TokenizedDestination, IoHelper.GetUgoiraEncoder(UgoiraDownloadFormat), token);
         }
         foreach (var imageDownloadTask in TasksSet)
             imageDownloadTask.Delete();
