@@ -9,4 +9,4 @@ namespace Pixeval.CoreApi.Net.Request;
 public record AddNovelBookmarkRequest(
     [property: JsonPropertyName("restrict")] PrivacyPolicy Restrict,
     [property: JsonPropertyName("novel_id")] long Id,
-    [property: JsonPropertyName("tags[]")] string? Tags);
+    [property: JsonPropertyName("tags[]"), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] string? Tags);

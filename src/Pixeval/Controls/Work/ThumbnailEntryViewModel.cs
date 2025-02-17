@@ -77,10 +77,10 @@ public abstract partial class ThumbnailEntryViewModel<T>(T entry) : EntryViewMod
     /// </summary>
     public sealed override void Dispose()
     {
+        GC.SuppressFinalize(this);
         LoadingThumbnailCancellationTokenSource.TryCancelDispose();
         ThumbnailSource = null;
         DisposeOverride();
-        GC.SuppressFinalize(this);
     }
 
     protected virtual void DisposeOverride()

@@ -162,37 +162,37 @@ public partial class MakoClient
         => RunWithLoggerAsync(async t => await t
             .DeleteNovelCommentAsync(new DeleteCommentRequest(commentId)));
 
-    public Task<HttpResponseMessage> AddIllustCommentAsync(long illustId, string content)
-        => RunWithLoggerAsync(async t => await t
-            .AddIllustCommentAsync(new AddNormalIllustCommentRequest(illustId, null, content)));
+    public Task<Comment> AddIllustCommentAsync(long illustId, string content)
+        => RunWithLoggerAsync(async t => (await t
+            .AddIllustCommentAsync(new AddNormalIllustCommentRequest(illustId, null, content))).Comment);
 
-    public Task<HttpResponseMessage> AddIllustCommentAsync(long illustId, int stampId)
-        => RunWithLoggerAsync(async t => await t
-            .AddIllustCommentAsync(new AddStampIllustCommentRequest(illustId, null, stampId)));
+    public Task<Comment> AddIllustCommentAsync(long illustId, int stampId)
+        => RunWithLoggerAsync(async t => (await t
+            .AddIllustCommentAsync(new AddStampIllustCommentRequest(illustId, null, stampId))).Comment);
 
-    public Task<HttpResponseMessage> AddIllustCommentAsync(long illustId, long parentCommentId, string content)
-        => RunWithLoggerAsync(async t => await t
-            .AddIllustCommentAsync(new AddNormalIllustCommentRequest(illustId, parentCommentId, content)));
+    public Task<Comment> AddIllustCommentAsync(long illustId, long parentCommentId, string content)
+        => RunWithLoggerAsync(async t => (await t
+            .AddIllustCommentAsync(new AddNormalIllustCommentRequest(illustId, parentCommentId, content))).Comment);
 
-    public Task<HttpResponseMessage> AddIllustCommentAsync(long illustId, long parentCommentId, int stampId)
-        => RunWithLoggerAsync(async t => await t
-            .AddIllustCommentAsync(new AddStampIllustCommentRequest(illustId, parentCommentId, stampId)));
+    public Task<Comment> AddIllustCommentAsync(long illustId, long parentCommentId, int stampId)
+        => RunWithLoggerAsync(async t => (await t
+            .AddIllustCommentAsync(new AddStampIllustCommentRequest(illustId, parentCommentId, stampId))).Comment);
 
-    public Task<HttpResponseMessage> AddNovelCommentAsync(long novelId, string content)
-        => RunWithLoggerAsync(async t => await t
-            .AddNovelCommentAsync(new AddNormalNovelCommentRequest(novelId, null, content)));
+    public Task<Comment> AddNovelCommentAsync(long novelId, string content)
+        => RunWithLoggerAsync(async t => (await t
+            .AddNovelCommentAsync(new AddNormalNovelCommentRequest(novelId, null, content))).Comment);
 
-    public Task<HttpResponseMessage> AddNovelCommentAsync(long novelId, int stampId)
-        => RunWithLoggerAsync(async t => await t
-            .AddNovelCommentAsync(new AddStampNovelCommentRequest(novelId, null, stampId)));
+    public Task<Comment> AddNovelCommentAsync(long novelId, int stampId)
+        => RunWithLoggerAsync(async t => (await t
+            .AddNovelCommentAsync(new AddStampNovelCommentRequest(novelId, null, stampId))).Comment);
 
-    public Task<HttpResponseMessage> AddNovelCommentAsync(long novelId, long parentCommentId, string content)
-        => RunWithLoggerAsync(async t => await t
-            .AddNovelCommentAsync(new AddNormalNovelCommentRequest(novelId, parentCommentId, content)));
+    public Task<Comment> AddNovelCommentAsync(long novelId, long parentCommentId, string content)
+        => RunWithLoggerAsync(async t => (await t
+            .AddNovelCommentAsync(new AddNormalNovelCommentRequest(novelId, parentCommentId, content))).Comment);
 
-    public Task<HttpResponseMessage> AddNovelCommentAsync(long novelId, long parentCommentId, int stampId)
-        => RunWithLoggerAsync(async t => await t
-            .AddNovelCommentAsync(new AddStampNovelCommentRequest(novelId, parentCommentId, stampId)));
+    public Task<Comment> AddNovelCommentAsync(long novelId, long parentCommentId, int stampId)
+        => RunWithLoggerAsync(async t => (await t
+            .AddNovelCommentAsync(new AddStampNovelCommentRequest(novelId, parentCommentId, stampId))).Comment);
 
     public Task<bool> GetAiShowSettingsAsync()
         => RunWithLoggerAsync(async t => (await t.GetAiShowSettingsAsync()).ShowAi);

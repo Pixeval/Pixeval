@@ -17,12 +17,8 @@ using WinUI3Utilities;
 
 namespace Pixeval.Controls;
 
-public partial class CommentItemViewModel(Comment comment, SimpleWorkType type, long entryId) : ObservableObject, IDisposable
+public partial class CommentItemViewModel(Comment comment) : ObservableObject, IFactory<Comment, CommentItemViewModel>, IDisposable
 {
-    public long EntryId { get; } = entryId;
-
-    public SimpleWorkType EntryType { get; } = type;
-
     public Comment Comment { get; } = comment;
 
     public bool HasReplies => Comment.HasReplies;
@@ -42,7 +38,7 @@ public partial class CommentItemViewModel(Comment comment, SimpleWorkType type, 
 
     public bool IsMe => PosterId == App.AppViewModel.PixivUid;
 
-    public long CommentId => Comment.Id;
+    public long Id => Comment.Id;
 
     [ObservableProperty]
     public partial ImageSource AvatarSource { get; set; } = null!;
@@ -55,16 +51,19 @@ public partial class CommentItemViewModel(Comment comment, SimpleWorkType type, 
 
     public string? RepliesCount => Replies?.Count.ToString();
 
-    public async Task LoadRepliesAsync()
+    public async Task LoadRepliesAsync(SimpleWorkType entryType)
     {
-        Replies = await
-            (EntryType switch
-            {
-                SimpleWorkType.IllustAndManga => App.AppViewModel.MakoClient.IllustrationCommentReplies(CommentId),
-                SimpleWorkType.Novel => App.AppViewModel.MakoClient.NovelCommentReplies(CommentId),
-                _ => ThrowHelper.ArgumentOutOfRange<SimpleWorkType, IFetchEngine<Comment>>(EntryType)
-            }).Select(c => new CommentItemViewModel(c, EntryType, EntryId))
-            .ToObservableCollectionAsync();
+        if (HasReplies)
+            Replies = await
+                (entryType switch
+                {
+                    SimpleWorkType.IllustAndManga => App.AppViewModel.MakoClient.IllustrationCommentReplies(Id),
+                    SimpleWorkType.Novel => App.AppViewModel.MakoClient.NovelCommentReplies(Id),
+                    _ => ThrowHelper.ArgumentOutOfRange<SimpleWorkType, IFetchEngine<Comment>>(entryType)
+                }).Select(c => new CommentItemViewModel(c))
+                .ToObservableCollectionAsync();
+        else
+            Replies = null;
     }
 
     public async Task LoadAvatarSource()
@@ -76,7 +75,16 @@ public partial class CommentItemViewModel(Comment comment, SimpleWorkType type, 
     {
         Replies ??= [];
 
-        Replies.Insert(0, new CommentItemViewModel(comment, EntryType, EntryId));
+        Replies.Insert(0, new CommentItemViewModel(comment));
+        OnPropertyChanged(nameof(RepliesCount));
+    }
+
+    public void DeleteComment(CommentItemViewModel viewModel)
+    {
+        _ = Replies?.Remove(viewModel);
+        OnPropertyChanged(nameof(RepliesCount));
+        if (Replies is { Count: 0 })
+            Replies = null;
     }
 
     public void Dispose()
@@ -84,4 +92,6 @@ public partial class CommentItemViewModel(Comment comment, SimpleWorkType type, 
         GC.SuppressFinalize(this);
         Replies?.ForEach(r => r.Dispose());
     }
+
+    public static CommentItemViewModel CreateInstance(Comment entry) => new CommentItemViewModel(entry);
 }

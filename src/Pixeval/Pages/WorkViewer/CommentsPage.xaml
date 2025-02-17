@@ -14,7 +14,11 @@
             x:Uid="/CommentsPage/CommentRepliesTeachingTip"
             Grid.Row="0"
             IsLightDismissEnabled="False">
-            <flyouts:CommentRepliesBlock x:Name="CommentRepliesBlock" MaxHeight="{StaticResource TeachingTipContentMaxHeight}" />
+            <flyouts:CommentRepliesBlock
+                x:Name="CommentRepliesBlock"
+                MaxHeight="{StaticResource TeachingTipContentMaxHeight}"
+                EntryId="{x:Bind _viewModel.EntryId}"
+                SimpleWorkType="{x:Bind _viewModel.EntryType}" />
         </TeachingTip>
     </controls:EnhancedPage.Resources>
     <controls1:DockPanel>
@@ -25,9 +29,10 @@
             StickerClick="ReplyBar_OnStickerClick" />
         <controls:CommentView
             HorizontalAlignment="Stretch"
-            DeleteHyperlinkButtonClick="CommentView_OnDeleteHyperlinkButtonClick"
+            DeleteButtonClick="CommentView_OnDeleteButtonClick"
             HasNoItem="{x:Bind _viewModel.HasNoItem, Mode=OneWay}"
-            ItemsSource="{x:Bind _viewModel.View}"
-            RepliesHyperlinkButtonClick="CommentView_OnRepliesHyperlinkButtonClick" />
+            ItemsSource="{x:Bind _viewModel.DataProvider.View}"
+            OpenRepliesButtonClick="CommentView_OnOpenRepliesButtonClick"
+            RequireEntryType="CommentView_OnRequireEntryType" />
     </controls1:DockPanel>
 </controls:EnhancedPage>

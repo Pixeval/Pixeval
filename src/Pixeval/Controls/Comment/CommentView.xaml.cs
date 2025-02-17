@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
+using Pixeval.CoreApi.Global.Enum;
 
 namespace Pixeval.Controls;
 
@@ -16,24 +17,19 @@ public sealed partial class CommentView : IStructuralDisposalCompleter
     [GeneratedDependencyProperty(DefaultValue = true)]
     public partial bool HasNoItem { get; set; }
 
-    [GeneratedDependencyProperty(DefaultValue = false)]
-    public partial bool IsLoadingMore { get; set; }
-
     public CommentView() => InitializeComponent();
 
-    public event Action<CommentItemViewModel>? RepliesHyperlinkButtonClick;
+    public event Action<CommentItemViewModel>? OpenRepliesButtonClick;
 
-    public event Action<CommentItemViewModel>? DeleteHyperlinkButtonClick;
+    public event Action<CommentItemViewModel>? DeleteButtonClick;
 
-    private void CommentItem_OnRepliesHyperlinkButtonClick(CommentItemViewModel viewModel)
-    {
-        RepliesHyperlinkButtonClick?.Invoke(viewModel);
-    }
+    public event Func<SimpleWorkType> RequireEntryType = null!;
 
-    private void CommentItem_OnDeleteHyperlinkButtonClick(CommentItemViewModel viewModel)
-    {
-        DeleteHyperlinkButtonClick?.Invoke(viewModel);
-    }
+    private void CommentItem_OnOpenRepliesButtonClick(CommentItemViewModel viewModel) => OpenRepliesButtonClick?.Invoke(viewModel);
+
+    private void CommentItem_OnDeleteButtonClick(CommentItemViewModel viewModel) => DeleteButtonClick?.Invoke(viewModel);
+
+    private SimpleWorkType CommentItem_OnRequireEntryType() => RequireEntryType();
 
     public void CompleteDisposal()
     {
@@ -48,8 +44,5 @@ public sealed partial class CommentView : IStructuralDisposalCompleter
 
     public bool CompleterDisposed { get; set; }
 
-    private void CommentView_OnLoaded(object sender, RoutedEventArgs e)
-    {
-        ((IStructuralDisposalCompleter) this).Hook();
-    }
+    private void CommentView_OnLoaded(object sender, RoutedEventArgs e) => ((IStructuralDisposalCompleter) this).Hook();
 }

@@ -201,8 +201,6 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
                     Max = ushort.MaxValue,
                     Min = 10
                 },
-                new BoolAppSettingsEntry(AppSettings,
-                    t => t.OverwriteDownloadedFile),
                 new IntAppSettingsEntry(AppSettings,
                     t => t.MaxDownloadTaskConcurrencyLevel)
                 {

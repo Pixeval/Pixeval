@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Class Name="Pixeval.Pages.Tags.TagsEntryIncrementalSource" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="11.75" Y="1.5" Width="1.5" />
+    <Position X="13.5" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Pages\Tags\TagsEntryIncrementalSource.cs</FileName>
@@ -17,7 +17,7 @@
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="Pixeval.Controls.FetchEngineIncrementalSource&lt;T, TViewModel&gt;" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="13.5" Y="0.5" Width="1.5" />
+    <Position X="11.75" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAABAIAAAAAQAAAAAgQAAAAAAAAAAAAAAAAQAAAAAA=</HashCode>
       <FileName>Controls\Entry\FetchEngineIncrementalSource.cs</FileName>
@@ -44,27 +44,19 @@
     <Position X="5" Y="0.5" Width="1.5" />
     <TypeIdentifier />
   </Class>
-  <Class Name="Pixeval.Pages.CommentsIncrementalSource" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="11.75" Y="0.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Pages\WorkViewer\CommentsIncrementalSource.cs</FileName>
-    </TypeIdentifier>
-    <Lollipop Position="0.2" Collapsed="true" />
-  </Class>
   <Interface Name="Pixeval.CoreApi.Engine.IFetchEngine&lt;TResult&gt;" Collapsed="true">
-    <Position X="13.5" Y="2.75" Width="1.5" />
+    <Position X="13.5" Y="1.75" Width="1.5" />
     <TypeIdentifier />
   </Interface>
   <Interface Name="Pixeval.Controls.IDataProvider&lt;T, TViewModel&gt;" Collapsed="true">
-    <Position X="11.75" Y="2.75" Width="1.5" />
+    <Position X="11.75" Y="1.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAEAAEAAgAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Controls\Entry\IDataProvider.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Interface Name="CommunityToolkit.Common.Collections.IIncrementalSource&lt;TSource&gt;" Collapsed="true">
-    <Position X="11.75" Y="3.5" Width="1.5" />
+    <Position X="11.75" Y="2.5" Width="1.5" />
     <TypeIdentifier />
   </Interface>
   <Font Name="Microsoft YaHei UI" Size="9" />
