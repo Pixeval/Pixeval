@@ -56,9 +56,10 @@ public partial record AppSettings() : IWindowSettings
     [SettingsEntry(Symbol.Rename, nameof(DownloadPathMacroEntryHeader), nameof(DownloadPathMacroEntryDescription))]
     public string DownloadPathMacro { get; set; } = GetSpecialFolder() + @"\@{if_pic_set=[@{artist_name}] @{title}}\[@{artist_name}] @{id}@{if_pic_set=p@{pic_set_index}}@{ext}";
 
-    public UgoiraDownloadFormat UgoiraDownloadFormat { get; set; } = UgoiraDownloadFormat.WebPLossless;
-
+    [SettingsEntry(Symbol.TextPeriodAsterisk, nameof(WorkDownloadFormatEntryHeader), nameof(WorkDownloadFormatEntryDescription))]
     public IllustrationDownloadFormat IllustrationDownloadFormat { get; set; } = IllustrationDownloadFormat.Png;
+
+    public UgoiraDownloadFormat UgoiraDownloadFormat { get; set; } = UgoiraDownloadFormat.WebPLossless;
 
     public NovelDownloadFormat NovelDownloadFormat { get; set; }
 
@@ -88,6 +89,7 @@ public partial record AppSettings() : IWindowSettings
     [SettingsEntry(Symbol.Grid, nameof(SimpleWorkTypeEntryHeader), nameof(SimpleWorkTypeEntryDescription))]
     public SimpleWorkType SimpleWorkType { get; set; }
 
+    [SettingsEntry(Symbol.ArrowTrending, nameof(RankOptionEntryHeader), nameof(RankOptionEntryDescription))]
     public RankOption IllustrationRankOption { get; set; }
 
     public RankOption NovelRankOption { get; set; }
@@ -95,6 +97,7 @@ public partial record AppSettings() : IWindowSettings
     /// <summary>
     /// The illustration tag match option for keyword search
     /// </summary>
+    [SettingsEntry(Symbol.CheckmarkCircleSquare, nameof(DefaultSearchTagMatchOptionEntryHeader), nameof(DefaultSearchTagMatchOptionEntryDescription))]
     public SearchIllustrationTagMatchOption SearchIllustrationTagMatchOption { get; set; } = SearchIllustrationTagMatchOption.PartialMatchForTags;
 
     /// <summary>
