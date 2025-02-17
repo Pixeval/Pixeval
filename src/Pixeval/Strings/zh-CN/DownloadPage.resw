@@ -133,7 +133,7 @@
     <value>删除</value>
   </data>
   <data name="DeleteDownloadHistoryRecordsFormatted" xml:space="preserve">
-    <value>删除{0}条历史记录</value>
+    <value>删除 {0} 条历史记录</value>
   </data>
   <data name="DownloadListOptionAllQueued" xml:space="preserve">
     <value>所有下载任务</value>

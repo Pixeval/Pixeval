@@ -63,9 +63,8 @@ public partial record AppSettings() : IWindowSettings
 
     public NovelDownloadFormat NovelDownloadFormat { get; set; }
 
-    // 目前使用断点续传并且没有记录下载进度，所以这个选项暂时不需要
-    // [SettingsEntry(Symbol.ImageSplit, nameof(OverwriteDownloadedFileEntryHeader), nameof(OverwriteDownloadedFileEntryDescription))]
-    // public bool OverwriteDownloadedFile { get; set; }
+    [SettingsEntry(Symbol.ImageSplit, nameof(OverwriteDownloadedFileEntryHeader), nameof(OverwriteDownloadedFileEntryDescription))]
+    public bool OverwriteDownloadedFile { get; set; }
 
     [SettingsEntry(Symbol.History, nameof(MaximumDownloadHistoryRecordsEntryHeader), nameof(MaximumDownloadHistoryRecordsEntryDescription))]
     public int MaximumDownloadHistoryRecords { get; set; } = 100;

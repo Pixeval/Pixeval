@@ -77,7 +77,7 @@ public partial class SingleImageDownloadTaskGroup : ImageDownloadTask, IImageDow
     {
         if (IllustrationDownloadFormat is IllustrationDownloadFormat.Original)
             return;
-        await TagsManager.SetTagsAsync(Destination, Entry, token);
+        await ExifManager.SetTagsAsync(Destination, Entry, IllustrationDownloadFormat, token);
     }
 
     public DownloadToken GetToken() => new(this, CancellationTokenSource.Token);
