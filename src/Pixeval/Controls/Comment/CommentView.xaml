@@ -4,15 +4,14 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:Pixeval.Controls"
-    Loaded="CommentView_OnLoaded"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Loaded="CommentView_OnLoaded"
     mc:Ignorable="d">
     <local:EntryView HasNoItem="{x:Bind HasNoItem, Mode=OneWay}" IsLoadingMore="{x:Bind CommentsList.IsLoadingMore, Mode=OneWay}">
         <local:EntryView.Content>
             <local:AdvancedItemsView
                 x:Name="CommentsList"
                 IsItemInvokedEnabled="False"
-                IsLoadingMore="{x:Bind IsLoadingMore, Mode=TwoWay}"
                 ItemsSource="{x:Bind ItemsSource, Mode=OneWay}"
                 LayoutType="VerticalStack"
                 SelectionMode="None">
@@ -21,8 +20,9 @@
                         <ItemContainer>
                             <local:CommentItem
                                 Margin="{StaticResource CardControlPadding}"
-                                DeleteHyperlinkButtonClick="CommentItem_OnDeleteHyperlinkButtonClick"
-                                RepliesHyperlinkButtonClick="CommentItem_OnRepliesHyperlinkButtonClick"
+                                DeleteButtonClick="CommentItem_OnDeleteButtonClick"
+                                OpenRepliesButtonClick="CommentItem_OnOpenRepliesButtonClick"
+                                RequireEntryType="CommentItem_OnRequireEntryType"
                                 ViewModel="{x:Bind}" />
                         </ItemContainer>
                     </DataTemplate>

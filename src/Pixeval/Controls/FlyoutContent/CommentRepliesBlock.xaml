@@ -19,5 +19,7 @@
         x:Name="CommentView"
         HasNoItem="{x:Bind controls:C.Negation(ViewModel.RepliesIsNotNull), Mode=OneWay}"
         ItemsSource="{x:Bind ViewModel.Replies, Mode=OneWay}"
-        RepliesHyperlinkButtonClick="CommentView_OnRepliesHyperlinkButtonClick" />
+        OpenRepliesButtonClick="CommentView_OnOpenRepliesButtonClick"
+        DeleteButtonClick="CommentView_OnDeleteButtonClick"
+        RequireEntryType="CommentView_OnRequireEntryType" />
 </controls1:DockPanel>

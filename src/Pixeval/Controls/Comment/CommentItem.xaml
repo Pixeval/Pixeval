@@ -39,12 +39,12 @@
             DefaultLabelPosition="Right"
             OverflowButtonVisibility="Collapsed">
             <AppBarButton
-                Click="DeleteReplyHyperlinkButton_OnClicked"
+                Click="DeleteReplyButton_OnClicked"
                 Icon="{fluent:SymbolIcon Symbol=Delete}"
                 LabelPosition="Collapsed"
                 Visibility="{x:Bind local:C.ToVisibility(ViewModel.IsMe), Mode=OneWay}" />
             <AppBarButton
-                Click="OpenRepliesHyperlinkButton_OnClicked"
+                Click="OpenRepliesButton_OnClicked"
                 Icon="{fluent:SymbolIcon Symbol=Chat}"
                 Label="{x:Bind ViewModel.RepliesCount, Mode=OneWay}"
                 LabelPosition="{x:Bind local:C.LabelIsNullToVisibility(ViewModel.RepliesCount), Mode=OneWay}" />

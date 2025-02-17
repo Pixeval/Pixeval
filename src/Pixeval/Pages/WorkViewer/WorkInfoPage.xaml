@@ -35,13 +35,13 @@
                     <labs:MarkdownConfig />
                 </labs:MarkdownTextBlock.Config>
             </labs:MarkdownTextBlock>
-            <StackPanel Orientation="Horizontal">
+            <StackPanel Orientation="Horizontal" Spacing="5">
                 <TextBlock VerticalAlignment="Center" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}">
                     <Run Text="PID" />
                     <Run Text="{x:Bind _viewModel.Entry.Id}" />
                 </TextBlock>
                 <Button
-                    Padding="4"
+                    Padding="2"
                     VerticalAlignment="Center"
                     Content="{ui:SymbolIcon FontSize=12,
                                             Symbol=Copy}"
@@ -73,13 +73,16 @@
                         TextWrapping="Wrap">
                         <Run Text="{x:Bind _viewModel.Illustrator.Name}" />
                     </TextBlock>
-                    <StackPanel controls:DockPanel.Dock="Bottom" Orientation="Horizontal">
+                    <StackPanel
+                        controls:DockPanel.Dock="Bottom"
+                        Orientation="Horizontal"
+                        Spacing="5">
                         <TextBlock
                             VerticalAlignment="Center"
                             Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"
                             Text="{x:Bind _viewModel.Illustrator.Id}" />
                         <Button
-                            Padding="4"
+                            Padding="2"
                             VerticalAlignment="Center"
                             Content="{ui:SymbolIcon FontSize=12,
                                                     Symbol=Copy}"

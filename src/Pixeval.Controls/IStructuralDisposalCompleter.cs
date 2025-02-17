@@ -51,7 +51,8 @@ public interface IStructuralDisposalCompleter : IPageDisposalCompleter
     /// </summary>
     public void Hook()
     {
-        if (CompleterRegistered) return;
+        if (CompleterRegistered)
+            return;
         CompleterRegistered = true;
         ParentCompleter?.ChildrenCompletes.Add(CompleteDisposalRecursively);
     }

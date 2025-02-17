@@ -1,15 +1,11 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL v3 License.
 
-using System.Net.Http;
-using System.Net.Http.Json;
-using System.Threading.Tasks;
 using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Pixeval.CoreApi;
 using Pixeval.CoreApi.Global.Enum;
-using Pixeval.CoreApi.Net.Response;
+using Pixeval.CoreApi.Model;
 using WinUI3Utilities;
 
 namespace Pixeval.Controls.FlyoutContent;
@@ -19,52 +15,49 @@ public sealed partial class CommentRepliesBlock
     [GeneratedDependencyProperty]
     public partial CommentItemViewModel ViewModel { get; set; }
 
+    public long EntryId { get; set; }
+
+    public SimpleWorkType SimpleWorkType { get; set; }
+
     public CommentRepliesBlock() => InitializeComponent();
 
-    private void CommentView_OnRepliesHyperlinkButtonClick(CommentItemViewModel viewModel)
-    {
-        _ = ReplyBar.FindDescendant<RichEditBox>()?.Focus(FocusState.Programmatic);
-    }
+    private void CommentView_OnOpenRepliesButtonClick(CommentItemViewModel viewModel) => ReplyBar.FindDescendant<RichEditBox>()?.Focus(FocusState.Programmatic);
+
+    private void CommentView_OnDeleteButtonClick(CommentItemViewModel viewModel) => ViewModel.DeleteComment(viewModel);
+
+    private SimpleWorkType CommentView_OnRequireEntryType() => SimpleWorkType;
 
     private async void ReplyBar_OnSendButtonClick(object? sender, SendButtonClickEventArgs e)
     {
-        using var result = ViewModel.EntryType switch
+        var comment = SimpleWorkType switch
         {
             SimpleWorkType.IllustAndManga => await App.AppViewModel.MakoClient.AddIllustCommentAsync(
-                ViewModel.EntryId,
-                ViewModel.CommentId,
+                EntryId,
+                ViewModel.Id,
                 e.ReplyContentRichEditBoxStringContent),
             SimpleWorkType.Novel => await App.AppViewModel.MakoClient.AddNovelCommentAsync(
-                ViewModel.EntryId,
-                ViewModel.CommentId,
+                EntryId,
+                ViewModel.Id,
                 e.ReplyContentRichEditBoxStringContent),
-            _ => ThrowHelper.ArgumentOutOfRange<SimpleWorkType, HttpResponseMessage>(ViewModel.EntryType)
+            _ => ThrowHelper.ArgumentOutOfRange<SimpleWorkType, Comment>(SimpleWorkType)
         };
-
-        await AddComment(result);
+        ViewModel.AddComment(comment);
     }
 
     private async void ReplyBar_OnStickerClick(object? sender, StickerClickEventArgs e)
     {
-        using var result = ViewModel.EntryType switch
+        var comment = SimpleWorkType switch
         {
             SimpleWorkType.IllustAndManga => await App.AppViewModel.MakoClient.AddIllustCommentAsync(
-                ViewModel.EntryId,
-                ViewModel.CommentId,
+                EntryId,
+                ViewModel.Id,
                 e.StickerViewModel.StickerId),
             SimpleWorkType.Novel => await App.AppViewModel.MakoClient.AddNovelCommentAsync(
-                ViewModel.EntryId,
-                ViewModel.CommentId,
+                EntryId,
+                ViewModel.Id,
                 e.StickerViewModel.StickerId),
-            _ => ThrowHelper.ArgumentOutOfRange<SimpleWorkType, HttpResponseMessage>(ViewModel.EntryType)
+            _ => ThrowHelper.ArgumentOutOfRange<SimpleWorkType, Comment>(SimpleWorkType)
         };
-
-        await AddComment(result);
-    }
-
-    private async Task AddComment(HttpResponseMessage postCommentResponse)
-    {
-        if (postCommentResponse.IsSuccessStatusCode && await postCommentResponse.Content.ReadFromJsonAsync(typeof(PostCommentResponse), AppJsonSerializerContext.Default) is PostCommentResponse { Comment: { } comment })
-            ViewModel.AddComment(comment);
+        ViewModel.AddComment(comment);
     }
 }

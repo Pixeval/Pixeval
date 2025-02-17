@@ -79,19 +79,19 @@ public interface IAppApiEndPoint
     Task<AutoCompletionResponse> GetAutoCompletionAsync(string word, [AliasAs("merge_plain_keyword_results")] bool mergePlainKeywordResult = true);
 
     [HttpPost("/v1/illust/comment/add")]
-    Task<HttpResponseMessage> AddIllustCommentAsync([FormContent] AddNormalIllustCommentRequest request);
+    Task<PostCommentResponse> AddIllustCommentAsync([FormContent] AddNormalIllustCommentRequest request);
 
     [HttpPost("/v1/illust/comment/add")]
-    Task<HttpResponseMessage> AddIllustCommentAsync([FormContent] AddStampIllustCommentRequest request);
+    Task<PostCommentResponse> AddIllustCommentAsync([FormContent] AddStampIllustCommentRequest request);
 
     [HttpPost("/v1/illust/comment/delete")]
     Task<HttpResponseMessage> DeleteIllustCommentAsync([FormContent] DeleteCommentRequest request);
 
     [HttpPost("/v1/novel/comment/add")]
-    Task<HttpResponseMessage> AddNovelCommentAsync([FormContent] AddNormalNovelCommentRequest request);
+    Task<PostCommentResponse> AddNovelCommentAsync([FormContent] AddNormalNovelCommentRequest request);
 
     [HttpPost("/v1/novel/comment/add")]
-    Task<HttpResponseMessage> AddNovelCommentAsync([FormContent] AddStampNovelCommentRequest request);
+    Task<PostCommentResponse> AddNovelCommentAsync([FormContent] AddStampNovelCommentRequest request);
 
     [HttpPost("/v1/novel/comment/delete")]
     Task<HttpResponseMessage> DeleteNovelCommentAsync([FormContent] DeleteCommentRequest request);

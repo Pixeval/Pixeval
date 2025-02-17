@@ -1,47 +1,51 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL v3 License.
 
-using System.Collections.Generic;
-using System.Linq;
+using System;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.WinUI.Collections;
 using Pixeval.Collections;
 using Pixeval.Controls;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Model;
+using Pixeval.CoreApi.Engine;
+using CommentViewDataProvider = Pixeval.Controls.SimpleViewDataProvider<
+    Pixeval.CoreApi.Model.Comment,
+    Pixeval.Controls.CommentItemViewModel>;
 
 namespace Pixeval.Pages;
 
-public partial class CommentsPageViewModel : ObservableObject
+public partial class CommentsPageViewModel : ObservableObject, IDisposable
 {
-    public CommentsPageViewModel(IAsyncEnumerable<Comment?> engine, SimpleWorkType type, long entryId)
+    public CommentsPageViewModel(IFetchEngine<Comment> engine, SimpleWorkType type, long entryId)
     {
         EntryId = entryId;
         EntryType = type;
-        View = new(new IncrementalLoadingCollection<CommentsIncrementalSource, CommentItemViewModel>(
-            new CommentsIncrementalSource(engine.Where(c => c is not null)
-                .Select(c => new CommentItemViewModel(c!, type, entryId))), 30));
-        View.CollectionChanged += (_, _) => OnPropertyChanged(nameof(HasNoItem));
+        DataProvider.View.CollectionChanged += (_, _) => OnPropertyChanged(nameof(HasNoItem));
+        DataProvider.ResetEngine(engine);
     }
+
+    /// <summary>
+    /// 不用!<see cref="AdvancedObservableCollection{T}.HasMoreItems"/>，此处只是为了表示集合有没有元素
+    /// </summary>
+    public bool HasNoItem => DataProvider.View.Count is 0;
+
+    public CommentViewDataProvider DataProvider { get; } = new();
 
     public long EntryId { get; }
 
     public SimpleWorkType EntryType { get; }
 
-    /// <summary>
-    /// 不用!<see cref="AdvancedObservableCollection{T}.HasMoreItems"/>，此处只是为了表示集合有没有元素
-    /// </summary>
-    public bool HasNoItem => View.Count is 0;
-
-    public AdvancedObservableCollection<CommentItemViewModel> View { get; }
-
-    public void AddComment(Comment comment)
+    public async Task AddCommentAsync()
     {
-        View.Insert(0, new CommentItemViewModel(comment, EntryType, EntryId));
+        await DataProvider.View.LoadMoreItemsAsync(20);
     }
 
-    public void DeleteComment(CommentItemViewModel viewModel)
+    public void DeleteComment(CommentItemViewModel viewModel) => DataProvider.Source.Remove(viewModel);
+
+    public void Dispose()
     {
-        _ = View.Remove(viewModel);
+        GC.SuppressFinalize(this);
+        DataProvider.Dispose();
     }
 }

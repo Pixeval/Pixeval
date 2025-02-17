@@ -393,7 +393,7 @@ public partial class MakoClient
     /// <returns>
     /// The <see cref="IllustrationCommentsEngine" /> containing comments of the illustration.
     /// </returns>
-    public IFetchEngine<Comment?> IllustrationComments(long illustId)
+    public IFetchEngine<Comment> IllustrationComments(long illustId)
     {
         EnsureNotCancelled();
         return new IllustrationCommentsEngine(illustId, this, new EngineHandle(CancelInstance));
@@ -406,7 +406,7 @@ public partial class MakoClient
     /// <returns>
     /// The <see cref="IllustrationCommentsEngine" /> containing comments of the illustration.
     /// </returns>
-    public IFetchEngine<Comment?> NovelComments(long illustId)
+    public IFetchEngine<Comment> NovelComments(long illustId)
     {
         EnsureNotCancelled();
         return new NovelCommentsEngine(illustId, this, new EngineHandle(CancelInstance));
