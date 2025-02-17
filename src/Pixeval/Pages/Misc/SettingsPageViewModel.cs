@@ -21,7 +21,6 @@ using Pixeval.Controls.Windowing;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.Settings.Models;
 using WinUI3Utilities;
-using Symbol = FluentIcons.Common.Symbol;
 using Microsoft.Extensions.DependencyInjection;
 using Pixeval.Extensions;
 

@@ -30,11 +30,12 @@ public class MultiValuesEntry(
         : this("", "", default, entries)
     {
         // t => (T)t.A
-        if (property.Body is not MemberExpression member)
+        var member = property.Body switch
         {
-            ThrowHelper.Argument(property);
-            return;
-        }
+            UnaryExpression { Operand: MemberExpression member1 } => member1,
+            MemberExpression member2 => member2,
+            _ => ThrowHelper.Argument<Expression<Func<AppSettings, object>>, MemberExpression>(property)
+        };
 
         if (member.Member.GetCustomAttribute<SettingsEntryAttribute>() is { } attribute)
         {
