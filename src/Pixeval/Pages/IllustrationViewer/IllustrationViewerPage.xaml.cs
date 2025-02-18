@@ -84,7 +84,7 @@ public sealed partial class IllustrationViewerPage
                     return;
                 // TODO: https://github.com/microsoft/microsoft-ui-xaml/issues/9952
                 // ThumbnailItemsView.StartBringItemIntoView(vm.CurrentIllustrationIndex, new BringIntoViewOptions { AnimationDesired = true });
-                EntryViewerSplitView.NavigationViewSelect(vm.Tags[0]);
+                EntryViewerSplitView.NavigationViewSelectRefresh();
             }
 
             Navigate<ImageViewerPage>(IllustrationImageShowcaseFrame, vm.CurrentImage, info);

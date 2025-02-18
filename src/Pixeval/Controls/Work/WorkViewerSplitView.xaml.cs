@@ -27,12 +27,12 @@ public sealed partial class WorkViewerSplitView
     private void NavigationViewOnSelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs e)
     {
         if (sender.SelectedItem is NavigationViewTag tag)
-            NavigationViewSelect(tag, e.RecommendedNavigationTransitionInfo);
+            _ = PaneFrame.Navigate(tag.NavigateTo, tag.Parameter, e.RecommendedNavigationTransitionInfo);
     }
 
-    public void NavigationViewSelect(NavigationViewTag tag, NavigationTransitionInfo? info = null)
+    public void NavigationViewSelectRefresh(NavigationTransitionInfo? info = null)
     {
-        if (NavigationView.SelectedItem.To<NavigationViewTag>() == tag)
+        if (NavigationView.SelectedItem is NavigationViewTag tag)
             _ = PaneFrame.Navigate(tag.NavigateTo, tag.Parameter, info);
     }
 }

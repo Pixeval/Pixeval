@@ -59,7 +59,7 @@ public sealed partial class NovelViewerPage
             var oldIndex = args.OldValue.To<int>();
             var newIndex = args.NewValue.To<int>(); // vm.CurrentNovelIndex
 
-            EntryViewerSplitView.NavigationViewSelect(vm.Tags[0]);
+            EntryViewerSplitView.NavigationViewSelectRefresh();
             // TODO: https://github.com/microsoft/microsoft-ui-xaml/issues/9952
             // ThumbnailItemsView.StartBringItemIntoView(vm.CurrentNovelIndex, new BringIntoViewOptions { AnimationDesired = true });
         };
