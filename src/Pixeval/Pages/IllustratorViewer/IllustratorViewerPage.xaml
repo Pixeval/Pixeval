@@ -58,9 +58,11 @@
                             FontSize="14"
                             IsTextSelectionEnabled="True"
                             Text="{x:Bind _viewModel.Id}" />
-                        <ScrollView MaxHeight="70" Padding="0,0,15,0">
+                        <ScrollView
+                            MaxHeight="70"
+                            Padding="0,0,15,0"
+                            controls1:DockPanel.Dock="Top">
                             <controls:TranslatableTextBlock
-                                controls1:DockPanel.Dock="Top"
                                 IsCompact="True"
                                 IsHorizontal="True"
                                 Text="{x:Bind _viewModel.Comment}"
