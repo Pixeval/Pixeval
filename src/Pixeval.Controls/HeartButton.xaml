@@ -1,60 +1,43 @@
-<Grid
+<UserControl
     x:Class="Pixeval.Controls.HeartButton"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:fluent="using:FluentIcons.WinUI"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:local="using:Pixeval.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    x:Name="This"
+    xmlns:winUi="using:FluentIcons.WinUI"
     Width="26"
     Height="26"
-    Padding="3"
-    Tapped="ToggleBookmarkButtonOnTapped"
+    Tapped="HeartButton_OnTapped"
+    HorizontalAlignment="Center"
+    VerticalAlignment="Center"
     mc:Ignorable="d">
-    <Grid.Resources>
-        <ExponentialEase
-            x:Key="EasingFunction"
-            EasingMode="EaseOut"
-            Exponent="12" />
-        <!--  ReSharper disable once Xaml.RedundantResource  -->
-        <Storyboard x:Key="ThumbnailScaleInStoryboard">
-            <DoubleAnimation
-                EasingFunction="{StaticResource EasingFunction}"
-                Storyboard.TargetName="This"
-                Storyboard.TargetProperty="(Grid.RenderTransform).(ScaleTransform.ScaleX)"
-                To="1"
-                Duration="0:0:2" />
-            <DoubleAnimation
-                EasingFunction="{StaticResource EasingFunction}"
-                Storyboard.TargetName="This"
-                Storyboard.TargetProperty="(Grid.RenderTransform).(ScaleTransform.ScaleY)"
-                To="1"
-                Duration="0:0:2" />
-        </Storyboard>
-        <!--  ReSharper disable once Xaml.RedundantResource  -->
-        <Storyboard x:Key="ThumbnailScaleOutStoryboard">
-            <DoubleAnimation
-                EasingFunction="{StaticResource EasingFunction}"
-                Storyboard.TargetName="This"
-                Storyboard.TargetProperty="(Grid.RenderTransform).(ScaleTransform.ScaleX)"
-                To="0"
-                Duration="0:0:2" />
-            <DoubleAnimation
-                EasingFunction="{StaticResource EasingFunction}"
-                Storyboard.TargetName="This"
-                Storyboard.TargetProperty="(Grid.RenderTransform).(ScaleTransform.ScaleY)"
-                To="0"
-                Duration="0:0:2" />
-        </Storyboard>
-    </Grid.Resources>
-    <Grid.RenderTransform>
-        <ScaleTransform CenterX="10" CenterY="10" ScaleX="0" ScaleY="0" />
-    </Grid.RenderTransform>
-    <fluent:SymbolIcon
-        Foreground="{ThemeResource LayerFillColorDefaultBrush}"
-        IconVariant="Filled"
-        Symbol="Heart" />
-    <IconSourceElement IconSource="{x:Bind Command.IconSource, Mode=OneWay}" />
-    <fluent:SymbolIcon Symbol="Heart" />
-</Grid>
+    <Grid>
+        <interactivity:Interaction.Behaviors>
+            <interactivity:EventTriggerBehavior EventName="PointerEntered">
+                <interactivity:ChangePropertyAction
+                    PropertyName="Value"
+                    TargetObject="{x:Bind Back}"
+                    Value="1" />
+            </interactivity:EventTriggerBehavior>
+            <interactivity:EventTriggerBehavior EventName="PointerExited">
+                <interactivity:ChangePropertyAction
+                    PropertyName="Value"
+                    TargetObject="{x:Bind Back}"
+                    Value="0" />
+            </interactivity:EventTriggerBehavior>
+        </interactivity:Interaction.Behaviors>
+        <local:WaveProgressHeart
+            x:Name="Back"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            DurationSeconds="1"
+            Opacity="0.5" />
+        <local:WaveProgressHeart
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Value="{x:Bind Convert(State), Mode=OneWay}" />
+        <winUi:SymbolIcon FontSize="22" Symbol="Heart" />
+    </Grid>
+</UserControl>
