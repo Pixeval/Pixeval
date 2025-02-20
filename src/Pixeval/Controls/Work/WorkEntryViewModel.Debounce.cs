@@ -16,7 +16,7 @@ public partial class WorkEntryViewModel<T>
         Bookmark, RemoveBookmark
     }
 
-    private record struct BookmarkDebounceTag(long IllustId, BookmarkDebounceGroupPhase Phase);
+    private record struct BookmarkDebounceTag(long EntryId, BookmarkDebounceGroupPhase Phase);
 
     private class BookmarkDebounceTask(WorkEntryViewModel<T> vm, bool isPrivate, IEnumerable<string>? userTags) : IDebouncedTask<BookmarkDebounceTag, bool>
     {

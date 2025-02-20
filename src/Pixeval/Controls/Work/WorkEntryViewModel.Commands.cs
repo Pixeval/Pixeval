@@ -93,23 +93,24 @@ public partial class WorkEntryViewModel<T>
         CopyCommand.ExecuteRequested += CopyCommandOnExecuteRequested;
     }
 
-    private void BookmarkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
+    private async void BookmarkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
-        
-        IsBookmarked = !IsBookmarked; // pre-update
-        BookmarkCommand.RefreshBookmarkCommand(IsBookmarked); // pre-update
-        _ = _bookmarkDebounce.ExecuteAsync(IsBookmarked ? new BookmarkDebounceTask(this, false, null) : new RemoveBookmarkDebounceTask(this, false, null));
-        if (App.AppViewModel.AppSettings.DownloadWhenBookmarked && IsBookmarked)
+        IsBookmarkedDisplay = HeartButtonState.Pending; // pre-update
+        var result = await _bookmarkDebounce.ExecuteAsync(!IsBookmarked ? new BookmarkDebounceTask(this, false, null) : new RemoveBookmarkDebounceTask(this, false, null));
+        IsBookmarkedDisplay = result ? HeartButtonState.Checked : HeartButtonState.Unchecked;
+        BookmarkCommand.RefreshBookmarkCommand(result);
+        if (App.AppViewModel.AppSettings.DownloadWhenBookmarked && result)
             SaveCommand.Execute(args.Parameter);
     }
 
-    private void AddToBookmarkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
+    private async void AddToBookmarkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
         if (args.Parameter is not (IEnumerable<string> userTags, bool isPrivate, var parameter))
             return;
-        IsBookmarked = true;
-        BookmarkCommand.RefreshBookmarkCommand(IsBookmarked);
-        _ = _bookmarkDebounce.ExecuteAsync(IsBookmarked ? new BookmarkDebounceTask(this, isPrivate, userTags) : new RemoveBookmarkDebounceTask(this, isPrivate, userTags));
+        IsBookmarkedDisplay = HeartButtonState.Pending; // pre-update
+        var result = await _bookmarkDebounce.ExecuteAsync(!IsBookmarked ? new BookmarkDebounceTask(this, isPrivate, userTags) : new RemoveBookmarkDebounceTask(this, isPrivate, userTags));
+        IsBookmarkedDisplay = result ? HeartButtonState.Checked : HeartButtonState.Unchecked;
+        BookmarkCommand.RefreshBookmarkCommand(result);
         if (App.AppViewModel.AppSettings.DownloadWhenBookmarked)
             SaveCommand.Execute(parameter);
     }

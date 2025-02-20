@@ -2,6 +2,7 @@
 // Licensed under the GPL v3 License.
 
 using System;
+using CommunityToolkit.Mvvm.ComponentModel;
 using Pixeval.CoreApi.Model;
 using Pixeval.Util;
 
@@ -9,7 +10,11 @@ namespace Pixeval.Controls;
 
 public abstract partial class WorkEntryViewModel<T> : ThumbnailEntryViewModel<T>, IWorkViewModel where T : class, IWorkEntry
 {
-    protected WorkEntryViewModel(T entry) : base(entry) => InitializeCommands();
+    protected WorkEntryViewModel(T entry) : base(entry)
+    {
+        IsBookmarkedDisplay = Entry.IsBookmarked ? HeartButtonState.Checked : HeartButtonState.Unchecked;
+        InitializeCommands();
+    }
 
     IWorkEntry IWorkViewModel.Entry => Entry;
 
@@ -21,6 +26,16 @@ public abstract partial class WorkEntryViewModel<T> : ThumbnailEntryViewModel<T>
     {
         get => Entry.IsBookmarked;
         set => Entry.IsBookmarked = value;
+    }
+
+    [ObservableProperty]
+    public partial HeartButtonState IsBookmarkedDisplay { get; set; }
+
+    partial void OnIsBookmarkedDisplayChanged(HeartButtonState value)
+    {
+        if (value is HeartButtonState.Pending)
+            return;
+        IsBookmarked = value is HeartButtonState.Checked;
     }
 
     public Tag[] Tags => Entry.Tags;

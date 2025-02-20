@@ -57,9 +57,7 @@ public class Debounce<T, TResult> : IDisposable where T : struct, IEquatable<T>
     public async Task<TResult> ExecuteAsync(IDebouncedTask<T, TResult> task)
     {
         if (_taskQueue.Reader.Completion.IsCompleted)
-        {
-            throw new InvalidOperationException("The debounce queue has been disposed");
-        }
+            return ThrowUtils.InvalidOperation<TResult>("The debounce queue has been disposed");
 
         if (!_started)
             _ = StartLoopAsync();

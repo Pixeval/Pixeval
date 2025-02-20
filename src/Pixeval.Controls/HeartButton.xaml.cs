@@ -1,33 +1,43 @@
-// Copyright (c) Pixeval.Controls.
-// Licensed under the GPL v3 License.
-
 using CommunityToolkit.WinUI;
+using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media.Animation;
-using WinUI3Utilities;
 
 namespace Pixeval.Controls;
 
-public sealed partial class HeartButton
+public sealed partial class HeartButton : UserControl
 {
     [GeneratedDependencyProperty]
-    public partial XamlUICommand Command { get; set; }
+    public partial XamlUICommand? Command { get; set; }
 
     [GeneratedDependencyProperty]
     public partial object? CommandParameter { get; set; }
 
     public HeartButton() => InitializeComponent();
 
-    private void ToggleBookmarkButtonOnTapped(object sender, TappedRoutedEventArgs e)
+    [GeneratedDependencyProperty]
+    public partial HeartButtonState State { get; set; }
+
+    private double Convert(HeartButtonState value)
+    {
+        return State switch
+        {
+            HeartButtonState.Checked => 1,
+            HeartButtonState.Unchecked => 0,
+            _ => 0.5
+        };
+    }
+
+    private void HeartButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
         e.Handled = true;
         if (IsTapEnabled)
-            Command.Execute(CommandParameter);
+            Command?.Execute(CommandParameter);
     }
+}
 
-    // ReSharper disable UnusedMember.Global
-    public void ScaleIn() => this.GetResource<Storyboard>("ThumbnailScaleInStoryboard").Begin();
-
-    public void ScaleOut() => this.GetResource<Storyboard>("ThumbnailScaleOutStoryboard").Begin();
-    // ReSharper restore UnusedMember.Global
+public enum HeartButtonState
+{
+    Unchecked,
+    Pending,
+    Checked
 }
