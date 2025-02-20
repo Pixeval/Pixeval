@@ -63,7 +63,7 @@ public partial class App
         {
             case ExtendedActivationKind.ToastNotification or ExtendedActivationKind.AppNotification:
                 return;
-            case ExtendedActivationKind.Protocol when AppInstance.GetInstances().Count > 1:
+            case ExtendedActivationKind.Protocol or ExtendedActivationKind.Launch when AppInstance.GetInstances().Count > 1:
             {
                 var notCurrent = AppInstance.GetInstances().First(ins => !ins.IsCurrent);
                 await notCurrent.RedirectActivationToAsync(current.GetActivatedEventArgs());
