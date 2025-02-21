@@ -84,7 +84,7 @@ public sealed partial class MainPage
         if (_viewModel.MenuItems[(int)App.AppViewModel.AppSettings.DefaultSelectedTabItem] is NavigationViewTag tag)
             MainPageRootTab.AddPage(tag);
 
-        LoadRestrictedModeSettings();
+        // LoadRestrictedModeSettings();
         LoadAiShowSettings();
 
         using var client = new HttpClient();
@@ -133,6 +133,14 @@ public sealed partial class MainPage
         // args.SelectedItem may be null here
         if (e.InvokedItem is NavigationViewTag tag)
         {
+            if (MainPageRootTab.TabView.TabItems.FirstOrDefault(t =>
+                    t is TabViewItem { Tag: NavigationViewTag { NavigateTo: { } type } } && tag.NavigateTo == type) is
+                TabViewItem item)
+            {
+                MainPageRootTab.TabView.SelectedItem = item;
+                return;
+            }
+
             if (Equals(tag, _viewModel.FeedTag) && App.AppViewModel.AppSettings.WebCookie is "")
                 _ = this.CreateAcknowledgementAsync(MainPageResources.FeedTabCannotBeOpenedTitle, MainPageResources.FeedTabCannotBeOpenedContent);
             else

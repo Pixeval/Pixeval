@@ -62,6 +62,7 @@ public sealed partial class TabPage
             Header = string.IsNullOrEmpty(viewModel.Header) ? " " : viewModel.Header,
             IconSource = viewModel.IconSource ?? new ImageIconSource { ImageSource = WindowFactory.IconImageSource },
             IsClosable = true,
+            Tag = viewModel,
             Content = frame
         };
         TabView.TabItems.Add(tabViewItem);

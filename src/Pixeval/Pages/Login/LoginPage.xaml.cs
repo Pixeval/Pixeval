@@ -108,6 +108,7 @@ public sealed partial class LoginPage
 
         WindowFactory.GetWindowForElement(Current).PageContent = new MainPage();
         Current._viewModel.LogoutExit = false;
+        App.AppViewModel.MakoClient.Me.IsPremium = App.AppViewModel.LoginContext.IsPremium;
         AppInfo.SaveContext();
     }
 
