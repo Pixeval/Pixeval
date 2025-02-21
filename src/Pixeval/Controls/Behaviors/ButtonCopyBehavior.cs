@@ -7,7 +7,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.Xaml.Interactivity;
 using Pixeval.Util.UI;
 
-namespace Pixeval.Behaviors;
+namespace Pixeval.Controls;
 
 public partial class ButtonCopyBehavior : Behavior<Button>
 {

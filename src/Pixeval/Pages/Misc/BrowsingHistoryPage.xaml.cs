@@ -18,7 +18,11 @@ namespace Pixeval.Pages.Misc;
 /// </summary>
 public sealed partial class BrowsingHistoryPage : IScrollViewHost
 {
-    public BrowsingHistoryPage() => InitializeComponent();
+    public BrowsingHistoryPage()
+    {
+        InitializeComponent();
+        SimpleWorkTypeComboBox.SelectedEnum = App.AppViewModel.AppSettings.SimpleWorkType;
+    }
 
     public override void OnPageActivated(NavigationEventArgs e, object? parameter) => ChangeSource();
 

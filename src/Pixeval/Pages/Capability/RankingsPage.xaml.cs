@@ -23,6 +23,7 @@ public sealed partial class RankingsPage : IScrollViewHost
     {
         InitializeComponent();
         RankDateTimeCalendarDatePicker.Date = MaxDate;
+        SimpleWorkTypeComboBox.SelectedEnum = App.AppViewModel.AppSettings.SimpleWorkType;
     }
 
     public DateTime MaxDate => DateTime.Now.AddDays(-2);

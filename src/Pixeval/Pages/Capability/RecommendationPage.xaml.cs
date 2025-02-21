@@ -9,7 +9,11 @@ namespace Pixeval.Pages.Capability;
 
 public sealed partial class RecommendationPage
 {
-    public RecommendationPage() => InitializeComponent();
+    public RecommendationPage()
+    {
+        InitializeComponent();
+        WorkTypeComboBox.SelectedEnum = App.AppViewModel.AppSettings.WorkType;
+    }
 
     public override void OnPageActivated(NavigationEventArgs e, object? parameter) => ChangeSource();
 

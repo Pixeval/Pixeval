@@ -15,7 +15,11 @@ public sealed partial class BookmarksPage : IScrollViewHost
 {
     private BookmarksPageViewModel _viewModel = null!;
 
-    public BookmarksPage() => InitializeComponent();
+    public BookmarksPage()
+    {
+        InitializeComponent();
+        SimpleWorkTypeComboBox.SelectedEnum = App.AppViewModel.AppSettings.SimpleWorkType;
+    }
 
     public override void OnPageActivated(NavigationEventArgs e, object? parameter)
     {

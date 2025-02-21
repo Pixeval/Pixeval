@@ -10,7 +10,11 @@ namespace Pixeval.Pages.Capability;
 
 public sealed partial class NewWorksPage : IScrollViewHost
 {
-    public NewWorksPage() => InitializeComponent();
+    public NewWorksPage()
+    {
+        InitializeComponent();
+        WorkTypeComboBox.SelectedEnum = App.AppViewModel.AppSettings.WorkType;
+    }
 
     public override void OnPageActivated(NavigationEventArgs e, object? parameter) => ChangeSource();
 
