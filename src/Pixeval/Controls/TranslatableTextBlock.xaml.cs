@@ -1,54 +1,108 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL v3 License.
 
-using System.Collections.Generic;
+using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Threading.Tasks;
+using CommunityToolkit.Labs.WinUI.MarkdownTextBlock;
 using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Extensions.DependencyInjection;
 using Pixeval.Extensions;
 using Pixeval.Extensions.Common.Commands.Transformers;
-using Microsoft.UI.Xaml.Documents;
 using Pixeval.Util.IO.Caching;
 
 namespace Pixeval.Controls;
 
 public sealed partial class TranslatableTextBlock : Grid
 {
+    /// <summary>
+    /// 原文
+    /// </summary>
     [GeneratedDependencyProperty]
-    public partial object? Text { get; set; }
+    public partial string? Text { get; set; }
 
+    /// <summary>
+    /// 折叠模式（显示译文时隐藏原文）
+    /// </summary>
     [GeneratedDependencyProperty]
     public partial bool IsCompact { get; set; }
 
+    /// <summary>
+    /// 是否横向布局
+    /// </summary>
     [GeneratedDependencyProperty]
     public partial bool IsHorizontal { get; set; }
 
+    /// <summary>
+    /// 当前是否可以翻译（<see cref="Text"/>为空则不行）
+    /// </summary>
     [GeneratedDependencyProperty]
     public partial bool CanTranslate { get; private set; }
 
+    /// <summary>
+    /// 是否正在翻译
+    /// </summary>
     [GeneratedDependencyProperty]
     public partial bool IsTranslating { get; private set; }
 
-    [GeneratedDependencyProperty(DefaultValue = "")]
-    public partial string? TranslatedText { get; private set; }
-
-    [GeneratedDependencyProperty]
-    public partial Style? TextBlockStyle { get; set; }
-
-    [GeneratedDependencyProperty]
-    public partial int MaxLines { get; set; }
-
+    /// <summary>
+    /// 翻译按钮的水平对齐方式
+    /// </summary>
     [GeneratedDependencyProperty(DefaultValue = HorizontalAlignment.Center)]
     public partial HorizontalAlignment HorizontalButtonAlignment { get; set; }
 
+    /// <summary>
+    /// 翻译按钮的垂直对齐方式
+    /// </summary>
     [GeneratedDependencyProperty(DefaultValue = VerticalAlignment.Center)]
     public partial VerticalAlignment VerticalButtonAlignment { get; set; }
 
+    /// <summary>
+    /// 翻译按钮的Margin
+    /// </summary>
+    [GeneratedDependencyProperty]
+    public partial Thickness ButtonMargin { get; set; }
+
+    /// <summary>
+    /// 普通文本框的样式
+    /// </summary>
+    public Style? TextBlockStyle { get; set; }
+
+    /// <summary>
+    /// 普通文本框行数
+    /// </summary>
+    public int MaxLines { get; set; }
+
+    /// <summary>
+    /// 文本框翻译的类型
+    /// </summary>
     public TextTransformerType TextType { get; set; }
 
-    public bool TranslateRespectively { get; set; } = true;
+    /// <summary>
+    /// 使用Markdown
+    /// </summary>
+    public bool UseMarkdown { get; set; } = true;
+
+    /// <summary>
+    /// 默认的Markdown配置
+    /// </summary>
+    public static MarkdownConfig StaticMarkdownConfig { get; } = new()
+    {
+        ImageProvider = new CacheImageProvider()
+    };
+
+    /// <summary>
+    /// Markdown配置
+    /// </summary>
+    [field: MaybeNull, AllowNull]
+    public MarkdownConfig MarkdownConfig
+    {
+        get => field ?? StaticMarkdownConfig;
+        set;
+    }
 
     public TranslatableTextBlock()
     {
@@ -60,115 +114,96 @@ public sealed partial class TranslatableTextBlock : Grid
         App.AppViewModel.AppServiceProvider.GetRequiredService<ExtensionService>();
 
     /// <summary>
-    /// 在<paramref name="isCompact"/>折叠模式下，若<paramref name="translatedText"/>翻译文本不为空，则隐藏原文
+    /// 在<paramref name="isCompact"/>折叠模式下，若<see cref="TranslationBoxPresenter"/>内容不为空，则隐藏原文
     /// </summary>
-    private Visibility CanDisplay(string? translatedText, bool isCompact) =>
-        isCompact && !string.IsNullOrWhiteSpace(translatedText) ? Visibility.Collapsed : Visibility.Visible;
+    private Visibility CanDisplay(bool isCompact) =>
+        isCompact && TranslationBoxPresenter.Content is not null ? Visibility.Collapsed : Visibility.Visible;
 
     /// <summary>
     /// 设置<paramref name="maxLines"/>时，将<paramref name="text"/>显示到提示中
     /// </summary>
     private string? NeedToolTip(int maxLines, string? text) => maxLines is 0 ? null : text;
 
-    async partial void OnTextPropertyChanged(DependencyPropertyChangedEventArgs e)
+    private object? OriginalTextPresenterContent
     {
-        var canTranslate = false;
-        switch (Text)
+        get => OriginalTextPresenter.Content ?? field;
+        set
         {
-            case string text:
-                canTranslate = !string.IsNullOrWhiteSpace(text);
-                var tb = new TextBlock
-                {
-                    Text = text,
-                    TextWrapping = TextWrapping.Wrap,
-                    TextTrimming = TextTrimming.CharacterEllipsis,
-                    IsTextSelectionEnabled = true,
-                    MaxLines = MaxLines,
-                    Style = TextBlockStyle
-                };
-                ToolTipService.SetToolTip(tb, NeedToolTip(MaxLines, text));
-                OriginalTextPresenter.Content = tb;
-                break;
-            case IEnumerable<InlineContent> contents:
-                var arr = contents.ToArray();
-                if (arr.Length is 0)
-                {
-                    canTranslate = false;
-                    break;
-                }
-
-                if (arr.All(t => t is RunContent))
-                {
-                    canTranslate = true;
-                    var text = arr.Cast<RunContent>().Aggregate("", (current, content) => current + content.Text);
-                    var textBlock = new TextBlock
-                    {
-                        Text = text,
-                        TextWrapping = TextWrapping.Wrap,
-                        TextTrimming = TextTrimming.CharacterEllipsis,
-                        IsTextSelectionEnabled = true,
-                        MaxLines = MaxLines,
-                        Style = TextBlockStyle
-                    };
-                    ToolTipService.SetToolTip(textBlock, NeedToolTip(MaxLines, text));
-                    OriginalTextPresenter.Content = textBlock;
-                }
-                else
-                {
-                    canTranslate = !arr.All(t => t is ImageContent);
-
-                    foreach (var content in arr)
-                    {
-                        var paragraph = new Paragraph();
-                        switch (content)
-                        {
-                            case RunContent runContent:
-                                paragraph.Inlines.Add(new Run { Text = runContent.Text });
-                                break;
-                            case ImageContent imageContent:
-                                paragraph.Inlines.Add(new InlineUIContainer
-                                {
-                                    Child = new Image
-                                    {
-                                        VerticalAlignment = VerticalAlignment.Bottom,
-                                        Source = await CacheHelper.GetSourceFromCacheAsync(imageContent.Content,
-                                                desiredWidth: 24),
-                                        Width = 24,
-                                        Height = 24
-                                    }
-                                }
-                                );
-                                break;
-                        }
-
-                        OriginalTextPresenter.Content = new RichTextBlock
-                        {
-                            Blocks = { paragraph },
-                            TextWrapping = TextWrapping.Wrap,
-                            TextTrimming = TextTrimming.CharacterEllipsis,
-                            IsTextSelectionEnabled = true,
-                            MaxLines = MaxLines
-                        };
-                    }
-                }
-
-                break;
-            default:
-                canTranslate = false;
+            if (value is null)
+            {
+                if (OriginalTextPresenter.Content is not null)
+                    field = OriginalTextPresenter.Content;
                 OriginalTextPresenter.Content = null;
-                break;
+            }
+            else
+            {
+                OriginalTextPresenter.Content = value;
+                field = null;
+            }
         }
+    }
 
-        TranslatedText = "";
+    private object? TranslationBoxPresenterContent
+    {
+        get => TranslationBoxPresenter.Content ?? field;
+        set
+        {
+            if (value is null)
+            {
+                if (TranslationBoxPresenter.Content is not null)
+                    field = TranslationBoxPresenter.Content;
+                TranslationBoxPresenter.Content = null;
+            }
+            else
+            {
+                TranslationBoxPresenter.Content = value;
+                field = null;
+            }
+
+            // 手动触发原始文本框可见性
+            OriginalTextPresenter.Visibility = CanDisplay(IsCompact);
+        }
+    }
+
+    private MarkdownTextBlock GetNewMarkdownTextBlock(MarkdownTextBlock? markdownTextBlock, string text)
+    {
+        var tb = markdownTextBlock ?? new MarkdownTextBlock();
+        tb.Text = text;
+        tb.Config = MarkdownConfig;
+        return tb;
+    }
+    
+    private TextBlock GetNewTextBlock(TextBlock? textBlock, string text)
+    {
+        var tb = textBlock ?? new TextBlock();
+        tb.Text = text;
+        tb.TextWrapping = TextWrapping.Wrap;
+        tb.TextTrimming = TextTrimming.CharacterEllipsis;
+        tb.IsTextSelectionEnabled = true;
+        tb.MaxLines = MaxLines;
+        tb.Style = TextBlockStyle;
+        ToolTipService.SetToolTip(tb, NeedToolTip(MaxLines, text));
+        return tb;
+    }
+
+    partial void OnTextPropertyChanged(DependencyPropertyChangedEventArgs e)
+    {
+        var canTranslate = !string.IsNullOrWhiteSpace(Text);
+        OriginalTextPresenterContent = Text is null
+            ? null
+            : UseMarkdown
+                ? GetNewMarkdownTextBlock(OriginalTextPresenterContent as MarkdownTextBlock, Text)
+                : GetNewTextBlock(OriginalTextPresenterContent as TextBlock, Text);
+
+        TranslationBoxPresenterContent = null;
         CanTranslate = canTranslate && _extensionService.ActiveTextTransformerCommands.Any();
     }
 
     private async void GetTranslationClicked(object sender, RoutedEventArgs e)
     {
-        if (!string.IsNullOrEmpty(TranslatedText))
+        if (TranslationBoxPresenter.Content is not null)
         {
-            // 赋值null会导致不触发绑定变化真离谱了
-            TranslatedText = "";
+            TranslationBoxPresenterContent = null;
             return;
         }
 
@@ -177,27 +212,14 @@ public sealed partial class TranslatableTextBlock : Grid
         IsTranslating = true;
         try
         {
-            switch (Text)
+            if (Text is not null)
             {
-                case string text:
-                    TranslatedText = await translator.TransformAsync(text, TextType);
-                    break;
-                case IEnumerable<InlineContent> contents:
-                    var arr = contents.OfType<RunContent>().ToArray();
-                    if (TranslateRespectively)
-                    {
-                        var result = "";
-                        foreach (var content in arr)
-                            result += await translator.TransformAsync(content.Text, TextType);
-                        TranslatedText = result;
-                    }
-                    else
-                    {
-                        var text = arr.Aggregate("", (current, content) => current + content.Text);
-                        TranslatedText = await translator.TransformAsync(text, TextType);
-                    }
-
-                    break;
+                var translatedText = await translator.TransformAsync(Text, TextType);
+                if (translatedText is null)
+                    return;
+                TranslationBoxPresenterContent = UseMarkdown
+                    ? GetNewMarkdownTextBlock(TranslationBoxPresenterContent as MarkdownTextBlock, translatedText)
+                    : GetNewTextBlock(TranslationBoxPresenterContent as TextBlock, translatedText);
             }
         }
         finally
@@ -257,12 +279,12 @@ public sealed partial class TranslatableTextBlock : Grid
             if (IsCompact)
             {
                 SetRowDefinitionsAuto(1);
-                SetRow(TranslationBox, 0);
+                SetRow(TranslationBoxPresenter, 0);
             }
             else
             {
                 SetRowDefinitionsAuto(2);
-                SetRow(TranslationBox, 1);
+                SetRow(TranslationBoxPresenter, 1);
             }
         }
         else
@@ -278,12 +300,12 @@ public sealed partial class TranslatableTextBlock : Grid
             if (IsCompact)
             {
                 SetRowDefinitionsAuto(2);
-                SetRow(TranslationBox, 0);
+                SetRow(TranslationBoxPresenter, 0);
             }
             else
             {
                 SetRowDefinitionsAuto(3);
-                SetRow(TranslationBox, 2);
+                SetRow(TranslationBoxPresenter, 2);
             }
         }
     }
@@ -299,8 +321,24 @@ public sealed partial class TranslatableTextBlock : Grid
     }
 }
 
-public abstract record InlineContent(string Content);
+public class CacheImageProvider : IImageProvider
+{
+    public async Task<Image> GetImage(string url)
+    {
+        var uri = new UriBuilder(url);
+        if (uri.Fragment is ['#', .. var fragment] && int.TryParse(fragment, out var size))
+        {
+            uri.Fragment = "";
+            return new()
+            {
+                Source = await CacheHelper.GetSourceFromCacheAsync(uri.ToString(), desiredWidth: size),
+                Height = size,
+                Width = size
+            };
+        }
 
-public record RunContent(string Text) : InlineContent(Text);
+        return new() { Source = await CacheHelper.GetSourceFromCacheAsync(url) };
+    }
 
-public record ImageContent(string Url) : InlineContent(Url);
+    public bool ShouldUseThisProvider(string url) => true;
+}

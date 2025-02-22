@@ -3,6 +3,7 @@
 
 using Microsoft.Extensions.DependencyInjection;
 using Pixeval.Controls;
+using Pixeval.CoreApi.Model;
 using Pixeval.Database.Managers;
 using Pixeval.Download.MacroParser;
 using Pixeval.Download.Models;
@@ -35,8 +36,8 @@ public class NovelDownloadTaskFactory : IDownloadTaskFactory<NovelItemViewModel,
         // xxx\novel.md\<ext>
         path += "\\" + IoHelper.GetIllustrationExtension();
         _ = manager.Delete(entry => entry.Destination == path);
-        var viewModel = (DocumentViewerViewModel)param;
-        var task = new NovelDownloadTaskGroup(context.Entry, viewModel.NovelContent, viewModel, path);
+        var content = (NovelContent)param;
+        var task = new NovelDownloadTaskGroup(context.Entry, content, path);
         manager.Insert(task.DatabaseEntry);
         return task;
     }

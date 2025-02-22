@@ -113,6 +113,7 @@
                                             <x:Boolean>True</x:Boolean>
                                         </controls:Case.Value>
                                         <controls2:TranslatableTextBlock
+                                            ButtonMargin="-2"
                                             IsCompact="True"
                                             IsHorizontal="True"
                                             Text="{x:Bind Name}"

@@ -120,4 +120,7 @@
   <data name="AppDefaultFontFamilyName" xml:space="preserve">
     <value>Microsoft YaHei UI</value>
   </data>
+  <data name="Bcl47" xml:space="preserve">
+    <value>zh-Hans</value>
+  </data>
 </root>

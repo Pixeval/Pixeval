@@ -1,249 +1,239 @@
-// Copyright (c) Pixeval.
-// Licensed under the GPL v3 License.
-
-using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using CommunityToolkit.Mvvm.ComponentModel;
-using Microsoft.UI.Xaml.Documents;
-using Pixeval.AppManagement;
-using Pixeval.CoreApi.Model;
-using Pixeval.Database.Managers;
+using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Threading;
-using QuestPDF.Fluent;
-using QuestPDF.Infrastructure;
-using Microsoft.UI.Xaml.Media;
+using System.Threading.Tasks;
+using System.Windows.Input;
+using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml;
-using Pixeval.Utilities;
+using Microsoft.UI.Xaml.Documents;
+using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Media;
+using Pixeval.CoreApi.Model;
+using Pixeval.Database.Managers;
+using Pixeval.Extensions.Common.Commands.Transformers;
+using Pixeval.Util.ComponentModels;
 using Pixeval.Util.IO.Caching;
+using WinUI3Utilities;
 
 namespace Pixeval.Controls;
 
-public partial class DocumentViewerViewModel(NovelContent novelContent) : ObservableObject, INovelParserViewModel<ImageSource>, INovelParserViewModel<Stream>
+/// <summary>
+/// 比<see cref="NovelContext"/>多了关于RTF渲染的内容
+/// </summary>
+public partial class DocumentViewerViewModel(FrameworkElement frameworkElement) : UiObservableObject(frameworkElement), INovelContext<ImageSource>, INotifyPropertyChanged
 {
     /// <summary>
-    /// 需要从外部Invoke
+    /// 当前页码，加载完之前为-1
     /// </summary>
-    public Action<int>? JumpToPageRequested;
-
-    public NovelContent NovelContent { get; } = novelContent;
-
-    public int TotalImagesCount { get; } = novelContent.Images.Length + novelContent.Illusts.Length;
-
-    public string? ImageExtension { get; set; }
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(CurrentParagraphs))]
+    public partial int CurrentPage { get; set; } = -1;
 
     /// <summary>
-    /// 所有图片的URL
+    /// 总页数
     /// </summary>
-    public string[] AllUrls { get; } = novelContent.Images.Select(x => x.ThumbnailUrl).Concat(novelContent.Illusts.Select(x => x.ThumbnailUrl)).ToArray();
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsMultiPage))]
+    public partial int PageCount { get; private set; }
 
-    public string[] AllTokens { get; } = novelContent.Images.Select(x => x.NovelImageId.ToString()).Concat(novelContent.Illusts.Select(x => $"{x.Id}-{x.Page}")).ToArray();
+    /// <summary>
+    /// 是否多页
+    /// </summary>
+    public bool IsMultiPage => PageCount > 1;
+
+    /// <summary>
+    /// 是否正在加载
+    /// </summary>
+    [ObservableProperty]
+    public partial bool IsLoading { get; private set; }
+
+    /// <summary>
+    /// 是否加载成功
+    /// </summary>
+    [ObservableProperty]
+    [MemberNotNullWhen(true, nameof(NovelContent))]
+    public partial bool LoadSuccessfully { get; private set; } = false;
+
+    /// <summary>
+    /// 翻译后的文本
+    /// </summary>
+    /// <remarks>为null不触发改变</remarks>
+    [ObservableProperty]
+    public partial string TranslatedText { get; private set; } = "";
+
+    /// <summary>
+    /// <see langword="true"/>能用，<see langword="false"/>不能用
+    /// </summary>
+    private bool ExtensionRunningLock
+    {
+        get;
+        set
+        {
+            if (field == value)
+                return;
+            field = value;
+            foreach (var command in ExtensionCommands)
+                command.NotifyCanExecuteChanged();
+        }
+    } = true;
+
+    public List<XamlUICommand> ExtensionCommands { get; } = [];
+
+    public List<List<Paragraph>> Pages { get; } = [];
+
+    public List<Paragraph>? CurrentParagraphs => -1 < CurrentPage && CurrentPage < PageCount ? Pages[CurrentPage] : null;
+
+    public async Task LoadAsync(NovelItemViewModel novelItem)
+    {
+        if (LoadSuccessfully || IsLoading)
+            return;
+        IsLoading = true;
+        try
+        {
+            NovelContent = await novelItem.GetNovelContentAsync();
+            ((INovelContext<ImageSource>) this).InitImages();
+            LoadRtfContent();
+            // 此时没有任何PropertyChanged订阅，所以此时直接赋值
+            CurrentPage = 0;
+            _ = LoadImagesAsync();
+            BrowseHistoryPersistentManager.AddHistory(novelItem.Entry);
+            LoadSuccessfully = true;
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+
+        return;
+
+        void LoadRtfContent()
+        {
+            var index = 0;
+            var length = NovelContent.Text.Length;
+            var parser = new PixivNovelRtfParser();
+            Pages.Add(parser.Parse(NovelContent.Text, ref index, this));
+            while (index < length)
+            {
+                if (LoadingCancellationTokenSource.IsCancellationRequested)
+                    break;
+                Pages.Add(parser.Parse(NovelContent.Text, ref index, this));
+            }
+            PageCount = Pages.Count;
+        }
+
+        async Task LoadImagesAsync()
+        {
+            foreach (var illust in NovelContent.Illusts)
+            {
+                if (LoadingCancellationTokenSource.IsCancellationRequested)
+                    break;
+                var key = (illust.Id, illust.Page);
+                IllustrationImages[key] = await CacheHelper.GetSourceFromCacheAsync(illust.ThumbnailUrl, cancellationToken: LoadingCancellationTokenSource.Token);
+                OnPropertyChanged(nameof(IllustrationImages) + key.GetHashCode());
+            }
+
+            foreach (var image in NovelContent.Images)
+            {
+                if (LoadingCancellationTokenSource.IsCancellationRequested)
+                    break;
+                UploadedImages[image.NovelImageId] = await CacheHelper.GetSourceFromCacheAsync(image.ThumbnailUrl, cancellationToken: LoadingCancellationTokenSource.Token);
+                OnPropertyChanged(nameof(UploadedImages) + image.NovelImageId);
+            }
+        }
+    }
+
+    public ICommand GetTransformExtensionCommand(ITextTransformerCommandExtension extension)
+    {
+        var command = new XamlUICommand();
+        command.CanExecuteRequested += ExtensionCanExecuteRequested;
+        command.ExecuteRequested += OnCommandOnExecuteRequested;
+        ExtensionCommands.Add(command);
+        return command;
+
+        void ExtensionCanExecuteRequested(XamlUICommand sender, CanExecuteRequestedEventArgs args)
+        {
+            args.CanExecute = LoadSuccessfully && ExtensionRunningLock;
+        }
+
+
+        async void OnCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
+        {
+            if (!LoadSuccessfully)
+                return;
+
+            if (!string.IsNullOrEmpty(TranslatedText))
+            {
+                TranslatedText = "";
+                return;
+            }
+
+            ExtensionRunningLock = false;
+            try
+            {
+                var transformer = args.Parameter.To<ITextTransformerCommandExtension>();
+                var token = LoadingCancellationTokenSource.Token;
+                if (token.IsCancellationRequested)
+                    return;
+                FrameworkElement.InfoGrowl(NovelViewerPageResources.ApplyingTransformerExtensions);
+                // 运行扩展
+                var result = await transformer.TransformAsync(CurrentMdPage, TextTransformerType.Novel);
+                if (result is null)
+                {
+                    FrameworkElement.ErrorGrowl(NovelViewerPageResources.TransformerExtensionFailed);
+                    return;
+                }
+                // 显示结果
+                TranslatedText = result;
+                if (!token.IsCancellationRequested)
+                    FrameworkElement.SuccessGrowl(NovelViewerPageResources.TransformerExtensionFinishedSuccessfully);
+            }
+            finally
+            {
+                ExtensionRunningLock = true;
+            }
+        }
+    }
+
+    public string CurrentMdPage
+    {
+        get
+        {
+            var currentPageCount = _markdownTexts.Count;
+            if (currentPageCount > CurrentPage)
+                return _markdownTexts[CurrentPage];
+            
+            var length = NovelContent.Text.Length;
+            for (var i = currentPageCount; _lastIndex < length || CurrentPage >= i; ++i)
+            {
+                var sb = new StringBuilder();
+                var parser = new PixivNovelMdDisplayParser(sb, i);
+                _ = parser.Parse(NovelContent.Text, ref _lastIndex, this);
+                _markdownTexts.Add(_lastIndex >= length
+                    ? sb.ToString()
+                    // \r\n---\r\n
+                    : sb.ToString(0, sb.Length - 7));
+            }
+
+            return _markdownTexts.Count > CurrentPage ? _markdownTexts[CurrentPage] : "";
+        }
+    }
+
+    private int _lastIndex;
+
+    private readonly List<string> _markdownTexts = [];
+
+    [ObservableProperty]
+    public partial NovelContent NovelContent { get; private set; } = null!;
 
     public Dictionary<(long, int), NovelIllustInfo> IllustrationLookup { get; } = [];
-
-    Dictionary<(long, int), Stream> INovelParserViewModel<Stream>.IllustrationImages => IllustrationStreams;
-
-    Dictionary<long, Stream> INovelParserViewModel<Stream>.UploadedImages => UploadedStreams;
 
     public Dictionary<(long, int), ImageSource> IllustrationImages { get; } = [];
 
     public Dictionary<long, ImageSource> UploadedImages { get; } = [];
 
-    public Dictionary<(long, int), Stream> IllustrationStreams { get; } = [];
+    public CancellationTokenSource LoadingCancellationTokenSource { get; } = new();
 
-    public Dictionary<long, Stream> UploadedStreams { get; } = [];
-
-    public ObservableCollection<List<Paragraph>> Pages { get; } = [];
-
-    public async Task LoadRtfContentAsync(FrameworkElement frameworkElement)
-    {
-        var index = 0;
-        var length = NovelContent.Text.Length;
-        var parser = new PixivNovelRtfParser(frameworkElement);
-        Pages.Add(parser.Parse(NovelContent.Text, ref index, this));
-        await Task.Yield();
-        while (index < length)
-        {
-            if (LoadingCancellationTokenSource.IsCancellationRequested)
-                break;
-            Pages.Add(parser.Parse(NovelContent.Text, ref index, this));
-        }
-    }
-
-    public StringBuilder LoadMdContent()
-    {
-        var index = 0;
-        var length = NovelContent.Text.Length;
-
-        var sb = new StringBuilder();
-        for (var i = 0; index < length; ++i)
-        {
-            var parser = new PixivNovelMdParser(sb, i);
-            _ = parser.Parse(NovelContent.Text, ref index, this);
-            if (LoadingCancellationTokenSource.IsCancellationRequested)
-                break;
-        }
-
-        return sb;
-    }
-
-    public StringBuilder LoadHtmlContent()
-    {
-        var index = 0;
-        var length = NovelContent.Text.Length;
-
-        var sb = new StringBuilder();
-        for (var i = 0; index < length; ++i)
-        {
-            var parser = new PixivNovelHtmlParser(sb, i);
-            _ = parser.Parse(NovelContent.Text, ref index, this);
-            if (LoadingCancellationTokenSource.IsCancellationRequested)
-                break;
-        }
-
-        return sb;
-    }
-
-    public Document LoadPdfContent()
-    {
-        var index = 0;
-        var length = NovelContent.Text.Length;
-
-        PixivNovelPdfParser.Init();
-
-        return
-            Document.Create(t =>
-                t.Page(p =>
-                {
-                    p.MarginHorizontal(90);
-                    p.MarginVertical(72);
-                    p.DefaultTextStyle(new TextStyle().LineHeight(2));
-                    p.Content().Column(c =>
-                    {
-                        for (var i = 0; index < length; ++i)
-                        {
-                            var parser = new PixivNovelPdfParser(c, i);
-                            _ = parser.Parse(NovelContent.Text, ref index, this);
-                            if (LoadingCancellationTokenSource.IsCancellationRequested)
-                                break;
-                        }
-                    });
-                }));
-    }
-
-    public void InitImages()
-    {
-        foreach (var illust in NovelContent.Illusts)
-        {
-            var key = (illust.Id, illust.Page);
-            IllustrationLookup[key] = illust;
-            IllustrationImages[key] = null!;
-            IllustrationStreams[key] = null!;
-        }
-
-        foreach (var image in NovelContent.Images)
-        {
-            UploadedImages[image.NovelImageId] = null!;
-            UploadedStreams[image.NovelImageId] = null!;
-        }
-    }
-
-    public async Task LoadImagesAsync()
-    {
-        InitImages();
-
-        foreach (var illust in NovelContent.Illusts)
-        {
-            if (LoadingCancellationTokenSource.IsCancellationRequested)
-                break;
-            var key = (illust.Id, illust.Page);
-            IllustrationStreams[key] = await CacheHelper.GetStreamFromCacheAsync(illust.ThumbnailUrl, cancellationToken: LoadingCancellationTokenSource.Token);
-            IllustrationImages[key] = await CacheHelper.GetSourceFromCacheAsync(illust.ThumbnailUrl, cancellationToken: LoadingCancellationTokenSource.Token);
-            OnPropertyChanged(nameof(IllustrationImages) + key.GetHashCode());
-        }
-
-        foreach (var image in NovelContent.Images)
-        {
-            if (LoadingCancellationTokenSource.IsCancellationRequested)
-                break;
-            UploadedStreams[image.NovelImageId] = await CacheHelper.GetStreamFromCacheAsync(image.ThumbnailUrl, cancellationToken: LoadingCancellationTokenSource.Token);
-            UploadedImages[image.NovelImageId] = await CacheHelper.GetSourceFromCacheAsync(image.ThumbnailUrl, cancellationToken: LoadingCancellationTokenSource.Token);
-            OnPropertyChanged(nameof(UploadedImages) + image.NovelImageId);
-        }
-    }
-
-    public (long Id, IEnumerable<string> Tags)? GetIdTags(int index)
-    {
-        if (index < NovelContent.Images.Length)
-            return null;
-        var illust = NovelContent.Illusts[index - NovelContent.Images.Length];
-        return (illust.Id, illust.Illust.Tags.Select(t => t.Tag));
-    }
-
-    public Stream? TryGetStream(int index)
-    {
-        if (index < NovelContent.Images.Length)
-            return UploadedStreams.GetValueOrDefault(NovelContent.Images[index].NovelImageId);
-        var illust = NovelContent.Illusts[index - NovelContent.Images.Length];
-        return IllustrationStreams.GetValueOrDefault((illust.Id, illust.Page));
-    }
-
-    public void SetStream(int index, Stream? stream)
-    {
-        if (index < NovelContent.Images.Length)
-        {
-            UploadedStreams[NovelContent.Images[index].NovelImageId] = TryGetNotAvailableImageStream(stream);
-        }
-        else
-        {
-            var illust = NovelContent.Illusts[index - NovelContent.Images.Length];
-            IllustrationStreams[(illust.Id, illust.Page)] = TryGetNotAvailableImageStream(stream);
-        }
-    }
-
-    public Stream TryGetNotAvailableImageStream(Stream? result) => result ?? AppInfo.GetImageNotAvailableStream();
-
-    private CancellationTokenSource LoadingCancellationTokenSource { get; } = new();
-
-    public static async Task<DocumentViewerViewModel> CreateAsync(FrameworkElement frameworkElement, NovelItemViewModel novelItem, Action<Task> callback)
-    {
-        var novelContent = await novelItem.GetNovelContentAsync();
-        var vm = new DocumentViewerViewModel(novelContent);
-        var task1 = vm.LoadImagesAsync();
-        var task2 = vm.LoadRtfContentAsync(frameworkElement);
-        _ = Task.WhenAll(task1, task2).ContinueWith(callback, TaskScheduler.FromCurrentSynchronizationContext());
-        BrowseHistoryPersistentManager.AddHistory(novelItem.Entry);
-        return vm;
-    }
-
-    public INovelParserViewModel<Stream> Clone()
-    {
-        var vm = new DocumentViewerViewModel(NovelContent);
-        foreach (var (key, value) in IllustrationLookup)
-            vm.IllustrationLookup[key] = value;
-        foreach (var (key, value) in IllustrationStreams)
-            vm.IllustrationStreams[key] = value;
-        foreach (var (key, value) in UploadedStreams)
-            vm.UploadedStreams[key] = value;
-        return vm;
-    }
-
-    public void Dispose()
-    {
-        LoadingCancellationTokenSource.TryCancelDispose();
-        IllustrationImages.Clear();
-        UploadedImages.Clear();
-        foreach (var (_, value) in IllustrationStreams)
-            value.Dispose();
-        IllustrationStreams.Clear();
-        foreach (var (_, value) in UploadedStreams)
-            value.Dispose();
-        UploadedStreams.Clear();
-        IllustrationLookup.Clear();
-        GC.SuppressFinalize(this);
-    }
+    public string? ImageExtension => null;
 }

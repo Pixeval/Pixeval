@@ -67,7 +67,7 @@ public sealed partial class DownloadItem
 
     private async void OpenDownloadLocationItem_OnClicked(object sender, RoutedEventArgs e)
     {
-        _ = await Launcher.LaunchFolderPathAsync(Path.GetDirectoryName(ViewModel.DownloadTask.Destination));
+        _ = await Launcher.LaunchFolderPathAsync(Path.GetDirectoryName(ViewModel.DownloadTask.OpenLocalDestination));
     }
 
     private void GoToPageItem_OnClicked(object sender, RoutedEventArgs e) => OpenIllustrationRequested?.Invoke(this, ViewModel);

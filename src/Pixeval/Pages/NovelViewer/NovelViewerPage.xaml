@@ -4,11 +4,11 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Pixeval.Controls"
     xmlns:controls1="using:CommunityToolkit.WinUI.Controls"
-    
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:flyoutContent="using:Pixeval.Controls.FlyoutContent"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:md="using:CommunityToolkit.Labs.WinUI.MarkdownTextBlock"
     KeyboardAcceleratorPlacementMode="Hidden"
     mc:Ignorable="d">
     <controls:EnhancedPage.Resources>
@@ -49,6 +49,7 @@
                 <SplitView
                     x:Name="NovelSettingsPane"
                     DisplayMode="Overlay"
+                    PaneBackground="{ThemeResource PixevalControlBackgroundChromeMediumLowBrush}"
                     PanePlacement="Right">
                     <SplitView.Pane>
                         <controls1:DockPanel>
@@ -65,21 +66,52 @@
                         </controls1:DockPanel>
                     </SplitView.Pane>
                     <Grid Background="{x:Bind controls:C.ToSolidColorBrush(_viewModel.NovelBackgroundEntry.Value), Mode=OneWay}">
-                        <controls:DocumentViewer
-                            x:Name="DocumentViewer"
-                            ActualThemeChanged="{x:Bind _viewModel.OnFrameworkElementOnActualThemeChanged}"
-                            CurrentPage="{x:Bind _viewModel.CurrentPageIndex, Mode=TwoWay}"
-                            FontFamily="{x:Bind controls:C.ToFontFamily(_viewModel.NovelFontFamilyEntry.Value), Mode=OneWay}"
-                            FontSize="{x:Bind _viewModel.NovelFontSizeEntry.Value, Mode=OneWay}"
-                            FontWeight="{x:Bind controls:C.ToFontWeight(_viewModel.NovelFontWeightEntry.Value), Mode=OneWay}"
-                            Foreground="{x:Bind controls:C.ToSolidColorBrush(_viewModel.NovelFontColorEntry.Value), Mode=OneWay}"
-                            LineHeight="{x:Bind _viewModel.NovelLineHeightEntry.Value, Mode=OneWay}"
-                            NovelItem="{x:Bind _viewModel.CurrentNovel, Mode=OneWay}"
-                            NovelMaxWidth="{x:Bind _viewModel.NovelMaxWidthEntry.Value, Mode=OneWay}"
-                            PageCount="{x:Bind _viewModel.PageCount, Mode=TwoWay}"
-                            Tapped="DocumentViewer_OnTapped" />
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" MinWidth="200" />
+                                <ColumnDefinition
+                                    x:Name="TranslationColumn"
+                                    Width="Auto"
+                                    MinWidth="{x:Bind NullOr200(_viewModel.CurrentDocument.TranslatedText), Mode=OneWay}" />
+                            </Grid.ColumnDefinitions>
+                            <controls:DocumentViewer
+                                x:Name="DocumentViewer"
+                                Grid.Column="0"
+                                ActualThemeChanged="{x:Bind _viewModel.OnFrameworkElementOnActualThemeChanged}"
+                                FontFamily="{x:Bind controls:C.ToFontFamily(_viewModel.NovelFontFamilyEntry.Value), Mode=OneWay}"
+                                FontSize="{x:Bind _viewModel.NovelFontSizeEntry.Value, Mode=OneWay}"
+                                FontWeight="{x:Bind controls:C.ToFontWeight(_viewModel.NovelFontWeightEntry.Value), Mode=OneWay}"
+                                Foreground="{x:Bind controls:C.ToSolidColorBrush(_viewModel.NovelFontColorEntry.Value), Mode=OneWay}"
+                                LineHeight="{x:Bind _viewModel.NovelLineHeightEntry.Value, Mode=OneWay}"
+                                NovelMaxWidth="{x:Bind _viewModel.NovelMaxWidthEntry.Value, Mode=OneWay}"
+                                Paragraphs="{x:Bind _viewModel.CurrentDocument.CurrentParagraphs, Mode=OneWay}"
+                                Tapped="DocumentViewer_OnTapped" />
+                            <ScrollView
+                                Grid.Column="1"
+                                Padding="50,0"
+                                Tapped="DocumentViewer_OnTapped"
+                                Visibility="{x:Bind controls:C.IsNullOrEmptyToVisibility(_viewModel.CurrentDocument.TranslatedText), Mode=OneWay}">
+                                <md:MarkdownTextBlock
+                                    MaxWidth="{x:Bind _viewModel.NovelMaxWidthEntry.Value, Mode=OneWay}"
+                                    Config="{x:Bind controls:TranslatableTextBlock.StaticMarkdownConfig}"
+                                    FontSize="{x:Bind _viewModel.NovelFontSizeEntry.Value, Mode=OneWay}"
+                                    FontWeight="{x:Bind controls:C.ToFontWeight(_viewModel.NovelFontWeightEntry.Value), Mode=OneWay}"
+                                    Foreground="{x:Bind controls:C.ToSolidColorBrush(_viewModel.NovelFontColorEntry.Value), Mode=OneWay}"
+                                    Text="{x:Bind _viewModel.CurrentDocument.TranslatedText, Mode=OneWay}"
+                                    Visibility="{x:Bind controls:C.IsNullOrEmptyToVisibility(_viewModel.CurrentDocument.TranslatedText), Mode=OneWay}" />
+                            </ScrollView>
+                            <controls1:GridSplitter
+                                Grid.Column="1"
+                                Width="16"
+                                HorizontalAlignment="Left"
+                                Visibility="{x:Bind controls:C.IsNullOrEmptyToVisibility(_viewModel.CurrentDocument.TranslatedText), Mode=OneWay}">
+                                <controls1:GridSplitter.RenderTransform>
+                                    <TranslateTransform X="-7" />
+                                </controls1:GridSplitter.RenderTransform>
+                            </controls1:GridSplitter>
+                        </Grid>
 
-                        <Grid Visibility="{x:Bind controls:C.ToVisibility(DocumentViewer.IsLoading), Mode=OneWay}">
+                        <Grid Visibility="{x:Bind controls:C.ToVisibility(_viewModel.CurrentDocument.IsLoading), Mode=OneWay}">
                             <Rectangle Fill="{ThemeResource PixevalAppAcrylicBrush}" />
                             <StackPanel
                                 HorizontalAlignment="Center"
@@ -174,22 +206,23 @@
                                             controls1:DockPanel.Dock="Top"
                                             MaxVisiblePips="10"
                                             NextButtonVisibility="Visible"
-                                            NumberOfPages="{x:Bind DocumentViewer.PageCount, Mode=OneWay}"
+                                            NumberOfPages="{x:Bind _viewModel.CurrentDocument.PageCount, Mode=OneWay}"
                                             PreviousButtonVisibility="Visible"
-                                            SelectedPageIndex="{x:Bind DocumentViewer.CurrentPage, Mode=TwoWay}"
-                                            Visibility="{x:Bind controls:C.ToVisibility(DocumentViewer.IsMultiPage), Mode=OneWay}" />
+                                            SelectedPageIndex="{x:Bind _viewModel.CurrentDocument.CurrentPage, Mode=TwoWay}"
+                                            Visibility="{x:Bind controls:C.ToVisibility(_viewModel.CurrentDocument.IsMultiPage), Mode=OneWay}" />
                                         <CommandBar
+                                            x:Name="ToolsCommandBar"
                                             HorizontalAlignment="Center"
                                             DefaultLabelPosition="Collapsed"
                                             OverflowButtonVisibility="Collapsed">
                                             <AppBarButton
                                                 Command="{x:Bind _viewModel.CurrentNovel.BookmarkCommand, Mode=OneWay}"
-                                                CommandParameter="{x:Bind DownloadParameter(DocumentViewer.ViewModel), Mode=OneWay}"
-                                                IsEnabled="{x:Bind DocumentViewer.LoadSuccessfully, Mode=OneWay}" />
+                                                CommandParameter="{x:Bind DownloadParameter(_viewModel.CurrentDocument.NovelContent), Mode=OneWay}"
+                                                IsEnabled="{x:Bind _viewModel.CurrentDocument.LoadSuccessfully, Mode=OneWay}" />
                                             <AppBarButton
                                                 Command="{x:Bind _viewModel.CurrentNovel.SaveCommand, Mode=OneWay}"
-                                                CommandParameter="{x:Bind DownloadParameter(DocumentViewer.ViewModel), Mode=OneWay}"
-                                                IsEnabled="{x:Bind DocumentViewer.LoadSuccessfully, Mode=OneWay}" />
+                                                CommandParameter="{x:Bind DownloadParameter(_viewModel.CurrentDocument.NovelContent), Mode=OneWay}"
+                                                IsEnabled="{x:Bind _viewModel.CurrentDocument.LoadSuccessfully, Mode=OneWay}" />
                                         </CommandBar>
                                     </controls1:DockPanel>
                                 </Border>
@@ -260,16 +293,16 @@
                 <AppBarSeparator />
                 <AppBarButton
                     Command="{x:Bind _viewModel.CurrentNovel.CopyCommand, Mode=OneWay}"
-                    CommandParameter="{x:Bind DownloadParameter(DocumentViewer.ViewModel), Mode=OneWay}"
-                    IsEnabled="{x:Bind DocumentViewer.LoadSuccessfully, Mode=OneWay}" />
+                    CommandParameter="{x:Bind DownloadParameter(_viewModel.CurrentDocument.NovelContent), Mode=OneWay}"
+                    IsEnabled="{x:Bind _viewModel.CurrentDocument.LoadSuccessfully, Mode=OneWay}" />
                 <AppBarButton
                     Command="{x:Bind _viewModel.CurrentNovel.SaveCommand, Mode=OneWay}"
-                    CommandParameter="{x:Bind DownloadParameter(DocumentViewer.ViewModel), Mode=OneWay}"
-                    IsEnabled="{x:Bind DocumentViewer.LoadSuccessfully, Mode=OneWay}" />
+                    CommandParameter="{x:Bind DownloadParameter(_viewModel.CurrentDocument.NovelContent), Mode=OneWay}"
+                    IsEnabled="{x:Bind _viewModel.CurrentDocument.LoadSuccessfully, Mode=OneWay}" />
                 <AppBarButton
                     Command="{x:Bind _viewModel.CurrentNovel.SaveAsCommand, Mode=OneWay}"
-                    CommandParameter="{x:Bind DownloadParameter(DocumentViewer.ViewModel), Mode=OneWay}"
-                    IsEnabled="{x:Bind DocumentViewer.LoadSuccessfully, Mode=OneWay}" />
+                    CommandParameter="{x:Bind DownloadParameter(_viewModel.CurrentDocument.NovelContent), Mode=OneWay}"
+                    IsEnabled="{x:Bind _viewModel.CurrentDocument.LoadSuccessfully, Mode=OneWay}" />
                 <AppBarSeparator />
                 <AppBarButton
                     x:Name="AddToBookmarkButton"
@@ -288,10 +321,10 @@
                 Margin="20,0"
                 HorizontalAlignment="Right"
                 Style="{StaticResource TextBlockStyle}"
-                Visibility="{x:Bind controls:C.ToVisibility(DocumentViewer.IsMultiPage), Mode=OneWay}">
-                <Run Text="{x:Bind controls:C.PlusOneToString(DocumentViewer.CurrentPage), Mode=OneWay}" />
+                Visibility="{x:Bind controls:C.ToVisibility(_viewModel.CurrentDocument.IsMultiPage), Mode=OneWay}">
+                <Run Text="{x:Bind controls:C.PlusOneToString(_viewModel.CurrentDocument.CurrentPage), Mode=OneWay}" />
                 <Run Text="/" />
-                <Run Text="{x:Bind DocumentViewer.PageCount, Mode=OneWay}" />
+                <Run Text="{x:Bind _viewModel.CurrentDocument.PageCount, Mode=OneWay}" />
             </TextBlock>
         </Grid>
         <TeachingTip

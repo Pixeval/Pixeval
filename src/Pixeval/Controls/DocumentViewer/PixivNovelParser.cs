@@ -5,7 +5,7 @@ using System;
 
 namespace Pixeval.Controls;
 
-public abstract class PixivNovelParser<T, TImage, TViewModel> where TViewModel : INovelParserViewModel<TImage>
+public abstract class PixivNovelParser<T, TImage, TViewModel> where TViewModel : INovelContext<TImage> where TImage : class
 {
     protected abstract T Vector { get; }
 

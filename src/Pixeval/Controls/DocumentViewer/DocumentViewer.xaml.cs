@@ -3,61 +3,38 @@
 
 using System.Collections.Generic;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Documents;
 using Pixeval.Utilities;
+using CommunityToolkit.WinUI;
+using Microsoft.UI.Xaml.Documents;
 
 namespace Pixeval.Controls;
 
 public sealed partial class DocumentViewer
 {
+    /// <summary>
+    /// 页宽
+    /// </summary>
+    [GeneratedDependencyProperty(DefaultValue = 1000d)]
+    public partial double NovelMaxWidth { get; set; }
+
+    /// <summary>
+    /// 行高
+    /// </summary>
+    [GeneratedDependencyProperty(DefaultValue = 28d)]
+    public partial double LineHeight { get; set; }
+
+    /// <summary>
+    /// ViewModel
+    /// </summary>
+    [GeneratedDependencyProperty]
+    public partial List<Paragraph>? Paragraphs { get; set; }
+
     public DocumentViewer() => InitializeComponent();
 
-    async partial void OnNovelItemPropertyChanged(DependencyPropertyChangedEventArgs e)
-    {
-        if (NovelItem is null)
-        {
-            ViewModel = null;
-            return;
-        }
-
-        try
-        {
-            LoadSuccessfully = false;
-            IsLoading = true;
-            ViewModel = await DocumentViewerViewModel.CreateAsync(this, NovelItem, _ => LoadSuccessfully = true);
-            ViewModel.JumpToPageRequested += newPage => CurrentPage = newPage;
-            ViewModel.Pages.CollectionChanged += (_, _) => PageCount = ViewModel.Pages.Count;
-            PageCount = ViewModel.Pages.Count;
-            if (CurrentPage is 0)
-                UpdateContent();
-            else
-                CurrentPage = 0;
-        }
-        finally
-        {
-            IsLoading = false;
-        }
-    }
-
-    partial void OnCurrentPagePropertyChanged(DependencyPropertyChangedEventArgs e)
-    {
-        if (NovelItem is null)
-            return;
-
-        UpdateContent();
-    }
-
-    partial void OnPageCountPropertyChanged(DependencyPropertyChangedEventArgs e)
-    {
-        IsMultiPage = PageCount > 1;
-    }
-
-    private void UpdateContent()
+    partial void OnParagraphsPropertyChanged(DependencyPropertyChangedEventArgs e)
     {
         NovelRichTextBlock.Blocks.Clear();
-        if (CurrentParagraph is { } current)
-            NovelRichTextBlock.Blocks.AddRange(current);
+        if (Paragraphs is not null) 
+            NovelRichTextBlock.Blocks.AddRange(Paragraphs);
     }
-
-    private List<Paragraph>? CurrentParagraph => ViewModel is not null && CurrentPage < PageCount ? ViewModel.Pages[CurrentPage] : null;
 }

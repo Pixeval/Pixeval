@@ -17,6 +17,11 @@
             <ui:Color x:Key="ExpanderHeaderCardPointerOverBackgroundColor">#F6F6F6</ui:Color>
             <ui:Color x:Key="ActionableCardPointerOverBackgroundColor">#F6F6F6</ui:Color>
             <ui:Color x:Key="ExpanderContentBackgroundColor">#FAFCFD</ui:Color>
+            <ui:Color x:Key="SystemControlBackgroundChromeMediumLowColor">#F2F2F2</ui:Color>
+            <SolidColorBrush
+                x:Key="PixevalControlBackgroundChromeMediumLowBrush"
+                Opacity="0.7"
+                Color="{ThemeResource SystemControlBackgroundChromeMediumLowColor}" />
             <SolidColorBrush x:Key="ExpanderHeaderCardPointerOverBackground" Color="{ThemeResource ExpanderHeaderCardPointerOverBackgroundColor}" />
             <SolidColorBrush x:Key="ActionableCardPointerOverBackground" Color="{ThemeResource ExpanderHeaderCardPointerOverBackgroundColor}" />
             <SolidColorBrush x:Key="ExpanderContentBackground" Color="{ThemeResource ExpanderContentBackgroundColor}" />
@@ -35,6 +40,11 @@
             <ui:Color x:Key="ExpanderHeaderCardPointerOverBackgroundColor">#F6F6F6</ui:Color>
             <ui:Color x:Key="ActionableCardPointerOverBackgroundColor">#F6F6F6</ui:Color>
             <ui:Color x:Key="ExpanderContentBackgroundColor">#FAFCFD</ui:Color>
+            <ui:Color x:Key="SystemControlBackgroundChromeMediumLowColor">#F2F2F2</ui:Color>
+            <SolidColorBrush
+                x:Key="PixevalControlBackgroundChromeMediumLowBrush"
+                Opacity="0.7"
+                Color="{ThemeResource SystemControlBackgroundChromeMediumLowColor}" />
             <SolidColorBrush x:Key="ExpanderHeaderCardPointerOverBackground" Color="{ThemeResource ExpanderHeaderCardPointerOverBackgroundColor}" />
             <SolidColorBrush x:Key="ActionableCardPointerOverBackground" Color="{ThemeResource ExpanderHeaderCardPointerOverBackgroundColor}" />
             <SolidColorBrush x:Key="ExpanderContentBackground" Color="{ThemeResource ExpanderContentBackgroundColor}" />
@@ -53,6 +63,11 @@
             <ui:Color x:Key="ExpanderHeaderCardPointerOverBackgroundColor">#323232</ui:Color>
             <ui:Color x:Key="ActionableCardPointerOverBackgroundColor">#323232</ui:Color>
             <ui:Color x:Key="ExpanderContentBackgroundColor">#2B2A2F</ui:Color>
+            <ui:Color x:Key="SystemControlBackgroundChromeMediumLowColor">#2B2B2B</ui:Color>
+            <SolidColorBrush
+                x:Key="PixevalControlBackgroundChromeMediumLowBrush"
+                Opacity="0.9"
+                Color="{ThemeResource SystemControlBackgroundChromeMediumLowColor}" />
             <SolidColorBrush x:Key="ExpanderHeaderCardPointerOverBackground" Color="{ThemeResource ExpanderHeaderCardPointerOverBackgroundColor}" />
             <SolidColorBrush x:Key="ActionableCardPointerOverBackground" Color="{ThemeResource ExpanderHeaderCardPointerOverBackgroundColor}" />
             <SolidColorBrush x:Key="ExpanderContentBackground" Color="{ThemeResource ExpanderContentBackgroundColor}" />

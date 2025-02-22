@@ -35,7 +35,7 @@ public partial class WorkEntryViewModel<T>
     /// <list type="bullet">
     /// <item><term>T1</term><description><see cref="FrameworkElement"/></description></item>
     /// <item><term>T2</term><description><see cref="GetImageStreams"/>?(<see cref="IllustrationItemViewModel"/>)</description></item>
-    /// <item><term>T2</term><description><see cref="DocumentViewerViewModel"/>?(<see cref="NovelItemViewModel"/>)</description></item>
+    /// <item><term>T2</term><description><see cref="NovelContent"/>?(<see cref="NovelItemViewModel"/>)</description></item>
     /// </list>
     /// 
     /// Parameter2: <see cref="FrameworkElement"/><br/>
@@ -48,7 +48,7 @@ public partial class WorkEntryViewModel<T>
     /// <list type="bullet">
     /// <item><term>T1</term><description><see cref="FrameworkElement"/></description></item>
     /// <item><term>T2</term><description><see cref="GetImageStreams"/>?(<see cref="IllustrationItemViewModel"/>)</description></item>
-    /// <item><term>T2</term><description><see cref="DocumentViewerViewModel"/>?(<see cref="NovelItemViewModel"/>)</description></item>
+    /// <item><term>T2</term><description><see cref="NovelContent"/>?(<see cref="NovelItemViewModel"/>)</description></item>
     /// </list>
     /// 
     /// Parameter2: <see cref="FrameworkElement"/>

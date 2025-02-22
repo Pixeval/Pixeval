@@ -102,7 +102,7 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
     /// <summary>
     /// <see langword="true"/>能用，<see langword="false"/>不能用
     /// </summary>
-    private bool ExtensionStreamLock
+    private bool ExtensionRunningLock
     {
         get;
         set
@@ -202,7 +202,7 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
         {
             if (OriginalStreamsSource is not (IReadOnlyList<Stream> and [{ } stream]))
                 return;
-            ExtensionStreamLock = false;
+            ExtensionRunningLock = false;
             try
             {
                 var transformer = args.Parameter.To<IImageTransformerCommandExtension>();
@@ -233,7 +233,7 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
             }
             finally
             {
-                ExtensionStreamLock = true;
+                ExtensionRunningLock = true;
             }
         }
     }
@@ -452,7 +452,7 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
 
     private void IsNotUgoiraAndLoadingCompletedCanExecuteRequested(XamlUICommand sender, CanExecuteRequestedEventArgs args) => args.CanExecute = !IllustrationViewModel.IsUgoira && LoadSuccessfully;
     
-    private void ExtensionCanExecuteRequested(XamlUICommand sender, CanExecuteRequestedEventArgs args) => args.CanExecute = !IllustrationViewModel.IsUgoira && LoadSuccessfully && ExtensionStreamLock;
+    private void ExtensionCanExecuteRequested(XamlUICommand sender, CanExecuteRequestedEventArgs args) => args.CanExecute = !IllustrationViewModel.IsUgoira && LoadSuccessfully && ExtensionRunningLock;
 
     public (FrameworkElement, GetImageStreams) DownloadParameter => (FrameworkElement, GetImageStreamsAsync);
 

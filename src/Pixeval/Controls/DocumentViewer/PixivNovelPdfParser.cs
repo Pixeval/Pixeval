@@ -11,7 +11,7 @@ using QuestPDF.Infrastructure;
 
 namespace Pixeval.Controls;
 
-public sealed class PixivNovelPdfParser(ColumnDescriptor descriptor, int pageIndex) : PixivNovelParser<ColumnDescriptor, Stream, INovelParserViewModel<Stream>>
+public sealed class PixivNovelPdfParser(ColumnDescriptor descriptor, int pageIndex) : PixivNovelParser<ColumnDescriptor, Stream, NovelContext>
 {
     public static void Init() { }
 
@@ -62,7 +62,7 @@ public sealed class PixivNovelPdfParser(ColumnDescriptor descriptor, int pageInd
         AddAction(t => t.Hyperlink(content, uri.OriginalString).FontColor(Colors.Blue.Medium));
     }
 
-    protected override void AddInlineHyperlink(ColumnDescriptor currentColumn, uint page, INovelParserViewModel<Stream> viewModel)
+    protected override void AddInlineHyperlink(ColumnDescriptor currentColumn, uint page, NovelContext viewModel)
     {
         AddAction(t => t.SectionLink(MiscResources.GoToPageFormatted.Format(page), (page - 1).ToString()).FontColor(Colors.Blue.Medium));
     }
@@ -75,13 +75,13 @@ public sealed class PixivNovelPdfParser(ColumnDescriptor descriptor, int pageInd
         _ = currentColumn.Item();
     }
 
-    protected override void AddUploadedImage(ColumnDescriptor currentColumn, INovelParserViewModel<Stream> viewModel, long imageId)
+    protected override void AddUploadedImage(ColumnDescriptor currentColumn, NovelContext viewModel, long imageId)
     {
         LineBreak(currentColumn);
         _ = currentColumn.Item().Image(viewModel.UploadedImages[imageId]).FitWidth();
     }
 
-    protected override void AddPixivImage(ColumnDescriptor currentColumn, INovelParserViewModel<Stream> viewModel, long imageId, int page)
+    protected override void AddPixivImage(ColumnDescriptor currentColumn, NovelContext viewModel, long imageId, int page)
     {
         LineBreak(currentColumn);
         var key = (imageId, page);

@@ -1,6 +1,8 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL v3 License.
 
+using System.ComponentModel;
+using System.Linq;
 using System.Numerics;
 using System.Threading.Tasks;
 using Windows.System;
@@ -11,6 +13,12 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Controls;
 using WinRT;
+using Microsoft.Extensions.DependencyInjection;
+using Pixeval.CoreApi.Model;
+using Pixeval.Extensions;
+using SymbolIcon = FluentIcons.WinUI.SymbolIcon;
+using Pixeval.Extensions.Common.Commands.Transformers;
+using Pixeval.Utilities;
 
 namespace Pixeval.Pages.NovelViewer;
 
@@ -64,6 +72,8 @@ public sealed partial class NovelViewerPage
             // ThumbnailItemsView.StartBringItemIntoView(vm.CurrentNovelIndex, new BringIntoViewOptions { AnimationDesired = true });
         };
 
+        _viewModel.CurrentDocumentPropertyChanged += OnViewModelOnCurrentDocumentPropertyChanged;
+
         foreach (var entry in _viewModel.Entries)
             SettingsPanel.Children.Add(entry.Element);
 
@@ -73,6 +83,35 @@ public sealed partial class NovelViewerPage
         // TODO: https://github.com/microsoft/microsoft-ui-xaml/issues/9952
         // ThumbnailItemsView.StartBringItemIntoView(_viewModel.CurrentNovelIndex, new BringIntoViewOptions { AnimationDesired = true });
         DocumentViewer_OnTapped(null!, null!);
+
+        var extensionService = App.AppViewModel.AppServiceProvider.GetRequiredService<ExtensionService>();
+        if (!extensionService.ActiveTextTransformerCommands.Any())
+            return;
+        ToolsCommandBar.PrimaryCommands.Add(new AppBarSeparator());
+        foreach (var extension in extensionService.ActiveTextTransformerCommands)
+        {
+            var appBarButton = new AppBarButton
+            {
+                Tag = extension,
+                Label = extension.GetLabel(),
+                Icon = new SymbolIcon { Symbol = extension.GetIcon() },
+                CommandParameter = extension
+            };
+            ToolTipService.SetToolTip(appBarButton, extension.GetDescription());
+            ToolsCommandBar.PrimaryCommands.Add(appBarButton);
+        }
+
+        OnViewModelOnCurrentDocumentPropertyChanged(_viewModel.CurrentDocument, null!);
+
+        return;
+
+        void OnViewModelOnCurrentDocumentPropertyChanged(object? sender, PropertyChangedEventArgs args)
+        {
+            var vm = sender.To<DocumentViewerViewModel>();
+            foreach (var appBarButton in ToolsCommandBar.PrimaryCommands.OfType<AppBarButton>())
+                if (appBarButton.Tag is ITextTransformerCommandExtension extension)
+                    appBarButton.Command = vm.GetTransformExtensionCommand(extension);
+        }
     }
 
     private async void FrameworkElement_OnDataContextChanged(FrameworkElement sender, DataContextChangedEventArgs args)
@@ -83,7 +122,7 @@ public sealed partial class NovelViewerPage
 
     private void AddToBookmarkTeachingTip_OnCloseButtonClick(TeachingTip sender, object args)
     {
-        _viewModel.CurrentNovel.AddToBookmarkCommand.Execute((BookmarkTagSelector.SelectedTags, BookmarkTagSelector.IsPrivate, DownloadParameter(DocumentViewer.ViewModel)));
+        _viewModel.CurrentNovel.AddToBookmarkCommand.Execute((BookmarkTagSelector.SelectedTags, BookmarkTagSelector.IsPrivate, DownloadParameter(_viewModel.CurrentDocument.NovelContent)));
     }
 
     private void AddToBookmarkButton_OnClicked(object sender, RoutedEventArgs e) => AddToBookmarkTeachingTip.IsOpen = true;
@@ -157,7 +196,18 @@ public sealed partial class NovelViewerPage
         teachingTip.Target = appBarButton.IsInOverflow ? null : appBarButton;
     }
 
-    public (FrameworkElement, DocumentViewerViewModel?) DownloadParameter(DocumentViewerViewModel? viewModel) => (this, viewModel);
+    private (FrameworkElement, NovelContent?) DownloadParameter(NovelContent? content) => (this, content);
+
+    private double NullOr200(string? text)
+    {
+        if (string.IsNullOrEmpty(text))
+        {
+            TranslationColumn.Width = GridLength.Auto;
+            return 0;
+        }
+
+        return 200;
+    }
 
     public override void CompleteDisposal()
     {

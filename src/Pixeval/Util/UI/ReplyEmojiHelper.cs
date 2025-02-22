@@ -3,10 +3,9 @@
 
 using System;
 using System.Collections.Frozen;
-using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
-using Pixeval.Controls;
 
 namespace Pixeval.Util.UI;
 
@@ -14,7 +13,7 @@ public static partial class ReplyEmojiHelper
 {
     private static readonly FrozenDictionary<string, PixivReplyEmoji> _StringToEmojiTable = Enum.GetValues<PixivReplyEmoji>().ToFrozenDictionary(emoji => emoji.GetReplyEmojiPlaceholderKey());
 
-    private static string _Pattern = string.Join("|", _StringToEmojiTable.Keys.Select(Regex.Escape));
+    private static readonly string _Pattern = string.Join("|", _StringToEmojiTable.Keys.Select(Regex.Escape));
 
     /// <summary>
     /// Returns the placeholder of the emoji in the reply content which has a form of
@@ -46,31 +45,34 @@ public static partial class ReplyEmojiHelper
         return _StringToEmojiTable[content];
     }
 
-    public static IEnumerable<InlineContent> GetContents(string content)
+    public static string GetMarkdownUrlFromPlaceholderKey(this string content)
+    {
+        // #24表示显示的图片大小
+        return $" ![{content}]({GetReplyEmojiDownloadUrl(_StringToEmojiTable[content])}#24) ";
+    }
+
+    public static string GetContents(string content)
     {
         var table = Regex.Matches(content, _Pattern);
         // var table = BuildEmojiReplacementIndexTableOfReplyContent(content);
-        var tokens = new List<InlineContent>();
         if (table.Count is 0)
-        {
-            tokens.Add(new RunContent(content));
-            return tokens;
-        }
+            return content;
 
         var span = content.AsSpan();
+        var sb = new StringBuilder();
 
         var lastEnd = 0;
         foreach (Match match in table)
         {
             if (match.Index > lastEnd)
-                tokens.Add(new RunContent(span[lastEnd..match.Index].ToString()));
+                _ = sb.Append(span[lastEnd..match.Index]);
             lastEnd = match.Index + match.Length;
-            tokens.Add(new ImageContent(GetReplyEmojiDownloadUrlFromPlaceholderKey(span[match.Index..lastEnd].ToString())));
+            sb.Append(GetMarkdownUrlFromPlaceholderKey(span[match.Index..lastEnd].ToString()));
         }
 
         if (span.Length > lastEnd)
-            tokens.Add(new RunContent(span[lastEnd..].ToString()));
+            sb.Append(span[lastEnd..]);
 
-        return tokens;
+        return sb.ToString();
     }
 }

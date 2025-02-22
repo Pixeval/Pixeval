@@ -5,7 +5,6 @@ using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
 using Pixeval.Controls.Windowing;
-using WinUI3Utilities;
 
 namespace Pixeval.Controls;
 
