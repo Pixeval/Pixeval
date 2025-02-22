@@ -93,6 +93,7 @@
                                 Visibility="{x:Bind controls:C.IsNullOrEmptyToVisibility(_viewModel.CurrentDocument.TranslatedText), Mode=OneWay}">
                                 <md:MarkdownTextBlock
                                     MaxWidth="{x:Bind _viewModel.NovelMaxWidthEntry.Value, Mode=OneWay}"
+                                    Margin="50"
                                     Config="{x:Bind controls:TranslatableTextBlock.StaticMarkdownConfig}"
                                     FontSize="{x:Bind _viewModel.NovelFontSizeEntry.Value, Mode=OneWay}"
                                     FontWeight="{x:Bind controls:C.ToFontWeight(_viewModel.NovelFontWeightEntry.Value), Mode=OneWay}"

@@ -7,7 +7,6 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:fluent="using:FluentIcons.WinUI"
     xmlns:i="using:Microsoft.Xaml.Interactivity"
-    xmlns:labs="using:CommunityToolkit.Labs.WinUI.MarkdownTextBlock"
     xmlns:local="using:Pixeval.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:model="using:Pixeval.CoreApi.Model"
@@ -26,14 +25,11 @@
                 Text="{x:Bind _viewModel.Entry.Title}"
                 TextBlockStyle="{StaticResource TitleTextBlockStyle}"
                 TextType="WorkTitle" />
-            <labs:MarkdownTextBlock
+            <controls2:TranslatableTextBlock
                 x:Name="WorkCaptionMarkdownTextBlock"
                 Margin="{StaticResource StackLayoutEntryPadding}"
-                Text="">
-                <labs:MarkdownTextBlock.Config>
-                    <labs:MarkdownConfig />
-                </labs:MarkdownTextBlock.Config>
-            </labs:MarkdownTextBlock>
+                HorizontalButtonAlignment="Left"
+                UseMarkdown="True" />
             <StackPanel Orientation="Horizontal" Spacing="5">
                 <TextBlock VerticalAlignment="Center" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}">
                     <Run Text="PID" />

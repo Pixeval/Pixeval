@@ -233,10 +233,15 @@ public partial class ExtensionService : IDisposable
             imageTransformer.OnExtensionLoaded();
     }
 
+    public bool Disposed { get; private set; }
+
     public void Dispose()
     {
+        if (Disposed)
+            return;
+        Disposed = true;
+        GC.SuppressFinalize(this);
         while (HostModels is [{ } model, ..])
             UnloadHost(model);
-        GC.SuppressFinalize(this);
     }
 }
