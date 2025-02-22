@@ -147,6 +147,8 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
             OnDetailedPropertyChanged(oldValue, value, oldTag, CurrentPage.Id);
             OnPropertyChanged(nameof(CurrentIllustration));
         }
+        // 第一次赋值属性时会判断 value == field，如果是0则无法进入get方法体
+        // ReSharper disable once MemberInitializerValueIgnored
     } = -1;
 
     /// <summary>

@@ -120,4 +120,7 @@
   <data name="AppDefaultFontFamilyName" xml:space="preserve">
     <value>Segoe UI</value>
   </data>
+  <data name="Bcl47" xml:space="preserve">
+    <value>ru-RU</value>
+  </data>
 </root>

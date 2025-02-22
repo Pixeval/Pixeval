@@ -23,12 +23,12 @@ public partial class NovelItemViewModel
     protected override void SaveCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
         var frameworkElement = null as FrameworkElement;
-        DocumentViewerViewModel? documentViewerViewModel = null;
+        NovelContent? content = null;
         switch (args.Parameter)
         {
-            case (FrameworkElement h, DocumentViewerViewModel vm):
+            case (FrameworkElement h, NovelContent vm):
                 frameworkElement = h;
-                documentViewerViewModel = vm;
+                content = vm;
                 break;
             case FrameworkElement h:
                 frameworkElement = h;
@@ -39,18 +39,18 @@ public partial class NovelItemViewModel
                 return;
         }
 
-        SaveUtility(frameworkElement, documentViewerViewModel, App.AppViewModel.AppSettings.DownloadPathMacro);
+        SaveUtility(frameworkElement, content, App.AppViewModel.AppSettings.DownloadPathMacro);
     }
 
     protected override async void SaveAsCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
         FrameworkElement frameworkElement;
-        DocumentViewerViewModel? documentViewerViewModel = null;
+        NovelContent? content = null;
         switch (args.Parameter)
         {
-            case (FrameworkElement h, DocumentViewerViewModel vm):
+            case (FrameworkElement h, NovelContent vm):
                 frameworkElement = h;
-                documentViewerViewModel = vm;
+                content = vm;
                 break;
             case FrameworkElement h:
                 frameworkElement = h;
@@ -69,22 +69,22 @@ public partial class NovelItemViewModel
 
         var name = Path.GetFileName(App.AppViewModel.AppSettings.DownloadPathMacro);
         var path = Path.Combine(folder.Path, name);
-        SaveUtility(frameworkElement, documentViewerViewModel, path);
+        SaveUtility(frameworkElement, content, path);
     }
 
     /// <summary>
     /// <see cref="IllustrationDownloadTaskFactory"/>
     /// </summary>
     /// <param name="frameworkElement">承载提示<see cref="TeachingTip"/>的控件，为<see langword="null"/>则不显示</param>
-    /// <param name="source">为<see langword="null"/>则创建新的下载任务</param>
+    /// <param name="content">为<see langword="null"/>则创建新的下载任务</param>
     /// <param name="path">文件路径</param>
     /// <returns></returns>
-    private void SaveUtility(FrameworkElement? frameworkElement, DocumentViewerViewModel? source, string path)
+    private void SaveUtility(FrameworkElement? frameworkElement, NovelContent? content, string path)
     {
         var ib = frameworkElement?.InfoGrowlReturn(EntryItemResources.NovelContentFetching);
 
         var factory = App.AppViewModel.AppServiceProvider.GetRequiredService<NovelDownloadTaskFactory>();
-        if (source is null)
+        if (content is null)
         {
             var task = factory.Create(this, path);
             App.AppViewModel.DownloadManager.QueueTask(task);
@@ -92,7 +92,7 @@ public partial class NovelItemViewModel
         }
         else
         {
-            var task = factory.CreateIntrinsic(this, path, source);
+            var task = factory.CreateIntrinsic(this, path, content);
             App.AppViewModel.DownloadManager.QueueTask(task);
             frameworkElement?.RemoveSuccessGrowlAfterDelay(ib!, EntryItemResources.Saved);
         }

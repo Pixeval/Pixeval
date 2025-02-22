@@ -10,7 +10,7 @@
         <Configurations>Debug;Release</Configurations>
         <LangVersion>preview</LangVersion>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-        <DefaultLanguage>zh-CN</DefaultLanguage>
+        <DefaultLanguage>zh-Hans</DefaultLanguage>
         <IsTrimmable>true</IsTrimmable>
     </PropertyGroup>
 

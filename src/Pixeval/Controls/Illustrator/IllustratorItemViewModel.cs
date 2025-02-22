@@ -19,7 +19,7 @@ public sealed partial class IllustratorItemViewModel : EntryViewModel<User>, IFa
         IsFollowed = Entry.UserInfo.IsFollowed;
 
         InitializeCommands();
-        FollowCommand.RefreshFollowCommand(IsFollowed);
+        FollowCommand.RefreshFollowCommand(IsFollowed, false);
     }
 
     public string Username => Entry.UserInfo.Name;

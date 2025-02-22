@@ -2,19 +2,23 @@
     x:Class="Pixeval.Pages.WorkInfoPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:behaviors="using:Pixeval.Behaviors"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:controls2="using:Pixeval.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:fluent="using:FluentIcons.WinUI"
     xmlns:i="using:Microsoft.Xaml.Interactivity"
-    xmlns:labs="using:CommunityToolkit.Labs.WinUI.MarkdownTextBlock"
     xmlns:local="using:Pixeval.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:model="using:Pixeval.CoreApi.Model"
     xmlns:pixeval="using:Pixeval.AppManagement"
     xmlns:ui="using:CommunityToolkit.WinUI"
     mc:Ignorable="d">
+    <controls2:EnhancedPage.Resources>
+        <!--  翻译后的TextBlock可以用，暂时没用上  -->
+        <Style x:Key="GrayTextBlock" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{ThemeResource SystemControlForegroundBaseMediumBrush}" />
+        </Style>
+    </controls2:EnhancedPage.Resources>
     <ScrollViewer
         HorizontalScrollBarVisibility="Disabled"
         HorizontalScrollMode="Disabled"
@@ -27,14 +31,11 @@
                 Text="{x:Bind _viewModel.Entry.Title}"
                 TextBlockStyle="{StaticResource TitleTextBlockStyle}"
                 TextType="WorkTitle" />
-            <labs:MarkdownTextBlock
+            <controls2:TranslatableTextBlock
                 x:Name="WorkCaptionMarkdownTextBlock"
                 Margin="{StaticResource StackLayoutEntryPadding}"
-                Text="">
-                <labs:MarkdownTextBlock.Config>
-                    <labs:MarkdownConfig />
-                </labs:MarkdownTextBlock.Config>
-            </labs:MarkdownTextBlock>
+                HorizontalButtonAlignment="Left"
+                UseMarkdown="True" />
             <StackPanel Orientation="Horizontal" Spacing="5">
                 <TextBlock VerticalAlignment="Center" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}">
                     <Run Text="PID" />
@@ -47,7 +48,7 @@
                                             Symbol=Copy}"
                     Style="{StaticResource PixevalTransparentButtonStyle}">
                     <i:Interaction.Behaviors>
-                        <behaviors:ButtonCopyBehavior TargetText="{x:Bind _viewModel.Entry.Id}" />
+                        <controls2:ButtonCopyBehavior TargetText="{x:Bind _viewModel.Entry.Id}" />
                     </i:Interaction.Behaviors>
                 </Button>
             </StackPanel>
@@ -88,7 +89,7 @@
                                                     Symbol=Copy}"
                             Style="{StaticResource PixevalTransparentButtonStyle}">
                             <i:Interaction.Behaviors>
-                                <behaviors:ButtonCopyBehavior TargetText="{x:Bind _viewModel.Illustrator.Id}" />
+                                <controls2:ButtonCopyBehavior TargetText="{x:Bind _viewModel.Illustrator.Id}" />
                             </i:Interaction.Behaviors>
                         </Button>
                     </StackPanel>
@@ -114,6 +115,7 @@
                                             <x:Boolean>True</x:Boolean>
                                         </controls:Case.Value>
                                         <controls2:TranslatableTextBlock
+                                            ButtonMargin="-2"
                                             IsCompact="True"
                                             IsHorizontal="True"
                                             Text="{x:Bind Name}"

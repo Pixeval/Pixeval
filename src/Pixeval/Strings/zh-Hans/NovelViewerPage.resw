@@ -117,10 +117,13 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AppDefaultFontFamilyName" xml:space="preserve">
-    <value>Segoe UI</value>
+  <data name="ApplyingTransformerExtensions" xml:space="preserve">
+    <value>正在应用文字翻译扩展</value>
   </data>
-  <data name="Bcl47" xml:space="preserve">
-    <value>fr-FR</value>
+  <data name="TransformerExtensionFailed" xml:space="preserve">
+    <value>文字翻译扩展应用失败</value>
+  </data>
+  <data name="TransformerExtensionFinishedSuccessfully" xml:space="preserve">
+    <value>文字翻译扩展应用成功</value>
   </data>
 </root>

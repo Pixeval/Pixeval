@@ -22,7 +22,7 @@ public partial class NovelDownloadTaskGroup : DownloadTaskGroup
 
     private NovelContent NovelContent { get; set; } = null!;
 
-    private DocumentViewerViewModel DocumentViewModel { get; set; } = null!;
+    private NovelContext DocumentViewModel { get; set; } = null!;
 
     /// <summary>
     /// 小说正文的保存路径
@@ -41,11 +41,10 @@ public partial class NovelDownloadTaskGroup : DownloadTaskGroup
 
     [MemberNotNull(nameof(NovelContent), nameof(DocumentViewModel))]
     private void SetNovelContent(
-        NovelContent novelContent,
-        DocumentViewerViewModel? documentViewModel = null)
+        NovelContent novelContent)
     {
         NovelContent = novelContent;
-        DocumentViewModel = documentViewModel ?? new DocumentViewerViewModel(novelContent);
+        DocumentViewModel = new NovelContext(novelContent);
         var directory = NovelDownloadFormat is NovelDownloadFormat.Pdf
             ? PdfTempFolderPath
             : Path.GetDirectoryName(DocPath)!;
@@ -97,7 +96,6 @@ public partial class NovelDownloadTaskGroup : DownloadTaskGroup
     public NovelDownloadTaskGroup(
         Novel entry,
         NovelContent novelContent,
-        DocumentViewerViewModel documentViewModel,
         string destination) : base(entry, destination, DownloadItemType.Novel)
     {
         var backSlash = TokenizedDestination.LastIndexOf('\\');
@@ -107,7 +105,7 @@ public partial class NovelDownloadTaskGroup : DownloadTaskGroup
         var imgExt = TokenizedDestination[(backSlash + 1)..];
         IllustrationDownloadFormat = IoHelper.GetIllustrationFormat(imgExt);
         NovelDownloadFormat = IoHelper.GetNovelFormat(Path.GetExtension(DocPath));
-        SetNovelContent(novelContent, documentViewModel);
+        SetNovelContent(novelContent);
     }
 
     public override async ValueTask InitializeTaskGroupAsync()
@@ -145,7 +143,7 @@ public partial class NovelDownloadTaskGroup : DownloadTaskGroup
             return;
         }
 
-        DocumentViewModel.InitImages();
+        ((INovelContext<Stream>)DocumentViewModel).InitImages();
 
         var content = NovelDownloadFormat switch
         {

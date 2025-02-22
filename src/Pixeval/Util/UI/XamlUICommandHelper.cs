@@ -40,22 +40,28 @@ public static class XamlUiCommandHelper
             KeyboardAccelerators = { new KeyboardAccelerator { Modifiers = modifiers, Key = key } }
         };
 
-    public static void RefreshBookmarkCommand(this XamlUICommand command, bool isBookmarked)
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="command"></param>
+    /// <param name="isBookmarked"></param>
+    /// <param name="isPending">表示<paramref name="isBookmarked"/>的状态即将变化</param>
+    public static void RefreshBookmarkCommand(this XamlUICommand command, bool isBookmarked, bool isPending)
     {
         command.Label = command.Description = isBookmarked ? MiscResources.RemoveBookmark : MiscResources.AddBookmark;
-        command.IconSource = Symbol.Heart.GetSymbolIconSource(isBookmarked, isBookmarked ? new SolidColorBrush(Colors.Crimson) : null);
+        command.IconSource = Symbol.Heart.GetSymbolIconSource(isBookmarked ^ isPending, isBookmarked ? new SolidColorBrush(Colors.Crimson) : null);
     }
 
-    public static void RefreshFollowCommand(this XamlUICommand command, bool isFollowed)
+    public static void RefreshFollowCommand(this XamlUICommand command, bool isFollowed, bool isPending)
     {
         command.Label = command.Description = isFollowed ? MiscResources.Unfollow : MiscResources.Follow;
-        command.IconSource = Symbol.Person.GetSymbolIconSource(isFollowed, isFollowed ? new SolidColorBrush(Colors.Crimson) : null);
+        command.IconSource = Symbol.Person.GetSymbolIconSource(isFollowed ^ isPending, isFollowed ? new SolidColorBrush(Colors.Crimson) : null);
     }
 
     public static XamlUICommand GetNewFollowCommand(bool isFollowed)
     {
         var xamlUiCommand = new XamlUICommand();
-        xamlUiCommand.RefreshFollowCommand(isFollowed);
+        xamlUiCommand.RefreshFollowCommand(isFollowed, false);
         return xamlUiCommand;
     }
 

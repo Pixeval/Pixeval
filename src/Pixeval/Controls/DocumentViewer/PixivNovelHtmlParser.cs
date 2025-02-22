@@ -2,20 +2,19 @@
 // Licensed under the GPL v3 License.
 
 using System;
-using System.IO;
 using System.Text;
 using Pixeval.Util;
 using Pixeval.Utilities;
 
 namespace Pixeval.Controls;
 
-public class PixivNovelHtmlParser(StringBuilder sb, int pageIndex) : PixivNovelParser<StringBuilder, Stream, INovelParserViewModel<Stream>>
+public class PixivNovelHtmlParser<T>(StringBuilder sb, int pageIndex) : PixivNovelParser<StringBuilder, T, INovelContext<T>> where T : class
 {
     protected override StringBuilder Vector => sb.AppendLine($"<div id=\"page{pageIndex}\" /><br/>");
 
     protected override void AddLastSpan(StringBuilder currentText, string lastSpan)
     {
-        _ = currentText.Append($"<span>{lastSpan.ReplaceLineEndings("\n<br/>\n")}</span>");
+        _ = currentText.Append($"<span>{lastSpan.ReplaceLineEndings(Environment.NewLine + "<br/>" + Environment.NewLine)}</span>");
     }
 
     protected override void AddRuby(StringBuilder currentText, string kanji, string ruby)
@@ -28,7 +27,7 @@ public class PixivNovelHtmlParser(StringBuilder sb, int pageIndex) : PixivNovelP
         _ = currentText.Append($"<a href=\"{uri.OriginalString}\">{content}</a>");
     }
 
-    protected override void AddInlineHyperlink(StringBuilder currentText, uint page, INovelParserViewModel<Stream> viewModel)
+    protected override void AddInlineHyperlink(StringBuilder currentText, uint page, INovelContext<T> viewModel)
     {
         _ = currentText.Append($"<a href=\"page{page - 1}\">{MiscResources.GoToPageFormatted.Format(page)}</a>");
     }
@@ -44,7 +43,7 @@ public class PixivNovelHtmlParser(StringBuilder sb, int pageIndex) : PixivNovelP
             .AppendLine("<br/><br/>");
     }
 
-    protected override void AddUploadedImage(StringBuilder currentText, INovelParserViewModel<Stream> viewModel, long imageId)
+    protected override void AddUploadedImage(StringBuilder currentText, INovelContext<T> viewModel, long imageId)
     {
         _ = currentText
         .AppendLine("<br/><br/>")
@@ -52,7 +51,7 @@ public class PixivNovelHtmlParser(StringBuilder sb, int pageIndex) : PixivNovelP
             .AppendLine("<br/><br/>");
     }
 
-    protected override void AddPixivImage(StringBuilder currentText, INovelParserViewModel<Stream> viewModel, long imageId, int page)
+    protected override void AddPixivImage(StringBuilder currentText, INovelContext<T> viewModel, long imageId, int page)
     {
         // var key = (imageId, page);
         _ = currentText

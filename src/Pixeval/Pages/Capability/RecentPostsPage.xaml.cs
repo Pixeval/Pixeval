@@ -10,7 +10,11 @@ namespace Pixeval.Pages.Capability;
 
 public sealed partial class RecentPostsPage : IScrollViewHost
 {
-    public RecentPostsPage() => InitializeComponent();
+    public RecentPostsPage()
+    {
+        InitializeComponent();
+        SimpleWorkTypeComboBox.SelectedEnum = App.AppViewModel.AppSettings.SimpleWorkType;
+    }
 
     public override void OnPageActivated(NavigationEventArgs e, object? parameter) => ChangeSource();
 

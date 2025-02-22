@@ -17,12 +17,13 @@
         x:Name="OriginalTextPresenter"
         Grid.Row="0"
         Grid.Column="0"
-        Visibility="{x:Bind CanDisplay(TranslatedText, IsCompact), Mode=OneWay}" />
+        Visibility="{x:Bind CanDisplay(IsCompact), Mode=OneWay}" />
     <!--  ReSharper disable once UnusedMember.Local  -->
     <Button
         x:Name="TranslateButton"
         Grid.Row="0"
         Grid.Column="0"
+        Margin="{x:Bind ButtonMargin, Mode=OneWay}"
         Padding="2"
         HorizontalAlignment="{x:Bind HorizontalButtonAlignment, Mode=OneWay}"
         VerticalAlignment="{x:Bind VerticalButtonAlignment, Mode=OneWay}"
@@ -51,16 +52,8 @@
             </controls:SwitchPresenter>
         </Button.Content>
     </Button>
-    <!--  ReSharper disable once UnusedMember.Local  -->
-    <TextBlock
-        x:Name="TranslationBox"
+    <ContentPresenter
+        x:Name="TranslationBoxPresenter"
         Grid.Row="0"
-        Grid.Column="0"
-        IsTextSelectionEnabled="True"
-        MaxLines="{x:Bind MaxLines, Mode=OneWay}"
-        Style="{x:Bind TextBlockStyle, Mode=OneWay}"
-        Text="{x:Bind TranslatedText, Mode=OneWay}"
-        TextWrapping="Wrap"
-        ToolTipService.ToolTip="{x:Bind NeedToolTip(MaxLines, TranslatedText), Mode=OneWay}"
-        Visibility="{x:Bind local:C.IsNullOrEmptyToVisibility(TranslatedText), Mode=OneWay}" />
+        Grid.Column="0" />
 </Grid>

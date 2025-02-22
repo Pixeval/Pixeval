@@ -277,7 +277,7 @@ public partial record AppSettings() : IWindowSettings
         }
     }
 
-    public static CultureInfo CurrentCulture => ApplicationLanguages.PrimaryLanguageOverride.Let(language => string.IsNullOrEmpty(language) ? CultureInfo.CurrentUICulture : CultureInfo.GetCultureInfo(language));
+    public static CultureInfo CurrentCulture => ApplicationLanguages.PrimaryLanguageOverride.Let(language => CultureInfo.GetCultureInfo(string.IsNullOrWhiteSpace(language) ? AppSettingsResources.Bcl47 : language));
 
     public MakoClientConfiguration ToMakoClientConfiguration()
     {

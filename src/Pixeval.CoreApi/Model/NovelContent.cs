@@ -148,6 +148,8 @@ public partial record NovelImage
     public required NovelImageUrls Urls { get; set; }
 
     public string ThumbnailUrl => Urls.X1200;
+
+    public string OriginalUrl => Urls.Original;
 }
 
 [Factory]

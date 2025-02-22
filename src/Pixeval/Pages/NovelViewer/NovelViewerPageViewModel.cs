@@ -3,9 +3,10 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using Windows.System;
-using FluentIcons.Common;
+using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
 using Pixeval.Controls;
@@ -18,6 +19,7 @@ using Pixeval.AppManagement;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.Settings;
 using Pixeval.Settings.Models;
+using Symbol = FluentIcons.Common.Symbol;
 
 namespace Pixeval.Pages.NovelViewer;
 
@@ -84,44 +86,23 @@ public partial class NovelViewerPageViewModel : DetailedUiObservableObject, IDis
 
     #region Current相关
 
-    /// <summary>
-    /// setter只用于绑定反向更新
-    /// </summary>
-    public int PageCount
-    {
-        get;
-        set
-        {
-            field = value;
-            OnButtonPropertiesChanged();
-        }
-    }
+    public event PropertyChangedEventHandler? CurrentDocumentPropertyChanged;
+
+    [ObservableProperty]
+    public partial DocumentViewerViewModel CurrentDocument { get; private set; } = null!;
 
     /// <summary>
-    /// setter只用于绑定反向更新
-    /// </summary>
-    public int CurrentPageIndex
-    {
-        get;
-        set
-        {
-            field = value;
-            OnButtonPropertiesChanged();
-        }
-    } = -1;
-
-    /// <summary>
-    /// 插画列表
+    /// 小说列表
     /// </summary>
     public IList<NovelItemViewModel> Novels => ViewModelSource?.DataProvider.View ?? (IList<NovelItemViewModel>)NovelsSource!;
 
     /// <summary>
-    /// 当前插画
+    /// 当前小说
     /// </summary>
     public NovelItemViewModel CurrentNovel => Novels[CurrentNovelIndex];
 
     /// <summary>
-    /// 当前插画的索引
+    /// 当前小说的索引
     /// </summary>
     public int CurrentNovelIndex
     {
@@ -134,18 +115,38 @@ public partial class NovelViewerPageViewModel : DetailedUiObservableObject, IDis
                 return;
 
             var oldValue = field;
-            // ReSharper disable once ConditionalAccessQualifierIsNonNullableAccordingToAPIContract
 
             field = value;
-            CurrentPageIndex = 0;
 
             NovelInfoTag.Parameter = CurrentNovel.Entry;
             CommentsTag.Parameter = (SimpleWorkType.Novel, NovelId);
 
+            if (CurrentDocument != null!)
+                CurrentDocument.PropertyChanged -= OnCurrentDocumentOnPropertyChanged;
+            CurrentDocument = new DocumentViewerViewModel(FrameworkElement);
+            _ = CurrentDocument.LoadAsync(CurrentNovel);
+            CurrentDocument.PropertyChanged += OnCurrentDocumentOnPropertyChanged;
+
             OnDetailedPropertyChanged(oldValue, value);
             OnPropertyChanged(nameof(CurrentNovel));
             OnPropertyChanged(nameof(NovelId));
+
+            return;
+
+            void OnCurrentDocumentOnPropertyChanged(object? o, PropertyChangedEventArgs e)
+            {
+                switch (e.PropertyName)
+                {
+                    case nameof(DocumentViewerViewModel.CurrentPage):
+                        OnButtonPropertiesChanged();
+                        break;
+                }
+
+                CurrentDocumentPropertyChanged?.Invoke(o, e);
+            }
         }
+        // 第一次赋值属性时会判断 value == field，如果是0则无法进入get方法体
+        // ReSharper disable once MemberInitializerValueIgnored
     } = -1;
 
     private void OnButtonPropertiesChanged()
@@ -175,7 +176,7 @@ public partial class NovelViewerPageViewModel : DetailedUiObservableObject, IDis
     {
         get
         {
-            if (CurrentPageIndex < PageCount - 1)
+            if (CurrentDocument.CurrentPage < CurrentDocument.PageCount - 1)
                 return true;
 
             if (CurrentNovelIndex < Novels.Count - 1)
@@ -202,7 +203,7 @@ public partial class NovelViewerPageViewModel : DetailedUiObservableObject, IDis
     {
         get
         {
-            if (CurrentPageIndex > 0)
+            if (CurrentDocument.CurrentPage > 0)
                 return true;
 
             if (CurrentNovelIndex > 0)

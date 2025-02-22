@@ -5,10 +5,10 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:Pixeval.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Padding="50,0"
     mc:Ignorable="d">
     <RichTextBlock
         x:Name="NovelRichTextBlock"
         MaxWidth="{x:Bind NovelMaxWidth, Mode=OneWay}"
+        Margin="50"
         LineHeight="{x:Bind LineHeight, Mode=OneWay}" />
 </ScrollView>

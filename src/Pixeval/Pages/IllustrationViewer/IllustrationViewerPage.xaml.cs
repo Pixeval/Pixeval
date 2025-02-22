@@ -133,7 +133,7 @@ public sealed partial class IllustrationViewerPage
                 Label = extension.GetLabel(),
                 Icon = new SymbolIcon { Symbol = extension.GetIcon() },
                 CommandParameter = extension,
-                // 第一次_viewModel.CurrentIllustrationIndex变化时，还没有订阅事件，所以需要手动触发
+                // 第一次_viewModel.CurrentIllustrationIndex变化时，还没有订阅事件，所以需要手动订阅
                 Command = _viewModel.CurrentImage.GetTransformExtensionCommand(extension)
             };
             ToolTipService.SetToolTip(appBarButton, extension.GetDescription());

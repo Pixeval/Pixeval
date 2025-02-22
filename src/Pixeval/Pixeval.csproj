@@ -11,7 +11,7 @@
         <UseWinUI>true</UseWinUI>
         <EnableMsixTooling>true</EnableMsixTooling>
         <EnableDefaultPriItems>false</EnableDefaultPriItems>
-        <DefaultLanguage>zh-CN</DefaultLanguage>
+        <DefaultLanguage>zh-Hans</DefaultLanguage>
         <LangVersion>preview</LangVersion>
         <Configurations>Debug;Release</Configurations>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -35,6 +35,7 @@
         <PackageReference Include="CommunityToolkit.WinUI.Controls.Primitives" />
         <PackageReference Include="CommunityToolkit.WinUI.Controls.Segmented" />
         <PackageReference Include="CommunityToolkit.WinUI.Controls.SettingsControls" />
+        <PackageReference Include="CommunityToolkit.WinUI.Controls.Sizers" />
         <PackageReference Include="CommunityToolkit.WinUI.Controls.TokenizingTextBox" />
         <PackageReference Include="CommunityToolkit.WinUI.Converters" />
         <PackageReference Include="CommunityToolkit.WinUI.Media" />
@@ -69,8 +70,7 @@
         <ProjectReference Include="..\Pixeval.Controls\Pixeval.Controls.csproj" />
         <ProjectReference Include="..\Pixeval.CoreApi\Pixeval.CoreApi.csproj" />
         <ProjectReference Include="..\Pixeval.Utilities\Pixeval.Utilities.csproj" />
-        <ProjectReference Include="..\Pixeval.SourceGen\Pixeval.SourceGen.csproj"
-            OutputItemType="Analyzer" ReferenceOutputAssembly="False" />
+        <ProjectReference Include="..\Pixeval.SourceGen\Pixeval.SourceGen.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="False" />
         <Manifest Include="$(ApplicationManifest)" />
     </ItemGroup>
 
@@ -84,11 +84,8 @@
                 <Content>$([System.IO.File]::ReadAllText(%(FullPath)))</Content>
             </TextFiles>
         </ItemGroup>
-        <WriteLinesToFile Condition="%(TextFiles.Identity) != ''" File="%(TextFiles.Identity)"
-            Overwrite="true" Lines="{}" />
-        <JsonPoke Condition="%(TextFiles.Identity) != '' AND '$(DesignTimeBuild)' != 'true'"
-            ContentPath="%(TextFiles.Identity)"
-            Query="$['%(TextFiles.Key)']" Value="%(TextFiles.Content)"></JsonPoke>
+        <WriteLinesToFile Condition="%(TextFiles.Identity) != ''" File="%(TextFiles.Identity)" Overwrite="true" Lines="{}" />
+        <JsonPoke Condition="%(TextFiles.Identity) != '' AND '$(DesignTimeBuild)' != 'true'" ContentPath="%(TextFiles.Identity)" Query="$['%(TextFiles.Key)']" Value="%(TextFiles.Content)"></JsonPoke>
         <ItemGroup>
             <PRIResource Include="@(TextFiles)" />
             <AdditionalFiles Include="@(PRIResource)" SourceItemGroup="PRIResource" />

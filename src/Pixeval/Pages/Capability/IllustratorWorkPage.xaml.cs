@@ -10,7 +10,11 @@ namespace Pixeval.Pages.Capability;
 
 public sealed partial class IllustratorWorkPage : IScrollViewHost
 {
-    public IllustratorWorkPage() => InitializeComponent();
+    public IllustratorWorkPage()
+    {
+        InitializeComponent();
+        WorkTypeComboBox.SelectedEnum = App.AppViewModel.AppSettings.WorkType;
+    }
 
     public ScrollView ScrollView => WorkContainer.ScrollView;
 
