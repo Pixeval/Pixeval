@@ -18,7 +18,6 @@ using Pixeval.CoreApi.Model;
 using Pixeval.Extensions;
 using SymbolIcon = FluentIcons.WinUI.SymbolIcon;
 using Pixeval.Extensions.Common.Commands.Transformers;
-using Pixeval.Utilities;
 
 namespace Pixeval.Pages.NovelViewer;
 

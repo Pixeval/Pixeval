@@ -13,6 +13,12 @@
     xmlns:pixeval="using:Pixeval.AppManagement"
     xmlns:ui="using:CommunityToolkit.WinUI"
     mc:Ignorable="d">
+    <controls2:EnhancedPage.Resources>
+        <!--  翻译后的TextBlock可以用，暂时没用上  -->
+        <Style x:Key="GrayTextBlock" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{ThemeResource SystemControlForegroundBaseMediumBrush}" />
+        </Style>
+    </controls2:EnhancedPage.Resources>
     <ScrollViewer
         HorizontalScrollBarVisibility="Disabled"
         HorizontalScrollMode="Disabled"

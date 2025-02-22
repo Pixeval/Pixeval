@@ -83,7 +83,7 @@ public partial class WorkEntryViewModel<T>
 
         AddToBookmarkCommand.ExecuteRequested += AddToBookmarkCommandOnExecuteRequested;
 
-        BookmarkCommand.RefreshBookmarkCommand(IsBookmarked);
+        BookmarkCommand.RefreshBookmarkCommand(IsBookmarked, false);
         BookmarkCommand.ExecuteRequested += BookmarkCommandOnExecuteRequested;
 
         SaveCommand.ExecuteRequested += SaveCommandOnExecuteRequested;
@@ -96,9 +96,10 @@ public partial class WorkEntryViewModel<T>
     private async void BookmarkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
         IsBookmarkedDisplay = HeartButtonState.Pending; // pre-update
+        BookmarkCommand.RefreshBookmarkCommand(IsBookmarked, true);
         var result = await _bookmarkDebounce.ExecuteAsync(!IsBookmarked ? new BookmarkDebounceTask(this, false, null) : new RemoveBookmarkDebounceTask(this, false, null));
         IsBookmarkedDisplay = result ? HeartButtonState.Checked : HeartButtonState.Unchecked;
-        BookmarkCommand.RefreshBookmarkCommand(result);
+        BookmarkCommand.RefreshBookmarkCommand(result, false);
         if (App.AppViewModel.AppSettings.DownloadWhenBookmarked && result)
             SaveCommand.Execute(args.Parameter);
     }
@@ -108,9 +109,10 @@ public partial class WorkEntryViewModel<T>
         if (args.Parameter is not (IEnumerable<string> userTags, bool isPrivate, var parameter))
             return;
         IsBookmarkedDisplay = HeartButtonState.Pending; // pre-update
+        BookmarkCommand.RefreshBookmarkCommand(IsBookmarked, true);
         var result = await _bookmarkDebounce.ExecuteAsync(!IsBookmarked ? new BookmarkDebounceTask(this, isPrivate, userTags) : new RemoveBookmarkDebounceTask(this, isPrivate, userTags));
         IsBookmarkedDisplay = result ? HeartButtonState.Checked : HeartButtonState.Unchecked;
-        BookmarkCommand.RefreshBookmarkCommand(result);
+        BookmarkCommand.RefreshBookmarkCommand(result, false);
         if (App.AppViewModel.AppSettings.DownloadWhenBookmarked)
             SaveCommand.Execute(parameter);
     }

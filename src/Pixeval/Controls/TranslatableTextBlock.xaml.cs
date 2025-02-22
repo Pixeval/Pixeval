@@ -5,6 +5,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
+using Windows.Foundation;
 using CommunityToolkit.Labs.WinUI.MarkdownTextBlock;
 using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
@@ -18,6 +19,8 @@ namespace Pixeval.Controls;
 
 public sealed partial class TranslatableTextBlock : Grid
 {
+    public event TypedEventHandler<TranslatableTextBlock, EventArgs>? IsTranslatedChanged; 
+
     /// <summary>
     /// 原文
     /// </summary>
@@ -49,6 +52,12 @@ public sealed partial class TranslatableTextBlock : Grid
     public partial bool IsTranslating { get; private set; }
 
     /// <summary>
+    /// 是否已经显示了翻译内容
+    /// </summary>
+    [GeneratedDependencyProperty]
+    public partial bool IsTranslated { get; private set; }
+
+    /// <summary>
     /// 翻译按钮的水平对齐方式
     /// </summary>
     [GeneratedDependencyProperty(DefaultValue = HorizontalAlignment.Center)]
@@ -67,9 +76,14 @@ public sealed partial class TranslatableTextBlock : Grid
     public partial Thickness ButtonMargin { get; set; }
 
     /// <summary>
-    /// 普通文本框的样式
+    /// 原文普通文本框的样式
     /// </summary>
     public Style? TextBlockStyle { get; set; }
+
+    /// <summary>
+    /// 翻译后普通文本框的样式
+    /// </summary>
+    public Style? TranslatedBlockStyleWhenNotCompact { get; set; }
 
     /// <summary>
     /// 普通文本框行数
@@ -84,7 +98,7 @@ public sealed partial class TranslatableTextBlock : Grid
     /// <summary>
     /// 使用Markdown
     /// </summary>
-    public bool UseMarkdown { get; set; } = true;
+    public bool UseMarkdown { get; set; }
 
     /// <summary>
     /// 默认的Markdown配置
@@ -162,6 +176,7 @@ public sealed partial class TranslatableTextBlock : Grid
 
             // 手动触发原始文本框可见性
             OriginalTextPresenter.Visibility = CanDisplay(IsCompact);
+            IsTranslated = TranslationBoxPresenter.Content is not null;
         }
     }
 
@@ -173,7 +188,7 @@ public sealed partial class TranslatableTextBlock : Grid
         return tb;
     }
     
-    private TextBlock GetNewTextBlock(TextBlock? textBlock, string text)
+    private TextBlock GetNewTextBlock(TextBlock? textBlock, string text, Style? textBlockStyle)
     {
         var tb = textBlock ?? new TextBlock();
         tb.Text = text;
@@ -181,7 +196,7 @@ public sealed partial class TranslatableTextBlock : Grid
         tb.TextTrimming = TextTrimming.CharacterEllipsis;
         tb.IsTextSelectionEnabled = true;
         tb.MaxLines = MaxLines;
-        tb.Style = TextBlockStyle;
+        tb.Style = textBlockStyle;
         ToolTipService.SetToolTip(tb, NeedToolTip(MaxLines, text));
         return tb;
     }
@@ -193,7 +208,7 @@ public sealed partial class TranslatableTextBlock : Grid
             ? null
             : UseMarkdown
                 ? GetNewMarkdownTextBlock(OriginalTextPresenterContent as MarkdownTextBlock, Text)
-                : GetNewTextBlock(OriginalTextPresenterContent as TextBlock, Text);
+                : GetNewTextBlock(OriginalTextPresenterContent as TextBlock, Text, TextBlockStyle);
 
         TranslationBoxPresenterContent = null;
         CanTranslate = canTranslate && _extensionService.ActiveTextTransformerCommands.Any();
@@ -219,7 +234,7 @@ public sealed partial class TranslatableTextBlock : Grid
                     return;
                 TranslationBoxPresenterContent = UseMarkdown
                     ? GetNewMarkdownTextBlock(TranslationBoxPresenterContent as MarkdownTextBlock, translatedText)
-                    : GetNewTextBlock(TranslationBoxPresenterContent as TextBlock, translatedText);
+                    : GetNewTextBlock(TranslationBoxPresenterContent as TextBlock, translatedText, IsCompact ? TextBlockStyle : TranslatedBlockStyleWhenNotCompact);
             }
         }
         finally
@@ -318,6 +333,11 @@ public sealed partial class TranslatableTextBlock : Grid
             for (var i = 0; i < row; ++i)
                 RowDefinitions.Add(new() { Height = GridLength.Auto });
         }
+    }
+
+    partial void OnIsTranslatedPropertyChanged(DependencyPropertyChangedEventArgs e)
+    {
+        IsTranslatedChanged?.Invoke(this, EventArgs.Empty);
     }
 }
 
