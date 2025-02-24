@@ -1,6 +1,8 @@
 bundles:
-    - 4
-    - 6
+  - 4
+  - 6
 files:
-  - source: /src/Pixeval/Strings/zh-CN/*
+  - source: /src/Pixeval/Strings/zh-Hans/*
     translation: /src/Pixeval/Strings/%locale%/%original_file_name%
+  - source: /src/Pixeval.Controls/Strings/zh-Hans/*
+    translation: /src/Pixeval.Controls/Strings/%locale%/%original_file_name%
