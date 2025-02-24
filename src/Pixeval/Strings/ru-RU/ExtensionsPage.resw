@@ -59,46 +59,46 @@
             : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
-  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
           <xsd:element name="metadata">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
               </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string" />
-              <xsd:attribute name="type" type="xsd:string" />
-              <xsd:attribute name="mimetype" type="xsd:string" />
-              <xsd:attribute ref="xml:space" />
+              <xsd:attribute name="name" use="required" type="xsd:string"/>
+              <xsd:attribute name="type" type="xsd:string"/>
+              <xsd:attribute name="mimetype" type="xsd:string"/>
+              <xsd:attribute ref="xml:space"/>
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
             <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string" />
-              <xsd:attribute name="name" type="xsd:string" />
+              <xsd:attribute name="alias" type="xsd:string"/>
+              <xsd:attribute name="name" type="xsd:string"/>
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
-              <xsd:attribute ref="xml:space" />
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
+              <xsd:attribute ref="xml:space"/>
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" />
+              <xsd:attribute name="name" type="xsd:string" use="required"/>
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -117,34 +117,40 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="DllLoadFailed" xml:space="preserve">
-    <value>Не удалось загрузить DLL</value>
-  </data>
-  <data name="DllLoadedSuccessfully" xml:space="preserve">
-    <value>DLL загружен</value>
-  </data>
-  <data name="DllFileExistedError" xml:space="preserve">
-    <value>Файл уже существует в папке расширений, он будет пропущен</value>
+  <data name="AddExtensionsButton.Label" xml:space="preserve">
+    <value>Добавить расширения</value>
   </data>
   <data name="UnzipFailed" xml:space="preserve">
     <value>Ошибка при распаковке архива расширения</value>
   </data>
-  <data name="AddExtensionsButton.Label" xml:space="preserve">
-    <value>Добавить расширения</value>
+  <data name="DllFileExistedError" xml:space="preserve">
+    <value>Файл уже существует в папке расширений, он будет пропущен</value>
   </data>
-  <data name="ExtensionsHelpButton.Label" xml:space="preserve">
-    <value>Справочная документация</value>
+  <data name="DllLoadedSuccessfully" xml:space="preserve">
+    <value>DLL загружен</value>
   </data>
-  <data name="ZipContainsNoDll" xml:space="preserve">
-    <value>ZIP-файл не содержит доступных DLL</value>
+  <data name="DllLoadFailed" xml:space="preserve">
+    <value>Не удалось загрузить DLL</value>
   </data>
-  <data name="UnloadExtensionsButton.Label" xml:space="preserve">
-    <value>Выгрузить расширения</value>
+  <data name="OpenExtensionsButton.Label" xml:space="preserve">
+    <value>Открыть папку расширений</value>
   </data>
   <data name="TitleTextBlock.Text" xml:space="preserve">
     <value>Менеджер расширений Pixeval</value>
   </data>
-  <data name="OpenExtensionsButton.Label" xml:space="preserve">
-    <value>Открыть папку расширений</value>
+  <data name="UnloadExtensionsButton.Label" xml:space="preserve">
+    <value>Выгрузить расширения</value>
+  </data>
+  <data name="ZipContainsNoDll" xml:space="preserve">
+    <value>ZIP-файл не содержит доступных DLL</value>
+  </data>
+  <data name="ExtensionsHelpButton.Label" xml:space="preserve">
+    <value>Справочная документация</value>
+  </data>
+  <data name="ExtensionOutdated" xml:space="preserve">
+    <value>DLL加载成功，但扩展版本已过时，请从获取扩展处下载最新的版本</value>
+  </data>
+  <data name="SomeExtensionsOutdatedFormatted" xml:space="preserve">
+    <value>有 {0} 个扩展版本已过时，请从获取扩展处下载最新的版本  </value>
   </data>
 </root>
