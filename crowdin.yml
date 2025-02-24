@@ -1,0 +1,6 @@
+bundles:
+    - 4
+    - 6
+files:
+  - source: /src/Pixeval/Strings/zh-Hans/*
+    translation: /src/Pixeval/Strings/%locale%/%original_file_name%
