@@ -59,46 +59,46 @@
             : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
-  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
           <xsd:element name="metadata">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
               </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string" />
-              <xsd:attribute name="type" type="xsd:string" />
-              <xsd:attribute name="mimetype" type="xsd:string" />
-              <xsd:attribute ref="xml:space" />
+              <xsd:attribute name="name" use="required" type="xsd:string"/>
+              <xsd:attribute name="type" type="xsd:string"/>
+              <xsd:attribute name="mimetype" type="xsd:string"/>
+              <xsd:attribute ref="xml:space"/>
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
             <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string" />
-              <xsd:attribute name="name" type="xsd:string" />
+              <xsd:attribute name="alias" type="xsd:string"/>
+              <xsd:attribute name="name" type="xsd:string"/>
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
-              <xsd:attribute ref="xml:space" />
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
+              <xsd:attribute ref="xml:space"/>
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" />
+              <xsd:attribute name="name" type="xsd:string" use="required"/>
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -120,11 +120,44 @@
   <data name="QrCodeTeachingTip.Title" xml:space="preserve">
     <value>QR-код работы</value>
   </data>
+  <data name="AddToBookmarkTeachingTip.CloseButtonContent" xml:space="preserve">
+    <value>Добавить в закладки</value>
+  </data>
+  <data name="AddedToBookmark" xml:space="preserve">
+    <value>Добавлено в закладки</value>
+  </data>
   <data name="Share" xml:space="preserve">
     <value>Поделиться</value>
   </data>
-  <data name="Background" xml:space="preserve">
-    <value>Обои</value>
+  <data name="WorkNavigationViewItem.Content" xml:space="preserve">
+    <value>Произведения</value>
+  </data>
+  <data name="BookmarksNavigationViewItem.Content" xml:space="preserve">
+    <value>Избранные произведения</value>
+  </data>
+  <data name="FollowingsNavigationViewItem.Content" xml:space="preserve">
+    <value>Подписки</value>
+  </data>
+  <data name="MyPixivUserNavigationViewItem.Content" xml:space="preserve">
+    <value>Друзья в Pixiv</value>
+  </data>
+  <data name="RelatedUserNavigationViewItem.Content" xml:space="preserve">
+    <value>Смежные художники</value>
+  </data>
+  <data name="FollowingUserItem.Title" xml:space="preserve">
+    <value>Подписки</value>
+  </data>
+  <data name="MyPixivUserItem.Title" xml:space="preserve">
+    <value>Друзья в Pixiv</value>
+  </data>
+  <data name="IllustrationCountItem.Title" xml:space="preserve">
+    <value>Количество иллюстраций</value>
+  </data>
+  <data name="MangaCountItem.Title" xml:space="preserve">
+    <value>Количество манги</value>
+  </data>
+  <data name="NovelCountItem.Title" xml:space="preserve">
+    <value>Количество рассказов</value>
   </data>
   <data name="CommentsTab.Content" xml:space="preserve">
     <value>Комментарии</value>
@@ -138,8 +171,8 @@
   <data name="LockScreen" xml:space="preserve">
     <value>Экран блокировки</value>
   </data>
-  <data name="Mirror" xml:space="preserve">
-    <value>Зеркальное отражение</value>
+  <data name="Background" xml:space="preserve">
+    <value>Обои</value>
   </data>
   <data name="RelatedWorksTab.Content" xml:space="preserve">
     <value>Рекомендованные работы</value>
@@ -149,6 +182,9 @@
   </data>
   <data name="RotateCounterclockwise" xml:space="preserve">
     <value>Повернуть против часовой стрелки</value>
+  </data>
+  <data name="Mirror" xml:space="preserve">
+    <value>Зеркальное отражение</value>
   </data>
   <data name="SetAs" xml:space="preserve">
     <value>Установить как</value>
@@ -185,36 +221,6 @@ R: Следующая иллюстрация</value>
   <data name="ZoomOut" xml:space="preserve">
     <value>Уменьшить</value>
   </data>
-  <data name="FollowingsNavigationViewItem.Content" xml:space="preserve">
-    <value>Подписки</value>
-  </data>
-  <data name="MyPixivUserNavigationViewItem.Content" xml:space="preserve">
-    <value>Друзья в Pixiv</value>
-  </data>
-  <data name="RelatedUserNavigationViewItem.Content" xml:space="preserve">
-    <value>Смежные художники</value>
-  </data>
-  <data name="FollowingUserItem.Title" xml:space="preserve">
-    <value>Подписки</value>
-  </data>
-  <data name="MyPixivUserItem.Title" xml:space="preserve">
-    <value>Друзья в Pixiv</value>
-  </data>
-  <data name="IllustrationCountItem.Title" xml:space="preserve">
-    <value>Количество иллюстраций</value>
-  </data>
-  <data name="MangaCountItem.Title" xml:space="preserve">
-    <value>Количество манги</value>
-  </data>
-  <data name="NovelCountItem.Title" xml:space="preserve">
-    <value>Количество рассказов</value>
-  </data>
-  <data name="WorkNavigationViewItem.Content" xml:space="preserve">
-    <value>Произведения</value>
-  </data>
-  <data name="BookmarksNavigationViewItem.Content" xml:space="preserve">
-    <value>Избранные произведения</value>
-  </data>
   <data name="PrevPageOrNovel" xml:space="preserve">
     <value>L: Предыдущая страница/новелла</value>
   </data>
@@ -235,12 +241,6 @@ R: Следующая иллюстрация</value>
   </data>
   <data name="NovelSettingsHeaderTextBlock.Text" xml:space="preserve">
     <value>Настройки новеллы</value>
-  </data>
-  <data name="AddToBookmarkTeachingTip.CloseButtonContent" xml:space="preserve">
-    <value>Добавить в закладки</value>
-  </data>
-  <data name="AddedToBookmark" xml:space="preserve">
-    <value>Добавлено в закладки</value>
   </data>
   <data name="BrowsingCompressedImage" xml:space="preserve">
     <value>Поскольку вы не включили опцию «Просмотр исходного изображения при просмотре» в настройках, эта страница будет отображать сжатое изображение. Если вы хотите просмотреть исходное изображение, включите соответствующую опцию в настройках</value>

@@ -59,46 +59,46 @@
             : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
-  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
           <xsd:element name="metadata">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
               </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string" />
-              <xsd:attribute name="type" type="xsd:string" />
-              <xsd:attribute name="mimetype" type="xsd:string" />
-              <xsd:attribute ref="xml:space" />
+              <xsd:attribute name="name" use="required" type="xsd:string"/>
+              <xsd:attribute name="type" type="xsd:string"/>
+              <xsd:attribute name="mimetype" type="xsd:string"/>
+              <xsd:attribute ref="xml:space"/>
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
             <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string" />
-              <xsd:attribute name="name" type="xsd:string" />
+              <xsd:attribute name="alias" type="xsd:string"/>
+              <xsd:attribute name="name" type="xsd:string"/>
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
-              <xsd:attribute ref="xml:space" />
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
+              <xsd:attribute ref="xml:space"/>
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" />
+              <xsd:attribute name="name" type="xsd:string" use="required"/>
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -142,9 +142,6 @@
   </data>
   <data name="BackdropEntry.Header" xml:space="preserve">
     <value>Background material</value>
-  </data>
-  <data name="BrowseHistoriesCleared" xml:space="preserve">
-    <value>History records deleted</value>
   </data>
   <data name="BrowsingExperienceSettingsGroup.Text" xml:space="preserve">
     <value>User Experiences</value>
@@ -197,8 +194,17 @@
   <data name="DownloadPathMacroEntry.Header" xml:space="preserve">
     <value>Default download location</value>
   </data>
+  <data name="DownloadPathMacroEntry.Description" xml:space="preserve">
+    <value>See Download Macros instructions on the help page</value>
+  </data>
   <data name="DownloadPathMacroTextBox.PlaceholderText" xml:space="preserve">
     <value>Download path</value>
+  </data>
+  <data name="RankOptionEntry.Description" xml:space="preserve">
+    <value>Ranking parameters</value>
+  </data>
+  <data name="RankOptionEntry.Header" xml:space="preserve">
+    <value>Default ranking option</value>
   </data>
   <data name="DefaultSearchSortOptionEntry.Description" xml:space="preserve">
     <value>Default sort strategy while searching</value>
@@ -206,11 +212,29 @@
   <data name="DefaultSearchSortOptionEntry.Header" xml:space="preserve">
     <value>Default sort stratege</value>
   </data>
+  <data name="SimpleWorkTypeEntry.Description" xml:space="preserve">
+    <value>Type of work to be shown by default</value>
+  </data>
+  <data name="SimpleWorkTypeEntry.Header" xml:space="preserve">
+    <value>Default work type</value>
+  </data>
   <data name="DefaultSearchTagMatchOptionEntry.Description" xml:space="preserve">
     <value>Indicates how does the app match result with the keyword/tag</value>
   </data>
   <data name="DefaultSearchTagMatchOptionEntry.Header" xml:space="preserve">
     <value>Default tag match stratege</value>
+  </data>
+  <data name="IllustrationOptionEntry.Header" xml:space="preserve">
+    <value>Illustration</value>
+  </data>
+  <data name="MangaOptionEntry.Header" xml:space="preserve">
+    <value>Manga</value>
+  </data>
+  <data name="UgoiraOptionEntry.Header" xml:space="preserve">
+    <value>Ugoira</value>
+  </data>
+  <data name="NovelOptionEntry.Header" xml:space="preserve">
+    <value>Novel</value>
   </data>
   <data name="PixivNameResolverHeader.Text" xml:space="preserve">
     <value>Name resolver</value>
@@ -224,6 +248,15 @@ Type and click on "+" to add an IP</value>
   </data>
   <data name="DefaultSelectedTabEntry.Header" xml:space="preserve">
     <value>Default tab</value>
+  </data>
+  <data name="WebCookieTextBox.PlaceholderText" xml:space="preserve">
+    <value>Pixiv 网页端 Cookie</value>
+  </data>
+  <data name="WebCookieEntry.Description" xml:space="preserve">
+    <value>诸如用户动态等功能需要该 Cookie 才能够正常使用</value>
+  </data>
+  <data name="WebCookieEntry.Header" xml:space="preserve">
+    <value>Cookie</value>
   </data>
   <data name="DeleteBrowseHistoriesButton.Content" xml:space="preserve">
     <value>Clear</value>
@@ -246,6 +279,15 @@ Type and click on "+" to add an IP</value>
   <data name="DeleteSearchHistoriesButton.Content" xml:space="preserve">
     <value>Clear</value>
   </data>
+  <data name="DeleteFileCacheEntry.Description" xml:space="preserve">
+    <value>Delete all file caches</value>
+  </data>
+  <data name="DeleteFileCacheEntry.Header" xml:space="preserve">
+    <value>Delete caches</value>
+  </data>
+  <data name="DeleteHistoriesEntry.Header" xml:space="preserve">
+    <value>Delete histories</value>
+  </data>
   <data name="DeleteSearchHistoriesEntry.Description" xml:space="preserve">
     <value>By clicking on this button you will delete all search histories</value>
   </data>
@@ -261,8 +303,17 @@ Type and click on "+" to add an IP</value>
   <data name="DonateDeveloperHyperlinkButton.Content" xml:space="preserve">
     <value>Donate the developers</value>
   </data>
+  <data name="FileCacheCleared" xml:space="preserve">
+    <value>Caches cleared</value>
+  </data>
   <data name="DownloadHistoriesCleared" xml:space="preserve">
     <value>Download history cleared</value>
+  </data>
+  <data name="SearchHistoriesCleared" xml:space="preserve">
+    <value>Search history cleared</value>
+  </data>
+  <data name="BrowseHistoriesCleared" xml:space="preserve">
+    <value>History records deleted</value>
   </data>
   <data name="DownloadMacroInvalidInfoBar.Title" xml:space="preserve">
     <value>Failed to parse the macro</value>
@@ -293,6 +344,15 @@ Type and click on "+" to add an IP</value>
   </data>
   <data name="ItemsViewLayoutTypeEntry.Header" xml:space="preserve">
     <value>Alignment rules for thumbnails</value>
+  </data>
+  <data name="BlockedTagsTokenizingTextBox.PlaceholderText" xml:space="preserve">
+    <value>Blocked tags</value>
+  </data>
+  <data name="BlockedTagsEntry.Description" xml:space="preserve">
+    <value>Blocked tags will not be displayed in Pixeval (Use comma to separate them)</value>
+  </data>
+  <data name="BlockedTagsEntry.Header" xml:space="preserve">
+    <value>Global blocked tags</value>
   </data>
   <data name="ImageMirrorServerEntry.Description" xml:space="preserve">
     <value>Mirror host for downloading images, leave this empty if you don't understand</value>
@@ -333,6 +393,12 @@ Type and click on "+" to add an IP</value>
   <data name="MaximumDownloadHistoryRecordsNumberBox.PlaceholderText" xml:space="preserve">
     <value>[10, 200]</value>
   </data>
+  <data name="RateEntry.Description" xml:space="preserve">
+    <value>Like Pixeval? Give a 5-⭐️ in Microsoft Store~</value>
+  </data>
+  <data name="RateEntry.Header" xml:space="preserve">
+    <value>Rate Pixeval</value>
+  </data>
   <data name="MaximumSearchHistoryRecordsEntry.Description" xml:space="preserve">
     <value>Oldest records will be deleted once the total records exceed this number</value>
   </data>
@@ -363,6 +429,12 @@ Type and click on "+" to add an IP</value>
   <data name="PerformSignOutButton.Content" xml:space="preserve">
     <value>Sign out</value>
   </data>
+  <data name="DownloadWhenBookmarkedEntry.Description" xml:space="preserve">
+    <value>The work will be automatically downloaded as soon as you bookmark it.</value>
+  </data>
+  <data name="DownloadWhenBookmarkedEntry.Header" xml:space="preserve">
+    <value>Automatic download when added to bookmark</value>
+  </data>
   <data name="ReleaseNotesHyperlinkButton.Content" xml:space="preserve">
     <value>Update log</value>
   </data>
@@ -374,6 +446,9 @@ Type and click on "+" to add an IP</value>
   </data>
   <data name="GitHubCheckForUpdatesEntry.Header" xml:space="preserve">
     <value>Get update from GitHub</value>
+  </data>
+  <data name="MsStoreCheckForUpdatesEntry.Header" xml:space="preserve">
+    <value>Search for updates from Microsoft Store</value>
   </data>
   <data name="BugReportEntry.Header" xml:space="preserve">
     <value>Feedback</value>
@@ -444,8 +519,17 @@ Type and click on "+" to add an IP</value>
   <data name="ReverseSearchResultSimilarityThresholdEntry.Header" xml:space="preserve">
     <value>Reverse search threshold</value>
   </data>
-  <data name="SearchHistoriesCleared" xml:space="preserve">
-    <value>Search history cleared</value>
+  <data name="BrowseOriginalImageEntry.Description" xml:space="preserve">
+    <value>This option requires more bandwidth and loading time, but you'll get a better experience and faster download speed</value>
+  </data>
+  <data name="BrowseOriginalImageEntry.Header" xml:space="preserve">
+    <value>View original images</value>
+  </data>
+  <data name="ReconfirmationOfClosingWindowEntry.Description" xml:space="preserve">
+    <value>在关闭窗口前，会弹出对话框要求你再次确认</value>
+  </data>
+  <data name="ReconfirmationOfClosingWindowEntry.Header" xml:space="preserve">
+    <value>关闭窗口再次确认</value>
   </data>
   <data name="SearchSettingsGroup.Text" xml:space="preserve">
     <value>Search</value>
@@ -467,6 +551,21 @@ Type and click on "+" to add an IP</value>
   </data>
   <data name="TargetAPIPlatformEntry.Header" xml:space="preserve">
     <value>Target API platform</value>
+  </data>
+  <data name="ProxyTypeEntry.Description" xml:space="preserve">
+    <value>When domain fronting is disabled, this proxy will be used by Pixeval</value>
+  </data>
+  <data name="ProxyTypeEntry.Header" xml:space="preserve">
+    <value>Proxy type</value>
+  </data>
+  <data name="ProxyTextBoxEntry.Description" xml:space="preserve">
+    <value>Protocols will be ignored</value>
+  </data>
+  <data name="ProxyTextBoxEntry.Header" xml:space="preserve">
+    <value>Proxy server</value>
+  </data>
+  <data name="ProxyTextBoxErrorUri" xml:space="preserve">
+    <value>The URI of the proxy server is incorrect, please correct it</value>
   </data>
   <data name="ThemeEntry.Header" xml:space="preserve">
     <value>Application theme</value>
@@ -500,90 +599,6 @@ Type and click on "+" to add an IP</value>
   </data>
   <data name="WorkDownloadFormatEntry.Header" xml:space="preserve">
     <value>Work format</value>
-  </data>
-  <data name="DownloadPathMacroEntry.Description" xml:space="preserve">
-    <value>See Download Macros instructions on the help page</value>
-  </data>
-  <data name="RankOptionEntry.Description" xml:space="preserve">
-    <value>Ranking parameters</value>
-  </data>
-  <data name="RankOptionEntry.Header" xml:space="preserve">
-    <value>Default ranking option</value>
-  </data>
-  <data name="SimpleWorkTypeEntry.Description" xml:space="preserve">
-    <value>Type of work to be shown by default</value>
-  </data>
-  <data name="SimpleWorkTypeEntry.Header" xml:space="preserve">
-    <value>Default work type</value>
-  </data>
-  <data name="IllustrationOptionEntry.Header" xml:space="preserve">
-    <value>Illustration</value>
-  </data>
-  <data name="MangaOptionEntry.Header" xml:space="preserve">
-    <value>Manga</value>
-  </data>
-  <data name="UgoiraOptionEntry.Header" xml:space="preserve">
-    <value>Ugoira</value>
-  </data>
-  <data name="NovelOptionEntry.Header" xml:space="preserve">
-    <value>Novel</value>
-  </data>
-  <data name="DeleteFileCacheEntry.Header" xml:space="preserve">
-    <value>Delete caches</value>
-  </data>
-  <data name="DeleteFileCacheEntry.Description" xml:space="preserve">
-    <value>Delete all file caches</value>
-  </data>
-  <data name="DeleteHistoriesEntry.Header" xml:space="preserve">
-    <value>Delete histories</value>
-  </data>
-  <data name="FileCacheCleared" xml:space="preserve">
-    <value>Caches cleared</value>
-  </data>
-  <data name="BlockedTagsTokenizingTextBox.PlaceholderText" xml:space="preserve">
-    <value>Blocked tags</value>
-  </data>
-  <data name="BlockedTagsEntry.Description" xml:space="preserve">
-    <value>Blocked tags will not be displayed in Pixeval (Use comma to separate them)</value>
-  </data>
-  <data name="BlockedTagsEntry.Header" xml:space="preserve">
-    <value>Global blocked tags</value>
-  </data>
-  <data name="RateEntry.Description" xml:space="preserve">
-    <value>Like Pixeval? Give a 5-⭐️ in Microsoft Store~</value>
-  </data>
-  <data name="RateEntry.Header" xml:space="preserve">
-    <value>Rate Pixeval</value>
-  </data>
-  <data name="DownloadWhenBookmarkedEntry.Description" xml:space="preserve">
-    <value>The work will be automatically downloaded as soon as you bookmark it.</value>
-  </data>
-  <data name="DownloadWhenBookmarkedEntry.Header" xml:space="preserve">
-    <value>Automatic download when added to bookmark</value>
-  </data>
-  <data name="MsStoreCheckForUpdatesEntry.Header" xml:space="preserve">
-    <value>Search for updates from Microsoft Store</value>
-  </data>
-  <data name="BrowseOriginalImageEntry.Description" xml:space="preserve">
-    <value>This option requires more bandwidth and loading time, but you'll get a better experience and faster download speed</value>
-  </data>
-  <data name="BrowseOriginalImageEntry.Header" xml:space="preserve">
-    <value>View original images</value>
-  </data>
-  <data name="ProxyTypeEntry.Description" xml:space="preserve">
-    <value>When domain fronting is disabled, this proxy will be used by Pixeval</value>
-  </data>
-  <data name="ProxyTypeEntry.Header" xml:space="preserve">
-    <value>Proxy type</value>
-  </data>
-  <data name="ProxyTextBoxEntry.Description" xml:space="preserve">
-    <value>Protocols will be ignored</value>
-  </data>
-  <data name="ProxyTextBoxEntry.Header" xml:space="preserve">
-    <value>Proxy server</value>
-  </data>
-  <data name="ProxyTextBoxErrorUri" xml:space="preserve">
-    <value>The URI of the proxy server is incorrect, please correct it</value>
   </data>
   <data name="NovelFontFamilyComboBox.PlaceholderText" xml:space="preserve">
     <value>Select a font</value>
@@ -657,6 +672,12 @@ Type and click on "+" to add an IP</value>
   <data name="PublishDayMacroTooltip" xml:space="preserve">
     <value>Day of publication</value>
   </data>
+  <data name="IfPicSetMacroTooltip" xml:space="preserve">
+    <value>如果是多图，该宏会被替换为其参数</value>
+  </data>
+  <data name="IfPicAllMacroTooltip" xml:space="preserve">
+    <value>如果是图片（包括静态单图、多图、动图），该宏会被替换为其参数</value>
+  </data>
   <data name="IfR18MacroTooltip" xml:space="preserve">
     <value>This marco will be replaced by its argument in the case of restricted work (R18 or R18G)</value>
   </data>
@@ -666,10 +687,67 @@ Type and click on "+" to add an IP</value>
   <data name="IfAiMacroTooltip" xml:space="preserve">
     <value>This marco will be replaced by its argument in the case of AI-generated work</value>
   </data>
+  <data name="IfPicOneMacroTooltip" xml:space="preserve">
+    <value>如果是静态单图，该宏会被替换为其参数</value>
+  </data>
   <data name="IfNovelMacroTooltip" xml:space="preserve">
     <value>This marco will be replaced by its argument if it's a novel</value>
   </data>
+  <data name="IfPicGifMacroTooltip" xml:space="preserve">
+    <value>如果是动图，该宏会被替换为其参数</value>
+  </data>
   <data name="PicSetIndexMacroTooltip" xml:space="preserve">
     <value>This marco will be replaced by the index of the current image in the manga. This macro MUST be used with the @{if_pic_set=} macro, and MUST be used on the file name</value>
+  </data>
+  <data name="UseSearchEndDateEntry.Header" xml:space="preserve">
+    <value>启用搜索结束日期</value>
+  </data>
+  <data name="UseSearchStartDateEntry.Header" xml:space="preserve">
+    <value>启用搜索开始日期</value>
+  </data>
+  <data name="UseSearchStartDateEntry.Description" xml:space="preserve">
+    <value>启用后搜索作品的投稿日期将从此日期开始</value>
+  </data>
+  <data name="UseSearchEndDateEntry.Description" xml:space="preserve">
+    <value>启用后搜索作品的投稿日期将到此日期结束</value>
+  </data>
+  <data name="OpenExtensionsEntry.Header" xml:space="preserve">
+    <value>打开扩展文件夹</value>
+  </data>
+  <data name="OpenExtensionsEntry.Description" xml:space="preserve">
+    <value>此处存储了软件会加载的扩展DLL文件</value>
+  </data>
+  <data name="BackupSettingsEntry.Header" xml:space="preserve">
+    <value>备份设置</value>
+  </data>
+  <data name="BackupSettingsEntry.Description" xml:space="preserve">
+    <value>选择导出或导入设置（导出后请注意防止敏感信息泄漏）</value>
+  </data>
+  <data name="OpenSettingsEntry.Header" xml:space="preserve">
+    <value>打开设置文件夹</value>
+  </data>
+  <data name="OpenSettingsEntry.Description" xml:space="preserve">
+    <value>此处存储了软件的设置文件（包含账号信息）</value>
+  </data>
+  <data name="ExportSettingsSuccess" xml:space="preserve">
+    <value>导出设置成功</value>
+  </data>
+  <data name="ImportSessionSuccess" xml:space="preserve">
+    <value>导入会话成功</value>
+  </data>
+  <data name="ImportSettingsSuccess" xml:space="preserve">
+    <value>导入设置成功</value>
+  </data>
+  <data name="ExportSettingsPlaintextEntry.Header" xml:space="preserve">
+    <value>导出明文设置</value>
+  </data>
+  <data name="ExportSettingsPlaintextEntry.Description" xml:space="preserve">
+    <value>以JSON格式导出设置</value>
+  </data>
+  <data name="ImportSettingsPlaintextEntry.Description" xml:space="preserve">
+    <value>导入JSON格式的明文设置</value>
+  </data>
+  <data name="ImportSettingsPlaintextEntry.Header" xml:space="preserve">
+    <value>导入明文设置</value>
   </data>
 </root>

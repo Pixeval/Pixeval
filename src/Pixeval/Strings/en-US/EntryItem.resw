@@ -59,46 +59,46 @@
             : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
-  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
           <xsd:element name="metadata">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
               </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string" />
-              <xsd:attribute name="type" type="xsd:string" />
-              <xsd:attribute name="mimetype" type="xsd:string" />
-              <xsd:attribute ref="xml:space" />
+              <xsd:attribute name="name" use="required" type="xsd:string"/>
+              <xsd:attribute name="type" type="xsd:string"/>
+              <xsd:attribute name="mimetype" type="xsd:string"/>
+              <xsd:attribute ref="xml:space"/>
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
             <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string" />
-              <xsd:attribute name="name" type="xsd:string" />
+              <xsd:attribute name="alias" type="xsd:string"/>
+              <xsd:attribute name="name" type="xsd:string"/>
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
-              <xsd:attribute ref="xml:space" />
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
+              <xsd:attribute ref="xml:space"/>
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" />
+              <xsd:attribute name="name" type="xsd:string" use="required"/>
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -126,6 +126,9 @@
   <data name="OpenInWebBrowser" xml:space="preserve">
     <value>Open in browser</value>
   </data>
+  <data name="LinkCopiedToClipboard" xml:space="preserve">
+    <value>Link copied to clipboard (See usage on help page)</value>
+  </data>
   <data name="ShowPixEzQrCode" xml:space="preserve">
     <value>Generate PixEz QR code</value>
   </data>
@@ -140,6 +143,9 @@
   </data>
   <data name="SaveAs" xml:space="preserve">
     <value>Save as</value>
+  </data>
+  <data name="OpenUserInfoPage" xml:space="preserve">
+    <value>作者信息</value>
   </data>
   <data name="MangaSave" xml:space="preserve">
     <value>Save manga</value>
@@ -165,14 +171,23 @@
   <data name="ImageProcessing" xml:space="preserve">
     <value>Processing image</value>
   </data>
+  <data name="NovelContentFetching" xml:space="preserve">
+    <value>Fetching novel content</value>
+  </data>
   <data name="ImageSetToClipBoard" xml:space="preserve">
     <value>Image copied to clipboard</value>
+  </data>
+  <data name="NovelSetToClipBoard" xml:space="preserve">
+    <value>Novel copied</value>
   </data>
   <data name="TheIllustrationIsAMangaFormatted" xml:space="preserve">
     <value>This work contains {0} pictures</value>
   </data>
   <data name="TheIllustrationIsAnUgoira" xml:space="preserve">
     <value>This is an ugoira</value>
+  </data>
+  <data name="OpenNovel" xml:space="preserve">
+    <value>Read the novel</value>
   </data>
   <data name="UserMetricsFollowingsTextBlock.Text" xml:space="preserve">
     <value>Follwings</value>
@@ -182,17 +197,5 @@
   </data>
   <data name="UserMetricsMyPixivUsersTextBlock.Text" xml:space="preserve">
     <value>My Pixiv users</value>
-  </data>
-  <data name="LinkCopiedToClipboard" xml:space="preserve">
-    <value>Link copied to clipboard (See usage on help page)</value>
-  </data>
-  <data name="NovelContentFetching" xml:space="preserve">
-    <value>Fetching novel content</value>
-  </data>
-  <data name="NovelSetToClipBoard" xml:space="preserve">
-    <value>Novel copied</value>
-  </data>
-  <data name="OpenNovel" xml:space="preserve">
-    <value>Read the novel</value>
   </data>
 </root>
