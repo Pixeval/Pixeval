@@ -3,28 +3,28 @@ tous les types de recherches.
 
 ## Syntaxe des recherches
 
-| Syntaxe         | Signification                                                     |
-|-----------------|-------------------------------------------------------------------|
-| [str]           | Titre                                                             |
-| #[str]          | Tag                                                               |
-| @[str \| num]   | Auteur                                                            |
-| +[const]        | Contraints positifs                                               |
-| -[const]        | Contraints négatifs                                               |
-| i:[int-range]   | Filtrer les artworks par leurs indices                            |
-| l:[int-range]   | Filtrer les artworks par leurs nombres de favoris                 |
-| r:[frac-range]  | Filtrer les artworks selon leurs ratios, invalide pour les novels |
-| s:[date]        | Date de publication à partir de                                   |
-| e:[date]        | Date de publication jusqu'à                                       |
+| Syntaxe                                                                            | Signification                                     |
+| ---------------------------------------------------------------------------------- | ------------------------------------------------- |
+| [str]                          | Titre                                             |
+| #[str]                         | Tag                                               |
+| @[str \\| num]   | Auteur                                            |
+| +[const]                       | 正约束                                               |
+| -[const]                       | 反约束                                               |
+| i:[int-range]  | 筛选作品的序号                                           |
+| l:[int-range]  | Filtrer les artworks par leurs nombres de favoris |
+| r:[frac-range] | 筛选插画的横纵比，对小说无效                                    |
+| s:[date]       | Date de publication à partir de                   |
+| e:[date]       | Date de publication jusqu'à                       |
 
 ## Syntaxe des valeurs
 
-### [str] Chaînes de caractères  
+### [str] Chaînes de caractères
 
 | Syntaxe | Signification                                         |
 | ------- | ----------------------------------------------------- |
 | abc     | Chaînes de caractères normales                        |
 | "ab# c" | Avec espaces ou caractères spéciales                  |
-| abc$    | Un exact match                                        |
+| abc$    | 完全匹配的字符串                                              |
 | "ab c$" | Un exact match avec espace et/ou caractères spéciales |
 
 ### [num] Nombres
@@ -44,43 +44,43 @@ tous les types de recherches.
 
 ### [int-range] Intervalles des intègres
 
-| Syntaxe | Signification                                   |
-| ------- | ----------------------------------------------- |
-| 2-      | Plus grand ou égale à 2                         |
-| -3      | Plus petit ou égale à 3                         |
-| 2-3     | Entre 2 et 3 inclus                             |
-| [2,3]   | Format intervalle, entre 2 et 3 inclus          |
-| \[2,3)  | Format intervalle, entre 2 (inclu) et 3 (exclu) |
+| Syntaxe                                                   | Signification           |
+| --------------------------------------------------------- | ----------------------- |
+| 2-                                                        | Plus grand ou égale à 2 |
+| -3                                                        | Plus petit ou égale à 3 |
+| 2-3                                                       | 大于等于2且小于等于3             |
+| [2,3] | 数学集合，大于等于2且小于等于3        |
+| \[2,3)                         | 数学集合，大于等于2且小于3          |
 
-> Les intervalles demi ouvertes comme '2-' ou '-3' ne sont pas supportées par le format d'intervalle.
+> 数学集合不支持类似"2-"、"-3"的半开无穷集
 
-### [frac-range] Intervalles des décimaux positifs
+### [frac-range] 正实数范围
 
-| Syntaxe | Signification             |
-|---------|---------------------------|
-| 2-      | Plus grand ou égale à 2   |
+| Syntaxe                 | Signification             |
+| ----------------------- | ------------------------- |
+| 2-                      | Plus grand ou égale à 2   |
 | -1.5    | Plus petit ou égale à 1,5 |
-| -1/2    | Moins de 1/2 ou égale     |
-| 1/2-3   | Entre 1/2 et 3, compris   |
+| -1/2                    | Moins de 1/2 ou égale     |
+| 1/2-3                   | 大于等于1/2且小于等于3             |
 | 0.3-1/2 | Entre 0,3 et 1/2          |
 
 ### [date] Date
 
-| Syntaxe    | Signification                      |
-| ---------- | ---------------------------------- |
-| MM-dd      | jour dd du mois MM de cette année  |
-| MM.dd      | jour dd du mois MM de cette année  |
-| yyyy-MM-dd | jour dd du mois MM de l'année yyyy |
-| yyyy.MM.dd | jour dd du mois MM de l'année yyyy |
+| Syntaxe                                    | Signification |
+| ------------------------------------------ | ------------- |
+| MM-dd                                      | 今年某月某日        |
+| MM.dd                      | 今年某月某日        |
+| yyyy-MM-dd                                 | 某年某月某日        |
+| yyyy.MM.dd | 某年某月某日        |
 
 > Les '.' et '-' peuvent être mélangés.
 
-## Combinatoires
+## 序列
 
-| Syntaxe                     | Signification                                           |
-| --------------------------- | ------------------------------------------------------- |
-| !\<segment>                 | Négation                                                |
-| (and \<segment> \<segment>) | Pattern 'et', tous les segments doivent être satisfaits |
-| (or \<segment> \<segment>)  | Pattern 'ou', un segment satisfait suffit               |
+| Syntaxe                                          | Signification |
+| ------------------------------------------------ | ------------- |
+| !\<segment>                                     | 反模式           |
+| (and \<segment> \<segment>) | 和模式           |
+| (or \<segment> \<segment>)  | 或模式           |
 
-> Ces trois patterns peuvent être imbriqués. Les segments de niveau plus haut est en mode 'et' par défaut.
+> 三种模式可以任意嵌套，顶层序列默认使用和模式
