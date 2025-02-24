@@ -7,7 +7,7 @@ all kinds of queries.
 | ---------------------------------------------------------------------------------- | ----------------------------------------------------- |
 | [str]                          | Title of artwork                                      |
 | #[str]                         | Tag                                                   |
-| @[str \\| num]   | Author                                                |
+| @[str \\                                  | Author                                                |
 | +[const]                       | Positive constraint                                   |
 | -[const]                       | Negative constraint                                   |
 | i:[int-range]  | Filter artworks by their indices                      |
