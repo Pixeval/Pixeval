@@ -59,46 +59,46 @@
             : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
-  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
           <xsd:element name="metadata">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
               </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string" />
-              <xsd:attribute name="type" type="xsd:string" />
-              <xsd:attribute name="mimetype" type="xsd:string" />
-              <xsd:attribute ref="xml:space" />
+              <xsd:attribute name="name" use="required" type="xsd:string"/>
+              <xsd:attribute name="type" type="xsd:string"/>
+              <xsd:attribute name="mimetype" type="xsd:string"/>
+              <xsd:attribute ref="xml:space"/>
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
             <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string" />
-              <xsd:attribute name="name" type="xsd:string" />
+              <xsd:attribute name="alias" type="xsd:string"/>
+              <xsd:attribute name="name" type="xsd:string"/>
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
-              <xsd:attribute ref="xml:space" />
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
+              <xsd:attribute ref="xml:space"/>
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" />
+              <xsd:attribute name="name" type="xsd:string" use="required"/>
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -126,6 +126,9 @@
   <data name="OpenInWebBrowser" xml:space="preserve">
     <value>Открыть в браузере</value>
   </data>
+  <data name="LinkCopiedToClipboard" xml:space="preserve">
+    <value>Ссылка скопирована в буфер обмена (см. страницу помощи для использования)</value>
+  </data>
   <data name="ShowPixEzQrCode" xml:space="preserve">
     <value>Создать QR-код для PixEz</value>
   </data>
@@ -140,6 +143,15 @@
   </data>
   <data name="SaveAs" xml:space="preserve">
     <value>Сохранить как</value>
+  </data>
+  <data name="OpenUserInfoPage" xml:space="preserve">
+    <value>Информация об авторе</value>
+  </data>
+  <data name="MangaSave" xml:space="preserve">
+    <value>Сохранить мангу</value>
+  </data>
+  <data name="MangaSaveAs" xml:space="preserve">
+    <value>Сохранить мангу как</value>
   </data>
   <data name="Copy" xml:space="preserve">
     <value>Скопировать изображение в буфер обмена</value>
@@ -159,14 +171,23 @@
   <data name="ImageProcessing" xml:space="preserve">
     <value>Обработка изображения</value>
   </data>
+  <data name="NovelContentFetching" xml:space="preserve">
+    <value>Загрузка содержимого новеллы</value>
+  </data>
   <data name="ImageSetToClipBoard" xml:space="preserve">
     <value>Изображение скопировано в буфер обмена</value>
+  </data>
+  <data name="NovelSetToClipBoard" xml:space="preserve">
+    <value>Новелла скопирована в буфер обмена</value>
   </data>
   <data name="TheIllustrationIsAMangaFormatted" xml:space="preserve">
     <value>Это набор иллюстраций, содержащий {0} изображений</value>
   </data>
   <data name="TheIllustrationIsAnUgoira" xml:space="preserve">
     <value>Это анимированное изображение</value>
+  </data>
+  <data name="OpenNovel" xml:space="preserve">
+    <value>Читать новеллу</value>
   </data>
   <data name="UserMetricsFollowingsTextBlock.Text" xml:space="preserve">
     <value>Подписки</value>
@@ -176,26 +197,5 @@
   </data>
   <data name="UserMetricsMyPixivUsersTextBlock.Text" xml:space="preserve">
     <value>Друзья в Pixiv</value>
-  </data>
-  <data name="OpenNovel" xml:space="preserve">
-    <value>Читать новеллу</value>
-  </data>
-  <data name="LinkCopiedToClipboard" xml:space="preserve">
-    <value>Ссылка скопирована в буфер обмена (см. страницу помощи для использования)</value>
-  </data>
-  <data name="MangaSave" xml:space="preserve">
-    <value>Сохранить мангу</value>
-  </data>
-  <data name="MangaSaveAs" xml:space="preserve">
-    <value>Сохранить мангу как</value>
-  </data>
-  <data name="NovelContentFetching" xml:space="preserve">
-    <value>Загрузка содержимого новеллы</value>
-  </data>
-  <data name="NovelSetToClipBoard" xml:space="preserve">
-    <value>Новелла скопирована в буфер обмена</value>
-  </data>
-  <data name="OpenUserInfoPage" xml:space="preserve">
-    <value>Информация об авторе</value>
   </data>
 </root>
