@@ -59,46 +59,46 @@
             : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
-  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
           <xsd:element name="metadata">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
               </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string" />
-              <xsd:attribute name="type" type="xsd:string" />
-              <xsd:attribute name="mimetype" type="xsd:string" />
-              <xsd:attribute ref="xml:space" />
+              <xsd:attribute name="name" use="required" type="xsd:string"/>
+              <xsd:attribute name="type" type="xsd:string"/>
+              <xsd:attribute name="mimetype" type="xsd:string"/>
+              <xsd:attribute ref="xml:space"/>
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
             <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string" />
-              <xsd:attribute name="name" type="xsd:string" />
+              <xsd:attribute name="alias" type="xsd:string"/>
+              <xsd:attribute name="name" type="xsd:string"/>
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
-              <xsd:attribute ref="xml:space" />
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
+              <xsd:attribute ref="xml:space"/>
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" />
+              <xsd:attribute name="name" type="xsd:string" use="required"/>
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -123,9 +123,6 @@
   <data name="RecommendUsersTab.Content" xml:space="preserve">
     <value>Recommend Users</value>
   </data>
-  <data name="NewWorksTab.Content" xml:space="preserve">
-    <value>All New Works</value>
-  </data>
   <data name="FollowingsTab.Content" xml:space="preserve">
     <value>Following</value>
   </data>
@@ -133,16 +130,22 @@
     <value>History</value>
   </data>
   <data name="TagsTab.Content" xml:space="preserve">
-    <value />
+    <value>标签</value>
   </data>
   <data name="RecentPostsTab.Content" xml:space="preserve">
     <value>Updates</value>
+  </data>
+  <data name="NewWorksTab.Content" xml:space="preserve">
+    <value>All New Works</value>
   </data>
   <data name="SpotlightsTab.Content" xml:space="preserve">
     <value>Spotlight 🏗️</value>
   </data>
   <data name="RankingsTab.Content" xml:space="preserve">
     <value>Ranking</value>
+  </data>
+  <data name="FeedTab.Content" xml:space="preserve">
+    <value>关注动态</value>
   </data>
   <data name="RecommendationsTab.Content" xml:space="preserve">
     <value>Recommendation</value>
@@ -207,11 +210,44 @@
   <data name="TagAutoCompletionSuggestionTextBlock.Text" xml:space="preserve">
     <value>Suggestions</value>
   </data>
+  <data name="FeedTabCannotBeOpenedTitle" xml:space="preserve">
+    <value>无法使用用户动态功能</value>
+  </data>
+  <data name="FeedTabCannotBeOpenedContent" xml:space="preserve">
+    <value>用户动态功能需要使用 Cookie，请先在设置页面中填写对应 Cookie 后再使用此功能</value>
+  </data>
+  <data name="ExtensionsTab.Content" xml:space="preserve">
+    <value>扩展</value>
+  </data>
+  <data name="RefreshingSessionFailedTitle" xml:space="preserve">
+    <value>Failed to refresh session</value>
+  </data>
   <data name="RefreshingSessionFailedContent" xml:space="preserve">
     <value>Please login again
 If this issue recurs, please contact the developer for a solution</value>
   </data>
-  <data name="RefreshingSessionFailedTitle" xml:space="preserve">
-    <value>Failed to refresh session</value>
+  <data name="SearchWorksResult" xml:space="preserve">
+    <value>搜索作品结果</value>
+  </data>
+  <data name="SearchUsersResult" xml:space="preserve">
+    <value>搜索用户结果</value>
+  </data>
+  <data name="OpenMyPageItem.Text" xml:space="preserve">
+    <value>打开个人页面</value>
+  </data>
+  <data name="OpenMyPageInBrowserItem.Text" xml:space="preserve">
+    <value>打开网页</value>
+  </data>
+  <data name="RestrictedModeItem.Text" xml:space="preserve">
+    <value>受限模式</value>
+  </data>
+  <data name="AiShowItem.Text" xml:space="preserve">
+    <value>显示AI作品</value>
+  </data>
+  <data name="MoreViewingSettingsItem.Text" xml:space="preserve">
+    <value>更多浏览设置</value>
+  </data>
+  <data name="LogoutItem.Text" xml:space="preserve">
+    <value>登出账号</value>
   </data>
 </root>
