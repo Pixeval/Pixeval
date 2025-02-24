@@ -59,46 +59,46 @@
             : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
-  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
           <xsd:element name="metadata">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
               </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string" />
-              <xsd:attribute name="type" type="xsd:string" />
-              <xsd:attribute name="mimetype" type="xsd:string" />
-              <xsd:attribute ref="xml:space" />
+              <xsd:attribute name="name" use="required" type="xsd:string"/>
+              <xsd:attribute name="type" type="xsd:string"/>
+              <xsd:attribute name="mimetype" type="xsd:string"/>
+              <xsd:attribute ref="xml:space"/>
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
             <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string" />
-              <xsd:attribute name="name" type="xsd:string" />
+              <xsd:attribute name="alias" type="xsd:string"/>
+              <xsd:attribute name="name" type="xsd:string"/>
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
-              <xsd:attribute ref="xml:space" />
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
+              <xsd:attribute ref="xml:space"/>
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" />
+              <xsd:attribute name="name" type="xsd:string" use="required"/>
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -142,27 +142,11 @@
   <data name="LoginPhaseWaitingForUserInput" xml:space="preserve">
     <value>Ожидание ввода пользователя</value>
   </data>
-  <data name="SubmitButton.Content" xml:space="preserve">
-    <value>Войти</value>
-  </data>
-  <data name="UserNameBox.PlaceholderText" xml:space="preserve">
-    <value>Email или pixiv ID</value>
-  </data>
-  <data name="PasswordBox.PlaceholderText" xml:space="preserve">
-    <value>Пароль</value>
-  </data>
-  <data name="FetchingSessionFailedContent" xml:space="preserve">
-    <value>Перезапустите приложение
-Если проблема повторяется, обратитесь к разработчику</value>
-  </data>
-  <data name="FetchingSessionFailedTitle" xml:space="preserve">
-    <value>Не удалось получить сессию</value>
-  </data>
-  <data name="RootCertificateInstallationRequiredTitle" xml:space="preserve">
-    <value>Требуется установка корневого сертификата</value>
-  </data>
   <data name="SubmitWithNewAccountButton.Text" xml:space="preserve">
     <value>Войти без аккаунта</value>
+  </data>
+  <data name="SubmitButton.Content" xml:space="preserve">
+    <value>Войти</value>
   </data>
   <data name="RefreshTokenButton.Content" xml:space="preserve">
     <value>Войти с обновлением токена</value>
@@ -176,6 +160,12 @@
   <data name="RefreshTokenBox.PlaceholderText" xml:space="preserve">
     <value>Обновить токен</value>
   </data>
+  <data name="UserNameBox.PlaceholderText" xml:space="preserve">
+    <value>Email или pixiv ID</value>
+  </data>
+  <data name="PasswordBox.PlaceholderText" xml:space="preserve">
+    <value>Пароль</value>
+  </data>
   <data name="DisableDomainFrontingToggleSwitch.Header" xml:space="preserve">
     <value>Доменное фронтирование</value>
   </data>
@@ -184,6 +174,13 @@
   </data>
   <data name="DisableDomainFrontingToggleSwitch.OffContent" xml:space="preserve">
     <value>Отключить</value>
+  </data>
+  <data name="FetchingSessionFailedContent" xml:space="preserve">
+    <value>Перезапустите приложение
+Если проблема повторяется, обратитесь к разработчику</value>
+  </data>
+  <data name="FetchingSessionFailedTitle" xml:space="preserve">
+    <value>Не удалось получить сессию</value>
   </data>
   <data name="RootCertificateInstallationRequiredSecondaryButtonText" xml:space="preserve">
     <value>Использовать сертификат Pixeval</value>
@@ -203,6 +200,9 @@
   </data>
   <data name="CertificateRequiredDialogInvalidInfoBar.Title" xml:space="preserve">
     <value>Неверный путь к сертификату или неправильный пароль</value>
+  </data>
+  <data name="RootCertificateInstallationRequiredTitle" xml:space="preserve">
+    <value>Требуется установка корневого сертификата</value>
   </data>
   <data name="WebView2InstallationRequiredContent" xml:space="preserve">
     <value>Для входа этим способом необходимо установить WebView2. Нажмите "ОК", чтобы автоматически открыть браузер и скачать WebView2 Runtime, затем дважды щелкните по exe-файлу для установки и перезапустите приложение</value>
