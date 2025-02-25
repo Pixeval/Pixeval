@@ -13,7 +13,6 @@ using Windows.UI;
 using Windows.UI.Core;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Graphics.Canvas.Brushes;
 using Microsoft.Graphics.Canvas.Geometry;
 using Microsoft.Graphics.Canvas.UI.Xaml;
 using Microsoft.UI;
@@ -22,8 +21,6 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
-using Microsoft.Windows.AppLifecycle;
-using Pixeval.Activation;
 using Pixeval.Database.Managers;
 using Pixeval.Messages;
 using Pixeval.Util;
@@ -38,7 +35,6 @@ using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Pages.IllustratorViewer;
 using Pixeval.Pages.NovelViewer;
 using WinUI3Utilities;
-using System.Runtime.CompilerServices;
 
 namespace Pixeval.Pages;
 
@@ -74,12 +70,7 @@ public sealed partial class MainPage
     {
         CustomizeTitleBar();
         App.AppViewModel.AppLoggedIn();
-
-        // The application is invoked by a protocol, call the corresponding protocol handler.
-        if (App.AppViewModel.ConsumeProtocolActivation())
-        {
-            ActivationRegistrar.Dispatch(AppInstance.GetCurrent().GetActivatedEventArgs());
-        }
+        _viewModel.SubscribeTokenRefresh();
 
         _ = WeakReferenceMessenger.Default.TryRegister<MainPage, WorkTagClickedMessage>(this, (_, message) =>
         {
@@ -98,9 +89,12 @@ public sealed partial class MainPage
         await AppInfo.AppVersion.GitHubCheckForUpdateAsync(client);
         if (AppInfo.AppVersion.UpdateAvailable)
             _viewModel.SettingsTag.ShowIconBadge = true;
+        _viewModel.TryLoadAvatar();
         return;
 
+#pragma warning disable CS8321 // 已声明本地函数，但从未使用过
         async void LoadRestrictedModeSettings()
+#pragma warning restore CS8321 // 已声明本地函数，但从未使用过
         {
             _viewModel.RestrictedModeProcessing = true;
             try

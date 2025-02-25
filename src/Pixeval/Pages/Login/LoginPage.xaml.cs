@@ -21,7 +21,10 @@ namespace Pixeval.Pages.Login;
 public sealed partial class LoginPage
 {
     private readonly LoginPageViewModel _viewModel;
+
     public static LoginPage? Current { get; private set; }
+
+    public static string? CurrentVerifier { get; private set; }
 
     private const string RefreshToken = nameof(RefreshToken);
     private const string Browser = nameof(Browser);
@@ -122,7 +125,7 @@ public sealed partial class LoginPage
 
     #region Browser
 
-    private void BrowserLogin_OnClicked(object sender, RoutedEventArgs e) => _viewModel.BrowserLogin();
+    private void BrowserLogin_OnClicked(object sender, RoutedEventArgs e) => CurrentVerifier = _viewModel.BrowserLogin();
 
     #endregion
 

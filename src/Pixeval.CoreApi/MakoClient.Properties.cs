@@ -23,6 +23,8 @@ public partial class MakoClient
 
     public TokenUser Me => Provider.GetRequiredService<PixivTokenProvider>().Me;
 
+    public TokenUser? TryGetMe() => Provider.GetService<PixivTokenProvider>()?.Me;
+
     public MakoClientConfiguration Configuration { get; set; }
 
     public FileLogger Logger { get; }

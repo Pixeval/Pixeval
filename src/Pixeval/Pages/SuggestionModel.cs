@@ -1,7 +1,6 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL v3 License.
 
-using Microsoft.UI.Xaml.Controls;
 using Pixeval.Attributes;
 using Pixeval.CoreApi.Model;
 using Pixeval.Database;
