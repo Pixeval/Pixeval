@@ -514,10 +514,10 @@
     <value>请输入API Key</value>
   </data>
   <data name="ReverseSearchResultSimilarityThresholdEntry.Description" xml:space="preserve">
-    <value>逆向搜索结果的阈值，如果搜索结果低于该阈值则会被忽略，值越高则说明搜索结果和原图越相似</value>
+    <value>以图搜图结果的阈值，如果搜索结果低于该阈值则会被忽略，值越高则说明搜索结果和原图越相似</value>
   </data>
   <data name="ReverseSearchResultSimilarityThresholdEntry.Header" xml:space="preserve">
-    <value>逆向搜索阈值</value>
+    <value>以图搜图阈值</value>
   </data>
   <data name="BrowseOriginalImageEntry.Description" xml:space="preserve">
     <value>浏览原图需要更多流量和时间加载，但也可以获得更好的浏览体验和更快的下载速度</value>

@@ -9,13 +9,19 @@ using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
 using Windows.System;
+using Windows.UI;
 using Windows.UI.Core;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Graphics.Canvas.Brushes;
+using Microsoft.Graphics.Canvas.Geometry;
+using Microsoft.Graphics.Canvas.UI.Xaml;
+using Microsoft.UI;
 using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Media;
 using Microsoft.Windows.AppLifecycle;
 using Pixeval.Activation;
 using Pixeval.Database.Managers;
@@ -32,6 +38,7 @@ using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Pages.IllustratorViewer;
 using Pixeval.Pages.NovelViewer;
 using WinUI3Utilities;
+using System.Runtime.CompilerServices;
 
 namespace Pixeval.Pages;
 
@@ -308,26 +315,6 @@ public sealed partial class MainPage
             NavigateToSettingEntry(ReverseSearchApiKeyAttribute.Value);
     }
 
-    private void KeywordAutoSuggestBox_OnDragOver(object sender, DragEventArgs e)
-    {
-        e.AcceptedOperation = DataPackageOperation.Copy;
-    }
-
-    private async void KeywordAutoSuggestBox_OnDrop(object sender, DragEventArgs e)
-    {
-        if (App.AppViewModel.AppSettings.ReverseSearchApiKey is { Length: > 0 })
-        {
-            if (e.DataView.Contains(StandardDataFormats.StorageItems) && (await e.DataView.GetStorageItemsAsync()).ToArray() is [StorageFile item, ..])
-            {
-                await _viewModel.ReverseSearchAsync(await item.OpenStreamForReadAsync());
-            }
-        }
-        else
-        {
-            await ShowReverseSearchApiKeyNotPresentDialog();
-        }
-    }
-
     private void TitleBar_OnPaneButtonClicked(object? sender, RoutedEventArgs e)
     {
         NavigationView.IsPaneOpen = !NavigationView.IsPaneOpen;
@@ -397,4 +384,53 @@ public sealed partial class MainPage
             WindowFactory.RootWindow.Close();
         }
     }
+
+    private async void MainPage_OnDragEnter(object sender, DragEventArgs e)
+    {
+        var deferral = e.GetDeferral();
+        if (e.DataView.Contains(StandardDataFormats.StorageItems) &&
+            await e.DataView.GetStorageItemsAsync() is [StorageFile])
+        {
+            e.AcceptedOperation = DataPackageOperation.Copy;
+            deferral.Complete();
+            ImageSearchGrid.Opacity = 1;
+            CanvasControl.Invalidate();
+        }
+    }
+
+    private void MainPage_OnDragLeave(object sender, DragEventArgs e)
+    {
+        if (e.AllowedOperations is not DataPackageOperation.None)
+            ImageSearchGrid.Opacity = 0;
+    }
+
+    private async void MainPage_OnDrop(object sender, DragEventArgs e)
+    {
+        ImageSearchGrid.Opacity = 0;
+        if (App.AppViewModel.AppSettings.ReverseSearchApiKey is { Length: > 0 })
+        {
+            if (e.DataView.Contains(StandardDataFormats.StorageItems) && await e.DataView.GetStorageItemsAsync() is [StorageFile item])
+                await _viewModel.ReverseSearchAsync(await item.OpenStreamForReadAsync());
+        }
+        else
+        {
+            await ShowReverseSearchApiKeyNotPresentDialog();
+        }
+    }
+
+    private void CanvasControl_OnDraw(CanvasControl sender, CanvasDrawEventArgs e)
+    {
+        const float strokeWidth = 5;
+        const float halfStrokeWidth = strokeWidth / 2;
+        e.DrawingSession.Clear(Colors.Transparent);
+        e.DrawingSession.DrawRoundedRectangle(halfStrokeWidth, halfStrokeWidth, (float) sender.ActualWidth - strokeWidth, (float) sender.ActualHeight - strokeWidth, 8, 8,
+            _Color, strokeWidth, new()
+            {
+                DashCap = CanvasCapStyle.Round,
+                LineJoin = CanvasLineJoin.Round,
+                DashStyle = CanvasDashStyle.Dash
+            });
+    }
+
+    private static readonly Color _Color = Application.Current.GetResource<SolidColorBrush>("TextFillColorPrimaryBrush").Color;
 }
