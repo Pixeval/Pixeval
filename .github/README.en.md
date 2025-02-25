@@ -23,9 +23,9 @@ Powerful, fast and beautiful Pixiv third-party desktop program based on .NET 8 a
 ---
 
 **The Pixeval that based on WinUI 3 is now WIP, the older version,
-which is the WPF version has been deprecated and expecting no more supports from developers.**\*\*
+which is the WPF version has been deprecated and expecting no more supports from developers.**
 
-> 仅支持 Windows 10（版本 2004 - 内部版本 19041）及更高版本。
+> The WinUI 3 codebase for Pixeval supports only Windows 10 (2004, Build Number 19041) and higher.
 > 可以通过以下步骤查看。右键点击“开始”按钮，选择然后选择系统；或者在“设置”中，依次选择“系统”>“系统信息”，此时页面中的Windows规格下可以看到相关信息。
 
 For more information, see [main page](https://sora.ink/pixeval/)
@@ -35,14 +35,14 @@ a more structural codebase and a modern development experience compared to the W
 You can download and compile it yourself if you want to take a glance at the new version,
 follow the following steps to compile and run:**
 
-## 环境要求
+## Prerequisites
 
 1. 拥有[git](https://git-scm.com)环境
 2. Install [Visual Studio 2022](https://visualstudio.microsoft.com/vs) (Roslyn 4.x requires VS17.x, i.e. VS2022)
    如果已安装请确认是VS2022的最新版本，因为负载里.NET SDK的版本和VS的版本有关，低版本可能不包含.NET8 SDK。
-3. In **Tools - Get Tools and Features**, under **Workloads**, select .NET Desktop Development (In the Installation Details pane of the installation dialog, select the Windows App SDK C# Template at the bottom of the list, but it is not required.) You can refer to [Install Tools for Windows App SDK](https://learn.microsoft.com/windows/apps/windows-app-sdk/set-up-your-development-environment)（可以参考[安装适用于 Windows 应用 SDK 的工具](https://learn.microsoft.com/windows/apps/windows-app-sdk/set-up-your-development-environment)）
+3. In **Tools - Get Tools and Features**, under **Workloads**, select .NET Desktop Development (In the Installation Details pane of the installation dialog, select the Windows App SDK C# Template at the bottom of the list, but it is not required.)You can refer to [Install Tools for Windows App SDK](https://learn.microsoft.com/windows/apps/windows-app-sdk/set-up-your-development-environment)
 
-## 运行项目
+## Development
 
 1. Clone the project
 2. If _Pixeval_ is not a startup project, set it as a startup project
@@ -50,7 +50,7 @@ follow the following steps to compile and run:**
 
 - If that fails, you can try rebuilding the solution or restarting Visual Studio 2022
 
-## 参与开发的要求
+## If you want to take part into the development, there are some extra requirements
 
 1. The basic knowledge about Windows XAML Framework, for more information, see [XAML Overview](https://docs.microsoft.com/windows/uwp/xaml-platform/xaml-overview)
 2. A comprehensive understanding of C# and .NET development
@@ -72,25 +72,25 @@ After your development, Please create a [Pull Request](https://github.com/Pixeva
 
 ## Project Structure
 
-1. Pixeval 项目包含了项目本身的逻辑及布局代码
+1. The _Pixeval_ project contains the most relevant codes and the packaging files.
 2. The _Pixeval.Controls_ project contains includes a number of less coupled controls
 3. The _Pixeval.CoreApi_ project contains the API endpoints that are required by the project.
 4. The _Pixeval.SourceGen_ project contains code generators about settings.
 5. The _Pixeval.Utilities_ project contains the codes for universal util functions.
 
-## 反馈问题（按照推荐程度优先级排序）
+## In case that you are having problems... (Ordered by recommend priority)
 
 1. Open an issue at [github](https://github.com/dylech30th/Pixeval/issues/new/choose)
 2. Send an email to [decem0730@hotmail.com](mailto:decem0730@hotmail.com)
 3. Join the QQ group 815791942 and ask developers face-to-face
 
-## 鸣谢（排名不分先后）
+## Acknowledgements (In no particular order)
 
 [![Toolkit Contributors](https://contrib.rocks/image?repo=Pixeval/Pixeval)](https://github.com/Pixeval/Pixeval/graphs/contributors)
 
 Made with [contrib.rocks](https://contrib.rocks).
 
-## 支持作者
+## Support me
 
 If this project meets your requirements perfectly, welcome the buy me a coffee at [afdian](https://afdian.net/@dylech30th). It's my pleasure to having your rewards. Thanks!
 
