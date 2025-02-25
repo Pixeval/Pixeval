@@ -35,86 +35,6 @@ public partial class MainPageViewModel : UiObservableObject
     [ObservableProperty]
     public partial bool AiShowProcessing { get; set; }
 
-    public readonly NavigationViewTag<RecommendationPage> RecommendationsTag =
-        new(MainPageResources.RecommendationsTabContent) { ImageUri = GetIconUri("recommendations") };
-
-    public readonly NavigationViewTag<RankingsPage> RankingsTag =
-        new(MainPageResources.RankingsTabContent) { ImageUri = GetIconUri("ranking") };
-
-    public readonly NavigationViewTag<BookmarksPage> BookmarksTag =
-        new(MainPageResources.BookmarksTabContent) { ImageUri = GetIconUri("bookmarks") };
-
-    public readonly NavigationViewTag<FollowingsPage> FollowingsTag =
-        new(MainPageResources.FollowingsTabContent) { ImageUri = GetIconUri("followings") };
-
-    public readonly NavigationViewTag<SpotlightsPage> SpotlightsTag =
-        new(MainPageResources.SpotlightsTabContent) { ImageUri = GetIconUri("spotlight") };
-
-    public readonly NavigationViewTag<RecommendUsersPage> RecommendUsersTag =
-        new(MainPageResources.RecommendUsersTabContent) { ImageUri = GetIconUri("recommend-user") };
-
-    public readonly NavigationViewTag<RecentPostsPage> RecentPostsTag =
-        new(MainPageResources.RecentPostsTabContent) { ImageUri = GetIconUri("recent-posts") };
-
-    public readonly NavigationViewTag<NewWorksPage> NewWorksTag =
-        new(MainPageResources.NewWorksTabContent) { ImageUri = GetIconUri("new-works") };
-
-    public readonly NavigationViewTag<FeedPage> FeedTag =
-        new(MainPageResources.FeedTabContent) { ImageUri = GetIconUri("feed") };
-
-    public readonly NavigationViewTag<BrowsingHistoryPage> HistoriesTag =
-        new(MainPageResources.HistoriesTabContent) { ImageUri = GetIconUri("history") };
-
-    public readonly NavigationViewTag<DownloadPage> DownloadListTag =
-        new(MainPageResources.DownloadListTabContent) { ImageUri = GetIconUri("download-list") };
-
-    public readonly NavigationViewTag<TagsPage> TagsTag =
-        new(MainPageResources.TagsTabContent) { ImageUri = GetIconUri("tag") };
-
-    public readonly NavigationViewTag<ExtensionsPage> ExtensionsTag =
-        new(MainPageResources.ExtensionsTabContent) { ImageUri = GetIconUri("extensions") };
-
-    public readonly NavigationViewTag<HelpPage> HelpTag =
-        new(MainPageResources.HelpTabContent) { ImageUri = GetIconUri("help") };
-
-    public readonly NavigationViewTag<AboutPage> AboutTag =
-        new(MainPageResources.AboutTabContent) { ImageUri = GetIconUri("about") };
-
-    public readonly NavigationViewTag<SettingsPage> SettingsTag;
-
-    public static NavigationViewTag<SettingsPage> GetSettingsTag(object? parameter = null) => 
-        new(MainPageResources.SettingsTabContent, parameter) { ImageUri = GetIconUri("settings") };
-
-    public readonly NavigationViewTag<SearchUsersPage> SearchUsersTag = new(MainPageResources.SearchUsersResult);
-
-    public readonly NavigationViewTag<SearchWorksPage> SearchWorksTag = new(MainPageResources.SearchWorksResult);
-
-    public IReadOnlyList<INavigationViewItem> MenuItems =>
-    [
-        RecommendationsTag,
-        RankingsTag,
-        BookmarksTag,
-        FollowingsTag,
-        SpotlightsTag,
-        RecommendUsersTag,
-        RecentPostsTag,
-        NewWorksTag,
-        FeedTag,
-        new NavigationViewSeparator(),
-        HistoriesTag,
-        DownloadListTag
-    ];
-
-    public IReadOnlyList<INavigationViewItem> FooterMenuItems =>
-    [
-        TagsTag,
-        ExtensionsTag,
-        HelpTag,
-        AboutTag,
-        new NavigationViewSeparator(),
-        SettingsTag
-    ];
-
     [ObservableProperty]
     public partial ImageSource? AvatarSource { get; private set; }
 
@@ -130,16 +50,47 @@ public partial class MainPageViewModel : UiObservableObject
 
     public Uri Url => MakoHelper.GenerateUserWebUri(Id);
 
+    public readonly NavigationViewTag<FeedPage> FeedTag =
+        new(MainPageResources.FeedTabContent) { ImageUri = GetIconUri("feed") };
+
+    public readonly NavigationViewTag<SettingsPage> SettingsTag = GetSettingsTag();
+
+    public static NavigationViewTag<SettingsPage> GetSettingsTag(object? parameter = null) =>
+        new(MainPageResources.SettingsTabContent, parameter) { ImageUri = GetIconUri("settings") };
+
+    public NavigationViewTag<SearchUsersPage> SearchUsersTag { get; } = new(MainPageResources.SearchUsersResult);
+
+    public NavigationViewTag<SearchWorksPage> SearchWorksTag { get; } = new(MainPageResources.SearchWorksResult);
+
+    public IReadOnlyList<INavigationViewItem> MenuItems =>
+    [
+        new NavigationViewTag<RecommendationPage>(MainPageResources.RecommendationsTabContent) { ImageUri = GetIconUri("recommendations") },
+        new NavigationViewTag<RankingsPage>(MainPageResources.RankingsTabContent) { ImageUri = GetIconUri("ranking") },
+        new NavigationViewTag<BookmarksPage>(MainPageResources.BookmarksTabContent) { ImageUri = GetIconUri("bookmarks") },
+        new NavigationViewTag<FollowingsPage>(MainPageResources.FollowingsTabContent) { ImageUri = GetIconUri("followings") },
+        new NavigationViewTag<SpotlightsPage>(MainPageResources.SpotlightsTabContent) { ImageUri = GetIconUri("spotlight") },
+        new NavigationViewTag<RecommendUsersPage>(MainPageResources.RecommendUsersTabContent) { ImageUri = GetIconUri("recommend-user") },
+        new NavigationViewTag<RecentPostsPage>(MainPageResources.RecentPostsTabContent) { ImageUri = GetIconUri("recent-posts") },
+        new NavigationViewTag<NewWorksPage>(MainPageResources.NewWorksTabContent) { ImageUri = GetIconUri("new-works") },
+        FeedTag,
+        new NavigationViewSeparator(),
+        new NavigationViewTag<BrowsingHistoryPage>(MainPageResources.HistoriesTabContent) { ImageUri = GetIconUri("history") },
+        new NavigationViewTag<DownloadPage>(MainPageResources.DownloadListTabContent) { ImageUri = GetIconUri("download-list") }
+    ];
+
+    public IReadOnlyList<INavigationViewItem> FooterMenuItems =>
+    [
+        new NavigationViewTag<TagsPage>(MainPageResources.TagsTabContent) { ImageUri = GetIconUri("tag") },
+        new NavigationViewTag<ExtensionsPage>(MainPageResources.ExtensionsTabContent) { ImageUri = GetIconUri("extensions") },
+        new NavigationViewTag<HelpPage>(MainPageResources.HelpTabContent) { ImageUri = GetIconUri("help") },
+        new NavigationViewTag<AboutPage>(MainPageResources.AboutTabContent) { ImageUri = GetIconUri("about") },
+        new NavigationViewSeparator(),
+        SettingsTag
+    ];
+
     public MainPageViewModel(FrameworkElement owner) : base(owner)
     {
-        SettingsTag = GetSettingsTag();
-        SetAvatarSource();
         SubscribeTokenRefresh();
-    }
-
-    private async void SetAvatarSource()
-    {
-        AvatarSource = await CacheHelper.GetSourceFromCacheAsync(App.AppViewModel.MakoClient.Me.ProfileImageUrls.Px50X50);
     }
 
     public double MainPageRootNavigationViewOpenPanelLength => 280;
@@ -183,6 +134,7 @@ public partial class MainPageViewModel : UiObservableObject
     {
         try
         {
+            FrameworkElement.InfoGrowl(MainPageResources.ReverseSearchStartContent);
             var result = await App.AppViewModel.MakoClient.ReverseSearchAsync(stream, App.AppViewModel.AppSettings.ReverseSearchApiKey);
             if (result.Header.Status is 0)
             {
@@ -194,14 +146,14 @@ public partial class MainPageViewModel : UiObservableObject
                             await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(r.Data.PixivId))));
 
                 if (viewModels.Length is 0)
-                    _ = FrameworkElement.CreateAcknowledgementAsync(MainPageResources.ReverseSearchNotFoundTitle,
+                    FrameworkElement.ErrorGrowl(MainPageResources.ReverseSearchNotFoundTitle,
                             MainPageResources.ReverseSearchNotFoundContent);
                 else
                     FrameworkElement.CreateIllustrationPage(viewModels[0], viewModels);
             }
             else
             {
-                _ = await FrameworkElement.CreateAcknowledgementAsync(MainPageResources.ReverseSearchErrorTitle,
+                FrameworkElement.ErrorGrowl(MainPageResources.ReverseSearchErrorTitle,
                     result.Header.Status > 0
                         ? MainPageResources.ReverseSearchServerSideErrorContent
                         : MainPageResources.ReverseSearchClientSideErrorContent);
@@ -209,12 +161,9 @@ public partial class MainPageViewModel : UiObservableObject
         }
         catch (Exception e)
         {
-            _ = await FrameworkElement.CreateAcknowledgementAsync(MiscResources.ExceptionEncountered, e.ToString());
+            FrameworkElement.ErrorGrowl(MiscResources.ExceptionEncountered, e.ToString());
         }
     }
 
-    private static Uri GetIconUri(string iconName)
-    {
-        return new($"ms-appx:///Assets/Images/Icons/{iconName}.png");
-    }
+    private static Uri GetIconUri(string iconName) => new($"ms-appx:///Assets/Images/Icons/{iconName}.png");
 }
