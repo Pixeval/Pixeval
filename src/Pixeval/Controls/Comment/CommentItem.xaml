@@ -31,7 +31,8 @@
                 <local:TranslatableTextBlock
                     x:Name="CommentContent"
                     HorizontalButtonAlignment="Left"
-                    TextType="Comment" />
+                    TextType="Comment"
+                    UseMarkdown="True" />
             </controls:Case>
         </controls:SwitchPresenter>
         <CommandBar
