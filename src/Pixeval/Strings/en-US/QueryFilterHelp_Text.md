@@ -7,7 +7,7 @@ all kinds of queries.
 | ---------------------------------------------------------------------------------- | ----------------------------------------------------- |
 | [str]                          | Title of artwork                                      |
 | #[str]                         | Tag                                                   |
-| @[str \\                                  | Author                                                |
+| @[str \\| num]   | Author                                                |
 | +[const]                       | Positive constraint                                   |
 | -[const]                       | Negative constraint                                   |
 | i:[int-range]  | Filter artworks by their indices                      |
@@ -22,7 +22,7 @@ all kinds of queries.
 
 | Syntax  | Meaning                                                      |
 | ------- | ------------------------------------------------------------ |
-| abc     | 普通的字符串                                                       |
+| abc     | A simple string                                              |
 | "ab# c" | A string with spaces/special characters                      |
 | abc$    | A string that exactly matches                                |
 | "ab c$" | A string that exactly matches with spaces/special characters |
