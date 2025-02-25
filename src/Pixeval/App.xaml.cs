@@ -73,7 +73,7 @@ public partial class App
             }
         }
 
-        AppViewModel.Initialize(kind is ExtendedActivationKind.Protocol);
+        AppViewModel.Initialize();
 
         TabPage.CreatedWindowClosing += OnClosing;
         WindowFactory.Create(new LoginPage())
@@ -108,22 +108,29 @@ public partial class App
 
         static async void OnClosing(AppWindow w, AppWindowClosingEventArgs e)
         {
-            if (AppViewModel.AppSettings.ReconfirmationOfClosingWindow)
+            try
             {
-                e.Cancel = true;
-                var checkBox = new CheckBox
+                if (AppViewModel.AppSettings.ReconfirmationOfClosingWindow)
                 {
-                    Content = ExitDialogResources.ReconfirmationOfClosingWindowCheckBoxContent
-                };
-                var window = WindowFactory.GetForkedWindows(w.Id.Value);
-                if (await window.Content.To<FrameworkElement>().CreateOkCancelAsync(
-                        ExitDialogResources.ReconfirmationOfClosingWindowTitle,
-                        checkBox) is ContentDialogResult.Primary)
-                {
-                    AppViewModel.AppSettings.ReconfirmationOfClosingWindow = checkBox.IsChecked is false;
-                    AppInfo.SaveConfig(AppViewModel.AppSettings);
-                    window.Close();
+                    e.Cancel = true;
+                    var checkBox = new CheckBox
+                    {
+                        Content = ExitDialogResources.ReconfirmationOfClosingWindowCheckBoxContent
+                    };
+                    var window = WindowFactory.GetForkedWindows(w.Id.Value);
+                    if (await window.Content.To<FrameworkElement>().CreateOkCancelAsync(
+                            ExitDialogResources.ReconfirmationOfClosingWindowTitle,
+                            checkBox) is ContentDialogResult.Primary)
+                    {
+                        AppViewModel.AppSettings.ReconfirmationOfClosingWindow = checkBox.IsChecked is false;
+                        AppInfo.SaveConfig(AppViewModel.AppSettings);
+                        window.Close();
+                    }
                 }
+            }
+            catch
+            {
+                e.Cancel = false;
             }
         }
     }

@@ -10,6 +10,7 @@ using Pixeval.Pages.Login;
 using Microsoft.Extensions.DependencyInjection;
 using Pixeval.CoreApi;
 using Pixeval.Logging;
+using Pixeval.Util.Threading;
 
 namespace Pixeval.Activation;
 
@@ -42,13 +43,15 @@ public static class ActivationRegistrar
                 }
                 case "pixiv":
                 {
-                    if (LoginPage.Current is null || App.AppViewModel.MakoClient != null!)
+                    if (LoginPage.Current is null || LoginPage.CurrentVerifier is null || App.AppViewModel.MakoClient != null!)
                         return;
                     var code = HttpUtility.ParseQueryString(activationUri.Query)["code"]!;
-                    var tokenResponse = await PixivAuth.AuthCodeToTokenResponseAsync(code, PixivAuth.GetCodeVerify());
+                    var tokenResponse = await PixivAuth.AuthCodeToTokenResponseAsync(code, LoginPage.CurrentVerifier);
+                    if (tokenResponse is null)
+                        return;
                     var logger = App.AppViewModel.AppServiceProvider.GetRequiredService<FileLogger>();
-                    App.AppViewModel.MakoClient = new MakoClient(tokenResponse, App.AppViewModel.AppSettings.ToMakoClientConfiguration(), logger);
-                    LoginPage.SuccessNavigating();
+                    App.AppViewModel.MakoClient = new MakoClient(tokenResponse, App.AppViewModel.AppSettings.ToMakoClientConfiguration(), logger); 
+                    _ = ThreadingHelper.DispatchAsync(LoginPage.SuccessNavigating);
                     break;
                 }
             }

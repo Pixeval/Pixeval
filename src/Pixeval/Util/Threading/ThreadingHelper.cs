@@ -35,6 +35,11 @@ public static class ThreadingHelper
         return action();
     }
 
+    public static Task DispatchAsync(Action action)
+    {
+        return WindowFactory.RootWindow.DispatcherQueue.EnqueueAsync(action);
+    }
+
     public static Task DispatchTaskAsync(Func<Task> action)
     {
         return WindowFactory.RootWindow.DispatcherQueue.EnqueueAsync(action);

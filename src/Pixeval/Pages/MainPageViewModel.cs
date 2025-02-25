@@ -23,7 +23,6 @@ using Pixeval.Pages.Tags;
 using Pixeval.Util;
 using Pixeval.Util.ComponentModels;
 using Pixeval.Util.IO.Caching;
-using Pixeval.Util.UI;
 
 namespace Pixeval.Pages;
 
@@ -128,6 +127,21 @@ public partial class MainPageViewModel : UiObservableObject
             OnDetachAction = listener => makoClient.TokenRefreshedFailed -= listener.OnEvent
         };
         makoClient.TokenRefreshedFailed += _tokenRefreshFailedListener.OnEvent;
+    }
+
+    public async void TryLoadAvatar()
+    {
+        if (AvatarSource is not null || App.AppViewModel.MakoClient.TryGetMe() is not { } me)
+            return;
+        await Task.Yield();
+        try
+        {
+            AvatarSource = await CacheHelper.GetSourceFromCacheAsync(me.ProfileImageUrls.Px50X50);
+        }
+        catch
+        {
+            // ignored
+        }
     }
 
     public async Task ReverseSearchAsync(Stream stream)

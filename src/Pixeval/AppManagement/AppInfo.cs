@@ -10,7 +10,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Pixeval.Controls.Windowing;
 using Pixeval.Database.Managers;
 using Pixeval.Util.IO;
-using Pixeval.Utilities;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
 using Windows.ApplicationModel;
@@ -67,8 +66,6 @@ public static partial class AppInfo
         MakoHttpOptions.SetNameResolver(MakoHttpOptions.WebApiHost, appSetting.PixivWebApiNameResolver);
     }
 
-    public static Uri NavigationIconUri(string name) => new Uri($"ms-appx:///Assets/Images/Icons/{name}.png");
-
     public static string ApplicationUriToPath(Uri uri)
     {
         if (uri.Scheme is not "ms-appx")
@@ -122,12 +119,26 @@ public static partial class AppInfo
 
     public static void ClearConfig()
     {
-        Functions.IgnoreException(() => AppData.LocalSettings.DeleteContainer(ConfigContainerKey));
+        try
+        {
+            AppData.LocalSettings.DeleteContainer(ConfigContainerKey);
+        }
+        catch
+        {
+            // ignored
+        }
     }
 
     public static void ClearLoginContext()
     {
-        Functions.IgnoreException(() => AppData.LocalSettings.DeleteContainer(LoginContextContainerKey));
+        try
+        {
+            AppData.LocalSettings.DeleteContainer(LoginContextContainerKey);
+        }
+        catch
+        {
+            // ignored
+        }
     }
 
     public static void SaveContext()
@@ -146,10 +157,18 @@ public static partial class AppInfo
 
     public static void SaveContextWhenExit()
     {
-        CacheHelper.PurgeCache();
-        SaveDebugTrace();
-        SaveContext();
-        App.AppViewModel.Dispose();
+        try
+        {
+            CacheHelper.PurgeCache();
+            SaveDebugTrace();
+            SaveContext();
+            App.AppViewModel.Dispose();
+        }
+        catch
+        {
+            // ignored
+            // 保证退出时不出幺蛾子
+        }
     }
 
     public static void SaveDebugTrace()
