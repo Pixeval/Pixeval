@@ -23,9 +23,9 @@ Un client desktop tierce de Pixiv, puissant, rapid et vivide, basé sur .NET 8 e
 ---
 
 **Pixeval est actuellement basé sur WinUI 3 avec développement en cours.
-L'ancienne version du WPF a été dépréciée et ne recevra plus de supports depuis les développeurs.**\*\*
+L'ancienne version du WPF a été dépréciée et ne recevra plus de supports depuis les développeurs.**
 
-> 仅支持 Windows 10（版本 2004 - 内部版本 19041）及更高版本。
+> La base de code de Pixeval prend seulement en compte Windows 10 (2004, Build Number 19041) ou versions ultérieures.
 > 可以通过以下步骤查看。右键点击“开始”按钮，选择然后选择系统；或者在“设置”中，依次选择“系统”>“系统信息”，此时页面中的Windows规格下可以看到相关信息。
 
 Pour plus d'information, consultez [site du projet](https://sora.ink/pixeval/)
@@ -35,22 +35,22 @@ expérience de développement plus moderne que la version WPF. Vous pouvez tél�
 par vous-même si vous voulez jeter un oeil sur cette nouvelle version, en suivant les étapes prochaines pour
 la compilation et le démarrage:**
 
-## 环境要求
+## Pré-requis
 
 1. 拥有[git](https://git-scm.com)环境
 2. Installer [Visual Studio 2022](https://visualstudio.microsoft.com/vs) (Roslyn 4.x nécessite VS17.x, i.e. VS2022)
    如果已安装请确认是VS2022的最新版本，因为负载里.NET SDK的版本和VS的版本有关，低版本可能不包含.NET8 SDK。
-3. Dans **Tools - Get Tools and Features**, sous **Workloads**, sélectionner .NET Desktop Development (Dans le panneau Installation Details du dialogue installation, sélectionner le Windows App SDK C# Template en bas de la liste, cependant ceci n'est pas requis.) Vous pouvez vous référer de [Install Tools for Windows App SDK](https://learn.microsoft.com/windows/apps/windows-app-sdk/set-up-your-development-environment)（可以参考[安装适用于 Windows 应用 SDK 的工具](https://learn.microsoft.com/windows/apps/windows-app-sdk/set-up-your-development-environment)）
+3. Dans **Tools - Get Tools and Features**, sous **Workloads**, sélectionner .NET Desktop Development (Dans le panneau Installation Details du dialogue installation, sélectionner le Windows App SDK C# Template en bas de la liste, cependant ceci n'est pas requis.)Vous pouvez vous référer de [Install Tools for Windows App SDK](https://learn.microsoft.com/windows/apps/windows-app-sdk/set-up-your-development-environment)
 
-## 运行项目
+## Développement
 
 1. Cloner le projet
 2. Si _Pixeval_ n'est pas un startup project, configurer-le comme celui-ci
-3. 构建并运行
+3. Builder and démarrer l'application
 
 - Si cela échoue, vous pouvez essayer de le rebuilder ou redémarrer Visual Studio 2022
 
-## 参与开发的要求
+## Si vous voulez participer dans le développement, voici quelques critères extras
 
 1. Une connaissance de base de Windows XAML Framework, pour plus d'informations: [XAML Overview](https://docs.microsoft.com/windows/uwp/xaml-platform/xaml-overview)
 2. Une connaissance compréhensive de C# et .NET développement
@@ -60,11 +60,11 @@ la compilation et le démarrage:**
 
 Ce projet est basé sur un modèle de branching simple mais raisonnable: Lorsque vous contribuez, vous créez une nouvelle branche basée sur la branche principale `main` et travaillez sur votre branche. Cette nouvelle branche **DOIT** être nommée de façon `{utilisateur}/{quantificateur}/{description}`, où l'utilisateur est votre nom d'identifiant GitHub.
 
-| Contenu de code                 | qualifier | desc                                                |
-| ------------------------------- | --------- | --------------------------------------------------- |
-| Bug fixes                       | fix       | Une description simple de la vulnérabilité          |
-| Nouvelles features              | feature   | Une description simple de la nouvelle feature       |
-| Refactoring ou qualité de codes | refactor  | Une description simple de la section de refactoring |
+| Contenu de code                 | Quantificateur | Description                                         |
+| ------------------------------- | -------------- | --------------------------------------------------- |
+| Bug fixes                       | fix            | Une description simple de la vulnérabilité          |
+| Nouvelles features              | feature        | Une description simple de la nouvelle feature       |
+| Refactoring ou qualité de codes | refactor       | Une description simple de la section de refactoring |
 
 Si votre contribution contient plus d'un type spécifié dessus, choisissez un rôle qui ressemble plus à votre contribution, et spécifiez les autres dans le mssage de commit.
 
@@ -72,27 +72,27 @@ Après votre développement, vous devez créer un [Pull Request](https://github.
 
 ## Structure du projet
 
-1. Pixeval 项目包含了项目本身的逻辑及布局代码
+1. Le projet _Pixeval_ contient la plupart des codes métiers et des fichiers de packages.
 2. Le projet _Pixeval.Controls_ contient de nombreux controls légèrement couplés.
 3. Le projet _Pixeval.CoreApi_ contient des endpoints API requis par ce projet.
 4. Le projet _Pixeval.SourceGen_ contient des générateurs de codes sources concernant les configurations.
-5. Pixeval.Utilities 包含了通用的工具代码
+5. Le projet _Pixeval.Utilities_ contient des fonctions utilitaires pour ce projet.
 
-## 反馈问题（按照推荐程度优先级排序）
+## En cas de problème... (Par priorité de recommendation)
 
 1. Ouvrir un issue sur [github](https://github.com/dylech30th/Pixeval/issues/new/choose)
 2. Envoyer un mail à [decem0730@hotmail.com](mailto:decem0730@hotmail.com)
 3. Rejoindre le groupe QQ 815791942 et poser vos questions en face des développeurs
 
-## 鸣谢（排名不分先后）
+## Crédits (Sans ordre particulière)
 
 [![Toolkit Contributors](https://contrib.rocks/image?repo=Pixeval/Pixeval)](https://github.com/Pixeval/Pixeval/graphs/contributors)
 
 Made with [contrib.rocks](https://contrib.rocks).
 
-## 支持作者
+## Me sponsoriser
 
-如果你感觉该项目帮助到了你，欢迎前往[爱发电](https://afdian.net/@dylech30th)赞助我，你的支持是我维护项目的动力，谢谢！
+Si ce projet vous plaît parfaitment, vous pouvez acheter un café pour moi dans [afdian](https://afdian.net/@dylech30th). Je le recevrai avec grand plaisir, merci!
 
 <div>
   <a href="https://www.jetbrains.com/?from=Pixeval" align="right"><img src="https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.svg" alt="JetBrains" class="logo-footer" width="130" align="left"></a>
