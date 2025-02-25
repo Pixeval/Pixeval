@@ -7,7 +7,7 @@ tous les types de recherches.
 | ---------------------------------------------------------------------------------- | ----------------------------------------------------------------- |
 | [str]                          | Titre                                                             |
 | #[str]                         | Tag                                                               |
-| @[str \\                                  | Auteur                                                            |
+| @[str \\| num]   | Auteur                                                            |
 | +[const]                       | Contraints positifs                                               |
 | -[const]                       | Contraints négatifs                                               |
 | i:[int-range]  | Filtrer les artworks par leurs indices                            |
