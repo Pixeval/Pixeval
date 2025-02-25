@@ -22,7 +22,7 @@ all kinds of queries.
 
 | Syntax  | Meaning                                                      |
 | ------- | ------------------------------------------------------------ |
-| abc     | 普通的字符串                                                       |
+| abc     | A simple string                                              |
 | "ab# c" | A string with spaces/special characters                      |
 | abc$    | A string that exactly matches                                |
 | "ab c$" | A string that exactly matches with spaces/special characters |

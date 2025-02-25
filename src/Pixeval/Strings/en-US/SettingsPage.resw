@@ -514,10 +514,10 @@ Type and click on "+" to add an IP</value>
     <value>API Key</value>
   </data>
   <data name="ReverseSearchResultSimilarityThresholdEntry.Description" xml:space="preserve">
-    <value>Threshold of the likelihood of the reverse search, higher value indicates higher similarities, results lower than this value will be ignored</value>
+    <value>以图搜图结果的阈值，如果搜索结果低于该阈值则会被忽略，值越高则说明搜索结果和原图越相似</value>
   </data>
   <data name="ReverseSearchResultSimilarityThresholdEntry.Header" xml:space="preserve">
-    <value>Reverse search threshold</value>
+    <value>以图搜图阈值</value>
   </data>
   <data name="BrowseOriginalImageEntry.Description" xml:space="preserve">
     <value>This option requires more bandwidth and loading time, but you'll get a better experience and faster download speed</value>
