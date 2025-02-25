@@ -34,7 +34,7 @@ public sealed partial class SettingsPage : IDisposable
 
     private SettingsPageViewModel _viewModel = null!;
 
-    private SettingsEntryAttribute? _scrollToAttribute;
+    public SettingsEntryAttribute? TargetAttribute { get; set; }
 
     private bool _disposed;
 
@@ -43,7 +43,6 @@ public sealed partial class SettingsPage : IDisposable
     public override void OnPageActivated(NavigationEventArgs e, object? parameter)
     {
         _viewModel = new SettingsPageViewModel(this);
-        _scrollToAttribute = parameter as SettingsEntryAttribute;
 
         // ItemsControl会有缓动动画，ItemsRepeater会延迟加载，使用只好手动一次全部加载，以方便根据Tag导航
         var style = Resources["SettingHeaderStyle"] as Style;
@@ -59,14 +58,24 @@ public sealed partial class SettingsPage : IDisposable
                 SettingsPanel.Children.Add(entry.Element);
         }
 
-        var frameworkElement = SettingsPanel.FindChild<SettingsCard>(element => element.Tag is SettingsEntryAttribute a && Equals(a, _scrollToAttribute));
+        ScrollToAttribute(parameter as SettingsEntryAttribute, -135);
+    }
+
+    private void SettingsPage_OnLoaded(object sender, RoutedEventArgs e) => ScrollToAttribute(TargetAttribute);
+
+    public void ScrollToAttribute(SettingsEntryAttribute? attribute, double offset = 0)
+    {
+        if (attribute is null)
+            return;
+
+        var frameworkElement = SettingsPanel.FindChild<SettingsCard>(element => element.Tag is SettingsEntryAttribute a && Equals(a, attribute));
 
         if (frameworkElement is not null)
         {
             var position = frameworkElement
                 .TransformToVisual(SettingsPanel)
                 // 神秘的偏移量
-                .TransformPoint(new Point(0, -160));
+                .TransformPoint(new Point(0, offset));
 
             _ = SettingsPageScrollView.ScrollTo(position.X, position.Y);
         }

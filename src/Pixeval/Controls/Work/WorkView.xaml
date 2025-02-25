@@ -5,8 +5,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:flyoutContent="using:Pixeval.Controls.FlyoutContent"
     xmlns:local="using:Pixeval.Controls"
-    Loaded="WorkView_OnLoaded"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Loaded="WorkView_OnLoaded"
     mc:Ignorable="d">
     <UserControl.Resources>
         <DataTemplate x:Key="NovelItemDataTemplate" x:DataType="local:NovelItemViewModel">

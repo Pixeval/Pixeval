@@ -35,6 +35,9 @@ using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Pages.IllustratorViewer;
 using Pixeval.Pages.NovelViewer;
 using WinUI3Utilities;
+using Pixeval.Pages.Misc;
+using CommunityToolkit.WinUI.Controls;
+using Windows.UI.ApplicationSettings;
 
 namespace Pixeval.Pages;
 
@@ -260,7 +263,22 @@ public sealed partial class MainPage
         NavigateToSettingEntry(ReverseSearchApiKeyAttribute.Value);
     }
 
-    private void NavigateToSettingEntry(SettingsEntryAttribute entry) => MainPageRootTab.AddPage(MainPageViewModel.GetSettingsTag(entry));
+    private void NavigateToSettingEntry(SettingsEntryAttribute entry)
+    {
+        if (MainPageRootTab.TabView.TabItems.FirstOrDefault(t => t is TabViewItem { Content: Frame { Content : SettingsPage } }) is
+            TabViewItem { Content: Frame { Content: SettingsPage page } } item)
+        {
+            if (Equals(MainPageRootTab.TabView.SelectedItem, item))
+                page.ScrollToAttribute(entry);
+            else
+            {
+                page.TargetAttribute = entry;
+                MainPageRootTab.TabView.SelectedItem = item;
+            }
+        }
+        else
+            MainPageRootTab.AddPage(MainPageViewModel.GetSettingsTag(entry));
+    }
 
     /// <summary>
     /// The AutoSuggestBox does not have a 'Paste' event, so we check the keyboard event accordingly
