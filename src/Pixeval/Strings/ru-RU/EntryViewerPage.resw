@@ -242,7 +242,4 @@ R: Следующая иллюстрация</value>
   <data name="NovelSettingsHeaderTextBlock.Text" xml:space="preserve">
     <value>Настройки новеллы</value>
   </data>
-  <data name="BrowsingCompressedImage" xml:space="preserve">
-    <value>Поскольку вы не включили опцию «Просмотр исходного изображения при просмотре» в настройках, эта страница будет отображать сжатое изображение. Если вы хотите просмотреть исходное изображение, включите соответствующую опцию в настройках</value>
-  </data>
 </root>
