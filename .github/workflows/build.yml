@@ -4,11 +4,12 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - "**"
+      - main
     paths-ignore:
-      - "**.md"
-    tags-ignore:
-      - "**"
+      - '.github/*.md'
+  pull_request:
+    branches-ignore:
+      - l10n_main
 
 defaults:
   run:
