@@ -31,28 +31,6 @@ public sealed partial class IllustrationViewerPage
 
     public IllustrationViewerPage() => InitializeComponent();
 
-    public bool PointerNotInArea
-    {
-        get;
-        set
-        {
-            field = value;
-            if (IsLoaded && field && TimeUp)
-                BottomCommandSection.Translation = new Vector3(0, 120, 0);
-        }
-    } = true;
-
-    public bool TimeUp
-    {
-        get;
-        set
-        {
-            field = value;
-            if (IsLoaded && field && PointerNotInArea)
-                BottomCommandSection.Translation = new Vector3(0, 120, 0);
-        }
-    }
-
     public override void OnPageActivated(NavigationEventArgs e, object? parameter) => SetViewModel(parameter);
 
     public void SetViewModel(object? parameter)
@@ -110,17 +88,10 @@ public sealed partial class IllustrationViewerPage
         // 第一次_viewModel.CurrentIllustrationIndex变化时，还没有订阅事件，所以不会触发DetailedPropertyChanged，需要手动触发
         Navigate<ImageViewerPage>(IllustrationImageShowcaseFrame, _viewModel.CurrentImage);
 
-        if (!App.AppViewModel.AppSettings.BrowseOriginalImage)
-        {
-            _viewModel.AdditionalText = EntryViewerPageResources.BrowsingCompressedImage;
-        }
-
         CommandBorderDropShadow.Receivers.Add(IllustrationImageShowcaseFrame);
-        ThumbnailListDropShadow.Receivers.Add(IllustrationImageShowcaseFrame);
 
         // TODO: https://github.com/microsoft/microsoft-ui-xaml/issues/9952
         // ThumbnailItemsView.StartBringItemIntoView(_viewModel.CurrentIllustrationIndex, new BringIntoViewOptions { AnimationDesired = true });
-        IllustrationImageShowcaseFrame_OnTapped(null!, null!);
 
         var extensionService = App.AppViewModel.AppServiceProvider.GetRequiredService<ExtensionService>();
         if (!extensionService.ActiveImageTransformerCommands.Any())
@@ -204,14 +175,6 @@ public sealed partial class IllustrationViewerPage
             case VirtualKey.Up: PrevButton_OnRightTapped(null!, null!); break;
             case VirtualKey.Down: NextButton_OnRightTapped(null!, null!); break;
         }
-    }
-
-    private async void IllustrationImageShowcaseFrame_OnTapped(object sender, TappedRoutedEventArgs e)
-    {
-        BottomCommandSection.Translation = new Vector3();
-        TimeUp = false;
-        await Task.Delay(3000);
-        TimeUp = true;
     }
 
     private void Content_OnLoading(FrameworkElement sender, object args)

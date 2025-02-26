@@ -93,4 +93,12 @@ public static class XamlUiCommandHelper
             ? Symbol.ArrowMinimize
             : Symbol.ArrowMaximize).GetSymbolIconSource();
     }
+
+    public static void RefreshBottomPanelCommand(this XamlUICommand command, bool isExpand)
+    {
+        command.Label = command.Description = isExpand ? MiscResources.CloseBottomList : MiscResources.OpenBottomList;
+        command.IconSource = (isExpand
+            ? Symbol.PanelBottomContract
+            : Symbol.PanelBottomExpand).GetSymbolIconSource(true);
+    }
 }
