@@ -150,6 +150,12 @@
   <data name="BackToWindow" xml:space="preserve">
     <value>恢复窗口化</value>
   </data>
+  <data name="OpenBottomList" xml:space="preserve">
+    <value>打开底部图片列表</value>
+  </data>
+  <data name="CloseBottomList" xml:space="preserve">
+    <value>关闭底部图片列表</value>
+  </data>
   <data name="AppThemeLight" xml:space="preserve">
     <value>亮色</value>
   </data>

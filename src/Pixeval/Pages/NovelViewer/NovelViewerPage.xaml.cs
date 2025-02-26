@@ -27,28 +27,6 @@ public sealed partial class NovelViewerPage
 
     public NovelViewerPage() => InitializeComponent();
 
-    public bool PointerNotInArea
-    {
-        get;
-        set
-        {
-            field = value;
-            if (IsLoaded && field && TimeUp)
-                BottomCommandSection.Translation = new Vector3(0, 120, 0);
-        }
-    } = true;
-
-    public bool TimeUp
-    {
-        get;
-        set
-        {
-            field = value;
-            if (IsLoaded && field && PointerNotInArea)
-                BottomCommandSection.Translation = new Vector3(0, 120, 0);
-        }
-    }
-
     public override void OnPageActivated(NavigationEventArgs e, object? parameter) => SetViewModel(parameter);
 
     public void SetViewModel(object? parameter)
@@ -77,16 +55,13 @@ public sealed partial class NovelViewerPage
             SettingsPanel.Children.Add(entry.Element);
 
         CommandBorderDropShadow.Receivers.Add(DocumentViewer);
-        ThumbnailListDropShadow.Receivers.Add(DocumentViewer);
 
         // TODO: https://github.com/microsoft/microsoft-ui-xaml/issues/9952
         // ThumbnailItemsView.StartBringItemIntoView(_viewModel.CurrentNovelIndex, new BringIntoViewOptions { AnimationDesired = true });
-        DocumentViewer_OnTapped(null!, null!);
 
         var extensionService = App.AppViewModel.AppServiceProvider.GetRequiredService<ExtensionService>();
         if (!extensionService.ActiveTextTransformerCommands.Any())
             return;
-        ToolsCommandBar.PrimaryCommands.Add(new AppBarSeparator());
         foreach (var extension in extensionService.ActiveTextTransformerCommands)
         {
             var appBarButton = new AppBarButton
@@ -97,8 +72,10 @@ public sealed partial class NovelViewerPage
                 CommandParameter = extension
             };
             ToolTipService.SetToolTip(appBarButton, extension.GetDescription());
-            ToolsCommandBar.PrimaryCommands.Add(appBarButton);
+            ExtensionsCommandBar.PrimaryCommands.Add(appBarButton);
         }
+
+        ExtensionsCommandBar.PrimaryCommands.Add(new AppBarSeparator());
 
         OnViewModelOnCurrentDocumentPropertyChanged(_viewModel.CurrentDocument, null!);
 
@@ -107,7 +84,7 @@ public sealed partial class NovelViewerPage
         void OnViewModelOnCurrentDocumentPropertyChanged(object? sender, PropertyChangedEventArgs args)
         {
             var vm = sender.To<DocumentViewerViewModel>();
-            foreach (var appBarButton in ToolsCommandBar.PrimaryCommands.OfType<AppBarButton>())
+            foreach (var appBarButton in ExtensionsCommandBar.PrimaryCommands.OfType<AppBarButton>())
                 if (appBarButton.Tag is ITextTransformerCommandExtension extension)
                     appBarButton.Command = vm.GetTransformExtensionCommand(extension);
         }
@@ -178,14 +155,6 @@ public sealed partial class NovelViewerPage
                 NextButton_OnRightTapped(null!, null!);
                 break;
         }
-    }
-
-    private async void DocumentViewer_OnTapped(object sender, TappedRoutedEventArgs e)
-    {
-        BottomCommandSection.Translation = new Vector3();
-        TimeUp = false;
-        await Task.Delay(3000);
-        TimeUp = true;
     }
 
     private void Content_OnLoading(FrameworkElement sender, object args)

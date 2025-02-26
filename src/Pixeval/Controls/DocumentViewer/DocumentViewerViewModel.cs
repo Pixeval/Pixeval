@@ -95,8 +95,13 @@ public partial class DocumentViewerViewModel(FrameworkElement frameworkElement) 
             NovelContent = await novelItem.GetNovelContentAsync();
             ((INovelContext<ImageSource>) this).InitImages();
             LoadRtfContent();
-            // 此时没有任何PropertyChanged订阅，所以此时直接赋值
-            CurrentPage = 0;
+            if (CurrentPage is 0)
+            {
+                OnPropertyChanged(nameof(CurrentPage));
+                OnPropertyChanged(nameof(CurrentParagraphs));
+            }
+            else
+                CurrentPage = 0;
             _ = LoadImagesAsync();
             BrowseHistoryPersistentManager.AddHistory(novelItem.Entry);
             LoadSuccessfully = true;

@@ -28,6 +28,17 @@
         TargetType="TextBlock">
         <Setter Property="FontWeight" Value="SemiBold" />
     </Style>
+    <Style
+        x:Key="ViewerTextBlockStyle"
+        BasedOn="{StaticResource CaptionStrongTextBlockStyle}"
+        TargetType="TextBlock">
+        <Setter Property="FontSize" Value="15" />
+        <Setter Property="Margin" Value="10,0" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="HorizontalTextAlignment" Value="Center" />
+        <Setter Property="TextAlignment" Value="Center" />
+        <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+    </Style>
     <Style x:Key="PixevalNumberBoxStyle" TargetType="NumberBox">
         <Setter Property="IsWrapEnabled" Value="True" />
         <Setter Property="LargeChange" Value="10" />

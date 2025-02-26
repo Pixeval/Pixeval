@@ -21,13 +21,7 @@ namespace Pixeval.Pages.IllustrationViewer;
 public partial class IllustrationViewerPageViewModel : DetailedUiObservableObject, IDisposable
 {
     [ObservableProperty]
-    public partial bool ShowPixevalIcon { get; set; } = true;
-
-    [ObservableProperty]
-    public partial string AdditionalText { get; set; } = "";
-
-    [ObservableProperty]
-    public partial bool AdditionalTextBlockVisible { get; set; } = true;
+    public partial bool IsBottomListOpen { get; set; }
 
     /// <summary>
     /// 
@@ -277,8 +271,11 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
 
     #region Commands
 
-    public XamlUICommand InfoAndCommentsCommand { get; } =
-        EntryViewerPageResources.InfoAndComments.GetCommand(Symbol.Info, VirtualKey.F12);
+    partial void OnIsBottomListOpenChanged(bool value) => BottomListCommand.RefreshBottomPanelCommand(value);
+
+    public XamlUICommand InfoAndCommentsCommand { get; } = EntryViewerPageResources.InfoAndComments.GetCommand(Symbol.Info, VirtualKey.F12);
+
+    public XamlUICommand BottomListCommand { get; } = MiscResources.OpenBottomList.GetCommand(Symbol.PanelBottomExpand, VirtualKey.F);
 
     public XamlUICommand AddToBookmarkCommand { get; } = EntryItemResources.AddToBookmark.GetCommand(Symbol.Bookmark);
 
