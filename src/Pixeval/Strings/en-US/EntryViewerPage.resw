@@ -244,7 +244,4 @@ R: Next Novel</value>
   <data name="NovelSettingsHeaderTextBlock.Text" xml:space="preserve">
     <value>Novel Settings</value>
   </data>
-  <data name="BrowsingCompressedImage" xml:space="preserve">
-    <value>由于您未在设置中打开"浏览时查看原图"选项，因此该页面会显示压缩后的图片，若想要浏览原图，请在设置中打开对应选项</value>
-  </data>
 </root>
